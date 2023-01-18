@@ -1,11 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel;
-use crate::kernel::decl::{
-	GetLastError, IdStr, LANGID, RtStr, SysResult, WString,
-};
+use crate::kernel::decl::{IdStr, LANGID, RtStr, SysResult, WString};
 use crate::kernel::guard::HupdatersrcGuard;
-use crate::kernel::privs::bool_to_sysresult;
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::Handle;
 
 impl_handle! { HUPDATERSRC;
@@ -32,13 +30,15 @@ pub trait kernel_Hupdatersrc: Handle {
 		file_name: &str,
 		delete_existing_resources: bool) -> SysResult<HupdatersrcGuard>
 	{
-		unsafe {
-			kernel::ffi::BeginUpdateResourceW(
-				WString::from_str(file_name).as_ptr(),
-				delete_existing_resources as _,
-			).as_mut()
-		}.map(|ptr| HupdatersrcGuard { hupdatersrc: HUPDATERSRC(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				kernel::ffi::BeginUpdateResourceW(
+					WString::from_str(file_name).as_ptr(),
+					delete_existing_resources as _,
+				)
+			},
+			|ptr| HupdatersrcGuard { hupdatersrc: HUPDATERSRC(ptr) },
+		)
 	}
 
 	/// [`UpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-updateresourcew)

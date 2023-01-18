@@ -3,6 +3,7 @@
 use crate::{co, gdi};
 use crate::gdi::guard::GdiObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
+use crate::kernel::privs::ptr_to_sysresult;
 use crate::prelude::GdiObject;
 use crate::user::decl::{HRGN, RECT, SIZE};
 
@@ -22,21 +23,23 @@ pub trait gdi_Hrgn: GdiObject {
 	/// static method.
 	#[must_use]
 	fn CreateRectRgn(bounds: RECT) -> SysResult<GdiObjectGuard<HRGN>> {
-		unsafe {
-			gdi::ffi::CreateRectRgn(
-				bounds.left, bounds.top, bounds.right, bounds.bottom,
-			).as_mut()
-		}.map(|ptr| GdiObjectGuard { handle: HRGN(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				gdi::ffi::CreateRectRgn(
+					bounds.left, bounds.top, bounds.right, bounds.bottom)
+			},
+			|ptr| GdiObjectGuard { handle: HRGN(ptr) },
+		)
 	}
 
 	/// [`CreateRectRgnIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createrectrgnindirect)
 	/// static method.
 	#[must_use]
 	fn CreateRectRgnIndirect(rc: RECT) -> SysResult<GdiObjectGuard<HRGN>> {
-		unsafe { gdi::ffi::CreateRectRgnIndirect(&rc as *const _ as _).as_mut() }
-			.map(|ptr| GdiObjectGuard { handle: HRGN(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { gdi::ffi::CreateRectRgnIndirect(&rc as *const _ as _) },
+			|ptr| GdiObjectGuard { handle: HRGN(ptr) },
+		)
 	}
 
 	/// [`CreateRoundRectRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createroundrectrgn)
@@ -45,13 +48,15 @@ pub trait gdi_Hrgn: GdiObject {
 	fn CreateRoundRectRgn(
 		bounds: RECT, size: SIZE) -> SysResult<GdiObjectGuard<HRGN>>
 	{
-		unsafe {
-			gdi::ffi::CreateRoundRectRgn(
-				bounds.left, bounds.top, bounds.right, bounds.top,
-				size.cx, size.cy,
-			).as_mut()
-		}.map(|ptr| GdiObjectGuard { handle: HRGN(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				gdi::ffi::CreateRoundRectRgn(
+					bounds.left, bounds.top, bounds.right, bounds.top,
+					size.cx, size.cy,
+				)
+			},
+			|ptr| GdiObjectGuard { handle: HRGN(ptr) },
+		)
 	}
 
 	/// [`OffsetClipRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetcliprgn)

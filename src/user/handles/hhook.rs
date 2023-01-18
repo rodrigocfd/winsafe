@@ -1,8 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, user};
-use crate::kernel::decl::{GetLastError, HINSTANCE, SysResult};
-use crate::kernel::privs::{bool_to_sysresult, replace_handle_value};
+use crate::kernel::decl::{HINSTANCE, SysResult};
+use crate::kernel::privs::{
+	bool_to_sysresult, ptr_to_sysresult, replace_handle_value,
+};
 use crate::prelude::Handle;
 use crate::user::decl::HOOKPROC;
 
@@ -40,15 +42,17 @@ pub trait user_Hhook: Handle {
 		module: Option<&HINSTANCE>,
 		thread_id: Option<u32>) -> SysResult<HHOOK>
 	{
-		unsafe {
-			user::ffi::SetWindowsHookExW(
-				hook_id.0,
-				proc as _,
-				module.map_or(std::ptr::null_mut(), |h| h.0),
-				thread_id.unwrap_or_default(),
-			).as_mut()
-		}.map(|ptr| HHOOK(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				user::ffi::SetWindowsHookExW(
+					hook_id.0,
+					proc as _,
+					module.map_or(std::ptr::null_mut(), |h| h.0),
+					thread_id.unwrap_or_default(),
+				)
+			},
+			|ptr| HHOOK(ptr),
+		)
 	}
 
 	/// [`UnhookWindowsHookEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwindowshookex)

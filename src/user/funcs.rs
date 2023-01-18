@@ -3,7 +3,7 @@
 use crate::{co, user};
 use crate::kernel::decl::{GetLastError, HINSTANCE, SysResult, WString};
 use crate::kernel::ffi_types::BOOL;
-use crate::kernel::privs::bool_to_sysresult;
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::MsgSend;
 use crate::user::decl::{
 	ATOM, COLORREF, DEVMODE, DISPLAY_DEVICE, GmidxEnum, GUITHREADINFO, HWND,
@@ -363,10 +363,10 @@ pub fn GetAsyncKeyState(virt_key: co::VK) -> bool {
 /// `format`.
 #[must_use]
 pub unsafe fn GetClipboardData(format: co::CF) -> SysResult<*mut u8> {
-	user::ffi::GetClipboardData(format.0)
-		.as_mut()
-		.map(|hmem| hmem as *mut _ as _)
-		.ok_or_else(|| GetLastError())
+	ptr_to_sysresult(
+		user::ffi::GetClipboardData(format.0),
+		|hmem| hmem as *mut _ as _,
+	)
 }
 
 /// [`GetClipboardSequenceNumber`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboardsequencenumber)
@@ -434,7 +434,7 @@ pub fn GetGUIThreadInfo(
 	thread_id: u32, gti: &mut GUITHREADINFO) -> SysResult<()>
 {
 	bool_to_sysresult(
-		unsafe { user::ffi::GetGUIThreadInfo(thread_id, gti as *mut _ as _) }
+		unsafe { user::ffi::GetGUIThreadInfo(thread_id, gti as *mut _ as _) },
 	)
 }
 
@@ -573,7 +573,9 @@ pub fn LockSetForegroundWindow(lock_code: co::LSFW) -> SysResult<()> {
 /// [`OffsetRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-offsetrect)
 /// function.
 pub fn OffsetRect(rc: &mut RECT, dx: i32, dy: i32) -> SysResult<()> {
-	bool_to_sysresult(unsafe { user::ffi::OffsetRect(rc as *mut _ as _, dx, dy) })
+	bool_to_sysresult(
+		unsafe { user::ffi::OffsetRect(rc as *mut _ as _, dx, dy) },
+	)
 }
 
 /// [`PeekMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)
@@ -612,8 +614,7 @@ pub fn PostThreadMessage<M>(thread_id: u32, msg: M) -> SysResult<()>
 	bool_to_sysresult(
 		unsafe {
 			user::ffi::PostThreadMessageW(
-				thread_id, wm_any.msg_id.0, wm_any.wparam, wm_any.lparam,
-			)
+				thread_id, wm_any.msg_id.0, wm_any.wparam, wm_any.lparam)
 		}
 	)
 }
@@ -674,10 +675,10 @@ pub fn SetCaretPos(x: i32, y: i32) -> SysResult<()> {
 pub unsafe fn SetClipboardData(
 	format: co::CF, hmem: *mut u8) -> SysResult<*mut u8>
 {
-	user::ffi::SetClipboardData(format.0, hmem as _)
-		.as_mut()
-		.map(|hmem| hmem as *mut _ as _)
-		.ok_or_else(|| GetLastError())
+	ptr_to_sysresult(
+		user::ffi::SetClipboardData(format.0, hmem as _),
+		|hmem| hmem as *mut _ as _,
+	)
 }
 
 /// [`SetCursorPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursorpos)

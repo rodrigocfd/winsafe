@@ -3,6 +3,7 @@
 use crate::{co, user};
 use crate::gdi::guard::GdiObjectGuard;
 use crate::kernel::decl::{GetLastError, HINSTANCE, IdStr, SysResult, WString};
+use crate::kernel::privs::ptr_to_sysresult;
 use crate::prelude::Handle;
 use crate::user::decl::{
 	ATOM, DLGPROC, HACCEL, HBITMAP, HCURSOR, HICON, HMENU, HWND, IdIdcStr,
@@ -32,16 +33,18 @@ pub trait user_Hinstance: Handle {
 		dialog_proc: DLGPROC,
 		init_param: Option<isize>) -> SysResult<HWND>
 	{
-		unsafe {
-			user::ffi::CreateDialogParamW(
-				self.as_ptr(),
-				resource_id.as_ptr(),
-				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.0),
-				dialog_proc as _,
-				init_param.unwrap_or_default(),
-			).as_mut()
-		}.map(|ptr| HWND(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				user::ffi::CreateDialogParamW(
+					self.as_ptr(),
+					resource_id.as_ptr(),
+					hwnd_parent.map_or(std::ptr::null_mut(), |h| h.0),
+					dialog_proc as _,
+					init_param.unwrap_or_default(),
+				)
+			},
+			|ptr| HWND(ptr),
+		)
 	}
 
 	/// [`DialogBoxParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dialogboxparamw)
@@ -105,11 +108,12 @@ pub trait user_Hinstance: Handle {
 	/// method.
 	#[must_use]
 	fn LoadAccelerators(&self, table_name: IdStr) -> SysResult<HACCEL> {
-		unsafe {
-			user::ffi::LoadAcceleratorsW(self.as_ptr(), table_name.as_ptr())
-				.as_mut()
-		}.map(|ptr| HACCEL(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				user::ffi::LoadAcceleratorsW(self.as_ptr(), table_name.as_ptr())
+			},
+			|ptr| HACCEL(ptr),
+		)
 	}
 
 	/// [`LoadCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadcursorw)
@@ -129,10 +133,10 @@ pub trait user_Hinstance: Handle {
 	/// ```
 	#[must_use]
 	fn LoadCursor(&self, resource_id: IdIdcStr) -> SysResult<HCURSOR> {
-		unsafe {
-			user::ffi::LoadCursorW(self.as_ptr(), resource_id.as_ptr()).as_mut()
-		}.map(|ptr| HCURSOR(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { user::ffi::LoadCursorW(self.as_ptr(), resource_id.as_ptr()) },
+			|ptr| HCURSOR(ptr),
+		)
 	}
 
 	/// [`LoadIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadiconw)
@@ -155,10 +159,10 @@ pub trait user_Hinstance: Handle {
 	/// ```
 	#[must_use]
 	fn LoadIcon(&self, icon_id: IdIdiStr) -> SysResult<HICON> {
-		unsafe {
-			user::ffi::LoadIconW(self.as_ptr(), icon_id.as_ptr()).as_mut()
-		}.map(|ptr| HICON(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { user::ffi::LoadIconW(self.as_ptr(), icon_id.as_ptr()) },
+			|ptr| HICON(ptr),
+		)
 	}
 
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
@@ -167,12 +171,13 @@ pub trait user_Hinstance: Handle {
 	fn LoadImageBitmap(&self,
 		name: IdObmStr, sz: SIZE, load: co::LR) -> SysResult<GdiObjectGuard<HBITMAP>>
 	{
-		unsafe {
-			user::ffi::LoadImageW(
-				self.as_ptr(), name.as_ptr(), 0, sz.cx, sz.cy, load.0,
-			).as_mut()
-		}.map(|ptr| GdiObjectGuard { handle: HBITMAP(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				user::ffi::LoadImageW(
+					self.as_ptr(), name.as_ptr(), 0, sz.cx, sz.cy, load.0)
+			},
+			|ptr| GdiObjectGuard { handle: HBITMAP(ptr) },
+		)
 	}
 
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
@@ -185,12 +190,13 @@ pub trait user_Hinstance: Handle {
 	fn LoadImageCursor(&self,
 		name: IdOcrStr, sz: SIZE, load: co::LR) -> SysResult<HCURSOR>
 	{
-		unsafe {
-			user::ffi::LoadImageW(
-				self.as_ptr(), name.as_ptr(), 2, sz.cx, sz.cy, load.0,
-			).as_mut()
-		}.map(|ptr| HCURSOR(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				user::ffi::LoadImageW(
+					self.as_ptr(), name.as_ptr(), 2, sz.cx, sz.cy, load.0)
+			},
+			|ptr| HCURSOR(ptr),
+		)
 	}
 
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
@@ -202,22 +208,23 @@ pub trait user_Hinstance: Handle {
 	fn LoadImageIcon(&self,
 		name: IdOicStr, sz: SIZE, load: co::LR) -> SysResult<HICON>
 	{
-		unsafe {
-			user::ffi::LoadImageW(
-				self.as_ptr(), name.as_ptr(), 1, sz.cx, sz.cy, load.0,
-			).as_mut()
-		}.map(|ptr| HICON(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				user::ffi::LoadImageW(
+					self.as_ptr(), name.as_ptr(), 1, sz.cx, sz.cy, load.0)
+			},
+			|ptr| HICON(ptr),
+		)
 	}
 
 	/// [`LoadMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenuw)
 	/// method.
 	#[must_use]
 	fn LoadMenu(&self, resource_id: IdStr) -> SysResult<HMENU> {
-		unsafe {
-			user::ffi::LoadMenuW(self.as_ptr(), resource_id.as_ptr()).as_mut()
-		}.map(|ptr| HMENU(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { user::ffi::LoadMenuW(self.as_ptr(), resource_id.as_ptr()) },
+			|ptr| HMENU(ptr),
+		)
 	}
 
 	/// [`LoadString`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringw)

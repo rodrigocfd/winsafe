@@ -1,9 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
-use crate::kernel::decl::{GetLastError, HFILEMAPVIEW, SysResult};
+use crate::kernel::decl::{HFILEMAPVIEW, SysResult};
 use crate::kernel::guard::HfilemapviewGuard;
-use crate::prelude::{Handle};
+use crate::kernel::privs::ptr_to_sysresult;
+use crate::prelude::Handle;
 
 impl_handle! { HFILEMAP;
 	/// Handle to a
@@ -33,14 +34,16 @@ pub trait kernel_Hfilemap: Handle {
 		offset: u64,
 		number_of_bytes_to_map: Option<usize>) -> SysResult<HfilemapviewGuard>
 	{
-		unsafe {
-			kernel::ffi::MapViewOfFileFromApp(
-				self.as_ptr(),
-				desired_access.0,
-				offset,
-				number_of_bytes_to_map.unwrap_or_default(),
-			).as_mut()
-		}.map(|ptr| HfilemapviewGuard { handle: HFILEMAPVIEW(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				kernel::ffi::MapViewOfFileFromApp(
+					self.as_ptr(),
+					desired_access.0,
+					offset,
+					number_of_bytes_to_map.unwrap_or_default(),
+				)
+			},
+			|ptr| HfilemapviewGuard { handle: HFILEMAPVIEW(ptr) },
+		)
 	}
 }

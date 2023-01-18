@@ -5,7 +5,7 @@ use crate::kernel::decl::{
 	FILETIME, GetLastError, HACCESSTOKEN, SECURITY_ATTRIBUTES, SysResult,
 };
 use crate::kernel::guard::HandleGuard;
-use crate::kernel::privs::bool_to_sysresult;
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::Handle;
 
 impl_handle! { HTHREAD;
@@ -38,17 +38,19 @@ pub trait kernel_Hthread: Handle {
 		flags: co::THREAD_CREATE) -> SysResult<(HandleGuard<HTHREAD>, u32)>
 	{
 		let mut thread_id = u32::default();
-		unsafe {
-			kernel::ffi::CreateThread(
-				thread_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-				stack_size,
-				start_addr,
-				parameter,
-				flags.0,
-				&mut thread_id,
-			).as_mut()
-		}.map(|ptr| (HandleGuard { handle: HTHREAD(ptr) }, thread_id))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				kernel::ffi::CreateThread(
+					thread_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+					stack_size,
+					start_addr,
+					parameter,
+					flags.0,
+					&mut thread_id,
+				)
+			},
+			|ptr| (HandleGuard { handle: HTHREAD(ptr) }, thread_id),
+		)
 	}
 
 	/// [`ExitThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread)

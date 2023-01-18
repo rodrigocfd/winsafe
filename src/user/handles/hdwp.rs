@@ -2,7 +2,7 @@
 
 use crate::{co, user};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::replace_handle_value;
+use crate::kernel::privs::{ptr_to_sysresult, replace_handle_value};
 use crate::prelude::Handle;
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 use crate::user::guard::HdwpGuard;
@@ -27,9 +27,10 @@ pub trait user_Hdwp: Handle {
 	/// static method.
 	#[must_use]
 	fn BeginDeferWindowPos(num_windows: u32) -> SysResult<HdwpGuard> {
-		unsafe { user::ffi::BeginDeferWindowPos(num_windows as _).as_mut() }
-			.map(|ptr| HdwpGuard { handle: HDWP(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { user::ffi::BeginDeferWindowPos(num_windows as _) },
+			|ptr| HdwpGuard { handle: HDWP(ptr) },
+		)
 	}
 
 	/// [`DeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deferwindowpos)
@@ -44,7 +45,7 @@ pub trait user_Hdwp: Handle {
 		sz: SIZE,
 		flags: co::SWP) -> SysResult<()>
 	{
-		unsafe {
+		match unsafe {
 			user::ffi::DeferWindowPos(
 				self.as_ptr(),
 				hwnd.0,
@@ -52,12 +53,15 @@ pub trait user_Hdwp: Handle {
 				top_left.x, top_left.y, sz.cx, sz.cy,
 				flags.0,
 			).as_mut()
-				.map(|ptr| {
-					replace_handle_value(self, Self::from_ptr(ptr));
-				})
-		}.ok_or_else(|| {
-			replace_handle_value(self, Self::INVALID); // prevent EndDeferWindowPos()
-			GetLastError()
-		})
+		} {
+			Some(ptr) => {
+				replace_handle_value(self, unsafe { Self::from_ptr(ptr) });
+				Ok(())
+			},
+			None => {
+				replace_handle_value(self, Self::INVALID); // prevent EndDeferWindowPos()
+				Err(GetLastError())
+			},
+		}
 	}
 }

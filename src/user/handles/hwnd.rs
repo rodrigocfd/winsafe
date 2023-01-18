@@ -7,7 +7,9 @@ use crate::kernel::decl::{
 	GetLastError, HINSTANCE, HIWORD, LOWORD, SetLastError, SysResult, WString,
 };
 use crate::kernel::ffi_types::BOOL;
-use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, replace_handle_value};
+use crate::kernel::privs::{
+	bool_to_sysresult, MAX_PATH, ptr_to_sysresult, replace_handle_value,
+};
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{
 	ALTTABINFO, AtomStr, HACCEL, HDC, HMENU, HMONITOR, HRGN, HwndPlace, IdMenu,
@@ -108,11 +110,12 @@ pub trait user_Hwnd: Handle {
 	#[must_use]
 	fn BeginPaint(&self) -> SysResult<HdcPaintGuard<'_, Self>> {
 		let mut ps = PAINTSTRUCT::default();
-		unsafe {
-			user::ffi::BeginPaint(self.as_ptr(), &mut ps as *mut _ as _).as_mut()
-		}.map(|ptr| {
-			HdcPaintGuard { hwnd: self, hdc: HDC(ptr), ps }
-		}).ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				user::ffi::BeginPaint(self.as_ptr(), &mut ps as *mut _ as _)
+			},
+			|ptr| HdcPaintGuard { hwnd: self, hdc: HDC(ptr), ps },
+		)
 	}
 
 	/// [`BringWindowToTop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-bringwindowtotop)
@@ -195,6 +198,7 @@ pub trait user_Hwnd: Handle {
 		hinstance: &HINSTANCE,
 		lparam: Option<isize>) -> SysResult<HWND>
 	{
+		ptr_to_sysresult(
 			user::ffi::CreateWindowExW(
 				ex_style.0,
 				class_name.as_ptr(),
@@ -206,9 +210,9 @@ pub trait user_Hwnd: Handle {
 				hmenu.as_ptr(),
 				hinstance.as_ptr(),
 				lparam.unwrap_or_default() as _,
-			).as_mut()
-				.map(|ptr| HWND(ptr))
-				.ok_or_else(|| GetLastError())
+			),
+			|ptr| HWND(ptr),
+		)
 	}
 
 	/// [`DefWindowProc`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-defwindowprocw)
@@ -304,13 +308,15 @@ pub trait user_Hwnd: Handle {
 		class_name: Option<AtomStr>,
 		title: Option<&str>) -> SysResult<HWND>
 	{
-		unsafe {
-			user::ffi::FindWindowW(
-				class_name.map_or(std::ptr::null_mut(), |p| p.as_ptr()),
-				WString::from_opt_str(title).as_ptr(),
-			).as_mut()
-		}.map(|ptr| HWND(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				user::ffi::FindWindowW(
+					class_name.map_or(std::ptr::null_mut(), |p| p.as_ptr()),
+					WString::from_opt_str(title).as_ptr(),
+				)
+			},
+			|ptr| HWND(ptr),
+		)
 	}
 
 	/// [`FindWindowEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexw)
@@ -321,15 +327,17 @@ pub trait user_Hwnd: Handle {
 		class_name: AtomStr,
 		title: Option<&str>) -> SysResult<HWND>
 	{
-		unsafe {
-			user::ffi::FindWindowExW(
-				self.as_ptr(),
-				hwnd_child_after.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
-				class_name.as_ptr(),
-				WString::from_opt_str(title).as_ptr(),
-			).as_mut()
-		}.map(|ptr| HWND(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				user::ffi::FindWindowExW(
+					self.as_ptr(),
+					hwnd_child_after.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+					class_name.as_ptr(),
+					WString::from_opt_str(title).as_ptr(),
+				)
+			},
+			|ptr| HWND(ptr),
+		)
 	}
 
 	/// [`GetActiveWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getactivewindow)
@@ -431,9 +439,13 @@ pub trait user_Hwnd: Handle {
 	/// [`HWND::DESKTOP`](crate::prelude::user_Hwnd::DESKTOP).
 	#[must_use]
 	fn GetDC(&self) -> SysResult<HdcReleaseGuard<'_, Self>> {
-		unsafe { user::ffi::GetDC(self.as_ptr()).as_mut() }
-			.map(|ptr| HdcReleaseGuard { hwnd: self, hdc: HDC(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { user::ffi::GetDC(self.as_ptr()) },
+			|ptr| HdcReleaseGuard {
+				hwnd: self,
+				hdc: HDC(ptr),
+			},
+		)
 	}
 
 	/// [`GetDesktopWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdesktopwindow)
@@ -460,9 +472,10 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn GetDlgItem(&self, ctrl_id: u16) -> SysResult<HWND> {
-		unsafe { user::ffi::GetDlgItem(self.as_ptr(), ctrl_id as _).as_mut() }
-			.map(|ptr| HWND(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { user::ffi::GetDlgItem(self.as_ptr(), ctrl_id as _) },
+			|ptr| HWND(ptr),
+		)
 	}
 
 	/// [`GetFocus`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getfocus)
@@ -537,12 +550,15 @@ pub trait user_Hwnd: Handle {
 	fn GetNextDlgGroupItem(&self,
 		hwnd_ctrl: &HWND, previous: bool) -> SysResult<HWND>
 	{
-		unsafe {
-			user::ffi::GetNextDlgGroupItem(
-				self.as_ptr(), hwnd_ctrl.as_ptr(), previous as _,
-			).as_mut()
-		}.map(|ptr| HWND(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				user::ffi::GetNextDlgGroupItem(
+					self.as_ptr(),
+					hwnd_ctrl.as_ptr(), previous as _,
+				)
+			},
+			|ptr| HWND(ptr),
+		)
 	}
 
 	/// [`GetNextDlgTabItem`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getnextdlgtabitem)
@@ -551,23 +567,26 @@ pub trait user_Hwnd: Handle {
 	fn GetNextDlgTabItem(&self,
 		hwnd_ctrl: &HWND, previous: bool) -> SysResult<HWND>
 	{
-		unsafe {
-			user::ffi::GetNextDlgTabItem(
-				self.as_ptr(),
-				hwnd_ctrl.as_ptr(),
-				previous as _,
-			).as_mut()
-		}.map(|ptr| HWND(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				user::ffi::GetNextDlgTabItem(
+					self.as_ptr(),
+					hwnd_ctrl.as_ptr(),
+					previous as _,
+				)
+			},
+			|ptr| HWND(ptr),
+		)
 	}
 
 	/// [`GetParent`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getparent)
 	/// method.
 	#[must_use]
 	fn GetParent(&self) -> SysResult<HWND> {
-		unsafe { user::ffi::GetParent(self.as_ptr()).as_mut() }
-			.map(|ptr| HWND(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { user::ffi::GetParent(self.as_ptr()) },
+			|ptr| HWND(ptr),
+		)
 	}
 
 	/// [`GetScrollInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getscrollinfo)
@@ -656,18 +675,20 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn GetWindow(&self, cmd: co::GW) -> SysResult<HWND> {
-		unsafe { user::ffi::GetWindow(self.as_ptr(), cmd.0).as_mut() }
-			.map(|ptr| HWND(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { user::ffi::GetWindow(self.as_ptr(), cmd.0) },
+			|ptr| HWND(ptr),
+		)
 	}
 
 	/// [`GetWindowDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdc)
 	/// method.
 	#[must_use]
 	fn GetWindowDC(&self) -> SysResult<HdcReleaseGuard<'_, Self>> {
-		unsafe { user::ffi::GetWindowDC(self.as_ptr()).as_mut() }
-			.map(|ptr| HdcReleaseGuard { hwnd: self, hdc: HDC(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { user::ffi::GetWindowDC(self.as_ptr()) },
+			|ptr| HdcReleaseGuard { hwnd: self, hdc: HDC(ptr) },
+		)
 	}
 
 	/// [`GetWindowDisplayAffinity`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdisplayaffinity)

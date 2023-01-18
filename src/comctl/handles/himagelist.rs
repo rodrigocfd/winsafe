@@ -5,7 +5,9 @@ use std::marker::PhantomData;
 use crate::{co, comctl};
 use crate::comctl::guard::HimagelistDragGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::{bool_to_sysresult, replace_handle_value};
+use crate::kernel::privs::{
+	bool_to_sysresult, ptr_to_sysresult, replace_handle_value,
+};
 use crate::prelude::Handle;
 use crate::user::decl::{COLORREF, HBITMAP, HICON, POINT, SIZE};
 
@@ -133,15 +135,17 @@ pub trait comctl_Himagelist: Handle {
 		image_sz: SIZE, flags: co::ILC,
 		initial_size: i32, grow_size: i32) -> SysResult<HIMAGELIST>
 	{
-		unsafe {
-			comctl::ffi::ImageList_Create(
-				image_sz.cx, image_sz.cy,
-				flags.0,
-				initial_size,
-				grow_size,
-			).as_mut()
-		}.map(|ptr| HIMAGELIST(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				comctl::ffi::ImageList_Create(
+					image_sz.cx, image_sz.cy,
+					flags.0,
+					initial_size,
+					grow_size,
+				)
+			},
+			|ptr| HIMAGELIST(ptr),
+		)
 	}
 
 	/// [`ImageList_Destroy`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_destroy)

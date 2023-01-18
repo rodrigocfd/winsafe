@@ -1,8 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, user};
-use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::{bool_to_sysresult, replace_handle_value};
+use crate::kernel::decl::SysResult;
+use crate::kernel::privs::{
+	bool_to_sysresult, ptr_to_sysresult, replace_handle_value,
+};
 use crate::prelude::Handle;
 
 impl_handle! { HCURSOR;
@@ -29,9 +31,10 @@ pub trait user_Hcursor: Handle {
 	/// call.
 	#[must_use]
 	fn CopyCursor(&self) -> SysResult<HCURSOR> {
-		unsafe { user::ffi::CopyIcon(self.as_ptr()).as_mut() }
-			.map(|ptr| HCURSOR(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { user::ffi::CopyIcon(self.as_ptr()) },
+			|ptr| HCURSOR(ptr),
+		)
 	}
 
 	/// [`DestroyCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroycursor)

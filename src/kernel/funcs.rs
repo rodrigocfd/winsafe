@@ -10,7 +10,7 @@ use crate::kernel::decl::{
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::{
 	bool_to_sysresult, INVALID_FILE_ATTRIBUTES, MAX_COMPUTERNAME_LENGTH,
-	MAX_PATH, parse_multi_z_str,
+	MAX_PATH, parse_multi_z_str, ptr_to_sysresult,
 };
 
 /// [`CopyFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
@@ -171,8 +171,9 @@ pub fn GetCurrentDirectory() -> SysResult<String> {
 /// ```
 #[must_use]
 pub fn GetEnvironmentStrings() -> SysResult<HashMap<String, String>> {
-	unsafe { kernel::ffi::GetEnvironmentStringsW().as_mut() }
-		.map(|ptr| {
+	ptr_to_sysresult(
+		unsafe { kernel::ffi::GetEnvironmentStringsW() },
+		|ptr| {
 			let vec_env_strs = parse_multi_z_str(ptr as *mut _ as _);
 			unsafe { kernel::ffi::FreeEnvironmentStringsW(ptr); }
 
@@ -182,8 +183,8 @@ pub fn GetEnvironmentStrings() -> SysResult<HashMap<String, String>> {
 				map.insert(pair[0].to_owned(), pair[1].to_owned());
 			}
 			map
-		})
-		.ok_or_else(|| GetLastError())
+		},
+	)
 }
 
 /// [`GetFirmwareType`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getfirmwaretype)

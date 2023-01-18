@@ -4,7 +4,7 @@ use crate::{co, shell};
 use crate::kernel::decl::{
 	GetLastError, HACCESSTOKEN, HLOCAL, SysResult, WString,
 };
-use crate::kernel::privs::{bool_to_sysresult, MAX_PATH};
+use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, ptr_to_sysresult};
 use crate::ole::decl::{CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{Handle, kernel_Hlocal};
@@ -68,14 +68,16 @@ pub fn PathCombine(
 	str_dir: Option<&str>, str_file: Option<&str>) -> SysResult<String>
 {
 	let mut buf = WString::new_alloc_buf(MAX_PATH);
-	unsafe {
-		shell::ffi::PathCombineW(
-			buf.as_mut_ptr(),
-			WString::from_opt_str(str_dir).as_ptr(),
-			WString::from_opt_str(str_file).as_ptr(),
-		).as_mut()
-	}.map(|_| buf.to_string())
-		.ok_or_else(|| GetLastError())
+	ptr_to_sysresult(
+		unsafe {
+			shell::ffi::PathCombineW(
+				buf.as_mut_ptr(),
+				WString::from_opt_str(str_dir).as_ptr(),
+				WString::from_opt_str(str_file).as_ptr(),
+			) as _
+		},
+		|_| buf.to_string(),
+	)
 }
 
 /// [`PathCommonPrefix`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathcommonprefixw)

@@ -6,7 +6,7 @@ use crate::kernel::decl::{
 	OVERLAPPED, SECURITY_ATTRIBUTES, SysResult, WString,
 };
 use crate::kernel::guard::{HandleGuard, HfileLockGuard};
-use crate::kernel::privs::bool_to_sysresult;
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::Handle;
 
 impl_handle! { HFILE;
@@ -107,16 +107,18 @@ pub trait kernel_Hfile: Handle {
 		max_size: Option<u64>,
 		mapping_name: Option<&str>) -> SysResult<HandleGuard<HFILEMAP>>
 	{
-		unsafe {
-			kernel::ffi::CreateFileMappingFromApp(
-				self.as_ptr(),
-				mapping_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-				protect.0,
-				max_size.unwrap_or_default(),
-				WString::from_opt_str(mapping_name).as_ptr(),
-			).as_mut()
-		}.map(|ptr| HandleGuard { handle: HFILEMAP(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				kernel::ffi::CreateFileMappingFromApp(
+					self.as_ptr(),
+					mapping_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+					protect.0,
+					max_size.unwrap_or_default(),
+					WString::from_opt_str(mapping_name).as_ptr(),
+				)
+			},
+			|ptr| HandleGuard { handle: HFILEMAP(ptr) },
+		)
 	}
 
 	/// [`GetFileInformationByHandle`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)

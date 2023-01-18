@@ -4,7 +4,7 @@ use crate::{co, gdi};
 use crate::gdi::decl::LOGBRUSH;
 use crate::gdi::guard::GdiObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::bool_to_sysresult;
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::GdiObject;
 use crate::user::decl::{COLORREF, HBITMAP, HBRUSH};
 
@@ -34,9 +34,10 @@ pub trait gdi_Hbrush: GdiObject {
 	/// static method.
 	#[must_use]
 	fn CreateBrushIndirect(lb: &LOGBRUSH) -> SysResult<GdiObjectGuard<HBRUSH>> {
-		unsafe { gdi::ffi::CreateBrushIndirect(lb as *const _ as _).as_mut() }
-			.map(|ptr| GdiObjectGuard { handle: HBRUSH(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { gdi::ffi::CreateBrushIndirect(lb as *const _ as _) },
+			|ptr| GdiObjectGuard { handle: HBRUSH(ptr) },
+		)
 	}
 
 	/// [`CreateHatchBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createhatchbrush)
@@ -45,27 +46,30 @@ pub trait gdi_Hbrush: GdiObject {
 	fn CreateHatchBrush(
 		hatch: co::HS, color: COLORREF) -> SysResult<GdiObjectGuard<HBRUSH>>
 	{
-		unsafe { gdi::ffi::CreateHatchBrush(hatch.0, color.0).as_mut() }
-			.map(|ptr| GdiObjectGuard { handle: HBRUSH(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { gdi::ffi::CreateHatchBrush(hatch.0, color.0) },
+			|ptr| GdiObjectGuard { handle: HBRUSH(ptr) },
+		)
 	}
 
 	/// [`CreatePatternBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpatternbrush)
 	/// static method.
 	#[must_use]
 	fn CreatePatternBrush(hbmp: &HBITMAP) -> SysResult<GdiObjectGuard<HBRUSH>> {
-		unsafe { gdi::ffi::CreatePatternBrush(hbmp.0).as_mut() }
-			.map(|ptr| GdiObjectGuard { handle: HBRUSH(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { gdi::ffi::CreatePatternBrush(hbmp.0) },
+			|ptr| GdiObjectGuard { handle: HBRUSH(ptr) },
+		)
 	}
 
 	/// [`CreateSolidBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush)
 	/// static method.
 	#[must_use]
 	fn CreateSolidBrush(color: COLORREF) -> SysResult<GdiObjectGuard<HBRUSH>> {
-		unsafe { gdi::ffi::CreateSolidBrush(color.0).as_mut() }
-			.map(|ptr| GdiObjectGuard { handle: HBRUSH(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { gdi::ffi::CreateSolidBrush(color.0) },
+			|ptr| GdiObjectGuard { handle: HBRUSH(ptr) },
+		)
 	}
 
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
@@ -87,18 +91,20 @@ pub trait gdi_Hbrush: GdiObject {
 	/// static method.
 	#[must_use]
 	fn GetStockObject(sb: co::STOCK_BRUSH) -> SysResult<HBRUSH> {
-		unsafe { gdi::ffi::GetStockObject(sb.0).as_mut() }
-			.map(|ptr| HBRUSH(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { gdi::ffi::GetStockObject(sb.0) },
+			|ptr| HBRUSH(ptr),
+		)
 	}
 
 	/// [`GetSysColorBrush`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolorbrush)
 	/// static method.
 	#[must_use]
 	fn GetSysColorBrush(index: co::COLOR) -> SysResult<HBRUSH> {
-		unsafe { gdi::ffi::GetSysColorBrush(index.0).as_mut() }
-			.map(|ptr| HBRUSH(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { gdi::ffi::GetSysColorBrush(index.0) },
+			|ptr| HBRUSH(ptr),
+		)
 	}
 
 	/// [`UnrealizeObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-unrealizeobject)

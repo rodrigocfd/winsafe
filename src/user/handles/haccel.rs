@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::replace_handle_value;
+use crate::kernel::decl::SysResult;
+use crate::kernel::privs::{ptr_to_sysresult, replace_handle_value};
 use crate::prelude::Handle;
 use crate::user;
 use crate::user::decl::ACCEL;
@@ -30,13 +30,15 @@ pub trait user_Haccel: Handle {
 	/// call.
 	#[must_use]
 	fn CreateAcceleratorTable(accel: &mut [ACCEL]) -> SysResult<HACCEL> {
-		unsafe {
-			user::ffi::CreateAcceleratorTableW(
-				accel.as_mut_ptr() as _,
-				accel.len() as _,
-			).as_mut()
-		}.map(|ptr| HACCEL(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				user::ffi::CreateAcceleratorTableW(
+					accel.as_mut_ptr() as _,
+					accel.len() as _,
+				)
+			},
+			|ptr| HACCEL(ptr),
+		)
 	}
 
 	/// [`DestroyAcceleratorTable`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyacceleratortable)

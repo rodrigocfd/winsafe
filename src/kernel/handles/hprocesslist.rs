@@ -6,7 +6,7 @@ use crate::kernel::decl::{
 	THREADENTRY32,
 };
 use crate::kernel::guard::HandleGuard;
-use crate::kernel::privs::replace_handle_value;
+use crate::kernel::privs::{ptr_to_sysresult, replace_handle_value};
 use crate::prelude::Handle;
 
 impl_handle! { HPROCESSLIST;
@@ -156,13 +156,15 @@ pub trait kernel_Hprocesslist: Handle {
 		flags: co::TH32CS,
 		th32_process_id: Option<u32>) -> SysResult<HandleGuard<HPROCESSLIST>>
 	{
-		unsafe {
-			kernel::ffi::CreateToolhelp32Snapshot(
-				flags.0,
-				th32_process_id.unwrap_or_default(),
-			).as_mut()
-		}.map(|ptr| HandleGuard { handle: HPROCESSLIST(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				kernel::ffi::CreateToolhelp32Snapshot(
+					flags.0,
+					th32_process_id.unwrap_or_default(),
+				)
+			},
+			|ptr| HandleGuard { handle: HPROCESSLIST(ptr) },
+		)
 	}
 
 	/// [`HeapList32First`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-heap32listfirst)

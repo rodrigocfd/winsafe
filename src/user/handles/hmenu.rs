@@ -2,7 +2,9 @@
 
 use crate::{co, msg, user};
 use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::kernel::privs::{bool_to_sysresult, replace_handle_value};
+use crate::kernel::privs::{
+	bool_to_sysresult, ptr_to_sysresult, replace_handle_value,
+};
 use crate::prelude::{Handle, NativeBitflag, user_Hwnd};
 use crate::user::decl::{
 	BmpPtrStr, HBITMAP, HWND, IdMenu, IdPos, MenuEnum, MENUINFO, MENUITEMINFO,
@@ -155,9 +157,10 @@ pub trait user_Hmenu: Handle {
 	/// [`HMENU::DestroyMenu`](crate::prelude::user_Hmenu::DestroyMenu) call.
 	#[must_use]
 	fn CreateMenu() -> SysResult<HMENU> {
-		unsafe { user::ffi::CreateMenu().as_mut() }
-			.map(|ptr| HMENU(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { user::ffi::CreateMenu() },
+			|ptr| HMENU(ptr),
+		)
 	}
 
 	/// [`CreatePopupMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createpopupmenu)
@@ -169,9 +172,10 @@ pub trait user_Hmenu: Handle {
 	/// [`HMENU::DestroyMenu`](crate::prelude::user_Hmenu::DestroyMenu).
 	#[must_use]
 	fn CreatePopupMenu() -> SysResult<HMENU> {
-		unsafe { user::ffi::CreatePopupMenu().as_mut() }
-			.map(|ptr| HMENU(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { user::ffi::CreatePopupMenu() },
+			|ptr| HMENU(ptr),
+		)
 	}
 
 	/// [`DeleteMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deletemenu)

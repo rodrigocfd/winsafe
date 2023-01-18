@@ -7,7 +7,7 @@ use crate::gdi::decl::{BITMAPINFO, TEXTMETRIC};
 use crate::gdi::guard::{GdiObjectGuard, HdcDeleteGuard, SelectObjectGuard};
 use crate::gdi::privs::{CLR_INVALID, GDI_ERROR, LF_FACESIZE};
 use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::kernel::privs::bool_to_sysresult;
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::{GdiObject, Handle};
 use crate::user::decl::{
 	COLORREF, HBITMAP, HBRUSH, HDC, HRGN, POINT, RECT, SIZE,
@@ -144,19 +144,20 @@ pub trait gdi_Hdc: Handle {
 	fn CreateCompatibleBitmap(&self,
 		cx: i32, cy: i32) -> SysResult<GdiObjectGuard<HBITMAP>>
 	{
-		unsafe {
-			gdi::ffi::CreateCompatibleBitmap(self.as_ptr(), cx, cy).as_mut()
-		}.map(|ptr| GdiObjectGuard { handle: HBITMAP(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { gdi::ffi::CreateCompatibleBitmap(self.as_ptr(), cx, cy) },
+			|ptr| GdiObjectGuard { handle: HBITMAP(ptr) },
+		)
 	}
 
 	/// [`CreateCompatibleDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatibledc)
 	/// method.
 	#[must_use]
 	fn CreateCompatibleDC(&self) -> SysResult<HdcDeleteGuard> {
-		unsafe { gdi::ffi::CreateCompatibleDC(self.as_ptr()).as_mut() }
-			.map(|ptr| HdcDeleteGuard { handle: HDC(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { gdi::ffi::CreateCompatibleDC(self.as_ptr()) },
+			|ptr| HdcDeleteGuard { handle: HDC(ptr) },
+		)
 	}
 
 	/// [`Ellipse`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ellipse)
@@ -503,9 +504,10 @@ pub trait gdi_Hdc: Handle {
 	/// method.
 	#[must_use]
 	fn PathToRegion(&self) -> SysResult<GdiObjectGuard<HRGN>> {
-		unsafe { gdi::ffi::PathToRegion(self.as_ptr()).as_mut() }
-			.map(|ptr| GdiObjectGuard { handle: HRGN(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { gdi::ffi::PathToRegion(self.as_ptr()) },
+			|ptr| GdiObjectGuard { handle: HRGN(ptr) },
+		)
 	}
 
 	/// [`Pie`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pie)
@@ -666,24 +668,24 @@ pub trait gdi_Hdc: Handle {
 	fn SelectObject<G>(&self, hgdiobj: &G) -> SysResult<SelectObjectGuard<'_, Self, G>>
 		where G: GdiObject,
 	{
-		unsafe {
-			gdi::ffi::SelectObject(self.as_ptr(), hgdiobj.as_ptr())
-				.as_mut()
-		}.map(|ptr| {
-			if hgdiobj.type_id() == TypeId::of::<HRGN>() {
-				SelectObjectGuard {
-					hdc: self,
-					prev_hgdi: G::NULL, // regions don't need cleanup
-					region: Some(co::REGION(ptr as *mut _ as _)),
+		ptr_to_sysresult(
+			unsafe { gdi::ffi::SelectObject(self.as_ptr(), hgdiobj.as_ptr()) },
+			|ptr| {
+				if hgdiobj.type_id() == TypeId::of::<HRGN>() {
+					SelectObjectGuard {
+						hdc: self,
+						prev_hgdi: G::NULL, // regions don't need cleanup
+						region: Some(co::REGION(ptr as *mut _ as _)),
+					}
+				} else {
+					SelectObjectGuard {
+						hdc: self,
+						prev_hgdi: unsafe { G::from_ptr(ptr) },
+						region: None,
+					}
 				}
-			} else {
-				SelectObjectGuard {
-					hdc: self,
-					prev_hgdi: unsafe { G::from_ptr(ptr) },
-					region: None,
-				}
-			}
-		}).ok_or_else(|| GetLastError())
+			},
+		)
 	}
 
 	/// [`SetArcDirection`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setarcdirection)

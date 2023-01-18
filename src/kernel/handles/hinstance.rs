@@ -6,7 +6,9 @@ use crate::kernel::decl::{
 };
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::guard::HinstanceGuard;
-use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, str_to_iso88591};
+use crate::kernel::privs::{
+	bool_to_sysresult, MAX_PATH, ptr_to_sysresult, str_to_iso88591,
+};
 use crate::prelude::Handle;
 
 impl_handle! { HINSTANCE;
@@ -88,14 +90,16 @@ pub trait kernel_Hinstance: Handle {
 	fn FindResource(&self,
 		resource_id: IdStr, resource_type: RtStr) -> SysResult<HRSRC>
 	{
-		unsafe {
-			kernel::ffi::FindResourceW(
-				self.as_ptr(),
-				resource_id.as_ptr(),
-				resource_type.as_ptr(),
-			).as_mut()
-		}.map(|ptr| HRSRC(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				kernel::ffi::FindResourceW(
+					self.as_ptr(),
+					resource_id.as_ptr(),
+					resource_type.as_ptr(),
+				)
+			},
+			|ptr| HRSRC(ptr),
+		)
 	}
 
 	/// [`FindResourceEx`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourceexw)
@@ -108,15 +112,17 @@ pub trait kernel_Hinstance: Handle {
 		resource_id: IdStr, resource_type: RtStr,
 		language: Option<LANGID>) -> SysResult<HRSRC>
 	{
-		unsafe {
-			kernel::ffi::FindResourceExW(
-				self.as_ptr(),
-				resource_id.as_ptr(),
-				resource_type.as_ptr(),
-				language.unwrap_or(LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL)).0,
-			).as_mut()
-		}.map(|ptr| HRSRC(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				kernel::ffi::FindResourceExW(
+					self.as_ptr(),
+					resource_id.as_ptr(),
+					resource_type.as_ptr(),
+					language.unwrap_or(LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL)).0,
+				)
+			},
+			|ptr| HRSRC(ptr),
+		)
 	}
 
 	/// [`GetModuleFileName`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew)
@@ -166,12 +172,14 @@ pub trait kernel_Hinstance: Handle {
 	/// ```
 	#[must_use]
 	fn GetModuleHandle(module_name: Option<&str>) -> SysResult<HINSTANCE> {
-		unsafe {
-			kernel::ffi::GetModuleHandleW(
-				WString::from_opt_str(module_name).as_ptr(),
-			).as_mut()
-		}.map(|ptr| HINSTANCE(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				kernel::ffi::GetModuleHandleW(
+					WString::from_opt_str(module_name).as_ptr(),
+				)
+			},
+			|ptr| HINSTANCE(ptr),
+		)
 	}
 
 	/// [`GetProcAddress`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress)
@@ -180,24 +188,27 @@ pub trait kernel_Hinstance: Handle {
 	fn GetProcAddress(&self,
 		proc_name: &str) -> SysResult<*const std::ffi::c_void>
 	{
-		unsafe {
-			kernel::ffi::GetProcAddress(
-				self.as_ptr(),
-				str_to_iso88591(proc_name).as_ptr(),
-			).as_ref()
-		}.map(|ptr| ptr as _)
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				kernel::ffi::GetProcAddress(
+					self.as_ptr(),
+					str_to_iso88591(proc_name).as_ptr(),
+				) as _
+			},
+			|ptr| ptr as _,
+		)
 	}
 
 	/// [`LoadLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryw)
 	/// static method.
 	#[must_use]
 	fn LoadLibrary(lib_file_name: &str) -> SysResult<HinstanceGuard> {
-		unsafe {
-			kernel::ffi::LoadLibraryW(WString::from_str(lib_file_name).as_ptr())
-				.as_mut()
-		}.map(|ptr| HinstanceGuard { handle: HINSTANCE(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				kernel::ffi::LoadLibraryW(WString::from_str(lib_file_name).as_ptr())
+			},
+			|ptr| HinstanceGuard { handle: HINSTANCE(ptr) },
+		)
 	}
 
 	/// [`LoadResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadresource)
@@ -207,9 +218,10 @@ pub trait kernel_Hinstance: Handle {
 	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	#[must_use]
 	fn LoadResource(&self, res_info: &HRSRC) -> SysResult<HRSRCMEM> {
-		unsafe { kernel::ffi::LoadResource(self.as_ptr(), res_info.0).as_mut() }
-			.map(|ptr| HRSRCMEM(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { kernel::ffi::LoadResource(self.as_ptr(), res_info.0) },
+			|ptr| HRSRCMEM(ptr),
+		)
 	}
 
 	/// [`LockResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-lockresource)
@@ -259,11 +271,12 @@ pub trait kernel_Hinstance: Handle {
 		res_info: &HRSRC, hres_loaded: &HRSRCMEM) -> SysResult<&[u8]>
 	{
 		let sz = self.SizeofResource(res_info)?;
-		unsafe { kernel::ffi::LockResource(hres_loaded.0).as_mut() }
-			.map(|ptr| unsafe {
-				std::slice::from_raw_parts(ptr as *const _ as _, sz as _, )
-			})
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { kernel::ffi::LockResource(hres_loaded.0) },
+			|ptr| unsafe {
+				std::slice::from_raw_parts(ptr as *const _ as _, sz as _)
+			},
+		)
 	}
 
 	/// [`SizeofResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-sizeofresource)

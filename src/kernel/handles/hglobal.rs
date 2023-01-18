@@ -4,7 +4,8 @@ use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::guard::HglobalGuard;
 use crate::kernel::privs::{
-	bool_to_sysresult, GMEM_INVALID_HANDLE, replace_handle_value,
+	bool_to_sysresult, GMEM_INVALID_HANDLE, ptr_to_sysresult,
+	replace_handle_value,
 };
 use crate::prelude::Handle;
 
@@ -31,9 +32,10 @@ pub trait kernel_Hglobal: Handle {
 	fn GlobalAlloc(
 		flags: co::GMEM, num_bytes: usize) -> SysResult<HglobalGuard>
 	{
-		unsafe { kernel::ffi::GlobalAlloc(flags.0, num_bytes).as_mut() }
-			.map(|ptr| HglobalGuard { handle: HGLOBAL(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { kernel::ffi::GlobalAlloc(flags.0, num_bytes) },
+			|ptr| HglobalGuard { handle: HGLOBAL(ptr) },
+		)
 	}
 
 	/// [`GlobalFlags`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalflags)
@@ -58,11 +60,12 @@ pub trait kernel_Hglobal: Handle {
 	#[must_use]
 	fn GlobalLock(&self) -> SysResult<&mut [u8]> {
 		let mem_sz = self.GlobalSize()?;
-		unsafe { kernel::ffi::GlobalLock(self.as_ptr()).as_mut() }
-			.map(|ptr| unsafe {
+		ptr_to_sysresult(
+			unsafe { kernel::ffi::GlobalLock(self.as_ptr()) },
+			|ptr| unsafe {
 				std::slice::from_raw_parts_mut(ptr as *mut _ as *mut _, mem_sz as _)
-			})
-			.ok_or_else(|| GetLastError())
+			},
+		)
 	}
 
 	/// [`GlobalReAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalrealloc)
@@ -74,12 +77,13 @@ pub trait kernel_Hglobal: Handle {
 	fn GlobalReAlloc(&self,
 		num_bytes: usize, flags: co::GMEM) -> SysResult<()>
 	{
-		unsafe {
-			kernel::ffi::GlobalReAlloc(self.as_ptr(), num_bytes, flags.0).as_mut()
-				.map(|ptr| {
-					replace_handle_value(self, Self::from_ptr(ptr));
-				})
-		}.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				kernel::ffi::GlobalReAlloc(self.as_ptr(), num_bytes, flags.0)
+			}, |ptr| {
+				replace_handle_value(self, unsafe { Self::from_ptr(ptr) });
+			},
+		)
 	}
 
 	/// [`GlobalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize)

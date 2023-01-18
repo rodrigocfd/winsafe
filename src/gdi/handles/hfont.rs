@@ -4,6 +4,7 @@ use crate::{co, gdi};
 use crate::gdi::decl::LOGFONT;
 use crate::gdi::guard::GdiObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult, WString};
+use crate::kernel::privs::ptr_to_sysresult;
 use crate::prelude::GdiObject;
 use crate::user::decl::SIZE;
 
@@ -35,27 +36,30 @@ pub trait gdi_Hfont: GdiObject {
 		quality: co::QUALITY, pitch_and_family: co::PITCH,
 		face_name: &str) -> SysResult<GdiObjectGuard<HFONT>>
 	{
-		unsafe {
-			gdi::ffi::CreateFontW(
-				sz.cy, sz.cx, escapement, orientation,
-				weight.0 as _,
-				italic as _, underline as _, strike_out as _,
-				char_set.0 as _,
-				out_precision.0 as _, clip_precision.0 as _,
-				quality.0 as _, pitch_and_family.0 as _,
-				WString::from_str(face_name).as_ptr(),
-			).as_mut()
-		}.map(|ptr| GdiObjectGuard { handle: HFONT(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				gdi::ffi::CreateFontW(
+					sz.cy, sz.cx, escapement, orientation,
+					weight.0 as _,
+					italic as _, underline as _, strike_out as _,
+					char_set.0 as _,
+					out_precision.0 as _, clip_precision.0 as _,
+					quality.0 as _, pitch_and_family.0 as _,
+					WString::from_str(face_name).as_ptr(),
+				)
+			},
+			|ptr| GdiObjectGuard { handle: HFONT(ptr) },
+		)
 	}
 
 	/// [`CreateFontIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirectw)
 	/// static method.
 	#[must_use]
 	fn CreateFontIndirect(lf: &LOGFONT) -> SysResult<GdiObjectGuard<HFONT>> {
-		unsafe { gdi::ffi::CreateFontIndirectW(lf as *const _ as _).as_mut() }
-			.map(|ptr| GdiObjectGuard { handle: HFONT(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { gdi::ffi::CreateFontIndirectW(lf as *const _ as _) },
+			|ptr| GdiObjectGuard { handle: HFONT(ptr) },
+		)
 	}
 
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
@@ -77,8 +81,9 @@ pub trait gdi_Hfont: GdiObject {
 	/// static method.
 	#[must_use]
 	fn GetStockObject(sf: co::STOCK_FONT) -> SysResult<HFONT> {
-		unsafe { gdi::ffi::GetStockObject(sf.0).as_mut() }
-			.map(|ptr| HFONT(ptr))
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe { gdi::ffi::GetStockObject(sf.0) },
+			|ptr| HFONT(ptr),
+		)
 	}
 }

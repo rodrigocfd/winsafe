@@ -4,6 +4,7 @@ use crate::gdi;
 use crate::gdi::decl::BITMAP;
 use crate::gdi::guard::GdiObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
+use crate::kernel::privs::ptr_to_sysresult;
 use crate::prelude::GdiObject;
 use crate::user::decl::{HBITMAP, SIZE};
 
@@ -26,12 +27,13 @@ pub trait gdi_Hbitmap: GdiObject {
 		sz: SIZE, num_planes: u32,
 		bit_count: u32, bits: *mut u8) -> SysResult<GdiObjectGuard<HBITMAP>>
 	{
-		unsafe {
-			gdi::ffi::CreateBitmap(
-				sz.cx, sz.cy, num_planes, bit_count, bits as _,
-			).as_mut()
-		}.map(|ptr| GdiObjectGuard { handle: HBITMAP(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				gdi::ffi::CreateBitmap(
+					sz.cx, sz.cy, num_planes, bit_count, bits as _)
+			},
+			|ptr| GdiObjectGuard { handle: HBITMAP(ptr) },
+		)
 	}
 
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)

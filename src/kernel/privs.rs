@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::kernel::ffi_types::BOOL;
+use crate::kernel::ffi_types::{BOOL, HANDLE};
 use crate::prelude::Handle;
 
 pub(crate) const GMEM_INVALID_HANDLE: u32 = 0x8000;
@@ -31,6 +31,17 @@ pub(crate) fn bool_to_sysresult(expr: BOOL) -> SysResult<()> {
 	}
 }
 
+/// If pointer is null, yields `Err(GetLastError)`, otherwise `Ok(op(ptr))`.
+pub(crate) fn ptr_to_sysresult<U, F>(ptr: HANDLE, op: F) -> SysResult<U>
+	where F: FnOnce(HANDLE) -> U,
+{
+	if ptr.is_null() {
+		Err(GetLastError())
+	} else {
+		Ok(op(ptr))
+	}
+}
+
 /// Forcibly replaces the underlying handle value.
 pub(crate) fn replace_handle_value<H>(h: &H, new: H)
 	where H: Handle,
@@ -38,7 +49,7 @@ pub(crate) fn replace_handle_value<H>(h: &H, new: H)
 	*unsafe { &mut *(h as *const H as *mut H) } = new;
 }
 
-/// Converts a string to a ISO-8859-1 null-terminated byte array.
+/// Converts a string to an ISO-8859-1 null-terminated byte array.
 pub(crate) fn str_to_iso88591(s: &str) -> Vec<u8> {
 	s.chars().map(|ch| ch as u8)
 		.chain(std::iter::once(0)) // append a terminating null

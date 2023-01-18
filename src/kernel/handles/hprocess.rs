@@ -7,7 +7,9 @@ use crate::kernel::decl::{
 };
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::guard::{HandleGuard, ProcessInformationGuard};
-use crate::kernel::privs::{bool_to_sysresult, INFINITE, MAX_PATH};
+use crate::kernel::privs::{
+	bool_to_sysresult, INFINITE, MAX_PATH, ptr_to_sysresult,
+};
 use crate::prelude::Handle;
 
 impl_handle! { HPROCESS;
@@ -216,14 +218,16 @@ pub trait kernel_Hprocess: Handle {
 		inherit_handle: bool,
 		process_id: u32) -> SysResult<HandleGuard<HPROCESS>>
 	{
-		unsafe {
-			kernel::ffi::OpenProcess(
-				desired_access.0,
-				inherit_handle as _,
-				process_id,
-			).as_mut()
-		}.map(|ptr| HandleGuard { handle: HPROCESS(ptr) })
-			.ok_or_else(|| GetLastError())
+		ptr_to_sysresult(
+			unsafe {
+				kernel::ffi::OpenProcess(
+					desired_access.0,
+					inherit_handle as _,
+					process_id,
+				)
+			},
+			|ptr| HandleGuard { handle: HPROCESS(ptr) },
+		)
 	}
 
 	/// [`OpenProcessToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken)
