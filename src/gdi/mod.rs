@@ -2,13 +2,12 @@
 
 pub(in crate::gdi) mod ffi;
 pub(crate) mod privs;
+pub mod co;
+pub mod messages;
 
 mod funcs;
 mod handles;
 mod structs;
-
-pub mod co;
-pub mod messages;
 
 pub mod decl {
 	pub use super::funcs::*;

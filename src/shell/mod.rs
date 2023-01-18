@@ -2,14 +2,13 @@
 
 pub(in crate::shell) mod ffi;
 pub(crate) mod privs;
+pub mod co;
+pub mod messages;
 
 mod com_interfaces;
 mod funcs;
 mod handles;
 mod structs;
-
-pub mod co;
-pub mod messages;
 
 pub mod decl {
 	pub use super::com_interfaces::decl::*;

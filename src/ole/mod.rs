@@ -2,14 +2,13 @@
 
 pub(in crate::ole) mod ffi;
 pub(crate) mod privs;
+pub mod co;
 
 mod aliases;
 mod com_interfaces;
 mod funcs;
 mod handles;
 mod structs;
-
-pub mod co;
 
 pub mod decl {
 	pub use super::aliases::*;

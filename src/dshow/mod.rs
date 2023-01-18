@@ -1,9 +1,9 @@
 #![cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 
+pub mod co;
+
 mod com_interfaces;
 mod structs;
-
-pub mod co;
 
 pub mod decl {
 	pub use super::com_interfaces::decl::*;

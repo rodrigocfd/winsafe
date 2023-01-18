@@ -3,6 +3,7 @@
 pub(in crate::kernel) mod ffi;
 pub(crate) mod ffi_types;
 pub(crate) mod privs;
+pub mod co;
 
 mod aliases;
 mod co_traits;
@@ -11,8 +12,6 @@ mod funcs;
 mod handles;
 mod structs;
 mod utilities;
-
-pub mod co;
 
 pub mod decl {
 	pub use super::aliases::*;

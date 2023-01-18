@@ -2,15 +2,14 @@
 
 pub(in crate::comctl) mod ffi;
 pub(crate) mod privs;
+pub mod co;
+pub mod messages;
 
 mod aliases;
 mod enums;
 mod funcs;
 mod handles;
 mod structs;
-
-pub mod co;
-pub mod messages;
 
 pub mod decl {
 	pub use super::aliases::*;

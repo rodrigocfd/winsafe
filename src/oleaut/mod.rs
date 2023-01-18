@@ -1,12 +1,11 @@
 #![cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 
 pub(in crate::oleaut) mod ffi;
+pub mod co;
 
 mod com_interfaces;
 mod funcs;
 mod structs;
-
-pub mod co;
 
 pub mod decl {
 	pub use super::com_interfaces::decl::*;
