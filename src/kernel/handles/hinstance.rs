@@ -5,6 +5,7 @@ use crate::kernel::decl::{
 	GetLastError, HRSRC, HRSRCMEM, IdStr, LANGID, RtStr, SysResult, WString,
 };
 use crate::kernel::ffi_types::BOOL;
+use crate::kernel::guard::HinstanceGuard;
 use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, str_to_iso88591};
 use crate::prelude::Handle;
 
@@ -277,16 +278,6 @@ pub trait kernel_Hinstance: Handle {
 			sz => Ok(sz)
 		}
 	}
-}
-
-//------------------------------------------------------------------------------
-
-handle_guard! { HinstanceGuard: HINSTANCE;
-	kernel::ffi::FreeLibrary;
-	/// RAII implementation for [`HINSTANCE`](crate::HINSTANCE) which
-	/// automatically calls
-	/// [`FreeLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary)
-	/// when the object goes out of scope.
 }
 
 //------------------------------------------------------------------------------

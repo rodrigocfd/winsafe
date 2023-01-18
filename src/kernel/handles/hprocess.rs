@@ -1,14 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use std::ops::Deref;
-
 use crate::{co, kernel};
 use crate::kernel::decl::{
 	FILETIME, GetLastError, HACCESSTOKEN, PROCESS_INFORMATION,
 	SECURITY_ATTRIBUTES, STARTUPINFO, SysResult, WString,
 };
 use crate::kernel::ffi_types::BOOL;
-use crate::kernel::guard::HandleGuard;
+use crate::kernel::guard::{HandleGuard, ProcessInformationGuard};
 use crate::kernel::privs::{bool_to_sysresult, INFINITE, MAX_PATH};
 use crate::prelude::Handle;
 
@@ -283,34 +281,5 @@ pub trait kernel_Hprocess: Handle {
 			co::WAIT::FAILED => Err(GetLastError()),
 			wait => Ok(wait),
 		}
-	}
-}
-
-//------------------------------------------------------------------------------
-
-/// RAII implementation for [`PROCESS_INFORMATION`](crate::PROCESS_INFORMATION)
-/// which automatically calls
-/// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
-/// on `hProcess` and `hThread` fields when the object goes out of scope.
-pub struct ProcessInformationGuard {
-	pub(crate) pi: PROCESS_INFORMATION,
-}
-
-impl Drop for ProcessInformationGuard {
-	fn drop(&mut self) {
-		if let Some(h) = self.pi.hProcess.as_opt() {
-			unsafe { kernel::ffi::CloseHandle(h.as_ptr()); } // ignore errors
-		}
-		if let Some(h) = self.pi.hThread.as_opt() {
-			unsafe { kernel::ffi::CloseHandle(h.as_ptr()); }
-		}
-	}
-}
-
-impl Deref for ProcessInformationGuard {
-	type Target = PROCESS_INFORMATION;
-
-	fn deref(&self) -> &Self::Target {
-		&self.pi
 	}
 }

@@ -11,11 +11,6 @@ pub mod decl {
 	pub use super::hpen::HPEN;
 }
 
-pub mod guard {
-	pub use super::gdi_traits::GdiObjectGuard;
-	pub use super::hdc::{HdcDeleteGuard, SelectObjectGuard};
-}
-
 pub mod traits {
 	pub use super::gdi_traits::GdiObject;
 	pub use super::hbitmap::gdi_Hbitmap;

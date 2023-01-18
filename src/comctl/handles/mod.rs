@@ -10,10 +10,6 @@ pub mod decl {
 	}
 }
 
-pub mod guard {
-	pub use super::himagelist::HimagelistDragGuard;
-}
-
 pub mod traits {
 	pub use super::himagelist::comctl_Himagelist;
 	pub use super::hwnd::comctl_Hwnd;

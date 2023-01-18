@@ -53,17 +53,6 @@ pub mod decl {
 	}
 }
 
-pub mod guard {
-	pub use super::handle_traits::HandleGuard;
-	pub use super::hfile::HfileLockGuard;
-	pub use super::hfilemapview::HfilemapviewGuard;
-	pub use super::hfindfile::HfindfileGuard;
-	pub use super::hglobal::HglobalGuard;
-	pub use super::hinstance::HinstanceGuard;
-	pub use super::hprocess::ProcessInformationGuard;
-	pub use super::hupdatesrc::HupdatersrcGuard;
-}
-
 pub mod traits {
 	pub use super::haccesstoken::kernel_Haccesstoken;
 	pub use super::handle_traits::Handle;

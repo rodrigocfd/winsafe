@@ -2,6 +2,7 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult};
+use crate::kernel::guard::HglobalGuard;
 use crate::kernel::privs::{
 	bool_to_sysresult, GMEM_INVALID_HANDLE, replace_handle_value,
 };
@@ -96,14 +97,4 @@ pub trait kernel_Hglobal: Handle {
 	fn GlobalUnlock(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { kernel::ffi::GlobalUnlock(self.as_ptr()) })
 	}
-}
-
-//------------------------------------------------------------------------------
-
-handle_guard! { HglobalGuard: HGLOBAL;
-	kernel::ffi::GlobalFree;
-	/// RAII implementation for [`HGLOBAL`](crate::HGLOBAL) which automatically
-	/// calls
-	/// [`GlobalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalfree)
-	/// when the object goes out of scope.
 }

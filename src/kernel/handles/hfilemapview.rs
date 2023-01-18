@@ -1,6 +1,5 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel;
 use crate::prelude::Handle;
 
 impl_handle! { HFILEMAPVIEW;
@@ -77,14 +76,4 @@ pub trait kernel_Hfilemapview: Handle {
 	fn as_slice(&self, len: usize) -> &[u8] {
 		unsafe { std::slice::from_raw_parts(self.as_ptr() as _, len) }
 	}
-}
-
-//------------------------------------------------------------------------------
-
-handle_guard! { HfilemapviewGuard: HFILEMAPVIEW;
-	kernel::ffi::UnmapViewOfFile;
-	/// RAII implementation for [`HFILEMAPVIEW`](crate::HFILEMAPVIEW) which
-	/// automatically calls
-	/// [`UnmapViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-unmapviewoffile)
-	/// when the object goes out of scope.
 }

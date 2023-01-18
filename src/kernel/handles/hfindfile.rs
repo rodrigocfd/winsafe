@@ -2,6 +2,7 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult, WIN32_FIND_DATA, WString};
+use crate::kernel::guard::HfindfileGuard;
 use crate::prelude::Handle;
 
 impl_handle! { HFINDFILE;
@@ -68,14 +69,4 @@ pub trait kernel_Hfindfile: Handle {
 			_ => Ok(true),
 		}
 	}
-}
-
-//------------------------------------------------------------------------------
-
-handle_guard! { HfindfileGuard: HFINDFILE;
-	kernel::ffi::FindClose;
-	/// RAII implementation for [`HFINDFILE`](crate::HFINDFILE) which
-	/// automatically calls
-	/// [`FindClose`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findclose)
-	/// when the object goes out of scope.
 }

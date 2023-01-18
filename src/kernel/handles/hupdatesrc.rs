@@ -1,11 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use std::ops::Deref;
-
 use crate::kernel;
 use crate::kernel::decl::{
 	GetLastError, IdStr, LANGID, RtStr, SysResult, WString,
 };
+use crate::kernel::guard::HupdatersrcGuard;
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 
@@ -62,31 +61,5 @@ pub trait kernel_Hupdatersrc: Handle {
 				)
 			},
 		)
-	}
-}
-
-//------------------------------------------------------------------------------
-
-/// RAII implementation [`HUPDATERSRC`](crate::HUPDATERSRC) which automatically
-/// calls
-/// [`EndUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
-/// when the object goes out of scope.
-pub struct HupdatersrcGuard {
-	pub(crate) hupdatersrc: HUPDATERSRC,
-}
-
-impl Drop for HupdatersrcGuard {
-	fn drop(&mut self) {
-		if let Some(h) = self.hupdatersrc.as_opt() {
-			unsafe { kernel::ffi::EndUpdateResourceW(h.as_ptr(), false as _); } // ignore errors
-		}
-	}
-}
-
-impl Deref for HupdatersrcGuard {
-	type Target = HUPDATERSRC;
-
-	fn deref(&self) -> &Self::Target {
-		&self.hupdatersrc
 	}
 }

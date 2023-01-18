@@ -4,6 +4,7 @@ pub(in crate::kernel) mod ffi;
 pub(crate) mod ffi_types;
 pub(crate) mod privs;
 pub mod co;
+pub mod guard;
 
 mod aliases;
 mod co_traits;
@@ -20,10 +21,6 @@ pub mod decl {
 	pub use super::handles::decl::*;
 	pub use super::structs::*;
 	pub use super::utilities::*;
-}
-
-pub mod guard {
-	pub use super::handles::guard::*;
 }
 
 pub mod traits {

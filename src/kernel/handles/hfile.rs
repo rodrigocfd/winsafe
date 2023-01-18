@@ -5,7 +5,7 @@ use crate::kernel::decl::{
 	BY_HANDLE_FILE_INFORMATION, GetLastError, HFILEMAP, HIDWORD, LODWORD,
 	OVERLAPPED, SECURITY_ATTRIBUTES, SysResult, WString,
 };
-use crate::kernel::guard::HandleGuard;
+use crate::kernel::guard::{HandleGuard, HfileLockGuard};
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 
@@ -270,35 +270,5 @@ pub trait kernel_Hfile: Handle {
 				)
 			},
 		).map(|_| bytes_written)
-	}
-}
-
-//------------------------------------------------------------------------------
-
-/// RAII implementation for the [`HFILE`](crate::HFILE) lock which automatically
-/// calls
-/// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
-/// when the object goes out of scope.
-pub struct HfileLockGuard<'a, H>
-	where H: kernel_Hfile,
-{
-	pub(crate) hfile: &'a H,
-	pub(crate) offset: u64,
-	pub(crate) num_bytes_to_lock: u64,
-}
-
-impl<'a, H> Drop for HfileLockGuard<'a, H>
-	where H: kernel_Hfile,
-{
-	fn drop(&mut self) {
-		unsafe {
-			kernel::ffi::UnlockFile( // ignore errors
-				self.hfile.as_ptr(),
-				LODWORD(self.offset),
-				HIDWORD(self.offset),
-				LODWORD(self.num_bytes_to_lock),
-				HIDWORD(self.num_bytes_to_lock),
-			);
-		}
 	}
 }

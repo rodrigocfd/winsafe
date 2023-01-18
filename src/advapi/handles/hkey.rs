@@ -1,9 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use std::ops::Deref;
-
 use crate::{advapi, co};
 use crate::advapi::decl::RegistryValue;
+use crate::advapi::guard::HkeyGuard;
 use crate::advapi::privs::VALENT;
 use crate::kernel::decl::{FILETIME, SECURITY_ATTRIBUTES, SysResult, WString};
 use crate::prelude::Handle;
@@ -835,33 +834,6 @@ fn validate_retrieved_reg_val(
 	}
 
 	Ok(unsafe { RegistryValue::from_raw(buf, data_type1) })
-}
-
-//------------------------------------------------------------------------------
-
-/// RAII implementation for [`HKEY`](crate::HKEY) which automatically calls
-/// [`RegCloseKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
-/// when the object goes out of scope.
-pub struct HkeyGuard {
-	pub(crate) hkey: HKEY,
-}
-
-impl Drop for HkeyGuard {
-	fn drop(&mut self) {
-		if let Some(h) = self.hkey.as_opt() {
-			if h.0 < HKEY::CLASSES_ROOT.0 || h.0 > HKEY::PERFORMANCE_NLSTEXT.0 { // guard predefined keys
-				unsafe { advapi::ffi::RegCloseKey(h.as_ptr()); } // ignore errors
-			}
-		}
-	}
-}
-
-impl Deref for HkeyGuard {
-	type Target = HKEY;
-
-	fn deref(&self) -> &Self::Target {
-		&self.hkey
-	}
 }
 
 //------------------------------------------------------------------------------

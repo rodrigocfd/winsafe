@@ -5,6 +5,7 @@ use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::privs::replace_handle_value;
 use crate::prelude::Handle;
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
+use crate::user::guard::HdwpGuard;
 
 impl_handle! { HDWP;
 	/// Handle to a
@@ -59,13 +60,4 @@ pub trait user_Hdwp: Handle {
 			GetLastError()
 		})
 	}
-}
-
-//------------------------------------------------------------------------------
-
-handle_guard! { HdwpGuard: HDWP;
-	user::ffi::EndDeferWindowPos;
-	/// RAII implementation for [`HDWP`](crate::HDWP) which automatically calls
-	/// [`EndDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddeferwindowpos)
-	/// when the object goes out of scope.
 }

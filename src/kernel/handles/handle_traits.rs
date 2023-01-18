@@ -1,9 +1,6 @@
 #![allow(non_snake_case)]
 
 use std::{fmt, hash};
-use std::ops::Deref;
-
-use crate::kernel;
 
 /// A native
 /// [handle](https://learn.microsoft.com/en-us/windows/win32/sysinfo/handles-and-objects),
@@ -80,37 +77,5 @@ pub trait Handle: Sized
 		} else {
 			Some(self)
 		}
-	}
-}
-
-//------------------------------------------------------------------------------
-
-/// RAII implementation for a [`Handle`](crate::prelude::Handle) which
-/// automatically calls
-/// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
-/// when the object goes out of scope.
-pub struct HandleGuard<T>
-	where T: Handle,
-{
-	pub(crate) handle: T,
-}
-
-impl<T> Drop for HandleGuard<T>
-	where T: Handle,
-{
-	fn drop(&mut self) {
-		if let Some(h) = self.handle.as_opt() {
-			unsafe { kernel::ffi::CloseHandle(h.as_ptr()); } // ignore errors
-		}
-	}
-}
-
-impl<T> Deref for HandleGuard<T>
-	where T: Handle,
-{
-	type Target = T;
-
-	fn deref(&self) -> &Self::Target {
-		&self.handle
 	}
 }
