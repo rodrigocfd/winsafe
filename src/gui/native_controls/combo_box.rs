@@ -85,6 +85,31 @@ impl ComboBox {
 	///
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `ComboBox` in an event closure.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{gui, POINT};
+	///
+	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	///
+	/// let cmb = gui::ComboBox::new(
+	///     &wnd,
+	///     gui::ComboBoxOpts {
+	///         position: POINT::new(10, 10),
+	///         width: 140,
+	///         items: vec![
+	///             "Avocado".to_owned(),
+	///             "Banana".to_owned(),
+	///             "Grape".to_owned(),
+	///             "Orange".to_owned(),
+	///         ],
+	///         ..Default::default()
+	///     },
+	/// );
+	/// ```
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ComboBoxOpts) -> ComboBox {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };

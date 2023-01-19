@@ -86,6 +86,25 @@ impl Button {
 	///
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `Button` in an event closure.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{gui, POINT};
+	///
+	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	///
+	/// let btn = gui::Button::new(
+	///     &wnd,
+	///     gui::ButtonOpts {
+	///         position: POINT::new(10, 10),
+	///         text: "&Click me".to_owned(),
+	///         ..Default::default()
+	///     },
+	/// );
+	/// ```
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ButtonOpts) -> Button {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };

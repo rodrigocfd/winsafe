@@ -87,6 +87,25 @@ impl Edit {
 	///
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create an `Edit` in an event closure.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{gui, POINT};
+	///
+	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	///
+	/// let txt = gui::Edit::new(
+	///     &wnd,
+	///     gui::EditOpts {
+	///         position: POINT::new(10, 10),
+	///         width: 120,
+	///         ..Default::default()
+	///     },
+	/// );
+	/// ```
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: EditOpts) -> Edit {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
