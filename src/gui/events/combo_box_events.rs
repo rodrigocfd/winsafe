@@ -64,19 +64,21 @@ impl ComboBoxEvents {
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, AnyResult};
 		///
-		/// let cmb: gui::ComboBox; // initialized somewhere
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// let cmb: gui::ComboBox;
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		/// # let cmb = gui::ComboBox::new(&wnd, gui::ComboBoxOpts::default());
 		///
-		/// cmb.on().cbn_sel_change({
-		///     let cmb = cmb.clone(); // to pass into the closure
+		/// let cmb2 = cmb.clone(); // to pass into the closure
+		///
+		/// cmb.on().cbn_sel_change(
 		///     move || -> AnyResult<()> {
-		///         if let Some(sel_text) = cmb.items().selected_text() {
+		///         if let Some(sel_text) = cmb2.items().selected_text() {
 		///             println!("New selected text: {}", sel_text);
 		///         }
 		///         Ok(())
-		///     }
-		/// });
+		///     },
+		/// );
 		/// ```
 	}
 

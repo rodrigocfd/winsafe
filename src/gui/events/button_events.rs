@@ -40,17 +40,17 @@ impl ButtonEvents {
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, AnyResult};
 		///
-		/// let btn: gui::Button; // initialized somewhere
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// let btn: gui::Button;
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		/// # let btn = gui::Button::new(&wnd, gui::ButtonOpts::default());
 		///
-		/// btn.on().bn_clicked({
-		///     let btn = btn.clone(); // to pass into the closure
+		/// btn.on().bn_clicked(
 		///     move || -> AnyResult<()> {
-		///         println!("HWND: {}", btn.hwnd());
+		///         println!("Clicked.");
 		///         Ok(())
-		///     }
-		/// });
+		///     },
+		/// );
 		/// ```
 	}
 

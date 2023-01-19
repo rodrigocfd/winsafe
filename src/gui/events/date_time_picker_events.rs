@@ -31,6 +31,25 @@ impl DateTimePickerEvents {
 	pub_fn_nfy_withparm_noret! { dtn_date_time_change, co::DTN::DATETIMECHANGE, NMDATETIMECHANGE,
 		/// [`DTN_DATETIMECHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/dtn-datetimechange)
 		/// notification.
+		///
+		/// # Examples
+		///
+		/// ```rust,no_run
+		/// use winsafe::prelude::*;
+		/// use winsafe::{gui, AnyResult, NMDATETIMECHANGE};
+		///
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// let dtp: gui::DateTimePicker;
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+		/// # let dtp = gui::DateTimePicker::new(&wnd, gui::DateTimePickerOpts::default());
+		///
+		/// dtp.on().dtn_date_time_change(
+		///     move |p: &NMDATETIMECHANGE| -> AnyResult<()> {
+		///         println!("{}-{}-{}", p.st.wYear, p.st.wMonth, p.st.wDay);
+		///         Ok(())
+		///     },
+		/// );
+		/// ```
 	}
 
 	pub_fn_nfy_noparm_noret! { dtn_drop_down, co::DTN::DROPDOWN,

@@ -59,9 +59,28 @@ impl ListViewEvents {
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_boolret! { lvn_delete_all_items, co::LVN::DELETEALLITEMS, NMLISTVIEW,
+	pub_fn_nfy_noparm_boolret! { lvn_delete_all_items, co::LVN::DELETEALLITEMS,
 		/// [`LVN_DELETEALLITEMS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-deleteallitems)
 		/// notification.
+		///
+		/// # Examples
+		///
+		/// ```rust,no_run
+		/// use winsafe::prelude::*;
+		/// use winsafe::{gui, AnyResult};
+		///
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// let list: gui::ListView;
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+		/// # let list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
+		///
+		/// list.on().lvn_delete_all_items(
+		///     move || -> AnyResult<bool> {
+		///         println!("All items deleted.");
+		///         Ok(true) // supress subsequent WM_DELETEITEM notifications
+		///     },
+		/// );
+		/// ```
 	}
 
 	pub_fn_nfy_withparm_noret! { lvn_delete_item, co::LVN::DELETEITEM, NMLISTVIEW,
@@ -74,14 +93,17 @@ impl ListViewEvents {
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, AnyResult, NMLISTVIEW};
 		///
-		/// let list: gui::ListView; // initialized somewhere
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// let list: gui::ListView;
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		/// # let list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
 		///
-		/// list.on().lvn_delete_item(|p: &NMLISTVIEW| -> AnyResult<()> {
-		///     println!("Item: {}", p.iItem);
-		///     Ok(())
-		/// });
+		/// list.on().lvn_delete_item(
+		///     move |p: &NMLISTVIEW| -> AnyResult<()> {
+		///         println!("Item: {}", p.iItem);
+		///         Ok(())
+		///     },
+		/// );
 		/// ```
 	}
 
@@ -144,14 +166,17 @@ impl ListViewEvents {
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, AnyResult, NMLISTVIEW};
 		///
-		/// let list: gui::ListView; // initialized somewhere
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// let list: gui::ListView;
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		/// # let list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
 		///
-		/// list.on().lvn_item_changed(|p: &NMLISTVIEW| -> AnyResult<()> {
-		///     println!("Item: {}", p.iItem);
-		///     Ok(())
-		/// });
+		/// list.on().lvn_item_changed(
+		///     move |p: &NMLISTVIEW| -> AnyResult<()> {
+		///         println!("Item: {}", p.iItem);
+		///         Ok(())
+		///     },
+		/// );
 		/// ```
 	}
 
@@ -170,16 +195,19 @@ impl ListViewEvents {
 		/// use winsafe::prelude::*;
 		/// use winsafe::{co, gui, AnyResult, NMLVKEYDOWN};
 		///
-		/// let list: gui::ListView; // initialized somewhere
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// let list: gui::ListView;
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		/// # let list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
 		///
-		/// list.on().lvn_key_down(|p: &NMLVKEYDOWN| -> AnyResult<()> {
-		///     if p.wVKey == co::VK::DELETE {
-		///         println!("DEL key was pressed.");
-		///     }
-		///     Ok(())
-		/// });
+		/// list.on().lvn_key_down(
+		///     move |p: &NMLVKEYDOWN| -> AnyResult<()> {
+		///         if p.wVKey == co::VK::DELETE {
+		///             println!("DEL key was pressed.");
+		///         }
+		///         Ok(())
+		///     },
+		/// );
 		/// ```
 	}
 

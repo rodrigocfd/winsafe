@@ -105,13 +105,12 @@ pub trait GuiEvents {
 	///
 	/// let CUSTOM_MSG = co::WM::from(0x1234);
 	///
-	/// wnd.on().wm(CUSTOM_MSG, {
-	///     let wnd = wnd.clone(); // to pass into the closure
+	/// wnd.on().wm(CUSTOM_MSG,
 	///     move |p: msg::WndMsg| -> AnyResult<Option<isize>> {
-	///         println!("HWND: {}, msg ID: {}", wnd.hwnd(), p.msg_id);
+	///         println!("Msg ID: {}", p.msg_id);
 	///         Ok(Some(0))
-	///     }
-	/// });
+	///     },
+	/// );
 	/// ```
 	fn wm<F>(&self, ident: co::WM, func: F)
 		where F: Fn(WndMsg) -> AnyResult<Option<isize>> + 'static;
@@ -195,17 +194,15 @@ pub trait GuiEvents {
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	///
-	/// wnd.on().wm_create({
-	///     let wnd = wnd.clone(); // to pass into the closure
+	/// wnd.on().wm_create(
 	///     move |p: msg::wm::Create| -> AnyResult<i32> {
-	///         println!("HWND: {}, client area: {}x{}",
-	///             wnd.hwnd(),
+	///         println!("Client area: {}x{}",
 	///             p.createstruct.cx,
 	///             p.createstruct.cy,
 	///         );
 	///         Ok(0)
-	///     }
-	/// });
+	///     },
+	/// );
 	/// ```
 	fn wm_create<F>(&self, func: F)
 		where F: Fn(wm::Create) -> AnyResult<i32> + 'static,
@@ -620,16 +617,18 @@ pub trait GuiEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
-		/// wnd.on().wm_paint({
-		///     let wnd = wnd.clone(); // to pass into the closure
+		/// let wnd2 = wnd.clone(); // to pass into the closure
+		///
+		/// wnd.on().wm_paint(
 		///     move || -> AnyResult<()> {
-		///         let hdc = wnd.hwnd().BeginPaint()?; // EndPaint() called automatically
+		///         // The returned hdc is a guard which calls EndPaint() automatically
+		///         let hdc = wnd2.hwnd().BeginPaint()?;
 		///
 		///         // hdc painting...
 		///
 		///         Ok(())
-		///     }
-		/// });
+		///     },
+		/// );
 		/// ```
 	}
 
@@ -719,17 +718,15 @@ pub trait GuiEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
-		/// wnd.on().wm_size({
-		///     let wnd = wnd.clone(); // to pass into the closure
+		/// wnd.on().wm_size(
 		///     move |p: msg::wm::Size| -> AnyResult<()> {
-		///         println!("HWND: {}, client area: {}x{}",
-		///             wnd.hwnd(),
+		///         println!("Client area: {}x{}",
 		///             p.client_area.cx,
 		///             p.client_area.cy,
 		///         );
 		///         Ok(())
-		///     }
-		/// });
+		///     },
+		/// );
 		/// ```
 	}
 

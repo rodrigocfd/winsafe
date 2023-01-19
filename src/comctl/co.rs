@@ -2282,6 +2282,15 @@ const_ordinary! { TTI: i32;
 	ERROR_LARGE 6
 }
 
+const_ordinary! { TVC: u32;
+	/// [`NMTREEVIEW`](crate::NMTREEVIEW) `action` (`u32`).
+	=>
+	=>
+	UNKNOWN 0x0000
+	BYMOUSE 0x0001
+	BYKEYBOARD 0x0002
+}
+
 const_ordinary! { TVE: u32;
 	/// [`tvm::Expand`](crate::msg::tvm::Expand) `action` (`u32`).
 	=>

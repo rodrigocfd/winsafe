@@ -48,6 +48,30 @@ impl TreeViewEvents {
 	pub_fn_nfy_withparm_noret! { tvn_sel_changed, co::TVN::SELCHANGED, NMTREEVIEW,
 		/// [`TVN_SELCHANGED`](https://learn.microsoft.com/en-us/windows/win32/controls/tvn-selchanged)
 		/// notification.
+		///
+		/// # Examples
+		///
+		/// ```rust,no_run
+		/// use winsafe::prelude::*;
+		/// use winsafe::{co, gui, AnyResult, NMTREEVIEW};
+		///
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// let tree: gui::TreeView;
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+		/// # let tree = gui::TreeView::new(&wnd, gui::TreeViewOpts::default());
+		///
+		/// tree.on().tvn_sel_changed(
+		///     move |p: &NMTREEVIEW| -> AnyResult<()> {
+		///         println!(
+		///             "Old item: {} - new item: {} - action: {}",
+		///             p.itemOld.pszText().unwrap(),
+		///             p.itemNew.pszText().unwrap(),
+		///             co::TVC::from(p.action),
+		///         );
+		///         Ok(())
+		///     },
+		/// );
+		/// ```
 	}
 
 	pub_fn_nfy_withparm_boolret! { tvn_sel_changing, co::TVN::SELCHANGING, NMTREEVIEW,

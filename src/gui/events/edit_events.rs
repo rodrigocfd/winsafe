@@ -39,17 +39,19 @@ impl EditEvents {
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, AnyResult};
 		///
-		/// let txt: gui::Edit; // initialized somewhere
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// let txt: gui::Edit;
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		/// # let txt = gui::Edit::new(&wnd, gui::EditOpts::default());
 		///
-		/// txt.on().en_change({
-		///     let txt = txt.clone(); // to pass into the closure
+		/// let txt2 = txt.clone(); // to pass into the closure
+		///
+		/// txt.on().en_change(
 		///     move || -> AnyResult<()> {
-		///         println!("Text: {}", txt.hwnd().GetWindowText()?);
+		///         println!("Text: {}", txt2.text());
 		///         Ok(())
-		///     }
-		/// });
+		///     },
+		/// );
 		/// ```
 	}
 
