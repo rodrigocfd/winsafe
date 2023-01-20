@@ -27,7 +27,7 @@ pub(in crate::gui) static mut QUIT_ERROR: Option<MsgError> = None;
 pub(in crate::gui) fn post_quit_error(
 	src_msg: WndMsg, err: Box<dyn Error + Send + Sync>)
 {
-	unsafe { QUIT_ERROR = Some(MsgError::new(src_msg, err)); } // store the error, so the main window/dialog can grab it
+	unsafe { QUIT_ERROR = Some(MsgError::new(src_msg, err)); } // store the error, so Base::run_main_loop() can grab it
 	PostQuitMessage(-1); // this -1 will be discarded in the main loop, anyway
 }
 

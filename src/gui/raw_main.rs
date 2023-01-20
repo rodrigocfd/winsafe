@@ -5,7 +5,6 @@ use std::sync::Arc;
 use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::WindowEventsAll;
-use crate::gui::msg_error::MsgResult;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
@@ -72,7 +71,7 @@ impl RawMain {
 	}
 
 	pub(in crate::gui) fn run_main(&self,
-		cmd_show: Option<co::SW>) -> MsgResult<i32>
+		cmd_show: Option<co::SW>) -> AnyResult<i32>
 	{
 		let opts = &self.0.opts;
 

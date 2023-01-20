@@ -106,6 +106,7 @@ impl ComboBox {
 	///             "Grape".to_owned(),
 	///             "Orange".to_owned(),
 	///         ],
+	///         selected_item: Some(0),
 	///         ..Default::default()
 	///     },
 	/// );

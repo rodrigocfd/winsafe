@@ -30,7 +30,7 @@ mod window_modal;
 pub mod events;
 
 pub use layout_arranger::{Horz, Vert};
-pub use msg_error::{MsgError, MsgResult};
+pub use msg_error::MsgError;
 pub use native_controls::*;
 pub use raw_base::{Brush, Cursor, Icon};
 pub use raw_control::WindowControlOpts;

@@ -1,31 +1,10 @@
 use crate::msg::WndMsg;
 
-/// A [`Result` alias](crate#errors-and-result-aliases) for errors from window
-/// message handling, which returns a [`MsgError`](crate::gui::MsgError) on
-/// failure.
-///
-/// # Examples
-///
-/// Converting into the generic [`AnyResult`](crate::AnyResult):
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, AnyResult, gui::MsgResult};
-///
-/// let run_result: MsgResult<()> = Ok(());
-///
-/// let err_result: AnyResult<()> = run_result.map_err(|err| err.into());
-/// ```
-pub type MsgResult<T> = Result<T, MsgError>;
-
 /// An error that occurred within a closure of a window message handling.
 /// Usually these errors are thrown by the user closures.
 ///
 /// This error types wraps the actual user error along with the parameters of
 /// the message where the error happened.
-///
-/// The [`Result` alias](crate#errors-and-result-aliases) for this type is
-/// [`MsgResult`](crate::gui::MsgResult).
 pub struct MsgError {
 	src_msg: WndMsg,
 	source: Box<dyn std::error::Error + Send + Sync>,

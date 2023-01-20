@@ -3,7 +3,6 @@ use std::ptr::NonNull;
 use crate::co;
 use crate::gui::events::{ProcessResult, WindowEventsAll};
 use crate::gui::layout_arranger::{Horz, LayoutArranger, Vert};
-use crate::gui::msg_error::MsgResult;
 use crate::gui::privs::{post_quit_error, QUIT_ERROR};
 use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::{AnyResult, HINSTANCE, SysResult};
@@ -187,18 +186,19 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn run_main_loop(
-		haccel: Option<&HACCEL>) -> MsgResult<i32>
+		haccel: Option<&HACCEL>) -> AnyResult<i32>
 	{
 		let mut msg = MSG::default();
 
 		loop {
-			if !GetMessage(&mut msg, None, 0, 0).unwrap() {
+			if !GetMessage(&mut msg, None, 0, 0)? {
 				// WM_QUIT was sent, gracefully terminate the program.
 				// wParam has the program exit code.
 				// https://learn.microsoft.com/en-us/windows/win32/winmsg/using-messages-and-message-queues
+				// PostQuitMessage() may have been called internally, so check QUIT_ERROR.
 				return match unsafe { QUIT_ERROR.take() } {
-					Some(rt_err) => Err(rt_err),
-					None => Ok(msg.wParam as _),
+					Some(msg_err) => Err(msg_err.into()), // MsgError wrapped into AnyResult
+					None => Ok(msg.wParam as _), // successfull exit with ret code
 				};
 			}
 

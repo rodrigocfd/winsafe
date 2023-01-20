@@ -4,7 +4,6 @@ use crate::co;
 use crate::comctl::decl::InitCommonControls;
 use crate::gui::dlg_main::DlgMain;
 use crate::gui::events::WindowEventsAll;
-use crate::gui::msg_error::MsgResult;
 use crate::gui::privs::{create_ui_font, delete_ui_font};
 use crate::gui::raw_main::{RawMain, WindowMainOpts};
 use crate::kernel::decl::{AnyResult, HPROCESS, IsWindowsVistaOrGreater};
@@ -117,7 +116,7 @@ impl WindowMain {
 	/// # Panics
 	///
 	/// Panics if the window is already created.
-	pub fn run_main(&self, cmd_show: Option<co::SW>) -> MsgResult<i32> {
+	pub fn run_main(&self, cmd_show: Option<co::SW>) -> AnyResult<i32> {
 		if IsWindowsVistaOrGreater().unwrap() {
 			SetProcessDPIAware().unwrap();
 		}
