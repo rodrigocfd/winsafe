@@ -6,7 +6,9 @@ use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::WindowEventsAll;
 use crate::gui::layout_arranger::{Horz, Vert};
-use crate::gui::privs::{multiply_dpi_or_dtu, paint_control_borders};
+use crate::gui::privs::{
+	auto_ctrl_id, multiply_dpi_or_dtu, paint_control_borders,
+};
 use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
 use crate::kernel::decl::{AnyResult, WString};
 use crate::prelude:: GuiEvents;
@@ -30,6 +32,8 @@ impl RawControl {
 		opts: WindowControlOpts) -> Self
 	{
 		let (horz, vert) = (opts.horz_resize, opts.vert_resize);
+		let opts = WindowControlOpts::define_ctrl_id(opts);
+
 		let new_self = Self(
 			Arc::pin(
 				Obj {
@@ -205,5 +209,14 @@ impl Default for WindowControlOpts {
 			horz_resize: Horz::None,
 			vert_resize: Vert::None,
 		}
+	}
+}
+
+impl WindowControlOpts {
+	fn define_ctrl_id(mut self) -> Self {
+		if self.ctrl_id == 0 {
+			self.ctrl_id = auto_ctrl_id();
+		}
+		self
 	}
 }

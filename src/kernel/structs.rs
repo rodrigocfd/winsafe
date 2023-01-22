@@ -71,6 +71,10 @@ impl GUID {
 	/// Creates a new `GUID` from a representative hex string, which can be
 	/// copied straight from standard `GUID` declarations.
 	///
+	/// # Panics
+	///
+	/// Panics if the string has an invalid format.
+	///
 	/// # Examples
 	///
 	/// ```rust,no_run
