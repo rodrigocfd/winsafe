@@ -459,6 +459,7 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn GetDlgCtrlID(&self) -> SysResult<u16> {
+		SetLastError(co::ERROR::SUCCESS);
 		match unsafe { user::ffi::GetDlgCtrlID(self.as_ptr()) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(0), // actual ID is zero
