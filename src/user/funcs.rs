@@ -492,6 +492,19 @@ pub fn GetSystemMetrics(index: co::SM) -> i32 {
 	unsafe { user::ffi::GetSystemMetrics(index.0) }
 }
 
+/// [`GetSystemMetricsForDpi`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetricsfordpi)
+/// function.
+#[must_use]
+pub fn GetSystemMetricsForDpi(index: co::SM, dpi: u32) -> SysResult<i32> {
+	match unsafe { user::ffi::GetSystemMetricsForDpi(index.0, dpi) } {
+		0 => match GetLastError() {
+			co::ERROR::SUCCESS => Ok(0), // actual value is zero
+			err => Err(err),
+		},
+		val => Ok(val),
+	}
+}
+
 /// [`InSendMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insendmessage)
 /// function.
 #[must_use]

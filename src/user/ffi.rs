@@ -115,6 +115,7 @@ extern_sys! { "user32";
 	GetSysColor(i32) -> u32
 	GetSystemMenu(HANDLE, BOOL) -> HANDLE
 	GetSystemMetrics(i32) -> i32
+	GetSystemMetricsForDpi(i32, u32) -> i32
 	GetTopWindow(HANDLE) -> HANDLE
 	GetUpdateRect(HANDLE, PVOID, BOOL) -> BOOL
 	GetUpdateRgn(HANDLE, HANDLE, BOOL) -> i32
