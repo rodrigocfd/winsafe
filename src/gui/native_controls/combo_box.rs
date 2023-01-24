@@ -98,7 +98,7 @@ impl ComboBox {
 	/// let cmb = gui::ComboBox::new(
 	///     &wnd,
 	///     gui::ComboBoxOpts {
-	///         position: POINT::new(10, 10),
+	///         position: (10, 10),
 	///         width: 140,
 	///         items: vec![
 	///             "Avocado".to_owned(),
@@ -179,7 +179,7 @@ impl ComboBox {
 
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
-				let mut pos = opts.position;
+				let mut pos = POINT::new(opts.position.0, opts.position.1);
 				let mut sz = SIZE::new(opts.width as _, 0);
 				multiply_dpi_or_dtu(
 					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
@@ -216,23 +216,24 @@ impl ComboBox {
 /// Options to create a [`ComboBox`](crate::gui::ComboBox) programmatically with
 /// [`ComboBox::new`](crate::gui::ComboBox::new).
 pub struct ComboBoxOpts {
-	/// Control position within parent client area, to be
+	/// Left and top position coordinates of control within parent's client
+	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
 	/// system DPI.
 	///
-	/// Defaults to 0 x 0.
-	pub position: POINT,
-	/// Control width, to be
+	/// Defaults to `(0, 0)`.
+	pub position: (i32, i32),
+	/// Control width to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the value is in Dialog Template Units;
 	/// otherwise in pixels, which will be multiplied to match current system
 	/// DPI.
 	///
-	/// Defaults to 120.
+	/// Defaults to `120`.
 	pub width: u32,
 	/// Combo box styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -283,7 +284,7 @@ pub struct ComboBoxOpts {
 impl Default for ComboBoxOpts {
 	fn default() -> Self {
 		Self {
-			position: POINT::new(0, 0),
+			position: (0, 0),
 			width: 120,
 			combo_box_style: co::CBS::DROPDOWNLIST,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,

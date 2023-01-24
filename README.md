@@ -126,7 +126,7 @@ impl MyWindow {
         let wnd = gui::WindowMain::new( // instantiate the window manager
             gui::WindowMainOpts {
                 title: "My window title".to_owned(),
-                size: SIZE::new(300, 150),
+                size: (300, 150),
                 ..Default::default() // leave all other options as default
             },
         );
@@ -135,7 +135,7 @@ impl MyWindow {
             &wnd, // the window manager is the parent of our button
             gui::ButtonOpts {
                 text: "&Click me".to_owned(),
-                position: POINT::new(20, 20),
+                position: (20, 20),
                 ..Default::default()
             },
         );

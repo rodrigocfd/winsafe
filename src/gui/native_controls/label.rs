@@ -150,11 +150,11 @@ impl Label {
 	fn create(&self, horz: Horz, vert: Vert) -> SysResult<()> {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
-				let mut pos = opts.position;
+				let mut pos = POINT::new(opts.position.0, opts.position.1);
 				multiply_dpi_or_dtu(
 					self.0.base.parent(), Some(&mut pos), None)?;
 
-				let mut sz = opts.size;
+				let mut sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
 				if sz.cx == -1 && sz.cy == -1 {
 					sz = calc_text_bound_box(&opts.text)?; // resize to fit text
 				} else {
@@ -212,18 +212,19 @@ pub struct LabelOpts {
 	/// Text of the control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to empty string.
+	/// Defaults to "X".
 	pub text: String,
-	/// Control position within parent client area, to be
+	/// Left and top position coordinates of control within parent's client
+	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
 	/// system DPI.
 	///
-	/// Defaults to 0 x 0.
-	pub position: POINT,
-	/// Control size, to be
+	/// Defaults to `(0, 0)`.
+	pub position: (i32, i32),
+	/// Width and height of control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
@@ -231,7 +232,7 @@ pub struct LabelOpts {
 	/// system DPI.
 	///
 	/// Defaults to the size needed to fit the text.
-	pub size: SIZE,
+	pub size: (u32, u32),
 	/// label styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -265,9 +266,9 @@ pub struct LabelOpts {
 impl Default for LabelOpts {
 	fn default() -> Self {
 		Self {
-			text: "".to_owned(),
-			position: POINT::new(0, 0),
-			size: SIZE::new(-1, -1), // will resize to fit the text
+			text: "X".to_owned(),
+			position: (0, 0),
+			size: (-1i32 as _, -1i32 as _), // will resize to fit the text
 			label_style: co::SS::LEFT | co::SS::NOTIFY,
 			window_style: co::WS::CHILD | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,

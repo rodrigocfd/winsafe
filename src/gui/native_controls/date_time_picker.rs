@@ -154,7 +154,7 @@ impl DateTimePicker {
 
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
-				let mut pos = opts.position;
+				let mut pos = POINT::new(opts.position.0, opts.position.1);
 				let mut sz = SIZE::new(opts.width as _, 21); // default height
 				multiply_dpi_or_dtu(
 					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
@@ -212,16 +212,17 @@ impl DateTimePicker {
 /// programmatically with
 /// [`DateTimePicker::new`](crate::gui::DateTimePicker::new).
 pub struct DateTimePickerOpts {
-	/// Control position within parent client area, to be
+	/// Left and top position coordinates of control within parent's client
+	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
 	/// system DPI.
 	///
-	/// Defaults to 0 x 0.
-	pub position: POINT,
-	/// Control width, to be
+	/// Defaults to `(0, 0)`.
+	pub position: (i32, i32),
+	/// Control width to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
@@ -230,7 +231,7 @@ pub struct DateTimePickerOpts {
 	///
 	/// Defaults to ideal width retrieved with
 	/// [`dtm::GetIdealSize`](crate::msg::dtm::GetIdealSize) message, usually
-	/// around 250.
+	/// around `250`.
 	pub width: u32,
 	/// Date and time picker styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -268,7 +269,7 @@ pub struct DateTimePickerOpts {
 impl Default for DateTimePickerOpts {
 	fn default() -> Self {
 		Self {
-			position: POINT::new(0, 0),
+			position: (0, 0),
 			width: 0,
 			date_time_picker_style: co::DTS::LONGDATEFORMAT,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,

@@ -87,7 +87,7 @@ impl RawModal {
 		*self.0.hchild_prev_focus_parent.as_mut() = HWND::GetFocus().unwrap_or(HWND::NULL);
 		hparent.EnableWindow(false); // https://devblogs.microsoft.com/oldnewthing/20040227-00/?p=40463
 
-		let mut wnd_sz = opts.size;
+		let mut wnd_sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
 		multiply_dpi(None, Some(&mut wnd_sz))?;
 
 		let mut wnd_rc = RECT { // client area, will be adjusted to size with title bar and borders
@@ -214,14 +214,14 @@ pub struct WindowModalOpts {
 	///
 	/// Defaults to empty string.
 	pub title: String,
-	/// Size of window client area, in pixels, to be
+	/// Width and height of window client area, in pixels, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	/// Does not include title bar or borders.
 	///
 	/// Will be adjusted to match current system DPI.
 	///
-	/// Defaults to 500 x 400.
-	pub size: SIZE,
+	/// Defaults to `(500, 400)`.
+	pub size: (u32, u32),
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -247,7 +247,7 @@ impl Default for WindowModalOpts {
 			class_cursor: Cursor::Idc(co::IDC::ARROW),
 			class_bg_brush: Brush::Color(co::COLOR::BTNFACE),
 			title: "".to_owned(),
-			size: SIZE { cx: 500, cy: 400 },
+			size: (500, 400),
 			style: co::WS::CAPTION | co::WS::SYSMENU | co::WS::CLIPCHILDREN | co::WS::BORDER | co::WS::VISIBLE,
 			ex_style: co::WS_EX::LEFT | co::WS_EX::DLGMODALFRAME,
 		}

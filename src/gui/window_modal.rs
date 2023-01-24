@@ -106,8 +106,8 @@ impl WindowModal {
 	/// is always zero.
 	///
 	/// For a modal created with
-	/// [`WindowModal::new_dlg`](create::gui::WindowModal::new_dlg), the
-	/// returned `i32` is the value passed to
+	/// [`WindowModal::new_dlg`](crate::gui::WindowModal::new_dlg), the returned
+	/// `i32` is the value passed to
 	/// [`HWND::EndDialog`](crate::prelude::user_Hwnd::EndDialog). Note that, if
 	/// the user clicks the "X" to close the modal, the default behavior is to
 	/// call `EndDialog(0)`. To override this behavior, simply handle the

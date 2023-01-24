@@ -166,8 +166,8 @@ impl ListView {
 	fn create(&self, horz: Horz, vert: Vert) -> SysResult<()> {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
-				let mut pos = opts.position;
-				let mut sz = opts.size;
+				let mut pos = POINT::new(opts.position.0, opts.position.1);
+				let mut sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
 				multiply_dpi_or_dtu(
 					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
 
@@ -334,24 +334,25 @@ impl ListView {
 /// Options to create a [`ListView`](crate::gui::ListView) programmatically with
 /// [`ListView::new`](crate::gui::ListView::new).
 pub struct ListViewOpts {
-	/// Control position within parent client area, to be
+	/// Left and top position coordinates of control within parent's client
+	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
 	/// system DPI.
 	///
-	/// Defaults to 0 x 0.
-	pub position: POINT,
-	/// Control size, to be
+	/// Defaults to `(0, 0)`.
+	pub position: (i32, i32),
+	/// Width and height of control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
 	/// system DPI.
 	///
-	/// Defaults to 50 x 50.
-	pub size: SIZE,
+	/// Defaults to `(50, 50)`.
+	pub size: (u32, u32),
 	/// List view styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -404,8 +405,8 @@ pub struct ListViewOpts {
 impl Default for ListViewOpts {
 	fn default() -> Self {
 		Self {
-			position: POINT::new(0, 0),
-			size: SIZE::new(50, 50),
+			position: (0, 0),
+			size: (50, 50),
 			list_view_style: co::LVS::REPORT | co::LVS::NOSORTHEADER | co::LVS::SHOWSELALWAYS | co::LVS::SHAREIMAGELISTS,
 			list_view_ex_style: co::LVS_EX::NoValue,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,

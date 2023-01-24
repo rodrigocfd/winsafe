@@ -99,7 +99,7 @@ impl Button {
 	/// let btn = gui::Button::new(
 	///     &wnd,
 	///     gui::ButtonOpts {
-	///         position: POINT::new(10, 10),
+	///         position: (10, 10),
 	///         text: "&Click me".to_owned(),
 	///         ..Default::default()
 	///     },
@@ -169,7 +169,7 @@ impl Button {
 	fn create(&self, horz: Horz, vert: Vert) -> SysResult<()> {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
-				let mut pos = opts.position;
+				let mut pos = POINT::new(opts.position.0, opts.position.1);
 				let mut sz = SIZE::new(opts.width as _, opts.height as _);
 				multiply_dpi_or_dtu(
 					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
@@ -209,32 +209,33 @@ pub struct ButtonOpts {
 	///
 	/// Defaults to empty string.
 	pub text: String,
-	/// Control position within parent client area, to be
+	/// Left and top position coordinates of control within parent's client
+	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
 	/// system DPI.
 	///
-	/// Defaults to 0 x 0.
-	pub position: POINT,
-	/// Control width, to be
+	/// Defaults to `(0, 0)`.
+	pub position: (i32, i32),
+	/// Control width to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the value is in Dialog Template Units;
 	/// otherwise in pixels, which will be multiplied to match current system
 	/// DPI.
 	///
-	/// Defaults to 88.
+	/// Defaults to `88`.
 	pub width: u32,
-	/// Control height, to be
+	/// Control height to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the value is in Dialog Template Units;
 	/// otherwise in pixels, which will be multiplied to match current system
 	/// DPI.
 	///
-	/// Defaults to 26.
+	/// Defaults to `26`.
 	pub height: u32,
 	/// Button styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -274,7 +275,7 @@ impl Default for ButtonOpts {
 	fn default() -> Self {
 		Self {
 			text: "".to_owned(),
-			position: POINT::new(0, 0),
+			position: (0, 0),
 			width: 88,
 			height: 26,
 			button_style: co::BS::PUSHBUTTON,

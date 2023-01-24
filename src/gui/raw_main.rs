@@ -85,7 +85,7 @@ impl RawMain {
 			&mut class_name_buf).unwrap();
 		let atom = self.0.raw_base.register_class(&mut wcx).unwrap();
 
-		let mut wnd_sz = opts.size;
+		let mut wnd_sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
 		multiply_dpi(None, Some(&mut wnd_sz)).unwrap();
 
 		let screen_sz = SIZE::new(
@@ -200,14 +200,14 @@ pub struct WindowMainOpts {
 	///
 	/// Defaults to empty string.
 	pub title: String,
-	/// Size of window client area, in pixels, to be
+	/// Width and height of window client area, in pixels, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	/// Does not include title bar or borders.
 	///
 	/// Will be adjusted to match current system DPI.
 	///
-	/// Defaults to 600 x 500.
-	pub size: SIZE,
+	/// Defaults to `(600, 500)`.
+	pub size: (u32, u32),
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -250,7 +250,7 @@ impl Default for WindowMainOpts {
 			class_cursor: Cursor::Idc(co::IDC::ARROW),
 			class_bg_brush: Brush::Color(co::COLOR::BTNFACE),
 			title: "".to_owned(),
-			size: SIZE { cx: 600, cy: 500 },
+			size: (600, 500),
 			style: co::WS::CAPTION | co::WS::SYSMENU | co::WS::CLIPCHILDREN | co::WS::BORDER | co::WS::VISIBLE,
 			ex_style: co::WS_EX::LEFT,
 			menu: HMENU::NULL,

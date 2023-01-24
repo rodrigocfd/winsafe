@@ -100,7 +100,7 @@ impl Edit {
 	/// let txt = gui::Edit::new(
 	///     &wnd,
 	///     gui::EditOpts {
-	///         position: POINT::new(10, 10),
+	///         position: (10, 10),
 	///         width: 120,
 	///         ..Default::default()
 	///     },
@@ -170,7 +170,7 @@ impl Edit {
 	fn create(&self, horz: Horz, vert: Vert) -> SysResult<()> {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
-				let mut pos = opts.position;
+				let mut pos = POINT::new(opts.position.0, opts.position.1);
 				let mut sz = SIZE::new(opts.width as _, opts.height as _);
 				multiply_dpi_or_dtu(
 					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
@@ -328,34 +328,36 @@ pub struct EditOpts {
 	///
 	/// Defaults to empty string.
 	pub text: String,
-	/// Control position within parent client area, to be
+	/// Left and top position coordinates of control within parent's client
+	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
 	/// system DPI.
 	///
-	/// Defaults to 0 x 0.
-	pub position: POINT,
-	/// Control width, to be
+	/// Defaults to `(0, 0)`.
+	pub position: (i32, i32),
+	/// Control width to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the value is in Dialog Template Units;
 	/// otherwise in pixels, which will be multiplied to match current system
 	/// DPI.
 	///
-	/// Defaults to 100.
+	/// Defaults to `100`.
 	pub width: u32,
-	/// Control height, to be
+	/// Control height to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the value is in Dialog Template Units;
 	/// otherwise in pixels, which will be multiplied to match current system
 	/// DPI.
 	///
-	/// Defaults to 23.
+	/// Defaults to `23`.
 	///
-	/// **Note:** You should change the default height only in a multi-line edit.
+	/// **Note:** You should change the default height only in a multi-line
+	/// edit, otherwise it will look off.
 	pub height: u32,
 	/// Edit styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -398,7 +400,7 @@ impl Default for EditOpts {
 	fn default() -> Self {
 		Self {
 			text: "".to_owned(),
-			position: POINT::new(0, 0),
+			position: (0, 0),
 			width: 100,
 			height: 23,
 			edit_style: co::ES::AUTOHSCROLL | co::ES::NOHIDESEL,

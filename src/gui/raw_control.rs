@@ -90,8 +90,8 @@ impl RawControl {
 				&mut class_name_buf)?;
 			let atom = self2.0.raw_base.register_class(&mut wcx)?;
 
-			let mut wnd_pos = opts.position;
-			let mut wnd_sz = opts.size;
+			let mut wnd_pos = POINT::new(opts.position.0, opts.position.1);
+			let mut wnd_sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
 			multiply_dpi_or_dtu(self2.0.raw_base.parent().unwrap(),
 				Some(&mut wnd_pos), Some(&mut wnd_sz))?;
 
@@ -147,24 +147,25 @@ pub struct WindowControlOpts {
 	/// Defaults to `Brush::Color(co::COLOR::WINDOW)`.
 	pub class_bg_brush: Brush,
 
-	/// Position of control within parent's client area, in pixels, to be
+	/// Left and top position coordinates of control within parent's client
+	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
 	/// system DPI.
 	///
-	/// Defaults to 0 x 0.
-	pub position: POINT,
-	/// Size of window, in pixels, to be
+	/// Defaults to `(0, 0)`.
+	pub position: (i32, i32),
+	/// Width and height of window to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
 	/// system DPI.
 	///
-	/// Defaults to 100 x 80.
-	pub size: SIZE,
+	/// Defaults to `(100, 80)`.
+	pub size: (u32, u32),
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -201,8 +202,8 @@ impl Default for WindowControlOpts {
 			class_icon: Icon::None,
 			class_cursor: Cursor::Idc(co::IDC::ARROW),
 			class_bg_brush: Brush::Color(co::COLOR::WINDOW),
-			position: POINT { x: 0, y: 0 },
-			size: SIZE { cx: 100, cy: 80 },
+			position: (0, 0),
+			size: (100, 80),
 			style: co::WS::CHILD | co::WS::TABSTOP | co::WS::GROUP | co::WS::VISIBLE | co::WS::CLIPCHILDREN | co::WS::CLIPSIBLINGS,
 			ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,

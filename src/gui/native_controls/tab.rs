@@ -154,8 +154,8 @@ impl Tab {
 	fn create(&self, horz: Horz, vert: Vert) -> SysResult<()> {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
-				let mut pos = opts.position;
-				let mut sz = opts.size;
+				let mut pos = POINT::new(opts.position.0, opts.position.1);
+				let mut sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
 				multiply_dpi_or_dtu(
 					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
 
@@ -243,24 +243,25 @@ impl Tab {
 /// Options to create a [`Tab`](crate::gui::Tab) programmatically with
 /// [`Tab::new`](crate::gui::Tab::new).
 pub struct TabOpts {
-	/// Control position within parent client area, to be
+	/// Left and top position coordinates of control within parent's client
+	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
 	/// system DPI.
 	///
-	/// Defaults to 0 x 0.
-	pub position: POINT,
-	/// Control size, to be
+	/// Defaults to `(0, 0)`.
+	pub position: (i32, i32),
+	/// Width and height of control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// If the parent window is a dialog, the values are in Dialog Template
 	/// Units; otherwise in pixels, which will be multiplied to match current
 	/// system DPI.
 	///
-	/// Defaults to 80 x 50.
-	pub size: SIZE,
+	/// Defaults to `(80, 50)`.
+	pub size: (u32, u32),
 	/// Tab styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -310,8 +311,8 @@ pub struct TabOpts {
 impl Default for TabOpts {
 	fn default() -> Self {
 		Self {
-			position: POINT::new(0, 0),
-			size: SIZE::new(80, 50),
+			position: (0, 0),
+			size: (80, 50),
 			tab_style: co::TCS::NoValue,
 			tab_ex_style: co::TCS_EX::NoValue,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
