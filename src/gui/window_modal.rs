@@ -4,7 +4,7 @@ use crate::gui::base::Base;
 use crate::gui::dlg_modal::DlgModal;
 use crate::gui::events::WindowEventsAll;
 use crate::gui::raw_modal::{RawModal, WindowModalOpts};
-use crate::kernel::decl::AnyResult;
+use crate::kernel::decl::{AnyResult, SysResult};
 use crate::prelude::{GuiParent, GuiThread, GuiWindow, GuiWindowText};
 use crate::user::decl::HWND;
 
@@ -101,13 +101,25 @@ impl WindowModal {
 	/// Physically creates the window, then runs the modal loop. This method
 	/// will block until the window is closed.
 	///
+	/// For a modal created with
+	/// [`WindowModal::new`](crate::gui::WindowModal::new), the returned `i32`
+	/// is always zero.
+	///
+	/// For a modal created with
+	/// [`WindowModal::new_dlg`](create::gui::WindowModal::new_dlg), the
+	/// returned `i32` is the value passed to
+	/// [`HWND::EndDialog`](crate::prelude::user_Hwnd::EndDialog). Note that, if
+	/// the user clicks the "X" to close the modal, the default behavior is to
+	/// call `EndDialog(0)`. To override this behavior, simply handle the
+	/// modal's [`wm_close`](crate::prelude::GuiEvents::wm_close) yourself.
+	///
 	/// # Panics
 	///
 	/// Panics if the window is already created.
-	pub fn show_modal(&self) -> i32 {
+	pub fn show_modal(&self) -> SysResult<i32> {
 		match &self.0 {
 			RawDlg::Raw(r) => r.show_modal(),
 			RawDlg::Dlg(d) => d.show_modal(),
-		}.unwrap()
+		}
 	}
 }

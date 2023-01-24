@@ -82,8 +82,8 @@ impl DlgModal {
 		});
 
 		let self2 = self.clone();
-		self.on().wm_close(move || {
-			self2.hwnd().EndDialog(co::DLGID::CANCEL.0 as _)?;
+		self.on().wm_close(move || { // user clicked the X button
+			self2.hwnd().EndDialog(0)?;
 			Ok(())
 		});
 	}

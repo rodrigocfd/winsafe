@@ -114,18 +114,23 @@ impl RawModal {
 			opts.ex_style, opts.style,
 		)?;
 
-		Ok(self.run_modal_loop())
+		self.run_modal_loop()
 	}
 
-	fn run_modal_loop(&self) -> i32 {
+	fn run_modal_loop(&self) -> SysResult<i32> {
 		loop {
 			let mut msg = MSG::default();
-			if !GetMessage(&mut msg, None, 0, 0).unwrap() {
+			if !GetMessage(&mut msg, None, 0, 0)? {
 				// WM_QUIT was sent, exit modal loop now and signal parent.
 				// wParam has the program exit code.
 				// https://devblogs.microsoft.com/oldnewthing/20050222-00/?p=36393
+				// https://stackoverflow.com/a/29359913/6923555
 				PostQuitMessage(msg.wParam as _);
-				return msg.wParam as _;
+				return Ok(0); // raw modals will always return 0
+			}
+
+			if *self.hwnd() == HWND::NULL || !self.hwnd().IsWindow() {
+				return Ok(0); // our modal was destroyed, terminate loop
 			}
 
 			// If a child window, will retrieve its top-level parent.
@@ -137,7 +142,7 @@ impl RawModal {
 			if hwnd_top_level.IsDialogMessage(&mut msg) {
 				// Processed all keyboard actions for child controls.
 				if *self.hwnd() == HWND::NULL {
-					return 0; // our modal was destroyed, terminate loop
+					return Ok(0); // our modal was destroyed, terminate loop
 				} else {
 					continue;
 				}
@@ -146,8 +151,8 @@ impl RawModal {
 			TranslateMessage(&msg);
 			unsafe { DispatchMessage(&msg); }
 
-			if *self.hwnd() == HWND::NULL {
-				return 0; // our modal was destroyed, terminate loop
+			if *self.hwnd() == HWND::NULL || !self.hwnd().IsWindow() {
+				return Ok(0); // our modal was destroyed, terminate loop
 			}
 		}
 	}
