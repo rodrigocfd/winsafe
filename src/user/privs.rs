@@ -13,6 +13,7 @@ pub(crate) const DM_SPECVERSION: u16 = 0x0401;
 pub(crate) const FAPPCOMMAND_MASK: u16 = 0xf000;
 pub(crate) const LB_ERR: i32 = -1;
 pub(crate) const LB_ERRSPACE: i32 = -2;
+pub(crate) const WC_DIALOG: u16 = 0x8002;
 
 /// Takes an `isize` and returns `Err` if `-1`.
 pub(crate) fn minus1_as_err(v: isize) -> SysResult<isize> {

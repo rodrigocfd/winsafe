@@ -1,11 +1,13 @@
 use std::any::Any;
 
+use crate::co;
 use crate::gui::events::{WindowEvents, WindowEventsAll};
 use crate::gui::window_control::WindowControl;
 use crate::kernel::decl::AnyResult;
 use crate::msg::wm;
 use crate::prelude::{Handle, user_Hwnd};
 use crate::user::decl::{HWND, HwndFocus};
+use crate::user::privs::WC_DIALOG;
 
 /// Any window. Exposes the underlying window handle.
 pub trait GuiWindow {
@@ -240,17 +242,24 @@ pub trait GuiChild: GuiWindow {
 
 /// Any child window which can be focused.
 pub trait GuiChildFocus: GuiChild {
-	/// Focus the control by sending a
+	/// In a raw, ordinary window, simply calls
+	/// [`HWND:SetFocus`](crate::prelude::user_Hwnd::SetFocus).
+	///
+	/// In a dialog window, sends a
 	/// [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl) message. This is
-	/// preferable to the
-	/// [`HWND::SetFocus`](crate::prelude::user_Hwnd::SetFocus) method, because
-	/// it takes care of border highlighting, like the native
-	/// [`Button`](crate::gui::Button) control needs.
+	/// preferable to the `HWND::SetFocus` because it takes care of border
+	/// highlighting, like the native [`Button`](crate::gui::Button) control
+	/// needs.
 	fn focus(&self) {
 		let hparent = self.hwnd().GetParent().unwrap();
-		hparent.SendMessage(wm::NextDlgCtl {
-			hwnd_focus: HwndFocus::Hwnd(unsafe { self.hwnd().raw_copy() }),
-		});
+		let atom = hparent.GetClassLongPtr(co::GCLP::ATOM) as u16;
+		if atom == WC_DIALOG { // https://stackoverflow.com/a/64437627/6923555
+			hparent.SendMessage(wm::NextDlgCtl {
+				hwnd_focus: HwndFocus::Hwnd(unsafe { self.hwnd().raw_copy() }),
+			});
+		} else {
+			self.hwnd().SetFocus();
+		}
 	}
 }
 
