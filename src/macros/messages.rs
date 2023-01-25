@@ -52,7 +52,7 @@ macro_rules! pub_struct_msg_empty_handleable {
 }
 
 /// Struct for WM_CHAR-based handleable messages.
-macro_rules! pub_struct_msg_char {
+macro_rules! pub_struct_msg_char_code {
 	(
 		$name:ident : $wmconst:expr;
 		$( #[$msdn:meta] )*
@@ -62,7 +62,7 @@ macro_rules! pub_struct_msg_char {
 		///
 		/// Return type: `()`.
 		pub struct $name {
-			pub char_code: co::VK,
+			pub char_code: u16,
 			pub repeat_count: u16,
 			pub scan_code: u8,
 			pub is_extended_key: bool,
@@ -81,7 +81,7 @@ macro_rules! pub_struct_msg_char {
 			fn as_generic_wm(&mut self) -> crate::msg::WndMsg {
 				crate::msg::WndMsg {
 					msg_id: $wmconst,
-					wparam: self.char_code.0 as _,
+					wparam: self.char_code as _,
 					lparam: crate::kernel::decl::MAKEDWORD(
 						self.repeat_count,
 						crate::kernel::decl::MAKEWORD(
@@ -100,7 +100,69 @@ macro_rules! pub_struct_msg_char {
 			fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
 				use crate::kernel::decl::{HIBYTE, HIWORD, LOBYTE, LOWORD};
 				Self {
-					char_code: co::VK(p.wparam as _),
+					char_code: p.wparam as _,
+					repeat_count: LOWORD(p.lparam as _),
+					scan_code: LOBYTE(HIWORD(p.lparam as _)),
+					is_extended_key: (HIBYTE(HIWORD(p.lparam as _)) & 0b0000_0001) != 0,
+					has_alt_key: (HIBYTE(HIWORD(p.lparam as _)) & 0b0010_0000) != 0,
+					key_was_previously_down: (HIBYTE(HIWORD(p.lparam as _)) & 0b0100_0000) != 0,
+					key_is_being_released: (HIBYTE(HIWORD(p.lparam as _)) & 0b1000_0000) != 0,
+				}
+			}
+		}
+	};
+}
+
+/// Struct for WM_KEY-based handleable messages.
+macro_rules! pub_struct_msg_char_key {
+	(
+		$name:ident : $wmconst:expr;
+		$( #[$msdn:meta] )*
+	) => {
+		$( #[$msdn] )*
+		/// message parameters.
+		///
+		/// Return type: `()`.
+		pub struct $name {
+			pub vkey_code: co::VK,
+			pub repeat_count: u16,
+			pub scan_code: u8,
+			pub is_extended_key: bool,
+			pub has_alt_key: bool,
+			pub key_was_previously_down: bool,
+			pub key_is_being_released: bool,
+		}
+
+		unsafe impl crate::prelude::MsgSend for $name {
+			type RetType = ();
+
+			fn convert_ret(&self, _: isize) -> Self::RetType {
+				()
+			}
+
+			fn as_generic_wm(&mut self) -> crate::msg::WndMsg {
+				crate::msg::WndMsg {
+					msg_id: $wmconst,
+					wparam: self.vkey_code.0 as _,
+					lparam: crate::kernel::decl::MAKEDWORD(
+						self.repeat_count,
+						crate::kernel::decl::MAKEWORD(
+							self.scan_code,
+							if self.is_extended_key { 0b0000_0001 } else { 0 } |
+							if self.has_alt_key { 0b0010_0000 } else { 0 } |
+							if self.key_was_previously_down { 0b0100_0000 } else { 0 } |
+							if self.key_is_being_released { 0b1000_0000 } else { 0 },
+						),
+					) as _,
+				}
+			}
+		}
+
+		unsafe impl crate::prelude::MsgSendRecv for $name {
+			fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
+				use crate::kernel::decl::{HIBYTE, HIWORD, LOBYTE, LOWORD};
+				Self {
+					vkey_code: co::VK(p.wparam as _),
 					repeat_count: LOWORD(p.lparam as _),
 					scan_code: LOBYTE(HIWORD(p.lparam as _)),
 					is_extended_key: (HIBYTE(HIWORD(p.lparam as _)) & 0b0000_0001) != 0,

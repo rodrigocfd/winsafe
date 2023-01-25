@@ -31,7 +31,7 @@ pub_struct_msg_ctlcolor! { CtlColorStatic: co::WM::CTLCOLORSTATIC;
 	/// [`WM_CTLCOLORSTATIC`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorstatic)
 }
 
-pub_struct_msg_char! { DeadChar: co::WM::DEADCHAR;
+pub_struct_msg_char_code! { DeadChar: co::WM::DEADCHAR;
 	/// [`WM_DEADCHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-deadchar)
 }
 

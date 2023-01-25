@@ -154,7 +154,7 @@ unsafe impl MsgSendRecv for CaptureChanged {
 	}
 }
 
-pub_struct_msg_char! { Char: co::WM::CHAR;
+pub_struct_msg_char_code! { Char: co::WM::CHAR;
 	/// [`WM_CHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-char)
 }
 
@@ -877,11 +877,11 @@ unsafe impl MsgSendRecv for InitMenuPopup {
 	}
 }
 
-pub_struct_msg_char! { KeyDown: co::WM::KEYDOWN;
+pub_struct_msg_char_key! { KeyDown: co::WM::KEYDOWN;
 	/// [`WM_KEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keydown)
 }
 
-pub_struct_msg_char! { KeyUp: co::WM::KEYUP;
+pub_struct_msg_char_key! { KeyUp: co::WM::KEYUP;
 	/// [`WM_KEYUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keyup)
 }
 
@@ -1685,7 +1685,7 @@ unsafe impl<'a> MsgSendRecv for StyleChanging<'a> {
 	}
 }
 
-pub_struct_msg_char! { SysChar: co::WM::SYSCHAR;
+pub_struct_msg_char_code! { SysChar: co::WM::SYSCHAR;
 	/// [`WM_SYSCHAR`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-syschar)
 }
 
@@ -1723,15 +1723,15 @@ unsafe impl MsgSendRecv for SysCommand {
 	}
 }
 
-pub_struct_msg_char! { SysDeadChar: co::WM::SYSDEADCHAR;
+pub_struct_msg_char_code! { SysDeadChar: co::WM::SYSDEADCHAR;
 	/// [`WM_SYSDEADCHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-sysdeadchar)
 }
 
-pub_struct_msg_char! { SysKeyDown: co::WM::SYSKEYDOWN;
+pub_struct_msg_char_key! { SysKeyDown: co::WM::SYSKEYDOWN;
 	/// [`WM_SYSKEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-syskeydown)
 }
 
-pub_struct_msg_char! { SysKeyUp: co::WM::SYSKEYUP;
+pub_struct_msg_char_key! { SysKeyUp: co::WM::SYSKEYUP;
 	/// [`WM_SYSKEYUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-syskeyup)
 }
 
