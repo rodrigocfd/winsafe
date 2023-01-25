@@ -64,6 +64,25 @@ impl TabEvents {
 	pub_fn_nfy_noparm_noret! { tcn_sel_change, co::TCN::SELCHANGE,
 		/// [`TCN_SELCHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/tcn-selchange)
 		/// notification.
+		///
+		/// # Examples
+		///
+		/// ```rust,no_run
+		/// use winsafe::prelude::*;
+		/// use winsafe::{gui, AnyResult};
+		///
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// let tab: gui::Tab;
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+		/// # let tab = gui::Tab::new(&wnd, gui::TabOpts::default());
+		///
+		/// tab.on().tcn_sel_change(
+		///     move || -> AnyResult<()> {
+		///         println!("Changed tab.");
+		///         Ok(())
+		///     },
+		/// );
+		/// ```
 	}
 
 	pub_fn_nfy_noparm_boolret! { tcn_sel_changing, co::TCN::SELCHANGING,

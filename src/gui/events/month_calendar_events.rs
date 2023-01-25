@@ -26,8 +26,28 @@ impl MonthCalendarEvents {
 	}
 
 	pub_fn_nfy_withparm_noret! { mcn_sel_change, co::MCN::SELCHANGE, NMSELCHANGE,
-		/// [`MCN_GETDAYSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcn-selchange)
+		/// [`MCN_SELCHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcn-selchange)
 		/// notification.
+		///
+		/// # Examples
+		///
+		/// ```rust,no_run
+		/// use winsafe::prelude::*;
+		/// use winsafe::{gui, AnyResult, NMSELCHANGE};
+		///
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// let mcal: gui::MonthCalendar;
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+		/// # let mcal = gui::MonthCalendar::new(&wnd, gui::MonthCalendarOpts::default());
+		///
+		/// mcal.on().mcn_sel_change(
+		///     move |p: &NMSELCHANGE| -> AnyResult<()> {
+		///         let d = &p.stSelStart;
+		///         println!("{}-{}-{}", d.wYear, d.wMonth, d.wDay);
+		///         Ok(())
+		///     },
+		/// );
+		/// ```
 	}
 
 	pub_fn_nfy_withparm_noret! { mcn_select, co::MCN::SELECT, NMSELCHANGE,
