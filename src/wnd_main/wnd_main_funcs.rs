@@ -1,6 +1,7 @@
 use winsafe::{prelude::*, self as w, gui};
 
-use super::{ids, WndMain};
+use crate::ids;
+use super::WndMain;
 
 impl WndMain {
 	pub fn new() -> Self {
@@ -13,7 +14,7 @@ impl WndMain {
 		let txt_out = gui::Edit::new_dlg(&wnd, ids::TXT_OUT, (H::Resize, V::Resize));
 
 		let new_self = Self { wnd, txt_path, btn_run, pro_load, txt_out };
-		new_self._events();
+		new_self.events();
 		new_self
 	}
 
