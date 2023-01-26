@@ -15,30 +15,47 @@ impl Stats {
 	}
 }
 
-pub fn process(target: &str) -> w::SysResult<String> {
+/// Reads all files in the target directory and processes all the stats, calling
+/// the callback to give feedback after processing each file.
+pub fn process<F>(target: &str, callback: F) -> w::SysResult<String>
+	where F: Fn(usize),
+{
 	let mut stats = Stats::new();
 
-	w::path::dir_walk(target).try_for_each(|path| -> w::SysResult<_> {
-		let path = path?;
-		if w::path::has_extension(&path, &[".rs"]) {
-			count_ffis(&path, &mut stats);
-			count_structs(&path, &mut stats);
-			println!("[{}]", path);
-		}
-		Ok(())
-	})?;
+	w::path::dir_walk(target)
+		.enumerate()
+		.try_for_each(|(idx, path)| -> w::SysResult<_> {
+			let path = path?;
+			if w::path::has_extension(&path, &[".rs"]) {
+				let contents = {
+					let f = w::FileMapped::open(&path, w::FileAccess::ExistingReadOnly)?;
+					w::WString::parse(f.as_slice())?.to_string()
+				};
+				count_ffis(&contents, &mut stats);
+				count_structs(&contents, &mut stats);
+				count_consts(&contents, &mut stats);
+				callback(idx);
+			}
+			Ok(())
+		})?;
 
 	Ok( "shadows disappear".to_owned() )
 }
 
-fn count_ffis(path: &str, stats: &mut Stats) {
+fn count_ffis(contents: &str, stats: &mut Stats) {
+	for line in contents.lines() {
 
+	}
 }
 
-fn count_structs(path: &str, stats: &mut Stats) {
+fn count_structs(contents: &str, stats: &mut Stats) {
+	for line in contents.lines() {
 
+	}
 }
 
-fn count_consts(path: &str, stats: &mut Stats) {
+fn count_consts(contents: &str, stats: &mut Stats) {
+	for line in contents.lines() {
 
+	}
 }
