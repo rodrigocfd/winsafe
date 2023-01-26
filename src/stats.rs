@@ -77,8 +77,30 @@ impl Stats {
 	}
 
 	fn count_consts(contents: &str, stats: &mut Stats) {
+		let mut inside_block = false;
 		for line in contents.lines() {
+			if inside_block {
+				if line.starts_with("}") {
+					inside_block = false;
+				} else {
+					if !line.starts_with("\t//") &&
+						!line.starts_with("\t=>") {
+						stats.consts += 1;
+					}
+				}
+			} else {
+				if line.starts_with("const_values!") ||
+					line.starts_with("const_bitflag!") ||
+					line.starts_with("const_ordinary!") ||
+					line.starts_with("const_wm!") ||
+					line.starts_with("const_nm!") ||
+					line.starts_with("const_cmd!") ||
+					line.starts_with("const_ws!") ||
+					line.starts_with("const_wsex!") {
 
+					inside_block = true;
+				}
+			}
 		}
 	}
 }
