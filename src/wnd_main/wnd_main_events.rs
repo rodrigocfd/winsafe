@@ -12,6 +12,12 @@ impl WndMain {
 
 			let total = w::path::dir_walk(target).count();
 			self2.pro_load.set_range(0, total as _);
+
+			self2.txt_out.hwnd().SendMessage(msg::wm::SetFont {
+				hfont: unsafe { self2.mono_font.raw_copy() },
+				redraw: true,
+			});
+
 			Ok(true)
 		});
 

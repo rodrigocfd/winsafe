@@ -6,7 +6,7 @@ mod wnd_main;
 use wnd_main::WndMain;
 
 fn main() {
-	if let Err(e) = WndMain::new().run() {
+	if let Err(e) = (|| WndMain::new()?.run())() {
 		eprintln!("{}", e);
 	}
 }
