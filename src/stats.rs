@@ -4,6 +4,7 @@ pub struct Stats {
 	pub ffis: usize,
 	pub structs: usize,
 	pub consts: usize,
+	pub wmsgs: usize,
 }
 
 impl Stats {
@@ -12,15 +13,17 @@ impl Stats {
 			ffis: 0,
 			structs: 0,
 			consts: 0,
+			wmsgs: 0,
 		}
 	}
 
 	/// Returns the stats as the formatted output.
 	pub fn format(&self) -> String {
-		format!("{}\r\n{}\r\n{}",
+		format!("{}\r\n{}\r\n{}\r\n{}",
 			format!("| Functions | {} |", self.ffis),
 			format!("| Structs | {} |", self.structs),
 			format!("| Constants | {} |", self.consts),
+			format!("| Window messages | {} |", self.wmsgs),
 		)
 	}
 
@@ -29,7 +32,7 @@ impl Stats {
 	pub fn gather<F>(target: &str, callback: F) -> w::SysResult<Self>
 		where F: Fn(usize),
 	{
-		let mut stats = Self::new();
+		let mut me = Self::new();
 
 		w::path::dir_walk(target)
 			.enumerate()
@@ -40,25 +43,26 @@ impl Stats {
 						let f = w::FileMapped::open(&path, w::FileAccess::ExistingReadOnly)?;
 						w::WString::parse(f.as_slice())?.to_string()
 					};
-					Self::count_ffis(&contents, &mut stats);
-					Self::count_structs(&contents, &mut stats);
-					Self::count_consts(&contents, &mut stats);
+					me.count_ffis(&contents);
+					me.count_structs(&contents);
+					me.count_consts(&contents);
+					me.count_wmsgs(&contents);
 					callback(idx);
 				}
 				Ok(())
 			})?;
 
-		Ok(stats)
+		Ok(me)
 	}
 
-	fn count_ffis(contents: &str, stats: &mut Stats) {
+	fn count_ffis(&mut self, contents: &str) {
 		let mut inside_block = false;
 		for line in contents.lines() {
 			if inside_block {
 				if line.starts_with("}") {
 					inside_block = false;
 				} else {
-					stats.ffis += 1;
+					self.ffis += 1;
 				}
 			} else {
 				if line.starts_with("extern_sys!") {
@@ -68,15 +72,15 @@ impl Stats {
 		}
 	}
 
-	fn count_structs(contents: &str, stats: &mut Stats) {
+	fn count_structs(&mut self, contents: &str) {
 		for line in contents.lines() {
 			if line == "/// struct." {
-				stats.structs += 1;
+				self.structs += 1;
 			}
 		}
 	}
 
-	fn count_consts(contents: &str, stats: &mut Stats) {
+	fn count_consts(&mut self, contents: &str) {
 		let mut inside_block = false;
 		for line in contents.lines() {
 			if inside_block {
@@ -85,7 +89,7 @@ impl Stats {
 				} else {
 					if !line.starts_with("\t//") &&
 						!line.starts_with("\t=>") {
-						stats.consts += 1;
+						self.consts += 1;
 					}
 				}
 			} else {
@@ -100,6 +104,14 @@ impl Stats {
 
 					inside_block = true;
 				}
+			}
+		}
+	}
+
+	fn count_wmsgs(&mut self, contents: &str) {
+		for line in contents.lines() {
+			if line.contains("/// Return type: ") {
+				self.wmsgs += 1;
 			}
 		}
 	}
