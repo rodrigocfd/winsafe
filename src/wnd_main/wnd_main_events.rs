@@ -32,6 +32,7 @@ impl WndMain {
 			self2.txt_path.hwnd().EnableWindow(false);
 			self2.btn_run.hwnd().EnableWindow(false);
 			self2.txt_out.set_text("");
+			self2.pro_load.set_position(0);
 
 			self2.wnd.set_text(&format!("{} - {} files",
 				self2.wnd.text().split('-').next().unwrap().trim_end(),
