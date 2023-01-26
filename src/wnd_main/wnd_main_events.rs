@@ -1,6 +1,6 @@
 use winsafe::{prelude::*, self as w, co, msg};
 
-use crate::gather_stats;
+use crate::stats::Stats;
 use super::WndMain;
 
 impl WndMain {
@@ -25,6 +25,7 @@ impl WndMain {
 		self.btn_run.on().bn_clicked(move || {
 			self2.txt_path.hwnd().EnableWindow(false);
 			self2.btn_run.hwnd().EnableWindow(false);
+			self2.txt_out.set_text("");
 
 			self2.wnd.set_text(&format!("{} - {} files",
 				self2.wnd.text().split('-').next().unwrap().trim_end(),
@@ -37,11 +38,11 @@ impl WndMain {
 					&format!("Path does not exist:\n{}", target))?;
 			} else {
 				let self3 = self2.clone();
-				let stats = gather_stats::process(&target, move |pass| {
+				let stats = Stats::gather(&target, move |pass| {
 					self3.pro_load.set_position(pass as _);
 				})?;
 
-				self2.txt_out.set_text(&stats);
+				self2.txt_out.set_text(&stats.format());
 				self2.txt_out.focus();
 			}
 

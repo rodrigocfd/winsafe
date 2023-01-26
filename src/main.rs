@@ -1,7 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-mod gather_stats;
 mod ids;
+mod stats;
 mod wnd_main;
 use wnd_main::WndMain;
 
