@@ -46,7 +46,7 @@ impl Stats {
 						let f = w::FileMapped::open(&path, w::FileAccess::ExistingReadOnly)?;
 						w::WString::parse(f.as_slice())?.to_string()
 					};
-					me.count_ffis(&contents);
+					me.count_ffis(&contents, &path);
 					me.count_structs(&contents);
 					me.count_consts(&contents);
 					me.count_wmsgs(&contents);
@@ -59,7 +59,13 @@ impl Stats {
 		Ok(me)
 	}
 
-	fn count_ffis(&mut self, contents: &str) {
+	fn count_ffis(&mut self, contents: &str, path: &str) {
+		if let Some(file_name) = w::path::get_file_name(path) {
+			if file_name != "ffi.rs" {
+				return;
+			}
+		}
+
 		let mut inside_block = false;
 		for line in contents.lines() {
 			if inside_block {
