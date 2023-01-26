@@ -44,7 +44,7 @@ impl WndMain {
 					&format!("Path does not exist:\n{}", target))?;
 			} else {
 				let self3 = self2.clone();
-				let stats = Stats::gather(&target, move |pass| {
+				let stats = Stats::gather(&target, move |pass| { // process the files
 					self3.pro_load.set_position(pass as _);
 				})?;
 

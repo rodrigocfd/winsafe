@@ -1,32 +1,27 @@
 use winsafe as w;
 
+#[derive(Default)]
 pub struct Stats {
 	pub ffis: usize,
 	pub structs: usize,
 	pub consts: usize,
 	pub wmsgs: usize,
 	pub handles: usize,
+	pub com_interfaces: usize,
+	pub com_methods: usize,
 }
 
 impl Stats {
-	fn new() -> Self {
-		Self {
-			ffis: 0,
-			structs: 0,
-			consts: 0,
-			wmsgs: 0,
-			handles: 0,
-		}
-	}
-
 	/// Returns the stats as the formatted output.
 	pub fn format(&self) -> String {
-		format!("{}\r\n{}\r\n{}\r\n{}\r\n{}",
+		format!("{}\r\n{}\r\n{}\r\n{}\r\n{}\r\n{}\r\n{}",
 			format!("| Functions | {} |", self.ffis),
 			format!("| Structs | {} |", self.structs),
 			format!("| Constants | {} |", self.consts),
 			format!("| Window messages | {} |", self.wmsgs),
 			format!("| Handles | {} |", self.handles),
+			format!("| COM interfaces | {} |", self.com_interfaces),
+			format!("| COM methods | {} |", self.com_methods),
 		)
 	}
 
@@ -35,7 +30,7 @@ impl Stats {
 	pub fn gather<F>(target: &str, callback: F) -> w::SysResult<Self>
 		where F: Fn(usize),
 	{
-		let mut me = Self::new();
+		let mut me = Self::default();
 
 		w::path::dir_walk(target)
 			.enumerate()
@@ -51,6 +46,7 @@ impl Stats {
 					me.count_consts(&contents);
 					me.count_wmsgs(&contents);
 					me.count_handles(&contents);
+					me.count_com(&contents, &path);
 					callback(idx);
 				}
 				Ok(())
@@ -130,6 +126,36 @@ impl Stats {
 		for line in contents.lines() {
 			if line.contains("impl_handle! { ") {
 				self.handles += 1;
+			}
+		}
+	}
+
+	fn count_com(&mut self, contents: &str, path: &str) {
+		if !path.contains("\\com_interfaces\\") {
+			return;
+		} else if let Some(file_name) = w::path::get_file_name(path) {
+			if !file_name.starts_with('i') {
+				return;
+			}
+		}
+
+		let mut is_com_interface_file = false;
+		let mut inside_block = false;
+
+		for line in contents.lines() {
+			if !is_com_interface_file && line.starts_with("com_interface! { ") {
+				is_com_interface_file = true;
+				self.com_interfaces += 1;
+			} else if is_com_interface_file {
+				if !inside_block && line.starts_with("pub trait ") {
+					inside_block = true;
+				} else if inside_block {
+					if line.starts_with('}') {
+						inside_block = false;
+					} else if line.starts_with("\tfn ") {
+						self.com_methods += 1;
+					}
+				}
 			}
 		}
 	}
