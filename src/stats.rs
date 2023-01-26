@@ -5,6 +5,7 @@ pub struct Stats {
 	pub structs: usize,
 	pub consts: usize,
 	pub wmsgs: usize,
+	pub handles: usize,
 }
 
 impl Stats {
@@ -14,16 +15,18 @@ impl Stats {
 			structs: 0,
 			consts: 0,
 			wmsgs: 0,
+			handles: 0,
 		}
 	}
 
 	/// Returns the stats as the formatted output.
 	pub fn format(&self) -> String {
-		format!("{}\r\n{}\r\n{}\r\n{}",
+		format!("{}\r\n{}\r\n{}\r\n{}\r\n{}",
 			format!("| Functions | {} |", self.ffis),
 			format!("| Structs | {} |", self.structs),
 			format!("| Constants | {} |", self.consts),
 			format!("| Window messages | {} |", self.wmsgs),
+			format!("| Handles | {} |", self.handles),
 		)
 	}
 
@@ -47,6 +50,7 @@ impl Stats {
 					me.count_structs(&contents);
 					me.count_consts(&contents);
 					me.count_wmsgs(&contents);
+					me.count_handles(&contents);
 					callback(idx);
 				}
 				Ok(())
@@ -112,6 +116,14 @@ impl Stats {
 		for line in contents.lines() {
 			if line.contains("/// Return type: ") {
 				self.wmsgs += 1;
+			}
+		}
+	}
+
+	fn count_handles(&mut self, contents: &str) {
+		for line in contents.lines() {
+			if line.contains("impl_handle! { ") {
+				self.handles += 1;
 			}
 		}
 	}
