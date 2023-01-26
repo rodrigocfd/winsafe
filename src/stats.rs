@@ -70,7 +70,9 @@ impl Stats {
 
 	fn count_structs(contents: &str, stats: &mut Stats) {
 		for line in contents.lines() {
-
+			if line == "/// struct." {
+				stats.structs += 1;
+			}
 		}
 	}
 
