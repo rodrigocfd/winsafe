@@ -7,7 +7,7 @@ impl WndMain {
 	pub(super) fn events(&self) {
 		let self2 = self.clone();
 		self.wnd.on().wm_init_dialog(move |_| {
-			self2.txt_path.set_text("D:\\Stuff\\Core\\rs\\winsafe");
+			self2.txt_path.set_text("D:\\Stuff\\Core\\rs\\winsafe\\src");
 			Ok(true)
 		});
 
@@ -25,7 +25,7 @@ impl WndMain {
 					Some("Process cannot be done"),
 					&format!("Path does not exist:\n{}", target))?;
 			} else {
-				let stats = gather_stats::process(&target);
+				let stats = gather_stats::process(&target)?;
 				self2.txt_out.set_text(&stats);
 				self2.txt_out.focus();
 			}
