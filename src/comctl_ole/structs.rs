@@ -5,7 +5,7 @@ use std::marker::PhantomData;
 use crate::co;
 use crate::comctl_ole::decl::{IconId, IconIdTdicon, PFTASKDIALOGCALLBACK};
 use crate::comctl::decl::NMHDR;
-use crate::kernel::decl::HINSTANCE;
+use crate::kernel::decl::{HINSTANCE, WString};
 use crate::kernel::privs::{IS_INTRESOURCE, MAKEINTRESOURCE};
 use crate::ole::decl::ComPtr;
 use crate::user::decl::{HICON, HWND};

@@ -3,7 +3,9 @@
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::kernel::decl::{HINSTANCE, HIWORD, LCID, LOBYTE, LOWORD, MAKEDWORD};
+use crate::kernel::decl::{
+	HINSTANCE, HIWORD, LCID, LOBYTE, LOWORD, MAKEDWORD, WString,
+};
 use crate::kernel::ffi_types::BOOL;
 use crate::user::decl::{
 	DispfNup, HBITMAP, HBRUSH, HCURSOR, HDC, HICON, HMENU, HWND, HwndHmenu,

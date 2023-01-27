@@ -79,12 +79,13 @@ macro_rules! pub_fn_string_ptr_get_set {
 		/// Returns the string field, if any.
 		#[must_use]
 		pub fn $field(&self) -> Option<String> {
-			unsafe { self.$field.as_mut() }
-				.map(|psz| crate::kernel::decl::WString::from_wchars_nullt(psz).to_string())
+			unsafe { self.$field.as_mut() }.map(|psz| {
+				WString::from_wchars_nullt(psz).to_string()
+			})
 		}
 
 		/// Sets the string field.
-		pub fn $setter(&mut self, buf: Option<&$life mut crate::kernel::decl::WString>) {
+		pub fn $setter(&mut self, buf: Option<&$life mut WString>) {
 			self.$field = buf.map_or(std::ptr::null_mut(), |buf| unsafe { buf.as_mut_ptr() });
 		}
 	};
@@ -113,12 +114,13 @@ macro_rules! pub_fn_string_buf_get_set {
 		/// Returns the string field.
 		#[must_use]
 		pub fn $field(&self) -> Option<String> {
-			unsafe { self.$field.as_mut() }
-				.map(|psz| crate::kernel::decl::WString::from_wchars_nullt(psz).to_string())
+			unsafe { self.$field.as_mut() }.map(|psz| {
+				WString::from_wchars_nullt(psz).to_string()
+			})
 		}
 
 		/// Sets the string field.
-		pub fn $setter(&mut self, buf: Option<&$life mut crate::kernel::decl::WString>) {
+		pub fn $setter(&mut self, buf: Option<&$life mut WString>) {
 			self.$cch = buf.as_ref().map_or(0, |buf| buf.buf_len() as _);
 			self.$field = buf.map_or(std::ptr::null_mut(), |buf| unsafe { buf.as_mut_ptr() });
 		}
@@ -149,8 +151,9 @@ macro_rules! pub_fn_array_buf_get_set {
 		#[must_use]
 		pub fn $field(&self) -> Option<&$life mut [$ty]> {
 			unsafe {
-				self.$field.as_mut()
-					.map(|p| std::slice::from_raw_parts_mut(p, self.$cch as _))
+				self.$field.as_mut().map(|p| {
+					std::slice::from_raw_parts_mut(p, self.$cch as _)
+				})
 			}
 		}
 

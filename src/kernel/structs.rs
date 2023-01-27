@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::kernel::decl::{
-	HEVENT, HINSTANCE, HPIPE, HPROCESS, HTHREAD, MAKEQWORD,
+	HEVENT, HINSTANCE, HPIPE, HPROCESS, HTHREAD, MAKEQWORD, WString,
 };
 use crate::kernel::privs::{MAX_MODULE_NAME32, MAX_PATH};
 
