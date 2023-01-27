@@ -4,7 +4,6 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::comctl::decl::PBRANGE;
 use crate::gui::base::Base;
 use crate::gui::events::WindowEvents;
 use crate::gui::layout_arranger::{Horz, Vert};
@@ -163,12 +162,17 @@ impl ProgressBar {
 	/// 0 and 100.
 	#[must_use]
 	pub fn range(&self) -> (u32, u32) {
-		let mut ranges = PBRANGE::default();
-		self.hwnd().SendMessage(pbm::GetRange {
-			return_low: false, // indifferent, return value not used
-			ranges: Some(&mut ranges),
+		// For some reason, pbm::GetRange is returning all zeros when passing a
+		// PBRANGE pointer.
+		let low = self.hwnd().SendMessage(pbm::GetRange {
+			return_low: true,
+			ranges: None,
 		});
-		(ranges.iLow as _, ranges.iHigh as _)
+		let high = self.hwnd().SendMessage(pbm::GetRange {
+			return_low: false,
+			ranges: None,
+		});
+		(low as _, high as _)
 	}
 
 	/// Sets or unsets the marquee mode by sending a
