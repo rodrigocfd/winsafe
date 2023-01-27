@@ -1335,3 +1335,12 @@ pub struct TVSORTCB {
 }
 
 impl_default!(TVSORTCB);
+
+/// [`UDACCEL`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-udaccel)
+/// struct.
+#[repr(C)]
+#[derive(Default)]
+pub struct UDACCEL {
+	pub nSec: u32,
+	pub nInc: u32,
+}

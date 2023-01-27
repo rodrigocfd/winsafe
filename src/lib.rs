@@ -522,6 +522,14 @@ pub mod msg {
 		#[cfg(feature = "ole")] pub use super::super::comctl_ole::messages::tvm::*;
 	}
 
+	#[cfg(feature = "comctl")]
+	pub mod udm {
+		//! UpDown control
+		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-messages),
+		//! whose constants have [`UDM`](crate::co::UDM) prefix.
+		pub use super::super::comctl::messages::udm::*;
+	}
+
 	#[cfg(feature = "user")]
 	pub mod wm {
 		//! Generic window
