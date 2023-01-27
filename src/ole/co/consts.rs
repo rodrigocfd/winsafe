@@ -267,6 +267,81 @@ const_ordinary! { PICTYPE: i16;
 	ENHMETAFILE 4
 }
 
+const_ordinary! { RPC_C_AUTHN: u32;
+	/// Authentication service
+	/// [constants](https://learn.microsoft.com/en-us/windows/win32/com/com-authentication-service-constants)
+	/// (`u32`).
+	=>
+	=>
+	NONE 0
+	DCE_PRIVATE 1
+	DCE_PUBLIC 2
+	DEC_PUBLIC 4
+	GSS_NEGOTIATE 9
+	WINNT 10
+	GSS_SCHANNEL 14
+	GSS_KERBEROS 16
+	DPA 17
+	MSN 18
+	DIGEST 21
+	KERNEL 20
+	NEGO_EXTENDER 30
+	PKU2U 31
+	LIVE_SSP 32
+	LIVEXP_SSP 35
+	CLOUD_AP 36
+	MSONLINE 82
+	MQ 100
+	DEFAULT 0xffff_ffff
+}
+
+const_ordinary! { RPC_C_AUTHZ: u32;
+	/// Authorization
+	/// [constants](https://learn.microsoft.com/en-us/windows/win32/com/com-authorization-constants)
+	/// (`u32`).
+	=>
+	=>
+	NONE 0
+	NAME 1
+	DCE 2
+	DEFAULT 0xffff_ffff
+}
+
+const_ordinary! { RPC_C_IMP_LEVEL: u32;
+	/// Impersonation level
+	/// [constants](https://learn.microsoft.com/en-us/windows/win32/com/com-impersonation-level-constants)
+	/// (`u32`).
+	=>
+	=>
+	DEFAULT 0
+	ANONYMOUS 1
+	IDENTIFY 2
+	IMPERSONATE 3
+	DELEGATE 4
+}
+
+const_ordinary! { RPC_C_QOS_CAPABILITIES: u32;
+	/// [Quality of service](https://learn.microsoft.com/en-us/windows/win32/rpc/quality-of-service)
+	/// capabilities (`u32`).
+	=>
+	=>
+	DEFAULT 0x0
+	MUTUAL_AUTH 0x1
+	MAKE_FULLSIC 0x2
+	ANY_AUTHORITY 0x4
+	IGNORE_DELEGATE_FAILURE 0x8
+	LOCAL_MA_HINT 0x10
+	SCHANNEL_FULL_AUTH_IDENTITY 0x20
+}
+
+const_ordinary! { SEC_WINNT_AUTH_IDENTITY: u32;
+	/// [`COAUTHIDENTITY`](crate::COAUTHIDENTITY) `Flags` (`u32`).
+	=>
+	=>
+	ANSI 0x1
+	UNICODE 0x2
+}
+
 const_ordinary! { SEVERITY: u8;
 	/// [`HRESULT`](crate::co::HRESULT) severity (`u8`).
 	=>
