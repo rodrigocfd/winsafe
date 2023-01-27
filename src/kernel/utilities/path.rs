@@ -51,12 +51,33 @@ pub fn dir_list<'a>(
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
-/// use winsafe::path;
+/// use winsafe::{path, SysResult};
 ///
-/// for file_path in path::dir_walk("C:\\temp") {
+/// // Ordinary for loop
+/// for file_path in path::dir_walk("C:\\Temp") {
 ///     let file_path = file_path?;
 ///     println!("{}", file_path);
 /// }
+///
+/// // Closure with try_for_each
+/// path::dir_walk("C:\\Temp")
+///     .try_for_each(|file_path| -> SysResult<_> {
+///         let file_path = file_path?;
+///         println!("{}", file_path);
+///         Ok(())
+///     })?;
+///
+/// // Collecting into a Vec
+/// let all = path::dir_walk("C:\\Temp")
+///     .collect::<SysResult<Vec<_>>>()?;
+///
+/// // Transforming and collecting into a Vec
+/// let all = path::dir_walk("C:\\Temp")
+///     .map(|file_path| -> SysResult<_> {
+///         let file_path = file_path?;
+///         Ok(format!("PATH: {}", file_path))
+///     })
+///     .collect::<SysResult<Vec<_>>>()?;
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 #[must_use]
