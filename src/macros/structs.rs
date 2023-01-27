@@ -91,6 +91,27 @@ macro_rules! pub_fn_string_ptr_get_set {
 	};
 }
 
+/// Implements getter and setter methods for the given `*mut u16` and `u32`
+/// members, setting pointer and its actual chars length without terminating
+/// null.
+macro_rules! pub_fn_string_ptrlen_get_set {
+	($life:lifetime, $field:ident, $setter:ident, $length:ident) => {
+		/// Returns the string field, if any.
+		#[must_use]
+		pub fn $field(&self) -> Option<String> {
+			unsafe { self.$field.as_mut() }.map(|psz| {
+				WString::from_wchars_count(psz, self.$length as _).to_string()
+			})
+		}
+
+		/// Sets the string field.
+		pub fn $setter(&mut self, buf: Option<&$life mut WString>) {
+			self.$length = buf.as_ref().map_or(0, |buf| buf.str_len() as _);
+			self.$field = buf.map_or(std::ptr::null_mut(), |buf| unsafe { buf.as_mut_ptr() });
+		}
+	};
+}
+
 /// Implements getter and setter methods for the given `[u16; N]` member.
 macro_rules! pub_fn_string_arr_get_set {
 	($field:ident, $setter:ident) => {
