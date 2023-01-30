@@ -1,13 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, user};
-use crate::gdi::guard::GdiObjectGuard;
 use crate::kernel::decl::{GetLastError, HINSTANCE, IdStr, SysResult, WString};
 use crate::kernel::privs::ptr_to_sysresult;
 use crate::prelude::Handle;
+use crate::user;
 use crate::user::decl::{
-	ATOM, DLGPROC, HACCEL, HBITMAP, HCURSOR, HICON, HMENU, HWND, IdIdcStr,
-	IdIdiStr, IdObmStr, IdOcrStr, IdOicStr, SIZE, WNDCLASSEX,
+	ATOM, DLGPROC, HACCEL, HCURSOR, HICON, HMENU, HWND, IdIdcStr, IdIdiStr,
+	WNDCLASSEX,
 };
 
 impl user_Hinstance for HINSTANCE {}
@@ -161,58 +160,6 @@ pub trait user_Hinstance: Handle {
 	fn LoadIcon(&self, icon_id: IdIdiStr) -> SysResult<HICON> {
 		ptr_to_sysresult(
 			unsafe { user::ffi::LoadIconW(self.as_ptr(), icon_id.as_ptr()) },
-			|ptr| HICON(ptr),
-		)
-	}
-
-	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
-	/// method for [`HBITMAP`](crate::HBITMAP).
-	#[must_use]
-	fn LoadImageBitmap(&self,
-		name: IdObmStr, sz: SIZE, load: co::LR) -> SysResult<GdiObjectGuard<HBITMAP>>
-	{
-		ptr_to_sysresult(
-			unsafe {
-				user::ffi::LoadImageW(
-					self.as_ptr(), name.as_ptr(), 0, sz.cx, sz.cy, load.0)
-			},
-			|ptr| GdiObjectGuard { handle: HBITMAP(ptr) },
-		)
-	}
-
-	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
-	/// method for [`HCURSOR`](crate::HCURSOR).
-	///
-	/// **Note:** Must be paired with an
-	/// [`HCURSOR::DestroyCursor`](crate::prelude::user_Hcursor::DestroyCursor)
-	/// call.
-	#[must_use]
-	fn LoadImageCursor(&self,
-		name: IdOcrStr, sz: SIZE, load: co::LR) -> SysResult<HCURSOR>
-	{
-		ptr_to_sysresult(
-			unsafe {
-				user::ffi::LoadImageW(
-					self.as_ptr(), name.as_ptr(), 2, sz.cx, sz.cy, load.0)
-			},
-			|ptr| HCURSOR(ptr),
-		)
-	}
-
-	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
-	/// method for [`HICON`](crate::HICON).
-	///
-	/// **Note:** Must be paired with an
-	/// [`HICON::DestroyIcon`](crate::prelude::user_Hicon::DestroyIcon) call.
-	#[must_use]
-	fn LoadImageIcon(&self,
-		name: IdOicStr, sz: SIZE, load: co::LR) -> SysResult<HICON>
-	{
-		ptr_to_sysresult(
-			unsafe {
-				user::ffi::LoadImageW(
-					self.as_ptr(), name.as_ptr(), 1, sz.cx, sz.cy, load.0)
-			},
 			|ptr| HICON(ptr),
 		)
 	}

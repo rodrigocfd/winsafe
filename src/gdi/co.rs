@@ -214,6 +214,29 @@ const_ordinary! { HS: i32;
 	DIAGCROSS 5
 }
 
+const_bitflag! { LR: u32;
+	/// [`HINSTANCE::LoadImageBitmap`](crate::prelude::gdi_Hinstance::LoadImageBitmap),
+	/// [`HINSTANCE::LoadImageCursor`](crate::prelude::gdi_Hinstance::LoadImageCursor)
+	/// and
+	/// [`HINSTANCE::LoadImageIcon`](crate::prelude::gdi_Hinstance::LoadImageIcon)
+	/// `load`.
+	=>
+	=>
+	DEFAULTCOLOR 0x0000_0000
+	MONOCHROME 0x0000_0001
+	COLOR 0x0000_0002
+	COPYRETURNORG 0x0000_0004
+	COPYDELETEORG 0x0000_0008
+	LOADFROMFILE 0x0000_0010
+	LOADTRANSPARENT 0x0000_0020
+	DEFAULTSIZE 0x0000_0040
+	VGACOLOR 0x0000_0080
+	LOADMAP3DCOLORS 0x0000_1000
+	CREATEDIBSECTION 0x0000_2000
+	COPYFROMRESOURCE 0x0000_4000
+	SHARED 0x0000_8000
+}
+
 const_ordinary! { OUT_PRECIS: u8;
 	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont)
 	/// `out_precision` and [`LOGFONT`](crate::LOGFONT) `lfOutPrecision` (`u8`).

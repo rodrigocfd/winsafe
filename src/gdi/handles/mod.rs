@@ -3,6 +3,7 @@ mod hbitmap;
 mod hbrush;
 mod hdc;
 mod hfont;
+mod hinstance;
 mod hpen;
 mod hrgn;
 
@@ -17,6 +18,7 @@ pub mod traits {
 	pub use super::hbrush::gdi_Hbrush;
 	pub use super::hdc::gdi_Hdc;
 	pub use super::hfont::gdi_Hfont;
+	pub use super::hinstance::gdi_Hinstance;
 	pub use super::hpen::gdi_Hpen;
 	pub use super::hrgn::gdi_Hrgn;
 }

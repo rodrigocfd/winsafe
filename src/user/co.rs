@@ -1534,29 +1534,6 @@ const_ws! { LBS: u32;
 	STANDARD Self::NOTIFY.0 | Self::SORT.0 | WS::VSCROLL.0 | WS::BORDER.0
 }
 
-const_bitflag! { LR: u32;
-	/// [`HINSTANCE::LoadImageBitmap`](crate::prelude::user_Hinstance::LoadImageBitmap),
-	/// [`HINSTANCE::LoadImageCursor`](crate::prelude::user_Hinstance::LoadImageCursor)
-	/// and
-	/// [`HINSTANCE::LoadImageIcon`](crate::prelude::user_Hinstance::LoadImageIcon)
-	/// `load`.
-	=>
-	=>
-	DEFAULTCOLOR 0x0000_0000
-	MONOCHROME 0x0000_0001
-	COLOR 0x0000_0002
-	COPYRETURNORG 0x0000_0004
-	COPYDELETEORG 0x0000_0008
-	LOADFROMFILE 0x0000_0010
-	LOADTRANSPARENT 0x0000_0020
-	DEFAULTSIZE 0x0000_0040
-	VGACOLOR 0x0000_0080
-	LOADMAP3DCOLORS 0x0000_1000
-	CREATEDIBSECTION 0x0000_2000
-	COPYFROMRESOURCE 0x0000_4000
-	SHARED 0x0000_8000
-}
-
 const_ordinary! { LSFW: u32;
 	/// [`LockSetForegroundWindow`](crate::LockSetForegroundWindow) `lock_code`
 	/// (`u32`).
@@ -1865,7 +1842,7 @@ const_ordinary! { OBJID: u32;
 }
 
 const_ordinary! { OBM: u32;
-	/// [`HINSTANCE::LoadImageBitmap`](crate::prelude::user_Hinstance::LoadImageBitmap)
+	/// [`HINSTANCE::LoadImageBitmap`](crate::prelude::gdi_Hinstance::LoadImageBitmap)
 	/// OEM image identifier (`u32`).
 	=>
 	=>
@@ -1907,7 +1884,7 @@ const_ordinary! { OBM: u32;
 }
 
 const_ordinary! { OCR: u32;
-	/// [`HINSTANCE::LoadImageCursor`](crate::prelude::user_Hinstance::LoadImageCursor)
+	/// [`HINSTANCE::LoadImageCursor`](crate::prelude::gdi_Hinstance::LoadImageCursor)
 	/// and
 	/// [`HCURSOR::SetSystemCursor`](crate::prelude::user_Hcursor::SetSystemCursor)
 	/// OEM cursor identifier (`u32`).
@@ -1981,7 +1958,7 @@ const_ordinary! { ODT_C: u32;
 }
 
 const_ordinary! { OIC: u32;
-	/// [`HINSTANCE::LoadImageIcon`](crate::prelude::user_Hinstance::LoadImageIcon)
+	/// [`HINSTANCE::LoadImageIcon`](crate::prelude::gdi_Hinstance::LoadImageIcon)
 	/// OEM icon identifier (`u32`).
 	=>
 	=>

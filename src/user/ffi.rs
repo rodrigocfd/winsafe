@@ -155,7 +155,6 @@ extern_sys! { "user32";
 	LoadAcceleratorsW(HANDLE, PCSTR) -> HANDLE
 	LoadCursorW(HANDLE, PCSTR) -> HANDLE
 	LoadIconW(HANDLE, PCSTR) -> HANDLE
-	LoadImageW(HANDLE, PCSTR, u32, i32, i32, u32) -> HANDLE
 	LoadMenuW(HANDLE, PCSTR) -> HANDLE
 	LoadStringW(HANDLE, u32, PSTR, i32) -> i32
 	LockSetForegroundWindow(u32) -> BOOL

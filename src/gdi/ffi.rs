@@ -97,3 +97,7 @@ extern_sys! { "gdi32";
 	UpdateColors(HANDLE) -> BOOL
 	WidenPath(HANDLE) -> BOOL
 }
+
+extern_sys! { "user32";
+	LoadImageW(HANDLE, PCSTR, u32, i32, i32, u32) -> HANDLE // returns GdiObjectGuard, so needs gdi feature
+}

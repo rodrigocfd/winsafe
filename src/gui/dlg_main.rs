@@ -3,13 +3,16 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
+use crate::gdi::decl::IdOicStr;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::WindowEventsAll;
 use crate::kernel::decl::{AnyResult, HINSTANCE, IdStr, SysResult};
 use crate::msg::wm;
-use crate::prelude::{GuiEvents, kernel_Hinstance, user_Hinstance, user_Hwnd};
-use crate::user::decl::{HWND, IdOicStr, PostQuitMessage, SIZE};
+use crate::prelude::{
+	gdi_Hinstance, GuiEvents, kernel_Hinstance, user_Hinstance, user_Hwnd,
+};
+use crate::user::decl::{HWND, PostQuitMessage, SIZE};
 
 struct Obj { // actual fields of DlgMain
 	dlg_base: DlgBase,
