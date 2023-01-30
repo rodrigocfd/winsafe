@@ -15,14 +15,23 @@ impl Stats {
 	/// Returns the stats as the formatted output.
 	pub fn format(&self) -> String {
 		format!("{}\r\n{}\r\n{}\r\n{}\r\n{}\r\n{}\r\n{}",
-			format!("| Functions | {} |", self.ffis),
-			format!("| Structs | {} |", self.structs),
-			format!("| Constants | {} |", self.consts),
-			format!("| Window messages | {} |", self.wmsgs),
-			format!("| Handles | {} |", self.handles),
-			format!("| COM interfaces | {} |", self.com_interfaces),
-			format!("| COM methods | {} |", self.com_methods),
+			format!("| Functions | {} |", Self::fmt_thou(self.ffis)),
+			format!("| Structs | {} |", Self::fmt_thou(self.structs)),
+			format!("| Constants | {} |", Self::fmt_thou(self.consts)),
+			format!("| Window messages | {} |", Self::fmt_thou(self.wmsgs)),
+			format!("| Handles | {} |", Self::fmt_thou(self.handles)),
+			format!("| COM interfaces | {} |", Self::fmt_thou(self.com_interfaces)),
+			format!("| COM methods | {} |", Self::fmt_thou(self.com_methods)),
 		)
+	}
+
+	fn fmt_thou(n: usize) -> String {
+		let thou = (n - (n % 1000)) / 1000;
+		if thou > 0 {
+			format!("{},{}", thou, n % 1000)
+		} else {
+			n.to_string()
+		}
 	}
 
 	/// Reads all files in the target directory and processes all the stats, calling
