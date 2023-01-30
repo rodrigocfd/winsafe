@@ -30,6 +30,49 @@ impl<'a, 'b, 'c> COAUTHIDENTITY<'a, 'b, 'c> {
 	pub_fn_string_ptrlen_get_set!('c, Password, set_Password, PasswordLength);
 }
 
+/// [`COAUTHINFO`](https://learn.microsoft.com/en-us/windows/win32/api/wtypesbase/ns-wtypesbase-coauthinfo)
+/// struct.
+#[repr(C)]
+pub struct COAUTHINFO<'a, 'b, 'c, 'd, 'e> {
+	pub dwAuthnSvc: co::RPC_C_AUTHN,
+	pub dwAuthzSvc: co::RPC_C_AUTHZ,
+	pwszServerPrincName: *mut u16,
+	pub dwAuthnLevel: co::RPC_C_AUTHN,
+	pub dwImpersonationLevel: co::RPC_C_IMP_LEVEL,
+	pAuthIdentityData: *mut COAUTHIDENTITY<'c, 'd, 'e>,
+	pub dwCapabilities: co::RPC_C_QOS_CAPABILITIES,
+
+	_pwszServerPrincName: PhantomData<&'a mut u16>,
+	_pAuthIdentityData: PhantomData<&'b mut COAUTHIDENTITY<'c, 'd, 'e>>,
+}
+
+impl_default!(COAUTHINFO, 'a, 'b, 'c, 'd, 'e);
+
+impl<'a, 'b, 'c, 'd, 'e> COAUTHINFO<'a, 'b, 'c, 'd, 'e> {
+	pub_fn_string_ptr_get_set!('a, pwszServerPrincName, set_pwszServerPrincName);
+	pub_fn_ptr_get_set!('b, pAuthIdentityData, set_pAuthIdentityData, COAUTHIDENTITY<'c, 'd, 'e>);
+}
+
+/// [`COSERVERINFO`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-coserverinfo)
+/// struct.
+#[repr(C)]
+pub struct COSERVERINFO<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
+	dwReserved1: u32,
+	pwszName: *mut u16,
+	pAuthInfo: *mut COAUTHINFO<'c, 'd, 'e, 'f, 'g>,
+	dwReserved2: u32,
+
+	_pwszName: PhantomData<&'a mut u16>,
+	_pAuthInfo: PhantomData<&'b COAUTHINFO<'c, 'd, 'e, 'f, 'g>>,
+}
+
+impl_default!(COSERVERINFO, 'a, 'b, 'c, 'd, 'e, 'f, 'g);
+
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> COSERVERINFO<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
+	pub_fn_string_ptr_get_set!('a, pwszName, set_pwszName);
+	pub_fn_ptr_get_set!('b, pAuthInfo, set_pAuthInfo, COAUTHINFO<'c, 'd, 'e, 'f, 'g>);
+}
+
 /// [`FORMATETC`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-formatetc)
 /// struct.
 #[repr(C)]
