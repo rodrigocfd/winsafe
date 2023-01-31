@@ -8,7 +8,7 @@ use crate::kernel::decl::{
 };
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::{
-	bool_to_sysresult, MAX_PATH, ptr_to_sysresult, replace_handle_value,
+	as_mut, bool_to_sysresult, MAX_PATH, ptr_to_sysresult,
 };
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{
@@ -250,7 +250,7 @@ pub trait user_Hwnd: Handle {
 		let ret = bool_to_sysresult(
 			unsafe { user::ffi::DestroyWindow(self.as_ptr()) },
 		);
-		replace_handle_value(self, Self::INVALID);
+		*unsafe { as_mut(self) } = Self::INVALID;
 		ret
 	}
 

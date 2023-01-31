@@ -5,9 +5,7 @@ use std::marker::PhantomData;
 use crate::{co, comctl};
 use crate::comctl::guard::HimagelistDragGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::{
-	bool_to_sysresult, ptr_to_sysresult, replace_handle_value,
-};
+use crate::kernel::privs::{as_mut, bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::Handle;
 use crate::user::decl::{COLORREF, HBITMAP, HICON, POINT, SIZE};
 
@@ -158,7 +156,7 @@ pub trait comctl_Himagelist: Handle {
 		let ret = bool_to_sysresult(
 			unsafe { comctl::ffi::ImageList_Destroy(self.as_ptr()) },
 		);
-		replace_handle_value(self, Self::INVALID);
+		*unsafe { as_mut(self) } = Self::INVALID;
 		ret
 	}
 

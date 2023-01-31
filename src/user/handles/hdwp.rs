@@ -2,7 +2,7 @@
 
 use crate::{co, user};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::{ptr_to_sysresult, replace_handle_value};
+use crate::kernel::privs::{as_mut, ptr_to_sysresult};
 use crate::prelude::Handle;
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 use crate::user::guard::HdwpGuard;
@@ -55,11 +55,11 @@ pub trait user_Hdwp: Handle {
 			).as_mut()
 		} {
 			Some(ptr) => {
-				replace_handle_value(self, unsafe { Self::from_ptr(ptr) });
+				unsafe { *as_mut(self) = Self::from_ptr(ptr); }
 				Ok(())
 			},
 			None => {
-				replace_handle_value(self, Self::INVALID); // prevent EndDeferWindowPos()
+				*unsafe { as_mut(self) } = Self::INVALID; // prevent EndDeferWindowPos()
 				Err(GetLastError())
 			},
 		}

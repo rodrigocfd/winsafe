@@ -2,7 +2,7 @@
 
 use crate::kernel;
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::replace_handle_value;
+use crate::kernel::privs::as_mut;
 use crate::prelude::Handle;
 
 impl_handle! { HLOCAL;
@@ -34,7 +34,7 @@ pub trait kernel_Hlocal: Handle {
 			None => Ok(()),
 			Some(_) => Err(GetLastError()),
 		};
-		replace_handle_value(self, Self::INVALID);
+		*unsafe { as_mut(self) } = Self::INVALID;
 		ret
 	}
 

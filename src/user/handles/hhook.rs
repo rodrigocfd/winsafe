@@ -2,9 +2,7 @@
 
 use crate::{co, user};
 use crate::kernel::decl::{HINSTANCE, SysResult};
-use crate::kernel::privs::{
-	bool_to_sysresult, ptr_to_sysresult, replace_handle_value,
-};
+use crate::kernel::privs::{as_mut, bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::Handle;
 use crate::user::decl::HOOKPROC;
 
@@ -65,7 +63,7 @@ pub trait user_Hhook: Handle {
 		let ret = bool_to_sysresult(
 			unsafe { user::ffi::UnhookWindowsHookEx(self.as_ptr()) },
 		);
-		replace_handle_value(self, Self::INVALID);
+		*unsafe { as_mut(self) } = Self::INVALID;
 		ret
 	}
 }

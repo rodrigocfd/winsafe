@@ -2,7 +2,6 @@
 
 use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::ffi_types::{BOOL, HANDLE};
-use crate::prelude::Handle;
 
 pub(crate) const GMEM_INVALID_HANDLE: u32 = 0x8000;
 pub(crate) const INFINITE: u32 = 0xffff_ffff;
@@ -23,6 +22,11 @@ pub(crate) const fn MAKEINTRESOURCE(val: isize) -> *const u16 {
 	val as u16 as _
 }
 
+/// Forcibly casts a const reference into a mutable one.
+pub(crate) unsafe fn as_mut<T>(val: &T) -> &mut T {
+	&mut *(val as *const T as *mut T)
+}
+
 /// If value is `FALSE`, yields `Err(GetLastError)`, otherwise `Ok()`.
 pub(crate) fn bool_to_sysresult(expr: BOOL) -> SysResult<()> {
 	match expr {
@@ -40,13 +44,6 @@ pub(crate) fn ptr_to_sysresult<U, F>(ptr: HANDLE, op: F) -> SysResult<U>
 	} else {
 		Ok(op(ptr))
 	}
-}
-
-/// Forcibly replaces the underlying handle value.
-pub(crate) fn replace_handle_value<H>(h: &H, new: H)
-	where H: Handle,
-{
-	*unsafe { &mut *(h as *const H as *mut H) } = new;
 }
 
 /// Converts a string to an ISO-8859-1 null-terminated byte array.

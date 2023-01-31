@@ -6,7 +6,7 @@ use crate::kernel::decl::{
 	THREADENTRY32,
 };
 use crate::kernel::guard::HandleGuard;
-use crate::kernel::privs::{ptr_to_sysresult, replace_handle_value};
+use crate::kernel::privs::{as_mut, ptr_to_sysresult};
 use crate::prelude::Handle;
 
 impl_handle! { HPROCESSLIST;
@@ -184,7 +184,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					replace_handle_value(self, Self::INVALID);
+					*unsafe { as_mut(self) } = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),
@@ -210,7 +210,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					replace_handle_value(self, Self::INVALID);
+					*unsafe { as_mut(self) } = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),
@@ -236,7 +236,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					replace_handle_value(self, Self::INVALID);
+					*unsafe { as_mut(self) } = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),
@@ -262,7 +262,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					replace_handle_value(self, Self::INVALID);
+					*unsafe { as_mut(self) } = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),
@@ -288,7 +288,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					replace_handle_value(self, Self::INVALID);
+					*unsafe { as_mut(self) } = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),
@@ -314,7 +314,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					replace_handle_value(self, Self::INVALID);
+					*unsafe { as_mut(self) } = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),
@@ -340,7 +340,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					replace_handle_value(self, Self::INVALID);
+					*unsafe { as_mut(self) } = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),
@@ -366,7 +366,7 @@ pub trait kernel_Hprocesslist: Handle {
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					replace_handle_value(self, Self::INVALID);
+					*unsafe { as_mut(self) } = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),

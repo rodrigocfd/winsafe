@@ -4,8 +4,7 @@ use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::guard::HglobalGuard;
 use crate::kernel::privs::{
-	bool_to_sysresult, GMEM_INVALID_HANDLE, ptr_to_sysresult,
-	replace_handle_value,
+	as_mut, bool_to_sysresult, GMEM_INVALID_HANDLE, ptr_to_sysresult,
 };
 use crate::prelude::Handle;
 
@@ -77,13 +76,14 @@ pub trait kernel_Hglobal: Handle {
 	fn GlobalReAlloc(&self,
 		num_bytes: usize, flags: co::GMEM) -> SysResult<()>
 	{
-		ptr_to_sysresult(
-			unsafe {
-				kernel::ffi::GlobalReAlloc(self.as_ptr(), num_bytes, flags.0)
-			}, |ptr| {
-				replace_handle_value(self, unsafe { Self::from_ptr(ptr) });
-			},
-		)
+		unsafe {
+			ptr_to_sysresult(
+				kernel::ffi::GlobalReAlloc(self.as_ptr(), num_bytes, flags.0),
+				|ptr| {
+					*as_mut(self) = Self::from_ptr(ptr);
+				},
+			)
+		}
 	}
 
 	/// [`GlobalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize)

@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::kernel::privs::{MAX_PATH, replace_handle_value};
+use crate::kernel::privs::{as_mut, MAX_PATH};
 use crate::prelude::Handle;
 use crate::shell;
 use crate::user::decl::POINT;
@@ -76,7 +76,7 @@ pub trait shell_Hdrop: Handle {
 	fn DragFinish(&self) {
 		unsafe {
 			shell::ffi::DragFinish(self.as_ptr());
-			replace_handle_value(self, Self::INVALID);
+			*as_mut(self) = Self::INVALID;
 		}
 	}
 
