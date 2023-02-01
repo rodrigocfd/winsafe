@@ -5,7 +5,7 @@ use crate::kernel::decl::{
 	HFILEMAPVIEW, HFINDFILE, HGLOBAL, HIDWORD, HINSTANCE, HUPDATERSRC, LODWORD,
 	PROCESS_INFORMATION,
 };
-use crate::prelude::{Handle, kernel_Hfile};
+use crate::prelude::{Handle, kernel_Hfile, kernel_Hglobal};
 
 /// RAII implementation for a [`Handle`](crate::prelude::Handle) which
 /// automatically calls
@@ -127,6 +127,36 @@ handle_guard! { GlobalFreeGuard: HGLOBAL;
 	/// calls
 	/// [`GlobalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalfree)
 	/// when the object goes out of scope.
+}
+
+/// RAII implementation for [`HGLOBAL`](crate::HGLOBAL) lock which automatically
+/// calls
+/// [`GlobalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
+/// when the object goes out of scope.
+pub struct GlobalUnlockGuard<'a, H>
+	where H: kernel_Hglobal,
+{
+	hglobal: &'a H,
+}
+
+impl<'a, H> Drop for GlobalUnlockGuard<'a, H>
+	where H: kernel_Hglobal,
+{
+	fn drop(&mut self) {
+		if let Some(h) = self.hglobal.as_opt() {
+			unsafe { kernel::ffi::GlobalUnlock(h.as_ptr()); } // ignore errors
+		}
+	}
+}
+
+impl<'a, H> GlobalUnlockGuard<'a, H>
+	where H: kernel_Hglobal,
+{
+	/// Constructs the guard by taking ownership of the objects.
+	#[must_use]
+	pub const fn new(hglobal: &'a H) -> Self {
+		Self { hglobal }
+	}
 }
 
 /// RAII implementation for the [`HFILE`](crate::HFILE) lock which automatically

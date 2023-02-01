@@ -2,10 +2,8 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::guard::GlobalFreeGuard;
-use crate::kernel::privs::{
-	as_mut, bool_to_sysresult, GMEM_INVALID_HANDLE, ptr_to_sysresult,
-};
+use crate::kernel::guard::{GlobalFreeGuard, GlobalUnlockGuard};
+use crate::kernel::privs::{as_mut, GMEM_INVALID_HANDLE, ptr_to_sysresult};
 use crate::prelude::Handle;
 
 impl_handle! { HGLOBAL;
@@ -53,17 +51,44 @@ pub trait kernel_Hglobal: Handle {
 	/// Calls [`HGLOBAL::GlobalSize`](crate::prelude::kernel_Hglobal::GlobalSize)
 	/// to retrieve the size of the memory block.
 	///
-	/// **Note:** Must be paired with an
-	/// [`HGLOBAL::GlobalUnlock`](crate::prelude::kernel_Hglobal::GlobalUnlock)
-	/// call.
+	/// Note that this method returns two objects: a reference to the memory
+	/// block, and a guard which will call
+	/// [`GlobalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
+	/// automatically when the object goes out of scope, so keep the guard
+	/// alive.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HGLOBAL};
+	///
+	/// let hglobal = HGLOBAL::GlobalAlloc(
+	///     co::GMEM::FIXED | co::GMEM::ZEROINIT,
+	///     120,
+	/// )?;
+	///
+	/// let (block, _guard) = hglobal.GlobalLock()?;
+	///
+	/// block[0] = 40;
+	///
+	/// // GlobalUnlock() called automatically
+	///
+	/// // GlobalFree() called automatically
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
 	#[must_use]
-	fn GlobalLock(&self) -> SysResult<&mut [u8]> {
+	fn GlobalLock(&self) -> SysResult<(&mut [u8], GlobalUnlockGuard<'_, Self>)> {
 		let mem_sz = self.GlobalSize()?;
 		ptr_to_sysresult(
 			unsafe { kernel::ffi::GlobalLock(self.as_ptr()) },
-			|ptr| unsafe {
-				std::slice::from_raw_parts_mut(ptr as *mut _ as *mut _, mem_sz as _)
-			},
+			|ptr| (
+				unsafe {
+					std::slice::from_raw_parts_mut(
+						ptr as *mut _ as *mut _, mem_sz as _)
+				},
+				GlobalUnlockGuard::new(self),
+			),
 		)
 	}
 
@@ -94,11 +119,5 @@ pub trait kernel_Hglobal: Handle {
 			0 => Err(GetLastError()),
 			sz => Ok(sz),
 		}
-	}
-
-	/// [`GlobalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
-	/// method.
-	fn GlobalUnlock(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { kernel::ffi::GlobalUnlock(self.as_ptr()) })
 	}
 }
