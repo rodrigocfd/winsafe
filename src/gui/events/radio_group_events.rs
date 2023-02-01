@@ -4,7 +4,6 @@ use std::rc::Rc;
 use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::WindowEventsAll;
-use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::AnyResult;
 
 /// Exposes button control
@@ -66,7 +65,7 @@ impl RadioGroupEvents {
 	pub fn bn_clicked<F>(&self, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
-		let shared_func = Rc::new(VeryUnsafeCell::new(func));
+		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_user_events().wm_command(co::BN::CLICKED, *ctrl_id as _, {
@@ -87,7 +86,7 @@ impl RadioGroupEvents {
 	pub fn bn_dbl_clk<F>(&self, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
-		let shared_func = Rc::new(VeryUnsafeCell::new(func));
+		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_user_events().wm_command(co::BN::DBLCLK, *ctrl_id as _, {
@@ -106,7 +105,7 @@ impl RadioGroupEvents {
 	pub fn bn_kill_focus<F>(&self, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
-		let shared_func = Rc::new(VeryUnsafeCell::new(func));
+		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_user_events().wm_command(co::BN::KILLFOCUS, *ctrl_id as _, {
@@ -125,7 +124,7 @@ impl RadioGroupEvents {
 	pub fn bn_set_focus<F>(&self, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
-		let shared_func = Rc::new(VeryUnsafeCell::new(func));
+		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
 			self.parent_user_events().wm_command(co::BN::SETFOCUS, *ctrl_id as _, {

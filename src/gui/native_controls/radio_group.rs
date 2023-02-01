@@ -10,7 +10,6 @@ use crate::gui::base::Base;
 use crate::gui::events::RadioGroupEvents;
 use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::native_controls::radio_button::{RadioButton, RadioButtonOpts};
-use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::SysResult;
 use crate::prelude::{
 	GuiChild, GuiEvents, GuiNativeControlEvents, GuiParent, GuiWindow, Handle,
@@ -19,7 +18,7 @@ use crate::user::decl::HWND;
 
 struct Obj { // actual fields of RadioGroup
 	parent_ptr: NonNull<Base>,
-	radios: VeryUnsafeCell<Vec<RadioButton>>,
+	radios: Vec<RadioButton>,
 	events: RadioGroupEvents,
 	_pin: PhantomPinned,
 }
@@ -97,7 +96,7 @@ impl RadioGroup {
 			Arc::pin(
 				Obj {
 					parent_ptr: NonNull::from(parent_ref),
-					radios: VeryUnsafeCell::new(radios),
+					radios,
 					events: RadioGroupEvents::new(parent_ref, ctrl_ids),
 					_pin: PhantomPinned,
 				},
@@ -150,7 +149,7 @@ impl RadioGroup {
 			Arc::pin(
 				Obj {
 					parent_ptr: NonNull::from(parent_ref),
-					radios: VeryUnsafeCell::new(radios),
+					radios,
 					events: RadioGroupEvents::new(parent_ref, ctrl_ids),
 					_pin: PhantomPinned,
 				},

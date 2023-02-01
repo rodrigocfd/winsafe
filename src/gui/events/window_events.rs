@@ -2,6 +2,7 @@ use crate::co;
 use crate::gdi::decl::HFONT;
 use crate::gui::events::func_store::FuncStore;
 use crate::kernel::decl::AnyResult;
+use crate::kernel::privs::as_mut;
 use crate::msg::{wm, WndMsg};
 use crate::prelude::MsgSendRecv;
 use crate::user::decl::{HICON, HMENU};
@@ -41,7 +42,7 @@ impl WindowEvents {
 
 	/// Removes all stored events.
 	pub(in crate::gui) fn clear(&self) {
-		self.msgs.clear();
+		unsafe { as_mut(&self.msgs) }.clear();
 	}
 
 	/// Searches for the last added user function for the given message, and
@@ -78,7 +79,7 @@ impl GuiEvents for WindowEvents {
 	fn wm<F>(&self, ident: co::WM, func: F)
 		where F: Fn(WndMsg) -> AnyResult<Option<isize>> + 'static,
 	{
-		self.msgs.push(ident, Box::new(func));
+		unsafe { as_mut(&self.msgs) }.push(ident, Box::new(func));
 	}
 }
 

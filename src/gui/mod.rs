@@ -22,7 +22,6 @@ mod raw_base;
 mod raw_control;
 mod raw_main;
 mod raw_modal;
-mod very_unsafe_cell;
 mod window_control;
 mod window_main;
 mod window_modal;

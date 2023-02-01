@@ -9,8 +9,8 @@ use crate::gui::events::{StatusBarEvents, WindowEvents};
 use crate::gui::native_controls::base_native_control::BaseNativeControl;
 use crate::gui::native_controls::status_bar_parts::StatusBarParts;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
-use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::SysResult;
+use crate::kernel::privs::as_mut;
 use crate::msg::{sb, wm};
 use crate::prelude::{
 	GuiChild, GuiEvents, GuiNativeControl, GuiNativeControlEvents, GuiParent,
@@ -22,8 +22,8 @@ struct Obj { // actual fields of StatusBar
 	base: BaseNativeControl,
 	ctrl_id: u16,
 	events: StatusBarEvents,
-	parts_info: VeryUnsafeCell<Vec<StatusBarPart>>,
-	right_edges: VeryUnsafeCell<Vec<i32>>, // buffer to speed up resize calls
+	parts_info: Vec<StatusBarPart>,
+	right_edges: Vec<i32>, // buffer to speed up resize calls
 	_pin: PhantomPinned,
 }
 
@@ -133,8 +133,8 @@ impl StatusBar {
 					base: BaseNativeControl::new(parent_ref),
 					ctrl_id,
 					events: StatusBarEvents::new(parent_ref, ctrl_id),
-					parts_info: VeryUnsafeCell::new(parts.to_vec()),
-					right_edges: VeryUnsafeCell::new(vec![0; parts.len()]),
+					parts_info: parts.to_vec(),
+					right_edges: vec![0; parts.len()],
 					_pin: PhantomPinned,
 				},
 			),
@@ -157,7 +157,7 @@ impl StatusBar {
 	}
 
 	fn create(&self) -> SysResult<()> {
-		for part in self.0.parts_info.as_mut().iter_mut() {
+		for part in unsafe { as_mut(&self.0.parts_info) }.iter_mut() {
 			if let StatusBarPart::Fixed(width) = part { // adjust fixed-width parts to DPI
 				let mut col_cx = SIZE::new(*width as _, 0);
 				multiply_dpi_or_dtu(self.0.base.parent(), None, Some(&mut col_cx))?;
@@ -212,14 +212,15 @@ impl StatusBar {
 			}
 		}
 
-		let right_edges = &mut self.0.right_edges.as_mut();
+		let right_edges = unsafe { as_mut(&self.0.right_edges) };
 		let mut total_cx = p.client_area.cx as u32;
 
 		for (idx, part_info) in self.0.parts_info.iter().rev().enumerate() {
 			right_edges[self.0.parts_info.len() - idx - 1] = total_cx as _;
 			total_cx -= match part_info {
 				StatusBarPart::Fixed(pixels) => *pixels,
-				StatusBarPart::Proportional(pp) => (cx_available / total_proportions as u32) * (*pp as u32),
+				StatusBarPart::Proportional(pp) =>
+					(cx_available / total_proportions as u32) * (*pp as u32),
 			};
 		}
 		*right_edges.last_mut().unwrap() = -1;

@@ -3,8 +3,8 @@ use std::rc::Rc;
 use crate::co;
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::events::func_store::FuncStore;
-use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::AnyResult;
+use crate::kernel::privs::as_mut;
 use crate::msg::{wm, WndMsg};
 use crate::prelude::{GuiEvents, MsgSendRecv};
 
@@ -50,9 +50,11 @@ impl WindowEventsAll {
 
 	/// Removes all stored events.
 	pub(in crate::gui) fn clear(&self) {
-		self.tmrs.clear();
-		self.cmds.clear();
-		self.nfys.clear();
+		unsafe {
+			as_mut(&self.tmrs).clear();
+			as_mut(&self.cmds).clear();
+			as_mut(&self.nfys).clear();
+		}
 		self.window_events.clear();
 	}
 
@@ -135,7 +137,7 @@ impl WindowEventsAll {
 	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
-		self.tmrs.push(timer_id, Box::new(func));
+		unsafe { as_mut(&self.tmrs) }.push(timer_id, Box::new(func));
 	}
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
@@ -170,7 +172,7 @@ impl WindowEventsAll {
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
 		let code: co::CMD = code.into();
-		self.cmds.push((code, ctrl_id), Box::new(func));
+		unsafe { as_mut(&self.cmds) }.push((code, ctrl_id), Box::new(func));
 	}
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
@@ -182,7 +184,7 @@ impl WindowEventsAll {
 	pub fn wm_command_accel_menu<F>(&self, ctrl_id: u16, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
-		let shared_func = Rc::new(VeryUnsafeCell::new(func));
+		let shared_func = Rc::new(func);
 
 		self.wm_command(co::CMD::Menu, ctrl_id, {
 			let shared_func = shared_func.clone();
@@ -206,6 +208,6 @@ impl WindowEventsAll {
 		where F: Fn(wm::Notify) -> AnyResult<Option<isize>> + 'static,
 	{
 		let code: co::NM = code.into();
-		self.nfys.push((id_from, code), Box::new(func));
+		unsafe { as_mut(&self.nfys) }.push((id_from, code), Box::new(func));
 	}
 }

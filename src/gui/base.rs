@@ -4,8 +4,8 @@ use crate::co;
 use crate::gui::events::{ProcessResult, WindowEventsAll};
 use crate::gui::layout_arranger::{Horz, LayoutArranger, Vert};
 use crate::gui::privs::{post_quit_error, QUIT_ERROR};
-use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::{AnyResult, HINSTANCE, SysResult};
+use crate::kernel::privs::as_mut;
 use crate::msg::WndMsg;
 use crate::prelude::{GuiEvents, GuiParent, Handle, kernel_Hinstance, user_Hwnd};
 use crate::user::decl::{
@@ -19,7 +19,7 @@ pub(in crate::gui) struct Base {
 	parent_ptr: Option<NonNull<Self>>,
 	user_events: WindowEventsAll, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
 	privileged_events: WindowEventsAll, // inserted internally to automate tasks: all will be executed
-	layout_arranger: VeryUnsafeCell<LayoutArranger>,
+	layout_arranger: LayoutArranger,
 }
 
 impl Base {
@@ -42,7 +42,7 @@ impl Base {
 			parent_ptr: parent.map(|parent| NonNull::from(parent)),
 			user_events: WindowEventsAll::new(),
 			privileged_events: WindowEventsAll::new(),
-			layout_arranger: VeryUnsafeCell::new(LayoutArranger::new()),
+			layout_arranger: LayoutArranger::new(),
 		};
 		new_self.default_message_handlers();
 		new_self
@@ -115,7 +115,7 @@ impl Base {
 	pub(in crate::gui) fn add_to_layout_arranger(&self,
 		hchild: &HWND, horz: Horz, vert: Vert) -> SysResult<()>
 	{
-		self.layout_arranger.as_mut()
+		unsafe { as_mut(&self.layout_arranger) }
 			.add_child(&self.hwnd, hchild, horz, vert)?;
 		Ok(())
 	}

@@ -3,8 +3,8 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::SysResult;
+use crate::kernel::privs::as_mut;
 use crate::msg::wm;
 use crate::prelude::{Handle, user_Hdwp, user_Hwnd};
 use crate::user::decl::{HDWP, HWND, HwndPlace, POINT, RECT, SIZE};
@@ -49,8 +49,8 @@ struct ChildInfo {
 }
 
 struct Obj { // actual fields of LayoutArranger
-	ctrls: VeryUnsafeCell<Vec<ChildInfo>>,
-	sz_parent_orig: VeryUnsafeCell<SIZE>, // original parent client area
+	ctrls: Vec<ChildInfo>,
+	sz_parent_orig: SIZE, // original parent client area
 	_pin: PhantomPinned,
 }
 
@@ -65,8 +65,8 @@ impl LayoutArranger {
 		Self(
 			Arc::pin(
 				Obj {
-					ctrls: VeryUnsafeCell::new(Vec::with_capacity(10)), // arbitrary
-					sz_parent_orig: VeryUnsafeCell::new(SIZE::default()),
+					ctrls: Vec::with_capacity(10), // arbitrary
+					sz_parent_orig: SIZE::default(),
 					_pin: PhantomPinned,
 				},
 			),
@@ -88,14 +88,14 @@ impl LayoutArranger {
 
 		if self.0.ctrls.is_empty() { // first control being added?
 			let rc_parent = hparent.GetClientRect()?;
-			*self.0.sz_parent_orig.as_mut() =
+			*unsafe { as_mut(&self.0.sz_parent_orig) } =
 				SIZE::new(rc_parent.right, rc_parent.bottom); // save original parent size
 		}
 
 		let mut rc_orig = hchild.GetWindowRect()?;
 		hparent.ScreenToClientRc(&mut rc_orig)?; // control client coordinates relative to parent
 
-		self.0.ctrls.as_mut().push(
+		unsafe { as_mut(&self.0.ctrls) }.push(
 			ChildInfo {
 				hchild: unsafe { hchild.raw_copy() },
 				rc_orig,
@@ -124,7 +124,7 @@ impl LayoutArranger {
 				uflags |= co::SWP::NOMOVE;
 			}
 
-			let sz_parent_orig = *self.0.sz_parent_orig;
+			let sz_parent_orig = &self.0.sz_parent_orig;
 
 			hdwp.DeferWindowPos(
 				&ctrl.hchild,

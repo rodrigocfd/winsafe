@@ -1,5 +1,3 @@
-use crate::gui::very_unsafe_cell::VeryUnsafeCell;
-
 /// An identifier and a closure.
 struct Pair<K: Copy + Eq, F> {
 	id: K,
@@ -8,22 +6,21 @@ struct Pair<K: Copy + Eq, F> {
 
 /// Stores closures, associating them with an identifier.
 pub(in crate::gui) struct FuncStore<K: Copy + Eq, F> {
-	elems: VeryUnsafeCell<Vec<Pair<K, F>>>,
+	elems: Vec<Pair<K, F>>,
 }
 
 impl<K: Copy + Eq, F> FuncStore<K, F> {
 	/// Creates a new, empty store.
 	pub(in crate::gui) fn new() -> Self {
-		Self { elems: VeryUnsafeCell::new(Vec::default()) }
+		Self { elems: Vec::default() }
 	}
 
 	/// Adds a new function into the store, associated to the given identifier.
-	pub(in crate::gui) fn push(&self, id: K, func: F) {
-		let elems = self.elems.as_mut();
-		if elems.is_empty() {
-			elems.reserve(16); // arbitrary, prealloc for speed
+	pub(in crate::gui) fn push(&mut self, id: K, func: F) {
+		if self.elems.is_empty() {
+			self.elems.reserve(16); // arbitrary, prealloc for speed
 		}
-		elems.push(Pair { id, func });
+		self.elems.push(Pair { id, func });
 	}
 
 	/// Finds the last added function associated to the given identifier, if
@@ -51,8 +48,7 @@ impl<K: Copy + Eq, F> FuncStore<K, F> {
 	}
 
 	/// Removes all identifiers and closures.
-	pub(in crate::gui) fn clear(&self) {
-		let elems = self.elems.as_mut();
-		elems.clear();
+	pub(in crate::gui) fn clear(&mut self) {
+		self.elems.clear();
 	}
 }

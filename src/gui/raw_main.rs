@@ -7,8 +7,8 @@ use crate::gui::base::Base;
 use crate::gui::events::WindowEventsAll;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
-use crate::gui::very_unsafe_cell::VeryUnsafeCell;
 use crate::kernel::decl::{AnyResult, HINSTANCE, WString};
+use crate::kernel::privs::as_mut;
 use crate::prelude::{
 	GuiEvents, Handle, kernel_Hinstance, user_Haccel, user_Hwnd,
 };
@@ -20,7 +20,7 @@ use crate::user::decl::{
 struct Obj { // actual fields of RawMain
 	raw_base: RawBase,
 	opts: WindowMainOpts,
-	hchild_prev_focus: VeryUnsafeCell<HWND>, // WM_ACTIVATE woes
+	hchild_prev_focus: HWND, // WM_ACTIVATE woes
 	_pin: PhantomPinned,
 }
 
@@ -37,7 +37,7 @@ impl RawMain {
 				Obj {
 					raw_base: RawBase::new(None),
 					opts,
-					hchild_prev_focus: VeryUnsafeCell::new(HWND::NULL),
+					hchild_prev_focus: HWND::NULL,
 					_pin: PhantomPinned,
 				},
 			),
@@ -136,16 +136,15 @@ impl RawMain {
 	fn default_message_handlers(&self) {
 		let self2 = self.clone();
 		self.on().wm_activate(move |p| {
-			let hchild_prev_focus = self2.0.hchild_prev_focus.as_mut();
 			if !p.is_minimized {
 				if p.event == co::WA::INACTIVE {
 					if let Some(hwnd_cur_focus) = HWND::GetFocus() {
 						if self2.hwnd().IsChild(&hwnd_cur_focus) {
-							*hchild_prev_focus = hwnd_cur_focus; // save previously focused control
+							*unsafe { as_mut(&self2.0.hchild_prev_focus) } = hwnd_cur_focus; // save previously focused control
 						}
 					}
-				} else if *hchild_prev_focus != HWND::NULL {
-					hchild_prev_focus.SetFocus(); // put focus back
+				} else if self2.0.hchild_prev_focus != HWND::NULL {
+					self2.0.hchild_prev_focus.SetFocus(); // put focus back
 				}
 			}
 			Ok(())
