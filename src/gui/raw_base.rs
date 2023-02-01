@@ -53,12 +53,14 @@ pub enum Cursor {
 impl Cursor {
 	/// Converts the contents of `Cursor` to `HCURSOR`.
 	pub fn as_hcursor(&self, hinst: &HINSTANCE) -> SysResult<HCURSOR> {
-		Ok(match self {
-			Cursor::Handle(h) => unsafe { h.raw_copy() },
-			Cursor::Id(id) => hinst.LoadCursor(IdIdcStr::Id(*id))?,
-			Cursor::Idc(idc) => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(*idc))?,
-			Cursor::Str(s) => hinst.LoadCursor(IdIdcStr::Str(s.clone()))?,
-		})
+		unsafe {
+			Ok(match self {
+				Cursor::Handle(h) => h.raw_copy(),
+				Cursor::Id(id) => hinst.LoadCursor(IdIdcStr::Id(*id))?.leak(),
+				Cursor::Idc(idc) => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(*idc))?.leak(),
+				Cursor::Str(s) => hinst.LoadCursor(IdIdcStr::Str(s.clone()))?.leak(),
+			})
+		}
 	}
 }
 
@@ -82,13 +84,15 @@ pub enum Icon {
 impl Icon {
 	/// Converts the contents of `Icon` to `HICON`.
 	pub fn as_hicon(&self, hinst: &HINSTANCE) -> SysResult<HICON> {
-		Ok(match self {
-			Icon::Handle(h) => unsafe { h.raw_copy() },
-			Icon::Id(id) => hinst.LoadIcon(IdIdiStr::Id(*id))?,
-			Icon::Idi(idi) => HINSTANCE::NULL.LoadIcon(IdIdiStr::Idi(*idi))?,
-			Icon::None => HICON::NULL,
-			Icon::Str(s) => hinst.LoadIcon(IdIdiStr::Str(s.clone()))?,
-		})
+		unsafe {
+			Ok(match self {
+				Icon::Handle(h) => h.raw_copy(),
+				Icon::Id(id) => hinst.LoadIcon(IdIdiStr::Id(*id))?.leak(),
+				Icon::Idi(idi) => HINSTANCE::NULL.LoadIcon(IdIdiStr::Idi(*idi))?.leak(),
+				Icon::None => HICON::NULL,
+				Icon::Str(s) => hinst.LoadIcon(IdIdiStr::Str(s.clone()))?.leak(),
+			})
+		}
 	}
 }
 

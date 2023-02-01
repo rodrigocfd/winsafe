@@ -8,6 +8,7 @@ use crate::user::decl::{
 	ATOM, DLGPROC, HACCEL, HCURSOR, HICON, HMENU, HWND, IdIdcStr, IdIdiStr,
 	WNDCLASSEX,
 };
+use crate::user::guard::{DestroyCursorGuard, DestroyIconGuard};
 
 impl user_Hinstance for HINSTANCE {}
 
@@ -131,18 +132,15 @@ pub trait user_Hinstance: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn LoadCursor(&self, resource_id: IdIdcStr) -> SysResult<HCURSOR> {
+	fn LoadCursor(&self, resource_id: IdIdcStr) -> SysResult<DestroyCursorGuard> {
 		ptr_to_sysresult(
 			unsafe { user::ffi::LoadCursorW(self.as_ptr(), resource_id.as_ptr()) },
-			|ptr| HCURSOR(ptr),
+			|ptr| DestroyCursorGuard::new(HCURSOR(ptr)),
 		)
 	}
 
 	/// [`LoadIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadiconw)
 	/// method.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HICON::DestroyIcon`](crate::prelude::user_Hicon::DestroyIcon) call.
 	///
 	/// # Examples
 	///
@@ -157,10 +155,10 @@ pub trait user_Hinstance: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn LoadIcon(&self, icon_id: IdIdiStr) -> SysResult<HICON> {
+	fn LoadIcon(&self, icon_id: IdIdiStr) -> SysResult<DestroyIconGuard> {
 		ptr_to_sysresult(
 			unsafe { user::ffi::LoadIconW(self.as_ptr(), icon_id.as_ptr()) },
-			|ptr| HICON(ptr),
+			|ptr| DestroyIconGuard::new(HICON(ptr)),
 		)
 	}
 

@@ -17,9 +17,9 @@ impl<'a> Drop for ImageListEndDragGuard<'a> {
 }
 
 impl<'a> ImageListEndDragGuard<'a> {
-	/// Constructs the guard by taking ownership of the handle.
+	/// Constructs the guard by taking ownership of the object.
 	#[must_use]
-	pub const fn new(himagelist: PhantomData<&'a ()>) -> ImageListEndDragGuard<'a> {
+	pub const fn new(himagelist: PhantomData<&'a ()>) -> Self {
 		Self { _himagelist: himagelist }
 	}
 }

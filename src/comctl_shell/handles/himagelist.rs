@@ -3,8 +3,8 @@
 use crate::co;
 use crate::comctl::decl::HIMAGELIST;
 use crate::kernel::decl::SysResult;
-use crate::prelude::{comctl_Himagelist, user_Hicon};
-use crate::shell::decl::{SHFILEINFO, SHGetFileInfo};
+use crate::prelude::comctl_Himagelist;
+use crate::shell::decl::SHGetFileInfo;
 
 impl comctl_shell_Himagelist for HIMAGELIST {}
 
@@ -35,19 +35,22 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 	/// himgl.Destroy()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
-	fn add_icon_from_shell(&self, file_extensions: &[&str]) -> SysResult<()> {
+	fn add_icon_from_shell(&self,
+		file_extensions: &[impl AsRef<str>]) -> SysResult<()>
+	{
 		let sz = self.GetIconSize()?;
 		if !sz.is(16, 16) && !sz.is(32, 32) {
 			return Err(co::ERROR::NOT_SUPPORTED); // only 16x16 or 32x32 icons can be loaded
 		}
 
-		let mut shfi = SHFILEINFO::default();
 		for file_extension in file_extensions.iter() {
-			SHGetFileInfo(&format!("*.{}", file_extension), co::FILE_ATTRIBUTE::NORMAL,
-				&mut shfi, co::SHGFI::USEFILEATTRIBUTES | co::SHGFI::ICON |
-				if sz.is(16, 16) { co::SHGFI::SMALLICON } else { co::SHGFI::LARGEICON })?;
+			let (_, shfi) = SHGetFileInfo(
+				&format!("*.{}", file_extension.as_ref()),
+				co::FILE_ATTRIBUTE::NORMAL,
+				co::SHGFI::USEFILEATTRIBUTES | co::SHGFI::ICON |
+				if sz.is(16, 16) { co::SHGFI::SMALLICON } else { co::SHGFI::LARGEICON },
+			)?;
 			self.AddIcon(&shfi.hIcon)?;
-			shfi.hIcon.DestroyIcon()?;
 		}
 		Ok(())
 	}

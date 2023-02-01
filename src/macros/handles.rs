@@ -86,7 +86,7 @@ macro_rules! handle_guard {
 		impl $name {
 			/// Constructs the guard by taking ownership of the handle.
 			#[must_use]
-			pub const fn new(handle: $handle) -> $name {
+			pub const fn new(handle: $handle) -> Self {
 				Self { handle }
 			}
 

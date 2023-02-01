@@ -15,9 +15,9 @@ impl Drop for CoUninitializeGuard {
 }
 
 impl CoUninitializeGuard {
-	/// Constructs the guard by taking ownership of the handle.
+	/// Constructs the guard by taking ownership of the code.
 	#[must_use]
-	pub const fn new(hr: co::HRESULT) -> CoUninitializeGuard {
+	pub const fn new(hr: co::HRESULT) -> Self {
 		Self { hr }
 	}
 

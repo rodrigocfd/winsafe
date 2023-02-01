@@ -32,7 +32,7 @@ impl Deref for RegCloseKeyGuard {
 impl RegCloseKeyGuard {
 	/// Constructs the guard by taking ownership of the handle.
 	#[must_use]
-	pub const fn new(hkey: HKEY) -> RegCloseKeyGuard {
+	pub const fn new(hkey: HKEY) -> Self {
 		Self { hkey }
 	}
 

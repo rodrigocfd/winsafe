@@ -7,6 +7,7 @@ use crate::kernel::decl::{HINSTANCE, SysResult};
 use crate::kernel::privs::ptr_to_sysresult;
 use crate::prelude::Handle;
 use crate::user::decl::{HBITMAP, HCURSOR, HICON, SIZE};
+use crate::user::guard::{DestroyCursorGuard, DestroyIconGuard};
 
 impl gdi_Hinstance for HINSTANCE {}
 
@@ -36,38 +37,31 @@ pub trait gdi_Hinstance: Handle {
 
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HCURSOR`](crate::HCURSOR).
-	///
-	/// **Note:** Must be paired with an
-	/// [`HCURSOR::DestroyCursor`](crate::prelude::user_Hcursor::DestroyCursor)
-	/// call.
 	#[must_use]
 	fn LoadImageCursor(&self,
-		name: IdOcrStr, sz: SIZE, load: co::LR) -> SysResult<HCURSOR>
+		name: IdOcrStr, sz: SIZE, load: co::LR) -> SysResult<DestroyCursorGuard>
 	{
 		ptr_to_sysresult(
 			unsafe {
 				gdi::ffi::LoadImageW(
 					self.as_ptr(), name.as_ptr(), 2, sz.cx, sz.cy, load.0)
 			},
-			|ptr| HCURSOR(ptr),
+			|ptr| DestroyCursorGuard::new(HCURSOR(ptr)),
 		)
 	}
 
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HICON`](crate::HICON).
-	///
-	/// **Note:** Must be paired with an
-	/// [`HICON::DestroyIcon`](crate::prelude::user_Hicon::DestroyIcon) call.
 	#[must_use]
 	fn LoadImageIcon(&self,
-		name: IdOicStr, sz: SIZE, load: co::LR) -> SysResult<HICON>
+		name: IdOicStr, sz: SIZE, load: co::LR) -> SysResult<DestroyIconGuard>
 	{
 		ptr_to_sysresult(
 			unsafe {
 				gdi::ffi::LoadImageW(
 					self.as_ptr(), name.as_ptr(), 1, sz.cx, sz.cy, load.0)
 			},
-			|ptr| HICON(ptr),
+			|ptr| DestroyIconGuard::new(HICON(ptr)),
 		)
 	}
 }

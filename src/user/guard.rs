@@ -3,7 +3,7 @@ use std::ops::Deref;
 
 use crate::prelude::{Handle, user_Hwnd};
 use crate::user;
-use crate::user::decl::{HDC, HDWP, HWND, PAINTSTRUCT};
+use crate::user::decl::{HCURSOR, HDC, HDWP, HICON, HWND, PAINTSTRUCT};
 
 /// RAII implementation for clipboard which automatically calls
 /// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
@@ -21,9 +21,25 @@ impl<'a> Drop for CloseClipboardGuard<'a> {
 impl<'a> CloseClipboardGuard<'a> {
 	/// Constructs the guard by taking ownership of the handle.
 	#[must_use]
-	pub const fn new(hwnd: PhantomData<&'a ()>) -> CloseClipboardGuard<'a> {
+	pub const fn new(hwnd: PhantomData<&'a ()>) -> Self {
 		Self { _hwnd: hwnd }
 	}
+}
+
+handle_guard! { DestroyCursorGuard: HCURSOR;
+	user::ffi::DestroyCursor;
+	/// RAII implementation for [`HCURSOR`](crate::HCURSOR) which automatically
+	/// calls
+	/// [`DestroyCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroycursor)
+	/// when the object goes out of scope.
+}
+
+handle_guard! { DestroyIconGuard: HICON;
+	user::ffi::DestroyIcon;
+	/// RAII implementation for [`HICON`](crate::HICON) which automatically
+	/// calls
+	/// [`DestroyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
+	/// when the object goes out of scope.
 }
 
 handle_guard! { EndDeferWindowPosGuard: HDWP;
@@ -71,11 +87,9 @@ impl<'a, H> Deref for EndPaintGuard<'a, H>
 impl<'a, H> EndPaintGuard<'a, H>
 	where H: user_Hwnd,
 {
-	/// Constructs the guard by taking ownership of the handle.
+	/// Constructs the guard by taking ownership of the objects.
 	#[must_use]
-	pub const fn new(
-		hwnd: &'a H, hdc: HDC, ps: PAINTSTRUCT) -> EndPaintGuard<'a, H>
-	{
+	pub const fn new(hwnd: &'a H, hdc: HDC, ps: PAINTSTRUCT) -> Self {
 		Self { hwnd, hdc, ps }
 	}
 
@@ -108,11 +122,9 @@ impl<'a, H> Drop for ReleaseCaptureGuard<'a, H>
 impl<'a, H> ReleaseCaptureGuard<'a, H>
 	where H: user_Hwnd,
 {
-	/// Constructs the guard by taking ownership of the handle.
+	/// Constructs the guard by taking ownership of the handles.
 	#[must_use]
-	pub const fn new(
-		hwnd: &'a H, hwnd_prev: Option<HWND>) -> ReleaseCaptureGuard<'a, H>
-	{
+	pub const fn new(hwnd: &'a H, hwnd_prev: Option<HWND>) -> Self {
 		Self { _hwnd: hwnd, hwnd_prev }
 	}
 
@@ -159,9 +171,9 @@ impl<'a, H> Deref for ReleaseDCGuard<'a, H>
 impl<'a, H> ReleaseDCGuard<'a, H>
 	where H: user_Hwnd,
 {
-	/// Constructs the guard by taking ownership of the handle.
+	/// Constructs the guard by taking ownership of the handles.
 	#[must_use]
-	pub const fn new(hwnd: &'a H, hdc: HDC) -> ReleaseDCGuard<'a, H> {
+	pub const fn new(hwnd: &'a H, hdc: HDC) -> Self {
 		Self { hwnd, hdc }
 	}
 

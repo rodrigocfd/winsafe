@@ -11,6 +11,7 @@ use crate::prelude::{Handle, kernel_Hlocal};
 use crate::shell::decl::{
 	NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT, SHSTOCKICONINFO,
 };
+use crate::shell::guard::{DestroyIconShfiGuard, DestroyIconSiiGuard};
 
 /// [`CommandLineToArgv`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw)
 /// function.
@@ -178,27 +179,23 @@ pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> SysResult<()> {
 
 /// [`SHGetFileInfo`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow)
 /// function.
-///
-/// **Note:** If you are returning an icon in the `hIcon` member of
-/// [`SHFILEINFO`](crate::SHFILEINFO), it must be paired with an
-/// [`HICON::DestroyIcon`](crate::prelude::user_Hicon::DestroyIcon) call.
 pub fn SHGetFileInfo(
 	path: &str,
 	file_attrs: co::FILE_ATTRIBUTE,
-	shfi: &mut SHFILEINFO,
-	flags: co::SHGFI) -> SysResult<u32>
+	flags: co::SHGFI) -> SysResult<(u32, DestroyIconShfiGuard)>
 {
+	let mut shfi = SHFILEINFO::default();
 	match unsafe {
 		shell::ffi::SHGetFileInfoW(
 			WString::from_str(path).as_ptr(),
 			file_attrs.0,
-			shfi as *mut _ as _,
+			&mut shfi as *mut _ as _,
 			std::mem::size_of::<SHFILEINFO>() as _,
 			flags.0,
 		)
 	} {
 		0 => Err(GetLastError()),
-		n => Ok(n as _),
+		n => Ok((n as _, DestroyIconShfiGuard::new(shfi))),
 	}
 }
 
@@ -248,39 +245,33 @@ pub fn SHGetKnownFolderPath(
 /// [`SHGetStockIconInfo`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetstockiconinfo)
 /// function.
 ///
-/// **Note:** The `hIcon` member of [`SHSTOCKICONINFO`](crate::SHSTOCKICONINFO)
-/// must be paired with an
-/// [`HICON::DestroyIcon`](crate::prelude::user_Hicon::DestroyIcon) call.
-///
 /// # Examples
 ///
 /// Loading the small (16x16 pixels) camera icon from the system:
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
-/// use winsafe::{co, SHGetStockIconInfo, SHSTOCKICONINFO};
+/// use winsafe::{co, SHGetStockIconInfo};
 ///
-/// let mut sii = SHSTOCKICONINFO::default();
-///
-/// SHGetStockIconInfo(
+/// let sii = SHGetStockIconInfo(
 ///     co::SIID::DEVICECAMERA,
 ///     co::SHGSI::ICON | co::SHGSI::SMALLICON,
-///     &mut sii,
 /// )?;
 ///
 /// println!("HICON handle: {}", sii.hIcon);
-///
-/// sii.hIcon.DestroyIcon()?;
 /// # Ok::<_, Box<dyn std::error::Error>>(())
 /// ```
 pub fn SHGetStockIconInfo(
-	siid: co::SIID,
-	flags: co::SHGSI,
-	sii: &mut SHSTOCKICONINFO) -> HrResult<()>
+	siid: co::SIID, flags: co::SHGSI) -> HrResult<DestroyIconSiiGuard>
 {
+	let mut sii = SHSTOCKICONINFO::default();
 	ok_to_hrresult(
 		unsafe {
-			shell::ffi::SHGetStockIconInfo(siid.0, flags.0, sii as *mut _ as _)
+			shell::ffi::SHGetStockIconInfo(
+				siid.0,
+				flags.0,
+				&mut sii as *mut _ as _,
+			)
 		},
-	)
+	).map(|_| DestroyIconSiiGuard::new(sii))
 }

@@ -2,8 +2,9 @@
 
 use crate::{co, user};
 use crate::kernel::decl::SysResult;
-use crate::kernel::privs::{as_mut, bool_to_sysresult, ptr_to_sysresult};
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::Handle;
+use crate::user::guard::DestroyCursorGuard;
 
 impl_handle! { HCURSOR;
 	/// Handle to a
@@ -23,30 +24,12 @@ impl user_Hcursor for HCURSOR {}
 pub trait user_Hcursor: Handle {
 	/// [`CopyCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-copycursor)
 	/// method. Originally a macro.
-	///
-	/// **Note:** Must be paired with an
-	/// [`HCURSOR::DestroyCursor`](crate::prelude::user_Hcursor::DestroyCursor)
-	/// call.
 	#[must_use]
-	fn CopyCursor(&self) -> SysResult<HCURSOR> {
+	fn CopyCursor(&self) -> SysResult<DestroyCursorGuard> {
 		ptr_to_sysresult(
 			unsafe { user::ffi::CopyIcon(self.as_ptr()) },
-			|ptr| HCURSOR(ptr),
+			|ptr| DestroyCursorGuard::new(HCURSOR(ptr)),
 		)
-	}
-
-	/// [`DestroyCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroycursor)
-	/// method.
-	///
-	/// After calling this method, the handle will be invalidated and further
-	/// operations will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn DestroyCursor(&self) -> SysResult<()> {
-		let ret = bool_to_sysresult(
-			unsafe { user::ffi::DestroyCursor(self.as_ptr()) },
-		);
-		*unsafe { as_mut(self) } = Self::INVALID;
-		ret
 	}
 
 	/// [`SetSystemCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setsystemcursor)

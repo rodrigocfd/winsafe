@@ -42,7 +42,7 @@ impl<T> CloseHandleGuard<T>
 {
 	/// Constructs the guard by taking ownership of the handle.
 	#[must_use]
-	pub const fn new(handle: T) -> CloseHandleGuard<T> {
+	pub const fn new(handle: T) -> Self {
 		Self { handle }
 	}
 
@@ -87,7 +87,7 @@ impl Deref for EndUpdateResourceGuard {
 impl EndUpdateResourceGuard {
 	/// Constructs the guard by taking ownership of the handle.
 	#[must_use]
-	pub const fn new(hupsrc: HUPDATERSRC) -> EndUpdateResourceGuard {
+	pub const fn new(hupsrc: HUPDATERSRC) -> Self {
 		Self { hupsrc }
 	}
 
@@ -160,12 +160,12 @@ impl<'a, H> Drop for UnlockFileGuard<'a, H>
 impl<'a, H> UnlockFileGuard<'a, H>
 	where H: kernel_Hfile,
 {
-	/// Constructs the guard by taking ownership of the handle.
+	/// Constructs the guard by taking ownership of the objects.
 	#[must_use]
 	pub const fn new(
 		hfile: &'a H,
 		offset: u64,
-		num_bytes_to_lock: u64) -> UnlockFileGuard<'a, H>
+		num_bytes_to_lock: u64) -> Self
 	{
 		Self { hfile, offset, num_bytes_to_lock }
 	}
@@ -190,10 +190,10 @@ pub struct CloseHandlePiGuard {
 impl Drop for CloseHandlePiGuard {
 	fn drop(&mut self) {
 		if let Some(h) = self.pi.hProcess.as_opt() {
-			unsafe { kernel::ffi::CloseHandle(h.as_ptr()); } // ignore errors
+			let _ = CloseHandleGuard::new(unsafe { h.raw_copy() });
 		}
 		if let Some(h) = self.pi.hThread.as_opt() {
-			unsafe { kernel::ffi::CloseHandle(h.as_ptr()); }
+			let _ = CloseHandleGuard::new(unsafe { h.raw_copy() });
 		}
 	}
 }
@@ -207,9 +207,9 @@ impl Deref for CloseHandlePiGuard {
 }
 
 impl CloseHandlePiGuard {
-	/// Constructs the guard by taking ownership of the handle.
+	/// Constructs the guard by taking ownership of the struct.
 	#[must_use]
-	pub const fn new(pi: PROCESS_INFORMATION) -> CloseHandlePiGuard {
+	pub const fn new(pi: PROCESS_INFORMATION) -> Self {
 		Self { pi }
 	}
 

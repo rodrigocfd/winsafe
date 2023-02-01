@@ -3,6 +3,7 @@
 pub(in crate::shell) mod ffi;
 pub(crate) mod privs;
 pub mod co;
+pub mod guard;
 pub mod messages;
 
 mod com_interfaces;

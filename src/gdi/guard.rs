@@ -46,7 +46,7 @@ impl<T> DeleteObjectGuard<T>
 {
 	/// Constructs the guard by taking ownership of the handle.
 	#[must_use]
-	pub const fn new(handle: T) -> DeleteObjectGuard<T> {
+	pub const fn new(handle: T) -> Self {
 		Self { handle }
 	}
 
@@ -98,7 +98,7 @@ impl<'a, H, G> SelectObjectGuard<'a, H, G>
 	pub const fn new(
 		hdc: &'a H,
 		prev_hgdi: G,
-		region: Option<co::REGION>) -> SelectObjectGuard<'a, H, G>
+		region: Option<co::REGION>) -> Self
 	{
 		Self { hdc, prev_hgdi, region }
 	}
