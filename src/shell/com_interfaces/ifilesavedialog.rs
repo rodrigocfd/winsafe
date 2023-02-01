@@ -8,7 +8,6 @@ use crate::shell::decl::IShellItem;
 use crate::vt::IFileDialogVT;
 
 /// [`IFileSaveDialog`](crate::IFileSaveDialog) virtual table.
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 #[repr(C)]
 pub struct IFileSaveDialogVT {
 	pub IFileDialogVT: IFileDialogVT,
@@ -54,7 +53,6 @@ impl shell_IFileSaveDialog for IFileSaveDialog {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-#[cfg_attr(docsrs, doc(cfg(feature = "shell")))]
 pub trait shell_IFileSaveDialog: shell_IFileDialog {
 	/// [`IFileSaveDialog::SetSaveAsItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setsaveasitem)
 	/// method.

@@ -15,7 +15,6 @@ handle_guard! { ImageListDestroyGuard: HIMAGELIST;
 /// RAII implementation for image list drag which automatically calls
 /// [`ImageList_EndDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_enddrag)
 /// when the object goes out of scope.
-#[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
 pub struct ImageListEndDragGuard<'a> {
 	_himagelist: PhantomData<&'a ()>,
 }
