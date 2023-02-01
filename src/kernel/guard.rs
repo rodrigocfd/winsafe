@@ -11,13 +11,13 @@ use crate::prelude::{Handle, kernel_Hfile};
 /// automatically calls
 /// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
 /// when the object goes out of scope.
-pub struct HandleGuard<T>
+pub struct CloseHandleGuard<T>
 	where T: Handle,
 {
-	pub(crate) handle: T,
+	handle: T,
 }
 
-impl<T> Drop for HandleGuard<T>
+impl<T> Drop for CloseHandleGuard<T>
 	where T: Handle,
 {
 	fn drop(&mut self) {
@@ -27,7 +27,7 @@ impl<T> Drop for HandleGuard<T>
 	}
 }
 
-impl<T> Deref for HandleGuard<T>
+impl<T> Deref for CloseHandleGuard<T>
 	where T: Handle,
 {
 	type Target = T;
@@ -37,9 +37,15 @@ impl<T> Deref for HandleGuard<T>
 	}
 }
 
-impl<T> HandleGuard<T>
+impl<T> CloseHandleGuard<T>
 	where T: Handle,
 {
+	/// Constructs the guard by taking ownership of the handle.
+	#[must_use]
+	pub const fn new(handle: T) -> CloseHandleGuard<T> {
+		Self { handle }
+	}
+
 	/// Ejects the underlying handle, leaving a
 	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
 	///
@@ -54,19 +60,88 @@ impl<T> HandleGuard<T>
 	}
 }
 
+/// RAII implementation [`HUPDATERSRC`](crate::HUPDATERSRC) which automatically
+/// calls
+/// [`EndUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
+/// when the object goes out of scope.
+pub struct EndUpdateResourceGuard {
+	hupsrc: HUPDATERSRC,
+}
+
+impl Drop for EndUpdateResourceGuard {
+	fn drop(&mut self) {
+		if let Some(h) = self.hupsrc.as_opt() {
+			unsafe { kernel::ffi::EndUpdateResourceW(h.as_ptr(), false as _); } // ignore errors
+		}
+	}
+}
+
+impl Deref for EndUpdateResourceGuard {
+	type Target = HUPDATERSRC;
+
+	fn deref(&self) -> &Self::Target {
+		&self.hupsrc
+	}
+}
+
+impl EndUpdateResourceGuard {
+	/// Constructs the guard by taking ownership of the handle.
+	#[must_use]
+	pub const fn new(hupsrc: HUPDATERSRC) -> EndUpdateResourceGuard {
+		Self { hupsrc }
+	}
+
+	/// Ejects the underlying handle, leaving a
+	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
+	///
+	/// # Safety
+	///
+	/// Since the internal handle will be invalidated, the destructor will not
+	/// run. It's your responsability to run it, otherwise you'll cause a
+	/// resource leak.
+	#[must_use]
+	pub unsafe fn leak(&mut self) -> HUPDATERSRC {
+		std::mem::replace(&mut self.hupsrc, HUPDATERSRC::INVALID)
+	}
+}
+
+handle_guard! { FindCloseGuard: HFINDFILE;
+	kernel::ffi::FindClose;
+	/// RAII implementation for [`HFINDFILE`](crate::HFINDFILE) which
+	/// automatically calls
+	/// [`FindClose`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findclose)
+	/// when the object goes out of scope.
+}
+
+handle_guard! { FreeLibraryGuard: HINSTANCE;
+	kernel::ffi::FreeLibrary;
+	/// RAII implementation for [`HINSTANCE`](crate::HINSTANCE) which
+	/// automatically calls
+	/// [`FreeLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary)
+	/// when the object goes out of scope.
+}
+
+handle_guard! { GlobalFreeGuard: HGLOBAL;
+	kernel::ffi::GlobalFree;
+	/// RAII implementation for [`HGLOBAL`](crate::HGLOBAL) which automatically
+	/// calls
+	/// [`GlobalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalfree)
+	/// when the object goes out of scope.
+}
+
 /// RAII implementation for the [`HFILE`](crate::HFILE) lock which automatically
 /// calls
 /// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
 /// when the object goes out of scope.
-pub struct HfileLockGuard<'a, H>
+pub struct UnlockFileGuard<'a, H>
 	where H: kernel_Hfile,
 {
-	pub(crate) hfile: &'a H,
-	pub(crate) offset: u64,
-	pub(crate) num_bytes_to_lock: u64,
+	hfile: &'a H,
+	offset: u64,
+	num_bytes_to_lock: u64,
 }
 
-impl<'a, H> Drop for HfileLockGuard<'a, H>
+impl<'a, H> Drop for UnlockFileGuard<'a, H>
 	where H: kernel_Hfile,
 {
 	fn drop(&mut self) {
@@ -82,7 +157,21 @@ impl<'a, H> Drop for HfileLockGuard<'a, H>
 	}
 }
 
-handle_guard! { HfilemapviewGuard: HFILEMAPVIEW;
+impl<'a, H> UnlockFileGuard<'a, H>
+	where H: kernel_Hfile,
+{
+	/// Constructs the guard by taking ownership of the handle.
+	#[must_use]
+	pub const fn new(
+		hfile: &'a H,
+		offset: u64,
+		num_bytes_to_lock: u64) -> UnlockFileGuard<'a, H>
+	{
+		Self { hfile, offset, num_bytes_to_lock }
+	}
+}
+
+handle_guard! { UnmapViewOfFileGuard: HFILEMAPVIEW;
 	kernel::ffi::UnmapViewOfFile;
 	/// RAII implementation for [`HFILEMAPVIEW`](crate::HFILEMAPVIEW) which
 	/// automatically calls
@@ -90,78 +179,15 @@ handle_guard! { HfilemapviewGuard: HFILEMAPVIEW;
 	/// when the object goes out of scope.
 }
 
-handle_guard! { HfindfileGuard: HFINDFILE;
-	kernel::ffi::FindClose;
-	/// RAII implementation for [`HFINDFILE`](crate::HFINDFILE) which
-	/// automatically calls
-	/// [`FindClose`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findclose)
-	/// when the object goes out of scope.
-}
-
-handle_guard! { HglobalGuard: HGLOBAL;
-	kernel::ffi::GlobalFree;
-	/// RAII implementation for [`HGLOBAL`](crate::HGLOBAL) which automatically
-	/// calls
-	/// [`GlobalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalfree)
-	/// when the object goes out of scope.
-}
-
-handle_guard! { HinstanceGuard: HINSTANCE;
-	kernel::ffi::FreeLibrary;
-	/// RAII implementation for [`HINSTANCE`](crate::HINSTANCE) which
-	/// automatically calls
-	/// [`FreeLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary)
-	/// when the object goes out of scope.
-}
-
-/// RAII implementation [`HUPDATERSRC`](crate::HUPDATERSRC) which automatically
-/// calls
-/// [`EndUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
-/// when the object goes out of scope.
-pub struct HupdatersrcGuard {
-	pub(crate) hupsrc: HUPDATERSRC,
-}
-
-impl Drop for HupdatersrcGuard {
-	fn drop(&mut self) {
-		if let Some(h) = self.hupsrc.as_opt() {
-			unsafe { kernel::ffi::EndUpdateResourceW(h.as_ptr(), false as _); } // ignore errors
-		}
-	}
-}
-
-impl Deref for HupdatersrcGuard {
-	type Target = HUPDATERSRC;
-
-	fn deref(&self) -> &Self::Target {
-		&self.hupsrc
-	}
-}
-
-impl HupdatersrcGuard {
-	/// Ejects the underlying handle, leaving a
-	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
-	///
-	/// # Safety
-	///
-	/// Since the internal handle will be invalidated, the destructor will not
-	/// run. It's your responsability to run it, otherwise you'll cause a
-	/// resource leak.
-	#[must_use]
-	pub unsafe fn leak(&mut self) -> HUPDATERSRC {
-		std::mem::replace(&mut self.hupsrc, HUPDATERSRC::INVALID)
-	}
-}
-
 /// RAII implementation for [`PROCESS_INFORMATION`](crate::PROCESS_INFORMATION)
 /// which automatically calls
 /// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
 /// on `hProcess` and `hThread` fields when the object goes out of scope.
-pub struct ProcessInformationGuard {
-	pub(crate) pi: PROCESS_INFORMATION,
+pub struct CloseHandlePiGuard {
+	pi: PROCESS_INFORMATION,
 }
 
-impl Drop for ProcessInformationGuard {
+impl Drop for CloseHandlePiGuard {
 	fn drop(&mut self) {
 		if let Some(h) = self.pi.hProcess.as_opt() {
 			unsafe { kernel::ffi::CloseHandle(h.as_ptr()); } // ignore errors
@@ -172,7 +198,7 @@ impl Drop for ProcessInformationGuard {
 	}
 }
 
-impl Deref for ProcessInformationGuard {
+impl Deref for CloseHandlePiGuard {
 	type Target = PROCESS_INFORMATION;
 
 	fn deref(&self) -> &Self::Target {
@@ -180,7 +206,13 @@ impl Deref for ProcessInformationGuard {
 	}
 }
 
-impl ProcessInformationGuard {
+impl CloseHandlePiGuard {
+	/// Constructs the guard by taking ownership of the handle.
+	#[must_use]
+	pub const fn new(pi: PROCESS_INFORMATION) -> CloseHandlePiGuard {
+		Self { pi }
+	}
+
 	/// Ejects the underlying struct, leaving
 	/// [`PROCESS_INFORMATION::default`](crate::PROCESS_INFORMATION::default) in
 	/// its place.

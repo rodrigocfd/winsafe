@@ -2,7 +2,7 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::guard::HandleGuard;
+use crate::kernel::guard::CloseHandleGuard;
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 
@@ -27,7 +27,7 @@ pub trait kernel_Haccesstoken: Handle {
 	/// method.
 	#[must_use]
 	fn DuplicateToken(&self,
-		level: co::SECURITY_IMPERSONATION) -> SysResult<HandleGuard<HACCESSTOKEN>>
+		level: co::SECURITY_IMPERSONATION) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
 		bool_to_sysresult(
@@ -38,7 +38,7 @@ pub trait kernel_Haccesstoken: Handle {
 					&mut handle.0,
 				)
 			},
-		).map(|_| HandleGuard { handle })
+		).map(|_| CloseHandleGuard::new(handle))
 	}
 
 	/// [`GetCurrentProcessToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocesstoken)

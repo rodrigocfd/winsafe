@@ -6,7 +6,7 @@ use crate::kernel::decl::{
 	SECURITY_ATTRIBUTES, STARTUPINFO, SysResult, WString,
 };
 use crate::kernel::ffi_types::BOOL;
-use crate::kernel::guard::{HandleGuard, ProcessInformationGuard};
+use crate::kernel::guard::{CloseHandleGuard, CloseHandlePiGuard};
 use crate::kernel::privs::{
 	bool_to_sysresult, INFINITE, MAX_PATH, ptr_to_sysresult,
 };
@@ -41,7 +41,7 @@ pub trait kernel_Hprocess: Handle {
 		creation_flags: co::CREATE,
 		environment: Option<Vec<(&str, &str)>>,
 		current_dir: Option<&str>,
-		si: &mut STARTUPINFO) -> SysResult<ProcessInformationGuard>
+		si: &mut STARTUPINFO) -> SysResult<CloseHandlePiGuard>
 	{
 		let mut buf_cmd_line = WString::from_opt_str(command_line);
 		let mut pi = PROCESS_INFORMATION::default();
@@ -67,7 +67,7 @@ pub trait kernel_Hprocess: Handle {
 					&mut pi as *mut _ as _,
 				)
 			},
-		).map(|_| ProcessInformationGuard { pi })
+		).map(|_| CloseHandlePiGuard::new(pi))
 	}
 
 	/// [`ExitProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitprocess)
@@ -216,7 +216,7 @@ pub trait kernel_Hprocess: Handle {
 	fn OpenProcess(
 		desired_access: co::PROCESS,
 		inherit_handle: bool,
-		process_id: u32) -> SysResult<HandleGuard<HPROCESS>>
+		process_id: u32) -> SysResult<CloseHandleGuard<HPROCESS>>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -226,7 +226,7 @@ pub trait kernel_Hprocess: Handle {
 					process_id,
 				)
 			},
-			|ptr| HandleGuard { handle: HPROCESS(ptr) },
+			|ptr| CloseHandleGuard::new(HPROCESS(ptr)),
 		)
 	}
 
@@ -234,7 +234,7 @@ pub trait kernel_Hprocess: Handle {
 	/// method.
 	#[must_use]
 	fn OpenProcessToken(&self,
-		desired_access: co::TOKEN) -> SysResult<HandleGuard<HACCESSTOKEN>>
+		desired_access: co::TOKEN) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
 		bool_to_sysresult(
@@ -245,7 +245,7 @@ pub trait kernel_Hprocess: Handle {
 					&mut handle.0,
 				)
 			},
-		).map(|_| HandleGuard { handle })
+		).map(|_| CloseHandleGuard::new(handle))
 	}
 
 	/// [`QueryFullProcessImageName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew)

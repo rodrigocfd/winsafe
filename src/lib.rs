@@ -332,14 +332,10 @@ pub mod co {
 }
 
 pub mod guard {
-	//! RAII implementation for handles.
+	//! RAII implementation for various resources, which automatically perform
+	//! cleanup routines when the object goes out of scope.
 	//!
-	//! Most handles require cleanup routines, but some handles require cleanup
-	//! routines only *under certain circumstances*, what makes it impossible to
-	//! universally implement these routines for the handle types.
-	//!
-	//! So, when a handle needs a cleanup routine, it is instead returned
-	//! wrapped into a guard.
+	//! The guards are named after the functions they call.
 	#[cfg(feature = "advapi")] pub use super::advapi::guard::*;
 	#[cfg(feature = "comctl")] pub use super::comctl::guard::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::guard::*;

@@ -5,7 +5,7 @@ use crate::prelude::Handle;
 use crate::user::decl::HWND;
 use crate::uxtheme;
 use crate::uxtheme::decl::HTHEME;
-use crate::uxtheme::guard::HthemeGuard;
+use crate::uxtheme::guard::CloseThemeDataGuard;
 
 impl uxtheme_Hwnd for HWND {}
 
@@ -21,12 +21,12 @@ pub trait uxtheme_Hwnd: Handle {
 	/// [`OpenThemeData`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-openthemedata)
 	/// method.
 	#[must_use]
-	fn OpenThemeData(&self, class_list: &str) -> Option<HthemeGuard> {
+	fn OpenThemeData(&self, class_list: &str) -> Option<CloseThemeDataGuard> {
 		unsafe {
 			uxtheme::ffi::OpenThemeData(
 				self.as_ptr(),
 				WString::from_str(class_list).as_ptr(),
 			).as_mut()
-		}.map(|ptr| HthemeGuard { handle: HTHEME(ptr) })
+		}.map(|ptr| CloseThemeDataGuard::new(HTHEME(ptr)))
 	}
 }

@@ -2,7 +2,7 @@
 
 use crate::{advapi, co};
 use crate::advapi::decl::RegistryValue;
-use crate::advapi::guard::HkeyGuard;
+use crate::advapi::guard::RegCloseKeyGuard;
 use crate::advapi::privs::VALENT;
 use crate::kernel::decl::{FILETIME, SECURITY_ATTRIBUTES, SysResult, WString};
 use crate::prelude::Handle;
@@ -58,7 +58,7 @@ pub trait advapi_Hkey: Handle {
 	/// - [`HKEY::USERS`](crate::prelude::advapi_Hkey::USERS).
 	#[must_use]
 	fn RegConnectRegistry(
-		machine_name: Option<&str>, predef_hkey: &HKEY) -> SysResult<HkeyGuard>
+		machine_name: Option<&str>, predef_hkey: &HKEY) -> SysResult<RegCloseKeyGuard>
 	{
 		if *predef_hkey != HKEY::LOCAL_MACHINE
 			&& *predef_hkey != HKEY::PERFORMANCE_DATA
@@ -77,7 +77,7 @@ pub trait advapi_Hkey: Handle {
 				)
 			} as _,
 		) {
-			co::ERROR::SUCCESS => Ok(HkeyGuard { hkey }),
+			co::ERROR::SUCCESS => Ok(RegCloseKeyGuard::new(hkey)),
 			err => Err(err),
 		}
 	}
@@ -107,7 +107,7 @@ pub trait advapi_Hkey: Handle {
 		class: Option<&str>,
 		options: co::REG_OPTION,
 		access_rights: co::KEY,
-		security_attributes: Option<&SECURITY_ATTRIBUTES>) -> SysResult<(HkeyGuard, co::REG_DISPOSITION)>
+		security_attributes: Option<&SECURITY_ATTRIBUTES>) -> SysResult<(RegCloseKeyGuard, co::REG_DISPOSITION)>
 	{
 		let mut hkey = HKEY::NULL;
 		let mut disposition = co::REG_DISPOSITION::NoValue;
@@ -127,7 +127,7 @@ pub trait advapi_Hkey: Handle {
 				)
 			} as _,
 		) {
-			co::ERROR::SUCCESS => Ok((HkeyGuard { hkey }, disposition)),
+			co::ERROR::SUCCESS => Ok((RegCloseKeyGuard::new(hkey), disposition)),
 			err => Err(err),
 		}
 	}
@@ -397,7 +397,7 @@ pub trait advapi_Hkey: Handle {
 	fn RegOpenKeyEx(&self,
 		sub_key: &str,
 		options: co::REG_OPTION,
-		access_rights: co::KEY) -> SysResult<HkeyGuard>
+		access_rights: co::KEY) -> SysResult<RegCloseKeyGuard>
 	{
 		let mut hkey = HKEY::NULL;
 		match co::ERROR(
@@ -411,7 +411,7 @@ pub trait advapi_Hkey: Handle {
 				)
 			} as _,
 		) {
-			co::ERROR::SUCCESS => Ok(HkeyGuard { hkey }),
+			co::ERROR::SUCCESS => Ok(RegCloseKeyGuard::new(hkey)),
 			err => Err(err),
 		}
 	}

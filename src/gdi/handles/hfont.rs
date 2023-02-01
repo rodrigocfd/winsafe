@@ -2,7 +2,7 @@
 
 use crate::{co, gdi};
 use crate::gdi::decl::LOGFONT;
-use crate::gdi::guard::GdiObjectGuard;
+use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::privs::ptr_to_sysresult;
 use crate::prelude::GdiObject;
@@ -34,7 +34,7 @@ pub trait gdi_Hfont: GdiObject {
 		char_set: co::CHARSET,
 		out_precision: co::OUT_PRECIS, clip_precision: co::CLIP,
 		quality: co::QUALITY, pitch_and_family: co::PITCH,
-		face_name: &str) -> SysResult<GdiObjectGuard<HFONT>>
+		face_name: &str) -> SysResult<DeleteObjectGuard<HFONT>>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -48,17 +48,17 @@ pub trait gdi_Hfont: GdiObject {
 					WString::from_str(face_name).as_ptr(),
 				)
 			},
-			|ptr| GdiObjectGuard { handle: HFONT(ptr) },
+			|ptr| DeleteObjectGuard::new(HFONT(ptr)),
 		)
 	}
 
 	/// [`CreateFontIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirectw)
 	/// static method.
 	#[must_use]
-	fn CreateFontIndirect(lf: &LOGFONT) -> SysResult<GdiObjectGuard<HFONT>> {
+	fn CreateFontIndirect(lf: &LOGFONT) -> SysResult<DeleteObjectGuard<HFONT>> {
 		ptr_to_sysresult(
 			unsafe { gdi::ffi::CreateFontIndirectW(lf as *const _ as _) },
-			|ptr| GdiObjectGuard { handle: HFONT(ptr) },
+			|ptr| DeleteObjectGuard::new(HFONT(ptr)),
 		)
 	}
 

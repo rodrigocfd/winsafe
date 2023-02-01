@@ -2,7 +2,7 @@
 
 use crate::kernel;
 use crate::kernel::decl::{IdStr, LANGID, RtStr, SysResult, WString};
-use crate::kernel::guard::HupdatersrcGuard;
+use crate::kernel::guard::EndUpdateResourceGuard;
 use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::Handle;
 
@@ -28,7 +28,7 @@ pub trait kernel_Hupdatersrc: Handle {
 	#[must_use]
 	fn BeginUpdateResource(
 		file_name: &str,
-		delete_existing_resources: bool) -> SysResult<HupdatersrcGuard>
+		delete_existing_resources: bool) -> SysResult<EndUpdateResourceGuard>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -37,7 +37,7 @@ pub trait kernel_Hupdatersrc: Handle {
 					delete_existing_resources as _,
 				)
 			},
-			|ptr| HupdatersrcGuard { hupsrc: HUPDATERSRC(ptr) },
+			|ptr| EndUpdateResourceGuard::new(HUPDATERSRC(ptr)),
 		)
 	}
 

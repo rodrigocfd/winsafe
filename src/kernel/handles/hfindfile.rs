@@ -2,7 +2,7 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult, WIN32_FIND_DATA, WString};
-use crate::kernel::guard::HfindfileGuard;
+use crate::kernel::guard::FindCloseGuard;
 use crate::prelude::Handle;
 
 impl_handle! { HFINDFILE;
@@ -30,7 +30,7 @@ pub trait kernel_Hfindfile: Handle {
 	#[must_use]
 	fn FindFirstFile(
 		file_name: &str,
-		wfd: &mut WIN32_FIND_DATA) -> SysResult<(HfindfileGuard, bool)>
+		wfd: &mut WIN32_FIND_DATA) -> SysResult<(FindCloseGuard, bool)>
 	{
 		match unsafe {
 			kernel::ffi::FindFirstFileW(
@@ -39,12 +39,12 @@ pub trait kernel_Hfindfile: Handle {
 			).as_mut()
 		} {
 			Some(ptr) => Ok((
-				HfindfileGuard { handle: HFINDFILE(ptr) }, // first file found
+				FindCloseGuard::new(HFINDFILE(ptr)), // first file found
 				true,
 			)),
 			None => match GetLastError() {
 				co::ERROR::FILE_NOT_FOUND => Ok((
-					HfindfileGuard { handle: HFINDFILE::NULL }, // not an error, first file not found
+					FindCloseGuard::new(HFINDFILE::NULL), // not an error, first file not found
 					false,
 				)),
 				err => Err(err),

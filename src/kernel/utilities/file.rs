@@ -1,6 +1,6 @@
 use crate::co;
 use crate::kernel::decl::{HFILE, SysResult};
-use crate::kernel::guard::HandleGuard;
+use crate::kernel::guard::CloseHandleGuard;
 use crate::prelude::kernel_Hfile;
 
 /// Access types for [`File::open`](crate::File::open) and
@@ -29,7 +29,7 @@ pub enum FileAccess {
 /// If you just want to read the file, consider memory-mapping it with
 /// [`FileMapped`](crate::FileMapped), which tends to be faster.
 pub struct File {
-	hfile: HandleGuard<HFILE>,
+	hfile: CloseHandleGuard<HFILE>,
 }
 
 impl File {
@@ -70,8 +70,8 @@ impl File {
 
 	/// Returns the underlying file handle.
 	#[must_use]
-	pub const fn hfile(&self) -> &HFILE {
-		&self.hfile.handle
+	pub fn hfile(&self) -> &HFILE {
+		&*self.hfile
 	}
 
 	/// Returns the current offset of the internal pointer.

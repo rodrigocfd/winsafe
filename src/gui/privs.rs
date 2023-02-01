@@ -4,7 +4,7 @@ use std::error::Error;
 
 use crate::co;
 use crate::gdi::decl::{HFONT, NONCLIENTMETRICS};
-use crate::gdi::guard::GdiObjectGuard;
+use crate::gdi::guard::DeleteObjectGuard;
 use crate::gui::base::Base;
 use crate::gui::msg_error::MsgError;
 use crate::kernel::decl::{AnyResult, MulDiv, SysResult};
@@ -34,7 +34,7 @@ pub(in crate::gui) fn post_quit_error(
 //------------------------------------------------------------------------------
 
 /// Global UI font object.
-static mut UI_HFONT: Option<GdiObjectGuard<HFONT>> = None;
+static mut UI_HFONT: Option<DeleteObjectGuard<HFONT>> = None;
 
 /// Creates the global UI font object.
 pub(in crate::gui) fn create_ui_font() -> SysResult<()> {

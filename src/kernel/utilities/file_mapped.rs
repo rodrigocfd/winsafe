@@ -1,6 +1,6 @@
 use crate::co;
 use crate::kernel::decl::{File, FileAccess, HFILEMAP, HFILEMAPVIEW, SysResult};
-use crate::kernel::guard::{HandleGuard, HfilemapviewGuard};
+use crate::kernel::guard::{CloseHandleGuard, UnmapViewOfFileGuard};
 use crate::prelude::{
 	Handle, kernel_Hfile, kernel_Hfilemap, kernel_Hfilemapview,
 };
@@ -25,8 +25,8 @@ use crate::prelude::{
 pub struct FileMapped {
 	access: FileAccess,
 	file: File,
-	hmap: HandleGuard<HFILEMAP>,
-	hview: HfilemapviewGuard,
+	hmap: CloseHandleGuard<HFILEMAP>,
+	hview: UnmapViewOfFileGuard,
 	size: usize,
 }
 
@@ -44,7 +44,7 @@ impl FileMapped {
 
 	#[must_use]
 	fn map_in_memory(file: &File, access: FileAccess)
-		-> SysResult<(HandleGuard<HFILEMAP>, HfilemapviewGuard)>
+		-> SysResult<(CloseHandleGuard<HFILEMAP>, UnmapViewOfFileGuard)>
 	{
 		let hmap = file.hfile().CreateFileMapping(
 			None,
@@ -89,8 +89,8 @@ impl FileMapped {
 	/// * [`as_mut_slice`](crate::FileMapped::as_mut_slice);
 	/// * [`as_slice`](crate::FileMapped::as_slice).
 	pub fn resize(&mut self, num_bytes: usize) -> SysResult<()> {
-		self.hview = HfilemapviewGuard { handle: HFILEMAPVIEW::NULL }; // close mapping handles
-		self.hmap = HandleGuard { handle: HFILEMAP::NULL };
+		self.hview = UnmapViewOfFileGuard::new(HFILEMAPVIEW::NULL); // close mapping handles
+		self.hmap = CloseHandleGuard::new(HFILEMAP::NULL);
 
 		self.file.resize(num_bytes)?;
 		let (hmap, hview) = Self::map_in_memory(&self.file, self.access)?;

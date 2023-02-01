@@ -5,7 +5,7 @@ use crate::kernel::decl::{
 	GetLastError, HEAPLIST32, MODULEENTRY32, PROCESSENTRY32, SysResult,
 	THREADENTRY32,
 };
-use crate::kernel::guard::HandleGuard;
+use crate::kernel::guard::CloseHandleGuard;
 use crate::kernel::privs::{as_mut, ptr_to_sysresult};
 use crate::prelude::Handle;
 
@@ -154,7 +154,7 @@ pub trait kernel_Hprocesslist: Handle {
 	#[must_use]
 	fn CreateToolhelp32Snapshot(
 		flags: co::TH32CS,
-		th32_process_id: Option<u32>) -> SysResult<HandleGuard<HPROCESSLIST>>
+		th32_process_id: Option<u32>) -> SysResult<CloseHandleGuard<HPROCESSLIST>>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -163,7 +163,7 @@ pub trait kernel_Hprocesslist: Handle {
 					th32_process_id.unwrap_or_default(),
 				)
 			},
-			|ptr| HandleGuard { handle: HPROCESSLIST(ptr) },
+			|ptr| CloseHandleGuard::new(HPROCESSLIST(ptr)),
 		)
 	}
 

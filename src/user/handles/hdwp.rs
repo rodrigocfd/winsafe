@@ -5,7 +5,7 @@ use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::privs::{as_mut, ptr_to_sysresult};
 use crate::prelude::Handle;
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
-use crate::user::guard::HdwpGuard;
+use crate::user::guard::EndDeferWindowPosGuard;
 
 impl_handle! { HDWP;
 	/// Handle to a
@@ -26,10 +26,10 @@ pub trait user_Hdwp: Handle {
 	/// [`BeginDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-begindeferwindowpos)
 	/// static method.
 	#[must_use]
-	fn BeginDeferWindowPos(num_windows: u32) -> SysResult<HdwpGuard> {
+	fn BeginDeferWindowPos(num_windows: u32) -> SysResult<EndDeferWindowPosGuard> {
 		ptr_to_sysresult(
 			unsafe { user::ffi::BeginDeferWindowPos(num_windows as _) },
-			|ptr| HdwpGuard { handle: HDWP(ptr) },
+			|ptr| EndDeferWindowPosGuard::new(HDWP(ptr)),
 		)
 	}
 

@@ -2,7 +2,7 @@
 
 use crate::{co, gdi};
 use crate::gdi::decl::{IdObmStr, IdOcrStr, IdOicStr};
-use crate::gdi::guard::GdiObjectGuard;
+use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::{HINSTANCE, SysResult};
 use crate::kernel::privs::ptr_to_sysresult;
 use crate::prelude::Handle;
@@ -23,14 +23,14 @@ pub trait gdi_Hinstance: Handle {
 	/// method for [`HBITMAP`](crate::HBITMAP).
 	#[must_use]
 	fn LoadImageBitmap(&self,
-		name: IdObmStr, sz: SIZE, load: co::LR) -> SysResult<GdiObjectGuard<HBITMAP>>
+		name: IdObmStr, sz: SIZE, load: co::LR) -> SysResult<DeleteObjectGuard<HBITMAP>>
 	{
 		ptr_to_sysresult(
 			unsafe {
 				gdi::ffi::LoadImageW(
 					self.as_ptr(), name.as_ptr(), 0, sz.cx, sz.cy, load.0)
 			},
-			|ptr| GdiObjectGuard { handle: HBITMAP(ptr) },
+			|ptr| DeleteObjectGuard::new(HBITMAP(ptr)),
 		)
 	}
 

@@ -10,7 +10,7 @@ use crate::co;
 use crate::kernel::decl::{
 	GetFileAttributes, HFINDFILE, HINSTANCE, SysResult, WIN32_FIND_DATA,
 };
-use crate::kernel::guard::HfindfileGuard;
+use crate::kernel::guard::FindCloseGuard;
 use crate::prelude::{Handle, kernel_Hfindfile, kernel_Hinstance, NativeBitflag};
 
 /// Returns an iterator over the files and folders within a directory.
@@ -310,7 +310,7 @@ pub fn split_parts(full_path: &str) -> Vec<&str> {
 struct DirListIter<'a> {
 	dir_path: String,
 	filter: Option<&'a str>,
-	hfind: Option<HfindfileGuard>,
+	hfind: Option<FindCloseGuard>,
 	wfd: WIN32_FIND_DATA,
 	no_more: bool,
 }

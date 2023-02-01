@@ -4,7 +4,7 @@ use crate::{co, kernel};
 use crate::kernel::decl::{
 	FILETIME, GetLastError, HACCESSTOKEN, SECURITY_ATTRIBUTES, SysResult,
 };
-use crate::kernel::guard::HandleGuard;
+use crate::kernel::guard::CloseHandleGuard;
 use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::Handle;
 
@@ -35,7 +35,7 @@ pub trait kernel_Hthread: Handle {
 		stack_size: usize,
 		start_addr: *mut std::ffi::c_void,
 		parameter: *mut std::ffi::c_void,
-		flags: co::THREAD_CREATE) -> SysResult<(HandleGuard<HTHREAD>, u32)>
+		flags: co::THREAD_CREATE) -> SysResult<(CloseHandleGuard<HTHREAD>, u32)>
 	{
 		let mut thread_id = u32::default();
 		ptr_to_sysresult(
@@ -49,7 +49,7 @@ pub trait kernel_Hthread: Handle {
 					&mut thread_id,
 				)
 			},
-			|ptr| (HandleGuard { handle: HTHREAD(ptr) }, thread_id),
+			|ptr| (CloseHandleGuard::new(HTHREAD(ptr)), thread_id),
 		)
 	}
 
@@ -131,7 +131,7 @@ pub trait kernel_Hthread: Handle {
 	#[must_use]
 	fn OpenThreadToken(&self,
 		desired_access: co::TOKEN,
-		open_as_self: bool) -> SysResult<HandleGuard<HACCESSTOKEN>>
+		open_as_self: bool) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
 		bool_to_sysresult(
@@ -143,6 +143,6 @@ pub trait kernel_Hthread: Handle {
 					&mut handle.0,
 				)
 			},
-		).map(|_| HandleGuard { handle })
+		).map(|_| CloseHandleGuard::new(handle))
 	}
 }

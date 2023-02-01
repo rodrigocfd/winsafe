@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, gdi};
-use crate::gdi::guard::GdiObjectGuard;
+use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::privs::ptr_to_sysresult;
 use crate::prelude::GdiObject;
@@ -22,23 +22,23 @@ pub trait gdi_Hrgn: GdiObject {
 	/// [`CreateRectRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createrectrgn)
 	/// static method.
 	#[must_use]
-	fn CreateRectRgn(bounds: RECT) -> SysResult<GdiObjectGuard<HRGN>> {
+	fn CreateRectRgn(bounds: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
 		ptr_to_sysresult(
 			unsafe {
 				gdi::ffi::CreateRectRgn(
 					bounds.left, bounds.top, bounds.right, bounds.bottom)
 			},
-			|ptr| GdiObjectGuard { handle: HRGN(ptr) },
+			|ptr| DeleteObjectGuard::new(HRGN(ptr)),
 		)
 	}
 
 	/// [`CreateRectRgnIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createrectrgnindirect)
 	/// static method.
 	#[must_use]
-	fn CreateRectRgnIndirect(rc: RECT) -> SysResult<GdiObjectGuard<HRGN>> {
+	fn CreateRectRgnIndirect(rc: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
 		ptr_to_sysresult(
 			unsafe { gdi::ffi::CreateRectRgnIndirect(&rc as *const _ as _) },
-			|ptr| GdiObjectGuard { handle: HRGN(ptr) },
+			|ptr| DeleteObjectGuard::new(HRGN(ptr)),
 		)
 	}
 
@@ -46,7 +46,7 @@ pub trait gdi_Hrgn: GdiObject {
 	/// static method.
 	#[must_use]
 	fn CreateRoundRectRgn(
-		bounds: RECT, size: SIZE) -> SysResult<GdiObjectGuard<HRGN>>
+		bounds: RECT, size: SIZE) -> SysResult<DeleteObjectGuard<HRGN>>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -55,7 +55,7 @@ pub trait gdi_Hrgn: GdiObject {
 					size.cx, size.cy,
 				)
 			},
-			|ptr| GdiObjectGuard { handle: HRGN(ptr) },
+			|ptr| DeleteObjectGuard::new(HRGN(ptr)),
 		)
 	}
 

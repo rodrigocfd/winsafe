@@ -5,7 +5,7 @@ use crate::kernel::decl::{
 	GetLastError, HRSRC, HRSRCMEM, IdStr, LANGID, RtStr, SysResult, WString,
 };
 use crate::kernel::ffi_types::BOOL;
-use crate::kernel::guard::HinstanceGuard;
+use crate::kernel::guard::FreeLibraryGuard;
 use crate::kernel::privs::{
 	bool_to_sysresult, MAX_PATH, ptr_to_sysresult, str_to_iso88591,
 };
@@ -202,12 +202,12 @@ pub trait kernel_Hinstance: Handle {
 	/// [`LoadLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryw)
 	/// static method.
 	#[must_use]
-	fn LoadLibrary(lib_file_name: &str) -> SysResult<HinstanceGuard> {
+	fn LoadLibrary(lib_file_name: &str) -> SysResult<FreeLibraryGuard> {
 		ptr_to_sysresult(
 			unsafe {
 				kernel::ffi::LoadLibraryW(WString::from_str(lib_file_name).as_ptr())
 			},
-			|ptr| HinstanceGuard { handle: HINSTANCE(ptr) },
+			|ptr| FreeLibraryGuard::new(HINSTANCE(ptr)),
 		)
 	}
 

@@ -6,12 +6,20 @@ use crate::comctl;
 /// [`ImageList_EndDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_enddrag)
 /// when the object goes out of scope.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
-pub struct HimagelistDragGuard<'a> {
-	pub(crate) _himagelist: PhantomData<&'a ()>,
+pub struct ImageListEndDragGuard<'a> {
+	_himagelist: PhantomData<&'a ()>,
 }
 
-impl<'a> Drop for HimagelistDragGuard<'a> {
+impl<'a> Drop for ImageListEndDragGuard<'a> {
 	fn drop(&mut self) {
 		unsafe { comctl::ffi::ImageList_EndDrag(); }
+	}
+}
+
+impl<'a> ImageListEndDragGuard<'a> {
+	/// Constructs the guard by taking ownership of the handle.
+	#[must_use]
+	pub const fn new(himagelist: PhantomData<&'a ()>) -> ImageListEndDragGuard<'a> {
+		Self { _himagelist: himagelist }
 	}
 }

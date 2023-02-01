@@ -2,7 +2,7 @@
 
 use crate::{co, gdi};
 use crate::gdi::decl::LOGPEN;
-use crate::gdi::guard::GdiObjectGuard;
+use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::SysResult;
 use crate::kernel::privs::ptr_to_sysresult;
 use crate::prelude::GdiObject;
@@ -32,21 +32,21 @@ pub trait gdi_Hpen: GdiObject {
 	fn CreatePen(
 		style: co::PS,
 		width: i32,
-		color: COLORREF) -> SysResult<GdiObjectGuard<HPEN>>
+		color: COLORREF) -> SysResult<DeleteObjectGuard<HPEN>>
 	{
 		ptr_to_sysresult(
 			unsafe { gdi::ffi::CreatePen(style.0, width, color.0) },
-			|ptr| GdiObjectGuard { handle: HPEN(ptr) },
+			|ptr| DeleteObjectGuard::new(HPEN(ptr)),
 		)
 	}
 
 	/// [`CreatePenIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpenindirect)
 	/// static method.
 	#[must_use]
-	fn CreatePenIndirect(lp: &mut LOGPEN) -> SysResult<GdiObjectGuard<HPEN>> {
+	fn CreatePenIndirect(lp: &mut LOGPEN) -> SysResult<DeleteObjectGuard<HPEN>> {
 		ptr_to_sysresult(
 			unsafe { gdi::ffi::CreatePenIndirect(lp as *const _ as _) },
-			|ptr| GdiObjectGuard { handle: HPEN(ptr) },
+			|ptr| DeleteObjectGuard::new(HPEN(ptr)),
 		)
 	}
 

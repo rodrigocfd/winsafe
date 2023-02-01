@@ -17,7 +17,7 @@ use crate::user::decl::{
 	TIMERPROC, WINDOWINFO, WINDOWPLACEMENT,
 };
 use crate::user::guard::{
-	ClipboardGuard, HdcPaintGuard, HdcReleaseGuard, HwndCaptureGuard,
+	CloseClipboardGuard, EndPaintGuard, ReleaseCaptureGuard, ReleaseDCGuard,
 };
 use crate::user::privs::zero_as_none;
 
@@ -72,7 +72,7 @@ pub trait user_Hwnd: Handle {
 	/// [`PAINTSTRUCT`](crate::PAINTSTRUCT) object.
 	///
 	/// Here, the cleanup is performed automatically, because `BeginPaint`
-	/// returns an [`HdcPaintGuard`](crate::guard::HdcPaintGuard), which stores
+	/// returns an [`EndPaintGuard`](crate::guard::EndPaintGuard), which stores
 	/// the `PAINTSTRUCT` and automatically calls `EndPaint` when the guard goes
 	/// out of scope. You must, however, keep the guard alive, otherwise the
 	/// cleanup will be performed right away.
@@ -108,13 +108,13 @@ pub trait user_Hwnd: Handle {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn BeginPaint(&self) -> SysResult<HdcPaintGuard<'_, Self>> {
+	fn BeginPaint(&self) -> SysResult<EndPaintGuard<'_, Self>> {
 		let mut ps = PAINTSTRUCT::default();
 		ptr_to_sysresult(
 			unsafe {
 				user::ffi::BeginPaint(self.as_ptr(), &mut ps as *mut _ as _)
 			},
-			|ptr| HdcPaintGuard { hwnd: self, hdc: HDC(ptr), ps },
+			|ptr| EndPaintGuard::new(self, HDC(ptr), ps),
 		)
 	}
 
@@ -438,13 +438,10 @@ pub trait user_Hwnd: Handle {
 	/// To get the device context of the desktop window, use the predefined
 	/// [`HWND::DESKTOP`](crate::prelude::user_Hwnd::DESKTOP).
 	#[must_use]
-	fn GetDC(&self) -> SysResult<HdcReleaseGuard<'_, Self>> {
+	fn GetDC(&self) -> SysResult<ReleaseDCGuard<'_, Self>> {
 		ptr_to_sysresult(
 			unsafe { user::ffi::GetDC(self.as_ptr()) },
-			|ptr| HdcReleaseGuard {
-				hwnd: self,
-				hdc: HDC(ptr),
-			},
+			|ptr| ReleaseDCGuard::new(self, HDC(ptr)),
 		)
 	}
 
@@ -685,10 +682,10 @@ pub trait user_Hwnd: Handle {
 	/// [`GetWindowDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdc)
 	/// method.
 	#[must_use]
-	fn GetWindowDC(&self) -> SysResult<HdcReleaseGuard<'_, Self>> {
+	fn GetWindowDC(&self) -> SysResult<ReleaseDCGuard<'_, Self>> {
 		ptr_to_sysresult(
 			unsafe { user::ffi::GetWindowDC(self.as_ptr()) },
-			|ptr| HdcReleaseGuard { hwnd: self, hdc: HDC(ptr) },
+			|ptr| ReleaseDCGuard::new(self, HDC(ptr)),
 		)
 	}
 
@@ -1115,10 +1112,10 @@ pub trait user_Hwnd: Handle {
 	/// as a cleanup operation.
 	///
 	/// Here, the cleanup is performed automatically, because `OpenClipboard`
-	/// returns a [`ClipboardGuard`](crate::guard::ClipboardGuard), which
-	/// automatically calls `CloseClipboard` when the guard goes out of scope.
-	/// You must, however, keep the guard alive, otherwise the cleanup will be
-	/// performed right away.
+	/// returns a [`CloseClipboardGuard`](crate::guard::CloseClipboardGuard),
+	/// which automatically calls `CloseClipboard` when the guard goes out of
+	/// scope. You must, however, keep the guard alive, otherwise the cleanup
+	/// will be performed right away.
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
@@ -1141,9 +1138,9 @@ pub trait user_Hwnd: Handle {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn OpenClipboard(&self) -> SysResult<ClipboardGuard<'_>> {
+	fn OpenClipboard(&self) -> SysResult<CloseClipboardGuard<'_>> {
 		bool_to_sysresult(unsafe { user::ffi::OpenClipboard(self.as_ptr()) })
-			.map(|_| ClipboardGuard { _hwnd: PhantomData })
+			.map(|_| CloseClipboardGuard::new(PhantomData))
 	}
 
 	/// [`PostMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
@@ -1328,12 +1325,12 @@ pub trait user_Hwnd: Handle {
 
 	/// [`SetCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcapture)
 	/// method.
-	fn SetCapture(&self) -> HwndCaptureGuard<'_, Self> {
-		HwndCaptureGuard {
-			_hwnd: self,
-			hwnd_prev: unsafe { user::ffi::SetCapture(self.as_ptr()).as_mut() }
-				.map(|ptr| HWND(ptr))
-		}
+	fn SetCapture(&self) -> ReleaseCaptureGuard<'_, Self> {
+		ReleaseCaptureGuard::new(
+			self,
+			unsafe { user::ffi::SetCapture(self.as_ptr()).as_mut() }
+				.map(|ptr| HWND(ptr)),
+		)
 	}
 
 	/// [`SetFocus`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setfocus)

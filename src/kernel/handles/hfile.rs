@@ -5,7 +5,7 @@ use crate::kernel::decl::{
 	BY_HANDLE_FILE_INFORMATION, GetLastError, HFILEMAP, HIDWORD, LODWORD,
 	OVERLAPPED, SECURITY_ATTRIBUTES, SysResult, WString,
 };
-use crate::kernel::guard::{HandleGuard, HfileLockGuard};
+use crate::kernel::guard::{CloseHandleGuard, UnlockFileGuard};
 use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::Handle;
 
@@ -80,7 +80,7 @@ pub trait kernel_Hfile: Handle {
 		security_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		creation_disposition: co::DISPOSITION,
 		flags_and_attrs: co::FILE_ATTRIBUTE,
-		hfile_template: Option<&HFILE>) -> SysResult<(HandleGuard<HFILE>, co::ERROR)>
+		hfile_template: Option<&HFILE>) -> SysResult<(CloseHandleGuard<HFILE>, co::ERROR)>
 	{
 		match HFILE(unsafe {
 			kernel::ffi::CreateFileW(
@@ -94,7 +94,7 @@ pub trait kernel_Hfile: Handle {
 			) as _
 		}) {
 			HFILE::NULL => Err(GetLastError()),
-			handle => Ok((HandleGuard { handle }, GetLastError())),
+			handle => Ok((CloseHandleGuard::new(handle), GetLastError())),
 		}
 	}
 
@@ -105,7 +105,7 @@ pub trait kernel_Hfile: Handle {
 		mapping_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		protect: co::PAGE,
 		max_size: Option<u64>,
-		mapping_name: Option<&str>) -> SysResult<HandleGuard<HFILEMAP>>
+		mapping_name: Option<&str>) -> SysResult<CloseHandleGuard<HFILEMAP>>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -117,7 +117,7 @@ pub trait kernel_Hfile: Handle {
 					WString::from_opt_str(mapping_name).as_ptr(),
 				)
 			},
-			|ptr| HandleGuard { handle: HFILEMAP(ptr) },
+			|ptr| CloseHandleGuard::new(HFILEMAP(ptr)),
 		)
 	}
 
@@ -167,10 +167,10 @@ pub trait kernel_Hfile: Handle {
 	/// as a cleanup operation.
 	///
 	/// Here, the cleanup is performed automatically, because `LockFile` returns
-	/// an [`HfileLockGuard`](crate::guard::HfileLockGuard), which automatically
-	/// calls `UnlockFile` when the guard goes out of scope. You must, however,
-	/// keep the guard alive, otherwise the cleanup will be performed right
-	/// away.
+	/// an [`UnlockFileGuard`](crate::guard::UnlockFileGuard), which
+	/// automatically calls `UnlockFile` when the guard goes out of scope. You
+	/// must, however, keep the guard alive, otherwise the cleanup will be
+	/// performed right away.
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
@@ -189,7 +189,7 @@ pub trait kernel_Hfile: Handle {
 	#[must_use]
 	fn LockFile(&self,
 		offset: u64,
-		num_bytes_to_lock: u64) -> SysResult<HfileLockGuard<'_, Self>>
+		num_bytes_to_lock: u64) -> SysResult<UnlockFileGuard<'_, Self>>
 	{
 		bool_to_sysresult(
 			unsafe {
@@ -201,7 +201,7 @@ pub trait kernel_Hfile: Handle {
 					HIDWORD(num_bytes_to_lock),
 				)
 			},
-		).map(|_| HfileLockGuard { hfile: self, offset, num_bytes_to_lock })
+		).map(|_| UnlockFileGuard::new(self, offset, num_bytes_to_lock))
 	}
 
 	/// [`ReadFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)

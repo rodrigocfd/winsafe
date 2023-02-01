@@ -4,17 +4,24 @@ use crate::{co, gdi};
 use crate::prelude::{gdi_Hdc, GdiObject, Handle};
 use crate::user::decl::HDC;
 
+handle_guard! { DeleteDCGuard: HDC;
+	gdi::ffi::DeleteDC;
+	/// RAII implementation for [`HDC`](crate::HDC) which automatically calls
+	/// [`DeleteDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deletedc)
+	/// when the object goes out of scope.
+}
+
 /// RAII implementation for a [`GdiObject`](crate::prelude::GdiObject) which
 /// automatically calls
 /// [`DeleteObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
 /// when the object goes out of scope.
-pub struct GdiObjectGuard<T>
+pub struct DeleteObjectGuard<T>
 	where T: GdiObject,
 {
-	pub(crate) handle: T,
+	handle: T,
 }
 
-impl<T> Drop for GdiObjectGuard<T>
+impl<T> Drop for DeleteObjectGuard<T>
 	where T: GdiObject,
 {
 	fn drop(&mut self) {
@@ -24,7 +31,7 @@ impl<T> Drop for GdiObjectGuard<T>
 	}
 }
 
-impl<T> Deref for GdiObjectGuard<T>
+impl<T> Deref for DeleteObjectGuard<T>
 	where T: GdiObject,
 {
 	type Target = T;
@@ -34,9 +41,15 @@ impl<T> Deref for GdiObjectGuard<T>
 	}
 }
 
-impl<T> GdiObjectGuard<T>
+impl<T> DeleteObjectGuard<T>
 	where T: GdiObject,
 {
+	/// Constructs the guard by taking ownership of the handle.
+	#[must_use]
+	pub const fn new(handle: T) -> DeleteObjectGuard<T> {
+		Self { handle }
+	}
+
 	/// Ejects the underlying handle, leaving a
 	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
 	///
@@ -51,13 +64,6 @@ impl<T> GdiObjectGuard<T>
 	}
 }
 
-handle_guard! { HdcDeleteGuard: HDC;
-	gdi::ffi::DeleteDC;
-	/// RAII implementation for [`HDC`](crate::HDC) which automatically calls
-	/// [`DeleteDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deletedc)
-	/// when the object goes out of scope.
-}
-
 /// RAII implementation for
 /// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject) calls, which
 /// automatically selects the previous GDI object at the end of the scope.
@@ -65,9 +71,9 @@ pub struct SelectObjectGuard<'a, H, G>
 	where H: gdi_Hdc,
 		G: GdiObject,
 {
-	pub(crate) hdc: &'a H,
-	pub(crate) prev_hgdi: G,
-	pub(crate) region: Option<co::REGION>,
+	hdc: &'a H,
+	prev_hgdi: G,
+	region: Option<co::REGION>,
 }
 
 impl<'a, H, G> Drop for SelectObjectGuard<'a, H, G>
@@ -87,6 +93,16 @@ impl<'a, H, G> SelectObjectGuard<'a, H, G>
 	where H: gdi_Hdc,
 		G: GdiObject,
 {
+	/// Constructs the guard by taking ownership of the handle.
+	#[must_use]
+	pub const fn new(
+		hdc: &'a H,
+		prev_hgdi: G,
+		region: Option<co::REGION>) -> SelectObjectGuard<'a, H, G>
+	{
+		Self { hdc, prev_hgdi, region }
+	}
+
 	/// Returns a handle to the object that has been replaced.
 	#[must_use]
 	pub const fn prev_object(&self) -> &G {

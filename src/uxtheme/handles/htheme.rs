@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, uxtheme};
-use crate::gdi::guard::GdiObjectGuard;
+use crate::gdi::guard::DeleteObjectGuard;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::Handle;
@@ -98,7 +98,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// method.
 	#[must_use]
 	fn GetThemeBackgroundRegion(&self,
-		hdc: &HDC, part_state: co::VS, rc: RECT) -> HrResult<GdiObjectGuard<HRGN>>
+		hdc: &HDC, part_state: co::VS, rc: RECT) -> HrResult<DeleteObjectGuard<HRGN>>
 	{
 		let mut handle = HRGN::NULL;
 		ok_to_hrresult(
@@ -112,7 +112,7 @@ pub trait uxtheme_Htheme: Handle {
 					&mut handle as *mut _ as _,
 				)
 			},
-		).map(|_| GdiObjectGuard { handle })
+		).map(|_| DeleteObjectGuard::new(handle))
 	}
 
 	/// [`GetThemeColor`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemecolor)

@@ -2,7 +2,7 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{HFILEMAPVIEW, SysResult};
-use crate::kernel::guard::HfilemapviewGuard;
+use crate::kernel::guard::UnmapViewOfFileGuard;
 use crate::kernel::privs::ptr_to_sysresult;
 use crate::prelude::Handle;
 
@@ -32,7 +32,7 @@ pub trait kernel_Hfilemap: Handle {
 	fn MapViewOfFile(&self,
 		desired_access: co::FILE_MAP,
 		offset: u64,
-		number_of_bytes_to_map: Option<usize>) -> SysResult<HfilemapviewGuard>
+		number_of_bytes_to_map: Option<usize>) -> SysResult<UnmapViewOfFileGuard>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -43,7 +43,7 @@ pub trait kernel_Hfilemap: Handle {
 					number_of_bytes_to_map.unwrap_or_default(),
 				)
 			},
-			|ptr| HfilemapviewGuard { handle: HFILEMAPVIEW(ptr) },
+			|ptr| UnmapViewOfFileGuard::new(HFILEMAPVIEW(ptr)),
 		)
 	}
 }

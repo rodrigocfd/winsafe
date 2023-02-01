@@ -2,7 +2,7 @@
 
 use crate::gdi;
 use crate::gdi::decl::BITMAP;
-use crate::gdi::guard::GdiObjectGuard;
+use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::privs::ptr_to_sysresult;
 use crate::prelude::GdiObject;
@@ -25,14 +25,14 @@ pub trait gdi_Hbitmap: GdiObject {
 	#[must_use]
 	fn CreateBitmap(
 		sz: SIZE, num_planes: u32,
-		bit_count: u32, bits: *mut u8) -> SysResult<GdiObjectGuard<HBITMAP>>
+		bit_count: u32, bits: *mut u8) -> SysResult<DeleteObjectGuard<HBITMAP>>
 	{
 		ptr_to_sysresult(
 			unsafe {
 				gdi::ffi::CreateBitmap(
 					sz.cx, sz.cy, num_planes, bit_count, bits as _)
 			},
-			|ptr| GdiObjectGuard { handle: HBITMAP(ptr) },
+			|ptr| DeleteObjectGuard::new(HBITMAP(ptr)),
 		)
 	}
 

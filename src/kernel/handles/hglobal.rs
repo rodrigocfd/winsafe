@@ -2,7 +2,7 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::guard::HglobalGuard;
+use crate::kernel::guard::GlobalFreeGuard;
 use crate::kernel::privs::{
 	as_mut, bool_to_sysresult, GMEM_INVALID_HANDLE, ptr_to_sysresult,
 };
@@ -29,11 +29,11 @@ pub trait kernel_Hglobal: Handle {
 	/// static method.
 	#[must_use]
 	fn GlobalAlloc(
-		flags: co::GMEM, num_bytes: usize) -> SysResult<HglobalGuard>
+		flags: co::GMEM, num_bytes: usize) -> SysResult<GlobalFreeGuard>
 	{
 		ptr_to_sysresult(
 			unsafe { kernel::ffi::GlobalAlloc(flags.0, num_bytes) },
-			|ptr| HglobalGuard { handle: HGLOBAL(ptr) },
+			|ptr| GlobalFreeGuard::new(HGLOBAL(ptr)),
 		)
 	}
 

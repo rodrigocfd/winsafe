@@ -2,7 +2,7 @@
 
 use crate::kernel;
 use crate::kernel::decl::{HFILE, OVERLAPPED, SECURITY_ATTRIBUTES, SysResult};
-use crate::kernel::guard::HandleGuard;
+use crate::kernel::guard::CloseHandleGuard;
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::{Handle, kernel_Hfile};
 
@@ -30,7 +30,7 @@ pub trait kernel_Hpipe: Handle {
 	#[must_use]
 	fn CreatePipe(
 		attrs: Option<&mut SECURITY_ATTRIBUTES>,
-		size: u32) -> SysResult<(HandleGuard<HPIPE>, HandleGuard<HPIPE>)>
+		size: u32) -> SysResult<(CloseHandleGuard<HPIPE>, CloseHandleGuard<HPIPE>)>
 	{
 		let (mut hread, mut hwrite) = (HPIPE::NULL, HPIPE::NULL);
 		bool_to_sysresult(
@@ -42,10 +42,7 @@ pub trait kernel_Hpipe: Handle {
 					size,
 				)
 			},
-		).map(|_| (
-			HandleGuard { handle: hread },
-			HandleGuard { handle: hwrite },
-		))
+		).map(|_| (CloseHandleGuard::new(hread), CloseHandleGuard::new(hwrite)))
 	}
 
 	/// [`ReadFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)

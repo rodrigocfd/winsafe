@@ -64,7 +64,7 @@ macro_rules! handle_guard {
 	) => {
 		$( #[$doc] )*
 		pub struct $name {
-			pub(crate) handle: $handle,
+			handle: $handle,
 		}
 
 		impl Drop for $name {
@@ -84,6 +84,12 @@ macro_rules! handle_guard {
 		}
 
 		impl $name {
+			/// Constructs the guard by taking ownership of the handle.
+			#[must_use]
+			pub const fn new(handle: $handle) -> $name {
+				Self { handle }
+			}
+
 			/// Ejects the underlying handle, leaving a
 			/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its
 			/// place.

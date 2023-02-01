@@ -3,7 +3,7 @@
 use std::marker::PhantomData;
 
 use crate::{co, comctl};
-use crate::comctl::guard::HimagelistDragGuard;
+use crate::comctl::guard::ImageListEndDragGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::privs::{as_mut, bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::Handle;
@@ -80,10 +80,11 @@ pub trait comctl_Himagelist: Handle {
 	/// as a cleanup operation.
 	///
 	/// Here, the cleanup is performed automatically, because `BeginDrag`
-	/// returns an [`HimagelistDragGuard`](crate::guard::HimagelistDragGuard),
-	/// which automatically calls `ImageList_EndDrag` when the guard goes out of
-	/// scope. You must, however, keep the guard alive, otherwise the
-	/// cleanup will be performed right away.
+	/// returns an
+	/// [`ImageListEndDragGuard`](crate::guard::ImageListEndDragGuard), which
+	/// automatically calls `ImageList_EndDrag` when the guard goes out of
+	/// scope. You must, however, keep the guard alive, otherwise the cleanup
+	/// will be performed right away.
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
@@ -96,7 +97,7 @@ pub trait comctl_Himagelist: Handle {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	fn BeginDrag(&self,
-		itrack: u32, hotspot: POINT) -> SysResult<HimagelistDragGuard<'_>>
+		itrack: u32, hotspot: POINT) -> SysResult<ImageListEndDragGuard<'_>>
 	{
 		bool_to_sysresult(
 			unsafe {
@@ -106,7 +107,7 @@ pub trait comctl_Himagelist: Handle {
 					hotspot.x, hotspot.y,
 				)
 			},
-		).map(|_| HimagelistDragGuard { _himagelist: PhantomData })
+		).map(|_| ImageListEndDragGuard::new(PhantomData))
 	}
 
 	/// [`ImageList_Create`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_create)

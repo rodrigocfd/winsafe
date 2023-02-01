@@ -4,7 +4,7 @@ use crate::{co, ktm};
 use crate::kernel::decl::{
 	GetLastError, GUID, SECURITY_ATTRIBUTES, SysResult, WString,
 };
-use crate::kernel::guard::HandleGuard;
+use crate::kernel::guard::CloseHandleGuard;
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
 
@@ -38,7 +38,7 @@ pub trait ktm_Htransaction: Handle {
 		transaction_attributes: Option<&SECURITY_ATTRIBUTES>,
 		options: Option<co::TRANSACTION_OPT>,
 		timeout: Option<u32>,
-		description: &str) -> SysResult<HandleGuard<HTRANSACTION>>
+		description: &str) -> SysResult<CloseHandleGuard<HTRANSACTION>>
 	{
 		match HTRANSACTION(unsafe {
 			ktm::ffi::CreateTransaction(
@@ -52,7 +52,7 @@ pub trait ktm_Htransaction: Handle {
 			)
 		}) {
 			HTRANSACTION::INVALID => Err(GetLastError()),
-			handle => Ok(HandleGuard { handle }),
+			handle => Ok(CloseHandleGuard::new(handle)),
 		}
 	}
 
@@ -73,7 +73,7 @@ pub trait ktm_Htransaction: Handle {
 	#[must_use]
 	fn OpenTransaction(
 		desired_access: co::TRANSACTION,
-		transaction_id: &GUID) -> SysResult<HandleGuard<HTRANSACTION>>
+		transaction_id: &GUID) -> SysResult<CloseHandleGuard<HTRANSACTION>>
 	{
 		match HTRANSACTION(unsafe {
 			ktm::ffi::OpenTransaction(
@@ -82,7 +82,7 @@ pub trait ktm_Htransaction: Handle {
 			)
 		}) {
 			HTRANSACTION::INVALID => Err(GetLastError()),
-			handle => Ok(HandleGuard { handle }),
+			handle => Ok(CloseHandleGuard::new(handle)),
 		}
 	}
 

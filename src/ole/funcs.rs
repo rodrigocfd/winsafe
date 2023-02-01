@@ -2,7 +2,7 @@
 
 use crate::{co, ole};
 use crate::ole::decl::{ComPtr, HrResult, IUnknown};
-use crate::ole::guard::ComLibraryGuard;
+use crate::ole::guard::CoUninitializeGuard;
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::ole_IUnknown;
 
@@ -64,7 +64,7 @@ pub fn CoCreateInstance<T>(
 /// as a cleanup operation.
 ///
 /// Here, the cleanup is performed automatically, because `CoInitializeEx`
-/// returns a [`ComLibraryGuard`](crate::guard::ComLibraryGuard), which
+/// returns a [`CoUninitializeGuard`](crate::guard::CoUninitializeGuard), which
 /// automatically calls `CoUninitialize` when the guard goes out of scope. You
 /// must, however, keep the guard alive, otherwise the cleanup will be performed
 /// right away.
@@ -83,14 +83,14 @@ pub fn CoCreateInstance<T>(
 /// // program runs...
 /// # Ok::<_, co::HRESULT>(())
 /// ```
-pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<ComLibraryGuard> {
+pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<CoUninitializeGuard> {
 	let hr = co::HRESULT(
 		unsafe { ole::ffi::CoInitializeEx(std::ptr::null_mut(), coinit.0) },
 	);
 	match hr {
 		co::HRESULT::S_OK
 		| co::HRESULT::S_FALSE
-		| co::HRESULT::RPC_E_CHANGED_MODE => Ok(ComLibraryGuard { hr }),
+		| co::HRESULT::RPC_E_CHANGED_MODE => Ok(CoUninitializeGuard::new(hr)),
 		hr => Err(hr),
 	}
 }

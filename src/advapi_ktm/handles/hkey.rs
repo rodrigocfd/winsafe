@@ -2,7 +2,7 @@
 
 use crate::{advapi_ktm, co};
 use crate::advapi::decl::HKEY;
-use crate::advapi::guard::HkeyGuard;
+use crate::advapi::guard::RegCloseKeyGuard;
 use crate::kernel::decl::{SECURITY_ATTRIBUTES, SysResult, WString};
 use crate::ktm::decl::HTRANSACTION;
 use crate::prelude::Handle;
@@ -27,7 +27,7 @@ pub trait advapi_ktm_Hkey: Handle {
 		options: co::REG_OPTION,
 		access_rights: co::KEY,
 		security_attributes: Option<&SECURITY_ATTRIBUTES>,
-		htransaction: &HTRANSACTION) -> SysResult<(HkeyGuard, co::REG_DISPOSITION)>
+		htransaction: &HTRANSACTION) -> SysResult<(RegCloseKeyGuard, co::REG_DISPOSITION)>
 	{
 		let mut hkey = HKEY::NULL;
 		let mut disposition = co::REG_DISPOSITION::NoValue;
@@ -49,7 +49,7 @@ pub trait advapi_ktm_Hkey: Handle {
 				)
 			} as _,
 		) {
-			co::ERROR::SUCCESS => Ok((HkeyGuard { hkey }, disposition)),
+			co::ERROR::SUCCESS => Ok((RegCloseKeyGuard::new(hkey), disposition)),
 			err => Err(err),
 		}
 	}
@@ -61,7 +61,7 @@ pub trait advapi_ktm_Hkey: Handle {
 		sub_key: &str,
 		options: co::REG_OPTION,
 		access_rights: co::KEY,
-		htransaction: &HTRANSACTION) -> SysResult<HkeyGuard>
+		htransaction: &HTRANSACTION) -> SysResult<RegCloseKeyGuard>
 	{
 		let mut hkey = HKEY::NULL;
 		match co::ERROR(
@@ -77,7 +77,7 @@ pub trait advapi_ktm_Hkey: Handle {
 				)
 			} as _,
 		) {
-			co::ERROR::SUCCESS => Ok(HkeyGuard { hkey }),
+			co::ERROR::SUCCESS => Ok(RegCloseKeyGuard::new(hkey)),
 			err => Err(err),
 		}
 	}

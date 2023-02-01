@@ -2,7 +2,7 @@
 
 use crate::{co, gdi};
 use crate::gdi::decl::LOGBRUSH;
-use crate::gdi::guard::GdiObjectGuard;
+use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::GdiObject;
@@ -33,10 +33,10 @@ pub trait gdi_Hbrush: GdiObject {
 	/// [`CreateBrushIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbrushindirect)
 	/// static method.
 	#[must_use]
-	fn CreateBrushIndirect(lb: &LOGBRUSH) -> SysResult<GdiObjectGuard<HBRUSH>> {
+	fn CreateBrushIndirect(lb: &LOGBRUSH) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		ptr_to_sysresult(
 			unsafe { gdi::ffi::CreateBrushIndirect(lb as *const _ as _) },
-			|ptr| GdiObjectGuard { handle: HBRUSH(ptr) },
+			|ptr| DeleteObjectGuard::new(HBRUSH(ptr)),
 		)
 	}
 
@@ -44,31 +44,31 @@ pub trait gdi_Hbrush: GdiObject {
 	/// static method.
 	#[must_use]
 	fn CreateHatchBrush(
-		hatch: co::HS, color: COLORREF) -> SysResult<GdiObjectGuard<HBRUSH>>
+		hatch: co::HS, color: COLORREF) -> SysResult<DeleteObjectGuard<HBRUSH>>
 	{
 		ptr_to_sysresult(
 			unsafe { gdi::ffi::CreateHatchBrush(hatch.0, color.0) },
-			|ptr| GdiObjectGuard { handle: HBRUSH(ptr) },
+			|ptr| DeleteObjectGuard::new(HBRUSH(ptr)),
 		)
 	}
 
 	/// [`CreatePatternBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpatternbrush)
 	/// static method.
 	#[must_use]
-	fn CreatePatternBrush(hbmp: &HBITMAP) -> SysResult<GdiObjectGuard<HBRUSH>> {
+	fn CreatePatternBrush(hbmp: &HBITMAP) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		ptr_to_sysresult(
 			unsafe { gdi::ffi::CreatePatternBrush(hbmp.0) },
-			|ptr| GdiObjectGuard { handle: HBRUSH(ptr) },
+			|ptr| DeleteObjectGuard::new(HBRUSH(ptr)),
 		)
 	}
 
 	/// [`CreateSolidBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush)
 	/// static method.
 	#[must_use]
-	fn CreateSolidBrush(color: COLORREF) -> SysResult<GdiObjectGuard<HBRUSH>> {
+	fn CreateSolidBrush(color: COLORREF) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		ptr_to_sysresult(
 			unsafe { gdi::ffi::CreateSolidBrush(color.0) },
-			|ptr| GdiObjectGuard { handle: HBRUSH(ptr) },
+			|ptr| DeleteObjectGuard::new(HBRUSH(ptr)),
 		)
 	}
 
