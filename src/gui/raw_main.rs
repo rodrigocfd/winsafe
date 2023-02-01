@@ -9,13 +9,12 @@ use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
 use crate::kernel::decl::{AnyResult, HINSTANCE, WString};
 use crate::kernel::privs::as_mut;
-use crate::prelude::{
-	GuiEvents, Handle, kernel_Hinstance, user_Haccel, user_Hwnd,
-};
+use crate::prelude::{GuiEvents, Handle, kernel_Hinstance, user_Hwnd};
 use crate::user::decl::{
-	AdjustWindowRectEx, GetSystemMetrics, HACCEL, HMENU, HWND, IdMenu, POINT,
+	AdjustWindowRectEx, GetSystemMetrics, HMENU, HWND, IdMenu, POINT,
 	PostQuitMessage, RECT, SIZE, WNDCLASSEX,
 };
+use crate::user::guard::DestroyAcceleratorTableGuard;
 
 struct Obj { // actual fields of RawMain
 	raw_base: RawBase,
@@ -124,13 +123,7 @@ impl RawMain {
 		self.hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 		self.hwnd().UpdateWindow().unwrap();
 
-		let loop_res = Base::run_main_loop(opts.accel_table.as_opt()); // blocks until window is closed
-
-		if let Some(haccel) = opts.accel_table.as_opt() {
-			haccel.DestroyAcceleratorTable();
-		}
-
-		loop_res
+		Base::run_main_loop(opts.accel_table.as_deref()) // blocks until window is closed
 	}
 
 	fn default_message_handlers(&self) {
@@ -232,12 +225,12 @@ pub struct WindowMainOpts {
 	pub menu: HMENU,
 	/// Main accelerator table of the window to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// Use
+	/// [`HACCEL::CreateAcceleratorTable`](crate::prelude::user_Haccel::CreateAcceleratorTable)
+	/// to create one.
 	///
-	/// This accelerator table is **not** shared: the window will own it, and
-	/// destroy it when the window is destroyed.
-	///
-	/// Defaults to none.
-	pub accel_table: HACCEL,
+	/// Defaults to `None`.
+	pub accel_table: Option<DestroyAcceleratorTableGuard>,
 }
 
 impl Default for WindowMainOpts {
@@ -253,7 +246,7 @@ impl Default for WindowMainOpts {
 			style: co::WS::CAPTION | co::WS::SYSMENU | co::WS::CLIPCHILDREN | co::WS::BORDER | co::WS::VISIBLE,
 			ex_style: co::WS_EX::LEFT,
 			menu: HMENU::NULL,
-			accel_table: HACCEL::NULL,
+			accel_table: None,
 		}
 	}
 }

@@ -3,7 +3,7 @@ use std::ops::Deref;
 
 use crate::prelude::{Handle, user_Hwnd};
 use crate::user;
-use crate::user::decl::{HCURSOR, HDC, HDWP, HICON, HWND, PAINTSTRUCT};
+use crate::user::decl::{HACCEL, HCURSOR, HDC, HDWP, HICON, HWND, PAINTSTRUCT};
 
 /// RAII implementation for clipboard which automatically calls
 /// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
@@ -24,6 +24,14 @@ impl<'a> CloseClipboardGuard<'a> {
 	pub const fn new(hwnd: PhantomData<&'a ()>) -> Self {
 		Self { _hwnd: hwnd }
 	}
+}
+
+handle_guard! { DestroyAcceleratorTableGuard: HACCEL;
+	user::ffi::DestroyAcceleratorTable;
+	/// RAII implementation for [`HACCEL`](crate::HACCEL) which automatically
+	/// calls
+	/// [`DestroyAcceleratorTable`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyacceleratortable)
+	/// when the object goes out of scope.
 }
 
 handle_guard! { DestroyCursorGuard: HCURSOR;
