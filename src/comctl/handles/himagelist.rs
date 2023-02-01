@@ -3,7 +3,7 @@
 use std::marker::PhantomData;
 
 use crate::{co, comctl};
-use crate::comctl::guard::ImageListEndDragGuard;
+use crate::comctl::guard::{ImageListDestroyGuard, ImageListEndDragGuard};
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::privs::{as_mut, bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::Handle;
@@ -113,10 +113,6 @@ pub trait comctl_Himagelist: Handle {
 	/// [`ImageList_Create`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_create)
 	/// static method.
 	///
-	/// **Note:** Must be paired with an
-	/// [`HIMAGELIST::Destroy`](crate::prelude::comctl_Himagelist::Destroy)
-	/// call.
-	///
 	/// # Examples
 	///
 	/// ```rust,no_run
@@ -125,14 +121,12 @@ pub trait comctl_Himagelist: Handle {
 	///
 	/// let himgl = HIMAGELIST::Create(
 	///     SIZE::new(16, 16), co::ILC::COLOR32, 1, 1)?;
-	///
-	/// himgl.Destroy()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
 	fn Create(
 		image_sz: SIZE, flags: co::ILC,
-		initial_size: i32, grow_size: i32) -> SysResult<HIMAGELIST>
+		initial_size: i32, grow_size: i32) -> SysResult<ImageListDestroyGuard>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -143,7 +137,7 @@ pub trait comctl_Himagelist: Handle {
 					grow_size,
 				)
 			},
-			|ptr| HIMAGELIST(ptr),
+			|ptr| ImageListDestroyGuard::new(HIMAGELIST(ptr)),
 		)
 	}
 

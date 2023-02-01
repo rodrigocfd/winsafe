@@ -1,8 +1,18 @@
 use std::marker::PhantomData;
 
 use crate::comctl;
+use crate::comctl::decl::HIMAGELIST;
+use crate::prelude::Handle;
 
-/// RAII implementation for imagelist drag which automatically calls
+handle_guard! { ImageListDestroyGuard: HIMAGELIST;
+	comctl::ffi::ImageList_Destroy;
+	/// RAII implementation for [`HIMAGELIST`](crate::HIMAGELIST) which
+	/// automatically calls
+	/// [`ImageList_Destroy`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_destroy)
+	/// when the object goes out of scope.
+}
+
+/// RAII implementation for image list drag which automatically calls
 /// [`ImageList_EndDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_enddrag)
 /// when the object goes out of scope.
 #[cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
