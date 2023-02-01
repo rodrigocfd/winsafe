@@ -96,6 +96,23 @@ impl<'a, H> Deref for HdcReleaseGuard<'a, H>
 	}
 }
 
+impl<'a, H> HdcReleaseGuard<'a, H>
+	where H: user_Hwnd,
+{
+	/// Ejects the underlying handle, leaving a
+	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
+	///
+	/// # Safety
+	///
+	/// Since the internal handle will be invalidated, the destructor will not
+	/// run. It's your responsability to run it, otherwise you'll cause a
+	/// resource leak.
+	#[must_use]
+	pub unsafe fn leak(&mut self) -> HDC {
+		std::mem::replace(&mut self.hdc, HDC::INVALID)
+	}
+}
+
 handle_guard! { HdwpGuard: HDWP;
 	user::ffi::EndDeferWindowPos;
 	/// RAII implementation for [`HDWP`](crate::HDWP) which automatically calls
@@ -126,6 +143,7 @@ impl<'a, H> HwndCaptureGuard<'a, H>
 {
 	/// Returns a handle to the window that had previously captured the mouse,
 	/// if any.
+	#[must_use]
 	pub const fn prev_hwnd(&self) -> Option<&HWND> {
 		self.hwnd_prev.as_ref()
 	}

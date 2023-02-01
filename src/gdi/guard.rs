@@ -34,6 +34,23 @@ impl<T> Deref for GdiObjectGuard<T>
 	}
 }
 
+impl<T> GdiObjectGuard<T>
+	where T: GdiObject,
+{
+	/// Ejects the underlying handle, leaving a
+	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
+	///
+	/// # Safety
+	///
+	/// Since the internal handle will be invalidated, the destructor will not
+	/// run. It's your responsability to run it, otherwise you'll cause a
+	/// resource leak.
+	#[must_use]
+	pub unsafe fn leak(&mut self) -> T {
+		std::mem::replace(&mut self.handle, T::INVALID)
+	}
+}
+
 handle_guard! { HdcDeleteGuard: HDC;
 	gdi::ffi::DeleteDC;
 	/// RAII implementation for [`HDC`](crate::HDC) which automatically calls
@@ -71,6 +88,7 @@ impl<'a, H, G> SelectObjectGuard<'a, H, G>
 		G: GdiObject,
 {
 	/// Returns a handle to the object that has been replaced.
+	#[must_use]
 	pub const fn prev_object(&self) -> &G {
 		&self.prev_hgdi
 	}
@@ -79,7 +97,21 @@ impl<'a, H, G> SelectObjectGuard<'a, H, G>
 	/// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject) call, if
 	/// the [`GdiObject`](crate::prelude::GdiObject) was an
 	/// [`HRGN`](crate::HRGN); otherwise returns `None`.
+	#[must_use]
 	pub const fn region(&self) -> Option<co::REGION> {
 		self.region
+	}
+
+	/// Ejects the underlying handle, leaving a
+	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
+	///
+	/// # Safety
+	///
+	/// Since the internal handle will be invalidated, the destructor will not
+	/// run. It's your responsability to run it, otherwise you'll cause a
+	/// resource leak.
+	#[must_use]
+	pub unsafe fn leak(&mut self) -> G {
+		std::mem::replace(&mut self.prev_hgdi, G::INVALID)
 	}
 }

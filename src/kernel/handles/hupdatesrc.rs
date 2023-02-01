@@ -37,7 +37,7 @@ pub trait kernel_Hupdatersrc: Handle {
 					delete_existing_resources as _,
 				)
 			},
-			|ptr| HupdatersrcGuard { hupdatersrc: HUPDATERSRC(ptr) },
+			|ptr| HupdatersrcGuard { hupsrc: HUPDATERSRC(ptr) },
 		)
 	}
 

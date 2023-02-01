@@ -95,9 +95,9 @@ impl BSTR {
 		}
 	}
 
-	/// Returns the underlying
+	/// Ejects the underlying
 	/// [`LPWSTR`](https://learn.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
-	/// pointer and sets the internal pointer to null, so that
+	/// pointer leaving a null pointer in its place, so that
 	/// [`SysFreeString`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysfreestring)
 	/// won't be called.
 	///
@@ -107,9 +107,7 @@ impl BSTR {
 	/// implies, you will cause a memory leak.
 	#[must_use]
 	pub unsafe fn leak(&mut self) -> *mut u16 {
-		let ptr = self.0;
-		self.0 = std::ptr::null_mut();
-		ptr
+		std::mem::replace(&mut self.0, std::ptr::null_mut())
 	}
 
 	/// Converts into

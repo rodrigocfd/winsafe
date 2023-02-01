@@ -17,6 +17,7 @@ impl Drop for ComLibraryGuard {
 impl ComLibraryGuard {
 	/// Returns the informational success code returned by
 	/// [`CoInitializeEx`](crate::CoInitializeEx).
+	#[must_use]
 	pub const fn hr(&self) -> co::HRESULT {
 		self.hr
 	}
