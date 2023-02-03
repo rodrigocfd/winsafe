@@ -31,7 +31,7 @@ ole = ["kernel", "user"]
 oleaut = ["ole"]
 shell = ["ole"]
 user = ["kernel"]
-uxtheme = ["ole"]
+uxtheme = ["gdi", "ole"]
 version = ["kernel"]
 
 # Generate docs locally:

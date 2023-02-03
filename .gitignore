@@ -1,4 +1,3 @@
-**/target
+**/target/
+.vscode/
 Cargo.lock
-ft.sh
-gh.sh
