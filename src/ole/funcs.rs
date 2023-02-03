@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::{co, ole};
-use crate::ole::decl::{ComPtr, HrResult, IUnknown};
+use crate::ole::decl::{ComPtr, COSERVERINFO, HrResult, IUnknown, MULTI_QI};
 use crate::ole::guard::CoUninitializeGuard;
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::ole_IUnknown;
@@ -50,6 +50,35 @@ pub fn CoCreateInstance<T>(
 				*iunk_outer = IUnknown::from(ppv_outer); // create outer Unknown if due
 			}
 			T::from(ppv) // return new Unknown-derived object
+		})
+	}
+}
+
+/// [`CoCreateInstanceEx`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstanceex)
+/// function.
+pub fn CoCreateInstanceEx(
+	clsid: &co::CLSID,
+	iunk_outer: Option<&mut IUnknown>,
+	cls_context: co::CLSCTX,
+	server_info: Option<&COSERVERINFO>,
+	results: &mut [MULTI_QI]) -> HrResult<()>
+{
+	unsafe {
+		let mut ppv_outer = ComPtr::null();
+		ok_to_hrresult(
+			ole::ffi::CoCreateInstanceEx(
+				clsid as *const _ as _,
+				iunk_outer.as_ref()
+					.map_or(std::ptr::null_mut(), |_| &mut ppv_outer as *mut _ as _),
+				cls_context.0,
+				server_info.map_or(std::ptr::null(), |si| si as *const _ as _),
+				results.len() as _,
+				results.as_mut_ptr() as _,
+			),
+		).map(|_| {
+			if let Some(iunk_outer) = iunk_outer {
+				*iunk_outer = IUnknown::from(ppv_outer); // create outer Unknown if due
+			}
 		})
 	}
 }

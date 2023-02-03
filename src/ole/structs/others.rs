@@ -4,6 +4,9 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::kernel::decl::WString;
+use crate::kernel::privs::as_mut;
+use crate::ole::decl::ComPtr;
+use crate::prelude::ole_IUnknown;
 
 /// [`COAUTHIDENTITY`](https://learn.microsoft.com/en-us/windows/win32/api/wtypesbase/ns-wtypesbase-coauthidentity)
 /// struct.
@@ -114,4 +117,38 @@ pub struct DVTARGETDEVICE {
 	pub tdPortNameOffset: u16,
 	pub tdExtDevmodeOffset: u16,
 	pub tdData: [u8; 1],
+}
+
+/// [`MULTI_QI`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-multi_qi)
+/// struct.
+#[repr(C)]
+pub struct MULTI_QI<'a> {
+	pIID: *mut co::IID,
+	pItf: ComPtr,
+	pub hr: co::HRESULT,
+
+	_pIID: PhantomData<&'a mut co::IID>,
+}
+
+impl_default!(MULTI_QI, 'a);
+
+impl<'a> MULTI_QI<'a> {
+	pub_fn_ptr_get_set!('a, pIID, set_pIID, co::IID);
+
+	/// Returns the `pItf` field.
+	///
+	/// Note that once this method is called, a COM object will be returned and
+	/// a null pointer will be left in its place. This is done for security
+	/// reasons, since the returned COM object will call
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// automatically. So if you call this method a second time, a null COM
+	/// object will be returned.
+	#[must_use]
+	pub fn pItf<T>(&self) -> T
+		where T: ole_IUnknown,
+	{
+		let obj = T::from(self.pItf);
+		unsafe { as_mut(self).pItf = ComPtr::null(); }
+		obj
+	}
 }
