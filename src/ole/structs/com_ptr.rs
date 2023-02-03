@@ -38,9 +38,13 @@ impl ComPtr {
 		Self(std::ptr::null_mut())
 	}
 
-	/// Returns `true` if the pointer is null.
+	/// Returns `None` if the handle is null, otherwise returns `Some(&self)`.
 	#[must_use]
-	pub fn is_null(&self) -> bool {
-		self.0.is_null()
+	pub fn as_opt(&self) -> Option<&Self> {
+		if self.0.is_null() {
+			None
+		} else {
+			Some(self)
+		}
 	}
 }

@@ -12,9 +12,9 @@ macro_rules! com_interface {
 
 		impl Drop for $name {
 			fn drop(&mut self) {
-				if !self.0.is_null() {
-					let vt = unsafe { &**(self.0.0 as *mut *mut crate::vt::IUnknownVT) };
-					(vt.Release)(self.0);
+				if let Some(p) = self.0.as_opt() {
+					let vt = unsafe { &**(p.0 as *mut *mut crate::vt::IUnknownVT) };
+					(vt.Release)(*p);
 				}
 			}
 		}

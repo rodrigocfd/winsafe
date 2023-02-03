@@ -5,7 +5,7 @@ use std::marker::PhantomData;
 use crate::co;
 use crate::kernel::decl::WString;
 use crate::kernel::privs::as_mut;
-use crate::ole::decl::ComPtr;
+use crate::ole::decl::{ComPtr, IUnknown};
 use crate::prelude::ole_IUnknown;
 
 /// [`COAUTHIDENTITY`](https://learn.microsoft.com/en-us/windows/win32/api/wtypesbase/ns-wtypesbase-coauthidentity)
@@ -131,6 +131,14 @@ pub struct MULTI_QI<'a> {
 }
 
 impl_default!(MULTI_QI, 'a);
+
+impl<'a> Drop for MULTI_QI<'a> {
+	fn drop(&mut self) {
+		if let Some(p) = self.pItf.as_opt() {
+			let _ = IUnknown::from(*p); // increased safety, in case pItf() method is not called
+		}
+	}
+}
 
 impl<'a> MULTI_QI<'a> {
 	pub_fn_ptr_get_set!('a, pIID, set_pIID, co::IID);
