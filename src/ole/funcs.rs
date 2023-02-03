@@ -1,10 +1,56 @@
 #![allow(non_snake_case)]
 
 use crate::{co, ole};
+use crate::kernel::decl::WString;
 use crate::ole::decl::{ComPtr, COSERVERINFO, HrResult, IUnknown, MULTI_QI};
 use crate::ole::guard::CoUninitializeGuard;
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::ole_IUnknown;
+
+/// [`CLSIDFromProgID`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromprogid)
+/// function.
+#[must_use]
+pub fn CLSIDFromProgID(prog_id: &str) -> HrResult<co::CLSID> {
+	let mut clsid = co::CLSID::default();
+	ok_to_hrresult(
+		unsafe {
+			ole::ffi::CLSIDFromProgID(
+				WString::from_str(prog_id).as_ptr(),
+				&mut clsid as *mut _ as _,
+			)
+		},
+	).map(|_| clsid)
+}
+
+/// [`CLSIDFromProgIDEx`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromprogidex)
+/// function.
+#[must_use]
+pub fn CLSIDFromProgIDEx(prog_id: &str) -> HrResult<co::CLSID> {
+	let mut clsid = co::CLSID::default();
+	ok_to_hrresult(
+		unsafe {
+			ole::ffi::CLSIDFromProgIDEx(
+				WString::from_str(prog_id).as_ptr(),
+				&mut clsid as *mut _ as _,
+			)
+		},
+	).map(|_| clsid)
+}
+
+/// [`CLSIDFromString`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromstring)
+/// function.
+#[must_use]
+pub fn CLSIDFromString(prog_id: &str) -> HrResult<co::CLSID> {
+	let mut clsid = co::CLSID::default();
+	ok_to_hrresult(
+		unsafe {
+			ole::ffi::CLSIDFromString(
+				WString::from_str(prog_id).as_ptr(),
+				&mut clsid as *mut _ as _,
+			)
+		},
+	).map(|_| clsid)
+}
 
 /// [`CoCreateInstance`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
 /// function.
@@ -181,4 +227,18 @@ pub unsafe fn CoTaskMemRealloc(pv: *mut u8, cb: usize) -> HrResult<*mut u8> {
 	} else {
 		Ok(p as _)
 	}
+}
+
+/// [`StringFromCLSID`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-stringfromclsid)
+/// function.
+#[must_use]
+pub fn StringFromCLSID(clsid: &co::CLSID) -> HrResult<String> {
+	let mut pstr: *mut u16 = std::ptr::null_mut();
+	ok_to_hrresult(
+		unsafe { ole::ffi::StringFromCLSID(clsid as *const _ as _, &mut pstr) },
+	).map(|_| {
+		let name = WString::from_wchars_nullt(pstr);
+		CoTaskMemFree(pstr as _);
+		name.to_string()
+	})
 }

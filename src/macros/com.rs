@@ -98,6 +98,12 @@ macro_rules! const_guid {
 			}
 		}
 
+		impl Default for $name {
+			fn default() -> Self {
+				Self::new("00000000-0000-0000-c000-000000000046") // IUnknown GUID
+			}
+		}
+
 		impl $name {
 			/// Creates a new `GUID` from a representative hex string, which can
 			/// be copied straight from standard `GUID` declarations.

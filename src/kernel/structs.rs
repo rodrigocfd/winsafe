@@ -67,6 +67,12 @@ impl std::fmt::Display for GUID {
 	}
 }
 
+impl Default for GUID {
+	fn default() -> Self {
+		Self::new("00000000-0000-0000-c000-000000000046") // IUnknown GUID
+	}
+}
+
 impl GUID {
 	/// Creates a new `GUID` from a representative hex string, which can be
 	/// copied straight from standard `GUID` declarations.

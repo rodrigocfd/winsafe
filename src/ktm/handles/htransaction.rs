@@ -60,7 +60,7 @@ pub trait ktm_Htransaction: Handle {
 	/// method.
 	#[must_use]
 	fn GetTransactionId(&self) -> SysResult<GUID> {
-		let mut guid = GUID::new("00000000-0000-0000-c000-000000000046");
+		let mut guid = GUID::default();
 		bool_to_sysresult(
 			unsafe {
 				ktm::ffi::GetTransactionId(self.as_ptr(), &mut guid as *mut _ as _)
