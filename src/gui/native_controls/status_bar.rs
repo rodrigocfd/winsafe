@@ -1,4 +1,5 @@
 use std::any::Any;
+use std::cell::UnsafeCell;
 use std::marker::PhantomPinned;
 use std::pin::Pin;
 use std::sync::Arc;
@@ -10,7 +11,6 @@ use crate::gui::native_controls::base_native_control::BaseNativeControl;
 use crate::gui::native_controls::status_bar_parts::StatusBarParts;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::kernel::decl::SysResult;
-use crate::kernel::privs::as_mut;
 use crate::msg::{sb, wm};
 use crate::prelude::{
 	GuiChild, GuiEvents, GuiNativeControl, GuiNativeControlEvents, GuiParent,
@@ -22,8 +22,8 @@ struct Obj { // actual fields of StatusBar
 	base: BaseNativeControl,
 	ctrl_id: u16,
 	events: StatusBarEvents,
-	parts_info: Vec<StatusBarPart>,
-	right_edges: Vec<i32>, // buffer to speed up resize calls
+	parts_info: UnsafeCell<Vec<StatusBarPart>>,
+	right_edges: UnsafeCell<Vec<i32>>, // buffer to speed up resize calls
 	_pin: PhantomPinned,
 }
 
@@ -133,8 +133,8 @@ impl StatusBar {
 					base: BaseNativeControl::new(parent_ref),
 					ctrl_id,
 					events: StatusBarEvents::new(parent_ref, ctrl_id),
-					parts_info: parts.to_vec(),
-					right_edges: vec![0; parts.len()],
+					parts_info: UnsafeCell::new(parts.to_vec()),
+					right_edges: UnsafeCell::new(vec![0; parts.len()]),
 					_pin: PhantomPinned,
 				},
 			),
@@ -157,7 +157,8 @@ impl StatusBar {
 	}
 
 	fn create(&self) -> SysResult<()> {
-		for part in unsafe { as_mut(&self.0.parts_info) }.iter_mut() {
+		let parts_info = unsafe { &mut *self.0.parts_info.get() };
+		for part in parts_info.iter_mut() {
 			if let StatusBarPart::Fixed(width) = part { // adjust fixed-width parts to DPI
 				let mut col_cx = SIZE::new(*width as _, 0);
 				multiply_dpi_or_dtu(self.0.base.parent(), None, Some(&mut col_cx))?;
@@ -205,18 +206,19 @@ impl StatusBar {
 		let mut total_proportions: u8 = 0;
 		let mut cx_available = p.client_area.cx as u32;
 
-		for part_info in self.0.parts_info.iter() {
+		let parts_info = unsafe { &mut *self.0.parts_info.get() };
+		for part_info in parts_info.iter() {
 			match part_info {
 				StatusBarPart::Fixed(pixels) => cx_available -= pixels,
 				StatusBarPart::Proportional(prop) => total_proportions += prop,
 			}
 		}
 
-		let right_edges = unsafe { as_mut(&self.0.right_edges) };
+		let right_edges = unsafe { &mut *self.0.right_edges.get() };
 		let mut total_cx = p.client_area.cx as u32;
 
-		for (idx, part_info) in self.0.parts_info.iter().rev().enumerate() {
-			right_edges[self.0.parts_info.len() - idx - 1] = total_cx as _;
+		for (idx, part_info) in parts_info.iter().rev().enumerate() {
+			right_edges[parts_info.len() - idx - 1] = total_cx as _;
 			total_cx -= match part_info {
 				StatusBarPart::Fixed(pixels) => *pixels,
 				StatusBarPart::Proportional(pp) =>

@@ -1,3 +1,4 @@
+use std::cell::UnsafeCell;
 use std::marker::PhantomPinned;
 use std::pin::Pin;
 use std::sync::Arc;
@@ -8,7 +9,6 @@ use crate::gui::events::WindowEventsAll;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
 use crate::kernel::decl::{AnyResult, SysResult, WString};
-use crate::kernel::privs::as_mut;
 use crate::prelude::{GuiEvents, Handle, user_Hwnd};
 use crate::user::decl::{
 	AdjustWindowRectEx, DispatchMessage, GetMessage, HWND, IdMenu, MSG, POINT,
@@ -18,7 +18,7 @@ use crate::user::decl::{
 struct Obj { // actual fields of RawModal
 	raw_base: RawBase,
 	opts: WindowModalOpts,
-	hchild_prev_focus_parent: HWND,
+	hchild_prev_focus_parent: UnsafeCell<HWND>,
 	_pin: PhantomPinned,
 }
 
@@ -37,7 +37,7 @@ impl RawModal {
 				Obj {
 					raw_base: RawBase::new(Some(parent)),
 					opts,
-					hchild_prev_focus_parent: HWND::NULL,
+					hchild_prev_focus_parent: UnsafeCell::new(HWND::NULL),
 					_pin: PhantomPinned,
 				},
 			),
@@ -84,7 +84,7 @@ impl RawModal {
 			&mut class_name_buf)?;
 		let atom = self.0.raw_base.register_class(&mut wcx)?;
 
-		*unsafe { as_mut(&self.0.hchild_prev_focus_parent) } =
+		*unsafe { &mut *self.0.hchild_prev_focus_parent.get() } =
 			HWND::GetFocus().unwrap_or(HWND::NULL);
 		hparent.EnableWindow(false); // https://devblogs.microsoft.com/oldnewthing/20040227-00/?p=40463
 
@@ -170,8 +170,9 @@ impl RawModal {
 			if let Ok(hparent) = self2.hwnd().GetWindow(co::GW::OWNER) {
 				hparent.EnableWindow(true); // re-enable parent
 				self2.hwnd().DestroyWindow()?; // then destroy modal
-				if self2.0.hchild_prev_focus_parent != HWND::NULL {
-					self2.0.hchild_prev_focus_parent.SetFocus(); // this focus could be set on WM_DESTROY as well
+				let hchild_prev_focus_parent = unsafe { &mut *self2.0.hchild_prev_focus_parent.get() };
+				if *hchild_prev_focus_parent != HWND::NULL {
+					hchild_prev_focus_parent.SetFocus(); // this focus could be set on WM_DESTROY as well
 				}
 			}
 			Ok(())

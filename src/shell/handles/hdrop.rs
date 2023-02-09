@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::kernel::privs::{as_mut, MAX_PATH};
+use crate::kernel::privs::MAX_PATH;
 use crate::prelude::Handle;
 use crate::shell;
 use crate::user::decl::POINT;
@@ -35,8 +35,8 @@ pub trait shell_Hdrop: Handle {
 	/// use winsafe::prelude::*;
 	/// use winsafe::HDROP;
 	///
-	/// let hdrop: HDROP; // initialized somewhere
-	/// # let hdrop = HDROP::NULL;
+	/// let mut hdrop: HDROP; // initialized somewhere
+	/// # let mut hdrop = HDROP::NULL;
 	///
 	/// for file_path in hdrop.iter()? {
 	///     let file_path = file_path?;
@@ -52,15 +52,15 @@ pub trait shell_Hdrop: Handle {
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HDROP, SysResult};
 	///
-	/// let hdrop: HDROP; // initialized somewhere
-	/// # let hdrop = HDROP::NULL;
+	/// let mut hdrop: HDROP; // initialized somewhere
+	/// # let mut hdrop = HDROP::NULL;
 	///
 	/// let file_paths = hdrop.iter()?
 	///     .collect::<SysResult<Vec<_>>>()?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn iter(&self) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + '_>> {
+	fn iter(&mut self) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + '_>> {
 		Ok(Box::new(DropsIter::new(self)?))
 	}
 
@@ -73,11 +73,9 @@ pub trait shell_Hdrop: Handle {
 	///
 	/// Prefer using [`HDROP::iter`](crate::prelude::shell_Hdrop::iter), which
 	/// calls `DragFinish` automatically.
-	fn DragFinish(&self) {
-		unsafe {
-			shell::ffi::DragFinish(self.as_ptr());
-			*as_mut(self) = Self::INVALID;
-		}
+	fn DragFinish(&mut self) {
+		unsafe { shell::ffi::DragFinish(self.as_ptr()); }
+		*self = Self::INVALID;
 	}
 
 	/// [`DragQueryFile`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragqueryfilew)
@@ -127,7 +125,7 @@ pub trait shell_Hdrop: Handle {
 struct DropsIter<'a, H>
 	where H: shell_Hdrop,
 {
-	hdrop: &'a H,
+	hdrop: &'a mut H,
 	buffer: WString,
 	count: u32,
 	current: u32,
@@ -169,11 +167,12 @@ impl<'a, H> Iterator for DropsIter<'a, H>
 impl<'a, H> DropsIter<'a, H>
 	where H: shell_Hdrop,
 {
-	fn new(hdrop: &'a H) -> SysResult<Self> {
+	fn new(hdrop: &'a mut H) -> SysResult<Self> {
+		let count = unsafe { hdrop.DragQueryFile(None, None)? };
 		Ok(Self {
 			hdrop,
 			buffer: WString::new_alloc_buf(MAX_PATH + 1), // so we alloc just once
-			count: unsafe { hdrop.DragQueryFile(None, None)? },
+			count,
 			current: 0,
 		})
 	}

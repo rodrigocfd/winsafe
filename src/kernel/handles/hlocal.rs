@@ -2,7 +2,6 @@
 
 use crate::kernel;
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::as_mut;
 use crate::prelude::Handle;
 
 impl_handle! { HLOCAL;
@@ -27,14 +26,14 @@ pub trait kernel_Hlocal: Handle {
 	/// After calling this method, the handle will be invalidated and further
 	/// operations will fail with
 	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn LocalFree(&self) -> SysResult<()> {
+	fn LocalFree(&mut self) -> SysResult<()> {
 		let ret = match unsafe {
 			kernel::ffi::LocalFree(self.as_ptr()).as_mut() }
 		{
 			None => Ok(()),
 			Some(_) => Err(GetLastError()),
 		};
-		*unsafe { as_mut(self) } = Self::INVALID;
+		*self = Self::INVALID;
 		ret
 	}
 

@@ -1,5 +1,5 @@
 use std::marker::PhantomData;
-use std::ops::Deref;
+use std::ops::{Deref, DerefMut};
 
 use crate::prelude::{Handle, user_Hwnd};
 use crate::user;
@@ -92,6 +92,14 @@ impl<'a, H> Deref for EndPaintGuard<'a, H>
 	}
 }
 
+impl<'a, H> DerefMut for EndPaintGuard<'a, H>
+	where H: user_Hwnd,
+{
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		&mut self.hdc
+	}
+}
+
 impl<'a, H> EndPaintGuard<'a, H>
 	where H: user_Hwnd,
 {
@@ -173,6 +181,14 @@ impl<'a, H> Deref for ReleaseDCGuard<'a, H>
 
 	fn deref(&self) -> &Self::Target {
 		&self.hdc
+	}
+}
+
+impl<'a, H> DerefMut for ReleaseDCGuard<'a, H>
+	where H: user_Hwnd,
+{
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		&mut self.hdc
 	}
 }
 

@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::ops::{Deref, DerefMut};
 
 use crate::prelude::Handle;
 use crate::shell::decl::{SHFILEINFO, SHSTOCKICONINFO};
@@ -25,6 +25,12 @@ impl Deref for DestroyIconShfiGuard {
 
 	fn deref(&self) -> &Self::Target {
 		&self.shfi
+	}
+}
+
+impl DerefMut for DestroyIconShfiGuard {
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		&mut self.shfi
 	}
 }
 
@@ -70,6 +76,12 @@ impl Deref for DestroyIconSiiGuard {
 
 	fn deref(&self) -> &Self::Target {
 		&self.sii
+	}
+}
+
+impl DerefMut for DestroyIconSiiGuard {
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		&mut self.sii
 	}
 }
 

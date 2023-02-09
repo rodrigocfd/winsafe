@@ -27,7 +27,7 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HIMAGELIST, SIZE};
 	///
-	/// let himgl = HIMAGELIST::Create(
+	/// let mut himgl = HIMAGELIST::Create(
 	///     SIZE::new(16, 16), co::ILC::COLOR32, 1, 1)?;
 	///
 	/// himgl.add_icon_from_shell(&["mp3", "wav"])?;

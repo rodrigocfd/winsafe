@@ -4,7 +4,6 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::kernel::decl::WString;
-use crate::kernel::privs::as_mut;
 use crate::ole::decl::{ComPtr, IUnknown};
 use crate::prelude::ole_IUnknown;
 
@@ -152,11 +151,11 @@ impl<'a> MULTI_QI<'a> {
 	/// automatically. So if you call this method a second time, a null COM
 	/// object will be returned.
 	#[must_use]
-	pub fn pItf<T>(&self) -> T
+	pub fn pItf<T>(&mut self) -> T
 		where T: ole_IUnknown,
 	{
 		let obj = T::from(self.pItf);
-		unsafe { as_mut(self).pItf = ComPtr::null(); }
+		self.pItf = unsafe { ComPtr::null() };
 		obj
 	}
 }

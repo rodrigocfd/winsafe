@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::ops::{Deref, DerefMut};
 
 use crate::{co, gdi};
 use crate::prelude::{gdi_Hdc, GdiObject, Handle};
@@ -38,6 +38,14 @@ impl<T> Deref for DeleteObjectGuard<T>
 
 	fn deref(&self) -> &Self::Target {
 		&self.handle
+	}
+}
+
+impl<T> DerefMut for DeleteObjectGuard<T>
+	where T: GdiObject,
+{
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		&mut self.handle
 	}
 }
 

@@ -2,7 +2,7 @@
 
 use crate::{co, msg, user};
 use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::kernel::privs::{as_mut, bool_to_sysresult, ptr_to_sysresult};
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::{Handle, NativeBitflag, user_Hwnd};
 use crate::user::decl::{
 	BmpPtrStr, HBITMAP, HWND, IdMenu, IdPos, MenuEnum, MENUINFO, MENUITEMINFO,
@@ -196,11 +196,11 @@ pub trait user_Hmenu: Handle {
 	/// After calling this method, the handle will be invalidated and further
 	/// operations will fail with
 	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn DestroyMenu(&self) -> SysResult<()> {
+	fn DestroyMenu(&mut self) -> SysResult<()> {
 		let ret = bool_to_sysresult(
 			unsafe { user::ffi::DestroyMenu(self.as_ptr()) },
 		);
-		*unsafe { as_mut(self) } = Self::INVALID;
+		*self = Self::INVALID;
 		ret
 	}
 

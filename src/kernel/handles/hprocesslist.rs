@@ -6,7 +6,7 @@ use crate::kernel::decl::{
 	THREADENTRY32,
 };
 use crate::kernel::guard::CloseHandleGuard;
-use crate::kernel::privs::{as_mut, ptr_to_sysresult};
+use crate::kernel::privs::ptr_to_sysresult;
 use crate::prelude::Handle;
 
 impl_handle! { HPROCESSLIST;
@@ -39,7 +39,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HPROCESSLIST};
 	///
-	/// let hpl = HPROCESSLIST::
+	/// let mut hpl = HPROCESSLIST::
 	///     CreateToolhelp32Snapshot(co::TH32CS::SNAPHEAPLIST, None)?;
 	///
 	/// for heap_entry in hpl.iter_heaps() {
@@ -51,7 +51,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn iter_heaps(&self)
+	fn iter_heaps(&mut self)
 		-> Box<dyn Iterator<Item = SysResult<&HEAPLIST32>> + '_>
 	{
 		Box::new(HeapIter::new(self))
@@ -70,7 +70,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HPROCESSLIST};
 	///
-	/// let hpl = HPROCESSLIST::
+	/// let mut hpl = HPROCESSLIST::
 	///     CreateToolhelp32Snapshot(co::TH32CS::SNAPMODULE, None)?;
 	///
 	/// for mod_entry in hpl.iter_modules() {
@@ -81,7 +81,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn iter_modules(&self)
+	fn iter_modules(&mut self)
 		-> Box<dyn Iterator<Item = SysResult<&MODULEENTRY32>> + '_>
 	{
 		Box::new(ModuleIter::new(self))
@@ -100,7 +100,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HPROCESSLIST};
 	///
-	/// let hpl = HPROCESSLIST::
+	/// let mut hpl = HPROCESSLIST::
 	///     CreateToolhelp32Snapshot(co::TH32CS::SNAPPROCESS, None)?;
 	///
 	/// for proc_entry in hpl.iter_processes() {
@@ -111,7 +111,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn iter_processes(&self)
+	fn iter_processes(&mut self)
 		-> Box<dyn Iterator<Item = SysResult<&PROCESSENTRY32>> + '_>
 	{
 		Box::new(ProcessIter::new(self))
@@ -130,7 +130,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HPROCESS, HPROCESSLIST};
 	///
-	/// let hpl = HPROCESSLIST::CreateToolhelp32Snapshot(
+	/// let mut hpl = HPROCESSLIST::CreateToolhelp32Snapshot(
 	///     co::TH32CS::SNAPTHREAD,
 	///     Some(HPROCESS::GetCurrentProcessId()),
 	/// )?;
@@ -143,7 +143,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn iter_threads(&self)
+	fn iter_threads(&mut self)
 		-> Box<dyn Iterator<Item = SysResult<&THREADENTRY32>> + '_>
 	{
 		Box::new(ThreadIter::new(self))
@@ -178,13 +178,13 @@ pub trait kernel_Hprocesslist: Handle {
 	/// [`HPROCESSLIST::iter_heaps`](crate::prelude::kernel_Hprocesslist::iter_heaps),
 	/// which is simpler.
 	#[must_use]
-	fn Heap32ListFirst(&self, hl: &mut HEAPLIST32) -> SysResult<bool> {
+	fn Heap32ListFirst(&mut self, hl: &mut HEAPLIST32) -> SysResult<bool> {
 		match unsafe {
 			kernel::ffi::Heap32ListFirst(self.as_ptr(), hl as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					*unsafe { as_mut(self) } = Self::INVALID;
+					*self = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),
@@ -204,13 +204,13 @@ pub trait kernel_Hprocesslist: Handle {
 	/// [`HPROCESSLIST::iter_heaps`](crate::prelude::kernel_Hprocesslist::iter_heaps),
 	/// which is simpler.
 	#[must_use]
-	fn Heap32ListNext(&self, hl: &mut HEAPLIST32) -> SysResult<bool> {
+	fn Heap32ListNext(&mut self, hl: &mut HEAPLIST32) -> SysResult<bool> {
 		match unsafe {
 			kernel::ffi::Heap32ListNext(self.as_ptr(), hl as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					*unsafe { as_mut(self) } = Self::INVALID;
+					*self = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),
@@ -230,13 +230,13 @@ pub trait kernel_Hprocesslist: Handle {
 	/// [`HPROCESSLIST::iter_modules`](crate::prelude::kernel_Hprocesslist::iter_modules),
 	/// which is simpler.
 	#[must_use]
-	fn Module32First(&self, me: &mut MODULEENTRY32) -> SysResult<bool> {
+	fn Module32First(&mut self, me: &mut MODULEENTRY32) -> SysResult<bool> {
 		match unsafe {
 			kernel::ffi::Module32FirstW(self.as_ptr(), me as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					*unsafe { as_mut(self) } = Self::INVALID;
+					*self = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),
@@ -256,13 +256,13 @@ pub trait kernel_Hprocesslist: Handle {
 	/// [`HPROCESSLIST::iter_modules`](crate::prelude::kernel_Hprocesslist::iter_modules),
 	/// which is simpler.
 	#[must_use]
-	fn Module32Next(&self, me: &mut MODULEENTRY32) -> SysResult<bool> {
+	fn Module32Next(&mut self, me: &mut MODULEENTRY32) -> SysResult<bool> {
 		match unsafe {
 			kernel::ffi::Module32NextW(self.as_ptr(), me as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					*unsafe { as_mut(self) } = Self::INVALID;
+					*self = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),
@@ -282,13 +282,13 @@ pub trait kernel_Hprocesslist: Handle {
 	/// [`HPROCESSLIST::iter_processes`](crate::prelude::kernel_Hprocesslist::iter_processes),
 	/// which is simpler.
 	#[must_use]
-	fn Process32First(&self, pe: &mut PROCESSENTRY32) -> SysResult<bool> {
+	fn Process32First(&mut self, pe: &mut PROCESSENTRY32) -> SysResult<bool> {
 		match unsafe {
 			kernel::ffi::Process32FirstW(self.as_ptr(), pe as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					*unsafe { as_mut(self) } = Self::INVALID;
+					*self = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),
@@ -308,13 +308,13 @@ pub trait kernel_Hprocesslist: Handle {
 	/// [`HPROCESSLIST::iter_processes`](crate::prelude::kernel_Hprocesslist::iter_processes),
 	/// which is simpler.
 	#[must_use]
-	fn Process32Next(&self, pe: &mut PROCESSENTRY32) -> SysResult<bool> {
+	fn Process32Next(&mut self, pe: &mut PROCESSENTRY32) -> SysResult<bool> {
 		match unsafe {
 			kernel::ffi::Process32NextW(self.as_ptr(), pe as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					*unsafe { as_mut(self) } = Self::INVALID;
+					*self = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),
@@ -334,13 +334,13 @@ pub trait kernel_Hprocesslist: Handle {
 	/// [`HPROCESSLIST::iter_threads`](crate::prelude::kernel_Hprocesslist::iter_threads),
 	/// which is simpler.
 	#[must_use]
-	fn Thread32First(&self, te: &mut THREADENTRY32) -> SysResult<bool> {
+	fn Thread32First(&mut self, te: &mut THREADENTRY32) -> SysResult<bool> {
 		match unsafe {
 			kernel::ffi::Thread32First(self.as_ptr(), te as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					*unsafe { as_mut(self) } = Self::INVALID;
+					*self = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),
@@ -360,13 +360,13 @@ pub trait kernel_Hprocesslist: Handle {
 	/// [`HPROCESSLIST::iter_threads`](crate::prelude::kernel_Hprocesslist::iter_threads),
 	/// which is simpler.
 	#[must_use]
-	fn Thread32Next(&self, te: &mut THREADENTRY32) -> SysResult<bool> {
+	fn Thread32Next(&mut self, te: &mut THREADENTRY32) -> SysResult<bool> {
 		match unsafe {
 			kernel::ffi::Thread32Next(self.as_ptr(), te as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
-					*unsafe { as_mut(self) } = Self::INVALID;
+					*self = Self::INVALID;
 					Ok(false)
 				},
 				err => Err(err),
@@ -381,7 +381,7 @@ pub trait kernel_Hprocesslist: Handle {
 struct HeapIter<'a, H>
 	where H: kernel_Hprocesslist,
 {
-	hpl: &'a H,
+	hpl: &'a mut H,
 	hl32: HEAPLIST32,
 	first_pass: bool,
 	has_more: bool,
@@ -427,7 +427,7 @@ impl<'a, H> Iterator for HeapIter<'a, H>
 impl<'a, H> HeapIter<'a, H>
 	where H: kernel_Hprocesslist,
 {
-	fn new(hpl: &'a H) -> Self {
+	fn new(hpl: &'a mut H) -> Self {
 		Self {
 			hpl,
 			hl32: HEAPLIST32::default(),
@@ -442,7 +442,7 @@ impl<'a, H> HeapIter<'a, H>
 struct ModuleIter<'a, H>
 	where H: kernel_Hprocesslist,
 {
-	hpl: &'a H,
+	hpl: &'a mut H,
 	me32: MODULEENTRY32,
 	first_pass: bool,
 	has_more: bool,
@@ -488,7 +488,7 @@ impl<'a, H> Iterator for ModuleIter<'a, H>
 impl<'a, H> ModuleIter<'a, H>
 	where H: kernel_Hprocesslist,
 {
-	fn new(hpl: &'a H) -> Self {
+	fn new(hpl: &'a mut H) -> Self {
 		Self {
 			hpl,
 			me32: MODULEENTRY32::default(),
@@ -503,7 +503,7 @@ impl<'a, H> ModuleIter<'a, H>
 struct ProcessIter<'a, H>
 	where H: kernel_Hprocesslist,
 {
-	hpl: &'a H,
+	hpl: &'a mut H,
 	pe32: PROCESSENTRY32,
 	first_pass: bool,
 	has_more: bool,
@@ -549,7 +549,7 @@ impl<'a, H> Iterator for ProcessIter<'a, H>
 impl<'a, H> ProcessIter<'a, H>
 	where H: kernel_Hprocesslist,
 {
-	fn new(hpl: &'a H) -> Self {
+	fn new(hpl: &'a mut H) -> Self {
 		Self {
 			hpl,
 			pe32: PROCESSENTRY32::default(),
@@ -564,7 +564,7 @@ impl<'a, H> ProcessIter<'a, H>
 struct ThreadIter<'a, H>
 	where H: kernel_Hprocesslist,
 {
-	hpl: &'a H,
+	hpl: &'a mut H,
 	te32: THREADENTRY32,
 	first_pass: bool,
 	has_more: bool,
@@ -610,7 +610,7 @@ impl<'a, H> Iterator for ThreadIter<'a, H>
 impl<'a, H> ThreadIter<'a, H>
 	where H: kernel_Hprocesslist,
 {
-	fn new(hpl: &'a H) -> Self {
+	fn new(hpl: &'a mut H) -> Self {
 		Self {
 			hpl,
 			te32: THREADENTRY32::default(),

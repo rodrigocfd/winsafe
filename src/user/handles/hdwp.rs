@@ -2,7 +2,7 @@
 
 use crate::{co, user};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::{as_mut, ptr_to_sysresult};
+use crate::kernel::privs::ptr_to_sysresult;
 use crate::prelude::Handle;
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 use crate::user::guard::EndDeferWindowPosGuard;
@@ -38,7 +38,7 @@ pub trait user_Hdwp: Handle {
 	///
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
-	fn DeferWindowPos(&self,
+	fn DeferWindowPos(&mut self,
 		hwnd: &HWND,
 		hwnd_insert_after: HwndPlace,
 		top_left: POINT,
@@ -55,11 +55,11 @@ pub trait user_Hdwp: Handle {
 			).as_mut()
 		} {
 			Some(ptr) => {
-				unsafe { *as_mut(self) = Self::from_ptr(ptr); }
+				*self = unsafe { Self::from_ptr(ptr) };
 				Ok(())
 			},
 			None => {
-				*unsafe { as_mut(self) } = Self::INVALID; // prevent EndDeferWindowPos()
+				*self = Self::INVALID; // prevent EndDeferWindowPos()
 				Err(GetLastError())
 			},
 		}

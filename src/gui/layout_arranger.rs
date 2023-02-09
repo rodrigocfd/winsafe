@@ -1,10 +1,10 @@
+use std::cell::UnsafeCell;
 use std::marker::PhantomPinned;
 use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
 use crate::kernel::decl::SysResult;
-use crate::kernel::privs::as_mut;
 use crate::msg::wm;
 use crate::prelude::{Handle, user_Hdwp, user_Hwnd};
 use crate::user::decl::{HDWP, HWND, HwndPlace, POINT, RECT, SIZE};
@@ -49,8 +49,8 @@ struct ChildInfo {
 }
 
 struct Obj { // actual fields of LayoutArranger
-	ctrls: Vec<ChildInfo>,
-	sz_parent_orig: SIZE, // original parent client area
+	ctrls: UnsafeCell<Vec<ChildInfo>>,
+	sz_parent_orig: UnsafeCell<SIZE>, // original parent client area
 	_pin: PhantomPinned,
 }
 
@@ -65,8 +65,8 @@ impl LayoutArranger {
 		Self(
 			Arc::pin(
 				Obj {
-					ctrls: Vec::with_capacity(10), // arbitrary
-					sz_parent_orig: SIZE::default(),
+					ctrls: UnsafeCell::new(Vec::with_capacity(10)), // arbitrary
+					sz_parent_orig: UnsafeCell::new(SIZE::default()),
 					_pin: PhantomPinned,
 				},
 			),
@@ -86,16 +86,17 @@ impl LayoutArranger {
 			return Ok(()); // nothing to do, don't even add it
 		}
 
-		if self.0.ctrls.is_empty() { // first control being added?
+		let ctrls = unsafe { &mut *self.0.ctrls.get() };
+		if ctrls.is_empty() { // first control being added?
 			let rc_parent = hparent.GetClientRect()?;
-			*unsafe { as_mut(&self.0.sz_parent_orig) } =
+			*unsafe { &mut *self.0.sz_parent_orig.get() } =
 				SIZE::new(rc_parent.right, rc_parent.bottom); // save original parent size
 		}
 
 		let mut rc_orig = hchild.GetWindowRect()?;
 		hparent.ScreenToClientRc(&mut rc_orig)?; // control client coordinates relative to parent
 
-		unsafe { as_mut(&self.0.ctrls) }.push(
+		ctrls.push(
 			ChildInfo {
 				hchild: unsafe { hchild.raw_copy() },
 				rc_orig,
@@ -109,14 +110,15 @@ impl LayoutArranger {
 	/// Rearranges all child controls to fit the new width/height of parent
 	/// window.
 	pub(in crate::gui) fn rearrange(&self, p: &wm::Size) -> SysResult<()> {
-		if self.0.ctrls.is_empty() // no controls
+		let ctrls = unsafe { &mut *self.0.ctrls.get() };
+		if ctrls.is_empty() // no controls
 			|| p.request == co::SIZE_R::MINIMIZED { // we're minimized
 			return Ok(());
 		}
 
-		let hdwp = HDWP::BeginDeferWindowPos(self.0.ctrls.len() as _)?;
+		let mut hdwp = HDWP::BeginDeferWindowPos(ctrls.len() as _)?;
 
-		for ctrl in self.0.ctrls.iter() {
+		for ctrl in ctrls.iter() {
 			let mut uflags = co::SWP::NOZORDER;
 			if ctrl.horz == Horz::Repos && ctrl.vert == Vert::Repos { // reposition both vert & horz
 				uflags |= co::SWP::NOSIZE;
@@ -124,7 +126,7 @@ impl LayoutArranger {
 				uflags |= co::SWP::NOMOVE;
 			}
 
-			let sz_parent_orig = &self.0.sz_parent_orig;
+			let sz_parent_orig = unsafe { &mut *self.0.sz_parent_orig.get() };
 
 			hdwp.DeferWindowPos(
 				&ctrl.hchild,

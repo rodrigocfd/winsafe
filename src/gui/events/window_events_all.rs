@@ -1,10 +1,10 @@
+use std::cell::UnsafeCell;
 use std::rc::Rc;
 
 use crate::co;
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::events::func_store::FuncStore;
 use crate::kernel::decl::AnyResult;
-use crate::kernel::privs::as_mut;
 use crate::msg::{wm, WndMsg};
 use crate::prelude::{GuiEvents, MsgSendRecv};
 
@@ -16,18 +16,18 @@ use crate::prelude::{GuiEvents, MsgSendRecv};
 /// window.
 pub struct WindowEventsAll {
 	window_events: WindowEvents,
-	tmrs: FuncStore< // WM_TIMER messages
+	tmrs: UnsafeCell<FuncStore< // WM_TIMER messages
 		u32,
 		Box<dyn Fn() -> AnyResult<()>>, // return value is never meaningful
-	>,
-	cmds: FuncStore< // WM_COMMAND notifications
+	>>,
+	cmds: UnsafeCell<FuncStore< // WM_COMMAND notifications
 		(co::CMD, u16), // notif code, control ID
 		Box<dyn Fn() -> AnyResult<()>>, // return value is never meaningful
-	>,
-	nfys: FuncStore< // WM_NOTIFY notifications
+	>>,
+	nfys: UnsafeCell<FuncStore< // WM_NOTIFY notifications
 		(u16, co::NM), // idFrom, code
 		Box<dyn Fn(wm::Notify) -> AnyResult<Option<isize>>>, // return value may be meaningful
-	>,
+	>>,
 }
 
 impl GuiEvents for WindowEventsAll {
@@ -42,18 +42,18 @@ impl WindowEventsAll {
 	pub(in crate::gui) fn new() -> Self {
 		Self {
 			window_events: WindowEvents::new(),
-			tmrs: FuncStore::new(),
-			cmds: FuncStore::new(),
-			nfys: FuncStore::new(),
+			tmrs: UnsafeCell::new(FuncStore::new()),
+			cmds: UnsafeCell::new(FuncStore::new()),
+			nfys: UnsafeCell::new(FuncStore::new()),
 		}
 	}
 
 	/// Removes all stored events.
 	pub(in crate::gui) fn clear(&self) {
 		unsafe {
-			as_mut(&self.tmrs).clear();
-			as_mut(&self.cmds).clear();
-			as_mut(&self.nfys).clear();
+			{ &mut *self.tmrs.get() }.clear();
+			{ &mut *self.cmds.get() }.clear();
+			{ &mut *self.nfys.get() }.clear();
 		}
 		self.window_events.clear();
 	}
@@ -67,7 +67,8 @@ impl WindowEventsAll {
 			co::WM::NOTIFY => {
 				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
 				let key = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
-				match self.nfys.find(key) {
+				let nfys = unsafe { &mut *self.nfys.get() };
+				match nfys.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_NOTIFY notification
 						match func(wm_nfy)? { // execute user function
 							Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
@@ -80,7 +81,8 @@ impl WindowEventsAll {
 			co::WM::COMMAND => {
 				let wm_cmd = wm::Command::from_generic_wm(wm_any);
 				let key = wm_cmd.event.code_id();
-				match self.cmds.find(key) {
+				let cmds = unsafe { &mut *self.cmds.get() };
+				match cmds.find(key) {
 					Some(func) => { // we have a stored function to handle this WM_COMMAND notification
 						func()?; // execute user function
 						ProcessResult::HandledWithoutRet
@@ -90,7 +92,8 @@ impl WindowEventsAll {
 			},
 			co::WM::TIMER => {
 				let wm_tmr = wm::Timer::from_generic_wm(wm_any);
-				match self.tmrs.find(wm_tmr.timer_id) {
+				let tmrs = unsafe { &mut *self.tmrs.get() };
+				match tmrs.find(wm_tmr.timer_id) {
 					Some(func) => { // we have a stored function to handle this WM_TIMER message
 						func()?; // execute user function
 						ProcessResult::HandledWithoutRet
@@ -111,20 +114,23 @@ impl WindowEventsAll {
 			co::WM::NOTIFY => {
 				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
 				let key = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
-				for func in self.nfys.find_all(key) {
+				let nfys = unsafe { &mut *self.nfys.get() };
+				for func in nfys.find_all(key) {
 					func(wm_nfy)?; // execute stored function
 				}
 			},
 			co::WM::COMMAND => {
 				let wm_cmd = wm::Command::from_generic_wm(wm_any);
 				let key = wm_cmd.event.code_id();
-				for func in self.cmds.find_all(key) {
+				let cmds = unsafe { &mut *self.cmds.get() };
+				for func in cmds.find_all(key) {
 					func()?; // execute stored function
 				}
 			},
 			co::WM::TIMER => {
 				let wm_tmr = wm::Timer::from_generic_wm(wm_any);
-				for func in self.tmrs.find_all(wm_tmr.timer_id) {
+				let tmrs = unsafe { &mut *self.tmrs.get() };
+				for func in tmrs.find_all(wm_tmr.timer_id) {
 					func()?; // execute stored function
 				}
 			},
@@ -137,7 +143,7 @@ impl WindowEventsAll {
 	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
-		unsafe { as_mut(&self.tmrs) }.push(timer_id, Box::new(func));
+		unsafe { &mut *self.tmrs.get() }.push(timer_id, Box::new(func));
 	}
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
@@ -172,7 +178,7 @@ impl WindowEventsAll {
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
 		let code: co::CMD = code.into();
-		unsafe { as_mut(&self.cmds) }.push((code, ctrl_id), Box::new(func));
+		unsafe { &mut *self.cmds.get() }.push((code, ctrl_id), Box::new(func));
 	}
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
@@ -208,6 +214,6 @@ impl WindowEventsAll {
 		where F: Fn(wm::Notify) -> AnyResult<Option<isize>> + 'static,
 	{
 		let code: co::NM = code.into();
-		unsafe { as_mut(&self.nfys) }.push((id_from, code), Box::new(func));
+		unsafe { &mut *self.nfys.get() }.push((id_from, code), Box::new(func));
 	}
 }

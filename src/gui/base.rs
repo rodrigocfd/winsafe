@@ -5,7 +5,6 @@ use crate::gui::events::{ProcessResult, WindowEventsAll};
 use crate::gui::layout_arranger::{Horz, LayoutArranger, Vert};
 use crate::gui::privs::{post_quit_error, QUIT_ERROR};
 use crate::kernel::decl::{AnyResult, HINSTANCE, SysResult};
-use crate::kernel::privs::as_mut;
 use crate::msg::WndMsg;
 use crate::prelude::{GuiEvents, GuiParent, Handle, kernel_Hinstance, user_Hwnd};
 use crate::user::decl::{
@@ -115,8 +114,7 @@ impl Base {
 	pub(in crate::gui) fn add_to_layout_arranger(&self,
 		hchild: &HWND, horz: Horz, vert: Vert) -> SysResult<()>
 	{
-		unsafe { as_mut(&self.layout_arranger) }
-			.add_child(&self.hwnd, hchild, horz, vert)?;
+		self.layout_arranger.add_child(&self.hwnd, hchild, horz, vert)?;
 		Ok(())
 	}
 

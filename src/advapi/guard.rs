@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::ops::{Deref, DerefMut};
 
 use crate::advapi;
 use crate::advapi::decl::HKEY;
@@ -26,6 +26,12 @@ impl Deref for RegCloseKeyGuard {
 
 	fn deref(&self) -> &Self::Target {
 		&self.hkey
+	}
+}
+
+impl DerefMut for RegCloseKeyGuard {
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		&mut self.hkey
 	}
 }
 

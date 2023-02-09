@@ -7,9 +7,7 @@ use crate::kernel::decl::{
 	GetLastError, HINSTANCE, HIWORD, LOWORD, SetLastError, SysResult, WString,
 };
 use crate::kernel::ffi_types::BOOL;
-use crate::kernel::privs::{
-	as_mut, bool_to_sysresult, MAX_PATH, ptr_to_sysresult,
-};
+use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, ptr_to_sysresult};
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{
 	ALTTABINFO, AtomStr, HACCEL, HDC, HMENU, HMONITOR, HRGN, HwndPlace, IdMenu,
@@ -242,16 +240,8 @@ pub trait user_Hwnd: Handle {
 	/// automatically called inside the internal message loop. The ordinary way
 	/// to close a window is sending a [`wm::Close`](crate::msg::wm::Close)
 	/// message.
-	///
-	/// After calling this method, the handle will be invalidated and further
-	/// operations will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
 	fn DestroyWindow(&self) -> SysResult<()> {
-		let ret = bool_to_sysresult(
-			unsafe { user::ffi::DestroyWindow(self.as_ptr()) },
-		);
-		*unsafe { as_mut(self) } = Self::INVALID;
-		ret
+		bool_to_sysresult( unsafe { user::ffi::DestroyWindow(self.as_ptr()) })
 	}
 
 	/// [`DrawMenuBar`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawmenubar)

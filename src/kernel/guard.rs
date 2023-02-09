@@ -1,4 +1,4 @@
-use std::ops::Deref;
+use std::ops::{Deref, DerefMut};
 
 use crate::kernel;
 use crate::kernel::decl::{
@@ -34,6 +34,14 @@ impl<T> Deref for CloseHandleGuard<T>
 
 	fn deref(&self) -> &Self::Target {
 		&self.handle
+	}
+}
+
+impl<T> DerefMut for CloseHandleGuard<T>
+	where T: Handle,
+{
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		&mut self.handle
 	}
 }
 
@@ -81,6 +89,12 @@ impl Deref for EndUpdateResourceGuard {
 
 	fn deref(&self) -> &Self::Target {
 		&self.hupsrc
+	}
+}
+
+impl DerefMut for EndUpdateResourceGuard {
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		&mut self.hupsrc
 	}
 }
 
@@ -233,6 +247,12 @@ impl Deref for CloseHandlePiGuard {
 
 	fn deref(&self) -> &Self::Target {
 		&self.pi
+	}
+}
+
+impl DerefMut for CloseHandlePiGuard {
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		&mut self.pi
 	}
 }
 

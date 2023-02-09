@@ -83,6 +83,12 @@ macro_rules! handle_guard {
 			}
 		}
 
+		impl std::ops::DerefMut for $name {
+			fn deref_mut(&mut self) -> &mut Self::Target {
+				&mut self.handle
+			}
+		}
+
 		impl $name {
 			/// Constructs the guard by taking ownership of the handle.
 			#[must_use]

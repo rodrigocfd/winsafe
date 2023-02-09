@@ -22,11 +22,6 @@ pub(crate) const fn MAKEINTRESOURCE(val: isize) -> *const u16 {
 	val as u16 as _
 }
 
-/// Forcibly casts a const reference into a mutable one.
-pub(crate) unsafe fn as_mut<T>(val: &T) -> &mut T {
-	&mut *(val as *const T as *mut T)
-}
-
 /// If value is `FALSE`, yields `Err(GetLastError)`, otherwise `Ok()`.
 pub(crate) fn bool_to_sysresult(expr: BOOL) -> SysResult<()> {
 	match expr {

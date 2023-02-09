@@ -1,8 +1,9 @@
+use std::cell::UnsafeCell;
+
 use crate::co;
 use crate::gdi::decl::HFONT;
 use crate::gui::events::func_store::FuncStore;
 use crate::kernel::decl::AnyResult;
-use crate::kernel::privs::as_mut;
 use crate::msg::{wm, WndMsg};
 use crate::prelude::MsgSendRecv;
 use crate::user::decl::{HICON, HMENU};
@@ -25,24 +26,24 @@ pub(in crate::gui) enum ProcessResult {
 /// You cannot directly instantiate this object, it is created internally by the
 /// window.
 pub struct WindowEvents {
-	msgs: FuncStore< // ordinary WM messages
+	msgs: UnsafeCell<FuncStore< // ordinary WM messages
 		co::WM,
 		Box<dyn Fn(WndMsg) -> AnyResult<Option<isize>>>, // return value may be meaningful
-	>,
+	>>,
 }
 
 impl WindowEvents {
 	pub(in crate::gui) fn new() -> Self {
-		Self { msgs: FuncStore::new() }
+		Self { msgs: UnsafeCell::new(FuncStore::new()) }
 	}
 
 	pub(in crate::gui) fn is_empty(&self) -> bool {
-		self.msgs.is_empty()
+		unsafe { &mut *self.msgs.get() }.is_empty()
 	}
 
 	/// Removes all stored events.
 	pub(in crate::gui) fn clear(&self) {
-		unsafe { as_mut(&self.msgs) }.clear();
+		unsafe { &mut *self.msgs.get() }.clear();
 	}
 
 	/// Searches for the last added user function for the given message, and
@@ -50,7 +51,8 @@ impl WindowEvents {
 	pub(in crate::gui) fn process_one_message(&self,
 		wm_any: WndMsg) -> AnyResult<ProcessResult>
 	{
-		Ok(match self.msgs.find(wm_any.msg_id) {
+		let msgs = unsafe { &mut *self.msgs.get() };
+		Ok(match msgs.find(wm_any.msg_id) {
 			Some(func) => { // we have a stored function to handle this message
 				match func(wm_any)? { // execute user function
 					Some(res) => ProcessResult::HandledWithRet(res), // meaningful return value
@@ -66,7 +68,8 @@ impl WindowEvents {
 	pub(in crate::gui) fn process_all_messages(&self,
 		wm_any: WndMsg) -> AnyResult<()>
 	{
-		for func in self.msgs.find_all(wm_any.msg_id) {
+		let msgs = unsafe { &mut *self.msgs.get() };
+		for func in msgs.find_all(wm_any.msg_id) {
 			func(wm_any)?; // execute each stored function
 		}
 		Ok(())
@@ -79,7 +82,7 @@ impl GuiEvents for WindowEvents {
 	fn wm<F>(&self, ident: co::WM, func: F)
 		where F: Fn(WndMsg) -> AnyResult<Option<isize>> + 'static,
 	{
-		unsafe { as_mut(&self.msgs) }.push(ident, Box::new(func));
+		unsafe { &mut *self.msgs.get() }.push(ident, Box::new(func));
 	}
 }
 
@@ -292,7 +295,7 @@ pub trait GuiEvents {
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_drop_files(
-		///     move |p: msg::wm::DropFiles| -> AnyResult<()> {
+		///     move |mut p: msg::wm::DropFiles| -> AnyResult<()> {
 		///         for dropped_file in p.hdrop.iter()? {
 		///             let dropped_file = dropped_file?;
 		///             println!("Dropped: {}", dropped_file);

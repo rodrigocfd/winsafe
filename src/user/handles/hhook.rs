@@ -2,7 +2,7 @@
 
 use crate::{co, user};
 use crate::kernel::decl::{HINSTANCE, SysResult};
-use crate::kernel::privs::{as_mut, bool_to_sysresult, ptr_to_sysresult};
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::Handle;
 use crate::user::decl::HOOKPROC;
 
@@ -59,11 +59,11 @@ pub trait user_Hhook: Handle {
 	/// After calling this method, the handle will be invalidated and further
 	/// operations will fail with
 	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn UnhookWindowsHookEx(&self) -> SysResult<()> {
+	fn UnhookWindowsHookEx(&mut self) -> SysResult<()> {
 		let ret = bool_to_sysresult(
 			unsafe { user::ffi::UnhookWindowsHookEx(self.as_ptr()) },
 		);
-		*unsafe { as_mut(self) } = Self::INVALID;
+		*self = Self::INVALID;
 		ret
 	}
 }

@@ -1,3 +1,4 @@
+use std::cell::UnsafeCell;
 use std::ptr::NonNull;
 
 use crate::co;
@@ -5,7 +6,6 @@ use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::privs::post_quit_error;
 use crate::kernel::decl::{AnyResult, SysResult};
-use crate::kernel::privs::as_mut;
 use crate::msg::WndMsg;
 use crate::prelude::{comctl_Hwnd, Handle, user_Hwnd};
 use crate::user::decl::{AtomStr, HWND, IdMenu, POINT, SIZE};
@@ -30,7 +30,7 @@ pub enum OptsId<P> {
 ///
 /// Owns the window procedure for all subclassed native child controls.
 pub(in crate::gui) struct BaseNativeControl {
-	hwnd: HWND,
+	hwnd: UnsafeCell<HWND>,
 	parent_ptr: NonNull<Base>, // base of WindowControl, WindowMain or WindowModal
 	subclass_events: WindowEvents, // for control subclassing
 }
@@ -42,14 +42,14 @@ impl BaseNativeControl {
 		}
 
 		Self {
-			hwnd: HWND::NULL,
+			hwnd: UnsafeCell::new(HWND::NULL),
 			parent_ptr: NonNull::from(parent),
 			subclass_events: WindowEvents::new(),
 		}
 	}
 
 	pub(in crate::gui) fn hwnd(&self) -> &HWND {
-		&self.hwnd
+		unsafe { &mut *self.hwnd.get() }
 	}
 
 	pub(in crate::gui) fn parent(&self) -> &Base {
@@ -83,7 +83,7 @@ impl BaseNativeControl {
 		}
 
 		unsafe {
-			*as_mut(&self.hwnd) = HWND::CreateWindowEx(
+			*&mut *self.hwnd.get() = HWND::CreateWindowEx(
 				ex_styles,
 				AtomStr::from_str(class_name),
 				title, styles,
@@ -112,7 +112,7 @@ impl BaseNativeControl {
 			panic!("Cannot create control before parent window creation.");
 		}
 
-		*unsafe { as_mut(&self.hwnd) } = hparent.GetDlgItem(ctrl_id)?;
+		*unsafe { &mut *self.hwnd.get() } = hparent.GetDlgItem(ctrl_id)?;
 		self.install_subclass_if_needed()?;
 		Ok(())
 	}

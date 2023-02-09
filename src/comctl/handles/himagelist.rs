@@ -5,7 +5,7 @@ use std::marker::PhantomData;
 use crate::{co, comctl};
 use crate::comctl::guard::{ImageListDestroyGuard, ImageListEndDragGuard};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::{as_mut, bool_to_sysresult, ptr_to_sysresult};
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::Handle;
 use crate::user::decl::{COLORREF, HBITMAP, HICON, POINT, SIZE};
 
@@ -147,11 +147,11 @@ pub trait comctl_Himagelist: Handle {
 	/// After calling this method, the handle will be invalidated and further
 	/// operations will fail with
 	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn Destroy(&self) -> SysResult<()> {
+	fn Destroy(&mut self) -> SysResult<()> {
 		let ret = bool_to_sysresult(
 			unsafe { comctl::ffi::ImageList_Destroy(self.as_ptr()) },
 		);
-		*unsafe { as_mut(self) } = Self::INVALID;
+		*self = Self::INVALID;
 		ret
 	}
 

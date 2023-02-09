@@ -3,7 +3,7 @@
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::guard::{GlobalFreeGuard, GlobalUnlockGuard};
-use crate::kernel::privs::{as_mut, GMEM_INVALID_HANDLE, ptr_to_sysresult};
+use crate::kernel::privs::{GMEM_INVALID_HANDLE, ptr_to_sysresult};
 use crate::prelude::Handle;
 
 impl_handle! { HGLOBAL;
@@ -98,17 +98,15 @@ pub trait kernel_Hglobal: Handle {
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
 	#[must_use]
-	fn GlobalReAlloc(&self,
+	fn GlobalReAlloc(&mut self,
 		num_bytes: usize, flags: co::GMEM) -> SysResult<()>
 	{
-		unsafe {
-			ptr_to_sysresult(
-				kernel::ffi::GlobalReAlloc(self.as_ptr(), num_bytes, flags.0),
-				|ptr| {
-					*as_mut(self) = Self::from_ptr(ptr);
-				},
-			)
-		}
+		ptr_to_sysresult(
+			unsafe {
+				kernel::ffi::GlobalReAlloc(self.as_ptr(), num_bytes, flags.0)
+			},
+			|ptr| { *self = unsafe { Self::from_ptr(ptr) } },
+		)
 	}
 
 	/// [`GlobalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize)
