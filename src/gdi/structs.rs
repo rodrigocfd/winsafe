@@ -1,4 +1,7 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
+
+use std::alloc::Layout;
+use std::ops::{Deref, DerefMut};
 
 use crate::co;
 use crate::gdi::privs::LF_FACESIZE;
@@ -119,6 +122,122 @@ impl LOGFONT {
 	pub_fn_string_arr_get_set!(lfFaceName, set_lfFaceName);
 }
 
+/// [`LOGPALETTE`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logpalette)
+/// struct.
+///
+/// Note that you cannot directly instantiate this struct, because the
+/// `palPalEntry` field is dynamically allocated. That's why the
+/// [`new`](crate::LOGPALETTE::new) static method returns a
+/// [`LOGPALETTE_wrap`](crate::LOGPALETTE_wrap) object.
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{LOGPALETTE, PALETTEENTRY};
+///
+/// let mut log_pal = LOGPALETTE::new(0x300, &[
+///     PALETTEENTRY { peRed: 1, peGreen: 2, peBlue: 3, ..Default::default() },
+///     PALETTEENTRY { peRed: 10, peGreen: 20, peBlue: 30, ..Default::default() },
+/// ]);
+///
+/// // Setting a new entry value
+/// log_pal.palPalEntry_mut()[0].peRed = 255;
+///
+/// // Printing all entry values
+/// for entry in log_pal.palPalEntry().iter() {
+///     println!("{} {} {}", entry.peRed, entry.peGreen, entry.peBlue);
+/// }
+/// ```
+#[repr(C)]
+pub struct LOGPALETTE {
+	pub palVersion: u16,
+	palNumEntries: u16,
+	palPalEntry: [PALETTEENTRY; 1],
+}
+
+impl LOGPALETTE {
+	/// Returns a [`LOGPALETTE_wrap`](crate::LOGPALETTE_wrap) with an underlying
+	/// `LOGPALETTE` struct, dynamically alocated with the given
+	/// [`PALETTEENTRY`](crate::PALETTEENTRY) entries.
+	#[must_use]
+	pub fn new(palVersion: u16, entries: &[PALETTEENTRY]) -> LOGPALETTE_wrap {
+		LOGPALETTE_wrap::new(palVersion, entries)
+	}
+
+	/// Returns a constant slice over the `palPalEntry` entries.
+	#[must_use]
+	pub const fn palPalEntry(&self) -> &[PALETTEENTRY] {
+		unsafe {
+			std::slice::from_raw_parts(
+				self.palPalEntry.as_ptr(),
+				self.palNumEntries as _,
+			)
+		}
+	}
+
+	/// Returns a mutable slice over the `palPalEntry` entries.
+	#[must_use]
+	pub fn palPalEntry_mut(&mut self) -> &mut [PALETTEENTRY] {
+		unsafe {
+			std::slice::from_raw_parts_mut(
+				self.palPalEntry.as_mut_ptr(),
+				self.palNumEntries as _,
+			)
+		}
+	}
+}
+
+/// Safe wrapper over [`LOGPALETTE`](crate::LOGPALETTE), which automatically
+/// manages the dynamic allocation.
+pub struct LOGPALETTE_wrap {
+	layout: Layout,
+	log_pal: *mut LOGPALETTE,
+}
+
+impl Drop for LOGPALETTE_wrap {
+	fn drop(&mut self) {
+		unsafe { std::alloc::dealloc(self.log_pal as _, self.layout); }
+	}
+}
+
+impl Deref for LOGPALETTE_wrap {
+	type Target = LOGPALETTE;
+
+	fn deref(&self) -> &Self::Target {
+		unsafe { self.log_pal.as_ref() }.unwrap()
+	}
+}
+
+impl DerefMut for LOGPALETTE_wrap {
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		unsafe { self.log_pal.as_mut() }.unwrap()
+	}
+}
+
+impl LOGPALETTE_wrap {
+	fn new(palVersion: u16, entries: &[PALETTEENTRY]) -> Self {
+		// https://stackoverflow.com/q/75544466/6923555
+		let layout = Layout::new::<LOGPALETTE>()
+			.extend(Layout::array::<PALETTEENTRY>(entries.len() - 1).unwrap())
+			.unwrap().0;
+		let log_pal = unsafe { std::alloc::alloc(layout) }.cast::<LOGPALETTE>();
+		if log_pal.is_null() {
+			std::alloc::handle_alloc_error(layout)
+		}
+		let mut new_self = Self { layout, log_pal };
+
+		let log_pal_mut = new_self.deref_mut();
+		log_pal_mut.palVersion = palVersion;
+		log_pal_mut.palNumEntries = entries.len() as _;
+
+		let arr = log_pal_mut.palPalEntry_mut();
+		entries.iter().enumerate().for_each(|(idx, pe)| arr[idx] = *pe);
+
+		new_self
+	}
+}
+
 /// [`LOGPEN`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logpen)
 /// struct.
 #[repr(C)]
@@ -165,6 +284,17 @@ impl Default for NONCLIENTMETRICS {
 		}
 		obj
 	}
+}
+
+/// [`PALETTEENTRY`](https://learn.microsoft.com/en-us/previous-versions/dd162769(v=vs.85))
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Copy, Eq, PartialEq)]
+pub struct PALETTEENTRY {
+	pub peRed: u8,
+	pub peGreen: u8,
+	pub peBlue: u8,
+	pub peFlags: co::PC,
 }
 
 /// [`RGBQUAD`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-rgbquad)

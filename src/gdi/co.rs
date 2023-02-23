@@ -1,4 +1,4 @@
-#![allow(non_camel_case_types)]
+#![allow(non_camel_case_types, non_upper_case_globals)]
 
 const_ordinary! { AD: i32;
 	/// [`HDC::SetArcDirection`](crate::prelude::gdi_Hdc::SetArcDirection) `dir`
@@ -253,6 +253,17 @@ const_ordinary! { OUT_PRECIS: u8;
 	OUTLINE 8
 	SCREEN_OUTLINE 9
 	PS_ONLY 10
+}
+
+const_ordinary! { PC: u8;
+	/// [`PALETTEENTRY`](crate::PALETTEENTRY) `peFlags` (`u8`).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	RESERVED 0x01
+	EXPLICIT 0x02
+	NOCOLLAPSE 0x04
 }
 
 const_ordinary! { PITCH: u8;
