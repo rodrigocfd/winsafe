@@ -4,6 +4,7 @@ use std::mem::ManuallyDrop;
 
 use crate::co;
 use crate::kernel::decl::{SysResult, SYSTEMTIME};
+use crate::ole::decl::HrResult;
 use crate::oleaut::decl::{
 	BSTR, SystemTimeToVariantTime, VariantTimeToSystemTime,
 };
@@ -72,12 +73,12 @@ pub trait oleaut_Variant {
 
 	/// Creates a new object holding a [`BSTR`](crate::BSTR) value.
 	#[must_use]
-	fn new_bstr(val: &str) -> Self
+	fn new_bstr(val: &str) -> HrResult<Self>
 		where Self: Sized,
 	{
-		let mut bstr = BSTR::SysAllocString(val);
+		let mut bstr = BSTR::SysAllocString(val)?;
 		let ptr = bstr.leak() as usize;
-		unsafe { Self::from_raw(co::VT::BSTR, &ptr.to_ne_bytes()) }
+		Ok(unsafe { Self::from_raw(co::VT::BSTR, &ptr.to_ne_bytes()) })
 	}
 
 	/// If the object holds a [`BSTR`](crate::BSTR) value, returns it, otherwise

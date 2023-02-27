@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
-use crate::co;
+use crate::{co, oleaut};
 use crate::kernel::decl::WString;
-use crate::oleaut;
+use crate::ole::decl::HrResult;
 
 /// A
 /// [string data type](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/automat/bstr)
@@ -37,36 +37,31 @@ impl std::fmt::Display for BSTR {
 impl BSTR {
 	/// [`SysAllocString`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysallocstring)
 	/// function.
-	///
-	/// # Panics
-	///
-	/// Panics if there is not enough memory.
 	#[must_use]
-	pub fn SysAllocString(s: &str) -> BSTR {
+	pub fn SysAllocString(s: &str) -> HrResult<BSTR> {
 		let str_obj = WString::from_str(s);
 		let ptr = unsafe { oleaut::ffi::SysAllocString(str_obj.as_ptr()) };
 		if ptr.is_null() {
-			panic!("{}", co::HRESULT::E_OUTOFMEMORY)
+			Err(co::HRESULT::E_OUTOFMEMORY)
 		} else {
-			Self(ptr)
+			Ok(Self(ptr))
 		}
 	}
 
 	/// [`SysReAllocString`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysreallocstring)
 	/// function.
 	///
-	/// # Panics
-	///
-	/// Panics if there is not enough memory.
-	pub fn SysReAllocString(&mut self, s: &str) {
+	/// The underlying pointer is automatically updated.
+	pub fn SysReAllocString(&mut self, s: &str) -> HrResult<()> {
 		let str_obj = WString::from_str(s);
 		let ptr = unsafe {
 			oleaut::ffi::SysReAllocString(self.0, str_obj.as_ptr())
 		};
 		if ptr.is_null() {
-			panic!("{}", co::HRESULT::E_OUTOFMEMORY);
+			Err(co::HRESULT::E_OUTOFMEMORY)
 		} else {
 			self.0 = ptr;
+			Ok(())
 		}
 	}
 
@@ -79,7 +74,7 @@ impl BSTR {
 
 	/// Returns the underlying
 	/// [`LPWSTR`](https://learn.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
-	/// pointer.
+	/// pointer to the null-terminated wide string.
 	#[must_use]
 	pub const fn as_ptr(&self) -> *mut u16 {
 		self.0
