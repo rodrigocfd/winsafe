@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::dshow::decl::IFilterGraph;
+use crate::dshow::decl::{IEnumPins, IFilterGraph, IPin};
 use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR, PVOID};
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
@@ -55,6 +55,36 @@ impl dshow_IBaseFilter for IBaseFilter {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait dshow_IBaseFilter: dshow_IMediaFilter {
+	/// [`IBaseFilter::EnumPins`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-enumpins)
+	/// method.
+	#[must_use]
+	fn EnumPins(&self) -> HrResult<IEnumPins> {
+		unsafe {
+			let mut ppv_queried = ComPtr::null();
+			let vt = self.vt_ref::<IBaseFilterVT>();
+			ok_to_hrresult(
+				(vt.EnumPins)(self.ptr(), &mut ppv_queried),
+			).map(|_| IEnumPins::from(ppv_queried))
+		}
+	}
+
+	/// [`IBaseFilter::FindPin`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-findpin)
+	/// method.
+	#[must_use]
+	fn FindPin(&self, id: &str) -> HrResult<IPin> {
+		unsafe {
+			let mut ppv_queried = ComPtr::null();
+			let vt = self.vt_ref::<IBaseFilterVT>();
+			ok_to_hrresult(
+				(vt.FindPin)(
+					self.ptr(),
+					WString::from_str(id).as_ptr(),
+					&mut ppv_queried,
+				),
+			).map(|_| IPin::from(ppv_queried))
+		}
+	}
+
 	/// [`IBaseFilter::JoinFilterGraph`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-joinfiltergraph)
 	/// method.
 	fn JoinFilterGraph(&self,
