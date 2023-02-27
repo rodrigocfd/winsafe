@@ -11,5 +11,5 @@ pub struct WndMain {
 	btn_run:   gui::Button,
 	pro_load:  gui::ProgressBar,
 	txt_out:   gui::Edit,
-	mono_font: Rc<w::guard::GdiObjectGuard<w::HFONT>>,
+	mono_font: Rc<w::guard::DeleteObjectGuard<w::HFONT>>,
 }

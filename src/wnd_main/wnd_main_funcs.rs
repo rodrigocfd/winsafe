@@ -24,7 +24,7 @@ impl WndMain {
 		self.wnd.run_main(None)
 	}
 
-	fn create_mono_font() -> w::SysResult<w::guard::GdiObjectGuard<w::HFONT>> {
+	fn create_mono_font() -> w::SysResult<w::guard::DeleteObjectGuard<w::HFONT>> {
 		let mut lf = w::LOGFONT::default();
 		lf.lfHeight = 15;
 		lf.set_lfFaceName("Consolas");
