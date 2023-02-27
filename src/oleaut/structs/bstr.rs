@@ -101,12 +101,10 @@ impl BSTR {
 	/// [`SysFreeString`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysfreestring)
 	/// won't be called.
 	///
-	/// # Safety
-	///
 	/// Be sure to free the pointer, otherwise, as the name of this method
 	/// implies, you will cause a memory leak.
 	#[must_use]
-	pub unsafe fn leak(&mut self) -> *mut u16 {
+	pub fn leak(&mut self) -> *mut u16 {
 		std::mem::replace(&mut self.0, std::ptr::null_mut())
 	}
 

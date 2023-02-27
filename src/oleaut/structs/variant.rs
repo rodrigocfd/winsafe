@@ -65,7 +65,7 @@ impl VARIANT {
 	#[must_use]
 	pub fn new_idispatch(val: &impl oleaut_IDispatch) -> VARIANT {
 		let mut cloned = val.clone();
-		let ptr: usize = unsafe { cloned.leak() }.into();
+		let ptr: usize = cloned.leak().into();
 		unsafe { Self::from_raw(co::VT::DISPATCH, &ptr.to_ne_bytes()) }
 	}
 
@@ -95,7 +95,7 @@ impl VARIANT {
 	#[must_use]
 	pub fn new_iunknown<T>(val: &impl ole_IUnknown) -> VARIANT {
 		let mut cloned = val.clone();
-		let ptr: usize = unsafe { cloned.leak() }.into();
+		let ptr: usize = cloned.leak().into();
 		unsafe { Self::from_raw(co::VT::UNKNOWN, &ptr.to_ne_bytes()) }
 	}
 

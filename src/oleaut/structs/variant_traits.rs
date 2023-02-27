@@ -76,7 +76,7 @@ pub trait oleaut_Variant {
 		where Self: Sized,
 	{
 		let mut bstr = BSTR::SysAllocString(val);
-		let ptr = unsafe { bstr.leak() } as usize;
+		let ptr = bstr.leak() as usize;
 		unsafe { Self::from_raw(co::VT::BSTR, &ptr.to_ne_bytes()) }
 	}
 

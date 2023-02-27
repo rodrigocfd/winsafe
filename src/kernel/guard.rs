@@ -57,13 +57,11 @@ impl<T> CloseHandleGuard<T>
 	/// Ejects the underlying handle, leaving a
 	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
 	///
-	/// # Safety
-	///
 	/// Since the internal handle will be invalidated, the destructor will not
 	/// run. It's your responsability to run it, otherwise you'll cause a
 	/// resource leak.
 	#[must_use]
-	pub unsafe fn leak(&mut self) -> T {
+	pub fn leak(&mut self) -> T {
 		std::mem::replace(&mut self.handle, T::INVALID)
 	}
 }
@@ -108,13 +106,11 @@ impl EndUpdateResourceGuard {
 	/// Ejects the underlying handle, leaving a
 	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
 	///
-	/// # Safety
-	///
 	/// Since the internal handle will be invalidated, the destructor will not
 	/// run. It's your responsability to run it, otherwise you'll cause a
 	/// resource leak.
 	#[must_use]
-	pub unsafe fn leak(&mut self) -> HUPDATERSRC {
+	pub fn leak(&mut self) -> HUPDATERSRC {
 		std::mem::replace(&mut self.hupsrc, HUPDATERSRC::INVALID)
 	}
 }
@@ -267,13 +263,11 @@ impl CloseHandlePiGuard {
 	/// [`PROCESS_INFORMATION::default`](crate::PROCESS_INFORMATION::default) in
 	/// its place.
 	///
-	/// # Safety
-	///
 	/// Since the internal handles will be invalidated, the destructor will not
 	/// run. It's your responsibility to run it, otherwise you'll cause a
 	/// resource leak.
 	#[must_use]
-	pub unsafe fn leak(&mut self) -> PROCESS_INFORMATION {
+	pub fn leak(&mut self) -> PROCESS_INFORMATION {
 		std::mem::take(&mut self.pi)
 	}
 }

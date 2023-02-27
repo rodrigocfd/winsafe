@@ -45,13 +45,11 @@ impl RegCloseKeyGuard {
 	/// Ejects the underlying handle, leaving
 	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
 	///
-	/// # Safety
-	///
 	/// Since the internal handle will be invalidated, the destructor will not
 	/// run. It's your responsibility to run it, otherwise you'll cause a
 	/// resource leak.
 	#[must_use]
-	pub unsafe fn leak(&mut self) -> HKEY {
+	pub fn leak(&mut self) -> HKEY {
 		std::mem::replace(&mut self.hkey, HKEY::INVALID)
 	}
 }

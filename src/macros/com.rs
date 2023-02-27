@@ -36,9 +36,9 @@ macro_rules! com_interface {
 		impl crate::prelude::ole_IUnknown for $name {
 			const IID: crate::co::IID = crate::co::IID::new($guid);
 
-			unsafe fn leak(&mut self) -> ComPtr {
+			fn leak(&mut self) -> ComPtr {
 				let ptr = self.0;
-				self.0 = ComPtr::null();
+				self.0 = unsafe { ComPtr::null() };
 				ptr
 			}
 

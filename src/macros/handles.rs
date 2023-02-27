@@ -100,13 +100,11 @@ macro_rules! handle_guard {
 			/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its
 			/// place.
 			///
-			/// # Safety
-			///
 			/// Since the internal handle will be invalidated, the destructor
 			/// will not run. It's your responsability to run it, otherwise
 			/// you'll cause a resource leak.
 			#[must_use]
-			pub unsafe fn leak(&mut self) -> $handle {
+			pub fn leak(&mut self) -> $handle {
 				std::mem::replace(&mut self.handle, Handle::INVALID)
 			}
 		}

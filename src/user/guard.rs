@@ -204,13 +204,11 @@ impl<'a, H> ReleaseDCGuard<'a, H>
 	/// Ejects the underlying handle, leaving a
 	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
 	///
-	/// # Safety
-	///
 	/// Since the internal handle will be invalidated, the destructor will not
 	/// run. It's your responsability to run it, otherwise you'll cause a
 	/// resource leak.
 	#[must_use]
-	pub unsafe fn leak(&mut self) -> HDC {
+	pub fn leak(&mut self) -> HDC {
 		std::mem::replace(&mut self.hdc, HDC::INVALID)
 	}
 }

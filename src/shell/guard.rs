@@ -44,13 +44,11 @@ impl DestroyIconShfiGuard {
 	/// Ejects the underlying struct, leaving
 	/// [`SHFILEINFO::default`](crate::SHFILEINFO::default) in its place.
 	///
-	/// # Safety
-	///
 	/// Since the internal handle will be invalidated, the destructor will not
 	/// run. It's your responsibility to run it, otherwise you'll cause a
 	/// resource leak.
 	#[must_use]
-	pub unsafe fn leak(&mut self) -> SHFILEINFO {
+	pub fn leak(&mut self) -> SHFILEINFO {
 		std::mem::take(&mut self.shfi)
 	}
 }
@@ -96,13 +94,11 @@ impl DestroyIconSiiGuard {
 	/// [`SHSTOCKICONINFO::default`](crate::SHSTOCKICONINFO::default) in its
 	/// place.
 	///
-	/// # Safety
-	///
 	/// Since the internal handle will be invalidated, the destructor will not
 	/// run. It's your responsibility to run it, otherwise you'll cause a
 	/// resource leak.
 	#[must_use]
-	pub unsafe fn leak(&mut self) -> SHSTOCKICONINFO {
+	pub fn leak(&mut self) -> SHSTOCKICONINFO {
 		std::mem::take(&mut self.sii)
 	}
 }

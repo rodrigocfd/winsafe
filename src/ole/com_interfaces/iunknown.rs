@@ -55,15 +55,13 @@ pub trait ole_IUnknown: Clone + From<ComPtr> {
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// won't be called.
 	///
-	/// # Safety
-	///
 	/// Be sure to release the pointer, otherwise, as the name of this method
 	/// implies, you will cause a resource leak.
 	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
-	unsafe fn leak(&mut self) -> ComPtr;
+	fn leak(&mut self) -> ComPtr;
 
 	/// Returns the pointer to the underlying COM virtual table.
 	///

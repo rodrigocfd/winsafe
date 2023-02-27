@@ -61,13 +61,11 @@ impl<T> DeleteObjectGuard<T>
 	/// Ejects the underlying handle, leaving a
 	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
 	///
-	/// # Safety
-	///
 	/// Since the internal handle will be invalidated, the destructor will not
 	/// run. It's your responsability to run it, otherwise you'll cause a
 	/// resource leak.
 	#[must_use]
-	pub unsafe fn leak(&mut self) -> T {
+	pub fn leak(&mut self) -> T {
 		std::mem::replace(&mut self.handle, T::INVALID)
 	}
 }
@@ -129,13 +127,11 @@ impl<'a, H, G> SelectObjectGuard<'a, H, G>
 	/// Ejects the underlying handle, leaving a
 	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
 	///
-	/// # Safety
-	///
 	/// Since the internal handle will be invalidated, the destructor will not
 	/// run. It's your responsability to run it, otherwise you'll cause a
 	/// resource leak.
 	#[must_use]
-	pub unsafe fn leak(&mut self) -> G {
+	pub fn leak(&mut self) -> G {
 		std::mem::replace(&mut self.prev_hgdi, G::INVALID)
 	}
 }
