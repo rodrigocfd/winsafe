@@ -172,7 +172,7 @@ pub enum HwKbMouse {
 	Hw(HARDWAREINPUT),
 	/// Keyboard event.
 	Kb(KEYBDINPUT),
-	/// Mouse input.
+	/// Mouse event.
 	Mouse(MOUSEINPUT),
 }
 
