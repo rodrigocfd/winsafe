@@ -4,7 +4,8 @@ use crate::co;
 use crate::kernel::decl::WString;
 use crate::kernel::privs::MAKEINTRESOURCE;
 use crate::user::decl::{
-	ATOM, HBITMAP, HICON, HMENU, HWND, NCCALCSIZE_PARAMS, POINT, RECT,
+	ATOM, HARDWAREINPUT, HBITMAP, HICON, HMENU, HWND, KEYBDINPUT, MOUSEINPUT,
+	NCCALCSIZE_PARAMS, POINT, RECT,
 };
 
 /// Variant parameter for:
@@ -160,6 +161,19 @@ impl From<GmidxEnum> for u32 {
 			GmidxEnum::Enum(es) => es.0,
 		}
 	}
+}
+
+/// Variant parameter for:
+///
+/// * [`INPUT`](crate::INPUT).
+#[derive(Clone, Copy)]
+pub enum HwKbMouse {
+	/// Hardware event.
+	Hw(HARDWAREINPUT),
+	/// Keyboard event.
+	Kb(KEYBDINPUT),
+	/// Mouse input.
+	Mouse(MOUSEINPUT),
 }
 
 /// Variant parameter for:

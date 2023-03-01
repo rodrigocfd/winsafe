@@ -6,8 +6,8 @@ use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::MsgSend;
 use crate::user::decl::{
-	ATOM, COLORREF, DEVMODE, DISPLAY_DEVICE, GmidxEnum, GUITHREADINFO, HWND,
-	MSG, POINT, RECT, SIZE, TRACKMOUSEEVENT, WNDCLASSEX,
+	ATOM, COLORREF, DEVMODE, DISPLAY_DEVICE, GmidxEnum, GUITHREADINFO,
+	HwKbMouse, HWND, INPUT, MSG, POINT, RECT, SIZE, TRACKMOUSEEVENT, WNDCLASSEX,
 };
 use crate::user::privs::ASFW_ANY;
 
@@ -657,10 +657,65 @@ pub unsafe fn RegisterClassEx(wcx: &WNDCLASSEX) -> SysResult<ATOM> {
 #[must_use]
 pub fn RegisterWindowMessage(s: &str) -> SysResult<u32> {
 	match unsafe {
-			user::ffi::RegisterWindowMessageW(WString::from_str(s).as_ptr())
+		user::ffi::RegisterWindowMessageW(WString::from_str(s).as_ptr())
 	} {
 		0 => Err(GetLastError()),
 		id => Ok(id),
+	}
+}
+
+/// [`SendInput`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput)
+/// function.
+///
+/// # Examples
+///
+/// Sending Win+D to toggle the desktop:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{co, HwKbMouse, KEYBDINPUT, SendInput};
+///
+/// SendInput(&[
+///     HwKbMouse::Kb(
+///         KEYBDINPUT {
+///             wVk: co::VK::LWIN,
+///             ..Default::default()
+///         },
+///     ),
+///     HwKbMouse::Kb(
+///         KEYBDINPUT {
+///             wVk: co::VK::CHAR_D,
+///             ..Default::default()
+///         },
+///     ),
+///     HwKbMouse::Kb(
+///         KEYBDINPUT {
+///             wVk: co::VK::CHAR_D,
+///             dwFlags: co::KEYEVENTF::KEYUP,
+///             ..Default::default()
+///         },
+///     ),
+///     HwKbMouse::Kb(
+///         KEYBDINPUT {
+///             wVk: co::VK::LWIN,
+///             dwFlags: co::KEYEVENTF::KEYUP,
+///             ..Default::default()
+///         },
+///     ),
+/// ])?;
+/// # Ok::<_, co::ERROR>(())
+/// ```
+pub fn SendInput(inputs: &[HwKbMouse]) -> SysResult<u32> {
+	let objs = inputs.iter().map(|ipt| INPUT::new(*ipt)).collect::<Vec<_>>();
+	match unsafe {
+		user::ffi::SendInput(
+			objs.len() as _,
+			objs.as_ptr() as _,
+			std::mem::size_of::<INPUT>() as _,
+		)
+	} {
+		0 => Err(GetLastError()),
+		n => Ok(n),
 	}
 }
 

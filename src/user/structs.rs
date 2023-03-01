@@ -8,8 +8,8 @@ use crate::kernel::decl::{
 };
 use crate::kernel::ffi_types::BOOL;
 use crate::user::decl::{
-	DispfNup, HBITMAP, HBRUSH, HCURSOR, HDC, HICON, HMENU, HWND, HwndHmenu,
-	HwndPlace, WNDPROC,
+	DispfNup, HBITMAP, HBRUSH, HCURSOR, HDC, HICON, HMENU, HwKbMouse, HWND,
+	HwndHmenu, HwndPlace, WNDPROC,
 };
 use crate::user::privs::{
 	CCHDEVICENAME, CCHFORMNAME, CCHILDREN_TITLEBAR, DM_SPECVERSION,
@@ -490,6 +490,16 @@ pub struct GUITHREADINFO {
 
 impl_default_with_size!(GUITHREADINFO, cbSize);
 
+/// [`HARDWAREINPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-hardwareinput)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Copy, Eq, PartialEq)]
+pub struct HARDWAREINPUT {
+	pub uMsg: u32,
+	pub wParamL: u16,
+	pub wParamH: u16,
+}
+
 /// [`HELPINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-helpinfo)
 /// struct.
 ///
@@ -505,6 +515,7 @@ pub struct HELPINFO {
 }
 
 impl HELPINFO {
+	/// Returns the `hItemHandle` field.
 	#[must_use]
 	pub const fn hItemHandle(&self) -> HwndHmenu {
 		match self.iContextType {
@@ -512,6 +523,66 @@ impl HELPINFO {
 			_ => HwndHmenu::Hmenu(HMENU(self.hItemHandle as _)),
 		}
 	}
+}
+
+/// [`INPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-input)
+/// struct.
+#[repr(C)]
+pub struct INPUT {
+	dwType: co::INPUT,
+	union0: INPUT_union0,
+}
+
+#[repr(C)]
+union INPUT_union0 {
+	mi: MOUSEINPUT,
+	ki: KEYBDINPUT,
+	hi: HARDWAREINPUT,
+}
+
+impl INPUT {
+	/// Creates the struct.
+	#[must_use]
+	pub fn new(event: HwKbMouse) -> INPUT {
+		let mut new_self = INPUT {
+			dwType: co::INPUT::HARDWARE,
+			union0: INPUT_union0 { hi: HARDWAREINPUT::default() },
+		};
+		new_self.set_event(event);
+		new_self
+	}
+
+	/// Returns the event tagged union field.
+	#[must_use]
+	pub const fn event(&self) -> HwKbMouse {
+		match self.dwType {
+			co::INPUT::HARDWARE => HwKbMouse::Hw(unsafe { self.union0.hi }),
+			co::INPUT::KEYBOARD => HwKbMouse::Kb(unsafe { self.union0.ki }),
+			co::INPUT::MOUSE => HwKbMouse::Mouse(unsafe { self.union0.mi }),
+			_ => panic!("Bad INPUT value."),
+		}
+	}
+
+	/// Sets the event tagged union field.
+	pub fn set_event(&mut self, event: HwKbMouse) {
+		match event {
+			HwKbMouse::Hw(hi) => self.union0.hi = hi,
+			HwKbMouse::Kb(ki) => self.union0.ki = ki,
+			HwKbMouse::Mouse(mi) => self.union0.mi = mi,
+		}
+	}
+}
+
+/// [`KEYBDINPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Copy, Eq, PartialEq)]
+pub struct KEYBDINPUT {
+	pub wVk: co::VK,
+	pub wScan: u16,
+	pub dwFlags: co::KEYEVENTF,
+	pub time: u32,
+	pub dwExtraInfo: usize,
 }
 
 /// [`MENUBARINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menubarinfo)
@@ -612,6 +683,19 @@ impl_default_with_size!(MONITORINFOEX, cbSize);
 
 impl MONITORINFOEX {
 	pub_fn_string_arr_get_set!(szDevice, set_szDevice);
+}
+
+/// [`MOUSEINPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mouseinput)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Copy, Eq, PartialEq)]
+pub struct MOUSEINPUT {
+	pub dx: i32,
+	pub dy: i32,
+	pub mouseData: u32,
+	pub dwFlags: co::MOUSEEVENTF,
+	pub time: u32,
+	pub dwExtraInfo: usize,
 }
 
 /// [`NCCALCSIZE_PARAMS`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nccalcsize_params)

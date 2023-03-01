@@ -1475,6 +1475,15 @@ const_ordinary! { IMAGE_TYPE: u8;
 	ENHMETAFILE 3
 }
 
+const_ordinary! { INPUT: u32;
+	/// [`INPUT`](crate::INPUT) `type` (`u32`).
+	=>
+	=>
+	MOUSE 0
+	KEYBOARD 1
+	HARDWARE 2
+}
+
 #[cfg(target_pointer_width = "64")]
 const_bitflag! { ISMEX: u32;
 	/// [`InSendMessageEx`](crate::InSendMessageEx) return value (`u32`).
@@ -1487,6 +1496,19 @@ const_bitflag! { ISMEX: u32;
 	NOTIFY 0x0000_0002
 	REPLIED 0x0000_0008
 	SEND 0x0000_0001
+}
+
+const_bitflag! { KEYEVENTF: u32;
+	/// [`KEYBDINPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput)
+	/// `dwFlags` (`u32`).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	EXTENDEDKEY 0x0001
+	KEYUP 0x0002
+	UNICODE 0x0004
+	SCANCODE 0x0008
 }
 
 const_wm! { LB;
@@ -1866,6 +1888,27 @@ const_ordinary! { MONITORINFOF: u32;
 	/// None of the actual values (zero).
 	NoValue 0
 	PRIMARY 0x0000_0001
+}
+
+const_bitflag! { MOUSEEVENTF: u32;
+	/// [`MOUSEINPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mouseinput)
+	/// `dwFlags` (`u32`).
+	=>
+	=>
+	MOVE 0x0001
+	LEFTDOWN 0x0002
+	LEFTUP 0x0004
+	RIGHTDOWN 0x0008
+	RIGHTUP 0x0010
+	MIDDLEDOWN 0x0020
+	MIDDLEUP 0x0040
+	XDOWN 0x0080
+	XUP 0x0100
+	WHEEL 0x0800
+	HWHEEL 0x01000
+	MOVE_NOCOALESCE 0x2000
+	VIRTUALDESK 0x4000
+	ABSOLUTE 0x8000
 }
 
 const_ordinary! { MSGF: u8;
