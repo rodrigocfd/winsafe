@@ -1313,6 +1313,15 @@ pub trait user_Hwnd: Handle {
 		).map(|_| msg.convert_ret(result))
 	}
 
+	/// [`SetActiveWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setactivewindow)
+	/// method.
+	fn SetActiveWindow(&self) -> SysResult<HWND> {
+		ptr_to_sysresult(
+			unsafe { user::ffi::SetActiveWindow(self.as_ptr()) },
+			|ptr| HWND(ptr),
+		)
+	}
+
 	/// [`SetCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcapture)
 	/// method.
 	fn SetCapture(&self) -> ReleaseCaptureGuard<'_, Self> {

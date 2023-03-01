@@ -755,6 +755,13 @@ pub fn SetCursorPos(x: i32, y: i32) -> SysResult<()> {
 	bool_to_sysresult(unsafe { user::ffi::SetCursorPos(x, y) })
 }
 
+/// [`SetDoubleClickTime`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setdoubleclicktime)
+/// function.
+#[must_use]
+pub fn SetDoubleClickTime(ms: u32) -> SysResult<()> {
+	bool_to_sysresult(unsafe { user::ffi::SetDoubleClickTime(ms) })
+}
+
 /// [`SetProcessDPIAware`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdpiaware)
 /// function.
 pub fn SetProcessDPIAware() -> SysResult<()> {
@@ -787,6 +794,12 @@ pub fn SubtractRect(
 			)
 		},
 	)
+}
+
+/// [`SwapMouseButton`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-swapmousebutton)
+/// function.
+pub fn SwapMouseButton(swap: bool) -> bool {
+	unsafe { user::ffi::SwapMouseButton(swap as _) != 0 }
 }
 
 /// [`SystemParametersInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-systemparametersinfow)

@@ -193,11 +193,13 @@ extern_sys! { "user32";
 	SendInput(u32, PVOID, i32) -> u32
 	SendMessageTimeoutW(HANDLE, u32, usize, isize, u32, u32, *mut isize) -> isize
 	SendMessageW(HANDLE, u32, usize, isize) -> isize
+	SetActiveWindow(HANDLE) -> HANDLE
 	SetCapture(HANDLE) -> HANDLE
 	SetCaretBlinkTime(u32) -> BOOL
 	SetCaretPos(i32, i32) -> BOOL
 	SetClipboardData(u32, HANDLE) -> HANDLE
 	SetCursorPos(i32, i32) -> BOOL
+	SetDoubleClickTime(u32) -> BOOL
 	SetFocus(HANDLE) -> HANDLE
 	SetForegroundWindow(HANDLE) -> BOOL
 	SetMenu(HANDLE, HANDLE) -> BOOL
@@ -226,6 +228,7 @@ extern_sys! { "user32";
 	ShowWindowAsync(HANDLE, i32) -> BOOL
 	SoundSentry() -> BOOL
 	SubtractRect(PVOID, PCVOID, PCVOID) -> BOOL
+	SwapMouseButton(BOOL) -> BOOL
 	SwitchDesktop(HANDLE) -> BOOL
 	SystemParametersInfoW(u32, u32, PVOID, u32) -> BOOL
 	TrackMouseEvent(PVOID) -> BOOL
