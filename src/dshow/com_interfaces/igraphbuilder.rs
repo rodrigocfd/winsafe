@@ -94,6 +94,15 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 		}
 	}
 
+	/// [`IGraphBuilder::Render`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-render)
+	/// method.
+	fn Render(&self, pin_out: &IPin) -> HrResult<()> {
+		unsafe {
+			let vt = self.vt_ref::<IGraphBuilderVT>();
+			ok_to_hrresult((vt.Render)(self.ptr(), pin_out.ptr()))
+		}
+	}
+
 	/// [`IGraphBuilder::RenderFile`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-renderfile)
 	/// method.
 	fn RenderFile(&self, file: &str) -> HrResult<()> {

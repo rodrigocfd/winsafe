@@ -1,8 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::co;
 use crate::kernel::ffi_types::{HRES, PVOID};
+use crate::kernel::privs::INFINITE;
 use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::okfalse_to_hrresult;
+use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
 use crate::prelude::ole_IPersist;
 use crate::vt::IPersistVT;
 
@@ -13,7 +15,7 @@ pub struct IMediaFilterVT {
 	pub Stop: fn(ComPtr) -> HRES,
 	pub Pause: fn(ComPtr) -> HRES,
    pub Run: fn(ComPtr, i64) -> HRES,
-	pub GetState: fn(ComPtr, i64, PVOID, *mut u32) -> HRES,
+	pub GetState: fn(ComPtr, u32, PVOID) -> HRES,
 	pub SetSyncSource: fn(ComPtr, ComPtr) -> HRES,
 	pub GetSyncSource: fn(ComPtr, *mut ComPtr) -> HRES,
 }
@@ -39,6 +41,23 @@ impl dshow_IMediaFilter for IMediaFilter {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait dshow_IMediaFilter: ole_IPersist {
+	/// [`IMediaFilter::GetState`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-getstate)
+	/// method.
+	#[must_use]
+	fn GetState(&self, ms_timeout: Option<u32>) -> HrResult<co::FILTER_STATE> {
+		let mut fs = co::FILTER_STATE::Stopped;
+		unsafe {
+			let vt = self.vt_ref::<IMediaFilterVT>();
+			ok_to_hrresult(
+				(vt.GetState)(
+					self.ptr(),
+					ms_timeout.unwrap_or(INFINITE),
+					&mut fs.0 as *mut _ as _,
+				),
+			).map(|_| fs)
+		}
+	}
+
 	/// [`IMediaFilter::Pause`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-pause)
 	/// method.
 	fn Pause(&self) -> HrResult<bool> {
