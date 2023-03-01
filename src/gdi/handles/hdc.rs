@@ -633,6 +633,23 @@ pub trait gdi_Hdc: Handle {
 		}
 	}
 
+	/// [`SelectClipPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectclippath)
+	/// method.
+	fn SelectClipPath(&self, mode: co::RGN) -> SysResult<()> {
+		bool_to_sysresult(
+			unsafe { gdi::ffi::SelectClipPath(self.as_ptr(), mode.0) },
+		)
+	}
+
+	/// [`SelectClipRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectcliprgn)
+	/// method.
+	fn SelectClipRgn(&self, rgn: &HRGN) -> SysResult<co::REGION> {
+		match unsafe { gdi::ffi::SelectClipRgn(self.as_ptr(), rgn.as_ptr()) } {
+			0 => Err(GetLastError()),
+			v => Ok(co::REGION(v)),
+		}
+	}
+
 	/// [`SelectObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectobject)
 	/// method.
 	///

@@ -312,6 +312,18 @@ const_ordinary! { QUALITY: u8;
 	CLEARTYPE_NATURAL 6
 }
 
+const_ordinary! { RGN: i32;
+	/// [`HDC::SelectClipPath`](crate::prelude::gdi_Hdc::SelectClipPath) `mode`
+	/// (`i32`).
+	=>
+	=>
+	AND 1
+	OR 2
+	XOR 3
+	DIFF 4
+	COPY 5
+}
+
 const_ordinary! { ROP: u32;
 	/// Raster operation code (`u32`).
 	/// [`HDC::BitBlt`](crate::prelude::gdi_Hdc::BitBlt) `rop`,

@@ -73,6 +73,8 @@ extern_sys! { "gdi32";
 	RestoreDC(HANDLE, i32) -> BOOL
 	RoundRect(HANDLE, i32, i32, i32, i32, i32, i32) -> BOOL
 	SaveDC(HANDLE) -> i32
+	SelectClipPath(HANDLE, i32) -> BOOL
+	SelectClipRgn(HANDLE, HANDLE) -> i32
 	SelectObject(HANDLE, HANDLE) -> HANDLE
 	SetArcDirection(HANDLE, i32) -> i32
 	SetBkColor(HANDLE, u32) -> u32
