@@ -33,9 +33,12 @@ extern_sys! { "user32";
 	ClientToScreen(HANDLE, PVOID) -> BOOL
 	ClipCursor(PCVOID) -> BOOL
 	CloseClipboard() -> BOOL
+	CloseDesktop(HANDLE) -> BOOL
 	CloseWindow(HANDLE) -> BOOL
 	CopyIcon(HANDLE) -> HANDLE
 	CreateAcceleratorTableW(PVOID, i32) -> HANDLE
+	CreateDesktopExW(PCSTR, PCSTR, PCVOID, u32, u32, PVOID, u32, PVOID) -> HANDLE
+	CreateDesktopW(PCSTR, PCSTR, PCVOID, u32, u32, PVOID) -> HANDLE
 	CreateDialogParamW(HANDLE, PCSTR, HANDLE, PFUNC, isize) -> HANDLE
 	CreateMenu() -> HANDLE
 	CreatePopupMenu() -> HANDLE
@@ -116,6 +119,7 @@ extern_sys! { "user32";
 	GetSystemMenu(HANDLE, BOOL) -> HANDLE
 	GetSystemMetrics(i32) -> i32
 	GetSystemMetricsForDpi(i32, u32) -> i32
+	GetThreadDesktop(u32) -> HANDLE
 	GetTopWindow(HANDLE) -> HANDLE
 	GetUpdateRect(HANDLE, PVOID, BOOL) -> BOOL
 	GetUpdateRgn(HANDLE, HANDLE, BOOL) -> i32
@@ -169,6 +173,8 @@ extern_sys! { "user32";
 	MoveWindow(HANDLE, i32, i32, i32, i32, BOOL) -> BOOL
 	OffsetRect(PVOID, i32, i32) -> BOOL
 	OpenClipboard(HANDLE) -> BOOL
+	OpenDesktopW(PCSTR, u32, BOOL, u32) -> HANDLE
+	OpenInputDesktop(u32, BOOL, u32) -> HANDLE
 	PaintDesktop(HANDLE) -> BOOL
 	PeekMessageW(PVOID, HANDLE, u32, u32, u32) -> BOOL
 	PostMessageW(HANDLE, u32, usize, isize) -> BOOL
@@ -204,6 +210,7 @@ extern_sys! { "user32";
 	SetScrollPos(HANDLE, i32, i32, BOOL) -> i32
 	SetScrollRange(HANDLE, i32, i32, i32, BOOL) -> BOOL
 	SetSystemCursor(HANDLE, u32) -> BOOL
+	SetThreadDesktop(HANDLE) -> BOOL
 	SetTimer(HANDLE, usize, u32, PFUNC) -> usize
 	SetUserObjectInformationW(HANDLE, i32, PVOID, u32) -> BOOL
 	SetWindowDisplayAffinity(HANDLE, u32) -> BOOL
@@ -218,6 +225,7 @@ extern_sys! { "user32";
 	ShowWindowAsync(HANDLE, i32) -> BOOL
 	SoundSentry() -> BOOL
 	SubtractRect(PVOID, PCVOID, PCVOID) -> BOOL
+	SwitchDesktop(HANDLE) -> BOOL
 	SystemParametersInfoW(u32, u32, PVOID, u32) -> BOOL
 	TrackMouseEvent(PVOID) -> BOOL
 	TrackPopupMenu(HANDLE, u32, i32, i32, i32, HANDLE, PCVOID) -> BOOL

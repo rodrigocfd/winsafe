@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
+use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS};
+
 const_bitflag! { ACCELF: u8;
 	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`).
 	///
@@ -427,6 +429,49 @@ const_bitflag! { DDL: u16;
 	POSTMSGS 0x2000
 	DRIVES 0x4000
 	EXCLUSIVE 0x8000
+}
+
+const_bitflag! { DESKTOP_RIGHTS: u32;
+	/// Desktop security and access rights
+	/// [flags](https://learn.microsoft.com/en-us/windows/win32/winstation/desktop-security-and-access-rights)
+	/// (`u32`).
+	///
+	/// Originally aglutinates [`co::ACCESS_RIGHTS`](crate::co::ACCESS_RIGHTS)
+	/// and specific constants with `DESKTOP` prefix.
+	=>
+	=>
+	DELETE ACCESS_RIGHTS::DELETE.0
+	READ_CONTROL ACCESS_RIGHTS::READ_CONTROL.0
+	WRITE_DAC ACCESS_RIGHTS::WRITE_DAC.0
+	WRITE_OWNER ACCESS_RIGHTS::WRITE_OWNER.0
+	SYNCHRONIZE ACCESS_RIGHTS::SYNCHRONIZE.0
+
+	READOBJECTS 0x0001
+	CREATEWINDOW 0x0002
+	CREATEMENU 0x0004
+	HOOKCONTROL 0x0008
+	JOURNALRECORD 0x0010
+	JOURNALPLAYBACK 0x0020
+	ENUMERATE 0x0040
+	WRITEOBJECTS 0x0080
+	SWITCHDESKTOP 0x0100
+
+	GENERIC_READ Self::ENUMERATE.0 | Self::READOBJECTS.0 | STANDARD_RIGHTS::READ.0
+	GENERIC_WRITE Self::CREATEMENU.0 | Self::CREATEWINDOW.0 | Self::HOOKCONTROL.0 | Self::JOURNALPLAYBACK.0 | Self::JOURNALRECORD.0 | Self::WRITEOBJECTS.0 | STANDARD_RIGHTS::WRITE.0
+	GENERICE_EXECUTE Self::SWITCHDESKTOP.0 | STANDARD_RIGHTS::EXECUTE.0
+	GENERIC_ALL Self::CREATEMENU.0 | Self::CREATEWINDOW.0 | Self::ENUMERATE.0 | Self::HOOKCONTROL.0 | Self::JOURNALPLAYBACK.0 | Self::JOURNALRECORD.0 | Self::READOBJECTS.0 | Self::SWITCHDESKTOP.0 | Self::WRITEOBJECTS.0 | STANDARD_RIGHTS::REQUIRED.0
+}
+
+const_ordinary! { DF: u32;
+	/// [`HDESK::OpenDesktop`](crate::prelude::user_Hdesk::OpenDesktop) `flags`
+	/// (`u32`).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	/// Allows processes running in other accounts on the desktop to set hooks
+	/// in this process.
+	ALLOWOTHERACCOUNTHOOK 0x0001
 }
 
 const_ordinary! { DISP_CHANGE: i32;
