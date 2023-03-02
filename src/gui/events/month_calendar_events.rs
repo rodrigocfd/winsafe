@@ -20,12 +20,12 @@ impl MonthCalendarEvents {
 		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	pub_fn_nfy_withparm_noret! { mcn_get_day_state, co::MCN::GETDAYSTATE, NMDAYSTATE,
+	pub_fn_nfy_withparm_noret! { mcn_get_day_state, co::MCN::GETDAYSTATE, NMDAYSTATE;
 		/// [`MCN_GETDAYSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcn-getdaystate)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_noret! { mcn_sel_change, co::MCN::SELCHANGE, NMSELCHANGE,
+	pub_fn_nfy_withparm_noret! { mcn_sel_change, co::MCN::SELCHANGE, NMSELCHANGE;
 		/// [`MCN_SELCHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcn-selchange)
 		/// notification.
 		///
@@ -50,17 +50,17 @@ impl MonthCalendarEvents {
 		/// ```
 	}
 
-	pub_fn_nfy_withparm_noret! { mcn_select, co::MCN::SELECT, NMSELCHANGE,
+	pub_fn_nfy_withparm_noret! { mcn_select, co::MCN::SELECT, NMSELCHANGE;
 		/// [`MCN_SELECT`](https://learn.microsoft.com/en-us/windows/win32/controls/mcn-select)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_noret! { mcn_view_change, co::MCN::VIEWCHANGE, NMVIEWCHANGE,
+	pub_fn_nfy_withparm_noret! { mcn_view_change, co::MCN::VIEWCHANGE, NMVIEWCHANGE;
 		/// [`MCN_VIEWCHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/mcn-viewchange)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_released_capture, co::NM::RELEASEDCAPTURE,
+	pub_fn_nfy_noparm_noret! { nm_released_capture, co::NM::RELEASEDCAPTURE;
 		/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-monthcal-)
 		/// notification.
 	}

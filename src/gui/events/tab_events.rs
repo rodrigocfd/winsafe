@@ -21,47 +21,47 @@ impl TabEvents {
 		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_click, co::NM::CLICK,
+	pub_fn_nfy_noparm_noret! { nm_click, co::NM::CLICK;
 		/// [`NM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-click-tab)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_i32ret! { nm_dbl_clk, co::NM::DBLCLK,
+	pub_fn_nfy_noparm_i32ret! { nm_dbl_clk, co::NM::DBLCLK;
 		/// [`NM_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-dblclk-tab)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_i32ret! { nm_r_click, co::NM::RCLICK,
+	pub_fn_nfy_noparm_i32ret! { nm_r_click, co::NM::RCLICK;
 		/// [`NM_RCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rclick-tab)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_i32ret! { nm_r_dbl_clk, co::NM::RDBLCLK,
+	pub_fn_nfy_noparm_i32ret! { nm_r_dbl_clk, co::NM::RDBLCLK;
 		/// [`NM_RDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rdblclk-tab)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_released_capture, co::NM::RELEASEDCAPTURE,
+	pub_fn_nfy_noparm_noret! { nm_released_capture, co::NM::RELEASEDCAPTURE;
 		/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-tab-)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { tcn_focus_change, co::TCN::FOCUSCHANGE,
+	pub_fn_nfy_noparm_noret! { tcn_focus_change, co::TCN::FOCUSCHANGE;
 		/// [`TCN_FOCUSCHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/tcn-focuschange)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_noret! { tcn_get_object, co::TCN::GETOBJECT, NMOBJECTNOTIFY,
+	pub_fn_nfy_withparm_noret! { tcn_get_object, co::TCN::GETOBJECT, NMOBJECTNOTIFY;
 		/// [`TCN_GETOBJECT`](https://learn.microsoft.com/en-us/windows/win32/controls/tcn-getobject)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_noret! { tcn_key_down, co::TCN::KEYDOWN, NMTCKEYDOWN,
+	pub_fn_nfy_withparm_noret! { tcn_key_down, co::TCN::KEYDOWN, NMTCKEYDOWN;
 		/// [`TCN_KEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/controls/tcn-keydown)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { tcn_sel_change, co::TCN::SELCHANGE,
+	pub_fn_nfy_noparm_noret! { tcn_sel_change, co::TCN::SELCHANGE;
 		/// [`TCN_SELCHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/tcn-selchange)
 		/// notification.
 		///
@@ -85,7 +85,7 @@ impl TabEvents {
 		/// ```
 	}
 
-	pub_fn_nfy_noparm_boolret! { tcn_sel_changing, co::TCN::SELCHANGING,
+	pub_fn_nfy_noparm_boolret! { tcn_sel_changing, co::TCN::SELCHANGING;
 		/// [`TCN_SELCHANGING`](https://learn.microsoft.com/en-us/windows/win32/controls/tcn-selchanging)
 		/// notification.
 	}

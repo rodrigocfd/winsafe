@@ -20,32 +20,32 @@ impl TreeViewEvents {
 		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	pub_fn_nfy_withparm_noret! { tvn_delete_item, co::TVN::DELETEITEM, NMTREEVIEW,
+	pub_fn_nfy_withparm_noret! { tvn_delete_item, co::TVN::DELETEITEM, NMTREEVIEW;
 		/// [`TVN_DELETEITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/tvn-deleteitem)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_noret! { tvn_item_changed, co::TVN::ITEMCHANGED, NMTREEVIEW,
+	pub_fn_nfy_withparm_noret! { tvn_item_changed, co::TVN::ITEMCHANGED, NMTREEVIEW;
 		/// [`TVN_ITEMCHANGED`](https://learn.microsoft.com/en-us/windows/win32/controls/tvn-itemchanged)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_boolret! { tvn_item_changing, co::TVN::ITEMCHANGING, NMTREEVIEW,
+	pub_fn_nfy_withparm_boolret! { tvn_item_changing, co::TVN::ITEMCHANGING, NMTREEVIEW;
 		/// [`TVN_ITEMCHANGING`](https://learn.microsoft.com/en-us/windows/win32/controls/tvn-itemchanging)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_noret! { tvn_item_expanded, co::TVN::ITEMEXPANDED, NMTREEVIEW,
+	pub_fn_nfy_withparm_noret! { tvn_item_expanded, co::TVN::ITEMEXPANDED, NMTREEVIEW;
 		/// [`TVN_ITEMEXPANDED`](https://learn.microsoft.com/en-us/windows/win32/controls/tvn-itemexpanded)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_boolret! { tvn_item_expanding, co::TVN::ITEMEXPANDING, NMTREEVIEW,
+	pub_fn_nfy_withparm_boolret! { tvn_item_expanding, co::TVN::ITEMEXPANDING, NMTREEVIEW;
 		/// [`TVN_ITEMEXPANDING`](https://learn.microsoft.com/en-us/windows/win32/controls/tvn-itemexpanding)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_noret! { tvn_sel_changed, co::TVN::SELCHANGED, NMTREEVIEW,
+	pub_fn_nfy_withparm_noret! { tvn_sel_changed, co::TVN::SELCHANGED, NMTREEVIEW;
 		/// [`TVN_SELCHANGED`](https://learn.microsoft.com/en-us/windows/win32/controls/tvn-selchanged)
 		/// notification.
 		///
@@ -74,12 +74,12 @@ impl TreeViewEvents {
 		/// ```
 	}
 
-	pub_fn_nfy_withparm_boolret! { tvn_sel_changing, co::TVN::SELCHANGING, NMTREEVIEW,
+	pub_fn_nfy_withparm_boolret! { tvn_sel_changing, co::TVN::SELCHANGING, NMTREEVIEW;
 		/// [`TVN_SELCHANGING`](https://learn.microsoft.com/en-us/windows/win32/controls/tvn-selchanging)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_i32ret! { nm_click, co::NM::CLICK,
+	pub_fn_nfy_noparm_i32ret! { nm_click, co::NM::CLICK;
 		/// [`NM_CLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-click-tree-view)
 		/// notification.
 	}
@@ -93,37 +93,37 @@ impl TreeViewEvents {
 			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMTVCUSTOMDRAW>() })?.0 as _)));
 	}
 
-	pub_fn_nfy_noparm_i32ret! { nm_dbl_clk, co::NM::DBLCLK,
+	pub_fn_nfy_noparm_i32ret! { nm_dbl_clk, co::NM::DBLCLK;
 		/// [`NM_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-dblclk-tree-view)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_kill_focus, co::NM::KILLFOCUS,
+	pub_fn_nfy_noparm_noret! { nm_kill_focus, co::NM::KILLFOCUS;
 		/// [`NM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-killfocus-tree-view)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_i32ret! { nm_r_click, co::NM::RCLICK,
+	pub_fn_nfy_noparm_i32ret! { nm_r_click, co::NM::RCLICK;
 		/// [`NM_RCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rclick-tree-view)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_i32ret! { nm_r_dbl_clk, co::NM::RDBLCLK,
+	pub_fn_nfy_noparm_i32ret! { nm_r_dbl_clk, co::NM::RDBLCLK;
 		/// [`NM_RDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rdblclk-tree-view)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_return, co::NM::RETURN,
+	pub_fn_nfy_noparm_noret! { nm_return, co::NM::RETURN;
 		/// [`NM_RETURN`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-return-tree-view-)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_i32ret! { nm_set_cursor, co::NM::SETCURSOR, NMMOUSE,
+	pub_fn_nfy_withparm_i32ret! { nm_set_cursor, co::NM::SETCURSOR, NMMOUSE;
 		/// [`NM_MOUSE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setcursor-tree-view-)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_set_focus, co::NM::SETFOCUS,
+	pub_fn_nfy_noparm_noret! { nm_set_focus, co::NM::SETFOCUS;
 		/// [`NM_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setfocus-tree-view-)
 		/// notification.
 	}

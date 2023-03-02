@@ -19,42 +19,42 @@ impl ComboBoxEvents {
 		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	pub_fn_cmd_noparm_noret! { cbn_close_up, co::CBN::CLOSEUP,
+	pub_fn_cmd_noparm_noret! { cbn_close_up, co::CBN::CLOSEUP;
 		/// [`CBN_CLOSEUP`](https://learn.microsoft.com/en-us/windows/win32/controls/cbn-closeup)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { cbn_dbl_clk, co::CBN::DBLCLK,
+	pub_fn_cmd_noparm_noret! { cbn_dbl_clk, co::CBN::DBLCLK;
 		/// [`CBN_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/cbn-dblclk)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { cbn_drop_down, co::CBN::DROPDOWN,
+	pub_fn_cmd_noparm_noret! { cbn_drop_down, co::CBN::DROPDOWN;
 		/// [`CBN_DROPDOWN`](https://learn.microsoft.com/en-us/windows/win32/controls/cbn-dropdown)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { cbn_edit_change, co::CBN::EDITCHANGE,
+	pub_fn_cmd_noparm_noret! { cbn_edit_change, co::CBN::EDITCHANGE;
 		/// [`CBN_EDITCHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/cbn-editchange)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { cbn_edit_update, co::CBN::EDITUPDATE,
+	pub_fn_cmd_noparm_noret! { cbn_edit_update, co::CBN::EDITUPDATE;
 		/// [`CBN_EDITUPDATE`](https://learn.microsoft.com/en-us/windows/win32/controls/cbn-editupdate)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { cbn_err_space, co::CBN::ERRSPACE,
+	pub_fn_cmd_noparm_noret! { cbn_err_space, co::CBN::ERRSPACE;
 		/// [`CBN_ERRSPACE`](https://learn.microsoft.com/en-us/windows/win32/controls/cbn-errspace)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { cbn_kill_focus, co::CBN::KILLFOCUS,
+	pub_fn_cmd_noparm_noret! { cbn_kill_focus, co::CBN::KILLFOCUS;
 		/// [`CBN_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/cbn-killfocus)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { cbn_sel_change, co::CBN::SELCHANGE,
+	pub_fn_cmd_noparm_noret! { cbn_sel_change, co::CBN::SELCHANGE;
 		/// [`CBN_SELCHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/cbn-selchange)
 		/// command notification.
 		///
@@ -82,17 +82,17 @@ impl ComboBoxEvents {
 		/// ```
 	}
 
-	pub_fn_cmd_noparm_noret! { cbn_sel_end_cancel, co::CBN::SELENDCANCEL,
+	pub_fn_cmd_noparm_noret! { cbn_sel_end_cancel, co::CBN::SELENDCANCEL;
 		/// [`CBN_SELENDCANCEL`](https://learn.microsoft.com/en-us/windows/win32/controls/cbn-selendcancel)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { cbn_sel_end_ok, co::CBN::SELENDOK,
+	pub_fn_cmd_noparm_noret! { cbn_sel_end_ok, co::CBN::SELENDOK;
 		/// [`CBN_SELENDOK`](https://learn.microsoft.com/en-us/windows/win32/controls/cbn-selendok)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { cbn_set_focus, co::CBN::SETFOCUS,
+	pub_fn_cmd_noparm_noret! { cbn_set_focus, co::CBN::SETFOCUS;
 		/// [`CBN_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/cbn-setfocus)
 		/// command notification.
 	}

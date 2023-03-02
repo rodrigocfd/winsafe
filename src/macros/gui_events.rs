@@ -3,7 +3,7 @@
 /// Ordinary window message, no parameters, no meaningful return.
 macro_rules! fn_wm_noparm_noret {
 	(
-		$name:ident, $wmconst:expr,
+		$name:ident, $wmconst:expr;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -21,7 +21,7 @@ macro_rules! fn_wm_noparm_noret {
 /// Ordinary window message, no parameters, returns bool.
 macro_rules! fn_wm_noparm_boolret {
 	(
-		$name:ident, $wmconst:expr,
+		$name:ident, $wmconst:expr;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -37,7 +37,7 @@ macro_rules! fn_wm_noparm_boolret {
 /// Ordinary window message, with parameters, no meaningful return.
 macro_rules! fn_wm_withparm_noret {
 	(
-		$name:ident, $wmconst:expr, $parm:ty,
+		$name:ident, $wmconst:expr, $parm:ty;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -55,7 +55,7 @@ macro_rules! fn_wm_withparm_noret {
 /// Ordinary window message, with parameters, returns bool.
 macro_rules! fn_wm_withparm_boolret {
 	(
-		$name:ident, $wmconst:expr, $parm:ty,
+		$name:ident, $wmconst:expr, $parm:ty;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -71,7 +71,7 @@ macro_rules! fn_wm_withparm_boolret {
 /// Ordinary window message, with parameters, returns constant.
 macro_rules! fn_wm_withparm_coret {
 	(
-		$name:ident, $wmconst:expr, $parm:ty, $coret:ty,
+		$name:ident, $wmconst:expr, $parm:ty, $coret:ty;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -87,7 +87,7 @@ macro_rules! fn_wm_withparm_coret {
 /// WM_CTLCOLOR* message.
 macro_rules! fn_wm_ctlcolor {
 	(
-		$name:ident, $wmconst:expr, $parm:ty,
+		$name:ident, $wmconst:expr, $parm:ty;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -105,7 +105,7 @@ macro_rules! fn_wm_ctlcolor {
 /// WM_COMMAND message, no parameters, no meaningful return.
 macro_rules! pub_fn_cmd_noparm_noret {
 	(
-		$name:ident, $cmd:expr,
+		$name:ident, $cmd:expr;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -121,7 +121,7 @@ macro_rules! pub_fn_cmd_noparm_noret {
 /// WM_NOTIFY message, no parameters, no meaningful return.
 macro_rules! pub_fn_nfy_noparm_noret {
 	(
-		$name:ident, $nfy:expr,
+		$name:ident, $nfy:expr;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -139,7 +139,7 @@ macro_rules! pub_fn_nfy_noparm_noret {
 /// WM_NOTIFY message, with parameters, no meaningful return.
 macro_rules! pub_fn_nfy_withparm_noret {
 	(
-		$name:ident, $nfy:expr, $param:ty,
+		$name:ident, $nfy:expr, $param:ty;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -157,7 +157,7 @@ macro_rules! pub_fn_nfy_withparm_noret {
 /// WM_NOTIFY message, with mutable parameters, no meaningful return.
 macro_rules! pub_fn_nfy_withmutparm_noret {
 	(
-		$name:ident, $nfy:expr, $param:ty,
+		$name:ident, $nfy:expr, $param:ty;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -175,7 +175,7 @@ macro_rules! pub_fn_nfy_withmutparm_noret {
 /// WM_NOTIFY message, no parameters, returns bool.
 macro_rules! pub_fn_nfy_noparm_boolret {
 	(
-		$name:ident, $nfy:expr,
+		$name:ident, $nfy:expr;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -191,7 +191,7 @@ macro_rules! pub_fn_nfy_noparm_boolret {
 /// WM_NOTIFY message, with parameters, returns bool.
 macro_rules! pub_fn_nfy_withparm_boolret {
 	(
-		$name:ident, $nfy:expr, $param:ty,
+		$name:ident, $nfy:expr, $param:ty;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -207,7 +207,7 @@ macro_rules! pub_fn_nfy_withparm_boolret {
 /// WM_NOTIFY message, no parameters, returns i32.
 macro_rules! pub_fn_nfy_noparm_i32ret {
 	(
-		$name:ident, $nfy:expr,
+		$name:ident, $nfy:expr;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -223,7 +223,7 @@ macro_rules! pub_fn_nfy_noparm_i32ret {
 /// WM_NOTIFY message, with parameters, returns i32.
 macro_rules! pub_fn_nfy_withparm_i32ret {
 	(
-		$name:ident, $nfy:expr, $param:ty,
+		$name:ident, $nfy:expr, $param:ty;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*

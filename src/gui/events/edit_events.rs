@@ -19,17 +19,17 @@ impl EditEvents {
 		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	pub_fn_cmd_noparm_noret! { en_align_ltr_ec, co::EN::ALIGN_LTR_EC,
+	pub_fn_cmd_noparm_noret! { en_align_ltr_ec, co::EN::ALIGN_LTR_EC;
 		/// [`EN_ALIGN_LTR_EC`](https://learn.microsoft.com/en-us/windows/win32/controls/en-align-ltr-ec)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_align_rtl_ec, co::EN::ALIGN_RTL_EC,
+	pub_fn_cmd_noparm_noret! { en_align_rtl_ec, co::EN::ALIGN_RTL_EC;
 		/// [`EN_ALIGN_LTR_EC`](https://learn.microsoft.com/en-us/windows/win32/controls/en-align-rtl-ec)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_change, co::EN::CHANGE,
+	pub_fn_cmd_noparm_noret! { en_change, co::EN::CHANGE;
 		/// [`EN_CHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/en-change)
 		/// command notification.
 		///
@@ -55,37 +55,37 @@ impl EditEvents {
 		/// ```
 	}
 
-	pub_fn_cmd_noparm_noret! { en_err_space, co::EN::ERRSPACE,
+	pub_fn_cmd_noparm_noret! { en_err_space, co::EN::ERRSPACE;
 		/// [`EN_ERRSPACE`](https://learn.microsoft.com/en-us/windows/win32/controls/en-errspace)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_h_scroll, co::EN::HSCROLL,
+	pub_fn_cmd_noparm_noret! { en_h_scroll, co::EN::HSCROLL;
 		/// [`EN_HSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/en-hscroll)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_kill_focus, co::EN::KILLFOCUS,
+	pub_fn_cmd_noparm_noret! { en_kill_focus, co::EN::KILLFOCUS;
 		/// [`EN_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/en-killfocus)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_max_text, co::EN::MAXTEXT,
+	pub_fn_cmd_noparm_noret! { en_max_text, co::EN::MAXTEXT;
 		/// [`EN_MAXTEXT`](https://learn.microsoft.com/en-us/windows/win32/controls/en-maxtext)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_set_focus, co::EN::SETFOCUS,
+	pub_fn_cmd_noparm_noret! { en_set_focus, co::EN::SETFOCUS;
 		/// [`EN_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/en-setfocus)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_update, co::EN::UPDATE,
+	pub_fn_cmd_noparm_noret! { en_update, co::EN::UPDATE;
 		/// [`EN_UPDATE`](https://learn.microsoft.com/en-us/windows/win32/controls/en-update)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { en_v_scroll, co::EN::VSCROLL,
+	pub_fn_cmd_noparm_noret! { en_v_scroll, co::EN::VSCROLL;
 		/// [`EN_VSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/en-vscroll)
 		/// command notification.
 	}

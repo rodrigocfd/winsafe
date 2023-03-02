@@ -20,17 +20,17 @@ impl ButtonEvents {
 		Self(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	pub_fn_nfy_withparm_noret! { bcn_drop_down, co::BCN::DROPDOWN, NMBCDROPDOWN,
+	pub_fn_nfy_withparm_noret! { bcn_drop_down, co::BCN::DROPDOWN, NMBCDROPDOWN;
 		/// [`BCN_DROPDOWN`](https://learn.microsoft.com/en-us/windows/win32/controls/bcn-dropdown)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_noret! { bcn_hot_item_change, co::BCN::HOTITEMCHANGE, NMBCHOTITEM,
+	pub_fn_nfy_withparm_noret! { bcn_hot_item_change, co::BCN::HOTITEMCHANGE, NMBCHOTITEM;
 		/// [`BCN_HOTITEMCHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/bcn-hotitemchange)
 		/// notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { bn_clicked, co::BN::CLICKED,
+	pub_fn_cmd_noparm_noret! { bn_clicked, co::BN::CLICKED;
 		/// [`BN_CLICKED`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-clicked)
 		/// command notification.
 		///
@@ -54,17 +54,17 @@ impl ButtonEvents {
 		/// ```
 	}
 
-	pub_fn_cmd_noparm_noret! { bn_dbl_clk, co::BN::DBLCLK,
+	pub_fn_cmd_noparm_noret! { bn_dbl_clk, co::BN::DBLCLK;
 		/// [`BN_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-dblclk)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { bn_kill_focus, co::BN::KILLFOCUS,
+	pub_fn_cmd_noparm_noret! { bn_kill_focus, co::BN::KILLFOCUS;
 		/// [`BN_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
 		/// command notification.
 	}
 
-	pub_fn_cmd_noparm_noret! { bn_set_focus, co::BN::SETFOCUS,
+	pub_fn_cmd_noparm_noret! { bn_set_focus, co::BN::SETFOCUS;
 		/// [`BN_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
 		/// command notification.
 	}
