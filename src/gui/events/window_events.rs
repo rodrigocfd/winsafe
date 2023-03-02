@@ -26,10 +26,12 @@ pub(in crate::gui) enum ProcessResult {
 /// You cannot directly instantiate this object, it is created internally by the
 /// window.
 pub struct WindowEvents {
-	msgs: UnsafeCell<FuncStore< // ordinary WM messages
-		co::WM,
-		Box<dyn Fn(WndMsg) -> AnyResult<Option<isize>>>, // return value may be meaningful
-	>>,
+	msgs: UnsafeCell< // ordinary WM messages
+		FuncStore<
+			co::WM,
+			Box<dyn Fn(WndMsg) -> AnyResult<Option<isize>>>, // return value may be meaningful
+		>,
+	>,
 }
 
 impl WindowEvents {
@@ -76,8 +78,6 @@ impl WindowEvents {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 impl GuiEvents for WindowEvents {
 	fn wm<F>(&self, ident: co::WM, func: F)
 		where F: Fn(WndMsg) -> AnyResult<Option<isize>> + 'static,
@@ -86,8 +86,9 @@ impl GuiEvents for WindowEvents {
 	}
 }
 
-/// Exposes the basic window message methods of
-/// [`WindowEvents`](crate::gui::events::WindowEvents).
+//------------------------------------------------------------------------------
+
+/// Exposes methods to handle the basic window messages.
 pub trait GuiEvents {
 	/// Event to any [window message](crate::co::WM).
 	///
@@ -119,7 +120,7 @@ pub trait GuiEvents {
 	fn wm<F>(&self, ident: co::WM, func: F)
 		where F: Fn(WndMsg) -> AnyResult<Option<isize>> + 'static;
 
-	fn_wm_withparm_noret! { wm_activate, co::WM::ACTIVATE, wm::Activate;
+		fn_wm_withparm_noret! { wm_activate, co::WM::ACTIVATE, wm::Activate;
 		/// [`WM_ACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
 		/// message.
 		///

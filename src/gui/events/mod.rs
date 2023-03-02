@@ -37,5 +37,6 @@ pub use window_events::WindowEvents;
 pub(in crate::gui) use window_events::ProcessResult;
 
 pub(in crate::gui) mod traits {
+	pub use super::window_events_all::GuiEventsAll;
 	pub use super::window_events::GuiEvents;
 }

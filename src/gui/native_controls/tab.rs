@@ -15,7 +15,7 @@ use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
 use crate::kernel::decl::SysResult;
 use crate::msg::{tcm, wm};
 use crate::prelude::{
-	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
+	GuiChild, GuiChildFocus, GuiEvents, GuiEventsAll, GuiNativeControl,
 	GuiNativeControlEvents, GuiParent, GuiTab, GuiWindow, Handle, user_Hwnd,
 };
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};

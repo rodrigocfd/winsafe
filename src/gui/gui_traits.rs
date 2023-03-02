@@ -70,7 +70,8 @@ pub trait GuiWindowText: GuiWindow {
 
 /// Any window which can host child controls.
 pub trait GuiParent: GuiWindow {
-	/// Exposes the window events and control notifications.
+	/// Exposes methods to handle the basic window messages, plus timer and
+	/// native control notifications.
 	///
 	/// # Panics
 	///

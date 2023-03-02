@@ -5,6 +5,7 @@ use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::WindowEventsAll;
 use crate::kernel::decl::AnyResult;
+use crate::prelude::GuiEventsAll;
 
 /// Exposes button control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)

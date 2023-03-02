@@ -10,32 +10,30 @@ use crate::prelude::{GuiEvents, MsgSendRecv};
 
 /// Exposes window
 /// [messages](https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues),
-/// plus native control notifications.
+/// plus timer and native control notifications.
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// window.
 pub struct WindowEventsAll {
 	window_events: WindowEvents,
-	tmrs: UnsafeCell<FuncStore< // WM_TIMER messages
-		u32,
-		Box<dyn Fn() -> AnyResult<()>>, // return value is never meaningful
-	>>,
-	cmds: UnsafeCell<FuncStore< // WM_COMMAND notifications
-		(co::CMD, u16), // notif code, control ID
-		Box<dyn Fn() -> AnyResult<()>>, // return value is never meaningful
-	>>,
-	nfys: UnsafeCell<FuncStore< // WM_NOTIFY notifications
-		(u16, co::NM), // idFrom, code
-		Box<dyn Fn(wm::Notify) -> AnyResult<Option<isize>>>, // return value may be meaningful
-	>>,
-}
-
-impl GuiEvents for WindowEventsAll {
-	fn wm<F>(&self, ident: co::WM, func: F)
-		where F: Fn(WndMsg) -> AnyResult<Option<isize>> + 'static,
-	{
-		self.window_events.wm(ident, func);
-	}
+	tmrs: UnsafeCell<
+		FuncStore< // WM_TIMER messages
+			u32,
+			Box<dyn Fn() -> AnyResult<()>>, // return value is never meaningful
+		>,
+	>,
+	cmds: UnsafeCell<
+		FuncStore< // WM_COMMAND notifications
+			(co::CMD, u16), // notif code, control ID
+			Box<dyn Fn() -> AnyResult<()>>, // return value is never meaningful
+		>,
+	>,
+	nfys: UnsafeCell<
+		FuncStore< // WM_NOTIFY notifications
+			(u16, co::NM), // idFrom, code
+			Box<dyn Fn(wm::Notify) -> AnyResult<Option<isize>>>, // return value may be meaningful
+		>,
+	>,
 }
 
 impl WindowEventsAll {
@@ -137,14 +135,47 @@ impl WindowEventsAll {
 			_ => self.window_events.process_all_messages(wm_any)?,
 		})
 	}
+}
 
-	/// [`WM_TIMER`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
-	/// message, narrowed to a specific timer ID.
-	pub fn wm_timer<F>(&self, timer_id: u32, func: F)
+impl GuiEvents for WindowEventsAll {
+	fn wm<F>(&self, ident: co::WM, func: F)
+		where F: Fn(WndMsg) -> AnyResult<Option<isize>> + 'static,
+	{
+		self.window_events.wm(ident, func);
+	}
+}
+
+impl GuiEventsAll for WindowEventsAll {
+	fn wm_timer<F>(&self, timer_id: u32, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
 		unsafe { &mut *self.tmrs.get() }.push(timer_id, Box::new(func));
 	}
+
+	fn wm_command<F>(&self, code: impl Into<co::CMD>, ctrl_id: u16, func: F)
+		where F: Fn() -> AnyResult<()> + 'static,
+	{
+		let code: co::CMD = code.into();
+		unsafe { &mut *self.cmds.get() }.push((code, ctrl_id), Box::new(func));
+	}
+
+	fn wm_notify<F>(&self, id_from: u16, code: impl Into<co::NM>, func: F)
+		where F: Fn(wm::Notify) -> AnyResult<Option<isize>> + 'static,
+	{
+		let code: co::NM = code.into();
+		unsafe { &mut *self.nfys.get() }.push((id_from, code), Box::new(func));
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// Exposes methods to handle the basic window messages, plus timer and native
+/// control notifications.
+pub trait GuiEventsAll: GuiEvents {
+	/// [`WM_TIMER`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
+	/// message, narrowed to a specific timer ID.
+	fn wm_timer<F>(&self, timer_id: u32, func: F)
+		where F: Fn() -> AnyResult<()> + 'static;
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
 	/// message, for specific code and control ID.
@@ -174,12 +205,8 @@ impl WindowEventsAll {
 	///     },
 	/// );
 	/// ```
-	pub fn wm_command<F>(&self, code: impl Into<co::CMD>, ctrl_id: u16, func: F)
-		where F: Fn() -> AnyResult<()> + 'static,
-	{
-		let code: co::CMD = code.into();
-		unsafe { &mut *self.cmds.get() }.push((code, ctrl_id), Box::new(func));
-	}
+	fn wm_command<F>(&self, code: impl Into<co::CMD>, ctrl_id: u16, func: F)
+		where F: Fn() -> AnyResult<()> + 'static;
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
 	/// message, handling both `CMD::Accelerator` and `CMD::Menu`, for a
@@ -187,7 +214,7 @@ impl WindowEventsAll {
 	///
 	/// Ideal to be used with menu commands whose IDs are shared with
 	/// accelerators.
-	pub fn wm_command_accel_menu<F>(&self, ctrl_id: u16, func: F)
+	fn wm_command_accel_menu<F>(&self, ctrl_id: u16, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
 		let shared_func = Rc::new(func);
@@ -210,10 +237,6 @@ impl WindowEventsAll {
 	/// specific notifications, which will give you the correct notification
 	/// struct. This generic method should be used only when you have a custom,
 	/// non-standard window notification.
-	pub fn wm_notify<F>(&self, id_from: u16, code: impl Into<co::NM>, func: F)
-		where F: Fn(wm::Notify) -> AnyResult<Option<isize>> + 'static,
-	{
-		let code: co::NM = code.into();
-		unsafe { &mut *self.nfys.get() }.push((id_from, code), Box::new(func));
-	}
+	fn wm_notify<F>(&self, id_from: u16, code: impl Into<co::NM>, func: F)
+		where F: Fn(wm::Notify) -> AnyResult<Option<isize>> + 'static;
 }
