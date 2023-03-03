@@ -34,7 +34,7 @@ Plus, below are the numbers of native FFI items implemented:
 
 | Native FFI item | Count |
 | - | - |
-| Functions | 586 |
+| Functions | 591 |
 | Structs | 167 |
 | Constants | 11,990 |
 | Window messages | 648 |

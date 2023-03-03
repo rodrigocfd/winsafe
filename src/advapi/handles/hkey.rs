@@ -84,12 +84,12 @@ pub trait advapi_Hkey: Handle {
 
 	/// [`RegCopyTree`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcopytreew)
 	/// method.
-	fn RegCopyTree(&self, sub_key: &str, dest: &HKEY) -> SysResult<()> {
+	fn RegCopyTree(&self, sub_key: Option<&str>, dest: &HKEY) -> SysResult<()> {
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegCopyTreeW(
 					self.as_ptr(),
-					WString::from_str(sub_key).as_ptr(),
+					WString::from_opt_str(sub_key).as_ptr(),
 					dest.as_ptr(),
 				)
 			} as _,
@@ -182,12 +182,12 @@ pub trait advapi_Hkey: Handle {
 
 	/// [`RegDeleteTree`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletetreew)
 	/// method.
-	fn RegDeleteTree(&self, sub_key: &str) -> SysResult<()> {
+	fn RegDeleteTree(&self, sub_key: Option<&str>) -> SysResult<()> {
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegDeleteTreeW(
 					self.as_ptr(),
-					WString::from_str(sub_key).as_ptr(),
+					WString::from_opt_str(sub_key).as_ptr(),
 				)
 			} as _,
 		) {
@@ -198,14 +198,58 @@ pub trait advapi_Hkey: Handle {
 
 	/// [`RegDeleteValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletevaluew)
 	/// method.
-	fn RegDeleteValue(&self, value_name: &str) -> SysResult<()> {
+	fn RegDeleteValue(&self, value_name: Option<&str>) -> SysResult<()> {
 		match co::ERROR(
 			unsafe {
 				advapi::ffi::RegDeleteValueW(
 					self.as_ptr(),
-					WString::from_str(value_name).as_ptr(),
+					WString::from_opt_str(value_name).as_ptr(),
 				)
 			} as _,
+		) {
+			co::ERROR::SUCCESS => Ok(()),
+			err => Err(err),
+		}
+	}
+
+	/// [`RegDisablePredefinedCache`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcache)
+	/// static method.
+	fn RegDisablePredefinedCache() -> SysResult<()> {
+		match co::ERROR(
+			unsafe { advapi::ffi::RegDisablePredefinedCache() } as _,
+		) {
+			co::ERROR::SUCCESS => Ok(()),
+			err => Err(err),
+		}
+	}
+
+	/// [`RegDisablePredefinedCacheEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcacheex)
+	/// static method.
+	fn RegDisablePredefinedCacheEx() -> SysResult<()> {
+		match co::ERROR(
+			unsafe { advapi::ffi::RegDisablePredefinedCacheEx() } as _,
+		) {
+			co::ERROR::SUCCESS => Ok(()),
+			err => Err(err),
+		}
+	}
+
+	/// [`RegDisableReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablereflectionkey)
+	/// method.
+	fn RegDisableReflectionKey(&self) -> SysResult<()> {
+		match co::ERROR(
+			unsafe { advapi::ffi::RegDisableReflectionKey(self.as_ptr()) } as _,
+		) {
+			co::ERROR::SUCCESS => Ok(()),
+			err => Err(err),
+		}
+	}
+
+	/// [`RegEnableReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenablereflectionkey)
+	/// method.
+	fn RegEnableReflectionKey(&self) -> SysResult<()> {
+		match co::ERROR(
+			unsafe { advapi::ffi::RegEnableReflectionKey(self.as_ptr()) } as _,
 		) {
 			co::ERROR::SUCCESS => Ok(()),
 			err => Err(err),
@@ -223,7 +267,7 @@ pub trait advapi_Hkey: Handle {
 	/// use winsafe::{co, HKEY};
 	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     "Control Panel",
+	///     Some("Control Panel"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
@@ -250,7 +294,7 @@ pub trait advapi_Hkey: Handle {
 	/// use winsafe::{co, HKEY, SysResult};
 	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     "Control Panel\\Appearance",
+	///     Some("Control Panel\\Appearance"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
@@ -387,7 +431,7 @@ pub trait advapi_Hkey: Handle {
 	/// use winsafe::{co, HKEY};
 	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     "Control Panel\\Mouse",
+	///     Some("Control Panel\\Mouse"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
@@ -395,7 +439,7 @@ pub trait advapi_Hkey: Handle {
 	/// ```
 	#[must_use]
 	fn RegOpenKeyEx(&self,
-		sub_key: &str,
+		sub_key: Option<&str>,
 		options: co::REG_OPTION,
 		access_rights: co::KEY) -> SysResult<RegCloseKeyGuard>
 	{
@@ -404,7 +448,7 @@ pub trait advapi_Hkey: Handle {
 			unsafe {
 				advapi::ffi::RegOpenKeyExW(
 					self.as_ptr(),
-					WString::from_str(sub_key).as_ptr(),
+					WString::from_opt_str(sub_key).as_ptr(),
 					options.0,
 					access_rights.0,
 					&mut hkey.0,
@@ -499,7 +543,7 @@ pub trait advapi_Hkey: Handle {
 	/// use winsafe::{co, HKEY, RegistryValue};
 	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     "Control Panel\\Desktop",
+	///     Some("Control Panel\\Desktop"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
@@ -622,12 +666,12 @@ pub trait advapi_Hkey: Handle {
 	/// use winsafe::{co, HKEY, RegistryValue};
 	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     "Control Panel\\Mouse",
+	///     Some("Control Panel\\Mouse"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
 	///
-	/// let val = hkey.RegQueryValueEx("Beep")?;
+	/// let val = hkey.RegQueryValueEx(Some("Beep"))?;
 	///
 	/// match val {
 	///     RegistryValue::Dword(n) => println!("Number u32: {}", n),
@@ -652,8 +696,8 @@ pub trait advapi_Hkey: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn RegQueryValueEx(&self, value_name: &str) -> SysResult<RegistryValue> {
-		let value_name_w = WString::from_str(value_name);
+	fn RegQueryValueEx(&self, value_name: Option<&str>) -> SysResult<RegistryValue> {
+		let value_name_w = WString::from_opt_str(value_name);
 		let mut raw_data_type1 = u32::default();
 		let mut data_len1 = u32::default();
 
@@ -702,7 +746,7 @@ pub trait advapi_Hkey: Handle {
 			co::REG(raw_data_type2), data_len2, buf)
 	}
 
-	/// [`RegSetKeyValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw)
+	/// [`RegSetKeyValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetkeyvaluew)
 	/// method.
 	///
 	/// If the value doesn't exist, if will be created. If new type is different
@@ -715,14 +759,16 @@ pub trait advapi_Hkey: Handle {
 	/// use winsafe::{HKEY, RegistryValue, WString};
 	///
 	/// HKEY::CURRENT_USER.RegSetKeyValue(
-	///     "Software\\My Company",
-	///     "Color",
+	///     Some("Software\\My Company"),
+	///     Some("Color"),
 	///     RegistryValue::Sz("blue".to_owned()),
 	/// )?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	fn RegSetKeyValue(&self,
-		sub_key: &str, value_name: &str, data: RegistryValue) -> SysResult<()>
+		sub_key: Option<&str>,
+		value_name: Option<&str>,
+		data: RegistryValue) -> SysResult<()>
 	{
 		let mut str_buf = WString::default();
 		let (data_ptr, data_len) = data.as_ptr_with_len(&mut str_buf);
@@ -731,8 +777,8 @@ pub trait advapi_Hkey: Handle {
 			unsafe {
 				advapi::ffi::RegSetKeyValueW(
 					self.as_ptr(),
-					WString::from_str(sub_key).as_ptr(),
-					WString::from_str(value_name).as_ptr(),
+					WString::from_opt_str(sub_key).as_ptr(),
+					WString::from_opt_str(value_name).as_ptr(),
 					data.reg_type().0,
 					data_ptr,
 					data_len,
@@ -757,19 +803,19 @@ pub trait advapi_Hkey: Handle {
 	/// use winsafe::{co, HKEY, RegistryValue, WString};
 	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     "Console\\Git Bash",
+	///     Some("Console\\Git Bash"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::ALL_ACCESS,
 	/// )?;
 	///
 	/// hkey.RegSetValueEx(
-	///     "Color",
+	///     Some("Color"),
 	///     RegistryValue::Sz("blue".to_owned()),
 	/// )?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	fn RegSetValueEx(&self,
-		value_name: &str, data: RegistryValue) -> SysResult<()>
+		value_name: Option<&str>, data: RegistryValue) -> SysResult<()>
 	{
 		let mut str_buf = WString::default();
 		let (data_ptr, data_len) = data.as_ptr_with_len(&mut str_buf);
@@ -778,11 +824,27 @@ pub trait advapi_Hkey: Handle {
 			unsafe {
 				advapi::ffi::RegSetValueExW(
 					self.as_ptr(),
-					WString::from_str(value_name).as_ptr(),
+					WString::from_opt_str(value_name).as_ptr(),
 					0,
 					data.reg_type().0,
 					data_ptr as _,
 					data_len,
+				)
+			} as _,
+		) {
+			co::ERROR::SUCCESS => Ok(()),
+			err => Err(err),
+		}
+	}
+
+	/// [`RegUnLoadKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regunloadkeyw)
+	/// method.
+	fn RegUnLoadKey(&self, sub_key: Option<&str>) -> SysResult<()> {
+		match co::ERROR(
+			unsafe {
+				advapi::ffi::RegUnLoadKeyW(
+					self.as_ptr(),
+					WString::from_opt_str(sub_key).as_ptr(),
 				)
 			} as _,
 		) {

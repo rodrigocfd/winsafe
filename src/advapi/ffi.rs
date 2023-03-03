@@ -15,6 +15,10 @@ extern_sys! { "advapi32";
 	RegDeleteKeyW(HANDLE, PCSTR) -> i32
 	RegDeleteTreeW(HANDLE, PCSTR) -> i32
 	RegDeleteValueW(HANDLE, PCSTR) -> i32
+	RegDisablePredefinedCache() -> i32
+	RegDisablePredefinedCacheEx() -> i32
+	RegDisableReflectionKey(HANDLE) -> i32
+	RegEnableReflectionKey(HANDLE) -> i32
 	RegEnumKeyExW(HANDLE, u32, PSTR, *mut u32, *mut u32, PSTR, *mut u32, PVOID) -> i32
 	RegEnumValueW(HANDLE, u32, PSTR, *mut u32, *mut u32, *mut u32, *mut u8, *mut u32) -> i32
 	RegFlushKey(HANDLE) -> i32
@@ -25,4 +29,5 @@ extern_sys! { "advapi32";
 	RegQueryValueExW(HANDLE, PCSTR, *mut u32, *mut u32, *mut u8, *mut u32) -> i32
 	RegSetKeyValueW(HANDLE, PCSTR, PCSTR, u32, PCVOID, u32) -> i32
 	RegSetValueExW(HANDLE, PCSTR, u32, u32, *const u8, u32) -> i32
+	RegUnLoadKeyW(HANDLE, PCSTR) -> i32
 }
