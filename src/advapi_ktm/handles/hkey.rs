@@ -4,6 +4,7 @@ use crate::{advapi_ktm, co};
 use crate::advapi::decl::HKEY;
 use crate::advapi::guard::RegCloseKeyGuard;
 use crate::kernel::decl::{SECURITY_ATTRIBUTES, SysResult, WString};
+use crate::kernel::privs::error_to_sysresult;
 use crate::ktm::decl::HTRANSACTION;
 use crate::prelude::Handle;
 
@@ -32,7 +33,7 @@ pub trait advapi_ktm_Hkey: Handle {
 		let mut hkey = HKEY::NULL;
 		let mut disposition = co::REG_DISPOSITION::NoValue;
 
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi_ktm::ffi::RegCreateKeyTransactedW(
 					self.as_ptr(),
@@ -47,11 +48,29 @@ pub trait advapi_ktm_Hkey: Handle {
 					htransaction.as_ptr(),
 					std::ptr::null_mut(),
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => Ok((RegCloseKeyGuard::new(hkey), disposition)),
-			err => Err(err),
-		}
+			},
+		).map(|_| (RegCloseKeyGuard::new(hkey), disposition))
+	}
+
+	/// [`RegDeleteKeyTransacted`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletekeytransactedw)
+	/// method.
+	fn RegDeleteKeyTransacted(&self,
+		sub_key: &str,
+		access_rights: co::KEY,
+		htransaction: &HTRANSACTION) -> SysResult<()>
+	{
+		error_to_sysresult(
+			unsafe {
+				advapi_ktm::ffi::RegDeleteKeyTransactedW(
+					self.as_ptr(),
+					WString::from_str(sub_key).as_ptr(),
+					access_rights.0,
+					0,
+					htransaction.as_ptr(),
+					std::ptr::null_mut(),
+				)
+			},
+		)
 	}
 
 	/// [`RegOpenKeyTransacted`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeytransactedw)
@@ -64,7 +83,7 @@ pub trait advapi_ktm_Hkey: Handle {
 		htransaction: &HTRANSACTION) -> SysResult<RegCloseKeyGuard>
 	{
 		let mut hkey = HKEY::NULL;
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi_ktm::ffi::RegOpenKeyTransactedW(
 					self.as_ptr(),
@@ -75,10 +94,7 @@ pub trait advapi_ktm_Hkey: Handle {
 					htransaction.as_ptr(),
 					std::ptr::null_mut(),
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => Ok(RegCloseKeyGuard::new(hkey)),
-			err => Err(err),
-		}
+			},
+		).map(|_| RegCloseKeyGuard::new(hkey))
 	}
 }

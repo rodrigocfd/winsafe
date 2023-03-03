@@ -72,6 +72,31 @@ const_bitflag! { REG_OPTION: u32;
 	OPEN_LINK 0x0000_0008
 }
 
+const_ordinary! { REG_RESTORE: u32;
+	/// Registry restore
+	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regrestorekeyw)
+	/// (`u32`).
+	///
+	/// Originally has `REG` prefix.
+	=>
+	=>
+	FORCE_RESTORE 0x0000_0008
+	WHOLE_HIVE_VOLATILE 0x0000_0001
+}
+
+const_ordinary! { REG_SAVE: u32;
+	/// Registry save
+	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsavekeyexw)
+	/// (`u32`).
+	///
+	/// Originally has `REG` prefix.
+	=>
+	=>
+	STANDARD_FORMAT 1
+	LATEST_FORMAT 2
+	NO_COMPRESSION 4
+}
+
 const_bitflag! { RRF: u32;
 	/// [`HKEY::GetValue`](crate::prelude::advapi_Hkey::RegGetValue) `dwFlags`
 	/// (`u32`).

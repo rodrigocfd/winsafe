@@ -1,5 +1,6 @@
-#![allow(non_snake_case)]
+#![allow(dead_code, non_snake_case)]
 
+use crate::co::ERROR;
 use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::ffi_types::{BOOL, HANDLE};
 
@@ -38,6 +39,14 @@ pub(crate) fn ptr_to_sysresult<U, F>(ptr: HANDLE, op: F) -> SysResult<U>
 		Err(GetLastError())
 	} else {
 		Ok(op(ptr))
+	}
+}
+
+/// If value is `ERROR::SUCCESS`, yields `Ok(())`, otherwise `Err(err)`.
+pub(crate) const fn error_to_sysresult(lstatus: i32) -> SysResult<()> {
+	match ERROR(lstatus as _) {
+		ERROR::SUCCESS => Ok(()),
+		err => Err(err),
 	}
 }
 

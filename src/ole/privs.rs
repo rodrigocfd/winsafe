@@ -1,5 +1,3 @@
-#![allow(dead_code)]
-
 use crate::co;
 use crate::kernel::ffi_types::HRES;
 use crate::ole::decl::HrResult;

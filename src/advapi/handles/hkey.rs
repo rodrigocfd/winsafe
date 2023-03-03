@@ -3,8 +3,9 @@
 use crate::{advapi, co};
 use crate::advapi::decl::{RegistryValue, VALENT};
 use crate::advapi::guard::RegCloseKeyGuard;
-use crate::advapi::privs::error_to_sysresult;
 use crate::kernel::decl::{FILETIME, SECURITY_ATTRIBUTES, SysResult, WString};
+use crate::kernel::ffi_types::BOOL;
+use crate::kernel::privs::error_to_sysresult;
 use crate::prelude::Handle;
 
 impl_handle! { HKEY;
@@ -375,6 +376,39 @@ pub trait advapi_Hkey: Handle {
 			co::REG(raw_data_type2), data_len2, buf)
 	}
 
+	/// [`RegLoadKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regloadkeyw)
+	/// method.
+	fn RegLoadKey(&self,
+		sub_key: Option<&str>, file_path: &str) -> SysResult<()>
+	{
+		error_to_sysresult(
+			unsafe {
+				advapi::ffi::RegLoadKeyW(
+					self.as_ptr(),
+					WString::from_opt_str(sub_key).as_ptr(),
+					WString::from_str(file_path).as_ptr(),
+				)
+			},
+		)
+	}
+
+	/// [`RegOpenCurrentUser`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopencurrentuser)
+	/// static method.
+	#[must_use]
+	fn RegOpenCurrentUser(
+		access_rights: co::KEY) -> SysResult<RegCloseKeyGuard>
+	{
+		let mut hkey = HKEY::NULL;
+		error_to_sysresult(
+			unsafe {
+				advapi::ffi::RegOpenCurrentUser(
+					access_rights.0,
+					&mut hkey.0,
+				)
+			},
+		).map(|_| RegCloseKeyGuard::new(hkey))
+	}
+
 	/// [`RegOpenKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw)
 	/// method.
 	///
@@ -597,6 +631,18 @@ pub trait advapi_Hkey: Handle {
 		)
 	}
 
+	/// [`RegQueryReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryreflectionkey)
+	/// method.
+	#[must_use]
+	fn RegQueryReflectionKey(&self) -> SysResult<bool> {
+		let mut is_disabled: BOOL = 0;
+		error_to_sysresult(
+			unsafe {
+				advapi::ffi::RegQueryReflectionKey(self.as_ptr(), &mut is_disabled)
+			},
+		).map(|_| is_disabled != 0)
+	}
+
 	/// [`RegQueryValueEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryvalueexw)
 	/// method.
 	///
@@ -686,6 +732,93 @@ pub trait advapi_Hkey: Handle {
 		validate_retrieved_reg_val(
 			co::REG(raw_data_type1), data_len1,
 			co::REG(raw_data_type2), data_len2, buf)
+	}
+
+	/// [`RegRenameKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regrenamekey)
+	/// method.
+	fn RegRenameKey(&self,
+		sub_key_name: &str, new_key_name: &str) -> SysResult<()>
+	{
+		error_to_sysresult(
+			unsafe {
+				advapi::ffi::RegRenameKey(
+					self.as_ptr(),
+					WString::from_str(sub_key_name).as_ptr(),
+					WString::from_str(new_key_name).as_ptr(),
+				)
+			},
+		)
+	}
+
+	/// [`RegReplaceKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regreplacekeyw)
+	/// method.
+	fn RegReplaceKey(&self,
+		sub_key: Option<&str>,
+		new_src_file: &str,
+		old_file_backup: &str) -> SysResult<()>
+	{
+		error_to_sysresult(
+			unsafe {
+				advapi::ffi::RegReplaceKeyW(
+					self.as_ptr(),
+					WString::from_opt_str(sub_key).as_ptr(),
+					WString::from_str(new_src_file).as_ptr(),
+					WString::from_str(old_file_backup).as_ptr(),
+				)
+			},
+		)
+	}
+
+	/// [`RegRestoreKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regrestorekeyw)
+	/// method.
+	fn RegRestoreKey(&self,
+		file_path: &str, flags: co::REG_RESTORE) -> SysResult<()>
+	{
+		error_to_sysresult(
+			unsafe {
+				advapi::ffi::RegRestoreKeyW(
+					self.as_ptr(),
+					WString::from_str(file_path).as_ptr(),
+					flags.0,
+				)
+			},
+		)
+	}
+
+	/// [`RegSaveKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsavekeyw)
+	/// method.
+	fn RegSaveKey(&self,
+		dest_file_path: &str,
+		security_attributes: Option<&SECURITY_ATTRIBUTES>) -> SysResult<()>
+	{
+		error_to_sysresult(
+			unsafe {
+				advapi::ffi::RegSaveKeyW(
+					self.as_ptr(),
+					WString::from_str(dest_file_path).as_ptr(),
+					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+				)
+			},
+		)
+	}
+
+	/// [`RegSaveKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsavekeyexw)
+	/// method.
+	fn RegSaveKeyEx(&self,
+		dest_file_path: &str,
+		security_attributes: Option<&SECURITY_ATTRIBUTES>,
+		flags: co::REG_SAVE) -> SysResult<()>
+	{
+		error_to_sysresult(
+			unsafe {
+				advapi::ffi::RegSaveKeyExW(
+					self.as_ptr(),
+					WString::from_str(dest_file_path).as_ptr(),
+					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+					flags.0,
+				)
+			},
+		)
 	}
 
 	/// [`RegSetKeyValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetkeyvaluew)
