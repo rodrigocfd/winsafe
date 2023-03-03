@@ -3,7 +3,7 @@
 use crate::{advapi, co};
 use crate::advapi::decl::RegistryValue;
 use crate::advapi::guard::RegCloseKeyGuard;
-use crate::advapi::privs::VALENT;
+use crate::advapi::privs::{error_to_sysresult, VALENT};
 use crate::kernel::decl::{FILETIME, SECURITY_ATTRIBUTES, SysResult, WString};
 use crate::prelude::Handle;
 
@@ -68,35 +68,29 @@ pub trait advapi_Hkey: Handle {
 		}
 
 		let mut hkey = HKEY::NULL;
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegConnectRegistryW(
 					WString::from_opt_str(machine_name).as_ptr(),
 					predef_hkey.as_ptr(),
 					&mut hkey.0,
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => Ok(RegCloseKeyGuard::new(hkey)),
-			err => Err(err),
-		}
+			},
+		).map(|_| RegCloseKeyGuard::new(hkey))
 	}
 
 	/// [`RegCopyTree`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcopytreew)
 	/// method.
 	fn RegCopyTree(&self, sub_key: Option<&str>, dest: &HKEY) -> SysResult<()> {
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegCopyTreeW(
 					self.as_ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					dest.as_ptr(),
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => Ok(()),
-			err => Err(err),
-		}
+			},
+		)
 	}
 
 	/// [`RegCreateKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcreatekeyexw)
@@ -112,7 +106,7 @@ pub trait advapi_Hkey: Handle {
 		let mut hkey = HKEY::NULL;
 		let mut disposition = co::REG_DISPOSITION::NoValue;
 
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegCreateKeyExW(
 					self.as_ptr(),
@@ -125,27 +119,21 @@ pub trait advapi_Hkey: Handle {
 					&mut hkey.0,
 					&mut disposition.0,
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => Ok((RegCloseKeyGuard::new(hkey), disposition)),
-			err => Err(err),
-		}
+			},
+		).map(|_| (RegCloseKeyGuard::new(hkey), disposition))
 	}
 
 	/// [`RegDeleteKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletekeyw)
 	/// method.
 	fn RegDeleteKey(&self, sub_key: &str) -> SysResult<()> {
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegDeleteKeyW(
 					self.as_ptr(),
 					WString::from_str(sub_key).as_ptr(),
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => Ok(()),
-			err => Err(err),
-		}
+			},
+		)
 	}
 
 	/// [`RegDeleteKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletekeyexw)
@@ -165,7 +153,7 @@ pub trait advapi_Hkey: Handle {
 			panic!("Platform view must be co::KEY::WOW64_32KEY or co::KEY::WOW64_64KEY");
 		}
 
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegDeleteKeyExW(
 					self.as_ptr(),
@@ -173,87 +161,62 @@ pub trait advapi_Hkey: Handle {
 					platform_view.0,
 					0,
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => Ok(()),
-			err => Err(err),
-		}
+			},
+		)
 	}
 
 	/// [`RegDeleteTree`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletetreew)
 	/// method.
 	fn RegDeleteTree(&self, sub_key: Option<&str>) -> SysResult<()> {
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegDeleteTreeW(
 					self.as_ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => Ok(()),
-			err => Err(err),
-		}
+			},
+		)
 	}
 
 	/// [`RegDeleteValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletevaluew)
 	/// method.
 	fn RegDeleteValue(&self, value_name: Option<&str>) -> SysResult<()> {
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegDeleteValueW(
 					self.as_ptr(),
 					WString::from_opt_str(value_name).as_ptr(),
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => Ok(()),
-			err => Err(err),
-		}
+			},
+		)
 	}
 
 	/// [`RegDisablePredefinedCache`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcache)
 	/// static method.
 	fn RegDisablePredefinedCache() -> SysResult<()> {
-		match co::ERROR(
-			unsafe { advapi::ffi::RegDisablePredefinedCache() } as _,
-		) {
-			co::ERROR::SUCCESS => Ok(()),
-			err => Err(err),
-		}
+		error_to_sysresult(unsafe { advapi::ffi::RegDisablePredefinedCache() })
 	}
 
 	/// [`RegDisablePredefinedCacheEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcacheex)
 	/// static method.
 	fn RegDisablePredefinedCacheEx() -> SysResult<()> {
-		match co::ERROR(
-			unsafe { advapi::ffi::RegDisablePredefinedCacheEx() } as _,
-		) {
-			co::ERROR::SUCCESS => Ok(()),
-			err => Err(err),
-		}
+		error_to_sysresult(unsafe { advapi::ffi::RegDisablePredefinedCacheEx() })
 	}
 
 	/// [`RegDisableReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablereflectionkey)
 	/// method.
 	fn RegDisableReflectionKey(&self) -> SysResult<()> {
-		match co::ERROR(
-			unsafe { advapi::ffi::RegDisableReflectionKey(self.as_ptr()) } as _,
-		) {
-			co::ERROR::SUCCESS => Ok(()),
-			err => Err(err),
-		}
+		error_to_sysresult(
+			unsafe { advapi::ffi::RegDisableReflectionKey(self.as_ptr()) },
+		)
 	}
 
 	/// [`RegEnableReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenablereflectionkey)
 	/// method.
 	fn RegEnableReflectionKey(&self) -> SysResult<()> {
-		match co::ERROR(
-			unsafe { advapi::ffi::RegEnableReflectionKey(self.as_ptr()) } as _,
-		) {
-			co::ERROR::SUCCESS => Ok(()),
-			err => Err(err),
-		}
+		error_to_sysresult(
+			unsafe { advapi::ffi::RegEnableReflectionKey(self.as_ptr()) },
+		)
 	}
 
 	/// Returns an iterator over the names of the keys, which calls
@@ -318,10 +281,7 @@ pub trait advapi_Hkey: Handle {
 	/// [`RegFlushKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regflushkey)
 	/// method.
 	fn RegFlushKey(&self) -> SysResult<()> {
-		match co::ERROR(unsafe { advapi::ffi::RegFlushKey(self.as_ptr()) } as _) {
-			co::ERROR::SUCCESS => Ok(()),
-			err => Err(err),
-		}
+		error_to_sysresult(unsafe { advapi::ffi::RegFlushKey(self.as_ptr()) })
 	}
 
 	/// [`RegGetValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
@@ -375,7 +335,7 @@ pub trait advapi_Hkey: Handle {
 		let mut data_len1 = u32::default();
 
 		// Query data type and length.
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegGetValueW(
 					self.as_ptr(),
@@ -386,11 +346,8 @@ pub trait advapi_Hkey: Handle {
 					std::ptr::null_mut(),
 					&mut data_len1,
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => {},
-			err => return Err(err),
-		}
+			},
+		)?;
 
 		// Alloc the receiving block.
 		let mut buf: Vec<u8> = vec![0x00; data_len1 as _];
@@ -399,7 +356,7 @@ pub trait advapi_Hkey: Handle {
 		let mut data_len2 = data_len1;
 
 		// Retrieve the value content.
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegGetValueW(
 					self.as_ptr(),
@@ -410,11 +367,8 @@ pub trait advapi_Hkey: Handle {
 					buf.as_mut_ptr() as _,
 					&mut data_len2,
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => {},
-			err => return Err(err),
-		}
+			},
+		)?;
 
 		validate_retrieved_reg_val(
 			co::REG(raw_data_type1), data_len1,
@@ -444,7 +398,7 @@ pub trait advapi_Hkey: Handle {
 		access_rights: co::KEY) -> SysResult<RegCloseKeyGuard>
 	{
 		let mut hkey = HKEY::NULL;
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegOpenKeyExW(
 					self.as_ptr(),
@@ -453,11 +407,8 @@ pub trait advapi_Hkey: Handle {
 					access_rights.0,
 					&mut hkey.0,
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => Ok(RegCloseKeyGuard::new(hkey)),
-			err => Err(err),
-		}
+			},
+		).map(|_| RegCloseKeyGuard::new(hkey))
 	}
 
 	/// [`RegQueryInfoKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw)
@@ -617,7 +568,7 @@ pub trait advapi_Hkey: Handle {
 		let mut data_len2 = data_len1;
 
 		// Retrieve the values content.
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegQueryMultipleValuesW(
 					self.as_ptr(),
@@ -626,11 +577,8 @@ pub trait advapi_Hkey: Handle {
 					buf.as_mut_ptr() as _,
 					&mut data_len2,
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => {},
-			err => return Err(err),
-		}
+			},
+		)?;
 
 		if data_len1 != data_len2 {
 			// Race condition: someone modified the data content in between our calls.
@@ -702,7 +650,7 @@ pub trait advapi_Hkey: Handle {
 		let mut data_len1 = u32::default();
 
 		// Query data type and length.
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegQueryValueExW(
 					self.as_ptr(),
@@ -712,11 +660,8 @@ pub trait advapi_Hkey: Handle {
 					std::ptr::null_mut(),
 					&mut data_len1,
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => {},
-			err => return Err(err),
-		}
+			},
+		)?;
 
 		// Alloc the receiving block.
 		let mut buf: Vec<u8> = vec![0x00; data_len1 as _];
@@ -725,7 +670,7 @@ pub trait advapi_Hkey: Handle {
 		let mut data_len2 = data_len1;
 
 		// Retrieve the value content.
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegQueryValueExW(
 					self.as_ptr(),
@@ -735,11 +680,8 @@ pub trait advapi_Hkey: Handle {
 					buf.as_mut_ptr() as _,
 					&mut data_len2,
 				)
-			} as _
-		) {
-			co::ERROR::SUCCESS => {},
-			err => return Err(err),
-		}
+			},
+		)?;
 
 		validate_retrieved_reg_val(
 			co::REG(raw_data_type1), data_len1,
@@ -773,7 +715,7 @@ pub trait advapi_Hkey: Handle {
 		let mut str_buf = WString::default();
 		let (data_ptr, data_len) = data.as_ptr_with_len(&mut str_buf);
 
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegSetKeyValueW(
 					self.as_ptr(),
@@ -783,11 +725,8 @@ pub trait advapi_Hkey: Handle {
 					data_ptr,
 					data_len,
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => Ok(()),
-			err => Err(err),
-		}
+			},
+		)
 	}
 
 	/// [`RegSetValueEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw)
@@ -820,7 +759,7 @@ pub trait advapi_Hkey: Handle {
 		let mut str_buf = WString::default();
 		let (data_ptr, data_len) = data.as_ptr_with_len(&mut str_buf);
 
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegSetValueExW(
 					self.as_ptr(),
@@ -830,27 +769,21 @@ pub trait advapi_Hkey: Handle {
 					data_ptr as _,
 					data_len,
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => Ok(()),
-			err => Err(err),
-		}
+			},
+		)
 	}
 
 	/// [`RegUnLoadKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regunloadkeyw)
 	/// method.
 	fn RegUnLoadKey(&self, sub_key: Option<&str>) -> SysResult<()> {
-		match co::ERROR(
+		error_to_sysresult(
 			unsafe {
 				advapi::ffi::RegUnLoadKeyW(
 					self.as_ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 				)
-			} as _,
-		) {
-			co::ERROR::SUCCESS => Ok(()),
-			err => Err(err),
-		}
+			},
+		)
 	}
 }
 

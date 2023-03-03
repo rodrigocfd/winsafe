@@ -1,4 +1,5 @@
 use crate::co;
+use crate::kernel::decl::SysResult;
 
 pub(crate) const SECURITY_DESCRIPTOR_REVISION: u32 = 1;
 pub(crate) const UNLEN: usize = 256;
@@ -19,5 +20,13 @@ impl VALENT {
 		let proj_idx = self.ve_valueptr - src.as_ptr() as usize;
 		let proj_past_idx = proj_idx + self.ve_valuelen as usize;
 		&src[proj_idx..proj_past_idx]
+	}
+}
+
+/// If value is `ERROR::SUCCESS`, yields `Ok(())`, otherwise `Err(err)`.
+pub(crate) const fn error_to_sysresult(lstatus: i32) -> SysResult<()> {
+	match co::ERROR(lstatus as _) {
+		co::ERROR::SUCCESS => Ok(()),
+		err => Err(err),
 	}
 }
