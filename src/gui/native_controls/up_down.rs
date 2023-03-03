@@ -32,10 +32,10 @@ struct Obj { // actual fields of UpDown
 /// control.
 ///
 /// Note that if the `UpDown` is created with
-/// [`UDS::AUTOBUDDY`](create::co::UDS::AUTOBUDDY) style, it takes the control
+/// [`UDS::AUTOBUDDY`](crate::co::UDS::AUTOBUDDY) style, it takes the control
 /// created immediately before the `UpDown` as the buddy one, attaching the
 /// `UpDown` to it. This control should be an [`Edit`](crate::gui::Edit) with
-/// [`ES::NUMBER`](create::co::ES::NUMBER) style.
+/// [`ES::NUMBER`](crate::co::ES::NUMBER) style.
 #[derive(Clone)]
 pub struct UpDown(Pin<Arc<Obj>>);
 
@@ -241,7 +241,7 @@ pub struct UpDownOpts {
 	/// Note that the `UDS::AUTOBUDDY` style will take the control created
 	/// immediately before the `UpDown` as the buddy one, attaching the `UpDown`
 	/// to it. This control should be an [`Edit`](crate::gui::Edit) with
-	/// [`ES::NUMBER`](create::co::ES::NUMBER) style.
+	/// [`ES::NUMBER`](crate::co::ES::NUMBER) style.
 	///
 	/// Defaults to `UDS::AUTOBUDDY | UDS::SETBUDDYINT | UDS::ALIGNRIGHT | UDS::ARROWKEYS | UDS::HOTTRACK`.
 	pub up_down_style: co::UDS,
