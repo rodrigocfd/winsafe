@@ -258,7 +258,7 @@ pub struct TrackbarOpts {
 
 	/// The minimum and maximum position values.
 	///
-	/// Defaults to 0 and 100.
+	/// Defaults to `(0, 100)`.
 	pub range: (u32, u32),
 }
 

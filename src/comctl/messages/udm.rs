@@ -104,7 +104,7 @@ unsafe impl MsgSend for GetPos {
 ///
 /// Return type: `i32`.
 pub struct GetPos32<'a> {
-	pub success_flag: &'a mut i32,
+	pub success_flag: Option<&'a mut i32>,
 }
 
 unsafe impl<'a> MsgSend for GetPos32<'a> {
@@ -118,7 +118,7 @@ unsafe impl<'a> MsgSend for GetPos32<'a> {
 		WndMsg {
 			msg_id: co::UDM::GETPOS32.into(),
 			wparam: 0,
-			lparam: self.success_flag as *mut _ as  _,
+			lparam: self.success_flag.as_mut().map_or(0, |f| f as *mut _ as _),
 		}
 	}
 }

@@ -16,6 +16,7 @@ mod status_bar_events;
 mod tab_events;
 mod trackbar_events;
 mod tree_view_events;
+mod up_down_events;
 mod window_events_all;
 mod window_events;
 
@@ -32,6 +33,7 @@ pub use status_bar_events::StatusBarEvents;
 pub use tab_events::TabEvents;
 pub use trackbar_events::TrackbarEvents;
 pub use tree_view_events::TreeViewEvents;
+pub use up_down_events::UpDownEvents;
 pub use window_events_all::WindowEventsAll;
 pub use window_events::WindowEvents;
 pub(in crate::gui) use window_events::ProcessResult;

@@ -1007,6 +1007,15 @@ pub struct NMTVITEMCHANGE {
 	pub lParam: isize,
 }
 
+/// [`NMUPDOWN`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmupdown)
+/// struct.
+#[repr(C)]
+pub struct NMUPDOWN {
+	pub hdr: NMHDR,
+	pub iPos: i32,
+	pub iDelta: i32,
+}
+
 /// [`NMVIEWCHANGE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmviewchange)
 /// struct.
 #[repr(C)]
