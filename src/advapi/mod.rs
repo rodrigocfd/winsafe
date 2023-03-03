@@ -8,11 +8,13 @@ pub mod guard;
 mod enums;
 mod funcs;
 mod handles;
+mod structs;
 
 pub mod decl {
 	pub use super::enums::*;
 	pub use super::funcs::*;
 	pub use super::handles::decl::*;
+	pub use super::structs::*;
 }
 
 pub mod traits {

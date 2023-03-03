@@ -1,9 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{advapi, co};
-use crate::advapi::decl::RegistryValue;
+use crate::advapi::decl::{RegistryValue, VALENT};
 use crate::advapi::guard::RegCloseKeyGuard;
-use crate::advapi::privs::{error_to_sysresult, VALENT};
+use crate::advapi::privs::error_to_sysresult;
 use crate::kernel::decl::{FILETIME, SECURITY_ATTRIBUTES, SysResult, WString};
 use crate::prelude::Handle;
 
