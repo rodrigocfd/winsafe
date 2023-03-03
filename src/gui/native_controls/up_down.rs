@@ -86,6 +86,38 @@ impl UpDown {
 	///
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create an `UpDown` in an event closure.
+	///
+	/// # Examples
+	///
+	/// In the example below, the `UpDown` has
+	/// [`UDS::AUTOBUDDY`](crate::co::UDS::AUTOBUDDY) style by default, so it
+	/// will take the [`Edit`](crate::gui::Edit), which was created immediately
+	/// prior, as its buddy control. The `UpDown` will automatically attach
+	/// itself to the `Edit`.
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, gui};
+	///
+	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	///
+	/// let txt = gui::Edit::new(
+	///     &wnd,
+	///     gui::EditOpts {
+	///         edit_style: co::ES::AUTOHSCROLL | co::ES::NOHIDESEL | co::ES::NUMBER,
+	///         ..Default::default()
+	///     },
+	/// );
+	///
+	/// let updn = gui::UpDown::new(
+	///     &wnd,
+	///     gui::UpDownOpts {
+	///         range: (0, 50),
+	///         ..Default::default()
+	///     },
+	/// );
+	/// ```
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: UpDownOpts) -> UpDown {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
