@@ -1193,19 +1193,53 @@ const_ws! { ES: u32;
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
+	/// Aligns text with the left margin.
 	LEFT 0x0000
+	/// Centers text in a single-line or multiline edit control.
 	CENTER 0x0001
+	/// Right-aligns text in a single-line or multiline edit control.
 	RIGHT 0x0002
+	/// Designates a multiline edit control.
 	MULTILINE 0x0004
+	/// Converts all characters to uppercase as they are typed into the edit
+	/// control.
 	UPPERCASE 0x0008
+	/// Converts all characters to lowercase as they are typed into the edit
+	/// control.
 	LOWERCASE 0x0010
+	/// Displays an asterisk (*) for each character typed into the edit control.
+	/// This style is valid only for single-line edit controls. To change the
+	/// characters that is displayed, or set or clear this style, use the
+	/// [`EM_SETPASSWORDCHAR`](crate::msg::em::SetPasswordChar) message.
 	PASSWORD 0x0020
+	/// Automatically scrolls text up one page when the user presses the ENTER
+	/// key on the last line.
 	AUTOVSCROLL 0x0040
+	/// Automatically scrolls text to the right by 10 characters when the user
+	/// types a character at the end of the line. When the user presses the
+	/// ENTER key, the control scrolls all text back to position zero.
 	AUTOHSCROLL 0x0080
+	/// Negates the default behavior for an edit control. The default behavior
+	/// hides the selection when the control loses the input focus and inverts
+	/// the selection when the control receives the input focus.
 	NOHIDESEL 0x0100
+	/// Converts text entered in the edit control. The text is converted from
+	/// the Windows character set to the OEM character set and then back to the
+	/// Windows character set. This style is most useful for edit controls that
+	/// contain file names that will be used on file systems that do not support
+	/// Unicode.
 	OEMCONVERT 0x0400
+	/// Prevents the user from typing or editing text in the edit control.
 	READONLY 0x0800
+	/// Specifies that a carriage return be inserted when the user presses the
+	/// ENTER key while entering text into a multiline edit control in a dialog
+	/// box. If you do not specify this style, pressing the ENTER key has the
+	/// same effect as pressing the dialog box's default push button. This style
+	/// has no effect on a single-line edit control.
 	WANTRETURN 0x1000
+	/// Allows only digits to be entered into the edit control. Note that, even
+	/// with this set, it is still possible to paste non-digits into the edit
+	/// control.
 	NUMBER 0x2000
 }
 
