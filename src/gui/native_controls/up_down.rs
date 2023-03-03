@@ -148,10 +148,12 @@ impl UpDown {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = POINT::new(opts.position.0, opts.position.1);
-				multiply_dpi_or_dtu(self.0.base.parent(), Some(&mut pos), None)?;
+				let mut sz = SIZE::new(0, opts.height as _);
+				multiply_dpi_or_dtu(
+					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
 
 				self.0.base.create_window( // may panic
-					"msctls_updown32", None, pos, SIZE::new(0, 40),
+					"msctls_updown32", None, pos, SIZE::new(0, opts.height as _),
 					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.up_down_style.into(),
