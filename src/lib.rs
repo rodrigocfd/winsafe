@@ -38,6 +38,7 @@
 //! | `comctl` | ComCtl32.dll, for [Common Controls](https://learn.microsoft.com/en-us/windows/win32/api/_controls/) |
 //! | `comdlg` | ComDlg32.dll, for the old [Common Dialogs](https://learn.microsoft.com/en-us/windows/win32/uxguide/win-common-dlg) |
 //! | `dshow` | [DirectShow](https://learn.microsoft.com/en-us/windows/win32/directshow/directshow) |
+//! | `dxgi` | [DirectX Graphics Infrastructure](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dx-graphics-dxgi) |
 //! | `gdi` | Gdi32.dll, the [Windows GDI](https://learn.microsoft.com/en-us/windows/win32/gdi/windows-gdi) |
 //! | **`gui`** | **The WinSafe high-level GUI abstractions** |
 //! | `kernel` | Kernel32.dll, all others will include it |
@@ -264,6 +265,7 @@
 #[cfg(feature = "comctl")] mod comctl;
 #[cfg(feature = "comdlg")] mod comdlg;
 #[cfg(feature = "dshow")] mod dshow;
+#[cfg(feature = "dxgi")] mod dxgi;
 #[cfg(feature = "gdi")] mod gdi;
 #[cfg(feature = "kernel")] mod kernel;
 #[cfg(feature = "ktm")] mod ktm;
@@ -292,6 +294,7 @@
 #[cfg(feature = "comctl")] pub use comctl::decl::*;
 #[cfg(feature = "comdlg")] pub use comdlg::decl::*;
 #[cfg(feature = "dshow")] pub use dshow::decl::*;
+#[cfg(feature = "dxgi")] pub use dxgi::decl::*;
 #[cfg(feature = "gdi")] pub use gdi::decl::*;
 #[cfg(feature = "kernel")] pub use kernel::decl::*;
 #[cfg(feature = "ktm")] pub use ktm::decl::*;
@@ -321,6 +324,7 @@ pub mod co {
 	#[cfg(feature = "comctl")] pub use super::comctl::co::*;
 	#[cfg(feature = "comdlg")] pub use super::comdlg::co::*;
 	#[cfg(feature = "dshow")] pub use super::dshow::co::*;
+	#[cfg(feature = "dxgi")] pub use super::dxgi::co::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::co::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::co::*;
 	#[cfg(feature = "ktm")] pub use super::ktm::co::*;
@@ -555,6 +559,7 @@ pub mod prelude {
 	#[cfg(feature = "advapi")] pub use super::advapi::traits::*;
 	#[cfg(feature = "comctl")] pub use super::comctl::traits::*;
 	#[cfg(feature = "dshow")] pub use super::dshow::traits::*;
+	#[cfg(feature = "dxgi")] pub use super::dxgi::traits::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::traits::*;
 	#[cfg(feature = "gui")] pub use super::gui::traits::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::traits::*;
@@ -576,6 +581,7 @@ pub mod prelude {
 pub mod vt {
 	//! Virtual tables of COM interfaces.
 	#[cfg(feature = "dshow")] pub use super::dshow::vt::*;
+	#[cfg(feature = "dxgi")] pub use super::dxgi::vt::*;
 	#[cfg(feature = "ole")] pub use super::ole::vt::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::vt::*;
 	#[cfg(feature = "shell")] pub use super::shell::vt::*;
