@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types)]
 
 const_bitflag! { DXGI_MWA: u32;
-	/// [`IDXGIFactory::GetWindowAssociation`](crate::prelude::dgxi_IDXGIFactory::GetWindowAssociation)
+	/// [`IDXGIFactory::GetWindowAssociation`](crate::prelude::dxgi_IDXGIFactory::GetWindowAssociation)
 	/// `flags` (`u32`).
 	=>
 	=>
