@@ -305,6 +305,7 @@
 #[cfg(all(feature = "comctl", feature = "gdi"))] pub use comctl_gdi::decl::*;
 #[cfg(all(feature = "comctl", feature = "ole"))] pub use comctl_ole::decl::*;
 
+#[cfg(feature = "kernel")]
 pub mod co {
 	//! Native constants.
 	//!
@@ -331,6 +332,7 @@ pub mod co {
 	#[cfg(feature = "version")] pub use super::version::co::*;
 }
 
+#[cfg(feature = "kernel")]
 pub mod guard {
 	//! RAII implementation for various resources, which automatically perform
 	//! cleanup routines when the object goes out of scope.
@@ -346,7 +348,7 @@ pub mod guard {
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::guard::*;
 }
 
-#[cfg(any(feature = "comctl", feature = "gdi", feature = "shell", feature = "user"))]
+#[cfg(feature = "user")]
 pub mod msg {
 	//! Parameters of
 	//! [window messages](https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
@@ -539,6 +541,7 @@ pub mod msg {
 	}
 }
 
+#[cfg(feature = "kernel")]
 pub mod prelude {
 	//! The WinSafe prelude.
 	//!
@@ -569,7 +572,7 @@ pub mod prelude {
 	#[cfg(all(feature = "dshow", feature = "gdi"))] pub use super::dshow_gdi::traits::*;
 }
 
-#[cfg(any(feature = "dshow", feature = "ole", feature = "oleaut", feature = "shell"))]
+#[cfg(feature = "ole")]
 pub mod vt {
 	//! Virtual tables of COM interfaces.
 	#[cfg(feature = "dshow")] pub use super::dshow::vt::*;
