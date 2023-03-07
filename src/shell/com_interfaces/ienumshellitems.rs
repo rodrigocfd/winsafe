@@ -1,8 +1,5 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use std::marker::PhantomData;
-use std::mem::ManuallyDrop;
-
 use crate::co;
 use crate::kernel::ffi_types::HRES;
 use crate::ole::decl::{ComPtr, HrResult};
@@ -66,7 +63,7 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn iter(&self) -> Box<dyn Iterator<Item = HrResult<IShellItem>> + '_> {
-		Box::new(EnumShellItemsIter::new(unsafe { self.ptr() }))
+		Box::new(EnumShellItemsIter::new(self))
 	}
 
 	/// [`IEnumShellItems::Next`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-next)
@@ -114,27 +111,29 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 
 //------------------------------------------------------------------------------
 
-struct EnumShellItemsIter<'a> {
-	array: ManuallyDrop<IEnumShellItems>,
-	_owner: PhantomData<&'a ()>,
+struct EnumShellItemsIter<'a, I>
+	where I: shell_IEnumShellItems,
+{
+	enum_shi: &'a I,
 }
 
-impl<'a> Iterator for EnumShellItemsIter<'a> {
+impl<'a, I> Iterator for EnumShellItemsIter<'a, I>
+	where I: shell_IEnumShellItems,
+{
 	type Item = HrResult<IShellItem>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		match self.array.Next() {
+		match self.enum_shi.Next() {
 			Err(err) => Some(Err(err)),
 			Ok(maybe_item) => maybe_item.map(|item| Ok(item)),
 		}
 	}
 }
 
-impl<'a> EnumShellItemsIter<'a> {
-	fn new(com_ptr: ComPtr) -> Self {
-		Self {
-			array: ManuallyDrop::new(IEnumShellItems(com_ptr)),
-			_owner: PhantomData,
-		}
+impl<'a, I> EnumShellItemsIter<'a, I>
+	where I: shell_IEnumShellItems,
+{
+	fn new(enum_shi: &'a I) -> Self {
+		Self { enum_shi }
 	}
 }

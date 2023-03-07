@@ -1,8 +1,5 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use std::marker::PhantomData;
-use std::mem::ManuallyDrop;
-
 use crate::kernel::ffi_types::{HRES, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
@@ -90,7 +87,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn iter(&self) -> HrResult<Box<dyn Iterator<Item = HrResult<IShellItem>> + '_>> {
-		Ok(Box::new(ShellItemIter::new(unsafe { self.ptr() })?))
+		Ok(Box::new(ShellItemIter::new(self)?))
 	}
 
 	/// [`IShellItemArray::GetCount`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getcount)
@@ -122,14 +119,17 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 
 //------------------------------------------------------------------------------
 
-struct ShellItemIter<'a> {
-	array: ManuallyDrop<IShellItemArray>,
+struct ShellItemIter<'a, I>
+	where I: shell_IShellItemArray,
+{
+	shi_arr: &'a I,
 	count: u32,
 	current: u32,
-	_owner: PhantomData<&'a ()>,
 }
 
-impl<'a> Iterator for ShellItemIter<'a> {
+impl<'a, I> Iterator for ShellItemIter<'a, I>
+	where I: shell_IShellItemArray,
+{
 	type Item = HrResult<IShellItem>;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -137,7 +137,7 @@ impl<'a> Iterator for ShellItemIter<'a> {
 			return None;
 		}
 
-		match self.array.GetItemAt(self.current) {
+		match self.shi_arr.GetItemAt(self.current) {
 			Err(e) => {
 				self.current = self.count; // no further iterations will be made
 				Some(Err(e))
@@ -150,16 +150,11 @@ impl<'a> Iterator for ShellItemIter<'a> {
 	}
 }
 
-impl<'a> ShellItemIter<'a> {
-	fn new(com_ptr: ComPtr) -> HrResult<Self> {
-		let array = ManuallyDrop::new(IShellItemArray(com_ptr));
-		let count = array.GetCount()?;
-
-		Ok(Self {
-			array,
-			count,
-			current: 0,
-			_owner: PhantomData,
-		})
+impl<'a, I> ShellItemIter<'a, I>
+	where I: shell_IShellItemArray,
+{
+	fn new(shi_arr: &'a I) -> HrResult<Self> {
+		let count = shi_arr.GetCount()?;
+		Ok(Self { shi_arr, count, current: 0 })
 	}
 }

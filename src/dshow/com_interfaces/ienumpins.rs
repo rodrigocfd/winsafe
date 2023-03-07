@@ -1,8 +1,5 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use std::marker::PhantomData;
-use std::mem::ManuallyDrop;
-
 use crate::co;
 use crate::dshow::decl::IPin;
 use crate::kernel::ffi_types::HRES;
@@ -61,7 +58,7 @@ pub trait dshow_IEnumPins: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn iter(&self) -> Box<dyn Iterator<Item = HrResult<IPin>> + '_> {
-		Box::new(EnumPinsIter::new(unsafe { self.ptr() }))
+		Box::new(EnumPinsIter::new(self))
 	}
 
 	/// [`IEnumPins::Next`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumpins-next)
@@ -109,27 +106,29 @@ pub trait dshow_IEnumPins: ole_IUnknown {
 
 //------------------------------------------------------------------------------
 
-struct EnumPinsIter<'a> {
-	array: ManuallyDrop<IEnumPins>,
-	_owner: PhantomData<&'a ()>,
+struct EnumPinsIter<'a, I>
+	where I: dshow_IEnumPins,
+{
+	enum_pins: &'a I,
 }
 
-impl<'a> Iterator for EnumPinsIter<'a> {
+impl<'a, I> Iterator for EnumPinsIter<'a, I>
+	where I: dshow_IEnumPins,
+{
 	type Item = HrResult<IPin>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		match self.array.Next() {
+		match self.enum_pins.Next() {
 			Err(err) => Some(Err(err)),
 			Ok(maybe_item) => maybe_item.map(|item| Ok(item)),
 		}
 	}
 }
 
-impl<'a> EnumPinsIter<'a> {
-	fn new(com_ptr: ComPtr) -> Self {
-		Self {
-			array: ManuallyDrop::new(IEnumPins(com_ptr)),
-			_owner: PhantomData,
-		}
+impl<'a, I> EnumPinsIter<'a, I>
+	where I: dshow_IEnumPins,
+{
+	fn new(enum_pins: &'a I) -> Self {
+		Self { enum_pins }
 	}
 }

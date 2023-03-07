@@ -1,8 +1,5 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use std::marker::PhantomData;
-use std::mem::ManuallyDrop;
-
 use crate::co;
 use crate::dshow::decl::IBaseFilter;
 use crate::kernel::ffi_types::HRES;
@@ -63,7 +60,7 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn iter(&self) -> Box<dyn Iterator<Item = HrResult<IBaseFilter>> + '_> {
-		Box::new(EnumFiltersIter::new(unsafe { self.ptr() }))
+		Box::new(EnumFiltersIter::new(self))
 	}
 
 	/// [`IEnumFilters::Next`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-next)
@@ -111,27 +108,29 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 
 //------------------------------------------------------------------------------
 
-struct EnumFiltersIter<'a> {
-	array: ManuallyDrop<IEnumFilters>,
-	_owner: PhantomData<&'a ()>,
+struct EnumFiltersIter<'a, I>
+	where I: dshow_IEnumFilters,
+{
+	enum_filters: &'a I,
 }
 
-impl<'a> Iterator for EnumFiltersIter<'a> {
+impl<'a, I> Iterator for EnumFiltersIter<'a, I>
+	where I: dshow_IEnumFilters,
+{
 	type Item = HrResult<IBaseFilter>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		match self.array.Next() {
+		match self.enum_filters.Next() {
 			Err(err) => Some(Err(err)),
 			Ok(maybe_item) => maybe_item.map(|item| Ok(item)),
 		}
 	}
 }
 
-impl<'a> EnumFiltersIter<'a> {
-	fn new(com_ptr: ComPtr) -> Self {
-		Self {
-			array: ManuallyDrop::new(IEnumFilters(com_ptr)),
-			_owner: PhantomData,
-		}
+impl<'a, I> EnumFiltersIter<'a, I>
+	where I: dshow_IEnumFilters,
+{
+	fn new(enum_filters: &'a I) -> Self {
+		Self { enum_filters }
 	}
 }

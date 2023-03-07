@@ -35,7 +35,7 @@ impl ole_ISequentialStream for IStream {}
 impl ole_IStream for IStream {}
 
 /// [`IStream`](crate::IStream) methods from `ole` feature.
-pub trait ole_IStream: ole_IUnknown {
+pub trait ole_IStream: ole_ISequentialStream {
 	/// [`IStream::Commit`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-commit)
 	/// method.
 	fn Commit(&self, flags: co::STGC) -> HrResult<()> {

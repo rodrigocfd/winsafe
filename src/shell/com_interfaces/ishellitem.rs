@@ -109,7 +109,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 					bhid as *const _ as _,
 					&T::IID as *const _ as _,
 					&mut ppv_queried,
-				)
+				),
 			).map(|_| T::from(ppv_queried))
 		}
 	}

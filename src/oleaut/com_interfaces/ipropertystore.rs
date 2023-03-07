@@ -1,8 +1,5 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use std::marker::PhantomData;
-use std::mem::ManuallyDrop;
-
 use crate::co;
 use crate::kernel::ffi_types::{HRES, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
@@ -69,7 +66,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn iter(&self) -> HrResult<Box<dyn Iterator<Item = HrResult<PROPERTYKEY>> + '_>> {
-		Ok(Box::new(PropertyStoreIter::new(unsafe { self.ptr() })?))
+		Ok(Box::new(PropertyStoreIter::new(self)?))
 	}
 
 	/// [`IPropertyStore::Commit`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-commit)
@@ -129,14 +126,17 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 
 //------------------------------------------------------------------------------
 
-struct PropertyStoreIter<'a> {
-	array: ManuallyDrop<IPropertyStore>,
+struct PropertyStoreIter<'a, I>
+	where I: oleaut_IPropertyStore,
+{
+	prop_st: &'a I,
 	count: u32,
 	current: u32,
-	_owner: PhantomData<&'a ()>,
 }
 
-impl<'a> Iterator for PropertyStoreIter<'a> {
+impl<'a, I> Iterator for PropertyStoreIter<'a, I>
+	where I: oleaut_IPropertyStore,
+{
 	type Item = HrResult<PROPERTYKEY>;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -144,7 +144,7 @@ impl<'a> Iterator for PropertyStoreIter<'a> {
 			return None;
 		}
 
-		match self.array.GetAt(self.current) {
+		match self.prop_st.GetAt(self.current) {
 			Err(e) => {
 				self.current = self.count; // no further iterations will be made
 				Some(Err(e))
@@ -157,16 +157,11 @@ impl<'a> Iterator for PropertyStoreIter<'a> {
 	}
 }
 
-impl<'a> PropertyStoreIter<'a> {
-	fn new(com_ptr: ComPtr) -> HrResult<Self> {
-		let array = ManuallyDrop::new(IPropertyStore(com_ptr));
-		let count = array.GetCount()?;
-
-		Ok(Self {
-			array,
-			count,
-			current: 0,
-			_owner: PhantomData,
-		})
+impl<'a, I> PropertyStoreIter<'a, I>
+	where I: oleaut_IPropertyStore,
+{
+	fn new(prop_st: &'a I) -> HrResult<Self> {
+		let count = prop_st.GetCount()?;
+		Ok(Self { prop_st, count, current: 0 })
 	}
 }
