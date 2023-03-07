@@ -1,5 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::dxgi::decl::DXGI_ADAPTER_DESC;
 use crate::kernel::decl::GUID;
 use crate::kernel::ffi_types::{HRES, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
@@ -52,5 +53,29 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 				),
 			)
 		}.map(|_| umd_ver)
+	}
+
+	/// [`IDXGIAdapter::GetDesc`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiadapter-getdesc)
+	/// method.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{IDXGIAdapter, DXGI_ADAPTER_DESC};
+	///
+	/// let adapter: IDXGIAdapter; // initialized somewhere
+	/// # let adapter = IDXGIAdapter::from(unsafe { winsafe::ComPtr::null() });
+	/// let mut desc = DXGI_ADAPTER_DESC::default();
+	///
+	/// adapter.GetDesc(&mut desc)?;
+	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// ```
+	#[must_use]
+	fn GetDesc(&self, desc: &mut DXGI_ADAPTER_DESC) -> HrResult<()> {
+		unsafe {
+			let vt = self.vt_ref::<IDXGIAdapterVT>();
+			ok_to_hrresult((vt.GetDesc)(self.ptr(), desc as *mut _ as _))
+		}
 	}
 }

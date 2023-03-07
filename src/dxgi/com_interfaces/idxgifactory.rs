@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::dxgi::decl::IDXGIAdapter;
+use crate::kernel::decl::HINSTANCE;
 use crate::kernel::ffi_types::{HANDLE, HRES, PCVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
@@ -74,6 +75,25 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	#[must_use]
 	fn iter_adapters(&self) -> Box<dyn Iterator<Item = HrResult<IDXGIAdapter>> + '_> {
 		Box::new(EnumAdaptersIter::new(self))
+	}
+
+	/// [`IDXGIFactory::CreateSoftwareAdapter`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-createsoftwareadapter)
+	/// method.
+	#[must_use]
+	fn CreateSoftwareAdapter(&self,
+		hmodule: &HINSTANCE) -> HrResult<IDXGIAdapter>
+	{
+		unsafe {
+			let mut ppv_queried = ComPtr::null();
+			let vt = self.vt_ref::<IDXGIFactoryVT>();
+			ok_to_hrresult(
+				(vt.CreateSoftwareAdapter)(
+					self.ptr(),
+					hmodule.as_ptr(),
+					&mut ppv_queried,
+				),
+			).map(|_| IDXGIAdapter::from(ppv_queried))
+		}
 	}
 
 	/// [`IDXGIFactory::EnumAdapters`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-enumadapters)

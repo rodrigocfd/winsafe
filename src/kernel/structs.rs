@@ -247,6 +247,35 @@ impl LCID {
 	}
 }
 
+/// [`LUID`](https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-luid)
+/// identifier.
+#[repr(C)]
+#[derive(Debug, Clone, Copy, Eq, PartialEq)]
+pub struct LUID {
+	LowPart: u32,
+	HighPart: i32,
+}
+
+impl LUID {
+	/// Creates a new `LUID`.
+	#[must_use]
+	pub const fn new(low_part: u32, high_part: i32) -> LUID {
+		Self { LowPart: low_part, HighPart: high_part }
+	}
+
+	/// Returns the low part.
+	#[must_use]
+	pub const fn low_part(&self) -> u32 {
+		self.LowPart
+	}
+
+	/// Returns the high part.
+	#[must_use]
+	pub const fn high_part(&self) -> i32 {
+		self.HighPart
+	}
+}
+
 /// [`MODULEENTRY32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-moduleentry32w)
 /// struct.
 #[repr(C)]

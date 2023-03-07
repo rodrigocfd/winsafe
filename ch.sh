@@ -5,6 +5,7 @@ FEATS=(
 	comctl
 	comdlg
 	dshow
+	dxgi
 	gdi
 	gui
 	kernel
