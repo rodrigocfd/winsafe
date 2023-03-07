@@ -3,6 +3,9 @@ use crate::kernel::decl::WString;
 use crate::kernel::privs::parse_multi_z_str;
 
 /// Registry value types.
+///
+/// This is a high-level abstraction over the [`co::REG`](crate::co::REG)
+/// constants, plus the value they carry.
 #[derive(Clone)]
 pub enum RegistryValue {
 	/// Binary value, defined as [`REG::BINARY`](crate::co::REG::BINARY).
@@ -13,6 +16,11 @@ pub enum RegistryValue {
 	Qword(u64),
 	/// String value, defined as [`REG::SZ`](crate::co::REG::SZ).
 	Sz(String),
+	/// String value that contains unexpanded references to environment
+	/// variables, for example, `%PATH%`. To expand the environment variable
+	/// references, use
+	/// [`ExpandEnvironmentStrings`](crate::ExpandEnvironmentStrings).
+	ExpandSz(String),
 	/// Multiple strings, defined as [`REG::MULTI_SZ`](crate::co::REG::MULTI_SZ).
 	MultiSz(Vec<String>),
 	/// No value, defined as [`REG::NONE`](crate::co::REG::NONE). Also used for
@@ -48,6 +56,10 @@ impl RegistryValue {
 				let (_, vec16, _) = unsafe { buf.align_to::<u16>() };
 				RegistryValue::Sz(WString::from_wchars_slice(&vec16).to_string())
 			},
+			co::REG::EXPAND_SZ => {
+				let (_, vec16, _) = unsafe { buf.align_to::<u16>() };
+				RegistryValue::Sz(WString::from_wchars_slice(&vec16).to_string())
+			},
 			co::REG::MULTI_SZ => {
 				let (_, vec16, _) = unsafe { buf.align_to::<u16>() };
 				RegistryValue::MultiSz(parse_multi_z_str(vec16.as_ptr()))
@@ -67,6 +79,10 @@ impl RegistryValue {
 			Self::Dword(n) => (n as *const _ as _, std::mem::size_of::<u32>() as _),
 			Self::Qword(n) => (n as *const _ as _, std::mem::size_of::<u64>() as _),
 			Self::Sz(s) => {
+				*str_buf = WString::from_str(s);
+				Self::as_ptr_with_len_str(&str_buf)
+			},
+			Self::ExpandSz(s) => {
 				*str_buf = WString::from_str(s);
 				Self::as_ptr_with_len_str(&str_buf)
 			},
@@ -93,6 +109,7 @@ impl RegistryValue {
 			Self::Dword(_) => co::REG::DWORD,
 			Self::Qword(_) => co::REG::QWORD,
 			Self::Sz(_) => co::REG::SZ,
+			Self::ExpandSz(_) => co::REG::EXPAND_SZ,
 			Self::MultiSz(_) => co::REG::MULTI_SZ,
 			Self::None => co::REG::NONE,
 		}

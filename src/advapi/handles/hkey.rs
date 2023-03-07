@@ -296,7 +296,7 @@ pub trait advapi_Hkey: Handle {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{HKEY, RegistryValue};
+	/// use winsafe::{ExpandEnvironmentStrings, HKEY, RegistryValue};
 	///
 	/// let val = HKEY::CURRENT_USER.RegGetValue(
 	///     Some("Control Panel\\Mouse"),
@@ -306,7 +306,10 @@ pub trait advapi_Hkey: Handle {
 	/// match val {
 	///     RegistryValue::Dword(n) => println!("Number u32: {}", n),
 	///     RegistryValue::Qword(n) => println!("Number u64: {}", n),
-	///     RegistryValue::Sz(str) => println!("String: {}", str),
+	///     RegistryValue::Sz(s) => println!("String: {}", s),
+	///     RegistryValue::ExpandSz(s) => {
+	///         println!("Env string: {}", ExpandEnvironmentStrings(&s)?);
+	///     },
 	///     RegistryValue::MultiSz(strs) => {
 	///        println!("Multi string:");
 	///        for s in strs.iter() {
@@ -525,7 +528,7 @@ pub trait advapi_Hkey: Handle {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HKEY, RegistryValue};
+	/// use winsafe::{co, ExpandEnvironmentStrings, HKEY, RegistryValue};
 	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     Some("Control Panel\\Desktop"),
@@ -537,7 +540,10 @@ pub trait advapi_Hkey: Handle {
 	///     match val {
 	///         RegistryValue::Dword(n) => println!("Number u32: {}", n),
 	///         RegistryValue::Qword(n) => println!("Number u64: {}", n),
-	///         RegistryValue::Sz(str) => println!("String: {}", str),
+	///         RegistryValue::Sz(s) => println!("String: {}", s),
+	///         RegistryValue::ExpandSz(s) => {
+	///             println!("Env string: {}", ExpandEnvironmentStrings(&s)?);
+	///         },
 	///         RegistryValue::MultiSz(strs) => {
 	///            println!("Multi string:");
 	///            for s in strs.iter() {
@@ -657,7 +663,7 @@ pub trait advapi_Hkey: Handle {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HKEY, RegistryValue};
+	/// use winsafe::{co, ExpandEnvironmentStrings, HKEY, RegistryValue};
 	///
 	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     Some("Control Panel\\Mouse"),
@@ -670,7 +676,10 @@ pub trait advapi_Hkey: Handle {
 	/// match val {
 	///     RegistryValue::Dword(n) => println!("Number u32: {}", n),
 	///     RegistryValue::Qword(n) => println!("Number u64: {}", n),
-	///     RegistryValue::Sz(str) => println!("String: {}", str),
+	///     RegistryValue::Sz(s) => println!("String: {}", s),
+	///     RegistryValue::ExpandSz(s) => {
+	///         println!("Env string: {}", ExpandEnvironmentStrings(&s)?);
+	///     },
 	///     RegistryValue::MultiSz(strs) => {
 	///        println!("Multi string:");
 	///        for s in strs.iter() {
