@@ -38,7 +38,8 @@ impl ComPtr {
 		Self(std::ptr::null_mut())
 	}
 
-	/// Returns `None` if the handle is null, otherwise returns `Some(&self)`.
+	/// Returns `None` if the COM pointer is null, otherwise returns
+	/// `Some(&self)`.
 	#[must_use]
 	pub fn as_opt(&self) -> Option<&Self> {
 		if self.0.is_null() {

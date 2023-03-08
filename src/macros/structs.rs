@@ -1,6 +1,6 @@
 #![allow(unused_macros)]
 
-/// Implements `Default` trait by zeroing all members.
+/// Implements `Default` trait by zeroing all fields.
 macro_rules! impl_default {
 	($name:ident $(, $life:lifetime)*) => {
 		impl<$($life),*> Default for $name<$($life),*> {
@@ -11,7 +11,7 @@ macro_rules! impl_default {
 	};
 }
 
-/// Implements `Default` trait by zeroing all members. Also sets the size field
+/// Implements `Default` trait by zeroing all fields. Also sets the size field
 /// to struct size.
 macro_rules! impl_default_with_size {
 	($name:ident, $field:ident $(, $life:lifetime)*) => {
@@ -40,7 +40,7 @@ macro_rules! pub_fn_serialize {
 	};
 }
 
-/// Implements getter and setter methods for the given `BOOL` member.
+/// Implements getter and setter methods for the given `BOOL` field.
 macro_rules! pub_fn_bool_get_set {
 	($field:ident, $setter:ident) => {
 		/// Returns the bool field.
@@ -73,7 +73,7 @@ macro_rules! pub_fn_resource_id_get_set {
 	};
 }
 
-/// Implements getter and setter methods for the given `*mut u16` member.
+/// Implements getter and setter methods for the given `*mut u16` field.
 macro_rules! pub_fn_string_ptr_get_set {
 	($life:lifetime, $field:ident, $setter:ident) => {
 		/// Returns the string field, if any.
@@ -92,7 +92,7 @@ macro_rules! pub_fn_string_ptr_get_set {
 }
 
 /// Implements getter and setter methods for the given `*mut u16` and `u32`
-/// members, setting pointer and its actual chars length without terminating
+/// fields, setting pointer and its actual chars length without terminating
 /// null.
 macro_rules! pub_fn_string_ptrlen_get_set {
 	($life:lifetime, $field:ident, $setter:ident, $length:ident) => {
@@ -112,7 +112,7 @@ macro_rules! pub_fn_string_ptrlen_get_set {
 	};
 }
 
-/// Implements getter and setter methods for the given `[u16; N]` member.
+/// Implements getter and setter methods for the given `[u16; N]` field.
 macro_rules! pub_fn_string_arr_get_set {
 	($field:ident, $setter:ident) => {
 		/// Returns the string field.
@@ -129,7 +129,7 @@ macro_rules! pub_fn_string_arr_get_set {
 }
 
 /// Implements getter and setter methods for the given `*mut 16` and `i32`
-/// members, setting buffer and its size.
+/// fields, setting buffer and its size.
 macro_rules! pub_fn_string_buf_get_set {
 	($life:lifetime, $field:ident, $setter:ident, $cch:ident) => {
 		/// Returns the string field.
@@ -148,7 +148,7 @@ macro_rules! pub_fn_string_buf_get_set {
 	};
 }
 
-/// Implements getter and setter methods for the given pointer member.
+/// Implements getter and setter methods for the given pointer field.
 macro_rules! pub_fn_ptr_get_set {
 	($life:lifetime, $field:ident, $setter:ident, $ty:ty) => {
 		/// Returns the pointer field.
@@ -164,7 +164,7 @@ macro_rules! pub_fn_ptr_get_set {
 	};
 }
 
-/// Implements getter and setter methods for the given array + size members,
+/// Implements getter and setter methods for the given array + size fields,
 /// setting buffer and its size.
 macro_rules! pub_fn_array_buf_get_set {
 	($life:lifetime, $field:ident, $setter:ident, $cch:ident, $ty:ty) => {
@@ -189,6 +189,50 @@ macro_rules! pub_fn_array_buf_get_set {
 					self.$field = std::ptr::null_mut();
 					self.$cch = 0;
 				},
+			}
+		}
+	};
+}
+
+/// Implements getter and setter methods for the given `ComPtr` field.
+macro_rules! pub_fn_comptr_get_set {
+	($field:ident, $setter:ident, $trait:ident) => {
+		/// Returns the `Object` field, by cloning the underlying COM pointer.
+		#[must_use]
+		pub fn $field<T>(&self) -> Option<T>
+			where T: $trait,
+		{
+			self.$field.as_opt().map(|ptr| {
+				let obj = std::mem::ManuallyDrop::new(T::from(*ptr)); // won't release the stored pointer
+				let cloned = T::clone(&obj);
+				cloned
+			})
+		}
+
+		/// Sets the `Object` field, by cloning the underlying COM pointer.
+		pub fn $setter<T>(&mut self, obj: Option<&T>)
+			where T: $trait,
+		{
+			let _ = T::from(self.$field); // if already set, call Release() immediately
+			self.$field = obj.map_or_else(
+				|| unsafe { crate::ComPtr::null() },
+				|obj| {
+					let mut cloned = T::clone(obj);
+					cloned.leak()
+				},
+			);
+		}
+	};
+}
+
+/// Implements `Drop` for a `ComPtr` field.
+macro_rules! impl_drop_comptr {
+	($field:ident, $name:ident $(, $life:lifetime)*) => {
+		impl<$($life),*> Drop for $name<$($life),*> {
+			fn drop(&mut self) {
+				if let Some(p) = self.$field.as_opt() {
+					let _ = crate::IUnknown::from(*p); // if a pointer is present, call Release() on it
+				}
 			}
 		}
 	};

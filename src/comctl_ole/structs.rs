@@ -8,6 +8,7 @@ use crate::comctl::decl::NMHDR;
 use crate::kernel::decl::{HINSTANCE, WString};
 use crate::kernel::privs::{IS_INTRESOURCE, MAKEINTRESOURCE};
 use crate::ole::decl::ComPtr;
+use crate::prelude::ole_IUnknown;
 use crate::user::decl::{HICON, HWND};
 
 /// [`NMOBJECTNOTIFY`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmobjectnotify)
@@ -17,7 +18,7 @@ pub struct NMOBJECTNOTIFY<'a> {
 	pub hdr: NMHDR,
 	pub iItem: i32,
 	piid: *mut co::IID,
-	pub Object: ComPtr,
+	Object: ComPtr,
 	pub hrResult: co::HRESULT,
 	pub dwFlags: u32,
 
@@ -25,9 +26,11 @@ pub struct NMOBJECTNOTIFY<'a> {
 }
 
 impl_default!(NMOBJECTNOTIFY, 'a);
+impl_drop_comptr!(Object, NMOBJECTNOTIFY, 'a);
 
 impl<'a> NMOBJECTNOTIFY<'a> {
 	pub_fn_ptr_get_set!('a, piid, set_piid, co::IID);
+	pub_fn_comptr_get_set!(Object, set_Object, ole_IUnknown);
 }
 
 /// [`TASKDIALOG_BUTTON`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialog_button)

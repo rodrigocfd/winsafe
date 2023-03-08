@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::kernel::decl::WString;
-use crate::ole::decl::{ComPtr, IUnknown};
+use crate::ole::decl::ComPtr;
 use crate::prelude::ole_IUnknown;
 
 /// [`COAUTHIDENTITY`](https://learn.microsoft.com/en-us/windows/win32/api/wtypesbase/ns-wtypesbase-coauthidentity)
@@ -120,6 +120,9 @@ pub struct DVTARGETDEVICE {
 
 /// [`MULTI_QI`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-multi_qi)
 /// struct.
+///
+/// Used to query multiple interfaces with
+/// [`CoCreateInstanceEx`](crate::CoCreateInstanceEx).
 #[repr(C)]
 pub struct MULTI_QI<'a> {
 	pIID: *mut co::IID,
@@ -130,32 +133,9 @@ pub struct MULTI_QI<'a> {
 }
 
 impl_default!(MULTI_QI, 'a);
-
-impl<'a> Drop for MULTI_QI<'a> {
-	fn drop(&mut self) {
-		if let Some(p) = self.pItf.as_opt() {
-			let _ = IUnknown::from(*p); // increased safety, in case pItf() method is not called
-		}
-	}
-}
+impl_drop_comptr!(pItf, MULTI_QI, 'a);
 
 impl<'a> MULTI_QI<'a> {
 	pub_fn_ptr_get_set!('a, pIID, set_pIID, co::IID);
-
-	/// Returns the `pItf` field.
-	///
-	/// Note that once this method is called, a COM object will be returned and
-	/// a null pointer will be left in its place. This is done for security
-	/// reasons, since the returned COM object will call
-	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-	/// automatically. So if you call this method a second time, a null COM
-	/// object will be returned.
-	#[must_use]
-	pub fn pItf<T>(&mut self) -> T
-		where T: ole_IUnknown,
-	{
-		let obj = T::from(self.pItf);
-		self.pItf = unsafe { ComPtr::null() };
-		obj
-	}
+	pub_fn_comptr_get_set!(pItf, set_pItf, ole_IUnknown);
 }
