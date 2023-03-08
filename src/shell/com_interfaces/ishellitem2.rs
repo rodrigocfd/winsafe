@@ -32,6 +32,10 @@ com_interface! { IShellItem2: "7e9fb0d3-919f-4307-ab2e-9b1860310c93";
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
+	///
+	/// Usually created with
+	/// [`SHCreateItemFromParsingName`](crate::SHCreateItemFromParsingName)
+	/// function.
 }
 
 impl shell_IShellItem for IShellItem2 {}

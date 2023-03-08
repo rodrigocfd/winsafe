@@ -5,9 +5,9 @@ use crate::kernel::decl::{
 	GetLastError, HACCESSTOKEN, HLOCAL, SysResult, WString,
 };
 use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, ptr_to_sysresult};
-use crate::ole::decl::{CoTaskMemFree, HrResult};
+use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult, IBindCtx};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, kernel_Hlocal};
+use crate::prelude::{Handle, kernel_Hlocal, ole_IUnknown, shell_IShellItem};
 use crate::shell::decl::{
 	NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT, SHSTOCKICONINFO,
 };
@@ -164,6 +164,40 @@ pub fn Shell_NotifyIcon(
 	bool_to_sysresult(
 		unsafe { shell::ffi::Shell_NotifyIconW(message.0, data as *mut _ as _) },
 	)
+}
+
+/// [`SHCreateItemFromParsingName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromparsingname)
+/// function.
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{IShellItem2, SHCreateItemFromParsingName};
+///
+/// let shi = SHCreateItemFromParsingName::<IShellItem2>(
+///     "C:\\Temp\\foo.txt",
+///     None,
+/// )?;
+/// # Ok::<_, winsafe::co::HRESULT>(())
+/// ```
+#[must_use]
+pub fn SHCreateItemFromParsingName<T>(
+	file_or_folder_path: &str,
+	bind_ctx: Option<&IBindCtx>) -> HrResult<T>
+	where T: shell_IShellItem,
+{
+	unsafe {
+		let mut ppv_queried = ComPtr::null();
+		ok_to_hrresult(
+			shell::ffi::SHCreateItemFromParsingName(
+				WString::from_str(file_or_folder_path).as_ptr(),
+				bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr().0 as _),
+				&T::IID as *const _ as _,
+				&mut ppv_queried as *mut _ as _,
+			),
+		).map(|_| T::from(ppv_queried))
+	}
 }
 
 /// [`SHFileOperation`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)

@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, shell};
+use crate::co;
 use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCVOID, PSTR, PVOID};
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult, IBindCtx};
@@ -26,6 +26,10 @@ com_interface! { IShellItem: "43826d1e-e718-42ee-bc55-a1e261c37bfe";
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
+	///
+	/// Usually created with
+	/// [`SHCreateItemFromParsingName`](crate::SHCreateItemFromParsingName)
+	/// function.
 }
 
 impl shell_IShellItem for IShellItem {}
@@ -39,40 +43,6 @@ impl shell_IShellItem for IShellItem {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_IShellItem: ole_IUnknown {
-	/// [`SHCreateItemFromParsingName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromparsingname)
-	/// static method.
-	///
-	/// # Examples
-	///
-	/// ```rust,no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::IShellItem;
-	///
-	/// let shi = IShellItem::SHCreateItemFromParsingName(
-	///     "C:\\Temp\\foo.txt",
-	///     None,
-	/// )?;
-	///
-	/// # Ok::<_, winsafe::co::HRESULT>(())
-	/// ```
-	#[must_use]
-	fn SHCreateItemFromParsingName(
-		file_or_folder_path: &str,
-		bind_ctx: Option<&IBindCtx>) -> HrResult<IShellItem>
-	{
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			ok_to_hrresult(
-				shell::ffi::SHCreateItemFromParsingName(
-					WString::from_str(file_or_folder_path).as_ptr(),
-					bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr().0 as _),
-					&IShellItem::IID as *const _ as _,
-					&mut ppv_queried as *mut _ as _,
-				),
-			).map(|_| IShellItem::from(ppv_queried))
-		}
-	}
-
 	/// [`IShellItem::BindToHandler`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-bindtohandler)
 	/// method.
 	///
@@ -138,9 +108,9 @@ pub trait shell_IShellItem: ole_IUnknown {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IShellItem};
+	/// use winsafe::{co, IShellItem, SHCreateItemFromParsingName};
 	///
-	/// let shi = IShellItem::SHCreateItemFromParsingName(
+	/// let shi = SHCreateItemFromParsingName::<IShellItem>(
 	///     "C:\\Temp\\foo.txt",
 	///     None,
 	/// )?;
@@ -172,9 +142,9 @@ pub trait shell_IShellItem: ole_IUnknown {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IShellItem};
+	/// use winsafe::{co, IShellItem, SHCreateItemFromParsingName};
 	///
-	/// let shi = IShellItem::SHCreateItemFromParsingName(
+	/// let shi = SHCreateItemFromParsingName::<IShellItem>(
 	///     "C:\\Temp\\foo.txt",
 	///     None,
 	/// )?;

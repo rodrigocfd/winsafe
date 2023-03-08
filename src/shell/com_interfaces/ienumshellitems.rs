@@ -50,9 +50,9 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IEnumShellItems, IShellItem};
+	/// use winsafe::{co, IEnumShellItems, IShellItem, SHCreateItemFromParsingName};
 	///
-	/// let folder = IShellItem::SHCreateItemFromParsingName("C:\\Temp", None)?;
+	/// let folder = SHCreateItemFromParsingName::<IShellItem>("C:\\Temp", None)?;
 	/// let items = folder.BindToHandler::<IEnumShellItems>(None, &co::BHID::EnumItems)?;
 	///
 	/// for item in items.iter() {
