@@ -11,7 +11,7 @@ use crate::vt::IUnknownVT;
 pub struct IDXGIObjectVT {
 	pub IUnknownVT: IUnknownVT,
 	pub SetPrivateData: fn(ComPtr, PCVOID, u32, PVOID) -> HRES,
-	pub SetPrivateDataInterface: fn(ComPtr, PCVOID, *const ComPtr) -> HRES,
+	pub SetPrivateDataInterface: fn(ComPtr, PCVOID, ComPtr) -> HRES,
 	pub GetPrivateData: fn(ComPtr, PCVOID, *mut u32, PVOID) -> HRES,
 	pub GetParent: fn(ComPtr, PCVOID, *mut ComPtr) -> HRES,
 }
@@ -52,6 +52,23 @@ pub trait dxgi_IDXGIObject: ole_IUnknown {
 					&mut ppv_queried,
 				),
 			).map(|_| T::from(ppv_queried))
+		}
+	}
+
+	/// [`IDXGIObject::SetPrivateDataInterface`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiobject-setprivatedatainterface)
+	/// method.
+	fn SetPrivateDataInterface<T>(&self, interface: &T) -> HrResult<()>
+		where T: ole_IUnknown,
+	{
+		unsafe {
+			let vt = self.vt_ref::<IDXGIObjectVT>();
+			ok_to_hrresult(
+				(vt.SetPrivateDataInterface)(
+					self.ptr(),
+					&T::IID as *const _ as _,
+					interface.ptr(),
+				),
+			)
 		}
 	}
 }

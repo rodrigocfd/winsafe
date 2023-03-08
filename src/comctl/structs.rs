@@ -526,7 +526,8 @@ pub struct MCGRIDINFO<'a> {
 impl_default_with_size!(MCGRIDINFO, cbSize, 'a);
 
 impl<'a> MCGRIDINFO<'a> {
-	pub_fn_bool_get_set!(bSelected, set_bSelected); // ignore cchName
+	pub_fn_bool_get_set!(bSelected, set_bSelected);
+	pub_fn_string_buf_get_set!('a, pszName, set_pszName, cchName);
 }
 
 /// [`MCHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mchittestinfo)

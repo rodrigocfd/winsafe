@@ -13,7 +13,7 @@ use crate::vt::IDXGIObjectVT;
 /// [`IDXGIFactory`](crate::IDXGIFactory) virtual table.
 #[repr(C)]
 pub struct IDXGIFactoryVT {
-	pub IUnknownVT: IDXGIObjectVT,
+	pub IDXGIObjectVT: IDXGIObjectVT,
 	pub EnumAdapters: fn(ComPtr, u32, *const ComPtr) -> HRES,
 	pub MakeWindowAssociation: fn(ComPtr, HANDLE, u32) -> HRES,
 	pub GetWindowAssociation: fn(ComPtr, *mut HANDLE) -> HRES,
