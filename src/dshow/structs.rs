@@ -6,6 +6,8 @@ use crate::co;
 use crate::dshow::decl::IBaseFilter;
 use crate::kernel::decl::GUID;
 use crate::kernel::ffi_types::BOOL;
+use crate::ole::decl::ComPtr;
+use crate::prelude::dshow_IFilterGraph;
 
 /// [`AM_MEDIA_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-am_media_type)
 /// struct.
@@ -65,6 +67,21 @@ pub struct DVINFO {
 	pub dwDVVAuxSrc: u32,
 	pub dwDVVAuxCtl: u32,
 	dwDVReserved: [u32; 2],
+}
+
+/// [`FILTER_INFO`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-filter_info)
+/// struct.
+#[repr(C)]
+pub struct FILTER_INFO {
+	achName: [u16; 128],
+	pGraph: ComPtr,
+}
+
+impl_default!(FILTER_INFO);
+impl_drop_comptr!(pGraph, FILTER_INFO);
+
+impl FILTER_INFO {
+	pub_fn_comptr_get_set!(pGraph, set_pGraph, dshow_IFilterGraph);
 }
 
 /// [`MFVideoNormalizedRect`](https://learn.microsoft.com/en-us/windows/win32/api/evr/ns-evr-mfvideonormalizedrect)

@@ -197,7 +197,7 @@ macro_rules! pub_fn_array_buf_get_set {
 /// Implements getter and setter methods for the given `ComPtr` field.
 macro_rules! pub_fn_comptr_get_set {
 	($field:ident, $setter:ident, $trait:ident) => {
-		/// Returns the `Object` field, by cloning the underlying COM pointer.
+		/// Returns the COM object field, by cloning the underlying COM pointer.
 		#[must_use]
 		pub fn $field<T>(&self) -> Option<T>
 			where T: $trait,
@@ -209,7 +209,7 @@ macro_rules! pub_fn_comptr_get_set {
 			})
 		}
 
-		/// Sets the `Object` field, by cloning the underlying COM pointer.
+		/// Sets the COM object field, by cloning the underlying COM pointer.
 		pub fn $setter<T>(&mut self, obj: Option<&T>)
 			where T: $trait,
 		{

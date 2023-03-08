@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::dshow::decl::{IEnumPins, IFilterGraph, IPin};
+use crate::dshow::decl::{FILTER_INFO, IEnumPins, IFilterGraph, IPin};
 use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR, PVOID};
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
@@ -98,6 +98,17 @@ pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 					graph.map_or(ComPtr::null(), |g| g.ptr()),
 					WString::from_str(name).as_ptr(),
 				),
+			)
+		}
+	}
+
+	/// [`IBaseFilter::QueryFilterInfo`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-queryfilterinfo)
+	/// method.
+	fn QueryFilterInfo(&self, info: &mut FILTER_INFO) -> HrResult<()> {
+		unsafe {
+			let vt = self.vt_ref::<IBaseFilterVT>();
+			ok_to_hrresult(
+				(vt.QueryFilterInfo)(self.ptr(), info as *mut _ as _),
 			)
 		}
 	}
