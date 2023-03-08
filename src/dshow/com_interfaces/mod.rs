@@ -4,6 +4,7 @@ mod ienummediatypes;
 mod ienumpins;
 mod ifilesinkfilter;
 mod ifiltergraph;
+mod ifiltergraph2;
 mod igraphbuilder;
 mod imediacontrol;
 mod imediafilter;
@@ -19,6 +20,7 @@ pub mod decl {
 	pub use super::ienumpins::IEnumPins;
 	pub use super::ifilesinkfilter::IFileSinkFilter;
 	pub use super::ifiltergraph::IFilterGraph;
+	pub use super::ifiltergraph2::IFilterGraph2;
 	pub use super::igraphbuilder::IGraphBuilder;
 	pub use super::imediacontrol::IMediaControl;
 	pub use super::imediafilter::IMediaFilter;
@@ -35,6 +37,7 @@ pub mod traits {
 	pub use super::ienumpins::dshow_IEnumPins;
 	pub use super::ifilesinkfilter::dshow_IFileSinkFilter;
 	pub use super::ifiltergraph::dshow_IFilterGraph;
+	pub use super::ifiltergraph2::dshow_IFilterGraph2;
 	pub use super::igraphbuilder::dshow_IGraphBuilder;
 	pub use super::imediacontrol::dshow_IMediaControl;
 	pub use super::imediafilter::dshow_IMediaFilter;
@@ -51,6 +54,7 @@ pub mod vt {
 	pub use super::ienumpins::IEnumPinsVT;
 	pub use super::ifilesinkfilter::IFileSinkFilterVT;
 	pub use super::ifiltergraph::IFilterGraphVT;
+	pub use super::ifiltergraph2::IFilterGraph2VT;
 	pub use super::igraphbuilder::IGraphBuilderVT;
 	pub use super::imediacontrol::IMediaControlVT;
 	pub use super::imediafilter::IMediaFilterVT;
