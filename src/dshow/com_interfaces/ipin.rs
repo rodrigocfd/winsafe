@@ -56,7 +56,8 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// [`IPin::Connect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connect)
 	/// method.
 	fn Connect(&self,
-		receive_pin: &IPin, amt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
+		receive_pin: &impl dshow_IPin,
+		mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<IPinVT>();
@@ -64,7 +65,7 @@ pub trait dshow_IPin: ole_IUnknown {
 				(vt.Connect)(
 					self.ptr(),
 					receive_pin.ptr(),
-					amt.map_or(std::ptr::null(), |amt| amt as *const _ as _),
+					mt.map_or(std::ptr::null(), |amt| amt as *const _ as _),
 				),
 			)
 		}
@@ -224,7 +225,8 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// [`IPin::ReceiveConnection`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-receiveconnection)
 	/// method.
 	fn ReceiveConnection(&self,
-		connector: &IPin, amt: &AM_MEDIA_TYPE) -> HrResult<()>
+		connector: &impl dshow_IPin,
+		mt: &AM_MEDIA_TYPE) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<IPinVT>();
@@ -232,7 +234,7 @@ pub trait dshow_IPin: ole_IUnknown {
 				(vt.ReceiveConnection)(
 					self.ptr(),
 					connector.ptr(),
-					amt as *const _ as _,
+					mt as *const _ as _,
 				),
 			)
 		}

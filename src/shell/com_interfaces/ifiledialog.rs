@@ -5,7 +5,7 @@ use crate::kernel::decl::{GUID, WString};
 use crate::kernel::ffi_types::{HRES, PCSTR, PCVOID, PSTR, PVOID};
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{ole_IUnknown, shell_IModalWindow};
+use crate::prelude::{shell_IModalWindow, shell_IShellItem};
 use crate::shell::decl::{COMDLG_FILTERSPEC, IShellItem};
 use crate::vt::IModalWindowVT;
 
@@ -61,7 +61,9 @@ impl shell_IFileDialog for IFileDialog {}
 pub trait shell_IFileDialog: shell_IModalWindow {
 	/// [`IFileDialog::AddPlace`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-addplace)
 	/// method.
-	fn AddPlace(&self, si: &IShellItem, fdap: co::FDAP) -> HrResult<()> {
+	fn AddPlace(&self,
+		si: &impl shell_IShellItem, fdap: co::FDAP) -> HrResult<()>
+	{
 		unsafe {
 			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.AddPlace)(self.ptr(), si.ptr(), fdap.0))
@@ -186,7 +188,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 
 	/// [`IFileDialog::SetDefaultFolder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setdefaultfolder)
 	/// method.
-	fn SetDefaultFolder(&self, si: &IShellItem) -> HrResult<()> {
+	fn SetDefaultFolder(&self, si: &impl shell_IShellItem) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.SetDefaultFolder)(self.ptr(), si.ptr()))
@@ -281,7 +283,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 
 	/// [`IFileDialog::SetFolder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfolder)
 	/// method.
-	fn SetFolder(&self, si: &IShellItem) -> HrResult<()> {
+	fn SetFolder(&self, si: &impl shell_IShellItem) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.SetFolder)(self.ptr(), si.ptr()))

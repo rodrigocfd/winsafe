@@ -3,9 +3,9 @@
 use crate::co;
 use crate::kernel::decl::MAKEQWORD;
 use crate::kernel::ffi_types::HRES;
-use crate::ole::decl::{ComPtr, HrResult, IDataObject};
+use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::ole_IUnknown;
+use crate::prelude::{ole_IDataObject, ole_IUnknown};
 use crate::user::decl::POINT;
 use crate::vt::IUnknownVT;
 
@@ -42,7 +42,7 @@ pub trait ole_IDropTarget: ole_IUnknown {
 	/// [`IDropTarget::DragEnter`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragenter)
 	/// method.
 	fn DragEnter(&self,
-		data_obj: &IDataObject,
+		data_obj: &impl ole_IDataObject,
 		key_state: co::MK,
 		pt: POINT,
 		effect: co::DROPEFFECT) -> HrResult<co::DROPEFFECT>
@@ -97,7 +97,7 @@ pub trait ole_IDropTarget: ole_IUnknown {
 	/// [`IDropTarget::Drop`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-drop)
 	/// method.
 	fn Drop(&self,
-		data_obj: &IDataObject,
+		data_obj: &impl ole_IDataObject,
 		key_state: co::MK,
 		pt: POINT,
 		effect: co::DROPEFFECT) -> HrResult<co::DROPEFFECT>

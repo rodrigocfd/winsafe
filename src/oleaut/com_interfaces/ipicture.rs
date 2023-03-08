@@ -1,10 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::WString;
-use crate::ole::decl::{ComPtr, HrResult, IPicture, IStream};
+use crate::ole::decl::{ComPtr, HrResult, IPicture};
 use crate::ole::privs::ok_to_hrresult;
 use crate::oleaut;
-use crate::prelude::{ole_IPicture, ole_IUnknown};
+use crate::prelude::{ole_IPicture, ole_IStream};
 use crate::user::decl::COLORREF;
 
 impl oleaut_IPicture for IPicture {}
@@ -37,7 +37,7 @@ pub trait oleaut_IPicture: ole_IPicture {
 	/// ```
 	#[must_use]
 	fn OleLoadPicture(
-		stream: &IStream,
+		stream: &impl ole_IStream,
 		size: Option<u32>,
 		keep_original_format: bool) -> HrResult<IPicture>
 	{

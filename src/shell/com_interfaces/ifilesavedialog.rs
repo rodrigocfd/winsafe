@@ -3,8 +3,7 @@
 use crate::kernel::ffi_types::{BOOL, HANDLE, HRES};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{ole_IUnknown, shell_IFileDialog, shell_IModalWindow};
-use crate::shell::decl::IShellItem;
+use crate::prelude::{shell_IFileDialog, shell_IModalWindow, shell_IShellItem};
 use crate::vt::IFileDialogVT;
 
 /// [`IFileSaveDialog`](crate::IFileSaveDialog) virtual table.
@@ -56,7 +55,7 @@ impl shell_IFileSaveDialog for IFileSaveDialog {}
 pub trait shell_IFileSaveDialog: shell_IFileDialog {
 	/// [`IFileSaveDialog::SetSaveAsItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setsaveasitem)
 	/// method.
-	fn SetSaveAsItem(&self, psi: &IShellItem) -> HrResult<()> {
+	fn SetSaveAsItem(&self, psi: &impl shell_IShellItem) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IFileSaveDialogVT>();
 			ok_to_hrresult((vt.SetSaveAsItem)(self.ptr(), psi.ptr()))

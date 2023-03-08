@@ -1,9 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::ffi_types::{BOOL, HRES, PCVOID, PSTR, PVOID};
-use crate::ole::decl::{ComPtr, HrResult, IBindCtx};
+use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{ole_IUnknown, shell_IShellItem};
+use crate::prelude::{ole_IBindCtx, shell_IShellItem};
 use crate::vt::IShellItemVT;
 
 /// [`IShellItem2`](crate::IShellItem2) virtual table.
@@ -52,7 +52,7 @@ impl shell_IShellItem2 for IShellItem2 {}
 pub trait shell_IShellItem2: shell_IShellItem {
 	/// [`IShellItem2::Update`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-update)
 	/// method.
-	fn Update(&self, pbc: &IBindCtx) -> HrResult<()> {
+	fn Update(&self, pbc: &impl ole_IBindCtx) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IShellItem2VT>();
 			ok_to_hrresult((vt.Update)(self.ptr(), pbc.ptr()))

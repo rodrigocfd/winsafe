@@ -4,7 +4,7 @@ use crate::co;
 use crate::kernel::ffi_types::{HRES, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{ole_IUnknown, ole_ISequentialStream};
+use crate::prelude::ole_ISequentialStream;
 use crate::vt::ISequentialStreamVT;
 
 /// [`IStream`](crate::IStream) virtual table.
@@ -51,7 +51,10 @@ pub trait ole_IStream: ole_ISequentialStream {
 	/// method.
 	///
 	/// Returns the number of bytes read and written.
-	fn CopyTo(&self, dest: &IStream, num_bytes: u64) -> HrResult<(u64, u64)> {
+	fn CopyTo(&self,
+		dest: &impl ole_IStream,
+		num_bytes: u64) -> HrResult<(u64, u64)>
+	{
 		let (mut read, mut written) = (u64::default(), u64::default());
 		ok_to_hrresult(
 			unsafe {

@@ -5,7 +5,7 @@ use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCSTR, PCVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::ole_IUnknown;
+use crate::prelude::{dshow_IBaseFilter, ole_IUnknown};
 use crate::vt::IUnknownVT;
 
 /// [`IFilterGraph`](crate::IFilterGraph) virtual table.
@@ -44,7 +44,10 @@ impl dshow_IFilterGraph for IFilterGraph {}
 pub trait dshow_IFilterGraph: ole_IUnknown {
 	/// [`IFilterGraph::AddFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-addfilter)
 	/// method.
-	fn AddFilter(&self, filter: &IBaseFilter, name: &str) -> HrResult<()> {
+	fn AddFilter(&self,
+		filter: &impl dshow_IBaseFilter,
+		name: &str) -> HrResult<()>
+	{
 		unsafe {
 			let vt = self.vt_ref::<IFilterGraphVT>();
 			ok_to_hrresult(
@@ -89,7 +92,7 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 
 	/// [`IFilterGraph::RemoveFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-removefilter)
 	/// method.
-	fn RemoveFilter(&self, filter: &IBaseFilter) -> HrResult<()> {
+	fn RemoveFilter(&self, filter: &impl dshow_IBaseFilter) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IFilterGraphVT>();
 			ok_to_hrresult((vt.RemoveFilter)(self.ptr(), filter.ptr()))

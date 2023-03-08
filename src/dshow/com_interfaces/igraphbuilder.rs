@@ -1,11 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::dshow::decl::{IBaseFilter, IPin};
+use crate::dshow::decl::IBaseFilter;
 use crate::kernel::decl::{HFILE, WString};
 use crate::kernel::ffi_types::{HANDLE, HRES, PCSTR};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
-use crate::prelude::{dshow_IFilterGraph, ole_IUnknown};
+use crate::prelude::{dshow_IFilterGraph, dshow_IPin};
 use crate::vt::IFilterGraphVT;
 
 /// [`IGraphBuilder`](crate::IGraphBuilder) virtual table.
@@ -87,7 +87,10 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 
 	/// [`IGraphBuilder::Connect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-connect)
 	/// method.
-	fn Connect(&self, pin_out: &IPin, pin_in: &IPin) -> HrResult<()> {
+	fn Connect(&self,
+		pin_out: &impl dshow_IPin,
+		pin_in: &impl dshow_IPin) -> HrResult<()>
+	{
 		unsafe {
 			let vt = self.vt_ref::<IGraphBuilderVT>();
 			ok_to_hrresult((vt.Connect)(self.ptr(), pin_out.ptr(), pin_in.ptr()))
@@ -96,7 +99,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 
 	/// [`IGraphBuilder::Render`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-render)
 	/// method.
-	fn Render(&self, pin_out: &IPin) -> HrResult<()> {
+	fn Render(&self, pin_out: &impl dshow_IPin) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IGraphBuilderVT>();
 			ok_to_hrresult((vt.Render)(self.ptr(), pin_out.ptr()))
