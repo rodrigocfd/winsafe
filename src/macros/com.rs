@@ -13,7 +13,8 @@ macro_rules! com_interface {
 		impl Drop for $name {
 			fn drop(&mut self) {
 				if let Some(p) = self.0.as_opt() {
-					let vt = unsafe { &**(p.0 as *mut *mut crate::vt::IUnknownVT) };
+					use crate::{prelude::ole_IUnknown, vt::IUnknownVT};
+					let vt = unsafe { self.vt_ref::<IUnknownVT>() };
 					(vt.Release)(*p);
 				}
 			}
@@ -21,7 +22,8 @@ macro_rules! com_interface {
 
 		impl Clone for $name {
 			fn clone(&self) -> Self {
-				let vt = unsafe { &**(self.0.0 as *mut *mut crate::vt::IUnknownVT) };
+				use crate::{prelude::ole_IUnknown, vt::IUnknownVT};
+				let vt = unsafe { self.vt_ref::<IUnknownVT>() };
 				(vt.AddRef)(self.0);
 				Self(self.0)
 			}
