@@ -5,31 +5,26 @@ use std::sync::Arc;
 use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::WindowEventsAll;
-use crate::gui::layout_arranger::{Horz, Vert};
-use crate::gui::privs::{
-	auto_ctrl_id, multiply_dpi_or_dtu, paint_control_borders,
-};
+use crate::gui::privs::{adjust_modeless_pos, multiply_dpi_or_dtu};
 use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
 use crate::kernel::decl::{AnyResult, WString};
-use crate::prelude:: GuiEvents;
-use crate::user::decl::{HWND, IdMenu, POINT, SIZE, WNDCLASSEX};
+use crate::prelude::{GuiEvents, Handle};
+use crate::user::decl::{HMENU, HWND, IdMenu, POINT, SIZE, WNDCLASSEX};
 
-struct Obj { // actual fields of RawControl
+struct Obj { // actual fields of RawModeless
 	raw_base: RawBase,
-	opts: WindowControlOpts,
+	opts: WindowModelessOpts,
 	_pin: PhantomPinned,
 }
 
 //------------------------------------------------------------------------------
 
-/// An ordinary custom control window.
+/// An ordinary modeless window.
 #[derive(Clone)]
-pub(in crate::gui) struct RawControl(Pin<Arc<Obj>>);
+pub(in crate::gui) struct RawModeless(Pin<Arc<Obj>>);
 
-impl RawControl {
-	pub(in crate::gui) fn new(parent: &Base, opts: WindowControlOpts) -> Self {
-		let (horz, vert) = (opts.horz_resize, opts.vert_resize);
-		let opts = WindowControlOpts::define_ctrl_id(opts);
+impl RawModeless {
+	pub(in crate::gui) fn new(parent: &Base, opts: WindowModelessOpts) -> Self {
 		let new_self = Self(
 			Arc::pin(
 				Obj {
@@ -39,7 +34,7 @@ impl RawControl {
 				},
 			),
 		);
-		new_self.default_message_handlers(parent, horz, vert);
+		new_self.default_message_handlers(parent);
 		new_self
 	}
 
@@ -49,10 +44,6 @@ impl RawControl {
 
 	pub(in crate::gui) fn hwnd(&self) -> &HWND {
 		self.0.raw_base.hwnd()
-	}
-
-	pub(in crate::gui) fn ctrl_id(&self) -> u16 {
-		self.0.opts.ctrl_id
 	}
 
 	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
@@ -71,9 +62,10 @@ impl RawControl {
 		self.0.raw_base.run_ui_thread(func);
 	}
 
-	fn default_message_handlers(&self, parent: &Base, horz: Horz, vert: Vert) {
+	fn default_message_handlers(&self, parent: &Base) {
 		let self2 = self.clone();
 		self.0.raw_base.parent().unwrap().privileged_on().wm(parent.creation_msg(), move |_| {
+			let hparent = self2.0.raw_base.parent().unwrap().hwnd();
 			let opts = &self2.0.opts;
 
 			let parent_hinst = self2.0.raw_base.parent_hinstance()?;
@@ -86,37 +78,32 @@ impl RawControl {
 				&mut class_name_buf)?;
 			let atom = self2.0.raw_base.register_class(&mut wcx)?;
 
-			let mut wnd_pos = POINT::new(opts.position.0, opts.position.1);
+			let wnd_pos = adjust_modeless_pos(
+				self2.0.raw_base.parent().unwrap(), hparent,
+				POINT::new(opts.position.0, opts.position.1))?;
+
 			let mut wnd_sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
-			multiply_dpi_or_dtu(self2.0.raw_base.parent().unwrap(),
-				Some(&mut wnd_pos), Some(&mut wnd_sz))?;
+			multiply_dpi_or_dtu(
+				self2.0.raw_base.parent().unwrap(), None, Some(&mut wnd_sz))?;
 
 			self2.0.raw_base.create_window(
 				atom,
-				None,
-				IdMenu::Id(opts.ctrl_id),
+				Some(&opts.title),
+				IdMenu::Menu(&HMENU::NULL),
 				wnd_pos, wnd_sz,
 				opts.ex_style, opts.style,
 			)?;
-
-			self2.0.raw_base.parent().unwrap()
-				.add_to_layout_arranger(self2.hwnd(), horz, vert)?;
 			Ok(None) // not meaningful
-		});
-
-		let self2 = self.clone();
-		self.on().wm_nc_paint(move |p| {
-			paint_control_borders(self2.hwnd(), p)?;
-			Ok(())
 		});
 	}
 }
 
 //------------------------------------------------------------------------------
 
-/// Options to create a [`WindowControl`](crate::gui::WindowControl)
-/// programmatically with [`WindowControl::new`](crate::gui::WindowControl::new).
-pub struct WindowControlOpts {
+/// Options to create a [`WindowModeless`](crate::gui::WindowModeless)
+/// programmatically with
+/// [`WindowModeless::new`](crate::gui::WindowModeless::new).
+pub struct WindowModelessOpts {
 	/// Window class name to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
@@ -140,9 +127,14 @@ pub struct WindowControlOpts {
 	/// Window background brush to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to `Brush::Color(co::COLOR::WINDOW)`.
+	/// Defaults to `Brush::Color(co::COLOR::BTNFACE)`.
 	pub class_bg_brush: Brush,
 
+	/// Window title to be
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	///
+	/// Defaults to empty string.
+	pub title: String,
 	/// Left and top position coordinates of control within parent's client
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -153,67 +145,42 @@ pub struct WindowControlOpts {
 	///
 	/// Defaults to `(0, 0)`.
 	pub position: (i32, i32),
-	/// Width and height of window to be
+	/// Width and height of window client area, in pixels, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+	/// Does not include title bar or borders.
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
+	/// Will be adjusted to match current system DPI.
 	///
-	/// Defaults to `(100, 80)`.
+	/// Defaults to `(220, 150)`.
 	pub size: (u32, u32),
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS::CHILD | WS::TABSTOP | WS::GROUP | WS::VISIBLE | WS::CLIPCHILDREN | WS::CLIPSIBLINGS`.
+	/// Defaults to `WS::CAPTION | WS::SYSMENU | WS::CLIPCHILDREN | WS::BORDER | WS::VISIBLE`.
+	///
+	/// Suggestions:
+	/// * `WS::SIZEBOX` to make the window resizable.
 	pub style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS_EX::LEFT`.
-	///
-	/// Suggestion:
-	/// * `WS_EX::CLIENTEDGE` to have a border.
+	/// Defaults to `WS_EX::LEFT | WS_EX::TOOLWINDOW`.
 	pub ex_style: co::WS_EX,
-
-	/// The control ID.
-	///
-	/// Defaults to an auto-generated ID.
-	pub ctrl_id: u16,
-	/// Horizontal behavior when the parent is resized.
-	///
-	/// Defaults to `Horz::None`.
-	pub horz_resize: Horz,
-	/// Vertical behavior when the parent is resized.
-	///
-	/// Defaults to `Vert::None`.
-	pub vert_resize: Vert,
 }
 
-impl Default for WindowControlOpts {
+impl Default for WindowModelessOpts {
 	fn default() -> Self {
 		Self {
 			class_name: "".to_owned(),
 			class_style: co::CS::DBLCLKS,
 			class_icon: Icon::None,
 			class_cursor: Cursor::Idc(co::IDC::ARROW),
-			class_bg_brush: Brush::Color(co::COLOR::WINDOW),
+			class_bg_brush: Brush::Color(co::COLOR::BTNFACE),
+			title: "".to_owned(),
 			position: (0, 0),
-			size: (100, 80),
-			style: co::WS::CHILD | co::WS::TABSTOP | co::WS::GROUP | co::WS::VISIBLE | co::WS::CLIPCHILDREN | co::WS::CLIPSIBLINGS,
-			ex_style: co::WS_EX::LEFT,
-			ctrl_id: 0,
-			horz_resize: Horz::None,
-			vert_resize: Vert::None,
+			size: (220, 150),
+			style: co::WS::CAPTION | co::WS::SYSMENU | co::WS::CLIPCHILDREN | co::WS::BORDER | co::WS::VISIBLE,
+			ex_style: co::WS_EX::LEFT | co::WS_EX::TOOLWINDOW,
 		}
-	}
-}
-
-impl WindowControlOpts {
-	fn define_ctrl_id(mut self) -> Self {
-		if self.ctrl_id == 0 {
-			self.ctrl_id = auto_ctrl_id();
-		}
-		self
 	}
 }

@@ -199,6 +199,19 @@ fn remove_accelerator_ampersands(text: &str) -> String {
 
 //------------------------------------------------------------------------------
 
+/// Adjusts the position of a modeless window on parent.
+pub(in crate::gui) fn adjust_modeless_pos(
+	modeless_base: &Base, hparent: &HWND, mut user_pos: POINT) -> SysResult<POINT>
+{
+	// For a modeless (0,0) is the left/topmost point in parent's client area.
+	multiply_dpi_or_dtu(modeless_base, Some(&mut user_pos), None)?;
+	let mut parent_rc = hparent.GetClientRect()?;
+	hparent.ClientToScreenRc(&mut parent_rc)?;
+	user_pos.x += parent_rc.left;
+	user_pos.y += parent_rc.top;
+	Ok(user_pos)
+}
+
 /// Paints the themed border of an user control, if it has the proper styles.
 pub(in crate::gui) fn paint_control_borders(
 	hwnd: &HWND, wm_ncp: wm::NcPaint) -> AnyResult<()>

@@ -27,7 +27,7 @@ These are the estimated progresses of the GUI features:
 
 | GUI feature | Estimated progress |
 | - | - |
-| User window/dialogs (main, modal and control) | 100% |
+| User window/dialogs (main, modal, modeless and control) | 100% |
 | Native controls | 85% |
 
 Plus, below are the numbers of native FFI items implemented:

@@ -13,6 +13,7 @@ mod dlg_base;
 mod dlg_control;
 mod dlg_main;
 mod dlg_modal;
+mod dlg_modeless;
 mod gui_traits;
 mod layout_arranger;
 mod msg_error;
@@ -22,9 +23,11 @@ mod raw_base;
 mod raw_control;
 mod raw_main;
 mod raw_modal;
+mod raw_modeless;
 mod window_control;
 mod window_main;
 mod window_modal;
+mod window_modeless;
 
 pub mod events;
 
@@ -35,9 +38,11 @@ pub use raw_base::{Brush, Cursor, Icon};
 pub use raw_control::WindowControlOpts;
 pub use raw_main::WindowMainOpts;
 pub use raw_modal::WindowModalOpts;
+pub use raw_modeless::WindowModelessOpts;
 pub use window_control::WindowControl;
 pub use window_main::WindowMain;
 pub use window_modal::WindowModal;
+pub use window_modeless::WindowModeless;
 
 pub(crate) mod traits {
 	pub use super::events::traits::*;

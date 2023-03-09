@@ -67,11 +67,10 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn parent_hinstance(&self) -> SysResult<HINSTANCE> {
-		Ok(if let Some(parent) = self.parent() {
-			parent.hwnd().hinstance()
-		} else {
-			HINSTANCE::GetModuleHandle(None)?
-		})
+		self.parent().map_or_else(
+			|| HINSTANCE::GetModuleHandle(None),
+			|parent| Ok(parent.hwnd().hinstance()),
+		)
 	}
 
 	/// User events can be overriden; only the last one is executed.
