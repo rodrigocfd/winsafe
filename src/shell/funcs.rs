@@ -5,7 +5,7 @@ use crate::kernel::decl::{
 	GetLastError, HACCESSTOKEN, HLOCAL, SysResult, WString,
 };
 use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, ptr_to_sysresult};
-use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult, IBindCtx};
+use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult, IBindCtx, IStream};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{Handle, kernel_Hlocal, ole_IUnknown, shell_IShellItem};
 use crate::shell::decl::{
@@ -197,6 +197,35 @@ pub fn SHCreateItemFromParsingName<T>(
 				&mut ppv_queried as *mut _ as _,
 			),
 		).map(|_| T::from(ppv_queried))
+	}
+}
+
+/// [`SHCreateMemStream`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shcreatememstream)
+/// function.
+///
+/// # Examples
+///
+/// Loading from a `Vec`:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::SHCreateMemStream;
+///
+/// let raw_data: Vec<u8>; // initialized somewhere
+/// # let raw_data = Vec::<u8>::default();
+///
+/// let stream = SHCreateMemStream(&raw_data)?;
+/// # Ok::<_, winsafe::co::HRESULT>(())
+/// ```
+#[must_use]
+pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
+	let p = unsafe {
+		shell::ffi::SHCreateMemStream(src.as_ptr(), src.len() as _)
+	};
+	if p.is_null() {
+		Err(co::HRESULT::E_OUTOFMEMORY)
+	} else {
+		Ok(IStream::from(ComPtr(p as _)))
 	}
 }
 

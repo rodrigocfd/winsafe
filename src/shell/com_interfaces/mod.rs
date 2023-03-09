@@ -7,7 +7,6 @@ mod ishellitem;
 mod ishellitem2;
 mod ishellitemarray;
 mod ishelllink;
-mod istream;
 mod itaskbarlist;
 mod itaskbarlist2;
 mod itaskbarlist3;
@@ -39,7 +38,6 @@ pub mod traits {
 	pub use super::ishellitem2::shell_IShellItem2;
 	pub use super::ishellitemarray::shell_IShellItemArray;
 	pub use super::ishelllink::shell_IShellLink;
-	pub use super::istream::shell_IStream;
 	pub use super::itaskbarlist::shell_ITaskbarList;
 	pub use super::itaskbarlist2::shell_ITaskbarList2;
 	pub use super::itaskbarlist3::shell_ITaskbarList3;
