@@ -86,7 +86,9 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
 	#[must_use]
-	fn iter(&self) -> HrResult<Box<dyn Iterator<Item = HrResult<IShellItem>> + '_>> {
+	fn iter(&self,
+	) -> HrResult<Box<dyn Iterator<Item = HrResult<IShellItem>> + '_>>
+	{
 		Ok(Box::new(ShellItemIter::new(self)?))
 	}
 

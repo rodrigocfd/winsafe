@@ -59,7 +59,9 @@ pub trait advapi_Hkey: Handle {
 	/// - [`HKEY::USERS`](crate::prelude::advapi_Hkey::USERS).
 	#[must_use]
 	fn RegConnectRegistry(
-		machine_name: Option<&str>, predef_hkey: &HKEY) -> SysResult<RegCloseKeyGuard>
+		machine_name: Option<&str>,
+		predef_hkey: &HKEY,
+	) -> SysResult<RegCloseKeyGuard>
 	{
 		if *predef_hkey != HKEY::LOCAL_MACHINE
 			&& *predef_hkey != HKEY::PERFORMANCE_DATA
@@ -102,7 +104,8 @@ pub trait advapi_Hkey: Handle {
 		class: Option<&str>,
 		options: co::REG_OPTION,
 		access_rights: co::KEY,
-		security_attributes: Option<&SECURITY_ATTRIBUTES>) -> SysResult<(RegCloseKeyGuard, co::REG_DISPOSITION)>
+		security_attributes: Option<&SECURITY_ATTRIBUTES>,
+	) -> SysResult<(RegCloseKeyGuard, co::REG_DISPOSITION)>
 	{
 		let mut hkey = HKEY::NULL;
 		let mut disposition = co::REG_DISPOSITION::NoValue;
@@ -243,7 +246,9 @@ pub trait advapi_Hkey: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn RegEnumKeyEx(&self) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + '_>> {
+	fn RegEnumKeyEx(&self,
+	) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + '_>>
+	{
 		Ok(Box::new(EnumKeyIter::new(self)?))
 	}
 
@@ -275,7 +280,9 @@ pub trait advapi_Hkey: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn RegEnumValue(&self) -> SysResult<Box<dyn Iterator<Item = SysResult<(String, co::REG)>> + '_>> {
+	fn RegEnumValue(&self,
+	) -> SysResult<Box<dyn Iterator<Item = SysResult<(String, co::REG)>> + '_>>
+	{
 		Ok(Box::new(EnumValueIter::new(self)?))
 	}
 
@@ -331,7 +338,8 @@ pub trait advapi_Hkey: Handle {
 	#[must_use]
 	fn RegGetValue(&self,
 		sub_key: Option<&str>,
-		value_name: Option<&str>) -> SysResult<RegistryValue>
+		value_name: Option<&str>,
+	) -> SysResult<RegistryValue>
 	{
 		let sub_key_w = WString::from_opt_str(sub_key);
 		let value_name_w = WString::from_opt_str(value_name);
@@ -432,7 +440,8 @@ pub trait advapi_Hkey: Handle {
 	fn RegOpenKeyEx(&self,
 		sub_key: Option<&str>,
 		options: co::REG_OPTION,
-		access_rights: co::KEY) -> SysResult<RegCloseKeyGuard>
+		access_rights: co::KEY,
+	) -> SysResult<RegCloseKeyGuard>
 	{
 		let mut hkey = HKEY::NULL;
 		error_to_sysresult(
@@ -459,7 +468,8 @@ pub trait advapi_Hkey: Handle {
 		max_value_name_len: Option<&mut u32>,
 		max_value_len: Option<&mut u32>,
 		security_descr_len: Option<&mut u32>,
-		last_write_time: Option<&mut FILETIME>) -> SysResult<()>
+		last_write_time: Option<&mut FILETIME>,
+	) -> SysResult<()>
 	{
 		const BLOCK: usize = 32; // arbitrary
 
@@ -699,7 +709,9 @@ pub trait advapi_Hkey: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn RegQueryValueEx(&self, value_name: Option<&str>) -> SysResult<RegistryValue> {
+	fn RegQueryValueEx(&self,
+		value_name: Option<&str>) -> SysResult<RegistryValue>
+	{
 		let value_name_w = WString::from_opt_str(value_name);
 		let mut raw_data_type1 = u32::default();
 		let mut data_len1 = u32::default();
@@ -764,7 +776,8 @@ pub trait advapi_Hkey: Handle {
 	fn RegReplaceKey(&self,
 		sub_key: Option<&str>,
 		new_src_file: &str,
-		old_file_backup: &str) -> SysResult<()>
+		old_file_backup: &str,
+	) -> SysResult<()>
 	{
 		error_to_sysresult(
 			unsafe {
@@ -798,7 +811,8 @@ pub trait advapi_Hkey: Handle {
 	/// method.
 	fn RegSaveKey(&self,
 		dest_file_path: &str,
-		security_attributes: Option<&SECURITY_ATTRIBUTES>) -> SysResult<()>
+		security_attributes: Option<&SECURITY_ATTRIBUTES>,
+	) -> SysResult<()>
 	{
 		error_to_sysresult(
 			unsafe {
@@ -816,7 +830,8 @@ pub trait advapi_Hkey: Handle {
 	fn RegSaveKeyEx(&self,
 		dest_file_path: &str,
 		security_attributes: Option<&SECURITY_ATTRIBUTES>,
-		flags: co::REG_SAVE) -> SysResult<()>
+		flags: co::REG_SAVE,
+	) -> SysResult<()>
 	{
 		error_to_sysresult(
 			unsafe {
@@ -852,7 +867,8 @@ pub trait advapi_Hkey: Handle {
 	fn RegSetKeyValue(&self,
 		sub_key: Option<&str>,
 		value_name: Option<&str>,
-		data: RegistryValue) -> SysResult<()>
+		data: RegistryValue,
+	) -> SysResult<()>
 	{
 		let mut str_buf = WString::default();
 		let (data_ptr, data_len) = data.as_ptr_with_len(&mut str_buf);
@@ -936,7 +952,8 @@ fn validate_retrieved_reg_val(
 	data_len1: u32,
 	data_type2: co::REG,
 	mut data_len2: u32,
-	buf: Vec<u8>) -> SysResult<RegistryValue>
+	buf: Vec<u8>,
+) -> SysResult<RegistryValue>
 {
 	if data_type1 != data_type2 {
 		// Race condition: someone modified the data type in between our calls.

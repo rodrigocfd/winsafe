@@ -70,7 +70,9 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	#[must_use]
 	fn ConvertTimeFormat(&self,
 		target_format: &co::TIME_FORMAT,
-		source: i64, source_format: &co::TIME_FORMAT) -> HrResult<i64>
+		source: i64,
+		source_format: &co::TIME_FORMAT,
+	) -> HrResult<i64>
 	{
 		let mut target = i64::default();
 		unsafe {
@@ -184,8 +186,11 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	/// [`IMediaSeeking::SetPositions`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setpositions)
 	/// method.
 	fn SetPositions(&self,
-		current: i64, current_flags: co::SEEKING_FLAGS,
-		stop: i64, stop_flags: co::SEEKING_FLAGS) -> HrResult<()>
+		current: i64,
+		current_flags: co::SEEKING_FLAGS,
+		stop: i64,
+		stop_flags: co::SEEKING_FLAGS,
+	) -> HrResult<()>
 	{
 		let (mut current, mut stop) = (current, stop);
 		match co::HRESULT(

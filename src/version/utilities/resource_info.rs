@@ -62,7 +62,7 @@ impl ResourceInfo {
 	/// These blocks allow retrieval of version information strings in their
 	/// respective languages.
 	#[must_use]
-	pub fn blocks<'a>(&'a self) -> impl Iterator<Item = ResourceInfoBlock> + 'a {
+	pub fn blocks(&self) -> impl Iterator<Item = ResourceInfoBlock> + '_ {
 		unsafe {
 			VarQueryValue::<(LANGID, co::CP)>(&self.res_buf, "\\VarFileInfo\\Translation")
 				.ok()

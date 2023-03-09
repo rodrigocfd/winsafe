@@ -158,8 +158,7 @@ pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
 /// [`Shell_NotifyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)
 /// function.
 pub fn Shell_NotifyIcon(
-	message: co::NIM,
-	data: &mut NOTIFYICONDATA) -> SysResult<()>
+	message: co::NIM, data: &mut NOTIFYICONDATA) -> SysResult<()>
 {
 	bool_to_sysresult(
 		unsafe { shell::ffi::Shell_NotifyIconW(message.0, data as *mut _ as _) },
@@ -184,7 +183,8 @@ pub fn Shell_NotifyIcon(
 #[must_use]
 pub fn SHCreateItemFromParsingName<T>(
 	file_or_folder_path: &str,
-	bind_ctx: Option<&IBindCtx>) -> HrResult<T>
+	bind_ctx: Option<&IBindCtx>,
+) -> HrResult<T>
 	where T: shell_IShellItem,
 {
 	unsafe {
@@ -216,7 +216,8 @@ pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> SysResult<()> {
 pub fn SHGetFileInfo(
 	path: &str,
 	file_attrs: co::FILE_ATTRIBUTE,
-	flags: co::SHGFI) -> SysResult<(u32, DestroyIconShfiGuard)>
+	flags: co::SHGFI,
+) -> SysResult<(u32, DestroyIconShfiGuard)>
 {
 	let mut shfi = SHFILEINFO::default();
 	match unsafe {
@@ -257,7 +258,8 @@ pub fn SHGetFileInfo(
 pub fn SHGetKnownFolderPath(
 	folder_id: &co::KNOWNFOLDERID,
 	flags: co::KF,
-	token: Option<&HACCESSTOKEN>) -> HrResult<String>
+	token: Option<&HACCESSTOKEN>,
+) -> HrResult<String>
 {
 	let mut pstr: *mut u16 = std::ptr::null_mut();
 	ok_to_hrresult(

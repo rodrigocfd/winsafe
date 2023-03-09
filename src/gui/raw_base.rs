@@ -164,7 +164,8 @@ impl RawBase {
 		class_bg_brush: &'a Brush,
 		class_cursor: &'a Cursor,
 		wcx: &mut WNDCLASSEX<'a>,
-		class_name_buf: &'a mut WString) -> SysResult<()>
+		class_name_buf: &'a mut WString,
+	) -> SysResult<()>
 	{
 		wcx.lpfnWndProc = Some(Self::window_proc);
 		wcx.hInstance = unsafe { hinst.raw_copy() };
@@ -219,7 +220,8 @@ impl RawBase {
 		pos: POINT,
 		sz: SIZE,
 		ex_styles: co::WS_EX,
-		styles: co::WS) -> SysResult<()>
+		styles: co::WS,
+	) -> SysResult<()>
 	{
 		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot create window twice.");

@@ -38,7 +38,8 @@ pub trait ktm_Htransaction: Handle {
 		transaction_attributes: Option<&SECURITY_ATTRIBUTES>,
 		options: Option<co::TRANSACTION_OPT>,
 		timeout: Option<u32>,
-		description: &str) -> SysResult<CloseHandleGuard<HTRANSACTION>>
+		description: &str,
+	) -> SysResult<CloseHandleGuard<HTRANSACTION>>
 	{
 		match HTRANSACTION(unsafe {
 			ktm::ffi::CreateTransaction(
@@ -73,7 +74,8 @@ pub trait ktm_Htransaction: Handle {
 	#[must_use]
 	fn OpenTransaction(
 		desired_access: co::TRANSACTION,
-		transaction_id: &GUID) -> SysResult<CloseHandleGuard<HTRANSACTION>>
+		transaction_id: &GUID,
+	) -> SysResult<CloseHandleGuard<HTRANSACTION>>
 	{
 		match HTRANSACTION(unsafe {
 			ktm::ffi::OpenTransaction(

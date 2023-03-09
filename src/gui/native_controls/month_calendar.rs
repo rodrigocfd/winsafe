@@ -84,10 +84,7 @@ impl MonthCalendar {
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `MonthCalendar` in an event closure.
 	#[must_use]
-	pub fn new(
-		parent: &impl GuiParent,
-		opts: MonthCalendarOpts) -> MonthCalendar
-	{
+	pub fn new(parent: &impl GuiParent, opts: MonthCalendarOpts) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = MonthCalendarOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
@@ -123,7 +120,8 @@ impl MonthCalendar {
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,
-		resize_behavior: (Horz, Vert)) -> MonthCalendar
+		resize_behavior: (Horz, Vert),
+	) -> Self
 	{
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 

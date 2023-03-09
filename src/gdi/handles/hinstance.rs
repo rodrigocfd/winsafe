@@ -24,7 +24,10 @@ pub trait gdi_Hinstance: Handle {
 	/// method for [`HBITMAP`](crate::HBITMAP).
 	#[must_use]
 	fn LoadImageBitmap(&self,
-		name: IdObmStr, sz: SIZE, load: co::LR) -> SysResult<DeleteObjectGuard<HBITMAP>>
+		name: IdObmStr,
+		sz: SIZE,
+		load: co::LR,
+	) -> SysResult<DeleteObjectGuard<HBITMAP>>
 	{
 		ptr_to_sysresult(
 			unsafe {

@@ -39,8 +39,7 @@ impl<'a> TreeViewItem<'a> {
 	/// [`tvm::InsertItem`](crate::msg::tvm::InsertItem) message, and returns
 	/// the newly added item.
 	pub fn add_child(&self,
-		text: &str,
-		icon_index: Option<u32>) -> TreeViewItem<'_>
+		text: &str, icon_index: Option<u32>) -> Self
 	{
 		let mut buf = WString::from_str(text);
 
@@ -129,26 +128,30 @@ impl<'a> TreeViewItem<'a> {
 
 	/// Returns an iterator over the child items.
 	#[must_use]
-	pub fn iter_children(&self) -> impl Iterator<Item = TreeViewItem<'_>> + '_ {
+	pub fn iter_children(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
 		TreeViewChildItemIter::new(self.owner, Some(self.raw_clone()))
 	}
 
 	/// Returns an iterator over the next sibling items.
 	#[must_use]
-	pub fn iter_next_siblings(&self) -> impl Iterator<Item = TreeViewItem<'_>> + '_ {
+	pub fn iter_next_siblings(&self,
+	) -> impl Iterator<Item = TreeViewItem<'a>> + 'a
+	{
 		TreeViewItemIter::new(self.owner, Some(self.raw_clone()), co::TVGN::NEXT)
 	}
 
 	/// Returns an iterator over the previous sibling items.
 	#[must_use]
-	pub fn iter_prev_siblings(&self) -> impl Iterator<Item = TreeViewItem<'_>> + '_ {
+	pub fn iter_prev_siblings(&self,
+	) -> impl Iterator<Item = TreeViewItem<'a>> + 'a
+	{
 		TreeViewItemIter::new(self.owner, Some(self.raw_clone()), co::TVGN::PREVIOUS)
 	}
 
 	/// Retrieves the parent of the item by sending a
 	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) message.
 	#[must_use]
-	pub fn parent(&self) -> Option<TreeViewItem<'_>> {
+	pub fn parent(&self) -> Option<Self> {
 		self.owner.hwnd()
 			.SendMessage(tvm::GetNextItem {
 				relationship: co::TVGN::PARENT,

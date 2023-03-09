@@ -70,7 +70,8 @@ pub fn info(
 	hparent: &HWND,
 	title: &str,
 	header: Option<&str>,
-	body: &str) -> HrResult<()>
+	body: &str,
+) -> HrResult<()>
 {
 	generate(hparent, title, header, body, None,
 		co::TDCBF::OK, co::TD_ICON::INFORMATION)
@@ -115,7 +116,8 @@ pub fn ok_cancel(
 	title: &str,
 	header: Option<&str>,
 	body: &str,
-	ok_text: Option<&str>) -> HrResult<bool>
+	ok_text: Option<&str>,
+) -> HrResult<bool>
 {
 	let mut btns = co::TDCBF::CANCEL;
 	if ok_text.is_none() {
@@ -162,7 +164,8 @@ pub fn yes_no(
 	hparent: &HWND,
 	title: &str,
 	header: Option<&str>,
-	body: &str) -> HrResult<bool>
+	body: &str,
+) -> HrResult<bool>
 {
 	generate(hparent, title, header, body, None,
 		co::TDCBF::YES | co::TDCBF::NO, co::TD_ICON::WARNING)
@@ -204,7 +207,8 @@ pub fn yes_no_cancel(
 	hparent: &HWND,
 	title: &str,
 	header: Option<&str>,
-	body: &str) -> HrResult<co::DLGID>
+	body: &str,
+) -> HrResult<co::DLGID>
 {
 	generate(hparent, title, header, body, None,
 		co::TDCBF::YES | co::TDCBF::NO | co::TDCBF::CANCEL, co::TD_ICON::WARNING)
@@ -217,7 +221,8 @@ fn generate(
 	body: &str,
 	ok_text: Option<&str>,
 	btns: co::TDCBF,
-	ico: co::TD_ICON) -> HrResult<co::DLGID>
+	ico: co::TD_ICON,
+) -> HrResult<co::DLGID>
 {
 	let mut ok_text_buf = WString::from_opt_str(ok_text);
 	let mut custom_btns = if ok_text.is_some() {

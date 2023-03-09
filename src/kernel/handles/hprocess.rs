@@ -41,7 +41,8 @@ pub trait kernel_Hprocess: Handle {
 		creation_flags: co::CREATE,
 		environment: Option<Vec<(&str, &str)>>,
 		current_dir: Option<&str>,
-		si: &mut STARTUPINFO) -> SysResult<CloseHandlePiGuard>
+		si: &mut STARTUPINFO,
+	) -> SysResult<CloseHandlePiGuard>
 	{
 		let mut buf_cmd_line = WString::from_opt_str(command_line);
 		let mut pi = PROCESS_INFORMATION::default();
@@ -160,7 +161,8 @@ pub trait kernel_Hprocess: Handle {
 		creation: &mut FILETIME,
 		exit: &mut FILETIME,
 		kernel: &mut FILETIME,
-		user: &mut FILETIME) -> SysResult<()>
+		user: &mut FILETIME,
+	) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {
@@ -216,7 +218,8 @@ pub trait kernel_Hprocess: Handle {
 	fn OpenProcess(
 		desired_access: co::PROCESS,
 		inherit_handle: bool,
-		process_id: u32) -> SysResult<CloseHandleGuard<HPROCESS>>
+		process_id: u32,
+	) -> SysResult<CloseHandleGuard<HPROCESS>>
 	{
 		ptr_to_sysresult(
 			unsafe {

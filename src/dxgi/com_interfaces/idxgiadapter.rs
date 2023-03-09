@@ -60,7 +60,9 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 	#[must_use]
-	fn iter_outputs(&self) -> Box<dyn Iterator<Item = HrResult<IDXGIOutput>> + '_> {
+	fn iter_outputs(&self,
+	) -> Box<dyn Iterator<Item = HrResult<IDXGIOutput>> + '_>
+	{
 		Box::new(EnumOutputsIter::new(self))
 	}
 

@@ -35,7 +35,8 @@ pub trait kernel_Hthread: Handle {
 		stack_size: usize,
 		start_addr: *mut std::ffi::c_void,
 		parameter: *mut std::ffi::c_void,
-		flags: co::THREAD_CREATE) -> SysResult<(CloseHandleGuard<HTHREAD>, u32)>
+		flags: co::THREAD_CREATE,
+	) -> SysResult<(CloseHandleGuard<HTHREAD>, u32)>
 	{
 		let mut thread_id = u32::default();
 		ptr_to_sysresult(
@@ -111,7 +112,8 @@ pub trait kernel_Hthread: Handle {
 		creation: &mut FILETIME,
 		exit: &mut FILETIME,
 		kernel: &mut FILETIME,
-		user: &mut FILETIME) -> SysResult<()>
+		user: &mut FILETIME,
+	) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {
@@ -131,7 +133,8 @@ pub trait kernel_Hthread: Handle {
 	#[must_use]
 	fn OpenThreadToken(&self,
 		desired_access: co::TOKEN,
-		open_as_self: bool) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
+		open_as_self: bool,
+	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
 		bool_to_sysresult(

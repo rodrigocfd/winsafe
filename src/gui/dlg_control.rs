@@ -33,7 +33,8 @@ impl DlgControl {
 		dialog_id: u16,
 		position: POINT,
 		resize_behavior: (Horz, Vert),
-		ctrl_id: Option<u16>) -> Self
+		ctrl_id: Option<u16>,
+	) -> Self
 	{
 		let new_self = Self(
 			Arc::pin(

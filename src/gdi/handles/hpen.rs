@@ -32,7 +32,8 @@ pub trait gdi_Hpen: GdiObject {
 	fn CreatePen(
 		style: co::PS,
 		width: i32,
-		color: COLORREF) -> SysResult<DeleteObjectGuard<HPEN>>
+		color: COLORREF,
+	) -> SysResult<DeleteObjectGuard<HPEN>>
 	{
 		ptr_to_sysresult(
 			unsafe { gdi::ffi::CreatePen(style.0, width, color.0) },

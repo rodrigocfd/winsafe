@@ -30,7 +30,8 @@ pub trait kernel_Hpipe: Handle {
 	#[must_use]
 	fn CreatePipe(
 		attrs: Option<&mut SECURITY_ATTRIBUTES>,
-		size: u32) -> SysResult<(CloseHandleGuard<HPIPE>, CloseHandleGuard<HPIPE>)>
+		size: u32,
+	) -> SysResult<(CloseHandleGuard<HPIPE>, CloseHandleGuard<HPIPE>)>
 	{
 		let (mut hread, mut hwrite) = (HPIPE::NULL, HPIPE::NULL);
 		bool_to_sysresult(
@@ -50,8 +51,7 @@ pub trait kernel_Hpipe: Handle {
 	///
 	/// Returns the number of bytes read.
 	fn ReadFile(&self,
-		buffer: &mut [u8],
-		overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
+		buffer: &mut [u8], overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
 	{
 		HFILE(unsafe { self.as_ptr() }).ReadFile(buffer, overlapped)
 	}
@@ -59,8 +59,7 @@ pub trait kernel_Hpipe: Handle {
 	/// [`WriteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
 	/// method.
 	fn WriteFile(&self,
-		data: &[u8],
-		overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
+		data: &[u8], overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
 	{
 		HFILE(unsafe { self.as_ptr() }).WriteFile(data, overlapped)
 	}

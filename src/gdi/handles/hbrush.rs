@@ -33,7 +33,9 @@ pub trait gdi_Hbrush: GdiObject {
 	/// [`CreateBrushIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbrushindirect)
 	/// static method.
 	#[must_use]
-	fn CreateBrushIndirect(lb: &LOGBRUSH) -> SysResult<DeleteObjectGuard<HBRUSH>> {
+	fn CreateBrushIndirect(
+		lb: &LOGBRUSH) -> SysResult<DeleteObjectGuard<HBRUSH>>
+	{
 		ptr_to_sysresult(
 			unsafe { gdi::ffi::CreateBrushIndirect(lb as *const _ as _) },
 			|ptr| DeleteObjectGuard::new(HBRUSH(ptr)),
@@ -55,7 +57,9 @@ pub trait gdi_Hbrush: GdiObject {
 	/// [`CreatePatternBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpatternbrush)
 	/// static method.
 	#[must_use]
-	fn CreatePatternBrush(hbmp: &HBITMAP) -> SysResult<DeleteObjectGuard<HBRUSH>> {
+	fn CreatePatternBrush(
+		hbmp: &HBITMAP) -> SysResult<DeleteObjectGuard<HBRUSH>>
+	{
 		ptr_to_sysresult(
 			unsafe { gdi::ffi::CreatePatternBrush(hbmp.0) },
 			|ptr| DeleteObjectGuard::new(HBRUSH(ptr)),
@@ -65,7 +69,9 @@ pub trait gdi_Hbrush: GdiObject {
 	/// [`CreateSolidBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush)
 	/// static method.
 	#[must_use]
-	fn CreateSolidBrush(color: COLORREF) -> SysResult<DeleteObjectGuard<HBRUSH>> {
+	fn CreateSolidBrush(
+		color: COLORREF) -> SysResult<DeleteObjectGuard<HBRUSH>>
+	{
 		ptr_to_sysresult(
 			unsafe { gdi::ffi::CreateSolidBrush(color.0) },
 			|ptr| DeleteObjectGuard::new(HBRUSH(ptr)),

@@ -27,7 +27,8 @@ pub trait kernel_Haccesstoken: Handle {
 	/// method.
 	#[must_use]
 	fn DuplicateToken(&self,
-		level: co::SECURITY_IMPERSONATION) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
+		level: co::SECURITY_IMPERSONATION,
+	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
 		bool_to_sysresult(

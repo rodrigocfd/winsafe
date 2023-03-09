@@ -31,7 +31,8 @@ pub trait user_Hinstance: Handle {
 		resource_id: IdStr,
 		hwnd_parent: Option<&HWND>,
 		dialog_proc: DLGPROC,
-		init_param: Option<isize>) -> SysResult<HWND>
+		init_param: Option<isize>,
+	) -> SysResult<HWND>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -57,7 +58,8 @@ pub trait user_Hinstance: Handle {
 		resource_id: IdStr,
 		hwnd_parent: Option<&HWND>,
 		dialog_proc: DLGPROC,
-		init_param: Option<isize>) -> SysResult<isize>
+		init_param: Option<isize>,
+	) -> SysResult<isize>
 	{
 		match unsafe {
 			user::ffi::DialogBoxParamW(
@@ -132,7 +134,9 @@ pub trait user_Hinstance: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn LoadCursor(&self, resource_id: IdIdcStr) -> SysResult<DestroyCursorGuard> {
+	fn LoadCursor(&self,
+		resource_id: IdIdcStr) -> SysResult<DestroyCursorGuard>
+	{
 		ptr_to_sysresult(
 			unsafe { user::ffi::LoadCursorW(self.as_ptr(), resource_id.as_ptr()) },
 			|ptr| DestroyCursorGuard::new(HCURSOR(ptr)),

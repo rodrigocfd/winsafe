@@ -30,7 +30,8 @@ pub trait kernel_Hfindfile: Handle {
 	#[must_use]
 	fn FindFirstFile(
 		file_name: &str,
-		wfd: &mut WIN32_FIND_DATA) -> SysResult<(FindCloseGuard, bool)>
+		wfd: &mut WIN32_FIND_DATA,
+	) -> SysResult<(FindCloseGuard, bool)>
 	{
 		match unsafe {
 			kernel::ffi::FindFirstFileW(

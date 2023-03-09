@@ -110,7 +110,9 @@ pub(in crate::gui) fn multiply_dpi(
 /// multiplies by current DPI factor.
 pub(in crate::gui) fn multiply_dpi_or_dtu(
 	parent_base: &Base,
-	pt: Option<&mut POINT>, sz: Option<&mut SIZE>) -> SysResult<()>
+	pt: Option<&mut POINT>,
+	sz: Option<&mut SIZE>,
+) -> SysResult<()>
 {
 	if parent_base.is_dialog() {
 		let mut rc = RECT::default();

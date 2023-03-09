@@ -86,7 +86,7 @@ impl ListBox {
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `ListBox` in an event closure.
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: ListBoxOpts) -> ListBox {
+	pub fn new(parent: &impl GuiParent, opts: ListBoxOpts) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = ListBoxOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
@@ -122,7 +122,8 @@ impl ListBox {
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,
-		resize_behavior: (Horz, Vert)) -> ListBox
+		resize_behavior: (Horz, Vert),
+	) -> Self
 	{
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 

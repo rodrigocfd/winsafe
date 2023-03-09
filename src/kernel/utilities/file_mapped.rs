@@ -33,9 +33,7 @@ pub struct FileMapped {
 impl FileMapped {
 	/// Opens a file with the desired access, then map its contents in memory.
 	#[must_use]
-	pub fn open(
-		file_path: &str, access: FileAccess) -> SysResult<FileMapped>
-	{
+	pub fn open(file_path: &str, access: FileAccess) -> SysResult<Self> {
 		let file = File::open(file_path, access)?;
 		let (hmap, hview) = Self::map_in_memory(&file, access)?;
 		let size = file.hfile().GetFileSizeEx()?; // cache
@@ -43,8 +41,10 @@ impl FileMapped {
 	}
 
 	#[must_use]
-	fn map_in_memory(file: &File, access: FileAccess)
-		-> SysResult<(CloseHandleGuard<HFILEMAP>, UnmapViewOfFileGuard)>
+	fn map_in_memory(
+		file: &File,
+		access: FileAccess,
+	) -> SysResult<(CloseHandleGuard<HFILEMAP>, UnmapViewOfFileGuard)>
 	{
 		let hmap = file.hfile().CreateFileMapping(
 			None,

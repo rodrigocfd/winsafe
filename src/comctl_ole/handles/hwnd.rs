@@ -87,7 +87,8 @@ pub trait comctl_ole_Hwnd: Handle {
 		main_instruction: Option<&str>,
 		content: Option<&str>,
 		common_buttons: co::TDCBF,
-		icon: IdTdiconStr) -> HrResult<co::DLGID>
+		icon: IdTdiconStr,
+	) -> HrResult<co::DLGID>
 	{
 		// https://weblogs.asp.net/kennykerr/Windows-Vista-for-Developers-_1320_-Part-2-_1320_-Task-Dialogs-in-Depth
 		let mut str_buf = WString::default();

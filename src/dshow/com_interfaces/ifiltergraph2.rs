@@ -41,8 +41,7 @@ pub trait dshow_IFilterGraph2: dshow_IGraphBuilder {
 	/// [`IFilterGraph2::ReconnectEx`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph2-reconnectex)
 	/// method.
 	fn ReconnectEx(&self,
-		pin: &impl dshow_IPin,
-		mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
+		pin: &impl dshow_IPin, mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<IFilterGraph2VT>();

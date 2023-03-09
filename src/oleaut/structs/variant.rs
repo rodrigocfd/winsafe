@@ -63,7 +63,7 @@ impl VARIANT {
 	/// Note that the `IDispatch` object will be cloned into the object, still
 	/// being able to be used thereafter.
 	#[must_use]
-	pub fn new_idispatch(val: &impl oleaut_IDispatch) -> VARIANT {
+	pub fn new_idispatch(val: &impl oleaut_IDispatch) -> Self {
 		let mut cloned = val.clone();
 		let ptr: usize = cloned.leak().into();
 		unsafe { Self::from_raw(co::VT::DISPATCH, &ptr.to_ne_bytes()) }
@@ -93,7 +93,7 @@ impl VARIANT {
 	/// Note that the `IUnknown` object will be cloned into the object, still
 	/// being able to be used thereafter.
 	#[must_use]
-	pub fn new_iunknown<T>(val: &impl ole_IUnknown) -> VARIANT {
+	pub fn new_iunknown<T>(val: &impl ole_IUnknown) -> Self {
 		let mut cloned = val.clone();
 		let ptr: usize = cloned.leak().into();
 		unsafe { Self::from_raw(co::VT::UNKNOWN, &ptr.to_ne_bytes()) }

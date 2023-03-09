@@ -70,7 +70,7 @@ impl ProgressBar {
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `ProgressBar` in an event closure.
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: ProgressBarOpts) -> ProgressBar {
+	pub fn new(parent: &impl GuiParent, opts: ProgressBarOpts) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = ProgressBarOpts::define_ctrl_id(opts);
 		let (horz, vert) = (opts.horz_resize, opts.vert_resize);
@@ -106,7 +106,8 @@ impl ProgressBar {
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,
-		resize_behavior: (Horz, Vert)) -> ProgressBar
+		resize_behavior: (Horz, Vert),
+	) -> Self
 	{
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 

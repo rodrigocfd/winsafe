@@ -32,7 +32,8 @@ pub trait kernel_Hfilemap: Handle {
 	fn MapViewOfFile(&self,
 		desired_access: co::FILE_MAP,
 		offset: u64,
-		number_of_bytes_to_map: Option<usize>) -> SysResult<UnmapViewOfFileGuard>
+		number_of_bytes_to_map: Option<usize>,
+	) -> SysResult<UnmapViewOfFileGuard>
 	{
 		ptr_to_sysresult(
 			unsafe {

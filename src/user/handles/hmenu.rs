@@ -31,9 +31,7 @@ pub trait user_Hmenu: Handle {
 	/// This method is rather tricky, consider using
 	/// [`HMENU::AppendMenuEnum`](crate::prelude::user_Hmenu::AppendMenuEnum).
 	fn AppendMenu(&self,
-		flags: co::MF,
-		new_item: IdMenu,
-		content: BmpPtrStr) -> SysResult<()>
+		flags: co::MF, new_item: IdMenu, content: BmpPtrStr) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {
@@ -453,7 +451,8 @@ pub trait user_Hmenu: Handle {
 	fn SetMenuItemBitmaps(&self,
 		id_or_pos: IdPos,
 		hbmp_unchecked: Option<&HBITMAP>,
-		hbmp_checked: Option<&HBITMAP>) -> SysResult<()>
+		hbmp_checked: Option<&HBITMAP>,
+	) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {
@@ -528,7 +527,8 @@ pub trait user_Hmenu: Handle {
 	fn TrackPopupMenuAtPoint(&self,
 		pos: POINT,
 		hwnd_parent: &HWND,
-		hwnd_coords_relative_to: &HWND) -> SysResult<()>
+		hwnd_coords_relative_to: &HWND,
+	) -> SysResult<()>
 	{
 		let mut pos = pos;
 		hwnd_coords_relative_to.ClientToScreen(&mut pos)?; // now relative to screen

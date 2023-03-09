@@ -107,7 +107,7 @@ impl Edit {
 	/// );
 	/// ```
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: EditOpts) -> Edit {
+	pub fn new(parent: &impl GuiParent, opts: EditOpts) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = EditOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
@@ -143,7 +143,8 @@ impl Edit {
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,
-		resize_behavior: (Horz, Vert)) -> Edit
+		resize_behavior: (Horz, Vert),
+	) -> Self
 	{
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 

@@ -88,8 +88,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 	/// [`IGraphBuilder::Connect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-connect)
 	/// method.
 	fn Connect(&self,
-		pin_out: &impl dshow_IPin,
-		pin_in: &impl dshow_IPin) -> HrResult<()>
+		pin_out: &impl dshow_IPin, pin_in: &impl dshow_IPin) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<IGraphBuilderVT>();

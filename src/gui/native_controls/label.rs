@@ -86,7 +86,7 @@ impl Label {
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `Label` in an event closure.
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: LabelOpts) -> Label {
+	pub fn new(parent: &impl GuiParent, opts: LabelOpts) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = LabelOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
@@ -123,7 +123,8 @@ impl Label {
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,
-		resize_behavior: (Horz, Vert)) -> Label
+		resize_behavior: (Horz, Vert)
+	) -> Self
 	{
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 

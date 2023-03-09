@@ -38,7 +38,8 @@ pub trait user_Hhook: Handle {
 		hook_id: co::WH,
 		proc: HOOKPROC,
 		module: Option<&HINSTANCE>,
-		thread_id: Option<u32>) -> SysResult<HHOOK>
+		thread_id: Option<u32>,
+	) -> SysResult<HHOOK>
 	{
 		ptr_to_sysresult(
 			unsafe {

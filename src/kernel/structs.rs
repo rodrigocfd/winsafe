@@ -90,7 +90,7 @@ impl GUID {
 	/// let g = GUID::new("00000000-0000-0000-c000-000000000046");
 	/// ```
 	#[must_use]
-	pub const fn new(guid_str: &str) -> GUID {
+	pub const fn new(guid_str: &str) -> Self {
 		if guid_str.len() != 36 {
 			panic!("Bad number of GUID chars.");
 		}
@@ -184,7 +184,7 @@ impl LANGID {
 	/// [`MAKELANGID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-makelangid)
 	/// macro.
 	#[must_use]
-	pub const fn new(lang: co::LANG, sublang: co::SUBLANG) -> LANGID {
+	pub const fn new(lang: co::LANG, sublang: co::SUBLANG) -> Self {
 		Self((sublang.0 << 10) | lang.0)
 	}
 
@@ -226,7 +226,7 @@ impl LCID {
 	/// [`MAKELCID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/nf-winnt-makelcid)
 	/// macro.
 	#[must_use]
-	pub const fn new(lang_id: LANGID, sort_id: co::SORT) -> LCID {
+	pub const fn new(lang_id: LANGID, sort_id: co::SORT) -> Self {
 		Self(((sort_id.0 as u32) << 16) | lang_id.0 as u32)
 	}
 
@@ -259,7 +259,7 @@ pub struct LUID {
 impl LUID {
 	/// Creates a new `LUID`.
 	#[must_use]
-	pub const fn new(low_part: u32, high_part: i32) -> LUID {
+	pub const fn new(low_part: u32, high_part: i32) -> Self {
 		Self { LowPart: low_part, HighPart: high_part }
 	}
 

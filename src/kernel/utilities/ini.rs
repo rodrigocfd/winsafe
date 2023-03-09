@@ -41,7 +41,7 @@ pub struct Ini {
 impl Ini {
 	/// Parses an `Ini` from a string.
 	#[must_use]
-	pub fn parse_str(contents: &str) -> Ini {
+	pub fn parse_str(contents: &str) -> Self {
 		let mut sections = Vec::<IniSection>::default();
 		let mut cur_section = IniSection {
 			name: "".to_owned(),
@@ -79,7 +79,7 @@ impl Ini {
 	/// Parses an `Ini` from raw bytes with
 	/// [`WString::parse`](crate::WString::parse).
 	#[must_use]
-	pub fn parse_bytes(bytes: &[u8]) -> SysResult<Ini> {
+	pub fn parse_bytes(bytes: &[u8]) -> SysResult<Self> {
 		Ok(
 			Self::parse_str(&WString::parse(bytes)?.to_string()),
 		)
@@ -90,7 +90,7 @@ impl Ini {
 	/// [mapped in memory](crate::FileMapped) during reading for maximum
 	/// performance.
 	#[must_use]
-	pub fn parse_from_file(ini_path: &str) -> SysResult<Ini> {
+	pub fn parse_from_file(ini_path: &str) -> SysResult<Self> {
 		let fin = FileMapped::open(ini_path, FileAccess::ExistingReadOnly)?;
 		Self::parse_bytes(fin.as_slice())
 	}
@@ -238,7 +238,9 @@ impl Ini {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	pub fn value_mut(&mut self, section: &str, key: &str) -> Option<&mut String> {
+	pub fn value_mut(&mut self,
+		section: &str, key: &str) -> Option<&mut String>
+	{
 		self.find_section_mut(section)
 			.and_then(|sec| {
 				sec.find_entry_mut(key)

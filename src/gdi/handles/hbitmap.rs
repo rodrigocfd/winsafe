@@ -24,8 +24,11 @@ pub trait gdi_Hbitmap: GdiObject {
 	/// static method.
 	#[must_use]
 	fn CreateBitmap(
-		sz: SIZE, num_planes: u32,
-		bit_count: u32, bits: *mut u8) -> SysResult<DeleteObjectGuard<HBITMAP>>
+		sz: SIZE,
+		num_planes: u32,
+		bit_count: u32,
+		bits: *mut u8,
+	) -> SysResult<DeleteObjectGuard<HBITMAP>>
 	{
 		ptr_to_sysresult(
 			unsafe {

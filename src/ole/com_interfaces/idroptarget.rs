@@ -45,7 +45,8 @@ pub trait ole_IDropTarget: ole_IUnknown {
 		data_obj: &impl ole_IDataObject,
 		key_state: co::MK,
 		pt: POINT,
-		effect: co::DROPEFFECT) -> HrResult<co::DROPEFFECT>
+		effect: co::DROPEFFECT,
+	) -> HrResult<co::DROPEFFECT>
 	{
 		let mut effect_buf = effect;
 		ok_to_hrresult(
@@ -78,7 +79,8 @@ pub trait ole_IDropTarget: ole_IUnknown {
 	fn DragOver(&self,
 		key_state: co::MK,
 		pt: POINT,
-		effect: co::DROPEFFECT) -> HrResult<co::DROPEFFECT>
+		effect: co::DROPEFFECT,
+	) -> HrResult<co::DROPEFFECT>
 	{
 		let mut effect_buf = effect;
 		ok_to_hrresult(
@@ -100,7 +102,8 @@ pub trait ole_IDropTarget: ole_IUnknown {
 		data_obj: &impl ole_IDataObject,
 		key_state: co::MK,
 		pt: POINT,
-		effect: co::DROPEFFECT) -> HrResult<co::DROPEFFECT>
+		effect: co::DROPEFFECT,
+	) -> HrResult<co::DROPEFFECT>
 	{
 		let mut effect_buf = effect;
 		ok_to_hrresult(

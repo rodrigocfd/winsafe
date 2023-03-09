@@ -194,7 +194,8 @@ pub trait user_Hwnd: Handle {
 		hwnd_parent: Option<&HWND>,
 		hmenu: IdMenu,
 		hinstance: &HINSTANCE,
-		lparam: Option<isize>) -> SysResult<HWND>
+		lparam: Option<isize>,
+	) -> SysResult<HWND>
 	{
 		ptr_to_sysresult(
 			user::ffi::CreateWindowExW(
@@ -295,8 +296,7 @@ pub trait user_Hwnd: Handle {
 	/// static method.
 	#[must_use]
 	fn FindWindow(
-		class_name: Option<AtomStr>,
-		title: Option<&str>) -> SysResult<HWND>
+		class_name: Option<AtomStr>, title: Option<&str>) -> SysResult<HWND>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -315,7 +315,8 @@ pub trait user_Hwnd: Handle {
 	fn FindWindowEx(&self,
 		hwnd_child_after: Option<&HWND>,
 		class_name: AtomStr,
-		title: Option<&str>) -> SysResult<HWND>
+		title: Option<&str>,
+	) -> SysResult<HWND>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -348,7 +349,8 @@ pub trait user_Hwnd: Handle {
 	fn GetAltTabInfo(&self,
 		item: Option<u32>,
 		ati: &mut ALTTABINFO,
-		sz_item_text: Option<u32>) -> SysResult<String>
+		sz_item_text: Option<u32>,
+	) -> SysResult<String>
 	{
 		let buf_sz = sz_item_text.unwrap_or(100) + 1;
 		let mut buf = match item {
@@ -1081,7 +1083,9 @@ pub trait user_Hwnd: Handle {
 
 	/// [`MoveWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-movewindow)
 	/// method.
-	fn MoveWindow(&self, pos: POINT, size: SIZE, repaint: bool) -> SysResult<()> {
+	fn MoveWindow(&self,
+		pos: POINT, size: SIZE, repaint: bool) -> SysResult<()>
+	{
 		bool_to_sysresult(
 			unsafe {
 				user::ffi::MoveWindow(
@@ -1291,7 +1295,10 @@ pub trait user_Hwnd: Handle {
 	/// [`SendMessageTimeout`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagetimeoutw)
 	/// method.
 	fn SendMessageTimeout<M>(&self,
-		msg: M, flags: co::SMTO, timeout_ms: u32) -> SysResult<M::RetType>
+		msg: M,
+		flags: co::SMTO,
+		timeout_ms: u32,
+	) -> SysResult<M::RetType>
 		where M: MsgSend,
 	{
 		let mut msg = msg;
@@ -1418,7 +1425,8 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	fn SetTimer(&self,
 		event_id: usize, elapse_ms: u32,
-		timer_func: Option<TIMERPROC>) -> SysResult<usize>
+		timer_func: Option<TIMERPROC>,
+	) -> SysResult<usize>
 	{
 		match unsafe {
 			user::ffi::SetTimer(
@@ -1485,7 +1493,10 @@ pub trait user_Hwnd: Handle {
 	/// ```
 	fn SetWindowPos(&self,
 		hwnd_insert_after: HwndPlace,
-		pos: POINT, size: SIZE, flags: co::SWP) -> SysResult<()>
+		pos: POINT,
+		size: SIZE,
+		flags: co::SWP,
+	) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {

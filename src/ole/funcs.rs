@@ -76,7 +76,8 @@ pub fn CLSIDFromString(prog_id: &str) -> HrResult<co::CLSID> {
 pub fn CoCreateInstance<T>(
 	clsid: &co::CLSID,
 	iunk_outer: Option<&mut IUnknown>,
-	cls_context: co::CLSCTX) -> HrResult<T>
+	cls_context: co::CLSCTX,
+) -> HrResult<T>
 	where T: ole_IUnknown,
 {
 	unsafe {
@@ -107,7 +108,8 @@ pub fn CoCreateInstanceEx(
 	iunk_outer: Option<&mut IUnknown>,
 	cls_context: co::CLSCTX,
 	server_info: Option<&COSERVERINFO>,
-	results: &mut [MULTI_QI]) -> HrResult<()>
+	results: &mut [MULTI_QI],
+) -> HrResult<()>
 {
 	unsafe {
 		let mut ppv_outer = ComPtr::null();
@@ -178,7 +180,8 @@ pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<CoUninitializeGuard> {
 pub fn CoLockObjectExternal(
 	obj: &impl ole_IUnknown,
 	lock: bool,
-	last_unlock_releases: bool) -> HrResult<()>
+	last_unlock_releases: bool,
+) -> HrResult<()>
 {
 	ok_to_hrresult(
 		unsafe {

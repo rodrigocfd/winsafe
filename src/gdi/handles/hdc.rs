@@ -33,8 +33,11 @@ pub trait gdi_Hdc: Handle {
 	/// [`AngleArc`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-anglearc)
 	/// method.
 	fn AngleArc(&self,
-		center: POINT, radius: u32,
-		start_angle: f32, sweep_angle: f32) -> SysResult<()>
+		center: POINT,
+		radius: u32,
+		start_angle: f32,
+		sweep_angle: f32,
+	) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {
@@ -92,8 +95,12 @@ pub trait gdi_Hdc: Handle {
 	/// [`BitBlt`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-bitblt)
 	/// method.
 	fn BitBlt(&self,
-		dest_pos: POINT, sz: SIZE,
-		hdc_src: &HDC, src_src: POINT, rop: co::ROP) -> SysResult<()>
+		dest_pos: POINT,
+		sz: SIZE,
+		hdc_src: &HDC,
+		src_src: POINT,
+		rop: co::ROP,
+	) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {
@@ -331,7 +338,8 @@ pub trait gdi_Hdc: Handle {
 		numScanLines: u32,
 		bmpDataBuf: Option<&mut [u8]>,
 		bmi: &mut BITMAPINFO,
-		usage: co::DIB) -> SysResult<i32>
+		usage: co::DIB,
+	) -> SysResult<i32>
 	{
 		let ret = gdi::ffi::GetDIBits(
 			self.as_ptr(),
@@ -682,7 +690,9 @@ pub trait gdi_Hdc: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn SelectObject<G>(&self, hgdiobj: &G) -> SysResult<SelectObjectGuard<'_, Self, G>>
+	fn SelectObject<G>(&self,
+		hgdiobj: &G,
+	) -> SysResult<SelectObjectGuard<'_, Self, G>>
 		where G: GdiObject,
 	{
 		ptr_to_sysresult(
@@ -868,10 +878,13 @@ pub trait gdi_Hdc: Handle {
 	/// [`StretchBlt`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-stretchblt)
 	/// method.
 	fn StretchBlt(&self,
-		pos_dest: POINT, sz_dest: SIZE,
+		pos_dest: POINT,
+		sz_dest: SIZE,
 		hdc_src: &HDC,
-		pt_src: POINT, sz_src: SIZE,
-		rop: co::ROP) -> SysResult<()>
+		pt_src: POINT,
+		sz_src: SIZE,
+		rop: co::ROP,
+	) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {

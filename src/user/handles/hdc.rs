@@ -66,7 +66,8 @@ pub trait user_Hdc: Handle {
 	/// ```
 	fn EnumDisplayMonitors<F>(&self,
 		rc_clip: Option<RECT>,
-		func: F) -> SysResult<()>
+		func: F,
+	) -> SysResult<()>
 		where F: Fn(HMONITOR, HDC, &RECT) -> bool,
 	{
 		bool_to_sysresult(

@@ -65,7 +65,9 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 	#[must_use]
-	fn iter(&self) -> HrResult<Box<dyn Iterator<Item = HrResult<PROPERTYKEY>> + '_>> {
+	fn iter(&self,
+	) -> HrResult<Box<dyn Iterator<Item = HrResult<PROPERTYKEY>> + '_>>
+	{
 		Ok(Box::new(PropertyStoreIter::new(self)?))
 	}
 

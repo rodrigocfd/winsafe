@@ -39,7 +39,8 @@ pub trait oleaut_IPicture: ole_IPicture {
 	fn OleLoadPicture(
 		stream: &impl ole_IStream,
 		size: Option<u32>,
-		keep_original_format: bool) -> HrResult<IPicture>
+		keep_original_format: bool,
+	) -> HrResult<IPicture>
 	{
 		unsafe {
 			let mut ppv_queried = ComPtr::null();
@@ -63,7 +64,8 @@ pub trait oleaut_IPicture: ole_IPicture {
 	#[must_use]
 	fn OleLoadPicturePath(
 		path: &str,
-		transparent_color: Option<COLORREF>) -> HrResult<IPicture>
+		transparent_color: Option<COLORREF>,
+	) -> HrResult<IPicture>
 	{
 		unsafe {
 			let mut ppv_queried = ComPtr::null();

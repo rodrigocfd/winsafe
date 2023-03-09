@@ -129,8 +129,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetPath(&self,
-		fd: Option<&mut WIN32_FIND_DATA>,
-		flags: co::SLGP) -> HrResult<String>
+		fd: Option<&mut WIN32_FIND_DATA>, flags: co::SLGP) -> HrResult<String>
 	{
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
 		unsafe {

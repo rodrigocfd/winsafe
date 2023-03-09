@@ -86,7 +86,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// [`IFileSinkFilter::SetFileName`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifilesinkfilter-setfilename)
 	/// method.
 	fn SetFileName(&self,
-		file_name: &str, amt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
+		file_name: &str, mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<IFileSinkFilterVT>();
@@ -94,7 +94,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 				(vt.SetFileName)(
 					self.ptr(),
 					WString::from_str(file_name).as_ptr(),
-					amt.map_or(std::ptr::null(), |amt| amt as *const _ as _),
+					mt.map_or(std::ptr::null(), |amt| amt as *const _ as _),
 				),
 			)
 		}

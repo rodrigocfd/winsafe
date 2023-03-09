@@ -38,7 +38,7 @@ impl BSTR {
 	/// [`SysAllocString`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysallocstring)
 	/// function.
 	#[must_use]
-	pub fn SysAllocString(s: &str) -> HrResult<BSTR> {
+	pub fn SysAllocString(s: &str) -> HrResult<Self> {
 		let str_obj = WString::from_str(s);
 		let ptr = unsafe { oleaut::ffi::SysAllocString(str_obj.as_ptr()) };
 		if ptr.is_null() {

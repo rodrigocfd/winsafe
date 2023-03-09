@@ -51,8 +51,8 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn iter_heaps(&mut self)
-		-> Box<dyn Iterator<Item = SysResult<&HEAPLIST32>> + '_>
+	fn iter_heaps(&mut self,
+	) -> Box<dyn Iterator<Item = SysResult<&HEAPLIST32>> + '_>
 	{
 		Box::new(HeapIter::new(self))
 	}
@@ -81,8 +81,8 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn iter_modules(&mut self)
-		-> Box<dyn Iterator<Item = SysResult<&MODULEENTRY32>> + '_>
+	fn iter_modules(&mut self,
+	) -> Box<dyn Iterator<Item = SysResult<&MODULEENTRY32>> + '_>
 	{
 		Box::new(ModuleIter::new(self))
 	}
@@ -111,8 +111,8 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn iter_processes(&mut self)
-		-> Box<dyn Iterator<Item = SysResult<&PROCESSENTRY32>> + '_>
+	fn iter_processes(&mut self,
+	) -> Box<dyn Iterator<Item = SysResult<&PROCESSENTRY32>> + '_>
 	{
 		Box::new(ProcessIter::new(self))
 	}
@@ -143,8 +143,8 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn iter_threads(&mut self)
-		-> Box<dyn Iterator<Item = SysResult<&THREADENTRY32>> + '_>
+	fn iter_threads(&mut self,
+	) -> Box<dyn Iterator<Item = SysResult<&THREADENTRY32>> + '_>
 	{
 		Box::new(ThreadIter::new(self))
 	}
@@ -154,7 +154,8 @@ pub trait kernel_Hprocesslist: Handle {
 	#[must_use]
 	fn CreateToolhelp32Snapshot(
 		flags: co::TH32CS,
-		th32_process_id: Option<u32>) -> SysResult<CloseHandleGuard<HPROCESSLIST>>
+		th32_process_id: Option<u32>,
+	) -> SysResult<CloseHandleGuard<HPROCESSLIST>>
 	{
 		ptr_to_sysresult(
 			unsafe {

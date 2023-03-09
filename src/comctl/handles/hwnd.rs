@@ -62,7 +62,9 @@ pub trait comctl_Hwnd: Handle {
 	/// You must provide a subclass procedure.
 	unsafe fn SetWindowSubclass(&self,
 		subclass_proc: SUBCLASSPROC,
-		subclass_id: usize, ref_data: usize) -> SysResult<()>
+		subclass_id: usize,
+		ref_data: usize,
+	) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {

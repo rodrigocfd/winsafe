@@ -112,7 +112,7 @@ impl ComboBox {
 	/// );
 	/// ```
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: ComboBoxOpts) -> ComboBox {
+	pub fn new(parent: &impl GuiParent, opts: ComboBoxOpts) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = ComboBoxOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
@@ -148,7 +148,8 @@ impl ComboBox {
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,
-		resize_behavior: (Horz, Vert)) -> ComboBox
+		resize_behavior: (Horz, Vert),
+	) -> Self
 	{
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 

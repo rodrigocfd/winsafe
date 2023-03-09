@@ -60,7 +60,8 @@ use crate::ole::privs::ok_to_hrresult;
 /// ```
 pub fn TaskDialogIndirect(
 	task_config: &TASKDIALOGCONFIG,
-	verification_flag_checked: Option<&mut bool>) -> HrResult<(co::DLGID, u16)>
+	verification_flag_checked: Option<&mut bool>,
+) -> HrResult<(co::DLGID, u16)>
 {
 	let mut pn_button = i32::default();
 	let mut pn_radio_button = i32::default();

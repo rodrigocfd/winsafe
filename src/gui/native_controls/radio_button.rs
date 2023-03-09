@@ -99,7 +99,9 @@ impl RadioButton {
 		}
 	}
 
-	pub(in crate::gui) fn create(&self, horz: Horz, vert: Vert) -> SysResult<()> {
+	pub(in crate::gui) fn create(&self,
+		horz: Horz, vert: Vert) -> SysResult<()>
+	{
 		match &self.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = POINT::new(opts.position.0, opts.position.1);

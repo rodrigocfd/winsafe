@@ -70,11 +70,11 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	/// [`IEnumMediaTypes::iter`](crate::prelude::dshow_IEnumMediaTypes::iter),
 	/// which is simpler.
 	#[must_use]
-	fn Next(&self, amt: &mut AM_MEDIA_TYPE) -> HrResult<bool> {
+	fn Next(&self, mt: &mut AM_MEDIA_TYPE) -> HrResult<bool> {
 		unsafe {
 			let vt = self.vt_ref::<IEnumMediaTypesVT>();
 			okfalse_to_hrresult(
-				(vt.Next)(self.ptr(), 1, amt as *mut _ as _, std::ptr::null_mut()), // retrieve only 1
+				(vt.Next)(self.ptr(), 1, mt as *mut _ as _, std::ptr::null_mut()), // retrieve only 1
 			)
 		}
 	}

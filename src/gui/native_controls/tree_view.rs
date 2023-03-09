@@ -85,7 +85,7 @@ impl TreeView {
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `TreeView` in an event closure.
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: TreeViewOpts) -> TreeView {
+	pub fn new(parent: &impl GuiParent, opts: TreeViewOpts) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = TreeViewOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
@@ -122,7 +122,8 @@ impl TreeView {
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,
-		resize_behavior: (Horz, Vert)) -> TreeView
+		resize_behavior: (Horz, Vert),
+	) -> Self
 	{
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 

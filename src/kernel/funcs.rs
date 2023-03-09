@@ -16,8 +16,7 @@ use crate::kernel::privs::{
 /// [`CopyFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
 /// function.
 pub fn CopyFile(
-	existing_file: &str, new_file: &str,
-	fail_if_exists: bool) -> SysResult<()>
+	existing_file: &str, new_file: &str, fail_if_exists: bool) -> SysResult<()>
 {
 	bool_to_sysresult(
 		unsafe {
@@ -319,7 +318,8 @@ pub fn GetSystemTimePreciseAsFileTime(ft: &mut FILETIME) {
 pub fn GetSystemTimes(
 	idle_time: &mut FILETIME,
 	kernel_time: &mut FILETIME,
-	user_time: &mut FILETIME) -> SysResult<()>
+	user_time: &mut FILETIME,
+) -> SysResult<()>
 {
 	bool_to_sysresult(
 		unsafe {
@@ -404,7 +404,8 @@ pub fn GetVolumeInformation(
 	serial_number: Option<&mut u32>,
 	max_component_len: Option<&mut u32>,
 	file_system_flags: Option<&mut co::FILE_VOL>,
-	file_system_name: Option<&mut String>) -> SysResult<()>
+	file_system_name: Option<&mut String>,
+) -> SysResult<()>
 {
 	let mut name_buf = match name {
 		None => (WString::default(), 0),
@@ -543,8 +544,10 @@ pub fn IsWindowsServer() -> SysResult<bool> {
 /// function.
 #[must_use]
 pub fn IsWindowsVersionOrGreater(
-	major_version: u16, minor_version: u16,
-	service_pack_major: u16) -> SysResult<bool>
+	major_version: u16,
+	minor_version: u16,
+	service_pack_major: u16,
+) -> SysResult<bool>
 {
 	let mut osvi = OSVERSIONINFOEX::default();
 	let cond_mask = VerSetConditionMask(
@@ -647,8 +650,10 @@ pub fn MulDiv(number: i32, numerator: i32, denominator: i32) -> i32 {
 /// The resulting `Vec<u16>` includes a terminating null.
 #[must_use]
 pub fn MultiByteToWideChar(
-	code_page: co::CP, flags: co::MBC,
-	multi_byte_str: &[u8]) -> SysResult<Vec<u16>>
+	code_page: co::CP,
+	flags: co::MBC,
+	multi_byte_str: &[u8],
+) -> SysResult<Vec<u16>>
 {
 	match unsafe {
 		kernel::ffi::MultiByteToWideChar(
@@ -737,8 +742,11 @@ pub fn QueryPerformanceFrequency() -> SysResult<i64> {
 /// [`ReplaceFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew)
 /// function.
 pub fn ReplaceFile(
-	replaced: &str, replacement: &str,
-	backup: Option<&str>, flags: co::REPLACEFILE) -> SysResult<()>
+	replaced: &str,
+	replacement: &str,
+	backup: Option<&str>,
+	flags: co::REPLACEFILE,
+) -> SysResult<()>
 {
 	bool_to_sysresult(
 		unsafe {
@@ -796,7 +804,8 @@ pub fn SystemTimeToFileTime(
 pub fn SystemTimeToTzSpecificLocalTime(
 	time_zone: Option<&TIME_ZONE_INFORMATION>,
 	universal_time: &SYSTEMTIME,
-	local_time: &mut SYSTEMTIME) -> SysResult<()>
+	local_time: &mut SYSTEMTIME,
+) -> SysResult<()>
 {
 	bool_to_sysresult(
 		unsafe {
@@ -815,7 +824,8 @@ pub fn SystemTimeToTzSpecificLocalTime(
 pub fn VerifyVersionInfo(
 	osvix: &mut OSVERSIONINFOEX,
 	type_mask: co::VER_MASK,
-	condition_mask: u64) -> SysResult<bool>
+	condition_mask: u64,
+) -> SysResult<bool>
 {
 	match unsafe {
 		kernel::ffi::VerifyVersionInfoW(
@@ -849,10 +859,12 @@ pub fn VerSetConditionMask(
 /// The resulting `Vec<u16>` includes a terminating null.
 #[must_use]
 pub fn WideCharToMultiByte(
-	code_page: co::CP, flags: co::WC,
-	wide_char_str: &[u16], default_char: Option<u8>,
-	used_default_char: Option<&mut bool>) -> SysResult<Vec<u8>> {
-
+	code_page: co::CP,
+	flags: co::WC,
+	wide_char_str: &[u16],
+	default_char: Option<u8>,
+	used_default_char: Option<&mut bool>,
+) -> SysResult<Vec<u8>> {
 	let mut default_char_buf = default_char.unwrap_or_default();
 
 	match unsafe {

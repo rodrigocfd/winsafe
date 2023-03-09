@@ -32,8 +32,7 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn new(
-		is_dialog: bool,
-		parent: Option<&Base>) -> Self
+		is_dialog: bool, parent: Option<&Base>) -> Self
 	{
 		let new_self = Self {
 			hwnd: HWND::NULL,

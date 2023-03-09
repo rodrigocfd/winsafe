@@ -26,7 +26,9 @@ pub trait user_Hdwp: Handle {
 	/// [`BeginDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-begindeferwindowpos)
 	/// static method.
 	#[must_use]
-	fn BeginDeferWindowPos(num_windows: u32) -> SysResult<EndDeferWindowPosGuard> {
+	fn BeginDeferWindowPos(
+		num_windows: u32) -> SysResult<EndDeferWindowPosGuard>
+	{
 		ptr_to_sysresult(
 			unsafe { user::ffi::BeginDeferWindowPos(num_windows as _) },
 			|ptr| EndDeferWindowPosGuard::new(HDWP(ptr)),
@@ -43,7 +45,8 @@ pub trait user_Hdwp: Handle {
 		hwnd_insert_after: HwndPlace,
 		top_left: POINT,
 		sz: SIZE,
-		flags: co::SWP) -> SysResult<()>
+		flags: co::SWP,
+	) -> SysResult<()>
 	{
 		match unsafe {
 			user::ffi::DeferWindowPos(

@@ -85,7 +85,7 @@ impl Tab {
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `TreeView` in an event closure.
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: TabOpts) -> Tab {
+	pub fn new(parent: &impl GuiParent, opts: TabOpts) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let mut opts = TabOpts::define_ctrl_id(opts);
 		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
@@ -125,7 +125,8 @@ impl Tab {
 		parent: &impl GuiParent,
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
-		items: Vec<(String, Box<dyn GuiTab>)>) -> Tab
+		items: Vec<(String, Box<dyn GuiTab>)>,
+	) -> Self
 	{
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 

@@ -31,7 +31,8 @@ pub trait user_Hdesk: Handle {
 		name: &str,
 		flags: Option<co::DF>,
 		desired_access: co::DESKTOP_RIGHTS,
-		security_attributes: Option<&SECURITY_ATTRIBUTES>) -> SysResult<CloseDesktopGuard>
+		security_attributes: Option<&SECURITY_ATTRIBUTES>,
+	) -> SysResult<CloseDesktopGuard>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -56,7 +57,8 @@ pub trait user_Hdesk: Handle {
 		flags: Option<co::DF>,
 		desired_access: co::DESKTOP_RIGHTS,
 		security_attributes: Option<&SECURITY_ATTRIBUTES>,
-		heap_size_kb: u32) -> SysResult<CloseDesktopGuard>
+		heap_size_kb: u32,
+	) -> SysResult<CloseDesktopGuard>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -89,7 +91,9 @@ pub trait user_Hdesk: Handle {
 	/// )?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	#[must_use]
-	fn GetThreadDesktop(thread_id: u32) -> SysResult<ManuallyDrop<CloseDesktopGuard>> {
+	fn GetThreadDesktop(
+		thread_id: u32) -> SysResult<ManuallyDrop<CloseDesktopGuard>>
+	{
 		ptr_to_sysresult(
 			unsafe { user::ffi::GetThreadDesktop(thread_id) },
 			|ptr| ManuallyDrop::new(CloseDesktopGuard::new(HDESK(ptr))),
@@ -103,7 +107,8 @@ pub trait user_Hdesk: Handle {
 		name: &str,
 		flags: Option<co::DF>,
 		inherit: bool,
-		desired_access: co::DESKTOP_RIGHTS) -> SysResult<CloseDesktopGuard>
+		desired_access: co::DESKTOP_RIGHTS,
+	) -> SysResult<CloseDesktopGuard>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -124,7 +129,8 @@ pub trait user_Hdesk: Handle {
 	fn OpenInputDesktop(
 		flags: Option<co::DF>,
 		inherit: bool,
-		desired_access: co::DESKTOP_RIGHTS) -> SysResult<CloseDesktopGuard>
+		desired_access: co::DESKTOP_RIGHTS,
+	) -> SysResult<CloseDesktopGuard>
 	{
 		ptr_to_sysresult(
 			unsafe {

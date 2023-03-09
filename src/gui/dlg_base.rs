@@ -24,7 +24,7 @@ impl Drop for DlgBase {
 }
 
 impl DlgBase {
-	pub(in crate::gui) fn new(parent: Option<&Base>, dialog_id: u16) -> DlgBase {
+	pub(in crate::gui) fn new(parent: Option<&Base>, dialog_id: u16) -> Self {
 		Self {
 			base: Base::new(true, parent),
 			dialog_id,

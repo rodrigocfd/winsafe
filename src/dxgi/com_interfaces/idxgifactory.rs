@@ -73,7 +73,9 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 	#[must_use]
-	fn iter_adapters(&self) -> Box<dyn Iterator<Item = HrResult<IDXGIAdapter>> + '_> {
+	fn iter_adapters(&self,
+	) -> Box<dyn Iterator<Item = HrResult<IDXGIAdapter>> + '_>
+	{
 		Box::new(EnumAdaptersIter::new(self))
 	}
 

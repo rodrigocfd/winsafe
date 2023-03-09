@@ -166,7 +166,8 @@ pub trait ole_IPicture: ole_IUnknown {
 		dest_sz: SIZE,
 		src_offset: Option<POINT>,
 		src_extent: SIZE,
-		metafile_bounds: Option<&RECT>) -> HrResult<()>
+		metafile_bounds: Option<&RECT>,
+	) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<IPictureVT>();

@@ -35,7 +35,7 @@ pub struct File {
 impl File {
 	/// Opens a file with the desired access.
 	#[must_use]
-	pub fn open(file_path: &str, access: FileAccess) -> SysResult<File> {
+	pub fn open(file_path: &str, access: FileAccess) -> SysResult<Self> {
 		let (acc, share, disp) = match access {
 			FileAccess::ExistingReadOnly => (
 				co::GENERIC::READ,

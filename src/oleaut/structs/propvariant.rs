@@ -54,7 +54,7 @@ impl oleaut_Variant for PROPVARIANT {
 impl PROPVARIANT {
 	/// Creates a new object holding an `i64` value.
 	#[must_use]
-	pub fn new_i64(val: i64) -> PROPVARIANT {
+	pub fn new_i64(val: i64) -> Self {
 		unsafe { Self::from_raw(co::VT::I8, &val.to_ne_bytes()) }
 	}
 
@@ -70,7 +70,7 @@ impl PROPVARIANT {
 
 	/// Creates a new object holding an `u64` value.
 	#[must_use]
-	pub fn new_u64(val: u64) -> PROPVARIANT {
+	pub fn new_u64(val: u64) -> Self {
 		unsafe { Self::from_raw(co::VT::UI8, &val.to_ne_bytes()) }
 	}
 

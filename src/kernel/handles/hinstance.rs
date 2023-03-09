@@ -31,7 +31,10 @@ pub trait kernel_Hinstance: Handle {
 	/// [`EnumResourceLanguages`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcelanguagesw)
 	/// method.
 	fn EnumResourceLanguages<F>(&self,
-		resource_type: RtStr, resource_id: IdStr, func: F) -> SysResult<()>
+		resource_type: RtStr,
+		resource_id: IdStr,
+		func: F,
+	) -> SysResult<()>
 		where F: Fn(LANGID) -> bool,
 	{
 		bool_to_sysresult(
@@ -50,7 +53,9 @@ pub trait kernel_Hinstance: Handle {
 	/// [`EnumResourceNames`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-enumresourcenamesw)
 	/// method.
 	fn EnumResourceNames<F>(&self,
-		resource_type: RtStr, func: F) -> SysResult<()>
+		resource_type: RtStr,
+		func: F,
+	) -> SysResult<()>
 		where F: Fn(IdStr) -> bool,
 	{
 		bool_to_sysresult(
@@ -109,8 +114,10 @@ pub trait kernel_Hinstance: Handle {
 	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	#[must_use]
 	fn FindResourceEx(&self,
-		resource_id: IdStr, resource_type: RtStr,
-		language: Option<LANGID>) -> SysResult<HRSRC>
+		resource_id: IdStr,
+		resource_type: RtStr,
+		language: Option<LANGID>,
+	) -> SysResult<HRSRC>
 	{
 		ptr_to_sysresult(
 			unsafe {

@@ -52,8 +52,7 @@ pub trait ole_IStream: ole_ISequentialStream {
 	///
 	/// Returns the number of bytes read and written.
 	fn CopyTo(&self,
-		dest: &impl ole_IStream,
-		num_bytes: u64) -> HrResult<(u64, u64)>
+		dest: &impl ole_IStream, num_bytes: u64) -> HrResult<(u64, u64)>
 	{
 		let (mut read, mut written) = (u64::default(), u64::default());
 		ok_to_hrresult(

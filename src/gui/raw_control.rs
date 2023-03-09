@@ -28,8 +28,7 @@ pub(in crate::gui) struct RawControl(Pin<Arc<Obj>>);
 
 impl RawControl {
 	pub(in crate::gui) fn new(
-		parent: &Base,
-		opts: WindowControlOpts) -> Self
+		parent: &Base, opts: WindowControlOpts) -> Self
 	{
 		let (horz, vert) = (opts.horz_resize, opts.vert_resize);
 		let opts = WindowControlOpts::define_ctrl_id(opts);

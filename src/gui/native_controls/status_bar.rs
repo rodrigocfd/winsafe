@@ -120,10 +120,7 @@ impl StatusBar {
 	/// );
 	/// ```
 	#[must_use]
-	pub fn new(
-		parent: &impl GuiParent,
-		parts: &[StatusBarPart]) -> StatusBar
-	{
+	pub fn new(parent: &impl GuiParent, parts: &[StatusBarPart]) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let ctrl_id = auto_ctrl_id();
 

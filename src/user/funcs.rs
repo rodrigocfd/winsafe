@@ -17,7 +17,8 @@ pub fn AdjustWindowRectEx(
 	rc: &mut RECT,
 	style: co::WS,
 	has_menu: bool,
-	ex_style: co::WS_EX) -> SysResult<()>
+	ex_style: co::WS_EX,
+) -> SysResult<()>
 {
 	bool_to_sysresult(
 		unsafe {
@@ -63,7 +64,10 @@ pub fn AttachThreadInput(
 /// [`BroadcastSystemMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-broadcastsystemmessage)
 /// function.
 pub fn BroadcastSystemMessage<M>(
-	flags: co::BSF, info: co::BSM, msg: M) -> SysResult<co::BSM>
+	flags: co::BSF,
+	info: co::BSM,
+	msg: M,
+) -> SysResult<co::BSM>
 	where M: MsgSend,
 {
 	let mut msg = msg;
@@ -90,7 +94,8 @@ pub fn BroadcastSystemMessage<M>(
 /// function.
 pub fn ChangeDisplaySettings(
 	dev_mode: Option<&mut DEVMODE>,
-	flags: co::CDS) -> Result<co::DISP_CHANGE, co::DISP_CHANGE>
+	flags: co::CDS,
+) -> Result<co::DISP_CHANGE, co::DISP_CHANGE>
 {
 	let ret = unsafe {
 		user::ffi::ChangeDisplaySettingsW(
@@ -111,7 +116,8 @@ pub fn ChangeDisplaySettings(
 pub fn ChangeDisplaySettingsEx(
 	device_name: Option<&str>,
 	dev_mode: Option<&mut DEVMODE>,
-	flags: co::CDS) -> Result<co::DISP_CHANGE, co::DISP_CHANGE>
+	flags: co::CDS,
+) -> Result<co::DISP_CHANGE, co::DISP_CHANGE>
 {
 	let ret = unsafe {
 		user::ffi::ChangeDisplaySettingsExW(
@@ -196,7 +202,8 @@ pub fn EnumDisplayDevices(
 	device_name: Option<&str>,
 	device_num: u32,
 	display_device: &mut DISPLAY_DEVICE,
-	flags: co::EDD) -> SysResult<bool>
+	flags: co::EDD,
+) -> SysResult<bool>
 {
 	match unsafe {
 		user::ffi::EnumDisplayDevicesW(
@@ -272,7 +279,8 @@ pub fn EnumDisplayDevices(
 pub fn EnumDisplaySettings(
 	device_name: Option<&str>,
 	mode_num: GmidxEnum,
-	dev_mode: &mut DEVMODE) -> SysResult<bool>
+	dev_mode: &mut DEVMODE,
+) -> SysResult<bool>
 {
 	match unsafe {
 		user::ffi::EnumDisplaySettingsW(
@@ -295,7 +303,8 @@ pub fn EnumDisplaySettingsEx(
 	device_name: Option<&str>,
 	mode_num: GmidxEnum,
 	dev_mode: &mut DEVMODE,
-	flags: co::EDS) -> SysResult<bool>
+	flags: co::EDS,
+) -> SysResult<bool>
 {
 	match unsafe {
 		user::ffi::EnumDisplaySettingsExW(
@@ -441,8 +450,11 @@ pub fn GetGUIThreadInfo(
 /// [`GetMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
 /// function.
 pub fn GetMessage(
-	msg: &mut MSG, hwnd: Option<&HWND>,
-	msg_filter_min: u32, msg_filter_max: u32) -> SysResult<bool>
+	msg: &mut MSG,
+	hwnd: Option<&HWND>,
+	msg_filter_min: u32,
+	msg_filter_max: u32,
+) -> SysResult<bool>
 {
 	match unsafe {
 		user::ffi::GetMessageW(
@@ -598,7 +610,8 @@ pub fn PeekMessage(
 	hwnd: Option<&HWND>,
 	msg_filter_min: u32,
 	msg_filter_max: u32,
-	remove_msg: co::PM) -> bool
+	remove_msg: co::PM,
+) -> bool
 {
 	unsafe {
 		user::ffi::PeekMessageW(
@@ -813,7 +826,8 @@ pub unsafe fn SystemParametersInfo<T>(
 	action: co::SPI,
 	ui_param: u32,
 	pv_param: &mut T,
-	win_ini: co::SPIF) -> SysResult<()>
+	win_ini: co::SPIF,
+) -> SysResult<()>
 {
 	bool_to_sysresult(
 		user::ffi::SystemParametersInfoW(

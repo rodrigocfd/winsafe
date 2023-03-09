@@ -33,7 +33,7 @@ impl WString {
 	/// If `s` is `None`, the internal buffer is not allocated – it simply calls
 	/// `WString::default`.
 	#[must_use]
-	pub fn from_opt_str(s: Option<&str>) -> WString {
+	pub fn from_opt_str(s: Option<&str>) -> Self {
 		match s {
 			Some(s) => Self::from_str(s),
 			None => Self::default(),
@@ -45,7 +45,7 @@ impl WString {
 	///
 	/// The string will be stored with a terminating null.
 	#[must_use]
-	pub fn from_str(s: &str) -> WString {
+	pub fn from_str(s: &str) -> Self {
 		Self {
 			vec_u16: s.encode_utf16()
 				.chain(std::iter::once(0x0000)) // append a terminating null
@@ -62,7 +62,7 @@ impl WString {
 	/// This method is intended to pass multi-strings to native APIs, not to
 	/// retrieve them.
 	#[must_use]
-	pub fn from_str_vec(v: &[impl AsRef<str>]) -> WString {
+	pub fn from_str_vec(v: &[impl AsRef<str>]) -> Self {
 		let tot_chars = v.iter() // number of chars of all strings, including terminating nulls
 			.fold(0, |tot, s| tot + s.as_ref().chars().count() + 1) // include terminating null
 				+ 1; // double terminating null
@@ -84,7 +84,7 @@ impl WString {
 	///
 	/// The string will be stored with a terminating null.
 	#[must_use]
-	pub fn from_wchars_count(src: *const u16, num_chars: usize) -> WString {
+	pub fn from_wchars_count(src: *const u16, num_chars: usize) -> Self {
 		if src.is_null() || num_chars == 0 {
 			Self::default()
 		} else {
@@ -103,7 +103,7 @@ impl WString {
 	///
 	/// The string will be stored with a terminating null.
 	#[must_use]
-	pub fn from_wchars_nullt(src: *const u16) -> WString {
+	pub fn from_wchars_nullt(src: *const u16) -> Self {
 		if src.is_null() {
 			Self::default()
 		} else {
@@ -116,14 +116,14 @@ impl WString {
 	///
 	/// The string will be stored with a terminating null.
 	#[must_use]
-	pub fn from_wchars_slice(src: &[u16]) -> WString {
+	pub fn from_wchars_slice(src: &[u16]) -> Self {
 		Self::from_wchars_count(src.as_ptr(), src.len())
 	}
 
 	/// Creates a new UTF-16 buffer allocated with an specific length. All
 	/// UTF-16 chars will be set to zero.
 	#[must_use]
-	pub fn new_alloc_buf(num_chars: usize) -> WString {
+	pub fn new_alloc_buf(num_chars: usize) -> Self {
 		Self { vec_u16: vec![0x0000; num_chars] }
 	}
 
@@ -342,16 +342,16 @@ impl WString {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	pub fn parse(data: &[u8]) -> SysResult<WString> {
+	pub fn parse(data: &[u8]) -> SysResult<Self> {
 		let mut data = data;
 		if data.is_empty() { // nothing to parse
-			return Ok(WString::default());
+			return Ok(Self::default());
 		}
 
 		let (encoding, sz_bom) = Encoding::guess(data);
 		data = &data[sz_bom..]; // skip BOM, if any
 
-		let wstr = WString::from_wchars_slice(
+		let wstr = Self::from_wchars_slice(
 			&match encoding {
 				Encoding::Ansi => Self::parse_ansi(data),
 				Encoding::Win1252 => MultiByteToWideChar(co::CP::WINDOWS_1252, co::MBC::NoValue, data)?,

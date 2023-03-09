@@ -45,8 +45,7 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 	/// [`IFilterGraph::AddFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-addfilter)
 	/// method.
 	fn AddFilter(&self,
-		filter: &impl dshow_IBaseFilter,
-		name: &str) -> HrResult<()>
+		filter: &impl dshow_IBaseFilter, name: &str) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<IFilterGraphVT>();
@@ -65,7 +64,8 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 	fn ConnectDirect(&self,
 		pin_out: &impl dshow_IPin,
 		pin_in: &impl dshow_IPin,
-		mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
+		mt: Option<&AM_MEDIA_TYPE>,
+	) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<IFilterGraphVT>();

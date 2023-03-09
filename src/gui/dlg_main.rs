@@ -31,7 +31,8 @@ impl DlgMain {
 	pub(in crate::gui) fn new(
 		dialog_id: u16,
 		icon_id: Option<u16>,
-		accel_table_id: Option<u16>) -> Self
+		accel_table_id: Option<u16>,
+	) -> Self
 	{
 		let new_self = Self(
 			Arc::pin(

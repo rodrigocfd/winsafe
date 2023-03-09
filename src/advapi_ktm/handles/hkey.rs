@@ -28,7 +28,8 @@ pub trait advapi_ktm_Hkey: Handle {
 		options: co::REG_OPTION,
 		access_rights: co::KEY,
 		security_attributes: Option<&SECURITY_ATTRIBUTES>,
-		htransaction: &HTRANSACTION) -> SysResult<(RegCloseKeyGuard, co::REG_DISPOSITION)>
+		htransaction: &HTRANSACTION,
+	) -> SysResult<(RegCloseKeyGuard, co::REG_DISPOSITION)>
 	{
 		let mut hkey = HKEY::NULL;
 		let mut disposition = co::REG_DISPOSITION::NoValue;
@@ -57,7 +58,8 @@ pub trait advapi_ktm_Hkey: Handle {
 	fn RegDeleteKeyTransacted(&self,
 		sub_key: &str,
 		access_rights: co::KEY,
-		htransaction: &HTRANSACTION) -> SysResult<()>
+		htransaction: &HTRANSACTION,
+	) -> SysResult<()>
 	{
 		error_to_sysresult(
 			unsafe {
@@ -80,7 +82,8 @@ pub trait advapi_ktm_Hkey: Handle {
 		sub_key: &str,
 		options: co::REG_OPTION,
 		access_rights: co::KEY,
-		htransaction: &HTRANSACTION) -> SysResult<RegCloseKeyGuard>
+		htransaction: &HTRANSACTION,
+	) -> SysResult<RegCloseKeyGuard>
 	{
 		let mut hkey = HKEY::NULL;
 		error_to_sysresult(

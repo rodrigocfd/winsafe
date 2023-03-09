@@ -89,9 +89,7 @@ impl WindowControl {
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `WindowControl` in an event closure.
 	#[must_use]
-	pub fn new(
-		parent: &impl GuiParent, opts: WindowControlOpts) -> WindowControl
-	{
+	pub fn new(parent: &impl GuiParent, opts: WindowControlOpts) -> Self {
 		if *parent.hwnd() != HWND::NULL {
 			panic!("Cannot create a custom child control after the parent window is created.");
 		}
@@ -122,7 +120,8 @@ impl WindowControl {
 		dialog_id: u16,
 		position: POINT,
 		resize_behavior: (Horz, Vert),
-		ctrl_id: Option<u16>) -> WindowControl
+		ctrl_id: Option<u16>,
+	) -> Self
 	{
 		if *parent.hwnd() != HWND::NULL {
 			panic!("Cannot create a custom child control after the parent window is created.");

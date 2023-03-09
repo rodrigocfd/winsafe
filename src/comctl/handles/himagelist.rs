@@ -125,8 +125,11 @@ pub trait comctl_Himagelist: Handle {
 	/// ```
 	#[must_use]
 	fn Create(
-		image_sz: SIZE, flags: co::ILC,
-		initial_size: i32, grow_size: i32) -> SysResult<ImageListDestroyGuard>
+		image_sz: SIZE,
+		flags: co::ILC,
+		initial_size: i32,
+		grow_size: i32,
+	) -> SysResult<ImageListDestroyGuard>
 	{
 		ptr_to_sysresult(
 			unsafe {

@@ -119,7 +119,7 @@ impl UpDown {
 	/// );
 	/// ```
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: UpDownOpts) -> UpDown {
+	pub fn new(parent: &impl GuiParent, opts: UpDownOpts) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = UpDownOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
@@ -153,7 +153,7 @@ impl UpDown {
 	/// Panics if the parent dialog was already created – that is, you cannot
 	/// dynamically create an `UpDown` in an event closure.
 	#[must_use]
-	pub fn new_dlg(parent: &impl GuiParent, ctrl_id: u16) -> UpDown {
+	pub fn new_dlg(parent: &impl GuiParent, ctrl_id: u16) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 
 		let new_self = Self(

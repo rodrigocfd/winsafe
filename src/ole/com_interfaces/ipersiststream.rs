@@ -76,8 +76,7 @@ pub trait ole_IPersistStream: ole_IPersist {
 	/// [`IPersistStream::Save`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersiststream-save)
 	/// method.
 	fn Save(&self,
-		stream: &impl ole_IStream,
-		clear_dirty: bool) -> HrResult<()>
+		stream: &impl ole_IStream, clear_dirty: bool) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {

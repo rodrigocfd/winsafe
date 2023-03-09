@@ -28,7 +28,8 @@ pub trait kernel_Hupdatersrc: Handle {
 	#[must_use]
 	fn BeginUpdateResource(
 		file_name: &str,
-		delete_existing_resources: bool) -> SysResult<EndUpdateResourceGuard>
+		delete_existing_resources: bool,
+	) -> SysResult<EndUpdateResourceGuard>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -47,7 +48,8 @@ pub trait kernel_Hupdatersrc: Handle {
 		resource_type: RtStr,
 		resource_id: IdStr,
 		language: LANGID,
-		data: &[u8]) -> SysResult<()>
+		data: &[u8],
+	) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {

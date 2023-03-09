@@ -63,8 +63,7 @@ impl RadioGroup {
 	/// dynamically create a `RadioGroup` in an event closure.
 	#[must_use]
 	pub fn new(
-		parent: &impl GuiParent,
-		opts: &[RadioButtonOpts]) -> RadioGroup
+		parent: &impl GuiParent, opts: &[RadioButtonOpts]) -> Self
 	{
 		if opts.is_empty() {
 			panic!("RadioGroup needs at least one RadioButton.");
@@ -124,8 +123,7 @@ impl RadioGroup {
 	/// dynamically create a `RadioGroup` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
-		parent: &impl GuiParent,
-		ctrls: &[(u16, Horz, Vert)]) -> RadioGroup
+		parent: &impl GuiParent, ctrls: &[(u16, Horz, Vert)]) -> Self
 	{
 		if ctrls.is_empty() {
 			panic!("RadioGroup needs at least one RadioButton.");

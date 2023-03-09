@@ -26,8 +26,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`DrawThemeBackground`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-drawthemebackground)
 	/// method.
 	fn DrawThemeBackground(&self,
-		hdc: &HDC, part_state: co::VS,
-		rc: RECT, rc_clip: RECT) -> HrResult<()>
+		hdc: &HDC, part_state: co::VS, rc: RECT, rc_clip: RECT) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {
@@ -98,7 +97,10 @@ pub trait uxtheme_Htheme: Handle {
 	/// method.
 	#[must_use]
 	fn GetThemeBackgroundRegion(&self,
-		hdc: &HDC, part_state: co::VS, rc: RECT) -> HrResult<DeleteObjectGuard<HRGN>>
+		hdc: &HDC,
+		part_state: co::VS,
+		rc: RECT,
+	) -> HrResult<DeleteObjectGuard<HRGN>>
 	{
 		let mut handle = HRGN::NULL;
 		ok_to_hrresult(

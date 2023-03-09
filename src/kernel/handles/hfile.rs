@@ -80,7 +80,8 @@ pub trait kernel_Hfile: Handle {
 		security_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		creation_disposition: co::DISPOSITION,
 		flags_and_attrs: co::FILE_ATTRIBUTE,
-		hfile_template: Option<&HFILE>) -> SysResult<(CloseHandleGuard<HFILE>, co::ERROR)>
+		hfile_template: Option<&HFILE>,
+	) -> SysResult<(CloseHandleGuard<HFILE>, co::ERROR)>
 	{
 		match HFILE(unsafe {
 			kernel::ffi::CreateFileW(
@@ -105,7 +106,8 @@ pub trait kernel_Hfile: Handle {
 		mapping_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		protect: co::PAGE,
 		max_size: Option<u64>,
-		mapping_name: Option<&str>) -> SysResult<CloseHandleGuard<HFILEMAP>>
+		mapping_name: Option<&str>,
+	) -> SysResult<CloseHandleGuard<HFILEMAP>>
 	{
 		ptr_to_sysresult(
 			unsafe {
@@ -189,7 +191,8 @@ pub trait kernel_Hfile: Handle {
 	#[must_use]
 	fn LockFile(&self,
 		offset: u64,
-		num_bytes_to_lock: u64) -> SysResult<UnlockFileGuard<'_, Self>>
+		num_bytes_to_lock: u64,
+	) -> SysResult<UnlockFileGuard<'_, Self>>
 	{
 		bool_to_sysresult(
 			unsafe {
@@ -209,8 +212,7 @@ pub trait kernel_Hfile: Handle {
 	///
 	/// Returns the number of bytes read.
 	fn ReadFile(&self,
-		buffer: &mut [u8],
-		overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
+		buffer: &mut [u8], overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
 	{
 		let mut bytes_read = u32::default();
 		bool_to_sysresult(
@@ -236,7 +238,8 @@ pub trait kernel_Hfile: Handle {
 	/// method.
 	fn SetFilePointerEx(&self,
 		distance_to_move: i64,
-		move_method: co::FILE_STARTING_POINT) -> SysResult<i64>
+		move_method: co::FILE_STARTING_POINT,
+	) -> SysResult<i64>
 	{
 		let mut new_offset = i64::default();
 

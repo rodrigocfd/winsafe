@@ -220,8 +220,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	///
 	/// At least one parameter must be passed.
 	fn SetVideoPosition(&self,
-		src: Option<MFVideoNormalizedRect>,
-		dest: Option<RECT>) -> HrResult<()>
+		src: Option<MFVideoNormalizedRect>, dest: Option<RECT>) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();

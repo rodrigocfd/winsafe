@@ -46,25 +46,25 @@ impl Encoding {
 	/// Guesses the encoding of the given raw data, also returning the size of
 	/// its [BOM](https://en.wikipedia.org/wiki/Byte_order_mark), if any.
 	#[must_use]
-	pub fn guess(data: &[u8]) -> (Encoding, usize) {
+	pub fn guess(data: &[u8]) -> (Self, usize) {
 		if let Some((enc, bom_sz)) = Self::guess_bom(data) {
 			return (enc, bom_sz); // BOM found, we already guessed the encoding
 		}
 
 		if Self::guess_utf8(data) {
-			return (Encoding::Utf8, 0);
+			return (Self::Utf8, 0);
 		}
 
 		let has_non_ansi_char = data.iter().find(|ch| **ch > 0x7f).is_some();
 		if has_non_ansi_char {
-			(Encoding::Win1252, 0) // by exclusion, not assertive
+			(Self::Win1252, 0) // by exclusion, not assertive
 		} else {
-			(Encoding::Ansi, 0)
+			(Self::Ansi, 0)
 		}
 	}
 
 	#[must_use]
-	fn guess_bom(data: &[u8]) -> Option<(Encoding, usize)> {
+	fn guess_bom(data: &[u8]) -> Option<(Self, usize)> {
 		let has_bom = |bom_bytes: &[u8]| -> bool {
 			data.len() >= bom_bytes.len()
 				&& data[..bom_bytes.len()].cmp(bom_bytes) == Ordering::Equal
@@ -72,37 +72,37 @@ impl Encoding {
 
 		const UTF8: [u8; 3] = [0xef, 0xbb, 0xbf];
 		if has_bom(&UTF8) { // UTF-8 BOM
-			return Some((Encoding::Utf8, UTF8.len()));
+			return Some((Self::Utf8, UTF8.len()));
 		}
 
 		const UTF16BE: [u8; 2] = [0xfe, 0xff];
 		if has_bom(&UTF16BE) {
-			return Some((Encoding::Utf16be, UTF16BE.len()));
+			return Some((Self::Utf16be, UTF16BE.len()));
 		}
 
 		const UTF16LE: [u8; 2] = [0xff, 0xfe];
 		if has_bom(&UTF16LE) {
-			return Some((Encoding::Utf16le, UTF16LE.len()));
+			return Some((Self::Utf16le, UTF16LE.len()));
 		}
 
 		const UTF32BE: [u8; 4] = [0x00, 0x00, 0xfe, 0xff];
 		if has_bom(&UTF32BE) {
-			return Some((Encoding::Utf32be, UTF32BE.len()));
+			return Some((Self::Utf32be, UTF32BE.len()));
 		}
 
 		const UTF32LE: [u8; 4] = [0xff, 0xfe, 0x00, 0x00];
 		if has_bom(&UTF32LE) {
-			return Some((Encoding::Utf32le, UTF32LE.len()));
+			return Some((Self::Utf32le, UTF32LE.len()));
 		}
 
 		const SCSU: [u8; 3] = [0x0e, 0xfe, 0xff];
 		if has_bom(&SCSU) {
-			return Some((Encoding::Scsu, SCSU.len()));
+			return Some((Self::Scsu, SCSU.len()));
 		}
 
 		const BOCU1: [u8; 3] = [0xfb, 0xee, 0x28];
 		if has_bom(&BOCU1) {
-			return Some((Encoding::Bocu1, BOCU1.len()));
+			return Some((Self::Bocu1, BOCU1.len()));
 		}
 
 		None // no BOM found

@@ -83,7 +83,7 @@ impl WindowMain {
 	/// Instantiates a new `WindowMain` object, to be created internally with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
-	pub fn new(opts: WindowMainOpts) -> WindowMain {
+	pub fn new(opts: WindowMainOpts) -> Self {
 		Self(
 			RawDlg::Raw(
 				RawMain::new(opts),
@@ -98,7 +98,8 @@ impl WindowMain {
 	pub fn new_dlg(
 		dialog_id: u16,
 		icon_id: Option<u16>,
-		accel_table_id: Option<u16>) -> WindowMain
+		accel_table_id: Option<u16>,
+	) -> Self
 	{
 		Self(
 			RawDlg::Dlg(

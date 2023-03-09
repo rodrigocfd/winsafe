@@ -119,7 +119,7 @@ macro_rules! const_guid {
 			/// let g = GUID::new("00000000-0000-0000-c000-000000000046");
 			/// ```
 			#[must_use]
-			pub const fn new(guid_str: &str) -> $name {
+			pub const fn new(guid_str: &str) -> Self {
 				Self(crate::kernel::decl::GUID::new(guid_str))
 			}
 		}

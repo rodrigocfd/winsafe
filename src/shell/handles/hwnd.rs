@@ -29,7 +29,8 @@ pub trait shell_Hwnd: Handle {
 		title_bar: &str,
 		first_line: Option<&str>,
 		other_stuff: Option<&str>,
-		hicon: Option<&HICON>) -> SysResult<()>
+		hicon: Option<&HICON>,
+	) -> SysResult<()>
 	{
 		let mut wapp = WString::from_str(title_bar);
 		if let Some(line) = first_line {
@@ -56,7 +57,8 @@ pub trait shell_Hwnd: Handle {
 		file: &str,
 		parameters: Option<&str>,
 		directory: Option<&str>,
-		show_cmd: co::SW) -> Result<HINSTANCE, co::SE_ERR>
+		show_cmd: co::SW,
+	) -> Result<HINSTANCE, co::SE_ERR>
 	{
 		let ret = unsafe {
 			shell::ffi::ShellExecuteW(

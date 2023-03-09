@@ -85,7 +85,7 @@ impl<'a> ComboBoxItems<'a> {
 	/// }
 	/// ```
 	#[must_use]
-	pub fn iter(&'a self) -> impl Iterator<Item = String> + 'a {
+	pub fn iter(&self) -> impl Iterator<Item = String> + 'a {
 		ComboBoxItemIter::new(self.owner)
 	}
 

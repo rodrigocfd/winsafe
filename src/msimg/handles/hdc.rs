@@ -20,10 +20,13 @@ pub trait msimg_Hdc: Handle {
 	/// [`TransparentBlt`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-transparentblt)
 	/// method.
 	fn TransparentBlt(&self,
-		dest_top_left: POINT, dest_sz: SIZE,
+		dest_top_left: POINT,
+		dest_sz: SIZE,
 		hdc_src: HDC,
-		src_top_left: POINT, src_sz: SIZE,
-		color_transparent: COLORREF) -> SysResult<()>
+		src_top_left: POINT,
+		src_sz: SIZE,
+		color_transparent: COLORREF,
+	) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {

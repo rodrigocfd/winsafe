@@ -72,7 +72,8 @@ impl BaseNativeControl {
 		sz: SIZE,
 		ctrl_id: u16,
 		ex_styles: co::WS_EX,
-		styles: co::WS) -> SysResult<()>
+		styles: co::WS,
+	) -> SysResult<()>
 	{
 		let hparent = self.parent().hwnd();
 
@@ -135,8 +136,13 @@ impl BaseNativeControl {
 	}
 
 	extern "system" fn subclass_proc(
-		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize,
-		subclass_id: usize, ref_data: usize) -> isize
+		hwnd: HWND,
+		msg: co::WM,
+		wparam: usize,
+		lparam: isize,
+		subclass_id: usize,
+		ref_data: usize,
+	) -> isize
 	{
 		let wm_any = WndMsg::new(msg, wparam, lparam);
 		Self::subclass_proc_proc(hwnd, wm_any, subclass_id, ref_data)
@@ -144,8 +150,11 @@ impl BaseNativeControl {
 	}
 
 	fn subclass_proc_proc(
-		hwnd: HWND, wm_any: WndMsg,
-		subclass_id: usize, ref_data: usize) -> AnyResult<isize>
+		hwnd: HWND,
+		wm_any: WndMsg,
+		subclass_id: usize,
+		ref_data: usize,
+	) -> AnyResult<isize>
 	{
 		let ptr_self = ref_data as *mut Self; // retrieve
 		let mut process_result = ProcessResult::NotHandled;

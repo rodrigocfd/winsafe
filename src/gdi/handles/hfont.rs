@@ -29,12 +29,20 @@ pub trait gdi_Hfont: GdiObject {
 	/// static method.
 	#[must_use]
 	fn CreateFont(
-		sz: SIZE, escapement: i32, orientation: i32,
-		weight: co::FW, italic: bool, underline: bool, strike_out: bool,
+		sz: SIZE,
+		escapement: i32,
+		orientation: i32,
+		weight: co::FW,
+		italic: bool,
+		underline: bool,
+		strike_out: bool,
 		char_set: co::CHARSET,
-		out_precision: co::OUT_PRECIS, clip_precision: co::CLIP,
-		quality: co::QUALITY, pitch_and_family: co::PITCH,
-		face_name: &str) -> SysResult<DeleteObjectGuard<HFONT>>
+		out_precision: co::OUT_PRECIS,
+		clip_precision: co::CLIP,
+		quality: co::QUALITY,
+		pitch_and_family: co::PITCH,
+		face_name: &str,
+	) -> SysResult<DeleteObjectGuard<HFONT>>
 	{
 		ptr_to_sysresult(
 			unsafe {
