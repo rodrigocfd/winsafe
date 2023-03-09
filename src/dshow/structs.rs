@@ -81,6 +81,7 @@ impl_default!(FILTER_INFO);
 impl_drop_comptr!(pGraph, FILTER_INFO);
 
 impl FILTER_INFO {
+	pub_fn_string_arr_get_set!(achName, set_achName);
 	pub_fn_comptr_get_set!(pGraph, set_pGraph, dshow_IFilterGraph);
 }
 

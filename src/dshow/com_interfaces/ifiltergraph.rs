@@ -1,11 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::dshow::decl::{IBaseFilter, IEnumFilters};
+use crate::dshow::decl::{AM_MEDIA_TYPE, IBaseFilter, IEnumFilters};
 use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCSTR, PCVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{dshow_IBaseFilter, ole_IUnknown};
+use crate::prelude::{dshow_IBaseFilter, dshow_IPin, ole_IUnknown};
 use crate::vt::IUnknownVT;
 
 /// [`IFilterGraph`](crate::IFilterGraph) virtual table.
@@ -60,6 +60,35 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 		}
 	}
 
+	/// [`IFilterGraph::ConnectDirect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-connectdirect)
+	/// method.
+	fn ConnectDirect(&self,
+		pin_out: &impl dshow_IPin,
+		pin_in: &impl dshow_IPin,
+		mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
+	{
+		unsafe {
+			let vt = self.vt_ref::<IFilterGraphVT>();
+			ok_to_hrresult(
+				(vt.ConnectDirect)(
+					self.ptr(),
+					pin_out.ptr(),
+					pin_in.ptr(),
+					mt.map_or(std::ptr::null_mut(), |amt| amt as *const _ as _),
+				),
+			)
+		}
+	}
+
+	/// [`IFilterGraph::Disconnect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-disconnect)
+	/// method.
+	fn Disconnect(&self, pin: &impl dshow_IPin) -> HrResult<()> {
+		unsafe {
+			let vt = self.vt_ref::<IFilterGraphVT>();
+			ok_to_hrresult((vt.Disconnect)(self.ptr(), pin.ptr()))
+		}
+	}
+
 	/// [`IFilterGraph::EnumFilters`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-enumfilters)
 	/// method.
 	#[must_use]
@@ -87,6 +116,15 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 					&mut ppv_queried,
 				),
 			).map(|_| IBaseFilter::from(ppv_queried))
+		}
+	}
+
+	/// [`IFilterGraph::Reconnect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-reconnect)
+	/// method.
+	fn Reconnect(&self, pin: &impl dshow_IPin) -> HrResult<()> {
+		unsafe {
+			let vt = self.vt_ref::<IFilterGraphVT>();
+			ok_to_hrresult((vt.Reconnect)(self.ptr(), pin.ptr()))
 		}
 	}
 
