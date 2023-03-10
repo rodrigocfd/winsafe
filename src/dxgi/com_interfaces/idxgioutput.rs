@@ -110,8 +110,8 @@ pub trait dxgi_IDXGIOutput: dxgi_IDXGIObject {
 
 	/// [`IDXGIOutput::TakeOwnership`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgioutput-takeownership)
 	/// method.
-	fn TakeOwnership<T>(&self, device: &T, exclusive: bool) -> HrResult<()>
-		where T: ole_IUnknown,
+	fn TakeOwnership(&self,
+		device: &impl ole_IUnknown, exclusive: bool) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<IDXGIOutputVT>();

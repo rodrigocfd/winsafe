@@ -5,9 +5,9 @@ use crate::kernel::decl::{
 	GetLastError, HACCESSTOKEN, HLOCAL, SysResult, WString,
 };
 use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, ptr_to_sysresult};
-use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult, IBindCtx, IStream};
+use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult, IStream};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, kernel_Hlocal, ole_IUnknown, shell_IShellItem};
+use crate::prelude::{Handle, kernel_Hlocal, ole_IBindCtx, shell_IShellItem};
 use crate::shell::decl::{
 	NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT, SHSTOCKICONINFO,
 };
@@ -172,18 +172,18 @@ pub fn Shell_NotifyIcon(
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
-/// use winsafe::{IShellItem2, SHCreateItemFromParsingName};
+/// use winsafe::{IBindCtx, IShellItem2, SHCreateItemFromParsingName};
 ///
 /// let shi = SHCreateItemFromParsingName::<IShellItem2>(
 ///     "C:\\Temp\\foo.txt",
-///     None,
+///     None::<&IBindCtx>,
 /// )?;
 /// # Ok::<_, winsafe::co::HRESULT>(())
 /// ```
 #[must_use]
 pub fn SHCreateItemFromParsingName<T>(
 	file_or_folder_path: &str,
-	bind_ctx: Option<&IBindCtx>,
+	bind_ctx: Option<&impl ole_IBindCtx>,
 ) -> HrResult<T>
 	where T: shell_IShellItem,
 {

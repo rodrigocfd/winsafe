@@ -3,9 +3,9 @@
 use crate::co;
 use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCVOID, PSTR, PVOID};
-use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult, IBindCtx};
+use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::ole_IUnknown;
+use crate::prelude::{ole_IBindCtx, ole_IUnknown};
 use crate::vt::IUnknownVT;
 
 /// [`IShellItem`](crate::IShellItem) virtual table.
@@ -52,20 +52,20 @@ pub trait shell_IShellItem: ole_IUnknown {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IEnumShellItems, IShellItem};
+	/// use winsafe::{co, IBindCtx, IEnumShellItems, IShellItem};
 	///
 	/// let sh_folder: IShellItem; // initialized somewhere
 	///
 	/// # let sh_folder = IShellItem::from(unsafe { winsafe::ComPtr::null() });
 	/// let sh_items = sh_folder.BindToHandler::<IEnumShellItems>(
-	///     None,
+	///     None::<&IBindCtx>,
 	///     &co::BHID::EnumItems,
 	/// )?;
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
 	#[must_use]
 	fn BindToHandler<T>(&self,
-		bind_ctx: Option<&IBindCtx>,
+		bind_ctx: Option<&impl ole_IBindCtx>,
 		bhid: &co::BHID,
 	) -> HrResult<T>
 		where T: ole_IUnknown,
@@ -109,11 +109,11 @@ pub trait shell_IShellItem: ole_IUnknown {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IShellItem, SHCreateItemFromParsingName};
+	/// use winsafe::{co, IBindCtx, IShellItem, SHCreateItemFromParsingName};
 	///
 	/// let shi = SHCreateItemFromParsingName::<IShellItem>(
 	///     "C:\\Temp\\foo.txt",
-	///     None,
+	///     None::<&IBindCtx>,
 	/// )?;
 	///
 	/// let full_path = shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;
@@ -143,11 +143,11 @@ pub trait shell_IShellItem: ole_IUnknown {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IShellItem, SHCreateItemFromParsingName};
+	/// use winsafe::{co, IBindCtx, IShellItem, SHCreateItemFromParsingName};
 	///
 	/// let shi = SHCreateItemFromParsingName::<IShellItem>(
 	///     "C:\\Temp\\foo.txt",
-	///     None,
+	///     None::<&IBindCtx>,
 	/// )?;
 	///
 	/// let parent_shi = shi.GetParent()?;

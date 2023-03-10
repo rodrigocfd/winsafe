@@ -1,11 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::dshow::decl::{FILTER_INFO, IEnumPins, IFilterGraph, IPin};
+use crate::dshow::decl::{FILTER_INFO, IEnumPins, IPin};
 use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR, PVOID};
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{dshow_IMediaFilter, ole_IPersist, ole_IUnknown};
+use crate::prelude::{dshow_IFilterGraph, dshow_IMediaFilter, ole_IPersist};
 use crate::vt::IMediaFilterVT;
 
 /// [`IBaseFilter`](crate::IBaseFilter) virtual table.
@@ -88,7 +88,7 @@ pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 	/// [`IBaseFilter::JoinFilterGraph`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-joinfiltergraph)
 	/// method.
 	fn JoinFilterGraph(&self,
-		graph: Option<&IFilterGraph>, name: &str) -> HrResult<()>
+		graph: Option<&impl dshow_IFilterGraph>, name: &str) -> HrResult<()>
 	{
 		unsafe {
 			let vt = self.vt_ref::<IBaseFilterVT>();
