@@ -1,6 +1,7 @@
 mod ibindctx;
 mod idataobject;
 mod idroptarget;
+mod imoniker;
 mod ipersist;
 mod ipersiststream;
 mod ipicture;
@@ -12,6 +13,7 @@ pub mod decl {
 	pub use super::ibindctx::IBindCtx;
 	pub use super::idataobject::IDataObject;
 	pub use super::idroptarget::IDropTarget;
+	pub use super::imoniker::IMoniker;
 	pub use super::ipersist::IPersist;
 	pub use super::ipersiststream::IPersistStream;
 	pub use super::ipicture::IPicture;
@@ -24,6 +26,7 @@ pub mod traits {
 	pub use super::ibindctx::ole_IBindCtx;
 	pub use super::idataobject::ole_IDataObject;
 	pub use super::idroptarget::ole_IDropTarget;
+	pub use super::imoniker::ole_IMoniker;
 	pub use super::ipersist::ole_IPersist;
 	pub use super::ipersiststream::ole_IPersistStream;
 	pub use super::ipicture::ole_IPicture;
@@ -36,6 +39,7 @@ pub mod vt {
 	pub use super::ibindctx::IBindCtxVT;
 	pub use super::idataobject::IDataObjectVT;
 	pub use super::idroptarget::IDropTargetVT;
+	pub use super::imoniker::IMonikerVT;
 	pub use super::ipersist::IPersistVT;
 	pub use super::ipersiststream::IPersistStreamVT;
 	pub use super::ipicture::IPictureVT;

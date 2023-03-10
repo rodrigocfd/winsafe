@@ -254,6 +254,35 @@ const_bitflag! { LOCKTYPE: u32;
 	ONLYONCE 4
 }
 
+const_ordinary! { MKRREDUCE: u32;
+	/// [How far](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-mkrreduce)
+	/// a moniker should be reduced (`u32`).
+	=>
+	=>
+	ONE (3 << 16)
+	TOUSER (2 << 16)
+	THROUGHUSER (1 << 16)
+	ALL 0
+}
+
+const_ordinary! { MKSYS: u32;
+	/// Moniker
+	/// [classes](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-mksys)
+	/// (`u32`).
+	=>
+	=>
+	NONE 0
+	GENERICCOMPOSITE 1
+	FILEMONIKER 2
+	ANTIMONIKER 3
+	ITEMMONIKER 4
+	POINTERMONIKER 5
+	CLASSMONIKER 7
+	OBJREFMONIKER 8
+	SESSIONMONIKER 9
+	LUAMONIKER 10
+}
+
 const_ordinary! { PICTYPE: i16;
 	/// [`PICTYPE`](https://learn.microsoft.com/en-us/windows/win32/com/pictype-constants)
 	/// constants (`i16`).
