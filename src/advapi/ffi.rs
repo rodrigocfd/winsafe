@@ -11,7 +11,10 @@ extern_sys! { "advapi32";
 	EqualDomainSid(PVOID, PVOID, *mut BOOL) -> BOOL
 	EqualPrefixSid(PVOID, PVOID) -> BOOL
 	EqualSid(PVOID, PVOID) -> BOOL
+	GetLengthSid(PVOID) -> u32
+	GetSidLengthRequired(u8) -> u32
 	GetUserNameW(PSTR, *mut u32) -> BOOL
+	GetWindowsAccountDomainSid(PCVOID, *mut u8, *mut u32) -> BOOL
 	InitializeSecurityDescriptor(PVOID, u32) -> BOOL
 	IsValidSecurityDescriptor(PCVOID) -> BOOL
 	IsValidSid(PVOID) -> BOOL

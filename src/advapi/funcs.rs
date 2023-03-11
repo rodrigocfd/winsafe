@@ -50,10 +50,7 @@ pub fn ConvertStringSidToSid(str_sid: &str) -> SysResult<SID_wrap> {
 		},
 	)?;
 	let pbuf_sid = unsafe { std::mem::transmute::<_, &SID>(pbuf) };
-	let pbuf_sid_sz = std::mem::size_of::<SID>() -
-		std::mem::size_of::<[u32; 1]>() + 
-		(pbuf_sid.SubAuthorityCount() as usize * std::mem::size_of::<u32>());
-	let pbuf_slice = unsafe { std::slice::from_raw_parts(pbuf, pbuf_sid_sz) };
+	let pbuf_slice = unsafe { std::slice::from_raw_parts(pbuf, GetLengthSid(pbuf_sid) as _) };
 	let raw_sid_copied = Vec::from_iter(pbuf_slice.iter().cloned());
 	HLOCAL(pbuf as _).LocalFree()?;
 	Ok(SID_wrap::new(raw_sid_copied))
@@ -187,6 +184,20 @@ pub fn EqualSid(sid1: &SID, sid2: &SID) -> SysResult<bool> {
 	}
 }
 
+/// [`GetLengthSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getlengthsid)
+/// function.
+#[must_use]
+pub fn GetLengthSid(sid: &SID) -> u32 {
+	unsafe { advapi::ffi::GetLengthSid(sid as *const _ as _) }
+}
+
+/// [`GetSidLengthRequired`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidlengthrequired)
+/// function.
+#[must_use]
+pub fn GetSidLengthRequired(sub_authority_count: u8) -> u32 {
+	unsafe { advapi::ffi::GetSidLengthRequired(sub_authority_count) }
+}
+
 /// [`GetUserName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getusernamew)
 /// function.
 #[must_use]
@@ -198,6 +209,24 @@ pub fn GetUserName() -> SysResult<String> {
 		0 => Err(GetLastError()),
 		_ => Ok(buf.to_string()),
 	}
+}
+
+/// [`GetWindowsAccountDomainSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getwindowsaccountdomainsid)
+/// function.
+#[must_use]
+pub fn GetWindowsAccountDomainSid(sid: &SID) -> SysResult<SID_wrap> {
+	let mut domain_sid = SID::new_raw();
+	let mut domain_sid_sz = domain_sid.len() as u32;
+
+	bool_to_sysresult(
+		unsafe {
+			advapi::ffi::GetWindowsAccountDomainSid(
+				sid as *const _ as _,
+				domain_sid.as_mut_ptr(),
+				&mut domain_sid_sz,
+			)
+		},
+	).map(|_| SID_wrap::new(domain_sid))
 }
 
 /// [`InitializeSecurityDescriptor`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-initializesecuritydescriptor)
