@@ -49,13 +49,7 @@ impl BaseNativeControl {
 	}
 
 	pub(in crate::gui) fn hwnd(&self) -> &HWND {
-		let h = unsafe { &mut *self.hwnd.get() };
-		if *h == HWND::NULL {
-			panic!(concat!("You cannot perform an action on a control",
-				" before it has been physically created.",
-				" You probably want to do this on WM_CREATE or WM_INITDIALOG events."));
-		}
-		h
+		unsafe { &mut *self.hwnd.get() }
 	}
 
 	pub(in crate::gui) fn parent(&self) -> &Base {
