@@ -34,7 +34,7 @@
 //!
 //! | Feature | Description |
 //! | - | - |
-//! | `advapi` | Advapi32.dll, for [Windows Registry](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry) |
+//! | `advapi` | Advapi32.dll, for [Windows Registry](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry) and identity |
 //! | `comctl` | ComCtl32.dll, for [Common Controls](https://learn.microsoft.com/en-us/windows/win32/api/_controls/) |
 //! | `comdlg` | ComDlg32.dll, for the old [Common Dialogs](https://learn.microsoft.com/en-us/windows/win32/uxguide/win-common-dlg) |
 //! | `dshow` | [DirectShow](https://learn.microsoft.com/en-us/windows/win32/directshow/directshow) |

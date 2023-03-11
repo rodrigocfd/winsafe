@@ -1,12 +1,21 @@
 use crate::kernel::ffi_types::{BOOL, HANDLE, PCSTR, PCVOID, PSTR, PVOID};
 
 extern_sys! { "advapi32";
+	ConvertSidToStringSidW(PCVOID, *mut PSTR) -> BOOL
+	ConvertStringSidToSidW(PCSTR, *mut *mut u8) -> BOOL
+	CopySid(u32, *mut u8, PCVOID) -> BOOL
+	CreateWellKnownSid(u32, PCVOID, *mut u8, *mut u32) -> BOOL
 	DecryptFileW(PCSTR, u32) -> BOOL
 	EncryptFileW(PCSTR) -> BOOL
 	EncryptionDisable(PCSTR, BOOL) -> BOOL
+	EqualDomainSid(PVOID, PVOID, *mut BOOL) -> BOOL
+	EqualPrefixSid(PVOID, PVOID) -> BOOL
+	EqualSid(PVOID, PVOID) -> BOOL
 	GetUserNameW(PSTR, *mut u32) -> BOOL
 	InitializeSecurityDescriptor(PVOID, u32) -> BOOL
 	IsValidSecurityDescriptor(PCVOID) -> BOOL
+	IsValidSid(PVOID) -> BOOL
+	LookupAccountNameW(PCSTR, PCSTR, *mut u8, *mut u32, PSTR, *mut u32, *mut u32) -> BOOL
 	RegCloseKey(HANDLE) -> i32
 	RegConnectRegistryW(PCSTR, HANDLE, *mut HANDLE) -> i32
 	RegCopyTreeW(HANDLE, PCSTR, HANDLE) -> i32

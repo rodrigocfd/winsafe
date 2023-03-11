@@ -46,9 +46,8 @@ pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 		strs.push(WString::from_wchars_nullt(*lp).to_string());
 	}
 
-	(HLOCAL(lp_arr as _))
-		.LocalFree()
-		.map(|_| strs)
+	HLOCAL(lp_arr as _).LocalFree()?;
+	Ok(strs)
 }
 
 /// [`PathCombine`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathcombinew)
