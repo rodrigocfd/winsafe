@@ -2,7 +2,9 @@
 
 use crate::{co, ole};
 use crate::kernel::decl::WString;
-use crate::ole::decl::{ComPtr, COSERVERINFO, HrResult, IUnknown, MULTI_QI};
+use crate::ole::decl::{
+	ComPtr, COSERVERINFO, HrResult, IMoniker, IUnknown, MULTI_QI,
+};
 use crate::ole::guard::CoUninitializeGuard;
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::ole_IUnknown;
@@ -160,6 +162,7 @@ pub fn CoCreateInstanceEx(
 /// // program runs...
 /// # Ok::<_, co::HRESULT>(())
 /// ```
+#[must_use]
 pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<CoUninitializeGuard> {
 	let hr = co::HRESULT(
 		unsafe { ole::ffi::CoInitializeEx(std::ptr::null_mut(), coinit.0) },
@@ -201,6 +204,7 @@ pub fn CoLockObjectExternal(
 ///
 /// This function manually allocates a memory block, which must be freed with
 /// [`CoTaskMemFree`](crate::CoTaskMemFree).
+#[must_use]
 pub unsafe fn CoTaskMemAlloc(cb: usize) -> HrResult<*mut u8> {
 	let p = unsafe { ole::ffi::CoTaskMemAlloc(cb) };
 	if p.is_null() {
@@ -223,12 +227,89 @@ pub fn CoTaskMemFree(pv: *mut u8) {
 ///
 /// This function manually allocates a memory block, which must be freed with
 /// [`CoTaskMemFree`](crate::CoTaskMemFree).
+#[must_use]
 pub unsafe fn CoTaskMemRealloc(pv: *mut u8, cb: usize) -> HrResult<*mut u8> {
 	let p = unsafe { ole::ffi::CoTaskMemRealloc(pv as _, cb) };
 	if p.is_null() {
 		Err(co::HRESULT::E_OUTOFMEMORY)
 	} else {
 		Ok(p as _)
+	}
+}
+
+/// [`CreateClassMoniker`](https://learn.microsoft.com/en-us/windows/win32/api/objbase/nf-objbase-createclassmoniker)
+/// function.
+#[must_use]
+pub fn CreateClassMoniker(clsid: &co::CLSID) -> HrResult<IMoniker> {
+	unsafe {
+		let mut ppv = ComPtr::null();
+		ok_to_hrresult(
+			ole::ffi::CreateClassMoniker(
+				clsid as *const _ as _,
+				&mut ppv as *mut _ as _,
+			),
+		).map(|_| IMoniker::from(ppv))
+	}
+}
+
+/// [`CreateFileMoniker`](https://learn.microsoft.com/en-us/windows/win32/api/objbase/nf-objbase-createfilemoniker)
+/// function.
+#[must_use]
+pub fn CreateFileMoniker(path_name: &str) -> HrResult<IMoniker> {
+	unsafe {
+		let mut ppv = ComPtr::null();
+		ok_to_hrresult(
+			ole::ffi::CreateFileMoniker(
+				WString::from_str(path_name).as_ptr(),
+				&mut ppv as *mut _ as _,
+			),
+		).map(|_| IMoniker::from(ppv))
+	}
+}
+
+/// [`CreateItemMoniker`](https://learn.microsoft.com/en-us/windows/win32/api/objbase/nf-objbase-createitemmoniker)
+/// function.
+#[must_use]
+pub fn CreateItemMoniker(delim: &str, item: &str) -> HrResult<IMoniker> {
+	unsafe {
+		let mut ppv = ComPtr::null();
+		ok_to_hrresult(
+			ole::ffi::CreateItemMoniker(
+				WString::from_str(delim).as_ptr(),
+				WString::from_str(item).as_ptr(),
+				&mut ppv as *mut _ as _,
+			),
+		).map(|_| IMoniker::from(ppv))
+	}
+}
+
+/// [`CreateObjrefMoniker`](https://learn.microsoft.com/en-us/windows/win32/api/objbase/nf-objbase-createobjrefmoniker)
+/// function.
+#[must_use]
+pub fn CreateObjrefMoniker(unk: &impl ole_IUnknown) -> HrResult<IMoniker> {
+	unsafe {
+		let mut ppv = ComPtr::null();
+		ok_to_hrresult(
+			ole::ffi::CreateObjrefMoniker(
+				unk.ptr().0 as _,
+				&mut ppv as *mut _ as _,
+			),
+		).map(|_| IMoniker::from(ppv))
+	}
+}
+
+/// [`CreatePointerMoniker`](https://learn.microsoft.com/en-us/windows/win32/api/objbase/nf-objbase-createpointermoniker)
+/// function.
+#[must_use]
+pub fn CreatePointerMoniker(unk: &impl ole_IUnknown) -> HrResult<IMoniker> {
+	unsafe {
+		let mut ppv = ComPtr::null();
+		ok_to_hrresult(
+			ole::ffi::CreatePointerMoniker(
+				unk.ptr().0 as _,
+				&mut ppv as *mut _ as _,
+			),
+		).map(|_| IMoniker::from(ppv))
 	}
 }
 
