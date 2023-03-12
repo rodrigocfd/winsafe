@@ -29,6 +29,18 @@ impl kernel_Hprocess for HPROCESS {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait kernel_Hprocess: Handle {
+	/// [`CheckRemoteDebuggerPresent`](https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-checkremotedebuggerpresent)
+	/// method.
+	#[must_use]
+	fn CheckRemoteDebuggerPresent(&self) -> SysResult<bool> {
+		let mut present: BOOL = 0;
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::CheckRemoteDebuggerPresent(self.as_ptr(), &mut present)
+			},
+		).map(|_| present != 0)
+	}
+
 	/// [`CreateProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw)
 	/// static method.
 	#[must_use]
@@ -71,12 +83,6 @@ pub trait kernel_Hprocess: Handle {
 		).map(|_| CloseHandlePiGuard::new(pi))
 	}
 
-	/// [`ExitProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitprocess)
-	/// static method.
-	fn ExitProcess(exit_code: u32) {
-		unsafe { kernel::ffi::ExitProcess(exit_code) }
-	}
-
 	/// [`FlushInstructionCache`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushinstructioncache)
 	/// method.
 	fn FlushInstructionCache(&self,
@@ -91,24 +97,11 @@ pub trait kernel_Hprocess: Handle {
 		)
 	}
 
-	/// [`FlushProcessWriteBuffers`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushprocesswritebuffers)
-	/// static method.
-	fn FlushProcessWriteBuffers() {
-		unsafe { kernel::ffi::FlushProcessWriteBuffers() }
-	}
-
 	/// [`GetCurrentProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocess)
 	/// static method.
 	#[must_use]
 	fn GetCurrentProcess() -> HPROCESS {
 		HPROCESS(unsafe { kernel::ffi::GetCurrentProcess() })
-	}
-
-	/// [`GetCurrentProcessId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
-	/// static method.
-	#[must_use]
-	fn GetCurrentProcessId() -> u32 {
-		unsafe { kernel::ffi::GetCurrentProcessId() }
 	}
 
 	/// [`GetExitCodeProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess)
@@ -175,13 +168,6 @@ pub trait kernel_Hprocess: Handle {
 				)
 			},
 		)
-	}
-
-	/// [`IsDebuggerPresent`](https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-isdebuggerpresent)
-	/// static method.
-	#[must_use]
-	fn IsDebuggerPresent() -> bool {
-		unsafe { kernel::ffi::IsDebuggerPresent() != 0 }
 	}
 
 	/// [`IsProcessCritical`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-isprocesscritical)

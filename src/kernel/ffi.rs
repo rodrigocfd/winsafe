@@ -2,6 +2,7 @@ use crate::kernel::ffi_types::{BOOL, HANDLE, PCSTR, PCVOID, PFUNC, PSTR, PVOID};
 
 extern_sys! { "kernel32";
 	BeginUpdateResourceW(PCSTR, BOOL) -> HANDLE
+	CheckRemoteDebuggerPresent(HANDLE, *mut BOOL) -> BOOL
 	CloseHandle(HANDLE) -> BOOL
 	CopyFileW(PCSTR, PCSTR, BOOL) -> BOOL
 	CreateFileMappingFromApp(HANDLE, PVOID, u32, u64, PCSTR) -> HANDLE

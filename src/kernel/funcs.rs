@@ -39,6 +39,18 @@ pub fn DeleteFile(file_name: &str) -> SysResult<()> {
 	)
 }
 
+/// [`ExitProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitprocess)
+/// function.
+pub fn ExitProcess(exit_code: u32) {
+	unsafe { kernel::ffi::ExitProcess(exit_code) }
+}
+
+/// [`ExitThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread)
+/// function.
+pub fn ExitThread(exit_code: u32) {
+	unsafe { kernel::ffi::ExitThread(exit_code) }
+}
+
 /// [`ExpandEnvironmentStrings`](https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-expandenvironmentstringsw)
 /// function.
 ///
@@ -94,6 +106,12 @@ pub fn FileTimeToSystemTime(
 	)
 }
 
+/// [`FlushProcessWriteBuffers`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushprocesswritebuffers)
+/// function.
+pub fn FlushProcessWriteBuffers() {
+	unsafe { kernel::ffi::FlushProcessWriteBuffers() }
+}
+
 /// [`GetBinaryType`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getbinarytypew)
 /// function.
 #[must_use]
@@ -145,6 +163,20 @@ pub fn GetCurrentDirectory() -> SysResult<String> {
 		0 => Err(GetLastError()),
 		_ => Ok(buf.to_string()),
 	}
+}
+
+/// [`GetCurrentProcessId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
+/// function.
+#[must_use]
+pub fn GetCurrentProcessId() -> u32 {
+	unsafe { kernel::ffi::GetCurrentProcessId() }
+}
+
+/// [`GetCurrentThreadId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid)
+/// function.
+#[must_use]
+pub fn GetCurrentThreadId() -> u32 {
+	unsafe { kernel::ffi::GetCurrentThreadId() }
 }
 
 /// [`GetEnvironmentStrings`](https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getenvironmentstringsw)
@@ -471,6 +503,13 @@ pub const fn HIDWORD(v: u64) -> u32 {
 #[must_use]
 pub const fn HIWORD(v: u32) -> u16 {
 	(v >> 16 & 0xffff) as _
+}
+
+/// [`IsDebuggerPresent`](https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-isdebuggerpresent)
+/// function.
+#[must_use]
+pub fn IsDebuggerPresent() -> bool {
+	unsafe { kernel::ffi::IsDebuggerPresent() != 0 }
 }
 
 /// [`IsNativeVhdBoot`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-isnativevhdboot)

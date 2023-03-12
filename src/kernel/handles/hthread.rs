@@ -54,24 +54,11 @@ pub trait kernel_Hthread: Handle {
 		)
 	}
 
-	/// [`ExitThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitthread)
-	/// static method.
-	fn ExitThread(exit_code: u32) {
-		unsafe { kernel::ffi::ExitThread(exit_code) }
-	}
-
 	/// [`GetCurrentThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthread)
 	/// static method.
 	#[must_use]
 	fn GetCurrentThread() -> HTHREAD {
 		HTHREAD(unsafe { kernel::ffi::GetCurrentThread() })
-	}
-
-	/// [`GetCurrentThreadId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadid)
-	/// static method.
-	#[must_use]
-	fn GetCurrentThreadId() -> u32 {
-		unsafe { kernel::ffi::GetCurrentThreadId() }
 	}
 
 	/// [`GetExitCodeThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodethread)
