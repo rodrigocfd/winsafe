@@ -3,7 +3,7 @@
 use std::ops::Deref;
 
 use crate::co;
-use crate::advapi::privs::SECURITY_MAX_SID_SIZE;
+use crate::advapi::decl::ConvertSidToStringSid;
 
 /// [`SID_IDENTIFIER_AUTHORITY`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid_identifier_authority)
 /// struct.
@@ -56,11 +56,16 @@ pub struct SID {
 	SubAuthority: [u32; 1],
 }
 
-impl SID {
-	pub(in crate::advapi) fn new_raw() -> Vec<u8> {
-		vec![0u8; SECURITY_MAX_SID_SIZE as _]
+impl std::fmt::Display for SID {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		match ConvertSidToStringSid(self) {
+			Ok(name) => write!(f, "{}", name),
+			Err(err) => write!(f, "{}", err),
+		}
 	}
+}
 
+impl SID {
 	/// Returns a [`SID_wrap`](crate::SID_wrap) with an underlying `SID` struct,
 	/// which will parse the raw bytes.
 	#[must_use]
@@ -95,6 +100,12 @@ impl Deref for SID_wrap {
 
 	fn deref(&self) -> &Self::Target {
 		unsafe { std::mem::transmute::<_, _>(self.raw.as_ptr()) }
+	}
+}
+
+impl std::fmt::Display for SID_wrap {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		self.deref().fmt(f) // delegate the underlying SID
 	}
 }
 

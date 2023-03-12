@@ -257,6 +257,13 @@ pub struct LUID {
 }
 
 impl LUID {
+	pub const SYSTEM: Self = Self::new(0x3e7, 0x0);
+	pub const ANONYMOUS_LOGON: Self = Self::new(0x3e6, 0x0);
+	pub const LOCALSERVICE: Self = Self::new(0x3e5, 0x0);
+	pub const NETWORKSERVICE: Self = Self::new(0x3e4, 0x0);
+	pub const IUSER: Self = Self::new(0x3e3, 0x0);
+	pub const PROTECTED_TO_SYSTEM: Self = Self::new(0x3e2, 0x0);
+
 	/// Creates a new `LUID`.
 	#[must_use]
 	pub const fn new(low_part: u32, high_part: i32) -> Self {

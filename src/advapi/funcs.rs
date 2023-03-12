@@ -2,7 +2,7 @@
 
 use crate::{advapi, co};
 use crate::advapi::decl::{SID, SID_wrap};
-use crate::advapi::privs::{SECURITY_DESCRIPTOR_REVISION, UNLEN};
+use crate::advapi::privs::SECURITY_DESCRIPTOR_REVISION;
 use crate::kernel::decl::{
 	GetLastError, HLOCAL, SECURITY_DESCRIPTOR, SysResult, WString,
 };
@@ -13,16 +13,10 @@ use crate::prelude::kernel_Hlocal;
 /// [`ConvertSidToStringSid`](https://learn.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsidw)
 /// function.
 /// 
-/// # Examples
-/// 
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, ConvertSidToStringSid, CreateWellKnownSid};
-/// 
-/// let sid = CreateWellKnownSid(co::WELL_KNOWN_SID_TYPE::LocalSystem, None)?;
-/// let sid_str = ConvertSidToStringSid(&sid)?;
-/// # Ok::<_, co::ERROR>(())
-/// ```
+/// You don't need to call this function directly, because [`SID`](crate::SID)
+/// implements [`Display`](https://doc.rust-lang.org/std/fmt/trait.Display.html)
+/// and [`ToString`](https://doc.rust-lang.org/std/string/trait.ToString.html)
+/// traits, which call it.
 #[must_use]
 pub fn ConvertSidToStringSid(sid: &SID) -> SysResult<String> {
 	let mut pstr = std::ptr::null_mut() as *mut u16;
@@ -60,16 +54,18 @@ pub fn ConvertStringSidToSid(str_sid: &str) -> SysResult<SID_wrap> {
 /// function.
 #[must_use]
 pub fn CopySid(src: &SID) -> SysResult<SID_wrap> {
-	let mut sid = SID::new_raw();
+	let sid_sz = GetLengthSid(&src);
+	let mut sid_buf = vec![0u8; sid_sz as _];
+
 	bool_to_sysresult(
 		unsafe {
 			advapi::ffi::CopySid(
-				sid.len() as _,
-				sid.as_mut_ptr(),
+				sid_sz,
+				sid_buf.as_mut_ptr(),
 				src as *const _ as _,
 			)
 		},
-	).map(|_| SID_wrap::new(sid))
+	).map(|_| SID_wrap::new(sid_buf))
 }
 
 /// [`CreateWellKnownSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-createwellknownsid)
@@ -86,23 +82,37 @@ pub fn CopySid(src: &SID) -> SysResult<SID_wrap> {
 /// ```
 #[must_use]
 pub fn CreateWellKnownSid(
-	well_know_sid: co::WELL_KNOWN_SID_TYPE,
+	well_known_sid: co::WELL_KNOWN_SID_TYPE,
 	domain_sid: Option<&SID>,
 ) -> SysResult<SID_wrap>
 {
-	let mut sid = SID::new_raw();
-	let mut sid_sz = sid.len() as u32;
+	let mut sid_sz = u32::default();
+
+	unsafe {
+		advapi::ffi::CreateWellKnownSid( // retrieve needed buffer sizes
+			well_known_sid.0,
+			domain_sid.map_or(std::ptr::null(), |s| s as *const _ as _),
+			std::ptr::null_mut(),
+			&mut sid_sz,
+		);
+	}
+	let get_size_err = GetLastError();
+	if get_size_err != co::ERROR::INSUFFICIENT_BUFFER {
+		return Err(get_size_err);
+	}
+
+	let mut sid_buf = vec![0u8; sid_sz as _];
 
 	bool_to_sysresult(
 		unsafe {
 			advapi::ffi::CreateWellKnownSid(
-				well_know_sid.0,
+				well_known_sid.0,
 				domain_sid.map_or(std::ptr::null(), |s| s as *const _ as _),
-				sid.as_mut_ptr(),
+				sid_buf.as_mut_ptr(),
 				&mut sid_sz,
 			)
 		},
-	).map(|_| SID_wrap::new(sid))
+	).map(|_| SID_wrap::new(sid_buf))
 }
 
 /// [`DecryptFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-decryptfilew)
@@ -202,31 +212,50 @@ pub fn GetSidLengthRequired(sub_authority_count: u8) -> u32 {
 /// function.
 #[must_use]
 pub fn GetUserName() -> SysResult<String> {
-	let mut buf = WString::new_alloc_buf(UNLEN + 1);
-	let mut sz = buf.buf_len() as u32;
+	let mut name_sz = u32::default();
 
-	match unsafe { advapi::ffi::GetUserNameW(buf.as_mut_ptr(), &mut sz) } {
-		0 => Err(GetLastError()),
-		_ => Ok(buf.to_string()),
+	unsafe { advapi::ffi::GetUserNameW(std::ptr::null_mut(), &mut name_sz); }
+	let get_size_err = GetLastError();
+	if get_size_err != co::ERROR::INSUFFICIENT_BUFFER {
+		return Err(get_size_err);
 	}
+
+	let mut name_buf = WString::new_alloc_buf(name_sz as _);
+
+	bool_to_sysresult(
+		unsafe { advapi::ffi::GetUserNameW(name_buf.as_mut_ptr(), &mut name_sz) },
+	).map(|_| name_buf.to_string())
 }
 
 /// [`GetWindowsAccountDomainSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getwindowsaccountdomainsid)
 /// function.
 #[must_use]
 pub fn GetWindowsAccountDomainSid(sid: &SID) -> SysResult<SID_wrap> {
-	let mut domain_sid = SID::new_raw();
-	let mut domain_sid_sz = domain_sid.len() as u32;
+	let mut ad_sid_sz = u32::default();
+
+	unsafe {
+		advapi::ffi::GetWindowsAccountDomainSid(
+			sid as *const _ as _,
+			std::ptr::null_mut(),
+			&mut ad_sid_sz,
+		)
+	};
+	let get_size_err = GetLastError();
+	if get_size_err != co::ERROR::INSUFFICIENT_BUFFER {
+		return Err(get_size_err);
+	}
+
+	let mut ad_sid_buf = vec![0u8; ad_sid_sz as _];
 
 	bool_to_sysresult(
 		unsafe {
 			advapi::ffi::GetWindowsAccountDomainSid(
 				sid as *const _ as _,
-				domain_sid.as_mut_ptr(),
-				&mut domain_sid_sz,
+				ad_sid_buf.as_mut_ptr(),
+				&mut ad_sid_sz,
 			)
 		},
-	).map(|_| SID_wrap::new(domain_sid))
+	).map(|_| SID_wrap::new(ad_sid_buf))
 }
 
 /// [`InitializeSecurityDescriptor`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-initializesecuritydescriptor)
@@ -274,6 +303,17 @@ pub fn IsValidSid(sid: &SID) -> SysResult<bool> {
 	}
 }
 
+/// [`IsWellKnownSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-iswellknownsid)
+/// function.
+#[must_use]
+pub fn IsWellKnownSid(
+	sid: &SID, well_known_sid: co::WELL_KNOWN_SID_TYPE) -> bool
+{
+	unsafe {
+		advapi::ffi::IsWellKnownSid(sid as *const _ as _, well_known_sid.0) != 0
+	}
+}
+
 /// [`LookupAccountName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupaccountnamew)
 /// function.
 /// 
@@ -295,23 +335,88 @@ pub fn LookupAccountName(
 	account_name: &str,
 ) -> SysResult<(String, SID_wrap, co::SID_NAME_USE)>
 {
-	let mut sid = SID::new_raw();
-	let mut sid_sz = sid.len() as u32;
-	let mut domain_name = WString::new_alloc_buf(UNLEN);
-	let mut domain_name_sz = domain_name.buf_len() as u32;
+	let mut sid_sz = u32::default();
+	let mut domain_sz = u32::default();
 	let mut sid_name_use = co::SID_NAME_USE::User;
 
-	bool_to_sysresult( // https://aljensencprogramming.wordpress.com/tag/lookupaccountname/
+	unsafe {
+		advapi::ffi::LookupAccountNameW( // retrieve needed buffer sizes
+			WString::from_opt_str(system_name).as_ptr(),
+			WString::from_str(account_name).as_ptr(),
+			std::ptr::null_mut(),
+			&mut sid_sz,
+			std::ptr::null_mut(),
+			&mut domain_sz,
+			&mut sid_name_use.0,
+		);
+	}
+	let get_size_err = GetLastError();
+	if get_size_err != co::ERROR::INSUFFICIENT_BUFFER {
+		return Err(get_size_err);
+	}
+
+	let mut sid_buf = vec![0u8; sid_sz as _];
+	let mut domain_buf = WString::new_alloc_buf(domain_sz as _);
+
+	bool_to_sysresult(
 		unsafe {
 			advapi::ffi::LookupAccountNameW(
 				WString::from_opt_str(system_name).as_ptr(),
 				WString::from_str(account_name).as_ptr(),
-				sid.as_mut_ptr(),
+				sid_buf.as_mut_ptr(),
 				&mut sid_sz,
-				domain_name.as_mut_ptr(),
-				&mut domain_name_sz,
-				&mut sid_name_use.0
+				domain_buf.as_mut_ptr(),
+				&mut domain_sz,
+				&mut sid_name_use.0,
 			)
 		},
-	).map(|_| (domain_name.to_string(), SID_wrap::new(sid), sid_name_use))
+	).map(|_| (domain_buf.to_string(), SID_wrap::new(sid_buf), sid_name_use))
+}
+
+/// [`LookupAccountSid`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupaccountsidw)
+/// function.
+/// 
+/// Returns account name, domain name and type, respectively.
+#[must_use]
+pub fn LookupAccountSid(
+	system_name: Option<&str>,
+	sid: &SID,
+) -> SysResult<(String, String, co::SID_NAME_USE)>
+{
+	let mut account_sz = u32::default();
+	let mut domain_sz = u32::default();
+	let mut sid_name_use = co::SID_NAME_USE::User;
+
+	unsafe {
+		advapi::ffi::LookupAccountSidW( // retrieve needed buffer sizes
+			WString::from_opt_str(system_name).as_ptr(),
+			sid as *const _ as _,
+			std::ptr::null_mut(),
+			&mut account_sz,
+			std::ptr::null_mut(),
+			&mut domain_sz,
+			&mut sid_name_use.0,
+		);
+	}
+	let get_size_err = GetLastError();
+	if get_size_err != co::ERROR::INSUFFICIENT_BUFFER {
+		return Err(get_size_err);
+	}
+
+	let mut account_buf = WString::new_alloc_buf(account_sz as _);
+	let mut domain_buf = WString::new_alloc_buf(domain_sz as _);
+
+	bool_to_sysresult(
+		unsafe {
+			advapi::ffi::LookupAccountSidW(
+				WString::from_opt_str(system_name).as_ptr(),
+				sid as *const _ as _,
+				account_buf.as_mut_ptr(),
+				&mut account_sz,
+				domain_buf.as_mut_ptr(),
+				&mut domain_sz,
+				&mut sid_name_use.0,
+			)
+		},
+	).map(|_| (account_buf.to_string(), domain_buf.to_string(), sid_name_use))
 }
