@@ -1,7 +1,6 @@
 # Runs cargo check on each feature.
 
 FEATS=(
-	advapi
 	comctl
 	comdlg
 	dshow
@@ -9,7 +8,6 @@ FEATS=(
 	gdi
 	gui
 	kernel
-	ktm
 	msimg
 	ole
 	oleaut

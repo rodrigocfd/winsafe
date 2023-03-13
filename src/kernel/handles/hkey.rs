@@ -1,10 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{advapi, co};
-use crate::advapi::decl::{RegistryValue, VALENT};
-use crate::advapi::guard::RegCloseKeyGuard;
-use crate::kernel::decl::{FILETIME, SECURITY_ATTRIBUTES, SysResult, WString};
+use crate::{co, kernel};
+use crate::kernel::decl::{
+	FILETIME, HTRANSACTION, RegistryValue, SECURITY_ATTRIBUTES, SysResult,
+	VALENT, WString,
+};
 use crate::kernel::ffi_types::BOOL;
+use crate::kernel::guard::RegCloseKeyGuard;
 use crate::kernel::privs::error_to_sysresult;
 use crate::prelude::Handle;
 
@@ -18,7 +20,7 @@ impl_handle! { HKEY;
 	/// Usually, they are the starting point to open a registry key.
 }
 
-impl advapi_Hkey for HKEY {}
+impl kernel_Hkey for HKEY {}
 
 macro_rules! predef_key {
 	($name:ident, $val:expr) => {
@@ -27,7 +29,7 @@ macro_rules! predef_key {
 	};
 }
 
-/// This trait is enabled with the `advapi` feature, and provides methods for
+/// This trait is enabled with the `kernel` feature, and provides methods for
 /// [`HKEY`](crate::HKEY).
 ///
 /// Prefer importing this trait through the prelude:
@@ -35,7 +37,7 @@ macro_rules! predef_key {
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait advapi_Hkey: Handle {
+pub trait kernel_Hkey: Handle {
 	predef_key!(CLASSES_ROOT, 0x8000_0000);
 	predef_key!(CURRENT_USER, 0x8000_0001);
 	predef_key!(LOCAL_MACHINE, 0x8000_0002);
@@ -54,9 +56,9 @@ pub trait advapi_Hkey: Handle {
 	///
 	/// Panics if `predef_key` is different from:
 	///
-	/// - [`HKEY::LOCAL_MACHINE`](crate::prelude::advapi_Hkey::LOCAL_MACHINE);
-	/// - [`HKEY::PERFORMANCE_DATA`](crate::prelude::advapi_Hkey::PERFORMANCE_DATA);
-	/// - [`HKEY::USERS`](crate::prelude::advapi_Hkey::USERS).
+	/// - [`HKEY::LOCAL_MACHINE`](crate::prelude::kernel_Hkey::LOCAL_MACHINE);
+	/// - [`HKEY::PERFORMANCE_DATA`](crate::prelude::kernel_Hkey::PERFORMANCE_DATA);
+	/// - [`HKEY::USERS`](crate::prelude::kernel_Hkey::USERS).
 	#[must_use]
 	fn RegConnectRegistry(
 		machine_name: Option<&str>,
@@ -73,7 +75,7 @@ pub trait advapi_Hkey: Handle {
 		let mut hkey = HKEY::NULL;
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegConnectRegistryW(
+				kernel::ffi::RegConnectRegistryW(
 					WString::from_opt_str(machine_name).as_ptr(),
 					predef_hkey.as_ptr(),
 					&mut hkey.0,
@@ -87,7 +89,7 @@ pub trait advapi_Hkey: Handle {
 	fn RegCopyTree(&self, sub_key: Option<&str>, dest: &HKEY) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegCopyTreeW(
+				kernel::ffi::RegCopyTreeW(
 					self.as_ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					dest.as_ptr(),
@@ -112,7 +114,7 @@ pub trait advapi_Hkey: Handle {
 
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegCreateKeyExW(
+				kernel::ffi::RegCreateKeyExW(
 					self.as_ptr(),
 					WString::from_str(sub_key).as_ptr(),
 					0,
@@ -127,12 +129,46 @@ pub trait advapi_Hkey: Handle {
 		).map(|_| (RegCloseKeyGuard::new(hkey), disposition))
 	}
 
+	/// [`RegCreateKeyTransacted`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcreatekeytransactedw)
+	/// method.
+	#[must_use]
+	fn RegCreateKeyTransacted(&self,
+		sub_key: &str,
+		class: Option<&str>,
+		options: co::REG_OPTION,
+		access_rights: co::KEY,
+		security_attributes: Option<&SECURITY_ATTRIBUTES>,
+		htransaction: &HTRANSACTION,
+	) -> SysResult<(RegCloseKeyGuard, co::REG_DISPOSITION)>
+	{
+		let mut hkey = HKEY::NULL;
+		let mut disposition = co::REG_DISPOSITION::NoValue;
+
+		error_to_sysresult(
+			unsafe {
+				kernel::ffi::RegCreateKeyTransactedW(
+					self.as_ptr(),
+					WString::from_str(sub_key).as_ptr(),
+					0,
+					WString::from_opt_str(class).as_ptr(),
+					options.0,
+					access_rights.0,
+					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+					&mut hkey.0,
+					&mut disposition.0,
+					htransaction.as_ptr(),
+					std::ptr::null_mut(),
+				)
+			},
+		).map(|_| (RegCloseKeyGuard::new(hkey), disposition))
+	}
+
 	/// [`RegDeleteKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletekeyw)
 	/// method.
 	fn RegDeleteKey(&self, sub_key: &str) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegDeleteKeyW(
+				kernel::ffi::RegDeleteKeyW(
 					self.as_ptr(),
 					WString::from_str(sub_key).as_ptr(),
 				)
@@ -159,11 +195,33 @@ pub trait advapi_Hkey: Handle {
 
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegDeleteKeyExW(
+				kernel::ffi::RegDeleteKeyExW(
 					self.as_ptr(),
 					WString::from_str(sub_key).as_ptr(),
 					platform_view.0,
 					0,
+				)
+			},
+		)
+	}
+
+	/// [`RegDeleteKeyTransacted`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletekeytransactedw)
+	/// method.
+	fn RegDeleteKeyTransacted(&self,
+		sub_key: &str,
+		access_rights: co::KEY,
+		htransaction: &HTRANSACTION,
+	) -> SysResult<()>
+	{
+		error_to_sysresult(
+			unsafe {
+				kernel::ffi::RegDeleteKeyTransactedW(
+					self.as_ptr(),
+					WString::from_str(sub_key).as_ptr(),
+					access_rights.0,
+					0,
+					htransaction.as_ptr(),
+					std::ptr::null_mut(),
 				)
 			},
 		)
@@ -174,7 +232,7 @@ pub trait advapi_Hkey: Handle {
 	fn RegDeleteTree(&self, sub_key: Option<&str>) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegDeleteTreeW(
+				kernel::ffi::RegDeleteTreeW(
 					self.as_ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 				)
@@ -187,7 +245,7 @@ pub trait advapi_Hkey: Handle {
 	fn RegDeleteValue(&self, value_name: Option<&str>) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegDeleteValueW(
+				kernel::ffi::RegDeleteValueW(
 					self.as_ptr(),
 					WString::from_opt_str(value_name).as_ptr(),
 				)
@@ -198,20 +256,20 @@ pub trait advapi_Hkey: Handle {
 	/// [`RegDisablePredefinedCache`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcache)
 	/// static method.
 	fn RegDisablePredefinedCache() -> SysResult<()> {
-		error_to_sysresult(unsafe { advapi::ffi::RegDisablePredefinedCache() })
+		error_to_sysresult(unsafe { kernel::ffi::RegDisablePredefinedCache() })
 	}
 
 	/// [`RegDisablePredefinedCacheEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcacheex)
 	/// static method.
 	fn RegDisablePredefinedCacheEx() -> SysResult<()> {
-		error_to_sysresult(unsafe { advapi::ffi::RegDisablePredefinedCacheEx() })
+		error_to_sysresult(unsafe { kernel::ffi::RegDisablePredefinedCacheEx() })
 	}
 
 	/// [`RegDisableReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablereflectionkey)
 	/// method.
 	fn RegDisableReflectionKey(&self) -> SysResult<()> {
 		error_to_sysresult(
-			unsafe { advapi::ffi::RegDisableReflectionKey(self.as_ptr()) },
+			unsafe { kernel::ffi::RegDisableReflectionKey(self.as_ptr()) },
 		)
 	}
 
@@ -219,7 +277,7 @@ pub trait advapi_Hkey: Handle {
 	/// method.
 	fn RegEnableReflectionKey(&self) -> SysResult<()> {
 		error_to_sysresult(
-			unsafe { advapi::ffi::RegEnableReflectionKey(self.as_ptr()) },
+			unsafe { kernel::ffi::RegEnableReflectionKey(self.as_ptr()) },
 		)
 	}
 
@@ -289,7 +347,7 @@ pub trait advapi_Hkey: Handle {
 	/// [`RegFlushKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regflushkey)
 	/// method.
 	fn RegFlushKey(&self) -> SysResult<()> {
-		error_to_sysresult(unsafe { advapi::ffi::RegFlushKey(self.as_ptr()) })
+		error_to_sysresult(unsafe { kernel::ffi::RegFlushKey(self.as_ptr()) })
 	}
 
 	/// [`RegGetValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
@@ -349,7 +407,7 @@ pub trait advapi_Hkey: Handle {
 		// Query data type and length.
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegGetValueW(
+				kernel::ffi::RegGetValueW(
 					self.as_ptr(),
 					sub_key_w.as_ptr(),
 					value_name_w.as_ptr(),
@@ -370,7 +428,7 @@ pub trait advapi_Hkey: Handle {
 		// Retrieve the value content.
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegGetValueW(
+				kernel::ffi::RegGetValueW(
 					self.as_ptr(),
 					sub_key_w.as_ptr(),
 					value_name_w.as_ptr(),
@@ -394,7 +452,7 @@ pub trait advapi_Hkey: Handle {
 	{
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegLoadKeyW(
+				kernel::ffi::RegLoadKeyW(
 					self.as_ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					WString::from_str(file_path).as_ptr(),
@@ -412,7 +470,7 @@ pub trait advapi_Hkey: Handle {
 		let mut hkey = HKEY::NULL;
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegOpenCurrentUser(
+				kernel::ffi::RegOpenCurrentUser(
 					access_rights.0,
 					&mut hkey.0,
 				)
@@ -446,12 +504,38 @@ pub trait advapi_Hkey: Handle {
 		let mut hkey = HKEY::NULL;
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegOpenKeyExW(
+				kernel::ffi::RegOpenKeyExW(
 					self.as_ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					options.0,
 					access_rights.0,
 					&mut hkey.0,
+				)
+			},
+		).map(|_| RegCloseKeyGuard::new(hkey))
+	}
+
+	/// [`RegOpenKeyTransacted`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeytransactedw)
+	/// method.
+	#[must_use]
+	fn RegOpenKeyTransacted(&self,
+		sub_key: &str,
+		options: co::REG_OPTION,
+		access_rights: co::KEY,
+		htransaction: &HTRANSACTION,
+	) -> SysResult<RegCloseKeyGuard>
+	{
+		let mut hkey = HKEY::NULL;
+		error_to_sysresult(
+			unsafe {
+				kernel::ffi::RegOpenKeyTransactedW(
+					self.as_ptr(),
+					WString::from_str(sub_key).as_ptr(),
+					options.0,
+					access_rights.0,
+					&mut hkey.0,
+					htransaction.as_ptr(),
+					std::ptr::null_mut(),
 				)
 			},
 		).map(|_| RegCloseKeyGuard::new(hkey))
@@ -495,7 +579,7 @@ pub trait advapi_Hkey: Handle {
 		loop { // until class is large enough
 			match co::ERROR(
 				unsafe {
-					advapi::ffi::RegQueryInfoKeyW(
+					kernel::ffi::RegQueryInfoKeyW(
 						self.as_ptr(),
 						class_ptr,
 						&mut class_len,
@@ -529,7 +613,7 @@ pub trait advapi_Hkey: Handle {
 	/// method.
 	///
 	/// This method is a multi-value version of
-	/// [`HKEY::RegQueryValueEx`](crate::prelude::advapi_Hkey::RegQueryValueEx).
+	/// [`HKEY::RegQueryValueEx`](crate::prelude::kernel_Hkey::RegQueryValueEx).
 	///
 	/// Note that this method validates some race conditions, returning
 	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID).
@@ -592,7 +676,7 @@ pub trait advapi_Hkey: Handle {
 		// Query data types and lenghts.
 		match co::ERROR(
 			unsafe {
-				advapi::ffi::RegQueryMultipleValuesW(
+				kernel::ffi::RegQueryMultipleValuesW(
 					self.as_ptr(),
 					valents1.as_mut_ptr() as _,
 					value_names.len() as _,
@@ -620,7 +704,7 @@ pub trait advapi_Hkey: Handle {
 		// Retrieve the values content.
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegQueryMultipleValuesW(
+				kernel::ffi::RegQueryMultipleValuesW(
 					self.as_ptr(),
 					valents2.as_mut_ptr() as _,
 					value_names.len() as _,
@@ -654,7 +738,7 @@ pub trait advapi_Hkey: Handle {
 		let mut is_disabled: BOOL = 0;
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegQueryReflectionKey(self.as_ptr(), &mut is_disabled)
+				kernel::ffi::RegQueryReflectionKey(self.as_ptr(), &mut is_disabled)
 			},
 		).map(|_| is_disabled != 0)
 	}
@@ -663,7 +747,7 @@ pub trait advapi_Hkey: Handle {
 	/// method.
 	///
 	/// This method is a single-value version of
-	/// [`HKEY::RegQueryMultipleValues`](crate::prelude::advapi_Hkey::RegQueryMultipleValues).
+	/// [`HKEY::RegQueryMultipleValues`](crate::prelude::kernel_Hkey::RegQueryMultipleValues).
 	///
 	/// Note that this method validates some race conditions, returning
 	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID)
@@ -719,7 +803,7 @@ pub trait advapi_Hkey: Handle {
 		// Query data type and length.
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegQueryValueExW(
+				kernel::ffi::RegQueryValueExW(
 					self.as_ptr(),
 					value_name_w.as_ptr(),
 					std::ptr::null_mut(),
@@ -739,7 +823,7 @@ pub trait advapi_Hkey: Handle {
 		// Retrieve the value content.
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegQueryValueExW(
+				kernel::ffi::RegQueryValueExW(
 					self.as_ptr(),
 					value_name_w.as_ptr(),
 					std::ptr::null_mut(),
@@ -762,7 +846,7 @@ pub trait advapi_Hkey: Handle {
 	{
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegRenameKey(
+				kernel::ffi::RegRenameKey(
 					self.as_ptr(),
 					WString::from_str(sub_key_name).as_ptr(),
 					WString::from_str(new_key_name).as_ptr(),
@@ -781,7 +865,7 @@ pub trait advapi_Hkey: Handle {
 	{
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegReplaceKeyW(
+				kernel::ffi::RegReplaceKeyW(
 					self.as_ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					WString::from_str(new_src_file).as_ptr(),
@@ -798,7 +882,7 @@ pub trait advapi_Hkey: Handle {
 	{
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegRestoreKeyW(
+				kernel::ffi::RegRestoreKeyW(
 					self.as_ptr(),
 					WString::from_str(file_path).as_ptr(),
 					flags.0,
@@ -816,7 +900,7 @@ pub trait advapi_Hkey: Handle {
 	{
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegSaveKeyW(
+				kernel::ffi::RegSaveKeyW(
 					self.as_ptr(),
 					WString::from_str(dest_file_path).as_ptr(),
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
@@ -835,7 +919,7 @@ pub trait advapi_Hkey: Handle {
 	{
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegSaveKeyExW(
+				kernel::ffi::RegSaveKeyExW(
 					self.as_ptr(),
 					WString::from_str(dest_file_path).as_ptr(),
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
@@ -875,7 +959,7 @@ pub trait advapi_Hkey: Handle {
 
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegSetKeyValueW(
+				kernel::ffi::RegSetKeyValueW(
 					self.as_ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					WString::from_opt_str(value_name).as_ptr(),
@@ -919,7 +1003,7 @@ pub trait advapi_Hkey: Handle {
 
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegSetValueExW(
+				kernel::ffi::RegSetValueExW(
 					self.as_ptr(),
 					WString::from_opt_str(value_name).as_ptr(),
 					0,
@@ -936,7 +1020,7 @@ pub trait advapi_Hkey: Handle {
 	fn RegUnLoadKey(&self, sub_key: Option<&str>) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {
-				advapi::ffi::RegUnLoadKeyW(
+				kernel::ffi::RegUnLoadKeyW(
 					self.as_ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 				)
@@ -993,7 +1077,7 @@ fn validate_retrieved_reg_val(
 //------------------------------------------------------------------------------
 
 struct EnumKeyIter<'a, H>
-	where H: advapi_Hkey,
+	where H: kernel_Hkey,
 {
 	hkey: &'a H,
 	count: u32,
@@ -1002,7 +1086,7 @@ struct EnumKeyIter<'a, H>
 }
 
 impl<'a, H> Iterator for EnumKeyIter<'a, H>
-	where H: advapi_Hkey,
+	where H: kernel_Hkey,
 {
 	type Item = SysResult<String>;
 
@@ -1014,7 +1098,7 @@ impl<'a, H> Iterator for EnumKeyIter<'a, H>
 		let mut len_buffer = self.name_buffer.buf_len() as u32;
 		match co::ERROR(
 			unsafe {
-				advapi::ffi::RegEnumKeyExW(
+				kernel::ffi::RegEnumKeyExW(
 					self.hkey.as_ptr(),
 					self.current,
 					self.name_buffer.as_mut_ptr(),
@@ -1039,7 +1123,7 @@ impl<'a, H> Iterator for EnumKeyIter<'a, H>
 }
 
 impl<'a, H> EnumKeyIter<'a, H>
-	where H: advapi_Hkey,
+	where H: kernel_Hkey,
 {
 	fn new(hkey: &'a H) -> SysResult<Self> {
 		let mut num_keys = u32::default();
@@ -1060,7 +1144,7 @@ impl<'a, H> EnumKeyIter<'a, H>
 //------------------------------------------------------------------------------
 
 struct EnumValueIter<'a, H>
-	where H: advapi_Hkey,
+	where H: kernel_Hkey,
 {
 	hkey: &'a H,
 	count: u32,
@@ -1069,7 +1153,7 @@ struct EnumValueIter<'a, H>
 }
 
 impl<'a, H> Iterator for EnumValueIter<'a, H>
-	where H: advapi_Hkey,
+	where H: kernel_Hkey,
 {
 	type Item = SysResult<(String, co::REG)>;
 
@@ -1082,7 +1166,7 @@ impl<'a, H> Iterator for EnumValueIter<'a, H>
 		let mut len_buffer = self.name_buffer.buf_len() as u32;
 		match co::ERROR(
 			unsafe {
-				advapi::ffi::RegEnumValueW(
+				kernel::ffi::RegEnumValueW(
 					self.hkey.as_ptr(),
 					self.current,
 					self.name_buffer.as_mut_ptr(),
@@ -1107,7 +1191,7 @@ impl<'a, H> Iterator for EnumValueIter<'a, H>
 }
 
 impl<'a, H> EnumValueIter<'a, H>
-	where H: advapi_Hkey,
+	where H: kernel_Hkey,
 {
 	fn new(hkey: &'a H) -> SysResult<Self> {
 		let mut num_vals = u32::default();

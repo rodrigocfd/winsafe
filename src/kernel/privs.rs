@@ -10,6 +10,7 @@ pub(crate) const INVALID_FILE_ATTRIBUTES: i32 = -1;
 pub(crate) const MAX_COMPUTERNAME_LENGTH: usize = 15;
 pub(crate) const MAX_MODULE_NAME32: usize = 255;
 pub(crate) const MAX_PATH: usize = 260;
+pub(crate) const SECURITY_DESCRIPTOR_REVISION: u32 = 1;
 
 /// [`IS_INTRESOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-is_intresource)
 /// macro.

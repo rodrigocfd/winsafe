@@ -34,15 +34,13 @@
 //!
 //! | Feature | Description |
 //! | - | - |
-//! | `advapi` | Advapi32.dll, for [Windows Registry](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry) and identity |
 //! | `comctl` | ComCtl32.dll, for [Common Controls](https://learn.microsoft.com/en-us/windows/win32/api/_controls/) |
 //! | `comdlg` | ComDlg32.dll, for the old [Common Dialogs](https://learn.microsoft.com/en-us/windows/win32/uxguide/win-common-dlg) |
 //! | `dshow` | [DirectShow](https://learn.microsoft.com/en-us/windows/win32/directshow/directshow) |
 //! | `dxgi` | [DirectX Graphics Infrastructure](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dx-graphics-dxgi) |
 //! | `gdi` | Gdi32.dll, the [Windows GDI](https://learn.microsoft.com/en-us/windows/win32/gdi/windows-gdi) |
 //! | **`gui`** | **The WinSafe high-level GUI abstractions** |
-//! | `kernel` | Kernel32.dll, all others will include it |
-//! | `ktm` | Ktmw32.dll, the [Kernel Transaction Manager](https://learn.microsoft.com/en-us/windows/win32/ktm/ktm-security-and-access-rights) |
+//! | `kernel` | Kernel32.dll, Advapi32.dll and Ktmw32.dll – all others will include it |
 //! | `msimg` | Msimg32.dll |
 //! | `ole` | OLE and basic COM support |
 //! | `oleaut` | [OLE Automation](https://learn.microsoft.com/en-us/windows/win32/api/_automat/) |
@@ -261,14 +259,12 @@
 
 // Declarations of modules themselves.
 
-#[cfg(feature = "advapi")] mod advapi;
 #[cfg(feature = "comctl")] mod comctl;
 #[cfg(feature = "comdlg")] mod comdlg;
 #[cfg(feature = "dshow")] mod dshow;
 #[cfg(feature = "dxgi")] mod dxgi;
 #[cfg(feature = "gdi")] mod gdi;
 #[cfg(feature = "kernel")] mod kernel;
-#[cfg(feature = "ktm")] mod ktm;
 #[cfg(feature = "msimg")] mod msimg;
 #[cfg(feature = "ole")] mod ole;
 #[cfg(feature = "oleaut")] mod oleaut;
@@ -276,8 +272,6 @@
 #[cfg(feature = "user")] mod user;
 #[cfg(feature = "uxtheme")] mod uxtheme;
 #[cfg(feature = "version")] mod version;
-#[cfg(all(feature = "advapi", feature = "comctl"))] mod advapi_comctl;
-#[cfg(all(feature = "advapi", feature = "ktm"))] mod advapi_ktm;
 #[cfg(all(feature = "comctl", feature = "gdi"))] mod comctl_gdi;
 #[cfg(all(feature = "comctl", feature = "ole"))] mod comctl_ole;
 #[cfg(all(feature = "comctl", feature = "shell"))] mod comctl_shell;
@@ -290,21 +284,18 @@
 
 // Declarations inside decl are public, placed at the root of the crate.
 
-#[cfg(feature = "advapi")] pub use advapi::decl::*;
 #[cfg(feature = "comctl")] pub use comctl::decl::*;
 #[cfg(feature = "comdlg")] pub use comdlg::decl::*;
 #[cfg(feature = "dshow")] pub use dshow::decl::*;
 #[cfg(feature = "dxgi")] pub use dxgi::decl::*;
 #[cfg(feature = "gdi")] pub use gdi::decl::*;
 #[cfg(feature = "kernel")] pub use kernel::decl::*;
-#[cfg(feature = "ktm")] pub use ktm::decl::*;
 #[cfg(feature = "ole")] pub use ole::decl::*;
 #[cfg(feature = "oleaut")] pub use oleaut::decl::*;
 #[cfg(feature = "shell")] pub use shell::decl::*;
 #[cfg(feature = "user")] pub use user::decl::*;
 #[cfg(feature = "uxtheme")] pub use uxtheme::decl::*;
 #[cfg(feature = "version")] pub use version::decl::*;
-#[cfg(all(feature = "advapi", feature = "comctl"))] pub use advapi_comctl::decl::*;
 #[cfg(all(feature = "comctl", feature = "gdi"))] pub use comctl_gdi::decl::*;
 #[cfg(all(feature = "comctl", feature = "ole"))] pub use comctl_ole::decl::*;
 
@@ -320,14 +311,12 @@ pub mod co {
 	//! Among these constant types, three are error types:
 	//! [`CDERR`](crate::co::CDERR), [`ERROR`](crate::co::ERROR) and
 	//! [`HRESULT`](crate::co::HRESULT).
-	#[cfg(feature = "advapi")] pub use super::advapi::co::*;
 	#[cfg(feature = "comctl")] pub use super::comctl::co::*;
 	#[cfg(feature = "comdlg")] pub use super::comdlg::co::*;
 	#[cfg(feature = "dshow")] pub use super::dshow::co::*;
 	#[cfg(feature = "dxgi")] pub use super::dxgi::co::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::co::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::co::*;
-	#[cfg(feature = "ktm")] pub use super::ktm::co::*;
 	#[cfg(feature = "ole")] pub use super::ole::co::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::co::*;
 	#[cfg(feature = "shell")] pub use super::shell::co::*;
@@ -342,7 +331,6 @@ pub mod guard {
 	//! cleanup routines when the object goes out of scope.
 	//!
 	//! The guards are named after the functions they call.
-	#[cfg(feature = "advapi")] pub use super::advapi::guard::*;
 	#[cfg(feature = "comctl")] pub use super::comctl::guard::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::guard::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::guard::*;
@@ -494,7 +482,6 @@ pub mod msg {
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-messages),
 		//! whose constants have [`TBM`](crate::co::TBM) prefix.
 		pub use super::super::comctl::messages::tbm::*;
-		#[cfg(feature = "advapi")] pub use super::super::advapi_comctl::messages::tbm::*;
 		#[cfg(feature = "ole")] pub use super::super::comctl_ole::messages::tbm::*;
 	}
 
@@ -556,21 +543,18 @@ pub mod prelude {
 	//! ```rust,no_run
 	//! use winsafe::prelude::*;
 	//! ```
-	#[cfg(feature = "advapi")] pub use super::advapi::traits::*;
 	#[cfg(feature = "comctl")] pub use super::comctl::traits::*;
 	#[cfg(feature = "dshow")] pub use super::dshow::traits::*;
 	#[cfg(feature = "dxgi")] pub use super::dxgi::traits::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::traits::*;
 	#[cfg(feature = "gui")] pub use super::gui::traits::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::traits::*;
-	#[cfg(feature = "ktm")] pub use super::ktm::traits::*;
 	#[cfg(feature = "msimg")] pub use super::msimg::traits::*;
 	#[cfg(feature = "ole")] pub use super::ole::traits::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::traits::*;
 	#[cfg(feature = "shell")] pub use super::shell::traits::*;
 	#[cfg(feature = "user")] pub use super::user::traits::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::traits::*;
-	#[cfg(all(feature = "advapi", feature = "ktm"))] pub use super::advapi_ktm::traits::*;
 	#[cfg(all(feature = "gdi", feature = "ole"))] pub use super::gdi_ole::traits::*;
 	#[cfg(all(feature = "comctl", feature = "ole"))] pub use super::comctl_ole::traits::*;
 	#[cfg(all(feature = "comctl", feature = "shell"))] pub use super::comctl_shell::traits::*;

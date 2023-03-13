@@ -128,11 +128,11 @@ pub trait kernel_Hprocesslist: Handle {
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HPROCESS, HPROCESSLIST};
+	/// use winsafe::{co, GetCurrentProcessId, HPROCESS, HPROCESSLIST};
 	///
 	/// let mut hpl = HPROCESSLIST::CreateToolhelp32Snapshot(
 	///     co::TH32CS::SNAPTHREAD,
-	///     Some(HPROCESS::GetCurrentProcessId()),
+	///     Some(GetCurrentProcessId()),
 	/// )?;
 	///
 	/// for thread_entry in hpl.iter_threads() {

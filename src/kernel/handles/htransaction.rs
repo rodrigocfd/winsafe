@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, ktm};
+use crate::{co, kernel};
 use crate::kernel::decl::{
 	GetLastError, GUID, SECURITY_ATTRIBUTES, SysResult, WString,
 };
@@ -14,9 +14,9 @@ impl_handle! { HTRANSACTION;
 	/// Originally just a `HANDLE`.
 }
 
-impl ktm_Htransaction for HTRANSACTION {}
+impl kernel_Htransaction for HTRANSACTION {}
 
-/// This trait is enabled with the `ktm` feature, and provides methods for
+/// This trait is enabled with the `kernel` feature, and provides methods for
 /// [`HTRANSACTION`](crate::HTRANSACTION).
 ///
 /// Prefer importing this trait through the prelude:
@@ -24,11 +24,13 @@ impl ktm_Htransaction for HTRANSACTION {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait ktm_Htransaction: Handle {
+pub trait kernel_Htransaction: Handle {
 	/// [`CommitTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-committransaction)
 	/// method.
 	fn CommitTransaction(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ktm::ffi::CommitTransaction(self.as_ptr()) })
+		bool_to_sysresult(
+			unsafe { kernel::ffi::CommitTransaction(self.as_ptr()) },
+		)
 	}
 
 	/// [`CreateTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-createtransaction)
@@ -42,7 +44,7 @@ pub trait ktm_Htransaction: Handle {
 	) -> SysResult<CloseHandleGuard<HTRANSACTION>>
 	{
 		match HTRANSACTION(unsafe {
-			ktm::ffi::CreateTransaction(
+			kernel::ffi::CreateTransaction(
 				transaction_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
 				std::ptr::null_mut(),
 				options.map_or(0, |opt| opt.0),
@@ -64,7 +66,10 @@ pub trait ktm_Htransaction: Handle {
 		let mut guid = GUID::default();
 		bool_to_sysresult(
 			unsafe {
-				ktm::ffi::GetTransactionId(self.as_ptr(), &mut guid as *mut _ as _)
+				kernel::ffi::GetTransactionId(
+					self.as_ptr(),
+					&mut guid as *mut _ as _,
+				)
 			},
 		).map(|_| guid)
 	}
@@ -78,7 +83,7 @@ pub trait ktm_Htransaction: Handle {
 	) -> SysResult<CloseHandleGuard<HTRANSACTION>>
 	{
 		match HTRANSACTION(unsafe {
-			ktm::ffi::OpenTransaction(
+			kernel::ffi::OpenTransaction(
 				desired_access.0,
 				transaction_id as *const _ as _,
 			)
@@ -91,6 +96,8 @@ pub trait ktm_Htransaction: Handle {
 	/// [`RollbackTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-rollbacktransaction)
 	/// method.
 	fn RollbackTransaction(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ktm::ffi::RollbackTransaction(self.as_ptr()) })
+		bool_to_sysresult(
+			unsafe { kernel::ffi::RollbackTransaction(self.as_ptr()) },
+		)
 	}
 }

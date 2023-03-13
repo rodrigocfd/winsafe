@@ -2,10 +2,10 @@ use std::ops::{Deref, DerefMut};
 
 use crate::kernel;
 use crate::kernel::decl::{
-	HFILEMAPVIEW, HFINDFILE, HGLOBAL, HIDWORD, HINSTANCE, HUPDATERSRC, LODWORD,
-	PROCESS_INFORMATION,
+	HFILEMAPVIEW, HFINDFILE, HGLOBAL, HIDWORD, HINSTANCE, HKEY, HUPDATERSRC,
+	LODWORD, PROCESS_INFORMATION,
 };
-use crate::prelude::{Handle, kernel_Hfile, kernel_Hglobal};
+use crate::prelude::{Handle, kernel_Hfile, kernel_Hglobal, kernel_Hkey};
 
 /// RAII implementation for a [`Handle`](crate::prelude::Handle) which
 /// automatically calls
@@ -166,6 +166,56 @@ impl<'a, H> GlobalUnlockGuard<'a, H>
 	#[must_use]
 	pub const fn new(hglobal: &'a H) -> Self {
 		Self { hglobal }
+	}
+}
+
+/// RAII implementation for [`HKEY`](crate::HKEY) which automatically calls
+/// [`RegCloseKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
+/// when the object goes out of scope.
+pub struct RegCloseKeyGuard {
+	hkey: HKEY,
+}
+
+impl Drop for RegCloseKeyGuard {
+	fn drop(&mut self) {
+		if let Some(h) = self.hkey.as_opt() {
+			if h.0 < HKEY::CLASSES_ROOT.0 || h.0 > HKEY::PERFORMANCE_NLSTEXT.0 { // guard predefined keys
+				unsafe { kernel::ffi::RegCloseKey(h.as_ptr()); } // ignore errors
+			}
+		}
+	}
+}
+
+impl Deref for RegCloseKeyGuard {
+	type Target = HKEY;
+
+	fn deref(&self) -> &Self::Target {
+		&self.hkey
+	}
+}
+
+impl DerefMut for RegCloseKeyGuard {
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		&mut self.hkey
+	}
+}
+
+impl RegCloseKeyGuard {
+	/// Constructs the guard by taking ownership of the handle.
+	#[must_use]
+	pub const fn new(hkey: HKEY) -> Self {
+		Self { hkey }
+	}
+
+	/// Ejects the underlying handle, leaving
+	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
+	///
+	/// Since the internal handle will be invalidated, the destructor will not
+	/// run. It's your responsibility to run it, otherwise you'll cause a
+	/// resource leak.
+	#[must_use]
+	pub fn leak(&mut self) -> HKEY {
+		std::mem::replace(&mut self.hkey, HKEY::INVALID)
 	}
 }
 

@@ -6,11 +6,13 @@ mod hfilemapview;
 mod hfindfile;
 mod hglobal;
 mod hinstance;
+mod hkey;
 mod hlocal;
 mod hpipe;
 mod hprocess;
 mod hprocesslist;
 mod hthread;
+mod htransaction;
 mod hupdatesrc;
 
 pub mod decl {
@@ -21,11 +23,13 @@ pub mod decl {
 	pub use super::hfindfile::HFINDFILE;
 	pub use super::hglobal::HGLOBAL;
 	pub use super::hinstance::HINSTANCE;
+	pub use super::hkey::HKEY;
 	pub use super::hlocal::HLOCAL;
 	pub use super::hpipe::HPIPE;
 	pub use super::hprocess::HPROCESS;
 	pub use super::hprocesslist::HPROCESSLIST;
 	pub use super::hthread::HTHREAD;
+	pub use super::htransaction::HTRANSACTION;
 	pub use super::hupdatesrc::HUPDATERSRC;
 
 	impl_handle! { HEVENT;
@@ -62,10 +66,12 @@ pub mod traits {
 	pub use super::hfindfile::kernel_Hfindfile;
 	pub use super::hglobal::kernel_Hglobal;
 	pub use super::hinstance::kernel_Hinstance;
+	pub use super::hkey::kernel_Hkey;
 	pub use super::hlocal::kernel_Hlocal;
 	pub use super::hpipe::kernel_Hpipe;
 	pub use super::hprocess::kernel_Hprocess;
 	pub use super::hprocesslist::kernel_Hprocesslist;
 	pub use super::hthread::kernel_Hthread;
+	pub use super::htransaction::kernel_Htransaction;
 	pub use super::hupdatesrc::kernel_Hupdatersrc;
 }

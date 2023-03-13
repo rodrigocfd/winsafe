@@ -1,1 +1,0 @@
-pub(crate) const SECURITY_DESCRIPTOR_REVISION: u32 = 1;
