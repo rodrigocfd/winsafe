@@ -372,28 +372,6 @@ pub struct PROCESS_INFORMATION {
 
 impl_default!(PROCESS_INFORMATION);
 
-/// [`SECURITY_DESCRIPTOR`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-security_descriptor)
-/// struct.
-///
-/// This struct is created by
-/// [`InitializeSecurityDescriptor`](crate::InitializeSecurityDescriptor).
-#[repr(C)]
-pub struct SECURITY_DESCRIPTOR {
-	pub Revision: u8,
-	pub Sbz1: u8,
-	pub Control: co::SE,
-	pub Owner: *mut std::ffi::c_void,
-	pub Group: *mut std::ffi::c_void,
-	pub Sacl: *mut ACL,
-	pub Dacl: *mut ACL,
-}
-
-impl Default for SECURITY_DESCRIPTOR {
-	fn default() -> Self {
-		InitializeSecurityDescriptor().unwrap()
-	}
-}
-
 /// [`PROCESSENTRY32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-processentry32w)
 /// struct.
 #[repr(C)]
@@ -434,6 +412,25 @@ impl<'a> SECURITY_ATTRIBUTES<'a> {
 	pub_fn_bool_get_set!(bInheritHandle, set_bInheritHandle);
 }
 
+/// [`SECURITY_DESCRIPTOR`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-security_descriptor)
+/// struct.
+#[repr(C)]
+pub struct SECURITY_DESCRIPTOR {
+	pub Revision: u8,
+	pub Sbz1: u8,
+	pub Control: co::SE,
+	pub Owner: *mut std::ffi::c_void,
+	pub Group: *mut std::ffi::c_void,
+	pub Sacl: *mut ACL,
+	pub Dacl: *mut ACL,
+}
+
+impl Default for SECURITY_DESCRIPTOR {
+	fn default() -> Self {
+		InitializeSecurityDescriptor().unwrap()
+	}
+}
+
 /// [`SID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid)
 /// struct.
 /// 
@@ -446,7 +443,7 @@ pub struct SID {
 	pub Revision: u8,
 	SubAuthorityCount: u8,
 	pub IdentifierAuthority: SID_IDENTIFIER_AUTHORITY,
-	SubAuthority: [u32; 1],
+	SubAuthority: [co::RID; 1],
 }
 
 impl std::fmt::Display for SID {
@@ -474,7 +471,7 @@ impl SID {
 
 	/// Returns the `SubAuthority` field.
 	#[must_use]
-	pub fn SubAuthority(&self) -> &[u32] {
+	pub fn SubAuthority(&self) -> &[co::RID] {
 		unsafe {
 			std::slice::from_raw_parts(
 				self.SubAuthority.as_ptr(), self.SubAuthorityCount as _)
@@ -531,7 +528,8 @@ macro_rules! predef_sid_ident_au {
 }
 
 impl SID_IDENTIFIER_AUTHORITY {
-	predef_sid_ident_au!(NULL, [0, 0, 0, 0, 0, 1]);
+	predef_sid_ident_au!(NULL, [0, 0, 0, 0, 0, 0]);
+	predef_sid_ident_au!(WORLD, [0, 0, 0, 0, 0, 1]);
 	predef_sid_ident_au!(LOCAL, [0, 0, 0, 0, 0, 2]);
 	predef_sid_ident_au!(CREATOR, [0, 0, 0, 0, 0, 3]);
 	predef_sid_ident_au!(NON_UNIQUE, [0, 0, 0, 0, 0, 4]);

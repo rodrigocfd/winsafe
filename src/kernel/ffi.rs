@@ -1,6 +1,7 @@
 use crate::kernel::ffi_types::{BOOL, HANDLE, PCSTR, PCVOID, PFUNC, PSTR, PVOID};
 
 extern_sys! { "advapi32";
+	AllocateAndInitializeSid(PCVOID, u8, u32, u32, u32, u32, u32, u32, u32, u32, *mut u8) -> BOOL
 	ConvertSidToStringSidW(PCVOID, *mut PSTR) -> BOOL
 	ConvertStringSidToSidW(PCSTR, *mut *mut u8) -> BOOL
 	CopySid(u32, *mut u8, PCVOID) -> BOOL
@@ -11,6 +12,7 @@ extern_sys! { "advapi32";
 	EqualDomainSid(PVOID, PVOID, *mut BOOL) -> BOOL
 	EqualPrefixSid(PVOID, PVOID) -> BOOL
 	EqualSid(PVOID, PVOID) -> BOOL
+	FreeSid(PVOID)
 	GetLengthSid(PVOID) -> u32
 	GetSidLengthRequired(u8) -> u32
 	GetUserNameW(PSTR, *mut u32) -> BOOL

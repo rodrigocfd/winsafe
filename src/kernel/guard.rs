@@ -3,7 +3,7 @@ use std::ops::{Deref, DerefMut};
 use crate::kernel;
 use crate::kernel::decl::{
 	HFILEMAPVIEW, HFINDFILE, HGLOBAL, HIDWORD, HINSTANCE, HKEY, HUPDATERSRC,
-	LODWORD, PROCESS_INFORMATION,
+	LODWORD, PROCESS_INFORMATION, SID,
 };
 use crate::prelude::{Handle, kernel_Hfile, kernel_Hglobal, kernel_Hkey};
 
@@ -129,6 +129,45 @@ handle_guard! { FreeLibraryGuard: HINSTANCE;
 	/// automatically calls
 	/// [`FreeLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary)
 	/// when the object goes out of scope.
+}
+
+/// RAII implementation for [`SID`](crate::SID) which automatically calls
+/// [`FreeSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-freesid)
+/// when the object goes out of scope.
+pub struct FreeSidGuard {
+	psid: *mut SID,
+}
+
+impl Drop for FreeSidGuard {
+	fn drop(&mut self) {
+		if !self.psid.is_null() {
+			unsafe { kernel::ffi::FreeSid(self.psid as *mut _ as _); }
+		}
+	}
+}
+
+impl Deref for FreeSidGuard {
+	type Target = SID;
+
+	fn deref(&self) -> &Self::Target {
+		unsafe { &*self.psid }
+	}
+}
+
+impl FreeSidGuard {
+	pub(in crate::kernel) const fn new(psid: *mut SID) -> Self {
+		Self { psid }
+	}
+
+	/// Ejects the underlying pointer, leaving a null pointer in its place.
+	///
+	/// Since the internal pointer will be invalidated, the destructor will not
+	/// run. It's your responsability to run it, otherwise you'll cause a
+	/// resource leak.
+	#[must_use]
+	pub fn leak(&mut self) -> *mut SID {
+		std::mem::replace(&mut self.psid, std::ptr::null_mut())
+	}
 }
 
 handle_guard! { GlobalFreeGuard: HGLOBAL;

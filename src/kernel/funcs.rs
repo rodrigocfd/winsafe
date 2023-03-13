@@ -5,15 +5,86 @@ use std::collections::HashMap;
 use crate::{co, kernel};
 use crate::kernel::decl::{
 	FILETIME, HLOCAL, MEMORYSTATUSEX, OSVERSIONINFOEX, SECURITY_DESCRIPTOR, SID,
-	SID_wrap, STARTUPINFO, SysResult, SYSTEM_INFO, SYSTEMTIME,
-	TIME_ZONE_INFORMATION, WString,
+	SID_IDENTIFIER_AUTHORITY, SID_wrap, STARTUPINFO, SysResult, SYSTEM_INFO,
+	SYSTEMTIME, TIME_ZONE_INFORMATION, WString,
 };
 use crate::kernel::ffi_types::BOOL;
+use crate::kernel::guard::FreeSidGuard;
 use crate::kernel::privs::{
 	bool_to_sysresult, INVALID_FILE_ATTRIBUTES, MAX_COMPUTERNAME_LENGTH,
 	MAX_PATH, parse_multi_z_str, ptr_to_sysresult, SECURITY_DESCRIPTOR_REVISION,
 };
 use crate::prelude::kernel_Hlocal;
+
+/// [`AllocateAndInitializeSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-allocateandinitializesid)
+/// function.
+/// 
+/// # Panics
+/// 
+/// Panics if `sub_authorities` has more than 8 elements.
+/// 
+/// # Examples
+/// 
+/// Create a well-known SID for the Everyone group:
+/// 
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{AllocateAndInitializeSid, co, SID_IDENTIFIER_AUTHORITY};
+/// 
+/// let sid_everyone = AllocateAndInitializeSid(
+///     &SID_IDENTIFIER_AUTHORITY::WORLD,
+///     &[
+///         co::RID::SECURITY_WORLD,
+///     ],
+/// )?;
+/// # Ok::<_, co::ERROR>(())
+/// ```
+/// 
+/// Create a SID for the BUILTIN\Administrators group:
+/// 
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{AllocateAndInitializeSid, co, SID_IDENTIFIER_AUTHORITY};
+/// 
+/// let sid_builtin_administrators = AllocateAndInitializeSid(
+///     &SID_IDENTIFIER_AUTHORITY::NT,
+///     &[
+///         co::RID::SECURITY_BUILTIN_DOMAIN,
+///         co::RID::DOMAIN_ALIAS_ADMINS,
+///     ],
+/// )?;
+/// # Ok::<_, co::ERROR>(())
+/// ```
+#[must_use]
+pub fn AllocateAndInitializeSid(
+	identifier_authority: &SID_IDENTIFIER_AUTHORITY,
+	sub_authorities: &[co::RID],
+) -> SysResult<FreeSidGuard>
+{
+	if sub_authorities.len() > 8 {
+		panic!("You must specify at most 8 sub authorities.");
+	}
+
+	let mut psid = std::ptr::null_mut() as *mut SID;
+
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::AllocateAndInitializeSid(
+				identifier_authority as *const _ as _,
+				sub_authorities.len() as _,
+				if sub_authorities.len() >= 1 { sub_authorities[0].0 } else { 0 },
+				if sub_authorities.len() >= 2 { sub_authorities[1].0 } else { 0 },
+				if sub_authorities.len() >= 3 { sub_authorities[2].0 } else { 0 },
+				if sub_authorities.len() >= 4 { sub_authorities[3].0 } else { 0 },
+				if sub_authorities.len() >= 5 { sub_authorities[4].0 } else { 0 },
+				if sub_authorities.len() >= 6 { sub_authorities[5].0 } else { 0 },
+				if sub_authorities.len() >= 7 { sub_authorities[6].0 } else { 0 },
+				if sub_authorities.len() >= 8 { sub_authorities[7].0 } else { 0 },
+				&mut psid as *mut _ as _,
+			)
+		},
+	).map(|_| FreeSidGuard::new(psid))
+}
 
 /// [`ConvertSidToStringSid`](https://learn.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsidw)
 /// function.
