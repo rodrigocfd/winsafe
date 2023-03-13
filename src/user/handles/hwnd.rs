@@ -108,12 +108,12 @@ pub trait user_Hwnd: Handle {
 	#[must_use]
 	fn BeginPaint(&self) -> SysResult<EndPaintGuard<'_, Self>> {
 		let mut ps = PAINTSTRUCT::default();
-		ptr_to_sysresult(
-			unsafe {
-				user::ffi::BeginPaint(self.as_ptr(), &mut ps as *mut _ as _)
-			},
-			|ptr| EndPaintGuard::new(self, HDC(ptr), ps),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				user::ffi::BeginPaint(self.as_ptr(), &mut ps as *mut _ as _),
+				|ptr| EndPaintGuard::new(self, HDC(ptr), ps),
+			)
+		}
 	}
 
 	/// [`BringWindowToTop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-bringwindowtotop)
@@ -431,10 +431,12 @@ pub trait user_Hwnd: Handle {
 	/// [`HWND::DESKTOP`](crate::prelude::user_Hwnd::DESKTOP).
 	#[must_use]
 	fn GetDC(&self) -> SysResult<ReleaseDCGuard<'_, Self>> {
-		ptr_to_sysresult(
-			unsafe { user::ffi::GetDC(self.as_ptr()) },
-			|ptr| ReleaseDCGuard::new(self, HDC(ptr)),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				user::ffi::GetDC(self.as_ptr()),
+				|ptr| ReleaseDCGuard::new(self, HDC(ptr)),
+			)
+		}
 	}
 
 	/// [`GetDesktopWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdesktopwindow)
@@ -665,20 +667,24 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn GetWindow(&self, cmd: co::GW) -> SysResult<HWND> {
-		ptr_to_sysresult(
-			unsafe { user::ffi::GetWindow(self.as_ptr(), cmd.0) },
-			|ptr| HWND(ptr),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				user::ffi::GetWindow(self.as_ptr(), cmd.0),
+				|ptr| HWND(ptr),
+			)
+		}
 	}
 
 	/// [`GetWindowDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdc)
 	/// method.
 	#[must_use]
 	fn GetWindowDC(&self) -> SysResult<ReleaseDCGuard<'_, Self>> {
-		ptr_to_sysresult(
-			unsafe { user::ffi::GetWindowDC(self.as_ptr()) },
-			|ptr| ReleaseDCGuard::new(self, HDC(ptr)),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				user::ffi::GetWindowDC(self.as_ptr()),
+				|ptr| ReleaseDCGuard::new(self, HDC(ptr)),
+			)
+		}
 	}
 
 	/// [`GetWindowDisplayAffinity`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdisplayaffinity)
@@ -1133,8 +1139,10 @@ pub trait user_Hwnd: Handle {
 	/// ```
 	#[must_use]
 	fn OpenClipboard(&self) -> SysResult<CloseClipboardGuard<'_>> {
-		bool_to_sysresult(unsafe { user::ffi::OpenClipboard(self.as_ptr()) })
-			.map(|_| CloseClipboardGuard::new(PhantomData))
+		unsafe {
+			bool_to_sysresult(user::ffi::OpenClipboard(self.as_ptr()))
+				.map(|_| CloseClipboardGuard::new(PhantomData))
+		}
 	}
 
 	/// [`PostMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew)
@@ -1332,11 +1340,13 @@ pub trait user_Hwnd: Handle {
 	/// [`SetCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcapture)
 	/// method.
 	fn SetCapture(&self) -> ReleaseCaptureGuard<'_, Self> {
-		ReleaseCaptureGuard::new(
-			self,
-			unsafe { user::ffi::SetCapture(self.as_ptr()).as_mut() }
-				.map(|ptr| HWND(ptr)),
-		)
+		unsafe {
+			ReleaseCaptureGuard::new(
+				self,
+				user::ffi::SetCapture(self.as_ptr()).as_mut()
+					.map(|ptr| HWND(ptr)),
+			)
+		}
 	}
 
 	/// [`SetFocus`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setfocus)

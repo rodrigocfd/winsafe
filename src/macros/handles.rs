@@ -91,8 +91,13 @@ macro_rules! handle_guard {
 
 		impl $name {
 			/// Constructs the guard by taking ownership of the handle.
+			/// 
+			/// # Safety
+			/// 
+			/// Be sure the handle must be freed with the specified function at
+			/// the end of scope.
 			#[must_use]
-			pub const fn new(handle: $handle) -> Self {
+			pub const unsafe fn new(handle: $handle) -> Self {
 				Self { handle }
 			}
 

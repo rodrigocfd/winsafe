@@ -99,15 +99,15 @@ pub trait comctl_Himagelist: Handle {
 	fn BeginDrag(&self,
 		itrack: u32, hotspot: POINT) -> SysResult<ImageListEndDragGuard<'_>>
 	{
-		bool_to_sysresult(
-			unsafe {
+		unsafe {
+			bool_to_sysresult(
 				comctl::ffi::ImageList_BeginDrag(
 					self.as_ptr(),
 					itrack as _,
 					hotspot.x, hotspot.y,
-				)
-			},
-		).map(|_| ImageListEndDragGuard::new(PhantomData))
+				),
+			).map(|_| ImageListEndDragGuard::new(PhantomData))
+		}
 	}
 
 	/// [`ImageList_Create`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_create)
@@ -131,17 +131,17 @@ pub trait comctl_Himagelist: Handle {
 		grow_size: i32,
 	) -> SysResult<ImageListDestroyGuard>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				comctl::ffi::ImageList_Create(
 					image_sz.cx, image_sz.cy,
 					flags.0,
 					initial_size,
 					grow_size,
-				)
-			},
-			|ptr| ImageListDestroyGuard::new(HIMAGELIST(ptr)),
-		)
+				),
+				|ptr| ImageListDestroyGuard::new(HIMAGELIST::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`ImageList_Destroy`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_destroy)

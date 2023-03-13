@@ -29,10 +29,12 @@ pub trait kernel_Hglobal: Handle {
 	fn GlobalAlloc(
 		flags: co::GMEM, num_bytes: usize) -> SysResult<GlobalFreeGuard>
 	{
-		ptr_to_sysresult(
-			unsafe { kernel::ffi::GlobalAlloc(flags.0, num_bytes) },
-			|ptr| GlobalFreeGuard::new(HGLOBAL(ptr)),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				kernel::ffi::GlobalAlloc(flags.0, num_bytes),
+				|ptr| GlobalFreeGuard::new(HGLOBAL::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`GlobalFlags`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalflags)

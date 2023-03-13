@@ -33,23 +33,23 @@ pub trait kernel_Hfindfile: Handle {
 		wfd: &mut WIN32_FIND_DATA,
 	) -> SysResult<(FindCloseGuard, bool)>
 	{
-		match unsafe {
-			kernel::ffi::FindFirstFileW(
+		unsafe {
+			match kernel::ffi::FindFirstFileW(
 				WString::from_str(file_name).as_ptr(),
 				wfd as *mut _ as _,
-			).as_mut()
-		} {
-			Some(ptr) => Ok((
-				FindCloseGuard::new(HFINDFILE(ptr)), // first file found
-				true,
-			)),
-			None => match GetLastError() {
-				co::ERROR::FILE_NOT_FOUND => Ok((
-					FindCloseGuard::new(HFINDFILE::NULL), // not an error, first file not found
-					false,
+			).as_mut() {
+				Some(ptr) => Ok((
+					FindCloseGuard::new(HFINDFILE::from_ptr(ptr)), // first file found
+					true,
 				)),
-				err => Err(err),
-			},
+				None => match GetLastError() {
+					co::ERROR::FILE_NOT_FOUND => Ok((
+						FindCloseGuard::new(HFINDFILE::NULL), // not an error, first file not found
+						false,
+					)),
+					err => Err(err),
+				},
+			}
 		}
 	}
 

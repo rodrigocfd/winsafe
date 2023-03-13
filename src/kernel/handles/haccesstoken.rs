@@ -31,15 +31,15 @@ pub trait kernel_Haccesstoken: Handle {
 	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
-		bool_to_sysresult(
-			unsafe {
+		unsafe {
+			bool_to_sysresult(
 				kernel::ffi::DuplicateToken(
 					self.as_ptr(),
 					level.0,
 					&mut handle.0,
-				)
-			},
-		).map(|_| CloseHandleGuard::new(handle))
+				),
+			).map(|_| CloseHandleGuard::new(handle))
+		}
 	}
 
 	/// [`GetCurrentProcessToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocesstoken)

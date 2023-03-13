@@ -16,8 +16,14 @@ impl Drop for CoUninitializeGuard {
 
 impl CoUninitializeGuard {
 	/// Constructs the guard by taking ownership of the code.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure you need to call
+	/// [`CoUninitialize`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)
+	/// at the end of scope.
 	#[must_use]
-	pub const fn new(hr: co::HRESULT) -> Self {
+	pub const unsafe fn new(hr: co::HRESULT) -> Self {
 		Self { hr }
 	}
 

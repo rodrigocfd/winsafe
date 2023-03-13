@@ -47,7 +47,7 @@ pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 		strs.push(WString::from_wchars_nullt(*lp).to_string());
 	}
 
-	let _ = LocalFreeGuard::new(unsafe { HLOCAL::from_ptr(lp_arr as _) });
+	let _ = unsafe { LocalFreeGuard::new(HLOCAL::from_ptr(lp_arr as _)) };
 	Ok(strs)
 }
 
@@ -249,17 +249,17 @@ pub fn SHGetFileInfo(
 ) -> SysResult<(u32, DestroyIconShfiGuard)>
 {
 	let mut shfi = SHFILEINFO::default();
-	match unsafe {
-		shell::ffi::SHGetFileInfoW(
+	unsafe {
+		match shell::ffi::SHGetFileInfoW(
 			WString::from_str(path).as_ptr(),
 			file_attrs.0,
 			&mut shfi as *mut _ as _,
 			std::mem::size_of::<SHFILEINFO>() as _,
 			flags.0,
-		)
-	} {
-		0 => Err(GetLastError()),
-		n => Ok((n as _, DestroyIconShfiGuard::new(shfi))),
+		) {
+			0 => Err(GetLastError()),
+			n => Ok((n as _, DestroyIconShfiGuard::new(shfi))),
+		}
 	}
 }
 
@@ -330,13 +330,13 @@ pub fn SHGetStockIconInfo(
 	siid: co::SIID, flags: co::SHGSI) -> HrResult<DestroyIconSiiGuard>
 {
 	let mut sii = SHSTOCKICONINFO::default();
-	ok_to_hrresult(
-		unsafe {
+	unsafe {
+		ok_to_hrresult(
 			shell::ffi::SHGetStockIconInfo(
 				siid.0,
 				flags.0,
 				&mut sii as *mut _ as _,
-			)
-		},
-	).map(|_| DestroyIconSiiGuard::new(sii))
+			),
+		).map(|_| DestroyIconSiiGuard::new(sii))
+	}
 }

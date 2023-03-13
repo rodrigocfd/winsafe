@@ -157,15 +157,15 @@ pub trait kernel_Hprocesslist: Handle {
 		th32_process_id: Option<u32>,
 	) -> SysResult<CloseHandleGuard<HPROCESSLIST>>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				kernel::ffi::CreateToolhelp32Snapshot(
 					flags.0,
 					th32_process_id.unwrap_or_default(),
-				)
-			},
-			|ptr| CloseHandleGuard::new(HPROCESSLIST(ptr)),
-		)
+				),
+				|ptr| CloseHandleGuard::new(HPROCESSLIST(ptr)),
+			)
+		}
 	}
 
 	/// [`HeapList32First`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-heap32listfirst)

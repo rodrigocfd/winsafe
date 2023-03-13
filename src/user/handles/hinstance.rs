@@ -137,10 +137,12 @@ pub trait user_Hinstance: Handle {
 	fn LoadCursor(&self,
 		resource_id: IdIdcStr) -> SysResult<DestroyCursorGuard>
 	{
-		ptr_to_sysresult(
-			unsafe { user::ffi::LoadCursorW(self.as_ptr(), resource_id.as_ptr()) },
-			|ptr| DestroyCursorGuard::new(HCURSOR(ptr)),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				user::ffi::LoadCursorW(self.as_ptr(), resource_id.as_ptr()),
+				|ptr| DestroyCursorGuard::new(HCURSOR(ptr)),
+			)
+		}
 	}
 
 	/// [`LoadIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadiconw)
@@ -160,10 +162,12 @@ pub trait user_Hinstance: Handle {
 	/// ```
 	#[must_use]
 	fn LoadIcon(&self, icon_id: IdIdiStr) -> SysResult<DestroyIconGuard> {
-		ptr_to_sysresult(
-			unsafe { user::ffi::LoadIconW(self.as_ptr(), icon_id.as_ptr()) },
-			|ptr| DestroyIconGuard::new(HICON(ptr)),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				user::ffi::LoadIconW(self.as_ptr(), icon_id.as_ptr()),
+				|ptr| DestroyIconGuard::new(HICON(ptr)),
+			)
+		}
 	}
 
 	/// [`LoadMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenuw)

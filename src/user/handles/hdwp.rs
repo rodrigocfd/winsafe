@@ -29,10 +29,12 @@ pub trait user_Hdwp: Handle {
 	fn BeginDeferWindowPos(
 		num_windows: u32) -> SysResult<EndDeferWindowPosGuard>
 	{
-		ptr_to_sysresult(
-			unsafe { user::ffi::BeginDeferWindowPos(num_windows as _) },
-			|ptr| EndDeferWindowPosGuard::new(HDWP(ptr)),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				user::ffi::BeginDeferWindowPos(num_windows as _),
+				|ptr| EndDeferWindowPosGuard::new(HDWP(ptr)),
+			)
+		}
 	}
 
 	/// [`DeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deferwindowpos)

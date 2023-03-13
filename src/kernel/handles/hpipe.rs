@@ -34,16 +34,16 @@ pub trait kernel_Hpipe: Handle {
 	) -> SysResult<(CloseHandleGuard<HPIPE>, CloseHandleGuard<HPIPE>)>
 	{
 		let (mut hread, mut hwrite) = (HPIPE::NULL, HPIPE::NULL);
-		bool_to_sysresult(
-			unsafe {
+		unsafe {
+			bool_to_sysresult(
 				kernel::ffi::CreatePipe(
 					&mut hread.0,
 					&mut hwrite.0,
 					attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					size,
-				)
-			},
-		).map(|_| (CloseHandleGuard::new(hread), CloseHandleGuard::new(hwrite)))
+				),
+			).map(|_| (CloseHandleGuard::new(hread), CloseHandleGuard::new(hwrite)))
+		}
 	}
 
 	/// [`ReadFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)

@@ -207,16 +207,16 @@ pub trait kernel_Hprocess: Handle {
 		process_id: u32,
 	) -> SysResult<CloseHandleGuard<HPROCESS>>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				kernel::ffi::OpenProcess(
 					desired_access.0,
 					inherit_handle as _,
 					process_id,
-				)
-			},
-			|ptr| CloseHandleGuard::new(HPROCESS(ptr)),
-		)
+				),
+				|ptr| CloseHandleGuard::new(HPROCESS(ptr)),
+			)
+		}
 	}
 
 	/// [`OpenProcessToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken)
@@ -226,15 +226,15 @@ pub trait kernel_Hprocess: Handle {
 		desired_access: co::TOKEN) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
-		bool_to_sysresult(
-			unsafe {
+		unsafe {
+			bool_to_sysresult(
 				kernel::ffi::OpenProcessToken(
 					self.as_ptr(),
 					desired_access.0,
 					&mut handle.0,
-				)
-			},
-		).map(|_| CloseHandleGuard::new(handle))
+				),
+			).map(|_| CloseHandleGuard::new(handle))
+		}
 	}
 
 	/// [`QueryFullProcessImageName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew)

@@ -164,14 +164,16 @@ pub fn CoCreateInstanceEx(
 /// ```
 #[must_use]
 pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<CoUninitializeGuard> {
-	let hr = co::HRESULT(
-		unsafe { ole::ffi::CoInitializeEx(std::ptr::null_mut(), coinit.0) },
-	);
-	match hr {
-		co::HRESULT::S_OK
-		| co::HRESULT::S_FALSE
-		| co::HRESULT::RPC_E_CHANGED_MODE => Ok(CoUninitializeGuard::new(hr)),
-		hr => Err(hr),
+	unsafe {
+		let hr = co::HRESULT(
+			ole::ffi::CoInitializeEx(std::ptr::null_mut(), coinit.0),
+		);
+		match hr {
+			co::HRESULT::S_OK
+			| co::HRESULT::S_FALSE
+			| co::HRESULT::RPC_E_CHANGED_MODE => Ok(CoUninitializeGuard::new(hr)),
+			hr => Err(hr),
+		}
 	}
 }
 

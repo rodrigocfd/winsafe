@@ -49,8 +49,14 @@ impl<T> CloseHandleGuard<T>
 	where T: Handle,
 {
 	/// Constructs the guard by taking ownership of the handle.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the handle must be freed with
+	/// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
+	/// at the end of scope.
 	#[must_use]
-	pub const fn new(handle: T) -> Self {
+	pub const unsafe fn new(handle: T) -> Self {
 		Self { handle }
 	}
 
@@ -77,10 +83,10 @@ pub struct CloseHandlePiGuard {
 impl Drop for CloseHandlePiGuard {
 	fn drop(&mut self) {
 		if let Some(h) = self.pi.hProcess.as_opt() {
-			let _ = CloseHandleGuard::new(unsafe { h.raw_copy() });
+			let _ = unsafe { CloseHandleGuard::new(h.raw_copy()) };
 		}
 		if let Some(h) = self.pi.hThread.as_opt() {
-			let _ = CloseHandleGuard::new(unsafe { h.raw_copy() });
+			let _ = unsafe { CloseHandleGuard::new(h.raw_copy()) };
 		}
 	}
 }

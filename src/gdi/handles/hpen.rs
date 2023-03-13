@@ -5,7 +5,7 @@ use crate::gdi::decl::LOGPEN;
 use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::SysResult;
 use crate::kernel::privs::ptr_to_sysresult;
-use crate::prelude::GdiObject;
+use crate::prelude::{GdiObject, Handle};
 use crate::user::decl::COLORREF;
 
 impl_handle! { HPEN;
@@ -35,20 +35,24 @@ pub trait gdi_Hpen: GdiObject {
 		color: COLORREF,
 	) -> SysResult<DeleteObjectGuard<HPEN>>
 	{
-		ptr_to_sysresult(
-			unsafe { gdi::ffi::CreatePen(style.0, width, color.0) },
-			|ptr| DeleteObjectGuard::new(HPEN(ptr)),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				gdi::ffi::CreatePen(style.0, width, color.0),
+				|ptr| DeleteObjectGuard::new(HPEN::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`CreatePenIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpenindirect)
 	/// static method.
 	#[must_use]
 	fn CreatePenIndirect(lp: &mut LOGPEN) -> SysResult<DeleteObjectGuard<HPEN>> {
-		ptr_to_sysresult(
-			unsafe { gdi::ffi::CreatePenIndirect(lp as *const _ as _) },
-			|ptr| DeleteObjectGuard::new(HPEN(ptr)),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				gdi::ffi::CreatePenIndirect(lp as *const _ as _),
+				|ptr| DeleteObjectGuard::new(HPEN::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)

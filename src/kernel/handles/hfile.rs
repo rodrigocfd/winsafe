@@ -83,19 +83,21 @@ pub trait kernel_Hfile: Handle {
 		hfile_template: Option<&HFILE>,
 	) -> SysResult<(CloseHandleGuard<HFILE>, co::ERROR)>
 	{
-		match HFILE(unsafe {
-			kernel::ffi::CreateFileW(
-				WString::from_str(file_name).as_ptr(),
-				desired_access.0,
-				share_mode.0,
-				security_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-				creation_disposition.0,
-				flags_and_attrs.0,
-				hfile_template.map_or(std::ptr::null_mut(), |h| h.0),
-			) as _
-		}) {
-			HFILE::NULL => Err(GetLastError()),
-			handle => Ok((CloseHandleGuard::new(handle), GetLastError())),
+		unsafe {
+			match HFILE(
+				kernel::ffi::CreateFileW(
+					WString::from_str(file_name).as_ptr(),
+					desired_access.0,
+					share_mode.0,
+					security_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+					creation_disposition.0,
+					flags_and_attrs.0,
+					hfile_template.map_or(std::ptr::null_mut(), |h| h.0),
+				) as _,
+			) {
+				HFILE::NULL => Err(GetLastError()),
+				handle => Ok((CloseHandleGuard::new(handle), GetLastError())),
+			}
 		}
 	}
 
@@ -109,18 +111,18 @@ pub trait kernel_Hfile: Handle {
 		mapping_name: Option<&str>,
 	) -> SysResult<CloseHandleGuard<HFILEMAP>>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				kernel::ffi::CreateFileMappingFromApp(
 					self.as_ptr(),
 					mapping_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					protect.0,
 					max_size.unwrap_or_default(),
 					WString::from_opt_str(mapping_name).as_ptr(),
-				)
-			},
-			|ptr| CloseHandleGuard::new(HFILEMAP(ptr)),
-		)
+				),
+				|ptr| CloseHandleGuard::new(HFILEMAP(ptr)),
+			)
+		}
 	}
 
 	/// [`GetFileInformationByHandle`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)

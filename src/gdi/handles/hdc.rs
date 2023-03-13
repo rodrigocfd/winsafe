@@ -151,20 +151,24 @@ pub trait gdi_Hdc: Handle {
 	fn CreateCompatibleBitmap(&self,
 		cx: i32, cy: i32) -> SysResult<DeleteObjectGuard<HBITMAP>>
 	{
-		ptr_to_sysresult(
-			unsafe { gdi::ffi::CreateCompatibleBitmap(self.as_ptr(), cx, cy) },
-			|ptr| DeleteObjectGuard::new(HBITMAP(ptr)),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				gdi::ffi::CreateCompatibleBitmap(self.as_ptr(), cx, cy),
+				|ptr| DeleteObjectGuard::new(HBITMAP::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`CreateCompatibleDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatibledc)
 	/// method.
 	#[must_use]
 	fn CreateCompatibleDC(&self) -> SysResult<DeleteDCGuard> {
-		ptr_to_sysresult(
-			unsafe { gdi::ffi::CreateCompatibleDC(self.as_ptr()) },
-			|ptr| DeleteDCGuard::new(HDC(ptr)),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				gdi::ffi::CreateCompatibleDC(self.as_ptr()),
+				|ptr| DeleteDCGuard::new(HDC::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`Ellipse`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ellipse)
@@ -512,10 +516,12 @@ pub trait gdi_Hdc: Handle {
 	/// method.
 	#[must_use]
 	fn PathToRegion(&self) -> SysResult<DeleteObjectGuard<HRGN>> {
-		ptr_to_sysresult(
-			unsafe { gdi::ffi::PathToRegion(self.as_ptr()) },
-			|ptr| DeleteObjectGuard::new(HRGN(ptr)),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				gdi::ffi::PathToRegion(self.as_ptr()),
+				|ptr| DeleteObjectGuard::new(HRGN::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`Pie`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pie)
@@ -695,24 +701,26 @@ pub trait gdi_Hdc: Handle {
 	) -> SysResult<SelectObjectGuard<'_, Self, G>>
 		where G: GdiObject,
 	{
-		ptr_to_sysresult(
-			unsafe { gdi::ffi::SelectObject(self.as_ptr(), hgdiobj.as_ptr()) },
-			|ptr| {
-				if hgdiobj.type_id() == TypeId::of::<HRGN>() {
-					SelectObjectGuard::new(
-						self,
-						G::NULL, // regions don't need cleanup
-						Some(co::REGION(ptr as *mut _ as _)),
-					)
-				} else {
-					SelectObjectGuard::new(
-						self,
-						unsafe { G::from_ptr(ptr) },
-						None,
-					)
-				}
-			},
-		)
+		unsafe {
+			ptr_to_sysresult(
+				gdi::ffi::SelectObject(self.as_ptr(), hgdiobj.as_ptr()),
+				|ptr| {
+					if hgdiobj.type_id() == TypeId::of::<HRGN>() {
+						SelectObjectGuard::new(
+							self,
+							G::NULL, // regions don't need cleanup
+							Some(co::REGION(ptr as *mut _ as _)),
+						)
+					} else {
+						SelectObjectGuard::new(
+							self,
+							G::from_ptr(ptr), // GDI object to cleanup
+							None,
+						)
+					}
+				},
+			)
+		}
 	}
 
 	/// [`SetArcDirection`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setarcdirection)

@@ -53,8 +53,14 @@ impl<T> DeleteObjectGuard<T>
 	where T: GdiObject,
 {
 	/// Constructs the guard by taking ownership of the handle.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the handle must be freed with
+	/// [`DeleteObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
+	/// at the end of scope.
 	#[must_use]
-	pub const fn new(handle: T) -> Self {
+	pub const unsafe fn new(handle: T) -> Self {
 		Self { handle }
 	}
 
@@ -100,8 +106,14 @@ impl<'a, H, G> SelectObjectGuard<'a, H, G>
 		G: GdiObject,
 {
 	/// Constructs the guard by taking ownership of the handle.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the handle must be again passed to
+	/// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject)
+	/// at the end of scope.
 	#[must_use]
-	pub const fn new(
+	pub const unsafe fn new(
 		hdc: &'a H,
 		prev_hgdi: G,
 		region: Option<co::REGION>) -> Self

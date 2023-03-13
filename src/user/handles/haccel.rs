@@ -29,14 +29,14 @@ pub trait user_Haccel: Handle {
 	fn CreateAcceleratorTable(
 		accel: &mut [ACCEL]) -> SysResult<DestroyAcceleratorTableGuard>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				user::ffi::CreateAcceleratorTableW(
 					accel.as_mut_ptr() as _,
 					accel.len() as _,
-				)
-			},
-			|ptr| DestroyAcceleratorTableGuard::new(HACCEL(ptr)),
-		)
+				),
+				|ptr| DestroyAcceleratorTableGuard::new(HACCEL::from_ptr(ptr)),
+			)
+		}
 	}
 }

@@ -43,19 +43,21 @@ pub trait kernel_Htransaction: Handle {
 		description: &str,
 	) -> SysResult<CloseHandleGuard<HTRANSACTION>>
 	{
-		match HTRANSACTION(unsafe {
-			kernel::ffi::CreateTransaction(
-				transaction_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
-				std::ptr::null_mut(),
-				options.map_or(0, |opt| opt.0),
-				0,
-				0,
-				timeout.map_or(0, |t| t),
-				WString::from_str(description).as_ptr() as _,
-			)
-		}) {
-			HTRANSACTION::INVALID => Err(GetLastError()),
-			handle => Ok(CloseHandleGuard::new(handle)),
+		unsafe {
+			match HTRANSACTION(
+				kernel::ffi::CreateTransaction(
+					transaction_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+					std::ptr::null_mut(),
+					options.map_or(0, |opt| opt.0),
+					0,
+					0,
+					timeout.map_or(0, |t| t),
+					WString::from_str(description).as_ptr() as _,
+				),
+			) {
+				HTRANSACTION::INVALID => Err(GetLastError()),
+				handle => Ok(CloseHandleGuard::new(handle)),
+			}
 		}
 	}
 
@@ -82,14 +84,16 @@ pub trait kernel_Htransaction: Handle {
 		transaction_id: &GUID,
 	) -> SysResult<CloseHandleGuard<HTRANSACTION>>
 	{
-		match HTRANSACTION(unsafe {
-			kernel::ffi::OpenTransaction(
-				desired_access.0,
-				transaction_id as *const _ as _,
-			)
-		}) {
-			HTRANSACTION::INVALID => Err(GetLastError()),
-			handle => Ok(CloseHandleGuard::new(handle)),
+		unsafe {
+			match HTRANSACTION(
+				kernel::ffi::OpenTransaction(
+					desired_access.0,
+					transaction_id as *const _ as _,
+				),
+			) {
+				HTRANSACTION::INVALID => Err(GetLastError()),
+				handle => Ok(CloseHandleGuard::new(handle)),
+			}
 		}
 	}
 

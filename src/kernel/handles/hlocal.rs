@@ -28,10 +28,12 @@ pub trait kernel_Hlocal: Handle {
 	fn LocalAlloc(
 		flags: co::LMEM, num_bytes: usize) -> SysResult<LocalFreeGuard>
 	{
-		ptr_to_sysresult(
-			unsafe { kernel::ffi::LocalAlloc(flags.0, num_bytes) },
-			|ptr| LocalFreeGuard::new(HLOCAL(ptr)),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				kernel::ffi::LocalAlloc(flags.0, num_bytes),
+				|ptr| LocalFreeGuard::new(HLOCAL::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`LocalFlags`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localflags)

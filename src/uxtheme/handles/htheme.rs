@@ -103,8 +103,8 @@ pub trait uxtheme_Htheme: Handle {
 	) -> HrResult<DeleteObjectGuard<HRGN>>
 	{
 		let mut handle = HRGN::NULL;
-		ok_to_hrresult(
-			unsafe {
+		unsafe {
+			ok_to_hrresult(
 				uxtheme::ffi::GetThemeBackgroundRegion(
 					self.as_ptr(),
 					hdc.0,
@@ -112,9 +112,9 @@ pub trait uxtheme_Htheme: Handle {
 					part_state.state,
 					&rc as *const _ as _,
 					&mut handle as *mut _ as _,
-				)
-			},
-		).map(|_| DeleteObjectGuard::new(handle))
+				),
+			).map(|_| DeleteObjectGuard::new(handle))
+		}
 	}
 
 	/// [`GetThemeColor`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemecolor)

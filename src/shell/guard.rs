@@ -15,7 +15,7 @@ pub struct DestroyIconShfiGuard {
 impl Drop for DestroyIconShfiGuard {
 	fn drop(&mut self) {
 		if let Some(h) = self.shfi.hIcon.as_opt() {
-			let _ = DestroyIconGuard::new(unsafe { h.raw_copy() });
+			let _ = unsafe { DestroyIconGuard::new(h.raw_copy()) };
 		}
 	}
 }
@@ -36,8 +36,14 @@ impl DerefMut for DestroyIconShfiGuard {
 
 impl DestroyIconShfiGuard {
 	/// Constructs the guard by taking ownership of the struct.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the handle must be freed with
+	/// [`DestroyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
+	/// at the end of scope.
 	#[must_use]
-	pub const fn new(shfi: SHFILEINFO) -> Self {
+	pub const unsafe fn new(shfi: SHFILEINFO) -> Self {
 		Self { shfi }
 	}
 
@@ -64,7 +70,7 @@ pub struct DestroyIconSiiGuard {
 impl Drop for DestroyIconSiiGuard {
 	fn drop(&mut self) {
 		if let Some(h) = self.sii.hIcon.as_opt() {
-			let _ = DestroyIconGuard::new(unsafe { h.raw_copy() });
+			let _ = unsafe { DestroyIconGuard::new(h.raw_copy()) };
 		}
 	}
 }
@@ -85,8 +91,14 @@ impl DerefMut for DestroyIconSiiGuard {
 
 impl DestroyIconSiiGuard {
 	/// Constructs the guard by taking ownership of the struct.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the handle must be freed with
+	/// [`DestroyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
+	/// at the end of scope.
 	#[must_use]
-	pub const fn new(sii: SHSTOCKICONINFO) -> Self {
+	pub const unsafe fn new(sii: SHSTOCKICONINFO) -> Self {
 		Self { sii }
 	}
 

@@ -27,6 +27,7 @@ pub trait uxtheme_Hwnd: Handle {
 				self.as_ptr(),
 				WString::from_str(class_list).as_ptr(),
 			).as_mut()
-		}.map(|ptr| CloseThemeDataGuard::new(HTHEME(ptr)))
+				.map(|ptr| CloseThemeDataGuard::new(HTHEME::from_ptr(ptr)))
+		}
 	}
 }

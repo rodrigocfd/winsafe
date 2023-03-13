@@ -210,12 +210,13 @@ pub trait kernel_Hinstance: Handle {
 	/// static method.
 	#[must_use]
 	fn LoadLibrary(lib_file_name: &str) -> SysResult<FreeLibraryGuard> {
-		ptr_to_sysresult(
-			unsafe {
-				kernel::ffi::LoadLibraryW(WString::from_str(lib_file_name).as_ptr())
-			},
-			|ptr| FreeLibraryGuard::new(HINSTANCE(ptr)),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				kernel::ffi::LoadLibraryW(
+					WString::from_str(lib_file_name).as_ptr()),
+				|ptr| FreeLibraryGuard::new(HINSTANCE::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`LoadResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadresource)

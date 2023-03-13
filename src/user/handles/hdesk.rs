@@ -34,8 +34,8 @@ pub trait user_Hdesk: Handle {
 		security_attributes: Option<&SECURITY_ATTRIBUTES>,
 	) -> SysResult<CloseDesktopGuard>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				user::ffi::CreateDesktopW(
 					WString::from_str(name).as_ptr(),
 					std::ptr::null(),
@@ -43,10 +43,10 @@ pub trait user_Hdesk: Handle {
 					flags.unwrap_or(co::DF::NoValue).0,
 					desired_access.0,
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
-				)
-			},
-			|ptr| CloseDesktopGuard::new(HDESK(ptr)),
-		)
+				),
+				|ptr| CloseDesktopGuard::new(HDESK::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`CreateDesktopEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdesktopexw)
@@ -60,8 +60,8 @@ pub trait user_Hdesk: Handle {
 		heap_size_kb: u32,
 	) -> SysResult<CloseDesktopGuard>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				user::ffi::CreateDesktopExW(
 					WString::from_str(name).as_ptr(),
 					std::ptr::null(),
@@ -71,10 +71,10 @@ pub trait user_Hdesk: Handle {
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
 					heap_size_kb,
 					std::ptr::null_mut(),
-				)
-			},
-			|ptr| CloseDesktopGuard::new(HDESK(ptr)),
-		)
+				),
+				|ptr| CloseDesktopGuard::new(HDESK(ptr)),
+			)
+		}
 	}
 
 	/// [`GetThreadDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getthreaddesktop)
@@ -92,10 +92,12 @@ pub trait user_Hdesk: Handle {
 	fn GetThreadDesktop(
 		thread_id: u32) -> SysResult<ManuallyDrop<CloseDesktopGuard>>
 	{
-		ptr_to_sysresult(
-			unsafe { user::ffi::GetThreadDesktop(thread_id) },
-			|ptr| ManuallyDrop::new(CloseDesktopGuard::new(HDESK(ptr))),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				user::ffi::GetThreadDesktop(thread_id),
+				|ptr| ManuallyDrop::new(CloseDesktopGuard::new(HDESK(ptr))),
+			)
+		}
 	}
 
 	/// [`OpenDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-opendesktopw)
@@ -108,17 +110,17 @@ pub trait user_Hdesk: Handle {
 		desired_access: co::DESKTOP_RIGHTS,
 	) -> SysResult<CloseDesktopGuard>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				user::ffi::OpenDesktopW(
 					WString::from_str(name).as_ptr(),
 					flags.unwrap_or(co::DF::NoValue).0,
 					inherit as _,
 					desired_access.0,
-				)
-			},
-			|ptr| CloseDesktopGuard::new(HDESK(ptr)),
-		)
+				),
+				|ptr| CloseDesktopGuard::new(HDESK(ptr)),
+			)
+		}
 	}
 
 	/// [`OpenInputDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-openinputdesktop)
@@ -130,16 +132,16 @@ pub trait user_Hdesk: Handle {
 		desired_access: co::DESKTOP_RIGHTS,
 	) -> SysResult<CloseDesktopGuard>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				user::ffi::OpenInputDesktop(
 					flags.unwrap_or(co::DF::NoValue).0,
 					inherit as _,
 					desired_access.0,
-				)
-			},
-			|ptr| CloseDesktopGuard::new(HDESK(ptr)),
-		)
+				),
+				|ptr| CloseDesktopGuard::new(HDESK(ptr)),
+			)
+		}
 	}
 
 	/// [`SetThreadDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setthreaddesktop)

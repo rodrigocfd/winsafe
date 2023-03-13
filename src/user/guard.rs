@@ -22,8 +22,14 @@ impl<'a> Drop for CloseClipboardGuard<'a> {
 
 impl<'a> CloseClipboardGuard<'a> {
 	/// Constructs the guard by taking ownership of the handle.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure you must call
+	/// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
+	/// at the end of scope.
 	#[must_use]
-	pub const fn new(hwnd: PhantomData<&'a ()>) -> Self {
+	pub const unsafe fn new(hwnd: PhantomData<&'a ()>) -> Self {
 		Self { _hwnd: hwnd }
 	}
 }
@@ -114,8 +120,14 @@ impl<'a, H> EndPaintGuard<'a, H>
 	where H: user_Hwnd,
 {
 	/// Constructs the guard by taking ownership of the objects.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure you must call
+	/// [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint)
+	/// at the end of scope.
 	#[must_use]
-	pub const fn new(hwnd: &'a H, hdc: HDC, ps: PAINTSTRUCT) -> Self {
+	pub const unsafe fn new(hwnd: &'a H, hdc: HDC, ps: PAINTSTRUCT) -> Self {
 		Self { hwnd, hdc, ps }
 	}
 
@@ -149,8 +161,14 @@ impl<'a, H> ReleaseCaptureGuard<'a, H>
 	where H: user_Hwnd,
 {
 	/// Constructs the guard by taking ownership of the handles.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure you must call
+	/// [`ReleaseCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasecapture)
+	/// at the end of scope.
 	#[must_use]
-	pub const fn new(hwnd: &'a H, hwnd_prev: Option<HWND>) -> Self {
+	pub const unsafe fn new(hwnd: &'a H, hwnd_prev: Option<HWND>) -> Self {
 		Self { _hwnd: hwnd, hwnd_prev }
 	}
 
@@ -206,8 +224,14 @@ impl<'a, H> ReleaseDCGuard<'a, H>
 	where H: user_Hwnd,
 {
 	/// Constructs the guard by taking ownership of the handles.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the handle must be freed with
+	/// [`ReleaseDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
+	/// at the end of scope.
 	#[must_use]
-	pub const fn new(hwnd: &'a H, hdc: HDC) -> Self {
+	pub const unsafe fn new(hwnd: &'a H, hdc: HDC) -> Self {
 		Self { hwnd, hdc }
 	}
 

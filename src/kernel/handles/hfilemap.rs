@@ -35,16 +35,16 @@ pub trait kernel_Hfilemap: Handle {
 		number_of_bytes_to_map: Option<usize>,
 	) -> SysResult<UnmapViewOfFileGuard>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				kernel::ffi::MapViewOfFileFromApp(
 					self.as_ptr(),
 					desired_access.0,
 					offset,
 					number_of_bytes_to_map.unwrap_or_default(),
-				)
-			},
-			|ptr| UnmapViewOfFileGuard::new(HFILEMAPVIEW(ptr)),
-		)
+				),
+				|ptr| UnmapViewOfFileGuard::new(HFILEMAPVIEW::from_ptr(ptr)),
+			)
+		}
 	}
 }

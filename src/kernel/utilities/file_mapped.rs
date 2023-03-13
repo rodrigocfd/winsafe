@@ -89,8 +89,10 @@ impl FileMapped {
 	/// * [`as_mut_slice`](crate::FileMapped::as_mut_slice);
 	/// * [`as_slice`](crate::FileMapped::as_slice).
 	pub fn resize(&mut self, num_bytes: usize) -> SysResult<()> {
-		self.hview = UnmapViewOfFileGuard::new(HFILEMAPVIEW::NULL); // close mapping handles
-		self.hmap = CloseHandleGuard::new(HFILEMAP::NULL);
+		unsafe {
+			self.hview = UnmapViewOfFileGuard::new(HFILEMAPVIEW::NULL); // close mapping handles
+			self.hmap = CloseHandleGuard::new(HFILEMAP::NULL);
+		}
 
 		self.file.resize(num_bytes)?;
 		let (hmap, hview) = Self::map_in_memory(&self.file, self.access)?;

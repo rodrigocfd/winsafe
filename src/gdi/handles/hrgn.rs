@@ -4,7 +4,7 @@ use crate::{co, gdi};
 use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::privs::ptr_to_sysresult;
-use crate::prelude::GdiObject;
+use crate::prelude::{GdiObject, Handle};
 use crate::user::decl::{HRGN, RECT, SIZE};
 
 impl GdiObject for HRGN {}
@@ -23,23 +23,25 @@ pub trait gdi_Hrgn: GdiObject {
 	/// static method.
 	#[must_use]
 	fn CreateRectRgn(bounds: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				gdi::ffi::CreateRectRgn(
-					bounds.left, bounds.top, bounds.right, bounds.bottom)
-			},
-			|ptr| DeleteObjectGuard::new(HRGN(ptr)),
-		)
+					bounds.left, bounds.top, bounds.right, bounds.bottom),
+				|ptr| DeleteObjectGuard::new(HRGN::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`CreateRectRgnIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createrectrgnindirect)
 	/// static method.
 	#[must_use]
 	fn CreateRectRgnIndirect(rc: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
-		ptr_to_sysresult(
-			unsafe { gdi::ffi::CreateRectRgnIndirect(&rc as *const _ as _) },
-			|ptr| DeleteObjectGuard::new(HRGN(ptr)),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				gdi::ffi::CreateRectRgnIndirect(&rc as *const _ as _),
+				|ptr| DeleteObjectGuard::new(HRGN::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`CreateRoundRectRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createroundrectrgn)
@@ -48,15 +50,15 @@ pub trait gdi_Hrgn: GdiObject {
 	fn CreateRoundRectRgn(
 		bounds: RECT, size: SIZE) -> SysResult<DeleteObjectGuard<HRGN>>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				gdi::ffi::CreateRoundRectRgn(
 					bounds.left, bounds.top, bounds.right, bounds.top,
 					size.cx, size.cy,
-				)
-			},
-			|ptr| DeleteObjectGuard::new(HRGN(ptr)),
-		)
+				),
+				|ptr| DeleteObjectGuard::new(HRGN::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`OffsetClipRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetcliprgn)

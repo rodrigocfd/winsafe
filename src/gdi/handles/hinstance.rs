@@ -29,13 +29,13 @@ pub trait gdi_Hinstance: Handle {
 		load: co::LR,
 	) -> SysResult<DeleteObjectGuard<HBITMAP>>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				gdi::ffi::LoadImageW(
-					self.as_ptr(), name.as_ptr(), 0, sz.cx, sz.cy, load.0)
-			},
-			|ptr| DeleteObjectGuard::new(HBITMAP(ptr)),
-		)
+					self.as_ptr(), name.as_ptr(), 0, sz.cx, sz.cy, load.0),
+				|ptr| DeleteObjectGuard::new(HBITMAP::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
@@ -44,13 +44,13 @@ pub trait gdi_Hinstance: Handle {
 	fn LoadImageCursor(&self,
 		name: IdOcrStr, sz: SIZE, load: co::LR) -> SysResult<DestroyCursorGuard>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				gdi::ffi::LoadImageW(
-					self.as_ptr(), name.as_ptr(), 2, sz.cx, sz.cy, load.0)
-			},
-			|ptr| DestroyCursorGuard::new(HCURSOR(ptr)),
-		)
+					self.as_ptr(), name.as_ptr(), 2, sz.cx, sz.cy, load.0),
+				|ptr| DestroyCursorGuard::new(HCURSOR::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
@@ -59,12 +59,12 @@ pub trait gdi_Hinstance: Handle {
 	fn LoadImageIcon(&self,
 		name: IdOicStr, sz: SIZE, load: co::LR) -> SysResult<DestroyIconGuard>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				gdi::ffi::LoadImageW(
-					self.as_ptr(), name.as_ptr(), 1, sz.cx, sz.cy, load.0)
-			},
-			|ptr| DestroyIconGuard::new(HICON(ptr)),
-		)
+					self.as_ptr(), name.as_ptr(), 1, sz.cx, sz.cy, load.0),
+				|ptr| DestroyIconGuard::new(HICON::from_ptr(ptr)),
+			)
+		}
 	}
 }

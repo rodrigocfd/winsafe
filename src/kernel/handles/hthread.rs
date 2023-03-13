@@ -39,8 +39,8 @@ pub trait kernel_Hthread: Handle {
 	) -> SysResult<(CloseHandleGuard<HTHREAD>, u32)>
 	{
 		let mut thread_id = u32::default();
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				kernel::ffi::CreateThread(
 					thread_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					stack_size,
@@ -48,10 +48,10 @@ pub trait kernel_Hthread: Handle {
 					parameter,
 					flags.0,
 					&mut thread_id,
-				)
-			},
-			|ptr| (CloseHandleGuard::new(HTHREAD(ptr)), thread_id),
-		)
+				),
+				|ptr| (CloseHandleGuard::new(HTHREAD(ptr)), thread_id),
+			)
+		}
 	}
 
 	/// [`GetCurrentThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthread)
@@ -124,15 +124,15 @@ pub trait kernel_Hthread: Handle {
 	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
-		bool_to_sysresult(
-			unsafe {
+		unsafe {
+			bool_to_sysresult(
 				kernel::ffi::OpenThreadToken(
 					self.as_ptr(),
 					desired_access.0,
 					open_as_self as _,
 					&mut handle.0,
-				)
-			},
-		).map(|_| CloseHandleGuard::new(handle))
+				),
+			).map(|_| CloseHandleGuard::new(handle))
+		}
 	}
 }

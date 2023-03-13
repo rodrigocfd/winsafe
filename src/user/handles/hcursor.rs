@@ -26,10 +26,12 @@ pub trait user_Hcursor: Handle {
 	/// method. Originally a macro.
 	#[must_use]
 	fn CopyCursor(&self) -> SysResult<DestroyCursorGuard> {
-		ptr_to_sysresult(
-			unsafe { user::ffi::CopyIcon(self.as_ptr()) },
-			|ptr| DestroyCursorGuard::new(HCURSOR(ptr)),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				user::ffi::CopyIcon(self.as_ptr()),
+				|ptr| DestroyCursorGuard::new(HCURSOR::from_ptr(ptr)),
+			)
+		}
 	}
 
 	/// [`SetSystemCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setsystemcursor)
