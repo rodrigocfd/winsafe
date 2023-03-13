@@ -1,7 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use std::marker::PhantomData;
-use std::ops::Deref;
 
 use crate::co;
 use crate::kernel::decl::{
@@ -435,9 +434,10 @@ impl Default for SECURITY_DESCRIPTOR {
 /// struct.
 /// 
 /// Note that you cannot directly instantiate this struct, because the
-/// `SubAuthority` field is dynamically allocated. That's why the
-/// [`new`](crate::SID::new) static method returns a
-/// [`SID_wrap`](crate::SID_wrap) object.
+/// `SubAuthority` field is dynamically allocated. There are two types of allocations:
+/// 
+/// * handled by the OS, which yields a [`FreeSidGuard`](crate::guard::FreeSidGuard);
+/// * handled by WinSafe, which yields a [`SidGuard`](crate::guard::SidGuard).
 #[repr(C)]
 pub struct SID {
 	pub Revision: u8,
@@ -456,13 +456,6 @@ impl std::fmt::Display for SID {
 }
 
 impl SID {
-	/// Returns a [`SID_wrap`](crate::SID_wrap) with an underlying `SID` struct,
-	/// which will parse the raw bytes.
-	#[must_use]
-	pub fn new(raw: Vec<u8>) -> SID_wrap {
-		SID_wrap { raw }
-	}
-
 	/// Returns the `SubAuthorityCount` field.
 	#[must_use]
 	pub fn SubAuthorityCount(&self) -> u8 {
@@ -476,32 +469,6 @@ impl SID {
 			std::slice::from_raw_parts(
 				self.SubAuthority.as_ptr(), self.SubAuthorityCount as _)
 		}
-	}
-}
-
-/// Safe wrapper over [`SID`](crate::SID), which automatically manages the
-/// dynamic allocation.
-pub struct SID_wrap {
-	raw: Vec<u8>,
-}
-
-impl Deref for SID_wrap {
-	type Target = SID;
-
-	fn deref(&self) -> &Self::Target {
-		unsafe { std::mem::transmute::<_, _>(self.raw.as_ptr()) }
-	}
-}
-
-impl std::fmt::Display for SID_wrap {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		self.deref().fmt(f) // delegate the underlying SID
-	}
-}
-
-impl SID_wrap {
-	pub(crate) fn new(raw: Vec<u8>) -> Self {
-		Self { raw }
 	}
 }
 

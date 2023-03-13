@@ -66,6 +66,59 @@ impl<T> CloseHandleGuard<T>
 	}
 }
 
+/// RAII implementation for [`PROCESS_INFORMATION`](crate::PROCESS_INFORMATION)
+/// which automatically calls
+/// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
+/// on `hProcess` and `hThread` fields when the object goes out of scope.
+pub struct CloseHandlePiGuard {
+	pi: PROCESS_INFORMATION,
+}
+
+impl Drop for CloseHandlePiGuard {
+	fn drop(&mut self) {
+		if let Some(h) = self.pi.hProcess.as_opt() {
+			let _ = CloseHandleGuard::new(unsafe { h.raw_copy() });
+		}
+		if let Some(h) = self.pi.hThread.as_opt() {
+			let _ = CloseHandleGuard::new(unsafe { h.raw_copy() });
+		}
+	}
+}
+
+impl Deref for CloseHandlePiGuard {
+	type Target = PROCESS_INFORMATION;
+
+	fn deref(&self) -> &Self::Target {
+		&self.pi
+	}
+}
+
+impl DerefMut for CloseHandlePiGuard {
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		&mut self.pi
+	}
+}
+
+impl CloseHandlePiGuard {
+	/// Constructs the guard by taking ownership of the struct.
+	#[must_use]
+	pub const fn new(pi: PROCESS_INFORMATION) -> Self {
+		Self { pi }
+	}
+
+	/// Ejects the underlying struct, leaving
+	/// [`PROCESS_INFORMATION::default`](crate::PROCESS_INFORMATION::default) in
+	/// its place.
+	///
+	/// Since the internal handles will be invalidated, the destructor will not
+	/// run. It's your responsibility to run it, otherwise you'll cause a
+	/// resource leak.
+	#[must_use]
+	pub fn leak(&mut self) -> PROCESS_INFORMATION {
+		std::mem::take(&mut self.pi)
+	}
+}
+
 /// RAII implementation [`HUPDATERSRC`](crate::HUPDATERSRC) which automatically
 /// calls
 /// [`EndUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
@@ -151,6 +204,12 @@ impl Deref for FreeSidGuard {
 
 	fn deref(&self) -> &Self::Target {
 		unsafe { &*self.psid }
+	}
+}
+
+impl std::fmt::Display for FreeSidGuard {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		self.deref().fmt(f) // delegate the underlying SID
 	}
 }
 
@@ -308,55 +367,29 @@ handle_guard! { UnmapViewOfFileGuard: HFILEMAPVIEW;
 	/// when the object goes out of scope.
 }
 
-/// RAII implementation for [`PROCESS_INFORMATION`](crate::PROCESS_INFORMATION)
-/// which automatically calls
-/// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
-/// on `hProcess` and `hThread` fields when the object goes out of scope.
-pub struct CloseHandlePiGuard {
-	pi: PROCESS_INFORMATION,
+/// RAII implementation for [`SID`](crate::SID) which automatically frees the
+/// underlying [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html) with
+/// the allocated memory block.
+pub struct SidGuard {
+	raw: Vec<u8>,
 }
 
-impl Drop for CloseHandlePiGuard {
-	fn drop(&mut self) {
-		if let Some(h) = self.pi.hProcess.as_opt() {
-			let _ = CloseHandleGuard::new(unsafe { h.raw_copy() });
-		}
-		if let Some(h) = self.pi.hThread.as_opt() {
-			let _ = CloseHandleGuard::new(unsafe { h.raw_copy() });
-		}
-	}
-}
-
-impl Deref for CloseHandlePiGuard {
-	type Target = PROCESS_INFORMATION;
+impl Deref for SidGuard {
+	type Target = SID;
 
 	fn deref(&self) -> &Self::Target {
-		&self.pi
+		unsafe { std::mem::transmute::<_, _>(self.raw.as_ptr()) }
 	}
 }
 
-impl DerefMut for CloseHandlePiGuard {
-	fn deref_mut(&mut self) -> &mut Self::Target {
-		&mut self.pi
+impl std::fmt::Display for SidGuard {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		self.deref().fmt(f) // delegate the underlying SID
 	}
 }
 
-impl CloseHandlePiGuard {
-	/// Constructs the guard by taking ownership of the struct.
-	#[must_use]
-	pub const fn new(pi: PROCESS_INFORMATION) -> Self {
-		Self { pi }
-	}
-
-	/// Ejects the underlying struct, leaving
-	/// [`PROCESS_INFORMATION::default`](crate::PROCESS_INFORMATION::default) in
-	/// its place.
-	///
-	/// Since the internal handles will be invalidated, the destructor will not
-	/// run. It's your responsibility to run it, otherwise you'll cause a
-	/// resource leak.
-	#[must_use]
-	pub fn leak(&mut self) -> PROCESS_INFORMATION {
-		std::mem::take(&mut self.pi)
+impl SidGuard {
+	pub(crate) fn new(raw: Vec<u8>) -> Self {
+		Self { raw }
 	}
 }
