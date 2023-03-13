@@ -4,7 +4,8 @@ use std::{fmt, hash, ops};
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, HLOCAL, LANGID, WString};
-use crate::prelude::kernel_Hlocal;
+use crate::kernel::guard::LocalFreeGuard;
+use crate::prelude::Handle;
 
 /// A system error which can be formatted with
 /// [`FormatMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew).
@@ -33,13 +34,10 @@ pub trait FormattedError: Into<u32> {
 					err_code, GetLastError(),
 				),
 				nchars => {
-					let final_str = WString::from_wchars_count(ptr_buf, nchars as _);
-					match (HLOCAL(ptr_buf as _)).LocalFree() {
-						Ok(()) => final_str.to_string(),
-						Err(e) => format!(
-							"LocalFree failed after formatting error {:#06x}: error {:#06x}.",
-							err_code, e.0),
-					}
+					let final_wstr = WString::from_wchars_count(ptr_buf, nchars as _);
+					let _ = LocalFreeGuard::new(HLOCAL::from_ptr(ptr_buf as _));
+					let final_str = final_wstr.to_string();
+					final_str
 				},
 			}
 		}

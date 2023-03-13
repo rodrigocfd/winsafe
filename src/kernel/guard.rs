@@ -2,8 +2,8 @@ use std::ops::{Deref, DerefMut};
 
 use crate::kernel;
 use crate::kernel::decl::{
-	HFILEMAPVIEW, HFINDFILE, HGLOBAL, HIDWORD, HINSTANCE, HKEY, HUPDATERSRC,
-	LODWORD, PROCESS_INFORMATION, SID,
+	HFILEMAPVIEW, HFINDFILE, HGLOBAL, HIDWORD, HINSTANCE, HKEY, HLOCAL,
+	HUPDATERSRC, LODWORD, PROCESS_INFORMATION, SID,
 };
 use crate::prelude::{Handle, kernel_Hfile, kernel_Hglobal, kernel_Hkey};
 
@@ -267,6 +267,14 @@ impl<'a, H> GlobalUnlockGuard<'a, H>
 	}
 }
 
+handle_guard! { LocalFreeGuard: HLOCAL;
+	kernel::ffi::LocalFree;
+	/// RAII implementation for [`HLOCAL`](crate::HLOCAL) which automatically
+	/// calls
+	/// [`LocalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
+	/// when the object goes out of scope.
+}
+
 /// RAII implementation for [`HKEY`](crate::HKEY) which automatically calls
 /// [`RegCloseKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 /// when the object goes out of scope.
@@ -368,8 +376,8 @@ handle_guard! { UnmapViewOfFileGuard: HFILEMAPVIEW;
 }
 
 /// RAII implementation for [`SID`](crate::SID) which automatically frees the
-/// underlying [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html) with
-/// the allocated memory block.
+/// underlying [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html) when
+/// the object goes out of scope.
 pub struct SidGuard {
 	raw: Vec<u8>,
 }

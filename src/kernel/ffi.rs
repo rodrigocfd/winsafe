@@ -150,7 +150,10 @@ extern_sys! { "kernel32";
 	IsWow64Process(HANDLE, *mut BOOL) -> BOOL
 	LoadLibraryW(PCSTR) -> HANDLE
 	LoadResource(HANDLE, HANDLE) -> HANDLE
+	LocalAlloc(u32, usize) -> HANDLE
+	LocalFlags(HANDLE) -> u32
 	LocalFree(HANDLE) -> HANDLE
+	LocalReAlloc(HANDLE, usize, u32) -> HANDLE
 	LocalSize(HANDLE) -> usize
 	LockFile(HANDLE, u32, u32, u32, u32) -> BOOL
 	LockResource(HANDLE) -> PVOID

@@ -97,7 +97,6 @@ pub trait kernel_Hglobal: Handle {
 	///
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
-	#[must_use]
 	fn GlobalReAlloc(&mut self,
 		num_bytes: usize, flags: co::GMEM) -> SysResult<()>
 	{

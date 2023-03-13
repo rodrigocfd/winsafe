@@ -550,6 +550,23 @@ const_ordinary! { LANG: u16;
 	ZULU 0x35
 }
 
+const_bitflag! { LMEM: u32;
+	/// [`HLOCAL::LocalAlloc`](crate::prelude::kernel_Hlocal::LocalAlloc) and
+	/// [`HLOCAL::LocalReAlloc`](crate::prelude::kernel_Hlocal::LocalReAlloc)
+	/// `flags` (`u32`).
+	=>
+	=>
+	FIXED 0x0000
+	MOVEABLE 0x0002
+	NOCOMPACT 0x0010
+	NODISCARD 0x0020
+	ZEROINIT 0x0040
+	MODIFY 0x0080
+	DISCARDABLE 0x0f00
+	LHND Self::MOVEABLE.0 | Self::ZEROINIT.0
+	LPTR Self::FIXED.0 | Self::ZEROINIT.0
+}
+
 const_bitflag! { MBC: u32;
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `flags` (`u32`).
 	///

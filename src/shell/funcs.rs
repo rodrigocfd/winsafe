@@ -4,10 +4,11 @@ use crate::{co, shell};
 use crate::kernel::decl::{
 	GetLastError, HACCESSTOKEN, HLOCAL, SysResult, WString,
 };
+use crate::kernel::guard::LocalFreeGuard;
 use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, ptr_to_sysresult};
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult, IStream};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, kernel_Hlocal, ole_IBindCtx, shell_IShellItem};
+use crate::prelude::{Handle, ole_IBindCtx, shell_IShellItem};
 use crate::shell::decl::{
 	NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT, SHSTOCKICONINFO,
 };
@@ -46,7 +47,7 @@ pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 		strs.push(WString::from_wchars_nullt(*lp).to_string());
 	}
 
-	HLOCAL(lp_arr as _).LocalFree()?;
+	let _ = LocalFreeGuard::new(unsafe { HLOCAL::from_ptr(lp_arr as _) });
 	Ok(strs)
 }
 

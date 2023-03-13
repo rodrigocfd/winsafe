@@ -9,12 +9,12 @@ use crate::kernel::decl::{
 	TIME_ZONE_INFORMATION, WString,
 };
 use crate::kernel::ffi_types::BOOL;
-use crate::kernel::guard::{FreeSidGuard, SidGuard};
+use crate::kernel::guard::{FreeSidGuard, LocalFreeGuard, SidGuard};
 use crate::kernel::privs::{
 	bool_to_sysresult, INVALID_FILE_ATTRIBUTES, MAX_COMPUTERNAME_LENGTH,
 	MAX_PATH, parse_multi_z_str, ptr_to_sysresult, SECURITY_DESCRIPTOR_REVISION,
 };
-use crate::prelude::kernel_Hlocal;
+use crate::prelude::Handle;
 
 /// [`AllocateAndInitializeSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-allocateandinitializesid)
 /// function.
@@ -102,7 +102,7 @@ pub fn ConvertSidToStringSid(sid: &SID) -> SysResult<String> {
 		},
 	)?;	
 	let name = WString::from_wchars_nullt(pstr).to_string();
-	HLOCAL(pstr as _).LocalFree()?;
+	let _ = LocalFreeGuard::new(unsafe { HLOCAL::from_ptr(pstr as _) });
 	Ok(name)
 }
 
@@ -122,7 +122,7 @@ pub fn ConvertStringSidToSid(str_sid: &str) -> SysResult<SidGuard> {
 	let pbuf_sid = unsafe { std::mem::transmute::<_, &SID>(pbuf) };
 	let pbuf_slice = unsafe { std::slice::from_raw_parts(pbuf, GetLengthSid(pbuf_sid) as _) };
 	let raw_sid_copied = Vec::from_iter(pbuf_slice.iter().cloned());
-	HLOCAL(pbuf as _).LocalFree()?;
+	let _ = LocalFreeGuard::new(unsafe { HLOCAL::from_ptr(pbuf as _) });
 	Ok(SidGuard::new(raw_sid_copied))
 }
 
