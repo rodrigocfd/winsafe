@@ -6,7 +6,7 @@ use std::ops::Deref;
 use crate::co;
 use crate::kernel::decl::{
 	ConvertSidToStringSid, HEVENT, HINSTANCE, HPIPE, HPROCESS, HTHREAD,
-	MAKEQWORD, WString,
+	InitializeSecurityDescriptor, MAKEQWORD, WString,
 };
 use crate::kernel::privs::{MAX_MODULE_NAME32, MAX_PATH};
 
@@ -386,6 +386,12 @@ pub struct SECURITY_DESCRIPTOR {
 	pub Group: *mut std::ffi::c_void,
 	pub Sacl: *mut ACL,
 	pub Dacl: *mut ACL,
+}
+
+impl Default for SECURITY_DESCRIPTOR {
+	fn default() -> Self {
+		InitializeSecurityDescriptor().unwrap()
+	}
 }
 
 /// [`PROCESSENTRY32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-processentry32w)

@@ -501,6 +501,19 @@ pub fn GetFileAttributes(file_name: &str) -> SysResult<co::FILE_ATTRIBUTE> {
 
 /// [`GetLocalTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlocaltime)
 /// function.
+/// 
+/// This function retrieves local time; for UTC time use
+/// [`GetSystemTime`](crate::GetSystemTime).
+/// 
+/// # Examples
+/// 
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{GetLocalTime, SYSTEMTIME};
+/// 
+/// let mut st = SYSTEMTIME::default();
+/// GetLocalTime(&mut st);
+/// ```
 pub fn GetLocalTime(st: &mut SYSTEMTIME) {
 	unsafe { kernel::ffi::GetLocalTime(st as *mut _ as _) }
 }
@@ -520,6 +533,16 @@ pub fn GetSidLengthRequired(sub_authority_count: u8) -> u32 {
 
 /// [`GetStartupInfo`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getstartupinfow)
 /// function.
+/// 
+/// # Examples
+/// 
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{GetStartupInfo, STARTUPINFO};
+/// 
+/// let mut si = STARTUPINFO::default();
+/// GetStartupInfo(&mut si);
+/// ```
 pub fn GetStartupInfo(si: &mut STARTUPINFO) {
 	unsafe { kernel::ffi::GetStartupInfoW(si as *mut _ as _) }
 }
@@ -539,6 +562,16 @@ pub fn GetSystemDirectory() -> SysResult<String> {
 
 /// [`GetSystemInfo`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsysteminfo)
 /// function.
+/// 
+/// # Examples
+/// 
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{GetSystemInfo, SYSTEM_INFO};
+/// 
+/// let mut si = SYSTEM_INFO::default();
+/// GetSystemInfo(&mut si);
+/// ```
 pub fn GetSystemInfo(si: &mut SYSTEM_INFO) {
 	unsafe { kernel::ffi::GetSystemInfo(si as *mut _ as _) }
 }
@@ -548,6 +581,16 @@ pub fn GetSystemInfo(si: &mut SYSTEM_INFO) {
 ///
 /// This function retrieves UTC time; for local time use
 /// [`GetLocalTime`](crate::GetLocalTime).
+/// 
+/// # Examples
+/// 
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{GetSystemTime, SYSTEMTIME};
+/// 
+/// let mut st = SYSTEMTIME::default();
+/// GetSystemTime(&mut st);
+/// ```
 pub fn GetSystemTime(st: &mut SYSTEMTIME) {
 	unsafe { kernel::ffi::GetSystemTime(st as *mut _ as _) }
 }
@@ -757,16 +800,11 @@ pub const fn HIWORD(v: u32) -> u16 {
 
 /// [`InitializeSecurityDescriptor`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-initializesecuritydescriptor)
 /// function.
-///
-/// # Examples
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// use winsafe::InitializeSecurityDescriptor;
-///
-/// let security_descriptor = InitializeSecurityDescriptor()?;
-/// # Ok::<_, winsafe::co::ERROR>(())
-/// ```
+/// 
+/// You don't need to call this function directly, because
+/// [`SECURITY_DESCRIPTOR`](crate::SECURITY_DESCRIPTOR) implements the
+/// [`Default`](https://doc.rust-lang.org/std/default/trait.Default.html) trait,
+/// which calls it.
 #[must_use]
 pub fn InitializeSecurityDescriptor() -> SysResult<SECURITY_DESCRIPTOR> {
 	let mut sd = unsafe { std::mem::zeroed::<SECURITY_DESCRIPTOR>() };
