@@ -240,7 +240,17 @@ impl std::fmt::Display for FreeSidGuard {
 }
 
 impl FreeSidGuard {
-	pub(in crate::kernel) const fn new(psid: *mut SID) -> Self {
+	/// Constructs the guard by taking ownership of the pointer.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the pointer must be freed with 
+	/// [`FreeSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-freesid).
+	/// 
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
+	#[must_use]
+	pub const unsafe fn new(psid: *mut SID) -> Self {
 		Self { psid }
 	}
 
@@ -311,6 +321,45 @@ handle_guard! { LocalFreeGuard: HLOCAL;
 	/// calls
 	/// [`LocalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
 	/// when the object goes out of scope.
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation for [`SID`](crate::SID) which automatically calls
+/// [`LocalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
+/// when the object goes out of scope.
+pub struct LocalFreeSidGuard {
+	pmem: LocalFreeGuard,
+}
+
+impl Deref for LocalFreeSidGuard {
+	type Target = SID;
+
+	fn deref(&self) -> &Self::Target {
+		unsafe { &*(self.pmem.as_ptr() as *mut _) }
+	}
+}
+
+impl std::fmt::Display for LocalFreeSidGuard {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		self.deref().fmt(f) // delegate the underlying SID
+	}
+}
+
+impl LocalFreeSidGuard {
+	/// Constructs the guard by taking ownership of the handle.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the pointer is an [`HLOCAL`](crate::HLOCAL) handle pointing to a
+	/// [`SID`](crate::SID) memory block.
+	/// 
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
+	#[must_use]
+	pub const unsafe fn new(pmem: HLOCAL) -> Self {
+		Self { pmem: LocalFreeGuard::new(pmem) }
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -455,7 +504,13 @@ impl std::fmt::Display for SidGuard {
 }
 
 impl SidGuard {
-	pub(in crate::kernel) fn new(raw: Vec<u8>) -> Self {
+	/// Constructs a new guard by taking ownership of the data.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the data is an allocated `SID` structure.
+	#[must_use]
+	pub const unsafe fn new(raw: Vec<u8>) -> Self {
 		Self { raw }
 	}
 }

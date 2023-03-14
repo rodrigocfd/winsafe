@@ -434,9 +434,11 @@ impl Default for SECURITY_DESCRIPTOR {
 /// struct.
 /// 
 /// Note that you cannot directly instantiate this struct, because the
-/// `SubAuthority` field is dynamically allocated. There are two types of allocations:
+/// `SubAuthority` field is dynamically allocated. There are 3 possible types of
+/// allocations:
 /// 
 /// * handled by the OS, which yields a [`FreeSidGuard`](crate::guard::FreeSidGuard);
+/// * handled by the OS, which yields a [`LocalFreeSidGuard`](crate::guard::LocalFreeSidGuard);
 /// * handled by WinSafe, which yields a [`SidGuard`](crate::guard::SidGuard).
 #[repr(C)]
 pub struct SID {

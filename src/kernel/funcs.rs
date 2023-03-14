@@ -9,7 +9,9 @@ use crate::kernel::decl::{
 	TIME_ZONE_INFORMATION, WString,
 };
 use crate::kernel::ffi_types::BOOL;
-use crate::kernel::guard::{FreeSidGuard, LocalFreeGuard, SidGuard};
+use crate::kernel::guard::{
+	FreeSidGuard, LocalFreeGuard, LocalFreeSidGuard, SidGuard,
+};
 use crate::kernel::privs::{
 	bool_to_sysresult, INVALID_FILE_ATTRIBUTES, MAX_COMPUTERNAME_LENGTH,
 	MAX_PATH, parse_multi_z_str, ptr_to_sysresulA, SECURITY_DESCRIPTOR_REVISION,
@@ -67,8 +69,8 @@ pub fn AllocateAndInitializeSid(
 
 	let mut psid = std::ptr::null_mut() as *mut SID;
 
-	bool_to_sysresult(
-		unsafe {
+	unsafe {
+		bool_to_sysresult(
 			kernel::ffi::AllocateAndInitializeSid(
 				identifier_authority as *const _ as _,
 				sub_authorities.len() as _,
@@ -81,9 +83,9 @@ pub fn AllocateAndInitializeSid(
 				if sub_authorities.len() >= 7 { sub_authorities[6].0 } else { 0 },
 				if sub_authorities.len() >= 8 { sub_authorities[7].0 } else { 0 },
 				&mut psid as *mut _ as _,
-			)
-		},
-	).map(|_| FreeSidGuard::new(psid))
+			),
+		).map(|_| FreeSidGuard::new(psid))
+	}
 }
 
 /// [`ConvertSidToStringSid`](https://learn.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsidw)
@@ -109,21 +111,16 @@ pub fn ConvertSidToStringSid(sid: &SID) -> SysResult<String> {
 /// [`ConvertStringSidToSid`](https://learn.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw)
 /// function.
 #[must_use]
-pub fn ConvertStringSidToSid(str_sid: &str) -> SysResult<SidGuard> {
+pub fn ConvertStringSidToSid(str_sid: &str) -> SysResult<LocalFreeSidGuard> {
 	let mut pbuf = std::ptr::null_mut() as *mut u8;
-	bool_to_sysresult(
-		unsafe {
+	unsafe {
+		bool_to_sysresult(
 			kernel::ffi::ConvertStringSidToSidW(
 				WString::from_str(str_sid).as_ptr(),
 				&mut pbuf,
-			)
-		},
-	)?;
-	let pbuf_sid = unsafe { std::mem::transmute::<_, &SID>(pbuf) };
-	let pbuf_slice = unsafe { std::slice::from_raw_parts(pbuf, GetLengthSid(pbuf_sid) as _) };
-	let raw_sid_copied = Vec::from_iter(pbuf_slice.iter().cloned());
-	let _ = unsafe { LocalFreeGuard::new(HLOCAL::from_ptr(pbuf as _)) };
-	Ok(SidGuard::new(raw_sid_copied))
+			),
+		).map(|_| LocalFreeSidGuard::new(HLOCAL::from_ptr(pbuf as _)))
+	}
 }
 
 /// [`CopyFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
@@ -149,15 +146,15 @@ pub fn CopySid(src: &SID) -> SysResult<SidGuard> {
 	let sid_sz = GetLengthSid(&src);
 	let mut sid_buf = vec![0u8; sid_sz as _];
 
-	bool_to_sysresult(
-		unsafe {
+	unsafe {
+		bool_to_sysresult(
 			kernel::ffi::CopySid(
 				sid_sz,
 				sid_buf.as_mut_ptr(),
 				src as *const _ as _,
-			)
-		},
-	).map(|_| SidGuard::new(sid_buf))
+			),
+		).map(|_| SidGuard::new(sid_buf))
+	}
 }
 
 /// [`CreateWellKnownSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-createwellknownsid)
@@ -195,16 +192,16 @@ pub fn CreateWellKnownSid(
 
 	let mut sid_buf = vec![0u8; sid_sz as _];
 
-	bool_to_sysresult(
-		unsafe {
+	unsafe {
+		bool_to_sysresult(
 			kernel::ffi::CreateWellKnownSid(
 				well_known_sid.0,
 				domain_sid.map_or(std::ptr::null(), |s| s as *const _ as _),
 				sid_buf.as_mut_ptr(),
 				&mut sid_sz,
-			)
-		},
-	).map(|_| SidGuard::new(sid_buf))
+			),
+		).map(|_| SidGuard::new(sid_buf))
+	}
 }
 
 /// [`DeleteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilew)
@@ -829,15 +826,15 @@ pub fn GetWindowsAccountDomainSid(sid: &SID) -> SysResult<SidGuard> {
 
 	let mut ad_sid_buf = vec![0u8; ad_sid_sz as _];
 
-	bool_to_sysresult(
-		unsafe {
+	unsafe {
+		bool_to_sysresult(
 			kernel::ffi::GetWindowsAccountDomainSid(
 				sid as *const _ as _,
 				ad_sid_buf.as_mut_ptr(),
 				&mut ad_sid_sz,
-			)
-		},
-	).map(|_| SidGuard::new(ad_sid_buf))
+			),
+		).map(|_| SidGuard::new(ad_sid_buf))
+	}
 }
 
 /// [`GlobalMemoryStatusEx`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex)
@@ -1090,8 +1087,8 @@ pub fn LookupAccountName(
 	let mut sid_buf = vec![0u8; sid_sz as _];
 	let mut domain_buf = WString::new_alloc_buf(domain_sz as _);
 
-	bool_to_sysresult(
-		unsafe {
+	unsafe {
+		bool_to_sysresult(
 			kernel::ffi::LookupAccountNameW(
 				WString::from_opt_str(system_name).as_ptr(),
 				WString::from_str(account_name).as_ptr(),
@@ -1100,9 +1097,9 @@ pub fn LookupAccountName(
 				domain_buf.as_mut_ptr(),
 				&mut domain_sz,
 				&mut sid_name_use.0,
-			)
-		},
-	).map(|_| (domain_buf.to_string(), SidGuard::new(sid_buf), sid_name_use))
+			),
+		).map(|_| (domain_buf.to_string(), SidGuard::new(sid_buf), sid_name_use))
+	}
 }
 
 /// [`LookupAccountSid`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupaccountsidw)
