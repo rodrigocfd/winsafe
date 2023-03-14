@@ -120,7 +120,7 @@ pub trait kernel_Hfile: Handle {
 					max_size.unwrap_or_default(),
 					WString::from_opt_str(mapping_name).as_ptr(),
 				),
-				|ptr| CloseHandleGuard::new(HFILEMAP(ptr)),
+				|ptr| CloseHandleGuard::new(HFILEMAP::from_ptr(ptr)),
 			)
 		}
 	}

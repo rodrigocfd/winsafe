@@ -1,6 +1,6 @@
 use crate::co;
 use crate::msg::WndMsg;
-use crate::prelude::{MsgSend, MsgSendRecv};
+use crate::prelude::{Handle, MsgSend, MsgSendRecv};
 use crate::shell::decl::HDROP;
 
 /// [`WM_DROPFILES`](https://learn.microsoft.com/en-us/windows/win32/shell/wm-dropfiles)
@@ -21,7 +21,7 @@ unsafe impl MsgSend for DropFiles {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::DROPFILES,
-			wparam: self.hdrop.0 as _,
+			wparam: self.hdrop.as_ptr() as _,
 			lparam: 0,
 		}
 	}
@@ -30,7 +30,7 @@ unsafe impl MsgSend for DropFiles {
 unsafe impl MsgSendRecv for DropFiles {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hdrop: HDROP(p.wparam as _),
+			hdrop: unsafe { HDROP::from_ptr(p.wparam as _) },
 		}
 	}
 }

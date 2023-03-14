@@ -3,7 +3,7 @@ use crate::comctl::decl::DATETIMEPICKERINFO;
 use crate::comctl::privs::GDT_ERROR;
 use crate::kernel::decl::{SysResult, SYSTEMTIME, WString};
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HWND, SIZE};
 use crate::user::privs::{minus1_as_err, zero_as_err};
 
@@ -115,7 +115,7 @@ unsafe impl MsgSend for GetMonthCal {
 	type RetType = SysResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HWND(p as _))
+		zero_as_err(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

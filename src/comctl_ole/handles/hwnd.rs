@@ -97,7 +97,7 @@ pub trait comctl_ole_Hwnd: Handle {
 			unsafe {
 				comctl_ole::ffi::TaskDialog(
 					self.as_ptr(),
-					hinstance.map_or(std::ptr::null_mut(), |h| h.0),
+					hinstance.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 					WString::from_opt_str(window_title).as_ptr(),
 					WString::from_opt_str(main_instruction).as_ptr(),
 					WString::from_opt_str(content).as_ptr(),

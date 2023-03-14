@@ -95,16 +95,16 @@ pub trait kernel_Hinstance: Handle {
 	fn FindResource(&self,
 		resource_id: IdStr, resource_type: RtStr) -> SysResult<HRSRC>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				kernel::ffi::FindResourceW(
 					self.as_ptr(),
 					resource_id.as_ptr(),
 					resource_type.as_ptr(),
-				)
-			},
-			|ptr| HRSRC(ptr),
-		)
+				),
+				|ptr| HRSRC::from_ptr(ptr),
+			)
+		}
 	}
 
 	/// [`FindResourceEx`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourceexw)
@@ -119,17 +119,17 @@ pub trait kernel_Hinstance: Handle {
 		language: Option<LANGID>,
 	) -> SysResult<HRSRC>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				kernel::ffi::FindResourceExW(
 					self.as_ptr(),
 					resource_id.as_ptr(),
 					resource_type.as_ptr(),
 					language.unwrap_or(LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL)).0,
-				)
-			},
-			|ptr| HRSRC(ptr),
-		)
+				),
+				|ptr| HRSRC::from_ptr(ptr),
+			)
+		}
 	}
 
 	/// [`GetModuleFileName`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew)
@@ -226,10 +226,12 @@ pub trait kernel_Hinstance: Handle {
 	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	#[must_use]
 	fn LoadResource(&self, res_info: &HRSRC) -> SysResult<HRSRCMEM> {
-		ptr_to_sysresult(
-			unsafe { kernel::ffi::LoadResource(self.as_ptr(), res_info.0) },
-			|ptr| HRSRCMEM(ptr),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				kernel::ffi::LoadResource(self.as_ptr(), res_info.as_ptr()),
+				|ptr| HRSRCMEM::from_ptr(ptr),
+			)
+		}
 	}
 
 	/// [`LockResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-lockresource)
@@ -279,12 +281,12 @@ pub trait kernel_Hinstance: Handle {
 		res_info: &HRSRC, hres_loaded: &HRSRCMEM) -> SysResult<&[u8]>
 	{
 		let sz = self.SizeofResource(res_info)?;
-		ptr_to_sysresult(
-			unsafe { kernel::ffi::LockResource(hres_loaded.0) },
-			|ptr| unsafe {
-				std::slice::from_raw_parts(ptr as *const _ as _, sz as _)
-			},
-		)
+		unsafe {
+			ptr_to_sysresult(
+				kernel::ffi::LockResource(hres_loaded.as_ptr()),
+				|ptr| std::slice::from_raw_parts(ptr as *const _ as _, sz as _),
+			)
+		}
 	}
 
 	/// [`SizeofResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-sizeofresource)
@@ -294,7 +296,9 @@ pub trait kernel_Hinstance: Handle {
 	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	#[must_use]
 	fn SizeofResource(&self, res_info: &HRSRC) -> SysResult<u32> {
-		match unsafe { kernel::ffi::SizeofResource(self.as_ptr(), res_info.0) } {
+		match unsafe {
+			kernel::ffi::SizeofResource(self.as_ptr(), res_info.as_ptr())
+		} {
 			0 => Err(GetLastError()),
 			sz => Ok(sz)
 		}

@@ -5,7 +5,7 @@ use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HANDLE, HRES, PCSTR, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{shell_ITaskbarList, shell_ITaskbarList2};
+use crate::prelude::{Handle, shell_ITaskbarList, shell_ITaskbarList2};
 use crate::user::decl::{HICON, HWND, RECT};
 use crate::vt::ITaskbarList2VT;
 
@@ -69,7 +69,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarList3VT>();
 			ok_to_hrresult(
-				(vt.RegisterTab)(self.ptr(), hwnd_tab.0, hwnd_mdi.0),
+				(vt.RegisterTab)(self.ptr(), hwnd_tab.as_ptr(), hwnd_mdi.as_ptr()),
 			)
 		}
 	}
@@ -84,8 +84,8 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 			ok_to_hrresult(
 				(vt.SetOverlayIcon)(
 					self.ptr(),
-					hwnd.0,
-					hicon.map_or(std::ptr::null_mut(), |h| h.0),
+					hwnd.as_ptr(),
+					hicon.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 					WString::from_str(description).as_ptr(),
 				),
 			)
@@ -100,7 +100,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarList3VT>();
 			ok_to_hrresult(
-				(vt.SetProgressState)(self.ptr(), hwnd.0, tbpf_flags.0),
+				(vt.SetProgressState)(self.ptr(), hwnd.as_ptr(), tbpf_flags.0),
 			)
 		}
 	}
@@ -130,7 +130,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarList3VT>();
 			ok_to_hrresult(
-				(vt.SetProgressValue)(self.ptr(), hwnd.0, completed, total),
+				(vt.SetProgressValue)(self.ptr(), hwnd.as_ptr(), completed, total),
 			)
 		}
 	}
@@ -141,7 +141,12 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarList3VT>();
 			ok_to_hrresult(
-				(vt.SetTabActive)(self.ptr(), hwnd_tab.0, hwnd_mdi.0, 0),
+				(vt.SetTabActive)(
+					self.ptr(),
+					hwnd_tab.as_ptr(),
+					hwnd_mdi.as_ptr(),
+					0,
+				),
 			)
 		}
 	}
@@ -154,7 +159,11 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarList3VT>();
 			ok_to_hrresult(
-				(vt.SetTabOrder)(self.ptr(), hwnd_tab.0, hwnd_insert_before.0),
+				(vt.SetTabOrder)(
+					self.ptr(),
+					hwnd_tab.as_ptr(),
+					hwnd_insert_before.as_ptr(),
+				),
 			)
 		}
 	}
@@ -165,7 +174,11 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarList3VT>();
 			ok_to_hrresult(
-				(vt.SetThumbnailClip)(self.ptr(), hwnd.0, &clip as *const _ as _),
+				(vt.SetThumbnailClip)(
+					self.ptr(),
+					hwnd.as_ptr(),
+					&clip as *const _ as _,
+				),
 			)
 		}
 	}
@@ -180,7 +193,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 			ok_to_hrresult(
 				(vt.SetThumbnailTooltip)(
 					self.ptr(),
-					hwnd.0,
+					hwnd.as_ptr(),
 					tip.map_or(std::ptr::null_mut(), |s| WString::from_str(s).as_ptr()),
 				),
 			)

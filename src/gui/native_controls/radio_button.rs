@@ -171,7 +171,7 @@ impl RadioButton {
 				AccelMenuCtrlData {
 					notif_code: co::BN::CLICKED.into(),
 					ctrl_id: self.ctrl_id(),
-					ctrl_hwnd: HWND(self.hwnd().0),
+					ctrl_hwnd: unsafe { self.hwnd().raw_copy() },
 				},
 			),
 		});

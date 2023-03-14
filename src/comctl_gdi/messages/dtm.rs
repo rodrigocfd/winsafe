@@ -2,7 +2,7 @@ use crate::co;
 use crate::gdi::decl::HFONT;
 use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{Handle, MsgSend};
 use crate::user::privs::zero_as_err;
 
 /// [`DTM_GETMCFONT`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-getmcfont)
@@ -15,7 +15,7 @@ unsafe impl MsgSend for GetMcFont {
 	type RetType = SysResult<HFONT>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HFONT(p as _))
+		zero_as_err(v).map(|p| unsafe { HFONT::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -46,7 +46,7 @@ unsafe impl<'a> MsgSend for SetMcFont<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETMCFONT.into(),
-			wparam: self.hfont.0 as _,
+			wparam: self.hfont.as_ptr() as _,
 			lparam: self.redraw as _,
 		}
 	}

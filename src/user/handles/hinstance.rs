@@ -39,12 +39,12 @@ pub trait user_Hinstance: Handle {
 				user::ffi::CreateDialogParamW(
 					self.as_ptr(),
 					resource_id.as_ptr(),
-					hwnd_parent.map_or(std::ptr::null_mut(), |h| h.0),
+					hwnd_parent.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 					dialog_proc as _,
 					init_param.unwrap_or_default(),
 				)
 			},
-			|ptr| HWND(ptr),
+			|ptr| unsafe { HWND::from_ptr(ptr) },
 		)
 	}
 
@@ -65,7 +65,7 @@ pub trait user_Hinstance: Handle {
 			user::ffi::DialogBoxParamW(
 				self.as_ptr(),
 				resource_id.as_ptr(),
-				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.0),
+				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 				dialog_proc as _,
 				init_param.unwrap_or_default(),
 			)
@@ -110,12 +110,12 @@ pub trait user_Hinstance: Handle {
 	/// method.
 	#[must_use]
 	fn LoadAccelerators(&self, table_name: IdStr) -> SysResult<HACCEL> {
-		ptr_to_sysresult(
-			unsafe {
-				user::ffi::LoadAcceleratorsW(self.as_ptr(), table_name.as_ptr())
-			},
-			|ptr| HACCEL(ptr),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				user::ffi::LoadAcceleratorsW(self.as_ptr(), table_name.as_ptr()),
+				|ptr| HACCEL::from_ptr(ptr),
+			)
+		}
 	}
 
 	/// [`LoadCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadcursorw)
@@ -140,7 +140,7 @@ pub trait user_Hinstance: Handle {
 		unsafe {
 			ptr_to_sysresult(
 				user::ffi::LoadCursorW(self.as_ptr(), resource_id.as_ptr()),
-				|ptr| DestroyCursorGuard::new(HCURSOR(ptr)),
+				|ptr| DestroyCursorGuard::new(HCURSOR::from_ptr(ptr)),
 			)
 		}
 	}
@@ -165,7 +165,7 @@ pub trait user_Hinstance: Handle {
 		unsafe {
 			ptr_to_sysresult(
 				user::ffi::LoadIconW(self.as_ptr(), icon_id.as_ptr()),
-				|ptr| DestroyIconGuard::new(HICON(ptr)),
+				|ptr| DestroyIconGuard::new(HICON::from_ptr(ptr)),
 			)
 		}
 	}
@@ -174,10 +174,12 @@ pub trait user_Hinstance: Handle {
 	/// method.
 	#[must_use]
 	fn LoadMenu(&self, resource_id: IdStr) -> SysResult<HMENU> {
-		ptr_to_sysresult(
-			unsafe { user::ffi::LoadMenuW(self.as_ptr(), resource_id.as_ptr()) },
-			|ptr| HMENU(ptr),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				user::ffi::LoadMenuW(self.as_ptr(), resource_id.as_ptr()),
+				|ptr| HMENU::from_ptr(ptr),
+			)
+		}
 	}
 
 	/// [`LoadString`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringw)

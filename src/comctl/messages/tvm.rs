@@ -5,7 +5,7 @@ use crate::comctl::decl::{
 use crate::comctl::privs::CLR_DEFAULT;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HWND, RECT};
 use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
 
@@ -21,14 +21,14 @@ unsafe impl<'a> MsgSend for CreateDragImage<'a> {
 	type RetType = SysResult<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HIMAGELIST(p as _))
+		zero_as_err(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::CREATEDRAGIMAGE.into(),
 			wparam: 0,
-			lparam: self.hitem.0 as _,
+			lparam: self.hitem.as_ptr() as _,
 		}
 	}
 }
@@ -52,7 +52,7 @@ unsafe impl<'a> MsgSend for DeleteItem<'a> {
 		WndMsg {
 			msg_id: co::TVM::DELETEITEM.into(),
 			wparam: 0,
-			lparam: self.hitem.0 as _,
+			lparam: self.hitem.as_ptr() as _,
 		}
 	}
 }
@@ -69,14 +69,14 @@ unsafe impl<'a> MsgSend for EditLabel<'a> {
 	type RetType = SysResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HWND(p as _))
+		zero_as_err(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::EDITLABEL.into(),
 			wparam: 0,
-			lparam: self.hitem.0 as _,
+			lparam: self.hitem.as_ptr() as _,
 		}
 	}
 }
@@ -124,7 +124,7 @@ unsafe impl<'a> MsgSend for EnsureVisible<'a> {
 		WndMsg {
 			msg_id: co::TVM::ENSUREVISIBLE.into(),
 			wparam: 0,
-			lparam: self.hitem.0 as _,
+			lparam: self.hitem.as_ptr() as _,
 		}
 	}
 }
@@ -149,7 +149,7 @@ unsafe impl<'a> MsgSend for Expand<'a> {
 		WndMsg {
 			msg_id: co::TVM::EXPAND.into(),
 			wparam: self.action.0 as _,
-			lparam: self.hitem.0 as _,
+			lparam: self.hitem.as_ptr() as _,
 		}
 	}
 }
@@ -208,7 +208,7 @@ unsafe impl MsgSend for GetEditControl {
 	type RetType = SysResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HWND(p as _))
+		zero_as_err(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -254,7 +254,7 @@ unsafe impl MsgSend for GetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST(p as _))
+		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -424,7 +424,7 @@ unsafe impl<'a> MsgSend for GetItemState<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETITEMSTATE.into(),
-			wparam: self.hitem.0 as _,
+			wparam: self.hitem.as_ptr() as _,
 			lparam: self.mask.0 as _,
 		}
 	}
@@ -468,14 +468,14 @@ unsafe impl<'a> MsgSend for GetNextItem<'a> {
 	type RetType = Option<HTREEITEM>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HTREEITEM(p as _))
+		zero_as_none(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETNEXTITEM.into(),
 			wparam: self.relationship.0 as _,
-			lparam: self.hitem.map_or(0, |h| h.0 as _),
+			lparam: self.hitem.map_or(0, |h| h.as_ptr() as _),
 		}
 	}
 }
@@ -534,7 +534,7 @@ unsafe impl MsgSend for GetTooltips {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HWND(p as _))
+		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -602,7 +602,7 @@ unsafe impl<'a> MsgSend for HitTest<'a> {
 	type RetType = Option<HTREEITEM>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HTREEITEM(p as _))
+		zero_as_none(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -626,7 +626,7 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	type RetType = SysResult<HTREEITEM>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HTREEITEM(p as _))
+		zero_as_err(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -650,7 +650,7 @@ unsafe impl MsgSend for MapAccIdToHtreeitem {
 	type RetType = SysResult<HTREEITEM>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HTREEITEM(p as _))
+		zero_as_err(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -680,7 +680,7 @@ unsafe impl<'a> MsgSend for MapHtreeitemToAccId<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::MAPHTREEITEMTOACCID.into(),
-			wparam: self.hitem.0 as _,
+			wparam: self.hitem.as_ptr() as _,
 			lparam: 0,
 		}
 	}
@@ -706,7 +706,7 @@ unsafe impl<'a> MsgSend for SelectItem<'a> {
 		WndMsg {
 			msg_id: co::TVM::SELECTITEM.into(),
 			wparam: self.action.0 as _,
-			lparam: self.hitem.0 as _,
+			lparam: self.hitem.as_ptr() as _,
 		}
 	}
 }
@@ -808,7 +808,7 @@ unsafe impl<'a> MsgSend for SetHot<'a> {
 		WndMsg {
 			msg_id: co::TVM::SETHOT.into(),
 			wparam: 0,
-			lparam: self.hitem.map_or(0, |h| h.0 as _),
+			lparam: self.hitem.map_or(0, |h| h.as_ptr() as _),
 		}
 	}
 }
@@ -826,14 +826,14 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST(p as _))
+		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SETIMAGELIST.into(),
 			wparam: self.kind.0 as _,
-			lparam: self.himagelist.map_or(0, |h| h.0 as _),
+			lparam: self.himagelist.map_or(0, |h| h.as_ptr() as _),
 		}
 	}
 }
@@ -882,7 +882,7 @@ unsafe impl<'a> MsgSend for SetInsertMark<'a> {
 		WndMsg {
 			msg_id: co::TVM::SETINSERTMARK.into(),
 			wparam: self.insert_after as _,
-			lparam: self.hitem.0 as _,
+			lparam: self.hitem.as_ptr() as _,
 		}
 	}
 }
@@ -1046,13 +1046,13 @@ unsafe impl<'a> MsgSend for SetTooltips<'a> {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HWND(p as _))
+		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SETTOOLTIPS.into(),
-			wparam: self.htooltips.map_or(0, |h| h.0 as _),
+			wparam: self.htooltips.map_or(0, |h| h.as_ptr() as _),
 			lparam: 0,
 		}
 	}
@@ -1101,7 +1101,7 @@ unsafe impl<'a> MsgSend for ShowInfoTip<'a> {
 		WndMsg {
 			msg_id: co::TVM::SHOWINFOTIP.into(),
 			wparam: 0,
-			lparam: self.hitem.0 as _,
+			lparam: self.hitem.as_ptr() as _,
 		}
 	}
 }

@@ -1042,21 +1042,29 @@ impl TBADDBITMAP {
 	/// Returns the `hInst` and `nID` fields.
 	#[must_use]
 	pub fn nID(&self) -> BmpIdbRes {
-		match &self.hInst {
-			&HINST_COMMCTRL => BmpIdbRes::Idb(co::IDB(self.nID)),
-			&HINSTANCE::NULL => BmpIdbRes::Bmp(HBITMAP(self.nID as _ )),
-			hInst => BmpIdbRes::Res(
+		if self.hInst.as_ptr() as isize == HINST_COMMCTRL {
+			BmpIdbRes::Idb(co::IDB(self.nID))
+		} else if self.hInst == HINSTANCE::NULL {
+			BmpIdbRes::Bmp(unsafe { HBITMAP::from_ptr(self.nID as _) })
+		} else {
+			BmpIdbRes::Res(
 				IdStr::from_ptr(self.nID as _),
-				unsafe { hInst.raw_copy() },
-			),
+				unsafe { self.hInst.raw_copy() },
+			)
 		}
 	}
 
 	/// Sets the `hInst` and `nID` fields.
 	pub fn set_nID(&mut self, val: &BmpIdbRes) {
 		*self = match val {
-			BmpIdbRes::Idb(idb) => Self { hInst: HINST_COMMCTRL, nID: idb.0 },
-			BmpIdbRes::Bmp(bmp) => Self { hInst: HINSTANCE::NULL, nID: bmp.0 as _ },
+			BmpIdbRes::Idb(idb) => Self {
+				hInst: unsafe { HINSTANCE::from_ptr(HINST_COMMCTRL as _) },
+				nID: idb.0,
+			},
+			BmpIdbRes::Bmp(bmp) => Self {
+				hInst: HINSTANCE::NULL,
+				nID: bmp.as_ptr() as _
+			},
 			BmpIdbRes::Res(res, hInst) => Self {
 				hInst: unsafe { hInst.raw_copy() },
 				nID: res.as_ptr() as _,
@@ -1169,7 +1177,7 @@ impl TBREPLACEBITMAP {
 	#[must_use]
 	pub fn olds(&self) -> BmpInstId {
 		if self.hInstOld == HINSTANCE::NULL {
-			BmpInstId::Bmp(HBITMAP(self.nIDOld as _))
+			BmpInstId::Bmp(unsafe { HBITMAP::from_ptr(self.nIDOld as _) })
 		} else {
 			BmpInstId::InstId((
 				unsafe { self.hInstOld.raw_copy() },
@@ -1183,7 +1191,7 @@ impl TBREPLACEBITMAP {
 		match val {
 			BmpInstId::Bmp(hbmp) => {
 				self.hInstOld = HINSTANCE::NULL;
-				self.nIDOld = hbmp.0 as _;
+				self.nIDOld = hbmp.as_ptr() as _;
 			},
 			BmpInstId::InstId((hinst, id)) => {
 				self.hInstOld = hinst;
@@ -1196,7 +1204,7 @@ impl TBREPLACEBITMAP {
 	#[must_use]
 	pub fn news(&self) -> BmpInstId {
 		if self.hInstNew == HINSTANCE::NULL {
-			BmpInstId::Bmp(HBITMAP(self.nIDNew as _))
+			BmpInstId::Bmp(unsafe { HBITMAP::from_ptr(self.nIDNew as _) })
 		} else {
 			BmpInstId::InstId((
 				unsafe { self.hInstNew.raw_copy() },
@@ -1210,7 +1218,7 @@ impl TBREPLACEBITMAP {
 		match val {
 			BmpInstId::Bmp(hbmp) => {
 				self.hInstNew = HINSTANCE::NULL;
-				self.nIDNew = hbmp.0 as _;
+				self.nIDNew = hbmp.as_ptr() as _;
 			},
 			BmpInstId::InstId((hinst, id)) => {
 				self.hInstNew = hinst;

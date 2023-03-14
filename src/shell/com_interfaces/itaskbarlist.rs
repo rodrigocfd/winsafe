@@ -3,7 +3,7 @@
 use crate::kernel::ffi_types::{HANDLE, HRES};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::ole_IUnknown;
+use crate::prelude::{Handle, ole_IUnknown};
 use crate::user::decl::HWND;
 use crate::vt::IUnknownVT;
 
@@ -57,7 +57,7 @@ pub trait shell_ITaskbarList: ole_IUnknown {
 	fn ActivateTab(&self, hwnd: &HWND) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarListVT>();
-			ok_to_hrresult((vt.ActivateTab)(self.ptr(), hwnd.0))
+			ok_to_hrresult((vt.ActivateTab)(self.ptr(), hwnd.as_ptr()))
 		}
 	}
 
@@ -66,7 +66,7 @@ pub trait shell_ITaskbarList: ole_IUnknown {
 	fn AddTab(&self, hwnd: &HWND) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarListVT>();
-			ok_to_hrresult((vt.AddTab)(self.ptr(), hwnd.0))
+			ok_to_hrresult((vt.AddTab)(self.ptr(), hwnd.as_ptr()))
 		}
 	}
 
@@ -75,7 +75,7 @@ pub trait shell_ITaskbarList: ole_IUnknown {
 	fn DeleteTab(&self, hwnd: &HWND) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarListVT>();
-			ok_to_hrresult((vt.DeleteTab)(self.ptr(), hwnd.0))
+			ok_to_hrresult((vt.DeleteTab)(self.ptr(), hwnd.as_ptr()))
 		}
 	}
 
@@ -93,7 +93,7 @@ pub trait shell_ITaskbarList: ole_IUnknown {
 	fn SetActiveAlt(&self, hwnd: &HWND) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarListVT>();
-			ok_to_hrresult((vt.SetActiveAlt)(self.ptr(), hwnd.0))
+			ok_to_hrresult((vt.SetActiveAlt)(self.ptr(), hwnd.as_ptr()))
 		}
 	}
 }

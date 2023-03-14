@@ -2,6 +2,7 @@ use crate::co;
 use crate::comctl::decl::HTREEITEM;
 use crate::comctl::privs::{I_IMAGECALLBACK, I_IMAGENONE};
 use crate::kernel::decl::{HINSTANCE, IdStr, WString};
+use crate::prelude::Handle;
 use crate::user::decl::{HBITMAP, HCURSOR, HDC, HICON, POINT};
 
 /// Variant parameter for:
@@ -22,13 +23,13 @@ pub enum BmpIconCurMeta {
 impl BmpIconCurMeta {
 	/// Converts the contents into an `isize`.
 	#[must_use]
-	pub const fn as_isize(&self) -> isize {
+	pub fn as_isize(&self) -> isize {
 		unsafe {
 			std::mem::transmute(match self {
-				BmpIconCurMeta::Bmp(hbmp) => hbmp.0,
-				BmpIconCurMeta::Icon(hicon) => hicon.0,
-				BmpIconCurMeta::Cur(hcur) => hcur.0,
-				BmpIconCurMeta::Meta(hdc) => hdc.0,
+				BmpIconCurMeta::Bmp(hbmp) => hbmp.as_ptr(),
+				BmpIconCurMeta::Icon(hicon) => hicon.as_ptr(),
+				BmpIconCurMeta::Cur(hcur) => hcur.as_ptr(),
+				BmpIconCurMeta::Meta(hdc) => hdc.as_ptr(),
 			})
 		}
 	}
@@ -133,7 +134,7 @@ pub enum TreeitemTvi {
 impl From<TreeitemTvi> for isize {
 	fn from(v: TreeitemTvi) -> Self {
 		match v {
-			TreeitemTvi::Treeitem(htreeitem) => htreeitem.0 as _,
+			TreeitemTvi::Treeitem(htreeitem) => htreeitem.as_ptr() as _,
 			TreeitemTvi::Tvi(tvi) => tvi.0,
 		}
 	}
@@ -142,13 +143,13 @@ impl From<TreeitemTvi> for isize {
 impl TreeitemTvi {
 	/// Constructs the enum from an `isize`.
 	#[must_use]
-	pub const fn from_isize(val: isize) -> TreeitemTvi {
+	pub fn from_isize(val: isize) -> TreeitemTvi {
 		match co::TVI(val) {
 			co::TVI::FIRST => Self::Tvi(co::TVI::FIRST),
 			co::TVI::LAST => Self::Tvi(co::TVI::LAST),
 			co::TVI::ROOT => Self::Tvi(co::TVI::ROOT),
 			co::TVI::SORT => Self::Tvi(co::TVI::SORT),
-			val => Self::Treeitem(HTREEITEM(val.0 as _)),
+			val => Self::Treeitem(unsafe { HTREEITEM::from_ptr(val.0 as _) }),
 		}
 	}
 }

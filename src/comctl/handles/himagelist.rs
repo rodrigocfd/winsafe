@@ -36,8 +36,8 @@ pub trait comctl_Himagelist: Handle {
 		match unsafe {
 			comctl::ffi::ImageList_Add(
 				self.as_ptr(),
-				hbmp_image.0,
-				hbmp_mask.map_or(std::ptr::null_mut(), |h| h.0),
+				hbmp_image.as_ptr(),
+				hbmp_mask.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 			)
 		} {
 			-1 => Err(GetLastError()),
@@ -64,7 +64,7 @@ pub trait comctl_Himagelist: Handle {
 	{
 		match unsafe {
 			comctl::ffi::ImageList_AddMasked(
-				self.as_ptr(), hbmp_image.0, color_mask.0,
+				self.as_ptr(), hbmp_image.as_ptr(), color_mask.0,
 			)
 		} {
 			-1 => Err(GetLastError()),
@@ -219,7 +219,7 @@ pub trait comctl_Himagelist: Handle {
 			comctl::ffi::ImageList_ReplaceIcon(
 				self.as_ptr(),
 				index.map_or(-1, |i| i as _),
-				hicon_new.0,
+				hicon_new.as_ptr(),
 			)
 		} {
 			-1 => Err(GetLastError()),

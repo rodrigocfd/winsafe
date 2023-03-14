@@ -46,7 +46,7 @@ pub trait user_Hhook: Handle {
 				user::ffi::SetWindowsHookExW(
 					hook_id.0,
 					proc as _,
-					module.map_or(std::ptr::null_mut(), |h| h.0),
+					module.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 					thread_id.unwrap_or_default(),
 				)
 			},

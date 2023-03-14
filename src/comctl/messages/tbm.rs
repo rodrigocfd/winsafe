@@ -6,7 +6,7 @@ use crate::comctl::decl::{
 use crate::comctl::privs::HINST_COMMCTRL;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HWND, POINT, RECT, SIZE};
 use crate::user::privs::{
 	minus1_as_err, minus1_as_none, zero_as_err, zero_as_none,
@@ -80,7 +80,7 @@ unsafe impl MsgSend for AddString {
 		WndMsg {
 			msg_id: co::TBM::ADDSTRING.into(),
 			wparam: match &self.texts {
-				ResStrs::Res(_, hinst) => hinst.0 as _,
+				ResStrs::Res(_, hinst) => hinst.as_ptr() as _,
 				ResStrs::Strs(_) => 0,
 			},
 			lparam: match &self.texts {
@@ -467,7 +467,7 @@ unsafe impl MsgSend for GetDisabledImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HIMAGELIST(v as _))
+		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -511,7 +511,7 @@ unsafe impl MsgSend for GetHotImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HIMAGELIST(v as _))
+		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -580,7 +580,7 @@ unsafe impl MsgSend for GetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HIMAGELIST(v as _))
+		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -790,7 +790,7 @@ unsafe impl MsgSend for GetPressedImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST(p as _))
+		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -952,7 +952,7 @@ unsafe impl MsgSend for GetTooltips {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HWND(v as _))
+		zero_as_none(v).map(|v| unsafe { HWND::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1273,7 +1273,7 @@ unsafe impl MsgSend for LoadImages {
 		WndMsg {
 			msg_id: co::TBM::LOADIMAGES.into(),
 			wparam: self.img_list.0 as _,
-			lparam: HINST_COMMCTRL.0 as _,
+			lparam: HINST_COMMCTRL,
 		}
 	}
 }
@@ -1612,14 +1612,14 @@ unsafe impl<'a> MsgSend for SetDisabledImageList<'a> {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HIMAGELIST(v as _))
+		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::SETDISABLEDIMAGELIST.into(),
 			wparam: 0,
-			lparam: self.himagelist.0 as _,
+			lparam: self.himagelist.as_ptr() as _,
 		}
 	}
 }
@@ -1685,14 +1685,14 @@ unsafe impl<'a> MsgSend for SetHotImageList<'a> {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HIMAGELIST(v as _))
+		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::SETHOTIMAGELIST.into(),
 			wparam: 0,
-			lparam: self.himagelist.0 as _,
+			lparam: self.himagelist.as_ptr() as _,
 		}
 	}
 }
@@ -1758,14 +1758,14 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HIMAGELIST(v as _))
+		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::SETIMAGELIST.into(),
 			wparam: 0,
-			lparam: self.himagelist.0 as _,
+			lparam: self.himagelist.as_ptr() as _,
 		}
 	}
 }
@@ -1951,14 +1951,14 @@ unsafe impl<'a> MsgSend for SetParent<'a> {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HWND(v as _))
+		zero_as_none(v).map(|v| unsafe { HWND::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::SETPARENT.into(),
 			wparam: 0,
-			lparam: self.hparent.0 as _,
+			lparam: self.hparent.as_ptr() as _,
 		}
 	}
 }
@@ -1976,14 +1976,14 @@ unsafe impl<'a> MsgSend for SetPressedImageList<'a> {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HIMAGELIST(v as _))
+		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::SETPRESSEDIMAGELIST.into(),
 			wparam: self.index as _,
-			lparam: self.himagelist.map_or(0, |h| h.0 as _),
+			lparam: self.himagelist.map_or(0, |h| h.as_ptr() as _),
 		}
 	}
 }
@@ -2081,7 +2081,7 @@ unsafe impl<'a> MsgSend for SetTooltips<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::SETTOOLTIPS.into(),
-			wparam: self.htooltips.map_or(0, |h| h.0 as _),
+			wparam: self.htooltips.map_or(0, |h| h.as_ptr() as _),
 			lparam: 0,
 		}
 	}

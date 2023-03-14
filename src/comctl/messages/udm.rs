@@ -2,7 +2,7 @@ use crate::co;
 use crate::comctl::decl::UDACCEL;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult};
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::HWND;
 use crate::user::privs::{zero_as_err, zero_as_none};
 
@@ -62,7 +62,7 @@ unsafe impl MsgSend for GetBuddy {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HWND(p as _))
+		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -252,13 +252,13 @@ unsafe impl<'a> MsgSend for SetBuddy<'a> {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HWND(p as _))
+		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::UDM::SETBUDDY.into(),
-			wparam: self.hbuddy.0 as _,
+			wparam: self.hbuddy.as_ptr() as _,
 			lparam: 0,
 		}
 	}

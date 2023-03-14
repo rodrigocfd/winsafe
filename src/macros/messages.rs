@@ -194,23 +194,27 @@ macro_rules! pub_struct_msg_ctlcolor {
 			type RetType = crate::user::decl::HBRUSH;
 
 			fn convert_ret(&self, v: isize) -> Self::RetType {
-				crate::user::decl::HBRUSH(v as _)
+				unsafe {
+					<crate::user::decl::HBRUSH as crate::prelude::Handle>::from_ptr(v as _)
+				}
 			}
 
 			fn as_generic_wm(&mut self) -> crate::msg::WndMsg {
 				crate::msg::WndMsg {
 					msg_id: $wmconst,
-					wparam: self.hdc.0 as usize,
-					lparam: self.hwnd.0 as isize,
+					wparam: <crate::user::decl::HDC as crate::prelude::Handle>::as_ptr(&self.hdc) as _,
+					lparam: <crate::user::decl::HWND as crate::prelude::Handle>::as_ptr(&self.hwnd) as _,
 				}
 			}
 		}
 
 		unsafe impl crate::prelude::MsgSendRecv for $name {
 			fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
-				Self {
-					hdc: crate::user::decl::HDC(p.wparam as _),
-					hwnd: crate::user::decl::HWND(p.lparam as _),
+				unsafe {
+					Self {
+						hdc: <crate::user::decl::HDC as crate::prelude::Handle>::from_ptr(p.wparam as _),
+						hwnd: <crate::user::decl::HWND as crate::prelude::Handle>::from_ptr(p.lparam as _),
+					}
 				}
 			}
 		}

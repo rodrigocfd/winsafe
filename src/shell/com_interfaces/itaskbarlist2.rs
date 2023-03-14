@@ -3,7 +3,7 @@
 use crate::kernel::ffi_types::{BOOL, HANDLE, HRES};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::shell_ITaskbarList;
+use crate::prelude::{Handle, shell_ITaskbarList};
 use crate::user::decl::HWND;
 use crate::vt::ITaskbarListVT;
 
@@ -57,7 +57,11 @@ pub trait shell_ITaskbarList2: shell_ITaskbarList {
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarList2VT>();
 			ok_to_hrresult(
-				(vt.MarkFullscreenWindow)(self.ptr(), hwnd.0, full_screen as _),
+				(vt.MarkFullscreenWindow)(
+					self.ptr(),
+					hwnd.as_ptr(),
+					full_screen as _,
+				),
 			)
 		}
 	}

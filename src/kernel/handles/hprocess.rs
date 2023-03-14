@@ -231,7 +231,7 @@ pub trait kernel_Hprocess: Handle {
 				kernel::ffi::OpenProcessToken(
 					self.as_ptr(),
 					desired_access.0,
-					&mut handle.0,
+					handle.as_mut(),
 				),
 			).map(|_| CloseHandleGuard::new(handle))
 		}

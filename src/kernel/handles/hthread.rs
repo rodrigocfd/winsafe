@@ -130,7 +130,7 @@ pub trait kernel_Hthread: Handle {
 					self.as_ptr(),
 					desired_access.0,
 					open_as_self as _,
-					&mut handle.0,
+					handle.as_mut(),
 				),
 			).map(|_| CloseHandleGuard::new(handle))
 		}

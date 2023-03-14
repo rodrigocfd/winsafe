@@ -108,7 +108,7 @@ pub trait gdi_Hdc: Handle {
 					self.as_ptr(),
 					dest_pos.x, dest_pos.y,
 					sz.cx, sz.cy,
-					hdc_src.0,
+					hdc_src.as_ptr(),
 					src_src.x, src_src.y,
 					rop.0,
 				)
@@ -201,7 +201,7 @@ pub trait gdi_Hdc: Handle {
 	/// method.
 	fn FillRect(&self, rc: RECT, hbr: &HBRUSH) -> SysResult<()> {
 		match unsafe {
-			gdi::ffi::FillRect(self.as_ptr(), &rc as *const _ as _, hbr.0)
+			gdi::ffi::FillRect(self.as_ptr(), &rc as *const _ as _, hbr.as_ptr())
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),
@@ -900,7 +900,7 @@ pub trait gdi_Hdc: Handle {
 					self.as_ptr(),
 					pos_dest.x, pos_dest.y,
 					sz_dest.cx, sz_dest.cy,
-					hdc_src.0,
+					hdc_src.as_ptr(),
 					pt_src.x, pt_src.y,
 					sz_src.cx, sz_src.cy,
 					rop.0,

@@ -7,6 +7,7 @@ use crate::kernel::decl::{
 	HINSTANCE, HIWORD, LCID, LOBYTE, LOWORD, MAKEDWORD, WString,
 };
 use crate::kernel::ffi_types::BOOL;
+use crate::prelude::Handle;
 use crate::user::decl::{
 	DispfNup, HBITMAP, HBRUSH, HCURSOR, HDC, HICON, HMENU, HwKbMouse, HWND,
 	HwndHmenu, HwndPlace, WNDPROC,
@@ -517,10 +518,14 @@ pub struct HELPINFO {
 impl HELPINFO {
 	/// Returns the `hItemHandle` field.
 	#[must_use]
-	pub const fn hItemHandle(&self) -> HwndHmenu {
+	pub fn hItemHandle(&self) -> HwndHmenu {
 		match self.iContextType {
-			co::HELPINFO::WINDOW => HwndHmenu::Hwnd(HWND(self.hItemHandle as _)),
-			_ => HwndHmenu::Hmenu(HMENU(self.hItemHandle as _)),
+			co::HELPINFO::WINDOW => HwndHmenu::Hwnd(
+				unsafe { HWND::from_ptr(self.hItemHandle as _) },
+			),
+			_ => HwndHmenu::Hmenu(
+				unsafe { HMENU::from_ptr(self.hItemHandle as _) },
+			),
 		}
 	}
 }
@@ -968,17 +973,17 @@ impl_default!(WINDOWPOS);
 impl WINDOWPOS {
 	/// Returns the `hwndInsertAfter` field.
 	#[must_use]
-	pub const fn hwndInsertAfter(&self) -> HwndPlace {
+	pub fn hwndInsertAfter(&self) -> HwndPlace {
 		match self.hwndInsertAfter {
 			0 | 1 | -1 | -2 => HwndPlace::Place(co::HWND_PLACE(self.hwndInsertAfter)),
-			_ => HwndPlace::Hwnd(HWND(self.hwndInsertAfter as _)),
+			_ => HwndPlace::Hwnd(unsafe { HWND::from_ptr(self.hwndInsertAfter as _) }),
 		}
 	}
 
 	/// Sets the `hwndInsertAfter` field.
 	pub fn set_hwndInsertAfter(&mut self, hwnd: HwndPlace) {
 		self.hwndInsertAfter = match hwnd {
-			HwndPlace::Hwnd(h) => h.0 as _,
+			HwndPlace::Hwnd(h) => h.as_ptr() as _,
 			HwndPlace::Place(v) => v.into(),
 			HwndPlace::None => 0,
 		};

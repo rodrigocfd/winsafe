@@ -8,7 +8,7 @@ use crate::comctl::decl::NMHDR;
 use crate::kernel::decl::{HINSTANCE, WString};
 use crate::kernel::privs::{IS_INTRESOURCE, MAKEINTRESOURCE};
 use crate::ole::decl::ComPtr;
-use crate::prelude::ole_IUnknown;
+use crate::prelude::{Handle, ole_IUnknown};
 use crate::user::decl::{HICON, HWND};
 
 /// [`NMOBJECTNOTIFY`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmobjectnotify)
@@ -108,7 +108,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 				IconIdTdicon::Id(self.pszMainIcon as _)
 			}
 		} else {
-			IconIdTdicon::Icon(HICON(self.pszMainIcon as _))
+			IconIdTdicon::Icon(unsafe { HICON::from_ptr(self.pszMainIcon as _) })
 		}
 	}
 
@@ -116,7 +116,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 	pub fn set_pszMainIcon(&mut self, val: IconIdTdicon) {
 		match val {
 			IconIdTdicon::None => self.pszMainIcon = std::ptr::null_mut(),
-			IconIdTdicon::Icon(hicon) => self.pszMainIcon = hicon.0 as _,
+			IconIdTdicon::Icon(hicon) => self.pszMainIcon = hicon.as_ptr() as _,
 			IconIdTdicon::Id(id) => self.pszMainIcon = MAKEINTRESOURCE(id as _),
 			IconIdTdicon::Tdicon(tdi) => self.pszMainIcon = MAKEINTRESOURCE(tdi.0 as _),
 		}
@@ -137,7 +137,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 		if IS_INTRESOURCE(self.pszFooterIcon) {
 			IconId::Id(self.pszFooterIcon as _)
 		} else {
-			IconId::Icon(HICON(self.pszFooterIcon as _))
+			IconId::Icon(unsafe { HICON::from_ptr(self.pszFooterIcon as _) })
 		}
 	}
 
@@ -145,7 +145,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 	pub fn set_pszFooterIcon(&mut self, val: IconId) {
 		match val {
 			IconId::None => self.pszFooterIcon = std::ptr::null_mut(),
-			IconId::Icon(hicon) => self.pszFooterIcon = hicon.0 as _,
+			IconId::Icon(hicon) => self.pszFooterIcon = hicon.as_ptr() as _,
 			IconId::Id(id) => self.pszFooterIcon = MAKEINTRESOURCE(id as _),
 		}
 	}

@@ -5,7 +5,7 @@ use crate::kernel::decl::{HFILE, WString};
 use crate::kernel::ffi_types::{HANDLE, HRES, PCSTR};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
-use crate::prelude::{dshow_IFilterGraph, dshow_IPin};
+use crate::prelude::{dshow_IFilterGraph, dshow_IPin, Handle};
 use crate::vt::IFilterGraphVT;
 
 /// [`IGraphBuilder`](crate::IGraphBuilder) virtual table.
@@ -128,7 +128,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 			ok_to_hrresult(
 				(vt.SetLogFile)(
 					self.ptr(),
-					hfile.map_or(std::ptr::null_mut(), |h| h.0),
+					hfile.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 				),
 			)
 		}

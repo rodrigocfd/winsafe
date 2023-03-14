@@ -6,7 +6,7 @@ use crate::kernel::ffi_types::{HANDLE, HRES, PCSTR, PSTR, PVOID};
 use crate::kernel::privs::MAX_PATH;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::ole_IUnknown;
+use crate::prelude::{Handle, ole_IUnknown};
 use crate::shell::privs::INFOTIPSIZE;
 use crate::user::decl::HWND;
 use crate::vt::IUnknownVT;
@@ -180,7 +180,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	fn Resolve(&self, hwnd: &HWND, flags: co::SLR) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult((vt.Resolve)(self.ptr(), hwnd.0, flags.0))
+			ok_to_hrresult((vt.Resolve)(self.ptr(), hwnd.as_ptr(), flags.0))
 		}
 	}
 

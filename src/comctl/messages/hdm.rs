@@ -2,7 +2,7 @@ use crate::co;
 use crate::comctl::decl::{HDHITTESTINFO, HDITEM, HDLAYOUT, HIMAGELIST, PtIdx};
 use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::RECT;
 use crate::user::privs::{minus1_as_err, zero_as_err, zero_as_none};
 
@@ -42,7 +42,7 @@ unsafe impl MsgSend for CreateDragImage {
 	type RetType = SysResult<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HIMAGELIST(p as _))
+		zero_as_err(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -159,7 +159,7 @@ unsafe impl MsgSend for GetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST(p as _))
+		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -550,14 +550,14 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST(p as _))
+		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::HDM::SETIMAGELIST.into(),
 			wparam: self.which.0 as _,
-			lparam: self.himagelist.0 as _,
+			lparam: self.himagelist.as_ptr() as _,
 		}
 	}
 }

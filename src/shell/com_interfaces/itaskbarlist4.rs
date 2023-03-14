@@ -5,7 +5,7 @@ use crate::kernel::ffi_types::{HANDLE, HRES};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{
-	shell_ITaskbarList, shell_ITaskbarList2, shell_ITaskbarList3,
+	Handle, shell_ITaskbarList, shell_ITaskbarList2, shell_ITaskbarList3,
 };
 use crate::user::decl::HWND;
 use crate::vt::ITaskbarList3VT;
@@ -62,7 +62,7 @@ pub trait shell_ITaskbarList4: shell_ITaskbarList3 {
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarList4VT>();
 			ok_to_hrresult(
-				(vt.SetTabProperties)(self.ptr(), hwnd_tab.0, stp_flags.0),
+				(vt.SetTabProperties)(self.ptr(), hwnd_tab.as_ptr(), stp_flags.0),
 			)
 		}
 	}

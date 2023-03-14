@@ -7,7 +7,7 @@ use crate::comctl::decl::{
 };
 use crate::kernel::decl::{MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HCURSOR, HWND, POINT, RECT, SIZE};
 use crate::user::privs::{
 	minus1_as_err, minus1_as_none, zero_as_err, zero_as_none,
@@ -84,7 +84,7 @@ unsafe impl<'a> MsgSend for CreateDragImage<'a> {
 	type RetType = SysResult<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HIMAGELIST(p as _))
+		zero_as_err(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -178,7 +178,7 @@ unsafe impl MsgSend for EditLabel {
 	type RetType = SysResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HWND(p as _))
+		zero_as_err(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -437,7 +437,7 @@ unsafe impl MsgSend for GetEditControl {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HWND(p as _))
+		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -774,7 +774,7 @@ unsafe impl MsgSend for GetHeader {
 	type RetType = SysResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HWND(p as _))
+		zero_as_err(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -796,7 +796,7 @@ unsafe impl MsgSend for GetHotCursor {
 	type RetType = SysResult<HCURSOR>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HCURSOR(p as _))
+		zero_as_err(v).map(|p| unsafe { HCURSOR::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -864,7 +864,7 @@ unsafe impl MsgSend for GetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST(p as _))
+		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1515,7 +1515,7 @@ unsafe impl MsgSend for GetTooltips {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HWND(p as _))
+		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -2221,14 +2221,14 @@ unsafe impl<'a> MsgSend for SetHotCursor<'a> {
 	type RetType = Option<HCURSOR>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HCURSOR(p as _))
+		zero_as_none(v).map(|p| unsafe { HCURSOR::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETHOTCURSOR.into(),
 			wparam: 0,
-			lparam: self.hcursor.map_or(0, |h| h.0 as _),
+			lparam: self.hcursor.map_or(0, |h| h.as_ptr() as _),
 		}
 	}
 }
@@ -2318,14 +2318,14 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST(p as _))
+		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETIMAGELIST.into(),
 			wparam: self.kind.0 as _,
-			lparam: self.himagelist.0 as _,
+			lparam: self.himagelist.as_ptr() as _,
 		}
 	}
 }
@@ -2731,13 +2731,13 @@ unsafe impl<'a> MsgSend for SetTooltips<'a> {
 	type RetType = Option<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HWND(p as _))
+		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETTOOLTIPS.into(),
-			wparam: self.htooltips.map_or(0, |h| h.0 as _),
+			wparam: self.htooltips.map_or(0, |h| h.as_ptr() as _),
 			lparam: 0,
 		}
 	}

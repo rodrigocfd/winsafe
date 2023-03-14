@@ -44,7 +44,7 @@ pub trait shell_Hwnd: Handle {
 					self.as_ptr(),
 					wapp.as_ptr(),
 					WString::from_opt_str(other_stuff).as_ptr(),
-					hicon.map_or(std::ptr::null_mut(), |h| h.0),
+					hicon.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 				)
 			},
 		)
@@ -74,7 +74,7 @@ pub trait shell_Hwnd: Handle {
 		if ret <= 32 as _ {
 			Err(co::SE_ERR(ret as _))
 		} else {
-			Ok(HINSTANCE(ret as _))
+			Ok(unsafe { HINSTANCE::from_ptr(ret as _) })
 		}
 	}
 }

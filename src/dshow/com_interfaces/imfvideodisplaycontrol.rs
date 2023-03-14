@@ -169,7 +169,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 		let mut hwnd = HWND::NULL;
 		unsafe {
 			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
-			ok_to_hrresult((vt.GetVideoWindow)(self.ptr(), &mut hwnd.0))
+			ok_to_hrresult((vt.GetVideoWindow)(self.ptr(), hwnd.as_mut()))
 		}.map(|_| hwnd)
 	}
 
@@ -239,7 +239,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	fn SetVideoWindow(&self, hwnd_video: &HWND) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
-			ok_to_hrresult((vt.SetVideoWindow)(self.ptr(), hwnd_video.0))
+			ok_to_hrresult((vt.SetVideoWindow)(self.ptr(), hwnd_video.as_ptr()))
 		}
 	}
 }

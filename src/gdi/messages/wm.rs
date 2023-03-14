@@ -3,7 +3,7 @@ use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD};
 
 use crate::gdi::decl::HFONT;
 use crate::msg::WndMsg;
-use crate::prelude::{MsgSend, MsgSendRecv};
+use crate::prelude::{Handle, MsgSend, MsgSendRecv};
 use crate::user::decl::HRGN;
 use crate::user::privs::zero_as_none;
 
@@ -81,7 +81,7 @@ unsafe impl MsgSend for GetFont {
 	type RetType = Option<HFONT>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HFONT(p as _))
+		zero_as_none(v).map(|p| unsafe { HFONT::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -117,7 +117,7 @@ unsafe impl MsgSend for NcPaint {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::NCPAINT,
-			wparam: self.updated_hrgn.0 as _,
+			wparam: self.updated_hrgn.as_ptr() as _,
 			lparam: 0,
 		}
 	}
@@ -126,7 +126,7 @@ unsafe impl MsgSend for NcPaint {
 unsafe impl MsgSendRecv for NcPaint {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			updated_hrgn: HRGN(p.wparam as _),
+			updated_hrgn: unsafe { HRGN::from_ptr(p.wparam as _) },
 		}
 	}
 }
@@ -154,7 +154,7 @@ unsafe impl MsgSend for SetFont {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SETFONT,
-			wparam: self.hfont.0 as _,
+			wparam: self.hfont.as_ptr() as _,
 			lparam: MAKEDWORD(self.redraw as _, 0) as _,
 		}
 	}
@@ -163,7 +163,7 @@ unsafe impl MsgSend for SetFont {
 unsafe impl MsgSendRecv for SetFont {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hfont: HFONT(p.wparam as _),
+			hfont: unsafe { HFONT::from_ptr(p.wparam as _) },
 			redraw: LOWORD(p.lparam as _) != 0,
 		}
 	}

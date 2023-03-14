@@ -1,7 +1,7 @@
 use crate::co;
 use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{BmpIcon, HBITMAP, HICON};
 
 pub_struct_msg_empty! { Click: co::BM::CLICK.into();
@@ -42,10 +42,12 @@ unsafe impl MsgSend for GetImage {
 	type RetType = SysResult<BmpIcon>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		match self.img_type {
-			co::IMAGE_TYPE::BITMAP => Ok(BmpIcon::Bmp(HBITMAP(v as _))),
-			co::IMAGE_TYPE::ICON => Ok(BmpIcon::Icon(HICON(v as _))),
-			_ => Err(co::ERROR::BAD_ARGUMENTS),
+		unsafe {
+			match self.img_type {
+				co::IMAGE_TYPE::BITMAP => Ok(BmpIcon::Bmp(HBITMAP::from_ptr(v as _))),
+				co::IMAGE_TYPE::ICON => Ok(BmpIcon::Icon(HICON::from_ptr(v as _))),
+				_ => Err(co::ERROR::BAD_ARGUMENTS),
+			}
 		}
 	}
 
@@ -143,9 +145,11 @@ unsafe impl MsgSend for SetImage {
 		if v == 0 {
 			Err(co::ERROR::BAD_ARGUMENTS)
 		} else {
-			match self.image {
-				BmpIcon::Bmp(_) => Ok(BmpIcon::Bmp(HBITMAP(v as _))),
-				BmpIcon::Icon(_) => Ok(BmpIcon::Icon(HICON(v as _))),
+			unsafe {
+				match self.image {
+					BmpIcon::Bmp(_) => Ok(BmpIcon::Bmp(HBITMAP::from_ptr(v as _))),
+					BmpIcon::Icon(_) => Ok(BmpIcon::Icon(HICON::from_ptr(v as _))),
+				}
 			}
 		}
 	}

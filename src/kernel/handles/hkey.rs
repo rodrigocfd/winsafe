@@ -78,7 +78,7 @@ pub trait kernel_Hkey: Handle {
 				kernel::ffi::RegConnectRegistryW(
 					WString::from_opt_str(machine_name).as_ptr(),
 					predef_hkey.as_ptr(),
-					&mut hkey.0,
+					hkey.as_mut(),
 				)
 			},
 		).map(|_| RegCloseKeyGuard::new(hkey))
@@ -122,7 +122,7 @@ pub trait kernel_Hkey: Handle {
 					options.0,
 					access_rights.0,
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
-					&mut hkey.0,
+					hkey.as_mut(),
 					&mut disposition.0,
 				)
 			},
@@ -154,7 +154,7 @@ pub trait kernel_Hkey: Handle {
 					options.0,
 					access_rights.0,
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
-					&mut hkey.0,
+					hkey.as_mut(),
 					&mut disposition.0,
 					htransaction.as_ptr(),
 					std::ptr::null_mut(),
@@ -470,10 +470,7 @@ pub trait kernel_Hkey: Handle {
 		let mut hkey = HKEY::NULL;
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegOpenCurrentUser(
-					access_rights.0,
-					&mut hkey.0,
-				)
+				kernel::ffi::RegOpenCurrentUser(access_rights.0, hkey.as_mut())
 			},
 		).map(|_| RegCloseKeyGuard::new(hkey))
 	}
@@ -509,7 +506,7 @@ pub trait kernel_Hkey: Handle {
 					WString::from_opt_str(sub_key).as_ptr(),
 					options.0,
 					access_rights.0,
-					&mut hkey.0,
+					hkey.as_mut(),
 				)
 			},
 		).map(|_| RegCloseKeyGuard::new(hkey))
@@ -533,7 +530,7 @@ pub trait kernel_Hkey: Handle {
 					WString::from_str(sub_key).as_ptr(),
 					options.0,
 					access_rights.0,
-					&mut hkey.0,
+					hkey.as_mut(),
 					htransaction.as_ptr(),
 					std::ptr::null_mut(),
 				)
@@ -1026,6 +1023,14 @@ pub trait kernel_Hkey: Handle {
 				)
 			},
 		)
+	}
+}
+
+impl HKEY {
+	pub(in crate::kernel) fn is_predef_key(&self) -> bool {
+		// Note that we are not constructing HKEY objects, so no drop() is called.
+		(self.0 as usize) >= (Self::CLASSES_ROOT.0 as usize)
+			&& (self.0 as usize) <= (Self::PERFORMANCE_NLSTEXT.0 as usize)
 	}
 }
 

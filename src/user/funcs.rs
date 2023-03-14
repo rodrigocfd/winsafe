@@ -4,7 +4,7 @@ use crate::{co, user};
 use crate::kernel::decl::{GetLastError, HINSTANCE, SysResult, WString};
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
-use crate::prelude::MsgSend;
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{
 	ATOM, COLORREF, DEVMODE, DISPLAY_DEVICE, GmidxEnum, GUITHREADINFO,
 	HwKbMouse, HWND, INPUT, MSG, POINT, RECT, SIZE, TRACKMOUSEEVENT, WNDCLASSEX,
@@ -459,7 +459,7 @@ pub fn GetMessage(
 	match unsafe {
 		user::ffi::GetMessageW(
 			msg as *mut _ as _,
-			hwnd.map_or(std::ptr::null_mut(), |h| h.0),
+			hwnd.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 			msg_filter_min, msg_filter_max,
 		)
 	} {
@@ -616,7 +616,7 @@ pub fn PeekMessage(
 	unsafe {
 		user::ffi::PeekMessageW(
 			msg as *mut _ as _,
-			hwnd.map_or(std::ptr::null_mut(), |h| h.0),
+			hwnd.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 			msg_filter_min,
 			msg_filter_max,
 			remove_msg.0,
@@ -874,7 +874,7 @@ pub fn UnregisterClass(class_name: &str, hinst: &HINSTANCE) -> SysResult<()> {
 		unsafe {
 			user::ffi::UnregisterClassW(
 				WString::from_str(class_name).as_ptr(),
-				hinst.0,
+				hinst.as_ptr(),
 			)
 		},
 	)

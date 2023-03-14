@@ -122,7 +122,7 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 		let mut hwnd = HWND::NULL;
 		unsafe {
 			let vt = self.vt_ref::<IDXGIFactoryVT>();
-			ok_to_hrresult((vt.GetWindowAssociation)(self.ptr(), &mut hwnd.0))
+			ok_to_hrresult((vt.GetWindowAssociation)(self.ptr(), hwnd.as_mut()))
 		}.map(|_| hwnd)
 	}
 
@@ -133,7 +133,9 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	{
 		unsafe {
 			let vt = self.vt_ref::<IDXGIFactoryVT>();
-			ok_to_hrresult((vt.MakeWindowAssociation)(self.ptr(), hwnd.0, flags.0))
+			ok_to_hrresult(
+				(vt.MakeWindowAssociation)(self.ptr(), hwnd.as_ptr(), flags.0),
+			)
 		}
 	}
 }

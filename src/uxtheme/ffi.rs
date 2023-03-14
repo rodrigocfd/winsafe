@@ -11,7 +11,7 @@ extern_sys! { "uxtheme";
 	GetThemeAppProperties() -> u32
 	GetThemeBackgroundContentRect(HANDLE, HANDLE, i32, i32, PCVOID, PVOID) -> HRES
 	GetThemeBackgroundExtent(HANDLE, HANDLE, i32, i32, PCVOID, PVOID) -> HRES
-	GetThemeBackgroundRegion(HANDLE, HANDLE, i32, i32, PCVOID, PVOID) -> HRES
+	GetThemeBackgroundRegion(HANDLE, HANDLE, i32, i32, PCVOID, *mut HANDLE) -> HRES
 	GetThemeColor(HANDLE, i32, i32, i32, *mut u32) -> HRES
 	IsAppThemed() -> BOOL
 	IsCompositionActive() -> BOOL

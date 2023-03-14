@@ -32,7 +32,7 @@ pub trait uxtheme_Htheme: Handle {
 			unsafe {
 				uxtheme::ffi::DrawThemeBackground(
 					self.as_ptr(),
-					hdc.0,
+					hdc.as_ptr(),
 					part_state.part,
 					part_state.state,
 					&rc as *const _ as _,
@@ -61,7 +61,7 @@ pub trait uxtheme_Htheme: Handle {
 			unsafe {
 				uxtheme::ffi::GetThemeBackgroundContentRect(
 					self.as_ptr(),
-					hdc.0,
+					hdc.as_ptr(),
 					part_state.part,
 					part_state.state,
 					&bounds as *const _ as _,
@@ -83,7 +83,7 @@ pub trait uxtheme_Htheme: Handle {
 			unsafe {
 				uxtheme::ffi::GetThemeBackgroundExtent(
 					self.as_ptr(),
-					hdc.0,
+					hdc.as_ptr(),
 					part_state.part,
 					part_state.state,
 					&rc_content as *const _ as _,
@@ -102,18 +102,18 @@ pub trait uxtheme_Htheme: Handle {
 		rc: RECT,
 	) -> HrResult<DeleteObjectGuard<HRGN>>
 	{
-		let mut handle = HRGN::NULL;
+		let mut hrgn = HRGN::NULL;
 		unsafe {
 			ok_to_hrresult(
 				uxtheme::ffi::GetThemeBackgroundRegion(
 					self.as_ptr(),
-					hdc.0,
+					hdc.as_ptr(),
 					part_state.part,
 					part_state.state,
 					&rc as *const _ as _,
-					&mut handle as *mut _ as _,
+					hrgn.as_mut(),
 				),
-			).map(|_| DeleteObjectGuard::new(handle))
+			).map(|_| DeleteObjectGuard::new(hrgn))
 		}
 	}
 

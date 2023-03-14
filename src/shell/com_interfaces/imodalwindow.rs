@@ -3,7 +3,7 @@
 use crate::co;
 use crate::kernel::ffi_types::HANDLE;
 use crate::ole::decl::{ComPtr, HrResult};
-use crate::prelude::ole_IUnknown;
+use crate::prelude::{Handle, ole_IUnknown};
 use crate::user::decl::HWND;
 use crate::vt::IUnknownVT;
 
@@ -43,7 +43,7 @@ pub trait shell_IModalWindow: ole_IUnknown {
 		match co::HRESULT(
 			unsafe {
 				let vt = self.vt_ref::<IModalWindowVT>();
-				(vt.Show)(self.ptr(), hwnd_owner.0)
+				(vt.Show)(self.ptr(), hwnd_owner.as_ptr())
 			},
 		) {
 			co::HRESULT::S_OK => Ok(true),

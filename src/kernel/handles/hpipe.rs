@@ -37,8 +37,8 @@ pub trait kernel_Hpipe: Handle {
 		unsafe {
 			bool_to_sysresult(
 				kernel::ffi::CreatePipe(
-					&mut hread.0,
-					&mut hwrite.0,
+					hread.as_mut(),
+					hwrite.as_mut(),
 					attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					size,
 				),
@@ -53,7 +53,8 @@ pub trait kernel_Hpipe: Handle {
 	fn ReadFile(&self,
 		buffer: &mut [u8], overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
 	{
-		HFILE(unsafe { self.as_ptr() }).ReadFile(buffer, overlapped)
+		unsafe { HFILE::from_ptr(self.as_ptr()) }
+			.ReadFile(buffer, overlapped)
 	}
 
 	/// [`WriteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
@@ -61,6 +62,7 @@ pub trait kernel_Hpipe: Handle {
 	fn WriteFile(&self,
 		data: &[u8], overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
 	{
-		HFILE(unsafe { self.as_ptr() }).WriteFile(data, overlapped)
+		unsafe { HFILE::from_ptr(self.as_ptr()) }
+			.WriteFile(data, overlapped)
 	}
 }

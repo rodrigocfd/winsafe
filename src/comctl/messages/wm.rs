@@ -1,7 +1,7 @@
 use crate::co;
 use crate::comctl::decl::NMHDR;
 use crate::msg::WndMsg;
-use crate::prelude::{MsgSend, MsgSendRecv};
+use crate::prelude::{Handle, MsgSend, MsgSendRecv};
 
 /// [`WM_NOTIFY`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-notify)
 /// message parameters.
@@ -22,7 +22,7 @@ unsafe impl<'a> MsgSend for Notify<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::NOTIFY,
-			wparam: self.nmhdr.hwndFrom.0 as _,
+			wparam: self.nmhdr.hwndFrom.as_ptr() as _,
 			lparam: self.nmhdr as *const _ as _,
 		}
 	}

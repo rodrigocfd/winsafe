@@ -34,7 +34,7 @@ pub trait msimg_Hdc: Handle {
 					self.as_ptr(),
 					dest_top_left.x, dest_top_left.y,
 					dest_sz.cx, dest_sz.cy,
-					hdc_src.0,
+					hdc_src.as_ptr(),
 					src_top_left.x, src_top_left.y,
 					src_sz.cx, src_sz.cy,
 					color_transparent.0,

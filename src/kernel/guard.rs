@@ -5,7 +5,7 @@ use crate::kernel::decl::{
 	HFILEMAPVIEW, HFINDFILE, HGLOBAL, HIDWORD, HINSTANCE, HKEY, HLOCAL,
 	HUPDATERSRC, LODWORD, PROCESS_INFORMATION, SID,
 };
-use crate::prelude::{Handle, kernel_Hfile, kernel_Hglobal, kernel_Hkey};
+use crate::prelude::{Handle, kernel_Hfile, kernel_Hglobal};
 
 /// RAII implementation for a [`Handle`](crate::prelude::Handle) which
 /// automatically calls
@@ -291,7 +291,7 @@ pub struct RegCloseKeyGuard {
 impl Drop for RegCloseKeyGuard {
 	fn drop(&mut self) {
 		if let Some(h) = self.hkey.as_opt() {
-			if h.0 < HKEY::CLASSES_ROOT.0 || h.0 > HKEY::PERFORMANCE_NLSTEXT.0 { // guard predefined keys
+			if !self.is_predef_key() { // guard predefined keys
 				unsafe { kernel::ffi::RegCloseKey(h.as_ptr()); } // ignore errors
 			}
 		}

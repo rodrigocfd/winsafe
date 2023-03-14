@@ -55,7 +55,7 @@ pub trait ole_IPicture: ole_IUnknown {
 		let mut hdc = HDC::NULL;
 		unsafe {
 			let vt = self.vt_ref::<IPictureVT>();
-			ok_to_hrresult((vt.get_CurDC)(self.ptr(), &mut hdc.0))
+			ok_to_hrresult((vt.get_CurDC)(self.ptr(), hdc.as_mut()))
 				.map(|_| hdc)
 		}
 	}
@@ -174,7 +174,7 @@ pub trait ole_IPicture: ole_IUnknown {
 			ok_to_hrresult(
 				(vt.Render)(
 					self.ptr(),
-					hdc.0,
+					hdc.as_ptr(),
 					dest_pt.x, dest_pt.y,
 					dest_sz.cx, dest_sz.cy,
 					src_offset.map_or(0, |off| off.x),
@@ -195,7 +195,12 @@ pub trait ole_IPicture: ole_IUnknown {
 		unsafe {
 			let vt = self.vt_ref::<IPictureVT>();
 			ok_to_hrresult(
-				(vt.SelectPicture)(self.ptr(), hdc.0, &mut hdc_out.0, &mut hbmp.0),
+				(vt.SelectPicture)(
+					self.ptr(),
+					hdc.as_ptr(),
+					hdc_out.as_mut(),
+					hbmp.as_mut(),
+				),
 			)
 		}.map(|_| (hdc_out, hbmp))
 	}

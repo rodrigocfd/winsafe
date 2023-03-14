@@ -460,8 +460,8 @@ pub trait user_Hmenu: Handle {
 					self.as_ptr(),
 					id_or_pos.id_or_pos_u32(),
 					id_or_pos.mf_flag().0,
-					hbmp_unchecked.map_or(std::ptr::null_mut(), |h| h.0),
-					hbmp_checked.map_or(std::ptr::null_mut(), |h| h.0),
+					hbmp_unchecked.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+					hbmp_checked.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 				)
 			},
 		)

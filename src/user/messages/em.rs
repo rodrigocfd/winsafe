@@ -1,7 +1,7 @@
 use crate::co;
 use crate::kernel::decl::{HIWORD, HLOCAL, LOWORD, SysResult, WString};
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{EDITWORDBREAKPROC, POINT, RECT, SIZE};
 use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
 
@@ -113,7 +113,7 @@ unsafe impl MsgSend for GetHandle {
 	type RetType = SysResult<HLOCAL>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|v| HLOCAL(v as _))
+		zero_as_err(v).map(|v| unsafe { HLOCAL::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -607,7 +607,7 @@ unsafe impl<'a> MsgSend for SetHandle<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::SETHANDLE.into(),
-			wparam: self.handle.0 as _,
+			wparam: self.handle.as_ptr() as _,
 			lparam: 0,
 		}
 	}

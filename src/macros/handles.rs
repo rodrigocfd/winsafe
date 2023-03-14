@@ -9,7 +9,7 @@ macro_rules! impl_handle {
 		$( #[$doc] )*
 		#[repr(transparent)]
 		#[derive(PartialEq, Eq, Hash)]
-		pub struct $name(pub(crate) *mut std::ffi::c_void);
+		pub struct $name(*mut std::ffi::c_void);
 
 		unsafe impl Send for $name {}
 
@@ -44,12 +44,16 @@ macro_rules! impl_handle {
 				Self(p)
 			}
 
-			unsafe fn as_ptr(&self) -> *mut std::ffi::c_void {
-				self.0
+			unsafe fn as_mut(&mut self) -> &mut *mut std::ffi::c_void {
+				&mut self.0
 			}
 
 			unsafe fn raw_copy(&self) -> Self {
 				Self(self.0)
+			}
+
+			fn as_ptr(&self) -> *mut std::ffi::c_void {
+				self.0
 			}
 		}
 	};

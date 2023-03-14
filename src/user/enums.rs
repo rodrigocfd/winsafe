@@ -7,6 +7,7 @@ use crate::user::decl::{
 	ATOM, HARDWAREINPUT, HBITMAP, HICON, HMENU, HWND, KEYBDINPUT, MOUSEINPUT,
 	NCCALCSIZE_PARAMS, POINT, RECT,
 };
+use crate::prelude::Handle;
 
 /// Variant parameter for:
 ///
@@ -89,11 +90,11 @@ pub enum BmpIcon {
 impl BmpIcon {
 	/// Converts the contents into an `isize`.
 	#[must_use]
-	pub const fn as_isize(&self) -> isize {
+	pub fn as_isize(&self) -> isize {
 		unsafe {
 			std::mem::transmute(match self {
-				BmpIcon::Bmp(hbmp) => hbmp.0,
-				BmpIcon::Icon(hicon) => hicon.0,
+				BmpIcon::Bmp(hbmp) => hbmp.as_ptr(),
+				BmpIcon::Icon(hicon) => hicon.as_ptr(),
 			})
 		}
 	}
@@ -124,7 +125,7 @@ impl BmpPtrStr {
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			Self::Bmp(hbmp) => hbmp.0 as _,
+			Self::Bmp(hbmp) => hbmp.as_ptr() as _,
 			Self::Ptr(lp) => *lp as _,
 			Self::Str(ws) => unsafe { ws.as_ptr() },
 			Self::None => std::ptr::null(),
@@ -201,12 +202,10 @@ pub enum HwndHmenu {
 impl HwndHmenu {
 	/// Converts the contents into an `isize`.
 	#[must_use]
-	pub const fn as_isize(&self) -> isize {
-		unsafe {
-			std::mem::transmute(match self {
-				HwndHmenu::Hwnd(hwnd) => hwnd.0,
-				HwndHmenu::Hmenu(hmenu) => hmenu.0,
-			})
+	pub fn as_isize(&self) -> isize {
+		match self {
+			HwndHmenu::Hwnd(hwnd) => hwnd.as_ptr() as _,
+			HwndHmenu::Hmenu(hmenu) => hmenu.as_ptr() as _,
 		}
 	}
 }
@@ -228,9 +227,9 @@ pub enum HwndPlace {
 impl HwndPlace {
 	/// Returns a pointer to the raw data content.
 	#[must_use]
-	pub const fn as_ptr(&self) -> *mut std::ffi::c_void {
+	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
-			Self::Hwnd(hwnd) => hwnd.0,
+			Self::Hwnd(hwnd) => hwnd.as_ptr(),
 			Self::Place(v) => v.0 as _,
 			Self::None => std::ptr::null_mut(),
 		}
@@ -254,7 +253,7 @@ impl HwndPointId {
 	#[must_use]
 	pub fn as_isize(&self) -> isize {
 		match self {
-			HwndPointId::Hwnd(hwnd) => hwnd.0 as _,
+			HwndPointId::Hwnd(hwnd) => hwnd.as_ptr() as _,
 			HwndPointId::Point(pt) => u32::from(*pt) as _,
 			HwndPointId::Id(id) => *id as _,
 		}
@@ -339,20 +338,20 @@ pub enum IdMenu<'a> {
 impl<'a> IdMenu<'a> {
 	/// Returns a pointer to the raw data content.
 	#[must_use]
-	pub const fn as_ptr(&self) -> *mut std::ffi::c_void {
+	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
 			Self::Id(id) => *id as _,
-			Self::Menu(hMenu) => hMenu.0,
+			Self::Menu(hMenu) => hMenu.as_ptr(),
 			Self::None => std::ptr::null_mut(),
 		}
 	}
 
 	/// Converts the raw data into an `usize`.
 	#[must_use]
-	pub const fn as_usize(&self) -> usize {
+	pub fn as_usize(&self) -> usize {
 		match self {
 			IdMenu::Id(id) => *id as _,
-			IdMenu::Menu(hMenu) => unsafe { std::mem::transmute(hMenu.0) },
+			IdMenu::Menu(hMenu) => hMenu.as_ptr() as _,
 			IdMenu::None => 0,
 		}
 	}

@@ -48,7 +48,9 @@ pub trait user_Hwnd: Handle {
 	/// wrapper to retrieve the window [`HINSTANCE`](crate::HINSTANCE).
 	#[must_use]
 	fn hinstance(&self) -> HINSTANCE {
-		HINSTANCE(self.GetWindowLongPtr(co::GWLP::HINSTANCE) as _)
+		unsafe {
+			HINSTANCE::from_ptr(self.GetWindowLongPtr(co::GWLP::HINSTANCE) as _)
+		}
 	}
 
 	/// [`ArrangeIconicWindows`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-arrangeiconicwindows)
@@ -111,7 +113,7 @@ pub trait user_Hwnd: Handle {
 		unsafe {
 			ptr_to_sysresult(
 				user::ffi::BeginPaint(self.as_ptr(), &mut ps as *mut _ as _),
-				|ptr| EndPaintGuard::new(self, HDC(ptr), ps),
+				|ptr| EndPaintGuard::new(self, HDC::from_ptr(ptr), ps),
 			)
 		}
 	}
@@ -434,7 +436,7 @@ pub trait user_Hwnd: Handle {
 		unsafe {
 			ptr_to_sysresult(
 				user::ffi::GetDC(self.as_ptr()),
-				|ptr| ReleaseDCGuard::new(self, HDC(ptr)),
+				|ptr| ReleaseDCGuard::new(self, HDC::from_ptr(ptr)),
 			)
 		}
 	}
@@ -498,8 +500,11 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn GetMenu(&self) -> Option<HMENU> {
-		unsafe { user::ffi::GetMenu(self.as_ptr()).as_mut() }
-			.map(|ptr| HMENU(ptr))
+		unsafe {
+			user::ffi::GetMenu(self.as_ptr())
+				.as_mut()
+				.map(|ptr| HMENU::from_ptr(ptr))
+		}
 	}
 
 	/// [`GetMenuBarInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenubarinfo)
@@ -618,8 +623,11 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn GetSystemMenu(&self, revert: bool) -> Option<HMENU> {
-		unsafe { user::ffi::GetSystemMenu(self.as_ptr(), revert as _).as_mut() }
-			.map(|ptr| HMENU(ptr))
+		unsafe {
+			user::ffi::GetSystemMenu(self.as_ptr(), revert as _)
+				.as_mut()
+				.map(|ptr| HMENU::from_ptr(ptr))
+		}
 	}
 
 	/// [`GetTopWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-gettopwindow)
@@ -682,7 +690,7 @@ pub trait user_Hwnd: Handle {
 		unsafe {
 			ptr_to_sysresult(
 				user::ffi::GetWindowDC(self.as_ptr()),
-				|ptr| ReleaseDCGuard::new(self, HDC(ptr)),
+				|ptr| ReleaseDCGuard::new(self, HDC::from_ptr(ptr)),
 			)
 		}
 	}
@@ -1084,7 +1092,11 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn MonitorFromWindow(&self, flags: co::MONITOR) -> HMONITOR {
-		HMONITOR(unsafe { user::ffi::MonitorFromWindow(self.as_ptr(), flags.0) })
+		unsafe {
+			HMONITOR::from_ptr(
+				user::ffi::MonitorFromWindow(self.as_ptr(), flags.0),
+			)
+		}
 	}
 
 	/// [`MoveWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-movewindow)

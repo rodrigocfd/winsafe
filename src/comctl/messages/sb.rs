@@ -4,7 +4,7 @@ use crate::kernel::decl::{
 	HIWORD, LOWORD, MAKEDWORD, MAKEWORD, SysResult, WString,
 };
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HICON, RECT};
 use crate::user::privs::zero_as_err;
 
@@ -44,7 +44,7 @@ unsafe impl MsgSend for GetIcon {
 	type RetType = SysResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| HICON(p as _))
+		zero_as_err(v).map(|p| unsafe { HICON::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -270,7 +270,7 @@ unsafe impl<'a> MsgSend for SetIcon<'a> {
 		WndMsg {
 			msg_id: co::SB::SETICON.into(),
 			wparam: self.part_index as _,
-			lparam: self.hicon.map_or(0, |p| p.0 as _),
+			lparam: self.hicon.map_or(0, |p| p.as_ptr() as _),
 		}
 	}
 }

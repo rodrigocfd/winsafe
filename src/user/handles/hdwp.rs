@@ -53,7 +53,7 @@ pub trait user_Hdwp: Handle {
 		match unsafe {
 			user::ffi::DeferWindowPos(
 				self.as_ptr(),
-				hwnd.0,
+				hwnd.as_ptr(),
 				hwnd_insert_after.as_ptr(),
 				top_left.x, top_left.y, sz.cx, sz.cy,
 				flags.0,

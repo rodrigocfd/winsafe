@@ -100,7 +100,9 @@ pub trait user_Hdc: Handle {
 	/// method.
 	#[must_use]
 	fn WindowFromDC(&self) -> Option<HWND> {
-		match HWND(unsafe { user::ffi::WindowFromDC(self.as_ptr()) as _ }) {
+		match unsafe {
+			HWND::from_ptr(user::ffi::WindowFromDC(self.as_ptr()) as _)
+		} {
 			HWND::NULL => None,
 			handle => Some(handle),
 		}
