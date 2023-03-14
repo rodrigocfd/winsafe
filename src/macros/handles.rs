@@ -100,6 +100,9 @@ macro_rules! handle_guard {
 			/// 
 			/// Be sure the handle must be freed with the specified function at
 			/// the end of scope.
+			/// 
+			/// This method is used internally by the library, and not intended
+			/// to be used externally.
 			#[must_use]
 			pub const unsafe fn new(handle: $handle) -> Self {
 				Self { handle }

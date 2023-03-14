@@ -42,6 +42,9 @@ impl DestroyIconShfiGuard {
 	/// Be sure the handle must be freed with
 	/// [`DestroyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
 	/// at the end of scope.
+	/// 
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(shfi: SHFILEINFO) -> Self {
 		Self { shfi }
@@ -99,6 +102,9 @@ impl DestroyIconSiiGuard {
 	/// Be sure the handle must be freed with
 	/// [`DestroyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
 	/// at the end of scope.
+	/// 
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(sii: SHSTOCKICONINFO) -> Self {
 		Self { sii }
