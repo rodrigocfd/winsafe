@@ -32,7 +32,7 @@ pub trait user_Hdwp: Handle {
 		unsafe {
 			ptr_to_sysresult(
 				user::ffi::BeginDeferWindowPos(num_windows as _),
-				|ptr| EndDeferWindowPosGuard::new(HDWP(ptr)),
+				|ptr| EndDeferWindowPosGuard::new(HDWP::from_ptr(ptr)),
 			)
 		}
 	}

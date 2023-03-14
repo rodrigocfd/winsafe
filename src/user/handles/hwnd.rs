@@ -7,7 +7,9 @@ use crate::kernel::decl::{
 	GetLastError, HINSTANCE, HIWORD, LOWORD, SetLastError, SysResult, WString,
 };
 use crate::kernel::ffi_types::BOOL;
-use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, ptr_to_sysresult};
+use crate::kernel::privs::{
+	bool_to_sysresult, MAX_PATH, ptr_to_option_handle, ptr_to_sysresult,
+};
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{
 	ALTTABINFO, AtomStr, HACCEL, HDC, HMENU, HMONITOR, HRGN, HwndPlace, IdMenu,
@@ -128,9 +130,9 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn ChildWindowFromPoint(&self, pt: POINT) -> Option<HWND> {
-		unsafe {
-			user::ffi::ChildWindowFromPoint(self.as_ptr(), pt.x, pt.y).as_mut()
-		}.map(|ptr| HWND(ptr))
+		ptr_to_option_handle(
+			unsafe { user::ffi::ChildWindowFromPoint(self.as_ptr(), pt.x, pt.y) },
+		)
 	}
 
 	/// [`ClientToScreen`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-clienttoscreen)
@@ -212,7 +214,7 @@ pub trait user_Hwnd: Handle {
 				hinstance.as_ptr(),
 				lparam.unwrap_or_default() as _,
 			),
-			|ptr| HWND(ptr),
+			|ptr| HWND::from_ptr(ptr),
 		)
 	}
 
@@ -300,15 +302,15 @@ pub trait user_Hwnd: Handle {
 	fn FindWindow(
 		class_name: Option<AtomStr>, title: Option<&str>) -> SysResult<HWND>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				user::ffi::FindWindowW(
 					class_name.map_or(std::ptr::null_mut(), |p| p.as_ptr()),
 					WString::from_opt_str(title).as_ptr(),
-				)
-			},
-			|ptr| HWND(ptr),
-		)
+				),
+				|ptr| HWND::from_ptr(ptr),
+			)
+		}
 	}
 
 	/// [`FindWindowEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexw)
@@ -320,25 +322,26 @@ pub trait user_Hwnd: Handle {
 		title: Option<&str>,
 	) -> SysResult<HWND>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				user::ffi::FindWindowExW(
 					self.as_ptr(),
 					hwnd_child_after.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 					class_name.as_ptr(),
 					WString::from_opt_str(title).as_ptr(),
-				)
-			},
-			|ptr| HWND(ptr),
-		)
+				),
+				|ptr| HWND::from_ptr(ptr),
+			)
+		}
 	}
 
 	/// [`GetActiveWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getactivewindow)
 	/// static method.
 	#[must_use]
 	fn GetActiveWindow() -> Option<HWND> {
-		unsafe { user::ffi::GetActiveWindow().as_mut() }
-			.map(|ptr| HWND(ptr))
+		ptr_to_option_handle(
+			unsafe { user::ffi::GetActiveWindow() },
+		)
 	}
 
 	/// [`GetAltTabInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getalttabinfow)
@@ -377,16 +380,16 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn GetAncestor(&self, flags: co::GA) -> Option<HWND> {
-		unsafe { user::ffi::GetAncestor(self.as_ptr(), flags.0).as_mut() }
-			.map(|ptr| HWND(ptr))
+		ptr_to_option_handle(
+			unsafe { user::ffi::GetAncestor(self.as_ptr(), flags.0) },
+		)
 	}
 
 	/// [`GetCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcapture)
 	/// static method.
 	#[must_use]
 	fn GetCapture() -> Option<HWND> {
-		unsafe { user::ffi::GetCapture().as_mut() }
-			.map(|ptr| HWND(ptr))
+		ptr_to_option_handle(unsafe { user::ffi::GetCapture() })
 	}
 
 	/// [`GetClassLongPtr`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclasslongptrw)
@@ -476,35 +479,30 @@ pub trait user_Hwnd: Handle {
 	/// static method.
 	#[must_use]
 	fn GetFocus() -> Option<HWND> {
-		unsafe { user::ffi::GetFocus().as_mut() }
-			.map(|ptr| HWND(ptr))
+		ptr_to_option_handle(unsafe { user::ffi::GetFocus() })
 	}
 
 	/// [`GetForegroundWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow)
 	/// static method.
 	#[must_use]
 	fn GetForegroundWindow() -> Option<HWND> {
-		unsafe { user::ffi::GetForegroundWindow().as_mut() }
-			.map(|ptr| HWND(ptr))
+		ptr_to_option_handle(unsafe { user::ffi::GetForegroundWindow() })
 	}
 
 	/// [`GetLastActivePopup`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getlastactivepopup)
 	/// method.
 	#[must_use]
 	fn GetLastActivePopup(&self) -> Option<HWND> {
-		unsafe { user::ffi::GetLastActivePopup(self.as_ptr()).as_mut() }
-			.map(|ptr| HWND(ptr))
+		ptr_to_option_handle(
+			unsafe { user::ffi::GetLastActivePopup(self.as_ptr()) },
+		)
 	}
 
 	/// [`GetMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenu)
 	/// method.
 	#[must_use]
 	fn GetMenu(&self) -> Option<HMENU> {
-		unsafe {
-			user::ffi::GetMenu(self.as_ptr())
-				.as_mut()
-				.map(|ptr| HMENU::from_ptr(ptr))
-		}
+		ptr_to_option_handle(unsafe { user::ffi::GetMenu(self.as_ptr()) })
 	}
 
 	/// [`GetMenuBarInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenubarinfo)
@@ -547,15 +545,15 @@ pub trait user_Hwnd: Handle {
 	fn GetNextDlgGroupItem(&self,
 		hwnd_ctrl: &HWND, previous: bool) -> SysResult<HWND>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult(
 				user::ffi::GetNextDlgGroupItem(
 					self.as_ptr(),
 					hwnd_ctrl.as_ptr(), previous as _,
-				)
-			},
-			|ptr| HWND(ptr),
-		)
+				),
+				|ptr| HWND::from_ptr(ptr),
+			)
+		}
 	}
 
 	/// [`GetNextDlgTabItem`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getnextdlgtabitem)
@@ -615,31 +613,30 @@ pub trait user_Hwnd: Handle {
 	/// static method.
 	#[must_use]
 	fn GetShellWindow() -> Option<HWND> {
-		unsafe { user::ffi::GetShellWindow().as_mut() }
-			.map(|ptr| HWND(ptr))
+		ptr_to_option_handle(unsafe { user::ffi::GetShellWindow() })
 	}
 
 	/// [`GetSystemMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmenu)
 	/// method.
 	#[must_use]
 	fn GetSystemMenu(&self, revert: bool) -> Option<HMENU> {
-		unsafe {
-			user::ffi::GetSystemMenu(self.as_ptr(), revert as _)
-				.as_mut()
-				.map(|ptr| HMENU::from_ptr(ptr))
-		}
+		ptr_to_option_handle(
+			unsafe { user::ffi::GetSystemMenu(self.as_ptr(), revert as _) },
+		)
 	}
 
 	/// [`GetTopWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-gettopwindow)
 	/// method.
 	#[must_use]
 	fn GetTopWindow(&self) -> SysResult<Option<HWND>> {
-		match unsafe { user::ffi::GetTopWindow(self.as_ptr()).as_mut() } {
-			Some(ptr) => Ok(Some(HWND(ptr))),
+		match ptr_to_option_handle(
+			unsafe { user::ffi::GetTopWindow(self.as_ptr()) },
+		) {
 			None => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(None), // no child window
 				err => Err(err),
 			},
+			Some(h) => Ok(Some(h)),
 		}
 	}
 
@@ -678,7 +675,7 @@ pub trait user_Hwnd: Handle {
 		unsafe {
 			ptr_to_sysresult(
 				user::ffi::GetWindow(self.as_ptr(), cmd.0),
-				|ptr| HWND(ptr),
+				|ptr| HWND::from_ptr(ptr),
 			)
 		}
 	}
@@ -1179,13 +1176,15 @@ pub trait user_Hwnd: Handle {
 	fn RealChildWindowFromPoint(&self,
 		pt_parent_client_coords: POINT) -> Option<HWND>
 	{
-		unsafe {
-			user::ffi::RealChildWindowFromPoint(
-				self.as_ptr(),
-				pt_parent_client_coords.x,
-				pt_parent_client_coords.y,
-			).as_mut()
-		}.map(|ptr| HWND(ptr))
+		ptr_to_option_handle(
+			unsafe {
+				user::ffi::RealChildWindowFromPoint(
+					self.as_ptr(),
+					pt_parent_client_coords.x,
+					pt_parent_client_coords.y,
+				)
+			},
+		)
 	}
 
 	/// [`RealGetWindowClassW`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-realgetwindowclassw)
@@ -1246,14 +1245,15 @@ pub trait user_Hwnd: Handle {
 					&mut rc.left as *mut _ as _,
 				)
 			},
-		).and_then(|_| bool_to_sysresult(
+		)?;
+		bool_to_sysresult(
 			unsafe {
 				user::ffi::ScreenToClient(
 					self.as_ptr(),
 					&mut rc.right as *mut _ as _,
 				)
 			},
-		))
+		)
 	}
 
 	/// [`SendMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew)
@@ -1343,10 +1343,12 @@ pub trait user_Hwnd: Handle {
 	/// [`SetActiveWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setactivewindow)
 	/// method.
 	fn SetActiveWindow(&self) -> SysResult<HWND> {
-		ptr_to_sysresult(
-			unsafe { user::ffi::SetActiveWindow(self.as_ptr()) },
-			|ptr| HWND(ptr),
-		)
+		unsafe {
+			ptr_to_sysresult(
+				user::ffi::SetActiveWindow(self.as_ptr()),
+				|ptr| HWND::from_ptr(ptr),
+			)
+		}
 	}
 
 	/// [`SetCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcapture)
@@ -1355,8 +1357,9 @@ pub trait user_Hwnd: Handle {
 		unsafe {
 			ReleaseCaptureGuard::new(
 				self,
-				user::ffi::SetCapture(self.as_ptr()).as_mut()
-					.map(|ptr| HWND(ptr)),
+				user::ffi::SetCapture(self.as_ptr())
+					.as_mut()
+					.map(|ptr| HWND::from_ptr(ptr)),
 			)
 		}
 	}
@@ -1364,8 +1367,7 @@ pub trait user_Hwnd: Handle {
 	/// [`SetFocus`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setfocus)
 	/// method.
 	fn SetFocus(&self) -> Option<HWND> {
-		unsafe { user::ffi::SetFocus(self.as_ptr()).as_mut() }
-			.map(|ptr| HWND(ptr))
+		ptr_to_option_handle(unsafe { user::ffi::SetFocus(self.as_ptr()) })
 	}
 
 	/// [`SetForegroundWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setforegroundwindow)
@@ -1385,14 +1387,16 @@ pub trait user_Hwnd: Handle {
 	/// [`SetParent`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setparent)
 	/// method.
 	fn SetParent(&self, hwnd_new_parent: &HWND) -> SysResult<Option<HWND>> {
-		match unsafe {
-			user::ffi::SetParent(self.as_ptr(), hwnd_new_parent.as_ptr()).as_mut()
-		} {
-			Some(ptr) => Ok(Some(HWND(ptr))),
+		match ptr_to_option_handle(
+			unsafe {
+				user::ffi::SetParent(self.as_ptr(), hwnd_new_parent.as_ptr())
+			},
+		) {	
 			None => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(None), // no previous parent
 				err => Err(err),
 			},
+			Some(h) => Ok(Some(h)),
 		}
 	}
 
@@ -1621,16 +1625,16 @@ pub trait user_Hwnd: Handle {
 	/// static method.
 	#[must_use]
 	fn WindowFromPhysicalPoint(pt: POINT) -> Option<HWND> {
-		unsafe { user::ffi::WindowFromPhysicalPoint(pt.x, pt.y).as_mut() }
-			.map(|ptr| HWND(ptr))
+		ptr_to_option_handle(
+			unsafe { user::ffi::WindowFromPhysicalPoint(pt.x, pt.y) },
+		)
 	}
 
 	/// [`WindowFromPoint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfrompoint)
 	/// static method.
 	#[must_use]
 	fn WindowFromPoint(pt: POINT) -> Option<HWND> {
-		unsafe { user::ffi::WindowFromPoint(pt.x, pt.y).as_mut() }
-			.map(|ptr| HWND(ptr))
+		ptr_to_option_handle(unsafe { user::ffi::WindowFromPoint(pt.x, pt.y) })
 	}
 
 	/// [`WinHelp`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-winhelpw)

@@ -3,6 +3,7 @@
 use crate::co::ERROR;
 use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::ffi_types::{BOOL, HANDLE};
+use crate::prelude::Handle;
 
 pub(crate) const GMEM_INVALID_HANDLE: u32 = 0x8000;
 pub(crate) const INFINITE: u32 = 0xffff_ffff;
@@ -41,6 +42,17 @@ pub(crate) fn ptr_to_sysresult<U, F>(ptr: HANDLE, op: F) -> SysResult<U>
 		Err(GetLastError())
 	} else {
 		Ok(op(ptr))
+	}
+}
+
+/// If the pointer is null, yields `None`, otherwise `Some(Handle)`.
+pub(crate) fn ptr_to_option_handle<H>(ptr: HANDLE) -> Option<H>
+	where H: Handle,
+{
+	if ptr.is_null() {
+		None
+	} else {
+		Some(unsafe { H::from_ptr(ptr) })
 	}
 }
 

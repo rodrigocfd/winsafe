@@ -3,7 +3,7 @@
 use crate::{co, user};
 use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::ffi_types::BOOL;
-use crate::kernel::privs::bool_to_sysresult;
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_option_handle};
 use crate::prelude::Handle;
 use crate::user::decl::{HMONITOR, HWND, RECT};
 
@@ -100,12 +100,7 @@ pub trait user_Hdc: Handle {
 	/// method.
 	#[must_use]
 	fn WindowFromDC(&self) -> Option<HWND> {
-		match unsafe {
-			HWND::from_ptr(user::ffi::WindowFromDC(self.as_ptr()) as _)
-		} {
-			HWND::NULL => None,
-			handle => Some(handle),
-		}
+		ptr_to_option_handle(unsafe { user::ffi::WindowFromDC(self.as_ptr()) })
 	}
 }
 

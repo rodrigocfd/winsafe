@@ -72,7 +72,7 @@ pub trait user_Hdesk: Handle {
 					heap_size_kb,
 					std::ptr::null_mut(),
 				),
-				|ptr| CloseDesktopGuard::new(HDESK(ptr)),
+				|ptr| CloseDesktopGuard::new(HDESK::from_ptr(ptr)),
 			)
 		}
 	}
@@ -95,7 +95,7 @@ pub trait user_Hdesk: Handle {
 		unsafe {
 			ptr_to_sysresult(
 				user::ffi::GetThreadDesktop(thread_id),
-				|ptr| ManuallyDrop::new(CloseDesktopGuard::new(HDESK(ptr))),
+				|ptr| ManuallyDrop::new(CloseDesktopGuard::new(HDESK::from_ptr(ptr))),
 			)
 		}
 	}
@@ -118,7 +118,7 @@ pub trait user_Hdesk: Handle {
 					inherit as _,
 					desired_access.0,
 				),
-				|ptr| CloseDesktopGuard::new(HDESK(ptr)),
+				|ptr| CloseDesktopGuard::new(HDESK::from_ptr(ptr)),
 			)
 		}
 	}
@@ -139,7 +139,7 @@ pub trait user_Hdesk: Handle {
 					inherit as _,
 					desired_access.0,
 				),
-				|ptr| CloseDesktopGuard::new(HDESK(ptr)),
+				|ptr| CloseDesktopGuard::new(HDESK::from_ptr(ptr)),
 			)
 		}
 	}

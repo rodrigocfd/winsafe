@@ -29,7 +29,7 @@ pub trait user_Hicon: Handle {
 		unsafe {
 			ptr_to_sysresult(
 				user::ffi::CopyIcon(self.as_ptr()),
-				|ptr| DestroyIconGuard::new(HICON(ptr)),
+				|ptr| DestroyIconGuard::new(HICON::from_ptr(ptr)),
 			)
 		}
 	}
