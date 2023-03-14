@@ -72,6 +72,8 @@ impl<T> CloseHandleGuard<T>
 	}
 }
 
+//------------------------------------------------------------------------------
+
 /// RAII implementation for [`PROCESS_INFORMATION`](crate::PROCESS_INFORMATION)
 /// which automatically calls
 /// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
@@ -107,8 +109,14 @@ impl DerefMut for CloseHandlePiGuard {
 
 impl CloseHandlePiGuard {
 	/// Constructs the guard by taking ownership of the struct.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the handles must be freed with
+	/// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
+	/// at the end of the scope.
 	#[must_use]
-	pub const fn new(pi: PROCESS_INFORMATION) -> Self {
+	pub const unsafe fn new(pi: PROCESS_INFORMATION) -> Self {
 		Self { pi }
 	}
 
@@ -124,6 +132,8 @@ impl CloseHandlePiGuard {
 		std::mem::take(&mut self.pi)
 	}
 }
+
+//------------------------------------------------------------------------------
 
 /// RAII implementation [`HUPDATERSRC`](crate::HUPDATERSRC) which automatically
 /// calls
@@ -157,8 +167,14 @@ impl DerefMut for EndUpdateResourceGuard {
 
 impl EndUpdateResourceGuard {
 	/// Constructs the guard by taking ownership of the handle.
+	/// 
+	/// # Safety 
+	/// 
+	/// Be sure the handle must be freed with
+	/// [`EndUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
+	/// at the end of scope.
 	#[must_use]
-	pub const fn new(hupsrc: HUPDATERSRC) -> Self {
+	pub const unsafe fn new(hupsrc: HUPDATERSRC) -> Self {
 		Self { hupsrc }
 	}
 
@@ -173,6 +189,8 @@ impl EndUpdateResourceGuard {
 		std::mem::replace(&mut self.hupsrc, HUPDATERSRC::INVALID)
 	}
 }
+
+//------------------------------------------------------------------------------
 
 handle_guard! { FindCloseGuard: HFINDFILE;
 	kernel::ffi::FindClose;
@@ -189,6 +207,8 @@ handle_guard! { FreeLibraryGuard: HINSTANCE;
 	/// [`FreeLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary)
 	/// when the object goes out of scope.
 }
+
+//------------------------------------------------------------------------------
 
 /// RAII implementation for [`SID`](crate::SID) which automatically calls
 /// [`FreeSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-freesid)
@@ -235,6 +255,8 @@ impl FreeSidGuard {
 	}
 }
 
+//------------------------------------------------------------------------------
+
 handle_guard! { GlobalFreeGuard: HGLOBAL;
 	kernel::ffi::GlobalFree;
 	/// RAII implementation for [`HGLOBAL`](crate::HGLOBAL) which automatically
@@ -242,6 +264,8 @@ handle_guard! { GlobalFreeGuard: HGLOBAL;
 	/// [`GlobalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalfree)
 	/// when the object goes out of scope.
 }
+
+//------------------------------------------------------------------------------
 
 /// RAII implementation for [`HGLOBAL`](crate::HGLOBAL) lock which automatically
 /// calls
@@ -266,12 +290,20 @@ impl<'a, H> Drop for GlobalUnlockGuard<'a, H>
 impl<'a, H> GlobalUnlockGuard<'a, H>
 	where H: kernel_Hglobal,
 {
-	/// Constructs the guard by taking ownership of the objects.
+	/// Constructs the guard by taking ownership of the handle.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the handle must be freed with
+	/// [`GlobalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
+	/// at the end of scope.
 	#[must_use]
-	pub const fn new(hglobal: &'a H) -> Self {
+	pub const unsafe fn new(hglobal: &'a H) -> Self {
 		Self { hglobal }
 	}
 }
+
+//------------------------------------------------------------------------------
 
 handle_guard! { LocalFreeGuard: HLOCAL;
 	kernel::ffi::LocalFree;
@@ -280,6 +312,8 @@ handle_guard! { LocalFreeGuard: HLOCAL;
 	/// [`LocalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
 	/// when the object goes out of scope.
 }
+
+//------------------------------------------------------------------------------
 
 /// RAII implementation for [`HKEY`](crate::HKEY) which automatically calls
 /// [`RegCloseKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
@@ -314,8 +348,14 @@ impl DerefMut for RegCloseKeyGuard {
 
 impl RegCloseKeyGuard {
 	/// Constructs the guard by taking ownership of the handle.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the handle must be freed with
+	/// [`RegCloseKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
+	/// at the end of scope.
 	#[must_use]
-	pub const fn new(hkey: HKEY) -> Self {
+	pub const unsafe fn new(hkey: HKEY) -> Self {
 		Self { hkey }
 	}
 
@@ -330,6 +370,8 @@ impl RegCloseKeyGuard {
 		std::mem::replace(&mut self.hkey, HKEY::INVALID)
 	}
 }
+
+//------------------------------------------------------------------------------
 
 /// RAII implementation for the [`HFILE`](crate::HFILE) lock which automatically
 /// calls
@@ -363,8 +405,14 @@ impl<'a, H> UnlockFileGuard<'a, H>
 	where H: kernel_Hfile,
 {
 	/// Constructs the guard by taking ownership of the objects.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the handle must be freed with
+	/// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
+	/// at the end of scope.
 	#[must_use]
-	pub const fn new(
+	pub const unsafe fn new(
 		hfile: &'a H,
 		offset: u64,
 		num_bytes_to_lock: u64) -> Self
@@ -373,6 +421,8 @@ impl<'a, H> UnlockFileGuard<'a, H>
 	}
 }
 
+//------------------------------------------------------------------------------
+
 handle_guard! { UnmapViewOfFileGuard: HFILEMAPVIEW;
 	kernel::ffi::UnmapViewOfFile;
 	/// RAII implementation for [`HFILEMAPVIEW`](crate::HFILEMAPVIEW) which
@@ -380,6 +430,8 @@ handle_guard! { UnmapViewOfFileGuard: HFILEMAPVIEW;
 	/// [`UnmapViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-unmapviewoffile)
 	/// when the object goes out of scope.
 }
+
+//------------------------------------------------------------------------------
 
 /// RAII implementation for [`SID`](crate::SID) which automatically frees the
 /// underlying [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html) when
@@ -403,7 +455,7 @@ impl std::fmt::Display for SidGuard {
 }
 
 impl SidGuard {
-	pub(crate) fn new(raw: Vec<u8>) -> Self {
+	pub(in crate::kernel) fn new(raw: Vec<u8>) -> Self {
 		Self { raw }
 	}
 }

@@ -4,7 +4,7 @@ use std::mem::ManuallyDrop;
 
 use crate::{co, user};
 use crate::kernel::decl::{SECURITY_ATTRIBUTES, SysResult, WString};
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
 use crate::prelude::Handle;
 use crate::user::guard::CloseDesktopGuard;
 
@@ -35,7 +35,7 @@ pub trait user_Hdesk: Handle {
 	) -> SysResult<CloseDesktopGuard>
 	{
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				user::ffi::CreateDesktopW(
 					WString::from_str(name).as_ptr(),
 					std::ptr::null(),
@@ -44,8 +44,7 @@ pub trait user_Hdesk: Handle {
 					desired_access.0,
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
 				),
-				|ptr| CloseDesktopGuard::new(HDESK::from_ptr(ptr)),
-			)
+			).map(|h| CloseDesktopGuard::new(h))
 		}
 	}
 
@@ -61,7 +60,7 @@ pub trait user_Hdesk: Handle {
 	) -> SysResult<CloseDesktopGuard>
 	{
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				user::ffi::CreateDesktopExW(
 					WString::from_str(name).as_ptr(),
 					std::ptr::null(),
@@ -71,9 +70,8 @@ pub trait user_Hdesk: Handle {
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
 					heap_size_kb,
 					std::ptr::null_mut(),
-				),
-				|ptr| CloseDesktopGuard::new(HDESK::from_ptr(ptr)),
-			)
+				),	
+			).map(|h| CloseDesktopGuard::new(h))
 		}
 	}
 
@@ -93,10 +91,8 @@ pub trait user_Hdesk: Handle {
 		thread_id: u32) -> SysResult<ManuallyDrop<CloseDesktopGuard>>
 	{
 		unsafe {
-			ptr_to_sysresult(
-				user::ffi::GetThreadDesktop(thread_id),
-				|ptr| ManuallyDrop::new(CloseDesktopGuard::new(HDESK::from_ptr(ptr))),
-			)
+			ptr_to_sysresult_handle(user::ffi::GetThreadDesktop(thread_id))
+				.map(|h| ManuallyDrop::new(CloseDesktopGuard::new(h)))
 		}
 	}
 
@@ -111,15 +107,14 @@ pub trait user_Hdesk: Handle {
 	) -> SysResult<CloseDesktopGuard>
 	{
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				user::ffi::OpenDesktopW(
 					WString::from_str(name).as_ptr(),
 					flags.unwrap_or(co::DF::NoValue).0,
 					inherit as _,
 					desired_access.0,
 				),
-				|ptr| CloseDesktopGuard::new(HDESK::from_ptr(ptr)),
-			)
+			).map(|h| CloseDesktopGuard::new(h))
 		}
 	}
 
@@ -133,14 +128,13 @@ pub trait user_Hdesk: Handle {
 	) -> SysResult<CloseDesktopGuard>
 	{
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				user::ffi::OpenInputDesktop(
 					flags.unwrap_or(co::DF::NoValue).0,
 					inherit as _,
 					desired_access.0,
 				),
-				|ptr| CloseDesktopGuard::new(HDESK::from_ptr(ptr)),
-			)
+			).map(|h| CloseDesktopGuard::new(h))
 		}
 	}
 

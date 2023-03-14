@@ -3,7 +3,7 @@
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::guard::LocalFreeGuard;
-use crate::kernel::privs::{LMEM_INVALID_HANDLE, ptr_to_sysresult};
+use crate::kernel::privs::{LMEM_INVALID_HANDLE, ptr_to_sysresult_handle};
 use crate::prelude::Handle;
 
 impl_handle! { HLOCAL;
@@ -29,10 +29,8 @@ pub trait kernel_Hlocal: Handle {
 		flags: co::LMEM, num_bytes: usize) -> SysResult<LocalFreeGuard>
 	{
 		unsafe {
-			ptr_to_sysresult(
-				kernel::ffi::LocalAlloc(flags.0, num_bytes),
-				|ptr| LocalFreeGuard::new(HLOCAL::from_ptr(ptr)),
-			)
+			ptr_to_sysresult_handle(kernel::ffi::LocalAlloc(flags.0, num_bytes))
+				.map(|h| LocalFreeGuard::new(h))
 		}
 	}
 
@@ -54,12 +52,11 @@ pub trait kernel_Hlocal: Handle {
 	fn LocalReAlloc(&mut self,
 		num_bytes: usize, flags: co::LMEM) -> SysResult<()>
 	{
-		ptr_to_sysresult(
+		ptr_to_sysresult_handle(
 			unsafe {
 				kernel::ffi::LocalReAlloc(self.as_ptr(), num_bytes, flags.0)
 			},
-			|ptr| { *self = unsafe { Self::from_ptr(ptr) } },
-		)
+		).map(|h| { *self = h })
 	}
 
 	/// [`LocalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localsize)

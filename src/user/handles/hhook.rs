@@ -2,7 +2,7 @@
 
 use crate::{co, user};
 use crate::kernel::decl::{HINSTANCE, SysResult};
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
 use crate::prelude::Handle;
 use crate::user::decl::HOOKPROC;
 
@@ -41,7 +41,7 @@ pub trait user_Hhook: Handle {
 		thread_id: Option<u32>,
 	) -> SysResult<HHOOK>
 	{
-		ptr_to_sysresult(
+		ptr_to_sysresult_handle(
 			unsafe {
 				user::ffi::SetWindowsHookExW(
 					hook_id.0,
@@ -50,7 +50,6 @@ pub trait user_Hhook: Handle {
 					thread_id.unwrap_or_default(),
 				)
 			},
-			|ptr| HHOOK(ptr),
 		)
 	}
 

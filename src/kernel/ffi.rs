@@ -100,7 +100,7 @@ extern_sys! { "kernel32";
 	GetCurrentThread() -> HANDLE
 	GetCurrentThreadEffectiveToken() -> HANDLE
 	GetCurrentThreadId() -> u32
-	GetEnvironmentStringsW() -> HANDLE
+	GetEnvironmentStringsW() -> *mut u16
 	GetExitCodeProcess(HANDLE, *mut u32) -> BOOL
 	GetExitCodeThread(HANDLE, *mut u32) -> BOOL
 	GetFileAttributesW(PCSTR) -> u32

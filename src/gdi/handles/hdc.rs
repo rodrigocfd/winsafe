@@ -7,7 +7,9 @@ use crate::gdi::decl::{BITMAPINFO, TEXTMETRIC};
 use crate::gdi::guard::{DeleteDCGuard, DeleteObjectGuard, SelectObjectGuard};
 use crate::gdi::privs::{CLR_INVALID, GDI_ERROR, LF_FACESIZE};
 use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
+use crate::kernel::privs::{
+	bool_to_sysresult, ptr_to_sysresulA, ptr_to_sysresult_handle,
+};
 use crate::prelude::{GdiObject, Handle};
 use crate::user::decl::{
 	COLORREF, HBITMAP, HBRUSH, HDC, HRGN, POINT, RECT, SIZE,
@@ -152,10 +154,9 @@ pub trait gdi_Hdc: Handle {
 		cx: i32, cy: i32) -> SysResult<DeleteObjectGuard<HBITMAP>>
 	{
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				gdi::ffi::CreateCompatibleBitmap(self.as_ptr(), cx, cy),
-				|ptr| DeleteObjectGuard::new(HBITMAP::from_ptr(ptr)),
-			)
+			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -164,10 +165,8 @@ pub trait gdi_Hdc: Handle {
 	#[must_use]
 	fn CreateCompatibleDC(&self) -> SysResult<DeleteDCGuard> {
 		unsafe {
-			ptr_to_sysresult(
-				gdi::ffi::CreateCompatibleDC(self.as_ptr()),
-				|ptr| DeleteDCGuard::new(HDC::from_ptr(ptr)),
-			)
+			ptr_to_sysresult_handle(gdi::ffi::CreateCompatibleDC(self.as_ptr()))
+				.map(|h| DeleteDCGuard::new(h))
 		}
 	}
 
@@ -517,10 +516,8 @@ pub trait gdi_Hdc: Handle {
 	#[must_use]
 	fn PathToRegion(&self) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
-			ptr_to_sysresult(
-				gdi::ffi::PathToRegion(self.as_ptr()),
-				|ptr| DeleteObjectGuard::new(HRGN::from_ptr(ptr)),
-			)
+			ptr_to_sysresult_handle(gdi::ffi::PathToRegion(self.as_ptr()))
+				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -702,24 +699,23 @@ pub trait gdi_Hdc: Handle {
 		where G: GdiObject,
 	{
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresulA(
 				gdi::ffi::SelectObject(self.as_ptr(), hgdiobj.as_ptr()),
-				|ptr| {
-					if hgdiobj.type_id() == TypeId::of::<HRGN>() {
-						SelectObjectGuard::new(
-							self,
-							G::NULL, // regions don't need cleanup
-							Some(co::REGION(ptr as *mut _ as _)),
-						)
-					} else {
-						SelectObjectGuard::new(
-							self,
-							G::from_ptr(ptr), // GDI object to cleanup
-							None,
-						)
-					}
-				},
-			)
+			).map(|ptr| {
+				if hgdiobj.type_id() == TypeId::of::<HRGN>() {
+					SelectObjectGuard::new(
+						self,
+						G::NULL, // regions don't need cleanup
+						Some(co::REGION(ptr as *mut _ as _)),
+					)
+				} else {
+					SelectObjectGuard::new(
+						self,
+						G::from_ptr(ptr), // GDI object to cleanup
+						None,
+					)
+				}
+			})
 		}
 	}
 

@@ -73,15 +73,15 @@ pub trait kernel_Hkey: Handle {
 		}
 
 		let mut hkey = HKEY::NULL;
-		error_to_sysresult(
-			unsafe {
+		unsafe {
+			error_to_sysresult(
 				kernel::ffi::RegConnectRegistryW(
 					WString::from_opt_str(machine_name).as_ptr(),
 					predef_hkey.as_ptr(),
 					hkey.as_mut(),
-				)
-			},
-		).map(|_| RegCloseKeyGuard::new(hkey))
+				),
+			).map(|_| RegCloseKeyGuard::new(hkey))
+		}
 	}
 
 	/// [`RegCopyTree`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcopytreew)
@@ -112,8 +112,8 @@ pub trait kernel_Hkey: Handle {
 		let mut hkey = HKEY::NULL;
 		let mut disposition = co::REG_DISPOSITION::NoValue;
 
-		error_to_sysresult(
-			unsafe {
+		unsafe {
+			error_to_sysresult(
 				kernel::ffi::RegCreateKeyExW(
 					self.as_ptr(),
 					WString::from_str(sub_key).as_ptr(),
@@ -124,9 +124,9 @@ pub trait kernel_Hkey: Handle {
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
 					hkey.as_mut(),
 					&mut disposition.0,
-				)
-			},
-		).map(|_| (RegCloseKeyGuard::new(hkey), disposition))
+				),
+			).map(|_| (RegCloseKeyGuard::new(hkey), disposition))
+		}
 	}
 
 	/// [`RegCreateKeyTransacted`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcreatekeytransactedw)
@@ -144,8 +144,8 @@ pub trait kernel_Hkey: Handle {
 		let mut hkey = HKEY::NULL;
 		let mut disposition = co::REG_DISPOSITION::NoValue;
 
-		error_to_sysresult(
-			unsafe {
+		unsafe {
+			error_to_sysresult(
 				kernel::ffi::RegCreateKeyTransactedW(
 					self.as_ptr(),
 					WString::from_str(sub_key).as_ptr(),
@@ -158,9 +158,9 @@ pub trait kernel_Hkey: Handle {
 					&mut disposition.0,
 					htransaction.as_ptr(),
 					std::ptr::null_mut(),
-				)
-			},
-		).map(|_| (RegCloseKeyGuard::new(hkey), disposition))
+				),
+			).map(|_| (RegCloseKeyGuard::new(hkey), disposition))
+		}
 	}
 
 	/// [`RegDeleteKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletekeyw)
@@ -468,11 +468,11 @@ pub trait kernel_Hkey: Handle {
 		access_rights: co::KEY) -> SysResult<RegCloseKeyGuard>
 	{
 		let mut hkey = HKEY::NULL;
-		error_to_sysresult(
-			unsafe {
-				kernel::ffi::RegOpenCurrentUser(access_rights.0, hkey.as_mut())
-			},
-		).map(|_| RegCloseKeyGuard::new(hkey))
+		unsafe {
+			error_to_sysresult(
+				kernel::ffi::RegOpenCurrentUser(access_rights.0, hkey.as_mut()),
+			).map(|_| RegCloseKeyGuard::new(hkey))
+		}
 	}
 
 	/// [`RegOpenKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw)
@@ -499,17 +499,17 @@ pub trait kernel_Hkey: Handle {
 	) -> SysResult<RegCloseKeyGuard>
 	{
 		let mut hkey = HKEY::NULL;
-		error_to_sysresult(
-			unsafe {
+		unsafe {
+			error_to_sysresult(
 				kernel::ffi::RegOpenKeyExW(
 					self.as_ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					options.0,
 					access_rights.0,
 					hkey.as_mut(),
-				)
-			},
-		).map(|_| RegCloseKeyGuard::new(hkey))
+				),
+			).map(|_| RegCloseKeyGuard::new(hkey))
+		}
 	}
 
 	/// [`RegOpenKeyTransacted`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeytransactedw)
@@ -523,8 +523,8 @@ pub trait kernel_Hkey: Handle {
 	) -> SysResult<RegCloseKeyGuard>
 	{
 		let mut hkey = HKEY::NULL;
-		error_to_sysresult(
-			unsafe {
+		unsafe {
+			error_to_sysresult(
 				kernel::ffi::RegOpenKeyTransactedW(
 					self.as_ptr(),
 					WString::from_str(sub_key).as_ptr(),
@@ -533,9 +533,9 @@ pub trait kernel_Hkey: Handle {
 					hkey.as_mut(),
 					htransaction.as_ptr(),
 					std::ptr::null_mut(),
-				)
-			},
-		).map(|_| RegCloseKeyGuard::new(hkey))
+				),
+			).map(|_| RegCloseKeyGuard::new(hkey))
+		}
 	}
 
 	/// [`RegQueryInfoKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw)

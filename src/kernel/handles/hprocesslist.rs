@@ -6,7 +6,7 @@ use crate::kernel::decl::{
 	THREADENTRY32,
 };
 use crate::kernel::guard::CloseHandleGuard;
-use crate::kernel::privs::ptr_to_sysresult;
+use crate::kernel::privs::ptr_to_sysresult_handle;
 use crate::prelude::Handle;
 
 impl_handle! { HPROCESSLIST;
@@ -158,13 +158,12 @@ pub trait kernel_Hprocesslist: Handle {
 	) -> SysResult<CloseHandleGuard<HPROCESSLIST>>
 	{
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				kernel::ffi::CreateToolhelp32Snapshot(
 					flags.0,
 					th32_process_id.unwrap_or_default(),
 				),
-				|ptr| CloseHandleGuard::new(HPROCESSLIST(ptr)),
-			)
+			).map(|h| CloseHandleGuard::new(h))
 		}
 	}
 

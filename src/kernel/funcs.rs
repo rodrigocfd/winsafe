@@ -12,7 +12,7 @@ use crate::kernel::ffi_types::BOOL;
 use crate::kernel::guard::{FreeSidGuard, LocalFreeGuard, SidGuard};
 use crate::kernel::privs::{
 	bool_to_sysresult, INVALID_FILE_ATTRIBUTES, MAX_COMPUTERNAME_LENGTH,
-	MAX_PATH, parse_multi_z_str, ptr_to_sysresult, SECURITY_DESCRIPTOR_REVISION,
+	MAX_PATH, parse_multi_z_str, ptr_to_sysresulA, SECURITY_DESCRIPTOR_REVISION,
 };
 use crate::prelude::Handle;
 
@@ -459,20 +459,19 @@ pub fn GetCurrentThreadId() -> u32 {
 /// ```
 #[must_use]
 pub fn GetEnvironmentStrings() -> SysResult<HashMap<String, String>> {
-	ptr_to_sysresult(
-		unsafe { kernel::ffi::GetEnvironmentStringsW() },
-		|ptr| {
-			let vec_env_strs = parse_multi_z_str(ptr as *mut _ as _);
-			unsafe { kernel::ffi::FreeEnvironmentStringsW(ptr); }
+	ptr_to_sysresulA(
+		unsafe { kernel::ffi::GetEnvironmentStringsW() } as _,
+	).map(|ptr| {
+		let vec_env_strs = parse_multi_z_str(ptr as *mut _ as _);
+		unsafe { kernel::ffi::FreeEnvironmentStringsW(ptr); }
 
-			let mut map = HashMap::with_capacity(vec_env_strs.len());
-			for env_str in vec_env_strs {
-				let pair: Vec<&str> = env_str.split("=").collect();
-				map.insert(pair[0].to_owned(), pair[1].to_owned());
-			}
-			map
-		},
-	)
+		let mut map = HashMap::with_capacity(vec_env_strs.len());
+		for env_str in vec_env_strs {
+			let pair: Vec<&str> = env_str.split("=").collect();
+			map.insert(pair[0].to_owned(), pair[1].to_owned());
+		}
+		map
+	})
 }
 
 /// [`GetFirmwareType`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getfirmwaretype)

@@ -3,8 +3,8 @@
 use crate::{co, gdi};
 use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::ptr_to_sysresult;
-use crate::prelude::{GdiObject, Handle};
+use crate::kernel::privs::ptr_to_sysresult_handle;
+use crate::prelude::GdiObject;
 use crate::user::decl::{HRGN, RECT, SIZE};
 
 impl GdiObject for HRGN {}
@@ -24,11 +24,10 @@ pub trait gdi_Hrgn: GdiObject {
 	#[must_use]
 	fn CreateRectRgn(bounds: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				gdi::ffi::CreateRectRgn(
 					bounds.left, bounds.top, bounds.right, bounds.bottom),
-				|ptr| DeleteObjectGuard::new(HRGN::from_ptr(ptr)),
-			)
+			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -37,10 +36,9 @@ pub trait gdi_Hrgn: GdiObject {
 	#[must_use]
 	fn CreateRectRgnIndirect(rc: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				gdi::ffi::CreateRectRgnIndirect(&rc as *const _ as _),
-				|ptr| DeleteObjectGuard::new(HRGN::from_ptr(ptr)),
-			)
+			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -51,13 +49,12 @@ pub trait gdi_Hrgn: GdiObject {
 		bounds: RECT, size: SIZE) -> SysResult<DeleteObjectGuard<HRGN>>
 	{
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				gdi::ffi::CreateRoundRectRgn(
 					bounds.left, bounds.top, bounds.right, bounds.top,
 					size.cx, size.cy,
 				),
-				|ptr| DeleteObjectGuard::new(HRGN::from_ptr(ptr)),
-			)
+			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 

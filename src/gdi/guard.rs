@@ -11,6 +11,8 @@ handle_guard! { DeleteDCGuard: HDC;
 	/// when the object goes out of scope.
 }
 
+//------------------------------------------------------------------------------
+
 /// RAII implementation for a [`GdiObject`](crate::prelude::GdiObject) which
 /// automatically calls
 /// [`DeleteObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
@@ -75,6 +77,8 @@ impl<T> DeleteObjectGuard<T>
 		std::mem::replace(&mut self.handle, T::INVALID)
 	}
 }
+
+//------------------------------------------------------------------------------
 
 /// RAII implementation for
 /// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject) calls, which

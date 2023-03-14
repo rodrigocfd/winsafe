@@ -4,8 +4,8 @@ use crate::gdi;
 use crate::gdi::decl::BITMAP;
 use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::ptr_to_sysresult;
-use crate::prelude::{GdiObject, Handle};
+use crate::kernel::privs::ptr_to_sysresult_handle;
+use crate::prelude::GdiObject;
 use crate::user::decl::{HBITMAP, SIZE};
 
 impl GdiObject for HBITMAP {}
@@ -31,11 +31,10 @@ pub trait gdi_Hbitmap: GdiObject {
 	) -> SysResult<DeleteObjectGuard<HBITMAP>>
 	{
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				gdi::ffi::CreateBitmap(
 					sz.cx, sz.cy, num_planes, bit_count, bits as _),
-				|ptr| DeleteObjectGuard::new(HBITMAP::from_ptr(ptr)),
-			)
+			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 

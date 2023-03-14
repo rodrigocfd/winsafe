@@ -3,7 +3,9 @@
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::guard::{GlobalFreeGuard, GlobalUnlockGuard};
-use crate::kernel::privs::{GMEM_INVALID_HANDLE, ptr_to_sysresult};
+use crate::kernel::privs::{
+	GMEM_INVALID_HANDLE, ptr_to_sysresulA, ptr_to_sysresult_handle,
+};
 use crate::prelude::Handle;
 
 impl_handle! { HGLOBAL;
@@ -30,10 +32,8 @@ pub trait kernel_Hglobal: Handle {
 		flags: co::GMEM, num_bytes: usize) -> SysResult<GlobalFreeGuard>
 	{
 		unsafe {
-			ptr_to_sysresult(
-				kernel::ffi::GlobalAlloc(flags.0, num_bytes),
-				|ptr| GlobalFreeGuard::new(HGLOBAL::from_ptr(ptr)),
-			)
+			ptr_to_sysresult_handle(kernel::ffi::GlobalAlloc(flags.0, num_bytes))
+				.map(|h| GlobalFreeGuard::new(h))
 		}
 	}
 
@@ -82,16 +82,15 @@ pub trait kernel_Hglobal: Handle {
 	#[must_use]
 	fn GlobalLock(&self) -> SysResult<(&mut [u8], GlobalUnlockGuard<'_, Self>)> {
 		let mem_sz = self.GlobalSize()?;
-		ptr_to_sysresult(
-			unsafe { kernel::ffi::GlobalLock(self.as_ptr()) },
-			|ptr| (
-				unsafe {
+		unsafe {
+			ptr_to_sysresulA(kernel::ffi::GlobalLock(self.as_ptr()))
+				.map(|ptr| (
 					std::slice::from_raw_parts_mut(
-						ptr as *mut _ as *mut _, mem_sz as _)
-				},
-				GlobalUnlockGuard::new(self),
-			),
-		)
+						ptr as *mut _ as *mut _, mem_sz as _),
+					GlobalUnlockGuard::new(self),
+				),
+			)
+		}
 	}
 
 	/// [`GlobalReAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalrealloc)
@@ -102,12 +101,11 @@ pub trait kernel_Hglobal: Handle {
 	fn GlobalReAlloc(&mut self,
 		num_bytes: usize, flags: co::GMEM) -> SysResult<()>
 	{
-		ptr_to_sysresult(
+		ptr_to_sysresult_handle(
 			unsafe {
 				kernel::ffi::GlobalReAlloc(self.as_ptr(), num_bytes, flags.0)
 			},
-			|ptr| { *self = unsafe { Self::from_ptr(ptr) } },
-		)
+		).map(|h| { *self = h })
 	}
 
 	/// [`GlobalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize)

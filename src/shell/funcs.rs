@@ -5,7 +5,9 @@ use crate::kernel::decl::{
 	GetLastError, HACCESSTOKEN, HLOCAL, SysResult, WString,
 };
 use crate::kernel::guard::LocalFreeGuard;
-use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, ptr_to_sysresult};
+use crate::kernel::privs::{
+	bool_to_sysresult, MAX_PATH, ptr_to_sysresulA,
+};
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult, IStream};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{Handle, ole_IBindCtx, shell_IShellItem};
@@ -69,7 +71,7 @@ pub fn PathCombine(
 	str_dir: Option<&str>, str_file: Option<&str>) -> SysResult<String>
 {
 	let mut buf = WString::new_alloc_buf(MAX_PATH);
-	ptr_to_sysresult(
+	ptr_to_sysresulA(
 		unsafe {
 			shell::ffi::PathCombineW(
 				buf.as_mut_ptr(),
@@ -77,8 +79,7 @@ pub fn PathCombine(
 				WString::from_opt_str(str_file).as_ptr(),
 			) as _
 		},
-		|_| buf.to_string(),
-	)
+	).map(|_| buf.to_string())
 }
 
 /// [`PathCommonPrefix`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathcommonprefixw)

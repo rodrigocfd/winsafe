@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::SysResult;
-use crate::kernel::privs::ptr_to_sysresult;
+use crate::kernel::privs::ptr_to_sysresult_handle;
 use crate::prelude::Handle;
 use crate::user;
 use crate::user::guard::DestroyIconGuard;
@@ -27,10 +27,8 @@ pub trait user_Hicon: Handle {
 	#[must_use]
 	fn CopyIcon(&self) -> SysResult<DestroyIconGuard> {
 		unsafe {
-			ptr_to_sysresult(
-				user::ffi::CopyIcon(self.as_ptr()),
-				|ptr| DestroyIconGuard::new(HICON::from_ptr(ptr)),
-			)
+			ptr_to_sysresult_handle(user::ffi::CopyIcon(self.as_ptr()))
+				.map(|h| DestroyIconGuard::new(h))
 		}
 	}
 }

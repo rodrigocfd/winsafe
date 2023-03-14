@@ -2,7 +2,7 @@
 
 use crate::{co, user};
 use crate::kernel::decl::SysResult;
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
 use crate::prelude::Handle;
 use crate::user::guard::DestroyCursorGuard;
 
@@ -27,10 +27,8 @@ pub trait user_Hcursor: Handle {
 	#[must_use]
 	fn CopyCursor(&self) -> SysResult<DestroyCursorGuard> {
 		unsafe {
-			ptr_to_sysresult(
-				user::ffi::CopyIcon(self.as_ptr()),
-				|ptr| DestroyCursorGuard::new(HCURSOR::from_ptr(ptr)),
-			)
+			ptr_to_sysresult_handle(user::ffi::CopyIcon(self.as_ptr()))
+				.map(|h| DestroyCursorGuard::new(h))
 		}
 	}
 

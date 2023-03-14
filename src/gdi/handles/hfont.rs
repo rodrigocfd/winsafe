@@ -4,8 +4,8 @@ use crate::{co, gdi};
 use crate::gdi::decl::LOGFONT;
 use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::kernel::privs::ptr_to_sysresult;
-use crate::prelude::{GdiObject, Handle};
+use crate::kernel::privs::ptr_to_sysresult_handle;
+use crate::prelude::GdiObject;
 use crate::user::decl::SIZE;
 
 impl_handle! { HFONT;
@@ -45,7 +45,7 @@ pub trait gdi_Hfont: GdiObject {
 	) -> SysResult<DeleteObjectGuard<HFONT>>
 	{
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				gdi::ffi::CreateFontW(
 					sz.cy, sz.cx, escapement, orientation,
 					weight.0 as _,
@@ -55,8 +55,7 @@ pub trait gdi_Hfont: GdiObject {
 					quality.0 as _, pitch_and_family.0 as _,
 					WString::from_str(face_name).as_ptr(),
 				),
-				|ptr| DeleteObjectGuard::new(HFONT::from_ptr(ptr)),
-			)
+			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -65,10 +64,9 @@ pub trait gdi_Hfont: GdiObject {
 	#[must_use]
 	fn CreateFontIndirect(lf: &LOGFONT) -> SysResult<DeleteObjectGuard<HFONT>> {
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				gdi::ffi::CreateFontIndirectW(lf as *const _ as _),
-				|ptr| DeleteObjectGuard::new(HFONT::from_ptr(ptr)),
-			)
+			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -91,9 +89,6 @@ pub trait gdi_Hfont: GdiObject {
 	/// static method.
 	#[must_use]
 	fn GetStockObject(sf: co::STOCK_FONT) -> SysResult<HFONT> {
-		ptr_to_sysresult(
-			unsafe { gdi::ffi::GetStockObject(sf.0) },
-			|ptr| HFONT(ptr),
-		)
+		ptr_to_sysresult_handle(unsafe { gdi::ffi::GetStockObject(sf.0) })
 	}
 }

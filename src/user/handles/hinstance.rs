@@ -1,12 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::{GetLastError, HINSTANCE, IdStr, SysResult, WString};
-use crate::kernel::privs::ptr_to_sysresult;
+use crate::kernel::privs::ptr_to_sysresult_handle;
 use crate::prelude::Handle;
 use crate::user;
 use crate::user::decl::{
-	ATOM, DLGPROC, HACCEL, HCURSOR, HICON, HMENU, HWND, IdIdcStr, IdIdiStr,
-	WNDCLASSEX,
+	ATOM, DLGPROC, HACCEL, HMENU, HWND, IdIdcStr, IdIdiStr, WNDCLASSEX,
 };
 use crate::user::guard::{DestroyCursorGuard, DestroyIconGuard};
 
@@ -34,7 +33,7 @@ pub trait user_Hinstance: Handle {
 		init_param: Option<isize>,
 	) -> SysResult<HWND>
 	{
-		ptr_to_sysresult(
+		ptr_to_sysresult_handle(
 			unsafe {
 				user::ffi::CreateDialogParamW(
 					self.as_ptr(),
@@ -44,7 +43,6 @@ pub trait user_Hinstance: Handle {
 					init_param.unwrap_or_default(),
 				)
 			},
-			|ptr| unsafe { HWND::from_ptr(ptr) },
 		)
 	}
 
@@ -110,12 +108,11 @@ pub trait user_Hinstance: Handle {
 	/// method.
 	#[must_use]
 	fn LoadAccelerators(&self, table_name: IdStr) -> SysResult<HACCEL> {
-		unsafe {
-			ptr_to_sysresult(
-				user::ffi::LoadAcceleratorsW(self.as_ptr(), table_name.as_ptr()),
-				|ptr| HACCEL::from_ptr(ptr),
-			)
-		}
+		ptr_to_sysresult_handle(
+			unsafe {
+				user::ffi::LoadAcceleratorsW(self.as_ptr(), table_name.as_ptr())
+			},
+		)
 	}
 
 	/// [`LoadCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadcursorw)
@@ -138,10 +135,9 @@ pub trait user_Hinstance: Handle {
 		resource_id: IdIdcStr) -> SysResult<DestroyCursorGuard>
 	{
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				user::ffi::LoadCursorW(self.as_ptr(), resource_id.as_ptr()),
-				|ptr| DestroyCursorGuard::new(HCURSOR::from_ptr(ptr)),
-			)
+			).map(|h| DestroyCursorGuard::new(h))
 		}
 	}
 
@@ -163,10 +159,9 @@ pub trait user_Hinstance: Handle {
 	#[must_use]
 	fn LoadIcon(&self, icon_id: IdIdiStr) -> SysResult<DestroyIconGuard> {
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				user::ffi::LoadIconW(self.as_ptr(), icon_id.as_ptr()),
-				|ptr| DestroyIconGuard::new(HICON::from_ptr(ptr)),
-			)
+			).map(|h| DestroyIconGuard::new(h))
 		}
 	}
 
@@ -174,12 +169,9 @@ pub trait user_Hinstance: Handle {
 	/// method.
 	#[must_use]
 	fn LoadMenu(&self, resource_id: IdStr) -> SysResult<HMENU> {
-		unsafe {
-			ptr_to_sysresult(
-				user::ffi::LoadMenuW(self.as_ptr(), resource_id.as_ptr()),
-				|ptr| HMENU::from_ptr(ptr),
-			)
-		}
+		ptr_to_sysresult_handle(
+			unsafe { user::ffi::LoadMenuW(self.as_ptr(), resource_id.as_ptr()) },
+		)
 	}
 
 	/// [`LoadString`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringw)

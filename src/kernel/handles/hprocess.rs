@@ -8,7 +8,7 @@ use crate::kernel::decl::{
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::guard::{CloseHandleGuard, CloseHandlePiGuard};
 use crate::kernel::privs::{
-	bool_to_sysresult, INFINITE, MAX_PATH, ptr_to_sysresult,
+	bool_to_sysresult, INFINITE, MAX_PATH, ptr_to_sysresult_handle,
 };
 use crate::prelude::Handle;
 
@@ -59,8 +59,8 @@ pub trait kernel_Hprocess: Handle {
 		let mut buf_cmd_line = WString::from_opt_str(command_line);
 		let mut pi = PROCESS_INFORMATION::default();
 
-		bool_to_sysresult(
-			unsafe {
+		unsafe {
+			bool_to_sysresult(
 				kernel::ffi::CreateProcessW(
 					WString::from_opt_str(application_name).as_ptr(),
 					buf_cmd_line.as_mut_ptr(),
@@ -78,9 +78,9 @@ pub trait kernel_Hprocess: Handle {
 					WString::from_opt_str(current_dir).as_ptr(),
 					si as *mut _ as _,
 					&mut pi as *mut _ as _,
-				)
-			},
-		).map(|_| CloseHandlePiGuard::new(pi))
+				),
+			).map(|_| CloseHandlePiGuard::new(pi))
+		}
 	}
 
 	/// [`FlushInstructionCache`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushinstructioncache)
@@ -208,14 +208,13 @@ pub trait kernel_Hprocess: Handle {
 	) -> SysResult<CloseHandleGuard<HPROCESS>>
 	{
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				kernel::ffi::OpenProcess(
 					desired_access.0,
 					inherit_handle as _,
 					process_id,
 				),
-				|ptr| CloseHandleGuard::new(HPROCESS(ptr)),
-			)
+			).map(|h| CloseHandleGuard::new(h))
 		}
 	}
 

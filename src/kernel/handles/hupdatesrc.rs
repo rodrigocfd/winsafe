@@ -3,7 +3,7 @@
 use crate::kernel;
 use crate::kernel::decl::{IdStr, LANGID, RtStr, SysResult, WString};
 use crate::kernel::guard::EndUpdateResourceGuard;
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
 use crate::prelude::Handle;
 
 impl_handle! { HUPDATERSRC;
@@ -31,15 +31,14 @@ pub trait kernel_Hupdatersrc: Handle {
 		delete_existing_resources: bool,
 	) -> SysResult<EndUpdateResourceGuard>
 	{
-		ptr_to_sysresult(
-			unsafe {
+		unsafe {
+			ptr_to_sysresult_handle(
 				kernel::ffi::BeginUpdateResourceW(
 					WString::from_str(file_name).as_ptr(),
 					delete_existing_resources as _,
-				)
-			},
-			|ptr| EndUpdateResourceGuard::new(HUPDATERSRC(ptr)),
-		)
+				),
+			).map(|h| EndUpdateResourceGuard::new(h))
+		}
 	}
 
 	/// [`UpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-updateresourcew)

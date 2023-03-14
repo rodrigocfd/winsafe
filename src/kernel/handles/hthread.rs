@@ -5,7 +5,7 @@ use crate::kernel::decl::{
 	FILETIME, GetLastError, HACCESSTOKEN, SECURITY_ATTRIBUTES, SysResult,
 };
 use crate::kernel::guard::CloseHandleGuard;
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
 use crate::prelude::Handle;
 
 impl_handle! { HTHREAD;
@@ -40,7 +40,7 @@ pub trait kernel_Hthread: Handle {
 	{
 		let mut thread_id = u32::default();
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				kernel::ffi::CreateThread(
 					thread_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					stack_size,
@@ -48,9 +48,8 @@ pub trait kernel_Hthread: Handle {
 					parameter,
 					flags.0,
 					&mut thread_id,
-				),
-				|ptr| (CloseHandleGuard::new(HTHREAD(ptr)), thread_id),
-			)
+				)
+			).map(|h| (CloseHandleGuard::new(h), thread_id))
 		}
 	}
 

@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::SysResult;
-use crate::kernel::privs::ptr_to_sysresult;
+use crate::kernel::privs::ptr_to_sysresult_handle;
 use crate::prelude::Handle;
 use crate::user;
 use crate::user::decl::ACCEL;
@@ -30,13 +30,12 @@ pub trait user_Haccel: Handle {
 		accel: &mut [ACCEL]) -> SysResult<DestroyAcceleratorTableGuard>
 	{
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				user::ffi::CreateAcceleratorTableW(
 					accel.as_mut_ptr() as _,
 					accel.len() as _,
 				),
-				|ptr| DestroyAcceleratorTableGuard::new(HACCEL::from_ptr(ptr)),
-			)
+			).map(|h| DestroyAcceleratorTableGuard::new(h))
 		}
 	}
 }

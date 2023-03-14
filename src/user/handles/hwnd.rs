@@ -8,11 +8,11 @@ use crate::kernel::decl::{
 };
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::{
-	bool_to_sysresult, MAX_PATH, ptr_to_option_handle, ptr_to_sysresult,
+	bool_to_sysresult, MAX_PATH, ptr_to_option_handle, ptr_to_sysresult_handle,
 };
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{
-	ALTTABINFO, AtomStr, HACCEL, HDC, HMENU, HMONITOR, HRGN, HwndPlace, IdMenu,
+	ALTTABINFO, AtomStr, HACCEL, HMENU, HMONITOR, HRGN, HwndPlace, IdMenu,
 	IdPos, MENUBARINFO, MSG, PAINTSTRUCT, POINT, RECT, SCROLLINFO, SIZE,
 	TIMERPROC, WINDOWINFO, WINDOWPLACEMENT,
 };
@@ -113,10 +113,9 @@ pub trait user_Hwnd: Handle {
 	fn BeginPaint(&self) -> SysResult<EndPaintGuard<'_, Self>> {
 		let mut ps = PAINTSTRUCT::default();
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				user::ffi::BeginPaint(self.as_ptr(), &mut ps as *mut _ as _),
-				|ptr| EndPaintGuard::new(self, HDC::from_ptr(ptr), ps),
-			)
+			).map(|h| EndPaintGuard::new(self, h, ps))
 		}
 	}
 
@@ -201,7 +200,7 @@ pub trait user_Hwnd: Handle {
 		lparam: Option<isize>,
 	) -> SysResult<HWND>
 	{
-		ptr_to_sysresult(
+		ptr_to_sysresult_handle(
 			user::ffi::CreateWindowExW(
 				ex_style.0,
 				class_name.as_ptr(),
@@ -214,7 +213,6 @@ pub trait user_Hwnd: Handle {
 				hinstance.as_ptr(),
 				lparam.unwrap_or_default() as _,
 			),
-			|ptr| HWND::from_ptr(ptr),
 		)
 	}
 
@@ -302,15 +300,14 @@ pub trait user_Hwnd: Handle {
 	fn FindWindow(
 		class_name: Option<AtomStr>, title: Option<&str>) -> SysResult<HWND>
 	{
-		unsafe {
-			ptr_to_sysresult(
+		ptr_to_sysresult_handle(
+			unsafe {
 				user::ffi::FindWindowW(
 					class_name.map_or(std::ptr::null_mut(), |p| p.as_ptr()),
 					WString::from_opt_str(title).as_ptr(),
-				),
-				|ptr| HWND::from_ptr(ptr),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`FindWindowEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexw)
@@ -322,17 +319,16 @@ pub trait user_Hwnd: Handle {
 		title: Option<&str>,
 	) -> SysResult<HWND>
 	{
-		unsafe {
-			ptr_to_sysresult(
+		ptr_to_sysresult_handle(
+			unsafe {
 				user::ffi::FindWindowExW(
 					self.as_ptr(),
 					hwnd_child_after.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 					class_name.as_ptr(),
 					WString::from_opt_str(title).as_ptr(),
-				),
-				|ptr| HWND::from_ptr(ptr),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`GetActiveWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getactivewindow)
@@ -437,10 +433,8 @@ pub trait user_Hwnd: Handle {
 	#[must_use]
 	fn GetDC(&self) -> SysResult<ReleaseDCGuard<'_, Self>> {
 		unsafe {
-			ptr_to_sysresult(
-				user::ffi::GetDC(self.as_ptr()),
-				|ptr| ReleaseDCGuard::new(self, HDC::from_ptr(ptr)),
-			)
+			ptr_to_sysresult_handle(user::ffi::GetDC(self.as_ptr()))
+				.map(|h| ReleaseDCGuard::new(self, h))
 		}
 	}
 
@@ -448,7 +442,7 @@ pub trait user_Hwnd: Handle {
 	/// static method.
 	#[must_use]
 	fn GetDesktopWindow() -> HWND {
-		HWND(unsafe { user::ffi::GetDesktopWindow() })
+		unsafe { HWND::from_ptr(user::ffi::GetDesktopWindow()) }
 	}
 
 	/// [`GetDlgCtrlID`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdlgctrlid)
@@ -469,9 +463,8 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn GetDlgItem(&self, ctrl_id: u16) -> SysResult<HWND> {
-		ptr_to_sysresult(
+		ptr_to_sysresult_handle(
 			unsafe { user::ffi::GetDlgItem(self.as_ptr(), ctrl_id as _) },
-			|ptr| HWND(ptr),
 		)
 	}
 
@@ -545,15 +538,14 @@ pub trait user_Hwnd: Handle {
 	fn GetNextDlgGroupItem(&self,
 		hwnd_ctrl: &HWND, previous: bool) -> SysResult<HWND>
 	{
-		unsafe {
-			ptr_to_sysresult(
+		ptr_to_sysresult_handle(
+			unsafe {
 				user::ffi::GetNextDlgGroupItem(
 					self.as_ptr(),
 					hwnd_ctrl.as_ptr(), previous as _,
-				),
-				|ptr| HWND::from_ptr(ptr),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`GetNextDlgTabItem`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getnextdlgtabitem)
@@ -562,7 +554,7 @@ pub trait user_Hwnd: Handle {
 	fn GetNextDlgTabItem(&self,
 		hwnd_ctrl: &HWND, previous: bool) -> SysResult<HWND>
 	{
-		ptr_to_sysresult(
+		ptr_to_sysresult_handle(
 			unsafe {
 				user::ffi::GetNextDlgTabItem(
 					self.as_ptr(),
@@ -570,7 +562,6 @@ pub trait user_Hwnd: Handle {
 					previous as _,
 				)
 			},
-			|ptr| HWND(ptr),
 		)
 	}
 
@@ -578,10 +569,7 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn GetParent(&self) -> SysResult<HWND> {
-		ptr_to_sysresult(
-			unsafe { user::ffi::GetParent(self.as_ptr()) },
-			|ptr| HWND(ptr),
-		)
+		ptr_to_sysresult_handle(unsafe { user::ffi::GetParent(self.as_ptr()) })
 	}
 
 	/// [`GetScrollInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getscrollinfo)
@@ -672,12 +660,9 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn GetWindow(&self, cmd: co::GW) -> SysResult<HWND> {
-		unsafe {
-			ptr_to_sysresult(
-				user::ffi::GetWindow(self.as_ptr(), cmd.0),
-				|ptr| HWND::from_ptr(ptr),
-			)
-		}
+		ptr_to_sysresult_handle(
+			unsafe { user::ffi::GetWindow(self.as_ptr(), cmd.0) },
+		)
 	}
 
 	/// [`GetWindowDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdc)
@@ -685,10 +670,8 @@ pub trait user_Hwnd: Handle {
 	#[must_use]
 	fn GetWindowDC(&self) -> SysResult<ReleaseDCGuard<'_, Self>> {
 		unsafe {
-			ptr_to_sysresult(
-				user::ffi::GetWindowDC(self.as_ptr()),
-				|ptr| ReleaseDCGuard::new(self, HDC::from_ptr(ptr)),
-			)
+			ptr_to_sysresult_handle(user::ffi::GetWindowDC(self.as_ptr()))
+				.map(|h| ReleaseDCGuard::new(self, h))
 		}
 	}
 
@@ -1343,12 +1326,9 @@ pub trait user_Hwnd: Handle {
 	/// [`SetActiveWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setactivewindow)
 	/// method.
 	fn SetActiveWindow(&self) -> SysResult<HWND> {
-		unsafe {
-			ptr_to_sysresult(
-				user::ffi::SetActiveWindow(self.as_ptr()),
-				|ptr| HWND::from_ptr(ptr),
-			)
-		}
+		ptr_to_sysresult_handle(
+			unsafe { user::ffi::SetActiveWindow(self.as_ptr()) },
+		)
 	}
 
 	/// [`SetCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcapture)

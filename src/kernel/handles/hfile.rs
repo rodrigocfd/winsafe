@@ -6,7 +6,7 @@ use crate::kernel::decl::{
 	OVERLAPPED, SECURITY_ATTRIBUTES, SysResult, WString,
 };
 use crate::kernel::guard::{CloseHandleGuard, UnlockFileGuard};
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
 use crate::prelude::Handle;
 
 impl_handle! { HFILE;
@@ -112,7 +112,7 @@ pub trait kernel_Hfile: Handle {
 	) -> SysResult<CloseHandleGuard<HFILEMAP>>
 	{
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				kernel::ffi::CreateFileMappingFromApp(
 					self.as_ptr(),
 					mapping_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
@@ -120,8 +120,7 @@ pub trait kernel_Hfile: Handle {
 					max_size.unwrap_or_default(),
 					WString::from_opt_str(mapping_name).as_ptr(),
 				),
-				|ptr| CloseHandleGuard::new(HFILEMAP::from_ptr(ptr)),
-			)
+			).map(|h| CloseHandleGuard::new(h))
 		}
 	}
 
@@ -196,17 +195,17 @@ pub trait kernel_Hfile: Handle {
 		num_bytes_to_lock: u64,
 	) -> SysResult<UnlockFileGuard<'_, Self>>
 	{
-		bool_to_sysresult(
-			unsafe {
+		unsafe {
+			bool_to_sysresult(
 				kernel::ffi::LockFile(
 					self.as_ptr(),
 					LODWORD(offset),
 					HIDWORD(offset),
 					LODWORD(num_bytes_to_lock),
 					HIDWORD(num_bytes_to_lock),
-				)
-			},
-		).map(|_| UnlockFileGuard::new(self, offset, num_bytes_to_lock))
+				),
+			).map(|_| UnlockFileGuard::new(self, offset, num_bytes_to_lock))
+		}
 	}
 
 	/// [`ReadFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)

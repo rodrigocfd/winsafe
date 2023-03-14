@@ -2,7 +2,7 @@
 
 use crate::{co, user};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::ptr_to_sysresult;
+use crate::kernel::privs::ptr_to_sysresult_handle;
 use crate::prelude::Handle;
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 use crate::user::guard::EndDeferWindowPosGuard;
@@ -30,10 +30,9 @@ pub trait user_Hdwp: Handle {
 		num_windows: u32) -> SysResult<EndDeferWindowPosGuard>
 	{
 		unsafe {
-			ptr_to_sysresult(
+			ptr_to_sysresult_handle(
 				user::ffi::BeginDeferWindowPos(num_windows as _),
-				|ptr| EndDeferWindowPosGuard::new(HDWP::from_ptr(ptr)),
-			)
+			).map(|h| EndDeferWindowPosGuard::new(h))
 		}
 	}
 
