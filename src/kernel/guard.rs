@@ -437,6 +437,44 @@ impl RegCloseKeyGuard {
 
 //------------------------------------------------------------------------------
 
+/// RAII implementation for [`SID`](crate::SID) which automatically frees the
+/// underlying [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html) when
+/// the object goes out of scope.
+pub struct SidGuard {
+	raw: Vec<u8>,
+}
+
+impl Deref for SidGuard {
+	type Target = SID;
+
+	fn deref(&self) -> &Self::Target {
+		unsafe { std::mem::transmute::<_, _>(self.raw.as_ptr()) }
+	}
+}
+
+impl std::fmt::Display for SidGuard {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		self.deref().fmt(f) // delegate the underlying SID
+	}
+}
+
+impl SidGuard {
+	/// Constructs a new guard by taking ownership of the data.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the data is an allocated [`SID`](crate::SID) structure.
+	/// 
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
+	#[must_use]
+	pub const unsafe fn new(raw: Vec<u8>) -> Self {
+		Self { raw }
+	}
+}
+
+//------------------------------------------------------------------------------
+
 /// RAII implementation for the [`HFILE`](crate::HFILE) lock which automatically
 /// calls
 /// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
@@ -508,42 +546,4 @@ handle_guard! { UnmapViewOfFileGuard: HFILEMAPVIEW;
 	/// automatically calls
 	/// [`UnmapViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-unmapviewoffile)
 	/// when the object goes out of scope.
-}
-
-//------------------------------------------------------------------------------
-
-/// RAII implementation for [`SID`](crate::SID) which automatically frees the
-/// underlying [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html) when
-/// the object goes out of scope.
-pub struct SidGuard {
-	raw: Vec<u8>,
-}
-
-impl Deref for SidGuard {
-	type Target = SID;
-
-	fn deref(&self) -> &Self::Target {
-		unsafe { std::mem::transmute::<_, _>(self.raw.as_ptr()) }
-	}
-}
-
-impl std::fmt::Display for SidGuard {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		self.deref().fmt(f) // delegate the underlying SID
-	}
-}
-
-impl SidGuard {
-	/// Constructs a new guard by taking ownership of the data.
-	/// 
-	/// # Safety
-	/// 
-	/// Be sure the data is an allocated [`SID`](crate::SID) structure.
-	/// 
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
-	#[must_use]
-	pub const unsafe fn new(raw: Vec<u8>) -> Self {
-		Self { raw }
-	}
 }

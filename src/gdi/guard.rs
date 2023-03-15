@@ -1,6 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use crate::{co, gdi};
+use crate::gdi::decl::{LOGPALETTE, PALETTEENTRY};
 use crate::prelude::{gdi_Hdc, GdiObject, Handle};
 use crate::user::decl::HDC;
 
@@ -83,6 +84,44 @@ impl<T> DeleteObjectGuard<T>
 
 //------------------------------------------------------------------------------
 
+/// RAII implementation for [`LOGPALETTE`](crate::LOGPALETTE) which manages the
+/// allocated memory.
+pub struct LogpaletteGuard {
+	raw: Vec<u8>,
+}
+
+impl Deref for LogpaletteGuard {
+	type Target = LOGPALETTE;
+
+	fn deref(&self) -> &Self::Target {
+		unsafe { std::mem::transmute::<_, _>(self.raw.as_ptr()) }
+	}
+}
+
+impl DerefMut for LogpaletteGuard {
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		unsafe { std::mem::transmute::<_, _>(self.raw.as_mut_ptr()) }
+	}
+}
+
+impl LogpaletteGuard {
+	pub(in crate::gdi) fn new(
+		pal_version: u16, entries: &[PALETTEENTRY]) -> Self
+	{
+		let sz = std::mem::size_of::<LOGPALETTE>() // size in bytes of the allocated struct
+			- std::mem::size_of::<PALETTEENTRY>()
+			+ (entries.len() * std::mem::size_of::<PALETTEENTRY>());
+		let mut new_self = Self { raw: vec![0u8; sz] };
+		new_self.palVersion = pal_version;
+		entries.iter()
+			.zip(new_self.palPalEntry_mut())
+			.for_each(|(src, dest)| *dest = *src); // copy all PALETTEENTRY into struct room
+		new_self
+	}
+}
+
+//------------------------------------------------------------------------------
+
 /// RAII implementation for
 /// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject) calls, which
 /// automatically selects the previous GDI object at the end of the scope.
@@ -126,7 +165,8 @@ impl<'a, H, G> SelectObjectGuard<'a, H, G>
 	pub const unsafe fn new(
 		hdc: &'a H,
 		prev_hgdi: G,
-		region: Option<co::REGION>) -> Self
+		region: Option<co::REGION>,
+	) -> Self
 	{
 		Self { hdc, prev_hgdi, region }
 	}

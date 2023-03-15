@@ -1,9 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use std::alloc::Layout;
-use std::ops::{Deref, DerefMut};
-
 use crate::co;
+use crate::gdi::guard::LogpaletteGuard;
 use crate::gdi::privs::LF_FACESIZE;
 use crate::kernel::decl::IsWindowsVistaOrGreater;
 use crate::user::decl::{COLORREF, POINT};
@@ -125,11 +123,6 @@ impl LOGFONT {
 /// [`LOGPALETTE`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logpalette)
 /// struct.
 ///
-/// Note that you cannot directly instantiate this struct, because the
-/// `palPalEntry` field is dynamically allocated. That's why the
-/// [`new`](crate::LOGPALETTE::new) static method returns a
-/// [`LOGPALETTE_wrap`](crate::LOGPALETTE_wrap) object.
-///
 /// # Examples
 ///
 /// ```rust,no_run
@@ -157,12 +150,11 @@ pub struct LOGPALETTE {
 }
 
 impl LOGPALETTE {
-	/// Returns a [`LOGPALETTE_wrap`](crate::LOGPALETTE_wrap) with an underlying
-	/// `LOGPALETTE` struct, dynamically alocated with the given
-	/// [`PALETTEENTRY`](crate::PALETTEENTRY) entries.
+	/// Returns a [`LogpaletteGuard`](crate::guard::LogpaletteGuard) dynamically
+	/// allocated.
 	#[must_use]
-	pub fn new(palVersion: u16, entries: &[PALETTEENTRY]) -> LOGPALETTE_wrap {
-		LOGPALETTE_wrap::new(palVersion, entries)
+	pub fn new(palVersion: u16, entries: &[PALETTEENTRY]) -> LogpaletteGuard {
+		LogpaletteGuard::new(palVersion, entries)
 	}
 
 	/// Returns a constant slice over the `palPalEntry` entries.
@@ -185,56 +177,6 @@ impl LOGPALETTE {
 				self.palNumEntries as _,
 			)
 		}
-	}
-}
-
-/// Safe wrapper over [`LOGPALETTE`](crate::LOGPALETTE), which automatically
-/// manages the dynamic allocation.
-pub struct LOGPALETTE_wrap {
-	layout: Layout,
-	log_pal: *mut LOGPALETTE,
-}
-
-impl Drop for LOGPALETTE_wrap {
-	fn drop(&mut self) {
-		unsafe { std::alloc::dealloc(self.log_pal as _, self.layout); }
-	}
-}
-
-impl Deref for LOGPALETTE_wrap {
-	type Target = LOGPALETTE;
-
-	fn deref(&self) -> &Self::Target {
-		unsafe { self.log_pal.as_ref() }.unwrap()
-	}
-}
-
-impl DerefMut for LOGPALETTE_wrap {
-	fn deref_mut(&mut self) -> &mut Self::Target {
-		unsafe { self.log_pal.as_mut() }.unwrap()
-	}
-}
-
-impl LOGPALETTE_wrap {
-	fn new(palVersion: u16, entries: &[PALETTEENTRY]) -> Self {
-		// https://stackoverflow.com/q/75544466/6923555
-		let layout = Layout::new::<LOGPALETTE>()
-			.extend(Layout::array::<PALETTEENTRY>(entries.len() - 1).unwrap())
-			.unwrap().0;
-		let log_pal = unsafe { std::alloc::alloc(layout) }.cast::<LOGPALETTE>();
-		if log_pal.is_null() {
-			std::alloc::handle_alloc_error(layout)
-		}
-		let mut new_self = Self { layout, log_pal };
-
-		let log_pal_mut = new_self.deref_mut();
-		log_pal_mut.palVersion = palVersion;
-		log_pal_mut.palNumEntries = entries.len() as _;
-
-		let arr = log_pal_mut.palPalEntry_mut();
-		entries.iter().enumerate().for_each(|(idx, pe)| arr[idx] = *pe);
-
-		new_self
 	}
 }
 
