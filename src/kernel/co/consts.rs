@@ -164,6 +164,19 @@ const_ordinary! { DISPOSITION: u32;
 	TRUNCATE_EXISTING 5
 }
 
+const_ordinary! { DRIVE: u32;
+	/// [`GetDriveType`](crate::GetDriveType) return type (`u32`).
+	=>
+	=>
+	UNKNOWN 0
+	NO_ROOT_DIR 1
+	REMOVABLE 2
+	FIXED 3
+	REMOTE 4
+	CDROM 5
+	RAMDISK 6
+}
+
 const_bitflag! { FILE_ATTRIBUTE: u32;
 	/// File attribute
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants),

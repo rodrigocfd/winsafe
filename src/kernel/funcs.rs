@@ -433,6 +433,19 @@ pub fn GetCurrentThreadId() -> u32 {
 	unsafe { kernel::ffi::GetCurrentThreadId() }
 }
 
+/// [`GetDriveType`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getdrivetypew)
+/// function.
+#[must_use]
+pub fn GetDriveType(root_path_name: Option<&str>) -> co::DRIVE {
+	co::DRIVE(
+		unsafe {
+			kernel::ffi::GetDriveTypeW(
+				WString::from_opt_str(root_path_name).as_ptr(),
+			)
+		},
+	)
+}
+
 /// [`GetEnvironmentStrings`](https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getenvironmentstringsw)
 /// function.
 ///
@@ -503,6 +516,13 @@ pub fn GetLastError() -> co::ERROR {
 #[must_use]
 pub fn GetLengthSid(sid: &SID) -> u32 {
 	unsafe { kernel::ffi::GetLengthSid(sid as *const _ as _) }
+}
+
+/// [`GetLogicalDrives`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlogicaldrives)
+/// function.
+#[must_use]
+pub fn GetLogicalDrives() -> u32 {
+	unsafe { kernel::ffi::GetLogicalDrives() }
 }
 
 /// [`GetLogicalDriveStrings`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlogicaldrivestringsw)

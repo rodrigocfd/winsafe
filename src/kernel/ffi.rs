@@ -100,6 +100,7 @@ extern_sys! { "kernel32";
 	GetCurrentThread() -> HANDLE
 	GetCurrentThreadEffectiveToken() -> HANDLE
 	GetCurrentThreadId() -> u32
+	GetDriveTypeW(PCSTR) -> u32
 	GetEnvironmentStringsW() -> *mut u16
 	GetExitCodeProcess(HANDLE, *mut u32) -> BOOL
 	GetExitCodeThread(HANDLE, *mut u32) -> BOOL
@@ -112,6 +113,7 @@ extern_sys! { "kernel32";
 	GetLargePageMinimum() -> usize
 	GetLastError() -> u32
 	GetLocalTime(PVOID)
+	GetLogicalDrives() -> u32
 	GetLogicalDriveStringsW(u32, PSTR) -> u32
 	GetModuleFileNameW(HANDLE, PSTR, u32) -> u32
 	GetModuleHandleW(PCSTR) -> HANDLE
