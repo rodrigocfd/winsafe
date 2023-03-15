@@ -3,7 +3,7 @@
 use crate::{co, user};
 use crate::kernel::decl::{GetLastError, HINSTANCE, SysResult, WString};
 use crate::kernel::ffi_types::BOOL;
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresulA};
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{
 	ATOM, COLORREF, DEVMODE, DISPLAY_DEVICE, GmidxEnum, GUITHREADINFO,
@@ -372,7 +372,7 @@ pub fn GetAsyncKeyState(virt_key: co::VK) -> bool {
 /// `format`.
 #[must_use]
 pub unsafe fn GetClipboardData(format: co::CF) -> SysResult<*mut u8> {
-	ptr_to_sysresulA(user::ffi::GetClipboardData(format.0))
+	ptr_to_sysresult(user::ffi::GetClipboardData(format.0))
 		.map(|hmem| hmem as *mut _ as _)
 }
 
@@ -754,7 +754,7 @@ pub fn SetCaretPos(x: i32, y: i32) -> SysResult<()> {
 pub unsafe fn SetClipboardData(
 	format: co::CF, hmem: *mut u8) -> SysResult<*mut u8>
 {
-	ptr_to_sysresulA(
+	ptr_to_sysresult(
 		user::ffi::SetClipboardData(format.0, hmem as _),
 	).map(|hmem| hmem as *mut _ as _)
 }

@@ -4,7 +4,7 @@ use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::guard::{GlobalFreeGuard, GlobalUnlockGuard};
 use crate::kernel::privs::{
-	GMEM_INVALID_HANDLE, ptr_to_sysresulA, ptr_to_sysresult_handle,
+	GMEM_INVALID_HANDLE, ptr_to_sysresult, ptr_to_sysresult_handle,
 };
 use crate::prelude::Handle;
 
@@ -83,7 +83,7 @@ pub trait kernel_Hglobal: Handle {
 	fn GlobalLock(&self) -> SysResult<(&mut [u8], GlobalUnlockGuard<'_, Self>)> {
 		let mem_sz = self.GlobalSize()?;
 		unsafe {
-			ptr_to_sysresulA(kernel::ffi::GlobalLock(self.as_ptr()))
+			ptr_to_sysresult(kernel::ffi::GlobalLock(self.as_ptr()))
 				.map(|ptr| (
 					std::slice::from_raw_parts_mut(
 						ptr as *mut _ as *mut _, mem_sz as _),

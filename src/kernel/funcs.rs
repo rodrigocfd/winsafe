@@ -14,7 +14,7 @@ use crate::kernel::guard::{
 };
 use crate::kernel::privs::{
 	bool_to_sysresult, INVALID_FILE_ATTRIBUTES, MAX_COMPUTERNAME_LENGTH,
-	MAX_PATH, parse_multi_z_str, ptr_to_sysresulA, SECURITY_DESCRIPTOR_REVISION,
+	MAX_PATH, parse_multi_z_str, ptr_to_sysresult, SECURITY_DESCRIPTOR_REVISION,
 };
 use crate::prelude::Handle;
 
@@ -469,7 +469,7 @@ pub fn GetDriveType(root_path_name: Option<&str>) -> co::DRIVE {
 /// ```
 #[must_use]
 pub fn GetEnvironmentStrings() -> SysResult<HashMap<String, String>> {
-	ptr_to_sysresulA(
+	ptr_to_sysresult(
 		unsafe { kernel::ffi::GetEnvironmentStringsW() } as _,
 	).map(|ptr| {
 		let vec_env_strs = parse_multi_z_str(ptr as *mut _ as _);

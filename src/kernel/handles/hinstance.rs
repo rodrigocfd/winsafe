@@ -7,7 +7,7 @@ use crate::kernel::decl::{
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::guard::FreeLibraryGuard;
 use crate::kernel::privs::{
-	bool_to_sysresult, MAX_PATH, ptr_to_sysresulA, ptr_to_sysresult_handle,
+	bool_to_sysresult, MAX_PATH, ptr_to_sysresult, ptr_to_sysresult_handle,
 	str_to_iso88591,
 };
 use crate::prelude::Handle;
@@ -193,7 +193,7 @@ pub trait kernel_Hinstance: Handle {
 	fn GetProcAddress(&self,
 		proc_name: &str) -> SysResult<*const std::ffi::c_void>
 	{
-		ptr_to_sysresulA(
+		ptr_to_sysresult(
 			unsafe {
 				kernel::ffi::GetProcAddress(
 					self.as_ptr(),
@@ -275,7 +275,7 @@ pub trait kernel_Hinstance: Handle {
 	{
 		let sz = self.SizeofResource(res_info)?;
 		unsafe {
-			ptr_to_sysresulA(
+			ptr_to_sysresult(
 				kernel::ffi::LockResource(hres_loaded.as_ptr()),
 			).map(|ptr| std::slice::from_raw_parts(ptr as *const _ as _, sz as _))
 		}

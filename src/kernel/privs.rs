@@ -35,7 +35,7 @@ pub(crate) fn bool_to_sysresult(expr: BOOL) -> SysResult<()> {
 }
 
 /// If pointer is null, yields `Err(GetLastError)`, otherwise `Ok(ptr)`.
-pub(crate) fn ptr_to_sysresulA(ptr: HANDLE) -> SysResult<HANDLE> {
+pub(crate) fn ptr_to_sysresult(ptr: HANDLE) -> SysResult<HANDLE> {
 	if ptr.is_null() {
 		Err(GetLastError())
 	} else {
@@ -47,7 +47,7 @@ pub(crate) fn ptr_to_sysresulA(ptr: HANDLE) -> SysResult<HANDLE> {
 pub(crate) fn ptr_to_sysresult_handle<H>(ptr: HANDLE) -> SysResult<H>
 	where H: Handle,
 {
-	ptr_to_sysresulA(ptr).map(|ptr| unsafe { Handle::from_ptr(ptr) })
+	ptr_to_sysresult(ptr).map(|ptr| unsafe { Handle::from_ptr(ptr) })
 }
 
 /// If the pointer is null, yields `None`, otherwise `Some(Handle)`.

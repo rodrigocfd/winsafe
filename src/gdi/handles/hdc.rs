@@ -8,7 +8,7 @@ use crate::gdi::guard::{DeleteDCGuard, DeleteObjectGuard, SelectObjectGuard};
 use crate::gdi::privs::{CLR_INVALID, GDI_ERROR, LF_FACESIZE};
 use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::privs::{
-	bool_to_sysresult, ptr_to_sysresulA, ptr_to_sysresult_handle,
+	bool_to_sysresult, ptr_to_sysresult, ptr_to_sysresult_handle,
 };
 use crate::prelude::{GdiObject, Handle};
 use crate::user::decl::{
@@ -699,7 +699,7 @@ pub trait gdi_Hdc: Handle {
 		where G: GdiObject,
 	{
 		unsafe {
-			ptr_to_sysresulA(
+			ptr_to_sysresult(
 				gdi::ffi::SelectObject(self.as_ptr(), hgdiobj.as_ptr()),
 			).map(|ptr| {
 				if hgdiobj.type_id() == TypeId::of::<HRGN>() {

@@ -6,7 +6,7 @@ use crate::kernel::decl::{
 };
 use crate::kernel::guard::LocalFreeGuard;
 use crate::kernel::privs::{
-	bool_to_sysresult, MAX_PATH, ptr_to_sysresulA,
+	bool_to_sysresult, MAX_PATH, ptr_to_sysresult,
 };
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult, IStream};
 use crate::ole::privs::ok_to_hrresult;
@@ -71,7 +71,7 @@ pub fn PathCombine(
 	str_dir: Option<&str>, str_file: Option<&str>) -> SysResult<String>
 {
 	let mut buf = WString::new_alloc_buf(MAX_PATH);
-	ptr_to_sysresulA(
+	ptr_to_sysresult(
 		unsafe {
 			shell::ffi::PathCombineW(
 				buf.as_mut_ptr(),
