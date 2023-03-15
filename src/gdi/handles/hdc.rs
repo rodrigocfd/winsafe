@@ -3,14 +3,14 @@
 use std::any::TypeId;
 
 use crate::{co, gdi};
-use crate::gdi::decl::{BITMAPINFO, TEXTMETRIC};
+use crate::gdi::decl::{BITMAPINFO, HPALETTE, TEXTMETRIC};
 use crate::gdi::guard::{DeleteDCGuard, DeleteObjectGuard, SelectObjectGuard};
 use crate::gdi::privs::{CLR_INVALID, GDI_ERROR, LF_FACESIZE};
 use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::privs::{
 	bool_to_sysresult, ptr_to_sysresult, ptr_to_sysresult_handle,
 };
-use crate::prelude::{GdiObject, Handle};
+use crate::prelude::{GdiObjectSelect, Handle};
 use crate::user::decl::{
 	COLORREF, HBITMAP, HBRUSH, HDC, HRGN, POINT, RECT, SIZE,
 };
@@ -167,6 +167,16 @@ pub trait gdi_Hdc: Handle {
 		unsafe {
 			ptr_to_sysresult_handle(gdi::ffi::CreateCompatibleDC(self.as_ptr()))
 				.map(|h| DeleteDCGuard::new(h))
+		}
+	}
+
+	/// [`CreateHalftonePalette`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createhalftonepalette)
+	/// method.
+	#[must_use]
+	fn CreateHalftonePalette(&self) -> SysResult<DeleteObjectGuard<HPALETTE>> {
+		unsafe {
+			ptr_to_sysresult_handle(gdi::ffi::CreateHalftonePalette(self.as_ptr()))
+				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -696,7 +706,7 @@ pub trait gdi_Hdc: Handle {
 	fn SelectObject<G>(&self,
 		hgdiobj: &G,
 	) -> SysResult<SelectObjectGuard<'_, Self, G>>
-		where G: GdiObject,
+		where G: GdiObjectSelect,
 	{
 		unsafe {
 			ptr_to_sysresult(
@@ -716,6 +726,29 @@ pub trait gdi_Hdc: Handle {
 					)
 				}
 			})
+		}
+	}
+
+	/// [`SelectPalette`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectpalette)
+	/// method.
+	fn SelectPalette(&self,
+		hpal: &HPALETTE, force_bkgd: bool) -> SysResult<Option<HPALETTE>>
+	{
+		let ptr = unsafe {
+			gdi::ffi::SelectPalette(
+				self.as_ptr(),
+				hpal.as_ptr(),
+				force_bkgd as _,
+			)
+		};
+
+		if ptr.is_null() {
+			match GetLastError() {
+				co::ERROR::SUCCESS => Ok(None),
+				err => Err(err),
+			}
+		} else {
+			Ok(Some(unsafe { HPALETTE::from_ptr(ptr) }))
 		}
 	}
 

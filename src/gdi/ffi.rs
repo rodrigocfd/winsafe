@@ -16,7 +16,9 @@ extern_sys! { "gdi32";
 	CreateCompatibleDC(HANDLE) -> HANDLE
 	CreateFontIndirectW(PCVOID) -> HANDLE
 	CreateFontW(i32, i32, i32, i32, i32, u32, u32, u32, u32, u32, u32, u32, u32, PCSTR) -> HANDLE
+	CreateHalftonePalette(HANDLE) -> HANDLE
 	CreateHatchBrush(i32, u32) -> HANDLE
+	CreatePalette(PCVOID) -> HANDLE
 	CreatePatternBrush(HANDLE) -> HANDLE
 	CreatePen(i32, i32, u32) -> HANDLE
 	CreatePenIndirect(PCVOID) -> HANDLE
@@ -76,6 +78,7 @@ extern_sys! { "gdi32";
 	SelectClipPath(HANDLE, i32) -> BOOL
 	SelectClipRgn(HANDLE, HANDLE) -> i32
 	SelectObject(HANDLE, HANDLE) -> HANDLE
+	SelectPalette(HANDLE, HANDLE, BOOL) -> HANDLE
 	SetArcDirection(HANDLE, i32) -> i32
 	SetBkColor(HANDLE, u32) -> u32
 	SetBkMode(HANDLE, i32) -> i32

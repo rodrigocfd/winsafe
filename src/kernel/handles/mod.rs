@@ -59,7 +59,7 @@ pub mod decl {
 
 pub mod traits {
 	pub use super::haccesstoken::kernel_Haccesstoken;
-	pub use super::handle_traits::Handle;
+	pub use super::handle_traits::*;
 	pub use super::hfile::kernel_Hfile;
 	pub use super::hfilemap::kernel_Hfilemap;
 	pub use super::hfilemapview::kernel_Hfilemapview;

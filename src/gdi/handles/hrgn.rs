@@ -4,10 +4,11 @@ use crate::{co, gdi};
 use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::GdiObject;
+use crate::prelude::{GdiObject, GdiObjectSelect, Handle};
 use crate::user::decl::{HRGN, RECT, SIZE};
 
 impl GdiObject for HRGN {}
+impl GdiObjectSelect for HRGN {}
 impl gdi_Hrgn for HRGN {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for
@@ -18,7 +19,7 @@ impl gdi_Hrgn for HRGN {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait gdi_Hrgn: GdiObject {
+pub trait gdi_Hrgn: Handle {
 	/// [`CreateRectRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createrectrgn)
 	/// static method.
 	#[must_use]

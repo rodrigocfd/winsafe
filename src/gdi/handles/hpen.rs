@@ -5,7 +5,7 @@ use crate::gdi::decl::LOGPEN;
 use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::SysResult;
 use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::GdiObject;
+use crate::prelude::{GdiObject, GdiObjectSelect, Handle};
 use crate::user::decl::COLORREF;
 
 impl_handle! { HPEN;
@@ -15,6 +15,7 @@ impl_handle! { HPEN;
 }
 
 impl GdiObject for HPEN {}
+impl GdiObjectSelect for HPEN {}
 impl gdi_Hpen for HPEN {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for
@@ -25,7 +26,7 @@ impl gdi_Hpen for HPEN {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait gdi_Hpen: GdiObject {
+pub trait gdi_Hpen: Handle {
 	/// [`CreatePen`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpen)
 	/// static method.
 	#[must_use]

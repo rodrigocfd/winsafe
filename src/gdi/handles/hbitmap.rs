@@ -5,10 +5,11 @@ use crate::gdi::decl::BITMAP;
 use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::GdiObject;
+use crate::prelude::{GdiObject, GdiObjectSelect, Handle};
 use crate::user::decl::{HBITMAP, SIZE};
 
 impl GdiObject for HBITMAP {}
+impl GdiObjectSelect for HBITMAP {}
 impl gdi_Hbitmap for HBITMAP {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for
@@ -19,7 +20,7 @@ impl gdi_Hbitmap for HBITMAP {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait gdi_Hbitmap: GdiObject {
+pub trait gdi_Hbitmap: Handle {
 	/// [`CreateBitmap`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbitmap)
 	/// static method.
 	#[must_use]

@@ -5,7 +5,7 @@ use crate::gdi::decl::LOGFONT;
 use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::GdiObject;
+use crate::prelude::{GdiObject, GdiObjectSelect, Handle};
 use crate::user::decl::SIZE;
 
 impl_handle! { HFONT;
@@ -14,6 +14,7 @@ impl_handle! { HFONT;
 }
 
 impl GdiObject for HFONT {}
+impl GdiObjectSelect for HFONT {}
 impl gdi_Hfont for HFONT {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for
@@ -24,7 +25,7 @@ impl gdi_Hfont for HFONT {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait gdi_Hfont: GdiObject {
+pub trait gdi_Hfont: Handle {
 	/// [`CreateFont`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontw)
 	/// static method.
 	#[must_use]

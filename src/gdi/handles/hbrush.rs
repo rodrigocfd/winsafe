@@ -5,10 +5,11 @@ use crate::gdi::decl::LOGBRUSH;
 use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::{GetLastError, SysResult};
 use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
-use crate::prelude::{GdiObject, Handle};
+use crate::prelude::{GdiObject, GdiObjectSelect, Handle};
 use crate::user::decl::{COLORREF, HBITMAP, HBRUSH};
 
 impl GdiObject for HBRUSH {}
+impl GdiObjectSelect for HBRUSH {}
 impl gdi_Hbrush for HBRUSH {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for
@@ -19,7 +20,7 @@ impl gdi_Hbrush for HBRUSH {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait gdi_Hbrush: GdiObject {
+pub trait gdi_Hbrush: Handle {
 	/// Creates a brush with the given system color.
 	///
 	/// **Note:** This should be used only to initialize the
