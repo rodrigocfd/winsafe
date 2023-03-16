@@ -219,15 +219,14 @@ impl<'a> ListViewItem<'a> {
 	#[must_use]
 	pub fn text(&self, column_index: u32) -> String {
 		// https://forums.codeguru.com/showthread.php?351972-Getting-listView-item-text-length
-		const BLOCK: usize = 64; // arbitrary
-		let mut buf_sz = BLOCK;
-		let mut buf = WString::default();
+		const BLOCK_SZ: usize = 64; // arbitrary
+		let mut buf_sz = BLOCK_SZ;
 
 		loop {
 			let mut lvi = LVITEM::default();
 			lvi.iSubItem = column_index as _;
 
-			unsafe { buf.buf_realloc(buf_sz); }
+			let mut buf = WString::new_alloc_buf(buf_sz);
 			lvi.set_pszText(Some(&mut buf));
 
 			let num_chars = self.owner.hwnd()
@@ -237,12 +236,10 @@ impl<'a> ListViewItem<'a> {
 				});
 
 			if (num_chars as usize) + 1 < buf_sz { // to break, must have at least 1 char gap
-				break;
+				return buf.to_string();
 			}
 
-			buf_sz += BLOCK; // increase buffer size to try again
+			buf_sz += BLOCK_SZ; // increase buffer size to try again
 		}
-
-		buf.to_string()
 	}
 }

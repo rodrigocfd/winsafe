@@ -71,7 +71,7 @@ impl AtomStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Atom(atom) => MAKEINTRESOURCE(atom.0 as _),
-			Self::Str(ws) => unsafe { ws.as_ptr() },
+			Self::Str(ws) => ws.as_ptr(),
 		}
 	}
 }
@@ -127,7 +127,7 @@ impl BmpPtrStr {
 		match self {
 			Self::Bmp(hbmp) => hbmp.as_ptr() as _,
 			Self::Ptr(lp) => *lp as _,
-			Self::Str(ws) => unsafe { ws.as_ptr() },
+			Self::Str(ws) => ws.as_ptr(),
 			Self::None => std::ptr::null(),
 		}
 	}
@@ -286,7 +286,7 @@ impl IdIdcStr {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
 			Self::Idc(idc) => MAKEINTRESOURCE(idc.0 as _),
-			Self::Str(ws) => unsafe { ws.as_ptr() },
+			Self::Str(ws) => ws.as_ptr(),
 		}
 	}
 }
@@ -317,7 +317,7 @@ impl IdIdiStr {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
 			Self::Idi(idi) => MAKEINTRESOURCE(idi.0 as _),
-			Self::Str(ws) => unsafe { ws.as_ptr() },
+			Self::Str(ws) => ws.as_ptr(),
 		}
 	}
 }

@@ -1378,7 +1378,7 @@ unsafe impl MsgSend for GetStringWidth {
 		WndMsg {
 			msg_id: co::LVM::GETSTRINGWIDTH.into(),
 			wparam: 0,
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: self.text.as_ptr() as _,
 		}
 	}
 }

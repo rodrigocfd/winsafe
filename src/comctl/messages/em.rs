@@ -74,7 +74,7 @@ unsafe impl MsgSend for SetCueBanner {
 		WndMsg {
 			msg_id: co::EM::SETCUEBANNER.into(),
 			wparam: self.show_even_with_focus as _,
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: self.text.as_ptr() as _,
 		}
 	}
 }

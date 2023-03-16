@@ -75,7 +75,7 @@ unsafe impl MsgSend for SetCueBanner {
 		WndMsg {
 			msg_id: co::CB::SETCUEBANNER.into(),
 			wparam: 0,
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: self.text.as_ptr() as _,
 		}
 	}
 }

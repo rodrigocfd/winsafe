@@ -144,7 +144,7 @@ impl<'a> Iterator for ListBoxItemIter<'a> {
 		let num_chars = self.owner.hwnd()
 			.SendMessage(lb::GetTextLen { index: self.current })
 			.unwrap();
-		unsafe { self.buffer.buf_realloc(num_chars as usize + 1); }
+		self.buffer = WString::new_alloc_buf(num_chars as usize + 1);
 
 		self.owner.hwnd()
 			.SendMessage(lb::GetText {
@@ -190,7 +190,7 @@ impl<'a> Iterator for ListBoxSelItemIter<'a> {
 		let num_chars = self.owner.hwnd()
 			.SendMessage(lb::GetTextLen { index: cur_sel_index })
 			.unwrap();
-		unsafe { self.buffer.buf_realloc(num_chars as usize + 1); }
+		self.buffer = WString::new_alloc_buf(num_chars as usize + 1);
 
 		self.owner.hwnd()
 			.SendMessage(lb::GetText {

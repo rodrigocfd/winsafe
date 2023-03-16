@@ -556,7 +556,7 @@ unsafe impl MsgSend for ReplaceSel {
 		WndMsg {
 			msg_id: co::EM::REPLACESEL.into(),
 			wparam: self.can_be_undone as _,
-			lparam: unsafe { self.replacement_text.as_ptr() } as _,
+			lparam: self.replacement_text.as_ptr() as _,
 		}
 	}
 }

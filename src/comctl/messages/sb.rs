@@ -344,7 +344,7 @@ unsafe impl MsgSend for SetText {
 		WndMsg {
 			msg_id: co::SB::SETTEXT.into(),
 			wparam: MAKEDWORD(MAKEWORD(self.part_index, 0), self.draw_operation.0) as _,
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: self.text.as_ptr() as _,
 		}
 	}
 }
@@ -367,7 +367,7 @@ unsafe impl MsgSend for SetTipText {
 		WndMsg {
 			msg_id: co::SB::SETTIPTEXT.into(),
 			wparam: self.part_index as _,
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: self.text.as_ptr() as _,
 		}
 	}
 }

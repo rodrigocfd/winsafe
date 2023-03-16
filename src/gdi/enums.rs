@@ -28,7 +28,7 @@ impl IdObmStr {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
 			Self::Obm(obm) => MAKEINTRESOURCE(obm.0 as _),
-			Self::Str(ws) => unsafe { ws.as_ptr() },
+			Self::Str(ws) => ws.as_ptr(),
 		}
 	}
 }
@@ -59,7 +59,7 @@ impl IdOcrStr {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
 			Self::Ocr(ocr) => MAKEINTRESOURCE(ocr.0 as _),
-			Self::Str(ws) => unsafe { ws.as_ptr() },
+			Self::Str(ws) => ws.as_ptr(),
 		}
 	}
 }
@@ -90,7 +90,7 @@ impl IdOicStr {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
 			Self::Oic(oic) => MAKEINTRESOURCE(oic.0 as _),
-			Self::Str(ws) => unsafe { ws.as_ptr() },
+			Self::Str(ws) => ws.as_ptr(),
 		}
 	}
 }

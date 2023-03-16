@@ -46,7 +46,7 @@ impl IdStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Str(ws) => unsafe { ws.as_ptr() },
+			Self::Str(ws) => ws.as_ptr(),
 		}
 	}
 }
@@ -145,7 +145,7 @@ impl RegistryValue {
 
 	fn as_ptr_with_len_str(str_buf: &WString) -> (*const std::ffi::c_void, u32) {
 		(
-			unsafe { str_buf.as_ptr() as *const std::ffi::c_void },
+			str_buf.as_ptr() as _,
 			(str_buf.buf_len() * std::mem::size_of::<u16>()) as _, // will include terminating null
 		)
 	}
@@ -205,7 +205,7 @@ impl RtStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Rt(id) => MAKEINTRESOURCE(id.0 as _),
-			Self::Str(ws) => unsafe { ws.as_ptr() },
+			Self::Str(ws) => ws.as_ptr(),
 		}
 	}
 }

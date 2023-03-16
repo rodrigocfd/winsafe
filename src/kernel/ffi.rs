@@ -159,7 +159,6 @@ extern_sys! { "kernel32";
 	LocalSize(HANDLE) -> usize
 	LockFile(HANDLE, u32, u32, u32, u32) -> BOOL
 	LockResource(HANDLE) -> PVOID
-	lstrcatW(PSTR, PCSTR) -> PSTR
 	lstrlenW(PCSTR) -> i32
 	MapViewOfFileFromApp(HANDLE, u32, u64, usize) -> PVOID
 	Module32FirstW(HANDLE, PVOID) -> BOOL

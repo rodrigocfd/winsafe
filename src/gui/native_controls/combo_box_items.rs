@@ -150,7 +150,7 @@ impl<'a> Iterator for ComboBoxItemIter<'a> {
 		let num_chars = self.owner.hwnd()
 			.SendMessage(cb::GetLbTextLen { index: self.current })
 			.unwrap();
-		unsafe { self.buffer.buf_realloc(num_chars as usize + 1); }
+		self.buffer = WString::new_alloc_buf(num_chars as usize + 1);
 
 		self.owner.hwnd()
 			.SendMessage(cb::GetLbText {

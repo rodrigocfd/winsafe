@@ -344,13 +344,12 @@ pub trait user_Hmenu: Handle {
 	/// method.
 	#[must_use]
 	fn GetMenuString(&self, id_or_pos: IdPos) -> SysResult<String> {
-		const BLOCK: usize = 64; // arbitrary
-		let mut buf_sz = BLOCK;
-		let mut buf = WString::default();
+		const BLOCK_SZ: usize = 64; // arbitrary
+		let mut buf_sz = BLOCK_SZ;
 
 		loop {
-			unsafe { buf.buf_realloc(buf_sz); }
-
+			let mut buf = WString::new_alloc_buf(buf_sz);
+			
 			let nchars = match unsafe {
 				user::ffi::GetMenuStringW(
 					self.as_ptr(),
@@ -365,13 +364,11 @@ pub trait user_Hmenu: Handle {
 			};
 
 			if (nchars as usize) + 1 < buf_sz { // to break, must have at least 1 char gap
-				break;
+				return Ok(buf.to_string());
 			}
 
-			buf_sz += BLOCK; // increase buffer size to try again
+			buf_sz += BLOCK_SZ; // increase buffer size to try again
 		}
-
-		Ok(buf.to_string())
 	}
 
 	/// [`GetSubMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsubmenu)

@@ -54,7 +54,7 @@ impl IdTdiconStr {
 			Self::Tdicon(tdi) => MAKEINTRESOURCE(tdi.0 as _),
 			Self::Str(s) => {
 				*str_buf = WString::from_str(s);
-				unsafe { str_buf.as_ptr() }
+				str_buf.as_ptr()
 			},
 		}
 	}

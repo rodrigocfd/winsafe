@@ -540,7 +540,7 @@ pub fn GetLogicalDriveStrings() -> SysResult<Vec<String>> {
 				kernel::ffi::GetLogicalDriveStringsW(len, buf.as_mut_ptr())
 			} {
 				0 => Err(GetLastError()),
-				_ => Ok(parse_multi_z_str(unsafe { buf.as_ptr() })),
+				_ => Ok(parse_multi_z_str(buf.as_ptr())),
 			}
 		},
 	}

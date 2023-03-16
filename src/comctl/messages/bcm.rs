@@ -215,7 +215,7 @@ unsafe impl MsgSend for SetNote {
 		WndMsg {
 			msg_id: co::BCM::SETNOTE.into(),
 			wparam: self.text.buf_len(),
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: self.text.as_ptr() as _,
 		}
 	}
 }

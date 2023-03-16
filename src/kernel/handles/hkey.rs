@@ -552,12 +552,12 @@ pub trait kernel_Hkey: Handle {
 		last_write_time: Option<&mut FILETIME>,
 	) -> SysResult<()>
 	{
-		const BLOCK: usize = 32; // arbitrary
+		const BLOCK_SZ: usize = 32; // arbitrary
 
 		let (mut class_ptr, mut class_len) = match &mut class {
 			Some(class) => {
-				if class.buf_len() < BLOCK {
-					unsafe { class.buf_realloc(BLOCK); } // make it at least BLOCK_SZ
+				if class.buf_len() < BLOCK_SZ {
+					**class = WString::new_alloc_buf(BLOCK_SZ); // make it at least BLOCK_SZ
 				}
 				(unsafe { class.as_mut_ptr() }, class.buf_len() as u32)
 			},
@@ -594,7 +594,7 @@ pub trait kernel_Hkey: Handle {
 			) {
 				co::ERROR::MORE_DATA => match &mut class {
 					Some(class) => {
-						unsafe { class.buf_realloc(class.buf_len() + BLOCK); }
+						**class = WString::new_alloc_buf(class.buf_len() + BLOCK_SZ);
 						class_ptr = unsafe { class.as_mut_ptr() };
 						class_len = class.buf_len() as _;
 					},
@@ -664,7 +664,7 @@ pub trait kernel_Hkey: Handle {
 			.zip(valents1.iter_mut())
 			.map(|(value_name, valent)| {
 				let value_name_w = WString::from_str(value_name.as_ref());
-				valent.ve_valuename = unsafe { value_name_w.as_ptr() as _ };
+				valent.ve_valuename = value_name_w.as_ptr() as _;
 				value_name_w
 			})
 			.collect::<Vec<_>>();
@@ -692,7 +692,7 @@ pub trait kernel_Hkey: Handle {
 		let mut valents2 = value_names_w.iter()
 			.map(|value_name_w| {
 				let mut valent = VALENT::default();
-				valent.ve_valuename = unsafe { value_name_w.as_ptr() as _ };
+				valent.ve_valuename = value_name_w.as_ptr() as _;
 				valent
 			})
 			.collect::<Vec<_>>();

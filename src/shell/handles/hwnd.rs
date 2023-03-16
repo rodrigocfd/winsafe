@@ -32,17 +32,16 @@ pub trait shell_Hwnd: Handle {
 		hicon: Option<&HICON>,
 	) -> SysResult<()>
 	{
-		let mut wapp = WString::from_str(title_bar);
-		if let Some(line) = first_line {
-			wapp.append("#");
-			wapp.append(line);
-		}
-
 		bool_to_sysresult(
 			unsafe {
 				shell::ffi::ShellAboutW(
 					self.as_ptr(),
-					wapp.as_ptr(),
+					WString::from_str(
+						&match first_line {
+							Some(line) => format!("{}#{}", title_bar, line),
+							None => title_bar.to_owned(),
+						},
+					).as_ptr(),
 					WString::from_opt_str(other_stuff).as_ptr(),
 					hicon.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 				)

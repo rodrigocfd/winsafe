@@ -28,7 +28,7 @@ unsafe impl MsgSend for AddFile {
 		WndMsg {
 			msg_id: co::LB::ADDFILE.into(),
 			wparam: 0,
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: self.text.as_ptr() as _,
 		}
 	}
 }
@@ -56,7 +56,7 @@ unsafe impl MsgSend for AddString {
 		WndMsg {
 			msg_id: co::LB::ADDSTRING.into(),
 			wparam: 0,
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: self.text.as_ptr() as _,
 		}
 	}
 }
@@ -112,7 +112,7 @@ unsafe impl MsgSend for Dir {
 		WndMsg {
 			msg_id: co::LB::DIR.into(),
 			wparam: self.attributes.0 as _,
-			lparam: unsafe { self.path.as_ptr() } as _,
+			lparam: self.path.as_ptr() as _,
 		}
 	}
 }
@@ -140,7 +140,7 @@ unsafe impl MsgSend for FindString {
 		WndMsg {
 			msg_id: co::LB::FINDSTRING.into(),
 			wparam: self.preceding_index.map_or(-1, |idx| idx as i32) as _,
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: self.text.as_ptr() as _,
 		}
 	}
 }
@@ -168,7 +168,7 @@ unsafe impl MsgSend for FindStringExact {
 		WndMsg {
 			msg_id: co::LB::FINDSTRINGEXACT.into(),
 			wparam: self.preceding_index.map_or(-1, |idx| idx as i32) as _,
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: self.text.as_ptr() as _,
 		}
 	}
 }
@@ -627,7 +627,7 @@ unsafe impl MsgSend for InsertString {
 		WndMsg {
 			msg_id: co::LB::INSERTSTRING.into(),
 			wparam: self.insertion_index.map_or(-1, |idx| idx as i32) as _,
-			lparam: unsafe { self.text.as_ptr() } as _,
+			lparam: self.text.as_ptr() as _,
 		}
 	}
 }
@@ -684,7 +684,7 @@ unsafe impl MsgSend for SelectString {
 		WndMsg {
 			msg_id: co::LB::SELECTSTRING.into(),
 			wparam: self.index.map_or(-1, |idx| idx as i32) as _,
-			lparam: unsafe { self.prefix.as_ptr() } as _,
+			lparam: self.prefix.as_ptr() as _,
 		}
 	}
 }

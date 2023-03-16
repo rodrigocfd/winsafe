@@ -85,7 +85,7 @@ unsafe impl MsgSend for AddString {
 			},
 			lparam: match &self.texts {
 				ResStrs::Res(res, _) => res.as_ptr() as _,
-				ResStrs::Strs(strs) => unsafe { strs.as_ptr() as _ },
+				ResStrs::Strs(strs) => strs.as_ptr() as _,
 			},
 		}
 	}
@@ -2130,7 +2130,7 @@ unsafe impl MsgSend for SetWindowTheme {
 		WndMsg {
 			msg_id: co::TBM::SETWINDOWTHEME.into(),
 			wparam: 0,
-			lparam: unsafe { self.visual_style.as_ptr() } as _,
+			lparam: self.visual_style.as_ptr() as _,
 		}
 	}
 }

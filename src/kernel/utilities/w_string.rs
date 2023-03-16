@@ -1,191 +1,135 @@
 use crate::{co, kernel};
-use crate::kernel::decl::{MultiByteToWideChar, Encoding, SysResult};
+use crate::kernel::decl::{Encoding, HLOCAL, MultiByteToWideChar, SysResult};
+use crate::kernel::guard::LocalFreeGuard;
+use crate::prelude::{Handle, kernel_Hlocal};
 
-/// Stores a `Vec<u16>` buffer for a null-terminated
+pub const SSO_LEN: usize = 20;
+
+/// Stores a `[u16]` buffer for a null-terminated
 /// [Unicode UTF-16](https://learn.microsoft.com/en-us/windows/win32/intl/unicode-in-the-windows-api)
 /// wide string natively used by Windows.
+/// 
+/// Uses
+/// [Short String Optimization](https://joellaity.com/2020/01/31/string.html)
+/// technique for faster performance.
 ///
 /// This is struct is mostly used internally by the library, as a bridge between
 /// Windows and Rust strings.
-#[derive(Clone, Debug)]
+#[derive(Default, Clone)]
 pub struct WString {
-	vec_u16: Vec<u16>,
-}
-
-impl Default for WString {
-	fn default() -> Self {
-		Self { vec_u16: Vec::<u16>::default() }
-	}
+	buf: Buffer,
 }
 
 impl std::fmt::Display for WString {
 	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		write!(f, "{}", self.to_string())
+		write!(f, "{}", self.buf.to_string_checked().unwrap())
+	}
+}
+
+impl std::fmt::Debug for WString {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		<dyn std::fmt::Debug>::fmt(&self.buf, f) // simply delegate
 	}
 }
 
 impl WString {
-	/// Creates and stores a new UTF-16 string from an optional
+	/// Stores an UTF-16 null-terminated string from an optional
 	/// [`&str`](https://doc.rust-lang.org/std/primitive.str.html).
-	///
-	/// The string will be stored with a terminating null.
-	///
-	/// If `s` is `None`, the internal buffer is not allocated – it simply calls
-	/// `WString::default`.
+	/// 
+	/// If `s` is `None`, no allocation is made.
 	#[must_use]
 	pub fn from_opt_str(s: Option<&str>) -> Self {
-		match s {
-			Some(s) => Self::from_str(s),
-			None => Self::default(),
-		}
+		Self { buf: Buffer::from_opt_str(s) }
 	}
 
-	/// Creates and stores a new UTF-16 string from an ordinary
+	/// Stores an UTF-16 null-terminated string from a
 	/// [`&str`](https://doc.rust-lang.org/std/primitive.str.html).
-	///
-	/// The string will be stored with a terminating null.
 	#[must_use]
 	pub fn from_str(s: &str) -> Self {
-		Self {
-			vec_u16: s.encode_utf16()
-				.chain(std::iter::once(0x0000)) // append a terminating null
-				.collect(),
-		}
+		Self { buf: Buffer::from_str(s) }
 	}
 
-	/// Creates and stores a new UTF-16 string from a
-	/// [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html) of ordinary
-	/// strings. This new string will be stored as sequential null-separated
-	/// strings, terminated with two nulls. That means that further retrieval
-	/// operations will "see" only the first string.
-	///
-	/// This method is intended to pass multi-strings to native APIs, not to
-	/// retrieve them.
+	/// Stores a series of UTF-16 null-terminated strings. The buffer will end
+	/// with two terminating nulls – that means further retrieval operations
+	/// will "see" only the first string.
+	/// 
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
 	#[must_use]
 	pub fn from_str_vec(v: &[impl AsRef<str>]) -> Self {
-		let tot_chars = v.iter() // number of chars of all strings, including terminating nulls
-			.fold(0, |tot, s| tot + s.as_ref().chars().count() + 1) // include terminating null
-				+ 1; // double terminating null
-
-		let mut vec_u16 = Vec::<u16>::with_capacity(tot_chars); // prealloc
-		v.iter().for_each(|s|
-			vec_u16.extend(
-				s.as_ref().encode_utf16() // convert each string
-					.chain(std::iter::once(0x0000)) // append a terminating null
-			),
-		);
-		vec_u16.push(0x0000); // double terminating null
-
-		Self { vec_u16 }
+		Self { buf: Buffer::from_str_vec(v) }
 	}
 
-	/// Creates a new UTF-16 string by copying from a buffer, specifying the
-	/// number of existing chars, not counting a terminating null.
-	///
-	/// The string will be stored with a terminating null.
+	/// Stores an UTF-16 null-terminated string by copying from a buffer,
+	/// specifying the number of chars to be copied.
+	/// 
+	/// The `src` buffer doesn't need to be null-terminated.
 	#[must_use]
 	pub fn from_wchars_count(src: *const u16, num_chars: usize) -> Self {
-		if src.is_null() || num_chars == 0 {
-			Self::default()
-		} else {
-			let tot_chars = num_chars + 1; // add room for terminating null
-			let mut vec_u16 = vec![0x0000; tot_chars]; // alloc right away
-			unsafe {
-				src.copy_to_nonoverlapping(vec_u16.as_mut_ptr(), tot_chars - 1); // no terminating null to copy
-				*vec_u16.get_unchecked_mut(tot_chars - 1) = 0x0000; // terminating null
-			}
-
-			Self { vec_u16 }
-		}
+		Self { buf: Buffer::from_wchars_count(src, num_chars) }
 	}
 
-	/// Creates a new UTF-16 string by copying from a null-terminated buffer.
-	///
-	/// The string will be stored with a terminating null.
+	/// Stores an UTF-16 null-terminated string by copying from a
+	/// null-terminated buffer. The string length is retrieved with
+	/// [`lstrlen`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lstrlenw).
 	#[must_use]
 	pub fn from_wchars_nullt(src: *const u16) -> Self {
-		if src.is_null() {
-			Self::default()
-		} else {
-			Self::from_wchars_count(
-				src, unsafe { kernel::ffi::lstrlenW(src) } as _)
-		}
+		Self { buf: Buffer::from_wchars_nullt(src) }
 	}
 
-	/// Creates a new UTF-16 string by copying from a slice.
-	///
-	/// The string will be stored with a terminating null.
+	/// Stores an UTF-16 null-terminated string by copying from a slice.
+	/// 
+	/// The `src` slice doesn't need to be null-terminated.
 	#[must_use]
 	pub fn from_wchars_slice(src: &[u16]) -> Self {
-		Self::from_wchars_count(src.as_ptr(), src.len())
+		Self { buf: Buffer::from_wchars_slice(src) }
 	}
 
-	/// Creates a new UTF-16 buffer allocated with an specific length. All
-	/// UTF-16 chars will be set to zero.
+	/// Allocates an UTF-16 buffer with an specific length. All elements will be
+	/// set to zero.
 	#[must_use]
-	pub fn new_alloc_buf(num_chars: usize) -> Self {
-		Self { vec_u16: vec![0x0000; num_chars] }
+	pub fn new_alloc_buf(sz: usize) -> Self {
+		Self { buf: Buffer::new_alloc_buf(sz) }
 	}
 
-	/// Returns a
+	/// Returns a mutable
 	/// [`LPWSTR`](https://learn.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
-	/// mut pointer to the internal UTF-16 string buffer, to be passed to native
+	/// pointer to the internal UTF-16 string buffer, to be passed to native
 	/// Win32 functions. This is useful to receive strings.
-	///
+	/// 
 	/// # Panics
-	///
-	/// Panics if the buffer wasn't previously allocated.
-	///
+	/// 
+	/// Panics if the buffer was not allocated.
+	/// 
 	/// # Safety
-	///
+	/// 
 	/// Be sure to alloc enough room, otherwise a buffer overrun may occur.
 	#[must_use]
 	pub unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
-		if self.vec_u16.is_empty() {
-			panic!("Trying to use an unallocated WString buffer.")
-		} else {
-			self.vec_u16.as_mut_ptr()
-		}
+		self.buf.as_mut_ptr()
+	}
+
+	/// Returns a mutable slice to the internal UTF-16 string buffer.
+	#[must_use]
+	pub fn as_mut_slice(&mut self) -> &mut [u16] {
+		self.buf.as_mut_slice()
 	}
 
 	/// Returns a
 	/// [`LPCWSTR`](https://learn.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
-	/// const pointer to the internal UTF-16 string buffer, to be passed to
-	/// native Win32 functions.
-	///
-	/// Safely returns a null pointer if the buffer wasn't previously allocated.
-	///
-	/// # Safety
-	///
-	/// Make sure the `WString` object outlives the function call, otherwise it
-	/// will point to an invalid memory location.
+	/// pointer to the internal UTF-16 string buffer, to be passed to native
+	/// Win32 functions.
+	/// 
+	/// If the buffer was not allocated, returns a null pointer.
 	#[must_use]
-	pub unsafe fn as_ptr(&self) -> *const u16 {
-		if self.vec_u16.is_empty() {
-			std::ptr::null()
-		} else {
-			self.vec_u16.as_ptr()
-		}
-	}
-
-	/// Returns a slice to the internal
-	/// [`u16`](https://doc.rust-lang.org/std/primitive.u16.html) buffer. This
-	/// is useful to receive strings.
-	#[must_use]
-	pub fn as_mut_slice(&mut self) -> &mut [u16] {
-		self.vec_u16.as_mut_slice()
+	pub fn as_ptr(&self) -> *const u16 {
+		self.buf.as_ptr()
 	}
 
 	/// Returns a slice to the internal UTF-16 string buffer.
 	#[must_use]
 	pub fn as_slice(&self) -> &[u16] {
-		self.vec_u16.as_slice()
-	}
-
-	/// Tells whether the internal bufer has not been allocated.
-	#[must_use]
-	pub fn buf_is_empty(&self) -> bool {
-		self.vec_u16.is_empty()
+		self.buf.as_slice()
 	}
 
 	/// Returns the size of the allocated internal buffer. Note that the
@@ -193,32 +137,8 @@ impl WString {
 	///
 	/// If the buffer was not allocated yet, returns zero.
 	#[must_use]
-	pub fn buf_len(&self) -> usize {
-		self.vec_u16.len()
-	}
-
-	/// Resizes the internal buffer, to be used as a buffer for native Win32
-	/// functions. All new UTF-16 chars will be set to zero.
-	///
-	/// The underlying `Vec` will be resized with a call to
-	/// [`Vec::resize`](https://doc.rust-lang.org/std/vec/struct.Vec.html#method.resize).
-	///
-	/// If the new size is zero, the internal buffer is deallocated.
-	///
-	/// # Safety
-	///
-	/// The internal memory can be moved after a realloc, so if you're using a
-	/// pointer to the internal buffer, it may then point to an invalid memory
-	/// location. After a realloc, the following methods must be called again:
-	///
-	/// * [`as_mut_ptr`](crate::WString::as_mut_ptr);
-	/// * [`as_ptr`](crate::WString::as_ptr).
-	pub unsafe fn buf_realloc(&mut self, new_size: usize) {
-		if new_size == 0 {
-			self.vec_u16 = Vec::<u16>::default();
-		} else {
-			self.vec_u16.resize(new_size, 0x0000);
-		}
+	pub const fn buf_len(&self) -> usize {
+		self.buf.buf_len()
 	}
 
 	/// Copies the content into an external buffer. A terminating null will be
@@ -228,76 +148,22 @@ impl WString {
 	///
 	/// If `dest` has 1 element, it will receive only the terminating null.
 	pub fn copy_to_slice(&self, dest: &mut [u16]) {
-		if dest.is_empty() {
-			// Do nothing.
-		} else if self.vec_u16.is_empty() {
-			dest.iter_mut()
-				.for_each(|dest| *dest = 0x0000);
-		} else {
-			let num_chars = std::cmp::min(self.vec_u16.len() - 1, dest.len() - 1); // no terminating null
-			let src_wri = &self.vec_u16[..num_chars];
-			let dest_wri = &mut dest[..num_chars];
-
-			src_wri.iter()
-				.zip(dest_wri.iter_mut())
-				.for_each(|(src_ch, dest_ch)| *dest_ch = *src_ch);
-
-			dest.iter_mut()
-				.skip(num_chars)
-				.for_each(|dest_ch| *dest_ch = 0x0000);
-		}
+		if !dest.is_empty() {
+			let usable_len = dest.len() - 1; // leave room for terminating null
+			self.as_slice()
+				.iter()
+				.zip(dest[..usable_len].iter_mut())
+				.for_each(|(src, dest)| *dest = *src);
+			dest[usable_len..].iter_mut()
+				.for_each(|dest| *dest = 0x0000); // fill the rest with zero
+		}			
 	}
 
-	/// Fills the entire buffer with zero values. The buffer size is not
-	/// changed.
+	/// Fills the entire buffer with zeros.
 	pub fn fill_with_zero(&mut self) {
-		self.vec_u16.iter_mut()
+		self.as_mut_slice()
+			.iter_mut()
 			.for_each(|ch| *ch = 0x0000);
-	}
-
-	/// Wrapper to
-	/// [`lstrlen`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lstrlenw).
-	///
-	/// Returns the number of
-	/// [`u16`](https://doc.rust-lang.org/std/primitive.u16.html) characters
-	/// stored in the internal buffer, not counting the terminating null.
-	#[must_use]
-	pub fn str_len(&self) -> usize {
-		unsafe { kernel::ffi::lstrlenW(self.as_ptr()) as _ }
-	}
-
-	/// Wrapper to
-	/// [`lstrcat`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lstrcatw).
-	///
-	/// Appends a string onto the current one, repositioning the null terminator
-	/// at the end of the new string. If the internal buffer hasn't been
-	/// allocated yet, simply calls
-	/// [`WString::from_str`](crate::WString::from_str).
-	pub fn append(&mut self, s: &str) {
-		if self.buf_is_empty() {
-			*self = Self::from_str(s)
-		} else {
-			let new_text = Self::from_str(s);
-			unsafe {
-				self.buf_realloc(self.str_len() + new_text.str_len() + 1);
-				kernel::ffi::lstrcatW(self.as_mut_ptr(), new_text.as_ptr());
-			}
-		}
-	}
-
-	/// Converts into
-	/// [`String`](https://doc.rust-lang.org/std/string/struct.String.html). An
-	/// unallocated buffer will simply be converted into an empty string.
-	///
-	/// # Panics
-	///
-	/// Panics if any invalid character is found.
-	///
-	/// If you're parsing raw data which may contain errors, prefer using
- 	/// [`to_string_checked`](crate::WString::to_string_checked) instead.
-	#[must_use]
-	pub fn to_string(&self) -> String {
-		self.to_string_checked().unwrap()
 	}
 
 	/// Converts into
@@ -308,14 +174,24 @@ impl WString {
 	///
 	/// This method is useful if you're parsing raw data which may contain
 	/// invalid characters. If you're dealing with a string known to be valid,
-	/// [`to_string`](crate::WString::to_string) is more practical.
+	/// [`to_string`](https://doc.rust-lang.org/std/string/trait.ToString.html#tymethod.to_string)
+	/// is more practical.
 	#[must_use]
-	pub fn to_string_checked(&self) -> Result<String, std::string::FromUtf16Error> {
-		if self.vec_u16.is_empty() {
-			Ok(String::default())
-		} else {
-			String::from_utf16(&self.vec_u16[..self.str_len()]) // without terminating null
-		}
+	pub fn to_string_checked(&self
+	) -> Result<String, std::string::FromUtf16Error>
+	{
+		self.buf.to_string_checked()
+	}
+
+	/// Wrapper to
+	/// [`lstrlen`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lstrlenw).
+	///
+	/// Returns the number of
+	/// [`u16`](https://doc.rust-lang.org/std/primitive.u16.html) characters
+	/// stored in the internal buffer, not counting the terminating null.
+	#[must_use]
+	pub fn str_len(&self) -> usize {
+		unsafe { kernel::ffi::lstrlenW(self.buf.as_ptr()) as _ }
 	}
 
 	/// Guesses the encoding with [`Encoding::guess`](crate::Encoding::guess)
@@ -330,15 +206,16 @@ impl WString {
 	///
 	/// # Examples
 	///
-	/// Parsing a file as string by [memory-mapping](crate::FileMapped) the file
-	/// (usually the fastest method):
+	/// Usually the fastest way to read the text from a file is by mapping its
+	/// contents in memory with [`FileMapped`](crate::FileMapped), then parsing:
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{FileAccess, FileMapped, WString};
 	///
 	/// let file_in = FileMapped::open("C:\\Temp\\foo.txt", FileAccess::ExistingReadOnly)?;
-	/// let str_contents = WString::parse(file_in.as_slice())?.to_string();
+	/// let wstr = WString::parse(file_in.as_slice())?;
+	/// let str_contents = wstr.to_string();
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -351,7 +228,7 @@ impl WString {
 		let (encoding, sz_bom) = Encoding::guess(data);
 		data = &data[sz_bom..]; // skip BOM, if any
 
-		let wstr = Self::from_wchars_slice(
+		Ok(Self::from_wchars_slice(
 			&match encoding {
 				Encoding::Ansi => Self::parse_ansi(data),
 				Encoding::Win1252 => MultiByteToWideChar(co::CP::WINDOWS_1252, co::MBC::NoValue, data)?,
@@ -364,21 +241,16 @@ impl WString {
 				| Encoding::Bocu1
 				| Encoding::Unknown => panic!("Encoding {} not implemented.", encoding),
 			}
-		);
-		Ok(wstr)
+		))
 	}
 
 	fn parse_ansi(data: &[u8]) -> Vec<u16> {
-		let the_len = data.iter()
-			.position(|ch| *ch == 0x00) // a terminating null means end of the string
-			.unwrap_or(data.len());
-
-		let mut str16 = Vec::<u16>::with_capacity(the_len + 1); // room for terminating null
-		data.iter().for_each(|by| str16.push(*by as _)); // u8 to u16 raw conversion
-		str16.push(0x0000); // terminating null
-		str16
+		data.iter()
+			.take_while(|ch| **ch != 0x0000) // ignore terminating null, if any
+			.map(|ch| *ch as u16) // raw u8 to u16 conversion
+			.collect()
 	}
-
+	
 	fn parse_utf16(data: &[u8], is_big_endian: bool) -> Vec<u16> {
 		let data = if data.len() % 2 == 1 {
 			&data[..data.len() - 1] // if odd number of bytes, discard last one
@@ -386,22 +258,201 @@ impl WString {
 			data
 		};
 
-		let the_len = data.chunks(2)
-			.position(|ch2| ch2 == &[0x00, 0x00]) // a terminating null means end of the string
-			.unwrap_or(data.len() / 2);
-
-		let mut str16 = Vec::<u16>::with_capacity(the_len + 1); // room for terminating null
 		data.chunks(2)
-			.for_each(|ch2| {
-				str16.push(
-					if is_big_endian {
-						u16::from_be_bytes(ch2.try_into().unwrap())
-					} else {
-						u16::from_le_bytes(ch2.try_into().unwrap())
-					},
-				);
-			});
-		str16.push(0x0000); // terminating null
-		str16
+			.take_while(|ch2| **ch2 != [0x00, 0x00]) // ignore terminating null, if any
+			.map(|ch2| {
+				if is_big_endian {
+					u16::from_be_bytes(ch2.try_into().unwrap())
+				} else {
+					u16::from_le_bytes(ch2.try_into().unwrap())
+				}
+			})
+			.collect()
+	}
+}
+
+//------------------------------------------------------------------------------
+
+enum Buffer {
+	Stack([u16; SSO_LEN]),
+	Heap((LocalFreeGuard, usize)), // pointer, char count
+	Unallocated,
+}
+
+impl Default for Buffer {
+	fn default() -> Self {
+		Self::Unallocated
+	}
+}
+
+impl Clone for Buffer {
+	fn clone(&self) -> Self {
+		match self {
+			Self::Unallocated => Self::Unallocated,
+			_ => {
+				let mut new_self = Self::new_alloc_buf(self.buf_len());
+				self.as_slice()
+					.iter()
+					.zip(new_self.as_mut_slice())
+					.for_each(|(src, dest)| *dest = *src);
+				new_self
+			},
+		}
+	}
+}
+
+impl std::fmt::Debug for Buffer {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "{}", match self {
+			Self::Stack(arr) =>
+				format!("STACK({}) \"{}\"", arr.len(), self.to_string_checked().unwrap()),
+			Self::Heap((_, num_chars)) =>
+				format!("HEAP({}) \"{}\"", num_chars, self.to_string_checked().unwrap()),
+			Self::Unallocated =>
+				"(UNALLOCATED)".to_owned(),
+		})
+	}
+}
+
+impl Buffer {
+	fn from_opt_str(s: Option<&str>) -> Self {
+		match s {
+			Some(s) => Self::from_str(s),
+			None => Self::Unallocated,
+		}
+	}
+
+	fn from_str(s: &str) -> Self {
+		let s_len = s.encode_utf16().count();
+		if s_len == 0 {
+			Self::Unallocated
+		} else {
+			let num_chars = s_len + 1; // room for terminating null
+			let mut new_self = Self::new_alloc_buf(num_chars);
+			s.encode_utf16()
+				.into_iter()
+				.zip(new_self.as_mut_slice())
+				.for_each(|(src, dest)| *dest = src);
+			new_self
+		}
+	}
+
+	fn from_str_vec(v: &[impl AsRef<str>]) -> Self {
+		let tot_chars = v.iter() // number of chars of all strings, including terminating nulls
+			.fold(0, |tot, s| tot + s.as_ref().chars().count() + 1) // include terminating null
+			+ 1; // double terminating null
+		let mut new_self = Self::new_alloc_buf(tot_chars);
+		v.iter()
+			.map(|s| {
+				s.as_ref()
+					.encode_utf16()
+					.into_iter()
+			})
+			.flatten()
+			.zip(new_self.as_mut_slice())
+			.for_each(|(src, dest)| *dest = src);
+		new_self
+	}
+
+	fn from_wchars_count(src: *const u16, num_chars: usize) -> Self {
+		if src.is_null() || num_chars == 0 {
+			Self::Unallocated
+		} else {
+			Self::from_wchars_slice(
+				unsafe { std::slice::from_raw_parts(src, num_chars) },
+			)
+		}
+	}
+
+	fn from_wchars_nullt(src: *const u16) -> Self {
+		Self::from_wchars_count(src, unsafe { kernel::ffi::lstrlenW(src) as _ })
+	}
+
+	fn from_wchars_slice(src: &[u16]) -> Self {
+		if src.is_empty() {
+			Self::Unallocated
+		} else {
+			let num_chars = src.iter()
+				.take_while(|ch| **ch != 0x0000) // skip terminating null, if any
+				.count()
+				+ 1; // room for terminating null
+			let mut new_self = Self::new_alloc_buf(num_chars);
+			src.iter()
+				.take_while(|ch| **ch != 0x0000) // skip terminating null, if any
+				.zip(new_self.as_mut_slice())
+				.for_each(|(src, dest)| *dest = *src);
+			new_self
+		}
+	}
+
+	fn new_alloc_buf(num_chars: usize) -> Self {
+		if num_chars == 0 {
+			Self::Unallocated
+		} else if num_chars <= SSO_LEN {
+			Self::Stack([0x0000; SSO_LEN])
+		} else {
+			Self::Heap((
+				HLOCAL::LocalAlloc(
+					co::LMEM::FIXED | co::LMEM::ZEROINIT,
+					num_chars * std::mem::size_of::<u16>(),
+				).unwrap(),
+				num_chars,
+			))
+		}
+	}
+
+	unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
+		match self {
+			Self::Stack(arr) => arr.as_mut_ptr(),
+			Self::Heap((hlocal, _)) => hlocal.as_ptr() as _,
+			Self::Unallocated => panic!("Trying to use an unallocated WString buffer."),
+		}
+	}
+
+	fn as_mut_slice(&mut self) -> &mut [u16] {
+		match self {
+			Self::Stack(arr) => arr,
+			Self::Heap((hlocal, num_chars)) =>
+				unsafe { std::slice::from_raw_parts_mut(hlocal.as_ptr() as _, *num_chars) },
+			Self::Unallocated => &mut [],
+		}
+	}
+
+	fn as_ptr(&self) -> *const u16 {
+		match self {
+			Self::Stack(arr) => arr.as_ptr(),
+			Self::Heap((hlocal, _)) => hlocal.as_ptr() as _,
+			Self::Unallocated => std::ptr::null(),
+		}
+	}
+
+	fn as_slice(&self) -> &[u16] {
+		match self {
+			Self::Stack(arr) => arr,
+			Self::Heap((hlocal, num_chars)) =>
+				unsafe { std::slice::from_raw_parts(hlocal.as_ptr() as _, *num_chars) },
+			Self::Unallocated => &[],
+		}
+	}
+
+	const fn buf_len(&self) -> usize {
+		match self {
+			Self::Stack(arr) => arr.len(),
+			Self::Heap((_, num_chars)) => *num_chars,
+			Self::Unallocated => 0,
+		}
+	}
+
+	fn to_string_checked(&self) -> Result<String, std::string::FromUtf16Error> {
+		match self {
+			Self::Unallocated => Ok(String::default()),
+			_ => String::from_utf16(
+				&self.as_slice()
+					.into_iter()
+					.take_while(|ch| **ch != 0x0000) // remove all trailing zeros
+					.map(|ch| *ch)
+					.collect::<Vec<_>>(),
+			),
+		}
 	}
 }
