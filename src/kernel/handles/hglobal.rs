@@ -105,7 +105,7 @@ pub trait kernel_Hglobal: Handle {
 			unsafe {
 				kernel::ffi::GlobalReAlloc(self.as_ptr(), num_bytes, flags.0)
 			},
-		).map(|h| { *self = h })
+		).map(|h| { *self = h; })
 	}
 
 	/// [`GlobalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize)

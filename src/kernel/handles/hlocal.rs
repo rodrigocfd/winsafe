@@ -56,7 +56,7 @@ pub trait kernel_Hlocal: Handle {
 			unsafe {
 				kernel::ffi::LocalReAlloc(self.as_ptr(), num_bytes, flags.0)
 			},
-		).map(|h| { *self = h })
+		).map(|h| { *self = h; })
 	}
 
 	/// [`LocalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localsize)

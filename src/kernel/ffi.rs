@@ -120,6 +120,8 @@ extern_sys! { "kernel32";
 	GetNativeSystemInfo(PVOID)
 	GetProcAddress(HANDLE, *const u8) -> PCVOID
 	GetProcessHandleCount(HANDLE, &mut u32) -> BOOL
+	GetProcessHeap() -> HANDLE
+	GetProcessHeaps(u32, *mut HANDLE) -> u32
 	GetProcessId(HANDLE) -> u32
 	GetProcessIdOfThread(HANDLE) -> u32
 	GetProcessTimes(HANDLE, PVOID, PVOID, PVOID, PVOID) -> BOOL
@@ -145,6 +147,15 @@ extern_sys! { "kernel32";
 	GlobalUnlock(HANDLE) -> BOOL
 	Heap32ListFirst(HANDLE, PVOID) -> BOOL
 	Heap32ListNext(HANDLE, PVOID) -> BOOL
+	HeapAlloc(HANDLE, u32, usize) -> PVOID
+	HeapCompact(HANDLE, u32) -> usize
+	HeapCreate(u32, usize, usize) -> HANDLE
+	HeapDestroy(HANDLE) -> BOOL
+	HeapFree(HANDLE, u32, PVOID) -> BOOL
+	HeapLock(HANDLE) -> BOOL
+	HeapReAlloc(HANDLE, u32, PVOID, usize) -> PVOID
+	HeapSize(HANDLE, u32, PVOID) -> usize
+	HeapUnlock(HANDLE) -> BOOL
 	IsDebuggerPresent() -> BOOL
 	IsNativeVhdBoot(*mut BOOL) -> BOOL
 	IsProcessCritical(HANDLE, *mut BOOL) -> BOOL

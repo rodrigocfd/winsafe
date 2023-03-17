@@ -1,11 +1,11 @@
 use std::ops::{Deref, DerefMut};
 
-use crate::kernel;
+use crate::{co, kernel};
 use crate::kernel::decl::{
-	HFILEMAPVIEW, HFINDFILE, HGLOBAL, HIDWORD, HINSTANCE, HKEY, HLOCAL,
-	HUPDATERSRC, LODWORD, PROCESS_INFORMATION, SID,
+	HFILEMAPVIEW, HFINDFILE, HGLOBAL, HHEAPMEM, HHEAPOBJ, HIDWORD, HINSTANCE,
+	HKEY, HLOCAL, HUPDATERSRC, LODWORD, PROCESS_INFORMATION, SID,
 };
-use crate::prelude::{Handle, kernel_Hfile, kernel_Hglobal};
+use crate::prelude::{Handle, kernel_Hfile, kernel_Hglobal, kernel_Hheapobj};
 
 /// RAII implementation for a [`Handle`](crate::prelude::Handle) which
 /// automatically calls
@@ -309,7 +309,7 @@ impl<'a, H> Drop for GlobalUnlockGuard<'a, H>
 impl<'a, H> GlobalUnlockGuard<'a, H>
 	where H: kernel_Hglobal,
 {
-	/// Constructs the guard by taking ownership of the handle.
+	/// Constructs the guard.
 	/// 
 	/// # Safety
 	/// 
@@ -322,6 +322,135 @@ impl<'a, H> GlobalUnlockGuard<'a, H>
 	#[must_use]
 	pub const unsafe fn new(hglobal: &'a H) -> Self {
 		Self { hglobal }
+	}
+}
+
+//------------------------------------------------------------------------------
+
+handle_guard! { HeapDestroyGuard: HHEAPOBJ;
+	kernel::ffi::HeapDestroy;
+	/// RAII implementation for [`HHEAPOBJ`](crate::HHEAPOBJ) which automatically
+	/// calls
+	/// [`HeapDestroy`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapdestroy)
+	/// when the object goes out of scope.
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation for [`HHEAPMEM`](crate::HHEAPMEM) which automatically
+/// calls
+/// [`HeapFree`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapfree)
+/// when the object goes out of scope.
+pub struct HeapFreeGuard<H>
+	where H: kernel_Hheapobj,
+{
+	hheapobj: H,
+	hheapmem: HHEAPMEM,
+}
+
+impl<H> Drop for HeapFreeGuard<H>
+	where H: kernel_Hheapobj,
+{
+	fn drop(&mut self) {
+		if let Some(ho) = self.hheapobj.as_opt() {
+			if let Some(hm) = self.hheapmem.as_opt() {
+				unsafe {
+					kernel::ffi::HeapFree( // ignore errors
+						ho.as_ptr(),
+						co::HEAP_ALLOC::NoValue.0,
+						hm.as_ptr(),
+					);
+				} 
+			}
+		}
+	}
+}
+
+impl<H> Deref for HeapFreeGuard<H>
+	where H: kernel_Hheapobj,
+{
+	type Target = HHEAPMEM;
+
+	fn deref(&self) -> &Self::Target {
+		&self.hheapmem
+	}
+}
+
+impl<H> DerefMut for HeapFreeGuard<H>
+	where H: kernel_Hheapobj,
+{
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		&mut self.hheapmem
+	}
+}
+
+impl<H> HeapFreeGuard<H>
+	where H: kernel_Hheapobj,
+{
+	/// Constructs the guard by taking ownership of the handle.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the handle must be freed with
+	/// [`HeapFree`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapfree)
+	/// at the end of scope.
+	/// 
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
+	#[must_use]
+	pub const unsafe fn new(hheapobj: H, hheapmem: HHEAPMEM) -> Self {
+		Self { hheapobj, hheapmem }
+	}
+
+	/// Ejects the underlying handle, leaving
+	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
+	///
+	/// Since the internal handle will be invalidated, the destructor will not
+	/// run. It's your responsibility to run it, otherwise you'll cause a
+	/// resource leak.
+	#[must_use]
+	pub fn leak(&mut self) -> HHEAPMEM {
+		std::mem::replace(&mut self.hheapmem, HHEAPMEM::INVALID)
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation for [`HHEAPOBJ`](crate::HHEAPOBJ) which automatically calls
+/// [`HeapUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock)
+/// when the object goes out of scope.
+pub struct HeapUnlockGuard<'a, H>
+	where H: kernel_Hheapobj,
+{
+	hheapobj: &'a H,
+}
+
+impl<'a, H> Drop for HeapUnlockGuard<'a, H>
+	where H: kernel_Hheapobj,
+{
+	fn drop(&mut self) {
+		if let Some(h) = self.hheapobj.as_opt() {
+			unsafe { kernel::ffi::HeapUnlock(h.as_ptr()); } // ignore errors
+		}
+	}
+}
+
+impl<'a, H> HeapUnlockGuard<'a, H>
+	where H: kernel_Hheapobj,
+{
+	/// Constructs the guard.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the handle must be freed with
+	/// [`HeapUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock)
+	/// at the end of scope.
+	/// 
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
+	#[must_use]
+	pub const unsafe fn new(hheapobj: &'a H) -> Self {
+		Self { hheapobj }
 	}
 }
 

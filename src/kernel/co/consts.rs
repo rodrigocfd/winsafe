@@ -386,10 +386,68 @@ const_bitflag! { GR: u32;
 	USEROBJECTS_PEAK 4
 }
 
+const_bitflag! { HEAP_ALLOC: u32;
+	/// [`HHEAPOBJ::HeapAlloc`](crate::prelude::kernel_Hheapobj::HeapAlloc)
+	/// `flags` (`u32`).
+	/// 
+	/// Originally has `HEAP` prefix.
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	GENERATE_EXCEPTIONS 0x0000_0004
+	NO_SERIALIZE 0x0000_0001
+	ZERO_MEMORY 0x0000_0008
+}
+
+const_bitflag! { HEAP_CREATE: u32;
+	/// [`HHEAPOBJ::HeapCreate`](crate::prelude::kernel_Hheapobj::HeapCreate)
+	/// `options` (`u32`).
+	/// 
+	/// Originally has `HEAP` prefix.
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	ENABLE_EXECUTE 0x0004_0000
+	GENERATE_EXCEPTIONS 0x0000_0004
+	NO_SERIALIZE 0x0000_0001
+}
+
+const_bitflag! { HEAP_REALLOC: u32;
+	/// [`HHEAPOBJ::HeapReAlloc`](crate::prelude::kernel_Hheapobj::HeapReAlloc)
+	/// `options` (`u32`).
+	/// 
+	/// Originally has `HEAP` prefix.
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	GENERATE_EXCEPTIONS 0x0000_0004
+	NO_SERIALIZE 0x0000_0001
+	REALLOC_IN_PLACE_ONLY 0x0000_0010
+	ZERO_MEMORY 0x0000_0008
+}
+
+const_bitflag! { HEAP_SIZE: u32;
+	/// [`HHEAPOBJ::HeapSize`](crate::prelude::kernel_Hheapobj::HeapSize)
+	/// and
+	/// [`HHEAPOBJ::HeapCompact`](crate::prelude::kernel_Hheapobj::HeapCompact)
+	/// `options` (`u32`).
+	/// 
+	/// Originally has `HEAP` prefix.
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	NO_SERIALIZE 0x0000_0001
+}
+
 const_ordinary! { HF32: u32;
 	/// [`HEAPLIST32`](crate::HEAPLIST32) `dwFlags` (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
 	NoValue 0
 	/// Default heap of the process.
 	DEFAULT 1
