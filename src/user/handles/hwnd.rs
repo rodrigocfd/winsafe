@@ -256,11 +256,11 @@ pub trait user_Hwnd: Handle {
 	/// [`EnableScrollBar`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enablescrollbar)
 	/// method.
 	fn EnableScrollBar(&self,
-		sb_flags: co::SB_TYPE, arrows: co::ESB) -> SysResult<()>
+		sb_flags: co::SBB, arrows: co::ESB) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {
-				user::ffi::EnableScrollBar(self.as_ptr(), sb_flags.0, arrows.0)
+				user::ffi::EnableScrollBar(self.as_ptr(), sb_flags.0 as _, arrows.0)
 			},
 		)
 	}

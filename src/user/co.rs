@@ -2213,20 +2213,8 @@ const_ordinary! { SB_REQ: u16;
 	ENDSCROLL 8
 }
 
-const_ordinary! { SB_TYPE: u32;
-	/// [`HWND::EnableScrollBar`](crate::prelude::user_Hwnd::EnableScrollBar)
-	/// `sb_flags` (`u32`).
-	/// 
-	/// Originally has `SB` prefix.
-	=>
-	=>
-	HORZ 0
-	VERT 1
-	CTL 2
-	BOTH 3
-}
-
 const_ordinary! { SBB: i32;
+	/// [`HWND::EnableScrollBar`](crate::prelude::user_Hwnd::EnableScrollBar),
 	/// [`HWND::GetScrollInfo`](crate::prelude::user_Hwnd::GetScrollInfo),
 	/// [`HWND::SetScrollInfo`](crate::prelude::user_Hwnd::SetScrollInfo) and
 	/// [`HWND::SetScrollRange`](crate::prelude::user_Hwnd::SetScrollRange)
@@ -2238,6 +2226,7 @@ const_ordinary! { SBB: i32;
 	HORZ 0
 	VERT 1
 	CTL 2
+	BOTH 3
 }
 
 const_ordinary! { SC: u32;
