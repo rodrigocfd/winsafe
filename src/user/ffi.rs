@@ -57,6 +57,7 @@ extern_sys! { "user32";
 	DrawText(HANDLE, PCSTR, i32, PVOID, u32) -> i32
 	EmptyClipboard() -> BOOL
 	EnableMenuItem(HANDLE, u32, u32) -> BOOL
+	EnableScrollBar(HANDLE, u32, u32) -> BOOL
 	EnableWindow(HANDLE, BOOL) -> BOOL
 	EndDeferWindowPos(HANDLE) -> BOOL
 	EndDialog(HANDLE, isize) -> BOOL

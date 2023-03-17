@@ -1243,6 +1243,21 @@ const_ws! { ES: u32;
 	NUMBER 0x2000
 }
 
+const_ordinary! { ESB: u32;
+	/// [`HWND::EnableScrollBar`](crate::prelude::user_Hwnd::EnableScrollBar)
+	/// `arrows` (`u32`).
+	=>
+	=>
+	ENABLE_BOTH 0x0000
+	DISABLE_BOTH 0x0003
+	DISABLE_LEFT 0x0001
+	DISABLE_RIGHT 0x0002
+	DISABLE_UP 0x0001
+	DISABLE_DOWN 0x0002
+	DISABLE_LTUP Self::DISABLE_LEFT.0
+	DISABLE_RTDN Self::DISABLE_RIGHT.0
+}
+
 const_ordinary! { FAPPCOMMAND: u16;
 	/// [`wm::AppCommand`](crate::msg::wm::AppCommand) input event (`u16`).
 	=>
@@ -2198,11 +2213,26 @@ const_ordinary! { SB_REQ: u16;
 	ENDSCROLL 8
 }
 
+const_ordinary! { SB_TYPE: u32;
+	/// [`HWND::EnableScrollBar`](crate::prelude::user_Hwnd::EnableScrollBar)
+	/// `sb_flags` (`u32`).
+	/// 
+	/// Originally has `SB` prefix.
+	=>
+	=>
+	HORZ 0
+	VERT 1
+	CTL 2
+	BOTH 3
+}
+
 const_ordinary! { SBB: i32;
 	/// [`HWND::GetScrollInfo`](crate::prelude::user_Hwnd::GetScrollInfo),
 	/// [`HWND::SetScrollInfo`](crate::prelude::user_Hwnd::SetScrollInfo) and
 	/// [`HWND::SetScrollRange`](crate::prelude::user_Hwnd::SetScrollRange)
-	/// `bar` (`i32`). Originally has `SB` prefix.
+	/// `bar` (`i32`).
+	/// 
+	/// Originally has `SB` prefix.
 	=>
 	=>
 	HORZ 0
