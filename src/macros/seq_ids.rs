@@ -26,22 +26,37 @@
 /// ```
 #[macro_export]
 macro_rules! seq_ids {
-	(
-		$name:ident = $val:expr;
-		$( $others:ident )*
-	) => {
-		pub const $name: u16 = $val;
-		seq_ids!($val + 1, $($others,)*);
-	};
+	() => {};
 
 	($val:expr,) => {};
 
-	($val:expr, $name:ident,) => {
+	(
+		$(#[$comment:meta])*
+		$name:ident = $val:expr;
+		$($rest:tt)*
+	) => {
+		$(#[$comment])*
 		pub const $name: u16 = $val;
+		seq_ids!($val + 1, $($rest)*);
 	};
 
-	($val:expr, $name:ident, $( $others:ident, )+) => {
+	($next_val:expr,
+		$(#[$comment:meta])*
+		$name:ident = $val:expr;
+		$($rest:tt)*
+	) => {
+		$(#[$comment])*
 		pub const $name: u16 = $val;
-		seq_ids!($val + 1, $($others,)*);
+		seq_ids!($val + 1, $($rest)*);
+	};
+
+	($next_val:expr,
+		$(#[$comment:meta])*
+		$name:ident
+		$($rest:tt)*
+	) => {
+		$(#[$comment])*
+		pub const $name: u16 = $next_val;
+		seq_ids!($next_val + 1, $($rest)*);
 	};
 }
