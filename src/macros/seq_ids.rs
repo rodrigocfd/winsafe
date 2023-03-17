@@ -33,30 +33,30 @@ macro_rules! seq_ids {
 	(
 		$(#[$comment:meta])*
 		$name:ident = $val:expr;
-		$($rest:tt)*
+		$($others:tt)*
 	) => {
 		$(#[$comment])*
 		pub const $name: u16 = $val;
-		seq_ids!($val + 1, $($rest)*);
+		seq_ids!($val + 1, $($others)*);
 	};
 
 	($next_val:expr,
 		$(#[$comment:meta])*
 		$name:ident = $val:expr;
-		$($rest:tt)*
+		$($others:tt)*
 	) => {
 		$(#[$comment])*
 		pub const $name: u16 = $val;
-		seq_ids!($val + 1, $($rest)*);
+		seq_ids!($val + 1, $($others)*);
 	};
 
 	($next_val:expr,
 		$(#[$comment:meta])*
 		$name:ident
-		$($rest:tt)*
+		$($others:tt)*
 	) => {
 		$(#[$comment])*
 		pub const $name: u16 = $next_val;
-		seq_ids!($next_val + 1, $($rest)*);
+		seq_ids!($next_val + 1, $($others)*);
 	};
 }
