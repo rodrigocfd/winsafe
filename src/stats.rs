@@ -34,8 +34,8 @@ impl Stats {
 		}
 	}
 
-	/// Reads all files in the target directory and processes all the stats, calling
-	/// the callback to give feedback after processing each file.
+	/// Reads all files in the target directory and processes all the stats,
+	/// calling the callback to give feedback after processing each file.
 	pub fn gather<F>(target: &str, callback: F) -> w::SysResult<Self>
 		where F: Fn(usize),
 	{
@@ -56,7 +56,7 @@ impl Stats {
 					me.count_wmsgs(&contents);
 					me.count_handles(&contents);
 					me.count_com(&contents, &path);
-					callback(idx);
+					callback(idx); // pass the zero-based index of the file that has been processed
 				}
 				Ok(())
 			})?;

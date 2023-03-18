@@ -7,13 +7,10 @@ impl WndMain {
 	pub(super) fn events(&self) {
 		let self2 = self.clone();
 		self.wnd.on().wm_init_dialog(move |_| {
-			let target = "D:\\Stuff\\Core\\rs\\winsafe\\src";
-			self2.txt_path.set_text(target);
+			let target_dir = "D:\\Stuff\\Core\\rs\\winsafe\\src"; // arbitrary initial dir
+			self2.txt_path.set_text(target_dir);
 
-			let total = w::path::dir_walk(target).count();
-			self2.pro_load.set_range(0, total as _);
-
-			self2.txt_out.hwnd().SendMessage(msg::wm::SetFont {
+			self2.txt_out.hwnd().SendMessage(msg::wm::SetFont { // fixed-width font for output
 				hfont: unsafe { self2.mono_font.raw_copy() },
 				redraw: true,
 			});
@@ -32,26 +29,33 @@ impl WndMain {
 			self2.txt_path.hwnd().EnableWindow(false);
 			self2.btn_run.hwnd().EnableWindow(false);
 			self2.txt_out.set_text("");
+
+			let target_dir = self2.txt_path.text();
+			if !w::path::exists(&target_dir) {
+				w::task_dlg::error(self2.wnd.hwnd(), "Bad path",
+					Some("Process cannot be done"),
+					&format!("Path does not exist:\n{}", target_dir) )?;
+				return Ok(()); // halt processing
+			}
+
+			self2.pro_load.set_marquee(true);
+			let total_files_count = w::path::dir_walk(&target_dir).count(); // how many files to process?
+			self2.pro_load.set_marquee(false);
+
+			self2.pro_load.set_range(0, total_files_count as _); // setup progress bar
 			self2.pro_load.set_position(0);
 
 			self2.wnd.set_text(&format!("{} - {} files",
-				self2.wnd.text().split('-').next().unwrap().trim_end(),
-				self2.pro_load.range().1));
+				self2.wnd.text().split('-').next().unwrap().trim_end(), // get app name from titlebar
+				self2.pro_load.range().1) );
 
-			let target = self2.txt_path.text();
-			if !w::path::exists(&target) {
-				w::task_dlg::error(self2.wnd.hwnd(), "Bad path",
-					Some("Process cannot be done"),
-					&format!("Path does not exist:\n{}", target))?;
-			} else {
-				let self3 = self2.clone();
-				let stats = Stats::gather(&target, move |pass| { // process the files
-					self3.pro_load.set_position(pass as _);
-				})?;
+			let self3 = self2.clone();
+			let stats = Stats::gather(&target_dir, move |pass_idx| { // process the files
+				self3.pro_load.set_position(pass_idx as _);
+			})?;
 
-				self2.txt_out.set_text(&stats.format());
-				self2.txt_out.focus();
-			}
+			self2.txt_out.set_text(&stats.format());
+			self2.txt_out.focus();
 
 			self2.txt_path.hwnd().EnableWindow(true);
 			self2.btn_run.hwnd().EnableWindow(true);
