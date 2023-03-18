@@ -243,6 +243,11 @@ pub struct DEVMODE {
 }
 
 #[repr(C)]
+union DEVMODE_union0 {
+	printer: DEVMODE_printer,
+	display: DEVMODE_display,
+}
+#[repr(C)]
 #[derive(Clone, Copy)]
 struct DEVMODE_printer {
 	dmOrientation: co::DMORIENT,
@@ -254,19 +259,12 @@ struct DEVMODE_printer {
 	dmDefaultSource: co::DMBIN,
 	dmPrintQuality: co::DMRES,
 }
-
 #[repr(C)]
 #[derive(Clone, Copy)]
 struct DEVMODE_display {
 	dmPosition: POINT,
 	dmDisplayOrientation: co::DMDO,
 	dmDisplayFixedOutput: co::DMDFO,
-}
-
-#[repr(C)]
-union DEVMODE_union0 {
-	printer: DEVMODE_printer,
-	display: DEVMODE_display,
 }
 
 #[repr(C)]
