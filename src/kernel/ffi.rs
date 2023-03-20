@@ -127,6 +127,7 @@ extern_sys! { "kernel32";
 	GetProcessTimes(HANDLE, PVOID, PVOID, PVOID, PVOID) -> BOOL
 	GetStartupInfoW(PVOID)
 	GetSystemDirectoryW(PSTR, u32) -> u32
+	GetSystemFileCacheSize(*mut usize, *mut usize, *mut u32) -> BOOL
 	GetSystemInfo(PVOID)
 	GetSystemTime(PVOID)
 	GetSystemTimeAsFileTime(PVOID)

@@ -647,6 +647,22 @@ pub fn GetSystemDirectory() -> SysResult<String> {
 	}
 }
 
+/// [`GetSystemFileCacheSize`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-getsystemfilecachesize)
+/// function.
+/// 
+/// Returns minimum and maximum size of file cache (in bytes), and enabled cache
+/// limit flags, respectively.
+#[must_use]
+pub fn GetSystemFileCacheSize() -> SysResult<(usize, usize, co::FILE_CACHE)> {
+	let (mut min, mut max) = (usize::default(), usize::default());
+	let mut flags = co::FILE_CACHE::NoValue;
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::GetSystemFileCacheSize(&mut min, &mut max, &mut flags.0)
+		},
+	).map(|_| (min, max, flags))
+}
+
 /// [`GetSystemInfo`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsysteminfo)
 /// function.
 /// 

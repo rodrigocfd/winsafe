@@ -229,6 +229,17 @@ const_bitflag! { FILE_ATTRIBUTE: u32;
 	SECURITY_EFFECTIVE_ONLY 0x0008_0000
 }
 
+const_bitflag! { FILE_CACHE: u32;
+	/// [`GetSystemFileCacheSize`](crate::GetSystemFileCacheSize) returned flags
+	/// (`u32`).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	MAX_HARD_ENABLE 0x1
+	MIN_HARD_ENABLE 0x4
+}
+
 const_bitflag! { FILE_MAP: u32;
 	/// [`HFILEMAP::MapViewOfFile`](crate::prelude::kernel_Hfilemap::MapViewOfFile)
 	/// `desired_access` (`u32`).
