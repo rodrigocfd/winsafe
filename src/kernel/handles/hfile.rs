@@ -174,6 +174,8 @@ pub trait kernel_Hfile: Handle {
 	/// automatically calls `UnlockFile` when the guard goes out of scope. You
 	/// must, however, keep the guard alive, otherwise the cleanup will be
 	/// performed right away.
+	/// 
+	/// # Examples
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;

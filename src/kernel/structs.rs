@@ -8,6 +8,7 @@ use crate::kernel::decl::{
 	InitializeSecurityDescriptor, MAKEQWORD, WString,
 };
 use crate::kernel::privs::{MAX_MODULE_NAME32, MAX_PATH};
+use crate::prelude::NativeBitflag;
 
 /// [`ACL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-acl)
 /// struct.
@@ -373,18 +374,22 @@ pub struct PROCESS_HEAP_ENTRY {
 
 #[repr(C)]
 union PROCESS_HEAP_ENTRY_union0 {
-	hmem: PROCESS_HEAP_ENTRY_block,
-	committed: PROCESS_HEAP_ENTRY_region,
+	Block: PROCESS_HEAP_ENTRY_Block,
+	Region: PROCESS_HEAP_ENTRY_Region,
 }
+
+/// [`PROCESS_HEAP_ENTRY`]`(crate::PROCESS_HEAP_ENTRY) `Block`.
 #[repr(C)]
 #[derive(Clone, Copy)]
-struct PROCESS_HEAP_ENTRY_block {
+pub struct PROCESS_HEAP_ENTRY_Block {
 	pub hMem: *mut std::ffi::c_void,
 	dwReserved: [u32; 3],
 }
+
+/// [`PROCESS_HEAP_ENTRY`]`(crate::PROCESS_HEAP_ENTRY) `Region`.
 #[repr(C)]
 #[derive(Clone, Copy)]
-struct PROCESS_HEAP_ENTRY_region {
+pub struct PROCESS_HEAP_ENTRY_Region {
 	pub dwCommittedSize: u32,
 	pub dwUnCommittedSize: u32,
 	pub lpFirstBlock: *mut std::ffi::c_void,
@@ -392,6 +397,28 @@ struct PROCESS_HEAP_ENTRY_region {
 }
 
 impl_default!(PROCESS_HEAP_ENTRY);
+
+impl PROCESS_HEAP_ENTRY {
+	/// Retrieves the `Block` union field.
+	#[must_use]
+	pub fn Block(&self) -> Option<&PROCESS_HEAP_ENTRY_Block> {
+		if self.wFlags.has(co::PROCESS_HEAP::ENTRY_MOVEABLE) {
+			Some(unsafe { &self.union0.Block })
+		} else {
+			None
+		}
+	}
+
+	/// Retrieves the `Region` union field.
+	#[must_use]
+	pub fn Region(&self) -> Option<&PROCESS_HEAP_ENTRY_Region> {
+		if self.wFlags.has(co::PROCESS_HEAP::REGION) {
+			Some(unsafe { &self.union0.Region })
+		} else {
+			None
+		}
+	}
+}
 
 /// [`PROCESS_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information)
 /// struct.

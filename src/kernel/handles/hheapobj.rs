@@ -27,6 +27,33 @@ impl kernel_Hheapobj for HHEAPOBJ {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait kernel_Hheapobj: Handle {
+	/// Returns an iterator over the heap memory blocks with
+	/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) structs. Calls
+	/// [`HHEAPOBJ::HeapWalk`](crate::prelude::kernel_Hheapobj::HeapWalk).
+	/// 
+	/// # Examples
+	/// 
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HHEAPOBJ};
+	/// 
+	/// let heap_obj = HHEAPOBJ::HeapCreate(co::HEAP_CREATE::NoValue, 0, 0)?;
+	/// let _lock = heap_obj.HeapLock()?;
+	/// 
+	/// for entry in heap_obj.iter_walk() {
+	///     let entry = entry?;
+	///     println!("Size: {}, overhead? {}",
+	///         entry.cbData, entry.cbOverhead);
+	/// }
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
+	#[must_use]
+	fn iter_walk(&self
+	) -> Box<dyn Iterator<Item = SysResult<&PROCESS_HEAP_ENTRY>> + '_>
+	{
+		Box::new(WalkIter::new(self))
+	}
+
 	/// [`GetProcessHeap`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-getprocessheap)
 	/// static method.
 	#[must_use]
@@ -101,6 +128,30 @@ pub trait kernel_Hheapobj: Handle {
 
 	/// [`HeapLock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heaplock)
 	/// method.
+	/// 
+	/// In the original C implementation, you must call
+	/// [`HeapUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock)
+	/// as a cleanup operation.
+	/// 
+	/// Here, the cleanup is performed automatically, because `HeapLock` returns
+	/// a [`HeapUnlockGuard`](crate::guard::HeapUnlockGuard), which
+	/// automatically calls `HeapUnlock` when the guard goes out of scope. You
+	/// must, however, keep the guard alive, otherwise the cleanup will be
+	/// performed right away.
+	/// 
+	/// # Examples
+	/// 
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HHEAPOBJ};
+	/// 
+	/// let heap_obj = HHEAPOBJ::HeapCreate(co::HEAP_CREATE::NoValue, 0, 0)?;
+	/// 
+	/// let _lock = heap_obj.HeapLock()?;
+	/// 
+	/// // heap operations...
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
 	#[must_use]
 	fn HeapLock(&self) -> SysResult<HeapUnlockGuard<'_, Self>> {
 		unsafe {
@@ -152,16 +203,72 @@ pub trait kernel_Hheapobj: Handle {
 
 	/// [`HeapWalk`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapwalk)
 	/// method.
+	/// 
+	/// Prefer using
+	/// [`HHEAPOBJ::iter_walk`](crate::prelude::kernel_Hheapobj::iter_walk),
+	/// which is simpler.
 	#[must_use]
-	unsafe fn HeapWalk(&self,
-		entry: &mut PROCESS_HEAP_ENTRY) -> SysResult<bool>
-	{
-		match kernel::ffi::HeapWalk(self.as_ptr(), entry as *mut _ as _) {
+	fn HeapWalk(&self, entry: &mut PROCESS_HEAP_ENTRY) -> SysResult<bool> {
+		match unsafe {
+			kernel::ffi::HeapWalk(self.as_ptr(), entry as *mut _ as _)
+		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_ITEMS => Ok(false),
 				err => Err(err),
 			},
 			_ => Ok(true),
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+struct WalkIter<'a, H>
+	where H: kernel_Hheapobj,
+{
+	hheapobj: &'a H,
+	entry: PROCESS_HEAP_ENTRY,
+	has_more: bool,
+}
+
+impl<'a, H> Iterator for WalkIter<'a, H>
+	where H: kernel_Hheapobj,
+{
+	type Item = SysResult<&'a PROCESS_HEAP_ENTRY>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if !self.has_more {
+			return None;
+		}
+
+		match self.hheapobj.HeapWalk(&mut self.entry) {
+			Err(e) => {
+				self.has_more = false; // no further iterations
+				Some(Err(e))
+			},
+			Ok(found) => {
+				if found {
+					// Returning a reference cannot be done until GATs
+					// stabilization, so we simply cheat the borrow checker.
+					let ptr = &self.entry as *const PROCESS_HEAP_ENTRY;
+					Some(Ok(unsafe { &*ptr }))
+				} else {
+					self.has_more = false; // no further iterations
+					None
+				}
+			},
+		}
+	}
+}
+
+impl<'a, H> WalkIter<'a, H>
+	where H: kernel_Hheapobj,
+{
+	fn new(hheapobj: &'a H) -> Self {
+		Self {
+			hheapobj,
+			entry: PROCESS_HEAP_ENTRY::default(),
+			has_more: true,
 		}
 	}
 }
