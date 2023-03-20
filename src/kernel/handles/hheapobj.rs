@@ -1,7 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
-use crate::kernel::decl::{GetLastError, HHEAPMEM, SetLastError, SysResult};
+use crate::kernel::decl::{
+	GetLastError, HHEAPMEM, PROCESS_HEAP_ENTRY, SetLastError, SysResult,
+};
 use crate::kernel::guard::{HeapDestroyGuard, HeapFreeGuard, HeapUnlockGuard};
 use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
 use crate::prelude::Handle;
@@ -145,6 +147,21 @@ pub trait kernel_Hheapobj: Handle {
 		} {
 			FAILED => Err(GetLastError()),
 			n => Ok(n),
+		}
+	}
+
+	/// [`HeapWalk`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapwalk)
+	/// method.
+	#[must_use]
+	unsafe fn HeapWalk(&self,
+		entry: &mut PROCESS_HEAP_ENTRY) -> SysResult<bool>
+	{
+		match kernel::ffi::HeapWalk(self.as_ptr(), entry as *mut _ as _) {
+			0 => match GetLastError() {
+				co::ERROR::NO_MORE_ITEMS => Ok(false),
+				err => Err(err),
+			},
+			_ => Ok(true),
 		}
 	}
 }

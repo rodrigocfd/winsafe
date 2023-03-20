@@ -732,6 +732,17 @@ const_bitflag! { PROCESS: u32;
 	VM_WRITE 0x0020
 }
 
+const_bitflag! { PROCESS_HEAP: u16;
+	/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) `wFlags` (`u16`).
+	=>
+	=>
+	ENTRY_BUSY 0x0004
+	ENTRY_DDESHARE 0x0020
+	ENTRY_MOVEABLE 0x0010
+	REGION 0x0001
+	UNCOMMITTED_RANGE 0x0002
+}
+
 const_ordinary! { PROCESSOR: u32;
 	/// [`SYSTEM_INFO`](crate::SYSTEM_INFO) `dwProcessorType` (`u32`).
 	=>

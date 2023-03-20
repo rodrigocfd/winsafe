@@ -359,6 +359,40 @@ pub struct OVERLAPPED {
 
 impl_default!(OVERLAPPED);
 
+/// [`PROCESS_HEAP_ENTRY`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-process_heap_entry)
+/// struct.
+#[repr(C)]
+pub struct PROCESS_HEAP_ENTRY {
+	pub lpData: *mut std::ffi::c_void,
+	pub cbData: u32,
+	pub cbOverhead: u8,
+	pub iRegionIndex: u8,
+	pub wFlags: co::PROCESS_HEAP,
+	union0: PROCESS_HEAP_ENTRY_union0,
+}
+
+#[repr(C)]
+union PROCESS_HEAP_ENTRY_union0 {
+	hmem: PROCESS_HEAP_ENTRY_block,
+	committed: PROCESS_HEAP_ENTRY_region,
+}
+#[repr(C)]
+#[derive(Clone, Copy)]
+struct PROCESS_HEAP_ENTRY_block {
+	pub hMem: *mut std::ffi::c_void,
+	dwReserved: [u32; 3],
+}
+#[repr(C)]
+#[derive(Clone, Copy)]
+struct PROCESS_HEAP_ENTRY_region {
+	pub dwCommittedSize: u32,
+	pub dwUnCommittedSize: u32,
+	pub lpFirstBlock: *mut std::ffi::c_void,
+	pub lpLastBlock: *mut std::ffi::c_void,
+}
+
+impl_default!(PROCESS_HEAP_ENTRY);
+
 /// [`PROCESS_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-process_information)
 /// struct.
 #[repr(C)]
