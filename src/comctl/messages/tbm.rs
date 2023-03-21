@@ -9,7 +9,7 @@ use crate::msg::WndMsg;
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HWND, POINT, RECT, SIZE};
 use crate::user::privs::{
-	minus1_as_err, minus1_as_none, zero_as_err, zero_as_none,
+	minus1_as_badargs, minus1_as_none, zero_as_badargs, zero_as_none,
 };
 
 /// [`TB_ADDBITMAP`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-addbitmap)
@@ -25,7 +25,7 @@ unsafe impl<'a> MsgSend for AddBitmap<'a> {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_err(v).map(|v| v as _)
+		minus1_as_badargs(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -49,7 +49,7 @@ unsafe impl<'a, 'b> MsgSend for AddButtons<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -73,7 +73,7 @@ unsafe impl MsgSend for AddString {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_err(v).map(|v| v as _)
+		minus1_as_badargs(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -154,7 +154,7 @@ unsafe impl MsgSend for ChangeBitmap {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -179,7 +179,7 @@ unsafe impl MsgSend for CheckButton {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -231,7 +231,7 @@ unsafe impl MsgSend for DeleteButton {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -256,7 +256,7 @@ unsafe impl MsgSend for EnableButton {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -349,7 +349,7 @@ unsafe impl<'a, 'b> MsgSend for GetButton<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -374,7 +374,7 @@ unsafe impl<'a, 'b> MsgSend for GetButtonInfo<'a, 'b> {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|v| v as _)
+		zero_as_badargs(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -421,7 +421,7 @@ unsafe impl<'a> MsgSend for GetButtonText<'a> {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_err(v).map(|v| v as _)
+		minus1_as_badargs(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -445,7 +445,7 @@ unsafe impl<'a> MsgSend for GetColorScheme<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -558,7 +558,7 @@ unsafe impl<'a> MsgSend for GetIdealSize<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -698,7 +698,7 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -722,7 +722,7 @@ unsafe impl<'a> MsgSend for GetMaxSize<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -815,7 +815,7 @@ unsafe impl<'a> MsgSend for GetRect<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -861,7 +861,7 @@ unsafe impl MsgSend for GetState {
 	type RetType = SysResult<co::TBSTATE>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_err(v).map(|v| co::TBSTATE(v as _))
+		minus1_as_badargs(v).map(|v| co::TBSTATE(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -886,7 +886,7 @@ unsafe impl<'a> MsgSend for GetString<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -999,7 +999,7 @@ unsafe impl MsgSend for HideButton {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1048,7 +1048,7 @@ unsafe impl MsgSend for Indeterminate {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1073,7 +1073,7 @@ unsafe impl<'a, 'b> MsgSend for InsertButton<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1316,7 +1316,7 @@ unsafe impl MsgSend for MarkButton {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1341,7 +1341,7 @@ unsafe impl MsgSend for MoveButton {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1366,7 +1366,7 @@ unsafe impl MsgSend for PressButton {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1390,7 +1390,7 @@ unsafe impl<'a> MsgSend for ReplaceBitmap<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1464,7 +1464,7 @@ unsafe impl MsgSend for SetBitmapSize {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1489,7 +1489,7 @@ unsafe impl<'a, 'b> MsgSend for SetButtonInfo<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1514,7 +1514,7 @@ unsafe impl MsgSend for SetButtonSize {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1539,7 +1539,7 @@ unsafe impl MsgSend for SetButtonWidth {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1564,7 +1564,7 @@ unsafe impl MsgSend for SetCmdId {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1782,7 +1782,7 @@ unsafe impl MsgSend for SetIndent {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1878,7 +1878,7 @@ unsafe impl MsgSend for SetMaxTextRows {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -2027,7 +2027,7 @@ unsafe impl MsgSend for SetState {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

@@ -3,7 +3,7 @@ use crate::kernel::decl::{HIWORD, LCID, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{POINT, RECT};
-use crate::user::privs::{LB_ERR, LB_ERRSPACE, zero_as_err};
+use crate::user::privs::{LB_ERR, LB_ERRSPACE, zero_as_badargs};
 
 /// [`LB_ADDFILE`](https://learn.microsoft.com/en-us/windows/win32/controls/lb-addfile)
 /// message parameters.
@@ -1031,7 +1031,7 @@ unsafe impl<'a> MsgSend for SetTabStops<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

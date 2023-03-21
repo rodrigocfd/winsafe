@@ -3,7 +3,7 @@ use crate::kernel::decl::{MAKEDWORD, SysResult};
 use crate::msg::WndMsg;
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{HWND, RECT};
-use crate::user::privs::{minus1_as_err, zero_as_err, zero_as_none};
+use crate::user::privs::{minus1_as_badargs, zero_as_badargs, zero_as_none};
 
 /// [`TBM_CLEARSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-clearsel)
 /// message parameters.
@@ -335,7 +335,7 @@ unsafe impl MsgSend for GetTic {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_err(v).map(|v| v as _)
+		minus1_as_badargs(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -359,7 +359,7 @@ unsafe impl MsgSend for GetTicPos {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_err(v).map(|v| v as _)
+		minus1_as_badargs(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -725,7 +725,7 @@ unsafe impl MsgSend for SetTic {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

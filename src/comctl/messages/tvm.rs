@@ -7,7 +7,7 @@ use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HWND, RECT};
-use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
+use crate::user::privs::{minus1_as_none, zero_as_badargs, zero_as_none};
 
 /// [`TVM_CREATEDRAGIMAGE`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-createdragimage)
 /// message parameters.
@@ -21,7 +21,7 @@ unsafe impl<'a> MsgSend for CreateDragImage<'a> {
 	type RetType = SysResult<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
+		zero_as_badargs(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -45,7 +45,7 @@ unsafe impl<'a> MsgSend for DeleteItem<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -69,7 +69,7 @@ unsafe impl<'a> MsgSend for EditLabel<'a> {
 	type RetType = SysResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| unsafe { HWND::from_ptr(p as _) })
+		zero_as_badargs(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -93,7 +93,7 @@ unsafe impl MsgSend for EndEditLabelNow {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -142,7 +142,7 @@ unsafe impl<'a> MsgSend for Expand<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -208,7 +208,7 @@ unsafe impl MsgSend for GetEditControl {
 	type RetType = SysResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| unsafe { HWND::from_ptr(p as _) })
+		zero_as_badargs(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -346,7 +346,7 @@ unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -393,7 +393,7 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -626,7 +626,7 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	type RetType = SysResult<HTREEITEM>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
+		zero_as_badargs(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -650,7 +650,7 @@ unsafe impl MsgSend for MapAccIdToHtreeitem {
 	type RetType = SysResult<HTREEITEM>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
+		zero_as_badargs(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -699,7 +699,7 @@ unsafe impl<'a> MsgSend for SelectItem<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -801,7 +801,7 @@ unsafe impl<'a> MsgSend for SetHot<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -875,7 +875,7 @@ unsafe impl<'a> MsgSend for SetInsertMark<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -923,7 +923,7 @@ unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1118,7 +1118,7 @@ unsafe impl MsgSend for SortChildren {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1142,7 +1142,7 @@ unsafe impl<'a> MsgSend for SortChildrenCb<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

@@ -4,7 +4,7 @@ use crate::kernel::decl::{HIWORD, LOWORD, SysResult, SYSTEMTIME};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{COLORREF, RECT};
-use crate::user::privs::{minus1_as_err, minus1_as_none, zero_as_err};
+use crate::user::privs::{minus1_as_badargs, minus1_as_none, zero_as_badargs};
 
 /// [`MCM_GETCALENDARBORDER`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getcalendarborder)
 /// message, which has no parameters.
@@ -62,7 +62,7 @@ unsafe impl<'a, 'b> MsgSend for GetCalendarGridInfo<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -108,7 +108,7 @@ unsafe impl MsgSend for GetColor {
 	type RetType = SysResult<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_err(v).map(|v| COLORREF(v as _))
+		minus1_as_badargs(v).map(|v| COLORREF(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -154,7 +154,7 @@ unsafe impl<'a> MsgSend for GetCurSel<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -244,7 +244,7 @@ unsafe impl<'a> MsgSend for GetMinReqRect<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -339,7 +339,7 @@ unsafe impl<'a> MsgSend for GetSelRange<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -363,7 +363,7 @@ unsafe impl<'a> MsgSend for GetToday<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -507,7 +507,7 @@ unsafe impl MsgSend for SetCurrentView {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -531,7 +531,7 @@ unsafe impl<'a> MsgSend for SetCurSel<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -555,7 +555,7 @@ unsafe impl<'a> MsgSend for SetDayState<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -603,7 +603,7 @@ unsafe impl MsgSend for SetMaxSelCount {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -652,7 +652,7 @@ unsafe impl<'a> MsgSend for SetRange<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -676,7 +676,7 @@ unsafe impl<'a> MsgSend for SetSelRange<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

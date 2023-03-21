@@ -4,7 +4,7 @@ use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::RECT;
-use crate::user::privs::{minus1_as_err, zero_as_err, zero_as_none};
+use crate::user::privs::{minus1_as_badargs, zero_as_badargs, zero_as_none};
 
 /// [`HDM_CLEARFILTER`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-clearfilter)
 /// message parameters.
@@ -42,7 +42,7 @@ unsafe impl MsgSend for CreateDragImage {
 	type RetType = SysResult<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
+		zero_as_badargs(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -66,7 +66,7 @@ unsafe impl MsgSend for DeleteItem {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -184,7 +184,7 @@ unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -206,7 +206,7 @@ unsafe impl MsgSend for GetItemCount {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_err(v).map(|v| v as _)
+		minus1_as_badargs(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -231,7 +231,7 @@ unsafe impl<'a> MsgSend for GetItemDropDownRect<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -256,7 +256,7 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -280,7 +280,7 @@ unsafe impl<'a> MsgSend for GetOrderArray<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -304,7 +304,7 @@ unsafe impl<'a> MsgSend for GetOverflowRect<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -375,7 +375,7 @@ unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_err(v).map(|v| v as _)
+		minus1_as_badargs(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -399,7 +399,7 @@ unsafe impl<'a, 'b, 'c> MsgSend for Layout<'a, 'b, 'c> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -495,7 +495,7 @@ unsafe impl MsgSend for SetFocusedItem {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -575,7 +575,7 @@ unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -599,7 +599,7 @@ unsafe impl<'a> MsgSend for SetOrderArray<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

@@ -5,7 +5,7 @@ use crate::kernel::decl::{
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::{COMBOBOXINFO, RECT};
-use crate::user::privs::{CB_ERR, CB_ERRSPACE, zero_as_err};
+use crate::user::privs::{CB_ERR, CB_ERRSPACE, zero_as_badargs};
 
 /// [`CB_ADDSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-addstring)
 /// message parameters.
@@ -159,7 +159,7 @@ unsafe impl<'a> MsgSend for GetComboBoxInfo<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -181,7 +181,7 @@ unsafe impl MsgSend for GetCount {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|count| count as _)
+		zero_as_badargs(v).map(|count| count as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -230,7 +230,7 @@ unsafe impl<'a> MsgSend for GetDroppedControlRect<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -855,7 +855,7 @@ unsafe impl MsgSend for SetTopIndex {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

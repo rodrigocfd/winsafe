@@ -5,7 +5,7 @@ use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
 use crate::user::decl::COLORREF;
-use crate::user::privs::zero_as_err;
+use crate::user::privs::zero_as_badargs;
 
 /// [`PBM_DELTAPOS`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-deltapos)
 /// message parameters.
@@ -288,7 +288,7 @@ unsafe impl MsgSend for SetRange {
 	type RetType = SysResult<(u16, u16)>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|v| (LOWORD(v as _), HIWORD(v as _)))
+		zero_as_badargs(v).map(|v| (LOWORD(v as _), HIWORD(v as _)))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

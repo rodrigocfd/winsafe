@@ -4,7 +4,7 @@ use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult};
 use crate::msg::WndMsg;
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::HWND;
-use crate::user::privs::{zero_as_err, zero_as_none};
+use crate::user::privs::{zero_as_badargs, zero_as_none};
 
 /// [`UDM_GETACCEL`](https://learn.microsoft.com/en-us/windows/win32/controls/udm-getaccel)
 /// message parameters.
@@ -204,7 +204,7 @@ unsafe impl<'a> MsgSend for SetAccel<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -228,7 +228,7 @@ unsafe impl MsgSend for SetBase {
 	type RetType = SysResult<u8>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|v| v as _)
+		zero_as_badargs(v).map(|v| v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

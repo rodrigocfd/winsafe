@@ -4,7 +4,7 @@ use crate::kernel::decl::SysResult;
 use crate::msg::WndMsg;
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{HBITMAP, HCURSOR, HDC, HICON};
-use crate::user::privs::zero_as_err;
+use crate::user::privs::zero_as_badargs;
 
 /// [`STM_GETICON`](https://learn.microsoft.com/en-us/windows/win32/controls/stm-geticon)
 /// message, which has no parameters.
@@ -16,7 +16,7 @@ unsafe impl MsgSend for GetIcon {
 	type RetType = SysResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| unsafe { HICON::from_ptr(p as _) })
+		zero_as_badargs(v).map(|p| unsafe { HICON::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -72,7 +72,7 @@ unsafe impl<'a> MsgSend for SetIcon<'a> {
 	type RetType = SysResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| unsafe { HICON::from_ptr(p as _) })
+		zero_as_badargs(v).map(|p| unsafe { HICON::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

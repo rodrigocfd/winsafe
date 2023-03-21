@@ -5,7 +5,7 @@ use crate::kernel::decl::{SysResult, SYSTEMTIME, WString};
 use crate::msg::WndMsg;
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HWND, SIZE};
-use crate::user::privs::{minus1_as_err, zero_as_err};
+use crate::user::privs::{minus1_as_badargs, zero_as_badargs};
 
 pub_struct_msg_empty! { CloseMonthCal: co::DTM::CLOSEMONTHCAL.into();
 	/// [`DTM_CLOSEMONTHCAL`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-closemonthcal)
@@ -71,7 +71,7 @@ unsafe impl MsgSend for GetMcColor {
 	type RetType = SysResult<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_err(v).map(|v| COLORREF(v as _))
+		minus1_as_badargs(v).map(|v| COLORREF(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -93,7 +93,7 @@ unsafe impl MsgSend for GetMcStyle {
 	type RetType = SysResult<co::MCS>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|v| co::MCS(v as _))
+		zero_as_badargs(v).map(|v| co::MCS(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -115,7 +115,7 @@ unsafe impl MsgSend for GetMonthCal {
 	type RetType = SysResult<HWND>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| unsafe { HWND::from_ptr(p as _) })
+		zero_as_badargs(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -192,7 +192,7 @@ unsafe impl MsgSend for SetFormat {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -217,7 +217,7 @@ unsafe impl MsgSend for SetMcColor {
 	type RetType = SysResult<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_err(v).map(|v| COLORREF(v as _))
+		minus1_as_badargs(v).map(|v| COLORREF(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -241,7 +241,7 @@ unsafe impl MsgSend for SetMcStyle {
 	type RetType = SysResult<co::MCS>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|v| co::MCS(v as _))
+		zero_as_badargs(v).map(|v| co::MCS(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -266,7 +266,7 @@ unsafe impl<'a> MsgSend for SetRange<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -290,7 +290,7 @@ unsafe impl<'a> MsgSend for SetSystemTime<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

@@ -4,7 +4,7 @@ use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult};
 use crate::msg::WndMsg;
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{HWND, RECT};
-use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
+use crate::user::privs::{minus1_as_none, zero_as_badargs, zero_as_none};
 
 /// [`TCM_ADJUSTRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/tcm-adjustrect)
 /// message parameters.
@@ -41,7 +41,7 @@ unsafe impl MsgSend for DeleteAllItems {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -65,7 +65,7 @@ unsafe impl MsgSend for DeleteItem {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -177,7 +177,7 @@ unsafe impl MsgSend for GetImageList {
 	type RetType = SysResult<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
+		zero_as_badargs(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -202,7 +202,7 @@ unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -224,7 +224,7 @@ unsafe impl MsgSend for GetItemCount {
 	type RetType = SysResult<u32>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|c| c as _)
+		zero_as_badargs(v).map(|c| c as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -249,7 +249,7 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -340,7 +340,7 @@ unsafe impl MsgSend for HighlightItem {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -535,7 +535,7 @@ unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -559,7 +559,7 @@ unsafe impl MsgSend for SetItemExtra {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

@@ -2,7 +2,7 @@ use crate::co;
 use crate::kernel::decl::{SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
-use crate::user::privs::zero_as_err;
+use crate::user::privs::zero_as_badargs;
 
 /// [`CB_GETCUEBANNER`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-getcuebanner)
 /// message parameters.
@@ -92,7 +92,7 @@ unsafe impl MsgSend for SetMinVisible {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

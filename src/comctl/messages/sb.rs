@@ -6,7 +6,7 @@ use crate::kernel::decl::{
 use crate::msg::WndMsg;
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HICON, RECT};
-use crate::user::privs::zero_as_err;
+use crate::user::privs::zero_as_badargs;
 
 /// [`SB_GETBORDERS`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-getborders)
 /// message parameters.
@@ -20,7 +20,7 @@ unsafe impl<'a> MsgSend for GetBorders<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -44,7 +44,7 @@ unsafe impl MsgSend for GetIcon {
 	type RetType = SysResult<HICON>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|p| unsafe { HICON::from_ptr(p as _) })
+		zero_as_badargs(v).map(|p| unsafe { HICON::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -93,7 +93,7 @@ unsafe impl<'a> MsgSend for GetRect<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -263,7 +263,7 @@ unsafe impl<'a> MsgSend for SetIcon<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -311,7 +311,7 @@ unsafe impl<'a> MsgSend for SetParts<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -337,7 +337,7 @@ unsafe impl MsgSend for SetText {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

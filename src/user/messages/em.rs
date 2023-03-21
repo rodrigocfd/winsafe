@@ -3,7 +3,7 @@ use crate::kernel::decl::{HIWORD, HLOCAL, LOWORD, SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{EDITWORDBREAKPROC, POINT, RECT, SIZE};
-use crate::user::privs::{minus1_as_none, zero_as_err, zero_as_none};
+use crate::user::privs::{minus1_as_none, zero_as_badargs, zero_as_none};
 
 /// [`EN_CANUNDO`](https://learn.microsoft.com/en-us/windows/win32/controls/em-canundo)
 /// message, which has no parameters.
@@ -113,7 +113,7 @@ unsafe impl MsgSend for GetHandle {
 	type RetType = SysResult<HLOCAL>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|v| unsafe { HLOCAL::from_ptr(v as _) })
+		zero_as_badargs(v).map(|v| unsafe { HLOCAL::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -308,7 +308,7 @@ unsafe impl<'a> MsgSend for GetRect<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -573,7 +573,7 @@ unsafe impl MsgSend for Scroll {
 	type RetType = SysResult<u16>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|num_lines| num_lines as _)
+		zero_as_badargs(v).map(|num_lines| num_lines as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -746,7 +746,7 @@ unsafe impl MsgSend for SetReadOnly {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -845,7 +845,7 @@ unsafe impl<'a> MsgSend for SetTabStops<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -891,7 +891,7 @@ unsafe impl MsgSend for Undo {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

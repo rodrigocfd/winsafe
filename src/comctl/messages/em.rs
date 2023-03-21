@@ -3,7 +3,7 @@ use crate::comctl::decl::EDITBALLOONTIP;
 use crate::kernel::decl::{SysResult, WString};
 use crate::msg::WndMsg;
 use crate::prelude::MsgSend;
-use crate::user::privs::zero_as_err;
+use crate::user::privs::zero_as_badargs;
 
 /// [`EM_GETCUEBANNER`](https://learn.microsoft.com/en-us/windows/win32/controls/em-getcuebanner)
 /// message parameters.
@@ -42,7 +42,7 @@ unsafe impl MsgSend for HideBalloonTip {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -67,7 +67,7 @@ unsafe impl MsgSend for SetCueBanner {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -91,7 +91,7 @@ unsafe impl<'a, 'b, 'c> MsgSend for ShowBalloonTip<'a, 'b, 'c> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_err(v).map(|_| ())
+		zero_as_badargs(v).map(|_| ())
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
