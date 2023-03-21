@@ -1253,6 +1253,34 @@ pub trait user_Hwnd: Handle {
 		)
 	}
 
+	/// [`ScrollWindowEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-scrollwindowex)
+	/// method.
+	fn ScrollWindowEx(&self,
+		dx: i32,
+		dy: i32,
+		client_area_portion: Option<&RECT>,
+		clipping_rect: Option<&RECT>,
+		hrgn_update: Option<&HRGN>,
+		updated_boundaries: Option<&mut RECT>,
+		flags: co::SCROLLW,
+	) -> SysResult<co::REGION>
+	{
+		match unsafe {
+			user::ffi::ScrollWindowEx(
+				self.as_ptr(),
+				dx, dy,
+				client_area_portion.map_or(std::ptr::null(), |rc| rc as *const _ as _),
+				clipping_rect.map_or(std::ptr::null(), |rc| rc as *const _ as _),
+				hrgn_update.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+				updated_boundaries.map_or(std::ptr::null_mut(), |rc| rc as *mut _ as _),
+				flags.0
+			)
+		} {
+			0 => Err(GetLastError()),
+			v => Ok(co::REGION(v)),
+		}
+	}
+
 	/// [`SendMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew)
 	/// method.
 	///

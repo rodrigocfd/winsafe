@@ -2255,6 +2255,21 @@ const_ordinary! { SC: u32;
 	VSCROLL 0xf070
 }
 
+const_bitflag! { SCROLLW: u32;
+	/// [`ScrollWindowEx`](crate::prelude::user_Hwnd::ScrollWindowEx) `flags`
+	/// (`u32`).
+	/// 
+	/// Originally has `SW` prefix.
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	SCROLLCHILDREN 0x0001
+	INVALIDATE 0x0002
+	ERASE 0x0004
+	SMOOTHSCROLL 0x0010
+}
+
 const_bitflag! { SIF: u32;
 	/// [`SCROLLINFO`](crate::SCROLLINFO) `fMask` (`u32`).
 	=>

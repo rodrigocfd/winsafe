@@ -191,6 +191,7 @@ extern_sys! { "user32";
 	ReleaseDC(HANDLE, HANDLE) -> i32
 	RemoveMenu(HANDLE, u32, u32) -> BOOL
 	ScreenToClient(HANDLE, PVOID) -> BOOL
+	ScrollWindowEx(HANDLE, i32, i32, PCVOID, PCVOID, HANDLE, PVOID, u32) -> i32
 	SendInput(u32, PVOID, i32) -> u32
 	SendMessageTimeoutW(HANDLE, u32, usize, isize, u32, u32, *mut isize) -> isize
 	SendMessageW(HANDLE, u32, usize, isize) -> isize
