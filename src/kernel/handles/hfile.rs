@@ -141,12 +141,11 @@ pub trait kernel_Hfile: Handle {
 	/// [`GetFileSizeEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesizeex)
 	/// method.
 	#[must_use]
-	fn GetFileSizeEx(&self) -> SysResult<usize> {
-		let mut sz_buf = 0;
-		match unsafe { kernel::ffi::GetFileSizeEx(self.as_ptr(), &mut sz_buf) } {
-			0 => Err(GetLastError()),
-			_ => Ok(sz_buf as _),
-		}
+	fn GetFileSizeEx(&self) -> SysResult<u64> {
+		let mut sz_buf = i64::default();
+		bool_to_sysresult(
+			unsafe { kernel::ffi::GetFileSizeEx(self.as_ptr(), &mut sz_buf) },
+		).map(|_| sz_buf as _)
 	}
 
 	/// [`GetFileType`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype)

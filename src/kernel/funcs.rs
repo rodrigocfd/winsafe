@@ -104,7 +104,7 @@ pub fn ConvertSidToStringSid(sid: &SID) -> SysResult<String> {
 		},
 	)?;	
 	let name = WString::from_wchars_nullt(pstr).to_string();
-	let _ = unsafe { LocalFreeGuard::new(HLOCAL::from_ptr(pstr as _)) };
+	let _ = unsafe { LocalFreeGuard::new(HLOCAL::from_ptr(pstr as _)) }; // free returned pointer
 	Ok(name)
 }
 
@@ -333,16 +333,15 @@ pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 	};
 
 	let mut buf = WString::new_alloc_buf(len as _);
-	match unsafe {
-		kernel::ffi::ExpandEnvironmentStringsW(
-			wsrc.as_ptr(),
-			buf.as_mut_ptr(),
-			len,
-		)
-	} {
-		0 => Err(GetLastError()),
-		_ => Ok(buf.to_string()),
-	}
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::ExpandEnvironmentStringsW(
+				wsrc.as_ptr(),
+				buf.as_mut_ptr(),
+				len,
+			)
+		} as _,
+	).map(|_| buf.to_string())
 }
 
 /// [`FileTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime)
@@ -408,15 +407,14 @@ pub fn GetComputerName() -> SysResult<String> {
 #[must_use]
 pub fn GetCurrentDirectory() -> SysResult<String> {
 	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
-	match unsafe {
-		kernel::ffi::GetCurrentDirectoryW(
-			buf.buf_len() as _,
-			buf.as_mut_ptr(),
-		)
-	} {
-		0 => Err(GetLastError()),
-		_ => Ok(buf.to_string()),
-	}
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::GetCurrentDirectoryW(
+				buf.buf_len() as _,
+				buf.as_mut_ptr(),
+			)
+		} as _,
+	).map(|_| buf.to_string())
 }
 
 /// [`GetCurrentProcessId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
@@ -452,7 +450,7 @@ pub fn GetDriveType(root_path_name: Option<&str>) -> co::DRIVE {
 /// Returns the parsed strings, and automatically frees the retrieved
 /// environment block with
 /// [`FreeEnvironmentStrings`](https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-freeenvironmentstringsw).
-///
+/// 
 /// # Examples
 ///
 /// Retrieving and printing the key/value pairs of all environment strings:
@@ -474,13 +472,14 @@ pub fn GetEnvironmentStrings() -> SysResult<HashMap<String, String>> {
 	).map(|ptr| {
 		let vec_env_strs = parse_multi_z_str(ptr as *mut _ as _);
 		unsafe { kernel::ffi::FreeEnvironmentStringsW(ptr); }
-
-		let mut map = HashMap::with_capacity(vec_env_strs.len());
-		for env_str in vec_env_strs {
-			let pair: Vec<&str> = env_str.split("=").collect();
-			map.insert(pair[0].to_owned(), pair[1].to_owned());
-		}
-		map
+		vec_env_strs.iter()
+			.map(|env_str| {
+				let mut pair = env_str.split("="); // assumes correctly formatted pairs
+				let key = pair.next().unwrap();
+				let val = pair.next().unwrap();
+				(key.to_owned(), val.to_owned())
+			})
+			.collect()
 	})
 }
 
@@ -529,21 +528,20 @@ pub fn GetLogicalDrives() -> u32 {
 /// function.
 #[must_use]
 pub fn GetLogicalDriveStrings() -> SysResult<Vec<String>> {
-	match unsafe {
+	let len = match unsafe {
 		kernel::ffi::GetLogicalDriveStringsW(0, std::ptr::null_mut())
 	} {
 		0 => Err(GetLastError()),
-		len => {
-			let mut buf = WString::new_alloc_buf(len as usize + 1);
+		len => Ok(len),
+	}?;
 
-			match unsafe {
-				kernel::ffi::GetLogicalDriveStringsW(len, buf.as_mut_ptr())
-			} {
-				0 => Err(GetLastError()),
-				_ => Ok(parse_multi_z_str(buf.as_ptr())),
-			}
-		},
-	}
+	let mut buf = WString::new_alloc_buf(len as usize + 1); // room for terminating null
+
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::GetLogicalDriveStringsW(len, buf.as_mut_ptr())
+		} as _,
+	).map(|_| parse_multi_z_str(buf.as_ptr()))
 }
 
 /// [`GetFileAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesw)
@@ -639,12 +637,11 @@ pub fn GetStartupInfo(si: &mut STARTUPINFO) {
 #[must_use]
 pub fn GetSystemDirectory() -> SysResult<String> {
 	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
-	match unsafe {
-		kernel::ffi::GetSystemDirectoryW(buf.as_mut_ptr(), buf.buf_len() as _)
-	} {
-		0 => Err(GetLastError()),
-		_ => Ok(buf.to_string()),
-	}
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::GetSystemDirectoryW(buf.as_mut_ptr(), buf.buf_len() as _)
+		} as _,
+	).map(|_| buf.to_string())
 }
 
 /// [`GetSystemFileCacheSize`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-getsystemfilecachesize)
@@ -734,12 +731,11 @@ pub fn GetSystemTimes(
 #[must_use]
 pub fn GetTempPath() -> SysResult<String> {
 	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
-	match unsafe {
-		kernel::ffi::GetTempPathW(buf.buf_len() as _, buf.as_mut_ptr()) }
-	{
-		0 => Err(GetLastError()),
-		_ => Ok(buf.to_string()),
-	}
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::GetTempPathW(buf.buf_len() as _, buf.as_mut_ptr())
+		} as _,
+	).map(|_| buf.to_string())
 }
 
 /// [`GetTickCount64`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-gettickcount64)
@@ -933,10 +929,9 @@ pub fn IsDebuggerPresent() -> bool {
 #[must_use]
 pub fn IsNativeVhdBoot() -> SysResult<bool> {
 	let mut is_native: BOOL = 0;
-	match unsafe { kernel::ffi::IsNativeVhdBoot(&mut is_native) } {
-		0 => Err(GetLastError()),
-		_ => Ok(is_native != 0),
-	}
+	bool_to_sysresult(
+		unsafe { kernel::ffi::IsNativeVhdBoot(&mut is_native) },
+	).map(|_| is_native != 0)
 }
 
 /// [`IsValidSecurityDescriptor`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-isvalidsecuritydescriptor)
@@ -1248,7 +1243,7 @@ pub fn MultiByteToWideChar(
 	multi_byte_str: &[u8],
 ) -> SysResult<Vec<u16>>
 {
-	match unsafe {
+	let num_bytes = match unsafe {
 		kernel::ffi::MultiByteToWideChar(
 			code_page.0 as _,
 			flags.0,
@@ -1259,28 +1254,23 @@ pub fn MultiByteToWideChar(
 		)
 	} {
 		0 => Err(GetLastError()),
-		num_bytes => {
-			let num_bytes = num_bytes as usize + 1; // add room for terminating null
-			let mut dest_buf: Vec<u16> = vec![0x0000; num_bytes as _];
+		num_bytes => Ok(num_bytes),
+	}? + 1; // room for terminating null
 
-			match unsafe {
-				kernel::ffi::MultiByteToWideChar(
-					code_page.0 as _,
-					flags.0,
-					multi_byte_str.as_ptr(),
-					multi_byte_str.len() as _,
-					dest_buf.as_mut_ptr(),
-					num_bytes as _,
-				)
-			} {
-				0 => Err(GetLastError()),
-				_ => {
-					unsafe { *dest_buf.get_unchecked_mut(num_bytes - 1) = 0x0000; } // terminating null
-					Ok(dest_buf)
-				},
-			}
+	let mut buf = vec![0u16; num_bytes as _];
+
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::MultiByteToWideChar(
+				code_page.0 as _,
+				flags.0,
+				multi_byte_str.as_ptr(),
+				multi_byte_str.len() as _,
+				buf.as_mut_ptr(),
+				num_bytes as _,
+			)
 		},
-	}
+	).map(|_| buf)
 }
 
 /// [`OutputDebugString`](https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-outputdebugstringw)
@@ -1457,10 +1447,11 @@ pub fn WideCharToMultiByte(
 	wide_char_str: &[u16],
 	default_char: Option<u8>,
 	used_default_char: Option<&mut bool>,
-) -> SysResult<Vec<u8>> {
+) -> SysResult<Vec<u8>>
+{
 	let mut default_char_buf = default_char.unwrap_or_default();
 
-	match unsafe {
+	let num_bytes = match unsafe {
 		kernel::ffi::WideCharToMultiByte(
 			code_page.0 as _,
 			flags.0,
@@ -1473,32 +1464,29 @@ pub fn WideCharToMultiByte(
 		)
 	} {
 		0 => Err(GetLastError()),
-		num_bytes => {
-			let num_bytes = num_bytes as usize + 1; // add room for terminating null
-			let mut dest_buf: Vec<u8> = vec![0x00; num_bytes as _];
-			let mut bool_buf: BOOL = 0;
+		num_bytes => Ok(num_bytes),
+	}? + 1; // room for terminating null
 
-			match unsafe {
-				kernel::ffi::WideCharToMultiByte(
-					code_page.0 as _,
-					flags.0,
-					wide_char_str.as_ptr(),
-					wide_char_str.len() as _,
-					dest_buf.as_mut_ptr() as _,
-					num_bytes as _,
-					&mut default_char_buf,
-					&mut bool_buf,
-				)
-			} {
-				0 => Err(GetLastError()),
-				_ => {
-					if let Some(lp) = used_default_char {
-						*lp = bool_buf != 0;
-					}
-					unsafe { *dest_buf.get_unchecked_mut(num_bytes - 1) = 0x00; } // terminating null
-					Ok(dest_buf)
-				},
-			}
-		},
-	}
+	let mut u8_buf = vec![0u8; num_bytes as _];
+	let mut bool_buf: BOOL = 0;
+
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::WideCharToMultiByte(
+				code_page.0 as _,
+				flags.0,
+				wide_char_str.as_ptr(),
+				wide_char_str.len() as _,
+				u8_buf.as_mut_ptr() as _,
+				num_bytes as _,
+				&mut default_char_buf,
+				&mut bool_buf,
+			)
+		},	
+	).map(|_| {
+		if let Some(used_default_char) = used_default_char {
+			*used_default_char = bool_buf != 0;
+		}
+		u8_buf
+	})
 }

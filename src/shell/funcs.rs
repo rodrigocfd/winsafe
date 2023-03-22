@@ -233,12 +233,9 @@ pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
 /// [`SHFileOperation`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)
 /// function.
 pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> SysResult<()> {
-	match unsafe {
-		shell::ffi::SHFileOperationW(file_op as *mut _ as _)
-	} {
-		0 => Err(GetLastError()),
-		_ => Ok(()),
-	}
+	bool_to_sysresult(
+		unsafe { shell::ffi::SHFileOperationW(file_op as *mut _ as _) },
+	)
 }
 
 /// [`SHGetFileInfo`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow)

@@ -63,7 +63,7 @@ impl File {
 	///
 	/// The internal file pointer will be rewound to the beginning of the file.
 	pub fn erase_and_write(&self, data: &[u8]) -> SysResult<()> {
-		self.resize(data.len())?;
+		self.resize(data.len() as _)?;
 		self.write(data)?;
 		self.rewind_pointer()
 	}
@@ -76,7 +76,7 @@ impl File {
 
 	/// Returns the current offset of the internal pointer.
 	#[must_use]
-	pub fn pointer_offset(&self) -> SysResult<usize> {
+	pub fn pointer_offset(&self) -> SysResult<u64> {
 		self.hfile.SetFilePointerEx(0, co::FILE_STARTING_POINT::CURRENT) // https://stackoverflow.com/a/17707021/6923555
 			.map(|off| off as _)
 	}
@@ -86,7 +86,7 @@ impl File {
 	/// Note that the bytes will start being read from the current offset of the
 	/// internal file pointer, which is then incremented by the size of
 	/// `buffer`.
-	pub fn read(&self, buffer: &mut [u8]) -> SysResult<usize> {
+	pub fn read(&self, buffer: &mut [u8]) -> SysResult<u64> {
 		self.hfile.ReadFile(buffer, None)
 			.map(|n| n as _)
 	}
@@ -97,9 +97,9 @@ impl File {
 	#[must_use]
 	pub fn read_all(&self) -> SysResult<Vec<u8>> {
 		self.rewind_pointer()?;
-		let mut data: Vec<u8> = vec![0; self.size()?];
+		let mut data = vec![0u8; self.size()? as _];
 		let bytes_read = self.read(&mut data)?;
-		data.resize(bytes_read, 0);
+		data.resize(bytes_read as _, 0);
 		self.rewind_pointer()?;
 		Ok(data)
 	}
@@ -108,7 +108,7 @@ impl File {
 	/// the file.
 	///
 	/// The internal file pointer will be rewound to the beginning of the file.
-	pub fn resize(&self, num_bytes: usize) -> SysResult<()> {
+	pub fn resize(&self, num_bytes: u64) -> SysResult<()> {
 		self.hfile.SetFilePointerEx(num_bytes as _, co::FILE_STARTING_POINT::BEGIN)?;
 		self.hfile.SetEndOfFile()?;
 		self.rewind_pointer()
@@ -122,7 +122,7 @@ impl File {
 
 	/// Returns the size of the file.
 	#[must_use]
-	pub fn size(&self) -> SysResult<usize> {
+	pub fn size(&self) -> SysResult<u64> {
 		self.hfile.GetFileSizeEx()
 	}
 

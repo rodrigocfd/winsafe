@@ -3,8 +3,8 @@
 use crate::{co, gdi};
 use crate::gdi::decl::LOGFONT;
 use crate::gdi::guard::DeleteObjectGuard;
-use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::kernel::privs::ptr_to_sysresult_handle;
+use crate::kernel::decl::{SysResult, WString};
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
 use crate::prelude::{GdiObject, GdiObjectSelect, Handle};
 use crate::user::decl::SIZE;
 
@@ -74,16 +74,15 @@ pub trait gdi_Hfont: Handle {
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// method.
 	fn GetObject(&self, lf: &mut LOGFONT) -> SysResult<()> {
-		match unsafe {
-			gdi::ffi::GetObjectW(
-				self.as_ptr(),
-				std::mem::size_of::<LOGFONT>() as _,
-				lf as *mut _ as _,
-			)
-		} {
-			0 => Err(GetLastError()),
-			_ => Ok(()),
-		}
+		bool_to_sysresult(
+			unsafe {
+				gdi::ffi::GetObjectW(
+					self.as_ptr(),
+					std::mem::size_of::<LOGFONT>() as _,
+					lf as *mut _ as _,
+				)
+			},
+		)
 	}
 
 	/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)

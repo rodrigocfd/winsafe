@@ -27,7 +27,7 @@ pub struct FileMapped {
 	file: File,
 	hmap: CloseHandleGuard<HFILEMAP>,
 	hview: UnmapViewOfFileGuard,
-	size: usize,
+	size: u64,
 }
 
 impl FileMapped {
@@ -73,13 +73,13 @@ impl FileMapped {
 	/// Returns a mutable slice to the mapped memory.
 	#[must_use]
 	pub fn as_mut_slice(&mut self) -> &mut [u8] {
-		self.hview.as_mut_slice(self.size)
+		self.hview.as_mut_slice(self.size as _)
 	}
 
 	/// Returns a slice to the mapped memory.
 	#[must_use]
 	pub fn as_slice(&self) -> &[u8] {
-		self.hview.as_slice(self.size)
+		self.hview.as_slice(self.size as _)
 	}
 
 	/// Resizes the file, which will be remapped in memory.
@@ -88,7 +88,7 @@ impl FileMapped {
 	/// must be recreated. The following functions must be called again:
 	/// * [`as_mut_slice`](crate::FileMapped::as_mut_slice);
 	/// * [`as_slice`](crate::FileMapped::as_slice).
-	pub fn resize(&mut self, num_bytes: usize) -> SysResult<()> {
+	pub fn resize(&mut self, num_bytes: u64) -> SysResult<()> {
 		unsafe {
 			self.hview = UnmapViewOfFileGuard::new(HFILEMAPVIEW::NULL); // close mapping handles
 			self.hmap = CloseHandleGuard::new(HFILEMAP::NULL);
@@ -105,7 +105,7 @@ impl FileMapped {
 
 	/// Returns the size of the file. This value is cached.
 	#[must_use]
-	pub const fn size(&self) -> usize {
+	pub const fn size(&self) -> u64 {
 		self.size
 	}
 }

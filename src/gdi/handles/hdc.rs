@@ -209,12 +209,15 @@ pub trait gdi_Hdc: Handle {
 	/// [`FillRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-fillrect)
 	/// method.
 	fn FillRect(&self, rc: RECT, hbr: &HBRUSH) -> SysResult<()> {
-		match unsafe {
-			gdi::ffi::FillRect(self.as_ptr(), &rc as *const _ as _, hbr.as_ptr())
-		} {
-			0 => Err(GetLastError()),
-			_ => Ok(()),
-		}
+		bool_to_sysresult(
+			unsafe {
+				gdi::ffi::FillRect(
+					self.as_ptr(),
+					&rc as *const _ as _,
+					hbr.as_ptr(),
+				)
+			},
+		)
 	}
 
 	/// [`FillRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-fillrgn)

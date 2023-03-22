@@ -412,16 +412,15 @@ pub trait user_Hwnd: Handle {
 	#[must_use]
 	fn GetClassName(&self) -> SysResult<String> {
 		let mut buf = WString::new_alloc_buf(256 + 1); // according to WNDCLASSEX docs
-		match unsafe {
-			user::ffi::GetClassNameW(
-				self.as_ptr(),
-				buf.as_mut_ptr(),
-				buf.buf_len() as _,
-			)
-		} {
-			0 => Err(GetLastError()),
-			_ => Ok(buf.to_string()),
-		}
+		bool_to_sysresult(
+			unsafe {
+				user::ffi::GetClassNameW(
+					self.as_ptr(),
+					buf.as_mut_ptr(),
+					buf.buf_len() as _,
+				)
+			},
+		).map(|_| buf.to_string())
 	}
 
 	/// [`GetClientRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclientrect)
@@ -429,12 +428,11 @@ pub trait user_Hwnd: Handle {
 	#[must_use]
 	fn GetClientRect(&self) -> SysResult<RECT> {
 		let mut rc = RECT::default();
-		match unsafe {
-			user::ffi::GetClientRect(self.as_ptr(), &mut rc as *mut _ as _)
-		} {
-			0 => Err(GetLastError()),
-			_ => Ok(rc),
-		}
+		bool_to_sysresult(
+			unsafe {
+				user::ffi::GetClientRect(self.as_ptr(), &mut rc as *mut _ as _)
+			},
+		).map(|_| rc)
 	}
 
 	/// [`GetDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
@@ -692,15 +690,14 @@ pub trait user_Hwnd: Handle {
 	#[must_use]
 	fn GetWindowDisplayAffinity(&self) -> SysResult<co::WDA> {
 		let mut affinity = co::WDA::default();
-		match unsafe {
-			user::ffi::GetWindowDisplayAffinity(
-				self.as_ptr(),
-				&mut affinity as *mut _ as _,
-			)
-		} {
-			0 => Err(GetLastError()),
-			_ => Ok(affinity),
-		}
+		bool_to_sysresult(
+			unsafe {
+				user::ffi::GetWindowDisplayAffinity(
+					self.as_ptr(),
+					&mut affinity as *mut _ as _,
+				)
+			},
+		).map(|_| affinity)
 	}
 
 	/// [`GetWindowInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowinfo)
@@ -752,12 +749,11 @@ pub trait user_Hwnd: Handle {
 	#[must_use]
 	fn GetWindowRect(&self) -> SysResult<RECT> {
 		let mut rc = RECT::default();
-		match unsafe {
-			user::ffi::GetWindowRect(self.as_ptr(), &mut rc as *mut _ as _)
-		} {
-			0 => Err(GetLastError()),
-			_ => Ok(rc),
-		}
+		bool_to_sysresult(
+			unsafe {
+				user::ffi::GetWindowRect(self.as_ptr(), &mut rc as *mut _ as _)
+			},
+		).map(|_| rc)
 	}
 
 	/// [`GetWindowRgn`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowrgn)
@@ -1189,16 +1185,15 @@ pub trait user_Hwnd: Handle {
 	#[must_use]
 	fn RealGetWindowClass(&self) -> SysResult<String> {
 		let mut buf = WString::new_alloc_buf(256 + 1); // according to WNDCLASSEX docs
-		match unsafe {
-			user::ffi::RealGetWindowClassW(
-				self.as_ptr(),
-				buf.as_mut_ptr(),
-				buf.buf_len() as _,
-			)
-		} {
-			0 => Err(GetLastError()),
-			_ => Ok(buf.to_string()),
-		}
+		bool_to_sysresult(
+			unsafe {
+				user::ffi::RealGetWindowClassW(
+					self.as_ptr(),
+					buf.as_mut_ptr(),
+					buf.buf_len() as _,
+				)
+			} as _,
+		).map(|_| buf.to_string())
 	}
 
 	/// [`RedrawWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-redrawwindow)
@@ -1607,16 +1602,15 @@ pub trait user_Hwnd: Handle {
 	fn TranslateAccelerator(&self,
 		haccel_table: &HACCEL, msg: &mut MSG) -> SysResult<()>
 	{
-		match unsafe {
-			user::ffi::TranslateAcceleratorW(
-				self.as_ptr(),
-				haccel_table.as_ptr(),
-				msg as *mut _ as _,
-			)
-		} {
-			0 => Err(GetLastError()),
-			_ => Ok(()),
-		}
+		bool_to_sysresult(
+			unsafe {
+				user::ffi::TranslateAcceleratorW(
+					self.as_ptr(),
+					haccel_table.as_ptr(),
+					msg as *mut _ as _,
+				)
+			},
+		)
 	}
 
 	/// [`UpdateWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-updatewindow)

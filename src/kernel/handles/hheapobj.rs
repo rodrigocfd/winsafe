@@ -79,12 +79,11 @@ pub trait kernel_Hheapobj: Handle {
 			.map(|_| HHEAPOBJ::NULL)
 			.collect::<Vec<_>>();
 
-		match unsafe {
-			kernel::ffi::GetProcessHeaps(num, buf.as_mut_ptr() as _)
-		} {
-			0 => Err(GetLastError()),
-			_ => Ok(buf)
-		}
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::GetProcessHeaps(num, buf.as_mut_ptr() as _)
+			} as _,
+		).map(|_| buf)
 	}
 
 	/// [`HeapCreate`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcreate)

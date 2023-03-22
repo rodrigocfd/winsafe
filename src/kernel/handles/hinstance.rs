@@ -150,16 +150,15 @@ pub trait kernel_Hinstance: Handle {
 	#[must_use]
 	fn GetModuleFileName(&self) -> SysResult<String> {
 		let mut buf = [0; MAX_PATH];
-		match unsafe {
-			kernel::ffi::GetModuleFileNameW(
-				self.as_ptr(),
-				buf.as_mut_ptr(),
-				buf.len() as _,
-			)
-		} {
-			0 => Err(GetLastError()),
-			_ => Ok(WString::from_wchars_slice(&buf).to_string()),
-		}
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::GetModuleFileNameW(
+					self.as_ptr(),
+					buf.as_mut_ptr(),
+					buf.len() as _,
+				)
+			} as _,
+		).map(|_| WString::from_wchars_slice(&buf).to_string())
 	}
 
 	/// [`GetModuleHandle`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew)

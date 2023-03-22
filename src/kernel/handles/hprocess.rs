@@ -175,12 +175,11 @@ pub trait kernel_Hprocess: Handle {
 	#[must_use]
 	fn IsProcessCritical(&self) -> SysResult<bool> {
 		let mut critical: BOOL = 0;
-		match unsafe {
-			kernel::ffi::IsProcessCritical(self.as_ptr(), &mut critical) }
-		{
-			0 => Err(GetLastError()),
-			_ => Ok(critical != 0),
-		}
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::IsProcessCritical(self.as_ptr(), &mut critical)
+			},
+		).map(|_| critical != 0)
 	}
 
 	/// [`IsWow64Process`](https://learn.microsoft.com/en-us/windows/win32/api/wow64apiset/nf-wow64apiset-iswow64process)

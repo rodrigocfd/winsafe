@@ -3,8 +3,8 @@
 use crate::gdi;
 use crate::gdi::decl::BITMAP;
 use crate::gdi::guard::DeleteObjectGuard;
-use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::ptr_to_sysresult_handle;
+use crate::kernel::decl::SysResult;
+use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
 use crate::prelude::{GdiObject, GdiObjectSelect, Handle};
 use crate::user::decl::{HBITMAP, SIZE};
 
@@ -42,15 +42,14 @@ pub trait gdi_Hbitmap: Handle {
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// method.
 	fn GetObject(&self, pv: &mut BITMAP) -> SysResult<()> {
-		match unsafe {
-			gdi::ffi::GetObjectW(
-				self.as_ptr(),
-				std::mem::size_of::<BITMAP>() as _,
-				pv as *mut _ as _,
-			)
-		} {
-			0 => Err(GetLastError()),
-			_ => Ok(()),
-		}
+		bool_to_sysresult(
+			unsafe {
+				gdi::ffi::GetObjectW(
+					self.as_ptr(),
+					std::mem::size_of::<BITMAP>() as _,
+					pv as *mut _ as _,
+				)
+			},
+		)
 	}
 }

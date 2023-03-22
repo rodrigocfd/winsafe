@@ -66,7 +66,7 @@ pub trait kernel_Hfilemapview: Handle {
 	///
 	/// let view = hmap.MapViewOfFile(co::FILE_MAP::READ, 0, None)?;
 	///
-	/// let slice = view.as_slice(hfile.GetFileSizeEx()?);
+	/// let slice = view.as_slice(hfile.GetFileSizeEx()? as _);
 	/// let text = std::str::from_utf8(slice)?;
 	///
 	/// println!("{}", text);
