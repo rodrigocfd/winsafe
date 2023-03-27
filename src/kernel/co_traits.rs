@@ -2,44 +2,34 @@
 
 use std::{fmt, hash, ops};
 
-use crate::{co, kernel};
-use crate::kernel::decl::{GetLastError, HLOCAL, LANGID, WString};
-use crate::kernel::guard::LocalFreeGuard;
-use crate::prelude::Handle;
+use crate::co;
+use crate::kernel::decl::{FormatMessage, LANGID};
 
 /// A system error which can be formatted with
-/// [`FormatMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew).
+/// [`FormatMessage`](crate::FormatMessage).
 pub trait FormattedError: Into<u32> {
 	/// Returns the textual description of the system error, by calling
-	/// [`FormatMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
+	/// [`FormatMessage`](crate::FormatMessage).
 	/// function.
 	#[must_use]
 	fn FormatMessage(self) -> String {
 		let err_code: u32 = self.into();
-		unsafe {
-			let mut ptr_buf: *mut u16 = std::ptr::null_mut();
-			match kernel::ffi::FormatMessageW(
-				co::FORMAT_MESSAGE::ALLOCATE_BUFFER.0
-					| co::FORMAT_MESSAGE::FROM_SYSTEM.0
-					| co::FORMAT_MESSAGE::IGNORE_INSERTS.0,
-				std::ptr::null(),
+		match unsafe {
+			FormatMessage(
+				co::FORMAT_MESSAGE::ALLOCATE_BUFFER
+					| co::FORMAT_MESSAGE::FROM_SYSTEM
+					| co::FORMAT_MESSAGE::IGNORE_INSERTS,
+				None,
 				err_code,
-				LANGID::USER_DEFAULT.0 as _,
-				(&mut ptr_buf as *mut *mut u16) as _, // pass pointer to pointer
-				0,
-				std::ptr::null_mut(),
-			) {
-				0 => format!( // never fails, returns a message instead
-					"FormatMessage failed to format error {:#06x}: error {:#06x}.",
-					err_code, GetLastError(),
-				),
-				nchars => {
-					let final_wstr = WString::from_wchars_count(ptr_buf, nchars as _);
-					let _ = LocalFreeGuard::new(HLOCAL::from_ptr(ptr_buf as _));
-					let final_str = final_wstr.to_string();
-					final_str
-				},
-			}
+				LANGID::USER_DEFAULT,
+				None,
+			)
+		} {
+			Err(err_fmt) => format!( // never fails, returns a message instead
+				"FormatMessage failed to format error {:#06x}: error {:#06x}.",
+				err_code, err_fmt,
+			),
+			Ok(s) => s,
 		}
 	}
 }

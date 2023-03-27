@@ -4,9 +4,9 @@ use std::collections::HashMap;
 
 use crate::{co, kernel};
 use crate::kernel::decl::{
-	FILETIME, HLOCAL, MEMORYSTATUSEX, OSVERSIONINFOEX, SECURITY_DESCRIPTOR, SID,
-	SID_IDENTIFIER_AUTHORITY, STARTUPINFO, SysResult, SYSTEM_INFO, SYSTEMTIME,
-	TIME_ZONE_INFORMATION, WString,
+	FILETIME, HLOCAL, LANGID, MEMORYSTATUSEX, OSVERSIONINFOEX,
+	SECURITY_DESCRIPTOR, SID, SID_IDENTIFIER_AUTHORITY, STARTUPINFO, SysResult,
+	SYSTEM_INFO, SYSTEMTIME, TIME_ZONE_INFORMATION, WString,
 };
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::guard::{
@@ -363,6 +363,42 @@ pub fn FileTimeToSystemTime(
 /// function.
 pub fn FlushProcessWriteBuffers() {
 	unsafe { kernel::ffi::FlushProcessWriteBuffers() }
+}
+
+/// [`FormatMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
+/// function.
+/// 
+/// You don't need to call this function: all error types implement the
+/// [`FormattedError`](crate::prelude::FormattedError) trait which will
+/// automatically call `FormatMessage`.
+#[must_use]
+pub unsafe fn FormatMessage(
+	flags: co::FORMAT_MESSAGE,
+	source: Option<*mut std::ffi::c_void>,
+	message_id: u32,
+	lang_id: LANGID,
+	args: Option<&[*mut std::ffi::c_void]>,
+) -> SysResult<String>
+{
+	let mut ptr_buf = std::ptr::null_mut() as *mut u16;
+	
+	let nchars = match kernel::ffi::FormatMessageW(
+		flags.0,
+		source.unwrap_or(std::ptr::null_mut()),
+		message_id,
+		lang_id.0 as _,
+		&mut ptr_buf as *mut *mut _ as _, // pass pointer to pointer
+		0,
+		args.map_or(std::ptr::null_mut(), |arr| arr.as_ptr() as _),
+	) as _ {
+		0 => Err(GetLastError()),
+		nchars => Ok(nchars),
+	}?;
+
+	let final_wstr = WString::from_wchars_count(ptr_buf, nchars as _);
+	let _ = LocalFreeGuard::new(HLOCAL::from_ptr(ptr_buf as _)); // free returned pointer
+	let final_str = final_wstr.to_string();
+	Ok(final_str)
 }
 
 /// [`GetBinaryType`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getbinarytypew)
