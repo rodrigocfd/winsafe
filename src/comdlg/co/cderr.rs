@@ -9,11 +9,11 @@ const_no_debug_display! { CDERR: u32;
 	/// Implements the standard
 	/// [`Error`](https://doc.rust-lang.org/beta/std/error/trait.Error.html)
 	/// trait.
-	///
-	/// Note that there is no way to obtain the textual error description for a
-	/// common dialog box error, since
-	/// [`FormatMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
-	/// offers no support to it.
+	/// 
+	/// Does not implement [`FormattedError`](crate::prelude::FormattedError)
+	/// because [`FormatMessage`](crate::FormatMessage) function does not offer
+	/// support for it, so there is no way to obtain a textual description of
+	/// the error codes.
 }
 
 impl std::error::Error for CDERR {

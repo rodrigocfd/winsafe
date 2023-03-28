@@ -77,6 +77,34 @@ pub enum RegistryValue {
 	None,
 }
 
+impl std::fmt::Display for RegistryValue {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		match self {
+			Self::Binary(b) => write!(
+				f,
+				"[REG_BINARY] {}",
+				b.iter()
+					.map(|n| format!("{:02}", *n))
+					.collect::<Vec<_>>()
+					.join(" "),
+			),
+			Self::Dword(n) => write!(f, "[REG_DWORD] {}", *n),
+			Self::Qword(n) => write!(f, "[REG_QWORD] {}", *n),
+			Self::Sz(s) => write!(f, "[REG_SZ] \"{}\"", s),
+			Self::ExpandSz(s) => write!(f, "[REG_EXPAND_SZ] \"{}\"", s),
+			Self::MultiSz(v) => write!(
+				f,
+				"[REG_MULTI_SZ] {}",
+				v.iter()
+					.map(|s| format!("\"{}\"", s))
+					.collect::<Vec<_>>()
+					.join(", "),
+			),
+			Self::None => write!(f, "[REG_NONE]"),
+		}
+	}
+}
+
 impl RegistryValue {
 	/// Parses a binary data block as a `RegistryValue`.
 	///
