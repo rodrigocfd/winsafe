@@ -55,7 +55,7 @@ impl IdStr {
 ///
 /// This is a high-level abstraction over the [`co::REG`](crate::co::REG)
 /// constants, plus the value they carry.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum RegistryValue {
 	/// Binary value, defined as [`REG::BINARY`](crate::co::REG::BINARY).
 	Binary(Vec<u8>),
