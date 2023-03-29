@@ -15,6 +15,33 @@ const_bitflag! { ACCESS_RIGHTS: u32;
 	SYNCHRONIZE 0x0010_0000
 }
 
+const_bitflag! { CONSOLE: u32;
+	/// [`SetConsoleMode`](crate::prelude::kernel_Hstd::SetConsoleMode) `mode`
+	/// (`u32`).
+	/// 
+	/// Originally has no prefix.
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	ENABLE_PROCESSED_INPUT 0x0001
+	ENABLE_LINE_INPUT 0x0002
+	ENABLE_ECHO_INPUT 0x0004
+	ENABLE_WINDOW_INPUT 0x0008
+	ENABLE_MOUSE_INPUT 0x0010
+	ENABLE_INSERT_MODE 0x0020
+	ENABLE_QUICK_EDIT_MODE 0x0040
+	ENABLE_EXTENDED_FLAGS 0x0080
+	ENABLE_AUTO_POSITION 0x0100
+	ENABLE_VIRTUAL_TERMINAL_INPUT 0x0200
+
+	ENABLE_PROCESSED_OUTPUT 0x0001
+	ENABLE_WRAP_AT_EOL_OUTPUT 0x0002
+	ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
+	DISABLE_NEWLINE_AUTO_RETURN 0x0008
+	ENABLE_LVB_GRID_WORLDWIDE 0x0010
+}
+
 const_ordinary! { CP: u16;
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) and
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `code_page`
@@ -1208,7 +1235,9 @@ const_bitflag! { SECURITY_INFORMATION: u32;
 
 const_ordinary! { SID_NAME_USE: u32;
 	/// [`SID_NAME_USE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-sid_name_use)
-	/// enumeration (`u32`). Originally has `Sid` prefix.
+	/// enumeration (`u32`).
+	/// 
+	/// Originally has `Sid` prefix.
 	=>
 	=>
 	User 1
@@ -1282,6 +1311,18 @@ const_bitflag! { STARTF: u32;
 	USESHOWWINDOW 0x0000_0001
 	USESIZE 0x0000_0002
 	USESTDHANDLES 0x0000_0100
+}
+
+const_ordinary! { STD_HANDLE: u32;
+	/// [`GetStdHandle`](crate::prelude::kernel_Hstd::GetStdHandle) `std_handle`
+	/// (`u32`).
+	/// 
+	/// Originally has `STD` prefix and `HANDLE` suffix.
+	=>
+	=>
+	INPUT -10i32 as u32
+	OUTPUT -11i32 as u32
+	ERROR -12i32 as u32
 }
 
 const_ordinary! { SUBLANG: u16;
@@ -1606,7 +1647,9 @@ const_bitflag! { TH32CS: u32;
 
 const_bitflag! { THREAD_CREATE: u32;
 	/// [`HTHREAD::CreateThread`](crate::prelude::kernel_Hthread::CreateThread)
-	/// `flags` (`u32`). Originally has no prefix.
+	/// `flags` (`u32`).
+	/// 
+	/// Originally has no prefix.
 	=>
 	=>
 	/// Originally just a zero.
@@ -1663,7 +1706,9 @@ const_bitflag! { TRANSACTION: u32;
 
 const_bitflag! { TRANSACTION_OPT: u32;
 	/// [`CrateTransaction`](crate::prelude::kernel_Htransaction::CreateTransaction)
-	/// `options` (`u32`). Originally has `TRANSACTION` prefix.
+	/// `options` (`u32`).
+	/// 
+	/// Originally has `TRANSACTION` prefix.
 	=>
 	=>
 	/// None of the actual values (zero).

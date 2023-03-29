@@ -39,6 +39,17 @@ pub struct BY_HANDLE_FILE_INFORMATION {
 	pub nFileIndexLow: u32,
 }
 
+/// [`CONSOLE_READCONSOLE_CONTROL`](https://learn.microsoft.com/en-us/windows/console/console-readconsole-control)
+/// struct.
+#[repr(C)]
+#[derive(Default)]
+pub struct CONSOLE_READCONSOLE_CONTROL {
+	pub nLength: u32,
+	pub nInitialChars: u32,
+	pub dwCtrlWakeupMask: u32,
+	pub dwControlKeyState: u32,
+}
+
 /// [`FILETIME`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
 /// struct.
 #[repr(C)]

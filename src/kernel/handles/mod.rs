@@ -12,6 +12,7 @@ mod hlocal;
 mod hpipe;
 mod hprocess;
 mod hprocesslist;
+mod hstd;
 mod hthread;
 mod htransaction;
 mod hupdatesrc;
@@ -30,6 +31,7 @@ pub mod decl {
 	pub use super::hpipe::HPIPE;
 	pub use super::hprocess::HPROCESS;
 	pub use super::hprocesslist::HPROCESSLIST;
+	pub use super::hstd::HSTD;
 	pub use super::hthread::HTHREAD;
 	pub use super::htransaction::HTRANSACTION;
 	pub use super::hupdatesrc::HUPDATERSRC;
@@ -82,6 +84,7 @@ pub mod traits {
 	pub use super::hpipe::kernel_Hpipe;
 	pub use super::hprocess::kernel_Hprocess;
 	pub use super::hprocesslist::kernel_Hprocesslist;
+	pub use super::hstd::kernel_Hstd;
 	pub use super::hthread::kernel_Hthread;
 	pub use super::htransaction::kernel_Htransaction;
 	pub use super::hupdatesrc::kernel_Hupdatersrc;

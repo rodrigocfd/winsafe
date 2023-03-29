@@ -85,6 +85,7 @@ extern_sys! { "kernel32";
 	FindNextFileW(HANDLE, PVOID) -> BOOL
 	FindResourceExW(HANDLE, PCSTR, PCSTR, u16) -> HANDLE
 	FindResourceW(HANDLE, PCSTR, PCSTR) -> HANDLE
+	FlushConsoleInputBuffer(HANDLE) -> BOOL
 	FlushInstructionCache(HANDLE, PCVOID, usize) -> BOOL
 	FlushProcessWriteBuffers()
 	FormatMessageW(u32, PCVOID, u32, u32, PSTR, u32, PVOID) -> u32
@@ -93,6 +94,7 @@ extern_sys! { "kernel32";
 	GetBinaryTypeW(PCSTR, *mut u32) -> BOOL
 	GetCommandLineW() -> PCSTR
 	GetComputerNameW(PSTR, *mut u32) -> BOOL
+	GetConsoleMode(HANDLE, *mut u32) -> BOOL
 	GetCurrentDirectoryW(u32, PSTR) -> u32
 	GetCurrentProcess() -> HANDLE
 	GetCurrentProcessId() -> u32
@@ -126,6 +128,7 @@ extern_sys! { "kernel32";
 	GetProcessIdOfThread(HANDLE) -> u32
 	GetProcessTimes(HANDLE, PVOID, PVOID, PVOID, PVOID) -> BOOL
 	GetStartupInfoW(PVOID)
+	GetStdHandle(u32) -> HANDLE
 	GetSystemDirectoryW(PSTR, u32) -> u32
 	GetSystemFileCacheSize(*mut usize, *mut usize, *mut u32) -> BOOL
 	GetSystemInfo(PVOID)
@@ -188,8 +191,10 @@ extern_sys! { "kernel32";
 	QueryFullProcessImageNameW(HANDLE, u32, PSTR, *mut u32) -> BOOL
 	QueryPerformanceCounter(*mut i64) -> BOOL
 	QueryPerformanceFrequency(*mut i64) -> BOOL
+	ReadConsoleW(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
 	ReadFile(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
 	ReplaceFileW(PCSTR, PCSTR, PCSTR, u32, PVOID, PVOID) -> BOOL
+	SetConsoleMode(HANDLE, u32) -> BOOL
 	SetCurrentDirectoryW(PCSTR) -> BOOL
 	SetEndOfFile(HANDLE) -> BOOL
 	SetFilePointerEx(HANDLE, i64, *mut i64, u32) -> BOOL
@@ -207,6 +212,7 @@ extern_sys! { "kernel32";
 	VerSetConditionMask(u64, u32, u8) -> u64
 	WaitForSingleObject(HANDLE, u32) -> u32
 	WideCharToMultiByte(u32, u32, PCSTR, i32, PSTR, i32, *const u8, *mut BOOL) -> i32
+	WriteConsoleW(HANDLE, PCVOID, u32, *mut u32, PVOID) -> BOOL
 	WriteFile(HANDLE, PCVOID, u32, *mut u32, PVOID) -> BOOL
 }
 
