@@ -256,6 +256,14 @@ pub trait kernel_Hprocess: Handle {
 		).map(|_| buf.to_string())
 	}
 
+	/// [`TerminateProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess)
+	/// method.
+	fn TerminateProcess(&self, exit_code: u32) -> SysResult<()> {
+		bool_to_sysresult(
+			unsafe { kernel::ffi::TerminateProcess(self.as_ptr(), exit_code) },
+		)
+	}
+
 	/// [`WaitForSingleObject`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)
 	/// method.
 	fn WaitForSingleObject(&self,

@@ -194,6 +194,7 @@ extern_sys! { "kernel32";
 	ReadConsoleW(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
 	ReadFile(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
 	ReplaceFileW(PCSTR, PCSTR, PCSTR, u32, PVOID, PVOID) -> BOOL
+	ResumeThread(HANDLE) -> u32
 	SetConsoleMode(HANDLE, u32) -> BOOL
 	SetCurrentDirectoryW(PCSTR) -> BOOL
 	SetEndOfFile(HANDLE) -> BOOL
@@ -201,8 +202,11 @@ extern_sys! { "kernel32";
 	SetLastError(u32)
 	SizeofResource(HANDLE, HANDLE) -> u32
 	Sleep(u32)
+	SuspendThread(HANDLE) -> u32
 	SystemTimeToFileTime(PCVOID, PVOID) -> BOOL
 	SystemTimeToTzSpecificLocalTime(PCVOID, PCVOID, PVOID) -> BOOL
+	TerminateProcess(HANDLE, u32) -> BOOL
+	TerminateThread(HANDLE, u32) -> BOOL
 	Thread32First(HANDLE, PVOID) -> BOOL
 	Thread32Next(HANDLE, PVOID) -> BOOL
 	UnlockFile(HANDLE, u32, u32, u32, u32) -> BOOL

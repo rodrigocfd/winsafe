@@ -134,4 +134,32 @@ pub trait kernel_Hthread: Handle {
 			).map(|_| CloseHandleGuard::new(handle))
 		}
 	}
+
+	/// [`ResumeThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread)
+	/// method.
+	fn ResumeThread(&self) -> SysResult<u32> {
+		const MINUS_ONE: u32 = -1i32 as u32;
+		match unsafe { kernel::ffi::ResumeThread(self.as_ptr()) } {
+			MINUS_ONE => Err(GetLastError()),
+			c => Ok(c),
+		}
+	}
+
+	/// [`SuspendThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-suspendthread)
+	/// method.
+	fn SuspendThread(&self) -> SysResult<u32> {
+		const MINUS_ONE: u32 = -1i32 as u32;
+		match unsafe { kernel::ffi::SuspendThread(self.as_ptr()) } {
+			MINUS_ONE => Err(GetLastError()),
+			c => Ok(c),
+		}
+	}
+
+	/// [`TerminateThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminatethread)
+	/// method.
+	fn TerminateThread(&self, exit_code: u32) -> SysResult<()> {
+		bool_to_sysresult(
+			unsafe { kernel::ffi::TerminateThread(self.as_ptr(), exit_code) },
+		)
+	}
 }
