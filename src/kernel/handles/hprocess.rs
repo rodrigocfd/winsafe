@@ -126,6 +126,16 @@ pub trait kernel_Hprocess: Handle {
 		}
 	}
 
+	/// [`GetPriorityClass`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getpriorityclass)
+	/// method.
+	#[must_use]
+	fn GetPriorityClass(&self) -> SysResult<co::PRIORITY_CLASS> {
+		match unsafe { kernel::ffi::GetPriorityClass(self.as_ptr()) } {
+			0 => Err(GetLastError()),
+			pc => Ok(co::PRIORITY_CLASS(pc)),
+		}
+	}
+
 	/// [`GetProcessHandleCount`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesshandlecount)
 	/// method.
 	#[must_use]
@@ -254,6 +264,60 @@ pub trait kernel_Hprocess: Handle {
 				)
 			},
 		).map(|_| buf.to_string())
+	}
+
+	/// [`QueryProcessAffinityUpdateMode`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-queryprocessaffinityupdatemode)
+	/// method.
+	#[must_use]
+	fn QueryProcessAffinityUpdateMode(&self) -> SysResult<co::PROCESS_AFFINITY> {
+		let mut affinity = co::PROCESS_AFFINITY::default();
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::QueryProcessAffinityUpdateMode(
+					self.as_ptr(),
+					&mut affinity.0,
+				)
+			},
+		).map(|_| affinity)
+	}
+
+	/// [`SetPriorityClass`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setpriorityclass)
+	/// method.
+	fn SetPriorityClass(&self,
+		prority_class: co::PRIORITY_CLASS) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::SetPriorityClass(self.as_ptr(), prority_class.0)
+			},
+		)
+	}
+
+	/// [`SetProcessAffinityUpdateMode`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setprocessaffinityupdatemode)
+	/// method.
+	fn SetProcessAffinityUpdateMode(&self,
+		flags: co::PROCESS_AFFINITY) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::SetProcessAffinityUpdateMode(self.as_ptr(), flags.0)
+			},
+		)
+	}
+
+	/// [`SetProcessPriorityBoost`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setprocesspriorityboost)
+	/// method.
+	fn SetProcessPriorityBoost(&self,
+		disable_priority_boost: bool) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::SetProcessPriorityBoost(
+					self.as_ptr(),
+					disable_priority_boost as _,
+				)
+			},
+		)
 	}
 
 	/// [`TerminateProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess)

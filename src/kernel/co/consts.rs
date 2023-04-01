@@ -743,6 +743,23 @@ const_ordinary! { PAGE: u32;
 	SEC_WRITECOMBINE 0x4000_0000
 }
 
+const_bitflag! { PRIORITY_CLASS: u32;
+	/// [`GetPriorityClass`](crate::prelude::kernel_Hprocess::GetPriorityClass)
+	/// and
+	/// [`SetPriorityClass`](crate::prelude::kernel_Hprocess::SetPriorityClass)
+	/// `priority_class` (`u32`).
+	/// 
+	/// Originally has `PRIORITY_CLASS` suffix.
+	=>
+	=>
+	ABOVE_NORMAL 0x0000_8000
+	BELOW_NORMAL 0x0000_4000
+	HIGH 0x0000_0080
+	IDLE 0x0000_0040
+	NORMAL 0x0000_0020
+	REALTIME 0x0000_0100
+}
+
 const_bitflag! { PROCESS: u32;
 	/// Process
 	/// [security and access rights](https://learn.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights)
@@ -770,6 +787,18 @@ const_bitflag! { PROCESS: u32;
 	VM_WRITE 0x0020
 }
 
+const_bitflag! { PROCESS_AFFINITY: u32;
+	/// [`QueryProcessAffinityUpdateMode`](crate::prelude::kernel_Hprocess::QueryProcessAffinityUpdateMode)
+	/// and
+	/// [`SetProcessAffinityUpdateMode`](crate::prelude::kernel_Hprocess::SetProcessAffinityUpdateMode)
+	/// `flags` (`u32`).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	ENABLE_AUTO_UPDATE 0x0000_0001
+}
+
 const_bitflag! { PROCESS_HEAP: u16;
 	/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) `wFlags` (`u16`).
 	=>
@@ -779,6 +808,17 @@ const_bitflag! { PROCESS_HEAP: u16;
 	ENTRY_MOVEABLE 0x0010
 	REGION 0x0001
 	UNCOMMITTED_RANGE 0x0002
+}
+
+const_ordinary! { PROCESS_NAME: u32;
+	/// [`QueryFullProcessImageName`](crate::prelude::kernel_Hprocess::QueryFullProcessImageName)
+	/// flags (`u32`).
+	=>
+	=>
+	/// The name should use the Win32 path format.
+	WIN32 0
+	/// The name should use the native system path format.
+	NATIVE 0x0000_0001
 }
 
 const_ordinary! { PROCESSOR: u32;
@@ -808,17 +848,6 @@ const_ordinary! { PROCESSOR: u32;
 	ARM920 2336
 	ARM_7TDMI 70001
 	OPTIL 0x494f
-}
-
-const_ordinary! { PROCESS_NAME: u32;
-	/// [`QueryFullProcessImageName`](crate::prelude::kernel_Hprocess::QueryFullProcessImageName)
-	/// flags (`u32`).
-	=>
-	=>
-	/// The name should use the Win32 path format.
-	WIN32 0
-	/// The name should use the native system path format.
-	NATIVE 0x0000_0001
 }
 
 const_ordinary! { PROCESSOR_ARCHITECTURE: u16;

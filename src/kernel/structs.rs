@@ -465,6 +465,16 @@ impl PROCESSENTRY32 {
 	pub_fn_string_arr_get_set!(szExeFile, set_szExeFile);
 }
 
+/// [`PROCESSOR_NUMBER`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-processor_number)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
+pub struct PROCESSOR_NUMBER {
+	pub Group: u16,
+	pub Number: u8,
+	Reserved: u8,
+}
+
 /// [`SECURITY_ATTRIBUTES`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa379560(v=vs.85))
 /// struct.
 #[repr(C)]

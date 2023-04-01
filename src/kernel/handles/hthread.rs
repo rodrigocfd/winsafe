@@ -2,10 +2,13 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{
-	FILETIME, GetLastError, HACCESSTOKEN, SECURITY_ATTRIBUTES, SysResult,
+	FILETIME, GetLastError, HACCESSTOKEN, PROCESSOR_NUMBER, SECURITY_ATTRIBUTES,
+	SysResult,
 };
 use crate::kernel::guard::CloseHandleGuard;
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
+use crate::kernel::privs::{
+	bool_to_sysresult, minus1_as_error, ptr_to_sysresult_handle,
+};
 use crate::prelude::Handle;
 
 impl_handle! { HTHREAD;
@@ -138,21 +141,59 @@ pub trait kernel_Hthread: Handle {
 	/// [`ResumeThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread)
 	/// method.
 	fn ResumeThread(&self) -> SysResult<u32> {
-		const MINUS_ONE: u32 = -1i32 as u32;
-		match unsafe { kernel::ffi::ResumeThread(self.as_ptr()) } {
-			MINUS_ONE => Err(GetLastError()),
-			c => Ok(c),
-		}
+		minus1_as_error(unsafe { kernel::ffi::ResumeThread(self.as_ptr()) })
+	}
+
+	/// [`SetThreadIdealProcessor`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadidealprocessor)
+	/// method.
+	/// 
+	/// Returns the previous ideal processor.
+	fn SetThreadIdealProcessor(&self, ideal_processor: u32) -> SysResult<u32> {
+		minus1_as_error(
+			unsafe {
+				kernel::ffi::SetThreadIdealProcessor(self.as_ptr(), ideal_processor)
+			},
+		)
+	}
+
+	/// [`SetThreadIdealProcessorEx`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadidealprocessorex)
+	/// method.
+	/// 
+	/// Returns the previous ideal processor.
+	fn SetThreadIdealProcessorEx(&self,
+		ideal_processor: PROCESSOR_NUMBER) -> SysResult<PROCESSOR_NUMBER>
+	{
+		let mut prev = PROCESSOR_NUMBER::default();
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::SetThreadIdealProcessorEx(
+					self.as_ptr(),
+					&ideal_processor as *const _ as _,
+					&mut prev as *mut _ as _,
+				)
+			},
+		).map(|_| prev)
+	}
+
+	/// [`SetThreadPriorityBoost`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadpriorityboost)
+	/// method.
+	fn SetThreadPriorityBoost(&self,
+		disable_priority_boost: bool) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::SetThreadPriorityBoost(
+					self.as_ptr(),
+					disable_priority_boost as _,
+				)
+			},
+		)
 	}
 
 	/// [`SuspendThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-suspendthread)
 	/// method.
 	fn SuspendThread(&self) -> SysResult<u32> {
-		const MINUS_ONE: u32 = -1i32 as u32;
-		match unsafe { kernel::ffi::SuspendThread(self.as_ptr()) } {
-			MINUS_ONE => Err(GetLastError()),
-			c => Ok(c),
-		}
+		minus1_as_error(unsafe { kernel::ffi::SuspendThread(self.as_ptr()) })
 	}
 
 	/// [`TerminateThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminatethread)

@@ -120,6 +120,7 @@ extern_sys! { "kernel32";
 	GetModuleFileNameW(HANDLE, PSTR, u32) -> u32
 	GetModuleHandleW(PCSTR) -> HANDLE
 	GetNativeSystemInfo(PVOID)
+	GetPriorityClass(HANDLE) -> u32
 	GetProcAddress(HANDLE, *const u8) -> PCVOID
 	GetProcessHandleCount(HANDLE, &mut u32) -> BOOL
 	GetProcessHeap() -> HANDLE
@@ -191,6 +192,7 @@ extern_sys! { "kernel32";
 	QueryFullProcessImageNameW(HANDLE, u32, PSTR, *mut u32) -> BOOL
 	QueryPerformanceCounter(*mut i64) -> BOOL
 	QueryPerformanceFrequency(*mut i64) -> BOOL
+	QueryProcessAffinityUpdateMode(HANDLE, *mut u32) -> BOOL
 	ReadConsoleW(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
 	ReadFile(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
 	ReplaceFileW(PCSTR, PCSTR, PCSTR, u32, PVOID, PVOID) -> BOOL
@@ -200,9 +202,17 @@ extern_sys! { "kernel32";
 	SetEndOfFile(HANDLE) -> BOOL
 	SetFilePointerEx(HANDLE, i64, *mut i64, u32) -> BOOL
 	SetLastError(u32)
+	SetPriorityClass(HANDLE, u32) -> BOOL
+	SetProcessAffinityUpdateMode(HANDLE, u32) -> BOOL
+	SetProcessPriorityBoost(HANDLE, BOOL) -> BOOL
+	SetThreadIdealProcessor(HANDLE, u32) -> u32
+	SetThreadIdealProcessorEx(HANDLE, PCVOID, PVOID) -> BOOL
+	SetThreadPriorityBoost(HANDLE, BOOL) -> BOOL
+	SetThreadStackGuarantee(*mut u32) -> BOOL
 	SizeofResource(HANDLE, HANDLE) -> u32
 	Sleep(u32)
 	SuspendThread(HANDLE) -> u32
+	SwitchToThread() -> BOOL
 	SystemTimeToFileTime(PCVOID, PVOID) -> BOOL
 	SystemTimeToTzSpecificLocalTime(PCVOID, PCVOID, PVOID) -> BOOL
 	TerminateProcess(HANDLE, u32) -> BOOL

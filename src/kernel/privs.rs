@@ -69,6 +69,15 @@ pub(crate) const fn error_to_sysresult(lstatus: i32) -> SysResult<()> {
 	}
 }
 
+/// If value is -1, yields `Err(GetLastError())`, otherwise `Ok(dword)`.
+pub(crate) fn minus1_as_error(dword: u32) -> SysResult<u32> {
+	const MINUS_ONE: u32 = -1i32 as u32;
+	match dword {
+		MINUS_ONE => Err(GetLastError()),
+		dword => Ok(dword),
+	}
+}
+
 /// Converts a string to an ISO-8859-1 null-terminated byte array.
 pub(crate) fn str_to_iso88591(s: &str) -> Vec<u8> {
 	s.chars().map(|ch| ch as u8)

@@ -1397,10 +1397,26 @@ pub fn SetLastError(err_code: co::ERROR) {
 	unsafe { kernel::ffi::SetLastError(err_code.0) }
 }
 
+/// [`SetThreadStackGuarantee`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadstackguarantee)
+/// function.
+/// 
+/// Returns the size of the previous stack.
+pub fn SetThreadStackGuarantee(stack_size_in_bytes: u32) -> SysResult<u32> {
+	let mut sz = stack_size_in_bytes;
+	bool_to_sysresult(unsafe { kernel::ffi::SetThreadStackGuarantee(&mut sz) })
+		.map(|_| sz)
+}
+
 /// [`Sleep`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep)
 /// function.
 pub fn Sleep(milliseconds: u32) {
 	unsafe { kernel::ffi::Sleep(milliseconds) }
+}
+
+/// [`SwitchToThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-switchtothread)
+/// function.
+pub fn SwitchToThread() -> SysResult<()> {
+	bool_to_sysresult(unsafe { kernel::ffi::SwitchToThread() })
 }
 
 /// [`SystemTimeToFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetofiletime)
