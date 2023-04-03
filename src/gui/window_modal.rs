@@ -87,7 +87,7 @@ impl WindowModal {
 
 	/// Instantiates a new `WindowModal` object, to be loaded from a dialog
 	/// resource with
-	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
+	/// [`HINSTANCE::DialogBoxParam`](crate::prelude::user_Hinstance::DialogBoxParam).
 	#[must_use]
 	pub fn new_dlg(parent: &impl GuiParent, dialog_id: u16) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };

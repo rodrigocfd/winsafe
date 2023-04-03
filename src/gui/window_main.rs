@@ -93,7 +93,7 @@ impl WindowMain {
 
 	/// Instantiates a new `WindowMain` object, to be loaded from a dialog
 	/// resource with
-	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
+	/// [`HINSTANCE::CreateDialogParam`](crate::prelude::user_Hinstance::CreateDialogParam).
 	#[must_use]
 	pub fn new_dlg(
 		dialog_id: u16,

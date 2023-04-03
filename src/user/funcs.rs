@@ -322,6 +322,29 @@ pub fn EnumDisplaySettingsEx(
 	}
 }
 
+/// [`EnumThreadWindows`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumthreadwindows)
+/// function.
+pub fn EnumThreadWindows<F>(thread_id: u32, func: F) -> SysResult<()>
+	where F: Fn(HWND) -> bool,
+{
+	bool_to_sysresult(
+		unsafe {
+			user::ffi::EnumThreadWindows(
+				thread_id,
+				enum_thread_wnd_proc::<F> as _,
+				&func as *const _ as _,
+			)
+		},
+	)
+}
+
+extern "system" fn enum_thread_wnd_proc<F>(hwnd: HWND, lparam: isize) -> BOOL
+	where F: Fn(HWND) -> bool,
+{
+	let func = unsafe { &*(lparam as *const F) };
+	func(hwnd) as _
+}
+
 /// [`EnumWindows`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumwindows)
 /// function.
 ///

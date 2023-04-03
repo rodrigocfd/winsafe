@@ -1583,6 +1583,14 @@ pub trait user_Hwnd: Handle {
 		bool_to_sysresult(unsafe { user::ffi::ShowCaret(self.as_ptr()) })
 	}
 
+	/// [`ShowOwnedPopups`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showownedpopups)
+	/// method.
+	fn ShowOwnedPopups(&self, show: bool) -> SysResult<()> {
+		bool_to_sysresult(
+			unsafe { user::ffi::ShowOwnedPopups(self.as_ptr(), show as _) }
+		)
+	}
+
 	/// [`ShowWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow)
 	/// method.
 	fn ShowWindow(&self, show_cmd: co::SW) -> bool {
@@ -1595,6 +1603,31 @@ pub trait user_Hwnd: Handle {
 		bool_to_sysresult(
 			unsafe { user::ffi::ShowWindowAsync(self.as_ptr(), show_cmd.0) }
 		)
+	}
+
+	/// [`TileWindows`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-tilewindows)
+	/// method.
+	fn TileWindows(&self,
+		how: co::MDITILE,
+		rect: Option<RECT>,
+		kids: Option<&[&HWND]>,
+	) -> SysResult<u16>
+	{
+		match unsafe {
+			user::ffi::TileWindows(
+				self.as_ptr(),
+				how.0,
+				rect.map_or(std::ptr::null(), |rc| &rc as *const _ as _),
+				kids.map_or(0, |s| s.len() as _),
+				kids.map_or(std::ptr::null(), |s| s.as_ptr() as *const _ as _),
+			)
+		} {
+			0 => match GetLastError() {
+				co::ERROR::SUCCESS => Ok(0),
+				err => Err(err),
+			},
+			c => Ok(c),
+		}
 	}
 
 	/// [`TranslateAccelerator`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translateacceleratorw)

@@ -68,6 +68,7 @@ extern_sys! { "user32";
 	EnumDisplayMonitors(HANDLE, PCVOID, PFUNC, isize) -> BOOL
 	EnumDisplaySettingsExW(PCSTR, u32, PVOID, u32) -> BOOL
 	EnumDisplaySettingsW(PCSTR, u32, PVOID) -> BOOL
+	EnumThreadWindows(u32, PFUNC, isize) -> BOOL
 	EnumWindows(PFUNC, isize) -> BOOL
 	FindWindowExW(HANDLE, HANDLE, PCSTR, PCSTR) -> HANDLE
 	FindWindowW(PCSTR, PCSTR) -> HANDLE
@@ -226,6 +227,7 @@ extern_sys! { "user32";
 	SetWindowTextW(HANDLE, PCSTR) -> BOOL
 	ShowCaret(HANDLE) -> BOOL
 	ShowCursor(BOOL) -> i32
+	ShowOwnedPopups(HANDLE, BOOL) -> BOOL
 	ShowWindow(HANDLE, i32) -> BOOL
 	ShowWindowAsync(HANDLE, i32) -> BOOL
 	SoundSentry() -> BOOL
@@ -233,6 +235,7 @@ extern_sys! { "user32";
 	SwapMouseButton(BOOL) -> BOOL
 	SwitchDesktop(HANDLE) -> BOOL
 	SystemParametersInfoW(u32, u32, PVOID, u32) -> BOOL
+	TileWindows(HANDLE, u32, PCVOID, u32, PCVOID) -> u16
 	TrackMouseEvent(PVOID) -> BOOL
 	TrackPopupMenu(HANDLE, u32, i32, i32, i32, HANDLE, PCVOID) -> BOOL
 	TranslateAcceleratorW(HANDLE, HANDLE, PVOID) -> i32

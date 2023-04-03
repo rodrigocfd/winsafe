@@ -1793,6 +1793,16 @@ const_bitflag! { MB: u32;
 	SERVICE_NOTIFICATION 0x0020_0000
 }
 
+const_bitflag! { MDITILE: u32;
+	/// [`HWND::TileWindows`](crate::prelude::user_Hwnd::TileWindows) `how`
+	/// (`u32`).
+	=>
+	=>
+	MDITILE_VERTICAL 0x0000
+	HORIZONTAL 0x0001
+	SKIPDISABLED 0x0002
+}
+
 const_bitflag! { MIIM: u32;
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fMask` (`u32`).
 	=>
