@@ -310,16 +310,25 @@ pub trait user_Hwnd: Handle {
 	/// static method.
 	#[must_use]
 	fn FindWindow(
-		class_name: Option<AtomStr>, title: Option<&str>) -> SysResult<HWND>
+		class_name: Option<AtomStr>,
+		title: Option<&str>,
+	) -> SysResult<Option<HWND>>
 	{
-		ptr_to_sysresult_handle(
-			unsafe {
-				user::ffi::FindWindowW(
-					class_name.map_or(std::ptr::null_mut(), |p| p.as_ptr()),
-					WString::from_opt_str(title).as_ptr(),
-				)
-			},
-		)
+		let ptr = unsafe {
+			user::ffi::FindWindowW(
+				class_name.as_ref().map_or(std::ptr::null(), |c| c.as_ptr()),
+				WString::from_opt_str(title).as_ptr(),
+			)
+		};
+
+		if ptr.is_null() {
+			match GetLastError() {
+				co::ERROR::SUCCESS => Ok(None), // no window found
+				err => Err(err), // actual error
+			}
+		} else {
+			Ok(Some(unsafe { HWND::from_ptr(ptr) }))
+		}
 	}
 
 	/// [`FindWindowEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-findwindowexw)
@@ -329,18 +338,25 @@ pub trait user_Hwnd: Handle {
 		hwnd_child_after: Option<&HWND>,
 		class_name: AtomStr,
 		title: Option<&str>,
-	) -> SysResult<HWND>
+	) -> SysResult<Option<HWND>>
 	{
-		ptr_to_sysresult_handle(
-			unsafe {
-				user::ffi::FindWindowExW(
-					self.as_ptr(),
-					hwnd_child_after.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
-					class_name.as_ptr(),
-					WString::from_opt_str(title).as_ptr(),
-				)
-			},
-		)
+		let ptr = unsafe {
+			user::ffi::FindWindowExW(
+				self.as_ptr(),
+				hwnd_child_after.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+				class_name.as_ptr(),
+				WString::from_opt_str(title).as_ptr(),
+			)
+		};
+
+		if ptr.is_null() {
+			match GetLastError() {
+				co::ERROR::SUCCESS => Ok(None), // no window found
+				err => Err(err), // actual error
+			}
+		} else {
+			Ok(Some(unsafe { HWND::from_ptr(ptr) }))
+		}
 	}
 
 	/// [`GetActiveWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getactivewindow)

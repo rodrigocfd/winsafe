@@ -43,11 +43,10 @@ pub struct AccelMenuCtrlData {
 	pub ctrl_hwnd: HWND,
 }
 
-/// Variant parameter used in
-/// [window class](https://learn.microsoft.com/en-us/windows/win32/winmsg/window-classes)
-/// functions:
+/// Variant parameter for:
 ///
 /// * [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx);
+/// /// * [`HWND::FindWindow`](crate::prelude::user_Hwnd::FindWindow);
 /// * [`HWND::FindWindowEx`](crate::prelude::user_Hwnd::FindWindowEx);
 /// * [`UnregisterClass`](crate::UnregisterClass).
 #[derive(Clone)]

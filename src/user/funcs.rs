@@ -6,7 +6,7 @@ use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{
-	ATOM, COLORREF, DEVMODE, DISPLAY_DEVICE, GmidxEnum, GUITHREADINFO,
+	ATOM, AtomStr, COLORREF, DEVMODE, DISPLAY_DEVICE, GmidxEnum, GUITHREADINFO,
 	HwKbMouse, HWND, INPUT, MSG, POINT, RECT, SIZE, TRACKMOUSEEVENT, WNDCLASSEX,
 };
 use crate::user::privs::ASFW_ANY;
@@ -889,13 +889,10 @@ pub fn UnionRect(dest: &mut RECT, src1: &RECT, src2: &RECT) -> SysResult<()> {
 
 /// [`UnregisterClass`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw)
 /// function.
-pub fn UnregisterClass(class_name: &str, hinst: &HINSTANCE) -> SysResult<()> {
+pub fn UnregisterClass(class_name: AtomStr, hinst: &HINSTANCE) -> SysResult<()> {
 	bool_to_sysresult(
 		unsafe {
-			user::ffi::UnregisterClassW(
-				WString::from_str(class_name).as_ptr(),
-				hinst.as_ptr(),
-			)
+			user::ffi::UnregisterClassW(class_name.as_ptr(), hinst.as_ptr())
 		},
 	)
 }
