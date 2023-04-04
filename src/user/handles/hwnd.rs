@@ -13,7 +13,7 @@ use crate::kernel::privs::{
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{
 	ALTTABINFO, AtomStr, HACCEL, HMENU, HMONITOR, HRGN, HwndPlace, IdMenu,
-	IdPos, MENUBARINFO, MSG, PAINTSTRUCT, POINT, RECT, SCROLLINFO, SIZE,
+	IdPos, MENUBARINFO, MSG, PAINTSTRUCT, POINT, PtsRcs, RECT, SCROLLINFO, SIZE,
 	TIMERPROC, WINDOWINFO, WINDOWPLACEMENT,
 };
 use crate::user::guard::{
@@ -1009,16 +1009,46 @@ pub trait user_Hwnd: Handle {
 
 	/// [`MapWindowPoints`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapwindowpoints)
 	/// method.
+	/// 
+	/// This method can convert either a series of [`POINT`](crate::POINT) or
+	/// [`RECT`](crate::RECT) structs.
+	/// 
+	/// # Examples
+	/// 
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{HWND, POINT, PtsRcs};
+	/// 
+	/// let hwnd: HWND; // initialized somewhere
+	/// # let hwnd = HWND::NULL;
+	/// let hwnd_dest: HWND;
+	/// # let hwnd_dest = HWND::NULL;
+	/// 
+	/// let mut points = vec![POINT::default(), POINT::default()];
+	/// 
+	/// hwnd.MapWindowPoints(
+	///     &hwnd_dest,
+	///     PtsRcs::Pts(&mut points),
+	/// )?;
+	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// ```
 	fn MapWindowPoints(&self,
-		hdest: &HWND, points: &mut [POINT]) -> SysResult<(i16, i16)>
+		hdest: &HWND, points: PtsRcs) -> SysResult<(i16, i16)>
 	{
+		let forced_pts = match points {
+			PtsRcs::Pts(pts) => pts,
+			PtsRcs::Rcs(rcs) => unsafe {
+				std::slice::from_raw_parts_mut(rcs.as_mut_ptr() as _, rcs.len() * 2)
+			},
+		};
+
 		SetLastError(co::ERROR::SUCCESS);
 		match unsafe {
 			user::ffi::MapWindowPoints(
 				self.as_ptr(),
 				hdest.as_ptr(),
-				points.as_mut_ptr() as _,
-				points.len() as _,
+				forced_pts.as_mut_ptr() as _,
+				forced_pts.len() as _,
 			)
 		} {
 			0 => Err(GetLastError()),
