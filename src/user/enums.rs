@@ -435,9 +435,9 @@ pub enum NccspRect<'a, 'b> {
 /// Variant parameter for:
 /// 
 /// * [`HWND::MapWindowPoints`](crate::prelude::user_Hwnd::MapWindowPoints) `points`.
-pub enum PtsRcs<'a> {
+pub enum PtsRc<'a> {
 	/// A series of [`POINT`](crate::POINT) structs.
 	Pts(&'a mut [POINT]),
-	/// A series of [`RECT`](crate::RECT) structs.
-	Rcs(&'a mut [RECT]),
+	/// A single [`RECT`](crate::RECT) struct.
+	Rc(&'a mut RECT),
 }
