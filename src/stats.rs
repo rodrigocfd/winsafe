@@ -34,8 +34,10 @@ impl Stats {
 		}
 	}
 
-	/// Reads all files in the target directory and processes all the stats,
-	/// calling the callback to give feedback after processing each file.
+	/// Reads all files in the target directory and processes all the stats.
+	/// 
+	/// The callback is called after processing each file, to give a progressive
+	/// feedback of the whole operation.
 	pub fn gather<F>(target: &str, callback: F) -> w::SysResult<Self>
 		where F: Fn(usize),
 	{
