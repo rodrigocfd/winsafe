@@ -223,9 +223,16 @@ impl Edit {
 	}
 
 	/// Limits the number of characters that can be type by sending an
-	/// /// [`em::SetLimitText`](crate::msg::em::SetLimitText) message.
+	/// [`em::SetLimitText`](crate::msg::em::SetLimitText) message.
 	pub fn limit_text(&self, max_chars: Option<u32>) {
 		self.hwnd().SendMessage(em::SetLimitText { max_chars });
+	}
+
+	/// Returns the number of lines by sending an
+	/// [`em::GetLineCount`](crate::msg::em::GetLineCount) message.
+	#[must_use]
+	pub fn line_count(&self) -> u32 {
+		self.hwnd().SendMessage(em::GetLineCount {})
 	}
 
 	/// Sets the selection range of the text by sending an

@@ -65,6 +65,14 @@ impl<'a> ListBoxItems<'a> {
 		self.owner.hwnd().SendMessage(lb::ResetContent {});
 	}
 
+	/// Ensures that the specified item in a list box is visible by sending an
+	/// [`lb::SetTopIndex`](crate::msg::lb::SetTopIndex) message.
+	pub fn ensure_visible(&self, index: u32) {
+		self.owner.hwnd()
+			.SendMessage(lb::SetTopIndex { index })
+			.unwrap();
+	}
+
 	/// Returns an iterator over the texts.
 	///
 	/// # Examples
@@ -107,6 +115,15 @@ impl<'a> ListBoxItems<'a> {
 	#[must_use]
 	pub fn iter_selected(&self) -> impl Iterator<Item = (u32, String)> + 'a {
 		ListBoxSelItemIter::new(self.owner)
+	}
+
+	/// Retrieves the number of selected items by sending an
+	/// [`lb::GetSelCount`](crate::msg::lb::GetSelCount) message.
+	#[must_use]
+	pub fn selected_count(&self) -> u32 {
+		self.owner.hwnd()
+			.SendMessage(lb::GetSelCount {})
+			.unwrap()
 	}
 
 	/// Retrieves the text at the given position, if any, by sending a

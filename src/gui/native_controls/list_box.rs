@@ -13,7 +13,7 @@ use crate::gui::native_controls::base_native_control::{
 use crate::gui::native_controls::list_box_items::ListBoxItems;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
 use crate::kernel::decl::SysResult;
-use crate::msg::wm;
+use crate::msg::{lb, wm};
 use crate::prelude::{
 	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
 	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, user_Hwnd,
@@ -177,6 +177,12 @@ impl ListBox {
 	#[must_use]
 	pub const fn items(&self) -> ListBoxItems {
 		ListBoxItems::new(self)
+	}
+
+	/// Sets the scrollable width by sending an
+	/// [`lb::SetHorizontalExtent`](crate::msg::lb::SetHorizontalExtent) message.
+	pub fn set_horizontal_extend(&self, pixels: u32) {
+		self.hwnd().SendMessage(lb::SetHorizontalExtent { width: pixels });
 	}
 }
 
