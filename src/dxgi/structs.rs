@@ -1,7 +1,9 @@
 #![allow(non_snake_case)]
 
+use crate::co;
 use crate::kernel::decl::LUID;
 use crate::kernel::ffi_types::BOOL;
+use crate::user::decl::HWND;
 
 /// [`DXGI_ADAPTER_DESC`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_adapter_desc)
 /// struct.
@@ -64,6 +66,28 @@ impl DXGI_GAMMA_CONTROL_CAPABILITIES {
 	pub_fn_bool_get_set!(ScaleAndOffsetSupported, set_ScaleAndOffsetSupported);
 }
 
+/// [`DXGI_MODE_DESC`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173064(v=vs.85))
+/// struct.
+#[repr(C)]
+#[derive(Default, PartialEq, Eq)]
+pub struct DXGI_MODE_DESC {
+	pub Width: u32,
+	pub Height: u32,
+	pub RefreshRate: DXGI_RATIONAL,
+	pub Format: co::DXGI_FORMAT,
+	pub ScanlineOrdering: co::DXGI_MODE_SCANLINE_ORDER,
+	pub Scaling: co::DXGI_MODE_SCALING,
+}
+
+/// [`DXGI_RATIONAL`](https://learn.microsoft.com/en-us/windows/win32/api/dxgicommon/ns-dxgicommon-dxgi_rational?redirectedfrom=MSDN)
+/// struct.
+#[repr(C)]
+#[derive(Default, PartialEq, Eq)]
+pub struct DXGI_RATIONAL {
+	pub Numerator: u32,
+	pub Denominator: u32,
+}
+
 /// [`DXGI_RGB`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173071(v=vs.85))
 /// struct.
 #[repr(C)]
@@ -72,4 +96,34 @@ pub struct DXGI_RGB {
 	pub Red: f32,
 	pub Green: f32,
 	pub Blue: f32,
+}
+
+/// [`DXGI_SAMPLE_DESC`](https://learn.microsoft.com/en-us/windows/win32/api/dxgicommon/ns-dxgicommon-dxgi_sample_desc)
+/// struct.
+#[repr(C)]
+#[derive(Default, PartialEq, Eq)]
+pub struct DXGI_SAMPLE_DESC {
+	pub Count: u32,
+	pub Quality: u32,
+}
+
+/// [`DXGI_SWAP_CHAIN_DESC`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_swap_chain_desc)
+/// struct.
+#[repr(C)]
+#[derive(PartialEq, Eq)]
+pub struct DXGI_SWAP_CHAIN_DESC {
+	pub BufferDesc: DXGI_MODE_DESC,
+	pub SampleDesc: DXGI_SAMPLE_DESC,
+	pub BufferUsage: co::DXGI_USAGE,
+	pub BufferCount: u32,
+	pub OutputWindow: HWND,
+	Windowed: BOOL,
+	pub SwapEffect: co::DXGI_SWAP_EFFECT,
+	pub Flags: co::DXGI_SWAP_CHAIN_FLAG,
+}
+
+impl_default!(DXGI_SWAP_CHAIN_DESC);
+
+impl DXGI_SWAP_CHAIN_DESC {
+	pub_fn_bool_get_set!(Windowed, set_Windowed);
 }
