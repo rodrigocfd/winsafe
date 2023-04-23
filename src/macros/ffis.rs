@@ -2,12 +2,16 @@
 
 /// Builds one single FFI binding function.
 macro_rules! one_func {
-	($func:ident( $( $parm:ty ),* ) -> $ret:ty) => {
-		pub(crate) fn $func( $( _: $parm, )* ) -> $ret;
+	($dll:literal $func:ident( $( $parm:ty ),* ) -> $ret:ty) => {
+		::windows_targets::link! {
+			$dll
+			"system"
+			fn $func( $( x: $parm ),* ) -> $ret
+		}
 	};
 
-	($func:ident( $( $parm:ty ),* )) => {
-		pub(crate) fn $func( $( _: $parm, )* );
+	($dll:literal $func:ident( $( $parm:ty ),* )) => {
+		one_func!($dll $func( $( $parm ),* ) -> () );
 	};
 }
 
@@ -19,11 +23,8 @@ macro_rules! extern_sys {
 			$func:ident( $( $parm:ty ),* ) $( -> $ret:ty )?
 		)*
 	) => {
-		#[link(name = $dll)]
-		extern "system" {
-			$(
-				one_func!( $func( $( $parm ),* ) $(-> $ret)? );
-			)*
-		}
+		$(
+			one_func!( $dll $func( $( $parm ),* ) $(-> $ret)? );
+		)*
 	};
 }
