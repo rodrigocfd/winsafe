@@ -206,7 +206,9 @@ impl StatusBar {
 		let parts_info = unsafe { &mut *self.0.parts_info.get() };
 		for part_info in parts_info.iter() {
 			match part_info {
-				StatusBarPart::Fixed(pixels) => cx_available -= pixels,
+				StatusBarPart::Fixed(pixels) => {
+					cx_available -= if *pixels > cx_available { 0 } else { *pixels }; // prevent subtract overflow
+				},
 				StatusBarPart::Proportional(prop) => total_proportions += prop,
 			}
 		}
@@ -216,11 +218,12 @@ impl StatusBar {
 
 		for (idx, part_info) in parts_info.iter().rev().enumerate() {
 			right_edges[parts_info.len() - idx - 1] = total_cx as _;
-			total_cx -= match part_info {
+			let minus = match part_info {
 				StatusBarPart::Fixed(pixels) => *pixels,
 				StatusBarPart::Proportional(pp) =>
 					(cx_available / total_proportions as u32) * (*pp as u32),
 			};
+			total_cx -= if minus > total_cx { 0 } else { minus }; // prevent subtract overflow
 		}
 		*right_edges.last_mut().unwrap() = -1;
 
