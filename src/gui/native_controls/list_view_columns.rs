@@ -1,5 +1,6 @@
 use crate::co;
 use crate::comctl::decl::LVCOLUMN;
+use crate::gui::native_controls::list_view_column::ListViewColumn;
 use crate::gui::native_controls::list_view::ListView;
 use crate::gui::privs::multiply_dpi;
 use crate::kernel::decl::WString;
@@ -73,100 +74,13 @@ impl<'a> ListViewColumns<'a> {
 			.unwrap()
 	}
 
-	/// Retrieves information about the column by sending an
-	/// [`lvm::GetColumn`](crate::msg::lvm::GetColumn) message.
-	pub fn info(&self, column_index: u32, lvc: &mut LVCOLUMN) {
-		self.owner.hwnd()
-			.SendMessage(lvm::GetColumn {
-				index: column_index,
-				lvcolumn: lvc,
-			})
-			.unwrap();
-	}
-
-	/// Sets information of the column by sending an
-	/// [`lvm::SetColumn`](crate::msg::lvm::SetColumn) message.
-	pub fn set_info(&self, column_index: u32, lvc: &LVCOLUMN) {
-		self.owner.hwnd()
-			.SendMessage(lvm::SetColumn {
-				index: column_index,
-				lvcolumn: lvc,
-			})
-			.unwrap();
-	}
-
-	/// Sets the title of the column by calling
-	/// [`set_info`](crate::gui::spec::ListViewColumns::set_info).
-	pub fn set_title(&self, column_index: u32, text: &str) {
-		let mut lvc = LVCOLUMN::default();
-		lvc.iSubItem = column_index as _;
-		lvc.mask = co::LVCF::TEXT;
-
-		let mut buf = WString::from_str(text);
-		lvc.set_pszText(Some(&mut buf));
-
-		self.set_info(column_index, &lvc);
-	}
-
-	/// Sets the width of the column by sending an
-	/// [`lvm::SetColumnWidth`](crate::msg::lvm::SetColumnWidth) message.
+	/// Retrieves the column at the given zero-based position.
 	///
-	/// Width will be adjusted to match current system DPI.
-	pub fn set_width(&self, column_index: u32, width: u32) {
-		let mut col_cx = SIZE::new(width as _, 0);
-		multiply_dpi(None, Some(&mut col_cx)).unwrap();
-
-		self.owner.hwnd()
-			.SendMessage(lvm::SetColumnWidth {
-				index: column_index,
-				width: col_cx.cx as _,
-			})
-			.unwrap();
-	}
-
-	/// Sets the width of the column by sending an
-	/// [`lvm::SetColumnWidth`](crate::msg::lvm::SetColumnWidth) message. The
-	/// width will be calculated to fill the remaining space.
-	pub fn set_width_to_fill(&self, column_index: u32) {
-		let num_cols = self.count();
-		let mut cx_used = 0;
-
-		for i in 0..num_cols {
-			if i != column_index {
-				cx_used += self.width(i); // retrieve cx of each column, but us
-			}
-		}
-
-		let rc = self.owner.hwnd().GetClientRect().unwrap(); // list view client area
-		self.owner.hwnd()
-			.SendMessage(lvm::SetColumnWidth {
-				index: column_index,
-				width: rc.right as u32 - cx_used,
-			})
-			.unwrap();
-	}
-
-	/// Retrieves the title of the column by calling
-	/// [`info`](crate::gui::spec::ListViewColumns::info).
+	/// **Note:** This method is cheap – even if `index` is beyond the range of
+	/// existing columns, an object will still be returned. However, operations
+	/// upon this object will fail.
 	#[must_use]
-	pub fn title(&self, column_index: u32) -> String {
-		let mut lvc = LVCOLUMN::default();
-		lvc.iSubItem = column_index as _;
-		lvc.mask = co::LVCF::TEXT;
-
-		let mut buf = WString::new_alloc_buf(128); // arbitrary
-		lvc.set_pszText(Some(&mut buf));
-
-		self.info(column_index, &mut lvc);
-		buf.to_string()
-	}
-
-	/// Retrieves the width of the column by sending an
-	/// [`lvm::GetColumnWidth`](crate::msg::lvm::GetColumnWidth) message.
-	#[must_use]
-	pub fn width(&self, column_index: u32) -> u32 {
-		self.owner.hwnd()
-			.SendMessage(lvm::GetColumnWidth { index: column_index })
-			.unwrap()
+	pub const fn get(&self, index: u32) -> ListViewColumn<'a> {
+		ListViewColumn::new(self.owner, index)
 	}
 }

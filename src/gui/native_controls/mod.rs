@@ -10,6 +10,7 @@ mod edit;
 mod label;
 mod list_box_items;
 mod list_box;
+mod list_view_column;
 mod list_view_columns;
 mod list_view_item;
 mod list_view_items;
@@ -51,6 +52,7 @@ pub use up_down::{UpDown, UpDownOpts};
 pub mod spec {
 	pub use super::combo_box_items::ComboBoxItems;
 	pub use super::list_box_items::ListBoxItems;
+	pub use super::list_view_column::ListViewColumn;
 	pub use super::list_view_columns::ListViewColumns;
 	pub use super::list_view_item::ListViewItem;
 	pub use super::list_view_items::ListViewItems;
