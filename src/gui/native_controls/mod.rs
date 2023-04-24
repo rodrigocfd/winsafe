@@ -19,6 +19,7 @@ mod month_calendar;
 mod progress_bar;
 mod radio_button;
 mod radio_group;
+mod status_bar_part;
 mod status_bar_parts;
 mod status_bar;
 mod tab_item;
@@ -56,6 +57,7 @@ pub mod spec {
 	pub use super::list_view_columns::ListViewColumns;
 	pub use super::list_view_item::ListViewItem;
 	pub use super::list_view_items::ListViewItems;
+	pub use super::status_bar_part::StatusBarPart;
 	pub use super::status_bar_parts::StatusBarParts;
 	pub use super::tab_item::TabItem;
 	pub use super::tab_items::TabItems;

@@ -1,6 +1,5 @@
-use crate::co;
+use crate::gui::native_controls::status_bar_part::StatusBarPart;
 use crate::gui::native_controls::status_bar::StatusBar;
-use crate::kernel::decl::WString;
 use crate::msg::sb;
 use crate::prelude::{GuiWindow, user_Hwnd};
 
@@ -25,44 +24,13 @@ impl<'a> StatusBarParts<'a> {
 			.SendMessage(sb::GetParts { right_edges: None })
 	}
 
-	/// Sets the text of a part by sending an
-	/// [`sb::SetText`](crate::msg::sb::SetText) message.
-	pub fn set_text(&self, part_index: u8, text: &str) {
-		self.owner.hwnd()
-			.SendMessage(sb::SetText {
-				part_index,
-				draw_operation: co::SBT::BORDER,
-				text: WString::from_str(text),
-			})
-			.unwrap();
-	}
-
-	/// Retrieves the text of the item by sending a
-	/// [`sb::GetText`](crate::msg::sb::GetText) message.
+	/// Retrieves the part at the given zero-based position.
 	///
-	/// # Examples
-	///
-	/// ```rust,no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::gui;
-	///
-	/// let my_sb: gui::StatusBar; // initialized somewhere
-	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-	/// # let my_sb = gui::StatusBar::new(&wnd, &[]);
-	///
-	/// println!("Text: {}", my_sb.parts().text(0));
-	/// ```
+	/// **Note:** This method is cheap – even if `index` is beyond the range of
+	/// existing parts, an object will still be returned. However, operations
+	/// upon this object will fail.
 	#[must_use]
-	pub fn text(&self, part_index: u8) -> String {
-		let (num_chars, _) = self.owner.hwnd()
-			.SendMessage(sb::GetTextLength { part_index });
-
-		let mut buf = WString::new_alloc_buf(num_chars as usize + 1);
-		self.owner.hwnd()
-			.SendMessage(sb::GetText {
-				part_index,
-				text: &mut buf,
-			});
-		buf.to_string()
+	pub const fn get(&self, index: u8) -> StatusBarPart<'a> {
+		StatusBarPart::new(self.owner, index)
 	}
 }
