@@ -29,3 +29,15 @@ const_bitflag! { TASK_LOGON: u32;
 	SERVICE_ACCOUNT 5
 	INTERACTIVE_TOKEN_OR_PASSWORD 6
 }
+
+const_ordinary! { TASK_STATE: u32;
+	/// [`TASK_STATE`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/ne-taskschd-task_state)
+	/// enumeration (`u32`).
+	=>
+	=>
+	UNKNOWN 0
+	DISABLED 1
+	QUEUED 2
+	READY 3
+	RUNNING 4
+}

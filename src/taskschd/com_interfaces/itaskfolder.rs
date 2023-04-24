@@ -1,11 +1,15 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::co;
 use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::oleaut::decl::{BSTR, VARIANT};
-use crate::prelude::oleaut_IDispatch;
+use crate::prelude::{
+	oleaut_IDispatch, oleaut_Variant, taskschd_ITaskDefinition,
+};
+use crate::taskschd::decl::IRegisteredTask;
 use crate::vt::IDispatchVT;
 
 /// [`ITaskFolder`](crate::ITaskFolder) virtual table.
@@ -89,5 +93,42 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 			let bstr = unsafe { BSTR::from_ptr(pstr) };
 			bstr.to_string()
 		})
+	}
+
+	/// [`ITaskFolder::RegisterTaskDefinition`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskfolder-registertaskdefinition)
+	/// method.
+	fn RegisterTaskDefinition(&self,
+		path: Option<&str>,
+		definition: &impl taskschd_ITaskDefinition,
+		flags: co::TASK_CREATION,
+		user_id: Option<&str>,
+		password: Option<&str>,
+		logon_type: co::TASK_LOGON,
+		sddl: Option<VARIANT>,
+	) -> HrResult<IRegisteredTask>
+	{
+		unsafe {
+			let mut ppv_queried = ComPtr::null();
+			let vt = self.vt_ref::<ITaskFolderVT>();
+			ok_to_hrresult(
+				(vt.RegisterTaskDefinition)(
+					self.ptr(),
+					WString::from_opt_str(path).as_ptr(),
+					definition.ptr(),
+					flags.0 as _,
+					match user_id {
+						Some(user_id) => VARIANT::new_bstr(user_id)?,
+						None => VARIANT::default(),
+					},
+					match password {
+						Some(password) => VARIANT::new_bstr(password)?,
+						None => VARIANT::default(),
+					},
+					logon_type.0,
+					sddl.unwrap_or_default(),
+					&mut ppv_queried,
+				),
+			).map(|_| IRegisteredTask::from(ppv_queried))
+		}
 	}
 }
