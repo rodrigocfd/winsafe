@@ -116,7 +116,6 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	/// adapter.GetDesc(&mut desc)?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
-	#[must_use]
 	fn GetDesc(&self, desc: &mut DXGI_ADAPTER_DESC) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IDXGIAdapterVT>();

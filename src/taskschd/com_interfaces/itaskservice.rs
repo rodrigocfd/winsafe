@@ -1,10 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::oleaut::decl::{BSTR, VARIANT};
 use crate::prelude::{oleaut_IDispatch, oleaut_Variant};
+use crate::taskschd::decl::{ITaskFolder, ITaskDefinition};
 use crate::vt::IDispatchVT;
 
 /// [`ITaskService`](crate::ITaskService) virtual table.
@@ -66,32 +68,27 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 		password: Option<&str>,
 	) -> HrResult<()>
 	{
-		let v_server_name = match server_name {
-			Some(server_name) => VARIANT::new_bstr(server_name)?,
-			None => VARIANT::default(),
-		};
-		let v_user = match user {
-			Some(user) => VARIANT::new_bstr(user)?,
-			None => VARIANT::default(),
-		};
-		let v_domain = match domain {
-			Some(domain) => VARIANT::new_bstr(domain)?,
-			None => VARIANT::default(),
-		};
-		let v_password = match password {
-			Some(password) => VARIANT::new_bstr(password)?,
-			None => VARIANT::default(),
-		};
-
 		unsafe {
 			let vt = self.vt_ref::<ITaskServiceVT>();
 			ok_to_hrresult(
 				(vt.Connect)(
 					self.ptr(),
-					v_server_name,
-					v_user,
-					v_domain,
-					v_password,
+					match server_name {
+						Some(server_name) => VARIANT::new_bstr(server_name)?,
+						None => VARIANT::default(),
+					},
+					match user {
+						Some(user) => VARIANT::new_bstr(user)?,
+						None => VARIANT::default(),
+					},
+					match domain {
+						Some(domain) => VARIANT::new_bstr(domain)?,
+						None => VARIANT::default(),
+					},
+					match password {
+						Some(password) => VARIANT::new_bstr(password)?,
+						None => VARIANT::default(),
+					},
 				)
 			)
 		}
@@ -134,5 +131,59 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 			let bstr = unsafe { BSTR::from_ptr(pstr) };
 			bstr.to_string()
 		})
+	}
+
+	/// [`ITaskService::get_HighestVersion`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-get_highestversion)
+	/// method.
+	#[must_use]
+	fn get_HighestVersion(&self) -> HrResult<u32> {
+		let mut ver = u32::default();
+		unsafe {
+			let vt = self.vt_ref::<ITaskServiceVT>();
+			ok_to_hrresult((vt.get_HighestVersion)(self.ptr(), &mut ver))
+		}.map(|_| ver)
+	}
+
+	/// [`ITaskService::get_TargetServer`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-get_targetserver)
+	/// method.
+	#[must_use]
+	fn get_TargetServer(&self) -> HrResult<String> {
+		let mut pstr = std::ptr::null_mut::<u16>();
+		unsafe {
+			let vt = self.vt_ref::<ITaskServiceVT>();
+			ok_to_hrresult((vt.get_TargetServer)(self.ptr(), &mut pstr))
+		}.map(|_| {
+			let bstr = unsafe { BSTR::from_ptr(pstr) };
+			bstr.to_string()
+		})
+	}
+
+	/// [`ITaskService::GetFolder`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-getfolder)
+	/// method.
+	#[must_use]
+	fn GetFolder(&self, path: &str) -> HrResult<ITaskFolder> {
+		unsafe {
+			let mut ppv_queried = ComPtr::null();
+			let vt = self.vt_ref::<ITaskServiceVT>();
+			ok_to_hrresult(
+				(vt.GetFolder)(
+					self.ptr(),
+					WString::from_str(path).as_ptr(),
+					&mut ppv_queried,
+				),
+			).map(|_| ITaskFolder::from(ppv_queried))
+		}
+	}
+
+	/// [`ITaskService::NewTask`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-newtask)
+	/// method.
+	#[must_use]
+	fn NewTask(&self) -> HrResult<ITaskDefinition> {
+		unsafe {
+			let mut ppv_queried = ComPtr::null();
+			let vt = self.vt_ref::<ITaskServiceVT>();
+			ok_to_hrresult((vt.NewTask)(self.ptr(), 0, &mut ppv_queried))
+				.map(|_| ITaskDefinition::from(ppv_queried))
+		}
 	}
 }

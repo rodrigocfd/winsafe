@@ -2,7 +2,7 @@
 
 const_bitflag! { DXGI_ENUM_MODES: u32;
 	/// [`DXGI_ENUM_MODES`](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-enum-modes)
-	/// flags (`u32`).
+	/// enumeration (`u32`).
 	=>
 	=>
 	INTERLACED 1
@@ -182,7 +182,7 @@ const_ordinary! { DXGI_MODE_SCANLINE_ORDER: u32;
 
 const_bitflag! { DXGI_SWAP_CHAIN_FLAG: u32;
 	/// [`DXGI_SWAP_CHAIN_FLAG`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_swap_chain_flag)
-	/// options (`u32`).
+	/// enumeration (`u32`).
 	=>
 	=>
 	NONPREROTATED 1

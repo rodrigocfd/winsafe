@@ -67,7 +67,6 @@ pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {
 
 	/// [`IDXGIDevice::SetGPUThreadPriority`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-setgputhreadpriority)
 	/// method.
-	#[must_use]
 	fn SetGPUThreadPriority(&self, priority: i8) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IDXGIDeviceVT>();
