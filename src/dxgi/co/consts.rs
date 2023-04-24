@@ -1,5 +1,16 @@
 #![allow(non_camel_case_types)]
 
+const_bitflag! { DXGI_ENUM_MODES: u32;
+	/// [`DXGI_ENUM_MODES`](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-enum-modes)
+	/// flags (`u32`).
+	=>
+	=>
+	INTERLACED 1
+	SCALING 2
+	STEREO 4
+	DISABLED_STEREO 8
+}
+
 const_ordinary! { DXGI_FORMAT: u32;
 	/// [`DXGI_FORMAT`](https://learn.microsoft.com/en-us/windows/win32/api/dxgiformat/ne-dxgiformat-dxgi_format)
 	/// enumeration (`u32`).
@@ -134,6 +145,18 @@ const_bitflag! { DXGI_MWA: u32;
 	NO_WINDOW_CHANGES (1 << 0)
 	NO_ALT_ENTER (1 << 1)
 	NO_PRINT_SCREEN (1 << 2)
+}
+
+const_ordinary! { DXGI_MODE_ROTATION: u32;
+	/// [`DXGI_MODE_ROTATION`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173065(v=vs.85))
+	/// enumeration (`u32`).
+	=>
+	=>
+	UNSPECIFIED 0
+	IDENTITY 1
+	ROTATE90 2
+	ROTATE180 3
+	ROTATE270 4
 }
 
 const_ordinary! { DXGI_MODE_SCALING: u32;

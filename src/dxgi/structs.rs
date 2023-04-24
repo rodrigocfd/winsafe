@@ -3,7 +3,7 @@
 use crate::co;
 use crate::kernel::decl::LUID;
 use crate::kernel::ffi_types::BOOL;
-use crate::user::decl::HWND;
+use crate::user::decl::{HMONITOR, HWND, RECT};
 
 /// [`DXGI_ADAPTER_DESC`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_adapter_desc)
 /// struct.
@@ -69,7 +69,7 @@ impl DXGI_GAMMA_CONTROL_CAPABILITIES {
 /// [`DXGI_MODE_DESC`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173064(v=vs.85))
 /// struct.
 #[repr(C)]
-#[derive(Default, PartialEq, Eq)]
+#[derive(Default, Clone, PartialEq, Eq)]
 pub struct DXGI_MODE_DESC {
 	pub Width: u32,
 	pub Height: u32,
@@ -79,10 +79,29 @@ pub struct DXGI_MODE_DESC {
 	pub Scaling: co::DXGI_MODE_SCALING,
 }
 
+/// [`DXGI_OUTPUT_DESC`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_output_desc)
+/// struct.
+#[repr(C)]
+pub struct DXGI_OUTPUT_DESC {
+	DeviceName: [u16; 32],
+	pub DesktopCoordinates: RECT,
+	AttachedToDesktop: BOOL,
+	pub Rotation: co::DXGI_MODE_ROTATION,
+	pub Monitor: HMONITOR,
+}
+
+impl_default!(DXGI_OUTPUT_DESC);
+
+impl DXGI_OUTPUT_DESC {
+	pub_fn_string_arr_get_set!(DeviceName, set_DeviceName);
+	pub_fn_bool_get_set!(AttachedToDesktop, set_AttachedToDesktop);
+
+}
+
 /// [`DXGI_RATIONAL`](https://learn.microsoft.com/en-us/windows/win32/api/dxgicommon/ns-dxgicommon-dxgi_rational?redirectedfrom=MSDN)
 /// struct.
 #[repr(C)]
-#[derive(Default, PartialEq, Eq)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct DXGI_RATIONAL {
 	pub Numerator: u32,
 	pub Denominator: u32,
@@ -91,7 +110,7 @@ pub struct DXGI_RATIONAL {
 /// [`DXGI_RGB`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173071(v=vs.85))
 /// struct.
 #[repr(C)]
-#[derive(Default, PartialEq)]
+#[derive(Default, Clone, Copy, PartialEq)]
 pub struct DXGI_RGB {
 	pub Red: f32,
 	pub Green: f32,
@@ -101,7 +120,7 @@ pub struct DXGI_RGB {
 /// [`DXGI_SAMPLE_DESC`](https://learn.microsoft.com/en-us/windows/win32/api/dxgicommon/ns-dxgicommon-dxgi_sample_desc)
 /// struct.
 #[repr(C)]
-#[derive(Default, PartialEq, Eq)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct DXGI_SAMPLE_DESC {
 	pub Count: u32,
 	pub Quality: u32,
