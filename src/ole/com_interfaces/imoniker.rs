@@ -156,7 +156,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 		moniker_to_left: Option<&impl ole_IMoniker>,
 	) -> HrResult<String>
 	{
-		let mut pstr: *mut u16 = std::ptr::null_mut();
+		let mut pstr = std::ptr::null_mut::<u16>();
 		unsafe {
 			let vt = self.vt_ref::<IMonikerVT>();
 			ok_to_hrresult(

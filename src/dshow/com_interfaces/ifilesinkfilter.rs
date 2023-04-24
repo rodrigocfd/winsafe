@@ -68,7 +68,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	unsafe fn GetCurFile(&self,
 		mt: Option<&mut AM_MEDIA_TYPE>) -> HrResult<String>
 	{
-		let mut pstr: *mut u16 = std::ptr::null_mut();
+		let mut pstr = std::ptr::null_mut::<u16>();
 		let vt = self.vt_ref::<IFileSinkFilterVT>();
 		ok_to_hrresult(
 			(vt.GetCurFile)(

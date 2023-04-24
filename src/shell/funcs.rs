@@ -288,7 +288,7 @@ pub fn SHGetKnownFolderPath(
 	token: Option<&HACCESSTOKEN>,
 ) -> HrResult<String>
 {
-	let mut pstr: *mut u16 = std::ptr::null_mut();
+	let mut pstr = std::ptr::null_mut::<u16>();
 	ok_to_hrresult(
 		unsafe {
 			shell::ffi::SHGetKnownFolderPath(

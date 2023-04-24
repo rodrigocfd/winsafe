@@ -87,7 +87,7 @@ pub trait oleaut_Variant {
 	fn bstr(&self) -> Option<String> {
 		if self.vt() == co::VT::BSTR {
 			let ptr = usize::from_ne_bytes(unsafe { self.raw() }[..8].try_into().unwrap());
-			let bstr = ManuallyDrop::new(BSTR(ptr as _)); // won't release the stored pointer
+			let bstr = ManuallyDrop::new(unsafe { BSTR::from_ptr(ptr as _) }); // won't release the stored pointer
 			Some(bstr.to_string())
 		} else {
 			None

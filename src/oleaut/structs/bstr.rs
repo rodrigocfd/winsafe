@@ -12,7 +12,7 @@ use crate::ole::decl::HrResult;
 /// [`SysFreeString`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysfreestring)
 /// when the object goes out of scope.
 #[repr(transparent)]
-pub struct BSTR(pub(crate) *mut u16);
+pub struct BSTR(*mut u16);
 
 impl Default for BSTR {
 	fn default() -> Self {
@@ -70,6 +70,17 @@ impl BSTR {
 	#[must_use]
 	pub fn SysStringLen(&self) -> u32 {
 		unsafe { oleaut::ffi::SysStringLen(self.0) }
+	}
+
+	/// Creates a new `BSTR` by wrapping a pointer.
+	/// 
+	/// # Safety
+	/// 
+	/// Be sure the pointer has the correct type and isn't owned by anyone else,
+	/// otherwise you may cause memory access violations.
+	#[must_use]
+	pub const unsafe fn from_ptr(p: *mut u16) -> Self {
+		Self(p)
 	}
 
 	/// Returns the underlying

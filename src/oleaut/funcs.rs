@@ -10,7 +10,7 @@ use crate::oleaut::decl::PROPERTYKEY;
 /// function.
 #[must_use]
 pub fn PSGetNameFromPropertyKey(prop_key: &PROPERTYKEY) -> HrResult<String> {
-	let mut pstr: *mut u16 = std::ptr::null_mut();
+	let mut pstr = std::ptr::null_mut::<u16>();
 	ok_to_hrresult(
 		unsafe {
 			oleaut::ffi::PSGetNameFromPropertyKey(

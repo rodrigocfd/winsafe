@@ -12,6 +12,7 @@ FEATS=(
 	ole
 	oleaut
 	shell
+	taskschd
 	user
 	uxtheme
 	version

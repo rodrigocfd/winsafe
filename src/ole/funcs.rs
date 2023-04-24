@@ -319,7 +319,7 @@ pub fn CreatePointerMoniker(unk: &impl ole_IUnknown) -> HrResult<IMoniker> {
 /// function.
 #[must_use]
 pub fn StringFromCLSID(clsid: &co::CLSID) -> HrResult<String> {
-	let mut pstr: *mut u16 = std::ptr::null_mut();
+	let mut pstr = std::ptr::null_mut::<u16>();
 	ok_to_hrresult(
 		unsafe { ole::ffi::StringFromCLSID(clsid as *const _ as _, &mut pstr) },
 	).map(|_| {

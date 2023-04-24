@@ -45,6 +45,7 @@
 //! | `ole` | OLE and basic COM support |
 //! | `oleaut` | [OLE Automation](https://learn.microsoft.com/en-us/windows/win32/api/_automat/) |
 //! | `shell` | Shell32.dll and Shlwapi.dll, the COM-based [Windows Shell](https://learn.microsoft.com/en-us/windows/win32/shell/shell-entry) |
+//! | `taskschd` | [Task Scheduler](https://learn.microsoft.com/en-us/windows/win32/taskschd/task-scheduler-start-page) |
 //! | `user` | User32.dll, the basic Windows GUI support |
 //! | `uxtheme` | UxTheme.dll, extended window theming |
 //! | `version` | Version.dll, to manipulate *.exe version info |
@@ -269,6 +270,7 @@
 #[cfg(feature = "ole")] mod ole;
 #[cfg(feature = "oleaut")] mod oleaut;
 #[cfg(feature = "shell")] mod shell;
+#[cfg(feature = "taskschd")] mod taskschd;
 #[cfg(feature = "user")] mod user;
 #[cfg(feature = "uxtheme")] mod uxtheme;
 #[cfg(feature = "version")] mod version;
@@ -293,6 +295,7 @@
 #[cfg(feature = "ole")] pub use ole::decl::*;
 #[cfg(feature = "oleaut")] pub use oleaut::decl::*;
 #[cfg(feature = "shell")] pub use shell::decl::*;
+#[cfg(feature = "taskschd")] pub use taskschd::decl::*;
 #[cfg(feature = "user")] pub use user::decl::*;
 #[cfg(feature = "uxtheme")] pub use uxtheme::decl::*;
 #[cfg(feature = "version")] pub use version::decl::*;
@@ -320,6 +323,7 @@ pub mod co {
 	#[cfg(feature = "ole")] pub use super::ole::co::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::co::*;
 	#[cfg(feature = "shell")] pub use super::shell::co::*;
+	#[cfg(feature = "taskschd")] pub use super::taskschd::co::*;
 	#[cfg(feature = "user")] pub use super::user::co::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::co::*;
 	#[cfg(feature = "version")] pub use super::version::co::*;
@@ -553,6 +557,7 @@ pub mod prelude {
 	#[cfg(feature = "ole")] pub use super::ole::traits::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::traits::*;
 	#[cfg(feature = "shell")] pub use super::shell::traits::*;
+	#[cfg(feature = "taskschd")] pub use super::taskschd::traits::*;
 	#[cfg(feature = "user")] pub use super::user::traits::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::traits::*;
 	#[cfg(all(feature = "gdi", feature = "ole"))] pub use super::gdi_ole::traits::*;
@@ -569,4 +574,5 @@ pub mod vt {
 	#[cfg(feature = "ole")] pub use super::ole::vt::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::vt::*;
 	#[cfg(feature = "shell")] pub use super::shell::vt::*;
+	#[cfg(feature = "taskschd")] pub use super::taskschd::vt::*;
 }

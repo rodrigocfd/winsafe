@@ -56,8 +56,7 @@ pub trait ole_IPicture: ole_IUnknown {
 		unsafe {
 			let vt = self.vt_ref::<IPictureVT>();
 			ok_to_hrresult((vt.get_CurDC)(self.ptr(), hdc.as_mut()))
-				.map(|_| hdc)
-		}
+		}.map(|_| hdc)
 	}
 
 	/// [`IPicture::get_Height`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_height)
@@ -90,8 +89,7 @@ pub trait ole_IPicture: ole_IUnknown {
 		unsafe {
 			let vt = self.vt_ref::<IPictureVT>();
 			ok_to_hrresult((vt.get_Height)(self.ptr(), &mut h))
-				.map(|_| h)
-		}
+		}.map(|_| h)
 	}
 
 	/// [`IPicture::get_Type`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_type)
@@ -102,8 +100,7 @@ pub trait ole_IPicture: ole_IUnknown {
 		unsafe {
 			let vt = self.vt_ref::<IPictureVT>();
 			ok_to_hrresult((vt.get_Type)(self.ptr(), &mut ty))
-				.map(|_| co::PICTYPE(ty))
-		}
+		}.map(|_| co::PICTYPE(ty))
 	}
 
 	/// [`IPicture::get_Width`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_width)
@@ -136,8 +133,7 @@ pub trait ole_IPicture: ole_IUnknown {
 		unsafe {
 			let vt = self.vt_ref::<IPictureVT>();
 			ok_to_hrresult((vt.get_Width)(self.ptr(), &mut w))
-				.map(|_| w)
-		}
+		}.map(|_| w)
 	}
 
 	/// [`IPicture::PictureChanged`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-picturechanged)

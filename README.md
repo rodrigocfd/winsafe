@@ -39,8 +39,8 @@ Plus, below are the numbers of native FFI items implemented:
 | Constants | 12,713 |
 | Window messages | 648 |
 | Handles | 41 |
-| COM interfaces | 46 |
-| COM methods | 229 |
+| COM interfaces | 47 |
+| COM methods | 233 |
 
 ## Usage
 
@@ -75,6 +75,7 @@ The following Cargo features are available so far:
 | `ole` | OLE and basic COM support |
 | `oleaut` | [OLE Automation](https://learn.microsoft.com/en-us/windows/win32/api/_automat/) |
 | `shell` | Shell32.dll and Shlwapi.dll, the COM-based [Windows Shell](https://learn.microsoft.com/en-us/windows/win32/shell/shell-entry) |
+| `taskschd` | [Task Scheduler](https://learn.microsoft.com/en-us/windows/win32/taskschd/task-scheduler-start-page) |
 | `user` | User32.dll, the basic Windows GUI support |
 | `uxtheme` | UxTheme.dll, extended window theming |
 | `version` | Version.dll, to manipulate *.exe version info |

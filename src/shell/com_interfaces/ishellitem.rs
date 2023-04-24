@@ -123,7 +123,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn GetDisplayName(&self, sigdn_name: co::SIGDN) -> HrResult<String> {
-		let mut pstr: *mut u16 = std::ptr::null_mut();
+		let mut pstr = std::ptr::null_mut::<u16>();
 		unsafe {
 			let vt = self.vt_ref::<IShellItemVT>();
 			ok_to_hrresult(

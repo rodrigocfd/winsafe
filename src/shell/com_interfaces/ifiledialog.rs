@@ -104,7 +104,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	#[must_use]
 	fn GetFileName(&self) -> HrResult<String> {
-		let mut pstr: *mut u16 = std::ptr::null_mut();
+		let mut pstr = std::ptr::null_mut::<u16>();
 		unsafe {
 			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.GetFileName)(self.ptr(), &mut pstr))

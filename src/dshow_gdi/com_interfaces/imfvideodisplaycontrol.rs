@@ -25,7 +25,7 @@ pub trait dshow_gdi_IMFVideoDisplayControl: ole_IUnknown {
 	#[must_use]
 	fn GetCurrentImage(&self) -> HrResult<(BITMAPINFOHEADER, Vec<u8>, i64)> {
 		let mut bih = BITMAPINFOHEADER::default();
-		let mut dib_ptr: *mut u8 = std::ptr::null_mut();
+		let mut dib_ptr = std::ptr::null_mut::<u8>();
 		let mut dib_sz = u32::default();
 		let mut time_stamp = i64::default();
 

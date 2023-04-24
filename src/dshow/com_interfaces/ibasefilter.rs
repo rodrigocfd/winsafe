@@ -117,7 +117,7 @@ pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 	/// method.
 	#[must_use]
 	fn QueryVendorInfo(&self) -> HrResult<String> {
-		let mut pstr: *mut u16 = std::ptr::null_mut();
+		let mut pstr = std::ptr::null_mut::<u16>();
 		unsafe {
 			let vt = self.vt_ref::<IBaseFilterVT>();
 			ok_to_hrresult((vt.QueryVendorInfo)(self.ptr(), &mut pstr))

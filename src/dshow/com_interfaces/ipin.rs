@@ -169,7 +169,7 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn QueryId(&self) -> HrResult<String> {
-		let mut pstr: *mut u16 = std::ptr::null_mut();
+		let mut pstr = std::ptr::null_mut::<u16>();
 		unsafe {
 			let vt = self.vt_ref::<IPinVT>();
 			ok_to_hrresult((vt.QueryId)(self.ptr(), &mut pstr))
