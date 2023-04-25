@@ -3,7 +3,7 @@
 const_bitflag! { TASK_CREATION: u32;
 	/// [`TASK_CREATION`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/ne-taskschd-task_creation)
 	/// enumeration (`u32`).
-	/// 
+	///
 	/// Originally has `TASK` prefix.
 	=>
 	=>
@@ -40,4 +40,23 @@ const_ordinary! { TASK_STATE: u32;
 	QUEUED 2
 	READY 3
 	RUNNING 4
+}
+
+const_ordinary! { TASK_TRIGGER_TYPE2: u32;
+	/// [`TASK_TRIGGER_TYPE2`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/ne-taskschd-task_trigger_type2)
+	/// enumeration (`u32`).
+	=>
+	=>
+	EVENT 0
+	TIME 1
+	DAILY 2
+	WEEKLY 3
+	MONTHLY 4
+	MONTHLYDOW 5
+	IDLE 6
+	REGISTRATION 7
+	BOOT 8
+	LOGON 9
+	SESSION_STATE_CHANGE 11
+	CUSTOM_TRIGGER_01 12
 }
