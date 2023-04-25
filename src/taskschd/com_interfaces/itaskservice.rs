@@ -1,6 +1,5 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
@@ -168,7 +167,7 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 			ok_to_hrresult(
 				(vt.GetFolder)(
 					self.ptr(),
-					WString::from_str(path).as_ptr(),
+					BSTR::SysAllocString(path)?.as_ptr(),
 					&mut ppv_queried,
 				),
 			).map(|_| ITaskFolder::from(ppv_queried))

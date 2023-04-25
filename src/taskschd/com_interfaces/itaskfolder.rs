@@ -1,7 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
@@ -60,7 +59,7 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 			ok_to_hrresult(
 				(vt.DeleteTask)(
 					self.ptr(),
-					WString::from_str(name).as_ptr(),
+					BSTR::SysAllocString(name)?.as_ptr(),
 					0,
 				),
 			)
@@ -113,7 +112,7 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 			ok_to_hrresult(
 				(vt.RegisterTaskDefinition)(
 					self.ptr(),
-					WString::from_opt_str(path).as_ptr(),
+					BSTR::SysAllocString(path.unwrap_or_default())?.as_ptr(),
 					definition.ptr(),
 					flags.0 as _,
 					match user_id {

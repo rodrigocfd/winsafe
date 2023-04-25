@@ -1,6 +1,5 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
@@ -83,7 +82,7 @@ pub trait taskschd_ITaskDefinition: oleaut_IDispatch {
 		unsafe {
 			let vt = self.vt_ref::<ITaskDefinitionVT>();
 			ok_to_hrresult(
-				(vt.put_Data)(self.ptr(), WString::from_str(xml).as_ptr()),
+				(vt.put_Data)(self.ptr(), BSTR::SysAllocString(xml)?.as_ptr()),
 			)
 		}
 	}
@@ -94,7 +93,7 @@ pub trait taskschd_ITaskDefinition: oleaut_IDispatch {
 		unsafe {
 			let vt = self.vt_ref::<ITaskDefinitionVT>();
 			ok_to_hrresult(
-				(vt.put_XmlText)(self.ptr(), WString::from_str(xml).as_ptr()),
+				(vt.put_XmlText)(self.ptr(), BSTR::SysAllocString(xml)?.as_ptr()),
 			)
 		}
 	}
