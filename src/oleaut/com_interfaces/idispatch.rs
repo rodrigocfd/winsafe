@@ -1,7 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::decl::LCID;
-use crate::kernel::ffi_types::{HRES, PCVOID, PVOID};
+use crate::co;
+use crate::kernel::decl::{LCID, WString};
+use crate::kernel::ffi_types::{HRES, PCSTR, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::oleaut::decl::ITypeInfo;
@@ -14,7 +15,7 @@ pub struct IDispatchVT {
 	pub IUnknownVT: IUnknownVT,
 	pub GetTypeInfoCount: fn(ComPtr, *mut u32) -> HRES,
 	pub GetTypeInfo: fn(ComPtr, u32, u32, *mut ComPtr) -> HRES,
-	pub GetIDsOfNames: fn(ComPtr, PCVOID, PVOID, u32, u32, PVOID) -> HRES,
+	pub GetIDsOfNames: fn(ComPtr, PCVOID, *const PCSTR, u32, u32, PVOID) -> HRES,
 	pub Invoke: fn(ComPtr, i32, PCVOID, u32, u16, PVOID, PVOID, PVOID, *mut u32) -> HRES,
 }
 
@@ -38,6 +39,35 @@ impl oleaut_IDispatch for IDispatch {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait oleaut_IDispatch: ole_IUnknown {
+	/// [`IDispatch::GetIDsOfNames`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-getidsofnames)
+	/// method.
+	#[must_use]
+	fn GetIDsOfNames(&self,
+		names: &[impl AsRef<str>], lcid: LCID) -> HrResult<Vec<i32>>
+	{
+		let wnames = names.iter()
+			.map(|name| WString::from_str(name.as_ref()))
+			.collect::<Vec<_>>();
+		let wptrs = wnames.iter()
+			.map(|wname| wname.as_ptr())
+			.collect::<Vec<_>>();
+		let mut ids = vec![i32::default(); names.len()];
+
+		unsafe {
+			let vt = self.vt_ref::<IDispatchVT>();
+			ok_to_hrresult(
+				(vt.GetIDsOfNames)(
+					self.ptr(),
+					&co::IID::default() as *const _ as _,
+					wptrs.as_ptr(),
+					names.len() as _,
+					lcid.0,
+					ids.as_mut_ptr() as _,
+				),
+			)
+		}.map(|_| ids)
+	}
+
 	/// [`IDispatch::GetTypeInfoCount`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfocount)
 	/// method.
 	#[must_use]
@@ -47,7 +77,6 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 			let vt = self.vt_ref::<IDispatchVT>();
 			ok_to_hrresult((vt.GetTypeInfoCount)(self.ptr(), &mut count))
 		}.map(|_| count)
-
 	}
 
 	/// [`IDispatch::GetTypeInfo`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfo)

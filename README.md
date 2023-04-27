@@ -40,7 +40,7 @@ Plus, below are the numbers of native FFI items implemented:
 | Window messages | 648 |
 | Handles | 41 |
 | COM interfaces | 53 |
-| COM methods | 278 |
+| COM methods | 279 |
 
 ## Usage
 
