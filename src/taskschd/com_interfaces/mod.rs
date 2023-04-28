@@ -1,3 +1,4 @@
+mod iaction;
 mod iactioncollection;
 mod idailytrigger;
 mod ieventtrigger;
@@ -11,6 +12,7 @@ mod itrigger;
 mod itriggercollection;
 
 pub mod decl {
+	pub use super::iaction::IAction;
 	pub use super::iactioncollection::IActionCollection;
 	pub use super::idailytrigger::IDailyTrigger;
 	pub use super::ieventtrigger::IEventTrigger;
@@ -25,6 +27,7 @@ pub mod decl {
 }
 
 pub mod traits {
+	pub use super::iaction::taskschd_IAction;
 	pub use super::iactioncollection::taskschd_IActionCollection;
 	pub use super::idailytrigger::taskschd_IDailyTrigger;
 	pub use super::ieventtrigger::taskschd_IEventTrigger;
@@ -39,6 +42,7 @@ pub mod traits {
 }
 
 pub mod vt {
+	pub use super::iaction::IActionVT;
 	pub use super::iactioncollection::IActionCollectionVT;
 	pub use super::idailytrigger::IDailyTriggerVT;
 	pub use super::ieventtrigger::IEventTriggerVT;
