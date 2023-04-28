@@ -1,4 +1,5 @@
 mod idailytrigger;
+mod ieventtrigger;
 mod iregisteredtask;
 mod itaskdefinition;
 mod itaskfolder;
@@ -8,6 +9,7 @@ mod itriggercollection;
 
 pub mod decl {
 	pub use super::idailytrigger::IDailyTrigger;
+	pub use super::ieventtrigger::IEventTrigger;
 	pub use super::iregisteredtask::IRegisteredTask;
 	pub use super::itaskdefinition::ITaskDefinition;
 	pub use super::itaskfolder::ITaskFolder;
@@ -18,6 +20,7 @@ pub mod decl {
 
 pub mod traits {
 	pub use super::idailytrigger::taskschd_IDailyTrigger;
+	pub use super::ieventtrigger::taskschd_IEventTrigger;
 	pub use super::iregisteredtask::taskschd_IRegisteredTask;
 	pub use super::itaskdefinition::taskschd_ITaskDefinition;
 	pub use super::itaskfolder::taskschd_ITaskFolder;
@@ -28,6 +31,7 @@ pub mod traits {
 
 pub mod vt {
 	pub use super::idailytrigger::IDailyTriggerVT;
+	pub use super::ieventtrigger::IEventTriggerVT;
 	pub use super::iregisteredtask::IRegisteredTaskVT;
 	pub use super::itaskdefinition::ITaskDefinitionVT;
 	pub use super::itaskfolder::ITaskFolderVT;
