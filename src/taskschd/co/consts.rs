@@ -1,5 +1,16 @@
 #![allow(non_camel_case_types)]
 
+const_ordinary! { TASK_ACTION_TYPE: u32;
+	/// [`TASK_ACTION_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/ne-taskschd-task_action_type)
+	/// enumeration (`u32`);
+	=>
+	=>
+	EXEC 0
+	COM_HANDLER 5
+	SEND_EMAIL 6
+	SHOW_MESSAGE 7
+}
+
 const_bitflag! { TASK_CREATION: u32;
 	/// [`TASK_CREATION`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/ne-taskschd-task_creation)
 	/// enumeration (`u32`).
