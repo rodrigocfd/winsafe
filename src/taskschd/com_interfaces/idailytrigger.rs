@@ -64,7 +64,7 @@ pub trait taskschd_IDailyTrigger: taskschd_ITrigger {
 		}.map(|_| days)
 	}
 
-	/// [`IDailyTrigger::get_get_RandomDelay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-idailytrigger-get_randomdelay)
+	/// [`IDailyTrigger::get_RandomDelay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-idailytrigger-get_randomdelay)
 	/// method.
 	#[must_use]
 	fn get_RandomDelay(&self) -> HrResult<String> {
