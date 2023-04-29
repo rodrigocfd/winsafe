@@ -4,7 +4,6 @@ use crate::co;
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::oleaut::decl::BSTR;
 use crate::prelude::oleaut_IDispatch;
 use crate::vt::IDispatchVT;
 
@@ -38,18 +37,9 @@ impl taskschd_IAction for IAction {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IAction: oleaut_IDispatch {
-	/// [`IAction::get_Id`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iaction-get_id)
-	/// method.
-	#[must_use]
-	fn get_Id(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<IActionVT>();
-			ok_to_hrresult((vt.get_Id)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_Id: IActionVT;
+		/// [`IAction::get_Id`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iaction-get_id)
+		/// method.
 	}
 
 	/// [`IAction::get_Type`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iaction-get_type)
@@ -63,14 +53,8 @@ pub trait taskschd_IAction: oleaut_IDispatch {
 		}.map(|_| at)
 	}
 
-	/// [`IAction::put_Id`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iaction-put_id)
-	/// method.
-	fn put_Id(&self, id: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IActionVT>();
-			ok_to_hrresult(
-				(vt.put_Id)(self.ptr(), BSTR::SysAllocString(id)?.as_ptr()),
-			)
-		}
+	fn_bstr_set! { put_Id: IActionVT, id;
+		/// [`IAction::put_Id`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iaction-put_id)
+		/// method.
 	}
 }

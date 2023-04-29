@@ -3,7 +3,6 @@
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::oleaut::decl::BSTR;
 use crate::prelude::oleaut_IDispatch;
 use crate::taskschd::decl::ITriggerCollection;
 use crate::vt::IDispatchVT;
@@ -31,7 +30,7 @@ pub struct ITaskDefinitionVT {
 com_interface! { ITaskDefinition: "f5bc8fc5-536d-4f77-b852-fbc1356fdeb6";
 	/// [`ITaskDefinition`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskdefinition)
 	/// COM interface over [`ITaskDefinitionVT`](crate::vt::ITaskDefinitionVT).
-	/// 
+	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
@@ -49,18 +48,9 @@ impl taskschd_ITaskDefinition for ITaskDefinition {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_ITaskDefinition: oleaut_IDispatch {
-	/// [`ITaskDefinition::get_Data`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_data)
-	/// method.
-	#[must_use]
-	fn get_Data(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<ITaskDefinitionVT>();
-			ok_to_hrresult((vt.get_Data)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_Data: ITaskDefinitionVT;
+		/// [`ITaskDefinition::get_Data`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_data)
+		/// method.
 	}
 
 	/// [`ITaskDefinition::get_Triggers`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_triggers)
@@ -75,39 +65,18 @@ pub trait taskschd_ITaskDefinition: oleaut_IDispatch {
 		}
 	}
 
-	/// [`ITaskDefinition::get_XmlText`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_xmltext)
-	/// method.
-	#[must_use]
-	fn get_XmlText(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<ITaskDefinitionVT>();
-			ok_to_hrresult((vt.get_XmlText)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_XmlText: ITaskDefinitionVT;
+		/// [`ITaskDefinition::get_XmlText`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_xmltext)
+		/// method.
 	}
 
-	/// [`ITaskDefinition::put_Data`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-put_data)
-	/// method.
-	fn put_Data(&self, xml: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<ITaskDefinitionVT>();
-			ok_to_hrresult(
-				(vt.put_Data)(self.ptr(), BSTR::SysAllocString(xml)?.as_ptr()),
-			)
-		}
+	fn_bstr_set! { put_Data: ITaskDefinitionVT, data;
+		/// [`ITaskDefinition::put_Data`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-put_data)
+		/// method.
 	}
 
-	/// [`ITaskDefinition::put_XmlText`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-put_xmltext)
-	/// method.
-	fn put_XmlText(&self, xml: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<ITaskDefinitionVT>();
-			ok_to_hrresult(
-				(vt.put_XmlText)(self.ptr(), BSTR::SysAllocString(xml)?.as_ptr()),
-			)
-		}
+	fn_bstr_set! { put_XmlText: ITaskDefinitionVT, xml;
+		/// [`ITaskDefinition::put_XmlText`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-put_xmltext)
+		/// method.
 	}
 }

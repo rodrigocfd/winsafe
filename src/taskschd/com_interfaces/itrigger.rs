@@ -4,7 +4,6 @@ use crate::co;
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::oleaut::decl::BSTR;
 use crate::prelude::oleaut_IDispatch;
 use crate::vt::IDispatchVT;
 
@@ -59,60 +58,24 @@ pub trait taskschd_ITrigger: oleaut_IDispatch {
 		}.map(|_| enabled != 0)
 	}
 
-	/// [`ITrigger::get_EndBoundary`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-get_endboundary)
-	/// method.
-	#[must_use]
-	fn get_EndBoundary(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<ITriggerVT>();
-			ok_to_hrresult((vt.get_EndBoundary)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_EndBoundary: ITriggerVT;
+		/// [`ITrigger::get_EndBoundary`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-get_endboundary)
+		/// method.
 	}
 
-	/// [`ITrigger::get_ExecutionTimeLimit`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-get_executiontimelimit)
-	/// method.
-	#[must_use]
-	fn get_ExecutionTimeLimit(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<ITriggerVT>();
-			ok_to_hrresult((vt.get_ExecutionTimeLimit)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_ExecutionTimeLimit: ITriggerVT;
+		/// [`ITrigger::get_ExecutionTimeLimit`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-get_executiontimelimit)
+		/// method.
 	}
 
-	/// [`ITrigger::get_Id`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-get_id)
-	/// method.
-	#[must_use]
-	fn get_Id(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<ITriggerVT>();
-			ok_to_hrresult((vt.get_Id)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_Id: ITriggerVT;
+		/// [`ITrigger::get_Id`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-get_id)
+		/// method.
 	}
 
-	/// [`ITrigger::get_StartBoundary`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-get_startboundary)
-	/// method.
-	#[must_use]
-	fn get_StartBoundary(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<ITriggerVT>();
-			ok_to_hrresult((vt.get_StartBoundary)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_StartBoundary: ITriggerVT;
+		/// [`ITrigger::get_StartBoundary`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-get_startboundary)
+		/// method.
 	}
 
 	/// [`ITrigger::get_Type`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-get_type)
@@ -135,56 +98,23 @@ pub trait taskschd_ITrigger: oleaut_IDispatch {
 		}
 	}
 
-	/// [`ITrigger::put_EndBoundary`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-put_endboundary)
-	/// method.
-	fn put_EndBoundary(&self, id: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<ITriggerVT>();
-			ok_to_hrresult(
-				(vt.put_EndBoundary)(
-					self.ptr(),
-					BSTR::SysAllocString(id)?.as_ptr(),
-				),
-			)
-		}
+	fn_bstr_set! { put_EndBoundary: ITriggerVT, end;
+		/// [`ITrigger::put_EndBoundary`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-put_endboundary)
+		/// method.
 	}
 
-	/// [`ITrigger::put_ExecutionTimeLimit`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-put_executiontimelimit)
-	/// method.
-	fn put_ExecutionTimeLimit(&self, id: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<ITriggerVT>();
-			ok_to_hrresult(
-				(vt.put_ExecutionTimeLimit)(
-					self.ptr(),
-					BSTR::SysAllocString(id)?.as_ptr(),
-				),
-			)
-		}
+	fn_bstr_set! { put_ExecutionTimeLimit: ITriggerVT, time_limit;
+		/// [`ITrigger::put_ExecutionTimeLimit`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-put_executiontimelimit)
+		/// method.
 	}
 
-	/// [`ITrigger::put_Id`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-put_id)
-	/// method.
-	fn put_Id(&self, id: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<ITriggerVT>();
-			ok_to_hrresult(
-				(vt.put_Id)(self.ptr(), BSTR::SysAllocString(id)?.as_ptr()),
-			)
-		}
+	fn_bstr_set! { put_Id: ITriggerVT, id;
+		/// [`ITrigger::put_Id`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-put_id)
+		/// method.
 	}
 
-	/// [`ITrigger::put_StartBoundary`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-put_startboundary)
-	/// method.
-	fn put_StartBoundary(&self, id: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<ITriggerVT>();
-			ok_to_hrresult(
-				(vt.put_StartBoundary)(
-					self.ptr(),
-					BSTR::SysAllocString(id)?.as_ptr(),
-				),
-			)
-		}
+	fn_bstr_set! { put_StartBoundary: ITriggerVT, start;
+		/// [`ITrigger::put_StartBoundary`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-put_startboundary)
+		/// method.
 	}
 }

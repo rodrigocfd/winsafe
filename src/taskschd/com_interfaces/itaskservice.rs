@@ -26,11 +26,11 @@ pub struct ITaskServiceVT {
 com_interface! { ITaskService: "2faba4c7-4da9-4013-9697-20cc3fd40f85";
 	/// [`ITaskService`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskservice)
 	/// COM interface over [`ITaskServiceVT`](crate::vt::ITaskServiceVT).
-	/// 
+	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
-	/// 
+	///
 	/// # Examples
 	///
 	/// ```rust,no_run
@@ -104,32 +104,14 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 		}.map(|_| connected != 0)
 	}
 
-	/// [`ITaskService::get_ConnectedDomain`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-get_connecteddomain)
-	/// method.
-	#[must_use]
-	fn get_ConnectedDomain(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<ITaskServiceVT>();
-			ok_to_hrresult((vt.get_ConnectedDomain)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_ConnectedDomain: ITaskServiceVT;
+		/// [`ITaskService::get_ConnectedDomain`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-get_connecteddomain)
+		/// method.
 	}
 
-	/// [`ITaskService::get_ConnectedUser`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-get_connecteduser)
-	/// method.
-	#[must_use]
-	fn get_ConnectedUser(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<ITaskServiceVT>();
-			ok_to_hrresult((vt.get_ConnectedUser)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_ConnectedUser: ITaskServiceVT;
+		/// [`ITaskService::get_ConnectedUser`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-get_connecteduser)
+		/// method.
 	}
 
 	/// [`ITaskService::get_HighestVersion`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-get_highestversion)
@@ -143,18 +125,9 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 		}.map(|_| ver)
 	}
 
-	/// [`ITaskService::get_TargetServer`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-get_targetserver)
-	/// method.
-	#[must_use]
-	fn get_TargetServer(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<ITaskServiceVT>();
-			ok_to_hrresult((vt.get_TargetServer)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_TargetServer: ITaskServiceVT;
+		/// [`ITaskService::get_TargetServer`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-get_targetserver)
+		/// method.
 	}
 
 	/// [`ITaskService::GetFolder`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-getfolder)

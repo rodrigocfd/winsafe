@@ -3,7 +3,7 @@
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::oleaut::decl::{BSTR, VARIANT};
+use crate::oleaut::decl::VARIANT;
 use crate::prelude::{oleaut_IDispatch, oleaut_Variant};
 use crate::vt::IDispatchVT;
 
@@ -53,57 +53,24 @@ pub trait taskschd_IActionCollection: oleaut_IDispatch {
 		}
 	}
 
-	/// [`IActionCollection::get_Context`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-get_context)
-	/// method.
-	#[must_use]
-	fn get_Context(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<IActionCollectionVT>();
-			ok_to_hrresult((vt.get_Context)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_Context: IActionCollectionVT;
+		/// [`IActionCollection::get_Context`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-get_context)
+		/// method.
 	}
 
-	/// [`IActionCollection::get_XmlText`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-get_xmltext)
-	/// method.
-	#[must_use]
-	fn get_XmlText(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<IActionCollectionVT>();
-			ok_to_hrresult((vt.get_XmlText)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_XmlText: IActionCollectionVT;
+		/// [`IActionCollection::get_XmlText`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-get_xmltext)
+		/// method.
 	}
 
-	/// [`IActionCollection::put_Context`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-put_context)
-	/// method.
-	fn put_Context(&self, context: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IActionCollectionVT>();
-			ok_to_hrresult(
-				(vt.put_Context)(
-					self.ptr(),
-					BSTR::SysAllocString(context)?.as_ptr(),
-				),
-			)
-		}
+	fn_bstr_set! { put_Context: IActionCollectionVT, context;
+		/// [`IActionCollection::put_Context`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-put_context)
+		/// method.
 	}
 
-	/// [`IActionCollection::put_XmlText`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-put_xmltext)
-	/// method.
-	fn put_XmlText(&self, text: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IActionCollectionVT>();
-			ok_to_hrresult(
-				(vt.put_XmlText)(self.ptr(), BSTR::SysAllocString(text)?.as_ptr()),
-			)
-		}
+	fn_bstr_set! { put_XmlText: IActionCollectionVT, text;
+		/// [`IActionCollection::put_XmlText`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-put_xmltext)
+		/// method.
 	}
 
 	/// [`IActionCollection::Remove`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-remove)

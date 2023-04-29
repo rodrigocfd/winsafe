@@ -130,3 +130,45 @@ macro_rules! const_guid {
 		}
 	};
 }
+
+/// Implements a trait function for a BSTR getter, no parameters.
+macro_rules! fn_bstr_get {
+	(
+		$method:ident : $vt:ty;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		#[must_use]
+		fn $method(&self) -> HrResult<String> {
+			let mut pstr = std::ptr::null_mut::<u16>();
+			unsafe {
+				let vt = self.vt_ref::<$vt>();
+				crate::ole::privs::ok_to_hrresult((vt.$method)(self.ptr(), &mut pstr))
+			}.map(|_| {
+				let bstr = unsafe { crate::oleaut::decl::BSTR::from_ptr(pstr) };
+				bstr.to_string()
+			})
+		}
+	};
+}
+
+/// Implements a trait function for a BSTR setter, single parameter.
+macro_rules! fn_bstr_set {
+	(
+		$method:ident : $vt:ty, $arg:ident;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		fn $method(&self, $arg: &str) -> HrResult<()> {
+			unsafe {
+				let vt = self.vt_ref::<$vt>();
+				crate::ole::privs::ok_to_hrresult(
+					(vt.$method)(
+						self.ptr(),
+						crate::oleaut::decl::BSTR::SysAllocString($arg)?.as_ptr(),
+					),
+				)
+			}
+		}
+	};
+}

@@ -33,7 +33,7 @@ pub struct ITaskFolderVT {
 com_interface! { ITaskFolder: "8cfac062-a080-4c15-9a88-aa7c2af80dfc";
 	/// [`ITaskFolder`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskfolder)
 	/// COM interface over [`ITaskFolderVT`](crate::vt::ITaskFolderVT).
-	/// 
+	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
@@ -66,32 +66,14 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 		}
 	}
 
-	/// [`ITaskFolder::get_Name`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskfolder-get_name)
-	/// method.
-	#[must_use]
-	fn get_Name(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<ITaskFolderVT>();
-			ok_to_hrresult((vt.get_Name)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_Name: ITaskFolderVT;
+		/// [`ITaskFolder::get_Name`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskfolder-get_name)
+		/// method.
 	}
 
-	/// [`ITaskFolder::get_Path`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskfolder-get_path)
-	/// method.
-	#[must_use]
-	fn get_Path(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<ITaskFolderVT>();
-			ok_to_hrresult((vt.get_Path)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_Path: ITaskFolderVT;
+		/// [`ITaskFolder::get_Path`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskfolder-get_path)
+		/// method.
 	}
 
 	/// [`ITaskFolder::RegisterTaskDefinition`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskfolder-registertaskdefinition)

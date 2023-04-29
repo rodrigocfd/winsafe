@@ -3,7 +3,6 @@
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::oleaut::decl::BSTR;
 use crate::prelude::{oleaut_IDispatch, taskschd_ITrigger};
 use crate::vt::ITriggerVT;
 
@@ -64,18 +63,9 @@ pub trait taskschd_IDailyTrigger: taskschd_ITrigger {
 		}.map(|_| days)
 	}
 
-	/// [`IDailyTrigger::get_RandomDelay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-idailytrigger-get_randomdelay)
-	/// method.
-	#[must_use]
-	fn get_RandomDelay(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<IDailyTriggerVT>();
-			ok_to_hrresult((vt.get_RandomDelay)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_RandomDelay: IDailyTriggerVT;
+		/// [`IDailyTrigger::get_RandomDelay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-idailytrigger-get_randomdelay)
+		/// method.
 	}
 
 	/// [`IDailyTrigger::put_DaysInterval`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-idailytrigger-put_daysinterval)
@@ -87,16 +77,8 @@ pub trait taskschd_IDailyTrigger: taskschd_ITrigger {
 		}
 	}
 
-	/// [`IDailyTrigger::put_RandomDelay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-idailytrigger-put_randomdelay)
-	/// method.
-	fn put_RandomDelay(&self, random_delay: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IDailyTriggerVT>();
-			ok_to_hrresult(
-				(vt.put_RandomDelay)(
-					self.ptr(), BSTR::SysAllocString(random_delay)?.as_ptr(),
-				),
-			)
-		}
+	fn_bstr_set! { put_RandomDelay: IDailyTriggerVT, random_delay;
+		/// [`IDailyTrigger::put_RandomDelay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-idailytrigger-put_randomdelay)
+		/// method.
 	}
 }

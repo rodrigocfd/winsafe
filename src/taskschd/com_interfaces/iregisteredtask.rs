@@ -36,7 +36,7 @@ pub struct IRegisteredTaskVT {
 com_interface! { IRegisteredTask: "9c86f320-dee3-4dd1-b972-a303f26b061e";
 	/// [`IRegisteredTask`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-iregisteredtask)
 	/// COM interface over [`IRegisteredTaskVT`](crate::vt::IRegisteredTaskVT).
-	/// 
+	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
@@ -99,18 +99,9 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 		}.map(|_| r)
 	}
 
-	/// [`IRegisteredTask::get_Name`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_name)
-	/// method.
-	#[must_use]
-	fn get_Name(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<IRegisteredTaskVT>();
-			ok_to_hrresult((vt.get_Name)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_Name: IRegisteredTaskVT;
+		/// [`IRegisteredTask::get_Name`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_name)
+		/// method.
 	}
 
 	/// [`IRegisteredTask::get_NextRunTime`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_nextruntime)
@@ -135,18 +126,9 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 		}.map(|_| mr)
 	}
 
-	/// [`IRegisteredTask::get_Path`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_path)
-	/// method.
-	#[must_use]
-	fn get_Path(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<IRegisteredTaskVT>();
-			ok_to_hrresult((vt.get_Path)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_Path: IRegisteredTaskVT;
+		/// [`IRegisteredTask::get_Path`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_path)
+		/// method.
 	}
 
 	/// [`IRegisteredTask::get_State`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_state)
@@ -160,18 +142,9 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 		}.map(|_| state)
 	}
 
-	/// [`IRegisteredTask::get_Xml`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_xml)
-	/// method.
-	#[must_use]
-	fn get_Xml(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<IRegisteredTaskVT>();
-			ok_to_hrresult((vt.get_Xml)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_Xml: IRegisteredTaskVT;
+		/// [`IRegisteredTask::get_Xml`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_xml)
+		/// method.
 	}
 
 	/// [`IRegisteredTask::put_Enabled`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-put_enabled)

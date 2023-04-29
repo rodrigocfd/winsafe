@@ -2,8 +2,6 @@
 
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
-use crate::oleaut::decl::BSTR;
 use crate::prelude::{oleaut_IDispatch, taskschd_ITrigger};
 use crate::vt::ITriggerVT;
 
@@ -53,57 +51,23 @@ impl taskschd_ILogonTrigger for ILogonTrigger {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_ILogonTrigger: taskschd_ITrigger {
-	/// [`ILogonTrigger::get_RandomDelay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ilogontrigger-get_delay)
-	/// method.
-	#[must_use]
-	fn get_Delay(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<ILogonTriggerVT>();
-			ok_to_hrresult((vt.get_Delay)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_Delay: ILogonTriggerVT;
+		/// [`ILogonTrigger::get_RandomDelay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ilogontrigger-get_delay)
+		/// method.
 	}
 
-	/// [`ILogonTrigger::get_UserId`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ilogontrigger-get_userid)
-	/// method.
-	#[must_use]
-	fn get_UserId(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<ILogonTriggerVT>();
-			ok_to_hrresult((vt.get_UserId)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_UserId: ILogonTriggerVT;
+		/// [`ILogonTrigger::get_UserId`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ilogontrigger-get_userid)
+		/// method.
 	}
 
-	/// [`ILogonTrigger::put_RandomDelay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ilogontrigger-put_delay)
-	/// method.
-	fn put_RandomDelay(&self, delay: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<ILogonTriggerVT>();
-			ok_to_hrresult(
-				(vt.put_Delay)(
-					self.ptr(), BSTR::SysAllocString(delay)?.as_ptr(),
-				),
-			)
-		}
+	fn_bstr_set! { put_Delay: ILogonTriggerVT, delay;
+		/// [`ILogonTrigger::put_RandomDelay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ilogontrigger-put_delay)
+		/// method.
 	}
 
-	/// [`ILogonTrigger::put_UserId`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ilogontrigger-put_userid)
-	/// method.
-	fn put_UserId(&self, user_id: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<ILogonTriggerVT>();
-			ok_to_hrresult(
-				(vt.put_UserId)(
-					self.ptr(), BSTR::SysAllocString(user_id)?.as_ptr(),
-				),
-			)
-		}
+	fn_bstr_set! { put_UserId: ILogonTriggerVT, user_id;
+		/// [`ILogonTrigger::put_UserId`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ilogontrigger-put_userid)
+		/// method.
 	}
 }

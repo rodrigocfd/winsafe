@@ -2,8 +2,6 @@
 
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
-use crate::oleaut::decl::BSTR;
 use crate::prelude::{oleaut_IDispatch, taskschd_IAction};
 use crate::vt::IActionVT;
 
@@ -55,84 +53,33 @@ impl taskschd_IExecAction for IExecAction {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IExecAction: taskschd_IAction {
-	/// [`IExecAction::get_Arguments`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-get_arguments)
-	/// method.
-	#[must_use]
-	fn get_Arguments(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<IExecActionVT>();
-			ok_to_hrresult((vt.get_Arguments)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_Arguments: IExecActionVT;
+		/// [`IExecAction::get_Arguments`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-get_arguments)
+		/// method.
 	}
 
-	/// [`IExecAction::get_Path`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-get_path)
-	/// method.
-	#[must_use]
-	fn get_Path(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<IExecActionVT>();
-			ok_to_hrresult((vt.get_Path)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_Path: IExecActionVT;
+		/// [`IExecAction::get_Path`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-get_path)
+		/// method.
 	}
 
-	/// [`IExecAction::get_WorkingDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-get_workingdirectory)
-	/// method.
-	#[must_use]
-	fn get_WorkingDirectory(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<IExecActionVT>();
-			ok_to_hrresult((vt.get_WorkingDirectory)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_WorkingDirectory: IExecActionVT;
+		/// [`IExecAction::get_WorkingDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-get_workingdirectory)
+		/// method.
 	}
 
-	/// [`IExecAction::get_Arguments`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-put_arguments)
-	/// method.
-	fn put_Arguments(&self, arguments: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IExecActionVT>();
-			ok_to_hrresult(
-				(vt.put_Arguments)(
-					self.ptr(), BSTR::SysAllocString(arguments)?.as_ptr(),
-				),
-			)
-		}
+	fn_bstr_set! { put_Arguments: IExecActionVT, arguments;
+		/// [`IExecAction::get_Arguments`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-put_arguments)
+		/// method.
 	}
 
-	/// [`IExecAction::put_Path`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-put_path)
-	/// method.
-	fn put_Path(&self, path: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IExecActionVT>();
-			ok_to_hrresult(
-				(vt.put_Path)(
-					self.ptr(), BSTR::SysAllocString(path)?.as_ptr(),
-				),
-			)
-		}
+	fn_bstr_set! { put_Path: IExecActionVT, path;
+		/// [`IExecAction::put_Path`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-put_path)
+		/// method.
 	}
 
-	/// [`IExecAction::put_WorkingDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-put_workingdirectory)
-	/// method.
-	fn put_WorkingDirectory(&self, working_directory: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IExecActionVT>();
-			ok_to_hrresult(
-				(vt.put_WorkingDirectory)(
-					self.ptr(), BSTR::SysAllocString(working_directory)?.as_ptr(),
-				),
-			)
-		}
+	fn_bstr_set! { put_WorkingDirectory: IExecActionVT, working_directory;
+		/// [`IExecAction::put_WorkingDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-put_workingdirectory)
+		/// method.
 	}
 }

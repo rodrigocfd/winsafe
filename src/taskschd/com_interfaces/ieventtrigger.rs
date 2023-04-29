@@ -2,8 +2,6 @@
 
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
-use crate::oleaut::decl::BSTR;
 use crate::prelude::{oleaut_IDispatch, taskschd_ITrigger};
 use crate::vt::ITriggerVT;
 
@@ -55,57 +53,23 @@ impl taskschd_IEventTrigger for IEventTrigger {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IEventTrigger: taskschd_ITrigger {
-	/// [`IEventTrigger::get_Delay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ieventtrigger-get_delay)
-	/// method.
-	#[must_use]
-	fn get_Delay(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<IEventTriggerVT>();
-			ok_to_hrresult((vt.get_Delay)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_Delay: IEventTriggerVT;
+		/// [`IEventTrigger::get_Delay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ieventtrigger-get_delay)
+		/// method.
 	}
 
-	/// [`IEventTrigger::get_Subscription`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ieventtrigger-get_subscription)
-	/// method.
-	#[must_use]
-	fn get_Subscription(&self) -> HrResult<String> {
-		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<IEventTriggerVT>();
-			ok_to_hrresult((vt.get_Subscription)(self.ptr(), &mut pstr))
-		}.map(|_| {
-			let bstr = unsafe { BSTR::from_ptr(pstr) };
-			bstr.to_string()
-		})
+	fn_bstr_get! { get_Subscription: IEventTriggerVT;
+		/// [`IEventTrigger::get_Subscription`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ieventtrigger-get_subscription)
+		/// method.
 	}
 
-	/// [`IEventTrigger::put_Delay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ieventtrigger-put_delay)
-	/// method.
-	fn put_Delay(&self, subscription: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IEventTriggerVT>();
-			ok_to_hrresult(
-				(vt.put_Delay)(
-					self.ptr(), BSTR::SysAllocString(subscription)?.as_ptr(),
-				),
-			)
-		}
+	fn_bstr_set! { put_Delay: IEventTriggerVT, delay;
+		/// [`IEventTrigger::put_Delay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ieventtrigger-put_delay)
+		/// method.
 	}
 
-	/// [`IEventTrigger::put_Subscription`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ieventtrigger-put_subscription)
-	/// method.
-	fn put_Subscription(&self, subscription: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IEventTriggerVT>();
-			ok_to_hrresult(
-				(vt.put_Subscription)(
-					self.ptr(), BSTR::SysAllocString(subscription)?.as_ptr(),
-				),
-			)
-		}
+	fn_bstr_set! { put_Subscription: IEventTriggerVT, subscription;
+		/// [`IEventTrigger::put_Subscription`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ieventtrigger-put_subscription)
+		/// method.
 	}
 }
