@@ -39,17 +39,9 @@ impl dxgi_IDXGIDevice for IDXGIDevice {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {
-	/// [`IDXGIDevice::GetAdapter`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-getadapter)
-	/// method.
-	#[must_use]
-	fn GetAdapter(&self) -> HrResult<IDXGIAdapter> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IDXGIDeviceVT>();
-			ok_to_hrresult(
-				(vt.GetAdapter)(self.ptr(), &mut ppv_queried),
-			).map(|_| IDXGIAdapter::from(ppv_queried))
-		}
+	fn_com_get! { GetAdapter: IDXGIDeviceVT, IDXGIAdapter;
+		/// [`IDXGIDevice::GetAdapter`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-getadapter)
+		/// method.
 	}
 
 	/// [`IDXGIDevice::GetGPUThreadPriority`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-getgputhreadpriority)

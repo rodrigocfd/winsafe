@@ -89,17 +89,9 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 		}
 	}
 
-	/// [`IFilterGraph::EnumFilters`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-enumfilters)
-	/// method.
-	#[must_use]
-	fn EnumFilters(&self) -> HrResult<IEnumFilters> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IFilterGraphVT>();
-			ok_to_hrresult(
-				(vt.EnumFilters)(self.ptr(), &mut ppv_queried),
-			).map(|_| IEnumFilters::from(ppv_queried))
-		}
+	fn_com_get! { EnumFilters: IFilterGraphVT, IEnumFilters;
+		/// [`IFilterGraph::EnumFilters`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-enumfilters)
+		/// method.
 	}
 
 	/// [`IFilterGraph::FindFilterByName`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-findfilterbyname)

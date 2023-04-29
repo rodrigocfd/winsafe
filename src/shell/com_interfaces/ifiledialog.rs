@@ -88,16 +88,9 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}
 	}
 
-	/// [`IFileDialog::GetCurrentSelection`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getcurrentselection)
-	/// method.
-	#[must_use]
-	fn GetCurrentSelection(&self) -> HrResult<IShellItem> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.GetCurrentSelection)(self.ptr(), &mut ppv_queried))
-				.map(|_| IShellItem::from(ppv_queried))
-		}
+	fn_com_get! { GetCurrentSelection: IFileDialogVT, IShellItem;
+		/// [`IFileDialog::GetCurrentSelection`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getcurrentselection)
+		/// method.
 	}
 
 	/// [`IFileDialog::GetFileName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfilename)
@@ -126,16 +119,9 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}.map(|_| index)
 	}
 
-	/// [`IFileDialog::GetFolder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfolder)
-	/// method.
-	#[must_use]
-	fn GetFolder(&self) -> HrResult<IShellItem> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.GetFolder)(self.ptr(), &mut ppv_queried))
-				.map(|_| IShellItem::from(ppv_queried))
-		}
+	fn_com_get! { GetFolder: IFileDialogVT, IShellItem;
+		/// [`IFileDialog::GetFolder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfolder)
+		/// method.
 	}
 
 	/// [`IFileDialog::GetOptions`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getoptions)
@@ -149,18 +135,11 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		}.map(|_| co::FOS(opts))
 	}
 
-	/// [`IFileDialog::GetResult`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getresult)
-	/// method.
-	///
-	/// If you chose a single file, this is the method to retrieve its path.
-	#[must_use]
-	fn GetResult(&self) -> HrResult<IShellItem> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.GetResult)(self.ptr(), &mut ppv_queried))
-				.map(|_| IShellItem::from(ppv_queried))
-		}
+	fn_com_get! { GetResult: IFileDialogVT, IShellItem;
+		/// [`IFileDialog::GetResult`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getresult)
+		/// method.
+		///
+		/// If you chose a single file, this is the method to retrieve its path.
 	}
 
 	/// [`IFileDialog::SetClientGuid`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setclientguid)

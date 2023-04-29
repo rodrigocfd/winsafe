@@ -136,33 +136,26 @@ pub trait shell_IShellItem: ole_IUnknown {
 		})
 	}
 
-	/// [`IShellItem::GetParent`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getparent)
-	/// method.
-	///
-	/// # Examples
-	///
-	/// ```rust,no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IBindCtx, IShellItem, SHCreateItemFromParsingName};
-	///
-	/// let shi = SHCreateItemFromParsingName::<IShellItem>(
-	///     "C:\\Temp\\foo.txt",
-	///     None::<&IBindCtx>,
-	/// )?;
-	///
-	/// let parent_shi = shi.GetParent()?;
-	/// let full_path = parent_shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;
-	///
-	/// println!("{}", full_path);
-	/// # Ok::<_, co::HRESULT>(())
-	/// ```
-	#[must_use]
-	fn GetParent(&self) -> HrResult<IShellItem> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IShellItemVT>();
-			ok_to_hrresult((vt.GetParent)(self.ptr(), &mut ppv_queried))
-				.map(|_| IShellItem::from(ppv_queried))
-		}
+	fn_com_get! { GetParent: IShellItemVT, IShellItem;
+		/// [`IShellItem::GetParent`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getparent)
+		/// method.
+		///
+		/// # Examples
+		///
+		/// ```rust,no_run
+		/// use winsafe::prelude::*;
+		/// use winsafe::{co, IBindCtx, IShellItem, SHCreateItemFromParsingName};
+		///
+		/// let shi = SHCreateItemFromParsingName::<IShellItem>(
+		///     "C:\\Temp\\foo.txt",
+		///     None::<&IBindCtx>,
+		/// )?;
+		///
+		/// let parent_shi = shi.GetParent()?;
+		/// let full_path = parent_shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;
+		///
+		/// println!("{}", full_path);
+		/// # Ok::<_, co::HRESULT>(())
+		/// ```
 	}
 }

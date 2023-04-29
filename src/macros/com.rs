@@ -131,6 +131,26 @@ macro_rules! const_guid {
 	};
 }
 
+/// Implements a trait function for a COM interface getter, no parameters.
+macro_rules! fn_com_get {
+	(
+		$method:ident : $vt:ty, $iface:ty;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		#[must_use]
+		fn $method(&self) -> HrResult<$iface> {
+			unsafe {
+				let mut ppv_queried = crate::ole::decl::ComPtr::null();
+				let vt = self.vt_ref::<$vt>();
+				crate::ole::privs::ok_to_hrresult(
+					(vt.$method)(self.ptr(), &mut ppv_queried),
+				).map(|_| <$iface>::from(ppv_queried))
+			}
+		}
+	};
+}
+
 /// Implements a trait function for a BSTR getter, no parameters.
 macro_rules! fn_bstr_get {
 	(

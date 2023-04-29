@@ -2,7 +2,6 @@
 
 use crate::kernel::ffi_types::HRES;
 use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{shell_IFileDialog, shell_IModalWindow};
 use crate::shell::decl::IShellItemArray;
 use crate::vt::IFileDialogVT;
@@ -76,51 +75,38 @@ impl shell_IFileOpenDialog for IFileOpenDialog {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_IFileOpenDialog: shell_IFileDialog {
-	/// [`IFileOpenDialog::GetResults`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
-	/// method.
-	///
-	/// If you chose multiple files, this is the method to retrieve the paths.
-	///
-	/// # Examples
-	///
-	/// Collecting the file paths into a
-	/// [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html):
-	///
-	/// ```rust,no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HrResult, IFileOpenDialog};
-	///
-	/// let fo: IFileOpenDialog; // initialized somewhere
-	/// # let fo = IFileOpenDialog::from(unsafe { winsafe::ComPtr::null() });
-	///
-	/// let paths = fo.GetResults()?.iter()?
-	///     .map(|shi|
-	///         shi.and_then(|shi|
-	///             shi.GetDisplayName(co::SIGDN::FILESYSPATH)
-	///         ),
-	///     )
-	///     .collect::<HrResult<Vec<_>>>()?;
-	/// # Ok::<_, co::HRESULT>(())
-	/// ```
-	#[must_use]
-	fn GetResults(&self) -> HrResult<IShellItemArray> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IFileOpenDialogVT>();
-			ok_to_hrresult((vt.GetResults)(self.ptr(), &mut ppv_queried))
-				.map(|_| IShellItemArray::from(ppv_queried))
-		}
+	fn_com_get! { GetResults: IFileOpenDialogVT, IShellItemArray;
+		/// [`IFileOpenDialog::GetResults`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
+		/// method.
+		///
+		/// If you chose multiple files, this is the method to retrieve the
+		/// paths.
+		///
+		/// # Examples
+		///
+		/// Collecting the file paths into a
+		/// [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html):
+		///
+		/// ```rust,no_run
+		/// use winsafe::prelude::*;
+		/// use winsafe::{co, HrResult, IFileOpenDialog};
+		///
+		/// let fo: IFileOpenDialog; // initialized somewhere
+		/// # let fo = IFileOpenDialog::from(unsafe { winsafe::ComPtr::null() });
+		///
+		/// let paths = fo.GetResults()?.iter()?
+		///     .map(|shi|
+		///         shi.and_then(|shi|
+		///             shi.GetDisplayName(co::SIGDN::FILESYSPATH)
+		///         ),
+		///     )
+		///     .collect::<HrResult<Vec<_>>>()?;
+		/// # Ok::<_, co::HRESULT>(())
+		/// ```
 	}
 
-	/// [`IFileOpenDialog::GetSelectedItems`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getselecteditems)
-	/// method.
-	#[must_use]
-	fn GetSelectedItems(&self) -> HrResult<IShellItemArray> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IFileOpenDialogVT>();
-			ok_to_hrresult((vt.GetSelectedItems)(self.ptr(), &mut ppv_queried))
-				.map(|_| IShellItemArray::from(ppv_queried))
-		}
+	fn_com_get! { GetSelectedItems: IFileOpenDialogVT, IShellItemArray;
+		/// [`IFileOpenDialog::GetSelectedItems`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getselecteditems)
+		/// method.
 	}
 }

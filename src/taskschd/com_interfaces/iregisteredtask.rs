@@ -4,7 +4,7 @@ use crate::co;
 use crate::kernel::ffi_types::{HRES, PCSTR, PCVOID, PSTR, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::oleaut::decl::{BSTR, VARIANT};
+use crate::oleaut::decl::VARIANT;
 use crate::prelude::oleaut_IDispatch;
 use crate::taskschd::decl::ITaskDefinition;
 use crate::vt::IDispatchVT;
@@ -54,16 +54,9 @@ impl taskschd_IRegisteredTask for IRegisteredTask {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
-	/// [`IRegisteredTask::get_Definition`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_definition)
-	/// method.
-	#[must_use]
-	fn get_Definition(&self) -> HrResult<ITaskDefinition> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IRegisteredTaskVT>();
-			ok_to_hrresult((vt.get_Definition)(self.ptr(), &mut ppv_queried))
-				.map(|_| ITaskDefinition::from(ppv_queried))
-		}
+	fn_com_get! { get_Definition: IRegisteredTaskVT, ITaskDefinition;
+		/// [`IRegisteredTask::get_Definition`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_definition)
+		/// method.
 	}
 
 	/// [`IRegisteredTask::get_Enabled`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_enabled)

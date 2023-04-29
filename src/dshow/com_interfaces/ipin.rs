@@ -70,17 +70,9 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
-	/// [`IPin::ConnectedTo`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectedto)
-	/// method.
-	#[must_use]
-	fn ConnectedTo(&self) -> HrResult<IPin> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IPinVT>();
-			ok_to_hrresult(
-				(vt.ConnectedTo)(self.ptr(), &mut ppv_queried),
-			).map(|_| IPin::from(ppv_queried))
-		}
+	fn_com_get! { ConnectedTo: IPinVT, IPin;
+		/// [`IPin::ConnectedTo`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectedto)
+		/// method.
 	}
 
 	/// [`IPin::ConnectionMediaType`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectionmediatype)
@@ -121,16 +113,9 @@ pub trait dshow_IPin: ole_IUnknown {
 		}
 	}
 
-	/// [`IPin::EnumMediaTypes`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-enummediatypes)
-	/// method.
-	#[must_use]
-	fn EnumMediaTypes(&self) -> HrResult<IEnumMediaTypes> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IPinVT>();
-			ok_to_hrresult((vt.EnumMediaTypes)(self.ptr(), &mut ppv_queried))
-				.map(|_| IEnumMediaTypes::from(ppv_queried))
-		}
+	fn_com_get! { EnumMediaTypes: IPinVT, IEnumMediaTypes;
+		/// [`IPin::EnumMediaTypes`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-enummediatypes)
+		/// method.
 	}
 
 	/// [`IPin::NewSegment`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-newsegment)

@@ -55,17 +55,9 @@ impl dshow_IBaseFilter for IBaseFilter {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait dshow_IBaseFilter: dshow_IMediaFilter {
-	/// [`IBaseFilter::EnumPins`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-enumpins)
-	/// method.
-	#[must_use]
-	fn EnumPins(&self) -> HrResult<IEnumPins> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IBaseFilterVT>();
-			ok_to_hrresult(
-				(vt.EnumPins)(self.ptr(), &mut ppv_queried),
-			).map(|_| IEnumPins::from(ppv_queried))
-		}
+	fn_com_get! { EnumPins: IBaseFilterVT, IEnumPins;
+		/// [`IBaseFilter::EnumPins`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-enumpins)
+		/// method.
 	}
 
 	/// [`IBaseFilter::FindPin`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-findpin)

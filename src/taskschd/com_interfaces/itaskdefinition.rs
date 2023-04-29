@@ -2,7 +2,6 @@
 
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::oleaut_IDispatch;
 use crate::taskschd::decl::ITriggerCollection;
 use crate::vt::IDispatchVT;
@@ -53,16 +52,9 @@ pub trait taskschd_ITaskDefinition: oleaut_IDispatch {
 		/// method.
 	}
 
-	/// [`ITaskDefinition::get_Triggers`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_triggers)
-	/// method.
-	#[must_use]
-	fn get_Triggers(&self) -> HrResult<ITriggerCollection> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<ITaskDefinitionVT>();
-			ok_to_hrresult((vt.get_Triggers)(self.ptr(), &mut ppv_queried))
-				.map(|_| ITriggerCollection::from(ppv_queried))
-		}
+	fn_com_get! { get_Triggers: ITaskDefinitionVT, ITriggerCollection;
+		/// [`ITaskDefinition::get_Triggers`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_triggers)
+		/// method.
 	}
 
 	fn_bstr_get! { get_XmlText: ITaskDefinitionVT;

@@ -208,16 +208,9 @@ pub trait ole_IMoniker: ole_IPersistStream {
 		}
 	}
 
-	/// [`IMoniker::Inverse`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-inverse)
-	/// method.
-	#[must_use]
-	fn Inverse(&self) -> HrResult<IMoniker> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IMonikerVT>();
-			ok_to_hrresult((vt.Inverse)(self.ptr(), &mut ppv_queried))
-				.map(|_| IMoniker::from(ppv_queried))
-		}
+	fn_com_get! { Inverse: IMonikerVT, IMoniker;
+		/// [`IMoniker::Inverse`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-inverse)
+		/// method.
 	}
 
 	/// [`IMoniker::IsEqual`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-isequal)
