@@ -55,7 +55,7 @@ pub trait gdi_Hdc: Handle {
 	/// [`Arc`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-arc)
 	/// method.
 	fn Arc(&self,
-		bound: RECT, radialStart: POINT, radialEnd: POINT) -> SysResult<()>
+		bound: RECT, radial_start: POINT, radial_end: POINT) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {
@@ -63,8 +63,8 @@ pub trait gdi_Hdc: Handle {
 					self.as_ptr(),
 					bound.left, bound.top,
 					bound.right, bound.bottom,
-					radialStart.x, radialStart.y,
-					radialEnd.x, radialEnd.y,
+					radial_start.x, radial_start.y,
+					radial_end.x, radial_end.y,
 				)
 			},
 		)
@@ -73,7 +73,7 @@ pub trait gdi_Hdc: Handle {
 	/// [`ArcTo`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-arcto)
 	/// method.
 	fn ArcTo(&self,
-		bound: RECT, radialStart: POINT, radialEnd: POINT) -> SysResult<()>
+		bound: RECT, radial_start: POINT, radial_end: POINT) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {
@@ -81,8 +81,8 @@ pub trait gdi_Hdc: Handle {
 					self.as_ptr(),
 					bound.left, bound.top,
 					bound.right, bound.bottom,
-					radialStart.x, radialStart.y,
-					radialEnd.x, radialEnd.y,
+					radial_start.x, radial_start.y,
+					radial_end.x, radial_end.y,
 				)
 			},
 		)
@@ -350,9 +350,9 @@ pub trait gdi_Hdc: Handle {
 	/// ```
 	unsafe fn GetDIBits(&self,
 		hbm: &HBITMAP,
-		firstScanLine: u32,
-		numScanLines: u32,
-		bmpDataBuf: Option<&mut [u8]>,
+		first_scan_line: u32,
+		num_scan_lines: u32,
+		bmp_data_buf: Option<&mut [u8]>,
 		bmi: &mut BITMAPINFO,
 		usage: co::DIB,
 	) -> SysResult<i32>
@@ -360,8 +360,9 @@ pub trait gdi_Hdc: Handle {
 		let ret = gdi::ffi::GetDIBits(
 			self.as_ptr(),
 			hbm.as_ptr(),
-			firstScanLine, numScanLines,
-			bmpDataBuf.map_or(std::ptr::null_mut(), |buf| buf.as_mut_ptr() as _),
+			first_scan_line,
+			num_scan_lines,
+			bmp_data_buf.map_or(std::ptr::null_mut(), |buf| buf.as_mut_ptr() as _),
 			bmi as *const _ as _,
 			usage.0,
 		);
@@ -812,6 +813,36 @@ pub trait gdi_Hdc: Handle {
 		match unsafe { gdi::ffi::SetDCPenColor(self.as_ptr(), color.0) } {
 			CLR_INVALID => Err(GetLastError()),
 			old => Ok(COLORREF(old)),
+		}
+	}
+
+	/// [`SetDIBits`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setdibits)
+	/// method.
+	fn SetDIBits(&self,
+		hbm: &HBITMAP,
+		first_scan_line: u32,
+		num_scan_lines: u32,
+		dib_color_data: &[u8],
+		bmi: &BITMAPINFO,
+		color_use: co::DIB,
+	) -> SysResult<i32>
+	{
+		match unsafe {
+			gdi::ffi::SetDIBits(
+				self.as_ptr(),
+				hbm.as_ptr(),
+				first_scan_line,
+				num_scan_lines,
+				dib_color_data.as_ptr() as _,
+				bmi as *const _ as _,
+				color_use.0,
+			)
+		} {
+			0 => match GetLastError() {
+				co::ERROR::SUCCESS => Ok(0),
+				err => Err(err),
+			},
+			n => Ok(n),
 		}
 	}
 

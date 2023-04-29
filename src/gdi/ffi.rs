@@ -85,6 +85,7 @@ extern_sys! { "gdi32";
 	SetBrushOrgEx(HANDLE, i32, i32, PVOID) -> BOOL
 	SetDCBrushColor(HANDLE, u32) -> u32
 	SetDCPenColor(HANDLE, u32) -> u32
+	SetDIBits(HANDLE, HANDLE, u32, u32, PCVOID, PCVOID, u32) -> i32
 	SetGraphicsMode(HANDLE, i32) -> i32
 	SetStretchBltMode(HANDLE, i32) -> i32
 	SetTextAlign(HANDLE, u32) -> u32
