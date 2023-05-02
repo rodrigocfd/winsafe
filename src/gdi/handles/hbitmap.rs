@@ -41,6 +41,20 @@ pub trait gdi_Hbitmap: Handle {
 
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// method.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{BITMAP, HBITMAP};
+	///
+	/// let hbmp: HBITMAP; // initialized somewhere
+	/// # let hbmp = HBITMAP::NULL;
+	///
+	/// let mut bitmap = BITMAP::default();
+	/// hbmp.GetObject(&mut bitmap)?;
+	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// ```
 	fn GetObject(&self, pv: &mut BITMAP) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {

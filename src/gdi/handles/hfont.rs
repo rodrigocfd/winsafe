@@ -73,6 +73,19 @@ pub trait gdi_Hfont: Handle {
 
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// method.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{HFONT, LOGFONT};
+	///
+	/// let hfont: HFONT; // initialized somewhere
+	/// # let hfont = HFONT::NULL;
+	///
+	/// let mut log_font = LOGFONT::default();
+	/// hfont.GetObject(&mut log_font)?;
+	/// # Ok::<_, winsafe::co::ERROR>(())
 	fn GetObject(&self, lf: &mut LOGFONT) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {

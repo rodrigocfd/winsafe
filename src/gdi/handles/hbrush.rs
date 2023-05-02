@@ -85,6 +85,20 @@ pub trait gdi_Hbrush: Handle {
 
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// method.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{HBRUSH, LOGBRUSH};
+	///
+	/// let hbr: HBRUSH; // initialized somewhere
+	/// # let hbr = HBRUSH::NULL;
+	///
+	/// let mut brush = LOGBRUSH::default();
+	/// hbr.GetObject(&mut brush)?;
+	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// ```
 	fn GetObject(&self, pv: &mut LOGBRUSH) -> SysResult<()> {
 		match unsafe {
 			gdi::ffi::GetObjectW(
