@@ -56,6 +56,16 @@ macro_rules! const_no_debug_display {
 				n.0
 			}
 		}
+		impl AsRef<$ntype> for $name {
+			fn as_ref(&self) -> &$ntype {
+				&self.0
+			}
+		}
+		impl AsMut<$ntype> for $name {
+			fn as_mut(&mut self) -> &mut $ntype {
+				&mut self.0
+			}
+		}
 
 		// Formatters.
 		impl std::fmt::LowerHex for $name {

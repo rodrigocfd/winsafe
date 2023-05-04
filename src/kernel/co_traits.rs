@@ -46,7 +46,7 @@ pub trait FormattedError: Into<u32> {
 /// ```
 pub trait NativeConst: Sized
 	+ Default + Clone + Copy + PartialEq + Eq + Send + hash::Hash
-	+ From<Self::Raw> + Into<Self::Raw>
+	+ From<Self::Raw> + Into<Self::Raw> + AsRef<Self::Raw> + AsMut<Self::Raw>
 	+ fmt::Debug + fmt::Display
 	+ fmt::LowerHex + fmt::UpperHex
 	+ fmt::Binary + fmt::Octal
