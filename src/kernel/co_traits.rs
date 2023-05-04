@@ -46,13 +46,25 @@ pub trait FormattedError: Into<u32> {
 /// ```
 pub trait NativeConst: Sized
 	+ Default + Clone + Copy + PartialEq + Eq + Send + hash::Hash
-	+ From<Self::Raw> + Into<Self::Raw> + AsRef<Self::Raw> + AsMut<Self::Raw>
+	+ Into<Self::Raw> + AsRef<Self::Raw>
 	+ fmt::Debug + fmt::Display
 	+ fmt::LowerHex + fmt::UpperHex
 	+ fmt::Binary + fmt::Octal
 {
 	/// The underlying type of this constant.
 	type Raw;
+
+	/// Returns a mutable reference to the underlying raw value.
+	///
+	/// # Safety
+	///
+	/// Be sure the value being set is a valid constant value for the given
+	/// type.
+	///
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
+	#[must_use]
+	unsafe fn as_mut(&mut self) -> &mut Self::Raw;
 }
 
 /// A native typed bitflag constant.

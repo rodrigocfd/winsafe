@@ -41,16 +41,14 @@ macro_rules! const_no_debug_display {
 
 		impl crate::prelude::NativeConst for $name {
 			type Raw = $ntype;
+
+			unsafe fn as_mut(&mut self) -> &mut Self::Raw {
+				&mut self.0
+			}
 		}
 
 		unsafe impl Send for $name {}
 
-		// Conversions from/to underlying number type.
-		impl From<$ntype> for $name {
-			fn from(n: $ntype) -> Self {
-				Self(n)
-			}
-		}
 		impl From<$name> for $ntype {
 			fn from(n: $name) -> Self {
 				n.0
@@ -61,13 +59,7 @@ macro_rules! const_no_debug_display {
 				&self.0
 			}
 		}
-		impl AsMut<$ntype> for $name {
-			fn as_mut(&mut self) -> &mut $ntype {
-				&mut self.0
-			}
-		}
 
-		// Formatters.
 		impl std::fmt::LowerHex for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
 				std::fmt::LowerHex::fmt(&self.0, f)

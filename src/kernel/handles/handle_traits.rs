@@ -56,13 +56,15 @@ pub trait Handle: Sized
 	}
 
 	/// Returns a mutable reference to the underlying raw pointer.
-	/// 
-	/// This method exposes the raw pointer used by raw Windows calls. It's an
-	/// opaque pointer to an internal Windows structure, and no dereferencings
-	/// should be attempted.
 	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
+	///
+	/// # Safety
+	///
+	/// This method exposes the raw pointer used by raw Windows calls. It's an
+	/// opaque pointer to an internal Windows structure, and no dereferencings
+	/// should be attempted.
 	#[must_use]
 	unsafe fn as_mut(&mut self) -> &mut *mut std::ffi::c_void;
 
@@ -79,15 +81,15 @@ pub trait Handle: Sized
 
 	/// Returns `None` if the handle is null or invalid, otherwise returns
 	/// `Some(&self)`.
-	/// 
+	///
 	/// # Examples
-	/// 
+	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HFILE;
-	/// 
+	///
 	/// let hfile = HFILE::NULL;
-	/// 
+	///
 	/// match hfile.as_opt() {
 	///     Some(hfile) => println!("Never prints"),
 	///     None => println!("The handle is null"),
