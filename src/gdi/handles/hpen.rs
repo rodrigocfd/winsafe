@@ -38,7 +38,7 @@ pub trait gdi_Hpen: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::CreatePen(style.0, width, color.0),
+				gdi::ffi::CreatePen(style.0, width, color.into()),
 			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}

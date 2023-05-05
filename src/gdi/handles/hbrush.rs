@@ -52,7 +52,7 @@ pub trait gdi_Hbrush: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::CreateHatchBrush(hatch.0, color.0),
+				gdi::ffi::CreateHatchBrush(hatch.0, color.into()),
 			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -78,7 +78,7 @@ pub trait gdi_Hbrush: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::CreateSolidBrush(color.0),
+				gdi::ffi::CreateSolidBrush(color.into()),
 			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}

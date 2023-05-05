@@ -25,6 +25,37 @@ macro_rules! impl_default_with_size {
 	};
 }
 
+/// Implements `IntUnderlying`, and other needed traits.
+macro_rules! impl_intunderlying {
+	($name:ident, $ntype:ty) => {
+		unsafe impl Send for $name {}
+
+		impl From<$name> for $ntype {
+			fn from(v: $name) -> Self {
+				v.0
+			}
+		}
+
+		impl AsRef<$ntype> for $name {
+			fn as_ref(&self) -> &$ntype {
+				&self.0
+			}
+		}
+
+		impl crate::prelude::IntUnderlying for $name {
+			type Raw = $ntype;
+
+			unsafe fn from_raw(v: Self::Raw) -> Self {
+				Self(v)
+			}
+
+			unsafe fn as_mut(&mut self) -> &mut Self::Raw {
+				&mut self.0
+			}
+		}
+	};
+}
+
 /// Implements a serialization method.
 macro_rules! pub_fn_serialize {
 	() => {

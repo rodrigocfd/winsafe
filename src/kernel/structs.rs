@@ -173,14 +173,10 @@ impl_default_with_size!(HEAPLIST32, dwSize);
 /// [`LANGID`](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifiers)
 /// language identifier.
 #[repr(transparent)]
-#[derive(Debug, Clone, Copy, Eq, PartialEq)]
-pub struct LANGID(pub(crate) u16);
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct LANGID(u16);
 
-impl From<LANGID> for u16 {
-	fn from(v: LANGID) -> Self {
-		v.0
-	}
-}
+impl_intunderlying!(LANGID, u16);
 
 impl LANGID {
 	/// [`LANGID`](crate::LANGID) composed of
@@ -221,8 +217,10 @@ impl LANGID {
 /// [`LCID`](https://learn.microsoft.com/en-us/windows/win32/intl/locale-identifiers)
 /// locale identifier.
 #[repr(transparent)]
-#[derive(Debug, Clone, Copy, Eq, PartialEq)]
-pub struct LCID(pub(crate) u32);
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct LCID(u32);
+
+impl_intunderlying!(LCID, u32);
 
 impl LCID {
 	/// [`LCID`](crate::LCID) composed of
@@ -514,11 +512,11 @@ impl Default for SECURITY_DESCRIPTOR {
 
 /// [`SID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid)
 /// struct.
-/// 
+///
 /// Note that you cannot directly instantiate this struct, because the
 /// `SubAuthority` field is dynamically allocated. There are 3 possible types of
 /// allocations:
-/// 
+///
 /// * handled by the OS, which yields a [`FreeSidGuard`](crate::guard::FreeSidGuard);
 /// * handled by the OS, which yields a [`LocalFreeSidGuard`](crate::guard::LocalFreeSidGuard);
 /// * handled by WinSafe, which yields a [`SidGuard`](crate::guard::SidGuard).

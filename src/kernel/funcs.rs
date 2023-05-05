@@ -20,19 +20,19 @@ use crate::prelude::Handle;
 
 /// [`AllocateAndInitializeSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-allocateandinitializesid)
 /// function.
-/// 
+///
 /// # Panics
-/// 
+///
 /// Panics if `sub_authorities` has more than 8 elements.
-/// 
+///
 /// # Examples
-/// 
+///
 /// Create a well-known SID for the Everyone group:
-/// 
+///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{AllocateAndInitializeSid, co, SID_IDENTIFIER_AUTHORITY};
-/// 
+///
 /// let sid_everyone = AllocateAndInitializeSid(
 ///     &SID_IDENTIFIER_AUTHORITY::WORLD,
 ///     &[
@@ -41,13 +41,13 @@ use crate::prelude::Handle;
 /// )?;
 /// # Ok::<_, co::ERROR>(())
 /// ```
-/// 
+///
 /// Create a SID for the BUILTIN\Administrators group:
-/// 
+///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{AllocateAndInitializeSid, co, SID_IDENTIFIER_AUTHORITY};
-/// 
+///
 /// let sid_builtin_administrators = AllocateAndInitializeSid(
 ///     &SID_IDENTIFIER_AUTHORITY::NT,
 ///     &[
@@ -90,7 +90,7 @@ pub fn AllocateAndInitializeSid(
 
 /// [`ConvertSidToStringSid`](https://learn.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsidw)
 /// function.
-/// 
+///
 /// You don't need to call this function directly, because [`SID`](crate::SID)
 /// implements [`Display`](https://doc.rust-lang.org/std/fmt/trait.Display.html)
 /// and [`ToString`](https://doc.rust-lang.org/std/string/trait.ToString.html)
@@ -102,7 +102,7 @@ pub fn ConvertSidToStringSid(sid: &SID) -> SysResult<String> {
 		unsafe {
 			kernel::ffi::ConvertSidToStringSidW(sid as *const _ as _, &mut pstr)
 		},
-	)?;	
+	)?;
 	let name = WString::from_wchars_nullt(pstr).to_string();
 	let _ = unsafe { LocalFreeGuard::new(HLOCAL::from_ptr(pstr as _)) }; // free returned pointer
 	Ok(name)
@@ -159,13 +159,13 @@ pub fn CopySid(src: &SID) -> SysResult<SidGuard> {
 
 /// [`CreateWellKnownSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-createwellknownsid)
 /// function.
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, CreateWellKnownSid};
-/// 
+///
 /// let sid = CreateWellKnownSid(co::WELL_KNOWN_SID_TYPE::LocalSystem, None)?;
 /// # Ok::<_, co::ERROR>(())
 /// ```
@@ -367,7 +367,7 @@ pub fn FlushProcessWriteBuffers() {
 
 /// [`FormatMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
 /// function.
-/// 
+///
 /// You don't need to call this function: all error types implement the
 /// [`FormattedError`](crate::prelude::FormattedError) trait which will
 /// automatically call `FormatMessage`.
@@ -381,12 +381,12 @@ pub unsafe fn FormatMessage(
 ) -> SysResult<String>
 {
 	let mut ptr_buf = std::ptr::null_mut() as *mut u16;
-	
+
 	let nchars = match kernel::ffi::FormatMessageW(
 		flags.0,
 		source.unwrap_or(std::ptr::null_mut()),
 		message_id,
-		lang_id.0 as _,
+		u16::from(lang_id) as _,
 		&mut ptr_buf as *mut *mut _ as _, // pass pointer to pointer
 		0,
 		args.map_or(std::ptr::null_mut(), |arr| arr.as_ptr() as _),
@@ -486,7 +486,7 @@ pub fn GetDriveType(root_path_name: Option<&str>) -> co::DRIVE {
 /// Returns the parsed strings, and automatically frees the retrieved
 /// environment block with
 /// [`FreeEnvironmentStrings`](https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-freeenvironmentstringsw).
-/// 
+///
 /// # Examples
 ///
 /// Retrieving and printing the key/value pairs of all environment strings:
@@ -622,16 +622,16 @@ pub fn GetFileAttributes(file_name: &str) -> SysResult<co::FILE_ATTRIBUTE> {
 
 /// [`GetLocalTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlocaltime)
 /// function.
-/// 
+///
 /// This function retrieves local time; for UTC time use
 /// [`GetSystemTime`](crate::GetSystemTime).
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{GetLocalTime, SYSTEMTIME};
-/// 
+///
 /// let mut st = SYSTEMTIME::default();
 /// GetLocalTime(&mut st);
 /// ```
@@ -654,13 +654,13 @@ pub fn GetSidLengthRequired(sub_authority_count: u8) -> u32 {
 
 /// [`GetStartupInfo`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getstartupinfow)
 /// function.
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{GetStartupInfo, STARTUPINFO};
-/// 
+///
 /// let mut si = STARTUPINFO::default();
 /// GetStartupInfo(&mut si);
 /// ```
@@ -682,7 +682,7 @@ pub fn GetSystemDirectory() -> SysResult<String> {
 
 /// [`GetSystemFileCacheSize`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-getsystemfilecachesize)
 /// function.
-/// 
+///
 /// Returns minimum and maximum size of file cache (in bytes), and enabled cache
 /// limit flags, respectively.
 #[must_use]
@@ -698,13 +698,13 @@ pub fn GetSystemFileCacheSize() -> SysResult<(usize, usize, co::FILE_CACHE)> {
 
 /// [`GetSystemInfo`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsysteminfo)
 /// function.
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{GetSystemInfo, SYSTEM_INFO};
-/// 
+///
 /// let mut si = SYSTEM_INFO::default();
 /// GetSystemInfo(&mut si);
 /// ```
@@ -717,13 +717,13 @@ pub fn GetSystemInfo(si: &mut SYSTEM_INFO) {
 ///
 /// This function retrieves UTC time; for local time use
 /// [`GetLocalTime`](crate::GetLocalTime).
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{GetSystemTime, SYSTEMTIME};
-/// 
+///
 /// let mut st = SYSTEMTIME::default();
 /// GetSystemTime(&mut st);
 /// ```
@@ -935,7 +935,7 @@ pub const fn HIWORD(v: u32) -> u16 {
 
 /// [`InitializeSecurityDescriptor`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-initializesecuritydescriptor)
 /// function.
-/// 
+///
 /// You don't need to call this function directly, because
 /// [`SECURITY_DESCRIPTOR`](crate::SECURITY_DESCRIPTOR) implements the
 /// [`Default`](https://doc.rust-lang.org/std/default/trait.Default.html) trait,
@@ -1112,15 +1112,15 @@ pub const fn LODWORD(v: u64) -> u32 {
 
 /// [`LookupAccountName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupaccountnamew)
 /// function.
-/// 
+///
 /// Returns account's domain name, `SID` and type, respectively.
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{GetUserName, LookupAccountName};
-/// 
+///
 /// let user_name = GetUserName()?;
 /// let (domain_name, sid, kind) = LookupAccountName(None, &user_name)?;
 /// # Ok::<_, winsafe::co::ERROR>(())
@@ -1171,7 +1171,7 @@ pub fn LookupAccountName(
 
 /// [`LookupAccountSid`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupaccountsidw)
 /// function.
-/// 
+///
 /// Returns account name, domain name and type, respectively.
 #[must_use]
 pub fn LookupAccountSid(
@@ -1399,7 +1399,7 @@ pub fn SetLastError(err_code: co::ERROR) {
 
 /// [`SetThreadStackGuarantee`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadstackguarantee)
 /// function.
-/// 
+///
 /// Returns the size of the previous stack.
 pub fn SetThreadStackGuarantee(stack_size_in_bytes: u32) -> SysResult<u32> {
 	let mut sz = stack_size_in_bytes;
@@ -1534,7 +1534,7 @@ pub fn WideCharToMultiByte(
 				&mut default_char_buf,
 				&mut bool_buf,
 			)
-		},	
+		},
 	).map(|_| {
 		if let Some(used_default_char) = used_default_char {
 			*used_default_char = bool_buf != 0;

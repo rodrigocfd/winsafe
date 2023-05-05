@@ -3,7 +3,7 @@ use crate::comctl::decl::PBRANGE;
 use crate::comctl::privs::CLR_DEFAULT;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult};
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{IntUnderlying, MsgSend};
 use crate::user::decl::COLORREF;
 use crate::user::privs::zero_as_badargs;
 
@@ -43,7 +43,7 @@ unsafe impl MsgSend for GetBarColor {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			v => Some(COLORREF(v)),
+			v => Some(unsafe { COLORREF::from_raw(v) }),
 		}
 	}
 
@@ -68,7 +68,7 @@ unsafe impl MsgSend for GetBkColor {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			v => Some(COLORREF(v)),
+			v => Some(unsafe { COLORREF::from_raw(v) }),
 		}
 	}
 
@@ -186,14 +186,14 @@ unsafe impl MsgSend for SetBarColor {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			v => Some(COLORREF(v)),
+			v => Some(unsafe { COLORREF::from_raw(v) }),
 		}
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETBARCOLOR.into(),
-			wparam: self.color.map_or(CLR_DEFAULT, |color| color.0) as _,
+			wparam: self.color.map_or(CLR_DEFAULT, |color| color.into()) as _,
 			lparam: 0,
 		}
 	}
@@ -213,14 +213,14 @@ unsafe impl MsgSend for SetBkColor {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			v => Some(COLORREF(v)),
+			v => Some(unsafe { COLORREF::from_raw(v) }),
 		}
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETBKCOLOR.into(),
-			wparam: self.color.map_or(CLR_DEFAULT, |color| color.0) as _,
+			wparam: self.color.map_or(CLR_DEFAULT, |color| color.into()) as _,
 			lparam: 0,
 		}
 	}

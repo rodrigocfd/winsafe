@@ -69,7 +69,7 @@ impl AtomStr {
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			Self::Atom(atom) => MAKEINTRESOURCE(atom.0 as _),
+			Self::Atom(atom) => MAKEINTRESOURCE(u16::from(*atom) as _),
 			Self::Str(ws) => ws.as_ptr(),
 		}
 	}
@@ -432,7 +432,7 @@ pub enum NccspRect<'a, 'b> {
 }
 
 /// Variant parameter for:
-/// 
+///
 /// * [`HWND::MapWindowPoints`](crate::prelude::user_Hwnd::MapWindowPoints) `points`.
 pub enum PtsRc<'a> {
 	/// A series of [`POINT`](crate::POINT) structs.

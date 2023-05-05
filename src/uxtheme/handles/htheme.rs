@@ -4,7 +4,7 @@ use crate::{co, uxtheme};
 use crate::gdi::guard::DeleteObjectGuard;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::Handle;
+use crate::prelude::{Handle, IntUnderlying};
 use crate::user::decl::{COLORREF, HDC, HRGN, RECT};
 
 impl_handle! { HTHEME;
@@ -123,7 +123,7 @@ pub trait uxtheme_Htheme: Handle {
 	fn GetThemeColor(&self,
 		part_state: co::VS, prop: co::TMT) -> HrResult<COLORREF>
 	{
-		let mut color = COLORREF(0);
+		let mut color = COLORREF::default();
 		ok_to_hrresult(
 			unsafe {
 				uxtheme::ffi::GetThemeColor(
@@ -131,7 +131,7 @@ pub trait uxtheme_Htheme: Handle {
 					part_state.part,
 					part_state.state,
 					prop.0,
-					&mut color as *mut _ as _,
+					color.as_mut(),
 				)
 			},
 		).map(|_| color)

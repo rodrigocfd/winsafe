@@ -3,7 +3,7 @@ use crate::comctl::decl::DATETIMEPICKERINFO;
 use crate::comctl::privs::GDT_ERROR;
 use crate::kernel::decl::{SysResult, SYSTEMTIME, WString};
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
+use crate::prelude::{Handle, IntUnderlying, MsgSend};
 use crate::user::decl::{COLORREF, HWND, SIZE};
 use crate::user::privs::{minus1_as_badargs, zero_as_badargs};
 
@@ -71,7 +71,7 @@ unsafe impl MsgSend for GetMcColor {
 	type RetType = SysResult<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_badargs(v).map(|v| COLORREF(v as _))
+		minus1_as_badargs(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -217,14 +217,14 @@ unsafe impl MsgSend for SetMcColor {
 	type RetType = SysResult<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_badargs(v).map(|v| COLORREF(v as _))
+		minus1_as_badargs(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETMCCOLOR.into(),
 			wparam: self.color_index.0 as _,
-			lparam: self.color.0 as _,
+			lparam: u32::from(self.color) as _,
 		}
 	}
 }

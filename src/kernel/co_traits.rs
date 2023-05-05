@@ -5,6 +5,67 @@ use std::{fmt, hash, ops};
 use crate::co;
 use crate::kernel::decl::{FormatMessage, LANGID};
 
+/// A type which as a primitive integer as its underlying type.
+pub trait IntUnderlying: Sized
+	+ Clone + Copy + PartialEq + Eq + hash::Hash + Send
+	+ Into<Self::Raw> + AsRef<Self::Raw>
+{
+	/// The underlying raw integer type.
+	type Raw;
+
+	/// Constructs a new `IntUnderlying` by wrapping the given integer value.
+	///
+	/// # Safety
+	///
+	/// Be sure the given value is meaningful for the actual type.
+	#[must_use]
+	unsafe fn from_raw(v: Self::Raw) -> Self;
+
+	/// Returns a mutable reference to the underlying raw value.
+	///
+	/// # Safety
+	///
+	/// Be sure the integer being set is meaningful for the actual type.
+	#[must_use]
+	unsafe fn as_mut(&mut self) -> &mut Self::Raw;
+}
+
+/// A native typed constant.
+///
+/// If the values of this constant type can be combined as bitflags, it will
+/// also implement the [`NativeBitflag`](crate::prelude::NativeBitflag) trait.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
+pub trait NativeConst: IntUnderlying
+	+ Default + fmt::Debug + fmt::Display
+	+ fmt::LowerHex + fmt::UpperHex
+	+ fmt::Binary + fmt::Octal
+{}
+
+/// A native typed bitflag constant.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
+pub trait NativeBitflag: NativeConst
+	+ ops::BitAnd + ops::BitAndAssign
+	+ ops::BitOr + ops::BitOrAssign
+	+ ops::BitXor + ops::BitXorAssign
+	+ ops::Not
+{
+	/// Tells whether other bitflag style is present.
+	///
+	/// Equivalent to `(val & other) != 0`.
+	#[must_use]
+	fn has(&self, other: Self) -> bool;
+}
+
 /// A system error which can be formatted with
 /// [`FormatMessage`](crate::FormatMessage).
 pub trait FormattedError: Into<u32> {
@@ -32,57 +93,4 @@ pub trait FormattedError: Into<u32> {
 			Ok(s) => s,
 		}
 	}
-}
-
-/// A native typed constant.
-///
-/// If the values of this constant type can be combined as bitflags, it will
-/// also implement the [`NativeBitflag`](crate::prelude::NativeBitflag) trait.
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait NativeConst: Sized
-	+ Default + Clone + Copy + PartialEq + Eq + Send + hash::Hash
-	+ Into<Self::Raw> + AsRef<Self::Raw>
-	+ fmt::Debug + fmt::Display
-	+ fmt::LowerHex + fmt::UpperHex
-	+ fmt::Binary + fmt::Octal
-{
-	/// The underlying type of this constant.
-	type Raw;
-
-	/// Returns a mutable reference to the underlying raw value.
-	///
-	/// # Safety
-	///
-	/// Be sure the value being set is a valid constant value for the given
-	/// type.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
-	#[must_use]
-	unsafe fn as_mut(&mut self) -> &mut Self::Raw;
-}
-
-/// A native typed bitflag constant.
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```rust,no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait NativeBitflag: NativeConst
-	+ ops::BitAnd + ops::BitAndAssign
-	+ ops::BitOr + ops::BitOrAssign
-	+ ops::BitXor + ops::BitXorAssign
-	+ ops::Not
-{
-	/// Tells whether other bitflag style is present.
-	///
-	/// Equivalent to `(val & other) != 0`.
-	#[must_use]
-	fn has(&self, other: Self) -> bool;
 }

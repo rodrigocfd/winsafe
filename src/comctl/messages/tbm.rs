@@ -6,7 +6,7 @@ use crate::comctl::decl::{
 use crate::comctl::privs::HINST_COMMCTRL;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
+use crate::prelude::{Handle, IntUnderlying, MsgSend};
 use crate::user::decl::{COLORREF, HWND, POINT, RECT, SIZE};
 use crate::user::privs::{
 	minus1_as_badargs, minus1_as_none, zero_as_badargs, zero_as_none,
@@ -648,7 +648,7 @@ unsafe impl MsgSend for GetInsertMarkColor {
 	type RetType = COLORREF;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		COLORREF(v as _)
+		unsafe { COLORREF::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1830,14 +1830,14 @@ unsafe impl MsgSend for SetInsertMarkColor {
 	type RetType = COLORREF;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		COLORREF(v as _)
+		unsafe { COLORREF::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::SETINSERTMARKCOLOR.into(),
 			wparam: 0,
-			lparam: self.color.0 as _,
+			lparam: u32::from(self.color) as _,
 		}
 	}
 }

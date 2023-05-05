@@ -22,5 +22,5 @@ pub fn InitCommonControlsEx(icce: &INITCOMMONCONTROLSEX) -> SysResult<()> {
 /// [`InitMUILanguage`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initmuilanguage)
 /// function.
 pub fn InitMUILanguage(ui_lang: LANGID) {
-	unsafe { comctl::ffi::InitMUILanguage(ui_lang.0) }
+	unsafe { comctl::ffi::InitMUILanguage(ui_lang.into()) }
 }

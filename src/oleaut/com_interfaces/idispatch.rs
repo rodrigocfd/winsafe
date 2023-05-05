@@ -61,7 +61,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 					&co::IID::default() as *const _ as _,
 					wptrs.as_ptr(),
 					names.len() as _,
-					lcid.0,
+					lcid.into(),
 					ids.as_mut_ptr() as _,
 				),
 			)
@@ -90,7 +90,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 				(vt.GetTypeInfo)(
 					self.ptr(),
 					info_type,
-					lcid.0,
+					lcid.into(),
 					&mut ppv_queried,
 				),
 			).map(|_| ITypeInfo::from(ppv_queried))

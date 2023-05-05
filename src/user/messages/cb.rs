@@ -3,7 +3,7 @@ use crate::kernel::decl::{
 	HIWORD, LANGID, LOWORD, MAKEDWORD, SysResult, WString,
 };
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{IntUnderlying, MsgSend};
 use crate::user::decl::{COMBOBOXINFO, RECT};
 use crate::user::privs::{CB_ERR, CB_ERRSPACE, zero_as_badargs};
 
@@ -474,7 +474,7 @@ unsafe impl MsgSend for GetLocale {
 	type RetType = LANGID;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		LANGID(v as _)
+		unsafe { LANGID::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -837,7 +837,7 @@ unsafe impl MsgSend for SetLocale {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::SETLOCALE.into(),
-			wparam: self.locale.0 as _,
+			wparam: u16::from(self.locale) as _,
 			lparam: 0,
 		}
 	}

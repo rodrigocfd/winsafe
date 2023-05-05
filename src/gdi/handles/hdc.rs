@@ -10,7 +10,7 @@ use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::privs::{
 	bool_to_sysresult, ptr_to_sysresult, ptr_to_sysresult_handle,
 };
-use crate::prelude::{GdiObjectSelect, Handle};
+use crate::prelude::{GdiObjectSelect, Handle, IntUnderlying};
 use crate::user::decl::{
 	COLORREF, HBITMAP, HBRUSH, HDC, HRGN, POINT, RECT, SIZE,
 };
@@ -259,7 +259,7 @@ pub trait gdi_Hdc: Handle {
 	fn GetBkColor(&self) -> SysResult<COLORREF> {
 		match unsafe { gdi::ffi::GetBkColor(self.as_ptr()) } {
 			CLR_INVALID => Err(GetLastError()),
-			c => Ok(COLORREF(c)),
+			c => Ok(unsafe { COLORREF::from_raw(c) }),
 		}
 	}
 
@@ -279,7 +279,7 @@ pub trait gdi_Hdc: Handle {
 	fn GetDCBrushColor(&self) -> SysResult<COLORREF> {
 		match unsafe { gdi::ffi::GetDCBrushColor(self.as_ptr()) } {
 			CLR_INVALID => Err(GetLastError()),
-			color => Ok(COLORREF(color)),
+			color => Ok(unsafe { COLORREF::from_raw(color) }),
 		}
 	}
 
@@ -289,7 +289,7 @@ pub trait gdi_Hdc: Handle {
 	fn GetDCPenColor(&self) -> SysResult<COLORREF> {
 		match unsafe { gdi::ffi::GetDCPenColor(self.as_ptr()) } {
 			CLR_INVALID => Err(GetLastError()),
-			color => Ok(COLORREF(color)),
+			color => Ok(unsafe { COLORREF::from_raw(color) }),
 		}
 	}
 
@@ -399,7 +399,7 @@ pub trait gdi_Hdc: Handle {
 	fn GetTextColor(&self) -> SysResult<COLORREF> {
 		match unsafe { gdi::ffi::GetTextColor(self.as_ptr()) } {
 			CLR_INVALID => Err(GetLastError()),
-			color => Ok(COLORREF(color)),
+			color => Ok(unsafe { COLORREF::from_raw(color) }),
 		}
 	}
 
@@ -768,9 +768,9 @@ pub trait gdi_Hdc: Handle {
 	/// [`SetBkColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkcolor)
 	/// method.
 	fn SetBkColor(&self, color: COLORREF) -> SysResult<COLORREF> {
-		match unsafe { gdi::ffi::SetBkColor(self.as_ptr(), color.0) } {
+		match unsafe { gdi::ffi::SetBkColor(self.as_ptr(), color.into()) } {
 			CLR_INVALID => Err(GetLastError()),
-			old => Ok(COLORREF(old)),
+			old => Ok(unsafe { COLORREF::from_raw(old) }),
 		}
 	}
 
@@ -801,18 +801,18 @@ pub trait gdi_Hdc: Handle {
 	/// [`SetDCBrushColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setdcbrushcolor)
 	/// method.
 	fn SetDCBrushColor(&self, color: COLORREF) -> SysResult<COLORREF> {
-		match unsafe { gdi::ffi::SetDCBrushColor(self.as_ptr(), color.0) } {
+		match unsafe { gdi::ffi::SetDCBrushColor(self.as_ptr(), color.into()) } {
 			CLR_INVALID => Err(GetLastError()),
-			old => Ok(COLORREF(old)),
+			old => Ok(unsafe { COLORREF::from_raw(old) }),
 		}
 	}
 
 	/// [`SetDCPenColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setdcpencolor)
 	/// method.
 	fn SetDCPenColor(&self, color: COLORREF) -> SysResult<COLORREF> {
-		match unsafe { gdi::ffi::SetDCPenColor(self.as_ptr(), color.0) } {
+		match unsafe { gdi::ffi::SetDCPenColor(self.as_ptr(), color.into()) } {
 			CLR_INVALID => Err(GetLastError()),
-			old => Ok(COLORREF(old)),
+			old => Ok(unsafe { COLORREF::from_raw(old) }),
 		}
 	}
 
@@ -880,9 +880,9 @@ pub trait gdi_Hdc: Handle {
 	/// [`SetTextColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-settextcolor)
 	/// method.
 	fn SetTextColor(&self, color: COLORREF) -> SysResult<COLORREF> {
-		match unsafe { gdi::ffi::SetTextColor(self.as_ptr(), color.0) } {
+		match unsafe { gdi::ffi::SetTextColor(self.as_ptr(), color.into()) } {
 			CLR_INVALID => Err(GetLastError()),
-			old => Ok(COLORREF(old)),
+			old => Ok(unsafe { COLORREF::from_raw(old) }),
 		}
 	}
 

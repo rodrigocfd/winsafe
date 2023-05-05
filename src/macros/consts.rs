@@ -39,26 +39,9 @@ macro_rules! const_no_debug_display {
 		#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 		pub struct $name(pub(crate) $ntype);
 
-		impl crate::prelude::NativeConst for $name {
-			type Raw = $ntype;
+		impl_intunderlying!($name, $ntype);
 
-			unsafe fn as_mut(&mut self) -> &mut Self::Raw {
-				&mut self.0
-			}
-		}
-
-		unsafe impl Send for $name {}
-
-		impl From<$name> for $ntype {
-			fn from(n: $name) -> Self {
-				n.0
-			}
-		}
-		impl AsRef<$ntype> for $name {
-			fn as_ref(&self) -> &$ntype {
-				&self.0
-			}
-		}
+		impl crate::prelude::NativeConst for $name {}
 
 		impl std::fmt::LowerHex for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {

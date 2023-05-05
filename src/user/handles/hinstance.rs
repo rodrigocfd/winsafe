@@ -2,7 +2,7 @@
 
 use crate::kernel::decl::{GetLastError, HINSTANCE, IdStr, SysResult, WString};
 use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::Handle;
+use crate::prelude::{Handle, IntUnderlying};
 use crate::user;
 use crate::user::decl::{
 	ATOM, DLGPROC, HACCEL, HMENU, HWND, IdIdcStr, IdIdiStr, WNDCLASSEX,
@@ -100,7 +100,7 @@ pub trait user_Hinstance: Handle {
 			)
 		} {
 			0 => Err(GetLastError()),
-			atom => Ok(ATOM(atom as _)),
+			atom => Ok(unsafe { ATOM::from_raw(atom as _) }),
 		}
 	}
 

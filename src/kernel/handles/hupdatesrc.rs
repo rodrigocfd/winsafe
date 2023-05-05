@@ -56,7 +56,7 @@ pub trait kernel_Hupdatersrc: Handle {
 					self.as_ptr(),
 					resource_type.as_ptr(),
 					resource_id.as_ptr(),
-					language.0,
+					language.into(),
 					data.as_ptr() as _,
 					data.len() as _,
 				)

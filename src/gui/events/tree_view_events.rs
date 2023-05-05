@@ -66,7 +66,7 @@ impl TreeViewEvents {
 		///             "Old item: {} - new item: {} - action: {}",
 		///             p.itemOld.pszText().unwrap(),
 		///             p.itemNew.pszText().unwrap(),
-		///             co::TVC::from(p.action),
+		///             unsafe { co::TVC::from_raw(p.action) },
 		///         );
 		///         Ok(())
 		///     },

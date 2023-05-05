@@ -5,7 +5,7 @@ use crate::dshow::decl::MFVideoNormalizedRect;
 use crate::kernel::ffi_types::{BOOL, HANDLE, HRES, PCVOID, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, ole_IUnknown};
+use crate::prelude::{Handle, IntUnderlying, ole_IUnknown};
 use crate::user::decl::{COLORREF, HWND, RECT, SIZE};
 use crate::vt::IUnknownVT;
 
@@ -85,10 +85,10 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	/// method;
 	#[must_use]
 	fn GetBorderColor(&self) -> HrResult<COLORREF> {
-		let mut color = COLORREF::new(0, 0, 0);
+		let mut color = COLORREF::default();
 		unsafe {
 			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
-			ok_to_hrresult((vt.GetBorderColor)(self.ptr(), &mut color.0))
+			ok_to_hrresult((vt.GetBorderColor)(self.ptr(), color.as_mut()))
 		}.map(|_| color)
 	}
 
@@ -202,7 +202,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	fn SetBorderColor(&self, color: COLORREF) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
-			ok_to_hrresult((vt.SetBorderColor)(self.ptr(), color.0))
+			ok_to_hrresult((vt.SetBorderColor)(self.ptr(), color.into()))
 		}
 	}
 

@@ -10,7 +10,7 @@ use crate::kernel::privs::{
 	bool_to_sysresult, MAX_PATH, ptr_to_sysresult, ptr_to_sysresult_handle,
 	str_to_iso88591,
 };
-use crate::prelude::Handle;
+use crate::prelude::{Handle, IntUnderlying};
 
 impl_handle! { HINSTANCE;
 	/// Handle to an
@@ -125,7 +125,7 @@ pub trait kernel_Hinstance: Handle {
 					self.as_ptr(),
 					resource_id.as_ptr(),
 					resource_type.as_ptr(),
-					language.unwrap_or(LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL)).0,
+					language.unwrap_or(LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL)).into(),
 				)
 			},
 		)
@@ -304,7 +304,7 @@ extern "system" fn enum_resource_languages_proc<F>(
 	where F: Fn(LANGID) -> bool,
 {
 	let func = unsafe { &*(lparam as *const F) };
-	func(LANGID(language_id)) as _
+	func(unsafe { LANGID::from_raw(language_id) }) as _
 }
 
 extern "system" fn enum_resource_names_proc<F>(

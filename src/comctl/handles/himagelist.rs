@@ -64,7 +64,7 @@ pub trait comctl_Himagelist: Handle {
 	{
 		match unsafe {
 			comctl::ffi::ImageList_AddMasked(
-				self.as_ptr(), hbmp_image.as_ptr(), color_mask.0,
+				self.as_ptr(), hbmp_image.as_ptr(), color_mask.into(),
 			)
 		} {
 			-1 => Err(GetLastError()),
@@ -85,7 +85,7 @@ pub trait comctl_Himagelist: Handle {
 	/// automatically calls `ImageList_EndDrag` when the guard goes out of
 	/// scope. You must, however, keep the guard alive, otherwise the cleanup
 	/// will be performed right away.
-	/// 
+	///
 	/// # Examples
 	///
 	/// ```rust,no_run

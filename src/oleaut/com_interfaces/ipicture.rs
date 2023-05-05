@@ -74,7 +74,7 @@ pub trait oleaut_IPicture: ole_IPicture {
 					WString::from_str(path).as_ptr(),
 					std::ptr::null_mut(),
 					0,
-					transparent_color.map_or(0, |c| c.0),
+					transparent_color.map_or(0, |c| c.into()),
 					&Self::IID as *const _ as _,
 					&mut ppv_queried as *mut _ as _,
 				)

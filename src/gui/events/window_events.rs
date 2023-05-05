@@ -108,7 +108,7 @@ pub trait GuiEvents {
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	///
-	/// let CUSTOM_MSG = co::WM::from(0x1234);
+	/// let CUSTOM_MSG = unsafe { co::WM::from_raw(0x1234) };
 	///
 	/// wnd.on().wm(CUSTOM_MSG,
 	///     move |p: msg::WndMsg| -> AnyResult<Option<isize>> {

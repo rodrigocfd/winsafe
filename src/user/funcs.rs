@@ -4,7 +4,7 @@ use crate::{co, user};
 use crate::kernel::decl::{GetLastError, HINSTANCE, SysResult, WString};
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult};
-use crate::prelude::{Handle, MsgSend};
+use crate::prelude::{Handle, IntUnderlying, MsgSend};
 use crate::user::decl::{
 	ATOM, AtomStr, COLORREF, DEVMODE, DISPLAY_DEVICE, GmidxEnum, GUITHREADINFO,
 	HwKbMouse, HWND, INPUT, MSG, POINT, RECT, SIZE, TRACKMOUSEEVENT, WNDCLASSEX,
@@ -515,7 +515,7 @@ pub fn GetQueueStatus(flags: co::QS) -> u32 {
 /// function.
 #[must_use]
 pub fn GetSysColor(index: co::COLOR) -> COLORREF {
-	COLORREF(unsafe { user::ffi::GetSysColor(index.0) })
+	unsafe { COLORREF::from_raw(user::ffi::GetSysColor(index.0)) }
 }
 
 /// [`GetSystemMetrics`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics)
@@ -682,7 +682,7 @@ pub fn PtInRect(rc: &RECT, pt: POINT) -> bool {
 pub unsafe fn RegisterClassEx(wcx: &WNDCLASSEX) -> SysResult<ATOM> {
 	match unsafe { user::ffi::RegisterClassExW(wcx as *const _ as _) } {
 		0 => Err(GetLastError()),
-		atom => Ok(ATOM(atom)),
+		atom => Ok(unsafe { ATOM::from_raw(atom) }),
 	}
 }
 

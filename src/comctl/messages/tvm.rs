@@ -5,7 +5,7 @@ use crate::comctl::decl::{
 use crate::comctl::privs::CLR_DEFAULT;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
+use crate::prelude::{Handle, IntUnderlying, MsgSend};
 use crate::user::decl::{COLORREF, HWND, RECT};
 use crate::user::privs::{minus1_as_none, zero_as_badargs, zero_as_none};
 
@@ -164,7 +164,7 @@ unsafe impl MsgSend for GetBkColor {
 	type RetType = Option<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_none(v).map(|v| COLORREF(v as _))
+		minus1_as_none(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -298,7 +298,7 @@ unsafe impl MsgSend for GetInsertMarkColor {
 	type RetType = COLORREF;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		COLORREF(v as _)
+		unsafe { COLORREF::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -442,7 +442,7 @@ unsafe impl MsgSend for GetLineColor {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			c => Some(COLORREF(c))
+			c => Some(unsafe { COLORREF::from_raw(c) })
 		}
 	}
 
@@ -512,7 +512,7 @@ unsafe impl MsgSend for GetTextColor {
 	type RetType = Option<COLORREF>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_none(v).map(|v| COLORREF(v as _))
+		minus1_as_none(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -750,7 +750,7 @@ unsafe impl MsgSend for SetBkColor {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => None,
-			v => Some(COLORREF(v as _)),
+			v => Some(unsafe { COLORREF::from_raw(v as _) }),
 		}
 	}
 
@@ -758,7 +758,7 @@ unsafe impl MsgSend for SetBkColor {
 		WndMsg {
 			msg_id: co::TVM::SETBKCOLOR.into(),
 			wparam: 0,
-			lparam: self.color.map_or(-1, |color| color.0 as _),
+			lparam: self.color.map_or(-1, |color| u32::from(color) as _),
 		}
 	}
 }
@@ -899,14 +899,14 @@ unsafe impl MsgSend for SetInsertMarkColor {
 	type RetType = COLORREF;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		COLORREF(v as _)
+		unsafe { COLORREF::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SETINSERTMARKCOLOR.into(),
 			wparam: 0,
-			lparam: self.color.0 as _,
+			lparam: u32::from(self.color) as _,
 		}
 	}
 }
@@ -971,14 +971,14 @@ unsafe impl MsgSend for SetLineColor {
 	type RetType = COLORREF;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		COLORREF(v as _)
+		unsafe { COLORREF::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SETLINECOLOR.into(),
 			wparam: 0,
-			lparam: self.color.map_or(CLR_DEFAULT, |c| c.0 as _) as _,
+			lparam: self.color.map_or(CLR_DEFAULT, |c| c.into()) as _,
 		}
 	}
 }
@@ -1021,7 +1021,7 @@ unsafe impl MsgSend for SetTextColor {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => None,
-			v => Some(COLORREF(v as _)),
+			v => Some(unsafe { COLORREF::from_raw(v as _) }),
 		}
 	}
 
@@ -1029,7 +1029,7 @@ unsafe impl MsgSend for SetTextColor {
 		WndMsg {
 			msg_id: co::TVM::SETTEXTCOLOR.into(),
 			wparam: 0,
-			lparam: self.color.map_or(-1, |color| color.0 as _),
+			lparam: self.color.map_or(-1, |color| u32::from(color) as _),
 		}
 	}
 }

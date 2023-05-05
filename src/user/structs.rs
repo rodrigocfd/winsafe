@@ -46,8 +46,10 @@ impl_default_with_size!(ALTTABINFO, cbSize);
 /// [`ATOM`](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#atom)
 /// returned by [`RegisterClassEx`](crate::RegisterClassEx).
 #[repr(transparent)]
-#[derive(Debug, Clone, Copy, Eq, PartialEq)]
-pub struct ATOM(pub(crate) u16);
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct ATOM(u16);
+
+impl_intunderlying!(ATOM, u16);
 
 impl std::fmt::Display for ATOM {
 	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -58,8 +60,10 @@ impl std::fmt::Display for ATOM {
 /// [`COLORREF`](https://learn.microsoft.com/en-us/windows/win32/gdi/colorref)
 /// struct.
 #[repr(transparent)]
-#[derive(Debug, Clone, Copy, Eq, PartialEq)]
-pub struct COLORREF(pub(crate) u32);
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub struct COLORREF(u32);
+
+impl_intunderlying!(COLORREF, u32);
 
 impl From<co::CLR> for COLORREF {
 	fn from(v: co::CLR) -> Self {

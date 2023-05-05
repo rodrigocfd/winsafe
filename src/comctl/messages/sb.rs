@@ -4,7 +4,7 @@ use crate::kernel::decl::{
 	HIWORD, LOWORD, MAKEDWORD, MAKEWORD, SysResult, WString,
 };
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
+use crate::prelude::{Handle, IntUnderlying, MsgSend};
 use crate::user::decl::{COLORREF, HICON, RECT};
 use crate::user::privs::zero_as_badargs;
 
@@ -237,7 +237,7 @@ unsafe impl MsgSend for SetBkColor {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			v => Some(COLORREF(v)),
+			v => Some(unsafe { COLORREF::from_raw(v) }),
 		}
 	}
 
@@ -245,7 +245,7 @@ unsafe impl MsgSend for SetBkColor {
 		WndMsg {
 			msg_id: co::SB::SETBKCOLOR.into(),
 			wparam: 0,
-			lparam: self.color.map_or(CLR_DEFAULT, |color| color.0) as _,
+			lparam: self.color.map_or(CLR_DEFAULT, |color| color.into()) as _,
 		}
 	}
 }

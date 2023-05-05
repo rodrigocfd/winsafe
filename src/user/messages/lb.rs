@@ -1,7 +1,7 @@
 use crate::co;
 use crate::kernel::decl::{HIWORD, LCID, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
+use crate::prelude::{IntUnderlying, MsgSend};
 use crate::user::decl::{POINT, RECT};
 use crate::user::privs::{LB_ERR, LB_ERRSPACE, zero_as_badargs};
 
@@ -404,7 +404,7 @@ unsafe impl MsgSend for GetLocale {
 	type RetType = LCID;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		LCID(v as _)
+		unsafe { LCID::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -978,14 +978,14 @@ unsafe impl MsgSend for SetLocale {
 	fn convert_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			lcid => Ok(LCID(lcid as _)),
+			lcid => Ok(unsafe { LCID::from_raw(lcid as _) }),
 		}
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::SETLOCALE.into(),
-			wparam: self.locale.0 as _,
+			wparam: u32::from(self.locale) as _,
 			lparam: 0,
 		}
 	}

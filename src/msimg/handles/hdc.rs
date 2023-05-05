@@ -37,7 +37,7 @@ pub trait msimg_Hdc: Handle {
 					hdc_src.as_ptr(),
 					src_top_left.x, src_top_left.y,
 					src_sz.cx, src_sz.cy,
-					color_transparent.0,
+					color_transparent.into(),
 				)
 			},
 		)
