@@ -13,14 +13,6 @@ pub trait IntUnderlying: Sized
 	/// The underlying raw integer type.
 	type Raw;
 
-	/// Constructs a new `IntUnderlying` by wrapping the given integer value.
-	///
-	/// # Safety
-	///
-	/// Be sure the given value is meaningful for the actual type.
-	#[must_use]
-	unsafe fn from_raw(v: Self::Raw) -> Self;
-
 	/// Returns a mutable reference to the underlying raw value.
 	///
 	/// # Safety

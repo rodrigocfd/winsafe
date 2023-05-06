@@ -28,7 +28,7 @@ pub trait gdi_Hbrush: Handle {
 	/// will yield an invalid handle.
 	#[must_use]
 	fn from_sys_color(color: co::COLOR) -> HBRUSH {
-		unsafe { HBRUSH::from_ptr((color.0 + 1) as _ ) }
+		unsafe { HBRUSH::from_ptr((color.raw() + 1) as _ ) }
 	}
 
 	/// [`CreateBrushIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbrushindirect)
@@ -52,7 +52,7 @@ pub trait gdi_Hbrush: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::CreateHatchBrush(hatch.0, color.into()),
+				gdi::ffi::CreateHatchBrush(hatch.raw(), color.into()),
 			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -116,14 +116,16 @@ pub trait gdi_Hbrush: Handle {
 	/// static method.
 	#[must_use]
 	fn GetStockObject(sb: co::STOCK_BRUSH) -> SysResult<HBRUSH> {
-		ptr_to_sysresult_handle(unsafe { gdi::ffi::GetStockObject(sb.0) })
+		ptr_to_sysresult_handle(unsafe { gdi::ffi::GetStockObject(sb.raw()) })
 	}
 
 	/// [`GetSysColorBrush`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolorbrush)
 	/// static method.
 	#[must_use]
 	fn GetSysColorBrush(index: co::COLOR) -> SysResult<HBRUSH> {
-		ptr_to_sysresult_handle(unsafe { gdi::ffi::GetSysColorBrush(index.0) })
+		ptr_to_sysresult_handle(
+			unsafe { gdi::ffi::GetSysColorBrush(index.raw()) },
+		)
 	}
 
 	/// [`UnrealizeObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-unrealizeobject)

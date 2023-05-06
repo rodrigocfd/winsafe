@@ -10,7 +10,7 @@ use crate::kernel::guard::{CloseHandleGuard, CloseHandlePiGuard};
 use crate::kernel::privs::{
 	bool_to_sysresult, INFINITE, MAX_PATH, ptr_to_sysresult_handle,
 };
-use crate::prelude::Handle;
+use crate::prelude::{Handle, IntUnderlying};
 
 impl_handle! { HPROCESS;
 	/// Handle to a
@@ -67,7 +67,7 @@ pub trait kernel_Hprocess: Handle {
 					process_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					thread_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					inherit_handles as _,
-					creation_flags.0,
+					creation_flags.raw(),
 					environment.map_or(std::ptr::null_mut(), |environment| {
 						WString::from_str_vec(
 							&environment.iter()
@@ -120,7 +120,9 @@ pub trait kernel_Hprocess: Handle {
 	/// method.
 	#[must_use]
 	fn GetGuiResources(&self, flags: co::GR) -> SysResult<u32> {
-		match unsafe { kernel::ffi::GetGuiResources(self.as_ptr(), flags.0) } {
+		match unsafe {
+			kernel::ffi::GetGuiResources(self.as_ptr(), flags.raw())
+		} {
 			0 => Err(GetLastError()),
 			count => Ok(count),
 		}
@@ -132,7 +134,7 @@ pub trait kernel_Hprocess: Handle {
 	fn GetPriorityClass(&self) -> SysResult<co::PRIORITY_CLASS> {
 		match unsafe { kernel::ffi::GetPriorityClass(self.as_ptr()) } {
 			0 => Err(GetLastError()),
-			pc => Ok(co::PRIORITY_CLASS(pc)),
+			pc => Ok(unsafe { co::PRIORITY_CLASS::from_raw(pc) }),
 		}
 	}
 
@@ -219,7 +221,7 @@ pub trait kernel_Hprocess: Handle {
 		unsafe {
 			ptr_to_sysresult_handle(
 				kernel::ffi::OpenProcess(
-					desired_access.0,
+					desired_access.raw(),
 					inherit_handle as _,
 					process_id,
 				),
@@ -238,7 +240,7 @@ pub trait kernel_Hprocess: Handle {
 			bool_to_sysresult(
 				kernel::ffi::OpenProcessToken(
 					self.as_ptr(),
-					desired_access.0,
+					desired_access.raw(),
 					handle.as_mut(),
 				),
 			).map(|_| CloseHandleGuard::new(handle))
@@ -258,7 +260,7 @@ pub trait kernel_Hprocess: Handle {
 			unsafe {
 				kernel::ffi::QueryFullProcessImageNameW(
 					self.as_ptr(),
-					flags.0,
+					flags.raw(),
 					buf.as_mut_ptr(),
 					&mut sz,
 				)
@@ -275,7 +277,7 @@ pub trait kernel_Hprocess: Handle {
 			unsafe {
 				kernel::ffi::QueryProcessAffinityUpdateMode(
 					self.as_ptr(),
-					&mut affinity.0,
+					affinity.as_mut(),
 				)
 			},
 		).map(|_| affinity)
@@ -288,7 +290,7 @@ pub trait kernel_Hprocess: Handle {
 	{
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::SetPriorityClass(self.as_ptr(), prority_class.0)
+				kernel::ffi::SetPriorityClass(self.as_ptr(), prority_class.raw())
 			},
 		)
 	}
@@ -300,7 +302,7 @@ pub trait kernel_Hprocess: Handle {
 	{
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::SetProcessAffinityUpdateMode(self.as_ptr(), flags.0)
+				kernel::ffi::SetProcessAffinityUpdateMode(self.as_ptr(), flags.raw())
 			},
 		)
 	}
@@ -334,7 +336,7 @@ pub trait kernel_Hprocess: Handle {
 		milliseconds: Option<u32>) -> SysResult<co::WAIT>
 	{
 		match unsafe {
-			co::WAIT(
+			co::WAIT::from_raw(
 				kernel::ffi::WaitForSingleObject(
 					self.as_ptr(),
 					milliseconds.unwrap_or(INFINITE),

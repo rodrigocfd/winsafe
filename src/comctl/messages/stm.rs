@@ -54,7 +54,7 @@ unsafe impl MsgSend for GetImage {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::STM::GETIMAGE.into(),
-			wparam: self.img_type.0 as _,
+			wparam: self.img_type.raw() as _,
 			lparam: 0,
 		}
 	}
@@ -114,11 +114,11 @@ unsafe impl MsgSend for SetImage {
 		WndMsg {
 			msg_id: co::STM::SETIMAGE.into(),
 			wparam: match self.image {
-				BmpIconCurMeta::Bmp(_) => co::IMAGE_TYPE::BITMAP.0,
-				BmpIconCurMeta::Icon(_) => co::IMAGE_TYPE::ICON.0,
-				BmpIconCurMeta::Cur(_) => co::IMAGE_TYPE::CURSOR.0,
-				BmpIconCurMeta::Meta(_) => co::IMAGE_TYPE::ENHMETAFILE.0,
-			} as _,
+				BmpIconCurMeta::Bmp(_) => co::IMAGE_TYPE::BITMAP,
+				BmpIconCurMeta::Icon(_) => co::IMAGE_TYPE::ICON,
+				BmpIconCurMeta::Cur(_) => co::IMAGE_TYPE::CURSOR,
+				BmpIconCurMeta::Meta(_) => co::IMAGE_TYPE::ENHMETAFILE,
+			}.raw() as _,
 			lparam: self.image.as_isize(),
 		}
 	}

@@ -101,12 +101,12 @@ pub trait comctl_ole_Hwnd: Handle {
 					WString::from_opt_str(window_title).as_ptr(),
 					WString::from_opt_str(main_instruction).as_ptr(),
 					WString::from_opt_str(content).as_ptr(),
-					common_buttons.0,
+					common_buttons.raw(),
 					icon.as_ptr(&mut str_buf),
 					&mut pn_button,
 				)
 			},
-		).map(|_| co::DLGID(pn_button as _))
+		).map(|_| unsafe { co::DLGID::from_raw(pn_button as _) })
 	}
 
 	/// [`UninitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-uninitializeflatsb)

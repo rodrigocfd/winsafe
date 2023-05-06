@@ -82,10 +82,16 @@ impl co::ERROR {
 	/// [`HRESULT_FROM_WIN32`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
 	/// method. Originally a macro.
 	pub const fn to_hresult(self) -> co::HRESULT {
-		if self.0 as i32 <= 0 {
-			co::HRESULT(self.0)
-		} else {
-			co::HRESULT((self.0 & 0x0000_ffff) | co::FACILITY::WIN32.0 << 16 | 0x8000_0000)
+		unsafe {
+			if self.raw() as i32 <= 0 {
+				co::HRESULT::from_raw(self.raw())
+			} else {
+				co::HRESULT::from_raw(
+					(self.raw() & 0x0000_ffff) |
+					co::FACILITY::WIN32.raw() << 16 |
+					0x8000_0000,
+				)
+			}
 		}
 	}
 }
@@ -100,13 +106,13 @@ impl HRESULT {
 	/// [`HRESULT_FACILITY`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_facility)
 	/// method. Originally a macro.
 	pub fn facility(self) -> co::FACILITY {
-		co::FACILITY((self.0 >> 16) & 0x1fff)
+		unsafe { co::FACILITY::from_raw((self.0 >> 16) & 0x1fff) }
 	}
 
 	/// [`HRESULT_SEVERITY`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_severity)
 	/// method. Originally a macro.
 	pub fn severity(self) -> co::SEVERITY {
-		co::SEVERITY(((self.0 >> 31) & 0x1) as _)
+		unsafe { co::SEVERITY::from_raw(((self.0 >> 31) & 0x1) as _) }
 	}
 }
 

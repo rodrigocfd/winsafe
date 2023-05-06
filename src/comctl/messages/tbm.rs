@@ -6,7 +6,7 @@ use crate::comctl::decl::{
 use crate::comctl::privs::HINST_COMMCTRL;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, IntUnderlying, MsgSend};
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HWND, POINT, RECT, SIZE};
 use crate::user::privs::{
 	minus1_as_badargs, minus1_as_none, zero_as_badargs, zero_as_none,
@@ -324,7 +324,7 @@ unsafe impl MsgSend for GetBitmapFlags {
 	type RetType = co::TBBF;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::TBBF(v as _)
+		unsafe { co::TBBF::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -489,7 +489,7 @@ unsafe impl MsgSend for GetExtendedStyle {
 	type RetType = co::TBSTYLE_EX;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::TBSTYLE_EX(v as _)
+		unsafe { co::TBSTYLE_EX::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -861,7 +861,7 @@ unsafe impl MsgSend for GetState {
 	type RetType = SysResult<co::TBSTATE>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_badargs(v).map(|v| co::TBSTATE(v as _))
+		minus1_as_badargs(v).map(|v| unsafe { co::TBSTATE::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -908,7 +908,7 @@ unsafe impl MsgSend for GetStyle {
 	type RetType = co::BTNS;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::BTNS(v as _)
+		unsafe { co::BTNS::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1272,7 +1272,7 @@ unsafe impl MsgSend for LoadImages {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::LOADIMAGES.into(),
-			wparam: self.img_list.0 as _,
+			wparam: self.img_list.raw() as _,
 			lparam: HINST_COMMCTRL,
 		}
 	}
@@ -1637,14 +1637,14 @@ unsafe impl MsgSend for SetDrawTextFlags {
 	type RetType = co::DT;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::DT(v as _)
+		unsafe { co::DT::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::SETDRAWTEXTFLAGS.into(),
-			wparam: self.mask.0 as _,
-			lparam: self.draw.0 as _,
+			wparam: self.mask.raw() as _,
+			lparam: self.draw.raw() as _,
 		}
 	}
 }
@@ -1661,14 +1661,14 @@ unsafe impl MsgSend for SetExtendedStyle {
 	type RetType = co::TBSTYLE_EX;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::TBSTYLE_EX(v as _)
+		unsafe { co::TBSTYLE_EX::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::SETEXTENDEDSTYLE.into(),
 			wparam: 0,
-			lparam: self.style.0 as _,
+			lparam: self.style.raw() as _,
 		}
 	}
 }
@@ -1741,7 +1741,7 @@ unsafe impl MsgSend for SetHotItem2 {
 		WndMsg {
 			msg_id: co::TBM::SETHOTITEM2.into(),
 			wparam: self.index.map_or(-1, |idx| idx as i32) as _,
-			lparam: self.flags.0 as _,
+			lparam: self.flags.raw() as _,
 		}
 	}
 }
@@ -2034,7 +2034,7 @@ unsafe impl MsgSend for SetState {
 		WndMsg {
 			msg_id: co::TBM::SETSTATE.into(),
 			wparam: self.btn_cmd_id as _,
-			lparam: MAKEDWORD(self.state.0 as _, 0) as _,
+			lparam: MAKEDWORD(self.state.raw() as _, 0) as _,
 		}
 	}
 }
@@ -2058,7 +2058,7 @@ unsafe impl MsgSend for SetStyle {
 		WndMsg {
 			msg_id: co::TBM::SETSTYLE.into(),
 			wparam: 0,
-			lparam: self.style.0 as _,
+			lparam: self.style.raw() as _,
 		}
 	}
 }

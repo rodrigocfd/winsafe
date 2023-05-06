@@ -773,13 +773,13 @@ unsafe impl MsgSend for SetTipSide {
 	type RetType = co::TBTS;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::TBTS(v as _)
+		unsafe { co::TBTS::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TRBM::SETTIPSIDE.into(),
-			wparam: self.location.0 as _,
+			wparam: self.location.raw() as _,
 			lparam: 0,
 		}
 	}

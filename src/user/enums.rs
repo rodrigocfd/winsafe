@@ -158,7 +158,7 @@ impl From<GmidxEnum> for u32 {
 	fn from(v: GmidxEnum) -> Self {
 		match v {
 			GmidxEnum::Gmidx(idx) => idx,
-			GmidxEnum::Enum(es) => es.0,
+			GmidxEnum::Enum(es) => es.raw(),
 		}
 	}
 }
@@ -229,7 +229,7 @@ impl HwndPlace {
 	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
 			Self::Hwnd(hwnd) => hwnd.as_ptr(),
-			Self::Place(v) => v.0 as _,
+			Self::Place(v) => v.raw() as _,
 			Self::None => std::ptr::null_mut(),
 		}
 	}
@@ -284,7 +284,7 @@ impl IdIdcStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Idc(idc) => MAKEINTRESOURCE(idc.0 as _),
+			Self::Idc(idc) => MAKEINTRESOURCE(idc.raw() as _),
 			Self::Str(ws) => ws.as_ptr(),
 		}
 	}
@@ -315,7 +315,7 @@ impl IdIdiStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Idi(idi) => MAKEINTRESOURCE(idi.0 as _),
+			Self::Idi(idi) => MAKEINTRESOURCE(idi.raw() as _),
 			Self::Str(ws) => ws.as_ptr(),
 		}
 	}

@@ -10,7 +10,7 @@ use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::privs::{
 	bool_to_sysresult, ptr_to_sysresult, ptr_to_sysresult_handle,
 };
-use crate::prelude::{GdiObjectSelect, Handle, IntUnderlying};
+use crate::prelude::{GdiObjectSelect, Handle};
 use crate::user::decl::{
 	COLORREF, HBITMAP, HBRUSH, HDC, HRGN, POINT, RECT, SIZE,
 };
@@ -112,7 +112,7 @@ pub trait gdi_Hdc: Handle {
 					sz.cx, sz.cy,
 					hdc_src.as_ptr(),
 					src_src.x, src_src.y,
-					rop.0,
+					rop.raw(),
 				)
 			},
 		)
@@ -269,7 +269,7 @@ pub trait gdi_Hdc: Handle {
 	fn GetBkMode(&self) -> SysResult<co::BKMODE> {
 		match unsafe { gdi::ffi::GetBkMode(self.as_ptr()) } {
 			0 => Err(GetLastError()),
-			v => Ok(co::BKMODE(v)),
+			v => Ok(unsafe { co::BKMODE::from_raw(v) }),
 		}
 	}
 
@@ -364,10 +364,10 @@ pub trait gdi_Hdc: Handle {
 			num_scan_lines,
 			bmp_data_buf.map_or(std::ptr::null_mut(), |buf| buf.as_mut_ptr() as _),
 			bmi as *const _ as _,
-			usage.0,
+			usage.raw(),
 		);
 
-		if co::ERROR(ret as _) == co::ERROR::INVALID_PARAMETER {
+		if unsafe { co::ERROR::from_raw(ret as _) } == co::ERROR::INVALID_PARAMETER {
 			Err(co::ERROR::INVALID_PARAMETER)
 		} else if ret == 0 {
 			Err(GetLastError())
@@ -380,7 +380,7 @@ pub trait gdi_Hdc: Handle {
 	/// method.
 	#[must_use]
 	fn GetDeviceCaps(&self, index: co::GDC) -> i32 {
-		unsafe { gdi::ffi::GetDeviceCaps(self.as_ptr(), index.0) }
+		unsafe { gdi::ffi::GetDeviceCaps(self.as_ptr(), index.raw()) }
 	}
 
 	/// [`GetStretchBltMode`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstretchbltmode)
@@ -389,7 +389,7 @@ pub trait gdi_Hdc: Handle {
 	fn GetStretchBltMode(&self) -> SysResult<co::STRETCH_MODE> {
 		match unsafe { gdi::ffi::GetStretchBltMode(self.as_ptr()) } {
 			0 => Err(GetLastError()),
-			sm => Ok(co::STRETCH_MODE(sm)),
+			sm => Ok(unsafe { co::STRETCH_MODE::from_raw(sm) }),
 		}
 	}
 
@@ -519,7 +519,7 @@ pub trait gdi_Hdc: Handle {
 		bool_to_sysresult(
 			unsafe {
 				gdi::ffi::PatBlt(
-					self.as_ptr(), top_left.x, top_left.y, sz.cx, sz.cy, rop.0,
+					self.as_ptr(), top_left.x, top_left.y, sz.cx, sz.cy, rop.raw(),
 				)
 			},
 		)
@@ -662,7 +662,7 @@ pub trait gdi_Hdc: Handle {
 	/// method.
 	fn SelectClipPath(&self, mode: co::RGN) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { gdi::ffi::SelectClipPath(self.as_ptr(), mode.0) },
+			unsafe { gdi::ffi::SelectClipPath(self.as_ptr(), mode.raw()) },
 		)
 	}
 
@@ -671,7 +671,7 @@ pub trait gdi_Hdc: Handle {
 	fn SelectClipRgn(&self, rgn: &HRGN) -> SysResult<co::REGION> {
 		match unsafe { gdi::ffi::SelectClipRgn(self.as_ptr(), rgn.as_ptr()) } {
 			0 => Err(GetLastError()),
-			v => Ok(co::REGION(v)),
+			v => Ok(unsafe { co::REGION::from_raw(v) }),
 		}
 	}
 
@@ -720,7 +720,7 @@ pub trait gdi_Hdc: Handle {
 					SelectObjectGuard::new(
 						self,
 						G::NULL, // regions don't need cleanup
-						Some(co::REGION(ptr as *mut _ as _)),
+						Some(co::REGION::from_raw(ptr as *mut _ as _)),
 					)
 				} else {
 					SelectObjectGuard::new(
@@ -759,9 +759,9 @@ pub trait gdi_Hdc: Handle {
 	/// [`SetArcDirection`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setarcdirection)
 	/// method.
 	fn SetArcDirection(&self, dir: co::AD) -> SysResult<co::AD> {
-		match unsafe { gdi::ffi::SetArcDirection(self.as_ptr(), dir.0) } {
+		match unsafe { gdi::ffi::SetArcDirection(self.as_ptr(), dir.raw()) } {
 			0 => Err(GetLastError()),
-			v => Ok(co::AD(v)),
+			v => Ok(unsafe { co::AD::from_raw(v) }),
 		}
 	}
 
@@ -777,9 +777,9 @@ pub trait gdi_Hdc: Handle {
 	/// [`SetBkMode`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setbkmode)
 	/// method.
 	fn SetBkMode(&self, mode: co::BKMODE) -> SysResult<co::BKMODE> {
-		match unsafe { gdi::ffi::SetBkMode(self.as_ptr(), mode.0) } {
+		match unsafe { gdi::ffi::SetBkMode(self.as_ptr(), mode.raw()) } {
 			0 => Err(GetLastError()),
-			v => Ok(co::BKMODE(v)),
+			v => Ok(unsafe { co::BKMODE::from_raw(v) }),
 		}
 	}
 
@@ -835,7 +835,7 @@ pub trait gdi_Hdc: Handle {
 				num_scan_lines,
 				dib_color_data.as_ptr() as _,
 				bmi as *const _ as _,
-				color_use.0,
+				color_use.raw(),
 			)
 		} {
 			0 => match GetLastError() {
@@ -849,9 +849,9 @@ pub trait gdi_Hdc: Handle {
 	/// [`SetGraphicsMode`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setgraphicsmode)
 	/// method.
 	fn SetGraphicsMode(&self, mode: co::GM) -> SysResult<co::GM> {
-		match unsafe { gdi::ffi::SetGraphicsMode(self.as_ptr(), mode.0) } {
+		match unsafe { gdi::ffi::SetGraphicsMode(self.as_ptr(), mode.raw()) } {
 			0 => Err(GetLastError()),
-			v => Ok(co::GM(v))
+			v => Ok(unsafe { co::GM::from_raw(v) })
 		}
 	}
 
@@ -860,20 +860,22 @@ pub trait gdi_Hdc: Handle {
 	fn SetStretchBltMode(&self,
 		mode: co::STRETCH_MODE) -> SysResult<co::STRETCH_MODE>
 	{
-		match co::ERROR(
-			unsafe { gdi::ffi::SetStretchBltMode(self.as_ptr(), mode.0) } as _,
-		) {
+		match unsafe {
+			co::ERROR::from_raw(
+				gdi::ffi::SetStretchBltMode(self.as_ptr(), mode.raw()) as _,
+			)
+		} {
 			co::ERROR::INVALID_PARAMETER => Err(co::ERROR::INVALID_PARAMETER),
-			err_val => Ok(co::STRETCH_MODE(err_val.0 as _)),
+			err_val => Ok(unsafe { co::STRETCH_MODE::from_raw(err_val.raw() as _) }),
 		}
 	}
 
 	/// [`SetTextAlign`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-settextalign)
 	/// method.
 	fn SetTextAlign(&self, align: co::TA) -> SysResult<co::TA> {
-		match unsafe { gdi::ffi::SetTextAlign(self.as_ptr(), align.0) } {
+		match unsafe { gdi::ffi::SetTextAlign(self.as_ptr(), align.raw()) } {
 			GDI_ERROR => Err(GetLastError()),
-			ta => Ok(co::TA(ta)),
+			ta => Ok(unsafe { co::TA::from_raw(ta) }),
 		}
 	}
 
@@ -966,7 +968,7 @@ pub trait gdi_Hdc: Handle {
 					hdc_src.as_ptr(),
 					pt_src.x, pt_src.y,
 					sz_src.cx, sz_src.cy,
-					rop.0,
+					rop.raw(),
 				)
 			},
 		)

@@ -82,5 +82,5 @@ pub fn TaskDialogIndirect(
 	if let Some(pf) = verification_flag_checked {
 		*pf = pf_bool != 0;
 	}
-	Ok((co::DLGID(pn_button as _), pn_radio_button as _))
+	Ok((unsafe { co::DLGID::from_raw(pn_button as _) }, pn_radio_button as _))
 }

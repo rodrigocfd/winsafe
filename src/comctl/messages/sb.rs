@@ -4,7 +4,7 @@ use crate::kernel::decl::{
 	HIWORD, LOWORD, MAKEDWORD, MAKEWORD, SysResult, WString,
 };
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, IntUnderlying, MsgSend};
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HICON, RECT};
 use crate::user::privs::zero_as_badargs;
 
@@ -118,7 +118,7 @@ unsafe impl<'a> MsgSend for GetText<'a> {
 	type RetType = (u16, co::SBT);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		(LOWORD(v as _), co::SBT(HIWORD(v as _)))
+		(LOWORD(v as _), unsafe { co::SBT::from_raw(HIWORD(v as _)) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -142,7 +142,7 @@ unsafe impl MsgSend for GetTextLength {
 	type RetType = (u16, co::SBT);
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		(LOWORD(v as _), co::SBT(HIWORD(v as _)))
+		(LOWORD(v as _), unsafe { co::SBT::from_raw(HIWORD(v as _)) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -343,7 +343,7 @@ unsafe impl MsgSend for SetText {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::SB::SETTEXT.into(),
-			wparam: MAKEDWORD(MAKEWORD(self.part_index, 0), self.draw_operation.0) as _,
+			wparam: MAKEDWORD(MAKEWORD(self.part_index, 0), self.draw_operation.raw()) as _,
 			lparam: self.text.as_ptr() as _,
 		}
 	}

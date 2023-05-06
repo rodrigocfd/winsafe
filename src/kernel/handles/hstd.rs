@@ -6,7 +6,7 @@ use crate::kernel::decl::{
 	CONSOLE_READCONSOLE_CONTROL, GetLastError, SysResult, WString,
 };
 use crate::kernel::privs::bool_to_sysresult;
-use crate::prelude::Handle;
+use crate::prelude::{Handle, IntUnderlying};
 
 impl_handle! { HSTD;
 	/// Handle to a
@@ -37,9 +37,9 @@ pub trait kernel_Hstd: Handle {
 	/// method.
 	#[must_use]
 	fn GetConsoleMode(&self) -> SysResult<co::CONSOLE> {
-		let mut mode = co::CONSOLE::NoValue;
+		let mut mode = co::CONSOLE::default();
 		bool_to_sysresult(
-			unsafe { kernel::ffi::GetConsoleMode(self.as_ptr(), &mut mode.0) },
+			unsafe { kernel::ffi::GetConsoleMode(self.as_ptr(), mode.as_mut()) },
 		).map(|_| mode)
 	}
 
@@ -51,7 +51,7 @@ pub trait kernel_Hstd: Handle {
 	) -> SysResult<CloseHandleGuard<HSTD>>
 	{
 		unsafe {
-			match HSTD::from_ptr(kernel::ffi::GetStdHandle(std_handle.0)) {
+			match HSTD::from_ptr(kernel::ffi::GetStdHandle(std_handle.raw())) {
 				HSTD::INVALID => Err(GetLastError()),
 				handle => Ok(CloseHandleGuard::new(handle)),
 			}
@@ -60,20 +60,20 @@ pub trait kernel_Hstd: Handle {
 
 	/// [`ReadConsole`](https://learn.microsoft.com/en-us/windows/console/readconsole)
 	/// method.
-	/// 
+	///
 	/// Returns the number of chars actually written.
-	/// 
+	///
 	/// # Examples
-	/// 
+	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HSTD, WString};
-	/// 
+	///
 	/// let hstd = HSTD::GetStdHandle(co::STD_HANDLE::INPUT)?;
-	/// 
+	///
 	/// let mut buffer = WString::new_alloc_buf(2048);
 	/// hstd.ReadConsole(&mut buffer, None)?;
-	/// 
+	///
 	/// let text = buffer.to_string();
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
@@ -101,13 +101,13 @@ pub trait kernel_Hstd: Handle {
 	/// method.
 	fn SetConsoleMode(&self, mode: co::CONSOLE) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { kernel::ffi::SetConsoleMode(self.as_ptr(), mode.0) },
+			unsafe { kernel::ffi::SetConsoleMode(self.as_ptr(), mode.raw()) },
 		)
 	}
 
 	/// [`WriteConsole`](https://learn.microsoft.com/en-us/windows/console/writeconsole)
 	/// method.
-	/// 
+	///
 	/// Returns the number of chars actually written.
 	fn WriteConsole(&self, text: &str) -> SysResult<u32> {
 		let buf = WString::from_str(text);

@@ -42,7 +42,7 @@ pub trait ole_IStream: ole_ISequentialStream {
 		ok_to_hrresult(
 			unsafe {
 				let vt = self.vt_ref::<IStreamVT>();
-				(vt.Commit)(self.ptr(), flags.0)
+				(vt.Commit)(self.ptr(), flags.raw())
 			},
 		)
 	}
@@ -81,7 +81,7 @@ pub trait ole_IStream: ole_ISequentialStream {
 		ok_to_hrresult(
 			unsafe {
 				let vt = self.vt_ref::<IStreamVT>();
-				(vt.LockRegion)(self.ptr(), offset, length, lock_type.0)
+				(vt.LockRegion)(self.ptr(), offset, length, lock_type.raw())
 			},
 		)
 	}
@@ -108,7 +108,7 @@ pub trait ole_IStream: ole_ISequentialStream {
 		ok_to_hrresult(
 			unsafe {
 				let vt = self.vt_ref::<IStreamVT>();
-				(vt.Seek)(self.ptr(), displacement, origin.0, &mut new_off)
+				(vt.Seek)(self.ptr(), displacement, origin.raw(), &mut new_off)
 			},
 		).map(|_| new_off)
 	}
@@ -132,7 +132,7 @@ pub trait ole_IStream: ole_ISequentialStream {
 		ok_to_hrresult(
 			unsafe {
 				let vt = self.vt_ref::<IStreamVT>();
-				(vt.UnlockRegion)(self.ptr(), offset, length, lock_type.0)
+				(vt.UnlockRegion)(self.ptr(), offset, length, lock_type.raw())
 			},
 		)
 	}

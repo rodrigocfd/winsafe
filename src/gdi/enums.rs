@@ -27,7 +27,7 @@ impl IdObmStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Obm(obm) => MAKEINTRESOURCE(obm.0 as _),
+			Self::Obm(obm) => MAKEINTRESOURCE(obm.raw() as _),
 			Self::Str(ws) => ws.as_ptr(),
 		}
 	}
@@ -58,7 +58,7 @@ impl IdOcrStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Ocr(ocr) => MAKEINTRESOURCE(ocr.0 as _),
+			Self::Ocr(ocr) => MAKEINTRESOURCE(ocr.raw() as _),
 			Self::Str(ws) => ws.as_ptr(),
 		}
 	}
@@ -89,7 +89,7 @@ impl IdOicStr {
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Oic(oic) => MAKEINTRESOURCE(oic.0 as _),
+			Self::Oic(oic) => MAKEINTRESOURCE(oic.raw() as _),
 			Self::Str(ws) => ws.as_ptr(),
 		}
 	}

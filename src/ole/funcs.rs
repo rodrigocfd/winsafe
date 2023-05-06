@@ -90,7 +90,7 @@ pub fn CoCreateInstance<T>(
 				clsid as *const _ as _,
 				iunk_outer.as_ref()
 					.map_or(std::ptr::null_mut(), |_| &mut ppv_outer as *mut _ as _),
-				cls_context.0,
+				cls_context.raw(),
 				&T::IID as *const _ as _,
 				&mut ppv as *mut _ as _,
 			),
@@ -120,7 +120,7 @@ pub fn CoCreateInstanceEx(
 				clsid as *const _ as _,
 				iunk_outer.as_ref()
 					.map_or(std::ptr::null_mut(), |_| &mut ppv_outer as *mut _ as _),
-				cls_context.0,
+				cls_context.raw(),
 				server_info.map_or(std::ptr::null(), |si| si as *const _ as _),
 				results.len() as _,
 				results.as_mut_ptr() as _,
@@ -165,8 +165,8 @@ pub fn CoCreateInstanceEx(
 #[must_use]
 pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<CoUninitializeGuard> {
 	unsafe {
-		let hr = co::HRESULT(
-			ole::ffi::CoInitializeEx(std::ptr::null_mut(), coinit.0),
+		let hr = co::HRESULT::from_raw(
+			ole::ffi::CoInitializeEx(std::ptr::null_mut(), coinit.raw()),
 		);
 		match hr {
 			co::HRESULT::S_OK

@@ -48,12 +48,19 @@ pub trait gdi_Hfont: Handle {
 		unsafe {
 			ptr_to_sysresult_handle(
 				gdi::ffi::CreateFontW(
-					sz.cy, sz.cx, escapement, orientation,
-					weight.0 as _,
-					italic as _, underline as _, strike_out as _,
-					char_set.0 as _,
-					out_precision.0 as _, clip_precision.0 as _,
-					quality.0 as _, pitch_and_family.0 as _,
+					sz.cy,
+					sz.cx,
+					escapement,
+					orientation,
+					weight.raw() as _,
+					italic as _,
+					underline as _,
+					strike_out as _,
+					char_set.raw() as _,
+					out_precision.raw() as _,
+					clip_precision.raw() as _,
+					quality.raw() as _,
+					pitch_and_family.raw() as _,
 					WString::from_str(face_name).as_ptr(),
 				),
 			).map(|h| DeleteObjectGuard::new(h))
@@ -102,6 +109,6 @@ pub trait gdi_Hfont: Handle {
 	/// static method.
 	#[must_use]
 	fn GetStockObject(sf: co::STOCK_FONT) -> SysResult<HFONT> {
-		ptr_to_sysresult_handle(unsafe { gdi::ffi::GetStockObject(sf.0) })
+		ptr_to_sysresult_handle(unsafe { gdi::ffi::GetStockObject(sf.raw()) })
 	}
 }

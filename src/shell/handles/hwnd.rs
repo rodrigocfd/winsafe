@@ -66,14 +66,16 @@ pub trait shell_Hwnd: Handle {
 				WString::from_str(file).as_ptr(),
 				parameters.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
 				directory.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),
-				show_cmd.0,
+				show_cmd.raw(),
 			)
 		};
 
-		if ret <= 32 as _ {
-			Err(co::SE_ERR(ret as _))
-		} else {
-			Ok(unsafe { HINSTANCE::from_ptr(ret as _) })
+		unsafe {
+			if ret <= 32 as _ {
+				Err(co::SE_ERR::from_raw(ret as _))
+			} else {
+				Ok(HINSTANCE::from_ptr(ret as _))
+			}
 		}
 	}
 }

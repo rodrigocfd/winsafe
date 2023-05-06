@@ -35,7 +35,7 @@ pub trait user_Hdc: Handle {
 				wtext.as_ptr(),
 				wtext.str_len() as _,
 				bounds as *const _ as _,
-				format.0,
+				format.raw(),
 			)
 		} {
 			0 => Err(GetLastError()),

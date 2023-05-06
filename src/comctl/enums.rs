@@ -135,7 +135,7 @@ impl From<TreeitemTvi> for isize {
 	fn from(v: TreeitemTvi) -> Self {
 		match v {
 			TreeitemTvi::Treeitem(htreeitem) => htreeitem.as_ptr() as _,
-			TreeitemTvi::Tvi(tvi) => tvi.0,
+			TreeitemTvi::Tvi(tvi) => tvi.raw(),
 		}
 	}
 }
@@ -144,12 +144,12 @@ impl TreeitemTvi {
 	/// Constructs the enum from an `isize`.
 	#[must_use]
 	pub fn from_isize(val: isize) -> TreeitemTvi {
-		match co::TVI(val) {
+		match unsafe { co::TVI::from_raw(val) } {
 			co::TVI::FIRST => Self::Tvi(co::TVI::FIRST),
 			co::TVI::LAST => Self::Tvi(co::TVI::LAST),
 			co::TVI::ROOT => Self::Tvi(co::TVI::ROOT),
 			co::TVI::SORT => Self::Tvi(co::TVI::SORT),
-			val => Self::Treeitem(unsafe { HTREEITEM::from_ptr(val.0 as _) }),
+			val => Self::Treeitem(unsafe { HTREEITEM::from_ptr(val.raw() as _) }),
 		}
 	}
 }

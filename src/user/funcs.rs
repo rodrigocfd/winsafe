@@ -24,9 +24,9 @@ pub fn AdjustWindowRectEx(
 		unsafe {
 			user::ffi::AdjustWindowRectEx(
 				rc as *mut _ as _,
-				style.0,
+				style.raw(),
 				has_menu as _,
-				ex_style.0,
+				ex_style.raw(),
 			)
 		},
 	)
@@ -77,9 +77,9 @@ pub fn BroadcastSystemMessage<M>(
 
 	if unsafe {
 		user::ffi::BroadcastSystemMessageW(
-			flags.0,
-			&mut info_ret.0 as _,
-			wm_any.msg_id.0,
+			flags.raw(),
+			info_ret.as_mut(),
+			wm_any.msg_id.raw(),
 			wm_any.wparam,
 			wm_any.lparam,
 		)
@@ -100,14 +100,16 @@ pub fn ChangeDisplaySettings(
 	let ret = unsafe {
 		user::ffi::ChangeDisplaySettingsW(
 			dev_mode.map_or(std::ptr::null_mut(), |dm| dm as *mut _ as _),
-			flags.0
+			flags.raw(),
 		)
 	};
 
-	if ret < 0 {
-		Err(co::DISP_CHANGE(ret))
-	} else {
-		Ok(co::DISP_CHANGE(ret))
+	unsafe {
+		if ret < 0 {
+			Err(co::DISP_CHANGE::from_raw(ret))
+		} else {
+			Ok(co::DISP_CHANGE::from_raw(ret))
+		}
 	}
 }
 
@@ -124,15 +126,17 @@ pub fn ChangeDisplaySettingsEx(
 			WString::from_opt_str(device_name).as_ptr(),
 			dev_mode.map_or(std::ptr::null_mut(), |dm| dm as *mut _ as _),
 			std::ptr::null_mut(),
-			flags.0,
+			flags.raw(),
 			std::ptr::null_mut(),
 		)
 	};
 
-	if ret < 0 {
-		Err(co::DISP_CHANGE(ret))
-	} else {
-		Ok(co::DISP_CHANGE(ret))
+	unsafe {
+		if ret < 0 {
+			Err(co::DISP_CHANGE::from_raw(ret))
+		} else {
+			Ok(co::DISP_CHANGE::from_raw(ret))
+		}
 	}
 }
 
@@ -210,7 +214,7 @@ pub fn EnumDisplayDevices(
 			WString::from_opt_str(device_name).as_ptr(),
 			device_num,
 			display_device as *mut _ as _,
-			flags.0,
+			flags.raw(),
 		)
 	} {
 		// Empirical tests have shown that two different error codes can be
@@ -311,7 +315,7 @@ pub fn EnumDisplaySettingsEx(
 			WString::from_opt_str(device_name).as_ptr(),
 			mode_num.into(),
 			dev_mode as *mut _ as _,
-			flags.0,
+			flags.raw(),
 		)
 	} {
 		0 => match GetLastError() {
@@ -383,7 +387,7 @@ extern "system" fn enum_windows_proc<F>(hwnd: HWND, lparam: isize) -> BOOL
 /// function.
 #[must_use]
 pub fn GetAsyncKeyState(virt_key: co::VK) -> bool {
-	unsafe { user::ffi::GetAsyncKeyState(virt_key.0 as _) != 0 }
+	unsafe { user::ffi::GetAsyncKeyState(virt_key.raw() as _) != 0 }
 }
 
 /// [`GetClipboardData`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboarddata)
@@ -395,7 +399,7 @@ pub fn GetAsyncKeyState(virt_key: co::VK) -> bool {
 /// `format`.
 #[must_use]
 pub unsafe fn GetClipboardData(format: co::CF) -> SysResult<*mut u8> {
-	ptr_to_sysresult(user::ffi::GetClipboardData(format.0))
+	ptr_to_sysresult(user::ffi::GetClipboardData(format.raw()))
 		.map(|hmem| hmem as *mut _ as _)
 }
 
@@ -508,28 +512,28 @@ pub fn GetMessagePos() -> POINT {
 /// function.
 #[must_use]
 pub fn GetQueueStatus(flags: co::QS) -> u32 {
-	unsafe { user::ffi::GetQueueStatus(flags.0) }
+	unsafe { user::ffi::GetQueueStatus(flags.raw()) }
 }
 
 /// [`GetSysColor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
 /// function.
 #[must_use]
 pub fn GetSysColor(index: co::COLOR) -> COLORREF {
-	unsafe { COLORREF::from_raw(user::ffi::GetSysColor(index.0)) }
+	unsafe { COLORREF::from_raw(user::ffi::GetSysColor(index.raw())) }
 }
 
 /// [`GetSystemMetrics`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetrics)
 /// function.
 #[must_use]
 pub fn GetSystemMetrics(index: co::SM) -> i32 {
-	unsafe { user::ffi::GetSystemMetrics(index.0) }
+	unsafe { user::ffi::GetSystemMetrics(index.raw()) }
 }
 
 /// [`GetSystemMetricsForDpi`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsystemmetricsfordpi)
 /// function.
 #[must_use]
 pub fn GetSystemMetricsForDpi(index: co::SM, dpi: u32) -> SysResult<i32> {
-	match unsafe { user::ffi::GetSystemMetricsForDpi(index.0, dpi) } {
+	match unsafe { user::ffi::GetSystemMetricsForDpi(index.raw(), dpi) } {
 		0 => match GetLastError() {
 			co::ERROR::SUCCESS => Ok(0), // actual value is zero
 			err => Err(err),
@@ -560,7 +564,7 @@ pub fn InflateRect(rc: &mut RECT, dx: i32, dy: i32) -> SysResult<()> {
 #[cfg(target_pointer_width = "64")]
 #[must_use]
 pub fn InSendMessageEx() -> co::ISMEX {
-	co::ISMEX(unsafe { user::ffi::InSendMessageEx()})
+	unsafe { co::ISMEX::from_raw(user::ffi::InSendMessageEx()) }
 }
 
 /// [`IntersectRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-intersectrect)
@@ -587,7 +591,7 @@ pub fn IsGUIThread(convert_to_gui_thread: bool) -> SysResult<bool> {
 		match r {
 			0 => Ok(false),
 			1 => Ok(true),
-			err => Err(co::ERROR(err as _)),
+			err => Err(unsafe { co::ERROR::from_raw(err as _) }),
 		}
 	} else {
 		Ok(r != 0)
@@ -612,7 +616,7 @@ pub fn IsWow64Message() -> bool {
 /// function.
 pub fn LockSetForegroundWindow(lock_code: co::LSFW) -> SysResult<()> {
 	bool_to_sysresult(
-		unsafe { user::ffi::LockSetForegroundWindow(lock_code.0) },
+		unsafe { user::ffi::LockSetForegroundWindow(lock_code.raw()) },
 	)
 }
 
@@ -640,7 +644,7 @@ pub fn PeekMessage(
 			hwnd.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 			msg_filter_min,
 			msg_filter_max,
-			remove_msg.0,
+			remove_msg.raw(),
 		) != 0
 	}
 }
@@ -661,7 +665,7 @@ pub fn PostThreadMessage<M>(thread_id: u32, msg: M) -> SysResult<()>
 	bool_to_sysresult(
 		unsafe {
 			user::ffi::PostThreadMessageW(
-				thread_id, wm_any.msg_id.0, wm_any.wparam, wm_any.lparam)
+				thread_id, wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam)
 		}
 	)
 }
@@ -778,7 +782,7 @@ pub unsafe fn SetClipboardData(
 	format: co::CF, hmem: *mut u8) -> SysResult<*mut u8>
 {
 	ptr_to_sysresult(
-		user::ffi::SetClipboardData(format.0, hmem as _),
+		user::ffi::SetClipboardData(format.raw(), hmem as _),
 	).map(|hmem| hmem as *mut _ as _)
 }
 
@@ -851,10 +855,10 @@ pub unsafe fn SystemParametersInfo<T>(
 {
 	bool_to_sysresult(
 		user::ffi::SystemParametersInfoW(
-			action.0,
+			action.raw(),
 			ui_param,
 			pv_param as *mut _ as _,
-			win_ini.0,
+			win_ini.raw(),
 		),
 	)
 }

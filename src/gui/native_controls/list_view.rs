@@ -198,7 +198,7 @@ impl ListView {
 			let has_ctrl = GetAsyncKeyState(co::VK::CONTROL);
 			let has_shift = GetAsyncKeyState(co::VK::SHIFT);
 
-			if has_ctrl && lvnk.wVKey == co::VK('A' as _) { // Ctrl+A
+			if has_ctrl && lvnk.wVKey == unsafe { co::VK::from_raw('A' as _) } { // Ctrl+A
 				self2.items().select_all(true);
 			} else if lvnk.wVKey == co::VK::APPS { // context menu key
 				self2.show_context_menu(false, has_ctrl, has_shift);

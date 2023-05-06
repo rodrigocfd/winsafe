@@ -7,7 +7,7 @@ use crate::comctl::decl::{
 };
 use crate::kernel::decl::{MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, IntUnderlying, MsgSend};
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HCURSOR, HWND, POINT, RECT, SIZE};
 use crate::user::privs::{
 	minus1_as_badargs, minus1_as_none, zero_as_badargs, zero_as_none,
@@ -61,7 +61,7 @@ unsafe impl MsgSend for Arrange {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::ARRANGE.into(),
-			wparam: self.arrangement.0 as _,
+			wparam: self.arrangement.raw() as _,
 			lparam: 0,
 		}
 	}
@@ -320,7 +320,7 @@ unsafe impl MsgSend for GetCallbackMask {
 	type RetType = co::LVIS;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::LVIS(v as _)
+		unsafe { co::LVIS::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -483,7 +483,7 @@ unsafe impl MsgSend for GetExtendedListViewStyle {
 	type RetType = co::LVS_EX;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::LVS_EX(v as _)
+		unsafe { co::LVS_EX::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -729,7 +729,7 @@ unsafe impl<'a> MsgSend for GetGroupRect<'a> {
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
-		self.rect.top = self.flags.0;
+		self.rect.top = self.flags.raw();
 
 		WndMsg {
 			msg_id: co::LVM::GETGROUPRECT.into(),
@@ -752,14 +752,14 @@ unsafe impl MsgSend for GetGroupState {
 	type RetType = co::LVGS;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::LVGS(v as _)
+		unsafe { co::LVGS::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETGROUPSTATE.into(),
 			wparam: self.id as _,
-			lparam: self.mask.0 as _,
+			lparam: self.mask.raw() as _,
 		}
 	}
 }
@@ -870,7 +870,7 @@ unsafe impl MsgSend for GetImageList {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETIMAGELIST.into(),
-			wparam: self.kind.0 as _,
+			wparam: self.kind.raw() as _,
 			lparam: 0,
 		}
 	}
@@ -1036,7 +1036,7 @@ unsafe impl<'a, 'b> MsgSend for GetItemIndexRect<'a, 'b> {
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		self.rect.top = self.index as _;
-		self.rect.left = self.portion.0 as _;
+		self.rect.left = self.portion.raw() as _;
 
 		WndMsg {
 			msg_id: co::LVM::GETITEMINDEXRECT.into(),
@@ -1089,7 +1089,7 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
-		self.rect.left = self.portion.0 as _;
+		self.rect.left = self.portion.raw() as _;
 
 		WndMsg {
 			msg_id: co::LVM::GETITEMRECT.into(),
@@ -1136,14 +1136,14 @@ unsafe impl MsgSend for GetItemState {
 	type RetType = co::LVIS;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::LVIS(v as _)
+		unsafe { co::LVIS::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::GETITEMSTATE.into(),
 			wparam: self.index as _,
-			lparam: self.mask.0 as _,
+			lparam: self.mask.raw() as _,
 		}
 	}
 }
@@ -1193,7 +1193,7 @@ unsafe impl MsgSend for GetNextItem {
 		WndMsg {
 			msg_id: co::LVM::GETNEXTITEM.into(),
 			wparam: self.initial_index.map_or(-1, |idx| idx as i32) as _,
-			lparam: self.relationship.0 as _,
+			lparam: self.relationship.raw() as _,
 		}
 	}
 }
@@ -1218,7 +1218,7 @@ unsafe impl<'a> MsgSend for GetNextItemIndex<'a> {
 		WndMsg {
 			msg_id: co::LVM::GETNEXTITEMINDEX.into(),
 			wparam: self.initial_item as *mut _ as _,
-			lparam: self.relationship.0 as _,
+			lparam: self.relationship.raw() as _,
 		}
 	}
 }
@@ -1402,7 +1402,7 @@ unsafe impl<'a> MsgSend for GetSubItemRect<'a> {
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
-		self.rect.left = self.portion.0 as _;
+		self.rect.left = self.portion.raw() as _;
 		self.rect.top = self.subitem_index as _;
 
 		WndMsg {
@@ -1584,7 +1584,7 @@ unsafe impl MsgSend for GetView {
 	type RetType = co::LV_VIEW;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::LV_VIEW(v as _)
+		unsafe { co::LV_VIEW::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -2008,7 +2008,7 @@ unsafe impl MsgSend for SetBkColor {
 		WndMsg {
 			msg_id: co::LVM::SETBKCOLOR.into(),
 			wparam: 0,
-			lparam: self.color.map_or(co::CLR::NONE.0, |c| c.into()) as _,
+			lparam: self.color.map_or(co::CLR::NONE.raw(), |c| c.raw()) as _,
 		}
 	}
 }
@@ -2055,7 +2055,7 @@ unsafe impl MsgSend for SetCallbackMask {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETCALLBACKMASK.into(),
-			wparam: self.mask.0 as _,
+			wparam: self.mask.raw() as _,
 			lparam: 0,
 		}
 	}
@@ -2148,14 +2148,14 @@ unsafe impl MsgSend for SetExtendedListViewStyle {
 	type RetType = co::LVS_EX;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::LVS_EX(v as _)
+		unsafe { co::LVS_EX::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETEXTENDEDLISTVIEWSTYLE.into(),
-			wparam: self.style.0 as _,
-			lparam: self.mask.0 as _,
+			wparam: self.style.raw() as _,
+			lparam: self.mask.raw() as _,
 		}
 	}
 }
@@ -2324,7 +2324,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETIMAGELIST.into(),
-			wparam: self.kind.0 as _,
+			wparam: self.kind.raw() as _,
 			lparam: self.himagelist.as_ptr() as _,
 		}
 	}
@@ -2446,7 +2446,7 @@ unsafe impl MsgSend for SetItemCount {
 		WndMsg {
 			msg_id: co::LVM::SETITEMCOUNT.into(),
 			wparam: self.count as _,
-			lparam: self.behavior.0 as _,
+			lparam: self.behavior.raw() as _,
 		}
 	}
 }
@@ -2642,7 +2642,7 @@ unsafe impl MsgSend for SetTextBkColor {
 		WndMsg {
 			msg_id: co::LVM::SETTEXTBKCOLOR.into(),
 			wparam: 0,
-			lparam: self.color.map_or(co::CLR::NONE.0, |c| c.into()) as _,
+			lparam: self.color.map_or(co::CLR::NONE.raw(), |c| c.raw()) as _,
 		}
 	}
 }
@@ -2666,7 +2666,7 @@ unsafe impl MsgSend for SetTextColor {
 		WndMsg {
 			msg_id: co::LVM::SETTEXTCOLOR.into(),
 			wparam: 0,
-			lparam: self.color.map_or(co::CLR::NONE.0, |c| c.into()) as _,
+			lparam: self.color.map_or(co::CLR::NONE.raw(), |c| c.raw()) as _,
 		}
 	}
 }
@@ -2785,7 +2785,7 @@ unsafe impl MsgSend for SetView {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LVM::SETVIEW.into(),
-			wparam: self.view.0 as _,
+			wparam: self.view.raw() as _,
 			lparam: 0,
 		}
 	}

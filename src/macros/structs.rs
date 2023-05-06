@@ -45,12 +45,32 @@ macro_rules! impl_intunderlying {
 		impl crate::prelude::IntUnderlying for $name {
 			type Raw = $ntype;
 
-			unsafe fn from_raw(v: Self::Raw) -> Self {
+			unsafe fn as_mut(&mut self) -> &mut Self::Raw {
+				&mut self.0
+			}
+		}
+
+		impl $name {
+			/// Constructs a new `IntUnderlying` by wrapping the given integer
+			/// value.
+			///
+			/// # Safety
+			///
+			/// Be sure the given value is meaningful for the actual type.
+			#[must_use]
+			pub const unsafe fn from_raw(v: $ntype) -> Self {
 				Self(v)
 			}
 
-			unsafe fn as_mut(&mut self) -> &mut Self::Raw {
-				&mut self.0
+			/// Returns the primitive integer underlying value.
+			///
+			/// This method is similar to
+			/// [`Into`](https://doc.rust-lang.org/std/convert/trait.Into.html),
+			/// but it is `const`, therefore it can be used in
+			/// [const contexts](https://doc.rust-lang.org/reference/const_eval.html).
+			#[must_use]
+			pub const fn raw(&self) -> $ntype {
+				self.0
 			}
 		}
 	};

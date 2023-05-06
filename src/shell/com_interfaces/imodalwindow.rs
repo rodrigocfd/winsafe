@@ -40,12 +40,10 @@ pub trait shell_IModalWindow: ole_IUnknown {
 	/// Returns false if user clicked Cancel.
 	fn Show(&self, hwnd_owner: &HWND) -> HrResult<bool> {
 		const CANCELLED: co::HRESULT = co::ERROR::CANCELLED.to_hresult();
-		match co::HRESULT(
-			unsafe {
-				let vt = self.vt_ref::<IModalWindowVT>();
-				(vt.Show)(self.ptr(), hwnd_owner.as_ptr())
-			},
-		) {
+		match unsafe {
+			let vt = self.vt_ref::<IModalWindowVT>();
+			co::HRESULT::from_raw((vt.Show)(self.ptr(), hwnd_owner.as_ptr()))
+		} {
 			co::HRESULT::S_OK => Ok(true),
 			CANCELLED => Ok(false),
 			e => Err(e),

@@ -6,7 +6,7 @@ use crate::kernel::ffi_types::{HANDLE, HRES, PCSTR, PSTR, PVOID};
 use crate::kernel::privs::MAX_PATH;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, ole_IUnknown};
+use crate::prelude::{Handle, IntUnderlying, ole_IUnknown};
 use crate::shell::privs::INFOTIPSIZE;
 use crate::user::decl::HWND;
 use crate::vt::IUnknownVT;
@@ -140,7 +140,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 					buf.as_mut_ptr(),
 					buf.buf_len() as _,
 					fd.map_or(std::ptr::null_mut(), |fd| fd as *mut _ as _),
-					flags.0,
+					flags.raw(),
 				),
 			).map(|_| buf.to_string())
 		}
@@ -153,7 +153,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 		let mut show_cmd = co::SW::default();
 		unsafe {
 			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult((vt.GetShowCmd)(self.ptr(), &mut show_cmd.0))
+			ok_to_hrresult((vt.GetShowCmd)(self.ptr(), show_cmd.as_mut()))
 				.map(|_| show_cmd)
 		}
 	}
@@ -180,7 +180,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	fn Resolve(&self, hwnd: &HWND, flags: co::SLR) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult((vt.Resolve)(self.ptr(), hwnd.as_ptr(), flags.0))
+			ok_to_hrresult((vt.Resolve)(self.ptr(), hwnd.as_ptr(), flags.raw()))
 		}
 	}
 
@@ -261,7 +261,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 	fn SetShowCmd(&self, show_cmd: co::SW) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult((vt.SetShowCmd)(self.ptr(), show_cmd.0))
+			ok_to_hrresult((vt.SetShowCmd)(self.ptr(), show_cmd.raw()))
 		}
 	}
 

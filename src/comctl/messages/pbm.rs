@@ -3,7 +3,7 @@ use crate::comctl::decl::PBRANGE;
 use crate::comctl::privs::CLR_DEFAULT;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult};
 use crate::msg::WndMsg;
-use crate::prelude::{IntUnderlying, MsgSend};
+use crate::prelude::MsgSend;
 use crate::user::decl::COLORREF;
 use crate::user::privs::zero_as_badargs;
 
@@ -138,7 +138,7 @@ unsafe impl MsgSend for GetState {
 	type RetType = co::PBST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::PBST(v as _)
+		unsafe { co::PBST::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -337,13 +337,13 @@ unsafe impl MsgSend for SetState {
 	type RetType = co::PBST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::PBST(v as _)
+		unsafe { co::PBST::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::PBM::SETSTATE.into(),
-			wparam: self.state.0 as _,
+			wparam: self.state.raw() as _,
 			lparam: 0,
 		}
 	}

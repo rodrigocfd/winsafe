@@ -135,7 +135,7 @@ unsafe impl MsgSend for GetImeStatus {
 	type RetType = co::EIMES;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::EIMES(v as _)
+		unsafe { co::EIMES::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -579,7 +579,7 @@ unsafe impl MsgSend for Scroll {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::SCROLL.into(),
-			wparam: self.action.0 as _,
+			wparam: self.action.raw() as _,
 			lparam: 0,
 		}
 	}
@@ -625,14 +625,14 @@ unsafe impl MsgSend for SetImeStatus {
 	type RetType = co::EIMES;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::EIMES(v as _)
+		unsafe { co::EIMES::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::SETIMESTATUS.into(),
 			wparam: 0x0001, // EMSIS_COMPOSITIONSTRING
-			lparam: self.status.0 as _,
+			lparam: self.status.raw() as _,
 		}
 	}
 }
@@ -680,7 +680,7 @@ unsafe impl MsgSend for SetMargins {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::SETMARGINS.into(),
-			wparam: self.margins.0 as _,
+			wparam: self.margins.raw() as _,
 			lparam: u32::from(self.size) as _,
 		}
 	}

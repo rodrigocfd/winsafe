@@ -63,7 +63,7 @@ pub(crate) fn ptr_to_option_handle<H>(ptr: HANDLE) -> Option<H>
 
 /// If value is `ERROR::SUCCESS`, yields `Ok(())`, otherwise `Err(err)`.
 pub(crate) const fn error_to_sysresult(lstatus: i32) -> SysResult<()> {
-	match ERROR(lstatus as _) {
+	match unsafe { ERROR::from_raw(lstatus as _) } {
 		ERROR::SUCCESS => Ok(()),
 		err => Err(err),
 	}

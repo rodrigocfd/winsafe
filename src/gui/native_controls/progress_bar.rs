@@ -236,7 +236,9 @@ impl ProgressBar {
 	}
 
 	fn cur_style(&self) -> co::PBS {
-		co::PBS(self.hwnd().GetWindowLongPtr(co::GWLP::STYLE) as _)
+		unsafe {
+			co::PBS::from_raw(self.hwnd().GetWindowLongPtr(co::GWLP::STYLE) as _)
+		}
 	}
 }
 

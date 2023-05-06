@@ -100,7 +100,7 @@ pub trait ole_IPicture: ole_IUnknown {
 		unsafe {
 			let vt = self.vt_ref::<IPictureVT>();
 			ok_to_hrresult((vt.get_Type)(self.ptr(), &mut ty))
-		}.map(|_| co::PICTYPE(ty))
+		}.map(|_| unsafe { co::PICTYPE::from_raw(ty) })
 	}
 
 	/// [`IPicture::get_Width`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_width)

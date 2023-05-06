@@ -194,7 +194,7 @@ impl LANGID {
 	/// macro.
 	#[must_use]
 	pub const fn new(lang: co::LANG, sublang: co::SUBLANG) -> Self {
-		Self((sublang.0 << 10) | lang.0)
+		Self((sublang.raw() << 10) | lang.raw())
 	}
 
 	/// Returns the primary language ID. Originally
@@ -202,7 +202,7 @@ impl LANGID {
 	/// macro.
 	#[must_use]
 	pub const fn primary_lang_id(self) -> co::LANG {
-		co::LANG(self.0 & 0x3ff)
+		unsafe { co::LANG::from_raw(self.0 & 0x3ff) }
 	}
 
 	/// Returns the sublanguage ID. Originally
@@ -210,7 +210,7 @@ impl LANGID {
 	/// macro.
 	#[must_use]
 	pub const fn sub_lang_id(self) -> co::SUBLANG {
-		co::SUBLANG(self.0 >> 10)
+		unsafe { co::SUBLANG::from_raw(self.0 >> 10) }
 	}
 }
 
@@ -238,7 +238,7 @@ impl LCID {
 	/// macro.
 	#[must_use]
 	pub const fn new(lang_id: LANGID, sort_id: co::SORT) -> Self {
-		Self(((sort_id.0 as u32) << 16) | lang_id.0 as u32)
+		Self(((sort_id.raw() as u32) << 16) | lang_id.raw() as u32)
 	}
 
 	/// Returns the language identifier. Originally
@@ -246,7 +246,7 @@ impl LCID {
 	/// macro.
 	#[must_use]
 	pub const fn lang_id(self) -> LANGID {
-		LANGID(self.0 as _)
+		unsafe { LANGID::from_raw(self.raw() as _) }
 	}
 
 	/// Returns the sort ID. Originally
@@ -254,7 +254,7 @@ impl LCID {
 	/// macro.
 	#[must_use]
 	pub const fn sort_id(self) -> co::SORT {
-		co::SORT(((self.0 >> 16) & 0xf) as _)
+		unsafe { co::SORT::from_raw(((self.raw() >> 16) & 0xf) as _) }
 	}
 }
 
@@ -627,12 +627,12 @@ impl<'a, 'b> STARTUPINFO<'a, 'b> {
 	/// Returns the `wShowWindow` field.
 	#[must_use]
 	pub const fn wShowWindow(&self) -> co::SW {
-		co::SW(self.wShowWindow as _)
+		unsafe { co::SW::from_raw(self.wShowWindow as _) }
 	}
 
 	/// Sets the `wShowWindow` field.
 	pub fn set_wShowWindow(&mut self, val: co::SW) {
-		self.wShowWindow = val.0 as _;
+		self.wShowWindow = val.raw() as _;
 	}
 }
 

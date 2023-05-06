@@ -5,7 +5,7 @@ use crate::comctl::decl::{
 use crate::comctl::privs::CLR_DEFAULT;
 use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, IntUnderlying, MsgSend};
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HWND, RECT};
 use crate::user::privs::{minus1_as_none, zero_as_badargs, zero_as_none};
 
@@ -148,7 +148,7 @@ unsafe impl<'a> MsgSend for Expand<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::EXPAND.into(),
-			wparam: self.action.0 as _,
+			wparam: self.action.raw() as _,
 			lparam: self.hitem.as_ptr() as _,
 		}
 	}
@@ -230,7 +230,7 @@ unsafe impl MsgSend for GetExtendedStyle {
 	type RetType = co::TVS_EX;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::TVS_EX(v as _)
+		unsafe { co::TVS_EX::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -260,7 +260,7 @@ unsafe impl MsgSend for GetImageList {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETIMAGELIST.into(),
-			wparam: self.kind.0 as _,
+			wparam: self.kind.raw() as _,
 			lparam: 0,
 		}
 	}
@@ -418,14 +418,14 @@ unsafe impl<'a> MsgSend for GetItemState<'a> {
 	type RetType = co::TVIS;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::TVIS(v as _)
+		unsafe { co::TVIS::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETITEMSTATE.into(),
 			wparam: self.hitem.as_ptr() as _,
-			lparam: self.mask.0 as _,
+			lparam: self.mask.raw() as _,
 		}
 	}
 }
@@ -474,7 +474,7 @@ unsafe impl<'a> MsgSend for GetNextItem<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETNEXTITEM.into(),
-			wparam: self.relationship.0 as _,
+			wparam: self.relationship.raw() as _,
 			lparam: self.hitem.map_or(0, |h| h.as_ptr() as _),
 		}
 	}
@@ -705,7 +705,7 @@ unsafe impl<'a> MsgSend for SelectItem<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SELECTITEM.into(),
-			wparam: self.action.0 as _,
+			wparam: self.action.raw() as _,
 			lparam: self.hitem.as_ptr() as _,
 		}
 	}
@@ -783,7 +783,7 @@ unsafe impl MsgSend for SetBorder {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SETBORDER.into(),
-			wparam: self.action.0 as _,
+			wparam: self.action.raw() as _,
 			lparam: MAKEDWORD(self.left, self.top) as _,
 		}
 	}
@@ -832,7 +832,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SETIMAGELIST.into(),
-			wparam: self.kind.0 as _,
+			wparam: self.kind.raw() as _,
 			lparam: self.himagelist.map_or(0, |h| h.as_ptr() as _),
 		}
 	}

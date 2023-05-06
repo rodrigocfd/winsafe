@@ -1043,7 +1043,7 @@ impl TBADDBITMAP {
 	#[must_use]
 	pub fn nID(&self) -> BmpIdbRes {
 		if self.hInst.as_ptr() as isize == HINST_COMMCTRL {
-			BmpIdbRes::Idb(co::IDB(self.nID))
+			BmpIdbRes::Idb(unsafe { co::IDB::from_raw(self.nID) })
 		} else if self.hInst == HINSTANCE::NULL {
 			BmpIdbRes::Bmp(unsafe { HBITMAP::from_ptr(self.nID as _) })
 		} else {
@@ -1059,7 +1059,7 @@ impl TBADDBITMAP {
 		*self = match val {
 			BmpIdbRes::Idb(idb) => Self {
 				hInst: unsafe { HINSTANCE::from_ptr(HINST_COMMCTRL as _) },
-				nID: idb.0,
+				nID: idb.raw(),
 			},
 			BmpIdbRes::Bmp(bmp) => Self {
 				hInst: HINSTANCE::NULL,

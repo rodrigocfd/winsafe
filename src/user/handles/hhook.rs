@@ -28,7 +28,7 @@ pub trait user_Hhook: Handle {
 		code: co::WH, wparam: usize, lparam: isize) -> isize
 	{
 		unsafe {
-			user::ffi::CallNextHookEx(self.as_ptr(), code.0, wparam, lparam)
+			user::ffi::CallNextHookEx(self.as_ptr(), code.raw(), wparam, lparam)
 		}
 	}
 
@@ -44,7 +44,7 @@ pub trait user_Hhook: Handle {
 		ptr_to_sysresult_handle(
 			unsafe {
 				user::ffi::SetWindowsHookExW(
-					hook_id.0,
+					hook_id.raw(),
 					proc as _,
 					module.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 					thread_id.unwrap_or_default(),

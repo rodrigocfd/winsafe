@@ -218,7 +218,7 @@ pub(in crate::gui) fn paint_control_borders(
 {
 	hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us
 
-	let ex_style = co::WS_EX(hwnd.GetWindowLongPtr(co::GWLP::EXSTYLE) as _);
+	let ex_style = unsafe { co::WS_EX::from_raw(hwnd.GetWindowLongPtr(co::GWLP::EXSTYLE) as _) };
 	if !ex_style.has(co::WS_EX::CLIENTEDGE) // no border
 		|| !IsThemeActive()
 		|| !IsAppThemed()

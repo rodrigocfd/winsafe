@@ -36,7 +36,7 @@ pub trait user_Hcursor: Handle {
 	/// method.
 	fn SetSystemCursor(&self, id: co::OCR) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { user::ffi::SetSystemCursor(self.as_ptr(), id.0) },
+			unsafe { user::ffi::SetSystemCursor(self.as_ptr(), id.raw()) },
 		)
 	}
 }

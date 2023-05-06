@@ -100,7 +100,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarList3VT>();
 			ok_to_hrresult(
-				(vt.SetProgressState)(self.ptr(), hwnd.as_ptr(), tbpf_flags.0),
+				(vt.SetProgressState)(self.ptr(), hwnd.as_ptr(), tbpf_flags.raw()),
 			)
 		}
 	}

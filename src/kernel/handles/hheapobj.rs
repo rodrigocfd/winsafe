@@ -12,7 +12,7 @@ impl_handle! { HHEAPOBJ;
 	/// Handle to a
 	/// [heap object](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcreate).
 	/// Originally just a `HANDLE`.
-	/// 
+	///
 	/// Not to be confused with [`HHEAPMEM`](crate::HHEAPMEM).
 }
 
@@ -30,16 +30,16 @@ pub trait kernel_Hheapobj: Handle {
 	/// Returns an iterator over the heap memory blocks with
 	/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) structs. Calls
 	/// [`HHEAPOBJ::HeapWalk`](crate::prelude::kernel_Hheapobj::HeapWalk).
-	/// 
+	///
 	/// # Examples
-	/// 
+	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HHEAPOBJ};
-	/// 
+	///
 	/// let heap_obj = HHEAPOBJ::HeapCreate(co::HEAP_CREATE::NoValue, 0, 0)?;
 	/// let _lock = heap_obj.HeapLock()?;
-	/// 
+	///
 	/// for entry in heap_obj.iter_walk() {
 	///     let entry = entry?;
 	///     println!("Size: {}, overhead? {}",
@@ -97,7 +97,7 @@ pub trait kernel_Hheapobj: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				kernel::ffi::HeapCreate(options.0, initial_size, maximum_size)
+				kernel::ffi::HeapCreate(options.raw(), initial_size, maximum_size)
 			).map(|h| HeapDestroyGuard::new(h))
 		}
 	}
@@ -111,7 +111,7 @@ pub trait kernel_Hheapobj: Handle {
 		SetLastError(co::ERROR::SUCCESS);
 		unsafe {
 			ptr_to_sysresult_handle(
-				kernel::ffi::HeapAlloc(self.as_ptr(), flags.0, bytes),
+				kernel::ffi::HeapAlloc(self.as_ptr(), flags.raw(), bytes),
 			).map(|h| HeapFreeGuard::new(self.raw_copy(), h))
 		}
 	}
@@ -119,7 +119,7 @@ pub trait kernel_Hheapobj: Handle {
 	/// [`HeapCompact`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcompact)
 	/// method.
 	fn HeapCompact(&self, flags: co::HEAP_SIZE) -> SysResult<usize> {
-		match unsafe { kernel::ffi::HeapCompact(self.as_ptr(), flags.0) } {
+		match unsafe { kernel::ffi::HeapCompact(self.as_ptr(), flags.raw()) } {
 			0 => Err(GetLastError()),
 			n => Ok(n),
 		}
@@ -127,27 +127,27 @@ pub trait kernel_Hheapobj: Handle {
 
 	/// [`HeapLock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heaplock)
 	/// method.
-	/// 
+	///
 	/// In the original C implementation, you must call
 	/// [`HeapUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock)
 	/// as a cleanup operation.
-	/// 
+	///
 	/// Here, the cleanup is performed automatically, because `HeapLock` returns
 	/// a [`HeapUnlockGuard`](crate::guard::HeapUnlockGuard), which
 	/// automatically calls `HeapUnlock` when the guard goes out of scope. You
 	/// must, however, keep the guard alive, otherwise the cleanup will be
 	/// performed right away.
-	/// 
+	///
 	/// # Examples
-	/// 
+	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HHEAPOBJ};
-	/// 
+	///
 	/// let heap_obj = HHEAPOBJ::HeapCreate(co::HEAP_CREATE::NoValue, 0, 0)?;
-	/// 
+	///
 	/// let _lock = heap_obj.HeapLock()?;
-	/// 
+	///
 	/// // heap operations...
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
@@ -161,7 +161,7 @@ pub trait kernel_Hheapobj: Handle {
 
 	/// [`HeapReAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heaprealloc)
 	/// method.
-	/// 
+	///
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
 	fn HeapReAlloc(&self,
@@ -175,7 +175,7 @@ pub trait kernel_Hheapobj: Handle {
 			unsafe {
 				kernel::ffi::HeapReAlloc(
 					self.as_ptr(),
-					flags.0,
+					flags.raw(),
 					mem.as_ptr(),
 					bytes,
 				)
@@ -193,7 +193,7 @@ pub trait kernel_Hheapobj: Handle {
 		const FAILED: usize = -1isize as usize;
 
 		match unsafe {
-			kernel::ffi::HeapSize(self.as_ptr(), flags.0, mem.as_ptr())
+			kernel::ffi::HeapSize(self.as_ptr(), flags.raw(), mem.as_ptr())
 		} {
 			FAILED => Err(GetLastError()),
 			n => Ok(n),
@@ -202,7 +202,7 @@ pub trait kernel_Hheapobj: Handle {
 
 	/// [`HeapWalk`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapwalk)
 	/// method.
-	/// 
+	///
 	/// Prefer using
 	/// [`HHEAPOBJ::iter_walk`](crate::prelude::kernel_Hheapobj::iter_walk),
 	/// which is simpler.

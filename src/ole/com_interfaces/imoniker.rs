@@ -6,7 +6,7 @@ use crate::kernel::ffi_types::{BOOL, HRES, PCSTR, PCVOID, PSTR, PVOID};
 use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
 use crate::prelude::{
-	ole_IBindCtx, ole_IPersist, ole_IPersistStream, ole_IUnknown,
+	IntUnderlying, ole_IBindCtx, ole_IPersist, ole_IPersistStream, ole_IUnknown,
 };
 use crate::vt::IPersistStreamVT;
 
@@ -249,10 +249,10 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	/// method.
 	#[must_use]
 	fn IsSystemMoniker(&self) -> HrResult<(bool, co::MKSYS)> {
-		let mut mksys = co::MKSYS::NONE;
+		let mut mksys = co::MKSYS::default();
 		unsafe {
 			let vt = self.vt_ref::<IMonikerVT>();
-			okfalse_to_hrresult((vt.IsSystemMoniker)(self.ptr(), &mut mksys.0))
+			okfalse_to_hrresult((vt.IsSystemMoniker)(self.ptr(), mksys.as_mut()))
 				.map(|b| (b, mksys))
 		}
 	}
@@ -300,7 +300,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 				(vt.Reduce)(
 					self.ptr(),
 					bind_ctx.ptr(),
-					reduce_how_far.0,
+					reduce_how_far.raw(),
 					&mut ppv_queried,
 					&mut ppv_queried2,
 				),

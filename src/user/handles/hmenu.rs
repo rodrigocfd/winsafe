@@ -39,7 +39,7 @@ pub trait user_Hmenu: Handle {
 			unsafe {
 				user::ffi::AppendMenuW(
 					self.as_ptr(),
-					flags.0,
+					flags.raw(),
 					new_item.as_usize(),
 					content.as_ptr(),
 				)
@@ -112,11 +112,11 @@ pub trait user_Hmenu: Handle {
 					co::MF::CHECKED
 				} else {
 					co::MF::UNCHECKED
-				}).0,
+				}).raw(),
 			)
 		} {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			ret => Ok(co::MF(ret as _)),
+			ret => Ok(unsafe { co::MF::from_raw(ret as _) }),
 		}
 	}
 
@@ -142,7 +142,7 @@ pub trait user_Hmenu: Handle {
 					first.id_or_pos_u32(),
 					last.id_or_pos_u32(),
 					check.id_or_pos_u32(),
-					check.mf_flag().0,
+					check.mf_flag().raw(),
 				)
 			},
 		)
@@ -178,7 +178,7 @@ pub trait user_Hmenu: Handle {
 				user::ffi::DeleteMenu(
 					self.as_ptr(),
 					id_or_pos.id_or_pos_u32(),
-					id_or_pos.mf_flag().0,
+					id_or_pos.mf_flag().raw(),
 				)
 			},
 		)
@@ -256,11 +256,11 @@ pub trait user_Hmenu: Handle {
 				self.as_ptr(),
 				id_or_pos.id_or_pos_u32(),
 				(id_or_pos.mf_flag()
-					| if enable { co::MF::ENABLED } else { co::MF::DISABLED }).0,
+					| if enable { co::MF::ENABLED } else { co::MF::DISABLED }).raw(),
 			)
 		} {
 			-1 => Err(co::ERROR::BAD_ARGUMENTS),
-			ret => Ok(co::MF(ret as _)),
+			ret => Ok(unsafe { co::MF::from_raw(ret as _) }),
 		}
 	}
 
@@ -271,7 +271,7 @@ pub trait user_Hmenu: Handle {
 		by_pos: bool, flags: co::GMDI) -> SysResult<IdPos>
 	{
 		match unsafe {
-			user::ffi::GetMenuDefaultItem(self.as_ptr(), by_pos as _, flags.0)
+			user::ffi::GetMenuDefaultItem(self.as_ptr(), by_pos as _, flags.raw())
 				as i32
 		} {
 			-1 => Err(GetLastError()),
@@ -336,7 +336,7 @@ pub trait user_Hmenu: Handle {
 			) as i32
 		} {
 			-1 => Err(GetLastError()),
-			mf => Ok(co::MF(mf as _)),
+			mf => Ok(unsafe { co::MF::from_raw(mf as _) }),
 		}
 	}
 
@@ -349,14 +349,14 @@ pub trait user_Hmenu: Handle {
 
 		loop {
 			let mut buf = WString::new_alloc_buf(buf_sz);
-			
+
 			let nchars = match unsafe {
 				user::ffi::GetMenuStringW(
 					self.as_ptr(),
 					id_or_pos.id_or_pos_u32(),
 					buf.as_mut_ptr(),
 					buf.buf_len() as _,
-					id_or_pos.mf_flag().0,
+					id_or_pos.mf_flag().raw(),
 				)
 			} {
 				0 => return Err(GetLastError()),
@@ -412,7 +412,7 @@ pub trait user_Hmenu: Handle {
 				user::ffi::RemoveMenu(
 					self.as_ptr(),
 					id_or_pos.id_or_pos_u32(),
-					id_or_pos.mf_flag().0,
+					id_or_pos.mf_flag().raw(),
 				)
 			},
 		)
@@ -453,7 +453,7 @@ pub trait user_Hmenu: Handle {
 				user::ffi::SetMenuItemBitmaps(
 					self.as_ptr(),
 					id_or_pos.id_or_pos_u32(),
-					id_or_pos.mf_flag().0,
+					id_or_pos.mf_flag().raw(),
 					hbmp_unchecked.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 					hbmp_checked.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 				)
@@ -489,7 +489,7 @@ pub trait user_Hmenu: Handle {
 		let ret = unsafe {
 			user::ffi::TrackPopupMenu(
 				self.as_ptr(),
-				flags.0,
+				flags.raw(),
 				location.x, location.y,
 				0,
 				hwnd.as_ptr(),

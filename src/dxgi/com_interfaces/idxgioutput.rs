@@ -99,8 +99,8 @@ pub trait dxgi_IDXGIOutput: dxgi_IDXGIObject {
 			ok_to_hrresult(
 				(vt.GetDisplayModeList)(
 					self.ptr(),
-					format.0,
-					flags.0,
+					format.raw(),
+					flags.raw(),
 					&mut num_modes,
 					std::ptr::null_mut(),
 				),
@@ -113,8 +113,8 @@ pub trait dxgi_IDXGIOutput: dxgi_IDXGIObject {
 			ok_to_hrresult(
 				(vt.GetDisplayModeList)(
 					self.ptr(),
-					format.0,
-					flags.0,
+					format.raw(),
+					flags.raw(),
 					&mut num_modes,
 					modes.as_mut_ptr() as _,
 				),

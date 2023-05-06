@@ -202,10 +202,10 @@ pub trait user_Hwnd: Handle {
 	{
 		ptr_to_sysresult_handle(
 			user::ffi::CreateWindowExW(
-				ex_style.0,
+				ex_style.raw(),
 				class_name.as_ptr(),
 				WString::from_opt_str(title).as_ptr(),
-				style.0,
+				style.raw(),
 				pos.x, pos.y,
 				size.cx, size.cy,
 				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
@@ -230,7 +230,7 @@ pub trait user_Hwnd: Handle {
 		msg.convert_ret(
 			unsafe {
 				user::ffi::DefWindowProcW(
-					self.as_ptr(), wm_any.msg_id.0, wm_any.wparam, wm_any.lparam,
+					self.as_ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
 				)
 			},
 		)
@@ -260,7 +260,11 @@ pub trait user_Hwnd: Handle {
 	{
 		bool_to_sysresult(
 			unsafe {
-				user::ffi::EnableScrollBar(self.as_ptr(), sb_flags.0 as _, arrows.0)
+				user::ffi::EnableScrollBar(
+					self.as_ptr(),
+					sb_flags.raw() as _,
+					arrows.raw(),
+				)
 			},
 		)
 	}
@@ -405,7 +409,7 @@ pub trait user_Hwnd: Handle {
 	#[must_use]
 	fn GetAncestor(&self, flags: co::GA) -> Option<HWND> {
 		ptr_to_option_handle(
-			unsafe { user::ffi::GetAncestor(self.as_ptr(), flags.0) },
+			unsafe { user::ffi::GetAncestor(self.as_ptr(), flags.raw()) },
 		)
 	}
 
@@ -420,7 +424,7 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn GetClassLongPtr(&self, index: co::GCLP) -> usize {
-		unsafe { user::ffi::GetClassLongPtrW(self.as_ptr(), index.0) }
+		unsafe { user::ffi::GetClassLongPtrW(self.as_ptr(), index.raw()) }
 	}
 
 	/// [`GetClassName`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclassnamew)
@@ -533,7 +537,7 @@ pub trait user_Hwnd: Handle {
 			unsafe {
 				user::ffi::GetMenuBarInfo(
 					self.as_ptr(),
-					obj_id.0 as _,
+					obj_id.raw() as _,
 					item_id as _,
 					mbi as *mut _ as _,
 				)
@@ -605,7 +609,7 @@ pub trait user_Hwnd: Handle {
 	{
 		bool_to_sysresult(
 			unsafe {
-				user::ffi::GetScrollInfo(self.as_ptr(), bar.0, si as *mut _ as _)
+				user::ffi::GetScrollInfo(self.as_ptr(), bar.raw(), si as *mut _ as _)
 			},
 		)
 	}
@@ -614,7 +618,7 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	#[must_use]
 	fn GetScrollPos(&self, bar: co::SBB) -> SysResult<i32> {
-		match unsafe { user::ffi::GetScrollPos(self.as_ptr(), bar.0) } {
+		match unsafe { user::ffi::GetScrollPos(self.as_ptr(), bar.raw()) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(0), // actual zero position
 				err => Err(err),
@@ -678,7 +682,7 @@ pub trait user_Hwnd: Handle {
 			user::ffi::GetUpdateRgn(self.as_ptr(), hrgn.as_ptr(), erase as _) }
 		{
 			0 => Err(GetLastError()),
-			ret => Ok(co::REGION(ret)),
+			ret => Ok(unsafe { co::REGION::from_raw(ret) }),
 		}
 	}
 
@@ -687,7 +691,7 @@ pub trait user_Hwnd: Handle {
 	#[must_use]
 	fn GetWindow(&self, cmd: co::GW) -> SysResult<HWND> {
 		ptr_to_sysresult_handle(
-			unsafe { user::ffi::GetWindow(self.as_ptr(), cmd.0) },
+			unsafe { user::ffi::GetWindow(self.as_ptr(), cmd.raw()) },
 		)
 	}
 
@@ -729,10 +733,10 @@ pub trait user_Hwnd: Handle {
 	#[must_use]
 	fn GetWindowLongPtr(&self, index: co::GWLP) -> isize {
 		#[cfg(target_pointer_width = "32")]
-		unsafe { user::ffi::GetWindowLongW(self.as_ptr(), index.0) }
+		unsafe { user::ffi::GetWindowLongW(self.as_ptr(), index.raw()) }
 
 		#[cfg(target_pointer_width = "64")]
-		unsafe { user::ffi::GetWindowLongPtrW(self.as_ptr(), index.0) }
+		unsafe { user::ffi::GetWindowLongPtrW(self.as_ptr(), index.raw()) }
 	}
 
 	/// [`GetWindowModuleFileName`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowmodulefilenamew)
@@ -778,7 +782,7 @@ pub trait user_Hwnd: Handle {
 	fn GetWindowRgn(&self, hrgn: &HRGN) -> SysResult<co::REGION> {
 		match unsafe { user::ffi::GetWindowRgn(self.as_ptr(), hrgn.as_ptr()) } {
 			0 => Err(GetLastError()),
-			ret => Ok(co::REGION(ret)),
+			ret => Ok(unsafe { co::REGION::from_raw(ret) }),
 		}
 	}
 
@@ -790,7 +794,7 @@ pub trait user_Hwnd: Handle {
 			user::ffi::GetWindowRgnBox(self.as_ptr(), rc as *mut _ as _)
 		} {
 			0 => Err(GetLastError()),
-			ret => Ok(co::REGION(ret)),
+			ret => Ok(unsafe { co::REGION::from_raw(ret) }),
 		}
 	}
 
@@ -870,7 +874,10 @@ pub trait user_Hwnd: Handle {
 	{
 		unsafe {
 			user::ffi::HiliteMenuItem(
-				self.as_ptr(), hmenu.as_ptr(), id_or_pos.id_or_pos_u32(), hilite.0,
+				self.as_ptr(),
+				hmenu.as_ptr(),
+				id_or_pos.id_or_pos_u32(),
+				hilite.raw(),
 			) != 0
 		}
 	}
@@ -1025,23 +1032,23 @@ pub trait user_Hwnd: Handle {
 
 	/// [`MapWindowPoints`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapwindowpoints)
 	/// method.
-	/// 
+	///
 	/// This method can convert either a series of [`POINT`](crate::POINT)
 	/// structs or a single [`RECT`](crate::RECT).
-	/// 
+	///
 	/// # Examples
-	/// 
+	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HWND, POINT, PtsRc};
-	/// 
+	///
 	/// let hwnd: HWND; // initialized somewhere
 	/// # let hwnd = HWND::NULL;
 	/// let hwnd_dest: HWND;
 	/// # let hwnd_dest = HWND::NULL;
-	/// 
+	///
 	/// let mut points = vec![POINT::default(), POINT::default()];
-	/// 
+	///
 	/// hwnd.MapWindowPoints(
 	///     &hwnd_dest,
 	///     PtsRc::Pts(&mut points),
@@ -1114,11 +1121,11 @@ pub trait user_Hwnd: Handle {
 				self.as_ptr(),
 				WString::from_str(text).as_ptr(),
 				WString::from_str(caption).as_ptr(),
-				flags.0,
+				flags.raw(),
 			)
 		} {
 			0 => Err(GetLastError()),
-			ret => Ok(co::DLGID(ret as _)),
+			ret => Ok(unsafe { co::DLGID::from_raw(ret as _) }),
 		}
 	}
 
@@ -1128,7 +1135,7 @@ pub trait user_Hwnd: Handle {
 	fn MonitorFromWindow(&self, flags: co::MONITOR) -> HMONITOR {
 		unsafe {
 			HMONITOR::from_ptr(
-				user::ffi::MonitorFromWindow(self.as_ptr(), flags.0),
+				user::ffi::MonitorFromWindow(self.as_ptr(), flags.raw()),
 			)
 		}
 	}
@@ -1162,7 +1169,7 @@ pub trait user_Hwnd: Handle {
 	/// which automatically calls `CloseClipboard` when the guard goes out of
 	/// scope. You must, however, keep the guard alive, otherwise the cleanup
 	/// will be performed right away.
-	/// 
+	///
 	/// # Examples
 	///
 	/// ```rust,no_run
@@ -1203,7 +1210,7 @@ pub trait user_Hwnd: Handle {
 		bool_to_sysresult(
 			unsafe {
 				user::ffi::PostMessageW(
-					self.as_ptr(), wm_any.msg_id.0, wm_any.wparam, wm_any.lparam,
+					self.as_ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
 				)
 			},
 		)
@@ -1253,7 +1260,7 @@ pub trait user_Hwnd: Handle {
 					self.as_ptr(),
 					rc_update as *const _ as _,
 					hrgn_update.as_ptr(),
-					flags.0,
+					flags.raw(),
 				)
 			},
 		)
@@ -1314,11 +1321,11 @@ pub trait user_Hwnd: Handle {
 				clipping_rect.map_or(std::ptr::null(), |rc| rc as *const _ as _),
 				hrgn_update.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 				updated_boundaries.map_or(std::ptr::null_mut(), |rc| rc as *mut _ as _),
-				flags.0
+				flags.raw(),
 			)
 		} {
 			0 => Err(GetLastError()),
-			v => Ok(co::REGION(v)),
+			v => Ok(unsafe { co::REGION::from_raw(v) }),
 		}
 	}
 
@@ -1372,7 +1379,7 @@ pub trait user_Hwnd: Handle {
 		msg.convert_ret(
 			unsafe {
 				user::ffi::SendMessageW(
-					self.as_ptr(), wm_any.msg_id.0, wm_any.wparam, wm_any.lparam,
+					self.as_ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
 				)
 			},
 		)
@@ -1395,10 +1402,10 @@ pub trait user_Hwnd: Handle {
 			unsafe {
 				user::ffi::SendMessageTimeoutW(
 					self.as_ptr(),
-					wm_any.msg_id.0,
+					wm_any.msg_id.raw(),
 					wm_any.wparam,
 					wm_any.lparam,
-					flags.0,
+					flags.raw(),
 					timeout_ms,
 					&mut result,
 				)
@@ -1454,7 +1461,7 @@ pub trait user_Hwnd: Handle {
 			unsafe {
 				user::ffi::SetParent(self.as_ptr(), hwnd_new_parent.as_ptr())
 			},
-		) {	
+		) {
 			None => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(None), // no previous parent
 				err => Err(err),
@@ -1469,7 +1476,7 @@ pub trait user_Hwnd: Handle {
 		unsafe {
 			user::ffi::SetScrollInfo(
 				self.as_ptr(),
-				bar.0,
+				bar.raw(),
 				si as *const _ as _,
 				redraw as _,
 			)
@@ -1482,7 +1489,7 @@ pub trait user_Hwnd: Handle {
 		b: co::SBB, pos: i32, redraw: bool) -> SysResult<i32>
 	{
 		match unsafe {
-			user::ffi::SetScrollPos(self.as_ptr(), b.0, pos, redraw as BOOL)
+			user::ffi::SetScrollPos(self.as_ptr(), b.raw(), pos, redraw as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(0), // actual zero position
@@ -1501,7 +1508,7 @@ pub trait user_Hwnd: Handle {
 			unsafe {
 				user::ffi::SetScrollRange(
 					self.as_ptr(),
-					bar.0,
+					bar.raw(),
 					min_pos,
 					max_pos,
 					redraw as _,
@@ -1535,7 +1542,7 @@ pub trait user_Hwnd: Handle {
 	fn SetWindowDisplayAffinity(&self, affinity: co::WDA) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
-				user::ffi::SetWindowDisplayAffinity(self.as_ptr(), affinity.0)
+				user::ffi::SetWindowDisplayAffinity(self.as_ptr(), affinity.raw())
 			},
 		)
 	}
@@ -1544,10 +1551,10 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	fn SetWindowLongPtr(&self, index: co::GWLP, new_long: isize) -> isize {
 		#[cfg(target_pointer_width = "32")]
-		unsafe { user::ffi::SetWindowLongW(self.as_ptr(), index.0, new_long) }
+		unsafe { user::ffi::SetWindowLongW(self.as_ptr(), index.raw(), new_long) }
 
 		#[cfg(target_pointer_width = "64")]
-		unsafe { user::ffi::SetWindowLongPtrW(self.as_ptr(), index.0, new_long) }
+		unsafe { user::ffi::SetWindowLongPtrW(self.as_ptr(), index.raw(), new_long) }
 	}
 
 	/// [`SetWindowPlacement`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowplacement)
@@ -1594,7 +1601,7 @@ pub trait user_Hwnd: Handle {
 					hwnd_insert_after.as_ptr(),
 					pos.x, pos.y,
 					size.cx, size.cy,
-					flags.0,
+					flags.raw(),
 				)
 			},
 		)
@@ -1640,14 +1647,14 @@ pub trait user_Hwnd: Handle {
 	/// [`ShowWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow)
 	/// method.
 	fn ShowWindow(&self, show_cmd: co::SW) -> bool {
-		unsafe { user::ffi::ShowWindow(self.as_ptr(), show_cmd.0) != 0 }
+		unsafe { user::ffi::ShowWindow(self.as_ptr(), show_cmd.raw()) != 0 }
 	}
 
 	/// [`ShowWindowAsync`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindowasync)
 	/// method.
 	fn ShowWindowAsync(&self, show_cmd: co::SW) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { user::ffi::ShowWindowAsync(self.as_ptr(), show_cmd.0) }
+			unsafe { user::ffi::ShowWindowAsync(self.as_ptr(), show_cmd.raw()) }
 		)
 	}
 
@@ -1662,7 +1669,7 @@ pub trait user_Hwnd: Handle {
 		match unsafe {
 			user::ffi::TileWindows(
 				self.as_ptr(),
-				how.0,
+				how.raw(),
 				rect.map_or(std::ptr::null(), |rc| &rc as *const _ as _),
 				kids.map_or(0, |s| s.len() as _),
 				kids.map_or(std::ptr::null(), |s| s.as_ptr() as *const _ as _),
@@ -1742,7 +1749,7 @@ pub trait user_Hwnd: Handle {
 				user::ffi::WinHelpW(
 					self.as_ptr(),
 					WString::from_str(help_file).as_ptr(),
-					cmd.0,
+					cmd.raw(),
 					data,
 				)
 			},

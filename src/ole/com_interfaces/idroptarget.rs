@@ -55,7 +55,7 @@ pub trait ole_IDropTarget: ole_IUnknown {
 				(vt.DragEnter)(
 					self.ptr(),
 					data_obj.ptr(),
-					key_state.0 as _,
+					key_state.raw() as _,
 					MAKEQWORD(pt.x as _, pt.y as _),
 					&mut effect_buf as *mut _ as _,
 				)
@@ -88,7 +88,7 @@ pub trait ole_IDropTarget: ole_IUnknown {
 				let vt = self.vt_ref::<IDropTargetVT>();
 				(vt.DragOver)(
 					self.ptr(),
-					key_state.0 as _,
+					key_state.raw() as _,
 					MAKEQWORD(pt.x as _, pt.y as _),
 					&mut effect_buf as *mut _ as _,
 				)
@@ -112,7 +112,7 @@ pub trait ole_IDropTarget: ole_IUnknown {
 				(vt.Drop)(
 					self.ptr(),
 					data_obj.ptr(),
-					key_state.0 as _,
+					key_state.raw() as _,
 					MAKEQWORD(pt.x as _, pt.y as _),
 					&mut effect_buf as *mut _ as _,
 				)

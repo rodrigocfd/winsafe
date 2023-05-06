@@ -90,7 +90,7 @@ impl TreeViewEvents {
 		where F: Fn(&NMTVCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
 		self.0.wm_notify(co::NM::CUSTOMDRAW,
-			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMTVCUSTOMDRAW>() })?.0 as _)));
+			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMTVCUSTOMDRAW>() })?.raw() as _)));
 	}
 
 	pub_fn_nfy_noparm_i32ret! { nm_dbl_clk, co::NM::DBLCLK;

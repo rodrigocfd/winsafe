@@ -49,7 +49,7 @@ pub trait kernel_Hthread: Handle {
 					stack_size,
 					start_addr,
 					parameter,
-					flags.0,
+					flags.raw(),
 					&mut thread_id,
 				)
 			).map(|h| (CloseHandleGuard::new(h), thread_id))
@@ -130,7 +130,7 @@ pub trait kernel_Hthread: Handle {
 			bool_to_sysresult(
 				kernel::ffi::OpenThreadToken(
 					self.as_ptr(),
-					desired_access.0,
+					desired_access.raw(),
 					open_as_self as _,
 					handle.as_mut(),
 				),
@@ -146,7 +146,7 @@ pub trait kernel_Hthread: Handle {
 
 	/// [`SetThreadIdealProcessor`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadidealprocessor)
 	/// method.
-	/// 
+	///
 	/// Returns the previous ideal processor.
 	fn SetThreadIdealProcessor(&self, ideal_processor: u32) -> SysResult<u32> {
 		minus1_as_error(
@@ -158,7 +158,7 @@ pub trait kernel_Hthread: Handle {
 
 	/// [`SetThreadIdealProcessorEx`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadidealprocessorex)
 	/// method.
-	/// 
+	///
 	/// Returns the previous ideal processor.
 	fn SetThreadIdealProcessorEx(&self,
 		ideal_processor: PROCESSOR_NUMBER) -> SysResult<PROCESSOR_NUMBER>

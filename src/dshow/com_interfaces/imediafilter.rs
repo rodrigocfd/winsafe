@@ -1,11 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::{HRES, PVOID};
+use crate::kernel::ffi_types::HRES;
 use crate::kernel::privs::INFINITE;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
-use crate::prelude::ole_IPersist;
+use crate::prelude::{IntUnderlying, ole_IPersist};
 use crate::vt::IPersistVT;
 
 /// [`IMediaFilter`](crate::IMediaFilter) virtual table.
@@ -15,7 +15,7 @@ pub struct IMediaFilterVT {
 	pub Stop: fn(ComPtr) -> HRES,
 	pub Pause: fn(ComPtr) -> HRES,
    pub Run: fn(ComPtr, i64) -> HRES,
-	pub GetState: fn(ComPtr, u32, PVOID) -> HRES,
+	pub GetState: fn(ComPtr, u32, *mut u32) -> HRES,
 	pub SetSyncSource: fn(ComPtr, ComPtr) -> HRES,
 	pub GetSyncSource: fn(ComPtr, *mut ComPtr) -> HRES,
 }
@@ -45,14 +45,14 @@ pub trait dshow_IMediaFilter: ole_IPersist {
 	/// method.
 	#[must_use]
 	fn GetState(&self, ms_timeout: Option<u32>) -> HrResult<co::FILTER_STATE> {
-		let mut fs = co::FILTER_STATE::Stopped;
+		let mut fs = co::FILTER_STATE::default();
 		unsafe {
 			let vt = self.vt_ref::<IMediaFilterVT>();
 			ok_to_hrresult(
 				(vt.GetState)(
 					self.ptr(),
 					ms_timeout.unwrap_or(INFINITE),
-					&mut fs.0 as *mut _ as _,
+					fs.as_mut(),
 				),
 			).map(|_| fs)
 		}

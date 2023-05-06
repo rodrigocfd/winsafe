@@ -61,7 +61,7 @@ pub trait taskschd_ITriggerCollection: oleaut_IDispatch {
 			let mut ppv_queried = ComPtr::null();
 			let vt = self.vt_ref::<ITriggerCollectionVT>();
 			ok_to_hrresult(
-				(vt.Create)(self.ptr(), trigger_type.0, &mut ppv_queried),
+				(vt.Create)(self.ptr(), trigger_type.raw(), &mut ppv_queried),
 			).map(|_| ITrigger::from(ppv_queried))
 		}
 	}

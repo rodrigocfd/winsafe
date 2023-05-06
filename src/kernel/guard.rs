@@ -49,13 +49,13 @@ impl<T> CloseHandleGuard<T>
 	where T: Handle,
 {
 	/// Constructs the guard by taking ownership of the handle.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure the handle must be freed with
 	/// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
 	/// at the end of scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -112,13 +112,13 @@ impl DerefMut for CloseHandlePiGuard {
 
 impl CloseHandlePiGuard {
 	/// Constructs the guard by taking ownership of the struct.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure the handles must be freed with
 	/// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
 	/// at the end of the scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -173,13 +173,13 @@ impl DerefMut for EndUpdateResourceGuard {
 
 impl EndUpdateResourceGuard {
 	/// Constructs the guard by taking ownership of the handle.
-	/// 
-	/// # Safety 
-	/// 
+	///
+	/// # Safety
+	///
 	/// Be sure the handle must be freed with
 	/// [`EndUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
 	/// at the end of scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -250,12 +250,12 @@ impl std::fmt::Display for FreeSidGuard {
 
 impl FreeSidGuard {
 	/// Constructs the guard by taking ownership of the pointer.
-	/// 
+	///
 	/// # Safety
-	/// 
-	/// Be sure the pointer must be freed with 
+	///
+	/// Be sure the pointer must be freed with
 	/// [`FreeSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-freesid).
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -310,13 +310,13 @@ impl<'a, H> GlobalUnlockGuard<'a, H>
 	where H: kernel_Hglobal,
 {
 	/// Constructs the guard.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure the handle must be freed with
 	/// [`GlobalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
 	/// at the end of scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -357,10 +357,10 @@ impl<H> Drop for HeapFreeGuard<H>
 				unsafe {
 					kernel::ffi::HeapFree( // ignore errors
 						ho.as_ptr(),
-						co::HEAP_ALLOC::NoValue.0,
+						co::HEAP_ALLOC::NoValue.raw(),
 						hm.as_ptr(),
 					);
-				} 
+				}
 			}
 		}
 	}
@@ -388,13 +388,13 @@ impl<H> HeapFreeGuard<H>
 	where H: kernel_Hheapobj,
 {
 	/// Constructs the guard by taking ownership of the handle.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure the handle must be freed with
 	/// [`HeapFree`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapfree)
 	/// at the end of scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -439,13 +439,13 @@ impl<'a, H> HeapUnlockGuard<'a, H>
 	where H: kernel_Hheapobj,
 {
 	/// Constructs the guard.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure the handle must be freed with
 	/// [`HeapUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock)
 	/// at the end of scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -489,12 +489,12 @@ impl std::fmt::Display for LocalFreeSidGuard {
 
 impl LocalFreeSidGuard {
 	/// Constructs the guard by taking ownership of the handle.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure the pointer is an [`HLOCAL`](crate::HLOCAL) handle pointing to a
 	/// [`SID`](crate::SID) memory block.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -538,13 +538,13 @@ impl DerefMut for RegCloseKeyGuard {
 
 impl RegCloseKeyGuard {
 	/// Constructs the guard by taking ownership of the handle.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure the handle must be freed with
 	/// [`RegCloseKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 	/// at the end of scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -589,11 +589,11 @@ impl std::fmt::Display for SidGuard {
 
 impl SidGuard {
 	/// Constructs a new guard by taking ownership of the data.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure the data is an allocated [`SID`](crate::SID) structure.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -636,13 +636,13 @@ impl<'a, H> UnlockFileGuard<'a, H>
 	where H: kernel_Hfile,
 {
 	/// Constructs the guard by taking ownership of the objects.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure the handle must be freed with
 	/// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
 	/// at the end of scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]

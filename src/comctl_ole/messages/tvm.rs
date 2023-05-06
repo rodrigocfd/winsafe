@@ -23,8 +23,8 @@ unsafe impl MsgSend for SetExtendedStyle {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SETEXTENDEDSTYLE.into(),
-			wparam: self.style.0 as _,
-			lparam: self.mask.0 as _,
+			wparam: self.style.raw() as _,
+			lparam: self.mask.raw() as _,
 		}
 	}
 }

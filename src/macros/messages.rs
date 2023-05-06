@@ -143,7 +143,7 @@ macro_rules! pub_struct_msg_char_key {
 			fn as_generic_wm(&mut self) -> crate::msg::WndMsg {
 				crate::msg::WndMsg {
 					msg_id: $wmconst,
-					wparam: self.vkey_code.0 as _,
+					wparam: self.vkey_code.raw() as _,
 					lparam: crate::kernel::decl::MAKEDWORD(
 						self.repeat_count,
 						crate::kernel::decl::MAKEWORD(
@@ -162,7 +162,7 @@ macro_rules! pub_struct_msg_char_key {
 			fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
 				use crate::kernel::decl::{HIBYTE, HIWORD, LOBYTE, LOWORD};
 				Self {
-					vkey_code: co::VK(p.wparam as _),
+					vkey_code: unsafe { co::VK::from_raw(p.wparam as _) },
 					repeat_count: LOWORD(p.lparam as _),
 					scan_code: LOBYTE(HIWORD(p.lparam as _)),
 					is_extended_key: (HIBYTE(HIWORD(p.lparam as _)) & 0b0000_0001) != 0,
@@ -246,7 +246,7 @@ macro_rules! pub_struct_msg_button {
 			fn as_generic_wm(&mut self) -> WndMsg {
 				WndMsg {
 					msg_id: $wmconst,
-					wparam: self.vkey_code.0 as _,
+					wparam: self.vkey_code.raw() as _,
 					lparam: u32::from(self.coords) as _,
 				}
 			}
@@ -255,7 +255,7 @@ macro_rules! pub_struct_msg_button {
 		unsafe impl MsgSendRecv for $name {
 			fn from_generic_wm(p: WndMsg) -> Self {
 				Self {
-					vkey_code: co::VK(p.wparam as _),
+					vkey_code: unsafe { co::VK::from_raw(p.wparam as _) },
 					coords: POINT {
 						x: LOWORD(p.lparam as _) as _,
 						y: HIWORD(p.lparam as _) as _,

@@ -22,7 +22,7 @@ pub(in crate::gui) struct Base {
 }
 
 impl Base {
-	const WM_UI_THREAD: co::WM = co::WM(co::WM::APP.0 + 0x3fff);
+	const WM_UI_THREAD: co::WM = unsafe { co::WM::from_raw(co::WM::APP.raw() + 0x3fff) };
 
 	pub(in crate::gui) unsafe fn from_guiparent<'a>(
 		p: &impl GuiParent) -> &'a Self
@@ -128,7 +128,7 @@ impl Base {
 					.map(|hwnd| {
 						hwnd.SendMessage(WndMsg {
 							msg_id: Self::WM_UI_THREAD,
-							wparam: Self::WM_UI_THREAD.0 as _,
+							wparam: Self::WM_UI_THREAD.raw() as _,
 							lparam: ptr_pack as _,
 						});
 					});
@@ -155,7 +155,7 @@ impl Base {
 			.map(|hwnd| {
 				hwnd.SendMessage(WndMsg {
 					msg_id: Self::WM_UI_THREAD,
-					wparam: Self::WM_UI_THREAD.0 as _,
+					wparam: Self::WM_UI_THREAD.raw() as _,
 					lparam: ptr_pack as _,
 				});
 			});
@@ -172,7 +172,7 @@ impl Base {
 		});
 
 		self.privileged_events.wm(Self::WM_UI_THREAD, |p| {
-			if co::WM(p.wparam as _) == Self::WM_UI_THREAD { // additional safety check
+			if unsafe { co::WM::from_raw(p.wparam as _) } == Self::WM_UI_THREAD { // additional safety check
 				let ptr_pack = p.lparam as *mut Box<dyn FnOnce() -> AnyResult<()>>;
 				let pack: Box<Box<dyn FnOnce() -> AnyResult<()>>> = unsafe { Box::from_raw(ptr_pack) };
 				pack().unwrap_or_else(|err| post_quit_error(p, err));

@@ -176,12 +176,10 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	/// [`IMFVideoDisplayControl::RepaintVideo`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-repaintvideo)
 	/// method.
 	fn RepaintVideo(&self) -> HrResult<()> {
-		match co::HRESULT(
-			unsafe {
-				let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
-				(vt.RepaintVideo)(self.ptr())
-			},
-		) {
+		match unsafe {
+			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
+			co::HRESULT::from_raw((vt.RepaintVideo)(self.ptr()))
+		} {
 			co::HRESULT::S_OK
 			| co::HRESULT::MF_E_INVALIDREQUEST => Ok(()),
 			hr => Err(hr),
@@ -193,7 +191,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 	fn SetAspectRatioMode(&self, mode: co::MFVideoARMode) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
-			ok_to_hrresult((vt.SetAspectRatioMode)(self.ptr(), mode.0))
+			ok_to_hrresult((vt.SetAspectRatioMode)(self.ptr(), mode.raw()))
 		}
 	}
 

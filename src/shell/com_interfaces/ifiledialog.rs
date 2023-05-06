@@ -66,7 +66,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	{
 		unsafe {
 			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.AddPlace)(self.ptr(), si.ptr(), fdap.0))
+			ok_to_hrresult((vt.AddPlace)(self.ptr(), si.ptr(), fdap.raw()))
 		}
 	}
 
@@ -84,7 +84,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	fn Close(&self, hr: co::ERROR) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.Close)(self.ptr(), hr.0 as _))
+			ok_to_hrresult((vt.Close)(self.ptr(), hr.raw() as _))
 		}
 	}
 
@@ -132,7 +132,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		unsafe {
 			let vt = self.vt_ref::<IFileDialogVT>();
 			ok_to_hrresult((vt.GetOptions)(self.ptr(), &mut opts))
-		}.map(|_| co::FOS(opts))
+		}.map(|_| unsafe { co::FOS::from_raw(opts) })
 	}
 
 	fn_com_get! { GetResult: IFileDialogVT, IShellItem;
@@ -285,7 +285,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	fn SetOptions(&self, opts: co::FOS) -> HrResult<()> {
 		unsafe {
 			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.SetOptions)(self.ptr(), opts.0))
+			ok_to_hrresult((vt.SetOptions)(self.ptr(), opts.raw()))
 		}
 	}
 

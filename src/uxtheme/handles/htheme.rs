@@ -46,7 +46,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// static method.
 	#[must_use]
 	fn GetThemeAppProperties() -> co::STAP {
-		co::STAP(unsafe { uxtheme::ffi::GetThemeAppProperties() })
+		unsafe { co::STAP::from_raw(uxtheme::ffi::GetThemeAppProperties()) }
 	}
 
 	/// [`GetThemeBackgroundContentRect`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundcontentrect)
@@ -130,7 +130,7 @@ pub trait uxtheme_Htheme: Handle {
 					self.as_ptr(),
 					part_state.part,
 					part_state.state,
-					prop.0,
+					prop.raw(),
 					color.as_mut(),
 				)
 			},

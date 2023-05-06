@@ -160,7 +160,7 @@ pub trait kernel_Hprocesslist: Handle {
 		unsafe {
 			ptr_to_sysresult_handle(
 				kernel::ffi::CreateToolhelp32Snapshot(
-					flags.0,
+					flags.raw(),
 					th32_process_id.unwrap_or_default(),
 				),
 			).map(|h| CloseHandleGuard::new(h))

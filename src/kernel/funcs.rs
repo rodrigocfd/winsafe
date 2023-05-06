@@ -16,7 +16,7 @@ use crate::kernel::privs::{
 	bool_to_sysresult, INVALID_FILE_ATTRIBUTES, MAX_COMPUTERNAME_LENGTH,
 	MAX_PATH, parse_multi_z_str, ptr_to_sysresult, SECURITY_DESCRIPTOR_REVISION,
 };
-use crate::prelude::Handle;
+use crate::prelude::{Handle, IntUnderlying};
 
 /// [`AllocateAndInitializeSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-allocateandinitializesid)
 /// function.
@@ -74,14 +74,14 @@ pub fn AllocateAndInitializeSid(
 			kernel::ffi::AllocateAndInitializeSid(
 				identifier_authority as *const _ as _,
 				sub_authorities.len() as _,
-				if sub_authorities.len() >= 1 { sub_authorities[0].0 } else { 0 },
-				if sub_authorities.len() >= 2 { sub_authorities[1].0 } else { 0 },
-				if sub_authorities.len() >= 3 { sub_authorities[2].0 } else { 0 },
-				if sub_authorities.len() >= 4 { sub_authorities[3].0 } else { 0 },
-				if sub_authorities.len() >= 5 { sub_authorities[4].0 } else { 0 },
-				if sub_authorities.len() >= 6 { sub_authorities[5].0 } else { 0 },
-				if sub_authorities.len() >= 7 { sub_authorities[6].0 } else { 0 },
-				if sub_authorities.len() >= 8 { sub_authorities[7].0 } else { 0 },
+				if sub_authorities.len() >= 1 { sub_authorities[0].raw() } else { 0 },
+				if sub_authorities.len() >= 2 { sub_authorities[1].raw() } else { 0 },
+				if sub_authorities.len() >= 3 { sub_authorities[2].raw() } else { 0 },
+				if sub_authorities.len() >= 4 { sub_authorities[3].raw() } else { 0 },
+				if sub_authorities.len() >= 5 { sub_authorities[4].raw() } else { 0 },
+				if sub_authorities.len() >= 6 { sub_authorities[5].raw() } else { 0 },
+				if sub_authorities.len() >= 7 { sub_authorities[6].raw() } else { 0 },
+				if sub_authorities.len() >= 8 { sub_authorities[7].raw() } else { 0 },
 				&mut psid as *mut _ as _,
 			),
 		).map(|_| FreeSidGuard::new(psid))
@@ -179,7 +179,7 @@ pub fn CreateWellKnownSid(
 
 	unsafe {
 		kernel::ffi::CreateWellKnownSid( // retrieve needed buffer sizes
-			well_known_sid.0,
+			well_known_sid.raw(),
 			domain_sid.map_or(std::ptr::null(), |s| s as *const _ as _),
 			std::ptr::null_mut(),
 			&mut sid_sz,
@@ -195,7 +195,7 @@ pub fn CreateWellKnownSid(
 	unsafe {
 		bool_to_sysresult(
 			kernel::ffi::CreateWellKnownSid(
-				well_known_sid.0,
+				well_known_sid.raw(),
 				domain_sid.map_or(std::ptr::null(), |s| s as *const _ as _),
 				sid_buf.as_mut_ptr(),
 				&mut sid_sz,
@@ -383,7 +383,7 @@ pub unsafe fn FormatMessage(
 	let mut ptr_buf = std::ptr::null_mut() as *mut u16;
 
 	let nchars = match kernel::ffi::FormatMessageW(
-		flags.0,
+		flags.raw(),
 		source.unwrap_or(std::ptr::null_mut()),
 		message_id,
 		u16::from(lang_id) as _,
@@ -410,7 +410,7 @@ pub fn GetBinaryType(application_name: &str) -> SysResult<co::SCS> {
 		unsafe {
 			kernel::ffi::GetBinaryTypeW(
 				WString::from_str(application_name).as_ptr(),
-				&mut binary_type.0,
+				binary_type.as_mut(),
 			)
 		},
 	).map(|_| binary_type)
@@ -471,13 +471,13 @@ pub fn GetCurrentThreadId() -> u32 {
 /// function.
 #[must_use]
 pub fn GetDriveType(root_path_name: Option<&str>) -> co::DRIVE {
-	co::DRIVE(
-		unsafe {
+	unsafe {
+		co::DRIVE::from_raw(
 			kernel::ffi::GetDriveTypeW(
 				WString::from_opt_str(root_path_name).as_ptr(),
-			)
-		},
-	)
+			),
+		)
+	}
 }
 
 /// [`GetEnvironmentStrings`](https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getenvironmentstringsw)
@@ -525,7 +525,7 @@ pub fn GetEnvironmentStrings() -> SysResult<HashMap<String, String>> {
 pub fn GetFirmwareType() -> SysResult<co::FIRMWARE_TYPE> {
 	let mut ft = u32::default();
 	bool_to_sysresult(unsafe { kernel::ffi::GetFirmwareType(&mut ft) })
-		.map(|_| co::FIRMWARE_TYPE(ft))
+		.map(|_| unsafe { co::FIRMWARE_TYPE::from_raw(ft) })
 }
 
 /// [`GetLargePageMinimum`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-getlargepageminimum)
@@ -543,7 +543,7 @@ pub fn GetLargePageMinimum() -> usize {
 /// you ever need to call it.
 #[must_use]
 pub fn GetLastError() -> co::ERROR {
-	co::ERROR(unsafe { kernel::ffi::GetLastError() })
+	unsafe { co::ERROR::from_raw(kernel::ffi::GetLastError()) }
 }
 
 /// [`GetLengthSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getlengthsid)
@@ -616,7 +616,7 @@ pub fn GetFileAttributes(file_name: &str) -> SysResult<co::FILE_ATTRIBUTE> {
 		kernel::ffi::GetFileAttributesW(WString::from_str(file_name).as_ptr())
 	} {
 		INVALID => Err(GetLastError()),
-		flags => Ok(co::FILE_ATTRIBUTE(flags)),
+		flags => Ok(unsafe { co::FILE_ATTRIBUTE::from_raw(flags) }),
 	}
 }
 
@@ -688,10 +688,10 @@ pub fn GetSystemDirectory() -> SysResult<String> {
 #[must_use]
 pub fn GetSystemFileCacheSize() -> SysResult<(usize, usize, co::FILE_CACHE)> {
 	let (mut min, mut max) = (usize::default(), usize::default());
-	let mut flags = co::FILE_CACHE::NoValue;
+	let mut flags = co::FILE_CACHE::default();
 	bool_to_sysresult(
 		unsafe {
-			kernel::ffi::GetSystemFileCacheSize(&mut min, &mut max, &mut flags.0)
+			kernel::ffi::GetSystemFileCacheSize(&mut min, &mut max, flags.as_mut())
 		},
 	).map(|_| (min, max, flags))
 }
@@ -856,7 +856,7 @@ pub fn GetVolumeInformation(
 				name_buf.1 as u32,
 				serial_number.map_or(std::ptr::null_mut(), |n| n),
 				max_component_len.map_or(std::ptr::null_mut(), |m| m),
-				file_system_flags.map_or(std::ptr::null_mut(), |f| &mut f.0),
+				file_system_flags.map_or(std::ptr::null_mut(), |f| f.as_mut()),
 				match file_system_name {
 					Some(_) => sys_name_buf.0.as_mut_ptr(),
 					None => std::ptr::null_mut(),
@@ -997,7 +997,8 @@ pub fn IsWellKnownSid(
 	sid: &SID, well_known_sid: co::WELL_KNOWN_SID_TYPE) -> bool
 {
 	unsafe {
-		kernel::ffi::IsWellKnownSid(sid as *const _ as _, well_known_sid.0) != 0
+		kernel::ffi::IsWellKnownSid(sid as *const _ as _, well_known_sid.raw())
+			!= 0
 	}
 }
 
@@ -1006,8 +1007,8 @@ pub fn IsWellKnownSid(
 #[must_use]
 pub fn IsWindows10OrGreater() -> SysResult<bool> {
 	IsWindowsVersionOrGreater(
-		HIBYTE(co::WIN32::WINNT_WINTHRESHOLD.0) as _,
-		LOBYTE(co::WIN32::WINNT_WINTHRESHOLD.0) as _,
+		HIBYTE(co::WIN32::WINNT_WINTHRESHOLD.raw()) as _,
+		LOBYTE(co::WIN32::WINNT_WINTHRESHOLD.raw()) as _,
 		0,
 	)
 }
@@ -1017,8 +1018,8 @@ pub fn IsWindows10OrGreater() -> SysResult<bool> {
 #[must_use]
 pub fn IsWindows7OrGreater() -> SysResult<bool> {
 	IsWindowsVersionOrGreater(
-		HIBYTE(co::WIN32::WINNT_WIN7.0) as _,
-		LOBYTE(co::WIN32::WINNT_WIN7.0) as _,
+		HIBYTE(co::WIN32::WINNT_WIN7.raw()) as _,
+		LOBYTE(co::WIN32::WINNT_WIN7.raw()) as _,
 		0,
 	)
 }
@@ -1028,8 +1029,8 @@ pub fn IsWindows7OrGreater() -> SysResult<bool> {
 #[must_use]
 pub fn IsWindows8OrGreater() -> SysResult<bool> {
 	IsWindowsVersionOrGreater(
-		HIBYTE(co::WIN32::WINNT_WIN8.0) as _,
-		LOBYTE(co::WIN32::WINNT_WIN8.0) as _,
+		HIBYTE(co::WIN32::WINNT_WIN8.raw()) as _,
+		LOBYTE(co::WIN32::WINNT_WIN8.raw()) as _,
 		0,
 	)
 }
@@ -1039,8 +1040,8 @@ pub fn IsWindows8OrGreater() -> SysResult<bool> {
 #[must_use]
 pub fn IsWindows8Point1OrGreater() -> SysResult<bool> {
 	IsWindowsVersionOrGreater(
-		HIBYTE(co::WIN32::WINNT_WINBLUE.0) as _,
-		LOBYTE(co::WIN32::WINNT_WINBLUE.0) as _,
+		HIBYTE(co::WIN32::WINNT_WINBLUE.raw()) as _,
+		LOBYTE(co::WIN32::WINNT_WINBLUE.raw()) as _,
 		0,
 	)
 }
@@ -1091,8 +1092,8 @@ pub fn IsWindowsVersionOrGreater(
 #[must_use]
 pub fn IsWindowsVistaOrGreater() -> SysResult<bool> {
 	IsWindowsVersionOrGreater(
-		HIBYTE(co::WIN32::WINNT_VISTA.0) as _,
-		LOBYTE(co::WIN32::WINNT_VISTA.0) as _,
+		HIBYTE(co::WIN32::WINNT_VISTA.raw()) as _,
+		LOBYTE(co::WIN32::WINNT_VISTA.raw()) as _,
 		0,
 	)
 }
@@ -1133,7 +1134,7 @@ pub fn LookupAccountName(
 {
 	let mut sid_sz = u32::default();
 	let mut domain_sz = u32::default();
-	let mut sid_name_use = co::SID_NAME_USE::User;
+	let mut sid_name_use = co::SID_NAME_USE::default();
 
 	unsafe {
 		kernel::ffi::LookupAccountNameW( // retrieve needed buffer sizes
@@ -1143,7 +1144,7 @@ pub fn LookupAccountName(
 			&mut sid_sz,
 			std::ptr::null_mut(),
 			&mut domain_sz,
-			&mut sid_name_use.0,
+			sid_name_use.as_mut(),
 		);
 	}
 	let get_size_err = GetLastError();
@@ -1163,7 +1164,7 @@ pub fn LookupAccountName(
 				&mut sid_sz,
 				domain_buf.as_mut_ptr(),
 				&mut domain_sz,
-				&mut sid_name_use.0,
+				sid_name_use.as_mut(),
 			),
 		).map(|_| (domain_buf.to_string(), SidGuard::new(sid_buf), sid_name_use))
 	}
@@ -1181,7 +1182,7 @@ pub fn LookupAccountSid(
 {
 	let mut account_sz = u32::default();
 	let mut domain_sz = u32::default();
-	let mut sid_name_use = co::SID_NAME_USE::User;
+	let mut sid_name_use = co::SID_NAME_USE::default();
 
 	unsafe {
 		kernel::ffi::LookupAccountSidW( // retrieve needed buffer sizes
@@ -1191,7 +1192,7 @@ pub fn LookupAccountSid(
 			&mut account_sz,
 			std::ptr::null_mut(),
 			&mut domain_sz,
-			&mut sid_name_use.0,
+			sid_name_use.as_mut(),
 		);
 	}
 	let get_size_err = GetLastError();
@@ -1211,7 +1212,7 @@ pub fn LookupAccountSid(
 				&mut account_sz,
 				domain_buf.as_mut_ptr(),
 				&mut domain_sz,
-				&mut sid_name_use.0,
+				sid_name_use.as_mut(),
 			)
 		},
 	).map(|_| (account_buf.to_string(), domain_buf.to_string(), sid_name_use))
@@ -1281,8 +1282,8 @@ pub fn MultiByteToWideChar(
 {
 	let num_bytes = match unsafe {
 		kernel::ffi::MultiByteToWideChar(
-			code_page.0 as _,
-			flags.0,
+			code_page.raw() as _,
+			flags.raw(),
 			multi_byte_str.as_ptr(),
 			multi_byte_str.len() as _,
 			std::ptr::null_mut(),
@@ -1298,8 +1299,8 @@ pub fn MultiByteToWideChar(
 	bool_to_sysresult(
 		unsafe {
 			kernel::ffi::MultiByteToWideChar(
-				code_page.0 as _,
-				flags.0,
+				code_page.raw() as _,
+				flags.raw(),
 				multi_byte_str.as_ptr(),
 				multi_byte_str.len() as _,
 				buf.as_mut_ptr(),
@@ -1373,7 +1374,7 @@ pub fn ReplaceFile(
 				WString::from_str(replaced).as_ptr(),
 				WString::from_str(replacement).as_ptr(),
 				WString::from_opt_str(backup).as_ptr(),
-				flags.0,
+				flags.raw(),
 				std::ptr::null_mut(),
 				std::ptr::null_mut(),
 			)
@@ -1394,7 +1395,7 @@ pub fn SetCurrentDirectory(path_name: &str) -> SysResult<()> {
 /// [`SetLastError`](https://learn.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-setlasterror)
 /// function.
 pub fn SetLastError(err_code: co::ERROR) {
-	unsafe { kernel::ffi::SetLastError(err_code.0) }
+	unsafe { kernel::ffi::SetLastError(err_code.raw()) }
 }
 
 /// [`SetThreadStackGuarantee`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadstackguarantee)
@@ -1465,7 +1466,7 @@ pub fn VerifyVersionInfo(
 	match unsafe {
 		kernel::ffi::VerifyVersionInfoW(
 			osvix as *mut _ as _,
-			type_mask.0,
+			type_mask.raw(),
 			condition_mask,
 		)
 	} {
@@ -1484,7 +1485,11 @@ pub fn VerSetConditionMask(
 	condition_mask: u64, type_mask: co::VER_MASK, condition: co::VER_COND) -> u64
 {
 	unsafe {
-		kernel::ffi::VerSetConditionMask(condition_mask, type_mask.0, condition.0)
+		kernel::ffi::VerSetConditionMask(
+			condition_mask,
+			type_mask.raw(),
+			condition.raw(),
+		)
 	}
 }
 
@@ -1505,8 +1510,8 @@ pub fn WideCharToMultiByte(
 
 	let num_bytes = match unsafe {
 		kernel::ffi::WideCharToMultiByte(
-			code_page.0 as _,
-			flags.0,
+			code_page.raw() as _,
+			flags.raw(),
 			wide_char_str.as_ptr(),
 			wide_char_str.len() as _,
 			std::ptr::null_mut(),
@@ -1525,8 +1530,8 @@ pub fn WideCharToMultiByte(
 	bool_to_sysresult(
 		unsafe {
 			kernel::ffi::WideCharToMultiByte(
-				code_page.0 as _,
-				flags.0,
+				code_page.raw() as _,
+				flags.raw(),
 				wide_char_str.as_ptr(),
 				wide_char_str.len() as _,
 				u8_buf.as_mut_ptr() as _,

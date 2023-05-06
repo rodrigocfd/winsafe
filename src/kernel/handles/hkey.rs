@@ -8,7 +8,7 @@ use crate::kernel::decl::{
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::guard::RegCloseKeyGuard;
 use crate::kernel::privs::error_to_sysresult;
-use crate::prelude::Handle;
+use crate::prelude::{Handle, IntUnderlying};
 
 impl_handle! { HKEY;
 	/// Handle to a
@@ -110,7 +110,7 @@ pub trait kernel_Hkey: Handle {
 	) -> SysResult<(RegCloseKeyGuard, co::REG_DISPOSITION)>
 	{
 		let mut hkey = HKEY::NULL;
-		let mut disposition = co::REG_DISPOSITION::NoValue;
+		let mut disposition = co::REG_DISPOSITION::default();
 
 		unsafe {
 			error_to_sysresult(
@@ -119,11 +119,11 @@ pub trait kernel_Hkey: Handle {
 					WString::from_str(sub_key).as_ptr(),
 					0,
 					WString::from_opt_str(class).as_ptr(),
-					options.0,
-					access_rights.0,
+					options.raw(),
+					access_rights.raw(),
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
 					hkey.as_mut(),
-					&mut disposition.0,
+					disposition.as_mut(),
 				),
 			).map(|_| (RegCloseKeyGuard::new(hkey), disposition))
 		}
@@ -142,7 +142,7 @@ pub trait kernel_Hkey: Handle {
 	) -> SysResult<(RegCloseKeyGuard, co::REG_DISPOSITION)>
 	{
 		let mut hkey = HKEY::NULL;
-		let mut disposition = co::REG_DISPOSITION::NoValue;
+		let mut disposition = co::REG_DISPOSITION::default();
 
 		unsafe {
 			error_to_sysresult(
@@ -151,11 +151,11 @@ pub trait kernel_Hkey: Handle {
 					WString::from_str(sub_key).as_ptr(),
 					0,
 					WString::from_opt_str(class).as_ptr(),
-					options.0,
-					access_rights.0,
+					options.raw(),
+					access_rights.raw(),
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
 					hkey.as_mut(),
-					&mut disposition.0,
+					disposition.as_mut(),
 					htransaction.as_ptr(),
 					std::ptr::null_mut(),
 				),
@@ -198,7 +198,7 @@ pub trait kernel_Hkey: Handle {
 				kernel::ffi::RegDeleteKeyExW(
 					self.as_ptr(),
 					WString::from_str(sub_key).as_ptr(),
-					platform_view.0,
+					platform_view.raw(),
 					0,
 				)
 			},
@@ -218,7 +218,7 @@ pub trait kernel_Hkey: Handle {
 				kernel::ffi::RegDeleteKeyTransactedW(
 					self.as_ptr(),
 					WString::from_str(sub_key).as_ptr(),
-					access_rights.0,
+					access_rights.raw(),
 					0,
 					htransaction.as_ptr(),
 					std::ptr::null_mut(),
@@ -411,7 +411,7 @@ pub trait kernel_Hkey: Handle {
 					self.as_ptr(),
 					sub_key_w.as_ptr(),
 					value_name_w.as_ptr(),
-					(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
+					(co::RRF::RT_ANY | co::RRF::NOEXPAND).raw(),
 					&mut raw_data_type1,
 					std::ptr::null_mut(),
 					&mut data_len1,
@@ -432,7 +432,7 @@ pub trait kernel_Hkey: Handle {
 					self.as_ptr(),
 					sub_key_w.as_ptr(),
 					value_name_w.as_ptr(),
-					(co::RRF::RT_ANY | co::RRF::NOEXPAND).0,
+					(co::RRF::RT_ANY | co::RRF::NOEXPAND).raw(),
 					&mut raw_data_type2,
 					buf.as_mut_ptr() as _,
 					&mut data_len2,
@@ -441,8 +441,10 @@ pub trait kernel_Hkey: Handle {
 		)?;
 
 		validate_retrieved_reg_val(
-			co::REG(raw_data_type1), data_len1,
-			co::REG(raw_data_type2), data_len2, buf)
+			unsafe { co::REG::from_raw(raw_data_type1) }, data_len1,
+			unsafe { co::REG::from_raw(raw_data_type2) }, data_len2,
+			buf,
+		)
 	}
 
 	/// [`RegLoadKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regloadkeyw)
@@ -470,7 +472,7 @@ pub trait kernel_Hkey: Handle {
 		let mut hkey = HKEY::NULL;
 		unsafe {
 			error_to_sysresult(
-				kernel::ffi::RegOpenCurrentUser(access_rights.0, hkey.as_mut()),
+				kernel::ffi::RegOpenCurrentUser(access_rights.raw(), hkey.as_mut()),
 			).map(|_| RegCloseKeyGuard::new(hkey))
 		}
 	}
@@ -504,8 +506,8 @@ pub trait kernel_Hkey: Handle {
 				kernel::ffi::RegOpenKeyExW(
 					self.as_ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
-					options.0,
-					access_rights.0,
+					options.raw(),
+					access_rights.raw(),
 					hkey.as_mut(),
 				),
 			).map(|_| RegCloseKeyGuard::new(hkey))
@@ -528,8 +530,8 @@ pub trait kernel_Hkey: Handle {
 				kernel::ffi::RegOpenKeyTransactedW(
 					self.as_ptr(),
 					WString::from_str(sub_key).as_ptr(),
-					options.0,
-					access_rights.0,
+					options.raw(),
+					access_rights.raw(),
 					hkey.as_mut(),
 					htransaction.as_ptr(),
 					std::ptr::null_mut(),
@@ -574,8 +576,8 @@ pub trait kernel_Hkey: Handle {
 		let last_write_time = last_write_time.map_or(std::ptr::null_mut(), |re| re as *mut _ as _);
 
 		loop { // until class is large enough
-			match co::ERROR(
-				unsafe {
+			match unsafe {
+				co::ERROR::from_raw(
 					kernel::ffi::RegQueryInfoKeyW(
 						self.as_ptr(),
 						class_ptr,
@@ -589,9 +591,9 @@ pub trait kernel_Hkey: Handle {
 						max_value_len,
 						security_descr_len,
 						last_write_time,
-					)
-				} as _,
-			) {
+					) as _,
+				 )
+			} {
 				co::ERROR::MORE_DATA => match &mut class {
 					Some(class) => {
 						**class = WString::new_alloc_buf(class.buf_len() + BLOCK_SZ);
@@ -671,17 +673,17 @@ pub trait kernel_Hkey: Handle {
 		let mut data_len1 = u32::default();
 
 		// Query data types and lenghts.
-		match co::ERROR(
-			unsafe {
+		match unsafe {
+			co::ERROR::from_raw(
 				kernel::ffi::RegQueryMultipleValuesW(
 					self.as_ptr(),
 					valents1.as_mut_ptr() as _,
 					value_names.len() as _,
 					std::ptr::null_mut(),
 					&mut data_len1,
-				)
-			} as _,
-		) {
+				) as _,
+			 )
+		} {
 			co::ERROR::MORE_DATA => {},
 			err => return Err(err),
 		}
@@ -832,8 +834,10 @@ pub trait kernel_Hkey: Handle {
 		)?;
 
 		validate_retrieved_reg_val(
-			co::REG(raw_data_type1), data_len1,
-			co::REG(raw_data_type2), data_len2, buf)
+			unsafe { co::REG::from_raw(raw_data_type1) }, data_len1,
+			unsafe { co::REG::from_raw(raw_data_type2) }, data_len2,
+			buf,
+		)
 	}
 
 	/// [`RegRenameKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regrenamekey)
@@ -882,7 +886,7 @@ pub trait kernel_Hkey: Handle {
 				kernel::ffi::RegRestoreKeyW(
 					self.as_ptr(),
 					WString::from_str(file_path).as_ptr(),
-					flags.0,
+					flags.raw(),
 				)
 			},
 		)
@@ -920,7 +924,7 @@ pub trait kernel_Hkey: Handle {
 					self.as_ptr(),
 					WString::from_str(dest_file_path).as_ptr(),
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
-					flags.0,
+					flags.raw(),
 				)
 			},
 		)
@@ -960,7 +964,7 @@ pub trait kernel_Hkey: Handle {
 					self.as_ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					WString::from_opt_str(value_name).as_ptr(),
-					data.reg_type().0,
+					data.reg_type().raw(),
 					data_ptr,
 					data_len,
 				)
@@ -1004,7 +1008,7 @@ pub trait kernel_Hkey: Handle {
 					self.as_ptr(),
 					WString::from_opt_str(value_name).as_ptr(),
 					0,
-					data.reg_type().0,
+					data.reg_type().raw(),
 					data_ptr as _,
 					data_len,
 				)
@@ -1101,8 +1105,8 @@ impl<'a, H> Iterator for EnumKeyIter<'a, H>
 		}
 
 		let mut len_buffer = self.name_buffer.buf_len() as u32;
-		match co::ERROR(
-			unsafe {
+		match unsafe {
+			co::ERROR::from_raw(
 				kernel::ffi::RegEnumKeyExW(
 					self.hkey.as_ptr(),
 					self.current,
@@ -1112,9 +1116,9 @@ impl<'a, H> Iterator for EnumKeyIter<'a, H>
 					std::ptr::null_mut(),
 					std::ptr::null_mut(),
 					std::ptr::null_mut(),
-				)
-			} as _,
-		) {
+				) as _,
+			)
+		} {
 			co::ERROR::SUCCESS => {
 				self.current += 1;
 				Some(Ok(self.name_buffer.to_string()))
@@ -1169,8 +1173,8 @@ impl<'a, H> Iterator for EnumValueIter<'a, H>
 
 		let mut raw_data_type = u32::default();
 		let mut len_buffer = self.name_buffer.buf_len() as u32;
-		match co::ERROR(
-			unsafe {
+		match unsafe {
+			co::ERROR::from_raw(
 				kernel::ffi::RegEnumValueW(
 					self.hkey.as_ptr(),
 					self.current,
@@ -1180,12 +1184,12 @@ impl<'a, H> Iterator for EnumValueIter<'a, H>
 					&mut raw_data_type,
 					std::ptr::null_mut(),
 					std::ptr::null_mut(),
-				)
-			} as _,
-		) {
+				) as _,
+			)
+		} {
 			co::ERROR::SUCCESS => {
 				self.current += 1;
-				Some(Ok((self.name_buffer.to_string(), co::REG(raw_data_type))))
+				Some(Ok((self.name_buffer.to_string(), unsafe { co::REG::from_raw(raw_data_type) })))
 			},
 			e => {
 				self.current = self.count; // no further iterations will be made

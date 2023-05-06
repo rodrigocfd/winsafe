@@ -45,5 +45,5 @@ pub fn ChooseColor(cc: &mut CHOOSECOLOR) -> Result<bool, co::CDERR> {
 /// [`CommDlgExtendedError`](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror)
 /// function.
 pub fn CommDlgExtendedError() -> co::CDERR {
-	co::CDERR(unsafe { comdlg::ffi::CommDlgExtendedError() })
+	unsafe { co::CDERR::from_raw(comdlg::ffi::CommDlgExtendedError()) }
 }

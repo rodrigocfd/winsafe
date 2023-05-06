@@ -29,7 +29,7 @@ pub trait user_Hprocess: Handle {
 		bool_to_sysresult(
 			user::ffi::SetUserObjectInformationW(
 				self.as_ptr(),
-				index.0,
+				index.raw(),
 				pv_info as *mut _ as _,
 				std::mem::size_of::<T>() as _,
 			),

@@ -153,7 +153,7 @@ pub fn PathUnquoteSpaces(str_path: &str) -> String {
 /// The `pv` type varies according to `uFlags`. If you set it wrong, you're
 /// likely to cause a buffer overrun.
 pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
-	shell::ffi::SHAddToRecentDocs(flags.0, pv as *const _ as _);
+	shell::ffi::SHAddToRecentDocs(flags.raw(), pv as *const _ as _);
 }
 
 /// [`Shell_NotifyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)
@@ -162,7 +162,7 @@ pub fn Shell_NotifyIcon(
 	message: co::NIM, data: &mut NOTIFYICONDATA) -> SysResult<()>
 {
 	bool_to_sysresult(
-		unsafe { shell::ffi::Shell_NotifyIconW(message.0, data as *mut _ as _) },
+		unsafe { shell::ffi::Shell_NotifyIconW(message.raw(), data as *mut _ as _) },
 	)
 }
 
@@ -250,10 +250,10 @@ pub fn SHGetFileInfo(
 	unsafe {
 		match shell::ffi::SHGetFileInfoW(
 			WString::from_str(path).as_ptr(),
-			file_attrs.0,
+			file_attrs.raw(),
 			&mut shfi as *mut _ as _,
 			std::mem::size_of::<SHFILEINFO>() as _,
-			flags.0,
+			flags.raw(),
 		) {
 			0 => Err(GetLastError()),
 			n => Ok((n as _, DestroyIconShfiGuard::new(shfi))),
@@ -293,7 +293,7 @@ pub fn SHGetKnownFolderPath(
 		unsafe {
 			shell::ffi::SHGetKnownFolderPath(
 				folder_id as *const _ as _,
-				flags.0,
+				flags.raw(),
 				token.map_or(std::ptr::null_mut(), |t| t.as_ptr()),
 				&mut pstr,
 			)
@@ -331,8 +331,8 @@ pub fn SHGetStockIconInfo(
 	unsafe {
 		ok_to_hrresult(
 			shell::ffi::SHGetStockIconInfo(
-				siid.0,
-				flags.0,
+				siid.raw(),
+				flags.raw(),
 				&mut sii as *mut _ as _,
 			),
 		).map(|_| DestroyIconSiiGuard::new(sii))

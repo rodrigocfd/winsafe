@@ -67,7 +67,7 @@ impl_intunderlying!(COLORREF, u32);
 
 impl From<co::CLR> for COLORREF {
 	fn from(v: co::CLR) -> Self {
-		Self(v.0)
+		Self(v.raw())
 	}
 }
 
@@ -878,25 +878,25 @@ impl STYLESTRUCT {
 	/// Returns the [`WS`](crate::co::WS) of `styleOld` field.
 	#[must_use]
 	pub const fn styleOld_WS(&self) -> co::WS {
-		co::WS(self.styleOld)
+		unsafe { co::WS::from_raw(self.styleOld) }
 	}
 
 	/// Returns the [`WS_EX`](crate::co::WS_EX) of `styleOld` field.
 	#[must_use]
 	pub fn styleOld_WSEX(&self) -> co::WS_EX {
-		co::WS_EX(self.styleOld)
+		unsafe { co::WS_EX::from_raw(self.styleOld) }
 	}
 
 	/// Returns the [`WS`](crate::co::WS) of `styleNew` field.
 	#[must_use]
 	pub const fn styleNew_WS(&self) -> co::WS {
-		co::WS(self.styleNew)
+		unsafe { co::WS::from_raw(self.styleNew) }
 	}
 
 	/// Returns the [`WS_EX`](crate::co::WS_EX) of `styleNew` field.
 	#[must_use]
 	pub const fn styleNew_WSEX(&self) -> co::WS_EX {
-		co::WS_EX(self.styleNew)
+		unsafe { co::WS_EX::from_raw(self.styleNew) }
 	}
 }
 
@@ -977,7 +977,7 @@ impl WINDOWPOS {
 	#[must_use]
 	pub fn hwndInsertAfter(&self) -> HwndPlace {
 		match self.hwndInsertAfter {
-			0 | 1 | -1 | -2 => HwndPlace::Place(co::HWND_PLACE(self.hwndInsertAfter)),
+			0 | 1 | -1 | -2 => HwndPlace::Place(unsafe { co::HWND_PLACE::from_raw(self.hwndInsertAfter) }),
 			_ => HwndPlace::Hwnd(unsafe { HWND::from_ptr(self.hwndInsertAfter as _) }),
 		}
 	}

@@ -51,7 +51,7 @@ impl IdTdiconStr {
 		match self {
 			Self::None => std::ptr::null(),
 			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Tdicon(tdi) => MAKEINTRESOURCE(tdi.0 as _),
+			Self::Tdicon(tdi) => MAKEINTRESOURCE(tdi.raw() as _),
 			Self::Str(s) => {
 				*str_buf = WString::from_str(s);
 				str_buf.as_ptr()

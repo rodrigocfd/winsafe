@@ -90,14 +90,14 @@ pub trait shell_IShellItem: ole_IUnknown {
 	#[must_use]
 	fn GetAttributes(&self, sfgao_mask: co::SFGAO) -> HrResult<co::SFGAO> {
 		let mut attrs = u32::default();
-		match co::HRESULT(
-			unsafe {
-				let vt = self.vt_ref::<IShellItemVT>();
-				(vt.GetAttributes)(self.ptr(), sfgao_mask.0, &mut attrs)
-			},
-		) {
+		match unsafe {
+			let vt = self.vt_ref::<IShellItemVT>();
+			co::HRESULT::from_raw(
+				(vt.GetAttributes)(self.ptr(), sfgao_mask.raw(), &mut attrs),
+			)
+		} {
 			co::HRESULT::S_OK
-			| co::HRESULT::S_FALSE => Ok(co::SFGAO(attrs)),
+			| co::HRESULT::S_FALSE => Ok(unsafe { co::SFGAO::from_raw(attrs) }),
 			hr => Err(hr),
 		}
 	}
@@ -127,7 +127,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 		unsafe {
 			let vt = self.vt_ref::<IShellItemVT>();
 			ok_to_hrresult(
-				(vt.GetDisplayName)(self.ptr(), sigdn_name.0, &mut pstr),
+				(vt.GetDisplayName)(self.ptr(), sigdn_name.raw(), &mut pstr),
 			)
 		}.map(|_| {
 			let name = WString::from_wchars_nullt(pstr);

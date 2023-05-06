@@ -35,7 +35,7 @@ pub trait kernel_Haccesstoken: Handle {
 			bool_to_sysresult(
 				kernel::ffi::DuplicateToken(
 					self.as_ptr(),
-					level.0,
+					level.raw(),
 					handle.as_mut(),
 				),
 			).map(|_| CloseHandleGuard::new(handle))

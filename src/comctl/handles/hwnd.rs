@@ -32,7 +32,7 @@ pub trait comctl_Hwnd: Handle {
 		msg.convert_ret(
 			unsafe {
 				comctl::ffi::DefSubclassProc(
-					self.as_ptr(), wm_any.msg_id.0, wm_any.wparam, wm_any.lparam,
+					self.as_ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
 				)
 			},
 		)

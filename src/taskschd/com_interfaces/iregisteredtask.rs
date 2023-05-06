@@ -5,7 +5,7 @@ use crate::kernel::ffi_types::{HRES, PCSTR, PCVOID, PSTR, PVOID};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
 use crate::oleaut::decl::VARIANT;
-use crate::prelude::oleaut_IDispatch;
+use crate::prelude::{IntUnderlying, oleaut_IDispatch};
 use crate::taskschd::decl::ITaskDefinition;
 use crate::vt::IDispatchVT;
 
@@ -131,7 +131,7 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 		let mut state = co::TASK_STATE::default();
 		unsafe {
 			let vt = self.vt_ref::<IRegisteredTaskVT>();
-			ok_to_hrresult((vt.get_State)(self.ptr(), &mut state.0))
+			ok_to_hrresult((vt.get_State)(self.ptr(), state.as_mut()))
 		}.map(|_| state)
 	}
 

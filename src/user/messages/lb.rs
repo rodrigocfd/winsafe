@@ -1,7 +1,7 @@
 use crate::co;
 use crate::kernel::decl::{HIWORD, LCID, LOWORD, MAKEDWORD, SysResult, WString};
 use crate::msg::WndMsg;
-use crate::prelude::{IntUnderlying, MsgSend};
+use crate::prelude::MsgSend;
 use crate::user::decl::{POINT, RECT};
 use crate::user::privs::{LB_ERR, LB_ERRSPACE, zero_as_badargs};
 
@@ -111,7 +111,7 @@ unsafe impl MsgSend for Dir {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::LB::DIR.into(),
-			wparam: self.attributes.0 as _,
+			wparam: self.attributes.raw() as _,
 			lparam: self.path.as_ptr() as _,
 		}
 	}

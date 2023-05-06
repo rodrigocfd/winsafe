@@ -137,7 +137,7 @@ pub trait comctl_Himagelist: Handle {
 			ptr_to_sysresult_handle(
 				comctl::ffi::ImageList_Create(
 					image_sz.cx, image_sz.cy,
-					flags.0,
+					flags.raw(),
 					initial_size,
 					grow_size,
 				)

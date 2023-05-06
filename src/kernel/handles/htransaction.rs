@@ -48,7 +48,7 @@ pub trait kernel_Htransaction: Handle {
 				kernel::ffi::CreateTransaction(
 					transaction_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
 					std::ptr::null_mut(),
-					options.map_or(0, |opt| opt.0),
+					options.map_or(0, |opt| opt.raw()),
 					0,
 					0,
 					timeout.map_or(0, |t| t),
@@ -87,7 +87,7 @@ pub trait kernel_Htransaction: Handle {
 		unsafe {
 			match HTRANSACTION(
 				kernel::ffi::OpenTransaction(
-					desired_access.0,
+					desired_access.raw(),
 					transaction_id as *const _ as _,
 				),
 			) {

@@ -165,7 +165,7 @@ unsafe impl MsgSend for GetImageList {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::HDM::GETIMAGELIST.into(),
-			wparam: self.which.0 as _,
+			wparam: self.which.raw() as _,
 			lparam: 0,
 		}
 	}
@@ -556,7 +556,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::HDM::SETIMAGELIST.into(),
-			wparam: self.which.0 as _,
+			wparam: self.which.raw() as _,
 			lparam: self.himagelist.as_ptr() as _,
 		}
 	}

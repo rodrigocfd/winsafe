@@ -38,7 +38,7 @@ pub trait gdi_Hpen: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::CreatePen(style.0, width, color.into()),
+				gdi::ffi::CreatePen(style.raw(), width, color.into()),
 			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -58,6 +58,6 @@ pub trait gdi_Hpen: Handle {
 	/// static method.
 	#[must_use]
 	fn GetStockObject(sp: co::STOCK_PEN) -> SysResult<HPEN> {
-		ptr_to_sysresult_handle(unsafe { gdi::ffi::GetStockObject(sp.0) })
+		ptr_to_sysresult_handle(unsafe { gdi::ffi::GetStockObject(sp.raw()) })
 	}
 }

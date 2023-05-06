@@ -155,7 +155,7 @@ unsafe impl MsgSend for GetExtendedStyle {
 	type RetType = co::TCS_EX;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::TCS_EX(v as _)
+		unsafe { co::TCS_EX::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -486,14 +486,14 @@ unsafe impl MsgSend for SetExtendedStyle {
 	type RetType = co::TCS_EX;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::TCS_EX(v as _)
+		unsafe { co::TCS_EX::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TCM::SETEXTENDEDSTYLE.into(),
-			wparam: self.mask.0 as _,
-			lparam: self.style.0 as _,
+			wparam: self.mask.raw() as _,
+			lparam: self.style.raw() as _,
 		}
 	}
 }

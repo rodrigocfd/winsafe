@@ -87,12 +87,12 @@ pub trait kernel_Hfile: Handle {
 			match HFILE(
 				kernel::ffi::CreateFileW(
 					WString::from_str(file_name).as_ptr(),
-					desired_access.0,
-					share_mode.0,
+					desired_access.raw(),
+					share_mode.raw(),
 					security_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-					creation_disposition.0,
-					flags_and_attrs.0,
-					hfile_template.map_or(std::ptr::null_mut(), |h| h.0),
+					creation_disposition.raw(),
+					flags_and_attrs.raw(),
+					hfile_template.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 				) as _,
 			) {
 				HFILE::NULL => Err(GetLastError()),
@@ -116,7 +116,7 @@ pub trait kernel_Hfile: Handle {
 				kernel::ffi::CreateFileMappingFromApp(
 					self.as_ptr(),
 					mapping_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-					protect.0,
+					protect.raw(),
 					max_size.unwrap_or_default(),
 					WString::from_opt_str(mapping_name).as_ptr(),
 				),
@@ -152,7 +152,9 @@ pub trait kernel_Hfile: Handle {
 	/// method.
 	#[must_use]
 	fn GetFileType(&self) -> SysResult<co::FILE_TYPE> {
-		match co::FILE_TYPE(unsafe { kernel::ffi::GetFileType(self.as_ptr()) }) {
+		match unsafe {
+			co::FILE_TYPE::from_raw(kernel::ffi::GetFileType(self.as_ptr()))
+		} {
 			co::FILE_TYPE::UNKNOWN => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(co::FILE_TYPE::UNKNOWN), // actual unknown type
 				err => Err(err),
@@ -173,7 +175,7 @@ pub trait kernel_Hfile: Handle {
 	/// automatically calls `UnlockFile` when the guard goes out of scope. You
 	/// must, however, keep the guard alive, otherwise the cleanup will be
 	/// performed right away.
-	/// 
+	///
 	/// # Examples
 	///
 	/// ```rust,no_run
@@ -251,7 +253,7 @@ pub trait kernel_Hfile: Handle {
 					self.as_ptr(),
 					distance_to_move,
 					&mut new_offset,
-					move_method.0,
+					move_method.raw(),
 				)
 			},
 		).map(|_| new_offset)

@@ -39,7 +39,7 @@ pub trait kernel_Hfilemap: Handle {
 			ptr_to_sysresult_handle(
 				kernel::ffi::MapViewOfFileFromApp(
 					self.as_ptr(),
-					desired_access.0,
+					desired_access.raw(),
 					offset,
 					number_of_bytes_to_map.unwrap_or_default(),
 				),

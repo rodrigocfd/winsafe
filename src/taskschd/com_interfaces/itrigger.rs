@@ -4,7 +4,7 @@ use crate::co;
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::oleaut_IDispatch;
+use crate::prelude::{IntUnderlying, oleaut_IDispatch};
 use crate::vt::IDispatchVT;
 
 /// [`ITrigger`](crate::ITrigger) virtual table.
@@ -85,7 +85,7 @@ pub trait taskschd_ITrigger: oleaut_IDispatch {
 		let mut ty = co::TASK_TRIGGER_TYPE2::default();
 		unsafe {
 			let vt = self.vt_ref::<ITriggerVT>();
-			ok_to_hrresult((vt.get_Type)(self.ptr(), &mut ty.0))
+			ok_to_hrresult((vt.get_Type)(self.ptr(), ty.as_mut()))
 		}.map(|_| ty)
 	}
 

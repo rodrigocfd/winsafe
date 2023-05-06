@@ -193,18 +193,18 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	) -> HrResult<()>
 	{
 		let (mut current, mut stop) = (current, stop);
-		match co::HRESULT(
-			unsafe {
-				let vt = self.vt_ref::<IMediaSeekingVT>();
+		match unsafe {
+			let vt = self.vt_ref::<IMediaSeekingVT>();
+			co::HRESULT::from_raw(
 				(vt.SetPositions)(
 					self.ptr(),
 					&mut current,
-					current_flags.0,
+					current_flags.raw(),
 					&mut stop,
-					stop_flags.0,
-				) as _
-			},
-		) {
+					stop_flags.raw(),
+				) as _,
+			)
+		} {
 			co::HRESULT::S_OK
 			| co::HRESULT::S_FALSE => Ok(()),
 			hr => Err(hr),

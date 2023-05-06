@@ -94,12 +94,12 @@ impl<'a> FORMATETC<'a> {
 	/// Returns the `cfFormat` field.
 	#[must_use]
 	pub fn cfFormat(&self) -> co::CF {
-		co::CF(self.cfFormat as _)
+		unsafe { co::CF::from_raw(self.cfFormat as _) }
 	}
 
 	/// Sets the `cfFormat` field.
 	pub fn set_cfFormat(&mut self, val: co::CF) {
-		self.cfFormat = val.0 as _;
+		self.cfFormat = val.raw() as _;
 	}
 
 	pub_fn_ptr_get_set!('a, ptd, set_ptd, DVTARGETDEVICE);

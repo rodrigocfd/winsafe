@@ -7,7 +7,7 @@ use crate::kernel::privs::INFINITE;
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
 use crate::oleaut::decl::IDispatch;
-use crate::prelude::oleaut_IDispatch;
+use crate::prelude::{IntUnderlying, oleaut_IDispatch};
 use crate::vt::IDispatchVT;
 
 /// [`IMediaControl`](crate::IMediaControl) virtual table.
@@ -83,14 +83,14 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 	fn GetState(&self,
 		ms_timeout: Option<i32>) -> HrResult<co::FILTER_STATE>
 	{
-		let mut state = co::FILTER_STATE::Stopped;
+		let mut state = co::FILTER_STATE::default();
 		unsafe {
 			let vt = self.vt_ref::<IMediaControlVT>();
 			ok_to_hrresult(
 				(vt.GetState)(
 					self.ptr(),
 					ms_timeout.unwrap_or(INFINITE as _),
-					&mut state.0,
+					state.as_mut(),
 				),
 			)
 		}.map(|_| state)

@@ -28,7 +28,7 @@ com_interface! { IDXGIFactory: "7b7166ec-21c7-44ae-b21a-c9ae321ae369";
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
-	/// 
+	///
 	/// Created with [`CreateDXGIFactory`](crate::CreateDXGIFactory) function.
 	///
 	/// # Examples
@@ -136,7 +136,7 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 		unsafe {
 			let vt = self.vt_ref::<IDXGIFactoryVT>();
 			ok_to_hrresult(
-				(vt.MakeWindowAssociation)(self.ptr(), hwnd.as_ptr(), flags.0),
+				(vt.MakeWindowAssociation)(self.ptr(), hwnd.as_ptr(), flags.raw()),
 			)
 		}
 	}

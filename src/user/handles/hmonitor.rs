@@ -53,7 +53,9 @@ pub trait user_Hmonitor: Handle {
 	#[must_use]
 	fn MonitorFromPoint(pt: POINT, flags: co::MONITOR) -> HMONITOR {
 		unsafe {
-			HMONITOR::from_ptr(user::ffi::MonitorFromPoint(pt.x, pt.y, flags.0))
+			HMONITOR::from_ptr(
+				user::ffi::MonitorFromPoint(pt.x, pt.y, flags.raw()),
+			)
 		}
 	}
 
@@ -63,7 +65,7 @@ pub trait user_Hmonitor: Handle {
 	fn MonitorFromRect(rc: RECT, flags: co::MONITOR) -> HMONITOR {
 		unsafe {
 			HMONITOR::from_ptr(
-				user::ffi::MonitorFromRect(&rc as *const _ as _, flags.0))
+				user::ffi::MonitorFromRect(&rc as *const _ as _, flags.raw()))
 		}
 	}
 }

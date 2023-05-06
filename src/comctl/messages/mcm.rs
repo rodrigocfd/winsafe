@@ -2,7 +2,7 @@ use crate::co;
 use crate::comctl::decl::{MCGRIDINFO, MCHITTESTINFO, MONTHDAYSTATE};
 use crate::kernel::decl::{HIWORD, LOWORD, SysResult, SYSTEMTIME};
 use crate::msg::WndMsg;
-use crate::prelude::{IntUnderlying, MsgSend};
+use crate::prelude::MsgSend;
 use crate::user::decl::{COLORREF, RECT};
 use crate::user::privs::{minus1_as_badargs, minus1_as_none, zero_as_badargs};
 
@@ -84,7 +84,7 @@ unsafe impl MsgSend for GetCalId {
 	type RetType = co::CAL;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::CAL(v as _)
+		unsafe { co::CAL::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -114,7 +114,7 @@ unsafe impl MsgSend for GetColor {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::MCM::GETCOLOR.into(),
-			wparam: self.which.0 as _,
+			wparam: self.which.raw() as _,
 			lparam: 0,
 		}
 	}
@@ -130,7 +130,7 @@ unsafe impl MsgSend for GetCurrentView {
 	type RetType = co::MCMV;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::MCMV(v as _)
+		unsafe { co::MCMV::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -297,7 +297,7 @@ unsafe impl<'a> MsgSend for GetMonthRange<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::MCM::GETMONTHRANGE.into(),
-			wparam: self.scope.0 as _,
+			wparam: self.scope.raw() as _,
 			lparam: self.limits.as_mut_ptr() as _,
 		}
 	}
@@ -315,7 +315,7 @@ unsafe impl<'a> MsgSend for GetRange<'a> {
 	type RetType = co::GDTR;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::GDTR(v as _)
+		unsafe { co::GDTR::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -464,7 +464,7 @@ unsafe impl MsgSend for SetCalId {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::MCM::SETCALID.into(),
-			wparam: self.id.0 as _,
+			wparam: self.id.raw() as _,
 			lparam: 0,
 		}
 	}
@@ -489,7 +489,7 @@ unsafe impl MsgSend for SetColor {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::MCM::SETCOLOR.into(),
-			wparam: self.which.0 as _,
+			wparam: self.which.raw() as _,
 			lparam: u32::from(self.color) as _,
 		}
 	}
@@ -514,7 +514,7 @@ unsafe impl MsgSend for SetCurrentView {
 		WndMsg {
 			msg_id: co::MCM::SETCURRENTVIEW.into(),
 			wparam: 0,
-			lparam: self.view.0 as _,
+			lparam: self.view.raw() as _,
 		}
 	}
 }
@@ -658,7 +658,7 @@ unsafe impl<'a> MsgSend for SetRange<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::MCM::SETRANGE.into(),
-			wparam: self.which.0 as _,
+			wparam: self.which.raw() as _,
 			lparam: self.limits.as_ptr() as _,
 		}
 	}

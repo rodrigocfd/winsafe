@@ -32,7 +32,7 @@ pub trait kernel_Hglobal: Handle {
 		flags: co::GMEM, num_bytes: usize) -> SysResult<GlobalFreeGuard>
 	{
 		unsafe {
-			ptr_to_sysresult_handle(kernel::ffi::GlobalAlloc(flags.0, num_bytes))
+			ptr_to_sysresult_handle(kernel::ffi::GlobalAlloc(flags.raw(), num_bytes))
 				.map(|h| GlobalFreeGuard::new(h))
 		}
 	}
@@ -43,7 +43,7 @@ pub trait kernel_Hglobal: Handle {
 	fn GlobalFlags(&self) -> SysResult<co::GMEM> {
 		match unsafe { kernel::ffi::GlobalFlags(self.as_ptr()) } {
 			GMEM_INVALID_HANDLE => Err(GetLastError()),
-			flags => Ok(co::GMEM(flags)),
+			flags => Ok(unsafe { co::GMEM::from_raw(flags) }),
 		}
 	}
 
@@ -103,7 +103,7 @@ pub trait kernel_Hglobal: Handle {
 	{
 		ptr_to_sysresult_handle(
 			unsafe {
-				kernel::ffi::GlobalReAlloc(self.as_ptr(), num_bytes, flags.0)
+				kernel::ffi::GlobalReAlloc(self.as_ptr(), num_bytes, flags.raw())
 			},
 		).map(|h| { *self = h; })
 	}

@@ -164,9 +164,11 @@ impl StatusBar {
 		}
 
 		let hparent = self.0.base.parent().hwnd();
-		let parent_style = co::WS(
-			hparent.GetWindowLongPtr(co::GWLP::STYLE) as _,
-		);
+		let parent_style = unsafe {
+			co::WS::from_raw(
+				hparent.GetWindowLongPtr(co::GWLP::STYLE) as _,
+			)
+		};
 		let is_parent_resizable = parent_style.has(co::WS::MAXIMIZEBOX)
 			|| parent_style.has(co::WS::SIZEBOX);
 

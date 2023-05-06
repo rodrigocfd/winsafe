@@ -18,7 +18,7 @@ unsafe impl MsgSend for GetCheck {
 	type RetType = co::BST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::BST(v as _)
+		unsafe { co::BST::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -54,7 +54,7 @@ unsafe impl MsgSend for GetImage {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::GETIMAGE.into(),
-			wparam: self.img_type.0 as _,
+			wparam: self.img_type.raw() as _,
 			lparam: 0,
 		}
 	}
@@ -70,7 +70,7 @@ unsafe impl MsgSend for GetState {
 	type RetType = co::BST;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::BST(v as _)
+		unsafe { co::BST::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -100,7 +100,7 @@ unsafe impl MsgSend for SetCheck {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETCHECK.into(),
-			wparam: self.state.0 as _,
+			wparam: self.state.raw() as _,
 			lparam: 0,
 		}
 	}
@@ -158,9 +158,9 @@ unsafe impl MsgSend for SetImage {
 		WndMsg {
 			msg_id: co::BM::SETIMAGE.into(),
 			wparam: match self.image {
-				BmpIcon::Bmp(_) => co::IMAGE_TYPE::BITMAP.0,
-				BmpIcon::Icon(_) => co::IMAGE_TYPE::ICON.0,
-			} as _,
+				BmpIcon::Bmp(_) => co::IMAGE_TYPE::BITMAP,
+				BmpIcon::Icon(_) => co::IMAGE_TYPE::ICON,
+			}.raw() as _,
 			lparam: self.image.as_isize(),
 		}
 	}
@@ -209,7 +209,7 @@ unsafe impl MsgSend for SetStyle {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::BM::SETSTYLE.into(),
-			wparam: self.style.0 as _,
+			wparam: self.style.raw() as _,
 			lparam: self.redraw as _,
 		}
 	}

@@ -3,7 +3,7 @@ use crate::comctl::decl::DATETIMEPICKERINFO;
 use crate::comctl::privs::GDT_ERROR;
 use crate::kernel::decl::{SysResult, SYSTEMTIME, WString};
 use crate::msg::WndMsg;
-use crate::prelude::{Handle, IntUnderlying, MsgSend};
+use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{COLORREF, HWND, SIZE};
 use crate::user::privs::{minus1_as_badargs, zero_as_badargs};
 
@@ -77,7 +77,7 @@ unsafe impl MsgSend for GetMcColor {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::GETMCCOLOR.into(),
-			wparam: self.color_index.0 as _,
+			wparam: self.color_index.raw() as _,
 			lparam: 0,
 		}
 	}
@@ -93,7 +93,7 @@ unsafe impl MsgSend for GetMcStyle {
 	type RetType = SysResult<co::MCS>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|v| co::MCS(v as _))
+		zero_as_badargs(v).map(|v| unsafe { co::MCS::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -139,7 +139,7 @@ unsafe impl<'a> MsgSend for GetRange<'a> {
 	type RetType = co::GDTR;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		co::GDTR(v as _)
+		unsafe { co::GDTR::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -163,7 +163,7 @@ unsafe impl<'a> MsgSend for GetSystemTime<'a> {
 	type RetType = SysResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		const GDT_NONE: i32 = co::GDT::NONE.0 as _;
+		const GDT_NONE: i32 = co::GDT::NONE.raw() as _;
 		match v as i32 {
 			GDT_ERROR => Err(co::ERROR::BAD_ARGUMENTS),
 			GDT_NONE => Err(co::ERROR::INVALID_DATA),
@@ -223,7 +223,7 @@ unsafe impl MsgSend for SetMcColor {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETMCCOLOR.into(),
-			wparam: self.color_index.0 as _,
+			wparam: self.color_index.raw() as _,
 			lparam: u32::from(self.color) as _,
 		}
 	}
@@ -241,14 +241,14 @@ unsafe impl MsgSend for SetMcStyle {
 	type RetType = SysResult<co::MCS>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|v| co::MCS(v as _))
+		zero_as_badargs(v).map(|v| unsafe { co::MCS::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETMCSTYLE.into(),
 			wparam: 0,
-			lparam: self.style.0 as _,
+			lparam: self.style.raw() as _,
 		}
 	}
 }
@@ -272,7 +272,7 @@ unsafe impl<'a> MsgSend for SetRange<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETRANGE.into(),
-			wparam: self.valid.0 as _,
+			wparam: self.valid.raw() as _,
 			lparam: self.system_times as *mut _ as _,
 		}
 	}
@@ -296,7 +296,7 @@ unsafe impl<'a> MsgSend for SetSystemTime<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETSYSTEMTIME.into(),
-			wparam: self.system_time.as_ref().map_or(co::GDT::NONE.0, |_| co::GDT::VALID.0) as _,
+			wparam: self.system_time.as_ref().map_or(co::GDT::NONE.raw(), |_| co::GDT::VALID.raw()) as _,
 			lparam: self.system_time.as_ref().map_or(0, |st| st as *const _ as _),
 		}
 	}

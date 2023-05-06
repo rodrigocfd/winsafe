@@ -62,7 +62,11 @@ pub trait shell_ITaskbarList4: shell_ITaskbarList3 {
 		unsafe {
 			let vt = self.vt_ref::<ITaskbarList4VT>();
 			ok_to_hrresult(
-				(vt.SetTabProperties)(self.ptr(), hwnd_tab.as_ptr(), stp_flags.0),
+				(vt.SetTabProperties)(
+					self.ptr(),
+					hwnd_tab.as_ptr(),
+					stp_flags.raw(),
+				),
 			)
 		}
 	}

@@ -64,7 +64,7 @@ pub trait gdi_Hrgn: Handle {
 	fn OffsetClipRgn(&self, x: i32, y: i32) -> SysResult<co::REGION> {
 		match unsafe { gdi::ffi::OffsetClipRgn(self.as_ptr(), x, y) } {
 			0 => Err(GetLastError()),
-			ret => Ok(co::REGION(ret)),
+			ret => Ok(unsafe { co::REGION::from_raw(ret) }),
 		}
 	}
 
@@ -73,7 +73,7 @@ pub trait gdi_Hrgn: Handle {
 	fn OffsetRgn(&self, x: i32, y: i32) -> SysResult<co::REGION> {
 		match unsafe { gdi::ffi::OffsetRgn(self.as_ptr(), x, y) } {
 			0 => Err(GetLastError()),
-			ret => Ok(co::REGION(ret)),
+			ret => Ok(unsafe { co::REGION::from_raw(ret) }),
 		}
 	}
 

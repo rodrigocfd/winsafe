@@ -17,11 +17,11 @@ macro_rules! const_values {
 		impl $name {
 			$(
 				$( #[$privvaldoc] )*
-				pub(crate) const $privvalname: Self = Self($privval);
+				pub(crate) const $privvalname: Self = unsafe { Self::from_raw($privval) };
 			)*
 			$(
 				$( #[$pubvaldoc] )*
-				pub const $pubvalname: Self = Self($pubval);
+				pub const $pubvalname: Self = unsafe { Self::from_raw($pubval) };
 			)*
 		}
 	};
@@ -37,7 +37,7 @@ macro_rules! const_no_debug_display {
 		$( #[$doc] )*
 		#[repr(transparent)]
 		#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
-		pub struct $name(pub(crate) $ntype);
+		pub struct $name($ntype);
 
 		impl_intunderlying!($name, $ntype);
 
@@ -240,7 +240,7 @@ macro_rules! const_wm {
 
 		impl From<$name> for crate::co::WM {
 			fn from(v: $name) -> Self {
-				Self(v.0)
+				unsafe { Self::from_raw(v.0) }
 			}
 		}
 	};
@@ -370,7 +370,7 @@ macro_rules! const_ws {
 
 		impl From<$name> for crate::co::WS {
 			fn from(v: $name) -> Self {
-				Self(v.0 as _)
+				unsafe { Self::from_raw(v.0 as _) }
 			}
 		}
 	};
@@ -414,7 +414,7 @@ macro_rules! const_wsex {
 
 		impl From<$name> for crate::co::WS_EX {
 			fn from(v: $name) -> Self {
-				Self(v.0)
+				unsafe { Self::from_raw(v.0) }
 			}
 		}
 	};

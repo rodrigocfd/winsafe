@@ -29,8 +29,9 @@ pub trait kernel_Hlocal: Handle {
 		flags: co::LMEM, num_bytes: usize) -> SysResult<LocalFreeGuard>
 	{
 		unsafe {
-			ptr_to_sysresult_handle(kernel::ffi::LocalAlloc(flags.0, num_bytes))
-				.map(|h| LocalFreeGuard::new(h))
+			ptr_to_sysresult_handle(
+				kernel::ffi::LocalAlloc(flags.raw(), num_bytes),
+			).map(|h| LocalFreeGuard::new(h))
 		}
 	}
 
@@ -40,13 +41,13 @@ pub trait kernel_Hlocal: Handle {
 	fn LocalFlags(&self) -> SysResult<co::LMEM> {
 		match unsafe { kernel::ffi::LocalFlags(self.as_ptr()) } {
 			LMEM_INVALID_HANDLE => Err(GetLastError()),
-			flags => Ok(co::LMEM(flags)),
+			flags => Ok(unsafe { co::LMEM::from_raw(flags) }),
 		}
 	}
 
 	/// [`LocalReAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localrealloc)
 	/// method.
-	/// 
+	///
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
 	fn LocalReAlloc(&mut self,
@@ -54,7 +55,7 @@ pub trait kernel_Hlocal: Handle {
 	{
 		ptr_to_sysresult_handle(
 			unsafe {
-				kernel::ffi::LocalReAlloc(self.as_ptr(), num_bytes, flags.0)
+				kernel::ffi::LocalReAlloc(self.as_ptr(), num_bytes, flags.raw())
 			},
 		).map(|h| { *self = h; })
 	}

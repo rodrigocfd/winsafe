@@ -10,7 +10,7 @@ use crate::kernel::privs::{
 	bool_to_sysresult, MAX_PATH, ptr_to_sysresult, ptr_to_sysresult_handle,
 	str_to_iso88591,
 };
-use crate::prelude::{Handle, IntUnderlying};
+use crate::prelude::Handle;
 
 impl_handle! { HINSTANCE;
 	/// Handle to an

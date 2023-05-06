@@ -103,7 +103,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 	pub fn pszMainIcon(&self) -> IconIdTdicon {
 		if IS_INTRESOURCE(self.pszMainIcon) {
 			if self.pszMainIcon as u16 >= 0xfffc {
-				IconIdTdicon::Tdicon(co::TD_ICON(self.pszMainIcon as _))
+				IconIdTdicon::Tdicon(unsafe { co::TD_ICON::from_raw(self.pszMainIcon as _) })
 			} else {
 				IconIdTdicon::Id(self.pszMainIcon as _)
 			}
@@ -118,7 +118,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 			IconIdTdicon::None => self.pszMainIcon = std::ptr::null_mut(),
 			IconIdTdicon::Icon(hicon) => self.pszMainIcon = hicon.as_ptr() as _,
 			IconIdTdicon::Id(id) => self.pszMainIcon = MAKEINTRESOURCE(id as _),
-			IconIdTdicon::Tdicon(tdi) => self.pszMainIcon = MAKEINTRESOURCE(tdi.0 as _),
+			IconIdTdicon::Tdicon(tdi) => self.pszMainIcon = MAKEINTRESOURCE(tdi.raw() as _),
 		}
 	}
 

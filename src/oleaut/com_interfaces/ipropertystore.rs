@@ -111,7 +111,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 		let mut var = PROPVARIANT::default();
 		unsafe {
 			let vt = self.vt_ref::<IPropertyStoreVT>();
-			match co::HRESULT(
+			match co::HRESULT::from_raw(
 				(vt.GetValue)(
 					self.ptr(),
 					key as *const _ as _,

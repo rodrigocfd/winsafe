@@ -79,7 +79,7 @@ macro_rules! fn_wm_withparm_coret {
 			where F: Fn($parm) -> AnyResult<$coret> + 'static,
 		{
 			self.wm($wmconst,
-				move |p| Ok(Some(func(<$parm>::from_generic_wm(p))?.0 as _)));
+				move |p| Ok(Some(func(<$parm>::from_generic_wm(p))?.raw() as _)));
 		}
 	};
 }

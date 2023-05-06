@@ -4,7 +4,7 @@ use crate::co;
 use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
 use crate::ole::decl::{ComPtr, HrResult};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::oleaut_IDispatch;
+use crate::prelude::{IntUnderlying, oleaut_IDispatch};
 use crate::vt::IDispatchVT;
 
 /// [`IAction`](crate::IAction) virtual table.
@@ -49,7 +49,7 @@ pub trait taskschd_IAction: oleaut_IDispatch {
 		let mut at = co::TASK_ACTION_TYPE::default();
 		unsafe {
 			let vt = self.vt_ref::<IActionVT>();
-			ok_to_hrresult((vt.get_Type)(self.ptr(), &mut at.0))
+			ok_to_hrresult((vt.get_Type)(self.ptr(), at.as_mut()))
 		}.map(|_| at)
 	}
 
