@@ -874,6 +874,22 @@ pub fn GetVolumeInformation(
 	})
 }
 
+/// [`GetVolumePathName`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getvolumepathnamew)
+/// function.
+#[must_use]
+pub fn GetVolumePathName(file_name: &str) -> SysResult<String> {
+	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::GetVolumePathNameW(
+				WString::from_str(file_name).as_ptr(),
+				buf.as_mut_ptr(),
+				buf.buf_len() as _,
+			)
+		} as _,
+	).map(|_| buf.to_string())
+}
+
 /// [`GetWindowsAccountDomainSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getwindowsaccountdomainsid)
 /// function.
 #[must_use]

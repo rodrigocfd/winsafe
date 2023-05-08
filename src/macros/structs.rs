@@ -51,8 +51,7 @@ macro_rules! impl_intunderlying {
 		}
 
 		impl $name {
-			/// Constructs a new `IntUnderlying` by wrapping the given integer
-			/// value.
+			/// Constructs a new object by wrapping the given integer value.
 			///
 			/// # Safety
 			///

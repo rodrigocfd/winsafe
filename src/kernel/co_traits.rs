@@ -5,7 +5,7 @@ use std::{fmt, hash, ops};
 use crate::co;
 use crate::kernel::decl::{FormatMessage, LANGID};
 
-/// A type which as a primitive integer as its underlying type.
+/// A type which has a primitive integer as its underlying type.
 pub trait IntUnderlying: Sized
 	+ Clone + Copy + PartialEq + Eq + hash::Hash + Send
 	+ Into<Self::Raw> + AsRef<Self::Raw>
