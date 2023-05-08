@@ -412,7 +412,7 @@ impl<'a> LVITEM<'a> {
 /// [`LVITEMINDEX`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemindex)
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, Copy, Eq, PartialEq)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct LVITEMINDEX {
 	pub iItem: i32,
 	pub iGroup: i32,
@@ -736,7 +736,7 @@ impl<'a> NMDAYSTATE<'a> {
 /// [`NMHDR`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nmhdr)
 /// struct.
 #[repr(C)]
-#[derive(Eq, PartialEq)]
+#[derive(PartialEq, Eq)]
 pub struct NMHDR {
 	/// A window handle to the control sending the message.
 	pub hwndFrom: HWND,
@@ -779,7 +779,7 @@ pub struct NMITEMACTIVATE {
 /// [`PBRANGE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-pbrange)
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, Copy, Eq, PartialEq)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct PBRANGE {
 	pub iLow: i32,
 	pub iHigh: i32,

@@ -50,10 +50,30 @@ pub struct CONSOLE_READCONSOLE_CONTROL {
 	pub dwControlKeyState: u32,
 }
 
+/// [`DISK_SPACE_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/ns-fileapi-disk_space_information)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, PartialEq, Eq)]
+pub struct DISK_SPACE_INFORMATION {
+	pub ActualTotalAllocationUnits: u64,
+	pub ActualAvailableAllocationUnits: u64,
+	pub ActualPoolUnavailableAllocationUnits: u64,
+	pub CallerTotalAllocationUnits: u64,
+	pub CallerAvailableAllocationUnits: u64,
+	pub CallerPoolUnavailableAllocationUnits: u64,
+	pub UsedAllocationUnits: u64,
+	pub TotalReservedAllocationUnits: u64,
+	pub VolumeStorageReserveAllocationUnits: u64,
+	pub AvailableCommittedAllocationUnits: u64,
+	pub PoolAvailableAllocationUnits: u64,
+	pub SectorsPerAllocationUnit: u32,
+	pub BytesPerSector: u32,
+}
+
 /// [`FILETIME`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, PartialEq, Eq)]
 pub struct FILETIME {
 	pub dwLowDateTime: u32,
 	pub dwHighDateTime: u32,
@@ -62,7 +82,7 @@ pub struct FILETIME {
 /// [`GUID`](https://learn.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid)
 /// struct.
 #[repr(C)]
-#[derive(Clone, Copy, Eq, PartialEq, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct GUID {
 	data1: u32,
 	data2: u16,
@@ -261,7 +281,7 @@ impl LCID {
 /// [`LUID`](https://learn.microsoft.com/en-us/windows/win32/api/ntdef/ns-ntdef-luid)
 /// identifier.
 #[repr(C)]
-#[derive(Debug, Clone, Copy, Eq, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct LUID {
 	LowPart: u32,
 	HighPart: i32,
@@ -658,7 +678,7 @@ impl_default!(SYSTEM_INFO);
 /// [`SYSTEMTIME`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime)
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, PartialEq, Eq)]
 pub struct SYSTEMTIME {
 	pub wYear: u16,
 	pub wMonth: u16,

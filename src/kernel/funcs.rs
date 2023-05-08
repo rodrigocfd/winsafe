@@ -4,9 +4,10 @@ use std::collections::HashMap;
 
 use crate::{co, kernel};
 use crate::kernel::decl::{
-	FILETIME, HLOCAL, LANGID, MEMORYSTATUSEX, OSVERSIONINFOEX,
-	SECURITY_DESCRIPTOR, SID, SID_IDENTIFIER_AUTHORITY, STARTUPINFO, SysResult,
-	SYSTEM_INFO, SYSTEMTIME, TIME_ZONE_INFORMATION, WString,
+	DISK_SPACE_INFORMATION, FILETIME, HLOCAL, LANGID, MEMORYSTATUSEX,
+	OSVERSIONINFOEX, SECURITY_DESCRIPTOR, SID, SID_IDENTIFIER_AUTHORITY,
+	STARTUPINFO, SysResult, SYSTEM_INFO, SYSTEMTIME, TIME_ZONE_INFORMATION,
+	WString,
 };
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::guard::{
@@ -477,6 +478,27 @@ pub fn GetDriveType(root_path_name: Option<&str>) -> co::DRIVE {
 				WString::from_opt_str(root_path_name).as_ptr(),
 			),
 		)
+	}
+}
+
+/// [`GetDiskSpaceInformation`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getdiskspaceinformationw)
+/// function.
+pub fn GetDiskSpaceInformation(
+	root_path: &str,
+	disk_space_info: &mut DISK_SPACE_INFORMATION,
+) -> SysResult<()>
+{
+	match unsafe {
+		co::ERROR::from_raw(
+			kernel::ffi::GetDiskSpaceInformationW(
+				WString::from_str(root_path).as_ptr(),
+				disk_space_info as *mut _ as _,
+			),
+		)
+	} {
+		co::ERROR::SUCCESS
+			| co::ERROR::MORE_DATA => Ok(()),
+		err => Err(err),
 	}
 }
 

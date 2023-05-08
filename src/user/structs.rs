@@ -19,7 +19,7 @@ use crate::user::privs::{
 /// [`ACCEL`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, Copy, Eq, PartialEq)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct ACCEL {
 	pub fVirt: co::ACCELF,
 	pub key: co::VK,
@@ -496,7 +496,7 @@ impl_default_with_size!(GUITHREADINFO, cbSize);
 /// [`HARDWAREINPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-hardwareinput)
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, Copy, Eq, PartialEq)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct HARDWAREINPUT {
 	pub uMsg: u32,
 	pub wParamL: u16,
@@ -583,7 +583,7 @@ impl INPUT {
 /// [`KEYBDINPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput)
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, Copy, Eq, PartialEq)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct KEYBDINPUT {
 	pub wVk: co::VK,
 	pub wScan: u16,
@@ -649,7 +649,7 @@ impl_default_with_size!(MENUITEMINFO, cbSize);
 /// [`MINMAXINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-minmaxinfo)
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, PartialEq, Eq)]
 pub struct MINMAXINFO {
 	ptReserved: POINT,
 	/// The maximized width (x member) and the maximized height (y member) of
@@ -695,7 +695,7 @@ impl MONITORINFOEX {
 /// [`MOUSEINPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mouseinput)
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, Copy, Eq, PartialEq)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct MOUSEINPUT {
 	pub dx: i32,
 	pub dy: i32,
@@ -742,7 +742,7 @@ impl PAINTSTRUCT {
 /// [`POINT`](https://learn.microsoft.com/en-us/windows/win32/api/windef/ns-windef-point)
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, Copy, Eq, PartialEq, Hash)]
+#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct POINT {
 	pub x: i32,
 	pub y: i32,
@@ -783,7 +783,7 @@ impl POINT {
 /// [`RECT`](https://learn.microsoft.com/en-us/windows/win32/api/windef/ns-windef-rect)
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, Copy, Eq, PartialEq, Hash)]
+#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct RECT {
 	pub left: i32,
 	pub top: i32,
@@ -825,7 +825,7 @@ impl_default_with_size!(SCROLLINFO, cbSize);
 /// [`SIZE`](https://learn.microsoft.com/en-us/windows/win32/api/windef/ns-windef-size)
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, Copy, Eq, PartialEq, Hash)]
+#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct SIZE {
 	pub cx: i32,
 	pub cy: i32,

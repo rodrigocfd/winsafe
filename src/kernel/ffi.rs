@@ -102,6 +102,7 @@ extern_sys! { "kernel32";
 	GetCurrentThread() -> HANDLE
 	GetCurrentThreadEffectiveToken() -> HANDLE
 	GetCurrentThreadId() -> u32
+	GetDiskSpaceInformationW(PCSTR, PVOID) -> u32
 	GetDriveTypeW(PCSTR) -> u32
 	GetEnvironmentStringsW() -> *mut u16
 	GetExitCodeProcess(HANDLE, *mut u32) -> BOOL

@@ -79,7 +79,7 @@ macro_rules! const_guid {
 	) => {
 		$( #[$doc] )*
 		#[repr(transparent)]
-		#[derive(Clone, Copy, Eq, PartialEq, Hash)]
+		#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 		pub struct $name(crate::kernel::decl::GUID);
 
 		impl From<crate::kernel::decl::GUID> for $name {

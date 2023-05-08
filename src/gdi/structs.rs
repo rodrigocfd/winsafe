@@ -98,7 +98,7 @@ impl_default!(LOGBRUSH);
 /// [`LOGFONT`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logfontw)
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, Eq, PartialEq)]
+#[derive(Default, Clone, PartialEq, Eq)]
 pub struct LOGFONT {
 	pub lfHeight: i32,
 	pub lfWidth: i32,
@@ -231,7 +231,7 @@ impl Default for NONCLIENTMETRICS {
 /// [`PALETTEENTRY`](https://learn.microsoft.com/en-us/previous-versions/dd162769(v=vs.85))
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, Copy, Eq, PartialEq)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct PALETTEENTRY {
 	pub peRed: u8,
 	pub peGreen: u8,
@@ -242,7 +242,7 @@ pub struct PALETTEENTRY {
 /// [`RGBQUAD`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-rgbquad)
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, Copy, Eq, PartialEq)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct RGBQUAD {
 	pub rgbBlue: u8,
 	pub rgbGreen: u8,
