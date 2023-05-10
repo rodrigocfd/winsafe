@@ -1,11 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::HRES;
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::oleaut::decl::VARIANT;
-use crate::prelude::{oleaut_IDispatch, oleaut_Variant};
+use crate::prelude::{ole_IUnknown, oleaut_IDispatch, oleaut_Variant};
 use crate::taskschd::decl::ITrigger;
 use crate::vt::IDispatchVT;
 
@@ -13,12 +13,12 @@ use crate::vt::IDispatchVT;
 #[repr(C)]
 pub struct ITriggerCollectionVT {
 	pub IDispatchVT: IDispatchVT,
-	pub get_Count: fn(ComPtr, *mut i32) -> HRES,
-	pub get_Item: fn(ComPtr, i32, *mut ComPtr) -> HRES,
-	pub get__NewEnum: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub Create: fn(ComPtr, u32, *mut ComPtr) -> HRES,
-	pub Remove: fn(ComPtr, VARIANT) -> HRES,
-	pub Clear: fn(ComPtr) -> HRES,
+	pub get_Count: fn(COMPTR, *mut i32) -> HRES,
+	pub get_Item: fn(COMPTR, i32, *mut COMPTR) -> HRES,
+	pub get__NewEnum: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub Create: fn(COMPTR, u32, *mut COMPTR) -> HRES,
+	pub Remove: fn(COMPTR, VARIANT) -> HRES,
+	pub Clear: fn(COMPTR) -> HRES,
 }
 
 com_interface! { ITriggerCollection: "85df5081-1b24-4f32-878a-d9d14df4cb77";
@@ -45,10 +45,9 @@ pub trait taskschd_ITriggerCollection: oleaut_IDispatch {
 	/// [`ITriggerCollection::Clear`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itriggercollection-clear)
 	/// method.
 	fn Clear(&self) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<ITriggerCollectionVT>();
-			ok_to_hrresult((vt.Clear)(self.ptr()))
-		}
+		ok_to_hrresult(
+			unsafe { (vt::<ITriggerCollectionVT>(self).Clear)(self.ptr()) },
+		)
 	}
 
 	/// [`ITriggerCollection::Create`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itriggercollection-create)
@@ -57,13 +56,16 @@ pub trait taskschd_ITriggerCollection: oleaut_IDispatch {
 	fn Create(&self,
 		trigger_type: co::TASK_TRIGGER_TYPE2) -> HrResult<ITrigger>
 	{
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<ITriggerCollectionVT>();
-			ok_to_hrresult(
-				(vt.Create)(self.ptr(), trigger_type.raw(), &mut ppv_queried),
-			).map(|_| ITrigger::from(ppv_queried))
-		}
+		let mut queried = unsafe { ITrigger::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITriggerCollectionVT>(self).Create)(
+					self.ptr(),
+					trigger_type.raw(),
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
 	}
 
 	/// [`ITriggerCollection::get_Count`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itriggercollection-get_count)
@@ -71,30 +73,42 @@ pub trait taskschd_ITriggerCollection: oleaut_IDispatch {
 	#[must_use]
 	fn get_Count(&self) -> HrResult<i32> {
 		let mut count = i32::default();
-		unsafe {
-			let vt = self.vt_ref::<ITriggerCollectionVT>();
-			ok_to_hrresult((vt.get_Count)(self.ptr(), &mut count))
-		}.map(|_| count)
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITriggerCollectionVT>(self).get_Count)(
+					self.ptr(),
+					&mut count,
+				)
+			},
+		).map(|_| count)
 	}
 
 	/// [`ITriggerCollection::get_Item`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itriggercollection-get_item)
 	/// method.
 	#[must_use]
 	fn get_Item(&self, index: i32) -> HrResult<ITrigger> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<ITriggerCollectionVT>();
-			ok_to_hrresult((vt.get_Item)(self.ptr(), index, &mut ppv_queried))
-				.map(|_| ITrigger::from(ppv_queried))
-		}
+		let mut queried = unsafe { ITrigger::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITriggerCollectionVT>(self).get_Item)(
+					self.ptr(),
+					index,
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
 	}
 
 	/// [`ITriggerCollection::Remove`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itriggercollection-remove)
 	/// method.
 	fn Remove(&self, index: i32) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<ITriggerCollectionVT>();
-			ok_to_hrresult((vt.Remove)(self.ptr(), VARIANT::new_i32(index)))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITriggerCollectionVT>(self).Remove)(
+					self.ptr(),
+					VARIANT::new_i32(index),
+				)
+			},
+		)
 	}
 }

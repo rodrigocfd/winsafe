@@ -27,7 +27,7 @@ unsafe impl<'a, T> MsgSend for GetObject<'a, T>
 		WndMsg {
 			msg_id: co::TBM::GETOBJECT.into(),
 			wparam: &IDropTarget::IID as *const _ as _,
-			lparam: &unsafe { self.obj.ptr() }.0 as *const _ as _,
+			lparam: &self.obj.ptr() as *const _ as _,
 		}
 	}
 }

@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::HRES;
-use crate::ole::decl::{ComPtr, HrResult};
+use crate::kernel::ffi_types::{COMPTR, HRES};
+use crate::ole::decl::HrResult;
 use crate::prelude::{shell_IFileDialog, shell_IModalWindow};
 use crate::shell::decl::IShellItemArray;
 use crate::vt::IFileDialogVT;
@@ -10,8 +10,8 @@ use crate::vt::IFileDialogVT;
 #[repr(C)]
 pub struct IFileOpenDialogVT {
 	pub IFileDialogVT: IFileDialogVT,
-	pub GetResults: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub GetSelectedItems: fn(ComPtr, *mut ComPtr) -> HRES,
+	pub GetResults: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub GetSelectedItems: fn(COMPTR, *mut COMPTR) -> HRES,
 }
 
 com_interface! { IFileOpenDialog: "d57c7288-d4ad-4768-be02-9d969532d960";
@@ -92,7 +92,7 @@ pub trait shell_IFileOpenDialog: shell_IFileDialog {
 		/// use winsafe::{co, HrResult, IFileOpenDialog};
 		///
 		/// let fo: IFileOpenDialog; // initialized somewhere
-		/// # let fo = IFileOpenDialog::from(unsafe { winsafe::ComPtr::null() });
+		/// # let fo = unsafe { IFileOpenDialog::null() };
 		///
 		/// let paths = fo.GetResults()?.iter()?
 		///     .map(|shi|

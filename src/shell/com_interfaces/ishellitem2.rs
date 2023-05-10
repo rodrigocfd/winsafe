@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{BOOL, HRES, PCVOID, PSTR, PVOID};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{BOOL, COMPTR, HRES, PCVOID, PSTR, PVOID};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::{ole_IBindCtx, shell_IShellItem};
 use crate::vt::IShellItemVT;
 
@@ -10,19 +10,19 @@ use crate::vt::IShellItemVT;
 #[repr(C)]
 pub struct IShellItem2VT {
 	pub IShellItemVT: IShellItemVT,
-	pub GetPropertyStore: fn(ComPtr, u32, PCVOID, *mut ComPtr) -> HRES,
-	pub GetPropertyStoreWithCreateObject: fn(ComPtr, u32, ComPtr, PCVOID, *mut ComPtr) -> HRES,
-	pub GetPropertyStoreForKeys: fn(ComPtr, PCVOID, u32, u32, PCVOID, *mut ComPtr) -> HRES,
-	pub GetPropertyDescriptionList: fn(ComPtr, PCVOID, PCVOID, *mut ComPtr) -> HRES,
-	pub Update: fn(ComPtr, ComPtr) -> HRES,
-	pub GetProperty: fn(ComPtr, PCVOID, PVOID) -> HRES,
-	pub GetCLSID: fn(ComPtr, PCVOID, PVOID) -> HRES,
-	pub GetFileTime: fn(ComPtr, PCVOID, PVOID) -> HRES,
-	pub GetInt32: fn(ComPtr, PCVOID, *mut i32) -> HRES,
-	pub GetString: fn(ComPtr, PCVOID, *mut PSTR) -> HRES,
-	pub GetUInt32: fn(ComPtr, PCVOID, *mut u32) -> HRES,
-	pub GetUInt64: fn(ComPtr, PCVOID, *mut u64) -> HRES,
-	pub GetBool: fn(ComPtr, PCVOID, *mut BOOL) -> HRES,
+	pub GetPropertyStore: fn(COMPTR, u32, PCVOID, *mut COMPTR) -> HRES,
+	pub GetPropertyStoreWithCreateObject: fn(COMPTR, u32, COMPTR, PCVOID, *mut COMPTR) -> HRES,
+	pub GetPropertyStoreForKeys: fn(COMPTR, PCVOID, u32, u32, PCVOID, *mut COMPTR) -> HRES,
+	pub GetPropertyDescriptionList: fn(COMPTR, PCVOID, PCVOID, *mut COMPTR) -> HRES,
+	pub Update: fn(COMPTR, COMPTR) -> HRES,
+	pub GetProperty: fn(COMPTR, PCVOID, PVOID) -> HRES,
+	pub GetCLSID: fn(COMPTR, PCVOID, PVOID) -> HRES,
+	pub GetFileTime: fn(COMPTR, PCVOID, PVOID) -> HRES,
+	pub GetInt32: fn(COMPTR, PCVOID, *mut i32) -> HRES,
+	pub GetString: fn(COMPTR, PCVOID, *mut PSTR) -> HRES,
+	pub GetUInt32: fn(COMPTR, PCVOID, *mut u32) -> HRES,
+	pub GetUInt64: fn(COMPTR, PCVOID, *mut u64) -> HRES,
+	pub GetBool: fn(COMPTR, PCVOID, *mut BOOL) -> HRES,
 }
 
 com_interface! { IShellItem2: "7e9fb0d3-919f-4307-ab2e-9b1860310c93";
@@ -53,9 +53,8 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	/// [`IShellItem2::Update`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-update)
 	/// method.
 	fn Update(&self, pbc: &impl ole_IBindCtx) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IShellItem2VT>();
-			ok_to_hrresult((vt.Update)(self.ptr(), pbc.ptr()))
-		}
+		ok_to_hrresult(
+			unsafe { (vt::<IShellItem2VT>(self).Update)(self.ptr(), pbc.ptr()) },
+		)
 	}
 }

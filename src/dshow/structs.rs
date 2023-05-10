@@ -5,8 +5,7 @@ use std::marker::PhantomData;
 use crate::co;
 use crate::dshow::decl::IBaseFilter;
 use crate::kernel::decl::GUID;
-use crate::kernel::ffi_types::BOOL;
-use crate::ole::decl::ComPtr;
+use crate::kernel::ffi_types::{BOOL, COMPTR};
 use crate::prelude::dshow_IFilterGraph;
 
 /// [`AM_MEDIA_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-am_media_type)
@@ -74,7 +73,7 @@ pub struct DVINFO {
 #[repr(C)]
 pub struct FILTER_INFO {
 	achName: [u16; 128],
-	pGraph: ComPtr,
+	pGraph: COMPTR,
 }
 
 impl_default!(FILTER_INFO);

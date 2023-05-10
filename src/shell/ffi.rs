@@ -1,4 +1,4 @@
-use crate::kernel::ffi_types::{BOOL, HANDLE, HRES, PCSTR, PCVOID, PSTR, PVOID};
+use crate::kernel::ffi_types::{BOOL, COMPTR, HANDLE, HRES, PCSTR, PCVOID, PSTR, PVOID};
 
 extern_sys! { "shell32";
 	CommandLineToArgvW(PCSTR, *mut i32) -> *mut PSTR
@@ -7,7 +7,7 @@ extern_sys! { "shell32";
 	DragQueryFileW(HANDLE, u32, PSTR, u32) -> u32
 	DragQueryPoint(HANDLE, PVOID) -> BOOL
 	SHAddToRecentDocs(u32, PCVOID)
-	SHCreateItemFromParsingName(PCSTR, PVOID, PCVOID, *mut PVOID) -> HRES
+	SHCreateItemFromParsingName(PCSTR, PVOID, PCVOID, *mut COMPTR) -> HRES
 	Shell_NotifyIconW(u32, PVOID) -> BOOL
 	ShellAboutW(HANDLE, PCSTR, PCSTR, HANDLE) -> i32
 	ShellExecuteW(HANDLE, PCSTR, PCSTR, PCSTR, PCSTR, i32) -> HANDLE
@@ -24,5 +24,5 @@ extern_sys! { "shlwapi";
 	PathStripPathW(PSTR)
 	PathUndecorateW(PSTR)
 	PathUnquoteSpacesW(PSTR) -> BOOL
-	SHCreateMemStream(*const u8, u32) -> PVOID
+	SHCreateMemStream(*const u8, u32) -> COMPTR
 }

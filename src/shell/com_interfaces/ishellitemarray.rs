@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{HRES, PCVOID, PVOID};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID, PVOID};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::ole_IUnknown;
 use crate::shell::decl::IShellItem;
 use crate::vt::IUnknownVT;
@@ -11,13 +11,13 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IShellItemArrayVT {
 	pub IUnknownVT: IUnknownVT,
-	pub BindToHandler: fn(ComPtr, PVOID, PCVOID, PCVOID, *mut ComPtr) -> HRES,
-	pub GetPropertyStore: fn(ComPtr, u32, PCVOID, *mut ComPtr) -> HRES,
-	pub GetPropertyDescriptionList: fn(ComPtr, PVOID, PCVOID, *mut ComPtr) -> HRES,
-	pub GetAttributes: fn(ComPtr, u32, u32, PVOID) -> HRES,
-	pub GetCount: fn(ComPtr, *mut u32) -> HRES,
-	pub GetItemAt: fn(ComPtr, u32, *mut ComPtr) -> HRES,
-	pub EnumItems: fn(ComPtr, *mut PVOID) -> HRES,
+	pub BindToHandler: fn(COMPTR, PVOID, PCVOID, PCVOID, *mut COMPTR) -> HRES,
+	pub GetPropertyStore: fn(COMPTR, u32, PCVOID, *mut COMPTR) -> HRES,
+	pub GetPropertyDescriptionList: fn(COMPTR, PVOID, PCVOID, *mut COMPTR) -> HRES,
+	pub GetAttributes: fn(COMPTR, u32, u32, PVOID) -> HRES,
+	pub GetCount: fn(COMPTR, *mut u32) -> HRES,
+	pub GetItemAt: fn(COMPTR, u32, *mut COMPTR) -> HRES,
+	pub EnumItems: fn(COMPTR, *mut PVOID) -> HRES,
 }
 
 com_interface! { IShellItemArray: "b63ea76d-1f85-456f-a19c-48159efa858b";
@@ -56,7 +56,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	/// use winsafe::{co, IShellItemArray};
 	///
 	/// let ish_arr: IShellItemArray; // initialized somewhere
-	/// # let ish_arr = IShellItemArray::from(unsafe { winsafe::ComPtr::null() });
+	/// # let ish_arr = unsafe { IShellItemArray::null() };
 	///
 	/// for ish_item in ish_arr.iter()? {
 	///     let ish_item = ish_item?;
@@ -74,7 +74,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	/// use winsafe::{co, HrResult, IShellItemArray};
 	///
 	/// let ish_arr: IShellItemArray; // initialized somewhere
-	/// # let ish_arr = IShellItemArray::from(unsafe { winsafe::ComPtr::null() });
+	/// # let ish_arr = unsafe { IShellItemArray::null() };
 	///
 	/// let paths = ish_arr.iter()?
 	///     .map(|shi|
@@ -97,10 +97,11 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	#[must_use]
 	fn GetCount(&self) -> HrResult<u32> {
 		let mut count = u32::default();
-		unsafe {
-			let vt = self.vt_ref::<IShellItemArrayVT>();
-			ok_to_hrresult((vt.GetCount)(self.ptr(), &mut count))
-		}.map(|_| count)
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellItemArrayVT>(self).GetCount)(self.ptr(), &mut count)
+			},
+		).map(|_| count)
 	}
 
 	/// [`IShellItemArray::GetItemAt`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getitemat)
@@ -110,12 +111,16 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	/// [`IShellItemArrayT::iter`](crate::prelude::shell_IShellItemArray::iter).
 	#[must_use]
 	fn GetItemAt(&self, index: u32) -> HrResult<IShellItem> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IShellItemArrayVT>();
-			ok_to_hrresult((vt.GetItemAt)(self.ptr(), index, &mut ppv_queried))
-				.map(|_| IShellItem::from(ppv_queried))
-		}
+		let mut queried = unsafe { IShellItem::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellItemArrayVT>(self).GetItemAt)(
+					self.ptr(),
+					index,
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
 	}
 }
 

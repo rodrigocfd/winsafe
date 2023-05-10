@@ -5,12 +5,10 @@ use crate::kernel::decl::{
 	GetLastError, HACCESSTOKEN, HLOCAL, SysResult, WString,
 };
 use crate::kernel::guard::LocalFreeGuard;
-use crate::kernel::privs::{
-	bool_to_sysresult, MAX_PATH, ptr_to_sysresult,
-};
-use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult, IStream};
+use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, ptr_to_sysresult};
+use crate::ole::decl::{CoTaskMemFree, HrResult, IStream};
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, ole_IBindCtx, shell_IShellItem};
+use crate::prelude::{Handle, ole_IBindCtx, ole_IUnknown, shell_IShellItem};
 use crate::shell::decl::{
 	NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT, SHSTOCKICONINFO,
 };
@@ -188,17 +186,17 @@ pub fn SHCreateItemFromParsingName<T>(
 ) -> HrResult<T>
 	where T: shell_IShellItem,
 {
-	unsafe {
-		let mut ppv_queried = ComPtr::null();
-		ok_to_hrresult(
+	let mut queried = unsafe { T::null() };
+	ok_to_hrresult(
+		unsafe {
 			shell::ffi::SHCreateItemFromParsingName(
 				WString::from_str(file_or_folder_path).as_ptr(),
-				bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr().0 as _),
+				bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr() as _),
 				&T::IID as *const _ as _,
-				&mut ppv_queried as *mut _ as _,
-			),
-		).map(|_| T::from(ppv_queried))
-	}
+				queried.as_mut(),
+			)
+		},
+	).map(|_| queried)
 }
 
 /// [`SHCreateMemStream`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shcreatememstream)
@@ -226,7 +224,7 @@ pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
 	if p.is_null() {
 		Err(co::HRESULT::E_OUTOFMEMORY)
 	} else {
-		Ok(IStream::from(ComPtr(p as _)))
+		Ok(unsafe { IStream::from_ptr(p) })
 	}
 }
 

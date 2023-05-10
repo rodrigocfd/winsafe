@@ -1,9 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::WString;
-use crate::kernel::ffi_types::{HRES, PCSTR, PVOID};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PVOID};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
@@ -11,16 +11,16 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IBindCtxVT {
 	pub IUnknownVT: IUnknownVT,
-	pub RegisterObjectBound: fn(ComPtr, ComPtr) -> HRES,
-	pub RevokeObjectBound: fn(ComPtr, ComPtr) -> HRES,
-	pub ReleaseBoundObjects: fn(ComPtr) -> HRES,
-	pub SetBindOptions: fn(ComPtr, PVOID) -> HRES,
-	pub GetBindOptions: fn(ComPtr, PVOID) -> HRES,
-	pub GetRunningObjectTable: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub RegisterObjectParam: fn(ComPtr, PCSTR, ComPtr) -> HRES,
-	pub GetObjectParam: fn(ComPtr, PCSTR, *mut ComPtr) -> HRES,
-	pub EnumObjectParam: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub RevokeObjectParam: fn(ComPtr, PCSTR) -> HRES,
+	pub RegisterObjectBound: fn(COMPTR, COMPTR) -> HRES,
+	pub RevokeObjectBound: fn(COMPTR, COMPTR) -> HRES,
+	pub ReleaseBoundObjects: fn(COMPTR) -> HRES,
+	pub SetBindOptions: fn(COMPTR, PVOID) -> HRES,
+	pub GetBindOptions: fn(COMPTR, PVOID) -> HRES,
+	pub GetRunningObjectTable: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub RegisterObjectParam: fn(COMPTR, PCSTR, COMPTR) -> HRES,
+	pub GetObjectParam: fn(COMPTR, PCSTR, *mut COMPTR) -> HRES,
+	pub EnumObjectParam: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub RevokeObjectParam: fn(COMPTR, PCSTR) -> HRES,
 }
 
 com_interface! { IBindCtx: "0000000e-0000-0000-c000-000000000046";
@@ -47,10 +47,7 @@ pub trait ole_IBindCtx: ole_IUnknown {
 	/// method.
 	fn ReleaseBoundObjects(&self) -> HrResult<()> {
 		ok_to_hrresult(
-			unsafe {
-				let vt = self.vt_ref::<IBindCtxVT>();
-				(vt.ReleaseBoundObjects)(self.ptr())
-			}
+			unsafe { (vt::<IBindCtxVT>(self).ReleaseBoundObjects)(self.ptr()) },
 		)
 	}
 
@@ -59,12 +56,11 @@ pub trait ole_IBindCtx: ole_IUnknown {
 	fn RevokeObjectParam(&self, key: &str) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe {
-				let vt = self.vt_ref::<IBindCtxVT>();
-				(vt.RevokeObjectParam)(
+				(vt::<IBindCtxVT>(self).RevokeObjectParam)(
 					self.ptr(),
 					WString::from_str(key).as_ptr(),
 				)
-			}
+			},
 		)
 	}
 }

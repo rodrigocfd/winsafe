@@ -2,9 +2,9 @@
 
 use crate::co;
 use crate::dshow::decl::IPin;
-use crate::kernel::ffi_types::HRES;
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
+use crate::kernel::ffi_types::{COMPTR, HRES};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
 use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
@@ -12,10 +12,10 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IEnumPinsVT {
 	pub IUnknownVT: IUnknownVT,
-	pub Next: fn(ComPtr, u32, *mut ComPtr, *mut u32) -> HRES,
-	pub Skip: fn(ComPtr, u32) -> HRES,
-	pub Reset: fn(ComPtr) -> HRES,
-	pub Clone: fn(ComPtr, *mut ComPtr) -> HRES,
+	pub Next: fn(COMPTR, u32, *mut COMPTR, *mut u32) -> HRES,
+	pub Skip: fn(COMPTR, u32) -> HRES,
+	pub Reset: fn(COMPTR) -> HRES,
+	pub Clone: fn(COMPTR, *mut COMPTR) -> HRES,
 }
 
 com_interface! { IEnumPins: "56a86893-0ad4-11ce-b03a-0020af0ba770";
@@ -48,7 +48,7 @@ pub trait dshow_IEnumPins: ole_IUnknown {
 	/// use winsafe::IEnumPins;
 	///
 	/// let pins: IEnumPins; // initialized somewhere
-	/// # let pins = IEnumPins::from(unsafe { winsafe::ComPtr::null() });
+	/// # let pins = unsafe { IEnumPins::null() };
 	///
 	/// for pin in pins.iter() {
 	///     let pin = pin?;
@@ -69,38 +69,39 @@ pub trait dshow_IEnumPins: ole_IUnknown {
 	/// is simpler.
 	#[must_use]
 	fn Next(&self) -> HrResult<Option<IPin>> {
+		let mut queried = unsafe { IPin::null() };
 		let mut fetched = u32::default();
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IEnumPinsVT>();
-			match ok_to_hrresult(
-				(vt.Next)(self.ptr(), 1, &mut ppv_queried, &mut fetched), // retrieve only 1
-			) {
-				Ok(_) => Ok(Some(IPin::from(ppv_queried))),
-				Err(hr) => match hr {
-					co::HRESULT::S_FALSE => Ok(None), // no pin found
-					hr => Err(hr), // actual error
-				},
-			}
+
+		match ok_to_hrresult(
+			unsafe {
+				(vt::<IEnumPinsVT>(self).Next)(
+					self.ptr(),
+					1, // retrieve only 1
+					queried.as_mut(),
+					&mut fetched,
+				)
+			},
+		) {
+			Ok(_) => Ok(Some(queried)),
+			Err(hr) => match hr {
+				co::HRESULT::S_FALSE => Ok(None), // no pin found
+				hr => Err(hr), // actual error
+			},
 		}
 	}
 
 	/// [`IEnumPins::Reset`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumpins-reset)
 	/// method.
 	fn Reset(&self) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IEnumPinsVT>();
-			ok_to_hrresult((vt.Reset)(self.ptr()))
-		}
+		ok_to_hrresult(unsafe { (vt::<IEnumPinsVT>(self).Reset)(self.ptr()) })
 	}
 
 	/// [`IEnumPins::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumpins-skip)
 	/// method.
 	fn Skip(&self, count: u32) -> HrResult<bool> {
-		unsafe {
-			let vt = self.vt_ref::<IEnumPinsVT>();
-			okfalse_to_hrresult((vt.Skip)(self.ptr(), count))
-		}
+		okfalse_to_hrresult(
+			unsafe { (vt::<IEnumPinsVT>(self).Skip)(self.ptr(), count) },
+		)
 	}
 }
 

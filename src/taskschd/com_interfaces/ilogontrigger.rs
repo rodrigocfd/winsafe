@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
-use crate::ole::decl::{ComPtr, HrResult};
+use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR};
+use crate::ole::decl::HrResult;
 use crate::prelude::{oleaut_IDispatch, taskschd_ITrigger};
 use crate::vt::ITriggerVT;
 
@@ -9,10 +9,10 @@ use crate::vt::ITriggerVT;
 #[repr(C)]
 pub struct ILogonTriggerVT {
 	pub ITriggerVT: ITriggerVT,
-	pub get_Delay: fn(ComPtr, *mut PSTR) -> HRES,
-	pub put_Delay: fn(ComPtr, PCSTR) -> HRES,
-	pub get_UserId: fn(ComPtr, *mut PSTR) -> HRES,
-	pub put_UserId: fn(ComPtr, PCSTR) -> HRES,
+	pub get_Delay: fn(COMPTR, *mut PSTR) -> HRES,
+	pub put_Delay: fn(COMPTR, PCSTR) -> HRES,
+	pub get_UserId: fn(COMPTR, *mut PSTR) -> HRES,
+	pub put_UserId: fn(COMPTR, PCSTR) -> HRES,
 }
 
 com_interface! { ILogonTrigger: "72dade38-fae4-4b3e-baf4-5d009af02b1c";
@@ -29,10 +29,10 @@ com_interface! { ILogonTrigger: "72dade38-fae4-4b3e-baf4-5d009af02b1c";
 	/// use winsafe::prelude::*;
 	/// use winsafe::{ILogonTrigger, ITrigger};
 	///
-	/// let trigger: ILogonTrigger; // initialized somewhere
-	/// # let trigger = ITrigger::from(unsafe { winsafe::ComPtr::null() });
+	/// let trigger: ITrigger; // initialized somewhere
+	/// # let trigger = unsafe { ITrigger::null() };
 	///
-	/// let Logon_trigger = trigger
+	/// let logon_trigger = trigger
 	///     .QueryInterface::<ILogonTrigger>()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```

@@ -1,12 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::oleaut::decl::{BSTR, VARIANT};
 use crate::prelude::{
-	oleaut_IDispatch, oleaut_Variant, taskschd_ITaskDefinition,
+	ole_IUnknown, oleaut_IDispatch, oleaut_Variant, taskschd_ITaskDefinition,
 };
 use crate::taskschd::decl::IRegisteredTask;
 use crate::vt::IDispatchVT;
@@ -15,19 +15,19 @@ use crate::vt::IDispatchVT;
 #[repr(C)]
 pub struct ITaskFolderVT {
 	pub IDispatchVT: IDispatchVT,
-	pub get_Name: fn(ComPtr, *mut PSTR) -> HRES,
-	pub get_Path: fn(ComPtr, *mut PSTR) -> HRES,
-	pub GetFolder: fn(ComPtr, PCSTR, *mut ComPtr) -> HRES,
-	pub GetFolders: fn(ComPtr, i32, *mut ComPtr) -> HRES,
-	pub CreateFolder: fn(ComPtr, PCSTR, VARIANT, *mut ComPtr) -> HRES,
-	pub DeleteFolder: fn(ComPtr, PCSTR, i32) -> HRES,
-	pub GetTask: fn(ComPtr, PCSTR, *mut ComPtr) -> HRES,
-	pub GetTasks: fn(ComPtr, i32, *mut ComPtr) -> HRES,
-	pub DeleteTask: fn(ComPtr, PCSTR, i32) -> HRES,
-	pub RegisterTask: fn(ComPtr, PCSTR, PCSTR, i32, VARIANT, VARIANT, u32, VARIANT, *mut ComPtr) -> HRES,
-	pub RegisterTaskDefinition: fn(ComPtr, PCSTR, ComPtr, i32, VARIANT, VARIANT, u32, VARIANT, *mut ComPtr) -> HRES,
-	pub GetSecurityDescriptor: fn(ComPtr, i32, *mut PSTR) -> HRES,
-	pub SetSecurityDescriptor: fn(ComPtr, PCSTR, i32) -> HRES,
+	pub get_Name: fn(COMPTR, *mut PSTR) -> HRES,
+	pub get_Path: fn(COMPTR, *mut PSTR) -> HRES,
+	pub GetFolder: fn(COMPTR, PCSTR, *mut COMPTR) -> HRES,
+	pub GetFolders: fn(COMPTR, i32, *mut COMPTR) -> HRES,
+	pub CreateFolder: fn(COMPTR, PCSTR, VARIANT, *mut COMPTR) -> HRES,
+	pub DeleteFolder: fn(COMPTR, PCSTR, i32) -> HRES,
+	pub GetTask: fn(COMPTR, PCSTR, *mut COMPTR) -> HRES,
+	pub GetTasks: fn(COMPTR, i32, *mut COMPTR) -> HRES,
+	pub DeleteTask: fn(COMPTR, PCSTR, i32) -> HRES,
+	pub RegisterTask: fn(COMPTR, PCSTR, PCSTR, i32, VARIANT, VARIANT, u32, VARIANT, *mut COMPTR) -> HRES,
+	pub RegisterTaskDefinition: fn(COMPTR, PCSTR, COMPTR, i32, VARIANT, VARIANT, u32, VARIANT, *mut COMPTR) -> HRES,
+	pub GetSecurityDescriptor: fn(COMPTR, i32, *mut PSTR) -> HRES,
+	pub SetSecurityDescriptor: fn(COMPTR, PCSTR, i32) -> HRES,
 }
 
 com_interface! { ITaskFolder: "8cfac062-a080-4c15-9a88-aa7c2af80dfc";
@@ -54,16 +54,15 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 	/// [`ITaskFolder::DeleteTask`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskfolder-deletetask)
 	/// method.
 	fn DeleteTask(&self, name: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<ITaskFolderVT>();
-			ok_to_hrresult(
-				(vt.DeleteTask)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskFolderVT>(self).DeleteTask)(
 					self.ptr(),
 					BSTR::SysAllocString(name)?.as_ptr(),
 					0,
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	fn_bstr_get! { get_Name: ITaskFolderVT;
@@ -88,11 +87,10 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 		sddl: Option<VARIANT>,
 	) -> HrResult<IRegisteredTask>
 	{
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<ITaskFolderVT>();
-			ok_to_hrresult(
-				(vt.RegisterTaskDefinition)(
+		let mut queried = unsafe { IRegisteredTask::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskFolderVT>(self).RegisterTaskDefinition)(
 					self.ptr(),
 					BSTR::SysAllocString(path.unwrap_or_default())?.as_ptr(),
 					definition.ptr(),
@@ -107,9 +105,9 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 					},
 					logon_type.raw(),
 					sddl.unwrap_or_default(),
-					&mut ppv_queried,
-				),
-			).map(|_| IRegisteredTask::from(ppv_queried))
-		}
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
 	}
 }

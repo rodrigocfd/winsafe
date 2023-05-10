@@ -1,9 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::{HRES, PVOID};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES, PVOID};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::ole_ISequentialStream;
 use crate::vt::ISequentialStreamVT;
 
@@ -11,15 +11,15 @@ use crate::vt::ISequentialStreamVT;
 #[repr(C)]
 pub struct IStreamVT {
 	pub ISequentialStreamVT: ISequentialStreamVT,
-	pub Seek: fn(ComPtr, i64, u32, *mut u64) -> HRES,
-	pub SetSize: fn(ComPtr, u64) -> HRES,
-	pub CopyTo: fn(ComPtr, ComPtr, u64, *mut u64, *mut u64) -> HRES,
-	pub Commit: fn(ComPtr, u32)-> HRES,
-	pub Revert: fn(ComPtr) -> HRES,
-	pub LockRegion: fn(ComPtr, u64, u64, u32) -> HRES,
-	pub UnlockRegion: fn(ComPtr, u64, u64, u32) -> HRES,
-	pub Stat: fn(ComPtr, PVOID, u32) -> HRES,
-	pub Clone: fn(ComPtr, *mut ComPtr) -> HRES,
+	pub Seek: fn(COMPTR, i64, u32, *mut u64) -> HRES,
+	pub SetSize: fn(COMPTR, u64) -> HRES,
+	pub CopyTo: fn(COMPTR, COMPTR, u64, *mut u64, *mut u64) -> HRES,
+	pub Commit: fn(COMPTR, u32)-> HRES,
+	pub Revert: fn(COMPTR) -> HRES,
+	pub LockRegion: fn(COMPTR, u64, u64, u32) -> HRES,
+	pub UnlockRegion: fn(COMPTR, u64, u64, u32) -> HRES,
+	pub Stat: fn(COMPTR, PVOID, u32) -> HRES,
+	pub Clone: fn(COMPTR, *mut COMPTR) -> HRES,
 }
 
 com_interface! { IStream: "0000000c-0000-0000-c000-000000000046";
@@ -40,10 +40,7 @@ pub trait ole_IStream: ole_ISequentialStream {
 	/// method.
 	fn Commit(&self, flags: co::STGC) -> HrResult<()> {
 		ok_to_hrresult(
-			unsafe {
-				let vt = self.vt_ref::<IStreamVT>();
-				(vt.Commit)(self.ptr(), flags.raw())
-			},
+			unsafe { (vt::<IStreamVT>(self).Commit)(self.ptr(), flags.raw()) },
 		)
 	}
 
@@ -57,8 +54,7 @@ pub trait ole_IStream: ole_ISequentialStream {
 		let (mut read, mut written) = (u64::default(), u64::default());
 		ok_to_hrresult(
 			unsafe {
-				let vt = self.vt_ref::<IStreamVT>();
-				(vt.CopyTo)(
+				(vt::<IStreamVT>(self).CopyTo)(
 					self.ptr(),
 					dest.ptr(),
 					num_bytes,
@@ -80,8 +76,12 @@ pub trait ole_IStream: ole_ISequentialStream {
 	{
 		ok_to_hrresult(
 			unsafe {
-				let vt = self.vt_ref::<IStreamVT>();
-				(vt.LockRegion)(self.ptr(), offset, length, lock_type.raw())
+				(vt::<IStreamVT>(self).LockRegion)(
+					self.ptr(),
+					offset,
+					length,
+					lock_type.raw(),
+				)
 			},
 		)
 	}
@@ -89,12 +89,7 @@ pub trait ole_IStream: ole_ISequentialStream {
 	/// [`IStream::Revert`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-revert)
 	/// method.
 	fn Revert(&self) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				let vt = self.vt_ref::<IStreamVT>();
-				(vt.Revert)(self.ptr())
-			},
-		)
+		ok_to_hrresult(unsafe { (vt::<IStreamVT>(self).Revert)(self.ptr()) })
 	}
 
 	/// [`IStream::Seek`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-seek)
@@ -107,8 +102,12 @@ pub trait ole_IStream: ole_ISequentialStream {
 		let mut new_off = u64::default();
 		ok_to_hrresult(
 			unsafe {
-				let vt = self.vt_ref::<IStreamVT>();
-				(vt.Seek)(self.ptr(), displacement, origin.raw(), &mut new_off)
+				(vt::<IStreamVT>(self).Seek)(
+					self.ptr(),
+					displacement,
+					origin.raw(),
+					&mut new_off,
+				)
 			},
 		).map(|_| new_off)
 	}
@@ -117,10 +116,7 @@ pub trait ole_IStream: ole_ISequentialStream {
 	/// method.
 	fn SetSize(&self, new_size: u64) -> HrResult<()> {
 		ok_to_hrresult(
-			unsafe {
-				let vt = self.vt_ref::<IStreamVT>();
-				(vt.SetSize)(self.ptr(), new_size)
-			},
+			unsafe { (vt::<IStreamVT>(self).SetSize)(self.ptr(), new_size) },
 		)
 	}
 
@@ -131,8 +127,12 @@ pub trait ole_IStream: ole_ISequentialStream {
 	{
 		ok_to_hrresult(
 			unsafe {
-				let vt = self.vt_ref::<IStreamVT>();
-				(vt.UnlockRegion)(self.ptr(), offset, length, lock_type.raw())
+				(vt::<IStreamVT>(self).UnlockRegion)(
+					self.ptr(),
+					offset,
+					length,
+					lock_type.raw(),
+				)
 			},
 		)
 	}

@@ -1,5 +1,5 @@
-use crate::kernel::ffi_types::{HRES, PCVOID, PVOID};
+use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID};
 
 extern_sys! { "dxgi";
-	CreateDXGIFactory(PCVOID, *mut PVOID) -> HRES
+	CreateDXGIFactory(PCVOID, *mut COMPTR) -> HRES
 }

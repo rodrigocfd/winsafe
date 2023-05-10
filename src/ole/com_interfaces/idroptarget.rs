@@ -2,9 +2,9 @@
 
 use crate::co;
 use crate::kernel::decl::MAKEQWORD;
-use crate::kernel::ffi_types::HRES;
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::{ole_IDataObject, ole_IUnknown};
 use crate::user::decl::POINT;
 use crate::vt::IUnknownVT;
@@ -13,10 +13,10 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IDropTargetVT {
 	pub IUnknownVT: IUnknownVT,
-	pub DragEnter: fn(ComPtr, ComPtr, u32, u64, *mut u32) -> HRES,
-	pub DragOver: fn(ComPtr, u32, u64, *mut u32) -> HRES,
-	pub DragLeave: fn(ComPtr) -> HRES,
-	pub Drop: fn(ComPtr, ComPtr, u32, u64, *mut u32) -> HRES,
+	pub DragEnter: fn(COMPTR, COMPTR, u32, u64, *mut u32) -> HRES,
+	pub DragOver: fn(COMPTR, u32, u64, *mut u32) -> HRES,
+	pub DragLeave: fn(COMPTR) -> HRES,
+	pub Drop: fn(COMPTR, COMPTR, u32, u64, *mut u32) -> HRES,
 }
 
 com_interface! { IDropTarget: "00000122-0000-0000-c000-000000000046";
@@ -51,8 +51,7 @@ pub trait ole_IDropTarget: ole_IUnknown {
 		let mut effect_buf = effect;
 		ok_to_hrresult(
 			unsafe {
-				let vt = self.vt_ref::<IDropTargetVT>();
-				(vt.DragEnter)(
+				(vt::<IDropTargetVT>(self).DragEnter)(
 					self.ptr(),
 					data_obj.ptr(),
 					key_state.raw() as _,
@@ -67,10 +66,7 @@ pub trait ole_IDropTarget: ole_IUnknown {
 	/// method.
 	fn DragLeave(&self) -> HrResult<()> {
 		ok_to_hrresult(
-			unsafe {
-				let vt = self.vt_ref::<IDropTargetVT>();
-				(vt.DragLeave)(self.ptr())
-			},
+			unsafe { (vt::<IDropTargetVT>(self).DragLeave)(self.ptr()) },
 		)
 	}
 
@@ -85,8 +81,7 @@ pub trait ole_IDropTarget: ole_IUnknown {
 		let mut effect_buf = effect;
 		ok_to_hrresult(
 			unsafe {
-				let vt = self.vt_ref::<IDropTargetVT>();
-				(vt.DragOver)(
+				(vt::<IDropTargetVT>(self).DragOver)(
 					self.ptr(),
 					key_state.raw() as _,
 					MAKEQWORD(pt.x as _, pt.y as _),
@@ -108,8 +103,7 @@ pub trait ole_IDropTarget: ole_IUnknown {
 		let mut effect_buf = effect;
 		ok_to_hrresult(
 			unsafe {
-				let vt = self.vt_ref::<IDropTargetVT>();
-				(vt.Drop)(
+				(vt::<IDropTargetVT>(self).Drop)(
 					self.ptr(),
 					data_obj.ptr(),
 					key_state.raw() as _,

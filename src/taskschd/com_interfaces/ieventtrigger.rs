@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
-use crate::ole::decl::{ComPtr, HrResult};
+use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR};
+use crate::ole::decl::HrResult;
 use crate::prelude::{oleaut_IDispatch, taskschd_ITrigger};
 use crate::vt::ITriggerVT;
 
@@ -9,12 +9,12 @@ use crate::vt::ITriggerVT;
 #[repr(C)]
 pub struct IEventTriggerVT {
 	pub ITriggerVT: ITriggerVT,
-	pub get_Subscription: fn(ComPtr, *mut PSTR) -> HRES,
-	pub put_Subscription: fn(ComPtr, PCSTR) -> HRES,
-	pub get_Delay: fn(ComPtr, *mut PSTR) -> HRES,
-	pub put_Delay: fn(ComPtr, PCSTR) -> HRES,
-	pub get_ValueQueries: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub put_ValueQueries: fn(ComPtr, ComPtr) -> HRES,
+	pub get_Subscription: fn(COMPTR, *mut PSTR) -> HRES,
+	pub put_Subscription: fn(COMPTR, PCSTR) -> HRES,
+	pub get_Delay: fn(COMPTR, *mut PSTR) -> HRES,
+	pub put_Delay: fn(COMPTR, PCSTR) -> HRES,
+	pub get_ValueQueries: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub put_ValueQueries: fn(COMPTR, COMPTR) -> HRES,
 }
 
 com_interface! { IEventTrigger: "d45b0167-9653-4eef-b94f-0732ca7af251";
@@ -32,7 +32,7 @@ com_interface! { IEventTrigger: "d45b0167-9653-4eef-b94f-0732ca7af251";
 	/// use winsafe::{IEventTrigger, ITrigger};
 	///
 	/// let trigger: IEventTrigger; // initialized somewhere
-	/// # let trigger = ITrigger::from(unsafe { winsafe::ComPtr::null() });
+	/// # let trigger = unsafe { ITrigger::null() };
 	///
 	/// let event_trigger = trigger
 	///     .QueryInterface::<IEventTrigger>()?;

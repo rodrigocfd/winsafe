@@ -1,9 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::HRES;
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
+use crate::kernel::ffi_types::{COMPTR, HRES};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
 use crate::prelude::ole_IUnknown;
 use crate::shell::decl::IShellItem;
 use crate::vt::IUnknownVT;
@@ -12,10 +12,10 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IEnumShellItemsVT {
 	pub IUnknownVT: IUnknownVT,
-	pub Next: fn(ComPtr, u32, *mut ComPtr, *mut u32) -> HRES,
-	pub Skip: fn(ComPtr, u32) -> HRES,
-	pub Reset: fn(ComPtr) -> HRES,
-	pub Clone: fn(ComPtr, *mut ComPtr) -> HRES,
+	pub Next: fn(COMPTR, u32, *mut COMPTR, *mut u32) -> HRES,
+	pub Skip: fn(COMPTR, u32) -> HRES,
+	pub Reset: fn(COMPTR) -> HRES,
+	pub Clone: fn(COMPTR, *mut COMPTR) -> HRES,
 }
 
 com_interface! { IEnumShellItems: "70629033-e363-4a28-a567-0db78006e6d7";
@@ -81,38 +81,41 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 	/// which is simpler.
 	#[must_use]
 	fn Next(&self) -> HrResult<Option<IShellItem>> {
+		let mut queried = unsafe { IShellItem::null() };
 		let mut fetched = u32::default();
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IEnumShellItemsVT>();
-			match ok_to_hrresult(
-				(vt.Next)(self.ptr(), 1, &mut ppv_queried, &mut fetched), // retrieve only 1
-			) {
-				Ok(_) => Ok(Some(IShellItem::from(ppv_queried))),
-				Err(hr) => match hr {
-					co::HRESULT::S_FALSE => Ok(None), // no item found
+
+		match ok_to_hrresult(
+			unsafe {
+				(vt::<IEnumShellItemsVT>(self).Next)(
+					self.ptr(),
+					1, // retrieve only 1
+					queried.as_mut(),
+					&mut fetched,
+				)
+			},
+		) {
+			Ok(_) => Ok(Some(queried)),
+			Err(hr) => match hr {
+				co::HRESULT::S_FALSE => Ok(None), // no item found
 				hr => Err(hr), // actual error
-				},
-			}
+			},
 		}
 	}
 
 	/// [`IEnumShellItems::Reset`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-reset)
 	/// method.
 	fn Reset(&self) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IEnumShellItemsVT>();
-			ok_to_hrresult((vt.Reset)(self.ptr()))
-		}
+		ok_to_hrresult(
+			unsafe { (vt::<IEnumShellItemsVT>(self).Reset)(self.ptr()) },
+		)
 	}
 
 	/// [`IEnumShellItems::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-skip)
 	/// method.
 	fn Skip(&self, count: u32) -> HrResult<bool> {
-		unsafe {
-			let vt = self.vt_ref::<IEnumShellItemsVT>();
-			okfalse_to_hrresult((vt.Skip)(self.ptr(), count))
-		}
+		okfalse_to_hrresult(
+			unsafe { (vt::<IEnumShellItemsVT>(self).Skip)(self.ptr(), count) },
+		)
 	}
 }
 

@@ -2,10 +2,10 @@
 
 use crate::co;
 use crate::kernel::decl::{WIN32_FIND_DATA, WString};
-use crate::kernel::ffi_types::{HANDLE, HRES, PCSTR, PSTR, PVOID};
+use crate::kernel::ffi_types::{COMPTR, HANDLE, HRES, PCSTR, PSTR, PVOID};
 use crate::kernel::privs::MAX_PATH;
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::{Handle, IntUnderlying, ole_IUnknown};
 use crate::shell::privs::INFOTIPSIZE;
 use crate::user::decl::HWND;
@@ -15,24 +15,24 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IShellLinkVT {
 	pub IUnknownVT: IUnknownVT,
-	pub GetPath: fn(ComPtr, PCSTR, i32, PVOID, u32) -> HRES,
-	pub GetIDList: fn(ComPtr, PVOID) -> HRES,
-	pub SetIDList: fn(ComPtr, PVOID) -> HRES,
-	pub GetDescription: fn(ComPtr, PSTR, i32) -> HRES,
-	pub SetDescription: fn(ComPtr, PCSTR) -> HRES,
-	pub GetWorkingDirectory: fn(ComPtr, PSTR, i32) -> HRES,
-	pub SetWorkingDirectory: fn(ComPtr, PCSTR) -> HRES,
-	pub GetArguments: fn(ComPtr, PSTR, i32) -> HRES,
-	pub SetArguments: fn(ComPtr, PCSTR) -> HRES,
-	pub GetHotkey: fn(ComPtr, *mut u16) -> HRES,
-	pub SetHotkey: fn(ComPtr, u16) -> HRES,
-	pub GetShowCmd: fn(ComPtr, *mut i32) -> HRES,
-	pub SetShowCmd: fn(ComPtr, i32) -> HRES,
-	pub GetIconLocation: fn(ComPtr, PSTR, i32, *mut i32) -> HRES,
-	pub SetIconLocation: fn(ComPtr, PCSTR, i32) -> HRES,
-	pub SetRelativePath: fn(ComPtr, PCSTR, u32) -> HRES,
-	pub Resolve: fn(ComPtr, HANDLE, u32) -> HRES,
-	pub SetPath: fn(ComPtr, PCSTR) -> HRES,
+	pub GetPath: fn(COMPTR, PCSTR, i32, PVOID, u32) -> HRES,
+	pub GetIDList: fn(COMPTR, PVOID) -> HRES,
+	pub SetIDList: fn(COMPTR, PVOID) -> HRES,
+	pub GetDescription: fn(COMPTR, PSTR, i32) -> HRES,
+	pub SetDescription: fn(COMPTR, PCSTR) -> HRES,
+	pub GetWorkingDirectory: fn(COMPTR, PSTR, i32) -> HRES,
+	pub SetWorkingDirectory: fn(COMPTR, PCSTR) -> HRES,
+	pub GetArguments: fn(COMPTR, PSTR, i32) -> HRES,
+	pub SetArguments: fn(COMPTR, PCSTR) -> HRES,
+	pub GetHotkey: fn(COMPTR, *mut u16) -> HRES,
+	pub SetHotkey: fn(COMPTR, u16) -> HRES,
+	pub GetShowCmd: fn(COMPTR, *mut i32) -> HRES,
+	pub SetShowCmd: fn(COMPTR, i32) -> HRES,
+	pub GetIconLocation: fn(COMPTR, PSTR, i32, *mut i32) -> HRES,
+	pub SetIconLocation: fn(COMPTR, PCSTR, i32) -> HRES,
+	pub SetRelativePath: fn(COMPTR, PCSTR, u32) -> HRES,
+	pub Resolve: fn(COMPTR, HANDLE, u32) -> HRES,
+	pub SetPath: fn(COMPTR, PCSTR) -> HRES,
 }
 
 com_interface! { IShellLink: "000214f9-0000-0000-c000-000000000046";
@@ -74,16 +74,15 @@ pub trait shell_IShellLink: ole_IUnknown {
 	#[must_use]
 	fn GetArguments(&self) -> HrResult<String> {
 		let mut buf = WString::new_alloc_buf(INFOTIPSIZE + 1); // arbitrary
-		unsafe {
-			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult(
-				(vt.GetArguments)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellLinkVT>(self).GetArguments)(
 					self.ptr(),
 					buf.as_mut_ptr(),
 					buf.buf_len() as _,
-				),
-			).map(|_| buf.to_string())
-		}
+				)
+			},
+		).map(|_| buf.to_string())
 	}
 
 	/// [`IShellLinkW::GetDescription`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getdescription)
@@ -91,16 +90,15 @@ pub trait shell_IShellLink: ole_IUnknown {
 	#[must_use]
 	fn GetDescription(&self) -> HrResult<String> {
 		let mut buf = WString::new_alloc_buf(INFOTIPSIZE + 1);
-		unsafe {
-			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult(
-				(vt.GetDescription)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellLinkVT>(self).GetDescription)(
 					self.ptr(),
 					buf.as_mut_ptr(),
 					buf.buf_len() as _,
-				),
-			).map(|_| buf.to_string())
-		}
+				)
+			},
+		).map(|_| buf.to_string())
 	}
 
 	/// [`IShellLinkW::GetIconLocation`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-geticonlocation)
@@ -112,17 +110,16 @@ pub trait shell_IShellLink: ole_IUnknown {
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
 		let mut index: i32 = 0;
 
-		unsafe {
-			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult(
-				(vt.GetIconLocation)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellLinkVT>(self).GetIconLocation)(
 					self.ptr(),
 					buf.as_mut_ptr(),
 					buf.buf_len() as _,
 					&mut index,
-				),
-			).map(|_| (buf.to_string(), index))
-		}
+				)
+			},
+		).map(|_| (buf.to_string(), index))
 	}
 
 	/// [`IShellLinkW::GetPath`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getpath)
@@ -132,18 +129,17 @@ pub trait shell_IShellLink: ole_IUnknown {
 		fd: Option<&mut WIN32_FIND_DATA>, flags: co::SLGP) -> HrResult<String>
 	{
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
-		unsafe {
-			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult(
-				(vt.GetPath)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellLinkVT>(self).GetPath)(
 					self.ptr(),
 					buf.as_mut_ptr(),
 					buf.buf_len() as _,
 					fd.map_or(std::ptr::null_mut(), |fd| fd as *mut _ as _),
 					flags.raw(),
-				),
-			).map(|_| buf.to_string())
-		}
+				)
+			},
+		).map(|_| buf.to_string())
 	}
 
 	/// [`IShellLinkW::GetShowCmd`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getshowcmd)
@@ -151,11 +147,14 @@ pub trait shell_IShellLink: ole_IUnknown {
 	#[must_use]
 	fn GetShowCmd(&self) -> HrResult<co::SW> {
 		let mut show_cmd = co::SW::default();
-		unsafe {
-			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult((vt.GetShowCmd)(self.ptr(), show_cmd.as_mut()))
-				.map(|_| show_cmd)
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellLinkVT>(self).GetShowCmd)(
+					self.ptr(),
+					show_cmd.as_mut(),
+				)
+			},
+		).map(|_| show_cmd)
 	}
 
 	/// [`IShellLinkW::GetWorkingDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-getworkingdirectory)
@@ -163,119 +162,118 @@ pub trait shell_IShellLink: ole_IUnknown {
 	#[must_use]
 	fn GetWorkingDirectory(&self) -> HrResult<String> {
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
-		unsafe {
-			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult(
-				(vt.GetWorkingDirectory)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellLinkVT>(self).GetWorkingDirectory)(
 					self.ptr(),
 					buf.as_mut_ptr(),
 					buf.buf_len() as _,
-				),
-			).map(|_| buf.to_string())
-		}
+				)
+			},
+		).map(|_| buf.to_string())
 	}
 
 	/// [`IShellLinkW::Resolve`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-resolve)
 	/// method.
 	fn Resolve(&self, hwnd: &HWND, flags: co::SLR) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult((vt.Resolve)(self.ptr(), hwnd.as_ptr(), flags.raw()))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellLinkVT>(self).Resolve)(
+					self.ptr(),
+					hwnd.as_ptr(),
+					flags.raw(),
+				)
+			},
+		)
 	}
 
 	/// [`IShellLinkW::SetArguments`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setarguments)
 	/// method.
 	fn SetArguments(&self, args: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult(
-				(vt.SetArguments)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellLinkVT>(self).SetArguments)(
 					self.ptr(),
 					WString::from_str(args).as_ptr(),
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`IShellLinkW::SetDescription`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setdescription)
 	/// method.
 	fn SetDescription(&self, args: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult(
-				(vt.SetDescription)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellLinkVT>(self).SetDescription)(
 					self.ptr(),
 					WString::from_str(args).as_ptr(),
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`IShellLinkW::SetIconLocation`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-seticonlocation)
 	/// method.
 	fn SetIconLocation(&self, path: &str, index: i32) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult(
-				(vt.SetIconLocation)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellLinkVT>(self).SetIconLocation)(
 					self.ptr(),
 					WString::from_str(path).as_ptr(),
 					index,
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`IShellLinkW::SetPath`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setpath)
 	/// method.
 	fn SetPath(&self, file: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult(
-				(vt.SetPath)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellLinkVT>(self).SetPath)(
 					self.ptr(),
 					WString::from_str(file).as_ptr(),
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`IShellLinkW::SetRelativePath`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setrelativepath)
 	/// method.
 	fn SetRelativePath(&self, file: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult(
-				(vt.SetRelativePath)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellLinkVT>(self).SetRelativePath)(
 					self.ptr(),
 					WString::from_str(file).as_ptr(),
 					0,
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`IShellLinkW::SetShowCmd`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setshowcmd)
 	/// method.
 	fn SetShowCmd(&self, show_cmd: co::SW) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult((vt.SetShowCmd)(self.ptr(), show_cmd.raw()))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellLinkVT>(self).SetShowCmd)(self.ptr(), show_cmd.raw())
+			},
+		)
 	}
 
 	/// [`IShellLinkW::SetWorkingDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishelllinkw-setworkingdirectory)
 	/// method.
 	fn SetWorkingDirectory(&self, dir: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IShellLinkVT>();
-			ok_to_hrresult(
-				(vt.SetWorkingDirectory)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellLinkVT>(self).SetWorkingDirectory)(
 					self.ptr(),
 					WString::from_str(dir).as_ptr(),
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 }

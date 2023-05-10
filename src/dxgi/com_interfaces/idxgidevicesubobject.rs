@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{HRES, PCVOID};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::{dxgi_IDXGIObject, ole_IUnknown};
 use crate::vt::IDXGIObjectVT;
 
@@ -10,7 +10,7 @@ use crate::vt::IDXGIObjectVT;
 #[repr(C)]
 pub struct IDXGIDeviceSubObjectVT {
 	pub IDXGIObjectVT: IDXGIObjectVT,
-	pub GetDevice: fn(ComPtr, PCVOID, *mut ComPtr) -> HRES,
+	pub GetDevice: fn(COMPTR, PCVOID, *mut COMPTR) -> HRES,
 }
 
 com_interface! { IDXGIDeviceSubObject: "3d3e0379-f9de-4d58-bb6c-18d62992f1a6";
@@ -40,16 +40,15 @@ pub trait dxgi_IDXGIDeviceSubObject: dxgi_IDXGIObject {
 	fn GetDevice<T>(&self) -> HrResult<T>
 		where T: ole_IUnknown,
 	{
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IDXGIDeviceSubObjectVT>();
-			ok_to_hrresult(
-				(vt.GetDevice)(
+		let mut queried = unsafe { T::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGIDeviceSubObjectVT>(self).GetDevice)(
 					self.ptr(),
 					&T::IID as *const _ as _,
-					&mut ppv_queried,
-				),
-			).map(|_| T::from(ppv_queried))
-		}
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
 	}
 }

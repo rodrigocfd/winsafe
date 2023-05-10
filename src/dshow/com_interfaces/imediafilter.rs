@@ -1,10 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::HRES;
+use crate::kernel::ffi_types::{COMPTR, HRES};
 use crate::kernel::privs::INFINITE;
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
 use crate::prelude::{IntUnderlying, ole_IPersist};
 use crate::vt::IPersistVT;
 
@@ -12,12 +12,12 @@ use crate::vt::IPersistVT;
 #[repr(C)]
 pub struct IMediaFilterVT {
 	pub IPersistVT: IPersistVT,
-	pub Stop: fn(ComPtr) -> HRES,
-	pub Pause: fn(ComPtr) -> HRES,
-   pub Run: fn(ComPtr, i64) -> HRES,
-	pub GetState: fn(ComPtr, u32, *mut u32) -> HRES,
-	pub SetSyncSource: fn(ComPtr, ComPtr) -> HRES,
-	pub GetSyncSource: fn(ComPtr, *mut ComPtr) -> HRES,
+	pub Stop: fn(COMPTR) -> HRES,
+	pub Pause: fn(COMPTR) -> HRES,
+   pub Run: fn(COMPTR, i64) -> HRES,
+	pub GetState: fn(COMPTR, u32, *mut u32) -> HRES,
+	pub SetSyncSource: fn(COMPTR, COMPTR) -> HRES,
+	pub GetSyncSource: fn(COMPTR, *mut COMPTR) -> HRES,
 }
 
 com_interface! { IMediaFilter: "56a86899-0ad4-11ce-b03a-0020af0ba770";
@@ -46,42 +46,38 @@ pub trait dshow_IMediaFilter: ole_IPersist {
 	#[must_use]
 	fn GetState(&self, ms_timeout: Option<u32>) -> HrResult<co::FILTER_STATE> {
 		let mut fs = co::FILTER_STATE::default();
-		unsafe {
-			let vt = self.vt_ref::<IMediaFilterVT>();
-			ok_to_hrresult(
-				(vt.GetState)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMediaFilterVT>(self).GetState)(
 					self.ptr(),
 					ms_timeout.unwrap_or(INFINITE),
 					fs.as_mut(),
-				),
-			).map(|_| fs)
-		}
+				)
+			},
+		).map(|_| fs)
 	}
 
 	/// [`IMediaFilter::Pause`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-pause)
 	/// method.
 	fn Pause(&self) -> HrResult<bool> {
-		unsafe {
-			let vt = self.vt_ref::<IMediaFilterVT>();
-			okfalse_to_hrresult((vt.Pause)(self.ptr()))
-		}
+		okfalse_to_hrresult(
+			unsafe { (vt::<IMediaFilterVT>(self).Pause)(self.ptr()) },
+		)
 	}
 
 	/// [`IMediaFilter::Run`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-run)
 	/// method.
 	fn Run(&self, start: i64) -> HrResult<bool> {
-		unsafe {
-			let vt = self.vt_ref::<IMediaFilterVT>();
-			okfalse_to_hrresult((vt.Run)(self.ptr(), start))
-		}
+		okfalse_to_hrresult(
+			unsafe { (vt::<IMediaFilterVT>(self).Run)(self.ptr(), start) },
+		)
 	}
 
 	/// [`IMediaFilter::Stop`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediafilter-stop)
 	/// method.
 	fn Stop(&self) -> HrResult<bool> {
-		unsafe {
-			let vt = self.vt_ref::<IMediaFilterVT>();
-			okfalse_to_hrresult((vt.Stop)(self.ptr()))
-		}
+		okfalse_to_hrresult(
+			unsafe { (vt::<IMediaFilterVT>(self).Stop)(self.ptr()) },
+		)
 	}
 }

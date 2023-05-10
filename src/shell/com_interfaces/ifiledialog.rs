@@ -2,9 +2,9 @@
 
 use crate::co;
 use crate::kernel::decl::{GUID, WString};
-use crate::kernel::ffi_types::{HRES, PCSTR, PCVOID, PSTR, PVOID};
-use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PCVOID, PSTR, PVOID};
+use crate::ole::decl::{CoTaskMemFree, HrResult};
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::{shell_IModalWindow, shell_IShellItem};
 use crate::shell::decl::{COMDLG_FILTERSPEC, IShellItem};
 use crate::vt::IModalWindowVT;
@@ -13,29 +13,29 @@ use crate::vt::IModalWindowVT;
 #[repr(C)]
 pub struct IFileDialogVT {
 	pub IModalWindowVT: IModalWindowVT,
-	pub SetFileTypes: fn(ComPtr, u32, PCVOID) -> HRES,
-	pub SetFileTypeIndex: fn(ComPtr, u32) -> HRES,
-	pub GetFileTypeIndex: fn(ComPtr, *mut u32) -> HRES,
-	pub Advise: fn(ComPtr, PVOID, *mut u32) -> HRES,
-	pub Unadvise: fn(ComPtr, u32) -> HRES,
-	pub SetOptions: fn(ComPtr, u32) -> HRES,
-	pub GetOptions: fn(ComPtr, *mut u32) -> HRES,
-	pub SetDefaultFolder: fn(ComPtr, ComPtr) -> HRES,
-	pub SetFolder: fn(ComPtr, ComPtr) -> HRES,
-	pub GetFolder: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub GetCurrentSelection: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub SetFileName: fn(ComPtr, PCSTR) -> HRES,
-	pub GetFileName: fn(ComPtr, *mut PSTR) -> HRES,
-	pub SetTitle: fn(ComPtr, PCSTR) -> HRES,
-	pub SetOkButtonLabel: fn(ComPtr, PCSTR) -> HRES,
-	pub SetFileNameLabel: fn(ComPtr, PCSTR) -> HRES,
-	pub GetResult: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub AddPlace: fn(ComPtr, ComPtr, u32) -> HRES,
-	pub SetDefaultExtension: fn(ComPtr, PCSTR) -> HRES,
-	pub Close: fn(ComPtr, HRES) -> HRES,
-	pub SetClientGuid: fn(ComPtr, PCVOID) -> HRES,
-	pub ClearClientData: fn(ComPtr) -> HRES,
-	pub SetFilter: fn(ComPtr, PVOID) -> HRES,
+	pub SetFileTypes: fn(COMPTR, u32, PCVOID) -> HRES,
+	pub SetFileTypeIndex: fn(COMPTR, u32) -> HRES,
+	pub GetFileTypeIndex: fn(COMPTR, *mut u32) -> HRES,
+	pub Advise: fn(COMPTR, PVOID, *mut u32) -> HRES,
+	pub Unadvise: fn(COMPTR, u32) -> HRES,
+	pub SetOptions: fn(COMPTR, u32) -> HRES,
+	pub GetOptions: fn(COMPTR, *mut u32) -> HRES,
+	pub SetDefaultFolder: fn(COMPTR, COMPTR) -> HRES,
+	pub SetFolder: fn(COMPTR, COMPTR) -> HRES,
+	pub GetFolder: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub GetCurrentSelection: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub SetFileName: fn(COMPTR, PCSTR) -> HRES,
+	pub GetFileName: fn(COMPTR, *mut PSTR) -> HRES,
+	pub SetTitle: fn(COMPTR, PCSTR) -> HRES,
+	pub SetOkButtonLabel: fn(COMPTR, PCSTR) -> HRES,
+	pub SetFileNameLabel: fn(COMPTR, PCSTR) -> HRES,
+	pub GetResult: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub AddPlace: fn(COMPTR, COMPTR, u32) -> HRES,
+	pub SetDefaultExtension: fn(COMPTR, PCSTR) -> HRES,
+	pub Close: fn(COMPTR, HRES) -> HRES,
+	pub SetClientGuid: fn(COMPTR, PCVOID) -> HRES,
+	pub ClearClientData: fn(COMPTR) -> HRES,
+	pub SetFilter: fn(COMPTR, PVOID) -> HRES,
 }
 
 com_interface! { IFileDialog: "42f85136-db7e-439c-85f1-e4075d135fc8";
@@ -64,28 +64,33 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	fn AddPlace(&self,
 		si: &impl shell_IShellItem, fdap: co::FDAP) -> HrResult<()>
 	{
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.AddPlace)(self.ptr(), si.ptr(), fdap.raw()))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).AddPlace)(
+					self.ptr(),
+					si.ptr(),
+					fdap.raw(),
+				)
+			},
+		)
 	}
 
 	/// [`IFileDialog::ClearClientData`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-clearclientdata)
 	/// method.
 	fn ClearClientData(&self) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.ClearClientData)(self.ptr()))
-		}
+		ok_to_hrresult(
+			unsafe { (vt::<IFileDialogVT>(self).ClearClientData)(self.ptr()) },
+		)
 	}
 
 	/// [`IFileDialog::Close`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-close)
 	/// method.
 	fn Close(&self, hr: co::ERROR) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.Close)(self.ptr(), hr.raw() as _))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).Close)(self.ptr(), hr.raw() as _)
+			},
+		)
 	}
 
 	fn_com_get! { GetCurrentSelection: IFileDialogVT, IShellItem;
@@ -98,10 +103,11 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	#[must_use]
 	fn GetFileName(&self) -> HrResult<String> {
 		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.GetFileName)(self.ptr(), &mut pstr))
-		}.map(|_| {
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).GetFileName)(self.ptr(), &mut pstr)
+			},
+		).map(|_| {
 			let name = WString::from_wchars_nullt(pstr);
 			CoTaskMemFree(pstr as _);
 			name.to_string()
@@ -113,10 +119,14 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	#[must_use]
 	fn GetFileTypeIndex(&self) -> HrResult<u32> {
 		let mut index = u32::default();
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.GetFileTypeIndex)(self.ptr(), &mut index))
-		}.map(|_| index)
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).GetFileTypeIndex)(
+					self.ptr(),
+					&mut index,
+				)
+			},
+		).map(|_| index)
 	}
 
 	fn_com_get! { GetFolder: IFileDialogVT, IShellItem;
@@ -129,10 +139,11 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	#[must_use]
 	fn GetOptions(&self) -> HrResult<co::FOS> {
 		let mut opts = u32::default();
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.GetOptions)(self.ptr(), &mut opts))
-		}.map(|_| unsafe { co::FOS::from_raw(opts) })
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).GetOptions)(self.ptr(), &mut opts)
+			},
+		).map(|_| unsafe { co::FOS::from_raw(opts) })
 	}
 
 	fn_com_get! { GetResult: IFileDialogVT, IShellItem;
@@ -145,58 +156,66 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// [`IFileDialog::SetClientGuid`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setclientguid)
 	/// method.
 	fn SetClientGuid(&self, guid: &GUID) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.SetClientGuid)(self.ptr(), guid as *const _ as _))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).SetClientGuid)(
+					self.ptr(),
+					guid as *const _ as _,
+				)
+			},
+		)
 	}
 
 	/// [`IFileDialog::SetDefaultExtension`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setdefaultextension)
 	/// method.
 	fn SetDefaultExtension(&self, default_extension: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult(
-				(vt.SetDefaultExtension)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).SetDefaultExtension)(
 					self.ptr(),
 					WString::from_str(default_extension).as_ptr(),
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`IFileDialog::SetDefaultFolder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setdefaultfolder)
 	/// method.
 	fn SetDefaultFolder(&self, si: &impl shell_IShellItem) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.SetDefaultFolder)(self.ptr(), si.ptr()))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).SetDefaultFolder)(
+					self.ptr(),
+					si.ptr(),
+				)
+			},
+		)
 	}
 
 	/// [`IFileDialog::SetFileName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfilename)
 	/// method.
 	fn SetFileName(&self, name: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult(
-				(vt.SetFileName)(self.ptr(), WString::from_str(name).as_ptr()),
-			)
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).SetFileName)(
+					self.ptr(),
+					WString::from_str(name).as_ptr(),
+				)
+			},
+		)
 	}
 
 	/// [`IFileDialog::SetFileNameLabel`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfilenamelabel)
 	/// method.
 	fn SetFileNameLabel(&self, label: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult(
-				(vt.SetFileNameLabel)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).SetFileNameLabel)(
 					self.ptr(),
 					WString::from_str(label).as_ptr(),
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`IFileDialog::SetFileTypeIndex`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfiletypeindex)
@@ -204,10 +223,11 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	///
 	/// **Note:** The index is one-based.
 	fn SetFileTypeIndex(&self, index: u32) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.SetFileTypeIndex)(self.ptr(), index))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).SetFileTypeIndex)(self.ptr(), index)
+			},
+		)
 	}
 
 	/// [`IFileDialog::SetFileTypes`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfiletypes)
@@ -220,7 +240,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// use winsafe::IFileDialog;
 	///
 	/// let file_dlg: IFileDialog; // initialized somewhere
-	/// # let file_dlg = IFileDialog::from(unsafe { winsafe::ComPtr::null() });
+	/// # let file_dlg = unsafe { IFileDialog::null() };
 	///
 	/// file_dlg.SetFileTypes(&[
 	///     ("Documents", "*.docx;*.txt"),
@@ -248,55 +268,58 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		specs_buf.iter_mut().enumerate()
 			.for_each(|(i, el)| com_dlgs[i].set_pszSpec(Some(el)));
 
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult(
-				(vt.SetFileTypes)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).SetFileTypes)(
 					self.ptr(),
 					filter_spec.len() as _,
 					com_dlgs.as_ptr() as _,
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`IFileDialog::SetFolder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfolder)
 	/// method.
 	fn SetFolder(&self, si: &impl shell_IShellItem) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.SetFolder)(self.ptr(), si.ptr()))
-		}
+		ok_to_hrresult(
+			unsafe { (vt::<IFileDialogVT>(self).SetFolder)(self.ptr(), si.ptr()) },
+		)
 	}
 
 	/// [`IFileDialog::SetOkButtonLabel`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setokbuttonlabel)
 	/// method.
 	fn SetOkButtonLabel(&self, text: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult(
-				(vt.SetOkButtonLabel)(self.ptr(), WString::from_str(text).as_ptr()),
-			)
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).SetOkButtonLabel)(
+					self.ptr(),
+					WString::from_str(text).as_ptr(),
+				)
+			},
+		)
 	}
 
 	/// [`IFileDialog::SetOptions`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setoptions)
 	/// method.
 	fn SetOptions(&self, opts: co::FOS) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult((vt.SetOptions)(self.ptr(), opts.raw()))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).SetOptions)(self.ptr(), opts.raw())
+			},
+		)
 	}
 
 	/// [`IFileDialog::SetTitle`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-settitle)
 	/// method.
 	fn SetTitle(&self, text: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IFileDialogVT>();
-			ok_to_hrresult(
-				(vt.SetTitle)(self.ptr(), WString::from_str(text).as_ptr()),
-			)
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).SetTitle)(
+					self.ptr(),
+					WString::from_str(text).as_ptr(),
+				)
+			},
+		)
 	}
 }

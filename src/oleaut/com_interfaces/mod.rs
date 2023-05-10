@@ -1,5 +1,4 @@
 mod idispatch;
-mod ipicture;
 mod ipropertystore;
 mod itypeinfo;
 
@@ -11,7 +10,6 @@ pub mod decl {
 
 pub mod traits {
 	pub use super::idispatch::oleaut_IDispatch;
-	pub use super::ipicture::oleaut_IPicture;
 	pub use super::ipropertystore::oleaut_IPropertyStore;
 	pub use super::itypeinfo::oleaut_ITypeInfo;
 }

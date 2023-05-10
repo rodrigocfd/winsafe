@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
-use crate::ole::decl::{ComPtr, HrResult};
+use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR};
+use crate::ole::decl::HrResult;
 use crate::prelude::oleaut_IDispatch;
 use crate::taskschd::decl::ITriggerCollection;
 use crate::vt::IDispatchVT;
@@ -10,20 +10,20 @@ use crate::vt::IDispatchVT;
 #[repr(C)]
 pub struct ITaskDefinitionVT {
 	pub IDispatchVT: IDispatchVT,
-	pub get_RegistrationInfo: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub put_RegistrationInfo: fn(ComPtr, ComPtr) -> HRES,
-	pub get_Triggers: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub put_Triggers: fn(ComPtr, ComPtr) -> HRES,
-	pub get_Settings: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub put_Settings: fn(ComPtr, ComPtr) -> HRES,
-	pub get_Data: fn(ComPtr, *mut PSTR) -> HRES,
-	pub put_Data: fn(ComPtr, PCSTR) -> HRES,
-	pub get_Principal: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub put_Principal: fn(ComPtr, ComPtr) -> HRES,
-	pub get_Actions: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub put_Actions: fn(ComPtr, ComPtr) -> HRES,
-	pub get_XmlText: fn(ComPtr, *mut PSTR) -> HRES,
-	pub put_XmlText: fn(ComPtr, PCSTR) -> HRES,
+	pub get_RegistrationInfo: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub put_RegistrationInfo: fn(COMPTR, COMPTR) -> HRES,
+	pub get_Triggers: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub put_Triggers: fn(COMPTR, COMPTR) -> HRES,
+	pub get_Settings: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub put_Settings: fn(COMPTR, COMPTR) -> HRES,
+	pub get_Data: fn(COMPTR, *mut PSTR) -> HRES,
+	pub put_Data: fn(COMPTR, PCSTR) -> HRES,
+	pub get_Principal: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub put_Principal: fn(COMPTR, COMPTR) -> HRES,
+	pub get_Actions: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub put_Actions: fn(COMPTR, COMPTR) -> HRES,
+	pub get_XmlText: fn(COMPTR, *mut PSTR) -> HRES,
+	pub put_XmlText: fn(COMPTR, PCSTR) -> HRES,
 }
 
 com_interface! { ITaskDefinition: "f5bc8fc5-536d-4f77-b852-fbc1356fdeb6";

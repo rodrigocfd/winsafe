@@ -1,6 +1,13 @@
 use crate::co;
 use crate::kernel::ffi_types::HRES;
 use crate::ole::decl::HrResult;
+use crate::prelude::ole_IUnknown;
+
+/// Returns a reference to the virtual table of the COM object.
+pub(crate) unsafe fn vt<T>(obj: &impl ole_IUnknown) -> &T {
+	let ppvt = obj.ptr() as *mut *mut T;
+	&**ppvt
+}
 
 /// If value is `S_OK` yields `Ok()`, othersize `Err(hresult)`.
 pub(crate) const fn ok_to_hrresult(hr: HRES) -> HrResult<()> {

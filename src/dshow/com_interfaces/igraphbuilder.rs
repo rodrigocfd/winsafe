@@ -2,23 +2,23 @@
 
 use crate::dshow::decl::IBaseFilter;
 use crate::kernel::decl::{HFILE, WString};
-use crate::kernel::ffi_types::{HANDLE, HRES, PCSTR};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
-use crate::prelude::{dshow_IFilterGraph, dshow_IPin, Handle};
+use crate::kernel::ffi_types::{COMPTR, HANDLE, HRES, PCSTR};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
+use crate::prelude::{dshow_IFilterGraph, dshow_IPin, Handle, ole_IUnknown};
 use crate::vt::IFilterGraphVT;
 
 /// [`IGraphBuilder`](crate::IGraphBuilder) virtual table.
 #[repr(C)]
 pub struct IGraphBuilderVT {
 	pub IFilterGraphVT: IFilterGraphVT,
-	pub Connect: fn(ComPtr, ComPtr, ComPtr) -> HRES,
-	pub Render: fn(ComPtr, ComPtr) -> HRES,
-	pub RenderFile: fn(ComPtr, PCSTR, PCSTR) -> HRES,
-	pub AddSourceFilter: fn(ComPtr, PCSTR, PCSTR, *mut ComPtr) -> HRES,
-	pub SetLogFile: fn(ComPtr, HANDLE) -> HRES,
-	pub Abort: fn(ComPtr) -> HRES,
-	pub ShouldOperationContinue: fn(ComPtr) -> HRES,
+	pub Connect: fn(COMPTR, COMPTR, COMPTR) -> HRES,
+	pub Render: fn(COMPTR, COMPTR) -> HRES,
+	pub RenderFile: fn(COMPTR, PCSTR, PCSTR) -> HRES,
+	pub AddSourceFilter: fn(COMPTR, PCSTR, PCSTR, *mut COMPTR) -> HRES,
+	pub SetLogFile: fn(COMPTR, HANDLE) -> HRES,
+	pub Abort: fn(COMPTR) -> HRES,
+	pub ShouldOperationContinue: fn(COMPTR) -> HRES,
 }
 
 com_interface! { IGraphBuilder: "56a868a9-0ad4-11ce-b03a-0020af0ba770";
@@ -59,10 +59,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 	/// [`IGraphBuilder::Abort`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-abort)
 	/// method.
 	fn Abort(&self) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IGraphBuilderVT>();
-			ok_to_hrresult((vt.Abort)(self.ptr()))
-		}
+		ok_to_hrresult(unsafe { (vt::<IGraphBuilderVT>(self).Abort)(self.ptr()) })
 	}
 
 	/// [`IGraphBuilder::AddSourceFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-addsourcefilter)
@@ -71,18 +68,17 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 	fn AddSourceFilter(&self,
 		file_name: &str, filter_name: &str) -> HrResult<IBaseFilter>
 	{
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IGraphBuilderVT>();
-			ok_to_hrresult(
-				(vt.AddSourceFilter)(
+		let mut queried = unsafe { IBaseFilter::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IGraphBuilderVT>(self).AddSourceFilter)(
 					self.ptr(),
 					WString::from_str(file_name).as_ptr(),
 					WString::from_str(filter_name).as_ptr(),
-					&mut ppv_queried,
-				),
-			).map(|_| IBaseFilter::from(ppv_queried))
-		}
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
 	}
 
 	/// [`IGraphBuilder::Connect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-connect)
@@ -90,57 +86,62 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 	fn Connect(&self,
 		pin_out: &impl dshow_IPin, pin_in: &impl dshow_IPin) -> HrResult<()>
 	{
-		unsafe {
-			let vt = self.vt_ref::<IGraphBuilderVT>();
-			ok_to_hrresult((vt.Connect)(self.ptr(), pin_out.ptr(), pin_in.ptr()))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IGraphBuilderVT>(self).Connect)(
+					self.ptr(),
+					pin_out.ptr(),
+					pin_in.ptr(),
+				)
+			},
+		)
 	}
 
 	/// [`IGraphBuilder::Render`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-render)
 	/// method.
 	fn Render(&self, pin_out: &impl dshow_IPin) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IGraphBuilderVT>();
-			ok_to_hrresult((vt.Render)(self.ptr(), pin_out.ptr()))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IGraphBuilderVT>(self).Render)(self.ptr(), pin_out.ptr())
+			},
+		)
 	}
 
 	/// [`IGraphBuilder::RenderFile`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-renderfile)
 	/// method.
 	fn RenderFile(&self, file: &str) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IGraphBuilderVT>();
-			ok_to_hrresult(
-				(vt.RenderFile)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IGraphBuilderVT>(self).RenderFile)(
 					self.ptr(),
 					WString::from_str(file).as_ptr(),
 					std::ptr::null(),
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`IGraphBuilder::SetLogFile`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-setlogfile)
 	/// method.
 	fn SetLogFile(&self, hfile: Option<&HFILE>) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IGraphBuilderVT>();
-			ok_to_hrresult(
-				(vt.SetLogFile)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IGraphBuilderVT>(self).SetLogFile)(
 					self.ptr(),
 					hfile.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`IGraphBuilder::ShouldOperationContinue`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-shouldoperationcontinue)
 	/// method.
 	#[must_use]
 	fn ShouldOperationContinue(&self) -> HrResult<bool> {
-		unsafe {
-			let vt = self.vt_ref::<IGraphBuilderVT>();
-			okfalse_to_hrresult((vt.ShouldOperationContinue)(self.ptr()))
-		}
+		okfalse_to_hrresult(
+			unsafe {
+				(vt::<IGraphBuilderVT>(self).ShouldOperationContinue)(self.ptr())
+			},
+		)
 	}
 }

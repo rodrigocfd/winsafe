@@ -2,9 +2,9 @@
 
 use crate::dshow::decl::AM_MEDIA_TYPE;
 use crate::kernel::decl::WString;
-use crate::kernel::ffi_types::{HRES, PCSTR, PCVOID, PSTR, PVOID};
-use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PCVOID, PSTR, PVOID};
+use crate::ole::decl::{CoTaskMemFree, HrResult};
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
@@ -12,8 +12,8 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IFileSinkFilterVT {
 	pub IUnknownVT: IUnknownVT,
-	pub SetFileName: fn(ComPtr, PCSTR, PCVOID) -> HRES,
-	pub GetCurFile: fn(ComPtr, *mut PSTR, PVOID) -> HRES,
+	pub SetFileName: fn(COMPTR, PCSTR, PCVOID) -> HRES,
+	pub GetCurFile: fn(COMPTR, *mut PSTR, PVOID) -> HRES,
 }
 
 com_interface! { IFileSinkFilter: "a2104830-7c70-11cf-8bce-00aa00a3f1a6";
@@ -53,7 +53,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// use winsafe::{AM_MEDIA_TYPE, CoTaskMemFree, DVINFO, IFileSinkFilter};
 	///
 	/// let sinkf: IFileSinkFilter; // initialized somewhere
-	/// # let sinkf = IFileSinkFilter::from(unsafe { winsafe::ComPtr::null() });
+	/// # let sinkf = unsafe { IFileSinkFilter::null() };
 	///
 	/// let mut ammt = AM_MEDIA_TYPE::default();
 	/// unsafe {
@@ -69,9 +69,8 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 		mt: Option<&mut AM_MEDIA_TYPE>) -> HrResult<String>
 	{
 		let mut pstr = std::ptr::null_mut::<u16>();
-		let vt = self.vt_ref::<IFileSinkFilterVT>();
 		ok_to_hrresult(
-			(vt.GetCurFile)(
+			(vt::<IFileSinkFilterVT>(self).GetCurFile)(
 				self.ptr(),
 				&mut pstr,
 				mt.map_or(std::ptr::null_mut(), |amt| amt as *mut _ as _),
@@ -88,15 +87,14 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	fn SetFileName(&self,
 		file_name: &str, mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
 	{
-		unsafe {
-			let vt = self.vt_ref::<IFileSinkFilterVT>();
-			ok_to_hrresult(
-				(vt.SetFileName)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileSinkFilterVT>(self).SetFileName)(
 					self.ptr(),
 					WString::from_str(file_name).as_ptr(),
 					mt.map_or(std::ptr::null(), |amt| amt as *const _ as _),
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 }

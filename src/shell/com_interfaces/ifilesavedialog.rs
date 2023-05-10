@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{BOOL, HANDLE, HRES};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{BOOL, COMPTR, HANDLE, HRES};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::{shell_IFileDialog, shell_IModalWindow, shell_IShellItem};
 use crate::vt::IFileDialogVT;
 
@@ -10,11 +10,11 @@ use crate::vt::IFileDialogVT;
 #[repr(C)]
 pub struct IFileSaveDialogVT {
 	pub IFileDialogVT: IFileDialogVT,
-	pub SetSaveAsItem: fn(ComPtr, ComPtr) -> HRES,
-	pub SetProperties: fn(ComPtr, ComPtr) -> HRES,
-	pub SetCollectedProperties: fn(ComPtr, ComPtr, BOOL) -> HRES,
-	pub GetProperties: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub ApplyProperties: fn(ComPtr, ComPtr, ComPtr, HANDLE, ComPtr) -> HRES,
+	pub SetSaveAsItem: fn(COMPTR, COMPTR) -> HRES,
+	pub SetProperties: fn(COMPTR, COMPTR) -> HRES,
+	pub SetCollectedProperties: fn(COMPTR, COMPTR, BOOL) -> HRES,
+	pub GetProperties: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub ApplyProperties: fn(COMPTR, COMPTR, COMPTR, HANDLE, COMPTR) -> HRES,
 }
 
 com_interface! { IFileSaveDialog: "84bccd23-5fde-4cdb-aea4-af64b83d78ab";
@@ -56,9 +56,13 @@ pub trait shell_IFileSaveDialog: shell_IFileDialog {
 	/// [`IFileSaveDialog::SetSaveAsItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setsaveasitem)
 	/// method.
 	fn SetSaveAsItem(&self, psi: &impl shell_IShellItem) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IFileSaveDialogVT>();
-			ok_to_hrresult((vt.SetSaveAsItem)(self.ptr(), psi.ptr()))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileSaveDialogVT>(self).SetSaveAsItem)(
+					self.ptr(),
+					psi.ptr(),
+				)
+			},
+		)
 	}
 }

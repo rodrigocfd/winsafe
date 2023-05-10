@@ -3,10 +3,10 @@
 use crate::co;
 use crate::dxgi::decl::IDXGIAdapter;
 use crate::kernel::decl::HINSTANCE;
-use crate::kernel::ffi_types::{HANDLE, HRES, PCVOID};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{dxgi_IDXGIObject, Handle};
+use crate::kernel::ffi_types::{COMPTR, HANDLE, HRES, PCVOID};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
+use crate::prelude::{dxgi_IDXGIObject, Handle, ole_IUnknown};
 use crate::user::decl::HWND;
 use crate::vt::IDXGIObjectVT;
 
@@ -14,11 +14,11 @@ use crate::vt::IDXGIObjectVT;
 #[repr(C)]
 pub struct IDXGIFactoryVT {
 	pub IDXGIObjectVT: IDXGIObjectVT,
-	pub EnumAdapters: fn(ComPtr, u32, *const ComPtr) -> HRES,
-	pub MakeWindowAssociation: fn(ComPtr, HANDLE, u32) -> HRES,
-	pub GetWindowAssociation: fn(ComPtr, *mut HANDLE) -> HRES,
-	pub CreateSwapChain: fn(ComPtr, *const ComPtr, PCVOID, *mut ComPtr) -> HRES,
-	pub CreateSoftwareAdapter: fn(ComPtr, HANDLE, *mut ComPtr) -> HRES,
+	pub EnumAdapters: fn(COMPTR, u32, *const COMPTR) -> HRES,
+	pub MakeWindowAssociation: fn(COMPTR, HANDLE, u32) -> HRES,
+	pub GetWindowAssociation: fn(COMPTR, *mut HANDLE) -> HRES,
+	pub CreateSwapChain: fn(COMPTR, *const COMPTR, PCVOID, *mut COMPTR) -> HRES,
+	pub CreateSoftwareAdapter: fn(COMPTR, HANDLE, *mut COMPTR) -> HRES,
 }
 
 com_interface! { IDXGIFactory: "7b7166ec-21c7-44ae-b21a-c9ae321ae369";
@@ -66,7 +66,7 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	/// use winsafe::IDXGIFactory;
 	///
 	/// let factory: IDXGIFactory; // initialized somewhere
-	/// # let factory = IDXGIFactory::from(unsafe { winsafe::ComPtr::null() });
+	/// # let factory = unsafe { IDXGIFactory::null() };
 	///
 	/// for adapter in factory.iter_adapters() {
 	///     let adapter = adapter?;
@@ -87,17 +87,16 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	fn CreateSoftwareAdapter(&self,
 		hmodule: &HINSTANCE) -> HrResult<IDXGIAdapter>
 	{
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IDXGIFactoryVT>();
-			ok_to_hrresult(
-				(vt.CreateSoftwareAdapter)(
+		let mut queried = unsafe { IDXGIAdapter::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGIFactoryVT>(self).CreateSoftwareAdapter)(
 					self.ptr(),
 					hmodule.as_ptr(),
-					&mut ppv_queried,
-				),
-			).map(|_| IDXGIAdapter::from(ppv_queried))
-		}
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
 	}
 
 	/// [`IDXGIFactory::EnumAdapters`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-enumadapters)
@@ -108,13 +107,16 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	/// which is simpler.
 	#[must_use]
 	fn EnumAdapters(&self, adapter: u32) -> HrResult<IDXGIAdapter> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IDXGIFactoryVT>();
-			ok_to_hrresult(
-				(vt.EnumAdapters)(self.ptr(), adapter, &mut ppv_queried),
-			).map(|_| IDXGIAdapter::from(ppv_queried))
-		}
+		let mut queried = unsafe { IDXGIAdapter::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGIFactoryVT>(self).EnumAdapters)(
+					self.ptr(),
+					adapter,
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
 	}
 
 	/// [`IDXGIFactory::GetWindowAssociation`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-getwindowassociation)
@@ -122,10 +124,14 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	#[must_use]
 	fn GetWindowAssociation(&self) -> HrResult<HWND> {
 		let mut hwnd = HWND::NULL;
-		unsafe {
-			let vt = self.vt_ref::<IDXGIFactoryVT>();
-			ok_to_hrresult((vt.GetWindowAssociation)(self.ptr(), hwnd.as_mut()))
-		}.map(|_| hwnd)
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGIFactoryVT>(self).GetWindowAssociation)(
+					self.ptr(),
+					hwnd.as_mut(),
+				)
+			},
+		).map(|_| hwnd)
 	}
 
 	/// [`IDXGIFactory::MakeWindowAssociation`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-makewindowassociation)
@@ -133,12 +139,15 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	fn MakeWindowAssociation(&self,
 		hwnd: &HWND, flags: co::DXGI_MWA) -> HrResult<()>
 	{
-		unsafe {
-			let vt = self.vt_ref::<IDXGIFactoryVT>();
-			ok_to_hrresult(
-				(vt.MakeWindowAssociation)(self.ptr(), hwnd.as_ptr(), flags.raw()),
-			)
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGIFactoryVT>(self).MakeWindowAssociation)(
+					self.ptr(),
+					hwnd.as_ptr(),
+					flags.raw(),
+				)
+			},
+		)
 	}
 }
 

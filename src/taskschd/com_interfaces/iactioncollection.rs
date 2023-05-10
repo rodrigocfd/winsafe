@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::oleaut::decl::VARIANT;
 use crate::prelude::{oleaut_IDispatch, oleaut_Variant};
 use crate::vt::IDispatchVT;
@@ -11,16 +11,16 @@ use crate::vt::IDispatchVT;
 #[repr(C)]
 pub struct IActionCollectionVT {
 	pub IDispatchVT: IDispatchVT,
-	pub get_Count: fn(ComPtr, *mut i32) -> HRES,
-	pub get_Item: fn(ComPtr, i32, *mut ComPtr) -> HRES,
-	pub get__NewEnum: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub get_XmlText: fn(ComPtr, *mut PSTR) -> HRES,
-	pub put_XmlText: fn(ComPtr, PCSTR) -> HRES,
-	pub Create: fn(ComPtr, u32, *mut ComPtr) -> HRES,
-	pub Remove: fn(ComPtr, VARIANT) -> HRES,
-	pub Clear: fn(ComPtr) -> HRES,
-	pub get_Context: fn(ComPtr, *mut PSTR) -> HRES,
-	pub put_Context: fn(ComPtr, PCSTR) -> HRES,
+	pub get_Count: fn(COMPTR, *mut i32) -> HRES,
+	pub get_Item: fn(COMPTR, i32, *mut COMPTR) -> HRES,
+	pub get__NewEnum: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub get_XmlText: fn(COMPTR, *mut PSTR) -> HRES,
+	pub put_XmlText: fn(COMPTR, PCSTR) -> HRES,
+	pub Create: fn(COMPTR, u32, *mut COMPTR) -> HRES,
+	pub Remove: fn(COMPTR, VARIANT) -> HRES,
+	pub Clear: fn(COMPTR) -> HRES,
+	pub get_Context: fn(COMPTR, *mut PSTR) -> HRES,
+	pub put_Context: fn(COMPTR, PCSTR) -> HRES,
 }
 
 com_interface! { IActionCollection: "02820e19-7b98-4ed2-b2e8-fdccceff619b";
@@ -47,10 +47,9 @@ pub trait taskschd_IActionCollection: oleaut_IDispatch {
 	/// [`IActionCollection::Clear`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-clear)
 	/// method.
 	fn Clear(&self) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IActionCollectionVT>();
-			ok_to_hrresult((vt.Clear)(self.ptr()))
-		}
+		ok_to_hrresult(
+			unsafe { (vt::<IActionCollectionVT>(self).Clear)(self.ptr()) },
+		)
 	}
 
 	fn_bstr_get! { get_Context: IActionCollectionVT;
@@ -76,9 +75,13 @@ pub trait taskschd_IActionCollection: oleaut_IDispatch {
 	/// [`IActionCollection::Remove`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-remove)
 	/// method.
 	fn Remove(&self, index: i32) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IActionCollectionVT>();
-			ok_to_hrresult((vt.Remove)(self.ptr(), VARIANT::new_i32(index)))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IActionCollectionVT>(self).Remove)(
+					self.ptr(),
+					VARIANT::new_i32(index),
+				)
+			},
+		)
 	}
 }

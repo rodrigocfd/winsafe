@@ -1,9 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::{HRES, PVOID};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES, PVOID};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
@@ -11,7 +11,7 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IPersistVT {
 	pub IUnknownVT: IUnknownVT,
-	pub GetClassID: fn(ComPtr, PVOID) -> HRES,
+	pub GetClassID: fn(COMPTR, PVOID) -> HRES,
 }
 
 com_interface! { IPersist: "0000010c-0000-0000-c000-000000000046";
@@ -39,11 +39,13 @@ pub trait ole_IPersist: ole_IUnknown {
 	#[must_use]
 	fn GetClassID(&self) -> HrResult<co::CLSID> {
 		let mut clsid = co::CLSID::new("00000000-0000-0000-0000-000000000000"); // just a placeholder
-		unsafe {
-			let vt = self.vt_ref::<IPersistVT>();
-			ok_to_hrresult(
-				(vt.GetClassID)(self.ptr(), &mut clsid as *mut _ as _),
-			)
-		}.map(|_| clsid)
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IPersistVT>(self).GetClassID)(
+					self.ptr(),
+					&mut clsid as *mut _ as _,
+				)
+			},
+		).map(|_| clsid)
 	}
 }

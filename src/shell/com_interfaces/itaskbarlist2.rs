@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{BOOL, HANDLE, HRES};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{BOOL, COMPTR, HANDLE, HRES};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::{Handle, shell_ITaskbarList};
 use crate::user::decl::HWND;
 use crate::vt::ITaskbarListVT;
@@ -11,7 +11,7 @@ use crate::vt::ITaskbarListVT;
 #[repr(C)]
 pub struct ITaskbarList2VT {
 	pub ITaskbarListVT: ITaskbarListVT,
-	pub MarkFullscreenWindow: fn(ComPtr, HANDLE, BOOL) -> HRES,
+	pub MarkFullscreenWindow: fn(COMPTR, HANDLE, BOOL) -> HRES,
 }
 
 com_interface! { ITaskbarList2: "602d4995-b13a-429b-a66e-1935e44f4317";
@@ -54,15 +54,14 @@ pub trait shell_ITaskbarList2: shell_ITaskbarList {
 	fn MarkFullscreenWindow(&self,
 		hwnd: &HWND, full_screen: bool) -> HrResult<()>
 	{
-		unsafe {
-			let vt = self.vt_ref::<ITaskbarList2VT>();
-			ok_to_hrresult(
-				(vt.MarkFullscreenWindow)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskbarList2VT>(self).MarkFullscreenWindow)(
 					self.ptr(),
 					hwnd.as_ptr(),
 					full_screen as _,
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 }

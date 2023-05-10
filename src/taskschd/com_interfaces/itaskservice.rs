@@ -1,26 +1,26 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::oleaut::decl::{BSTR, VARIANT};
-use crate::prelude::{oleaut_IDispatch, oleaut_Variant};
-use crate::taskschd::decl::{ITaskFolder, ITaskDefinition};
+use crate::prelude::{ole_IUnknown, oleaut_IDispatch, oleaut_Variant};
+use crate::taskschd::decl::{ITaskDefinition, ITaskFolder};
 use crate::vt::IDispatchVT;
 
 /// [`ITaskService`](crate::ITaskService) virtual table.
 #[repr(C)]
 pub struct ITaskServiceVT {
 	pub IDispatchVT: IDispatchVT,
-	pub GetFolder: fn(ComPtr, PCSTR, *mut ComPtr) -> HRES,
-	pub GetRunningTasks: fn(ComPtr, i32, *mut ComPtr) -> HRES,
-	pub NewTask: fn(ComPtr, u32, *mut ComPtr) -> HRES,
-	pub Connect: fn(ComPtr, VARIANT, VARIANT, VARIANT, VARIANT) -> HRES,
-	pub get_Connected: fn(ComPtr, *mut i16) -> HRES,
-	pub get_TargetServer: fn(ComPtr, *mut PSTR) -> HRES,
-	pub get_ConnectedUser: fn(ComPtr, *mut PSTR) -> HRES,
-	pub get_ConnectedDomain: fn(ComPtr, *mut PSTR) -> HRES,
-	pub get_HighestVersion: fn(ComPtr, *mut u32) -> HRES,
+	pub GetFolder: fn(COMPTR, PCSTR, *mut COMPTR) -> HRES,
+	pub GetRunningTasks: fn(COMPTR, i32, *mut COMPTR) -> HRES,
+	pub NewTask: fn(COMPTR, u32, *mut COMPTR) -> HRES,
+	pub Connect: fn(COMPTR, VARIANT, VARIANT, VARIANT, VARIANT) -> HRES,
+	pub get_Connected: fn(COMPTR, *mut i16) -> HRES,
+	pub get_TargetServer: fn(COMPTR, *mut PSTR) -> HRES,
+	pub get_ConnectedUser: fn(COMPTR, *mut PSTR) -> HRES,
+	pub get_ConnectedDomain: fn(COMPTR, *mut PSTR) -> HRES,
+	pub get_HighestVersion: fn(COMPTR, *mut u32) -> HRES,
 }
 
 com_interface! { ITaskService: "2faba4c7-4da9-4013-9697-20cc3fd40f85";
@@ -67,10 +67,9 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 		password: Option<&str>,
 	) -> HrResult<()>
 	{
-		unsafe {
-			let vt = self.vt_ref::<ITaskServiceVT>();
-			ok_to_hrresult(
-				(vt.Connect)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskServiceVT>(self).Connect)(
 					self.ptr(),
 					match server_name {
 						Some(server_name) => VARIANT::new_bstr(server_name)?,
@@ -89,8 +88,8 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 						None => VARIANT::default(),
 					},
 				)
-			)
-		}
+			},
+		)
 	}
 
 	/// [`ITaskService::get_Connected`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-get_connected)
@@ -98,10 +97,14 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 	#[must_use]
 	fn get_Connected(&self) -> HrResult<bool> {
 		let mut connected = i16::default();
-		unsafe {
-			let vt = self.vt_ref::<ITaskServiceVT>();
-			ok_to_hrresult((vt.get_Connected)(self.ptr(), &mut connected))
-		}.map(|_| connected != 0)
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskServiceVT>(self).get_Connected)(
+					self.ptr(),
+					&mut connected,
+				)
+			},
+		).map(|_| connected != 0)
 	}
 
 	fn_bstr_get! { get_ConnectedDomain: ITaskServiceVT;
@@ -119,10 +122,14 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 	#[must_use]
 	fn get_HighestVersion(&self) -> HrResult<u32> {
 		let mut ver = u32::default();
-		unsafe {
-			let vt = self.vt_ref::<ITaskServiceVT>();
-			ok_to_hrresult((vt.get_HighestVersion)(self.ptr(), &mut ver))
-		}.map(|_| ver)
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskServiceVT>(self).get_HighestVersion)(
+					self.ptr(),
+					&mut ver,
+				)
+			},
+		).map(|_| ver)
 	}
 
 	fn_bstr_get! { get_TargetServer: ITaskServiceVT;
@@ -134,28 +141,31 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn GetFolder(&self, path: &str) -> HrResult<ITaskFolder> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<ITaskServiceVT>();
-			ok_to_hrresult(
-				(vt.GetFolder)(
+		let mut queried = unsafe { ITaskFolder::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskServiceVT>(self).GetFolder)(
 					self.ptr(),
 					BSTR::SysAllocString(path)?.as_ptr(),
-					&mut ppv_queried,
-				),
-			).map(|_| ITaskFolder::from(ppv_queried))
-		}
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
 	}
 
 	/// [`ITaskService::NewTask`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-newtask)
 	/// method.
 	#[must_use]
 	fn NewTask(&self) -> HrResult<ITaskDefinition> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<ITaskServiceVT>();
-			ok_to_hrresult((vt.NewTask)(self.ptr(), 0, &mut ppv_queried))
-				.map(|_| ITaskDefinition::from(ppv_queried))
-		}
+		let mut queried = unsafe { ITaskDefinition::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskServiceVT>(self).NewTask)(
+					self.ptr(),
+					0,
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
 	}
 }

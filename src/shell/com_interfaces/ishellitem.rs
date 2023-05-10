@@ -2,9 +2,9 @@
 
 use crate::co;
 use crate::kernel::decl::WString;
-use crate::kernel::ffi_types::{HRES, PCVOID, PSTR, PVOID};
-use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID, PSTR, PVOID};
+use crate::ole::decl::{CoTaskMemFree, HrResult};
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::{ole_IBindCtx, ole_IUnknown};
 use crate::vt::IUnknownVT;
 
@@ -12,11 +12,11 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IShellItemVT {
 	pub IUnknownVT: IUnknownVT,
-	pub BindToHandler: fn(ComPtr, PVOID, PCVOID, PCVOID, *mut ComPtr) -> HRES,
-	pub GetParent: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub GetDisplayName: fn(ComPtr, u32, *mut PSTR) -> HRES,
-	pub GetAttributes: fn(ComPtr, u32, *mut u32) -> HRES,
-	pub Compare: fn(ComPtr, PVOID, u32, *mut i32) -> HRES,
+	pub BindToHandler: fn(COMPTR, PVOID, PCVOID, PCVOID, *mut COMPTR) -> HRES,
+	pub GetParent: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub GetDisplayName: fn(COMPTR, u32, *mut PSTR) -> HRES,
+	pub GetAttributes: fn(COMPTR, u32, *mut u32) -> HRES,
+	pub Compare: fn(COMPTR, PVOID, u32, *mut i32) -> HRES,
 }
 
 com_interface! { IShellItem: "43826d1e-e718-42ee-bc55-a1e261c37bfe";
@@ -55,8 +55,8 @@ pub trait shell_IShellItem: ole_IUnknown {
 	/// use winsafe::{co, IBindCtx, IEnumShellItems, IShellItem};
 	///
 	/// let sh_folder: IShellItem; // initialized somewhere
+	/// # let sh_folder = unsafe { IShellItem::null() };
 	///
-	/// # let sh_folder = IShellItem::from(unsafe { winsafe::ComPtr::null() });
 	/// let sh_items = sh_folder.BindToHandler::<IEnumShellItems>(
 	///     None::<&IBindCtx>,
 	///     &co::BHID::EnumItems,
@@ -70,19 +70,18 @@ pub trait shell_IShellItem: ole_IUnknown {
 	) -> HrResult<T>
 		where T: ole_IUnknown,
 	{
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IShellItemVT>();
-			ok_to_hrresult(
-				(vt.BindToHandler)(
+		let mut queried = unsafe { T::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellItemVT>(self).BindToHandler)(
 					self.ptr(),
-					bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr().0 as _),
+					bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr() as _),
 					bhid as *const _ as _,
 					&T::IID as *const _ as _,
-					&mut ppv_queried,
-				),
-			).map(|_| T::from(ppv_queried))
-		}
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
 	}
 
 	/// [`IShellItem::GetAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getattributes)
@@ -91,9 +90,12 @@ pub trait shell_IShellItem: ole_IUnknown {
 	fn GetAttributes(&self, sfgao_mask: co::SFGAO) -> HrResult<co::SFGAO> {
 		let mut attrs = u32::default();
 		match unsafe {
-			let vt = self.vt_ref::<IShellItemVT>();
 			co::HRESULT::from_raw(
-				(vt.GetAttributes)(self.ptr(), sfgao_mask.raw(), &mut attrs),
+				(vt::<IShellItemVT>(self).GetAttributes)(
+					self.ptr(),
+					sfgao_mask.raw(),
+					&mut attrs,
+				),
 			)
 		} {
 			co::HRESULT::S_OK
@@ -124,12 +126,15 @@ pub trait shell_IShellItem: ole_IUnknown {
 	#[must_use]
 	fn GetDisplayName(&self, sigdn_name: co::SIGDN) -> HrResult<String> {
 		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<IShellItemVT>();
-			ok_to_hrresult(
-				(vt.GetDisplayName)(self.ptr(), sigdn_name.raw(), &mut pstr),
-			)
-		}.map(|_| {
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellItemVT>(self).GetDisplayName)(
+					self.ptr(),
+					sigdn_name.raw(),
+					&mut pstr,
+				)
+			},
+		).map(|_| {
 			let name = WString::from_wchars_nullt(pstr);
 			CoTaskMemFree(pstr as _);
 			name.to_string()

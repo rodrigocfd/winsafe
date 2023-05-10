@@ -252,20 +252,24 @@ macro_rules! pub_fn_comptr_get_set {
 		pub fn $field<T>(&self) -> Option<T>
 			where T: $trait,
 		{
-			self.$field.as_opt().map(|ptr| {
-				let obj = std::mem::ManuallyDrop::new(T::from(*ptr)); // won't release the stored pointer
+			if self.$field.is_null() {
+				None
+			} else {
+				let obj = std::mem::ManuallyDrop::new( // won't release the stored pointer
+					unsafe { T::from_ptr(self.$field) },
+				);
 				let cloned = T::clone(&obj);
-				cloned
-			})
+				Some(cloned)
+			}
 		}
 
 		/// Sets the COM object field, by cloning the underlying COM pointer.
 		pub fn $setter<T>(&mut self, obj: Option<&T>)
 			where T: $trait,
 		{
-			let _ = T::from(self.$field); // if already set, call Release() immediately
+			let _ = unsafe { T::from_ptr(self.$field) }; // if already set, call Release() immediately
 			self.$field = obj.map_or_else(
-				|| unsafe { crate::ComPtr::null() },
+				|| std::ptr::null_mut(),
 				|obj| {
 					let mut cloned = T::clone(obj);
 					cloned.leak()
@@ -280,8 +284,11 @@ macro_rules! impl_drop_comptr {
 	($field:ident, $name:ident $(, $life:lifetime)*) => {
 		impl<$($life),*> Drop for $name<$($life),*> {
 			fn drop(&mut self) {
-				if let Some(p) = self.$field.as_opt() {
-					let _ = crate::IUnknown::from(*p); // if a pointer is present, call Release() on it
+				if !self.$field.is_null() {
+					let _ = unsafe {
+						<crate::IUnknown as crate::prelude::ole_IUnknown>
+							::from_ptr(self.$field) // if pointer is present, call Release() on it
+					};
 				}
 			}
 		}

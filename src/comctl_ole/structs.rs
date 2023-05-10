@@ -6,8 +6,8 @@ use crate::co;
 use crate::comctl_ole::decl::{IconId, IconIdTdicon, PFTASKDIALOGCALLBACK};
 use crate::comctl::decl::NMHDR;
 use crate::kernel::decl::{HINSTANCE, WString};
+use crate::kernel::ffi_types::COMPTR;
 use crate::kernel::privs::{IS_INTRESOURCE, MAKEINTRESOURCE};
-use crate::ole::decl::ComPtr;
 use crate::prelude::{Handle, ole_IUnknown};
 use crate::user::decl::{HICON, HWND};
 
@@ -18,7 +18,7 @@ pub struct NMOBJECTNOTIFY<'a> {
 	pub hdr: NMHDR,
 	pub iItem: i32,
 	piid: *mut co::IID,
-	Object: ComPtr,
+	Object: COMPTR,
 	pub hrResult: co::HRESULT,
 	pub dwFlags: u32,
 

@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::{oleaut_IDispatch, taskschd_ITrigger};
 use crate::vt::ITriggerVT;
 
@@ -10,10 +10,10 @@ use crate::vt::ITriggerVT;
 #[repr(C)]
 pub struct IDailyTriggerVT {
 	pub ITriggerVT: ITriggerVT,
-	pub get_DaysInterval: fn(ComPtr, *mut i16) -> HRES,
-	pub put_DaysInterval: fn(ComPtr, i16) -> HRES,
-	pub get_RandomDelay: fn(ComPtr, *mut PSTR) -> HRES,
-	pub put_RandomDelay: fn(ComPtr, PCSTR) -> HRES,
+	pub get_DaysInterval: fn(COMPTR, *mut i16) -> HRES,
+	pub put_DaysInterval: fn(COMPTR, i16) -> HRES,
+	pub get_RandomDelay: fn(COMPTR, *mut PSTR) -> HRES,
+	pub put_RandomDelay: fn(COMPTR, PCSTR) -> HRES,
 }
 
 com_interface! { IDailyTrigger: "126c5cd8-b288-41d5-8dbf-e491446adc5c";
@@ -31,7 +31,7 @@ com_interface! { IDailyTrigger: "126c5cd8-b288-41d5-8dbf-e491446adc5c";
 	/// use winsafe::{IDailyTrigger, ITrigger};
 	///
 	/// let trigger: IDailyTrigger; // initialized somewhere
-	/// # let trigger = ITrigger::from(unsafe { winsafe::ComPtr::null() });
+	/// # let trigger = unsafe { ITrigger::null() };
 	///
 	/// let daily_trigger = trigger
 	///     .QueryInterface::<IDailyTrigger>()?;
@@ -57,10 +57,14 @@ pub trait taskschd_IDailyTrigger: taskschd_ITrigger {
 	#[must_use]
 	fn get_DaysInterval(&self) -> HrResult<i16> {
 		let mut days = i16::default();
-		unsafe {
-			let vt = self.vt_ref::<IDailyTriggerVT>();
-			ok_to_hrresult((vt.get_DaysInterval)(self.ptr(), &mut days))
-		}.map(|_| days)
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDailyTriggerVT>(self).get_DaysInterval)(
+					self.ptr(),
+					&mut days,
+				)
+			},
+		).map(|_| days)
 	}
 
 	fn_bstr_get! { get_RandomDelay: IDailyTriggerVT;
@@ -71,10 +75,11 @@ pub trait taskschd_IDailyTrigger: taskschd_ITrigger {
 	/// [`IDailyTrigger::put_DaysInterval`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-idailytrigger-put_daysinterval)
 	/// method.
 	fn put_DaysInterval(&self, days: i16) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IDailyTriggerVT>();
-			ok_to_hrresult((vt.put_DaysInterval)(self.ptr(), days))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDailyTriggerVT>(self).put_DaysInterval)(self.ptr(), days)
+			},
+		)
 	}
 
 	fn_bstr_set! { put_RandomDelay: IDailyTriggerVT, random_delay;

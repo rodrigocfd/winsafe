@@ -2,9 +2,9 @@
 
 use crate::co;
 use crate::kernel::decl::WString;
-use crate::kernel::ffi_types::{HANDLE, HRES, PCSTR, PVOID};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HANDLE, HRES, PCSTR, PVOID};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::{Handle, shell_ITaskbarList, shell_ITaskbarList2};
 use crate::user::decl::{HICON, HWND, RECT};
 use crate::vt::ITaskbarList2VT;
@@ -13,18 +13,18 @@ use crate::vt::ITaskbarList2VT;
 #[repr(C)]
 pub struct ITaskbarList3VT {
 	pub ITaskbarList2VT: ITaskbarList2VT,
-	pub SetProgressValue: fn(ComPtr, HANDLE, u64, u64) -> HRES,
-	pub SetProgressState: fn(ComPtr, HANDLE, u32) -> HRES,
-	pub RegisterTab: fn(ComPtr, HANDLE, HANDLE) -> HRES,
-	pub UnregisterTab: fn(ComPtr, HANDLE) -> HRES,
-	pub SetTabOrder: fn(ComPtr, HANDLE, HANDLE) -> HRES,
-	pub SetTabActive: fn(ComPtr, HANDLE, HANDLE, u32) -> HRES,
-	pub ThumbBarAddButtons: fn(ComPtr, HANDLE, u32, PVOID) -> HRES,
-	pub ThumbBarUpdateButtons: fn(ComPtr, HANDLE, u32, PVOID) -> HRES,
-	pub ThumbBarSetImageList: fn(ComPtr, HANDLE, HANDLE) -> HRES,
-	pub SetOverlayIcon: fn(ComPtr, HANDLE, HANDLE, PCSTR) -> HRES,
-	pub SetThumbnailTooltip: fn(ComPtr, HANDLE, PCSTR) -> HRES,
-	pub SetThumbnailClip: fn(ComPtr, HANDLE, PVOID) -> HRES,
+	pub SetProgressValue: fn(COMPTR, HANDLE, u64, u64) -> HRES,
+	pub SetProgressState: fn(COMPTR, HANDLE, u32) -> HRES,
+	pub RegisterTab: fn(COMPTR, HANDLE, HANDLE) -> HRES,
+	pub UnregisterTab: fn(COMPTR, HANDLE) -> HRES,
+	pub SetTabOrder: fn(COMPTR, HANDLE, HANDLE) -> HRES,
+	pub SetTabActive: fn(COMPTR, HANDLE, HANDLE, u32) -> HRES,
+	pub ThumbBarAddButtons: fn(COMPTR, HANDLE, u32, PVOID) -> HRES,
+	pub ThumbBarUpdateButtons: fn(COMPTR, HANDLE, u32, PVOID) -> HRES,
+	pub ThumbBarSetImageList: fn(COMPTR, HANDLE, HANDLE) -> HRES,
+	pub SetOverlayIcon: fn(COMPTR, HANDLE, HANDLE, PCSTR) -> HRES,
+	pub SetThumbnailTooltip: fn(COMPTR, HANDLE, PCSTR) -> HRES,
+	pub SetThumbnailClip: fn(COMPTR, HANDLE, PVOID) -> HRES,
 }
 
 com_interface! { ITaskbarList3: "ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf";
@@ -66,12 +66,15 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// [`ITaskbarList3::RegisterTab`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-registertab)
 	/// method.
 	fn RegisterTab(&self, hwnd_tab: &HWND, hwnd_mdi: &HWND) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<ITaskbarList3VT>();
-			ok_to_hrresult(
-				(vt.RegisterTab)(self.ptr(), hwnd_tab.as_ptr(), hwnd_mdi.as_ptr()),
-			)
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskbarList3VT>(self).RegisterTab)(
+					self.ptr(),
+					hwnd_tab.as_ptr(),
+					hwnd_mdi.as_ptr(),
+				)
+			},
+		)
 	}
 
 	/// [`ITaskbarList3::SetOverlayIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setoverlayicon)
@@ -79,17 +82,16 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	fn SetOverlayIcon(&self,
 		hwnd: &HWND, hicon: Option<&HICON>, description: &str) -> HrResult<()>
 	{
-		unsafe {
-			let vt = self.vt_ref::<ITaskbarList3VT>();
-			ok_to_hrresult(
-				(vt.SetOverlayIcon)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskbarList3VT>(self).SetOverlayIcon)(
 					self.ptr(),
 					hwnd.as_ptr(),
 					hicon.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
 					WString::from_str(description).as_ptr(),
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`ITaskbarList3::SetProgressState`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressstate)
@@ -97,12 +99,15 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	fn SetProgressState(&self,
 		hwnd: &HWND, tbpf_flags: co::TBPF) -> HrResult<()>
 	{
-		unsafe {
-			let vt = self.vt_ref::<ITaskbarList3VT>();
-			ok_to_hrresult(
-				(vt.SetProgressState)(self.ptr(), hwnd.as_ptr(), tbpf_flags.raw()),
-			)
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskbarList3VT>(self).SetProgressState)(
+					self.ptr(),
+					hwnd.as_ptr(),
+					tbpf_flags.raw(),
+				)
+			},
+		)
 	}
 
 	/// [`ITaskbarList3::SetProgressValue`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressvalue)
@@ -117,7 +122,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// use winsafe::{HWND, ITaskbarList3};
 	///
 	/// let tbar: ITaskbarList3; // initialized somewhere
-	/// # let tbar = ITaskbarList3::from(unsafe { winsafe::ComPtr::null() });
+	/// # let tbar = unsafe { ITaskbarList3::null() };
 	/// let hwnd: HWND;
 	/// # let hwnd = HWND::NULL;
 	///
@@ -127,28 +132,31 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	fn SetProgressValue(&self,
 		hwnd: &HWND, completed: u64, total: u64) -> HrResult<()>
 	{
-		unsafe {
-			let vt = self.vt_ref::<ITaskbarList3VT>();
-			ok_to_hrresult(
-				(vt.SetProgressValue)(self.ptr(), hwnd.as_ptr(), completed, total),
-			)
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskbarList3VT>(self).SetProgressValue)(
+					self.ptr(),
+					hwnd.as_ptr(),
+					completed,
+					total,
+				)
+			},
+		)
 	}
 
 	/// [`ITaskbarList3::SetTabActive`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settabactive)
 	/// method.
 	fn SetTabActive(&self, hwnd_tab: &HWND, hwnd_mdi: &HWND) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<ITaskbarList3VT>();
-			ok_to_hrresult(
-				(vt.SetTabActive)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskbarList3VT>(self).SetTabActive)(
 					self.ptr(),
 					hwnd_tab.as_ptr(),
 					hwnd_mdi.as_ptr(),
 					0,
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`ITaskbarList3::SetTabOrder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settaborder)
@@ -156,31 +164,29 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	fn SetTabOrder(&self,
 		hwnd_tab: &HWND, hwnd_insert_before: &HWND) -> HrResult<()>
 	{
-		unsafe {
-			let vt = self.vt_ref::<ITaskbarList3VT>();
-			ok_to_hrresult(
-				(vt.SetTabOrder)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskbarList3VT>(self).SetTabOrder)(
 					self.ptr(),
 					hwnd_tab.as_ptr(),
 					hwnd_insert_before.as_ptr(),
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`ITaskbarList3::SetThumbnailClip`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setthumbnailclip)
 	/// method.
 	fn SetThumbnailClip(&self, hwnd: &HWND, clip: Option<RECT>) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<ITaskbarList3VT>();
-			ok_to_hrresult(
-				(vt.SetThumbnailClip)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskbarList3VT>(self).SetThumbnailClip)(
 					self.ptr(),
 					hwnd.as_ptr(),
 					&clip as *const _ as _,
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`ITaskbarList3::SetThumbnailTooltip`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setthumbnailtooltip)
@@ -188,15 +194,14 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	fn SetThumbnailTooltip(&self,
 		hwnd: &HWND, tip: Option<&str>) -> HrResult<()>
 	{
-		unsafe {
-			let vt = self.vt_ref::<ITaskbarList3VT>();
-			ok_to_hrresult(
-				(vt.SetThumbnailTooltip)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskbarList3VT>(self).SetThumbnailTooltip)(
 					self.ptr(),
 					hwnd.as_ptr(),
 					tip.map_or(std::ptr::null_mut(), |s| WString::from_str(s).as_ptr()),
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 }

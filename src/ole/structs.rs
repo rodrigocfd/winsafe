@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::kernel::decl::WString;
-use crate::ole::decl::ComPtr;
+use crate::kernel::ffi_types::COMPTR;
 use crate::prelude::ole_IUnknown;
 
 /// [`COAUTHIDENTITY`](https://learn.microsoft.com/en-us/windows/win32/api/wtypesbase/ns-wtypesbase-coauthidentity)
@@ -126,7 +126,7 @@ pub struct DVTARGETDEVICE {
 #[repr(C)]
 pub struct MULTI_QI<'a> {
 	pIID: *mut co::IID,
-	pItf: ComPtr,
+	pItf: COMPTR,
 	pub hr: co::HRESULT,
 
 	_pIID: PhantomData<&'a mut co::IID>,

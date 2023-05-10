@@ -1,6 +1,5 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::ole::decl::ComPtr;
 use crate::prelude::{oleaut_IDispatch, taskschd_ITrigger};
 use crate::vt::ITriggerVT;
 
@@ -24,10 +23,10 @@ com_interface! { IIdleTrigger: "d537d2b0-9fb3-4d34-9739-1ff5ce7b1ef3";
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IIdleTrigger, ITrigger};
 	///
-	/// let trigger: IIdleTrigger; // initialized somewhere
-	/// # let trigger = ITrigger::from(unsafe { winsafe::ComPtr::null() });
+	/// let trigger: ITrigger; // initialized somewhere
+	/// # let trigger = unsafe { ITrigger::null() };
 	///
-	/// let Idle_trigger = trigger
+	/// let idle_trigger = trigger
 	///     .QueryInterface::<IIdleTrigger>()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```

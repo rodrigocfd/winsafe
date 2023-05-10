@@ -3,7 +3,6 @@
 use std::mem::ManuallyDrop;
 
 use crate::{co, oleaut};
-use crate::ole::decl::ComPtr;
 use crate::prelude::{ole_IUnknown, oleaut_IDispatch, oleaut_Variant};
 
 /// [`VARIANT`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/ns-oaidl-variant)
@@ -65,7 +64,7 @@ impl VARIANT {
 	#[must_use]
 	pub fn new_idispatch(val: &impl oleaut_IDispatch) -> Self {
 		let mut cloned = val.clone();
-		let ptr: usize = cloned.leak().into();
+		let ptr = cloned.leak() as usize;
 		unsafe { Self::from_raw(co::VT::DISPATCH, &ptr.to_ne_bytes()) }
 	}
 
@@ -80,7 +79,7 @@ impl VARIANT {
 	{
 		if self.vt() == co::VT::DISPATCH {
 			let ptr = usize::from_ne_bytes(unsafe { self.raw() }[..8].try_into().unwrap());
-			let obj = ManuallyDrop::new(T::from(ComPtr(ptr as *mut _))); // won't release the stored pointer
+			let obj = ManuallyDrop::new(unsafe { T::from_ptr(ptr as *mut _) }); // won't release the stored pointer
 			let cloned = T::clone(&obj);
 			Some(cloned)
 		} else {
@@ -95,7 +94,7 @@ impl VARIANT {
 	#[must_use]
 	pub fn new_iunknown<T>(val: &impl ole_IUnknown) -> Self {
 		let mut cloned = val.clone();
-		let ptr: usize = cloned.leak().into();
+		let ptr = cloned.leak() as usize;
 		unsafe { Self::from_raw(co::VT::UNKNOWN, &ptr.to_ne_bytes()) }
 	}
 
@@ -110,7 +109,7 @@ impl VARIANT {
 	{
 		if self.vt() == co::VT::UNKNOWN {
 			let ptr = usize::from_ne_bytes(unsafe { self.raw() }[..8].try_into().unwrap());
-			let obj = ManuallyDrop::new(T::from(ComPtr(ptr as *mut _))); // won't release the stored pointer
+			let obj = ManuallyDrop::new(unsafe { T::from_ptr(ptr as *mut _) }); // won't release the stored pointer
 			let cloned = T::clone(&obj);
 			Some(cloned)
 		} else {

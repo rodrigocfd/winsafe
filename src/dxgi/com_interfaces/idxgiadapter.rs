@@ -3,19 +3,19 @@
 use crate::co;
 use crate::dxgi::decl::{DXGI_ADAPTER_DESC, IDXGIOutput};
 use crate::kernel::decl::GUID;
-use crate::kernel::ffi_types::{HRES, PCVOID, PVOID};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::dxgi_IDXGIObject;
+use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID, PVOID};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
+use crate::prelude::{dxgi_IDXGIObject, ole_IUnknown};
 use crate::vt::IDXGIObjectVT;
 
 /// [`IDXGIAdapter`](crate::IDXGIAdapter) virtual table.
 #[repr(C)]
 pub struct IDXGIAdapterVT {
 	pub IDXGIObjectVT: IDXGIObjectVT,
-	pub EnumOutputs: fn(ComPtr, u32, *mut ComPtr) -> HRES,
-	pub GetDesc: fn(ComPtr, PVOID) -> HRES,
-	pub CheckInterfaceSupport: fn(ComPtr, PCVOID, *mut i64) -> HRES,
+	pub EnumOutputs: fn(COMPTR, u32, *mut COMPTR) -> HRES,
+	pub GetDesc: fn(COMPTR, PVOID) -> HRES,
+	pub CheckInterfaceSupport: fn(COMPTR, PCVOID, *mut i64) -> HRES,
 }
 
 com_interface! { IDXGIAdapter: "2411e7e1-12ac-4ccf-bd14-9798e8534dc0";
@@ -51,7 +51,7 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	/// use winsafe::IDXGIAdapter;
 	///
 	/// let adapter: IDXGIAdapter; // initialized somewhere
-	/// # let adapter = IDXGIAdapter::from(unsafe { winsafe::ComPtr::null() });
+	/// # let adapter = unsafe { IDXGIAdapter::null() };
 	///
 	/// for output in adapter.iter_outputs() {
 	///     let output = output?;
@@ -71,16 +71,15 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	#[must_use]
 	fn CheckInterfaceSupport(&self, interface_name: &GUID) -> HrResult<i64> {
 		let mut umd_ver = i64::default();
-		unsafe {
-			let vt = self.vt_ref::<IDXGIAdapterVT>();
-			ok_to_hrresult(
-				(vt.CheckInterfaceSupport)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGIAdapterVT>(self).CheckInterfaceSupport)(
 					self.ptr(),
 					interface_name as *const _ as _,
 					&mut umd_ver,
-				),
-			)
-		}.map(|_| umd_ver)
+				)
+			},
+		).map(|_| umd_ver)
 	}
 
 	/// [`IDXGIAdapter::EnumOutputs`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiadapter-enumoutputs)
@@ -91,13 +90,16 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	/// which is simpler.
 	#[must_use]
 	fn EnumOutputs(&self, output: u32) -> HrResult<IDXGIOutput> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IDXGIAdapterVT>();
-			ok_to_hrresult(
-				(vt.EnumOutputs)(self.ptr(), output, &mut ppv_queried),
-			).map(|_| IDXGIOutput::from(ppv_queried))
-		}
+		let mut queried = unsafe { IDXGIOutput::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGIAdapterVT>(self).EnumOutputs)(
+					self.ptr(),
+					output,
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
 	}
 
 	/// [`IDXGIAdapter::GetDesc`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiadapter-getdesc)
@@ -110,17 +112,21 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	/// use winsafe::{IDXGIAdapter, DXGI_ADAPTER_DESC};
 	///
 	/// let adapter: IDXGIAdapter; // initialized somewhere
-	/// # let adapter = IDXGIAdapter::from(unsafe { winsafe::ComPtr::null() });
+	/// # let adapter = unsafe { IDXGIAdapter::null() };
 	/// let mut desc = DXGI_ADAPTER_DESC::default();
 	///
 	/// adapter.GetDesc(&mut desc)?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 	fn GetDesc(&self, desc: &mut DXGI_ADAPTER_DESC) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IDXGIAdapterVT>();
-			ok_to_hrresult((vt.GetDesc)(self.ptr(), desc as *mut _ as _))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGIAdapterVT>(self).GetDesc)(
+					self.ptr(),
+					desc as *mut _ as _,
+				)
+			},
+		)
 	}
 }
 

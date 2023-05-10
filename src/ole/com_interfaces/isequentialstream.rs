@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{HRES, PCVOID, PVOID};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
+use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID, PVOID};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
 use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
@@ -10,8 +10,8 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct ISequentialStreamVT {
 	pub IUnknownVT: IUnknownVT,
-	pub Read: fn(ComPtr, PVOID, u32, *mut u32) -> HRES,
-	pub Write: fn(ComPtr, PCVOID, u32, *mut u32) -> HRES,
+	pub Read: fn(COMPTR, PVOID, u32, *mut u32) -> HRES,
+	pub Write: fn(COMPTR, PCVOID, u32, *mut u32) -> HRES,
 }
 
 com_interface! { ISequentialStream: "0c733a30-2a1c-11ce-ade5-00aa0044773d";
@@ -43,8 +43,7 @@ pub trait ole_ISequentialStream: ole_IUnknown {
 		let mut num_read = u32::default();
 		okfalse_to_hrresult(
 			unsafe {
-				let vt = self.vt_ref::<ISequentialStreamVT>();
-				(vt.Read)(
+				(vt::<ISequentialStreamVT>(self).Read)(
 					self.ptr(),
 					buffer.as_mut_ptr() as _,
 					buffer.len() as _,
@@ -62,8 +61,7 @@ pub trait ole_ISequentialStream: ole_IUnknown {
 		let mut num_written = u32::default();
 		ok_to_hrresult(
 			unsafe {
-				let vt = self.vt_ref::<ISequentialStreamVT>();
-				(vt.Read)(
+				(vt::<ISequentialStreamVT>(self).Read)(
 					self.ptr(),
 					data.as_ptr() as _,
 					data.len() as _,

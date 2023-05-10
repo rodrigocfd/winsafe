@@ -1,8 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::HANDLE;
-use crate::ole::decl::{ComPtr, HrResult};
+use crate::kernel::ffi_types::{COMPTR, HANDLE};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::vt;
 use crate::prelude::{Handle, ole_IUnknown};
 use crate::user::decl::HWND;
 use crate::vt::IUnknownVT;
@@ -11,7 +12,7 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IModalWindowVT {
 	pub IUnknownVT: IUnknownVT,
-	pub Show: fn(ComPtr, HANDLE) -> u32,
+	pub Show: fn(COMPTR, HANDLE) -> u32,
 }
 
 com_interface! { IModalWindow: "b4db1657-70d7-485e-8e3e-6fcb5a5c1802";
@@ -41,8 +42,12 @@ pub trait shell_IModalWindow: ole_IUnknown {
 	fn Show(&self, hwnd_owner: &HWND) -> HrResult<bool> {
 		const CANCELLED: co::HRESULT = co::ERROR::CANCELLED.to_hresult();
 		match unsafe {
-			let vt = self.vt_ref::<IModalWindowVT>();
-			co::HRESULT::from_raw((vt.Show)(self.ptr(), hwnd_owner.as_ptr()))
+			co::HRESULT::from_raw(
+				(vt::<IModalWindowVT>(self).Show)(
+					self.ptr(),
+					hwnd_owner.as_ptr(),
+				),
+			)
 		} {
 			co::HRESULT::S_OK => Ok(true),
 			CANCELLED => Ok(false),

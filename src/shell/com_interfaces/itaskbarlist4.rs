@@ -1,9 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::{HANDLE, HRES};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HANDLE, HRES};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::{
 	Handle, shell_ITaskbarList, shell_ITaskbarList2, shell_ITaskbarList3,
 };
@@ -14,7 +14,7 @@ use crate::vt::ITaskbarList3VT;
 #[repr(C)]
 pub struct ITaskbarList4VT {
 	pub ITaskbarList3VT: ITaskbarList3VT,
-	pub SetTabProperties: fn(ComPtr, HANDLE, u32) -> HRES,
+	pub SetTabProperties: fn(COMPTR, HANDLE, u32) -> HRES,
 }
 
 com_interface! { ITaskbarList4: "c43dc798-95d1-4bea-9030-bb99e2983a1a";
@@ -59,15 +59,14 @@ pub trait shell_ITaskbarList4: shell_ITaskbarList3 {
 	fn SetTabProperties(&self,
 		hwnd_tab: &HWND, stp_flags: co::STPFLAG) -> HrResult<()>
 	{
-		unsafe {
-			let vt = self.vt_ref::<ITaskbarList4VT>();
-			ok_to_hrresult(
-				(vt.SetTabProperties)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<ITaskbarList4VT>(self).SetTabProperties)(
 					self.ptr(),
 					hwnd_tab.as_ptr(),
 					stp_flags.raw(),
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 }

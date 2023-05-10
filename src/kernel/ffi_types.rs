@@ -3,6 +3,7 @@
 #![allow(dead_code)]
 
 pub(crate) type BOOL = i32;
+pub(crate) type COMPTR = *mut std::ffi::c_void;
 pub(crate) type HANDLE = *mut std::ffi::c_void;
 pub(crate) type HRES = u32; // originally declared as i32
 pub(crate) type PCSTR = *const u16;

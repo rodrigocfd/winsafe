@@ -24,7 +24,7 @@ pub trait ole_Hwnd: Handle {
 	{
 		ok_to_hrresult(
 			unsafe {
-				ole::ffi::RegisterDragDrop(self.as_ptr(), drop_target.ptr().0 as _)
+				ole::ffi::RegisterDragDrop(self.as_ptr(), drop_target.ptr() as _)
 			},
 		)
 	}

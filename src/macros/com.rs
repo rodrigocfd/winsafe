@@ -8,14 +8,15 @@ macro_rules! com_interface {
 	) => {
 		$( #[$doc] )*
 		#[repr(transparent)]
-		pub struct $name(ComPtr);
+		pub struct $name(crate::kernel::ffi_types::COMPTR);
 
 		impl Drop for $name {
 			fn drop(&mut self) {
-				if let Some(p) = self.0.as_opt() {
-					use crate::{prelude::ole_IUnknown, vt::IUnknownVT};
-					let vt = unsafe { self.vt_ref::<IUnknownVT>() };
-					(vt.Release)(*p);
+				if !self.0.is_null() {
+					unsafe {
+						use crate::{prelude::ole_IUnknown, vt::IUnknownVT};
+						(crate::ole::privs::vt::<IUnknownVT>(self).Release)(self.ptr());
+					}
 				}
 			}
 		}
@@ -23,33 +24,30 @@ macro_rules! com_interface {
 		impl Clone for $name {
 			fn clone(&self) -> Self {
 				use crate::{prelude::ole_IUnknown, vt::IUnknownVT};
-				let vt = unsafe { self.vt_ref::<IUnknownVT>() };
-				(vt.AddRef)(self.0);
-				Self(self.0)
-			}
-		}
-
-		impl From<ComPtr> for $name {
-			fn from(com_ptr: ComPtr) -> Self {
-				Self(com_ptr)
+				unsafe { (crate::ole::privs::vt::<IUnknownVT>(self).AddRef)(self.ptr()); }
+				Self(self.ptr())
 			}
 		}
 
 		impl crate::prelude::ole_IUnknown for $name {
 			const IID: crate::co::IID = crate::co::IID::new($guid);
 
-			fn leak(&mut self) -> ComPtr {
+			unsafe fn from_ptr(p: *mut std::ffi::c_void) -> Self {
+				Self(p)
+			}
+
+			unsafe fn as_mut(&mut self) -> &mut *mut std::ffi::c_void {
+				&mut self.0
+			}
+
+			fn leak(&mut self) -> *mut std::ffi::c_void {
 				let ptr = self.0;
-				self.0 = unsafe { ComPtr::null() };
+				self.0 = std::ptr::null_mut();
 				ptr
 			}
 
-			unsafe fn ptr(&self) -> ComPtr {
+			fn ptr(&self) -> *mut std::ffi::c_void {
 				self.0
-			}
-
-			unsafe fn vt_ref<T>(&self) -> &T {
-				&**self.0.into_ptr::<T>()
 			}
 		}
 	};
@@ -140,13 +138,13 @@ macro_rules! fn_com_get {
 		$( #[$doc] )*
 		#[must_use]
 		fn $method(&self) -> HrResult<$iface> {
-			unsafe {
-				let mut ppv_queried = crate::ole::decl::ComPtr::null();
-				let vt = self.vt_ref::<$vt>();
-				crate::ole::privs::ok_to_hrresult(
-					(vt.$method)(self.ptr(), &mut ppv_queried),
-				).map(|_| <$iface>::from(ppv_queried))
-			}
+			use crate::prelude::ole_IUnknown;
+			let mut queried = unsafe { <$iface>::null() };
+			crate::ole::privs::ok_to_hrresult(
+				unsafe {
+					(crate::ole::privs::vt::<$vt>(self).$method)(self.ptr(), queried.as_mut())
+				},
+			).map(|_| queried)
 		}
 	};
 }
@@ -161,10 +159,11 @@ macro_rules! fn_bstr_get {
 		#[must_use]
 		fn $method(&self) -> HrResult<String> {
 			let mut pstr = std::ptr::null_mut::<u16>();
-			unsafe {
-				let vt = self.vt_ref::<$vt>();
-				crate::ole::privs::ok_to_hrresult((vt.$method)(self.ptr(), &mut pstr))
-			}.map(|_| {
+			crate::ole::privs::ok_to_hrresult(
+				unsafe {
+					(crate::ole::privs::vt::<$vt>(self).$method)(self.ptr(), &mut pstr)
+				},
+			).map(|_| {
 				let bstr = unsafe { crate::oleaut::decl::BSTR::from_ptr(pstr) };
 				bstr.to_string()
 			})
@@ -180,15 +179,14 @@ macro_rules! fn_bstr_set {
 	) => {
 		$( #[$doc] )*
 		fn $method(&self, $arg: &str) -> HrResult<()> {
-			unsafe {
-				let vt = self.vt_ref::<$vt>();
-				crate::ole::privs::ok_to_hrresult(
-					(vt.$method)(
+			crate::ole::privs::ok_to_hrresult(
+				unsafe {
+					(crate::ole::privs::vt::<$vt>(self).$method)(
 						self.ptr(),
 						crate::oleaut::decl::BSTR::SysAllocString($arg)?.as_ptr(),
-					),
-				)
-			}
+					)
+				},
+			)
 		}
 	};
 }

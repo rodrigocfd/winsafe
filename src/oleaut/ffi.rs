@@ -1,4 +1,4 @@
-use crate::kernel::ffi_types::{BOOL, HRES, PCSTR, PCVOID, PSTR, PVOID};
+use crate::kernel::ffi_types::{BOOL, COMPTR, HRES, PCSTR, PCVOID, PSTR, PVOID};
 
 // This block should be in the "ole" feature, but there is a circular dependency
 // in the Windows headers.
@@ -7,8 +7,8 @@ extern_sys! { "ole32";
 }
 
 extern_sys! { "oleaut32";
-	OleLoadPicture(PVOID, i32, BOOL, PCVOID, PVOID) -> HRES
-	OleLoadPicturePath(PCSTR, *mut PVOID, u32, u32, PCVOID, *mut PVOID) -> HRES
+	OleLoadPicture(COMPTR, i32, BOOL, PCVOID, *mut COMPTR) -> HRES
+	OleLoadPicturePath(PCSTR, COMPTR, u32, u32, PCVOID, *mut COMPTR) -> HRES
 	SysAllocString(PCSTR) -> PSTR
 	SysFreeString(PSTR)
 	SysReAllocString(PSTR, PCSTR) -> PSTR

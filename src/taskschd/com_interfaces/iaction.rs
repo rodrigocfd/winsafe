@@ -1,9 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::{HRES, PCSTR, PSTR};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::{IntUnderlying, oleaut_IDispatch};
 use crate::vt::IDispatchVT;
 
@@ -11,9 +11,9 @@ use crate::vt::IDispatchVT;
 #[repr(C)]
 pub struct IActionVT {
 	pub IDispatchVT: IDispatchVT,
-	pub get_Id: fn(ComPtr, *mut PSTR) -> HRES,
-	pub put_Id: fn(ComPtr, PCSTR) -> HRES,
-	pub get_Type: fn(ComPtr, *mut u32) -> HRES,
+	pub get_Id: fn(COMPTR, *mut PSTR) -> HRES,
+	pub put_Id: fn(COMPTR, PCSTR) -> HRES,
+	pub get_Type: fn(COMPTR, *mut u32) -> HRES,
 }
 
 com_interface! { IAction: "bae54997-48b1-4cbe-9965-d6be263ebea4";
@@ -47,10 +47,9 @@ pub trait taskschd_IAction: oleaut_IDispatch {
 	#[must_use]
 	fn get_Type(&self) -> HrResult<co::TASK_ACTION_TYPE> {
 		let mut at = co::TASK_ACTION_TYPE::default();
-		unsafe {
-			let vt = self.vt_ref::<IActionVT>();
-			ok_to_hrresult((vt.get_Type)(self.ptr(), at.as_mut()))
-		}.map(|_| at)
+		ok_to_hrresult(
+			unsafe { (vt::<IActionVT>(self).get_Type)(self.ptr(), at.as_mut()) },
+		).map(|_| at)
 	}
 
 	fn_bstr_set! { put_Id: IActionVT, id;

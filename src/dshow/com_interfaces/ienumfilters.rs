@@ -2,9 +2,9 @@
 
 use crate::co;
 use crate::dshow::decl::IBaseFilter;
-use crate::kernel::ffi_types::HRES;
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
+use crate::kernel::ffi_types::{COMPTR, HRES};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
 use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
@@ -12,10 +12,10 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IEnumFiltersVT {
 	pub IUnknownVT: IUnknownVT,
-	pub Next: fn(ComPtr, u32, *mut ComPtr, *mut u32) -> HRES,
-	pub Skip: fn(ComPtr, u32) -> HRES,
-	pub Reset: fn(ComPtr) -> HRES,
-	pub Clone: fn(ComPtr, *mut ComPtr) -> HRES,
+	pub Next: fn(COMPTR, u32, *mut COMPTR, *mut u32) -> HRES,
+	pub Skip: fn(COMPTR, u32) -> HRES,
+	pub Reset: fn(COMPTR) -> HRES,
+	pub Clone: fn(COMPTR, *mut COMPTR) -> HRES,
 }
 
 com_interface! { IEnumFilters: "56a86893-0ad4-11ce-b03a-0020af0ba770";
@@ -50,7 +50,7 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 	/// use winsafe::IEnumFilters;
 	///
 	/// let filters: IEnumFilters; // initialized somewhere
-	/// # let filters = IEnumFilters::from(unsafe { winsafe::ComPtr::null() });
+	/// # let filters = unsafe { IEnumFilters::null() };
 	///
 	/// for filter in filters.iter() {
 	///     let filter = filter?;
@@ -71,38 +71,39 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 	/// is simpler.
 	#[must_use]
 	fn Next(&self) -> HrResult<Option<IBaseFilter>> {
+		let mut queried = unsafe { IBaseFilter::null() };
 		let mut fetched = u32::default();
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IEnumFiltersVT>();
-			match ok_to_hrresult(
-				(vt.Next)(self.ptr(), 1, &mut ppv_queried, &mut fetched), // retrieve only 1
-			) {
-				Ok(_) => Ok(Some(IBaseFilter::from(ppv_queried))),
-				Err(hr) => match hr {
-					co::HRESULT::S_FALSE => Ok(None), // no filter found
-					hr => Err(hr), // actual error
-				},
-			}
+
+		match ok_to_hrresult(
+			unsafe {
+				(vt::<IEnumFiltersVT>(self).Next)(
+					self.ptr(),
+					1, // retrieve only 1
+					queried.as_mut(),
+					&mut fetched,
+				)
+			},
+		) {
+			Ok(_) => Ok(Some(queried)),
+			Err(hr) => match hr {
+				co::HRESULT::S_FALSE => Ok(None), // no filter found
+				hr => Err(hr), // actual error
+			},
 		}
 	}
 
 	/// [`IEnumFilters::Reset`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-reset)
 	/// method.
 	fn Reset(&self) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IEnumFiltersVT>();
-			ok_to_hrresult((vt.Reset)(self.ptr()))
-		}
+		ok_to_hrresult(unsafe { (vt::<IEnumFiltersVT>(self).Reset)(self.ptr()) })
 	}
 
 	/// [`IEnumFilters::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-skip)
 	/// method.
 	fn Skip(&self, count: u32) -> HrResult<bool> {
-		unsafe {
-			let vt = self.vt_ref::<IEnumFiltersVT>();
-			okfalse_to_hrresult((vt.Skip)(self.ptr(), count))
-		}
+		okfalse_to_hrresult(
+			unsafe { (vt::<IEnumFiltersVT>(self).Skip)(self.ptr(), count) },
+		)
 	}
 }
 

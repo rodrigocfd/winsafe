@@ -2,21 +2,23 @@
 
 use crate::dshow::decl::{FILTER_INFO, IEnumPins, IPin};
 use crate::kernel::decl::WString;
-use crate::kernel::ffi_types::{HRES, PCSTR, PSTR, PVOID};
-use crate::ole::decl::{ComPtr, CoTaskMemFree, HrResult};
-use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{dshow_IFilterGraph, dshow_IMediaFilter, ole_IPersist};
+use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR, PVOID};
+use crate::ole::decl::{CoTaskMemFree, HrResult};
+use crate::ole::privs::{ok_to_hrresult, vt};
+use crate::prelude::{
+	dshow_IFilterGraph, dshow_IMediaFilter, ole_IPersist, ole_IUnknown,
+};
 use crate::vt::IMediaFilterVT;
 
 /// [`IBaseFilter`](crate::IBaseFilter) virtual table.
 #[repr(C)]
 pub struct IBaseFilterVT {
 	pub IMediaFilterVT: IMediaFilterVT,
-	pub EnumPins: fn(ComPtr, *mut ComPtr) -> HRES,
-	pub FindPin: fn(ComPtr, PCSTR, *mut ComPtr) -> HRES,
-	pub QueryFilterInfo: fn(ComPtr, PVOID) -> HRES,
-	pub JoinFilterGraph: fn(ComPtr, ComPtr, PCSTR) -> HRES,
-	pub QueryVendorInfo: fn(ComPtr, *mut PSTR) -> HRES,
+	pub EnumPins: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub FindPin: fn(COMPTR, PCSTR, *mut COMPTR) -> HRES,
+	pub QueryFilterInfo: fn(COMPTR, PVOID) -> HRES,
+	pub JoinFilterGraph: fn(COMPTR, COMPTR, PCSTR) -> HRES,
+	pub QueryVendorInfo: fn(COMPTR, *mut PSTR) -> HRES,
 }
 
 com_interface! { IBaseFilter: "56a86895-0ad4-11ce-b03a-0020af0ba770";
@@ -64,17 +66,16 @@ pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 	/// method.
 	#[must_use]
 	fn FindPin(&self, id: &str) -> HrResult<IPin> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IBaseFilterVT>();
-			ok_to_hrresult(
-				(vt.FindPin)(
+		let mut queried = unsafe { IPin::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IBaseFilterVT>(self).FindPin)(
 					self.ptr(),
 					WString::from_str(id).as_ptr(),
-					&mut ppv_queried,
-				),
-			).map(|_| IPin::from(ppv_queried))
-		}
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
 	}
 
 	/// [`IBaseFilter::JoinFilterGraph`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-joinfiltergraph)
@@ -82,27 +83,28 @@ pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 	fn JoinFilterGraph(&self,
 		graph: Option<&impl dshow_IFilterGraph>, name: &str) -> HrResult<()>
 	{
-		unsafe {
-			let vt = self.vt_ref::<IBaseFilterVT>();
-			ok_to_hrresult(
-				(vt.JoinFilterGraph)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IBaseFilterVT>(self).JoinFilterGraph)(
 					self.ptr(),
-					graph.map_or(ComPtr::null(), |g| g.ptr()),
+					graph.map_or(std::ptr::null_mut(), |g| g.ptr()),
 					WString::from_str(name).as_ptr(),
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`IBaseFilter::QueryFilterInfo`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-queryfilterinfo)
 	/// method.
 	fn QueryFilterInfo(&self, info: &mut FILTER_INFO) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IBaseFilterVT>();
-			ok_to_hrresult(
-				(vt.QueryFilterInfo)(self.ptr(), info as *mut _ as _),
-			)
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IBaseFilterVT>(self).QueryFilterInfo)(
+					self.ptr(),
+					info as *mut _ as _,
+				)
+			},
+		)
 	}
 
 	/// [`IBaseFilter::QueryVendorInfo`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-queryvendorinfo)
@@ -110,10 +112,14 @@ pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 	#[must_use]
 	fn QueryVendorInfo(&self) -> HrResult<String> {
 		let mut pstr = std::ptr::null_mut::<u16>();
-		unsafe {
-			let vt = self.vt_ref::<IBaseFilterVT>();
-			ok_to_hrresult((vt.QueryVendorInfo)(self.ptr(), &mut pstr))
-		}.map(|_| {
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IBaseFilterVT>(self).QueryVendorInfo)(
+					self.ptr(),
+					&mut pstr,
+				)
+			},
+		).map(|_| {
 			let name = WString::from_wchars_nullt(pstr);
 			CoTaskMemFree(pstr as _);
 			name.to_string()

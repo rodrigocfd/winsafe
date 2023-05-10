@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{BOOL, HRES};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
+use crate::kernel::ffi_types::{BOOL, COMPTR, HRES};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
 use crate::prelude::{ole_IPersist, ole_IStream};
 use crate::vt::IPersistVT;
 
@@ -10,10 +10,10 @@ use crate::vt::IPersistVT;
 #[repr(C)]
 pub struct IPersistStreamVT {
 	pub IPersistVT: IPersistVT,
-	pub IsDirty: fn(ComPtr) -> HRES,
-	pub Load: fn(ComPtr, ComPtr) -> HRES,
-	pub Save: fn(ComPtr, ComPtr, BOOL) -> HRES,
-	pub GetSizeMax: fn(ComPtr, *mut u64) -> HRES,
+	pub IsDirty: fn(COMPTR) -> HRES,
+	pub Load: fn(COMPTR, COMPTR) -> HRES,
+	pub Save: fn(COMPTR, COMPTR, BOOL) -> HRES,
+	pub GetSizeMax: fn(COMPTR, *mut u64) -> HRES,
 }
 
 com_interface! { IPersistStream: "00000109-0000-0000-c000-000000000046";
@@ -44,8 +44,7 @@ pub trait ole_IPersistStream: ole_IPersist {
 		let mut max = u64::default();
 		ok_to_hrresult(
 			unsafe {
-				let vt = self.vt_ref::<IPersistStreamVT>();
-				(vt.GetSizeMax)(self.ptr(), &mut max)
+				(vt::<IPersistStreamVT>(self).GetSizeMax)(self.ptr(), &mut max)
 			},
 		).map(|_| max)
 	}
@@ -55,10 +54,7 @@ pub trait ole_IPersistStream: ole_IPersist {
 	#[must_use]
 	fn IsDirty(&self) -> HrResult<bool> {
 		okfalse_to_hrresult(
-			unsafe {
-				let vt = self.vt_ref::<IPersistStreamVT>();
-				(vt.IsDirty)(self.ptr())
-			},
+			unsafe { (vt::<IPersistStreamVT>(self).IsDirty)(self.ptr()) },
 		)
 	}
 
@@ -67,8 +63,7 @@ pub trait ole_IPersistStream: ole_IPersist {
 	fn Load(&self, stream: &impl ole_IStream) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe {
-				let vt = self.vt_ref::<IPersistStreamVT>();
-				(vt.Load)(self.ptr(), stream.ptr())
+				(vt::<IPersistStreamVT>(self).Load)(self.ptr(), stream.ptr())
 			},
 		)
 	}
@@ -80,8 +75,11 @@ pub trait ole_IPersistStream: ole_IPersist {
 	{
 		ok_to_hrresult(
 			unsafe {
-				let vt = self.vt_ref::<IPersistStreamVT>();
-				(vt.Save)(self.ptr(), stream.ptr(), clear_dirty as _)
+				(vt::<IPersistStreamVT>(self).Save)(
+					self.ptr(),
+					stream.ptr(),
+					clear_dirty as _,
+				)
 			},
 		)
 	}

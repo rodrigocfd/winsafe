@@ -2,9 +2,9 @@
 
 use crate::co;
 use crate::kernel::decl::{LCID, WString};
-use crate::kernel::ffi_types::{HRES, PCSTR, PCVOID, PVOID};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PCVOID, PVOID};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::oleaut::decl::ITypeInfo;
 use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
@@ -13,10 +13,10 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IDispatchVT {
 	pub IUnknownVT: IUnknownVT,
-	pub GetTypeInfoCount: fn(ComPtr, *mut u32) -> HRES,
-	pub GetTypeInfo: fn(ComPtr, u32, u32, *mut ComPtr) -> HRES,
-	pub GetIDsOfNames: fn(ComPtr, PCVOID, *const PCSTR, u32, u32, PVOID) -> HRES,
-	pub Invoke: fn(ComPtr, i32, PCVOID, u32, u16, PVOID, PVOID, PVOID, *mut u32) -> HRES,
+	pub GetTypeInfoCount: fn(COMPTR, *mut u32) -> HRES,
+	pub GetTypeInfo: fn(COMPTR, u32, u32, *mut COMPTR) -> HRES,
+	pub GetIDsOfNames: fn(COMPTR, PCVOID, *const PCSTR, u32, u32, PVOID) -> HRES,
+	pub Invoke: fn(COMPTR, i32, PCVOID, u32, u16, PVOID, PVOID, PVOID, *mut u32) -> HRES,
 }
 
 com_interface! { IDispatch: "00020400-0000-0000-c000-000000000046";
@@ -53,19 +53,18 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 			.collect::<Vec<_>>();
 		let mut ids = vec![i32::default(); names.len()];
 
-		unsafe {
-			let vt = self.vt_ref::<IDispatchVT>();
-			ok_to_hrresult(
-				(vt.GetIDsOfNames)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDispatchVT>(self).GetIDsOfNames)(
 					self.ptr(),
 					&co::IID::default() as *const _ as _,
 					wptrs.as_ptr(),
 					names.len() as _,
 					lcid.into(),
 					ids.as_mut_ptr() as _,
-				),
-			)
-		}.map(|_| ids)
+				)
+			},
+		).map(|_| ids)
 	}
 
 	/// [`IDispatch::GetTypeInfoCount`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfocount)
@@ -73,27 +72,27 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	#[must_use]
 	fn GetTypeInfoCount(&self) -> HrResult<u32> {
 		let mut count = u32::default();
-		unsafe {
-			let vt = self.vt_ref::<IDispatchVT>();
-			ok_to_hrresult((vt.GetTypeInfoCount)(self.ptr(), &mut count))
-		}.map(|_| count)
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDispatchVT>(self).GetTypeInfoCount)(self.ptr(), &mut count)
+			},
+		).map(|_| count)
 	}
 
 	/// [`IDispatch::GetTypeInfo`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfo)
 	/// method.
 	#[must_use]
 	fn GetTypeInfo(&self, info_type: u32, lcid: LCID) -> HrResult<ITypeInfo> {
-		unsafe {
-			let mut ppv_queried = ComPtr::null();
-			let vt = self.vt_ref::<IDispatchVT>();
-			ok_to_hrresult(
-				(vt.GetTypeInfo)(
+		let mut queried = unsafe { ITypeInfo::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDispatchVT>(self).GetTypeInfo)(
 					self.ptr(),
 					info_type,
 					lcid.into(),
-					&mut ppv_queried,
-				),
-			).map(|_| ITypeInfo::from(ppv_queried))
-		}
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
 	}
 }

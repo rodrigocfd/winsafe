@@ -3,7 +3,7 @@
 use crate::dshow::decl::IMFVideoDisplayControl;
 use crate::gdi::decl::BITMAPINFOHEADER;
 use crate::ole::decl::{CoTaskMemFree, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::ole_IUnknown;
 use crate::vt::IMFVideoDisplayControlVT;
 
@@ -29,18 +29,17 @@ pub trait dshow_gdi_IMFVideoDisplayControl: ole_IUnknown {
 		let mut dib_sz = u32::default();
 		let mut time_stamp = i64::default();
 
-		unsafe {
-			let vt = self.vt_ref::<IMFVideoDisplayControlVT>();
-			ok_to_hrresult(
-				(vt.GetCurrentImage)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFVideoDisplayControlVT>(self).GetCurrentImage)(
 					self.ptr(),
 					&mut bih as *mut _ as _,
 					&mut dib_ptr,
 					&mut dib_sz,
 					&mut time_stamp,
-				),
-			)
-		}.map(|_| {
+				)
+			},
+		).map(|_| {
 			let dib_vec = unsafe {
 				std::slice::from_raw_parts(dib_ptr, dib_sz as _)
 			}.to_vec();

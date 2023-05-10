@@ -1,9 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::{BOOL, HANDLE, HRES, PCVOID};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::ok_to_hrresult;
+use crate::kernel::ffi_types::{BOOL, COMPTR, HANDLE, HRES, PCVOID};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::{Handle, ole_IUnknown};
 use crate::user::decl::{HBITMAP, HDC, POINT, RECT, SIZE};
 use crate::vt::IUnknownVT;
@@ -12,20 +12,20 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IPictureVT {
 	pub IUnknownVT: IUnknownVT,
-	pub get_Handle: fn(ComPtr, *mut u32) -> HRES,
-	pub get_hPal: fn(ComPtr, *mut u32) -> HRES,
-	pub get_Type: fn(ComPtr, *mut i16) -> HRES,
-	pub get_Width: fn(ComPtr, *mut i32) -> HRES,
-	pub get_Height: fn(ComPtr, *mut i32) -> HRES,
-	pub Render: fn(ComPtr, HANDLE, i32, i32, i32, i32, i32, i32, i32, i32, PCVOID) -> HRES,
-	pub set_hPal: fn(ComPtr, u32) -> HRES,
-	pub get_CurDC: fn(ComPtr, *mut HANDLE) -> HRES,
-	pub SelectPicture: fn(ComPtr, HANDLE, *mut HANDLE, *mut HANDLE) -> HRES,
-	pub get_KeepOriginalFormat: fn(ComPtr, *mut BOOL) -> HRES,
-	pub put_KeepOriginalFormat: fn(ComPtr, BOOL) -> HRES,
-	pub PictureChanged: fn(ComPtr) -> HRES,
-	pub SaveAsFile: fn(ComPtr, *mut ComPtr, BOOL, *mut i32) -> HRES,
-	pub get_Attributes: fn(ComPtr, *mut u32) -> HRES,
+	pub get_Handle: fn(COMPTR, *mut u32) -> HRES,
+	pub get_hPal: fn(COMPTR, *mut u32) -> HRES,
+	pub get_Type: fn(COMPTR, *mut i16) -> HRES,
+	pub get_Width: fn(COMPTR, *mut i32) -> HRES,
+	pub get_Height: fn(COMPTR, *mut i32) -> HRES,
+	pub Render: fn(COMPTR, HANDLE, i32, i32, i32, i32, i32, i32, i32, i32, PCVOID) -> HRES,
+	pub set_hPal: fn(COMPTR, u32) -> HRES,
+	pub get_CurDC: fn(COMPTR, *mut HANDLE) -> HRES,
+	pub SelectPicture: fn(COMPTR, HANDLE, *mut HANDLE, *mut HANDLE) -> HRES,
+	pub get_KeepOriginalFormat: fn(COMPTR, *mut BOOL) -> HRES,
+	pub put_KeepOriginalFormat: fn(COMPTR, BOOL) -> HRES,
+	pub PictureChanged: fn(COMPTR) -> HRES,
+	pub SaveAsFile: fn(COMPTR, *mut COMPTR, BOOL, *mut i32) -> HRES,
+	pub get_Attributes: fn(COMPTR, *mut u32) -> HRES,
 }
 
 com_interface! { IPicture: "7bf80980-bf32-101a-8bbb-00aa00300cab";
@@ -53,10 +53,11 @@ pub trait ole_IPicture: ole_IUnknown {
 	#[must_use]
 	fn get_CurDC(&self) -> HrResult<HDC> {
 		let mut hdc = HDC::NULL;
-		unsafe {
-			let vt = self.vt_ref::<IPictureVT>();
-			ok_to_hrresult((vt.get_CurDC)(self.ptr(), hdc.as_mut()))
-		}.map(|_| hdc)
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IPictureVT>(self).get_CurDC)(self.ptr(), hdc.as_mut())
+			},
+		).map(|_| hdc)
 	}
 
 	/// [`IPicture::get_Height`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_height)
@@ -86,10 +87,11 @@ pub trait ole_IPicture: ole_IUnknown {
 	#[must_use]
 	fn get_Height(&self) -> HrResult<i32> {
 		let mut h = i32::default();
-		unsafe {
-			let vt = self.vt_ref::<IPictureVT>();
-			ok_to_hrresult((vt.get_Height)(self.ptr(), &mut h))
-		}.map(|_| h)
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IPictureVT>(self).get_Height)(self.ptr(), &mut h)
+			},
+		).map(|_| h)
 	}
 
 	/// [`IPicture::get_Type`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_type)
@@ -97,10 +99,9 @@ pub trait ole_IPicture: ole_IUnknown {
 	#[must_use]
 	fn get_Type(&self) -> HrResult<co::PICTYPE> {
 		let mut ty = i16::default();
-		unsafe {
-			let vt = self.vt_ref::<IPictureVT>();
-			ok_to_hrresult((vt.get_Type)(self.ptr(), &mut ty))
-		}.map(|_| unsafe { co::PICTYPE::from_raw(ty) })
+		ok_to_hrresult(
+			unsafe { (vt::<IPictureVT>(self).get_Type)(self.ptr(), &mut ty) },
+		).map(|_| unsafe { co::PICTYPE::from_raw(ty) })
 	}
 
 	/// [`IPicture::get_Width`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_width)
@@ -130,28 +131,30 @@ pub trait ole_IPicture: ole_IUnknown {
 	#[must_use]
 	fn get_Width(&self) -> HrResult<i32> {
 		let mut w = i32::default();
-		unsafe {
-			let vt = self.vt_ref::<IPictureVT>();
-			ok_to_hrresult((vt.get_Width)(self.ptr(), &mut w))
-		}.map(|_| w)
+		ok_to_hrresult(
+			unsafe { (vt::<IPictureVT>(self).get_Width)(self.ptr(), &mut w) },
+		).map(|_| w)
 	}
 
 	/// [`IPicture::PictureChanged`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-picturechanged)
 	/// method.
 	fn PictureChanged(&self) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IPictureVT>();
-			ok_to_hrresult((vt.PictureChanged)(self.ptr()))
-		}
+		ok_to_hrresult(
+			unsafe { (vt::<IPictureVT>(self).PictureChanged)(self.ptr()) },
+		)
 	}
 
 	/// [`IPicture::put_KeepOriginalFormat`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-put_keeporiginalformat)
 	/// method.
 	fn put_KeepOriginalFormat(&self, keep: bool) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IPictureVT>();
-			ok_to_hrresult((vt.put_KeepOriginalFormat)(self.ptr(), keep as _))
-		}
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IPictureVT>(self).put_KeepOriginalFormat)(
+					self.ptr(),
+					keep as _,
+				)
+			},
+		)
 	}
 
 	/// [`IPicture::Render`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-render)
@@ -165,10 +168,9 @@ pub trait ole_IPicture: ole_IUnknown {
 		metafile_bounds: Option<&RECT>,
 	) -> HrResult<()>
 	{
-		unsafe {
-			let vt = self.vt_ref::<IPictureVT>();
-			ok_to_hrresult(
-				(vt.Render)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IPictureVT>(self).Render)(
 					self.ptr(),
 					hdc.as_ptr(),
 					dest_pt.x, dest_pt.y,
@@ -177,9 +179,9 @@ pub trait ole_IPicture: ole_IUnknown {
 					src_offset.map_or(0, |off| off.y),
 					src_extent.cx, src_extent.cy,
 					metafile_bounds.map_or(std::ptr::null_mut(), |rc| rc as *const _ as _),
-				),
-			)
-		}
+				)
+			},
+		)
 	}
 
 	/// [`IPicture::SelectPicture`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-selectpicture)
@@ -188,16 +190,15 @@ pub trait ole_IPicture: ole_IUnknown {
 		let mut hdc_out = HDC::NULL;
 		let mut hbmp = HBITMAP::NULL;
 
-		unsafe {
-			let vt = self.vt_ref::<IPictureVT>();
-			ok_to_hrresult(
-				(vt.SelectPicture)(
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IPictureVT>(self).SelectPicture)(
 					self.ptr(),
 					hdc.as_ptr(),
 					hdc_out.as_mut(),
 					hbmp.as_mut(),
-				),
-			)
-		}.map(|_| (hdc_out, hbmp))
+				)
+			},
+		).map(|_| (hdc_out, hbmp))
 	}
 }

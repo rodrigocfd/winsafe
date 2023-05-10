@@ -2,9 +2,75 @@
 
 use crate::{co, oleaut};
 use crate::kernel::decl::{SysResult, SYSTEMTIME, WString};
-use crate::ole::decl::{CoTaskMemFree, HrResult};
+use crate::ole::decl::{CoTaskMemFree, HrResult, IPicture};
 use crate::ole::privs::ok_to_hrresult;
 use crate::oleaut::decl::PROPERTYKEY;
+use crate::prelude::{ole_IStream, ole_IUnknown};
+use crate::user::decl::COLORREF;
+
+/// [`OleLoadPicture`](https://learn.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-oleloadpicture)
+/// function.
+///
+/// # Examples
+///
+/// Parsing an image from raw data:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{IStream, OleLoadPicture};
+///
+/// let stream: IStream; // initialized somewhere
+/// # let stream = unsafe { IStream::null() };
+///
+/// let picture = OleLoadPicture(&stream, None, true)?;
+/// # Ok::<_, winsafe::co::HRESULT>(())
+/// ```
+#[must_use]
+pub fn OleLoadPicture(
+	stream: &impl ole_IStream,
+	size: Option<u32>,
+	keep_original_format: bool,
+) -> HrResult<IPicture>
+{
+	let mut queried = unsafe { IPicture::null() };
+	ok_to_hrresult(
+		unsafe {
+			oleaut::ffi::OleLoadPicture(
+				stream.ptr() as _,
+				size.unwrap_or(0) as _,
+				!keep_original_format as _, // note: reversed
+				&IPicture::IID as *const _ as _,
+				queried.as_mut(),
+			)
+		},
+	).map(|_| queried)
+}
+
+/// [`OleLoadPicturePath`](https://learn.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-oleloadpicturepath)
+/// function.
+///
+/// The picture must be in BMP (bitmap), JPEG, WMF (metafile), ICO (icon), or
+/// GIF format.
+#[must_use]
+pub fn OleLoadPicturePath(
+	path: &str,
+	transparent_color: Option<COLORREF>,
+) -> HrResult<IPicture>
+{
+	let mut queried = unsafe { IPicture::null() };
+	ok_to_hrresult(
+		unsafe {
+			oleaut::ffi::OleLoadPicturePath(
+				WString::from_str(path).as_ptr(),
+				std::ptr::null_mut(),
+				0,
+				transparent_color.map_or(0, |c| c.into()),
+				&IPicture::IID as *const _ as _,
+				queried.as_mut(),
+			)
+		},
+	).map(|_| queried)
+}
 
 /// [`PSGetNameFromPropertyKey`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-psgetnamefrompropertykey)
 /// function.

@@ -1,9 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::dshow::decl::AM_MEDIA_TYPE;
-use crate::kernel::ffi_types::{HRES, PVOID};
-use crate::ole::decl::{ComPtr, HrResult};
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult};
+use crate::kernel::ffi_types::{COMPTR, HRES, PVOID};
+use crate::ole::decl::HrResult;
+use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
 use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
@@ -11,10 +11,10 @@ use crate::vt::IUnknownVT;
 #[repr(C)]
 pub struct IEnumMediaTypesVT {
 	pub IUnknownVT: IUnknownVT,
-	pub Next: fn(ComPtr, u32, *mut PVOID, *mut u32) -> HRES,
-	pub Skip: fn(ComPtr, u32) -> HRES,
-	pub Reset: fn(ComPtr) -> HRES,
-	pub Clone: fn(ComPtr, *mut ComPtr) -> HRES,
+	pub Next: fn(COMPTR, u32, *mut PVOID, *mut u32) -> HRES,
+	pub Skip: fn(COMPTR, u32) -> HRES,
+	pub Reset: fn(COMPTR) -> HRES,
+	pub Clone: fn(COMPTR, *mut COMPTR) -> HRES,
 }
 
 com_interface! { IEnumMediaTypes: "89c31040-846b-11ce-97d3-00aa0055595a";
@@ -49,7 +49,7 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	/// use winsafe::IEnumMediaTypes;
 	///
 	/// let types: IEnumMediaTypes; // initialized somewhere
-	/// # let types = IEnumMediaTypes::from(unsafe { winsafe::ComPtr::null() });
+	/// # let types = unsafe { IEnumMediaTypes::null() };
 	///
 	/// for amt in types.iter() {
 	///     let amt = amt?;
@@ -59,7 +59,9 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 	#[must_use]
-	fn iter(&self) -> Box<dyn Iterator<Item = HrResult<&'_ AM_MEDIA_TYPE<'_>>> + '_> {
+	fn iter(&self,
+	) -> Box<dyn Iterator<Item = HrResult<&'_ AM_MEDIA_TYPE<'_>>> + '_>
+	{
 		Box::new(EnumMediaTypesIter::new(self))
 	}
 
@@ -71,30 +73,32 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	/// which is simpler.
 	#[must_use]
 	fn Next(&self, mt: &mut AM_MEDIA_TYPE) -> HrResult<bool> {
-		unsafe {
-			let vt = self.vt_ref::<IEnumMediaTypesVT>();
-			okfalse_to_hrresult(
-				(vt.Next)(self.ptr(), 1, mt as *mut _ as _, std::ptr::null_mut()), // retrieve only 1
-			)
-		}
+		okfalse_to_hrresult(
+			unsafe {
+				(vt::<IEnumMediaTypesVT>(self).Next)(
+					self.ptr(),
+					1, // retrieve only 1
+					mt as *mut _ as _,
+					std::ptr::null_mut(),
+				)
+			},
+		)
 	}
 
 	/// [`IEnumMediaTypes::Reset`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienummediatypes-reset)
 	/// method.
 	fn Reset(&self) -> HrResult<()> {
-		unsafe {
-			let vt = self.vt_ref::<IEnumMediaTypesVT>();
-			ok_to_hrresult((vt.Reset)(self.ptr()))
-		}
+		ok_to_hrresult(
+			unsafe { (vt::<IEnumMediaTypesVT>(self).Reset)(self.ptr()) },
+		)
 	}
 
 	/// [`IEnumMediaTypes::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienummediatypes-skip)
 	/// method.
 	fn Skip(&self, count: u32) -> HrResult<bool> {
-		unsafe {
-			let vt = self.vt_ref::<IEnumMediaTypesVT>();
-			okfalse_to_hrresult((vt.Skip)(self.ptr(), count))
-		}
+		okfalse_to_hrresult(
+			unsafe { (vt::<IEnumMediaTypesVT>(self).Skip)(self.ptr(), count) },
+		)
 	}
 }
 
