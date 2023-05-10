@@ -607,7 +607,7 @@ unsafe impl<'a> MsgSend for SetHandle<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::SETHANDLE.into(),
-			wparam: self.handle.as_ptr() as _,
+			wparam: self.handle.ptr() as _,
 			lparam: 0,
 		}
 	}

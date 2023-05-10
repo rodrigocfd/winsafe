@@ -45,7 +45,7 @@ pub trait shell_IModalWindow: ole_IUnknown {
 			co::HRESULT::from_raw(
 				(vt::<IModalWindowVT>(self).Show)(
 					self.ptr(),
-					hwnd_owner.as_ptr(),
+					hwnd_owner.ptr(),
 				),
 			)
 		} {

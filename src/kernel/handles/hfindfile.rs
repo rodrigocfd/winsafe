@@ -61,7 +61,7 @@ pub trait kernel_Hfindfile: Handle {
 	#[must_use]
 	fn FindNextFile(&self, wfd: &mut WIN32_FIND_DATA) -> SysResult<bool> {
 		match unsafe {
-			kernel::ffi::FindNextFileW(self.as_ptr(), wfd as *mut _ as _)
+			kernel::ffi::FindNextFileW(self.ptr(), wfd as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => Ok(false), // not an error, no further files found

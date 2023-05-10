@@ -23,7 +23,7 @@ pub trait comctl_ole_Hwnd: Handle {
 	/// method.
 	fn InitializeFlatSB(&self) -> HrResult<()> {
 		ok_to_hrresult(
-			unsafe { comctl_ole::ffi::InitializeFlatSB(self.as_ptr()) },
+			unsafe { comctl_ole::ffi::InitializeFlatSB(self.ptr()) },
 		)
 	}
 
@@ -96,8 +96,8 @@ pub trait comctl_ole_Hwnd: Handle {
 		ok_to_hrresult(
 			unsafe {
 				comctl_ole::ffi::TaskDialog(
-					self.as_ptr(),
-					hinstance.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+					self.ptr(),
+					hinstance.map_or(std::ptr::null_mut(), |h| h.ptr()),
 					WString::from_opt_str(window_title).as_ptr(),
 					WString::from_opt_str(main_instruction).as_ptr(),
 					WString::from_opt_str(content).as_ptr(),
@@ -113,7 +113,7 @@ pub trait comctl_ole_Hwnd: Handle {
 	/// method.
 	fn UninitializeFlatSB(&self) -> HrResult<()> {
 		ok_to_hrresult(
-			unsafe { comctl_ole::ffi::UninitializeFlatSB(self.as_ptr()) },
+			unsafe { comctl_ole::ffi::UninitializeFlatSB(self.ptr()) },
 		)
 	}
 }

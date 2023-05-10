@@ -202,8 +202,8 @@ macro_rules! pub_struct_msg_ctlcolor {
 			fn as_generic_wm(&mut self) -> crate::msg::WndMsg {
 				crate::msg::WndMsg {
 					msg_id: $wmconst,
-					wparam: <crate::user::decl::HDC as crate::prelude::Handle>::as_ptr(&self.hdc) as _,
-					lparam: <crate::user::decl::HWND as crate::prelude::Handle>::as_ptr(&self.hwnd) as _,
+					wparam: <crate::user::decl::HDC as crate::prelude::Handle>::ptr(&self.hdc) as _,
+					lparam: <crate::user::decl::HWND as crate::prelude::Handle>::ptr(&self.hwnd) as _,
 				}
 			}
 		}

@@ -52,7 +52,7 @@ pub trait Handle: Sized
 	/// `raw_copy` is an escape hatch to fill this gap.
 	#[must_use]
 	unsafe fn raw_copy(&self) -> Self {
-		Self::from_ptr(self.as_ptr())
+		Self::from_ptr(self.ptr())
 	}
 
 	/// Returns a mutable reference to the underlying raw pointer.
@@ -77,7 +77,7 @@ pub trait Handle: Sized
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
-	fn as_ptr(&self) -> *mut std::ffi::c_void;
+	fn ptr(&self) -> *mut std::ffi::c_void;
 
 	/// Returns `None` if the handle is null or invalid, otherwise returns
 	/// `Some(&self)`.

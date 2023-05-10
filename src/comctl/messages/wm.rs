@@ -22,7 +22,7 @@ unsafe impl<'a> MsgSend for Notify<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::NOTIFY,
-			wparam: self.nmhdr.hwndFrom.as_ptr() as _,
+			wparam: self.nmhdr.hwndFrom.ptr() as _,
 			lparam: self.nmhdr as *const _ as _,
 		}
 	}

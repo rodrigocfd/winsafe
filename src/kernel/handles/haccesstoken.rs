@@ -34,7 +34,7 @@ pub trait kernel_Haccesstoken: Handle {
 		unsafe {
 			bool_to_sysresult(
 				kernel::ffi::DuplicateToken(
-					self.as_ptr(),
+					self.ptr(),
 					level.raw(),
 					handle.as_mut(),
 				),
@@ -60,7 +60,7 @@ pub trait kernel_Haccesstoken: Handle {
 	/// method.
 	#[must_use]
 	fn IsTokenRestricted(&self) -> SysResult<bool> {
-		match unsafe { kernel::ffi::IsTokenRestricted(self.as_ptr()) } {
+		match unsafe { kernel::ffi::IsTokenRestricted(self.ptr()) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(false), // actual false
 				err => Err(err),

@@ -484,7 +484,7 @@ pub fn GetMessage(
 	match unsafe {
 		user::ffi::GetMessageW(
 			msg as *mut _ as _,
-			hwnd.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+			hwnd.map_or(std::ptr::null_mut(), |h| h.ptr()),
 			msg_filter_min, msg_filter_max,
 		)
 	} {
@@ -641,7 +641,7 @@ pub fn PeekMessage(
 	unsafe {
 		user::ffi::PeekMessageW(
 			msg as *mut _ as _,
-			hwnd.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+			hwnd.map_or(std::ptr::null_mut(), |h| h.ptr()),
 			msg_filter_min,
 			msg_filter_max,
 			remove_msg.raw(),
@@ -896,7 +896,7 @@ pub fn UnionRect(dest: &mut RECT, src1: &RECT, src2: &RECT) -> SysResult<()> {
 pub fn UnregisterClass(class_name: AtomStr, hinst: &HINSTANCE) -> SysResult<()> {
 	bool_to_sysresult(
 		unsafe {
-			user::ffi::UnregisterClassW(class_name.as_ptr(), hinst.as_ptr())
+			user::ffi::UnregisterClassW(class_name.as_ptr(), hinst.ptr())
 		},
 	)
 }

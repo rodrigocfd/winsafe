@@ -435,7 +435,7 @@ unsafe impl<'a> MsgSend for SetBuddy<'a> {
 		WndMsg {
 			msg_id: co::TRBM::SETBUDDY.into(),
 			wparam: self.left_above as _,
-			lparam: self.hwnd_buddy.as_ptr() as _,
+			lparam: self.hwnd_buddy.ptr() as _,
 		}
 	}
 }
@@ -803,7 +803,7 @@ unsafe impl<'a> MsgSend for SetTooltips<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TRBM::SETTOOLTIPS.into(),
-			wparam: self.htooltips.map_or(0, |h| h.as_ptr() as _),
+			wparam: self.htooltips.map_or(0, |h| h.ptr() as _),
 			lparam: 0,
 		}
 	}

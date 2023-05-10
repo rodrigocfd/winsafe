@@ -39,7 +39,7 @@ pub trait kernel_Hlocal: Handle {
 	/// method.
 	#[must_use]
 	fn LocalFlags(&self) -> SysResult<co::LMEM> {
-		match unsafe { kernel::ffi::LocalFlags(self.as_ptr()) } {
+		match unsafe { kernel::ffi::LocalFlags(self.ptr()) } {
 			LMEM_INVALID_HANDLE => Err(GetLastError()),
 			flags => Ok(unsafe { co::LMEM::from_raw(flags) }),
 		}
@@ -55,7 +55,7 @@ pub trait kernel_Hlocal: Handle {
 	{
 		ptr_to_sysresult_handle(
 			unsafe {
-				kernel::ffi::LocalReAlloc(self.as_ptr(), num_bytes, flags.raw())
+				kernel::ffi::LocalReAlloc(self.ptr(), num_bytes, flags.raw())
 			},
 		).map(|h| { *self = h; })
 	}
@@ -64,7 +64,7 @@ pub trait kernel_Hlocal: Handle {
 	/// method.
 	#[must_use]
 	fn LocalSize(&self) -> SysResult<usize> {
-		match unsafe { kernel::ffi::LocalSize(self.as_ptr()) } {
+		match unsafe { kernel::ffi::LocalSize(self.ptr()) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz),
 		}

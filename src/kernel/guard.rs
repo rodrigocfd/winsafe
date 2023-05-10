@@ -22,7 +22,7 @@ impl<T> Drop for CloseHandleGuard<T>
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.handle.as_opt() {
-			unsafe { kernel::ffi::CloseHandle(h.as_ptr()); } // ignore errors
+			unsafe { kernel::ffi::CloseHandle(h.ptr()); } // ignore errors
 		}
 	}
 }
@@ -152,7 +152,7 @@ pub struct EndUpdateResourceGuard {
 impl Drop for EndUpdateResourceGuard {
 	fn drop(&mut self) {
 		if let Some(h) = self.hupsrc.as_opt() {
-			unsafe { kernel::ffi::EndUpdateResourceW(h.as_ptr(), false as _); } // ignore errors
+			unsafe { kernel::ffi::EndUpdateResourceW(h.ptr(), false as _); } // ignore errors
 		}
 	}
 }
@@ -301,7 +301,7 @@ impl<'a, H> Drop for GlobalUnlockGuard<'a, H>
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.hglobal.as_opt() {
-			unsafe { kernel::ffi::GlobalUnlock(h.as_ptr()); } // ignore errors
+			unsafe { kernel::ffi::GlobalUnlock(h.ptr()); } // ignore errors
 		}
 	}
 }
@@ -356,9 +356,9 @@ impl<H> Drop for HeapFreeGuard<H>
 			if let Some(hm) = self.hheapmem.as_opt() {
 				unsafe {
 					kernel::ffi::HeapFree( // ignore errors
-						ho.as_ptr(),
+						ho.ptr(),
 						co::HEAP_ALLOC::NoValue.raw(),
-						hm.as_ptr(),
+						hm.ptr(),
 					);
 				}
 			}
@@ -430,7 +430,7 @@ impl<'a, H> Drop for HeapUnlockGuard<'a, H>
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.hheapobj.as_opt() {
-			unsafe { kernel::ffi::HeapUnlock(h.as_ptr()); } // ignore errors
+			unsafe { kernel::ffi::HeapUnlock(h.ptr()); } // ignore errors
 		}
 	}
 }
@@ -477,7 +477,7 @@ impl Deref for LocalFreeSidGuard {
 	type Target = SID;
 
 	fn deref(&self) -> &Self::Target {
-		unsafe { &*(self.pmem.as_ptr() as *mut _) }
+		unsafe { &*(self.pmem.ptr() as *mut _) }
 	}
 }
 
@@ -516,7 +516,7 @@ impl Drop for RegCloseKeyGuard {
 	fn drop(&mut self) {
 		if let Some(h) = self.hkey.as_opt() {
 			if !self.is_predef_key() { // guard predefined keys
-				unsafe { kernel::ffi::RegCloseKey(h.as_ptr()); } // ignore errors
+				unsafe { kernel::ffi::RegCloseKey(h.ptr()); } // ignore errors
 			}
 		}
 	}
@@ -622,7 +622,7 @@ impl<'a, H> Drop for UnlockFileGuard<'a, H>
 	fn drop(&mut self) {
 		unsafe {
 			kernel::ffi::UnlockFile( // ignore errors
-				self.hfile.as_ptr(),
+				self.hfile.ptr(),
 				LODWORD(self.offset),
 				HIDWORD(self.offset),
 				LODWORD(self.num_bytes_to_lock),

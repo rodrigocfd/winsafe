@@ -78,7 +78,7 @@ unsafe impl<'a> MsgSend for SetIcon<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::STM::SETICON.into(),
-			wparam: self.icon.as_ptr() as _,
+			wparam: self.icon.ptr() as _,
 			lparam: 0,
 		}
 	}

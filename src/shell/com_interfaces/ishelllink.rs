@@ -180,7 +180,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 			unsafe {
 				(vt::<IShellLinkVT>(self).Resolve)(
 					self.ptr(),
-					hwnd.as_ptr(),
+					hwnd.ptr(),
 					flags.raw(),
 				)
 			},

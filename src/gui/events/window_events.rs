@@ -362,7 +362,7 @@ pub trait GuiEvents {
 		where F: Fn() -> AnyResult<Option<HFONT>> + 'static,
 	{
 		self.wm(co::WM::GETFONT,
-			move |_| Ok(Some(func()?.map_or(0, |h| h.as_ptr() as _))));
+			move |_| Ok(Some(func()?.map_or(0, |h| h.ptr() as _))));
 	}
 
 	/// [`WM_GETHMENU`](https://learn.microsoft.com/en-us/windows/win32/winmsg/mn-gethmenu)
@@ -371,7 +371,7 @@ pub trait GuiEvents {
 		where F: Fn() -> AnyResult<Option<HMENU>> + 'static
 	{
 		self.wm(co::WM::MN_GETHMENU,
-			move |_| Ok(Some(func()?.map_or(0, |h| h.as_ptr() as _))));
+			move |_| Ok(Some(func()?.map_or(0, |h| h.ptr() as _))));
 	}
 
 	fn_wm_withparm_noret! { wm_get_min_max_info, co::WM::GETMINMAXINFO, wm::GetMinMaxInfo;
@@ -690,7 +690,7 @@ pub trait GuiEvents {
 	{
 		self.wm(co::WM::SETICON, move |p|
 			Ok(Some(
-				func(wm::SetIcon::from_generic_wm(p))?.map_or(0, |h| h.as_ptr() as _),
+				func(wm::SetIcon::from_generic_wm(p))?.map_or(0, |h| h.ptr() as _),
 			))
 		);
 	}

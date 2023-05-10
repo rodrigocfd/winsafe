@@ -35,9 +35,9 @@ pub trait comctl_Himagelist: Handle {
 	{
 		match unsafe {
 			comctl::ffi::ImageList_Add(
-				self.as_ptr(),
-				hbmp_image.as_ptr(),
-				hbmp_mask.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+				self.ptr(),
+				hbmp_image.ptr(),
+				hbmp_mask.map_or(std::ptr::null_mut(), |h| h.ptr()),
 			)
 		} {
 			-1 => Err(GetLastError()),
@@ -64,7 +64,7 @@ pub trait comctl_Himagelist: Handle {
 	{
 		match unsafe {
 			comctl::ffi::ImageList_AddMasked(
-				self.as_ptr(), hbmp_image.as_ptr(), color_mask.into(),
+				self.ptr(), hbmp_image.ptr(), color_mask.into(),
 			)
 		} {
 			-1 => Err(GetLastError()),
@@ -104,7 +104,7 @@ pub trait comctl_Himagelist: Handle {
 		unsafe {
 			bool_to_sysresult(
 				comctl::ffi::ImageList_BeginDrag(
-					self.as_ptr(),
+					self.ptr(),
 					itrack as _,
 					hotspot.x, hotspot.y,
 				),
@@ -153,7 +153,7 @@ pub trait comctl_Himagelist: Handle {
 	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
 	fn Destroy(&mut self) -> SysResult<()> {
 		let ret = bool_to_sysresult(
-			unsafe { comctl::ffi::ImageList_Destroy(self.as_ptr()) },
+			unsafe { comctl::ffi::ImageList_Destroy(self.ptr()) },
 		);
 		*self = Self::INVALID;
 		ret
@@ -163,7 +163,7 @@ pub trait comctl_Himagelist: Handle {
 	/// method.
 	fn DragMove(&self, x: i32, y: i32) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { comctl::ffi::ImageList_DragMove(self.as_ptr(), x, y) },
+			unsafe { comctl::ffi::ImageList_DragMove(self.ptr(), x, y) },
 		)
 	}
 
@@ -183,7 +183,7 @@ pub trait comctl_Himagelist: Handle {
 		bool_to_sysresult(
 			unsafe {
 				comctl::ffi::ImageList_GetIconSize(
-					self.as_ptr(), &mut sz.cx, &mut sz.cy,
+					self.ptr(), &mut sz.cx, &mut sz.cy,
 				)
 			}
 		).map(|_| sz)
@@ -193,7 +193,7 @@ pub trait comctl_Himagelist: Handle {
 	/// method.
 	#[must_use]
 	fn GetImageCount(&self) -> u32 {
-		unsafe { comctl::ffi::ImageList_GetImageCount(self.as_ptr()) as _ }
+		unsafe { comctl::ffi::ImageList_GetImageCount(self.ptr()) as _ }
 	}
 
 	/// [`ImageList_Remove`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_remove)
@@ -202,7 +202,7 @@ pub trait comctl_Himagelist: Handle {
 		bool_to_sysresult(
 			unsafe {
 				comctl::ffi::ImageList_Remove(
-					self.as_ptr(), index.map_or(-1, |i| i as _),
+					self.ptr(), index.map_or(-1, |i| i as _),
 				)
 			},
 		)
@@ -218,9 +218,9 @@ pub trait comctl_Himagelist: Handle {
 	{
 		match unsafe {
 			comctl::ffi::ImageList_ReplaceIcon(
-				self.as_ptr(),
+				self.ptr(),
 				index.map_or(-1, |i| i as _),
-				hicon_new.as_ptr(),
+				hicon_new.ptr(),
 			)
 		} {
 			-1 => Err(GetLastError()),
@@ -233,7 +233,7 @@ pub trait comctl_Himagelist: Handle {
 	fn SetImageCount(&self, new_count: u32) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
-				comctl::ffi::ImageList_SetImageCount(self.as_ptr(), new_count)
+				comctl::ffi::ImageList_SetImageCount(self.ptr(), new_count)
 			},
 		)
 	}

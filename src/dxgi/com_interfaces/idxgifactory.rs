@@ -92,7 +92,7 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 			unsafe {
 				(vt::<IDXGIFactoryVT>(self).CreateSoftwareAdapter)(
 					self.ptr(),
-					hmodule.as_ptr(),
+					hmodule.ptr(),
 					queried.as_mut(),
 				)
 			},
@@ -143,7 +143,7 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 			unsafe {
 				(vt::<IDXGIFactoryVT>(self).MakeWindowAssociation)(
 					self.ptr(),
-					hwnd.as_ptr(),
+					hwnd.ptr(),
 					flags.raw(),
 				)
 			},

@@ -270,7 +270,7 @@ unsafe impl<'a> MsgSend for SetIcon<'a> {
 		WndMsg {
 			msg_id: co::SB::SETICON.into(),
 			wparam: self.part_index as _,
-			lparam: self.hicon.map_or(0, |p| p.as_ptr() as _),
+			lparam: self.hicon.map_or(0, |p| p.ptr() as _),
 		}
 	}
 }

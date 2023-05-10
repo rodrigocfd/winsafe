@@ -28,7 +28,7 @@ unsafe impl<'a> MsgSend for CreateDragImage<'a> {
 		WndMsg {
 			msg_id: co::TVM::CREATEDRAGIMAGE.into(),
 			wparam: 0,
-			lparam: self.hitem.as_ptr() as _,
+			lparam: self.hitem.ptr() as _,
 		}
 	}
 }
@@ -52,7 +52,7 @@ unsafe impl<'a> MsgSend for DeleteItem<'a> {
 		WndMsg {
 			msg_id: co::TVM::DELETEITEM.into(),
 			wparam: 0,
-			lparam: self.hitem.as_ptr() as _,
+			lparam: self.hitem.ptr() as _,
 		}
 	}
 }
@@ -76,7 +76,7 @@ unsafe impl<'a> MsgSend for EditLabel<'a> {
 		WndMsg {
 			msg_id: co::TVM::EDITLABEL.into(),
 			wparam: 0,
-			lparam: self.hitem.as_ptr() as _,
+			lparam: self.hitem.ptr() as _,
 		}
 	}
 }
@@ -124,7 +124,7 @@ unsafe impl<'a> MsgSend for EnsureVisible<'a> {
 		WndMsg {
 			msg_id: co::TVM::ENSUREVISIBLE.into(),
 			wparam: 0,
-			lparam: self.hitem.as_ptr() as _,
+			lparam: self.hitem.ptr() as _,
 		}
 	}
 }
@@ -149,7 +149,7 @@ unsafe impl<'a> MsgSend for Expand<'a> {
 		WndMsg {
 			msg_id: co::TVM::EXPAND.into(),
 			wparam: self.action.raw() as _,
-			lparam: self.hitem.as_ptr() as _,
+			lparam: self.hitem.ptr() as _,
 		}
 	}
 }
@@ -424,7 +424,7 @@ unsafe impl<'a> MsgSend for GetItemState<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::GETITEMSTATE.into(),
-			wparam: self.hitem.as_ptr() as _,
+			wparam: self.hitem.ptr() as _,
 			lparam: self.mask.raw() as _,
 		}
 	}
@@ -475,7 +475,7 @@ unsafe impl<'a> MsgSend for GetNextItem<'a> {
 		WndMsg {
 			msg_id: co::TVM::GETNEXTITEM.into(),
 			wparam: self.relationship.raw() as _,
-			lparam: self.hitem.map_or(0, |h| h.as_ptr() as _),
+			lparam: self.hitem.map_or(0, |h| h.ptr() as _),
 		}
 	}
 }
@@ -680,7 +680,7 @@ unsafe impl<'a> MsgSend for MapHtreeitemToAccId<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::MAPHTREEITEMTOACCID.into(),
-			wparam: self.hitem.as_ptr() as _,
+			wparam: self.hitem.ptr() as _,
 			lparam: 0,
 		}
 	}
@@ -706,7 +706,7 @@ unsafe impl<'a> MsgSend for SelectItem<'a> {
 		WndMsg {
 			msg_id: co::TVM::SELECTITEM.into(),
 			wparam: self.action.raw() as _,
-			lparam: self.hitem.as_ptr() as _,
+			lparam: self.hitem.ptr() as _,
 		}
 	}
 }
@@ -808,7 +808,7 @@ unsafe impl<'a> MsgSend for SetHot<'a> {
 		WndMsg {
 			msg_id: co::TVM::SETHOT.into(),
 			wparam: 0,
-			lparam: self.hitem.map_or(0, |h| h.as_ptr() as _),
+			lparam: self.hitem.map_or(0, |h| h.ptr() as _),
 		}
 	}
 }
@@ -833,7 +833,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 		WndMsg {
 			msg_id: co::TVM::SETIMAGELIST.into(),
 			wparam: self.kind.raw() as _,
-			lparam: self.himagelist.map_or(0, |h| h.as_ptr() as _),
+			lparam: self.himagelist.map_or(0, |h| h.ptr() as _),
 		}
 	}
 }
@@ -882,7 +882,7 @@ unsafe impl<'a> MsgSend for SetInsertMark<'a> {
 		WndMsg {
 			msg_id: co::TVM::SETINSERTMARK.into(),
 			wparam: self.insert_after as _,
-			lparam: self.hitem.as_ptr() as _,
+			lparam: self.hitem.ptr() as _,
 		}
 	}
 }
@@ -1052,7 +1052,7 @@ unsafe impl<'a> MsgSend for SetTooltips<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TVM::SETTOOLTIPS.into(),
-			wparam: self.htooltips.map_or(0, |h| h.as_ptr() as _),
+			wparam: self.htooltips.map_or(0, |h| h.ptr() as _),
 			lparam: 0,
 		}
 	}
@@ -1101,7 +1101,7 @@ unsafe impl<'a> MsgSend for ShowInfoTip<'a> {
 		WndMsg {
 			msg_id: co::TVM::SHOWINFOTIP.into(),
 			wparam: 0,
-			lparam: self.hitem.as_ptr() as _,
+			lparam: self.hitem.ptr() as _,
 		}
 	}
 }

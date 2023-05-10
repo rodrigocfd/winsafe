@@ -52,7 +52,7 @@ macro_rules! impl_handle {
 				Self(self.0)
 			}
 
-			fn as_ptr(&self) -> *mut std::ffi::c_void {
+			fn ptr(&self) -> *mut std::ffi::c_void {
 				self.0
 			}
 		}
@@ -74,7 +74,7 @@ macro_rules! handle_guard {
 		impl Drop for $name {
 			fn drop(&mut self) {
 				if let Some(h) = self.handle.as_opt() {
-					unsafe { $cleaner(h.as_ptr()); } // ignore errors
+					unsafe { $cleaner(h.ptr()); } // ignore errors
 				}
 			}
 		}
@@ -95,12 +95,12 @@ macro_rules! handle_guard {
 
 		impl $name {
 			/// Constructs the guard by taking ownership of the handle.
-			/// 
+			///
 			/// # Safety
-			/// 
+			///
 			/// Be sure the handle must be freed with the specified function at
 			/// the end of scope.
-			/// 
+			///
 			/// This method is used internally by the library, and not intended
 			/// to be used externally.
 			#[must_use]

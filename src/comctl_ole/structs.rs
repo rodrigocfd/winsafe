@@ -116,7 +116,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 	pub fn set_pszMainIcon(&mut self, val: IconIdTdicon) {
 		match val {
 			IconIdTdicon::None => self.pszMainIcon = std::ptr::null_mut(),
-			IconIdTdicon::Icon(hicon) => self.pszMainIcon = hicon.as_ptr() as _,
+			IconIdTdicon::Icon(hicon) => self.pszMainIcon = hicon.ptr() as _,
 			IconIdTdicon::Id(id) => self.pszMainIcon = MAKEINTRESOURCE(id as _),
 			IconIdTdicon::Tdicon(tdi) => self.pszMainIcon = MAKEINTRESOURCE(tdi.raw() as _),
 		}
@@ -145,7 +145,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
 	pub fn set_pszFooterIcon(&mut self, val: IconId) {
 		match val {
 			IconId::None => self.pszFooterIcon = std::ptr::null_mut(),
-			IconId::Icon(hicon) => self.pszFooterIcon = hicon.as_ptr() as _,
+			IconId::Icon(hicon) => self.pszFooterIcon = hicon.ptr() as _,
 			IconId::Id(id) => self.pszFooterIcon = MAKEINTRESOURCE(id as _),
 		}
 	}

@@ -27,7 +27,7 @@ pub trait user_Hicon: Handle {
 	#[must_use]
 	fn CopyIcon(&self) -> SysResult<DestroyIconGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(user::ffi::CopyIcon(self.as_ptr()))
+			ptr_to_sysresult_handle(user::ffi::CopyIcon(self.ptr()))
 				.map(|h| DestroyIconGuard::new(h))
 		}
 	}

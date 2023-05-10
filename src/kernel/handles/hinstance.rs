@@ -41,7 +41,7 @@ pub trait kernel_Hinstance: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::EnumResourceLanguagesW(
-					self.as_ptr(),
+					self.ptr(),
 					resource_type.as_ptr(),
 					resource_id.as_ptr(),
 					enum_resource_languages_proc::<F> as _,
@@ -62,7 +62,7 @@ pub trait kernel_Hinstance: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::EnumResourceNamesW(
-					self.as_ptr(),
+					self.ptr(),
 					resource_type.as_ptr(),
 					enum_resource_names_proc::<F> as _,
 					&func as *const _ as _,
@@ -79,7 +79,7 @@ pub trait kernel_Hinstance: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::EnumResourceTypesW(
-					self.as_ptr(),
+					self.ptr(),
 					enum_resource_types_proc::<F> as _,
 					&func as *const _ as _,
 				)
@@ -99,7 +99,7 @@ pub trait kernel_Hinstance: Handle {
 		ptr_to_sysresult_handle(
 			unsafe {
 				kernel::ffi::FindResourceW(
-					self.as_ptr(),
+					self.ptr(),
 					resource_id.as_ptr(),
 					resource_type.as_ptr(),
 				)
@@ -122,7 +122,7 @@ pub trait kernel_Hinstance: Handle {
 		ptr_to_sysresult_handle(
 			unsafe {
 				kernel::ffi::FindResourceExW(
-					self.as_ptr(),
+					self.ptr(),
 					resource_id.as_ptr(),
 					resource_type.as_ptr(),
 					language.unwrap_or(LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL)).into(),
@@ -153,7 +153,7 @@ pub trait kernel_Hinstance: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::GetModuleFileNameW(
-					self.as_ptr(),
+					self.ptr(),
 					buf.as_mut_ptr(),
 					buf.len() as _,
 				)
@@ -195,7 +195,7 @@ pub trait kernel_Hinstance: Handle {
 		ptr_to_sysresult(
 			unsafe {
 				kernel::ffi::GetProcAddress(
-					self.as_ptr(),
+					self.ptr(),
 					str_to_iso88591(proc_name).as_ptr(),
 				) as _
 			},
@@ -222,7 +222,7 @@ pub trait kernel_Hinstance: Handle {
 	#[must_use]
 	fn LoadResource(&self, res_info: &HRSRC) -> SysResult<HRSRCMEM> {
 		ptr_to_sysresult_handle(
-			unsafe { kernel::ffi::LoadResource(self.as_ptr(), res_info.as_ptr()) },
+			unsafe { kernel::ffi::LoadResource(self.ptr(), res_info.ptr()) },
 		)
 	}
 
@@ -275,7 +275,7 @@ pub trait kernel_Hinstance: Handle {
 		let sz = self.SizeofResource(res_info)?;
 		unsafe {
 			ptr_to_sysresult(
-				kernel::ffi::LockResource(hres_loaded.as_ptr()),
+				kernel::ffi::LockResource(hres_loaded.ptr()),
 			).map(|ptr| std::slice::from_raw_parts(ptr as *const _ as _, sz as _))
 		}
 	}
@@ -288,7 +288,7 @@ pub trait kernel_Hinstance: Handle {
 	#[must_use]
 	fn SizeofResource(&self, res_info: &HRSRC) -> SysResult<u32> {
 		match unsafe {
-			kernel::ffi::SizeofResource(self.as_ptr(), res_info.as_ptr())
+			kernel::ffi::SizeofResource(self.ptr(), res_info.ptr())
 		} {
 			0 => Err(GetLastError()),
 			sz => Ok(sz)

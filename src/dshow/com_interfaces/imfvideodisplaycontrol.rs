@@ -262,7 +262,7 @@ pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
 			unsafe {
 				(vt::<IMFVideoDisplayControlVT>(self).SetVideoWindow)(
 					self.ptr(),
-					hwnd_video.as_ptr(),
+					hwnd_video.ptr(),
 				)
 			},
 		)

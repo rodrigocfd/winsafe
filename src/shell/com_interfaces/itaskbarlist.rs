@@ -57,7 +57,7 @@ pub trait shell_ITaskbarList: ole_IUnknown {
 	fn ActivateTab(&self, hwnd: &HWND) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe {
-				(vt::<ITaskbarListVT>(self).ActivateTab)(self.ptr(), hwnd.as_ptr())
+				(vt::<ITaskbarListVT>(self).ActivateTab)(self.ptr(), hwnd.ptr())
 			},
 		)
 	}
@@ -67,7 +67,7 @@ pub trait shell_ITaskbarList: ole_IUnknown {
 	fn AddTab(&self, hwnd: &HWND) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe {
-				(vt::<ITaskbarListVT>(self).AddTab)(self.ptr(), hwnd.as_ptr())
+				(vt::<ITaskbarListVT>(self).AddTab)(self.ptr(), hwnd.ptr())
 			},
 		)
 	}
@@ -77,7 +77,7 @@ pub trait shell_ITaskbarList: ole_IUnknown {
 	fn DeleteTab(&self, hwnd: &HWND) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe {
-				(vt::<ITaskbarListVT>(self).DeleteTab)(self.ptr(), hwnd.as_ptr())
+				(vt::<ITaskbarListVT>(self).DeleteTab)(self.ptr(), hwnd.ptr())
 			},
 		)
 	}
@@ -93,7 +93,7 @@ pub trait shell_ITaskbarList: ole_IUnknown {
 	fn SetActiveAlt(&self, hwnd: &HWND) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe {
-				(vt::<ITaskbarListVT>(self).SetActiveAlt)(self.ptr(), hwnd.as_ptr())
+				(vt::<ITaskbarListVT>(self).SetActiveAlt)(self.ptr(), hwnd.ptr())
 			},
 		)
 	}

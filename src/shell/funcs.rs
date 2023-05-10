@@ -292,7 +292,7 @@ pub fn SHGetKnownFolderPath(
 			shell::ffi::SHGetKnownFolderPath(
 				folder_id as *const _ as _,
 				flags.raw(),
-				token.map_or(std::ptr::null_mut(), |t| t.as_ptr()),
+				token.map_or(std::ptr::null_mut(), |t| t.ptr()),
 				&mut pstr,
 			)
 		},

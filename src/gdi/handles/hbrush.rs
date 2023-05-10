@@ -65,7 +65,7 @@ pub trait gdi_Hbrush: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::CreatePatternBrush(hbmp.as_ptr()),
+				gdi::ffi::CreatePatternBrush(hbmp.ptr()),
 			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -102,7 +102,7 @@ pub trait gdi_Hbrush: Handle {
 	fn GetObject(&self, pv: &mut LOGBRUSH) -> SysResult<()> {
 		match unsafe {
 			gdi::ffi::GetObjectW(
-				self.as_ptr(),
+				self.ptr(),
 				std::mem::size_of::<LOGBRUSH>() as _,
 				pv as *mut _ as _,
 			)
@@ -131,6 +131,6 @@ pub trait gdi_Hbrush: Handle {
 	/// [`UnrealizeObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-unrealizeobject)
 	/// method.
 	fn UnrealizeObject(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { gdi::ffi::UnrealizeObject(self.as_ptr()) })
+		bool_to_sysresult(unsafe { gdi::ffi::UnrealizeObject(self.ptr()) })
 	}
 }

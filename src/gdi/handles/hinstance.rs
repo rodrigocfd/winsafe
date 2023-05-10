@@ -32,7 +32,7 @@ pub trait gdi_Hinstance: Handle {
 		unsafe {
 			ptr_to_sysresult_handle(
 				gdi::ffi::LoadImageW(
-					self.as_ptr(), name.as_ptr(), 0, sz.cx, sz.cy, load.raw()),
+					self.ptr(), name.as_ptr(), 0, sz.cx, sz.cy, load.raw()),
 			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -46,7 +46,7 @@ pub trait gdi_Hinstance: Handle {
 		unsafe {
 			ptr_to_sysresult_handle(
 				gdi::ffi::LoadImageW(
-					self.as_ptr(), name.as_ptr(), 2, sz.cx, sz.cy, load.raw()),
+					self.ptr(), name.as_ptr(), 2, sz.cx, sz.cy, load.raw()),
 			).map(|h| DestroyCursorGuard::new(h))
 		}
 	}
@@ -60,7 +60,7 @@ pub trait gdi_Hinstance: Handle {
 		unsafe {
 			ptr_to_sysresult_handle(
 				gdi::ffi::LoadImageW(
-					self.as_ptr(), name.as_ptr(), 1, sz.cx, sz.cy, load.raw()),
+					self.ptr(), name.as_ptr(), 1, sz.cx, sz.cy, load.raw()),
 			).map(|h| DestroyIconGuard::new(h))
 		}
 	}

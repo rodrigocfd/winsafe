@@ -46,7 +46,7 @@ unsafe impl<'a> MsgSend for SetMcFont<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETMCFONT.into(),
-			wparam: self.hfont.as_ptr() as _,
+			wparam: self.hfont.ptr() as _,
 			lparam: self.redraw as _,
 		}
 	}

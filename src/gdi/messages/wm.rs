@@ -117,7 +117,7 @@ unsafe impl MsgSend for NcPaint {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::NCPAINT,
-			wparam: self.updated_hrgn.as_ptr() as _,
+			wparam: self.updated_hrgn.ptr() as _,
 			lparam: 0,
 		}
 	}
@@ -154,7 +154,7 @@ unsafe impl MsgSend for SetFont {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SETFONT,
-			wparam: self.hfont.as_ptr() as _,
+			wparam: self.hfont.ptr() as _,
 			lparam: MAKEDWORD(self.redraw as _, 0) as _,
 		}
 	}

@@ -53,7 +53,7 @@ pub trait kernel_Hpipe: Handle {
 	fn ReadFile(&self,
 		buffer: &mut [u8], overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
 	{
-		unsafe { HFILE::from_ptr(self.as_ptr()) }
+		unsafe { HFILE::from_ptr(self.ptr()) }
 			.ReadFile(buffer, overlapped)
 	}
 
@@ -62,7 +62,7 @@ pub trait kernel_Hpipe: Handle {
 	fn WriteFile(&self,
 		data: &[u8], overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
 	{
-		unsafe { HFILE::from_ptr(self.as_ptr()) }
+		unsafe { HFILE::from_ptr(self.ptr()) }
 			.WriteFile(data, overlapped)
 	}
 }

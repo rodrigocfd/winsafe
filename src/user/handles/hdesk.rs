@@ -141,12 +141,12 @@ pub trait user_Hdesk: Handle {
 	/// [`SetThreadDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setthreaddesktop)
 	/// method.
 	fn SetThreadDesktop(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { user::ffi::SetThreadDesktop(self.as_ptr()) })
+		bool_to_sysresult(unsafe { user::ffi::SetThreadDesktop(self.ptr()) })
 	}
 
 	/// [`SwitchDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-switchdesktop)
 	/// method.
 	fn SwitchDesktop(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { user::ffi::SwitchDesktop(self.as_ptr()) })
+		bool_to_sysresult(unsafe { user::ffi::SwitchDesktop(self.ptr()) })
 	}
 }

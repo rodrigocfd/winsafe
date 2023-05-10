@@ -172,7 +172,7 @@ pub trait ole_IPicture: ole_IUnknown {
 			unsafe {
 				(vt::<IPictureVT>(self).Render)(
 					self.ptr(),
-					hdc.as_ptr(),
+					hdc.ptr(),
 					dest_pt.x, dest_pt.y,
 					dest_sz.cx, dest_sz.cy,
 					src_offset.map_or(0, |off| off.x),
@@ -194,7 +194,7 @@ pub trait ole_IPicture: ole_IUnknown {
 			unsafe {
 				(vt::<IPictureVT>(self).SelectPicture)(
 					self.ptr(),
-					hdc.as_ptr(),
+					hdc.ptr(),
 					hdc_out.as_mut(),
 					hbmp.as_mut(),
 				)

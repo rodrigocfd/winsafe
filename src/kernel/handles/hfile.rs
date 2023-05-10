@@ -92,7 +92,7 @@ pub trait kernel_Hfile: Handle {
 					security_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					creation_disposition.raw(),
 					flags_and_attrs.raw(),
-					hfile_template.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+					hfile_template.map_or(std::ptr::null_mut(), |h| h.ptr()),
 				) as _,
 			) {
 				HFILE::NULL => Err(GetLastError()),
@@ -114,7 +114,7 @@ pub trait kernel_Hfile: Handle {
 		unsafe {
 			ptr_to_sysresult_handle(
 				kernel::ffi::CreateFileMappingFromApp(
-					self.as_ptr(),
+					self.ptr(),
 					mapping_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					protect.raw(),
 					max_size.unwrap_or_default(),
@@ -132,7 +132,7 @@ pub trait kernel_Hfile: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::GetFileInformationByHandle(
-					self.as_ptr(), fi as *mut _ as _,
+					self.ptr(), fi as *mut _ as _,
 				)
 			},
 		)
@@ -144,7 +144,7 @@ pub trait kernel_Hfile: Handle {
 	fn GetFileSizeEx(&self) -> SysResult<u64> {
 		let mut sz_buf = i64::default();
 		bool_to_sysresult(
-			unsafe { kernel::ffi::GetFileSizeEx(self.as_ptr(), &mut sz_buf) },
+			unsafe { kernel::ffi::GetFileSizeEx(self.ptr(), &mut sz_buf) },
 		).map(|_| sz_buf as _)
 	}
 
@@ -153,7 +153,7 @@ pub trait kernel_Hfile: Handle {
 	#[must_use]
 	fn GetFileType(&self) -> SysResult<co::FILE_TYPE> {
 		match unsafe {
-			co::FILE_TYPE::from_raw(kernel::ffi::GetFileType(self.as_ptr()))
+			co::FILE_TYPE::from_raw(kernel::ffi::GetFileType(self.ptr()))
 		} {
 			co::FILE_TYPE::UNKNOWN => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(co::FILE_TYPE::UNKNOWN), // actual unknown type
@@ -201,7 +201,7 @@ pub trait kernel_Hfile: Handle {
 		unsafe {
 			bool_to_sysresult(
 				kernel::ffi::LockFile(
-					self.as_ptr(),
+					self.ptr(),
 					LODWORD(offset),
 					HIDWORD(offset),
 					LODWORD(num_bytes_to_lock),
@@ -222,7 +222,7 @@ pub trait kernel_Hfile: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::ReadFile(
-					self.as_ptr(),
+					self.ptr(),
 					buffer.as_mut_ptr() as _,
 					buffer.len() as _,
 					&mut bytes_read,
@@ -235,7 +235,7 @@ pub trait kernel_Hfile: Handle {
 	/// [`SetEndOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setendoffile)
 	/// method.
 	fn SetEndOfFile(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { kernel::ffi::SetEndOfFile(self.as_ptr()) })
+		bool_to_sysresult(unsafe { kernel::ffi::SetEndOfFile(self.ptr()) })
 	}
 
 	/// [`SetFilePointerEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfilepointerex)
@@ -250,7 +250,7 @@ pub trait kernel_Hfile: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::SetFilePointerEx(
-					self.as_ptr(),
+					self.ptr(),
 					distance_to_move,
 					&mut new_offset,
 					move_method.raw(),
@@ -271,7 +271,7 @@ pub trait kernel_Hfile: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::WriteFile(
-					self.as_ptr(),
+					self.ptr(),
 					data.as_ptr() as _,
 					data.len() as _,
 					&mut bytes_written,

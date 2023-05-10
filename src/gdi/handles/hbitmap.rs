@@ -59,7 +59,7 @@ pub trait gdi_Hbitmap: Handle {
 		bool_to_sysresult(
 			unsafe {
 				gdi::ffi::GetObjectW(
-					self.as_ptr(),
+					self.ptr(),
 					std::mem::size_of::<BITMAP>() as _,
 					pv as *mut _ as _,
 				)

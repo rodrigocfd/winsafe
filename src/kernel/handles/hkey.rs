@@ -77,7 +77,7 @@ pub trait kernel_Hkey: Handle {
 			error_to_sysresult(
 				kernel::ffi::RegConnectRegistryW(
 					WString::from_opt_str(machine_name).as_ptr(),
-					predef_hkey.as_ptr(),
+					predef_hkey.ptr(),
 					hkey.as_mut(),
 				),
 			).map(|_| RegCloseKeyGuard::new(hkey))
@@ -90,9 +90,9 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegCopyTreeW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
-					dest.as_ptr(),
+					dest.ptr(),
 				)
 			},
 		)
@@ -115,7 +115,7 @@ pub trait kernel_Hkey: Handle {
 		unsafe {
 			error_to_sysresult(
 				kernel::ffi::RegCreateKeyExW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_str(sub_key).as_ptr(),
 					0,
 					WString::from_opt_str(class).as_ptr(),
@@ -147,7 +147,7 @@ pub trait kernel_Hkey: Handle {
 		unsafe {
 			error_to_sysresult(
 				kernel::ffi::RegCreateKeyTransactedW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_str(sub_key).as_ptr(),
 					0,
 					WString::from_opt_str(class).as_ptr(),
@@ -156,7 +156,7 @@ pub trait kernel_Hkey: Handle {
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
 					hkey.as_mut(),
 					disposition.as_mut(),
-					htransaction.as_ptr(),
+					htransaction.ptr(),
 					std::ptr::null_mut(),
 				),
 			).map(|_| (RegCloseKeyGuard::new(hkey), disposition))
@@ -169,7 +169,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegDeleteKeyW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_str(sub_key).as_ptr(),
 				)
 			},
@@ -196,7 +196,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegDeleteKeyExW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_str(sub_key).as_ptr(),
 					platform_view.raw(),
 					0,
@@ -216,11 +216,11 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegDeleteKeyTransactedW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_str(sub_key).as_ptr(),
 					access_rights.raw(),
 					0,
-					htransaction.as_ptr(),
+					htransaction.ptr(),
 					std::ptr::null_mut(),
 				)
 			},
@@ -233,7 +233,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegDeleteTreeW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 				)
 			},
@@ -246,7 +246,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegDeleteValueW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_opt_str(value_name).as_ptr(),
 				)
 			},
@@ -269,7 +269,7 @@ pub trait kernel_Hkey: Handle {
 	/// method.
 	fn RegDisableReflectionKey(&self) -> SysResult<()> {
 		error_to_sysresult(
-			unsafe { kernel::ffi::RegDisableReflectionKey(self.as_ptr()) },
+			unsafe { kernel::ffi::RegDisableReflectionKey(self.ptr()) },
 		)
 	}
 
@@ -277,7 +277,7 @@ pub trait kernel_Hkey: Handle {
 	/// method.
 	fn RegEnableReflectionKey(&self) -> SysResult<()> {
 		error_to_sysresult(
-			unsafe { kernel::ffi::RegEnableReflectionKey(self.as_ptr()) },
+			unsafe { kernel::ffi::RegEnableReflectionKey(self.ptr()) },
 		)
 	}
 
@@ -347,7 +347,7 @@ pub trait kernel_Hkey: Handle {
 	/// [`RegFlushKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regflushkey)
 	/// method.
 	fn RegFlushKey(&self) -> SysResult<()> {
-		error_to_sysresult(unsafe { kernel::ffi::RegFlushKey(self.as_ptr()) })
+		error_to_sysresult(unsafe { kernel::ffi::RegFlushKey(self.ptr()) })
 	}
 
 	/// [`RegGetValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
@@ -408,7 +408,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegGetValueW(
-					self.as_ptr(),
+					self.ptr(),
 					sub_key_w.as_ptr(),
 					value_name_w.as_ptr(),
 					(co::RRF::RT_ANY | co::RRF::NOEXPAND).raw(),
@@ -429,7 +429,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegGetValueW(
-					self.as_ptr(),
+					self.ptr(),
 					sub_key_w.as_ptr(),
 					value_name_w.as_ptr(),
 					(co::RRF::RT_ANY | co::RRF::NOEXPAND).raw(),
@@ -455,7 +455,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegLoadKeyW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					WString::from_str(file_path).as_ptr(),
 				)
@@ -504,7 +504,7 @@ pub trait kernel_Hkey: Handle {
 		unsafe {
 			error_to_sysresult(
 				kernel::ffi::RegOpenKeyExW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					options.raw(),
 					access_rights.raw(),
@@ -528,12 +528,12 @@ pub trait kernel_Hkey: Handle {
 		unsafe {
 			error_to_sysresult(
 				kernel::ffi::RegOpenKeyTransactedW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_str(sub_key).as_ptr(),
 					options.raw(),
 					access_rights.raw(),
 					hkey.as_mut(),
-					htransaction.as_ptr(),
+					htransaction.ptr(),
 					std::ptr::null_mut(),
 				),
 			).map(|_| RegCloseKeyGuard::new(hkey))
@@ -579,7 +579,7 @@ pub trait kernel_Hkey: Handle {
 			match unsafe {
 				co::ERROR::from_raw(
 					kernel::ffi::RegQueryInfoKeyW(
-						self.as_ptr(),
+						self.ptr(),
 						class_ptr,
 						&mut class_len,
 						std::ptr::null_mut(),
@@ -676,7 +676,7 @@ pub trait kernel_Hkey: Handle {
 		match unsafe {
 			co::ERROR::from_raw(
 				kernel::ffi::RegQueryMultipleValuesW(
-					self.as_ptr(),
+					self.ptr(),
 					valents1.as_mut_ptr() as _,
 					value_names.len() as _,
 					std::ptr::null_mut(),
@@ -704,7 +704,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegQueryMultipleValuesW(
-					self.as_ptr(),
+					self.ptr(),
 					valents2.as_mut_ptr() as _,
 					value_names.len() as _,
 					buf.as_mut_ptr() as _,
@@ -737,7 +737,7 @@ pub trait kernel_Hkey: Handle {
 		let mut is_disabled: BOOL = 0;
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegQueryReflectionKey(self.as_ptr(), &mut is_disabled)
+				kernel::ffi::RegQueryReflectionKey(self.ptr(), &mut is_disabled)
 			},
 		).map(|_| is_disabled != 0)
 	}
@@ -803,7 +803,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegQueryValueExW(
-					self.as_ptr(),
+					self.ptr(),
 					value_name_w.as_ptr(),
 					std::ptr::null_mut(),
 					&mut raw_data_type1,
@@ -823,7 +823,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegQueryValueExW(
-					self.as_ptr(),
+					self.ptr(),
 					value_name_w.as_ptr(),
 					std::ptr::null_mut(),
 					&mut raw_data_type2,
@@ -848,7 +848,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegRenameKey(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_str(sub_key_name).as_ptr(),
 					WString::from_str(new_key_name).as_ptr(),
 				)
@@ -867,7 +867,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegReplaceKeyW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					WString::from_str(new_src_file).as_ptr(),
 					WString::from_str(old_file_backup).as_ptr(),
@@ -884,7 +884,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegRestoreKeyW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_str(file_path).as_ptr(),
 					flags.raw(),
 				)
@@ -902,7 +902,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegSaveKeyW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_str(dest_file_path).as_ptr(),
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
 				)
@@ -921,7 +921,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegSaveKeyExW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_str(dest_file_path).as_ptr(),
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
 					flags.raw(),
@@ -961,7 +961,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegSetKeyValueW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					WString::from_opt_str(value_name).as_ptr(),
 					data.reg_type().raw(),
@@ -1005,7 +1005,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegSetValueExW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_opt_str(value_name).as_ptr(),
 					0,
 					data.reg_type().raw(),
@@ -1022,7 +1022,7 @@ pub trait kernel_Hkey: Handle {
 		error_to_sysresult(
 			unsafe {
 				kernel::ffi::RegUnLoadKeyW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 				)
 			},
@@ -1108,7 +1108,7 @@ impl<'a, H> Iterator for EnumKeyIter<'a, H>
 		match unsafe {
 			co::ERROR::from_raw(
 				kernel::ffi::RegEnumKeyExW(
-					self.hkey.as_ptr(),
+					self.hkey.ptr(),
 					self.current,
 					self.name_buffer.as_mut_ptr(),
 					&mut len_buffer,
@@ -1176,7 +1176,7 @@ impl<'a, H> Iterator for EnumValueIter<'a, H>
 		match unsafe {
 			co::ERROR::from_raw(
 				kernel::ffi::RegEnumValueW(
-					self.hkey.as_ptr(),
+					self.hkey.ptr(),
 					self.current,
 					self.name_buffer.as_mut_ptr(),
 					&mut len_buffer,

@@ -41,7 +41,7 @@ pub trait kernel_Hglobal: Handle {
 	/// method.
 	#[must_use]
 	fn GlobalFlags(&self) -> SysResult<co::GMEM> {
-		match unsafe { kernel::ffi::GlobalFlags(self.as_ptr()) } {
+		match unsafe { kernel::ffi::GlobalFlags(self.ptr()) } {
 			GMEM_INVALID_HANDLE => Err(GetLastError()),
 			flags => Ok(unsafe { co::GMEM::from_raw(flags) }),
 		}
@@ -83,7 +83,7 @@ pub trait kernel_Hglobal: Handle {
 	fn GlobalLock(&self) -> SysResult<(&mut [u8], GlobalUnlockGuard<'_, Self>)> {
 		let mem_sz = self.GlobalSize()?;
 		unsafe {
-			ptr_to_sysresult(kernel::ffi::GlobalLock(self.as_ptr()))
+			ptr_to_sysresult(kernel::ffi::GlobalLock(self.ptr()))
 				.map(|ptr| (
 					std::slice::from_raw_parts_mut(
 						ptr as *mut _ as *mut _, mem_sz as _),
@@ -103,7 +103,7 @@ pub trait kernel_Hglobal: Handle {
 	{
 		ptr_to_sysresult_handle(
 			unsafe {
-				kernel::ffi::GlobalReAlloc(self.as_ptr(), num_bytes, flags.raw())
+				kernel::ffi::GlobalReAlloc(self.ptr(), num_bytes, flags.raw())
 			},
 		).map(|h| { *self = h; })
 	}
@@ -112,7 +112,7 @@ pub trait kernel_Hglobal: Handle {
 	/// method.
 	#[must_use]
 	fn GlobalSize(&self) -> SysResult<usize> {
-		match unsafe { kernel::ffi::GlobalSize(self.as_ptr()) } {
+		match unsafe { kernel::ffi::GlobalSize(self.ptr()) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz),
 		}

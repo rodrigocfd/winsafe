@@ -31,10 +31,10 @@ pub trait msimg_Hdc: Handle {
 		bool_to_sysresult(
 			unsafe {
 				msimg::ffi::TransparentBlt(
-					self.as_ptr(),
+					self.ptr(),
 					dest_top_left.x, dest_top_left.y,
 					dest_sz.cx, dest_sz.cy,
-					hdc_src.as_ptr(),
+					hdc_src.ptr(),
 					src_top_left.x, src_top_left.y,
 					src_sz.cx, src_sz.cy,
 					color_transparent.into(),

@@ -20,7 +20,7 @@ pub trait shell_Hwnd: Handle {
 	/// [`DragAcceptFiles`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragacceptfiles)
 	/// method.
 	fn DragAcceptFiles(&self, accept: bool) {
-		unsafe { shell::ffi::DragAcceptFiles(self.as_ptr(), accept as _); }
+		unsafe { shell::ffi::DragAcceptFiles(self.ptr(), accept as _); }
 	}
 
 	/// [`ShellAbout`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellaboutw)
@@ -35,7 +35,7 @@ pub trait shell_Hwnd: Handle {
 		bool_to_sysresult(
 			unsafe {
 				shell::ffi::ShellAboutW(
-					self.as_ptr(),
+					self.ptr(),
 					WString::from_str(
 						&match first_line {
 							Some(line) => format!("{}#{}", title_bar, line),
@@ -43,7 +43,7 @@ pub trait shell_Hwnd: Handle {
 						},
 					).as_ptr(),
 					WString::from_opt_str(other_stuff).as_ptr(),
-					hicon.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+					hicon.map_or(std::ptr::null_mut(), |h| h.ptr()),
 				)
 			},
 		)
@@ -61,7 +61,7 @@ pub trait shell_Hwnd: Handle {
 	{
 		let ret = unsafe {
 			shell::ffi::ShellExecuteW(
-				self.as_ptr(),
+				self.ptr(),
 				WString::from_str(operation).as_ptr(),
 				WString::from_str(file).as_ptr(),
 				parameters.map_or(std::ptr::null(), |lp| WString::from_str(lp).as_ptr()),

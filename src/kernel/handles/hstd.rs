@@ -29,7 +29,7 @@ pub trait kernel_Hstd: Handle {
 	/// method.
 	fn FlushConsoleInputBuffer(&self) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { kernel::ffi::FlushConsoleInputBuffer(self.as_ptr()) },
+			unsafe { kernel::ffi::FlushConsoleInputBuffer(self.ptr()) },
 		)
 	}
 
@@ -39,7 +39,7 @@ pub trait kernel_Hstd: Handle {
 	fn GetConsoleMode(&self) -> SysResult<co::CONSOLE> {
 		let mut mode = co::CONSOLE::default();
 		bool_to_sysresult(
-			unsafe { kernel::ffi::GetConsoleMode(self.as_ptr(), mode.as_mut()) },
+			unsafe { kernel::ffi::GetConsoleMode(self.ptr(), mode.as_mut()) },
 		).map(|_| mode)
 	}
 
@@ -87,7 +87,7 @@ pub trait kernel_Hstd: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::ReadConsoleW(
-					self.as_ptr(),
+					self.ptr(),
 					buffer.as_mut_ptr() as _,
 					buffer.buf_len() as _,
 					&mut num_read,
@@ -101,7 +101,7 @@ pub trait kernel_Hstd: Handle {
 	/// method.
 	fn SetConsoleMode(&self, mode: co::CONSOLE) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { kernel::ffi::SetConsoleMode(self.as_ptr(), mode.raw()) },
+			unsafe { kernel::ffi::SetConsoleMode(self.ptr(), mode.raw()) },
 		)
 	}
 
@@ -116,7 +116,7 @@ pub trait kernel_Hstd: Handle {
 		unsafe {
 			bool_to_sysresult(
 				kernel::ffi::WriteConsoleW(
-					self.as_ptr(),
+					self.ptr(),
 					buf.as_ptr() as _,
 					buf.str_len() as _,
 					&mut num_written,

@@ -28,7 +28,7 @@ pub trait user_Hhook: Handle {
 		code: co::WH, wparam: usize, lparam: isize) -> isize
 	{
 		unsafe {
-			user::ffi::CallNextHookEx(self.as_ptr(), code.raw(), wparam, lparam)
+			user::ffi::CallNextHookEx(self.ptr(), code.raw(), wparam, lparam)
 		}
 	}
 
@@ -46,7 +46,7 @@ pub trait user_Hhook: Handle {
 				user::ffi::SetWindowsHookExW(
 					hook_id.raw(),
 					proc as _,
-					module.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+					module.map_or(std::ptr::null_mut(), |h| h.ptr()),
 					thread_id.unwrap_or_default(),
 				)
 			},
@@ -61,7 +61,7 @@ pub trait user_Hhook: Handle {
 	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
 	fn UnhookWindowsHookEx(&mut self) -> SysResult<()> {
 		let ret = bool_to_sysresult(
-			unsafe { user::ffi::UnhookWindowsHookEx(self.as_ptr()) },
+			unsafe { user::ffi::UnhookWindowsHookEx(self.ptr()) },
 		);
 		*self = Self::INVALID;
 		ret

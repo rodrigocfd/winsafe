@@ -70,8 +70,8 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 			unsafe {
 				(vt::<ITaskbarList3VT>(self).RegisterTab)(
 					self.ptr(),
-					hwnd_tab.as_ptr(),
-					hwnd_mdi.as_ptr(),
+					hwnd_tab.ptr(),
+					hwnd_mdi.ptr(),
 				)
 			},
 		)
@@ -86,8 +86,8 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 			unsafe {
 				(vt::<ITaskbarList3VT>(self).SetOverlayIcon)(
 					self.ptr(),
-					hwnd.as_ptr(),
-					hicon.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+					hwnd.ptr(),
+					hicon.map_or(std::ptr::null_mut(), |h| h.ptr()),
 					WString::from_str(description).as_ptr(),
 				)
 			},
@@ -103,7 +103,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 			unsafe {
 				(vt::<ITaskbarList3VT>(self).SetProgressState)(
 					self.ptr(),
-					hwnd.as_ptr(),
+					hwnd.ptr(),
 					tbpf_flags.raw(),
 				)
 			},
@@ -136,7 +136,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 			unsafe {
 				(vt::<ITaskbarList3VT>(self).SetProgressValue)(
 					self.ptr(),
-					hwnd.as_ptr(),
+					hwnd.ptr(),
 					completed,
 					total,
 				)
@@ -151,8 +151,8 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 			unsafe {
 				(vt::<ITaskbarList3VT>(self).SetTabActive)(
 					self.ptr(),
-					hwnd_tab.as_ptr(),
-					hwnd_mdi.as_ptr(),
+					hwnd_tab.ptr(),
+					hwnd_mdi.ptr(),
 					0,
 				)
 			},
@@ -168,8 +168,8 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 			unsafe {
 				(vt::<ITaskbarList3VT>(self).SetTabOrder)(
 					self.ptr(),
-					hwnd_tab.as_ptr(),
-					hwnd_insert_before.as_ptr(),
+					hwnd_tab.ptr(),
+					hwnd_insert_before.ptr(),
 				)
 			},
 		)
@@ -182,7 +182,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 			unsafe {
 				(vt::<ITaskbarList3VT>(self).SetThumbnailClip)(
 					self.ptr(),
-					hwnd.as_ptr(),
+					hwnd.ptr(),
 					&clip as *const _ as _,
 				)
 			},
@@ -198,7 +198,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 			unsafe {
 				(vt::<ITaskbarList3VT>(self).SetThumbnailTooltip)(
 					self.ptr(),
-					hwnd.as_ptr(),
+					hwnd.ptr(),
 					tip.map_or(std::ptr::null_mut(), |s| WString::from_str(s).as_ptr()),
 				)
 			},

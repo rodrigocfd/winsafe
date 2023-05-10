@@ -38,7 +38,7 @@ pub trait user_Hmenu: Handle {
 		bool_to_sysresult(
 			unsafe {
 				user::ffi::AppendMenuW(
-					self.as_ptr(),
+					self.ptr(),
 					flags.raw(),
 					new_item.as_usize(),
 					content.as_ptr(),
@@ -106,7 +106,7 @@ pub trait user_Hmenu: Handle {
 	{
 		match unsafe {
 			user::ffi::CheckMenuItem(
-				self.as_ptr(),
+				self.ptr(),
 				id_or_pos.id_or_pos_u32(),
 				(id_or_pos.mf_flag() | if check {
 					co::MF::CHECKED
@@ -138,7 +138,7 @@ pub trait user_Hmenu: Handle {
 		bool_to_sysresult(
 			unsafe {
 				user::ffi::CheckMenuRadioItem(
-					self.as_ptr(),
+					self.ptr(),
 					first.id_or_pos_u32(),
 					last.id_or_pos_u32(),
 					check.id_or_pos_u32(),
@@ -176,7 +176,7 @@ pub trait user_Hmenu: Handle {
 		bool_to_sysresult(
 			unsafe {
 				user::ffi::DeleteMenu(
-					self.as_ptr(),
+					self.ptr(),
 					id_or_pos.id_or_pos_u32(),
 					id_or_pos.mf_flag().raw(),
 				)
@@ -192,7 +192,7 @@ pub trait user_Hmenu: Handle {
 	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
 	fn DestroyMenu(&mut self) -> SysResult<()> {
 		let ret = bool_to_sysresult(
-			unsafe { user::ffi::DestroyMenu(self.as_ptr()) },
+			unsafe { user::ffi::DestroyMenu(self.ptr()) },
 		);
 		*self = Self::INVALID;
 		ret
@@ -253,7 +253,7 @@ pub trait user_Hmenu: Handle {
 	{
 		match unsafe {
 			user::ffi::EnableMenuItem(
-				self.as_ptr(),
+				self.ptr(),
 				id_or_pos.id_or_pos_u32(),
 				(id_or_pos.mf_flag()
 					| if enable { co::MF::ENABLED } else { co::MF::DISABLED }).raw(),
@@ -271,7 +271,7 @@ pub trait user_Hmenu: Handle {
 		by_pos: bool, flags: co::GMDI) -> SysResult<IdPos>
 	{
 		match unsafe {
-			user::ffi::GetMenuDefaultItem(self.as_ptr(), by_pos as _, flags.raw())
+			user::ffi::GetMenuDefaultItem(self.ptr(), by_pos as _, flags.raw())
 				as i32
 		} {
 			-1 => Err(GetLastError()),
@@ -283,7 +283,7 @@ pub trait user_Hmenu: Handle {
 	/// method.
 	fn GetMenuInfo(&self, mi: &mut MENUINFO) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { user::ffi::GetMenuInfo(self.as_ptr(), mi as *mut _ as _) },
+			unsafe { user::ffi::GetMenuInfo(self.ptr(), mi as *mut _ as _) },
 		)
 	}
 
@@ -291,7 +291,7 @@ pub trait user_Hmenu: Handle {
 	/// method.
 	#[must_use]
 	fn GetMenuItemCount(&self) -> SysResult<u32> {
-		match unsafe { user::ffi::GetMenuItemCount(self.as_ptr()) } {
+		match unsafe { user::ffi::GetMenuItemCount(self.ptr()) } {
 			-1 => Err(GetLastError()),
 			count => Ok(count as _),
 		}
@@ -301,7 +301,7 @@ pub trait user_Hmenu: Handle {
 	/// method.
 	#[must_use]
 	fn GetMenuItemID(&self, nPos: i32) -> Option<i32> {
-		match unsafe { user::ffi::GetMenuItemID(self.as_ptr(), nPos) } {
+		match unsafe { user::ffi::GetMenuItemID(self.ptr(), nPos) } {
 			-1 => None,
 			id => Some(id),
 		}
@@ -315,7 +315,7 @@ pub trait user_Hmenu: Handle {
 		bool_to_sysresult(
 			unsafe {
 				user::ffi::GetMenuItemInfoW(
-					self.as_ptr(),
+					self.ptr(),
 					id_or_pos.id_or_pos_u32(),
 					id_or_pos.is_by_pos() as _,
 					mii as *mut _ as _,
@@ -330,7 +330,7 @@ pub trait user_Hmenu: Handle {
 	fn GetMenuState(&self, id_or_pos: IdPos) -> SysResult<co::MF> {
 		match unsafe {
 			user::ffi::GetMenuState(
-				self.as_ptr(),
+				self.ptr(),
 				id_or_pos.id_or_pos_u32(),
 				id_or_pos.is_by_pos() as _,
 			) as i32
@@ -352,7 +352,7 @@ pub trait user_Hmenu: Handle {
 
 			let nchars = match unsafe {
 				user::ffi::GetMenuStringW(
-					self.as_ptr(),
+					self.ptr(),
 					id_or_pos.id_or_pos_u32(),
 					buf.as_mut_ptr(),
 					buf.buf_len() as _,
@@ -376,7 +376,7 @@ pub trait user_Hmenu: Handle {
 	#[must_use]
 	fn GetSubMenu(&self, pos: u32) -> Option<HMENU> {
 		ptr_to_option_handle(
-			unsafe { user::ffi::GetSubMenu(self.as_ptr(), pos as _) },
+			unsafe { user::ffi::GetSubMenu(self.ptr(), pos as _) },
 		)
 	}
 
@@ -388,7 +388,7 @@ pub trait user_Hmenu: Handle {
 		bool_to_sysresult(
 			unsafe {
 				user::ffi::InsertMenuItemW(
-					self.as_ptr(),
+					self.ptr(),
 					id_or_pos.id_or_pos_u32(),
 					id_or_pos.is_by_pos() as _,
 					mii as *const _ as _,
@@ -401,7 +401,7 @@ pub trait user_Hmenu: Handle {
 	/// method.
 	#[must_use]
 	fn IsMenu(&self) -> bool {
-		unsafe { user::ffi::IsMenu(self.as_ptr()) != 0 }
+		unsafe { user::ffi::IsMenu(self.ptr()) != 0 }
 	}
 
 	/// [`RemoveMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-removemenu)
@@ -410,7 +410,7 @@ pub trait user_Hmenu: Handle {
 		bool_to_sysresult(
 			unsafe {
 				user::ffi::RemoveMenu(
-					self.as_ptr(),
+					self.ptr(),
 					id_or_pos.id_or_pos_u32(),
 					id_or_pos.mf_flag().raw(),
 				)
@@ -424,7 +424,7 @@ pub trait user_Hmenu: Handle {
 		bool_to_sysresult(
 			unsafe {
 				user::ffi::SetMenuDefaultItem(
-					self.as_ptr(),
+					self.ptr(),
 					id_or_pos.id_or_pos_u32(),
 					id_or_pos.is_by_pos() as _,
 				)
@@ -436,7 +436,7 @@ pub trait user_Hmenu: Handle {
 	/// method.
 	fn SetMenuInfo(&self, mi: &MENUINFO) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { user::ffi::SetMenuInfo(self.as_ptr(), mi as *const _ as _) },
+			unsafe { user::ffi::SetMenuInfo(self.ptr(), mi as *const _ as _) },
 		)
 	}
 
@@ -451,11 +451,11 @@ pub trait user_Hmenu: Handle {
 		bool_to_sysresult(
 			unsafe {
 				user::ffi::SetMenuItemBitmaps(
-					self.as_ptr(),
+					self.ptr(),
 					id_or_pos.id_or_pos_u32(),
 					id_or_pos.mf_flag().raw(),
-					hbmp_unchecked.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
-					hbmp_checked.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+					hbmp_unchecked.map_or(std::ptr::null_mut(), |h| h.ptr()),
+					hbmp_checked.map_or(std::ptr::null_mut(), |h| h.ptr()),
 				)
 			},
 		)
@@ -469,7 +469,7 @@ pub trait user_Hmenu: Handle {
 		bool_to_sysresult(
 			unsafe {
 				user::ffi::SetMenuItemInfoW(
-					self.as_ptr(),
+					self.ptr(),
 					id_or_pos.id_or_pos_u32(),
 					id_or_pos.is_by_pos() as _,
 					mii as *const _ as _,
@@ -488,11 +488,11 @@ pub trait user_Hmenu: Handle {
 	{
 		let ret = unsafe {
 			user::ffi::TrackPopupMenu(
-				self.as_ptr(),
+				self.ptr(),
 				flags.raw(),
 				location.x, location.y,
 				0,
-				hwnd.as_ptr(),
+				hwnd.ptr(),
 				std::ptr::null(),
 			)
 		};

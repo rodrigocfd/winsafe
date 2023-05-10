@@ -21,7 +21,7 @@ unsafe impl MsgSend for DropFiles {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::DROPFILES,
-			wparam: self.hdrop.as_ptr() as _,
+			wparam: self.hdrop.ptr() as _,
 			lparam: 0,
 		}
 	}

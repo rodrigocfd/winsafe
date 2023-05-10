@@ -517,7 +517,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 		WndMsg {
 			msg_id: co::TCM::SETIMAGELIST.into(),
 			wparam: 0,
-			lparam: self.himagelist.as_ptr() as _,
+			lparam: self.himagelist.ptr() as _,
 		}
 	}
 }
@@ -663,7 +663,7 @@ unsafe impl<'a> MsgSend for SetTooltips<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TCM::SETTOOLTIPS.into(),
-			wparam: self.htooltips.map_or(0, |h| h.as_ptr() as _),
+			wparam: self.htooltips.map_or(0, |h| h.ptr() as _),
 			lparam: 0,
 		}
 	}

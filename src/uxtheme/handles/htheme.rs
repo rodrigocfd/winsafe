@@ -31,8 +31,8 @@ pub trait uxtheme_Htheme: Handle {
 		ok_to_hrresult(
 			unsafe {
 				uxtheme::ffi::DrawThemeBackground(
-					self.as_ptr(),
-					hdc.as_ptr(),
+					self.ptr(),
+					hdc.ptr(),
 					part_state.part,
 					part_state.state,
 					&rc as *const _ as _,
@@ -60,8 +60,8 @@ pub trait uxtheme_Htheme: Handle {
 		ok_to_hrresult(
 			unsafe {
 				uxtheme::ffi::GetThemeBackgroundContentRect(
-					self.as_ptr(),
-					hdc.as_ptr(),
+					self.ptr(),
+					hdc.ptr(),
 					part_state.part,
 					part_state.state,
 					&bounds as *const _ as _,
@@ -82,8 +82,8 @@ pub trait uxtheme_Htheme: Handle {
 		ok_to_hrresult(
 			unsafe {
 				uxtheme::ffi::GetThemeBackgroundExtent(
-					self.as_ptr(),
-					hdc.as_ptr(),
+					self.ptr(),
+					hdc.ptr(),
 					part_state.part,
 					part_state.state,
 					&rc_content as *const _ as _,
@@ -106,8 +106,8 @@ pub trait uxtheme_Htheme: Handle {
 		unsafe {
 			ok_to_hrresult(
 				uxtheme::ffi::GetThemeBackgroundRegion(
-					self.as_ptr(),
-					hdc.as_ptr(),
+					self.ptr(),
+					hdc.ptr(),
 					part_state.part,
 					part_state.state,
 					&rc as *const _ as _,
@@ -127,7 +127,7 @@ pub trait uxtheme_Htheme: Handle {
 		ok_to_hrresult(
 			unsafe {
 				uxtheme::ffi::GetThemeColor(
-					self.as_ptr(),
+					self.ptr(),
 					part_state.part,
 					part_state.state,
 					prop.raw(),
@@ -145,7 +145,7 @@ pub trait uxtheme_Htheme: Handle {
 	{
 		unsafe {
 			uxtheme::ffi::IsThemeBackgroundPartiallyTransparent(
-				self.as_ptr(), part_state.part, part_state.state) != 0
+				self.ptr(), part_state.part, part_state.state) != 0
 		}
 	}
 
@@ -155,7 +155,7 @@ pub trait uxtheme_Htheme: Handle {
 	fn IsThemePartDefined(&self, part_state: co::VS) -> bool {
 		unsafe {
 			uxtheme::ffi::IsThemePartDefined(
-				self.as_ptr(), part_state.part, part_state.state) != 0
+				self.ptr(), part_state.part, part_state.state) != 0
 		}
 	}
 }

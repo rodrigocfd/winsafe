@@ -36,9 +36,9 @@ pub trait user_Hinstance: Handle {
 		ptr_to_sysresult_handle(
 			unsafe {
 				user::ffi::CreateDialogParamW(
-					self.as_ptr(),
+					self.ptr(),
 					resource_id.as_ptr(),
-					hwnd_parent.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+					hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr()),
 					dialog_proc as _,
 					init_param.unwrap_or_default(),
 				)
@@ -61,9 +61,9 @@ pub trait user_Hinstance: Handle {
 	{
 		match unsafe {
 			user::ffi::DialogBoxParamW(
-				self.as_ptr(),
+				self.ptr(),
 				resource_id.as_ptr(),
-				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr()),
 				dialog_proc as _,
 				init_param.unwrap_or_default(),
 			)
@@ -94,7 +94,7 @@ pub trait user_Hinstance: Handle {
 	{
 		match unsafe {
 			user::ffi::GetClassInfoExW(
-				self.as_ptr(),
+				self.ptr(),
 				WString::from_str(class_name).as_ptr(),
 				wcx as *mut _ as _,
 			)
@@ -110,7 +110,7 @@ pub trait user_Hinstance: Handle {
 	fn LoadAccelerators(&self, table_name: IdStr) -> SysResult<HACCEL> {
 		ptr_to_sysresult_handle(
 			unsafe {
-				user::ffi::LoadAcceleratorsW(self.as_ptr(), table_name.as_ptr())
+				user::ffi::LoadAcceleratorsW(self.ptr(), table_name.as_ptr())
 			},
 		)
 	}
@@ -136,7 +136,7 @@ pub trait user_Hinstance: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				user::ffi::LoadCursorW(self.as_ptr(), resource_id.as_ptr()),
+				user::ffi::LoadCursorW(self.ptr(), resource_id.as_ptr()),
 			).map(|h| DestroyCursorGuard::new(h))
 		}
 	}
@@ -160,7 +160,7 @@ pub trait user_Hinstance: Handle {
 	fn LoadIcon(&self, icon_id: IdIdiStr) -> SysResult<DestroyIconGuard> {
 		unsafe {
 			ptr_to_sysresult_handle(
-				user::ffi::LoadIconW(self.as_ptr(), icon_id.as_ptr()),
+				user::ffi::LoadIconW(self.ptr(), icon_id.as_ptr()),
 			).map(|h| DestroyIconGuard::new(h))
 		}
 	}
@@ -170,7 +170,7 @@ pub trait user_Hinstance: Handle {
 	#[must_use]
 	fn LoadMenu(&self, resource_id: IdStr) -> SysResult<HMENU> {
 		ptr_to_sysresult_handle(
-			unsafe { user::ffi::LoadMenuW(self.as_ptr(), resource_id.as_ptr()) },
+			unsafe { user::ffi::LoadMenuW(self.ptr(), resource_id.as_ptr()) },
 		)
 	}
 
@@ -181,7 +181,7 @@ pub trait user_Hinstance: Handle {
 		let mut pdata: *const u16 = std::ptr::null_mut();
 		match unsafe {
 			user::ffi::LoadStringW(
-				self.as_ptr(),
+				self.ptr(),
 				id as _,
 				&mut pdata as *mut _ as  _, 0,
 			)

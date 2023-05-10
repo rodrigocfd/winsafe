@@ -92,8 +92,8 @@ impl BmpIcon {
 	pub fn as_isize(&self) -> isize {
 		unsafe {
 			std::mem::transmute(match self {
-				BmpIcon::Bmp(hbmp) => hbmp.as_ptr(),
-				BmpIcon::Icon(hicon) => hicon.as_ptr(),
+				BmpIcon::Bmp(hbmp) => hbmp.ptr(),
+				BmpIcon::Icon(hicon) => hicon.ptr(),
 			})
 		}
 	}
@@ -124,7 +124,7 @@ impl BmpPtrStr {
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
-			Self::Bmp(hbmp) => hbmp.as_ptr() as _,
+			Self::Bmp(hbmp) => hbmp.ptr() as _,
 			Self::Ptr(lp) => *lp as _,
 			Self::Str(ws) => ws.as_ptr(),
 			Self::None => std::ptr::null(),
@@ -203,8 +203,8 @@ impl HwndHmenu {
 	#[must_use]
 	pub fn as_isize(&self) -> isize {
 		match self {
-			HwndHmenu::Hwnd(hwnd) => hwnd.as_ptr() as _,
-			HwndHmenu::Hmenu(hmenu) => hmenu.as_ptr() as _,
+			HwndHmenu::Hwnd(hwnd) => hwnd.ptr() as _,
+			HwndHmenu::Hmenu(hmenu) => hmenu.ptr() as _,
 		}
 	}
 }
@@ -228,7 +228,7 @@ impl HwndPlace {
 	#[must_use]
 	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
-			Self::Hwnd(hwnd) => hwnd.as_ptr(),
+			Self::Hwnd(hwnd) => hwnd.ptr(),
 			Self::Place(v) => v.raw() as _,
 			Self::None => std::ptr::null_mut(),
 		}
@@ -252,7 +252,7 @@ impl HwndPointId {
 	#[must_use]
 	pub fn as_isize(&self) -> isize {
 		match self {
-			HwndPointId::Hwnd(hwnd) => hwnd.as_ptr() as _,
+			HwndPointId::Hwnd(hwnd) => hwnd.ptr() as _,
 			HwndPointId::Point(pt) => u32::from(*pt) as _,
 			HwndPointId::Id(id) => *id as _,
 		}
@@ -340,7 +340,7 @@ impl<'a> IdMenu<'a> {
 	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
 			Self::Id(id) => *id as _,
-			Self::Menu(hMenu) => hMenu.as_ptr(),
+			Self::Menu(hMenu) => hMenu.ptr(),
 			Self::None => std::ptr::null_mut(),
 		}
 	}
@@ -350,7 +350,7 @@ impl<'a> IdMenu<'a> {
 	pub fn as_usize(&self) -> usize {
 		match self {
 			IdMenu::Id(id) => *id as _,
-			IdMenu::Menu(hMenu) => hMenu.as_ptr() as _,
+			IdMenu::Menu(hMenu) => hMenu.ptr() as _,
 			IdMenu::None => 0,
 		}
 	}

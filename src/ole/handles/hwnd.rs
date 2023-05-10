@@ -24,7 +24,7 @@ pub trait ole_Hwnd: Handle {
 	{
 		ok_to_hrresult(
 			unsafe {
-				ole::ffi::RegisterDragDrop(self.as_ptr(), drop_target.ptr() as _)
+				ole::ffi::RegisterDragDrop(self.ptr(), drop_target.ptr() as _)
 			},
 		)
 	}
@@ -32,6 +32,6 @@ pub trait ole_Hwnd: Handle {
 	/// [`RevokeDragDrop`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-revokedragdrop)
 	/// method.
 	fn RevokeDragDrop(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { ole::ffi::RevokeDragDrop(self.as_ptr()) })
+		ok_to_hrresult(unsafe { ole::ffi::RevokeDragDrop(self.ptr()) })
 	}
 }

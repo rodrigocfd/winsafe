@@ -985,7 +985,7 @@ impl WINDOWPOS {
 	/// Sets the `hwndInsertAfter` field.
 	pub fn set_hwndInsertAfter(&mut self, hwnd: HwndPlace) {
 		self.hwndInsertAfter = match hwnd {
-			HwndPlace::Hwnd(h) => h.as_ptr() as _,
+			HwndPlace::Hwnd(h) => h.ptr() as _,
 			HwndPlace::Place(v) => v.into(),
 			HwndPlace::None => 0,
 		};

@@ -31,7 +31,7 @@ unsafe impl MsgSend for Activate {
 		WndMsg {
 			msg_id: co::WM::ACTIVATE,
 			wparam: MAKEDWORD(self.event.raw(), self.is_minimized as _) as _,
-			lparam: self.hwnd.as_ptr() as _,
+			lparam: self.hwnd.ptr() as _,
 		}
 	}
 }
@@ -101,7 +101,7 @@ unsafe impl MsgSend for AppCommand {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::APPCOMMAND,
-			wparam: self.hwnd_owner.as_ptr() as _,
+			wparam: self.hwnd_owner.ptr() as _,
 			lparam: MAKEDWORD(self.keys.into(), self.app_command.raw() | self.u_device.raw()) as _,
 		}
 	}
@@ -142,7 +142,7 @@ unsafe impl MsgSend for CaptureChanged {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::CAPTURECHANGED,
-			wparam: self.hwnd_gaining_mouse.as_ptr() as _,
+			wparam: self.hwnd_gaining_mouse.ptr() as _,
 			lparam: 0,
 		}
 	}
@@ -194,7 +194,7 @@ unsafe impl MsgSend for Command {
 			lparam: match &self.event {
 				AccelMenuCtrl::Accel(_) => co::CMD::Accelerator.raw() as _,
 				AccelMenuCtrl::Menu(_) => co::CMD::Menu.raw() as _,
-				AccelMenuCtrl::Ctrl(data) => data.ctrl_hwnd.as_ptr() as _,
+				AccelMenuCtrl::Ctrl(data) => data.ctrl_hwnd.ptr() as _,
 			},
 		}
 	}
@@ -237,7 +237,7 @@ unsafe impl MsgSend for ContextMenu {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::CONTEXTMENU,
-			wparam: self.hwnd.as_ptr() as _,
+			wparam: self.hwnd.ptr() as _,
 			lparam: u32::from(self.cursor_pos) as _,
 		}
 	}
@@ -480,7 +480,7 @@ unsafe impl MsgSend for EraseBkgnd {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::ERASEBKGND,
-			wparam: self.hdc.as_ptr() as _,
+			wparam: self.hdc.ptr() as _,
 			lparam: 0,
 		}
 	}
@@ -791,7 +791,7 @@ unsafe impl MsgSend for HScroll {
 		WndMsg {
 			msg_id: co::WM::HSCROLL,
 			wparam: MAKEDWORD(self.request.raw(), self.scroll_box_pos) as _,
-			lparam: self.hcontrol.as_ref().map_or(0, |h| h.as_ptr() as _),
+			lparam: self.hcontrol.as_ref().map_or(0, |h| h.ptr() as _),
 		}
 	}
 }
@@ -828,7 +828,7 @@ unsafe impl MsgSend for InitDialog {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::INITDIALOG,
-			wparam: self.hwnd_focus.as_ptr() as _,
+			wparam: self.hwnd_focus.ptr() as _,
 			lparam: self.additional_data,
 		}
 	}
@@ -863,7 +863,7 @@ unsafe impl MsgSend for InitMenuPopup {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::INITMENUPOPUP,
-			wparam: self.hmenu.as_ptr() as _,
+			wparam: self.hmenu.ptr() as _,
 			lparam: MAKEDWORD(self.item_pos, self.is_window_menu as _) as _,
 		}
 	}
@@ -905,7 +905,7 @@ unsafe impl MsgSend for KillFocus {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::KILLFOCUS,
-			wparam: self.hwnd.as_ref().map_or(0, |h| h.as_ptr() as _),
+			wparam: self.hwnd.as_ref().map_or(0, |h| h.ptr() as _),
 			lparam: 0,
 		}
 	}
@@ -966,7 +966,7 @@ unsafe impl MsgSend for MenuCommand {
 		WndMsg {
 			msg_id: co::WM::MENUCOMMAND,
 			wparam: self.item_index as _,
-			lparam: self.hmenu.as_ptr() as _,
+			lparam: self.hmenu.ptr() as _,
 		}
 	}
 }
@@ -1000,7 +1000,7 @@ unsafe impl MsgSend for MenuDrag {
 		WndMsg {
 			msg_id: co::WM::MENUDRAG,
 			wparam: self.position as _,
-			lparam: self.hmenu.as_ptr() as _,
+			lparam: self.hmenu.ptr() as _,
 		}
 	}
 }
@@ -1034,7 +1034,7 @@ unsafe impl MsgSend for MenuRButtonUp {
 		WndMsg {
 			msg_id: co::WM::MENURBUTTONUP,
 			wparam: self.position as _,
-			lparam: self.hmenu.as_ptr() as _,
+			lparam: self.hmenu.ptr() as _,
 		}
 	}
 }
@@ -1252,7 +1252,7 @@ unsafe impl MsgSend for NextDlgCtl {
 		WndMsg {
 			msg_id: co::WM::NEXTDLGCTL,
 			wparam: match &self.hwnd_focus {
-				HwndFocus::Hwnd(hctl) => hctl.as_ptr() as _,
+				HwndFocus::Hwnd(hctl) => hctl.ptr() as _,
 				HwndFocus::FocusNext(next) => if *next { 0 } else { 1 },
 			},
 			lparam: MAKEDWORD(match &self.hwnd_focus {
@@ -1380,7 +1380,7 @@ unsafe impl MsgSend for SetCursor {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SETCURSOR,
-			wparam: self.hwnd.as_ptr() as _,
+			wparam: self.hwnd.ptr() as _,
 			lparam: MAKEDWORD(self.hit_test.raw(), self.mouse_msg) as _,
 		}
 	}
@@ -1414,7 +1414,7 @@ unsafe impl MsgSend for SetFocus {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::SETFOCUS,
-			wparam: self.hwnd_losing_focus.as_ptr() as _,
+			wparam: self.hwnd_losing_focus.ptr() as _,
 			lparam: 0,
 		}
 	}
@@ -1448,7 +1448,7 @@ unsafe impl MsgSend for SetIcon {
 		WndMsg {
 			msg_id: co::WM::SETICON,
 			wparam: self.size.raw() as _,
-			lparam: self.hicon.as_ptr() as _,
+			lparam: self.hicon.ptr() as _,
 		}
 	}
 }
@@ -1804,7 +1804,7 @@ unsafe impl MsgSend for UninitMenuPopup {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::UNINITMENUPOPUP,
-			wparam: self.hmenu.as_ptr() as _,
+			wparam: self.hmenu.ptr() as _,
 			lparam: MAKEDWORD(0, self.which.raw() as _) as _,
 		}
 	}
@@ -1870,7 +1870,7 @@ unsafe impl MsgSend for VScroll {
 		WndMsg {
 			msg_id: co::WM::VSCROLL,
 			wparam: MAKEDWORD(self.request.raw(), self.scroll_box_pos) as _,
-			lparam: self.hcontrol.as_ref().map_or(0, |h| h.as_ptr() as _),
+			lparam: self.hcontrol.as_ref().map_or(0, |h| h.ptr() as _),
 		}
 	}
 }

@@ -97,7 +97,7 @@ pub trait gdi_Hfont: Handle {
 		bool_to_sysresult(
 			unsafe {
 				gdi::ffi::GetObjectW(
-					self.as_ptr(),
+					self.ptr(),
 					std::mem::size_of::<LOGFONT>() as _,
 					lf as *mut _ as _,
 				)

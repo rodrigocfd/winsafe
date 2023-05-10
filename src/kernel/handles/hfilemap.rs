@@ -38,7 +38,7 @@ pub trait kernel_Hfilemap: Handle {
 		unsafe {
 			ptr_to_sysresult_handle(
 				kernel::ffi::MapViewOfFileFromApp(
-					self.as_ptr(),
+					self.ptr(),
 					desired_access.raw(),
 					offset,
 					number_of_bytes_to_map.unwrap_or_default(),

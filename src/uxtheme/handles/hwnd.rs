@@ -24,7 +24,7 @@ pub trait uxtheme_Hwnd: Handle {
 	fn OpenThemeData(&self, class_list: &str) -> Option<CloseThemeDataGuard> {
 		unsafe {
 			uxtheme::ffi::OpenThemeData(
-				self.as_ptr(),
+				self.ptr(),
 				WString::from_str(class_list).as_ptr(),
 			).as_mut()
 				.map(|ptr| CloseThemeDataGuard::new(HTHEME::from_ptr(ptr)))

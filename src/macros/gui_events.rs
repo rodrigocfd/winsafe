@@ -95,7 +95,7 @@ macro_rules! fn_wm_ctlcolor {
 			where F: Fn($parm) -> AnyResult<crate::user::decl::HBRUSH> + 'static,
 		{
 			self.wm($wmconst,
-				move |p| Ok(Some(func(<$parm>::from_generic_wm(p))?.as_ptr() as _)));
+				move |p| Ok(Some(func(<$parm>::from_generic_wm(p))?.ptr() as _)));
 		}
 	};
 }

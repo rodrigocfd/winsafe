@@ -128,7 +128,7 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 			unsafe {
 				(vt::<IGraphBuilderVT>(self).SetLogFile)(
 					self.ptr(),
-					hfile.map_or(std::ptr::null_mut(), |h| h.as_ptr()),
+					hfile.map_or(std::ptr::null_mut(), |h| h.ptr()),
 				)
 			},
 		)

@@ -80,7 +80,7 @@ unsafe impl MsgSend for AddString {
 		WndMsg {
 			msg_id: co::TBM::ADDSTRING.into(),
 			wparam: match &self.texts {
-				ResStrs::Res(_, hinst) => hinst.as_ptr() as _,
+				ResStrs::Res(_, hinst) => hinst.ptr() as _,
 				ResStrs::Strs(_) => 0,
 			},
 			lparam: match &self.texts {
@@ -1619,7 +1619,7 @@ unsafe impl<'a> MsgSend for SetDisabledImageList<'a> {
 		WndMsg {
 			msg_id: co::TBM::SETDISABLEDIMAGELIST.into(),
 			wparam: 0,
-			lparam: self.himagelist.as_ptr() as _,
+			lparam: self.himagelist.ptr() as _,
 		}
 	}
 }
@@ -1692,7 +1692,7 @@ unsafe impl<'a> MsgSend for SetHotImageList<'a> {
 		WndMsg {
 			msg_id: co::TBM::SETHOTIMAGELIST.into(),
 			wparam: 0,
-			lparam: self.himagelist.as_ptr() as _,
+			lparam: self.himagelist.ptr() as _,
 		}
 	}
 }
@@ -1765,7 +1765,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 		WndMsg {
 			msg_id: co::TBM::SETIMAGELIST.into(),
 			wparam: 0,
-			lparam: self.himagelist.as_ptr() as _,
+			lparam: self.himagelist.ptr() as _,
 		}
 	}
 }
@@ -1958,7 +1958,7 @@ unsafe impl<'a> MsgSend for SetParent<'a> {
 		WndMsg {
 			msg_id: co::TBM::SETPARENT.into(),
 			wparam: 0,
-			lparam: self.hparent.as_ptr() as _,
+			lparam: self.hparent.ptr() as _,
 		}
 	}
 }
@@ -1983,7 +1983,7 @@ unsafe impl<'a> MsgSend for SetPressedImageList<'a> {
 		WndMsg {
 			msg_id: co::TBM::SETPRESSEDIMAGELIST.into(),
 			wparam: self.index as _,
-			lparam: self.himagelist.map_or(0, |h| h.as_ptr() as _),
+			lparam: self.himagelist.map_or(0, |h| h.ptr() as _),
 		}
 	}
 }
@@ -2081,7 +2081,7 @@ unsafe impl<'a> MsgSend for SetTooltips<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::TBM::SETTOOLTIPS.into(),
-			wparam: self.htooltips.map_or(0, |h| h.as_ptr() as _),
+			wparam: self.htooltips.map_or(0, |h| h.ptr() as _),
 			lparam: 0,
 		}
 	}

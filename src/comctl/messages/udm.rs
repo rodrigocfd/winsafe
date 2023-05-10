@@ -258,7 +258,7 @@ unsafe impl<'a> MsgSend for SetBuddy<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::UDM::SETBUDDY.into(),
-			wparam: self.hbuddy.as_ptr() as _,
+			wparam: self.hbuddy.ptr() as _,
 			lparam: 0,
 		}
 	}

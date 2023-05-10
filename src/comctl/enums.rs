@@ -26,10 +26,10 @@ impl BmpIconCurMeta {
 	pub fn as_isize(&self) -> isize {
 		unsafe {
 			std::mem::transmute(match self {
-				BmpIconCurMeta::Bmp(hbmp) => hbmp.as_ptr(),
-				BmpIconCurMeta::Icon(hicon) => hicon.as_ptr(),
-				BmpIconCurMeta::Cur(hcur) => hcur.as_ptr(),
-				BmpIconCurMeta::Meta(hdc) => hdc.as_ptr(),
+				BmpIconCurMeta::Bmp(hbmp) => hbmp.ptr(),
+				BmpIconCurMeta::Icon(hicon) => hicon.ptr(),
+				BmpIconCurMeta::Cur(hcur) => hcur.ptr(),
+				BmpIconCurMeta::Meta(hdc) => hdc.ptr(),
 			})
 		}
 	}
@@ -134,7 +134,7 @@ pub enum TreeitemTvi {
 impl From<TreeitemTvi> for isize {
 	fn from(v: TreeitemTvi) -> Self {
 		match v {
-			TreeitemTvi::Treeitem(htreeitem) => htreeitem.as_ptr() as _,
+			TreeitemTvi::Treeitem(htreeitem) => htreeitem.ptr() as _,
 			TreeitemTvi::Tvi(tvi) => tvi.raw(),
 		}
 	}

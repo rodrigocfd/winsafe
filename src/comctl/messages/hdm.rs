@@ -557,7 +557,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 		WndMsg {
 			msg_id: co::HDM::SETIMAGELIST.into(),
 			wparam: self.which.raw() as _,
-			lparam: self.himagelist.as_ptr() as _,
+			lparam: self.himagelist.ptr() as _,
 		}
 	}
 }

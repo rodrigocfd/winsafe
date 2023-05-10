@@ -74,7 +74,7 @@ pub trait shell_Hdrop: Handle {
 	/// Prefer using [`HDROP::iter`](crate::prelude::shell_Hdrop::iter), which
 	/// calls `DragFinish` automatically.
 	fn DragFinish(&mut self) {
-		unsafe { shell::ffi::DragFinish(self.as_ptr()); }
+		unsafe { shell::ffi::DragFinish(self.ptr()); }
 		*self = Self::INVALID;
 	}
 
@@ -94,7 +94,7 @@ pub trait shell_Hdrop: Handle {
 
 		match unsafe {
 			shell::ffi::DragQueryFileW(
-				self.as_ptr(),
+				self.ptr(),
 				ifile.unwrap_or(0xffff_ffff),
 				buf.map_or(std::ptr::null_mut(), |buf| buf.as_mut_ptr()),
 				cch as _,
@@ -114,7 +114,7 @@ pub trait shell_Hdrop: Handle {
 	fn DragQueryPoint(&self) -> (POINT, bool) {
 		let mut pt = POINT::default();
 		let client_area = unsafe {
-			shell::ffi::DragQueryPoint(self.as_ptr(), &mut pt as *mut _ as _)
+			shell::ffi::DragQueryPoint(self.ptr(), &mut pt as *mut _ as _)
 		};
 		(pt, client_area != 0)
 	}

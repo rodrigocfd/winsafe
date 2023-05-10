@@ -70,7 +70,7 @@ pub trait kernel_Hthread: Handle {
 		let mut exit_code = u32::default();
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::GetExitCodeThread(self.as_ptr(), &mut exit_code)
+				kernel::ffi::GetExitCodeThread(self.ptr(), &mut exit_code)
 			},
 		).map(|_| exit_code)
 	}
@@ -79,7 +79,7 @@ pub trait kernel_Hthread: Handle {
 	/// method.
 	#[must_use]
 	fn GetProcessIdOfThread(&self) -> SysResult<u32> {
-		match unsafe { kernel::ffi::GetProcessIdOfThread(self.as_ptr()) } {
+		match unsafe { kernel::ffi::GetProcessIdOfThread(self.ptr()) } {
 			0 => Err(GetLastError()),
 			id => Ok(id),
 		}
@@ -89,7 +89,7 @@ pub trait kernel_Hthread: Handle {
 	/// method.
 	#[must_use]
 	fn GetThreadId(&self) -> SysResult<u32> {
-		match unsafe { kernel::ffi::GetThreadId(self.as_ptr()) } {
+		match unsafe { kernel::ffi::GetThreadId(self.ptr()) } {
 			0 => Err(GetLastError()),
 			id => Ok(id),
 		}
@@ -107,7 +107,7 @@ pub trait kernel_Hthread: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::GetThreadTimes(
-					self.as_ptr(),
+					self.ptr(),
 					creation as *mut _ as _,
 					exit as *mut _ as _,
 					kernel as *mut _ as _,
@@ -129,7 +129,7 @@ pub trait kernel_Hthread: Handle {
 		unsafe {
 			bool_to_sysresult(
 				kernel::ffi::OpenThreadToken(
-					self.as_ptr(),
+					self.ptr(),
 					desired_access.raw(),
 					open_as_self as _,
 					handle.as_mut(),
@@ -141,7 +141,7 @@ pub trait kernel_Hthread: Handle {
 	/// [`ResumeThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread)
 	/// method.
 	fn ResumeThread(&self) -> SysResult<u32> {
-		minus1_as_error(unsafe { kernel::ffi::ResumeThread(self.as_ptr()) })
+		minus1_as_error(unsafe { kernel::ffi::ResumeThread(self.ptr()) })
 	}
 
 	/// [`SetThreadIdealProcessor`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setthreadidealprocessor)
@@ -151,7 +151,7 @@ pub trait kernel_Hthread: Handle {
 	fn SetThreadIdealProcessor(&self, ideal_processor: u32) -> SysResult<u32> {
 		minus1_as_error(
 			unsafe {
-				kernel::ffi::SetThreadIdealProcessor(self.as_ptr(), ideal_processor)
+				kernel::ffi::SetThreadIdealProcessor(self.ptr(), ideal_processor)
 			},
 		)
 	}
@@ -167,7 +167,7 @@ pub trait kernel_Hthread: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::SetThreadIdealProcessorEx(
-					self.as_ptr(),
+					self.ptr(),
 					&ideal_processor as *const _ as _,
 					&mut prev as *mut _ as _,
 				)
@@ -183,7 +183,7 @@ pub trait kernel_Hthread: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::SetThreadPriorityBoost(
-					self.as_ptr(),
+					self.ptr(),
 					disable_priority_boost as _,
 				)
 			},
@@ -193,14 +193,14 @@ pub trait kernel_Hthread: Handle {
 	/// [`SuspendThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-suspendthread)
 	/// method.
 	fn SuspendThread(&self) -> SysResult<u32> {
-		minus1_as_error(unsafe { kernel::ffi::SuspendThread(self.as_ptr()) })
+		minus1_as_error(unsafe { kernel::ffi::SuspendThread(self.ptr()) })
 	}
 
 	/// [`TerminateThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminatethread)
 	/// method.
 	fn TerminateThread(&self, exit_code: u32) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { kernel::ffi::TerminateThread(self.as_ptr(), exit_code) },
+			unsafe { kernel::ffi::TerminateThread(self.ptr(), exit_code) },
 		)
 	}
 }

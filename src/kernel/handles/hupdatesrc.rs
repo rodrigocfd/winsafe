@@ -53,7 +53,7 @@ pub trait kernel_Hupdatersrc: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::UpdateResourceW(
-					self.as_ptr(),
+					self.ptr(),
 					resource_type.as_ptr(),
 					resource_id.as_ptr(),
 					language.into(),

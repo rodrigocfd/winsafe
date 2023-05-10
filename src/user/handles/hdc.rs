@@ -31,7 +31,7 @@ pub trait user_Hdc: Handle {
 		let wtext = WString::from_str(text);
 		match unsafe {
 			user::ffi::DrawText(
-				self.as_ptr(),
+				self.ptr(),
 				wtext.as_ptr(),
 				wtext.str_len() as _,
 				bounds as *const _ as _,
@@ -73,7 +73,7 @@ pub trait user_Hdc: Handle {
 		bool_to_sysresult(
 			unsafe {
 				user::ffi::EnumDisplayMonitors(
-					self.as_ptr(),
+					self.ptr(),
 					rc_clip.map_or(std::ptr::null_mut(), |rc| &rc as *const _ as _),
 					enum_display_monitors_proc::<F> as _,
 					&func as *const _ as _,
@@ -86,21 +86,21 @@ pub trait user_Hdc: Handle {
 	/// method.
 	fn InvertRect(&self, rc: &RECT) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { user::ffi::InvertRect(self.as_ptr(), rc as *const _ as _) },
+			unsafe { user::ffi::InvertRect(self.ptr(), rc as *const _ as _) },
 		)
 	}
 
 	/// [`PaintDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-paintdesktop)
 	/// method.
 	fn PaintDesktop(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { user::ffi::PaintDesktop(self.as_ptr()) })
+		bool_to_sysresult(unsafe { user::ffi::PaintDesktop(self.ptr()) })
 	}
 
 	/// [`WindowFromDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfromdc)
 	/// method.
 	#[must_use]
 	fn WindowFromDC(&self) -> Option<HWND> {
-		ptr_to_option_handle(unsafe { user::ffi::WindowFromDC(self.as_ptr()) })
+		ptr_to_option_handle(unsafe { user::ffi::WindowFromDC(self.ptr()) })
 	}
 }
 

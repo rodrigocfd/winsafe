@@ -29,7 +29,7 @@ pub trait kernel_Htransaction: Handle {
 	/// method.
 	fn CommitTransaction(&self) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { kernel::ffi::CommitTransaction(self.as_ptr()) },
+			unsafe { kernel::ffi::CommitTransaction(self.ptr()) },
 		)
 	}
 
@@ -69,7 +69,7 @@ pub trait kernel_Htransaction: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::GetTransactionId(
-					self.as_ptr(),
+					self.ptr(),
 					&mut guid as *mut _ as _,
 				)
 			},
@@ -101,7 +101,7 @@ pub trait kernel_Htransaction: Handle {
 	/// method.
 	fn RollbackTransaction(&self) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { kernel::ffi::RollbackTransaction(self.as_ptr()) },
+			unsafe { kernel::ffi::RollbackTransaction(self.ptr()) },
 		)
 	}
 }

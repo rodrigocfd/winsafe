@@ -32,7 +32,7 @@ pub trait comctl_Hwnd: Handle {
 		msg.convert_ret(
 			unsafe {
 				comctl::ffi::DefSubclassProc(
-					self.as_ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
+					self.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
 				)
 			},
 		)
@@ -46,7 +46,7 @@ pub trait comctl_Hwnd: Handle {
 		bool_to_sysresult(
 			unsafe {
 				comctl::ffi::RemoveWindowSubclass(
-					self.as_ptr(),
+					self.ptr(),
 					subclass_func as _,
 					subclass_id,
 				)
@@ -69,7 +69,7 @@ pub trait comctl_Hwnd: Handle {
 		bool_to_sysresult(
 			unsafe {
 				comctl::ffi::SetWindowSubclass(
-					self.as_ptr(),
+					self.ptr(),
 					subclass_proc as _,
 					subclass_id,
 					ref_data,

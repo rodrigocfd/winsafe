@@ -36,7 +36,7 @@ pub trait kernel_Hprocess: Handle {
 		let mut present: BOOL = 0;
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::CheckRemoteDebuggerPresent(self.as_ptr(), &mut present)
+				kernel::ffi::CheckRemoteDebuggerPresent(self.ptr(), &mut present)
 			},
 		).map(|_| present != 0)
 	}
@@ -91,7 +91,7 @@ pub trait kernel_Hprocess: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::FlushInstructionCache(
-					self.as_ptr(), base_address, size,
+					self.ptr(), base_address, size,
 				)
 			},
 		)
@@ -111,7 +111,7 @@ pub trait kernel_Hprocess: Handle {
 		let mut exit_code = u32::default();
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::GetExitCodeProcess(self.as_ptr(), &mut exit_code)
+				kernel::ffi::GetExitCodeProcess(self.ptr(), &mut exit_code)
 			},
 		).map(|_| exit_code)
 	}
@@ -121,7 +121,7 @@ pub trait kernel_Hprocess: Handle {
 	#[must_use]
 	fn GetGuiResources(&self, flags: co::GR) -> SysResult<u32> {
 		match unsafe {
-			kernel::ffi::GetGuiResources(self.as_ptr(), flags.raw())
+			kernel::ffi::GetGuiResources(self.ptr(), flags.raw())
 		} {
 			0 => Err(GetLastError()),
 			count => Ok(count),
@@ -132,7 +132,7 @@ pub trait kernel_Hprocess: Handle {
 	/// method.
 	#[must_use]
 	fn GetPriorityClass(&self) -> SysResult<co::PRIORITY_CLASS> {
-		match unsafe { kernel::ffi::GetPriorityClass(self.as_ptr()) } {
+		match unsafe { kernel::ffi::GetPriorityClass(self.ptr()) } {
 			0 => Err(GetLastError()),
 			pc => Ok(unsafe { co::PRIORITY_CLASS::from_raw(pc) }),
 		}
@@ -145,7 +145,7 @@ pub trait kernel_Hprocess: Handle {
 		let mut count = u32::default();
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::GetProcessHandleCount(self.as_ptr(), &mut count)
+				kernel::ffi::GetProcessHandleCount(self.ptr(), &mut count)
 			},
 		).map(|_| count)
 	}
@@ -154,7 +154,7 @@ pub trait kernel_Hprocess: Handle {
 	/// method.
 	#[must_use]
 	fn GetProcessId(&self) -> SysResult<u32> {
-		match unsafe { kernel::ffi::GetProcessId(self.as_ptr()) } {
+		match unsafe { kernel::ffi::GetProcessId(self.ptr()) } {
 			0 => Err(GetLastError()),
 			id => Ok(id),
 		}
@@ -172,7 +172,7 @@ pub trait kernel_Hprocess: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::GetProcessTimes(
-					self.as_ptr(),
+					self.ptr(),
 					creation as *mut _ as _,
 					exit as *mut _ as _,
 					kernel as *mut _ as _,
@@ -189,7 +189,7 @@ pub trait kernel_Hprocess: Handle {
 		let mut critical: BOOL = 0;
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::IsProcessCritical(self.as_ptr(), &mut critical)
+				kernel::ffi::IsProcessCritical(self.ptr(), &mut critical)
 			},
 		).map(|_| critical != 0)
 	}
@@ -199,7 +199,7 @@ pub trait kernel_Hprocess: Handle {
 	#[must_use]
 	fn IsWow64Process(&self) -> SysResult<bool> {
 		let mut wow64: BOOL = 0;
-		match unsafe { kernel::ffi::IsWow64Process(self.as_ptr(), &mut wow64) } {
+		match unsafe { kernel::ffi::IsWow64Process(self.ptr(), &mut wow64) } {
 			0 => Err(GetLastError()),
 			_ => Ok(wow64 != 0),
 		}
@@ -239,7 +239,7 @@ pub trait kernel_Hprocess: Handle {
 		unsafe {
 			bool_to_sysresult(
 				kernel::ffi::OpenProcessToken(
-					self.as_ptr(),
+					self.ptr(),
 					desired_access.raw(),
 					handle.as_mut(),
 				),
@@ -259,7 +259,7 @@ pub trait kernel_Hprocess: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::QueryFullProcessImageNameW(
-					self.as_ptr(),
+					self.ptr(),
 					flags.raw(),
 					buf.as_mut_ptr(),
 					&mut sz,
@@ -276,7 +276,7 @@ pub trait kernel_Hprocess: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::QueryProcessAffinityUpdateMode(
-					self.as_ptr(),
+					self.ptr(),
 					affinity.as_mut(),
 				)
 			},
@@ -290,7 +290,7 @@ pub trait kernel_Hprocess: Handle {
 	{
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::SetPriorityClass(self.as_ptr(), prority_class.raw())
+				kernel::ffi::SetPriorityClass(self.ptr(), prority_class.raw())
 			},
 		)
 	}
@@ -302,7 +302,7 @@ pub trait kernel_Hprocess: Handle {
 	{
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::SetProcessAffinityUpdateMode(self.as_ptr(), flags.raw())
+				kernel::ffi::SetProcessAffinityUpdateMode(self.ptr(), flags.raw())
 			},
 		)
 	}
@@ -315,7 +315,7 @@ pub trait kernel_Hprocess: Handle {
 		bool_to_sysresult(
 			unsafe {
 				kernel::ffi::SetProcessPriorityBoost(
-					self.as_ptr(),
+					self.ptr(),
 					disable_priority_boost as _,
 				)
 			},
@@ -326,7 +326,7 @@ pub trait kernel_Hprocess: Handle {
 	/// method.
 	fn TerminateProcess(&self, exit_code: u32) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { kernel::ffi::TerminateProcess(self.as_ptr(), exit_code) },
+			unsafe { kernel::ffi::TerminateProcess(self.ptr(), exit_code) },
 		)
 	}
 
@@ -338,7 +338,7 @@ pub trait kernel_Hprocess: Handle {
 		match unsafe {
 			co::WAIT::from_raw(
 				kernel::ffi::WaitForSingleObject(
-					self.as_ptr(),
+					self.ptr(),
 					milliseconds.unwrap_or(INFINITE),
 				),
 			)

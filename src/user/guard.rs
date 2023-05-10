@@ -22,13 +22,13 @@ impl<'a> Drop for CloseClipboardGuard<'a> {
 
 impl<'a> CloseClipboardGuard<'a> {
 	/// Constructs the guard by taking ownership of the handle.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure you must call
 	/// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
 	/// at the end of scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -100,7 +100,7 @@ impl<'a, H> Drop for EndPaintGuard<'a, H>
 {
 	fn drop(&mut self) {
 		unsafe {
-			user::ffi::EndPaint(self.hwnd.as_ptr(), &self.ps as *const _ as _);
+			user::ffi::EndPaint(self.hwnd.ptr(), &self.ps as *const _ as _);
 		}
 	}
 }
@@ -127,13 +127,13 @@ impl<'a, H> EndPaintGuard<'a, H>
 	where H: user_Hwnd,
 {
 	/// Constructs the guard by taking ownership of the objects.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure you must call
 	/// [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint)
 	/// at the end of scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -173,13 +173,13 @@ impl<'a, H> ReleaseCaptureGuard<'a, H>
 	where H: user_Hwnd,
 {
 	/// Constructs the guard by taking ownership of the handles.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure you must call
 	/// [`ReleaseCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasecapture)
 	/// at the end of scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -213,7 +213,7 @@ impl<'a, H> Drop for ReleaseDCGuard<'a, H>
 	fn drop(&mut self) {
 		if let Some(h) = self.hwnd.as_opt() {
 			if let Some(dc) = self.hdc.as_opt() {
-				unsafe { user::ffi::ReleaseDC(h.as_ptr(), dc.as_ptr()); } // ignore errors
+				unsafe { user::ffi::ReleaseDC(h.ptr(), dc.ptr()); } // ignore errors
 			}
 		}
 	}
@@ -241,13 +241,13 @@ impl<'a, H> ReleaseDCGuard<'a, H>
 	where H: user_Hwnd,
 {
 	/// Constructs the guard by taking ownership of the handles.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure the handle must be freed with
 	/// [`ReleaseDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
 	/// at the end of scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]

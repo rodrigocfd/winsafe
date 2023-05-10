@@ -63,7 +63,7 @@ pub trait shell_ITaskbarList4: shell_ITaskbarList3 {
 			unsafe {
 				(vt::<ITaskbarList4VT>(self).SetTabProperties)(
 					self.ptr(),
-					hwnd_tab.as_ptr(),
+					hwnd_tab.ptr(),
 					stp_flags.raw(),
 				)
 			},

@@ -29,7 +29,7 @@ impl<T> Drop for DeleteObjectGuard<T>
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.handle.as_opt() {
-			unsafe { gdi::ffi::DeleteObject(h.as_ptr()); } // ignore errors
+			unsafe { gdi::ffi::DeleteObject(h.ptr()); } // ignore errors
 		}
 	}
 }
@@ -56,13 +56,13 @@ impl<T> DeleteObjectGuard<T>
 	where T: GdiObject,
 {
 	/// Constructs the guard by taking ownership of the handle.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure the handle must be freed with
 	/// [`DeleteObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
 	/// at the end of scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -141,7 +141,7 @@ impl<'a, H, G> Drop for SelectObjectGuard<'a, H, G>
 	fn drop(&mut self) {
 		if let Some(h) = self.hdc.as_opt() {
 			if let Some(g) = self.prev_hgdi.as_opt() {
-				unsafe { gdi::ffi::SelectObject(h.as_ptr(), g.as_ptr()); } // ignore errors
+				unsafe { gdi::ffi::SelectObject(h.ptr(), g.ptr()); } // ignore errors
 			}
 		}
 	}
@@ -152,13 +152,13 @@ impl<'a, H, G> SelectObjectGuard<'a, H, G>
 		G: GdiObject,
 {
 	/// Constructs the guard by taking ownership of the handle.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure the handle must be again passed to
 	/// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject)
 	/// at the end of scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]

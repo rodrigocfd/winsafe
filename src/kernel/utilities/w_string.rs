@@ -8,7 +8,7 @@ pub const SSO_LEN: usize = 20;
 /// Stores a `[u16]` buffer for a null-terminated
 /// [Unicode UTF-16](https://learn.microsoft.com/en-us/windows/win32/intl/unicode-in-the-windows-api)
 /// wide string natively used by Windows.
-/// 
+///
 /// Uses
 /// [Short String Optimization](https://joellaity.com/2020/01/31/string.html)
 /// technique for faster performance.
@@ -35,7 +35,7 @@ impl std::fmt::Debug for WString {
 impl WString {
 	/// Stores an UTF-16 null-terminated string from an optional
 	/// [`&str`](https://doc.rust-lang.org/std/primitive.str.html).
-	/// 
+	///
 	/// If `s` is `None`, no allocation is made.
 	#[must_use]
 	pub fn from_opt_str(s: Option<&str>) -> Self {
@@ -52,7 +52,7 @@ impl WString {
 	/// Stores a series of UTF-16 null-terminated strings. The buffer will end
 	/// with two terminating nulls – that means further retrieval operations
 	/// will "see" only the first string.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -62,7 +62,7 @@ impl WString {
 
 	/// Stores an UTF-16 null-terminated string by copying from a buffer,
 	/// specifying the number of chars to be copied.
-	/// 
+	///
 	/// The `src` buffer doesn't need to be null-terminated.
 	#[must_use]
 	pub fn from_wchars_count(src: *const u16, num_chars: usize) -> Self {
@@ -78,7 +78,7 @@ impl WString {
 	}
 
 	/// Stores an UTF-16 null-terminated string by copying from a slice.
-	/// 
+	///
 	/// The `src` slice doesn't need to be null-terminated.
 	#[must_use]
 	pub fn from_wchars_slice(src: &[u16]) -> Self {
@@ -96,13 +96,13 @@ impl WString {
 	/// [`LPWSTR`](https://learn.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
 	/// pointer to the internal UTF-16 string buffer, to be passed to native
 	/// Win32 functions. This is useful to receive strings.
-	/// 
+	///
 	/// # Panics
-	/// 
+	///
 	/// Panics if the buffer was not allocated.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure to alloc enough room, otherwise a buffer overrun may occur.
 	#[must_use]
 	pub unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
@@ -119,7 +119,7 @@ impl WString {
 	/// [`LPCWSTR`](https://learn.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
 	/// pointer to the internal UTF-16 string buffer, to be passed to native
 	/// Win32 functions.
-	/// 
+	///
 	/// If the buffer was not allocated, returns a null pointer.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
@@ -156,7 +156,7 @@ impl WString {
 				.for_each(|(src, dest)| *dest = *src);
 			dest[usable_len..].iter_mut()
 				.for_each(|dest| *dest = 0x0000); // fill the rest with zero
-		}			
+		}
 	}
 
 	/// Fills the entire buffer with zeros.
@@ -250,7 +250,7 @@ impl WString {
 			.map(|ch| *ch as u16) // raw u8 to u16 conversion
 			.collect()
 	}
-	
+
 	fn parse_utf16(data: &[u8], is_big_endian: bool) -> Vec<u16> {
 		let data = if data.len() % 2 == 1 {
 			&data[..data.len() - 1] // if odd number of bytes, discard last one
@@ -404,7 +404,7 @@ impl Buffer {
 	unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
 		match self {
 			Self::Stack(arr) => arr.as_mut_ptr(),
-			Self::Heap((hlocal, _)) => hlocal.as_ptr() as _,
+			Self::Heap((hlocal, _)) => hlocal.ptr() as _,
 			Self::Unallocated => panic!("Trying to use an unallocated WString buffer."),
 		}
 	}
@@ -413,7 +413,7 @@ impl Buffer {
 		match self {
 			Self::Stack(arr) => arr,
 			Self::Heap((hlocal, num_chars)) =>
-				unsafe { std::slice::from_raw_parts_mut(hlocal.as_ptr() as _, *num_chars) },
+				unsafe { std::slice::from_raw_parts_mut(hlocal.ptr() as _, *num_chars) },
 			Self::Unallocated => &mut [],
 		}
 	}
@@ -421,7 +421,7 @@ impl Buffer {
 	fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Stack(arr) => arr.as_ptr(),
-			Self::Heap((hlocal, _)) => hlocal.as_ptr() as _,
+			Self::Heap((hlocal, _)) => hlocal.ptr() as _,
 			Self::Unallocated => std::ptr::null(),
 		}
 	}
@@ -430,7 +430,7 @@ impl Buffer {
 		match self {
 			Self::Stack(arr) => arr,
 			Self::Heap((hlocal, num_chars)) =>
-				unsafe { std::slice::from_raw_parts(hlocal.as_ptr() as _, *num_chars) },
+				unsafe { std::slice::from_raw_parts(hlocal.ptr() as _, *num_chars) },
 			Self::Unallocated => &[],
 		}
 	}

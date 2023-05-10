@@ -58,7 +58,7 @@ pub trait shell_ITaskbarList2: shell_ITaskbarList {
 			unsafe {
 				(vt::<ITaskbarList2VT>(self).MarkFullscreenWindow)(
 					self.ptr(),
-					hwnd.as_ptr(),
+					hwnd.ptr(),
 					full_screen as _,
 				)
 			},

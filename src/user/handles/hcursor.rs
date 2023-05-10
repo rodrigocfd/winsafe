@@ -27,7 +27,7 @@ pub trait user_Hcursor: Handle {
 	#[must_use]
 	fn CopyCursor(&self) -> SysResult<DestroyCursorGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(user::ffi::CopyIcon(self.as_ptr()))
+			ptr_to_sysresult_handle(user::ffi::CopyIcon(self.ptr()))
 				.map(|h| DestroyCursorGuard::new(h))
 		}
 	}
@@ -36,7 +36,7 @@ pub trait user_Hcursor: Handle {
 	/// method.
 	fn SetSystemCursor(&self, id: co::OCR) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { user::ffi::SetSystemCursor(self.as_ptr(), id.raw()) },
+			unsafe { user::ffi::SetSystemCursor(self.ptr(), id.raw()) },
 		)
 	}
 }

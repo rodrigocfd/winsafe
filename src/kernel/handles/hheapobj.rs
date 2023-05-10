@@ -111,7 +111,7 @@ pub trait kernel_Hheapobj: Handle {
 		SetLastError(co::ERROR::SUCCESS);
 		unsafe {
 			ptr_to_sysresult_handle(
-				kernel::ffi::HeapAlloc(self.as_ptr(), flags.raw(), bytes),
+				kernel::ffi::HeapAlloc(self.ptr(), flags.raw(), bytes),
 			).map(|h| HeapFreeGuard::new(self.raw_copy(), h))
 		}
 	}
@@ -119,7 +119,7 @@ pub trait kernel_Hheapobj: Handle {
 	/// [`HeapCompact`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcompact)
 	/// method.
 	fn HeapCompact(&self, flags: co::HEAP_SIZE) -> SysResult<usize> {
-		match unsafe { kernel::ffi::HeapCompact(self.as_ptr(), flags.raw()) } {
+		match unsafe { kernel::ffi::HeapCompact(self.ptr(), flags.raw()) } {
 			0 => Err(GetLastError()),
 			n => Ok(n),
 		}
@@ -154,7 +154,7 @@ pub trait kernel_Hheapobj: Handle {
 	#[must_use]
 	fn HeapLock(&self) -> SysResult<HeapUnlockGuard<'_, Self>> {
 		unsafe {
-			bool_to_sysresult(kernel::ffi::HeapLock(self.as_ptr()))
+			bool_to_sysresult(kernel::ffi::HeapLock(self.ptr()))
 				.map(|_| HeapUnlockGuard::new(self))
 		}
 	}
@@ -174,9 +174,9 @@ pub trait kernel_Hheapobj: Handle {
 		ptr_to_sysresult_handle(
 			unsafe {
 				kernel::ffi::HeapReAlloc(
-					self.as_ptr(),
+					self.ptr(),
 					flags.raw(),
-					mem.as_ptr(),
+					mem.ptr(),
 					bytes,
 				)
 			},
@@ -193,7 +193,7 @@ pub trait kernel_Hheapobj: Handle {
 		const FAILED: usize = -1isize as usize;
 
 		match unsafe {
-			kernel::ffi::HeapSize(self.as_ptr(), flags.raw(), mem.as_ptr())
+			kernel::ffi::HeapSize(self.ptr(), flags.raw(), mem.ptr())
 		} {
 			FAILED => Err(GetLastError()),
 			n => Ok(n),
@@ -209,7 +209,7 @@ pub trait kernel_Hheapobj: Handle {
 	#[must_use]
 	fn HeapWalk(&self, entry: &mut PROCESS_HEAP_ENTRY) -> SysResult<bool> {
 		match unsafe {
-			kernel::ffi::HeapWalk(self.as_ptr(), entry as *mut _ as _)
+			kernel::ffi::HeapWalk(self.ptr(), entry as *mut _ as _)
 		} {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_ITEMS => Ok(false),
