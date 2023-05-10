@@ -31,7 +31,7 @@ com_interface! { IEventTrigger: "d45b0167-9653-4eef-b94f-0732ca7af251";
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IEventTrigger, ITrigger};
 	///
-	/// let trigger: IEventTrigger; // initialized somewhere
+	/// let trigger: ITrigger; // initialized somewhere
 	/// # let trigger = unsafe { ITrigger::null() };
 	///
 	/// let event_trigger = trigger

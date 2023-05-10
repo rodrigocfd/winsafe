@@ -30,7 +30,7 @@ com_interface! { IDailyTrigger: "126c5cd8-b288-41d5-8dbf-e491446adc5c";
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IDailyTrigger, ITrigger};
 	///
-	/// let trigger: IDailyTrigger; // initialized somewhere
+	/// let trigger: ITrigger; // initialized somewhere
 	/// # let trigger = unsafe { ITrigger::null() };
 	///
 	/// let daily_trigger = trigger
