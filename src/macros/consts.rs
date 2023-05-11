@@ -419,3 +419,43 @@ macro_rules! const_wsex {
 		}
 	};
 }
+
+/// Declares the type of a constant for a static string.
+macro_rules! const_str {
+	(
+		$name:ident;
+		$( #[$doc:meta] )*
+		=>
+		$(
+			$( #[$pubvaldoc:meta] )*
+			$pubvalname:ident $pubval:expr
+		)*
+	) => {
+		$( #[$doc] )*
+		pub struct $name(&'static str);
+
+		impl crate::prelude::NativeStrConst for $name {
+			fn wstr(&self) -> crate::kernel::decl::WString {
+				crate::kernel::decl::WString::from_str(self.0)
+			}
+		}
+
+		impl $name {
+			/// Constructs a new object by wrapping the given `&'static str`
+			/// value.
+			///
+			/// # Safety
+			///
+			/// Be sure the given value is meaningful for the actual type.
+			#[must_use]
+			pub const unsafe fn from_raw(v: &'static str) -> Self {
+				Self(v)
+			}
+
+			$(
+				$( #[$pubvaldoc] )*
+				pub const $pubvalname: Self = unsafe { Self::from_raw($pubval) };
+			)*
+		}
+	};
+}

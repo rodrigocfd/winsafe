@@ -23,6 +23,7 @@ extern_sys! { "advapi32";
 	IsWellKnownSid(PVOID, u32) -> BOOL
 	LookupAccountNameW(PCSTR, PCSTR, *mut u8, *mut u32, PSTR, *mut u32, *mut u32) -> BOOL
 	LookupAccountSidW(PCSTR, PCVOID, PSTR, *mut u32, PSTR, *mut u32, *mut u32) -> BOOL
+	LookupPrivilegeValueW(PCSTR, PCSTR, PVOID) -> BOOL
 	RegCloseKey(HANDLE) -> i32
 	RegConnectRegistryW(PCSTR, HANDLE, *mut HANDLE) -> i32
 	RegCopyTreeW(HANDLE, PCSTR, HANDLE) -> i32

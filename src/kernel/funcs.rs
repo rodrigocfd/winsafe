@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 use crate::{co, kernel};
 use crate::kernel::decl::{
-	DISK_SPACE_INFORMATION, FILETIME, HLOCAL, LANGID, MEMORYSTATUSEX,
+	DISK_SPACE_INFORMATION, FILETIME, HLOCAL, LANGID, LUID, MEMORYSTATUSEX,
 	OSVERSIONINFOEX, SECURITY_DESCRIPTOR, SID, SID_IDENTIFIER_AUTHORITY,
 	STARTUPINFO, SysResult, SYSTEM_INFO, SYSTEMTIME, TIME_ZONE_INFORMATION,
 	WString,
@@ -17,7 +17,7 @@ use crate::kernel::privs::{
 	bool_to_sysresult, INVALID_FILE_ATTRIBUTES, MAX_COMPUTERNAME_LENGTH,
 	MAX_PATH, parse_multi_z_str, ptr_to_sysresult, SECURITY_DESCRIPTOR_REVISION,
 };
-use crate::prelude::{Handle, IntUnderlying};
+use crate::prelude::{Handle, IntUnderlying, NativeStrConst};
 
 /// [`AllocateAndInitializeSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-allocateandinitializesid)
 /// function.
@@ -1254,6 +1254,24 @@ pub fn LookupAccountSid(
 			)
 		},
 	).map(|_| (account_buf.to_string(), domain_buf.to_string(), sid_name_use))
+}
+
+/// [`LookupPrivilegeValue`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupprivilegevaluew)
+/// function.
+#[must_use]
+pub fn LookupPrivilegeValue(
+	system_name: Option<&str>, name: co::SE_PRIV) -> SysResult<LUID>
+{
+	let mut luid = LUID::new(0, 0);
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::LookupPrivilegeValueW(
+				WString::from_opt_str(system_name).as_ptr(),
+				name.wstr().as_ptr(),
+				&mut luid as *mut _ as _,
+			)
+		},
+	).map(|_| luid)
 }
 
 /// [`LOWORD`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632659(v=vs.85))

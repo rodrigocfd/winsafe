@@ -3,7 +3,7 @@
 use std::{fmt, hash, ops};
 
 use crate::co;
-use crate::kernel::decl::{FormatMessage, LANGID};
+use crate::kernel::decl::{FormatMessage, LANGID, WString};
 
 /// A type which has a primitive integer as its underlying type.
 pub trait IntUnderlying: Sized
@@ -56,6 +56,13 @@ pub trait NativeBitflag: NativeConst
 	/// Equivalent to `(val & other) != 0`.
 	#[must_use]
 	fn has(&self, other: Self) -> bool;
+}
+
+/// A native typed constant, with a `&'static str` as its underlying type.
+pub trait NativeStrConst {
+	/// Returns the underlying `&'static str` converted to
+	/// [`WString`](crate::WString).
+	fn wstr(&self) -> WString;
 }
 
 /// A system error which can be formatted with

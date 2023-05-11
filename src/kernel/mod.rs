@@ -7,7 +7,7 @@ pub mod co;
 pub mod guard;
 
 mod aliases;
-mod co_traits;
+mod base_traits;
 mod enums;
 mod funcs;
 mod handles;
@@ -24,6 +24,6 @@ pub mod decl {
 }
 
 pub mod traits {
-	pub use super::co_traits::*;
+	pub use super::base_traits::*;
 	pub use super::handles::traits::*;
 }

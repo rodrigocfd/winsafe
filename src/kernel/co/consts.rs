@@ -18,7 +18,7 @@ const_bitflag! { ACCESS_RIGHTS: u32;
 const_bitflag! { CONSOLE: u32;
 	/// [`SetConsoleMode`](crate::prelude::kernel_Hstd::SetConsoleMode) `mode`
 	/// (`u32`).
-	/// 
+	///
 	/// Originally has no prefix.
 	=>
 	=>
@@ -427,7 +427,7 @@ const_bitflag! { GR: u32;
 const_bitflag! { HEAP_ALLOC: u32;
 	/// [`HHEAPOBJ::HeapAlloc`](crate::prelude::kernel_Hheapobj::HeapAlloc)
 	/// `flags` (`u32`).
-	/// 
+	///
 	/// Originally has `HEAP` prefix.
 	=>
 	=>
@@ -441,7 +441,7 @@ const_bitflag! { HEAP_ALLOC: u32;
 const_bitflag! { HEAP_CREATE: u32;
 	/// [`HHEAPOBJ::HeapCreate`](crate::prelude::kernel_Hheapobj::HeapCreate)
 	/// `options` (`u32`).
-	/// 
+	///
 	/// Originally has `HEAP` prefix.
 	=>
 	=>
@@ -455,7 +455,7 @@ const_bitflag! { HEAP_CREATE: u32;
 const_bitflag! { HEAP_REALLOC: u32;
 	/// [`HHEAPOBJ::HeapReAlloc`](crate::prelude::kernel_Hheapobj::HeapReAlloc)
 	/// `options` (`u32`).
-	/// 
+	///
 	/// Originally has `HEAP` prefix.
 	=>
 	=>
@@ -472,7 +472,7 @@ const_bitflag! { HEAP_SIZE: u32;
 	/// and
 	/// [`HHEAPOBJ::HeapCompact`](crate::prelude::kernel_Hheapobj::HeapCompact)
 	/// `options` (`u32`).
-	/// 
+	///
 	/// Originally has `HEAP` prefix.
 	=>
 	=>
@@ -748,7 +748,7 @@ const_bitflag! { PRIORITY_CLASS: u32;
 	/// and
 	/// [`SetPriorityClass`](crate::prelude::kernel_Hprocess::SetPriorityClass)
 	/// `priority_class` (`u32`).
-	/// 
+	///
 	/// Originally has `PRIORITY_CLASS` suffix.
 	=>
 	=>
@@ -961,7 +961,7 @@ const_ordinary! { RID: u32;
 	/// [portion](https://learn.microsoft.com/en-us/windows/win32/secgloss/r-gly)
 	/// of a [`SID`](crate::SID) that identifies a user or group in relation to
 	/// the authority that issued the `SID`.
-	/// 
+	///
 	/// Originally has `RID` suffix.
 	=>
 	=>
@@ -1215,6 +1215,50 @@ const_bitflag! { SE: u16;
 	SELF_RELATIVE 0x8000
 }
 
+const_str! { SE_PRIV;
+	/// NT defined privileges for
+	/// [`LookupPrivilegeValue`](crate::LookupPrivilegeValue) (`&'static str`).
+	///
+	/// Originally has `SE` prefix.
+	=>
+	CREATE_TOKEN_NAME "SeCreateTokenPrivilege"
+	ASSIGNPRIMARYTOKEN_NAME "SeAssignPrimaryTokenPrivilege"
+	LOCK_MEMORY_NAME "SeLockMemoryPrivilege"
+	INCREASE_QUOTA_NAME "SeIncreaseQuotaPrivilege"
+	UNSOLICITED_INPUT_NAME "SeUnsolicitedInputPrivilege"
+	MACHINE_ACCOUNT_NAME "SeMachineAccountPrivilege"
+	TCB_NAME "SeTcbPrivilege"
+	SECURITY_NAME "SeSecurityPrivilege"
+	TAKE_OWNERSHIP_NAME "SeTakeOwnershipPrivilege"
+	LOAD_DRIVER_NAME "SeLoadDriverPrivilege"
+	SYSTEM_PROFILE_NAME "SeSystemProfilePrivilege"
+	SYSTEMTIME_NAME "SeSystemtimePrivilege"
+	PROF_SINGLE_PROCESS_NAME "SeProfileSingleProcessPrivilege"
+	INC_BASE_PRIORITY_NAME "SeIncreaseBasePriorityPrivilege"
+	CREATE_PAGEFILE_NAME "SeCreatePagefilePrivilege"
+	CREATE_PERMANENT_NAME "SeCreatePermanentPrivilege"
+	BACKUP_NAME "SeBackupPrivilege"
+	RESTORE_NAME "SeRestorePrivilege"
+	SHUTDOWN_NAME "SeShutdownPrivilege"
+	DEBUG_NAME "SeDebugPrivilege"
+	AUDIT_NAME "SeAuditPrivilege"
+	SYSTEM_ENVIRONMENT_NAME "SeSystemEnvironmentPrivilege"
+	CHANGE_NOTIFY_NAME "SeChangeNotifyPrivilege"
+	REMOTE_SHUTDOWN_NAME "SeRemoteShutdownPrivilege"
+	UNDOCK_NAME "SeUndockPrivilege"
+	SYNC_AGENT_NAME "SeSyncAgentPrivilege"
+	ENABLE_DELEGATION_NAME "SeEnableDelegationPrivilege"
+	MANAGE_VOLUME_NAME "SeManageVolumePrivilege"
+	IMPERSONATE_NAME "SeImpersonatePrivilege"
+	CREATE_GLOBAL_NAME "SeCreateGlobalPrivilege"
+	TRUSTED_CREDMAN_ACCESS_NAME "SeTrustedCredManAccessPrivilege"
+	RELABEL_NAME "SeRelabelPrivilege"
+	INC_WORKING_SET_NAME "SeIncreaseWorkingSetPrivilege"
+	TIME_ZONE_NAME "SeTimeZonePrivilege"
+	CREATE_SYMBOLIC_LINK_NAME "SeCreateSymbolicLinkPrivilege"
+	DELEGATE_SESSION_USER_IMPERSONATE_NAME "SeDelegateSessionUserImpersonatePrivilege"
+}
+
 const_bitflag! { SECTION: u32;
 	/// Composes [`FILE_MAP`](crate::co::FILE_MAP) (`u32`).
 	=>
@@ -1242,7 +1286,7 @@ const_bitflag! { SECURITY_IMPERSONATION: u32;
 const_bitflag! { SECURITY_INFORMATION: u32;
 	/// [`SECURITY_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/secauthz/security-information)
 	/// flags (`u32`).
-	/// 
+	///
 	/// Originally has `SECURITY_INFORMATION` suffix.
 	=>
 	=>
@@ -1265,7 +1309,7 @@ const_bitflag! { SECURITY_INFORMATION: u32;
 const_ordinary! { SID_NAME_USE: u32;
 	/// [`SID_NAME_USE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-sid_name_use)
 	/// enumeration (`u32`).
-	/// 
+	///
 	/// Originally has `Sid` prefix.
 	=>
 	=>
@@ -1345,7 +1389,7 @@ const_bitflag! { STARTF: u32;
 const_ordinary! { STD_HANDLE: u32;
 	/// [`GetStdHandle`](crate::prelude::kernel_Hstd::GetStdHandle) `std_handle`
 	/// (`u32`).
-	/// 
+	///
 	/// Originally has `STD` prefix and `HANDLE` suffix.
 	=>
 	=>
@@ -1677,7 +1721,7 @@ const_bitflag! { TH32CS: u32;
 const_bitflag! { THREAD_CREATE: u32;
 	/// [`HTHREAD::CreateThread`](crate::prelude::kernel_Hthread::CreateThread)
 	/// `flags` (`u32`).
-	/// 
+	///
 	/// Originally has no prefix.
 	=>
 	=>
@@ -1736,7 +1780,7 @@ const_bitflag! { TRANSACTION: u32;
 const_bitflag! { TRANSACTION_OPT: u32;
 	/// [`CrateTransaction`](crate::prelude::kernel_Htransaction::CreateTransaction)
 	/// `options` (`u32`).
-	/// 
+	///
 	/// Originally has `TRANSACTION` prefix.
 	=>
 	=>
