@@ -61,6 +61,25 @@ pub trait ole_IUnknown: Clone {
 	#[must_use]
 	unsafe fn from_ptr(p: *mut std::ffi::c_void) -> Self;
 
+	/// Returns the pointer to the underlying COM virtual table.
+	///
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
+	#[must_use]
+	fn ptr(&self) -> *mut std::ffi::c_void;
+
+	/// Returns a mutable reference do the underlying COM virtual table pointer.
+	///
+	/// # Safety
+	///
+	/// Be sure the pointer being set points to a properly allocated COM virtual
+	/// table.
+	///
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
+	#[must_use]
+	unsafe fn as_mut(&mut self) -> &mut *mut std::ffi::c_void;
+
 	/// Creates an object from a null COM virtual table pointer.
 	///
 	/// # Safety
@@ -75,18 +94,6 @@ pub trait ole_IUnknown: Clone {
 		Self::from_ptr(std::ptr::null_mut())
 	}
 
-	/// Returns a mutable reference do the underlying COM virtual table pointer.
-	///
-	/// # Safety
-	///
-	/// Be sure the pointer being set points to a properly allocated COM virtual
-	/// table.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
-	#[must_use]
-	unsafe fn as_mut(&mut self) -> &mut *mut std::ffi::c_void;
-
 	/// Returns the pointer to the underlying COM virtual table and sets the
 	/// internal pointer to null, so that
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
@@ -98,14 +105,11 @@ pub trait ole_IUnknown: Clone {
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
-	fn leak(&mut self) -> *mut std::ffi::c_void;
-
-	/// Returns the pointer to the underlying COM virtual table.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
-	#[must_use]
-	fn ptr(&self) -> *mut std::ffi::c_void;
+	fn leak(&mut self) -> *mut std::ffi::c_void {
+		let p = self.ptr();
+		unsafe { *self.as_mut() = std::ptr::null_mut(); }
+		p
+	}
 
 	/// [`IUnknown::QueryInterface`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void))
 	/// method.

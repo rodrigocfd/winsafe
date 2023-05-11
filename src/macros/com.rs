@@ -40,12 +40,6 @@ macro_rules! com_interface {
 				&mut self.0
 			}
 
-			fn leak(&mut self) -> *mut std::ffi::c_void {
-				let ptr = self.0;
-				self.0 = std::ptr::null_mut();
-				ptr
-			}
-
 			fn ptr(&self) -> *mut std::ffi::c_void {
 				self.0
 			}
