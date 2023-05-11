@@ -88,9 +88,7 @@ pub trait ole_IPicture: ole_IUnknown {
 	fn get_Height(&self) -> HrResult<i32> {
 		let mut h = i32::default();
 		ok_to_hrresult(
-			unsafe {
-				(vt::<IPictureVT>(self).get_Height)(self.ptr(), &mut h)
-			},
+			unsafe { (vt::<IPictureVT>(self).get_Height)(self.ptr(), &mut h) },
 		).map(|_| h)
 	}
 
