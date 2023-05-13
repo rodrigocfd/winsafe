@@ -58,12 +58,12 @@ pub trait NativeBitflag: NativeConst
 	fn has(&self, other: Self) -> bool;
 }
 
-/// A native typed constant, with a `&'static str` as its underlying type.
-pub trait NativeStrConst {
-	/// Returns the underlying `&'static str` converted to
-	/// [`WString`](crate::WString).
-	fn wstr(&self) -> WString;
-}
+/// A native typed constant mapped to a string.
+pub trait NativeStrConst: PartialEq + Eq
+	+ for<'a> TryFrom<&'a str, Error = co::ERROR>
+	+ Into<WString>
+	+ fmt::Debug + fmt::Display
+{}
 
 /// A system error which can be formatted with
 /// [`FormatMessage`](crate::FormatMessage).

@@ -1,6 +1,6 @@
 #![allow(unused_macros)]
 
-/// Writes pub(crate) and pub values of the given constant type.
+/// Writes `pub(crate)` and `pub` values of the given constant type.
 macro_rules! const_values {
 	(
 		$name:ident;
@@ -432,30 +432,46 @@ macro_rules! const_str {
 		)*
 	) => {
 		$( #[$doc] )*
-		pub struct $name(&'static str);
+		#[derive(Clone, Copy, PartialEq, Eq)]
+		pub enum $name {
+			$(
+				$( #[$pubvaldoc] )*
+				$pubvalname,
+			)*
+		}
 
-		impl crate::prelude::NativeStrConst for $name {
-			fn wstr(&self) -> crate::kernel::decl::WString {
-				crate::kernel::decl::WString::from_str(self.0)
+		impl crate::prelude::NativeStrConst for $name {}
+
+		impl TryFrom<&str> for $name {
+			type Error = crate::co::ERROR;
+
+			fn try_from(value: &str) -> Result<Self, Self::Error> {
+				match value {
+					$( $pubval => Ok(Self::$pubvalname), )*
+					_ => Err(crate::co::ERROR::INVALID_DATA),
+				}
 			}
 		}
 
-		impl $name {
-			/// Constructs a new object by wrapping the given `&'static str`
-			/// value.
-			///
-			/// # Safety
-			///
-			/// Be sure the given value is meaningful for the actual type.
-			#[must_use]
-			pub const unsafe fn from_raw(v: &'static str) -> Self {
-				Self(v)
+		impl From<$name> for crate::kernel::decl::WString {
+			fn from(value: $name) -> Self {
+				crate::kernel::decl::WString::from_str(
+					match value {
+						$( $name::$pubvalname => $pubval, )*
+					},
+				)
 			}
+		}
 
-			$(
-				$( #[$pubvaldoc] )*
-				pub const $pubvalname: Self = unsafe { Self::from_raw($pubval) };
-			)*
+		impl std::fmt::Debug for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+				write!(f, "{}", crate::kernel::decl::WString::from(*self))
+			}
+		}
+		impl std::fmt::Display for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+				<Self as std::fmt::Debug>::fmt(self, f) // delegate to Debug trait
+			}
 		}
 	};
 }

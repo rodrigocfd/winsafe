@@ -17,7 +17,7 @@ use crate::kernel::privs::{
 	bool_to_sysresult, INVALID_FILE_ATTRIBUTES, MAX_COMPUTERNAME_LENGTH,
 	MAX_PATH, parse_multi_z_str, ptr_to_sysresult, SECURITY_DESCRIPTOR_REVISION,
 };
-use crate::prelude::{Handle, IntUnderlying, NativeStrConst};
+use crate::prelude::{Handle, IntUnderlying};
 
 /// [`AllocateAndInitializeSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-allocateandinitializesid)
 /// function.
@@ -1256,6 +1256,39 @@ pub fn LookupAccountSid(
 	).map(|_| (account_buf.to_string(), domain_buf.to_string(), sid_name_use))
 }
 
+/// [`LookupPrivilegeName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupprivilegenamew)
+/// function.
+#[must_use]
+pub fn LookupPrivilegeName(
+	system_name: Option<&str>, luid: LUID) -> SysResult<co::SE_PRIV>
+{
+	let mut cch_name = u32::default();
+
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::LookupPrivilegeNameW(
+				WString::from_opt_str(system_name).as_ptr(),
+				&luid as *const _ as _,
+				std::ptr::null_mut(),
+				&mut cch_name,
+			)
+		},
+	)?;
+
+	let mut buf = WString::new_alloc_buf(cch_name as _);
+
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::LookupPrivilegeNameW(
+				WString::from_opt_str(system_name).as_ptr(),
+				&luid as *const _ as _,
+				buf.as_mut_ptr(),
+				&mut cch_name,
+			)
+		},
+	).map(|_| co::SE_PRIV::try_from(buf.to_string().as_str()))?
+}
+
 /// [`LookupPrivilegeValue`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupprivilegevaluew)
 /// function.
 #[must_use]
@@ -1267,7 +1300,7 @@ pub fn LookupPrivilegeValue(
 		unsafe {
 			kernel::ffi::LookupPrivilegeValueW(
 				WString::from_opt_str(system_name).as_ptr(),
-				name.wstr().as_ptr(),
+				WString::from(name).as_ptr(),
 				&mut luid as *mut _ as _,
 			)
 		},

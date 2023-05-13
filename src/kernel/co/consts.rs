@@ -1216,8 +1216,8 @@ const_bitflag! { SE: u16;
 }
 
 const_str! { SE_PRIV;
-	/// NT defined privileges for
-	/// [`LookupPrivilegeValue`](crate::LookupPrivilegeValue) (`&'static str`).
+	/// [Privilege constants](https://learn.microsoft.com/en-us/windows/win32/secauthz/privilege-constants)
+	/// (`&'static str`).
 	///
 	/// Originally has `SE` prefix.
 	=>
