@@ -420,7 +420,8 @@ macro_rules! const_wsex {
 	};
 }
 
-/// Declares the type of a constant for a static string.
+/// Declares the type of a constant with a literal string as its underlying
+/// type.
 macro_rules! const_str {
 	(
 		$name:ident;
@@ -428,17 +429,12 @@ macro_rules! const_str {
 		=>
 		$(
 			$( #[$pubvaldoc:meta] )*
-			$pubvalname:ident $pubval:expr
+			$pubvalname:ident $pubval:literal
 		)*
 	) => {
 		$( #[$doc] )*
 		#[derive(Clone, Copy, PartialEq, Eq)]
-		pub enum $name {
-			$(
-				$( #[$pubvaldoc] )*
-				$pubvalname,
-			)*
-		}
+		pub struct $name(&'static str);
 
 		impl crate::prelude::NativeStrConst for $name {}
 
@@ -455,11 +451,7 @@ macro_rules! const_str {
 
 		impl From<$name> for crate::kernel::decl::WString {
 			fn from(value: $name) -> Self {
-				crate::kernel::decl::WString::from_str(
-					match value {
-						$( $name::$pubvalname => $pubval, )*
-					},
-				)
+				crate::kernel::decl::WString::from_str(value.0)
 			}
 		}
 
@@ -472,6 +464,13 @@ macro_rules! const_str {
 			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 				<Self as std::fmt::Debug>::fmt(self, f) // delegate to Debug trait
 			}
+		}
+
+		impl $name {
+			$(
+				$( #[$pubvaldoc] )*
+				pub const $pubvalname: Self = Self($pubval);
+			)*
 		}
 	};
 }

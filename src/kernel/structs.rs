@@ -314,6 +314,14 @@ impl LUID {
 	}
 }
 
+/// [`LUID_AND_ATTRIBUTES`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-luid_and_attributes)
+/// struct.
+#[repr(C)]
+pub struct LUID_AND_ATTRIBUTES {
+	pub Luid: LUID,
+	pub Attributes: u32,
+}
+
 /// [`MODULEENTRY32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-moduleentry32w)
 /// struct.
 #[repr(C)]
@@ -722,6 +730,14 @@ pub struct TIME_ZONE_INFORMATION {
 impl TIME_ZONE_INFORMATION {
 	pub_fn_string_arr_get_set!(standardName, set_standardName);
 	pub_fn_string_arr_get_set!(daylightName, set_daylightName);
+}
+
+/// [`TOKEN_PRIVILEGES`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_privileges)
+/// struct.
+#[repr(C)]
+pub struct TOKEN_PRIVILEGES {
+	PrivilegeCount: u32,
+	Privileges: [LUID_AND_ATTRIBUTES; 1],
 }
 
 /// [`VALENT`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/ns-winreg-valentw)
