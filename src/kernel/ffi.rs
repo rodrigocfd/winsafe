@@ -176,8 +176,10 @@ extern_sys! { "kernel32";
 	LocalAlloc(u32, usize) -> HANDLE
 	LocalFlags(HANDLE) -> u32
 	LocalFree(HANDLE) -> HANDLE
+	LocalLock(HANDLE) -> PVOID
 	LocalReAlloc(HANDLE, usize, u32) -> HANDLE
 	LocalSize(HANDLE) -> usize
+	LocalUnlock(HANDLE) -> BOOL
 	LockFile(HANDLE, u32, u32, u32, u32) -> BOOL
 	LockResource(HANDLE) -> PVOID
 	lstrlenW(PCSTR) -> i32

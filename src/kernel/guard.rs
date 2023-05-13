@@ -6,7 +6,9 @@ use crate::kernel::decl::{
 	HKEY, HLOCAL, HUPDATERSRC, LODWORD, LUID_AND_ATTRIBUTES,
 	PROCESS_INFORMATION, SID, TOKEN_PRIVILEGES,
 };
-use crate::prelude::{Handle, kernel_Hfile, kernel_Hglobal, kernel_Hheapobj};
+use crate::prelude::{
+	Handle, kernel_Hfile, kernel_Hglobal, kernel_Hheapobj, kernel_Hlocal,
+};
 
 /// RAII implementation for a [`Handle`](crate::prelude::Handle) which
 /// automatically calls
@@ -501,6 +503,47 @@ impl LocalFreeSidGuard {
 	#[must_use]
 	pub const unsafe fn new(pmem: HLOCAL) -> Self {
 		Self { pmem: LocalFreeGuard::new(pmem) }
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation for [`LOCAL`](crate::LOCAL) lock which automatically
+/// calls
+/// [`LocalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localunlock)
+/// when the object goes out of scope.
+pub struct LocalUnlockGuard<'a, H>
+	where H: kernel_Hlocal,
+{
+	hlocal: &'a H,
+}
+
+impl<'a, H> Drop for LocalUnlockGuard<'a, H>
+	where H: kernel_Hlocal,
+{
+	fn drop(&mut self) {
+		if let Some(h) = self.hlocal.as_opt() {
+			unsafe { kernel::ffi::LocalUnlock(h.ptr()); } // ignore errors
+		}
+	}
+}
+
+impl<'a, H> LocalUnlockGuard<'a, H>
+	where H: kernel_Hlocal,
+{
+	/// Constructs the guard.
+	///
+	/// # Safety
+	///
+	/// Be sure the handle must be freed with
+	/// [`LocalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localunlock)
+	/// at the end of scope.
+	///
+	/// This method is used internally by the library, and not intended to be
+	/// used externally.
+	#[must_use]
+	pub const unsafe fn new(hlocal: &'a H) -> Self {
+		Self { hlocal }
 	}
 }
 

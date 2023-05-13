@@ -12,6 +12,9 @@ impl_handle! { HGLOBAL;
 	/// Handle to a
 	/// [global memory block](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc).
 	/// Originally just a `HANDLE`.
+	///
+	/// The allocated memory block is accessible through the
+	/// [`GlobalLock`](crate::prelude::kernel_Hglobal::GlobalLock) method.
 }
 
 impl kernel_Hglobal for HGLOBAL {}
@@ -50,8 +53,9 @@ pub trait kernel_Hglobal: Handle {
 	/// [`GlobalLock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globallock)
 	/// method.
 	///
-	/// Calls [`HGLOBAL::GlobalSize`](crate::prelude::kernel_Hglobal::GlobalSize)
-	/// to retrieve the size of the memory block.
+	/// Calls
+	/// [`HGLOBAL::GlobalSize`](crate::prelude::kernel_Hglobal::GlobalSize) to
+	/// retrieve the size of the memory block.
 	///
 	/// Note that this method returns two objects: a reference to the memory
 	/// block, and a guard which will call

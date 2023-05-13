@@ -2,13 +2,18 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::guard::LocalFreeGuard;
-use crate::kernel::privs::{LMEM_INVALID_HANDLE, ptr_to_sysresult_handle};
+use crate::kernel::guard::{LocalFreeGuard, LocalUnlockGuard};
+use crate::kernel::privs::{
+	LMEM_INVALID_HANDLE, ptr_to_sysresult, ptr_to_sysresult_handle,
+};
 use crate::prelude::Handle;
 
 impl_handle! { HLOCAL;
 	/// Handle to a
 	/// [local memory block](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hlocal).
+	///
+	/// The allocated memory block is accessible through the
+	/// [`LocalLock`](crate::prelude::kernel_Hlocal::LocalLock) method.
 }
 
 impl kernel_Hlocal for HLOCAL {}
@@ -42,6 +47,53 @@ pub trait kernel_Hlocal: Handle {
 		match unsafe { kernel::ffi::LocalFlags(self.ptr()) } {
 			LMEM_INVALID_HANDLE => Err(GetLastError()),
 			flags => Ok(unsafe { co::LMEM::from_raw(flags) }),
+		}
+	}
+
+	/// [`LocalLock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-locallock)
+	/// method.
+	///
+	/// Calls
+	/// [`HLOCAL::LocalSize`](crate::prelude::kernel_Hlocal::LocalSize) to
+	/// retrieve the size of the memory block.
+	///
+	/// Note that this method returns two objects: a reference to the memory
+	/// block, and a guard which will call
+	/// [`LocalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localunlock)
+	/// automatically when the object goes out of scope, so keep the guard
+	/// alive.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HLOCAL};
+	///
+	/// let hlocal = HLOCAL::LocalAlloc(
+	///     co::LMEM::FIXED | co::LMEM::ZEROINIT,
+	///     120,
+	/// )?;
+	///
+	/// let (block, _guard) = hlocal.LocalLock()?;
+	///
+	/// block[0] = 40;
+	///
+	/// // LocalUnlock() called automatically
+	///
+	/// // LocalFree() called automatically
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
+	#[must_use]
+	fn LocalLock(&self) -> SysResult<(&mut [u8], LocalUnlockGuard<'_, Self>)> {
+		let mem_sz = self.LocalSize()?;
+		unsafe {
+			ptr_to_sysresult(kernel::ffi::LocalLock(self.ptr()))
+				.map(|ptr| (
+					std::slice::from_raw_parts_mut(
+						ptr as *mut _ as *mut _, mem_sz as _),
+					LocalUnlockGuard::new(self),
+				),
+			)
 		}
 	}
 
