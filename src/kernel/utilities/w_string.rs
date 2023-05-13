@@ -28,7 +28,7 @@ impl std::fmt::Display for WString {
 
 impl std::fmt::Debug for WString {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		<dyn std::fmt::Debug>::fmt(&self.buf, f) // simply delegate
+		<Self as std::fmt::Display>::fmt(self, f) // simply delegate
 	}
 }
 
@@ -38,14 +38,14 @@ impl WString {
 	///
 	/// If `s` is `None`, no allocation is made.
 	#[must_use]
-	pub fn from_opt_str(s: Option<&str>) -> Self {
+	pub fn from_opt_str(s: Option<impl AsRef<str>>) -> Self {
 		Self { buf: Buffer::from_opt_str(s) }
 	}
 
 	/// Stores an UTF-16 null-terminated string from a
 	/// [`&str`](https://doc.rust-lang.org/std/primitive.str.html).
 	#[must_use]
-	pub fn from_str(s: &str) -> Self {
+	pub fn from_str(s: impl AsRef<str>) -> Self {
 		Self { buf: Buffer::from_str(s) }
 	}
 
@@ -315,21 +315,22 @@ impl std::fmt::Debug for Buffer {
 }
 
 impl Buffer {
-	fn from_opt_str(s: Option<&str>) -> Self {
+	fn from_opt_str(s: Option<impl AsRef<str>>) -> Self {
 		match s {
 			Some(s) => Self::from_str(s),
 			None => Self::Unallocated,
 		}
 	}
 
-	fn from_str(s: &str) -> Self {
-		let s_len = s.encode_utf16().count();
+	fn from_str(s: impl AsRef<str>) -> Self {
+		let s_len = s.as_ref().encode_utf16().count();
 		if s_len == 0 {
 			Self::Unallocated
 		} else {
 			let num_chars = s_len + 1; // room for terminating null
 			let mut new_self = Self::new_alloc_buf(num_chars);
-			s.encode_utf16()
+			s.as_ref()
+				.encode_utf16()
 				.into_iter()
 				.zip(new_self.as_mut_slice())
 				.for_each(|(src, dest)| *dest = src);
