@@ -3,6 +3,7 @@ mod iactioncollection;
 mod iboottrigger;
 mod icomhandleraction;
 mod idailytrigger;
+mod iemailaction;
 mod ieventtrigger;
 mod iexecaction;
 mod iidletrigger;
@@ -20,6 +21,7 @@ pub mod decl {
 	pub use super::iboottrigger::IBootTrigger;
 	pub use super::icomhandleraction::IComHandlerAction;
 	pub use super::idailytrigger::IDailyTrigger;
+	pub use super::iemailaction::IEmailAction;
 	pub use super::ieventtrigger::IEventTrigger;
 	pub use super::iexecaction::IExecAction;
 	pub use super::iidletrigger::IIdleTrigger;
@@ -38,6 +40,7 @@ pub mod traits {
 	pub use super::iboottrigger::taskschd_IBootTrigger;
 	pub use super::icomhandleraction::taskschd_IComHandlerAction;
 	pub use super::idailytrigger::taskschd_IDailyTrigger;
+	pub use super::iemailaction::taskschd_IEmailAction;
 	pub use super::ieventtrigger::taskschd_IEventTrigger;
 	pub use super::iexecaction::taskschd_IExecAction;
 	pub use super::iidletrigger::taskschd_IIdleTrigger;
@@ -56,6 +59,7 @@ pub mod vt {
 	pub use super::iboottrigger::IBootTriggerVT;
 	pub use super::icomhandleraction::IComHandlerActionVT;
 	pub use super::idailytrigger::IDailyTriggerVT;
+	pub use super::iemailaction::IEmailActionVT;
 	pub use super::ieventtrigger::IEventTriggerVT;
 	pub use super::iexecaction::IExecActionVT;
 	pub use super::iidletrigger::IIdleTriggerVT;
