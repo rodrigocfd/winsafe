@@ -4,6 +4,7 @@ use crate::co;
 use crate::gdi::guard::LogpaletteGuard;
 use crate::gdi::privs::LF_FACESIZE;
 use crate::kernel::decl::IsWindowsVistaOrGreater;
+use crate::prelude::VariableSized;
 use crate::user::decl::{COLORREF, POINT};
 
 /// [`BITMAP`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmap)
@@ -51,6 +52,8 @@ pub struct BITMAPINFO {
 	pub bmiHeader: BITMAPINFOHEADER,
 	pub bmiColors: [RGBQUAD; 1],
 }
+
+impl VariableSized for BITMAPINFO {}
 
 impl Default for BITMAPINFO {
 	fn default() -> Self {
@@ -123,6 +126,10 @@ impl LOGFONT {
 /// [`LOGPALETTE`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logpalette)
 /// struct.
 ///
+/// Note that you cannot directly instantiate this struct. This is a
+/// [`VariableSized`](crate::prelude::VariableSized) struct, managed by
+/// [`LogpaletteGuard`](crate::guard::LogpaletteGuard).
+///
 /// # Examples
 ///
 /// ```rust,no_run
@@ -145,13 +152,15 @@ impl LOGFONT {
 #[repr(C)]
 pub struct LOGPALETTE {
 	pub palVersion: u16,
-	palNumEntries: u16,
+	pub(in crate::gdi) palNumEntries: u16,
 	palPalEntry: [PALETTEENTRY; 1],
 }
 
+impl VariableSized for LOGPALETTE {}
+
 impl LOGPALETTE {
-	/// Returns a [`LogpaletteGuard`](crate::guard::LogpaletteGuard) dynamically
-	/// allocated.
+	/// Returns a dynamically allocated
+	/// [`LogpaletteGuard`](crate::guard::LogpaletteGuard).
 	#[must_use]
 	pub fn new(palVersion: u16, entries: &[PALETTEENTRY]) -> LogpaletteGuard {
 		LogpaletteGuard::new(palVersion, entries)

@@ -113,6 +113,7 @@ impl LogpaletteGuard {
 			+ (entries.len() * std::mem::size_of::<PALETTEENTRY>());
 		let mut new_self = Self { raw: vec![0u8; sz] };
 		new_self.palVersion = pal_version;
+		new_self.palNumEntries = entries.len() as _;
 		entries.iter()
 			.zip(new_self.palPalEntry_mut())
 			.for_each(|(src, dest)| *dest = *src); // copy all PALETTEENTRY into struct room

@@ -7,8 +7,9 @@ use crate::kernel::decl::{
 	ConvertSidToStringSid, HEVENT, HINSTANCE, HPIPE, HPROCESS, HTHREAD,
 	InitializeSecurityDescriptor, MAKEQWORD, WString,
 };
+use crate::kernel::guard::TokenPrivilegesGuard;
 use crate::kernel::privs::{MAX_MODULE_NAME32, MAX_PATH};
-use crate::prelude::NativeBitflag;
+use crate::prelude::{NativeBitflag, VariableSized};
 
 /// [`ACL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-acl)
 /// struct.
@@ -287,6 +288,12 @@ pub struct LUID {
 	HighPart: i32,
 }
 
+impl std::fmt::Display for LUID {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		write!(f, "LUID lo: {:#04x}, hi: {:#04x}", self.low_part(), self.high_part())
+	}
+}
+
 impl LUID {
 	pub const SYSTEM: Self = Self::new(0x3e7, 0x0);
 	pub const ANONYMOUS_LOGON: Self = Self::new(0x3e6, 0x0);
@@ -317,6 +324,7 @@ impl LUID {
 /// [`LUID_AND_ATTRIBUTES`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-luid_and_attributes)
 /// struct.
 #[repr(C)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct LUID_AND_ATTRIBUTES {
 	pub Luid: LUID,
 	pub Attributes: u32,
@@ -541,7 +549,8 @@ impl Default for SECURITY_DESCRIPTOR {
 /// [`SID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid)
 /// struct.
 ///
-/// Note that you cannot directly instantiate this struct, because the
+/// Note that you cannot directly instantiate this
+/// [`VariableSized`](crate::prelude::VariableSized) struct, because the
 /// `SubAuthority` field is dynamically allocated. There are 3 possible types of
 /// allocations:
 ///
@@ -551,10 +560,12 @@ impl Default for SECURITY_DESCRIPTOR {
 #[repr(C)]
 pub struct SID {
 	pub Revision: u8,
-	SubAuthorityCount: u8,
+	pub(in crate::kernel) SubAuthorityCount: u8,
 	pub IdentifierAuthority: SID_IDENTIFIER_AUTHORITY,
 	SubAuthority: [co::RID; 1],
 }
+
+impl VariableSized for SID {}
 
 impl std::fmt::Display for SID {
 	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -734,10 +745,47 @@ impl TIME_ZONE_INFORMATION {
 
 /// [`TOKEN_PRIVILEGES`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_privileges)
 /// struct.
+///
+/// Note that you cannot directly instantiate this struct. This is a
+/// [`VariableSized`](crate::prelude::VariableSized) struct, managed by
+/// [`TokenPrivilegesGuard`](crate::guard::TokenPrivilegesGuard).
 #[repr(C)]
 pub struct TOKEN_PRIVILEGES {
-	PrivilegeCount: u32,
+	pub(in crate::kernel) PrivilegeCount: u32,
 	Privileges: [LUID_AND_ATTRIBUTES; 1],
+}
+
+impl VariableSized for TOKEN_PRIVILEGES {}
+
+impl TOKEN_PRIVILEGES {
+	/// Returns a dynamically allocated
+	/// [`TokenPrivilegesGuard`](crate::guard::TokenPrivilegesGuard).
+	#[must_use]
+	pub fn new(privileges: &[LUID_AND_ATTRIBUTES]) -> TokenPrivilegesGuard {
+		TokenPrivilegesGuard::new(privileges)
+	}
+
+	/// Returns a constant slice over the `Privileges` entries.
+	#[must_use]
+	pub const fn Privileges(&self) -> &[LUID_AND_ATTRIBUTES] {
+		unsafe {
+			std::slice::from_raw_parts(
+				self.Privileges.as_ptr(),
+				self.PrivilegeCount as _,
+			)
+		}
+	}
+
+	/// Returns a mutable slice over the `Privileges` entries.
+	#[must_use]
+	pub fn Privileges_mut(&mut self) -> &mut [LUID_AND_ATTRIBUTES] {
+		unsafe {
+			std::slice::from_raw_parts_mut(
+				self.Privileges.as_mut_ptr(),
+				self.PrivilegeCount as _,
+			)
+		}
+	}
 }
 
 /// [`VALENT`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/ns-winreg-valentw)

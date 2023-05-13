@@ -3,7 +3,8 @@ use std::ops::{Deref, DerefMut};
 use crate::{co, kernel};
 use crate::kernel::decl::{
 	HFILEMAPVIEW, HFINDFILE, HGLOBAL, HHEAPMEM, HHEAPOBJ, HIDWORD, HINSTANCE,
-	HKEY, HLOCAL, HUPDATERSRC, LODWORD, PROCESS_INFORMATION, SID,
+	HKEY, HLOCAL, HUPDATERSRC, LODWORD, LUID_AND_ATTRIBUTES,
+	PROCESS_INFORMATION, SID, TOKEN_PRIVILEGES,
 };
 use crate::prelude::{Handle, kernel_Hfile, kernel_Hglobal, kernel_Hheapobj};
 
@@ -599,6 +600,42 @@ impl SidGuard {
 	#[must_use]
 	pub const unsafe fn new(raw: Vec<u8>) -> Self {
 		Self { raw }
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation for [`TOKEN_PRIVILEGES`](crate::TOKEN_PRIVILEGES) which
+/// manages the allocated memory.
+pub struct TokenPrivilegesGuard {
+	raw: Vec<u8>,
+}
+
+impl Deref for TokenPrivilegesGuard {
+	type Target = TOKEN_PRIVILEGES;
+
+	fn deref(&self) -> &Self::Target {
+		unsafe { std::mem::transmute::<_, _>(self.raw.as_ptr()) }
+	}
+}
+
+impl DerefMut for TokenPrivilegesGuard {
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		unsafe { std::mem::transmute::<_, _>(self.raw.as_mut_ptr()) }
+	}
+}
+
+impl TokenPrivilegesGuard {
+	pub(in crate::kernel) fn new(privileges: &[LUID_AND_ATTRIBUTES]) -> Self {
+		let sz = std::mem::size_of::<TOKEN_PRIVILEGES>() // size in bytes of the allocated struct
+			- std::mem::size_of::<LUID_AND_ATTRIBUTES>()
+			+ (privileges.len() * std::mem::size_of::<LUID_AND_ATTRIBUTES>());
+		let mut new_self = Self { raw: vec![0u8; sz] };
+		new_self.PrivilegeCount = privileges.len() as _;
+		privileges.iter()
+			.zip(new_self.Privileges_mut())
+			.for_each(|(src, dest)| *dest = *src); // copy all LUID_AND_ATTRIBUTES into struct room
+		new_self
 	}
 }
 

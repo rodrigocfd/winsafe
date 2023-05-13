@@ -5,6 +5,14 @@ use std::{fmt, hash, ops};
 use crate::co;
 use crate::kernel::decl::{FormatMessage, LANGID, WString};
 
+/// A struct natively defined with its last element being an 1-element array.
+/// The struct is dynamically allocated to accomodate a variable number of
+/// elements, whose amount is stored in a specific field. The elements are
+/// accessed by reaching the past-struct memory room.
+///
+/// Structs of this kind are managed through a [guard](crate::guard).
+pub trait VariableSized {}
+
 /// A type which has a primitive integer as its underlying type.
 pub trait IntUnderlying: Sized
 	+ Clone + Copy + PartialEq + Eq + hash::Hash + Send

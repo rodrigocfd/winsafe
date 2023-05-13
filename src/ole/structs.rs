@@ -5,7 +5,7 @@ use std::marker::PhantomData;
 use crate::co;
 use crate::kernel::decl::WString;
 use crate::kernel::ffi_types::COMPTR;
-use crate::prelude::ole_IUnknown;
+use crate::prelude::{ole_IUnknown, VariableSized};
 
 /// [`COAUTHIDENTITY`](https://learn.microsoft.com/en-us/windows/win32/api/wtypesbase/ns-wtypesbase-coauthidentity)
 /// struct.
@@ -117,6 +117,8 @@ pub struct DVTARGETDEVICE {
 	pub tdExtDevmodeOffset: u16,
 	pub tdData: [u8; 1],
 }
+
+impl VariableSized for DVTARGETDEVICE {}
 
 /// [`MULTI_QI`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-multi_qi)
 /// struct.
