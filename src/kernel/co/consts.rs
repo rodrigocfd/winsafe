@@ -406,10 +406,21 @@ const_bitflag! { GMEM: u32;
 	/// `flags` (`u32`).
 	=>
 	=>
+	/// Allocates fixed memory. The return value is a pointer to the memory
+	/// object.
 	FIXED 0x0000
+	/// Allocates movable memory. Memory blocks are never moved in physical
+	/// memory, but they can be moved within the default heap.
+	///
+	/// The return value is a handle to the memory object. To translate the
+	/// handle to a pointer, use the
+	/// [`LocalLock`](crate::prelude::kernel_Hlocal::LocalLock) function.
 	MOVEABLE 0x0002
+	/// Initializes memory contents to zero.
 	ZEROINIT 0x0040
+	/// Combines `MOVEABLE` and `ZEROINIT`.
 	GHND Self::MOVEABLE.0 | Self::ZEROINIT.0
+	/// Combines `FIXED` and `ZEROINIT`.
 	GPTR Self::FIXED.0 | Self::ZEROINIT.0
 }
 
@@ -425,42 +436,36 @@ const_bitflag! { GR: u32;
 }
 
 const_bitflag! { HEAP_ALLOC: u32;
-	/// [`HHEAPOBJ::HeapAlloc`](crate::prelude::kernel_Hheapobj::HeapAlloc)
-	/// `flags` (`u32`).
+	/// [`HHEAP::HeapAlloc`](crate::prelude::kernel_Hheap::HeapAlloc) `flags`
+	/// (`u32`).
 	///
 	/// Originally has `HEAP` prefix.
 	=>
 	=>
-	/// None of the actual values (zero).
-	NoValue 0
 	GENERATE_EXCEPTIONS 0x0000_0004
 	NO_SERIALIZE 0x0000_0001
 	ZERO_MEMORY 0x0000_0008
 }
 
 const_bitflag! { HEAP_CREATE: u32;
-	/// [`HHEAPOBJ::HeapCreate`](crate::prelude::kernel_Hheapobj::HeapCreate)
+	/// [`HHEAP::HeapCreate`](crate::prelude::kernel_Hheap::HeapCreate)
 	/// `options` (`u32`).
 	///
 	/// Originally has `HEAP` prefix.
 	=>
 	=>
-	/// None of the actual values (zero).
-	NoValue 0
 	ENABLE_EXECUTE 0x0004_0000
 	GENERATE_EXCEPTIONS 0x0000_0004
 	NO_SERIALIZE 0x0000_0001
 }
 
 const_bitflag! { HEAP_REALLOC: u32;
-	/// [`HHEAPOBJ::HeapReAlloc`](crate::prelude::kernel_Hheapobj::HeapReAlloc)
+	/// [`HHEAP::HeapReAlloc`](crate::prelude::kernel_Hheap::HeapReAlloc)
 	/// `options` (`u32`).
 	///
 	/// Originally has `HEAP` prefix.
 	=>
 	=>
-	/// None of the actual values (zero).
-	NoValue 0
 	GENERATE_EXCEPTIONS 0x0000_0004
 	NO_SERIALIZE 0x0000_0001
 	REALLOC_IN_PLACE_ONLY 0x0000_0010
@@ -468,16 +473,13 @@ const_bitflag! { HEAP_REALLOC: u32;
 }
 
 const_bitflag! { HEAP_SIZE: u32;
-	/// [`HHEAPOBJ::HeapSize`](crate::prelude::kernel_Hheapobj::HeapSize)
-	/// and
-	/// [`HHEAPOBJ::HeapCompact`](crate::prelude::kernel_Hheapobj::HeapCompact)
+	/// [`HHEAP::HeapSize`](crate::prelude::kernel_Hheap::HeapSize) and
+	/// [`HHEAP::HeapCompact`](crate::prelude::kernel_Hheap::HeapCompact)
 	/// `options` (`u32`).
 	///
 	/// Originally has `HEAP` prefix.
 	=>
 	=>
-	/// None of the actual values (zero).
-	NoValue 0
 	NO_SERIALIZE 0x0000_0001
 }
 
@@ -665,11 +667,21 @@ const_bitflag! { LMEM: u32;
 	/// `flags` (`u32`).
 	=>
 	=>
+	/// Allocates fixed memory. The return value is a pointer to the memory
+	/// object.
 	FIXED 0x0000
+	/// Allocates movable memory. Memory blocks are never moved in physical
+	/// memory, but they can be moved within the default heap.
+	///
+	/// The return value is a handle to the memory object. To translate the
+	/// handle to a pointer, use the
+	/// [`LocalLock`](crate::prelude::kernel_Hlocal::LocalLock) function.
 	MOVEABLE 0x0002
+	/// Initializes memory contents to zero.
 	ZEROINIT 0x0040
-	MODIFY 0x0080
+	/// Combines `MOVEABLE` and `ZEROINIT`.
 	LHND Self::MOVEABLE.0 | Self::ZEROINIT.0
+	/// Combines `FIXED` and `ZEROINIT`.
 	LPTR Self::FIXED.0 | Self::ZEROINIT.0
 }
 

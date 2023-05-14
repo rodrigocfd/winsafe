@@ -1,13 +1,13 @@
 use std::ops::{Deref, DerefMut};
 
-use crate::{co, kernel};
+use crate::kernel;
 use crate::kernel::decl::{
-	HFILEMAPVIEW, HFINDFILE, HGLOBAL, HHEAPMEM, HHEAPOBJ, HIDWORD, HINSTANCE,
-	HKEY, HLOCAL, HUPDATERSRC, LODWORD, LUID_AND_ATTRIBUTES,
-	PROCESS_INFORMATION, SID, TOKEN_PRIVILEGES,
+	HFILEMAPVIEW, HFINDFILE, HGLOBAL, HHEAP, HIDWORD, HINSTANCE, HKEY, HLOCAL,
+	HUPDATERSRC, LODWORD, LUID_AND_ATTRIBUTES, PROCESS_INFORMATION, SID,
+	TOKEN_PRIVILEGES,
 };
 use crate::prelude::{
-	Handle, kernel_Hfile, kernel_Hglobal, kernel_Hheapobj, kernel_Hlocal,
+	Handle, kernel_Hfile, kernel_Hglobal, kernel_Hheap, kernel_Hlocal,
 };
 
 /// RAII implementation for a [`Handle`](crate::prelude::Handle) which
@@ -232,7 +232,7 @@ pub struct FreeSidGuard {
 impl Drop for FreeSidGuard {
 	fn drop(&mut self) {
 		if !self.psid.is_null() {
-			unsafe { kernel::ffi::FreeSid(self.psid as *mut _ as _); }
+			unsafe { kernel::ffi::FreeSid(self.psid as *mut _ as _); } // ignore errors
 		}
 	}
 }
@@ -330,9 +330,9 @@ impl<'a, H> GlobalUnlockGuard<'a, H>
 
 //------------------------------------------------------------------------------
 
-handle_guard! { HeapDestroyGuard: HHEAPOBJ;
+handle_guard! { HeapDestroyGuard: HHEAP;
 	kernel::ffi::HeapDestroy;
-	/// RAII implementation for [`HHEAPOBJ`](crate::HHEAPOBJ) which automatically
+	/// RAII implementation for [`HHEAP`](crate::HHEAP) which automatically
 	/// calls
 	/// [`HeapDestroy`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapdestroy)
 	/// when the object goes out of scope.
@@ -340,55 +340,51 @@ handle_guard! { HeapDestroyGuard: HHEAPOBJ;
 
 //------------------------------------------------------------------------------
 
-/// RAII implementation for [`HHEAPMEM`](crate::HHEAPMEM) which automatically
-/// calls
+/// RAII implementation for the memory allocated by
+/// [`HHEAP::HeapAlloc`](crate::prelude::kernel_Hheap::HeapAlloc) which
+/// automatically calls
 /// [`HeapFree`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapfree)
 /// when the object goes out of scope.
-pub struct HeapFreeGuard<H>
-	where H: kernel_Hheapobj,
+pub struct HeapFreeGuard<'a, H>
+	where H: kernel_Hheap,
 {
-	hheapobj: H,
-	hheapmem: HHEAPMEM,
+	hheap: &'a H,
+	pmem: *mut std::ffi::c_void,
+	sz: usize,
 }
 
-impl<H> Drop for HeapFreeGuard<H>
-	where H: kernel_Hheapobj,
+impl<'a, H> Drop for HeapFreeGuard<'a, H>
+	where H: kernel_Hheap,
 {
 	fn drop(&mut self) {
-		if let Some(ho) = self.hheapobj.as_opt() {
-			if let Some(hm) = self.hheapmem.as_opt() {
-				unsafe {
-					kernel::ffi::HeapFree( // ignore errors
-						ho.ptr(),
-						co::HEAP_ALLOC::NoValue.raw(),
-						hm.ptr(),
-					);
-				}
+		if let Some(h) = self.hheap.as_opt() {
+			if !self.pmem.is_null() {
+				unsafe { kernel::ffi::HeapFree(h.ptr(), 0, self.pmem); } // ignore errors
 			}
 		}
 	}
 }
 
-impl<H> Deref for HeapFreeGuard<H>
-	where H: kernel_Hheapobj,
+impl<'a, H> Deref for HeapFreeGuard<'a, H>
+	where H: kernel_Hheap,
 {
-	type Target = HHEAPMEM;
+	type Target = [u8];
 
 	fn deref(&self) -> &Self::Target {
-		&self.hheapmem
+		unsafe { std::slice::from_raw_parts(self.pmem as _, self.sz) }
 	}
 }
 
-impl<H> DerefMut for HeapFreeGuard<H>
-	where H: kernel_Hheapobj,
+impl<'a, H> DerefMut for HeapFreeGuard<'a, H>
+	where H: kernel_Hheap,
 {
 	fn deref_mut(&mut self) -> &mut Self::Target {
-		&mut self.hheapmem
+		unsafe { std::slice::from_raw_parts_mut(self.pmem as _, self.sz) }
 	}
 }
 
-impl<H> HeapFreeGuard<H>
-	where H: kernel_Hheapobj,
+impl<'a, H> HeapFreeGuard<'a, H>
+	where H: kernel_Hheap,
 {
 	/// Constructs the guard by taking ownership of the handle.
 	///
@@ -401,45 +397,50 @@ impl<H> HeapFreeGuard<H>
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
-	pub const unsafe fn new(hheapobj: H, hheapmem: HHEAPMEM) -> Self {
-		Self { hheapobj, hheapmem }
+	pub const unsafe fn new(
+		hheap: &'a H, pmem: *mut std::ffi::c_void, sz: usize) -> Self
+	{
+		Self { hheap, pmem, sz }
 	}
 
-	/// Ejects the underlying handle, leaving
-	/// [`Handle::INVALID`](crate::prelude::Handle::INVALID) in its place.
+	/// Ejects the underlying memory pointer and size, leaving null and zero in
+	/// their places.
 	///
-	/// Since the internal handle will be invalidated, the destructor will not
-	/// run. It's your responsibility to run it, otherwise you'll cause a
-	/// resource leak.
+	/// Since the internal memory pointer will be invalidated, the destructor
+	/// will not run. It's your responsibility to run it, otherwise you'll cause
+	/// a memory leak.
 	#[must_use]
-	pub fn leak(&mut self) -> HHEAPMEM {
-		std::mem::replace(&mut self.hheapmem, HHEAPMEM::INVALID)
+	pub fn leak(&mut self) -> (*mut std::ffi::c_void, usize) {
+		(
+			std::mem::replace(&mut self.pmem, std::ptr::null_mut()),
+			std::mem::replace(&mut self.sz, 0),
+		)
 	}
 }
 
 //------------------------------------------------------------------------------
 
-/// RAII implementation for [`HHEAPOBJ`](crate::HHEAPOBJ) which automatically calls
+/// RAII implementation for [`HHEAP`](crate::HHEAP) which automatically calls
 /// [`HeapUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock)
 /// when the object goes out of scope.
 pub struct HeapUnlockGuard<'a, H>
-	where H: kernel_Hheapobj,
+	where H: kernel_Hheap,
 {
-	hheapobj: &'a H,
+	hheap: &'a H,
 }
 
 impl<'a, H> Drop for HeapUnlockGuard<'a, H>
-	where H: kernel_Hheapobj,
+	where H: kernel_Hheap,
 {
 	fn drop(&mut self) {
-		if let Some(h) = self.hheapobj.as_opt() {
+		if let Some(h) = self.hheap.as_opt() {
 			unsafe { kernel::ffi::HeapUnlock(h.ptr()); } // ignore errors
 		}
 	}
 }
 
 impl<'a, H> HeapUnlockGuard<'a, H>
-	where H: kernel_Hheapobj,
+	where H: kernel_Hheap,
 {
 	/// Constructs the guard.
 	///
@@ -452,8 +453,8 @@ impl<'a, H> HeapUnlockGuard<'a, H>
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
-	pub const unsafe fn new(hheapobj: &'a H) -> Self {
-		Self { hheapobj }
+	pub const unsafe fn new(hheap: &'a H) -> Self {
+		Self { hheap }
 	}
 }
 
@@ -508,7 +509,7 @@ impl LocalFreeSidGuard {
 
 //------------------------------------------------------------------------------
 
-/// RAII implementation for [`LOCAL`](crate::LOCAL) lock which automatically
+/// RAII implementation for [`HLOCAL`](crate::HLOCAL) lock which automatically
 /// calls
 /// [`LocalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localunlock)
 /// when the object goes out of scope.

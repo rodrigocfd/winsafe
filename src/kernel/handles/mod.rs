@@ -5,7 +5,7 @@ mod hfilemap;
 mod hfilemapview;
 mod hfindfile;
 mod hglobal;
-mod hheapobj;
+mod hheap;
 mod hinstance;
 mod hkey;
 mod hlocal;
@@ -24,7 +24,7 @@ pub mod decl {
 	pub use super::hfilemapview::HFILEMAPVIEW;
 	pub use super::hfindfile::HFINDFILE;
 	pub use super::hglobal::HGLOBAL;
-	pub use super::hheapobj::HHEAPOBJ;
+	pub use super::hheap::HHEAP;
 	pub use super::hinstance::HINSTANCE;
 	pub use super::hkey::HKEY;
 	pub use super::hlocal::HLOCAL;
@@ -40,14 +40,6 @@ pub mod decl {
 		/// Handle to an
 		/// [event](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventw).
 		/// Originally just a `HANDLE`.
-	}
-
-	impl_handle! { HHEAPMEM;
-		/// Handle to a
-		/// [heap memory block](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapalloc).
-		/// Originally just a `HANDLE`.
-		/// 
-		/// Not to be confused with [`HHEAPOBJ`](crate::HHEAPOBJ).
 	}
 
 	impl_handle! { HRSRC;
@@ -77,7 +69,7 @@ pub mod traits {
 	pub use super::hfilemapview::kernel_Hfilemapview;
 	pub use super::hfindfile::kernel_Hfindfile;
 	pub use super::hglobal::kernel_Hglobal;
-	pub use super::hheapobj::kernel_Hheapobj;
+	pub use super::hheap::kernel_Hheap;
 	pub use super::hinstance::kernel_Hinstance;
 	pub use super::hkey::kernel_Hkey;
 	pub use super::hlocal::kernel_Hlocal;

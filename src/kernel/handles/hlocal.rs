@@ -31,11 +31,11 @@ pub trait kernel_Hlocal: Handle {
 	/// static method.
 	#[must_use]
 	fn LocalAlloc(
-		flags: co::LMEM, num_bytes: usize) -> SysResult<LocalFreeGuard>
+		flags: Option<co::LMEM>, num_bytes: usize) -> SysResult<LocalFreeGuard>
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				kernel::ffi::LocalAlloc(flags.raw(), num_bytes),
+				kernel::ffi::LocalAlloc(flags.map_or(0, |f| f.raw()), num_bytes),
 			).map(|h| LocalFreeGuard::new(h))
 		}
 	}
@@ -70,7 +70,7 @@ pub trait kernel_Hlocal: Handle {
 	/// use winsafe::{co, HLOCAL};
 	///
 	/// let hlocal = HLOCAL::LocalAlloc(
-	///     co::LMEM::FIXED | co::LMEM::ZEROINIT,
+	///     Some(co::LMEM::FIXED | co::LMEM::ZEROINIT),
 	///     120,
 	/// )?;
 	///
@@ -103,11 +103,15 @@ pub trait kernel_Hlocal: Handle {
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
 	fn LocalReAlloc(&mut self,
-		num_bytes: usize, flags: co::LMEM) -> SysResult<()>
+		num_bytes: usize, flags: Option<co::LMEM>) -> SysResult<()>
 	{
 		ptr_to_sysresult_handle(
 			unsafe {
-				kernel::ffi::LocalReAlloc(self.ptr(), num_bytes, flags.raw())
+				kernel::ffi::LocalReAlloc(
+					self.ptr(),
+					num_bytes,
+					flags.map_or(0, |f| f.raw()),
+				)
 			},
 		).map(|h| { *self = h; })
 	}

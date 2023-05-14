@@ -165,6 +165,7 @@ extern_sys! { "kernel32";
 	HeapReAlloc(HANDLE, u32, PVOID, usize) -> PVOID
 	HeapSize(HANDLE, u32, PVOID) -> usize
 	HeapUnlock(HANDLE) -> BOOL
+	HeapValidate(HANDLE, u32, PVOID) -> BOOL
 	HeapWalk(HANDLE, PVOID) -> BOOL
 	IsDebuggerPresent() -> BOOL
 	IsNativeVhdBoot(*mut BOOL) -> BOOL

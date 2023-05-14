@@ -32,11 +32,12 @@ pub trait kernel_Hglobal: Handle {
 	/// static method.
 	#[must_use]
 	fn GlobalAlloc(
-		flags: co::GMEM, num_bytes: usize) -> SysResult<GlobalFreeGuard>
+		flags: Option<co::GMEM>, num_bytes: usize) -> SysResult<GlobalFreeGuard>
 	{
 		unsafe {
-			ptr_to_sysresult_handle(kernel::ffi::GlobalAlloc(flags.raw(), num_bytes))
-				.map(|h| GlobalFreeGuard::new(h))
+			ptr_to_sysresult_handle(
+				kernel::ffi::GlobalAlloc(flags.map_or(0, |f| f.raw()), num_bytes),
+			).map(|h| GlobalFreeGuard::new(h))
 		}
 	}
 
@@ -70,7 +71,7 @@ pub trait kernel_Hglobal: Handle {
 	/// use winsafe::{co, HGLOBAL};
 	///
 	/// let hglobal = HGLOBAL::GlobalAlloc(
-	///     co::GMEM::FIXED | co::GMEM::ZEROINIT,
+	///     Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
 	///     120,
 	/// )?;
 	///
@@ -103,11 +104,15 @@ pub trait kernel_Hglobal: Handle {
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
 	fn GlobalReAlloc(&mut self,
-		num_bytes: usize, flags: co::GMEM) -> SysResult<()>
+		num_bytes: usize, flags: Option<co::GMEM>) -> SysResult<()>
 	{
 		ptr_to_sysresult_handle(
 			unsafe {
-				kernel::ffi::GlobalReAlloc(self.ptr(), num_bytes, flags.raw())
+				kernel::ffi::GlobalReAlloc(
+					self.ptr(),
+					num_bytes,
+					flags.map_or(0, |f| f.raw()),
+				)
 			},
 		).map(|h| { *self = h; })
 	}

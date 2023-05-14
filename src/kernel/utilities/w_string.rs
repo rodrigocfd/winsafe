@@ -394,7 +394,7 @@ impl Buffer {
 		} else {
 			Self::Heap((
 				HLOCAL::LocalAlloc(
-					co::LMEM::FIXED | co::LMEM::ZEROINIT,
+					Some(co::LMEM::FIXED | co::LMEM::ZEROINIT), // with FIXED the handle is the memory pointer itself
 					num_chars * std::mem::size_of::<u16>(),
 				).unwrap(),
 				num_chars,

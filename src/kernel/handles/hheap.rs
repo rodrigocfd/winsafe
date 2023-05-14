@@ -2,45 +2,44 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{
-	GetLastError, HHEAPMEM, PROCESS_HEAP_ENTRY, SetLastError, SysResult,
+	GetLastError, PROCESS_HEAP_ENTRY, SetLastError, SysResult,
 };
 use crate::kernel::guard::{HeapDestroyGuard, HeapFreeGuard, HeapUnlockGuard};
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
+use crate::kernel::privs::{
+	bool_to_sysresult, ptr_to_sysresult, ptr_to_sysresult_handle,
+};
 use crate::prelude::Handle;
 
-impl_handle! { HHEAPOBJ;
+impl_handle! { HHEAP;
 	/// Handle to a
 	/// [heap object](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcreate).
 	/// Originally just a `HANDLE`.
-	///
-	/// Not to be confused with [`HHEAPMEM`](crate::HHEAPMEM).
 }
 
-impl kernel_Hheapobj for HHEAPOBJ {}
+impl kernel_Hheap for HHEAP {}
 
 /// This trait is enabled with the `kernel` feature, and provides methods for
-/// [`HHEAPOBJ`](crate::HHEAPOBJ).
+/// [`HHEAP`](crate::HHEAP).
 ///
 /// Prefer importing this trait through the prelude:
 ///
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait kernel_Hheapobj: Handle {
+pub trait kernel_Hheap: Handle {
 	/// Returns an iterator over the heap memory blocks with
 	/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) structs. Calls
-	/// [`HHEAPOBJ::HeapWalk`](crate::prelude::kernel_Hheapobj::HeapWalk).
+	/// [`HHEAP::HeapWalk`](crate::prelude::kernel_Hheap::HeapWalk).
 	///
 	/// # Examples
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HHEAPOBJ};
+	/// use winsafe::{co, HHEAP};
 	///
-	/// let heap_obj = HHEAPOBJ::HeapCreate(co::HEAP_CREATE::NoValue, 0, 0)?;
-	/// let _lock = heap_obj.HeapLock()?;
+	/// let heap = HHEAP::GetProcessHeap()?;
 	///
-	/// for entry in heap_obj.iter_walk() {
+	/// for entry in heap.iter_walk() {
 	///     let entry = entry?;
 	///     println!("Size: {}, overhead? {}",
 	///         entry.cbData, entry.cbOverhead);
@@ -57,14 +56,14 @@ pub trait kernel_Hheapobj: Handle {
 	/// [`GetProcessHeap`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-getprocessheap)
 	/// static method.
 	#[must_use]
-	fn GetProcessHeap() -> SysResult<HHEAPOBJ> {
+	fn GetProcessHeap() -> SysResult<HHEAP> {
 		ptr_to_sysresult_handle(unsafe { kernel::ffi::GetProcessHeap() })
 	}
 
 	/// [`GetProcessHeaps`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-getprocessheaps)
 	/// static method.
 	#[must_use]
-	fn GetProcessHeaps() -> SysResult<Vec<HHEAPOBJ>> {
+	fn GetProcessHeaps() -> SysResult<Vec<HHEAP>> {
 		let num = match unsafe {
 			kernel::ffi::GetProcessHeaps(0, std::ptr::null_mut())
 		} {
@@ -76,7 +75,7 @@ pub trait kernel_Hheapobj: Handle {
 		};
 
 		let mut buf = [0..num].iter()
-			.map(|_| HHEAPOBJ::NULL)
+			.map(|_| HHEAP::NULL)
 			.collect::<Vec<_>>();
 
 		bool_to_sysresult(
@@ -90,36 +89,68 @@ pub trait kernel_Hheapobj: Handle {
 	/// static method.
 	#[must_use]
 	fn HeapCreate(
-		options: co::HEAP_CREATE,
+		options: Option<co::HEAP_CREATE>,
 		initial_size: usize,
 		maximum_size: usize,
 	) -> SysResult<HeapDestroyGuard>
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				kernel::ffi::HeapCreate(options.raw(), initial_size, maximum_size)
+				kernel::ffi::HeapCreate(
+					options.map_or(0, |f| f.raw()),
+					initial_size,
+					maximum_size,
+				),
 			).map(|h| HeapDestroyGuard::new(h))
 		}
 	}
 
 	/// [`HeapAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapalloc)
 	/// method.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HHEAP};
+	///
+	/// let heap = HHEAP::GetProcessHeap()?;
+	///
+	/// let mut array = heap.HeapAlloc(Some(co::HEAP_ALLOC::ZERO_MEMORY), 40)?;
+	/// array[0] = 10;
+	/// array[1] = 12;
+	///
+	/// for byte in array.iter() {
+	///     println!("{} ", byte);
+	/// }
+	///
+	/// println!("End.");
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
 	#[must_use]
 	fn HeapAlloc(&self,
-		flags: co::HEAP_ALLOC, bytes: usize) -> SysResult<HeapFreeGuard<Self>>
+		flags: Option<co::HEAP_ALLOC>,
+		num_bytes: usize,
+	) -> SysResult<HeapFreeGuard<'_, Self>>
 	{
 		SetLastError(co::ERROR::SUCCESS);
 		unsafe {
-			ptr_to_sysresult_handle(
-				kernel::ffi::HeapAlloc(self.ptr(), flags.raw(), bytes),
-			).map(|h| HeapFreeGuard::new(self.raw_copy(), h))
+			ptr_to_sysresult(
+				kernel::ffi::HeapAlloc(
+					self.ptr(),
+					flags.map_or(0, |f| f.raw()),
+					num_bytes,
+				),
+			).map(|p| HeapFreeGuard::new(self, p, num_bytes))
 		}
 	}
 
 	/// [`HeapCompact`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcompact)
 	/// method.
-	fn HeapCompact(&self, flags: co::HEAP_SIZE) -> SysResult<usize> {
-		match unsafe { kernel::ffi::HeapCompact(self.ptr(), flags.raw()) } {
+	fn HeapCompact(&self, flags: Option<co::HEAP_SIZE>) -> SysResult<usize> {
+		match unsafe {
+			kernel::ffi::HeapCompact(self.ptr(), flags.map_or(0, |f| f.raw()))
+		} {
 			0 => Err(GetLastError()),
 			n => Ok(n),
 		}
@@ -128,25 +159,30 @@ pub trait kernel_Hheapobj: Handle {
 	/// [`HeapLock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heaplock)
 	/// method.
 	///
+	/// You only need to call this method if the [`HHEAP`](crate::HHEAP) was
+	/// created with
+	/// [`co::HEAP_CREATE::NO_SERIALIZE`](crate::co::HEAP_CREATE::NO_SERIALIZE).
+	/// Otherwise, the heap is already protected against concurrent thread
+	/// access.
+	///
 	/// In the original C implementation, you must call
 	/// [`HeapUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock)
-	/// as a cleanup operation.
-	///
-	/// Here, the cleanup is performed automatically, because `HeapLock` returns
-	/// a [`HeapUnlockGuard`](crate::guard::HeapUnlockGuard), which
-	/// automatically calls `HeapUnlock` when the guard goes out of scope. You
-	/// must, however, keep the guard alive, otherwise the cleanup will be
-	/// performed right away.
+	/// as a cleanup operation; here, the cleanup is performed automatically,
+	/// because `HeapLock` returns a
+	/// [`HeapUnlockGuard`](crate::guard::HeapUnlockGuard), which automatically
+	/// calls `HeapUnlock` when the guard goes out of scope. You must, however,
+	/// keep the guard alive, otherwise the cleanup will be performed right
+	/// away.
 	///
 	/// # Examples
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HHEAPOBJ};
+	/// use winsafe::{co, HHEAP};
 	///
-	/// let heap_obj = HHEAPOBJ::HeapCreate(co::HEAP_CREATE::NoValue, 0, 0)?;
+	/// let heap = HHEAP::HeapCreate(Some(co::HEAP_CREATE::NO_SERIALIZE), 0, 0)?;
 	///
-	/// let _lock = heap_obj.HeapLock()?;
+	/// let _lock = heap.HeapLock()?;
 	///
 	/// // heap operations...
 	/// # Ok::<_, co::ERROR>(())
@@ -163,40 +199,94 @@ pub trait kernel_Hheapobj: Handle {
 	/// method.
 	///
 	/// Originally this method returns the handle to the reallocated memory
-	/// object; here the original handle is automatically updated.
-	fn HeapReAlloc(&self,
-		flags: co::HEAP_REALLOC,
-		mem: &mut HHEAPMEM,
-		bytes: usize,
+	/// object; here the original handle, present inside
+	/// [`HeapFreeGuard`](crate::guard::HeapFreeGuard), is automatically
+	/// updated.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HHEAP};
+	///
+	/// let heap = HHEAP::GetProcessHeap()?;
+	/// let mut array = heap.HeapAlloc(Some(co::HEAP_ALLOC::ZERO_MEMORY), 40)?;
+	///
+	/// heap.HeapReAlloc(Some(co::HEAP_REALLOC::ZERO_MEMORY), &mut array, 65)?;
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
+	fn HeapReAlloc<'a>(&'a self,
+		flags: Option<co::HEAP_REALLOC>,
+		mem: &mut HeapFreeGuard<'a, Self>,
+		num_bytes: usize,
 	) -> SysResult<()>
 	{
 		SetLastError(co::ERROR::SUCCESS);
-		ptr_to_sysresult_handle(
+		ptr_to_sysresult(
 			unsafe {
 				kernel::ffi::HeapReAlloc(
 					self.ptr(),
-					flags.raw(),
-					mem.ptr(),
-					bytes,
+					flags.map_or(0, |f| f.raw()),
+					mem.as_ptr() as _,
+					num_bytes,
 				)
 			},
-		).map(|h| { *mem = h; })
+		).map(|p| {
+			let _old = mem.leak();
+			*mem = unsafe { HeapFreeGuard::new(self, p, num_bytes) };
+		})
 	}
 
 	/// [`HeapSize`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsize)
 	/// method.
 	#[must_use]
 	fn HeapSize(&self,
-		flags: co::HEAP_SIZE, mem: &HHEAPMEM) -> SysResult<usize>
+		flags: Option<co::HEAP_SIZE>,
+		mem: &HeapFreeGuard<'_, Self>,
+	) -> SysResult<usize>
 	{
 		SetLastError(co::ERROR::SUCCESS);
 		const FAILED: usize = -1isize as usize;
 
 		match unsafe {
-			kernel::ffi::HeapSize(self.ptr(), flags.raw(), mem.ptr())
+			kernel::ffi::HeapSize(
+				self.ptr(),
+				flags.map_or(0, |f| f.raw()),
+				mem.as_ptr() as _,
+			)
 		} {
 			FAILED => Err(GetLastError()),
 			n => Ok(n),
+		}
+	}
+
+	/// [`HeapValidate`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapvalidate)
+	/// method.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HHEAP};
+	///
+	/// let heap = HHEAP::GetProcessHeap()?;
+	/// let mut array = heap.HeapAlloc(Some(co::HEAP_ALLOC::ZERO_MEMORY), 40)?;
+	///
+	/// let is_ok = heap.HeapValidate(None, Some(&array));
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
+	#[must_use]
+	fn HeapValidate(&self,
+		flags: Option<co::HEAP_SIZE>,
+		mem: Option<&HeapFreeGuard<'_, Self>>,
+	) -> bool
+	{
+		unsafe {
+			kernel::ffi::HeapValidate(
+				self.ptr(),
+				flags.map_or(0, |f| f.raw()),
+				mem.map_or(std::ptr::null_mut(), |mem| mem.as_ptr() as _),
+			) != 0
 		}
 	}
 
@@ -204,8 +294,8 @@ pub trait kernel_Hheapobj: Handle {
 	/// method.
 	///
 	/// Prefer using
-	/// [`HHEAPOBJ::iter_walk`](crate::prelude::kernel_Hheapobj::iter_walk),
-	/// which is simpler.
+	/// [`HHEAP::iter_walk`](crate::prelude::kernel_Hheap::iter_walk), which is
+	/// simpler.
 	#[must_use]
 	fn HeapWalk(&self, entry: &mut PROCESS_HEAP_ENTRY) -> SysResult<bool> {
 		match unsafe {
@@ -223,15 +313,15 @@ pub trait kernel_Hheapobj: Handle {
 //------------------------------------------------------------------------------
 
 struct WalkIter<'a, H>
-	where H: kernel_Hheapobj,
+	where H: kernel_Hheap,
 {
-	hheapobj: &'a H,
+	hheap: &'a H,
 	entry: PROCESS_HEAP_ENTRY,
 	has_more: bool,
 }
 
 impl<'a, H> Iterator for WalkIter<'a, H>
-	where H: kernel_Hheapobj,
+	where H: kernel_Hheap,
 {
 	type Item = SysResult<&'a PROCESS_HEAP_ENTRY>;
 
@@ -240,7 +330,7 @@ impl<'a, H> Iterator for WalkIter<'a, H>
 			return None;
 		}
 
-		match self.hheapobj.HeapWalk(&mut self.entry) {
+		match self.hheap.HeapWalk(&mut self.entry) {
 			Err(e) => {
 				self.has_more = false; // no further iterations
 				Some(Err(e))
@@ -261,11 +351,11 @@ impl<'a, H> Iterator for WalkIter<'a, H>
 }
 
 impl<'a, H> WalkIter<'a, H>
-	where H: kernel_Hheapobj,
+	where H: kernel_Hheap,
 {
-	fn new(hheapobj: &'a H) -> Self {
+	fn new(hheap: &'a H) -> Self {
 		Self {
-			hheapobj,
+			hheap,
 			entry: PROCESS_HEAP_ENTRY::default(),
 			has_more: true,
 		}
