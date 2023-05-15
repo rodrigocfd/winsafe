@@ -14,6 +14,12 @@ impl_handle! { HHEAP;
 	/// Handle to a
 	/// [heap object](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcreate).
 	/// Originally just a `HANDLE`.
+	///
+	/// If you're allocating memory using just the default process heap – that
+	/// is, by calling
+	/// [`HHEAP::GetProcessHeap`](crate::prelude::kernel_Hheap::GetProcessHeap)
+	/// –, consider using the [`HeapBlock`](crate::HeapBlock) high-level
+	/// abstraction.
 }
 
 impl kernel_Hheap for HHEAP {}
@@ -107,6 +113,12 @@ pub trait kernel_Hheap: Handle {
 
 	/// [`HeapAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapalloc)
 	/// method.
+	///
+	/// If you're allocating memory using just the default process heap – that
+	/// is, by calling
+	/// [`HHEAP::GetProcessHeap`](crate::prelude::kernel_Hheap::GetProcessHeap)
+	/// –, consider using the [`HeapBlock`](crate::HeapBlock) high-level
+	/// abstraction.
 	///
 	/// # Examples
 	///
@@ -232,7 +244,7 @@ pub trait kernel_Hheap: Handle {
 				)
 			},
 		).map(|p| {
-			let _old = mem.leak();
+			let _ = mem.leak();
 			*mem = unsafe { HeapFreeGuard::new(self, p, num_bytes) };
 		})
 	}

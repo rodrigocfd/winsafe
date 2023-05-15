@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
-use crate::guard::CloseHandleGuard;
+use crate::kernel::guard::CloseHandleGuard;
 use crate::kernel::decl::{
 	CONSOLE_READCONSOLE_CONTROL, GetLastError, SysResult, WString,
 };
