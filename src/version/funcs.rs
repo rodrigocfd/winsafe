@@ -1,18 +1,18 @@
 #![allow(non_snake_case)]
 
-use crate::kernel::decl::{GetLastError, SysResult, WString};
+use crate::kernel::decl::{GetLastError, HeapBlock, SysResult, WString};
 use crate::kernel::privs::bool_to_sysresult;
 use crate::version;
 
 /// [`GetFileVersionInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfow)
 /// function.
 ///
-/// The buffer will be automatically allocated with
+/// The returned buffer will be automatically allocated with
 /// [`GetFileVersionInfoSize`](crate::GetFileVersionInfoSize).
 #[must_use]
-pub fn GetFileVersionInfo(file_name: &str) -> SysResult<Vec<u8>> {
+pub fn GetFileVersionInfo(file_name: &str) -> SysResult<HeapBlock> {
 	let block_sz = GetFileVersionInfoSize(file_name)?;
-	let mut buf: Vec<u8> = vec![0x00; block_sz as _];
+	let mut buf = HeapBlock::alloc(block_sz as _)?;
 
 	bool_to_sysresult(
 		unsafe {
@@ -67,7 +67,7 @@ pub fn GetFileVersionInfoSize(file_name: &str) -> SysResult<u32> {
 /// let res_buf = GetFileVersionInfo(&exe_name)?;
 ///
 /// let (pvsf, sz_data) = unsafe {
-///     VarQueryValue::<VS_FIXEDFILEINFO>(&res_buf, "\\")?
+///     VarQueryValue::<VS_FIXEDFILEINFO>(res_buf.as_slice(), "\\")?
 /// };
 ///
 /// let ver = unsafe { &*pvsf }.dwFileVersion();

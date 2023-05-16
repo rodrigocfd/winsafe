@@ -2,9 +2,9 @@ use std::ops::{Deref, DerefMut};
 
 use crate::kernel;
 use crate::kernel::decl::{
-	HFILEMAPVIEW, HFINDFILE, HGLOBAL, HHEAP, HIDWORD, HINSTANCE, HKEY, HLOCAL,
-	HUPDATERSRC, LODWORD, LUID_AND_ATTRIBUTES, PROCESS_INFORMATION, SID,
-	TOKEN_PRIVILEGES,
+	HeapBlock, HFILEMAPVIEW, HFINDFILE, HGLOBAL, HHEAP, HIDWORD, HINSTANCE,
+	HKEY, HLOCAL, HUPDATERSRC, LODWORD, LUID_AND_ATTRIBUTES,
+	PROCESS_INFORMATION, SID, TOKEN_PRIVILEGES,
 };
 use crate::prelude::{
 	Handle, kernel_Hfile, kernel_Hglobal, kernel_Hheap, kernel_Hlocal,
@@ -612,10 +612,9 @@ impl RegCloseKeyGuard {
 //------------------------------------------------------------------------------
 
 /// RAII implementation for [`SID`](crate::SID) which automatically frees the
-/// underlying [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html) when
-/// the object goes out of scope.
+/// underlying memory block when the object goes out of scope.
 pub struct SidGuard {
-	raw: Vec<u8>,
+	raw: HeapBlock,
 }
 
 impl Deref for SidGuard {
@@ -642,7 +641,7 @@ impl SidGuard {
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
-	pub const unsafe fn new(raw: Vec<u8>) -> Self {
+	pub const unsafe fn new(raw: HeapBlock) -> Self {
 		Self { raw }
 	}
 }
@@ -652,7 +651,7 @@ impl SidGuard {
 /// RAII implementation for [`TOKEN_PRIVILEGES`](crate::TOKEN_PRIVILEGES) which
 /// manages the allocated memory.
 pub struct TokenPrivilegesGuard {
-	raw: Vec<u8>,
+	raw: HeapBlock,
 }
 
 impl Deref for TokenPrivilegesGuard {
@@ -674,7 +673,7 @@ impl TokenPrivilegesGuard {
 		let sz = std::mem::size_of::<TOKEN_PRIVILEGES>() // size in bytes of the allocated struct
 			- std::mem::size_of::<LUID_AND_ATTRIBUTES>()
 			+ (privileges.len() * std::mem::size_of::<LUID_AND_ATTRIBUTES>());
-		let mut new_self = Self { raw: vec![0u8; sz] };
+		let mut new_self = Self { raw: HeapBlock::alloc(sz).unwrap() }; // assume no allocation errors
 		new_self.PrivilegeCount = privileges.len() as _;
 		privileges.iter()
 			.zip(new_self.Privileges_mut())

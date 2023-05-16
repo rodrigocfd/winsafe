@@ -17,11 +17,11 @@ use crate::prelude::{kernel_Hheap, Handle};
 ///
 /// let mut bl = HeapBlock::alloc(10)?;
 ///
-/// for (idx, b) in bl.mem_mut().iter_mut().enumerate() {
+/// for (idx, b) in bl.as_mut_slice().iter_mut().enumerate() {
 ///     *b = (idx * 10) as _;
 /// }
 ///
-/// for b in bl.mem().iter() {
+/// for b in bl.as_slice().iter() {
 ///     print!("{} ", b);
 /// }
 /// println!("");
@@ -57,58 +57,6 @@ impl HeapBlock {
 		})
 	}
 
-	/// Returns the size of the allocated memory block.
-	#[must_use]
-	pub const fn len(&self) -> usize {
-		self.sz
-	}
-
-	/// Returns a slice over the allocated memory block.
-	#[must_use]
-	pub const fn mem(&self) -> &[u8] {
-		unsafe { std::slice::from_raw_parts(self.pmem as _, self.sz) }
-	}
-
-	/// Returns a slice over the allocated memory block, casting the pointer to
-	/// the given type.
-	///
-	/// # Safety
-	///
-	/// Be sure the alignment and block length are correct.
-	#[must_use]
-	pub const unsafe fn mem_align<T>(&self) -> &[T] {
-		std::slice::from_raw_parts(
-			self.pmem as _,
-			self.sz / std::mem::size_of::<T>(),
-		)
-	}
-
-	/// Returns a mutable slice over the allocated memory block.
-	#[must_use]
-	pub fn mem_mut(&mut self) -> &mut [u8] {
-		unsafe { std::slice::from_raw_parts_mut(self.pmem as _, self.sz) }
-	}
-
-	/// Returns a mutable slice over the allocated memory block, casting the
-	/// pointer to the given type.
-	///
-	/// # Safety
-	///
-	/// Be sure the alignment and block length are correct.
-	#[must_use]
-	pub unsafe fn mem_mut_align<T>(&mut self) -> &mut [T] {
-		std::slice::from_raw_parts_mut(
-			self.pmem as _,
-			self.sz / std::mem::size_of::<T>(),
-		)
-	}
-
-	/// Returns the pointer to the allocated memory block.
-	#[must_use]
-	pub const fn ptr(&self) -> *mut std::ffi::c_void {
-		self.pmem
-	}
-
 	/// Resizes the memory block to the given number of bytes by calling
 	/// [`HHEAP::HeapReAlloc`](crate::prelude::kernel_Hheap::HeapReAlloc), with
 	/// [`co::HEAP_REALLOC::ZERO_MEMORY`](crate::co::HEAP_REALLOC::ZERO_MEMORY).
@@ -119,5 +67,69 @@ impl HeapBlock {
 		self.pmem = pmem;
 		self.sz = num_bytes;
 		Ok(())
+	}
+
+	/// Returns a reference to the current process [`HHEAP`](crate::HHEAP).
+	#[must_use]
+	pub const fn hheap(&self) -> &HHEAP {
+		&self.hheap
+	}
+
+	/// Returns the size of the allocated memory block.
+	#[must_use]
+	pub const fn len(&self) -> usize {
+		self.sz
+	}
+
+	/// Returns a pointer to the allocated memory block.
+	#[must_use]
+	pub const fn as_ptr(&self) -> *const std::ffi::c_void {
+		self.pmem
+	}
+
+	/// Returns a mutable pointer to the allocated memory block.
+	#[must_use]
+	pub fn as_mut_ptr(&mut self) -> *mut std::ffi::c_void {
+		self.pmem
+	}
+
+	/// Returns a slice over the allocated memory block.
+	#[must_use]
+	pub const fn as_slice(&self) -> &[u8] {
+		unsafe { std::slice::from_raw_parts(self.pmem as _, self.sz) }
+	}
+
+	/// Returns a mutable slice over the allocated memory block.
+	#[must_use]
+	pub fn as_mut_slice(&mut self) -> &mut [u8] {
+		unsafe { std::slice::from_raw_parts_mut(self.pmem as _, self.sz) }
+	}
+
+	/// Returns a slice over the allocated memory block, aligned to the given
+	/// type.
+	///
+	/// # Safety
+	///
+	/// Make sure the alignment is correct.
+	#[must_use]
+	pub const unsafe fn as_slice_aligned<T>(&self) -> &[T] {
+		std::slice::from_raw_parts(
+			self.pmem as _,
+			self.sz / std::mem::size_of::<T>(),
+		)
+	}
+
+	/// Returns a mutable slice over the allocated memory block, aligned to the
+	/// given type.
+	///
+	/// # Safety
+	///
+	/// Make sure the alignment is correct.
+	#[must_use]
+	pub unsafe fn as_mut_slice_aligned<T>(&mut self) -> &mut [T] {
+		std::slice::from_raw_parts_mut(
+			self.pmem as _,
+			self.sz / std::mem::size_of::<T>(),
+		)
 	}
 }

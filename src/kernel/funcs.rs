@@ -4,10 +4,10 @@ use std::collections::HashMap;
 
 use crate::{co, kernel};
 use crate::kernel::decl::{
-	DISK_SPACE_INFORMATION, FILETIME, HLOCAL, LANGID, LUID, MEMORYSTATUSEX,
-	OSVERSIONINFOEX, SECURITY_DESCRIPTOR, SID, SID_IDENTIFIER_AUTHORITY,
-	STARTUPINFO, SysResult, SYSTEM_INFO, SYSTEMTIME, TIME_ZONE_INFORMATION,
-	WString,
+	DISK_SPACE_INFORMATION, FILETIME, HeapBlock, HLOCAL, LANGID, LUID,
+	MEMORYSTATUSEX, OSVERSIONINFOEX, SECURITY_DESCRIPTOR, SID,
+	SID_IDENTIFIER_AUTHORITY, STARTUPINFO, SysResult, SYSTEM_INFO, SYSTEMTIME,
+	TIME_ZONE_INFORMATION, WString,
 };
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::guard::{
@@ -145,7 +145,7 @@ pub fn CopyFile(
 #[must_use]
 pub fn CopySid(src: &SID) -> SysResult<SidGuard> {
 	let sid_sz = GetLengthSid(&src);
-	let mut sid_buf = vec![0u8; sid_sz as _];
+	let mut sid_buf = HeapBlock::alloc(sid_sz as _).unwrap(); // assume no allocation errors
 
 	unsafe {
 		bool_to_sysresult(
@@ -191,7 +191,7 @@ pub fn CreateWellKnownSid(
 		return Err(get_size_err);
 	}
 
-	let mut sid_buf = vec![0u8; sid_sz as _];
+	let mut sid_buf = HeapBlock::alloc(sid_sz as _).unwrap(); // assume no allocation errors
 
 	unsafe {
 		bool_to_sysresult(
@@ -930,7 +930,7 @@ pub fn GetWindowsAccountDomainSid(sid: &SID) -> SysResult<SidGuard> {
 		return Err(get_size_err);
 	}
 
-	let mut ad_sid_buf = vec![0u8; ad_sid_sz as _];
+	let mut ad_sid_buf = HeapBlock::alloc(ad_sid_sz as _).unwrap(); // assume no allocation errors
 
 	unsafe {
 		bool_to_sysresult(
@@ -1190,7 +1190,7 @@ pub fn LookupAccountName(
 		return Err(get_size_err);
 	}
 
-	let mut sid_buf = vec![0u8; sid_sz as _];
+	let mut sid_buf = HeapBlock::alloc(sid_sz as _).unwrap(); // assume no allocation errors
 	let mut domain_buf = WString::new_alloc_buf(domain_sz as _);
 
 	unsafe {

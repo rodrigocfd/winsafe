@@ -1,7 +1,5 @@
 use crate::{co, kernel};
-use crate::kernel::decl::{Encoding, HLOCAL, MultiByteToWideChar, SysResult};
-use crate::kernel::guard::LocalFreeGuard;
-use crate::prelude::{Handle, kernel_Hlocal};
+use crate::kernel::decl::{Encoding, HeapBlock, MultiByteToWideChar, SysResult};
 
 pub const SSO_LEN: usize = 20;
 
@@ -28,7 +26,7 @@ impl std::fmt::Display for WString {
 
 impl std::fmt::Debug for WString {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		<Self as std::fmt::Display>::fmt(self, f) // simply delegate
+		<Buffer as std::fmt::Debug>::fmt(&self.buf, f) // simply delegate
 	}
 }
 
@@ -275,7 +273,7 @@ impl WString {
 
 enum Buffer {
 	Stack([u16; SSO_LEN]),
-	Heap((LocalFreeGuard, usize)), // pointer, char count
+	Heap(HeapBlock),
 	Unallocated,
 }
 
@@ -306,8 +304,9 @@ impl std::fmt::Debug for Buffer {
 		write!(f, "{}", match self {
 			Self::Stack(arr) =>
 				format!("STACK({}) \"{}\"", arr.len(), self.to_string_checked().unwrap()),
-			Self::Heap((_, num_chars)) =>
-				format!("HEAP({}) \"{}\"", num_chars, self.to_string_checked().unwrap()),
+			Self::Heap(block) =>
+				format!("HEAP({}) \"{}\"",
+					block.len() / std::mem::size_of::<u16>(), self.to_string_checked().unwrap()),
 			Self::Unallocated =>
 				"(UNALLOCATED)".to_owned(),
 		})
@@ -392,20 +391,17 @@ impl Buffer {
 		} else if num_chars <= SSO_LEN {
 			Self::Stack([0x0000; SSO_LEN])
 		} else {
-			Self::Heap((
-				HLOCAL::LocalAlloc(
-					Some(co::LMEM::FIXED | co::LMEM::ZEROINIT), // with FIXED the handle is the memory pointer itself
-					num_chars * std::mem::size_of::<u16>(),
-				).unwrap(),
-				num_chars,
-			))
+			Self::Heap(
+				HeapBlock::alloc(num_chars * std::mem::size_of::<u16>())
+					.unwrap(), // assume no allocation errors
+			)
 		}
 	}
 
 	unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
 		match self {
 			Self::Stack(arr) => arr.as_mut_ptr(),
-			Self::Heap((hlocal, _)) => hlocal.ptr() as _,
+			Self::Heap(block) => block.as_mut_ptr() as _,
 			Self::Unallocated => panic!("Trying to use an unallocated WString buffer."),
 		}
 	}
@@ -413,8 +409,7 @@ impl Buffer {
 	fn as_mut_slice(&mut self) -> &mut [u16] {
 		match self {
 			Self::Stack(arr) => arr,
-			Self::Heap((hlocal, num_chars)) =>
-				unsafe { std::slice::from_raw_parts_mut(hlocal.ptr() as _, *num_chars) },
+			Self::Heap(block) => unsafe { block.as_mut_slice_aligned::<_>() },
 			Self::Unallocated => &mut [],
 		}
 	}
@@ -422,7 +417,7 @@ impl Buffer {
 	fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Stack(arr) => arr.as_ptr(),
-			Self::Heap((hlocal, _)) => hlocal.ptr() as _,
+			Self::Heap(block) => block.as_ptr() as _,
 			Self::Unallocated => std::ptr::null(),
 		}
 	}
@@ -430,8 +425,7 @@ impl Buffer {
 	fn as_slice(&self) -> &[u16] {
 		match self {
 			Self::Stack(arr) => arr,
-			Self::Heap((hlocal, num_chars)) =>
-				unsafe { std::slice::from_raw_parts(hlocal.ptr() as _, *num_chars) },
+			Self::Heap(block) => unsafe { block.as_slice_aligned::<_>() },
 			Self::Unallocated => &[],
 		}
 	}
@@ -439,7 +433,7 @@ impl Buffer {
 	const fn buf_len(&self) -> usize {
 		match self {
 			Self::Stack(arr) => arr.len(),
-			Self::Heap((_, num_chars)) => *num_chars,
+			Self::Heap(block) => block.len() / std::mem::size_of::<u16>(),
 			Self::Unallocated => 0,
 		}
 	}

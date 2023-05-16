@@ -2,6 +2,7 @@ use std::ops::{Deref, DerefMut};
 
 use crate::{co, gdi};
 use crate::gdi::decl::{LOGPALETTE, PALETTEENTRY};
+use crate::kernel::decl::HeapBlock;
 use crate::prelude::{gdi_Hdc, GdiObject, Handle};
 use crate::user::decl::HDC;
 
@@ -87,7 +88,7 @@ impl<T> DeleteObjectGuard<T>
 /// RAII implementation for [`LOGPALETTE`](crate::LOGPALETTE) which manages the
 /// allocated memory.
 pub struct LogpaletteGuard {
-	raw: Vec<u8>,
+	raw: HeapBlock,
 }
 
 impl Deref for LogpaletteGuard {
@@ -111,7 +112,7 @@ impl LogpaletteGuard {
 		let sz = std::mem::size_of::<LOGPALETTE>() // size in bytes of the allocated struct
 			- std::mem::size_of::<PALETTEENTRY>()
 			+ (entries.len() * std::mem::size_of::<PALETTEENTRY>());
-		let mut new_self = Self { raw: vec![0u8; sz] };
+		let mut new_self = Self { raw: HeapBlock::alloc(sz).unwrap() }; // assume no allocation errors
 		new_self.palVersion = pal_version;
 		new_self.palNumEntries = entries.len() as _;
 		entries.iter()

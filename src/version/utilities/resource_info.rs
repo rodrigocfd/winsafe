@@ -1,5 +1,5 @@
 use crate::co;
-use crate::kernel::decl::{LANGID, SysResult, WString};
+use crate::kernel::decl::{HeapBlock, LANGID, SysResult, WString};
 use crate::version::decl::{GetFileVersionInfo, VarQueryValue, VS_FIXEDFILEINFO};
 
 /// Retrieves data from an embedded resource, which can be read from an
@@ -46,7 +46,7 @@ use crate::version::decl::{GetFileVersionInfo, VarQueryValue, VS_FIXEDFILEINFO};
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 pub struct ResourceInfo {
-	res_buf: Vec<u8>,
+	res_buf: HeapBlock,
 }
 
 impl ResourceInfo {
@@ -64,8 +64,10 @@ impl ResourceInfo {
 	#[must_use]
 	pub fn blocks(&self) -> impl Iterator<Item = ResourceInfoBlock> + '_ {
 		unsafe {
-			VarQueryValue::<(LANGID, co::CP)>(&self.res_buf, "\\VarFileInfo\\Translation")
-				.ok()
+			VarQueryValue::<(LANGID, co::CP)>(
+				self.res_buf.as_slice(),
+				"\\VarFileInfo\\Translation",
+			).ok()
 				.map(|(plangs, sz)|
 					std::slice::from_raw_parts(
 						plangs,
@@ -88,7 +90,7 @@ impl ResourceInfo {
 	#[must_use]
 	pub fn version_info(&self) -> Option<&VS_FIXEDFILEINFO> {
 		unsafe {
-			VarQueryValue::<VS_FIXEDFILEINFO>(&self.res_buf, "\\")
+			VarQueryValue::<VS_FIXEDFILEINFO>(self.res_buf.as_slice(), "\\")
 				.ok()
 				.map(|(pvsf, _)| &*pvsf)
 		}
@@ -123,7 +125,7 @@ impl<'a> ResourceInfoBlock<'a> {
 	fn generic_string_info(&self, info: &str) -> Option<String> {
 		unsafe {
 			VarQueryValue::<u16>(
-				&self.res_info.res_buf,
+				self.res_info.res_buf.as_slice(),
 				&format!("\\StringFileInfo\\{:04x}{:04x}\\{}",
 					u16::from(self.lang_id), u16::from(self.code_page), info),
 			).ok()

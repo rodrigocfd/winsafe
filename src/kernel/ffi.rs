@@ -4,8 +4,8 @@ extern_sys! { "advapi32";
 	AllocateAndInitializeSid(PCVOID, u8, u32, u32, u32, u32, u32, u32, u32, u32, *mut u8) -> BOOL
 	ConvertSidToStringSidW(PCVOID, *mut PSTR) -> BOOL
 	ConvertStringSidToSidW(PCSTR, *mut *mut u8) -> BOOL
-	CopySid(u32, *mut u8, PCVOID) -> BOOL
-	CreateWellKnownSid(u32, PCVOID, *mut u8, *mut u32) -> BOOL
+	CopySid(u32, PVOID, PCVOID) -> BOOL
+	CreateWellKnownSid(u32, PCVOID, PVOID, *mut u32) -> BOOL
 	DecryptFileW(PCSTR, u32) -> BOOL
 	EncryptFileW(PCSTR) -> BOOL
 	EncryptionDisable(PCSTR, BOOL) -> BOOL
@@ -16,12 +16,12 @@ extern_sys! { "advapi32";
 	GetLengthSid(PVOID) -> u32
 	GetSidLengthRequired(u8) -> u32
 	GetUserNameW(PSTR, *mut u32) -> BOOL
-	GetWindowsAccountDomainSid(PCVOID, *mut u8, *mut u32) -> BOOL
+	GetWindowsAccountDomainSid(PCVOID, PVOID, *mut u32) -> BOOL
 	InitializeSecurityDescriptor(PVOID, u32) -> BOOL
 	IsValidSecurityDescriptor(PCVOID) -> BOOL
 	IsValidSid(PVOID) -> BOOL
 	IsWellKnownSid(PVOID, u32) -> BOOL
-	LookupAccountNameW(PCSTR, PCSTR, *mut u8, *mut u32, PSTR, *mut u32, *mut u32) -> BOOL
+	LookupAccountNameW(PCSTR, PCSTR, PVOID, *mut u32, PSTR, *mut u32, *mut u32) -> BOOL
 	LookupAccountSidW(PCSTR, PCVOID, PSTR, *mut u32, PSTR, *mut u32, *mut u32) -> BOOL
 	LookupPrivilegeNameW(PCSTR, PCVOID, PSTR, *mut u32) -> BOOL
 	LookupPrivilegeValueW(PCSTR, PCSTR, PVOID) -> BOOL
