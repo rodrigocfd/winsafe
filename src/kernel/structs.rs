@@ -327,7 +327,15 @@ impl LUID {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct LUID_AND_ATTRIBUTES {
 	pub Luid: LUID,
-	pub Attributes: u32,
+	pub Attributes: co::SE_PRIV_ATTR,
+}
+
+impl LUID_AND_ATTRIBUTES {
+	/// Constructs a new `LUID_AND_ATTRIBUTES`.
+	#[must_use]
+	pub const fn new(luid: LUID, attrs: co::SE_PRIV_ATTR) -> Self {
+		Self { Luid: luid, Attributes: attrs }
+	}
 }
 
 /// [`MODULEENTRY32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-moduleentry32w)

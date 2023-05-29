@@ -62,6 +62,7 @@ extern_sys! { "advapi32";
 }
 
 extern_sys! { "kernel32";
+	AdjustTokenPrivileges(HANDLE, BOOL, PCVOID, u32, PVOID, *mut u32) -> BOOL
 	BeginUpdateResourceW(PCSTR, BOOL) -> HANDLE
 	CheckRemoteDebuggerPresent(HANDLE, *mut BOOL) -> BOOL
 	CloseHandle(HANDLE) -> BOOL

@@ -231,6 +231,17 @@ pub trait kernel_Hprocess: Handle {
 
 	/// [`OpenProcessToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken)
 	/// method.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HPROCESS};
+	///
+	/// let htoken = HPROCESS::GetCurrentProcess()
+	///     .OpenProcessToken(co::TOKEN::ADJUST_PRIVILEGES | co::TOKEN::QUERY)?;
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
 	#[must_use]
 	fn OpenProcessToken(&self,
 		desired_access: co::TOKEN) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>

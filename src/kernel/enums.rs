@@ -1,6 +1,16 @@
 use crate::co;
-use crate::kernel::decl::WString;
+use crate::kernel::decl::{TOKEN_PRIVILEGES, WString};
 use crate::kernel::privs::{IS_INTRESOURCE, MAKEINTRESOURCE, parse_multi_z_str};
+
+/// Variable parameter for:
+///
+/// * [`HACCESSTOKEN::AdjustTokenPrivileges`](crate::prelude::kernel_Haccesstoken::AdjustTokenPrivileges).
+pub enum DisabPriv<'a> {
+	/// Disables all privileges.
+	Disab,
+	/// An array of privileges and its attributes.
+	Privs(&'a TOKEN_PRIVILEGES)
+}
 
 /// A resource identifier.
 ///

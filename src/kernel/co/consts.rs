@@ -1227,6 +1227,22 @@ const_bitflag! { SE: u16;
 	SELF_RELATIVE 0x8000
 }
 
+const_bitflag! { SE_PRIV_ATTR: u32;
+	/// [Privilege attributes](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-adjusttokenprivileges)
+	/// (`u32`).
+	///
+	/// Originally has `SE_PRIVILEGE` prefix.
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	ENABLED_BY_DEFAULT 0x0000_0001
+	ENABLED 0x0000_0002
+	REMOVED 0x0000_0004
+	USED_FOR_ACCESS 0x8000_0000
+	VALID_ATTRIBUTES Self::ENABLED_BY_DEFAULT.0 | Self::ENABLED.0 | Self::REMOVED.0 | Self::USED_FOR_ACCESS.0
+}
+
 const_str! { SE_PRIV;
 	/// [Privilege constants](https://learn.microsoft.com/en-us/windows/win32/secauthz/privilege-constants)
 	/// (`&'static str`).

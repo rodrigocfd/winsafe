@@ -2,6 +2,7 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{GetLastError, SysResult};
+use crate::kernel::enums::DisabPriv;
 use crate::kernel::guard::CloseHandleGuard;
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
@@ -23,6 +24,51 @@ impl kernel_Haccesstoken for HACCESSTOKEN {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait kernel_Haccesstoken: Handle {
+	/// [`AdjustTokenPrivileges`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-adjusttokenprivileges)
+	/// method.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{
+	///     co, DisabPriv, HPROCESS, LookupPrivilegeValue,
+	///     LUID_AND_ATTRIBUTES, TOKEN_PRIVILEGES,
+	/// };
+	///
+	/// let htoken = HPROCESS::GetCurrentProcess()
+	///     .OpenProcessToken(co::TOKEN::ADJUST_PRIVILEGES | co::TOKEN::QUERY)?;
+	///
+	/// let luid = LookupPrivilegeValue(None, co::SE_PRIV::SHUTDOWN_NAME)?;
+	///
+	/// let privs = TOKEN_PRIVILEGES::new(&[
+	///     LUID_AND_ATTRIBUTES::new(luid, co::SE_PRIV_ATTR::ENABLED),
+	/// ]);
+	///
+	/// htoken.AdjustTokenPrivileges(DisabPriv::Privs(&privs))?;
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
+	fn AdjustTokenPrivileges(&self, new_state: DisabPriv) -> SysResult<()> {
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::AdjustTokenPrivileges(
+					self.ptr(),
+					match new_state {
+						DisabPriv::Disab => 1,
+						_ => 0,
+					},
+					match new_state {
+						DisabPriv::Privs(privs) => privs as *const _ as _,
+						_ => std::ptr::null(),
+					},
+					0,
+					std::ptr::null_mut(),
+					std::ptr::null_mut(),
+				)
+			},
+		)
+	}
+
 	/// [`DuplicateToken`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-duplicatetoken)
 	/// method.
 	#[must_use]

@@ -1291,6 +1291,19 @@ pub fn LookupPrivilegeName(
 
 /// [`LookupPrivilegeValue`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupprivilegevaluew)
 /// function.
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{co, HPROCESS, LookupPrivilegeValue};
+///
+/// let htoken = HPROCESS::GetCurrentProcess()
+///     .OpenProcessToken(co::TOKEN::ADJUST_PRIVILEGES | co::TOKEN::QUERY)?;
+///
+/// let luid = LookupPrivilegeValue(None, co::SE_PRIV::SHUTDOWN_NAME)?;
+/// # Ok::<_, co::ERROR>(())
+/// ```
 #[must_use]
 pub fn LookupPrivilegeValue(
 	system_name: Option<&str>, name: co::SE_PRIV) -> SysResult<LUID>
