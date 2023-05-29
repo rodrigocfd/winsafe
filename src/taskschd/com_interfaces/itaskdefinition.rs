@@ -4,6 +4,8 @@ use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR};
 use crate::ole::decl::HrResult;
 use crate::prelude::oleaut_IDispatch;
 use crate::taskschd::decl::ITriggerCollection;
+use crate::taskschd::decl::IActionCollection;
+use crate::taskschd::decl::IRegistrationInfo;
 use crate::vt::IDispatchVT;
 
 /// [`ITaskDefinition`](crate::ITaskDefinition) virtual table.
@@ -47,8 +49,18 @@ impl taskschd_ITaskDefinition for ITaskDefinition {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_ITaskDefinition: oleaut_IDispatch {
+	fn_com_get! { get_Actions: ITaskDefinitionVT, IActionCollection;
+		/// [`ITaskDefinition::get_Actions`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_actions)
+		/// method.
+	}
+
 	fn_bstr_get! { get_Data: ITaskDefinitionVT;
 		/// [`ITaskDefinition::get_Data`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_data)
+		/// method.
+	}
+
+	fn_com_get! { get_RegistrationInfo: ITaskDefinitionVT, IRegistrationInfo;
+		/// [`ITaskDefinition::get_RegistrationInfo`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_registrationinfo)
 		/// method.
 	}
 
