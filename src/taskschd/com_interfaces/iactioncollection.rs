@@ -54,6 +54,21 @@ pub trait taskschd_IActionCollection: oleaut_IDispatch {
 		)
 	}
 
+	/// [`IActionCollection::Create`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-create)
+	/// method.
+	fn Create(&self, action_type: TASK_ACTION_TYPE) -> HrResult<IAction> {
+		let mut queried = unsafe { IAction::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IActionCollectionVT>(self).Create)(
+					self.ptr(),
+					action_type.raw(),
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
+	}
+
 	fn_bstr_get! { get_Context: IActionCollectionVT;
 		/// [`IActionCollection::get_Context`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-get_context)
 		/// method.
@@ -72,21 +87,6 @@ pub trait taskschd_IActionCollection: oleaut_IDispatch {
 	fn_bstr_set! { put_XmlText: IActionCollectionVT, text;
 		/// [`IActionCollection::put_XmlText`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-put_xmltext)
 		/// method.
-	}
-
-	/// [`IActionCollection::Clear`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-clear)
-	/// method.
-	fn Create(&self, action_type: TASK_ACTION_TYPE) -> HrResult<IAction> {
-		let mut queried = unsafe { IAction::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IActionCollectionVT>(self).Create)(
-					self.ptr(),
-					action_type.raw(),
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
 	}
 
 	/// [`IActionCollection::Remove`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-remove)
