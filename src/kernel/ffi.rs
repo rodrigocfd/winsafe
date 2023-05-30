@@ -1,6 +1,7 @@
 use crate::kernel::ffi_types::{BOOL, HANDLE, PCSTR, PCVOID, PFUNC, PSTR, PVOID};
 
 extern_sys! { "advapi32";
+	AdjustTokenPrivileges(HANDLE, BOOL, PCVOID, u32, PVOID, *mut u32) -> BOOL
 	AllocateAndInitializeSid(PCVOID, u8, u32, u32, u32, u32, u32, u32, u32, u32, *mut u8) -> BOOL
 	ConvertSidToStringSidW(PCVOID, *mut PSTR) -> BOOL
 	ConvertStringSidToSidW(PCSTR, *mut *mut u8) -> BOOL
@@ -62,7 +63,6 @@ extern_sys! { "advapi32";
 }
 
 extern_sys! { "kernel32";
-	AdjustTokenPrivileges(HANDLE, BOOL, PCVOID, u32, PVOID, *mut u32) -> BOOL
 	BeginUpdateResourceW(PCSTR, BOOL) -> HANDLE
 	CheckRemoteDebuggerPresent(HANDLE, *mut BOOL) -> BOOL
 	CloseHandle(HANDLE) -> BOOL

@@ -383,6 +383,16 @@ extern "system" fn enum_windows_proc<F>(hwnd: HWND, lparam: isize) -> BOOL
 	func(hwnd) as _
 }
 
+/// [`ExitWindowsEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-exitwindowsex)
+/// function.
+pub fn ExitWindowsEx(
+	flags: co::EWX, reason: co::SHTDN_REASON) -> SysResult<()>
+{
+	bool_to_sysresult(
+		unsafe { user::ffi::ExitWindowsEx(flags.raw(), reason.raw()) },
+	)
+}
+
 /// [`GetAsyncKeyState`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getasynckeystate)
 /// function.
 #[must_use]

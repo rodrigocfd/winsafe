@@ -70,6 +70,7 @@ extern_sys! { "user32";
 	EnumDisplaySettingsW(PCSTR, u32, PVOID) -> BOOL
 	EnumThreadWindows(u32, PFUNC, isize) -> BOOL
 	EnumWindows(PFUNC, isize) -> BOOL
+	ExitWindowsEx(u32, u32) -> BOOL
 	FindWindowExW(HANDLE, HANDLE, PCSTR, PCSTR) -> HANDLE
 	FindWindowW(PCSTR, PCSTR) -> HANDLE
 	GetActiveWindow() -> HANDLE
