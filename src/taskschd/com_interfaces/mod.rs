@@ -9,6 +9,7 @@ mod iexecaction;
 mod iidletrigger;
 mod ilogontrigger;
 mod iregisteredtask;
+mod iregistrationinfo;
 mod itaskdefinition;
 mod itaskfolder;
 mod itaskservice;
@@ -27,6 +28,7 @@ pub mod decl {
 	pub use super::iidletrigger::IIdleTrigger;
 	pub use super::ilogontrigger::ILogonTrigger;
 	pub use super::iregisteredtask::IRegisteredTask;
+	pub use super::iregistrationinfo::IRegistrationInfo;
 	pub use super::itaskdefinition::ITaskDefinition;
 	pub use super::itaskfolder::ITaskFolder;
 	pub use super::itaskservice::ITaskService;
@@ -46,6 +48,7 @@ pub mod traits {
 	pub use super::iidletrigger::taskschd_IIdleTrigger;
 	pub use super::ilogontrigger::taskschd_ILogonTrigger;
 	pub use super::iregisteredtask::taskschd_IRegisteredTask;
+	pub use super::iregistrationinfo::taskschd_IRegistrationInfo;
 	pub use super::itaskdefinition::taskschd_ITaskDefinition;
 	pub use super::itaskfolder::taskschd_ITaskFolder;
 	pub use super::itaskservice::taskschd_ITaskService;
@@ -65,6 +68,7 @@ pub mod vt {
 	pub use super::iidletrigger::IIdleTriggerVT;
 	pub use super::ilogontrigger::ILogonTriggerVT;
 	pub use super::iregisteredtask::IRegisteredTaskVT;
+	pub use super::iregistrationinfo::IRegistrationInfoVT;
 	pub use super::itaskdefinition::ITaskDefinitionVT;
 	pub use super::itaskfolder::ITaskFolderVT;
 	pub use super::itaskservice::ITaskServiceVT;
