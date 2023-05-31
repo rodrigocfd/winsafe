@@ -991,6 +991,54 @@ pub fn InitializeSecurityDescriptor() -> SysResult<SECURITY_DESCRIPTOR> {
 	).map(|_| sd)
 }
 
+/// [`InitiateSystemShutdown`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-initiatesystemshutdownw)
+/// function.
+pub fn InitiateSystemShutdown(
+	machine_name: Option<&str>,
+	message: Option<&str>,
+	timeout: u32,
+	force_apps_closed: bool,
+	reboot_after_shutdown: bool,
+) -> SysResult<()>
+{
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::InitiateSystemShutdownW(
+				WString::from_opt_str(machine_name).as_ptr(),
+				WString::from_opt_str(message).as_ptr(),
+				timeout,
+				force_apps_closed as _,
+				reboot_after_shutdown as _,
+			)
+		},
+	)
+}
+
+/// [`InitiateSystemShutdownEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-initiatesystemshutdownexw)
+/// function.
+pub fn InitiateSystemShutdownEx(
+	machine_name: Option<&str>,
+	message: Option<&str>,
+	timeout: u32,
+	force_apps_closed: bool,
+	reboot_after_shutdown: bool,
+	reason: Option<co::SHTDN_REASON>,
+) -> SysResult<()>
+{
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::InitiateSystemShutdownExW(
+				WString::from_opt_str(machine_name).as_ptr(),
+				WString::from_opt_str(message).as_ptr(),
+				timeout,
+				force_apps_closed as _,
+				reboot_after_shutdown as _,
+				reason.unwrap_or_default().raw(),
+			)
+		},
+	)
+}
+
 /// [`IsDebuggerPresent`](https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-isdebuggerpresent)
 /// function.
 #[must_use]
