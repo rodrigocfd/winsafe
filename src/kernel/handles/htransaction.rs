@@ -48,10 +48,10 @@ pub trait kernel_Htransaction: Handle {
 				kernel::ffi::CreateTransaction(
 					transaction_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
 					std::ptr::null_mut(),
-					options.map_or(0, |opt| opt.raw()),
+					options.unwrap_or_default().raw(),
 					0,
 					0,
-					timeout.map_or(0, |t| t),
+					timeout.unwrap_or_default(),
 					WString::from_str(description).as_ptr() as _,
 				),
 			) {

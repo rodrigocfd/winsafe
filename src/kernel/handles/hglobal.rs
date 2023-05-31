@@ -36,7 +36,7 @@ pub trait kernel_Hglobal: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				kernel::ffi::GlobalAlloc(flags.map_or(0, |f| f.raw()), num_bytes),
+				kernel::ffi::GlobalAlloc(flags.unwrap_or_default().raw(), num_bytes),
 			).map(|h| GlobalFreeGuard::new(h))
 		}
 	}
@@ -111,7 +111,7 @@ pub trait kernel_Hglobal: Handle {
 				kernel::ffi::GlobalReAlloc(
 					self.ptr(),
 					num_bytes,
-					flags.map_or(0, |f| f.raw()),
+					flags.unwrap_or_default().raw(),
 				)
 			},
 		).map(|h| { *self = h; })

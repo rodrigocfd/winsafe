@@ -586,7 +586,7 @@ unsafe impl MsgSend for LimitText {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::CB::LIMITTEXT.into(),
-			wparam: self.max_chars.unwrap_or(0) as _,
+			wparam: self.max_chars.unwrap_or_default() as _,
 			lparam: 0,
 		}
 	}

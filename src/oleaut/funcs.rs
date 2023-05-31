@@ -37,7 +37,7 @@ pub fn OleLoadPicture(
 		unsafe {
 			oleaut::ffi::OleLoadPicture(
 				stream.ptr() as _,
-				size.unwrap_or(0) as _,
+				size.unwrap_or_default() as _,
 				!keep_original_format as _, // note: reversed
 				&IPicture::IID as *const _ as _,
 				queried.as_mut(),

@@ -35,7 +35,7 @@ pub trait kernel_Hlocal: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				kernel::ffi::LocalAlloc(flags.map_or(0, |f| f.raw()), num_bytes),
+				kernel::ffi::LocalAlloc(flags.unwrap_or_default().raw(), num_bytes),
 			).map(|h| LocalFreeGuard::new(h))
 		}
 	}
@@ -110,7 +110,7 @@ pub trait kernel_Hlocal: Handle {
 				kernel::ffi::LocalReAlloc(
 					self.ptr(),
 					num_bytes,
-					flags.map_or(0, |f| f.raw()),
+					flags.unwrap_or_default().raw(),
 				)
 			},
 		).map(|h| { *self = h; })

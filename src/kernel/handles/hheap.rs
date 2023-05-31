@@ -103,7 +103,7 @@ pub trait kernel_Hheap: Handle {
 		unsafe {
 			ptr_to_sysresult_handle(
 				kernel::ffi::HeapCreate(
-					options.map_or(0, |f| f.raw()),
+					options.unwrap_or_default().raw(),
 					initial_size,
 					maximum_size,
 				),
@@ -150,7 +150,7 @@ pub trait kernel_Hheap: Handle {
 			ptr_to_sysresult(
 				kernel::ffi::HeapAlloc(
 					self.ptr(),
-					flags.map_or(0, |f| f.raw()),
+					flags.unwrap_or_default().raw(),
 					num_bytes,
 				),
 			).map(|p| HeapFreeGuard::new(self, p, num_bytes))
@@ -161,7 +161,7 @@ pub trait kernel_Hheap: Handle {
 	/// method.
 	fn HeapCompact(&self, flags: Option<co::HEAP_SIZE>) -> SysResult<usize> {
 		match unsafe {
-			kernel::ffi::HeapCompact(self.ptr(), flags.map_or(0, |f| f.raw()))
+			kernel::ffi::HeapCompact(self.ptr(), flags.unwrap_or_default().raw())
 		} {
 			0 => Err(GetLastError()),
 			n => Ok(n),
@@ -238,7 +238,7 @@ pub trait kernel_Hheap: Handle {
 			unsafe {
 				kernel::ffi::HeapReAlloc(
 					self.ptr(),
-					flags.map_or(0, |f| f.raw()),
+					flags.unwrap_or_default().raw(),
 					mem.as_ptr() as _,
 					num_bytes,
 				)
@@ -263,7 +263,7 @@ pub trait kernel_Hheap: Handle {
 		match unsafe {
 			kernel::ffi::HeapSize(
 				self.ptr(),
-				flags.map_or(0, |f| f.raw()),
+				flags.unwrap_or_default().raw(),
 				mem.as_ptr() as _,
 			)
 		} {
@@ -296,7 +296,7 @@ pub trait kernel_Hheap: Handle {
 		unsafe {
 			kernel::ffi::HeapValidate(
 				self.ptr(),
-				flags.map_or(0, |f| f.raw()),
+				flags.unwrap_or_default().raw(),
 				mem.map_or(std::ptr::null_mut(), |mem| mem.as_ptr() as _),
 			) != 0
 		}
