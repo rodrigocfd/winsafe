@@ -1,8 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::{co, kernel};
-use crate::kernel::decl::{GetLastError, SysResult};
+use crate::kernel::decl::{GetLastError, SID, SysResult};
 use crate::kernel::enums::DisabPriv;
+use crate::kernel::ffi_types::BOOL;
 use crate::kernel::guard::CloseHandleGuard;
 use crate::kernel::privs::bool_to_sysresult;
 use crate::prelude::Handle;
@@ -67,6 +68,40 @@ pub trait kernel_Haccesstoken: Handle {
 				)
 			},
 		)
+	}
+
+	/// [`CheckTokenCapability`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokencapability)
+	/// method.
+	#[must_use]
+	fn CheckTokenCapability(&self,
+		capability_sid_to_check: &SID) -> SysResult<bool>
+	{
+		let mut has_capability: BOOL = 0;
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::CheckTokenCapability(
+					self.ptr(),
+					capability_sid_to_check as *const _ as _,
+					&mut has_capability,
+				)
+			},
+		).map(|_| has_capability != 0)
+	}
+
+	/// [`CheckTokenMembership`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokenmembership)
+	/// method.
+	#[must_use]
+	fn CheckTokenMembership(&self, sid_to_check: &SID) -> SysResult<bool> {
+		let mut is_member: BOOL = 0;
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::CheckTokenMembership(
+					self.ptr(),
+					sid_to_check as *const _ as _,
+					&mut is_member,
+				)
+			},
+		).map(|_| is_member != 0)
 	}
 
 	/// [`DuplicateToken`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-duplicatetoken)

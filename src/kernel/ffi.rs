@@ -3,6 +3,8 @@ use crate::kernel::ffi_types::{BOOL, HANDLE, PCSTR, PCVOID, PFUNC, PSTR, PVOID};
 extern_sys! { "advapi32";
 	AdjustTokenPrivileges(HANDLE, BOOL, PCVOID, u32, PVOID, *mut u32) -> BOOL
 	AllocateAndInitializeSid(PCVOID, u8, u32, u32, u32, u32, u32, u32, u32, u32, *mut u8) -> BOOL
+	CheckTokenCapability(HANDLE, PCVOID, *mut BOOL) -> BOOL
+	CheckTokenMembership(HANDLE, PCVOID, *mut BOOL) -> BOOL
 	ConvertSidToStringSidW(PCVOID, *mut PSTR) -> BOOL
 	ConvertStringSidToSidW(PCSTR, *mut *mut u8) -> BOOL
 	CopySid(u32, PVOID, PCVOID) -> BOOL
