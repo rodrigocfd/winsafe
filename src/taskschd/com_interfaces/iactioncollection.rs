@@ -74,6 +74,37 @@ pub trait taskschd_IActionCollection: oleaut_IDispatch {
 		/// method.
 	}
 
+	/// [`IActionCollection::get_Count`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-get_count)
+	/// method.
+	#[must_use]
+	fn get_Count(&self) -> HrResult<i32> {
+		let mut count = i32::default();
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IActionCollectionVT>(self).get_Count)(
+					self.ptr(),
+					&mut count,
+				)
+			},
+		).map(|_| count)
+	}
+
+	/// [`IActionCollection::get_Item`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-get_item)
+	/// method.
+	#[must_use]
+	fn get_Item(&self, index: i32) -> HrResult<IAction> {
+		let mut queried = unsafe { IAction::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IActionCollectionVT>(self).get_Item)(
+					self.ptr(),
+					index,
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
+	}
+
 	fn_bstr_get! { get_XmlText: IActionCollectionVT;
 		/// [`IActionCollection::get_XmlText`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-get_xmltext)
 		/// method.
