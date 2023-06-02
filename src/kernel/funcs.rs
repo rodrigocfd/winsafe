@@ -1559,6 +1559,21 @@ pub fn SetCurrentDirectory(path_name: &str) -> SysResult<()> {
 	)
 }
 
+/// [`SetFileAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfileattributesw)
+/// function.
+pub fn SetFileAttributes(
+	file_name: &str, attributes: co::FILE_ATTRIBUTE) -> SysResult<()>
+{
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::SetFileAttributesW(
+				WString::from_str(file_name).as_ptr(),
+				attributes.raw(),
+			)
+		},
+	)
+}
+
 /// [`SetLastError`](https://learn.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-setlasterror)
 /// function.
 pub fn SetLastError(err_code: co::ERROR) {

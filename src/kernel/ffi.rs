@@ -213,6 +213,7 @@ extern_sys! { "kernel32";
 	SetConsoleMode(HANDLE, u32) -> BOOL
 	SetCurrentDirectoryW(PCSTR) -> BOOL
 	SetEndOfFile(HANDLE) -> BOOL
+	SetFileAttributesW(PCSTR, u32) -> BOOL
 	SetFilePointerEx(HANDLE, i64, *mut i64, u32) -> BOOL
 	SetLastError(u32)
 	SetPriorityClass(HANDLE, u32) -> BOOL
