@@ -30,6 +30,31 @@ pub enum FileAccess {
 ///
 /// If you just want to read the file, consider memory-mapping it with
 /// [`FileMapped`](crate::FileMapped), which tends to be faster.
+///
+/// # Examples
+///
+/// Reading the contents as a string:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{File, FileAccess, WString};
+///
+/// let f = File::open("C:\\Temp\\foo.txt", FileAccess::ExistingRW)?;
+/// let raw_bytes = f.read_all()?;
+/// let text = WString::parse(&raw_bytes)?.to_string();
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
+///
+/// Writing a string:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{File, FileAccess};
+///
+/// let f = File::open("C:\\Temp\\foo.txt", FileAccess::OpenOrCreateRW)?;
+/// f.erase_and_write("My text".as_bytes())?;
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
 pub struct File {
 	hfile: CloseHandleGuard<HFILE>,
 }

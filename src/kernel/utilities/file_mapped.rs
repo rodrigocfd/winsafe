@@ -18,8 +18,9 @@ use crate::prelude::{
 /// use winsafe::prelude::*;
 /// use winsafe::{FileAccess, FileMapped, WString};
 ///
-/// let file_in = FileMapped::open("C:\\Temp\\foo.txt", FileAccess::ExistingReadOnly)?;
-/// let str_contents = WString::parse(file_in.as_slice())?.to_string();
+/// let f = FileMapped::open("C:\\Temp\\foo.txt", FileAccess::ExistingReadOnly)?;
+/// let raw_bytes = f.as_slice();
+/// let text = WString::parse(raw_bytes)?.to_string();
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 pub struct FileMapped {
