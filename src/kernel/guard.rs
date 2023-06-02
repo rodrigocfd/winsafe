@@ -371,7 +371,7 @@ impl<'a, H> Deref for HeapFreeGuard<'a, H>
 	type Target = [u8];
 
 	fn deref(&self) -> &Self::Target {
-		unsafe { std::slice::from_raw_parts(self.pmem as _, self.sz) }
+		unsafe { std::slice::from_raw_parts(self.pmem.cast(), self.sz) }
 	}
 }
 
@@ -379,7 +379,7 @@ impl<'a, H> DerefMut for HeapFreeGuard<'a, H>
 	where H: kernel_Hheap,
 {
 	fn deref_mut(&mut self) -> &mut Self::Target {
-		unsafe { std::slice::from_raw_parts_mut(self.pmem as _, self.sz) }
+		unsafe { std::slice::from_raw_parts_mut(self.pmem.cast(), self.sz) }
 	}
 }
 

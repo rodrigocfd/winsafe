@@ -89,8 +89,7 @@ pub trait kernel_Hlocal: Handle {
 		unsafe {
 			ptr_to_sysresult(kernel::ffi::LocalLock(self.ptr()))
 				.map(|ptr| (
-					std::slice::from_raw_parts_mut(
-						ptr as *mut _ as *mut _, mem_sz as _),
+					std::slice::from_raw_parts_mut(ptr.cast(), mem_sz as _),
 					LocalUnlockGuard::new(self),
 				),
 			)

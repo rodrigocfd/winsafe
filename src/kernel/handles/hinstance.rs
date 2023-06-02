@@ -276,7 +276,7 @@ pub trait kernel_Hinstance: Handle {
 		unsafe {
 			ptr_to_sysresult(
 				kernel::ffi::LockResource(hres_loaded.ptr()),
-			).map(|ptr| std::slice::from_raw_parts(ptr as *const _ as _, sz as _))
+			).map(|ptr| std::slice::from_raw_parts(ptr.cast(), sz as _))
 		}
 	}
 
