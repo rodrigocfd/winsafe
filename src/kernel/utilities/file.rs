@@ -14,6 +14,8 @@ pub enum FileAccess {
 	/// Opens the file as read/write. If the file doesn't exist, it will be
 	/// created.
 	OpenOrCreateRW,
+	/// Creates a new file as read/write. Fails if the file already exists.
+	CreateRW,
 }
 
 //------------------------------------------------------------------------------
@@ -51,6 +53,11 @@ impl File {
 				co::GENERIC::READ | co::GENERIC::WRITE,
 				None,
 				co::DISPOSITION::OPEN_ALWAYS,
+			),
+			FileAccess::CreateRW => (
+				co::GENERIC::READ | co::GENERIC::WRITE,
+				None,
+				co::DISPOSITION::CREATE_NEW,
 			),
 		};
 

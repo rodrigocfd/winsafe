@@ -51,7 +51,8 @@ impl FileMapped {
 			match access {
 				FileAccess::ExistingReadOnly => co::PAGE::READONLY,
 				FileAccess::ExistingRW
-					| FileAccess::OpenOrCreateRW => co::PAGE::READWRITE,
+					| FileAccess::OpenOrCreateRW
+					| FileAccess::CreateRW => co::PAGE::READWRITE,
 			},
 			None,
 			None,
@@ -61,7 +62,8 @@ impl FileMapped {
 			match access {
 				FileAccess::ExistingReadOnly => co::FILE_MAP::READ,
 				FileAccess::ExistingRW
-					| FileAccess::OpenOrCreateRW => co::FILE_MAP::READ | co::FILE_MAP::WRITE,
+					| FileAccess::OpenOrCreateRW
+					| FileAccess::CreateRW => co::FILE_MAP::READ | co::FILE_MAP::WRITE,
 			},
 			0,
 			None,

@@ -108,7 +108,7 @@ pub trait kernel_Hfile: Handle {
 					hfile_template.map_or(std::ptr::null_mut(), |h| h.ptr()),
 				) as _,
 			) {
-				HFILE::NULL => Err(GetLastError()),
+				HFILE::NULL | HFILE::INVALID => Err(GetLastError()),
 				handle => Ok((CloseHandleGuard::new(handle), GetLastError())),
 			}
 		}
