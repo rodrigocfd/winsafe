@@ -71,6 +71,7 @@ extern_sys! { "kernel32";
 	CheckRemoteDebuggerPresent(HANDLE, *mut BOOL) -> BOOL
 	CloseHandle(HANDLE) -> BOOL
 	CopyFileW(PCSTR, PCSTR, BOOL) -> BOOL
+	CreateDirectoryW(PCSTR, PVOID) -> BOOL
 	CreateFileMappingFromApp(HANDLE, PVOID, u32, u64, PCSTR) -> HANDLE
 	CreateFileW(PCSTR, u32, u32, PVOID, u32, u32, HANDLE) -> HANDLE
 	CreatePipe(*mut HANDLE, *mut HANDLE, PVOID, u32) -> BOOL

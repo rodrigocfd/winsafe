@@ -55,7 +55,8 @@ impl File {
 		};
 
 		let (hfile, _) = HFILE::CreateFile(
-			file_path, acc, share, None, disp, co::FILE_ATTRIBUTE::NORMAL, None)?;
+			file_path, acc, share, None, disp,
+			co::FILE_ATTRIBUTE::NORMAL, None, None, None)?;
 		Ok(Self { hfile })
 	}
 

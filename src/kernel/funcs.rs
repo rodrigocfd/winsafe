@@ -5,9 +5,9 @@ use std::collections::HashMap;
 use crate::{co, kernel};
 use crate::kernel::decl::{
 	DISK_SPACE_INFORMATION, FILETIME, HeapBlock, HLOCAL, LANGID, LUID,
-	MEMORYSTATUSEX, OSVERSIONINFOEX, SECURITY_DESCRIPTOR, SID,
-	SID_IDENTIFIER_AUTHORITY, STARTUPINFO, SysResult, SYSTEM_INFO, SYSTEMTIME,
-	TIME_ZONE_INFORMATION, WString,
+	MEMORYSTATUSEX, OSVERSIONINFOEX, SECURITY_ATTRIBUTES, SECURITY_DESCRIPTOR,
+	SID, SID_IDENTIFIER_AUTHORITY, STARTUPINFO, SysResult, SYSTEM_INFO,
+	SYSTEMTIME, TIME_ZONE_INFORMATION, WString,
 };
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::guard::{
@@ -156,6 +156,23 @@ pub fn CopySid(src: &SID) -> SysResult<SidGuard> {
 			),
 		).map(|_| SidGuard::new(sid_buf))
 	}
+}
+
+/// [`CreateDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createdirectoryw)
+/// function.
+pub fn CreateDirectory(
+	path_name: &str,
+	security_attributes: Option<&SECURITY_ATTRIBUTES>,
+) -> SysResult<()>
+{
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::CreateDirectoryW(
+				WString::from_str(path_name).as_ptr(),
+				security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+			)
+		},
+	)
 }
 
 /// [`CreateWellKnownSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-createwellknownsid)

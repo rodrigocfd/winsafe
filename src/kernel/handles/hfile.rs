@@ -6,7 +6,9 @@ use crate::kernel::decl::{
 	OVERLAPPED, SECURITY_ATTRIBUTES, SysResult, WString,
 };
 use crate::kernel::guard::{CloseHandleGuard, UnlockFileGuard};
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
+use crate::kernel::privs::{
+	bool_to_sysresult, ptr_to_sysresult_handle, SECURITY_SQOS_PRESENT,
+};
 use crate::prelude::Handle;
 
 impl_handle! { HFILE;
@@ -51,6 +53,8 @@ pub trait kernel_Hfile: Handle {
 	///     co::DISPOSITION::OPEN_EXISTING,
 	///     co::FILE_ATTRIBUTE::NORMAL,
 	///     None,
+	///     None,
+	///     None,
 	/// )?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
@@ -69,6 +73,8 @@ pub trait kernel_Hfile: Handle {
 	///     co::DISPOSITION::OPEN_ALWAYS,
 	///     co::FILE_ATTRIBUTE::NORMAL,
 	///     None,
+	///     None,
+	///     None,
 	/// )?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
@@ -79,7 +85,9 @@ pub trait kernel_Hfile: Handle {
 		share_mode: co::FILE_SHARE,
 		security_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		creation_disposition: co::DISPOSITION,
-		flags_and_attrs: co::FILE_ATTRIBUTE,
+		attributes: co::FILE_ATTRIBUTE,
+		flags: Option<co::FILE_FLAG>,
+		security: Option<co::FILE_SECURITY>,
 		hfile_template: Option<&HFILE>,
 	) -> SysResult<(CloseHandleGuard<HFILE>, co::ERROR)>
 	{
@@ -91,7 +99,9 @@ pub trait kernel_Hfile: Handle {
 					share_mode.raw(),
 					security_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					creation_disposition.raw(),
-					flags_and_attrs.raw(),
+					attributes.raw()
+						| flags.unwrap_or_default().raw()
+						| security.map_or(0, |s| SECURITY_SQOS_PRESENT | s.raw()),
 					hfile_template.map_or(std::ptr::null_mut(), |h| h.ptr()),
 				) as _,
 			) {

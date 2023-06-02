@@ -55,6 +55,8 @@ pub trait kernel_Hfilemapview: Handle {
 	///     co::DISPOSITION::OPEN_EXISTING,
 	///     co::FILE_ATTRIBUTE::NORMAL,
 	///     None,
+	///     None,
+	///     None,
 	/// )?;
 	///
 	/// let hmap = hfile.CreateFileMapping(
