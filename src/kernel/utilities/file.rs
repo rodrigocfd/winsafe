@@ -39,17 +39,17 @@ impl File {
 		let (acc, share, disp) = match access {
 			FileAccess::ExistingReadOnly => (
 				co::GENERIC::READ,
-				co::FILE_SHARE::READ,
+				Some(co::FILE_SHARE::READ),
 				co::DISPOSITION::OPEN_EXISTING,
 			),
 			FileAccess::ExistingRW => (
 				co::GENERIC::READ | co::GENERIC::WRITE,
-				co::FILE_SHARE::NoValue,
+				None,
 				co::DISPOSITION::OPEN_EXISTING,
 			),
 			FileAccess::OpenOrCreateRW => (
 				co::GENERIC::READ | co::GENERIC::WRITE,
-				co::FILE_SHARE::NoValue,
+				None,
 				co::DISPOSITION::OPEN_ALWAYS,
 			),
 		};

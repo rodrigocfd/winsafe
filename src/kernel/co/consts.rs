@@ -283,8 +283,6 @@ const_bitflag! { FILE_SHARE: u32;
 	/// `share_mode` (`u32`).
 	=>
 	=>
-	/// None of the actual values (zero).
-	NoValue 0
 	READ 0x0000_0001
 	WRITE 0x0000_0002
 	DELETE 0x0000_0004

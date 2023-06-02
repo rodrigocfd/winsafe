@@ -37,6 +37,9 @@ pub trait kernel_Hfile: Handle {
 	/// The error code is also returned because it can carry information even if
 	/// the file is successfully open.
 	///
+	/// Unless you need something specific, consider using the
+	/// [`File`](crate::File) high-level abstraction.
+	///
 	/// # Examples
 	///
 	/// Opening an existing file as read-only:
@@ -48,7 +51,7 @@ pub trait kernel_Hfile: Handle {
 	/// let (hfile, status) = HFILE::CreateFile(
 	///     "C:\\Temp\\test.txt",
 	///     co::GENERIC::READ,
-	///     co::FILE_SHARE::READ,
+	///     Some(co::FILE_SHARE::READ),
 	///     None,
 	///     co::DISPOSITION::OPEN_EXISTING,
 	///     co::FILE_ATTRIBUTE::NORMAL,
@@ -68,7 +71,7 @@ pub trait kernel_Hfile: Handle {
 	/// let (hfile, status) = HFILE::CreateFile(
 	///     "C:\\Temp\\test.txt",
 	///     co::GENERIC::READ | co::GENERIC::WRITE,
-	///     co::FILE_SHARE::NoValue,
+	///     None,
 	///     None,
 	///     co::DISPOSITION::OPEN_ALWAYS,
 	///     co::FILE_ATTRIBUTE::NORMAL,
@@ -82,7 +85,7 @@ pub trait kernel_Hfile: Handle {
 	fn CreateFile(
 		file_name: &str,
 		desired_access: co::GENERIC,
-		share_mode: co::FILE_SHARE,
+		share_mode: Option<co::FILE_SHARE>,
 		security_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		creation_disposition: co::DISPOSITION,
 		attributes: co::FILE_ATTRIBUTE,
@@ -96,7 +99,7 @@ pub trait kernel_Hfile: Handle {
 				kernel::ffi::CreateFileW(
 					WString::from_str(file_name).as_ptr(),
 					desired_access.raw(),
-					share_mode.raw(),
+					share_mode.unwrap_or_default().raw(),
 					security_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					creation_disposition.raw(),
 					attributes.raw()
@@ -113,6 +116,9 @@ pub trait kernel_Hfile: Handle {
 
 	/// [`CreateFileMapping`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw)
 	/// method.
+	///
+	/// Unless you need something specific, consider using the
+	/// [`FileMapped`](crate::FileMapped) high-level abstraction.
 	#[must_use]
 	fn CreateFileMapping(&self,
 		mapping_attrs: Option<&mut SECURITY_ATTRIBUTES>,

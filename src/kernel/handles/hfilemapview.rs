@@ -50,7 +50,7 @@ pub trait kernel_Hfilemapview: Handle {
 	/// let (hfile, _) = HFILE::CreateFile(
 	///     "C:\\Temp\\test.txt",
 	///     co::GENERIC::READ,
-	///     co::FILE_SHARE::READ,
+	///     Some(co::FILE_SHARE::READ),
 	///     None,
 	///     co::DISPOSITION::OPEN_EXISTING,
 	///     co::FILE_ATTRIBUTE::NORMAL,
