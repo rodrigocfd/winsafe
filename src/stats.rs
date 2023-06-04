@@ -68,7 +68,7 @@ impl Stats {
 
 	fn count_ffis(&mut self, contents: &str, path: &str) {
 		if let Some(file_name) = w::path::get_file_name(path) {
-			if file_name != "ffi.rs" {
+			if file_name != "ffi.rs" { // only in these files
 				return;
 			}
 		}
@@ -79,7 +79,7 @@ impl Stats {
 				if line.starts_with("}") {
 					inside_block = false;
 				} else {
-					self.ffis += 1;
+					self.ffis += 1; // each line inside FFI block is counted
 				}
 			} else {
 				if line.starts_with("extern_sys!") {
@@ -91,7 +91,7 @@ impl Stats {
 
 	fn count_structs(&mut self, contents: &str) {
 		for line in contents.lines() {
-			if line == "/// struct." {
+			if line == "/// struct." { // simplest approach
 				self.structs += 1;
 			}
 		}
@@ -104,8 +104,8 @@ impl Stats {
 				if line.starts_with("}") {
 					inside_block = false;
 				} else {
-					if !line.starts_with("\t//") &&
-						!line.starts_with("\t=>") {
+					if !line.starts_with("\t//") && // skip comments
+						!line.starts_with("\t=>") {  // skip separators
 						self.consts += 1;
 					}
 				}
@@ -128,7 +128,7 @@ impl Stats {
 
 	fn count_wmsgs(&mut self, contents: &str) {
 		for line in contents.lines() {
-			if line.contains("/// Return type: ") {
+			if line.contains("/// Return type: ") { // simplest approach
 				self.wmsgs += 1;
 			}
 		}
@@ -136,17 +136,17 @@ impl Stats {
 
 	fn count_handles(&mut self, contents: &str) {
 		for line in contents.lines() {
-			if line.contains("impl_handle! { ") {
+			if line.contains("impl_handle! { ") { // simplest approach
 				self.handles += 1;
 			}
 		}
 	}
 
 	fn count_com(&mut self, contents: &str, path: &str) {
-		if !path.contains("\\com_interfaces\\") {
+		if !path.contains("\\com_interfaces\\") { // this folder must be present
 			return;
 		} else if let Some(file_name) = w::path::get_file_name(path) {
-			if !file_name.starts_with('i') {
+			if !file_name.starts_with('i') { // file must start with "i"
 				return;
 			}
 		}
@@ -157,7 +157,7 @@ impl Stats {
 		for line in contents.lines() {
 			if !is_com_interface_file && line.starts_with("com_interface! { ") {
 				is_com_interface_file = true;
-				self.com_interfaces += 1;
+				self.com_interfaces += 1; // count COM interface
 			} else if is_com_interface_file {
 				if !inside_block && line.starts_with("pub trait ") {
 					inside_block = true;
@@ -165,7 +165,7 @@ impl Stats {
 					if line.starts_with('}') {
 						inside_block = false;
 					} else if line.starts_with("\tfn ") {
-						self.com_methods += 1;
+						self.com_methods += 1; // count COM method
 					}
 				}
 			}
