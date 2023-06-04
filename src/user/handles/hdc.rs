@@ -30,7 +30,7 @@ pub trait user_Hdc: Handle {
 	{
 		let wtext = WString::from_str(text);
 		match unsafe {
-			user::ffi::DrawText(
+			user::ffi::DrawTextW(
 				self.ptr(),
 				wtext.as_ptr(),
 				wtext.str_len() as _,

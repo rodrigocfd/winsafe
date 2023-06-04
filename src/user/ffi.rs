@@ -54,7 +54,7 @@ extern_sys! { "user32";
 	DialogBoxParamW(HANDLE, PCSTR, HANDLE, PFUNC, isize) -> isize
 	DispatchMessageW(PCVOID) -> isize
 	DrawMenuBar(HANDLE) -> BOOL
-	DrawText(HANDLE, PCSTR, i32, PVOID, u32) -> i32
+	DrawTextW(HANDLE, PCSTR, i32, PVOID, u32) -> i32
 	EmptyClipboard() -> BOOL
 	EnableMenuItem(HANDLE, u32, u32) -> BOOL
 	EnableScrollBar(HANDLE, u32, u32) -> BOOL
