@@ -23,6 +23,16 @@ impl user_Hdc for HDC {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait user_Hdc: Handle {
+	/// [`DrawFocusRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawfocusrect)
+	/// method.
+	fn DrawFocusRect(&self, rect: &RECT) -> SysResult<()> {
+		bool_to_sysresult(
+			unsafe {
+				user::ffi::DrawFocusRect(self.ptr(), rect as * const _ as _)
+			},
+		)
+	}
+
 	/// [`DrawText`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtextw)
 	/// method.
 	fn DrawText(&self,
