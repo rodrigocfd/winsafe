@@ -5,7 +5,7 @@ use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::privs::{bool_to_sysresult, ptr_to_option_handle};
 use crate::prelude::Handle;
-use crate::user::decl::{HMONITOR, HWND, RECT};
+use crate::user::decl::{DRAWTEXTPARAMS, HMONITOR, HWND, RECT};
 
 impl_handle! { HDC;
 	/// Handle to a
@@ -23,7 +23,7 @@ impl user_Hdc for HDC {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait user_Hdc: Handle {
-	/// [`DrawText`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtext)
+	/// [`DrawText`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtextw)
 	/// method.
 	fn DrawText(&self,
 		text: &str, bounds: &RECT, format: co::DT) -> SysResult<i32>
@@ -36,6 +36,31 @@ pub trait user_Hdc: Handle {
 				wtext.str_len() as _,
 				bounds as *const _ as _,
 				format.raw(),
+			)
+		} {
+			0 => Err(GetLastError()),
+			i => Ok(i),
+		}
+	}
+
+	/// [`DrawTextExW`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtextexw)
+	/// method.
+	fn DrawTextEx(&self,
+		text: &str,
+		bounds: &RECT,
+		format: co::DT,
+		dtp: Option<&DRAWTEXTPARAMS>,
+	) -> SysResult<i32>
+	{
+		let wtext = WString::from_str(text);
+		match unsafe {
+			user::ffi::DrawTextExW(
+				self.ptr(),
+				wtext.as_ptr(),
+				wtext.str_len() as _,
+				bounds as *const _ as _,
+				format.raw(),
+				dtp.map_or(std::ptr::null(), |p| p as *const _ as _),
 			)
 		} {
 			0 => Err(GetLastError()),

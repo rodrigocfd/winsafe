@@ -54,6 +54,7 @@ extern_sys! { "user32";
 	DialogBoxParamW(HANDLE, PCSTR, HANDLE, PFUNC, isize) -> isize
 	DispatchMessageW(PCVOID) -> isize
 	DrawMenuBar(HANDLE) -> BOOL
+	DrawTextExW(HANDLE, PCSTR, i32, PVOID, u32, PCVOID) -> i32
 	DrawTextW(HANDLE, PCSTR, i32, PVOID, u32) -> i32
 	EmptyClipboard() -> BOOL
 	EnableMenuItem(HANDLE, u32, u32) -> BOOL

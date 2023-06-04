@@ -462,6 +462,19 @@ pub struct DRAWITEMSTRUCT {
 
 impl_default!(DRAWITEMSTRUCT);
 
+/// [`DRAWTEXTPARAMS`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-drawtextparams)
+/// struct.
+#[repr(C)]
+pub struct DRAWTEXTPARAMS {
+	cbSize: u32,
+	pub iTabLength: i32,
+	pub iLeftMargin: i32,
+	pub iRightMargin: i32,
+	pub uiLengthDrawn: u32,
+}
+
+impl_default_with_size!(DRAWTEXTPARAMS, cbSize);
+
 /// [`MSG`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msg)
 /// struct.
 #[repr(C)]
