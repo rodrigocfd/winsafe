@@ -415,6 +415,20 @@ const_bitflag! { CS: u32;
 	DROPSHADOW 0x00020000
 }
 
+const_bitflag! { DC: u32;
+	/// [`HWND::DrawCaption`](crate::prelude::user_Hwnd::DrawCaption) `flags`
+	/// (`u32`).
+	=>
+	=>
+	ACTIVE 0x0001
+	SMALLCAP 0x0002
+	ICON 0x0004
+	TEXT 0x0008
+	INBUTTON 0x0010
+	GRADIENT 0x0020
+	BUTTONS 0x1000
+}
+
 const_bitflag! { DDL: u16;
 	/// [`cb::Dir`](crate::msg::cb::Dir) and [`lb::Dir`](crate::msg::lb::Dir)
 	/// attributes (`u16`).
@@ -1282,7 +1296,7 @@ const_ordinary! { FAPPCOMMAND: u16;
 	OEM 0x1000
 }
 
-const_bitflag! { GA: u32;
+const_ordinary! { GA: u32;
 	/// [`HWND::GetAncestor`](crate::prelude::user_Hwnd::GetAncestor) `flags`
 	/// (`u32`).
 	=>
@@ -1314,7 +1328,7 @@ const_ordinary! { GCLP: i32;
 	/// [`HWND::GetClassLongPtr`](crate::prelude::user_Hwnd::GetClassLongPtr)
 	/// `index` (`i32`).
 	///
-	/// Originally has prefixes `GCW` and `GCL` also.
+	/// Originally has `GCW` and `GCL` prefixes.
 	=>
 	=>
 	ATOM -32
@@ -1407,6 +1421,8 @@ const_ordinary! { HELPINFO: i32;
 const_ordinary! { HELPW: u32;
 	/// [`HWND::WinHelp`](crate::prelude::user_Hwnd::WinHelp) `uCommand`
 	/// (`u32`).
+	///
+	/// Originally has `HELP` prefix.
 	=>
 	=>
 	CONTEXT 0x0001
@@ -1808,7 +1824,7 @@ const_bitflag! { MB: u32;
 	SERVICE_NOTIFICATION 0x0020_0000
 }
 
-const_bitflag! { MDITILE: u32;
+const_ordinary! { MDITILE: u32;
 	/// [`HWND::TileWindows`](crate::prelude::user_Hwnd::TileWindows) `how`
 	/// (`u32`).
 	=>

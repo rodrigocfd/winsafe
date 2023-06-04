@@ -53,6 +53,7 @@ extern_sys! { "user32";
 	DestroyWindow(HANDLE) -> BOOL
 	DialogBoxParamW(HANDLE, PCSTR, HANDLE, PFUNC, isize) -> isize
 	DispatchMessageW(PCVOID) -> isize
+	DrawCaption(HANDLE, HANDLE, PCVOID, u32) -> BOOL
 	DrawMenuBar(HANDLE) -> BOOL
 	DrawTextExW(HANDLE, PCSTR, i32, PVOID, u32, PCVOID) -> i32
 	DrawTextW(HANDLE, PCSTR, i32, PVOID, u32) -> i32

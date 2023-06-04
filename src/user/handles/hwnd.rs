@@ -12,7 +12,7 @@ use crate::kernel::privs::{
 };
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{
-	ALTTABINFO, AtomStr, HACCEL, HMENU, HMONITOR, HRGN, HwndPlace, IdMenu,
+	ALTTABINFO, AtomStr, HACCEL, HDC, HMENU, HMONITOR, HRGN, HwndPlace, IdMenu,
 	IdPos, MENUBARINFO, MSG, PAINTSTRUCT, POINT, PtsRc, RECT, SCROLLINFO, SIZE,
 	TIMERPROC, WINDOWINFO, WINDOWPLACEMENT,
 };
@@ -245,6 +245,23 @@ pub trait user_Hwnd: Handle {
 	/// message.
 	fn DestroyWindow(&self) -> SysResult<()> {
 		bool_to_sysresult( unsafe { user::ffi::DestroyWindow(self.ptr()) })
+	}
+
+	/// [`DrawCaption`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawcaption)
+	/// method.
+	fn DrawCaption(&self,
+		hdc: &HDC, rect: &RECT, flags: Option<co::DC>) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				user::ffi::DrawCaption(
+					self.ptr(),
+					hdc.ptr(),
+					rect as * const _ as _,
+					flags.unwrap_or_default().raw(),
+				)
+			},
+		)
 	}
 
 	/// [`DrawMenuBar`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawmenubar)
@@ -870,14 +887,15 @@ pub trait user_Hwnd: Handle {
 	/// [`HiliteMenuItem`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-hilitemenuitem)
 	/// method.
 	fn HiliteMenuItem(&self,
-		hmenu: &HMENU, id_or_pos: IdPos, hilite: co::MF) -> bool
+		hmenu: &HMENU, id_or_pos: IdPos, hilite: bool) -> bool
 	{
 		unsafe {
 			user::ffi::HiliteMenuItem(
 				self.ptr(),
 				hmenu.ptr(),
 				id_or_pos.id_or_pos_u32(),
-				hilite.raw(),
+				id_or_pos.mf_flag().raw()
+					| if hilite { co::MF::HILITE } else { co::MF::UNHILITE }.raw(),
 			) != 0
 		}
 	}
@@ -1520,7 +1538,8 @@ pub trait user_Hwnd: Handle {
 	/// [`SetTimer`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-settimer)
 	/// method.
 	fn SetTimer(&self,
-		event_id: usize, elapse_ms: u32,
+		event_id: usize,
+		elapse_ms: u32,
 		timer_func: Option<TIMERPROC>,
 	) -> SysResult<usize>
 	{
