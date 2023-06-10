@@ -498,6 +498,27 @@ pub fn GetDriveType(root_path_name: Option<&str>) -> co::DRIVE {
 	}
 }
 
+/// [`GetDiskFreeSpaceEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getdiskfreespaceexw)
+/// function.
+pub fn GetDiskFreeSpaceEx(
+	directory_name: Option<&str>,
+	free_bytes_available_to_caller: Option<&mut u64>,
+	total_number_of_bytes: Option<&mut u64>,
+	total_number_of_free_bytes: Option<&mut u64>,
+) -> SysResult<()>
+{
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::GetDiskFreeSpaceExW(
+				WString::from_opt_str(directory_name).as_ptr(),
+				free_bytes_available_to_caller.map_or(std::ptr::null_mut(), |n| n),
+				total_number_of_bytes.map_or(std::ptr::null_mut(), |n| n),
+				total_number_of_free_bytes.map_or(std::ptr::null_mut(), |n| n),
+			)
+		},
+	)
+}
+
 /// [`GetDiskSpaceInformation`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getdiskspaceinformationw)
 /// function.
 pub fn GetDiskSpaceInformation(
@@ -799,6 +820,25 @@ pub fn GetSystemTimes(
 			)
 		},
 	)
+}
+
+/// [`GetTempFileName`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-gettempfilenamew)
+/// function.
+#[must_use]
+pub fn GetTempFileName(
+	path_name: &str, prefix: &str, unique: u32) -> SysResult<String>
+{
+	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
+	bool_to_sysresult(
+		unsafe {
+			kernel::ffi::GetTempFileNameW(
+				WString::from_str(path_name).as_ptr(),
+				WString::from_str(prefix).as_ptr(),
+				unique,
+				buf.as_mut_ptr(),
+			)
+		} as _,
+	).map(|_| buf.to_string())
 }
 
 /// [`GetTempPath`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-gettemppathw)

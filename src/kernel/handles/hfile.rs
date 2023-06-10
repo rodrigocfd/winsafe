@@ -2,8 +2,8 @@
 
 use crate::{co, kernel};
 use crate::kernel::decl::{
-	BY_HANDLE_FILE_INFORMATION, GetLastError, HFILEMAP, HIDWORD, LODWORD,
-	OVERLAPPED, SECURITY_ATTRIBUTES, SysResult, WString,
+	BY_HANDLE_FILE_INFORMATION, FILETIME, GetLastError, HFILEMAP, HIDWORD,
+	LODWORD, OVERLAPPED, SECURITY_ATTRIBUTES, SysResult, WString,
 };
 use crate::kernel::guard::{CloseHandleGuard, UnlockFileGuard};
 use crate::kernel::privs::{
@@ -164,6 +164,26 @@ pub trait kernel_Hfile: Handle {
 		).map(|_| sz_buf as _)
 	}
 
+	/// [`GetFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletime)
+	/// method.
+	fn GetFileTime(&self,
+		creation_time: Option<&mut FILETIME>,
+		last_access_time: Option<&mut FILETIME>,
+		last_write_time: Option<&mut FILETIME>,
+	) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::GetFileTime(
+					self.ptr(),
+					creation_time.map_or(std::ptr::null_mut(), |p| p as * mut _ as _),
+					last_access_time.map_or(std::ptr::null_mut(), |p| p as * mut _ as _),
+					last_write_time.map_or(std::ptr::null_mut(), |p| p as * mut _ as _),
+				)
+			},
+		)
+	}
+
 	/// [`GetFileType`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype)
 	/// method.
 	#[must_use]
@@ -273,6 +293,26 @@ pub trait kernel_Hfile: Handle {
 				)
 			},
 		).map(|_| new_offset)
+	}
+
+	/// [`SetFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfiletime)
+	/// method.
+	fn SetFileTime(&self,
+		creation_time: Option<&FILETIME>,
+		last_access_time: Option<&FILETIME>,
+		last_write_time: Option<&FILETIME>,
+	) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::SetFileTime(
+					self.ptr(),
+					creation_time.map_or(std::ptr::null(), |p| p as * const _ as _),
+					last_access_time.map_or(std::ptr::null(), |p| p as * const _ as _),
+					last_write_time.map_or(std::ptr::null(), |p| p as * const _ as _),
+				)
+			},
+		)
 	}
 
 	/// [`WriteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)

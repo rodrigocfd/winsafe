@@ -110,6 +110,7 @@ extern_sys! { "kernel32";
 	GetCurrentThread() -> HANDLE
 	GetCurrentThreadEffectiveToken() -> HANDLE
 	GetCurrentThreadId() -> u32
+	GetDiskFreeSpaceExW(PCSTR, *mut u64, *mut u64, *mut u64) -> BOOL
 	GetDiskSpaceInformationW(PCSTR, PVOID) -> u32
 	GetDriveTypeW(PCSTR) -> u32
 	GetEnvironmentStringsW() -> *mut u16
@@ -118,6 +119,7 @@ extern_sys! { "kernel32";
 	GetFileAttributesW(PCSTR) -> u32
 	GetFileInformationByHandle(HANDLE, PVOID) -> BOOL
 	GetFileSizeEx(HANDLE, *mut i64) -> BOOL
+	GetFileTime(HANDLE, PVOID, PVOID, PVOID) -> BOOL
 	GetFileType(HANDLE) -> u32
 	GetFirmwareType(*mut u32) -> BOOL
 	GetGuiResources(HANDLE, u32) -> u32
@@ -146,6 +148,7 @@ extern_sys! { "kernel32";
 	GetSystemTimeAsFileTime(PVOID)
 	GetSystemTimePreciseAsFileTime(PVOID)
 	GetSystemTimes(PVOID, PVOID, PVOID) -> BOOL
+	GetTempFileNameW(PCSTR, PCSTR, u32, PSTR) -> u32
 	GetTempPathW(u32, PSTR) -> u32
 	GetThreadId(HANDLE) -> u32
 	GetThreadTimes(HANDLE, PVOID, PVOID, PVOID, PVOID) -> BOOL
@@ -215,6 +218,7 @@ extern_sys! { "kernel32";
 	SetEndOfFile(HANDLE) -> BOOL
 	SetFileAttributesW(PCSTR, u32) -> BOOL
 	SetFilePointerEx(HANDLE, i64, *mut i64, u32) -> BOOL
+	SetFileTime(HANDLE, PCVOID, PCVOID, PCVOID) -> BOOL
 	SetLastError(u32)
 	SetPriorityClass(HANDLE, u32) -> BOOL
 	SetProcessAffinityUpdateMode(HANDLE, u32) -> BOOL
