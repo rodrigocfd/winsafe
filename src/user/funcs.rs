@@ -406,7 +406,9 @@ pub fn ExitWindowsEx(
 /// ```
 #[must_use]
 pub fn GetAsyncKeyState(virt_key: co::VK) -> bool {
-	unsafe { user::ffi::GetAsyncKeyState(virt_key.raw() as _) & 0x01 != 0 }
+	unsafe {
+		(user::ffi::GetAsyncKeyState(virt_key.raw() as _) as u16) & 0x8000 != 0
+	}
 }
 
 /// [`GetClipboardData`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboarddata)
