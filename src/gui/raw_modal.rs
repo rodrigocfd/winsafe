@@ -119,6 +119,7 @@ impl RawModal {
 	fn run_modal_loop(&self) -> SysResult<i32> {
 		loop {
 			let mut msg = MSG::default();
+
 			if !GetMessage(&mut msg, None, 0, 0)? {
 				// WM_QUIT was sent, exit modal loop now and signal parent.
 				// wParam has the program exit code.

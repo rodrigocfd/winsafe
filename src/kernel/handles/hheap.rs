@@ -293,6 +293,7 @@ pub trait kernel_Hheap: Handle {
 		mem: Option<&HeapFreeGuard<'_, Self>>,
 	) -> bool
 	{
+		SetLastError(co::ERROR::SUCCESS);
 		unsafe {
 			kernel::ffi::HeapValidate(
 				self.ptr(),
