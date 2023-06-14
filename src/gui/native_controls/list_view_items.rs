@@ -4,7 +4,7 @@ use crate::gui::native_controls::list_view_item::ListViewItem;
 use crate::gui::native_controls::list_view::ListView;
 use crate::kernel::decl::WString;
 use crate::msg::lvm;
-use crate::prelude::{GuiWindow, user_Hwnd};
+use crate::prelude::{GuiWindow, NativeBitflag, user_Hwnd};
 use crate::user::decl::POINT;
 
 /// Exposes item methods of a [`ListView`](crate::gui::ListView) control.
@@ -235,6 +235,13 @@ impl<'a> ListViewItems<'a> {
 	/// Sets or remove the selection for all items by sending an
 	/// [`lvm::SetItemState`](crate::msg::lvm::SetItemState) message.
 	pub fn select_all(&self, set: bool) {
+		let styles = unsafe {
+			co::LVS::from_raw(self.owner.hwnd().GetWindowLongPtr(co::GWLP::STYLE) as _)
+		};
+		if styles.has(co::LVS::SINGLESEL) {
+			return; // LVM_SETITEMSTATE fails for all items in single-sel list views
+		}
+
 		let mut lvi = LVITEM::default();
 		lvi.stateMask = co::LVIS::SELECTED;
 		if set { lvi.state = co::LVIS::SELECTED; }
