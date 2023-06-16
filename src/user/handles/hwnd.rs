@@ -475,8 +475,17 @@ pub trait user_Hwnd: Handle {
 	/// [`GetDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdc)
 	/// method.
 	///
-	/// To get the device context of the desktop window, use the predefined
-	/// [`HWND::DESKTOP`](crate::prelude::user_Hwnd::DESKTOP).
+	/// # Examples
+	///
+	/// Retrieving the device context of the desktop window:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::HWND;
+	///
+	/// let hdc_desktop = HWND::DESKTOP.GetDC()?;
+	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// ```
 	#[must_use]
 	fn GetDC(&self) -> SysResult<ReleaseDCGuard<'_, Self>> {
 		unsafe {
@@ -818,9 +827,10 @@ pub trait user_Hwnd: Handle {
 	/// [`GetWindowText`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextw)
 	/// method.
 	///
-	/// Returns a
-	/// [`String`](https://doc.rust-lang.org/std/string/struct.String.html),
-	/// performing all necessary allocations.
+	/// Calls
+	/// [`GetWindowTextLength`](crate::prelude::user_Hwnd::GetWindowTextLength)
+	/// and performs all necessary allocations, returning an ordinary
+	/// [`String`](https://doc.rust-lang.org/std/string/struct.String.html).
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
@@ -855,7 +865,7 @@ pub trait user_Hwnd: Handle {
 	/// [`GetWindowTextLength`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowtextlengthw)
 	/// method. Does not count the terminating null.
 	///
-	/// You should rarely use this method since
+	/// You usually don't need to call this method directly, since
 	/// [`GetWindowText`](crate::prelude::user_Hwnd::GetWindowText) returns a
 	/// [`String`](https://doc.rust-lang.org/std/string/struct.String.html),
 	/// performing all necessary allocations.
@@ -1251,7 +1261,7 @@ pub trait user_Hwnd: Handle {
 		)
 	}
 
-	/// [`RealGetWindowClassW`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-realgetwindowclassw)
+	/// [`RealGetWindowClass`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-realgetwindowclassw)
 	/// method.
 	#[must_use]
 	fn RealGetWindowClass(&self) -> SysResult<String> {
@@ -1358,7 +1368,8 @@ pub trait user_Hwnd: Handle {
 	///
 	/// Sending a [`bm::GetImage`](crate::msg::bm::GetImage) button message,
 	/// which demands an image type parameter. Note that this specific message
-	/// can also return an error, which is handled with `?`:
+	/// can also return an error, which is handled with
+	/// [`?`](https://doc.rust-lang.org/std/result/index.html#the-question-mark-operator-):
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
