@@ -105,8 +105,8 @@ impl Base {
 
 	/// Removes all user and privileged events.
 	pub(in crate::gui) fn clear_events(&self) {
-		self.user_events.clear();
-		self.privileged_events.clear();
+		self.user_events.clear_events();
+		self.privileged_events.clear_events();
 	}
 
 	pub(in crate::gui) fn add_to_layout_arranger(&self,

@@ -44,7 +44,7 @@ impl WindowEvents {
 	}
 
 	/// Removes all stored events.
-	pub(in crate::gui) fn clear(&self) {
+	pub(in crate::gui) fn clear_events(&self) {
 		unsafe { &mut *self.msgs.get() }.clear();
 	}
 

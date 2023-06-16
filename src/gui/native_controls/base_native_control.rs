@@ -170,7 +170,7 @@ impl BaseNativeControl {
 			hwnd.RemoveWindowSubclass(Self::subclass_proc, subclass_id)?;
 			if !ptr_self.is_null() {
 				let ref_self = unsafe { &mut *ptr_self };
-				ref_self.subclass_events.clear(); // prevents circular references
+				ref_self.subclass_events.clear_events(); // prevents circular references
 			}
 		}
 

@@ -47,13 +47,13 @@ impl WindowEventsAll {
 	}
 
 	/// Removes all stored events.
-	pub(in crate::gui) fn clear(&self) {
+	pub(in crate::gui) fn clear_events(&self) {
 		unsafe {
 			{ &mut *self.tmrs.get() }.clear();
 			{ &mut *self.cmds.get() }.clear();
 			{ &mut *self.nfys.get() }.clear();
 		}
-		self.window_events.clear();
+		self.window_events.clear_events();
 	}
 
 	/// Searches for the last added user function for the given message, and
