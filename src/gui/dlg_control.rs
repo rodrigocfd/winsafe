@@ -81,25 +81,21 @@ impl DlgControl {
 
 	fn default_message_handlers(&self, parent: &Base, horz: Horz, vert: Vert) {
 		let self2 = self.clone();
-		self.0.dlg_base.parent().unwrap().privileged_on().wm(parent.creation_msg(), move |_| {
-			// Create the control.
+		parent.privileged_on().wm(parent.wm_create_or_initdialog(), move |_| {
 			self2.0.dlg_base.create_dialog_param()?;
+			let parent_ref = self2.0.dlg_base.parent().unwrap();
 
-			// Set control position within parent.
 			let mut dlg_pos = self2.0.position;
-			multiply_dpi_or_dtu(
-				self2.0.dlg_base.parent().unwrap(), Some(&mut dlg_pos), None)?;
+			multiply_dpi_or_dtu(parent_ref, Some(&mut dlg_pos), None)?;
 			self2.hwnd().SetWindowPos(
 				HwndPlace::None,
 				dlg_pos, SIZE::default(),
 				co::SWP::NOZORDER | co::SWP::NOSIZE,
 			)?;
 
-			// Give the control an ID.
 			self2.hwnd().SetWindowLongPtr(co::GWLP::ID, self2.0.ctrl_id as _);
 
-			self2.0.dlg_base.parent().unwrap()
-				.add_to_layout_arranger(self2.hwnd(), horz, vert)?;
+			parent_ref.add_to_layout_arranger(self2.hwnd(), horz, vert)?;
 			Ok(None) // not meaningful
 		});
 

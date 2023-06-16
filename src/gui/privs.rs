@@ -201,10 +201,11 @@ fn remove_accelerator_ampersands(text: &str) -> String {
 
 /// Adjusts the position of a modeless window on parent.
 pub(in crate::gui) fn adjust_modeless_pos(
-	modeless_base: &Base, hparent: &HWND, mut user_pos: POINT) -> SysResult<POINT>
+	parent_base: &Base, mut user_pos: POINT) -> SysResult<POINT>
 {
 	// For a modeless (0,0) is the left/topmost point in parent's client area.
-	multiply_dpi_or_dtu(modeless_base, Some(&mut user_pos), None)?;
+	multiply_dpi_or_dtu(parent_base, Some(&mut user_pos), None)?;
+	let hparent = parent_base.hwnd();
 	let mut parent_rc = hparent.GetClientRect()?;
 	hparent.ClientToScreenRc(&mut parent_rc)?;
 	user_pos.x += parent_rc.left;

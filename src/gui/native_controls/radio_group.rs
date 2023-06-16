@@ -104,7 +104,7 @@ impl RadioGroup {
 
 		let self2 = new_self.clone();
 		let horz_verts = horz_verts.clone();
-		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
+		parent_ref.privileged_on().wm(parent_ref.wm_create_or_initdialog(), move |_| {
 			self2.create(horz_verts.as_ref())?;
 			Ok(None) // not meaningful
 		});

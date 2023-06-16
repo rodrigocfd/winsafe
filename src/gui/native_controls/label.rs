@@ -103,7 +103,7 @@ impl Label {
 		);
 
 		let self2 = new_self.clone();
-		parent_ref.privileged_on().wm(parent_ref.creation_msg(), move |_| {
+		parent_ref.privileged_on().wm(parent_ref.wm_create_or_initdialog(), move |_| {
 			self2.create(horz, vert)?;
 			Ok(None) // not meaningful
 		});

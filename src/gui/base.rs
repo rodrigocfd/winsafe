@@ -15,7 +15,7 @@ use crate::user::decl::{
 pub(in crate::gui) struct Base {
 	hwnd: HWND,
 	is_dialog: bool,
-	parent_ptr: Option<NonNull<Self>>,
+	parent_ptr: Option<NonNull<Self>>, // used only during creation stuff
 	user_events: WindowEventsAll, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
 	privileged_events: WindowEventsAll, // inserted internally to automate tasks: all will be executed
 	layout_arranger: LayoutArranger,
@@ -58,12 +58,12 @@ impl Base {
 		self.is_dialog
 	}
 
-	pub(in crate::gui) const fn creation_msg(&self) -> co::WM {
+	pub(in crate::gui) const fn wm_create_or_initdialog(&self) -> co::WM {
 		if self.is_dialog { co::WM::INITDIALOG } else { co::WM::CREATE }
 	}
 
 	pub(in crate::gui) fn parent(&self) -> Option<&Base> {
-		self.parent_ptr.map(move |parent| unsafe { parent.as_ref() })
+		self.parent_ptr.map(|parent| unsafe { parent.as_ref() })
 	}
 
 	pub(in crate::gui) fn parent_hinstance(&self) -> SysResult<HINSTANCE> {

@@ -69,13 +69,12 @@ impl DlgModeless {
 
 	fn default_message_handlers(&self, parent: &Base) {
 		let self2 = self.clone();
-		self.0.dlg_base.parent().unwrap().privileged_on().wm(parent.creation_msg(), move |_| {
-			let hparent = self2.0.dlg_base.parent().unwrap().hwnd();
+		parent.privileged_on().wm(parent.wm_create_or_initdialog(), move |_| {
 			self2.0.dlg_base.create_dialog_param()?;
-			self2.0.dlg_base.hwnd().ShowWindow(co::SW::SHOW);
+			self2.hwnd().ShowWindow(co::SW::SHOW);
 
 			let dlg_pos = adjust_modeless_pos(
-				self2.0.dlg_base.parent().unwrap(), hparent, self2.0.position)?;
+				self2.0.dlg_base.parent().unwrap(), self2.0.position)?;
 
 			self2.hwnd().SetWindowPos(
 				HwndPlace::None,
