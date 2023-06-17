@@ -1009,6 +1009,11 @@ pub trait user_Hwnd: Handle {
 
 	/// [`KillTimer`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-killtimer)
 	/// method.
+	///
+	/// This function ends the timer calls for the given timer ID. If you don't
+	/// call this function, the timer calls will continue until the window is
+	/// destroyed – at this point, any remaining timers will be automatically
+	/// cleared.
 	fn KillTimer(&self, event_id: usize) -> SysResult<()> {
 		match unsafe { user::ffi::KillTimer(self.ptr(), event_id) } {
 			0 => match GetLastError() {
@@ -1546,8 +1551,36 @@ pub trait user_Hwnd: Handle {
 		)
 	}
 
-	/// [`SetTimer`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-settimer)
-	/// method.
+	/// This method returns the timer ID, to be passed to
+	/// [`HWND::KillTimer`](crate::prelude::user_Hwnd::KillTimer).
+	///
+	/// The timer calls – either [`wm::Timer`](crate::msg::wm::Timer) message or
+	/// callback function – will continuously be executed until you call
+	/// `KillTimer`. If you don't call `KillTimer`, the timer calls will
+	/// continue until the window is destroyed – at this point, any remaining
+	/// timers will be automatically cleared.
+	///
+	/// # Why not closures?
+	///
+	/// A common C++ technique to use closures with `SetTimer` is allocating a
+	/// closure on the heap and use its pointer as the timer ID. When the
+	/// callback function is called, the pointer is dereferenced and the closure
+	/// is then executed.
+	///
+	/// The problem with this approach is that the closure must be freed after
+	/// `KillTimer`, which can be called from anywhere, including from the
+	/// closure itself – that means you must keep the pointer outside the
+	/// closure and free it somehow after the closure finishes.
+	///
+	/// Such approach is, obviously, incredibly unsafe, and only possible within
+	/// Rust's rigid ownership rules if we use some sort of garbage-collection,
+	/// which will free the allocated closure some time after `KillTimer` is
+	/// called and the closure itself finishes. Since that would incur in a
+	/// performance penalty, the current implementation of `SetTimer` will only
+	/// accept ordinary function pointers, not closures.
+	///
+	/// Handling the `wm::Timer` message is simply more practical and efficient,
+	/// so the use of a callback is discouraged here.
 	fn SetTimer(&self,
 		event_id: usize,
 		elapse_ms: u32,

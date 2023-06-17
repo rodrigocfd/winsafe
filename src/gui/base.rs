@@ -11,11 +11,10 @@ use crate::user::decl::{
 	DispatchMessage, GetMessage, HACCEL, HWND, MSG, TranslateMessage,
 };
 
+/// Allocated on the heap and passed through WM_UI_THREAD.
 struct ThreadPack {
 	func: Box<dyn FnOnce() -> AnyResult<()>>,
 }
-
-unsafe impl Send for ThreadPack {}
 
 //------------------------------------------------------------------------------
 
