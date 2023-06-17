@@ -11,6 +11,14 @@ use crate::user::decl::{
 	DispatchMessage, GetMessage, HACCEL, HWND, MSG, TranslateMessage,
 };
 
+struct ThreadPack {
+	func: Box<dyn FnOnce() -> AnyResult<()>>,
+}
+
+unsafe impl Send for ThreadPack {}
+
+//------------------------------------------------------------------------------
+
 /// Base to `RawBase` and `DlgBase`, which means all container windows.
 pub(in crate::gui) struct Base {
 	hwnd: HWND,
@@ -122,14 +130,16 @@ impl Base {
 		let hwnd = unsafe { self.hwnd.raw_copy() };
 		std::thread::spawn(move || {
 			func().unwrap_or_else(|err| {
-				let pack: Box<Box<dyn FnOnce() -> AnyResult<()>>> = Box::new(Box::new(|| Err(err)));
+				// If the user func returned an error, create another function
+				// which just returns it, then forward it to WM_UI_THREAD.
+				let pack = Box::new(ThreadPack { func: Box::new(|| Err(err)) });
 				let ptr_pack = Box::into_raw(pack);
 				hwnd.GetAncestor(co::GA::ROOTOWNER)
 					.map(|hwnd| {
 						hwnd.SendMessage(WndMsg {
 							msg_id: Self::WM_UI_THREAD,
 							wparam: Self::WM_UI_THREAD.raw() as _,
-							lparam: ptr_pack as _,
+							lparam: ptr_pack as _, // send pointer
 						});
 					});
 			});
@@ -146,7 +156,7 @@ impl Base {
 		// WM_ message.
 
 		// https://users.rust-lang.org/t/sending-a-boxed-trait-over-ffi/21708/2
-		let pack: Box<Box<dyn FnOnce() -> AnyResult<()>>> = Box::new(Box::new(func));
+		let pack = Box::new(ThreadPack { func: Box::new(func) });
 		let ptr_pack = Box::into_raw(pack);
 
 		// Bypass any modals and send straight to main window. This avoids any
@@ -156,7 +166,7 @@ impl Base {
 				hwnd.SendMessage(WndMsg {
 					msg_id: Self::WM_UI_THREAD,
 					wparam: Self::WM_UI_THREAD.raw() as _,
-					lparam: ptr_pack as _,
+					lparam: ptr_pack as _, // send pointer
 				});
 			});
 	}
@@ -173,9 +183,10 @@ impl Base {
 
 		self.privileged_events.wm(Self::WM_UI_THREAD, |p| {
 			if unsafe { co::WM::from_raw(p.wparam as _) } == Self::WM_UI_THREAD { // additional safety check
-				let ptr_pack = p.lparam as *mut Box<dyn FnOnce() -> AnyResult<()>>;
-				let pack: Box<Box<dyn FnOnce() -> AnyResult<()>>> = unsafe { Box::from_raw(ptr_pack) };
-				pack().unwrap_or_else(|err| post_quit_error(p, err));
+				let ptr_pack = p.lparam as *mut ThreadPack; // retrieve pointer
+				let pack = unsafe { Box::from_raw(ptr_pack) };
+				let func = pack.func;
+				func().unwrap_or_else(|err| post_quit_error(p, err));
 			}
 			Ok(None) // not meaningful
 		});
