@@ -1,4 +1,5 @@
 use crate::kernel::decl::GUID;
+use crate::oleaut::privs::PID_FIRST_USABLE;
 
 /// [`PROPERTYKEY`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ns-wtypes-propertykey)
 /// struct.
@@ -10,3 +11,11 @@ pub struct PROPERTYKEY {
 }
 
 impl_default!(PROPERTYKEY);
+
+impl PROPERTYKEY {
+	/// Creates a new `PROPERTYKEY` by setting `pid` to `PID_FIRST_USABLE`
+	/// (`0x02`).
+	pub const fn new(fmtid: GUID) -> Self {
+		Self { fmtid, pid: PID_FIRST_USABLE }
+	}
+}

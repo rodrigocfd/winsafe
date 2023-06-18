@@ -279,6 +279,7 @@
 #[cfg(all(feature = "comctl", feature = "shell"))] mod comctl_shell;
 #[cfg(all(feature = "dshow", feature = "gdi"))] mod dshow_gdi;
 #[cfg(all(feature = "gdi", feature = "ole"))] mod gdi_ole;
+#[cfg(all(feature = "oleaut", feature = "shell"))] mod oleaut_shell;
 
 // The gui module itself is public.
 
@@ -327,6 +328,7 @@ pub mod co {
 	#[cfg(feature = "user")] pub use super::user::co::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::co::*;
 	#[cfg(feature = "version")] pub use super::version::co::*;
+	#[cfg(all(feature = "oleaut", feature = "shell"))] pub use super::oleaut_shell::co::*;
 }
 
 #[cfg(feature = "kernel")]
@@ -564,6 +566,7 @@ pub mod prelude {
 	#[cfg(all(feature = "comctl", feature = "ole"))] pub use super::comctl_ole::traits::*;
 	#[cfg(all(feature = "comctl", feature = "shell"))] pub use super::comctl_shell::traits::*;
 	#[cfg(all(feature = "dshow", feature = "gdi"))] pub use super::dshow_gdi::traits::*;
+	#[cfg(all(feature = "oleaut", feature = "shell"))] pub use super::oleaut_shell::traits::*;
 }
 
 #[cfg(feature = "ole")]
