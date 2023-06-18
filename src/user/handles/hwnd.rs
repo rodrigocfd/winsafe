@@ -90,7 +90,9 @@ pub trait user_Hwnd: Handle {
 	///
 	/// let hdc = hwnd.BeginPaint()?;
 	///
-	/// // hdc painting...
+	/// // do your hdc painting...
+	///
+	/// // EndPaint() called automatically
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	///
@@ -106,7 +108,9 @@ pub trait user_Hwnd: Handle {
 	///
 	/// let _hdc = hwnd.BeginPaint()?; // keep guard alive
 	///
-	/// // hdc painting...
+	/// // do your hdc painting...
+	///
+	/// // EndPaint() called automatically
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]

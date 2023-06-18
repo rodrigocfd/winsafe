@@ -25,6 +25,17 @@ impl user_Hdwp for HDWP {}
 pub trait user_Hdwp: Handle {
 	/// [`BeginDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-begindeferwindowpos)
 	/// static method.
+	///
+	/// In the original C implementation, `BeginDeferWindowPos` returns a handle
+	/// which must be passed to
+	/// [`EndDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddeferwindowpos)
+	/// as a cleanup operation.
+	///
+	/// Here, the cleanup is performed automatically, because
+	/// `BeginDeferWindowPos` returns an
+	/// [`EndDeferWindowPosGuard`](crate::guard::EndDeferWindowPosGuard), which
+	/// automatically calls `EndDeferWindowPos` when the guard goes out of
+	/// scope.
 	#[must_use]
 	fn BeginDeferWindowPos(
 		num_windows: u32) -> SysResult<EndDeferWindowPosGuard>
