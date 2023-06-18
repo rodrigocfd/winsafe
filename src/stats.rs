@@ -41,29 +41,29 @@ impl Stats {
 	pub fn gather<F>(target: &str, callback: F) -> w::SysResult<Self>
 		where F: Fn(usize),
 	{
-		let mut me = Self::default();
+		let mut new_self = Self::default();
 
 		w::path::dir_walk(target)
 			.enumerate()
 			.try_for_each(|(idx, path)| -> w::SysResult<_> {
 				let path = path?;
-				if w::path::has_extension(&path, &[".rs"]) {
+				if w::path::has_extension(&path, &[".rs"]) && !path.ends_with("lib.rs") {
 					let contents = {
 						let f = w::FileMapped::open(&path, w::FileAccess::ExistingReadOnly)?;
 						w::WString::parse(f.as_slice())?.to_string()
 					};
-					me.count_ffis(&contents, &path);
-					me.count_structs(&contents);
-					me.count_consts(&contents);
-					me.count_wmsgs(&contents);
-					me.count_handles(&contents);
-					me.count_com(&contents, &path);
+					new_self.count_ffis(&contents, &path);
+					new_self.count_structs(&contents);
+					new_self.count_consts(&contents);
+					new_self.count_wmsgs(&contents);
+					new_self.count_handles(&contents);
+					new_self.count_com(&contents, &path);
 					callback(idx); // pass the zero-based index of the file that has been processed
 				}
 				Ok(())
 			})?;
 
-		Ok(me)
+		Ok(new_self)
 	}
 
 	fn count_ffis(&mut self, contents: &str, path: &str) {
