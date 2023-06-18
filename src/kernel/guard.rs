@@ -297,6 +297,8 @@ pub struct GlobalUnlockGuard<'a, H>
 	where H: kernel_Hglobal,
 {
 	hglobal: &'a H,
+	pmem: *mut std::ffi::c_void,
+	sz: usize,
 }
 
 impl<'a, H> Drop for GlobalUnlockGuard<'a, H>
@@ -318,13 +320,45 @@ impl<'a, H> GlobalUnlockGuard<'a, H>
 	///
 	/// Be sure the handle must be freed with
 	/// [`GlobalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
-	/// at the end of scope.
+	/// at the end of scope, the pointer is valid, and the size is correct.
 	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
-	pub const unsafe fn new(hglobal: &'a H) -> Self {
-		Self { hglobal }
+	pub const unsafe fn new(
+		hglobal: &'a H, pmem: *mut std::ffi::c_void, sz: usize) -> Self
+	{
+		Self { hglobal, pmem, sz }
+	}
+
+	/// Returns a pointer to the allocated memory block.
+	#[must_use]
+	pub const fn as_ptr(&self) -> *const std::ffi::c_void {
+		self.pmem
+	}
+
+	/// Returns a mutable pointer to the allocated memory block.
+	#[must_use]
+	pub fn as_mut_ptr(&mut self) -> *mut std::ffi::c_void {
+		self.pmem
+	}
+
+	/// Returns a slice over the allocated memory block.
+	#[must_use]
+	pub const fn as_slice(&self) -> &[u8] {
+		unsafe { std::slice::from_raw_parts(self.pmem as _, self.sz) }
+	}
+
+	/// Returns a mutable slice over the allocated memory block.
+	#[must_use]
+	pub fn as_mut_slice(&mut self) -> &mut [u8] {
+		unsafe { std::slice::from_raw_parts_mut(self.pmem as _, self.sz) }
+	}
+
+	/// Returns the size of the allocated memory block.
+	#[must_use]
+	pub const fn len(&self) -> usize {
+		self.sz
 	}
 }
 
@@ -365,24 +399,6 @@ impl<'a, H> Drop for HeapFreeGuard<'a, H>
 	}
 }
 
-impl<'a, H> Deref for HeapFreeGuard<'a, H>
-	where H: kernel_Hheap,
-{
-	type Target = [u8];
-
-	fn deref(&self) -> &Self::Target {
-		unsafe { std::slice::from_raw_parts(self.pmem.cast(), self.sz) }
-	}
-}
-
-impl<'a, H> DerefMut for HeapFreeGuard<'a, H>
-	where H: kernel_Hheap,
-{
-	fn deref_mut(&mut self) -> &mut Self::Target {
-		unsafe { std::slice::from_raw_parts_mut(self.pmem.cast(), self.sz) }
-	}
-}
-
 impl<'a, H> HeapFreeGuard<'a, H>
 	where H: kernel_Hheap,
 {
@@ -392,7 +408,7 @@ impl<'a, H> HeapFreeGuard<'a, H>
 	///
 	/// Be sure the handle must be freed with
 	/// [`HeapFree`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapfree)
-	/// at the end of scope.
+	/// at the end of scope, the pointer is valid, and the size is correct.
 	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
@@ -401,6 +417,30 @@ impl<'a, H> HeapFreeGuard<'a, H>
 		hheap: &'a H, pmem: *mut std::ffi::c_void, sz: usize) -> Self
 	{
 		Self { hheap, pmem, sz }
+	}
+
+	/// Returns a pointer to the allocated memory block.
+	#[must_use]
+	pub const fn as_ptr(&self) -> *const std::ffi::c_void {
+		self.pmem
+	}
+
+	/// Returns a mutable pointer to the allocated memory block.
+	#[must_use]
+	pub fn as_mut_ptr(&mut self) -> *mut std::ffi::c_void {
+		self.pmem
+	}
+
+	/// Returns a slice over the allocated memory block.
+	#[must_use]
+	pub const fn as_slice(&self) -> &[u8] {
+		unsafe { std::slice::from_raw_parts(self.pmem as _, self.sz) }
+	}
+
+	/// Returns a mutable slice over the allocated memory block.
+	#[must_use]
+	pub fn as_mut_slice(&mut self) -> &mut [u8] {
+		unsafe { std::slice::from_raw_parts_mut(self.pmem as _, self.sz) }
 	}
 
 	/// Ejects the underlying memory pointer and size, leaving null and zero in
@@ -415,6 +455,12 @@ impl<'a, H> HeapFreeGuard<'a, H>
 			std::mem::replace(&mut self.pmem, std::ptr::null_mut()),
 			std::mem::replace(&mut self.sz, 0),
 		)
+	}
+
+	/// Returns the size of the allocated memory block.
+	#[must_use]
+	pub const fn len(&self) -> usize {
+		self.sz
 	}
 }
 
@@ -517,6 +563,8 @@ pub struct LocalUnlockGuard<'a, H>
 	where H: kernel_Hlocal,
 {
 	hlocal: &'a H,
+	pmem: *mut std::ffi::c_void,
+	sz: usize,
 }
 
 impl<'a, H> Drop for LocalUnlockGuard<'a, H>
@@ -538,13 +586,45 @@ impl<'a, H> LocalUnlockGuard<'a, H>
 	///
 	/// Be sure the handle must be freed with
 	/// [`LocalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localunlock)
-	/// at the end of scope.
+	/// at the end of scope, the pointer is valid, and the size is correct.
 	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
-	pub const unsafe fn new(hlocal: &'a H) -> Self {
-		Self { hlocal }
+	pub const unsafe fn new(
+		hlocal: &'a H, pmem: *mut std::ffi::c_void, sz: usize) -> Self
+	{
+		Self { hlocal, pmem, sz }
+	}
+
+	/// Returns a pointer to the allocated memory block.
+	#[must_use]
+	pub const fn as_ptr(&self) -> *const std::ffi::c_void {
+		self.pmem
+	}
+
+	/// Returns a mutable pointer to the allocated memory block.
+	#[must_use]
+	pub fn as_mut_ptr(&mut self) -> *mut std::ffi::c_void {
+		self.pmem
+	}
+
+	/// Returns a slice over the allocated memory block.
+	#[must_use]
+	pub const fn as_slice(&self) -> &[u8] {
+		unsafe { std::slice::from_raw_parts(self.pmem as _, self.sz) }
+	}
+
+	/// Returns a mutable slice over the allocated memory block.
+	#[must_use]
+	pub fn as_mut_slice(&mut self) -> &mut [u8] {
+		unsafe { std::slice::from_raw_parts_mut(self.pmem as _, self.sz) }
+	}
+
+	/// Returns the size of the allocated memory block.
+	#[must_use]
+	pub const fn len(&self) -> usize {
+		self.sz
 	}
 }
 

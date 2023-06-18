@@ -54,15 +54,8 @@ pub trait kernel_Hglobal: Handle {
 	/// [`GlobalLock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globallock)
 	/// method.
 	///
-	/// Calls
-	/// [`HGLOBAL::GlobalSize`](crate::prelude::kernel_Hglobal::GlobalSize) to
+	/// Calls [`GlobalSize`](crate::prelude::kernel_Hglobal::GlobalSize) to
 	/// retrieve the size of the memory block.
-	///
-	/// Note that this method returns two objects: a reference to the memory
-	/// block, and a guard which will call
-	/// [`GlobalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
-	/// automatically when the object goes out of scope, so keep the guard
-	/// alive.
 	///
 	/// # Examples
 	///
@@ -75,9 +68,9 @@ pub trait kernel_Hglobal: Handle {
 	///     120,
 	/// )?;
 	///
-	/// let (block, _guard) = hglobal.GlobalLock()?;
+	/// let mut block = hglobal.GlobalLock()?;
 	///
-	/// block[0] = 40;
+	/// block.as_mut_slice()[0] = 40;
 	///
 	/// // GlobalUnlock() called automatically
 	///
@@ -85,14 +78,11 @@ pub trait kernel_Hglobal: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn GlobalLock(&self) -> SysResult<(&mut [u8], GlobalUnlockGuard<'_, Self>)> {
+	fn GlobalLock(&self) -> SysResult<GlobalUnlockGuard<'_, Self>> {
 		let mem_sz = self.GlobalSize()?;
 		unsafe {
 			ptr_to_sysresult(kernel::ffi::GlobalLock(self.ptr()))
-				.map(|ptr| (
-					std::slice::from_raw_parts_mut(ptr.cast(), mem_sz as _),
-					GlobalUnlockGuard::new(self),
-				),
+				.map(|ptr| GlobalUnlockGuard::new(self, ptr, mem_sz),
 			)
 		}
 	}

@@ -128,11 +128,11 @@ pub trait kernel_Hheap: Handle {
 	///
 	/// let heap = HHEAP::GetProcessHeap()?;
 	///
-	/// let mut array = heap.HeapAlloc(Some(co::HEAP_ALLOC::ZERO_MEMORY), 40)?;
-	/// array[0] = 10;
-	/// array[1] = 12;
+	/// let mut block = heap.HeapAlloc(Some(co::HEAP_ALLOC::ZERO_MEMORY), 40)?;
+	/// block.as_mut_slice()[0] = 10;
+	/// block.as_mut_slice()[1] = 12;
 	///
-	/// for byte in array.iter() {
+	/// for byte in block.as_slice().iter() {
 	///     println!("{} ", byte);
 	/// }
 	///
