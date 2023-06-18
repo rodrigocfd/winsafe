@@ -151,21 +151,24 @@ impl Stats {
 			}
 		}
 
-		let mut is_com_interface_file = false;
+		let mut is_com_interface_impl_file = false;
 		let mut inside_block = false;
 
 		for line in contents.lines() {
-			if !is_com_interface_file && line.starts_with("com_interface! { ") {
-				is_com_interface_file = true;
-				self.com_interfaces += 1; // count COM interface
-			} else if is_com_interface_file {
+			if line.starts_with("com_interface! { ") {
+				self.com_interfaces += 1;
+			}
+
+			if !is_com_interface_impl_file && line.starts_with("/// This trait is enabled with `") {
+				is_com_interface_impl_file = true;
+			} else {
 				if !inside_block && line.starts_with("pub trait ") {
 					inside_block = true;
-				} else if inside_block {
-					if line.starts_with('}') {
+				} else {
+					if line.starts_with("}") {
 						inside_block = false;
 					} else if line.starts_with("\tfn ") {
-						self.com_methods += 1; // count COM method
+						self.com_methods += 1;
 					}
 				}
 			}
