@@ -334,6 +334,17 @@ const_bitflag! { SHGSI: u32;
 	SHELLICONSIZE SHGFI::SHELLICONSIZE.0
 }
 
+const_ordinary! { SICHINTF: u32;
+	/// [`SICHINTF`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_sichintf)
+	/// enumeration (`u32`).
+	=>
+	=>
+	DISPLAY 0
+	ALLFIELDS 0x8000_0000
+	CANONICAL 0x1000_0000
+	TEST_FILESYSPATH_IF_NOT_EQUAL 0x2000_0000
+}
+
 const_ordinary! { SIGDN: u32;
 	/// [`SIGDN`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-sigdn)
 	/// enumeration (`u32`).

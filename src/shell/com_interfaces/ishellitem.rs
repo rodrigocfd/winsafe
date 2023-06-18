@@ -84,6 +84,25 @@ pub trait shell_IShellItem: ole_IUnknown {
 		).map(|_| queried)
 	}
 
+	/// [`IShellItem::Compare`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-compare)
+	/// method.
+	#[must_use]
+	fn Compare(&self,
+		other: &impl shell_IShellItem, hint: co::SICHINTF) -> HrResult<i32>
+	{
+		let mut order = i32::default();
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IShellItemVT>(self).Compare)(
+					self.ptr(),
+					other.ptr(),
+					hint.raw(),
+					&mut order,
+				)
+			},
+		).map(|_| order)
+	}
+
 	/// [`IShellItem::GetAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getattributes)
 	/// method.
 	#[must_use]
