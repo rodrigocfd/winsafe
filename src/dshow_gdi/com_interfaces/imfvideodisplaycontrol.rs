@@ -4,7 +4,7 @@ use crate::dshow::decl::IMFVideoDisplayControl;
 use crate::gdi::decl::BITMAPINFOHEADER;
 use crate::ole::decl::{CoTaskMemFree, HrResult};
 use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::ole_IUnknown;
+use crate::prelude::dshow_IMFVideoDisplayControl;
 use crate::vt::IMFVideoDisplayControlVT;
 
 impl dshow_gdi_IMFVideoDisplayControl for IMFVideoDisplayControl {}
@@ -17,7 +17,7 @@ impl dshow_gdi_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait dshow_gdi_IMFVideoDisplayControl: ole_IUnknown {
+pub trait dshow_gdi_IMFVideoDisplayControl: dshow_IMFVideoDisplayControl {
 	/// [`GetCurrentImage`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getcurrentimage)
 	/// method.
 	///
