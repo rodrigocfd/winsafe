@@ -5,7 +5,7 @@ use crate::gui::base::Base;
 use crate::gui::events::{ButtonEvents, WindowEvents};
 use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::native_controls::base_native_control::{
-	BaseNativeControl, OptsId,
+	BaseNativeControl, OptsResz,
 };
 use crate::gui::privs::{
 	auto_ctrl_id, calc_text_bound_box_check, multiply_dpi_or_dtu, ui_font,
@@ -28,7 +28,6 @@ use crate::user::decl::{
 /// [`RadioGroup`](crate::gui::RadioGroup).
 pub struct RadioButton {
 	base: BaseNativeControl,
-	opts_id: OptsId<RadioButtonOpts>,
 	events: ButtonEvents,
 }
 
@@ -46,10 +45,7 @@ impl GuiWindowText for RadioButton {}
 
 impl GuiChild for RadioButton {
 	fn ctrl_id(&self) -> u16 {
-		match &self.opts_id {
-			OptsId::Wnd(opts) => opts.ctrl_id,
-			OptsId::Dlg(ctrl_id) => *ctrl_id,
-		}
+		self.base.ctrl_id()
 	}
 }
 
@@ -81,8 +77,7 @@ impl RadioButton {
 		let ctrl_id = opts.ctrl_id;
 
 		Self {
-			base: BaseNativeControl::new(parent_ref),
-			opts_id: OptsId::Wnd(opts),
+			base: BaseNativeControl::new(parent_ref, ctrl_id),
 			events: ButtonEvents::new(parent_ref, ctrl_id),
 		}
 	}
@@ -93,17 +88,21 @@ impl RadioButton {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 
 		Self {
-			base: BaseNativeControl::new(parent_ref),
-			opts_id: OptsId::Dlg(ctrl_id),
+			base: BaseNativeControl::new(parent_ref, ctrl_id),
 			events: ButtonEvents::new(parent_ref, ctrl_id),
 		}
 	}
 
 	pub(in crate::gui) fn create(&self,
-		resize_behavior: (Horz, Vert)) -> SysResult<()>
+		opts_resz: &OptsResz<RadioButtonOpts>) -> SysResult<()>
 	{
-		match &self.opts_id {
-			OptsId::Wnd(opts) => {
+		let resize_behavior = match opts_resz {
+			OptsResz::Wnd(opts) => opts.resize_behavior,
+			OptsResz::Dlg(resize_behavior) => *resize_behavior,
+		};
+
+		match opts_resz {
+			OptsResz::Wnd(opts) => {
 				let mut pos = POINT::new(opts.position.0, opts.position.1);
 				multiply_dpi_or_dtu(
 					self.base.parent(), Some(&mut pos), None)?;
@@ -118,7 +117,6 @@ impl RadioButton {
 
 				self.base.create_window( // may panic
 					"BUTTON", Some(&opts.text), pos, sz,
-					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.button_style.into(),
 				)?;
@@ -129,9 +127,7 @@ impl RadioButton {
 				});
 				if opts.selected { self.select(true); }
 			},
-			OptsId::Dlg(ctrl_id) => {
-				self.base.create_dlg(*ctrl_id)?; // may panic
-			},
+			OptsResz::Dlg(_) => self.base.create_dlg()?,
 		}
 
 		self.base.parent().add_to_layout_arranger(self.hwnd(), resize_behavior)?;
@@ -193,6 +189,7 @@ impl RadioButton {
 
 /// Options to create a [`RadioButton`](crate::gui::RadioButton)
 /// programmatically with [`RadioGroup::new`](crate::gui::RadioGroup::new).
+#[derive(Clone)]
 pub struct RadioButtonOpts {
 	/// Text of the control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).

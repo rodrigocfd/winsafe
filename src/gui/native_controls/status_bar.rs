@@ -20,7 +20,6 @@ use crate::user::decl::{HWND, POINT, SIZE};
 
 struct Obj { // actual fields of StatusBar
 	base: BaseNativeControl,
-	ctrl_id: u16,
 	events: StatusBarEvents,
 	parts_info: UnsafeCell<Vec<StatusBarPart>>,
 	right_edges: UnsafeCell<Vec<i32>>, // buffer to speed up resize calls
@@ -70,7 +69,7 @@ impl GuiWindow for StatusBar {
 
 impl GuiChild for StatusBar {
 	fn ctrl_id(&self) -> u16 {
-		self.0.ctrl_id
+		self.0.base.ctrl_id()
 	}
 }
 
@@ -127,8 +126,7 @@ impl StatusBar {
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_ref),
-					ctrl_id,
+					base: BaseNativeControl::new(parent_ref, ctrl_id),
 					events: StatusBarEvents::new(parent_ref, ctrl_id),
 					parts_info: UnsafeCell::new(parts.to_vec()),
 					right_edges: UnsafeCell::new(vec![0; parts.len()]),
@@ -175,7 +173,6 @@ impl StatusBar {
 		self.0.base.create_window( // may panic
 			"msctls_statusbar32", None,
 			POINT::default(), SIZE::default(),
-			self.0.ctrl_id,
 			co::WS_EX::LEFT,
 			co::WS::CHILD | co::WS::VISIBLE | co::SBARS::TOOLTIPS.into() |
 				if is_parent_resizable {

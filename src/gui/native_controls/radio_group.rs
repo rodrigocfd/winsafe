@@ -8,6 +8,7 @@ use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::RadioGroupEvents;
 use crate::gui::layout_arranger::{Horz, Vert};
+use crate::gui::native_controls::base_native_control::OptsResz;
 use crate::gui::native_controls::radio_button::{RadioButton, RadioButtonOpts};
 use crate::kernel::decl::SysResult;
 use crate::prelude::{
@@ -84,8 +85,8 @@ impl RadioGroup {
 			.map(|r| r.ctrl_id()) // when the radio is created, the ctrl ID is defined
 			.collect::<Vec<_>>();
 
-		let resize_behaviors = opts.iter()
-			.map(|opt| opt.resize_behavior)
+		let opts_resz_s = opts.into_iter()
+			.map(|opt| OptsResz::Wnd(opt.clone()))
 			.collect::<Vec<_>>();
 
 		let new_self = Self(
@@ -101,9 +102,10 @@ impl RadioGroup {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm(parent_ref.wm_create_or_initdialog(), move |_| {
-			self2.create(resize_behaviors.clone())?;
+			self2.create(&opts_resz_s)?;
 			Ok(None) // not meaningful
 		});
+
 		new_self
 	}
 
@@ -135,8 +137,8 @@ impl RadioGroup {
 			.map(|(ctrl_id, _, _)| *ctrl_id)
 			.collect::<Vec<_>>();
 
-		let resize_behaviors = ctrls.iter()
-			.map(|(_, horz, vert)| (*horz, *vert))
+		let opts_resz_s = ctrls.iter()
+			.map(|(_, horz, vert)| OptsResz::Dlg((*horz, *vert)))
 			.collect::<Vec<_>>();
 
 		let new_self = Self(
@@ -152,17 +154,20 @@ impl RadioGroup {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm_init_dialog(move |_| {
-			self2.create(resize_behaviors.clone())?;
+			self2.create(&opts_resz_s)?;
 			Ok(true) // not meaningful
 		});
+
 		new_self
 	}
 
-	fn create(&self, resize_behaviors: Vec<(Horz, Vert)>) -> SysResult<()> {
+	fn create(&self,
+		opts_resz_s: &Vec<OptsResz<RadioButtonOpts>>) -> SysResult<()>
+	{
 		self.0.radios.iter()
-			.zip(resize_behaviors.iter())
-			.try_for_each(|(radio, resize_behavior)|
-				radio.create(*resize_behavior) // create each RadioButton sequentially
+			.zip(opts_resz_s.iter())
+			.try_for_each(|(radio, opts_resz)|
+				radio.create(opts_resz) // create each RadioButton sequentially
 			)
 	}
 

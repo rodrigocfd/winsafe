@@ -6,22 +6,19 @@ use crate::gui::base::Base;
 use crate::gui::events::{ProcessResult, WindowEvents};
 use crate::gui::privs::post_quit_error;
 use crate::kernel::decl::{AnyResult, SysResult};
+use crate::gui::layout_arranger::{Horz, Vert};
 use crate::msg::WndMsg;
 use crate::prelude::{comctl_Hwnd, Handle, user_Hwnd};
 use crate::user::decl::{AtomStr, HWND, IdMenu, POINT, SIZE};
 
 static mut BASE_SUBCLASS_ID: usize = 0;
 
-/// Variant field for child controls: creation options or just a control ID.
-pub enum OptsId<P> {
-	/// The control will be created with
-	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx). We
-	/// keep a lot of options for manual creation.
-	Wnd(P),
-	/// The control belongs to a dialog and will be attached with
-	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem). We keep
-	/// just the control ID from the dialog resource.
-	Dlg(u16),
+/// Variant field for creating child controls.
+pub(in crate::gui) enum OptsResz<T> {
+	/// Options for a raw control creation.
+	Wnd(T),
+	/// Resize behavior for a dialog control creation.
+	Dlg((Horz, Vert)),
 }
 
 //------------------------------------------------------------------------------
@@ -30,22 +27,28 @@ pub enum OptsId<P> {
 ///
 /// Owns the window procedure for all subclassed native child controls.
 pub(in crate::gui) struct BaseNativeControl {
+	ctrl_id: u16,
 	hwnd: UnsafeCell<HWND>,
 	parent_ptr: NonNull<Base>, // base of WindowControl, WindowMain or WindowModal
 	subclass_events: WindowEvents, // for control subclassing
 }
 
 impl BaseNativeControl {
-	pub(in crate::gui) fn new(parent: &Base) -> Self {
+	pub(in crate::gui) fn new(parent: &Base, ctrl_id: u16) -> Self {
 		if *parent.hwnd() != HWND::NULL {
 			panic!("Cannot create a child control after the parent window is created.");
 		}
 
 		Self {
+			ctrl_id,
 			hwnd: UnsafeCell::new(HWND::NULL),
 			parent_ptr: NonNull::from(parent),
 			subclass_events: WindowEvents::new(),
 		}
+	}
+
+	pub(in crate::gui) const fn ctrl_id(&self) -> u16 {
+		self.ctrl_id
 	}
 
 	pub(in crate::gui) fn hwnd(&self) -> &HWND {
@@ -70,7 +73,6 @@ impl BaseNativeControl {
 		title: Option<&str>,
 		pos: POINT,
 		sz: SIZE,
-		ctrl_id: u16,
 		ex_styles: co::WS_EX,
 		styles: co::WS,
 	) -> SysResult<()>
@@ -90,7 +92,7 @@ impl BaseNativeControl {
 				title, styles,
 				pos, sz,
 				Some(hparent),
-				IdMenu::Id(ctrl_id),
+				IdMenu::Id(self.ctrl_id),
 				&hparent.hinstance(),
 				None,
 			)?;
@@ -100,7 +102,7 @@ impl BaseNativeControl {
 		Ok(())
 	}
 
-	pub(in crate::gui) fn create_dlg(&self, ctrl_id: u16) -> SysResult<()> {
+	pub(in crate::gui) fn create_dlg(&self) -> SysResult<()> {
 		if !self.parent().is_dialog() {
 			panic!("Parent window is not a dialog, cannot create control.");
 		}
@@ -113,7 +115,7 @@ impl BaseNativeControl {
 			panic!("Cannot create control before parent window creation.");
 		}
 
-		*unsafe { &mut *self.hwnd.get() } = hparent.GetDlgItem(ctrl_id)?;
+		*unsafe { &mut *self.hwnd.get() } = hparent.GetDlgItem(self.ctrl_id)?;
 		self.install_subclass_if_needed()?;
 		Ok(())
 	}

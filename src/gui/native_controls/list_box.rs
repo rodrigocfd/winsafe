@@ -8,7 +8,7 @@ use crate::gui::base::Base;
 use crate::gui::events::{ListBoxEvents, WindowEvents};
 use crate::gui::layout_arranger::{Horz, Vert};
 use crate::gui::native_controls::base_native_control::{
-	BaseNativeControl, OptsId,
+	BaseNativeControl, OptsResz,
 };
 use crate::gui::native_controls::list_box_items::ListBoxItems;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
@@ -22,7 +22,6 @@ use crate::user::decl::{HWND, POINT, SIZE};
 
 struct Obj { // actual fields of ListBox
 	base: BaseNativeControl,
-	opts_id: OptsId<ListBoxOpts>,
 	events: ListBoxEvents,
 	_pin: PhantomPinned,
 }
@@ -50,10 +49,7 @@ impl GuiWindow for ListBox {
 
 impl GuiChild for ListBox {
 	fn ctrl_id(&self) -> u16 {
-		match &self.0.opts_id {
-			OptsId::Wnd(opts) => opts.ctrl_id,
-			OptsId::Dlg(ctrl_id) => *ctrl_id,
-		}
+		self.0.base.ctrl_id()
 	}
 }
 
@@ -89,13 +85,12 @@ impl ListBox {
 	pub fn new(parent: &impl GuiParent, opts: ListBoxOpts) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = ListBoxOpts::define_ctrl_id(opts);
-		let (ctrl_id, resize_behavior) = (opts.ctrl_id, opts.resize_behavior);
+		let ctrl_id = opts.ctrl_id;
 
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_ref),
-					opts_id: OptsId::Wnd(opts),
+					base: BaseNativeControl::new(parent_ref, ctrl_id),
 					events: ListBoxEvents::new(parent_ref, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -104,7 +99,7 @@ impl ListBox {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm(parent_ref.wm_create_or_initdialog(), move |_| {
-			self2.create(resize_behavior)?;
+			self2.create(OptsResz::Wnd(&opts))?;
 			Ok(None) // not meaningful
 		});
 
@@ -130,8 +125,7 @@ impl ListBox {
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_ref),
-					opts_id: OptsId::Dlg(ctrl_id),
+					base: BaseNativeControl::new(parent_ref, ctrl_id),
 					events: ListBoxEvents::new(parent_ref, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -140,15 +134,21 @@ impl ListBox {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm_init_dialog(move |_| {
-			self2.create(resize_behavior)?;
+			self2.create(OptsResz::Dlg(resize_behavior))?;
 			Ok(true)
 		});
+
 		new_self
 	}
 
-	fn create(&self, resize_behavior: (Horz, Vert)) -> SysResult<()> {
-		match &self.0.opts_id {
-			OptsId::Wnd(opts) => {
+	fn create(&self, opts_resz: OptsResz<&ListBoxOpts>) -> SysResult<()> {
+		let resize_behavior = match opts_resz {
+			OptsResz::Wnd(opts) => opts.resize_behavior,
+			OptsResz::Dlg(resize_behavior) => resize_behavior,
+		};
+
+		match opts_resz {
+			OptsResz::Wnd(opts) => {
 				let mut pos = POINT::new(opts.position.0, opts.position.1);
 				let mut sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
 				multiply_dpi_or_dtu(
@@ -156,7 +156,6 @@ impl ListBox {
 
 				self.0.base.create_window(
 					"ListBox", None, pos, sz,
-					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.list_box_style.into(),
 				)?;
@@ -167,7 +166,7 @@ impl ListBox {
 				});
 				self.items().add(&opts.items);
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id)?,
+			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
 		}
 
 		self.0.base.parent().add_to_layout_arranger(self.hwnd(), resize_behavior)

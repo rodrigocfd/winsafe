@@ -6,9 +6,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::gui::base::Base;
 use crate::gui::events::{UpDownEvents, WindowEvents};
-use crate::gui::native_controls::base_native_control::{
-	BaseNativeControl, OptsId,
-};
+use crate::gui::native_controls::base_native_control::BaseNativeControl;
 use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::kernel::decl::SysResult;
 use crate::msg::udm;
@@ -20,7 +18,6 @@ use crate::user::decl::{HWND, POINT, SIZE};
 
 struct Obj { // actual fields of UpDown
 	base: BaseNativeControl,
-	opts_id: OptsId<UpDownOpts>,
 	events: UpDownEvents,
 	_pin: PhantomPinned,
 }
@@ -53,10 +50,7 @@ impl GuiWindow for UpDown {
 
 impl GuiChild for UpDown {
 	fn ctrl_id(&self) -> u16 {
-		match &self.0.opts_id {
-			OptsId::Wnd(opts) => opts.ctrl_id,
-			OptsId::Dlg(ctrl_id) => *ctrl_id,
-		}
+		self.0.base.ctrl_id()
 	}
 }
 
@@ -127,8 +121,7 @@ impl UpDown {
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_ref),
-					opts_id: OptsId::Wnd(opts),
+					base: BaseNativeControl::new(parent_ref, ctrl_id),
 					events: UpDownEvents::new(parent_ref, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -137,7 +130,7 @@ impl UpDown {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm(parent_ref.wm_create_or_initdialog(), move |_| {
-			self2.create()?;
+			self2.create(Some(&opts))?;
 			Ok(None) // not meaningful
 		});
 
@@ -159,8 +152,7 @@ impl UpDown {
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_ref),
-					opts_id: OptsId::Dlg(ctrl_id),
+					base: BaseNativeControl::new(parent_ref, ctrl_id),
 					events: UpDownEvents::new(parent_ref, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -169,16 +161,16 @@ impl UpDown {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm_init_dialog(move |_| {
-			self2.create()?;
+			self2.create(None)?;
 			Ok(true) // not meaningful
 		});
 
 		new_self
 	}
 
-	fn create(&self) -> SysResult<()> {
-		match &self.0.opts_id {
-			OptsId::Wnd(opts) => {
+	fn create(&self, opts: Option<&UpDownOpts>) -> SysResult<()> {
+		match opts {
+			Some(opts) => {
 				let mut pos = POINT::new(opts.position.0, opts.position.1);
 				let mut sz = SIZE::new(0, opts.height as _);
 				multiply_dpi_or_dtu(
@@ -186,7 +178,6 @@ impl UpDown {
 
 				self.0.base.create_window( // may panic
 					"msctls_updown32", None, pos, SIZE::new(0, opts.height as _),
-					opts.ctrl_id,
 					opts.window_ex_style,
 					opts.window_style | opts.up_down_style.into(),
 				)?;
@@ -199,7 +190,7 @@ impl UpDown {
 					}
 				}
 			},
-			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id)?,
+			None => self.0.base.create_dlg()?,
 		}
 
 		Ok(())
