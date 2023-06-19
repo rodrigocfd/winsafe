@@ -110,7 +110,7 @@ impl Edit {
 	pub fn new(parent: &impl GuiParent, opts: EditOpts) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = EditOpts::define_ctrl_id(opts);
-		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
+		let (ctrl_id, resize_behavior) = (opts.ctrl_id, opts.resize_behavior);
 
 		let new_self = Self(
 			Arc::pin(
@@ -125,7 +125,7 @@ impl Edit {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm(parent_ref.wm_create_or_initdialog(), move |_| {
-			self2.create(horz, vert)?;
+			self2.create(resize_behavior)?;
 			Ok(None) // not meaningful
 		});
 
@@ -161,14 +161,14 @@ impl Edit {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm_init_dialog(move |_| {
-			self2.create(resize_behavior.0, resize_behavior.1)?;
+			self2.create(resize_behavior)?;
 			Ok(true) // not meaningful
 		});
 
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) -> SysResult<()> {
+	fn create(&self, resize_behavior: (Horz, Vert)) -> SysResult<()> {
 		match &self.0.opts_id {
 			OptsId::Wnd(opts) => {
 				let mut pos = POINT::new(opts.position.0, opts.position.1);
@@ -191,7 +191,7 @@ impl Edit {
 			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id)?,
 		}
 
-		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert)
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), resize_behavior)
 	}
 
 	/// Hides any balloon tip by sending an
@@ -392,16 +392,13 @@ pub struct EditOpts {
 	///
 	/// Defaults to an auto-generated ID.
 	pub ctrl_id: u16,
-	/// Horizontal behavior when the parent is resized.
-	///
-	/// Defaults to `Horz::None`.
-	pub horz_resize: Horz,
-	/// Vertical behavior when the parent is resized.
-	///
-	/// Defaults to `Vert::None`.
+	/// Horizontal and vertical behavior of the control when the parent window
+	/// is resized.
 	///
 	/// **Note:** You should use `Vert::Resize` only in a multi-line edit.
-	pub vert_resize: Vert,
+	///
+	/// Defaults to `(Horz::None, Vert::None)`.
+	pub resize_behavior: (Horz, Vert),
 }
 
 impl Default for EditOpts {
@@ -415,8 +412,7 @@ impl Default for EditOpts {
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
 			ctrl_id: 0,
-			horz_resize: Horz::None,
-			vert_resize: Vert::None,
+			resize_behavior: (Horz::None, Vert::None),
 		}
 	}
 }

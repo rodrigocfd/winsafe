@@ -46,8 +46,7 @@ impl DlgControl {
 				},
 			),
 		);
-		new_self.default_message_handlers(
-			parent, resize_behavior.0, resize_behavior.1);
+		new_self.default_message_handlers(parent, resize_behavior);
 		new_self
 	}
 
@@ -79,7 +78,9 @@ impl DlgControl {
 		self.0.dlg_base.run_ui_thread(func);
 	}
 
-	fn default_message_handlers(&self, parent: &Base, horz: Horz, vert: Vert) {
+	fn default_message_handlers(&self,
+		parent: &Base, resize_behavior: (Horz, Vert))
+	{
 		let self2 = self.clone();
 		parent.privileged_on().wm(parent.wm_create_or_initdialog(), move |_| {
 			self2.0.dlg_base.create_dialog_param()?;
@@ -95,7 +96,7 @@ impl DlgControl {
 
 			self2.hwnd().SetWindowLongPtr(co::GWLP::ID, self2.0.ctrl_id as _);
 
-			parent_ref.add_to_layout_arranger(self2.hwnd(), horz, vert)?;
+			parent_ref.add_to_layout_arranger(self2.hwnd(), resize_behavior)?;
 			Ok(None) // not meaningful
 		});
 

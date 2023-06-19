@@ -117,9 +117,9 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn add_to_layout_arranger(&self,
-		hchild: &HWND, horz: Horz, vert: Vert) -> SysResult<()>
+		hchild: &HWND, resize_behavior: (Horz, Vert)) -> SysResult<()>
 	{
-		self.layout_arranger.add_child(&self.hwnd, hchild, horz, vert)?;
+		self.layout_arranger.add_child(&self.hwnd, hchild, resize_behavior)?;
 		Ok(())
 	}
 

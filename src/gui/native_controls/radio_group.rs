@@ -2,7 +2,6 @@ use std::marker::PhantomPinned;
 use std::ops::Index;
 use std::pin::Pin;
 use std::ptr::NonNull;
-use std::rc::Rc;
 use std::sync::Arc;
 
 use crate::co;
@@ -69,6 +68,8 @@ impl RadioGroup {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
 
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
+
 		let radios = opts.iter().enumerate()
 			.map(|(i, opt)| {
 				let mut radio_opt = opt.manual_clone();
@@ -83,13 +84,9 @@ impl RadioGroup {
 			.map(|r| r.ctrl_id()) // when the radio is created, the ctrl ID is defined
 			.collect::<Vec<_>>();
 
-		let horz_verts = Rc::new(
-			opts.iter()
-				.map(|opt| (opt.horz_resize, opt.vert_resize))
-				.collect::<Vec<_>>(),
-		);
-
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let resize_behaviors = opts.iter()
+			.map(|opt| opt.resize_behavior)
+			.collect::<Vec<_>>();
 
 		let new_self = Self(
 			Arc::pin(
@@ -103,9 +100,8 @@ impl RadioGroup {
 		);
 
 		let self2 = new_self.clone();
-		let horz_verts = horz_verts.clone();
 		parent_ref.privileged_on().wm(parent_ref.wm_create_or_initdialog(), move |_| {
-			self2.create(horz_verts.as_ref())?;
+			self2.create(resize_behaviors.clone())?;
 			Ok(None) // not meaningful
 		});
 		new_self
@@ -129,6 +125,8 @@ impl RadioGroup {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
 
+		let parent_ref = unsafe { Base::from_guiparent(parent) };
+
 		let radios = ctrls.iter()
 			.map(|(ctrl_id, _, _)| RadioButton::new_dlg(parent, *ctrl_id))
 			.collect::<Vec<_>>();
@@ -137,11 +135,9 @@ impl RadioGroup {
 			.map(|(ctrl_id, _, _)| *ctrl_id)
 			.collect::<Vec<_>>();
 
-		let horz_verts = ctrls.iter()
+		let resize_behaviors = ctrls.iter()
 			.map(|(_, horz, vert)| (*horz, *vert))
 			.collect::<Vec<_>>();
-
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
 
 		let new_self = Self(
 			Arc::pin(
@@ -156,17 +152,18 @@ impl RadioGroup {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm_init_dialog(move |_| {
-			self2.create(horz_verts.as_ref())?;
+			self2.create(resize_behaviors.clone())?;
 			Ok(true) // not meaningful
 		});
 		new_self
 	}
 
-	fn create(&self, horz_vert: &[(Horz, Vert)]) -> SysResult<()> {
-		for (i, radio) in self.0.radios.iter().enumerate() {
-			radio.create(horz_vert[i].0, horz_vert[i].1)?; // create each RadioButton sequentially
-		}
-		Ok(())
+	fn create(&self, resize_behaviors: Vec<(Horz, Vert)>) -> SysResult<()> {
+		self.0.radios.iter()
+			.zip(resize_behaviors.iter())
+			.try_for_each(|(radio, resize_behavior)|
+				radio.create(*resize_behavior) // create each RadioButton sequentially
+			)
 	}
 
 	/// Returns an iterator over the internal
@@ -205,12 +202,8 @@ impl RadioGroup {
 	/// [`RadioButton`](crate::gui::RadioButton) of this group, if any.
 	#[must_use]
 	pub fn checked_index(&self) -> Option<usize> {
-		for (idx, radio) in self.0.radios.iter().enumerate() {
-			if radio.is_selected() {
-				return Some(idx);
-			}
-		}
-		None
+		self.0.radios.iter()
+			.position(|radio| radio.is_selected())
 	}
 
 	/// Returns the number of [`RadioButton`](crate::gui::RadioButton) controls

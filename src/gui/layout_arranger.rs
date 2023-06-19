@@ -76,12 +76,16 @@ impl LayoutArranger {
 	/// Adds a new child control to the internal list, so this control will have
 	/// its position and size rearranged when requested.
 	pub(in crate::gui) fn add_child(&self,
-		hparent: &HWND, hchild: &HWND, horz: Horz, vert: Vert) -> SysResult<()>
+		hparent: &HWND,
+		hchild: &HWND,
+		resize_behavior: (Horz, Vert),
+	) -> SysResult<()>
 	{
 		if *hparent == HWND::NULL || *hchild == HWND::NULL {
 			panic!("Cannot add resizer entries before window/control creation.");
 		}
 
+		let (horz, vert) = resize_behavior;
 		if horz == Horz::None && vert == Vert::None {
 			return Ok(()); // nothing to do, don't even add it
 		}

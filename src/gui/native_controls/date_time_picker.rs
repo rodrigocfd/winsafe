@@ -87,7 +87,7 @@ impl DateTimePicker {
 	pub fn new(parent: &impl GuiParent, opts: DateTimePickerOpts) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = DateTimePickerOpts::define_ctrl_id(opts);
-		let (ctrl_id, horz, vert) = (opts.ctrl_id, opts.horz_resize, opts.vert_resize);
+		let (ctrl_id, resize_behavior) = (opts.ctrl_id, opts.resize_behavior);
 
 		let new_self = Self(
 			Arc::pin(
@@ -102,7 +102,7 @@ impl DateTimePicker {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm(parent_ref.wm_create_or_initdialog(), move |_| {
-			self2.create(horz, vert)?;
+			self2.create(resize_behavior)?;
 			Ok(None) // not meaningful
 		});
 
@@ -139,15 +139,15 @@ impl DateTimePicker {
 
 		let self2 = new_self.clone();
 		parent_ref.privileged_on().wm_init_dialog(move |_| {
-			self2.create(resize_behavior.0, resize_behavior.1)?;
+			self2.create(resize_behavior)?;
 			Ok(true) // not meaningful
 		});
 
 		new_self
 	}
 
-	fn create(&self, horz: Horz, vert: Vert) -> SysResult<()> {
-		if vert == Vert::Resize {
+	fn create(&self, resize_behavior: (Horz, Vert)) -> SysResult<()> {
+		if resize_behavior.1 == Vert::Resize {
 			panic!("DateTimePicker cannot be resized with Vert::Resize.");
 		}
 
@@ -185,7 +185,7 @@ impl DateTimePicker {
 			OptsId::Dlg(ctrl_id) => self.0.base.create_dlg(*ctrl_id)?,
 		}
 
-		self.0.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert)
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), resize_behavior)
 	}
 
 	/// Retrieves the currently selected date by sending a
@@ -252,17 +252,14 @@ pub struct DateTimePickerOpts {
 	///
 	/// Defaults to an auto-generated ID.
 	pub ctrl_id: u16,
-	/// Horizontal behavior when the parent is resized.
-	///
-	/// Defaults to `Horz::None`.
-	pub horz_resize: Horz,
-	/// Vertical behavior when the parent is resized.
-	///
-	/// Defaults to `Vert::None`.
+	/// Horizontal and vertical behavior of the control when the parent window
+	/// is resized.
 	///
 	/// **Note:** A `DateTimePicker` cannot be resized vertically, so it will
 	/// panic if you use `Vert::Resize`.
-	pub vert_resize: Vert,
+	///
+	/// Defaults to `(Horz::None, Vert::None)`.
+	pub resize_behavior: (Horz, Vert),
 }
 
 impl Default for DateTimePickerOpts {
@@ -274,8 +271,7 @@ impl Default for DateTimePickerOpts {
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
-			horz_resize: Horz::None,
-			vert_resize: Vert::None,
+			resize_behavior: (Horz::None, Vert::None),
 		}
 	}
 }

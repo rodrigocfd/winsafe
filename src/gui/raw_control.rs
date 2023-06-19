@@ -28,7 +28,7 @@ pub(in crate::gui) struct RawControl(Pin<Arc<Obj>>);
 
 impl RawControl {
 	pub(in crate::gui) fn new(parent: &Base, opts: WindowControlOpts) -> Self {
-		let (horz, vert) = (opts.horz_resize, opts.vert_resize);
+		let resize_behavior = opts.resize_behavior;
 		let opts = WindowControlOpts::define_ctrl_id(opts);
 		let new_self = Self(
 			Arc::pin(
@@ -39,7 +39,7 @@ impl RawControl {
 				},
 			),
 		);
-		new_self.default_message_handlers(parent, horz, vert);
+		new_self.default_message_handlers(parent, resize_behavior);
 		new_self
 	}
 
@@ -71,7 +71,9 @@ impl RawControl {
 		self.0.raw_base.run_ui_thread(func);
 	}
 
-	fn default_message_handlers(&self, parent: &Base, horz: Horz, vert: Vert) {
+	fn default_message_handlers(&self,
+		parent: &Base, resize_behavior: (Horz, Vert))
+	{
 		let self2 = self.clone();
 		parent.privileged_on().wm(parent.wm_create_or_initdialog(), move |_| {
 			let parent_ref = self2.0.raw_base.parent().unwrap();
@@ -99,7 +101,7 @@ impl RawControl {
 				opts.ex_style, opts.style,
 			)?;
 
-			parent_ref.add_to_layout_arranger(self2.hwnd(), horz, vert)?;
+			parent_ref.add_to_layout_arranger(self2.hwnd(), resize_behavior)?;
 			Ok(None) // not meaningful
 		});
 
@@ -179,14 +181,11 @@ pub struct WindowControlOpts {
 	///
 	/// Defaults to an auto-generated ID.
 	pub ctrl_id: u16,
-	/// Horizontal behavior when the parent is resized.
+	/// Horizontal and vertical behavior of the control when the parent window
+	/// is resized.
 	///
-	/// Defaults to `Horz::None`.
-	pub horz_resize: Horz,
-	/// Vertical behavior when the parent is resized.
-	///
-	/// Defaults to `Vert::None`.
-	pub vert_resize: Vert,
+	/// Defaults to `(Horz::None, Vert::None)`.
+	pub resize_behavior: (Horz, Vert),
 }
 
 impl Default for WindowControlOpts {
@@ -202,8 +201,7 @@ impl Default for WindowControlOpts {
 			style: co::WS::CHILD | co::WS::TABSTOP | co::WS::GROUP | co::WS::VISIBLE | co::WS::CLIPCHILDREN | co::WS::CLIPSIBLINGS,
 			ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
-			horz_resize: Horz::None,
-			vert_resize: Vert::None,
+			resize_behavior: (Horz::None, Vert::None),
 		}
 	}
 }

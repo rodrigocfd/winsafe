@@ -100,7 +100,7 @@ impl RadioButton {
 	}
 
 	pub(in crate::gui) fn create(&self,
-		horz: Horz, vert: Vert) -> SysResult<()>
+		resize_behavior: (Horz, Vert)) -> SysResult<()>
 	{
 		match &self.opts_id {
 			OptsId::Wnd(opts) => {
@@ -134,7 +134,7 @@ impl RadioButton {
 			},
 		}
 
-		self.base.parent().add_to_layout_arranger(self.hwnd(), horz, vert)?;
+		self.base.parent().add_to_layout_arranger(self.hwnd(), resize_behavior)?;
 		self.hwnd().SendMessage(bm::SetDontClick { dont_click: true });
 		Ok(())
 	}
@@ -242,14 +242,11 @@ pub struct RadioButtonOpts {
 	///
 	/// Defaults to an auto-generated ID.
 	pub ctrl_id: u16,
-	/// Horizontal behavior when the parent is resized.
+	/// Horizontal and vertical behavior of the control when the parent window
+	/// is resized.
 	///
-	/// Defaults to `Horz::None`.
-	pub horz_resize: Horz,
-	/// Vertical behavior when the parent is resized.
-	///
-	/// Defaults to `Vert::None`.
-	pub vert_resize: Vert,
+	/// Defaults to `(Horz::None, Vert::None)`.
+	pub resize_behavior: (Horz, Vert),
 
 	/// Initial selection state.
 	///
@@ -267,8 +264,7 @@ impl Default for RadioButtonOpts {
 			window_style: co::WS::CHILD | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
-			horz_resize: Horz::None,
-			vert_resize: Vert::None,
+			resize_behavior: (Horz::None, Vert::None),
 			selected: false,
 		}
 	}
@@ -291,8 +287,7 @@ impl RadioButtonOpts {
 			window_style: self.window_style,
 			window_ex_style: self.window_ex_style,
 			ctrl_id: self.ctrl_id,
-			horz_resize: self.horz_resize,
-			vert_resize: self.vert_resize,
+			resize_behavior: self.resize_behavior,
 			selected: self.selected,
 		}
 	}
