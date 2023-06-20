@@ -18,6 +18,7 @@ mod trackbar_events;
 mod tree_view_events;
 mod up_down_events;
 mod window_events_all;
+mod window_events_traits;
 mod window_events;
 
 pub use button_events::ButtonEvents;
@@ -39,6 +40,5 @@ pub use window_events::WindowEvents;
 pub(in crate::gui) use window_events::ProcessResult;
 
 pub(in crate::gui) mod traits {
-	pub use super::window_events_all::GuiEventsAll;
-	pub use super::window_events::GuiEvents;
+	pub use super::window_events_traits::*;
 }

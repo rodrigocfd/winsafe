@@ -43,7 +43,8 @@ pub trait GuiWindow {
 	///     Arc::new( gui::Button::new(&parent, gui::ButtonOpts::default()) ),
 	/// ];
 	///
-	/// let edit = ctrls[0].as_any().downcast_ref::<gui::Edit>()
+	/// let edit = ctrls[0].as_any() // retrieve 1st element, which is an Edit
+	///     .downcast_ref::<gui::Edit>()
 	///     .expect("This Edit downcast should never fail.");
 	///
 	/// edit.set_text("Foo");
