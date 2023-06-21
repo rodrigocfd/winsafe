@@ -209,6 +209,7 @@ extern_sys! { "user32";
 	SetDoubleClickTime(u32) -> BOOL
 	SetFocus(HANDLE) -> HANDLE
 	SetForegroundWindow(HANDLE) -> BOOL
+	SetLayeredWindowAttributes(HANDLE, u32, u8, u32) -> BOOL
 	SetMenu(HANDLE, HANDLE) -> BOOL
 	SetMenuDefaultItem(HANDLE, u32, u32) -> BOOL
 	SetMenuInfo(HANDLE, PCVOID) -> BOOL

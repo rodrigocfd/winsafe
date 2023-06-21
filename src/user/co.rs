@@ -1690,6 +1690,15 @@ const_ordinary! { LSFW: u32;
 	UNLOCK 2
 }
 
+const_bitflag! { LWA: u32;
+	/// [`HWND::SetLayeredWindowAttributes`](crate::prelude::user_Hwnd::SetLayeredWindowAttributes)
+	/// `flags` (`u32`).
+	=>
+	=>
+	ALPHA 0x0000_0002
+	COLORKEY 0x0000_0001
+}
+
 const_bitflag! { MB: u32;
 	/// [`HWND::MessageBox`](crate::prelude::user_Hwnd::MessageBox) `flags`
 	/// (`u32`).

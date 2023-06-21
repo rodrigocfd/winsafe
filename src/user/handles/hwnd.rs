@@ -12,9 +12,9 @@ use crate::kernel::privs::{
 };
 use crate::prelude::{Handle, MsgSend};
 use crate::user::decl::{
-	ALTTABINFO, AtomStr, HACCEL, HDC, HMENU, HMONITOR, HRGN, HwndPlace, IdMenu,
-	IdPos, MENUBARINFO, MSG, PAINTSTRUCT, POINT, PtsRc, RECT, SCROLLINFO, SIZE,
-	TIMERPROC, WINDOWINFO, WINDOWPLACEMENT,
+	ALTTABINFO, AtomStr, COLORREF, HACCEL, HDC, HMENU, HMONITOR, HRGN,
+	HwndPlace, IdMenu, IdPos, MENUBARINFO, MSG, PAINTSTRUCT, POINT, PtsRc, RECT,
+	SCROLLINFO, SIZE, TIMERPROC, WINDOWINFO, WINDOWPLACEMENT,
 };
 use crate::user::guard::{
 	CloseClipboardGuard, EndPaintGuard, ReleaseCaptureGuard, ReleaseDCGuard,
@@ -1482,6 +1482,26 @@ pub trait user_Hwnd: Handle {
 	/// method.
 	fn SetForegroundWindow(&self) -> bool {
 		unsafe { user::ffi::SetForegroundWindow(self.ptr()) != 0 }
+	}
+
+	/// [`SetLayeredWindowAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setlayeredwindowattributes)
+	/// method.
+	fn SetLayeredWindowAttributes(&self,
+		transparency_color_key: COLORREF,
+		alpha: u8,
+		flags: co::LWA,
+	) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				user::ffi::SetLayeredWindowAttributes(
+					self.ptr(),
+					transparency_color_key.raw(),
+					alpha,
+					flags.raw(),
+				)
+			},
+		)
 	}
 
 	/// [`SetMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenu)
