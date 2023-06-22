@@ -94,47 +94,21 @@ impl COLORREF {
 		Self(red as u32 | ((green as u32) << 8) | ((blue as u32) << 16))
 	}
 
-	/// Creates an array of `COLORREF` objects with the given color intensities.
-	///
-	/// # Examples
-	///
-	/// ```rust,no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::COLORREF;
-	///
-	/// let colors: [COLORREF; 2] = COLORREF::new_array(&[
-	///     (0xff, 0xb2, 0x80),
-	///     (0x00, 0xa0, 0x40),
-	/// ]);
-	/// ```
-	#[must_use]
-	pub fn new_array<const N: usize>(rgbs: &[(u8, u8, u8); N]) -> [COLORREF; N] {
-		let mut arr = [Self::new(0, 0, 0); N];
-		for (i, rgb) in rgbs.iter().enumerate() {
-			arr[i] = Self::new(rgb.0, rgb.1, rgb.2);
-		}
-		arr
-	}
-
-	/// Retrieves the red intensity. Originally
 	/// [`GetRValue`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getrvalue)
-	/// macro.
+	/// macro. Retrieves the red intensity.
 	#[must_use]
 	pub const fn GetRValue(self) -> u8 {
 		LOBYTE(LOWORD(self.0))
 	}
 
-	/// Retrieves the green intensity. Originally
 	/// [`GetGValue`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getgvalue)
-	/// macro.
+	/// macro. Retrieves the green intensity.
 	#[must_use]
 	pub const fn GetGValue(self) -> u8 {
 		LOBYTE(LOWORD(self.0 >> 8))
 	}
-
-	/// Retrieves the blue intensity. Originally
 	/// [`GetBValue`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getbvalue)
-	/// macro.
+	/// macro. Retrieves the blue intensity.
 	#[must_use]
 	pub const fn GetBValue(self) -> u8 {
 		LOBYTE(LOWORD(self.0 >> 16))
