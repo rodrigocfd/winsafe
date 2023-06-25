@@ -1753,7 +1753,7 @@ pub_struct_msg_empty_handleable! { ThemeChanged: co::WM::THEMECHANGED;
 ///
 /// Return type: `()`.
 pub struct Timer {
-	pub timer_id: u32,
+	pub timer_id: usize,
 	pub timer_proc: Option<TIMERPROC>,
 }
 
@@ -1767,7 +1767,7 @@ unsafe impl MsgSend for Timer {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::WM::TIMER,
-			wparam: self.timer_id as _,
+			wparam: self.timer_id,
 			lparam: self.timer_proc.map_or(0, |proc| proc as _),
 		}
 	}

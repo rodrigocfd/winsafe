@@ -17,7 +17,7 @@ pub struct WindowEventsAll {
 	window_events: WindowEvents,
 	tmrs: UnsafeCell<
 		FuncStore< // WM_TIMER messages
-			u32,
+			usize,
 			Box<dyn Fn() -> AnyResult<()>>, // return value is never meaningful
 		>,
 	>,
@@ -44,7 +44,7 @@ impl GuiEvents for WindowEventsAll {
 }
 
 impl GuiEventsAll for WindowEventsAll {
-	fn wm_timer<F>(&self, timer_id: u32, func: F)
+	fn wm_timer<F>(&self, timer_id: usize, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
 		unsafe { &mut *self.tmrs.get() }.push(timer_id, Box::new(func));

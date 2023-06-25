@@ -12,7 +12,7 @@ use crate::user::decl::{HICON, HMENU};
 pub trait GuiEventsAll: GuiEvents {
 	/// [`WM_TIMER`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
 	/// message, narrowed to a specific timer ID.
-	fn wm_timer<F>(&self, timer_id: u32, func: F)
+	fn wm_timer<F>(&self, timer_id: usize, func: F)
 		where F: Fn() -> AnyResult<()> + 'static;
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
