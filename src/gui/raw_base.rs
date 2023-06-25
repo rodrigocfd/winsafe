@@ -207,7 +207,7 @@ impl RawBase {
 					let hinst = unsafe { wcx.hInstance.raw_copy() };
 					Ok(hinst.GetClassInfoEx(&wcx.lpszClassName().unwrap(), wcx)?)
 				},
-				_ => panic!(),
+				err => Err(err),
 			},
 		}
 	}
