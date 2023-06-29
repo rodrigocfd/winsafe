@@ -57,6 +57,10 @@ impl RawMain {
 		self.0.raw_base.on()
 	}
 
+	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsAll {
+		self.0.raw_base.privileged_on()
+	}
+
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
 		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
@@ -128,7 +132,7 @@ impl RawMain {
 
 	fn default_message_handlers(&self) {
 		let self2 = self.clone();
-		self.on().wm_activate(move |p| {
+		self.privileged_on().wm_activate(move |p| {
 			if !p.is_minimized {
 				let hchild_prev_focus = unsafe { &mut *self2.0.hchild_prev_focus.get() };
 				if p.event == co::WA::INACTIVE {
@@ -145,7 +149,7 @@ impl RawMain {
 		});
 
 		let self2 = self.clone();
-		self.on().wm_set_focus(move |_| {
+		self.privileged_on().wm_set_focus(move |_| {
 			self2.0.raw_base.delegate_focus_to_first_child();
 			Ok(())
 		});

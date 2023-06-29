@@ -113,15 +113,9 @@ pub trait GuiEvents {
 	fn wm<F>(&self, ident: co::WM, func: F)
 		where F: Fn(WndMsg) -> AnyResult<Option<isize>> + 'static;
 
-		fn_wm_withparm_noret! { wm_activate, co::WM::ACTIVATE, wm::Activate;
+	fn_wm_withparm_noret! { wm_activate, co::WM::ACTIVATE, wm::Activate;
 		/// [`WM_ACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
 		/// message.
-		///
-		/// # Default handling
-		///
-		/// If you handle this event, you'll overwrite the default handling in:
-		///
-		/// * non-dialog [`WindowMain`](crate::gui::WindowMain).
 	}
 
 	fn_wm_withparm_noret! { wm_activate_app, co::WM::ACTIVATEAPP, wm::ActivateApp;
@@ -583,13 +577,6 @@ pub trait GuiEvents {
 	fn_wm_withparm_noret! { wm_nc_paint, co::WM::NCPAINT, wm::NcPaint;
 		/// [`WM_NCPAINT`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-ncpaint)
 		/// message.
-		///
-		/// # Default handling
-		///
-		/// If you handle this event, you'll overwrite the default handling in:
-		///
-		/// * non-dialog [`WindowControl`](crate::gui::WindowControl);
-		/// * dialog [`WindowControl`](crate::gui::WindowControl).
 	}
 
 	fn_wm_withparm_noret! { wm_next_dlg_ctl, co::WM::NEXTDLGCTL, wm::NextDlgCtl;
@@ -662,13 +649,6 @@ pub trait GuiEvents {
 	fn_wm_withparm_noret! { wm_set_focus, co::WM::SETFOCUS, wm::SetFocus;
 		/// [`WM_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-setfocus)
 		/// message.
-		///
-		/// # Default handling
-		///
-		/// If you handle this event, you'll overwrite the default handling in:
-		///
-		/// * non-dialog [`WindowMain`](crate::gui::WindowMain);
-		/// * non-dialog [`WindowModal`](crate::gui::WindowModal).
 	}
 
 	fn_wm_withparm_noret! { wm_set_font, co::WM::SETFONT, wm::SetFont;

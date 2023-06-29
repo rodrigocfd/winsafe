@@ -66,6 +66,10 @@ impl DlgControl {
 		self.0.dlg_base.on()
 	}
 
+	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsAll {
+		self.0.dlg_base.privileged_on()
+	}
+
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
 		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
@@ -101,7 +105,7 @@ impl DlgControl {
 		});
 
 		let self2 = self.clone();
-		self.on().wm_nc_paint(move |p| {
+		self.privileged_on().wm_nc_paint(move |p| {
 			paint_control_borders(self2.hwnd(), p)?;
 			Ok(())
 		});

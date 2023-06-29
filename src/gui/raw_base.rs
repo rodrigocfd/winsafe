@@ -131,9 +131,9 @@ impl RawBase {
 		self.base.on()
 	}
 
-	// pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsAll {
-	// 	self.base.privileged_on()
-	// }
+	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsAll {
+		self.base.privileged_on()
+	}
 
 	pub(in crate::gui) fn parent(&self) -> Option<&Base> {
 		self.base.parent()

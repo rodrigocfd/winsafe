@@ -56,6 +56,10 @@ impl RawModal {
 		self.0.raw_base.on()
 	}
 
+	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsAll {
+		self.0.raw_base.privileged_on()
+	}
+
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
 		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
@@ -159,7 +163,7 @@ impl RawModal {
 
 	fn default_message_handlers(&self) {
 		let self2 = self.clone();
-		self.on().wm_set_focus(move |_| {
+		self.privileged_on().wm_set_focus(move |_| {
 			self2.0.raw_base.delegate_focus_to_first_child();
 			Ok(())
 		});
