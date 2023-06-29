@@ -3,7 +3,7 @@
 use crate::{co, ole};
 use crate::kernel::decl::WString;
 use crate::ole::decl::{COSERVERINFO, HrResult, IMoniker, IUnknown, MULTI_QI};
-use crate::ole::guard::CoUninitializeGuard;
+use crate::ole::guard::{CoLockObjectExternalGuard, CoUninitializeGuard};
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::ole_IUnknown;
 
@@ -182,23 +182,18 @@ pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<CoUninitializeGuard> {
 /// [`CoLockObjectExternal`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-colockobjectexternal)
 /// function.
 ///
-/// **Note:** If you lock a COM pointer, `CoLockObjectExternal` must be called
-/// again to unlock it, or you'll have a resource leak.
-pub fn CoLockObjectExternal(
-	obj: &impl ole_IUnknown,
-	lock: bool,
-	last_unlock_releases: bool,
-) -> HrResult<()>
+/// Note that this function will lock the COM object, returning a
+/// [`CoLockObjectExternalGuard`](crate::guard::CoLockObjectExternalGuard). The
+/// unlocking is automatically performed by the guard when it goes out of scope.
+pub fn CoLockObjectExternal<T>(
+	obj: &T
+) -> HrResult<CoLockObjectExternalGuard<T>>
+	where T: ole_IUnknown,
 {
-	ok_to_hrresult(
-		unsafe {
-			ole::ffi::CoLockObjectExternal(
-				obj.ptr(),
-				lock as _,
-				last_unlock_releases as _,
-			)
-		},
-	)
+	unsafe {
+		ok_to_hrresult(ole::ffi::CoLockObjectExternal(obj.ptr(), 1, 0))
+			.map(|_| CoLockObjectExternalGuard::new(obj))
+	}
 }
 
 /// [`CoTaskMemAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemalloc)
