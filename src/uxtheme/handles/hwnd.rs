@@ -19,7 +19,7 @@ impl uxtheme_Hwnd for HWND {}
 /// ```
 pub trait uxtheme_Hwnd: Handle {
 	/// [`OpenThemeData`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-openthemedata)
-	/// method.
+	/// function.
 	#[must_use]
 	fn OpenThemeData(&self, class_list: &str) -> Option<CloseThemeDataGuard> {
 		unsafe {

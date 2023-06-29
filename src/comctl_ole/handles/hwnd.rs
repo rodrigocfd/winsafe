@@ -20,7 +20,7 @@ impl comctl_ole_Hwnd for HWND {}
 /// ```
 pub trait comctl_ole_Hwnd: user_Hwnd {
 	/// [`InitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initializeflatsb)
-	/// method.
+	/// function.
 	fn InitializeFlatSB(&self) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe { comctl_ole::ffi::InitializeFlatSB(self.ptr()) },
@@ -28,7 +28,7 @@ pub trait comctl_ole_Hwnd: user_Hwnd {
 	}
 
 	/// [`TaskDialog`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialog)
-	/// method.
+	/// function.
 	///
 	/// Unless you need something specific, consider using the
 	/// [`task_dlg`](crate::task_dlg) high-level abstractions.
@@ -110,7 +110,7 @@ pub trait comctl_ole_Hwnd: user_Hwnd {
 	}
 
 	/// [`UninitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-uninitializeflatsb)
-	/// method.
+	/// function.
 	fn UninitializeFlatSB(&self) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe { comctl_ole::ffi::UninitializeFlatSB(self.ptr()) },

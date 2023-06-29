@@ -150,7 +150,7 @@ pub trait kernel_Hprocesslist: Handle {
 	}
 
 	/// [`CreateToolhelp32Snapshot`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreateToolhelp32Snapshot(
 		flags: co::TH32CS,
@@ -168,7 +168,7 @@ pub trait kernel_Hprocesslist: Handle {
 	}
 
 	/// [`HeapList32First`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-heap32listfirst)
-	/// method.
+	/// function.
 	///
 	/// After the listing ends, the handle will be invalidated and further
 	/// operations will fail with
@@ -194,7 +194,7 @@ pub trait kernel_Hprocesslist: Handle {
 	}
 
 	/// [`HeapList32Next`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-heap32listnext)
-	/// method.
+	/// function.
 	///
 	/// After the listing ends, the handle will be invalidated and further
 	/// operations will fail with
@@ -220,7 +220,7 @@ pub trait kernel_Hprocesslist: Handle {
 	}
 
 	/// [`Module32First`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-module32firstw)
-	/// method.
+	/// function.
 	///
 	/// After the listing ends, the handle will be invalidated and further
 	/// operations will fail with
@@ -246,7 +246,7 @@ pub trait kernel_Hprocesslist: Handle {
 	}
 
 	/// [`Module32Next`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-module32nextw)
-	/// method.
+	/// function.
 	///
 	/// After the listing ends, the handle will be invalidated and further
 	/// operations will fail with
@@ -272,7 +272,7 @@ pub trait kernel_Hprocesslist: Handle {
 	}
 
 	/// [`Process32First`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32firstw)
-	/// method.
+	/// function.
 	///
 	/// After the listing ends, the handle will be invalidated and further
 	/// operations will fail with
@@ -298,7 +298,7 @@ pub trait kernel_Hprocesslist: Handle {
 	}
 
 	/// [`Process32Next`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-process32nextw)
-	/// method.
+	/// function.
 	///
 	/// After the listing ends, the handle will be invalidated and further
 	/// operations will fail with
@@ -324,7 +324,7 @@ pub trait kernel_Hprocesslist: Handle {
 	}
 
 	/// [`Thread32First`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-thread32first)
-	/// method.
+	/// function.
 	///
 	/// After the listing ends, the handle will be invalidated and further
 	/// operations will fail with
@@ -350,7 +350,7 @@ pub trait kernel_Hprocesslist: Handle {
 	}
 
 	/// [`Thread32First`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-thread32next)
-	/// method.
+	/// function.
 	///
 	/// After the listing ends, the handle will be invalidated and further
 	/// operations will fail with

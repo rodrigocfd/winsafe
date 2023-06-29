@@ -27,7 +27,7 @@ impl gdi_Hfont for HFONT {}
 /// ```
 pub trait gdi_Hfont: Handle {
 	/// [`CreateFont`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontw)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreateFont(
 		sz: SIZE,
@@ -68,7 +68,7 @@ pub trait gdi_Hfont: Handle {
 	}
 
 	/// [`CreateFontIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirectw)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreateFontIndirect(lf: &LOGFONT) -> SysResult<DeleteObjectGuard<HFONT>> {
 		unsafe {
@@ -79,7 +79,7 @@ pub trait gdi_Hfont: Handle {
 	}
 
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
-	/// method.
+	/// function.
 	///
 	/// # Examples
 	///
@@ -106,7 +106,7 @@ pub trait gdi_Hfont: Handle {
 	}
 
 	/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn GetStockObject(sf: co::STOCK_FONT) -> SysResult<HFONT> {
 		ptr_to_sysresult_handle(unsafe { gdi::ffi::GetStockObject(sf.raw()) })

@@ -21,7 +21,7 @@ impl gdi_Hrgn for HRGN {}
 /// ```
 pub trait gdi_Hrgn: Handle {
 	/// [`CreateRectRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createrectrgn)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreateRectRgn(bounds: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
@@ -33,7 +33,7 @@ pub trait gdi_Hrgn: Handle {
 	}
 
 	/// [`CreateRectRgnIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createrectrgnindirect)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreateRectRgnIndirect(rc: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
@@ -44,7 +44,7 @@ pub trait gdi_Hrgn: Handle {
 	}
 
 	/// [`CreateRoundRectRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createroundrectrgn)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreateRoundRectRgn(
 		bounds: RECT, size: SIZE) -> SysResult<DeleteObjectGuard<HRGN>>
@@ -60,7 +60,7 @@ pub trait gdi_Hrgn: Handle {
 	}
 
 	/// [`OffsetClipRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetcliprgn)
-	/// method.
+	/// function.
 	fn OffsetClipRgn(&self, x: i32, y: i32) -> SysResult<co::REGION> {
 		match unsafe { gdi::ffi::OffsetClipRgn(self.ptr(), x, y) } {
 			0 => Err(GetLastError()),
@@ -69,7 +69,7 @@ pub trait gdi_Hrgn: Handle {
 	}
 
 	/// [`OffsetRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetrgn)
-	/// method.
+	/// function.
 	fn OffsetRgn(&self, x: i32, y: i32) -> SysResult<co::REGION> {
 		match unsafe { gdi::ffi::OffsetRgn(self.ptr(), x, y) } {
 			0 => Err(GetLastError()),
@@ -78,14 +78,14 @@ pub trait gdi_Hrgn: Handle {
 	}
 
 	/// [`PtInRegion`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ptinregion)
-	/// method.
+	/// function.
 	#[must_use]
 	fn PtInRegion(&self, x: i32, y: i32) -> bool {
 		unsafe { gdi::ffi::PtInRegion(self.ptr(), x, y) != 0 }
 	}
 
 	/// [`RectInRegion`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectinregion)
-	/// method.
+	/// function.
 	#[must_use]
 	fn RectInRegion(&self, rc: &RECT) -> bool {
 		unsafe { gdi::ffi::RectInRegion(self.ptr(), rc as *const _ as _) != 0 }

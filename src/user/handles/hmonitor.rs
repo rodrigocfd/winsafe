@@ -23,7 +23,7 @@ impl user_Hmonitor for HMONITOR {}
 /// ```
 pub trait user_Hmonitor: Handle {
 	/// [`GetMonitorInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmonitorinfow)
-	/// method.
+	/// function.
 	///
 	/// # Examples
 	///
@@ -49,7 +49,7 @@ pub trait user_Hmonitor: Handle {
 	}
 
 	/// [`MonitorFromPoint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn MonitorFromPoint(pt: POINT, flags: co::MONITOR) -> HMONITOR {
 		unsafe {
@@ -60,7 +60,7 @@ pub trait user_Hmonitor: Handle {
 	}
 
 	/// [`MonitorFromRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfromrect)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn MonitorFromRect(rc: RECT, flags: co::MONITOR) -> HMONITOR {
 		unsafe {

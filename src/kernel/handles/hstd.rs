@@ -26,7 +26,7 @@ impl kernel_Hstd for HSTD {}
 /// ```
 pub trait kernel_Hstd: Handle {
 	/// [`FlushConsoleInputBuffer`](https://learn.microsoft.com/en-us/windows/console/flushconsoleinputbuffer)
-	/// method.
+	/// function.
 	fn FlushConsoleInputBuffer(&self) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe { kernel::ffi::FlushConsoleInputBuffer(self.ptr()) },
@@ -34,7 +34,7 @@ pub trait kernel_Hstd: Handle {
 	}
 
 	/// [`GetConsoleMode`](https://learn.microsoft.com/en-us/windows/console/getconsolemode)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetConsoleMode(&self) -> SysResult<co::CONSOLE> {
 		let mut mode = co::CONSOLE::default();
@@ -44,7 +44,7 @@ pub trait kernel_Hstd: Handle {
 	}
 
 	/// [`GetStdHandle`](https://learn.microsoft.com/en-us/windows/console/getstdhandle)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn GetStdHandle(
 		std_handle: co::STD_HANDLE,
@@ -59,7 +59,7 @@ pub trait kernel_Hstd: Handle {
 	}
 
 	/// [`ReadConsole`](https://learn.microsoft.com/en-us/windows/console/readconsole)
-	/// method.
+	/// function.
 	///
 	/// Returns the number of chars actually written.
 	///
@@ -98,7 +98,7 @@ pub trait kernel_Hstd: Handle {
 	}
 
 	/// [`SetConsoleMode`](https://learn.microsoft.com/en-us/windows/console/setconsolemode)
-	/// method.
+	/// function.
 	fn SetConsoleMode(&self, mode: co::CONSOLE) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe { kernel::ffi::SetConsoleMode(self.ptr(), mode.raw()) },
@@ -106,7 +106,7 @@ pub trait kernel_Hstd: Handle {
 	}
 
 	/// [`WriteConsole`](https://learn.microsoft.com/en-us/windows/console/writeconsole)
-	/// method.
+	/// function.
 	///
 	/// Returns the number of chars actually written.
 	fn WriteConsole(&self, text: &str) -> SysResult<u32> {

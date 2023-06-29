@@ -30,7 +30,7 @@ impl kernel_Hinstance for HINSTANCE {}
 /// ```
 pub trait kernel_Hinstance: Handle {
 	/// [`EnumResourceLanguages`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcelanguagesw)
-	/// method.
+	/// function.
 	fn EnumResourceLanguages<F>(&self,
 		resource_type: RtStr,
 		resource_id: IdStr,
@@ -52,7 +52,7 @@ pub trait kernel_Hinstance: Handle {
 	}
 
 	/// [`EnumResourceNames`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-enumresourcenamesw)
-	/// method.
+	/// function.
 	fn EnumResourceNames<F>(&self,
 		resource_type: RtStr,
 		func: F,
@@ -72,7 +72,7 @@ pub trait kernel_Hinstance: Handle {
 	}
 
 	/// [`EnumResourceTypes`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcetypesw)
-	/// method.
+	/// function.
 	fn EnumResourceTypes<F>(&self, func: F) -> SysResult<()>
 		where F: Fn(RtStr) -> bool,
 	{
@@ -88,7 +88,7 @@ pub trait kernel_Hinstance: Handle {
 	}
 
 	/// [`FindResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourcew)
-	/// method.
+	/// function.
 	///
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
@@ -108,7 +108,7 @@ pub trait kernel_Hinstance: Handle {
 	}
 
 	/// [`FindResourceEx`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourceexw)
-	/// method.
+	/// function.
 	///
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
@@ -132,7 +132,7 @@ pub trait kernel_Hinstance: Handle {
 	}
 
 	/// [`GetModuleFileName`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew)
-	/// method.
+	/// function.
 	///
 	/// # Examples
 	///
@@ -162,7 +162,7 @@ pub trait kernel_Hinstance: Handle {
 	}
 
 	/// [`GetModuleHandle`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew)
-	/// static method.
+	/// function.
 	///
 	/// # Examples
 	///
@@ -187,7 +187,7 @@ pub trait kernel_Hinstance: Handle {
 	}
 
 	/// [`GetProcAddress`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetProcAddress(&self,
 		proc_name: &str) -> SysResult<*const std::ffi::c_void>
@@ -203,7 +203,7 @@ pub trait kernel_Hinstance: Handle {
 	}
 
 	/// [`LoadLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryw)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn LoadLibrary(lib_file_name: &str) -> SysResult<FreeLibraryGuard> {
 		unsafe {
@@ -215,7 +215,7 @@ pub trait kernel_Hinstance: Handle {
 	}
 
 	/// [`LoadResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadresource)
-	/// method.
+	/// function.
 	///
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
@@ -227,7 +227,7 @@ pub trait kernel_Hinstance: Handle {
 	}
 
 	/// [`LockResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-lockresource)
-	/// method.
+	/// function.
 	///
 	/// This method should belong to [`HRSRCMEM`](crate::HRSRCMEM), but in order
 	/// to make it safe, we automatically call
@@ -281,7 +281,7 @@ pub trait kernel_Hinstance: Handle {
 	}
 
 	/// [`SizeofResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-sizeofresource)
-	/// method.
+	/// function.
 	///
 	/// For an example, see
 	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).

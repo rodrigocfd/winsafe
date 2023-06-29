@@ -23,7 +23,7 @@ impl user_Hcursor for HCURSOR {}
 /// ```
 pub trait user_Hcursor: Handle {
 	/// [`CopyCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-copycursor)
-	/// method. Originally a macro.
+	/// macro.
 	#[must_use]
 	fn CopyCursor(&self) -> SysResult<DestroyCursorGuard> {
 		unsafe {
@@ -33,7 +33,7 @@ pub trait user_Hcursor: Handle {
 	}
 
 	/// [`SetSystemCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setsystemcursor)
-	/// method.
+	/// function.
 	fn SetSystemCursor(&self, id: co::OCR) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe { user::ffi::SetSystemCursor(self.ptr(), id.raw()) },

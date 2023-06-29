@@ -80,7 +80,7 @@ impl FormattedError for HRESULT {}
 
 impl co::ERROR {
 	/// [`HRESULT_FROM_WIN32`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
-	/// method. Originally a macro.
+	/// macro.
 	pub const fn to_hresult(self) -> co::HRESULT {
 		unsafe {
 			if self.raw() as i32 <= 0 {
@@ -98,20 +98,20 @@ impl co::ERROR {
 
 impl HRESULT {
 	/// [`HRESULT_CODE`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_code)
-	/// method. Originally a macro.
-	pub fn code(self) -> u16 {
+	/// macro.
+	pub const fn code(self) -> u16 {
 		(self.0 & 0xffff) as u16
 	}
 
 	/// [`HRESULT_FACILITY`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_facility)
-	/// method. Originally a macro.
-	pub fn facility(self) -> co::FACILITY {
+	/// macro.
+	pub const fn facility(self) -> co::FACILITY {
 		unsafe { co::FACILITY::from_raw((self.0 >> 16) & 0x1fff) }
 	}
 
 	/// [`HRESULT_SEVERITY`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_severity)
-	/// method. Originally a macro.
-	pub fn severity(self) -> co::SEVERITY {
+	/// macro.
+	pub const fn severity(self) -> co::SEVERITY {
 		unsafe { co::SEVERITY::from_raw(((self.0 >> 31) & 0x1) as _) }
 	}
 }

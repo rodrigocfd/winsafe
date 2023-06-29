@@ -25,7 +25,7 @@ impl gdi_Hpalette for HPALETTE {}
 /// ```
 pub trait gdi_Hpalette: Handle {
 	/// [`CreatePalette`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpalette)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreatePalette(
 		pal: &LOGPALETTE) -> SysResult<DeleteObjectGuard<HPALETTE>>

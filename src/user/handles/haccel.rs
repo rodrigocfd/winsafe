@@ -24,7 +24,7 @@ impl user_Haccel for HACCEL {}
 /// ```
 pub trait user_Haccel: Handle {
 	/// [`CreateAcceleratorTable`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createacceleratortablew)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreateAcceleratorTable(
 		accel: &mut [ACCEL]) -> SysResult<DestroyAcceleratorTableGuard>

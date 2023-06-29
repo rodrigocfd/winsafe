@@ -28,7 +28,7 @@ impl kernel_Hlocal for HLOCAL {}
 /// ```
 pub trait kernel_Hlocal: Handle {
 	/// [`LocalAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localalloc)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn LocalAlloc(
 		flags: Option<co::LMEM>, num_bytes: usize) -> SysResult<LocalFreeGuard>
@@ -41,7 +41,7 @@ pub trait kernel_Hlocal: Handle {
 	}
 
 	/// [`LocalFlags`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localflags)
-	/// method.
+	/// function.
 	#[must_use]
 	fn LocalFlags(&self) -> SysResult<co::LMEM> {
 		match unsafe { kernel::ffi::LocalFlags(self.ptr()) } {
@@ -51,7 +51,7 @@ pub trait kernel_Hlocal: Handle {
 	}
 
 	/// [`LocalLock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-locallock)
-	/// method.
+	/// function.
 	///
 	/// Calls [`LocalSize`](crate::prelude::kernel_Hlocal::LocalSize) to
 	/// retrieve the size of the memory block.
@@ -86,7 +86,7 @@ pub trait kernel_Hlocal: Handle {
 	}
 
 	/// [`LocalReAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localrealloc)
-	/// method.
+	/// function.
 	///
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
@@ -105,7 +105,7 @@ pub trait kernel_Hlocal: Handle {
 	}
 
 	/// [`LocalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localsize)
-	/// method.
+	/// function.
 	#[must_use]
 	fn LocalSize(&self) -> SysResult<usize> {
 		match unsafe { kernel::ffi::LocalSize(self.ptr()) } {

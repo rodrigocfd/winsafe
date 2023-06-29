@@ -32,7 +32,7 @@ pub trait gdi_Hbrush: Handle {
 	}
 
 	/// [`CreateBrushIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbrushindirect)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreateBrushIndirect(
 		lb: &LOGBRUSH) -> SysResult<DeleteObjectGuard<HBRUSH>>
@@ -45,7 +45,7 @@ pub trait gdi_Hbrush: Handle {
 	}
 
 	/// [`CreateHatchBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createhatchbrush)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreateHatchBrush(
 		hatch: co::HS, color: COLORREF) -> SysResult<DeleteObjectGuard<HBRUSH>>
@@ -58,7 +58,7 @@ pub trait gdi_Hbrush: Handle {
 	}
 
 	/// [`CreatePatternBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpatternbrush)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreatePatternBrush(
 		hbmp: &HBITMAP) -> SysResult<DeleteObjectGuard<HBRUSH>>
@@ -71,7 +71,7 @@ pub trait gdi_Hbrush: Handle {
 	}
 
 	/// [`CreateSolidBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreateSolidBrush(
 		color: COLORREF) -> SysResult<DeleteObjectGuard<HBRUSH>>
@@ -84,7 +84,7 @@ pub trait gdi_Hbrush: Handle {
 	}
 
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
-	/// method.
+	/// function.
 	///
 	/// # Examples
 	///
@@ -113,14 +113,14 @@ pub trait gdi_Hbrush: Handle {
 	}
 
 	/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn GetStockObject(sb: co::STOCK_BRUSH) -> SysResult<HBRUSH> {
 		ptr_to_sysresult_handle(unsafe { gdi::ffi::GetStockObject(sb.raw()) })
 	}
 
 	/// [`GetSysColorBrush`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolorbrush)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn GetSysColorBrush(index: co::COLOR) -> SysResult<HBRUSH> {
 		ptr_to_sysresult_handle(
@@ -129,7 +129,7 @@ pub trait gdi_Hbrush: Handle {
 	}
 
 	/// [`UnrealizeObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-unrealizeobject)
-	/// method.
+	/// function.
 	fn UnrealizeObject(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { gdi::ffi::UnrealizeObject(self.ptr()) })
 	}

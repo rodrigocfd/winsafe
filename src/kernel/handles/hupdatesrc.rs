@@ -24,7 +24,7 @@ impl kernel_Hupdatersrc for HUPDATERSRC {}
 /// ```
 pub trait kernel_Hupdatersrc: Handle {
 	/// [`BeginUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-beginupdateresourcew)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn BeginUpdateResource(
 		file_name: &str,
@@ -42,7 +42,7 @@ pub trait kernel_Hupdatersrc: Handle {
 	}
 
 	/// [`UpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-updateresourcew)
-	/// method.
+	/// function.
 	fn UpdateResource(&self,
 		resource_type: RtStr,
 		resource_id: IdStr,

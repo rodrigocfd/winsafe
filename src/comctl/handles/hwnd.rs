@@ -19,7 +19,7 @@ impl comctl_Hwnd for HWND {}
 /// ```
 pub trait comctl_Hwnd: Handle {
 	/// [`DefSubclassProc`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-defsubclassproc)
-	/// method.
+	/// function.
 	///
 	/// The return type is variable, being defined by the `RetType` associated
 	/// type of the [`MsgSend`](crate::prelude::MsgSend) trait. That means each
@@ -39,7 +39,7 @@ pub trait comctl_Hwnd: Handle {
 	}
 
 	/// [`RemoveWindowSubclass`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-removewindowsubclass)
-	/// method.
+	/// function.
 	fn RemoveWindowSubclass(&self,
 		subclass_func: SUBCLASSPROC, subclass_id: usize) -> SysResult<()>
 	{
@@ -55,7 +55,7 @@ pub trait comctl_Hwnd: Handle {
 	}
 
 	/// [`SetWindowSubclass`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-setwindowsubclass)
-	/// method.
+	/// function.
 	///
 	/// # Safety
 	///

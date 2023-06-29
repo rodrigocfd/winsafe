@@ -23,7 +23,7 @@ impl user_Hhook for HHOOK {}
 /// ```
 pub trait user_Hhook: Handle {
 	/// [`CallNextHookEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-callnexthookex)
-	/// method.
+	/// function.
 	fn CallNextHookEx(&self,
 		code: co::WH, wparam: usize, lparam: isize) -> isize
 	{
@@ -33,7 +33,7 @@ pub trait user_Hhook: Handle {
 	}
 
 	/// [`SetWindowsHookEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexw)
-	/// static method.
+	/// function.
 	fn SetWindowsHookEx(
 		hook_id: co::WH,
 		proc: HOOKPROC,
@@ -54,7 +54,7 @@ pub trait user_Hhook: Handle {
 	}
 
 	/// [`UnhookWindowsHookEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwindowshookex)
-	/// method.
+	/// function.
 	///
 	/// After calling this method, the handle will be invalidated and further
 	/// operations will fail with

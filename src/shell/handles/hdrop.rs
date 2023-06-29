@@ -65,7 +65,7 @@ pub trait shell_Hdrop: Handle {
 	}
 
 	/// [`DragFinish`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragfinish)
-	/// method.
+	/// function.
 	///
 	/// After calling this method, the handle will be invalidated and further
 	/// operations will fail with
@@ -79,7 +79,7 @@ pub trait shell_Hdrop: Handle {
 	}
 
 	/// [`DragQueryFile`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragqueryfilew)
-	/// method.
+	/// function.
 	///
 	/// # Safety
 	///
@@ -106,7 +106,7 @@ pub trait shell_Hdrop: Handle {
 	}
 
 	/// [`DragQueryPoint`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragquerypoint)
-	/// method.
+	/// function.
 	///
 	/// Returns the coordinates and whether the drop occurred in the client area
 	/// of the window.

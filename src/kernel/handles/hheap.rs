@@ -60,14 +60,14 @@ pub trait kernel_Hheap: Handle {
 	}
 
 	/// [`GetProcessHeap`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-getprocessheap)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn GetProcessHeap() -> SysResult<HHEAP> {
 		ptr_to_sysresult_handle(unsafe { kernel::ffi::GetProcessHeap() })
 	}
 
 	/// [`GetProcessHeaps`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-getprocessheaps)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn GetProcessHeaps() -> SysResult<Vec<HHEAP>> {
 		let num = match unsafe {
@@ -92,7 +92,7 @@ pub trait kernel_Hheap: Handle {
 	}
 
 	/// [`HeapCreate`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcreate)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn HeapCreate(
 		options: Option<co::HEAP_CREATE>,
@@ -112,7 +112,7 @@ pub trait kernel_Hheap: Handle {
 	}
 
 	/// [`HeapAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapalloc)
-	/// method.
+	/// function.
 	///
 	/// If you're allocating memory using just the default process heap – that
 	/// is, by calling
@@ -158,7 +158,7 @@ pub trait kernel_Hheap: Handle {
 	}
 
 	/// [`HeapCompact`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcompact)
-	/// method.
+	/// function.
 	fn HeapCompact(&self, flags: Option<co::HEAP_SIZE>) -> SysResult<usize> {
 		match unsafe {
 			kernel::ffi::HeapCompact(self.ptr(), flags.unwrap_or_default().raw())
@@ -169,7 +169,7 @@ pub trait kernel_Hheap: Handle {
 	}
 
 	/// [`HeapLock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heaplock)
-	/// method.
+	/// function.
 	///
 	/// You only need to call this method if the [`HHEAP`](crate::HHEAP) was
 	/// created with
@@ -208,7 +208,7 @@ pub trait kernel_Hheap: Handle {
 	}
 
 	/// [`HeapReAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heaprealloc)
-	/// method.
+	/// function.
 	///
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle, present inside
@@ -250,7 +250,7 @@ pub trait kernel_Hheap: Handle {
 	}
 
 	/// [`HeapSize`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsize)
-	/// method.
+	/// function.
 	#[must_use]
 	fn HeapSize(&self,
 		flags: Option<co::HEAP_SIZE>,
@@ -273,7 +273,7 @@ pub trait kernel_Hheap: Handle {
 	}
 
 	/// [`HeapValidate`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapvalidate)
-	/// method.
+	/// function.
 	///
 	/// # Examples
 	///
@@ -304,7 +304,7 @@ pub trait kernel_Hheap: Handle {
 	}
 
 	/// [`HeapWalk`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapwalk)
-	/// method.
+	/// function.
 	///
 	/// Prefer using
 	/// [`HHEAP::iter_walk`](crate::prelude::kernel_Hheap::iter_walk), which is

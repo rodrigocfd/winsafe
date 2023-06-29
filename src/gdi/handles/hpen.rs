@@ -28,7 +28,7 @@ impl gdi_Hpen for HPEN {}
 /// ```
 pub trait gdi_Hpen: Handle {
 	/// [`CreatePen`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpen)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreatePen(
 		style: co::PS,
@@ -44,7 +44,7 @@ pub trait gdi_Hpen: Handle {
 	}
 
 	/// [`CreatePenIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpenindirect)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreatePenIndirect(lp: &mut LOGPEN) -> SysResult<DeleteObjectGuard<HPEN>> {
 		unsafe {
@@ -55,7 +55,7 @@ pub trait gdi_Hpen: Handle {
 	}
 
 	/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn GetStockObject(sp: co::STOCK_PEN) -> SysResult<HPEN> {
 		ptr_to_sysresult_handle(unsafe { gdi::ffi::GetStockObject(sp.raw()) })

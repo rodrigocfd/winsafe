@@ -26,7 +26,7 @@ impl kernel_Htransaction for HTRANSACTION {}
 /// ```
 pub trait kernel_Htransaction: Handle {
 	/// [`CommitTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-committransaction)
-	/// method.
+	/// function.
 	fn CommitTransaction(&self) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe { kernel::ffi::CommitTransaction(self.ptr()) },
@@ -34,7 +34,7 @@ pub trait kernel_Htransaction: Handle {
 	}
 
 	/// [`CreateTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-createtransaction)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreateTransaction(
 		transaction_attributes: Option<&SECURITY_ATTRIBUTES>,
@@ -62,7 +62,7 @@ pub trait kernel_Htransaction: Handle {
 	}
 
 	/// [`GetTransactionId`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-gettransactionid)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetTransactionId(&self) -> SysResult<GUID> {
 		let mut guid = GUID::default();
@@ -77,7 +77,7 @@ pub trait kernel_Htransaction: Handle {
 	}
 
 	/// [`OpenTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-opentransaction)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn OpenTransaction(
 		desired_access: co::TRANSACTION,
@@ -98,7 +98,7 @@ pub trait kernel_Htransaction: Handle {
 	}
 
 	/// [`RollbackTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-rollbacktransaction)
-	/// method.
+	/// function.
 	fn RollbackTransaction(&self) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe { kernel::ffi::RollbackTransaction(self.ptr()) },

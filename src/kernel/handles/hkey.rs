@@ -50,7 +50,7 @@ pub trait kernel_Hkey: Handle {
 	predef_key!(PERFORMANCE_NLSTEXT, 0x8000_0060);
 
 	/// [`RegConnectRegistry`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regconnectregistryw)
-	/// static method.
+	/// function.
 	///
 	/// # Panics
 	///
@@ -85,7 +85,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegCopyTree`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcopytreew)
-	/// method.
+	/// function.
 	fn RegCopyTree(&self, sub_key: Option<&str>, dest: &HKEY) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {
@@ -99,7 +99,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegCreateKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcreatekeyexw)
-	/// method.
+	/// function.
 	#[must_use]
 	fn RegCreateKeyEx(&self,
 		sub_key: &str,
@@ -130,7 +130,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegCreateKeyTransacted`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regcreatekeytransactedw)
-	/// method.
+	/// function.
 	#[must_use]
 	fn RegCreateKeyTransacted(&self,
 		sub_key: &str,
@@ -164,7 +164,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegDeleteKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletekeyw)
-	/// method.
+	/// function.
 	fn RegDeleteKey(&self, sub_key: &str) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {
@@ -177,7 +177,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegDeleteKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletekeyexw)
-	/// method.
+	/// function.
 	///
 	/// # Panics
 	///
@@ -206,7 +206,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegDeleteKeyTransacted`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletekeytransactedw)
-	/// method.
+	/// function.
 	fn RegDeleteKeyTransacted(&self,
 		sub_key: &str,
 		access_rights: co::KEY,
@@ -228,7 +228,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegDeleteTree`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletetreew)
-	/// method.
+	/// function.
 	fn RegDeleteTree(&self, sub_key: Option<&str>) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {
@@ -241,7 +241,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegDeleteValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdeletevaluew)
-	/// method.
+	/// function.
 	fn RegDeleteValue(&self, value_name: Option<&str>) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {
@@ -254,19 +254,19 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegDisablePredefinedCache`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcache)
-	/// static method.
+	/// function.
 	fn RegDisablePredefinedCache() -> SysResult<()> {
 		error_to_sysresult(unsafe { kernel::ffi::RegDisablePredefinedCache() })
 	}
 
 	/// [`RegDisablePredefinedCacheEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcacheex)
-	/// static method.
+	/// function.
 	fn RegDisablePredefinedCacheEx() -> SysResult<()> {
 		error_to_sysresult(unsafe { kernel::ffi::RegDisablePredefinedCacheEx() })
 	}
 
 	/// [`RegDisableReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablereflectionkey)
-	/// method.
+	/// function.
 	fn RegDisableReflectionKey(&self) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe { kernel::ffi::RegDisableReflectionKey(self.ptr()) },
@@ -274,7 +274,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegEnableReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenablereflectionkey)
-	/// method.
+	/// function.
 	fn RegEnableReflectionKey(&self) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe { kernel::ffi::RegEnableReflectionKey(self.ptr()) },
@@ -345,13 +345,13 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegFlushKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regflushkey)
-	/// method.
+	/// function.
 	fn RegFlushKey(&self) -> SysResult<()> {
 		error_to_sysresult(unsafe { kernel::ffi::RegFlushKey(self.ptr()) })
 	}
 
 	/// [`RegGetValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
-	/// method.
+	/// function.
 	///
 	/// Note that this method validates some race conditions, returning
 	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID)
@@ -448,7 +448,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegLoadKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regloadkeyw)
-	/// method.
+	/// function.
 	fn RegLoadKey(&self,
 		sub_key: Option<&str>, file_path: &str) -> SysResult<()>
 	{
@@ -464,7 +464,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegOpenCurrentUser`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopencurrentuser)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn RegOpenCurrentUser(
 		access_rights: co::KEY) -> SysResult<RegCloseKeyGuard>
@@ -478,7 +478,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegOpenKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeyexw)
-	/// method.
+	/// function.
 	///
 	/// # Examples
 	///
@@ -515,7 +515,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegOpenKeyTransacted`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regopenkeytransactedw)
-	/// method.
+	/// function.
 	#[must_use]
 	fn RegOpenKeyTransacted(&self,
 		sub_key: &str,
@@ -541,7 +541,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegQueryInfoKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryinfokeyw)
-	/// method.
+	/// function.
 	fn RegQueryInfoKey(&self,
 		mut class: Option<&mut WString>,
 		num_sub_keys: Option<&mut u32>,
@@ -609,7 +609,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegQueryMultipleValues`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regquerymultiplevaluesw)
-	/// method.
+	/// function.
 	///
 	/// This method is a multi-value version of
 	/// [`HKEY::RegQueryValueEx`](crate::prelude::kernel_Hkey::RegQueryValueEx).
@@ -731,7 +731,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegQueryReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryreflectionkey)
-	/// method.
+	/// function.
 	#[must_use]
 	fn RegQueryReflectionKey(&self) -> SysResult<bool> {
 		let mut is_disabled: BOOL = 0;
@@ -743,7 +743,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegQueryValueEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryvalueexw)
-	/// method.
+	/// function.
 	///
 	/// This method is a single-value version of
 	/// [`HKEY::RegQueryMultipleValues`](crate::prelude::kernel_Hkey::RegQueryMultipleValues).
@@ -841,7 +841,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegRenameKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regrenamekey)
-	/// method.
+	/// function.
 	fn RegRenameKey(&self,
 		sub_key_name: &str, new_key_name: &str) -> SysResult<()>
 	{
@@ -857,7 +857,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegReplaceKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regreplacekeyw)
-	/// method.
+	/// function.
 	fn RegReplaceKey(&self,
 		sub_key: Option<&str>,
 		new_src_file: &str,
@@ -877,7 +877,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegRestoreKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regrestorekeyw)
-	/// method.
+	/// function.
 	fn RegRestoreKey(&self,
 		file_path: &str, flags: co::REG_RESTORE) -> SysResult<()>
 	{
@@ -893,7 +893,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegSaveKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsavekeyw)
-	/// method.
+	/// function.
 	fn RegSaveKey(&self,
 		dest_file_path: &str,
 		security_attributes: Option<&SECURITY_ATTRIBUTES>,
@@ -911,7 +911,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegSaveKeyEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsavekeyexw)
-	/// method.
+	/// function.
 	fn RegSaveKeyEx(&self,
 		dest_file_path: &str,
 		security_attributes: Option<&SECURITY_ATTRIBUTES>,
@@ -931,7 +931,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegSetKeyValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetkeyvaluew)
-	/// method.
+	/// function.
 	///
 	/// If the value doesn't exist, if will be created. If new type is different
 	/// from current type, new type will take over.
@@ -973,7 +973,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegSetValueEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw)
-	/// method.
+	/// function.
 	///
 	/// If the value doesn't exist, if will be created. If new type is different
 	/// from current type, new type will prevail.
@@ -1017,7 +1017,7 @@ pub trait kernel_Hkey: Handle {
 	}
 
 	/// [`RegUnLoadKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regunloadkeyw)
-	/// method.
+	/// function.
 	fn RegUnLoadKey(&self, sub_key: Option<&str>) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {

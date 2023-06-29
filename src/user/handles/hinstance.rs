@@ -21,7 +21,7 @@ impl user_Hinstance for HINSTANCE {}
 /// ```
 pub trait user_Hinstance: Handle {
 	/// [`CreateDialogParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdialogparamw)
-	/// method.
+	/// function.
 	///
 	/// # Safety
 	///
@@ -47,7 +47,7 @@ pub trait user_Hinstance: Handle {
 	}
 
 	/// [`DialogBoxParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dialogboxparamw)
-	/// method.
+	/// function.
 	///
 	/// # Safety
 	///
@@ -74,7 +74,7 @@ pub trait user_Hinstance: Handle {
 	}
 
 	/// [`GetClassInfoEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclassinfoexw)
-	/// method.
+	/// function.
 	///
 	/// # Examples
 	///
@@ -105,7 +105,7 @@ pub trait user_Hinstance: Handle {
 	}
 
 	/// [`LoadAccelerators`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
-	/// method.
+	/// function.
 	#[must_use]
 	fn LoadAccelerators(&self, table_name: IdStr) -> SysResult<HACCEL> {
 		ptr_to_sysresult_handle(
@@ -116,7 +116,7 @@ pub trait user_Hinstance: Handle {
 	}
 
 	/// [`LoadCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadcursorw)
-	/// method.
+	/// function.
 	///
 	/// # Examples
 	///
@@ -142,7 +142,7 @@ pub trait user_Hinstance: Handle {
 	}
 
 	/// [`LoadIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadiconw)
-	/// method.
+	/// function.
 	///
 	/// # Examples
 	///
@@ -166,7 +166,7 @@ pub trait user_Hinstance: Handle {
 	}
 
 	/// [`LoadMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenuw)
-	/// method.
+	/// function.
 	#[must_use]
 	fn LoadMenu(&self, resource_id: IdStr) -> SysResult<HMENU> {
 		ptr_to_sysresult_handle(
@@ -175,7 +175,7 @@ pub trait user_Hinstance: Handle {
 	}
 
 	/// [`LoadString`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringw)
-	/// method.
+	/// function.
 	#[must_use]
 	fn LoadString(&self, id: u16) -> SysResult<String> {
 		let mut pdata: *const u16 = std::ptr::null_mut();

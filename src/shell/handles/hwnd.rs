@@ -18,13 +18,13 @@ impl shell_Hwnd for HWND {}
 /// ```
 pub trait shell_Hwnd: Handle {
 	/// [`DragAcceptFiles`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragacceptfiles)
-	/// method.
+	/// function.
 	fn DragAcceptFiles(&self, accept: bool) {
 		unsafe { shell::ffi::DragAcceptFiles(self.ptr(), accept as _); }
 	}
 
 	/// [`ShellAbout`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellaboutw)
-	/// method.
+	/// function.
 	fn ShellAbout(&self,
 		title_bar: &str,
 		first_line: Option<&str>,
@@ -50,7 +50,7 @@ pub trait shell_Hwnd: Handle {
 	}
 
 	/// [`ShellExecute`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutew)
-	/// method.
+	/// function.
 	fn ShellExecute(&self,
 		operation: &str,
 		file: &str,

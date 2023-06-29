@@ -27,7 +27,7 @@ impl kernel_Hfilemap for HFILEMAP {}
 /// ```
 pub trait kernel_Hfilemap: Handle {
 	/// [`MapViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile)
-	/// method.
+	/// function.
 	#[must_use]
 	fn MapViewOfFile(&self,
 		desired_access: co::FILE_MAP,

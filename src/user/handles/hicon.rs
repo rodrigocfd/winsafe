@@ -23,7 +23,7 @@ impl user_Hicon for HICON {}
 /// ```
 pub trait user_Hicon: Handle {
 	/// [`CopyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-copyicon)
-	/// method.
+	/// function.
 	#[must_use]
 	fn CopyIcon(&self) -> SysResult<DestroyIconGuard> {
 		unsafe {

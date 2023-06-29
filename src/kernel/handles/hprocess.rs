@@ -30,7 +30,7 @@ impl kernel_Hprocess for HPROCESS {}
 /// ```
 pub trait kernel_Hprocess: Handle {
 	/// [`CheckRemoteDebuggerPresent`](https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-checkremotedebuggerpresent)
-	/// method.
+	/// function.
 	#[must_use]
 	fn CheckRemoteDebuggerPresent(&self) -> SysResult<bool> {
 		let mut present: BOOL = 0;
@@ -42,7 +42,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`CreateProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreateProcess(
 		application_name: Option<&str>,
@@ -84,7 +84,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`FlushInstructionCache`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushinstructioncache)
-	/// method.
+	/// function.
 	fn FlushInstructionCache(&self,
 		base_address: *mut std::ffi::c_void, size: usize) -> SysResult<()>
 	{
@@ -98,14 +98,14 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`GetCurrentProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocess)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn GetCurrentProcess() -> HPROCESS {
 		HPROCESS(unsafe { kernel::ffi::GetCurrentProcess() })
 	}
 
 	/// [`GetExitCodeProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetExitCodeProcess(&self) -> SysResult<u32> {
 		let mut exit_code = u32::default();
@@ -117,7 +117,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`GetGuiResources`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getguiresources)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetGuiResources(&self, flags: co::GR) -> SysResult<u32> {
 		match unsafe {
@@ -129,7 +129,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`GetPriorityClass`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getpriorityclass)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetPriorityClass(&self) -> SysResult<co::PRIORITY_CLASS> {
 		match unsafe { kernel::ffi::GetPriorityClass(self.ptr()) } {
@@ -139,7 +139,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`GetProcessHandleCount`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesshandlecount)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetProcessHandleCount(&self) -> SysResult<u32> {
 		let mut count = u32::default();
@@ -151,7 +151,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`GetProcessId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetProcessId(&self) -> SysResult<u32> {
 		match unsafe { kernel::ffi::GetProcessId(self.ptr()) } {
@@ -161,7 +161,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`GetProcessTimes`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes)
-	/// method.
+	/// function.
 	fn GetProcessTimes(&self,
 		creation: &mut FILETIME,
 		exit: &mut FILETIME,
@@ -183,7 +183,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`IsProcessCritical`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-isprocesscritical)
-	/// method.
+	/// function.
 	#[must_use]
 	fn IsProcessCritical(&self) -> SysResult<bool> {
 		let mut critical: BOOL = 0;
@@ -195,7 +195,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`IsWow64Process`](https://learn.microsoft.com/en-us/windows/win32/api/wow64apiset/nf-wow64apiset-iswow64process)
-	/// method.
+	/// function.
 	#[must_use]
 	fn IsWow64Process(&self) -> SysResult<bool> {
 		let mut wow64: BOOL = 0;
@@ -206,7 +206,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`OpenProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocess)
-	/// static method.
+	/// function.
 	///
 	/// This method will return
 	/// [`ERROR::INVALID_PARAMETER`](crate::co::ERROR::INVALID_PARAMETER) if you
@@ -230,7 +230,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`OpenProcessToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken)
-	/// method.
+	/// function.
 	///
 	/// # Examples
 	///
@@ -259,7 +259,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`QueryFullProcessImageName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew)
-	/// method.
+	/// function.
 	#[must_use]
 	fn QueryFullProcessImageName(&self,
 		flags: co::PROCESS_NAME) -> SysResult<String>
@@ -280,7 +280,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`QueryProcessAffinityUpdateMode`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-queryprocessaffinityupdatemode)
-	/// method.
+	/// function.
 	#[must_use]
 	fn QueryProcessAffinityUpdateMode(&self) -> SysResult<co::PROCESS_AFFINITY> {
 		let mut affinity = co::PROCESS_AFFINITY::default();
@@ -295,7 +295,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`SetPriorityClass`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setpriorityclass)
-	/// method.
+	/// function.
 	fn SetPriorityClass(&self,
 		prority_class: co::PRIORITY_CLASS) -> SysResult<()>
 	{
@@ -307,7 +307,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`SetProcessAffinityUpdateMode`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setprocessaffinityupdatemode)
-	/// method.
+	/// function.
 	fn SetProcessAffinityUpdateMode(&self,
 		flags: co::PROCESS_AFFINITY) -> SysResult<()>
 	{
@@ -319,7 +319,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`SetProcessPriorityBoost`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setprocesspriorityboost)
-	/// method.
+	/// function.
 	fn SetProcessPriorityBoost(&self,
 		disable_priority_boost: bool) -> SysResult<()>
 	{
@@ -334,7 +334,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`TerminateProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess)
-	/// method.
+	/// function.
 	fn TerminateProcess(&self, exit_code: u32) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe { kernel::ffi::TerminateProcess(self.ptr(), exit_code) },
@@ -342,7 +342,7 @@ pub trait kernel_Hprocess: Handle {
 	}
 
 	/// [`WaitForSingleObject`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)
-	/// method.
+	/// function.
 	fn WaitForSingleObject(&self,
 		milliseconds: Option<u32>) -> SysResult<co::WAIT>
 	{

@@ -29,7 +29,7 @@ impl kernel_Hglobal for HGLOBAL {}
 /// ```
 pub trait kernel_Hglobal: Handle {
 	/// [`GlobalAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn GlobalAlloc(
 		flags: Option<co::GMEM>, num_bytes: usize) -> SysResult<GlobalFreeGuard>
@@ -42,7 +42,7 @@ pub trait kernel_Hglobal: Handle {
 	}
 
 	/// [`GlobalFlags`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalflags)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GlobalFlags(&self) -> SysResult<co::GMEM> {
 		match unsafe { kernel::ffi::GlobalFlags(self.ptr()) } {
@@ -52,7 +52,7 @@ pub trait kernel_Hglobal: Handle {
 	}
 
 	/// [`GlobalLock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globallock)
-	/// method.
+	/// function.
 	///
 	/// Calls [`GlobalSize`](crate::prelude::kernel_Hglobal::GlobalSize) to
 	/// retrieve the size of the memory block.
@@ -88,7 +88,7 @@ pub trait kernel_Hglobal: Handle {
 	}
 
 	/// [`GlobalReAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalrealloc)
-	/// method.
+	/// function.
 	///
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
@@ -107,7 +107,7 @@ pub trait kernel_Hglobal: Handle {
 	}
 
 	/// [`GlobalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GlobalSize(&self) -> SysResult<usize> {
 		match unsafe { kernel::ffi::GlobalSize(self.ptr()) } {

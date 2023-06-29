@@ -22,7 +22,7 @@ impl gdi_Hbitmap for HBITMAP {}
 /// ```
 pub trait gdi_Hbitmap: Handle {
 	/// [`CreateBitmap`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbitmap)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreateBitmap(
 		sz: SIZE,
@@ -40,7 +40,7 @@ pub trait gdi_Hbitmap: Handle {
 	}
 
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
-	/// method.
+	/// function.
 	///
 	/// # Examples
 	///

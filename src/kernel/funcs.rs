@@ -1009,7 +1009,7 @@ pub fn GlobalMemoryStatusEx(msx: &mut MEMORYSTATUSEX) -> SysResult<()> {
 }
 
 /// [`HIBYTE`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632656(v=vs.85))
-/// function. Originally a macro.
+/// macro.
 #[must_use]
 pub const fn HIBYTE(v: u16) -> u8 {
 	(v >> 8 & 0xff) as _
@@ -1022,7 +1022,7 @@ pub const fn HIDWORD(v: u64) -> u32 {
 }
 
 /// [`HIWORD`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632657(v=vs.85))
-/// function. Originally a macro.
+/// macro.
 #[must_use]
 pub const fn HIWORD(v: u32) -> u16 {
 	(v >> 16 & 0xffff) as _
@@ -1242,7 +1242,7 @@ pub fn IsWindowsVistaOrGreater() -> SysResult<bool> {
 }
 
 /// [`LOBYTE`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632658(v=vs.85))
-/// function. Originally a macro.
+/// macro.
 #[must_use]
 pub const fn LOBYTE(v: u16) -> u8 {
 	(v & 0xff) as _
@@ -1426,7 +1426,7 @@ pub fn LookupPrivilegeValue(
 }
 
 /// [`LOWORD`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632659(v=vs.85))
-/// function. Originally a macro.
+/// macro.
 #[must_use]
 pub const fn LOWORD(v: u32) -> u16 {
 	(v & 0xffff) as _
@@ -1450,7 +1450,7 @@ pub const fn MAKEQWORD(lo: u32, hi: u32) -> u64 {
 }
 
 /// [`MAKEWORD`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632663(v=vs.85))
-/// function. Originally a macro.
+/// macro.
 #[must_use]
 pub const fn MAKEWORD(lo: u8, hi: u8) -> u16 {
 	(lo as u16 & 0xff) | ((hi as u16 & 0xff) << 8) as u16

@@ -32,7 +32,7 @@ impl kernel_Hfile for HFILE {}
 /// ```
 pub trait kernel_Hfile: Handle {
 	/// [`CreateFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew)
-	/// static method.
+	/// function.
 	///
 	/// The error code is also returned because it can carry information even if
 	/// the file is successfully open.
@@ -115,7 +115,7 @@ pub trait kernel_Hfile: Handle {
 	}
 
 	/// [`CreateFileMapping`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw)
-	/// method.
+	/// function.
 	///
 	/// Unless you need something specific, consider using the
 	/// [`FileMapped`](crate::FileMapped) high-level abstraction.
@@ -141,7 +141,7 @@ pub trait kernel_Hfile: Handle {
 	}
 
 	/// [`GetFileInformationByHandle`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)
-	/// method.
+	/// function.
 	fn GetFileInformationByHandle(&self,
 		fi: &mut BY_HANDLE_FILE_INFORMATION) -> SysResult<()>
 	{
@@ -155,7 +155,7 @@ pub trait kernel_Hfile: Handle {
 	}
 
 	/// [`GetFileSizeEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesizeex)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetFileSizeEx(&self) -> SysResult<u64> {
 		let mut sz_buf = i64::default();
@@ -165,7 +165,7 @@ pub trait kernel_Hfile: Handle {
 	}
 
 	/// [`GetFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletime)
-	/// method.
+	/// function.
 	fn GetFileTime(&self,
 		creation_time: Option<&mut FILETIME>,
 		last_access_time: Option<&mut FILETIME>,
@@ -185,7 +185,7 @@ pub trait kernel_Hfile: Handle {
 	}
 
 	/// [`GetFileType`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetFileType(&self) -> SysResult<co::FILE_TYPE> {
 		match unsafe {
@@ -200,7 +200,7 @@ pub trait kernel_Hfile: Handle {
 	}
 
 	/// [`LockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
-	/// method.
+	/// function.
 	///
 	/// In the original C implementation, you must call
 	/// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-unlockfile)
@@ -248,7 +248,7 @@ pub trait kernel_Hfile: Handle {
 	}
 
 	/// [`ReadFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
-	/// method.
+	/// function.
 	///
 	/// Returns the number of bytes read.
 	fn ReadFile(&self,
@@ -269,13 +269,13 @@ pub trait kernel_Hfile: Handle {
 	}
 
 	/// [`SetEndOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setendoffile)
-	/// method.
+	/// function.
 	fn SetEndOfFile(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { kernel::ffi::SetEndOfFile(self.ptr()) })
 	}
 
 	/// [`SetFilePointerEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfilepointerex)
-	/// method.
+	/// function.
 	fn SetFilePointerEx(&self,
 		distance_to_move: i64,
 		move_method: co::FILE_STARTING_POINT,
@@ -296,7 +296,7 @@ pub trait kernel_Hfile: Handle {
 	}
 
 	/// [`SetFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfiletime)
-	/// method.
+	/// function.
 	fn SetFileTime(&self,
 		creation_time: Option<&FILETIME>,
 		last_access_time: Option<&FILETIME>,
@@ -316,7 +316,7 @@ pub trait kernel_Hfile: Handle {
 	}
 
 	/// [`WriteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
-	/// method.
+	/// function.
 	///
 	/// Returns the number of bytes written.
 	fn WriteFile(&self,

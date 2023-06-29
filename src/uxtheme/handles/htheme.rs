@@ -24,7 +24,7 @@ impl uxtheme_Htheme for HTHEME {}
 /// ```
 pub trait uxtheme_Htheme: Handle {
 	/// [`DrawThemeBackground`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-drawthemebackground)
-	/// method.
+	/// function.
 	fn DrawThemeBackground(&self,
 		hdc: &HDC, part_state: co::VS, rc: RECT, rc_clip: RECT) -> HrResult<()>
 	{
@@ -43,14 +43,14 @@ pub trait uxtheme_Htheme: Handle {
 	}
 
 	/// [`GetThemeAppProperties`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemeappproperties)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn GetThemeAppProperties() -> co::STAP {
 		unsafe { co::STAP::from_raw(uxtheme::ffi::GetThemeAppProperties()) }
 	}
 
 	/// [`GetThemeBackgroundContentRect`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundcontentrect)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetThemeBackgroundContentRect(&self,
 		hdc: &HDC, part_state: co::VS, bounds: RECT) -> HrResult<RECT>
@@ -72,7 +72,7 @@ pub trait uxtheme_Htheme: Handle {
 	}
 
 	/// [`GetThemeBackgroundExtent`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundextent)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetThemeBackgroundExtent(&self,
 		hdc: &HDC, part_state: co::VS, rc_content: RECT) -> HrResult<RECT>
@@ -94,7 +94,7 @@ pub trait uxtheme_Htheme: Handle {
 	}
 
 	/// [`GetThemeBackgroundRegion`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundregion)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetThemeBackgroundRegion(&self,
 		hdc: &HDC,
@@ -118,7 +118,7 @@ pub trait uxtheme_Htheme: Handle {
 	}
 
 	/// [`GetThemeColor`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemecolor)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetThemeColor(&self,
 		part_state: co::VS, prop: co::TMT) -> HrResult<COLORREF>
@@ -138,7 +138,7 @@ pub trait uxtheme_Htheme: Handle {
 	}
 
 	/// [`IsThemeBackgroundPartiallyTransparent`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemebackgroundpartiallytransparent)
-	/// method.
+	/// function.
 	#[must_use]
 	fn IsThemeBackgroundPartiallyTransparent(&self,
 		part_state: co::VS) -> bool
@@ -150,7 +150,7 @@ pub trait uxtheme_Htheme: Handle {
 	}
 
 	/// [`IsThemePartDefined`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemepartdefined)
-	/// method.
+	/// function.
 	#[must_use]
 	fn IsThemePartDefined(&self, part_state: co::VS) -> bool {
 		unsafe {

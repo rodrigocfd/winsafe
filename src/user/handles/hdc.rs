@@ -24,7 +24,7 @@ impl user_Hdc for HDC {}
 /// ```
 pub trait user_Hdc: Handle {
 	/// [`DrawFocusRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawfocusrect)
-	/// method.
+	/// function.
 	fn DrawFocusRect(&self, rect: &RECT) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
@@ -34,7 +34,7 @@ pub trait user_Hdc: Handle {
 	}
 
 	/// [`DrawText`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtextw)
-	/// method.
+	/// function.
 	fn DrawText(&self,
 		text: &str, bounds: &RECT, format: co::DT) -> SysResult<i32>
 	{
@@ -54,7 +54,7 @@ pub trait user_Hdc: Handle {
 	}
 
 	/// [`DrawTextExW`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtextexw)
-	/// method.
+	/// function.
 	fn DrawTextEx(&self,
 		text: &str,
 		bounds: &RECT,
@@ -79,7 +79,7 @@ pub trait user_Hdc: Handle {
 	}
 
 	/// [`EnumDisplayMonitors`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaymonitors)
-	/// method.
+	/// function.
 	///
 	/// # Examples
 	///
@@ -118,7 +118,7 @@ pub trait user_Hdc: Handle {
 	}
 
 	/// [`InvertRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invertrect)
-	/// method.
+	/// function.
 	fn InvertRect(&self, rc: &RECT) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe { user::ffi::InvertRect(self.ptr(), rc as *const _ as _) },
@@ -126,13 +126,13 @@ pub trait user_Hdc: Handle {
 	}
 
 	/// [`PaintDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-paintdesktop)
-	/// method.
+	/// function.
 	fn PaintDesktop(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { user::ffi::PaintDesktop(self.ptr()) })
 	}
 
 	/// [`WindowFromDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfromdc)
-	/// method.
+	/// function.
 	#[must_use]
 	fn WindowFromDC(&self) -> Option<HWND> {
 		ptr_to_option_handle(unsafe { user::ffi::WindowFromDC(self.ptr()) })

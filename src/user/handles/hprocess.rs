@@ -17,7 +17,7 @@ impl user_Hprocess for HPROCESS {}
 /// ```
 pub trait user_Hprocess: Handle {
 	/// [`SetUserObjectInformation`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setuserobjectinformationw)
-	/// method.
+	/// function.
 	///
 	/// # Safety
 	///

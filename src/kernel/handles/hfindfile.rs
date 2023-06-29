@@ -23,7 +23,7 @@ impl kernel_Hfindfile for HFINDFILE {}
 /// ```
 pub trait kernel_Hfindfile: Handle {
 	/// [`FindFirstFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew)
-	/// static method.
+	/// function.
 	///
 	/// This method is rather tricky, consider using
 	/// [`path::dir_list`](crate::path::dir_list).
@@ -54,7 +54,7 @@ pub trait kernel_Hfindfile: Handle {
 	}
 
 	/// [`FindNextFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findnextfilew)
-	/// method.
+	/// function.
 	///
 	/// This method is rather tricky, consider using
 	/// [`path::dir_list`](crate::path::dir_list).

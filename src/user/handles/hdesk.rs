@@ -25,7 +25,7 @@ impl user_Hdesk for HDESK {}
 /// ```
 pub trait user_Hdesk: Handle {
 	/// [`CreateDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdesktopw)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreateDesktop(
 		name: &str,
@@ -49,7 +49,7 @@ pub trait user_Hdesk: Handle {
 	}
 
 	/// [`CreateDesktopEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdesktopexw)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn CreateDesktopEx(
 		name: &str,
@@ -76,7 +76,7 @@ pub trait user_Hdesk: Handle {
 	}
 
 	/// [`GetThreadDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getthreaddesktop)
-	/// static method.
+	/// function.
 	///
 	/// # Examples
 	///
@@ -97,7 +97,7 @@ pub trait user_Hdesk: Handle {
 	}
 
 	/// [`OpenDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-opendesktopw)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn OpenDesktop(
 		name: &str,
@@ -119,7 +119,7 @@ pub trait user_Hdesk: Handle {
 	}
 
 	/// [`OpenInputDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-openinputdesktop)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn OpenInputDesktop(
 		flags: Option<co::DF>,
@@ -139,13 +139,13 @@ pub trait user_Hdesk: Handle {
 	}
 
 	/// [`SetThreadDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setthreaddesktop)
-	/// method.
+	/// function.
 	fn SetThreadDesktop(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { user::ffi::SetThreadDesktop(self.ptr()) })
 	}
 
 	/// [`SwitchDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-switchdesktop)
-	/// method.
+	/// function.
 	fn SwitchDesktop(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { user::ffi::SwitchDesktop(self.ptr()) })
 	}

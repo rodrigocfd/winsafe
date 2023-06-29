@@ -26,7 +26,7 @@ impl comctl_Himagelist for HIMAGELIST {}
 /// ```
 pub trait comctl_Himagelist: Handle {
 	/// [`ImageList_Add`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_add)
-	/// method.
+	/// function.
 	///
 	/// A copy of the bitmap is made and stored in the image list, so you're
 	/// free to release the original bitmap.
@@ -46,7 +46,7 @@ pub trait comctl_Himagelist: Handle {
 	}
 
 	/// [`ImageList_AddIcon`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_addicon)
-	/// method.
+	/// function.
 	///
 	/// A copy of the icon is made and stored in the image list, so you're free
 	/// to release the original icon.
@@ -55,7 +55,7 @@ pub trait comctl_Himagelist: Handle {
 	}
 
 	/// [`ImageList_AddMasked`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_addmasked)
-	/// method.
+	/// function.
 	///
 	/// A copy of the bitmap is made and stored in the image list, so you're
 	/// free to release the original bitmap.
@@ -73,7 +73,7 @@ pub trait comctl_Himagelist: Handle {
 	}
 
 	/// [`ImageList_BeginDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_begindrag)
-	/// method.
+	/// function.
 	///
 	/// In the original C implementation, you must call
 	/// [`ImageList_EndDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_enddrag)
@@ -113,7 +113,7 @@ pub trait comctl_Himagelist: Handle {
 	}
 
 	/// [`ImageList_Create`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_create)
-	/// static method.
+	/// function.
 	///
 	/// # Examples
 	///
@@ -146,7 +146,7 @@ pub trait comctl_Himagelist: Handle {
 	}
 
 	/// [`ImageList_Destroy`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_destroy)
-	/// method.
+	/// function.
 	///
 	/// After calling this method, the handle will be invalidated and further
 	/// operations will fail with
@@ -160,7 +160,7 @@ pub trait comctl_Himagelist: Handle {
 	}
 
 	/// [`ImageList_DragMove`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragmove)
-	/// method.
+	/// function.
 	fn DragMove(&self, x: i32, y: i32) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe { comctl::ffi::ImageList_DragMove(self.ptr(), x, y) },
@@ -168,7 +168,7 @@ pub trait comctl_Himagelist: Handle {
 	}
 
 	/// [`ImageList_DragShowNolock`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragshownolock)
-	/// static method.
+	/// function.
 	fn DragShowNolock(show: bool) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe { comctl::ffi::ImageList_DragShowNolock(show as _) },
@@ -176,7 +176,7 @@ pub trait comctl_Himagelist: Handle {
 	}
 
 	/// [`ImageList_GetIconSize`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_geticonsize)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetIconSize(&self) -> SysResult<SIZE> {
 		let mut sz = SIZE::default();
@@ -190,14 +190,14 @@ pub trait comctl_Himagelist: Handle {
 	}
 
 	/// [`ImageList_GetImageCount`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_getimagecount)
-	/// method.
+	/// function.
 	#[must_use]
 	fn GetImageCount(&self) -> u32 {
 		unsafe { comctl::ffi::ImageList_GetImageCount(self.ptr()) as _ }
 	}
 
 	/// [`ImageList_Remove`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_remove)
-	/// method.
+	/// function.
 	fn Remove(&self, index: Option<u32>) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
@@ -209,9 +209,9 @@ pub trait comctl_Himagelist: Handle {
 	}
 
 	/// [`ImageList_ReplaceIcon`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_replaceicon)
-	/// method.
+	/// function.
 	///
-	/// **Note:** A copy of the bitmap is made, and this copy is then stored.
+	/// Note that a copy of the bitmap is made, and this copy is then stored.
 	/// You're still responsible for freeing the original bitmap.
 	fn ReplaceIcon(&self,
 		index: Option<u32>, hicon_new: &HICON) -> SysResult<u32>
@@ -229,7 +229,7 @@ pub trait comctl_Himagelist: Handle {
 	}
 
 	/// [`ImageList_SetImageCount`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_setimagecount)
-	/// methods.
+	/// function.
 	fn SetImageCount(&self, new_count: u32) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {

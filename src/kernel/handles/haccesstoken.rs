@@ -26,7 +26,7 @@ impl kernel_Haccesstoken for HACCESSTOKEN {}
 /// ```
 pub trait kernel_Haccesstoken: Handle {
 	/// [`AdjustTokenPrivileges`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-adjusttokenprivileges)
-	/// method.
+	/// function.
 	///
 	/// # Examples
 	///
@@ -71,7 +71,7 @@ pub trait kernel_Haccesstoken: Handle {
 	}
 
 	/// [`CheckTokenCapability`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokencapability)
-	/// method.
+	/// function.
 	#[must_use]
 	fn CheckTokenCapability(&self,
 		capability_sid_to_check: &SID) -> SysResult<bool>
@@ -89,7 +89,7 @@ pub trait kernel_Haccesstoken: Handle {
 	}
 
 	/// [`CheckTokenMembership`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokenmembership)
-	/// method.
+	/// function.
 	#[must_use]
 	fn CheckTokenMembership(&self, sid_to_check: &SID) -> SysResult<bool> {
 		let mut is_member: BOOL = 0;
@@ -105,7 +105,7 @@ pub trait kernel_Haccesstoken: Handle {
 	}
 
 	/// [`DuplicateToken`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-duplicatetoken)
-	/// method.
+	/// function.
 	#[must_use]
 	fn DuplicateToken(&self,
 		level: co::SECURITY_IMPERSONATION,
@@ -124,21 +124,21 @@ pub trait kernel_Haccesstoken: Handle {
 	}
 
 	/// [`GetCurrentProcessToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocesstoken)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn GetCurrentProcessToken() -> HACCESSTOKEN {
 		HACCESSTOKEN(unsafe { kernel::ffi::GetCurrentProcessToken() })
 	}
 
 	/// [`GetCurrentThreadEffectiveToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadeffectivetoken)
-	/// static method.
+	/// function.
 	#[must_use]
 	fn GetCurrentThreadEffectiveToken() -> HACCESSTOKEN {
 		HACCESSTOKEN(unsafe { kernel::ffi::GetCurrentThreadEffectiveToken() })
 	}
 
 	/// [`IsTokenRestricted`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-istokenrestricted)
-	/// method.
+	/// function.
 	#[must_use]
 	fn IsTokenRestricted(&self) -> SysResult<bool> {
 		match unsafe { kernel::ffi::IsTokenRestricted(self.ptr()) } {

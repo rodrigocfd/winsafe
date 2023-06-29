@@ -24,7 +24,7 @@ impl kernel_Hpipe for HPIPE {}
 /// ```
 pub trait kernel_Hpipe: Handle {
 	/// [`CreatePipe`](https://learn.microsoft.com/en-us/windows/win32/api/namedpipeapi/nf-namedpipeapi-createpipe)
-	/// static method.
+	/// function.
 	///
 	/// Returns handles to the read and write pipes.
 	#[must_use]
@@ -47,7 +47,7 @@ pub trait kernel_Hpipe: Handle {
 	}
 
 	/// [`ReadFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
-	/// method.
+	/// function.
 	///
 	/// Returns the number of bytes read.
 	fn ReadFile(&self,
@@ -58,7 +58,7 @@ pub trait kernel_Hpipe: Handle {
 	}
 
 	/// [`WriteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
-	/// method.
+	/// function.
 	fn WriteFile(&self,
 		data: &[u8], overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
 	{

@@ -18,7 +18,7 @@ impl ole_Hwnd for HWND {}
 /// ```
 pub trait ole_Hwnd: Handle {
 	/// [`RegisterDragDrop`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-registerdragdrop)
-	/// method.
+	/// function.
 	fn RegisterDragDrop(&self,
 		drop_target: &impl ole_IDropTarget) -> HrResult<()>
 	{
@@ -30,7 +30,7 @@ pub trait ole_Hwnd: Handle {
 	}
 
 	/// [`RevokeDragDrop`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-revokedragdrop)
-	/// method.
+	/// function.
 	fn RevokeDragDrop(&self) -> HrResult<()> {
 		ok_to_hrresult(unsafe { ole::ffi::RevokeDragDrop(self.ptr()) })
 	}

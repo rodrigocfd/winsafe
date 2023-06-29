@@ -24,7 +24,7 @@ impl user_Hdwp for HDWP {}
 /// ```
 pub trait user_Hdwp: Handle {
 	/// [`BeginDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-begindeferwindowpos)
-	/// static method.
+	/// function.
 	///
 	/// In the original C implementation, `BeginDeferWindowPos` returns a handle
 	/// which must be passed to
@@ -48,7 +48,7 @@ pub trait user_Hdwp: Handle {
 	}
 
 	/// [`DeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-deferwindowpos)
-	/// method.
+	/// function.
 	///
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
