@@ -135,7 +135,7 @@ impl DlgBase {
 
 		// Execute privileged closures.
 		let ref_self = unsafe { &mut *ptr_self };
-		ref_self.base.process_privileged_messages(wm_any)?;
+		let at_least_one_privileged = ref_self.base.process_privileged_messages(wm_any)?;
 
 		if wm_any.msg_id == co::WM::INITDIALOG {
 			// Child controls are created in privileged closures, so we set the
@@ -165,7 +165,11 @@ impl DlgBase {
 		Ok(match process_result {
 			ProcessResult::HandledWithRet(res) => res,
 			ProcessResult::HandledWithoutRet => 1, // TRUE
-			ProcessResult::NotHandled => 0, // FALSE
+			ProcessResult::NotHandled => if at_least_one_privileged {
+				1 // TRUE
+			} else {
+				0 // FALSE
+			},
 		})
 	}
 }

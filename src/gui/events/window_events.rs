@@ -73,13 +73,18 @@ impl WindowEvents {
 
 	/// Searches for all user functions for the given message, and runs all of
 	/// them, discarding the results.
+	///
+	/// Returns `true` if at least one message was processed.
 	pub(in crate::gui) fn process_all_messages(&self,
-		wm_any: WndMsg) -> AnyResult<()>
+		wm_any: WndMsg) -> AnyResult<bool>
 	{
+		let mut at_least_one = false;
 		let msgs = unsafe { &mut *self.msgs.get() };
+
 		for func in msgs.find_all(wm_any.msg_id) {
+			at_least_one = true;
 			func(wm_any)?; // execute each stored function
 		}
-		Ok(())
+		Ok(at_least_one)
 	}
 }

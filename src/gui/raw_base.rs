@@ -288,7 +288,7 @@ impl RawBase {
 
 		// Execute privileged closures, discard results.
 		let ref_self = unsafe { &mut *ptr_self };
-		ref_self.base.process_privileged_messages(wm_any)?;
+		let at_least_one_privileged = ref_self.base.process_privileged_messages(wm_any)?;
 
 		// Execute user closure, if any.
 		let process_result = ref_self.base.process_user_message(wm_any)?;
@@ -302,7 +302,11 @@ impl RawBase {
 		Ok(match process_result {
 			ProcessResult::HandledWithRet(res) => res,
 			ProcessResult::HandledWithoutRet => 0,
-			ProcessResult::NotHandled => hwnd.DefWindowProc(wm_any).into(),
+			ProcessResult::NotHandled => if at_least_one_privileged {
+				0
+			} else {
+				hwnd.DefWindowProc(wm_any).into()
+			},
 		})
 	}
 }

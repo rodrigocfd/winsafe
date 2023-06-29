@@ -134,15 +134,20 @@ impl WindowEventsAll {
 
 	/// Searches for all user functions for the given message, and runs all of
 	/// them, discarding the results.
+	///
+	/// Returns `true` if at least one message was processed.
 	pub(in crate::gui) fn process_all_messages(&self,
-		wm_any: WndMsg) -> AnyResult<()>
+		wm_any: WndMsg) -> AnyResult<bool>
 	{
-		Ok(match wm_any.msg_id {
+		let mut at_least_one = false;
+
+		match wm_any.msg_id {
 			co::WM::NOTIFY => {
 				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
 				let key = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
 				let nfys = unsafe { &mut *self.nfys.get() };
 				for func in nfys.find_all(key) {
+					at_least_one = true;
 					func(wm_nfy)?; // execute stored function
 				}
 			},
@@ -151,6 +156,7 @@ impl WindowEventsAll {
 				let key = wm_cmd.event.code_id();
 				let cmds = unsafe { &mut *self.cmds.get() };
 				for func in cmds.find_all(key) {
+					at_least_one = true;
 					func()?; // execute stored function
 				}
 			},
@@ -158,10 +164,15 @@ impl WindowEventsAll {
 				let wm_tmr = wm::Timer::from_generic_wm(wm_any);
 				let tmrs = unsafe { &mut *self.tmrs.get() };
 				for func in tmrs.find_all(wm_tmr.timer_id) {
+					at_least_one = true;
 					func()?; // execute stored function
 				}
 			},
-			_ => self.window_events.process_all_messages(wm_any)?,
-		})
+			_ => {
+				at_least_one = self.window_events.process_all_messages(wm_any)?;
+			},
+		}
+
+		Ok(at_least_one)
 	}
 }

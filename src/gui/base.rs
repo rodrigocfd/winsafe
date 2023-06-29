@@ -104,8 +104,10 @@ impl Base {
 	}
 
 	/// If the library added a closure to the given message, run it.
+	///
+	/// Returns `true` if at least one message was processed.
 	pub(in crate::gui) fn process_privileged_messages(&self,
-		wm_any: WndMsg) -> AnyResult<()>
+		wm_any: WndMsg) -> AnyResult<bool>
 	{
 		self.privileged_events.process_all_messages(wm_any)
 	}
