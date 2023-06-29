@@ -162,9 +162,9 @@ pub trait GuiEvents {
 		///
 		/// If you handle this event, you'll overwrite the default handling in:
 		///
-		/// * dialog [`WindowMain`](crate::gui::WindowMain);
-		/// * dialog [`WindowModal`](crate::gui::WindowModal);
-		/// * non-dialog [`WindowModal`](crate::gui::WindowModal).
+		/// * dialog [`WindowMain`](crate::gui::WindowMain) – calls [`DestroyWindow`](crate::prelude::user_Hwnd::DestroyWindow);
+		/// * dialog [`WindowModal`](crate::gui::WindowModal) – calls [`EndDialog`](crate::prelude::user_Hwnd::EndDialog);
+		/// * non-dialog [`WindowModal`](crate::gui::WindowModal) – re-enables parent and calls [`DestroyWindow`](crate::prelude::user_Hwnd::DestroyWindow).
 	}
 
 	fn_wm_noparm_noret! { wm_context_menu, co::WM::CONTEXTMENU;
@@ -567,6 +567,8 @@ pub trait GuiEvents {
 		///
 		/// * non-dialog [`WindowMain`](crate::gui::WindowMain);
 		/// * dialog [`WindowMain`](crate::gui::WindowMain).
+		///
+		/// In both cases, [`PostQuitMessage`](crate::PostQuitMessage) is called.
 	}
 
 	fn_wm_withparm_coret! { wm_nc_hit_test, co::WM::NCHITTEST, wm::NcHitTest, co::HT;
