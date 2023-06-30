@@ -4,7 +4,10 @@ use crate::dwm;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::Handle;
+use crate::user::decl::HWND;
 use crate::uxtheme::decl::MARGINS;
+
+impl dwm_Hwnd for HWND {}
 
 /// This trait is enabled with the `dwm` feature, and provides methods for
 /// [`HWND`](crate::HWND).
