@@ -5,7 +5,8 @@ use crate::gdi::guard::DeleteObjectGuard;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
 use crate::prelude::{Handle, IntUnderlying};
-use crate::user::decl::{COLORREF, HDC, HRGN, RECT};
+use crate::user::decl::{COLORREF, HDC, HRGN, POINT, RECT, SIZE};
+use crate::uxtheme::decl::MARGINS;
 
 impl_handle! { HTHEME;
 	/// Handle to a
@@ -135,6 +136,142 @@ pub trait uxtheme_Htheme: Handle {
 				)
 			},
 		).map(|_| color)
+	}
+
+	/// [`GetThemeMargins`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthememargins)
+	/// function.
+	#[must_use]
+	fn GetThemeMargins(&self,
+		hdc_fonts: Option<&HDC>,
+		part_state: co::VS,
+		prop: co::TMT,
+		draw_dest: Option<&RECT>,
+	) -> HrResult<MARGINS>
+	{
+		let mut margins = MARGINS::default();
+		ok_to_hrresult(
+			unsafe {
+				uxtheme::ffi::GetThemeMargins(
+					self.ptr(),
+					hdc_fonts.map_or(std::ptr::null_mut(), |h| h.ptr()),
+					part_state.part(),
+					part_state.state(),
+					prop.raw(),
+					draw_dest.map_or(std::ptr::null(), |p| p as *const _ as _),
+					&mut margins as *mut _ as _,
+				)
+			},
+		).map(|_| margins)
+	}
+
+	/// [`GetThemeMetric`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthememetric)
+	/// function.
+	#[must_use]
+	fn GetThemeMetric(&self,
+		hdc_fonts: Option<&HDC>,
+		part_state: co::VS,
+		prop: co::TMT,
+	) -> HrResult<i32>
+	{
+		let mut val = i32::default();
+		ok_to_hrresult(
+			unsafe {
+				uxtheme::ffi::GetThemeMetric(
+					self.ptr(),
+					hdc_fonts.map_or(std::ptr::null_mut(), |h| h.ptr()),
+					part_state.part(),
+					part_state.state(),
+					prop.raw(),
+					&mut val,
+				)
+			},
+		).map(|_| val)
+	}
+
+	/// [`GetThemePartSize`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemepartsize)
+	/// function.
+	#[must_use]
+	fn GetThemePartSize(&self,
+		hdc_fonts: Option<&HDC>,
+		part_state: co::VS,
+		draw_dest: Option<&RECT>,
+		esize: co::THEMESIZE,
+	) -> HrResult<SIZE>
+	{
+		let mut sz = SIZE::default();
+		ok_to_hrresult(
+			unsafe {
+				uxtheme::ffi::GetThemePartSize(
+					self.ptr(),
+					hdc_fonts.map_or(std::ptr::null_mut(), |h| h.ptr()),
+					part_state.part(),
+					part_state.state(),
+					draw_dest.map_or(std::ptr::null(), |p| p as *const _ as _),
+					esize.raw(),
+					&mut sz as *mut _ as _,
+				)
+			}
+		).map(|_| sz)
+	}
+
+	/// [`GetThemePosition`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemeposition)
+	/// function.
+	#[must_use]
+	fn GetThemePosition(&self,
+		part_state: co::VS, prop: co::TMT) -> HrResult<POINT>
+	{
+		let mut pt = POINT::default();
+		ok_to_hrresult(
+			unsafe {
+				uxtheme::ffi::GetThemePosition(
+					self.ptr(),
+					part_state.part(),
+					part_state.state(),
+					prop.raw(),
+					&mut pt as *mut _ as _,
+				)
+			},
+		).map(|_| pt)
+	}
+
+	/// [`GetThemePropertyOrigin`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemepropertyorigin)
+	/// function.
+	#[must_use]
+	fn GetThemePropertyOrigin(&self,
+		part_state: co::VS, prop: co::TMT) -> HrResult<co::PROPERTYORIGIN>
+	{
+		let mut origin = co::PROPERTYORIGIN::default();
+		ok_to_hrresult(
+			unsafe {
+				uxtheme::ffi::GetThemePropertyOrigin(
+					self.ptr(),
+					part_state.part(),
+					part_state.state(),
+					prop.raw(),
+					origin.as_mut(),
+				)
+			},
+		).map(|_| origin)
+	}
+
+	/// [`GetThemeRect`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemerect)
+	/// function.
+	#[must_use]
+	fn GetThemeRect(&self,
+		part_state: co::VS, prop: co::TMT) -> HrResult<RECT>
+	{
+		let mut rc = RECT::default();
+		ok_to_hrresult(
+			unsafe {
+				uxtheme::ffi::GetThemeRect(
+					self.ptr(),
+					part_state.part(),
+					part_state.state(),
+					prop.raw(),
+					&mut rc as *mut _ as _,
+				)
+			},
+		).map(|_| rc)
 	}
 
 	/// [`IsThemeBackgroundPartiallyTransparent`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemebackgroundpartiallytransparent)

@@ -13,6 +13,12 @@ extern_sys! { "uxtheme";
 	GetThemeBackgroundExtent(HANDLE, HANDLE, i32, i32, PCVOID, PVOID) -> HRES
 	GetThemeBackgroundRegion(HANDLE, HANDLE, i32, i32, PCVOID, *mut HANDLE) -> HRES
 	GetThemeColor(HANDLE, i32, i32, i32, *mut u32) -> HRES
+	GetThemeMargins(HANDLE, HANDLE, i32, i32, i32, PCVOID, PVOID) -> HRES
+	GetThemeMetric(HANDLE, HANDLE, i32, i32, i32, *mut i32) -> HRES
+	GetThemePartSize(HANDLE, HANDLE, i32, i32, PCVOID, u32, PVOID) -> HRES
+	GetThemePosition(HANDLE, i32, i32, i32, PVOID) -> HRES
+	GetThemePropertyOrigin(HANDLE, i32, i32, i32, *mut u32) -> HRES
+	GetThemeRect(HANDLE, i32, i32, i32, PVOID) -> HRES
 	IsAppThemed() -> BOOL
 	IsCompositionActive() -> BOOL
 	IsThemeActive() -> BOOL

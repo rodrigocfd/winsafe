@@ -14,12 +14,20 @@ impl std::fmt::Display for VS {
 }
 
 impl VS {
+	/// Creates a new part + style value.
 	pub const fn new(part: i32, state: i32) -> VS {
 		Self { part, state }
 	}
 
-	pub const fn part(&self) -> i32 { self.part }
-	pub const fn state(&self) -> i32 { self.state }
+	/// Returns the part of the value.
+	pub const fn part(&self) -> i32 {
+		self.part
+	}
+
+	/// Returns the state of the value.
+	pub const fn state(&self) -> i32 {
+		self.state
+	}
 }
 
 macro_rules! impl_pub_const_vs {
