@@ -4,6 +4,7 @@ FEATS=(
 	comctl
 	comdlg
 	dshow
+	dwm
 	dxgi
 	gdi
 	gui
