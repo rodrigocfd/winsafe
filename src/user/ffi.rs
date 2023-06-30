@@ -15,6 +15,7 @@ extern_sys! { "user32";
 
 extern_sys! { "user32";
 	AdjustWindowRectEx(PVOID, u32, BOOL, u32) -> BOOL
+	AdjustWindowRectExForDpi(PVOID, u32, BOOL, u32, u32) -> BOOL
 	AllowSetForegroundWindow(u32) -> BOOL
 	AnyPopup() -> BOOL
 	AppendMenuW(HANDLE, u32, usize, PCSTR) -> BOOL

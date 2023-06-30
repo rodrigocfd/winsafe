@@ -32,6 +32,29 @@ pub fn AdjustWindowRectEx(
 	)
 }
 
+/// [`AdjustWindowRectExForDpi`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectexfordpi)
+/// function.
+pub fn AdjustWindowRectExForDpi(
+	rc: &mut RECT,
+	style: co::WS,
+	has_menu: bool,
+	ex_style: co::WS_EX,
+	dpi: u32,
+) -> SysResult<()>
+{
+	bool_to_sysresult(
+		unsafe {
+			user::ffi::AdjustWindowRectExForDpi(
+				rc as *mut _ as _,
+				style.raw(),
+				has_menu as _,
+				ex_style.raw(),
+				dpi,
+			)
+		},
+	)
+}
+
 /// [`AllowSetForegroundWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-allowsetforegroundwindow)
 /// function
 pub fn AllowSetForegroundWindow(process_id: Option<u32>) -> SysResult<()> {

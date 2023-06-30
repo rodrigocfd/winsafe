@@ -1582,11 +1582,12 @@ pub trait user_Hwnd: Handle {
 	/// This method returns the timer ID, to be passed to
 	/// [`HWND::KillTimer`](crate::prelude::user_Hwnd::KillTimer).
 	///
-	/// The timer calls – either [`wm::Timer`](crate::msg::wm::Timer) message or
-	/// callback function – will continuously be executed until you call
-	/// `KillTimer`. If you don't call `KillTimer`, the timer calls will
-	/// continue until the window is destroyed – at this point, any remaining
-	/// timers will be automatically cleared.
+	/// The timer calls – either
+	/// [`wm_timer`](crate::prelude::GuiEventsAll::wm_timer) message or callback
+	/// function – will continuously be executed until you call `KillTimer`. If
+	/// you don't call `KillTimer`, the timer calls will continue until the
+	/// window is destroyed – at this point, any remaining timers will be
+	/// automatically cleared.
 	///
 	/// # Why not closures?
 	///
@@ -1607,7 +1608,7 @@ pub trait user_Hwnd: Handle {
 	/// performance penalty, the current implementation of `SetTimer` will only
 	/// accept ordinary function pointers, not closures.
 	///
-	/// Handling the `wm::Timer` message is simply more practical and efficient,
+	/// Handling the `wm_timer` message is simply more practical and efficient,
 	/// so the use of a callback is discouraged here.
 	fn SetTimer(&self,
 		event_id: usize,
