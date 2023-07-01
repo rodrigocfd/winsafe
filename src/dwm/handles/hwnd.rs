@@ -3,7 +3,7 @@
 use crate::{co, dwm};
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::Handle;
+use crate::prelude::{Handle, uxtheme_Hwnd};
 use crate::user::decl::{HBITMAP, HWND, POINT};
 use crate::uxtheme::decl::MARGINS;
 
@@ -17,7 +17,7 @@ impl dwm_Hwnd for HWND {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait dwm_Hwnd: Handle {
+pub trait dwm_Hwnd: uxtheme_Hwnd {
 	/// [`DwmExtendFrameIntoClientArea`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmextendframeintoclientarea)
 	/// function.
 	fn DwmExtendFrameIntoClientArea(&self,

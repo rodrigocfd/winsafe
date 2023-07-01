@@ -4,7 +4,7 @@ use crate::comctl;
 use crate::comctl::decl::SUBCLASSPROC;
 use crate::kernel::decl::SysResult;
 use crate::kernel::privs::bool_to_sysresult;
-use crate::prelude::{Handle, MsgSend};
+use crate::prelude::{MsgSend, user_Hwnd};
 use crate::user::decl::HWND;
 
 impl comctl_Hwnd for HWND {}
@@ -17,7 +17,7 @@ impl comctl_Hwnd for HWND {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait comctl_Hwnd: Handle {
+pub trait comctl_Hwnd: user_Hwnd {
 	/// [`DefSubclassProc`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-defsubclassproc)
 	/// function.
 	///

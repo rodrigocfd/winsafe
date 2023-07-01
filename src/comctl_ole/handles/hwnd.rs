@@ -5,7 +5,7 @@ use crate::comctl_ole::decl::IdTdiconStr;
 use crate::kernel::decl::{HINSTANCE, WString};
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, user_Hwnd};
+use crate::prelude::{comctl_Hwnd, Handle};
 use crate::user::decl::HWND;
 
 impl comctl_ole_Hwnd for HWND {}
@@ -18,7 +18,7 @@ impl comctl_ole_Hwnd for HWND {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait comctl_ole_Hwnd: user_Hwnd {
+pub trait comctl_ole_Hwnd: comctl_Hwnd {
 	/// [`InitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initializeflatsb)
 	/// function.
 	fn InitializeFlatSB(&self) -> HrResult<()> {

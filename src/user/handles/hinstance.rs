@@ -2,7 +2,7 @@
 
 use crate::kernel::decl::{GetLastError, HINSTANCE, IdStr, SysResult, WString};
 use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::Handle;
+use crate::prelude::{Handle, kernel_Hinstance};
 use crate::user;
 use crate::user::decl::{
 	ATOM, DLGPROC, HACCEL, HMENU, HWND, IdIdcStr, IdIdiStr, WNDCLASSEX,
@@ -19,7 +19,7 @@ impl user_Hinstance for HINSTANCE {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait user_Hinstance: Handle {
+pub trait user_Hinstance: kernel_Hinstance {
 	/// [`CreateDialogParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdialogparamw)
 	/// function.
 	///

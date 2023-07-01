@@ -3,7 +3,7 @@
 use crate::{co, shell};
 use crate::kernel::decl::{HINSTANCE, SysResult, WString};
 use crate::kernel::privs::bool_to_sysresult;
-use crate::prelude::Handle;
+use crate::prelude::{Handle, ole_Hwnd};
 use crate::user::decl::{HICON, HWND};
 
 impl shell_Hwnd for HWND {}
@@ -16,7 +16,7 @@ impl shell_Hwnd for HWND {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait shell_Hwnd: Handle {
+pub trait shell_Hwnd: ole_Hwnd {
 	/// [`DragAcceptFiles`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragacceptfiles)
 	/// function.
 	fn DragAcceptFiles(&self, accept: bool) {

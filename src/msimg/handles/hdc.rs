@@ -3,7 +3,7 @@
 use crate::kernel::decl::SysResult;
 use crate::kernel::privs::bool_to_sysresult;
 use crate::msimg;
-use crate::prelude::Handle;
+use crate::prelude::{Handle, user_Hdc};
 use crate::user::decl::{COLORREF, HDC, POINT, SIZE};
 
 impl msimg_Hdc for HDC {}
@@ -16,7 +16,7 @@ impl msimg_Hdc for HDC {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait msimg_Hdc: Handle {
+pub trait msimg_Hdc: user_Hdc {
 	/// [`TransparentBlt`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-transparentblt)
 	/// function.
 	fn TransparentBlt(&self,

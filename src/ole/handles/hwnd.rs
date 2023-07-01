@@ -3,7 +3,7 @@
 use crate::ole;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, ole_IDropTarget};
+use crate::prelude::{ole_IDropTarget, user_Hwnd};
 use crate::user::decl::HWND;
 
 impl ole_Hwnd for HWND {}
@@ -16,7 +16,7 @@ impl ole_Hwnd for HWND {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait ole_Hwnd: Handle {
+pub trait ole_Hwnd: user_Hwnd {
 	/// [`RegisterDragDrop`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-registerdragdrop)
 	/// function.
 	fn RegisterDragDrop(&self,

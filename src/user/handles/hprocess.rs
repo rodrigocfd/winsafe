@@ -3,7 +3,7 @@
 use crate::{co, user};
 use crate::kernel::decl::{HPROCESS, SysResult};
 use crate::kernel::privs::bool_to_sysresult;
-use crate::prelude::Handle;
+use crate::prelude::kernel_Hprocess;
 
 impl user_Hprocess for HPROCESS {}
 
@@ -15,7 +15,7 @@ impl user_Hprocess for HPROCESS {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait user_Hprocess: Handle {
+pub trait user_Hprocess: kernel_Hprocess {
 	/// [`SetUserObjectInformation`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setuserobjectinformationw)
 	/// function.
 	///

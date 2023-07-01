@@ -5,7 +5,7 @@ use crate::gdi::decl::{IdObmStr, IdOcrStr, IdOicStr};
 use crate::gdi::guard::DeleteObjectGuard;
 use crate::kernel::decl::{HINSTANCE, SysResult};
 use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::Handle;
+use crate::prelude::{user_Hinstance};
 use crate::user::decl::{HBITMAP, SIZE};
 use crate::user::guard::{DestroyCursorGuard, DestroyIconGuard};
 
@@ -19,7 +19,7 @@ impl gdi_Hinstance for HINSTANCE {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait gdi_Hinstance: Handle {
+pub trait gdi_Hinstance: user_Hinstance {
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HBITMAP`](crate::HBITMAP).
 	#[must_use]

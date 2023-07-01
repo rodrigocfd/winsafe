@@ -10,7 +10,7 @@ use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::privs::{
 	bool_to_sysresult, ptr_to_sysresult, ptr_to_sysresult_handle,
 };
-use crate::prelude::{GdiObjectSelect, Handle};
+use crate::prelude::{GdiObjectSelect, Handle, user_Hdc};
 use crate::user::decl::{
 	COLORREF, HBITMAP, HBRUSH, HDC, HRGN, POINT, RECT, SIZE,
 };
@@ -25,7 +25,7 @@ impl gdi_Hdc for HDC {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait gdi_Hdc: Handle {
+pub trait gdi_Hdc: user_Hdc {
 	/// [`AborthPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-abortpath)
 	/// function.
 	fn AbortPath(&self) -> SysResult<()> {

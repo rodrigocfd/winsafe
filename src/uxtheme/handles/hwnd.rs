@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::WString;
-use crate::prelude::Handle;
+use crate::prelude::{Handle, ole_Hwnd};
 use crate::user::decl::HWND;
 use crate::uxtheme;
 use crate::uxtheme::decl::HTHEME;
@@ -17,7 +17,7 @@ impl uxtheme_Hwnd for HWND {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait uxtheme_Hwnd: Handle {
+pub trait uxtheme_Hwnd: ole_Hwnd {
 	/// [`OpenThemeData`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-openthemedata)
 	/// function.
 	#[must_use]
