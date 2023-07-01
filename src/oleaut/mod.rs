@@ -1,6 +1,7 @@
 #![cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
 
 pub(in crate::oleaut) mod ffi;
+pub(in crate::oleaut) mod iterators;
 pub(crate) mod privs;
 pub mod co;
 

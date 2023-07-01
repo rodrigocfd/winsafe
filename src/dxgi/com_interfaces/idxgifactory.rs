@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::dxgi::decl::IDXGIAdapter;
+use crate::dxgi::iterators::IdxgifactoryAdaptersIter;
 use crate::kernel::decl::HINSTANCE;
 use crate::kernel::ffi_types::{COMPTR, HANDLE, HRES, PCVOID};
 use crate::ole::decl::HrResult;
@@ -78,7 +79,7 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	fn iter_adapters(&self,
 	) -> Box<dyn Iterator<Item = HrResult<IDXGIAdapter>> + '_>
 	{
-		Box::new(EnumAdaptersIter::new(self))
+		Box::new(IdxgifactoryAdaptersIter::new(self))
 	}
 
 	/// [`IDXGIFactory::CreateSoftwareAdapter`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-createsoftwareadapter)
@@ -148,48 +149,5 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 				)
 			},
 		)
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct EnumAdaptersIter<'a, I>
-	where I: dxgi_IDXGIFactory,
-{
-	fact: &'a I,
-	cur_index: u32,
-}
-
-impl<'a, I> Iterator for EnumAdaptersIter<'a, I>
-	where I: dxgi_IDXGIFactory,
-{
-	type Item = HrResult<IDXGIAdapter>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if self.cur_index == 0xffff_ffff {
-			None
-		} else {
-			match self.fact.EnumAdapters(self.cur_index) {
-				Err(err) => {
-					self.cur_index = 0xffff_ffff; // no further iterations will be made
-					match err {
-						co::HRESULT::DXGI_ERROR_NOT_FOUND => None, // no more entries
-						_ => Some(Err(err)), // actual error
-					}
-				},
-				Ok(adapter) => {
-					self.cur_index += 1;
-					Some(Ok(adapter))
-				},
-			}
-		}
-	}
-}
-
-impl<'a, I> EnumAdaptersIter<'a, I>
-	where I: dxgi_IDXGIFactory,
-{
-	fn new(fact: &'a I) -> Self {
-		Self { fact, cur_index: 0 }
 	}
 }

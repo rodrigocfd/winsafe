@@ -7,6 +7,7 @@ use crate::kernel::decl::{
 };
 use crate::kernel::ffi_types::BOOL;
 use crate::kernel::guard::RegCloseKeyGuard;
+use crate::kernel::iterators::{HkeyKeyIter, HkeyValueIter};
 use crate::kernel::privs::error_to_sysresult;
 use crate::prelude::{Handle, IntUnderlying};
 
@@ -307,7 +308,7 @@ pub trait kernel_Hkey: Handle {
 	fn RegEnumKeyEx(&self,
 	) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + '_>>
 	{
-		Ok(Box::new(EnumKeyIter::new(self)?))
+		Ok(Box::new(HkeyKeyIter::new(self)?))
 	}
 
 	/// Returns an iterator of the names and types of the values, which calls
@@ -341,7 +342,7 @@ pub trait kernel_Hkey: Handle {
 	fn RegEnumValue(&self,
 	) -> SysResult<Box<dyn Iterator<Item = SysResult<(String, co::REG)>> + '_>>
 	{
-		Ok(Box::new(EnumValueIter::new(self)?))
+		Ok(Box::new(HkeyValueIter::new(self)?))
 	}
 
 	/// [`RegFlushKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regflushkey)
@@ -1081,139 +1082,4 @@ fn validate_retrieved_reg_val(
 	}
 
 	Ok(unsafe { RegistryValue::from_raw(buf, data_type1) })
-}
-
-//------------------------------------------------------------------------------
-
-struct EnumKeyIter<'a, H>
-	where H: kernel_Hkey,
-{
-	hkey: &'a H,
-	count: u32,
-	current: u32,
-	name_buffer: WString,
-}
-
-impl<'a, H> Iterator for EnumKeyIter<'a, H>
-	where H: kernel_Hkey,
-{
-	type Item = SysResult<String>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		let mut len_buffer = self.name_buffer.buf_len() as u32;
-		match unsafe {
-			co::ERROR::from_raw(
-				kernel::ffi::RegEnumKeyExW(
-					self.hkey.ptr(),
-					self.current,
-					self.name_buffer.as_mut_ptr(),
-					&mut len_buffer,
-					std::ptr::null_mut(),
-					std::ptr::null_mut(),
-					std::ptr::null_mut(),
-					std::ptr::null_mut(),
-				) as _,
-			)
-		} {
-			co::ERROR::SUCCESS => {
-				self.current += 1;
-				Some(Ok(self.name_buffer.to_string()))
-			},
-			e => {
-				self.current = self.count; // no further iterations will be made
-				Some(Err(e))
-			},
-		}
-	}
-}
-
-impl<'a, H> EnumKeyIter<'a, H>
-	where H: kernel_Hkey,
-{
-	fn new(hkey: &'a H) -> SysResult<Self> {
-		let mut num_keys = u32::default();
-		let mut max_key_name_len = u32::default();
-		hkey.RegQueryInfoKey(
-			None, Some(&mut num_keys), Some(&mut max_key_name_len),
-			None, None, None, None, None, None)?;
-
-		Ok(Self {
-			hkey,
-			count: num_keys,
-			current: 0,
-			name_buffer: WString::new_alloc_buf(max_key_name_len as usize + 1),
-		})
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct EnumValueIter<'a, H>
-	where H: kernel_Hkey,
-{
-	hkey: &'a H,
-	count: u32,
-	current: u32,
-	name_buffer: WString,
-}
-
-impl<'a, H> Iterator for EnumValueIter<'a, H>
-	where H: kernel_Hkey,
-{
-	type Item = SysResult<(String, co::REG)>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		let mut raw_data_type = u32::default();
-		let mut len_buffer = self.name_buffer.buf_len() as u32;
-		match unsafe {
-			co::ERROR::from_raw(
-				kernel::ffi::RegEnumValueW(
-					self.hkey.ptr(),
-					self.current,
-					self.name_buffer.as_mut_ptr(),
-					&mut len_buffer,
-					std::ptr::null_mut(),
-					&mut raw_data_type,
-					std::ptr::null_mut(),
-					std::ptr::null_mut(),
-				) as _,
-			)
-		} {
-			co::ERROR::SUCCESS => {
-				self.current += 1;
-				Some(Ok((self.name_buffer.to_string(), unsafe { co::REG::from_raw(raw_data_type) })))
-			},
-			e => {
-				self.current = self.count; // no further iterations will be made
-				Some(Err(e))
-			},
-		}
-	}
-}
-
-impl<'a, H> EnumValueIter<'a, H>
-	where H: kernel_Hkey,
-{
-	fn new(hkey: &'a H) -> SysResult<Self> {
-		let mut num_vals = u32::default();
-		let mut max_val_name_len = u32::default();
-		hkey.RegQueryInfoKey(
-			None, None, None, None, Some(&mut num_vals), Some(&mut max_val_name_len),
-			None, None, None)?;
-
-		Ok(Self {
-			hkey,
-			count: num_vals,
-			current: 0,
-			name_buffer: WString::new_alloc_buf(max_val_name_len as usize + 1),
-		})
-	}
 }

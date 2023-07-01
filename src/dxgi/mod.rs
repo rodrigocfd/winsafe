@@ -1,6 +1,7 @@
 #![cfg_attr(docsrs, doc(cfg(feature = "dxgi")))]
 
 pub(in crate::dxgi) mod ffi;
+pub(in crate::dxgi) mod iterators;
 pub mod co;
 
 mod com_interfaces;

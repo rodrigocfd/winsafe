@@ -6,6 +6,7 @@ use crate::ole::decl::HrResult;
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
 use crate::prelude::ole_IUnknown;
 use crate::shell::decl::IShellItem;
+use crate::shell::iterators::IenumshellitemsIter;
 use crate::vt::IUnknownVT;
 
 /// [`IEnumShellItems`](crate::IEnumShellItems) virtual table.
@@ -70,7 +71,7 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn iter(&self) -> Box<dyn Iterator<Item = HrResult<IShellItem>> + '_> {
-		Box::new(EnumShellItemsIter::new(self))
+		Box::new(IenumshellitemsIter::new(self))
 	}
 
 	/// [`IEnumShellItems::Next`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-next)
@@ -116,34 +117,5 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 		okfalse_to_hrresult(
 			unsafe { (vt::<IEnumShellItemsVT>(self).Skip)(self.ptr(), count) },
 		)
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct EnumShellItemsIter<'a, I>
-	where I: shell_IEnumShellItems,
-{
-	enum_shi: &'a I,
-}
-
-impl<'a, I> Iterator for EnumShellItemsIter<'a, I>
-	where I: shell_IEnumShellItems,
-{
-	type Item = HrResult<IShellItem>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		match self.enum_shi.Next() {
-			Err(err) => Some(Err(err)),
-			Ok(maybe_item) => maybe_item.map(|item| Ok(item)),
-		}
-	}
-}
-
-impl<'a, I> EnumShellItemsIter<'a, I>
-	where I: shell_IEnumShellItems,
-{
-	fn new(enum_shi: &'a I) -> Self {
-		Self { enum_shi }
 	}
 }

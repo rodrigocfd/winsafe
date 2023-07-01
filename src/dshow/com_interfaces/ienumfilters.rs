@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::dshow::decl::IBaseFilter;
+use crate::dshow::iterators::IenumfiltersIter;
 use crate::kernel::ffi_types::{COMPTR, HRES};
 use crate::ole::decl::HrResult;
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
@@ -60,7 +61,7 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn iter(&self) -> Box<dyn Iterator<Item = HrResult<IBaseFilter>> + '_> {
-		Box::new(EnumFiltersIter::new(self))
+		Box::new(IenumfiltersIter::new(self))
 	}
 
 	/// [`IEnumFilters::Next`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-next)
@@ -104,34 +105,5 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 		okfalse_to_hrresult(
 			unsafe { (vt::<IEnumFiltersVT>(self).Skip)(self.ptr(), count) },
 		)
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct EnumFiltersIter<'a, I>
-	where I: dshow_IEnumFilters,
-{
-	enum_filters: &'a I,
-}
-
-impl<'a, I> Iterator for EnumFiltersIter<'a, I>
-	where I: dshow_IEnumFilters,
-{
-	type Item = HrResult<IBaseFilter>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		match self.enum_filters.Next() {
-			Err(err) => Some(Err(err)),
-			Ok(maybe_item) => maybe_item.map(|item| Ok(item)),
-		}
-	}
-}
-
-impl<'a, I> EnumFiltersIter<'a, I>
-	where I: dshow_IEnumFilters,
-{
-	fn new(enum_filters: &'a I) -> Self {
-		Self { enum_filters }
 	}
 }

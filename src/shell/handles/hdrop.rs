@@ -1,9 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::kernel::privs::MAX_PATH;
 use crate::prelude::Handle;
 use crate::shell;
+use crate::shell::iterators::HdropIter;
 use crate::user::decl::POINT;
 
 impl_handle! { HDROP;
@@ -61,7 +61,7 @@ pub trait shell_Hdrop: Handle {
 	/// ```
 	#[must_use]
 	fn iter(&mut self) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + '_>> {
-		Ok(Box::new(DropsIter::new(self)?))
+		Ok(Box::new(HdropIter::new(self)?))
 	}
 
 	/// [`DragFinish`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragfinish)
@@ -117,63 +117,5 @@ pub trait shell_Hdrop: Handle {
 			shell::ffi::DragQueryPoint(self.ptr(), &mut pt as *mut _ as _)
 		};
 		(pt, client_area != 0)
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct DropsIter<'a, H>
-	where H: shell_Hdrop,
-{
-	hdrop: &'a mut H,
-	buffer: WString,
-	count: u32,
-	current: u32,
-}
-
-impl<'a, H> Drop for DropsIter<'a, H>
-	where H: shell_Hdrop,
-{
-	fn drop(&mut self) {
-		self.hdrop.DragFinish();
-	}
-}
-
-impl<'a, H> Iterator for DropsIter<'a, H>
-	where H: shell_Hdrop,
-{
-	type Item = SysResult<String>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		match unsafe {
-			self.hdrop.DragQueryFile(Some(self.current), Some(&mut self.buffer))
-		} {
-			Err(e) => {
-				self.current = self.count; // no further iterations will be made
-				Some(Err(e))
-			},
-			Ok(_) => {
-				self.current += 1;
-				Some(Ok(self.buffer.to_string()))
-			},
-		}
-	}
-}
-
-impl<'a, H> DropsIter<'a, H>
-	where H: shell_Hdrop,
-{
-	fn new(hdrop: &'a mut H) -> SysResult<Self> {
-		let count = unsafe { hdrop.DragQueryFile(None, None)? };
-		Ok(Self {
-			hdrop,
-			buffer: WString::new_alloc_buf(MAX_PATH + 1), // so we alloc just once
-			count,
-			current: 0,
-		})
 	}
 }

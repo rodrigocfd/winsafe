@@ -5,6 +5,7 @@ use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID, PVOID};
 use crate::ole::decl::HrResult;
 use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::oleaut::decl::{PROPERTYKEY, PROPVARIANT};
+use crate::oleaut::iterators::IpropertystoreIter;
 use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
@@ -68,7 +69,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	fn iter(&self,
 	) -> HrResult<Box<dyn Iterator<Item = HrResult<PROPERTYKEY>> + '_>>
 	{
-		Ok(Box::new(PropertyStoreIter::new(self)?))
+		Ok(Box::new(IpropertystoreIter::new(self)?))
 	}
 
 	/// [`IPropertyStore::Commit`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-commit)
@@ -125,47 +126,5 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 			| co::HRESULT::INPLACE_S_TRUNCATED => Ok(var),
 			hr => Err(hr),
 		}
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct PropertyStoreIter<'a, I>
-	where I: oleaut_IPropertyStore,
-{
-	prop_st: &'a I,
-	count: u32,
-	current: u32,
-}
-
-impl<'a, I> Iterator for PropertyStoreIter<'a, I>
-	where I: oleaut_IPropertyStore,
-{
-	type Item = HrResult<PROPERTYKEY>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		match self.prop_st.GetAt(self.current) {
-			Err(e) => {
-				self.current = self.count; // no further iterations will be made
-				Some(Err(e))
-			},
-			Ok(ppk) => {
-				self.current += 1;
-				Some(Ok(ppk))
-			},
-		}
-	}
-}
-
-impl<'a, I> PropertyStoreIter<'a, I>
-	where I: oleaut_IPropertyStore,
-{
-	fn new(prop_st: &'a I) -> HrResult<Self> {
-		let count = prop_st.GetCount()?;
-		Ok(Self { prop_st, count, current: 0 })
 	}
 }

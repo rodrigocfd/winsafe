@@ -1,6 +1,7 @@
 #![cfg_attr(docsrs, doc(cfg(feature = "kernel")))]
 
 pub(in crate::kernel) mod ffi;
+pub(in crate::kernel) mod iterators;
 pub(crate) mod ffi_types;
 pub(crate) mod privs;
 pub mod co;

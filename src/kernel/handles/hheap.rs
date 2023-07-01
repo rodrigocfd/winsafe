@@ -5,6 +5,7 @@ use crate::kernel::decl::{
 	GetLastError, PROCESS_HEAP_ENTRY, SetLastError, SysResult,
 };
 use crate::kernel::guard::{HeapDestroyGuard, HeapFreeGuard, HeapUnlockGuard};
+use crate::kernel::iterators::HheapIter;
 use crate::kernel::privs::{
 	bool_to_sysresult, ptr_to_sysresult, ptr_to_sysresult_handle,
 };
@@ -33,9 +34,9 @@ impl kernel_Hheap for HHEAP {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait kernel_Hheap: Handle {
-	/// Returns an iterator over the heap memory blocks with
-	/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) structs. Calls
-	/// [`HHEAP::HeapWalk`](crate::prelude::kernel_Hheap::HeapWalk).
+	/// Returns an iterator over the heap memory block entries, exposing
+	/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) structs by calling
+	/// [`HeapWalk`](crate::prelude::kernel_Hheap::HeapWalk).
 	///
 	/// # Examples
 	///
@@ -45,7 +46,7 @@ pub trait kernel_Hheap: Handle {
 	///
 	/// let heap = HHEAP::GetProcessHeap()?;
 	///
-	/// for entry in heap.iter_walk() {
+	/// for entry in heap.iter_entries() {
 	///     let entry = entry?;
 	///     println!("Size: {}, overhead? {}",
 	///         entry.cbData, entry.cbOverhead);
@@ -53,10 +54,10 @@ pub trait kernel_Hheap: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn iter_walk(&self
+	fn iter_entries(&self
 	) -> Box<dyn Iterator<Item = SysResult<&PROCESS_HEAP_ENTRY>> + '_>
 	{
-		Box::new(WalkIter::new(self))
+		Box::new(HheapIter::new(self))
 	}
 
 	/// [`GetProcessHeap`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-getprocessheap)
@@ -307,7 +308,7 @@ pub trait kernel_Hheap: Handle {
 	/// function.
 	///
 	/// Prefer using
-	/// [`HHEAP::iter_walk`](crate::prelude::kernel_Hheap::iter_walk), which is
+	/// [`iter_entries`](crate::prelude::kernel_Hheap::iter_entries), which is
 	/// simpler.
 	#[must_use]
 	fn HeapWalk(&self, entry: &mut PROCESS_HEAP_ENTRY) -> SysResult<bool> {
@@ -319,58 +320,6 @@ pub trait kernel_Hheap: Handle {
 				err => Err(err),
 			},
 			_ => Ok(true),
-		}
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct WalkIter<'a, H>
-	where H: kernel_Hheap,
-{
-	hheap: &'a H,
-	entry: PROCESS_HEAP_ENTRY,
-	has_more: bool,
-}
-
-impl<'a, H> Iterator for WalkIter<'a, H>
-	where H: kernel_Hheap,
-{
-	type Item = SysResult<&'a PROCESS_HEAP_ENTRY>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if !self.has_more {
-			return None;
-		}
-
-		match self.hheap.HeapWalk(&mut self.entry) {
-			Err(e) => {
-				self.has_more = false; // no further iterations
-				Some(Err(e))
-			},
-			Ok(found) => {
-				if found {
-					// Returning a reference cannot be done until GATs
-					// stabilization, so we simply cheat the borrow checker.
-					let ptr = &self.entry as *const PROCESS_HEAP_ENTRY;
-					Some(Ok(unsafe { &*ptr }))
-				} else {
-					self.has_more = false; // no further iterations
-					None
-				}
-			},
-		}
-	}
-}
-
-impl<'a, H> WalkIter<'a, H>
-	where H: kernel_Hheap,
-{
-	fn new(hheap: &'a H) -> Self {
-		Self {
-			hheap,
-			entry: PROCESS_HEAP_ENTRY::default(),
-			has_more: true,
 		}
 	}
 }

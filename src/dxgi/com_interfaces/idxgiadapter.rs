@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::co;
 use crate::dxgi::decl::{DXGI_ADAPTER_DESC, IDXGIOutput};
+use crate::dxgi::iterators::IdxgiadapterOutputsIter;
 use crate::kernel::decl::GUID;
 use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID, PVOID};
 use crate::ole::decl::HrResult;
@@ -63,7 +63,7 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	fn iter_outputs(&self,
 	) -> Box<dyn Iterator<Item = HrResult<IDXGIOutput>> + '_>
 	{
-		Box::new(EnumOutputsIter::new(self))
+		Box::new(IdxgiadapterOutputsIter::new(self))
 	}
 
 	/// [`IDXGIAdapter::CheckInterfaceSupport`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiadapter-checkinterfacesupport)
@@ -127,48 +127,5 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 				)
 			},
 		)
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct EnumOutputsIter<'a, I>
-	where I: dxgi_IDXGIAdapter,
-{
-	adapter: &'a I,
-	cur_index: u32,
-}
-
-impl<'a, I> Iterator for EnumOutputsIter<'a, I>
-	where I: dxgi_IDXGIAdapter,
-{
-	type Item = HrResult<IDXGIOutput>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if self.cur_index == 0xffff_ffff {
-			None
-		} else {
-			match self.adapter.EnumOutputs(self.cur_index) {
-				Err(err) => {
-					self.cur_index = 0xffff_ffff; // no further iterations will be made
-					match err {
-						co::HRESULT::DXGI_ERROR_NOT_FOUND => None, // no more entries
-						_ => Some(Err(err)), // actual error
-					}
-				},
-				Ok(output) => {
-					self.cur_index += 1;
-					Some(Ok(output))
-				},
-			}
-		}
-	}
-}
-
-impl<'a, I> EnumOutputsIter<'a, I>
-	where I: dxgi_IDXGIAdapter,
-{
-	fn new(adapter: &'a I) -> Self {
-		Self { adapter, cur_index: 0 }
 	}
 }

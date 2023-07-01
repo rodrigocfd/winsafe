@@ -5,6 +5,7 @@ use crate::ole::decl::HrResult;
 use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::ole_IUnknown;
 use crate::shell::decl::IShellItem;
+use crate::shell::iterators::IshellitemarrayIter;
 use crate::vt::IUnknownVT;
 
 /// [`IShellItemArray`](crate::IShellItemArray) virtual table.
@@ -89,7 +90,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	fn iter(&self,
 	) -> HrResult<Box<dyn Iterator<Item = HrResult<IShellItem>> + '_>>
 	{
-		Ok(Box::new(ShellItemIter::new(self)?))
+		Ok(Box::new(IshellitemarrayIter::new(self)?))
 	}
 
 	/// [`IShellItemArray::GetCount`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getcount)
@@ -121,47 +122,5 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 				)
 			},
 		).map(|_| queried)
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct ShellItemIter<'a, I>
-	where I: shell_IShellItemArray,
-{
-	shi_arr: &'a I,
-	count: u32,
-	current: u32,
-}
-
-impl<'a, I> Iterator for ShellItemIter<'a, I>
-	where I: shell_IShellItemArray,
-{
-	type Item = HrResult<IShellItem>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		match self.shi_arr.GetItemAt(self.current) {
-			Err(e) => {
-				self.current = self.count; // no further iterations will be made
-				Some(Err(e))
-			},
-			Ok(shell_item) => {
-				self.current += 1;
-				Some(Ok(shell_item))
-			},
-		}
-	}
-}
-
-impl<'a, I> ShellItemIter<'a, I>
-	where I: shell_IShellItemArray,
-{
-	fn new(shi_arr: &'a I) -> HrResult<Self> {
-		let count = shi_arr.GetCount()?;
-		Ok(Self { shi_arr, count, current: 0 })
 	}
 }

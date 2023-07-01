@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::dshow::decl::IPin;
+use crate::dshow::iterators::IenumpinsIter;
 use crate::kernel::ffi_types::{COMPTR, HRES};
 use crate::ole::decl::HrResult;
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
@@ -58,7 +59,7 @@ pub trait dshow_IEnumPins: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn iter(&self) -> Box<dyn Iterator<Item = HrResult<IPin>> + '_> {
-		Box::new(EnumPinsIter::new(self))
+		Box::new(IenumpinsIter::new(self))
 	}
 
 	/// [`IEnumPins::Next`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumpins-next)
@@ -102,34 +103,5 @@ pub trait dshow_IEnumPins: ole_IUnknown {
 		okfalse_to_hrresult(
 			unsafe { (vt::<IEnumPinsVT>(self).Skip)(self.ptr(), count) },
 		)
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct EnumPinsIter<'a, I>
-	where I: dshow_IEnumPins,
-{
-	enum_pins: &'a I,
-}
-
-impl<'a, I> Iterator for EnumPinsIter<'a, I>
-	where I: dshow_IEnumPins,
-{
-	type Item = HrResult<IPin>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		match self.enum_pins.Next() {
-			Err(err) => Some(Err(err)),
-			Ok(maybe_item) => maybe_item.map(|item| Ok(item)),
-		}
-	}
-}
-
-impl<'a, I> EnumPinsIter<'a, I>
-	where I: dshow_IEnumPins,
-{
-	fn new(enum_pins: &'a I) -> Self {
-		Self { enum_pins }
 	}
 }

@@ -6,6 +6,10 @@ use crate::kernel::decl::{
 	THREADENTRY32,
 };
 use crate::kernel::guard::CloseHandleGuard;
+use crate::kernel::iterators::{
+	HprocesslistHeapIter, HprocesslistModuleIter, HprocesslistProcessIter,
+	HprocesslistThreadIter,
+};
 use crate::kernel::privs::ptr_to_sysresult_handle;
 use crate::prelude::Handle;
 
@@ -54,7 +58,7 @@ pub trait kernel_Hprocesslist: Handle {
 	fn iter_heaps(&mut self,
 	) -> Box<dyn Iterator<Item = SysResult<&HEAPLIST32>> + '_>
 	{
-		Box::new(HeapIter::new(self))
+		Box::new(HprocesslistHeapIter::new(self))
 	}
 
 	/// Returns an iterator over the modules of a process, with
@@ -84,7 +88,7 @@ pub trait kernel_Hprocesslist: Handle {
 	fn iter_modules(&mut self,
 	) -> Box<dyn Iterator<Item = SysResult<&MODULEENTRY32>> + '_>
 	{
-		Box::new(ModuleIter::new(self))
+		Box::new(HprocesslistModuleIter::new(self))
 	}
 
 	/// Returns an iterator over the processes of a process, with
@@ -114,7 +118,7 @@ pub trait kernel_Hprocesslist: Handle {
 	fn iter_processes(&mut self,
 	) -> Box<dyn Iterator<Item = SysResult<&PROCESSENTRY32>> + '_>
 	{
-		Box::new(ProcessIter::new(self))
+		Box::new(HprocesslistProcessIter::new(self))
 	}
 
 	/// Returns an iterator over the threads of a process, with
@@ -146,7 +150,7 @@ pub trait kernel_Hprocesslist: Handle {
 	fn iter_threads(&mut self,
 	) -> Box<dyn Iterator<Item = SysResult<&THREADENTRY32>> + '_>
 	{
-		Box::new(ThreadIter::new(self))
+		Box::new(HprocesslistThreadIter::new(self))
 	}
 
 	/// [`CreateToolhelp32Snapshot`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot)
@@ -372,250 +376,6 @@ pub trait kernel_Hprocesslist: Handle {
 				err => Err(err),
 			},
 			_ => Ok(true),
-		}
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct HeapIter<'a, H>
-	where H: kernel_Hprocesslist,
-{
-	hpl: &'a mut H,
-	hl32: HEAPLIST32,
-	first_pass: bool,
-	has_more: bool,
-}
-
-impl<'a, H> Iterator for HeapIter<'a, H>
-	where H: kernel_Hprocesslist,
-{
-	type Item = SysResult<&'a HEAPLIST32>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if !self.has_more {
-			return None;
-		}
-
-		let has_more_res = if self.first_pass {
-			self.first_pass = false;
-			self.hpl.Heap32ListFirst(&mut self.hl32)
-		} else {
-			self.hpl.Heap32ListNext(&mut self.hl32)
-		};
-
-		match has_more_res {
-			Err(e) => {
-				self.has_more = false; // no further iterations
-				Some(Err(e))
-			},
-			Ok(has_more) => {
-				self.has_more = has_more;
-				if has_more {
-					// Returning a reference cannot be done until GATs
-					// stabilization, so we simply cheat the borrow checker.
-					let ptr = &self.hl32 as *const HEAPLIST32;
-					Some(Ok(unsafe { &*ptr }))
-				} else {
-					None // no heap found
-				}
-			},
-		}
-	}
-}
-
-impl<'a, H> HeapIter<'a, H>
-	where H: kernel_Hprocesslist,
-{
-	fn new(hpl: &'a mut H) -> Self {
-		Self {
-			hpl,
-			hl32: HEAPLIST32::default(),
-			first_pass: true,
-			has_more: true,
-		}
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct ModuleIter<'a, H>
-	where H: kernel_Hprocesslist,
-{
-	hpl: &'a mut H,
-	me32: MODULEENTRY32,
-	first_pass: bool,
-	has_more: bool,
-}
-
-impl<'a, H> Iterator for ModuleIter<'a, H>
-	where H: kernel_Hprocesslist,
-{
-	type Item = SysResult<&'a MODULEENTRY32>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if !self.has_more {
-			return None;
-		}
-
-		let has_more_res = if self.first_pass {
-			self.first_pass = false;
-			self.hpl.Module32First(&mut self.me32)
-		} else {
-			self.hpl.Module32Next(&mut self.me32)
-		};
-
-		match has_more_res {
-			Err(e) => {
-				self.has_more = false; // no further iterations
-				Some(Err(e))
-			},
-			Ok(has_more) => {
-				self.has_more = has_more;
-				if has_more {
-					// Returning a reference cannot be done until GATs
-					// stabilization, so we simply cheat the borrow checker.
-					let ptr = &self.me32 as *const MODULEENTRY32;
-					Some(Ok(unsafe { &*ptr }))
-				} else {
-					None // no module found
-				}
-			},
-		}
-	}
-}
-
-impl<'a, H> ModuleIter<'a, H>
-	where H: kernel_Hprocesslist,
-{
-	fn new(hpl: &'a mut H) -> Self {
-		Self {
-			hpl,
-			me32: MODULEENTRY32::default(),
-			first_pass: true,
-			has_more: true,
-		}
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct ProcessIter<'a, H>
-	where H: kernel_Hprocesslist,
-{
-	hpl: &'a mut H,
-	pe32: PROCESSENTRY32,
-	first_pass: bool,
-	has_more: bool,
-}
-
-impl<'a, H> Iterator for ProcessIter<'a, H>
-	where H: kernel_Hprocesslist,
-{
-	type Item = SysResult<&'a PROCESSENTRY32>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if !self.has_more {
-			return None;
-		}
-
-		let has_more_res = if self.first_pass {
-			self.first_pass = false;
-			self.hpl.Process32First(&mut self.pe32)
-		} else {
-			self.hpl.Process32Next(&mut self.pe32)
-		};
-
-		match has_more_res {
-			Err(e) => {
-				self.has_more = false; // no further iterations
-				Some(Err(e))
-			},
-			Ok(has_more) => {
-				self.has_more = has_more;
-				if has_more {
-					// Returning a reference cannot be done until GATs
-					// stabilization, so we simply cheat the borrow checker.
-					let ptr = &self.pe32 as *const PROCESSENTRY32;
-					Some(Ok(unsafe { &*ptr }))
-				} else {
-					None // no process found
-				}
-			},
-		}
-	}
-}
-
-impl<'a, H> ProcessIter<'a, H>
-	where H: kernel_Hprocesslist,
-{
-	fn new(hpl: &'a mut H) -> Self {
-		Self {
-			hpl,
-			pe32: PROCESSENTRY32::default(),
-			first_pass: true,
-			has_more: true,
-		}
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct ThreadIter<'a, H>
-	where H: kernel_Hprocesslist,
-{
-	hpl: &'a mut H,
-	te32: THREADENTRY32,
-	first_pass: bool,
-	has_more: bool,
-}
-
-impl<'a, H> Iterator for ThreadIter<'a, H>
-	where H: kernel_Hprocesslist,
-{
-	type Item = SysResult<&'a THREADENTRY32>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if !self.has_more {
-			return None;
-		}
-
-		let has_more_res = if self.first_pass {
-			self.first_pass = false;
-			self.hpl.Thread32First(&mut self.te32)
-		} else {
-			self.hpl.Thread32Next(&mut self.te32)
-		};
-
-		match has_more_res {
-			Err(e) => {
-				self.has_more = false; // no further iterations
-				Some(Err(e))
-			},
-			Ok(has_more) => {
-				self.has_more = has_more;
-				if has_more {
-					// Returning a reference cannot be done until GATs
-					// stabilization, so we simply cheat the borrow checker.
-					let ptr = &self.te32 as *const THREADENTRY32;
-					Some(Ok(unsafe { &*ptr }))
-				} else {
-					None // no thread found
-				}
-			},
-		}
-	}
-}
-
-impl<'a, H> ThreadIter<'a, H>
-	where H: kernel_Hprocesslist,
-{
-	fn new(hpl: &'a mut H) -> Self {
-		Self {
-			hpl,
-			te32: THREADENTRY32::default(),
-			first_pass: true,
-			has_more: true,
 		}
 	}
 }

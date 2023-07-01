@@ -1,5 +1,6 @@
 #![cfg_attr(docsrs, doc(cfg(feature = "dshow")))]
 
+pub (in crate::dshow) mod iterators;
 pub mod co;
 
 mod com_interfaces;

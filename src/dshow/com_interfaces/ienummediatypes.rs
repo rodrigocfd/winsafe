@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::dshow::decl::AM_MEDIA_TYPE;
+use crate::dshow::iterators::IenummediatypesIter;
 use crate::kernel::ffi_types::{COMPTR, HRES, PVOID};
 use crate::ole::decl::HrResult;
 use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
@@ -62,7 +63,7 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	fn iter(&self,
 	) -> Box<dyn Iterator<Item = HrResult<&'_ AM_MEDIA_TYPE<'_>>> + '_>
 	{
-		Box::new(EnumMediaTypesIter::new(self))
+		Box::new(IenummediatypesIter::new(self))
 	}
 
 	/// [`IEnumMediaTypes::Next`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienummediatypes-next)
@@ -99,42 +100,5 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 		okfalse_to_hrresult(
 			unsafe { (vt::<IEnumMediaTypesVT>(self).Skip)(self.ptr(), count) },
 		)
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct EnumMediaTypesIter<'a, I>
-	where I: dshow_IEnumMediaTypes,
-{
-	enum_mt: &'a I,
-	amt: AM_MEDIA_TYPE<'a>,
-}
-
-impl<'a, I> Iterator for EnumMediaTypesIter<'a, I>
-	where I: dshow_IEnumMediaTypes,
-{
-	type Item = HrResult<&'a AM_MEDIA_TYPE<'a>>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		match self.enum_mt.Next(&mut self.amt) {
-			Err(err) => Some(Err(err)),
-			Ok(success) => if success {
-				// Returning a reference cannot be done until GATs
-				// stabilization, so we simply cheat the borrow checker.
-				let ptr = &self.amt as *const AM_MEDIA_TYPE;
-				Some(Ok(unsafe { &*ptr }))
-			} else {
-				None
-			},
-		}
-	}
-}
-
-impl<'a, I> EnumMediaTypesIter<'a, I>
-	where I: dshow_IEnumMediaTypes,
-{
-	fn new(enum_mt: &'a I) -> Self {
-		Self { enum_mt, amt: AM_MEDIA_TYPE::default() }
 	}
 }
