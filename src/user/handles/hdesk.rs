@@ -40,7 +40,7 @@ pub trait user_Hdesk: Handle {
 					WString::from_str(name).as_ptr(),
 					std::ptr::null(),
 					std::ptr::null(),
-					flags.unwrap_or(co::DF::NoValue).raw(),
+					flags.unwrap_or_default().raw(),
 					desired_access.raw(),
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
 				),
@@ -65,7 +65,7 @@ pub trait user_Hdesk: Handle {
 					WString::from_str(name).as_ptr(),
 					std::ptr::null(),
 					std::ptr::null(),
-					flags.unwrap_or(co::DF::NoValue).raw(),
+					flags.unwrap_or_default().raw(),
 					desired_access.raw(),
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
 					heap_size_kb,
@@ -110,7 +110,7 @@ pub trait user_Hdesk: Handle {
 			ptr_to_sysresult_handle(
 				user::ffi::OpenDesktopW(
 					WString::from_str(name).as_ptr(),
-					flags.unwrap_or(co::DF::NoValue).raw(),
+					flags.unwrap_or_default().raw(),
 					inherit as _,
 					desired_access.raw(),
 				),
@@ -130,7 +130,7 @@ pub trait user_Hdesk: Handle {
 		unsafe {
 			ptr_to_sysresult_handle(
 				user::ffi::OpenInputDesktop(
-					flags.unwrap_or(co::DF::NoValue).raw(),
+					flags.unwrap_or_default().raw(),
 					inherit as _,
 					desired_access.raw(),
 				),

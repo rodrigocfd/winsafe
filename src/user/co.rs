@@ -481,10 +481,6 @@ const_ordinary! { DF: u32;
 	/// (`u32`).
 	=>
 	=>
-	/// None of the actual values (zero).
-	NoValue 0
-	/// Allows processes running in other accounts on the desktop to set hooks
-	/// in this process.
 	ALLOWOTHERACCOUNTHOOK 0x0001
 }
 
@@ -1087,8 +1083,6 @@ const_bitflag! { EDD: u32;
 	/// [`EnumDisplayDevices`](crate::EnumDisplayDevices) `flags` (`u32`).
 	=>
 	=>
-	/// None of the actual values (zero).
-	NoValue 0
 	GET_DEVICE_INTERFACE_NAME 0x0000_0001
 }
 

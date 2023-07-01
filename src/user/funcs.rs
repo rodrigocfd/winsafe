@@ -211,8 +211,7 @@ pub fn EndMenu() -> SysResult<()> {
 /// let mut dev_num: u32 = 0;
 ///
 /// loop {
-///     let is_good = EnumDisplayDevices(
-///         None, dev_num, &mut dide, co::EDD::NoValue)?;
+///     let is_good = EnumDisplayDevices(None, dev_num, &mut dide, None)?;
 ///
 ///     if !is_good {
 ///         break;
@@ -229,7 +228,7 @@ pub fn EnumDisplayDevices(
 	device_name: Option<&str>,
 	device_num: u32,
 	display_device: &mut DISPLAY_DEVICE,
-	flags: co::EDD,
+	flags: Option<co::EDD>,
 ) -> SysResult<bool>
 {
 	match unsafe {
@@ -237,7 +236,7 @@ pub fn EnumDisplayDevices(
 			WString::from_opt_str(device_name).as_ptr(),
 			device_num,
 			display_device as *mut _ as _,
-			flags.raw(),
+			flags.unwrap_or_default().raw(),
 		)
 	} {
 		// Empirical tests have shown that two different error codes can be
