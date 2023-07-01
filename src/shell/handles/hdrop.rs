@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::decl::{GetLastError, SysResult, WString};
+use crate::kernel::decl::SysResult;
 use crate::prelude::Handle;
 use crate::shell;
 use crate::shell::iterators::HdropIter;
@@ -22,10 +22,14 @@ impl shell_Hdrop for HDROP {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_Hdrop: Handle {
-	/// Returns an iterator over the dropped files by calling
-	/// [`HDROP::DragQueryFile`](crate::prelude::shell_Hdrop::DragQueryFile)
-	/// consecutively, then frees the handle by calling
-	/// [`HDROP::DragFinish`](crate::prelude::shell_Hdrop::DragFinish).
+	/// [`DragQueryFile`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragqueryfilew)
+	/// function.
+	///
+	/// Returns an iterator over the dropped files. After the iterator is
+	/// consumed, calls
+	/// [`DragFinish`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragfinish)
+	/// and invalidates the `HDROP` handle, so further calls will fail with
+	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
 	///
 	/// # Examples
 	///
@@ -38,7 +42,7 @@ pub trait shell_Hdrop: Handle {
 	/// let mut hdrop: HDROP; // initialized somewhere
 	/// # let mut hdrop = HDROP::NULL;
 	///
-	/// for file_path in hdrop.iter()? {
+	/// for file_path in hdrop.DragQueryFile()? {
 	///     let file_path = file_path?;
 	///     println!("File: {}", file_path);
 	/// }
@@ -55,54 +59,13 @@ pub trait shell_Hdrop: Handle {
 	/// let mut hdrop: HDROP; // initialized somewhere
 	/// # let mut hdrop = HDROP::NULL;
 	///
-	/// let file_paths = hdrop.iter()?
+	/// let file_paths = hdrop.DragQueryFile()?
 	///     .collect::<SysResult<Vec<_>>>()?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn iter(&mut self) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + '_>> {
+	fn DragQueryFile(&mut self) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + '_>> {
 		Ok(Box::new(HdropIter::new(self)?))
-	}
-
-	/// [`DragFinish`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragfinish)
-	/// function.
-	///
-	/// After calling this method, the handle will be invalidated and further
-	/// operations will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	///
-	/// Prefer using [`HDROP::iter`](crate::prelude::shell_Hdrop::iter), which
-	/// calls `DragFinish` automatically.
-	fn DragFinish(&mut self) {
-		unsafe { shell::ffi::DragFinish(self.ptr()); }
-		*self = Self::INVALID;
-	}
-
-	/// [`DragQueryFile`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragqueryfilew)
-	/// function.
-	///
-	/// # Safety
-	///
-	/// The `buf` must be allocated with the correct length.
-	///
-	/// This method is rather tricky, consider using
-	/// [`HDROP::iter`](crate::prelude::shell_Hdrop::iter).
-	unsafe fn DragQueryFile(&self,
-		ifile: Option<u32>, buf: Option<&mut WString>) -> SysResult<u32>
-	{
-		let cch = buf.as_ref().map_or(0, |buf| buf.buf_len());
-
-		match unsafe {
-			shell::ffi::DragQueryFileW(
-				self.ptr(),
-				ifile.unwrap_or(0xffff_ffff),
-				buf.map_or(std::ptr::null_mut(), |buf| buf.as_mut_ptr()),
-				cch as _,
-			)
-		} {
-			0 => Err(GetLastError()),
-			char_count => Ok(char_count),
-		}
 	}
 
 	/// [`DragQueryPoint`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragquerypoint)
@@ -110,6 +73,10 @@ pub trait shell_Hdrop: Handle {
 	///
 	/// Returns the coordinates and whether the drop occurred in the client area
 	/// of the window.
+	///
+	/// Note that you must call this method before
+	/// [`DragQueryFile`](crate::prelude::shell_Hdrop::DragQueryFile), because
+	/// it invalidates the `HDROP` handle after the iterator is consumed.
 	#[must_use]
 	fn DragQueryPoint(&self) -> (POINT, bool) {
 		let mut pt = POINT::default();

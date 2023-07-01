@@ -284,7 +284,7 @@ pub trait GuiEvents {
 		///
 		/// wnd.on().wm_drop_files(
 		///     move |mut p: msg::wm::DropFiles| -> AnyResult<()> {
-		///         for dropped_file in p.hdrop.iter()? {
+		///         for dropped_file in p.hdrop.DragQueryFile()? {
 		///             let dropped_file = dropped_file?;
 		///             println!("Dropped: {}", dropped_file);
 		///         }

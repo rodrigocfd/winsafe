@@ -1,4 +1,5 @@
-use crate::kernel::decl::{SysResult, WString};
+use crate::shell;
+use crate::kernel::decl::{GetLastError, SysResult, WString};
 use crate::kernel::privs::MAX_PATH;
 use crate::ole::decl::HrResult;
 use crate::prelude::{shell_Hdrop, shell_IEnumShellItems, shell_IShellItemArray};
@@ -17,7 +18,7 @@ impl<'a, H> Drop for HdropIter<'a, H>
 	where H: shell_Hdrop,
 {
 	fn drop(&mut self) {
-		self.hdrop.DragFinish();
+		unsafe { shell::ffi::DragFinish(self.hdrop.ptr()); }
 	}
 }
 
@@ -32,13 +33,18 @@ impl<'a, H> Iterator for HdropIter<'a, H>
 		}
 
 		match unsafe {
-			self.hdrop.DragQueryFile(Some(self.current), Some(&mut self.buffer))
+			shell::ffi::DragQueryFileW(
+				self.hdrop.ptr(),
+				self.current,
+				self.buffer.as_mut_ptr(),
+				self.buffer.buf_len() as _,
+			)
 		} {
-			Err(e) => {
+			0 => {
 				self.current = self.count; // no further iterations will be made
-				Some(Err(e))
+				Some(Err(GetLastError()))
 			},
-			Ok(_) => {
+			_ => {
 				self.current += 1;
 				Some(Ok(self.buffer.to_string()))
 			},
@@ -50,7 +56,15 @@ impl<'a, H> HdropIter<'a, H>
 	where H: shell_Hdrop,
 {
 	pub(in crate::shell) fn new(hdrop: &'a mut H) -> SysResult<Self> {
-		let count = unsafe { hdrop.DragQueryFile(None, None)? };
+		let count = unsafe {
+			shell::ffi::DragQueryFileW( // preliminar call to retrieve the file count
+				hdrop.ptr(),
+				0xffff_ffff,
+				std::ptr::null_mut(),
+				0,
+			)
+		};
+
 		Ok(Self {
 			hdrop,
 			buffer: WString::new_alloc_buf(MAX_PATH + 1), // so we alloc just once
