@@ -5,7 +5,7 @@ use crate::kernel::decl::{
 	GetLastError, PROCESS_HEAP_ENTRY, SetLastError, SysResult,
 };
 use crate::kernel::guard::{HeapDestroyGuard, HeapFreeGuard, HeapUnlockGuard};
-use crate::kernel::iterators::HheapIter;
+use crate::kernel::iterators::HheapHeapwalkIter;
 use crate::kernel::privs::{
 	bool_to_sysresult, ptr_to_sysresult, ptr_to_sysresult_handle,
 };
@@ -34,32 +34,6 @@ impl kernel_Hheap for HHEAP {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait kernel_Hheap: Handle {
-	/// Returns an iterator over the heap memory block entries, exposing
-	/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) structs by calling
-	/// [`HeapWalk`](crate::prelude::kernel_Hheap::HeapWalk).
-	///
-	/// # Examples
-	///
-	/// ```rust,no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HHEAP};
-	///
-	/// let heap = HHEAP::GetProcessHeap()?;
-	///
-	/// for entry in heap.iter_entries() {
-	///     let entry = entry?;
-	///     println!("Size: {}, overhead? {}",
-	///         entry.cbData, entry.cbOverhead);
-	/// }
-	/// # Ok::<_, co::ERROR>(())
-	/// ```
-	#[must_use]
-	fn iter_entries(&self
-	) -> Box<dyn Iterator<Item = SysResult<&PROCESS_HEAP_ENTRY>> + '_>
-	{
-		Box::new(HheapIter::new(self))
-	}
-
 	/// [`GetProcessHeap`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-getprocessheap)
 	/// function.
 	#[must_use]
@@ -307,19 +281,28 @@ pub trait kernel_Hheap: Handle {
 	/// [`HeapWalk`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapwalk)
 	/// function.
 	///
-	/// Prefer using
-	/// [`iter_entries`](crate::prelude::kernel_Hheap::iter_entries), which is
-	/// simpler.
+	/// Returns an iterator over the heap memory blocks, exposing
+	/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) structs.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HHEAP};
+	///
+	/// let heap = HHEAP::GetProcessHeap()?;
+	///
+	/// for block in heap.HeapWalk() {
+	///     let block = block?;
+	///     println!("Size: {}, overhead? {}",
+	///         block.cbData, block.cbOverhead);
+	/// }
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
 	#[must_use]
-	fn HeapWalk(&self, entry: &mut PROCESS_HEAP_ENTRY) -> SysResult<bool> {
-		match unsafe {
-			kernel::ffi::HeapWalk(self.ptr(), entry as *mut _ as _)
-		} {
-			0 => match GetLastError() {
-				co::ERROR::NO_MORE_ITEMS => Ok(false),
-				err => Err(err),
-			},
-			_ => Ok(true),
-		}
+	fn HeapWalk(&self
+	) -> Box<dyn Iterator<Item = SysResult<&PROCESS_HEAP_ENTRY>> + '_>
+	{
+		Box::new(HheapHeapwalkIter::new(self))
 	}
 }

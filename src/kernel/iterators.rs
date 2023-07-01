@@ -1,11 +1,11 @@
 use crate::{co, kernel};
 use crate::kernel::decl::{
-	HEAPLIST32, MODULEENTRY32, PROCESS_HEAP_ENTRY, PROCESSENTRY32, SysResult,
-	THREADENTRY32, WString,
+	GetLastError, HEAPLIST32, MODULEENTRY32, PROCESS_HEAP_ENTRY, PROCESSENTRY32,
+	SysResult, THREADENTRY32, WString,
 };
 use crate::prelude::{kernel_Hheap, kernel_Hkey, kernel_Hprocesslist};
 
-pub(in crate::kernel) struct HheapIter<'a, H>
+pub(in crate::kernel) struct HheapHeapwalkIter<'a, H>
 	where H: kernel_Hheap,
 {
 	hheap: &'a H,
@@ -13,7 +13,7 @@ pub(in crate::kernel) struct HheapIter<'a, H>
 	has_more: bool,
 }
 
-impl<'a, H> Iterator for HheapIter<'a, H>
+impl<'a, H> Iterator for HheapHeapwalkIter<'a, H>
 	where H: kernel_Hheap,
 {
 	type Item = SysResult<&'a PROCESS_HEAP_ENTRY>;
@@ -23,27 +23,27 @@ impl<'a, H> Iterator for HheapIter<'a, H>
 			return None;
 		}
 
-		match self.hheap.HeapWalk(&mut self.entry) {
-			Err(e) => {
+		match unsafe {
+			kernel::ffi::HeapWalk(self.hheap.ptr(), &mut self.entry as *mut _ as _)
+		} {
+			0 => {
 				self.has_more = false; // no further iterations
-				Some(Err(e))
-			},
-			Ok(found) => {
-				if found {
-					// Returning a reference cannot be done until GATs
-					// stabilization, so we simply cheat the borrow checker.
-					let ptr = &self.entry as *const PROCESS_HEAP_ENTRY;
-					Some(Ok(unsafe { &*ptr }))
-				} else {
-					self.has_more = false; // no further iterations
-					None
+				match GetLastError() {
+					co::ERROR::NO_MORE_ITEMS => None, // search completed successfully
+					err => Some(Err(err)), // actual error
 				}
+			},
+			_ => {
+				// Returning a reference cannot be done until GATs
+				// stabilization, so we simply cheat the borrow checker.
+				let ptr = &self.entry as *const PROCESS_HEAP_ENTRY;
+				Some(Ok(unsafe { &*ptr }))
 			},
 		}
 	}
 }
 
-impl<'a, H> HheapIter<'a, H>
+impl<'a, H> HheapHeapwalkIter<'a, H>
 	where H: kernel_Hheap,
 {
 	pub(in crate::kernel) fn new(hheap: &'a H) -> Self {
