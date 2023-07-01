@@ -321,6 +321,7 @@ pub mod co {
 	#[cfg(feature = "comctl")] pub use super::comctl::co::*;
 	#[cfg(feature = "comdlg")] pub use super::comdlg::co::*;
 	#[cfg(feature = "dshow")] pub use super::dshow::co::*;
+	#[cfg(feature = "dwm")] pub use super::dwm::co::*;
 	#[cfg(feature = "dxgi")] pub use super::dxgi::co::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::co::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::co::*;

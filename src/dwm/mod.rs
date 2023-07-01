@@ -1,6 +1,7 @@
 #![cfg_attr(docsrs, doc(cfg(feature = "dwm")))]
 
 pub(in crate::dwm) mod ffi;
+pub mod co;
 
 mod funcs;
 mod handles;
