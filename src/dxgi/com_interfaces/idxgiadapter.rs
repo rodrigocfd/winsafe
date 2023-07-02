@@ -1,12 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::dxgi::decl::{DXGI_ADAPTER_DESC, IDXGIOutput};
-use crate::dxgi::iterators::IdxgiadapterOutputsIter;
+use crate::dxgi::iterators::IdxgiadapterEnumoutputsIter;
 use crate::kernel::decl::GUID;
 use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID, PVOID};
 use crate::ole::decl::HrResult;
 use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{dxgi_IDXGIObject, ole_IUnknown};
+use crate::prelude::dxgi_IDXGIObject;
 use crate::vt::IDXGIObjectVT;
 
 /// [`IDXGIAdapter`](crate::IDXGIAdapter) virtual table.
@@ -39,33 +39,6 @@ impl dxgi_IDXGIAdapter for IDXGIAdapter {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
-	/// Returns an iterator over the [`IDXGIOutput`](crate::IDXGIOutput)
-	/// elements which calls
-	/// [`IDXGIAdapter::EnumOutputs`](crate::prelude::dxgi_IDXGIAdapter::EnumOutputs)
-	/// internally.
-	///
-	/// # Examples
-	///
-	/// ```rust,no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::IDXGIAdapter;
-	///
-	/// let adapter: IDXGIAdapter; // initialized somewhere
-	/// # let adapter = unsafe { IDXGIAdapter::null() };
-	///
-	/// for output in adapter.iter_outputs() {
-	///     let output = output?;
-	///     // ...
-	/// }
-	/// # Ok::<_, winsafe::co::HRESULT>(())
-	/// ```
-	#[must_use]
-	fn iter_outputs(&self,
-	) -> Box<dyn Iterator<Item = HrResult<IDXGIOutput>> + '_>
-	{
-		Box::new(IdxgiadapterOutputsIter::new(self))
-	}
-
 	/// [`IDXGIAdapter::CheckInterfaceSupport`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiadapter-checkinterfacesupport)
 	/// method.
 	#[must_use]
@@ -85,21 +58,33 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	/// [`IDXGIAdapter::EnumOutputs`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiadapter-enumoutputs)
 	/// method.
 	///
-	/// Prefer using
-	/// [`IDXGIAdapter::iter_outputs`](crate::prelude::dxgi_IDXGIAdapter::iter_outputs),
-	/// which is simpler.
+	/// Returns an iterator over [`IDXGIOutput`](crate::IDXGIOutput) elements.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{HrResult, IDXGIAdapter, IDXGIOutput};
+	///
+	/// let adapter: IDXGIAdapter; // initialized somewhere
+	/// # let adapter = unsafe { IDXGIAdapter::null() };
+	///
+	/// for output in adapter.EnumOutputs() {
+	///     let output = output?;
+	///     // ...
+	/// }
+	///
+	/// // Collecting into a Vec
+	/// let outputs: Vec<IDXGIOutput> =
+	///     adapter.EnumOutputs()
+	///         .collect::<HrResult<Vec<_>>>()?;
+	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// ```
 	#[must_use]
-	fn EnumOutputs(&self, output: u32) -> HrResult<IDXGIOutput> {
-		let mut queried = unsafe { IDXGIOutput::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIAdapterVT>(self).EnumOutputs)(
-					self.ptr(),
-					output,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+	fn EnumOutputs(&self,
+	) -> Box<dyn Iterator<Item = HrResult<IDXGIOutput>> + '_>
+	{
+		Box::new(IdxgiadapterEnumoutputsIter::new(self))
 	}
 
 	/// [`IDXGIAdapter::GetDesc`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiadapter-getdesc)
