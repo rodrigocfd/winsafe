@@ -96,6 +96,7 @@ extern_sys! { "user32";
 	GetDlgCtrlID(HANDLE) -> i32
 	GetDlgItem(HANDLE, i32) -> HANDLE
 	GetDoubleClickTime() -> u32
+	GetDpiForWindow(HANDLE) -> u32
 	GetFocus() -> HANDLE
 	GetForegroundWindow() -> HANDLE
 	GetGUIThreadInfo(u32, PVOID) -> BOOL

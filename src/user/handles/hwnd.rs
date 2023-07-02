@@ -528,6 +528,13 @@ pub trait user_Hwnd: Handle {
 		)
 	}
 
+	/// [`GetDpiForWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdpiforwindow)
+	/// function.
+	#[must_use]
+	fn GetDpiForWindow(&self) -> u32 {
+		unsafe { user::ffi::GetDpiForWindow(self.ptr()) }
+	}
+
 	/// [`GetFocus`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getfocus)
 	/// function.
 	#[must_use]
