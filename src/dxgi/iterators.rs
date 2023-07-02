@@ -3,7 +3,7 @@ use crate::dxgi::decl::{IDXGIAdapter, IDXGIOutput};
 use crate::ole::decl::HrResult;
 use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::{dxgi_IDXGIAdapter, dxgi_IDXGIFactory, ole_IUnknown};
-use crate::vt::IDXGIAdapterVT;
+use crate::vt::{IDXGIAdapterVT, IDXGIFactoryVT};
 
 pub(in crate::dxgi) struct IdxgiadapterEnumoutputsIter<'a, I>
 	where I: dxgi_IDXGIAdapter,
@@ -57,14 +57,14 @@ impl<'a, I> IdxgiadapterEnumoutputsIter<'a, I>
 
 //------------------------------------------------------------------------------
 
-pub(in crate::dxgi) struct IdxgifactoryAdaptersIter<'a, I>
+pub(in crate::dxgi) struct IdxgifactoryEnumadaptersIter<'a, I>
 	where I: dxgi_IDXGIFactory,
 {
 	fact: &'a I,
 	cur_index: u32,
 }
 
-impl<'a, I> Iterator for IdxgifactoryAdaptersIter<'a, I>
+impl<'a, I> Iterator for IdxgifactoryEnumadaptersIter<'a, I>
 	where I: dxgi_IDXGIFactory,
 {
 	type Item = HrResult<IDXGIAdapter>;
@@ -73,7 +73,16 @@ impl<'a, I> Iterator for IdxgifactoryAdaptersIter<'a, I>
 		if self.cur_index == 0xffff_ffff {
 			None
 		} else {
-			match self.fact.EnumAdapters(self.cur_index) {
+			let mut queried = unsafe { IDXGIAdapter::null() };
+			match ok_to_hrresult(
+				unsafe {
+					(vt::<IDXGIFactoryVT>(self.fact).EnumAdapters)(
+						self.fact.ptr(),
+						self.cur_index,
+						queried.as_mut(),
+					)
+				},
+			) {
 				Err(err) => {
 					self.cur_index = 0xffff_ffff; // no further iterations will be made
 					match err {
@@ -81,16 +90,16 @@ impl<'a, I> Iterator for IdxgifactoryAdaptersIter<'a, I>
 						_ => Some(Err(err)), // actual error
 					}
 				},
-				Ok(adapter) => {
+				Ok(_) => {
 					self.cur_index += 1;
-					Some(Ok(adapter))
+					Some(Ok(queried))
 				},
 			}
 		}
 	}
 }
 
-impl<'a, I> IdxgifactoryAdaptersIter<'a, I>
+impl<'a, I> IdxgifactoryEnumadaptersIter<'a, I>
 	where I: dxgi_IDXGIFactory,
 {
 	pub(in crate::dxgi) fn new(fact: &'a I) -> Self {

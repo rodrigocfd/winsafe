@@ -2,7 +2,7 @@
 
 use crate::co;
 use crate::dxgi::decl::IDXGIAdapter;
-use crate::dxgi::iterators::IdxgifactoryAdaptersIter;
+use crate::dxgi::iterators::IdxgifactoryEnumadaptersIter;
 use crate::kernel::decl::HINSTANCE;
 use crate::kernel::ffi_types::{COMPTR, HANDLE, HRES, PCVOID};
 use crate::ole::decl::HrResult;
@@ -55,33 +55,6 @@ impl dxgi_IDXGIFactory for IDXGIFactory {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
-	/// Returns an iterator over the [`IDXGIAdapter`](crate::IDXGIAdapter)
-	/// elements which calls
-	/// [`IDXGIFactory::EnumAdapters`](crate::prelude::dxgi_IDXGIFactory::EnumAdapters)
-	/// internally.
-	///
-	/// # Examples
-	///
-	/// ```rust,no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::IDXGIFactory;
-	///
-	/// let factory: IDXGIFactory; // initialized somewhere
-	/// # let factory = unsafe { IDXGIFactory::null() };
-	///
-	/// for adapter in factory.iter_adapters() {
-	///     let adapter = adapter?;
-	///     // ...
-	/// }
-	/// # Ok::<_, winsafe::co::HRESULT>(())
-	/// ```
-	#[must_use]
-	fn iter_adapters(&self,
-	) -> Box<dyn Iterator<Item = HrResult<IDXGIAdapter>> + '_>
-	{
-		Box::new(IdxgifactoryAdaptersIter::new(self))
-	}
-
 	/// [`IDXGIFactory::CreateSoftwareAdapter`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-createsoftwareadapter)
 	/// method.
 	#[must_use]
@@ -103,21 +76,33 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	/// [`IDXGIFactory::EnumAdapters`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-enumadapters)
 	/// method.
 	///
-	/// Prefer using
-	/// [`IDXGIFactory::iter_adapters`](crate::prelude::dxgi_IDXGIFactory::iter_adapters),
-	/// which is simpler.
+	/// Returns an iterator over [`IDXGIAdapter`](crate::IDXGIAdapter) elements.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{HrResult, IDXGIAdapter, IDXGIFactory};
+	///
+	/// let factory: IDXGIFactory; // initialized somewhere
+	/// # let factory = unsafe { IDXGIFactory::null() };
+	///
+	/// for adapter in factory.EnumAdapters() {
+	///     let adapter = adapter?;
+	///     // ...
+	/// }
+	///
+	/// // Collecting into a Vec
+	/// let adapters: Vec<IDXGIAdapter> =
+	///     factory.EnumAdapters()
+	///         .collect::<HrResult<Vec<_>>>()?;
+	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// ```
 	#[must_use]
-	fn EnumAdapters(&self, adapter: u32) -> HrResult<IDXGIAdapter> {
-		let mut queried = unsafe { IDXGIAdapter::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIFactoryVT>(self).EnumAdapters)(
-					self.ptr(),
-					adapter,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+	fn EnumAdapters(&self,
+	) -> Box<dyn Iterator<Item = HrResult<IDXGIAdapter>> + '_>
+	{
+		Box::new(IdxgifactoryEnumadaptersIter::new(self))
 	}
 
 	/// [`IDXGIFactory::GetWindowAssociation`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-getwindowassociation)
