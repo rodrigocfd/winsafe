@@ -395,7 +395,7 @@ pub struct EditOpts {
 	///
 	/// **Note:** You should use `Vert::Resize` only in a multi-line edit.
 	///
-	/// Defaults to `(Horz::None, Vert::None)`.
+	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
 	pub resize_behavior: (Horz, Vert),
 }
 

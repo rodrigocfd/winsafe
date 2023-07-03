@@ -287,7 +287,7 @@ pub struct ProgressBarOpts {
 	/// Horizontal and vertical behavior of the control when the parent window
 	/// is resized.
 	///
-	/// Defaults to `(Horz::None, Vert::None)`.
+	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
 	pub resize_behavior: (Horz, Vert),
 }
 

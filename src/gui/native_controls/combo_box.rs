@@ -264,7 +264,7 @@ pub struct ComboBoxOpts {
 	/// **Note:** A `ComboBox` cannot be resized vertically, so it will panic if
 	/// you use `Vert::Resize`.
 	///
-	/// Defaults to `(Horz::None, Vert::None)`.
+	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
 	pub resize_behavior: (Horz, Vert),
 
 	/// Items to be added right away to the control.

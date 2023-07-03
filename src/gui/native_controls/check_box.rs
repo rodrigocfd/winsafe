@@ -323,12 +323,12 @@ pub struct CheckBoxOpts {
 	/// Horizontal and vertical behavior of the control when the parent window
 	/// is resized.
 	///
-	/// Defaults to `(Horz::None, Vert::None)`.
+	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
 	pub resize_behavior: (Horz, Vert),
 
 	/// Initial check state.
 	///
-	/// Defaults to `CheckState::Unchecked`.
+	/// Defaults to `gui::CheckState::Unchecked`.
 	pub check_state: CheckState,
 }
 

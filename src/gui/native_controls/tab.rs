@@ -289,7 +289,7 @@ pub struct TabOpts {
 	/// Horizontal and vertical behavior of the control when the parent window
 	/// is resized.
 	///
-	/// Defaults to `(Horz::None, Vert::None)`.
+	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
 	pub resize_behavior: (Horz, Vert),
 
 	/// Items to be added as soon as the control is created. The tuple contains

@@ -255,7 +255,7 @@ pub struct DateTimePickerOpts {
 	/// **Note:** A `DateTimePicker` cannot be resized vertically, so it will
 	/// panic if you use `Vert::Resize`.
 	///
-	/// Defaults to `(Horz::None, Vert::None)`.
+	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
 	pub resize_behavior: (Horz, Vert),
 }
 

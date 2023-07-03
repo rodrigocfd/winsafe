@@ -232,7 +232,7 @@ pub struct MonthCalendarOpts {
 	/// vertically, so it will panic if you use `Horz::Resize` or
 	/// `Vert::Resize`.
 	///
-	/// Defaults to `(Horz::None, Vert::None)`.
+	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
 	pub resize_behavior: (Horz, Vert),
 }
 
