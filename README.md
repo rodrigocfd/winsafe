@@ -12,8 +12,6 @@ WinSafe has:
 * low-level Win32 API constants, functions and structs;
 * high-level structs to build native Win32 GUI applications.
 
-If you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but have everything.
-
 WinSafe documentation:
 
 | Branch | Docs |
@@ -40,7 +38,9 @@ Plus, below are the numbers of native FFI items implemented:
 | Window messages | 648 |
 | Handles | 40 |
 | COM interfaces | 63 |
-| COM methods | 259 |
+| COM methods | 257 |
+
+Although WinSafe already has a lot of Win32 APIs, it doesn't have *everything*, simply because Win32 API is gigantic. So if you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but have everything.
 
 ## Usage
 
@@ -82,7 +82,6 @@ The following Cargo features are available so far:
 | `version` | Version.dll, to manipulate *.exe version info |
 
 Note that a Cargo feature may depend on other features, which will be enabled automatically.
-
 
 ## Example
 

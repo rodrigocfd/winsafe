@@ -201,17 +201,17 @@ pub struct WindowModalOpts {
 	/// Window main icon to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to `Icon::None`.
+	/// Defaults to `gui::Icon::None`.
 	pub class_icon: Icon,
 	/// Window cursor to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to `Cursor::Idc(co::IDC::ARROW)`.
+	/// Defaults to `gui::Cursor::Idc(co::IDC::ARROW)`.
 	pub class_cursor: Cursor,
 	/// Window background brush to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to `Brush::Color(co::COLOR::BTNFACE)`.
+	/// Defaults to `gui::Brush::Color(co::COLOR::BTNFACE)`.
 	pub class_bg_brush: Brush,
 
 	/// Window title to be

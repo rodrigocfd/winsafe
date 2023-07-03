@@ -135,17 +135,17 @@ pub struct WindowControlOpts {
 	/// Window main icon to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to `Icon::None`.
+	/// Defaults to `gui::Icon::None`.
 	pub class_icon: Icon,
 	/// Window cursor to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to `Cursor::Idc(co::IDC::ARROW)`.
+	/// Defaults to `gui::Cursor::Idc(co::IDC::ARROW)`.
 	pub class_cursor: Cursor,
 	/// Window background brush to be
 	/// [registered](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw).
 	///
-	/// Defaults to `Brush::Color(co::COLOR::WINDOW)`.
+	/// Defaults to `gui::Brush::Color(co::COLOR::WINDOW)`.
 	pub class_bg_brush: Brush,
 
 	/// Left and top position coordinates of control within parent's client
@@ -188,7 +188,7 @@ pub struct WindowControlOpts {
 	/// Horizontal and vertical behavior of the control when the parent window
 	/// is resized.
 	///
-	/// Defaults to `(Horz::None, Vert::None)`.
+	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
 	pub resize_behavior: (Horz, Vert),
 }
 
