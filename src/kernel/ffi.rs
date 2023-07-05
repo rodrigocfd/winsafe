@@ -21,6 +21,7 @@ extern_sys! { "advapi32";
 	GetCurrentThreadEffectiveToken() -> HANDLE
 	GetLengthSid(PVOID) -> u32
 	GetSidLengthRequired(u8) -> u32
+	GetTokenInformation(HANDLE, u32, PCVOID, u32, *mut u32) -> BOOL
 	GetUserNameW(PSTR, *mut u32) -> BOOL
 	GetWindowsAccountDomainSid(PCVOID, PVOID, *mut u32) -> BOOL
 	InitializeSecurityDescriptor(PVOID, u32) -> BOOL

@@ -137,6 +137,54 @@ pub trait kernel_Haccesstoken: Handle {
 		HACCESSTOKEN(unsafe { kernel::ffi::GetCurrentThreadEffectiveToken() })
 	}
 
+	/// [`GetTokenInformation`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-gettokeninformation)
+	/// function.
+	///
+	/// # Safety
+	///
+	/// Make sure the `information` type is the correct one, matching that in
+	/// `information_class`.
+	///
+	/// # Examples
+	///
+	/// Checking if the current process has elevated privileges:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HPROCESS, TOKEN_ELEVATION};
+	///
+	/// let htoken = HPROCESS::GetCurrentProcess()
+	///     .OpenProcessToken(co::TOKEN::QUERY)?;
+	///
+	/// let mut elevation = TOKEN_ELEVATION::default();
+	/// unsafe {
+	///     htoken.GetTokenInformation(
+	///         co::TOKEN_INFORMATION_CLASS::Elevation,
+	///         &mut elevation,
+	///      )?;
+	/// }
+	/// println!("Is elevated: {}", elevation.TokenIsElevated());
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
+	unsafe fn GetTokenInformation<T>(&self,
+		information_class: co::TOKEN_INFORMATION_CLASS,
+		information: &mut T,
+	) -> SysResult<()>
+	{
+		let mut ret_len = u32::default();
+		bool_to_sysresult(
+			unsafe {
+				kernel::ffi::GetTokenInformation(
+					self.ptr(),
+					information_class.raw(),
+					information as *mut _ as _,
+					std::mem::size_of::<T>() as _,
+					&mut ret_len,
+				)
+			},
+		)
+	}
+
 	/// [`IsTokenRestricted`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-istokenrestricted)
 	/// function.
 	#[must_use]

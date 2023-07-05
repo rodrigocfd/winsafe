@@ -601,6 +601,22 @@ impl SID {
 	}
 }
 
+/// [`SID_AND_ATTRIBUTES`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid_and_attributes)
+/// struct.
+#[repr(C)]
+pub struct SID_AND_ATTRIBUTES<'a> {
+	Sid: *mut SID,
+	pub Attributes: u32,
+
+	_Sid: PhantomData<&'a mut SID>,
+}
+
+impl_default!(SID_AND_ATTRIBUTES, 'a);
+
+impl<'a> SID_AND_ATTRIBUTES<'a> {
+	pub_fn_ptr_get_set!('a, Sid, set_Sid, SID);
+}
+
 /// [`SID_IDENTIFIER_AUTHORITY`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid_identifier_authority)
 /// struct.
 #[repr(C)]
@@ -751,6 +767,27 @@ impl TIME_ZONE_INFORMATION {
 	pub_fn_string_arr_get_set!(daylightName, set_daylightName);
 }
 
+/// [`TOKEN_ELEVATION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_elevation)
+/// struct.
+#[repr(C)]
+#[derive(Default)]
+pub struct TOKEN_ELEVATION {
+	TokenIsElevated: u32,
+}
+
+impl TOKEN_ELEVATION {
+	pub_fn_bool_get_set!(TokenIsElevated, set_TokenIsElevated);
+}
+
+/// [`TOKEN_ORIGIN`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_origin)
+/// struct.
+#[repr(C)]
+pub struct TOKEN_ORIGIN {
+	pub OriginatingLogonSession: LUID,
+}
+
+impl_default!(TOKEN_ORIGIN);
+
 /// [`TOKEN_PRIVILEGES`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_privileges)
 /// struct.
 ///
@@ -794,6 +831,14 @@ impl TOKEN_PRIVILEGES {
 			)
 		}
 	}
+}
+
+/// [`TOKEN_USER`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_user)
+/// struct.
+#[repr(C)]
+#[derive(Default)]
+pub struct TOKEN_USER<'a> {
+	pub User: SID_AND_ATTRIBUTES<'a>,
 }
 
 /// [`VALENT`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/ns-winreg-valentw)

@@ -1842,6 +1842,71 @@ const_bitflag! { TOKEN: u32;
 	ACCESS_PSEUDO_HANDLE Self::QUERY.0 | Self::QUERY_SOURCE.0
 }
 
+const_ordinary! { TOKEN_ELEVATION_TYPE: u32;
+	/// [`TOKEN_ELEVATION_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_elevation_type)
+	/// enumeration (`u32`).
+	=>
+	=>
+	Default 1
+	Full 2
+	Limited 3
+}
+
+const_ordinary! { TOKEN_INFORMATION_CLASS: u32;
+	/// [`TOKEN_INFORMATION_CLASS`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_information_class)
+	/// enumeration (`u32`).
+	=>
+	=>
+	User 1
+	Groups 2
+	Privileges 3
+	Owner 4
+	PrimaryGroup 5
+	DefaultDacl 6
+	Source 7
+	Type 8
+	ImpersonationLevel 9
+	Statistics 10
+	RestrictedSids 11
+	SessionId 12
+	GroupsAndPrivileges 13
+	SessionReference 14
+	SandBoxInert 15
+	AuditPolicy 16
+	Origin 17
+	ElevationType 18
+	Linked 19
+	Elevation 20
+	HasRestrictions 21
+	AccessInformation 22
+	VirtualizationAllowed 23
+	VirtualizationEnabled 24
+	IntegrityLevel 25
+	UIAccess 26
+	MandatoryPolicy 27
+	LogonSid 28
+	IsAppContainer 29
+	Capabilities 30
+	AppContainerSid 31
+	AppContainerNumber 32
+	UserClaimAttributes 33
+	DeviceClaimAttributes 34
+	RestrictedUserClaimAttributes 35
+	RestrictedDeviceClaimAttributes 36
+	DeviceGroups 37
+	RestrictedDeviceGroups 38
+	SecurityAttributes 39
+	IsRestricted 40
+	ProcessTrustLevel 41
+	PrivateNameSpace 42
+	SingletonAttributes 43
+	BnoIsolation 44
+	ChildProcessFlags 45
+	IsLessPrivilegedAppContainer 46
+	IsSandboxed 47
+	OriginatingProcessTrustLevel 48
+}
+
 const_bitflag! { TRANSACTION: u32;
 	/// [`Transaction access masks`](https://learn.microsoft.com/en-us/windows/win32/ktm/transaction-access-masks)
 	/// (`u32`).
