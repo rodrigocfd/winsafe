@@ -7,7 +7,7 @@ use crate::kernel::decl::{
 	ConvertSidToStringSid, HEVENT, HINSTANCE, HPIPE, HPROCESS, HTHREAD,
 	InitializeSecurityDescriptor, MAKEQWORD, WString,
 };
-use crate::kernel::guard::TokenPrivilegesGuard;
+use crate::kernel::guard::{TokenGroupsGuard, TokenPrivilegesGuard};
 use crate::kernel::privs::{MAX_MODULE_NAME32, MAX_PATH};
 use crate::prelude::{NativeBitflag, VariableSized};
 
@@ -604,6 +604,7 @@ impl SID {
 /// [`SID_AND_ATTRIBUTES`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid_and_attributes)
 /// struct.
 #[repr(C)]
+#[derive(Clone)]
 pub struct SID_AND_ATTRIBUTES<'a> {
 	Sid: *mut SID,
 	pub Attributes: u32,
@@ -777,6 +778,51 @@ pub struct TOKEN_ELEVATION {
 
 impl TOKEN_ELEVATION {
 	pub_fn_bool_get_set!(TokenIsElevated, set_TokenIsElevated);
+}
+
+/// [`TOKEN_GROUPS`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_groups)
+/// struct.
+///
+/// Note that you cannot directly instantiate this struct. This is a
+/// [`VariableSized`](crate::prelude::VariableSized) struct, managed by
+/// [`TokenGroupsGuard`](crate::guard::TokenGroupsGuard).
+#[repr(C)]
+pub struct TOKEN_GROUPS<'a> {
+	pub(in crate::kernel) GroupCount: u32,
+	Groups: [SID_AND_ATTRIBUTES<'a>; 1],
+}
+
+impl<'a> VariableSized for TOKEN_GROUPS<'a> {}
+
+impl<'a> TOKEN_GROUPS<'a> {
+	/// Returns a dynamically allocated
+	/// [`TokenGroupsGuard`](crate::guard::TokenGroupsGuard).
+	#[must_use]
+	pub fn new(groups: &'a [SID_AND_ATTRIBUTES<'a>]) -> TokenGroupsGuard<'a> {
+		TokenGroupsGuard::new(groups)
+	}
+
+	/// Returns a constant slice over the `Groups` entries.
+	#[must_use]
+	pub const fn Groups(&self) -> &[SID_AND_ATTRIBUTES<'a>] {
+		unsafe {
+			std::slice::from_raw_parts(
+				self.Groups.as_ptr(),
+				self.GroupCount as _,
+			)
+		}
+	}
+
+	/// Returns a mutable slice over the `Groups` entries.
+	#[must_use]
+	pub fn Groups_mut(&mut self) -> &mut [SID_AND_ATTRIBUTES<'a>] {
+		unsafe {
+			std::slice::from_raw_parts_mut(
+				self.Groups.as_mut_ptr(),
+				self.GroupCount as _,
+			)
+		}
+	}
 }
 
 /// [`TOKEN_ORIGIN`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_origin)

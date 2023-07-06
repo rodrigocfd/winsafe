@@ -1,10 +1,12 @@
+use std::marker::PhantomData;
 use std::ops::{Deref, DerefMut};
 
 use crate::kernel;
 use crate::kernel::decl::{
 	HeapBlock, HFILEMAPVIEW, HFINDFILE, HGLOBAL, HHEAP, HIDWORD, HINSTANCE,
 	HKEY, HLOCAL, HUPDATERSRC, LODWORD, LUID_AND_ATTRIBUTES,
-	PROCESS_INFORMATION, SID, TOKEN_PRIVILEGES,
+	PROCESS_INFORMATION, SID, SID_AND_ATTRIBUTES, TOKEN_GROUPS,
+	TOKEN_PRIVILEGES,
 };
 use crate::prelude::{
 	Handle, kernel_Hfile, kernel_Hglobal, kernel_Hheap, kernel_Hlocal,
@@ -723,6 +725,46 @@ impl SidGuard {
 	#[must_use]
 	pub const unsafe fn new(raw: HeapBlock) -> Self {
 		Self { raw }
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation for [`TOKEN_GROUPS`](crate::TOKEN_GROUPS) which manages
+/// the allocated memory.
+pub struct TokenGroupsGuard<'a> {
+	raw: HeapBlock,
+	_groups: PhantomData<&'a ()>,
+}
+
+impl<'a> Deref for TokenGroupsGuard<'a> {
+	type Target = TOKEN_GROUPS<'a>;
+
+	fn deref(&self) -> &Self::Target {
+		unsafe { std::mem::transmute::<_, _>(self.raw.as_ptr()) }
+	}
+}
+
+impl<'a> DerefMut for TokenGroupsGuard<'a> {
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		unsafe { std::mem::transmute::<_, _>(self.raw.as_mut_ptr()) }
+	}
+}
+
+impl<'a> TokenGroupsGuard<'a> {
+	pub(in crate::kernel) fn new(groups: &'a [SID_AND_ATTRIBUTES<'a>]) -> Self {
+		let sz = std::mem::size_of::<TOKEN_GROUPS>() // size in bytes of the allocated struct
+			- std::mem::size_of::<SID_AND_ATTRIBUTES>()
+			+ (groups.len() * std::mem::size_of::<SID_AND_ATTRIBUTES>());
+		let mut new_self = Self {
+			raw: HeapBlock::alloc(sz).unwrap(), // assume no allocation errors
+			_groups: PhantomData,
+		};
+		new_self.GroupCount = groups.len() as _;
+		groups.iter()
+			.zip(new_self.Groups_mut())
+			.for_each(|(src, dest)| *dest = src.clone()); // copy all SID_AND_ATTRIBUTES into struct room
+		new_self
 	}
 }
 
