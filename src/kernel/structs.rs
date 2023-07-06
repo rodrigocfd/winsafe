@@ -768,6 +768,21 @@ impl TIME_ZONE_INFORMATION {
 	pub_fn_string_arr_get_set!(daylightName, set_daylightName);
 }
 
+/// [`TOKEN_DEFAULT_DACL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_default_dacl)
+/// struct.
+#[repr(C)]
+pub struct TOKEN_DEFAULT_DACL<'a> {
+	DefaultDacl: *mut ACL,
+
+	_DefaultDacl: PhantomData<&'a mut ACL>,
+}
+
+impl_default!(TOKEN_DEFAULT_DACL, 'a);
+
+impl<'a> TOKEN_DEFAULT_DACL<'a> {
+	pub_fn_ptr_get_set!('a, DefaultDacl, set_DefaultDacl, ACL);
+}
+
 /// [`TOKEN_ELEVATION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_elevation)
 /// struct.
 #[repr(C)]
@@ -833,6 +848,36 @@ pub struct TOKEN_ORIGIN {
 }
 
 impl_default!(TOKEN_ORIGIN);
+
+/// [`TOKEN_OWNER`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_owner)
+/// struct.
+#[repr(C)]
+pub struct TOKEN_OWNER<'a> {
+	Owner: *mut SID,
+
+	_Owner: PhantomData<&'a mut SID>,
+}
+
+impl_default!(TOKEN_OWNER, 'a);
+
+impl<'a> TOKEN_OWNER<'a> {
+	pub_fn_ptr_get_set!('a, Owner, set_Owner, SID);
+}
+
+/// [`TOKEN_PRIMARY_GROUP`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_primary_group)
+/// struct.
+#[repr(C)]
+pub struct TOKEN_PRIMARY_GROUP<'a> {
+	PrimaryGroup: *mut SID,
+
+	_Owner: PhantomData<&'a mut SID>,
+}
+
+impl_default!(TOKEN_PRIMARY_GROUP, 'a);
+
+impl<'a> TOKEN_PRIMARY_GROUP<'a> {
+	pub_fn_ptr_get_set!('a, PrimaryGroup, set_PrimaryGroup, SID);
+}
 
 /// [`TOKEN_PRIVILEGES`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_privileges)
 /// struct.
