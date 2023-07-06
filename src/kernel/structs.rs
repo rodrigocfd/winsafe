@@ -4,8 +4,8 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::kernel::decl::{
-	ConvertSidToStringSid, HEVENT, HINSTANCE, HPIPE, HPROCESS, HTHREAD,
-	InitializeSecurityDescriptor, MAKEQWORD, WString,
+	ConvertSidToStringSid, HACCESSTOKEN, HEVENT, HINSTANCE, HPIPE, HPROCESS,
+	HTHREAD, InitializeSecurityDescriptor, MAKEQWORD, WString,
 };
 use crate::kernel::guard::{TokenGroupsGuard, TokenPrivilegesGuard};
 use crate::kernel::privs::{MAX_MODULE_NAME32, MAX_PATH};
@@ -768,6 +768,21 @@ impl TIME_ZONE_INFORMATION {
 	pub_fn_string_arr_get_set!(daylightName, set_daylightName);
 }
 
+/// [`TOKEN_APPCONTAINER_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_appcontainer_information)
+/// struct.
+#[repr(C)]
+pub struct TOKEN_APPCONTAINER_INFORMATION<'a> {
+	TokenAppContainer: *mut SID,
+
+	_TokenAppContainer: PhantomData<&'a mut SID>,
+}
+
+impl_default!(TOKEN_APPCONTAINER_INFORMATION, 'a);
+
+impl<'a> TOKEN_APPCONTAINER_INFORMATION<'a> {
+	pub_fn_ptr_get_set!('a, TokenAppContainer, set_TokenAppContainer, SID);
+}
+
 /// [`TOKEN_DEFAULT_DACL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_default_dacl)
 /// struct.
 #[repr(C)]
@@ -839,6 +854,33 @@ impl<'a> TOKEN_GROUPS<'a> {
 		}
 	}
 }
+
+/// [`TOKEN_LINKED_TOKEN`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_linked_token)
+/// struct.
+#[repr(C)]
+pub struct TOKEN_LINKED_TOKEN {
+	pub LinkedToken: HACCESSTOKEN,
+}
+
+impl_default!(TOKEN_LINKED_TOKEN);
+
+/// [`TOKEN_MANDATORY_LABEL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_mandatory_label)
+/// struct.
+#[repr(C)]
+pub struct TOKEN_MANDATORY_LABEL<'a> {
+	pub Label: SID_AND_ATTRIBUTES<'a>,
+}
+
+impl_default!(TOKEN_MANDATORY_LABEL, 'a);
+
+/// [`TOKEN_MANDATORY_POLICY`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_mandatory_policy)
+/// struct.
+#[repr(C)]
+pub struct TOKEN_MANDATORY_POLICY {
+	pub Policy: co::TOKEN_MANDATORY_POLICY,
+}
+
+impl_default!(TOKEN_MANDATORY_POLICY);
 
 /// [`TOKEN_ORIGIN`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_origin)
 /// struct.

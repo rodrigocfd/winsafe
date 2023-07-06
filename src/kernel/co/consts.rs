@@ -1907,6 +1907,17 @@ const_ordinary! { TOKEN_INFORMATION_CLASS: u32;
 	OriginatingProcessTrustLevel 48
 }
 
+const_ordinary! { TOKEN_MANDATORY_POLICY: u32;
+	/// [`TOKEN_MANDATORY_POLICY`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_mandatory_policy)
+	/// `Policy` (`u32`).
+	=>
+	=>
+	OFF 0x0
+	NO_WRITE_UP 0x1
+	NEW_PROCESS_MIN 0x2
+	VALID_MASK 0x3
+}
+
 const_bitflag! { TRANSACTION: u32;
 	/// [`Transaction access masks`](https://learn.microsoft.com/en-us/windows/win32/ktm/transaction-access-masks)
 	/// (`u32`).
