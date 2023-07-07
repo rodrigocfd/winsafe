@@ -27,6 +27,8 @@ com_interface! { IFileSaveDialog: "84bccd23-5fde-4cdb-aea4-af64b83d78ab";
 	///
 	/// # Examples
 	///
+	/// Saving a TXT file:
+	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, CoCreateInstance, IFileSaveDialog};
@@ -36,6 +38,19 @@ com_interface! { IFileSaveDialog: "84bccd23-5fde-4cdb-aea4-af64b83d78ab";
 	///     None,
 	///     co::CLSCTX::INPROC_SERVER,
 	/// )?;
+	///
+	/// file_save.SetFileTypes(&[
+	///     ("Text files", "*.txt"),
+	///     ("All files", "*.*"),
+	/// ])?;
+	/// file_save.SetFileTypeIndex(1)?;
+	/// file_save.SetDefaultExtension("txt")?;
+	///
+	/// if file_open.Show(&hparent)? {
+	///     let chosen_file = file_open.GetResult()?
+	///         .GetDisplayName(co::SIGDN::FILESYSPATH)?;
+	///     println!("{}", chosen_file);
+	/// }
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
 }

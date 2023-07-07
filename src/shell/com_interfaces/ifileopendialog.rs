@@ -49,7 +49,6 @@ com_interface! { IFileOpenDialog: "d57c7288-d4ad-4768-be02-9d969532d960";
 	///     ("Text files", "*.txt"),
 	///     ("All files", "*.*"),
 	/// ])?;
-	///
 	/// file_open.SetFileTypeIndex(1)?;
 	///
 	/// if file_open.Show(&hparent)? {
@@ -57,7 +56,6 @@ com_interface! { IFileOpenDialog: "d57c7288-d4ad-4768-be02-9d969532d960";
 	///         .GetDisplayName(co::SIGDN::FILESYSPATH)?;
 	///     println!("{}", chosen_file);
 	/// }
-	///
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
 }
