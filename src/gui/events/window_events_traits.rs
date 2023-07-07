@@ -426,6 +426,25 @@ pub trait GuiEvents {
 	fn_wm_withparm_noret! { wm_init_menu_popup, co::WM::INITMENUPOPUP, wm::InitMenuPopup;
 		/// [`WM_INITMENUPOPUP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-initmenupopup)
 		/// message.
+		///
+		/// # Examples
+		///
+		/// ```rust,no_run
+		/// use winsafe::prelude::*;
+		/// use winsafe::{AnyResult, gui, IdPos, msg};
+		///
+		/// let wnd: gui::WindowMain; // initialized somewhere
+		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+		///
+		/// wnd.on().wm_init_menu_popup(
+		///     move |p: msg::wm::InitMenuPopup| -> AnyResult<()> {
+		///         if p.hmenu.GetMenuItemID(0).unwrap() == 3001 { // check ID of 1st item
+		///             p.hmenu.EnableMenuItem(IdPos::Id(3001), false)?;
+		///         }
+		///         Ok(())
+		///     },
+		/// );
+		/// ```
 	}
 
 	fn_wm_withparm_noret! { wm_key_down, co::WM::KEYDOWN, wm::KeyDown;

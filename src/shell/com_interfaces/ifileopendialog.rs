@@ -28,7 +28,7 @@ com_interface! { IFileOpenDialog: "d57c7288-d4ad-4768-be02-9d969532d960";
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, CoCreateInstance, IFileOpenDialog, HWND};
+	/// use winsafe::{co, CoCreateInstance, HWND, IFileOpenDialog};
 	///
 	/// let hparent: HWND; // initialized somewhere
 	/// # let hparent = HWND::NULL;

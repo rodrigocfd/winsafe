@@ -31,9 +31,12 @@ com_interface! { IFileSaveDialog: "84bccd23-5fde-4cdb-aea4-af64b83d78ab";
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
-	/// use winsafe::{co, CoCreateInstance, IFileSaveDialog};
+	/// use winsafe::{co, CoCreateInstance, HWND, IFileSaveDialog};
 	///
-	/// let obj = CoCreateInstance::<IFileSaveDialog>(
+	/// let hparent: HWND; // initialized somewhere
+	/// # let hparent = HWND::NULL;
+	///
+	/// let file_save = CoCreateInstance::<IFileSaveDialog>(
 	///     &co::CLSID::FileSaveDialog,
 	///     None,
 	///     co::CLSCTX::INPROC_SERVER,
@@ -46,8 +49,8 @@ com_interface! { IFileSaveDialog: "84bccd23-5fde-4cdb-aea4-af64b83d78ab";
 	/// file_save.SetFileTypeIndex(1)?;
 	/// file_save.SetDefaultExtension("txt")?;
 	///
-	/// if file_open.Show(&hparent)? {
-	///     let chosen_file = file_open.GetResult()?
+	/// if file_save.Show(&hparent)? {
+	///     let chosen_file = file_save.GetResult()?
 	///         .GetDisplayName(co::SIGDN::FILESYSPATH)?;
 	///     println!("{}", chosen_file);
 	/// }

@@ -299,11 +299,13 @@ pub trait user_Hmenu: Handle {
 
 	/// [`GetMenuItemID`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemid)
 	/// function.
+	///
+	/// If `item_index` corresponds to a submenu, returns `None`.
 	#[must_use]
-	fn GetMenuItemID(&self, nPos: i32) -> Option<i32> {
-		match unsafe { user::ffi::GetMenuItemID(self.ptr(), nPos) } {
+	fn GetMenuItemID(&self, item_index: i32) -> Option<u16> {
+		match unsafe { user::ffi::GetMenuItemID(self.ptr(), item_index) } {
 			-1 => None,
-			id => Some(id),
+			id => Some(id as _),
 		}
 	}
 
