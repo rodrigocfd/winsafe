@@ -4,7 +4,7 @@ use crate::gui::base::Base;
 use crate::gui::dlg_modal::DlgModal;
 use crate::gui::events::WindowEventsAll;
 use crate::gui::raw_modal::{RawModal, WindowModalOpts};
-use crate::kernel::decl::{AnyResult, SysResult};
+use crate::kernel::decl::AnyResult;
 use crate::prelude::{GuiParent, GuiThread, GuiWindow, GuiWindowText};
 use crate::user::decl::HWND;
 
@@ -116,7 +116,7 @@ impl WindowModal {
 	/// # Panics
 	///
 	/// Panics if the window is already created.
-	pub fn show_modal(&self) -> SysResult<i32> {
+	pub fn show_modal(&self) -> AnyResult<i32> {
 		match &self.0 {
 			RawDlg::Raw(r) => r.show_modal(),
 			RawDlg::Dlg(d) => d.show_modal(),

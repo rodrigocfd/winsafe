@@ -8,7 +8,7 @@ use crate::gui::base::Base;
 use crate::gui::events::WindowEventsAll;
 use crate::gui::privs::multiply_dpi;
 use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
-use crate::kernel::decl::{AnyResult, SysResult, WString};
+use crate::kernel::decl::{AnyResult, WString};
 use crate::prelude::{GuiEvents, Handle, user_Hwnd};
 use crate::user::decl::{
 	AdjustWindowRectEx, DispatchMessage, GetMessage, HWND, IdMenu, MSG, POINT,
@@ -72,7 +72,7 @@ impl RawModal {
 		self.0.raw_base.run_ui_thread(func);
 	}
 
-	pub(in crate::gui) fn show_modal(&self) -> SysResult<i32> {
+	pub(in crate::gui) fn show_modal(&self) -> AnyResult<i32> {
 		let hparent = self.0.raw_base.parent().unwrap().hwnd();
 		let opts = &self.0.opts;
 
@@ -120,7 +120,7 @@ impl RawModal {
 		self.run_modal_loop()
 	}
 
-	fn run_modal_loop(&self) -> SysResult<i32> {
+	fn run_modal_loop(&self) -> AnyResult<i32> {
 		loop {
 			let mut msg = MSG::default();
 

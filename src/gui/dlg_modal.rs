@@ -6,7 +6,7 @@ use crate::co;
 use crate::gui::base::Base;
 use crate::gui::dlg_base::DlgBase;
 use crate::gui::events::WindowEventsAll;
-use crate::kernel::decl::{AnyResult, SysResult};
+use crate::kernel::decl::AnyResult;
 use crate::prelude::{GuiEvents, user_Hwnd};
 use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
 
@@ -59,8 +59,9 @@ impl DlgModal {
 		self.0.dlg_base.run_ui_thread(func);
 	}
 
-	pub(in crate::gui) fn show_modal(&self) -> SysResult<i32> {
+	pub(in crate::gui) fn show_modal(&self) -> AnyResult<i32> {
 		self.0.dlg_base.dialog_box_param()
+			.map_err(|err| err.into())
 	}
 
 	fn default_message_handlers(&self) {
