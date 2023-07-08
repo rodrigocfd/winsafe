@@ -73,6 +73,23 @@ pub trait kernel_Hinstance: Handle {
 
 	/// [`EnumResourceTypes`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-enumresourcetypesw)
 	/// function.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HINSTANCE, RtStr};
+	///
+	/// let hexe = HINSTANCE::LoadLibrary("hand.exe")?;
+	///
+	/// hexe.EnumResourceTypes(|res_type: RtStr| -> bool {
+	///     println!("Type {}", res_type);
+	///     true
+	/// })?;
+	///
+	/// // FreeLibrary() called automatically
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
 	fn EnumResourceTypes<F>(&self, func: F) -> SysResult<()>
 		where F: Fn(RtStr) -> bool,
 	{
@@ -249,23 +266,27 @@ pub trait kernel_Hinstance: Handle {
 	/// const IDD_HAND_ABOUTBOX: u16 = 103;
 	/// const IDD_FOOT_ABOUTBOX: u16 = 110;
 	///
-	/// let hExe = HINSTANCE::LoadLibrary("hand.exe")?;
+	/// let hexe = HINSTANCE::LoadLibrary("hand.exe")?;
 	///
-	/// let hRes = hExe.FindResource(
+	/// let hres = hexe.FindResource(
 	///     IdStr::Id(IDD_HAND_ABOUTBOX),
 	///     RtStr::Rt(co::RT::DIALOG),
 	/// )?;
 	///
-	/// let hResLoad = hExe.LoadResource(&hRes)?;
-	/// let lpResLock = hExe.LockResource(&hRes, &hResLoad)?;
-	/// let hUpdateRes = HUPDATERSRC::BeginUpdateResource("foot.exe", false)?;
+	/// let hres_load = hexe.LoadResource(&hres)?;
+	/// let hres_slice_lock = hexe.LockResource(&hres, &hres_load)?;
+	/// let hres_update = HUPDATERSRC::BeginUpdateResource("foot.exe", false)?;
 	///
-	/// hUpdateRes.UpdateResource(
+	/// hres_update.UpdateResource(
 	///     RtStr::Rt(co::RT::DIALOG),
 	///     IdStr::Id(IDD_FOOT_ABOUTBOX),
 	///     LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL),
-	///     lpResLock,
+	///     hres_slice_lock,
 	/// )?;
+	///
+	/// // EndUpdateResource() called automatically
+	///
+	/// // FreeLibrary() called automatically
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]

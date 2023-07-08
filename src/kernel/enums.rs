@@ -34,6 +34,15 @@ pub enum IdStr {
 	Str(WString),
 }
 
+impl std::fmt::Display for IdStr {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		match self {
+			Self::Id(rt) => write!(f, "ID: {}", rt),
+			Self::Str(str) => write!(f, "Str: {}", str),
+		}
+	}
+}
+
 impl IdStr {
 	/// Constructs the enum directly from a string.
 	#[must_use]
@@ -219,6 +228,15 @@ pub enum RtStr {
 	Rt(co::RT),
 	/// A resource string identifier.
 	Str(WString),
+}
+
+impl std::fmt::Display for RtStr {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		match self {
+			Self::Rt(rt) => write!(f, "RT: {}", rt),
+			Self::Str(str) => write!(f, "Str: {}", str),
+		}
+	}
 }
 
 impl RtStr {
