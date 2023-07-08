@@ -5,6 +5,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::comctl::decl::EDITBALLOONTIP;
+use crate::gdi::decl::HFONT;
 use crate::gui::base::Base;
 use crate::gui::events::{EditEvents, WindowEvents};
 use crate::gui::layout_arranger::{Horz, Vert};
@@ -233,6 +234,17 @@ impl Edit {
 		self.hwnd().SendMessage(em::GetLineCount {})
 	}
 
+	/// Sets the font to the `Edit` by sending an
+	/// [`wm::SetFont`](crate::msg::wm::SetFont) message.
+	///
+	/// Note that the font must remain alive while being used in the control.
+	pub fn set_font(&self, font: &HFONT) {
+		self.hwnd().SendMessage(wm::SetFont {
+			hfont: unsafe { font.raw_copy() },
+			redraw: true,
+		});
+	}
+
 	/// Sets the selection range of the text by sending an
 	/// [`em::SetSel`](crate::msg::em::SetSel) message.
 	///
@@ -248,7 +260,7 @@ impl Edit {
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	/// # let my_edit = gui::Edit::new(&wnd, gui::EditOpts::default());
 	///
-	/// my_edit.set_selection(Some(0), None);
+	/// my_edit.set_selection(0, -1);
 	/// ```
 	///
 	/// Clearing the selection:
@@ -260,9 +272,9 @@ impl Edit {
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	/// # let my_edit = gui::Edit::new(&wnd, gui::EditOpts::default());
 	///
-	/// my_edit.set_selection(None, None);
+	/// my_edit.set_selection(-1, -1);
 	/// ```
-	pub fn set_selection(&self, start: Option<u32>, end: Option<u32>) {
+	pub fn set_selection(&self, start: i32, end: i32) {
 		self.hwnd().SendMessage(em::SetSel { start, end });
 	}
 

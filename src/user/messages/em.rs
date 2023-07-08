@@ -813,8 +813,8 @@ unsafe impl<'a> MsgSend for SetRectNp<'a> {
 ///
 /// Return type: `()`.
 pub struct SetSel {
-	pub start: Option<u32>,
-	pub end: Option<u32>,
+	pub start: i32,
+	pub end: i32,
 }
 
 unsafe impl MsgSend for SetSel {
@@ -827,8 +827,8 @@ unsafe impl MsgSend for SetSel {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::EM::SETSEL.into(),
-			wparam: self.start.map_or(-1, |n| n as i32) as _,
-			lparam: self.end.map_or(-1, |n| n as i32) as _,
+			wparam: self.start as _,
+			lparam: self.end as _,
 		}
 	}
 }

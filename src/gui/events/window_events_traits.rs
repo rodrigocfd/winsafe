@@ -405,6 +405,8 @@ pub trait GuiEvents {
 		/// [`WM_CREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create)
 		/// instead.
 		///
+		/// Return `true` to set the focus to the first control in the dialog.
+		///
 		/// # Examples
 		///
 		/// ```rust,no_run
