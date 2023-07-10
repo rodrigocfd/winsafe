@@ -350,6 +350,22 @@ pub fn EnumDisplaySettingsEx(
 
 /// [`EnumThreadWindows`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumthreadwindows)
 /// function.
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{EnumThreadWindows, GetCurrentThreadId, HWND};
+///
+/// EnumThreadWindows(
+///     GetCurrentThreadId(),
+///     |hwnd: HWND| -> bool {
+///         println!("HWND: {}", hwnd);
+///         true
+///     },
+/// )?;
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
 pub fn EnumThreadWindows<F>(thread_id: u32, func: F) -> SysResult<()>
 	where F: Fn(HWND) -> bool,
 {

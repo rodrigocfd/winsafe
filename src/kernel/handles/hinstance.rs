@@ -53,6 +53,27 @@ pub trait kernel_Hinstance: Handle {
 
 	/// [`EnumResourceNames`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-enumresourcenamesw)
 	/// function.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, HINSTANCE, IdStr, RtStr};
+	///
+	/// let hexe = HINSTANCE::LoadLibrary("hand.exe")?;
+	///
+	/// hexe.EnumResourceTypes(|res_type: RtStr| -> bool {
+	///     let res_type2 = res_type.clone();
+	///     hexe.EnumResourceNames(res_type, |name: IdStr| -> bool {
+	///         println!("Type: {}, name: {}", res_type2, name);
+	///         true
+	///     }).unwrap();
+	///     true
+	/// })?;
+	///
+	/// // FreeLibrary() called automatically
+	/// # Ok::<_, co::ERROR>(())
+	/// ```
 	fn EnumResourceNames<F>(&self,
 		resource_type: RtStr,
 		func: F,
