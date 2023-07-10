@@ -5,7 +5,8 @@ use crate::kernel::privs::ptr_to_sysresult_handle;
 use crate::prelude::{Handle, kernel_Hinstance};
 use crate::user;
 use crate::user::decl::{
-	ATOM, DLGPROC, HACCEL, HMENU, HWND, IdIdcStr, IdIdiStr, WNDCLASSEX,
+	ATOM, DLGPROC, DLGTEMPLATE, HACCEL, HMENU, HWND, IdIdcStr, IdIdiStr,
+	WNDCLASSEX,
 };
 use crate::user::guard::{DestroyCursorGuard, DestroyIconGuard};
 
@@ -45,6 +46,34 @@ pub trait user_Hinstance: kernel_Hinstance {
 			},
 		)
 	}
+
+	/// [`DialogBoxIndirectParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dialogboxindirectparamw)
+	/// function.
+	///
+	/// # Safety
+	///
+	/// To create a dialog, you must provide a dialog procedure.
+	unsafe fn DialogBoxIndirectParam(&self,
+		dialog_template: &DLGTEMPLATE,
+		hwnd_parent: Option<&HWND>,
+		dialog_proc: DLGPROC,
+		init_param: Option<isize>,
+	) -> SysResult<isize>
+	{
+		match unsafe {
+			user::ffi::DialogBoxIndirectParamW(
+				self.ptr(),
+				dialog_template as *const _ as _,
+				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr()),
+				dialog_proc as _,
+				init_param.unwrap_or_default(),
+			)
+		} {
+			-1 => Err(GetLastError()),
+			res => Ok(res), // assumes hWndParent as valid, so no check for zero
+		}
+	}
+
 
 	/// [`DialogBoxParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dialogboxparamw)
 	/// function.

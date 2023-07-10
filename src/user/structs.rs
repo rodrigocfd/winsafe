@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use std::marker::PhantomData;
 
@@ -417,6 +417,34 @@ impl DISPLAY_DEVICE {
 	pub_fn_string_arr_get_set!(DeviceString, set_DeviceString);
 	pub_fn_string_arr_get_set!(DeviceID, set_DeviceID);
 	pub_fn_string_arr_get_set!(DeviceKey, set_DeviceKey);
+}
+
+/// [`DLGITEMTEMPLATE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-dlgitemtemplate)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Copy)]
+pub struct DLGITEMTEMPLATE {
+	pub style: co::WS,
+	pub dwExtendedStyle: co::WS_EX,
+	pub x: i16,
+	pub y: i16,
+	pub cx: i16,
+	pub cy: i16,
+	pub id: u16,
+}
+
+/// [`DLGTEMPLATE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-dlgtemplate)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Copy)]
+pub struct DLGTEMPLATE {
+	pub style: co::WS,
+	pub dwExtendedStyle: co::WS_EX,
+	pub cdit: u16,
+	pub x: i16,
+	pub y: i16,
+	pub cx: i16,
+	pub cy: i16,
 }
 
 /// [`DRAWITEMSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-drawitemstruct)

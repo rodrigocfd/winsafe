@@ -74,7 +74,7 @@ pub struct DISK_SPACE_INFORMATION {
 /// [`FILETIME`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
 /// struct.
 #[repr(C)]
-#[derive(Default, Clone, PartialEq, Eq)]
+#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct FILETIME {
 	pub dwLowDateTime: u32,
 	pub dwHighDateTime: u32,
