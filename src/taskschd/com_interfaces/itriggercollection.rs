@@ -42,12 +42,9 @@ impl taskschd_ITriggerCollection for ITriggerCollection {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_ITriggerCollection: oleaut_IDispatch {
-	/// [`ITriggerCollection::Clear`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itriggercollection-clear)
-	/// method.
-	fn Clear(&self) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe { (vt::<ITriggerCollectionVT>(self).Clear)(self.ptr()) },
-		)
+	fn_com_noparm! { Clear: ITriggerCollectionVT;
+		/// [`ITriggerCollection::Clear`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itriggercollection-clear)
+		/// method.
 	}
 
 	/// [`ITriggerCollection::Create`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itriggercollection-create)

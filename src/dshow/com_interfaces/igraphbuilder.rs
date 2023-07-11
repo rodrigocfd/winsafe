@@ -56,10 +56,9 @@ impl dshow_IGraphBuilder for IGraphBuilder {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
-	/// [`IGraphBuilder::Abort`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-abort)
-	/// method.
-	fn Abort(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IGraphBuilderVT>(self).Abort)(self.ptr()) })
+	fn_com_noparm! { Abort: IGraphBuilderVT;
+		/// [`IGraphBuilder::Abort`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-abort)
+		/// method.
 	}
 
 	/// [`IGraphBuilder::AddSourceFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-addsourcefilter)

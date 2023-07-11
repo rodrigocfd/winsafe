@@ -103,12 +103,9 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 		}
 	}
 
-	/// [`IEnumShellItems::Reset`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-reset)
-	/// method.
-	fn Reset(&self) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe { (vt::<IEnumShellItemsVT>(self).Reset)(self.ptr()) },
-		)
+	fn_com_noparm! { Reset: IEnumShellItemsVT;
+		/// [`IEnumShellItems::Reset`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-reset)
+		/// method.
 	}
 
 	/// [`IEnumShellItems::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-skip)

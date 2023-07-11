@@ -44,10 +44,9 @@ impl dshow_IPin for IPin {}
 /// This trait is enabled with the `dshow` feature, and provides methods for
 /// [`IPin`](crate::IPin).
 pub trait dshow_IPin: ole_IUnknown {
-	/// [`IPin::BeginFlush`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-beginflush)
-	/// method.
-	fn BeginFlush(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IPinVT>(self).BeginFlush)(self.ptr()) })
+	fn_com_noparm! { BeginFlush: IPinVT;
+		/// [`IPin::BeginFlush`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-beginflush)
+		/// method.
 	}
 
 	/// [`IPin::Connect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connect)
@@ -84,22 +83,19 @@ pub trait dshow_IPin: ole_IUnknown {
 		)
 	}
 
-	/// [`IPin::Disconnect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-disconnect)
-	/// method.
-	fn Disconnect(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IPinVT>(self).Disconnect)(self.ptr()) })
+	fn_com_noparm! { Disconnect: IPinVT;
+		/// [`IPin::Disconnect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-disconnect)
+		/// method.
 	}
 
-	/// [`IPin::EndFlush`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-endflush)
-	/// method.
-	fn EndFlush(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IPinVT>(self).EndFlush)(self.ptr()) })
+	fn_com_noparm! { EndFlush: IPinVT;
+		/// [`IPin::EndFlush`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-endflush)
+		/// method.
 	}
 
-	/// [`IPin::EndOfStream`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-endofstream)
-	/// method.
-	fn EndOfStream(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IPinVT>(self).EndOfStream)(self.ptr()) })
+	fn_com_noparm! { EndOfStream: IPinVT;
+		/// [`IPin::EndOfStream`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-endofstream)
+		/// method.
 	}
 
 	fn_com_get! { EnumMediaTypes: IPinVT, IEnumMediaTypes;

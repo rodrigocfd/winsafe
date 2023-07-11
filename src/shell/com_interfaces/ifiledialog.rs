@@ -75,12 +75,9 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		)
 	}
 
-	/// [`IFileDialog::ClearClientData`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-clearclientdata)
-	/// method.
-	fn ClearClientData(&self) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe { (vt::<IFileDialogVT>(self).ClearClientData)(self.ptr()) },
-		)
+	fn_com_noparm! { ClearClientData: IFileDialogVT;
+		/// [`IFileDialog::ClearClientData`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-clearclientdata)
+		/// method.
 	}
 
 	/// [`IFileDialog::Close`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-close)

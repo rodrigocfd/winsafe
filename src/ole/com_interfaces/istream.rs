@@ -86,10 +86,9 @@ pub trait ole_IStream: ole_ISequentialStream {
 		)
 	}
 
-	/// [`IStream::Revert`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-revert)
-	/// method.
-	fn Revert(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IStreamVT>(self).Revert)(self.ptr()) })
+	fn_com_noparm! { Revert: IStreamVT;
+		/// [`IStream::Revert`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-revert)
+		/// method.
 	}
 
 	/// [`IStream::Seek`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-seek)

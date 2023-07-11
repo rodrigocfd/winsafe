@@ -43,12 +43,9 @@ impl ole_IBindCtx for IBindCtx {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait ole_IBindCtx: ole_IUnknown {
-	/// [`IBindCtx::ReleaseBoundObjects`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-releaseboundobjects)
-	/// method.
-	fn ReleaseBoundObjects(&self) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe { (vt::<IBindCtxVT>(self).ReleaseBoundObjects)(self.ptr()) },
-		)
+	fn_com_noparm! { ReleaseBoundObjects: IBindCtxVT;
+		/// [`IBindCtx::ReleaseBoundObjects`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-releaseboundobjects)
+		/// method.
 	}
 
 	/// [`IBindCtx::RevokeObjectParam`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-revokeobjectparam)

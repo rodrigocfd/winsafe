@@ -46,12 +46,9 @@ impl taskschd_IActionCollection for IActionCollection {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IActionCollection: oleaut_IDispatch {
-	/// [`IActionCollection::Clear`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-clear)
-	/// method.
-	fn Clear(&self) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe { (vt::<IActionCollectionVT>(self).Clear)(self.ptr()) },
-		)
+	fn_com_noparm! { Clear: IActionCollectionVT;
+		/// [`IActionCollection::Clear`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-clear)
+		/// method.
 	}
 
 	/// [`IActionCollection::Create`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-create)

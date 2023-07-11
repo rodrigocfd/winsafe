@@ -115,10 +115,9 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 		)
 	}
 
-	/// [`IMediaControl::Stop`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-stop)
-	/// method.
-	fn Stop(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IMediaControlVT>(self).Stop)(self.ptr()) })
+	fn_com_noparm! { Stop: IMediaControlVT;
+		/// [`IMediaControl::Stop`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-stop)
+		/// method.
 	}
 
 	/// [`IMediaControl::StopWhenReady`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-stopwhenready)

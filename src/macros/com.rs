@@ -123,6 +123,23 @@ macro_rules! const_guid {
 	};
 }
 
+/// Implements a trait function with no parameters.
+macro_rules! fn_com_noparm {
+	(
+		$method:ident : $vt:ty;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		fn $method(&self) -> HrResult<()> {
+			crate::ole::privs::ok_to_hrresult(
+				unsafe {
+					(crate::ole::privs::vt::<$vt>(self).$method)(self.ptr())
+				},
+			)
+		}
+	};
+}
+
 /// Implements a trait function for a COM interface getter, no parameters.
 macro_rules! fn_com_get {
 	(

@@ -134,12 +134,9 @@ pub trait ole_IPicture: ole_IUnknown {
 		).map(|_| w)
 	}
 
-	/// [`IPicture::PictureChanged`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-picturechanged)
-	/// method.
-	fn PictureChanged(&self) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe { (vt::<IPictureVT>(self).PictureChanged)(self.ptr()) },
-		)
+	fn_com_noparm! { PictureChanged: IPictureVT;
+		/// [`IPicture::PictureChanged`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-picturechanged)
+		/// method.
 	}
 
 	/// [`IPicture::put_KeepOriginalFormat`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-put_keeporiginalformat)

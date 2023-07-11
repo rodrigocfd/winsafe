@@ -32,13 +32,13 @@ Plus, below are the numbers of native FFI items implemented:
 
 | Native FFI item | Count |
 | - | - |
-| Functions | 710 |
+| Functions | 711 |
 | Structs | 203 |
 | Constants | 12,919 |
 | Window messages | 648 |
 | Handles | 40 |
-| COM interfaces | 63 |
-| COM methods | 257 |
+| COM interfaces | 66 |
+| COM methods | 242 |
 
 Although WinSafe already has a lot of Win32 APIs, it doesn't have *everything*, simply because Win32 API is gigantic. So if you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but have everything.
 
@@ -72,6 +72,7 @@ The following Cargo features are available so far:
 | `gdi` | Gdi32.dll, the [Windows GDI](https://learn.microsoft.com/en-us/windows/win32/gdi/windows-gdi) |
 | **`gui`** | **The WinSafe high-level GUI abstractions** |
 | `kernel` | Kernel32.dll, Advapi32.dll and Ktmw32.dll – all others will include it |
+| `mf` | [Media Foundation](https://learn.microsoft.com/en-us/windows/win32/medfound/microsoft-media-foundation-sdk) |
 | `msimg` | Msimg32.dll |
 | `ole` | OLE and basic COM support |
 | `oleaut` | [OLE Automation](https://learn.microsoft.com/en-us/windows/win32/api/_automat/) |

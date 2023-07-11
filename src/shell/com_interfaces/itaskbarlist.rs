@@ -82,10 +82,9 @@ pub trait shell_ITaskbarList: ole_IUnknown {
 		)
 	}
 
-	/// [`ITaskbarList::HrInit`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-hrinit)
-	/// method.
-	fn HrInit(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<ITaskbarListVT>(self).HrInit)(self.ptr()) })
+	fn_com_noparm! { HrInit: ITaskbarListVT;
+		/// [`ITaskbarList::HrInit`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-hrinit)
+		/// method.
 	}
 
 	/// [`ITaskbarList::SetActiveAlt`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist-setactivealt)

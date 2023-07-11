@@ -4,7 +4,7 @@ use crate::dshow::decl::AM_MEDIA_TYPE;
 use crate::dshow::iterators::IenummediatypesIter;
 use crate::kernel::ffi_types::{COMPTR, HRES, PVOID};
 use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
+use crate::ole::privs::{okfalse_to_hrresult, vt};
 use crate::prelude::ole_IUnknown;
 use crate::vt::IUnknownVT;
 
@@ -86,12 +86,9 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 		)
 	}
 
-	/// [`IEnumMediaTypes::Reset`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienummediatypes-reset)
-	/// method.
-	fn Reset(&self) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe { (vt::<IEnumMediaTypesVT>(self).Reset)(self.ptr()) },
-		)
+	fn_com_noparm! { Reset: IEnumMediaTypesVT;
+		/// [`IEnumMediaTypes::Reset`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienummediatypes-reset)
+		/// method.
 	}
 
 	/// [`IEnumMediaTypes::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienummediatypes-skip)

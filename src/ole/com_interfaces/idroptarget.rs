@@ -62,12 +62,9 @@ pub trait ole_IDropTarget: ole_IUnknown {
 		).map(|_| effect_buf)
 	}
 
-	/// [`IDropTarget::DragLeave`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragleave)
-	/// method.
-	fn DragLeave(&self) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe { (vt::<IDropTargetVT>(self).DragLeave)(self.ptr()) },
-		)
+	fn_com_noparm! { DragLeave: IDropTargetVT;
+		/// [`IDropTarget::DragLeave`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragleave)
+		/// method.
 	}
 
 	/// [`IDropTarget::DragOver`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragover)

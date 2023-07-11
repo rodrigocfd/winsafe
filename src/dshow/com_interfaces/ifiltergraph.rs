@@ -132,13 +132,8 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 		)
 	}
 
-	/// [`IFilterGraph::SetDefaultSyncSource`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-setdefaultsyncsource)
-	/// method.
-	fn SetDefaultSyncSource(&self) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IFilterGraphVT>(self).SetDefaultSyncSource)(self.ptr())
-			},
-		)
+	fn_com_noparm! { SetDefaultSyncSource: IFilterGraphVT;
+		/// [`IFilterGraph::SetDefaultSyncSource`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-setdefaultsyncsource)
+		/// method.
 	}
 }

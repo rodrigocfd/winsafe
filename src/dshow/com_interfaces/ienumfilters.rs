@@ -93,10 +93,9 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 		}
 	}
 
-	/// [`IEnumFilters::Reset`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-reset)
-	/// method.
-	fn Reset(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IEnumFiltersVT>(self).Reset)(self.ptr()) })
+	fn_com_noparm! { Reset: IEnumFiltersVT;
+		/// [`IEnumFilters::Reset`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-reset)
+		/// method.
 	}
 
 	/// [`IEnumFilters::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-skip)

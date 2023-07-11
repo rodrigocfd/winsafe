@@ -203,11 +203,8 @@ pub trait dxgi_IDXGIOutput: dxgi_IDXGIObject {
 		)
 	}
 
-	/// [`IDXGIOutput::WaitForVBlank`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgioutput-waitforvblank)
-	/// method.
-	fn WaitForVBlank(&self) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe { (vt::<IDXGIOutputVT>(self).WaitForVBlank)(self.ptr()) },
-		)
+	fn_com_noparm! { WaitForVBlank: IDXGIOutputVT;
+		/// [`IDXGIOutput::WaitForVBlank`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgioutput-waitforvblank)
+		/// method.
 	}
 }

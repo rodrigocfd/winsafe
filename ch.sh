@@ -9,6 +9,7 @@ FEATS=(
 	gdi
 	gui
 	kernel
+	mf
 	msimg
 	ole
 	oleaut

@@ -72,12 +72,9 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 		Ok(Box::new(IpropertystoreIter::new(self)?))
 	}
 
-	/// [`IPropertyStore::Commit`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-commit)
-	/// method.
-	fn Commit(&self) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe { (vt::<IPropertyStoreVT>(self).Commit)(self.ptr()) },
-		)
+	fn_com_noparm! { Commit: IPropertyStoreVT;
+		/// [`IPropertyStore::Commit`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-commit)
+		/// method.
 	}
 
 	/// [`IPropertyStore::GetAt`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getat)
