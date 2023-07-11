@@ -1,6 +1,8 @@
 #![cfg_attr(docsrs, doc(cfg(feature = "mf")))]
 
 pub(in crate::mf) mod ffi;
+pub(crate) mod privs;
+pub mod co;
 
 mod com_interfaces;
 mod funcs;

@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID};
+use crate::kernel::ffi_types::{COMPTR, HRES};
 use crate::ole::decl::HrResult;
 use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::mf_IMFAttributes;

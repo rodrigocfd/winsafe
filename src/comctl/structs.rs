@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use std::marker::PhantomData;
 
@@ -1179,10 +1179,10 @@ impl TBREPLACEBITMAP {
 		if self.hInstOld == HINSTANCE::NULL {
 			BmpInstId::Bmp(unsafe { HBITMAP::from_ptr(self.nIDOld as _) })
 		} else {
-			BmpInstId::InstId((
+			BmpInstId::InstId(
 				unsafe { self.hInstOld.raw_copy() },
 				self.nIDOld as _,
-			))
+			)
 		}
 	}
 
@@ -1193,7 +1193,7 @@ impl TBREPLACEBITMAP {
 				self.hInstOld = HINSTANCE::NULL;
 				self.nIDOld = hbmp.ptr() as _;
 			},
-			BmpInstId::InstId((hinst, id)) => {
+			BmpInstId::InstId(hinst, id) => {
 				self.hInstOld = hinst;
 				self.nIDOld = id as _;
 			},
@@ -1206,10 +1206,10 @@ impl TBREPLACEBITMAP {
 		if self.hInstNew == HINSTANCE::NULL {
 			BmpInstId::Bmp(unsafe { HBITMAP::from_ptr(self.nIDNew as _) })
 		} else {
-			BmpInstId::InstId((
+			BmpInstId::InstId(
 				unsafe { self.hInstNew.raw_copy() },
 				self.nIDNew as _,
-			))
+			)
 		}
 	}
 
@@ -1220,7 +1220,7 @@ impl TBREPLACEBITMAP {
 				self.hInstNew = HINSTANCE::NULL;
 				self.nIDNew = hbmp.ptr() as _;
 			},
-			BmpInstId::InstId((hinst, id)) => {
+			BmpInstId::InstId(hinst, id) => {
 				self.hInstNew = hinst;
 				self.nIDNew = id as _;
 			},

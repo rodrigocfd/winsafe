@@ -54,7 +54,7 @@ pub enum BmpInstId {
 	/// Bitmap handle.
 	Bmp(HBITMAP),
 	/// Module handle and resource ID.
-	InstId((HINSTANCE, u16)),
+	InstId(HINSTANCE, u16),
 }
 
 /// Variant type for:

@@ -328,6 +328,7 @@ pub mod co {
 	#[cfg(feature = "dxgi")] pub use super::dxgi::co::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::co::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::co::*;
+	#[cfg(feature = "mf")] pub use super::mf::co::*;
 	#[cfg(feature = "ole")] pub use super::ole::co::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::co::*;
 	#[cfg(feature = "shell")] pub use super::shell::co::*;
