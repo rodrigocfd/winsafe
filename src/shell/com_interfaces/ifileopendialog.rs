@@ -73,7 +73,7 @@ impl shell_IFileOpenDialog for IFileOpenDialog {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_IFileOpenDialog: shell_IFileDialog {
-	fn_com_get! { GetResults: IFileOpenDialogVT, IShellItemArray;
+	fn_com_interface_get! { GetResults: IFileOpenDialogVT, IShellItemArray;
 		/// [`IFileOpenDialog::GetResults`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
 		/// method.
 		///
@@ -103,7 +103,7 @@ pub trait shell_IFileOpenDialog: shell_IFileDialog {
 		/// ```
 	}
 
-	fn_com_get! { GetSelectedItems: IFileOpenDialogVT, IShellItemArray;
+	fn_com_interface_get! { GetSelectedItems: IFileOpenDialogVT, IShellItemArray;
 		/// [`IFileOpenDialog::GetSelectedItems`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getselecteditems)
 		/// method.
 	}

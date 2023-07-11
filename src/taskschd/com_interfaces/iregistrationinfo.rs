@@ -51,12 +51,12 @@ impl taskschd_IRegistrationInfo for IRegistrationInfo {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IRegistrationInfo: oleaut_IDispatch {
-	fn_bstr_get! { get_Author: IRegistrationInfoVT;
+	fn_com_bstr_get! { get_Author: IRegistrationInfoVT;
 		/// [`IRegistrationInfo::get_Author`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregistrationinfo-get_author)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Author: IRegistrationInfoVT, author;
+	fn_com_bstr_set! { put_Author: IRegistrationInfoVT, author;
 		/// [`IRegistrationInfo::put_Author`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregistrationinfo-put_author)
 		/// method.
 	}

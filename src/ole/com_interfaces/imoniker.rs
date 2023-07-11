@@ -208,7 +208,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 		).map(|_| hash)
 	}
 
-	fn_com_get! { Inverse: IMonikerVT, IMoniker;
+	fn_com_interface_get! { Inverse: IMonikerVT, IMoniker;
 		/// [`IMoniker::Inverse`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-inverse)
 		/// method.
 	}

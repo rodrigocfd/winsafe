@@ -54,7 +54,7 @@ impl taskschd_IRegisteredTask for IRegisteredTask {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
-	fn_com_get! { get_Definition: IRegisteredTaskVT, ITaskDefinition;
+	fn_com_interface_get! { get_Definition: IRegisteredTaskVT, ITaskDefinition;
 		/// [`IRegisteredTask::get_Definition`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_definition)
 		/// method.
 	}
@@ -101,7 +101,7 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 		).map(|_| r)
 	}
 
-	fn_bstr_get! { get_Name: IRegisteredTaskVT;
+	fn_com_bstr_get! { get_Name: IRegisteredTaskVT;
 		/// [`IRegisteredTask::get_Name`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_name)
 		/// method.
 	}
@@ -133,7 +133,7 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 		).map(|_| mr)
 	}
 
-	fn_bstr_get! { get_Path: IRegisteredTaskVT;
+	fn_com_bstr_get! { get_Path: IRegisteredTaskVT;
 		/// [`IRegisteredTask::get_Path`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_path)
 		/// method.
 	}
@@ -153,7 +153,7 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 		).map(|_| state)
 	}
 
-	fn_bstr_get! { get_Xml: IRegisteredTaskVT;
+	fn_com_bstr_get! { get_Xml: IRegisteredTaskVT;
 		/// [`IRegisteredTask::get_Xml`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_xml)
 		/// method.
 	}

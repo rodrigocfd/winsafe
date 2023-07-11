@@ -53,32 +53,32 @@ impl taskschd_IExecAction for IExecAction {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IExecAction: taskschd_IAction {
-	fn_bstr_get! { get_Arguments: IExecActionVT;
+	fn_com_bstr_get! { get_Arguments: IExecActionVT;
 		/// [`IExecAction::get_Arguments`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-get_arguments)
 		/// method.
 	}
 
-	fn_bstr_get! { get_Path: IExecActionVT;
+	fn_com_bstr_get! { get_Path: IExecActionVT;
 		/// [`IExecAction::get_Path`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-get_path)
 		/// method.
 	}
 
-	fn_bstr_get! { get_WorkingDirectory: IExecActionVT;
+	fn_com_bstr_get! { get_WorkingDirectory: IExecActionVT;
 		/// [`IExecAction::get_WorkingDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-get_workingdirectory)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Arguments: IExecActionVT, arguments;
+	fn_com_bstr_set! { put_Arguments: IExecActionVT, arguments;
 		/// [`IExecAction::get_Arguments`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-put_arguments)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Path: IExecActionVT, path;
+	fn_com_bstr_set! { put_Path: IExecActionVT, path;
 		/// [`IExecAction::put_Path`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-put_path)
 		/// method.
 	}
 
-	fn_bstr_set! { put_WorkingDirectory: IExecActionVT, working_directory;
+	fn_com_bstr_set! { put_WorkingDirectory: IExecActionVT, working_directory;
 		/// [`IExecAction::put_WorkingDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iexecaction-put_workingdirectory)
 		/// method.
 	}

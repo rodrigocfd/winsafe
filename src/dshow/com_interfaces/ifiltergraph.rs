@@ -88,7 +88,7 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 		)
 	}
 
-	fn_com_get! { EnumFilters: IFilterGraphVT, IEnumFilters;
+	fn_com_interface_get! { EnumFilters: IFilterGraphVT, IEnumFilters;
 		/// [`IFilterGraph::EnumFilters`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-enumfilters)
 		/// method.
 	}

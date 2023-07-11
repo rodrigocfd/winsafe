@@ -59,22 +59,22 @@ pub trait taskschd_ITrigger: oleaut_IDispatch {
 		).map(|_| enabled != 0)
 	}
 
-	fn_bstr_get! { get_EndBoundary: ITriggerVT;
+	fn_com_bstr_get! { get_EndBoundary: ITriggerVT;
 		/// [`ITrigger::get_EndBoundary`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-get_endboundary)
 		/// method.
 	}
 
-	fn_bstr_get! { get_ExecutionTimeLimit: ITriggerVT;
+	fn_com_bstr_get! { get_ExecutionTimeLimit: ITriggerVT;
 		/// [`ITrigger::get_ExecutionTimeLimit`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-get_executiontimelimit)
 		/// method.
 	}
 
-	fn_bstr_get! { get_Id: ITriggerVT;
+	fn_com_bstr_get! { get_Id: ITriggerVT;
 		/// [`ITrigger::get_Id`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-get_id)
 		/// method.
 	}
 
-	fn_bstr_get! { get_StartBoundary: ITriggerVT;
+	fn_com_bstr_get! { get_StartBoundary: ITriggerVT;
 		/// [`ITrigger::get_StartBoundary`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-get_startboundary)
 		/// method.
 	}
@@ -99,22 +99,22 @@ pub trait taskschd_ITrigger: oleaut_IDispatch {
 		)
 	}
 
-	fn_bstr_set! { put_EndBoundary: ITriggerVT, end;
+	fn_com_bstr_set! { put_EndBoundary: ITriggerVT, end;
 		/// [`ITrigger::put_EndBoundary`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-put_endboundary)
 		/// method.
 	}
 
-	fn_bstr_set! { put_ExecutionTimeLimit: ITriggerVT, time_limit;
+	fn_com_bstr_set! { put_ExecutionTimeLimit: ITriggerVT, time_limit;
 		/// [`ITrigger::put_ExecutionTimeLimit`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-put_executiontimelimit)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Id: ITriggerVT, id;
+	fn_com_bstr_set! { put_Id: ITriggerVT, id;
 		/// [`ITrigger::put_Id`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-put_id)
 		/// method.
 	}
 
-	fn_bstr_set! { put_StartBoundary: ITriggerVT, start;
+	fn_com_bstr_set! { put_StartBoundary: ITriggerVT, start;
 		/// [`ITrigger::put_StartBoundary`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-put_startboundary)
 		/// method.
 	}

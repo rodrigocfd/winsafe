@@ -65,12 +65,12 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 		)
 	}
 
-	fn_bstr_get! { get_Name: ITaskFolderVT;
+	fn_com_bstr_get! { get_Name: ITaskFolderVT;
 		/// [`ITaskFolder::get_Name`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskfolder-get_name)
 		/// method.
 	}
 
-	fn_bstr_get! { get_Path: ITaskFolderVT;
+	fn_com_bstr_get! { get_Path: ITaskFolderVT;
 		/// [`ITaskFolder::get_Path`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskfolder-get_path)
 		/// method.
 	}

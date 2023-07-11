@@ -53,22 +53,22 @@ impl taskschd_IEventTrigger for IEventTrigger {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IEventTrigger: taskschd_ITrigger {
-	fn_bstr_get! { get_Delay: IEventTriggerVT;
+	fn_com_bstr_get! { get_Delay: IEventTriggerVT;
 		/// [`IEventTrigger::get_Delay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ieventtrigger-get_delay)
 		/// method.
 	}
 
-	fn_bstr_get! { get_Subscription: IEventTriggerVT;
+	fn_com_bstr_get! { get_Subscription: IEventTriggerVT;
 		/// [`IEventTrigger::get_Subscription`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ieventtrigger-get_subscription)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Delay: IEventTriggerVT, delay;
+	fn_com_bstr_set! { put_Delay: IEventTriggerVT, delay;
 		/// [`IEventTrigger::put_Delay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ieventtrigger-put_delay)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Subscription: IEventTriggerVT, subscription;
+	fn_com_bstr_set! { put_Subscription: IEventTriggerVT, subscription;
 		/// [`IEventTrigger::put_Subscription`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ieventtrigger-put_subscription)
 		/// method.
 	}

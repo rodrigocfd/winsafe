@@ -141,7 +141,7 @@ macro_rules! fn_com_noparm {
 }
 
 /// Implements a trait function for a COM interface getter, no parameters.
-macro_rules! fn_com_get {
+macro_rules! fn_com_interface_get {
 	(
 		$method:ident : $vt:ty, $iface:ty;
 		$( #[$doc:meta] )*
@@ -161,7 +161,7 @@ macro_rules! fn_com_get {
 }
 
 /// Implements a trait function for a BSTR getter, no parameters.
-macro_rules! fn_bstr_get {
+macro_rules! fn_com_bstr_get {
 	(
 		$method:ident : $vt:ty;
 		$( #[$doc:meta] )*
@@ -183,7 +183,7 @@ macro_rules! fn_bstr_get {
 }
 
 /// Implements a trait function for a BSTR setter, single parameter.
-macro_rules! fn_bstr_set {
+macro_rules! fn_com_bstr_set {
 	(
 		$method:ident : $vt:ty, $arg:ident;
 		$( #[$doc:meta] )*

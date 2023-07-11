@@ -52,22 +52,22 @@ impl taskschd_IComHandlerAction for IComHandlerAction {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IComHandlerAction: taskschd_IAction {
-	fn_bstr_get! { get_ClassId: IComHandlerActionVT;
+	fn_com_bstr_get! { get_ClassId: IComHandlerActionVT;
 		/// [`IComHandlerAction::get_ClassId`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-icomhandleraction-get_classid)
 		/// method.
 	}
 
-	fn_bstr_get! { get_Data: IComHandlerActionVT;
+	fn_com_bstr_get! { get_Data: IComHandlerActionVT;
 		/// [`IComHandlerAction::get_Data`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-icomhandleraction-get_data)
 		/// method.
 	}
 
-	fn_bstr_set! { put_ClassId: IComHandlerActionVT, class_id;
+	fn_com_bstr_set! { put_ClassId: IComHandlerActionVT, class_id;
 		/// [`IComHandlerAction::put_ClassId`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-icomhandleraction-put_classid)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Data: IComHandlerActionVT, data;
+	fn_com_bstr_set! { put_Data: IComHandlerActionVT, data;
 		/// [`IComHandlerAction::put_Data`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-icomhandleraction-put_data)
 		/// method.
 	}

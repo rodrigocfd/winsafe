@@ -67,82 +67,82 @@ impl taskschd_IEmailAction for IEmailAction {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IEmailAction: taskschd_IAction {
-	fn_bstr_get! { get_Bcc: IEmailActionVT;
+	fn_com_bstr_get! { get_Bcc: IEmailActionVT;
 		/// [`IEmailAction::get_Bcc`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-get_bcc)
 		/// method.
 	}
 
-	fn_bstr_get! { get_Body: IEmailActionVT;
+	fn_com_bstr_get! { get_Body: IEmailActionVT;
 		/// [`IEmailAction::get_Body`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-get_body)
 		/// method.
 	}
 
-	fn_bstr_get! { get_Cc: IEmailActionVT;
+	fn_com_bstr_get! { get_Cc: IEmailActionVT;
 		/// [`IEmailAction::get_Cc`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-get_cc)
 		/// method.
 	}
 
-	fn_bstr_get! { get_From: IEmailActionVT;
+	fn_com_bstr_get! { get_From: IEmailActionVT;
 		/// [`IEmailAction::get_From`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-get_from)
 		/// method.
 	}
 
-	fn_bstr_get! { get_ReplyTo: IEmailActionVT;
+	fn_com_bstr_get! { get_ReplyTo: IEmailActionVT;
 		/// [`IEmailAction::get_ReplyTo`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-get_replyto)
 		/// method.
 	}
 
-	fn_bstr_get! { get_Server: IEmailActionVT;
+	fn_com_bstr_get! { get_Server: IEmailActionVT;
 		/// [`IEmailAction::get_Server`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-get_server)
 		/// method.
 	}
 
-	fn_bstr_get! { get_Subject: IEmailActionVT;
+	fn_com_bstr_get! { get_Subject: IEmailActionVT;
 		/// [`IEmailAction::get_Subject`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-get_subject)
 		/// method.
 	}
 
-	fn_bstr_get! { get_To: IEmailActionVT;
+	fn_com_bstr_get! { get_To: IEmailActionVT;
 		/// [`IEmailAction::get_To`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-get_to)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Bcc: IEmailActionVT, bcc;
+	fn_com_bstr_set! { put_Bcc: IEmailActionVT, bcc;
 		/// [`IEmailAction::put_Bcc`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-put_bcc)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Body: IEmailActionVT, body;
+	fn_com_bstr_set! { put_Body: IEmailActionVT, body;
 		/// [`IEmailAction::put_Body`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-put_body)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Cc: IEmailActionVT, cc;
+	fn_com_bstr_set! { put_Cc: IEmailActionVT, cc;
 		/// [`IEmailAction::put_Cc`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-put_cc)
 		/// method.
 	}
 
-	fn_bstr_set! { put_From: IEmailActionVT, from;
+	fn_com_bstr_set! { put_From: IEmailActionVT, from;
 		/// [`IEmailAction::put_From`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-put_from)
 		/// method.
 	}
 
-	fn_bstr_set! { put_ReplyTo: IEmailActionVT, reply_to;
+	fn_com_bstr_set! { put_ReplyTo: IEmailActionVT, reply_to;
 		/// [`IEmailAction::put_ReplyTo`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-put_replyto)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Server: IEmailActionVT, server;
+	fn_com_bstr_set! { put_Server: IEmailActionVT, server;
 		/// [`IEmailAction::put_Server`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-put_server)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Subject: IEmailActionVT, subject;
+	fn_com_bstr_set! { put_Subject: IEmailActionVT, subject;
 		/// [`IEmailAction::put_Subject`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-put_subject)
 		/// method.
 	}
 
-	fn_bstr_set! { put_To: IEmailActionVT, to;
+	fn_com_bstr_set! { put_To: IEmailActionVT, to;
 		/// [`IEmailAction::put_To`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iemailaction-put_to)
 		/// method.
 	}

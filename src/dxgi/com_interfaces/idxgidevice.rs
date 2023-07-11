@@ -39,7 +39,7 @@ impl dxgi_IDXGIDevice for IDXGIDevice {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {
-	fn_com_get! { GetAdapter: IDXGIDeviceVT, IDXGIAdapter;
+	fn_com_interface_get! { GetAdapter: IDXGIDeviceVT, IDXGIAdapter;
 		/// [`IDXGIDevice::GetAdapter`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-getadapter)
 		/// method.
 	}

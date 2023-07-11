@@ -49,12 +49,12 @@ impl taskschd_IBootTrigger for IBootTrigger {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IBootTrigger: taskschd_ITrigger {
-	fn_bstr_get! { get_Delay: IBootTriggerVT;
+	fn_com_bstr_get! { get_Delay: IBootTriggerVT;
 		/// [`IBootTrigger::get_Delay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iboottrigger-get_delay)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Delay: IBootTriggerVT, delay;
+	fn_com_bstr_set! { put_Delay: IBootTriggerVT, delay;
 		/// [`IBootTrigger::put_Delay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iboottrigger-put_delay)
 		/// method.
 	}

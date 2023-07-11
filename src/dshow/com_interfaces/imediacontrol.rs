@@ -102,7 +102,7 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 		)
 	}
 
-	fn_bstr_set! { RenderFile: IMediaControlVT, file_name;
+	fn_com_bstr_set! { RenderFile: IMediaControlVT, file_name;
 		/// [`IMediaControl::RenderFile`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-renderfile)
 		/// method.
 	}

@@ -57,7 +57,7 @@ impl dshow_IBaseFilter for IBaseFilter {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait dshow_IBaseFilter: dshow_IMediaFilter {
-	fn_com_get! { EnumPins: IBaseFilterVT, IEnumPins;
+	fn_com_interface_get! { EnumPins: IBaseFilterVT, IEnumPins;
 		/// [`IBaseFilter::EnumPins`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-enumpins)
 		/// method.
 	}

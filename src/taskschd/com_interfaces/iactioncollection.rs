@@ -66,7 +66,7 @@ pub trait taskschd_IActionCollection: oleaut_IDispatch {
 		).map(|_| queried)
 	}
 
-	fn_bstr_get! { get_Context: IActionCollectionVT;
+	fn_com_bstr_get! { get_Context: IActionCollectionVT;
 		/// [`IActionCollection::get_Context`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-get_context)
 		/// method.
 	}
@@ -102,17 +102,17 @@ pub trait taskschd_IActionCollection: oleaut_IDispatch {
 		).map(|_| queried)
 	}
 
-	fn_bstr_get! { get_XmlText: IActionCollectionVT;
+	fn_com_bstr_get! { get_XmlText: IActionCollectionVT;
 		/// [`IActionCollection::get_XmlText`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-get_xmltext)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Context: IActionCollectionVT, context;
+	fn_com_bstr_set! { put_Context: IActionCollectionVT, context;
 		/// [`IActionCollection::put_Context`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-put_context)
 		/// method.
 	}
 
-	fn_bstr_set! { put_XmlText: IActionCollectionVT, text;
+	fn_com_bstr_set! { put_XmlText: IActionCollectionVT, text;
 		/// [`IActionCollection::put_XmlText`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-put_xmltext)
 		/// method.
 	}

@@ -90,7 +90,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		)
 	}
 
-	fn_com_get! { GetCurrentSelection: IFileDialogVT, IShellItem;
+	fn_com_interface_get! { GetCurrentSelection: IFileDialogVT, IShellItem;
 		/// [`IFileDialog::GetCurrentSelection`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getcurrentselection)
 		/// method.
 	}
@@ -126,7 +126,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		).map(|_| index)
 	}
 
-	fn_com_get! { GetFolder: IFileDialogVT, IShellItem;
+	fn_com_interface_get! { GetFolder: IFileDialogVT, IShellItem;
 		/// [`IFileDialog::GetFolder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfolder)
 		/// method.
 	}
@@ -143,7 +143,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		).map(|_| unsafe { co::FOS::from_raw(opts) })
 	}
 
-	fn_com_get! { GetResult: IFileDialogVT, IShellItem;
+	fn_com_interface_get! { GetResult: IFileDialogVT, IShellItem;
 		/// [`IFileDialog::GetResult`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getresult)
 		/// method.
 		///

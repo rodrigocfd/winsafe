@@ -51,22 +51,22 @@ impl taskschd_ILogonTrigger for ILogonTrigger {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_ILogonTrigger: taskschd_ITrigger {
-	fn_bstr_get! { get_Delay: ILogonTriggerVT;
+	fn_com_bstr_get! { get_Delay: ILogonTriggerVT;
 		/// [`ILogonTrigger::get_RandomDelay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ilogontrigger-get_delay)
 		/// method.
 	}
 
-	fn_bstr_get! { get_UserId: ILogonTriggerVT;
+	fn_com_bstr_get! { get_UserId: ILogonTriggerVT;
 		/// [`ILogonTrigger::get_UserId`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ilogontrigger-get_userid)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Delay: ILogonTriggerVT, delay;
+	fn_com_bstr_set! { put_Delay: ILogonTriggerVT, delay;
 		/// [`ILogonTrigger::put_RandomDelay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ilogontrigger-put_delay)
 		/// method.
 	}
 
-	fn_bstr_set! { put_UserId: ILogonTriggerVT, user_id;
+	fn_com_bstr_set! { put_UserId: ILogonTriggerVT, user_id;
 		/// [`ILogonTrigger::put_UserId`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-ilogontrigger-put_userid)
 		/// method.
 	}

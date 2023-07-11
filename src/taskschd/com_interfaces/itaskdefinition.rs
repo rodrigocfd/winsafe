@@ -49,37 +49,37 @@ impl taskschd_ITaskDefinition for ITaskDefinition {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_ITaskDefinition: oleaut_IDispatch {
-	fn_com_get! { get_Actions: ITaskDefinitionVT, IActionCollection;
+	fn_com_interface_get! { get_Actions: ITaskDefinitionVT, IActionCollection;
 		/// [`ITaskDefinition::get_Actions`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_actions)
 		/// method.
 	}
 
-	fn_bstr_get! { get_Data: ITaskDefinitionVT;
+	fn_com_bstr_get! { get_Data: ITaskDefinitionVT;
 		/// [`ITaskDefinition::get_Data`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_data)
 		/// method.
 	}
 
-	fn_com_get! { get_RegistrationInfo: ITaskDefinitionVT, IRegistrationInfo;
+	fn_com_interface_get! { get_RegistrationInfo: ITaskDefinitionVT, IRegistrationInfo;
 		/// [`ITaskDefinition::get_RegistrationInfo`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_registrationinfo)
 		/// method.
 	}
 
-	fn_com_get! { get_Triggers: ITaskDefinitionVT, ITriggerCollection;
+	fn_com_interface_get! { get_Triggers: ITaskDefinitionVT, ITriggerCollection;
 		/// [`ITaskDefinition::get_Triggers`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_triggers)
 		/// method.
 	}
 
-	fn_bstr_get! { get_XmlText: ITaskDefinitionVT;
+	fn_com_bstr_get! { get_XmlText: ITaskDefinitionVT;
 		/// [`ITaskDefinition::get_XmlText`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_xmltext)
 		/// method.
 	}
 
-	fn_bstr_set! { put_Data: ITaskDefinitionVT, data;
+	fn_com_bstr_set! { put_Data: ITaskDefinitionVT, data;
 		/// [`ITaskDefinition::put_Data`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-put_data)
 		/// method.
 	}
 
-	fn_bstr_set! { put_XmlText: ITaskDefinitionVT, xml;
+	fn_com_bstr_set! { put_XmlText: ITaskDefinitionVT, xml;
 		/// [`ITaskDefinition::put_XmlText`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-put_xmltext)
 		/// method.
 	}

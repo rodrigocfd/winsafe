@@ -37,7 +37,7 @@ impl taskschd_IAction for IAction {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IAction: oleaut_IDispatch {
-	fn_bstr_get! { get_Id: IActionVT;
+	fn_com_bstr_get! { get_Id: IActionVT;
 		/// [`IAction::get_Id`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iaction-get_id)
 		/// method.
 	}
@@ -52,7 +52,7 @@ pub trait taskschd_IAction: oleaut_IDispatch {
 		).map(|_| at)
 	}
 
-	fn_bstr_set! { put_Id: IActionVT, id;
+	fn_com_bstr_set! { put_Id: IActionVT, id;
 		/// [`IAction::put_Id`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iaction-put_id)
 		/// method.
 	}

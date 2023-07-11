@@ -67,7 +67,7 @@ pub trait taskschd_IDailyTrigger: taskschd_ITrigger {
 		).map(|_| days)
 	}
 
-	fn_bstr_get! { get_RandomDelay: IDailyTriggerVT;
+	fn_com_bstr_get! { get_RandomDelay: IDailyTriggerVT;
 		/// [`IDailyTrigger::get_RandomDelay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-idailytrigger-get_randomdelay)
 		/// method.
 	}
@@ -82,7 +82,7 @@ pub trait taskschd_IDailyTrigger: taskschd_ITrigger {
 		)
 	}
 
-	fn_bstr_set! { put_RandomDelay: IDailyTriggerVT, random_delay;
+	fn_com_bstr_set! { put_RandomDelay: IDailyTriggerVT, random_delay;
 		/// [`IDailyTrigger::put_RandomDelay`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-idailytrigger-put_randomdelay)
 		/// method.
 	}

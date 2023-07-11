@@ -107,12 +107,12 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 		).map(|_| connected != 0)
 	}
 
-	fn_bstr_get! { get_ConnectedDomain: ITaskServiceVT;
+	fn_com_bstr_get! { get_ConnectedDomain: ITaskServiceVT;
 		/// [`ITaskService::get_ConnectedDomain`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-get_connecteddomain)
 		/// method.
 	}
 
-	fn_bstr_get! { get_ConnectedUser: ITaskServiceVT;
+	fn_com_bstr_get! { get_ConnectedUser: ITaskServiceVT;
 		/// [`ITaskService::get_ConnectedUser`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-get_connecteduser)
 		/// method.
 	}
@@ -132,7 +132,7 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 		).map(|_| ver)
 	}
 
-	fn_bstr_get! { get_TargetServer: ITaskServiceVT;
+	fn_com_bstr_get! { get_TargetServer: ITaskServiceVT;
 		/// [`ITaskService::get_TargetServer`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskservice-get_targetserver)
 		/// method.
 	}
