@@ -1,9 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::kernel::ffi_types::{COMPTR, HRES};
+use crate::mf::decl::IMFTopologyNode;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::mf_IMFAttributes;
+use crate::prelude::{mf_IMFAttributes, mf_IMFTopologyNode, ole_IUnknown};
 use crate::vt::IMFAttributesVT;
 
 /// [`IMFTopology`](crate::IMFTopology) virtual table.
@@ -43,6 +44,14 @@ impl mf_IMFTopology for IMFTopology {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait mf_IMFTopology: mf_IMFAttributes {
+	/// [`IMFTopology::AddNode`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopology-addnode)
+	/// method.
+	fn AddNode(&self, node: &impl mf_IMFTopologyNode) -> HrResult<()> {
+		ok_to_hrresult(
+			unsafe { (vt::<IMFTopologyVT>(self).AddNode)(self.ptr(), node.ptr()) },
+		)
+	}
+
 	fn_com_noparm! { Clear: IMFTopologyVT;
 		/// [`IMFTopology::Clear`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopology-clear)
 		/// method.
@@ -58,6 +67,38 @@ pub trait mf_IMFTopology: mf_IMFAttributes {
 		)
 	}
 
+	/// [`IMFTopology::GetNode`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopology-getnode)
+	/// method.
+	#[must_use]
+	fn GetNode(&self, index: u16) -> HrResult<IMFTopologyNode> {
+		let mut queried = unsafe { IMFTopologyNode::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFTopologyVT>(self).GetNode)(
+					self.ptr(),
+					index,
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
+	}
+
+	/// [`IMFTopology::GetNodeByID`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopology-getnodebyid)
+	/// method.
+	#[must_use]
+	fn GetNodeByID(&self, topo_node_id: u64) -> HrResult<IMFTopologyNode> {
+		let mut queried = unsafe { IMFTopologyNode::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFTopologyVT>(self).GetNodeByID)(
+					self.ptr(),
+					topo_node_id,
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
+	}
+
 	/// [`IMFTopology::GetNodeCount`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopology-getnodecount)
 	/// method.
 	#[must_use]
@@ -68,5 +109,27 @@ pub trait mf_IMFTopology: mf_IMFAttributes {
 				(vt::<IMFTopologyVT>(self).GetNodeCount)(self.ptr(), &mut nodes)
 			},
 		).map(|_| nodes)
+	}
+
+	/// [`IMFTopology::GetTopologyID`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopology-gettopologyid)
+	/// method.
+	#[must_use]
+	fn GetTopologyID(&self) -> HrResult<u64> {
+		let mut id = u64::default();
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFTopologyVT>(self).GetTopologyID)(self.ptr(), &mut id)
+			},
+		).map(|_| id)
+	}
+
+	/// [`IMFTopology::RemoveNode`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopology-removenode)
+	/// method.
+	fn RemoveNode(&self, node: &impl mf_IMFTopologyNode) -> HrResult<()> {
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFTopologyVT>(self).RemoveNode)(self.ptr(), node.ptr())
+			},
+		)
 	}
 }

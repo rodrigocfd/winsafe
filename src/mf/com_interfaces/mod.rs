@@ -3,6 +3,7 @@ mod imfmediaeventgenerator;
 mod imfmediasession;
 mod imfpresentationdescriptor;
 mod imftopology;
+mod imftopologynode;
 
 pub mod decl {
 	pub use super::imfattributes::IMFAttributes;
@@ -10,6 +11,7 @@ pub mod decl {
 	pub use super::imfmediasession::IMFMediaSession;
 	pub use super::imfpresentationdescriptor::IMFPresentationDescriptor;
 	pub use super::imftopology::IMFTopology;
+	pub use super::imftopologynode::IMFTopologyNode;
 }
 
 pub mod traits {
@@ -18,6 +20,7 @@ pub mod traits {
 	pub use super::imfmediasession::mf_IMFMediaSession;
 	pub use super::imfpresentationdescriptor::mf_IMFPresentationDescriptor;
 	pub use super::imftopology::mf_IMFTopology;
+	pub use super::imftopologynode::mf_IMFTopologyNode;
 }
 
 pub mod vt {
@@ -26,4 +29,5 @@ pub mod vt {
 	pub use super::imfmediasession::IMFMediaSessionVT;
 	pub use super::imfpresentationdescriptor::IMFPresentationDescriptorVT;
 	pub use super::imftopology::IMFTopologyVT;
+	pub use super::imftopologynode::IMFTopologyNodeVT;
 }
