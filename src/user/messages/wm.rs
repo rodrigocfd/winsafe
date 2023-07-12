@@ -537,6 +537,7 @@ pub_struct_msg_empty_handleable! { ExitSizeMove: co::WM::EXITSIZEMOVE;
 pub struct GetDlgCode<'a> {
 	pub vkey_code: co::VK,
 	pub msg: Option<&'a mut MSG>,
+	pub is_query: bool,
 }
 
 unsafe impl<'a> MsgSend for GetDlgCode<'a> {
@@ -563,6 +564,7 @@ unsafe impl<'a> MsgSendRecv for GetDlgCode<'a> {
 				0 => None,
 				ptr => Some(unsafe { &mut *(ptr as *mut _) })
 			},
+			is_query: p.lparam == 0,
 		}
 	}
 }

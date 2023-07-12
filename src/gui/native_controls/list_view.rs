@@ -17,9 +17,9 @@ use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
 use crate::kernel::decl::SysResult;
 use crate::msg::{lvm, wm};
 use crate::prelude::{
-	GuiChild, GuiChildFocus, GuiEvents, GuiEventsAll, GuiNativeControl,
-	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, NativeBitflag,
-	user_Hmenu, user_Hwnd,
+	comctl_Hwnd, GuiChild, GuiChildFocus, GuiEvents, GuiEventsAll,
+	GuiNativeControl, GuiNativeControlEvents, GuiParent, GuiWindow, Handle,
+	NativeBitflag, user_Hmenu, user_Hwnd,
 };
 use crate::user::decl::{
 	GetAsyncKeyState, GetCursorPos, HMENU, HWND, POINT, SIZE,
@@ -190,6 +190,24 @@ impl ListView {
 	}
 
 	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {
+		let self2 = self.clone();
+		self.on_subclass().wm_get_dlg_code(move |p| {
+			if !p.is_query {
+				if p.vkey_code == co::VK::RETURN {
+					let mut nmlvkd = NMLVKEYDOWN::default();
+					nmlvkd.hdr.hwndFrom = unsafe { self2.hwnd().raw_copy() };
+					nmlvkd.hdr.set_idFrom(self2.ctrl_id());
+					nmlvkd.hdr.code = co::LVN::KEYDOWN.into();
+					nmlvkd.wVKey = co::VK::RETURN;
+
+					self2.hwnd().GetAncestor(co::GA::PARENT).unwrap()
+						.SendMessage(wm::Notify { nmhdr: &nmlvkd.hdr }); // send Enter key to parent
+				}
+			}
+			let dlgc_system = self2.hwnd().DefSubclassProc::<wm::GetDlgCode>(p.into());
+			Ok(dlgc_system)
+		});
+
 		let self2 = self.clone();
 		parent.privileged_on().wm_notify(ctrl_id, co::LVN::KEYDOWN, move |p| {
 			let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };
