@@ -18,7 +18,7 @@ impl BaseEventsProxy {
 	pub(in crate::gui) fn new(parent_base: &Base, ctrl_id: u16) -> Self {
 		Self {
 			parent_ptr: NonNull::from(parent_base),
-			ctrl_id
+			ctrl_id,
 		}
 	}
 

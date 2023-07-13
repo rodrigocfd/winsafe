@@ -192,17 +192,15 @@ impl ListView {
 	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {
 		let self2 = self.clone();
 		self.on_subclass().wm_get_dlg_code(move |p| {
-			if !p.is_query {
-				if p.vkey_code == co::VK::RETURN {
-					let mut nmlvkd = NMLVKEYDOWN::default();
-					nmlvkd.hdr.hwndFrom = unsafe { self2.hwnd().raw_copy() };
-					nmlvkd.hdr.set_idFrom(self2.ctrl_id());
-					nmlvkd.hdr.code = co::LVN::KEYDOWN.into();
-					nmlvkd.wVKey = co::VK::RETURN;
+			if !p.is_query && p.vkey_code == co::VK::RETURN {
+				let mut nmlvkd = NMLVKEYDOWN::default();
+				nmlvkd.hdr.hwndFrom = unsafe { self2.hwnd().raw_copy() };
+				nmlvkd.hdr.set_idFrom(self2.ctrl_id());
+				nmlvkd.hdr.code = co::LVN::KEYDOWN.into();
+				nmlvkd.wVKey = co::VK::RETURN;
 
-					self2.hwnd().GetAncestor(co::GA::PARENT).unwrap()
-						.SendMessage(wm::Notify { nmhdr: &nmlvkd.hdr }); // send Enter key to parent
-				}
+				self2.hwnd().GetAncestor(co::GA::PARENT).unwrap()
+					.SendMessage(wm::Notify { nmhdr: &nmlvkd.hdr }); // send Enter key to parent
 			}
 			let dlgc_system = self2.hwnd().DefSubclassProc::<wm::GetDlgCode>(p.into());
 			Ok(dlgc_system)

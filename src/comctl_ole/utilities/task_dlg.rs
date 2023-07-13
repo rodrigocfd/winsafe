@@ -37,10 +37,45 @@ pub fn error(
 	hparent: &HWND,
 	title: &str,
 	header: Option<&str>,
-	body: &str) -> HrResult<()>
+	body: &str,
+) -> HrResult<()>
 {
 	generate(hparent, title, header, body, None,
 		co::TDCBF::OK, co::TD_ICON::ERROR)
+		.map(|_| ())
+}
+
+/// Displays a warning modal window with an OK button.
+///
+/// High-level abstraction over
+/// [`TaskDialogIndirect`](crate::TaskDialogIndirect).
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{co, HWND, task_dlg};
+///
+/// let hparent: HWND; // initialized somewhere
+/// # let hparent = HWND::NULL;
+///
+/// task_dlg::warn(
+///     &hparent,
+///     "Warning",
+///     Some("The warning"),
+///     "Something is not quite right.",
+/// )?;
+/// # Ok::<_, co::HRESULT>(())
+/// ```
+pub fn warn(
+	hparent: &HWND,
+	title: &str,
+	header: Option<&str>,
+	body: &str,
+) -> HrResult<()>
+{
+	generate(hparent, title, header, body, None,
+		co::TDCBF::OK, co::TD_ICON::WARNING)
 		.map(|_| ())
 }
 
