@@ -1,5 +1,8 @@
 use crate::co;
-use crate::kernel::decl::{HFILE, SysResult};
+use crate::kernel::decl::{
+	FILETIME, FileTimeToSystemTime, HFILE, SysResult, SYSTEMTIME,
+	SystemTimeToTzSpecificLocalTime,
+};
 use crate::kernel::guard::CloseHandleGuard;
 use crate::prelude::kernel_Hfile;
 
@@ -154,9 +157,29 @@ impl File {
 	}
 
 	/// Returns the size of the file.
+	///
+	/// This value is retrieved with
+	/// [`GetFileSizeEx`](crate::prelude::kernel_Hfile).
 	#[must_use]
 	pub fn size(&self) -> SysResult<u64> {
 		self.hfile.GetFileSizeEx()
+	}
+
+	/// Returns the creation and last write times of the file, in the current
+	/// time zone.
+	#[must_use]
+	pub fn times(&self) -> SysResult<(SYSTEMTIME, SYSTEMTIME)> {
+		let (mut ft_creation, mut ft_last_write) = (FILETIME::default(), FILETIME::default());
+		self.hfile.GetFileTime(Some(&mut ft_creation), None, Some(&mut ft_last_write))?;
+
+		let (mut st_creation_utc, mut st_last_write_utc) = (SYSTEMTIME::default(), SYSTEMTIME::default());
+		FileTimeToSystemTime(&ft_creation, &mut st_creation_utc)?;
+		FileTimeToSystemTime(&ft_last_write, &mut st_last_write_utc)?;
+
+		let (mut st_creation_local, mut st_last_write_local) = (SYSTEMTIME::default(), SYSTEMTIME::default());
+		SystemTimeToTzSpecificLocalTime(None, &st_creation_utc, &mut st_creation_local)?;
+		SystemTimeToTzSpecificLocalTime(None, &st_last_write_utc, &mut st_last_write_local)?;
+		Ok((st_creation_local, st_last_write_local))
 	}
 
 	/// Writes the given bytes. The content will be written at the position

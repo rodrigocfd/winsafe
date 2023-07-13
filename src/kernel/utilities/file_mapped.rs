@@ -1,5 +1,7 @@
 use crate::co;
-use crate::kernel::decl::{File, FileAccess, HFILEMAP, HFILEMAPVIEW, SysResult};
+use crate::kernel::decl::{
+	File, FileAccess, HFILE, HFILEMAP, HFILEMAPVIEW, SysResult, SYSTEMTIME,
+};
 use crate::kernel::guard::{CloseHandleGuard, UnmapViewOfFileGuard};
 use crate::prelude::{
 	Handle, kernel_Hfile, kernel_Hfilemap, kernel_Hfilemapview,
@@ -85,6 +87,12 @@ impl FileMapped {
 		self.hview.as_slice(self.size as _)
 	}
 
+	/// Returns the underlying file handle.
+	#[must_use]
+	pub fn hfile(&self) -> &HFILE {
+		self.file.hfile()
+	}
+
 	/// Resizes the file, which will be remapped in memory.
 	///
 	/// **Note:** Since the mapping pointers will change, any existing slices
@@ -106,9 +114,18 @@ impl FileMapped {
 		Ok(())
 	}
 
-	/// Returns the size of the file. This value is cached.
+	/// Returns the size of the file.
+	///
+	/// This value is cached.
 	#[must_use]
 	pub const fn size(&self) -> u64 {
 		self.size
+	}
+
+	/// Returns the creation and last write times of the file, in the current
+	/// time zone.
+	#[must_use]
+	pub fn times(&self) -> SysResult<(SYSTEMTIME, SYSTEMTIME)> {
+		self.file.times()
 	}
 }
