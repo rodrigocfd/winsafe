@@ -68,6 +68,7 @@ impl BaseNativeControl {
 		&self.subclass_events
 	}
 
+	/// Creates the child control with `CreateWindowEx`.
 	pub(in crate::gui) fn create_window(&self,
 		class_name: &str,
 		title: Option<&str>,
@@ -102,6 +103,7 @@ impl BaseNativeControl {
 		Ok(())
 	}
 
+	/// Assigns the control ID with `GetDlgItem`.
 	pub(in crate::gui) fn create_dlg(&self) -> SysResult<()> {
 		if !self.parent().is_dialog() {
 			panic!("Parent window is not a dialog, cannot create control.");

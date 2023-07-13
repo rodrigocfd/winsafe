@@ -43,14 +43,14 @@ pub enum Vert {
 
 struct ChildInfo {
 	hchild: HWND,
-	rc_orig: RECT, // original coordinates relative to parent
 	horz: Horz,
 	vert: Vert,
+	rc_orig: Option<RECT>, // original coordinates relative to parent, filled at 1st WM_SIZE
 }
 
 struct Obj { // actual fields of LayoutArranger
 	ctrls: UnsafeCell<Vec<ChildInfo>>,
-	sz_parent_orig: UnsafeCell<SIZE>, // original parent client area
+	sz_parent_orig: UnsafeCell<Option<SIZE>>, // original parent client area, filled at 1st WM_SIZE
 	_pin: PhantomPinned,
 }
 
@@ -66,7 +66,7 @@ impl LayoutArranger {
 			Arc::pin(
 				Obj {
 					ctrls: UnsafeCell::new(Vec::with_capacity(10)), // arbitrary
-					sz_parent_orig: UnsafeCell::new(SIZE::default()),
+					sz_parent_orig: UnsafeCell::new(None),
 					_pin: PhantomPinned,
 				},
 			),
@@ -86,28 +86,17 @@ impl LayoutArranger {
 		}
 
 		let (horz, vert) = resize_behavior;
-		if horz == Horz::None && vert == Vert::None {
-			return Ok(()); // nothing to do, don't even add it
+		if horz != Horz::None || vert != Vert::None { // if nothing to do, don't even add it
+			unsafe { &mut *self.0.ctrls.get() }.push(
+				ChildInfo {
+					hchild: unsafe { hchild.raw_copy() },
+					horz,
+					vert,
+					rc_orig: None,
+				},
+			);
 		}
 
-		let ctrls = unsafe { &mut *self.0.ctrls.get() };
-		if ctrls.is_empty() { // first control being added?
-			let rc_parent = hparent.GetClientRect()?;
-			*unsafe { &mut *self.0.sz_parent_orig.get() } =
-				SIZE::new(rc_parent.right, rc_parent.bottom); // save original parent size
-		}
-
-		let mut rc_orig = hchild.GetWindowRect()?;
-		hparent.ScreenToClientRc(&mut rc_orig)?; // control client coordinates relative to parent
-
-		ctrls.push(
-			ChildInfo {
-				hchild: unsafe { hchild.raw_copy() },
-				rc_orig,
-				horz,
-				vert,
-			},
-		);
 		Ok(())
 	}
 
@@ -120,9 +109,19 @@ impl LayoutArranger {
 			return Ok(());
 		}
 
+		let sz_parent_orig = match unsafe { &mut *self.0.sz_parent_orig.get() } {
+			Some(sz) => *sz,
+			None => {
+				let rc_parent = ctrls[0].hchild.GetParent()?.GetClientRect()?;
+				let sz = SIZE::new(rc_parent.right, rc_parent.bottom);
+				*unsafe { &mut *self.0.sz_parent_orig.get() } = Some(sz); // save original parent size
+				sz
+			},
+		};
+
 		let mut hdwp = HDWP::BeginDeferWindowPos(ctrls.len() as _)?;
 
-		for ctrl in ctrls.iter() {
+		for ctrl in ctrls.iter_mut() {
 			let mut uflags = co::SWP::NOZORDER;
 			if ctrl.horz == Horz::Repos && ctrl.vert == Vert::Repos { // reposition both vert & horz
 				uflags |= co::SWP::NOSIZE;
@@ -130,29 +129,37 @@ impl LayoutArranger {
 				uflags |= co::SWP::NOMOVE;
 			}
 
-			let sz_parent_orig = unsafe { &mut *self.0.sz_parent_orig.get() };
+			let rc_orig = match &ctrl.rc_orig {
+				Some(rc) => *rc,
+				None => {
+					let mut rc = ctrl.hchild.GetWindowRect()?;
+					ctrl.hchild.GetParent()?.ScreenToClientRc(&mut rc)?;
+					ctrl.rc_orig = Some(rc); // save control client coordinates relative to parent
+					rc
+				},
+			};
 
 			hdwp.DeferWindowPos(
 				&ctrl.hchild,
 				HwndPlace::None,
 				POINT::new(
 					match ctrl.horz {
-						Horz::Repos => p.client_area.cx - sz_parent_orig.cx + ctrl.rc_orig.left,
-						_ => ctrl.rc_orig.left // keep original x pos
+						Horz::Repos => p.client_area.cx - sz_parent_orig.cx + rc_orig.left,
+						_ => rc_orig.left // keep original x pos
 					},
 					match ctrl.vert {
-						Vert::Repos => p.client_area.cy - sz_parent_orig.cy + ctrl.rc_orig.top,
-						_ => ctrl.rc_orig.top // keep original y pos
+						Vert::Repos => p.client_area.cy - sz_parent_orig.cy + rc_orig.top,
+						_ => rc_orig.top // keep original y pos
 					},
 				),
 				SIZE::new(
 					match ctrl.horz {
-						Horz::Resize => p.client_area.cx - sz_parent_orig.cx + ctrl.rc_orig.right - ctrl.rc_orig.left,
-						_ => ctrl.rc_orig.right - ctrl.rc_orig.left // keep original width
+						Horz::Resize => p.client_area.cx - sz_parent_orig.cx + rc_orig.right - rc_orig.left,
+						_ => rc_orig.right - rc_orig.left // keep original width
 					},
 					match ctrl.vert {
-						Vert::Resize => p.client_area.cy - sz_parent_orig.cy + ctrl.rc_orig.bottom - ctrl.rc_orig.top,
-						_ =>ctrl.rc_orig.bottom - ctrl.rc_orig.top // keep original height
+						Vert::Resize => p.client_area.cy - sz_parent_orig.cy + rc_orig.bottom - rc_orig.top,
+						_ => rc_orig.bottom - rc_orig.top // keep original height
 					},
 				),
 				uflags,
