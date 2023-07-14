@@ -1,7 +1,9 @@
 #![allow(non_snake_case)]
 
 use crate::{co, mf};
-use crate::mf::decl::{IMFMediaSession, IMFTopology, IMFTopologyNode};
+use crate::mf::decl::{
+	IMFMediaSession, IMFSourceResolver, IMFTopology, IMFTopologyNode,
+};
 use crate::mf::privs::MF_VERSION;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
@@ -22,6 +24,15 @@ pub fn MFCreateMediaSession(
 			)
 		},
 	).map(|_| queried)
+}
+
+/// [`MFCreateSourceResolver`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-mfcreatesourceresolver)
+/// function.
+#[must_use]
+pub fn MFCreateSourceResolver() -> HrResult<IMFSourceResolver> {
+	let mut queried = unsafe { IMFSourceResolver::null() };
+	ok_to_hrresult(unsafe { mf::ffi::MFCreateSourceResolver(queried.as_mut()) })
+		.map(|_| queried)
 }
 
 /// [`MFCreateTopology`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-mfcreatetopology)
