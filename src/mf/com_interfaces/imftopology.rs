@@ -30,6 +30,16 @@ com_interface! { IMFTopology: "83cf873a-f6da-4bc8-823f-bacfd55dc433";
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{IMFTopology, MFCreateTopology};
+	///
+	/// let topology = MFCreateTopology()?;
+	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// ```
 }
 
 impl mf_IMFAttributes for IMFTopology {}

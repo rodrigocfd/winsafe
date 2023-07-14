@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::{co, mf};
-use crate::mf::decl::IMFMediaSession;
+use crate::mf::decl::{IMFMediaSession, IMFTopology, IMFTopologyNode};
 use crate::mf::privs::MF_VERSION;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::ok_to_hrresult;
@@ -20,6 +20,30 @@ pub fn MFCreateMediaSession(
 				configuration.map_or(std::ptr::null_mut(), |c| c.ptr()),
 				queried.as_mut(),
 			)
+		},
+	).map(|_| queried)
+}
+
+/// [`MFCreateTopology`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-mfcreatetopology)
+/// function.
+#[must_use]
+pub fn MFCreateTopology() -> HrResult<IMFTopology> {
+	let mut queried = unsafe { IMFTopology::null() };
+	ok_to_hrresult(unsafe { mf::ffi::MFCreateTopology(queried.as_mut()) })
+		.map(|_| queried)
+}
+
+/// [`MFCreateTopologyNode`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-mfcreatetopologynode)
+/// function.
+#[must_use]
+pub fn MFCreateTopologyNode(
+	node_type: co::MF_TOPOLOGY,
+) -> HrResult<IMFTopologyNode>
+{
+	let mut queried = unsafe { IMFTopologyNode::null() };
+	ok_to_hrresult(
+		unsafe {
+			mf::ffi::MFCreateTopologyNode(node_type.raw(), queried.as_mut())
 		},
 	).map(|_| queried)
 }

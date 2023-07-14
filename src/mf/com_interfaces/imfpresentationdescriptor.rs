@@ -19,7 +19,7 @@ pub struct IMFPresentationDescriptorVT {
 }
 
 com_interface! { IMFPresentationDescriptor: "03cb2711-24d7-4db6-a17f-f3a7a479a536";
-	/// [`IMFPresentationDescriptor`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imftopology)
+	/// [`IMFPresentationDescriptor`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfpresentationdescriptor)
 	/// COM interface over
 	/// [`IMFPresentationDescriptorVT`](crate::vt::IMFPresentationDescriptorVT).
 	///
