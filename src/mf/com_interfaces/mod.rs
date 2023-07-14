@@ -1,3 +1,4 @@
+mod imfasynccallback;
 mod imfattributes;
 mod imfmediaeventgenerator;
 mod imfmediasession;
@@ -6,6 +7,7 @@ mod imftopology;
 mod imftopologynode;
 
 pub mod decl {
+	pub use super::imfasynccallback::IMFAsyncCallback;
 	pub use super::imfattributes::IMFAttributes;
 	pub use super::imfmediaeventgenerator::IMFMediaEventGenerator;
 	pub use super::imfmediasession::IMFMediaSession;
@@ -15,6 +17,7 @@ pub mod decl {
 }
 
 pub mod traits {
+	pub use super::imfasynccallback::mf_IMFAsyncCallback;
 	pub use super::imfattributes::mf_IMFAttributes;
 	pub use super::imfmediaeventgenerator::mf_IMFMediaEventGenerator;
 	pub use super::imfmediasession::mf_IMFMediaSession;
@@ -24,6 +27,7 @@ pub mod traits {
 }
 
 pub mod vt {
+	pub use super::imfasynccallback::IMFAsyncCallbackVT;
 	pub use super::imfattributes::IMFAttributesVT;
 	pub use super::imfmediaeventgenerator::IMFMediaEventGeneratorVT;
 	pub use super::imfmediasession::IMFMediaSessionVT;
