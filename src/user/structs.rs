@@ -787,12 +787,6 @@ impl POINT {
 	pub const fn new(x: i32, y: i32) -> POINT {
 		Self { x, y }
 	}
-
-	/// Tells whether the struct contains exactly the given values.
-	#[must_use]
-	pub const fn is(&self, x: i32, y: i32) -> bool {
-		self.x == x && self.y == y
-	}
 }
 
 /// [`RECT`](https://learn.microsoft.com/en-us/windows/win32/api/windef/ns-windef-rect)
@@ -810,14 +804,6 @@ impl std::fmt::Display for RECT {
 	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
 		write!(f, "left {}, top {}, right {}, bottom {}",
 			self.left, self.top, self.right, self.bottom)
-	}
-}
-
-impl RECT {
-	/// Tells whether the struct contains exactly the given values.
-	#[must_use]
-	pub const fn is(&self, left: i32, top: i32, right: i32, bottom: i32) -> bool {
-		self.left == left && self.top == top && self.right == right && self.bottom == bottom
 	}
 }
 
@@ -869,12 +855,6 @@ impl SIZE {
 	#[must_use]
 	pub const fn new(cx: i32, cy: i32) -> SIZE {
 		Self { cx, cy }
-	}
-
-	/// Tells whether the struct contains exactly the given values.
-	#[must_use]
-	pub const fn is(&self, cx: i32, cy: i32) -> bool {
-		self.cx == cx && self.cy == cy
 	}
 }
 

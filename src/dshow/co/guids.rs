@@ -10,15 +10,16 @@ const_guid_values! { CLSID;
 	NullRenderer "c1f400a4-3f08-11d3-9f0b-006008039e37"
 }
 
-const_guid! { DSHOW_SERVICE;
+const_guid! { MF_SERVICE;
 	/// [`IMFGetService::GetService`](`crate::prelude::dshow_IMFGetService::GetService`)
 	/// `service_guid` (`GUID`).
+	///
+	/// Originally has `MF`, `MFNET` and `MR` prefixes.
 	=>
 	MR_VIDEO_RENDER_SERVICE "1092a86c-ab1a-459a-a336-831fbc4d11ff"
 	MR_VIDEO_MIXER_SERVICE "073cd2fc-6cf4-40b7-8859-e89552c841f8"
 	MR_VIDEO_ACCELERATION_SERVICE "efef5175-5c7d-4ce2-bbbd-34ff8bca6554"
 	MR_BUFFER_SERVICE "a562248c-9ac6-4ffc-9fba-3af8f8ad1a4d"
-	VIDEO_ZOOM_RECT "7aaa1638-1b7f-4c93-bd89-5b9c9fb6fcf0"
 }
 
 const_guid! { MEDIA_FORMAT;

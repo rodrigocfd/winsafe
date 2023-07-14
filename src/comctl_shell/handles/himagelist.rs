@@ -5,6 +5,7 @@ use crate::comctl::decl::HIMAGELIST;
 use crate::kernel::decl::SysResult;
 use crate::prelude::comctl_Himagelist;
 use crate::shell::decl::SHGetFileInfo;
+use crate::user::decl::SIZE;
 
 impl comctl_shell_Himagelist for HIMAGELIST {}
 
@@ -39,7 +40,7 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 		file_extensions: &[impl AsRef<str>]) -> SysResult<()>
 	{
 		let sz = self.GetIconSize()?;
-		if !sz.is(16, 16) && !sz.is(32, 32) {
+		if sz != SIZE::new(16, 16) && sz != SIZE::new(32, 32) {
 			return Err(co::ERROR::NOT_SUPPORTED); // only 16x16 or 32x32 icons can be loaded
 		}
 
@@ -48,7 +49,7 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 				&format!("*.{}", file_extension.as_ref()),
 				co::FILE_ATTRIBUTE::NORMAL,
 				co::SHGFI::USEFILEATTRIBUTES | co::SHGFI::ICON |
-				if sz.is(16, 16) { co::SHGFI::SMALLICON } else { co::SHGFI::LARGEICON },
+				if sz == SIZE::new(16, 16) { co::SHGFI::SMALLICON } else { co::SHGFI::LARGEICON },
 			)?;
 			self.AddIcon(&shfi.hIcon)?;
 		}

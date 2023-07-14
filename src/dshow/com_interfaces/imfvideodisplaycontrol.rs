@@ -51,7 +51,7 @@ com_interface! { IMFVideoDisplayControl: "a490b1e4-ab84-4d31-a1b2-181e03b1077a";
 	///
 	/// let controller_evr = get_svc
 	///     .GetService::<IMFVideoDisplayControl>(
-	///         &co::DSHOW_SERVICE::MR_VIDEO_RENDER_SERVICE,
+	///         &co::MF_SERVICE::MR_VIDEO_RENDER_SERVICE,
 	///     )?;
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```

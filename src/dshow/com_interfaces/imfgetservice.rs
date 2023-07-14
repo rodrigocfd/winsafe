@@ -61,12 +61,12 @@ pub trait dshow_IMFGetService: ole_IUnknown {
 	///
 	/// let controller_evr = get_svc
 	///     .GetService::<IMFVideoDisplayControl>(
-	///         &co::DSHOW_SERVICE::MR_VIDEO_RENDER_SERVICE,
+	///         &co::MF_SERVICE::MR_VIDEO_RENDER_SERVICE,
 	///     )?;
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
 	#[must_use]
-	fn GetService<T>(&self, service_id: &co::DSHOW_SERVICE) -> HrResult<T>
+	fn GetService<T>(&self, service_id: &co::MF_SERVICE) -> HrResult<T>
 		where T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
