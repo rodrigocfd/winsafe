@@ -24,6 +24,21 @@ const_bitflag! { MFASYNC: u32;
 	REPLY_CALLBACK 0x0000_0008
 }
 
+const_bitflag! { MFMEDIASOURCE: u32;
+	/// [`MFMEDIASOURCE_CHARACTERISTICS`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfmediasource_characteristics)
+	/// enumeration (`u32`).
+	=>
+	=>
+	IS_LIVE 0x1
+	CAN_SEEK 0x2
+	CAN_PAUSE 0x4
+	HAS_SLOW_SEEK 0x8
+	HAS_MULTIPLE_PRESENTATIONS 0x10
+	CAN_SKIPFORWARD 0x20
+	CAN_SKIPBACKWARD 0x40
+	DOES_NOT_USE_NETWORK 0x80
+}
+
 const_bitflag! { MFSESSION_GETFULLTOPOLOGY: u32;
 	/// [`MFSESSION_GETFULLTOPOLOGY_FLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfsession_getfulltopology_flags)
 	/// enumeration (`u32`).

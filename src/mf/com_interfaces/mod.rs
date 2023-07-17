@@ -3,6 +3,7 @@ mod imfattributes;
 mod imfgetservice;
 mod imfmediaeventgenerator;
 mod imfmediasession;
+mod imfmediasource;
 mod imfpresentationdescriptor;
 mod imfsourceresolver;
 mod imftopology;
@@ -15,6 +16,7 @@ pub mod decl {
 	pub use super::imfgetservice::IMFGetService;
 	pub use super::imfmediaeventgenerator::IMFMediaEventGenerator;
 	pub use super::imfmediasession::IMFMediaSession;
+	pub use super::imfmediasource::IMFMediaSource;
 	pub use super::imfpresentationdescriptor::IMFPresentationDescriptor;
 	pub use super::imfsourceresolver::IMFSourceResolver;
 	pub use super::imftopology::IMFTopology;
@@ -28,6 +30,7 @@ pub mod traits {
 	pub use super::imfgetservice::mf_IMFGetService;
 	pub use super::imfmediaeventgenerator::mf_IMFMediaEventGenerator;
 	pub use super::imfmediasession::mf_IMFMediaSession;
+	pub use super::imfmediasource::mf_IMFMediaSource;
 	pub use super::imfpresentationdescriptor::mf_IMFPresentationDescriptor;
 	pub use super::imfsourceresolver::mf_IMFSourceResolver;
 	pub use super::imftopology::mf_IMFTopology;
@@ -41,6 +44,7 @@ pub mod vt {
 	pub use super::imfgetservice::IMFGetServiceVT;
 	pub use super::imfmediaeventgenerator::IMFMediaEventGeneratorVT;
 	pub use super::imfmediasession::IMFMediaSessionVT;
+	pub use super::imfmediasource::IMFMediaSourceVT;
 	pub use super::imfpresentationdescriptor::IMFPresentationDescriptorVT;
 	pub use super::imfsourceresolver::IMFSourceResolverVT;
 	pub use super::imftopology::IMFTopologyVT;
