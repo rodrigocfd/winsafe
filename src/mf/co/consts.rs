@@ -50,3 +50,14 @@ const_ordinary! { MFSTARTUP: u32;
 	LITE Self::NOSOCKET.0
 	FULL 0
 }
+
+const_ordinary! { MFVideoARMode: u32;
+	/// [`MFVideoAspectRatioMode`](https://learn.microsoft.com/en-us/windows/win32/api/evr/ne-evr-mfvideoaspectratiomode)
+	/// enumeration (`u32`).
+	=>
+	=>
+	None 0
+	PreservePicture 0x1
+	PreservePixel 0x2
+	NonLinearStretch 0x4
+}

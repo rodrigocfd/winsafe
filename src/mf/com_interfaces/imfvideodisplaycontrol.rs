@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::dshow::decl::MFVideoNormalizedRect;
 use crate::kernel::ffi_types::{BOOL, COMPTR, HANDLE, HRES, PCVOID, PVOID};
+use crate::mf::decl::MFVideoNormalizedRect;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::{ok_to_hrresult, vt};
 use crate::prelude::{Handle, IntUnderlying, ole_IUnknown};
@@ -57,9 +57,9 @@ com_interface! { IMFVideoDisplayControl: "a490b1e4-ab84-4d31-a1b2-181e03b1077a";
 	/// ```
 }
 
-impl dshow_IMFVideoDisplayControl for IMFVideoDisplayControl {}
+impl mf_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 
-/// This trait is enabled with the `dshow` feature, and provides methods for
+/// This trait is enabled with the `mf` feature, and provides methods for
 /// [`IMFVideoDisplayControl`](crate::IMFVideoDisplayControl).
 ///
 /// Prefer importing this trait through the prelude:
@@ -67,12 +67,12 @@ impl dshow_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait dshow_IMFVideoDisplayControl: ole_IUnknown {
+pub trait mf_IMFVideoDisplayControl: ole_IUnknown {
 	/// [`IMFVideoDisplayControl::GetAspectRatioMode`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getaspectratiomode)
 	/// method.
 	#[must_use]
 	fn GetAspectRatioMode(&self) -> HrResult<co::MFVideoARMode> {
-		let mut mode = co::MFVideoARMode::None;
+		let mut mode = co::MFVideoARMode::default();
 		ok_to_hrresult(
 			unsafe {
 				(vt::<IMFVideoDisplayControlVT>(self).GetAspectRatioMode)(

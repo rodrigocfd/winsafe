@@ -36,9 +36,9 @@ com_interface! { IMFGetService: "fa993888-4383-415a-a930-dd472a8cf6f7";
 	/// ```
 }
 
-impl dshow_IMFGetService for IMFGetService {}
+impl mf_IMFGetService for IMFGetService {}
 
-/// This trait is enabled with the `dshow` feature, and provides methods for
+/// This trait is enabled with the `mf` feature, and provides methods for
 /// [`IMFGetService`](crate::IMFGetService).
 ///
 /// Prefer importing this trait through the prelude:
@@ -46,7 +46,7 @@ impl dshow_IMFGetService for IMFGetService {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait dshow_IMFGetService: ole_IUnknown {
+pub trait mf_IMFGetService: ole_IUnknown {
 	/// [`IMFGetService::GetService`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfgetservice-getservice)
 	/// method.
 	///

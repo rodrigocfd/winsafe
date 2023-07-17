@@ -1,15 +1,15 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::dshow::decl::IMFVideoDisplayControl;
 use crate::gdi::decl::BITMAPINFOHEADER;
+use crate::mf::decl::IMFVideoDisplayControl;
 use crate::ole::decl::{CoTaskMemFree, HrResult};
 use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::dshow_IMFVideoDisplayControl;
+use crate::prelude::mf_IMFVideoDisplayControl;
 use crate::vt::IMFVideoDisplayControlVT;
 
-impl dshow_gdi_IMFVideoDisplayControl for IMFVideoDisplayControl {}
+impl gdi_mf_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 
-/// This trait is enabled with `dshow` and `gdi` features, and provides methods
+/// This trait is enabled with `gdi` and `mf` features, and provides methods
 /// for [`IMFVideoDisplayControl`](crate::IMFVideoDisplayControl).
 ///
 /// Prefer importing this trait through the prelude:
@@ -17,7 +17,7 @@ impl dshow_gdi_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 /// ```rust,no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait dshow_gdi_IMFVideoDisplayControl: dshow_IMFVideoDisplayControl {
+pub trait gdi_mf_IMFVideoDisplayControl: mf_IMFVideoDisplayControl {
 	/// [`GetCurrentImage`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getcurrentimage)
 	/// method.
 	///

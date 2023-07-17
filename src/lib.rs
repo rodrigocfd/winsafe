@@ -265,8 +265,8 @@
 #[cfg(feature = "comctl")] mod comctl;
 #[cfg(feature = "comdlg")] mod comdlg;
 #[cfg(feature = "dshow")] mod dshow;
-#[cfg(feature = "dxgi")] mod dxgi;
 #[cfg(feature = "dwm")] mod dwm;
+#[cfg(feature = "dxgi")] mod dxgi;
 #[cfg(feature = "gdi")] mod gdi;
 #[cfg(feature = "kernel")] mod kernel;
 #[cfg(feature = "mf")] mod mf;
@@ -281,7 +281,7 @@
 #[cfg(all(feature = "comctl", feature = "gdi"))] mod comctl_gdi;
 #[cfg(all(feature = "comctl", feature = "ole"))] mod comctl_ole;
 #[cfg(all(feature = "comctl", feature = "shell"))] mod comctl_shell;
-#[cfg(all(feature = "dshow", feature = "gdi"))] mod dshow_gdi;
+#[cfg(all(feature = "gdi", feature = "mf"))] mod gdi_mf;
 #[cfg(all(feature = "gdi", feature = "ole"))] mod gdi_ole;
 #[cfg(all(feature = "oleaut", feature = "shell"))] mod oleaut_shell;
 
@@ -572,10 +572,10 @@ pub mod prelude {
 	#[cfg(feature = "taskschd")] pub use super::taskschd::traits::*;
 	#[cfg(feature = "user")] pub use super::user::traits::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::traits::*;
-	#[cfg(all(feature = "gdi", feature = "ole"))] pub use super::gdi_ole::traits::*;
 	#[cfg(all(feature = "comctl", feature = "ole"))] pub use super::comctl_ole::traits::*;
 	#[cfg(all(feature = "comctl", feature = "shell"))] pub use super::comctl_shell::traits::*;
-	#[cfg(all(feature = "dshow", feature = "gdi"))] pub use super::dshow_gdi::traits::*;
+	#[cfg(all(feature = "gdi", feature = "mf"))] pub use super::gdi_mf::traits::*;
+	#[cfg(all(feature = "gdi", feature = "ole"))] pub use super::gdi_ole::traits::*;
 	#[cfg(all(feature = "oleaut", feature = "shell"))] pub use super::oleaut_shell::traits::*;
 }
 

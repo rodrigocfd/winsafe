@@ -10,17 +10,6 @@ const_ordinary! { FILTER_STATE: u32;
 	Running 2
 }
 
-const_ordinary! { MFVideoARMode: u32;
-	/// [`MFVideoAspectRatioMode`](https://learn.microsoft.com/en-us/windows/win32/api/evr/ne-evr-mfvideoaspectratiomode)
-	/// enumeration (`u32`).
-	=>
-	=>
-	None 0
-	PreservePicture 0x1
-	PreservePixel 0x2
-	NonLinearStretch 0x4
-}
-
 const_ordinary! { PIN_DIRECTION: u32;
 	/// [`PIN_DIRECTION`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/ne-strmif-pin_direction)
 	/// enumeration (`u32`).
