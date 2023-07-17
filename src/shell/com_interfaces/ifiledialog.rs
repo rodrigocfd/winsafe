@@ -5,7 +5,9 @@ use crate::kernel::decl::{GUID, WString};
 use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PCVOID, PSTR, PVOID};
 use crate::ole::decl::{CoTaskMemFree, HrResult};
 use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{shell_IModalWindow, shell_IShellItem};
+use crate::prelude::{
+	shell_IFileDialogEvents, shell_IModalWindow, shell_IShellItem,
+};
 use crate::shell::decl::{COMDLG_FILTERSPEC, IShellItem};
 use crate::vt::IModalWindowVT;
 
@@ -73,6 +75,21 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 				)
 			},
 		)
+	}
+
+	/// [`IFileDialog::Advise`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-advise)
+	/// method.
+	fn Advise(&self, fde: &impl shell_IFileDialogEvents) -> HrResult<u32> {
+		let mut cookie = u32::default();
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IFileDialogVT>(self).Advise)(
+					self.ptr(),
+					fde.ptr(),
+					&mut cookie,
+				)
+			},
+		).map(|_| cookie)
 	}
 
 	fn_com_noparm! { ClearClientData: IFileDialogVT;
@@ -317,6 +334,14 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 					WString::from_str(text).as_ptr(),
 				)
 			},
+		)
+	}
+
+	/// [`IFileDialog::Unadvise`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-unadvise)
+	/// method.
+	fn Unadvise(&self, cookie: u32) -> HrResult<()> {
+		ok_to_hrresult(
+			unsafe { (vt::<IFileDialogVT>(self).Unadvise)(self.ptr(), cookie) },
 		)
 	}
 }
