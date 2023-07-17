@@ -36,6 +36,19 @@ com_interface! { IShellItem2: "7e9fb0d3-919f-4307-ab2e-9b1860310c93";
 	/// Usually created with
 	/// [`SHCreateItemFromParsingName`](crate::SHCreateItemFromParsingName)
 	/// function.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{IBindCtx, IShellItem2, SHCreateItemFromParsingName};
+	///
+	/// let shi = SHCreateItemFromParsingName::<IShellItem2>(
+	///     "C:\\Temp\\foo.txt",
+	///     None::<&IBindCtx>,
+	/// )?;
+	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// ```
 }
 
 impl shell_IShellItem for IShellItem2 {}

@@ -29,6 +29,21 @@ com_interface! { IStream: "0000000c-0000-0000-c000-000000000046";
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// Loading from a `Vec`:
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::SHCreateMemStream;
+	///
+	/// let raw_data: Vec<u8>; // initialized somewhere
+	/// # let raw_data = Vec::<u8>::default();
+	///
+	/// let stream = SHCreateMemStream(&raw_data)?;
+	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// ```
 }
 
 impl ole_ISequentialStream for IStream {}
