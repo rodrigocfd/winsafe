@@ -82,7 +82,7 @@ const_bitflag! { FOS: u32;
 	CREATEPROMPT 0x2000
 	/// In the case of a sharing violation when an application is opening a
 	/// file call the application back through
-	/// [`OnShareViolation`](crate::prelude::shell_IFileDialogEvents::OnShareViolation)
+	/// [`OnShareViolation`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onshareviolation)
 	/// for guidance. This flag is overridden by
 	/// [`FOS::NOVALIDATE`](crate::co::FOS::NOVALIDATE).
 	SHAREAWARE 0x4000
