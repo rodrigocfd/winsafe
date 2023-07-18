@@ -33,7 +33,7 @@ impl Default for PROPVARIANT {
 }
 
 impl oleaut_Variant for PROPVARIANT {
-	unsafe fn raw(&self) -> &[u8; 16] {
+	fn raw(&self) -> &[u8; 16] {
 		&self.data
 	}
 
@@ -62,7 +62,7 @@ impl PROPVARIANT {
 	#[must_use]
 	pub fn i64(&self) -> Option<i64> {
 		if self.vt() == co::VT::I8 {
-			Some(i64::from_ne_bytes(unsafe { self.raw() }[..8].try_into().unwrap()))
+			Some(i64::from_ne_bytes(self.raw()[..8].try_into().unwrap()))
 		} else {
 			None
 		}
@@ -78,7 +78,7 @@ impl PROPVARIANT {
 	#[must_use]
 	pub fn u64(&self) -> Option<u64> {
 		if self.vt() == co::VT::UI8 {
-			Some(u64::from_ne_bytes(unsafe { self.raw() }[..8].try_into().unwrap()))
+			Some(u64::from_ne_bytes(self.raw()[..8].try_into().unwrap()))
 		} else {
 			None
 		}

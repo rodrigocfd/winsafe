@@ -37,7 +37,7 @@ impl Default for VARIANT {
 }
 
 impl oleaut_Variant for VARIANT {
-	unsafe fn raw(&self) -> &[u8; 16] {
+	fn raw(&self) -> &[u8; 16] {
 		&self.data
 	}
 
@@ -59,8 +59,9 @@ impl VARIANT {
 	/// Creates a new object holding an [`IDispatch`](crate::IDispatch) COM
 	/// value.
 	///
-	/// Note that the `IDispatch` object will be cloned into the object, still
-	/// being able to be used thereafter.
+	/// Note that `val` will be cloned into the `VARIANT` – that is,
+	/// [`IUnknown::AddRef`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
+	/// will be called –, so `val` will remain valid to be used thereafter.
 	#[must_use]
 	pub fn new_idispatch(val: &impl oleaut_IDispatch) -> Self {
 		let mut cloned = val.clone();
@@ -71,16 +72,17 @@ impl VARIANT {
 	/// If the object holds an [`IDispatch`](crate::IDispatch) COM value,
 	/// returns it, otherwise `None`.
 	///
-	/// Note that the returned object will be a clone of the `IDispatch` being
-	/// held.
+	/// Note that the returned object will be a clone – that is,
+	/// [`IUnknown::AddRef`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
+	/// will be called.
 	#[must_use]
 	pub fn idispatch<T>(&self) -> Option<T>
 		where T: oleaut_IDispatch,
 	{
 		if self.vt() == co::VT::DISPATCH {
-			let ptr = usize::from_ne_bytes(unsafe { self.raw() }[..8].try_into().unwrap());
+			let ptr = usize::from_ne_bytes(self.raw()[..8].try_into().unwrap());
 			let obj = ManuallyDrop::new(unsafe { T::from_ptr(ptr as *mut _) }); // won't release the stored pointer
-			let cloned = T::clone(&obj);
+			let cloned = T::clone(&obj); // call AddRef
 			Some(cloned)
 		} else {
 			None
@@ -89,8 +91,9 @@ impl VARIANT {
 
 	/// Creates a new object holding an [`IUnknown`](crate::IUnknown) COM value.
 	///
-	/// Note that the `IUnknown` object will be cloned into the object, still
-	/// being able to be used thereafter.
+	/// Note that `val` will be cloned into the `VARIANT` – that is,
+	/// [`IUnknown::AddRef`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
+	/// will be called –, so `val` will remain valid to be used thereafter.
 	#[must_use]
 	pub fn new_iunknown<T>(val: &impl ole_IUnknown) -> Self {
 		let mut cloned = val.clone();
@@ -101,16 +104,17 @@ impl VARIANT {
 	/// If the object holds an [`IUnknown`](crate::IUnknown) COM value, returns
 	/// it, otherwise `None`.
 	///
-	/// Note that the returned object will be a clone of the `IUnknown` being
-	/// held.
+	/// Note that the returned object will be a clone – that is,
+	/// [`IUnknown::AddRef`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
+	/// will be called.
 	#[must_use]
 	pub fn iunknown<T>(&self) -> Option<T>
 		where T: ole_IUnknown,
 	{
 		if self.vt() == co::VT::UNKNOWN {
-			let ptr = usize::from_ne_bytes(unsafe { self.raw() }[..8].try_into().unwrap());
+			let ptr = usize::from_ne_bytes(self.raw()[..8].try_into().unwrap());
 			let obj = ManuallyDrop::new(unsafe { T::from_ptr(ptr as *mut _) }); // won't release the stored pointer
-			let cloned = T::clone(&obj);
+			let cloned = T::clone(&obj); // call AddRef
 			Some(cloned)
 		} else {
 			None

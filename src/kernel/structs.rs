@@ -73,6 +73,9 @@ pub struct DISK_SPACE_INFORMATION {
 
 /// [`FILETIME`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-filetime)
 /// struct.
+///
+/// Can be converted to [`SYSTEMTIME`](crate::SYSTEMTIME) with
+/// [`FileTimeToSystemTime`](crate::FileTimeToSystemTime) function.
 #[repr(C)]
 #[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct FILETIME {
@@ -82,6 +85,10 @@ pub struct FILETIME {
 
 /// [`GUID`](https://learn.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid)
 /// struct.
+///
+/// The
+/// [`Default`](https://doc.rust-lang.org/std/default/trait.Default.html)
+/// implementation returns the null `GUID` (all zeros).
 #[repr(C)]
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct GUID {
@@ -103,7 +110,7 @@ impl std::fmt::Display for GUID {
 
 impl Default for GUID {
 	fn default() -> Self {
-		Self::new("00000000-0000-0000-c000-000000000046") // IUnknown GUID
+		Self::new("00000000-0000-0000-0000-000000000000") // NULL GUID
 	}
 }
 
@@ -721,6 +728,9 @@ impl_default!(SYSTEM_INFO);
 
 /// [`SYSTEMTIME`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime)
 /// struct.
+///
+/// Can be converted to [`FILETIME`](crate::FILETIME) with
+/// [`SystemTimeToFileTime`](crate::SystemTimeToFileTime) function.
 #[repr(C)]
 #[derive(Default, Clone, PartialEq, Eq)]
 pub struct SYSTEMTIME {

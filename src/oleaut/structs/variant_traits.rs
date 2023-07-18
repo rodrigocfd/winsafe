@@ -9,19 +9,21 @@ use crate::oleaut::decl::{
 	BSTR, SystemTimeToVariantTime, VariantTimeToSystemTime,
 };
 
-/// Methods common to [`VARIANT`](crate::VARIANT) and
-/// [`PROPVARIANT`](crate::PROPVARIANT) structs.
-pub trait oleaut_Variant {
+/// This trait is enabled with the `oleaut` feature, and provides common methods
+/// for [`VARIANT`](crate::VARIANT) and [`PROPVARIANT`](crate::PROPVARIANT).
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// ```
+pub trait oleaut_Variant: Default {
 	/// Returns a reference to the raw data being held.
-	///
-	/// # Safety
-	///
-	/// The raw binary data has no guarantees.
 	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
-	unsafe fn raw(&self) -> &[u8; 16];
+	fn raw(&self) -> &[u8; 16];
 
 	/// Creates an object straight from raw data. Up to 16 `u8` elements will be
 	/// actually copied.
@@ -39,13 +41,15 @@ pub trait oleaut_Variant {
 	#[must_use]
 	fn vt(&self) -> co::VT;
 
-	/// Tells whether no value is being held.
+	/// Tells whether no value is being held, that is, the variant type is
+	/// [`co::VT::EMPTY`](crate::co::VT::EMPTY).
 	#[must_use]
 	fn is_empty(&self) -> bool {
 		self.vt() == co::VT::EMPTY
 	}
 
-	/// Tells whether the object holds an SQL style null.
+	/// Tells whether the object holds an SQL style null, that is, the variant
+	/// type is [`co::VT::NULL`](crate::co::VT::NULL).
 	#[must_use]
 	fn is_null(&self) -> bool {
 		self.vt() == co::VT::NULL
@@ -64,7 +68,7 @@ pub trait oleaut_Variant {
 	#[must_use]
 	fn bool(&self) -> Option<bool> {
 		if self.vt() == co::VT::BOOL {
-			let val16 = i16::from_ne_bytes(unsafe { self.raw() }[..2].try_into().unwrap());
+			let val16 = i16::from_ne_bytes(self.raw()[..2].try_into().unwrap());
 			Some(val16 != 0)
 		} else {
 			None
@@ -86,7 +90,7 @@ pub trait oleaut_Variant {
 	#[must_use]
 	fn bstr(&self) -> Option<String> {
 		if self.vt() == co::VT::BSTR {
-			let ptr = usize::from_ne_bytes(unsafe { self.raw() }[..8].try_into().unwrap());
+			let ptr = usize::from_ne_bytes(self.raw()[..8].try_into().unwrap());
 			let bstr = ManuallyDrop::new(unsafe { BSTR::from_ptr(ptr as _) }); // won't release the stored pointer
 			Some(bstr.to_string())
 		} else {
@@ -106,7 +110,7 @@ pub trait oleaut_Variant {
 	#[must_use]
 	fn f32(&self) -> Option<f32> {
 		if self.vt() == co::VT::R4 {
-			Some(f32::from_ne_bytes(unsafe { self.raw() }[..4].try_into().unwrap()))
+			Some(f32::from_ne_bytes(self.raw()[..4].try_into().unwrap()))
 		} else {
 			None
 		}
@@ -124,7 +128,7 @@ pub trait oleaut_Variant {
 	#[must_use]
 	fn f64(&self) -> Option<f64> {
 		if self.vt() == co::VT::R8 {
-			Some(f64::from_ne_bytes(unsafe { self.raw() }[..8].try_into().unwrap()))
+			Some(f64::from_ne_bytes(self.raw()[..8].try_into().unwrap()))
 		} else {
 			None
 		}
@@ -142,7 +146,7 @@ pub trait oleaut_Variant {
 	#[must_use]
 	fn i8(&self) -> Option<i8> {
 		if self.vt() == co::VT::I1 {
-			Some(i8::from_ne_bytes(unsafe { self.raw() }[..1].try_into().unwrap()))
+			Some(i8::from_ne_bytes(self.raw()[..1].try_into().unwrap()))
 		} else {
 			None
 		}
@@ -160,7 +164,7 @@ pub trait oleaut_Variant {
 	#[must_use]
 	fn i16(&self) -> Option<i16> {
 		if self.vt() == co::VT::I2 {
-			Some(i16::from_ne_bytes(unsafe { self.raw() }[..2].try_into().unwrap()))
+			Some(i16::from_ne_bytes(self.raw()[..2].try_into().unwrap()))
 		} else {
 			None
 		}
@@ -178,7 +182,7 @@ pub trait oleaut_Variant {
 	#[must_use]
 	fn i32(&self) -> Option<i32> {
 		if self.vt() == co::VT::I4 {
-			Some(i32::from_ne_bytes(unsafe { self.raw() }[..4].try_into().unwrap()))
+			Some(i32::from_ne_bytes(self.raw()[..4].try_into().unwrap()))
 		} else {
 			None
 		}
@@ -197,7 +201,7 @@ pub trait oleaut_Variant {
 	#[must_use]
 	fn time(&self) -> Option<SYSTEMTIME> {
 		if self.vt() == co::VT::DATE {
-			let double = f64::from_ne_bytes(unsafe { self.raw() }[..8].try_into().unwrap());
+			let double = f64::from_ne_bytes(self.raw()[..8].try_into().unwrap());
 			let mut st = SYSTEMTIME::default();
 			VariantTimeToSystemTime(double, &mut st).unwrap();
 			Some(st)
@@ -218,7 +222,7 @@ pub trait oleaut_Variant {
 	#[must_use]
 	fn u8(&self) -> Option<u8> {
 		if self.vt() == co::VT::UI1 {
-			Some(u8::from_ne_bytes(unsafe { self.raw() }[..1].try_into().unwrap()))
+			Some(u8::from_ne_bytes(self.raw()[..1].try_into().unwrap()))
 		} else {
 			None
 		}
@@ -236,7 +240,7 @@ pub trait oleaut_Variant {
 	#[must_use]
 	fn u16(&self) -> Option<u16> {
 		if self.vt() == co::VT::UI2 {
-			Some(u16::from_ne_bytes(unsafe { self.raw() }[..2].try_into().unwrap()))
+			Some(u16::from_ne_bytes(self.raw()[..2].try_into().unwrap()))
 		} else {
 			None
 		}
@@ -254,7 +258,7 @@ pub trait oleaut_Variant {
 	#[must_use]
 	fn u32(&self) -> Option<u32> {
 		if self.vt() == co::VT::UI4 {
-			Some(u32::from_ne_bytes(unsafe { self.raw() }[..4].try_into().unwrap()))
+			Some(u32::from_ne_bytes(self.raw()[..4].try_into().unwrap()))
 		} else {
 			None
 		}
