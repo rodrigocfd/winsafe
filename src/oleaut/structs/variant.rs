@@ -11,6 +11,10 @@ use crate::prelude::{ole_IUnknown, oleaut_IDispatch, oleaut_Variant};
 /// Automatically calls
 /// [`VariantClear`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-variantclear)
 /// when the object goes out of scope.
+///
+/// The
+/// [`Default`](https://doc.rust-lang.org/std/default/trait.Default.html)
+/// implementation returns a [`co::VT::EMPTY`](crate::co::VT::EMPTY) value.
 #[repr(C)]
 pub struct VARIANT {
 	vt: co::VT,

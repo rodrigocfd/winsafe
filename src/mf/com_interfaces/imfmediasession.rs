@@ -5,6 +5,7 @@ use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID};
 use crate::mf::decl::IMFTopology;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::{ok_to_hrresult, vt};
+use crate::oleaut::decl::PROPVARIANT;
 use crate::prelude::{mf_IMFMediaEventGenerator, mf_IMFTopology, ole_IUnknown};
 use crate::vt::IMFMediaEventGeneratorVT;
 
@@ -112,6 +113,40 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 	fn_com_noparm! { Shutdown: IMFMediaSessionVT;
 		/// [`IMFMediaSession::Shutdown`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfmediasession-shutdown)
 		/// method.
+	}
+
+	/// [`IMFMediaSession::Start`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfmediasession-start)
+	/// method.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::prelude::*;
+	/// use winsafe::{co, IMFMediaSession, PROPVARIANT};
+	///
+	/// let session: IMFMediaSession; // initialized somewhere
+	/// # let session = unsafe { IMFMediaSession::null() };
+	///
+	/// session.Start(
+	///     co::MF_TIME_FORMAT::NULL,
+	///     &PROPVARIANT::default(),
+	/// )?;
+	/// # Ok::<_, co::HRESULT>(())
+	/// ```
+	fn Start(&self,
+		time_format: co::MF_TIME_FORMAT,
+		start_position: &PROPVARIANT,
+	) -> HrResult<()>
+	{
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFMediaSessionVT>(self).Start)(
+					self.ptr(),
+					&time_format as *const _ as _,
+					start_position as *const _ as _,
+				)
+			},
+		)
 	}
 
 	fn_com_noparm! { Stop: IMFMediaSessionVT;

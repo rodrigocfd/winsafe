@@ -22,6 +22,13 @@ com_interface! { IMFSourceResolver: "fbe5a32d-a497-4b61-bb85-97b1a848a6e3";
 	/// COM interface over
 	/// [`IMFSourceResolverVT`](crate::vt::IMFSourceResolverVT).
 	///
+	/// Automatically calls
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// Usually created with
+	/// [`MFCreateSourceResolver`](crate::MFCreateSourceResolver) function.
+	///
 	/// # Examples
 	///
 	/// ```rust,no_run

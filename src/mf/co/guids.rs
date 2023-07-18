@@ -11,3 +11,12 @@ const_guid! { MF_SERVICE;
 	MR_VIDEO_ACCELERATION_SERVICE "efef5175-5c7d-4ce2-bbbd-34ff8bca6554"
 	MR_BUFFER_SERVICE "a562248c-9ac6-4ffc-9fba-3af8f8ad1a4d"
 }
+
+const_guid! { MF_TIME_FORMAT;
+	/// [`IMFMediaSession::Start`](crate::prelude::mf_IMFMediaSession::Start)
+	/// `time_format` (`GUID`).
+	=>
+	NULL "00000000-0000-0000-0000-000000000000"
+	SEGMENT_OFFSET "c8b8be77-869c-431d-812e-169693f65a39"
+	ENTRY_RELATIVE "4399f178-46d3-4504-afda-20d32e9ba360"
+}

@@ -9,6 +9,10 @@ use crate::prelude::oleaut_Variant;
 /// Automatically calls
 /// [`PropVariantClear`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-propvariantclear)
 /// when the object goes out of scope.
+///
+/// The
+/// [`Default`](https://doc.rust-lang.org/std/default/trait.Default.html)
+/// implementation returns a [`co::VT::EMPTY`](crate::co::VT::EMPTY) value.
 #[repr(C)]
 pub struct PROPVARIANT {
 	vt: co::VT,

@@ -88,7 +88,7 @@ pub struct FILETIME {
 ///
 /// The
 /// [`Default`](https://doc.rust-lang.org/std/default/trait.Default.html)
-/// implementation returns the null `GUID` (all zeros).
+/// implementation returns `GUID::NULL` (all zeros).
 #[repr(C)]
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct GUID {
@@ -110,11 +110,14 @@ impl std::fmt::Display for GUID {
 
 impl Default for GUID {
 	fn default() -> Self {
-		Self::new("00000000-0000-0000-0000-000000000000") // NULL GUID
+		Self::NULL
 	}
 }
 
 impl GUID {
+	/// The null `GUID` contains only zeros.
+	pub const NULL: Self = Self::new("00000000-0000-0000-0000-000000000000");
+
 	/// Creates a new `GUID` from a representative hex string, which can be
 	/// copied straight from standard `GUID` declarations.
 	///

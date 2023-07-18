@@ -31,6 +31,9 @@ com_interface! { IMFTopology: "83cf873a-f6da-4bc8-823f-bacfd55dc433";
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
+	/// Usually created with [`MFCreateTopology`](crate::MFCreateTopology)
+	/// function.
+	///
 	/// # Examples
 	///
 	/// ```rust,no_run

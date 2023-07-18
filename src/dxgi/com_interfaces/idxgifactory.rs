@@ -30,7 +30,8 @@ com_interface! { IDXGIFactory: "7b7166ec-21c7-44ae-b21a-c9ae321ae369";
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
-	/// Created with [`CreateDXGIFactory`](crate::CreateDXGIFactory) function.
+	/// Usually created with [`CreateDXGIFactory`](crate::CreateDXGIFactory)
+	/// function.
 	///
 	/// # Examples
 	///

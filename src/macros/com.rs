@@ -61,7 +61,7 @@ macro_rules! const_guid_values {
 	};
 }
 
-/// Declares the type of a GUID constant, along with public values.
+/// Declares the type of a `GUID`-derived constant, along with public values.
 macro_rules! const_guid {
 	(
 		$name:ident;
@@ -94,7 +94,7 @@ macro_rules! const_guid {
 
 		impl Default for $name {
 			fn default() -> Self {
-				Self::new("00000000-0000-0000-c000-000000000046") // IUnknown GUID
+				Self::new("00000000-0000-0000-0000-000000000000") // NULL GUID
 			}
 		}
 

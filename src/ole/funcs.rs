@@ -1,7 +1,7 @@
 #![allow(non_snake_case)]
 
 use crate::{co, ole};
-use crate::kernel::decl::WString;
+use crate::kernel::decl::{GUID, WString};
 use crate::ole::decl::{COSERVERINFO, HrResult, IMoniker, IUnknown, MULTI_QI};
 use crate::ole::guard::{CoLockObjectExternalGuard, CoUninitializeGuard};
 use crate::ole::privs::ok_to_hrresult;
@@ -50,6 +50,17 @@ pub fn CLSIDFromString(prog_id: &str) -> HrResult<co::CLSID> {
 			)
 		},
 	).map(|_| clsid)
+}
+
+/// [`CoCreateGuid`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateguid)
+/// function.
+///
+/// Returns a globally unique 128-bit integer.
+#[must_use]
+pub fn CoCreateGuid() -> HrResult<GUID> {
+	let mut guid = GUID::default();
+	ok_to_hrresult(unsafe { ole::ffi::CoCreateGuid(&mut guid as *mut _ as _) })
+		.map(|_| guid)
 }
 
 /// [`CoCreateInstance`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
