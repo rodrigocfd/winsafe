@@ -2,10 +2,9 @@
 
 use crate::co;
 use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID};
-use crate::mf::decl::IMFTopology;
 use crate::ole::decl::HrResult;
 use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{IntUnderlying, mf_IMFMediaEventGenerator, mf_IMFTopology, ole_IUnknown};
+use crate::prelude::{IntUnderlying, mf_IMFMediaEventGenerator};
 use crate::vt::IMFMediaEventGeneratorVT;
 
 /// [`IMFMediaSource`](crate::IMFMediaSource) virtual table.

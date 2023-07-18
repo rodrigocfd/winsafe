@@ -11,6 +11,16 @@ use crate::prelude::{mf_IMFAttributes, ole_IUnknown};
 
 /// [`MFCreateMediaSession`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-mfcreatemediasession)
 /// function.
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{IMFAttributes, MFCreateMediaSession};
+///
+/// let media_session = MFCreateMediaSession(None::<&IMFAttributes>)?;
+/// # Ok::<_, winsafe::co::HRESULT>(())
+/// ```
 #[must_use]
 pub fn MFCreateMediaSession(
 	configuration: Option<&impl mf_IMFAttributes>) -> HrResult<IMFMediaSession>
@@ -28,6 +38,16 @@ pub fn MFCreateMediaSession(
 
 /// [`MFCreateSourceResolver`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-mfcreatesourceresolver)
 /// function.
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{IMFSourceResolver, MFCreateSourceResolver};
+///
+/// let source_resolver = MFCreateSourceResolver()?;
+/// # Ok::<_, winsafe::co::HRESULT>(())
+/// ```
 #[must_use]
 pub fn MFCreateSourceResolver() -> HrResult<IMFSourceResolver> {
 	let mut queried = unsafe { IMFSourceResolver::null() };
@@ -37,6 +57,16 @@ pub fn MFCreateSourceResolver() -> HrResult<IMFSourceResolver> {
 
 /// [`MFCreateTopology`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-mfcreatetopology)
 /// function.
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{IMFTopology, MFCreateTopology};
+///
+/// let topology = MFCreateTopology()?;
+/// # Ok::<_, winsafe::co::HRESULT>(())
+/// ```
 #[must_use]
 pub fn MFCreateTopology() -> HrResult<IMFTopology> {
 	let mut queried = unsafe { IMFTopology::null() };
@@ -46,6 +76,16 @@ pub fn MFCreateTopology() -> HrResult<IMFTopology> {
 
 /// [`MFCreateTopologyNode`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-mfcreatetopologynode)
 /// function.
+///
+/// # Examples
+///
+/// ```rust,no_run
+/// use winsafe::prelude::*;
+/// use winsafe::{co, IMFTopologyNode, MFCreateTopologyNode};
+///
+/// let topology_node = MFCreateTopologyNode(co::MF_TOPOLOGY::OUTPUT_NODE)?;
+/// # Ok::<_, winsafe::co::HRESULT>(())
+/// ```
 #[must_use]
 pub fn MFCreateTopologyNode(
 	node_type: co::MF_TOPOLOGY,
