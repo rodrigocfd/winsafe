@@ -154,14 +154,14 @@ impl Ini {
 	}
 
 	/// Serializes the sections and entries to raw bytes with
-	/// [`String::into_bytes`](https://doc.rust-lang.org/std/string/struct.String.html#method.into_bytes).
+	/// [`String::into_bytes`](std::string::String::into_bytes).
 	#[must_use]
 	pub fn serialize_to_bytes(&self) -> Vec<u8> {
 		self.serialize_to_str().into_bytes()
 	}
 
 	/// Serializes the data directly to a file with
-	/// [`String::into_bytes`](https://doc.rust-lang.org/std/string/struct.String.html#method.into_bytes).
+	/// [`String::into_bytes`](std::string::String::into_bytes).
 	pub fn serialize_to_file(&self, ini_path: &str) -> SysResult<()> {
 		let fout = File::open(ini_path, FileAccess::OpenOrCreateRW)?;
 		fout.erase_and_write(&self.serialize_to_bytes())?;

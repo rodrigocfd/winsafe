@@ -1,10 +1,7 @@
 //! File path utilities.
 //!
-//! Some of the functions are similar to
-//! [`std::path::Path`](https://doc.rust-lang.org/std/path/struct.Path.html)
-//! ones, but here they work directly upon
-//! [`&str`](https://doc.rust-lang.org/std/primitive.str.html) instead of
-//! [`&OsStr`](https://doc.rust-lang.org/std/ffi/struct.OsStr.html).
+//! Some of the functions are similar to [`std::path::Path`] ones, but here they
+//! work directly upon [`&str`](str) instead of [`&OsStr`](std::ffi::OsStr).
 
 use crate::co;
 use crate::kernel::decl::{

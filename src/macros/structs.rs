@@ -63,9 +63,8 @@ macro_rules! impl_intunderlying {
 
 			/// Returns the primitive integer underlying value.
 			///
-			/// This method is similar to
-			/// [`Into`](https://doc.rust-lang.org/std/convert/trait.Into.html),
-			/// but it is `const`, therefore it can be used in
+			/// This method is similar to [`Into`](std::convert::Into), but it
+			/// is `const`, therefore it can be used in
 			/// [const contexts](https://doc.rust-lang.org/reference/const_eval.html).
 			#[must_use]
 			pub const fn raw(&self) -> $ntype {

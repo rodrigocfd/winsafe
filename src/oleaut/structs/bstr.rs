@@ -73,9 +73,9 @@ impl BSTR {
 	}
 
 	/// Creates a new `BSTR` by wrapping a pointer.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure the pointer has the correct type and isn't owned by anyone else,
 	/// otherwise you may cause memory access violations.
 	#[must_use]
@@ -114,8 +114,7 @@ impl BSTR {
 		std::mem::replace(&mut self.0, std::ptr::null_mut())
 	}
 
-	/// Converts into
-	/// [`String`](https://doc.rust-lang.org/std/string/struct.String.html).
+	/// Converts into [`String`](std::string::String).
 	#[must_use]
 	pub fn to_string(&self) -> String {
 		WString::from_wchars_nullt(self.0).to_string()

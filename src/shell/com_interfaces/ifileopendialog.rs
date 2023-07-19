@@ -82,8 +82,7 @@ pub trait shell_IFileOpenDialog: shell_IFileDialog {
 		///
 		/// # Examples
 		///
-		/// Collecting the file paths into a
-		/// [`Vec`](https://doc.rust-lang.org/std/vec/struct.Vec.html):
+		/// Collecting the file paths into a [`Vec`](std::vec::Vec):
 		///
 		/// ```rust,no_run
 		/// use winsafe::prelude::*;

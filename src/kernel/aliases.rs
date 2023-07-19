@@ -3,9 +3,8 @@ use crate::co;
 /// A [`Result` alias](crate#errors-and-result-aliases) which returns a `Box<dyn
 /// Error + Send + Sync>` on failure.
 ///
-/// This is the most generic
-/// [`Result`](https://doc.rust-lang.org/std/result/enum.Result.html) possible –
-/// any other `Result` can be converted into it.
+/// This is the most generic [`Result`](std::result::Result) possible – any
+/// other `Result` can be converted into it.
 pub type AnyResult<T> = Result<T, Box<dyn std::error::Error + Send + Sync>>;
 
 /// A [`Result` alias](crate#errors-and-result-aliases) for native system error

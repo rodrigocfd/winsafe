@@ -841,7 +841,7 @@ pub trait user_Hwnd: Handle {
 	/// Calls
 	/// [`GetWindowTextLength`](crate::prelude::user_Hwnd::GetWindowTextLength)
 	/// and performs all necessary allocations, returning an ordinary
-	/// [`String`](https://doc.rust-lang.org/std/string/struct.String.html).
+	/// [`String`](std::string::String).
 	///
 	/// ```rust,no_run
 	/// use winsafe::prelude::*;
@@ -880,8 +880,7 @@ pub trait user_Hwnd: Handle {
 	///
 	/// You usually don't need to call this method directly, since
 	/// [`GetWindowText`](crate::prelude::user_Hwnd::GetWindowText) returns a
-	/// [`String`](https://doc.rust-lang.org/std/string/struct.String.html),
-	/// performing all necessary allocations.
+	/// [`String`](std::string::String), performing all necessary allocations.
 	#[must_use]
 	fn GetWindowTextLength(&self) -> SysResult<i32> {
 		SetLastError(co::ERROR::SUCCESS);

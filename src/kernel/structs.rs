@@ -86,9 +86,8 @@ pub struct FILETIME {
 /// [`GUID`](https://learn.microsoft.com/en-us/windows/win32/api/guiddef/ns-guiddef-guid)
 /// struct.
 ///
-/// The
-/// [`Default`](https://doc.rust-lang.org/std/default/trait.Default.html)
-/// implementation returns `GUID::NULL` (all zeros).
+/// The [`Default`](std::default::Default) implementation returns `GUID::NULL`
+/// (all zeros).
 #[repr(C)]
 #[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct GUID {

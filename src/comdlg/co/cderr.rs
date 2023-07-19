@@ -6,10 +6,8 @@ const_no_debug_display! { CDERR: u32;
 	///
 	/// Also includes `PDERR`, `CFERR`, `FNERR` and `FRERR` prefixes.
 	///
-	/// Implements the standard
-	/// [`Error`](https://doc.rust-lang.org/beta/std/error/trait.Error.html)
-	/// trait.
-	/// 
+	/// Implements the standard [`Error`](std::error::Error) trait.
+	///
 	/// Does not implement [`FormattedError`](crate::prelude::FormattedError)
 	/// because [`FormatMessage`](crate::FormatMessage) function does not offer
 	/// support for it, so there is no way to obtain a textual description of

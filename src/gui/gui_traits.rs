@@ -23,10 +23,9 @@ pub trait GuiWindow {
 	#[must_use]
 	fn hwnd(&self) -> &HWND;
 
-	/// Converts a reference to the
-	/// [`Any`](https://doc.rust-lang.org/std/any/trait.Any.html) trait. This is
-	/// useful when storing a collection of polymorphic controls, because `Any`
-	/// allows downcasting.
+	/// Converts a reference to the [`Any`](std::any::Any) trait. This is useful
+	/// when storing a collection of polymorphic controls, because `Any` allows
+	/// downcasting.
 	///
 	/// # Examples
 	///
@@ -97,10 +96,9 @@ pub trait GuiParent: GuiWindow {
 /// Allows a window to spawn new threads which can return errors, and run
 /// closures in the original UI thread.
 pub trait GuiThread: GuiParent {
-	/// This method calls
-	/// [`std::thread::spawn`](https://doc.rust-lang.org/std/thread/fn.spawn.html),
-	/// but it allows the returning of an error value. This error value will be
-	/// forwarded to the original UI thread, allowing it to be caught at
+	/// This method calls [`std::thread::spawn`], but it allows the returning of
+	/// an error value. This error value will be forwarded to the original UI
+	/// thread, allowing it to be caught at
 	/// [`WindowMain::run_main`](crate::gui::WindowMain::run_main).
 	///
 	/// It's a way to ensure that, upon an unexpected error, you application

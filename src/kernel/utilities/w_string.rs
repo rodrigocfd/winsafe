@@ -31,8 +31,7 @@ impl std::fmt::Debug for WString {
 }
 
 impl WString {
-	/// Stores an UTF-16 null-terminated string from an optional
-	/// [`&str`](https://doc.rust-lang.org/std/primitive.str.html).
+	/// Stores an UTF-16 null-terminated string from an optional [`&str`](str).
 	///
 	/// If `s` is `None`, no allocation is made.
 	#[must_use]
@@ -40,8 +39,7 @@ impl WString {
 		Self { buf: Buffer::from_opt_str(s) }
 	}
 
-	/// Stores an UTF-16 null-terminated string from a
-	/// [`&str`](https://doc.rust-lang.org/std/primitive.str.html).
+	/// Stores an UTF-16 null-terminated string from a [`&str`](str).
 	#[must_use]
 	pub fn from_str(s: impl AsRef<str>) -> Self {
 		Self { buf: Buffer::from_str(s) }
@@ -164,16 +162,13 @@ impl WString {
 			.for_each(|ch| *ch = 0x0000);
 	}
 
-	/// Converts into
-	/// [`String`](https://doc.rust-lang.org/std/string/struct.String.html) by
-	/// calling
-	/// [`String::from_utf16`](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf16).
-	/// An uncallocated will simply be converted into an empty string.
+	/// Converts into [`String`](std::string::String) by calling
+	/// [`String::from_utf16`](std::string::String::from_utf16). An uncallocated
+	/// will simply be converted into an empty string.
 	///
 	/// This method is useful if you're parsing raw data which may contain
 	/// invalid characters. If you're dealing with a string known to be valid,
-	/// [`to_string`](https://doc.rust-lang.org/std/string/trait.ToString.html#tymethod.to_string)
-	/// is more practical.
+	/// [`to_string`](std::string::ToString::to_string) is more practical.
 	#[must_use]
 	pub fn to_string_checked(&self
 	) -> Result<String, std::string::FromUtf16Error>
@@ -184,9 +179,8 @@ impl WString {
 	/// Wrapper to
 	/// [`lstrlen`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lstrlenw).
 	///
-	/// Returns the number of
-	/// [`u16`](https://doc.rust-lang.org/std/primitive.u16.html) characters
-	/// stored in the internal buffer, not counting the terminating null.
+	/// Returns the number of [`u16`] characters stored in the internal buffer,
+	/// not counting the terminating null.
 	#[must_use]
 	pub fn str_len(&self) -> usize {
 		unsafe { kernel::ffi::lstrlenW(self.buf.as_ptr()) as _ }
@@ -196,11 +190,10 @@ impl WString {
 	/// and parses the data as a string.
 	///
 	/// If you're sure the data has UTF-8 encoding, you can also use the
-	/// built-in
-	/// [`String::from_utf8`](https://doc.rust-lang.org/std/string/struct.String.html#method.from_utf8).
+	/// built-in [`String::from_utf8`](std::string::String::from_utf8).
 	///
 	/// To serialize the string back into UTF-8 bytes, use the built-in
-	/// [`String::into_bytes`](https://doc.rust-lang.org/std/string/struct.String.html#method.into_bytes).
+	/// [`String::into_bytes`](std::string::String::into_bytes).
 	///
 	/// # Examples
 	///

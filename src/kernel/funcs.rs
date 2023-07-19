@@ -93,9 +93,8 @@ pub fn AllocateAndInitializeSid(
 /// function.
 ///
 /// You don't need to call this function directly, because [`SID`](crate::SID)
-/// implements [`Display`](https://doc.rust-lang.org/std/fmt/trait.Display.html)
-/// and [`ToString`](https://doc.rust-lang.org/std/string/trait.ToString.html)
-/// traits, which call it.
+/// implements [`Display`](std::fmt::Display) and
+/// [`ToString`](std::string::ToString) traits, which call it.
 #[must_use]
 pub fn ConvertSidToStringSid(sid: &SID) -> SysResult<String> {
 	let mut pstr = std::ptr::null_mut() as *mut u16;
@@ -1033,8 +1032,7 @@ pub const fn HIWORD(v: u32) -> u16 {
 ///
 /// You don't need to call this function directly, because
 /// [`SECURITY_DESCRIPTOR`](crate::SECURITY_DESCRIPTOR) implements the
-/// [`Default`](https://doc.rust-lang.org/std/default/trait.Default.html) trait,
-/// which calls it.
+/// [`Default`](std::default::Default) trait, which calls it.
 #[must_use]
 pub fn InitializeSecurityDescriptor() -> SysResult<SECURITY_DESCRIPTOR> {
 	let mut sd = unsafe { std::mem::zeroed::<SECURITY_DESCRIPTOR>() };

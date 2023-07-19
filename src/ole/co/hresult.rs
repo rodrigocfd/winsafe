@@ -10,14 +10,11 @@ const_no_debug_display! { HRESULT: u32;
 	/// The [`Result` alias](crate#errors-and-result-aliases) for this type is
 	/// [`HrResult`](crate::HrResult).
 	///
-	/// Implements the standard
-	/// [`Error`](https://doc.rust-lang.org/beta/std/error/trait.Error.html)
-	/// trait.
+	/// Implements the standard [`Error`](std::error::Error) trait.
 	///
-	/// Implements the
-	/// [`Debug`](https://doc.rust-lang.org/std/fmt/trait.Debug.html) and
-	/// [`Display`](https://doc.rust-lang.org/std/fmt/trait.Display.html) traits
-	/// to show the error code along with the error description, taken from
+	/// Implements the [`Debug`](std::fmt::Debug) and
+	/// [`Display`](std::fmt::Display) traits to show the error code along with
+	/// the error description, taken from
 	/// [`FormattedError`](crate::prelude::FormattedError) trait. For example,
 	/// the code below:
 	///

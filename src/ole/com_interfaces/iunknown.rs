@@ -41,11 +41,10 @@ com_interface! { IUnknown: "00000000-0000-0000-c000-000000000046";
 /// C++, here they are abstracted away as it follows:
 ///
 /// * `AddRef` – called along the `clone` method from the
-/// [`Clone`](https://doc.rust-lang.org/std/clone/trait.Clone.html) trait;
+/// [`Clone`](std::clone::Clone) trait;
 ///
-/// * `Release` – called automatically by the
-/// [`Drop`](https://doc.rust-lang.org/std/ops/trait.Drop.html) trait, so you
-/// don't need to worry about it.
+/// * `Release` – called automatically by the [`Drop`](std::ops::Drop) trait, so
+/// you don't need to worry about it.
 pub trait ole_IUnknown: Clone {
 	/// The COM interface ID.
 	const IID: co::IID;

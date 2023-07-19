@@ -216,8 +216,7 @@
 //!
 //! WinSafe uses Unicode UTF-16 internally but exposes idiomatic UTF-8,
 //! performing conversions automatically when needed, so you don't have to worry
-//! about [`OsString`](https://doc.rust-lang.org/std/ffi/struct.OsString.html)
-//! or any low-level conversion.
+//! about [`OsString`](std::ffi::OsString) or any low-level conversion.
 //!
 //! However, there are cases where a string conversion is still needed, like
 //! when dealing with native Win32 structs. In such cases, you can use the
