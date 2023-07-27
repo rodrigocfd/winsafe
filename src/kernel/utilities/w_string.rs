@@ -162,6 +162,12 @@ impl WString {
 			.for_each(|ch| *ch = 0x0000);
 	}
 
+	/// Returns `true` if the internal buffer has been allocated.
+	#[must_use]
+	pub const fn is_allocated(&self) -> bool {
+		self.buf.is_allocated()
+	}
+
 	/// Converts into [`String`](std::string::String) by calling
 	/// [`String::from_utf16`](std::string::String::from_utf16). An uncallocated
 	/// will simply be converted into an empty string.
@@ -428,6 +434,13 @@ impl Buffer {
 			Self::Stack(arr) => arr.len(),
 			Self::Heap(block) => block.len() / std::mem::size_of::<u16>(),
 			Self::Unallocated => 0,
+		}
+	}
+
+	const fn is_allocated(&self) -> bool {
+		match self {
+			Self::Unallocated => false,
+			_ => true,
 		}
 	}
 

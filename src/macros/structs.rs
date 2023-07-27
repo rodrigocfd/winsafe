@@ -192,7 +192,13 @@ macro_rules! pub_fn_string_buf_get_set {
 		/// Sets the string field.
 		pub fn $setter(&mut self, buf: Option<&$life mut WString>) {
 			self.$cch = buf.as_ref().map_or(0, |buf| buf.buf_len() as _);
-			self.$field = buf.map_or(std::ptr::null_mut(), |buf| unsafe { buf.as_mut_ptr() });
+			self.$field = buf.map_or(std::ptr::null_mut(), |buf| {
+				if buf.is_allocated() {
+					unsafe { buf.as_mut_ptr() }
+				} else {
+					std::ptr::null_mut()
+				}
+			});
 		}
 	};
 }
