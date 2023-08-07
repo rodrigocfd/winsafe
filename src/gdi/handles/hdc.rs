@@ -1001,6 +1001,32 @@ pub trait gdi_Hdc: user_Hdc {
 		)
 	}
 
+	/// [`TransparentBlt`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-transparentblt)
+	/// function.
+	fn TransparentBlt(&self,
+		dest_top_left: POINT,
+		dest_sz: SIZE,
+		hdc_src: HDC,
+		src_top_left: POINT,
+		src_sz: SIZE,
+		color_transparent: COLORREF,
+	) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				gdi::ffi::TransparentBlt(
+					self.ptr(),
+					dest_top_left.x, dest_top_left.y,
+					dest_sz.cx, dest_sz.cy,
+					hdc_src.ptr(),
+					src_top_left.x, src_top_left.y,
+					src_sz.cx, src_sz.cy,
+					color_transparent.into(),
+				)
+			},
+		)
+	}
+
 	/// [`UpdateColors`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-updatecolors)
 	/// function.
 	fn UpdateColors(&self) -> SysResult<()> {

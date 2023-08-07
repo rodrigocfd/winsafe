@@ -43,7 +43,6 @@
 //! | **`gui`** | **The WinSafe high-level GUI abstractions** |
 //! | `kernel` | Kernel32.dll, Advapi32.dll and Ktmw32.dll – all others will include it |
 //! | `mf` | [Media Foundation](https://learn.microsoft.com/en-us/windows/win32/medfound/microsoft-media-foundation-sdk) |
-//! | `msimg` | Msimg32.dll |
 //! | `ole` | OLE and basic COM support |
 //! | `oleaut` | [OLE Automation](https://learn.microsoft.com/en-us/windows/win32/api/_automat/) |
 //! | `shell` | Shell32.dll and Shlwapi.dll, the COM-based [Windows Shell](https://learn.microsoft.com/en-us/windows/win32/shell/shell-entry) |
@@ -269,7 +268,6 @@
 #[cfg(feature = "gdi")] mod gdi;
 #[cfg(feature = "kernel")] mod kernel;
 #[cfg(feature = "mf")] mod mf;
-#[cfg(feature = "msimg")] mod msimg;
 #[cfg(feature = "ole")] mod ole;
 #[cfg(feature = "oleaut")] mod oleaut;
 #[cfg(feature = "shell")] mod shell;
@@ -564,7 +562,6 @@ pub mod prelude {
 	#[cfg(feature = "gui")] pub use super::gui::traits::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::traits::*;
 	#[cfg(feature = "mf")] pub use super::mf::traits::*;
-	#[cfg(feature = "msimg")] pub use super::msimg::traits::*;
 	#[cfg(feature = "ole")] pub use super::ole::traits::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::traits::*;
 	#[cfg(feature = "shell")] pub use super::shell::traits::*;

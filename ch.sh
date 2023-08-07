@@ -10,7 +10,6 @@ FEATS=(
 	gui
 	kernel
 	mf
-	msimg
 	ole
 	oleaut
 	shell

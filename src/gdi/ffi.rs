@@ -104,6 +104,10 @@ extern_sys! { "gdi32";
 	WidenPath(HANDLE) -> BOOL
 }
 
+extern_sys! { "msimg32";
+	TransparentBlt(HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, i32, i32, u32) -> BOOL
+}
+
 extern_sys! { "user32";
 	LoadImageW(HANDLE, PCSTR, u32, i32, i32, u32) -> HANDLE // returns GdiObjectGuard, so needs gdi feature
 }

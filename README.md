@@ -73,7 +73,6 @@ The following Cargo features are available so far:
 | **`gui`** | **The WinSafe high-level GUI abstractions** |
 | `kernel` | Kernel32.dll, Advapi32.dll and Ktmw32.dll – all others will include it |
 | `mf` | [Media Foundation](https://learn.microsoft.com/en-us/windows/win32/medfound/microsoft-media-foundation-sdk) |
-| `msimg` | Msimg32.dll |
 | `ole` | OLE and basic COM support |
 | `oleaut` | [OLE Automation](https://learn.microsoft.com/en-us/windows/win32/api/_automat/) |
 | `shell` | Shell32.dll and Shlwapi.dll, the COM-based [Windows Shell](https://learn.microsoft.com/en-us/windows/win32/shell/shell-entry) |
