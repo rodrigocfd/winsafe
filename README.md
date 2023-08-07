@@ -40,8 +40,6 @@ Plus, below are the numbers of native FFI items implemented:
 | COM interfaces | 73 |
 | COM methods | 271 |
 
-Although WinSafe already has a lot of Win32 APIs, it doesn't have *everything*, simply because Win32 API is gigantic. So if you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but have everything.
-
 ## Usage
 
 Add the dependency in your `Cargo.toml`:
@@ -81,7 +79,7 @@ The following Cargo features are available so far:
 | `uxtheme` | UxTheme.dll, extended window theming |
 | `version` | Version.dll, to manipulate *.exe version info |
 
-Note that a Cargo feature may depend on other features, which will be enabled automatically.
+Although WinSafe already has a lot of Win32 APIs, it doesn't have *everything*, simply because Win32 API is gigantic. So if you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but have everything.
 
 ## Example
 
