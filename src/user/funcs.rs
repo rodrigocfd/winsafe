@@ -84,6 +84,12 @@ pub fn AttachThreadInput(
 	)
 }
 
+/// [`BlockInput`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-blockinput)
+/// function.
+pub fn BlockInput(block_it: bool) -> bool {
+	unsafe { user::ffi::BlockInput(block_it as _) != 0 }
+}
+
 /// [`BroadcastSystemMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-broadcastsystemmessage)
 /// function.
 pub fn BroadcastSystemMessage<M>(

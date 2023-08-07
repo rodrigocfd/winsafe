@@ -251,6 +251,13 @@ pub trait user_Hwnd: Handle {
 		bool_to_sysresult( unsafe { user::ffi::DestroyWindow(self.ptr()) })
 	}
 
+	/// [`DragDetect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dragdetect)
+	/// function.
+	#[must_use]
+	fn DragDetect(&self, pt: POINT) -> bool {
+		unsafe { user::ffi::DragDetect(self.ptr(), pt.x, pt.y) != 0 }
+	}
+
 	/// [`DrawCaption`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawcaption)
 	/// function.
 	fn DrawCaption(&self,

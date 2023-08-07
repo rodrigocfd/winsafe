@@ -23,6 +23,7 @@ extern_sys! { "user32";
 	AttachThreadInput(u32, u32, BOOL) -> BOOL
 	BeginDeferWindowPos(i32) -> HANDLE
 	BeginPaint(HANDLE, PVOID) -> HANDLE
+	BlockInput(BOOL) -> BOOL
 	BringWindowToTop(HANDLE) -> BOOL
 	BroadcastSystemMessageW(u32, *mut u32, u32, usize, isize) -> i32
 	CallNextHookEx(HANDLE, i32, usize, isize) -> isize
@@ -55,6 +56,7 @@ extern_sys! { "user32";
 	DialogBoxIndirectParamW(HANDLE, PCVOID, HANDLE, PFUNC, isize) -> isize
 	DialogBoxParamW(HANDLE, PCSTR, HANDLE, PFUNC, isize) -> isize
 	DispatchMessageW(PCVOID) -> isize
+	DragDetect(HANDLE, i32, i32) -> BOOL
 	DrawCaption(HANDLE, HANDLE, PCVOID, u32) -> BOOL
 	DrawFocusRect(HANDLE, PCVOID) -> BOOL
 	DrawMenuBar(HANDLE) -> BOOL
