@@ -19,7 +19,6 @@ rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
 comctl = ["user"]
-comdlg = ["user"]
 dshow = ["oleaut"]
 dwm = ["uxtheme"]
 dxgi = ["ole"]

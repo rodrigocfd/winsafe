@@ -1,5 +1,10 @@
 use crate::kernel::ffi_types::*;
 
+extern_sys! { "comdlg32";
+	ChooseColorW(PVOID) -> BOOL
+	CommDlgExtendedError() -> u32
+}
+
 #[cfg(target_pointer_width = "32")]
 extern_sys! { "user32";
 	GetWindowLongW(HANDLE, i32) -> isize
