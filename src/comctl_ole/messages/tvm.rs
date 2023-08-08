@@ -1,8 +1,8 @@
 use crate::co;
-use crate::msg::WndMsg;
-use crate::ole::decl::HrResult;
-use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::MsgSend;
+use crate::decl::*;
+use crate::msg::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
 
 /// [`TVM_SETEXTENDEDSTYLE`](https://learn.microsoft.com/en-us/windows/win32/controls/tvm-setextendedstyle)
 /// message parameters.

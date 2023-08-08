@@ -1,13 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PCVOID, PSTR, PVOID};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::oleaut::decl::VARIANT;
-use crate::prelude::{IntUnderlying, oleaut_IDispatch};
-use crate::taskschd::decl::ITaskDefinition;
-use crate::vt::IDispatchVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IRegisteredTask`](crate::IRegisteredTask) virtual table.
 #[repr(C)]

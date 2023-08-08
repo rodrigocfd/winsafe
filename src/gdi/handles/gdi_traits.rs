@@ -2,7 +2,7 @@
 
 use std::any::Any;
 
-use crate::prelude::Handle;
+use crate::prelude::*;
 
 /// This trait is enabled with the `gdi` feature, and implements methods for any
 /// [`HGDIOBJ`](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hgdiobj)

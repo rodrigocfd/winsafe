@@ -1,12 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, comctl_ole};
-use crate::comctl_ole::decl::IdTdiconStr;
-use crate::kernel::decl::{HINSTANCE, WString};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{comctl_Hwnd, Handle};
-use crate::user::decl::HWND;
+use crate::co;
+use crate::comctl_ole::ffi;
+use crate::decl::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
 
 impl comctl_ole_Hwnd for HWND {}
 
@@ -22,9 +20,7 @@ pub trait comctl_ole_Hwnd: comctl_Hwnd {
 	/// [`InitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initializeflatsb)
 	/// function.
 	fn InitializeFlatSB(&self) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe { comctl_ole::ffi::InitializeFlatSB(self.ptr()) },
-		)
+		ok_to_hrresult(unsafe { ffi::InitializeFlatSB(self.ptr()) })
 	}
 
 	/// [`TaskDialog`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialog)
@@ -95,7 +91,7 @@ pub trait comctl_ole_Hwnd: comctl_Hwnd {
 		let mut pn_button = i32::default();
 		ok_to_hrresult(
 			unsafe {
-				comctl_ole::ffi::TaskDialog(
+				ffi::TaskDialog(
 					self.ptr(),
 					hinstance.map_or(std::ptr::null_mut(), |h| h.ptr()),
 					WString::from_opt_str(window_title).as_ptr(),
@@ -112,8 +108,6 @@ pub trait comctl_ole_Hwnd: comctl_Hwnd {
 	/// [`UninitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-uninitializeflatsb)
 	/// function.
 	fn UninitializeFlatSB(&self) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe { comctl_ole::ffi::UninitializeFlatSB(self.ptr()) },
-		)
+		ok_to_hrresult(unsafe { ffi::UninitializeFlatSB(self.ptr()) })
 	}
 }

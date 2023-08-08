@@ -1,9 +1,8 @@
 use crate::co;
-use crate::kernel::decl::{MAKEDWORD, SysResult};
-use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
-use crate::user::decl::{HWND, RECT};
-use crate::user::privs::{minus1_as_badargs, zero_as_badargs, zero_as_none};
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`TBM_CLEARSEL`](https://learn.microsoft.com/en-us/windows/win32/controls/tbm-clearsel)
 /// message parameters.

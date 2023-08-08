@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID};
-use crate::prelude::ole_IUnknown;
-use crate::vt::IUnknownVT;
+use crate::kernel::ffi_types::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IMFMediaEventGenerator`](crate::IMFMediaEventGenerator) virtual table.
 #[repr(C)]

@@ -1,12 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::{COMPTR, HRES};
-use crate::kernel::privs::INFINITE;
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
-use crate::prelude::{IntUnderlying, ole_IPersist};
-use crate::vt::IPersistVT;
+use crate::decl::*;
+use crate::kernel::{ffi_types::*, privs::*};
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IMediaFilter`](crate::IMediaFilter) virtual table.
 #[repr(C)]

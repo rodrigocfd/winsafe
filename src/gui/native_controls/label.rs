@@ -4,22 +4,10 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::events::{LabelEvents, WindowEvents};
-use crate::gui::layout_arranger::{Horz, Vert};
-use crate::gui::native_controls::base_native_control::{
-	BaseNativeControl, OptsResz,
-};
-use crate::gui::privs::{
-	auto_ctrl_id, calc_text_bound_box, multiply_dpi_or_dtu, ui_font,
-};
-use crate::kernel::decl::SysResult;
-use crate::msg::wm;
-use crate::prelude::{
-	GuiChild, GuiEvents, GuiNativeControl, GuiNativeControlEvents, GuiParent,
-	GuiWindow, GuiWindowText, Handle, user_Hwnd,
-};
-use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
+use crate::decl::*;
+use crate::gui::{*, events::*, privs::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 struct Obj { // actual fields of Label
 	base: BaseNativeControl,

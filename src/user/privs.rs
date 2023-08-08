@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
 use crate::co;
-use crate::kernel::decl::SysResult;
+use crate::decl::*;
 
 pub(crate) const ASFW_ANY: u32 = -1i32 as _;
 pub(crate) const CB_ERR: i32 = -1;

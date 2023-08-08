@@ -1,13 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::dxgi::decl::{DXGI_ADAPTER_DESC, IDXGIOutput};
-use crate::dxgi::iterators::IdxgiadapterEnumoutputsIter;
-use crate::kernel::decl::GUID;
-use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID, PVOID};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::dxgi_IDXGIObject;
-use crate::vt::IDXGIObjectVT;
+use crate::decl::*;
+use crate::dxgi::iterators::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IDXGIAdapter`](crate::IDXGIAdapter) virtual table.
 #[repr(C)]

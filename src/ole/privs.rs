@@ -1,7 +1,7 @@
 use crate::co;
-use crate::kernel::ffi_types::HRES;
-use crate::ole::decl::HrResult;
-use crate::prelude::ole_IUnknown;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::prelude::*;
 
 /// Returns a reference to the virtual table of the COM object.
 pub(crate) unsafe fn vt<T>(obj: &impl ole_IUnknown) -> &T {

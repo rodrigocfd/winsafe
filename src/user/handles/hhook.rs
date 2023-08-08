@@ -1,10 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, user};
-use crate::kernel::decl::{HINSTANCE, SysResult};
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
-use crate::prelude::Handle;
-use crate::user::decl::HOOKPROC;
+use crate::co;
+use crate::decl::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
+use crate::user::ffi;
 
 impl_handle! { HHOOK;
 	/// Handle to a
@@ -25,11 +25,12 @@ pub trait user_Hhook: Handle {
 	/// [`CallNextHookEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-callnexthookex)
 	/// function.
 	fn CallNextHookEx(&self,
-		code: co::WH, wparam: usize, lparam: isize) -> isize
+		code: co::WH,
+		wparam: usize,
+		lparam: isize,
+	) -> isize
 	{
-		unsafe {
-			user::ffi::CallNextHookEx(self.ptr(), code.raw(), wparam, lparam)
-		}
+		unsafe { ffi::CallNextHookEx(self.ptr(), code.raw(), wparam, lparam) }
 	}
 
 	/// [`SetWindowsHookEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowshookexw)
@@ -43,7 +44,7 @@ pub trait user_Hhook: Handle {
 	{
 		ptr_to_sysresult_handle(
 			unsafe {
-				user::ffi::SetWindowsHookExW(
+				ffi::SetWindowsHookExW(
 					hook_id.raw(),
 					proc as _,
 					module.map_or(std::ptr::null_mut(), |h| h.ptr()),
@@ -61,7 +62,7 @@ pub trait user_Hhook: Handle {
 	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
 	fn UnhookWindowsHookEx(&mut self) -> SysResult<()> {
 		let ret = bool_to_sysresult(
-			unsafe { user::ffi::UnhookWindowsHookEx(self.ptr()) },
+			unsafe { ffi::UnhookWindowsHookEx(self.ptr()) },
 		);
 		*self = Self::INVALID;
 		ret

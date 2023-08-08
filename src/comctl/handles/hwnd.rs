@@ -1,11 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::comctl;
-use crate::comctl::decl::SUBCLASSPROC;
-use crate::kernel::decl::SysResult;
-use crate::kernel::privs::bool_to_sysresult;
-use crate::prelude::{MsgSend, user_Hwnd};
-use crate::user::decl::HWND;
+use crate::comctl::ffi;
+use crate::decl::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
 
 impl comctl_Hwnd for HWND {}
 
@@ -31,7 +29,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 		let wm_any = msg.as_generic_wm();
 		msg.convert_ret(
 			unsafe {
-				comctl::ffi::DefSubclassProc(
+				ffi::DefSubclassProc(
 					self.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
 				)
 			},
@@ -41,11 +39,13 @@ pub trait comctl_Hwnd: user_Hwnd {
 	/// [`RemoveWindowSubclass`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-removewindowsubclass)
 	/// function.
 	fn RemoveWindowSubclass(&self,
-		subclass_func: SUBCLASSPROC, subclass_id: usize) -> SysResult<()>
+		subclass_func: SUBCLASSPROC,
+		subclass_id: usize,
+	) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {
-				comctl::ffi::RemoveWindowSubclass(
+				ffi::RemoveWindowSubclass(
 					self.ptr(),
 					subclass_func as _,
 					subclass_id,
@@ -68,7 +68,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 	{
 		bool_to_sysresult(
 			unsafe {
-				comctl::ffi::SetWindowSubclass(
+				ffi::SetWindowSubclass(
 					self.ptr(),
 					subclass_proc as _,
 					subclass_id,

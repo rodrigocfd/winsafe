@@ -1,12 +1,12 @@
-#![cfg_attr(docsrs, doc(cfg(feature = "dxgi")))]
-
-pub(in crate::dxgi) mod ffi;
-pub(in crate::dxgi) mod iterators;
-pub mod co;
+#![cfg(feature = "dxgi")]
 
 mod com_interfaces;
 mod funcs;
 mod structs;
+
+pub(in crate::dxgi) mod ffi;
+pub(in crate::dxgi) mod iterators;
+pub mod co;
 
 pub mod decl {
 	pub use super::com_interfaces::decl::*;

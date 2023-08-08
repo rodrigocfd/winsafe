@@ -1,16 +1,9 @@
 use std::marker::PhantomData;
 use std::ops::{Deref, DerefMut};
 
-use crate::kernel;
-use crate::kernel::decl::{
-	HeapBlock, HFILEMAPVIEW, HFINDFILE, HGLOBAL, HHEAP, HIDWORD, HINSTANCE,
-	HKEY, HLOCAL, HUPDATERSRC, LODWORD, LUID_AND_ATTRIBUTES,
-	PROCESS_INFORMATION, SID, SID_AND_ATTRIBUTES, TOKEN_GROUPS,
-	TOKEN_PRIVILEGES,
-};
-use crate::prelude::{
-	Handle, kernel_Hfile, kernel_Hglobal, kernel_Hheap, kernel_Hlocal,
-};
+use crate::decl::*;
+use crate::kernel::ffi;
+use crate::prelude::*;
 
 /// RAII implementation for a [`Handle`](crate::prelude::Handle) which
 /// automatically calls
@@ -27,7 +20,7 @@ impl<T> Drop for CloseHandleGuard<T>
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.handle.as_opt() {
-			unsafe { kernel::ffi::CloseHandle(h.ptr()); } // ignore errors
+			unsafe { ffi::CloseHandle(h.ptr()); } // ignore errors
 		}
 	}
 }
@@ -157,7 +150,7 @@ pub struct EndUpdateResourceGuard {
 impl Drop for EndUpdateResourceGuard {
 	fn drop(&mut self) {
 		if let Some(h) = self.hupsrc.as_opt() {
-			unsafe { kernel::ffi::EndUpdateResourceW(h.ptr(), false as _); } // ignore errors
+			unsafe { ffi::EndUpdateResourceW(h.ptr(), false as _); } // ignore errors
 		}
 	}
 }
@@ -207,7 +200,7 @@ impl EndUpdateResourceGuard {
 //------------------------------------------------------------------------------
 
 handle_guard! { FindCloseGuard: HFINDFILE;
-	kernel::ffi::FindClose;
+	ffi::FindClose;
 	/// RAII implementation for [`HFINDFILE`](crate::HFINDFILE) which
 	/// automatically calls
 	/// [`FindClose`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findclose)
@@ -215,7 +208,7 @@ handle_guard! { FindCloseGuard: HFINDFILE;
 }
 
 handle_guard! { FreeLibraryGuard: HINSTANCE;
-	kernel::ffi::FreeLibrary;
+	ffi::FreeLibrary;
 	/// RAII implementation for [`HINSTANCE`](crate::HINSTANCE) which
 	/// automatically calls
 	/// [`FreeLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary)
@@ -234,7 +227,7 @@ pub struct FreeSidGuard {
 impl Drop for FreeSidGuard {
 	fn drop(&mut self) {
 		if !self.psid.is_null() {
-			unsafe { kernel::ffi::FreeSid(self.psid as *mut _ as _); } // ignore errors
+			unsafe { ffi::FreeSid(self.psid as *mut _ as _); } // ignore errors
 		}
 	}
 }
@@ -282,7 +275,7 @@ impl FreeSidGuard {
 //------------------------------------------------------------------------------
 
 handle_guard! { GlobalFreeGuard: HGLOBAL;
-	kernel::ffi::GlobalFree;
+	ffi::GlobalFree;
 	/// RAII implementation for [`HGLOBAL`](crate::HGLOBAL) which automatically
 	/// calls
 	/// [`GlobalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalfree)
@@ -308,7 +301,7 @@ impl<'a, H> Drop for GlobalUnlockGuard<'a, H>
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.hglobal.as_opt() {
-			unsafe { kernel::ffi::GlobalUnlock(h.ptr()); } // ignore errors
+			unsafe { ffi::GlobalUnlock(h.ptr()); } // ignore errors
 		}
 	}
 }
@@ -367,7 +360,7 @@ impl<'a, H> GlobalUnlockGuard<'a, H>
 //------------------------------------------------------------------------------
 
 handle_guard! { HeapDestroyGuard: HHEAP;
-	kernel::ffi::HeapDestroy;
+	ffi::HeapDestroy;
 	/// RAII implementation for [`HHEAP`](crate::HHEAP) which automatically
 	/// calls
 	/// [`HeapDestroy`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapdestroy)
@@ -395,7 +388,7 @@ impl<'a, H> Drop for HeapFreeGuard<'a, H>
 	fn drop(&mut self) {
 		if let Some(h) = self.hheap.as_opt() {
 			if !self.pmem.is_null() {
-				unsafe { kernel::ffi::HeapFree(h.ptr(), 0, self.pmem); } // ignore errors
+				unsafe { ffi::HeapFree(h.ptr(), 0, self.pmem); } // ignore errors
 			}
 		}
 	}
@@ -482,7 +475,7 @@ impl<'a, H> Drop for HeapUnlockGuard<'a, H>
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.hheap.as_opt() {
-			unsafe { kernel::ffi::HeapUnlock(h.ptr()); } // ignore errors
+			unsafe { ffi::HeapUnlock(h.ptr()); } // ignore errors
 		}
 	}
 }
@@ -509,7 +502,7 @@ impl<'a, H> HeapUnlockGuard<'a, H>
 //------------------------------------------------------------------------------
 
 handle_guard! { LocalFreeGuard: HLOCAL;
-	kernel::ffi::LocalFree;
+	ffi::LocalFree;
 	/// RAII implementation for [`HLOCAL`](crate::HLOCAL) which automatically
 	/// calls
 	/// [`LocalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
@@ -574,7 +567,7 @@ impl<'a, H> Drop for LocalUnlockGuard<'a, H>
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.hlocal.as_opt() {
-			unsafe { kernel::ffi::LocalUnlock(h.ptr()); } // ignore errors
+			unsafe { ffi::LocalUnlock(h.ptr()); } // ignore errors
 		}
 	}
 }
@@ -643,7 +636,7 @@ impl Drop for RegCloseKeyGuard {
 	fn drop(&mut self) {
 		if let Some(h) = self.hkey.as_opt() {
 			if !self.is_predef_key() { // guard predefined keys
-				unsafe { kernel::ffi::RegCloseKey(h.ptr()); } // ignore errors
+				unsafe { ffi::RegCloseKey(h.ptr()); } // ignore errors
 			}
 		}
 	}
@@ -823,7 +816,7 @@ impl<'a, H> Drop for UnlockFileGuard<'a, H>
 {
 	fn drop(&mut self) {
 		unsafe {
-			kernel::ffi::UnlockFile( // ignore errors
+			ffi::UnlockFile( // ignore errors
 				self.hfile.ptr(),
 				LODWORD(self.offset),
 				HIDWORD(self.offset),
@@ -872,7 +865,7 @@ impl<'a, H> UnlockFileGuard<'a, H>
 //------------------------------------------------------------------------------
 
 handle_guard! { UnmapViewOfFileGuard: HFILEMAPVIEW;
-	kernel::ffi::UnmapViewOfFile;
+	ffi::UnmapViewOfFile;
 	/// RAII implementation for [`HFILEMAPVIEW`](crate::HFILEMAPVIEW) which
 	/// automatically calls
 	/// [`UnmapViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-unmapviewoffile)

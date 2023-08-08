@@ -1,5 +1,5 @@
 use crate::co;
-use crate::user::decl::HWND;
+use crate::decl::*;
 
 /// Type alias to
 /// [`PFNLVCOMPARE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-listview_sortitems)

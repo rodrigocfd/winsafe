@@ -1,13 +1,9 @@
 #![allow(non_snake_case)]
 
 use crate::co;
-use crate::kernel::decl::WString;
-use crate::kernel::privs::MAKEINTRESOURCE;
-use crate::user::decl::{
-	ATOM, HARDWAREINPUT, HBITMAP, HICON, HMENU, HWND, KEYBDINPUT, MOUSEINPUT,
-	NCCALCSIZE_PARAMS, POINT, RECT,
-};
-use crate::prelude::Handle;
+use crate::decl::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
 
 /// Variant parameter for:
 ///

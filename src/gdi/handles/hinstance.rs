@@ -1,13 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, gdi};
-use crate::gdi::decl::{IdObmStr, IdOcrStr, IdOicStr};
-use crate::gdi::guard::DeleteObjectGuard;
-use crate::kernel::decl::{HINSTANCE, SysResult};
-use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::{user_Hinstance};
-use crate::user::decl::{HBITMAP, SIZE};
-use crate::user::guard::{DestroyCursorGuard, DestroyIconGuard};
+use crate::co;
+use crate::decl::*;
+use crate::gdi::ffi;
+use crate::guard::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
 
 impl gdi_Hinstance for HINSTANCE {}
 
@@ -31,7 +29,7 @@ pub trait gdi_Hinstance: user_Hinstance {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::LoadImageW(
+				ffi::LoadImageW(
 					self.ptr(), name.as_ptr(), 0, sz.cx, sz.cy, load.raw()),
 			).map(|h| DeleteObjectGuard::new(h))
 		}
@@ -41,11 +39,14 @@ pub trait gdi_Hinstance: user_Hinstance {
 	/// method for [`HCURSOR`](crate::HCURSOR).
 	#[must_use]
 	fn LoadImageCursor(&self,
-		name: IdOcrStr, sz: SIZE, load: co::LR) -> SysResult<DestroyCursorGuard>
+		name: IdOcrStr,
+		sz: SIZE,
+		load: co::LR,
+	) -> SysResult<DestroyCursorGuard>
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::LoadImageW(
+				ffi::LoadImageW(
 					self.ptr(), name.as_ptr(), 2, sz.cx, sz.cy, load.raw()),
 			).map(|h| DestroyCursorGuard::new(h))
 		}
@@ -55,11 +56,14 @@ pub trait gdi_Hinstance: user_Hinstance {
 	/// method for [`HICON`](crate::HICON).
 	#[must_use]
 	fn LoadImageIcon(&self,
-		name: IdOicStr, sz: SIZE, load: co::LR) -> SysResult<DestroyIconGuard>
+		name: IdOicStr,
+		sz: SIZE,
+		load: co::LR,
+	) -> SysResult<DestroyIconGuard>
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::LoadImageW(
+				ffi::LoadImageW(
 					self.ptr(), name.as_ptr(), 1, sz.cx, sz.cy, load.raw()),
 			).map(|h| DestroyIconGuard::new(h))
 		}

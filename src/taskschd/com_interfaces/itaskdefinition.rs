@@ -1,12 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR};
-use crate::ole::decl::HrResult;
-use crate::prelude::oleaut_IDispatch;
-use crate::taskschd::decl::ITriggerCollection;
-use crate::taskschd::decl::IActionCollection;
-use crate::taskschd::decl::IRegistrationInfo;
-use crate::vt::IDispatchVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`ITaskDefinition`](crate::ITaskDefinition) virtual table.
 #[repr(C)]

@@ -1,7 +1,6 @@
-use crate::gui::native_controls::status_bar_part::StatusBarPart;
-use crate::gui::native_controls::status_bar::StatusBar;
-use crate::msg::sb;
-use crate::prelude::{GuiWindow, user_Hwnd};
+use crate::gui::{*, spec::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 /// Exposes the part methods of a [`StatusBar`](crate::gui::StatusBar) control.
 ///

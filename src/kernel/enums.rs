@@ -1,6 +1,6 @@
 use crate::co;
-use crate::kernel::decl::{TOKEN_PRIVILEGES, WString};
-use crate::kernel::privs::{IS_INTRESOURCE, MAKEINTRESOURCE, parse_multi_z_str};
+use crate::decl::*;
+use crate::kernel::privs::*;
 
 /// Variable parameter for:
 ///

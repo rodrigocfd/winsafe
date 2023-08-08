@@ -4,17 +4,10 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::events::{UpDownEvents, WindowEvents};
-use crate::gui::native_controls::base_native_control::BaseNativeControl;
-use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
-use crate::kernel::decl::SysResult;
-use crate::msg::udm;
-use crate::prelude::{
-	GuiChild, GuiEvents, GuiNativeControl, GuiNativeControlEvents, GuiParent,
-	GuiWindow, Handle, NativeBitflag, user_Hwnd,
-};
-use crate::user::decl::{HWND, POINT, SIZE};
+use crate::decl::*;
+use crate::gui::{events::*, privs::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 struct Obj { // actual fields of UpDown
 	base: BaseNativeControl,

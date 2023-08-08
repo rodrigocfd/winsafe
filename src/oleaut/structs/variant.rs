@@ -2,8 +2,9 @@
 
 use std::mem::ManuallyDrop;
 
-use crate::{co, oleaut};
-use crate::prelude::{ole_IUnknown, oleaut_IDispatch, oleaut_Variant};
+use crate::co;
+use crate::oleaut::ffi;
+use crate::prelude::*;
 
 /// [`VARIANT`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/ns-oaidl-variant)
 /// struct.
@@ -26,7 +27,7 @@ pub struct VARIANT {
 impl Drop for VARIANT {
 	fn drop(&mut self) {
 		if self.vt() != co::VT::EMPTY {
-			unsafe { oleaut::ffi::VariantClear(self as *mut _ as _); } // ignore errors
+			unsafe { ffi::VariantClear(self as *mut _ as _); } // ignore errors
 		}
 	}
 }
@@ -34,7 +35,7 @@ impl Drop for VARIANT {
 impl Default for VARIANT {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		unsafe { oleaut::ffi::VariantInit(&mut obj as *mut _ as _); }
+		unsafe { ffi::VariantInit(&mut obj as *mut _ as _); }
 		obj
 	}
 }

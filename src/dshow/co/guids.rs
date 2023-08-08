@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
-use crate::co::CLSID;
+use crate::co::*;
 
 const_guid_values! { CLSID;
 	AviDest "e2510970-f137-11ce-8b67-00aa00a3f1a6"

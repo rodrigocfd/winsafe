@@ -1,11 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::gdi;
-use crate::gdi::decl::LOGPALETTE;
-use crate::gdi::guard::DeleteObjectGuard;
-use crate::kernel::decl::SysResult;
-use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::{GdiObject, Handle};
+use crate::decl::*;
+use crate::gdi::ffi;
+use crate::guard::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
 
 impl_handle! { HPALETTE;
 	/// Handle to a
@@ -28,10 +27,11 @@ pub trait gdi_Hpalette: Handle {
 	/// function.
 	#[must_use]
 	fn CreatePalette(
-		pal: &LOGPALETTE) -> SysResult<DeleteObjectGuard<HPALETTE>>
+		pal: &LOGPALETTE,
+	) -> SysResult<DeleteObjectGuard<HPALETTE>>
 	{
 		unsafe {
-			ptr_to_sysresult_handle(gdi::ffi::CreatePalette(pal as *const _ as _))
+			ptr_to_sysresult_handle(ffi::CreatePalette(pal as *const _ as _))
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}

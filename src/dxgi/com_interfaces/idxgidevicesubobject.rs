@@ -1,10 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{dxgi_IDXGIObject, ole_IUnknown};
-use crate::vt::IDXGIObjectVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IDXGIDeviceSubObject`](crate::IDXGIDeviceSubObject) virtual table.
 #[repr(C)]

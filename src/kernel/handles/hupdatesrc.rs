@@ -1,10 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel;
-use crate::kernel::decl::{IdStr, LANGID, RtStr, SysResult, WString};
-use crate::kernel::guard::EndUpdateResourceGuard;
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
-use crate::prelude::Handle;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::{ffi, privs::*};
+use crate::prelude::*;
 
 impl_handle! { HUPDATERSRC;
 	/// Handle to an
@@ -33,7 +32,7 @@ pub trait kernel_Hupdatersrc: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				kernel::ffi::BeginUpdateResourceW(
+				ffi::BeginUpdateResourceW(
 					WString::from_str(file_name).as_ptr(),
 					delete_existing_resources as _,
 				),
@@ -52,7 +51,7 @@ pub trait kernel_Hupdatersrc: Handle {
 	{
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::UpdateResourceW(
+				ffi::UpdateResourceW(
 					self.ptr(),
 					resource_type.as_ptr(),
 					resource_id.as_ptr(),

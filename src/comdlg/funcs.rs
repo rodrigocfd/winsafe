@@ -1,7 +1,8 @@
 #![allow(non_snake_case)]
 
-use crate::{co, comdlg};
-use crate::comdlg::decl::CHOOSECOLOR;
+use crate::co;
+use crate::comdlg::ffi;
+use crate::decl::*;
 
 /// [`ChooseColor`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms646912(v=vs.85))
 /// function.
@@ -33,7 +34,7 @@ use crate::comdlg::decl::CHOOSECOLOR;
 /// # Ok::<_, co::CDERR>(())
 /// ```
 pub fn ChooseColor(cc: &mut CHOOSECOLOR) -> Result<bool, co::CDERR> {
-	match unsafe { comdlg::ffi::ChooseColorW(cc as *mut _ as _) } {
+	match unsafe { ffi::ChooseColorW(cc as *mut _ as _) } {
 		0 => match CommDlgExtendedError() {
 			co::CDERR::NoValue => Ok(false),
 			err => Err(err),
@@ -45,5 +46,5 @@ pub fn ChooseColor(cc: &mut CHOOSECOLOR) -> Result<bool, co::CDERR> {
 /// [`CommDlgExtendedError`](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror)
 /// function.
 pub fn CommDlgExtendedError() -> co::CDERR {
-	unsafe { co::CDERR::from_raw(comdlg::ffi::CommDlgExtendedError()) }
+	unsafe { co::CDERR::from_raw(ffi::CommDlgExtendedError()) }
 }

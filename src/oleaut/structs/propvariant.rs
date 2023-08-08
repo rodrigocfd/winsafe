@@ -1,7 +1,8 @@
 #![allow(non_snake_case)]
 
-use crate::{co, oleaut};
-use crate::prelude::oleaut_Variant;
+use crate::co;
+use crate::oleaut::ffi;
+use crate::prelude::*;
 
 /// [`PROPVARIANT`](https://learn.microsoft.com/en-us/windows/win32/api/propidlbase/ns-propidlbase-propvariant)
 /// struct.
@@ -24,7 +25,7 @@ pub struct PROPVARIANT {
 impl Drop for PROPVARIANT {
 	fn drop(&mut self) {
 		if self.vt() != co::VT::EMPTY {
-			unsafe { oleaut::ffi::PropVariantClear(self as *mut _ as _); } // ignore errors
+			unsafe { ffi::PropVariantClear(self as *mut _ as _); } // ignore errors
 		}
 	}
 }

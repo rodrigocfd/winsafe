@@ -3,10 +3,9 @@
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::dshow::decl::IBaseFilter;
-use crate::kernel::decl::GUID;
-use crate::kernel::ffi_types::{BOOL, COMPTR};
-use crate::prelude::dshow_IFilterGraph;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::prelude::*;
 
 /// [`AM_MEDIA_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/ns-strmif-am_media_type)
 /// struct.

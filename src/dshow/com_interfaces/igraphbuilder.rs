@@ -1,12 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::dshow::decl::IBaseFilter;
-use crate::kernel::decl::{HFILE, WString};
-use crate::kernel::ffi_types::{COMPTR, HANDLE, HRES, PCSTR};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
-use crate::prelude::{dshow_IFilterGraph, dshow_IPin, Handle, ole_IUnknown};
-use crate::vt::IFilterGraphVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IGraphBuilder`](crate::IGraphBuilder) virtual table.
 #[repr(C)]
@@ -65,7 +63,9 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 	/// method.
 	#[must_use]
 	fn AddSourceFilter(&self,
-		file_name: &str, filter_name: &str) -> HrResult<IBaseFilter>
+		file_name: &str,
+		filter_name: &str,
+	) -> HrResult<IBaseFilter>
 	{
 		let mut queried = unsafe { IBaseFilter::null() };
 		ok_to_hrresult(
@@ -83,7 +83,9 @@ pub trait dshow_IGraphBuilder: dshow_IFilterGraph {
 	/// [`IGraphBuilder::Connect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-igraphbuilder-connect)
 	/// method.
 	fn Connect(&self,
-		pin_out: &impl dshow_IPin, pin_in: &impl dshow_IPin) -> HrResult<()>
+		pin_out: &impl dshow_IPin,
+		pin_in: &impl dshow_IPin,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {

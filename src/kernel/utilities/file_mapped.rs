@@ -1,11 +1,7 @@
 use crate::co;
-use crate::kernel::decl::{
-	File, FileAccess, HFILE, HFILEMAP, HFILEMAPVIEW, SysResult, SYSTEMTIME,
-};
-use crate::kernel::guard::{CloseHandleGuard, UnmapViewOfFileGuard};
-use crate::prelude::{
-	Handle, kernel_Hfile, kernel_Hfilemap, kernel_Hfilemapview,
-};
+use crate::decl::*;
+use crate::guard::*;
+use crate::prelude::*;
 
 /// Manages an [`HFILEMAP`](crate::HFILEMAP) handle, which provides
 /// memory-mapped file operations, including read/write through slices. It is

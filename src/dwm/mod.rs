@@ -1,10 +1,10 @@
-#![cfg_attr(docsrs, doc(cfg(feature = "dwm")))]
-
-pub(in crate::dwm) mod ffi;
-pub mod co;
+#![cfg(feature = "dwm")]
 
 mod funcs;
 mod handles;
+
+pub(in crate::dwm) mod ffi;
+pub mod co;
 
 pub mod decl {
 	pub use super::funcs::*;

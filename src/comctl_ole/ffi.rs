@@ -1,4 +1,4 @@
-use crate::kernel::ffi_types::{BOOL, HANDLE, HRES, PCSTR, PCVOID};
+use crate::kernel::ffi_types::*;
 
 extern_sys! { "comctl32";
 	InitializeFlatSB(HANDLE) -> HRES

@@ -1,9 +1,8 @@
 use crate::co;
-use crate::comctl::decl::{LVITEM, LVITEMINDEX};
-use crate::msg::WndMsg;
-use crate::ole::decl::HrResult;
-use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::MsgSend;
+use crate::decl::*;
+use crate::msg::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
 
 /// [`LVM_SETITEMINDEXSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setitemindexstate)
 /// message parameters.

@@ -1,10 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel;
-use crate::kernel::decl::{HFILE, OVERLAPPED, SECURITY_ATTRIBUTES, SysResult};
-use crate::kernel::guard::CloseHandleGuard;
-use crate::kernel::privs::bool_to_sysresult;
-use crate::prelude::{Handle, kernel_Hfile};
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::{ffi, privs::*};
+use crate::prelude::*;
 
 impl_handle! { HPIPE;
 	/// Handle to an
@@ -36,7 +35,7 @@ pub trait kernel_Hpipe: Handle {
 		let (mut hread, mut hwrite) = (HPIPE::NULL, HPIPE::NULL);
 		unsafe {
 			bool_to_sysresult(
-				kernel::ffi::CreatePipe(
+				ffi::CreatePipe(
 					hread.as_mut(),
 					hwrite.as_mut(),
 					attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
@@ -51,7 +50,9 @@ pub trait kernel_Hpipe: Handle {
 	///
 	/// Returns the number of bytes read.
 	fn ReadFile(&self,
-		buffer: &mut [u8], overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
+		buffer: &mut [u8],
+		overlapped: Option<&mut OVERLAPPED>,
+	) -> SysResult<u32>
 	{
 		unsafe { HFILE::from_ptr(self.ptr()) }
 			.ReadFile(buffer, overlapped)
@@ -60,7 +61,9 @@ pub trait kernel_Hpipe: Handle {
 	/// [`WriteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
 	/// function.
 	fn WriteFile(&self,
-		data: &[u8], overlapped: Option<&mut OVERLAPPED>) -> SysResult<u32>
+		data: &[u8],
+		overlapped: Option<&mut OVERLAPPED>,
+	) -> SysResult<u32>
 	{
 		unsafe { HFILE::from_ptr(self.ptr()) }
 			.WriteFile(data, overlapped)

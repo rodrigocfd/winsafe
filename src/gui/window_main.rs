@@ -1,18 +1,10 @@
 use std::any::Any;
 
 use crate::co;
-use crate::comctl::decl::InitCommonControls;
-use crate::gui::dlg_main::DlgMain;
-use crate::gui::events::WindowEventsAll;
-use crate::gui::privs::{create_ui_font, delete_ui_font};
-use crate::gui::raw_main::{RawMain, WindowMainOpts};
-use crate::kernel::decl::{AnyResult, HPROCESS, IsWindowsVistaOrGreater};
-use crate::kernel::ffi_types::BOOL;
-use crate::prelude::{
-	GuiParent, GuiThread, GuiWindow, GuiWindowText, kernel_Hprocess,
-	user_Hprocess,
-};
-use crate::user::decl::{HWND, SetProcessDPIAware};
+use crate::decl::*;
+use crate::gui::{*, events::*, privs::*};
+use crate::kernel::ffi_types::*;
+use crate::prelude::*;
 
 /// Keeps a raw or dialog window.
 #[derive(Clone)]

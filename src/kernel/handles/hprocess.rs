@@ -1,16 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, kernel};
-use crate::kernel::decl::{
-	FILETIME, GetLastError, HACCESSTOKEN, PROCESS_INFORMATION,
-	SECURITY_ATTRIBUTES, STARTUPINFO, SysResult, WString,
-};
-use crate::kernel::ffi_types::BOOL;
-use crate::kernel::guard::{CloseHandleGuard, CloseHandlePiGuard};
-use crate::kernel::privs::{
-	bool_to_sysresult, INFINITE, MAX_PATH, ptr_to_sysresult_handle,
-};
-use crate::prelude::{Handle, IntUnderlying};
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::{ffi, ffi_types::*, privs::*};
+use crate::prelude::*;
 
 impl_handle! { HPROCESS;
 	/// Handle to a
@@ -35,9 +29,7 @@ pub trait kernel_Hprocess: Handle {
 	fn CheckRemoteDebuggerPresent(&self) -> SysResult<bool> {
 		let mut present: BOOL = 0;
 		bool_to_sysresult(
-			unsafe {
-				kernel::ffi::CheckRemoteDebuggerPresent(self.ptr(), &mut present)
-			},
+			unsafe { ffi::CheckRemoteDebuggerPresent(self.ptr(), &mut present) },
 		).map(|_| present != 0)
 	}
 
@@ -61,7 +53,7 @@ pub trait kernel_Hprocess: Handle {
 
 		unsafe {
 			bool_to_sysresult(
-				kernel::ffi::CreateProcessW(
+				ffi::CreateProcessW(
 					WString::from_opt_str(application_name).as_ptr(),
 					buf_cmd_line.as_mut_ptr(),
 					process_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
@@ -86,14 +78,12 @@ pub trait kernel_Hprocess: Handle {
 	/// [`FlushInstructionCache`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushinstructioncache)
 	/// function.
 	fn FlushInstructionCache(&self,
-		base_address: *mut std::ffi::c_void, size: usize) -> SysResult<()>
+		base_address: *mut std::ffi::c_void,
+		size: usize,
+	) -> SysResult<()>
 	{
 		bool_to_sysresult(
-			unsafe {
-				kernel::ffi::FlushInstructionCache(
-					self.ptr(), base_address, size,
-				)
-			},
+			unsafe { ffi::FlushInstructionCache(self.ptr(), base_address, size) },
 		)
 	}
 
@@ -101,7 +91,7 @@ pub trait kernel_Hprocess: Handle {
 	/// function.
 	#[must_use]
 	fn GetCurrentProcess() -> HPROCESS {
-		HPROCESS(unsafe { kernel::ffi::GetCurrentProcess() })
+		HPROCESS(unsafe { ffi::GetCurrentProcess() })
 	}
 
 	/// [`GetExitCodeProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getexitcodeprocess)
@@ -110,9 +100,7 @@ pub trait kernel_Hprocess: Handle {
 	fn GetExitCodeProcess(&self) -> SysResult<u32> {
 		let mut exit_code = u32::default();
 		bool_to_sysresult(
-			unsafe {
-				kernel::ffi::GetExitCodeProcess(self.ptr(), &mut exit_code)
-			},
+			unsafe { ffi::GetExitCodeProcess(self.ptr(), &mut exit_code) },
 		).map(|_| exit_code)
 	}
 
@@ -120,9 +108,7 @@ pub trait kernel_Hprocess: Handle {
 	/// function.
 	#[must_use]
 	fn GetGuiResources(&self, flags: co::GR) -> SysResult<u32> {
-		match unsafe {
-			kernel::ffi::GetGuiResources(self.ptr(), flags.raw())
-		} {
+		match unsafe { ffi::GetGuiResources(self.ptr(), flags.raw()) } {
 			0 => Err(GetLastError()),
 			count => Ok(count),
 		}
@@ -132,7 +118,7 @@ pub trait kernel_Hprocess: Handle {
 	/// function.
 	#[must_use]
 	fn GetPriorityClass(&self) -> SysResult<co::PRIORITY_CLASS> {
-		match unsafe { kernel::ffi::GetPriorityClass(self.ptr()) } {
+		match unsafe { ffi::GetPriorityClass(self.ptr()) } {
 			0 => Err(GetLastError()),
 			pc => Ok(unsafe { co::PRIORITY_CLASS::from_raw(pc) }),
 		}
@@ -144,9 +130,7 @@ pub trait kernel_Hprocess: Handle {
 	fn GetProcessHandleCount(&self) -> SysResult<u32> {
 		let mut count = u32::default();
 		bool_to_sysresult(
-			unsafe {
-				kernel::ffi::GetProcessHandleCount(self.ptr(), &mut count)
-			},
+			unsafe { ffi::GetProcessHandleCount(self.ptr(), &mut count) },
 		).map(|_| count)
 	}
 
@@ -154,7 +138,7 @@ pub trait kernel_Hprocess: Handle {
 	/// function.
 	#[must_use]
 	fn GetProcessId(&self) -> SysResult<u32> {
-		match unsafe { kernel::ffi::GetProcessId(self.ptr()) } {
+		match unsafe { ffi::GetProcessId(self.ptr()) } {
 			0 => Err(GetLastError()),
 			id => Ok(id),
 		}
@@ -171,7 +155,7 @@ pub trait kernel_Hprocess: Handle {
 	{
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::GetProcessTimes(
+				ffi::GetProcessTimes(
 					self.ptr(),
 					creation as *mut _ as _,
 					exit as *mut _ as _,
@@ -188,9 +172,7 @@ pub trait kernel_Hprocess: Handle {
 	fn IsProcessCritical(&self) -> SysResult<bool> {
 		let mut critical: BOOL = 0;
 		bool_to_sysresult(
-			unsafe {
-				kernel::ffi::IsProcessCritical(self.ptr(), &mut critical)
-			},
+			unsafe { ffi::IsProcessCritical(self.ptr(), &mut critical) },
 		).map(|_| critical != 0)
 	}
 
@@ -199,7 +181,7 @@ pub trait kernel_Hprocess: Handle {
 	#[must_use]
 	fn IsWow64Process(&self) -> SysResult<bool> {
 		let mut wow64: BOOL = 0;
-		match unsafe { kernel::ffi::IsWow64Process(self.ptr(), &mut wow64) } {
+		match unsafe { ffi::IsWow64Process(self.ptr(), &mut wow64) } {
 			0 => Err(GetLastError()),
 			_ => Ok(wow64 != 0),
 		}
@@ -220,7 +202,7 @@ pub trait kernel_Hprocess: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				kernel::ffi::OpenProcess(
+				ffi::OpenProcess(
 					desired_access.raw(),
 					inherit_handle as _,
 					process_id,
@@ -244,12 +226,13 @@ pub trait kernel_Hprocess: Handle {
 	/// ```
 	#[must_use]
 	fn OpenProcessToken(&self,
-		desired_access: co::TOKEN) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
+		desired_access: co::TOKEN,
+	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
 	{
 		let mut handle = HACCESSTOKEN::NULL;
 		unsafe {
 			bool_to_sysresult(
-				kernel::ffi::OpenProcessToken(
+				ffi::OpenProcessToken(
 					self.ptr(),
 					desired_access.raw(),
 					handle.as_mut(),
@@ -262,14 +245,15 @@ pub trait kernel_Hprocess: Handle {
 	/// function.
 	#[must_use]
 	fn QueryFullProcessImageName(&self,
-		flags: co::PROCESS_NAME) -> SysResult<String>
+		flags: co::PROCESS_NAME,
+	) -> SysResult<String>
 	{
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
 		let mut sz = buf.buf_len() as u32;
 
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::QueryFullProcessImageNameW(
+				ffi::QueryFullProcessImageNameW(
 					self.ptr(),
 					flags.raw(),
 					buf.as_mut_ptr(),
@@ -286,7 +270,7 @@ pub trait kernel_Hprocess: Handle {
 		let mut affinity = co::PROCESS_AFFINITY::default();
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::QueryProcessAffinityUpdateMode(
+				ffi::QueryProcessAffinityUpdateMode(
 					self.ptr(),
 					affinity.as_mut(),
 				)
@@ -297,35 +281,34 @@ pub trait kernel_Hprocess: Handle {
 	/// [`SetPriorityClass`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setpriorityclass)
 	/// function.
 	fn SetPriorityClass(&self,
-		prority_class: co::PRIORITY_CLASS) -> SysResult<()>
+		prority_class: co::PRIORITY_CLASS,
+	) -> SysResult<()>
 	{
 		bool_to_sysresult(
-			unsafe {
-				kernel::ffi::SetPriorityClass(self.ptr(), prority_class.raw())
-			},
+			unsafe { ffi::SetPriorityClass(self.ptr(), prority_class.raw()) },
 		)
 	}
 
 	/// [`SetProcessAffinityUpdateMode`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setprocessaffinityupdatemode)
 	/// function.
 	fn SetProcessAffinityUpdateMode(&self,
-		flags: co::PROCESS_AFFINITY) -> SysResult<()>
+		flags: co::PROCESS_AFFINITY,
+	) -> SysResult<()>
 	{
 		bool_to_sysresult(
-			unsafe {
-				kernel::ffi::SetProcessAffinityUpdateMode(self.ptr(), flags.raw())
-			},
+			unsafe { ffi::SetProcessAffinityUpdateMode(self.ptr(), flags.raw()) },
 		)
 	}
 
 	/// [`SetProcessPriorityBoost`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setprocesspriorityboost)
 	/// function.
 	fn SetProcessPriorityBoost(&self,
-		disable_priority_boost: bool) -> SysResult<()>
+		disable_priority_boost: bool,
+	) -> SysResult<()>
 	{
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::SetProcessPriorityBoost(
+				ffi::SetProcessPriorityBoost(
 					self.ptr(),
 					disable_priority_boost as _,
 				)
@@ -336,19 +319,18 @@ pub trait kernel_Hprocess: Handle {
 	/// [`TerminateProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess)
 	/// function.
 	fn TerminateProcess(&self, exit_code: u32) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe { kernel::ffi::TerminateProcess(self.ptr(), exit_code) },
-		)
+		bool_to_sysresult(unsafe { ffi::TerminateProcess(self.ptr(), exit_code) })
 	}
 
 	/// [`WaitForSingleObject`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)
 	/// function.
 	fn WaitForSingleObject(&self,
-		milliseconds: Option<u32>) -> SysResult<co::WAIT>
+		milliseconds: Option<u32>,
+	) -> SysResult<co::WAIT>
 	{
 		match unsafe {
 			co::WAIT::from_raw(
-				kernel::ffi::WaitForSingleObject(
+				ffi::WaitForSingleObject(
 					self.ptr(),
 					milliseconds.unwrap_or(INFINITE),
 				),

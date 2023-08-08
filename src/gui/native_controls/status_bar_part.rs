@@ -1,9 +1,8 @@
 use crate::co;
-use crate::gui::native_controls::status_bar::StatusBar;
-use crate::kernel::decl::WString;
-use crate::msg::sb;
-use crate::prelude::{GuiWindow, user_Hwnd};
-use crate::user::decl::HICON;
+use crate::decl::*;
+use crate::gui::*;
+use crate::msg::*;
+use crate::prelude::*;
 
 /// A single part of a [`StatusBar`](crate::gui::StatusBar) control.
 ///

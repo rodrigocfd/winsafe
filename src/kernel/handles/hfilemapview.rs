@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::prelude::Handle;
+use crate::prelude::*;
 
 impl_handle! { HFILEMAPVIEW;
 	/// Address of a
@@ -30,7 +30,7 @@ pub trait kernel_Hfilemapview: Handle {
 	/// file is resized, re-generate the slice by calling `as_slice` again.
 	#[must_use]
 	fn as_mut_slice(&self, len: usize) -> &mut [u8] {
-		unsafe { std::slice::from_raw_parts_mut(self.ptr().cast(), len) }
+		unsafe { std::slice::from_raw_parts_mut(self.ptr() as _, len) }
 	}
 
 	/// Returns a slice representing the mapped memory.
@@ -76,6 +76,6 @@ pub trait kernel_Hfilemapview: Handle {
 	/// ```
 	#[must_use]
 	fn as_slice(&self, len: usize) -> &[u8] {
-		unsafe { std::slice::from_raw_parts(self.ptr().cast(), len) }
+		unsafe { std::slice::from_raw_parts(self.ptr() as _, len) }
 	}
 }

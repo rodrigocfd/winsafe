@@ -1,13 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::{BOOL, COMPTR, HANDLE, HRES, PCVOID, PVOID};
-use crate::mf::decl::MFVideoNormalizedRect;
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{Handle, IntUnderlying, ole_IUnknown};
-use crate::user::decl::{COLORREF, HWND, RECT, SIZE};
-use crate::vt::IUnknownVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IMFVideoDisplayControl`](crate::IMFVideoDisplayControl) virtual table.
 #[repr(C)]

@@ -1,13 +1,11 @@
 use std::any::Any;
 
 use crate::co;
-use crate::gui::events::{WindowEvents, WindowEventsAll};
-use crate::gui::window_control::WindowControl;
-use crate::kernel::decl::AnyResult;
-use crate::msg::wm;
-use crate::prelude::{Handle, user_Hwnd};
-use crate::user::decl::{HWND, HwndFocus};
-use crate::user::privs::WC_DIALOG;
+use crate::decl::*;
+use crate::gui::{*, events::*};
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// Any window. Exposes the underlying window handle.
 pub trait GuiWindow {

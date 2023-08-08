@@ -1,15 +1,15 @@
-#![cfg_attr(docsrs, doc(cfg(feature = "ole")))]
-
-pub(in crate::ole) mod ffi;
-pub(crate) mod privs;
-pub mod co;
-pub mod guard;
+#![cfg(feature = "ole")]
 
 mod aliases;
 mod com_interfaces;
 mod funcs;
 mod handles;
 mod structs;
+
+pub(in crate::ole) mod ffi;
+pub(crate) mod privs;
+pub mod co;
+pub mod guard;
 
 pub mod decl {
 	pub use super::aliases::*;

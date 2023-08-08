@@ -1,5 +1,5 @@
 use crate::co;
-use crate::prelude::FormattedError;
+use crate::prelude::*;
 
 const_no_debug_display! { HRESULT: u32;
 	/// A native

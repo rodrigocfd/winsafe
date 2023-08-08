@@ -6,7 +6,7 @@
 //! You'll probably want to start your GUI application using the
 //! [`WindowMain`](crate::gui::WindowMain).
 
-#![cfg_attr(docsrs, doc(cfg(feature = "gui")))]
+#![cfg(feature = "gui")]
 
 mod base;
 mod dlg_base;
@@ -18,7 +18,7 @@ mod gui_traits;
 mod layout_arranger;
 mod msg_error;
 mod native_controls;
-mod privs;
+mod privs_gui;
 mod raw_base;
 mod raw_control;
 mod raw_main;
@@ -28,6 +28,24 @@ mod window_control;
 mod window_main;
 mod window_modal;
 mod window_modeless;
+
+pub(in crate::gui) mod privs {
+	pub(in crate::gui) use super::base::Base;
+	pub(in crate::gui) use super::dlg_base::DlgBase;
+	pub(in crate::gui) use super::dlg_control::DlgControl;
+	pub(in crate::gui) use super::dlg_main::DlgMain;
+	pub(in crate::gui) use super::dlg_modal::DlgModal;
+	pub(in crate::gui) use super::dlg_modeless::DlgModeless;
+	pub(in crate::gui) use super::events::privs::*;
+	pub(in crate::gui) use super::layout_arranger::LayoutArranger;
+	pub(in crate::gui) use super::native_controls::privs::*;
+	pub(in crate::gui) use super::privs_gui::*;
+	pub(in crate::gui) use super::raw_base::RawBase;
+	pub(in crate::gui) use super::raw_control::RawControl;
+	pub(in crate::gui) use super::raw_main::RawMain;
+	pub(in crate::gui) use super::raw_modal::RawModal;
+	pub(in crate::gui) use super::raw_modeless::RawModeless;
+}
 
 pub mod events;
 

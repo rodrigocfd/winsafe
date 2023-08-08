@@ -1,4 +1,4 @@
-use crate::kernel::ffi_types::{COMPTR, HRES};
+use crate::kernel::ffi_types::*;
 
 extern_sys! { "mf";
 	MFCreateMediaSession(COMPTR, *mut COMPTR) -> HRES

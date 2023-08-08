@@ -1,11 +1,10 @@
 use std::cell::UnsafeCell;
 
 use crate::co;
-use crate::gui::events::{ProcessResult, WindowEvents};
-use crate::gui::events::func_store::FuncStore;
-use crate::kernel::decl::AnyResult;
-use crate::msg::{wm, WndMsg};
-use crate::prelude::{GuiEvents, GuiEventsAll, MsgSendRecv};
+use crate::decl::*;
+use crate::gui::{events::*, privs::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 /// Exposes window
 /// [messages](https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues),

@@ -1,8 +1,6 @@
 use crate::co;
-use crate::comctl::decl::{NMDAYSTATE, NMSELCHANGE, NMVIEWCHANGE};
-use crate::gui::base::Base;
-use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::kernel::decl::AnyResult;
+use crate::decl::*;
+use crate::gui::privs::*;
 
 /// Exposes month calendar control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-notifications).

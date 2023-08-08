@@ -1,9 +1,8 @@
 use crate::co;
-use crate::kernel::decl::{HIWORD, HLOCAL, LOWORD, SysResult, WString};
-use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
-use crate::user::decl::{EDITWORDBREAKPROC, POINT, RECT, SIZE};
-use crate::user::privs::{minus1_as_none, zero_as_badargs, zero_as_none};
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`EN_CANUNDO`](https://learn.microsoft.com/en-us/windows/win32/controls/em-canundo)
 /// message, which has no parameters.

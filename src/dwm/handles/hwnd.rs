@@ -1,11 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, dwm};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, uxtheme_Hwnd};
-use crate::user::decl::{HBITMAP, HWND, POINT};
-use crate::uxtheme::decl::MARGINS;
+use crate::co;
+use crate::decl::*;
+use crate::dwm::ffi;
+use crate::ole::privs::*;
+use crate::prelude::*;
 
 impl dwm_Hwnd for HWND {}
 
@@ -21,11 +20,12 @@ pub trait dwm_Hwnd: uxtheme_Hwnd {
 	/// [`DwmExtendFrameIntoClientArea`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmextendframeintoclientarea)
 	/// function.
 	fn DwmExtendFrameIntoClientArea(&self,
-		margins_inset: &MARGINS) -> HrResult<()>
+		margins_inset: &MARGINS,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {
-				dwm::ffi::DwmExtendFrameIntoClientArea(
+				ffi::DwmExtendFrameIntoClientArea(
 					self.ptr(),
 					margins_inset as *const _ as _,
 				)
@@ -37,7 +37,7 @@ pub trait dwm_Hwnd: uxtheme_Hwnd {
 	/// function.
 	fn DwmInvalidateIconicBitmaps(&self) -> HrResult<()> {
 		ok_to_hrresult(
-			unsafe { dwm::ffi::DwmInvalidateIconicBitmaps(self.ptr()) },
+			unsafe { ffi::DwmInvalidateIconicBitmaps(self.ptr()) },
 		)
 	}
 
@@ -51,7 +51,7 @@ pub trait dwm_Hwnd: uxtheme_Hwnd {
 	{
 		ok_to_hrresult(
 			unsafe {
-				dwm::ffi::DwmSetIconicLivePreviewBitmap(
+				ffi::DwmSetIconicLivePreviewBitmap(
 					self.ptr(),
 					hbmp.ptr(),
 					pt_client.map_or(std::ptr::null(), |pt| &pt as *const _ as _),
@@ -64,11 +64,13 @@ pub trait dwm_Hwnd: uxtheme_Hwnd {
 	/// [`DwmSetIconicThumbnail`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmseticonicthumbnail)
 	/// function.
 	fn DwmSetIconicThumbnail(&self,
-		hbmp: HBITMAP, sit_flags: Option<co::DWM_SIT>) -> HrResult<()>
+		hbmp: HBITMAP,
+		sit_flags: Option<co::DWM_SIT>,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {
-				dwm::ffi::DwmSetIconicThumbnail(
+				ffi::DwmSetIconicThumbnail(
 					self.ptr(),
 					hbmp.ptr(),
 					sit_flags.unwrap_or_default().raw(),

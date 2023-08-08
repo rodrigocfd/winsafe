@@ -4,11 +4,9 @@
 //! work directly upon [`&str`](str) instead of [`&OsStr`](std::ffi::OsStr).
 
 use crate::co;
-use crate::kernel::decl::{
-	GetFileAttributes, HFINDFILE, HINSTANCE, SysResult, WIN32_FIND_DATA,
-};
-use crate::kernel::guard::FindCloseGuard;
-use crate::prelude::{Handle, kernel_Hfindfile, kernel_Hinstance, NativeBitflag};
+use crate::decl::*;
+use crate::guard::*;
+use crate::prelude::*;
 
 /// Returns an iterator over the files and folders within a directory.
 /// Optionally, a wildcard can be specified to filter files by name.

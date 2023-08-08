@@ -1,12 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, kernel};
-use crate::kernel::decl::{
-	GetLastError, GUID, SECURITY_ATTRIBUTES, SysResult, WString,
-};
-use crate::kernel::guard::CloseHandleGuard;
-use crate::kernel::privs::bool_to_sysresult;
-use crate::prelude::Handle;
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::{ffi, privs::*};
+use crate::prelude::*;
 
 impl_handle! { HTRANSACTION;
 	/// Handle to a
@@ -28,9 +26,7 @@ pub trait kernel_Htransaction: Handle {
 	/// [`CommitTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-committransaction)
 	/// function.
 	fn CommitTransaction(&self) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe { kernel::ffi::CommitTransaction(self.ptr()) },
-		)
+		bool_to_sysresult(unsafe { ffi::CommitTransaction(self.ptr()) })
 	}
 
 	/// [`CreateTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-createtransaction)
@@ -45,7 +41,7 @@ pub trait kernel_Htransaction: Handle {
 	{
 		unsafe {
 			match HTRANSACTION(
-				kernel::ffi::CreateTransaction(
+				ffi::CreateTransaction(
 					transaction_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
 					std::ptr::null_mut(),
 					options.unwrap_or_default().raw(),
@@ -67,12 +63,7 @@ pub trait kernel_Htransaction: Handle {
 	fn GetTransactionId(&self) -> SysResult<GUID> {
 		let mut guid = GUID::default();
 		bool_to_sysresult(
-			unsafe {
-				kernel::ffi::GetTransactionId(
-					self.ptr(),
-					&mut guid as *mut _ as _,
-				)
-			},
+			unsafe { ffi::GetTransactionId(self.ptr(), &mut guid as *mut _ as _) },
 		).map(|_| guid)
 	}
 
@@ -86,7 +77,7 @@ pub trait kernel_Htransaction: Handle {
 	{
 		unsafe {
 			match HTRANSACTION(
-				kernel::ffi::OpenTransaction(
+				ffi::OpenTransaction(
 					desired_access.raw(),
 					transaction_id as *const _ as _,
 				),
@@ -101,7 +92,7 @@ pub trait kernel_Htransaction: Handle {
 	/// function.
 	fn RollbackTransaction(&self) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { kernel::ffi::RollbackTransaction(self.ptr()) },
+			unsafe { ffi::RollbackTransaction(self.ptr()) },
 		)
 	}
 }

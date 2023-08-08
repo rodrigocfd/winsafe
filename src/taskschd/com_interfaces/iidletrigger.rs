@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::prelude::{oleaut_IDispatch, taskschd_ITrigger};
-use crate::vt::ITriggerVT;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IIdleTrigger`](crate::IIdleTrigger) virtual table.
 #[repr(C)]

@@ -1,15 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::decl::{GUID, WString};
-use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PCVOID, PSTR, PVOID};
-use crate::ole::decl::{CoTaskMemFree, HrResult};
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{
-	shell_IFileDialogEvents, shell_IModalWindow, shell_IShellItem,
-};
-use crate::shell::decl::{COMDLG_FILTERSPEC, IShellItem};
-use crate::vt::IModalWindowVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IFileDialog`](crate::IFileDialog) virtual table.
 #[repr(C)]
@@ -64,7 +60,9 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// [`IFileDialog::AddPlace`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-addplace)
 	/// method.
 	fn AddPlace(&self,
-		si: &impl shell_IShellItem, fdap: co::FDAP) -> HrResult<()>
+		si: &impl shell_IShellItem,
+		fdap: co::FDAP,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {
@@ -264,7 +262,8 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 	fn SetFileTypes<S: AsRef<str>>(&self,
-		filter_spec: &[(S, S)]) -> HrResult<()>
+		filter_spec: &[(S, S)],
+	) -> HrResult<()>
 	{
 		let mut names_buf = Vec::with_capacity(filter_spec.len());
 		let mut specs_buf = Vec::with_capacity(filter_spec.len());

@@ -1,15 +1,10 @@
 use std::ptr::NonNull;
 
 use crate::co;
-use crate::gui::events::{ProcessResult, WindowEventsAll};
-use crate::gui::layout_arranger::{Horz, LayoutArranger, Vert};
-use crate::gui::privs::{post_quit_error, QUIT_ERROR};
-use crate::kernel::decl::{AnyResult, HINSTANCE, SysResult};
-use crate::msg::WndMsg;
-use crate::prelude::{GuiEvents, GuiParent, Handle, kernel_Hinstance, user_Hwnd};
-use crate::user::decl::{
-	DispatchMessage, GetMessage, HACCEL, HWND, MSG, TranslateMessage,
-};
+use crate::decl::*;
+use crate::gui::{*, events::*, privs::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 /// Allocated on the heap and passed through WM_UI_THREAD.
 struct ThreadPack {
@@ -32,14 +27,17 @@ impl Base {
 	const WM_UI_THREAD: co::WM = unsafe { co::WM::from_raw(co::WM::APP.raw() + 0x3fff) };
 
 	pub(in crate::gui) unsafe fn from_guiparent<'a>(
-		p: &impl GuiParent) -> &'a Self
+		p: &impl GuiParent,
+	) -> &'a Self
 	{
 		let ptr = NonNull::new_unchecked(p.as_base() as *mut _);
 		ptr.as_ref()
 	}
 
 	pub(in crate::gui) fn new(
-		is_dialog: bool, parent: Option<&Base>) -> Self
+		is_dialog: bool,
+		parent: Option<&Base>,
+	) -> Self
 	{
 		let new_self = Self {
 			hwnd: HWND::NULL,
@@ -90,7 +88,8 @@ impl Base {
 
 	/// If the user added a closure to the given message, run it.
 	pub(in crate::gui) fn process_user_message(&self,
-		wm_any: WndMsg) -> AnyResult<ProcessResult>
+		wm_any: WndMsg,
+	) -> AnyResult<ProcessResult>
 	{
 		self.user_events.process_one_message(wm_any)
 	}
@@ -107,7 +106,8 @@ impl Base {
 	///
 	/// Returns `true` if at least one message was processed.
 	pub(in crate::gui) fn process_privileged_messages(&self,
-		wm_any: WndMsg) -> AnyResult<bool>
+		wm_any: WndMsg,
+	) -> AnyResult<bool>
 	{
 		self.privileged_events.process_all_messages(wm_any)
 	}
@@ -119,7 +119,9 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn add_to_layout_arranger(&self,
-		hchild: &HWND, resize_behavior: (Horz, Vert)) -> SysResult<()>
+		hchild: &HWND,
+		resize_behavior: (Horz, Vert),
+	) -> SysResult<()>
 	{
 		self.layout_arranger.add_child(&self.hwnd, hchild, resize_behavior)?;
 		Ok(())
@@ -194,7 +196,8 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn run_main_loop(
-		haccel: Option<&HACCEL>) -> AnyResult<i32>
+		haccel: Option<&HACCEL>,
+	) -> AnyResult<i32>
 	{
 		let mut msg = MSG::default();
 

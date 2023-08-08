@@ -1,10 +1,4 @@
-#![cfg_attr(docsrs, doc(cfg(feature = "user")))]
-
-pub(in crate::user) mod ffi;
-pub(crate) mod privs;
-pub mod co;
-pub mod guard;
-pub mod messages;
+#![cfg(feature = "user")]
 
 mod aliases;
 mod enums;
@@ -12,6 +6,12 @@ mod funcs;
 mod handles;
 mod structs;
 mod msg_traits;
+
+pub(in crate::user) mod ffi;
+pub(crate) mod privs;
+pub mod co;
+pub mod guard;
+pub mod messages;
 
 pub mod decl {
 	pub use super::aliases::*;

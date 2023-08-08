@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{BOOL, COMPTR, HRES, PVOID};
-use crate::prelude::ole_IUnknown;
-use crate::vt::IUnknownVT;
+use crate::kernel::ffi_types::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IDataObject`](crate::IDataObject) virtual table.
 #[repr(C)]

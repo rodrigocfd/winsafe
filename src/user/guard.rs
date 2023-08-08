@@ -1,11 +1,9 @@
 use std::marker::PhantomData;
 use std::ops::{Deref, DerefMut};
 
-use crate::prelude::{Handle, user_Hwnd};
-use crate::user;
-use crate::user::decl::{
-	HACCEL, HCURSOR, HDC, HDESK, HDWP, HICON, HWND, PAINTSTRUCT,
-};
+use crate::decl::*;
+use crate::prelude::*;
+use crate::user::ffi;
 
 /// RAII implementation for clipboard which automatically calls
 /// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
@@ -16,7 +14,7 @@ pub struct CloseClipboardGuard<'a> {
 
 impl<'a> Drop for CloseClipboardGuard<'a> {
 	fn drop(&mut self) {
-		unsafe { user::ffi::CloseClipboard(); } // ignore errors
+		unsafe { ffi::CloseClipboard(); } // ignore errors
 	}
 }
 
@@ -40,7 +38,7 @@ impl<'a> CloseClipboardGuard<'a> {
 //------------------------------------------------------------------------------
 
 handle_guard! { CloseDesktopGuard: HDESK;
-	user::ffi::CloseDesktop;
+	ffi::CloseDesktop;
 	/// RAII implementation for [`HDESK`](crate::HDESK) which automatically
 	/// calls
 	/// [`CloseDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closedesktop)
@@ -48,7 +46,7 @@ handle_guard! { CloseDesktopGuard: HDESK;
 }
 
 handle_guard! { DestroyAcceleratorTableGuard: HACCEL;
-	user::ffi::DestroyAcceleratorTable;
+	ffi::DestroyAcceleratorTable;
 	/// RAII implementation for [`HACCEL`](crate::HACCEL) which automatically
 	/// calls
 	/// [`DestroyAcceleratorTable`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyacceleratortable)
@@ -56,7 +54,7 @@ handle_guard! { DestroyAcceleratorTableGuard: HACCEL;
 }
 
 handle_guard! { DestroyCursorGuard: HCURSOR;
-	user::ffi::DestroyCursor;
+	ffi::DestroyCursor;
 	/// RAII implementation for [`HCURSOR`](crate::HCURSOR) which automatically
 	/// calls
 	/// [`DestroyCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroycursor)
@@ -64,7 +62,7 @@ handle_guard! { DestroyCursorGuard: HCURSOR;
 }
 
 handle_guard! { DestroyIconGuard: HICON;
-	user::ffi::DestroyIcon;
+	ffi::DestroyIcon;
 	/// RAII implementation for [`HICON`](crate::HICON) which automatically
 	/// calls
 	/// [`DestroyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
@@ -72,7 +70,7 @@ handle_guard! { DestroyIconGuard: HICON;
 }
 
 handle_guard! { EndDeferWindowPosGuard: HDWP;
-	user::ffi::EndDeferWindowPos;
+	ffi::EndDeferWindowPos;
 	/// RAII implementation for [`HDWP`](crate::HDWP) which automatically calls
 	/// [`EndDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddeferwindowpos)
 	/// when the object goes out of scope.
@@ -99,9 +97,7 @@ impl<'a, H> Drop for EndPaintGuard<'a, H>
 	where H: user_Hwnd,
 {
 	fn drop(&mut self) {
-		unsafe {
-			user::ffi::EndPaint(self.hwnd.ptr(), &self.ps as *const _ as _);
-		}
+		unsafe { ffi::EndPaint(self.hwnd.ptr(), &self.ps as *const _ as _); }
 	}
 }
 
@@ -165,7 +161,7 @@ impl<'a, H> Drop for ReleaseCaptureGuard<'a, H>
 	where H: user_Hwnd,
 {
 	fn drop(&mut self) {
-		unsafe { user::ffi::ReleaseCapture(); } // ignore errors
+		unsafe { ffi::ReleaseCapture(); } // ignore errors
 	}
 }
 
@@ -213,7 +209,7 @@ impl<'a, H> Drop for ReleaseDCGuard<'a, H>
 	fn drop(&mut self) {
 		if let Some(h) = self.hwnd.as_opt() {
 			if let Some(dc) = self.hdc.as_opt() {
-				unsafe { user::ffi::ReleaseDC(h.ptr(), dc.ptr()); } // ignore errors
+				unsafe { ffi::ReleaseDC(h.ptr(), dc.ptr()); } // ignore errors
 			}
 		}
 	}

@@ -1,11 +1,8 @@
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::events::{ProcessResult, WindowEventsAll};
-use crate::gui::privs::{post_quit_error, ui_font};
-use crate::kernel::decl::{AnyResult, IdStr, SysResult};
-use crate::msg::{wm, WndMsg};
-use crate::prelude::{Handle, MsgSendRecv, user_Hinstance, user_Hwnd};
-use crate::user::decl::HWND;
+use crate::decl::*;
+use crate::gui::{events::*, privs::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 /// Base to all dialog windows.
 ///
@@ -107,7 +104,11 @@ impl DlgBase {
 	}
 
 	extern "system" fn dialog_proc(
-		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize
+		hwnd: HWND,
+		msg: co::WM,
+		wparam: usize,
+		lparam: isize,
+	) -> isize
 	{
 		let wm_any = WndMsg::new(msg, wparam, lparam);
 		Self::dialog_proc_proc(hwnd, wm_any)

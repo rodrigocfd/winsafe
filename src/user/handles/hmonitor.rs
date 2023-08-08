@@ -1,10 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, user};
-use crate::kernel::decl::SysResult;
-use crate::kernel::privs::bool_to_sysresult;
-use crate::prelude::Handle;
-use crate::user::decl::{MONITORINFOEX, POINT, RECT};
+use crate::co;
+use crate::decl::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
+use crate::user::ffi;
 
 impl_handle! { HMONITOR;
 	/// Handle to a
@@ -42,9 +42,7 @@ pub trait user_Hmonitor: Handle {
 	/// ```
 	fn GetMonitorInfo(&self, mi: &mut MONITORINFOEX) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe {
-				user::ffi::GetMonitorInfoW(self.ptr(), mi as *mut _ as _)
-			},
+			unsafe { ffi::GetMonitorInfoW(self.ptr(), mi as *mut _ as _) },
 		)
 	}
 
@@ -53,9 +51,7 @@ pub trait user_Hmonitor: Handle {
 	#[must_use]
 	fn MonitorFromPoint(pt: POINT, flags: co::MONITOR) -> HMONITOR {
 		unsafe {
-			HMONITOR::from_ptr(
-				user::ffi::MonitorFromPoint(pt.x, pt.y, flags.raw()),
-			)
+			HMONITOR::from_ptr(ffi::MonitorFromPoint(pt.x, pt.y, flags.raw()))
 		}
 	}
 
@@ -65,7 +61,8 @@ pub trait user_Hmonitor: Handle {
 	fn MonitorFromRect(rc: RECT, flags: co::MONITOR) -> HMONITOR {
 		unsafe {
 			HMONITOR::from_ptr(
-				user::ffi::MonitorFromRect(&rc as *const _ as _, flags.raw()))
+				ffi::MonitorFromRect(&rc as *const _ as _, flags.raw()),
+			)
 		}
 	}
 }

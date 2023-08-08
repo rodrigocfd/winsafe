@@ -1,11 +1,8 @@
 #![allow(non_camel_case_types)]
 
 use crate::co;
-use crate::comctl::decl::HIMAGELIST;
-use crate::kernel::decl::SysResult;
-use crate::prelude::comctl_Himagelist;
-use crate::shell::decl::SHGetFileInfo;
-use crate::user::decl::SIZE;
+use crate::decl::*;
+use crate::prelude::*;
 
 impl comctl_shell_Himagelist for HIMAGELIST {}
 
@@ -37,7 +34,8 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	fn add_icon_from_shell(&self,
-		file_extensions: &[impl AsRef<str>]) -> SysResult<()>
+		file_extensions: &[impl AsRef<str>],
+	) -> SysResult<()>
 	{
 		let sz = self.GetIconSize()?;
 		if sz != SIZE::new(16, 16) && sz != SIZE::new(32, 32) {

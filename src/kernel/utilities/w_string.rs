@@ -1,5 +1,6 @@
-use crate::{co, kernel};
-use crate::kernel::decl::{Encoding, HeapBlock, MultiByteToWideChar, SysResult};
+use crate::co;
+use crate::decl::*;
+use crate::kernel::ffi;
 
 pub const SSO_LEN: usize = 20;
 
@@ -189,7 +190,7 @@ impl WString {
 	/// not counting the terminating null.
 	#[must_use]
 	pub fn str_len(&self) -> usize {
-		unsafe { kernel::ffi::lstrlenW(self.buf.as_ptr()) as _ }
+		unsafe { ffi::lstrlenW(self.buf.as_ptr()) as _ }
 	}
 
 	/// Guesses the encoding with [`Encoding::guess`](crate::Encoding::guess)
@@ -364,7 +365,7 @@ impl Buffer {
 	}
 
 	fn from_wchars_nullt(src: *const u16) -> Self {
-		Self::from_wchars_count(src, unsafe { kernel::ffi::lstrlenW(src) as _ })
+		Self::from_wchars_count(src, unsafe { ffi::lstrlenW(src) as _ })
 	}
 
 	fn from_wchars_slice(src: &[u16]) -> Self {

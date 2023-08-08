@@ -1,9 +1,9 @@
-#![cfg_attr(docsrs, doc(cfg(all(feature = "gdi", feature = "ole"))))]
-
-pub(crate) mod privs;
+#![cfg(all(feature = "gdi", feature = "ole"))]
 
 mod com_interfaces;
 mod handles;
+
+pub(crate) mod privs;
 
 pub mod traits {
 	pub use super::com_interfaces::traits::*;

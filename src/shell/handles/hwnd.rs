@@ -1,10 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, shell};
-use crate::kernel::decl::{HINSTANCE, SysResult, WString};
-use crate::kernel::privs::bool_to_sysresult;
-use crate::prelude::{Handle, ole_Hwnd};
-use crate::user::decl::{HICON, HWND};
+use crate::co;
+use crate::decl::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
+use crate::shell::ffi;
 
 impl shell_Hwnd for HWND {}
 
@@ -20,7 +20,7 @@ pub trait shell_Hwnd: ole_Hwnd {
 	/// [`DragAcceptFiles`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragacceptfiles)
 	/// function.
 	fn DragAcceptFiles(&self, accept: bool) {
-		unsafe { shell::ffi::DragAcceptFiles(self.ptr(), accept as _); }
+		unsafe { ffi::DragAcceptFiles(self.ptr(), accept as _); }
 	}
 
 	/// [`ShellAbout`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellaboutw)
@@ -34,7 +34,7 @@ pub trait shell_Hwnd: ole_Hwnd {
 	{
 		bool_to_sysresult(
 			unsafe {
-				shell::ffi::ShellAboutW(
+				ffi::ShellAboutW(
 					self.ptr(),
 					WString::from_str(
 						&match first_line {
@@ -60,7 +60,7 @@ pub trait shell_Hwnd: ole_Hwnd {
 	) -> Result<HINSTANCE, co::SE_ERR>
 	{
 		let ret = unsafe {
-			shell::ffi::ShellExecuteW(
+			ffi::ShellExecuteW(
 				self.ptr(),
 				WString::from_str(operation).as_ptr(),
 				WString::from_str(file).as_ptr(),

@@ -4,16 +4,9 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::events::WindowEventsAll;
-use crate::gui::privs::multiply_dpi;
-use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
-use crate::kernel::decl::{AnyResult, WString};
-use crate::prelude::{GuiEvents, Handle, user_Hwnd};
-use crate::user::decl::{
-	AdjustWindowRectEx, DispatchMessage, GetMessage, HWND, IdMenu, MSG, POINT,
-	PostQuitMessage, RECT, SIZE, TranslateMessage, WNDCLASSEX,
-};
+use crate::decl::*;
+use crate::gui::{*, events::*, privs::*};
+use crate::prelude::*;
 
 struct Obj { // actual fields of RawModal
 	raw_base: RawBase,

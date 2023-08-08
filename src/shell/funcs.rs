@@ -1,18 +1,12 @@
 #![allow(non_snake_case)]
 
-use crate::{co, shell};
-use crate::kernel::decl::{
-	GetLastError, HACCESSTOKEN, HLOCAL, SysResult, WString,
-};
-use crate::kernel::guard::LocalFreeGuard;
-use crate::kernel::privs::{bool_to_sysresult, MAX_PATH, ptr_to_sysresult};
-use crate::ole::decl::{CoTaskMemFree, HrResult, IStream};
-use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, ole_IBindCtx, ole_IUnknown, shell_IShellItem};
-use crate::shell::decl::{
-	NOTIFYICONDATA, SHFILEINFO, SHFILEOPSTRUCT, SHSTOCKICONINFO,
-};
-use crate::shell::guard::{DestroyIconShfiGuard, DestroyIconSiiGuard};
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::privs::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::shell::ffi;
 
 /// [`CommandLineToArgv`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-commandlinetoargvw)
 /// function.
@@ -33,7 +27,7 @@ use crate::shell::guard::{DestroyIconShfiGuard, DestroyIconSiiGuard};
 pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 	let mut num_args = i32::default();
 	let lp_arr = unsafe {
-		shell::ffi::CommandLineToArgvW(
+		ffi::CommandLineToArgvW(
 			WString::from_str(cmd_line).as_ptr(),
 			&mut num_args,
 		)
@@ -71,7 +65,7 @@ pub fn PathCombine(
 	let mut buf = WString::new_alloc_buf(MAX_PATH);
 	ptr_to_sysresult(
 		unsafe {
-			shell::ffi::PathCombineW(
+			ffi::PathCombineW(
 				buf.as_mut_ptr(),
 				WString::from_opt_str(str_dir).as_ptr(),
 				WString::from_opt_str(str_file).as_ptr(),
@@ -99,7 +93,7 @@ pub fn PathCombine(
 pub fn PathCommonPrefix(file1: &str, file2: &str) -> Option<String> {
 	let mut buf = WString::new_alloc_buf(MAX_PATH);
 	match unsafe {
-		shell::ffi::PathCommonPrefixW(
+		ffi::PathCommonPrefixW(
 			WString::from_str(file1).as_ptr(),
 			WString::from_str(file2).as_ptr(),
 			buf.as_mut_ptr(),
@@ -114,16 +108,15 @@ pub fn PathCommonPrefix(file1: &str, file2: &str) -> Option<String> {
 /// function.
 pub fn PathSkipRoot(str_path: &str) -> Option<String> {
 	let buf = WString::from_str(str_path);
-	unsafe {
-		shell::ffi::PathSkipRootW(buf.as_ptr()).as_ref()
-	}.map(|ptr| WString::from_wchars_nullt(ptr).to_string())
+	unsafe { ffi::PathSkipRootW(buf.as_ptr()).as_ref() }
+		.map(|ptr| WString::from_wchars_nullt(ptr).to_string())
 }
 
 /// [`PathStripPath`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathstrippathw)
 /// function.
 pub fn PathStripPath(str_path: &str) -> String {
 	let mut buf = WString::from_str(str_path);
-	unsafe { shell::ffi::PathStripPathW(buf.as_mut_ptr()); }
+	unsafe { ffi::PathStripPathW(buf.as_mut_ptr()); }
 	buf.to_string()
 }
 
@@ -131,7 +124,7 @@ pub fn PathStripPath(str_path: &str) -> String {
 /// function.
 pub fn PathUndecorate(str_path: &str) -> String {
 	let mut buf = WString::from_str(str_path);
-	unsafe { shell::ffi::PathUndecorateW(buf.as_mut_ptr()); }
+	unsafe { ffi::PathUndecorateW(buf.as_mut_ptr()); }
 	buf.to_string()
 }
 
@@ -139,7 +132,7 @@ pub fn PathUndecorate(str_path: &str) -> String {
 /// function.
 pub fn PathUnquoteSpaces(str_path: &str) -> String {
 	let mut buf = WString::from_str(str_path);
-	unsafe { shell::ffi::PathUnquoteSpacesW(buf.as_mut_ptr()); }
+	unsafe { ffi::PathUnquoteSpacesW(buf.as_mut_ptr()); }
 	buf.to_string()
 }
 
@@ -151,16 +144,18 @@ pub fn PathUnquoteSpaces(str_path: &str) -> String {
 /// The `pv` type varies according to `uFlags`. If you set it wrong, you're
 /// likely to cause a buffer overrun.
 pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
-	shell::ffi::SHAddToRecentDocs(flags.raw(), pv as *const _ as _);
+	ffi::SHAddToRecentDocs(flags.raw(), pv as *const _ as _);
 }
 
 /// [`Shell_NotifyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)
 /// function.
 pub fn Shell_NotifyIcon(
-	message: co::NIM, data: &mut NOTIFYICONDATA) -> SysResult<()>
+	message: co::NIM,
+	data: &mut NOTIFYICONDATA,
+) -> SysResult<()>
 {
 	bool_to_sysresult(
-		unsafe { shell::ffi::Shell_NotifyIconW(message.raw(), data as *mut _ as _) },
+		unsafe { ffi::Shell_NotifyIconW(message.raw(), data as *mut _ as _) },
 	)
 }
 
@@ -189,7 +184,7 @@ pub fn SHCreateItemFromParsingName<T>(
 	let mut queried = unsafe { T::null() };
 	ok_to_hrresult(
 		unsafe {
-			shell::ffi::SHCreateItemFromParsingName(
+			ffi::SHCreateItemFromParsingName(
 				WString::from_str(file_or_folder_path).as_ptr(),
 				bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr() as _),
 				&T::IID as *const _ as _,
@@ -218,9 +213,7 @@ pub fn SHCreateItemFromParsingName<T>(
 /// ```
 #[must_use]
 pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
-	let p = unsafe {
-		shell::ffi::SHCreateMemStream(src.as_ptr(), src.len() as _)
-	};
+	let p = unsafe { ffi::SHCreateMemStream(src.as_ptr(), src.len() as _) };
 	if p.is_null() {
 		Err(co::HRESULT::E_OUTOFMEMORY)
 	} else {
@@ -231,9 +224,7 @@ pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
 /// [`SHFileOperation`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)
 /// function.
 pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> SysResult<()> {
-	bool_to_sysresult(
-		unsafe { shell::ffi::SHFileOperationW(file_op as *mut _ as _) },
-	)
+	bool_to_sysresult( unsafe { ffi::SHFileOperationW(file_op as *mut _ as _) })
 }
 
 /// [`SHGetFileInfo`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow)
@@ -246,7 +237,7 @@ pub fn SHGetFileInfo(
 {
 	let mut shfi = SHFILEINFO::default();
 	unsafe {
-		match shell::ffi::SHGetFileInfoW(
+		match ffi::SHGetFileInfoW(
 			WString::from_str(path).as_ptr(),
 			file_attrs.raw(),
 			&mut shfi as *mut _ as _,
@@ -289,7 +280,7 @@ pub fn SHGetKnownFolderPath(
 	let mut pstr = std::ptr::null_mut::<u16>();
 	ok_to_hrresult(
 		unsafe {
-			shell::ffi::SHGetKnownFolderPath(
+			ffi::SHGetKnownFolderPath(
 				folder_id as *const _ as _,
 				flags.raw(),
 				token.map_or(std::ptr::null_mut(), |t| t.ptr()),
@@ -323,12 +314,14 @@ pub fn SHGetKnownFolderPath(
 /// # Ok::<_, Box<dyn std::error::Error>>(())
 /// ```
 pub fn SHGetStockIconInfo(
-	siid: co::SIID, flags: co::SHGSI) -> HrResult<DestroyIconSiiGuard>
+	siid: co::SIID,
+	flags: co::SHGSI,
+) -> HrResult<DestroyIconSiiGuard>
 {
 	let mut sii = SHSTOCKICONINFO::default();
 	unsafe {
 		ok_to_hrresult(
-			shell::ffi::SHGetStockIconInfo(
+			ffi::SHGetStockIconInfo(
 				siid.raw(),
 				flags.raw(),
 				&mut sii as *mut _ as _,

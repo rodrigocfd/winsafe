@@ -3,8 +3,7 @@
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::comdlg::decl::CCHOOKPROC;
-use crate::user::decl::{COLORREF, HWND};
+use crate::decl::*;
 
 /// [`CHOOSECOLOR`](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/ns-commdlg-choosecolorw-r1)
 /// struct.

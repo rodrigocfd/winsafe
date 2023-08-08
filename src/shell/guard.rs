@@ -1,8 +1,8 @@
 use std::ops::{Deref, DerefMut};
 
-use crate::prelude::Handle;
-use crate::shell::decl::{SHFILEINFO, SHSTOCKICONINFO};
-use crate::user::guard::DestroyIconGuard;
+use crate::decl::*;
+use crate::guard::*;
+use crate::prelude::*;
 
 /// RAII implementation for [`SHFILEINFO`](crate::SHFILEINFO) which
 /// automatically calls
@@ -36,13 +36,13 @@ impl DerefMut for DestroyIconShfiGuard {
 
 impl DestroyIconShfiGuard {
 	/// Constructs the guard by taking ownership of the struct.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure the handle must be freed with
 	/// [`DestroyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
 	/// at the end of scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]
@@ -96,13 +96,13 @@ impl DerefMut for DestroyIconSiiGuard {
 
 impl DestroyIconSiiGuard {
 	/// Constructs the guard by taking ownership of the struct.
-	/// 
+	///
 	/// # Safety
-	/// 
+	///
 	/// Be sure the handle must be freed with
 	/// [`DestroyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
 	/// at the end of scope.
-	/// 
+	///
 	/// This method is used internally by the library, and not intended to be
 	/// used externally.
 	#[must_use]

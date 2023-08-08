@@ -1,11 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, gdi};
-use crate::gdi::guard::DeleteObjectGuard;
-use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::{GdiObject, GdiObjectSelect, Handle};
-use crate::user::decl::{HRGN, RECT, SIZE};
+use crate::co;
+use crate::decl::*;
+use crate::gdi::ffi;
+use crate::guard::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
 
 impl GdiObject for HRGN {}
 impl GdiObjectSelect for HRGN {}
@@ -26,7 +26,7 @@ pub trait gdi_Hrgn: Handle {
 	fn CreateRectRgn(bounds: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::CreateRectRgn(
+				ffi::CreateRectRgn(
 					bounds.left, bounds.top, bounds.right, bounds.bottom),
 			).map(|h| DeleteObjectGuard::new(h))
 		}
@@ -38,7 +38,7 @@ pub trait gdi_Hrgn: Handle {
 	fn CreateRectRgnIndirect(rc: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::CreateRectRgnIndirect(&rc as *const _ as _),
+				ffi::CreateRectRgnIndirect(&rc as *const _ as _),
 			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -47,11 +47,13 @@ pub trait gdi_Hrgn: Handle {
 	/// function.
 	#[must_use]
 	fn CreateRoundRectRgn(
-		bounds: RECT, size: SIZE) -> SysResult<DeleteObjectGuard<HRGN>>
+		bounds: RECT,
+		size: SIZE,
+	) -> SysResult<DeleteObjectGuard<HRGN>>
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::CreateRoundRectRgn(
+				ffi::CreateRoundRectRgn(
 					bounds.left, bounds.top, bounds.right, bounds.top,
 					size.cx, size.cy,
 				),
@@ -62,7 +64,7 @@ pub trait gdi_Hrgn: Handle {
 	/// [`OffsetClipRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetcliprgn)
 	/// function.
 	fn OffsetClipRgn(&self, x: i32, y: i32) -> SysResult<co::REGION> {
-		match unsafe { gdi::ffi::OffsetClipRgn(self.ptr(), x, y) } {
+		match unsafe { ffi::OffsetClipRgn(self.ptr(), x, y) } {
 			0 => Err(GetLastError()),
 			ret => Ok(unsafe { co::REGION::from_raw(ret) }),
 		}
@@ -71,7 +73,7 @@ pub trait gdi_Hrgn: Handle {
 	/// [`OffsetRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetrgn)
 	/// function.
 	fn OffsetRgn(&self, x: i32, y: i32) -> SysResult<co::REGION> {
-		match unsafe { gdi::ffi::OffsetRgn(self.ptr(), x, y) } {
+		match unsafe { ffi::OffsetRgn(self.ptr(), x, y) } {
 			0 => Err(GetLastError()),
 			ret => Ok(unsafe { co::REGION::from_raw(ret) }),
 		}
@@ -81,13 +83,13 @@ pub trait gdi_Hrgn: Handle {
 	/// function.
 	#[must_use]
 	fn PtInRegion(&self, x: i32, y: i32) -> bool {
-		unsafe { gdi::ffi::PtInRegion(self.ptr(), x, y) != 0 }
+		unsafe { ffi::PtInRegion(self.ptr(), x, y) != 0 }
 	}
 
 	/// [`RectInRegion`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectinregion)
 	/// function.
 	#[must_use]
 	fn RectInRegion(&self, rc: &RECT) -> bool {
-		unsafe { gdi::ffi::RectInRegion(self.ptr(), rc as *const _ as _) != 0 }
+		unsafe { ffi::RectInRegion(self.ptr(), rc as *const _ as _) != 0 }
 	}
 }

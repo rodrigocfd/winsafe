@@ -1,13 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::decl::{LCID, WString};
-use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PCVOID, PVOID};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::oleaut::decl::ITypeInfo;
-use crate::prelude::ole_IUnknown;
-use crate::vt::IUnknownVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IDispatch`](crate::IDispatch) virtual table.
 #[repr(C)]
@@ -43,7 +41,9 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetIDsOfNames(&self,
-		names: &[impl AsRef<str>], lcid: LCID) -> HrResult<Vec<i32>>
+		names: &[impl AsRef<str>],
+		lcid: LCID,
+	) -> HrResult<Vec<i32>>
 	{
 		let wnames = names.iter()
 			.map(|name| WString::from_str(name.as_ref()))

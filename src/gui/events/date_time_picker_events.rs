@@ -1,11 +1,6 @@
 use crate::co;
-use crate::comctl::decl::{
-	NMDATETIMECHANGE, NMDATETIMEFORMAT, NMDATETIMEFORMATQUERY, NMDATETIMESTRING,
-	NMDATETIMEWMKEYDOWN,
-};
-use crate::gui::base::Base;
-use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::kernel::decl::AnyResult;
+use crate::decl::*;
+use crate::gui::privs::*;
 
 /// Exposes date and time picker control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications).

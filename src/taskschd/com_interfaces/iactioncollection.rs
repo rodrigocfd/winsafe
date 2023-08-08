@@ -1,13 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::co::TASK_ACTION_TYPE;
-use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::oleaut::decl::VARIANT;
-use crate::prelude::{ole_IUnknown, oleaut_IDispatch, oleaut_Variant};
-use crate::taskschd::decl::IAction;
-use crate::vt::IDispatchVT;
+use crate::co;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IActionCollection`](crate::IActionCollection) virtual table.
 #[repr(C)]
@@ -53,7 +51,7 @@ pub trait taskschd_IActionCollection: oleaut_IDispatch {
 
 	/// [`IActionCollection::Create`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iactioncollection-create)
 	/// method.
-	fn Create(&self, action_type: TASK_ACTION_TYPE) -> HrResult<IAction> {
+	fn Create(&self, action_type: co::TASK_ACTION_TYPE) -> HrResult<IAction> {
 		let mut queried = unsafe { IAction::null() };
 		ok_to_hrresult(
 			unsafe {

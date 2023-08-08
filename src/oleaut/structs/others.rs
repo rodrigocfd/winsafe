@@ -1,5 +1,5 @@
-use crate::kernel::decl::GUID;
-use crate::oleaut::privs::PID_FIRST_USABLE;
+use crate::decl::*;
+use crate::oleaut::privs::*;
 
 /// [`PROPERTYKEY`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ns-wtypes-propertykey)
 /// struct.

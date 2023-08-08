@@ -2,14 +2,10 @@ use std::cell::UnsafeCell;
 use std::ptr::NonNull;
 
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::events::{ProcessResult, WindowEvents};
-use crate::gui::privs::post_quit_error;
-use crate::kernel::decl::{AnyResult, SysResult};
-use crate::gui::layout_arranger::{Horz, Vert};
-use crate::msg::WndMsg;
-use crate::prelude::{comctl_Hwnd, Handle, user_Hwnd};
-use crate::user::decl::{AtomStr, HWND, IdMenu, POINT, SIZE};
+use crate::decl::*;
+use crate::gui::{*, events::*, privs::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 static mut BASE_SUBCLASS_ID: usize = 0;
 

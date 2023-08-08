@@ -1,10 +1,10 @@
 use std::ptr::NonNull;
 
 use crate::co;
-use crate::gui::base::Base;
-use crate::kernel::decl::AnyResult;
-use crate::msg::wm;
-use crate::prelude::GuiEventsAll;
+use crate::decl::*;
+use crate::gui::privs::*;
+use crate::msg::*;
+use crate::prelude::*;
 
 /// Base to all native control events. This is actually a proxy to the events of
 /// the parent window; events added to a native control are actually added as

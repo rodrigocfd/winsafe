@@ -1,18 +1,8 @@
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::events::{ProcessResult, WindowEventsAll};
-use crate::gui::privs::post_quit_error;
-use crate::kernel::decl::{
-	AnyResult, HINSTANCE, SetLastError, SysResult, WString,
-};
-use crate::msg::{wm, WndMsg};
-use crate::prelude::{
-	gdi_Hbrush, Handle, MsgSendRecv, user_Hinstance, user_Hwnd,
-};
-use crate::user::decl::{
-	ATOM, AtomStr, HBRUSH, HCURSOR, HICON, HWND, IdIdcStr, IdIdiStr, IdMenu,
-	POINT, RegisterClassEx, SIZE, WNDCLASSEX,
-};
+use crate::decl::*;
+use crate::gui::{events::*, privs::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 /// The class background brush to be loaded for
 /// [`WindowMainOpts`](crate::gui::WindowMainOpts),
@@ -194,7 +184,8 @@ impl RawBase {
 	}
 
 	pub(in crate::gui) fn register_class(&self,
-		wcx: &mut WNDCLASSEX) -> SysResult<ATOM>
+		wcx: &mut WNDCLASSEX,
+	) -> SysResult<ATOM>
 	{
 		SetLastError(co::ERROR::SUCCESS);
 		match unsafe { RegisterClassEx(&wcx) } {
@@ -260,7 +251,11 @@ impl RawBase {
 	}
 
 	extern "system" fn window_proc(
-		hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize
+		hwnd: HWND,
+		msg: co::WM,
+		wparam: usize,
+		lparam: isize,
+	) -> isize
 	{
 		let wm_any = WndMsg::new(msg, wparam, lparam);
 		Self::window_proc_proc(hwnd, wm_any)

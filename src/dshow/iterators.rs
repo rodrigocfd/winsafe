@@ -1,8 +1,5 @@
-use crate::dshow::decl::{AM_MEDIA_TYPE, IBaseFilter, IPin};
-use crate::ole::decl::HrResult;
-use crate::prelude::{
-	dshow_IEnumFilters, dshow_IEnumMediaTypes, dshow_IEnumPins,
-};
+use crate::decl::*;
+use crate::prelude::*;
 
 pub(in crate::dshow) struct IenumfiltersIter<'a, I>
 	where I: dshow_IEnumFilters,

@@ -1,11 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, user};
-use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::kernel::ffi_types::BOOL;
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_option_handle};
-use crate::prelude::Handle;
-use crate::user::decl::{DRAWTEXTPARAMS, HMONITOR, HWND, RECT};
+use crate::co;
+use crate::decl::*;
+use crate::kernel::{ffi_types::*, privs::*};
+use crate::prelude::*;
+use crate::user::ffi;
 
 impl_handle! { HDC;
 	/// Handle to a
@@ -27,20 +26,21 @@ pub trait user_Hdc: Handle {
 	/// function.
 	fn DrawFocusRect(&self, rect: &RECT) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe {
-				user::ffi::DrawFocusRect(self.ptr(), rect as * const _ as _)
-			},
+			unsafe { ffi::DrawFocusRect(self.ptr(), rect as * const _ as _) },
 		)
 	}
 
 	/// [`DrawText`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtextw)
 	/// function.
 	fn DrawText(&self,
-		text: &str, bounds: &RECT, format: co::DT) -> SysResult<i32>
+		text: &str,
+		bounds: &RECT,
+		format: co::DT,
+	) -> SysResult<i32>
 	{
 		let wtext = WString::from_str(text);
 		match unsafe {
-			user::ffi::DrawTextW(
+			ffi::DrawTextW(
 				self.ptr(),
 				wtext.as_ptr(),
 				wtext.str_len() as _,
@@ -64,7 +64,7 @@ pub trait user_Hdc: Handle {
 	{
 		let wtext = WString::from_str(text);
 		match unsafe {
-			user::ffi::DrawTextExW(
+			ffi::DrawTextExW(
 				self.ptr(),
 				wtext.as_ptr(),
 				wtext.str_len() as _,
@@ -107,7 +107,7 @@ pub trait user_Hdc: Handle {
 	{
 		bool_to_sysresult(
 			unsafe {
-				user::ffi::EnumDisplayMonitors(
+				ffi::EnumDisplayMonitors(
 					self.ptr(),
 					rc_clip.map_or(std::ptr::null_mut(), |rc| &rc as *const _ as _),
 					enum_display_monitors_proc::<F> as _,
@@ -121,21 +121,21 @@ pub trait user_Hdc: Handle {
 	/// function.
 	fn InvertRect(&self, rc: &RECT) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { user::ffi::InvertRect(self.ptr(), rc as *const _ as _) },
+			unsafe { ffi::InvertRect(self.ptr(), rc as *const _ as _) },
 		)
 	}
 
 	/// [`PaintDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-paintdesktop)
 	/// function.
 	fn PaintDesktop(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { user::ffi::PaintDesktop(self.ptr()) })
+		bool_to_sysresult(unsafe { ffi::PaintDesktop(self.ptr()) })
 	}
 
 	/// [`WindowFromDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfromdc)
 	/// function.
 	#[must_use]
 	fn WindowFromDC(&self) -> Option<HWND> {
-		ptr_to_option_handle(unsafe { user::ffi::WindowFromDC(self.ptr()) })
+		ptr_to_option_handle(unsafe { ffi::WindowFromDC(self.ptr()) })
 	}
 }
 

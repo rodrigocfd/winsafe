@@ -1,13 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::dshow::decl::{AM_MEDIA_TYPE, IEnumMediaTypes, PIN_INFO};
-use crate::kernel::decl::WString;
-use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID, PSTR, PVOID};
-use crate::ole::decl::{CoTaskMemFree, HrResult};
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
-use crate::prelude::ole_IUnknown;
-use crate::vt::IUnknownVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IPin`](crate::IPin) virtual table.
 #[repr(C)]
@@ -52,7 +50,9 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// [`IPin::Connect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connect)
 	/// method.
 	fn Connect(&self,
-		receive_pin: &impl dshow_IPin, mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
+		receive_pin: &impl dshow_IPin,
+		mt: Option<&AM_MEDIA_TYPE>,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {
@@ -195,7 +195,9 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// [`IPin::ReceiveConnection`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-receiveconnection)
 	/// method.
 	fn ReceiveConnection(&self,
-		connector: &impl dshow_IPin, mt: &AM_MEDIA_TYPE) -> HrResult<()>
+		connector: &impl dshow_IPin,
+		mt: &AM_MEDIA_TYPE,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {

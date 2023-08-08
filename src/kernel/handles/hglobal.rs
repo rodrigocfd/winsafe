@@ -1,12 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, kernel};
-use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::guard::{GlobalFreeGuard, GlobalUnlockGuard};
-use crate::kernel::privs::{
-	GMEM_INVALID_HANDLE, ptr_to_sysresult, ptr_to_sysresult_handle,
-};
-use crate::prelude::Handle;
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::{ffi, privs::*};
+use crate::prelude::*;
 
 impl_handle! { HGLOBAL;
 	/// Handle to a
@@ -32,11 +30,13 @@ pub trait kernel_Hglobal: Handle {
 	/// function.
 	#[must_use]
 	fn GlobalAlloc(
-		flags: Option<co::GMEM>, num_bytes: usize) -> SysResult<GlobalFreeGuard>
+		flags: Option<co::GMEM>,
+		num_bytes: usize,
+	) -> SysResult<GlobalFreeGuard>
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				kernel::ffi::GlobalAlloc(flags.unwrap_or_default().raw(), num_bytes),
+				ffi::GlobalAlloc(flags.unwrap_or_default().raw(), num_bytes),
 			).map(|h| GlobalFreeGuard::new(h))
 		}
 	}
@@ -45,7 +45,7 @@ pub trait kernel_Hglobal: Handle {
 	/// function.
 	#[must_use]
 	fn GlobalFlags(&self) -> SysResult<co::GMEM> {
-		match unsafe { kernel::ffi::GlobalFlags(self.ptr()) } {
+		match unsafe { ffi::GlobalFlags(self.ptr()) } {
 			GMEM_INVALID_HANDLE => Err(GetLastError()),
 			flags => Ok(unsafe { co::GMEM::from_raw(flags) }),
 		}
@@ -81,7 +81,7 @@ pub trait kernel_Hglobal: Handle {
 	fn GlobalLock(&self) -> SysResult<GlobalUnlockGuard<'_, Self>> {
 		let mem_sz = self.GlobalSize()?;
 		unsafe {
-			ptr_to_sysresult(kernel::ffi::GlobalLock(self.ptr()))
+			ptr_to_sysresult(ffi::GlobalLock(self.ptr()))
 				.map(|ptr| GlobalUnlockGuard::new(self, ptr, mem_sz),
 			)
 		}
@@ -93,11 +93,13 @@ pub trait kernel_Hglobal: Handle {
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
 	fn GlobalReAlloc(&mut self,
-		num_bytes: usize, flags: Option<co::GMEM>) -> SysResult<()>
+		num_bytes: usize,
+		flags: Option<co::GMEM>,
+	) -> SysResult<()>
 	{
 		ptr_to_sysresult_handle(
 			unsafe {
-				kernel::ffi::GlobalReAlloc(
+				ffi::GlobalReAlloc(
 					self.ptr(),
 					num_bytes,
 					flags.unwrap_or_default().raw(),
@@ -110,7 +112,7 @@ pub trait kernel_Hglobal: Handle {
 	/// function.
 	#[must_use]
 	fn GlobalSize(&self) -> SysResult<usize> {
-		match unsafe { kernel::ffi::GlobalSize(self.ptr()) } {
+		match unsafe { ffi::GlobalSize(self.ptr()) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz),
 		}

@@ -1,11 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::decl::WString;
-use crate::prelude::{Handle, ole_Hwnd};
-use crate::user::decl::HWND;
-use crate::uxtheme;
-use crate::uxtheme::decl::HTHEME;
-use crate::uxtheme::guard::CloseThemeDataGuard;
+use crate::decl::*;
+use crate::guard::*;
+use crate::prelude::*;
+use crate::uxtheme::ffi;
 
 impl uxtheme_Hwnd for HWND {}
 
@@ -23,7 +21,7 @@ pub trait uxtheme_Hwnd: ole_Hwnd {
 	#[must_use]
 	fn OpenThemeData(&self, class_list: &str) -> Option<CloseThemeDataGuard> {
 		unsafe {
-			uxtheme::ffi::OpenThemeData(
+			ffi::OpenThemeData(
 				self.ptr(),
 				WString::from_str(class_list).as_ptr(),
 			).as_mut()

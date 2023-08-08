@@ -3,18 +3,10 @@
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::comctl::decl::{
-	BmpIdbRes, BmpInstId, HIMAGELIST, HTREEITEM, IdxStr, PFNLVGROUPCOMPARE,
-	PFNTVCOMPARE, TreeitemTvi,
-};
-use crate::comctl::privs::{HINST_COMMCTRL, L_MAX_URL_LENGTH, MAX_LINKID_TEXT};
-use crate::kernel::decl::{HINSTANCE, HKEY, IdStr, SYSTEMTIME, WString};
-use crate::kernel::ffi_types::BOOL;
-use crate::kernel::privs::IS_INTRESOURCE;
-use crate::prelude::Handle;
-use crate::user::decl::{
-	COLORREF, HBITMAP, HDC, HWND, POINT, RECT, SIZE, WINDOWPOS,
-};
+use crate::comctl::privs::*;
+use crate::decl::*;
+use crate::kernel::{ffi_types::*, privs::*};
+use crate::prelude::*;
 
 /// [`BUTTON_IMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-button_imagelist)
 /// struct.

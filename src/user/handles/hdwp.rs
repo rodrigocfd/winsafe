@@ -1,11 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, user};
-use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::Handle;
-use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
-use crate::user::guard::EndDeferWindowPosGuard;
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
+use crate::user::ffi;
 
 impl_handle! { HDWP;
 	/// Handle to a
@@ -38,12 +38,12 @@ pub trait user_Hdwp: Handle {
 	/// scope.
 	#[must_use]
 	fn BeginDeferWindowPos(
-		num_windows: u32) -> SysResult<EndDeferWindowPosGuard>
+		num_windows: u32,
+	) -> SysResult<EndDeferWindowPosGuard>
 	{
 		unsafe {
-			ptr_to_sysresult_handle(
-				user::ffi::BeginDeferWindowPos(num_windows as _),
-			).map(|h| EndDeferWindowPosGuard::new(h))
+			ptr_to_sysresult_handle(ffi::BeginDeferWindowPos(num_windows as _))
+				.map(|h| EndDeferWindowPosGuard::new(h))
 		}
 	}
 
@@ -61,7 +61,7 @@ pub trait user_Hdwp: Handle {
 	) -> SysResult<()>
 	{
 		match unsafe {
-			user::ffi::DeferWindowPos(
+			ffi::DeferWindowPos(
 				self.ptr(),
 				hwnd.ptr(),
 				hwnd_insert_after.as_ptr(),

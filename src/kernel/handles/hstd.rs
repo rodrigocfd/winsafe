@@ -1,12 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, kernel};
-use crate::kernel::guard::CloseHandleGuard;
-use crate::kernel::decl::{
-	CONSOLE_READCONSOLE_CONTROL, GetLastError, SysResult, WString,
-};
-use crate::kernel::privs::bool_to_sysresult;
-use crate::prelude::{Handle, IntUnderlying};
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::{ffi, privs::*};
+use crate::prelude::*;
 
 impl_handle! { HSTD;
 	/// Handle to a
@@ -28,9 +26,7 @@ pub trait kernel_Hstd: Handle {
 	/// [`FlushConsoleInputBuffer`](https://learn.microsoft.com/en-us/windows/console/flushconsoleinputbuffer)
 	/// function.
 	fn FlushConsoleInputBuffer(&self) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe { kernel::ffi::FlushConsoleInputBuffer(self.ptr()) },
-		)
+		bool_to_sysresult(unsafe { ffi::FlushConsoleInputBuffer(self.ptr()) })
 	}
 
 	/// [`GetConsoleMode`](https://learn.microsoft.com/en-us/windows/console/getconsolemode)
@@ -39,7 +35,7 @@ pub trait kernel_Hstd: Handle {
 	fn GetConsoleMode(&self) -> SysResult<co::CONSOLE> {
 		let mut mode = co::CONSOLE::default();
 		bool_to_sysresult(
-			unsafe { kernel::ffi::GetConsoleMode(self.ptr(), mode.as_mut()) },
+			unsafe { ffi::GetConsoleMode(self.ptr(), mode.as_mut()) },
 		).map(|_| mode)
 	}
 
@@ -51,7 +47,7 @@ pub trait kernel_Hstd: Handle {
 	) -> SysResult<CloseHandleGuard<HSTD>>
 	{
 		unsafe {
-			match HSTD::from_ptr(kernel::ffi::GetStdHandle(std_handle.raw())) {
+			match HSTD::from_ptr(ffi::GetStdHandle(std_handle.raw())) {
 				HSTD::INVALID => Err(GetLastError()),
 				handle => Ok(CloseHandleGuard::new(handle)),
 			}
@@ -86,7 +82,7 @@ pub trait kernel_Hstd: Handle {
 		let mut num_read = u32::default();
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::ReadConsoleW(
+				ffi::ReadConsoleW(
 					self.ptr(),
 					buffer.as_mut_ptr() as _,
 					buffer.buf_len() as _,
@@ -100,9 +96,7 @@ pub trait kernel_Hstd: Handle {
 	/// [`SetConsoleMode`](https://learn.microsoft.com/en-us/windows/console/setconsolemode)
 	/// function.
 	fn SetConsoleMode(&self, mode: co::CONSOLE) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe { kernel::ffi::SetConsoleMode(self.ptr(), mode.raw()) },
-		)
+		bool_to_sysresult(unsafe { ffi::SetConsoleMode(self.ptr(), mode.raw()) })
 	}
 
 	/// [`WriteConsole`](https://learn.microsoft.com/en-us/windows/console/writeconsole)
@@ -115,7 +109,7 @@ pub trait kernel_Hstd: Handle {
 
 		unsafe {
 			bool_to_sysresult(
-				kernel::ffi::WriteConsoleW(
+				ffi::WriteConsoleW(
 					self.ptr(),
 					buf.as_ptr() as _,
 					buf.str_len() as _,

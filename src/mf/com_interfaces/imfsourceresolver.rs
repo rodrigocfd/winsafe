@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR};
-use crate::prelude::ole_IUnknown;
-use crate::vt::IUnknownVT;
+use crate::kernel::ffi_types::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IMFSourceResolver`](crate::IMFSourceResolver).
 #[repr(C)]

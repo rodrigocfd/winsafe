@@ -1,12 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, kernel};
-use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::guard::{LocalFreeGuard, LocalUnlockGuard};
-use crate::kernel::privs::{
-	LMEM_INVALID_HANDLE, ptr_to_sysresult, ptr_to_sysresult_handle,
-};
-use crate::prelude::Handle;
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::{ffi, privs::*};
+use crate::prelude::*;
 
 impl_handle! { HLOCAL;
 	/// Handle to a
@@ -31,11 +29,13 @@ pub trait kernel_Hlocal: Handle {
 	/// function.
 	#[must_use]
 	fn LocalAlloc(
-		flags: Option<co::LMEM>, num_bytes: usize) -> SysResult<LocalFreeGuard>
+		flags: Option<co::LMEM>,
+		num_bytes: usize,
+	) -> SysResult<LocalFreeGuard>
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				kernel::ffi::LocalAlloc(flags.unwrap_or_default().raw(), num_bytes),
+				ffi::LocalAlloc(flags.unwrap_or_default().raw(), num_bytes),
 			).map(|h| LocalFreeGuard::new(h))
 		}
 	}
@@ -44,7 +44,7 @@ pub trait kernel_Hlocal: Handle {
 	/// function.
 	#[must_use]
 	fn LocalFlags(&self) -> SysResult<co::LMEM> {
-		match unsafe { kernel::ffi::LocalFlags(self.ptr()) } {
+		match unsafe { ffi::LocalFlags(self.ptr()) } {
 			LMEM_INVALID_HANDLE => Err(GetLastError()),
 			flags => Ok(unsafe { co::LMEM::from_raw(flags) }),
 		}
@@ -80,7 +80,7 @@ pub trait kernel_Hlocal: Handle {
 	fn LocalLock(&self) -> SysResult<LocalUnlockGuard<'_, Self>> {
 		let mem_sz = self.LocalSize()?;
 		unsafe {
-			ptr_to_sysresult(kernel::ffi::LocalLock(self.ptr()))
+			ptr_to_sysresult(ffi::LocalLock(self.ptr()))
 				.map(|ptr| LocalUnlockGuard::new(self, ptr, mem_sz))
 		}
 	}
@@ -91,11 +91,13 @@ pub trait kernel_Hlocal: Handle {
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
 	fn LocalReAlloc(&mut self,
-		num_bytes: usize, flags: Option<co::LMEM>) -> SysResult<()>
+		num_bytes: usize,
+		flags: Option<co::LMEM>,
+	) -> SysResult<()>
 	{
 		ptr_to_sysresult_handle(
 			unsafe {
-				kernel::ffi::LocalReAlloc(
+				ffi::LocalReAlloc(
 					self.ptr(),
 					num_bytes,
 					flags.unwrap_or_default().raw(),
@@ -108,7 +110,7 @@ pub trait kernel_Hlocal: Handle {
 	/// function.
 	#[must_use]
 	fn LocalSize(&self) -> SysResult<usize> {
-		match unsafe { kernel::ffi::LocalSize(self.ptr()) } {
+		match unsafe { ffi::LocalSize(self.ptr()) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz),
 		}

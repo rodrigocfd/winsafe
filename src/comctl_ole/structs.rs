@@ -1,15 +1,11 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::comctl_ole::decl::{IconId, IconIdTdicon, PFTASKDIALOGCALLBACK};
-use crate::comctl::decl::NMHDR;
-use crate::kernel::decl::{HINSTANCE, WString};
-use crate::kernel::ffi_types::COMPTR;
-use crate::kernel::privs::{IS_INTRESOURCE, MAKEINTRESOURCE};
-use crate::prelude::{Handle, ole_IUnknown};
-use crate::user::decl::{HICON, HWND};
+use crate::decl::*;
+use crate::kernel::{ffi_types::*, privs::*};
+use crate::prelude::*;
 
 /// [`NMOBJECTNOTIFY`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmobjectnotify)
 /// struct.

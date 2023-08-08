@@ -1,14 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::decl::FILETIME;
-use crate::kernel::ffi_types::BOOL;
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::oleaut::decl::{IPropertyStore, PROPERTYKEY};
-use crate::prelude::{ole_IUnknown, shell_IShellItem2};
-use crate::shell::decl::IShellItem2;
-use crate::vt::IShellItem2VT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 impl oleaut_shell_IShellItem2 for IShellItem2 {}
 

@@ -1,10 +1,10 @@
 use std::cell::UnsafeCell;
 
 use crate::co;
-use crate::gui::events::func_store::FuncStore;
-use crate::kernel::decl::AnyResult;
-use crate::msg::WndMsg;
-use crate::prelude::GuiEvents;
+use crate::decl::*;
+use crate::gui::privs::*;
+use crate::msg::*;
+use crate::prelude::*;
 
 /// The result of processing a message.
 pub(in crate::gui) enum ProcessResult {
@@ -57,7 +57,8 @@ impl WindowEvents {
 	/// Searches for the last added user function for the given message, and
 	/// runs if it exists, returning the result.
 	pub(in crate::gui) fn process_one_message(&self,
-		wm_any: WndMsg) -> AnyResult<ProcessResult>
+		wm_any: WndMsg,
+	) -> AnyResult<ProcessResult>
 	{
 		let msgs = unsafe { &mut *self.msgs.get() };
 		Ok(match msgs.find(wm_any.msg_id) {
@@ -76,7 +77,8 @@ impl WindowEvents {
 	///
 	/// Returns `true` if at least one message was processed.
 	pub(in crate::gui) fn process_all_messages(&self,
-		wm_any: WndMsg) -> AnyResult<bool>
+		wm_any: WndMsg,
+	) -> AnyResult<bool>
 	{
 		let mut at_least_one = false;
 		let msgs = unsafe { &mut *self.msgs.get() };

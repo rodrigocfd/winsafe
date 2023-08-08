@@ -4,17 +4,10 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::events::WindowEventsAll;
-use crate::gui::privs::multiply_dpi;
-use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
-use crate::kernel::decl::{AnyResult, HINSTANCE, WString};
-use crate::prelude::{GuiEvents, Handle, kernel_Hinstance, user_Hwnd};
-use crate::user::decl::{
-	AdjustWindowRectEx, GetSystemMetrics, HMENU, HWND, IdMenu, POINT,
-	PostQuitMessage, RECT, SIZE, WNDCLASSEX,
-};
-use crate::user::guard::DestroyAcceleratorTableGuard;
+use crate::decl::*;
+use crate::gui::{*, events::*, privs::*};
+use crate::prelude::*;
+use crate::user::guard::*;
 
 struct Obj { // actual fields of RawMain
 	raw_base: RawBase,

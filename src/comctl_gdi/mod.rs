@@ -1,8 +1,8 @@
-#![cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "gdi"))))]
-
-pub mod messages;
+#![cfg(all(feature = "comctl", feature = "gdi"))]
 
 mod structs;
+
+pub mod messages;
 
 pub mod decl {
 	pub use super::structs::*;

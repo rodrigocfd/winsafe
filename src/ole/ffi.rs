@@ -1,4 +1,4 @@
-use crate::kernel::ffi_types::{BOOL, COMPTR, HANDLE, HRES, PCSTR, PCVOID, PSTR, PVOID};
+use crate::kernel::ffi_types::*;
 
 extern_sys! { "ole32";
 	CLSIDFromProgID(PCSTR, PVOID) -> HRES

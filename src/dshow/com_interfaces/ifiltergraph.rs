@@ -1,12 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::dshow::decl::{AM_MEDIA_TYPE, IBaseFilter, IEnumFilters};
-use crate::kernel::decl::WString;
-use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PCVOID};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{dshow_IBaseFilter, dshow_IPin, ole_IUnknown};
-use crate::vt::IUnknownVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IFilterGraph`](crate::IFilterGraph) virtual table.
 #[repr(C)]
@@ -45,7 +43,9 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 	/// [`IFilterGraph::AddFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-addfilter)
 	/// method.
 	fn AddFilter(&self,
-		filter: &impl dshow_IBaseFilter, name: &str) -> HrResult<()>
+		filter: &impl dshow_IBaseFilter,
+		name: &str,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {

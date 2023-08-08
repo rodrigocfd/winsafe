@@ -1,7 +1,7 @@
 use crate::co;
-use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend, MsgSendRecv};
-use crate::shell::decl::HDROP;
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
 
 /// [`WM_DROPFILES`](https://learn.microsoft.com/en-us/windows/win32/shell/wm-dropfiles)
 /// message parameters.

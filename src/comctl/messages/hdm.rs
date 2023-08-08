@@ -1,10 +1,8 @@
 use crate::co;
-use crate::comctl::decl::{HDHITTESTINFO, HDITEM, HDLAYOUT, HIMAGELIST, PtIdx};
-use crate::kernel::decl::SysResult;
-use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
-use crate::user::decl::RECT;
-use crate::user::privs::{minus1_as_badargs, zero_as_badargs, zero_as_none};
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`HDM_CLEARFILTER`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-clearfilter)
 /// message parameters.

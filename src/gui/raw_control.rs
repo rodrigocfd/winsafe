@@ -3,16 +3,9 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::events::WindowEventsAll;
-use crate::gui::layout_arranger::{Horz, Vert};
-use crate::gui::privs::{
-	auto_ctrl_id, multiply_dpi_or_dtu, paint_control_borders,
-};
-use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
-use crate::kernel::decl::{AnyResult, WString};
-use crate::prelude:: GuiEvents;
-use crate::user::decl::{HWND, IdMenu, POINT, SIZE, WNDCLASSEX};
+use crate::decl::*;
+use crate::gui::{*, events::*, privs::*};
+use crate::prelude:: *;
 
 struct Obj { // actual fields of RawControl
 	raw_base: RawBase,
@@ -76,7 +69,9 @@ impl RawControl {
 	}
 
 	fn default_message_handlers(&self,
-		parent: &Base, resize_behavior: (Horz, Vert))
+		parent: &Base,
+		resize_behavior: (Horz, Vert),
+	)
 	{
 		let self2 = self.clone();
 		parent.privileged_on().wm(parent.wm_create_or_initdialog(), move |_| {

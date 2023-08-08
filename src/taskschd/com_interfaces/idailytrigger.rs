@@ -1,10 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{oleaut_IDispatch, taskschd_ITrigger};
-use crate::vt::ITriggerVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IDailyTrigger`](crate::IDailyTrigger) virtual table.
 #[repr(C)]

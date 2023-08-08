@@ -3,16 +3,10 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::gdi::decl::IdOicStr;
-use crate::gui::base::Base;
-use crate::gui::dlg_base::DlgBase;
-use crate::gui::events::WindowEventsAll;
-use crate::kernel::decl::{AnyResult, HINSTANCE, IdStr, SysResult};
-use crate::msg::wm;
-use crate::prelude::{
-	gdi_Hinstance, GuiEvents, kernel_Hinstance, user_Hinstance, user_Hwnd,
-};
-use crate::user::decl::{HWND, PostQuitMessage, SIZE};
+use crate::decl::*;
+use crate::gui::{events::*, privs::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 struct Obj { // actual fields of DlgMain
 	dlg_base: DlgBase,
@@ -73,7 +67,8 @@ impl DlgMain {
 	}
 
 	pub(in crate::gui) fn run_main(&self,
-		cmd_show: Option<co::SW>) -> AnyResult<i32>
+		cmd_show: Option<co::SW>,
+	) -> AnyResult<i32>
 	{
 		self.0.dlg_base.create_dialog_param().unwrap();
 		let hinst = HINSTANCE::GetModuleHandle(None).unwrap();

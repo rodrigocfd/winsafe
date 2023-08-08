@@ -1,12 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::gdi;
-use crate::gdi::decl::BITMAP;
-use crate::gdi::guard::DeleteObjectGuard;
-use crate::kernel::decl::SysResult;
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
-use crate::prelude::{GdiObject, GdiObjectSelect, Handle};
-use crate::user::decl::{HBITMAP, SIZE};
+use crate::decl::*;
+use crate::gdi::ffi;
+use crate::guard::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
 
 impl GdiObject for HBITMAP {}
 impl GdiObjectSelect for HBITMAP {}
@@ -33,8 +31,7 @@ pub trait gdi_Hbitmap: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::CreateBitmap(
-					sz.cx, sz.cy, num_planes, bit_count, bits as _),
+				ffi::CreateBitmap(sz.cx, sz.cy, num_planes, bit_count, bits as _),
 			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -58,7 +55,7 @@ pub trait gdi_Hbitmap: Handle {
 	fn GetObject(&self, pv: &mut BITMAP) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
-				gdi::ffi::GetObjectW(
+				ffi::GetObjectW(
 					self.ptr(),
 					std::mem::size_of::<BITMAP>() as _,
 					pv as *mut _ as _,

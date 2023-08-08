@@ -3,13 +3,8 @@
 //! [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog) functions.
 
 use crate::co;
-use crate::comctl_ole::decl::{
-	IconIdTdicon, TASKDIALOG_BUTTON, TASKDIALOGCONFIG, TaskDialogIndirect,
-};
-use crate::kernel::decl::WString;
-use crate::ole::decl::HrResult;
-use crate::prelude::Handle;
-use crate::user::decl::HWND;
+use crate::decl::*;
+use crate::prelude::*;
 
 /// Displays an error modal window with an OK button.
 ///

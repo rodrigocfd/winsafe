@@ -3,21 +3,11 @@
 use std::error::Error;
 
 use crate::co;
-use crate::gdi::decl::{HFONT, NONCLIENTMETRICS};
-use crate::gdi::guard::DeleteObjectGuard;
-use crate::gui::base::Base;
-use crate::gui::msg_error::MsgError;
-use crate::kernel::decl::{AnyResult, MulDiv, SysResult};
-use crate::msg::{wm, WndMsg};
-use crate::prelude::{
-	gdi_Hdc, gdi_Hfont, Handle, NativeBitflag, user_Hwnd, uxtheme_Htheme,
-	uxtheme_Hwnd,
-};
-use crate::user::decl::{
-	GetSystemMetrics, HWND, POINT, PostQuitMessage, RECT, SIZE,
-	SystemParametersInfo,
-};
-use crate::uxtheme::decl::{IsAppThemed, IsThemeActive};
+use crate::decl::*;
+use crate::guard::*;
+use crate::gui::{*, privs::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 /// Global return error originated from an event handling closure; will be taken
 /// in main loop.
@@ -25,8 +15,9 @@ pub(in crate::gui) static mut QUIT_ERROR: Option<MsgError> = None;
 
 /// Terminates the program with the given error.
 pub(in crate::gui) fn post_quit_error(
-	src_msg: WndMsg, err: Box<dyn Error + Send + Sync>)
-{
+	src_msg: WndMsg,
+	err: Box<dyn Error + Send + Sync>,
+) {
 	unsafe { QUIT_ERROR = Some(MsgError::new(src_msg, err)); } // store the error, so Base::run_main_loop() can grab it
 	PostQuitMessage(-1); // this -1 will be discarded in the main loop, anyway
 }
@@ -85,7 +76,9 @@ static mut DPI: POINT = POINT::new(0, 0);
 
 /// Multiplies the given coordinates by current system DPI.
 pub(in crate::gui) fn multiply_dpi(
-	pt: Option<&mut POINT>, sz: Option<&mut SIZE>) -> SysResult<()>
+	pt: Option<&mut POINT>,
+	sz: Option<&mut SIZE>,
+) -> SysResult<()>
 {
 	unsafe {
 		if (pt.is_some() || sz.is_some()) && DPI.x == 0 { // DPI not cached yet?
@@ -201,7 +194,9 @@ fn remove_accelerator_ampersands(text: &str) -> String {
 
 /// Adjusts the position of a modeless window on parent.
 pub(in crate::gui) fn adjust_modeless_pos(
-	parent_base: &Base, mut user_pos: POINT) -> SysResult<POINT>
+	parent_base: &Base,
+	mut user_pos: POINT,
+) -> SysResult<POINT>
 {
 	// For a modeless (0,0) is the left/topmost point in parent's client area.
 	multiply_dpi_or_dtu(parent_base, Some(&mut user_pos), None)?;
@@ -215,7 +210,9 @@ pub(in crate::gui) fn adjust_modeless_pos(
 
 /// Paints the themed border of an user control, if it has the proper styles.
 pub(in crate::gui) fn paint_control_borders(
-	hwnd: &HWND, wm_ncp: wm::NcPaint) -> AnyResult<()>
+	hwnd: &HWND,
+	wm_ncp: wm::NcPaint,
+) -> AnyResult<()>
 {
 	hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us
 

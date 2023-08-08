@@ -3,7 +3,7 @@
 use std::{fmt, hash, ops};
 
 use crate::co;
-use crate::kernel::decl::{FormatMessage, LANGID, WString};
+use crate::decl::*;
 
 /// A struct natively defined with its last element being an 1-element array.
 /// The struct is dynamically allocated to accomodate a variable number of

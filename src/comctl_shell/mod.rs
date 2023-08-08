@@ -1,4 +1,4 @@
-#![cfg_attr(docsrs, doc(cfg(all(feature = "comctl", feature = "shell"))))]
+#![cfg(all(feature = "comctl", feature = "shell"))]
 
 mod handles;
 

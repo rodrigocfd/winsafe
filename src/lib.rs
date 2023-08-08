@@ -1,5 +1,5 @@
 #![doc = include_str!("lib.md")]
-#![cfg_attr(docsrs, feature(doc_cfg))]
+#![cfg_attr(docsrs, feature(doc_auto_cfg))]
 
 // Declarations of macros used throughout the library.
 // No macros are public.
@@ -36,23 +36,26 @@
 
 // Declarations inside decl are public, placed at the root of the crate.
 
-#[cfg(feature = "comctl")] pub use comctl::decl::*;
-#[cfg(feature = "comdlg")] pub use comdlg::decl::*;
-#[cfg(feature = "dshow")] pub use dshow::decl::*;
-#[cfg(feature = "dwm")] pub use dwm::decl::*;
-#[cfg(feature = "dxgi")] pub use dxgi::decl::*;
-#[cfg(feature = "gdi")] pub use gdi::decl::*;
-#[cfg(feature = "kernel")] pub use kernel::decl::*;
-#[cfg(feature = "mf")] pub use mf::decl::*;
-#[cfg(feature = "ole")] pub use ole::decl::*;
-#[cfg(feature = "oleaut")] pub use oleaut::decl::*;
-#[cfg(feature = "shell")] pub use shell::decl::*;
-#[cfg(feature = "taskschd")] pub use taskschd::decl::*;
-#[cfg(feature = "user")] pub use user::decl::*;
-#[cfg(feature = "uxtheme")] pub use uxtheme::decl::*;
-#[cfg(feature = "version")] pub use version::decl::*;
-#[cfg(all(feature = "comctl", feature = "gdi"))] pub use comctl_gdi::decl::*;
-#[cfg(all(feature = "comctl", feature = "ole"))] pub use comctl_ole::decl::*;
+mod decl {
+	#[cfg(feature = "comctl")] pub use super::comctl::decl::*;
+	#[cfg(feature = "comdlg")] pub use super::comdlg::decl::*;
+	#[cfg(feature = "dshow")] pub use super::dshow::decl::*;
+	#[cfg(feature = "dwm")] pub use super::dwm::decl::*;
+	#[cfg(feature = "dxgi")] pub use super::dxgi::decl::*;
+	#[cfg(feature = "gdi")] pub use super::gdi::decl::*;
+	#[cfg(feature = "kernel")] pub use super::kernel::decl::*;
+	#[cfg(feature = "mf")] pub use super::mf::decl::*;
+	#[cfg(feature = "ole")] pub use super::ole::decl::*;
+	#[cfg(feature = "oleaut")] pub use super::oleaut::decl::*;
+	#[cfg(feature = "shell")] pub use super::shell::decl::*;
+	#[cfg(feature = "taskschd")] pub use super::taskschd::decl::*;
+	#[cfg(feature = "user")] pub use super::user::decl::*;
+	#[cfg(feature = "uxtheme")] pub use super::uxtheme::decl::*;
+	#[cfg(feature = "version")] pub use super::version::decl::*;
+	#[cfg(all(feature = "comctl", feature = "gdi"))] pub use super::comctl_gdi::decl::*;
+	#[cfg(all(feature = "comctl", feature = "ole"))] pub use super::comctl_ole::decl::*;
+}
+pub use decl::*;
 
 #[cfg(feature = "kernel")]
 pub mod co {
@@ -66,6 +69,7 @@ pub mod co {
 	//! Among these constant types, three are error types:
 	//! [`CDERR`](crate::co::CDERR), [`ERROR`](crate::co::ERROR) and
 	//! [`HRESULT`](crate::co::HRESULT).
+
 	#[cfg(feature = "comctl")] pub use super::comctl::co::*;
 	#[cfg(feature = "comdlg")] pub use super::comdlg::co::*;
 	#[cfg(feature = "dshow")] pub use super::dshow::co::*;
@@ -90,6 +94,7 @@ pub mod guard {
 	//! cleanup routines when the object goes out of scope.
 	//!
 	//! The guards are named after the functions they call.
+
 	#[cfg(feature = "comctl")] pub use super::comctl::guard::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::guard::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::guard::*;
@@ -147,6 +152,7 @@ pub mod msg {
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages),
 		//! whose constants have [`BM`](crate::co::BM) and
 		//! [`BCM`](crate::co::BCM) prefixes.
+
 		pub use super::super::user::messages::bm::*;
 		#[cfg(feature = "comctl")] pub use super::super::comctl::messages::bcm::*;
 	}
@@ -156,6 +162,7 @@ pub mod msg {
 		//! Combo box control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages),
 		//! whose constants have [`CB`](crate::co::CB) prefix.
+
 		pub use super::super::user::messages::cb::*;
 		#[cfg(feature = "comctl")] pub use super::super::comctl::messages::cb::*;
 	}
@@ -165,6 +172,7 @@ pub mod msg {
 		//! Date and time picker control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-messages),
 		//! whose constants have [`DTM`](crate::co::DTM) prefix.
+
 		pub use super::super::comctl::messages::dtm::*;
 		#[cfg(feature = "gdi")] pub use super::super::comctl_gdi::messages::dtm::*;
 	}
@@ -174,6 +182,7 @@ pub mod msg {
 		//! Edit control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-messages),
 		//! whose constants have [`EM`](crate::co::EM) prefix.
+
 		pub use super::super::user::messages::em::*;
 		#[cfg(feature = "comctl")] pub use super::super::comctl::messages::em::*;
 	}
@@ -183,6 +192,7 @@ pub mod msg {
 		//! Header control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages),
 		//! whose constants have [`HDM`](crate::co::HDM) prefix.
+
 		pub use super::super::comctl::messages::hdm::*;
 	}
 
@@ -191,6 +201,7 @@ pub mod msg {
 		//! ListBox control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-messages),
 		//! whose constants have [`LB`](crate::co::LB) prefix.
+
 		pub use super::super::user::messages::lb::*;
 	}
 
@@ -199,6 +210,7 @@ pub mod msg {
 		//! List view control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages),
 		//! whose constants have [`LVM`](crate::co::LVM) prefix.
+
 		pub use super::super::comctl::messages::lvm::*;
 		#[cfg(feature = "ole")] pub use super::super::comctl_ole::messages::lvm::*;
 	}
@@ -208,6 +220,7 @@ pub mod msg {
 		//! Month calendar control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-messages),
 		//! whose constants have [`MCM`](crate::co::MCM) prefix.
+
 		pub use super::super::comctl::messages::mcm::*;
 	}
 
@@ -216,6 +229,7 @@ pub mod msg {
 		//! Progress bar control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-progress-bar-control-reference-messages),
 		//! whose constants have [`PBM`](crate::co::PBM) prefix.
+
 		pub use super::super::comctl::messages::pbm::*;
 	}
 
@@ -224,6 +238,7 @@ pub mod msg {
 		//! Status bar control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages),
 		//! whose constants have [`SB`](crate::co::SB) prefix.
+
 		pub use super::super::comctl::messages::sb::*;
 	}
 
@@ -232,6 +247,7 @@ pub mod msg {
 		//! Static control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages),
 		//! whose constants have [`STM`](crate::co::STM) prefix.
+
 		pub use super::super::comctl::messages::stm::*;
 	}
 
@@ -240,6 +256,7 @@ pub mod msg {
 		//! Toolbar control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-messages),
 		//! whose constants have [`TBM`](crate::co::TBM) prefix.
+
 		pub use super::super::comctl::messages::tbm::*;
 		#[cfg(feature = "ole")] pub use super::super::comctl_ole::messages::tbm::*;
 	}
@@ -249,6 +266,7 @@ pub mod msg {
 		//! Tab control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-messages),
 		//! whose constants have [`TCM`](crate::co::TCM) prefix.
+
 		pub use super::super::comctl::messages::tcm::*;
 	}
 
@@ -259,6 +277,7 @@ pub mod msg {
 		//! whose constants have [`TRBM`](crate::co::TRBM) prefix.
 		//!
 		//! Originally has `TBM` prefix.
+
 		pub use super::super::comctl::messages::trbm::*;
 	}
 
@@ -267,6 +286,7 @@ pub mod msg {
 		//! Tree view control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages),
 		//! whose constants have [`TVM`](crate::co::TVM) prefix.
+
 		pub use super::super::comctl::messages::tvm::*;
 		#[cfg(feature = "ole")] pub use super::super::comctl_ole::messages::tvm::*;
 	}
@@ -276,6 +296,7 @@ pub mod msg {
 		//! UpDown control
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-messages),
 		//! whose constants have [`UDM`](crate::co::UDM) prefix.
+
 		pub use super::super::comctl::messages::udm::*;
 	}
 
@@ -284,6 +305,7 @@ pub mod msg {
 		//! Generic window
 		//! [messages](https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues),
 		//! whose constants have [`WM`](crate::co::WM) prefix.
+
 		pub use super::super::user::messages::wm::*;
 		#[cfg(feature = "comctl")] pub use super::super::comctl::messages::wm::*;
 		#[cfg(feature = "gdi")] pub use super::super::gdi::messages::wm::*;
@@ -302,6 +324,7 @@ pub mod prelude {
 	//! ```rust,no_run
 	//! use winsafe::prelude::*;
 	//! ```
+
 	#[cfg(feature = "comctl")] pub use super::comctl::traits::*;
 	#[cfg(feature = "dshow")] pub use super::dshow::traits::*;
 	#[cfg(feature = "dwm")] pub use super::dwm::traits::*;
@@ -326,6 +349,7 @@ pub mod prelude {
 #[cfg(feature = "ole")]
 pub mod vt {
 	//! Virtual tables of COM interfaces.
+
 	#[cfg(feature = "dshow")] pub use super::dshow::vt::*;
 	#[cfg(feature = "dxgi")] pub use super::dxgi::vt::*;
 	#[cfg(feature = "mf")] pub use super::mf::vt::*;

@@ -3,13 +3,9 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::events::WindowEventsAll;
-use crate::gui::privs::{adjust_modeless_pos, multiply_dpi_or_dtu};
-use crate::gui::raw_base::{Brush, Cursor, Icon, RawBase};
-use crate::kernel::decl::{AnyResult, WString};
-use crate::prelude::{GuiEvents, Handle};
-use crate::user::decl::{HMENU, HWND, IdMenu, POINT, SIZE, WNDCLASSEX};
+use crate::decl::*;
+use crate::gui::{*, events::*, privs::*};
+use crate::prelude::*;
 
 struct Obj { // actual fields of RawModeless
 	raw_base: RawBase,

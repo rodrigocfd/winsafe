@@ -1,10 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::gdi_ole::privs::HIMETRIC_PER_INCH;
-use crate::kernel::decl::MulDiv;
-use crate::prelude::gdi_Hdc;
-use crate::user::decl::HDC;
+use crate::decl::*;
+use crate::gdi_ole::privs::*;
+use crate::prelude::*;
 
 impl gdi_ole_Hdc for HDC {}
 

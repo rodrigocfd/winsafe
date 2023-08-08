@@ -1,10 +1,8 @@
 use crate::co;
-use crate::comctl::decl::{BUTTON_IMAGELIST, BUTTON_SPLITINFO};
-use crate::kernel::decl::{SysResult, WString};
-use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
-use crate::user::decl::{RECT, SIZE};
-use crate::user::privs::zero_as_badargs;
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`BCM_GETIDEALSIZE`](https://learn.microsoft.com/en-us/windows/win32/controls/bcm-getidealsize)
 /// message parameters.

@@ -2,12 +2,12 @@
 
 use std::marker::PhantomData;
 
-use crate::{co, comctl};
-use crate::comctl::guard::{ImageListDestroyGuard, ImageListEndDragGuard};
-use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
-use crate::prelude::Handle;
-use crate::user::decl::{COLORREF, HBITMAP, HICON, POINT, SIZE};
+use crate::co;
+use crate::comctl::ffi;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
 
 impl_handle! { HIMAGELIST;
 	/// Handle to an
@@ -31,10 +31,12 @@ pub trait comctl_Himagelist: Handle {
 	/// A copy of the bitmap is made and stored in the image list, so you're
 	/// free to release the original bitmap.
 	fn Add(&self,
-		hbmp_image: &HBITMAP, hbmp_mask: Option<&HBITMAP>) -> SysResult<u32>
+		hbmp_image: &HBITMAP,
+		hbmp_mask: Option<&HBITMAP>,
+	) -> SysResult<u32>
 	{
 		match unsafe {
-			comctl::ffi::ImageList_Add(
+			ffi::ImageList_Add(
 				self.ptr(),
 				hbmp_image.ptr(),
 				hbmp_mask.map_or(std::ptr::null_mut(), |h| h.ptr()),
@@ -60,10 +62,12 @@ pub trait comctl_Himagelist: Handle {
 	/// A copy of the bitmap is made and stored in the image list, so you're
 	/// free to release the original bitmap.
 	fn AddMasked(&self,
-		hbmp_image: &HBITMAP, color_mask: COLORREF) -> SysResult<u32>
+		hbmp_image: &HBITMAP,
+		color_mask: COLORREF,
+	) -> SysResult<u32>
 	{
 		match unsafe {
-			comctl::ffi::ImageList_AddMasked(
+			ffi::ImageList_AddMasked(
 				self.ptr(), hbmp_image.ptr(), color_mask.into(),
 			)
 		} {
@@ -99,11 +103,13 @@ pub trait comctl_Himagelist: Handle {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	fn BeginDrag(&self,
-		itrack: u32, hotspot: POINT) -> SysResult<ImageListEndDragGuard<'_>>
+		itrack: u32,
+		hotspot: POINT,
+	) -> SysResult<ImageListEndDragGuard<'_>>
 	{
 		unsafe {
 			bool_to_sysresult(
-				comctl::ffi::ImageList_BeginDrag(
+				ffi::ImageList_BeginDrag(
 					self.ptr(),
 					itrack as _,
 					hotspot.x, hotspot.y,
@@ -135,7 +141,7 @@ pub trait comctl_Himagelist: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				comctl::ffi::ImageList_Create(
+				ffi::ImageList_Create(
 					image_sz.cx, image_sz.cy,
 					flags.raw(),
 					initial_size,
@@ -153,7 +159,7 @@ pub trait comctl_Himagelist: Handle {
 	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
 	fn Destroy(&mut self) -> SysResult<()> {
 		let ret = bool_to_sysresult(
-			unsafe { comctl::ffi::ImageList_Destroy(self.ptr()) },
+			unsafe { ffi::ImageList_Destroy(self.ptr()) },
 		);
 		*self = Self::INVALID;
 		ret
@@ -162,17 +168,13 @@ pub trait comctl_Himagelist: Handle {
 	/// [`ImageList_DragMove`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragmove)
 	/// function.
 	fn DragMove(&self, x: i32, y: i32) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe { comctl::ffi::ImageList_DragMove(self.ptr(), x, y) },
-		)
+		bool_to_sysresult(unsafe { ffi::ImageList_DragMove(self.ptr(), x, y) })
 	}
 
 	/// [`ImageList_DragShowNolock`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragshownolock)
 	/// function.
 	fn DragShowNolock(show: bool) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe { comctl::ffi::ImageList_DragShowNolock(show as _) },
-		)
+		bool_to_sysresult(unsafe { ffi::ImageList_DragShowNolock(show as _) })
 	}
 
 	/// [`ImageList_GetIconSize`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_geticonsize)
@@ -182,9 +184,7 @@ pub trait comctl_Himagelist: Handle {
 		let mut sz = SIZE::default();
 		bool_to_sysresult(
 			unsafe {
-				comctl::ffi::ImageList_GetIconSize(
-					self.ptr(), &mut sz.cx, &mut sz.cy,
-				)
+				ffi::ImageList_GetIconSize(self.ptr(), &mut sz.cx, &mut sz.cy)
 			}
 		).map(|_| sz)
 	}
@@ -193,7 +193,7 @@ pub trait comctl_Himagelist: Handle {
 	/// function.
 	#[must_use]
 	fn GetImageCount(&self) -> u32 {
-		unsafe { comctl::ffi::ImageList_GetImageCount(self.ptr()) as _ }
+		unsafe { ffi::ImageList_GetImageCount(self.ptr()) as _ }
 	}
 
 	/// [`ImageList_Remove`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_remove)
@@ -201,9 +201,7 @@ pub trait comctl_Himagelist: Handle {
 	fn Remove(&self, index: Option<u32>) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
-				comctl::ffi::ImageList_Remove(
-					self.ptr(), index.map_or(-1, |i| i as _),
-				)
+				ffi::ImageList_Remove(self.ptr(), index.map_or(-1, |i| i as _))
 			},
 		)
 	}
@@ -214,10 +212,12 @@ pub trait comctl_Himagelist: Handle {
 	/// Note that a copy of the bitmap is made, and this copy is then stored.
 	/// You're still responsible for freeing the original bitmap.
 	fn ReplaceIcon(&self,
-		index: Option<u32>, hicon_new: &HICON) -> SysResult<u32>
+		index: Option<u32>,
+		hicon_new: &HICON,
+	) -> SysResult<u32>
 	{
 		match unsafe {
-			comctl::ffi::ImageList_ReplaceIcon(
+			ffi::ImageList_ReplaceIcon(
 				self.ptr(),
 				index.map_or(-1, |i| i as _),
 				hicon_new.ptr(),
@@ -232,9 +232,7 @@ pub trait comctl_Himagelist: Handle {
 	/// function.
 	fn SetImageCount(&self, new_count: u32) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe {
-				comctl::ffi::ImageList_SetImageCount(self.ptr(), new_count)
-			},
+			unsafe { ffi::ImageList_SetImageCount(self.ptr(), new_count) },
 		)
 	}
 }

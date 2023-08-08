@@ -1,17 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, kernel};
-use crate::kernel::decl::{
-	GetLastError, HEAPLIST32, MODULEENTRY32, PROCESSENTRY32, SysResult,
-	THREADENTRY32,
-};
-use crate::kernel::guard::CloseHandleGuard;
-use crate::kernel::iterators::{
-	HprocesslistHeapIter, HprocesslistModuleIter, HprocesslistProcessIter,
-	HprocesslistThreadIter,
-};
-use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::Handle;
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::{ffi, iterators::*, privs::*};
+use crate::prelude::*;
 
 impl_handle! { HPROCESSLIST;
 	/// Handle to a process list
@@ -163,7 +156,7 @@ pub trait kernel_Hprocesslist: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				kernel::ffi::CreateToolhelp32Snapshot(
+				ffi::CreateToolhelp32Snapshot(
 					flags.raw(),
 					th32_process_id.unwrap_or_default(),
 				),
@@ -183,9 +176,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// which is simpler.
 	#[must_use]
 	fn Heap32ListFirst(&mut self, hl: &mut HEAPLIST32) -> SysResult<bool> {
-		match unsafe {
-			kernel::ffi::Heap32ListFirst(self.ptr(), hl as *mut _ as _)
-		} {
+		match unsafe { ffi::Heap32ListFirst(self.ptr(), hl as *mut _ as _) } {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
 					*self = Self::INVALID;
@@ -209,9 +200,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// which is simpler.
 	#[must_use]
 	fn Heap32ListNext(&mut self, hl: &mut HEAPLIST32) -> SysResult<bool> {
-		match unsafe {
-			kernel::ffi::Heap32ListNext(self.ptr(), hl as *mut _ as _)
-		} {
+		match unsafe { ffi::Heap32ListNext(self.ptr(), hl as *mut _ as _) } {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
 					*self = Self::INVALID;
@@ -235,9 +224,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// which is simpler.
 	#[must_use]
 	fn Module32First(&mut self, me: &mut MODULEENTRY32) -> SysResult<bool> {
-		match unsafe {
-			kernel::ffi::Module32FirstW(self.ptr(), me as *mut _ as _)
-		} {
+		match unsafe { ffi::Module32FirstW(self.ptr(), me as *mut _ as _) } {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
 					*self = Self::INVALID;
@@ -261,9 +248,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// which is simpler.
 	#[must_use]
 	fn Module32Next(&mut self, me: &mut MODULEENTRY32) -> SysResult<bool> {
-		match unsafe {
-			kernel::ffi::Module32NextW(self.ptr(), me as *mut _ as _)
-		} {
+		match unsafe { ffi::Module32NextW(self.ptr(), me as *mut _ as _) } {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
 					*self = Self::INVALID;
@@ -287,9 +272,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// which is simpler.
 	#[must_use]
 	fn Process32First(&mut self, pe: &mut PROCESSENTRY32) -> SysResult<bool> {
-		match unsafe {
-			kernel::ffi::Process32FirstW(self.ptr(), pe as *mut _ as _)
-		} {
+		match unsafe { ffi::Process32FirstW(self.ptr(), pe as *mut _ as _) } {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
 					*self = Self::INVALID;
@@ -313,9 +296,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// which is simpler.
 	#[must_use]
 	fn Process32Next(&mut self, pe: &mut PROCESSENTRY32) -> SysResult<bool> {
-		match unsafe {
-			kernel::ffi::Process32NextW(self.ptr(), pe as *mut _ as _)
-		} {
+		match unsafe { ffi::Process32NextW(self.ptr(), pe as *mut _ as _) } {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
 					*self = Self::INVALID;
@@ -339,9 +320,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// which is simpler.
 	#[must_use]
 	fn Thread32First(&mut self, te: &mut THREADENTRY32) -> SysResult<bool> {
-		match unsafe {
-			kernel::ffi::Thread32First(self.ptr(), te as *mut _ as _)
-		} {
+		match unsafe { ffi::Thread32First(self.ptr(), te as *mut _ as _) } {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
 					*self = Self::INVALID;
@@ -365,9 +344,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// which is simpler.
 	#[must_use]
 	fn Thread32Next(&mut self, te: &mut THREADENTRY32) -> SysResult<bool> {
-		match unsafe {
-			kernel::ffi::Thread32Next(self.ptr(), te as *mut _ as _)
-		} {
+		match unsafe { ffi::Thread32Next(self.ptr(), te as *mut _ as _) } {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => {
 					*self = Self::INVALID;

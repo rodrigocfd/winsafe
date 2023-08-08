@@ -1,11 +1,8 @@
 use crate::co;
-use crate::kernel::decl::{
-	HIWORD, LANGID, LOWORD, MAKEDWORD, SysResult, WString,
-};
-use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
-use crate::user::decl::{COMBOBOXINFO, RECT};
-use crate::user::privs::{CB_ERR, CB_ERRSPACE, zero_as_badargs};
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`CB_ADDSTRING`](https://learn.microsoft.com/en-us/windows/win32/controls/cb-addstring)
 /// message parameters.

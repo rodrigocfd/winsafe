@@ -1,12 +1,10 @@
 #![allow(non_snake_case)]
 
-use crate::{co, oleaut};
-use crate::kernel::decl::{SysResult, SYSTEMTIME, WString};
-use crate::ole::decl::{CoTaskMemFree, HrResult, IPicture};
-use crate::ole::privs::ok_to_hrresult;
-use crate::oleaut::decl::PROPERTYKEY;
-use crate::prelude::{ole_IStream, ole_IUnknown};
-use crate::user::decl::COLORREF;
+use crate::co;
+use crate::decl::*;
+use crate::ole::privs::*;
+use crate::oleaut::ffi;
+use crate::prelude::*;
 
 /// [`OleLoadPicture`](https://learn.microsoft.com/en-us/windows/win32/api/olectl/nf-olectl-oleloadpicture)
 /// function.
@@ -35,7 +33,7 @@ pub fn OleLoadPicture(
 	let mut queried = unsafe { IPicture::null() };
 	ok_to_hrresult(
 		unsafe {
-			oleaut::ffi::OleLoadPicture(
+			ffi::OleLoadPicture(
 				stream.ptr() as _,
 				size.unwrap_or_default() as _,
 				!keep_original_format as _, // note: reversed
@@ -60,7 +58,7 @@ pub fn OleLoadPicturePath(
 	let mut queried = unsafe { IPicture::null() };
 	ok_to_hrresult(
 		unsafe {
-			oleaut::ffi::OleLoadPicturePath(
+			ffi::OleLoadPicturePath(
 				WString::from_str(path).as_ptr(),
 				std::ptr::null_mut(),
 				0,
@@ -79,7 +77,7 @@ pub fn PSGetNameFromPropertyKey(prop_key: &PROPERTYKEY) -> HrResult<String> {
 	let mut pstr = std::ptr::null_mut::<u16>();
 	ok_to_hrresult(
 		unsafe {
-			oleaut::ffi::PSGetNameFromPropertyKey(
+			ffi::PSGetNameFromPropertyKey(
 				prop_key as *const _ as _,
 				&mut pstr,
 			)
@@ -101,7 +99,7 @@ pub fn PSGetNameFromPropertyKey(prop_key: &PROPERTYKEY) -> HrResult<String> {
 pub fn SystemTimeToVariantTime(st: &SYSTEMTIME) -> SysResult<f64> {
 	let mut double = f64::default();
 	match unsafe {
-		oleaut::ffi::SystemTimeToVariantTime(st as *const _ as _, &mut double)
+		ffi::SystemTimeToVariantTime(st as *const _ as _, &mut double)
 	} {
 		0 => Err(co::ERROR::INVALID_PARAMETER),
 		_ => Ok(double),
@@ -113,10 +111,12 @@ pub fn SystemTimeToVariantTime(st: &SYSTEMTIME) -> SysResult<f64> {
 /// [`SystemTimeToVariantTime`](SystemTimeToVariantTime).
 #[must_use]
 pub fn VariantTimeToSystemTime(
-	var_time: f64, st: &mut SYSTEMTIME) -> SysResult<()>
+	var_time: f64,
+	st: &mut SYSTEMTIME,
+) -> SysResult<()>
 {
 	match unsafe {
-		oleaut::ffi::VariantTimeToSystemTime(var_time, st as *mut _ as _)
+		ffi::VariantTimeToSystemTime(var_time, st as *mut _ as _)
 	} {
 		0 => Err(co::ERROR::INVALID_PARAMETER),
 		_ => Ok(()),

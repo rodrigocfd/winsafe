@@ -1,4 +1,4 @@
-#![cfg_attr(docsrs, doc(cfg(all(feature = "gdi", feature = "mf"))))]
+#![cfg(all(feature = "gdi", feature = "mf"))]
 
 mod com_interfaces;
 

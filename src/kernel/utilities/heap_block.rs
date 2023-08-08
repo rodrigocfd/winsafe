@@ -1,7 +1,7 @@
 use crate::co;
-use crate::kernel::decl::{HHEAP, SysResult};
-use crate::kernel::guard::HeapFreeGuard;
-use crate::prelude::{kernel_Hheap, Handle};
+use crate::decl::*;
+use crate::guard::*;
+use crate::prelude::*;
 
 /// Manages an [`HHEAP`](crate::HHEAP) memory block which uses the default heap
 /// of the calling process – that is, calls
@@ -96,13 +96,13 @@ impl HeapBlock {
 	/// Returns a slice over the allocated memory block.
 	#[must_use]
 	pub const fn as_slice(&self) -> &[u8] {
-		unsafe { std::slice::from_raw_parts(self.pmem.cast(), self.sz) }
+		unsafe { std::slice::from_raw_parts(self.pmem as _, self.sz) }
 	}
 
 	/// Returns a mutable slice over the allocated memory block.
 	#[must_use]
 	pub fn as_mut_slice(&mut self) -> &mut [u8] {
-		unsafe { std::slice::from_raw_parts_mut(self.pmem.cast(), self.sz) }
+		unsafe { std::slice::from_raw_parts_mut(self.pmem as _, self.sz) }
 	}
 
 	/// Returns a slice over the allocated memory block, aligned to the given
@@ -114,7 +114,7 @@ impl HeapBlock {
 	#[must_use]
 	pub const unsafe fn as_slice_aligned<T>(&self) -> &[T] {
 		std::slice::from_raw_parts(
-			self.pmem.cast(),
+			self.pmem as _,
 			self.sz / std::mem::size_of::<T>(),
 		)
 	}
@@ -128,7 +128,7 @@ impl HeapBlock {
 	#[must_use]
 	pub unsafe fn as_mut_slice_aligned<T>(&mut self) -> &mut [T] {
 		std::slice::from_raw_parts_mut(
-			self.pmem.cast(),
+			self.pmem as _,
 			self.sz / std::mem::size_of::<T>(),
 		)
 	}

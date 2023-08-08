@@ -1,9 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR};
-use crate::ole::decl::HrResult;
-use crate::prelude::{oleaut_IDispatch, taskschd_IAction};
-use crate::vt::IActionVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IExecAction`](crate::IExecAction) virtual table.
 #[repr(C)]

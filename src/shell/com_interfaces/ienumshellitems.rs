@@ -1,13 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::{COMPTR, HRES};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
-use crate::prelude::ole_IUnknown;
-use crate::shell::decl::IShellItem;
-use crate::shell::iterators::IenumshellitemsIter;
-use crate::vt::IUnknownVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::shell::iterators::*;
+use crate::vt::*;
 
 /// [`IEnumShellItems`](crate::IEnumShellItems) virtual table.
 #[repr(C)]

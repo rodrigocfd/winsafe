@@ -1,9 +1,8 @@
 use crate::co;
-use crate::comctl::decl::EDITBALLOONTIP;
-use crate::kernel::decl::{SysResult, WString};
-use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
-use crate::user::privs::zero_as_badargs;
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`EM_GETCUEBANNER`](https://learn.microsoft.com/en-us/windows/win32/controls/em-getcuebanner)
 /// message parameters.

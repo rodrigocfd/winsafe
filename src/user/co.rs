@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
-use crate::co::{ACCESS_RIGHTS, STANDARD_RIGHTS};
+use crate::co::*;
 
 const_bitflag! { ACCELF: u8;
 	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`).

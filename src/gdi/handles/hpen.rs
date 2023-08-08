@@ -1,12 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, gdi};
-use crate::gdi::decl::LOGPEN;
-use crate::gdi::guard::DeleteObjectGuard;
-use crate::kernel::decl::SysResult;
-use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::{GdiObject, GdiObjectSelect, Handle};
-use crate::user::decl::COLORREF;
+use crate::co;
+use crate::decl::*;
+use crate::gdi::ffi;
+use crate::guard::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
 
 impl_handle! { HPEN;
 	/// Handle to a
@@ -38,7 +37,7 @@ pub trait gdi_Hpen: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::CreatePen(style.raw(), width, color.into()),
+				ffi::CreatePen(style.raw(), width, color.into()),
 			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -48,9 +47,8 @@ pub trait gdi_Hpen: Handle {
 	#[must_use]
 	fn CreatePenIndirect(lp: &mut LOGPEN) -> SysResult<DeleteObjectGuard<HPEN>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				gdi::ffi::CreatePenIndirect(lp as *const _ as _),
-			).map(|h| DeleteObjectGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreatePenIndirect(lp as *const _ as _))
+				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -58,6 +56,6 @@ pub trait gdi_Hpen: Handle {
 	/// function.
 	#[must_use]
 	fn GetStockObject(sp: co::STOCK_PEN) -> SysResult<HPEN> {
-		ptr_to_sysresult_handle(unsafe { gdi::ffi::GetStockObject(sp.raw()) })
+		ptr_to_sysresult_handle(unsafe { ffi::GetStockObject(sp.raw()) })
 	}
 }

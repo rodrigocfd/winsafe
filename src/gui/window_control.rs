@@ -1,13 +1,8 @@
 use std::any::Any;
 
-use crate::gui::base::Base;
-use crate::gui::dlg_control::DlgControl;
-use crate::gui::events::WindowEventsAll;
-use crate::gui::layout_arranger::{Horz, Vert};
-use crate::gui::raw_control::{RawControl, WindowControlOpts};
-use crate::kernel::decl::AnyResult;
-use crate::prelude::{GuiChild, GuiParent, GuiThread, GuiWindow, Handle};
-use crate::user::decl::{HWND, POINT};
+use crate::decl::*;
+use crate::gui::{*, events::*, privs::*};
+use crate::prelude::*;
 
 /// Keeps a raw or dialog window.
 #[derive(Clone)]

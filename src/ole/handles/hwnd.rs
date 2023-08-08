@@ -1,10 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::ole;
-use crate::ole::decl::HrResult;
-use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{ole_IDropTarget, user_Hwnd};
-use crate::user::decl::HWND;
+use crate::decl::*;
+use crate::ole::ffi;
+use crate::ole::privs::*;
+use crate::prelude::*;
 
 impl ole_Hwnd for HWND {}
 
@@ -20,18 +19,17 @@ pub trait ole_Hwnd: user_Hwnd {
 	/// [`RegisterDragDrop`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-registerdragdrop)
 	/// function.
 	fn RegisterDragDrop(&self,
-		drop_target: &impl ole_IDropTarget) -> HrResult<()>
+		drop_target: &impl ole_IDropTarget,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
-			unsafe {
-				ole::ffi::RegisterDragDrop(self.ptr(), drop_target.ptr() as _)
-			},
+			unsafe { ffi::RegisterDragDrop(self.ptr(), drop_target.ptr() as _) },
 		)
 	}
 
 	/// [`RevokeDragDrop`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-revokedragdrop)
 	/// function.
 	fn RevokeDragDrop(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { ole::ffi::RevokeDragDrop(self.ptr()) })
+		ok_to_hrresult(unsafe { ffi::RevokeDragDrop(self.ptr()) })
 	}
 }

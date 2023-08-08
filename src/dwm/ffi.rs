@@ -1,4 +1,4 @@
-use crate::kernel::ffi_types::{BOOL, HANDLE, HRES, PCVOID};
+use crate::kernel::ffi_types::*;
 
 extern_sys! { "dwmapi";
 	DwmEnableMMCSS(BOOL) -> HRES

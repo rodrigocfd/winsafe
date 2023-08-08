@@ -1,17 +1,8 @@
 use crate::co;
-use crate::comctl::decl::{
-	HIMAGELIST, LVBKIMAGE, LVCOLUMN, LVFINDINFO, LVFOOTERINFO, LVFOOTERITEM,
-	LVGROUP, LVGROUPMETRICS, LVHITTESTINFO, LVINSERTGROUPSORTED, LVINSERTMARK,
-	LVITEM, LVITEMINDEX, LVSETINFOTIP, LVTILEINFO, LVTILEVIEWINFO, PFNLVCOMPARE,
-	PFNLVGROUPCOMPARE,
-};
-use crate::kernel::decl::{MAKEDWORD, SysResult, WString};
-use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
-use crate::user::decl::{COLORREF, HCURSOR, HWND, POINT, RECT, SIZE};
-use crate::user::privs::{
-	minus1_as_badargs, minus1_as_none, zero_as_badargs, zero_as_none,
-};
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`LVM_APPROXIMATEVIEWRECT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-approximateviewrect)
 /// message parameters.

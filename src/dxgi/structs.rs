@@ -1,9 +1,8 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::decl::LUID;
-use crate::kernel::ffi_types::BOOL;
-use crate::user::decl::{HMONITOR, HWND, RECT};
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
 
 /// [`DXGI_ADAPTER_DESC`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_adapter_desc)
 /// struct.

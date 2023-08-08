@@ -1,14 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::decl::{GetLastError, HINSTANCE, IdStr, SysResult, WString};
-use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::{Handle, kernel_Hinstance};
-use crate::user;
-use crate::user::decl::{
-	ATOM, DLGPROC, DLGTEMPLATE, HACCEL, HMENU, HWND, IdIdcStr, IdIdiStr,
-	WNDCLASSEX,
-};
-use crate::user::guard::{DestroyCursorGuard, DestroyIconGuard};
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
+use crate::user::ffi;
 
 impl user_Hinstance for HINSTANCE {}
 
@@ -36,7 +32,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	{
 		ptr_to_sysresult_handle(
 			unsafe {
-				user::ffi::CreateDialogParamW(
+				ffi::CreateDialogParamW(
 					self.ptr(),
 					resource_id.as_ptr(),
 					hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr()),
@@ -61,7 +57,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	) -> SysResult<isize>
 	{
 		match unsafe {
-			user::ffi::DialogBoxIndirectParamW(
+			ffi::DialogBoxIndirectParamW(
 				self.ptr(),
 				dialog_template as *const _ as _,
 				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr()),
@@ -89,7 +85,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	) -> SysResult<isize>
 	{
 		match unsafe {
-			user::ffi::DialogBoxParamW(
+			ffi::DialogBoxParamW(
 				self.ptr(),
 				resource_id.as_ptr(),
 				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr()),
@@ -119,10 +115,12 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	fn GetClassInfoEx(&self,
-		class_name: &str, wcx: &mut WNDCLASSEX) -> SysResult<ATOM>
+		class_name: &str,
+		wcx: &mut WNDCLASSEX,
+	) -> SysResult<ATOM>
 	{
 		match unsafe {
-			user::ffi::GetClassInfoExW(
+			ffi::GetClassInfoExW(
 				self.ptr(),
 				WString::from_str(class_name).as_ptr(),
 				wcx as *mut _ as _,
@@ -138,9 +136,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	#[must_use]
 	fn LoadAccelerators(&self, table_name: IdStr) -> SysResult<HACCEL> {
 		ptr_to_sysresult_handle(
-			unsafe {
-				user::ffi::LoadAcceleratorsW(self.ptr(), table_name.as_ptr())
-			},
+			unsafe { ffi::LoadAcceleratorsW(self.ptr(), table_name.as_ptr()) },
 		)
 	}
 
@@ -161,11 +157,12 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// ```
 	#[must_use]
 	fn LoadCursor(&self,
-		resource_id: IdIdcStr) -> SysResult<DestroyCursorGuard>
+		resource_id: IdIdcStr,
+	) -> SysResult<DestroyCursorGuard>
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				user::ffi::LoadCursorW(self.ptr(), resource_id.as_ptr()),
+				ffi::LoadCursorW(self.ptr(), resource_id.as_ptr()),
 			).map(|h| DestroyCursorGuard::new(h))
 		}
 	}
@@ -188,9 +185,8 @@ pub trait user_Hinstance: kernel_Hinstance {
 	#[must_use]
 	fn LoadIcon(&self, icon_id: IdIdiStr) -> SysResult<DestroyIconGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				user::ffi::LoadIconW(self.ptr(), icon_id.as_ptr()),
-			).map(|h| DestroyIconGuard::new(h))
+			ptr_to_sysresult_handle(ffi::LoadIconW(self.ptr(), icon_id.as_ptr()))
+				.map(|h| DestroyIconGuard::new(h))
 		}
 	}
 
@@ -199,7 +195,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	#[must_use]
 	fn LoadMenu(&self, resource_id: IdStr) -> SysResult<HMENU> {
 		ptr_to_sysresult_handle(
-			unsafe { user::ffi::LoadMenuW(self.ptr(), resource_id.as_ptr()) },
+			unsafe { ffi::LoadMenuW(self.ptr(), resource_id.as_ptr()) },
 		)
 	}
 
@@ -209,7 +205,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	fn LoadString(&self, id: u16) -> SysResult<String> {
 		let mut pdata: *const u16 = std::ptr::null_mut();
 		match unsafe {
-			user::ffi::LoadStringW(
+			ffi::LoadStringW(
 				self.ptr(),
 				id as _,
 				&mut pdata as *mut _ as  _, 0,

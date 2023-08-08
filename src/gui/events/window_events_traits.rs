@@ -1,11 +1,9 @@
 use std::rc::Rc;
 
 use crate::co;
-use crate::gdi::decl::HFONT;
-use crate::kernel::decl::AnyResult;
-use crate::msg::{wm, WndMsg};
-use crate::prelude::{Handle, MsgSendRecv};
-use crate::user::decl::{HICON, HMENU};
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
 
 /// Exposes methods to handle the basic window messages, plus timer and native
 /// control notifications.

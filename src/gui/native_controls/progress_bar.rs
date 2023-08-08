@@ -4,20 +4,10 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::events::WindowEvents;
-use crate::gui::layout_arranger::{Horz, Vert};
-use crate::gui::native_controls::base_native_control::{
-	BaseNativeControl, OptsResz,
-};
-use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
-use crate::kernel::decl::SysResult;
-use crate::msg::pbm;
-use crate::prelude::{
-	GuiChild, GuiEvents, GuiNativeControl, GuiParent, GuiWindow, NativeBitflag,
-	user_Hwnd,
-};
-use crate::user::decl::{HWND, POINT, SIZE};
+use crate::decl::*;
+use crate::gui::{*, events::*, privs::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 struct Obj { // actual fields of ProgressBar
 	base: BaseNativeControl,

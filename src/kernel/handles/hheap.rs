@@ -1,15 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, kernel};
-use crate::kernel::decl::{
-	GetLastError, PROCESS_HEAP_ENTRY, SetLastError, SysResult,
-};
-use crate::kernel::guard::{HeapDestroyGuard, HeapFreeGuard, HeapUnlockGuard};
-use crate::kernel::iterators::HheapHeapwalkIter;
-use crate::kernel::privs::{
-	bool_to_sysresult, ptr_to_sysresult, ptr_to_sysresult_handle,
-};
-use crate::prelude::Handle;
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::{ffi, iterators::*, privs::*};
+use crate::prelude::*;
 
 impl_handle! { HHEAP;
 	/// Handle to a
@@ -38,16 +33,14 @@ pub trait kernel_Hheap: Handle {
 	/// function.
 	#[must_use]
 	fn GetProcessHeap() -> SysResult<HHEAP> {
-		ptr_to_sysresult_handle(unsafe { kernel::ffi::GetProcessHeap() })
+		ptr_to_sysresult_handle(unsafe { ffi::GetProcessHeap() })
 	}
 
 	/// [`GetProcessHeaps`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-getprocessheaps)
 	/// function.
 	#[must_use]
 	fn GetProcessHeaps() -> SysResult<Vec<HHEAP>> {
-		let num = match unsafe {
-			kernel::ffi::GetProcessHeaps(0, std::ptr::null_mut())
-		} {
+		let num = match unsafe { ffi::GetProcessHeaps(0, std::ptr::null_mut()) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => return Ok(Vec::default()), // actual zero heaps
 				err => return Err(err),
@@ -60,9 +53,7 @@ pub trait kernel_Hheap: Handle {
 			.collect::<Vec<_>>();
 
 		bool_to_sysresult(
-			unsafe {
-				kernel::ffi::GetProcessHeaps(num, buf.as_mut_ptr() as _)
-			} as _,
+			unsafe { ffi::GetProcessHeaps(num, buf.as_mut_ptr() as _) } as _,
 		).map(|_| buf)
 	}
 
@@ -77,7 +68,7 @@ pub trait kernel_Hheap: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				kernel::ffi::HeapCreate(
+				ffi::HeapCreate(
 					options.unwrap_or_default().raw(),
 					initial_size,
 					maximum_size,
@@ -123,7 +114,7 @@ pub trait kernel_Hheap: Handle {
 		SetLastError(co::ERROR::SUCCESS);
 		unsafe {
 			ptr_to_sysresult(
-				kernel::ffi::HeapAlloc(
+				ffi::HeapAlloc(
 					self.ptr(),
 					flags.unwrap_or_default().raw(),
 					num_bytes,
@@ -136,7 +127,7 @@ pub trait kernel_Hheap: Handle {
 	/// function.
 	fn HeapCompact(&self, flags: Option<co::HEAP_SIZE>) -> SysResult<usize> {
 		match unsafe {
-			kernel::ffi::HeapCompact(self.ptr(), flags.unwrap_or_default().raw())
+			ffi::HeapCompact(self.ptr(), flags.unwrap_or_default().raw())
 		} {
 			0 => Err(GetLastError()),
 			n => Ok(n),
@@ -177,7 +168,7 @@ pub trait kernel_Hheap: Handle {
 	#[must_use]
 	fn HeapLock(&self) -> SysResult<HeapUnlockGuard<'_, Self>> {
 		unsafe {
-			bool_to_sysresult(kernel::ffi::HeapLock(self.ptr()))
+			bool_to_sysresult(ffi::HeapLock(self.ptr()))
 				.map(|_| HeapUnlockGuard::new(self))
 		}
 	}
@@ -211,7 +202,7 @@ pub trait kernel_Hheap: Handle {
 		SetLastError(co::ERROR::SUCCESS);
 		ptr_to_sysresult(
 			unsafe {
-				kernel::ffi::HeapReAlloc(
+				ffi::HeapReAlloc(
 					self.ptr(),
 					flags.unwrap_or_default().raw(),
 					mem.as_ptr() as _,
@@ -236,7 +227,7 @@ pub trait kernel_Hheap: Handle {
 		const FAILED: usize = -1isize as usize;
 
 		match unsafe {
-			kernel::ffi::HeapSize(
+			ffi::HeapSize(
 				self.ptr(),
 				flags.unwrap_or_default().raw(),
 				mem.as_ptr() as _,
@@ -270,7 +261,7 @@ pub trait kernel_Hheap: Handle {
 	{
 		SetLastError(co::ERROR::SUCCESS);
 		unsafe {
-			kernel::ffi::HeapValidate(
+			ffi::HeapValidate(
 				self.ptr(),
 				flags.unwrap_or_default().raw(),
 				mem.map_or(std::ptr::null_mut(), |mem| mem.as_ptr() as _),

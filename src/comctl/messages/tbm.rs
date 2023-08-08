@@ -1,16 +1,9 @@
 use crate::co;
-use crate::comctl::decl::{
-	COLORSCHEME, HIMAGELIST, IdxCbNone, ResStrs, TBADDBITMAP, TBBUTTON,
-	TBBUTTONINFO, TBINSERTMARK, TBMETRICS, TBREPLACEBITMAP, TBSAVEPARAMS,
-};
-use crate::comctl::privs::HINST_COMMCTRL;
-use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult, WString};
-use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
-use crate::user::decl::{COLORREF, HWND, POINT, RECT, SIZE};
-use crate::user::privs::{
-	minus1_as_badargs, minus1_as_none, zero_as_badargs, zero_as_none,
-};
+use crate::comctl::privs::*;
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`TB_ADDBITMAP`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-addbitmap)
 /// message parameters.

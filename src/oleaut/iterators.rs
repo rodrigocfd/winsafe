@@ -1,6 +1,5 @@
-use crate::ole::decl::HrResult;
-use crate::oleaut::decl::PROPERTYKEY;
-use crate::prelude::oleaut_IPropertyStore;
+use crate::decl::*;
+use crate::prelude::*;
 
 pub(in crate::oleaut) struct IpropertystoreIter<'a, I>
 	where I: oleaut_IPropertyStore,

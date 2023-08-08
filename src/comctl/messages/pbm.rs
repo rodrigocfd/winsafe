@@ -1,11 +1,9 @@
 use crate::co;
-use crate::comctl::decl::PBRANGE;
-use crate::comctl::privs::CLR_DEFAULT;
-use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult};
-use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
-use crate::user::decl::COLORREF;
-use crate::user::privs::zero_as_badargs;
+use crate::comctl::privs::*;
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`PBM_DELTAPOS`](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-deltapos)
 /// message parameters.

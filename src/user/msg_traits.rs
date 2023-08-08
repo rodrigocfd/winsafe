@@ -1,4 +1,4 @@
-use crate::user::messages::WndMsg;
+use crate::msg::*;
 
 /// Parameters of a message which can be sent. Implemented by [all undefined
 /// messages](crate::msg).

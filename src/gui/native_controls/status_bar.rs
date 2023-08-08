@@ -5,23 +5,15 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::events::{StatusBarEvents, WindowEvents};
-use crate::gui::native_controls::base_native_control::BaseNativeControl;
-use crate::gui::native_controls::status_bar_parts::StatusBarParts;
-use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu};
-use crate::kernel::decl::SysResult;
-use crate::msg::{sb, wm};
-use crate::prelude::{
-	GuiChild, GuiEvents, GuiNativeControl, GuiNativeControlEvents, GuiParent,
-	GuiWindow, Handle, MsgSend, NativeBitflag, user_Hwnd,
-};
-use crate::user::decl::{HWND, POINT, SIZE};
+use crate::decl::*;
+use crate::gui::{events::*, privs::*, spec::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 struct Obj { // actual fields of StatusBar
 	base: BaseNativeControl,
 	events: StatusBarEvents,
-	parts_info: UnsafeCell<Vec<StatusBarPart>>,
+	parts_info: UnsafeCell<Vec<SbPart>>,
 	right_edges: UnsafeCell<Vec<i32>>, // buffer to speed up resize calls
 	_pin: PhantomPinned,
 }
@@ -29,7 +21,7 @@ struct Obj { // actual fields of StatusBar
 /// Used when adding the parts in
 /// [`StatusBar::new`](crate::gui::StatusBar::new).
 #[derive(Clone, Copy)]
-pub enum StatusBarPart {
+pub enum SbPart {
 	/// A part that has a fixed size, in pixels.
 	///
 	/// Will be adjusted to match current system DPI.
@@ -112,14 +104,14 @@ impl StatusBar {
 	/// let status_bar = gui::StatusBar::new(
 	///     &wnd,
 	///     &[
-	///         gui::StatusBarPart::Fixed(200),      // 200 pixels, never resizes
-	///         gui::StatusBarPart::Proportional(1), // these two will fill the remaning space
-	///         gui::StatusBarPart::Proportional(1),
+	///         gui::SbPart::Fixed(200),      // 200 pixels, never resizes
+	///         gui::SbPart::Proportional(1), // these two will fill the remaning space
+	///         gui::SbPart::Proportional(1),
 	///     ],
 	/// );
 	/// ```
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, parts: &[StatusBarPart]) -> Self {
+	pub fn new(parent: &impl GuiParent, parts: &[SbPart]) -> Self {
 		let parent_ref = unsafe { Base::from_guiparent(parent) };
 		let ctrl_id = auto_ctrl_id();
 
@@ -154,7 +146,7 @@ impl StatusBar {
 	fn create(&self) -> SysResult<()> {
 		let parts_info = unsafe { &mut *self.0.parts_info.get() };
 		for part in parts_info.iter_mut() {
-			if let StatusBarPart::Fixed(width) = part { // adjust fixed-width parts to DPI
+			if let SbPart::Fixed(width) = part { // adjust fixed-width parts to DPI
 				let mut col_cx = SIZE::new(*width as _, 0);
 				multiply_dpi_or_dtu(self.0.base.parent(), None, Some(&mut col_cx))?;
 				*width = col_cx.cx as _;
@@ -205,10 +197,10 @@ impl StatusBar {
 		let parts_info = unsafe { &mut *self.0.parts_info.get() };
 		for part_info in parts_info.iter() {
 			match part_info {
-				StatusBarPart::Fixed(pixels) => {
+				SbPart::Fixed(pixels) => {
 					cx_available -= if *pixels > cx_available { 0 } else { *pixels }; // prevent subtract overflow
 				},
-				StatusBarPart::Proportional(prop) => total_proportions += prop,
+				SbPart::Proportional(prop) => total_proportions += prop,
 			}
 		}
 
@@ -218,8 +210,8 @@ impl StatusBar {
 		for (idx, part_info) in parts_info.iter().rev().enumerate() {
 			right_edges[parts_info.len() - idx - 1] = total_cx as _;
 			let minus = match part_info {
-				StatusBarPart::Fixed(pixels) => *pixels,
-				StatusBarPart::Proportional(pp) =>
+				SbPart::Fixed(pixels) => *pixels,
+				SbPart::Proportional(pp) =>
 					(cx_available / total_proportions as u32) * (*pp as u32),
 			};
 			total_cx -= if minus > total_cx { 0 } else { minus }; // prevent subtract overflow

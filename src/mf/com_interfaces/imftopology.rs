@@ -1,11 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{COMPTR, HRES};
-use crate::mf::decl::IMFTopologyNode;
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{mf_IMFAttributes, mf_IMFTopologyNode, ole_IUnknown};
-use crate::vt::IMFAttributesVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IMFTopology`](crate::IMFTopology) virtual table.
 #[repr(C)]

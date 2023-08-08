@@ -21,6 +21,16 @@ mod window_events_all;
 mod window_events_traits;
 mod window_events;
 
+pub(in crate::gui) mod privs {
+	pub(in crate::gui) use super::base_events_proxy::BaseEventsProxy;
+	pub(in crate::gui) use super::func_store::FuncStore;
+	pub(in crate::gui) use super::window_events::ProcessResult;
+}
+
+pub(in crate::gui) mod traits {
+	pub use super::window_events_traits::*;
+}
+
 pub use button_events::ButtonEvents;
 pub use combo_box_events::ComboBoxEvents;
 pub use date_time_picker_events::DateTimePickerEvents;
@@ -37,8 +47,3 @@ pub use tree_view_events::TreeViewEvents;
 pub use up_down_events::UpDownEvents;
 pub use window_events_all::WindowEventsAll;
 pub use window_events::WindowEvents;
-pub(in crate::gui) use window_events::ProcessResult;
-
-pub(in crate::gui) mod traits {
-	pub use super::window_events_traits::*;
-}

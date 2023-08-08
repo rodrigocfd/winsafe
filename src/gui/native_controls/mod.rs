@@ -31,6 +31,11 @@ mod tree_view_items;
 mod tree_view;
 mod up_down;
 
+pub(in crate::gui) mod privs {
+	pub(in crate::gui) use super::base_native_control::*;
+	pub(in crate::gui) use super::tree_view_items::{TreeViewChildItemIter, TreeViewItemIter};
+}
+
 pub use button::{Button, ButtonOpts};
 pub use check_box::{CheckBox, CheckBoxOpts, CheckState};
 pub use combo_box::{ComboBox, ComboBoxOpts};
@@ -43,14 +48,15 @@ pub use month_calendar::{MonthCalendar, MonthCalendarOpts};
 pub use progress_bar::{ProgressBar, ProgressBarOpts};
 pub use radio_button::{RadioButton, RadioButtonOpts};
 pub use radio_group::RadioGroup;
-pub use status_bar::{StatusBar, StatusBarPart};
+pub use status_bar::{StatusBar, SbPart};
 pub use tab::{Tab, TabOpts};
 pub use trackbar::{Trackbar, TrackbarOpts};
 pub use tree_view::{TreeView, TreeViewOpts};
 pub use up_down::{UpDown, UpDownOpts};
 
-/// Structs which expose specialized methods of controls.
 pub mod spec {
+	//! Structs which expose specialized methods of controls.
+
 	pub use super::combo_box_items::ComboBoxItems;
 	pub use super::list_box_items::ListBoxItems;
 	pub use super::list_view_column::ListViewColumn;

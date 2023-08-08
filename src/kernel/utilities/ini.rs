@@ -1,4 +1,4 @@
-use crate::kernel::decl::{File, FileAccess, FileMapped, SysResult, WString};
+use crate::decl::*;
 
 /// High-level abstraction to load, manage and serialize sections and key/value
 /// pairs of a `.ini` file.

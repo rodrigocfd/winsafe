@@ -1,11 +1,8 @@
 use crate::co;
-use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD};
-
-use crate::gdi::decl::HFONT;
-use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend, MsgSendRecv};
-use crate::user::decl::HRGN;
-use crate::user::privs::zero_as_none;
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 pub_struct_msg_ctlcolor! { CtlColorBtn: co::WM::CTLCOLORBTN;
 	/// [`WM_CTLCOLORBTN`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)

@@ -1,11 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::{COMPTR, HRES, PVOID};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::ole_ISequentialStream;
-use crate::vt::ISequentialStreamVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IStream`](crate::IStream) virtual table.
 #[repr(C)]
@@ -64,7 +64,9 @@ pub trait ole_IStream: ole_ISequentialStream {
 	///
 	/// Returns the number of bytes read and written.
 	fn CopyTo(&self,
-		dest: &impl ole_IStream, num_bytes: u64) -> HrResult<(u64, u64)>
+		dest: &impl ole_IStream,
+		num_bytes: u64,
+	) -> HrResult<(u64, u64)>
 	{
 		let (mut read, mut written) = (u64::default(), u64::default());
 		ok_to_hrresult(
@@ -87,7 +89,10 @@ pub trait ole_IStream: ole_ISequentialStream {
 	/// [`IStream::UnlockRegion`](crate::prelude::ole_IStream::UnlockRegion)
 	/// call.
 	fn LockRegion(&self,
-		offset: u64, length: u64, lock_type: co::LOCKTYPE) -> HrResult<()>
+		offset: u64,
+		length: u64,
+		lock_type: co::LOCKTYPE,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {
@@ -111,7 +116,9 @@ pub trait ole_IStream: ole_ISequentialStream {
 	///
 	/// Returns the new absolute offset.
 	fn Seek(&self,
-		displacement: i64, origin: co::STREAM_SEEK) -> HrResult<u64>
+		displacement: i64,
+		origin: co::STREAM_SEEK,
+	) -> HrResult<u64>
 	{
 		let mut new_off = u64::default();
 		ok_to_hrresult(
@@ -137,7 +144,10 @@ pub trait ole_IStream: ole_ISequentialStream {
 	/// [`IStream::UnlockRegion`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istream-unlockregion)
 	/// method.
 	fn UnlockRegion(&self,
-		offset: u64, length: u64, lock_type: co::LOCKTYPE) -> HrResult<()>
+		offset: u64,
+		length: u64,
+		lock_type: co::LOCKTYPE,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {

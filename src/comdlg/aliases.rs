@@ -1,4 +1,4 @@
-use crate::user::decl::HWND;
+use crate::decl::*;
 
 /// Type alias to
 /// [`CCHOOKPROC`](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/nc-commdlg-lpcchookproc)

@@ -1,12 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::dshow::decl::AM_MEDIA_TYPE;
-use crate::kernel::decl::WString;
-use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PCVOID, PSTR, PVOID};
-use crate::ole::decl::{CoTaskMemFree, HrResult};
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::ole_IUnknown;
-use crate::vt::IUnknownVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IFileSinkFilter`](crate::IFileSinkFilter) virtual table.
 #[repr(C)]
@@ -66,7 +64,8 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// ```
 	#[must_use]
 	unsafe fn GetCurFile(&self,
-		mt: Option<&mut AM_MEDIA_TYPE>) -> HrResult<String>
+		mt: Option<&mut AM_MEDIA_TYPE>,
+	) -> HrResult<String>
 	{
 		let mut pstr = std::ptr::null_mut::<u16>();
 		ok_to_hrresult(
@@ -85,7 +84,9 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// [`IFileSinkFilter::SetFileName`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifilesinkfilter-setfilename)
 	/// method.
 	fn SetFileName(&self,
-		file_name: &str, mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
+		file_name: &str,
+		mt: Option<&AM_MEDIA_TYPE>,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {

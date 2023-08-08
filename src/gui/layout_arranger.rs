@@ -4,10 +4,9 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::kernel::decl::SysResult;
-use crate::msg::wm;
-use crate::prelude::{Handle, user_Hdwp, user_Hwnd};
-use crate::user::decl::{HDWP, HWND, HwndPlace, POINT, RECT, SIZE};
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
 
 /// Specifies the horizontal behavior of the control when the parent window is
 /// resized.

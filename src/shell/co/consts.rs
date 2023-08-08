@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
-use crate::co::DROPEFFECT;
+use crate::co::*;
 
 const_ordinary! { FO: u32;
 	/// [`SHFILEOPSTRUCT`](crate::SHFILEOPSTRUCT) `wFunc` (`u32`).

@@ -1,15 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, kernel};
-use crate::kernel::decl::{
-	FILETIME, HTRANSACTION, RegistryValue, SECURITY_ATTRIBUTES, SysResult,
-	VALENT, WString,
-};
-use crate::kernel::ffi_types::BOOL;
-use crate::kernel::guard::RegCloseKeyGuard;
-use crate::kernel::iterators::{HkeyKeyIter, HkeyValueIter};
-use crate::kernel::privs::error_to_sysresult;
-use crate::prelude::{Handle, IntUnderlying};
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::{ffi, ffi_types::*, iterators::*, privs::*};
+use crate::prelude::*;
 
 impl_handle! { HKEY;
 	/// Handle to a
@@ -76,7 +71,7 @@ pub trait kernel_Hkey: Handle {
 		let mut hkey = HKEY::NULL;
 		unsafe {
 			error_to_sysresult(
-				kernel::ffi::RegConnectRegistryW(
+				ffi::RegConnectRegistryW(
 					WString::from_opt_str(machine_name).as_ptr(),
 					predef_hkey.ptr(),
 					hkey.as_mut(),
@@ -90,7 +85,7 @@ pub trait kernel_Hkey: Handle {
 	fn RegCopyTree(&self, sub_key: Option<&str>, dest: &HKEY) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegCopyTreeW(
+				ffi::RegCopyTreeW(
 					self.ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					dest.ptr(),
@@ -115,7 +110,7 @@ pub trait kernel_Hkey: Handle {
 
 		unsafe {
 			error_to_sysresult(
-				kernel::ffi::RegCreateKeyExW(
+				ffi::RegCreateKeyExW(
 					self.ptr(),
 					WString::from_str(sub_key).as_ptr(),
 					0,
@@ -147,7 +142,7 @@ pub trait kernel_Hkey: Handle {
 
 		unsafe {
 			error_to_sysresult(
-				kernel::ffi::RegCreateKeyTransactedW(
+				ffi::RegCreateKeyTransactedW(
 					self.ptr(),
 					WString::from_str(sub_key).as_ptr(),
 					0,
@@ -169,10 +164,7 @@ pub trait kernel_Hkey: Handle {
 	fn RegDeleteKey(&self, sub_key: &str) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegDeleteKeyW(
-					self.ptr(),
-					WString::from_str(sub_key).as_ptr(),
-				)
+				ffi::RegDeleteKeyW(self.ptr(), WString::from_str(sub_key).as_ptr())
 			},
 		)
 	}
@@ -186,7 +178,9 @@ pub trait kernel_Hkey: Handle {
 	/// [`co::KEY::WOW64_32KEY`](crate::co::KEY::WOW64_32KEY) and
 	/// [`co::KEY::WOW64_64KEY`](crate::co::KEY::WOW64_64KEY).
 	fn RegDeleteKeyEx(&self,
-		sub_key: &str, platform_view: co::KEY) -> SysResult<()>
+		sub_key: &str,
+		platform_view: co::KEY,
+	) -> SysResult<()>
 	{
 		if platform_view != co::KEY::WOW64_32KEY
 			&& platform_view != co::KEY::WOW64_64KEY
@@ -196,7 +190,7 @@ pub trait kernel_Hkey: Handle {
 
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegDeleteKeyExW(
+				ffi::RegDeleteKeyExW(
 					self.ptr(),
 					WString::from_str(sub_key).as_ptr(),
 					platform_view.raw(),
@@ -216,7 +210,7 @@ pub trait kernel_Hkey: Handle {
 	{
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegDeleteKeyTransactedW(
+				ffi::RegDeleteKeyTransactedW(
 					self.ptr(),
 					WString::from_str(sub_key).as_ptr(),
 					access_rights.raw(),
@@ -233,7 +227,7 @@ pub trait kernel_Hkey: Handle {
 	fn RegDeleteTree(&self, sub_key: Option<&str>) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegDeleteTreeW(
+				ffi::RegDeleteTreeW(
 					self.ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 				)
@@ -246,7 +240,7 @@ pub trait kernel_Hkey: Handle {
 	fn RegDeleteValue(&self, value_name: Option<&str>) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegDeleteValueW(
+				ffi::RegDeleteValueW(
 					self.ptr(),
 					WString::from_opt_str(value_name).as_ptr(),
 				)
@@ -257,29 +251,25 @@ pub trait kernel_Hkey: Handle {
 	/// [`RegDisablePredefinedCache`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcache)
 	/// function.
 	fn RegDisablePredefinedCache() -> SysResult<()> {
-		error_to_sysresult(unsafe { kernel::ffi::RegDisablePredefinedCache() })
+		error_to_sysresult(unsafe { ffi::RegDisablePredefinedCache() })
 	}
 
 	/// [`RegDisablePredefinedCacheEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcacheex)
 	/// function.
 	fn RegDisablePredefinedCacheEx() -> SysResult<()> {
-		error_to_sysresult(unsafe { kernel::ffi::RegDisablePredefinedCacheEx() })
+		error_to_sysresult(unsafe { ffi::RegDisablePredefinedCacheEx() })
 	}
 
 	/// [`RegDisableReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablereflectionkey)
 	/// function.
 	fn RegDisableReflectionKey(&self) -> SysResult<()> {
-		error_to_sysresult(
-			unsafe { kernel::ffi::RegDisableReflectionKey(self.ptr()) },
-		)
+		error_to_sysresult(unsafe { ffi::RegDisableReflectionKey(self.ptr()) })
 	}
 
 	/// [`RegEnableReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regenablereflectionkey)
 	/// function.
 	fn RegEnableReflectionKey(&self) -> SysResult<()> {
-		error_to_sysresult(
-			unsafe { kernel::ffi::RegEnableReflectionKey(self.ptr()) },
-		)
+		error_to_sysresult(unsafe { ffi::RegEnableReflectionKey(self.ptr()) })
 	}
 
 	/// Returns an iterator over the names of the keys, which calls
@@ -348,7 +338,7 @@ pub trait kernel_Hkey: Handle {
 	/// [`RegFlushKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regflushkey)
 	/// function.
 	fn RegFlushKey(&self) -> SysResult<()> {
-		error_to_sysresult(unsafe { kernel::ffi::RegFlushKey(self.ptr()) })
+		error_to_sysresult(unsafe { ffi::RegFlushKey(self.ptr()) })
 	}
 
 	/// [`RegGetValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
@@ -408,7 +398,7 @@ pub trait kernel_Hkey: Handle {
 		// Query data type and length.
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegGetValueW(
+				ffi::RegGetValueW(
 					self.ptr(),
 					sub_key_w.as_ptr(),
 					value_name_w.as_ptr(),
@@ -429,7 +419,7 @@ pub trait kernel_Hkey: Handle {
 		// Retrieve the value content.
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegGetValueW(
+				ffi::RegGetValueW(
 					self.ptr(),
 					sub_key_w.as_ptr(),
 					value_name_w.as_ptr(),
@@ -451,11 +441,13 @@ pub trait kernel_Hkey: Handle {
 	/// [`RegLoadKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regloadkeyw)
 	/// function.
 	fn RegLoadKey(&self,
-		sub_key: Option<&str>, file_path: &str) -> SysResult<()>
+		sub_key: Option<&str>,
+		file_path: &str,
+	) -> SysResult<()>
 	{
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegLoadKeyW(
+				ffi::RegLoadKeyW(
 					self.ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					WString::from_str(file_path).as_ptr(),
@@ -468,12 +460,13 @@ pub trait kernel_Hkey: Handle {
 	/// function.
 	#[must_use]
 	fn RegOpenCurrentUser(
-		access_rights: co::KEY) -> SysResult<RegCloseKeyGuard>
+		access_rights: co::KEY,
+	) -> SysResult<RegCloseKeyGuard>
 	{
 		let mut hkey = HKEY::NULL;
 		unsafe {
 			error_to_sysresult(
-				kernel::ffi::RegOpenCurrentUser(access_rights.raw(), hkey.as_mut()),
+				ffi::RegOpenCurrentUser(access_rights.raw(), hkey.as_mut()),
 			).map(|_| RegCloseKeyGuard::new(hkey))
 		}
 	}
@@ -504,7 +497,7 @@ pub trait kernel_Hkey: Handle {
 		let mut hkey = HKEY::NULL;
 		unsafe {
 			error_to_sysresult(
-				kernel::ffi::RegOpenKeyExW(
+				ffi::RegOpenKeyExW(
 					self.ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					options.raw(),
@@ -528,7 +521,7 @@ pub trait kernel_Hkey: Handle {
 		let mut hkey = HKEY::NULL;
 		unsafe {
 			error_to_sysresult(
-				kernel::ffi::RegOpenKeyTransactedW(
+				ffi::RegOpenKeyTransactedW(
 					self.ptr(),
 					WString::from_str(sub_key).as_ptr(),
 					options.raw(),
@@ -579,7 +572,7 @@ pub trait kernel_Hkey: Handle {
 		loop { // until class is large enough
 			match unsafe {
 				co::ERROR::from_raw(
-					kernel::ffi::RegQueryInfoKeyW(
+					ffi::RegQueryInfoKeyW(
 						self.ptr(),
 						class_ptr,
 						&mut class_len,
@@ -660,7 +653,8 @@ pub trait kernel_Hkey: Handle {
 	/// ```
 	#[must_use]
 	fn RegQueryMultipleValues(&self,
-		value_names: &[impl AsRef<str>]) -> SysResult<Vec<RegistryValue>>
+		value_names: &[impl AsRef<str>],
+	) -> SysResult<Vec<RegistryValue>>
 	{
 		let mut valents1 = vec![VALENT::default(); value_names.len()];
 		let value_names_w = value_names.iter()
@@ -676,7 +670,7 @@ pub trait kernel_Hkey: Handle {
 		// Query data types and lenghts.
 		match unsafe {
 			co::ERROR::from_raw(
-				kernel::ffi::RegQueryMultipleValuesW(
+				ffi::RegQueryMultipleValuesW(
 					self.ptr(),
 					valents1.as_mut_ptr() as _,
 					value_names.len() as _,
@@ -704,7 +698,7 @@ pub trait kernel_Hkey: Handle {
 		// Retrieve the values content.
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegQueryMultipleValuesW(
+				ffi::RegQueryMultipleValuesW(
 					self.ptr(),
 					valents2.as_mut_ptr() as _,
 					value_names.len() as _,
@@ -737,9 +731,7 @@ pub trait kernel_Hkey: Handle {
 	fn RegQueryReflectionKey(&self) -> SysResult<bool> {
 		let mut is_disabled: BOOL = 0;
 		error_to_sysresult(
-			unsafe {
-				kernel::ffi::RegQueryReflectionKey(self.ptr(), &mut is_disabled)
-			},
+			unsafe { ffi::RegQueryReflectionKey(self.ptr(), &mut is_disabled) },
 		).map(|_| is_disabled != 0)
 	}
 
@@ -794,7 +786,8 @@ pub trait kernel_Hkey: Handle {
 	/// ```
 	#[must_use]
 	fn RegQueryValueEx(&self,
-		value_name: Option<&str>) -> SysResult<RegistryValue>
+		value_name: Option<&str>,
+	) -> SysResult<RegistryValue>
 	{
 		let value_name_w = WString::from_opt_str(value_name);
 		let mut raw_data_type1 = u32::default();
@@ -803,7 +796,7 @@ pub trait kernel_Hkey: Handle {
 		// Query data type and length.
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegQueryValueExW(
+				ffi::RegQueryValueExW(
 					self.ptr(),
 					value_name_w.as_ptr(),
 					std::ptr::null_mut(),
@@ -823,7 +816,7 @@ pub trait kernel_Hkey: Handle {
 		// Retrieve the value content.
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegQueryValueExW(
+				ffi::RegQueryValueExW(
 					self.ptr(),
 					value_name_w.as_ptr(),
 					std::ptr::null_mut(),
@@ -844,11 +837,13 @@ pub trait kernel_Hkey: Handle {
 	/// [`RegRenameKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regrenamekey)
 	/// function.
 	fn RegRenameKey(&self,
-		sub_key_name: &str, new_key_name: &str) -> SysResult<()>
+		sub_key_name: &str,
+		new_key_name: &str,
+	) -> SysResult<()>
 	{
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegRenameKey(
+				ffi::RegRenameKey(
 					self.ptr(),
 					WString::from_str(sub_key_name).as_ptr(),
 					WString::from_str(new_key_name).as_ptr(),
@@ -867,7 +862,7 @@ pub trait kernel_Hkey: Handle {
 	{
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegReplaceKeyW(
+				ffi::RegReplaceKeyW(
 					self.ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					WString::from_str(new_src_file).as_ptr(),
@@ -880,11 +875,13 @@ pub trait kernel_Hkey: Handle {
 	/// [`RegRestoreKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regrestorekeyw)
 	/// function.
 	fn RegRestoreKey(&self,
-		file_path: &str, flags: co::REG_RESTORE) -> SysResult<()>
+		file_path: &str,
+		flags: co::REG_RESTORE,
+	) -> SysResult<()>
 	{
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegRestoreKeyW(
+				ffi::RegRestoreKeyW(
 					self.ptr(),
 					WString::from_str(file_path).as_ptr(),
 					flags.raw(),
@@ -902,7 +899,7 @@ pub trait kernel_Hkey: Handle {
 	{
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegSaveKeyW(
+				ffi::RegSaveKeyW(
 					self.ptr(),
 					WString::from_str(dest_file_path).as_ptr(),
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
@@ -921,7 +918,7 @@ pub trait kernel_Hkey: Handle {
 	{
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegSaveKeyExW(
+				ffi::RegSaveKeyExW(
 					self.ptr(),
 					WString::from_str(dest_file_path).as_ptr(),
 					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
@@ -961,7 +958,7 @@ pub trait kernel_Hkey: Handle {
 
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegSetKeyValueW(
+				ffi::RegSetKeyValueW(
 					self.ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 					WString::from_opt_str(value_name).as_ptr(),
@@ -998,14 +995,16 @@ pub trait kernel_Hkey: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	fn RegSetValueEx(&self,
-		value_name: Option<&str>, data: RegistryValue) -> SysResult<()>
+		value_name: Option<&str>,
+		data: RegistryValue,
+	) -> SysResult<()>
 	{
 		let mut str_buf = WString::default();
 		let (data_ptr, data_len) = data.as_ptr_with_len(&mut str_buf);
 
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegSetValueExW(
+				ffi::RegSetValueExW(
 					self.ptr(),
 					WString::from_opt_str(value_name).as_ptr(),
 					0,
@@ -1022,7 +1021,7 @@ pub trait kernel_Hkey: Handle {
 	fn RegUnLoadKey(&self, sub_key: Option<&str>) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {
-				kernel::ffi::RegUnLoadKeyW(
+				ffi::RegUnLoadKeyW(
 					self.ptr(),
 					WString::from_opt_str(sub_key).as_ptr(),
 				)

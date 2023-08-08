@@ -1,6 +1,6 @@
 #![allow(non_upper_case_globals)]
 
-use crate::co::CLSID;
+use crate::co::*;
 
 const_guid_values! { CLSID;
 	FileOpenDialog "dc1c5a9c-e88a-4dde-a5a1-60f82a20aef7"

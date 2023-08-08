@@ -1,11 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::gdi::decl::BITMAPINFOHEADER;
-use crate::mf::decl::IMFVideoDisplayControl;
-use crate::ole::decl::{CoTaskMemFree, HrResult};
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::mf_IMFVideoDisplayControl;
-use crate::vt::IMFVideoDisplayControlVT;
+use crate::decl::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 impl gdi_mf_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 

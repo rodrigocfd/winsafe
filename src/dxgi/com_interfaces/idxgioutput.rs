@@ -1,15 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::dxgi::decl::{
-	DXGI_FRAME_STATISTICS, DXGI_GAMMA_CONTROL, DXGI_GAMMA_CONTROL_CAPABILITIES,
-	DXGI_MODE_DESC, DXGI_OUTPUT_DESC,
-};
-use crate::kernel::ffi_types::{BOOL, COMPTR, HRES, PCVOID, PVOID};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{dxgi_IDXGIObject, ole_IUnknown};
-use crate::vt::IDXGIObjectVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IDXGIAdapter`](crate::IDXGIAdapter) virtual table.
 #[repr(C)]
@@ -190,7 +186,9 @@ pub trait dxgi_IDXGIOutput: dxgi_IDXGIObject {
 	/// [`IDXGIOutput::TakeOwnership`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgioutput-takeownership)
 	/// method.
 	fn TakeOwnership(&self,
-		device: &impl ole_IUnknown, exclusive: bool) -> HrResult<()>
+		device: &impl ole_IUnknown,
+		exclusive: bool,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {

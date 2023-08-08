@@ -1,9 +1,7 @@
-use crate::{co, kernel};
-use crate::kernel::decl::{
-	GetLastError, HEAPLIST32, MODULEENTRY32, PROCESS_HEAP_ENTRY, PROCESSENTRY32,
-	SysResult, THREADENTRY32, WString,
-};
-use crate::prelude::{kernel_Hheap, kernel_Hkey, kernel_Hprocesslist};
+use crate::co;
+use crate::decl::*;
+use crate::kernel::ffi;
+use crate::prelude::*;
 
 pub(in crate::kernel) struct HheapHeapwalkIter<'a, H>
 	where H: kernel_Hheap,
@@ -24,7 +22,7 @@ impl<'a, H> Iterator for HheapHeapwalkIter<'a, H>
 		}
 
 		match unsafe {
-			kernel::ffi::HeapWalk(self.hheap.ptr(), &mut self.entry as *mut _ as _)
+			ffi::HeapWalk(self.hheap.ptr(), &mut self.entry as *mut _ as _)
 		} {
 			0 => {
 				self.has_more = false; // no further iterations
@@ -79,7 +77,7 @@ impl<'a, H> Iterator for HkeyKeyIter<'a, H>
 		let mut len_buffer = self.name_buffer.buf_len() as u32;
 		match unsafe {
 			co::ERROR::from_raw(
-				kernel::ffi::RegEnumKeyExW(
+				ffi::RegEnumKeyExW(
 					self.hkey.ptr(),
 					self.current,
 					self.name_buffer.as_mut_ptr(),
@@ -147,7 +145,7 @@ impl<'a, H> Iterator for HkeyValueIter<'a, H>
 		let mut len_buffer = self.name_buffer.buf_len() as u32;
 		match unsafe {
 			co::ERROR::from_raw(
-				kernel::ffi::RegEnumValueW(
+				ffi::RegEnumValueW(
 					self.hkey.ptr(),
 					self.current,
 					self.name_buffer.as_mut_ptr(),

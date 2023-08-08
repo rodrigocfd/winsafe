@@ -1,15 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::decl::{WIN32_FIND_DATA, WString};
-use crate::kernel::ffi_types::{COMPTR, HANDLE, HRES, PCSTR, PSTR, PVOID};
-use crate::kernel::privs::MAX_PATH;
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{Handle, IntUnderlying, ole_IUnknown};
-use crate::shell::privs::INFOTIPSIZE;
-use crate::user::decl::HWND;
-use crate::vt::IUnknownVT;
+use crate::decl::*;
+use crate::kernel::{ffi_types::*, privs::*};
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::shell::privs::*;
+use crate::vt::*;
 
 /// [`IShellLink`](crate::IShellLink) virtual table.
 #[repr(C)]
@@ -126,7 +123,9 @@ pub trait shell_IShellLink: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetPath(&self,
-		fd: Option<&mut WIN32_FIND_DATA>, flags: co::SLGP) -> HrResult<String>
+		fd: Option<&mut WIN32_FIND_DATA>,
+		flags: co::SLGP,
+	) -> HrResult<String>
 	{
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
 		ok_to_hrresult(

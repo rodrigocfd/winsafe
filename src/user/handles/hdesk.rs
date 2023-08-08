@@ -2,11 +2,12 @@
 
 use std::mem::ManuallyDrop;
 
-use crate::{co, user};
-use crate::kernel::decl::{SECURITY_ATTRIBUTES, SysResult, WString};
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
-use crate::prelude::Handle;
-use crate::user::guard::CloseDesktopGuard;
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
+use crate::user::ffi;
 
 impl_handle! { HDESK;
 	/// Handle to a
@@ -36,7 +37,7 @@ pub trait user_Hdesk: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				user::ffi::CreateDesktopW(
+				ffi::CreateDesktopW(
 					WString::from_str(name).as_ptr(),
 					std::ptr::null(),
 					std::ptr::null(),
@@ -61,7 +62,7 @@ pub trait user_Hdesk: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				user::ffi::CreateDesktopExW(
+				ffi::CreateDesktopExW(
 					WString::from_str(name).as_ptr(),
 					std::ptr::null(),
 					std::ptr::null(),
@@ -88,10 +89,11 @@ pub trait user_Hdesk: Handle {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	#[must_use]
 	fn GetThreadDesktop(
-		thread_id: u32) -> SysResult<ManuallyDrop<CloseDesktopGuard>>
+		thread_id: u32,
+	) -> SysResult<ManuallyDrop<CloseDesktopGuard>>
 	{
 		unsafe {
-			ptr_to_sysresult_handle(user::ffi::GetThreadDesktop(thread_id))
+			ptr_to_sysresult_handle(ffi::GetThreadDesktop(thread_id))
 				.map(|h| ManuallyDrop::new(CloseDesktopGuard::new(h)))
 		}
 	}
@@ -108,7 +110,7 @@ pub trait user_Hdesk: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				user::ffi::OpenDesktopW(
+				ffi::OpenDesktopW(
 					WString::from_str(name).as_ptr(),
 					flags.unwrap_or_default().raw(),
 					inherit as _,
@@ -129,7 +131,7 @@ pub trait user_Hdesk: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				user::ffi::OpenInputDesktop(
+				ffi::OpenInputDesktop(
 					flags.unwrap_or_default().raw(),
 					inherit as _,
 					desired_access.raw(),
@@ -141,12 +143,12 @@ pub trait user_Hdesk: Handle {
 	/// [`SetThreadDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setthreaddesktop)
 	/// function.
 	fn SetThreadDesktop(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { user::ffi::SetThreadDesktop(self.ptr()) })
+		bool_to_sysresult(unsafe { ffi::SetThreadDesktop(self.ptr()) })
 	}
 
 	/// [`SwitchDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-switchdesktop)
 	/// function.
 	fn SwitchDesktop(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { user::ffi::SwitchDesktop(self.ptr()) })
+		bool_to_sysresult(unsafe { ffi::SwitchDesktop(self.ptr()) })
 	}
 }

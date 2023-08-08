@@ -1,10 +1,8 @@
 use crate::co;
-use crate::comctl::decl::{HTREEITEM, TreeitemTvi, TVINSERTSTRUCT, TVITEMEX};
-use crate::gui::native_controls::tree_view_item::TreeViewItem;
-use crate::gui::native_controls::tree_view::TreeView;
-use crate::kernel::decl::WString;
-use crate::msg::tvm;
-use crate::prelude::{GuiWindow, Handle, user_Hwnd};
+use crate::decl::*;
+use crate::gui::{*, spec::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 /// Exposes item methods of a [`TreeView`](crate::gui::TreeView) control.
 ///
@@ -23,7 +21,9 @@ impl<'a> TreeViewItems<'a> {
 	/// [`tvm::InsertItem`](crate::msg::tvm::InsertItem) message, and returns
 	/// the newly added item.
 	pub fn add_root(&self,
-		text: &str, icon_index: Option<u32>) -> TreeViewItem<'a>
+		text: &str,
+		icon_index: Option<u32>,
+	) -> TreeViewItem<'a>
 	{
 		let mut buf = WString::from_str(text);
 

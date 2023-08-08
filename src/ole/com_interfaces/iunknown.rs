@@ -1,9 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
 
 /// [`IUnknown`](crate::IUnknown) virtual table, base to all COM virtual tables.
 #[repr(C)]

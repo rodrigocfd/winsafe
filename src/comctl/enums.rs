@@ -1,9 +1,7 @@
 use crate::co;
-use crate::comctl::decl::HTREEITEM;
-use crate::comctl::privs::{I_IMAGECALLBACK, I_IMAGENONE};
-use crate::kernel::decl::{HINSTANCE, IdStr, WString};
-use crate::prelude::Handle;
-use crate::user::decl::{HBITMAP, HCURSOR, HDC, HICON, POINT};
+use crate::comctl::privs::*;
+use crate::decl::*;
+use crate::prelude::*;
 
 /// Variant parameter for:
 ///

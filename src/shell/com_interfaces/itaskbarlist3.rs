@@ -1,13 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::decl::WString;
-use crate::kernel::ffi_types::{COMPTR, HANDLE, HRES, PCSTR, PVOID};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{Handle, shell_ITaskbarList, shell_ITaskbarList2};
-use crate::user::decl::{HICON, HWND, RECT};
-use crate::vt::ITaskbarList2VT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`ITaskbarList3`](crate::ITaskbarList3) virtual table.
 #[repr(C)]
@@ -80,7 +78,10 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// [`ITaskbarList3::SetOverlayIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setoverlayicon)
 	/// method.
 	fn SetOverlayIcon(&self,
-		hwnd: &HWND, hicon: Option<&HICON>, description: &str) -> HrResult<()>
+		hwnd: &HWND,
+		hicon: Option<&HICON>,
+		description: &str,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {
@@ -97,7 +98,9 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// [`ITaskbarList3::SetProgressState`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setprogressstate)
 	/// method.
 	fn SetProgressState(&self,
-		hwnd: &HWND, tbpf_flags: co::TBPF) -> HrResult<()>
+		hwnd: &HWND,
+		tbpf_flags: co::TBPF,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {
@@ -130,7 +133,10 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 	fn SetProgressValue(&self,
-		hwnd: &HWND, completed: u64, total: u64) -> HrResult<()>
+		hwnd: &HWND,
+		completed: u64,
+		total: u64,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {
@@ -162,7 +168,9 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// [`ITaskbarList3::SetTabOrder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-settaborder)
 	/// method.
 	fn SetTabOrder(&self,
-		hwnd_tab: &HWND, hwnd_insert_before: &HWND) -> HrResult<()>
+		hwnd_tab: &HWND,
+		hwnd_insert_before: &HWND,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {
@@ -192,7 +200,9 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// [`ITaskbarList3::SetThumbnailTooltip`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist3-setthumbnailtooltip)
 	/// method.
 	fn SetThumbnailTooltip(&self,
-		hwnd: &HWND, tip: Option<&str>) -> HrResult<()>
+		hwnd: &HWND,
+		tip: Option<&str>,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {

@@ -1,11 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::decl::SysResult;
-use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::Handle;
-use crate::user;
-use crate::user::decl::ACCEL;
-use crate::user::guard::DestroyAcceleratorTableGuard;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
+use crate::user::ffi;
 
 impl_handle! { HACCEL;
 	/// Handle to an
@@ -27,11 +26,12 @@ pub trait user_Haccel: Handle {
 	/// function.
 	#[must_use]
 	fn CreateAcceleratorTable(
-		accel: &mut [ACCEL]) -> SysResult<DestroyAcceleratorTableGuard>
+		accel: &mut [ACCEL],
+	) -> SysResult<DestroyAcceleratorTableGuard>
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				user::ffi::CreateAcceleratorTableW(
+				ffi::CreateAcceleratorTableW(
 					accel.as_mut_ptr() as _,
 					accel.len() as _,
 				),

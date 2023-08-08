@@ -1,10 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{BOOL, COMPTR, HRES};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
-use crate::prelude::{ole_IPersist, ole_IStream};
-use crate::vt::IPersistVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IPersistStream`](crate::IPersistStream) virtual table.
 #[repr(C)]
@@ -71,7 +71,9 @@ pub trait ole_IPersistStream: ole_IPersist {
 	/// [`IPersistStream::Save`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersiststream-save)
 	/// method.
 	fn Save(&self,
-		stream: &impl ole_IStream, clear_dirty: bool) -> HrResult<()>
+		stream: &impl ole_IStream,
+		clear_dirty: bool,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {

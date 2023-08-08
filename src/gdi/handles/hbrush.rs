@@ -1,12 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, gdi};
-use crate::gdi::decl::LOGBRUSH;
-use crate::gdi::guard::DeleteObjectGuard;
-use crate::kernel::decl::{GetLastError, SysResult};
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
-use crate::prelude::{GdiObject, GdiObjectSelect, Handle};
-use crate::user::decl::{COLORREF, HBITMAP, HBRUSH};
+use crate::co;
+use crate::decl::*;
+use crate::gdi::ffi;
+use crate::guard::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
 
 impl GdiObject for HBRUSH {}
 impl GdiObjectSelect for HBRUSH {}
@@ -35,12 +34,12 @@ pub trait gdi_Hbrush: Handle {
 	/// function.
 	#[must_use]
 	fn CreateBrushIndirect(
-		lb: &LOGBRUSH) -> SysResult<DeleteObjectGuard<HBRUSH>>
+		lb: &LOGBRUSH,
+	) -> SysResult<DeleteObjectGuard<HBRUSH>>
 	{
 		unsafe {
-			ptr_to_sysresult_handle(
-				gdi::ffi::CreateBrushIndirect(lb as *const _ as _),
-			).map(|h| DeleteObjectGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateBrushIndirect(lb as *const _ as _))
+				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -48,11 +47,13 @@ pub trait gdi_Hbrush: Handle {
 	/// function.
 	#[must_use]
 	fn CreateHatchBrush(
-		hatch: co::HS, color: COLORREF) -> SysResult<DeleteObjectGuard<HBRUSH>>
+		hatch: co::HS,
+		color: COLORREF,
+	) -> SysResult<DeleteObjectGuard<HBRUSH>>
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::CreateHatchBrush(hatch.raw(), color.into()),
+				ffi::CreateHatchBrush(hatch.raw(), color.into()),
 			).map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -61,12 +62,12 @@ pub trait gdi_Hbrush: Handle {
 	/// function.
 	#[must_use]
 	fn CreatePatternBrush(
-		hbmp: &HBITMAP) -> SysResult<DeleteObjectGuard<HBRUSH>>
+		hbmp: &HBITMAP,
+	) -> SysResult<DeleteObjectGuard<HBRUSH>>
 	{
 		unsafe {
-			ptr_to_sysresult_handle(
-				gdi::ffi::CreatePatternBrush(hbmp.ptr()),
-			).map(|h| DeleteObjectGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreatePatternBrush(hbmp.ptr()))
+				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -74,12 +75,12 @@ pub trait gdi_Hbrush: Handle {
 	/// function.
 	#[must_use]
 	fn CreateSolidBrush(
-		color: COLORREF) -> SysResult<DeleteObjectGuard<HBRUSH>>
+		color: COLORREF,
+	) -> SysResult<DeleteObjectGuard<HBRUSH>>
 	{
 		unsafe {
-			ptr_to_sysresult_handle(
-				gdi::ffi::CreateSolidBrush(color.into()),
-			).map(|h| DeleteObjectGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateSolidBrush(color.into()))
+				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -101,7 +102,7 @@ pub trait gdi_Hbrush: Handle {
 	/// ```
 	fn GetObject(&self, pv: &mut LOGBRUSH) -> SysResult<()> {
 		match unsafe {
-			gdi::ffi::GetObjectW(
+			ffi::GetObjectW(
 				self.ptr(),
 				std::mem::size_of::<LOGBRUSH>() as _,
 				pv as *mut _ as _,
@@ -116,21 +117,19 @@ pub trait gdi_Hbrush: Handle {
 	/// function.
 	#[must_use]
 	fn GetStockObject(sb: co::STOCK_BRUSH) -> SysResult<HBRUSH> {
-		ptr_to_sysresult_handle(unsafe { gdi::ffi::GetStockObject(sb.raw()) })
+		ptr_to_sysresult_handle(unsafe { ffi::GetStockObject(sb.raw()) })
 	}
 
 	/// [`GetSysColorBrush`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolorbrush)
 	/// function.
 	#[must_use]
 	fn GetSysColorBrush(index: co::COLOR) -> SysResult<HBRUSH> {
-		ptr_to_sysresult_handle(
-			unsafe { gdi::ffi::GetSysColorBrush(index.raw()) },
-		)
+		ptr_to_sysresult_handle(unsafe { ffi::GetSysColorBrush(index.raw()) })
 	}
 
 	/// [`UnrealizeObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-unrealizeobject)
 	/// function.
 	fn UnrealizeObject(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { gdi::ffi::UnrealizeObject(self.ptr()) })
+		bool_to_sysresult(unsafe { ffi::UnrealizeObject(self.ptr()) })
 	}
 }

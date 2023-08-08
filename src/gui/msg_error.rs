@@ -1,4 +1,4 @@
-use crate::msg::WndMsg;
+use crate::msg::*;
 
 /// An error that occurred within a closure of a window message handling.
 /// Usually these errors are thrown by the user closures.
@@ -34,7 +34,8 @@ impl MsgError {
 	#[must_use]
 	pub const fn new(
 		src_msg: WndMsg,
-		source: Box<dyn std::error::Error + Send + Sync>) -> MsgError
+		source: Box<dyn std::error::Error + Send + Sync>,
+	) -> MsgError
 	{
 		Self { src_msg, source }
 	}

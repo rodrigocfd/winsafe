@@ -1,13 +1,12 @@
 use std::ops::{Deref, DerefMut};
 
-use crate::{co, gdi};
-use crate::gdi::decl::{LOGPALETTE, PALETTEENTRY};
-use crate::kernel::decl::HeapBlock;
-use crate::prelude::{gdi_Hdc, GdiObject, Handle};
-use crate::user::decl::HDC;
+use crate::co;
+use crate::decl::*;
+use crate::gdi::ffi;
+use crate::prelude::*;
 
 handle_guard! { DeleteDCGuard: HDC;
-	gdi::ffi::DeleteDC;
+	ffi::DeleteDC;
 	/// RAII implementation for [`HDC`](crate::HDC) which automatically calls
 	/// [`DeleteDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deletedc)
 	/// when the object goes out of scope.
@@ -30,7 +29,7 @@ impl<T> Drop for DeleteObjectGuard<T>
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.handle.as_opt() {
-			unsafe { gdi::ffi::DeleteObject(h.ptr()); } // ignore errors
+			unsafe { ffi::DeleteObject(h.ptr()); } // ignore errors
 		}
 	}
 }
@@ -107,7 +106,9 @@ impl DerefMut for LogpaletteGuard {
 
 impl LogpaletteGuard {
 	pub(in crate::gdi) fn new(
-		pal_version: u16, entries: &[PALETTEENTRY]) -> Self
+		pal_version: u16,
+		entries: &[PALETTEENTRY],
+	) -> Self
 	{
 		let sz = std::mem::size_of::<LOGPALETTE>() // size in bytes of the allocated struct
 			- std::mem::size_of::<PALETTEENTRY>()
@@ -143,7 +144,7 @@ impl<'a, H, G> Drop for SelectObjectGuard<'a, H, G>
 	fn drop(&mut self) {
 		if let Some(h) = self.hdc.as_opt() {
 			if let Some(g) = self.prev_hgdi.as_opt() {
-				unsafe { gdi::ffi::SelectObject(h.ptr(), g.ptr()); } // ignore errors
+				unsafe { ffi::SelectObject(h.ptr(), g.ptr()); } // ignore errors
 			}
 		}
 	}

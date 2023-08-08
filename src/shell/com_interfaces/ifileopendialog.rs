@@ -1,10 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{COMPTR, HRES};
-use crate::ole::decl::HrResult;
-use crate::prelude::{shell_IFileDialog, shell_IModalWindow};
-use crate::shell::decl::IShellItemArray;
-use crate::vt::IFileDialogVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IFileOpenDialog`](crate::IFileOpenDialog) virtual table.
 #[repr(C)]

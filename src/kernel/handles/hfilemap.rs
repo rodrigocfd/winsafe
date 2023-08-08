@@ -1,10 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, kernel};
-use crate::kernel::decl::SysResult;
-use crate::kernel::guard::UnmapViewOfFileGuard;
-use crate::kernel::privs::ptr_to_sysresult_handle;
-use crate::prelude::Handle;
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::{ffi, privs::*};
+use crate::prelude::*;
 
 impl_handle! { HFILEMAP;
 	/// Handle to a
@@ -37,7 +37,7 @@ pub trait kernel_Hfilemap: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				kernel::ffi::MapViewOfFileFromApp(
+				ffi::MapViewOfFileFromApp(
 					self.ptr(),
 					desired_access.raw(),
 					offset,

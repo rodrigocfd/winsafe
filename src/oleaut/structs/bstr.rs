@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
-use crate::{co, oleaut};
-use crate::kernel::decl::WString;
-use crate::ole::decl::HrResult;
+use crate::co;
+use crate::decl::*;
+use crate::oleaut::ffi;
 
 /// A
 /// [string data type](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/automat/bstr)
@@ -23,7 +23,7 @@ impl Default for BSTR {
 impl Drop for BSTR {
 	fn drop(&mut self) {
 		if !self.0.is_null() {
-			unsafe { oleaut::ffi::SysFreeString(self.0) }
+			unsafe { ffi::SysFreeString(self.0); }
 		}
 	}
 }
@@ -40,7 +40,7 @@ impl BSTR {
 	#[must_use]
 	pub fn SysAllocString(s: &str) -> HrResult<Self> {
 		let str_obj = WString::from_str(s);
-		let ptr = unsafe { oleaut::ffi::SysAllocString(str_obj.as_ptr()) };
+		let ptr = unsafe { ffi::SysAllocString(str_obj.as_ptr()) };
 		if ptr.is_null() {
 			Err(co::HRESULT::E_OUTOFMEMORY)
 		} else {
@@ -54,9 +54,7 @@ impl BSTR {
 	/// The underlying pointer is automatically updated.
 	pub fn SysReAllocString(&mut self, s: &str) -> HrResult<()> {
 		let str_obj = WString::from_str(s);
-		let ptr = unsafe {
-			oleaut::ffi::SysReAllocString(self.0, str_obj.as_ptr())
-		};
+		let ptr = unsafe { ffi::SysReAllocString(self.0, str_obj.as_ptr()) };
 		if ptr.is_null() {
 			Err(co::HRESULT::E_OUTOFMEMORY)
 		} else {
@@ -69,7 +67,7 @@ impl BSTR {
 	/// function.
 	#[must_use]
 	pub fn SysStringLen(&self) -> u32 {
-		unsafe { oleaut::ffi::SysStringLen(self.0) }
+		unsafe { ffi::SysStringLen(self.0) }
 	}
 
 	/// Creates a new `BSTR` by wrapping a pointer.

@@ -3,18 +3,10 @@
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::kernel::decl::{
-	HINSTANCE, HIWORD, LCID, LOBYTE, LOWORD, MAKEDWORD, WString,
-};
-use crate::kernel::ffi_types::BOOL;
-use crate::prelude::Handle;
-use crate::user::decl::{
-	DispfNup, HBITMAP, HBRUSH, HCURSOR, HDC, HICON, HMENU, HwKbMouse, HWND,
-	HwndHmenu, HwndPlace, WNDPROC,
-};
-use crate::user::privs::{
-	CCHDEVICENAME, CCHFORMNAME, CCHILDREN_TITLEBAR, DM_SPECVERSION,
-};
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`ACCEL`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-accel)
 /// struct.

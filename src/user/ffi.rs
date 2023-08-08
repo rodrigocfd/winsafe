@@ -1,4 +1,4 @@
-use crate::kernel::ffi_types::{BOOL, HANDLE, PCSTR, PCVOID, PFUNC, PSTR, PVOID};
+use crate::kernel::ffi_types::*;
 
 #[cfg(target_pointer_width = "32")]
 extern_sys! { "user32";

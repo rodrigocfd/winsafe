@@ -3,11 +3,7 @@
 use std::mem::ManuallyDrop;
 
 use crate::co;
-use crate::kernel::decl::{SysResult, SYSTEMTIME};
-use crate::ole::decl::HrResult;
-use crate::oleaut::decl::{
-	BSTR, SystemTimeToVariantTime, VariantTimeToSystemTime,
-};
+use crate::decl::*;
 
 /// This trait is enabled with the `oleaut` feature, and provides common methods
 /// for [`VARIANT`](crate::VARIANT) and [`PROPVARIANT`](crate::PROPVARIANT).

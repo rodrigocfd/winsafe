@@ -1,10 +1,8 @@
 use crate::co;
-use crate::comctl::decl::{MCGRIDINFO, MCHITTESTINFO, MONTHDAYSTATE};
-use crate::kernel::decl::{HIWORD, LOWORD, SysResult, SYSTEMTIME};
-use crate::msg::WndMsg;
-use crate::prelude::MsgSend;
-use crate::user::decl::{COLORREF, RECT};
-use crate::user::privs::{minus1_as_badargs, minus1_as_none, zero_as_badargs};
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`MCM_GETCALENDARBORDER`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getcalendarborder)
 /// message, which has no parameters.

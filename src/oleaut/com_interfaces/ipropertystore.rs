@@ -1,13 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::{COMPTR, HRES, PCVOID, PVOID};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::oleaut::decl::{PROPERTYKEY, PROPVARIANT};
-use crate::oleaut::iterators::IpropertystoreIter;
-use crate::prelude::ole_IUnknown;
-use crate::vt::IUnknownVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::oleaut::iterators::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IPropertyStore`](crate::IPropertyStore) virtual table.
 #[repr(C)]
@@ -120,7 +119,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 			)
 		 } {
 			co::HRESULT::S_OK
-			| co::HRESULT::INPLACE_S_TRUNCATED => Ok(var),
+				| co::HRESULT::INPLACE_S_TRUNCATED => Ok(var),
 			hr => Err(hr),
 		}
 	}

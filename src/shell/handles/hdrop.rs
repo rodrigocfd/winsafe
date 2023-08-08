@@ -1,10 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::decl::SysResult;
-use crate::prelude::Handle;
-use crate::shell;
-use crate::shell::iterators::HdropIter;
-use crate::user::decl::POINT;
+use crate::decl::*;
+use crate::prelude::*;
+use crate::shell::{ffi, iterators::*};
 
 impl_handle! { HDROP;
 	/// Handle to an
@@ -63,7 +61,8 @@ pub trait shell_Hdrop: Handle {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn DragQueryFile(&mut self) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + '_>> {
+	fn DragQueryFile(&mut self,
+	) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + '_>> {
 		Ok(Box::new(HdropIter::new(self)?))
 	}
 
@@ -80,7 +79,7 @@ pub trait shell_Hdrop: Handle {
 	fn DragQueryPoint(&self) -> (POINT, bool) {
 		let mut pt = POINT::default();
 		let client_area = unsafe {
-			shell::ffi::DragQueryPoint(self.ptr(), &mut pt as *mut _ as _)
+			ffi::DragQueryPoint(self.ptr(), &mut pt as *mut _ as _)
 		};
 		(pt, client_area != 0)
 	}

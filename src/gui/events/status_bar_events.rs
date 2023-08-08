@@ -1,8 +1,6 @@
 use crate::co;
-use crate::comctl::decl::NMMOUSE;
-use crate::gui::base::Base;
-use crate::gui::events::base_events_proxy::BaseEventsProxy;
-use crate::kernel::decl::AnyResult;
+use crate::decl::*;
+use crate::gui::privs::*;
 
 /// Exposes status bar control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications).

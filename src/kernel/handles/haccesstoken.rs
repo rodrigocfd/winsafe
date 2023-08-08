@@ -1,12 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, kernel};
-use crate::kernel::decl::{GetLastError, SID, SysResult};
-use crate::kernel::enums::DisabPriv;
-use crate::kernel::ffi_types::BOOL;
-use crate::kernel::guard::CloseHandleGuard;
-use crate::kernel::privs::bool_to_sysresult;
-use crate::prelude::Handle;
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::{ffi, ffi_types::*, privs::*};
+use crate::prelude::*;
 
 impl_handle! { HACCESSTOKEN;
 	/// Handle to an
@@ -52,7 +50,7 @@ pub trait kernel_Haccesstoken: Handle {
 	fn AdjustTokenPrivileges(&self, new_state: DisabPriv) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::AdjustTokenPrivileges(
+				ffi::AdjustTokenPrivileges(
 					self.ptr(),
 					match new_state {
 						DisabPriv::Disab => 1,
@@ -79,7 +77,7 @@ pub trait kernel_Haccesstoken: Handle {
 		let mut has_capability: BOOL = 0;
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::CheckTokenCapability(
+				ffi::CheckTokenCapability(
 					self.ptr(),
 					capability_sid_to_check as *const _ as _,
 					&mut has_capability,
@@ -95,7 +93,7 @@ pub trait kernel_Haccesstoken: Handle {
 		let mut is_member: BOOL = 0;
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::CheckTokenMembership(
+				ffi::CheckTokenMembership(
 					self.ptr(),
 					sid_to_check as *const _ as _,
 					&mut is_member,
@@ -114,7 +112,7 @@ pub trait kernel_Haccesstoken: Handle {
 		let mut handle = HACCESSTOKEN::NULL;
 		unsafe {
 			bool_to_sysresult(
-				kernel::ffi::DuplicateToken(
+				ffi::DuplicateToken(
 					self.ptr(),
 					level.raw(),
 					handle.as_mut(),
@@ -127,14 +125,14 @@ pub trait kernel_Haccesstoken: Handle {
 	/// function.
 	#[must_use]
 	fn GetCurrentProcessToken() -> HACCESSTOKEN {
-		HACCESSTOKEN(unsafe { kernel::ffi::GetCurrentProcessToken() })
+		HACCESSTOKEN(unsafe { ffi::GetCurrentProcessToken() })
 	}
 
 	/// [`GetCurrentThreadEffectiveToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadeffectivetoken)
 	/// function.
 	#[must_use]
 	fn GetCurrentThreadEffectiveToken() -> HACCESSTOKEN {
-		HACCESSTOKEN(unsafe { kernel::ffi::GetCurrentThreadEffectiveToken() })
+		HACCESSTOKEN(unsafe { ffi::GetCurrentThreadEffectiveToken() })
 	}
 
 	/// [`GetTokenInformation`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-gettokeninformation)
@@ -174,7 +172,7 @@ pub trait kernel_Haccesstoken: Handle {
 		let mut ret_len = u32::default();
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::GetTokenInformation(
+				ffi::GetTokenInformation(
 					self.ptr(),
 					information_class.raw(),
 					information as *mut _ as _,
@@ -189,7 +187,7 @@ pub trait kernel_Haccesstoken: Handle {
 	/// function.
 	#[must_use]
 	fn IsTokenRestricted(&self) -> SysResult<bool> {
-		match unsafe { kernel::ffi::IsTokenRestricted(self.ptr()) } {
+		match unsafe { ffi::IsTokenRestricted(self.ptr()) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(false), // actual false
 				err => Err(err),

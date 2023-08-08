@@ -1,14 +1,9 @@
 use crate::co;
-use crate::comctl::decl::{HTREEITEM, TreeitemTvi, TVINSERTSTRUCT, TVITEMEX};
-use crate::gui::native_controls::tree_view_items::{
-	TreeViewChildItemIter, TreeViewItemIter,
-};
-use crate::gui::native_controls::tree_view::TreeView;
-use crate::kernel::decl::WString;
-use crate::kernel::privs::MAX_PATH;
-use crate::msg::tvm;
-use crate::prelude::{GuiWindow, Handle, NativeBitflag, user_Hwnd};
-use crate::user::decl::HWND;
+use crate::decl::*;
+use crate::gui::{*, privs::*};
+use crate::kernel::privs::*;
+use crate::msg::*;
+use crate::prelude::*;
 
 /// A single item of a [`TreeView`](crate::gui::TreeView) control.
 ///

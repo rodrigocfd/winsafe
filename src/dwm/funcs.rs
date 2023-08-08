@@ -1,20 +1,20 @@
 #![allow(non_snake_case)]
 
-use crate::dwm;
-use crate::kernel::ffi_types::BOOL;
-use crate::ole::decl::HrResult;
-use crate::ole::privs::ok_to_hrresult;
+use crate::decl::*;
+use crate::dwm::ffi;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
 
 /// [`DwmEnableMMCSS`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmenablemmcss)
 /// function.
 pub fn DwmEnableMMCSS(enable: bool) -> HrResult<()> {
-	ok_to_hrresult(unsafe { dwm::ffi::DwmEnableMMCSS(enable as _) })
+	ok_to_hrresult(unsafe { ffi::DwmEnableMMCSS(enable as _) })
 }
 
 /// [`DwmFlush`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmflush)
 /// function.
 pub fn DwmFlush() -> HrResult<()> {
-	ok_to_hrresult(unsafe { dwm::ffi::DwmFlush() })
+	ok_to_hrresult(unsafe { ffi::DwmFlush() })
 }
 
 /// [`DwmGetColorizationColor`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmgetcolorizationcolor)
@@ -29,7 +29,7 @@ pub fn DwmGetColorizationColor() -> HrResult<(u32, bool)> {
 
 	ok_to_hrresult(
 		unsafe {
-			dwm::ffi::DwmGetColorizationColor(&mut colorization, &mut opaque_blend)
+			ffi::DwmGetColorizationColor(&mut colorization, &mut opaque_blend)
 		},
 	).map(|_| (colorization, opaque_blend != 0))
 }
@@ -39,6 +39,6 @@ pub fn DwmGetColorizationColor() -> HrResult<(u32, bool)> {
 #[must_use]
 pub fn DwmIsCompositionEnabled() -> HrResult<bool> {
 	let mut pf_enabled: BOOL = 0;
-	ok_to_hrresult(unsafe { dwm::ffi::DwmIsCompositionEnabled(&mut pf_enabled) })
+	ok_to_hrresult(unsafe { ffi::DwmIsCompositionEnabled(&mut pf_enabled) })
 		.map(|_| pf_enabled != 0)
 }

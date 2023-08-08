@@ -1,4 +1,4 @@
-use crate::kernel::ffi_types::{BOOL, PCSTR, PCVOID, PVOID};
+use crate::kernel::ffi_types::*;
 
 extern_sys! { "version";
 	GetFileVersionInfoSizeW(PCSTR, *mut u32) -> u32

@@ -1,11 +1,8 @@
 use crate::co;
-use crate::comctl::decl::{LVFINDINFO, LVHITTESTINFO, LVITEM};
-use crate::gui::native_controls::list_view_item::ListViewItem;
-use crate::gui::native_controls::list_view::ListView;
-use crate::kernel::decl::WString;
-use crate::msg::lvm;
-use crate::prelude::{GuiWindow, NativeBitflag, user_Hwnd};
-use crate::user::decl::POINT;
+use crate::decl::*;
+use crate::gui::{*, spec::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 /// Exposes item methods of a [`ListView`](crate::gui::ListView) control.
 ///
@@ -50,7 +47,9 @@ impl<'a> ListViewItems<'a> {
 	/// Panics if `texts` is empty, or if the number of texts is greater than
 	/// the number of columns.
 	pub fn add(&self,
-		texts: &[impl AsRef<str>], icon_index: Option<u32>) -> ListViewItem<'a>
+		texts: &[impl AsRef<str>],
+		icon_index: Option<u32>,
+	) -> ListViewItem<'a>
 	{
 		if texts.is_empty() {
 			panic!("No texts passed when adding a ListView item.");

@@ -1,16 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, kernel};
-use crate::kernel::decl::{
-	GetLastError, HRSRC, HRSRCMEM, IdStr, LANGID, RtStr, SysResult, WString,
-};
-use crate::kernel::ffi_types::BOOL;
-use crate::kernel::guard::FreeLibraryGuard;
-use crate::kernel::privs::{
-	bool_to_sysresult, MAX_PATH, ptr_to_sysresult, ptr_to_sysresult_handle,
-	str_to_iso88591,
-};
-use crate::prelude::Handle;
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::{ffi, ffi_types::*, privs::*};
+use crate::prelude::*;
 
 impl_handle! { HINSTANCE;
 	/// Handle to an
@@ -40,7 +34,7 @@ pub trait kernel_Hinstance: Handle {
 	{
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::EnumResourceLanguagesW(
+				ffi::EnumResourceLanguagesW(
 					self.ptr(),
 					resource_type.as_ptr(),
 					resource_id.as_ptr(),
@@ -82,7 +76,7 @@ pub trait kernel_Hinstance: Handle {
 	{
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::EnumResourceNamesW(
+				ffi::EnumResourceNamesW(
 					self.ptr(),
 					resource_type.as_ptr(),
 					enum_resource_names_proc::<F> as _,
@@ -116,7 +110,7 @@ pub trait kernel_Hinstance: Handle {
 	{
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::EnumResourceTypesW(
+				ffi::EnumResourceTypesW(
 					self.ptr(),
 					enum_resource_types_proc::<F> as _,
 					&func as *const _ as _,
@@ -132,11 +126,13 @@ pub trait kernel_Hinstance: Handle {
 	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	#[must_use]
 	fn FindResource(&self,
-		resource_id: IdStr, resource_type: RtStr) -> SysResult<HRSRC>
+		resource_id: IdStr,
+		resource_type: RtStr,
+	) -> SysResult<HRSRC>
 	{
 		ptr_to_sysresult_handle(
 			unsafe {
-				kernel::ffi::FindResourceW(
+				ffi::FindResourceW(
 					self.ptr(),
 					resource_id.as_ptr(),
 					resource_type.as_ptr(),
@@ -159,7 +155,7 @@ pub trait kernel_Hinstance: Handle {
 	{
 		ptr_to_sysresult_handle(
 			unsafe {
-				kernel::ffi::FindResourceExW(
+				ffi::FindResourceExW(
 					self.ptr(),
 					resource_id.as_ptr(),
 					resource_type.as_ptr(),
@@ -190,7 +186,7 @@ pub trait kernel_Hinstance: Handle {
 		let mut buf = [0; MAX_PATH];
 		bool_to_sysresult(
 			unsafe {
-				kernel::ffi::GetModuleFileNameW(
+				ffi::GetModuleFileNameW(
 					self.ptr(),
 					buf.as_mut_ptr(),
 					buf.len() as _,
@@ -217,9 +213,7 @@ pub trait kernel_Hinstance: Handle {
 	fn GetModuleHandle(module_name: Option<&str>) -> SysResult<HINSTANCE> {
 		ptr_to_sysresult_handle(
 			unsafe {
-				kernel::ffi::GetModuleHandleW(
-					WString::from_opt_str(module_name).as_ptr(),
-				)
+				ffi::GetModuleHandleW(WString::from_opt_str(module_name).as_ptr())
 			},
 		)
 	}
@@ -228,11 +222,12 @@ pub trait kernel_Hinstance: Handle {
 	/// function.
 	#[must_use]
 	fn GetProcAddress(&self,
-		proc_name: &str) -> SysResult<*const std::ffi::c_void>
+		proc_name: &str,
+	) -> SysResult<*const std::ffi::c_void>
 	{
 		ptr_to_sysresult(
 			unsafe {
-				kernel::ffi::GetProcAddress(
+				ffi::GetProcAddress(
 					self.ptr(),
 					str_to_iso88591(proc_name).as_ptr(),
 				) as _
@@ -246,8 +241,7 @@ pub trait kernel_Hinstance: Handle {
 	fn LoadLibrary(lib_file_name: &str) -> SysResult<FreeLibraryGuard> {
 		unsafe {
 			ptr_to_sysresult_handle(
-				kernel::ffi::LoadLibraryW(
-					WString::from_str(lib_file_name).as_ptr()),
+				ffi::LoadLibraryW(WString::from_str(lib_file_name).as_ptr()),
 			).map(|h| FreeLibraryGuard::new(h))
 		}
 	}
@@ -260,7 +254,7 @@ pub trait kernel_Hinstance: Handle {
 	#[must_use]
 	fn LoadResource(&self, res_info: &HRSRC) -> SysResult<HRSRCMEM> {
 		ptr_to_sysresult_handle(
-			unsafe { kernel::ffi::LoadResource(self.ptr(), res_info.ptr()) },
+			unsafe { ffi::LoadResource(self.ptr(), res_info.ptr()) },
 		)
 	}
 
@@ -312,13 +306,14 @@ pub trait kernel_Hinstance: Handle {
 	/// ```
 	#[must_use]
 	fn LockResource(&self,
-		res_info: &HRSRC, hres_loaded: &HRSRCMEM) -> SysResult<&[u8]>
+		res_info: &HRSRC,
+		hres_loaded: &HRSRCMEM,
+	) -> SysResult<&[u8]>
 	{
 		let sz = self.SizeofResource(res_info)?;
 		unsafe {
-			ptr_to_sysresult(
-				kernel::ffi::LockResource(hres_loaded.ptr()),
-			).map(|ptr| std::slice::from_raw_parts(ptr.cast(), sz as _))
+			ptr_to_sysresult(ffi::LockResource(hres_loaded.ptr()))
+				.map(|ptr| std::slice::from_raw_parts(ptr as _, sz as _))
 		}
 	}
 
@@ -329,9 +324,7 @@ pub trait kernel_Hinstance: Handle {
 	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	#[must_use]
 	fn SizeofResource(&self, res_info: &HRSRC) -> SysResult<u32> {
-		match unsafe {
-			kernel::ffi::SizeofResource(self.ptr(), res_info.ptr())
-		} {
+		match unsafe { ffi::SizeofResource(self.ptr(), res_info.ptr()) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz)
 		}

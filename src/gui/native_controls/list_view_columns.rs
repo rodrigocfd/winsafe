@@ -1,12 +1,8 @@
 use crate::co;
-use crate::comctl::decl::LVCOLUMN;
-use crate::gui::native_controls::list_view_column::ListViewColumn;
-use crate::gui::native_controls::list_view::ListView;
-use crate::gui::privs::multiply_dpi;
-use crate::kernel::decl::WString;
-use crate::msg::{hdm, lvm};
-use crate::prelude::{GuiWindow, user_Hwnd};
-use crate::user::decl::SIZE;
+use crate::decl::*;
+use crate::gui::{*, privs::*, spec::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 /// Exposes column methods of a [`ListView`](crate::gui::ListView) control.
 ///

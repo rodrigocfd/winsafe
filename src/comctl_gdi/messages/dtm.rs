@@ -1,9 +1,8 @@
 use crate::co;
-use crate::gdi::decl::HFONT;
-use crate::kernel::decl::SysResult;
-use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
-use crate::user::privs::zero_as_badargs;
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`DTM_GETMCFONT`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-getmcfont)
 /// message, which has no parameters.

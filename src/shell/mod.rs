@@ -1,4 +1,9 @@
-#![cfg_attr(docsrs, doc(cfg(feature = "shell")))]
+#![cfg(feature = "shell")]
+
+mod com_interfaces;
+mod funcs;
+mod handles;
+mod structs;
 
 pub(in crate::shell) mod ffi;
 pub(in crate::shell) mod iterators;
@@ -6,11 +11,6 @@ pub(crate) mod privs;
 pub mod co;
 pub mod guard;
 pub mod messages;
-
-mod com_interfaces;
-mod funcs;
-mod handles;
-mod structs;
 
 pub mod decl {
 	pub use super::com_interfaces::decl::*;

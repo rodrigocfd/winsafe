@@ -1,6 +1,6 @@
 use crate::co;
-use crate::kernel::decl::WString;
-use crate::kernel::privs::MAKEINTRESOURCE;
+use crate::decl::*;
+use crate::kernel::privs::*;
 
 /// Variant parameter for:
 ///

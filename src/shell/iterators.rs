@@ -1,9 +1,7 @@
-use crate::shell;
-use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::kernel::privs::MAX_PATH;
-use crate::ole::decl::HrResult;
-use crate::prelude::{shell_Hdrop, shell_IEnumShellItems, shell_IShellItemArray};
-use crate::shell::decl::IShellItem;
+use crate::decl::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
+use crate::shell::ffi;
 
 pub(in crate::shell) struct HdropIter<'a, H>
 	where H: shell_Hdrop,
@@ -18,7 +16,7 @@ impl<'a, H> Drop for HdropIter<'a, H>
 	where H: shell_Hdrop,
 {
 	fn drop(&mut self) {
-		unsafe { shell::ffi::DragFinish(self.hdrop.ptr()); }
+		unsafe { ffi::DragFinish(self.hdrop.ptr()); }
 	}
 }
 
@@ -33,7 +31,7 @@ impl<'a, H> Iterator for HdropIter<'a, H>
 		}
 
 		match unsafe {
-			shell::ffi::DragQueryFileW(
+			ffi::DragQueryFileW(
 				self.hdrop.ptr(),
 				self.current,
 				self.buffer.as_mut_ptr(),
@@ -57,7 +55,7 @@ impl<'a, H> HdropIter<'a, H>
 {
 	pub(in crate::shell) fn new(hdrop: &'a mut H) -> SysResult<Self> {
 		let count = unsafe {
-			shell::ffi::DragQueryFileW( // preliminar call to retrieve the file count
+			ffi::DragQueryFileW( // preliminar call to retrieve the file count
 				hdrop.ptr(),
 				0xffff_ffff,
 				std::ptr::null_mut(),

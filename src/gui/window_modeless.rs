@@ -1,12 +1,8 @@
 use std::any::Any;
 
-use crate::gui::base::Base;
-use crate::gui::dlg_modeless::DlgModeless;
-use crate::gui::events::WindowEventsAll;
-use crate::gui::raw_modeless::{RawModeless, WindowModelessOpts};
-use crate::kernel::decl::AnyResult;
-use crate::prelude::{GuiParent, GuiThread, GuiWindow, GuiWindowText, Handle};
-use crate::user::decl::{HWND, POINT};
+use crate::decl::*;
+use crate::gui::{*, events::*, privs::*};
+use crate::prelude::*;
 
 /// Keeps a raw or dialog window.
 #[derive(Clone)]

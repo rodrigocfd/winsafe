@@ -1,16 +1,16 @@
-#![cfg_attr(docsrs, doc(cfg(feature = "comctl")))]
-
-pub(in crate::comctl) mod ffi;
-pub(crate) mod privs;
-pub mod co;
-pub mod guard;
-pub mod messages;
+#![cfg(feature = "comctl")]
 
 mod aliases;
 mod enums;
 mod funcs;
 mod handles;
 mod structs;
+
+pub(in crate::comctl) mod ffi;
+pub(crate) mod privs;
+pub mod co;
+pub mod guard;
+pub mod messages;
 
 pub mod decl {
 	pub use super::aliases::*;

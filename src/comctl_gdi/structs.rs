@@ -3,8 +3,7 @@
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::comctl::decl::{HIMAGELIST, HTREEITEM, NMHDR};
-use crate::user::decl::{COLORREF, HDC};
+use crate::decl::*;
 
 /// [`IMAGELISTDRAWPARAMS`](https://learn.microsoft.com/en-us/windows/win32/api/commoncontrols/ns-commoncontrols-imagelistdrawparams)
 /// struct.

@@ -1,5 +1,5 @@
 use crate::co;
-use crate::prelude::{MsgSend, MsgSendRecv};
+use crate::prelude::*;
 
 /// Generic
 /// [window message](https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues)

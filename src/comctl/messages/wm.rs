@@ -1,7 +1,7 @@
 use crate::co;
-use crate::comctl::decl::NMHDR;
-use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend, MsgSendRecv};
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
 
 /// [`WM_NOTIFY`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-notify)
 /// message parameters.

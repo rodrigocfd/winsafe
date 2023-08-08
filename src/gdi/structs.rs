@@ -1,11 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::gdi::guard::LogpaletteGuard;
-use crate::gdi::privs::LF_FACESIZE;
-use crate::kernel::decl::IsWindowsVistaOrGreater;
-use crate::prelude::VariableSized;
-use crate::user::decl::{COLORREF, POINT};
+use crate::decl::*;
+use crate::gdi::privs::*;
+use crate::guard::*;
+use crate::prelude::*;
 
 /// [`BITMAP`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmap)
 /// struct.

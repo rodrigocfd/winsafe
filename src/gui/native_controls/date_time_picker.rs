@@ -4,20 +4,10 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::events::{DateTimePickerEvents, WindowEvents};
-use crate::gui::layout_arranger::{Horz, Vert};
-use crate::gui::native_controls::base_native_control::{
-	BaseNativeControl, OptsResz,
-};
-use crate::gui::privs::{auto_ctrl_id, multiply_dpi_or_dtu, ui_font};
-use crate::kernel::decl::{SysResult, SYSTEMTIME};
-use crate::msg::{dtm, wm};
-use crate::prelude::{
-	GuiChild, GuiChildFocus, GuiEvents, GuiNativeControl,
-	GuiNativeControlEvents, GuiParent, GuiWindow, Handle, user_Hwnd,
-};
-use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
+use crate::decl::*;
+use crate::gui::{*, events::*, privs::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 struct Obj { // actual fields of DateTimePicker
 	base: BaseNativeControl,

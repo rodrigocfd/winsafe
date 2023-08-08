@@ -1,9 +1,7 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::decl::{
-	HIDWORD, HIWORD, LODWORD, LOWORD, MAKEDWORD, MAKEQWORD,
-};
+use crate::decl::*;
 
 /// [`VS_FIXEDFILEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/verrsrc/ns-verrsrc-vs_fixedfileinfo)
 /// struct.

@@ -1,10 +1,8 @@
 use crate::co;
-use crate::comctl::decl::UDACCEL;
-use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD, SysResult};
-use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
-use crate::user::decl::HWND;
-use crate::user::privs::{zero_as_badargs, zero_as_none};
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`UDM_GETACCEL`](https://learn.microsoft.com/en-us/windows/win32/controls/udm-getaccel)
 /// message parameters.

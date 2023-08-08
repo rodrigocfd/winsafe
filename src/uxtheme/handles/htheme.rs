@@ -1,12 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, uxtheme};
-use crate::gdi::guard::DeleteObjectGuard;
-use crate::ole::decl::HrResult;
-use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{Handle, IntUnderlying};
-use crate::user::decl::{COLORREF, HDC, HRGN, POINT, RECT, SIZE};
-use crate::uxtheme::decl::MARGINS;
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::uxtheme::ffi;
 
 impl_handle! { HTHEME;
 	/// Handle to a
@@ -27,11 +26,15 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`DrawThemeBackground`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-drawthemebackground)
 	/// function.
 	fn DrawThemeBackground(&self,
-		hdc: &HDC, part_state: co::VS, rc: RECT, rc_clip: RECT) -> HrResult<()>
+		hdc: &HDC,
+		part_state: co::VS,
+		rc: RECT,
+		rc_clip: RECT,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {
-				uxtheme::ffi::DrawThemeBackground(
+				ffi::DrawThemeBackground(
 					self.ptr(),
 					hdc.ptr(),
 					part_state.part,
@@ -47,20 +50,23 @@ pub trait uxtheme_Htheme: Handle {
 	/// function.
 	#[must_use]
 	fn GetThemeAppProperties() -> co::STAP {
-		unsafe { co::STAP::from_raw(uxtheme::ffi::GetThemeAppProperties()) }
+		unsafe { co::STAP::from_raw(ffi::GetThemeAppProperties()) }
 	}
 
 	/// [`GetThemeBackgroundContentRect`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundcontentrect)
 	/// function.
 	#[must_use]
 	fn GetThemeBackgroundContentRect(&self,
-		hdc: &HDC, part_state: co::VS, bounds: RECT) -> HrResult<RECT>
+		hdc: &HDC,
+		part_state: co::VS,
+		bounds: RECT,
+	) -> HrResult<RECT>
 	{
 		let mut rc_content = RECT::default();
 
 		ok_to_hrresult(
 			unsafe {
-				uxtheme::ffi::GetThemeBackgroundContentRect(
+				ffi::GetThemeBackgroundContentRect(
 					self.ptr(),
 					hdc.ptr(),
 					part_state.part,
@@ -76,13 +82,16 @@ pub trait uxtheme_Htheme: Handle {
 	/// function.
 	#[must_use]
 	fn GetThemeBackgroundExtent(&self,
-		hdc: &HDC, part_state: co::VS, rc_content: RECT) -> HrResult<RECT>
+		hdc: &HDC,
+		part_state: co::VS,
+		rc_content: RECT,
+	) -> HrResult<RECT>
 	{
 		let mut rc_extent = RECT::default();
 
 		ok_to_hrresult(
 			unsafe {
-				uxtheme::ffi::GetThemeBackgroundExtent(
+				ffi::GetThemeBackgroundExtent(
 					self.ptr(),
 					hdc.ptr(),
 					part_state.part,
@@ -106,7 +115,7 @@ pub trait uxtheme_Htheme: Handle {
 		let mut hrgn = HRGN::NULL;
 		unsafe {
 			ok_to_hrresult(
-				uxtheme::ffi::GetThemeBackgroundRegion(
+				ffi::GetThemeBackgroundRegion(
 					self.ptr(),
 					hdc.ptr(),
 					part_state.part,
@@ -122,12 +131,14 @@ pub trait uxtheme_Htheme: Handle {
 	/// function.
 	#[must_use]
 	fn GetThemeColor(&self,
-		part_state: co::VS, prop: co::TMT) -> HrResult<COLORREF>
+		part_state: co::VS,
+		prop: co::TMT,
+	) -> HrResult<COLORREF>
 	{
 		let mut color = COLORREF::default();
 		ok_to_hrresult(
 			unsafe {
-				uxtheme::ffi::GetThemeColor(
+				ffi::GetThemeColor(
 					self.ptr(),
 					part_state.part,
 					part_state.state,
@@ -151,7 +162,7 @@ pub trait uxtheme_Htheme: Handle {
 		let mut margins = MARGINS::default();
 		ok_to_hrresult(
 			unsafe {
-				uxtheme::ffi::GetThemeMargins(
+				ffi::GetThemeMargins(
 					self.ptr(),
 					hdc_fonts.map_or(std::ptr::null_mut(), |h| h.ptr()),
 					part_state.part(),
@@ -176,7 +187,7 @@ pub trait uxtheme_Htheme: Handle {
 		let mut val = i32::default();
 		ok_to_hrresult(
 			unsafe {
-				uxtheme::ffi::GetThemeMetric(
+				ffi::GetThemeMetric(
 					self.ptr(),
 					hdc_fonts.map_or(std::ptr::null_mut(), |h| h.ptr()),
 					part_state.part(),
@@ -201,7 +212,7 @@ pub trait uxtheme_Htheme: Handle {
 		let mut sz = SIZE::default();
 		ok_to_hrresult(
 			unsafe {
-				uxtheme::ffi::GetThemePartSize(
+				ffi::GetThemePartSize(
 					self.ptr(),
 					hdc_fonts.map_or(std::ptr::null_mut(), |h| h.ptr()),
 					part_state.part(),
@@ -218,12 +229,14 @@ pub trait uxtheme_Htheme: Handle {
 	/// function.
 	#[must_use]
 	fn GetThemePosition(&self,
-		part_state: co::VS, prop: co::TMT) -> HrResult<POINT>
+		part_state: co::VS,
+		prop: co::TMT,
+	) -> HrResult<POINT>
 	{
 		let mut pt = POINT::default();
 		ok_to_hrresult(
 			unsafe {
-				uxtheme::ffi::GetThemePosition(
+				ffi::GetThemePosition(
 					self.ptr(),
 					part_state.part(),
 					part_state.state(),
@@ -238,12 +251,14 @@ pub trait uxtheme_Htheme: Handle {
 	/// function.
 	#[must_use]
 	fn GetThemePropertyOrigin(&self,
-		part_state: co::VS, prop: co::TMT) -> HrResult<co::PROPERTYORIGIN>
+		part_state: co::VS,
+		prop: co::TMT,
+	) -> HrResult<co::PROPERTYORIGIN>
 	{
 		let mut origin = co::PROPERTYORIGIN::default();
 		ok_to_hrresult(
 			unsafe {
-				uxtheme::ffi::GetThemePropertyOrigin(
+				ffi::GetThemePropertyOrigin(
 					self.ptr(),
 					part_state.part(),
 					part_state.state(),
@@ -258,12 +273,14 @@ pub trait uxtheme_Htheme: Handle {
 	/// function.
 	#[must_use]
 	fn GetThemeRect(&self,
-		part_state: co::VS, prop: co::TMT) -> HrResult<RECT>
+		part_state: co::VS,
+		prop: co::TMT,
+	) -> HrResult<RECT>
 	{
 		let mut rc = RECT::default();
 		ok_to_hrresult(
 			unsafe {
-				uxtheme::ffi::GetThemeRect(
+				ffi::GetThemeRect(
 					self.ptr(),
 					part_state.part(),
 					part_state.state(),
@@ -278,10 +295,11 @@ pub trait uxtheme_Htheme: Handle {
 	/// function.
 	#[must_use]
 	fn IsThemeBackgroundPartiallyTransparent(&self,
-		part_state: co::VS) -> bool
+		part_state: co::VS,
+	) -> bool
 	{
 		unsafe {
-			uxtheme::ffi::IsThemeBackgroundPartiallyTransparent(
+			ffi::IsThemeBackgroundPartiallyTransparent(
 				self.ptr(), part_state.part, part_state.state) != 0
 		}
 	}
@@ -291,7 +309,7 @@ pub trait uxtheme_Htheme: Handle {
 	#[must_use]
 	fn IsThemePartDefined(&self, part_state: co::VS) -> bool {
 		unsafe {
-			uxtheme::ffi::IsThemePartDefined(
+			ffi::IsThemePartDefined(
 				self.ptr(), part_state.part, part_state.state) != 0
 		}
 	}

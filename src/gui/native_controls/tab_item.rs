@@ -1,9 +1,8 @@
 use crate::co;
-use crate::comctl::decl::TCITEM;
-use crate::gui::native_controls::tab::Tab;
-use crate::kernel::decl::WString;
-use crate::msg::tcm;
-use crate::prelude::{GuiWindow, user_Hwnd};
+use crate::decl::*;
+use crate::gui::*;
+use crate::msg::*;
+use crate::prelude::*;
 
 /// A single item of a [`Tab`](crate::gui::Tab) control.
 ///

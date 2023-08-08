@@ -1,8 +1,7 @@
 use crate::co;
-use crate::kernel::decl::SysResult;
-use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
-use crate::user::decl::{BmpIcon, HBITMAP, HICON};
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
 
 pub_struct_msg_empty! { Click: co::BM::CLICK.into();
 	/// [`BM_CLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/bm-click)

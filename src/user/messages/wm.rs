@@ -1,14 +1,8 @@
 use crate::co;
-use crate::kernel::decl::{HIWORD, LOWORD, MAKEDWORD};
-use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend, MsgSendRecv};
-use crate::user::decl::{
-	AccelMenuCtrl, AccelMenuCtrlData, CREATESTRUCT, DELETEITEMSTRUCT, HDC,
-	HELPINFO, HICON, HMENU, HWND, HwndFocus, HwndHmenu, HwndPointId, MINMAXINFO,
-	MSG, NccspRect, POINT, RECT, SIZE, STYLESTRUCT, TIMERPROC, TITLEBARINFOEX,
-	WINDOWPOS,
-};
-use crate::user::privs::{CB_ERR, FAPPCOMMAND_MASK, LB_ERRSPACE, zero_as_none};
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`WM_ACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
 /// message parameters.

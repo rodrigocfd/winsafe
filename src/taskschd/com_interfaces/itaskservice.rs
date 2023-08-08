@@ -1,12 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::oleaut::decl::{BSTR, VARIANT};
-use crate::prelude::{ole_IUnknown, oleaut_IDispatch, oleaut_Variant};
-use crate::taskschd::decl::{ITaskDefinition, ITaskFolder};
-use crate::vt::IDispatchVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`ITaskService`](crate::ITaskService) virtual table.
 #[repr(C)]

@@ -1,12 +1,9 @@
 use crate::co;
-use crate::comctl::privs::CLR_DEFAULT;
-use crate::kernel::decl::{
-	HIWORD, LOWORD, MAKEDWORD, MAKEWORD, SysResult, WString,
-};
-use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
-use crate::user::decl::{COLORREF, HICON, RECT};
-use crate::user::privs::zero_as_badargs;
+use crate::comctl::privs::*;
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`SB_GETBORDERS`](https://learn.microsoft.com/en-us/windows/win32/controls/sb-getborders)
 /// message parameters.

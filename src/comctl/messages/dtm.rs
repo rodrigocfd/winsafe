@@ -1,11 +1,9 @@
 use crate::co;
-use crate::comctl::decl::DATETIMEPICKERINFO;
-use crate::comctl::privs::GDT_ERROR;
-use crate::kernel::decl::{SysResult, SYSTEMTIME, WString};
-use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
-use crate::user::decl::{COLORREF, HWND, SIZE};
-use crate::user::privs::{minus1_as_badargs, zero_as_badargs};
+use crate::comctl::privs::*;
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 pub_struct_msg_empty! { CloseMonthCal: co::DTM::CLOSEMONTHCAL.into();
 	/// [`DTM_CLOSEMONTHCAL`](https://learn.microsoft.com/en-us/windows/win32/controls/dtm-closemonthcal)

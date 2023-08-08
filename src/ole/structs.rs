@@ -1,11 +1,11 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::kernel::decl::WString;
-use crate::kernel::ffi_types::COMPTR;
-use crate::prelude::{ole_IUnknown, VariableSized};
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::prelude::*;
 
 /// [`COAUTHIDENTITY`](https://learn.microsoft.com/en-us/windows/win32/api/wtypesbase/ns-wtypesbase-coauthidentity)
 /// struct.

@@ -1,14 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::decl::WString;
-use crate::kernel::ffi_types::{COMPTR, HRES, PSTR};
-use crate::kernel::privs::INFINITE;
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
-use crate::oleaut::decl::IDispatch;
-use crate::prelude::{IntUnderlying, oleaut_IDispatch, ole_IUnknown};
-use crate::vt::IDispatchVT;
+use crate::decl::*;
+use crate::kernel::{ffi_types::*, privs::*};
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IMediaControl`](crate::IMediaControl) virtual table.
 #[repr(C)]
@@ -80,7 +77,8 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn GetState(&self,
-		ms_timeout: Option<i32>) -> HrResult<co::FILTER_STATE>
+		ms_timeout: Option<i32>,
+	) -> HrResult<co::FILTER_STATE>
 	{
 		let mut state = co::FILTER_STATE::default();
 		ok_to_hrresult(

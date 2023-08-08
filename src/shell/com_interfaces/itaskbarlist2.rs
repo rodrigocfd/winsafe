@@ -1,11 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{BOOL, COMPTR, HANDLE, HRES};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{Handle, shell_ITaskbarList};
-use crate::user::decl::HWND;
-use crate::vt::ITaskbarListVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`ITaskbarList2`](crate::ITaskbarList2) virtual table.
 #[repr(C)]
@@ -52,7 +51,9 @@ pub trait shell_ITaskbarList2: shell_ITaskbarList {
 	/// [`ITaskbarList2::MarkFullscreenWindow`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-itaskbarlist2-markfullscreenwindow)
 	/// method.
 	fn MarkFullscreenWindow(&self,
-		hwnd: &HWND, full_screen: bool) -> HrResult<()>
+		hwnd: &HWND,
+		full_screen: bool,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {

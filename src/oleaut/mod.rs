@@ -1,13 +1,13 @@
-#![cfg_attr(docsrs, doc(cfg(feature = "oleaut")))]
+#![cfg(feature = "oleaut")]
+
+mod com_interfaces;
+mod funcs;
+mod structs;
 
 pub(in crate::oleaut) mod ffi;
 pub(in crate::oleaut) mod iterators;
 pub(crate) mod privs;
 pub mod co;
-
-mod com_interfaces;
-mod funcs;
-mod structs;
 
 pub mod decl {
 	pub use super::com_interfaces::decl::*;

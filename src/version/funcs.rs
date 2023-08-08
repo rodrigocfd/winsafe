@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
-use crate::kernel::decl::{GetLastError, HeapBlock, SysResult, WString};
-use crate::kernel::privs::bool_to_sysresult;
-use crate::version;
+use crate::decl::*;
+use crate::kernel::privs::*;
+use crate::version::ffi;
 
 /// [`GetFileVersionInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfow)
 /// function.
@@ -16,7 +16,7 @@ pub fn GetFileVersionInfo(file_name: &str) -> SysResult<HeapBlock> {
 
 	bool_to_sysresult(
 		unsafe {
-			version::ffi::GetFileVersionInfoW(
+			ffi::GetFileVersionInfoW(
 				WString::from_str(file_name).as_ptr(),
 				0,
 				buf.len() as _,
@@ -32,7 +32,7 @@ pub fn GetFileVersionInfo(file_name: &str) -> SysResult<HeapBlock> {
 pub fn GetFileVersionInfoSize(file_name: &str) -> SysResult<u32> {
 	let mut dw_handle = u32::default();
 	match unsafe {
-		version::ffi::GetFileVersionInfoSizeW(
+		ffi::GetFileVersionInfoSizeW(
 			WString::from_str(file_name).as_ptr(),
 			&mut dw_handle,
 		)
@@ -77,13 +77,15 @@ pub fn GetFileVersionInfoSize(file_name: &str) -> SysResult<u32> {
 /// ```
 #[must_use]
 pub unsafe fn VarQueryValue<T>(
-	block: &[u8], sub_block: &str) -> SysResult<(*const T, u32)>
+	block: &[u8],
+	sub_block: &str,
+) -> SysResult<(*const T, u32)>
 {
 	let mut lp_lp_buffer = std::ptr::null();
 	let mut pu_len = 0;
 
 	bool_to_sysresult(
-		version::ffi::VerQueryValueW(
+		ffi::VerQueryValueW(
 			block.as_ptr() as _,
 			WString::from_str(sub_block).as_ptr(),
 			&mut lp_lp_buffer as *mut _ as _,

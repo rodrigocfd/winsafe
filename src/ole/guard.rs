@@ -1,5 +1,6 @@
-use crate::{co, ole};
-use crate::prelude::ole_IUnknown;
+use crate::co;
+use crate::ole::ffi;
+use crate::prelude::*;
 
 /// RAII implementation which automatically calls
 /// [`CoLockObjectExternal`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-colockobjectexternal)
@@ -15,7 +16,7 @@ impl<'a, T> Drop for CoLockObjectExternalGuard<'a, T>
 {
 	fn drop(&mut self) {
 		unsafe {
-			ole::ffi::CoLockObjectExternal(self.com_obj.ptr(), 0, 1); // ignore errors
+			ffi::CoLockObjectExternal(self.com_obj.ptr(), 0, 1); // ignore errors
 		}
 	}
 }
@@ -46,7 +47,7 @@ pub struct CoUninitializeGuard {
 
 impl Drop for CoUninitializeGuard {
 	fn drop(&mut self) {
-		unsafe { ole::ffi::CoUninitialize() }
+		unsafe { ffi::CoUninitialize() }
 	}
 }
 

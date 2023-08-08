@@ -1,8 +1,8 @@
 use crate::co;
-use crate::msg::WndMsg;
-use crate::ole::decl::{HrResult, IDropTarget};
-use crate::ole::privs::ok_to_hrresult;
-use crate::prelude::{MsgSend, ole_IDropTarget, ole_IUnknown};
+use crate::decl::*;
+use crate::msg::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
 
 /// [`TB_GETOBJECT`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-getobject)
 /// message parameters.

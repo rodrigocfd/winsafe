@@ -5,16 +5,9 @@ use std::ptr::NonNull;
 use std::sync::Arc;
 
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::events::RadioGroupEvents;
-use crate::gui::layout_arranger::{Horz, Vert};
-use crate::gui::native_controls::base_native_control::OptsResz;
-use crate::gui::native_controls::radio_button::{RadioButton, RadioButtonOpts};
-use crate::kernel::decl::SysResult;
-use crate::prelude::{
-	GuiChild, GuiEvents, GuiNativeControlEvents, GuiParent, GuiWindow, Handle,
-};
-use crate::user::decl::HWND;
+use crate::decl::*;
+use crate::gui::{*, events::*, privs::*};
+use crate::prelude::*;
 
 struct Obj { // actual fields of RadioGroup
 	parent_ptr: NonNull<Base>,

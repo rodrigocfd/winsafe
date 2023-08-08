@@ -1,12 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::{BOOL, COMPTR, HANDLE, HRES, PCVOID};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{Handle, ole_IUnknown};
-use crate::user::decl::{HBITMAP, HDC, POINT, RECT, SIZE};
-use crate::vt::IUnknownVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IPicture`](crate::IPicture) virtual table.
 #[repr(C)]

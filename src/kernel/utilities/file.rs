@@ -1,10 +1,7 @@
 use crate::co;
-use crate::kernel::decl::{
-	FILETIME, FileTimeToSystemTime, HFILE, SysResult, SYSTEMTIME,
-	SystemTimeToTzSpecificLocalTime,
-};
-use crate::kernel::guard::CloseHandleGuard;
-use crate::prelude::kernel_Hfile;
+use crate::decl::*;
+use crate::guard::*;
+use crate::prelude::*;
 
 /// Access types for [`File::open`](crate::File::open) and
 /// [`FileMapped::open`](crate::FileMapped::open).

@@ -1,12 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, gdi};
-use crate::gdi::decl::LOGFONT;
-use crate::gdi::guard::DeleteObjectGuard;
-use crate::kernel::decl::{SysResult, WString};
-use crate::kernel::privs::{bool_to_sysresult, ptr_to_sysresult_handle};
-use crate::prelude::{GdiObject, GdiObjectSelect, Handle};
-use crate::user::decl::SIZE;
+use crate::co;
+use crate::decl::*;
+use crate::gdi::ffi;
+use crate::guard::*;
+use crate::kernel::privs::*;
+use crate::prelude::*;
 
 impl_handle! { HFONT;
 	/// Handle to a
@@ -47,7 +46,7 @@ pub trait gdi_Hfont: Handle {
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
-				gdi::ffi::CreateFontW(
+				ffi::CreateFontW(
 					sz.cy,
 					sz.cx,
 					escapement,
@@ -72,9 +71,8 @@ pub trait gdi_Hfont: Handle {
 	#[must_use]
 	fn CreateFontIndirect(lf: &LOGFONT) -> SysResult<DeleteObjectGuard<HFONT>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				gdi::ffi::CreateFontIndirectW(lf as *const _ as _),
-			).map(|h| DeleteObjectGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateFontIndirectW(lf as *const _ as _))
+				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -96,7 +94,7 @@ pub trait gdi_Hfont: Handle {
 	fn GetObject(&self, lf: &mut LOGFONT) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
-				gdi::ffi::GetObjectW(
+				ffi::GetObjectW(
 					self.ptr(),
 					std::mem::size_of::<LOGFONT>() as _,
 					lf as *mut _ as _,
@@ -109,6 +107,6 @@ pub trait gdi_Hfont: Handle {
 	/// function.
 	#[must_use]
 	fn GetStockObject(sf: co::STOCK_FONT) -> SysResult<HFONT> {
-		ptr_to_sysresult_handle(unsafe { gdi::ffi::GetStockObject(sf.raw()) })
+		ptr_to_sysresult_handle(unsafe { ffi::GetStockObject(sf.raw()) })
 	}
 }

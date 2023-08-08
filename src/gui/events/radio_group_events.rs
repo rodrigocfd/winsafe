@@ -2,10 +2,9 @@ use std::ptr::NonNull;
 use std::rc::Rc;
 
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::events::WindowEventsAll;
-use crate::kernel::decl::AnyResult;
-use crate::prelude::GuiEventsAll;
+use crate::decl::*;
+use crate::gui::{events::*, privs::*};
+use crate::prelude::*;
 
 /// Exposes button control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
@@ -24,7 +23,9 @@ pub struct RadioGroupEvents {
 
 impl RadioGroupEvents {
 	pub(in crate::gui) fn new(
-		parent_base: &Base, ctrl_ids: Vec<u16>) -> Self
+		parent_base: &Base,
+		ctrl_ids: Vec<u16>,
+	) -> Self
 	{
 		Self {
 			parent_ptr: NonNull::from(parent_base),

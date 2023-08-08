@@ -1,10 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::kernel::ffi_types::{BOOL, COMPTR, HRES, PCVOID, PSTR, PVOID};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{ole_IBindCtx, shell_IShellItem};
-use crate::vt::IShellItemVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IShellItem2`](crate::IShellItem2) virtual table.
 #[repr(C)]

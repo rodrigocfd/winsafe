@@ -1,10 +1,8 @@
 use crate::co;
-use crate::comctl::decl::BmpIconCurMeta;
-use crate::kernel::decl::SysResult;
-use crate::msg::WndMsg;
-use crate::prelude::{Handle, MsgSend};
-use crate::user::decl::{HBITMAP, HCURSOR, HDC, HICON};
-use crate::user::privs::zero_as_badargs;
+use crate::decl::*;
+use crate::msg::*;
+use crate::prelude::*;
+use crate::user::privs::*;
 
 /// [`STM_GETICON`](https://learn.microsoft.com/en-us/windows/win32/controls/stm-geticon)
 /// message, which has no parameters.

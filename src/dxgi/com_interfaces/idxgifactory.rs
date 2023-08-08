@@ -1,15 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::dxgi::decl::IDXGIAdapter;
-use crate::dxgi::iterators::IdxgifactoryEnumadaptersIter;
-use crate::kernel::decl::HINSTANCE;
-use crate::kernel::ffi_types::{COMPTR, HANDLE, HRES, PCVOID};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{dxgi_IDXGIObject, Handle, ole_IUnknown};
-use crate::user::decl::HWND;
-use crate::vt::IDXGIObjectVT;
+use crate::decl::*;
+use crate::dxgi::iterators::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IDXGIFactory`](crate::IDXGIFactory) virtual table.
 #[repr(C)]
@@ -60,7 +57,8 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	/// method.
 	#[must_use]
 	fn CreateSoftwareAdapter(&self,
-		hmodule: &HINSTANCE) -> HrResult<IDXGIAdapter>
+		hmodule: &HINSTANCE,
+	) -> HrResult<IDXGIAdapter>
 	{
 		let mut queried = unsafe { IDXGIAdapter::null() };
 		ok_to_hrresult(
@@ -124,7 +122,9 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	/// [`IDXGIFactory::MakeWindowAssociation`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-makewindowassociation)
 	/// method.
 	fn MakeWindowAssociation(&self,
-		hwnd: &HWND, flags: co::DXGI_MWA) -> HrResult<()>
+		hwnd: &HWND,
+		flags: co::DXGI_MWA,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {

@@ -1,8 +1,7 @@
 #![allow(non_camel_case_types)]
 
-use crate::ole::decl::{HrResult, IPicture};
-use crate::prelude::{gdi_ole_Hdc, Handle, ole_IPicture, user_Hwnd};
-use crate::user::decl::{HDC, HWND, SIZE};
+use crate::decl::*;
+use crate::prelude::*;
 
 impl gdi_ole_IPicture for IPicture {}
 

@@ -1,12 +1,10 @@
-#![allow(non_snake_case)]
+#![allow(non_camel_case_types, non_snake_case)]
 
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::kernel::decl::{GUID, WString};
-use crate::kernel::ffi_types::BOOL;
-use crate::kernel::privs::{MAX_PATH, parse_multi_z_str};
-use crate::user::decl::{HICON, HWND};
+use crate::decl::*;
+use crate::kernel::{ffi_types::*, privs::*};
 
 /// [`COMDLG_FILTERSPEC`](https://learn.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-comdlg_filterspec)
 /// struct.

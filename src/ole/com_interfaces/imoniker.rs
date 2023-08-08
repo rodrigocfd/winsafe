@@ -1,14 +1,11 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::decl::{FILETIME, WString};
-use crate::kernel::ffi_types::{BOOL, COMPTR, HRES, PCSTR, PCVOID, PSTR, PVOID};
-use crate::ole::decl::{CoTaskMemFree, HrResult};
-use crate::ole::privs::{ok_to_hrresult, okfalse_to_hrresult, vt};
-use crate::prelude::{
-	IntUnderlying, ole_IBindCtx, ole_IPersist, ole_IPersistStream, ole_IUnknown,
-};
-use crate::vt::IPersistStreamVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IMoniker`](crate::IMoniker) virtual table.
 #[repr(C)]
@@ -318,7 +315,8 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	/// method.
 	#[must_use]
 	fn RelativePathTo(&self,
-		other_moniker: &impl ole_IMoniker) -> HrResult<IMoniker>
+		other_moniker: &impl ole_IMoniker,
+	) -> HrResult<IMoniker>
 	{
 		let mut queried = unsafe { IMoniker::null() };
 		ok_to_hrresult(

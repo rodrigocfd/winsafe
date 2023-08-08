@@ -1,10 +1,10 @@
 #![allow(non_snake_case)]
 
-use crate::{co, comctl_ole};
-use crate::comctl_ole::decl::TASKDIALOGCONFIG;
-use crate::kernel::ffi_types::BOOL;
-use crate::ole::decl::HrResult;
-use crate::ole::privs::ok_to_hrresult;
+use crate::co;
+use crate::comctl_ole::ffi;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
 
 /// [`TaskDialogIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
 /// function.
@@ -69,7 +69,7 @@ pub fn TaskDialogIndirect(
 
 	ok_to_hrresult(
 		unsafe {
-			comctl_ole::ffi::TaskDialogIndirect(
+			ffi::TaskDialogIndirect(
 				task_config as *const _ as _,
 				&mut pn_button,
 				&mut pn_radio_button,

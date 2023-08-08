@@ -1,14 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::dshow::decl::{FILTER_INFO, IEnumPins, IPin};
-use crate::kernel::decl::WString;
-use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PSTR, PVOID};
-use crate::ole::decl::{CoTaskMemFree, HrResult};
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{
-	dshow_IFilterGraph, dshow_IMediaFilter, ole_IPersist, ole_IUnknown,
-};
-use crate::vt::IMediaFilterVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IBaseFilter`](crate::IBaseFilter) virtual table.
 #[repr(C)]

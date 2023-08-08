@@ -1,6 +1,5 @@
 use crate::co;
-use crate::kernel::decl::{HeapBlock, LANGID, SysResult, WString};
-use crate::version::decl::{GetFileVersionInfo, VarQueryValue, VS_FIXEDFILEINFO};
+use crate::decl::*;
 
 /// Retrieves data from an embedded resource, which can be read from an
 /// EXE or a DLL file.

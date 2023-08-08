@@ -1,9 +1,8 @@
 use crate::co;
-use crate::dxgi::decl::{IDXGIAdapter, IDXGIOutput};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{dxgi_IDXGIAdapter, dxgi_IDXGIFactory, ole_IUnknown};
-use crate::vt::{IDXGIAdapterVT, IDXGIFactoryVT};
+use crate::decl::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 pub(in crate::dxgi) struct IdxgiadapterEnumoutputsIter<'a, I>
 	where I: dxgi_IDXGIAdapter,

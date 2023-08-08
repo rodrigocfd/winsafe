@@ -1,11 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::dshow::decl::AM_MEDIA_TYPE;
-use crate::kernel::ffi_types::{COMPTR, HRES, PCSTR, PCVOID};
-use crate::ole::decl::HrResult;
-use crate::ole::privs::{ok_to_hrresult, vt};
-use crate::prelude::{dshow_IFilterGraph, dshow_IGraphBuilder, dshow_IPin};
-use crate::vt::IGraphBuilderVT;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
+use crate::prelude::*;
+use crate::vt::*;
 
 /// [`IFilterGraph2`](crate::IFilterGraph2) virtual table.
 #[repr(C)]
@@ -41,7 +40,9 @@ pub trait dshow_IFilterGraph2: dshow_IGraphBuilder {
 	/// [`IFilterGraph2::ReconnectEx`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph2-reconnectex)
 	/// method.
 	fn ReconnectEx(&self,
-		pin: &impl dshow_IPin, mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()>
+		pin: &impl dshow_IPin,
+		mt: Option<&AM_MEDIA_TYPE>,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {

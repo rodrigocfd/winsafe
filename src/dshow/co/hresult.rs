@@ -1,4 +1,4 @@
-use crate::co::HRESULT;
+use crate::co::*;
 
 const_values! { HRESULT;
 	=>

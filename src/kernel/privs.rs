@@ -1,9 +1,9 @@
 #![allow(dead_code, non_snake_case)]
 
-use crate::co::ERROR;
-use crate::kernel::decl::{GetLastError, SysResult, WString};
-use crate::kernel::ffi_types::{BOOL, HANDLE};
-use crate::prelude::Handle;
+use crate::co;
+use crate::decl::*;
+use crate::kernel::ffi_types::*;
+use crate::prelude::*;
 
 pub(crate) const GMEM_INVALID_HANDLE: u32 = 0x8000;
 pub(crate) const INFINITE: u32 = 0xffff_ffff;
@@ -64,8 +64,8 @@ pub(crate) fn ptr_to_option_handle<H>(ptr: HANDLE) -> Option<H>
 
 /// If value is `ERROR::SUCCESS`, yields `Ok(())`, otherwise `Err(err)`.
 pub(crate) const fn error_to_sysresult(lstatus: i32) -> SysResult<()> {
-	match unsafe { ERROR::from_raw(lstatus as _) } {
-		ERROR::SUCCESS => Ok(()),
+	match unsafe { co::ERROR::from_raw(lstatus as _) } {
+		co::ERROR::SUCCESS => Ok(()),
 		err => Err(err),
 	}
 }

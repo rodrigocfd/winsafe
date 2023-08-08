@@ -1,9 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::{co, kernel};
-use crate::kernel::decl::{GetLastError, SysResult, WIN32_FIND_DATA, WString};
-use crate::kernel::guard::FindCloseGuard;
-use crate::prelude::Handle;
+use crate::co;
+use crate::decl::*;
+use crate::guard::*;
+use crate::kernel::ffi;
+use crate::prelude::*;
 
 impl_handle! { HFINDFILE;
 	/// Handle to a
@@ -34,7 +35,7 @@ pub trait kernel_Hfindfile: Handle {
 	) -> SysResult<(FindCloseGuard, bool)>
 	{
 		unsafe {
-			match kernel::ffi::FindFirstFileW(
+			match ffi::FindFirstFileW(
 				WString::from_str(file_name).as_ptr(),
 				wfd as *mut _ as _,
 			).as_mut() {
@@ -60,9 +61,7 @@ pub trait kernel_Hfindfile: Handle {
 	/// [`path::dir_list`](crate::path::dir_list).
 	#[must_use]
 	fn FindNextFile(&self, wfd: &mut WIN32_FIND_DATA) -> SysResult<bool> {
-		match unsafe {
-			kernel::ffi::FindNextFileW(self.ptr(), wfd as *mut _ as _)
-		} {
+		match unsafe { ffi::FindNextFileW(self.ptr(), wfd as *mut _ as _) } {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => Ok(false), // not an error, no further files found
 				err => Err(err),

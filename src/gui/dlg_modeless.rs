@@ -3,13 +3,9 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::gui::base::Base;
-use crate::gui::dlg_base::DlgBase;
-use crate::gui::events::WindowEventsAll;
-use crate::gui::privs::adjust_modeless_pos;
-use crate::kernel::decl::AnyResult;
-use crate::prelude::{GuiEvents, user_Hwnd};
-use crate::user::decl::{HWND, HwndPlace, POINT, SIZE};
+use crate::decl::*;
+use crate::gui::{events::*, privs::*};
+use crate::prelude::*;
 
 struct Obj { // actual fields of DlgModeless
 	dlg_base: DlgBase,
