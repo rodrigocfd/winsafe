@@ -1111,7 +1111,7 @@ pub trait user_Hwnd: Handle {
 	/// function.
 	///
 	/// Consider using the more modern
-	/// [`TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog) method.
+	/// [`TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog) method.
 	///
 	/// # Examples
 	///

@@ -1,6 +1,7 @@
 use crate::co;
 use crate::comctl::privs::*;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::prelude::*;
 
 /// Variant parameter for:
@@ -53,6 +54,63 @@ pub enum BmpInstId {
 	Bmp(HBITMAP),
 	/// Module handle and resource ID.
 	InstId(HINSTANCE, u16),
+}
+
+/// Variant parameter for:
+///
+/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG).
+pub enum IconId {
+	/// No icon.
+	None,
+	/// An icon handle.
+	Icon(HICON),
+	/// A resource ID.
+	Id(u16),
+}
+
+/// Variant parameter for:
+///
+/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG).
+pub enum IconIdTdicon {
+	/// No icon.
+	None,
+	/// An icon handle.
+	Icon(HICON),
+	/// A resource ID.
+	Id(u16),
+	/// A predefined icon.
+	Tdicon(co::TD_ICON),
+}
+
+/// Variant parameter for:
+///
+/// * [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog).
+#[derive(Clone)]
+pub enum IdTdiconStr {
+	/// No icon.
+	None,
+	/// A resource ID.
+	Id(u16),
+	/// A predefined icon.
+	Tdicon(co::TD_ICON),
+	/// A resource string identifier.
+	Str(String),
+}
+
+impl IdTdiconStr {
+	/// Returns a pointer to the raw data content.
+	#[must_use]
+	pub fn as_ptr(&self, str_buf: &mut WString) -> *const u16 {
+		match self {
+			Self::None => std::ptr::null(),
+			Self::Id(id) => MAKEINTRESOURCE(*id as _),
+			Self::Tdicon(tdi) => MAKEINTRESOURCE(tdi.raw() as _),
+			Self::Str(s) => {
+				*str_buf = WString::from_str(s);
+				str_buf.as_ptr()
+			},
+		}
+	}
 }
 
 /// Variant type for:

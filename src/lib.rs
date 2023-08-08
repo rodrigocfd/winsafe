@@ -9,7 +9,6 @@
 // Declarations of modules themselves.
 
 #[cfg(feature = "comctl")] mod comctl;
-#[cfg(feature = "comdlg")] mod comdlg;
 #[cfg(feature = "dshow")] mod dshow;
 #[cfg(feature = "dwm")] mod dwm;
 #[cfg(feature = "dxgi")] mod dxgi;
@@ -24,7 +23,6 @@
 #[cfg(feature = "uxtheme")] mod uxtheme;
 #[cfg(feature = "version")] mod version;
 #[cfg(all(feature = "comctl", feature = "gdi"))] mod comctl_gdi;
-#[cfg(all(feature = "comctl", feature = "ole"))] mod comctl_ole;
 #[cfg(all(feature = "comctl", feature = "shell"))] mod comctl_shell;
 #[cfg(all(feature = "gdi", feature = "mf"))] mod gdi_mf;
 #[cfg(all(feature = "gdi", feature = "ole"))] mod gdi_ole;
@@ -38,7 +36,6 @@
 
 mod decl {
 	#[cfg(feature = "comctl")] pub use super::comctl::decl::*;
-	#[cfg(feature = "comdlg")] pub use super::comdlg::decl::*;
 	#[cfg(feature = "dshow")] pub use super::dshow::decl::*;
 	#[cfg(feature = "dwm")] pub use super::dwm::decl::*;
 	#[cfg(feature = "dxgi")] pub use super::dxgi::decl::*;
@@ -53,7 +50,6 @@ mod decl {
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::decl::*;
 	#[cfg(feature = "version")] pub use super::version::decl::*;
 	#[cfg(all(feature = "comctl", feature = "gdi"))] pub use super::comctl_gdi::decl::*;
-	#[cfg(all(feature = "comctl", feature = "ole"))] pub use super::comctl_ole::decl::*;
 }
 pub use decl::*;
 
@@ -71,7 +67,6 @@ pub mod co {
 	//! [`HRESULT`](crate::co::HRESULT).
 
 	#[cfg(feature = "comctl")] pub use super::comctl::co::*;
-	#[cfg(feature = "comdlg")] pub use super::comdlg::co::*;
 	#[cfg(feature = "dshow")] pub use super::dshow::co::*;
 	#[cfg(feature = "dwm")] pub use super::dwm::co::*;
 	#[cfg(feature = "dxgi")] pub use super::dxgi::co::*;
@@ -212,7 +207,6 @@ pub mod msg {
 		//! whose constants have [`LVM`](crate::co::LVM) prefix.
 
 		pub use super::super::comctl::messages::lvm::*;
-		#[cfg(feature = "ole")] pub use super::super::comctl_ole::messages::lvm::*;
 	}
 
 	#[cfg(feature = "comctl")]
@@ -258,7 +252,6 @@ pub mod msg {
 		//! whose constants have [`TBM`](crate::co::TBM) prefix.
 
 		pub use super::super::comctl::messages::tbm::*;
-		#[cfg(feature = "ole")] pub use super::super::comctl_ole::messages::tbm::*;
 	}
 
 	#[cfg(feature = "comctl")]
@@ -288,7 +281,6 @@ pub mod msg {
 		//! whose constants have [`TVM`](crate::co::TVM) prefix.
 
 		pub use super::super::comctl::messages::tvm::*;
-		#[cfg(feature = "ole")] pub use super::super::comctl_ole::messages::tvm::*;
 	}
 
 	#[cfg(feature = "comctl")]
@@ -339,7 +331,6 @@ pub mod prelude {
 	#[cfg(feature = "taskschd")] pub use super::taskschd::traits::*;
 	#[cfg(feature = "user")] pub use super::user::traits::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::traits::*;
-	#[cfg(all(feature = "comctl", feature = "ole"))] pub use super::comctl_ole::traits::*;
 	#[cfg(all(feature = "comctl", feature = "shell"))] pub use super::comctl_shell::traits::*;
 	#[cfg(all(feature = "gdi", feature = "mf"))] pub use super::gdi_mf::traits::*;
 	#[cfg(all(feature = "gdi", feature = "ole"))] pub use super::gdi_ole::traits::*;

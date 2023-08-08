@@ -1,6 +1,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::msg::*;
+use crate::ole::privs::*;
 use crate::prelude::*;
 use crate::user::privs::*;
 
@@ -2438,6 +2439,31 @@ unsafe impl MsgSend for SetItemCount {
 			msg_id: co::LVM::SETITEMCOUNT.into(),
 			wparam: self.count as _,
 			lparam: self.behavior.raw() as _,
+		}
+	}
+}
+
+/// [`LVM_SETITEMINDEXSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-setitemindexstate)
+/// message parameters.
+///
+/// Return type: `HrResult<()>`.
+pub struct SetItemIndexState<'a, 'b, 'c> {
+	pub lvitemindex: &'a LVITEMINDEX,
+	pub lvitem: &'c LVITEM<'b>,
+}
+
+unsafe impl<'a, 'b, 'c> MsgSend for SetItemIndexState<'a, 'b, 'c> {
+	type RetType = HrResult<()>;
+
+	fn convert_ret(&self, v: isize) -> Self::RetType {
+		ok_to_hrresult(v as _)
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::LVM::SETITEMINDEXSTATE.into(),
+			wparam: self.lvitemindex as *const _ as _,
+			lparam: self.lvitem as *const _ as _,
 		}
 	}
 }

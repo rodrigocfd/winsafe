@@ -1064,7 +1064,7 @@ const_ordinary! { DLGC: u16;
 const_ordinary! { DLGID: u16;
 	/// Dialog built-in IDs (`u16`). These are also returned from
 	/// [`HWND::MessageBox`](crate::prelude::user_Hwnd::MessageBox) and
-	/// [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog).
+	/// [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog).
 	=>
 	=>
 	OK 1

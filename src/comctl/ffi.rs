@@ -17,7 +17,11 @@ extern_sys! { "comctl32";
 	ImageList_SetImageCount(HANDLE, u32) -> BOOL
 	InitCommonControls()
 	InitCommonControlsEx(PVOID) -> BOOL
+	InitializeFlatSB(HANDLE) -> HRES
 	InitMUILanguage(u16)
 	RemoveWindowSubclass(HANDLE, PFUNC, usize) -> BOOL
 	SetWindowSubclass(HANDLE, PFUNC, usize, usize) -> BOOL
+	TaskDialog(HANDLE, HANDLE, PCSTR, PCSTR, PCSTR, i32, PCSTR, *mut i32) -> HRES
+	TaskDialogIndirect(PCVOID, *mut i32, *mut i32, *mut BOOL) -> HRES
+	UninitializeFlatSB(HANDLE) -> HRES
 }

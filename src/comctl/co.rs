@@ -2163,7 +2163,7 @@ const_wsex! { TCS_EX;
 }
 
 const_ordinary! { TD_ICON: u16;
-	/// [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog)
+	/// [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog)
 	/// `pszIcon` and [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG)
 	/// `pszMainIcon` (`u16`). Originally has `TD` prefix and `ICON` suffix.
 	=>
@@ -2175,7 +2175,7 @@ const_ordinary! { TD_ICON: u16;
 }
 
 const_bitflag! { TDCBF: i32;
-	/// [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog) and
+	/// [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog) and
 	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `dwCommonButtons` (`i32`).
 	///
 	/// Originally has `TDCBF` prefix and `BUTTON` suffix.

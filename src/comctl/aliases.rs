@@ -32,6 +32,18 @@ pub type PFNTVCOMPARE =
 	) -> i32;
 
 /// Type alias to
+/// [`PFTASKDIALOGCALLBACK`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nc-commctrl-pftaskdialogcallback)
+/// calback function.
+pub type PFTASKDIALOGCALLBACK =
+	extern "system" fn(
+		hWnd: HWND,
+		msg: co::WM,
+		wParam: usize,
+		lParam: isize,
+		lpRefData: isize,
+	);
+
+/// Type alias to
 /// [`SUBCLASSPROC`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nc-commctrl-subclassproc)
 /// callback function.
 pub type SUBCLASSPROC =

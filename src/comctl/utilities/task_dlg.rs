@@ -1,6 +1,6 @@
 //! Provides high-level abstractions to
 //! [`TaskDialogIndirect`](crate::TaskDialogIndirect) and
-//! [`HWND::TaskDialog`](crate::prelude::comctl_ole_Hwnd::TaskDialog) functions.
+//! [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog) functions.
 
 use crate::co;
 use crate::decl::*;
