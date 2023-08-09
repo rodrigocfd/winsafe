@@ -12,10 +12,9 @@ use crate::prelude::*;
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{IMFAttributes, MFCreateMediaSession};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let media_session = MFCreateMediaSession(None::<&IMFAttributes>)?;
+/// let media_session = w::MFCreateMediaSession(None::<&w::IMFAttributes>)?;
 /// # Ok::<_, winsafe::co::HRESULT>(())
 /// ```
 #[must_use]
@@ -40,10 +39,9 @@ pub fn MFCreateMediaSession(
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{IMFSourceResolver, MFCreateSourceResolver};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let source_resolver = MFCreateSourceResolver()?;
+/// let source_resolver = w::MFCreateSourceResolver()?;
 /// # Ok::<_, winsafe::co::HRESULT>(())
 /// ```
 #[must_use]
@@ -59,10 +57,9 @@ pub fn MFCreateSourceResolver() -> HrResult<IMFSourceResolver> {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{IMFTopology, MFCreateTopology};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let topology = MFCreateTopology()?;
+/// let topology = w::MFCreateTopology()?;
 /// # Ok::<_, winsafe::co::HRESULT>(())
 /// ```
 #[must_use]
@@ -78,10 +75,9 @@ pub fn MFCreateTopology() -> HrResult<IMFTopology> {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, IMFTopologyNode, MFCreateTopologyNode};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let topology_node = MFCreateTopologyNode(co::MF_TOPOLOGY::OUTPUT_NODE)?;
+/// let topology_node = w::MFCreateTopologyNode(co::MF_TOPOLOGY::OUTPUT_NODE)?;
 /// # Ok::<_, winsafe::co::HRESULT>(())
 /// ```
 #[must_use]

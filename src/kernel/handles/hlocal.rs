@@ -59,10 +59,9 @@ pub trait kernel_Hlocal: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HLOCAL};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hlocal = HLOCAL::LocalAlloc(
+	/// let hlocal = w::HLOCAL::LocalAlloc(
 	///     Some(co::LMEM::FIXED | co::LMEM::ZEROINIT),
 	///     120,
 	/// )?;

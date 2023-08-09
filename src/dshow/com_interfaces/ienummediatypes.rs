@@ -45,11 +45,10 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::IEnumMediaTypes;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let types: IEnumMediaTypes; // initialized somewhere
-	/// # let types = unsafe { IEnumMediaTypes::null() };
+	/// let types: w::IEnumMediaTypes; // initialized somewhere
+	/// # let types = unsafe { w::IEnumMediaTypes::null() };
 	///
 	/// for amt in types.iter() {
 	///     let amt = amt?;

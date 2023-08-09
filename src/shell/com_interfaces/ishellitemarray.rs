@@ -52,28 +52,26 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	/// Iterating over the [`IShellItem`](crate::IShellItem) objects:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IShellItemArray};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let ish_arr: IShellItemArray; // initialized somewhere
-	/// # let ish_arr = unsafe { IShellItemArray::null() };
+	/// let ish_arr: w::IShellItemArray; // initialized somewhere
+	/// # let ish_arr = unsafe { w::IShellItemArray::null() };
 	///
 	/// for ish_item in ish_arr.iter()? {
 	///     let ish_item = ish_item?;
 	///     println!("Path: {}",
 	///         ish_item.GetDisplayName(co::SIGDN::FILESYSPATH)?);
 	/// }
-	/// # Ok::<_, co::HRESULT>(())
+	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 	///
 	/// Collecting the file paths into a [`Vec`](std::vec::Vec):
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HrResult, IShellItemArray};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let ish_arr: IShellItemArray; // initialized somewhere
-	/// # let ish_arr = unsafe { IShellItemArray::null() };
+	/// let ish_arr: w::IShellItemArray; // initialized somewhere
+	/// # let ish_arr = unsafe { w::IShellItemArray::null() };
 	///
 	/// let paths = ish_arr.iter()?
 	///     .map(|shi|
@@ -81,7 +79,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	///             shi.GetDisplayName(co::SIGDN::FILESYSPATH),
 	///         ),
 	///     )
-	///     .collect::<HrResult<Vec<_>>>()?;
+	///     .collect::<w::HrResult<Vec<_>>>()?;
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
 	#[must_use]

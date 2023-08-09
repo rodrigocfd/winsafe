@@ -217,10 +217,9 @@ pub trait kernel_Hprocess: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HPROCESS};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let htoken = HPROCESS::GetCurrentProcess()
+	/// let htoken = w::HPROCESS::GetCurrentProcess()
 	///     .OpenProcessToken(co::TOKEN::ADJUST_PRIVILEGES | co::TOKEN::QUERY)?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```

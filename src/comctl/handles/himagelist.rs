@@ -93,13 +93,12 @@ pub trait comctl_Himagelist: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HIMAGELIST, POINT};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let himgl: HIMAGELIST; // initialized somewhere
-	/// # let himgl = HIMAGELIST::NULL;
+	/// let himgl: w::HIMAGELIST; // initialized somewhere
+	/// # let himgl = w::HIMAGELIST::NULL;
 	///
-	/// let _drag = himgl.BeginDrag(0, POINT::new(0, 0))?; // keep guard alive
+	/// let _drag = himgl.BeginDrag(0, w::POINT::new(0, 0))?; // keep guard alive
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	fn BeginDrag(&self,
@@ -124,11 +123,14 @@ pub trait comctl_Himagelist: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HIMAGELIST, SIZE};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let himgl = HIMAGELIST::Create(
-	///     SIZE::new(16, 16), co::ILC::COLOR32, 1, 1)?;
+	/// let himgl = w::HIMAGELIST::Create(
+	///     w::SIZE::new(16, 16),
+	///     co::ILC::COLOR32,
+	///     1,
+	///     1,
+	/// )?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]

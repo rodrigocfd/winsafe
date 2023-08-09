@@ -30,8 +30,7 @@ impl MonthCalendarEvents {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, AnyResult, NMSELCHANGE};
+		/// use winsafe::{self as w, prelude::*, gui};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// let mcal: gui::MonthCalendar;
@@ -39,7 +38,7 @@ impl MonthCalendarEvents {
 		/// # let mcal = gui::MonthCalendar::new(&wnd, gui::MonthCalendarOpts::default());
 		///
 		/// mcal.on().mcn_sel_change(
-		///     move |p: &NMSELCHANGE| -> AnyResult<()> {
+		///     move |p: &w::NMSELCHANGE| -> w::AnyResult<()> {
 		///         let d = &p.stSelStart;
 		///         println!("{}-{}-{}", d.wYear, d.wMonth, d.wDay);
 		///         Ok(())

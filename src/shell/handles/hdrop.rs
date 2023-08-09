@@ -34,11 +34,10 @@ pub trait shell_Hdrop: Handle {
 	/// Iterating over the strings:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::HDROP;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let mut hdrop: HDROP; // initialized somewhere
-	/// # let mut hdrop = HDROP::NULL;
+	/// let mut hdrop: w::HDROP; // initialized somewhere
+	/// # let mut hdrop = w::HDROP::NULL;
 	///
 	/// for file_path in hdrop.DragQueryFile()? {
 	///     let file_path = file_path?;
@@ -50,14 +49,13 @@ pub trait shell_Hdrop: Handle {
 	/// Collecting the strings into a [`Vec`](std::vec::Vec):
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HDROP, SysResult};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let mut hdrop: HDROP; // initialized somewhere
-	/// # let mut hdrop = HDROP::NULL;
+	/// let mut hdrop: w::HDROP; // initialized somewhere
+	/// # let mut hdrop = w::HDROP::NULL;
 	///
 	/// let file_paths = hdrop.DragQueryFile()?
-	///     .collect::<SysResult<Vec<_>>>()?;
+	///     .collect::<w::SysResult<Vec<_>>>()?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]

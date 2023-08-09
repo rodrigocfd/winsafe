@@ -33,12 +33,11 @@ com_interface! { IShellItem: "43826d1e-e718-42ee-bc55-a1e261c37bfe";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{IBindCtx, IShellItem, SHCreateItemFromParsingName};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let shi = SHCreateItemFromParsingName::<IShellItem>(
+	/// let shi = w::SHCreateItemFromParsingName::<w::IShellItem>(
 	///     "C:\\Temp\\foo.txt",
-	///     None::<&IBindCtx>,
+	///     None::<&w::IBindCtx>,
 	/// )?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
@@ -63,14 +62,13 @@ pub trait shell_IShellItem: ole_IUnknown {
 	/// Retrieving the items inside a directory:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IBindCtx, IEnumShellItems, IShellItem};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let sh_folder: IShellItem; // initialized somewhere
-	/// # let sh_folder = unsafe { IShellItem::null() };
+	/// let sh_folder: w::IShellItem; // initialized somewhere
+	/// # let sh_folder = unsafe { w::IShellItem::null() };
 	///
-	/// let sh_items = sh_folder.BindToHandler::<IEnumShellItems>(
-	///     None::<&IBindCtx>,
+	/// let sh_items = sh_folder.BindToHandler::<w::IEnumShellItems>(
+	///     None::<&w::IBindCtx>,
 	///     &co::BHID::EnumItems,
 	/// )?;
 	/// # Ok::<_, co::HRESULT>(())
@@ -143,12 +141,11 @@ pub trait shell_IShellItem: ole_IUnknown {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IBindCtx, IShellItem, SHCreateItemFromParsingName};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let shi = SHCreateItemFromParsingName::<IShellItem>(
+	/// let shi = w::SHCreateItemFromParsingName::<w::IShellItem>(
 	///     "C:\\Temp\\foo.txt",
-	///     None::<&IBindCtx>,
+	///     None::<&w::IBindCtx>,
 	/// )?;
 	///
 	/// let full_path = shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;
@@ -181,12 +178,11 @@ pub trait shell_IShellItem: ole_IUnknown {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{co, IBindCtx, IShellItem, SHCreateItemFromParsingName};
+		/// use winsafe::{self as w, prelude::*, co};
 		///
-		/// let shi = SHCreateItemFromParsingName::<IShellItem>(
+		/// let shi = w::SHCreateItemFromParsingName::<w::IShellItem>(
 		///     "C:\\Temp\\foo.txt",
-		///     None::<&IBindCtx>,
+		///     None::<&w::IBindCtx>,
 		/// )?;
 		///
 		/// let parent_shi = shi.GetParent()?;

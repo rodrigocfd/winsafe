@@ -52,11 +52,10 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::IPropertyStore;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let pstore: IPropertyStore; // initialized somewhere
-	/// # let pstore = unsafe { IPropertyStore::null() };
+	/// let pstore: w::IPropertyStore; // initialized somewhere
+	/// # let pstore = unsafe { w::IPropertyStore::null() };
 	///
 	/// for ppk in pstore.iter()? {
 	///     let ppk = ppk?;

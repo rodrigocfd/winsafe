@@ -248,11 +248,10 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::IFileDialog;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let file_dlg: IFileDialog; // initialized somewhere
-	/// # let file_dlg = unsafe { IFileDialog::null() };
+	/// let file_dlg: w::IFileDialog; // initialized somewhere
+	/// # let file_dlg = unsafe { w::IFileDialog::null() };
 	///
 	/// file_dlg.SetFileTypes(&[
 	///     ("Documents", "*.docx;*.txt"),

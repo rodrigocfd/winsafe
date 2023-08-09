@@ -84,15 +84,14 @@ pub trait user_Hdc: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HDC, HMONITOR, RECT};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hdc: HDC; // initialized somewhere
-	/// # let hdc = HDC::NULL;
+	/// let hdc: w::HDC; // initialized somewhere
+	/// # let hdc = w::HDC::NULL;
 	///
 	/// hdc.EnumDisplayMonitors(
 	///     None,
-	///     |hmon: HMONITOR, hdc: HDC, rc: &RECT| -> bool {
+	///     |hmon: w::HMONITOR, hdc: w::HDC, rc: &w::RECT| -> bool {
 	///         println!("HMONITOR: {}, ", hmon);
 	///         true
 	///     },

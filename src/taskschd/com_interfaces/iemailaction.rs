@@ -42,14 +42,13 @@ com_interface! { IEmailAction: "10f62c64-7e16-4314-a0c2-0c3683f99d40";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{IAction, IEmailAction};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let action: IAction; // initialized somewhere
-	/// # let action = unsafe { IAction::null() };
+	/// let action: w::IAction; // initialized somewhere
+	/// # let action = unsafe { w::IAction::null() };
 	///
 	/// let email_action = action
-	///     .QueryInterface::<IEmailAction>()?;
+	///     .QueryInterface::<w::IEmailAction>()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 }

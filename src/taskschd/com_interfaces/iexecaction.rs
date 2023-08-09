@@ -28,14 +28,13 @@ com_interface! { IExecAction: "4c3d624d-fd6b-49a3-b9b7-09cb3cd3f047";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{IAction, IExecAction};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let action: IAction; // initialized somewhere
-	/// # let action = unsafe { IAction::null() };
+	/// let action: w::IAction; // initialized somewhere
+	/// # let action = unsafe { w::IAction::null() };
 	///
 	/// let exec_action = action
-	///     .QueryInterface::<IExecAction>()?;
+	///     .QueryInterface::<w::IExecAction>()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 }

@@ -132,12 +132,11 @@ impl LOGFONT {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{LOGPALETTE, PALETTEENTRY};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let mut log_pal = LOGPALETTE::new(0x300, &[
-///     PALETTEENTRY { peRed: 1, peGreen: 2, peBlue: 3, ..Default::default() },
-///     PALETTEENTRY { peRed: 10, peGreen: 20, peBlue: 30, ..Default::default() },
+/// let mut log_pal = w::LOGPALETTE::new(0x300, &[
+///     w::PALETTEENTRY { peRed: 1, peGreen: 2, peBlue: 3, ..Default::default() },
+///     w::PALETTEENTRY { peRed: 10, peGreen: 20, peBlue: 30, ..Default::default() },
 /// ]);
 ///
 /// // Setting a new entry value

@@ -27,14 +27,13 @@ com_interface! { IComHandlerAction: "6d2fd252-75c5-4f66-90ba-2a7d8cc3039f";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{IAction, IComHandlerAction};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let action: IAction; // initialized somewhere
-	/// # let action = unsafe { IAction::null() };
+	/// let action: w::IAction; // initialized somewhere
+	/// # let action = unsafe { w::IAction::null() };
 	///
 	/// let ch_action = action
-	///     .QueryInterface::<IComHandlerAction>()?;
+	///     .QueryInterface::<w::IComHandlerAction>()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 }

@@ -44,11 +44,10 @@ pub trait dshow_IEnumPins: ole_IUnknown {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::IEnumPins;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let pins: IEnumPins; // initialized somewhere
-	/// # let pins = unsafe { IEnumPins::null() };
+	/// let pins: w::IEnumPins; // initialized somewhere
+	/// # let pins = unsafe { w::IEnumPins::null() };
 	///
 	/// for pin in pins.iter() {
 	///     let pin = pin?;

@@ -90,13 +90,12 @@ pub trait gdi_Hbrush: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HBRUSH, LOGBRUSH};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hbr: HBRUSH; // initialized somewhere
-	/// # let hbr = HBRUSH::NULL;
+	/// let hbr: w::HBRUSH; // initialized somewhere
+	/// # let hbr = w::HBRUSH::NULL;
 	///
-	/// let mut brush = LOGBRUSH::default();
+	/// let mut brush = w::LOGBRUSH::default();
 	/// hbr.GetObject(&mut brush)?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```

@@ -89,10 +89,9 @@ pub trait kernel_Hheap: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HHEAP};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let heap = HHEAP::GetProcessHeap()?;
+	/// let heap = w::HHEAP::GetProcessHeap()?;
 	///
 	/// let mut block = heap.HeapAlloc(Some(co::HEAP_ALLOC::ZERO_MEMORY), 40)?;
 	/// block.as_mut_slice()[0] = 10;
@@ -155,14 +154,18 @@ pub trait kernel_Hheap: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HHEAP};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let heap = HHEAP::HeapCreate(Some(co::HEAP_CREATE::NO_SERIALIZE), 0, 0)?;
+	/// let heap = w::HHEAP::HeapCreate(
+	///     Some(co::HEAP_CREATE::NO_SERIALIZE), 0, 0)?;
 	///
 	/// let _lock = heap.HeapLock()?;
 	///
 	/// // heap operations...
+	///
+	/// // HeapUnlock() automatically called
+	///
+	/// // HeapDestroy() automatically called
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -184,13 +187,14 @@ pub trait kernel_Hheap: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HHEAP};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let heap = HHEAP::GetProcessHeap()?;
+	/// let heap = w::HHEAP::GetProcessHeap()?;
 	/// let mut array = heap.HeapAlloc(Some(co::HEAP_ALLOC::ZERO_MEMORY), 40)?;
 	///
 	/// heap.HeapReAlloc(Some(co::HEAP_REALLOC::ZERO_MEMORY), &mut array, 65)?;
+	///
+	/// // HeapFree() automatically called
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	fn HeapReAlloc<'a>(&'a self,
@@ -244,13 +248,14 @@ pub trait kernel_Hheap: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HHEAP};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let heap = HHEAP::GetProcessHeap()?;
+	/// let heap = w::HHEAP::GetProcessHeap()?;
 	/// let mut array = heap.HeapAlloc(Some(co::HEAP_ALLOC::ZERO_MEMORY), 40)?;
 	///
 	/// let is_ok = heap.HeapValidate(None, Some(&array));
+	///
+	/// // HeapFree() automatically called
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -278,10 +283,9 @@ pub trait kernel_Hheap: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HHEAP};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let heap = HHEAP::GetProcessHeap()?;
+	/// let heap = w::HHEAP::GetProcessHeap()?;
 	///
 	/// for block in heap.HeapWalk() {
 	///     let block = block?;

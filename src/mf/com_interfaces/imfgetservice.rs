@@ -25,13 +25,12 @@ com_interface! { IMFGetService: "fa993888-4383-415a-a930-dd472a8cf6f7";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{IBaseFilter, IMFGetService};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let vmr: IBaseFilter; // initialized somewhere
-	/// # let vmr = unsafe { IBaseFilter::null() };
+	/// let vmr: w::IBaseFilter; // initialized somewhere
+	/// # let vmr = unsafe { w::IBaseFilter::null() };
 	///
-	/// let get_svc = vmr.QueryInterface::<IMFGetService>()?;
+	/// let get_svc = vmr.QueryInterface::<w::IMFGetService>()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 }
@@ -53,14 +52,13 @@ pub trait mf_IMFGetService: ole_IUnknown {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IMFGetService, IMFVideoDisplayControl};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let get_svc: IMFGetService; // initialized somewhere
-	/// # let get_svc = unsafe { IMFGetService::null() };
+	/// let get_svc: w::IMFGetService; // initialized somewhere
+	/// # let get_svc = unsafe { w::IMFGetService::null() };
 	///
 	/// let controller_evr = get_svc
-	///     .GetService::<IMFVideoDisplayControl>(
+	///     .GetService::<w::IMFVideoDisplayControl>(
 	///         &co::MF_SERVICE::MR_VIDEO_RENDER_SERVICE,
 	///     )?;
 	/// # Ok::<_, co::HRESULT>(())

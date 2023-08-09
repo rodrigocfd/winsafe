@@ -36,10 +36,9 @@ com_interface! { IMFTopology: "83cf873a-f6da-4bc8-823f-bacfd55dc433";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{IMFTopology, MFCreateTopology};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let topology = MFCreateTopology()?;
+	/// let topology = w::MFCreateTopology()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 }

@@ -41,14 +41,13 @@ com_interface! { IMFVideoDisplayControl: "a490b1e4-ab84-4d31-a1b2-181e03b1077a";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IMFGetService, IMFVideoDisplayControl};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let get_svc: IMFGetService; // initialized somewhere
-	/// # let get_svc = unsafe { IMFGetService::null() };
+	/// let get_svc: w::IMFGetService; // initialized somewhere
+	/// # let get_svc = unsafe { w::IMFGetService::null() };
 	///
 	/// let controller_evr = get_svc
-	///     .GetService::<IMFVideoDisplayControl>(
+	///     .GetService::<w::IMFVideoDisplayControl>(
 	///         &co::MF_SERVICE::MR_VIDEO_RENDER_SERVICE,
 	///     )?;
 	/// # Ok::<_, co::HRESULT>(())

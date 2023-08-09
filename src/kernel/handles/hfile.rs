@@ -40,10 +40,9 @@ pub trait kernel_Hfile: Handle {
 	/// Opening an existing file as read-only:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HFILE};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let (hfile, status) = HFILE::CreateFile(
+	/// let (hfile, status) = w::HFILE::CreateFile(
 	///     "C:\\Temp\\test.txt",
 	///     co::GENERIC::READ,
 	///     Some(co::FILE_SHARE::READ),
@@ -60,10 +59,9 @@ pub trait kernel_Hfile: Handle {
 	/// Opening a file for read and write. If the file doesn't exist, create it:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HFILE};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let (hfile, status) = HFILE::CreateFile(
+	/// let (hfile, status) = w::HFILE::CreateFile(
 	///     "C:\\Temp\\test.txt",
 	///     co::GENERIC::READ | co::GENERIC::WRITE,
 	///     None,
@@ -206,17 +204,18 @@ pub trait kernel_Hfile: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::HFILE;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hfile: HFILE; // initialized somewhere
-	/// # let hfile = HFILE::NULL;
+	/// let hfile: w::HFILE; // initialized somewhere
+	/// # let hfile = w::HFILE::NULL;
 	///
 	/// let total_size = hfile.GetFileSizeEx()?;
 	///
 	/// let _lock = hfile.LockFile(0, total_size as _)?; // keep guard alive
 	///
 	/// // file read/write operations...
+	///
+	/// // UnlockFile() called automatically
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]

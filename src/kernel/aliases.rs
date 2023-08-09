@@ -15,11 +15,10 @@ pub type AnyResult<T> = Result<T, Box<dyn std::error::Error + Send + Sync>>;
 /// Converting into the generic [`AnyResult`](crate::AnyResult):
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, AnyResult, SysResult};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let sys_result: SysResult<()> = Err(co::ERROR::SUCCESS);
+/// let sys_result: w::SysResult<()> = Err(co::ERROR::SUCCESS);
 ///
-/// let err_result: AnyResult<()> = sys_result.map_err(|err| err.into());
+/// let err_result: w::AnyResult<()> = sys_result.map_err(|err| err.into());
 /// ```
 pub type SysResult<T> = Result<T, co::ERROR>;

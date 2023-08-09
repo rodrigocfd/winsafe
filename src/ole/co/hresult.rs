@@ -19,10 +19,9 @@ const_no_debug_display! { HRESULT: u32;
 	/// the code below:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::co::HRESULT;
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// println!("{}", HRESULT::E_INVALIDARG);
+	/// println!("{}", co::HRESULT::E_INVALIDARG);
 	/// ```
 	///
 	/// Will print:
@@ -40,10 +39,9 @@ const_no_debug_display! { HRESULT: u32;
 	/// macro:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co::ERROR, co::HRESULT};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let err = ERROR::FILE_NOT_FOUND;
+	/// let err = co::ERROR::FILE_NOT_FOUND;
 	///
 	/// let hr = err.to_hresult();
 	/// ```

@@ -100,11 +100,10 @@ pub trait comctl_Hwnd: user_Hwnd {
 	/// An information message with just an OK button:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HWND, IdTdiconStr};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hwnd: HWND; // initialized somewhere
-	/// # let hwnd = HWND::NULL;
+	/// let hwnd: w::HWND; // initialized somewhere
+	/// # let hwnd = w::HWND::NULL;
 	///
 	/// hwnd.TaskDialog(
 	///     None,
@@ -112,7 +111,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 	///     Some("Operation successful"),
 	///     Some("The operation completed successfully."),
 	///     co::TDCBF::OK,
-	///     IdTdiconStr::Tdicon(co::TD_ICON::INFORMATION),
+	///     w::IdTdiconStr::Tdicon(co::TD_ICON::INFORMATION),
 	/// )?;
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
@@ -120,11 +119,10 @@ pub trait comctl_Hwnd: user_Hwnd {
 	/// Prompt the user to click OK or Cancel upon a question:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HWND, IdTdiconStr};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hwnd: HWND; // initialized somewhere
-	/// # let hwnd = HWND::NULL;
+	/// let hwnd: w::HWND; // initialized somewhere
+	/// # let hwnd = w::HWND::NULL;
 	///
 	/// let answer = hwnd.TaskDialog(
 	///     None,
@@ -132,7 +130,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 	///     Some("File modified"),
 	///     Some("The file has been modified.\nProceed closing the application?"),
 	///     co::TDCBF::OK | co::TDCBF::CANCEL,
-	///     IdTdiconStr::Tdicon(co::TD_ICON::WARNING),
+	///     w::IdTdiconStr::Tdicon(co::TD_ICON::WARNING),
 	/// )?;
 	///
 	/// if answer == co::DLGID::OK {

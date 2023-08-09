@@ -14,13 +14,12 @@ use crate::prelude::*;
 /// Parsing an image from raw data:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{IStream, OleLoadPicture};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let stream: IStream; // initialized somewhere
-/// # let stream = unsafe { IStream::null() };
+/// let stream: w::IStream; // initialized somewhere
+/// # let stream = unsafe { w::IStream::null() };
 ///
-/// let picture = OleLoadPicture(&stream, None, true)?;
+/// let picture = w::OleLoadPicture(&stream, None, true)?;
 /// # Ok::<_, winsafe::co::HRESULT>(())
 /// ```
 #[must_use]

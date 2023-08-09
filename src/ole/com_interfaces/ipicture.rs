@@ -71,13 +71,12 @@ pub trait ole_IPicture: ole_IUnknown {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HWND, IPicture};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let pic: IPicture; // initialized somewhere
-	/// # let pic = IPicture::from(unsafe { winsafe::ComPtr::null() });
+	/// let pic: w::IPicture; // initialized somewhere
+	/// # let pic = unsafe { w::IPicture::null() };
 	///
-	/// let hdc = HWND::NULL.GetDC()?;
+	/// let hdc = w::HWND::NULL.GetDC()?;
 	///
 	/// let (_, height) = hdc.HiMetricToPixel(0, pic.get_Height()?);
 	/// println!("Height: {} px", height);
@@ -113,13 +112,12 @@ pub trait ole_IPicture: ole_IUnknown {
 	/// # Examples
 	///
 	/// ```rust,ignore
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HWND, IPicture};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let pic: IPicture; // initialized somewhere
-	/// # let pic = IPicture::from(unsafe { winsafe::ComPtr::null() });
+	/// let pic: w::IPicture; // initialized somewhere
+	/// # let pic = unsafe { w::IPicture::null() };
 	///
-	/// let hdc = HWND::NULL.GetDC()?;
+	/// let hdc = w::HWND::NULL.GetDC()?;
 	///
 	/// let (width, _) = hdc.HiMetricToPixel(pic.get_Width()?, 0);
 	/// println!("Width: {} px", width);

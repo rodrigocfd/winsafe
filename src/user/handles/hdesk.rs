@@ -82,10 +82,9 @@ pub trait user_Hdesk: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{GetCurrentThreadId, HDESK, HTHREAD};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hdesk = HDESK::GetThreadDesktop(GetCurrentThreadId())?;
+	/// let hdesk = w::HDESK::GetThreadDesktop(w::GetCurrentThreadId())?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	#[must_use]
 	fn GetThreadDesktop(

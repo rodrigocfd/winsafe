@@ -30,8 +30,7 @@ impl DateTimePickerEvents {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, AnyResult, NMDATETIMECHANGE};
+		/// use winsafe::{self as w, prelude::*, gui};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// let dtp: gui::DateTimePicker;
@@ -39,7 +38,7 @@ impl DateTimePickerEvents {
 		/// # let dtp = gui::DateTimePicker::new(&wnd, gui::DateTimePickerOpts::default());
 		///
 		/// dtp.on().dtn_date_time_change(
-		///     move |p: &NMDATETIMECHANGE| -> AnyResult<()> {
+		///     move |p: &w::NMDATETIMECHANGE| -> w::AnyResult<()> {
 		///         println!("{}-{}-{}", p.st.wYear, p.st.wMonth, p.st.wDay);
 		///         Ok(())
 		///     },

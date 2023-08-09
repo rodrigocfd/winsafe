@@ -47,17 +47,16 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{AM_MEDIA_TYPE, CoTaskMemFree, DVINFO, IFileSinkFilter};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let sinkf: IFileSinkFilter; // initialized somewhere
-	/// # let sinkf = unsafe { IFileSinkFilter::null() };
+	/// let sinkf: w::IFileSinkFilter; // initialized somewhere
+	/// # let sinkf = unsafe { w::IFileSinkFilter::null() };
 	///
-	/// let mut ammt = AM_MEDIA_TYPE::default();
+	/// let mut ammt = w::AM_MEDIA_TYPE::default();
 	/// unsafe {
 	///     sinkf.GetCurFile(Some(&mut ammt))?;
-	///     if let Some(pb_format) = ammt.pbFormat::<DVINFO>() { // valid reference?
-	///         CoTaskMemFree(pb_format as *mut _ as _);
+	///     if let Some(pb_format) = ammt.pbFormat::<w::DVINFO>() { // valid reference?
+	///         w::CoTaskMemFree(pb_format as *mut _ as _);
 	///     }
 	/// }
 	/// # Ok::<_, winsafe::co::HRESULT>(())

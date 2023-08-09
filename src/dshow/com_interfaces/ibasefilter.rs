@@ -28,10 +28,9 @@ com_interface! { IBaseFilter: "56a86895-0ad4-11ce-b03a-0020af0ba770";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, CoCreateInstance, IBaseFilter};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let vmr = CoCreateInstance::<IBaseFilter>(
+	/// let vmr = w::CoCreateInstance::<w::IBaseFilter>(
 	///     &co::CLSID::EnhancedVideoRenderer,
 	///     None,
 	///     co::CLSCTX::INPROC_SERVER,

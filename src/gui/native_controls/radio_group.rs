@@ -172,8 +172,7 @@ impl RadioGroup {
 	/// Changing the text of all radio buttons to `"One"`:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::gui;
+	/// use winsafe::{self as w, prelude::*, gui};
 	///
 	/// let radio_group: gui::RadioGroup; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());

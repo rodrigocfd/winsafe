@@ -171,21 +171,20 @@ pub fn ChangeDisplaySettingsEx(
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, ChooseColor, CHOOSECOLOR, COLORREF, HWND};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let parent_hwnd: HWND; // initialized somewhere
-/// # let parent_hwnd = HWND::NULL;
+/// let parent_hwnd: w::HWND; // initialized somewhere
+/// # let parent_hwnd = w::HWND::NULL;
 ///
-/// let mut cc = CHOOSECOLOR::default();
-/// let mut custom_colors = [COLORREF::new(255, 255, 255); 16];
+/// let mut cc = w::CHOOSECOLOR::default();
+/// let mut custom_colors = [w::COLORREF::new(255, 255, 255); 16];
 ///
 /// cc.hwndOwner = parent_hwnd;
 /// cc.Flags = co::CC::ANYCOLOR | co::CC::FULLOPEN | co::CC::RGBINIT;
-/// cc.rgbResult = COLORREF::new(255, 0, 0); // color initially chosen
+/// cc.rgbResult = w::COLORREF::new(255, 0, 0); // color initially chosen
 /// cc.set_lpCustColors(Some(&mut custom_colors));
 ///
-/// if ChooseColor(&mut cc)? {
+/// if w::ChooseColor(&mut cc)? {
 ///     println!("The color: {} {} {}",
 ///         cc.rgbResult.GetRValue(),
 ///         cc.rgbResult.GetGValue(),
@@ -249,14 +248,13 @@ pub fn EndMenu() -> SysResult<()> {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, DISPLAY_DEVICE, EnumDisplayDevices};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let mut dide = DISPLAY_DEVICE::default();
-/// let mut dev_num: u32 = 0;
+/// let mut dide = w::DISPLAY_DEVICE::default();
+/// let mut dev_num = u32::default();
 ///
 /// loop {
-///     let is_good = EnumDisplayDevices(None, dev_num, &mut dide, None)?;
+///     let is_good = w::EnumDisplayDevices(None, dev_num, &mut dide, None)?;
 ///
 ///     if !is_good {
 ///         break;
@@ -303,16 +301,15 @@ pub fn EnumDisplayDevices(
 /// Iterating graphics modes.
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{DEVMODE, EnumDisplaySettings, GmidxEnum};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let mut dm = DEVMODE::default();
-/// let mut graphics_mode_idx: u32 = 0;
+/// let mut dm = w::DEVMODE::default();
+/// let mut graphics_mode_idx = u32::default();
 ///
 /// loop {
-///     let is_good = EnumDisplaySettings(
+///     let is_good = w::EnumDisplaySettings(
 ///         None,
-///         GmidxEnum::Gmidx(graphics_mode_idx),
+///         w::GmidxEnum::Gmidx(graphics_mode_idx),
 ///         &mut dm,
 ///     )?;
 ///
@@ -332,14 +329,13 @@ pub fn EnumDisplayDevices(
 /// Retrieving from the predefined enum.
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, DEVMODE, EnumDisplaySettings, GmidxEnum};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let mut dm = DEVMODE::default();
+/// let mut dm = w::DEVMODE::default();
 ///
-/// EnumDisplaySettings(
+/// w::EnumDisplaySettings(
 ///     None,
-///     GmidxEnum::Enum(co::ENUM_SETTINGS::CURRENT),
+///     w::GmidxEnum::Enum(co::ENUM_SETTINGS::CURRENT),
 ///     &mut dm,
 /// )?;
 ///
@@ -399,12 +395,11 @@ pub fn EnumDisplaySettingsEx(
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{EnumThreadWindows, GetCurrentThreadId, HWND};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// EnumThreadWindows(
-///     GetCurrentThreadId(),
-///     |hwnd: HWND| -> bool {
+/// w::EnumThreadWindows(
+///     w::GetCurrentThreadId(),
+///     |hwnd: w::HWND| -> bool {
 ///         println!("HWND: {}", hwnd);
 ///         true
 ///     },
@@ -438,10 +433,9 @@ extern "system" fn enum_thread_wnd_proc<F>(hwnd: HWND, lparam: isize) -> BOOL
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{EnumWindows, HWND};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// EnumWindows(|hwnd: HWND| -> bool {
+/// w::EnumWindows(|hwnd: w::HWND| -> bool {
 ///     println!("HWND: {}", hwnd);
 ///     true
 /// })?;
@@ -482,10 +476,9 @@ pub fn ExitWindowsEx(
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, GetAsyncKeyState};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let esc_is_down = GetAsyncKeyState(co::VK::ESCAPE);
+/// let esc_is_down = w::GetAsyncKeyState(co::VK::ESCAPE);
 /// ```
 #[must_use]
 pub fn GetAsyncKeyState(virt_key: co::VK) -> bool {
@@ -550,16 +543,15 @@ pub fn GetDoubleClickTime() -> u32 {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{GetGUIThreadInfo, GUITHREADINFO, HWND};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let hwnd: HWND; // initialized somewhere
-/// # let hwnd = HWND::NULL;
+/// let hwnd: w::HWND; // initialized somewhere
+/// # let hwnd = w::HWND::NULL;
 ///
 /// let (thread_id, _) = hwnd.GetWindowThreadProcessId();
 ///
-/// let mut gti = GUITHREADINFO::default();
-/// GetGUIThreadInfo(thread_id, &mut gti)?;
+/// let mut gti = w::GUITHREADINFO::default();
+/// w::GetGUIThreadInfo(thread_id, &mut gti)?;
 ///
 /// println!("Caret rect: {}", gti.rcCaret);
 /// # Ok::<_, winsafe::co::ERROR>(())
@@ -807,31 +799,30 @@ pub fn RegisterWindowMessage(s: &str) -> SysResult<u32> {
 /// Sending Win+D to toggle the desktop:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, HwKbMouse, KEYBDINPUT, SendInput};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// SendInput(&[
-///     HwKbMouse::Kb(
-///         KEYBDINPUT {
+/// w::SendInput(&[
+///     w::HwKbMouse::Kb(
+///         w::KEYBDINPUT {
 ///             wVk: co::VK::LWIN,
 ///             ..Default::default()
 ///         },
 ///     ),
-///     HwKbMouse::Kb(
-///         KEYBDINPUT {
+///     w::HwKbMouse::Kb(
+///         w::KEYBDINPUT {
 ///             wVk: co::VK::CHAR_D,
 ///             ..Default::default()
 ///         },
 ///     ),
-///     HwKbMouse::Kb(
-///         KEYBDINPUT {
+///     w::HwKbMouse::Kb(
+///         w::KEYBDINPUT {
 ///             wVk: co::VK::CHAR_D,
 ///             dwFlags: co::KEYEVENTF::KEYUP,
 ///             ..Default::default()
 ///         },
 ///     ),
-///     HwKbMouse::Kb(
-///         KEYBDINPUT {
+///     w::HwKbMouse::Kb(
+///         w::KEYBDINPUT {
 ///             wVk: co::VK::LWIN,
 ///             dwFlags: co::KEYEVENTF::KEYUP,
 ///             ..Default::default()

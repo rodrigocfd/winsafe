@@ -51,19 +51,23 @@ pub trait kernel_Hinstance: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HINSTANCE, IdStr, RtStr};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hexe = HINSTANCE::LoadLibrary("hand.exe")?;
+	/// let hexe = w::HINSTANCE::LoadLibrary("hand.exe")?;
 	///
-	/// hexe.EnumResourceTypes(|res_type: RtStr| -> bool {
-	///     let res_type2 = res_type.clone();
-	///     hexe.EnumResourceNames(res_type, |name: IdStr| -> bool {
-	///         println!("Type: {}, name: {}", res_type2, name);
+	/// hexe.EnumResourceTypes(
+	///     |res_type: w::RtStr| -> bool {
+	///         let res_type2 = res_type.clone();
+	///         hexe.EnumResourceNames(
+	///             res_type,
+	///             |name: w::IdStr| -> bool {
+	///                 println!("Type: {}, name: {}", res_type2, name);
+	///                 true
+	///             },
+	///         ).unwrap();
 	///         true
-	///     }).unwrap();
-	///     true
-	/// })?;
+	///     },
+	/// )?;
 	///
 	/// // FreeLibrary() called automatically
 	/// # Ok::<_, co::ERROR>(())
@@ -92,15 +96,16 @@ pub trait kernel_Hinstance: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HINSTANCE, RtStr};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hexe = HINSTANCE::LoadLibrary("hand.exe")?;
+	/// let hexe = w::HINSTANCE::LoadLibrary("hand.exe")?;
 	///
-	/// hexe.EnumResourceTypes(|res_type: RtStr| -> bool {
-	///     println!("Type {}", res_type);
-	///     true
-	/// })?;
+	/// hexe.EnumResourceTypes(
+	///     |res_type: w::RtStr| -> bool {
+	///         println!("Type {}", res_type);
+	///         true
+	///     },
+	/// )?;
 	///
 	/// // FreeLibrary() called automatically
 	/// # Ok::<_, co::ERROR>(())
@@ -173,10 +178,9 @@ pub trait kernel_Hinstance: Handle {
 	/// Retrieving the full path of currently running .exe file:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::HINSTANCE;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let exe_name = HINSTANCE::NULL.GetModuleFileName()?;
+	/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
 	///
 	/// println!("EXE: {}", exe_name);
 	/// # Ok::<_, winsafe::co::ERROR>(())
@@ -203,10 +207,9 @@ pub trait kernel_Hinstance: Handle {
 	/// Retrieving current module instance:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::HINSTANCE;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hinstance = HINSTANCE::GetModuleHandle(None)?;
+	/// let hinstance = w::HINSTANCE::GetModuleHandle(None)?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -273,29 +276,26 @@ pub trait kernel_Hinstance: Handle {
 	/// example:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{
-	///     co, HINSTANCE, HUPDATERSRC, IdStr, LANGID, RtStr,
-	/// };
+	/// use winsafe::{self as w, prelude::*, co};
 	///
 	/// const IDD_HAND_ABOUTBOX: u16 = 103;
 	/// const IDD_FOOT_ABOUTBOX: u16 = 110;
 	///
-	/// let hexe = HINSTANCE::LoadLibrary("hand.exe")?;
+	/// let hexe = w::HINSTANCE::LoadLibrary("hand.exe")?;
 	///
 	/// let hres = hexe.FindResource(
-	///     IdStr::Id(IDD_HAND_ABOUTBOX),
-	///     RtStr::Rt(co::RT::DIALOG),
+	///     w::IdStr::Id(IDD_HAND_ABOUTBOX),
+	///     w::RtStr::Rt(co::RT::DIALOG),
 	/// )?;
 	///
 	/// let hres_load = hexe.LoadResource(&hres)?;
 	/// let hres_slice_lock = hexe.LockResource(&hres, &hres_load)?;
-	/// let hres_update = HUPDATERSRC::BeginUpdateResource("foot.exe", false)?;
+	/// let hres_update = w::HUPDATERSRC::BeginUpdateResource("foot.exe", false)?;
 	///
 	/// hres_update.UpdateResource(
-	///     RtStr::Rt(co::RT::DIALOG),
-	///     IdStr::Id(IDD_FOOT_ABOUTBOX),
-	///     LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL),
+	///     w::RtStr::Rt(co::RT::DIALOG),
+	///     w::IdStr::Id(IDD_FOOT_ABOUTBOX),
+	///     w::LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL),
 	///     hres_slice_lock,
 	/// )?;
 	///

@@ -101,8 +101,7 @@ winsafe = { version = "0.0.17", features = ["gui"] }
 ```rust
 #![windows_subsystem = "windows"]
 
-use winsafe::prelude::*;
-use winsafe::{gui, POINT, SIZE};
+use winsafe::{self as w, prelude::*, gui};
 
 fn main() {
     let my = MyWindow::new(); // instantiate our main window

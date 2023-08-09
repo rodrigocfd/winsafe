@@ -8,10 +8,9 @@ use crate::decl::*;
 /// Printing all sections, keys and values:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::Ini;
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let ini = Ini::parse_from_file("C:\\Temp\\foo.ini")?;
+/// let ini = w::Ini::parse_from_file("C:\\Temp\\foo.ini")?;
 ///
 /// for section in ini.sections.iter() {
 ///     println!("Section: {}", section.name);
@@ -25,10 +24,9 @@ use crate::decl::*;
 /// Reading a value:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::Ini;
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let ini = Ini::parse_from_file("C:\\Temp\\foo.ini")?;
+/// let ini = w::Ini::parse_from_file("C:\\Temp\\foo.ini")?;
 ///
 /// println!("{}", ini.value("the_section", "the_key").unwrap());
 /// # Ok::<_, winsafe::co::ERROR>(())
@@ -175,11 +173,10 @@ impl Ini {
 	/// Changing or creating a value:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::Ini;
+	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let ini_path = "C:\\Temp\\foo.ini";
-	/// let mut ini = Ini::parse_from_file(ini_path)?;
+	/// let mut ini = w::Ini::parse_from_file(ini_path)?;
 	///
 	/// ini.set_value("the_section", "the_key", "new_value");
 	///
@@ -226,11 +223,10 @@ impl Ini {
 	/// Changing an existing value:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::Ini;
+	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let ini_path = "C:\\Temp\\foo.ini";
-	/// let mut ini = Ini::parse_from_file(ini_path)?;
+	/// let mut ini = w::Ini::parse_from_file(ini_path)?;
 	///
 	/// *ini.value_mut("the_section", "the_key").unwrap() = "new_value".to_owned();
 	///

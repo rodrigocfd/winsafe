@@ -29,22 +29,18 @@ pub trait kernel_Haccesstoken: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{
-	///     co, DisabPriv, HPROCESS, LookupPrivilegeValue,
-	///     LUID_AND_ATTRIBUTES, TOKEN_PRIVILEGES,
-	/// };
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let htoken = HPROCESS::GetCurrentProcess()
+	/// let htoken = w::HPROCESS::GetCurrentProcess()
 	///     .OpenProcessToken(co::TOKEN::ADJUST_PRIVILEGES | co::TOKEN::QUERY)?;
 	///
-	/// let luid = LookupPrivilegeValue(None, co::SE_PRIV::SHUTDOWN_NAME)?;
+	/// let luid = w::LookupPrivilegeValue(None, co::SE_PRIV::SHUTDOWN_NAME)?;
 	///
-	/// let privs = TOKEN_PRIVILEGES::new(&[
-	///     LUID_AND_ATTRIBUTES::new(luid, co::SE_PRIV_ATTR::ENABLED),
+	/// let privs = w::TOKEN_PRIVILEGES::new(&[
+	///     w::LUID_AND_ATTRIBUTES::new(luid, co::SE_PRIV_ATTR::ENABLED),
 	/// ]);
 	///
-	/// htoken.AdjustTokenPrivileges(DisabPriv::Privs(&privs))?;
+	/// htoken.AdjustTokenPrivileges(w::DisabPriv::Privs(&privs))?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	fn AdjustTokenPrivileges(&self, new_state: DisabPriv) -> SysResult<()> {
@@ -148,13 +144,12 @@ pub trait kernel_Haccesstoken: Handle {
 	/// Checking if the current process has elevated privileges:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HPROCESS, TOKEN_ELEVATION};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let htoken = HPROCESS::GetCurrentProcess()
+	/// let htoken = w::HPROCESS::GetCurrentProcess()
 	///     .OpenProcessToken(co::TOKEN::QUERY)?;
 	///
-	/// let mut elevation = TOKEN_ELEVATION::default();
+	/// let mut elevation = w::TOKEN_ELEVATION::default();
 	/// unsafe {
 	///     htoken.GetTokenInformation(
 	///         co::TOKEN_INFORMATION_CLASS::Elevation,

@@ -50,8 +50,7 @@ impl TreeViewEvents {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{co, gui, AnyResult, NMTREEVIEW};
+		/// use winsafe::{self as w, prelude::*, gui, co};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// let tree: gui::TreeView;
@@ -59,7 +58,7 @@ impl TreeViewEvents {
 		/// # let tree = gui::TreeView::new(&wnd, gui::TreeViewOpts::default());
 		///
 		/// tree.on().tvn_sel_changed(
-		///     move |p: &NMTREEVIEW| -> AnyResult<()> {
+		///     move |p: &w::NMTREEVIEW| -> w::AnyResult<()> {
 		///         println!(
 		///             "Old item: {} - new item: {} - action: {}",
 		///             p.itemOld.pszText().unwrap(),

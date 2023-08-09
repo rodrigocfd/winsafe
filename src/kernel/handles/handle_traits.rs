@@ -85,10 +85,9 @@ pub trait Handle: Sized
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::HFILE;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hfile = HFILE::NULL;
+	/// let hfile = w::HFILE::NULL;
 	///
 	/// match hfile.as_opt() {
 	///     Some(hfile) => println!("Never prints"),

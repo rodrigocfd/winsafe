@@ -73,10 +73,9 @@ pub fn CoCreateGuid() -> HrResult<GUID> {
 /// Instantiating an [`ITaskbarList`](crate::ITaskbarList) object:
 ///
 /// ```rust,ignore
-/// use winsafe::prelude::*;
-/// use winsafe::{co, CoCreateInstance, ITaskbarList};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let obj = CoCreateInstance::<ITaskbarList>(
+/// let obj = w::CoCreateInstance::<w::ITaskbarList>(
 ///     &co::CLSID::TaskbarList,
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
@@ -164,15 +163,16 @@ pub fn CoCreateInstanceEx(
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, CoInitializeEx};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let _com_lib = CoInitializeEx( // keep guard alive
+/// let _com_lib = w::CoInitializeEx( // keep guard alive
 ///     co::COINIT::APARTMENTTHREADED
 ///     | co::COINIT::DISABLE_OLE1DDE,
 /// )?;
 ///
 /// // program runs...
+///
+/// // CoUninitialize() automatically called
 /// # Ok::<_, co::HRESULT>(())
 /// ```
 #[must_use]

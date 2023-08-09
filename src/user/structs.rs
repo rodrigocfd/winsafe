@@ -110,10 +110,9 @@ impl COLORREF {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::COLORREF;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let color = COLORREF::new(0xff, 0x80, 0x00);
+	/// let color = w::COLORREF::new(0xff, 0x80, 0x00);
 	/// ```
 	#[must_use]
 	pub const fn new(red: u8, green: u8, blue: u8) -> COLORREF {

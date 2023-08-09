@@ -30,10 +30,9 @@ com_interface! { IGraphBuilder: "56a868a9-0ad4-11ce-b03a-0020af0ba770";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, CoCreateInstance, IGraphBuilder};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let obj = CoCreateInstance::<IGraphBuilder>(
+	/// let obj = w::CoCreateInstance::<w::IGraphBuilder>(
 	///     &co::CLSID::FilterGraph,
 	///     None,
 	///     co::CLSCTX::INPROC_SERVER,

@@ -122,14 +122,13 @@ pub mod msg {
 	//! In the example below, `LVM_DELETEITEM` returns `SysResult<()>`.
 	//!
 	//! ```rust,ignore
-	//! use winsafe::prelude::*;
-	//! use winsafe::{HWND, msg::lvm};
+	//! use winsafe::{self as w, prelude::*, msg};
 	//!
-	//! let hlistview: HWND; // initialized somewhere
-	//! # let hlistview = HWND::NULL;
+	//! let hlistview: w::HWND; // initialized somewhere
+	//! # let hlistview = w::HWND::NULL;
 	//!
 	//! hlistview.SendMessage(
-	//!     lvm::DeleteItem {
+	//!     msg::lvm::DeleteItem {
 	//!         index: 2,
 	//!     },
 	//! ).expect("Failed to delete item 2.");

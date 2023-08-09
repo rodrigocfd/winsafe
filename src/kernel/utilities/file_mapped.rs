@@ -13,12 +13,14 @@ use crate::prelude::*;
 /// (usually the fastest method):
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{FileAccess, FileMapped, WString};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let f = FileMapped::open("C:\\Temp\\foo.txt", FileAccess::ExistingReadOnly)?;
+/// let f = w::FileMapped::open(
+///     "C:\\Temp\\foo.txt",
+///     w::FileAccess::ExistingReadOnly,
+/// )?;
 /// let raw_bytes = f.as_slice();
-/// let text = WString::parse(raw_bytes)?.to_string();
+/// let text = w::WString::parse(raw_bytes)?.to_string();
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 pub struct FileMapped {

@@ -66,8 +66,7 @@ SetFocus(hwnd);
 This is equivalent to:
 
 ```rust,ignore
-use winsafe::prelude::*;
-use winsafe::HWND;
+use winsafe::{prelude::*, HWND};
 
 let hwnd = HWND::GetDesktopWindow();
 hwnd.SetFocus();
@@ -87,7 +86,6 @@ PostQuitMessage(0);
 Is equivalent to:
 
 ```rust,ignore
-use winsafe::prelude::*;
 use winsafe::PostQuitMessage;
 
 PostQuitMessage(0);
@@ -115,8 +113,7 @@ MessageBox(hwnd, "Hello, world", "My hello", MB_OKCANCEL | MB_ICONINFORMATION);
 This is equivalent to:
 
 ```rust,ignore
-use winsafe::prelude::*;
-use winsafe::{co::MB, HWND};
+use winsafe::{prelude::*, co::MB, HWND};
 
 let hwnd = HWND::GetDesktopWindow();
 hwnd.MessageBox("Hello, world", "Title", MB::OKCANCEL | MB::ICONINFORMATION)?;
@@ -147,7 +144,6 @@ if (RegisterClassEx(&wcx) == 0) {
 Is equivalent to:
 
 ```rust,ignore
-use winsafe::prelude::*;
 use winsafe::{RegisterClassEx, WNDCLASSEX, WString};
 
 let mut wcx = WNDCLASSEX::default();

@@ -20,10 +20,9 @@ const_no_debug_display! { ERROR: u32;
 	/// the code below:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::co::ERROR;
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// println!("{}", ERROR::OUT_OF_PAPER);
+	/// println!("{}", co::ERROR::OUT_OF_PAPER);
 	/// ```
 	///
 	/// Will print:

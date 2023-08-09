@@ -28,13 +28,12 @@ pub trait user_Hmonitor: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HMONITOR, MONITORINFOEX};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hmon: HMONITOR; // initialized somewhere
-	/// # let hmon = HMONITOR::NULL;
+	/// let hmon: w::HMONITOR; // initialized somewhere
+	/// # let hmon = w::HMONITOR::NULL;
 	///
-	/// let mut mi = MONITORINFOEX::default();
+	/// let mut mi = w::MONITORINFOEX::default();
 	/// hmon.GetMonitorInfo(&mut mi)?;
 	///
 	/// println!("{}", mi.szDevice());

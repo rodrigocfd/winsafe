@@ -33,10 +33,9 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HPROCESSLIST};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let mut hpl = HPROCESSLIST::
+	/// let mut hpl = w::HPROCESSLIST::
 	///     CreateToolhelp32Snapshot(co::TH32CS::SNAPHEAPLIST, None)?;
 	///
 	/// for heap_entry in hpl.iter_heaps() {
@@ -64,10 +63,9 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HPROCESSLIST};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let mut hpl = HPROCESSLIST::
+	/// let mut hpl = w::HPROCESSLIST::
 	///     CreateToolhelp32Snapshot(co::TH32CS::SNAPMODULE, None)?;
 	///
 	/// for mod_entry in hpl.iter_modules() {
@@ -94,10 +92,9 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HPROCESSLIST};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let mut hpl = HPROCESSLIST::
+	/// let mut hpl = w::HPROCESSLIST::
 	///     CreateToolhelp32Snapshot(co::TH32CS::SNAPPROCESS, None)?;
 	///
 	/// for proc_entry in hpl.iter_processes() {
@@ -124,12 +121,11 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, GetCurrentProcessId, HPROCESS, HPROCESSLIST};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let mut hpl = HPROCESSLIST::CreateToolhelp32Snapshot(
+	/// let mut hpl = w::HPROCESSLIST::CreateToolhelp32Snapshot(
 	///     co::TH32CS::SNAPTHREAD,
-	///     Some(GetCurrentProcessId()),
+	///     Some(w::GetCurrentProcessId()),
 	/// )?;
 	///
 	/// for thread_entry in hpl.iter_threads() {

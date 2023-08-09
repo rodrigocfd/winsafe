@@ -19,10 +19,9 @@ use crate::prelude::*;
 /// Listing all text files in a directory:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::path;
+/// use winsafe::{self as w, prelude::*};
 ///
-/// for file_path in path::dir_list("C:\\temp", Some("*.txt")) {
+/// for file_path in w::path::dir_list("C:\\temp", Some("*.txt")) {
 ///     let file_path = file_path?;
 ///     println!("{}", file_path);
 /// }
@@ -31,7 +30,8 @@ use crate::prelude::*;
 #[must_use]
 pub fn dir_list<'a>(
 	dir_path: &'a str,
-	filter: Option<&'a str>) -> impl Iterator<Item = SysResult<String>> + 'a
+	filter: Option<&'a str>,
+) -> impl Iterator<Item = SysResult<String>> + 'a
 {
 	DirListIter::new(dir_path.to_owned(), filter)
 }
@@ -45,39 +45,39 @@ pub fn dir_list<'a>(
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{path, SysResult};
+/// use winsafe::{self as w, prelude::*};
 ///
 /// // Ordinary for loop
-/// for file_path in path::dir_walk("C:\\Temp") {
+/// for file_path in w::path::dir_walk("C:\\Temp") {
 ///     let file_path = file_path?;
 ///     println!("{}", file_path);
 /// }
 ///
 /// // Closure with try_for_each
-/// path::dir_walk("C:\\Temp")
-///     .try_for_each(|file_path| -> SysResult<_> {
+/// w::path::dir_walk("C:\\Temp")
+///     .try_for_each(|file_path| -> w::SysResult<_> {
 ///         let file_path = file_path?;
 ///         println!("{}", file_path);
 ///         Ok(())
 ///     })?;
 ///
 /// // Collecting into a Vec
-/// let all = path::dir_walk("C:\\Temp")
-///     .collect::<SysResult<Vec<_>>>()?;
+/// let all = w::path::dir_walk("C:\\Temp")
+///     .collect::<w::SysResult<Vec<_>>>()?;
 ///
 /// // Transforming and collecting into a Vec
-/// let all = path::dir_walk("C:\\Temp")
-///     .map(|file_path| -> SysResult<_> {
+/// let all = w::path::dir_walk("C:\\Temp")
+///     .map(|file_path| -> w::SysResult<_> {
 ///         let file_path = file_path?;
 ///         Ok(format!("PATH: {}", file_path))
 ///     })
-///     .collect::<SysResult<Vec<_>>>()?;
+///     .collect::<w::SysResult<Vec<_>>>()?;
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 #[must_use]
 pub fn dir_walk<'a>(
-	dir_path: &'a str) -> impl Iterator<Item = SysResult<String>> + 'a
+	dir_path: &'a str,
+) -> impl Iterator<Item = SysResult<String>> + 'a
 {
 	DirWalkIter::new(dir_path.to_owned())
 }
@@ -124,10 +124,9 @@ pub fn exists(full_path: &str) -> bool {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::path;
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let f = path::get_file_name("C:\\Temp\\foo.txt"); // foo.txt
+/// let f = w::path::get_file_name("C:\\Temp\\foo.txt"); // foo.txt
 /// ```
 #[must_use]
 pub fn get_file_name(full_path: &str) -> Option<&str> {
@@ -146,12 +145,11 @@ pub fn get_file_name(full_path: &str) -> Option<&str> {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::path;
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let p = path::get_path("C:\\Temp\\xx\\a.txt"); // C:\Temp\xx
-/// let q = path::get_path("C:\\Temp\\xx\\");      // C:\Temp\xx
-/// let r = path::get_path("C:\\Temp\\xx");        // C:\Temp"
+/// let p = w::path::get_path("C:\\Temp\\xx\\a.txt"); // C:\Temp\xx
+/// let q = w::path::get_path("C:\\Temp\\xx\\");      // C:\Temp\xx
+/// let r = w::path::get_path("C:\\Temp\\xx");        // C:\Temp"
 /// ```
 #[must_use]
 pub fn get_path(full_path: &str) -> Option<&str> {
@@ -165,11 +163,10 @@ pub fn get_path(full_path: &str) -> Option<&str> {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::path;
+/// use winsafe::{self as w, prelude::*};
 ///
 /// println!("{}",
-///     path::has_extension("file.txt", &[".txt", ".bat"]));
+///     w::path::has_extension("file.txt", &[".txt", ".bat"]));
 /// ```
 #[must_use]
 pub fn has_extension(full_path: &str, extensions: &[impl AsRef<str>]) -> bool {
@@ -209,10 +206,9 @@ pub fn is_hidden(full_path: &str) -> bool {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::path;
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let p = path::replace_extension(
+/// let p = w::path::replace_extension(
 ///     "C:\\Temp\\something.txt", ".sh"); // C:\Temp\something.sh
 /// ```
 #[must_use]
@@ -252,10 +248,9 @@ pub fn replace_file_name(full_path: &str, new_file: &str) -> String {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::path;
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let p = path::replace_path( // C:\another\foo.txt
+/// let p = w::path::replace_path( // C:\another\foo.txt
 ///     "C:\\Temp\\foo.txt",
 ///     "C:\\another",
 /// );
@@ -274,10 +269,9 @@ pub fn replace_path(full_path: &str, new_path: &str) -> String {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::path;
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let p = path::rtrim_backslash("C:\\Temp\\"); // C:\Temp
+/// let p = w::path::rtrim_backslash("C:\\Temp\\"); // C:\Temp
 /// ```
 #[must_use]
 pub fn rtrim_backslash(full_path: &str) -> &str {

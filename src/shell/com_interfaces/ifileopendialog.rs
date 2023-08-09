@@ -26,13 +26,12 @@ com_interface! { IFileOpenDialog: "d57c7288-d4ad-4768-be02-9d969532d960";
 	/// Choosing a single existing TXT file:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, CoCreateInstance, HWND, IFileOpenDialog};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hparent: HWND; // initialized somewhere
-	/// # let hparent = HWND::NULL;
+	/// let hparent: w::HWND; // initialized somewhere
+	/// # let hparent = w::HWND::NULL;
 	///
-	/// let file_open = CoCreateInstance::<IFileOpenDialog>(
+	/// let file_open = w::CoCreateInstance::<w::IFileOpenDialog>(
 	///     &co::CLSID::FileOpenDialog,
 	///     None,
 	///     co::CLSCTX::INPROC_SERVER,
@@ -84,11 +83,10 @@ pub trait shell_IFileOpenDialog: shell_IFileDialog {
 		/// Collecting the file paths into a [`Vec`](std::vec::Vec):
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{co, HrResult, IFileOpenDialog};
+		/// use winsafe::{self as w, prelude::*, co};
 		///
-		/// let fo: IFileOpenDialog; // initialized somewhere
-		/// # let fo = unsafe { IFileOpenDialog::null() };
+		/// let fo: w::IFileOpenDialog; // initialized somewhere
+		/// # let fo = unsafe { w::IFileOpenDialog::null() };
 		///
 		/// let paths = fo.GetResults()?.iter()?
 		///     .map(|shi|
@@ -96,7 +94,7 @@ pub trait shell_IFileOpenDialog: shell_IFileDialog {
 		///             shi.GetDisplayName(co::SIGDN::FILESYSPATH)
 		///         ),
 		///     )
-		///     .collect::<HrResult<Vec<_>>>()?;
+		///     .collect::<w::HrResult<Vec<_>>>()?;
 		/// # Ok::<_, co::HRESULT>(())
 		/// ```
 	}

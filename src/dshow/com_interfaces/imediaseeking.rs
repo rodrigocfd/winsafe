@@ -42,14 +42,13 @@ com_interface! { IMediaSeeking: "36b73880-c2c8-11cf-8b46-00805f6cef60";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{IGraphBuilder, IMediaSeeking};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let graph_builder: IGraphBuilder; // initialized somewhere
-	/// # let graph_builder = unsafe { IGraphBuilder::null() };
+	/// let graph_builder: w::IGraphBuilder; // initialized somewhere
+	/// # let graph_builder = unsafe { w::IGraphBuilder::null() };
 	///
 	/// let media_seeking = graph_builder
-	///     .QueryInterface::<IMediaSeeking>()?;
+	///     .QueryInterface::<w::IMediaSeeking>()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 }

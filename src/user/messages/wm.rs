@@ -631,18 +631,19 @@ unsafe impl<'a> MsgSendRecv for GetMinMaxInfo<'a> {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{msg::wm, HWND, WString};
+/// use winsafe::{self as w, prelude::*, msg};
 ///
-/// let hwnd: HWND; // initialized somewhere
-/// # let hwnd = HWND::NULL;
+/// let hwnd: w::HWND; // initialized somewhere
+/// # let hwnd = w::HWND::NULL;
 ///
-/// let needed_len = hwnd.SendMessage(wm::GetTextLength {});
-/// let mut buf = WString::new_alloc_buf(needed_len as _);
+/// let needed_len = hwnd.SendMessage(msg::wm::GetTextLength {});
+/// let mut buf = w::WString::new_alloc_buf(needed_len as _);
 ///
-/// hwnd.SendMessage(wm::GetText {
-///     buffer: buf.as_mut_slice(),
-/// });
+/// hwnd.SendMessage(
+///     msg::wm::GetText {
+///         buffer: buf.as_mut_slice(),
+///     },
+/// );
 ///
 /// println!("Text: {}", buf.to_string());
 /// ```
@@ -1468,17 +1469,18 @@ unsafe impl MsgSendRecv for SetIcon {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{msg::wm, HWND, WString};
+/// use winsafe::{self as w, prelude::*, msg};
 ///
-/// let hwnd: HWND; // initialized somewhere
-/// # let hwnd = HWND::NULL;
+/// let hwnd: w::HWND; // initialized somewhere
+/// # let hwnd = w::HWND::NULL;
 ///
-/// let new_text = WString::from_str("some text");
+/// let new_text = w::WString::from_str("some text");
 ///
-/// hwnd.SendMessage(wm::SetText {
-///     text: unsafe { new_text.as_ptr() },
-/// });
+/// hwnd.SendMessage(
+///     msg::wm::SetText {
+///         text: unsafe { new_text.as_ptr() },
+///     },
+/// );
 /// ```
 pub struct SetText {
 	pub text: *const u16, // can't be WString because this message can be received

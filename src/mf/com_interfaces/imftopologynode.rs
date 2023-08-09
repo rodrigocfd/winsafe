@@ -44,10 +44,9 @@ com_interface! { IMFTopologyNode: "83cf873a-f6da-4bc8-823f-bacfd55dc430";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IMFTopologyNode, MFCreateTopologyNode};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let topology_node = MFCreateTopologyNode(co::MF_TOPOLOGY::OUTPUT_NODE)?;
+	/// let topology_node = w::MFCreateTopologyNode(co::MF_TOPOLOGY::OUTPUT_NODE)?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 }

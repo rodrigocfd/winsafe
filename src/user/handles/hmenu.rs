@@ -54,8 +54,7 @@ pub trait user_Hmenu: Handle {
 	/// Adding multiple entries at once, with their command IDs:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HMENU, MenuEnum, seq_ids};
+	/// use winsafe::{self as w, prelude::*, seq_ids};
 	///
 	/// seq_ids! {
 	///     ID_FILE_OPEN = 2001;
@@ -63,14 +62,14 @@ pub trait user_Hmenu: Handle {
 	///     ID_FILE_EXIT
 	/// }
 	///
-	/// let hmenu: HMENU; // initialized somewhere
-	/// # let hmenu = HMENU::NULL;
+	/// let hmenu: w::HMENU; // initialized somewhere
+	/// # let hmenu = w::HMENU::NULL;
 	///
 	/// hmenu.AppendMenuEnum(&[
-	///     MenuEnum::Entry(ID_FILE_OPEN, "&Open"),
-	///     MenuEnum::Entry(ID_FILE_OPEN, "&Save"),
-	///     MenuEnum::Separator,
-	///     MenuEnum::Entry(ID_FILE_EXIT, "E&xit"),
+	///     w::MenuEnum::Entry(ID_FILE_OPEN, "&Open"),
+	///     w::MenuEnum::Entry(ID_FILE_OPEN, "&Save"),
+	///     w::MenuEnum::Separator,
+	///     w::MenuEnum::Entry(ID_FILE_EXIT, "E&xit"),
 	/// ])?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
@@ -208,18 +207,17 @@ pub trait user_Hmenu: Handle {
 	/// Disabling a menu item:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HMENU, IdPos, seq_ids};
+	/// use winsafe::{self as w, prelude::*, seq_ids};
 	///
 	/// seq_ids! {
 	///     ID_FILE_OPEN = 101;
 	/// }
 	///
-	/// let hmenu: HMENU; // initialized somewhere
-	/// # let hmenu = HMENU::NULL;
+	/// let hmenu: w::HMENU; // initialized somewhere
+	/// # let hmenu = w::HMENU::NULL;
 	///
 	/// hmenu.EnableMenuItem(
-	///     IdPos::Id(ID_FILE_OPEN),
+	///     w::IdPos::Id(ID_FILE_OPEN),
 	///     false,
 	/// )?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
@@ -228,26 +226,25 @@ pub trait user_Hmenu: Handle {
 	/// Disabling multiple menu items at once:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HMENU, IdPos, seq_ids};
+	/// use winsafe::{self as w, prelude::*, seq_ids};
 	///
 	/// seq_ids! {
 	///     ID_FILE_OPEN = 201;
 	///     ID_FILE_SAVE
 	/// }
 	///
-	/// let hmenu: HMENU; // initialized somewhere
-	/// # let hmenu = HMENU::NULL;
+	/// let hmenu: w::HMENU; // initialized somewhere
+	/// # let hmenu = w::HMENU::NULL;
 	///
 	/// [
 	///     (ID_FILE_OPEN, "Open\tCtrl+O"),
 	///     (ID_FILE_SAVE, "&Save"),
 	/// ].iter()
 	///     .map(|(id, txt)| hmenu.EnableMenuItem(
-	///         IdPos::Id(*id),
+	///         w::IdPos::Id(*id),
 	///         false,
 	///     ))
-	///     .collect::<Result<Vec<_>, _>>()?;
+	///     .collect::<w::SysResult<Vec<_>>>()?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	fn EnableMenuItem(&self,

@@ -32,10 +32,9 @@ com_interface! { ITaskService: "2faba4c7-4da9-4013-9697-20cc3fd40f85";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, CoCreateInstance, ITaskService};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let obj = CoCreateInstance::<ITaskService>(
+	/// let obj = w::CoCreateInstance::<w::ITaskService>(
 	///     &co::CLSID::TaskScheduler,
 	///     None,
 	///     co::CLSCTX::INPROC_SERVER,

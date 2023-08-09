@@ -30,13 +30,12 @@ com_interface! { IFileSaveDialog: "84bccd23-5fde-4cdb-aea4-af64b83d78ab";
 	/// Saving a TXT file:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, CoCreateInstance, HWND, IFileSaveDialog};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hparent: HWND; // initialized somewhere
-	/// # let hparent = HWND::NULL;
+	/// let hparent: w::HWND; // initialized somewhere
+	/// # let hparent = w::HWND::NULL;
 	///
-	/// let file_save = CoCreateInstance::<IFileSaveDialog>(
+	/// let file_save = w::CoCreateInstance::<w::IFileSaveDialog>(
 	///     &co::CLSID::FileSaveDialog,
 	///     None,
 	///     co::CLSCTX::INPROC_SERVER,

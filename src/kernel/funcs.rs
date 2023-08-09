@@ -20,31 +20,33 @@ use crate::prelude::*;
 /// Create a well-known SID for the Everyone group:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{AllocateAndInitializeSid, co, SID_IDENTIFIER_AUTHORITY};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let sid_everyone = AllocateAndInitializeSid(
-///     &SID_IDENTIFIER_AUTHORITY::WORLD,
+/// let sid_everyone = w::AllocateAndInitializeSid(
+///     &w::SID_IDENTIFIER_AUTHORITY::WORLD,
 ///     &[
 ///         co::RID::SECURITY_WORLD,
 ///     ],
 /// )?;
+///
+/// // FreeSid() automatically called
 /// # Ok::<_, co::ERROR>(())
 /// ```
 ///
 /// Create a SID for the BUILTIN\Administrators group:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{AllocateAndInitializeSid, co, SID_IDENTIFIER_AUTHORITY};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let sid_builtin_administrators = AllocateAndInitializeSid(
-///     &SID_IDENTIFIER_AUTHORITY::NT,
+/// let sid_builtin_administrators = w::AllocateAndInitializeSid(
+///     &w::SID_IDENTIFIER_AUTHORITY::NT,
 ///     &[
 ///         co::RID::SECURITY_BUILTIN_DOMAIN,
 ///         co::RID::DOMAIN_ALIAS_ADMINS,
 ///     ],
 /// )?;
+///
+/// // FreeSid() automatically called
 /// # Ok::<_, co::ERROR>(())
 /// ```
 #[must_use]
@@ -170,10 +172,12 @@ pub fn CreateDirectory(
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, CreateWellKnownSid};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let sid = CreateWellKnownSid(co::WELL_KNOWN_SID_TYPE::LocalSystem, None)?;
+/// let sid = w::CreateWellKnownSid(
+///     co::WELL_KNOWN_SID_TYPE::LocalSystem,
+///     None,
+/// )?;
 /// # Ok::<_, co::ERROR>(())
 /// ```
 #[must_use]
@@ -312,10 +316,9 @@ pub fn ExitThread(exit_code: u32) {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::ExpandEnvironmentStrings;
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let expanded = ExpandEnvironmentStrings(
+/// let expanded = w::ExpandEnvironmentStrings(
 ///     "Os %OS%, home %HOMEPATH% and temp %TEMP%",
 /// )?;
 ///
@@ -535,10 +538,9 @@ pub fn GetDiskSpaceInformation(
 /// Retrieving and printing the key/value pairs of all environment strings:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::GetEnvironmentStrings;
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let env_vars = GetEnvironmentStrings()?;
+/// let env_vars = w::GetEnvironmentStrings()?;
 /// for (k, v) in env_vars.iter() {
 ///     println!("{} = {}", k, v);
 /// }
@@ -628,19 +630,17 @@ pub fn GetLogicalDriveStrings() -> SysResult<Vec<String>> {
 /// Checking whether a file or folder exists:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, GetFileAttributes};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let file_exists = GetFileAttributes("C:\\Temp\\test.txt").is_ok();
+/// let file_exists = w::GetFileAttributes("C:\\Temp\\test.txt").is_ok();
 /// ```
 ///
 /// Retrieving various information about a file or folder path:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, GetFileAttributes};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let flags = GetFileAttributes("C:\\Temp\\test.txt")?;
+/// let flags = w::GetFileAttributes("C:\\Temp\\test.txt")?;
 ///
 /// let is_compressed = flags.has(co::FILE_ATTRIBUTE::COMPRESSED);
 /// let is_directory  = flags.has(co::FILE_ATTRIBUTE::DIRECTORY);
@@ -669,11 +669,10 @@ pub fn GetFileAttributes(file_name: &str) -> SysResult<co::FILE_ATTRIBUTE> {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{GetLocalTime, SYSTEMTIME};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let mut st = SYSTEMTIME::default();
-/// GetLocalTime(&mut st);
+/// let mut st = w::SYSTEMTIME::default();
+/// w::GetLocalTime(&mut st);
 /// ```
 pub fn GetLocalTime(st: &mut SYSTEMTIME) {
 	unsafe { ffi::GetLocalTime(st as *mut _ as _) }
@@ -698,11 +697,10 @@ pub fn GetSidLengthRequired(sub_authority_count: u8) -> u32 {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{GetStartupInfo, STARTUPINFO};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let mut si = STARTUPINFO::default();
-/// GetStartupInfo(&mut si);
+/// let mut si = w::STARTUPINFO::default();
+/// w::GetStartupInfo(&mut si);
 /// ```
 pub fn GetStartupInfo(si: &mut STARTUPINFO) {
 	unsafe { ffi::GetStartupInfoW(si as *mut _ as _) }
@@ -742,11 +740,10 @@ pub fn GetSystemFileCacheSize() -> SysResult<(usize, usize, co::FILE_CACHE)> {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{GetSystemInfo, SYSTEM_INFO};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let mut si = SYSTEM_INFO::default();
-/// GetSystemInfo(&mut si);
+/// let mut si = w::SYSTEM_INFO::default();
+/// w::GetSystemInfo(&mut si);
 /// ```
 pub fn GetSystemInfo(si: &mut SYSTEM_INFO) {
 	unsafe { ffi::GetSystemInfo(si as *mut _ as _) }
@@ -761,11 +758,10 @@ pub fn GetSystemInfo(si: &mut SYSTEM_INFO) {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{GetSystemTime, SYSTEMTIME};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let mut st = SYSTEMTIME::default();
-/// GetSystemTime(&mut st);
+/// let mut st = w::SYSTEMTIME::default();
+/// w::GetSystemTime(&mut st);
 /// ```
 pub fn GetSystemTime(st: &mut SYSTEMTIME) {
 	unsafe { ffi::GetSystemTime(st as *mut _ as _) }
@@ -866,7 +862,7 @@ pub fn GetUserName() -> SysResult<String> {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::{co, GetVolumeInformation};
+/// use winsafe::{self as w, prelude::*, co};
 ///
 /// let mut name = String::default();
 /// let mut serial_no = u32::default();
@@ -874,10 +870,13 @@ pub fn GetUserName() -> SysResult<String> {
 /// let mut sys_flags = co::FILE_VOL::default();
 /// let mut sys_name = String::default();
 ///
-/// GetVolumeInformation(
+/// w::GetVolumeInformation(
 ///     Some("C:\\"),
-///     Some(&mut name), Some(&mut serial_no), Some(&mut max_comp_len),
-///     Some(&mut sys_flags), Some(&mut sys_name),
+///     Some(&mut name),
+///     Some(&mut serial_no),
+///     Some(&mut max_comp_len),
+///     Some(&mut sys_flags),
+///     Some(&mut sys_name),
 /// )?;
 ///
 /// println!("Name: {}", name);
@@ -1242,11 +1241,10 @@ pub const fn LODWORD(v: u64) -> u32 {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{GetUserName, LookupAccountName};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let user_name = GetUserName()?;
-/// let (domain_name, sid, kind) = LookupAccountName(None, &user_name)?;
+/// let user_name = w::GetUserName()?;
+/// let (domain_name, sid, kind) = w::LookupAccountName(None, &user_name)?;
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 #[must_use]
@@ -1382,13 +1380,12 @@ pub fn LookupPrivilegeName(
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, HPROCESS, LookupPrivilegeValue};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let htoken = HPROCESS::GetCurrentProcess()
+/// let htoken = w::HPROCESS::GetCurrentProcess()
 ///     .OpenProcessToken(co::TOKEN::ADJUST_PRIVILEGES | co::TOKEN::QUERY)?;
 ///
-/// let luid = LookupPrivilegeValue(None, co::SE_PRIV::SHUTDOWN_NAME)?;
+/// let luid = w::LookupPrivilegeValue(None, co::SE_PRIV::SHUTDOWN_NAME)?;
 /// # Ok::<_, co::ERROR>(())
 /// ```
 #[must_use]
@@ -1513,16 +1510,15 @@ pub fn OutputDebugString(output_string: &str) {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{QueryPerformanceCounter, QueryPerformanceFrequency};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let freq = QueryPerformanceFrequency()?;
-/// let t0 = QueryPerformanceCounter()?;
+/// let freq = w::QueryPerformanceFrequency()?;
+/// let t0 = w::QueryPerformanceCounter()?;
 ///
 /// // perform some operation...
 ///
 /// let duration_ms =
-///     ((QueryPerformanceCounter()? - t0) as f64 / freq as f64) * 1000.0;
+///     ((w::QueryPerformanceCounter()? - t0) as f64 / freq as f64) * 1000.0;
 ///
 /// println!("Operation lasted {:.2} ms", duration_ms);
 /// # Ok::<_, winsafe::co::ERROR>(())

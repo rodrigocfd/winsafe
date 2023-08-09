@@ -46,11 +46,10 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::IEnumFilters;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let filters: IEnumFilters; // initialized somewhere
-	/// # let filters = unsafe { IEnumFilters::null() };
+	/// let filters: w::IEnumFilters; // initialized somewhere
+	/// # let filters = unsafe { w::IEnumFilters::null() };
 	///
 	/// for filter in filters.iter() {
 	///     let filter = filter?;

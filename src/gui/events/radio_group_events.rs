@@ -45,8 +45,7 @@ impl RadioGroupEvents {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{gui, AnyResult};
+	/// use winsafe::{self as w, prelude::*, gui};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
@@ -55,7 +54,7 @@ impl RadioGroupEvents {
 	///
 	/// radios.on().bn_clicked({
 	///     let radios = radios.clone();
-	///     move || -> AnyResult<()> {
+	///     move || -> w::AnyResult<()> {
 	///         println!("Selected {}",
 	///             radios.checked().unwrap()
 	///                 .hwnd().GetWindowText()?,

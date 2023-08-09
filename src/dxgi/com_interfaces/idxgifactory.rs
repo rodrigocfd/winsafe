@@ -33,10 +33,9 @@ com_interface! { IDXGIFactory: "7b7166ec-21c7-44ae-b21a-c9ae321ae369";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::CreateDXGIFactory;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let factory = CreateDXGIFactory()?;
+	/// let factory = w::CreateDXGIFactory()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 }
@@ -80,11 +79,10 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HrResult, IDXGIAdapter, IDXGIFactory};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let factory: IDXGIFactory; // initialized somewhere
-	/// # let factory = unsafe { IDXGIFactory::null() };
+	/// let factory: w::IDXGIFactory; // initialized somewhere
+	/// # let factory = unsafe { w::IDXGIFactory::null() };
 	///
 	/// for adapter in factory.EnumAdapters() {
 	///     let adapter = adapter?;
@@ -92,9 +90,9 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	/// }
 	///
 	/// // Collecting into a Vec
-	/// let adapters: Vec<IDXGIAdapter> =
+	/// let adapters: Vec<w::IDXGIAdapter> =
 	///     factory.EnumAdapters()
-	///         .collect::<HrResult<Vec<_>>>()?;
+	///         .collect::<w::HrResult<Vec<_>>>()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 	#[must_use]

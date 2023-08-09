@@ -44,10 +44,9 @@ pub trait kernel_Hfilemapview: Handle {
 	/// Reading the contents of a file into a string:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HFILE};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let (hfile, _) = HFILE::CreateFile(
+	/// let (hfile, _) = w::HFILE::CreateFile(
 	///     "C:\\Temp\\test.txt",
 	///     co::GENERIC::READ,
 	///     Some(co::FILE_SHARE::READ),

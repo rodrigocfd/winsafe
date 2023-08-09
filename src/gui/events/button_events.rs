@@ -35,8 +35,7 @@ impl ButtonEvents {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, AnyResult};
+		/// use winsafe::{self as w, prelude::*, gui};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// let btn: gui::Button;
@@ -44,7 +43,7 @@ impl ButtonEvents {
 		/// # let btn = gui::Button::new(&wnd, gui::ButtonOpts::default());
 		///
 		/// btn.on().bn_clicked(
-		///     move || -> AnyResult<()> {
+		///     move || -> w::AnyResult<()> {
 		///         println!("Clicked.");
 		///         Ok(())
 		///     },

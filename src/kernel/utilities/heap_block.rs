@@ -12,10 +12,9 @@ use crate::prelude::*;
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::HeapBlock;
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let mut bl = HeapBlock::alloc(10)?;
+/// let mut bl = w::HeapBlock::alloc(10)?;
 ///
 /// for (idx, b) in bl.as_mut_slice().iter_mut().enumerate() {
 ///     *b = (idx * 10) as _;

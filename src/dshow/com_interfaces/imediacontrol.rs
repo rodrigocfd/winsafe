@@ -33,14 +33,13 @@ com_interface! { IMediaControl: "56a868b1-0ad4-11ce-b03a-0020af0ba770";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{IGraphBuilder, IMediaControl};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let graph_builder: IGraphBuilder; // initialized somewhere
-	/// # let graph_builder = unsafe { IGraphBuilder::null() };
+	/// let graph_builder: w::IGraphBuilder; // initialized somewhere
+	/// # let graph_builder = unsafe { w::IGraphBuilder::null() };
 	///
 	/// let media_control = graph_builder
-	///     .QueryInterface::<IMediaControl>()?;
+	///     .QueryInterface::<w::IMediaControl>()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 }

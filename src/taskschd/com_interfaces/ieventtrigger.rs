@@ -28,14 +28,13 @@ com_interface! { IEventTrigger: "d45b0167-9653-4eef-b94f-0732ca7af251";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{IEventTrigger, ITrigger};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let trigger: ITrigger; // initialized somewhere
-	/// # let trigger = unsafe { ITrigger::null() };
+	/// let trigger: w::ITrigger; // initialized somewhere
+	/// # let trigger = unsafe { w::ITrigger::null() };
 	///
 	/// let event_trigger = trigger
-	///     .QueryInterface::<IEventTrigger>()?;
+	///     .QueryInterface::<w::IEventTrigger>()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 }

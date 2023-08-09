@@ -9,11 +9,10 @@ use crate::decl::*;
 /// Reading version information:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{HINSTANCE, ResourceInfo};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let exe_name = HINSTANCE::NULL.GetModuleFileName()?;
-/// let res_info = ResourceInfo::read_from(&exe_name)?;
+/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
+/// let res_info = w::ResourceInfo::read_from(&exe_name)?;
 ///
 /// if let Some(ver_info) = res_info.version_info() {
 ///     let ver = ver_info.dwFileVersion();
@@ -28,11 +27,10 @@ use crate::decl::*;
 /// block can have their own information strings:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{HINSTANCE, ResourceInfo};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let exe_name = HINSTANCE::NULL.GetModuleFileName()?;
-/// let res_info = ResourceInfo::read_from(&exe_name)?;
+/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
+/// let res_info = w::ResourceInfo::read_from(&exe_name)?;
 ///
 /// for block in res_info.blocks() {
 ///     if let Some(product_name) = block.product_name() {

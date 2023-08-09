@@ -26,14 +26,13 @@ com_interface! { ILogonTrigger: "72dade38-fae4-4b3e-baf4-5d009af02b1c";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{ILogonTrigger, ITrigger};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let trigger: ITrigger; // initialized somewhere
-	/// # let trigger = unsafe { ITrigger::null() };
+	/// let trigger: w::ITrigger; // initialized somewhere
+	/// # let trigger = unsafe { w::ITrigger::null() };
 	///
 	/// let logon_trigger = trigger
-	///     .QueryInterface::<ILogonTrigger>()?;
+	///     .QueryInterface::<w::ILogonTrigger>()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 }

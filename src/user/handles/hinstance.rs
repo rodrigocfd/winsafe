@@ -106,11 +106,10 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// Retrieving information of a window class created in our application:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HINSTANCE, WNDCLASSEX};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let mut wcx = WNDCLASSEX::default();
-	/// HINSTANCE::GetModuleHandle(None)?
+	/// let mut wcx = w::WNDCLASSEX::default();
+	/// w::HINSTANCE::GetModuleHandle(None)?
 	///     .GetClassInfoEx("SOME_CLASS_NAME", &mut wcx)?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
@@ -148,11 +147,10 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// Loading a system cursor:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HINSTANCE, IdIdcStr};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let sys_cursor = HINSTANCE::NULL
-	///     .LoadCursor(IdIdcStr::Idc(co::IDC::ARROW))?;
+	/// let sys_cursor = w::HINSTANCE::NULL
+	///     .LoadCursor(w::IdIdcStr::Idc(co::IDC::ARROW))?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -175,11 +173,10 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// Loading a system icon:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, IdIdiStr, HINSTANCE};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let sys_icon = HINSTANCE::NULL
-	///     .LoadIcon(IdIdiStr::Idi(co::IDI::INFORMATION))?;
+	/// let sys_icon = w::HINSTANCE::NULL
+	///     .LoadIcon(w::IdIdiStr::Idi(co::IDI::INFORMATION))?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]

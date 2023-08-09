@@ -27,14 +27,13 @@ com_interface! { IDailyTrigger: "126c5cd8-b288-41d5-8dbf-e491446adc5c";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{IDailyTrigger, ITrigger};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let trigger: ITrigger; // initialized somewhere
-	/// # let trigger = unsafe { ITrigger::null() };
+	/// let trigger: w::ITrigger; // initialized somewhere
+	/// # let trigger = unsafe { w::ITrigger::null() };
 	///
 	/// let daily_trigger = trigger
-	///     .QueryInterface::<IDailyTrigger>()?;
+	///     .QueryInterface::<w::IDailyTrigger>()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 }

@@ -24,10 +24,9 @@ com_interface! { ITaskbarList2: "602d4995-b13a-429b-a66e-1935e44f4317";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, CoCreateInstance, ITaskbarList2};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let obj = CoCreateInstance::<ITaskbarList2>(
+	/// let obj = w::CoCreateInstance::<w::ITaskbarList2>(
 	///     &co::CLSID::TaskbarList,
 	///     None,
 	///     co::CLSCTX::INPROC_SERVER,

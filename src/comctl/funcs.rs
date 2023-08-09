@@ -44,38 +44,34 @@ pub fn InitMUILanguage(ui_lang: LANGID) {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{
-///     co, HWND, IconIdTdicon, TASKDIALOG_BUTTON, TASKDIALOGCONFIG,
-///     TaskDialogIndirect, WString,
-/// };
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let hwnd: HWND; // initialized somewhere
-/// # let hwnd = HWND::NULL;
+/// let hwnd: w::HWND; // initialized somewhere
+/// # let hwnd = w::HWND::NULL;
 ///
-/// let mut tdc = TASKDIALOGCONFIG::default();
+/// let mut tdc = w::TASKDIALOGCONFIG::default();
 /// tdc.hwndParent = hwnd;
 /// tdc.dwCommonButtons = co::TDCBF::YES | co::TDCBF::NO;
-/// tdc.set_pszMainIcon(IconIdTdicon::Tdicon(co::TD_ICON::INFORMATION));
+/// tdc.set_pszMainIcon(w::IconIdTdicon::Tdicon(co::TD_ICON::INFORMATION));
 ///
-/// let mut title = WString::from_str("Title");
+/// let mut title = w::WString::from_str("Title");
 /// tdc.set_pszWindowTitle(Some(&mut title));
 ///
-/// let mut header = WString::from_str("Header");
+/// let mut header = w::WString::from_str("Header");
 /// tdc.set_pszMainInstruction(Some(&mut header));
 ///
-/// let mut body = WString::from_str("Body");
+/// let mut body = w::WString::from_str("Body");
 /// tdc.set_pszContent(Some(&mut body));
 ///
 /// // A custom button to appear before Yes and No.
-/// let mut btn1 = TASKDIALOG_BUTTON::default();
-/// let mut btn1_text = WString::from_str("Hello");
+/// let mut btn1 = w::TASKDIALOG_BUTTON::default();
+/// let mut btn1_text = w::WString::from_str("Hello");
 /// btn1.set_pszButtonText(Some(&mut btn1_text));
 /// btn1.set_nButtonID(333); // this ID is returned if user clicks this button
 /// let btns_slice = &mut [btn1];
 /// tdc.set_pButtons(Some(btns_slice));
 ///
-/// TaskDialogIndirect(&tdc, None)?;
+/// w::TaskDialogIndirect(&tdc, None)?;
 /// # Ok::<_, co::HRESULT>(())
 /// ```
 pub fn TaskDialogIndirect(

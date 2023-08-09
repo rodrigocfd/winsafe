@@ -26,8 +26,7 @@ impl<'a> ListViewItems<'a> {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::gui;
+	/// use winsafe::{self as w, prelude::*, gui};
 	///
 	/// let my_list: gui::ListView; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
@@ -174,8 +173,7 @@ impl<'a> ListViewItems<'a> {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::gui;
+	/// use winsafe::{self as w, prelude::*, gui};
 	///
 	/// let my_list: gui::ListView; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
@@ -196,8 +194,7 @@ impl<'a> ListViewItems<'a> {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::gui;
+	/// use winsafe::{self as w, prelude::*, gui};
 	///
 	/// let my_list: gui::ListView; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());

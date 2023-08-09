@@ -43,10 +43,9 @@ com_interface! { IShellLink: "000214f9-0000-0000-c000-000000000046";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, CoCreateInstance, IShellLink};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let obj = CoCreateInstance::<IShellLink>(
+	/// let obj = w::CoCreateInstance::<w::IShellLink>(
 	///     &co::CLSID::ShellLink,
 	///     None,
 	///     co::CLSCTX::INPROC_SERVER,

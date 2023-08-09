@@ -14,10 +14,9 @@ use crate::shell::ffi;
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{CommandLineToArgv, GetCommandLine};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let args = CommandLineToArgv(&GetCommandLine())?;
+/// let args = w::CommandLineToArgv(&w::GetCommandLine())?;
 /// for arg in args.iter() {
 ///     println!("{}", arg);
 /// }
@@ -51,16 +50,20 @@ pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::PathCombine;
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let full = PathCombine(Some("C:"), Some("One\\Two\\Three"))?;
+/// let full = w::PathCombine(
+///     Some("C:"),
+///     Some("One\\Two\\Three"),
+/// )?;
 ///
 /// // full = "C:\\One\\Two\\Three"
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 pub fn PathCombine(
-	str_dir: Option<&str>, str_file: Option<&str>) -> SysResult<String>
+	str_dir: Option<&str>,
+	str_file: Option<&str>,
+) -> SysResult<String>
 {
 	let mut buf = WString::new_alloc_buf(MAX_PATH);
 	ptr_to_sysresult(
@@ -80,10 +83,9 @@ pub fn PathCombine(
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::PathCommonPrefix;
+/// use winsafe::{self as w, prelude::*};
 ///
-/// if let Some(common_prefix) = PathCommonPrefix(
+/// if let Some(common_prefix) = w::PathCommonPrefix(
 ///     "C:\\temp\\one\\foo.txt",
 ///     "C:\\temp\\two\\bar.txt",
 /// ) {
@@ -165,12 +167,11 @@ pub fn Shell_NotifyIcon(
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{IBindCtx, IShellItem2, SHCreateItemFromParsingName};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let shi = SHCreateItemFromParsingName::<IShellItem2>(
+/// let shi = w::SHCreateItemFromParsingName::<w::IShellItem2>(
 ///     "C:\\Temp\\foo.txt",
-///     None::<&IBindCtx>,
+///     None::<&w::IBindCtx>,
 /// )?;
 /// # Ok::<_, winsafe::co::HRESULT>(())
 /// ```
@@ -202,13 +203,12 @@ pub fn SHCreateItemFromParsingName<T>(
 /// Loading from a `Vec`:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::SHCreateMemStream;
+/// use winsafe::{self as w, prelude::*};
 ///
 /// let raw_data: Vec<u8>; // initialized somewhere
 /// # let raw_data = Vec::<u8>::default();
 ///
-/// let stream = SHCreateMemStream(&raw_data)?;
+/// let stream = w::SHCreateMemStream(&raw_data)?;
 /// # Ok::<_, winsafe::co::HRESULT>(())
 /// ```
 #[must_use]
@@ -258,10 +258,9 @@ pub fn SHGetFileInfo(
 /// Retrieving documents folder:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, SHGetKnownFolderPath};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let docs_folder = SHGetKnownFolderPath(
+/// let docs_folder = w::SHGetKnownFolderPath(
 ///     &co::KNOWNFOLDERID::Documents,
 ///     co::KF::DEFAULT,
 ///     None,
@@ -302,10 +301,9 @@ pub fn SHGetKnownFolderPath(
 /// Loading the small (16x16 pixels) camera icon from the system:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, SHGetStockIconInfo};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let sii = SHGetStockIconInfo(
+/// let sii = w::SHGetStockIconInfo(
 ///     co::SIID::DEVICECAMERA,
 ///     co::SHGSI::ICON | co::SHGSI::SMALLICON,
 /// )?;

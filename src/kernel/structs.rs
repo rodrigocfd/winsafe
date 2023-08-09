@@ -124,10 +124,9 @@ impl GUID {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::GUID;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let g = GUID::new("00000000-0000-0000-c000-000000000046");
+	/// let g = w::GUID::new("00000000-0000-0000-c000-000000000046");
 	/// ```
 	#[must_use]
 	pub const fn new(guid_str: &str) -> Self {

@@ -62,12 +62,11 @@ pub trait kernel_Hstd: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HSTD, WString};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hstd = HSTD::GetStdHandle(co::STD_HANDLE::INPUT)?;
+	/// let hstd = w::HSTD::GetStdHandle(co::STD_HANDLE::INPUT)?;
 	///
-	/// let mut buffer = WString::new_alloc_buf(2048);
+	/// let mut buffer = w::WString::new_alloc_buf(2048);
 	/// hstd.ReadConsole(&mut buffer, None)?;
 	///
 	/// let text = buffer.to_string();

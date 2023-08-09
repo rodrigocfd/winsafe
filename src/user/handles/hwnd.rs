@@ -70,11 +70,10 @@ pub trait user_Hwnd: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::HWND;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hwnd: HWND; // initialized somewhere
-	/// # let hwnd = HWND::NULL;
+	/// let hwnd: w::HWND; // initialized somewhere
+	/// # let hwnd = w::HWND::NULL;
 	///
 	/// let hdc = hwnd.BeginPaint()?;
 	///
@@ -88,11 +87,10 @@ pub trait user_Hwnd: Handle {
 	/// the guard alive:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::HWND;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hwnd: HWND; // initialized somewhere
-	/// # let hwnd = HWND::NULL;
+	/// let hwnd: w::HWND; // initialized somewhere
+	/// # let hwnd = w::HWND::NULL;
 	///
 	/// let _hdc = hwnd.BeginPaint()?; // keep guard alive
 	///
@@ -303,13 +301,12 @@ pub trait user_Hwnd: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::HWND;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hwnd: HWND; // initialized somewhere
-	/// # let hwnd = HWND::NULL;
+	/// let hwnd: w::HWND; // initialized somewhere
+	/// # let hwnd = w::HWND::NULL;
 	///
-	/// hwnd.EnumChildWindows(|hchild: HWND| -> bool {
+	/// hwnd.EnumChildWindows(|hchild: w::HWND| -> bool {
 	///     println!("Child HWND: {}", hchild);
 	///     true
 	/// });
@@ -473,10 +470,9 @@ pub trait user_Hwnd: Handle {
 	/// Retrieving the device context of the desktop window:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::HWND;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hdc_desktop = HWND::DESKTOP.GetDC()?;
+	/// let hdc_desktop = w::HWND::DESKTOP.GetDC()?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -828,11 +824,10 @@ pub trait user_Hwnd: Handle {
 	/// [`String`](std::string::String).
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::HWND;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hwnd: HWND; // initialized somewhere
-	/// # let hwnd = HWND::NULL;
+	/// let hwnd: w::HWND; // initialized somewhere
+	/// # let hwnd = w::HWND::NULL;
 	///
 	/// let text = hwnd.GetWindowText()?;
 	/// println!("Text: {}", text);
@@ -917,11 +912,10 @@ pub trait user_Hwnd: Handle {
 	/// Most of the time you'll just want update the entire client area:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::HWND;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hwnd: HWND; // initialized somewhere
-	/// # let hwnd = HWND::NULL;
+	/// let hwnd: w::HWND; // initialized somewhere
+	/// # let hwnd = w::HWND::NULL;
 	///
 	/// hwnd.InvalidateRect(None, true)?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
@@ -1023,17 +1017,16 @@ pub trait user_Hwnd: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::HWND;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hwnd: HWND; // initialized somewhere
-	/// # let hwnd = HWND::NULL;
+	/// let hwnd: w::HWND; // initialized somewhere
+	/// # let hwnd = w::HWND::NULL;
 	///
 	/// // Lock the window – only one window can be locked at a time.
 	/// hwnd.LockWindowUpdate()?;
 	///
 	/// // After all operations, unlock the currently locked window.
-	/// HWND::NULL.LockWindowUpdate()?;
+	/// w::HWND::NULL.LockWindowUpdate()?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	fn LockWindowUpdate(&self) -> SysResult<()> {
@@ -1065,19 +1058,18 @@ pub trait user_Hwnd: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HWND, POINT, PtsRc};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hwnd: HWND; // initialized somewhere
-	/// # let hwnd = HWND::NULL;
-	/// let hwnd_dest: HWND;
-	/// # let hwnd_dest = HWND::NULL;
+	/// let hwnd: w::HWND; // initialized somewhere
+	/// # let hwnd = w::HWND::NULL;
+	/// let hwnd_dest: w::HWND;
+	/// # let hwnd_dest = w::HWND::NULL;
 	///
-	/// let mut points = vec![POINT::default(), POINT::default()];
+	/// let mut points = vec![w::POINT::default(), w::POINT::default()];
 	///
 	/// hwnd.MapWindowPoints(
 	///     &hwnd_dest,
-	///     PtsRc::Pts(&mut points),
+	///     w::PtsRc::Pts(&mut points),
 	/// )?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
@@ -1118,11 +1110,10 @@ pub trait user_Hwnd: Handle {
 	/// A modal message box, which blocks its parent:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HWND};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hwnd: HWND; // initialized somewhere
-	/// # let hwnd = HWND::NULL;
+	/// let hwnd: w::HWND; // initialized somewhere
+	/// # let hwnd = w::HWND::NULL;
 	///
 	/// hwnd.MessageBox("Hello, world", "title",
 	///     co::MB::OKCANCEL | co::MB::ICONINFORMATION)?;
@@ -1134,10 +1125,9 @@ pub trait user_Hwnd: Handle {
 	/// non-modal, parent-less message box by retrieving the desktop handle:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HWND};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// HWND::GetDesktopWindow()
+	/// w::HWND::GetDesktopWindow()
 	///     .MessageBox("Hello, world", "Title", co::MB::ICONEXCLAMATION)?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
@@ -1205,11 +1195,10 @@ pub trait user_Hwnd: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::HWND;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hwnd: HWND; // initialized somewhere
-	/// # let hwnd = HWND::NULL;
+	/// let hwnd: w::HWND; // initialized somewhere
+	/// # let hwnd = w::HWND::NULL;
 	///
 	/// let _hclip = hwnd.OpenClipboard()?; // keep guard alive
 	/// # Ok::<_, winsafe::co::ERROR>(())
@@ -1218,10 +1207,9 @@ pub trait user_Hwnd: Handle {
 	/// You can also open the clipboard without an `HWND` owner:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::HWND;
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let _hclip = HWND::NULL.OpenClipboard()?; // keep guard alive
+	/// let _hclip = w::HWND::NULL.OpenClipboard()?; // keep guard alive
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -1374,15 +1362,16 @@ pub trait user_Hwnd: Handle {
 	/// [`?`](https://doc.rust-lang.org/std/result/index.html#the-question-mark-operator-):
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HWND, msg::bm};
+	/// use winsafe::{self as w, prelude::*, co, msg};
 	///
-	/// let hwnd: HWND; // initialized somewhere
-	/// # let hwnd = HWND::NULL;
+	/// let hwnd: w::HWND; // initialized somewhere
+	/// # let hwnd = w::HWND::NULL;
 	///
-	/// let bmp = hwnd.SendMessage(bm::GetImage {
-	///     img_type: co::IMAGE_TYPE::BITMAP,
-	/// })?;
+	/// let bmp = hwnd.SendMessage(
+	///     msg::bm::GetImage {
+	///         img_type: co::IMAGE_TYPE::BITMAP,
+	///     },
+	/// )?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	///
@@ -1390,15 +1379,14 @@ pub trait user_Hwnd: Handle {
 	/// which receives point coordinates and returns two values:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HWND, msg::em, POINT};
+	/// use winsafe::{self as w, prelude::*, msg};
 	///
-	/// let hwnd: HWND; // initialized somewhere
-	/// # let hwnd = HWND::NULL;
+	/// let hwnd: w::HWND; // initialized somewhere
+	/// # let hwnd = w::HWND::NULL;
 	///
 	/// let (char_pos, line_pos) = hwnd.SendMessage(
-	///     em::CharFromPos {
-	///         coords: POINT::new(12, 20),
+	///     msg::em::CharFromPos {
+	///         coords: w::POINT::new(12, 20),
 	///     },
 	/// );
 	/// ```
@@ -1651,19 +1639,18 @@ pub trait user_Hwnd: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HWND, HwndPlace, POINT, SIZE};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hwnd: HWND; // initialized somewhere
-	/// # let hwnd = HWND::NULL;
+	/// let hwnd: w::HWND; // initialized somewhere
+	/// # let hwnd = w::HWND::NULL;
 	///
 	/// hwnd.SetWindowPos(
-	///     HwndPlace::None,
-	///     POINT::new(10, 10),
-	///     SIZE::default(),
+	///     w::HwndPlace::None,
+	///     w::POINT::new(10, 10),
+	///     w::SIZE::default(),
 	///     co::SWP::NOZORDER | co::SWP::NOSIZE,
 	/// )?;
-	/// # Ok::<_, co::ERROR>(())
+	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	fn SetWindowPos(&self,
 		hwnd_insert_after: HwndPlace,

@@ -35,8 +35,7 @@ impl EditEvents {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, AnyResult};
+		/// use winsafe::{self as w, prelude::*, gui};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// let txt: gui::Edit;
@@ -46,7 +45,7 @@ impl EditEvents {
 		/// let txt2 = txt.clone(); // to pass into the closure
 		///
 		/// txt.on().en_change(
-		///     move || -> AnyResult<()> {
+		///     move || -> w::AnyResult<()> {
 		///         println!("Text: {}", txt2.text());
 		///         Ok(())
 		///     },

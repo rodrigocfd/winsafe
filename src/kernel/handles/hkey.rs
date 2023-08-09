@@ -279,10 +279,9 @@ pub trait kernel_Hkey: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HKEY};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	/// let hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     Some("Control Panel"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
@@ -308,10 +307,9 @@ pub trait kernel_Hkey: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HKEY, SysResult};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	/// let hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     Some("Control Panel\\Appearance"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
@@ -325,7 +323,7 @@ pub trait kernel_Hkey: Handle {
 	/// // Collecting into a Vec
 	/// let values_and_types: Vec<(String, co::REG)> =
 	///     hkey.RegEnumValue()?
-	///         .collect::<SysResult<Vec<_>>>()?;
+	///         .collect::<w::SysResult<Vec<_>>>()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -351,36 +349,35 @@ pub trait kernel_Hkey: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{ExpandEnvironmentStrings, HKEY, RegistryValue};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let val = HKEY::CURRENT_USER.RegGetValue(
+	/// let val = w::HKEY::CURRENT_USER.RegGetValue(
 	///     Some("Control Panel\\Mouse"),
 	///     Some("Beep"),
 	/// )?;
 	///
 	/// match val {
-	///     RegistryValue::Dword(n) => println!("Number u32: {}", n),
-	///     RegistryValue::Qword(n) => println!("Number u64: {}", n),
-	///     RegistryValue::Sz(s) => println!("String: {}", s),
-	///     RegistryValue::ExpandSz(s) => {
-	///         println!("Env string: {}", ExpandEnvironmentStrings(&s)?);
+	///     w::RegistryValue::Dword(n) => println!("Number u32: {}", n),
+	///     w::RegistryValue::Qword(n) => println!("Number u64: {}", n),
+	///     w::RegistryValue::Sz(s) => println!("String: {}", s),
+	///     w::RegistryValue::ExpandSz(s) => {
+	///         println!("Env string: {}", w::ExpandEnvironmentStrings(&s)?);
 	///     },
-	///     RegistryValue::MultiSz(strs) => {
+	///     w::RegistryValue::MultiSz(strs) => {
 	///        println!("Multi string:");
 	///        for s in strs.iter() {
 	///            print!("[{}] ", s);
 	///        }
 	///        println!("");
 	///     },
-	///     RegistryValue::Binary(bin) => {
+	///     w::RegistryValue::Binary(bin) => {
 	///         println!("Binary:");
 	///         for b in bin.iter() {
 	///             print!("{:02x} ", b);
 	///         }
 	///         println!("");
 	///     },
-	///     RegistryValue::None => println!("No value"),
+	///     w::RegistryValue::None => println!("No value"),
 	/// }
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
@@ -477,10 +474,9 @@ pub trait kernel_Hkey: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HKEY};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	/// let hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     Some("Control Panel\\Mouse"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
@@ -614,10 +610,9 @@ pub trait kernel_Hkey: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, ExpandEnvironmentStrings, HKEY, RegistryValue};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	/// let hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     Some("Control Panel\\Desktop"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
@@ -625,27 +620,27 @@ pub trait kernel_Hkey: Handle {
 	///
 	/// for val in hkey.RegQueryMultipleValues(&["DpiScalingVer", "WallPaper"])? {
 	///     match val {
-	///         RegistryValue::Dword(n) => println!("Number u32: {}", n),
-	///         RegistryValue::Qword(n) => println!("Number u64: {}", n),
-	///         RegistryValue::Sz(s) => println!("String: {}", s),
-	///         RegistryValue::ExpandSz(s) => {
-	///             println!("Env string: {}", ExpandEnvironmentStrings(&s)?);
+	///         w::RegistryValue::Dword(n) => println!("Number u32: {}", n),
+	///         w::RegistryValue::Qword(n) => println!("Number u64: {}", n),
+	///         w::RegistryValue::Sz(s) => println!("String: {}", s),
+	///         w::RegistryValue::ExpandSz(s) => {
+	///             println!("Env string: {}", w::ExpandEnvironmentStrings(&s)?);
 	///         },
-	///         RegistryValue::MultiSz(strs) => {
+	///         w::RegistryValue::MultiSz(strs) => {
 	///            println!("Multi string:");
 	///            for s in strs.iter() {
 	///                print!("[{}] ", s);
 	///            }
 	///            println!("");
 	///         },
-	///         RegistryValue::Binary(bin) => {
+	///         w::RegistryValue::Binary(bin) => {
 	///             println!("Binary:");
 	///             for b in bin.iter() {
 	///                 print!("{:02x} ", b);
 	///             }
 	///             println!("");
 	///         },
-	///         RegistryValue::None => println!("No value"),
+	///         w::RegistryValue::None => println!("No value"),
 	///     }
 	/// }
 	///
@@ -748,10 +743,9 @@ pub trait kernel_Hkey: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, ExpandEnvironmentStrings, HKEY, RegistryValue};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	/// let hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     Some("Control Panel\\Mouse"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
@@ -760,27 +754,27 @@ pub trait kernel_Hkey: Handle {
 	/// let val = hkey.RegQueryValueEx(Some("Beep"))?;
 	///
 	/// match val {
-	///     RegistryValue::Dword(n) => println!("Number u32: {}", n),
-	///     RegistryValue::Qword(n) => println!("Number u64: {}", n),
-	///     RegistryValue::Sz(s) => println!("String: {}", s),
-	///     RegistryValue::ExpandSz(s) => {
-	///         println!("Env string: {}", ExpandEnvironmentStrings(&s)?);
+	///     w::RegistryValue::Dword(n) => println!("Number u32: {}", n),
+	///     w::RegistryValue::Qword(n) => println!("Number u64: {}", n),
+	///     w::RegistryValue::Sz(s) => println!("String: {}", s),
+	///     w::RegistryValue::ExpandSz(s) => {
+	///         println!("Env string: {}", w::ExpandEnvironmentStrings(&s)?);
 	///     },
-	///     RegistryValue::MultiSz(strs) => {
+	///     w::RegistryValue::MultiSz(strs) => {
 	///        println!("Multi string:");
 	///        for s in strs.iter() {
 	///            print!("[{}] ", s);
 	///        }
 	///        println!("");
 	///     },
-	///     RegistryValue::Binary(bin) => {
+	///     w::RegistryValue::Binary(bin) => {
 	///         println!("Binary:");
 	///         for b in bin.iter() {
 	///             print!("{:02x} ", b);
 	///         }
 	///         println!("");
 	///     },
-	///     RegistryValue::None => println!("No value"),
+	///     w::RegistryValue::None => println!("No value"),
 	/// }
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
@@ -937,13 +931,12 @@ pub trait kernel_Hkey: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HKEY, RegistryValue, WString};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// HKEY::CURRENT_USER.RegSetKeyValue(
+	/// w::HKEY::CURRENT_USER.RegSetKeyValue(
 	///     Some("Software\\My Company"),
 	///     Some("Color"),
-	///     RegistryValue::Sz("blue".to_owned()),
+	///     w::RegistryValue::Sz("blue".to_owned()),
 	/// )?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
@@ -979,10 +972,9 @@ pub trait kernel_Hkey: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HKEY, RegistryValue, WString};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hkey = HKEY::CURRENT_USER.RegOpenKeyEx(
+	/// let hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
 	///     Some("Console\\Git Bash"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::ALL_ACCESS,
@@ -990,7 +982,7 @@ pub trait kernel_Hkey: Handle {
 	///
 	/// hkey.RegSetValueEx(
 	///     Some("Color"),
-	///     RegistryValue::Sz("blue".to_owned()),
+	///     w::RegistryValue::Sz("blue".to_owned()),
 	/// )?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```

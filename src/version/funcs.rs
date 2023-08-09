@@ -58,16 +58,16 @@ pub fn GetFileVersionInfoSize(file_name: &str) -> SysResult<u32> {
 /// Reading version information from resource:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{
-///     GetFileVersionInfo, HINSTANCE, VarQueryValue, VS_FIXEDFILEINFO,
-/// };
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let exe_name = HINSTANCE::NULL.GetModuleFileName()?;
-/// let res_buf = GetFileVersionInfo(&exe_name)?;
+/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
+/// let res_buf = w::GetFileVersionInfo(&exe_name)?;
 ///
 /// let (pvsf, sz_data) = unsafe {
-///     VarQueryValue::<VS_FIXEDFILEINFO>(res_buf.as_slice(), "\\")?
+///     w::VarQueryValue::<w::VS_FIXEDFILEINFO>(
+///         res_buf.as_slice(),
+///         "\\",
+///     )?
 /// };
 ///
 /// let ver = unsafe { &*pvsf }.dwFileVersion();

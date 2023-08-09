@@ -14,19 +14,18 @@ use crate::prelude::*;
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, HWND, task_dlg};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let hparent: HWND; // initialized somewhere
-/// # let hparent = HWND::NULL;
+/// let hparent: w::HWND; // initialized somewhere
+/// # let hparent = w::HWND::NULL;
 ///
-/// task_dlg::error(
+/// w::task_dlg::error(
 ///     &hparent,
 ///     "Error",
 ///     Some("The error"),
 ///     "Operation failed to complete.",
 /// )?;
-/// # Ok::<_, co::HRESULT>(())
+/// # Ok::<_, winsafe::co::HRESULT>(())
 /// ```
 pub fn error(
 	hparent: &HWND,
@@ -48,19 +47,18 @@ pub fn error(
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, HWND, task_dlg};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let hparent: HWND; // initialized somewhere
-/// # let hparent = HWND::NULL;
+/// let hparent: w::HWND; // initialized somewhere
+/// # let hparent = w::HWND::NULL;
 ///
-/// task_dlg::warn(
+/// w::task_dlg::warn(
 ///     &hparent,
 ///     "Warning",
 ///     Some("The warning"),
 ///     "Something is not quite right.",
 /// )?;
-/// # Ok::<_, co::HRESULT>(())
+/// # Ok::<_, winsafe::co::HRESULT>(())
 /// ```
 pub fn warn(
 	hparent: &HWND,
@@ -82,19 +80,18 @@ pub fn warn(
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, HWND, task_dlg};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let hparent: HWND; // initialized somewhere
-/// # let hparent = HWND::NULL;
+/// let hparent: w::HWND; // initialized somewhere
+/// # let hparent = w::HWND::NULL;
 ///
-/// task_dlg::info(
+/// w::task_dlg::info(
 ///     &hparent,
 ///     "Information",
 ///     Some("The information"),
 ///     "Operation completed successfully.",
 /// )?;
-/// # Ok::<_, co::HRESULT>(())
+/// # Ok::<_, winsafe::co::HRESULT>(())
 /// ```
 pub fn info(
 	hparent: &HWND,
@@ -119,13 +116,12 @@ pub fn info(
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, HWND, task_dlg};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let hparent: HWND; // initialized somewhere
-/// # let hparent = HWND::NULL;
+/// let hparent: w::HWND; // initialized somewhere
+/// # let hparent = w::HWND::NULL;
 ///
-/// let got_ok = task_dlg::ok_cancel(
+/// let got_ok = w::task_dlg::ok_cancel(
 ///     &hparent,
 ///     "Question",
 ///     Some("The question"),
@@ -138,7 +134,7 @@ pub fn info(
 /// } else {
 ///     // ...
 /// }
-/// # Ok::<_, co::HRESULT>(())
+/// # Ok::<_, winsafe::co::HRESULT>(())
 /// ```
 #[must_use]
 pub fn ok_cancel(
@@ -169,13 +165,12 @@ pub fn ok_cancel(
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, HWND, task_dlg};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let hparent: HWND; // initialized somewhere
-/// # let hparent = HWND::NULL;
+/// let hparent: w::HWND; // initialized somewhere
+/// # let hparent = w::HWND::NULL;
 ///
-/// let got_yes = task_dlg::yes_no(
+/// let got_yes = w::task_dlg::yes_no(
 ///     &hparent,
 ///     "Question",
 ///     Some("The question"),
@@ -187,7 +182,7 @@ pub fn ok_cancel(
 /// } else {
 ///     // ...
 /// }
-/// # Ok::<_, co::HRESULT>(())
+/// # Ok::<_, winsafe::co::HRESULT>(())
 /// ```
 #[must_use]
 pub fn yes_no(
@@ -210,13 +205,12 @@ pub fn yes_no(
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{co, HWND, task_dlg};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let hparent: HWND; // initialized somewhere
-/// # let hparent = HWND::NULL;
+/// let hparent: w::HWND; // initialized somewhere
+/// # let hparent = w::HWND::NULL;
 ///
-/// let ret_code = task_dlg::yes_no_cancel(
+/// let ret_code = w::task_dlg::yes_no_cancel(
 ///     &hparent,
 ///     "Question",
 ///     Some("The question"),

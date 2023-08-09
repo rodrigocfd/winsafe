@@ -42,13 +42,12 @@ pub trait gdi_Hbitmap: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{BITMAP, HBITMAP};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hbmp: HBITMAP; // initialized somewhere
-	/// # let hbmp = HBITMAP::NULL;
+	/// let hbmp: w::HBITMAP; // initialized somewhere
+	/// # let hbmp = w::HBITMAP::NULL;
 	///
-	/// let mut bitmap = BITMAP::default();
+	/// let mut bitmap = w::BITMAP::default();
 	/// hbmp.GetObject(&mut bitmap)?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```

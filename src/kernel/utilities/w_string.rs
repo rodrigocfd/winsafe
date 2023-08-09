@@ -208,11 +208,13 @@ impl WString {
 	/// contents in memory with [`FileMapped`](crate::FileMapped), then parsing:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{FileAccess, FileMapped, WString};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let file_in = FileMapped::open("C:\\Temp\\foo.txt", FileAccess::ExistingReadOnly)?;
-	/// let wstr = WString::parse(file_in.as_slice())?;
+	/// let file_in = w::FileMapped::open(
+	///     "C:\\Temp\\foo.txt",
+	///     w::FileAccess::ExistingReadOnly,
+	/// )?;
+	/// let wstr = w::WString::parse(file_in.as_slice())?;
 	/// let str_contents = wstr.to_string();
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```

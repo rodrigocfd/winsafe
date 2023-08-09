@@ -20,14 +20,13 @@ com_interface! { IIdleTrigger: "d537d2b0-9fb3-4d34-9739-1ff5ce7b1ef3";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{IIdleTrigger, ITrigger};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let trigger: ITrigger; // initialized somewhere
-	/// # let trigger = unsafe { ITrigger::null() };
+	/// let trigger: w::ITrigger; // initialized somewhere
+	/// # let trigger = unsafe { w::ITrigger::null() };
 	///
 	/// let idle_trigger = trigger
-	///     .QueryInterface::<IIdleTrigger>()?;
+	///     .QueryInterface::<w::IIdleTrigger>()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 }

@@ -61,11 +61,10 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HrResult, IDXGIAdapter, IDXGIOutput};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let adapter: IDXGIAdapter; // initialized somewhere
-	/// # let adapter = unsafe { IDXGIAdapter::null() };
+	/// let adapter: w::IDXGIAdapter; // initialized somewhere
+	/// # let adapter = unsafe { w::IDXGIAdapter::null() };
 	///
 	/// for output in adapter.EnumOutputs() {
 	///     let output = output?;
@@ -73,9 +72,9 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	/// }
 	///
 	/// // Collecting into a Vec
-	/// let outputs: Vec<IDXGIOutput> =
+	/// let outputs: Vec<w::IDXGIOutput> =
 	///     adapter.EnumOutputs()
-	///         .collect::<HrResult<Vec<_>>>()?;
+	///         .collect::<w::HrResult<Vec<_>>>()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 	#[must_use]
@@ -91,12 +90,11 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{IDXGIAdapter, DXGI_ADAPTER_DESC};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let adapter: IDXGIAdapter; // initialized somewhere
-	/// # let adapter = unsafe { IDXGIAdapter::null() };
-	/// let mut desc = DXGI_ADAPTER_DESC::default();
+	/// let adapter: w::IDXGIAdapter; // initialized somewhere
+	/// # let adapter = unsafe { w::IDXGIAdapter::null() };
+	/// let mut desc = w::DXGI_ADAPTER_DESC::default();
 	///
 	/// adapter.GetDesc(&mut desc)?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())

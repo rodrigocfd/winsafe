@@ -82,13 +82,12 @@ pub trait gdi_Hfont: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{HFONT, LOGFONT};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let hfont: HFONT; // initialized somewhere
-	/// # let hfont = HFONT::NULL;
+	/// let hfont: w::HFONT; // initialized somewhere
+	/// # let hfont = w::HFONT::NULL;
 	///
-	/// let mut log_font = LOGFONT::default();
+	/// let mut log_font = w::LOGFONT::default();
 	/// hfont.GetObject(&mut log_font)?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	fn GetObject(&self, lf: &mut LOGFONT) -> SysResult<()> {

@@ -40,12 +40,11 @@ com_interface! { IShellItem2: "7e9fb0d3-919f-4307-ab2e-9b1860310c93";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{IBindCtx, IShellItem2, SHCreateItemFromParsingName};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let shi = SHCreateItemFromParsingName::<IShellItem2>(
+	/// let shi = w::SHCreateItemFromParsingName::<w::IShellItem2>(
 	///     "C:\\Temp\\foo.txt",
-	///     None::<&IBindCtx>,
+	///     None::<&w::IBindCtx>,
 	/// )?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```

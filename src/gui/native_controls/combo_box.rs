@@ -73,8 +73,7 @@ impl ComboBox {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{gui, POINT};
+	/// use winsafe::{self as w, prelude::*, gui};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());

@@ -35,22 +35,26 @@ pub enum FileAccess {
 /// Reading the contents as a string:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{File, FileAccess, WString};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let f = File::open("C:\\Temp\\foo.txt", FileAccess::ExistingRW)?;
+/// let f = w::File::open(
+///     "C:\\Temp\\foo.txt",
+///     w::FileAccess::ExistingRW,
+/// )?;
 /// let raw_bytes = f.read_all()?;
-/// let text = WString::parse(&raw_bytes)?.to_string();
+/// let text = w::WString::parse(&raw_bytes)?.to_string();
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 ///
 /// Writing a string:
 ///
 /// ```no_run
-/// use winsafe::prelude::*;
-/// use winsafe::{File, FileAccess};
+/// use winsafe::{self as w, prelude::*};
 ///
-/// let f = File::open("C:\\Temp\\foo.txt", FileAccess::OpenOrCreateRW)?;
+/// let f = w::File::open(
+///     "C:\\Temp\\foo.txt",
+///     w::FileAccess::OpenOrCreateRW,
+/// )?;
 /// f.erase_and_write("My text".as_bytes())?;
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```

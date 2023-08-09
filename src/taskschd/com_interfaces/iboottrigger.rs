@@ -24,14 +24,13 @@ com_interface! { IBootTrigger: "2a9c35da-d357-41f4-bbc1-207ac1b1f3cb";
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{IBootTrigger, ITrigger};
+	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let trigger: ITrigger; // initialized somewhere
-	/// # let trigger = unsafe { ITrigger::null() };
+	/// let trigger: w::ITrigger; // initialized somewhere
+	/// # let trigger = unsafe { w::ITrigger::null() };
 	///
 	/// let boot_trigger = trigger
-	///     .QueryInterface::<IBootTrigger>()?;
+	///     .QueryInterface::<w::IBootTrigger>()?;
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 }

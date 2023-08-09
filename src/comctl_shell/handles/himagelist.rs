@@ -22,11 +22,14 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HIMAGELIST, SIZE};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let mut himgl = HIMAGELIST::Create(
-	///     SIZE::new(16, 16), co::ILC::COLOR32, 1, 1)?;
+	/// let mut himgl = w::HIMAGELIST::Create(
+	///     w::SIZE::new(16, 16),
+	///     co::ILC::COLOR32,
+	///     1,
+	///     1,
+	/// )?;
 	///
 	/// himgl.add_icon_from_shell(&["mp3", "wav"])?;
 	///

@@ -679,16 +679,15 @@ pub trait gdi_Hdc: user_Hdc {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, COLORREF, HDC, HPEN};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hdc: HDC; // initialized somewhere
-	/// # let hdc = HDC::NULL;
+	/// let hdc: w::HDC; // initialized somewhere
+	/// # let hdc = w::HDC::NULL;
 	///
-	/// let hpen = HPEN::CreatePen(
+	/// let hpen = w::HPEN::CreatePen(
 	///     co::PS::SOLID,
 	///     1,
-	///     COLORREF::new(0xff, 0x00, 0x88),
+	///     w::COLORREF::new(0xff, 0x00, 0x88),
 	/// )?;
 	///
 	/// let _pen_guard = hdc.SelectObject(&*hpen); // keep guard alive

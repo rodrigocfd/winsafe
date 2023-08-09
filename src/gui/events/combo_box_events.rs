@@ -60,8 +60,7 @@ impl ComboBoxEvents {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, AnyResult};
+		/// use winsafe::{self as w, prelude::*, gui};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// let cmb: gui::ComboBox;
@@ -71,7 +70,7 @@ impl ComboBoxEvents {
 		/// let cmb2 = cmb.clone(); // to pass into the closure
 		///
 		/// cmb.on().cbn_sel_change(
-		///     move || -> AnyResult<()> {
+		///     move || -> w::AnyResult<()> {
 		///         if let Some(sel_text) = cmb2.items().selected_text() {
 		///             println!("New selected text: {}", sel_text);
 		///         }

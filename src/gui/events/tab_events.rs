@@ -65,8 +65,7 @@ impl TabEvents {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, AnyResult};
+		/// use winsafe::{self as w, prelude::*, gui};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// let tab: gui::Tab;
@@ -74,7 +73,7 @@ impl TabEvents {
 		/// # let tab = gui::Tab::new(&wnd, gui::TabOpts::default());
 		///
 		/// tab.on().tcn_sel_change(
-		///     move || -> AnyResult<()> {
+		///     move || -> w::AnyResult<()> {
 		///         println!("Changed tab.");
 		///         Ok(())
 		///     },

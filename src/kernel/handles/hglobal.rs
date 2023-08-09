@@ -60,10 +60,9 @@ pub trait kernel_Hglobal: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, HGLOBAL};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hglobal = HGLOBAL::GlobalAlloc(
+	/// let hglobal = w::HGLOBAL::GlobalAlloc(
 	///     Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
 	///     120,
 	/// )?;

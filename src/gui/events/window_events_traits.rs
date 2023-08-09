@@ -26,8 +26,7 @@ pub trait GuiEventsAll: GuiEvents {
 	/// custom, non-standard window notification.
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, gui, msg, AnyResult};
+	/// use winsafe::{self as w, prelude::*, co, gui};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
@@ -35,7 +34,7 @@ pub trait GuiEventsAll: GuiEvents {
 	/// const ID_BTN: u16 = 1000;
 	///
 	/// wnd.on().wm_command(co::BN::CLICKED, ID_BTN,
-	///     move || -> AnyResult<()> {
+	///     move || -> w::AnyResult<()> {
 	///         println!("Button clicked!");
 	///         Ok(())
 	///     },
@@ -93,8 +92,7 @@ pub trait GuiEvents {
 	/// Handling a custom, user-defined message:
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{co, gui, msg, AnyResult};
+	/// use winsafe::{self as w, prelude::*, co, gui, msg};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
@@ -102,7 +100,7 @@ pub trait GuiEvents {
 	/// let CUSTOM_MSG = unsafe { co::WM::from_raw(0x1234) };
 	///
 	/// wnd.on().wm(CUSTOM_MSG,
-	///     move |p: msg::WndMsg| -> AnyResult<Option<isize>> {
+	///     move |p: msg::WndMsg| -> w::AnyResult<Option<isize>> {
 	///         println!("Msg ID: {}", p.msg_id);
 	///         Ok(Some(0))
 	///     },
@@ -178,14 +176,13 @@ pub trait GuiEvents {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::prelude::*;
-	/// use winsafe::{gui, msg, AnyResult};
+	/// use winsafe::{self as w, prelude::*, gui, msg};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	///
 	/// wnd.on().wm_create(
-	///     move |p: msg::wm::Create| -> AnyResult<i32> {
+	///     move |p: msg::wm::Create| -> w::AnyResult<i32> {
 	///         println!("Client area: {}x{}",
 	///             p.createstruct.cx,
 	///             p.createstruct.cy,
@@ -247,14 +244,13 @@ pub trait GuiEvents {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, AnyResult};
+		/// use winsafe::{self as w, prelude::*, gui};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_destroy(
-		///     move || -> AnyResult<()> {
+		///     move || -> w::AnyResult<()> {
 		///         println!("Window is gone, goodbye!");
 		///         Ok(())
 		///     },
@@ -274,14 +270,13 @@ pub trait GuiEvents {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, msg, AnyResult};
+		/// use winsafe::{self as w, prelude::*, gui, msg};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_drop_files(
-		///     move |mut p: msg::wm::DropFiles| -> AnyResult<()> {
+		///     move |mut p: msg::wm::DropFiles| -> w::AnyResult<()> {
 		///         for dropped_file in p.hdrop.DragQueryFile()? {
 		///             let dropped_file = dropped_file?;
 		///             println!("Dropped: {}", dropped_file);
@@ -408,14 +403,13 @@ pub trait GuiEvents {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, msg, AnyResult};
+		/// use winsafe::{self as w, prelude::*, gui, msg};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_init_dialog(
-		///     move |p: msg::wm::InitDialog| -> AnyResult<bool> {
+		///     move |p: msg::wm::InitDialog| -> w::AnyResult<bool> {
 		///         println!("Focused HWND: {}", p.hwnd_focus);
 		///         Ok(true)
 		///     },
@@ -430,16 +424,15 @@ pub trait GuiEvents {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{AnyResult, gui, IdPos, msg};
+		/// use winsafe::{self as w, prelude::*, gui, msg};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_init_menu_popup(
-		///     move |p: msg::wm::InitMenuPopup| -> AnyResult<()> {
+		///     move |p: msg::wm::InitMenuPopup| -> w::AnyResult<()> {
 		///         if p.hmenu.GetMenuItemID(0).unwrap() == 3001 { // check ID of 1st item
-		///             p.hmenu.EnableMenuItem(IdPos::Id(3001), false)?;
+		///             p.hmenu.EnableMenuItem(w::IdPos::Id(3001), false)?;
 		///         }
 		///         Ok(())
 		///     },
@@ -469,14 +462,13 @@ pub trait GuiEvents {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, msg, AnyResult};
+		/// use winsafe::{self as w, prelude::*, gui, msg};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_l_button_dbl_clk(
-		///     move |p: msg::wm::LButtonDblClk| -> AnyResult<()> {
+		///     move |p: msg::wm::LButtonDblClk| -> w::AnyResult<()> {
 		///         println!("Point: {}x{}", p.coords.x, p.coords.y);
 		///         Ok(())
 		///     },
@@ -491,14 +483,13 @@ pub trait GuiEvents {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, msg, AnyResult};
+		/// use winsafe::{self as w, prelude::*, gui, msg};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_l_button_down(
-		///     move |p: msg::wm::LButtonDown| -> AnyResult<()> {
+		///     move |p: msg::wm::LButtonDown| -> w::AnyResult<()> {
 		///         println!("Point: {}x{}", p.coords.x, p.coords.y);
 		///         Ok(())
 		///     },
@@ -617,8 +608,7 @@ pub trait GuiEvents {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, AnyResult};
+		/// use winsafe::{self as w, prelude::*, gui};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
@@ -626,13 +616,14 @@ pub trait GuiEvents {
 		/// let wnd2 = wnd.clone(); // to pass into the closure
 		///
 		/// wnd.on().wm_paint(
-		///     move || -> AnyResult<()> {
-		///         // The returned hdc is a guard which calls EndPaint() automatically
+		///     move || -> w::AnyResult<()> {
 		///         let hdc = wnd2.hwnd().BeginPaint()?;
 		///
 		///         // hdc painting...
 		///
 		///         Ok(())
+		///
+		///         // EndPaint() automatically called
 		///     },
 		/// );
 		/// ```
@@ -711,14 +702,13 @@ pub trait GuiEvents {
 		/// # Examples
 		///
 		/// ```no_run
-		/// use winsafe::prelude::*;
-		/// use winsafe::{gui, msg, AnyResult};
+		/// use winsafe::{self as w, prelude::*, gui, msg};
 		///
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 		///
 		/// wnd.on().wm_size(
-		///     move |p: msg::wm::Size| -> AnyResult<()> {
+		///     move |p: msg::wm::Size| -> w::AnyResult<()> {
 		///         println!("Client area: {}x{}",
 		///             p.client_area.cx,
 		///             p.client_area.cy,
