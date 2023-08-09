@@ -299,3 +299,67 @@ macro_rules! impl_drop_comptr {
 		}
 	};
 }
+
+/// Implements accessor methods over `pmem` and `sz` fields of an allocated
+/// memory block.
+macro_rules! pub_fn_mem_block {
+	() => {
+		/// Returns a pointer to the allocated memory block.
+		#[must_use]
+		pub const fn as_ptr(&self) -> *const std::ffi::c_void {
+			self.pmem
+		}
+
+		/// Returns a mutable pointer to the allocated memory block.
+		#[must_use]
+		pub fn as_mut_ptr(&mut self) -> *mut std::ffi::c_void {
+			self.pmem
+		}
+
+		/// Returns a slice over the allocated memory block.
+		#[must_use]
+		pub const fn as_slice(&self) -> &[u8] {
+			unsafe { std::slice::from_raw_parts(self.pmem as _, self.sz) }
+		}
+
+		/// Returns a mutable slice over the allocated memory block.
+		#[must_use]
+		pub fn as_mut_slice(&mut self) -> &mut [u8] {
+			unsafe { std::slice::from_raw_parts_mut(self.pmem as _, self.sz) }
+		}
+
+		/// Returns a slice over the allocated memory block, aligned to the given
+		/// type.
+		///
+		/// # Safety
+		///
+		/// Make sure the alignment is correct.
+		#[must_use]
+		pub const unsafe fn as_slice_aligned<T>(&self) -> &[T] {
+			std::slice::from_raw_parts(
+				self.pmem as _,
+				self.sz / std::mem::size_of::<T>(),
+			)
+		}
+
+		/// Returns a mutable slice over the allocated memory block, aligned to the
+		/// given type.
+		///
+		/// # Safety
+		///
+		/// Make sure the alignment is correct.
+		#[must_use]
+		pub unsafe fn as_mut_slice_aligned<T>(&mut self) -> &mut [T] {
+			std::slice::from_raw_parts_mut(
+				self.pmem as _,
+				self.sz / std::mem::size_of::<T>(),
+			)
+		}
+
+		/// Returns the size of the allocated memory block.
+		#[must_use]
+		pub const fn len(&self) -> usize {
+			self.sz
+		}
+	};
+}

@@ -321,40 +321,15 @@ impl<'a, H> GlobalUnlockGuard<'a, H>
 	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(
-		hglobal: &'a H, pmem: *mut std::ffi::c_void, sz: usize) -> Self
+		hglobal: &'a H,
+		pmem: *mut std::ffi::c_void,
+		sz: usize,
+	) -> Self
 	{
 		Self { hglobal, pmem, sz }
 	}
 
-	/// Returns a pointer to the allocated memory block.
-	#[must_use]
-	pub const fn as_ptr(&self) -> *const std::ffi::c_void {
-		self.pmem
-	}
-
-	/// Returns a mutable pointer to the allocated memory block.
-	#[must_use]
-	pub fn as_mut_ptr(&mut self) -> *mut std::ffi::c_void {
-		self.pmem
-	}
-
-	/// Returns a slice over the allocated memory block.
-	#[must_use]
-	pub const fn as_slice(&self) -> &[u8] {
-		unsafe { std::slice::from_raw_parts(self.pmem as _, self.sz) }
-	}
-
-	/// Returns a mutable slice over the allocated memory block.
-	#[must_use]
-	pub fn as_mut_slice(&mut self) -> &mut [u8] {
-		unsafe { std::slice::from_raw_parts_mut(self.pmem as _, self.sz) }
-	}
-
-	/// Returns the size of the allocated memory block.
-	#[must_use]
-	pub const fn len(&self) -> usize {
-		self.sz
-	}
+	pub_fn_mem_block!();
 }
 
 //------------------------------------------------------------------------------
@@ -409,33 +384,12 @@ impl<'a, H> HeapFreeGuard<'a, H>
 	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(
-		hheap: &'a H, pmem: *mut std::ffi::c_void, sz: usize) -> Self
+		hheap: &'a H,
+		pmem: *mut std::ffi::c_void,
+		sz: usize,
+	) -> Self
 	{
 		Self { hheap, pmem, sz }
-	}
-
-	/// Returns a pointer to the allocated memory block.
-	#[must_use]
-	pub const fn as_ptr(&self) -> *const std::ffi::c_void {
-		self.pmem
-	}
-
-	/// Returns a mutable pointer to the allocated memory block.
-	#[must_use]
-	pub fn as_mut_ptr(&mut self) -> *mut std::ffi::c_void {
-		self.pmem
-	}
-
-	/// Returns a slice over the allocated memory block.
-	#[must_use]
-	pub const fn as_slice(&self) -> &[u8] {
-		unsafe { std::slice::from_raw_parts(self.pmem as _, self.sz) }
-	}
-
-	/// Returns a mutable slice over the allocated memory block.
-	#[must_use]
-	pub fn as_mut_slice(&mut self) -> &mut [u8] {
-		unsafe { std::slice::from_raw_parts_mut(self.pmem as _, self.sz) }
 	}
 
 	/// Ejects the underlying memory pointer and size, leaving null and zero in
@@ -452,11 +406,7 @@ impl<'a, H> HeapFreeGuard<'a, H>
 		)
 	}
 
-	/// Returns the size of the allocated memory block.
-	#[must_use]
-	pub const fn len(&self) -> usize {
-		self.sz
-	}
+	pub_fn_mem_block!();
 }
 
 //------------------------------------------------------------------------------
@@ -587,40 +537,15 @@ impl<'a, H> LocalUnlockGuard<'a, H>
 	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(
-		hlocal: &'a H, pmem: *mut std::ffi::c_void, sz: usize) -> Self
+		hlocal: &'a H,
+		pmem: *mut std::ffi::c_void,
+		sz: usize,
+	) -> Self
 	{
 		Self { hlocal, pmem, sz }
 	}
 
-	/// Returns a pointer to the allocated memory block.
-	#[must_use]
-	pub const fn as_ptr(&self) -> *const std::ffi::c_void {
-		self.pmem
-	}
-
-	/// Returns a mutable pointer to the allocated memory block.
-	#[must_use]
-	pub fn as_mut_ptr(&mut self) -> *mut std::ffi::c_void {
-		self.pmem
-	}
-
-	/// Returns a slice over the allocated memory block.
-	#[must_use]
-	pub const fn as_slice(&self) -> &[u8] {
-		unsafe { std::slice::from_raw_parts(self.pmem as _, self.sz) }
-	}
-
-	/// Returns a mutable slice over the allocated memory block.
-	#[must_use]
-	pub fn as_mut_slice(&mut self) -> &mut [u8] {
-		unsafe { std::slice::from_raw_parts_mut(self.pmem as _, self.sz) }
-	}
-
-	/// Returns the size of the allocated memory block.
-	#[must_use]
-	pub const fn len(&self) -> usize {
-		self.sz
-	}
+	pub_fn_mem_block!();
 }
 
 //------------------------------------------------------------------------------
@@ -844,7 +769,8 @@ impl<'a, H> UnlockFileGuard<'a, H>
 	pub const unsafe fn new(
 		hfile: &'a H,
 		offset: u64,
-		num_bytes_to_lock: u64) -> Self
+		num_bytes_to_lock: u64,
+	) -> Self
 	{
 		Self { hfile, offset, num_bytes_to_lock }
 	}
