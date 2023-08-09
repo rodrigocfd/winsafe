@@ -32,7 +32,7 @@ com_interface! { IDXGIFactory: "7b7166ec-21c7-44ae-b21a-c9ae321ae369";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::CreateDXGIFactory;
 	///
@@ -49,7 +49,7 @@ impl dxgi_IDXGIFactory for IDXGIFactory {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
@@ -79,7 +79,7 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HrResult, IDXGIAdapter, IDXGIFactory};
 	///

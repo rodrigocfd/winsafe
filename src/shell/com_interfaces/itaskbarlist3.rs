@@ -35,7 +35,7 @@ com_interface! { ITaskbarList3: "ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, CoCreateInstance, ITaskbarList3};
 	///
@@ -57,7 +57,7 @@ impl shell_ITaskbarList3 for ITaskbarList3 {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
@@ -120,7 +120,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	///
 	/// Setting progress to 50%:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HWND, ITaskbarList3};
 	///

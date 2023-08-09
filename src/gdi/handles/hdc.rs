@@ -16,7 +16,7 @@ impl gdi_Hdc for HDC {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait gdi_Hdc: user_Hdc {
@@ -305,7 +305,7 @@ pub trait gdi_Hdc: user_Hdc {
 	///
 	/// Taking a screenshot and saving to file:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::{self as w, prelude::*, co};
 	///
 	/// let cx_screen = w::GetSystemMetrics(co::SM::CXSCREEN);
@@ -678,7 +678,7 @@ pub trait gdi_Hdc: user_Hdc {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, COLORREF, HDC, HPEN};
 	///

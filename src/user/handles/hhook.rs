@@ -18,7 +18,7 @@ impl user_Hhook for HHOOK {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait user_Hhook: Handle {

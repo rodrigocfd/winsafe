@@ -34,7 +34,7 @@ pub enum FileAccess {
 ///
 /// Reading the contents as a string:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{File, FileAccess, WString};
 ///
@@ -46,7 +46,7 @@ pub enum FileAccess {
 ///
 /// Writing a string:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{File, FileAccess};
 ///

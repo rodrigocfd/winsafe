@@ -172,7 +172,7 @@ impl Label {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///

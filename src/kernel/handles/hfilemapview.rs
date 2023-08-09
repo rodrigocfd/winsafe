@@ -18,7 +18,7 @@ impl kernel_Hfilemapview for HFILEMAPVIEW {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait kernel_Hfilemapview: Handle {
@@ -43,7 +43,7 @@ pub trait kernel_Hfilemapview: Handle {
 	///
 	/// Reading the contents of a file into a string:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HFILE};
 	///

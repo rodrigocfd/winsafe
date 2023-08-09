@@ -11,7 +11,7 @@ impl comctl_shell_Himagelist for HIMAGELIST {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait comctl_shell_Himagelist: comctl_Himagelist {
@@ -21,7 +21,7 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HIMAGELIST, SIZE};
 	///

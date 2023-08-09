@@ -21,7 +21,7 @@ impl user_Hwnd for HWND {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait user_Hwnd: Handle {
@@ -69,7 +69,7 @@ pub trait user_Hwnd: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HWND;
 	///
@@ -87,7 +87,7 @@ pub trait user_Hwnd: Handle {
 	/// If you don't use the returned device context handle, you must still keep
 	/// the guard alive:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HWND;
 	///
@@ -302,7 +302,7 @@ pub trait user_Hwnd: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HWND;
 	///
@@ -472,7 +472,7 @@ pub trait user_Hwnd: Handle {
 	///
 	/// Retrieving the device context of the desktop window:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HWND;
 	///
@@ -827,7 +827,7 @@ pub trait user_Hwnd: Handle {
 	/// and performs all necessary allocations, returning an ordinary
 	/// [`String`](std::string::String).
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HWND;
 	///
@@ -916,7 +916,7 @@ pub trait user_Hwnd: Handle {
 	///
 	/// Most of the time you'll just want update the entire client area:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HWND;
 	///
@@ -1022,7 +1022,7 @@ pub trait user_Hwnd: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HWND;
 	///
@@ -1064,7 +1064,7 @@ pub trait user_Hwnd: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HWND, POINT, PtsRc};
 	///
@@ -1117,7 +1117,7 @@ pub trait user_Hwnd: Handle {
 	///
 	/// A modal message box, which blocks its parent:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HWND};
 	///
@@ -1133,7 +1133,7 @@ pub trait user_Hwnd: Handle {
 	/// reason you don't have a window to serve as parent, you still can show a
 	/// non-modal, parent-less message box by retrieving the desktop handle:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HWND};
 	///
@@ -1204,7 +1204,7 @@ pub trait user_Hwnd: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HWND;
 	///
@@ -1217,7 +1217,7 @@ pub trait user_Hwnd: Handle {
 	///
 	/// You can also open the clipboard without an `HWND` owner:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HWND;
 	///
@@ -1373,7 +1373,7 @@ pub trait user_Hwnd: Handle {
 	/// can also return an error, which is handled with
 	/// [`?`](https://doc.rust-lang.org/std/result/index.html#the-question-mark-operator-):
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HWND, msg::bm};
 	///
@@ -1389,7 +1389,7 @@ pub trait user_Hwnd: Handle {
 	/// Sending an [`em::CharFromPos`](crate::msg::em::CharFromPos) edit message,
 	/// which receives point coordinates and returns two values:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HWND, msg::em, POINT};
 	///
@@ -1650,7 +1650,7 @@ pub trait user_Hwnd: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HWND, HwndPlace, POINT, SIZE};
 	///

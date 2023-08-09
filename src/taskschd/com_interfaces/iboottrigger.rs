@@ -23,7 +23,7 @@ com_interface! { IBootTrigger: "2a9c35da-d357-41f4-bbc1-207ac1b1f3cb";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IBootTrigger, ITrigger};
 	///
@@ -45,7 +45,7 @@ impl taskschd_IBootTrigger for IBootTrigger {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IBootTrigger: taskschd_ITrigger {

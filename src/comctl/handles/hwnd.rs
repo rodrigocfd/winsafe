@@ -14,7 +14,7 @@ impl comctl_Hwnd for HWND {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait comctl_Hwnd: user_Hwnd {
@@ -99,7 +99,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 	///
 	/// An information message with just an OK button:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HWND, IdTdiconStr};
 	///
@@ -119,7 +119,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 	///
 	/// Prompt the user to click OK or Cancel upon a question:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HWND, IdTdiconStr};
 	///

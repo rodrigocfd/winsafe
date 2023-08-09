@@ -47,7 +47,7 @@ impl oleaut_ITypeInfo for ITypeInfo {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait oleaut_ITypeInfo: ole_IUnknown {

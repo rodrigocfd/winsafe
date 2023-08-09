@@ -8,7 +8,7 @@ use std::{fmt, hash};
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait Handle: Sized
@@ -84,7 +84,7 @@ pub trait Handle: Sized
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HFILE;
 	///

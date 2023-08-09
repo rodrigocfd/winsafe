@@ -8,7 +8,7 @@ use crate::decl::*;
 ///
 /// Reading version information:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{HINSTANCE, ResourceInfo};
 ///
@@ -27,7 +27,7 @@ use crate::decl::*;
 /// blocks, and each block is identified by a language/code page pair. Each
 /// block can have their own information strings:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{HINSTANCE, ResourceInfo};
 ///

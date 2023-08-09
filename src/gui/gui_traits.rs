@@ -27,7 +27,7 @@ pub trait GuiWindow {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use std::sync::Arc;
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
@@ -108,7 +108,7 @@ pub trait GuiThread: GuiParent {
 	/// [button click](crate::gui::events::ButtonEvents::bn_clicked) which
 	/// spawns a new thread.
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{gui, AnyResult, GetCurrentThreadId, HTHREAD};
 	///
@@ -171,7 +171,7 @@ pub trait GuiThread: GuiParent {
 	/// starts a long task in a parallel thread. As it progresses, the status is
 	/// printed at the windows's titlebar.
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{gui, AnyResult, GetCurrentThreadId, HTHREAD, Sleep};
 	///

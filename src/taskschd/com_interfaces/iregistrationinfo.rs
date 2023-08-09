@@ -46,7 +46,7 @@ impl taskschd_IRegistrationInfo for IRegistrationInfo {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IRegistrationInfo: oleaut_IDispatch {

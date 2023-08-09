@@ -34,7 +34,7 @@ com_interface! { IStream: "0000000c-0000-0000-c000-000000000046";
 	///
 	/// Loading from a `Vec`:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::SHCreateMemStream;
 	///

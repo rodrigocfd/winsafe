@@ -207,7 +207,7 @@ impl WString {
 	/// Usually the fastest way to read the text from a file is by mapping its
 	/// contents in memory with [`FileMapped`](crate::FileMapped), then parsing:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{FileAccess, FileMapped, WString};
 	///

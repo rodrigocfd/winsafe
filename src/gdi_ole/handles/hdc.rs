@@ -12,7 +12,7 @@ impl gdi_ole_Hdc for HDC {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait gdi_ole_Hdc: gdi_Hdc {

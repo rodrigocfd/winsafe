@@ -7,7 +7,7 @@ use crate::co;
 ///
 /// Converting into the generic [`AnyResult`](crate::AnyResult):
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, AnyResult, HrResult};
 ///
@@ -18,7 +18,7 @@ use crate::co;
 ///
 /// Converting from an [`SysResult`](crate::SysResult):
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, HrResult, SysResult};
 ///

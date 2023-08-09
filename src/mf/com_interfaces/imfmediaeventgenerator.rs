@@ -31,7 +31,7 @@ impl mf_IMFMediaEventGenerator for IMFMediaEventGenerator {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait mf_IMFMediaEventGenerator: ole_IUnknown {

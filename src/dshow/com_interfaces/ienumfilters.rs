@@ -34,7 +34,7 @@ impl dshow_IEnumFilters for IEnumFilters {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait dshow_IEnumFilters: ole_IUnknown {
@@ -45,7 +45,7 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::IEnumFilters;
 	///

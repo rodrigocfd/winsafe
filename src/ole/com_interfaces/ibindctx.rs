@@ -38,7 +38,7 @@ impl ole_IBindCtx for IBindCtx {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait ole_IBindCtx: ole_IUnknown {

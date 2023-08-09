@@ -38,7 +38,7 @@ impl oleaut_IPropertyStore for IPropertyStore {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait oleaut_IPropertyStore: ole_IUnknown {
@@ -51,7 +51,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::IPropertyStore;
 	///

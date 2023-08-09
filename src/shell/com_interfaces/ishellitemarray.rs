@@ -36,7 +36,7 @@ impl shell_IShellItemArray for IShellItemArray {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_IShellItemArray: ole_IUnknown {
@@ -51,7 +51,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	///
 	/// Iterating over the [`IShellItem`](crate::IShellItem) objects:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, IShellItemArray};
 	///
@@ -68,7 +68,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	///
 	/// Collecting the file paths into a [`Vec`](std::vec::Vec):
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HrResult, IShellItemArray};
 	///

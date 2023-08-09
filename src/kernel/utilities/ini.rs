@@ -7,7 +7,7 @@ use crate::decl::*;
 ///
 /// Printing all sections, keys and values:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::Ini;
 ///
@@ -24,7 +24,7 @@ use crate::decl::*;
 ///
 /// Reading a value:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::Ini;
 ///
@@ -174,7 +174,7 @@ impl Ini {
 	///
 	/// Changing or creating a value:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::Ini;
 	///
@@ -225,7 +225,7 @@ impl Ini {
 	///
 	/// Changing an existing value:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::Ini;
 	///

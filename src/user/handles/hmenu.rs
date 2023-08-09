@@ -19,7 +19,7 @@ impl user_Hmenu for HMENU {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait user_Hmenu: Handle {
@@ -53,7 +53,7 @@ pub trait user_Hmenu: Handle {
 	///
 	/// Adding multiple entries at once, with their command IDs:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HMENU, MenuEnum, seq_ids};
 	///
@@ -207,7 +207,7 @@ pub trait user_Hmenu: Handle {
 	///
 	/// Disabling a menu item:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HMENU, IdPos, seq_ids};
 	///
@@ -227,7 +227,7 @@ pub trait user_Hmenu: Handle {
 	///
 	/// Disabling multiple menu items at once:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HMENU, IdPos, seq_ids};
 	///

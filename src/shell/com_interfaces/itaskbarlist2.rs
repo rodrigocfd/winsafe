@@ -23,7 +23,7 @@ com_interface! { ITaskbarList2: "602d4995-b13a-429b-a66e-1935e44f4317";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, CoCreateInstance, ITaskbarList2};
 	///
@@ -44,7 +44,7 @@ impl shell_ITaskbarList2 for ITaskbarList2 {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_ITaskbarList2: shell_ITaskbarList {

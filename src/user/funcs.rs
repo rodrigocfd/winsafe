@@ -170,7 +170,7 @@ pub fn ChangeDisplaySettingsEx(
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, ChooseColor, CHOOSECOLOR, COLORREF, HWND};
 ///
@@ -248,7 +248,7 @@ pub fn EndMenu() -> SysResult<()> {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, DISPLAY_DEVICE, EnumDisplayDevices};
 ///
@@ -302,7 +302,7 @@ pub fn EnumDisplayDevices(
 ///
 /// Iterating graphics modes.
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{DEVMODE, EnumDisplaySettings, GmidxEnum};
 ///
@@ -331,7 +331,7 @@ pub fn EnumDisplayDevices(
 ///
 /// Retrieving from the predefined enum.
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, DEVMODE, EnumDisplaySettings, GmidxEnum};
 ///
@@ -398,7 +398,7 @@ pub fn EnumDisplaySettingsEx(
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{EnumThreadWindows, GetCurrentThreadId, HWND};
 ///
@@ -437,7 +437,7 @@ extern "system" fn enum_thread_wnd_proc<F>(hwnd: HWND, lparam: isize) -> BOOL
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{EnumWindows, HWND};
 ///
@@ -481,7 +481,7 @@ pub fn ExitWindowsEx(
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, GetAsyncKeyState};
 ///
@@ -549,7 +549,7 @@ pub fn GetDoubleClickTime() -> u32 {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{GetGUIThreadInfo, GUITHREADINFO, HWND};
 ///
@@ -806,7 +806,7 @@ pub fn RegisterWindowMessage(s: &str) -> SysResult<u32> {
 ///
 /// Sending Win+D to toggle the desktop:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, HwKbMouse, KEYBDINPUT, SendInput};
 ///

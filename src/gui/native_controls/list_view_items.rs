@@ -25,7 +25,7 @@ impl<'a> ListViewItems<'a> {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
@@ -173,7 +173,7 @@ impl<'a> ListViewItems<'a> {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
@@ -195,7 +195,7 @@ impl<'a> ListViewItems<'a> {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///

@@ -29,7 +29,7 @@ com_interface! { IFileSaveDialog: "84bccd23-5fde-4cdb-aea4-af64b83d78ab";
 	///
 	/// Saving a TXT file:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, CoCreateInstance, HWND, IFileSaveDialog};
 	///
@@ -67,7 +67,7 @@ impl shell_IFileSaveDialog for IFileSaveDialog {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_IFileSaveDialog: shell_IFileDialog {

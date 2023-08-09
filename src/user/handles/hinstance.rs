@@ -13,7 +13,7 @@ impl user_Hinstance for HINSTANCE {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait user_Hinstance: kernel_Hinstance {
@@ -105,7 +105,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	///
 	/// Retrieving information of a window class created in our application:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HINSTANCE, WNDCLASSEX};
 	///
@@ -147,7 +147,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	///
 	/// Loading a system cursor:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HINSTANCE, IdIdcStr};
 	///
@@ -174,7 +174,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	///
 	/// Loading a system icon:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, IdIdiStr, HINSTANCE};
 	///

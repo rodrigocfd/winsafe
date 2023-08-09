@@ -29,7 +29,7 @@ com_interface! { IGraphBuilder: "56a868a9-0ad4-11ce-b03a-0020af0ba770";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, CoCreateInstance, IGraphBuilder};
 	///
@@ -50,7 +50,7 @@ impl dshow_IGraphBuilder for IGraphBuilder {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait dshow_IGraphBuilder: dshow_IFilterGraph {

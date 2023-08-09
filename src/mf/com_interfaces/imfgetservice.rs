@@ -24,7 +24,7 @@ com_interface! { IMFGetService: "fa993888-4383-415a-a930-dd472a8cf6f7";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IBaseFilter, IMFGetService};
 	///
@@ -43,7 +43,7 @@ impl mf_IMFGetService for IMFGetService {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait mf_IMFGetService: ole_IUnknown {
@@ -52,7 +52,7 @@ pub trait mf_IMFGetService: ole_IUnknown {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, IMFGetService, IMFVideoDisplayControl};
 	///

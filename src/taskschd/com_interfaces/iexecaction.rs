@@ -27,7 +27,7 @@ com_interface! { IExecAction: "4c3d624d-fd6b-49a3-b9b7-09cb3cd3f047";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IAction, IExecAction};
 	///
@@ -49,7 +49,7 @@ impl taskschd_IExecAction for IExecAction {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IExecAction: taskschd_IAction {

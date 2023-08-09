@@ -27,7 +27,7 @@ com_interface! { ITaskbarList: "56fdf342-fd6d-11d0-958a-006097c9a090";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, CoCreateInstance, ITaskbarList};
 	///
@@ -47,7 +47,7 @@ impl shell_ITaskbarList for ITaskbarList {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_ITaskbarList: ole_IUnknown {

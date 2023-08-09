@@ -30,7 +30,7 @@ macro_rules! predef_key {
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait kernel_Hkey: Handle {
@@ -278,7 +278,7 @@ pub trait kernel_Hkey: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HKEY};
 	///
@@ -307,7 +307,7 @@ pub trait kernel_Hkey: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HKEY, SysResult};
 	///
@@ -350,7 +350,7 @@ pub trait kernel_Hkey: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{ExpandEnvironmentStrings, HKEY, RegistryValue};
 	///
@@ -476,7 +476,7 @@ pub trait kernel_Hkey: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HKEY};
 	///
@@ -613,7 +613,7 @@ pub trait kernel_Hkey: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, ExpandEnvironmentStrings, HKEY, RegistryValue};
 	///
@@ -747,7 +747,7 @@ pub trait kernel_Hkey: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, ExpandEnvironmentStrings, HKEY, RegistryValue};
 	///
@@ -936,7 +936,7 @@ pub trait kernel_Hkey: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HKEY, RegistryValue, WString};
 	///
@@ -978,7 +978,7 @@ pub trait kernel_Hkey: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HKEY, RegistryValue, WString};
 	///

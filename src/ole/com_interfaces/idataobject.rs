@@ -35,7 +35,7 @@ impl ole_IDataObject for IDataObject {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait ole_IDataObject: ole_IUnknown {

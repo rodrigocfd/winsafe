@@ -53,7 +53,7 @@ impl shell_IFileDialog for IFileDialog {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_IFileDialog: shell_IModalWindow {
@@ -247,7 +247,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::IFileDialog;
 	///

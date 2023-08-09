@@ -10,7 +10,7 @@ impl gdi_ole_IPicture for IPicture {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait gdi_ole_IPicture: ole_IPicture {

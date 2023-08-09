@@ -18,7 +18,7 @@ const_no_debug_display! { HRESULT: u32;
 	/// [`FormattedError`](crate::prelude::FormattedError) trait. For example,
 	/// the code below:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::co::HRESULT;
 	///
@@ -39,7 +39,7 @@ const_no_debug_display! { HRESULT: u32;
 	/// [`HRESULT_FROM_WIN32`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
 	/// macro:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co::ERROR, co::HRESULT};
 	///

@@ -13,7 +13,7 @@ use crate::shell::ffi;
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{CommandLineToArgv, GetCommandLine};
 ///
@@ -50,7 +50,7 @@ pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::PathCombine;
 ///
@@ -79,7 +79,7 @@ pub fn PathCombine(
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::PathCommonPrefix;
 ///
@@ -164,7 +164,7 @@ pub fn Shell_NotifyIcon(
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{IBindCtx, IShellItem2, SHCreateItemFromParsingName};
 ///
@@ -201,7 +201,7 @@ pub fn SHCreateItemFromParsingName<T>(
 ///
 /// Loading from a `Vec`:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::SHCreateMemStream;
 ///
@@ -257,7 +257,7 @@ pub fn SHGetFileInfo(
 ///
 /// Retrieving documents folder:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, SHGetKnownFolderPath};
 ///
@@ -301,7 +301,7 @@ pub fn SHGetKnownFolderPath(
 ///
 /// Loading the small (16x16 pixels) camera icon from the system:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, SHGetStockIconInfo};
 ///

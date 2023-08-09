@@ -12,7 +12,7 @@ impl uxtheme_Hwnd for HWND {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait uxtheme_Hwnd: ole_Hwnd {

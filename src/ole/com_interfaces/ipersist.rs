@@ -30,7 +30,7 @@ impl ole_IPersist for IPersist {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait ole_IPersist: ole_IUnknown {

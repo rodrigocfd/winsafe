@@ -12,7 +12,7 @@ impl gdi_mf_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait gdi_mf_IMFVideoDisplayControl: mf_IMFVideoDisplayControl {

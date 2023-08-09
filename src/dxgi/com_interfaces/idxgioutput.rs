@@ -42,7 +42,7 @@ impl dxgi_IDXGIOutput for IDXGIOutput {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait dxgi_IDXGIOutput: dxgi_IDXGIObject {

@@ -19,7 +19,7 @@ impl kernel_Hinstance for HINSTANCE {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait kernel_Hinstance: Handle {
@@ -50,7 +50,7 @@ pub trait kernel_Hinstance: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HINSTANCE, IdStr, RtStr};
 	///
@@ -91,7 +91,7 @@ pub trait kernel_Hinstance: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HINSTANCE, RtStr};
 	///
@@ -172,7 +172,7 @@ pub trait kernel_Hinstance: Handle {
 	///
 	/// Retrieving the full path of currently running .exe file:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HINSTANCE;
 	///
@@ -202,7 +202,7 @@ pub trait kernel_Hinstance: Handle {
 	///
 	/// Retrieving current module instance:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HINSTANCE;
 	///
@@ -272,7 +272,7 @@ pub trait kernel_Hinstance: Handle {
 	/// [Updating Resources](https://learn.microsoft.com/en-us/windows/win32/menurc/using-resources#updating-resources)
 	/// example:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{
 	///     co, HINSTANCE, HUPDATERSRC, IdStr, LANGID, RtStr,

@@ -30,7 +30,7 @@ impl shell_IModalWindow for IModalWindow {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_IModalWindow: ole_IUnknown {

@@ -19,7 +19,7 @@ const_no_debug_display! { ERROR: u32;
 	/// [`FormattedError`](crate::prelude::FormattedError) trait. For example,
 	/// the code below:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::co::ERROR;
 	///

@@ -13,7 +13,7 @@ use crate::prelude::*;
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, HWND, task_dlg};
 ///
@@ -47,7 +47,7 @@ pub fn error(
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, HWND, task_dlg};
 ///
@@ -81,7 +81,7 @@ pub fn warn(
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, HWND, task_dlg};
 ///
@@ -118,7 +118,7 @@ pub fn info(
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, HWND, task_dlg};
 ///
@@ -168,7 +168,7 @@ pub fn ok_cancel(
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, HWND, task_dlg};
 ///
@@ -209,7 +209,7 @@ pub fn yes_no(
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, HWND, task_dlg};
 ///

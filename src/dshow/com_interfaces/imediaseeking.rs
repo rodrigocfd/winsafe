@@ -41,7 +41,7 @@ com_interface! { IMediaSeeking: "36b73880-c2c8-11cf-8b46-00805f6cef60";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IGraphBuilder, IMediaSeeking};
 	///
@@ -61,7 +61,7 @@ impl dshow_IMediaSeeking for IMediaSeeking {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait dshow_IMediaSeeking: ole_IUnknown {

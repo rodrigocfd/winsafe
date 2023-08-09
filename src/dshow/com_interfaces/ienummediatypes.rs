@@ -33,7 +33,7 @@ impl dshow_IEnumMediaTypes for IEnumMediaTypes {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait dshow_IEnumMediaTypes: ole_IUnknown {
@@ -44,7 +44,7 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::IEnumMediaTypes;
 	///

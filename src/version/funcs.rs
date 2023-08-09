@@ -57,7 +57,7 @@ pub fn GetFileVersionInfoSize(file_name: &str) -> SysResult<u32> {
 ///
 /// Reading version information from resource:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{
 ///     GetFileVersionInfo, HINSTANCE, VarQueryValue, VS_FIXEDFILEINFO,

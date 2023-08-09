@@ -19,7 +19,7 @@ com_interface! { IIdleTrigger: "d537d2b0-9fb3-4d34-9739-1ff5ce7b1ef3";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IIdleTrigger, ITrigger};
 	///
@@ -41,7 +41,7 @@ impl taskschd_IIdleTrigger for IIdleTrigger {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IIdleTrigger: taskschd_ITrigger {}

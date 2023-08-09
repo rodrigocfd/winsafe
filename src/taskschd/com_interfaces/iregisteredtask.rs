@@ -48,7 +48,7 @@ impl taskschd_IRegisteredTask for IRegisteredTask {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IRegisteredTask: oleaut_IDispatch {

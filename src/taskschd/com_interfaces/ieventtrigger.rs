@@ -27,7 +27,7 @@ com_interface! { IEventTrigger: "d45b0167-9653-4eef-b94f-0732ca7af251";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IEventTrigger, ITrigger};
 	///
@@ -49,7 +49,7 @@ impl taskschd_IEventTrigger for IEventTrigger {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IEventTrigger: taskschd_ITrigger {

@@ -19,7 +19,7 @@ impl user_Hcursor for HCURSOR {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait user_Hcursor: Handle {

@@ -40,7 +40,7 @@ com_interface! { IMFVideoDisplayControl: "a490b1e4-ab84-4d31-a1b2-181e03b1077a";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, IMFGetService, IMFVideoDisplayControl};
 	///
@@ -62,7 +62,7 @@ impl mf_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait mf_IMFVideoDisplayControl: ole_IUnknown {

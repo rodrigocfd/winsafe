@@ -18,7 +18,7 @@ use crate::prelude::*;
 ///
 /// Listing all text files in a directory:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::path;
 ///
@@ -44,7 +44,7 @@ pub fn dir_list<'a>(
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{path, SysResult};
 ///
@@ -123,7 +123,7 @@ pub fn exists(full_path: &str) -> bool {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::path;
 ///
@@ -145,7 +145,7 @@ pub fn get_file_name(full_path: &str) -> Option<&str> {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::path;
 ///
@@ -164,7 +164,7 @@ pub fn get_path(full_path: &str) -> Option<&str> {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::path;
 ///
@@ -208,7 +208,7 @@ pub fn is_hidden(full_path: &str) -> bool {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::path;
 ///
@@ -251,7 +251,7 @@ pub fn replace_file_name(full_path: &str, new_file: &str) -> String {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::path;
 ///
@@ -273,7 +273,7 @@ pub fn replace_path(full_path: &str, new_path: &str) -> String {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::path;
 ///

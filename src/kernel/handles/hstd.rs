@@ -19,7 +19,7 @@ impl kernel_Hstd for HSTD {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait kernel_Hstd: Handle {
@@ -61,7 +61,7 @@ pub trait kernel_Hstd: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HSTD, WString};
 	///

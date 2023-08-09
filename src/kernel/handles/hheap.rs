@@ -25,7 +25,7 @@ impl kernel_Hheap for HHEAP {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait kernel_Hheap: Handle {
@@ -88,7 +88,7 @@ pub trait kernel_Hheap: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HHEAP};
 	///
@@ -154,7 +154,7 @@ pub trait kernel_Hheap: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HHEAP};
 	///
@@ -183,7 +183,7 @@ pub trait kernel_Hheap: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HHEAP};
 	///
@@ -243,7 +243,7 @@ pub trait kernel_Hheap: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HHEAP};
 	///
@@ -277,7 +277,7 @@ pub trait kernel_Hheap: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HHEAP};
 	///

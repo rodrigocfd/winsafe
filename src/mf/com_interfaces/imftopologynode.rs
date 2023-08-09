@@ -43,7 +43,7 @@ com_interface! { IMFTopologyNode: "83cf873a-f6da-4bc8-823f-bacfd55dc430";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, IMFTopologyNode, MFCreateTopologyNode};
 	///
@@ -60,7 +60,7 @@ impl mf_IMFTopologyNode for IMFTopologyNode {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait mf_IMFTopologyNode: mf_IMFAttributes {

@@ -14,7 +14,7 @@ pub type AnyResult<T> = Result<T, Box<dyn std::error::Error + Send + Sync>>;
 ///
 /// Converting into the generic [`AnyResult`](crate::AnyResult):
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, AnyResult, SysResult};
 ///

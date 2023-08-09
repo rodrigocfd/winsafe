@@ -43,7 +43,7 @@ pub fn InitMUILanguage(ui_lang: LANGID) {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{
 ///     co, HWND, IconIdTdicon, TASKDIALOG_BUTTON, TASKDIALOGCONFIG,

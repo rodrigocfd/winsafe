@@ -32,7 +32,7 @@ impl mf_IMFAsyncCallback for IMFAsyncCallback {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait mf_IMFAsyncCallback: ole_IUnknown {

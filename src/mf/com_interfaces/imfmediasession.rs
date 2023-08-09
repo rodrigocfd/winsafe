@@ -33,7 +33,7 @@ com_interface! { IMFMediaSession: "90377834-21d0-4dee-8214-ba2e3e6c1127";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IMFAttributes, MFCreateMediaSession};
 	///
@@ -50,7 +50,7 @@ impl mf_IMFMediaSession for IMFMediaSession {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
@@ -118,7 +118,7 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, IMFMediaSession, PROPVARIANT};
 	///

@@ -34,7 +34,7 @@ impl dxgi_IDXGIDevice for IDXGIDevice {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {

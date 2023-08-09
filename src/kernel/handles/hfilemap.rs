@@ -22,7 +22,7 @@ impl kernel_Hfilemap for HFILEMAP {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait kernel_Hfilemap: Handle {

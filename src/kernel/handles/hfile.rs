@@ -22,7 +22,7 @@ impl kernel_Hfile for HFILE {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait kernel_Hfile: Handle {
@@ -39,7 +39,7 @@ pub trait kernel_Hfile: Handle {
 	///
 	/// Opening an existing file as read-only:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HFILE};
 	///
@@ -59,7 +59,7 @@ pub trait kernel_Hfile: Handle {
 	///
 	/// Opening a file for read and write. If the file doesn't exist, create it:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HFILE};
 	///
@@ -205,7 +205,7 @@ pub trait kernel_Hfile: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HFILE;
 	///

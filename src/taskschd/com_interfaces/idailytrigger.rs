@@ -26,7 +26,7 @@ com_interface! { IDailyTrigger: "126c5cd8-b288-41d5-8dbf-e491446adc5c";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IDailyTrigger, ITrigger};
 	///
@@ -48,7 +48,7 @@ impl taskschd_IDailyTrigger for IDailyTrigger {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IDailyTrigger: taskschd_ITrigger {

@@ -42,7 +42,7 @@ com_interface! { IShellLink: "000214f9-0000-0000-c000-000000000046";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, CoCreateInstance, IShellLink};
 	///
@@ -62,7 +62,7 @@ impl shell_IShellLink for IShellLink {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_IShellLink: ole_IUnknown {

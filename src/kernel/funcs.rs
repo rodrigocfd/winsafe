@@ -19,7 +19,7 @@ use crate::prelude::*;
 ///
 /// Create a well-known SID for the Everyone group:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{AllocateAndInitializeSid, co, SID_IDENTIFIER_AUTHORITY};
 ///
@@ -34,7 +34,7 @@ use crate::prelude::*;
 ///
 /// Create a SID for the BUILTIN\Administrators group:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{AllocateAndInitializeSid, co, SID_IDENTIFIER_AUTHORITY};
 ///
@@ -169,7 +169,7 @@ pub fn CreateDirectory(
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, CreateWellKnownSid};
 ///
@@ -311,7 +311,7 @@ pub fn ExitThread(exit_code: u32) {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::ExpandEnvironmentStrings;
 ///
@@ -534,7 +534,7 @@ pub fn GetDiskSpaceInformation(
 ///
 /// Retrieving and printing the key/value pairs of all environment strings:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::GetEnvironmentStrings;
 ///
@@ -627,7 +627,7 @@ pub fn GetLogicalDriveStrings() -> SysResult<Vec<String>> {
 ///
 /// Checking whether a file or folder exists:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, GetFileAttributes};
 ///
@@ -636,7 +636,7 @@ pub fn GetLogicalDriveStrings() -> SysResult<Vec<String>> {
 ///
 /// Retrieving various information about a file or folder path:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, GetFileAttributes};
 ///
@@ -668,7 +668,7 @@ pub fn GetFileAttributes(file_name: &str) -> SysResult<co::FILE_ATTRIBUTE> {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{GetLocalTime, SYSTEMTIME};
 ///
@@ -697,7 +697,7 @@ pub fn GetSidLengthRequired(sub_authority_count: u8) -> u32 {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{GetStartupInfo, STARTUPINFO};
 ///
@@ -741,7 +741,7 @@ pub fn GetSystemFileCacheSize() -> SysResult<(usize, usize, co::FILE_CACHE)> {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{GetSystemInfo, SYSTEM_INFO};
 ///
@@ -760,7 +760,7 @@ pub fn GetSystemInfo(si: &mut SYSTEM_INFO) {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{GetSystemTime, SYSTEMTIME};
 ///
@@ -865,7 +865,7 @@ pub fn GetUserName() -> SysResult<String> {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::{co, GetVolumeInformation};
 ///
 /// let mut name = String::default();
@@ -1241,7 +1241,7 @@ pub const fn LODWORD(v: u64) -> u32 {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{GetUserName, LookupAccountName};
 ///
@@ -1381,7 +1381,7 @@ pub fn LookupPrivilegeName(
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, HPROCESS, LookupPrivilegeValue};
 ///
@@ -1512,7 +1512,7 @@ pub fn OutputDebugString(output_string: &str) {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{QueryPerformanceCounter, QueryPerformanceFrequency};
 ///

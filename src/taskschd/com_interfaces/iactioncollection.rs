@@ -40,7 +40,7 @@ impl taskschd_IActionCollection for IActionCollection {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IActionCollection: oleaut_IDispatch {

@@ -33,7 +33,7 @@ impl shell_IFileDialogEvents for IFileDialogEvents {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_IFileDialogEvents: ole_IUnknown {

@@ -13,7 +13,7 @@ use crate::prelude::*;
 ///
 /// Parsing an image from raw data:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{IStream, OleLoadPicture};
 ///

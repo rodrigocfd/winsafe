@@ -43,7 +43,7 @@ impl taskschd_ITaskFolder for ITaskFolder {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_ITaskFolder: oleaut_IDispatch {

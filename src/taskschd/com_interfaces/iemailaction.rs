@@ -41,7 +41,7 @@ com_interface! { IEmailAction: "10f62c64-7e16-4314-a0c2-0c3683f99d40";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IAction, IEmailAction};
 	///
@@ -63,7 +63,7 @@ impl taskschd_IEmailAction for IEmailAction {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IEmailAction: taskschd_IAction {

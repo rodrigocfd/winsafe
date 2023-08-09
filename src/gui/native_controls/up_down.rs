@@ -82,7 +82,7 @@ impl UpDown {
 	/// prior, as its buddy control. The `UpDown` will automatically attach
 	/// itself to the `Edit`.
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, gui};
 	///

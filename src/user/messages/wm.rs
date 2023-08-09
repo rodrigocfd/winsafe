@@ -630,7 +630,7 @@ unsafe impl<'a> MsgSendRecv for GetMinMaxInfo<'a> {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{msg::wm, HWND, WString};
 ///
@@ -1467,7 +1467,7 @@ unsafe impl MsgSendRecv for SetIcon {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{msg::wm, HWND, WString};
 ///

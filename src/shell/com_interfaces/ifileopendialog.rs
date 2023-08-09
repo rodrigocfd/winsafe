@@ -25,7 +25,7 @@ com_interface! { IFileOpenDialog: "d57c7288-d4ad-4768-be02-9d969532d960";
 	///
 	/// Choosing a single existing TXT file:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, CoCreateInstance, HWND, IFileOpenDialog};
 	///
@@ -68,7 +68,7 @@ impl shell_IFileOpenDialog for IFileOpenDialog {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_IFileOpenDialog: shell_IFileDialog {
@@ -83,7 +83,7 @@ pub trait shell_IFileOpenDialog: shell_IFileDialog {
 		///
 		/// Collecting the file paths into a [`Vec`](std::vec::Vec):
 		///
-		/// ```rust,no_run
+		/// ```no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{co, HrResult, IFileOpenDialog};
 		///

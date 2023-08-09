@@ -2,12 +2,12 @@
 ///
 /// This macro is useful to generate constants for loaded resources, like menus
 /// or dialog windows.
-/// 
+///
 /// Each constant also supports individual documentation.
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::seq_ids;
 ///
 /// seq_ids! {
@@ -21,7 +21,7 @@
 ///
 /// The code above will generate the following:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// pub const MNU_FILE: u16 = 3000;
 /// pub const MNU_FILE_OPEN: u16 = 3001;
 /// pub const MNU_FILE_SAVE: u16 = 3002;

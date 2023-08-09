@@ -11,7 +11,7 @@ use crate::prelude::*;
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{IMFAttributes, MFCreateMediaSession};
 ///
@@ -39,7 +39,7 @@ pub fn MFCreateMediaSession(
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{IMFSourceResolver, MFCreateSourceResolver};
 ///
@@ -58,7 +58,7 @@ pub fn MFCreateSourceResolver() -> HrResult<IMFSourceResolver> {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{IMFTopology, MFCreateTopology};
 ///
@@ -77,7 +77,7 @@ pub fn MFCreateTopology() -> HrResult<IMFTopology> {
 ///
 /// # Examples
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{co, IMFTopologyNode, MFCreateTopologyNode};
 ///

@@ -32,7 +32,7 @@ com_interface! { IMediaControl: "56a868b1-0ad4-11ce-b03a-0020af0ba770";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IGraphBuilder, IMediaControl};
 	///
@@ -53,7 +53,7 @@ impl dshow_IMediaControl for IMediaControl {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait dshow_IMediaControl: oleaut_IDispatch {

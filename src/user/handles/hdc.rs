@@ -18,7 +18,7 @@ impl user_Hdc for HDC {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait user_Hdc: Handle {
@@ -83,7 +83,7 @@ pub trait user_Hdc: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HDC, HMONITOR, RECT};
 	///

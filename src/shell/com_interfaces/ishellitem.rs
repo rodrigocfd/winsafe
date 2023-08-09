@@ -32,7 +32,7 @@ com_interface! { IShellItem: "43826d1e-e718-42ee-bc55-a1e261c37bfe";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IBindCtx, IShellItem, SHCreateItemFromParsingName};
 	///
@@ -51,7 +51,7 @@ impl shell_IShellItem for IShellItem {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_IShellItem: ole_IUnknown {
@@ -62,7 +62,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 	///
 	/// Retrieving the items inside a directory:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, IBindCtx, IEnumShellItems, IShellItem};
 	///
@@ -142,7 +142,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, IBindCtx, IShellItem, SHCreateItemFromParsingName};
 	///
@@ -180,7 +180,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 		///
 		/// # Examples
 		///
-		/// ```rust,no_run
+		/// ```no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{co, IBindCtx, IShellItem, SHCreateItemFromParsingName};
 		///

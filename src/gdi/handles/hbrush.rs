@@ -16,7 +16,7 @@ impl gdi_Hbrush for HBRUSH {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait gdi_Hbrush: Handle {
@@ -89,7 +89,7 @@ pub trait gdi_Hbrush: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HBRUSH, LOGBRUSH};
 	///

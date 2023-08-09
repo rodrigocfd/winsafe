@@ -74,7 +74,7 @@ impl Edit {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{gui, POINT};
 	///
@@ -190,7 +190,7 @@ impl Edit {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
@@ -239,7 +239,7 @@ impl Edit {
 	///
 	/// Selecting all text in the control:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
@@ -252,7 +252,7 @@ impl Edit {
 	///
 	/// Clearing the selection:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::gui;
 	///
 	/// let my_edit: gui::Edit; // initialized somewhere

@@ -12,7 +12,7 @@ use crate::prelude::*;
 /// [Parsing](crate::WString::parse) a file as string by memory-mapping the file
 /// (usually the fastest method):
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// use winsafe::{FileAccess, FileMapped, WString};
 ///

@@ -16,7 +16,7 @@ impl shell_Hdrop for HDROP {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_Hdrop: Handle {
@@ -33,7 +33,7 @@ pub trait shell_Hdrop: Handle {
 	///
 	/// Iterating over the strings:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::HDROP;
 	///
@@ -49,7 +49,7 @@ pub trait shell_Hdrop: Handle {
 	///
 	/// Collecting the strings into a [`Vec`](std::vec::Vec):
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HDROP, SysResult};
 	///

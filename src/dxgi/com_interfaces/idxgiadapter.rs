@@ -33,7 +33,7 @@ impl dxgi_IDXGIAdapter for IDXGIAdapter {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
@@ -60,7 +60,7 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{HrResult, IDXGIAdapter, IDXGIOutput};
 	///
@@ -90,7 +90,7 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IDXGIAdapter, DXGI_ADAPTER_DESC};
 	///

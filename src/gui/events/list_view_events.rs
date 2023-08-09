@@ -59,7 +59,7 @@ impl ListViewEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,no_run
+		/// ```no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, AnyResult};
 		///
@@ -83,7 +83,7 @@ impl ListViewEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,no_run
+		/// ```no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, AnyResult, NMLISTVIEW};
 		///
@@ -156,7 +156,7 @@ impl ListViewEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,no_run
+		/// ```no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, AnyResult, NMLISTVIEW};
 		///
@@ -185,7 +185,7 @@ impl ListViewEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,no_run
+		/// ```no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{co, gui, AnyResult, NMLVKEYDOWN};
 		///

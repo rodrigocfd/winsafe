@@ -19,7 +19,7 @@ impl gdi_Hpalette for HPALETTE {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait gdi_Hpalette: Handle {

@@ -33,7 +33,7 @@ impl dshow_IFilterGraph2 for IFilterGraph2 {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait dshow_IFilterGraph2: dshow_IGraphBuilder {

@@ -25,7 +25,7 @@ pub trait GuiEventsAll: GuiEvents {
 	/// parameters. This generic method should be used only when you have a
 	/// custom, non-standard window notification.
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, gui, msg, AnyResult};
 	///
@@ -92,7 +92,7 @@ pub trait GuiEvents {
 	///
 	/// Handling a custom, user-defined message:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, gui, msg, AnyResult};
 	///
@@ -177,7 +177,7 @@ pub trait GuiEvents {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{gui, msg, AnyResult};
 	///
@@ -246,7 +246,7 @@ pub trait GuiEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,no_run
+		/// ```no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, AnyResult};
 		///
@@ -273,7 +273,7 @@ pub trait GuiEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,no_run
+		/// ```no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, msg, AnyResult};
 		///
@@ -407,7 +407,7 @@ pub trait GuiEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,no_run
+		/// ```no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, msg, AnyResult};
 		///
@@ -429,7 +429,7 @@ pub trait GuiEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,no_run
+		/// ```no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{AnyResult, gui, IdPos, msg};
 		///
@@ -468,7 +468,7 @@ pub trait GuiEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,no_run
+		/// ```no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, msg, AnyResult};
 		///
@@ -490,7 +490,7 @@ pub trait GuiEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,no_run
+		/// ```no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, msg, AnyResult};
 		///
@@ -616,7 +616,7 @@ pub trait GuiEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,no_run
+		/// ```no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, AnyResult};
 		///
@@ -710,7 +710,7 @@ pub trait GuiEvents {
 		///
 		/// # Examples
 		///
-		/// ```rust,no_run
+		/// ```no_run
 		/// use winsafe::prelude::*;
 		/// use winsafe::{gui, msg, AnyResult};
 		///

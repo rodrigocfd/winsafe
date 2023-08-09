@@ -14,7 +14,7 @@ impl oleaut_shell_IShellItem2 for IShellItem2 {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait oleaut_shell_IShellItem2: shell_IShellItem2 {

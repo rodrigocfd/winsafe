@@ -31,7 +31,7 @@ com_interface! { IMFSourceResolver: "fbe5a32d-a497-4b61-bb85-97b1a848a6e3";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IMFSourceResolver, MFCreateSourceResolver};
 	///
@@ -47,7 +47,7 @@ impl mf_IMFSourceResolver for IMFSourceResolver {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait mf_IMFSourceResolver: ole_IUnknown {

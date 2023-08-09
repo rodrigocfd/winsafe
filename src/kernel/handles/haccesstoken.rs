@@ -19,7 +19,7 @@ impl kernel_Haccesstoken for HACCESSTOKEN {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait kernel_Haccesstoken: Handle {
@@ -28,7 +28,7 @@ pub trait kernel_Haccesstoken: Handle {
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{
 	///     co, DisabPriv, HPROCESS, LookupPrivilegeValue,
@@ -147,7 +147,7 @@ pub trait kernel_Haccesstoken: Handle {
 	///
 	/// Checking if the current process has elevated privileges:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, HPROCESS, TOKEN_ELEVATION};
 	///

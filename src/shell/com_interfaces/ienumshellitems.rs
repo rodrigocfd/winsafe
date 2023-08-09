@@ -34,7 +34,7 @@ impl shell_IEnumShellItems for IEnumShellItems {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_IEnumShellItems: ole_IUnknown {
@@ -48,7 +48,7 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 	/// Enumerating the items in a folder by iterating over the
 	/// [`IShellItem`](crate::IShellItem) objects:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{co, IBindCtx, IEnumShellItems, IShellItem, SHCreateItemFromParsingName};
 	///

@@ -32,7 +32,7 @@ com_interface! { IUnknown: "00000000-0000-0000-c000-000000000046";
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 ///

@@ -39,7 +39,7 @@ com_interface! { IShellItem2: "7e9fb0d3-919f-4307-ab2e-9b1860310c93";
 	///
 	/// # Examples
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::{IBindCtx, IShellItem2, SHCreateItemFromParsingName};
 	///
@@ -59,7 +59,7 @@ impl shell_IShellItem2 for IShellItem2 {}
 ///
 /// Prefer importing this trait through the prelude:
 ///
-/// ```rust,no_run
+/// ```no_run
 /// use winsafe::prelude::*;
 /// ```
 pub trait shell_IShellItem2: shell_IShellItem {

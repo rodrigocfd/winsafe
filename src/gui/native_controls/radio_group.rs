@@ -171,7 +171,7 @@ impl RadioGroup {
 	///
 	/// Changing the text of all radio buttons to `"One"`:
 	///
-	/// ```rust,no_run
+	/// ```no_run
 	/// use winsafe::prelude::*;
 	/// use winsafe::gui;
 	///
