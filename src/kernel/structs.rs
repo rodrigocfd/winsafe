@@ -86,7 +86,7 @@ pub struct FILETIME {
 /// The [`Default`](std::default::Default) implementation returns `GUID::NULL`
 /// (all zeros).
 #[repr(C)]
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Default)]
 pub struct GUID {
 	data1: u32,
 	data2: u16,
@@ -104,16 +104,7 @@ impl std::fmt::Display for GUID {
 	}
 }
 
-impl Default for GUID {
-	fn default() -> Self {
-		Self::NULL
-	}
-}
-
 impl GUID {
-	/// The null `GUID` contains only zeros.
-	pub const NULL: Self = Self::new("00000000-0000-0000-0000-000000000000");
-
 	/// Creates a new `GUID` from a representative hex string, which can be
 	/// copied straight from standard `GUID` declarations.
 	///
@@ -126,7 +117,7 @@ impl GUID {
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let g = w::GUID::new("00000000-0000-0000-c000-000000000046");
+	/// let g = w::GUID::new("43826d1e-e718-42ee-bc55-a1e261c37bfe");
 	/// ```
 	#[must_use]
 	pub const fn new(guid_str: &str) -> Self {

@@ -30,7 +30,7 @@ macro_rules! com_interface {
 		}
 
 		impl crate::prelude::ole_IUnknown for $name {
-			const IID: crate::co::IID = crate::co::IID::new($guid);
+			const IID: crate::co::IID = unsafe { crate::co::IID::from_raw($guid) };
 
 			unsafe fn from_ptr(p: *mut std::ffi::c_void) -> Self {
 				Self(p)
@@ -55,7 +55,7 @@ macro_rules! const_guid_values {
 	) => {
 		impl $name {
 			$(
-				pub const $pubname: $name = $name::new($guid);
+				pub const $pubname: $name = unsafe { $name::from_raw($guid) };
 			)*
 		}
 	};
@@ -71,7 +71,7 @@ macro_rules! const_guid {
 	) => {
 		$( #[$doc] )*
 		#[repr(transparent)]
-		#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+		#[derive(Clone, Copy, PartialEq, Eq, Hash, Default)]
 		pub struct $name(crate::kernel::decl::GUID);
 
 		impl From<crate::kernel::decl::GUID> for $name {
@@ -92,25 +92,16 @@ macro_rules! const_guid {
 			}
 		}
 
-		impl Default for $name {
-			fn default() -> Self {
-				Self::new("00000000-0000-0000-0000-000000000000") // NULL GUID
-			}
-		}
-
 		impl $name {
 			/// Creates a new `GUID` from a representative hex string, which can
 			/// be copied straight from standard `GUID` declarations.
 			///
-			/// # Examples
+			/// # Safety
 			///
-			/// ```no_run
-			/// use winsafe::{self as w, prelude::*};
-			///
-			/// let g = w::GUID::new("00000000-0000-0000-c000-000000000046");
+			/// Be sure the given value is meaningful for the actual type.
 			/// ```
 			#[must_use]
-			pub const fn new(guid_str: &str) -> Self {
+			pub const unsafe fn from_raw(guid_str: &str) -> Self {
 				Self(crate::kernel::decl::GUID::new(guid_str))
 			}
 		}
