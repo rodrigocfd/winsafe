@@ -210,40 +210,58 @@ pub fn CoLockObjectExternal<T>(
 /// [`CoTaskMemAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemalloc)
 /// function.
 ///
-/// # Safety
+/// # Examples
 ///
-/// This function manually allocates a memory block, which must be freed with
-/// [`CoTaskMemFree`](crate::CoTaskMemFree).
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let pmem = w::CoTaskMemAlloc(100)?;
+///
+/// // use memory block...
+///
+/// // CoTaskMemFree() automatically called
+/// # Ok::<_, winsafe::co::HRESULT>(())
 #[must_use]
-pub unsafe fn CoTaskMemAlloc(cb: usize) -> HrResult<*mut u8> {
+pub fn CoTaskMemAlloc(cb: usize) -> HrResult<CoTaskMemFreeGuard> {
 	let p = unsafe { ffi::CoTaskMemAlloc(cb) };
 	if p.is_null() {
 		Err(co::HRESULT::E_OUTOFMEMORY)
 	} else {
-		Ok(p as _)
+		Ok(unsafe { CoTaskMemFreeGuard::new(p, cb) })
 	}
-}
-
-/// [`CoTaskMemFree`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
-/// function.
-pub fn CoTaskMemFree(pv: *mut u8) {
-	unsafe { ffi::CoTaskMemFree(pv as _) }
 }
 
 /// [`CoTaskMemRealloc`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
 /// function.
 ///
-/// # Safety
+/// Originally this method returns a pointer to the reallocated memory block;
+/// here the original pointer is automatically updated.
 ///
-/// This function manually allocates a memory block, which must be freed with
-/// [`CoTaskMemFree`](crate::CoTaskMemFree).
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let mut pmem = w::CoTaskMemAlloc(100)?;
+/// w::CoTaskMemRealloc(&mut pmem, 120)?;
+///
+/// // use memory block...
+///
+/// // CoTaskMemFree() automatically called
+/// # Ok::<_, winsafe::co::HRESULT>(())
 #[must_use]
-pub unsafe fn CoTaskMemRealloc(pv: *mut u8, cb: usize) -> HrResult<*mut u8> {
-	let p = unsafe { ffi::CoTaskMemRealloc(pv as _, cb) };
+pub fn CoTaskMemRealloc(
+	pv: &mut CoTaskMemFreeGuard,
+	cb: usize,
+) -> HrResult<()>
+{
+	let (old_pmem, _) = pv.leak();
+	let p = unsafe { ffi::CoTaskMemRealloc(old_pmem, cb) };
 	if p.is_null() {
 		Err(co::HRESULT::E_OUTOFMEMORY)
 	} else {
-		Ok(p as _)
+		*pv = unsafe { CoTaskMemFreeGuard::new(p, cb) };
+		Ok(())
 	}
 }
 
@@ -254,10 +272,7 @@ pub fn CreateClassMoniker(clsid: &co::CLSID) -> HrResult<IMoniker> {
 	let mut queried = unsafe { IMoniker::null() };
 	ok_to_hrresult(
 		unsafe {
-			ffi::CreateClassMoniker(
-				clsid as *const _ as _,
-				queried.as_mut(),
-			)
+			ffi::CreateClassMoniker(clsid as *const _ as _, queried.as_mut())
 		},
 	).map(|_| queried)
 }
@@ -299,12 +314,7 @@ pub fn CreateItemMoniker(delim: &str, item: &str) -> HrResult<IMoniker> {
 pub fn CreateObjrefMoniker(unk: &impl ole_IUnknown) -> HrResult<IMoniker> {
 	let mut queried = unsafe { IMoniker::null() };
 	ok_to_hrresult(
-		unsafe {
-			ffi::CreateObjrefMoniker(
-				unk.ptr(),
-				queried.as_mut(),
-			)
-		},
+		unsafe { ffi::CreateObjrefMoniker(unk.ptr(), queried.as_mut()) },
 	).map(|_| queried)
 }
 
@@ -314,12 +324,7 @@ pub fn CreateObjrefMoniker(unk: &impl ole_IUnknown) -> HrResult<IMoniker> {
 pub fn CreatePointerMoniker(unk: &impl ole_IUnknown) -> HrResult<IMoniker> {
 	let mut queried = unsafe { IMoniker::null() };
 	ok_to_hrresult(
-		unsafe {
-			ffi::CreatePointerMoniker(
-				unk.ptr(),
-				queried.as_mut(),
-			)
-		},
+		unsafe { ffi::CreatePointerMoniker(unk.ptr(), queried.as_mut()) },
 	).map(|_| queried)
 }
 
@@ -332,7 +337,7 @@ pub fn StringFromCLSID(clsid: &co::CLSID) -> HrResult<String> {
 		unsafe { ffi::StringFromCLSID(clsid as *const _ as _, &mut pstr) },
 	).map(|_| {
 		let name = WString::from_wchars_nullt(pstr);
-		CoTaskMemFree(pstr as _);
+		let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 		name.to_string()
 	})
 }

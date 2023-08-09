@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
+use crate::guard::*;
 use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -42,12 +43,13 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// If you pass an [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE) reference to
 	/// `pmt`, its `pbFormat` field may return a valid reference to a format
 	/// block. If so, you must free it with
-	/// [`CoTaskMemFree`](crate::CoTaskMemFree), or you'll have a memory leak.
+	/// [`CoTaskMemFree`](crate::guard::CoTaskMemFreeGuard), or you'll have a
+	/// memory leak.
 	///
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::{self as w, prelude::*};
+	/// use winsafe::{self as w, prelude::*, guard};
 	///
 	/// let sinkf: w::IFileSinkFilter; // initialized somewhere
 	/// # let sinkf = unsafe { w::IFileSinkFilter::null() };
@@ -56,7 +58,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	/// unsafe {
 	///     sinkf.GetCurFile(Some(&mut ammt))?;
 	///     if let Some(pb_format) = ammt.pbFormat::<w::DVINFO>() { // valid reference?
-	///         w::CoTaskMemFree(pb_format as *mut _ as _);
+	///         let _ = guard::CoTaskMemFreeGuard::new(pb_format as *mut _  as _, 0);
 	///     }
 	/// }
 	/// # Ok::<_, winsafe::co::HRESULT>(())
@@ -75,7 +77,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 			),
 		).map(|_| {
 			let name = WString::from_wchars_nullt(pstr);
-			CoTaskMemFree(pstr as _);
+			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 			name.to_string()
 		})
 	}

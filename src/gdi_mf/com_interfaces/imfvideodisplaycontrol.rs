@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
+use crate::guard::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 use crate::vt::*;
@@ -41,7 +42,7 @@ pub trait gdi_mf_IMFVideoDisplayControl: mf_IMFVideoDisplayControl {
 			let dib_vec = unsafe {
 				std::slice::from_raw_parts(dib_ptr, dib_sz as _)
 			}.to_vec();
-			CoTaskMemFree(dib_ptr);
+			let _ = unsafe { CoTaskMemFreeGuard::new(dib_ptr as _, 0) };
 			(bih, dib_vec, time_stamp)
 		})
 	}

@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -148,7 +149,7 @@ pub trait dshow_IPin: ole_IUnknown {
 			unsafe { (vt::<IPinVT>(self).QueryId)(self.ptr(), &mut pstr) },
 		).map(|_| {
 			let name = WString::from_wchars_nullt(pstr);
-			CoTaskMemFree(pstr as _);
+			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 			name.to_string()
 		})
 	}

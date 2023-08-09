@@ -39,6 +39,52 @@ impl<'a, T> CoLockObjectExternalGuard<'a, T>
 //------------------------------------------------------------------------------
 
 /// RAII implementation which automatically calls
+/// [`CoTaskMemFree`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
+/// when the object goes out of scope.
+pub struct CoTaskMemFreeGuard {
+	pmem: *mut std::ffi::c_void,
+	sz: usize,
+}
+
+impl Drop for CoTaskMemFreeGuard {
+	fn drop(&mut self) {
+		unsafe { ffi::CoTaskMemFree(self.pmem); }
+	}
+}
+
+impl CoTaskMemFreeGuard {
+	/// Constructs the guard.
+	///
+	/// # Safety
+	///
+	/// Be sure the pointer must be freed with
+	/// [`CoTaskMemFree`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
+	/// at the end of the scope, and the size is correct.
+	#[must_use]
+	pub const unsafe fn new(pmem: *mut std::ffi::c_void, sz: usize) -> Self {
+		Self { pmem, sz }
+	}
+
+	/// Ejects the underlying memory pointer and size, leaving null and zero in
+	/// their places.
+	///
+	/// Since the internal memory pointer will be invalidated, the destructor
+	/// will not run. It's your responsibility to run it, otherwise you'll cause
+	/// a memory leak.
+	#[must_use]
+	pub fn leak(&mut self) -> (*mut std::ffi::c_void, usize) {
+		(
+			std::mem::replace(&mut self.pmem, std::ptr::null_mut()),
+			std::mem::replace(&mut self.sz, 0),
+		)
+	}
+
+	pub_fn_mem_block!();
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation which automatically calls
 /// [`CoUninitialize`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)
 /// when the object goes out of scope.
 pub struct CoUninitializeGuard {
@@ -47,7 +93,7 @@ pub struct CoUninitializeGuard {
 
 impl Drop for CoUninitializeGuard {
 	fn drop(&mut self) {
-		unsafe { ffi::CoUninitialize() }
+		unsafe { ffi::CoUninitialize(); }
 	}
 }
 

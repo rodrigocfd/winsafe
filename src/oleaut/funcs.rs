@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::ole::privs::*;
 use crate::oleaut::ffi;
 use crate::prelude::*;
@@ -83,7 +84,7 @@ pub fn PSGetNameFromPropertyKey(prop_key: &PROPERTYKEY) -> HrResult<String> {
 		},
 	).map(|_| {
 		let name = WString::from_wchars_nullt(pstr);
-		CoTaskMemFree(pstr as _);
+		let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 		name.to_string()
 	})
 }

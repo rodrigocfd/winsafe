@@ -288,7 +288,7 @@ pub fn SHGetKnownFolderPath(
 		},
 	).map(|_| {
 		let path = WString::from_wchars_nullt(pstr);
-		CoTaskMemFree(pstr as _);
+		let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 		path.to_string()
 	})
 }

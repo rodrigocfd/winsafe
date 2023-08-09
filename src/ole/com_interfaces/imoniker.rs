@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -169,7 +170,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 			},
 		).map(|_| {
 			let name = WString::from_wchars_nullt(pstr);
-			CoTaskMemFree(pstr as _); // https://stackoverflow.com/q/3079508/6923555
+			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) }; // https://stackoverflow.com/q/3079508/6923555
 			name.to_string()
 		})
 	}
