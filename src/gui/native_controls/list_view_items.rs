@@ -261,7 +261,7 @@ impl<'a> ListViewItems<'a> {
 
 //------------------------------------------------------------------------------
 
-struct ListViewItemIter<'a> {
+pub(in crate::gui) struct ListViewItemIter<'a> {
 	owner: &'a ListView,
 	current: Option<ListViewItem<'a>>,
 	relationship: co::LVNI,
@@ -283,7 +283,11 @@ impl<'a> Iterator for ListViewItemIter<'a> {
 }
 
 impl<'a> ListViewItemIter<'a> {
-	const fn new(owner: &'a ListView, relationship: co::LVNI) -> Self {
+	pub(in crate::gui) const fn new(
+		owner: &'a ListView,
+		relationship: co::LVNI,
+	) -> Self
+	{
 		Self {
 			owner,
 			current: None,

@@ -131,7 +131,8 @@ impl<'a> TreeViewItemIter<'a> {
 	pub(in crate::gui) const fn new(
 		owner: &'a TreeView,
 		current: Option<TreeViewItem<'a>>,
-		relationship: co::TVGN) -> Self
+		relationship: co::TVGN,
+	) -> Self
 	{
 		Self { owner, current, relationship }
 	}
@@ -179,7 +180,8 @@ impl<'a> Iterator for TreeViewChildItemIter<'a> {
 impl<'a> TreeViewChildItemIter<'a> {
 	pub(in crate::gui) fn new(
 		owner: &'a TreeView,
-		current: Option<TreeViewItem<'a>>) -> Self
+		current: Option<TreeViewItem<'a>>,
+	) -> Self
 	{
 		Self {
 			owner,

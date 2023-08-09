@@ -296,7 +296,7 @@ pub fn split_parts(full_path: &str) -> Vec<&str> {
 
 //------------------------------------------------------------------------------
 
-struct DirListIter<'a> {
+pub(in crate::kernel) struct DirListIter<'a> {
 	dir_path: String,
 	filter: Option<&'a str>,
 	hfind: Option<FindCloseGuard>,
@@ -356,7 +356,10 @@ impl<'a> Iterator for DirListIter<'a> {
 }
 
 impl<'a> DirListIter<'a> {
-	fn new(dir_path: String, filter: Option<&'a str>) -> Self {
+	pub(in crate::kernel) fn new(
+		dir_path: String,
+		filter: Option<&'a str>,
+	) -> Self {
 		Self {
 			dir_path: rtrim_backslash(&dir_path).to_owned(),
 			filter,
@@ -369,7 +372,7 @@ impl<'a> DirListIter<'a> {
 
 //------------------------------------------------------------------------------
 
-struct DirWalkIter<'a> {
+pub(in crate::kernel) struct DirWalkIter<'a> {
 	runner: DirListIter<'a>,
 	subdir_runner: Option<Box<DirWalkIter<'a>>>,
 	no_more: bool,
@@ -423,7 +426,7 @@ impl<'a> Iterator for DirWalkIter<'a> {
 }
 
 impl<'a> DirWalkIter<'a> {
-	fn new(dir_path: String) -> Self {
+	pub(in crate::kernel) fn new(dir_path: String) -> Self {
 		Self {
 			runner: DirListIter::new(dir_path, None),
 			subdir_runner: None,

@@ -286,7 +286,8 @@ pub fn EnumDisplayDevices(
 		// returned to signal the end of the loop, so we consider both.
 		// https://github.com/rodrigocfd/winsafe/issues/36
 		0 => match GetLastError() {
-			co::ERROR::PROC_NOT_FOUND | co::ERROR::ENVVAR_NOT_FOUND => Ok(false),
+			co::ERROR::PROC_NOT_FOUND
+				| co::ERROR::ENVVAR_NOT_FOUND => Ok(false),
 			err => Err(err), // actual error
 		},
 		_ => Ok(true),
