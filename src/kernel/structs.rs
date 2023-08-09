@@ -94,13 +94,18 @@ pub struct GUID {
 	data4: u64,
 }
 
-impl std::fmt::Display for GUID {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+impl std::fmt::Debug for GUID {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		write!(f, "{:08x}-{:04x}-{:04x}-{:04x}-{:012x}",
 			self.data1, self.data2, self.data3,
 			self.data4.swap_bytes() >> 48,
 			self.data4.swap_bytes() & 0x0000_ffff_ffff_ffff,
 		)
+	}
+}
+impl std::fmt::Display for GUID {
+	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+		<Self as std::fmt::Debug>::fmt(self, f) // delegate to Debug trait
 	}
 }
 

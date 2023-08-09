@@ -86,9 +86,14 @@ macro_rules! const_guid {
 			}
 		}
 
+		impl std::fmt::Debug for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+				write!(f, "{:?}", self.0)
+			}
+		}
 		impl std::fmt::Display for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-				self.0.fmt(f)
+				write!(f, "{}", self.0)
 			}
 		}
 
@@ -99,7 +104,6 @@ macro_rules! const_guid {
 			/// # Safety
 			///
 			/// Be sure the given value is meaningful for the actual type.
-			/// ```
 			#[must_use]
 			pub const unsafe fn from_raw(guid_str: &str) -> Self {
 				Self(crate::kernel::decl::GUID::new(guid_str))
