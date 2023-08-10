@@ -111,8 +111,8 @@ pub trait GuiThread: GuiParent {
 	/// use winsafe::{self as w, prelude::*, gui};
 	///
 	/// let wnd: gui::WindowMain; // initialized somewhere
-	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	/// let btn: gui::Button;
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	/// # let btn = gui::Button::new(&wnd, gui::ButtonOpts::default());
 	///
 	/// btn.on().bn_clicked({

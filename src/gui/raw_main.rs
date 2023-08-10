@@ -67,7 +67,8 @@ impl RawMain {
 	}
 
 	pub(in crate::gui) fn run_main(&self,
-		cmd_show: Option<co::SW>) -> AnyResult<i32>
+		cmd_show: Option<co::SW>,
+	) -> AnyResult<i32>
 	{
 		let opts = &self.0.opts;
 

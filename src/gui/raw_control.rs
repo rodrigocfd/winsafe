@@ -71,8 +71,7 @@ impl RawControl {
 	fn default_message_handlers(&self,
 		parent: &Base,
 		resize_behavior: (Horz, Vert),
-	)
-	{
+	) {
 		let self2 = self.clone();
 		parent.privileged_on().wm(parent.wm_create_or_initdialog(), move |_| {
 			let parent_ref = self2.0.raw_base.parent().unwrap();
