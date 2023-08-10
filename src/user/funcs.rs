@@ -261,7 +261,7 @@ pub fn EndMenu() -> SysResult<()> {
 ///
 /// // Closure with try_for_each
 /// w::EnumDisplayDevices(None, None)
-///     .try_for_each(|displ_dev| -> w::SysResult<_> {
+///     .try_for_each(|displ_dev| {
 ///         let displ_dev = displ_dev?;
 ///         println!("{} - {}",
 ///             displ_dev.DeviceName(), displ_dev.DeviceString());
@@ -270,7 +270,7 @@ pub fn EndMenu() -> SysResult<()> {
 ///
 /// // Collecting into a Vec
 /// let all = w::EnumDisplayDevices(None, None)
-///     .map(|displ_dev| -> w::SysResult<_> {
+///     .map(|displ_dev| {
 ///         let displ_dev = displ_dev?;
 ///         let name = format!("{} - {}",
 ///             displ_dev.DeviceName(), displ_dev.DeviceString());

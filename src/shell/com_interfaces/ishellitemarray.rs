@@ -74,11 +74,11 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	/// # let ish_arr = unsafe { w::IShellItemArray::null() };
 	///
 	/// let paths = ish_arr.iter()?
-	///     .map(|shi|
-	///         shi.and_then(|shi|
-	///             shi.GetDisplayName(co::SIGDN::FILESYSPATH),
-	///         ),
-	///     )
+	///     .map(|shi| {
+	///         let shi = shi?;
+	///         let name = shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;
+	///         Ok(name)
+	///     })
 	///     .collect::<w::HrResult<Vec<_>>>()?;
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```

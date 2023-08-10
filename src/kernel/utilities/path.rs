@@ -55,7 +55,7 @@ pub fn dir_list<'a>(
 ///
 /// // Closure with try_for_each
 /// w::path::dir_walk("C:\\Temp")
-///     .try_for_each(|file_path| -> w::SysResult<_> {
+///     .try_for_each(|file_path| {
 ///         let file_path = file_path?;
 ///         println!("{}", file_path);
 ///         Ok(())
@@ -67,7 +67,7 @@ pub fn dir_list<'a>(
 ///
 /// // Transforming and collecting into a Vec
 /// let all = w::path::dir_walk("C:\\Temp")
-///     .map(|file_path| -> w::SysResult<_> {
+///     .map(|file_path| {
 ///         let file_path = file_path?;
 ///         Ok(format!("PATH: {}", file_path))
 ///     })
