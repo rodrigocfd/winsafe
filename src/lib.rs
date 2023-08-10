@@ -25,7 +25,6 @@
 #[cfg(all(feature = "comctl", feature = "gdi"))] mod comctl_gdi;
 #[cfg(all(feature = "comctl", feature = "shell"))] mod comctl_shell;
 #[cfg(all(feature = "gdi", feature = "mf"))] mod gdi_mf;
-#[cfg(all(feature = "gdi", feature = "ole"))] mod gdi_ole;
 #[cfg(all(feature = "oleaut", feature = "shell"))] mod oleaut_shell;
 
 // The gui module itself is public.
@@ -332,7 +331,6 @@ pub mod prelude {
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::traits::*;
 	#[cfg(all(feature = "comctl", feature = "shell"))] pub use super::comctl_shell::traits::*;
 	#[cfg(all(feature = "gdi", feature = "mf"))] pub use super::gdi_mf::traits::*;
-	#[cfg(all(feature = "gdi", feature = "ole"))] pub use super::gdi_ole::traits::*;
 	#[cfg(all(feature = "oleaut", feature = "shell"))] pub use super::oleaut_shell::traits::*;
 }
 

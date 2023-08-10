@@ -486,6 +486,21 @@ pub trait gdi_Hdc: user_Hdc {
 		).map(|_| pt)
 	}
 
+	/// [`AtlHiMetricToPixel`](https://learn.microsoft.com/en-us/cpp/atl/reference/pixel-himetric-conversion-global-functions?view=msvc-170#atlhimetrictopixel)
+	/// function.
+	///
+	/// Converts HIMETRIC units to pixels. The inverse operation is
+	/// [`HDC::PixelToHiMetric`](crate::prelude::gdi_Hdc::PixelToHiMetric).
+	#[must_use]
+	fn HiMetricToPixel(&self, x: i32, y: i32) -> (i32, i32) {
+		// http://www.verycomputer.com/5_5f2f75dc2d090ee8_1.htm
+		// https://forums.codeguru.com/showthread.php?109554-Unresizable-activeX-control
+		(
+			MulDiv(x, self.GetDeviceCaps(co::GDC::LOGPIXELSX), HIMETRIC_PER_INCH),
+			MulDiv(y, self.GetDeviceCaps(co::GDC::LOGPIXELSY), HIMETRIC_PER_INCH),
+		)
+	}
+
 	/// [`LineTo`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-lineto)
 	/// function.
 	fn LineTo(&self, x: i32, y: i32) -> SysResult<()> {
@@ -545,6 +560,19 @@ pub trait gdi_Hdc: user_Hdc {
 					radial_2.y, radial_2.y,
 				)
 			},
+		)
+	}
+
+	/// [`AtlPixelToHiMetric`](https://learn.microsoft.com/en-us/cpp/atl/reference/pixel-himetric-conversion-global-functions?view=msvc-170#atlpixeltohimetric)
+	/// function.
+	///
+	/// Converts pixels to HIMETRIC units. The inverse operation is
+	/// [`HDC::HiMetricToPixel`](crate::prelude::gdi_Hdc::HiMetricToPixel).
+	#[must_use]
+	fn PixelToHiMetric(&self, x: i32, y: i32) -> (i32, i32) {
+		(
+			MulDiv(x, HIMETRIC_PER_INCH, self.GetDeviceCaps(co::GDC::LOGPIXELSX)),
+			MulDiv(y, HIMETRIC_PER_INCH, self.GetDeviceCaps(co::GDC::LOGPIXELSY)),
 		)
 	}
 
