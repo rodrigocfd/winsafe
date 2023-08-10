@@ -146,6 +146,28 @@ const_ordinary! { FDAP: u32;
 	TOP 1
 }
 
+const_bitflag! { GPS: u32;
+	/// [`GETPROPERTYSTOREFLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/ne-propsys-getpropertystoreflags)
+	/// enumeration (`u32`).
+	=>
+	=>
+	DEFAULT 0
+	HANDLERPROPERTIESONLY 0x1
+	READWRITE 0x2
+	TEMPORARY 0x4
+	FASTPROPERTIESONLY 0x8
+	OPENSLOWITEM 0x10
+	DELAYCREATION 0x20
+	BESTEFFORT 0x40
+	NO_OPLOCK 0x80
+	PREFERQUERYPROPERTIES 0x100
+	EXTRINSICPROPERTIES 0x200
+	EXTRINSICPROPERTIESONLY 0x400
+	VOLATILEPROPERTIES 0x800
+	VOLATILEPROPERTIESONLY 0x1000
+	MASK_VALID 0x1fff
+}
+
 const_bitflag! { KF: u32;
 	/// [`KNOWN_FOLDER_FLAG`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/ne-shlobj_core-known_folder_flag)
 	/// enumeration (`u32`).
