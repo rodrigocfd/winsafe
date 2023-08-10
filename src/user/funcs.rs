@@ -4,7 +4,7 @@ use crate::co;
 use crate::decl::*;
 use crate::kernel::{ffi_types::*, privs::*};
 use crate::prelude::*;
-use crate::user::{ffi, privs::*};
+use crate::user::{ffi, iterators::*, privs::*};
 
 /// [`AdjustWindowRectEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)
 /// function.
@@ -245,53 +245,47 @@ pub fn EndMenu() -> SysResult<()> {
 /// [`EnumDisplayDevices`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaydevicesw)
 /// function.
 ///
+/// Returns an iterator over [`DISPLAY_DEVICE`](crate::DISPLAY_DEVICE) elements.
+///
 /// # Examples
 ///
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
 ///
-/// let mut dide = w::DISPLAY_DEVICE::default();
-/// let mut dev_num = u32::default();
-///
-/// loop {
-///     let is_good = w::EnumDisplayDevices(None, dev_num, &mut dide, None)?;
-///
-///     if !is_good {
-///         break;
-///     }
-///
-///     println!("{}: {} - {}",
-///         dev_num, dide.DeviceName(), dide.DeviceString());
-///
-///     dev_num += 1; // advance to next display device
+/// // Ordinary for loop
+/// for displ_dev in w::EnumDisplayDevices(None, None) {
+///     let displ_dev = displ_dev?;
+///     println!("{} - {}",
+///         displ_dev.DeviceName(), displ_dev.DeviceString());
 /// }
+///
+/// // Closure with try_for_each
+/// w::EnumDisplayDevices(None, None)
+///     .try_for_each(|displ_dev| -> w::SysResult<_> {
+///         let displ_dev = displ_dev?;
+///         println!("{} - {}",
+///             displ_dev.DeviceName(), displ_dev.DeviceString());
+///         Ok(())
+///     })?;
+///
+/// // Collecting into a Vec
+/// let all = w::EnumDisplayDevices(None, None)
+///     .map(|displ_dev| -> w::SysResult<_> {
+///         let displ_dev = displ_dev?;
+///         let name = format!("{} - {}",
+///             displ_dev.DeviceName(), displ_dev.DeviceString());
+///         Ok(name)
+///     })
+///     .collect::<w::SysResult<Vec<_>>>()?;
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
+#[must_use]
 pub fn EnumDisplayDevices(
 	device_name: Option<&str>,
-	device_num: u32,
-	display_device: &mut DISPLAY_DEVICE,
 	flags: Option<co::EDD>,
-) -> SysResult<bool>
+) -> impl Iterator<Item = SysResult<&'_ DISPLAY_DEVICE>>
 {
-	match unsafe {
-		ffi::EnumDisplayDevicesW(
-			WString::from_opt_str(device_name).as_ptr(),
-			device_num,
-			display_device as *mut _ as _,
-			flags.unwrap_or_default().raw(),
-		)
-	} {
-		// Empirical tests have shown that two different error codes can be
-		// returned to signal the end of the loop, so we consider both.
-		// https://github.com/rodrigocfd/winsafe/issues/36
-		0 => match GetLastError() {
-			co::ERROR::PROC_NOT_FOUND
-				| co::ERROR::ENVVAR_NOT_FOUND => Ok(false),
-			err => Err(err), // actual error
-		},
-		_ => Ok(true),
-	}
+	EnumdisplaydevicesIter::new(device_name, flags)
 }
 
 /// [`EnumDisplaySettings`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumdisplaysettingsw)

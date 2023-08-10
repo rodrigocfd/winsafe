@@ -8,6 +8,7 @@ mod structs;
 mod msg_traits;
 
 pub(in crate::user) mod ffi;
+pub(in crate::user) mod iterators;
 pub(crate) mod privs;
 pub mod co;
 pub mod guard;
