@@ -32,8 +32,6 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 	/// )?;
 	///
 	/// himgl.add_icon_from_shell(&["mp3", "wav"])?;
-	///
-	/// himgl.Destroy()?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	fn add_icon_from_shell(&self,

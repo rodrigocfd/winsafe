@@ -131,6 +131,8 @@ pub trait comctl_Himagelist: Handle {
 	///     1,
 	///     1,
 	/// )?;
+	///
+	/// // ImageList_Destroy() automatically called
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
@@ -151,20 +153,6 @@ pub trait comctl_Himagelist: Handle {
 				)
 			).map(|h| ImageListDestroyGuard::new(h))
 		}
-	}
-
-	/// [`ImageList_Destroy`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_destroy)
-	/// function.
-	///
-	/// After calling this method, the handle will be invalidated and further
-	/// operations will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
-	fn Destroy(&mut self) -> SysResult<()> {
-		let ret = bool_to_sysresult(
-			unsafe { ffi::ImageList_Destroy(self.ptr()) },
-		);
-		*self = Self::INVALID;
-		ret
 	}
 
 	/// [`ImageList_DragMove`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragmove)
