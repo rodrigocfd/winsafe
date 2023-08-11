@@ -6,6 +6,28 @@ use crate::mf::{ffi, privs::*};
 use crate::ole::privs::*;
 use crate::prelude::*;
 
+/// [`MFCreateAsyncResult`](https://learn.microsoft.com/en-us/windows/win32/api/mfapi/nf-mfapi-mfcreateasyncresult)
+/// function.
+#[must_use]
+pub fn MFCreateAsyncResult(
+	object: Option<&impl ole_IUnknown>,
+	callback: &impl mf_IMFAsyncCallback,
+	state: Option<&impl ole_IUnknown>,
+) -> HrResult<IMFAsyncResult>
+{
+	let mut queried = unsafe { IMFAsyncResult::null() };
+	ok_to_hrresult(
+		unsafe {
+			ffi::MFCreateAsyncResult(
+				object.map_or(std::ptr::null_mut(), |o| o.ptr()),
+				callback.ptr(),
+				state.map_or(std::ptr::null_mut(), |s| s.ptr()),
+				queried.as_mut(),
+			)
+		},
+	).map(|_| queried)
+}
+
 /// [`MFCreateMediaSession`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-mfcreatemediasession)
 /// function.
 ///

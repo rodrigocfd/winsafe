@@ -1,4 +1,5 @@
 mod imfasynccallback;
+mod imfasyncresult;
 mod imfattributes;
 mod imfgetservice;
 mod imfmediaeventgenerator;
@@ -12,6 +13,7 @@ mod imfvideodisplaycontrol;
 
 pub mod decl {
 	pub use super::imfasynccallback::IMFAsyncCallback;
+	pub use super::imfasyncresult::IMFAsyncResult;
 	pub use super::imfattributes::IMFAttributes;
 	pub use super::imfgetservice::IMFGetService;
 	pub use super::imfmediaeventgenerator::IMFMediaEventGenerator;
@@ -26,6 +28,7 @@ pub mod decl {
 
 pub mod traits {
 	pub use super::imfasynccallback::mf_IMFAsyncCallback;
+	pub use super::imfasyncresult::mf_IMFAsyncResult;
 	pub use super::imfattributes::mf_IMFAttributes;
 	pub use super::imfgetservice::mf_IMFGetService;
 	pub use super::imfmediaeventgenerator::mf_IMFMediaEventGenerator;
@@ -40,6 +43,7 @@ pub mod traits {
 
 pub mod vt {
 	pub use super::imfasynccallback::IMFAsyncCallbackVT;
+	pub use super::imfasyncresult::IMFAsyncResultVT;
 	pub use super::imfattributes::IMFAttributesVT;
 	pub use super::imfgetservice::IMFGetServiceVT;
 	pub use super::imfmediaeventgenerator::IMFMediaEventGeneratorVT;

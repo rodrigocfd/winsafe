@@ -53,4 +53,17 @@ pub trait mf_IMFAsyncCallback: ole_IUnknown {
 			},
 		).map(|_| (flags, queue))
 	}
+
+	/// [`IMFAsyncCallback::Invoke`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasynccallback-invoke)
+	/// method.
+	fn Invoke(&self, async_result: &impl mf_IMFAsyncResult) -> HrResult<()> {
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFAsyncCallbackVT>(self).Invoke)(
+					self.ptr(),
+					async_result.ptr(),
+				)
+			},
+		)
+	}
 }
