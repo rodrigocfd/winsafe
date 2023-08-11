@@ -4,6 +4,7 @@ mod idxgidevicesubobject;
 mod idxgifactory;
 mod idxgiobject;
 mod idxgioutput;
+mod idxgisurface;
 
 pub mod decl {
 	pub use super::idxgiadapter::IDXGIAdapter;
@@ -12,6 +13,7 @@ pub mod decl {
 	pub use super::idxgifactory::IDXGIFactory;
 	pub use super::idxgiobject::IDXGIObject;
 	pub use super::idxgioutput::IDXGIOutput;
+	pub use super::idxgisurface::IDXGISurface;
 }
 
 pub mod traits {
@@ -21,6 +23,7 @@ pub mod traits {
 	pub use super::idxgifactory::dxgi_IDXGIFactory;
 	pub use super::idxgiobject::dxgi_IDXGIObject;
 	pub use super::idxgioutput::dxgi_IDXGIOutput;
+	pub use super::idxgisurface::dxgi_IDXGISurface;
 }
 
 pub mod vt {
@@ -30,4 +33,5 @@ pub mod vt {
 	pub use super::idxgifactory::IDXGIFactoryVT;
 	pub use super::idxgiobject::IDXGIObjectVT;
 	pub use super::idxgioutput::IDXGIOutputVT;
+	pub use super::idxgisurface::IDXGISurfaceVT;
 }

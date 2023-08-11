@@ -64,7 +64,7 @@ pub trait ole_IPicture: ole_IUnknown {
 	///
 	/// **Note:** Returns a value in HIMETRIC units. To convert it to pixels,
 	/// use
-	/// [`HDC::HiMetricToPixel`](crate::prelude::gdi_ole_Hdc::HiMetricToPixel).
+	/// [`HDC::HiMetricToPixel`](crate::prelude::gdi_Hdc::HiMetricToPixel).
 	///
 	/// # Examples
 	///
@@ -103,7 +103,7 @@ pub trait ole_IPicture: ole_IUnknown {
 	///
 	/// **Note:** Returns a value in HIMETRIC units. To convert it to pixels,
 	/// use
-	/// [`HDC::HiMetricToPixel`](crate::prelude::gdi_ole_Hdc::HiMetricToPixel).
+	/// [`HDC::HiMetricToPixel`](crate::prelude::gdi_Hdc::HiMetricToPixel).
 	///
 	/// # Examples
 	///

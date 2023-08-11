@@ -125,6 +125,17 @@ pub struct DXGI_SAMPLE_DESC {
 	pub Quality: u32,
 }
 
+/// [`DXGI_SURFACE_DESC`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_surface_desc)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
+pub struct DXGI_SURFACE_DESC {
+	pub Width: u32,
+	pub Height: u32,
+	pub Format: co::DXGI_FORMAT,
+	pub SampleDesc: DXGI_SAMPLE_DESC,
+}
+
 /// [`DXGI_SWAP_CHAIN_DESC`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_swap_chain_desc)
 /// struct.
 #[repr(C)]

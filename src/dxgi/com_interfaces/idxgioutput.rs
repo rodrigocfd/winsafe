@@ -117,6 +117,21 @@ pub trait dxgi_IDXGIOutput: dxgi_IDXGIObject {
 		).map(|_| modes)
 	}
 
+	/// [`IDXGIOutput::GetDisplaySurfaceData`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgioutput-getdisplaysurfacedata)
+	/// method.
+	fn GetDisplaySurfaceData(&self,
+		destination: &impl dxgi_IDXGISurface,
+	) -> HrResult<()> {
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGIOutputVT>(self).GetDisplaySurfaceData)(
+					self.ptr(),
+					destination.ptr(),
+				)
+			},
+		)
+	}
+
 	/// [`IDXGIOutput::GetFrameStatistics`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgioutput-getframestatistics)
 	/// method.
 	#[must_use]
@@ -168,6 +183,22 @@ pub trait dxgi_IDXGIOutput: dxgi_IDXGIObject {
 	/// method.
 	fn ReleaseOwnership(&self) {
 		unsafe { (vt::<IDXGIOutputVT>(self).ReleaseOwnership)(self.ptr()) };
+	}
+
+	/// [`IDXGIOutput::SetDisplaySurface`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgioutput-setdisplaysurface)
+	/// method.
+	fn SetDisplaySurface(&self,
+		scanout_surface: &impl dxgi_IDXGISurface,
+	) -> HrResult<()>
+	{
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGIOutputVT>(self).SetDisplaySurface)(
+					self.ptr(),
+					scanout_surface.ptr(),
+				)
+			},
+		)
 	}
 
 	/// [`IDXGIOutput::SetGammaControl`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgioutput-setgammacontrol)
