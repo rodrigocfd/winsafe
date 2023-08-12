@@ -9,6 +9,7 @@ use crate::ole::privs::*;
 use crate::prelude::*;
 use crate::vt::*;
 
+/// [`IMFAsyncResult`](crate::IMFAsyncResult) virtual table.
 #[repr(C)]
 pub struct IMFAsyncResultVT {
 	pub IUnknownVT: IUnknownVT,

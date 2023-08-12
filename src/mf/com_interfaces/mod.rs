@@ -2,6 +2,7 @@ mod imfasynccallback;
 mod imfasyncresult;
 mod imfattributes;
 mod imfgetservice;
+mod imfmediaevent;
 mod imfmediaeventgenerator;
 mod imfmediasession;
 mod imfmediasource;
@@ -16,6 +17,7 @@ pub mod decl {
 	pub use super::imfasyncresult::IMFAsyncResult;
 	pub use super::imfattributes::IMFAttributes;
 	pub use super::imfgetservice::IMFGetService;
+	pub use super::imfmediaevent::IMFMediaEvent;
 	pub use super::imfmediaeventgenerator::IMFMediaEventGenerator;
 	pub use super::imfmediasession::IMFMediaSession;
 	pub use super::imfmediasource::IMFMediaSource;
@@ -31,6 +33,7 @@ pub mod traits {
 	pub use super::imfasyncresult::mf_IMFAsyncResult;
 	pub use super::imfattributes::mf_IMFAttributes;
 	pub use super::imfgetservice::mf_IMFGetService;
+	pub use super::imfmediaevent::mf_IMFMediaEvent;
 	pub use super::imfmediaeventgenerator::mf_IMFMediaEventGenerator;
 	pub use super::imfmediasession::mf_IMFMediaSession;
 	pub use super::imfmediasource::mf_IMFMediaSource;
@@ -46,6 +49,7 @@ pub mod vt {
 	pub use super::imfasyncresult::IMFAsyncResultVT;
 	pub use super::imfattributes::IMFAttributesVT;
 	pub use super::imfgetservice::IMFGetServiceVT;
+	pub use super::imfmediaevent::IMFMediaEventVT;
 	pub use super::imfmediaeventgenerator::IMFMediaEventGeneratorVT;
 	pub use super::imfmediasession::IMFMediaSessionVT;
 	pub use super::imfmediasource::IMFMediaSourceVT;
