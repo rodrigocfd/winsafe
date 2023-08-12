@@ -45,7 +45,7 @@ impl Stats {
 
 		w::path::dir_walk(target)
 			.enumerate()
-			.try_for_each(|(idx, path)| -> w::SysResult<_> {
+			.try_for_each(|(idx, path)| {
 				let path = path?;
 				if w::path::has_extension(&path, &[".rs"]) && !path.ends_with("lib.rs") {
 					let contents = {
@@ -167,7 +167,12 @@ impl Stats {
 				} else {
 					if line.starts_with("}") {
 						inside_block = false;
-					} else if line.starts_with("\tfn ") {
+					} else if line.starts_with("\tfn ") ||
+						line.starts_with("\tfn_com_noparm!") ||
+						line.starts_with("\tfn_com_interface_get!") ||
+						line.starts_with("\tfn_com_bstr_get!") ||
+						line.starts_with("\tfn_com_bstr_set!") {
+
 						self.com_methods += 1;
 					}
 				}
