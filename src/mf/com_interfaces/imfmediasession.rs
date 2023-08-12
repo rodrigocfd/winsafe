@@ -84,6 +84,21 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 		).map(|_| queried)
 	}
 
+	/// [`IMFMediaSession::GetSessionCapabilities`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfmediasession-getsessioncapabilities)
+	/// method.
+	#[must_use]
+	fn GetSessionCapabilities(&self) -> HrResult<co::MFSESSIONCAP> {
+		let mut caps = co::MFSESSIONCAP::default();
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFMediaSessionVT>(self).GetSessionCapabilities)(
+					self.ptr(),
+					caps.as_mut(),
+				)
+			},
+		).map(|_| caps)
+	}
+
 	fn_com_noparm! { Pause: IMFMediaSessionVT;
 		/// [`IMFMediaSession::Pause`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfmediasession-pause)
 		/// method.

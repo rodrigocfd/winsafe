@@ -191,6 +191,19 @@ const_bitflag! { MFSESSION_SETTOPOLOGY: u32;
 	CLEAR_CURRENT 0x4
 }
 
+const_bitflag! { MFSESSIONCAP: u32;
+	/// [`IMFMediaSession::GetSessionCapabilities`](crate::prelude::mf_IMFMediaSession::GetSessionCapabilities)
+	/// `caps` ([`u32`]).
+	=>
+	=>
+	START 0x0000_0001
+	SEEK 0x0000_0002
+	PAUSE 0x0000_0004
+	RATE_FORWARD 0x0000_0010
+	RATE_REVERSE 0x0000_0020
+	DOES_NOT_USE_NETWORK 0x0000_0040
+}
+
 const_ordinary! { MFSTARTUP: u32;
 	/// [`MFStartup`](crate::MFStartup) `flags` ([`u32`]).
 	=>
