@@ -28,7 +28,7 @@ impl Stats {
 	fn fmt_thou(n: usize) -> String {
 		let thou = (n - (n % 1000)) / 1000;
 		if thou > 0 {
-			format!("{},{}", thou, n % 1000)
+			format!("{},{:03}", thou, n % 1000)
 		} else {
 			n.to_string()
 		}
