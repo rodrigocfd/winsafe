@@ -204,6 +204,19 @@ const_ordinary! { DRIVE: u32;
 	RAMDISK 6
 }
 
+const_ordinary! { EVENTLOG: u16;
+	/// [`HEVENTLOG::ReportEvent`](crate::prelude::kernel_Heventlog::ReportEvent)
+	/// `event_type` [`u16`].
+	=>
+	=>
+	SUCCESS 0x0000
+	AUDIT_FAILURE 0x0010
+	AUDIT_SUCCESS 0x0008
+	ERROR_TYPE 0x0001
+	INFORMATION_TYPE 0x0004
+	WARNING_TYPE 0x0002
+}
+
 const_bitflag! { FILE_ATTRIBUTE: u32;
 	/// File
 	/// [attributes](https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants)

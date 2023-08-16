@@ -10,6 +10,7 @@ extern_sys! { "advapi32";
 	CopySid(u32, PVOID, PCVOID) -> BOOL
 	CreateWellKnownSid(u32, PCVOID, PVOID, *mut u32) -> BOOL
 	DecryptFileW(PCSTR, u32) -> BOOL
+	DeregisterEventSource(HANDLE) -> BOOL
 	DuplicateToken(HANDLE, u32, *mut HANDLE) -> BOOL
 	EncryptFileW(PCSTR) -> BOOL
 	EncryptionDisable(PCSTR, BOOL) -> BOOL
@@ -55,6 +56,7 @@ extern_sys! { "advapi32";
 	RegEnumValueW(HANDLE, u32, PSTR, *mut u32, *mut u32, *mut u32, *mut u8, *mut u32) -> i32
 	RegFlushKey(HANDLE) -> i32
 	RegGetValueW(HANDLE, PCSTR, PCSTR, u32, *mut u32, PVOID, *mut u32) -> i32
+	RegisterEventSourceW(PCSTR, PCSTR) -> HANDLE
 	RegLoadKeyW(HANDLE, PCSTR, PCSTR) -> i32
 	RegOpenCurrentUser(u32, *mut HANDLE) -> i32
 	RegOpenKeyExW(HANDLE, PCSTR, u32, u32, *mut HANDLE) -> i32
@@ -71,6 +73,7 @@ extern_sys! { "advapi32";
 	RegSetKeyValueW(HANDLE, PCSTR, PCSTR, u32, PCVOID, u32) -> i32
 	RegSetValueExW(HANDLE, PCSTR, u32, u32, *const u8, u32) -> i32
 	RegUnLoadKeyW(HANDLE, PCSTR) -> i32
+	ReportEventW(HANDLE, u16, u16, u32, PCVOID, u16, u32, *const PCSTR, PCVOID) -> BOOL
 }
 
 extern_sys! { "kernel32";

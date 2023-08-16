@@ -68,7 +68,8 @@ pub trait kernel_Haccesstoken: Handle {
 	/// function.
 	#[must_use]
 	fn CheckTokenCapability(&self,
-		capability_sid_to_check: &SID) -> SysResult<bool>
+		capability_sid_to_check: &SID,
+	) -> SysResult<bool>
 	{
 		let mut has_capability: BOOL = 0;
 		bool_to_sysresult(

@@ -1,5 +1,6 @@
 mod haccesstoken;
 mod handle_traits;
+mod heventlog;
 mod hfile;
 mod hfilemap;
 mod hfilemapview;
@@ -19,6 +20,7 @@ mod hupdatesrc;
 
 pub mod decl {
 	pub use super::haccesstoken::HACCESSTOKEN;
+	pub use super::heventlog::HEVENTLOG;
 	pub use super::hfile::HFILE;
 	pub use super::hfilemap::HFILEMAP;
 	pub use super::hfilemapview::HFILEMAPVIEW;
@@ -64,6 +66,7 @@ pub mod decl {
 pub mod traits {
 	pub use super::haccesstoken::kernel_Haccesstoken;
 	pub use super::handle_traits::*;
+	pub use super::heventlog::kernel_Heventlog;
 	pub use super::hfile::kernel_Hfile;
 	pub use super::hfilemap::kernel_Hfilemap;
 	pub use super::hfilemapview::kernel_Hfilemapview;

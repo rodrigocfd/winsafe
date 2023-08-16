@@ -139,6 +139,16 @@ impl CloseHandlePiGuard {
 
 //------------------------------------------------------------------------------
 
+handle_guard! { DeregisterEventSourceGuard: HEVENTLOG;
+	ffi::DeregisterEventSource;
+	/// RAII implementation for [`HEVENTLOG`](crate::HEVENTLOG) which
+	/// automatically calls
+	/// [`DeregisterEventSource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-deregistereventsource)
+	/// when the object goes out of scope.
+}
+
+//------------------------------------------------------------------------------
+
 /// RAII implementation [`HUPDATERSRC`](crate::HUPDATERSRC) which automatically
 /// calls
 /// [`EndUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
