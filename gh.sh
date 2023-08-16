@@ -2,33 +2,39 @@
 # which must be in the $GHP directory.
 # https://gist.github.com/rodrigocfd/3a0f3370817ec5c8c3d2ec6e516ae86b
 
+set -e
+
+BLUE='\033[0;34m'
+PURP='\033[0;35m'
+NC='\033[0m'
+
 T0=$(date +%s%N)
 
 GHP=../gh-pages-winsafe # target gh-pages repo folder
 
-echo '> Generating docs locally...'
+echo -e "${BLUE}Generating docs locally...${NC}"
 RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc --all-features
 
-echo '> Removing previous HTML files...'
+echo -e "${BLUE}Removing previous HTML files...${NC}"
 cd $GHP
 git rm -r .
 
-echo '> Moving generated HTML files...'
+echo -e "${BLUE}Moving generated HTML files...${NC}"
 cd -
 mv ./target/doc/* $GHP/.
 
-echo '> Performing git add...'
+echo -e "${BLUE}Performing git add...${NC}"
 cd -
 git add .
 
-echo '> Committing changes...'
+echo -e "${BLUE}Committing changes...${NC}"
 dtt=$(date '+%Y-%m-%d %H:%M:%S')
 git commit -m "Cargo doc auto deployment $dtt."
 
-echo '> Pushing changes to remote...'
+echo -e "${BLUE}Pushing changes to remote...${NC}"
 git push
 
-echo '> Updating local repo...'
+echo -e "${BLUE}Updating local repo...${NC}"
 cd -
 git pull
 
@@ -37,8 +43,6 @@ print_elapsed () {
 	SEC=$(( ($TF - ($MIN * 1000 * 60) - ($1 % 1000)) / 1000 ))
 	MS=$(( $1 % 1000 ))
 
-	PURP='\033[0;35m'
-	NC='\033[0m'
 	if (($MIN > 0)); then
 		printf "${PURP}Duration${NC} %02d:%02d.%03d min\n" $MIN $SEC $MS
 	else
