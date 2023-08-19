@@ -63,6 +63,11 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 		/// method.
 	}
 
+	fn_com_interface_get! { GetClock: IMFMediaSessionVT, IMFClock;
+		/// [`IMFMediaSession::GetClock`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfmediasession-getclock)
+		/// method.
+	}
+
 	/// [`IMFMediaSession::GetFullTopology`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfmediasession-getfulltopology)
 	/// method.
 	#[must_use]

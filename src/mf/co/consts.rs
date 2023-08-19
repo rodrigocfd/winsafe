@@ -158,6 +158,37 @@ const_bitflag! { MFASYNC: u32;
 	REPLY_CALLBACK 0x0000_0008
 }
 
+const_bitflag! { MFCLOCK_CHARACTERISTICS_FLAG: u32;
+	/// [`MFCLOCK_CHARACTERISTICS_FLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfclock_characteristics_flags)
+	/// enumeration ([`u32`]).
+	=>
+	=>
+	FREQUENCY_10MHZ 0x2
+	ALWAYS_RUNNING 0x4
+	IS_SYSTEM_CLOCK 0x8
+}
+
+const_bitflag! { MFCLOCK_RELATIONAL_FLAG: u32;
+	/// [`MFCLOCK_RELATIONAL_FLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfclock_relational_flags)
+	/// enumeration ([`u32`]).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	JITTER_NEVER_AHEAD 0x1
+}
+
+const_ordinary! { MFCLOCK_STATE: u32;
+	/// [`MFCLOCK_STATE`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfclock_state)
+	/// enumeration ([`u32`]).
+	=>
+	=>
+	INVALID 0
+	RUNNING 1
+	STOPPED 2
+	PAUSED 3
+}
+
 const_bitflag! { MFMEDIASOURCE: u32;
 	/// [`MFMEDIASOURCE_CHARACTERISTICS`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfmediasource_characteristics)
 	/// enumeration ([`u32`]).

@@ -1,3 +1,21 @@
+#![allow(non_camel_case_types, non_snake_case)]
+
+use crate::co;
+use crate::decl::*;
+
+/// [`MFCLOCK_PROPERTIES`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ns-mfidl-mfclock_properties)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Copy)]
+pub struct MFCLOCK_PROPERTIES {
+	pub qwCorrelationRate: u64,
+	pub guidClockId: GUID,
+	pub dwClockFlags: co::MFCLOCK_RELATIONAL_FLAG,
+	pub qwClockFrequency: u64,
+	pub dwClockTolerance: u32,
+	pub dwClockJitter: u32,
+}
+
 /// [`MFVideoNormalizedRect`](https://learn.microsoft.com/en-us/windows/win32/api/evr/ns-evr-mfvideonormalizedrect)
 /// struct.
 #[repr(C)]
