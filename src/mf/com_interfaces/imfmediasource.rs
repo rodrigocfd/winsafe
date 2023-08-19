@@ -70,6 +70,26 @@ pub trait mf_IMFMediaSource: mf_IMFMediaEventGenerator {
 		/// method.
 	}
 
+	/// [`IMFMediaSource::Start`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfmediasource-start)
+	/// method.
+	fn Start(&self,
+		presentation_descriptor: IMFPresentationDescriptor,
+		time_format: Option<&GUID>,
+		start_position: Option<&PROPVARIANT>,
+	) -> HrResult<()>
+	{
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFMediaSourceVT>(self).Start)(
+					self.ptr(),
+					presentation_descriptor.ptr(),
+					time_format.unwrap_or(&GUID::default()) as *const _ as _,
+					start_position.unwrap_or(&PROPVARIANT::default()) as *const _ as _,
+				)
+			},
+		)
+	}
+
 	fn_com_noparm! { Stop: IMFMediaSourceVT;
 		/// [`IMFMediaSource::Stop`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfmediasource-stop)
 		/// method.

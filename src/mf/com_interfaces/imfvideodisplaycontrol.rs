@@ -234,12 +234,30 @@ pub trait mf_IMFVideoDisplayControl: ole_IUnknown {
 		)
 	}
 
+	/// [`IMFVideoDisplayControl::SetRenderingPrefs`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setrenderingprefs)
+	/// method.
+	fn SetRenderingPrefs(&self,
+		render_flags: co::MFVideoRenderPrefs,
+	) -> HrResult<()>
+	{
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFVideoDisplayControlVT>(self).SetRenderingPrefs)(
+					self.ptr(),
+					render_flags.raw(),
+				)
+			},
+		)
+	}
+
 	/// [`IMFVideoDisplayControl::SetVideoPosition`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-setvideoposition)
 	/// method.
 	///
 	/// At least one parameter must be passed.
 	fn SetVideoPosition(&self,
-		src: Option<MFVideoNormalizedRect>, dest: Option<RECT>) -> HrResult<()>
+		src: Option<MFVideoNormalizedRect>,
+		dest: Option<RECT>,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {

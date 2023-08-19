@@ -254,3 +254,19 @@ const_ordinary! { MFVideoARMode: u32;
 	PreservePixel 0x2
 	NonLinearStretch 0x4
 }
+
+const_bitflag! { MFVideoRenderPrefs: u32;
+	/// [`MFVideoRenderPrefs`](https://learn.microsoft.com/en-us/windows/win32/api/evr/ne-evr-mfvideorenderprefs)
+	/// enumeration ([`u32`]).
+	=>
+	=>
+	DoNotRenderBorder 0x1
+	DoNotClipToDevice 0x2
+	AllowOutputThrottling 0x4
+	ForceOutputThrottling 0x8
+	ForceBatching 0x10
+	AllowBatching 0x20
+	ForceScaling 0x40
+	AllowScaling 0x80
+	DoNotRepaintOnStop 0x100
+}
