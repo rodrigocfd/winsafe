@@ -21,14 +21,7 @@ WinSafe documentation:
 
 ## Current status
 
-These are the estimated progresses of the GUI features:
-
-| GUI feature | Estimated progress |
-| - | - |
-| User window/dialogs (main, modal, modeless and control) | 100% |
-| Native controls | 85% |
-
-Plus, below are the numbers of native FFI items implemented:
+Native FFI items implemented:
 
 | Native FFI item | Count |
 | - | - |
@@ -39,6 +32,11 @@ Plus, below are the numbers of native FFI items implemented:
 | Handles | 41 |
 | COM interfaces | 77 |
 | COM methods | 411 |
+
+High-level GUI controls:
+
+* User custom window/dialog – main, modal, modeless, control.
+* Native controls – button, check box, combo box, date and time picker, edit, label, list box, list view, month calendar, progress bar, radio button, status bar, tab, track bar, tree view, up down.
 
 ## Usage
 
