@@ -994,7 +994,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`TextOut`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-textoutw)
 	/// function.
 	fn TextOut(&self, x: i32, y: i32, text: &str) -> SysResult<()> {
-        let output = WString::from_str(text);
+		let output = WString::from_str(text);
 		bool_to_sysresult(
 			unsafe {
 				ffi::TextOutW(

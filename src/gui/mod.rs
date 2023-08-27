@@ -4,7 +4,7 @@
 //! [resource editor](https://en.wikipedia.org/wiki/Resource_(Windows)#Resource_software).
 //!
 //! You'll probably want to start your GUI application using the
-//! [`WindowMain`](crate::gui::WindowMain).
+//! [`WindowMain`].
 
 #![cfg(feature = "gui")]
 

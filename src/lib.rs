@@ -61,8 +61,7 @@ pub mod co {
 	//! [`NativeBitflag`](crate::prelude::NativeBitflag).
 	//!
 	//! Among these constant types, three are error types:
-	//! [`CDERR`](crate::co::CDERR), [`ERROR`](crate::co::ERROR) and
-	//! [`HRESULT`](crate::co::HRESULT).
+	//! [`CDERR`], [`ERROR`] and [`HRESULT`].
 
 	#[cfg(feature = "comctl")] pub use super::comctl::co::*;
 	#[cfg(feature = "dshow")] pub use super::dshow::co::*;
@@ -101,10 +100,9 @@ pub mod msg {
 	//! Parameters of
 	//! [window messages](https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
 	//!
-	//! [`WndMsg`](crate::msg::WndMsg) is the generic message, with `WPARAM` and
-	//! `LPARAM` fields. Other messages belong to a module according to its
-	//! prefix, for example, [`BM_CLICK`](crate::msg::bm::Click) can be found in
-	//! [`bm`](crate::msg::bm) module.
+	//! [`WndMsg`] is the generic message, with `WPARAM` and `LPARAM` fields.
+	//! Other messages belong to a module according to its prefix, for example,
+	//! [`BM_CLICK`](crate::msg::bm::Click) can be found in [`bm`] module.
 	//!
 	//! # Examples
 	//!
@@ -132,8 +130,7 @@ pub mod msg {
 	//! ```
 	//!
 	//! Messages are organized into modules according to their prefixes:
-	//! [`wm`](crate::msg::wm) (window messages), [`lvm`](crate::msg::lvm) (list
-	//! view messages), and so on.
+	//! [`wm`] (window messages), [`lvm`] (list view messages), and so on.
 
 	pub use super::user::messages::WndMsg;
 
