@@ -220,6 +220,18 @@ impl WString {
 		unsafe { ffi::lstrlenW(self.buf.as_ptr()) as _ }
 	}
 
+	/// Converts the string to lower case, in-place. Wrapper to
+	/// [`CharLower`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-charlowerw).
+	pub fn make_lowercase(&mut self) {
+		unsafe { ffi::CharLowerW(self.as_mut_ptr()); }
+	}
+
+	/// Converts the string to upper case, in-place. Wrapper to
+	/// [`CharUpper`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-charupperw).
+	pub fn make_uppercase(&mut self) {
+		unsafe { ffi::CharUpperW(self.as_mut_ptr()); }
+	}
+
 	/// Guesses the encoding with [`Encoding::guess`](crate::Encoding::guess)
 	/// and parses the data as a string.
 	///

@@ -260,3 +260,9 @@ extern_sys! { "ktmw32";
 	OpenTransaction(u32, PVOID) -> HANDLE
 	RollbackTransaction(HANDLE) -> BOOL
 }
+
+// This block should really be kernel.
+extern_sys! { "user32";
+	CharLowerW(PSTR) -> PSTR
+	CharUpperW(PSTR) -> PSTR
+}
