@@ -31,6 +31,26 @@ impl std::fmt::Debug for WString {
 	}
 }
 
+impl PartialEq for WString {
+	fn eq(&self, other: &Self) -> bool {
+		<Buffer as PartialEq>::eq(&self.buf, &other.buf)
+    }
+}
+
+impl Eq for WString {}
+
+impl PartialOrd for WString {
+	fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+		<Buffer as PartialOrd>::partial_cmp(&self.buf, &other.buf)
+    }
+}
+
+impl Ord for WString {
+	fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+		<Buffer as Ord>::cmp(&self.buf, &other.buf)
+    }
+}
+
 impl WString {
 	/// Stores an UTF-16 null-terminated string from an optional [`&str`](str).
 	///
@@ -313,6 +333,26 @@ impl std::fmt::Debug for Buffer {
 				"(UNALLOCATED)".to_owned(),
 		})
 	}
+}
+
+impl PartialEq for Buffer {
+	fn eq(&self, other: &Self) -> bool {
+		self.as_slice().eq(other.as_slice())
+    }
+}
+
+impl Eq for Buffer {}
+
+impl PartialOrd for Buffer {
+	fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+		self.as_slice().partial_cmp(other.as_slice())
+    }
+}
+
+impl Ord for Buffer {
+	fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+		self.as_slice().cmp(other.as_slice())
+    }
 }
 
 impl Buffer {
