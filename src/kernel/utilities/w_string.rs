@@ -31,6 +31,13 @@ impl std::fmt::Debug for WString {
 	}
 }
 
+impl std::cmp::PartialEq for WString {
+	fn eq(&self, other: &Self) -> bool {
+		unsafe { ffi::lstrcmpW(self.as_ptr(), other.as_ptr()) == 0 }
+	}
+}
+impl std::cmp::Eq for WString {}
+
 impl WString {
 	/// Stores an UTF-16 null-terminated string from an optional [`&str`](str).
 	///
