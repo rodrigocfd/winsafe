@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use crate::co;
 use crate::decl::*;
 use crate::kernel::ffi;
@@ -33,10 +35,28 @@ impl std::fmt::Debug for WString {
 
 impl std::cmp::PartialEq for WString {
 	fn eq(&self, other: &Self) -> bool {
-		unsafe { ffi::lstrcmpW(self.as_ptr(), other.as_ptr()) == 0 }
+		self.cmp(other) == Ordering::Equal
 	}
 }
 impl std::cmp::Eq for WString {}
+
+impl std::cmp::PartialOrd for WString {
+	fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+		let ord = unsafe { ffi::lstrcmpW(self.as_ptr(), other.as_ptr()) };
+		Some(if ord < 0 {
+			Ordering::Less
+		} else if ord > 0 {
+			Ordering::Greater
+		} else {
+			Ordering::Equal
+		})
+	}
+}
+impl std::cmp::Ord for WString {
+	fn cmp(&self, other: &Self) -> Ordering {
+		self.partial_cmp(other).unwrap()
+	}
+}
 
 impl WString {
 	/// Stores an UTF-16 null-terminated string from an optional [`&str`](str).
