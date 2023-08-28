@@ -179,6 +179,12 @@ pub trait kernel_Haccesstoken: Handle {
 		)
 	}
 
+	/// [`ImpersonateLoggedOnUser`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-impersonateloggedonuser)
+	/// function.
+	fn ImpersonateLoggedOnUser(&self) -> SysResult<()> {
+		bool_to_sysresult(unsafe { ffi::ImpersonateLoggedOnUser(self.ptr()) })
+	}
+
 	/// [`IsTokenRestricted`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-istokenrestricted)
 	/// function.
 	#[must_use]

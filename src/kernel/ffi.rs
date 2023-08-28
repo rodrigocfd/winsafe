@@ -25,6 +25,7 @@ extern_sys! { "advapi32";
 	GetTokenInformation(HANDLE, u32, PCVOID, u32, *mut u32) -> BOOL
 	GetUserNameW(PSTR, *mut u32) -> BOOL
 	GetWindowsAccountDomainSid(PCVOID, PVOID, *mut u32) -> BOOL
+	ImpersonateLoggedOnUser(HANDLE) -> BOOL
 	InitializeSecurityDescriptor(PVOID, u32) -> BOOL
 	InitiateSystemShutdownExW(PCSTR, PCSTR, u32, BOOL, BOOL, u32) -> BOOL
 	InitiateSystemShutdownW(PCSTR, PCSTR, u32, BOOL, BOOL) -> BOOL
