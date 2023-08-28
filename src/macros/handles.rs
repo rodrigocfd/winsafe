@@ -13,15 +13,15 @@ macro_rules! impl_handle {
 
 		unsafe impl Send for $name {}
 
+		impl std::fmt::Display for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+				write!(f, "{:#010x}", self.0 as usize)
+			}
+		}
 		impl std::fmt::Debug for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 				write!(f, "[{:#010x} {}] {}",
 					self.0 as usize, self.0 as usize, stringify!($name))
-			}
-		}
-		impl std::fmt::Display for $name {
-			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-				write!(f, "{:#010x}", self.0 as usize)
 			}
 		}
 

@@ -20,8 +20,8 @@ impl std::error::Error for CDERR {
 	}
 }
 
-impl std::fmt::Debug for CDERR {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+impl std::fmt::Display for CDERR {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		if self.0 > 0xffff {
 			write!(f, "[{:#010x} {}] Common dialog error.", self.0, self.0)
 		} else {
@@ -29,10 +29,9 @@ impl std::fmt::Debug for CDERR {
 		}
 	}
 }
-
-impl std::fmt::Display for CDERR {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		<Self as std::fmt::Debug>::fmt(self, f) // delegate to Debug trait
+impl std::fmt::Debug for CDERR {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		std::fmt::Display::fmt(self, f)
 	}
 }
 

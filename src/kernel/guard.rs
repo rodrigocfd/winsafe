@@ -251,8 +251,8 @@ impl Deref for FreeSidGuard {
 }
 
 impl std::fmt::Display for FreeSidGuard {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		self.deref().fmt(f) // delegate the underlying SID
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		std::fmt::Display::fmt(self.deref(), f) // delegate to the underlying SID
 	}
 }
 
@@ -487,8 +487,8 @@ impl Deref for LocalFreeSidGuard {
 }
 
 impl std::fmt::Display for LocalFreeSidGuard {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		self.deref().fmt(f) // delegate the underlying SID
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		std::fmt::Display::fmt(self.deref(), f) // delegate to the underlying SID
 	}
 }
 
@@ -636,8 +636,8 @@ impl Deref for SidGuard {
 }
 
 impl std::fmt::Display for SidGuard {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		self.deref().fmt(f) // delegate the underlying SID
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		std::fmt::Display::fmt(self.deref(), f) // delegate to the underlying SID
 	}
 }
 

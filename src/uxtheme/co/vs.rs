@@ -8,8 +8,13 @@ pub struct VS {
 }
 
 impl std::fmt::Display for VS {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		write!(f, "{}, {}", self.part, self.state)
+	}
+}
+impl std::fmt::Debug for VS {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "Part {}, state {}", self.part, self.state)
 	}
 }
 

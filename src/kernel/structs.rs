@@ -94,7 +94,7 @@ pub struct GUID {
 	data4: u64,
 }
 
-impl std::fmt::Debug for GUID {
+impl std::fmt::Display for GUID {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		write!(f, "{:08x}-{:04x}-{:04x}-{:04x}-{:012x}",
 			self.data1, self.data2, self.data3,
@@ -103,9 +103,9 @@ impl std::fmt::Debug for GUID {
 		)
 	}
 }
-impl std::fmt::Display for GUID {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		<Self as std::fmt::Debug>::fmt(self, f) // delegate to Debug trait
+impl std::fmt::Debug for GUID {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		std::fmt::Display::fmt(self, f)
 	}
 }
 
@@ -290,7 +290,7 @@ pub struct LUID {
 }
 
 impl std::fmt::Display for LUID {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		write!(f, "LUID lo: {:#04x}, hi: {:#04x}", self.low_part(), self.high_part())
 	}
 }
@@ -577,7 +577,7 @@ pub struct SID {
 impl VariableSized for SID {}
 
 impl std::fmt::Display for SID {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		match ConvertSidToStringSid(self) {
 			Ok(name) => write!(f, "{}", name),
 			Err(err) => write!(f, "{}", err),
@@ -628,8 +628,8 @@ pub struct SID_IDENTIFIER_AUTHORITY {
 }
 
 impl std::fmt::Display for SID_IDENTIFIER_AUTHORITY {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		write!(f, "{:?}", self.Value) // delegate to array Debug
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		std::fmt::Debug::fmt(&self.Value, f) // delegate to array Debug
 	}
 }
 

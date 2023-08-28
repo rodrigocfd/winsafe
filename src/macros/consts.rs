@@ -88,6 +88,11 @@ macro_rules! const_ordinary {
 			$( #[$doc] )*
 		}
 
+		impl std::fmt::Display for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+				write!(f, "{:#010x}", self.0 as usize)
+			}
+		}
 		impl std::fmt::Debug for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 				if self.0 as usize > 0xffff {
@@ -97,11 +102,6 @@ macro_rules! const_ordinary {
 					write!(f, "[{:#06x} {}] {}",
 						self.0, self.0, stringify!($name))
 				}
-			}
-		}
-		impl std::fmt::Display for $name {
-			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-				write!(f, "{:#010x}", self.0 as usize)
 			}
 		}
 
@@ -455,14 +455,14 @@ macro_rules! const_str {
 			}
 		}
 
-		impl std::fmt::Debug for $name {
-			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-				write!(f, "{}", crate::kernel::decl::WString::from(*self))
-			}
-		}
 		impl std::fmt::Display for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-				<Self as std::fmt::Debug>::fmt(self, f) // delegate to Debug trait
+				std::fmt::Display::fmt(self.0, f)
+			}
+		}
+		impl std::fmt::Debug for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+				write!(f, "\"{}\" {}", self.0, stringify!($name))
 			}
 		}
 

@@ -38,14 +38,19 @@ impl_default_with_size!(ALTTABINFO, cbSize);
 /// [`ATOM`](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#atom)
 /// returned by [`RegisterClassEx`](crate::RegisterClassEx).
 #[repr(transparent)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct ATOM(u16);
 
 impl_intunderlying!(ATOM, u16);
 
 impl std::fmt::Display for ATOM {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		write!(f, "{}", self.0)
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		std::fmt::Display::fmt(&self.0, f)
+	}
+}
+impl std::fmt::Debug for ATOM {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "ATOM [{:#06x} {}]", self.0, self.0)
 	}
 }
 
@@ -98,7 +103,7 @@ impl From<co::CLR> for COLORREF {
 }
 
 impl std::fmt::Display for COLORREF {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		write!(f, "R {}, G {}, B {}",
 			self.GetRValue(), self.GetGValue(), self.GetBValue())
 	}
@@ -789,7 +794,7 @@ pub struct POINT {
 }
 
 impl std::fmt::Display for POINT {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		write!(f, "x {}, y {}", self.x, self.y)
 	}
 }
@@ -826,7 +831,7 @@ pub struct RECT {
 }
 
 impl std::fmt::Display for RECT {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		write!(f, "left {}, top {}, right {}, bottom {}",
 			self.left, self.top, self.right, self.bottom)
 	}
@@ -858,7 +863,7 @@ pub struct SIZE {
 }
 
 impl std::fmt::Display for SIZE {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		write!(f, "cx {}, cy {}", self.cx, self.cy)
 	}
 }

@@ -35,7 +35,7 @@ pub enum IdStr {
 }
 
 impl std::fmt::Display for IdStr {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		match self {
 			Self::Id(rt) => write!(f, "ID: {}", rt),
 			Self::Str(str) => write!(f, "Str: {}", str),
@@ -97,7 +97,7 @@ pub enum RegistryValue {
 }
 
 impl std::fmt::Display for RegistryValue {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		match self {
 			Self::Binary(b) => write!(
 				f,
@@ -231,7 +231,7 @@ pub enum RtStr {
 }
 
 impl std::fmt::Display for RtStr {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		match self {
 			Self::Rt(rt) => write!(f, "RT: {}", rt),
 			Self::Str(str) => write!(f, "Str: {}", str),

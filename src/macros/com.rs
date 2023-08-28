@@ -88,12 +88,12 @@ macro_rules! const_guid {
 
 		impl std::fmt::Debug for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-				write!(f, "{:?}", self.0)
+				std::fmt::Debug::fmt(&self.0, f)
 			}
 		}
 		impl std::fmt::Display for $name {
-			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-				write!(f, "{}", self.0)
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+				std::fmt::Display::fmt(&self.0, f)
 			}
 		}
 

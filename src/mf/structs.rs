@@ -28,7 +28,7 @@ pub struct MFVideoNormalizedRect {
 }
 
 impl std::fmt::Display for MFVideoNormalizedRect {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		write!(f, "left {:.2}, top {:.2}, right {:.2}, bottom {:.2}",
 			self.left, self.top, self.right, self.bottom)
 	}

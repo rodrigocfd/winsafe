@@ -53,8 +53,8 @@ impl std::error::Error for HRESULT {
 	}
 }
 
-impl std::fmt::Debug for HRESULT {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+impl std::fmt::Display for HRESULT {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		if self.0 > 0xffff {
 			write!(f, "[{:#010x} {}] {}",
 				self.0, self.0, self.FormatMessage())
@@ -64,10 +64,9 @@ impl std::fmt::Debug for HRESULT {
 		}
 	}
 }
-
-impl std::fmt::Display for HRESULT {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		<Self as std::fmt::Debug>::fmt(self, f) // delegate to Debug trait
+impl std::fmt::Debug for HRESULT {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		std::fmt::Display::fmt(self, f)
 	}
 }
 

@@ -26,19 +26,22 @@ pub enum Encoding {
 }
 
 impl std::fmt::Display for Encoding {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		write!(f, "{}", match self {
-			Self::Unknown => "Unknown",
-			Self::Ansi => "ANSI",
-			Self::Win1252 => "Windows 1252",
-			Self::Utf8 => "UTF-8",
-			Self::Utf16be => "UTF-16 BE",
-			Self::Utf16le => "UTF-16 LE",
-			Self::Utf32be => "UTF-32 BE",
-			Self::Utf32le => "UTF-32 LE",
-			Self::Scsu => "SCSU",
-			Self::Bocu1 => "BOCU1",
-		})
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		std::fmt::Display::fmt(
+			match self {
+				Self::Unknown => "Unknown",
+				Self::Ansi => "ANSI",
+				Self::Win1252 => "Windows 1252",
+				Self::Utf8 => "UTF-8",
+				Self::Utf16be => "UTF-16 BE",
+				Self::Utf16le => "UTF-16 LE",
+				Self::Utf32be => "UTF-32 BE",
+				Self::Utf32le => "UTF-32 LE",
+				Self::Scsu => "SCSU",
+				Self::Bocu1 => "BOCU1",
+			},
+			f,
+		)
 	}
 }
 

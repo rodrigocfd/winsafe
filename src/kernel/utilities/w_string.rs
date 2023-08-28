@@ -22,14 +22,13 @@ pub struct WString {
 }
 
 impl std::fmt::Display for WString {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		write!(f, "{}", self.buf.to_string_checked().unwrap())
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		std::fmt::Display::fmt(&self.buf.to_string_checked().unwrap(), f)
 	}
 }
-
 impl std::fmt::Debug for WString {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		<Buffer as std::fmt::Debug>::fmt(&self.buf, f) // simply delegate
+		std::fmt::Debug::fmt(&self.buf, f)
 	}
 }
 
@@ -349,7 +348,7 @@ impl std::fmt::Debug for Buffer {
 				format!("HEAP({}) \"{}\"",
 					block.len() / std::mem::size_of::<u16>(), self.to_string_checked().unwrap()),
 			Self::Unallocated =>
-				"(UNALLOCATED)".to_owned(),
+				"UNALLOCATED \"\"".to_owned(),
 		})
 	}
 }

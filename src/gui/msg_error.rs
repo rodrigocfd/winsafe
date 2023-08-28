@@ -16,16 +16,15 @@ impl std::error::Error for MsgError {
 	}
 }
 
-impl std::fmt::Debug for MsgError {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+impl std::fmt::Display for MsgError {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		write!(f, "WM {} - {}",
 			self.src_msg.msg_id, self.source.to_string())
 	}
 }
-
-impl std::fmt::Display for MsgError {
+impl std::fmt::Debug for MsgError {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		<Self as std::fmt::Debug>::fmt(self, f) // delegate to Debug trait
+		std::fmt::Display::fmt(self, f)
 	}
 }
 

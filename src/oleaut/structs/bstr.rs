@@ -14,12 +14,6 @@ use crate::oleaut::ffi;
 #[repr(transparent)]
 pub struct BSTR(*mut u16);
 
-impl Default for BSTR {
-	fn default() -> Self {
-		Self(std::ptr::null_mut())
-	}
-}
-
 impl Drop for BSTR {
 	fn drop(&mut self) {
 		if !self.0.is_null() {
@@ -28,9 +22,26 @@ impl Drop for BSTR {
 	}
 }
 
+impl Default for BSTR {
+	fn default() -> Self {
+		Self(std::ptr::null_mut())
+	}
+}
+
+impl From<BSTR> for WString {
+	fn from(value: BSTR) -> WString {
+		WString::from_wchars_nullt(value.as_ptr())
+	}
+}
+
 impl std::fmt::Display for BSTR {
-	fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-		write!(f, "{}", self.to_string())
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		std::fmt::Display::fmt(&WString::from_wchars_nullt(self.as_ptr()), f)
+	}
+}
+impl std::fmt::Debug for BSTR {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "BSTR \"{}\"", self)
 	}
 }
 
@@ -110,11 +121,5 @@ impl BSTR {
 	#[must_use]
 	pub fn leak(&mut self) -> *mut u16 {
 		std::mem::replace(&mut self.0, std::ptr::null_mut())
-	}
-
-	/// Converts into [`String`](std::string::String).
-	#[must_use]
-	pub fn to_string(&self) -> String {
-		WString::from_wchars_nullt(self.0).to_string()
 	}
 }
