@@ -127,13 +127,13 @@ impl std::fmt::Display for RegistryValue {
 impl RegistryValue {
 	/// Parses a binary data block as a `RegistryValue`.
 	///
+	/// This method can be used as an escape hatch to interoperate with other
+	/// libraries.
+	///
 	/// # Safety
 	///
 	/// Assumes the binary data block has the correct content, according to the
 	/// informed [`co::REG`](crate::co::REG).
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub unsafe fn from_raw(buf: Vec<u8>, reg_type: co::REG) -> RegistryValue {
 		match reg_type {

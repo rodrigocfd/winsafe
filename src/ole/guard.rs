@@ -105,9 +105,6 @@ impl CoUninitializeGuard {
 	/// Be sure you need to call
 	/// [`CoUninitialize`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)
 	/// at the end of scope.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(hr: co::HRESULT) -> Self {
 		Self { hr }

@@ -96,13 +96,13 @@ macro_rules! handle_guard {
 		impl $name {
 			/// Constructs the guard by taking ownership of the handle.
 			///
+			/// This method can be used as an escape hatch to interoperate with
+			/// other libraries.
+			///
 			/// # Safety
 			///
 			/// Be sure the handle must be freed with the specified function at
 			/// the end of scope.
-			///
-			/// This method is used internally by the library, and not intended
-			/// to be used externally.
 			#[must_use]
 			pub const unsafe fn new(handle: $handle) -> Self {
 				Self { handle }

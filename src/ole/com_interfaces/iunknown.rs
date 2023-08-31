@@ -51,31 +51,31 @@ pub trait ole_IUnknown: Clone {
 
 	/// Creates an object from a COM virtual table pointer.
 	///
+	/// This method can be used as an escape hatch to interoperate with other
+	/// libraries.
+	///
 	/// # Safety
 	///
 	/// Be sure the pointer points to a properly allocated COM virtual table.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	unsafe fn from_ptr(p: *mut std::ffi::c_void) -> Self;
 
 	/// Returns the pointer to the underlying COM virtual table.
 	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
+	/// This method can be used as an escape hatch to interoperate with other
+	/// libraries.
 	#[must_use]
 	fn ptr(&self) -> *mut std::ffi::c_void;
 
 	/// Returns a mutable reference do the underlying COM virtual table pointer.
 	///
+	/// This method can be used as an escape hatch to interoperate with other
+	/// libraries.
+	///
 	/// # Safety
 	///
 	/// Be sure the pointer being set points to a properly allocated COM virtual
 	/// table.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	unsafe fn as_mut(&mut self) -> &mut *mut std::ffi::c_void;
 
@@ -85,9 +85,6 @@ pub trait ole_IUnknown: Clone {
 	///
 	/// The pointer must be initialized before any call. Do not call methods on
 	/// a null COM pointer.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	unsafe fn null() -> Self {
 		Self::from_ptr(std::ptr::null_mut())
@@ -100,9 +97,6 @@ pub trait ole_IUnknown: Clone {
 	///
 	/// Be sure to release the pointer, otherwise, as the name of this method
 	/// implies, you will cause a resource leak.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	fn leak(&mut self) -> *mut std::ffi::c_void {
 		let p = self.ptr();

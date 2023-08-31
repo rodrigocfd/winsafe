@@ -77,15 +77,12 @@ pub trait GuiParent: GuiWindow {
 	#[must_use]
 	fn on(&self) -> &WindowEventsAll;
 
-	/// Returns a pointer to the inner base window structure.
+	/// Returns a pointer to the inner base window structure, declared
+	/// internally in the library.
 	///
 	/// # Safety
 	///
-	/// The returned pointer must be cast to the specific underlying window
-	/// struct.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
+	/// **Do not use this method** – it's for internal use of the library only.
 	#[must_use]
 	unsafe fn as_base(&self) -> *mut std::ffi::c_void;
 }

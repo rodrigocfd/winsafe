@@ -26,9 +26,6 @@ impl<'a> CloseClipboardGuard<'a> {
 	/// Be sure you must call
 	/// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
 	/// at the end of scope.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(hwnd: PhantomData<&'a ()>) -> Self {
 		Self { _hwnd: hwnd }
@@ -129,9 +126,6 @@ impl<'a, H> EndPaintGuard<'a, H>
 	/// Be sure you must call
 	/// [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint)
 	/// at the end of scope.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(hwnd: &'a H, hdc: HDC, ps: PAINTSTRUCT) -> Self {
 		Self { hwnd, hdc, ps }
@@ -175,9 +169,6 @@ impl<'a, H> ReleaseCaptureGuard<'a, H>
 	/// Be sure you must call
 	/// [`ReleaseCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasecapture)
 	/// at the end of scope.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(hwnd: &'a H, hwnd_prev: Option<HWND>) -> Self {
 		Self { _hwnd: hwnd, hwnd_prev }
@@ -243,9 +234,6 @@ impl<'a, H> ReleaseDCGuard<'a, H>
 	/// Be sure the handle must be freed with
 	/// [`ReleaseDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
 	/// at the end of scope.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(hwnd: &'a H, hdc: HDC) -> Self {
 		Self { hwnd, hdc }

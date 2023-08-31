@@ -53,9 +53,6 @@ impl<T> CloseHandleGuard<T>
 	/// Be sure the handle must be freed with
 	/// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
 	/// at the end of scope.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(handle: T) -> Self {
 		Self { handle }
@@ -116,9 +113,6 @@ impl CloseHandlePiGuard {
 	/// Be sure the handles must be freed with
 	/// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
 	/// at the end of the scope.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(pi: PROCESS_INFORMATION) -> Self {
 		Self { pi }
@@ -187,9 +181,6 @@ impl EndUpdateResourceGuard {
 	/// Be sure the handle must be freed with
 	/// [`EndUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
 	/// at the end of scope.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(hupsrc: HUPDATERSRC) -> Self {
 		Self { hupsrc }
@@ -263,9 +254,6 @@ impl FreeSidGuard {
 	///
 	/// Be sure the pointer must be freed with
 	/// [`FreeSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-freesid).
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(psid: *mut SID) -> Self {
 		Self { psid }
@@ -326,9 +314,6 @@ impl<'a, H> GlobalUnlockGuard<'a, H>
 	/// Be sure the handle must be freed with
 	/// [`GlobalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
 	/// at the end of scope, the pointer is valid, and the size is correct.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(
 		hglobal: &'a H,
@@ -389,9 +374,6 @@ impl<'a, H> HeapFreeGuard<'a, H>
 	/// Be sure the handle must be freed with
 	/// [`HeapFree`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapfree)
 	/// at the end of scope, the pointer is valid, and the size is correct.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(
 		hheap: &'a H,
@@ -450,9 +432,6 @@ impl<'a, H> HeapUnlockGuard<'a, H>
 	/// Be sure the handle must be freed with
 	/// [`HeapUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock)
 	/// at the end of scope.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(hheap: &'a H) -> Self {
 		Self { hheap }
@@ -499,9 +478,6 @@ impl LocalFreeSidGuard {
 	///
 	/// Be sure the pointer is an [`HLOCAL`](crate::HLOCAL) handle pointing to a
 	/// [`SID`](crate::SID) memory block.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(pmem: HLOCAL) -> Self {
 		Self { pmem: LocalFreeGuard::new(pmem) }
@@ -542,9 +518,6 @@ impl<'a, H> LocalUnlockGuard<'a, H>
 	/// Be sure the handle must be freed with
 	/// [`LocalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localunlock)
 	/// at the end of scope, the pointer is valid, and the size is correct.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(
 		hlocal: &'a H,
@@ -599,9 +572,6 @@ impl RegCloseKeyGuard {
 	/// Be sure the handle must be freed with
 	/// [`RegCloseKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
 	/// at the end of scope.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(hkey: HKEY) -> Self {
 		Self { hkey }
@@ -647,9 +617,6 @@ impl SidGuard {
 	/// # Safety
 	///
 	/// Be sure the data is an allocated [`SID`](crate::SID) structure.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(raw: HeapBlock) -> Self {
 		Self { raw }
@@ -772,9 +739,6 @@ impl<'a, H> UnlockFileGuard<'a, H>
 	/// Be sure the handle must be freed with
 	/// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
 	/// at the end of scope.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(
 		hfile: &'a H,

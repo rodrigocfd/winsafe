@@ -62,9 +62,6 @@ impl<T> DeleteObjectGuard<T>
 	/// Be sure the handle must be freed with
 	/// [`DeleteObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
 	/// at the end of scope.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(handle: T) -> Self {
 		Self { handle }
@@ -161,9 +158,6 @@ impl<'a, H, G> SelectObjectGuard<'a, H, G>
 	/// Be sure the handle must be again passed to
 	/// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject)
 	/// at the end of scope.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(
 		hdc: &'a H,

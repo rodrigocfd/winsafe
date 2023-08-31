@@ -117,17 +117,18 @@ impl WindowMain {
 		InitCommonControls();
 
 		let mut b_val: BOOL = 0; // false
-		unsafe {
-			// SetTimer() safety
-			match HPROCESS::GetCurrentProcess().SetUserObjectInformation(
-				co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION, &mut b_val) {
-				Ok(_) => {}
-				Err(ref e) if e == &co::ERROR::INVALID_PARAMETER => {
-					// https://bugs.winehq.org/show_bug.cgi?id=54951
-					// Wine doesn't support SetUserObjectInformation for now.
-				}
-				Err(e) => panic!("unexpected error: {e:?}"),
-			}
+		match unsafe {
+			HPROCESS::GetCurrentProcess().SetUserObjectInformation( // SetTimer() safety
+				co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION,
+				&mut b_val,
+			)
+		} {
+			Err(e) if e == co::ERROR::INVALID_PARAMETER => {
+				// Do nothing: Wine doesn't support SetUserObjectInformation for now.
+				// https://bugs.winehq.org/show_bug.cgi?id=54951
+			},
+			Err(e) => panic!("TIMERPROC_EXCEPTION_SUPPRESSION failed: {e:?}"),
+			_ => {},
 		}
 
 		create_ui_font().unwrap();

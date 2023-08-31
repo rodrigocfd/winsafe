@@ -76,8 +76,8 @@ impl WString {
 	/// with two terminating nulls – that means further retrieval operations
 	/// will "see" only the first string.
 	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
+	/// This method can be used as an escape hatch to interoperate with other
+	/// libraries.
 	#[must_use]
 	pub fn from_str_vec(v: &[impl AsRef<str>]) -> Self {
 		Self { buf: Buffer::from_str_vec(v) }

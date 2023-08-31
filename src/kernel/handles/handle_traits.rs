@@ -25,15 +25,15 @@ pub trait Handle: Sized
 	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
 	const INVALID: Self;
 
-	/// Creates a new handle instance by wrapping a pointer.
+	/// Creates a new handle object by wrapping a pointer.
+	///
+	/// This method can be used as an escape hatch to interoperate with other
+	/// libraries.
 	///
 	/// # Safety
 	///
 	/// Be sure the pointer has the correct type and isn't owned by anyone else,
 	/// otherwise you may cause memory access violations.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	unsafe fn from_ptr(p: *mut std::ffi::c_void) -> Self;
 
@@ -57,8 +57,8 @@ pub trait Handle: Sized
 
 	/// Returns a mutable reference to the underlying raw pointer.
 	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
+	/// This method can be used as an escape hatch to interoperate with other
+	/// libraries.
 	///
 	/// # Safety
 	///
@@ -74,8 +74,8 @@ pub trait Handle: Sized
 	/// opaque pointer to an internal Windows structure, and no dereferencings
 	/// should be attempted.
 	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
+	/// This method can be used as an escape hatch to interoperate with other
+	/// libraries.
 	#[must_use]
 	fn ptr(&self) -> *mut std::ffi::c_void;
 

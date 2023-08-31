@@ -35,9 +35,6 @@ impl<'a> ImageListEndDragGuard<'a> {
 	/// Be sure the handle must be freed with
 	/// [`ImageList_EndDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_enddrag)
 	/// at the end of scope.
-	///
-	/// This method is used internally by the library, and not intended to be
-	/// used externally.
 	#[must_use]
 	pub const unsafe fn new(himagelist: PhantomData<&'a ()>) -> Self {
 		Self { _himagelist: himagelist }
