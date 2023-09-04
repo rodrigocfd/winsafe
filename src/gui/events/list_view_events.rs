@@ -109,7 +109,7 @@ impl ListViewEvents {
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_noret! { lvn_get_disp_info, co::LVN::GETDISPINFO, NMLVDISPINFO;
+	pub_fn_nfy_withmutparm_noret! { lvn_get_disp_info, co::LVN::GETDISPINFO, NMLVDISPINFO;
 		/// [`LVN_GETDISPINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-getdispinfo)
 		/// notification.
 	}
