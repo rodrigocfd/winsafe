@@ -97,7 +97,7 @@ pub struct HDITEM<'a> {
 impl_default!(HDITEM, 'a);
 
 impl<'a> HDITEM<'a> {
-	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 /// [`HDHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-hdhittestinfo)
@@ -174,7 +174,7 @@ pub struct LVBKIMAGE<'a> {
 impl_default!(LVBKIMAGE, 'a);
 
 impl<'a> LVBKIMAGE<'a> {
-	pub_fn_string_buf_get_set!('a, pszImage, set_pszImage, cchImageMax);
+	pub_fn_string_buf_get_set!('a, pszImage, set_pszImage, raw_pszImage, cchImageMax);
 }
 
 /// [`LVCOLUMN`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvcolumnw)
@@ -199,7 +199,7 @@ pub struct LVCOLUMN<'a> {
 impl_default!(LVCOLUMN, 'a);
 
 impl<'a> LVCOLUMN<'a> {
-	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 /// [`LVFINDINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfindinfow)
@@ -236,7 +236,7 @@ pub struct LVFOOTERINFO<'a> {
 impl_default!(LVFOOTERINFO, 'a);
 
 impl<'a> LVFOOTERINFO<'a> {
-	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 /// [`LVFOOTERITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfooteritem)
@@ -256,7 +256,7 @@ pub struct LVFOOTERITEM<'a> {
 impl_default!(LVFOOTERITEM, 'a);
 
 impl<'a> LVFOOTERITEM<'a> {
-	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 /// [`LVGROUP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvgroup)
@@ -300,13 +300,13 @@ pub struct LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 impl_default_with_size!(LVGROUP, cbSize, 'a, 'b, 'c, 'd, 'e, 'f, 'g);
 
 impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
-	pub_fn_string_buf_get_set!('a, pszHeader, set_pszHeader, cchHeader);
-	pub_fn_string_buf_get_set!('b, pszFooter, set_pszFooter, cchFooter);
-	pub_fn_string_buf_get_set!('c, pszSubtitle, set_pszSubtitle, cchSubtitle);
-	pub_fn_string_buf_get_set!('d, pszTask, set_pszTask, cchTask);
-	pub_fn_string_buf_get_set!('e, pszDescriptionTop, set_pszDescriptionTop, cchDescriptionTop);
-	pub_fn_string_buf_get_set!('f, pszDescriptionBottom, set_pszDescriptionBottom, cchDescriptionBottom);
-	pub_fn_string_buf_get_set!('g, pszSubsetTitle, set_pszSubsetTitle, cchSubsetTitle);
+	pub_fn_string_buf_get_set!('a, pszHeader, set_pszHeader, raw_pszHeader, cchHeader);
+	pub_fn_string_buf_get_set!('b, pszFooter, set_pszFooter, raw_pszFooter, cchFooter);
+	pub_fn_string_buf_get_set!('c, pszSubtitle, set_pszSubtitle, raw_pszSubtitle, cchSubtitle);
+	pub_fn_string_buf_get_set!('d, pszTask, set_pszTask, raw_pszTask, cchTask);
+	pub_fn_string_buf_get_set!('e, pszDescriptionTop, set_pszDescriptionTop, raw_pszDescriptionTop, cchDescriptionTop);
+	pub_fn_string_buf_get_set!('f, pszDescriptionBottom, set_pszDescriptionBottom, raw_pszDescriptionBottom, cchDescriptionBottom);
+	pub_fn_string_buf_get_set!('g, pszSubsetTitle, set_pszSubsetTitle, raw_pszSubsetTitle, cchSubsetTitle);
 }
 
 /// [`LVGROUPMETRICS`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvgroupmetrics)
@@ -398,7 +398,7 @@ pub struct LVITEM<'a> {
 impl_default!(LVITEM, 'a);
 
 impl<'a> LVITEM<'a> {
-	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 /// [`LVITEMINDEX`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemindex)
@@ -521,7 +521,7 @@ impl_default_with_size!(MCGRIDINFO, cbSize, 'a);
 
 impl<'a> MCGRIDINFO<'a> {
 	pub_fn_bool_get_set!(bSelected, set_bSelected);
-	pub_fn_string_buf_get_set!('a, pszName, set_pszName, cchName);
+	pub_fn_string_buf_get_set!('a, pszName, set_pszName, raw_pszName, cchName);
 }
 
 /// [`MCHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mchittestinfo)
@@ -898,7 +898,7 @@ pub struct NMLVGETINFOTIP<'a> {
 impl_default!(NMLVGETINFOTIP, 'a);
 
 impl<'a> NMLVGETINFOTIP<'a> {
-	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 /// [`NMLVKEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvkeydown)
@@ -1265,7 +1265,7 @@ pub struct TBBUTTONINFO<'a> {
 impl_default_with_size!(TBBUTTONINFO, cbSize, 'a);
 
 impl<'a> TBBUTTONINFO<'a> {
-	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchText);
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, raw_pszText, cchText);
 }
 
 /// [`TBINSERTMARK`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbinsertmark)
@@ -1409,7 +1409,7 @@ pub struct TCITEM<'a> {
 impl_default!(TCITEM, 'a);
 
 impl<'a> TCITEM<'a> {
-	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 /// [`TVHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvhittestinfo)
@@ -1471,7 +1471,7 @@ pub struct TVITEMEX<'a> {
 impl_default!(TVITEMEX, 'a);
 
 impl<'a> TVITEMEX<'a> {
-	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 /// [`TVITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvitemw)
@@ -1495,7 +1495,7 @@ pub struct TVITEM<'a> {
 impl_default!(TVITEM, 'a);
 
 impl<'a> TVITEM<'a> {
-	pub_fn_string_buf_get_set!('a, pszText, set_pszText, cchTextMax);
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 /// [`TVSORTCB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvsortcb)

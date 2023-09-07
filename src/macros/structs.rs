@@ -177,10 +177,19 @@ macro_rules! pub_fn_string_arr_get_set {
 	};
 }
 
-/// Implements getter and setter methods for the given `*mut 16` and `i32`
+/// Implements getter and setter methods for the given `*mut u16` and `i32`
 /// fields, setting buffer and its size.
 macro_rules! pub_fn_string_buf_get_set {
-	($life:lifetime, $field:ident, $setter:ident, $cch:ident) => {
+	($life:lifetime, $field:ident, $setter:ident, $raw:ident, $cch:ident) => {
+		/// Returns the raw pointer to the string field, and its declared size.
+		///
+		/// This method can be used as an escape hatch to interoperate with
+		/// other libraries.
+		#[must_use]
+		pub fn $raw(&self) -> (*mut u16, i32) {
+			(self.$field, self.$cch as _) // some u32 and usize exist
+		}
+
 		/// Returns the string field.
 		#[must_use]
 		pub fn $field(&self) -> Option<String> {
