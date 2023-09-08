@@ -52,6 +52,9 @@ impl<'a> ListViewItems<'a> {
 	{
 		if texts.is_empty() {
 			panic!("No texts passed when adding a ListView item.");
+		} else if texts.len() > self.owner.columns().count() as usize {
+			panic!("Cannot set {} text(s) to {} column(s).",
+				texts.len(), self.owner.columns().count());
 		}
 
 		let mut lvi = LVITEM::default();
@@ -63,10 +66,10 @@ impl<'a> ListViewItems<'a> {
 			lvi.iImage = icon_index as _;
 		}
 
-		let mut wtext = WString::from_str(texts[0].as_ref());
+		let mut wtext = WString::from_str(texts[0].as_ref()); // text of 1st column
 		lvi.set_pszText(Some(&mut wtext));
 
-		let new_item = self.get( // retrieve the item newly added
+		let new_item = self.get( // insert new item; retrieve newly added
 			self.owner.hwnd()
 				.SendMessage(lvm::InsertItem { item: &lvi })
 				.unwrap(),
