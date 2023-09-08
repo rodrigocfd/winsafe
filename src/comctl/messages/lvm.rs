@@ -2424,7 +2424,7 @@ unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 /// Return type: `SysResult<()>`.
 pub struct SetItemCount {
 	pub count: u32,
-	pub behavior: co::LVSICF,
+	pub behavior: Option<co::LVSICF>,
 }
 
 unsafe impl MsgSend for SetItemCount {
@@ -2438,7 +2438,7 @@ unsafe impl MsgSend for SetItemCount {
 		WndMsg {
 			msg_id: co::LVM::SETITEMCOUNT.into(),
 			wparam: self.count as _,
-			lparam: self.behavior.raw() as _,
+			lparam: self.behavior.unwrap_or_default().raw() as _,
 		}
 	}
 }

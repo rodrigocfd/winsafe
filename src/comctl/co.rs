@@ -1331,8 +1331,6 @@ const_bitflag! { LVSICF: u32;
 	/// [`lvm::SetItemCount`](crate::msg::lvm::SetItemCount) `behavior` (`u32`).
 	=>
 	=>
-	/// None of the actual values (zero).
-	NoValue 0
 	NOINVALIDATEALL 0x0000_0001
 	NOSCROLL 0x0000_0002
 }
