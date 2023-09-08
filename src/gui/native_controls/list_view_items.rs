@@ -261,7 +261,7 @@ impl<'a> ListViewItems<'a> {
 	/// Sets the number of items in a virtual list view – that is, a list view
 	/// created with [`LVS::OWNERDATA`](crate::co::LVS::OWNERDATA) style – by
 	/// sending an [`lvm::SetItemCount`](crate::msg::lvm::SetItemCount) message.
-	pub fn set_item_count(&self, count: u32, behavior: Option<co::LVSICF>) {
+	pub fn set_count(&self, count: u32, behavior: Option<co::LVSICF>) {
 		self.owner.hwnd()
 			.SendMessage(lvm::SetItemCount { count, behavior })
 			.unwrap();
