@@ -1,5 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::co;
 use crate::decl::*;
 use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
@@ -38,7 +39,32 @@ impl dxgi_IDXGIDevice for IDXGIDevice {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {
-	fn_com_interface_get! { GetAdapter: IDXGIDeviceVT, IDXGIAdapter;
+	/// [`IDXGIDevice::CreateSurface`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-createsurface)
+	/// method.
+	#[must_use]
+	fn CreateSurface(&self,
+		desc: &DXGI_SURFACE_DESC,
+		num_surfaces: u32,
+		usage: co::DXGI_USAGE,
+		shared_resource: Option<&DXGI_SHARED_RESOURCE>,
+	) -> HrResult<IDXGISurface>
+	{
+		let mut queried = unsafe { IDXGISurface::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGIDeviceVT>(self).CreateSurface)(
+					self.ptr(),
+					desc as *const _ as _,
+					num_surfaces,
+					usage.raw(),
+					shared_resource.map_or(std::ptr::null(), |s| s as *const _ as _),
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
+	}
+
+	fn_com_interface_get! { GetAdapter: IDXGIDeviceVT,  IDXGIAdapter;
 		/// [`IDXGIDevice::GetAdapter`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-getadapter)
 		/// method.
 	}

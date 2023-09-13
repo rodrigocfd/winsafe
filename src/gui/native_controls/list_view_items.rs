@@ -23,6 +23,11 @@ impl<'a> ListViewItems<'a> {
 	///
 	/// The texts are relative to each column.
 	///
+	/// # Panics
+	///
+	/// Panics if `texts` is empty, or if the number of texts is greater than
+	/// the number of columns.
+	///
 	/// # Examples
 	///
 	/// ```no_run
@@ -40,11 +45,6 @@ impl<'a> ListViewItems<'a> {
 	///     None, // no icon; requires a previous set_image_list()
 	/// );
 	/// ```
-	///
-	/// # Panics
-	///
-	/// Panics if `texts` is empty, or if the number of texts is greater than
-	/// the number of columns.
 	pub fn add(&self,
 		texts: &[impl AsRef<str>],
 		icon_index: Option<u32>,

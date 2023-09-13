@@ -180,6 +180,16 @@ const_ordinary! { DXGI_MODE_SCANLINE_ORDER: u32;
 	LOWER_FIELD_FIRST 3
 }
 
+const_ordinary! { DXGI_RESIDENCY: u32;
+	/// [`DXGI_RESIDENCY`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_residency)
+	/// enumeration (`u32`).
+	=>
+	=>
+	FULLY_RESIDENT 1
+	RESIDENT_IN_SHARED_MEMORY 2
+	EVICTED_TO_DISK 3
+}
+
 const_bitflag! { DXGI_SWAP_CHAIN_FLAG: u32;
 	/// [`DXGI_SWAP_CHAIN_FLAG`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_swap_chain_flag)
 	/// enumeration (`u32`).
@@ -217,10 +227,10 @@ const_bitflag! { DXGI_USAGE: u32;
 	=>
 	=>
 	SHADER_INPUT 0x0000_0010
-	RENDER_TARGET_OUTPUT 0x0000_0020 
+	RENDER_TARGET_OUTPUT 0x0000_0020
 	BACK_BUFFER 0x0000_0040
-	SHARED 0x0000_0080 
-	READ_ONLY 0x0000_0100 
-	DISCARD_ON_PRESENT 0x0000_0200 
-	UNORDERED_ACCESS 0x0000_0400 
+	SHARED 0x0000_0080
+	READ_ONLY 0x0000_0100
+	DISCARD_ON_PRESENT 0x0000_0200
+	UNORDERED_ACCESS 0x0000_0400
 }

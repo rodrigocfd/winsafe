@@ -125,6 +125,16 @@ pub struct DXGI_SAMPLE_DESC {
 	pub Quality: u32,
 }
 
+/// [`DXGI_SHARED_RESOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_shared_resource)
+/// struct.
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct DXGI_SHARED_RESOURCE {
+	pub Handle: *mut std::ffi::c_void,
+}
+
+impl_default!(DXGI_SHARED_RESOURCE);
+
 /// [`DXGI_SURFACE_DESC`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_surface_desc)
 /// struct.
 #[repr(C)]
