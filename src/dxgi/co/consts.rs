@@ -190,6 +190,20 @@ const_ordinary! { DXGI_RESIDENCY: u32;
 	EVICTED_TO_DISK 3
 }
 
+const_ordinary! { DXGI_RESOURCE_PRIORITY: u32;
+	/// [`IDXGIResource::GetEvictionPriority`](crate::prelude::dxgi_IDXGIResource::GetEvictionPriority)
+	/// and
+	/// [`IDXGIResource::SetEvictionPriority`](crate::prelude::dxgi_IDXGIResource::SetEvictionPriority)
+	/// `eviction_priority` (`u32`).
+	=>
+	=>
+	MINIMUM 0x2800_0000
+	LOW 0x5000_0000
+	NORMAL 0x7800_0000
+	HIGH 0xa000_0000
+	MAXIMUM 0xc800_0000
+}
+
 const_bitflag! { DXGI_SWAP_CHAIN_FLAG: u32;
 	/// [`DXGI_SWAP_CHAIN_FLAG`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_swap_chain_flag)
 	/// enumeration (`u32`).
