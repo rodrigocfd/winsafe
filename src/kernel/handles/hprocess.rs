@@ -327,16 +327,7 @@ pub trait kernel_Hprocess: Handle {
 		milliseconds: Option<u32>,
 	) -> SysResult<co::WAIT>
 	{
-		match unsafe {
-			co::WAIT::from_raw(
-				ffi::WaitForSingleObject(
-					self.ptr(),
-					milliseconds.unwrap_or(INFINITE),
-				),
-			)
-		} {
-			co::WAIT::FAILED => Err(GetLastError()),
-			wait => Ok(wait),
-		}
+		unsafe { HEVENT::from_ptr(self.ptr()) }
+			.WaitForSingleObject(milliseconds)
 	}
 }

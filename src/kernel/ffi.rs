@@ -83,6 +83,8 @@ extern_sys! { "kernel32";
 	CloseHandle(HANDLE) -> BOOL
 	CopyFileW(PCSTR, PCSTR, BOOL) -> BOOL
 	CreateDirectoryW(PCSTR, PVOID) -> BOOL
+	CreateEventExW(PCVOID, PCSTR, u32, u32) -> HANDLE
+	CreateEventW(PCVOID, BOOL, BOOL, PCSTR) -> HANDLE
 	CreateFileMappingFromApp(HANDLE, PVOID, u32, u64, PCSTR) -> HANDLE
 	CreateFileW(PCSTR, u32, u32, PVOID, u32, u32, HANDLE) -> HANDLE
 	CreatePipe(*mut HANDLE, *mut HANDLE, PVOID, u32) -> BOOL
@@ -207,10 +209,12 @@ extern_sys! { "kernel32";
 	MoveFileW(PCSTR, PCSTR) -> BOOL
 	MulDiv(i32, i32, i32) -> i32
 	MultiByteToWideChar(u32, u32, *const u8, i32, PSTR, i32) -> i32
+	OpenEventW(u32, BOOL, PCSTR) -> HANDLE
 	OpenProcess(u32, BOOL, u32) -> HANDLE
 	OutputDebugStringW(PCSTR)
 	Process32FirstW(HANDLE, PVOID) -> BOOL
 	Process32NextW(HANDLE, PVOID) -> BOOL
+	PulseEvent(HANDLE) -> BOOL
 	QueryFullProcessImageNameW(HANDLE, u32, PSTR, *mut u32) -> BOOL
 	QueryPerformanceCounter(*mut i64) -> BOOL
 	QueryPerformanceFrequency(*mut i64) -> BOOL
@@ -218,10 +222,12 @@ extern_sys! { "kernel32";
 	ReadConsoleW(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
 	ReadFile(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
 	ReplaceFileW(PCSTR, PCSTR, PCSTR, u32, PVOID, PVOID) -> BOOL
+	ResetEvent(HANDLE) -> BOOL
 	ResumeThread(HANDLE) -> u32
 	SetConsoleMode(HANDLE, u32) -> BOOL
 	SetCurrentDirectoryW(PCSTR) -> BOOL
 	SetEndOfFile(HANDLE) -> BOOL
+	SetEvent(HANDLE) -> BOOL
 	SetFileAttributesW(PCSTR, u32) -> BOOL
 	SetFilePointerEx(HANDLE, i64, *mut i64, u32) -> BOOL
 	SetFileTime(HANDLE, PCVOID, PCVOID, PCVOID) -> BOOL

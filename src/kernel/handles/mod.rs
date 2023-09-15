@@ -1,5 +1,6 @@
 mod haccesstoken;
 mod handle_traits;
+mod hevent;
 mod heventlog;
 mod hfile;
 mod hfilemap;
@@ -20,6 +21,7 @@ mod hupdatesrc;
 
 pub mod decl {
 	pub use super::haccesstoken::HACCESSTOKEN;
+	pub use super::hevent::HEVENT;
 	pub use super::heventlog::HEVENTLOG;
 	pub use super::hfile::HFILE;
 	pub use super::hfilemap::HFILEMAP;
@@ -37,12 +39,6 @@ pub mod decl {
 	pub use super::hthread::HTHREAD;
 	pub use super::htransaction::HTRANSACTION;
 	pub use super::hupdatesrc::HUPDATERSRC;
-
-	impl_handle! { HEVENT;
-		/// Handle to an
-		/// [event](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventw).
-		/// Originally just a `HANDLE`.
-	}
 
 	impl_handle! { HRSRC;
 		/// Handle to a
@@ -66,6 +62,7 @@ pub mod decl {
 pub mod traits {
 	pub use super::haccesstoken::kernel_Haccesstoken;
 	pub use super::handle_traits::*;
+	pub use super::hevent::kernel_Hevent;
 	pub use super::heventlog::kernel_Heventlog;
 	pub use super::hfile::kernel_Hfile;
 	pub use super::hfilemap::kernel_Hfilemap;

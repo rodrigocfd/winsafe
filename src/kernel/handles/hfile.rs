@@ -79,7 +79,7 @@ pub trait kernel_Hfile: Handle {
 		file_name: &str,
 		desired_access: co::GENERIC,
 		share_mode: Option<co::FILE_SHARE>,
-		security_attrs: Option<&mut SECURITY_ATTRIBUTES>,
+		security_attributes: Option<&mut SECURITY_ATTRIBUTES>,
 		creation_disposition: co::DISPOSITION,
 		attributes: co::FILE_ATTRIBUTE,
 		flags: Option<co::FILE_FLAG>,
@@ -93,7 +93,7 @@ pub trait kernel_Hfile: Handle {
 					WString::from_str(file_name).as_ptr(),
 					desired_access.raw(),
 					share_mode.unwrap_or_default().raw(),
-					security_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+					security_attributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
 					creation_disposition.raw(),
 					attributes.raw()
 						| flags.unwrap_or_default().raw()

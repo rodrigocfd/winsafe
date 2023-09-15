@@ -137,6 +137,15 @@ const_bitflag! { CREATE: u32;
 	INHERIT_PARENT_AFFINITY 0x0001_0000
 }
 
+const_bitflag! { CREATE_EVENT: u32;
+	/// [`HEVENT::CreateEventEx`](crate::prelude::kernel_Hevent::CreateEventEx)
+	/// `flags` (`u32`).
+	=>
+	=>
+	INITIAL_SET 0x0000_0002
+	MANUAL_RESET 0x0000_0001
+}
+
 const_ordinary! { DISPOSITION: u32;
 	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
 	/// `creation_disposition` (`u32`).
@@ -215,6 +224,22 @@ const_ordinary! { EVENTLOG: u16;
 	ERROR_TYPE 0x0001
 	INFORMATION_TYPE 0x0004
 	WARNING_TYPE 0x0002
+}
+
+const_bitflag! { EVENT_RIGHTS: u32;
+	/// Event
+	/// [access rights](https://learn.microsoft.com/en-us/windows/win32/sync/synchronization-object-security-and-access-rights)
+	/// (`u32`).
+	=>
+	=>
+	DELETE ACCESS_RIGHTS::DELETE.0
+	READ_CONTROL ACCESS_RIGHTS::READ_CONTROL.0
+	SYNCHRONIZE ACCESS_RIGHTS::SYNCHRONIZE.0
+	WRITE_DAC ACCESS_RIGHTS::WRITE_DAC.0
+	WRITE_OWNER ACCESS_RIGHTS::WRITE_OWNER.0
+
+	ALL_ACCESS 0x1f_0003
+	MODIFY_STATE 0x0002
 }
 
 const_bitflag! { FILE_ATTRIBUTE: u32;
