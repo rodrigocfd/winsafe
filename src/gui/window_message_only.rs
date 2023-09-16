@@ -41,9 +41,14 @@ impl WindowMessageOnly {
 	/// with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
-	pub fn new() -> Self {
+	pub fn new(parent: Option<&WindowMessageOnly>) -> Self {
+		let parent_base_ref = parent.map(|parent| {
+			let base_ptr = unsafe { parent.as_base() } as *mut Base;
+			unsafe { base_ptr.as_ref() }.unwrap()
+		});
+
 		let new_self = Self(
-			Arc::pin(RawBase::new(None)),
+			Arc::pin(RawBase::new(parent_base_ref)),
 		);
 		new_self.create();
 		new_self
@@ -60,8 +65,13 @@ impl WindowMessageOnly {
 			&mut class_name_buf).unwrap();
 		let atom = self.0.register_class(&mut wcx).unwrap();
 
+		let hparent_msg = unsafe { HWND::from_ptr(HWND_MESSAGE as _) };
+
 		self.0.create_window(
-			Some(&unsafe { HWND::from_ptr(HWND_MESSAGE as _) }),
+			Some(match self.0.parent() {
+				Some(parent) => parent.hwnd(),
+				None => &hparent_msg, // special case: message-only window with no parent
+			}),
 			atom, None, IdMenu::None,
 			POINT::default(), SIZE::default(),
 			co::WS_EX::NoValue, co::WS::NoValue,

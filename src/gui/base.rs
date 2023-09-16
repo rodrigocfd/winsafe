@@ -30,8 +30,8 @@ impl Base {
 		p: &impl GuiParent,
 	) -> &'a Self
 	{
-		let ptr = NonNull::new_unchecked(p.as_base() as *mut _);
-		ptr.as_ref()
+		let ptr = p.as_base() as *mut Self;
+		ptr.as_ref().unwrap()
 	}
 
 	pub(in crate::gui) fn new(
@@ -72,10 +72,10 @@ impl Base {
 	}
 
 	pub(in crate::gui) fn parent_hinstance(&self) -> SysResult<HINSTANCE> {
-		self.parent().map_or_else(
-			|| HINSTANCE::GetModuleHandle(None),
-			|parent| Ok(parent.hwnd().hinstance()),
-		)
+		match self.parent() {
+			Some(parent) => Ok(parent.hwnd().hinstance()),
+			None => HINSTANCE::GetModuleHandle(None),
+		}
 	}
 
 	/// User events can be overriden; only the last one is executed.

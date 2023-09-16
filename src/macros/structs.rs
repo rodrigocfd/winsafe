@@ -272,7 +272,7 @@ macro_rules! pub_fn_comptr_get_set {
 				let obj = std::mem::ManuallyDrop::new( // won't release the stored pointer
 					unsafe { T::from_ptr(self.$field) },
 				);
-				let cloned = T::clone(&obj);
+				let cloned = T::clone(&obj); // the cloned will release the stored pointer
 				Some(cloned)
 			}
 		}
@@ -282,13 +282,13 @@ macro_rules! pub_fn_comptr_get_set {
 			where T: $trait,
 		{
 			let _ = unsafe { T::from_ptr(self.$field) }; // if already set, call Release() immediately
-			self.$field = obj.map_or_else(
-				|| std::ptr::null_mut(),
-				|obj| {
+			self.$field = match obj {
+				Some(obj) => {
 					let mut cloned = T::clone(obj);
-					cloned.leak()
+					cloned.leak() // so the cloned pointer won't be released here
 				},
-			);
+				None => std::ptr::null_mut(),
+			};
 		}
 	};
 }
