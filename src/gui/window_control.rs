@@ -76,7 +76,7 @@ impl GuiChild for WindowControl {
 }
 
 impl WindowControl {
-	/// Instantiates a new `WindowControl` object, to be created with
+	/// Instantiates a new `WindowControl` object, to be created internally with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	///
 	/// # Panics

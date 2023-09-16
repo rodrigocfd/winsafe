@@ -13,6 +13,8 @@ pub enum Brush {
 	Color(co::COLOR),
 	/// A brush handle, previously created by you.
 	Handle(HBRUSH),
+	/// No brush.
+	None,
 }
 
 impl Brush {
@@ -21,6 +23,7 @@ impl Brush {
 		match self {
 			Brush::Color(c) => HBRUSH::from_sys_color(*c),
 			Brush::Handle(h) => unsafe { h.raw_copy() },
+			Brush::None => HBRUSH::NULL,
 		}
 	}
 }
@@ -36,6 +39,8 @@ pub enum Cursor {
 	Id(u16),
 	/// A [`co::IDC`](crate::co::IDC) constant for a stock system cursor.
 	Idc(co::IDC),
+	/// No cursor.
+	None,
 	/// A resource string identifier.
 	Str(WString),
 }
@@ -48,6 +53,7 @@ impl Cursor {
 				Cursor::Handle(h) => h.raw_copy(),
 				Cursor::Id(id) => hinst.LoadCursor(IdIdcStr::Id(*id))?.leak(),
 				Cursor::Idc(idc) => HINSTANCE::NULL.LoadCursor(IdIdcStr::Idc(*idc))?.leak(),
+				Cursor::None => HCURSOR::NULL,
 				Cursor::Str(s) => hinst.LoadCursor(IdIdcStr::Str(s.clone()))?.leak(),
 			})
 		}

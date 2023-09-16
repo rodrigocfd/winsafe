@@ -26,6 +26,7 @@ mod raw_modal;
 mod raw_modeless;
 mod window_control;
 mod window_main;
+mod window_message_only;
 mod window_modal;
 mod window_modeless;
 
@@ -59,6 +60,7 @@ pub use raw_modal::WindowModalOpts;
 pub use raw_modeless::WindowModelessOpts;
 pub use window_control::WindowControl;
 pub use window_main::WindowMain;
+pub use window_message_only::WindowMessageOnly;
 pub use window_modal::WindowModal;
 pub use window_modeless::WindowModeless;
 

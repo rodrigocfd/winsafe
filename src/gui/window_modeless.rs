@@ -69,7 +69,8 @@ impl GuiThread for WindowModeless {
 }
 
 impl WindowModeless {
-	/// Instantiates a new `WindowModeless` object, to be created with
+	/// Instantiates a new `WindowModeless` object, to be created internally
+	/// with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	///
 	/// # Panics

@@ -72,11 +72,11 @@ impl RawMain {
 	{
 		let opts = &self.0.opts;
 
-		let parent_hinst = HINSTANCE::GetModuleHandle(None).unwrap();
+		let hinst = HINSTANCE::GetModuleHandle(None).unwrap();
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::default();
 		RawBase::fill_wndclassex(
-			&parent_hinst,
+			&hinst,
 			opts.class_style, &opts.class_icon, &opts.class_icon,
 			&opts.class_bg_brush, &opts.class_cursor, &mut wcx,
 			&mut class_name_buf).unwrap();

@@ -69,7 +69,7 @@ impl GuiThread for WindowModal {
 }
 
 impl WindowModal {
-	/// Instantiates a new `WindowModal` object, to be created with
+	/// Instantiates a new `WindowModal` object, to be created internally with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: WindowModalOpts) -> Self {
