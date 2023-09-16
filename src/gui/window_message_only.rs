@@ -6,6 +6,7 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::{*, events::*, privs::*};
 use crate::prelude::*;
+use crate::user::privs::*;
 
 /// A
 /// [message-only](https://learn.microsoft.com/en-us/windows/win32/winmsg/window-features#message-only-windows)
@@ -60,6 +61,7 @@ impl WindowMessageOnly {
 		let atom = self.0.register_class(&mut wcx).unwrap();
 
 		self.0.create_window(
+			Some(&unsafe { HWND::from_ptr(HWND_MESSAGE as _) }),
 			atom, None, IdMenu::None,
 			POINT::default(), SIZE::default(),
 			co::WS_EX::NoValue, co::WS::NoValue,

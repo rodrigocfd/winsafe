@@ -64,7 +64,7 @@ impl LayoutArranger {
 		Self(
 			Arc::pin(
 				Obj {
-					ctrls: UnsafeCell::new(Vec::with_capacity(10)), // arbitrary
+					ctrls: UnsafeCell::new(Vec::default()),
 					sz_parent_orig: UnsafeCell::new(None),
 					_pin: PhantomPinned,
 				},

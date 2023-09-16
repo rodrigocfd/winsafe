@@ -92,6 +92,7 @@ impl RawControl {
 			multiply_dpi_or_dtu(parent_base_ref, Some(&mut wnd_pos), Some(&mut wnd_sz))?;
 
 			self2.0.raw_base.create_window(
+				Some(parent_base_ref.hwnd()),
 				atom,
 				None,
 				IdMenu::Id(opts.ctrl_id),

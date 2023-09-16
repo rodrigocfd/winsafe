@@ -107,6 +107,7 @@ impl RawMain {
 		wnd_sz.cy = wnd_rc.bottom - wnd_rc.top;
 
 		self.0.raw_base.create_window(
+			None,
 			atom,
 			Some(&opts.title),
 			if opts.menu == HMENU::NULL {

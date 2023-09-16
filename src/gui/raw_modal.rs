@@ -103,6 +103,7 @@ impl RawModal {
 		};
 
 		self.0.raw_base.create_window(
+			Some(hparent),
 			atom,
 			Some(&opts.title),
 			IdMenu::None,

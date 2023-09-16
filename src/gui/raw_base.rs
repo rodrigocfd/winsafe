@@ -211,6 +211,7 @@ impl RawBase {
 
 	pub(in crate::gui) fn create_window(
 		&self,
+		hparent: Option<&HWND>, // passed because message-only window is a special case
 		class_name: ATOM,
 		title: Option<&str>,
 		hmenu: IdMenu,
@@ -232,7 +233,7 @@ impl RawBase {
 				AtomStr::Atom(class_name),
 				title, styles,
 				pos, sz,
-				self.base.parent().map(|parent| parent.hwnd()),
+				hparent,
 				hmenu,
 				&self.base.parent_hinstance()?,
 				// Pass pointer to Self.

@@ -81,6 +81,7 @@ impl RawModeless {
 			multiply_dpi_or_dtu(parent_base_ref, None, Some(&mut wnd_sz))?;
 
 			self2.0.raw_base.create_window(
+				Some(parent_base_ref.hwnd()),
 				atom,
 				Some(&opts.title),
 				IdMenu::Menu(&HMENU::NULL),
