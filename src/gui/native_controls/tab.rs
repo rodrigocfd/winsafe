@@ -71,7 +71,7 @@ impl Tab {
 	/// dynamically create a `TreeView` in an event closure.
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: TabOpts) -> Self {
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		let mut opts = TabOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
 		let children = opts.items.drain(..).collect::<Vec<_>>();
@@ -79,8 +79,8 @@ impl Tab {
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_ref, ctrl_id),
-					events: TabEvents::new(parent_ref, ctrl_id),
+					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
+					events: TabEvents::new(parent_base_ref, ctrl_id),
 					children,
 					_pin: PhantomPinned,
 				},
@@ -88,12 +88,12 @@ impl Tab {
 		);
 
 		let self2 = new_self.clone();
-		parent_ref.privileged_on().wm(parent_ref.wm_create_or_initdialog(), move |_| {
+		parent_base_ref.privileged_on().wm(parent_base_ref.wm_create_or_initdialog(), move |_| {
 			self2.create(OptsResz::Wnd(&opts))?;
 			Ok(None) // not meaningful
 		});
 
-		new_self.default_message_handlers(parent_ref, ctrl_id);
+		new_self.default_message_handlers(parent_base_ref, ctrl_id);
 		new_self
 	}
 
@@ -112,13 +112,13 @@ impl Tab {
 		items: Vec<(String, Box<dyn GuiTab>)>,
 	) -> Self
 	{
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_ref, ctrl_id),
-					events: TabEvents::new(parent_ref, ctrl_id),
+					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
+					events: TabEvents::new(parent_base_ref, ctrl_id),
 					children: items,
 					_pin: PhantomPinned,
 				},
@@ -126,12 +126,12 @@ impl Tab {
 		);
 
 		let self2 = new_self.clone();
-		parent_ref.privileged_on().wm_init_dialog(move |_| {
+		parent_base_ref.privileged_on().wm_init_dialog(move |_| {
 			self2.create(OptsResz::Dlg(resize_behavior))?;
 			Ok(true) // not meaningful
 		});
 
-		new_self.default_message_handlers(parent_ref, ctrl_id);
+		new_self.default_message_handlers(parent_base_ref, ctrl_id);
 		new_self
 	}
 

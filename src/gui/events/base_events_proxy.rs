@@ -34,7 +34,7 @@ impl BaseEventsProxy {
 	pub(in crate::gui) fn wm_notify<F>(&self, code: impl Into<co::NM>, func: F)
 		where F: Fn(wm::Notify) -> AnyResult<Option<isize>> + 'static
 	{
-		let parent_ref = unsafe { self.parent_ptr.as_ref() };
-		parent_ref.on().wm_notify(self.ctrl_id as _, code, func);
+		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
+		parent_base_ref.on().wm_notify(self.ctrl_id as _, code, func);
 	}
 }

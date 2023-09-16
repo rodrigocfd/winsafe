@@ -56,13 +56,15 @@ impl RadioGroup {
 	/// dynamically create a `RadioGroup` in an event closure.
 	#[must_use]
 	pub fn new(
-		parent: &impl GuiParent, opts: &[RadioButtonOpts]) -> Self
+		parent: &impl GuiParent,
+		opts: &[RadioButtonOpts],
+	) -> Self
 	{
 		if opts.is_empty() {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
 
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 
 		let radios = opts.iter().enumerate()
 			.map(|(i, opt)| {
@@ -85,16 +87,16 @@ impl RadioGroup {
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					parent_ptr: NonNull::from(parent_ref),
+					parent_ptr: NonNull::from(parent_base_ref),
 					radios,
-					events: RadioGroupEvents::new(parent_ref, ctrl_ids),
+					events: RadioGroupEvents::new(parent_base_ref, ctrl_ids),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_ref.privileged_on().wm(parent_ref.wm_create_or_initdialog(), move |_| {
+		parent_base_ref.privileged_on().wm(parent_base_ref.wm_create_or_initdialog(), move |_| {
 			self2.create(&opts_resz_s)?;
 			Ok(None) // not meaningful
 		});
@@ -114,13 +116,15 @@ impl RadioGroup {
 	/// dynamically create a `RadioGroup` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
-		parent: &impl GuiParent, ctrls: &[(u16, Horz, Vert)]) -> Self
+		parent: &impl GuiParent,
+		ctrls: &[(u16, Horz, Vert)],
+	) -> Self
 	{
 		if ctrls.is_empty() {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
 
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 
 		let radios = ctrls.iter()
 			.map(|(ctrl_id, _, _)| RadioButton::new_dlg(parent, *ctrl_id))
@@ -137,16 +141,16 @@ impl RadioGroup {
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					parent_ptr: NonNull::from(parent_ref),
+					parent_ptr: NonNull::from(parent_base_ref),
 					radios,
-					events: RadioGroupEvents::new(parent_ref, ctrl_ids),
+					events: RadioGroupEvents::new(parent_base_ref, ctrl_ids),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_ref.privileged_on().wm_init_dialog(move |_| {
+		parent_base_ref.privileged_on().wm_init_dialog(move |_| {
 			self2.create(&opts_resz_s)?;
 			Ok(true) // not meaningful
 		});

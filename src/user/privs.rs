@@ -11,6 +11,7 @@ pub(crate) const CCHFORMNAME: usize = 32;
 pub(crate) const CCHILDREN_TITLEBAR: usize = 5;
 pub(crate) const DM_SPECVERSION: u16 = 0x0401;
 pub(crate) const FAPPCOMMAND_MASK: u16 = 0xf000;
+pub(crate) const HWND_MESSAGE: isize = -3;
 pub(crate) const LB_ERR: i32 = -1;
 pub(crate) const LB_ERRSPACE: i32 = -2;
 pub(crate) const WC_DIALOG: u16 = 0x8002;

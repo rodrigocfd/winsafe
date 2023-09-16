@@ -74,7 +74,7 @@ impl RawControl {
 	) {
 		let self2 = self.clone();
 		parent.privileged_on().wm(parent.wm_create_or_initdialog(), move |_| {
-			let parent_ref = self2.0.raw_base.parent().unwrap();
+			let parent_base_ref = self2.0.raw_base.parent().unwrap();
 			let opts = &self2.0.opts;
 
 			let parent_hinst = self2.0.raw_base.parent_hinstance()?;
@@ -89,7 +89,7 @@ impl RawControl {
 
 			let mut wnd_pos = POINT::new(opts.position.0, opts.position.1);
 			let mut wnd_sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
-			multiply_dpi_or_dtu(parent_ref, Some(&mut wnd_pos), Some(&mut wnd_sz))?;
+			multiply_dpi_or_dtu(parent_base_ref, Some(&mut wnd_pos), Some(&mut wnd_sz))?;
 
 			self2.0.raw_base.create_window(
 				atom,
@@ -99,7 +99,7 @@ impl RawControl {
 				opts.ex_style, opts.style,
 			)?;
 
-			parent_ref.add_to_layout_arranger(self2.hwnd(), resize_behavior)?;
+			parent_base_ref.add_to_layout_arranger(self2.hwnd(), resize_behavior)?;
 			Ok(None) // not meaningful
 		});
 

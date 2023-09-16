@@ -83,10 +83,10 @@ impl DlgControl {
 		let self2 = self.clone();
 		parent.privileged_on().wm(parent.wm_create_or_initdialog(), move |_| {
 			self2.0.dlg_base.create_dialog_param()?;
-			let parent_ref = self2.0.dlg_base.parent().unwrap();
+			let parent_base_ref = self2.0.dlg_base.parent().unwrap();
 
 			let mut dlg_pos = self2.0.position;
-			multiply_dpi_or_dtu(parent_ref, Some(&mut dlg_pos), None)?;
+			multiply_dpi_or_dtu(parent_base_ref, Some(&mut dlg_pos), None)?;
 			self2.hwnd().SetWindowPos(
 				HwndPlace::None,
 				dlg_pos, SIZE::default(),
@@ -95,7 +95,7 @@ impl DlgControl {
 
 			self2.hwnd().SetWindowLongPtr(co::GWLP::ID, self2.0.ctrl_id as _);
 
-			parent_ref.add_to_layout_arranger(self2.hwnd(), resize_behavior)?;
+			parent_base_ref.add_to_layout_arranger(self2.hwnd(), resize_behavior)?;
 			Ok(None) // not meaningful
 		});
 

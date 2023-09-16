@@ -111,14 +111,14 @@ impl StatusBar {
 	/// ```
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, parts: &[SbPart]) -> Self {
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		let ctrl_id = auto_ctrl_id();
 
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_ref, ctrl_id),
-					events: StatusBarEvents::new(parent_ref, ctrl_id),
+					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
+					events: StatusBarEvents::new(parent_base_ref, ctrl_id),
 					parts_info: UnsafeCell::new(parts.to_vec()),
 					right_edges: UnsafeCell::new(vec![0; parts.len()]),
 					_pin: PhantomPinned,
@@ -127,13 +127,13 @@ impl StatusBar {
 		);
 
 		let self2 = new_self.clone();
-		parent_ref.privileged_on().wm(parent_ref.wm_create_or_initdialog(), move |_| {
+		parent_base_ref.privileged_on().wm(parent_base_ref.wm_create_or_initdialog(), move |_| {
 			self2.create()?;
 			Ok(None) // not meaningful
 		});
 
 		let self2 = new_self.clone();
-		parent_ref.privileged_on().wm_size(move |p| {
+		parent_base_ref.privileged_on().wm_size(move |p| {
 			let mut p = p;
 			self2.resize(&mut p);
 			Ok(())

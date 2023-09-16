@@ -71,22 +71,22 @@ impl Trackbar {
 	/// dynamically create a `Trackbar` in an event closure.
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: TrackbarOpts) -> Self {
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = TrackbarOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_ref, ctrl_id),
-					events: TrackbarEvents::new(parent_ref, ctrl_id),
+					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
+					events: TrackbarEvents::new(parent_base_ref, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_ref.privileged_on().wm(parent_ref.wm_create_or_initdialog(), move |_| {
+		parent_base_ref.privileged_on().wm(parent_base_ref.wm_create_or_initdialog(), move |_| {
 			self2.create(OptsResz::Wnd(&opts))?;
 			Ok(None) // not meaningful
 		});
@@ -109,20 +109,20 @@ impl Trackbar {
 		resize_behavior: (Horz, Vert),
 	) -> Self
 	{
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_ref, ctrl_id),
-					events: TrackbarEvents::new(parent_ref, ctrl_id),
+					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
+					events: TrackbarEvents::new(parent_base_ref, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_ref.privileged_on().wm_init_dialog(move |_| {
+		parent_base_ref.privileged_on().wm_init_dialog(move |_| {
 			self2.create(OptsResz::Dlg(resize_behavior))?;
 			Ok(true) // not meaningful
 		});

@@ -87,7 +87,8 @@ impl WindowEventsAll {
 	/// Searches for the last added user function for the given message, and
 	/// runs if it exists, returning the result.
 	pub(in crate::gui) fn process_one_message(&self,
-		wm_any: WndMsg) -> AnyResult<ProcessResult>
+		wm_any: WndMsg,
+	) -> AnyResult<ProcessResult>
 	{
 		Ok(match wm_any.msg_id {
 			co::WM::NOTIFY => {

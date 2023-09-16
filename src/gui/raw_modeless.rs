@@ -61,7 +61,7 @@ impl RawModeless {
 	fn default_message_handlers(&self, parent: &Base) {
 		let self2 = self.clone();
 		parent.privileged_on().wm(parent.wm_create_or_initdialog(), move |_| {
-			let parent_ref = self2.0.raw_base.parent().unwrap();
+			let parent_base_ref = self2.0.raw_base.parent().unwrap();
 			let opts = &self2.0.opts;
 
 			let parent_hinst = self2.0.raw_base.parent_hinstance()?;
@@ -75,10 +75,10 @@ impl RawModeless {
 			let atom = self2.0.raw_base.register_class(&mut wcx)?;
 
 			let wnd_pos = adjust_modeless_pos(
-				parent_ref, POINT::new(opts.position.0, opts.position.1))?;
+				parent_base_ref, POINT::new(opts.position.0, opts.position.1))?;
 
 			let mut wnd_sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
-			multiply_dpi_or_dtu(parent_ref, None, Some(&mut wnd_sz))?;
+			multiply_dpi_or_dtu(parent_base_ref, None, Some(&mut wnd_sz))?;
 
 			self2.0.raw_base.create_window(
 				atom,

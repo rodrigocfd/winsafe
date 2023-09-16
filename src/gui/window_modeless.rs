@@ -83,10 +83,10 @@ impl WindowModeless {
 			panic!("Cannot create a modeless window after the parent window is created.");
 		}
 
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		Self(
 			RawDlg::Raw(
-				RawModeless::new(parent_ref, opts),
+				RawModeless::new(parent_base_ref, opts),
 			),
 		)
 	}
@@ -114,11 +114,11 @@ impl WindowModeless {
 			panic!("Cannot create a modeless window after the parent window is created.");
 		}
 
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		Self(
 			RawDlg::Dlg(
 				DlgModeless::new(
-					parent_ref,
+					parent_base_ref,
 					dialog_id,
 					position,
 				),

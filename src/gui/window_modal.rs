@@ -73,10 +73,10 @@ impl WindowModal {
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: WindowModalOpts) -> Self {
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		Self(
 			RawDlg::Raw(
-				RawModal::new(parent_ref, opts),
+				RawModal::new(parent_base_ref, opts),
 			),
 		)
 	}
@@ -86,10 +86,10 @@ impl WindowModal {
 	/// [`HINSTANCE::DialogBoxParam`](crate::prelude::user_Hinstance::DialogBoxParam).
 	#[must_use]
 	pub fn new_dlg(parent: &impl GuiParent, dialog_id: u16) -> Self {
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		Self(
 			RawDlg::Dlg(
-				DlgModal::new(parent_ref, dialog_id),
+				DlgModal::new(parent_base_ref, dialog_id),
 			),
 		)
 	}

@@ -56,31 +56,36 @@ impl GuiNativeControlEvents<ButtonEvents> for RadioButton {
 
 impl RadioButton {
 	pub(in crate::gui) fn new(
-		parent: &impl GuiParent, opts: RadioButtonOpts) -> Self
+		parent: &impl GuiParent,
+		opts: RadioButtonOpts,
+	) -> Self
 	{
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = RadioButtonOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		Self {
-			base: BaseNativeControl::new(parent_ref, ctrl_id),
-			events: ButtonEvents::new(parent_ref, ctrl_id),
+			base: BaseNativeControl::new(parent_base_ref, ctrl_id),
+			events: ButtonEvents::new(parent_base_ref, ctrl_id),
 		}
 	}
 
 	pub(in crate::gui) fn new_dlg(
-		parent: &impl GuiParent, ctrl_id: u16) -> Self
+		parent: &impl GuiParent,
+		ctrl_id: u16,
+	) -> Self
 	{
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 
 		Self {
-			base: BaseNativeControl::new(parent_ref, ctrl_id),
-			events: ButtonEvents::new(parent_ref, ctrl_id),
+			base: BaseNativeControl::new(parent_base_ref, ctrl_id),
+			events: ButtonEvents::new(parent_base_ref, ctrl_id),
 		}
 	}
 
 	pub(in crate::gui) fn create(&self,
-		opts_resz: &OptsResz<RadioButtonOpts>) -> SysResult<()>
+		opts_resz: &OptsResz<RadioButtonOpts>,
+	) -> SysResult<()>
 	{
 		let resize_behavior = match opts_resz {
 			OptsResz::Wnd(opts) => opts.resize_behavior,

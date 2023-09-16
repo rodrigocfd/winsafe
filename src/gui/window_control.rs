@@ -89,10 +89,10 @@ impl WindowControl {
 			panic!("Cannot create a custom child control after the parent window is created.");
 		}
 
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		Self(
 			RawDlg::Raw(
-				RawControl::new(parent_ref, opts),
+				RawControl::new(parent_base_ref, opts),
 			),
 		)
 	}
@@ -122,11 +122,11 @@ impl WindowControl {
 			panic!("Cannot create a custom child control after the parent window is created.");
 		}
 
-		let parent_ref = unsafe { Base::from_guiparent(parent) };
+		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		Self(
 			RawDlg::Dlg(
 				DlgControl::new(
-					parent_ref,
+					parent_base_ref,
 					dialog_id,
 					position,
 					resize_behavior,
