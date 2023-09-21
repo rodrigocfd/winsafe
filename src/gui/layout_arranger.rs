@@ -111,10 +111,8 @@ impl LayoutArranger {
 		let sz_parent_orig = match unsafe { &mut *self.0.sz_parent_orig.get() } {
 			Some(sz) => *sz,
 			None => {
-				let rc_parent = ctrls[0].hchild.GetParent()?.GetClientRect()?;
-				let sz = SIZE::new(rc_parent.right, rc_parent.bottom);
-				*unsafe { &mut *self.0.sz_parent_orig.get() } = Some(sz); // save original parent size
-				sz
+				*unsafe { &mut *self.0.sz_parent_orig.get() } = Some(p.client_area); // save original parent size
+				p.client_area
 			},
 		};
 
