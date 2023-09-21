@@ -370,7 +370,6 @@ impl Buffer {
 			let mut new_self = Self::new_alloc_buf(num_chars);
 			s.as_ref()
 				.encode_utf16()
-				.into_iter()
 				.zip(new_self.as_mut_slice())
 				.for_each(|(src, dest)| *dest = src);
 			new_self
@@ -386,7 +385,7 @@ impl Buffer {
 			.map(|s| {
 				s.as_ref()
 					.encode_utf16()
-					.into_iter()
+					.chain(std::iter::once(0x0000)) // append terminating null on each string
 			})
 			.flatten()
 			.zip(new_self.as_mut_slice())
