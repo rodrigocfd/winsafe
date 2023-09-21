@@ -312,7 +312,7 @@ pub trait user_Hwnd: Handle {
 	/// });
 	/// ```
 	fn EnumChildWindows<F>(&self, func: F)
-		where F: Fn(HWND) -> bool,
+		where F: FnMut(HWND) -> bool,
 	{
 		unsafe {
 			ffi::EnumChildWindows(
@@ -1818,8 +1818,8 @@ pub trait user_Hwnd: Handle {
 
 extern "system" fn enum_child_windows_proc<F>(
 	hwnd: HWND, lparam: isize) -> BOOL
-	where F: Fn(HWND) -> bool,
+	where F: FnMut(HWND) -> bool,
 {
-	let func = unsafe { &*(lparam as *const F) };
+	let func = unsafe { &mut *(lparam as *mut F) };
 	func(hwnd) as _
 }

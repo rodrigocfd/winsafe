@@ -102,7 +102,7 @@ pub trait user_Hdc: Handle {
 		rc_clip: Option<RECT>,
 		func: F,
 	) -> SysResult<()>
-		where F: Fn(HMONITOR, HDC, &RECT) -> bool,
+		where F: FnMut(HMONITOR, HDC, &RECT) -> bool,
 	{
 		bool_to_sysresult(
 			unsafe {
@@ -142,8 +142,8 @@ pub trait user_Hdc: Handle {
 
 extern "system" fn enum_display_monitors_proc<F>(
 	hmon: HMONITOR, hdc: HDC, rc: *const RECT, lparam: isize) -> BOOL
-	where F: Fn(HMONITOR, HDC, &RECT) -> bool,
+	where F: FnMut(HMONITOR, HDC, &RECT) -> bool,
 {
-	let func = unsafe { &*(lparam as *const F) };
+	let func = unsafe { &mut *(lparam as *mut F) };
 	func(hmon, hdc, unsafe { &*rc }) as _
 }

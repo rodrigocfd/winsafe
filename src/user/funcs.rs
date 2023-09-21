@@ -402,7 +402,7 @@ pub fn EnumDisplaySettingsEx(
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 pub fn EnumThreadWindows<F>(thread_id: u32, func: F) -> SysResult<()>
-	where F: Fn(HWND) -> bool,
+	where F: FnMut(HWND) -> bool,
 {
 	bool_to_sysresult(
 		unsafe {
@@ -416,9 +416,9 @@ pub fn EnumThreadWindows<F>(thread_id: u32, func: F) -> SysResult<()>
 }
 
 extern "system" fn enum_thread_wnd_proc<F>(hwnd: HWND, lparam: isize) -> BOOL
-	where F: Fn(HWND) -> bool,
+	where F: FnMut(HWND) -> bool,
 {
-	let func = unsafe { &*(lparam as *const F) };
+	let func = unsafe { &mut *(lparam as *mut F) };
 	func(hwnd) as _
 }
 
@@ -437,7 +437,7 @@ extern "system" fn enum_thread_wnd_proc<F>(hwnd: HWND, lparam: isize) -> BOOL
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 pub fn EnumWindows<F>(func: F) -> SysResult<()>
-	where F: Fn(HWND) -> bool,
+	where F: FnMut(HWND) -> bool,
 {
 	bool_to_sysresult(
 		unsafe {
@@ -449,9 +449,9 @@ pub fn EnumWindows<F>(func: F) -> SysResult<()>
 	)
 }
 extern "system" fn enum_windows_proc<F>(hwnd: HWND, lparam: isize) -> BOOL
-	where F: Fn(HWND) -> bool,
+	where F: FnMut(HWND) -> bool,
 {
-	let func = unsafe { &*(lparam as *const F) };
+	let func = unsafe { &mut *(lparam as *mut F) };
 	func(hwnd) as _
 }
 

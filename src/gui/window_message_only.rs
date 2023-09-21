@@ -10,7 +10,7 @@ use crate::user::privs::*;
 
 /// A
 /// [message-only](https://learn.microsoft.com/en-us/windows/win32/winmsg/window-features#message-only-windows)
-/// window.
+/// window, which can handle events.
 #[derive(Clone)]
 pub struct WindowMessageOnly(Pin<Arc<RawBase>>);
 

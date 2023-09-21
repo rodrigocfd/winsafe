@@ -30,7 +30,7 @@ pub trait kernel_Hinstance: Handle {
 		resource_id: IdStr,
 		func: F,
 	) -> SysResult<()>
-		where F: Fn(LANGID) -> bool,
+		where F: FnMut(LANGID) -> bool,
 	{
 		bool_to_sysresult(
 			unsafe {
@@ -76,7 +76,7 @@ pub trait kernel_Hinstance: Handle {
 		resource_type: RtStr,
 		func: F,
 	) -> SysResult<()>
-		where F: Fn(IdStr) -> bool,
+		where F: FnMut(IdStr) -> bool,
 	{
 		bool_to_sysresult(
 			unsafe {
@@ -111,7 +111,7 @@ pub trait kernel_Hinstance: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	fn EnumResourceTypes<F>(&self, func: F) -> SysResult<()>
-		where F: Fn(RtStr) -> bool,
+		where F: FnMut(RtStr) -> bool,
 	{
 		bool_to_sysresult(
 			unsafe {
@@ -336,24 +336,24 @@ pub trait kernel_Hinstance: Handle {
 extern "system" fn enum_resource_languages_proc<F>(
 	_: HINSTANCE, _: *const u16, _: *const u16,
 	language_id: u16, lparam: isize) -> BOOL
-	where F: Fn(LANGID) -> bool,
+	where F: FnMut(LANGID) -> bool,
 {
-	let func = unsafe { &*(lparam as *const F) };
+	let func = unsafe { &mut *(lparam as *mut F) };
 	func(unsafe { LANGID::from_raw(language_id) }) as _
 }
 
 extern "system" fn enum_resource_names_proc<F>(
 	_: HINSTANCE, _: *const u16, resource_id: *mut u16, lparam: isize) -> BOOL
-	where F: Fn(IdStr) -> bool,
+	where F: FnMut(IdStr) -> bool,
 {
-	let func = unsafe { &*(lparam as *const F) };
+	let func = unsafe { &mut *(lparam as *mut F) };
 	func(IdStr::from_ptr(resource_id)) as _
 }
 
 extern "system" fn enum_resource_types_proc<F>(
 	_: HINSTANCE, resource_type: *const u16, lparam: isize) -> BOOL
-	where F: Fn(RtStr) -> bool,
+	where F: FnMut(RtStr) -> bool,
 {
-	let func = unsafe { &*(lparam as *const F) };
+	let func = unsafe { &mut *(lparam as *mut F) };
 	func(RtStr::from_ptr(resource_type)) as _
 }
