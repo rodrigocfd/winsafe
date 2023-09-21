@@ -79,21 +79,23 @@ impl<'a> ListViewColumn<'a> {
 	/// width will be calculated to fill the remaining space.
 	pub fn set_width_to_fill(&self) {
 		let num_cols = self.owner.columns().count();
-		let mut cx_used = 0;
+		if num_cols > 0 {
+			let mut cx_used = 0;
 
-		for i in 0..num_cols {
-			if i != self.index {
-				cx_used += self.owner.columns().get(i).width(); // retrieve cx of each column, but us
+			for i in 0..num_cols {
+				if i != self.index {
+					cx_used += self.owner.columns().get(i).width(); // retrieve cx of each column, but us
+				}
 			}
-		}
 
-		let rc = self.owner.hwnd().GetClientRect().unwrap(); // list view client area
-		self.owner.hwnd()
-			.SendMessage(lvm::SetColumnWidth {
-				index: self.index,
-				width: rc.right as u32 - cx_used,
-			})
-			.unwrap();
+			let rc = self.owner.hwnd().GetClientRect().unwrap(); // list view client area
+			self.owner.hwnd()
+				.SendMessage(lvm::SetColumnWidth {
+					index: self.index,
+					width: rc.right as u32 - cx_used,
+				})
+				.unwrap();
+		}
 	}
 
 	/// Retrieves the title of the column by calling
