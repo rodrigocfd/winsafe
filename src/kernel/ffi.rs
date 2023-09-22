@@ -182,6 +182,7 @@ extern_sys! { "kernel32";
 	HeapFree(HANDLE, u32, PVOID) -> BOOL
 	HeapLock(HANDLE) -> BOOL
 	HeapReAlloc(HANDLE, u32, PVOID, usize) -> PVOID
+	HeapSetInformation(HANDLE, u32, PCVOID, usize) -> BOOL
 	HeapSize(HANDLE, u32, PVOID) -> usize
 	HeapUnlock(HANDLE) -> BOOL
 	HeapValidate(HANDLE, u32, PVOID) -> BOOL

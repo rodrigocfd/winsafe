@@ -219,6 +219,25 @@ pub trait kernel_Hheap: Handle {
 		})
 	}
 
+	/// [`HeapSetInformation`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsetinformation)
+	/// function.
+	fn HeapSetInformation(&self,
+		information_class: co::HEAP_INFORMATION,
+		information: Option<&[u8]>,
+	) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				ffi::HeapSetInformation(
+					self.ptr(),
+					information_class.raw(),
+					information.map_or(std::ptr::null(), |i| vec_ptr(i) as _),
+					information.map_or(0, |i| i.len()),
+				)
+			},
+		)
+	}
+
 	/// [`HeapSize`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsize)
 	/// function.
 	#[must_use]

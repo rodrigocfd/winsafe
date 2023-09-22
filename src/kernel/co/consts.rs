@@ -506,6 +506,16 @@ const_bitflag! { HEAP_CREATE: u32;
 	NO_SERIALIZE 0x0000_0001
 }
 
+const_ordinary! { HEAP_INFORMATION: u32;
+	/// [`HHEAP::HeapSetInformation`](crate::prelude::kernel_Hheap::HeapSetInformation)
+	/// information class (`u32`).
+	=>
+	=>
+	CompatibilityInformation 0
+	EnableTerminationOnCorruption 1
+	OptimizeResources 3
+}
+
 const_bitflag! { HEAP_REALLOC: u32;
 	/// [`HHEAP::HeapReAlloc`](crate::prelude::kernel_Hheap::HeapReAlloc)
 	/// `options` (`u32`).
