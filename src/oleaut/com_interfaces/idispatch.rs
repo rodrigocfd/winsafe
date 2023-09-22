@@ -2,7 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::kernel::{ffi_types::*, privs::*};
 use crate::ole::privs::*;
 use crate::prelude::*;
 use crate::vt::*;
@@ -45,12 +45,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 		lcid: LCID,
 	) -> HrResult<Vec<i32>>
 	{
-		let wnames = names.iter()
-			.map(|name| WString::from_str(name.as_ref()))
-			.collect::<Vec<_>>();
-		let wptrs = wnames.iter()
-			.map(|wname| wname.as_ptr())
-			.collect::<Vec<_>>();
+		let (_wstrs, pwstrs) = create_wstr_ptr_vecs(Some(names));
 		let mut ids = vec![i32::default(); names.len()];
 
 		ok_to_hrresult(
@@ -58,7 +53,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 				(vt::<IDispatchVT>(self).GetIDsOfNames)(
 					self.ptr(),
 					&co::IID::default() as *const _ as _,
-					wptrs.as_ptr(),
+					vec_ptr(&pwstrs),
 					names.len() as _,
 					lcid.into(),
 					ids.as_mut_ptr() as _,

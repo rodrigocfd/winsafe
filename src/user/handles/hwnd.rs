@@ -1685,7 +1685,10 @@ pub trait user_Hwnd: Handle {
 	fn SetWindowText(&self, text: &str) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
-				ffi::SetWindowTextW(self.ptr(), WString::from_str(text).as_ptr())
+				ffi::SetWindowTextW(
+					self.ptr(),
+					WString::from_str(text).as_ptr(),
+				)
 			},
 		)
 	}
@@ -1712,7 +1715,7 @@ pub trait user_Hwnd: Handle {
 	/// function.
 	fn ShowWindowAsync(&self, show_cmd: co::SW) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { ffi::ShowWindowAsync(self.ptr(), show_cmd.raw()) }
+			unsafe { ffi::ShowWindowAsync(self.ptr(), show_cmd.raw()) },
 		)
 	}
 
@@ -1730,7 +1733,7 @@ pub trait user_Hwnd: Handle {
 				how.raw(),
 				rect.map_or(std::ptr::null(), |rc| &rc as *const _ as _),
 				kids.map_or(0, |s| s.len() as _),
-				kids.map_or(std::ptr::null(), |s| s.as_ptr() as *const _ as _),
+				kids.map_or(std::ptr::null(), |hs| vec_ptr(hs) as *const _ as _),
 			)
 		} {
 			0 => match GetLastError() {

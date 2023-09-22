@@ -1,5 +1,6 @@
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 use crate::user::privs::*;
@@ -209,7 +210,7 @@ unsafe impl<'a> MsgSend for SetAccel<'a> {
 		WndMsg {
 			msg_id: co::UDM::SETACCEL.into(),
 			wparam: self.info.len(),
-			lparam: self.info.as_ptr() as _,
+			lparam: vec_ptr(self.info) as _,
 		}
 	}
 }

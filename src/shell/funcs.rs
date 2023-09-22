@@ -213,7 +213,7 @@ pub fn SHCreateItemFromParsingName<T>(
 /// ```
 #[must_use]
 pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
-	let p = unsafe { ffi::SHCreateMemStream(src.as_ptr(), src.len() as _) };
+	let p = unsafe { ffi::SHCreateMemStream(vec_ptr(src), src.len() as _) };
 	if p.is_null() {
 		Err(co::HRESULT::E_OUTOFMEMORY)
 	} else {

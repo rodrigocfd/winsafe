@@ -1472,7 +1472,7 @@ pub fn MultiByteToWideChar(
 		ffi::MultiByteToWideChar(
 			code_page.raw() as _,
 			flags.raw(),
-			multi_byte_str.as_ptr(),
+			vec_ptr(multi_byte_str),
 			multi_byte_str.len() as _,
 			std::ptr::null_mut(),
 			0,
@@ -1489,7 +1489,7 @@ pub fn MultiByteToWideChar(
 			ffi::MultiByteToWideChar(
 				code_page.raw() as _,
 				flags.raw(),
-				multi_byte_str.as_ptr(),
+				vec_ptr(multi_byte_str),
 				multi_byte_str.len() as _,
 				buf.as_mut_ptr(),
 				num_bytes as _,
@@ -1501,7 +1501,9 @@ pub fn MultiByteToWideChar(
 /// [`OutputDebugString`](https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-outputdebugstringw)
 /// function.
 pub fn OutputDebugString(output_string: &str) {
-	unsafe { ffi::OutputDebugStringW(WString::from_str(output_string).as_ptr()) }
+	unsafe {
+		ffi::OutputDebugStringW(WString::from_str(output_string).as_ptr())
+	}
 }
 
 /// [`QueryPerformanceCounter`](https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
@@ -1710,7 +1712,7 @@ pub fn WideCharToMultiByte(
 		ffi::WideCharToMultiByte(
 			code_page.raw() as _,
 			flags.raw(),
-			wide_char_str.as_ptr(),
+			vec_ptr(wide_char_str),
 			wide_char_str.len() as _,
 			std::ptr::null_mut(),
 			0,
@@ -1730,7 +1732,7 @@ pub fn WideCharToMultiByte(
 			ffi::WideCharToMultiByte(
 				code_page.raw() as _,
 				flags.raw(),
-				wide_char_str.as_ptr(),
+				vec_ptr(wide_char_str),
 				wide_char_str.len() as _,
 				u8_buf.as_mut_ptr() as _,
 				num_bytes as _,

@@ -86,7 +86,7 @@ pub unsafe fn VarQueryValue<T>(
 
 	bool_to_sysresult(
 		ffi::VerQueryValueW(
-			block.as_ptr() as _,
+			vec_ptr(block) as _,
 			WString::from_str(sub_block).as_ptr(),
 			&mut lp_lp_buffer as *mut _ as _,
 			&mut pu_len,

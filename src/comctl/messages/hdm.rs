@@ -1,5 +1,6 @@
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 use crate::user::privs::*;
@@ -604,7 +605,7 @@ unsafe impl<'a> MsgSend for SetOrderArray<'a> {
 		WndMsg {
 			msg_id: co::HDM::SETORDERARRAY.into(),
 			wparam: self.buffer.len(),
-			lparam: self.buffer.as_ptr() as _,
+			lparam: vec_ptr(self.buffer) as _,
 		}
 	}
 }

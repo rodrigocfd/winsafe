@@ -22,7 +22,7 @@ impl IdObmStr {
 		Self::Str(WString::from_str(v))
 	}
 
-	/// Returns a pointer to the raw data content.
+	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
@@ -53,7 +53,7 @@ impl IdOcrStr {
 		Self::Str(WString::from_str(v))
 	}
 
-	/// Returns a pointer to the raw data content.
+	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
@@ -84,7 +84,7 @@ impl IdOicStr {
 		Self::Str(WString::from_str(v))
 	}
 
-	/// Returns a pointer to the raw data content.
+	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {

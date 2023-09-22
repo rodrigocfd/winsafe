@@ -61,7 +61,7 @@ impl AtomStr {
 		Self::Str(WString::from_str(v))
 	}
 
-	/// Returns a pointer to the raw data content.
+	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
@@ -116,7 +116,7 @@ impl BmpPtrStr {
 		Self::Str(WString::from_str(v))
 	}
 
-	/// Returns a pointer to the raw data content.
+	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
@@ -220,7 +220,7 @@ pub enum HwndPlace {
 }
 
 impl HwndPlace {
-	/// Returns a pointer to the raw data content.
+	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
@@ -275,7 +275,7 @@ impl IdIdcStr {
 		Self::Str(WString::from_str(v))
 	}
 
-	/// Returns a pointer to the raw data content.
+	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
@@ -306,7 +306,7 @@ impl IdIdiStr {
 		Self::Str(WString::from_str(v))
 	}
 
-	/// Returns a pointer to the raw data content.
+	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
@@ -408,7 +408,7 @@ impl IdPos {
 /// Variant parameter for:
 ///
 /// * [`HMENU::append_item`](crate::prelude::user_Hmenu::append_item).
-pub enum MenuEnum<'a> {
+pub enum MenuItem<'a> {
 	/// A selectable entry item, with command ID and text.
 	Entry(u16, &'a str),
 	/// A separator.

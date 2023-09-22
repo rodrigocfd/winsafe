@@ -63,8 +63,8 @@ pub trait kernel_Heventlog: Handle {
 					user_sid.map_or(std::ptr::null(), |s| s as *const _ as _),
 					strings.map_or(0, |ss| ss.len() as _),
 					raw_data.map_or(0, |d| d.len() as _),
-					pwstrs.map_or(std::ptr::null(), |ws| ws.as_ptr()),
-					raw_data.map_or(std::ptr::null(), |d| d.as_ptr() as _),
+					vec_ptr(&pwstrs),
+					raw_data.map_or(std::ptr::null(), |d| vec_ptr(d) as _),
 				)
 			},
 		)

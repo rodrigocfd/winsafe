@@ -1,5 +1,6 @@
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 use crate::user::privs::*;
@@ -560,7 +561,7 @@ unsafe impl<'a> MsgSend for SetDayState<'a> {
 		WndMsg {
 			msg_id: co::MCM::SETDAYSTATE.into(),
 			wparam: self.months.len(),
-			lparam: self.months.as_ptr() as _,
+			lparam: vec_ptr(self.months) as _,
 		}
 	}
 }
@@ -657,7 +658,7 @@ unsafe impl<'a> MsgSend for SetRange<'a> {
 		WndMsg {
 			msg_id: co::MCM::SETRANGE.into(),
 			wparam: self.which.raw() as _,
-			lparam: self.limits.as_ptr() as _,
+			lparam: vec_ptr(self.limits) as _,
 		}
 	}
 }
@@ -681,7 +682,7 @@ unsafe impl<'a> MsgSend for SetSelRange<'a> {
 		WndMsg {
 			msg_id: co::MCM::SETSELRANGE.into(),
 			wparam: 0,
-			lparam: self.limits.as_ptr() as _,
+			lparam: vec_ptr(self.limits) as _,
 		}
 	}
 }

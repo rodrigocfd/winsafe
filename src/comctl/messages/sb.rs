@@ -1,6 +1,7 @@
 use crate::co;
 use crate::comctl::privs::*;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 use crate::user::privs::*;
@@ -315,7 +316,7 @@ unsafe impl<'a> MsgSend for SetParts<'a> {
 		WndMsg {
 			msg_id: co::SB::SETPARTS.into(),
 			wparam: self.right_edges.len(),
-			lparam: self.right_edges.as_ptr() as _,
+			lparam: vec_ptr(self.right_edges) as _,
 		}
 	}
 }

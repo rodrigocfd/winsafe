@@ -581,7 +581,7 @@ pub trait gdi_Hdc: user_Hdc {
 	fn PolyBezier(&self, pts: &[POINT]) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
-				ffi::PolyBezier(self.ptr(), pts.as_ptr() as _, pts.len() as _)
+				ffi::PolyBezier(self.ptr(), vec_ptr(pts) as _, pts.len() as _)
 			},
 		)
 	}
@@ -591,7 +591,7 @@ pub trait gdi_Hdc: user_Hdc {
 	fn PolyBezierTo(&self, pts: &[POINT]) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
-				ffi::PolyBezierTo(self.ptr(), pts.as_ptr() as _, pts.len() as _)
+				ffi::PolyBezierTo(self.ptr(), vec_ptr(pts) as _, pts.len() as _)
 			},
 		)
 	}
@@ -601,7 +601,7 @@ pub trait gdi_Hdc: user_Hdc {
 	fn Polyline(&self, pts: &[POINT]) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
-				ffi::Polyline(self.ptr(), pts.as_ptr() as _, pts.len() as _)
+				ffi::Polyline(self.ptr(), vec_ptr(pts) as _, pts.len() as _)
 			},
 		)
 	}
@@ -611,7 +611,7 @@ pub trait gdi_Hdc: user_Hdc {
 	fn PolylineTo(&self, pts: &[POINT]) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
-				ffi::PolylineTo(self.ptr(), pts.as_ptr() as _, pts.len() as _)
+				ffi::PolylineTo(self.ptr(), vec_ptr(pts) as _, pts.len() as _)
 			},
 		)
 	}
@@ -845,7 +845,7 @@ pub trait gdi_Hdc: user_Hdc {
 				hbm.ptr(),
 				first_scan_line,
 				num_scan_lines,
-				dib_color_data.as_ptr() as _,
+				vec_ptr(dib_color_data) as _,
 				bmi as *const _ as _,
 				color_use.raw(),
 			)

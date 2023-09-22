@@ -43,27 +43,27 @@ pub trait user_Hmenu: Handle {
 	/// # let hmenu = w::HMENU::NULL;
 	///
 	/// hmenu.append_item(&[
-	///     w::MenuEnum::Entry(ID_FILE_OPEN, "&Open"),
-	///     w::MenuEnum::Entry(ID_FILE_OPEN, "&Save"),
-	///     w::MenuEnum::Separator,
-	///     w::MenuEnum::Entry(ID_FILE_EXIT, "E&xit"),
+	///     w::MenuItem::Entry(ID_FILE_OPEN, "&Open"),
+	///     w::MenuItem::Entry(ID_FILE_OPEN, "&Save"),
+	///     w::MenuItem::Separator,
+	///     w::MenuItem::Entry(ID_FILE_EXIT, "E&xit"),
 	/// ])?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
-	fn append_item(&self, items: &[MenuEnum]) -> SysResult<()> {
+	fn append_item(&self, items: &[MenuItem]) -> SysResult<()> {
 		items.iter().map(|item| {
 			match item {
-				MenuEnum::Entry(cmd_id, text) => self.AppendMenu(
+				MenuItem::Entry(cmd_id, text) => self.AppendMenu(
 					co::MF::STRING,
 					IdMenu::Id(*cmd_id),
 					BmpPtrStr::from_str(*text),
 				),
-				MenuEnum::Separator => self.AppendMenu(
+				MenuItem::Separator => self.AppendMenu(
 					co::MF::SEPARATOR,
 					IdMenu::None,
 					BmpPtrStr::None,
 				),
-				MenuEnum::Submenu(hmenu, text) => self.AppendMenu(
+				MenuItem::Submenu(hmenu, text) => self.AppendMenu(
 					co::MF::POPUP,
 					IdMenu::Menu(hmenu),
 					BmpPtrStr::from_str(*text),

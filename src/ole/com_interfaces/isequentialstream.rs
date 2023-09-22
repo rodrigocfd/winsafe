@@ -2,6 +2,7 @@
 
 use crate::decl::*;
 use crate::kernel::ffi_types::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 use crate::vt::*;
@@ -63,7 +64,7 @@ pub trait ole_ISequentialStream: ole_IUnknown {
 			unsafe {
 				(vt::<ISequentialStreamVT>(self).Read)(
 					self.ptr(),
-					data.as_ptr() as _,
+					vec_ptr(data) as _,
 					data.len() as _,
 					&mut num_written,
 				)

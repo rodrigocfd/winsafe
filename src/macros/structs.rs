@@ -313,13 +313,15 @@ macro_rules! impl_drop_comptr {
 /// memory block.
 macro_rules! pub_fn_mem_block {
 	() => {
-		/// Returns a pointer to the allocated memory block.
+		/// Returns a pointer to the allocated memory block, or null if not
+		/// allocated.
 		#[must_use]
 		pub const fn as_ptr(&self) -> *const std::ffi::c_void {
 			self.pmem
 		}
 
-		/// Returns a mutable pointer to the allocated memory block.
+		/// Returns a mutable pointer to the allocated memory block, or null if
+		/// not allocated.
 		#[must_use]
 		pub fn as_mut_ptr(&mut self) -> *mut std::ffi::c_void {
 			self.pmem

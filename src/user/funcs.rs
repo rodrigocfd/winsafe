@@ -780,7 +780,9 @@ pub unsafe fn RegisterClassEx(wcx: &WNDCLASSEX) -> SysResult<ATOM> {
 /// function.
 #[must_use]
 pub fn RegisterWindowMessage(s: &str) -> SysResult<u32> {
-	match unsafe { ffi::RegisterWindowMessageW(WString::from_str(s).as_ptr()) } {
+	match unsafe {
+		ffi::RegisterWindowMessageW(WString::from_str(s).as_ptr())
+	} {
 		0 => Err(GetLastError()),
 		id => Ok(id),
 	}
@@ -827,11 +829,14 @@ pub fn RegisterWindowMessage(s: &str) -> SysResult<u32> {
 /// # Ok::<_, co::ERROR>(())
 /// ```
 pub fn SendInput(inputs: &[HwKbMouse]) -> SysResult<u32> {
-	let objs = inputs.iter().map(|ipt| INPUT::new(*ipt)).collect::<Vec<_>>();
+	let objs = inputs.iter()
+		.map(|ipt| INPUT::new(*ipt))
+		.collect::<Vec<_>>();
+
 	match unsafe {
 		ffi::SendInput(
 			objs.len() as _,
-			objs.as_ptr() as _,
+			vec_ptr(&objs) as _,
 			std::mem::size_of::<INPUT>() as _,
 		)
 	} {
@@ -976,7 +981,11 @@ pub fn UnionRect(dest: &mut RECT, src1: &RECT, src2: &RECT) -> SysResult<()> {
 
 /// [`UnregisterClass`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw)
 /// function.
-pub fn UnregisterClass(class_name: AtomStr, hinst: &HINSTANCE) -> SysResult<()> {
+pub fn UnregisterClass(
+	class_name: AtomStr,
+	hinst: &HINSTANCE,
+) -> SysResult<()>
+{
 	bool_to_sysresult(
 		unsafe { ffi::UnregisterClassW(class_name.as_ptr(), hinst.ptr()) },
 	)

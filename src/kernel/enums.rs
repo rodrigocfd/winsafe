@@ -60,7 +60,7 @@ impl IdStr {
 		}
 	}
 
-	/// Returns a pointer to the raw data content.
+	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {
@@ -257,7 +257,7 @@ impl RtStr {
 		}
 	}
 
-	/// Returns a pointer to the raw data content.
+	/// Returns a pointer to the raw data content, or null if no content.
 	#[must_use]
 	pub fn as_ptr(&self) -> *const u16 {
 		match self {

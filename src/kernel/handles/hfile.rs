@@ -322,7 +322,7 @@ pub trait kernel_Hfile: Handle {
 			unsafe {
 				ffi::WriteFile(
 					self.ptr(),
-					data.as_ptr() as _,
+					vec_ptr(data) as _,
 					data.len() as _,
 					&mut bytes_written,
 					overlapped.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),

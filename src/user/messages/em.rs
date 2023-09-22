@@ -1,5 +1,6 @@
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 use crate::user::privs::*;
@@ -851,7 +852,7 @@ unsafe impl<'a> MsgSend for SetTabStops<'a> {
 		WndMsg {
 			msg_id: co::EM::SETTABSTOPS.into(),
 			wparam: self.tab_stops.map_or(0, |ts| ts.len() as _),
-			lparam: self.tab_stops.map_or(0, |ts| ts.as_ptr() as _),
+			lparam: self.tab_stops.map_or(0, |ts| vec_ptr(ts) as _),
 		}
 	}
 }

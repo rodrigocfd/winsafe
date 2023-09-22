@@ -164,7 +164,10 @@ pub trait kernel_Hkey: Handle {
 	fn RegDeleteKey(&self, sub_key: &str) -> SysResult<()> {
 		error_to_sysresult(
 			unsafe {
-				ffi::RegDeleteKeyW(self.ptr(), WString::from_str(sub_key).as_ptr())
+				ffi::RegDeleteKeyW(
+					self.ptr(),
+					WString::from_str(sub_key).as_ptr(),
+				)
 			},
 		)
 	}

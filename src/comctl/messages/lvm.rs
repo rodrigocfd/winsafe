@@ -1,5 +1,6 @@
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -2097,7 +2098,7 @@ unsafe impl<'a> MsgSend for SetColumnOrderArray<'a> {
 		WndMsg {
 			msg_id: co::LVM::SETCOLUMNORDERARRAY.into(),
 			wparam: self.order.len() as _,
-			lparam: self.order.as_ptr() as _,
+			lparam: vec_ptr(self.order) as _,
 		}
 	}
 }
@@ -2827,7 +2828,7 @@ unsafe impl<'a> MsgSend for SetWorkAreas<'a> {
 		WndMsg {
 			msg_id: co::LVM::SETWORKAREAS.into(),
 			wparam: self.rects.map_or(0, |r| r.len() as _),
-			lparam: self.rects.map_or(0, |r| r.as_ptr() as _),
+			lparam: self.rects.map_or(0, |r| vec_ptr(r) as _),
 		}
 	}
 }

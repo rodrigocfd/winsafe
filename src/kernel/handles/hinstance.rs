@@ -216,7 +216,9 @@ pub trait kernel_Hinstance: Handle {
 	fn GetModuleHandle(module_name: Option<&str>) -> SysResult<HINSTANCE> {
 		ptr_to_sysresult_handle(
 			unsafe {
-				ffi::GetModuleHandleW(WString::from_opt_str(module_name).as_ptr())
+				ffi::GetModuleHandleW(
+					WString::from_opt_str(module_name).as_ptr(),
+				)
 			},
 		)
 	}
@@ -232,7 +234,7 @@ pub trait kernel_Hinstance: Handle {
 			unsafe {
 				ffi::GetProcAddress(
 					self.ptr(),
-					str_to_iso88591(proc_name).as_ptr(),
+					vec_ptr(&str_to_iso88591(proc_name)),
 				) as _
 			},
 		).map(|ptr| ptr as _)
