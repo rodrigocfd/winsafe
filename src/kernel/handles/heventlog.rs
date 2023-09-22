@@ -52,6 +52,7 @@ pub trait kernel_Heventlog: Handle {
 		raw_data: Option<&[u8]>,
 	) -> SysResult<()>
 	{
+		let (_wstrs, pwstrs) = create_wstr_ptr_vecs(strings);
 		bool_to_sysresult(
 			unsafe {
 				ffi::ReportEventW(
@@ -60,9 +61,9 @@ pub trait kernel_Heventlog: Handle {
 					category,
 					event_id,
 					user_sid.map_or(std::ptr::null(), |s| s as *const _ as _),
-					strings.map_or(0, |s| s.len() as _),
+					strings.map_or(0, |ss| ss.len() as _),
 					raw_data.map_or(0, |d| d.len() as _),
-					strings.map_or(std::ptr::null(), |s| WString::from_str_vec(s).as_ptr() as _),
+					pwstrs.map_or(std::ptr::null(), |ws| ws.as_ptr()),
 					raw_data.map_or(std::ptr::null(), |d| d.as_ptr() as _),
 				)
 			},

@@ -107,3 +107,28 @@ pub(crate) fn parse_multi_z_str(src: *const u16) -> Vec<String> {
 	}
 	strings
 }
+
+/// Creates two vectors:
+/// * the first with each string converted to `WString`;
+/// * the second with the pointers to each `WString` in the first vector.
+///
+/// If `strings` is `None`, returns (`None`, `None`).
+pub(crate) fn create_wstr_ptr_vecs(
+	strings: Option<&[impl AsRef<str>]>,
+) -> (Option<Vec<WString>>, Option<Vec<*const u16>>)
+{
+	match strings {
+		Some(ss) => {
+			let wstrs = ss.iter()
+				.map(|s| WString::from_str(s))
+				.collect::<Vec<_>>();
+
+			let pwstrs = wstrs.iter()
+				.map(|w| w.as_ptr())
+				.collect::<Vec<_>>();
+
+			(Some(wstrs), Some(pwstrs))
+		},
+		None => (None, None),
+	}
+}

@@ -168,7 +168,8 @@ impl RegistryValue {
 	/// Returns a pointer to the raw data, along with the raw data length.
 	#[must_use]
 	pub fn as_ptr_with_len(&self,
-		str_buf: &mut WString) -> (*const std::ffi::c_void, u32)
+		str_buf: &mut WString,
+	) -> (*const std::ffi::c_void, u32)
 	{
 		match self {
 			Self::Binary(b) => (b.as_ptr() as _, b.len() as _),
