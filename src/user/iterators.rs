@@ -1,5 +1,6 @@
 use crate::co;
 use crate::decl::*;
+use crate::prelude::*;
 use crate::user::ffi;
 
 pub(in crate::user) struct EnumdisplaydevicesIter<'a> {
@@ -51,6 +52,44 @@ impl<'a> EnumdisplaydevicesIter<'a> {
 			display_device: DISPLAY_DEVICE::default(),
 			idev_num: 0,
 			flags,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+pub(in crate::user) struct HmenuIteritems<'a, H>
+	where H: user_Hmenu,
+{
+	hmenu: &'a H,
+	num_items: u32,
+	current: u32,
+}
+
+impl<'a, H> Iterator for HmenuIteritems<'a, H>
+	where H: user_Hmenu,
+{
+	type Item = SysResult<MenuItemInfo>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if self.current == self.num_items {
+			None
+		} else {
+			let nfo = self.hmenu.item_info(IdPos::Pos(self.current));
+			self.current += 1;
+			Some(nfo)
+		}
+	}
+}
+
+impl<'a, H> HmenuIteritems<'a, H>
+	where H: user_Hmenu,
+{
+	pub(in crate::user) fn new(hmenu: &'a H) -> Self {
+		Self {
+			hmenu,
+			num_items: hmenu.GetMenuItemCount().unwrap_or_default(), // zero if any error
+			current: 0,
 		}
 	}
 }

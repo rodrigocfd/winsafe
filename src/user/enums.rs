@@ -407,7 +407,7 @@ impl IdPos {
 
 /// Variant parameter for:
 ///
-/// * [`HMENU::AppendMenuEnum`](crate::prelude::user_Hmenu::AppendMenuEnum).
+/// * [`HMENU::append_item`](crate::prelude::user_Hmenu::append_item).
 pub enum MenuEnum<'a> {
 	/// A selectable entry item, with command ID and text.
 	Entry(u16, &'a str),
@@ -415,6 +415,19 @@ pub enum MenuEnum<'a> {
 	Separator,
 	/// A submenu, with its entry text.
 	Submenu(&'a HMENU, &'a str),
+}
+
+/// Variant parameter for:
+///
+/// * [`HMENU::item_info`](crate::prelude::user_Hmenu::item_info);
+/// * [`HMENU::iter_items`](crate::prelude::user_Hmenu::iter_items).
+pub enum MenuItemInfo {
+	/// A selectable entry item, with command ID and text.
+	Entry(u16, String),
+	/// A separator.
+	Separator,
+	/// A submenu, with its entry text.
+	Submenu(HMENU, String),
 }
 
 /// Variant parameter for:

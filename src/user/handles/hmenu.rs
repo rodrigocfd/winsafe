@@ -5,7 +5,7 @@ use crate::decl::*;
 use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
-use crate::user::ffi;
+use crate::user::{iterators::*, ffi};
 
 impl_handle! { HMENU;
 	/// Handle to a
@@ -23,29 +23,6 @@ impl user_Hmenu for HMENU {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait user_Hmenu: Handle {
-	/// [`AppendMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-appendmenuw)
-	/// function.
-	///
-	/// This method is rather tricky, consider using
-	/// [`HMENU::AppendMenuEnum`](crate::prelude::user_Hmenu::AppendMenuEnum).
-	fn AppendMenu(&self,
-		flags: co::MF,
-		new_item: IdMenu,
-		content: BmpPtrStr,
-	) -> SysResult<()>
-	{
-		bool_to_sysresult(
-			unsafe {
-				ffi::AppendMenuW(
-					self.ptr(),
-					flags.raw(),
-					new_item.as_usize(),
-					content.as_ptr(),
-				)
-			},
-		)
-	}
-
 	/// A more convenient
 	/// [`HMENU::AppendMenu`](crate::prelude::user_Hmenu::AppendMenu).
 	///
@@ -65,7 +42,7 @@ pub trait user_Hmenu: Handle {
 	/// let hmenu: w::HMENU; // initialized somewhere
 	/// # let hmenu = w::HMENU::NULL;
 	///
-	/// hmenu.AppendMenuEnum(&[
+	/// hmenu.append_item(&[
 	///     w::MenuEnum::Entry(ID_FILE_OPEN, "&Open"),
 	///     w::MenuEnum::Entry(ID_FILE_OPEN, "&Save"),
 	///     w::MenuEnum::Separator,
@@ -73,7 +50,7 @@ pub trait user_Hmenu: Handle {
 	/// ])?;
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
-	fn AppendMenuEnum(&self, items: &[MenuEnum]) -> SysResult<()> {
+	fn append_item(&self, items: &[MenuEnum]) -> SysResult<()> {
 		items.iter().map(|item| {
 			match item {
 				MenuEnum::Entry(cmd_id, text) => self.AppendMenu(
@@ -95,6 +72,98 @@ pub trait user_Hmenu: Handle {
 		}).collect::<Result<Vec<_>, _>>()?;
 
 		Ok(())
+	}
+
+	/// Simpler version of
+	/// [`HMENU::GetMenuItemInfo`](crate::prelude::user_Hmenu::GetMenuItemInfo),
+	/// which returns a [`MenuItemInfo`](crate::MenuItemInfo) instead of the
+	/// tricky [`MENUITEMINFO`](crate::MENUITEMINFO).
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::{self as w, prelude::*};
+	///
+	/// let hmenu: w::HMENU; // initialized somewhere
+	/// # let hmenu = w::HMENU::NULL;
+	///
+	/// let item_info = hmenu.item_info(w::IdPos::Id(0))?;
+	/// match item_info {
+	///     w::MenuItemInfo::Entry(id, txt) => println!("item {} {}", id, txt),
+	///     w::MenuItemInfo::Separator => println!("separator"),
+	///     w::MenuItemInfo::Submenu(hsub, txt) => println!("submenu {} {}", hsub, txt),
+	/// }
+	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// ```
+	#[must_use]
+	fn item_info(&self, id_or_pos: IdPos) -> SysResult<MenuItemInfo> {
+		let mut mii = MENUITEMINFO::default();
+		mii.fMask = co::MIIM::FTYPE | co::MIIM::ID | co::MIIM::STATE | co::MIIM::SUBMENU;
+		self.GetMenuItemInfo(id_or_pos, &mut mii)?;
+
+		let nfo = if mii.fType == co::MFT::SEPARATOR {
+			MenuItemInfo::Separator
+		} else {
+			let text = self.GetMenuString(id_or_pos)?;
+			if mii.hSubMenu != HMENU::NULL {
+				MenuItemInfo::Submenu(mii.hSubMenu, text)
+			} else {
+				MenuItemInfo::Entry(mii.wID as _, text)
+			}
+		};
+
+		Ok(nfo)
+	}
+
+	/// Returns an iterator over all menu items, including submenus and
+	/// separators.
+	///
+	/// # Examples
+	///
+	/// ```rust,no_run
+	/// use winsafe::{self as w, prelude::*};
+	///
+	/// let hmenu: w::HMENU; // initialized somewhere
+	/// # let hmenu = w::HMENU::NULL;
+	///
+	/// for item_info in hmenu.iter_items() {
+	///     let item_info = item_info?;
+	///     match item_info {
+	///         w::MenuItemInfo::Entry(id, txt) => println!("item {} {}", id, txt),
+	///         w::MenuItemInfo::Separator => println!("separator"),
+	///         w::MenuItemInfo::Submenu(hsub, txt) => println!("submenu {} {}", hsub, txt),
+	///     }
+	/// }
+	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// ```
+	#[must_use]
+	fn iter_items(&self,
+	) -> Box<dyn Iterator<Item = SysResult<MenuItemInfo>> + '_>
+	{
+		Box::new(HmenuIteritems::new(self))
+	}
+
+	/// [`AppendMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-appendmenuw)
+	/// function.
+	///
+	/// This method is rather tricky, consider using
+	/// [`HMENU::append_item`](crate::prelude::user_Hmenu::append_item).
+	fn AppendMenu(&self,
+		flags: co::MF,
+		new_item: IdMenu,
+		content: BmpPtrStr,
+	) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				ffi::AppendMenuW(
+					self.ptr(),
+					flags.raw(),
+					new_item.as_usize(),
+					content.as_ptr(),
+				)
+			},
+		)
 	}
 
 	/// [`CheckMenuItem`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-checkmenuitem)
@@ -313,6 +382,9 @@ pub trait user_Hmenu: Handle {
 
 	/// [`GetMenuItemInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuiteminfow)
 	/// function.
+	///
+	/// This method is rather tricky, consider using
+	/// [`HMENU::item_info`](crate::prelude::user_Hmenu::item_info).
 	fn GetMenuItemInfo(&self,
 		id_or_pos: IdPos,
 		mii: &mut MENUITEMINFO,
