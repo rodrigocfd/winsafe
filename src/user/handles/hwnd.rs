@@ -756,7 +756,7 @@ pub trait user_Hwnd: Handle {
 	#[must_use]
 	fn GetWindowLongPtr(&self, index: co::GWLP) -> isize {
 		#[cfg(target_pointer_width = "32")]
-		unsafe { ffi::GetWindowLongW(self.as_ptr(), index.raw()) }
+		unsafe { ffi::GetWindowLongW(self.ptr(), index.raw()) }
 
 		#[cfg(target_pointer_width = "64")]
 		unsafe { ffi::GetWindowLongPtrW(self.ptr(), index.raw()) }
@@ -1619,7 +1619,7 @@ pub trait user_Hwnd: Handle {
 	/// function.
 	fn SetWindowLongPtr(&self, index: co::GWLP, new_long: isize) -> isize {
 		#[cfg(target_pointer_width = "32")]
-		unsafe { ffi::SetWindowLongW(self.as_ptr(), index.raw(), new_long) }
+		unsafe { ffi::SetWindowLongW(self.ptr(), index.raw(), new_long) }
 
 		#[cfg(target_pointer_width = "64")]
 		unsafe { ffi::SetWindowLongPtrW(self.ptr(), index.raw(), new_long) }
