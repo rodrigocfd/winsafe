@@ -77,7 +77,9 @@ pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 	/// [`IBaseFilter::JoinFilterGraph`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-joinfiltergraph)
 	/// method.
 	fn JoinFilterGraph(&self,
-		graph: Option<&impl dshow_IFilterGraph>, name: &str) -> HrResult<()>
+		graph: Option<&impl dshow_IFilterGraph>,
+		name: &str,
+	) -> HrResult<()>
 	{
 		ok_to_hrresult(
 			unsafe {

@@ -1,4 +1,4 @@
-#![allow(non_camel_case_types)]
+#![allow(non_camel_case_types, non_upper_case_globals)]
 
 const_bitflag! { DXGI_ENUM_MODES: u32;
 	/// [`DXGI_ENUM_MODES`](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-enum-modes)
@@ -178,6 +178,24 @@ const_ordinary! { DXGI_MODE_SCANLINE_ORDER: u32;
 	PROGRESSIVE 1
 	UPPER_FIELD_FIRST 2
 	LOWER_FIELD_FIRST 3
+}
+
+const_bitflag! { DXGI_PRESENT: u32;
+	/// [`DXGI_PRESENT`](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-present)
+	/// enumeration (`u32`).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	DO_NOT_SEQUENCE 0x0000_0002
+	TEST 0x0000_0001
+	RESTART 0x0000_0004
+	DO_NOT_WAIT 0x0000_0008
+	RESTRICT_TO_OUTPUT 0x0000_0010
+	STEREO_PREFER_RIGHT 0x0000_0020
+	STEREO_TEMPORARY_MONO 0x0000_0040
+	USE_DURATION 0x0000_0100
+	ALLOW_TEARING 0x0000_0200
 }
 
 const_ordinary! { DXGI_RESIDENCY: u32;

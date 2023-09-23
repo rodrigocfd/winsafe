@@ -15,7 +15,7 @@ pub struct IDXGIFactoryVT {
 	pub EnumAdapters: fn(COMPTR, u32, *const COMPTR) -> HRES,
 	pub MakeWindowAssociation: fn(COMPTR, HANDLE, u32) -> HRES,
 	pub GetWindowAssociation: fn(COMPTR, *mut HANDLE) -> HRES,
-	pub CreateSwapChain: fn(COMPTR, *const COMPTR, PCVOID, *mut COMPTR) -> HRES,
+	pub CreateSwapChain: fn(COMPTR, COMPTR, PCVOID, *mut COMPTR) -> HRES,
 	pub CreateSoftwareAdapter: fn(COMPTR, HANDLE, *mut COMPTR) -> HRES,
 }
 
@@ -65,6 +65,27 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 				(vt::<IDXGIFactoryVT>(self).CreateSoftwareAdapter)(
 					self.ptr(),
 					hmodule.ptr(),
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
+	}
+
+	/// [`IDXGIFactory::CreateSwapChain`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-createswapchain)
+	/// method.
+	#[must_use]
+	fn CreateSwapChain(&self,
+		device: &impl ole_IUnknown,
+		desc: &DXGI_SWAP_CHAIN_DESC,
+	) -> HrResult<IDXGISwapChain>
+	{
+		let mut queried = unsafe { IDXGISwapChain::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGIFactoryVT>(self).CreateSwapChain)(
+					self.ptr(),
+					device.ptr(),
+					desc as *const _ as _,
 					queried.as_mut(),
 				)
 			},

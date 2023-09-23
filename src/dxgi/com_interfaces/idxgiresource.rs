@@ -31,7 +31,7 @@ impl dxgi_IDXGIDeviceSubObject for IDXGIResource {}
 impl dxgi_IDXGIResource for IDXGIResource {}
 
 /// This trait is enabled with the `dxgi` feature, and provides methods for
-/// [`IDXGIDeviceSubObject`](crate::IDXGIDeviceSubObject).
+/// [`IDXGIResource`](crate::IDXGIResource).
 ///
 /// Prefer importing this trait through the prelude:
 ///

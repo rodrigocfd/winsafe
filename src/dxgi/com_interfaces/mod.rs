@@ -6,6 +6,7 @@ mod idxgiobject;
 mod idxgioutput;
 mod idxgiresource;
 mod idxgisurface;
+mod idxgiswapchain;
 
 pub mod decl {
 	pub use super::idxgiadapter::IDXGIAdapter;
@@ -16,6 +17,7 @@ pub mod decl {
 	pub use super::idxgioutput::IDXGIOutput;
 	pub use super::idxgiresource::IDXGIResource;
 	pub use super::idxgisurface::IDXGISurface;
+	pub use super::idxgiswapchain::IDXGISwapChain;
 }
 
 pub mod traits {
@@ -27,6 +29,7 @@ pub mod traits {
 	pub use super::idxgioutput::dxgi_IDXGIOutput;
 	pub use super::idxgiresource::dxgi_IDXGIResource;
 	pub use super::idxgisurface::dxgi_IDXGISurface;
+	pub use super::idxgiswapchain::dxgi_IDXGISwapChain;
 }
 
 pub mod vt {
@@ -38,4 +41,5 @@ pub mod vt {
 	pub use super::idxgioutput::IDXGIOutputVT;
 	pub use super::idxgiresource::IDXGIResourceVT;
 	pub use super::idxgisurface::IDXGISurfaceVT;
+	pub use super::idxgiswapchain::IDXGISwapChainVT;
 }
