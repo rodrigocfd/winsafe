@@ -155,8 +155,8 @@ impl WString {
 		self.buf.as_slice()
 	}
 
-	/// Returns the size of the allocated internal buffer. Note that the
-	/// terminating null, if existing, is also counted.
+	/// Returns the size of the allocated internal buffer, in `u16` wide chars.
+	/// Note that the terminating null, if existing, is also counted.
 	///
 	/// If the buffer was not allocated yet, returns zero.
 	#[must_use]

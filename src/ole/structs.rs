@@ -4,6 +4,7 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::kernel::ffi_types::*;
 use crate::prelude::*;
 
@@ -77,6 +78,8 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> COSERVERINFO<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 
 /// [`FORMATETC`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-formatetc)
 /// struct.
+///
+/// The [`Default`] trait automatically initializes `lindex` to `-1`.
 #[repr(C)]
 pub struct FORMATETC<'a> {
 	cfFormat: u16,
@@ -88,7 +91,18 @@ pub struct FORMATETC<'a> {
 	_ptd: PhantomData<&'a mut DVTARGETDEVICE>,
 }
 
-impl_default!(FORMATETC, 'a);
+impl<'a> Default for FORMATETC<'a> {
+	fn default() -> Self {
+		Self {
+			cfFormat: 0,
+			ptd: std::ptr::null_mut(),
+			dwAspect: 0,
+			lindex: -1,
+			tymed: co::TYMED::default(),
+			_ptd: PhantomData,
+		}
+	}
+}
 
 impl<'a> FORMATETC<'a> {
 	/// Returns the `cfFormat` field.
@@ -140,4 +154,74 @@ impl_drop_comptr!(pItf, MULTI_QI, 'a);
 impl<'a> MULTI_QI<'a> {
 	pub_fn_ptr_get_set!('a, pIID, set_pIID, co::IID);
 	pub_fn_comptr_get_set!(pItf, set_pItf, ole_IUnknown);
+}
+
+/// [`SNB`](https://learn.microsoft.com/en-us/windows/win32/stg/snb)
+/// struct.
+#[repr(transparent)]
+pub struct SNB(*mut *mut u16);
+
+impl_default!(SNB);
+
+impl Drop for SNB {
+	fn drop(&mut self) {
+		let _ = unsafe { CoTaskMemFreeGuard::new(self.0 as _, 0) }; // size is irrelevant
+	}
+}
+
+impl SNB {
+	/// Creates a new `SNB` by allocating a contiguous memory block for pointers
+	/// and strings.
+	pub fn new(strs: &[impl AsRef<str>]) -> HrResult<Self> {
+		if strs.is_empty() {
+			return Ok(Self::default());
+		}
+
+		let tot_bytes_ptrs = (strs.len() + 1) * std::mem::size_of::<*mut u16>(); // plus null
+
+		let wstrs = WString::from_str_vec(strs);
+		let num_valid_chars = wstrs.as_slice() // count just the chars; important because stack alloc has zero fills
+			.iter()
+			.filter(|ch| **ch != 0x0000)
+			.count();
+		let tot_bytes_wstrs = ( num_valid_chars + strs.len() ) // plus one null for each string
+			* std::mem::size_of::<u16>();
+
+		let mut block = CoTaskMemAlloc(tot_bytes_ptrs + tot_bytes_wstrs)?;
+		let ptr_block = block.as_mut_ptr() as *mut u8;
+		let ptr_block_wstrs = unsafe { ptr_block.add(tot_bytes_ptrs) } as *mut u16; // start of strings block
+
+		let mut idx_cur_wstr = 0; // current string to be copied to block
+		*unsafe { block.as_mut_slice_aligned::<*mut u16>() }
+			.get_mut(idx_cur_wstr).unwrap() = ptr_block_wstrs; // copy pointer to 1st string
+		idx_cur_wstr += 1;
+
+		wstrs.as_slice()
+			.iter()
+			.enumerate()
+			.for_each(|(idx, ch)| {
+				if *ch == 0x0000 && idx_cur_wstr < strs.len() {
+					unsafe {
+						*block.as_mut_slice_aligned::<*mut u16>() // copy pointer to each string in the block
+							.get_mut(idx_cur_wstr).unwrap() = ptr_block_wstrs.add(idx + 1);
+					}
+					idx_cur_wstr += 1;
+				}
+			});
+
+		*unsafe { block.as_mut_slice_aligned::<*mut u16>() }
+			.get_mut(idx_cur_wstr).unwrap() = std::ptr::null_mut(); // null pointer after string pointers
+
+		wstrs.copy_to_slice( // copy sequential strings block, beyond pointers
+			unsafe {
+				std::slice::from_raw_parts_mut(
+					ptr_block_wstrs,
+					tot_bytes_wstrs / std::mem::size_of::<u16>(),
+				)
+			},
+		);
+
+		let (ptr, _) = block.leak();
+		Ok(Self(ptr as _))
+	}
 }
