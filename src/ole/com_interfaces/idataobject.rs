@@ -1,6 +1,9 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::co;
+use crate::decl::*;
 use crate::kernel::ffi_types::*;
+use crate::ole::privs::*;
 use crate::prelude::*;
 use crate::vt::*;
 
@@ -39,5 +42,48 @@ impl ole_IDataObject for IDataObject {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait ole_IDataObject: ole_IUnknown {
+	/// [`IDataObject::DAdvise`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-dadvise)
+	/// method.
+	fn DAdvise(&self,
+		formatetc: &FORMATETC,
+		advf: co::ADVF,
+		adv_sink: &impl ole_IAdviseSink,
+	) -> HrResult<u32>
+	{
+		let mut connection = u32::default();
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDataObjectVT>(self).DAdvise)(
+					self.ptr(),
+					formatetc as *const _ as _,
+					advf.raw(),
+					adv_sink.ptr(),
+					&mut connection,
+				)
+			},
+		).map(|_| connection)
+	}
 
+	/// [`IDataObject::DUnadvise`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-dunadvise)
+	/// method.
+	fn DUnadvise(&self, connection: u32) -> HrResult<()> {
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDataObjectVT>(self).DUnadvise)(self.ptr(), connection)
+			},
+		)
+	}
+
+	/// [`IDataObject::QueryGetData`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-querygetdata)
+	/// method.
+	fn QueryGetData(&self, formatetc: &FORMATETC) -> HrResult<()> {
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDataObjectVT>(self).QueryGetData)(
+					self.ptr(),
+					formatetc as *const _ as _,
+				)
+			},
+		)
+	}
 }

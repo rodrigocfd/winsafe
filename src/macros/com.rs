@@ -134,6 +134,19 @@ macro_rules! fn_com_noparm {
 	};
 }
 
+/// Implements a trait function with no parameters and no return.
+macro_rules! fn_com_noparm_noret {
+	(
+		$method:ident : $vt:ty;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		fn $method(&self) {
+			unsafe { (crate::ole::privs::vt::<$vt>(self).$method)(self.ptr()); }
+		}
+	};
+}
+
 /// Implements a trait function for a COM interface getter, no parameters.
 macro_rules! fn_com_interface_get {
 	(

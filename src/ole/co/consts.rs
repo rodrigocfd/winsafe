@@ -1,5 +1,16 @@
 #![allow(non_camel_case_types)]
 
+const_bitflag! { ADVF: u32;
+	/// [`ADVF`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-advf)
+	/// enumeration (`u32`).
+	=>
+	=>
+	NODATA 1
+	PRIMEFIRST 2
+	ONLYONCE 4
+	DATAONSTOP 64
+}
+
 const_ordinary! { CLSCTX: u32;
 	/// [`CLSCTX`](https://learn.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
 	/// enumeration (`u32`).
@@ -93,6 +104,17 @@ const_ordinary! { DROPEFFECT: u32;
 	MOVE 2
 	LINK 4
 	SCROLL 0x8000_0000
+}
+
+const_ordinary! { DVASPECT: u32;
+	/// [`DVASPECT`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-dvaspect)
+	/// enumeration (`u32`).
+	=>
+	=>
+	CONTENT 1
+	THUMBNAIL 2
+	ICON 4
+	DOCPRINT 8
 }
 
 const_ordinary! { FACILITY: u32;

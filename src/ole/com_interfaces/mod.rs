@@ -1,3 +1,4 @@
+mod iadvisesink;
 mod ibindctx;
 mod idataobject;
 mod idroptarget;
@@ -10,6 +11,7 @@ mod istream;
 mod iunknown;
 
 pub mod decl {
+	pub use super::iadvisesink::IAdviseSink;
 	pub use super::ibindctx::IBindCtx;
 	pub use super::idataobject::IDataObject;
 	pub use super::idroptarget::IDropTarget;
@@ -23,6 +25,7 @@ pub mod decl {
 }
 
 pub mod traits {
+	pub use super::iadvisesink::ole_IAdviseSink;
 	pub use super::ibindctx::ole_IBindCtx;
 	pub use super::idataobject::ole_IDataObject;
 	pub use super::idroptarget::ole_IDropTarget;
@@ -36,6 +39,7 @@ pub mod traits {
 }
 
 pub mod vt {
+	pub use super::iadvisesink::IAdviseSinkVT;
 	pub use super::ibindctx::IBindCtxVT;
 	pub use super::idataobject::IDataObjectVT;
 	pub use super::idroptarget::IDropTargetVT;
