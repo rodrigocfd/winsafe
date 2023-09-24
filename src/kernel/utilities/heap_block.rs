@@ -34,7 +34,9 @@ pub struct HeapBlock {
 
 impl Drop for HeapBlock {
 	fn drop(&mut self) {
-		let _ = unsafe { HeapFreeGuard::new(&self.hheap, self.pmem, self.sz) };
+		if !self.pmem.is_null() {
+			let _ = unsafe { HeapFreeGuard::new(&self.hheap, self.pmem, self.sz) };
+		}
 	}
 }
 

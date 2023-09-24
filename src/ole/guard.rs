@@ -48,7 +48,9 @@ pub struct CoTaskMemFreeGuard {
 
 impl Drop for CoTaskMemFreeGuard {
 	fn drop(&mut self) {
-		unsafe { ffi::CoTaskMemFree(self.pmem); }
+		if !self.pmem.is_null() {
+			unsafe { ffi::CoTaskMemFree(self.pmem); }
+		}
 	}
 }
 

@@ -717,14 +717,16 @@ impl<'a, H> Drop for UnlockFileGuard<'a, H>
 	where H: kernel_Hfile,
 {
 	fn drop(&mut self) {
-		unsafe {
-			ffi::UnlockFile( // ignore errors
-				self.hfile.ptr(),
-				LODWORD(self.offset),
-				HIDWORD(self.offset),
-				LODWORD(self.num_bytes_to_lock),
-				HIDWORD(self.num_bytes_to_lock),
-			);
+		if let Some(h) = self.hfile.as_opt() {
+			unsafe {
+				ffi::UnlockFile( // ignore errors
+					h.ptr(),
+					LODWORD(self.offset),
+					HIDWORD(self.offset),
+					LODWORD(self.num_bytes_to_lock),
+					HIDWORD(self.num_bytes_to_lock),
+				);
+			}
 		}
 	}
 }
