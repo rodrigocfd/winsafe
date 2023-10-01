@@ -224,4 +224,10 @@ impl SNB {
 		let (ptr, _) = block.leak();
 		Ok(Self(ptr as _))
 	}
+
+	/// Returns the underlying pointer.
+	#[must_use]
+	pub const fn as_ptr(&self) -> *mut *mut u16 {
+		self.0
+	}
 }
