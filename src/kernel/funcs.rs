@@ -92,7 +92,7 @@ pub fn ConvertSidToStringSid(sid: &SID) -> SysResult<String> {
 	bool_to_sysresult(
 		unsafe { ffi::ConvertSidToStringSidW(sid as *const _ as _, &mut pstr) },
 	)?;
-	let name = WString::from_wchars_nullt(pstr).to_string();
+	let name = unsafe { WString::from_wchars_nullt(pstr) }.to_string();
 	let _ = unsafe { LocalFreeGuard::new(HLOCAL::from_ptr(pstr as _)) }; // free returned pointer
 	Ok(name)
 }
@@ -428,7 +428,7 @@ pub fn GetBinaryType(application_name: &str) -> SysResult<co::SCS> {
 /// For an example, see [`CommandLineToArgv`](crate::CommandLineToArgv).
 #[must_use]
 pub fn GetCommandLine() -> String {
-	WString::from_wchars_nullt(unsafe { ffi::GetCommandLineW() })
+	unsafe { WString::from_wchars_nullt(ffi::GetCommandLineW()) }
 		.to_string()
 }
 

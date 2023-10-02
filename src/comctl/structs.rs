@@ -645,7 +645,7 @@ impl<'a> NMDATETIMEFORMAT<'a> {
 	/// Returns the `pszDisplay` field.
 	#[must_use]
 	pub fn pszDisplay(&self) -> String {
-		WString::from_wchars_nullt(self.pszDisplay).to_string()
+		unsafe { WString::from_wchars_nullt(self.pszDisplay) }.to_string()
 	}
 
 	/// Sets the `pszDisplay` field.
@@ -1181,10 +1181,12 @@ impl TBADDBITMAP {
 		} else if self.hInst == HINSTANCE::NULL {
 			BmpIdbRes::Bmp(unsafe { HBITMAP::from_ptr(self.nID as _) })
 		} else {
-			BmpIdbRes::Res(
-				IdStr::from_ptr(self.nID as _),
-				unsafe { self.hInst.raw_copy() },
-			)
+			unsafe {
+				BmpIdbRes::Res(
+					IdStr::from_ptr(self.nID as _),
+					self.hInst.raw_copy(),
+				)
+			}
 		}
 	}
 
@@ -1231,7 +1233,7 @@ impl<'a> TBBUTTON<'a> {
 		if IS_INTRESOURCE(self.iString as _) {
 			IdxStr::Idx(self.iString as _)
 		} else {
-			IdxStr::Str(WString::from_wchars_nullt(self.iString as _))
+			IdxStr::Str(unsafe { WString::from_wchars_nullt(self.iString as _) })
 		}
 	}
 

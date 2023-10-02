@@ -83,7 +83,7 @@ pub fn PSGetNameFromPropertyKey(prop_key: &PROPERTYKEY) -> HrResult<String> {
 			)
 		},
 	).map(|_| {
-		let name = WString::from_wchars_nullt(pstr);
+		let name = unsafe { WString::from_wchars_nullt(pstr) };
 		let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 		name.to_string()
 	})

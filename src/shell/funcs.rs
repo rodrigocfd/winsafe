@@ -37,7 +37,7 @@ pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 
 	let mut strs = Vec::with_capacity(num_args as _);
 	for lp in unsafe { std::slice::from_raw_parts(lp_arr, num_args as _) }.iter() {
-		strs.push(WString::from_wchars_nullt(*lp).to_string());
+		strs.push(unsafe { WString::from_wchars_nullt(*lp) }.to_string());
 	}
 
 	let _ = unsafe { LocalFreeGuard::new(HLOCAL::from_ptr(lp_arr as _)) };
@@ -111,7 +111,7 @@ pub fn PathCommonPrefix(file1: &str, file2: &str) -> Option<String> {
 pub fn PathSkipRoot(str_path: &str) -> Option<String> {
 	let buf = WString::from_str(str_path);
 	unsafe { ffi::PathSkipRootW(buf.as_ptr()).as_ref() }
-		.map(|ptr| WString::from_wchars_nullt(ptr).to_string())
+		.map(|ptr| unsafe { WString::from_wchars_nullt(ptr) }.to_string())
 }
 
 /// [`PathStripPath`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathstrippathw)
@@ -287,7 +287,7 @@ pub fn SHGetKnownFolderPath(
 			)
 		},
 	).map(|_| {
-		let path = WString::from_wchars_nullt(pstr);
+		let path = unsafe { WString::from_wchars_nullt(pstr) };
 		let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 		path.to_string()
 	})

@@ -349,7 +349,7 @@ extern "system" fn enum_resource_names_proc<F>(
 	where F: FnMut(IdStr) -> bool,
 {
 	let func = unsafe { &mut *(lparam as *mut F) };
-	func(IdStr::from_ptr(resource_id)) as _
+	func(unsafe { IdStr::from_ptr(resource_id) }) as _
 }
 
 extern "system" fn enum_resource_types_proc<F>(
@@ -357,5 +357,5 @@ extern "system" fn enum_resource_types_proc<F>(
 	where F: FnMut(RtStr) -> bool,
 {
 	let func = unsafe { &mut *(lparam as *mut F) };
-	func(RtStr::from_ptr(resource_type)) as _
+	func(unsafe { RtStr::from_ptr(resource_type) }) as _
 }

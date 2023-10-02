@@ -148,7 +148,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		ok_to_hrresult(
 			unsafe { (vt::<IPinVT>(self).QueryId)(self.ptr(), &mut pstr) },
 		).map(|_| {
-			let name = WString::from_wchars_nullt(pstr);
+			let name = unsafe { WString::from_wchars_nullt(pstr) };
 			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 			name.to_string()
 		})

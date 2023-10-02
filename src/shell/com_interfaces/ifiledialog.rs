@@ -121,7 +121,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 				(vt::<IFileDialogVT>(self).GetFileName)(self.ptr(), &mut pstr)
 			},
 		).map(|_| {
-			let name = WString::from_wchars_nullt(pstr);
+			let name = unsafe { WString::from_wchars_nullt(pstr) };
 			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 			name.to_string()
 		})

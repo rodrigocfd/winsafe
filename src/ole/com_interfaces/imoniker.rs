@@ -169,7 +169,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 				)
 			},
 		).map(|_| {
-			let name = WString::from_wchars_nullt(pstr);
+			let name = unsafe { WString::from_wchars_nullt(pstr) };
 			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) }; // https://stackoverflow.com/q/3079508/6923555
 			name.to_string()
 		})

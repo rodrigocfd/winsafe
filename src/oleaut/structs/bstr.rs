@@ -30,13 +30,14 @@ impl Default for BSTR {
 
 impl From<BSTR> for WString {
 	fn from(value: BSTR) -> WString {
-		WString::from_wchars_nullt(value.as_ptr())
+		unsafe { WString::from_wchars_nullt(value.as_ptr()) }
 	}
 }
 
 impl std::fmt::Display for BSTR {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		std::fmt::Display::fmt(&WString::from_wchars_nullt(self.as_ptr()), f)
+		std::fmt::Display::fmt(
+			unsafe { &WString::from_wchars_nullt(self.as_ptr()) }, f)
 	}
 }
 impl std::fmt::Debug for BSTR {

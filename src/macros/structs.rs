@@ -129,13 +129,16 @@ macro_rules! pub_fn_string_ptr_get_set {
 		#[must_use]
 		pub fn $field(&self) -> Option<String> {
 			unsafe { self.$field.as_mut() }.map(|psz| {
-				WString::from_wchars_nullt(psz).to_string()
+				unsafe { WString::from_wchars_nullt(psz) }.to_string()
 			})
 		}
 
 		/// Sets the string field.
 		pub fn $setter(&mut self, buf: Option<&$life mut WString>) {
-			self.$field = buf.map_or(std::ptr::null_mut(), |buf| unsafe { buf.as_mut_ptr() });
+			self.$field = buf.map_or(
+				std::ptr::null_mut(),
+				|buf| unsafe { buf.as_mut_ptr() },
+			);
 		}
 	};
 }
@@ -156,7 +159,10 @@ macro_rules! pub_fn_string_ptrlen_get_set {
 		/// Sets the string field.
 		pub fn $setter(&mut self, buf: Option<&$life mut WString>) {
 			self.$length = buf.as_ref().map_or(0, |buf| buf.str_len() as _);
-			self.$field = buf.map_or(std::ptr::null_mut(), |buf| unsafe { buf.as_mut_ptr() });
+			self.$field = buf.map_or(
+				std::ptr::null_mut(),
+				|buf| unsafe { buf.as_mut_ptr() },
+			);
 		}
 	};
 }
@@ -194,7 +200,7 @@ macro_rules! pub_fn_string_buf_get_set {
 		#[must_use]
 		pub fn $field(&self) -> Option<String> {
 			unsafe { self.$field.as_mut() }.map(|psz| {
-				WString::from_wchars_nullt(psz).to_string()
+				unsafe { WString::from_wchars_nullt(psz) }.to_string()
 			})
 		}
 

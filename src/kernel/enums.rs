@@ -51,8 +51,13 @@ impl IdStr {
 	}
 
 	/// Constructs the enum from a raw pointer.
+	///
+	/// # Safety
+	///
+	/// If string, be sure it is null-terminated, otherwise an invalid memory
+	/// location might be read.
 	#[must_use]
-	pub fn from_ptr(ptr: *const u16) -> IdStr {
+	pub unsafe fn from_ptr(ptr: *const u16) -> IdStr {
 		if IS_INTRESOURCE(ptr) {
 			Self::Id(ptr as _)
 		} else {
@@ -248,8 +253,13 @@ impl RtStr {
 	}
 
 	/// Constructs the enum from a pointer to raw data.
+	///
+	/// # Safety
+	///
+	/// If string, be sure it is null-terminated, otherwise an invalid memory
+	/// location might be read.
 	#[must_use]
-	pub fn from_ptr(ptr: *const u16) -> RtStr {
+	pub unsafe fn from_ptr(ptr: *const u16) -> RtStr {
 		if IS_INTRESOURCE(ptr) {
 			Self::Rt(unsafe { co::RT::from_raw(ptr as _) })
 		} else {

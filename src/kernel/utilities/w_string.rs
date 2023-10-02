@@ -95,8 +95,13 @@ impl WString {
 	/// Stores an UTF-16 null-terminated string by copying from a
 	/// null-terminated buffer. The string length is retrieved with
 	/// [`lstrlen`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lstrlenw).
+	///
+	/// # Safety
+	///
+	/// Be sure the string is null-terminated, otherwise `lstrlen` will get
+	/// lost, possibly reading an invalid memory location.
 	#[must_use]
-	pub fn from_wchars_nullt(src: *const u16) -> Self {
+	pub unsafe fn from_wchars_nullt(src: *const u16) -> Self {
 		Self { buf: Buffer::from_wchars_nullt(src) }
 	}
 
@@ -403,7 +408,7 @@ impl Buffer {
 		}
 	}
 
-	fn from_wchars_nullt(src: *const u16) -> Self {
+	unsafe fn from_wchars_nullt(src: *const u16) -> Self {
 		Self::from_wchars_count(src, unsafe { ffi::lstrlenW(src) as _ })
 	}
 
