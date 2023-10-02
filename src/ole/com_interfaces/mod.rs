@@ -7,6 +7,7 @@ mod ipersist;
 mod ipersiststream;
 mod ipicture;
 mod isequentialstream;
+mod istorage;
 mod istream;
 mod iunknown;
 
@@ -20,6 +21,7 @@ pub mod decl {
 	pub use super::ipersiststream::IPersistStream;
 	pub use super::ipicture::IPicture;
 	pub use super::isequentialstream::ISequentialStream;
+	pub use super::istorage::IStorage;
 	pub use super::istream::IStream;
 	pub use super::iunknown::IUnknown;
 }
@@ -34,6 +36,7 @@ pub mod traits {
 	pub use super::ipersiststream::ole_IPersistStream;
 	pub use super::ipicture::ole_IPicture;
 	pub use super::isequentialstream::ole_ISequentialStream;
+	pub use super::istorage::ole_IStorage;
 	pub use super::istream::ole_IStream;
 	pub use super::iunknown::ole_IUnknown;
 }
@@ -48,6 +51,7 @@ pub mod vt {
 	pub use super::ipersiststream::IPersistStreamVT;
 	pub use super::ipicture::IPictureVT;
 	pub use super::isequentialstream::ISequentialStreamVT;
+	pub use super::istorage::IStorageVT;
 	pub use super::istream::IStreamVT;
 	pub use super::iunknown::IUnknownVT;
 }

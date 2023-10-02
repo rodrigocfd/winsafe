@@ -413,6 +413,41 @@ const_bitflag! { STGC: u32;
 	CONSOLIDATE 8
 }
 
+const_bitflag! { STGM: u32;
+	/// [`STGM`](https://learn.microsoft.com/en-us/windows/win32/stg/stgm-constants)
+	/// enumeration (`u32`).
+	=>
+	=>
+	READ 0x0000_0000
+	WRITE 0x0000_0001
+	READWRITE 0x0000_0002
+	SHARE_DENY_NONE 0x0000_0040
+	SHARE_DENY_READ 0x0000_0030
+	SHARE_DENY_WRITE 0x0000_0020
+	SHARE_EXCLUSIVE 0x0000_0010
+	PRIORITY 0x0004_0000
+	CREATE 0x0000_1000
+	CONVERT 0x0002_0000
+	FAILIFTHERE 0x0000_0000
+	DIRECT 0x0000_0000
+	TRANSACTED 0x0001_0000
+	NOSCRATCH 0x0010_0000
+	NOSNAPSHOT 0x0020_0000
+	SIMPLE 0x0800_0000
+	DIRECT_SWMR 0x0040_0000
+	DELETEONRELEASE 0x0400_0000
+}
+
+const_ordinary! { STGMOVE: u32;
+	/// [`STGMOVE`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-stgmove)
+	/// enumeration (`u32`).
+	=>
+	=>
+	MOVE 0
+	COPY 1
+	SHALLOWCOPY 2
+}
+
 const_ordinary! { STREAM_SEEK: u32;
 	/// [`STREAM_SEEK`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-stream_seek)
 	/// enumeration (`u32`).
