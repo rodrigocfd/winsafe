@@ -187,7 +187,7 @@ impl SNB {
 		let tot_bytes_wstrs = ( num_valid_chars + strs.len() ) // plus one null for each string
 			* std::mem::size_of::<u16>();
 
-		let mut block = CoTaskMemAlloc(tot_bytes_ptrs + tot_bytes_wstrs)?;
+		let mut block = CoTaskMemAlloc(tot_bytes_ptrs + tot_bytes_wstrs)?; // alloc block for pointers and strings
 		let ptr_block = block.as_mut_ptr() as *mut u8;
 		let ptr_block_wstrs = unsafe { ptr_block.add(tot_bytes_ptrs) } as *mut u16; // start of strings block
 
@@ -202,7 +202,7 @@ impl SNB {
 			.for_each(|(idx, ch)| {
 				if *ch == 0x0000 && idx_cur_wstr < strs.len() {
 					unsafe {
-						*block.as_mut_slice_aligned::<*mut u16>() // copy pointer to each string in the block
+						*block.as_mut_slice_aligned::<*mut u16>() // copy pointer to subsequent strings in the block
 							.get_mut(idx_cur_wstr).unwrap() = ptr_block_wstrs.add(idx + 1);
 					}
 					idx_cur_wstr += 1;
@@ -212,7 +212,7 @@ impl SNB {
 		*unsafe { block.as_mut_slice_aligned::<*mut u16>() }
 			.get_mut(idx_cur_wstr).unwrap() = std::ptr::null_mut(); // null pointer after string pointers
 
-		wstrs.copy_to_slice( // copy sequential strings block, beyond pointers
+		wstrs.copy_to_slice( // beyond pointers, copy each null-terminated string sequentially
 			unsafe {
 				std::slice::from_raw_parts_mut(
 					ptr_block_wstrs,
@@ -229,5 +229,27 @@ impl SNB {
 	#[must_use]
 	pub const fn as_ptr(&self) -> *mut *mut u16 {
 		self.0
+	}
+
+	/// Converts the internal UTF-16 blocks into strings.
+	#[must_use]
+	pub fn to_strings(&self) -> Vec<String> {
+		let mut vec = Vec::<String>::default();
+		if !self.0.is_null() {
+			let mut idx_ptr = 0;
+			loop {
+				let ptr_ws = unsafe {
+					let sli_ptrs = std::slice::from_raw_parts(self.0, idx_ptr + 1);
+					*sli_ptrs.get_unchecked(idx_ptr) // get nth pointer to string
+				};
+				if ptr_ws.is_null() { // a null pointer means the end of pointers block
+					break;
+				}
+				let ws = unsafe { WString::from_wchars_nullt(ptr_ws) };
+				vec.push(ws.to_string());
+				idx_ptr += 1;
+			}
+		}
+		vec
 	}
 }
