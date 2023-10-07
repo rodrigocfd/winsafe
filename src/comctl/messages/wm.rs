@@ -58,6 +58,7 @@ impl<'a> Notify<'a> {
 	/// You should always prefer the specific notifications, which perform this
 	/// conversion for you.
 	pub unsafe fn cast_nmhdr_mut<T>(&self) -> &mut T {
+		#[allow(invalid_reference_casting)] // https://github.com/rust-lang/rust/issues/116410
 		&mut *(self.nmhdr as *const _ as *mut _)
 	}
 }
