@@ -1,5 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::co;
 use crate::decl::*;
 use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
@@ -50,6 +51,22 @@ pub trait dxgi_IDXGISurface: dxgi_IDXGIDeviceSubObject {
 				)
 			},
 		).map(|_| desc)
+	}
+
+	/// [`IDXGISurface::Map`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgisurface-map)
+	/// method.
+	#[must_use]
+	fn Map(&self, map_flags: co::DXGI_MAP) -> HrResult<DXGI_MAPPED_RECT> {
+		let mut mr = DXGI_MAPPED_RECT::default();
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGISurfaceVT>(self).Map)(
+					self.ptr(),
+					&mut mr as *mut _ as _,
+					map_flags.raw(),
+				)
+			},
+		).map(|_| mr)
 	}
 
 	/// [`IDXGISurface::Unmap`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgisurface-unmap)

@@ -137,6 +137,16 @@ const_ordinary! { DXGI_FORMAT: u32;
 	V408 132
 }
 
+const_bitflag! { DXGI_MAP: u32;
+	/// [`IDXGISurface::Map`](crate::prelude::dxgi_IDXGISurface::Map)
+	/// `map_flags` (`u32`).
+	=>
+	=>
+	READ 1
+	WRITE 2
+	DISCARD 4
+}
+
 const_bitflag! { DXGI_MWA: u32;
 	/// [`IDXGIFactory::GetWindowAssociation`](crate::prelude::dxgi_IDXGIFactory::GetWindowAssociation)
 	/// `flags` (`u32`).

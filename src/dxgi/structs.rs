@@ -65,6 +65,27 @@ impl DXGI_GAMMA_CONTROL_CAPABILITIES {
 	pub_fn_bool_get_set!(ScaleAndOffsetSupported, set_ScaleAndOffsetSupported);
 }
 
+/// [`DXGI_MAPPED_RECT`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_mapped_rect)
+/// struct.
+#[repr(C)]
+pub struct DXGI_MAPPED_RECT {
+	Pitch: i32,
+	pBits: *mut u8,
+}
+
+impl_default!(DXGI_MAPPED_RECT);
+
+impl DXGI_MAPPED_RECT {
+	/// Returns a slice over the `pBits` buffer.
+	pub fn pBits(&self) -> Option<&[u8]> {
+		if self.pBits.is_null() {
+			None
+		} else {
+			Some(unsafe { std::slice::from_raw_parts(self.pBits, self.Pitch as _) })
+		}
+	}
+}
+
 /// [`DXGI_MODE_DESC`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173064(v=vs.85))
 /// struct.
 #[repr(C)]
