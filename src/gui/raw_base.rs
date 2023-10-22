@@ -288,7 +288,7 @@ impl RawBase {
 			return Ok(hwnd.DefWindowProc(wm_any));
 		}
 
-		// Execute privileged closures, discard results.
+		// Execute privileged closures, keep track if at least one was executed.
 		let ref_self = unsafe { &mut *ptr_self };
 		let at_least_one_privileged = ref_self.base.process_privileged_messages(wm_any)?;
 

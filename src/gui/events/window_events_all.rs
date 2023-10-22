@@ -137,7 +137,8 @@ impl WindowEventsAll {
 	///
 	/// Returns `true` if at least one message was processed.
 	pub(in crate::gui) fn process_all_messages(&self,
-		wm_any: WndMsg) -> AnyResult<bool>
+		wm_any: WndMsg,
+	) -> AnyResult<bool>
 	{
 		let mut at_least_one = false;
 
