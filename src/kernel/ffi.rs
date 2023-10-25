@@ -5,6 +5,7 @@ extern_sys! { "advapi32";
 	AllocateAndInitializeSid(PCVOID, u8, u32, u32, u32, u32, u32, u32, u32, u32, *mut u8) -> BOOL
 	CheckTokenCapability(HANDLE, PCVOID, *mut BOOL) -> BOOL
 	CheckTokenMembership(HANDLE, PCVOID, *mut BOOL) -> BOOL
+	CloseServiceHandle(HANDLE) -> BOOL
 	ConvertSidToStringSidW(PCVOID, *mut PSTR) -> BOOL
 	ConvertStringSidToSidW(PCSTR, *mut *mut u8) -> BOOL
 	CopySid(u32, PVOID, PCVOID) -> BOOL
@@ -38,6 +39,7 @@ extern_sys! { "advapi32";
 	LookupPrivilegeNameW(PCSTR, PCVOID, PSTR, *mut u32) -> BOOL
 	LookupPrivilegeValueW(PCSTR, PCSTR, PVOID) -> BOOL
 	OpenProcessToken(HANDLE, u32, *mut HANDLE) -> BOOL
+	OpenSCManagerW(PCSTR, PCSTR, u32) -> HANDLE
 	OpenThreadToken(HANDLE, u32, BOOL, *mut HANDLE) -> BOOL
 	RegCloseKey(HANDLE) -> i32
 	RegConnectRegistryW(PCSTR, HANDLE, *mut HANDLE) -> i32

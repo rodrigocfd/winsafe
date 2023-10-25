@@ -133,6 +133,13 @@ impl CloseHandlePiGuard {
 
 //------------------------------------------------------------------------------
 
+handle_guard! { CloseServiceHandleGuard: HSC;
+	ffi::CloseServiceHandle;
+	/// RAII implementation for [`HSC`](crate::HSC) which automatically calls
+	/// [`CloseServiceHandle`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-closeservicehandle)
+	/// when the object goes out of scope.
+}
+
 handle_guard! { DeregisterEventSourceGuard: HEVENTLOG;
 	ffi::DeregisterEventSource;
 	/// RAII implementation for [`HEVENTLOG`](crate::HEVENTLOG) which

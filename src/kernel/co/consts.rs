@@ -1250,6 +1250,25 @@ const_ordinary! { RT: u16;
 	VXD 20
 }
 
+const_bitflag! { SC_MANAGER: u32;
+	/// Service Control Manager access rights
+	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights).
+	=>
+	=>
+	ALL_ACCESS 0xf003f
+	CREATE_SERVICE 0x0002
+	CONNECT 0x0001
+	ENUMERATE_SERVICE 0x0004
+	LOCK 0x0008
+	MODIFY_BOOT_CONFIG 0x0020
+	QUERY_LOCK_STATUS 0x0010
+
+	GENERIC_READ STANDARD_RIGHTS::READ.0 | Self::ENUMERATE_SERVICE.0 | Self::QUERY_LOCK_STATUS.0
+	GENERIC_WRITE STANDARD_RIGHTS::WRITE.0 | Self::CREATE_SERVICE.0 | Self::MODIFY_BOOT_CONFIG.0
+	GENERIC_EXECUTE STANDARD_RIGHTS::EXECUTE.0 | Self::CONNECT.0 | Self::LOCK.0
+	GENERIC_ALL Self::ALL_ACCESS.0
+}
+
 const_ordinary! { SCS: u32;
 	/// [`GetBinaryType`](crate::GetBinaryType) return value (`u32`).
 	=>
