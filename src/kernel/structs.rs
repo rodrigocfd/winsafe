@@ -48,6 +48,84 @@ pub struct CONSOLE_READCONSOLE_CONTROL {
 	pub dwControlKeyState: u32,
 }
 
+/// [`DEV_BROADCAST_DEVICEINTERFACE`](https://learn.microsoft.com/en-us/windows/win32/api/dbt/ns-dbt-dev_broadcast_deviceinterface_w)
+/// struct.
+#[repr(C)]
+#[derive(Default)]
+pub struct DEV_BROADCAST_DEVICEINTERFACE {
+	pub hdr: DEV_BROADCAST_HDR,
+	pub dbcc_classguid: GUID,
+	dbcc_name: [u16; 1],
+}
+
+impl DEV_BROADCAST_DEVICEINTERFACE {
+	/// Returns the `dbcc_name` field.
+	#[must_use]
+	pub fn dbcc_name(&self) -> String {
+		unsafe { WString::from_wchars_nullt(self.dbcc_name.as_ptr()) }
+			.to_string()
+	}
+}
+
+/// [`DEV_BROADCAST_HANDLE`](https://learn.microsoft.com/en-us/windows/win32/api/dbt/ns-dbt-dev_broadcast_handle)
+/// struct.
+#[repr(C)]
+pub struct DEV_BROADCAST_HANDLE {
+	pub hdr: DEV_BROADCAST_HDR,
+	pub dbch_handle: usize,
+	pub dbch_hdevnotify: usize, // HDEVNOTIFY
+	pub dbch_eventguid: GUID,
+	pub dbch_nameoffset: i16,
+	pub dbch_data: [u8; 1],
+}
+
+/// [`DEV_BROADCAST_HDR`](https://learn.microsoft.com/en-us/windows/win32/api/dbt/ns-dbt-dev_broadcast_hdr)
+/// struct.
+#[repr(C)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DEV_BROADCAST_HDR {
+	pub dbch_size: u32,
+	pub dbch_devicetype: co::DBT_DEVTYP,
+	dbch_reserved: u32,
+}
+
+/// [`DEV_BROADCAST_OEM`](https://learn.microsoft.com/en-us/windows/win32/api/dbt/ns-dbt-dev_broadcast_oem)
+/// struct.
+#[repr(C)]
+#[derive(Default)]
+pub struct DEV_BROADCAST_OEM {
+	pub hdr: DEV_BROADCAST_HDR,
+	pub dbco_identifier: u32,
+	pub dbco_suppfunc: u32,
+}
+
+/// [`DEV_BROADCAST_PORT`](https://learn.microsoft.com/en-us/windows/win32/api/dbt/ns-dbt-dev_broadcast_port_w)
+/// struct.
+#[repr(C)]
+#[derive(Default)]
+pub struct DEV_BROADCAST_PORT {
+	pub hdr: DEV_BROADCAST_HDR,
+	dbcp_name: [u16; 1],
+}
+
+impl DEV_BROADCAST_PORT {
+	/// Returns the `dbcp_name` field.
+	#[must_use]
+	pub fn dbcp_name(&self) -> String {
+		unsafe { WString::from_wchars_nullt(self.dbcp_name.as_ptr()) }
+			.to_string()
+	}
+}
+
+/// [`DEV_BROADCAST_VOLUME`](https://learn.microsoft.com/en-us/windows/win32/api/dbt/ns-dbt-dev_broadcast_volume)
+/// struct.
+#[derive(Default)]
+pub struct DEV_BROADCAST_VOLUME {
+	pub hdr: DEV_BROADCAST_HDR,
+	pub dbcv_unitmask: u32,
+	pub dbcv_flags: co::DBTF,
+}
+
 /// [`DISK_SPACE_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/ns-fileapi-disk_space_information)
 /// struct.
 #[repr(C)]
@@ -86,7 +164,7 @@ pub struct FILETIME {
 /// The [`Default`](std::default::Default) implementation returns `GUID::NULL`
 /// (all zeros).
 #[repr(C)]
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Default)]
+#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct GUID {
 	data1: u32,
 	data2: u16,
@@ -414,6 +492,91 @@ pub struct OVERLAPPED {
 
 impl_default!(OVERLAPPED);
 
+/// [`POWERBROADCAST_SETTING`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-powerbroadcast_setting)
+/// struct.
+#[repr(C)]
+pub struct POWERBROADCAST_SETTING {
+	pub PowerSetting: co::POWER_SETTING,
+	pub DataLength: u32,
+	Data: [u8; 1],
+}
+
+impl VariableSized for POWERBROADCAST_SETTING {}
+
+impl POWERBROADCAST_SETTING {
+	/// Returns the `Data` field according to `PowerSetting` identifier.
+	///
+	/// # Panics
+	///
+	/// Panics if `PowerSetting` identifier is invalid.
+	///
+	/// # Safety
+	///
+	/// Make sure the struct contains the correct size and data described by the
+	/// `PowerSetting` identifier.
+	#[must_use]
+	pub unsafe fn data(&self) -> PowerSetting {
+		match self.PowerSetting {
+			co::POWER_SETTING::ACDC_POWER_SOURCE => PowerSetting::AcDcPowerSource(
+				co::SYSTEM_POWER_CONDITION::from_raw(
+					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
+				),
+			),
+			co::POWER_SETTING::BATTERY_PERCENTAGE_REMAINING => PowerSetting::BatteryPercentageRemaining(
+				std::slice::from_raw_parts(self.Data.as_ptr() as *const u32, 1)[0] as _
+			),
+			co::POWER_SETTING::CONSOLE_DISPLAY_STATE => PowerSetting::ConsoleDisplayState(
+				co::MONITOR_DISPLAY_STATE::from_raw(
+					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
+				),
+			),
+			co::POWER_SETTING::GLOBAL_USER_PRESENCE => PowerSetting::GlobalUserPresence(
+				co::USER_ACTIVITY_PRESENCE::from_raw(
+					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
+				),
+			),
+			co::POWER_SETTING::IDLE_BACKGROUND_TASK => PowerSetting::IdleBackgroundTask,
+			co::POWER_SETTING::MONITOR_POWER_ON => PowerSetting::MonitorPowerOn(
+				co::MONITOR_DISPLAY_STATE::from_raw(
+					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
+				),
+			),
+			co::POWER_SETTING::POWER_SAVING_STATUS => PowerSetting::PowerSavingStatus(
+				match std::slice::from_raw_parts(self.Data.as_ptr() as *const u32, 1)[0] {
+					0 => false,
+					_ => true,
+				},
+			),
+			co::POWER_SETTING::POWERSCHEME_PERSONALITY => PowerSetting::PowerSchemePersonality(
+				std::slice::from_raw_parts(self.Data.as_ptr() as *const co::POWER_SAVINGS, 1)[0],
+			),
+			co::POWER_SETTING::SESSION_DISPLAY_STATUS => PowerSetting::SessionDisplayStatus(
+				co::MONITOR_DISPLAY_STATE::from_raw(
+					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
+				),
+			),
+			co::POWER_SETTING::SESSION_USER_PRESENCE => PowerSetting::SessionUserPresence(
+				co::USER_ACTIVITY_PRESENCE::from_raw(
+					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
+				),
+			),
+			co::POWER_SETTING::LIDSWITCH_STATE_CHANGE => PowerSetting::LidSwitchStateChange(
+				match std::slice::from_raw_parts(self.Data.as_ptr() as *const u8, 1)[0] {
+					0 => PowerSettingLid::Closed,
+					_ => PowerSettingLid::Opened,
+				},
+			),
+			co::POWER_SETTING::SYSTEM_AWAYMODE => PowerSetting::SystemAwayMode(
+				match std::slice::from_raw_parts(self.Data.as_ptr() as *const u8, 1)[0] {
+					0 => PowerSettingAwayMode::Exiting,
+					_ => PowerSettingAwayMode::Entering,
+				},
+			),
+			_ => panic!("Invalid co::POWER_SETTING."),
+		}
+	}
+}
+
 /// [`PROCESS_HEAP_ENTRY`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-process_heap_entry)
 /// struct.
 #[repr(C)]
@@ -432,7 +595,7 @@ union PROCESS_HEAP_ENTRY_union0 {
 	Region: PROCESS_HEAP_ENTRY_Region,
 }
 
-/// [`PROCESS_HEAP_ENTRY`]`(crate::PROCESS_HEAP_ENTRY) `Block`.
+/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) `Block`.
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub struct PROCESS_HEAP_ENTRY_Block {
@@ -440,7 +603,7 @@ pub struct PROCESS_HEAP_ENTRY_Block {
 	dwReserved: [u32; 3],
 }
 
-/// [`PROCESS_HEAP_ENTRY`]`(crate::PROCESS_HEAP_ENTRY) `Region`.
+/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) `Region`.
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub struct PROCESS_HEAP_ENTRY_Region {
@@ -553,6 +716,57 @@ impl Default for SECURITY_DESCRIPTOR {
 	fn default() -> Self {
 		InitializeSecurityDescriptor().unwrap()
 	}
+}
+
+/// [`SERVICE_TIMECHANGE_INFO`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_timechange_info)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
+pub struct SERVICE_TIMECHANGE_INFO {
+	liNewTime: i64,
+	liOldTime: i64,
+}
+
+impl SERVICE_TIMECHANGE_INFO {
+	/// Returns the `liNewTime` field.
+	#[must_use]
+	pub const fn liNewTime(&self) -> FILETIME {
+		FILETIME {
+			dwLowDateTime: LODWORD(self.liNewTime as _),
+			dwHighDateTime: HIDWORD(self.liNewTime as _),
+		}
+	}
+
+	/// Returns the `liOldTime` field.
+	#[must_use]
+	pub const fn liOldTime(&self) -> FILETIME {
+		FILETIME {
+			dwLowDateTime: LODWORD(self.liOldTime as _),
+			dwHighDateTime: HIDWORD(self.liOldTime as _),
+		}
+	}
+
+	/// Sets the `liNewTime` field.
+	pub fn set_liNewTime(&mut self, ft: FILETIME) {
+		self.liNewTime = MAKEQWORD(ft.dwLowDateTime, ft.dwHighDateTime) as _;
+	}
+
+	/// Sets the `liOldTime` field.
+	pub fn set_liOldTime(&mut self, ft: FILETIME) {
+		self.liOldTime = MAKEQWORD(ft.dwLowDateTime, ft.dwHighDateTime) as _;
+	}
+}
+
+/// [`SERVICE_STATUS`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status)
+#[repr(C)]
+pub struct SERVICE_STATUS {
+	dwServiceType: co::SERVICE_TYPE,
+	dwCurrentState: co::SERVICE_STATE,
+	dwControlsAccepted: co::SERVICE_ACCEPT,
+	dwWin32ExitCode: u32,
+	dwServiceSpecificExitCode: u32,
+	dwCheckPoint: u32,
+	dwWaitPoint: u32,
 }
 
 /// [`SID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid)
@@ -970,6 +1184,35 @@ impl TOKEN_PRIVILEGES {
 	}
 }
 
+/// [`TOKEN_SOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_source)
+/// struct.
+#[repr(C)]
+#[derive(PartialEq, Eq)]
+pub struct TOKEN_SOURCE {
+	pub SourceName: [i8; TOKEN_SOURCE_LENGTH],
+	pub SourceIdentifier: LUID,
+}
+
+impl_default!(TOKEN_SOURCE);
+
+/// [`TOKEN_STATISTICS`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_statistics)
+/// struct.
+#[repr(C)]
+pub struct TOKEN_STATISTICS {
+	pub TokenId: LUID,
+	pub AuthenticationId: LUID,
+	pub ExpirationTime: i64,
+	pub TokenType: co::TOKEN_TYPE,
+	pub ImpersonationLevel: co::SECURITY_IMPERSONATION,
+	pub DynamicCharged: u32,
+	pub DynamicAvailable: u32,
+	pub GroupCount: u32,
+	pub PrivilegeCount: u32,
+	pub ModifiedId: LUID,
+}
+
+impl_default!(TOKEN_STATISTICS);
+
 /// [`TOKEN_USER`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_user)
 /// struct.
 #[repr(C)]
@@ -1028,4 +1271,13 @@ impl WIN32_FIND_DATA {
 	pub const fn nFileSize(&self) -> u64 {
 		MAKEQWORD(self.nFileSizeLow, self.nFileSizeHigh)
 	}
+}
+
+/// [`WTSSESSION_NOTIFICATION`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-wtssession_notification)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Copy, PartialEq)]
+pub struct WTSSESSION_NOTIFICATION {
+	pub cbSize: u32,
+	pub dwSessionId: u32,
 }

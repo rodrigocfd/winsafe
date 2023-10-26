@@ -316,6 +316,44 @@ pub_struct_msg_empty_handleable! { Destroy: co::WM::DESTROY;
 	/// [`WM_DESTROY`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
 }
 
+/// [`WM_DEVICECHANGE`](https://learn.microsoft.com/en-us/windows/win32/devio/wm-devicechange)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct DeviceChange<'a> {
+	pub event: co::DBT,
+	pub data: Option<&'a DEV_BROADCAST_HDR>,
+}
+
+unsafe impl<'a> MsgSend for DeviceChange<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::DEVICECHANGE,
+			wparam: self.event.raw() as _,
+			lparam: self.data.map_or(0, |d| d as *const _ as _),
+		}
+	}
+}
+
+unsafe impl<'a> MsgSendRecv for DeviceChange<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			event: unsafe { co::DBT::from_raw(p.wparam as _) },
+			data: if p.lparam == 0 {
+				None
+			} else {
+				Some(unsafe { &*(p.lparam as *const _) })
+			}
+		}
+	}
+}
+
 /// [`WM_ENABLE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-enable)
 /// message parameters.
 ///
@@ -1317,6 +1355,44 @@ unsafe impl MsgSendRecv for ParentNotify {
 	}
 }
 
+/// [`WM_POWERBROADCAST`](https://learn.microsoft.com/en-us/windows/win32/power/wm-powerbroadcast)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct PowerBroadcast<'a> {
+	pub event: co::PBT,
+	pub data: Option<&'a POWERBROADCAST_SETTING>,
+}
+
+unsafe impl<'a> MsgSend for PowerBroadcast<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::POWERBROADCAST,
+			wparam: self.event.raw() as _,
+			lparam: self.data.map_or(0, |d| d as *const _ as _),
+		}
+	}
+}
+
+unsafe impl<'a> MsgSendRecv for PowerBroadcast<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			event: unsafe { co::PBT::from_raw(p.wparam as _) },
+			data: if p.lparam == 0 {
+				None
+			} else {
+				Some(unsafe { &*(p.lparam as *const _) })
+			},
+		}
+	}
+}
+
 /// [`WM_QUERYOPEN`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-queryopen)
 /// message, which has no parameters.
 ///
@@ -1946,6 +2022,40 @@ unsafe impl<'a> MsgSendRecv for WindowPosChanging<'a> {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			windowpos: unsafe { &*(p.lparam as *const _) },
+		}
+	}
+}
+
+/// [`WM_WTSSESSION_CHANGE`](https://learn.microsoft.com/en-us/windows/win32/termserv/wm-wtssession-change)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct WtsSessionChange {
+	pub state: co::WTS,
+	pub session_id: u32,
+}
+
+unsafe impl MsgSend for WtsSessionChange {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::WTSSESSION_CHANGE,
+			wparam: self.state.raw() as _,
+			lparam: self.session_id as _,
+		}
+	}
+}
+
+unsafe impl MsgSendRecv for WtsSessionChange {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			state: unsafe { co::WTS::from_raw(p.wparam as _) },
+			session_id: p.lparam as _,
 		}
 	}
 }

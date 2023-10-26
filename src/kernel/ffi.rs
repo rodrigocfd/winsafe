@@ -63,6 +63,7 @@ extern_sys! { "advapi32";
 	RegFlushKey(HANDLE) -> i32
 	RegGetValueW(HANDLE, PCSTR, PCSTR, u32, *mut u32, PVOID, *mut u32) -> i32
 	RegisterEventSourceW(PCSTR, PCSTR) -> HANDLE
+	RegisterServiceCtrlHandlerExW(PCSTR, PFUNC, PVOID) -> HANDLE
 	RegLoadKeyW(HANDLE, PCSTR, PCSTR) -> i32
 	RegOpenCurrentUser(u32, *mut HANDLE) -> i32
 	RegOpenKeyExW(HANDLE, PCSTR, u32, u32, *mut HANDLE) -> i32
@@ -80,6 +81,7 @@ extern_sys! { "advapi32";
 	RegSetValueExW(HANDLE, PCSTR, u32, u32, *const u8, u32) -> i32
 	RegUnLoadKeyW(HANDLE, PCSTR) -> i32
 	ReportEventW(HANDLE, u16, u16, u32, PCVOID, u16, u32, *const PCSTR, PCVOID) -> BOOL
+	SetServiceStatus(HANDLE, PCVOID) -> BOOL
 }
 
 extern_sys! { "kernel32";

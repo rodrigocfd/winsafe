@@ -1039,17 +1039,13 @@ fn validate_retrieved_reg_val(
 	data_type1: co::REG,
 	data_len1: u32,
 	data_type2: co::REG,
-	mut data_len2: u32,
+	data_len2: u32,
 	buf: Vec<u8>,
 ) -> SysResult<RegistryValue>
 {
 	if data_type1 != data_type2 {
 		// Race condition: someone modified the data type in between our calls.
 		return Err(co::ERROR::TRANSACTION_REQUEST_NOT_VALID);
-	}
-
-	if data_type1 == co::REG::SZ || data_type1 == co::REG::MULTI_SZ {
-		data_len2 += 2; // also count wchar terminating null
 	}
 
 	if data_len1 != data_len2 {

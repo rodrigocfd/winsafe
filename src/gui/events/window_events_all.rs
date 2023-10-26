@@ -149,7 +149,7 @@ impl WindowEventsAll {
 				let nfys = unsafe { &mut *self.nfys.get() };
 				for func in nfys.find_all(key) {
 					at_least_one = true;
-					func(wm_nfy)?; // execute stored function
+					func(wm::Notify::from_generic_wm(wm_any))?; // execute stored function
 				}
 			},
 			co::WM::COMMAND => {

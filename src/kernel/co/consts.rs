@@ -146,6 +146,45 @@ const_bitflag! { CREATE_EVENT: u32;
 	MANUAL_RESET 0x0000_0001
 }
 
+const_ordinary! { DBT: u16;
+	/// [`wm::DeviceChange`](crate::msg::wm::DeviceChange) event (`u16`).
+	=>
+	=>
+	DEVNODES_CHANGED 0x0007
+	QUERYCHANGECONFIG 0x0017
+	CONFIGCHANGED 0x0018
+	CONFIGCHANGECANCELED 0x0019
+	DEVICEARRIVAL 0x8000
+	DEVICEQUERYREMOVE 0x8001
+	DEVICEQUERYREMOVEFAILED 0x8002
+	DEVICEREMOVEPENDING 0x8003
+	DEVICEREMOVECOMPLETE 0x8004
+	DEVICETYPESPECIFIC 0x8005
+	CUSTOMEVENT 0x8006
+	USERDEFINED 0xffff
+}
+
+const_ordinary! { DBT_DEVTYP: u32;
+	/// [`DEV_BROADCAST_HDR`](crate::DEV_BROADCAST_HDR) `dbch_devicetype`
+	/// (`u32`).
+	=>
+	=>
+	DEVICEINTERFACE 0x0000_0005
+	HANDLE 0x0000_0006
+	OEM 0x0000_0000
+	PORT 0x0000_0003
+	VOLUME 0x0000_0002
+}
+
+const_bitflag! { DBTF: u16;
+	/// [`DEV_BROADCAST_VOLUME`](crate::DEV_BROADCAST_VOLUME) `dbcv_flags`
+	/// (`u16`).
+	=>
+	=>
+	MEDIA 0x0001
+	NET 0x0002
+}
+
 const_ordinary! { DISPOSITION: u32;
 	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
 	/// `creation_disposition` (`u32`).
@@ -756,6 +795,16 @@ const_bitflag! { MBC: u32;
 	USEGLYPHCHARS 0x0000_0004
 }
 
+const_ordinary! { MONITOR_DISPLAY_STATE: u32;
+	/// [`MONITOR_DISPLAY_STATE`](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ne-wdm-_monitor_display_state)
+	/// enumeration (`u32`).
+	=>
+	=>
+	Off 0
+	On 1
+	Dim 2
+}
+
 const_ordinary! { PAGE: u32;
 	/// [`HFILE::CreateFileMapping`](crate::prelude::kernel_Hfile::CreateFileMapping)
 	/// `protect` (`u32`).
@@ -810,6 +859,18 @@ const_ordinary! { PAGE: u32;
 	SEC_NOCACHE 0x1000_0000
 	SEC_RESERVE 0x400_0000
 	SEC_WRITECOMBINE 0x4000_0000
+}
+
+const_ordinary! { PBT: u32;
+	/// [`wm::PowerBroadcast`](crate::msg::wm::PowerBroadcast) power-management
+	/// event (`u32`).
+	=>
+	=>
+	APMPOWERSTATUSCHANGE 0xa
+	APMRESUMEAUTOMATIC 0x12
+	APMRESUMESUSPEND 0x7
+	APMSUSPEND 0x4
+	POWERSETTINGCHANGE 0x8013
 }
 
 const_bitflag! { PRIORITY_CLASS: u32;
@@ -1439,6 +1500,32 @@ const_bitflag! { SERVICE: u32;
 	GENERIC_EXECUTE STANDARD_RIGHTS::EXECUTE.0 | Self::START.0 | Self::STOP.0 | Self::PAUSE_CONTINUE.0 | Self::USER_DEFINED_CONTROL.0
 }
 
+const_bitflag! { SERVICE_CONTROL: u32;
+	/// [`LPHANDLER_FUNCTION_EX`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nc-winsvc-lphandler_function_ex)
+	/// `dwControl` (`u32`).
+	=>
+	=>
+	CONTINUE 0x0000_0003
+	INTERROGATE 0x0000_0004
+	NETBINDADD 0x0000_0007
+	NETBINDDISABLE 0x0000_000a
+	NETBINDENABLE 0x0000_0009
+	NETBINDREMOVE 0x0000_0008
+	PARAMCHANGE 0x0000_0006
+	PAUSE 0x0000_0002
+	PRESHUTDOWN 0x0000_000f
+	SHUTDOWN 0x0000_0005
+	STOP 0x0000_0001
+
+	DEVICEEVENT 0x0000_000b
+	HARDWAREPROFILECHANGE 0x0000_000c
+	POWEREVENT 0x0000_000d
+	SESSIONCHANGE 0x0000_000e
+	TIMECHANGE 0x0000_0010
+	TRIGGEREVENT 0x0000_0020
+	USERMODEREBOOT 0x0000_0040
+}
+
 const_ordinary! { SERVICE_ERROR: u32;
 	/// [`HSC::CreateService`](crate::prelude::kernel_Hsc::CreateService)
 	/// `error_control` (`u32`).
@@ -1480,6 +1567,40 @@ const_ordinary! { SERVICE_TYPE: u32;
 
 	WIN32_OWN_PROCESS_INTERACTIVE Self::WIN32_OWN_PROCESS.0 | 0x0000_0100
 	WIN32_SHARE_PROCESS_INTERACTIVE Self::WIN32_SHARE_PROCESS.0 | 0x0000_0100
+}
+
+const_ordinary! { SERVICE_STATE: u32;
+	/// [`HSERVICESTATUS::SetServiceStatus`](crate::prelude::kernel_HserviceStatus::SetServiceStatus)
+	/// `current_state` (u32)
+	=>
+	=>
+	CONTINUE_PENDING 0x0000_0005
+	PAUSE_PENDING 0x0000_0006
+	PAUSED 0x0000_0007
+	RUNNING 0x0000_0004
+	START_PENDING 0x0000_0002
+	STOP_PENDING 0x0000_0003
+	STOPPED 0x0000_0001
+}
+
+const_bitflag! { SERVICE_ACCEPT: u32;
+	/// [`SERVICE_ACCEPT`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status)
+	/// Originally `Controls Accepted`
+	/// (`u32`)
+    =>
+    =>
+	NETBINDCHANGE 0x0000_0010
+	PARAMCHANGE 0x0000_0008
+	PAUSE_CONTINUE 0x0000_0002
+	PRESHUTDOWN 0x0000_0100
+	SHUTDOWN 0x0000_0004
+	STOP 0x0000_0001
+	HARDWAREPROFILECHANGE 0x0000_0020
+	POWEREVENT 0x0000_0040
+	SESSIONCHANGE 0x0000_0080
+	TIMECHANGE 0x0000_0200
+	TRIGGEREVENT 0x0000_0400
+	USERMODEREBOOT 0x0000_0800
 }
 
 const_bitflag! { SHTDN_REASON: u32;
@@ -1918,6 +2039,17 @@ const_ordinary! { SW: i32;
 	FORCEMINIMIZE 11
 }
 
+const_ordinary! { SYSTEM_POWER_CONDITION: u32;
+	/// [`SYSTEM_POWER_CONDITION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-system_power_condition)
+	/// enumeration (`u32`).
+	=>
+	=>
+	Ac 0
+	Dc 1
+	Hot 2
+	ConditionMaximum 3
+}
+
 const_bitflag! { TH32CS: u32;
 	/// [`HPROCESSLIST::CreateToolhelp32Snapshot`](crate::HPROCESSLIST) `flags`
 	/// (`u32`).
@@ -2057,6 +2189,15 @@ const_ordinary! { TOKEN_MANDATORY_POLICY: u32;
 	VALID_MASK 0x3
 }
 
+const_ordinary! { TOKEN_TYPE: u32;
+	/// [`TOKEN_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_type)
+	/// enumeration (`u32`).
+	=>
+	=>
+	Primary 1
+	Impersonation 2
+}
+
 const_bitflag! { TRANSACTION: u32;
 	/// [`Transaction access masks`](https://learn.microsoft.com/en-us/windows/win32/ktm/transaction-access-masks)
 	/// (`u32`).
@@ -2086,6 +2227,18 @@ const_bitflag! { TRANSACTION_OPT: u32;
 	/// None of the actual values (zero).
 	NoValue 0
 	DO_NOT_PROMOTE 0x0000_0001
+}
+
+const_ordinary! { USER_ACTIVITY_PRESENCE: u32;
+	/// [`PowerSetting::GlobalUserPresence`](crate::PowerSetting::GlobalUserPresence)
+	/// enumeration (`u32`).
+	=>
+	=>
+	Present 0
+    NotPresent 1
+    Inactive 2
+    Maximum 3
+    Invalid Self::Maximum.0
 }
 
 const_ordinary! { VER_COND: u8;
@@ -2173,6 +2326,8 @@ const_bitflag! { WC: u32;
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) `flags` (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	COMPOSITECHECK 0x0000_0200
 	ERR_INVALID_CHARS 0x0000_0080
 	NO_BEST_FIT_CHARS 0x0000_0400
@@ -2371,4 +2526,22 @@ const_ordinary! { WIN32: u16;
 	IE_WINBLUE Self::IE_IE100.0
 	IE_WINTHRESHOLD Self::IE_IE110.0
 	IE_WIN10 Self::IE_IE110.0
+}
+
+const_ordinary! { WTS: u8;
+	/// [`wm::WtsSessionChange`](crate::msg::wm::WtsSessionChange) `state`
+	/// (`u32`).
+	=>
+	=>
+	CONSOLE_CONNECT 0x1
+	CONSOLE_DISCONNECT 0x2
+	REMOTE_CONNECT 0x3
+	REMOTE_DISCONNECT 0x4
+	SESSION_LOGON 0x5
+	SESSION_LOGOFF 0x6
+	SESSION_LOCK 0x7
+	SESSION_UNLOCK 0x8
+	SESSION_REMOTE_CONTROL 0x9
+	SESSION_CREATE 0xa
+	SESSION_TERMINATE 0xb
 }

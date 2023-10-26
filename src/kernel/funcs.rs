@@ -1460,7 +1460,8 @@ pub fn MulDiv(number: i32, numerator: i32, denominator: i32) -> i32 {
 /// [`MultiByteToWideChar`](https://learn.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar)
 /// function.
 ///
-/// The resulting `Vec<u16>` includes a terminating null.
+/// If `multi_byte_str` doesn't have a terminating null, the resulting
+/// `Vec<u16>` also won't include one.
 #[must_use]
 pub fn MultiByteToWideChar(
 	code_page: co::CP,
@@ -1480,7 +1481,7 @@ pub fn MultiByteToWideChar(
 	} {
 		0 => Err(GetLastError()),
 		num_bytes => Ok(num_bytes),
-	}? + 1; // room for terminating null
+	}?;
 
 	let mut buf = vec![0u16; num_bytes as _];
 
@@ -1696,7 +1697,8 @@ pub fn VerSetConditionMask(
 /// [`WideCharToMultiByte`](https://learn.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte)
 /// function.
 ///
-/// The resulting `Vec<u16>` includes a terminating null.
+/// If `wide_char_str` doesn't have a terminating null, the resulting `Vec<u8>`
+/// also won't include one.
 #[must_use]
 pub fn WideCharToMultiByte(
 	code_page: co::CP,
@@ -1722,7 +1724,7 @@ pub fn WideCharToMultiByte(
 	} {
 		0 => Err(GetLastError()),
 		num_bytes => Ok(num_bytes),
-	}? + 1; // room for terminating null
+	}?;
 
 	let mut u8_buf = vec![0u8; num_bytes as _];
 	let mut bool_buf: BOOL = 0;

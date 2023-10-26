@@ -247,10 +247,10 @@ impl ListViewEvents {
 	/// [`NM_CUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-customdraw-list-view)
 	/// notification.
 	pub fn nm_custom_draw<F>(&self, func: F)
-		where F: Fn(&NMLVCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
+		where F: Fn(&mut NMLVCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
 		self.0.wm_notify(co::NM::CUSTOMDRAW,
-			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMLVCUSTOMDRAW>() })?.raw() as _)));
+			move |p| Ok(Some(func(unsafe { p.cast_nmhdr_mut::<NMLVCUSTOMDRAW>() })?.raw() as _)));
 	}
 
 	pub_fn_nfy_withparm_noret! { nm_dbl_clk, co::NM::DBLCLK, NMITEMACTIVATE;

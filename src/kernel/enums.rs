@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::kernel::privs::*;
+use crate::kernel::{ffi_types::*, privs::*};
 
 /// Variable parameter for:
 ///
@@ -73,6 +73,42 @@ impl IdStr {
 			Self::Str(ws) => ws.as_ptr(),
 		}
 	}
+}
+
+/// Variant parameter for:
+///
+/// * [`POWERBROADCAST_SETTING`](crate::POWERBROADCAST_SETTING).
+pub enum PowerSetting {
+	AcDcPowerSource(co::SYSTEM_POWER_CONDITION),
+	BatteryPercentageRemaining(u8),
+	ConsoleDisplayState(co::MONITOR_DISPLAY_STATE),
+	GlobalUserPresence(co::USER_ACTIVITY_PRESENCE),
+	IdleBackgroundTask,
+	MonitorPowerOn(co::MONITOR_DISPLAY_STATE),
+	PowerSavingStatus(bool),
+	PowerSchemePersonality(co::POWER_SAVINGS),
+	SessionDisplayStatus(co::MONITOR_DISPLAY_STATE),
+	SessionUserPresence(co::USER_ACTIVITY_PRESENCE),
+	LidSwitchStateChange(PowerSettingLid),
+	SystemAwayMode(PowerSettingAwayMode),
+}
+
+/// Variant parameter for:
+///
+/// * [`PowerSetting::SystemAwayMode`](crate::PowerSetting::SystemAwayMode).
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum PowerSettingAwayMode {
+	Exiting,
+	Entering,
+}
+
+/// Variant parameter for:
+///
+/// * [`PowerSetting::LidSwitchStateChange`](crate::PowerSetting::LidSwitchStateChange).
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum PowerSettingLid {
+	Closed,
+	Opened,
 }
 
 /// Registry value types.
@@ -273,6 +309,155 @@ impl RtStr {
 		match self {
 			Self::Rt(id) => MAKEINTRESOURCE(id.raw() as _),
 			Self::Str(ws) => ws.as_ptr(),
+		}
+	}
+}
+
+/// Notification content for
+/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::kernel_Hservicestatus::RegisterServiceCtrlHandlerEx)
+/// callback, describing [`co::SERVICE_CONTROL`](crate::co::SERVICE_CONTROL).
+pub enum SvcCtl<'a> {
+	Continue,
+	Interrogate,
+	NetBindAdd,
+	NetBindDisable,
+	NetBindEnable,
+	NetBindRemove,
+	ParamChange,
+	Pause,
+	PreShutdown,
+	Shutdown,
+	Stop,
+
+	DeviceEvent(co::DBT, SvcCtlDeviceEvent<'a>),
+	HardwareProfileChange(co::DBT),
+	PowerEvent(SvcCtlPowerEvent<'a>),
+	SessionChange(co::WTS, &'a WTSSESSION_NOTIFICATION),
+	TimeChange(&'a SERVICE_TIMECHANGE_INFO),
+	TriggerEvent,
+	UserModeReboot,
+
+	UserDefined(u8, u32, usize),
+}
+
+impl<'a> SvcCtl<'a> {
+	/// Constructs the enum according to the raw data.
+	///
+	/// # Safety
+	///
+	/// This enum is constructed when building the output of
+	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::kernel_Hservicestatus::RegisterServiceCtrlHandlerEx)
+	/// callback, make sure all parameters are correct.
+	#[must_use]
+	pub unsafe fn from_raw(
+		control: u32,
+		event_type: u32,
+		event_data: PVOID,
+	) -> Self
+	{
+		match co::SERVICE_CONTROL::from_raw(control) {
+			co::SERVICE_CONTROL::CONTINUE => Self::Continue,
+			co::SERVICE_CONTROL::INTERROGATE => Self::Interrogate,
+			co::SERVICE_CONTROL::NETBINDADD => Self::NetBindAdd,
+			co::SERVICE_CONTROL::NETBINDDISABLE => Self::NetBindDisable,
+			co::SERVICE_CONTROL::NETBINDENABLE => Self::NetBindEnable,
+			co::SERVICE_CONTROL::NETBINDREMOVE => Self::NetBindRemove,
+			co::SERVICE_CONTROL::PARAMCHANGE => Self::ParamChange,
+			co::SERVICE_CONTROL::PAUSE => Self::Pause,
+			co::SERVICE_CONTROL::PRESHUTDOWN => Self::PreShutdown,
+			co::SERVICE_CONTROL::SHUTDOWN => Self::Shutdown,
+			co::SERVICE_CONTROL::STOP => Self::Stop,
+
+			co::SERVICE_CONTROL::DEVICEEVENT => Self::DeviceEvent(
+				co::DBT::from_raw(event_type as _),
+				SvcCtlDeviceEvent::from_raw(&*(event_data as *const _)),
+			),
+			co::SERVICE_CONTROL::HARDWAREPROFILECHANGE => Self::HardwareProfileChange(
+				co::DBT::from_raw(event_type as _),
+			),
+			co::SERVICE_CONTROL::POWEREVENT => Self::PowerEvent(
+				SvcCtlPowerEvent::from_raw(co::PBT::from_raw(event_type), event_data),
+			),
+			co::SERVICE_CONTROL::SESSIONCHANGE => Self::SessionChange(
+				co::WTS::from_raw(event_type as _),
+				&*(event_data as *const _),
+			),
+			co::SERVICE_CONTROL::TIMECHANGE => Self::TimeChange(
+				&*(event_data as *const _),
+			),
+			co::SERVICE_CONTROL::TRIGGEREVENT => Self::TriggerEvent,
+			co::SERVICE_CONTROL::USERMODEREBOOT => Self::UserModeReboot,
+
+			_ => Self::UserDefined(control as _, event_type, event_data as _),
+		}
+	}
+}
+
+/// Notification content for [`SvcCtl`](crate::SvcCtl).
+pub enum SvcCtlDeviceEvent<'a> {
+	Interface(&'a DEV_BROADCAST_DEVICEINTERFACE),
+	Handle(&'a DEV_BROADCAST_HANDLE),
+	Oem(&'a DEV_BROADCAST_OEM),
+	Port(&'a DEV_BROADCAST_PORT),
+	Volume(&'a DEV_BROADCAST_VOLUME),
+}
+
+impl<'a> SvcCtlDeviceEvent<'a> {
+	/// Constructs the enum according to the raw data.
+	///
+	/// # Panics
+	///
+	/// Panics if `dbch_devicetype` field is invalid.
+	///
+	/// # Safety
+	///
+	/// This enum is constructed when building the output of
+	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::kernel_Hservicestatus::RegisterServiceCtrlHandlerEx)
+	/// callback, make sure all parameters are correct.
+	#[must_use]
+	pub unsafe fn from_raw(event_data: &DEV_BROADCAST_HDR) -> Self {
+		let ptr = event_data as *const DEV_BROADCAST_HDR;
+		match event_data.dbch_devicetype {
+			co::DBT_DEVTYP::DEVICEINTERFACE => Self::Interface(&*(ptr as *const _)),
+			co::DBT_DEVTYP::HANDLE => Self::Handle(&*(ptr as *const _)),
+			co::DBT_DEVTYP::OEM => Self::Oem(&*(ptr as *const _)),
+			co::DBT_DEVTYP::PORT => Self::Port(&*(ptr as *const _)),
+			co::DBT_DEVTYP::VOLUME => Self::Volume(&*(ptr as *const _)),
+			_ => panic!("Invalid co::DBT_DEVTYP."),
+		}
+	}
+}
+
+/// Notification content for [`SvcCtl`](crate::SvcCtl).
+pub enum SvcCtlPowerEvent<'a> {
+	StatusChange,
+	ResumeAutomatic,
+	ResumeSuspend,
+	Suspend,
+	PowerSettingChange(&'a POWERBROADCAST_SETTING),
+}
+
+impl<'a> SvcCtlPowerEvent<'a> {
+	/// Constructs the enum according to the raw data.
+	///
+	/// # Panics
+	///
+	/// Panics if `event` is invalid.
+	///
+	/// # Safety
+	///
+	/// This enum is constructed when building the output of
+	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::kernel_Hservicestatus::RegisterServiceCtrlHandlerEx)
+	/// callback, make sure all parameters are correct.
+	#[must_use]
+	pub unsafe fn from_raw(event: co::PBT, event_data: PVOID) -> Self {
+		match event {
+			co::PBT::APMPOWERSTATUSCHANGE => Self::StatusChange,
+			co::PBT::APMRESUMEAUTOMATIC => Self::ResumeAutomatic,
+			co::PBT::APMRESUMESUSPEND => Self::ResumeSuspend,
+			co::PBT::APMSUSPEND => Self::Suspend,
+			co::PBT::POWERSETTINGCHANGE => Self::PowerSettingChange(&*(event_data as *const _)),
+			_ => panic!("Invalid co::PBT."),
 		}
 	}
 }

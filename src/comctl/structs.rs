@@ -1085,7 +1085,7 @@ pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j> {
 	pszFooterIcon: *const u16, // union with HICON
 	pszFooter: *mut u16,
 	pub pfCallback: Option<PFTASKDIALOGCALLBACK>,
-	pub lpCallbackData: isize,
+	pub lpCallbackData: usize,
 	pub cxWidth: u32,
 
 	_pszWindowTitle: PhantomData<&'a mut u16>,

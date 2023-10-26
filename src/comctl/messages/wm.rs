@@ -7,9 +7,8 @@ use crate::prelude::*;
 /// message parameters.
 ///
 /// Return type: `isize`.
-#[derive(Clone, Copy)]
 pub struct Notify<'a> {
-	pub nmhdr: &'a NMHDR,
+	pub nmhdr: &'a mut NMHDR,
 }
 
 unsafe impl<'a> MsgSend for Notify<'a> {
@@ -23,7 +22,7 @@ unsafe impl<'a> MsgSend for Notify<'a> {
 		WndMsg {
 			msg_id: co::WM::NOTIFY,
 			wparam: self.nmhdr.hwndFrom.ptr() as _,
-			lparam: self.nmhdr as *const _ as _,
+			lparam: self.nmhdr as *mut _ as _,
 		}
 	}
 }
@@ -31,7 +30,7 @@ unsafe impl<'a> MsgSend for Notify<'a> {
 unsafe impl<'a> MsgSendRecv for Notify<'a> {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			nmhdr: unsafe { &*(p.lparam as *const _) },
+			nmhdr: unsafe { &mut *(p.lparam as *mut _) },
 		}
 	}
 }
