@@ -12,6 +12,7 @@ extern_sys! { "advapi32";
 	CreateServiceW(HANDLE, PCSTR, PCSTR, u32, u32, u32, u32, PCSTR, PCSTR, *mut u32, PCSTR, PCSTR, PCSTR) -> HANDLE
 	CreateWellKnownSid(u32, PCVOID, PVOID, *mut u32) -> BOOL
 	DecryptFileW(PCSTR, u32) -> BOOL
+	DeleteService(HANDLE) -> BOOL
 	DeregisterEventSource(HANDLE) -> BOOL
 	DuplicateToken(HANDLE, u32, *mut HANDLE) -> BOOL
 	EncryptFileW(PCSTR) -> BOOL

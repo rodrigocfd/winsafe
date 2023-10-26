@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::decl::*;
+use crate::kernel::{ffi, privs::*};
 use crate::prelude::*;
 
 impl_handle! { HSERVICE;
@@ -19,5 +21,9 @@ impl kernel_Hservice for HSERVICE {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait kernel_Hservice: Handle {
-
+	/// [`DeleteService`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-deleteservice)
+	/// function.
+	fn DeleteService(&self) -> SysResult<()> {
+		bool_to_sysresult(unsafe { ffi::DeleteService(self.ptr()) })
+	}
 }
