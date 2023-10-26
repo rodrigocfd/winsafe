@@ -16,8 +16,8 @@ const_bitflag! { ACCESS_RIGHTS: u32;
 }
 
 const_bitflag! { CONSOLE: u32;
-	/// [`SetConsoleMode`](crate::prelude::kernel_Hstd::SetConsoleMode) `mode`
-	/// (`u32`).
+	/// [`HSTD::SetConsoleMode`](crate::prelude::kernel_Hstd::SetConsoleMode)
+	/// `mode` (`u32`).
 	///
 	/// Originally has no prefix.
 	=>
@@ -1252,7 +1252,8 @@ const_ordinary! { RT: u16;
 
 const_bitflag! { SC_MANAGER: u32;
 	/// Service Control Manager access rights
-	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights).
+	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights)
+	/// (`u32`).
 	=>
 	=>
 	ALL_ACCESS 0xf003f
@@ -1408,6 +1409,77 @@ const_bitflag! { SECURITY_INFORMATION: u32;
 	PROTECTED_SACL 0x4000_0000
 	UNPROTECTED_DACL 0x2000_0000
 	UNPROTECTED_SACL 0x1000_0000
+}
+
+const_bitflag! { SERVICE: u32;
+	/// Service access rights
+	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights)
+	/// (`u32`).
+	=>
+	=>
+	ALL_ACCESS 0xf01ff
+	CHANGE_CONFIG 0x0002
+	ENUMERATE_DEPENDENTS 0x0008
+	INTERROGATE 0x0080
+	PAUSE_CONTINUE 0x0040
+	QUERY_CONFIG 0x0001
+	QUERY_STATUS 0x0004
+	START 0x0010
+	STOP 0x0020
+	USER_DEFINED_CONTROL 0x0100
+
+	ACCESS_SYSTEM_SECURITY 0x0100_0000
+	DELETE 0x1_0000
+	READ_CONTROL 0x2_0000
+	WRITE_DAC 0x4_0000
+	WRITE_OWNER 0x8_0000
+
+	GENERIC_READ STANDARD_RIGHTS::READ.0 | Self::QUERY_CONFIG.0 | Self::QUERY_STATUS.0 | Self::INTERROGATE.0 | Self::ENUMERATE_DEPENDENTS.0
+	GENERIC_WRITE STANDARD_RIGHTS::WRITE.0 | Self::CHANGE_CONFIG.0
+	GENERIC_EXECUTE STANDARD_RIGHTS::EXECUTE.0 | Self::START.0 | Self::STOP.0 | Self::PAUSE_CONTINUE.0 | Self::USER_DEFINED_CONTROL.0
+}
+
+const_ordinary! { SERVICE_ERROR: u32;
+	/// [`HSC::CreateService`](crate::prelude::kernel_Hsc::CreateService)
+	/// `error_control` (`u32`).
+	=>
+	=>
+	CRITICAL 0x0000_0003
+	IGNORE 0x0000_0000
+	NORMAL 0x0000_0001
+	SEVERE 0x0000_0002
+}
+
+const_ordinary! { SERVICE_START: u32;
+	/// [`HSC::CreateService`](crate::prelude::kernel_Hsc::CreateService)
+	/// `start_type` (`u32`).
+	///
+	/// Originally has `SERVICE` prefix.
+	=>
+	=>
+	AUTO_START 0x0000_0002
+	BOOT_START 0x0000_0000
+	DEMAND_START 0x0000_0003
+	DISABLED 0x0000_0004
+	SYSTEM_START 0x0000_0001
+}
+
+const_ordinary! { SERVICE_TYPE: u32;
+	/// [`HSC::CreateService`](crate::prelude::kernel_Hsc::CreateService)
+	/// `service_type` (`u32`).
+	///
+	/// Originally has `SERVICE` prefix.
+	=>
+	=>
+	ADAPTER 0x0000_0004
+	FILE_SYSTEM_DRIVER 0x0000_0002
+	KERNEL_DRIVER 0x0000_0001
+	RECOGNIZER_DRIVER 0x0000_0008
+	WIN32_OWN_PROCESS 0x0000_0010
+	WIN32_SHARE_PROCESS 0x0000_0020
+
+	WIN32_OWN_PROCESS_INTERACTIVE Self::WIN32_OWN_PROCESS.0 | 0x0000_0100
+	WIN32_SHARE_PROCESS_INTERACTIVE Self::WIN32_SHARE_PROCESS.0 | 0x0000_0100
 }
 
 const_bitflag! { SHTDN_REASON: u32;
