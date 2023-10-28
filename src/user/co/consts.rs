@@ -2193,6 +2193,18 @@ const_ordinary! { OIC: u32;
 	SHIELD 32518
 }
 
+const_ordinary! { PBT: u32;
+	/// [`wm::PowerBroadcast`](crate::msg::wm::PowerBroadcast) power-management
+	/// event (`u32`).
+	=>
+	=>
+	APMPOWERSTATUSCHANGE 0xa
+	APMRESUMEAUTOMATIC 0x12
+	APMRESUMESUSPEND 0x7
+	APMSUSPEND 0x4
+	POWERSETTINGCHANGE 0x8013
+}
+
 const_bitflag! { PM: u32;
 	/// [`PeekMessage`](crate::PeekMessage) `remove_msg` (`u32`).
 	=>
