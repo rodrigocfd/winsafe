@@ -1317,6 +1317,44 @@ unsafe impl MsgSendRecv for ParentNotify {
 	}
 }
 
+/// [`WM_POWERBROADCAST`](https://learn.microsoft.com/en-us/windows/win32/power/wm-powerbroadcast)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct PowerBroadcast<'a> {
+	pub event: co::PBT,
+	pub data: Option<&'a POWERBROADCAST_SETTING>,
+}
+
+unsafe impl<'a> MsgSend for PowerBroadcast<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::POWERBROADCAST,
+			wparam: self.event.raw() as _,
+			lparam: self.data.map_or(0, |d| d as *const _ as _),
+		}
+	}
+}
+
+unsafe impl<'a> MsgSendRecv for PowerBroadcast<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			event: unsafe { co::PBT::from_raw(p.wparam as _) },
+			data: if p.lparam == 0 {
+				None
+			} else {
+				Some(unsafe { &*(p.lparam as *const _) })
+			},
+		}
+	}
+}
+
 /// [`WM_QUERYOPEN`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-queryopen)
 /// message, which has no parameters.
 ///

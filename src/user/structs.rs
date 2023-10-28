@@ -819,6 +819,17 @@ impl POINT {
 	}
 }
 
+/// [`POWERBROADCAST_SETTING`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-powerbroadcast_setting)
+/// struct.
+#[repr(C)]
+pub struct POWERBROADCAST_SETTING {
+	pub PowerSetting: co::POWER_SETTING,
+	pub DataLength: u32,
+	pub Data: [u8; 1],
+}
+
+impl VariableSized for POWERBROADCAST_SETTING {}
+
 /// [`RECT`](https://learn.microsoft.com/en-us/windows/win32/api/windef/ns-windef-rect)
 /// struct.
 #[repr(C)]
