@@ -634,6 +634,11 @@ pub trait GuiEvents {
 		/// message.
 	}
 
+	fn_wm_withparm_noret! { wm_power_broadcast, co::WM::POWERBROADCAST, wm::PowerBroadcast;
+		/// [`WM_POWERBROADCAST`](https://learn.microsoft.com/en-us/windows/win32/power/wm-powerbroadcast)
+		/// message.
+	}
+
 	fn_wm_noparm_boolret! { wm_query_open, co::WM::QUERYOPEN;
 		/// [`WM_QUERYOPEN`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-queryopen)
 		/// message.
