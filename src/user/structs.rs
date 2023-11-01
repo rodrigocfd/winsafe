@@ -217,6 +217,16 @@ pub struct DELETEITEMSTRUCT {
 
 impl_default!(DELETEITEMSTRUCT);
 
+/// [`DEV_BROADCAST_HDR`](https://learn.microsoft.com/en-us/windows/win32/api/dbt/ns-dbt-dev_broadcast_hdr)
+/// struct.
+#[repr(C)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DEV_BROADCAST_HDR {
+	pub dbch_size: u32,
+	pub dbch_devicetype: co::DBT_DEVTYP,
+	pub dbch_reserved: u32,
+}
+
 /// [`DEVMODE`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-devmodew)
 /// struct.
 #[repr(C)]

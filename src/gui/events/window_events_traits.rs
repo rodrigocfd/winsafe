@@ -258,6 +258,11 @@ pub trait GuiEvents {
 		/// ```
 	}
 
+	fn_wm_withparm_noret! { wm_device_change, co::WM::DEVICECHANGE, wm::DeviceChange;
+		/// [`WM_DEVICECHANGE`](https://learn.microsoft.com/en-us/windows/win32/devio/wm-devicechange)
+		/// message.
+	}
+
 	fn_wm_withparm_noret! { wm_display_change, co::WM::DISPLAYCHANGE, wm::DisplayChange;
 		/// [`WM_DISPLAYCHANGE`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-displaychange)
 		/// message.
@@ -382,13 +387,13 @@ pub trait GuiEvents {
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_help, co::WM::HELP, wm::Help;
-		/// [`WM_HELP`](https://learn.microsoft.com/en-us/windows/win32/shell/wm-help)
+	fn_wm_withparm_noret! { wm_h_scroll, co::WM::HSCROLL, wm::HScroll;
+		/// [`WM_HSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-hscroll)
 		/// message.
 	}
 
-	fn_wm_withparm_noret! { wm_h_scroll, co::WM::HSCROLL, wm::HScroll;
-		/// [`WM_HSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-hscroll)
+	fn_wm_withparm_noret! { wm_help, co::WM::HELP, wm::Help;
+		/// [`WM_HELP`](https://learn.microsoft.com/en-us/windows/win32/shell/wm-help)
 		/// message.
 	}
 

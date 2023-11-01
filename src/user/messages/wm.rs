@@ -316,6 +316,44 @@ pub_struct_msg_empty_handleable! { Destroy: co::WM::DESTROY;
 	/// [`WM_DESTROY`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
 }
 
+/// [`WM_DEVICECHANGE`](https://learn.microsoft.com/en-us/windows/win32/devio/wm-devicechange)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct DeviceChange<'a> {
+	pub event: co::DBT,
+	pub data: Option<&'a DEV_BROADCAST_HDR>,
+}
+
+unsafe impl<'a> MsgSend for DeviceChange<'a> {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::DEVICECHANGE,
+			wparam: self.event.raw() as _,
+			lparam: self.data.map_or(0, |d| d as *const _ as _),
+		}
+	}
+}
+
+unsafe impl<'a> MsgSendRecv for DeviceChange<'a> {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			event: unsafe { co::DBT::from_raw(p.wparam as _) },
+			data: if p.lparam == 0 {
+				None
+			} else {
+				Some(unsafe { &*(p.lparam as *const _) })
+			}
+		}
+	}
+}
+
 /// [`WM_ENABLE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-enable)
 /// message parameters.
 ///
