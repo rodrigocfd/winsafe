@@ -555,6 +555,45 @@ impl Default for SECURITY_DESCRIPTOR {
 	}
 }
 
+/// [`SERVICE_TIMECHANGE_INFO`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_timechange_info)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
+pub struct SERVICE_TIMECHANGE_INFO {
+	liNewTime: i64,
+	liOldTime: i64,
+}
+
+impl SERVICE_TIMECHANGE_INFO {
+	/// Returns the `liNewTime` field.
+	#[must_use]
+	pub const fn liNewTime(&self) -> FILETIME {
+		FILETIME {
+			dwLowDateTime: LODWORD(self.liNewTime as _),
+			dwHighDateTime: HIDWORD(self.liNewTime as _),
+		}
+	}
+
+	/// Returns the `liOldTime` field.
+	#[must_use]
+	pub const fn liOldTime(&self) -> FILETIME {
+		FILETIME {
+			dwLowDateTime: LODWORD(self.liOldTime as _),
+			dwHighDateTime: HIDWORD(self.liOldTime as _),
+		}
+	}
+
+	/// Sets the `liNewTime` field.
+	pub fn set_liNewTime(&mut self, ft: FILETIME) {
+		self.liNewTime = MAKEQWORD(ft.dwLowDateTime, ft.dwHighDateTime) as _;
+	}
+
+	/// Sets the `liOldTime` field.
+	pub fn set_liOldTime(&mut self, ft: FILETIME) {
+		self.liOldTime = MAKEQWORD(ft.dwLowDateTime, ft.dwHighDateTime) as _;
+	}
+}
+
 /// [`SID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid)
 /// struct.
 ///
@@ -1028,4 +1067,13 @@ impl WIN32_FIND_DATA {
 	pub const fn nFileSize(&self) -> u64 {
 		MAKEQWORD(self.nFileSizeLow, self.nFileSizeHigh)
 	}
+}
+
+/// [`WTSSESSION_NOTIFICATION`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-wtssession_notification)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Copy, PartialEq)]
+pub struct WTSSESSION_NOTIFICATION {
+	pub cbSize: u32,
+	pub dwSessionId: u32,
 }

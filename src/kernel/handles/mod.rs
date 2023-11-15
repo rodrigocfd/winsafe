@@ -16,6 +16,7 @@ mod hprocess;
 mod hprocesslist;
 mod hsc;
 mod hservice;
+mod hservicestatus;
 mod hstd;
 mod hthread;
 mod htransaction;
@@ -39,6 +40,7 @@ pub mod decl {
 	pub use super::hprocesslist::HPROCESSLIST;
 	pub use super::hsc::HSC;
 	pub use super::hservice::HSERVICE;
+	pub use super::hservicestatus::HSERVICESTATUS;
 	pub use super::hstd::HSTD;
 	pub use super::hthread::HTHREAD;
 	pub use super::htransaction::HTRANSACTION;
@@ -82,6 +84,7 @@ pub mod traits {
 	pub use super::hprocesslist::kernel_Hprocesslist;
 	pub use super::hsc::kernel_Hsc;
 	pub use super::hservice::kernel_Hservice;
+	pub use super::hservicestatus::kernel_Hservicestatus;
 	pub use super::hstd::kernel_Hstd;
 	pub use super::hthread::kernel_Hthread;
 	pub use super::htransaction::kernel_Htransaction;

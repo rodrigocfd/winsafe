@@ -453,24 +453,6 @@ const_bitflag! { CS: u32;
 	DROPSHADOW 0x00020000
 }
 
-const_ordinary! { DBT: u16;
-	/// [`wm::DeviceChange`](crate::msg::wm::DeviceChange) event (`u16`).
-	=>
-	=>
-	DEVNODES_CHANGED 0x0007
-	QUERYCHANGECONFIG 0x0017
-	CONFIGCHANGED 0x0018
-	CONFIGCHANGECANCELED 0x0019
-	DEVICEARRIVAL 0x8000
-	DEVICEQUERYREMOVE 0x8001
-	DEVICEQUERYREMOVEFAILED 0x8002
-	DEVICEREMOVEPENDING 0x8003
-	DEVICEREMOVECOMPLETE 0x8004
-	DEVICETYPESPECIFIC 0x8005
-	CUSTOMEVENT 0x8006
-	USERDEFINED 0xFFFF
-}
-
 const_ordinary! { DBT_DEVTYP: u32;
 	/// [`DEV_BROADCAST_HDR`](crate::DEV_BROADCAST_HDR) `dbch_devicetype`
 	/// (`u32`).
@@ -2223,18 +2205,6 @@ const_ordinary! { OIC: u32;
 	SHIELD 32518
 }
 
-const_ordinary! { PBT: u32;
-	/// [`wm::PowerBroadcast`](crate::msg::wm::PowerBroadcast) power-management
-	/// event (`u32`).
-	=>
-	=>
-	APMPOWERSTATUSCHANGE 0xa
-	APMRESUMEAUTOMATIC 0x12
-	APMRESUMESUSPEND 0x7
-	APMSUSPEND 0x4
-	POWERSETTINGCHANGE 0x8013
-}
-
 const_bitflag! { PM: u32;
 	/// [`PeekMessage`](crate::PeekMessage) `remove_msg` (`u32`).
 	=>
@@ -3814,24 +3784,6 @@ const_bitflag! { WS_EX: u32;
 	/// The window does not appear on the taskbar by default. To force the
 	/// window to appear on the taskbar use the `WS_EX::APPWINDOW` style.
 	NOACTIVATE 0x0800_0000
-}
-
-const_ordinary! { WTS: u8;
-	/// [`wm::WtsSessionChange`](crate::msg::wm::WtsSessionChange) `state`
-	/// (`u32`).
-	=>
-	=>
-	CONSOLE_CONNECT 0x1
-	CONSOLE_DISCONNECT 0x2
-	REMOTE_CONNECT 0x3
-	REMOTE_DISCONNECT 0x4
-	SESSION_LOGON 0x5
-	SESSION_LOGOFF 0x6
-	SESSION_LOCK 0x7
-	SESSION_UNLOCK 0x8
-	SESSION_REMOTE_CONTROL 0x9
-	SESSION_CREATE 0xa
-	SESSION_TERMINATE 0xb
 }
 
 const_bitflag! { WVR: u32;

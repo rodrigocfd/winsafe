@@ -146,6 +146,24 @@ const_bitflag! { CREATE_EVENT: u32;
 	MANUAL_RESET 0x0000_0001
 }
 
+const_ordinary! { DBT: u16;
+	/// [`wm::DeviceChange`](crate::msg::wm::DeviceChange) event (`u16`).
+	=>
+	=>
+	DEVNODES_CHANGED 0x0007
+	QUERYCHANGECONFIG 0x0017
+	CONFIGCHANGED 0x0018
+	CONFIGCHANGECANCELED 0x0019
+	DEVICEARRIVAL 0x8000
+	DEVICEQUERYREMOVE 0x8001
+	DEVICEQUERYREMOVEFAILED 0x8002
+	DEVICEREMOVEPENDING 0x8003
+	DEVICEREMOVECOMPLETE 0x8004
+	DEVICETYPESPECIFIC 0x8005
+	CUSTOMEVENT 0x8006
+	USERDEFINED 0xFFFF
+}
+
 const_ordinary! { DISPOSITION: u32;
 	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
 	/// `creation_disposition` (`u32`).
@@ -810,6 +828,18 @@ const_ordinary! { PAGE: u32;
 	SEC_NOCACHE 0x1000_0000
 	SEC_RESERVE 0x400_0000
 	SEC_WRITECOMBINE 0x4000_0000
+}
+
+const_ordinary! { PBT: u32;
+	/// [`wm::PowerBroadcast`](crate::msg::wm::PowerBroadcast) power-management
+	/// event (`u32`).
+	=>
+	=>
+	APMPOWERSTATUSCHANGE 0xa
+	APMRESUMEAUTOMATIC 0x12
+	APMRESUMESUSPEND 0x7
+	APMSUSPEND 0x4
+	POWERSETTINGCHANGE 0x8013
 }
 
 const_bitflag! { PRIORITY_CLASS: u32;
@@ -2397,4 +2427,22 @@ const_ordinary! { WIN32: u16;
 	IE_WINBLUE Self::IE_IE100.0
 	IE_WINTHRESHOLD Self::IE_IE110.0
 	IE_WIN10 Self::IE_IE110.0
+}
+
+const_ordinary! { WTS: u8;
+	/// [`wm::WtsSessionChange`](crate::msg::wm::WtsSessionChange) `state`
+	/// (`u32`).
+	=>
+	=>
+	CONSOLE_CONNECT 0x1
+	CONSOLE_DISCONNECT 0x2
+	REMOTE_CONNECT 0x3
+	REMOTE_DISCONNECT 0x4
+	SESSION_LOGON 0x5
+	SESSION_LOGOFF 0x6
+	SESSION_LOCK 0x7
+	SESSION_UNLOCK 0x8
+	SESSION_REMOTE_CONTROL 0x9
+	SESSION_CREATE 0xa
+	SESSION_TERMINATE 0xb
 }

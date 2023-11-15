@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::kernel::privs::*;
+use crate::kernel::{ffi_types::*, privs::*};
 
 /// Variable parameter for:
 ///
@@ -273,6 +273,95 @@ impl RtStr {
 		match self {
 			Self::Rt(id) => MAKEINTRESOURCE(id.raw() as _),
 			Self::Str(ws) => ws.as_ptr(),
+		}
+	}
+}
+
+/// Notification content for
+/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::kernel_Hservicestatus::RegisterServiceCtrlHandlerEx)
+/// callback, describing [`co::SERVICE_CONTROL`](crate::co::SERVICE_CONTROL).
+pub enum ServiceControl<'a> {
+	Continue,
+	Interrogate,
+	NetBindAdd,
+	NetBindDisable,
+	NetBindEnable,
+	NetBindRemove,
+	ParamChange,
+	Pause,
+	PreShutdown,
+	Shutdown,
+	Stop,
+
+	DeviceEvent(co::DBT, Option<&'a DEV_BROADCAST_HDR>),
+	HardwareProfileChange(co::DBT),
+	PowerEvent(co::PBT, Option<&'a POWERBROADCAST_SETTING>),
+	SessionChange(co::WTS, &'a WTSSESSION_NOTIFICATION),
+	TimeChange(&'a SERVICE_TIMECHANGE_INFO),
+	TriggerEvent,
+	UserModeReboot,
+
+	UserDefined(u8, u32, usize),
+}
+
+impl<'a> ServiceControl<'a> {
+	/// Constructs the enum according to the raw data.
+	///
+	/// # Safety
+	///
+	/// This enum is constructed when building the output of
+	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::kernel_Hservicestatus::RegisterServiceCtrlHandlerEx)
+	/// callback, make sure all parameters are correct.
+	#[must_use]
+	pub unsafe fn from_raw(
+		control: u32,
+		event_type: u32,
+		event_data: PVOID,
+	) -> Self
+	{
+		match co::SERVICE_CONTROL::from_raw(control) {
+			co::SERVICE_CONTROL::CONTINUE => Self::Continue,
+			co::SERVICE_CONTROL::INTERROGATE => Self::Interrogate,
+			co::SERVICE_CONTROL::NETBINDADD => Self::NetBindAdd,
+			co::SERVICE_CONTROL::NETBINDDISABLE => Self::NetBindDisable,
+			co::SERVICE_CONTROL::NETBINDENABLE => Self::NetBindEnable,
+			co::SERVICE_CONTROL::NETBINDREMOVE => Self::NetBindRemove,
+			co::SERVICE_CONTROL::PARAMCHANGE => Self::ParamChange,
+			co::SERVICE_CONTROL::PAUSE => Self::Pause,
+			co::SERVICE_CONTROL::PRESHUTDOWN => Self::PreShutdown,
+			co::SERVICE_CONTROL::SHUTDOWN => Self::Shutdown,
+			co::SERVICE_CONTROL::STOP => Self::Stop,
+
+			co::SERVICE_CONTROL::DEVICEEVENT => Self::DeviceEvent(
+				co::DBT::from_raw(event_type as _),
+				if event_data.is_null() {
+					None
+				} else {
+					Some(&*(event_data as *const _))
+				},
+			),
+			co::SERVICE_CONTROL::HARDWAREPROFILECHANGE => Self::HardwareProfileChange(
+				co::DBT::from_raw(event_type as _),
+			),
+			co::SERVICE_CONTROL::POWEREVENT => Self::PowerEvent(
+				co::PBT::from_raw(event_type),
+				if event_data.is_null() {
+					None
+				} else {
+					Some(&*(event_data as *const _))
+				},
+			),
+			co::SERVICE_CONTROL::SESSIONCHANGE => Self::SessionChange(
+				co::WTS::from_raw(event_type as _),
+				&*(event_data as *const _),
+			),
+			co::SERVICE_CONTROL::TIMECHANGE => Self::TimeChange(
+				&*(event_data as *const _),
+			),
+			co::SERVICE_CONTROL::TRIGGEREVENT => Self::TriggerEvent,
+			co::SERVICE_CONTROL::USERMODEREBOOT => Self::UserModeReboot,
+
+			_ => Self::UserDefined(control as _, event_type, event_data as _),
 		}
 	}
 }
