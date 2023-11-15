@@ -279,6 +279,7 @@
 <a href="#279" id="279">279</a>
 <a href="#280" id="280">280</a>
 <a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys! </span>{ <span class="string">&quot;advapi32&quot;</span>;
@@ -344,6 +345,7 @@
 	RegFlushKey(HANDLE) -&gt; i32
 	RegGetValueW(HANDLE, PCSTR, PCSTR, u32, <span class="kw-2">*mut </span>u32, PVOID, <span class="kw-2">*mut </span>u32) -&gt; i32
 	RegisterEventSourceW(PCSTR, PCSTR) -&gt; HANDLE
+	RegisterServiceCtrlHandlerExW(PCSTR, PFUNC, PVOID) -&gt; HANDLE
 	RegLoadKeyW(HANDLE, PCSTR, PCSTR) -&gt; i32
 	RegOpenCurrentUser(u32, <span class="kw-2">*mut </span>HANDLE) -&gt; i32
 	RegOpenKeyExW(HANDLE, PCSTR, u32, u32, <span class="kw-2">*mut </span>HANDLE) -&gt; i32

@@ -3801,54 +3801,6 @@
 <a href="#3801" id="3801">3801</a>
 <a href="#3802" id="3802">3802</a>
 <a href="#3803" id="3803">3803</a>
-<a href="#3804" id="3804">3804</a>
-<a href="#3805" id="3805">3805</a>
-<a href="#3806" id="3806">3806</a>
-<a href="#3807" id="3807">3807</a>
-<a href="#3808" id="3808">3808</a>
-<a href="#3809" id="3809">3809</a>
-<a href="#3810" id="3810">3810</a>
-<a href="#3811" id="3811">3811</a>
-<a href="#3812" id="3812">3812</a>
-<a href="#3813" id="3813">3813</a>
-<a href="#3814" id="3814">3814</a>
-<a href="#3815" id="3815">3815</a>
-<a href="#3816" id="3816">3816</a>
-<a href="#3817" id="3817">3817</a>
-<a href="#3818" id="3818">3818</a>
-<a href="#3819" id="3819">3819</a>
-<a href="#3820" id="3820">3820</a>
-<a href="#3821" id="3821">3821</a>
-<a href="#3822" id="3822">3822</a>
-<a href="#3823" id="3823">3823</a>
-<a href="#3824" id="3824">3824</a>
-<a href="#3825" id="3825">3825</a>
-<a href="#3826" id="3826">3826</a>
-<a href="#3827" id="3827">3827</a>
-<a href="#3828" id="3828">3828</a>
-<a href="#3829" id="3829">3829</a>
-<a href="#3830" id="3830">3830</a>
-<a href="#3831" id="3831">3831</a>
-<a href="#3832" id="3832">3832</a>
-<a href="#3833" id="3833">3833</a>
-<a href="#3834" id="3834">3834</a>
-<a href="#3835" id="3835">3835</a>
-<a href="#3836" id="3836">3836</a>
-<a href="#3837" id="3837">3837</a>
-<a href="#3838" id="3838">3838</a>
-<a href="#3839" id="3839">3839</a>
-<a href="#3840" id="3840">3840</a>
-<a href="#3841" id="3841">3841</a>
-<a href="#3842" id="3842">3842</a>
-<a href="#3843" id="3843">3843</a>
-<a href="#3844" id="3844">3844</a>
-<a href="#3845" id="3845">3845</a>
-<a href="#3846" id="3846">3846</a>
-<a href="#3847" id="3847">3847</a>
-<a href="#3848" id="3848">3848</a>
-<a href="#3849" id="3849">3849</a>
-<a href="#3850" id="3850">3850</a>
-<a href="#3851" id="3851">3851</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
@@ -4302,24 +4254,6 @@
 	</span>GLOBALCLASS <span class="number">0x4000
 	</span>IME <span class="number">0x00010000
 	</span>DROPSHADOW <span class="number">0x00020000
-</span>}
-
-<span class="macro">const_ordinary! </span>{ DBT: u16;
-	<span class="doccomment">/// [`wm::DeviceChange`](crate::msg::wm::DeviceChange) event (`u16`).
-	</span>=&gt;
-	=&gt;
-	DEVNODES_CHANGED <span class="number">0x0007
-	</span>QUERYCHANGECONFIG <span class="number">0x0017
-	</span>CONFIGCHANGED <span class="number">0x0018
-	</span>CONFIGCHANGECANCELED <span class="number">0x0019
-	</span>DEVICEARRIVAL <span class="number">0x8000
-	</span>DEVICEQUERYREMOVE <span class="number">0x8001
-	</span>DEVICEQUERYREMOVEFAILED <span class="number">0x8002
-	</span>DEVICEREMOVEPENDING <span class="number">0x8003
-	</span>DEVICEREMOVECOMPLETE <span class="number">0x8004
-	</span>DEVICETYPESPECIFIC <span class="number">0x8005
-	</span>CUSTOMEVENT <span class="number">0x8006
-	</span>USERDEFINED <span class="number">0xFFFF
 </span>}
 
 <span class="macro">const_ordinary! </span>{ DBT_DEVTYP: u32;
@@ -6074,18 +6008,6 @@
 	</span>SHIELD <span class="number">32518
 </span>}
 
-<span class="macro">const_ordinary! </span>{ PBT: u32;
-	<span class="doccomment">/// [`wm::PowerBroadcast`](crate::msg::wm::PowerBroadcast) power-management
-	/// event (`u32`).
-	</span>=&gt;
-	=&gt;
-	APMPOWERSTATUSCHANGE <span class="number">0xa
-	</span>APMRESUMEAUTOMATIC <span class="number">0x12
-	</span>APMRESUMESUSPEND <span class="number">0x7
-	</span>APMSUSPEND <span class="number">0x4
-	</span>POWERSETTINGCHANGE <span class="number">0x8013
-</span>}
-
 <span class="macro">const_bitflag! </span>{ PM: u32;
 	<span class="doccomment">/// [`PeekMessage`](crate::PeekMessage) `remove_msg` (`u32`).
 	</span>=&gt;
@@ -7665,24 +7587,6 @@
 	/// The window does not appear on the taskbar by default. To force the
 	/// window to appear on the taskbar use the `WS_EX::APPWINDOW` style.
 	</span>NOACTIVATE <span class="number">0x0800_0000
-</span>}
-
-<span class="macro">const_ordinary! </span>{ WTS: u8;
-	<span class="doccomment">/// [`wm::WtsSessionChange`](crate::msg::wm::WtsSessionChange) `state`
-	/// (`u32`).
-	</span>=&gt;
-	=&gt;
-	CONSOLE_CONNECT <span class="number">0x1
-	</span>CONSOLE_DISCONNECT <span class="number">0x2
-	</span>REMOTE_CONNECT <span class="number">0x3
-	</span>REMOTE_DISCONNECT <span class="number">0x4
-	</span>SESSION_LOGON <span class="number">0x5
-	</span>SESSION_LOGOFF <span class="number">0x6
-	</span>SESSION_LOCK <span class="number">0x7
-	</span>SESSION_UNLOCK <span class="number">0x8
-	</span>SESSION_REMOTE_CONTROL <span class="number">0x9
-	</span>SESSION_CREATE <span class="number">0xa
-	</span>SESSION_TERMINATE <span class="number">0xb
 </span>}
 
 <span class="macro">const_bitflag! </span>{ WVR: u32;

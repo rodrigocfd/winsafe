@@ -2398,6 +2398,54 @@
 <a href="#2398" id="2398">2398</a>
 <a href="#2399" id="2399">2399</a>
 <a href="#2400" id="2400">2400</a>
+<a href="#2401" id="2401">2401</a>
+<a href="#2402" id="2402">2402</a>
+<a href="#2403" id="2403">2403</a>
+<a href="#2404" id="2404">2404</a>
+<a href="#2405" id="2405">2405</a>
+<a href="#2406" id="2406">2406</a>
+<a href="#2407" id="2407">2407</a>
+<a href="#2408" id="2408">2408</a>
+<a href="#2409" id="2409">2409</a>
+<a href="#2410" id="2410">2410</a>
+<a href="#2411" id="2411">2411</a>
+<a href="#2412" id="2412">2412</a>
+<a href="#2413" id="2413">2413</a>
+<a href="#2414" id="2414">2414</a>
+<a href="#2415" id="2415">2415</a>
+<a href="#2416" id="2416">2416</a>
+<a href="#2417" id="2417">2417</a>
+<a href="#2418" id="2418">2418</a>
+<a href="#2419" id="2419">2419</a>
+<a href="#2420" id="2420">2420</a>
+<a href="#2421" id="2421">2421</a>
+<a href="#2422" id="2422">2422</a>
+<a href="#2423" id="2423">2423</a>
+<a href="#2424" id="2424">2424</a>
+<a href="#2425" id="2425">2425</a>
+<a href="#2426" id="2426">2426</a>
+<a href="#2427" id="2427">2427</a>
+<a href="#2428" id="2428">2428</a>
+<a href="#2429" id="2429">2429</a>
+<a href="#2430" id="2430">2430</a>
+<a href="#2431" id="2431">2431</a>
+<a href="#2432" id="2432">2432</a>
+<a href="#2433" id="2433">2433</a>
+<a href="#2434" id="2434">2434</a>
+<a href="#2435" id="2435">2435</a>
+<a href="#2436" id="2436">2436</a>
+<a href="#2437" id="2437">2437</a>
+<a href="#2438" id="2438">2438</a>
+<a href="#2439" id="2439">2439</a>
+<a href="#2440" id="2440">2440</a>
+<a href="#2441" id="2441">2441</a>
+<a href="#2442" id="2442">2442</a>
+<a href="#2443" id="2443">2443</a>
+<a href="#2444" id="2444">2444</a>
+<a href="#2445" id="2445">2445</a>
+<a href="#2446" id="2446">2446</a>
+<a href="#2447" id="2447">2447</a>
+<a href="#2448" id="2448">2448</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="macro">const_bitflag! </span>{ ACCESS_RIGHTS: u32;
@@ -2544,6 +2592,24 @@
 	=&gt;
 	INITIAL_SET <span class="number">0x0000_0002
 	</span>MANUAL_RESET <span class="number">0x0000_0001
+</span>}
+
+<span class="macro">const_ordinary! </span>{ DBT: u16;
+	<span class="doccomment">/// [`wm::DeviceChange`](crate::msg::wm::DeviceChange) event (`u16`).
+	</span>=&gt;
+	=&gt;
+	DEVNODES_CHANGED <span class="number">0x0007
+	</span>QUERYCHANGECONFIG <span class="number">0x0017
+	</span>CONFIGCHANGED <span class="number">0x0018
+	</span>CONFIGCHANGECANCELED <span class="number">0x0019
+	</span>DEVICEARRIVAL <span class="number">0x8000
+	</span>DEVICEQUERYREMOVE <span class="number">0x8001
+	</span>DEVICEQUERYREMOVEFAILED <span class="number">0x8002
+	</span>DEVICEREMOVEPENDING <span class="number">0x8003
+	</span>DEVICEREMOVECOMPLETE <span class="number">0x8004
+	</span>DEVICETYPESPECIFIC <span class="number">0x8005
+	</span>CUSTOMEVENT <span class="number">0x8006
+	</span>USERDEFINED <span class="number">0xFFFF
 </span>}
 
 <span class="macro">const_ordinary! </span>{ DISPOSITION: u32;
@@ -3210,6 +3276,18 @@
 	</span>SEC_NOCACHE <span class="number">0x1000_0000
 	</span>SEC_RESERVE <span class="number">0x400_0000
 	</span>SEC_WRITECOMBINE <span class="number">0x4000_0000
+</span>}
+
+<span class="macro">const_ordinary! </span>{ PBT: u32;
+	<span class="doccomment">/// [`wm::PowerBroadcast`](crate::msg::wm::PowerBroadcast) power-management
+	/// event (`u32`).
+	</span>=&gt;
+	=&gt;
+	APMPOWERSTATUSCHANGE <span class="number">0xa
+	</span>APMRESUMEAUTOMATIC <span class="number">0x12
+	</span>APMRESUMESUSPEND <span class="number">0x7
+	</span>APMSUSPEND <span class="number">0x4
+	</span>POWERSETTINGCHANGE <span class="number">0x8013
 </span>}
 
 <span class="macro">const_bitflag! </span>{ PRIORITY_CLASS: u32;
@@ -4797,5 +4875,23 @@
 	</span>IE_WINBLUE <span class="self">Self</span>::IE_IE100.<span class="number">0
 	</span>IE_WINTHRESHOLD <span class="self">Self</span>::IE_IE110.<span class="number">0
 	</span>IE_WIN10 <span class="self">Self</span>::IE_IE110.<span class="number">0
+</span>}
+
+<span class="macro">const_ordinary! </span>{ WTS: u8;
+	<span class="doccomment">/// [`wm::WtsSessionChange`](crate::msg::wm::WtsSessionChange) `state`
+	/// (`u32`).
+	</span>=&gt;
+	=&gt;
+	CONSOLE_CONNECT <span class="number">0x1
+	</span>CONSOLE_DISCONNECT <span class="number">0x2
+	</span>REMOTE_CONNECT <span class="number">0x3
+	</span>REMOTE_DISCONNECT <span class="number">0x4
+	</span>SESSION_LOGON <span class="number">0x5
+	</span>SESSION_LOGOFF <span class="number">0x6
+	</span>SESSION_LOCK <span class="number">0x7
+	</span>SESSION_UNLOCK <span class="number">0x8
+	</span>SESSION_REMOTE_CONTROL <span class="number">0x9
+	</span>SESSION_CREATE <span class="number">0xa
+	</span>SESSION_TERMINATE <span class="number">0xb
 </span>}
 </code></pre></div></section></main></body></html>
