@@ -3816,6 +3816,24 @@ const_bitflag! { WS_EX: u32;
 	NOACTIVATE 0x0800_0000
 }
 
+const_ordinary! { WTS: u8;
+	/// [`wm::WtsSessionChange`](crate::msg::wm::WtsSessionChange) `state`
+	/// (`u32`).
+	=>
+	=>
+	CONSOLE_CONNECT 0x1
+	CONSOLE_DISCONNECT 0x2
+	REMOTE_CONNECT 0x3
+	REMOTE_DISCONNECT 0x4
+	SESSION_LOGON 0x5
+	SESSION_LOGOFF 0x6
+	SESSION_LOCK 0x7
+	SESSION_UNLOCK 0x8
+	SESSION_REMOTE_CONTROL 0x9
+	SESSION_CREATE 0xa
+	SESSION_TERMINATE 0xb
+}
+
 const_bitflag! { WVR: u32;
 	/// [`wm::NcCalcSize`](crate::msg::wm::NcCalcSize) return flags (`u32`).
 	=>

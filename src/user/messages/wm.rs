@@ -2026,6 +2026,40 @@ unsafe impl<'a> MsgSendRecv for WindowPosChanging<'a> {
 	}
 }
 
+/// [`WM_WTSSESSION_CHANGE`](https://learn.microsoft.com/en-us/windows/win32/termserv/wm-wtssession-change)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct WtsSessionChange {
+	pub state: co::WTS,
+	pub session_id: u32,
+}
+
+unsafe impl MsgSend for WtsSessionChange {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::WTSSESSION_CHANGE,
+			wparam: self.state.raw() as _,
+			lparam: self.session_id as _,
+		}
+	}
+}
+
+unsafe impl MsgSendRecv for WtsSessionChange {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			state: unsafe { co::WTS::from_raw(p.wparam as _) },
+			session_id: p.lparam as _,
+		}
+	}
+}
+
 pub_struct_msg_button! { XButtonDblClk: co::WM::XBUTTONDBLCLK;
 	/// [`WM_XBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondblclk)
 }

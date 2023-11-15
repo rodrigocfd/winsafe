@@ -804,6 +804,11 @@ pub trait GuiEvents {
 		/// message.
 	}
 
+	fn_wm_withparm_noret! { wm_wts_session_change, co::WM::WTSSESSION_CHANGE, wm::WtsSessionChange;
+		/// [`WM_WTSSESSION_CHANGE`](https://learn.microsoft.com/en-us/windows/win32/termserv/wm-wtssession-change)
+		/// message.
+	}
+
 	fn_wm_withparm_noret! { wm_x_button_dbl_clk, co::WM::XBUTTONDBLCLK, wm::XButtonDblClk;
 		/// [`WM_XBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondblclk)
 		/// message.
