@@ -86,7 +86,7 @@ pub struct FILETIME {
 /// The [`Default`](std::default::Default) implementation returns `GUID::NULL`
 /// (all zeros).
 #[repr(C)]
-#[derive(Clone, Copy, PartialEq, Eq, Hash, Default)]
+#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct GUID {
 	data1: u32,
 	data2: u16,

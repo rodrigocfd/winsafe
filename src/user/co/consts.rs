@@ -479,6 +479,15 @@ const_bitflag! { DC: u32;
 	BUTTONS 0x1000
 }
 
+const_bitflag! { DBTF: u16;
+	/// [`DEV_BROADCAST_VOLUME`](crate::DEV_BROADCAST_VOLUME) `dbcv_flags`
+	/// (`u16`).
+	=>
+	=>
+	MEDIA 0x0001
+	NET 0x0002
+}
+
 const_bitflag! { DDL: u16;
 	/// [`cb::Dir`](crate::msg::cb::Dir) and [`lb::Dir`](crate::msg::lb::Dir)
 	/// attributes (`u16`).
