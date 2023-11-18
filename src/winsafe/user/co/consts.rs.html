@@ -3801,6 +3801,15 @@
 <a href="#3801" id="3801">3801</a>
 <a href="#3802" id="3802">3802</a>
 <a href="#3803" id="3803">3803</a>
+<a href="#3804" id="3804">3804</a>
+<a href="#3805" id="3805">3805</a>
+<a href="#3806" id="3806">3806</a>
+<a href="#3807" id="3807">3807</a>
+<a href="#3808" id="3808">3808</a>
+<a href="#3809" id="3809">3809</a>
+<a href="#3810" id="3810">3810</a>
+<a href="#3811" id="3811">3811</a>
+<a href="#3812" id="3812">3812</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
@@ -4280,6 +4289,15 @@
 	</span>INBUTTON <span class="number">0x0010
 	</span>GRADIENT <span class="number">0x0020
 	</span>BUTTONS <span class="number">0x1000
+</span>}
+
+<span class="macro">const_bitflag! </span>{ DBTF: u16;
+	<span class="doccomment">/// [`DEV_BROADCAST_VOLUME`](crate::DEV_BROADCAST_VOLUME) `dbcv_flags`
+	/// (`u16`).
+	</span>=&gt;
+	=&gt;
+	MEDIA <span class="number">0x0001
+	</span>NET <span class="number">0x0002
 </span>}
 
 <span class="macro">const_bitflag! </span>{ DDL: u16;
