@@ -164,6 +164,27 @@ const_ordinary! { DBT: u16;
 	USERDEFINED 0xFFFF
 }
 
+const_ordinary! { DBT_DEVTYP: u32;
+	/// [`DEV_BROADCAST_HDR`](crate::DEV_BROADCAST_HDR) `dbch_devicetype`
+	/// (`u32`).
+	=>
+	=>
+	DEVICEINTERFACE 0x0000_0005
+	DBT_DEVTYP_HANDLE 0x0000_0006
+	DBT_DEVTYP_OEM 0x0000_0000
+	DBT_DEVTYP_PORT 0x0000_0003
+	DBT_DEVTYP_VOLUME 0x0000_0002
+}
+
+const_bitflag! { DBTF: u16;
+	/// [`DEV_BROADCAST_VOLUME`](crate::DEV_BROADCAST_VOLUME) `dbcv_flags`
+	/// (`u16`).
+	=>
+	=>
+	MEDIA 0x0001
+	NET 0x0002
+}
+
 const_ordinary! { DISPOSITION: u32;
 	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
 	/// `creation_disposition` (`u32`).

@@ -453,18 +453,6 @@ const_bitflag! { CS: u32;
 	DROPSHADOW 0x00020000
 }
 
-const_ordinary! { DBT_DEVTYP: u32;
-	/// [`DEV_BROADCAST_HDR`](crate::DEV_BROADCAST_HDR) `dbch_devicetype`
-	/// (`u32`).
-	=>
-	=>
-	DEVICEINTERFACE 0x0000_0005
-	DBT_DEVTYP_HANDLE 0x0000_0006
-	DBT_DEVTYP_OEM 0x0000_0000
-	DBT_DEVTYP_PORT 0x0000_0003
-	DBT_DEVTYP_VOLUME 0x0000_0002
-}
-
 const_bitflag! { DC: u32;
 	/// [`HWND::DrawCaption`](crate::prelude::user_Hwnd::DrawCaption) `flags`
 	/// (`u32`).
@@ -477,15 +465,6 @@ const_bitflag! { DC: u32;
 	INBUTTON 0x0010
 	GRADIENT 0x0020
 	BUTTONS 0x1000
-}
-
-const_bitflag! { DBTF: u16;
-	/// [`DEV_BROADCAST_VOLUME`](crate::DEV_BROADCAST_VOLUME) `dbcv_flags`
-	/// (`u16`).
-	=>
-	=>
-	MEDIA 0x0001
-	NET 0x0002
 }
 
 const_bitflag! { DDL: u16;
