@@ -542,10 +542,10 @@
 	<span class="doccomment">/// [`NM_CUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-customdraw-list-view)
 	/// notification.
 	</span><span class="kw">pub fn </span>nm_custom_draw&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: Fn(<span class="kw-2">&amp;</span>NMLVCUSTOMDRAW) -&gt; AnyResult&lt;co::CDRF&gt; + <span class="lifetime">&#39;static</span>,
+		<span class="kw">where </span>F: Fn(<span class="kw-2">&amp;mut </span>NMLVCUSTOMDRAW) -&gt; AnyResult&lt;co::CDRF&gt; + <span class="lifetime">&#39;static</span>,
 	{
 		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::NM::CUSTOMDRAW,
-			<span class="kw">move </span>|p| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func(<span class="kw">unsafe </span>{ p.cast_nmhdr::&lt;NMLVCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as _</span>)));
+			<span class="kw">move </span>|p| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMLVCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as _</span>)));
 	}
 
 	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ nm_dbl_clk, co::NM::DBLCLK, NMITEMACTIVATE;
