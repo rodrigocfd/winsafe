@@ -37,11 +37,11 @@ pub type PFNTVCOMPARE =
 pub type PFTASKDIALOGCALLBACK =
 	extern "system" fn(
 		hWnd: HWND,
-		msg: co::WM,
+		msg: co::TDN,
 		wParam: usize,
 		lParam: isize,
-		lpRefData: isize,
-	);
+		lpRefData: usize,
+	) -> co::HRESULT;
 
 /// Type alias to
 /// [`SUBCLASSPROC`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nc-commctrl-subclassproc)
