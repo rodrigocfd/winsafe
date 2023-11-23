@@ -2211,6 +2211,23 @@ const_bitflag! { TDF: i32;
 	SIZE_TO_CONTENT 0x0100_0000
 }
 
+const_ordinary! { TDN: u32;
+	/// [`PFTASKDIALOGCALLBACK`](crate::PFTASKDIALOGCALLBACK) `msg` (`u32`).
+	=>
+	=>
+    CREATED 0
+    NAVIGATED 1
+    BUTTON_CLICKED 2           	// wParam = Button ID
+    HYPERLINK_CLICKED 3         // lParam = (LPCWSTR)pszHREF
+    TIMER 4            			// wParam = Milliseconds since dialog created or timer reset
+    DESTROYED 5
+    RADIO_BUTTON_CLICKED 6      // wParam = Radio Button ID
+    DIALOG_CONSTRUCTED 7
+    VERIFICATION_CLICKED 8      // wParam = 1 if checkbox checked, 0 if not, lParam is unused and always 0
+    HELP 9
+    EXPANDO_BUTTON_CLICKED 10   // wParam = 0 (dialog is now collapsed), wParam != 0 (dialog is now expanded)
+}
+
 const_wm! { TRBM;
 	/// Trackbar control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-messages)

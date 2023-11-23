@@ -40,8 +40,8 @@ pub type PFTASKDIALOGCALLBACK =
 		msg: co::WM,
 		wParam: usize,
 		lParam: isize,
-		lpRefData: isize,
-	);
+		lpRefData: usize,
+	) -> co::HRESULT;
 
 /// Type alias to
 /// [`SUBCLASSPROC`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nc-commctrl-subclassproc)
@@ -49,7 +49,7 @@ pub type PFTASKDIALOGCALLBACK =
 pub type SUBCLASSPROC =
 	extern "system" fn(
 		hWnd: HWND,
-		uMsg: co::WM,
+		uMsg: co::TDN,
 		wParam: usize,
 		lParam: isize,
 		uIdSubclass: usize,
