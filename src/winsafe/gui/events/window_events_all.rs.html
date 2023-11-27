@@ -328,7 +328,7 @@
 				<span class="kw">let </span>nfys = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.nfys.get() };
 				<span class="kw">for </span>func <span class="kw">in </span>nfys.find_all(key) {
 					at_least_one = <span class="bool-val">true</span>;
-					func(wm_nfy)<span class="question-mark">?</span>; <span class="comment">// execute stored function
+					func(wm::Notify::from_generic_wm(wm_any))<span class="question-mark">?</span>; <span class="comment">// execute stored function
 				</span>}
 			},
 			co::WM::COMMAND =&gt; {

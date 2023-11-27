@@ -2635,6 +2635,23 @@
 <a href="#2635" id="2635">2635</a>
 <a href="#2636" id="2636">2636</a>
 <a href="#2637" id="2637">2637</a>
+<a href="#2638" id="2638">2638</a>
+<a href="#2639" id="2639">2639</a>
+<a href="#2640" id="2640">2640</a>
+<a href="#2641" id="2641">2641</a>
+<a href="#2642" id="2642">2642</a>
+<a href="#2643" id="2643">2643</a>
+<a href="#2644" id="2644">2644</a>
+<a href="#2645" id="2645">2645</a>
+<a href="#2646" id="2646">2646</a>
+<a href="#2647" id="2647">2647</a>
+<a href="#2648" id="2648">2648</a>
+<a href="#2649" id="2649">2649</a>
+<a href="#2650" id="2650">2650</a>
+<a href="#2651" id="2651">2651</a>
+<a href="#2652" id="2652">2652</a>
+<a href="#2653" id="2653">2653</a>
+<a href="#2654" id="2654">2654</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
@@ -4846,6 +4863,23 @@
 	</span>CAN_BE_MINIMIZED <span class="number">0x8000
 	</span>NO_SET_FOREGROUND <span class="number">0x0001_0000
 	</span>SIZE_TO_CONTENT <span class="number">0x0100_0000
+</span>}
+
+<span class="macro">const_ordinary! </span>{ TDN: u32;
+	<span class="doccomment">/// [`PFTASKDIALOGCALLBACK`](crate::PFTASKDIALOGCALLBACK) `msg` (`u32`).
+	</span>=&gt;
+	=&gt;
+    CREATED <span class="number">0
+    </span>NAVIGATED <span class="number">1
+    </span>BUTTON_CLICKED <span class="number">2           	</span><span class="comment">// wParam = Button ID
+    </span>HYPERLINK_CLICKED <span class="number">3         </span><span class="comment">// lParam = (LPCWSTR)pszHREF
+    </span>TIMER <span class="number">4            			</span><span class="comment">// wParam = Milliseconds since dialog created or timer reset
+    </span>DESTROYED <span class="number">5
+    </span>RADIO_BUTTON_CLICKED <span class="number">6      </span><span class="comment">// wParam = Radio Button ID
+    </span>DIALOG_CONSTRUCTED <span class="number">7
+    </span>VERIFICATION_CLICKED <span class="number">8      </span><span class="comment">// wParam = 1 if checkbox checked, 0 if not, lParam is unused and always 0
+    </span>HELP <span class="number">9
+    </span>EXPANDO_BUTTON_CLICKED <span class="number">10   </span><span class="comment">// wParam = 0 (dialog is now collapsed), wParam != 0 (dialog is now expanded)
 </span>}
 
 <span class="macro">const_wm! </span>{ TRBM;

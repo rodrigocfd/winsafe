@@ -94,11 +94,11 @@
 </span><span class="kw">pub type </span>PFTASKDIALOGCALLBACK =
 	<span class="kw">extern </span><span class="string">&quot;system&quot; </span><span class="kw">fn</span>(
 		hWnd: HWND,
-		msg: co::WM,
+		msg: co::TDN,
 		wParam: usize,
 		lParam: isize,
-		lpRefData: isize,
-	);
+		lpRefData: usize,
+	) -&gt; co::HRESULT;
 
 <span class="doccomment">/// Type alias to
 /// [`SUBCLASSPROC`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nc-commctrl-subclassproc)

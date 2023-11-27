@@ -609,7 +609,7 @@
 				nmlvkd.wVKey = co::VK::RETURN;
 
 				self2.hwnd().GetAncestor(co::GA::PARENT).unwrap()
-					.SendMessage(wm::Notify { nmhdr: <span class="kw-2">&amp;</span>nmlvkd.hdr }); <span class="comment">// send Enter key to parent
+					.SendMessage(wm::Notify { nmhdr: <span class="kw-2">&amp;mut </span>nmlvkd.hdr }); <span class="comment">// send Enter key to parent
 			</span>}
 			<span class="kw">let </span>dlgc_system = self2.hwnd().DefSubclassProc::&lt;wm::GetDlgCode&gt;(p.into());
 			<span class="prelude-val">Ok</span>(dlgc_system)

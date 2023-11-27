@@ -61,7 +61,6 @@
 <a href="#61" id="61">61</a>
 <a href="#62" id="62">62</a>
 <a href="#63" id="63">63</a>
-<a href="#64" id="64">64</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
@@ -71,9 +70,8 @@
 /// message parameters.
 ///
 /// Return type: `isize`.
-</span><span class="attr">#[derive(Clone, Copy)]
 </span><span class="kw">pub struct </span>Notify&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>nmhdr: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>NMHDR,
+	<span class="kw">pub </span>nmhdr: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>NMHDR,
 }
 
 <span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>Notify&lt;<span class="lifetime">&#39;a</span>&gt; {
@@ -87,7 +85,7 @@
 		WndMsg {
 			msg_id: co::WM::NOTIFY,
 			wparam: <span class="self">self</span>.nmhdr.hwndFrom.ptr() <span class="kw">as _</span>,
-			lparam: <span class="self">self</span>.nmhdr <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+			lparam: <span class="self">self</span>.nmhdr <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
 		}
 	}
 }
@@ -95,7 +93,7 @@
 <span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSendRecv <span class="kw">for </span>Notify&lt;<span class="lifetime">&#39;a</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
-			nmhdr: <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>(p.lparam <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>) },
+			nmhdr: <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(p.lparam <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>) },
 		}
 	}
 }
