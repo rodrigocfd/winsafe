@@ -184,7 +184,7 @@ impl ListView {
 				nmlvkd.wVKey = co::VK::RETURN;
 
 				self2.hwnd().GetAncestor(co::GA::PARENT).unwrap()
-					.SendMessage(wm::Notify { nmhdr: &nmlvkd.hdr }); // send Enter key to parent
+					.SendMessage(wm::Notify { nmhdr: &mut nmlvkd.hdr }); // send Enter key to parent
 			}
 			let dlgc_system = self2.hwnd().DefSubclassProc::<wm::GetDlgCode>(p.into());
 			Ok(dlgc_system)
