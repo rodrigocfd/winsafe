@@ -2250,6 +2250,8 @@ const_bitflag! { WC: u32;
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) `flags` (`u32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
 	COMPOSITECHECK 0x0000_0200
 	ERR_INVALID_CHARS 0x0000_0080
 	NO_BEST_FIT_CHARS 0x0000_0400
