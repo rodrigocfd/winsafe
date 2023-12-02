@@ -97,40 +97,7 @@ pub mod guard {
 
 #[cfg(feature = "user")]
 pub mod msg {
-	//! Parameters of
-	//! [window messages](https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
-	//!
-	//! [`WndMsg`] is the generic message, with `WPARAM` and `LPARAM` fields.
-	//! Other messages belong to a module according to its prefix, for example,
-	//! [`BM_CLICK`](crate::msg::bm::Click) can be found in [`bm`] module.
-	//!
-	//! # Examples
-	//!
-	//! We want to delete the 3rd element of a
-	//! [`ListView`](crate::gui::ListView) control. This can be done by sending
-	//! it an [`LVM_DELETEITEM`](crate::msg::lvm::DeleteItem) message via
-	//! [`HWND::SendMessage`](crate::prelude::user_Hwnd::SendMessage). The
-	//! message itself is a struct, which is initialized with the specific
-	//! message parameters.
-	//!
-	//! The message struct also defines the data type returned by `SendMessage`.
-	//! In the example below, `LVM_DELETEITEM` returns `SysResult<()>`.
-	//!
-	//! ```rust,ignore
-	//! use winsafe::{self as w, prelude::*, msg};
-	//!
-	//! let hlistview: w::HWND; // initialized somewhere
-	//! # let hlistview = w::HWND::NULL;
-	//!
-	//! hlistview.SendMessage(
-	//!     msg::lvm::DeleteItem {
-	//!         index: 2,
-	//!     },
-	//! ).expect("Failed to delete item 2.");
-	//! ```
-	//!
-	//! Messages are organized into modules according to their prefixes:
-	//! [`wm`] (window messages), [`lvm`] (list view messages), and so on.
+	#![doc = include_str!("msg.md")]
 
 	pub use super::user::messages::WndMsg;
 
