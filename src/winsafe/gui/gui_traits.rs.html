@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\gui_traits.rs`."><title>gui_traits.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e6a78389201e676c.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (87e1447aa 2023-11-30)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\gui_traits.rs`."><title>gui_traits.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (f967532a4 2023-12-08)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -327,9 +327,9 @@
 	///
 	/// let edit = ctrls[0].as_any() // retrieve 1st element, which is an Edit
 	///     .downcast_ref::&lt;gui::Edit&gt;()
-	///     .expect(&quot;This Edit downcast should never fail.&quot;);
+	///     .expect("This Edit downcast should never fail.");
 	///
-	/// edit.set_text(&quot;Foo&quot;);
+	/// edit.set_text("Foo");
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>as_any(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Any;
@@ -368,7 +368,7 @@
 	///
 	/// # Safety
 	///
-	/// **Do not use this method** – it&#39;s for internal use of the library only.
+	/// **Do not use this method** – it's for internal use of the library only.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">unsafe fn </span>as_base(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut </span>std::ffi::c_void;
 }
@@ -381,7 +381,7 @@
 	/// thread, allowing it to be caught at
 	/// [`WindowMain::run_main`](crate::gui::WindowMain::run_main).
 	///
-	/// It&#39;s a way to ensure that, upon an unexpected error, you application
+	/// It's a way to ensure that, upon an unexpected error, you application
 	/// will be terminated gracefully.
 	///
 	/// # Examples
@@ -401,14 +401,14 @@
 	/// btn.on().bn_clicked({
 	///     let wnd = wnd.clone();
 	///     move || -&gt; w::AnyResult&lt;()&gt; {
-	///         println!(&quot;Click event at {:#x}&quot;, w::GetCurrentThreadId());
+	///         println!("Click event at {:#x}", w::GetCurrentThreadId());
 	///
 	///         wnd.spawn_new_thread({
 	///             let wnd = wnd.clone();
 	///             move || {
-	///                 println!(&quot;This is another thread: {:#x}&quot;, w::GetCurrentThreadId());
+	///                 println!("This is another thread: {:#x}", w::GetCurrentThreadId());
 	///                 if 1 != 2 {
-	///                     Err(&quot;Unexpected condition, goodbye.&quot;.into())
+	///                     Err("Unexpected condition, goodbye.".into())
 	///                 } else {
 	///                     Ok(())
 	///                 }
@@ -420,17 +420,17 @@
 	/// });
 	/// ```
 	</span><span class="kw">fn </span>spawn_new_thread&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">&#39;static</span>;
+		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static</span>;
 
-	<span class="doccomment">/// Runs a closure synchronously in the window&#39;s original UI thread,
+	<span class="doccomment">/// Runs a closure synchronously in the window's original UI thread,
 	/// allowing UI updates without the risk of a deadlock.
 	///
 	/// # Rationale
 	///
 	/// If you perform a very long task in the UI thread, the UI freezes until
 	/// the task is complete – this may cause the impression that your
-	/// application crashed. That&#39;s why long tasks should be performed in
-	/// parallel threads. However, at some point you&#39;ll want to update the UI to
+	/// application crashed. That's why long tasks should be performed in
+	/// parallel threads. However, at some point you'll want to update the UI to
 	/// reflect the task progress, but if you update the UI from another thread
 	/// (different from the original UI thread), the UI may deadlock, and you
 	/// application crashes.
@@ -438,7 +438,7 @@
 	/// This is what this `run_ui_thread` does, step-by-step:
 	///
 	/// 1. blocks current thread;
-	/// 2. switches to the window&#39;s original UI thread;
+	/// 2. switches to the window's original UI thread;
 	/// 3. runs the given `FnOnce`;
 	/// 4. switches back to the first thread, which is then unblocked.
 	///
@@ -450,7 +450,7 @@
 	/// The example below shows the event of a
 	/// [button click](crate::gui::events::ButtonEvents::bn_clicked) which
 	/// starts a long task in a parallel thread. As it progresses, the status is
-	/// printed at the windows&#39;s titlebar.
+	/// printed at the windows's titlebar.
 	///
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*, gui};
@@ -463,31 +463,31 @@
 	/// btn.on().bn_clicked({
 	///     let wnd = wnd.clone();
 	///     move || -&gt; w::AnyResult&lt;()&gt; {
-	///         println!(&quot;Click event at {:#x}&quot;, w::GetCurrentThreadId());
+	///         println!("Click event at {:#x}", w::GetCurrentThreadId());
 	///
 	///         std::thread::spawn({
 	///             let wnd = wnd.clone();
 	///             move || {
-	///                 println!(&quot;Parallel task starts at {:#x}&quot;, w::GetCurrentThreadId());
+	///                 println!("Parallel task starts at {:#x}", w::GetCurrentThreadId());
 	///                 w::Sleep(2000);
 	///
 	///                 wnd.run_ui_thread({
 	///                     let wnd = wnd.clone();
 	///                     move || -&gt; w::AnyResult&lt;()&gt; {
-	///                         println!(&quot;Updating UI at {:#x}&quot;, w::GetCurrentThreadId());
-	///                         wnd.hwnd().SetWindowText(&quot;Status... 50%&quot;)?;
+	///                         println!("Updating UI at {:#x}", w::GetCurrentThreadId());
+	///                         wnd.hwnd().SetWindowText("Status... 50%")?;
 	///                         Ok(())
 	///                     }
 	///                 });
 	///
-	///                 println!(&quot;Parallel task keeps going at {:#x}&quot;, w::GetCurrentThreadId());
+	///                 println!("Parallel task keeps going at {:#x}", w::GetCurrentThreadId());
 	///                 w::Sleep(2000);
 	///
 	///                 wnd.run_ui_thread({
 	///                     let wnd = wnd.clone();
 	///                     move || -&gt; w::AnyResult&lt;()&gt; {
-	///                         println!(&quot;Updating UI at {:#x}&quot;, w::GetCurrentThreadId());
-	///                         wnd.hwnd().SetWindowText(&quot;Status... 100%&quot;)?;
+	///                         println!("Updating UI at {:#x}", w::GetCurrentThreadId());
+	///                         wnd.hwnd().SetWindowText("Status... 100%")?;
 	///                         Ok(())
 	///                     }
 	///                 });
@@ -499,7 +499,7 @@
 	/// });
 	/// ```
 	</span><span class="kw">fn </span>run_ui_thread&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">&#39;static</span>;
+		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static</span>;
 }
 
 <span class="doccomment">/// Any child window.

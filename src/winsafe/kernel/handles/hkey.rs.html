@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\handles\hkey.rs`."><title>hkey.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e6a78389201e676c.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (87e1447aa 2023-11-30)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\handles\hkey.rs`."><title>hkey.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (f967532a4 2023-12-08)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1140,7 +1140,7 @@
 			&amp;&amp; <span class="kw-2">*</span>predef_hkey != HKEY::PERFORMANCE_DATA
 			&amp;&amp; <span class="kw-2">*</span>predef_hkey != HKEY::USERS
 		{
-			<span class="macro">panic!</span>(<span class="string">&quot;Invalid predef_key.&quot;</span>);
+			<span class="macro">panic!</span>(<span class="string">"Invalid predef_key."</span>);
 		}
 
 		<span class="kw">let </span><span class="kw-2">mut </span>hkey = HKEY::NULL;
@@ -1263,7 +1263,7 @@
 		<span class="kw">if </span>platform_view != co::KEY::WOW64_32KEY
 			&amp;&amp; platform_view != co::KEY::WOW64_64KEY
 		{
-			<span class="macro">panic!</span>(<span class="string">&quot;Platform view must be co::KEY::WOW64_32KEY or co::KEY::WOW64_64KEY&quot;</span>);
+			<span class="macro">panic!</span>(<span class="string">"Platform view must be co::KEY::WOW64_32KEY or co::KEY::WOW64_64KEY"</span>);
 		}
 
 		error_to_sysresult(
@@ -1360,20 +1360,20 @@
 	/// use winsafe::{self as w, prelude::*, co};
 	///
 	/// let hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     Some(&quot;Control Panel&quot;),
+	///     Some("Control Panel"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
 	///
 	/// for key_name in hkey.RegEnumKeyEx()? {
 	///     let key_name = key_name?;
-	///     println!(&quot;{}&quot;, key_name);
+	///     println!("{}", key_name);
 	/// }
 	/// # Ok::&lt;_, co::ERROR&gt;(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>RegEnumKeyEx(<span class="kw-2">&amp;</span><span class="self">self</span>,
-	) -&gt; SysResult&lt;Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">&#39;_</span>&gt;&gt;
+	) -&gt; SysResult&lt;Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">'_</span>&gt;&gt;
 	{
 		<span class="prelude-val">Ok</span>(Box::new(HkeyKeyIter::new(<span class="self">self</span>)<span class="question-mark">?</span>))
 	}
@@ -1388,14 +1388,14 @@
 	/// use winsafe::{self as w, prelude::*, co};
 	///
 	/// let hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     Some(&quot;Control Panel\\Appearance&quot;),
+	///     Some("Control Panel\\Appearance"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
 	///
 	/// for value_and_type in hkey.RegEnumValue()? {
 	///     let (value, reg_type) = value_and_type?;
-	///     println!(&quot;{}, {}&quot;, value, reg_type);
+	///     println!("{}, {}", value, reg_type);
 	/// }
 	///
 	/// // Collecting into a Vec
@@ -1406,7 +1406,7 @@
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>RegEnumValue(<span class="kw-2">&amp;</span><span class="self">self</span>,
-	) -&gt; SysResult&lt;Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = SysResult&lt;(String, co::REG)&gt;&gt; + <span class="lifetime">&#39;_</span>&gt;&gt;
+	) -&gt; SysResult&lt;Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = SysResult&lt;(String, co::REG)&gt;&gt; + <span class="lifetime">'_</span>&gt;&gt;
 	{
 		<span class="prelude-val">Ok</span>(Box::new(HkeyValueIter::new(<span class="self">self</span>)<span class="question-mark">?</span>))
 	}
@@ -1430,32 +1430,32 @@
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let val = w::HKEY::CURRENT_USER.RegGetValue(
-	///     Some(&quot;Control Panel\\Mouse&quot;),
-	///     Some(&quot;Beep&quot;),
+	///     Some("Control Panel\\Mouse"),
+	///     Some("Beep"),
 	/// )?;
 	///
 	/// match val {
-	///     w::RegistryValue::Dword(n) =&gt; println!(&quot;Number u32: {}&quot;, n),
-	///     w::RegistryValue::Qword(n) =&gt; println!(&quot;Number u64: {}&quot;, n),
-	///     w::RegistryValue::Sz(s) =&gt; println!(&quot;String: {}&quot;, s),
+	///     w::RegistryValue::Dword(n) =&gt; println!("Number u32: {}", n),
+	///     w::RegistryValue::Qword(n) =&gt; println!("Number u64: {}", n),
+	///     w::RegistryValue::Sz(s) =&gt; println!("String: {}", s),
 	///     w::RegistryValue::ExpandSz(s) =&gt; {
-	///         println!(&quot;Env string: {}&quot;, w::ExpandEnvironmentStrings(&amp;s)?);
+	///         println!("Env string: {}", w::ExpandEnvironmentStrings(&amp;s)?);
 	///     },
 	///     w::RegistryValue::MultiSz(strs) =&gt; {
-	///        println!(&quot;Multi string:&quot;);
+	///        println!("Multi string:");
 	///        for s in strs.iter() {
-	///            print!(&quot;[{}] &quot;, s);
+	///            print!("[{}] ", s);
 	///        }
-	///        println!(&quot;&quot;);
+	///        println!("");
 	///     },
 	///     w::RegistryValue::Binary(bin) =&gt; {
-	///         println!(&quot;Binary:&quot;);
+	///         println!("Binary:");
 	///         for b in bin.iter() {
-	///             print!(&quot;{:02x} &quot;, b);
+	///             print!("{:02x} ", b);
 	///         }
-	///         println!(&quot;&quot;);
+	///         println!("");
 	///     },
-	///     w::RegistryValue::None =&gt; println!(&quot;No value&quot;),
+	///     w::RegistryValue::None =&gt; println!("No value"),
 	/// }
 	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
 	/// ```
@@ -1555,7 +1555,7 @@
 	/// use winsafe::{self as w, prelude::*, co};
 	///
 	/// let hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     Some(&quot;Control Panel\\Mouse&quot;),
+	///     Some("Control Panel\\Mouse"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
@@ -1691,34 +1691,34 @@
 	/// use winsafe::{self as w, prelude::*, co};
 	///
 	/// let hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     Some(&quot;Control Panel\\Desktop&quot;),
+	///     Some("Control Panel\\Desktop"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
 	///
-	/// for val in hkey.RegQueryMultipleValues(&amp;[&quot;DpiScalingVer&quot;, &quot;WallPaper&quot;])? {
+	/// for val in hkey.RegQueryMultipleValues(&amp;["DpiScalingVer", "WallPaper"])? {
 	///     match val {
-	///         w::RegistryValue::Dword(n) =&gt; println!(&quot;Number u32: {}&quot;, n),
-	///         w::RegistryValue::Qword(n) =&gt; println!(&quot;Number u64: {}&quot;, n),
-	///         w::RegistryValue::Sz(s) =&gt; println!(&quot;String: {}&quot;, s),
+	///         w::RegistryValue::Dword(n) =&gt; println!("Number u32: {}", n),
+	///         w::RegistryValue::Qword(n) =&gt; println!("Number u64: {}", n),
+	///         w::RegistryValue::Sz(s) =&gt; println!("String: {}", s),
 	///         w::RegistryValue::ExpandSz(s) =&gt; {
-	///             println!(&quot;Env string: {}&quot;, w::ExpandEnvironmentStrings(&amp;s)?);
+	///             println!("Env string: {}", w::ExpandEnvironmentStrings(&amp;s)?);
 	///         },
 	///         w::RegistryValue::MultiSz(strs) =&gt; {
-	///            println!(&quot;Multi string:&quot;);
+	///            println!("Multi string:");
 	///            for s in strs.iter() {
-	///                print!(&quot;[{}] &quot;, s);
+	///                print!("[{}] ", s);
 	///            }
-	///            println!(&quot;&quot;);
+	///            println!("");
 	///         },
 	///         w::RegistryValue::Binary(bin) =&gt; {
-	///             println!(&quot;Binary:&quot;);
+	///             println!("Binary:");
 	///             for b in bin.iter() {
-	///                 print!(&quot;{:02x} &quot;, b);
+	///                 print!("{:02x} ", b);
 	///             }
-	///             println!(&quot;&quot;);
+	///             println!("");
 	///         },
-	///         w::RegistryValue::None =&gt; println!(&quot;No value&quot;),
+	///         w::RegistryValue::None =&gt; println!("No value"),
 	///     }
 	/// }
 	///
@@ -1824,35 +1824,35 @@
 	/// use winsafe::{self as w, prelude::*, co};
 	///
 	/// let hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     Some(&quot;Control Panel\\Mouse&quot;),
+	///     Some("Control Panel\\Mouse"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
 	///
-	/// let val = hkey.RegQueryValueEx(Some(&quot;Beep&quot;))?;
+	/// let val = hkey.RegQueryValueEx(Some("Beep"))?;
 	///
 	/// match val {
-	///     w::RegistryValue::Dword(n) =&gt; println!(&quot;Number u32: {}&quot;, n),
-	///     w::RegistryValue::Qword(n) =&gt; println!(&quot;Number u64: {}&quot;, n),
-	///     w::RegistryValue::Sz(s) =&gt; println!(&quot;String: {}&quot;, s),
+	///     w::RegistryValue::Dword(n) =&gt; println!("Number u32: {}", n),
+	///     w::RegistryValue::Qword(n) =&gt; println!("Number u64: {}", n),
+	///     w::RegistryValue::Sz(s) =&gt; println!("String: {}", s),
 	///     w::RegistryValue::ExpandSz(s) =&gt; {
-	///         println!(&quot;Env string: {}&quot;, w::ExpandEnvironmentStrings(&amp;s)?);
+	///         println!("Env string: {}", w::ExpandEnvironmentStrings(&amp;s)?);
 	///     },
 	///     w::RegistryValue::MultiSz(strs) =&gt; {
-	///        println!(&quot;Multi string:&quot;);
+	///        println!("Multi string:");
 	///        for s in strs.iter() {
-	///            print!(&quot;[{}] &quot;, s);
+	///            print!("[{}] ", s);
 	///        }
-	///        println!(&quot;&quot;);
+	///        println!("");
 	///     },
 	///     w::RegistryValue::Binary(bin) =&gt; {
-	///         println!(&quot;Binary:&quot;);
+	///         println!("Binary:");
 	///         for b in bin.iter() {
-	///             print!(&quot;{:02x} &quot;, b);
+	///             print!("{:02x} ", b);
 	///         }
-	///         println!(&quot;&quot;);
+	///         println!("");
 	///     },
-	///     w::RegistryValue::None =&gt; println!(&quot;No value&quot;),
+	///     w::RegistryValue::None =&gt; println!("No value"),
 	/// }
 	/// # Ok::&lt;_, co::ERROR&gt;(())
 	/// ```
@@ -2003,7 +2003,7 @@
 	<span class="doccomment">/// [`RegSetKeyValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetkeyvaluew)
 	/// function.
 	///
-	/// If the value doesn&#39;t exist, if will be created. If new type is different
+	/// If the value doesn't exist, if will be created. If new type is different
 	/// from current type, new type will take over.
 	///
 	/// # Examples
@@ -2012,9 +2012,9 @@
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// w::HKEY::CURRENT_USER.RegSetKeyValue(
-	///     Some(&quot;Software\\My Company&quot;),
-	///     Some(&quot;Color&quot;),
-	///     w::RegistryValue::Sz(&quot;blue&quot;.to_owned()),
+	///     Some("Software\\My Company"),
+	///     Some("Color"),
+	///     w::RegistryValue::Sz("blue".to_owned()),
 	/// )?;
 	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
 	/// ```
@@ -2044,7 +2044,7 @@
 	<span class="doccomment">/// [`RegSetValueEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsetvalueexw)
 	/// function.
 	///
-	/// If the value doesn&#39;t exist, if will be created. If new type is different
+	/// If the value doesn't exist, if will be created. If new type is different
 	/// from current type, new type will prevail.
 	///
 	/// # Examples
@@ -2053,14 +2053,14 @@
 	/// use winsafe::{self as w, prelude::*, co};
 	///
 	/// let hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
-	///     Some(&quot;Console\\Git Bash&quot;),
+	///     Some("Console\\Git Bash"),
 	///     co::REG_OPTION::default(),
 	///     co::KEY::ALL_ACCESS,
 	/// )?;
 	///
 	/// hkey.RegSetValueEx(
-	///     Some(&quot;Color&quot;),
-	///     w::RegistryValue::Sz(&quot;blue&quot;.to_owned()),
+	///     Some("Color"),
+	///     w::RegistryValue::Sz("blue".to_owned()),
 	/// )?;
 	/// # Ok::&lt;_, co::ERROR&gt;(())
 	/// ```

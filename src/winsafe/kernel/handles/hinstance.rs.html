@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\handles\hinstance.rs`."><title>hinstance.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e6a78389201e676c.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (87e1447aa 2023-11-30)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\handles\hinstance.rs`."><title>hinstance.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (f967532a4 2023-12-08)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -414,7 +414,7 @@
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hexe = w::HINSTANCE::LoadLibrary(&quot;hand.exe&quot;)?;
+	/// let hexe = w::HINSTANCE::LoadLibrary("hand.exe")?;
 	///
 	/// hexe.EnumResourceTypes(
 	///     |res_type: w::RtStr| -&gt; bool {
@@ -422,7 +422,7 @@
 	///         hexe.EnumResourceNames(
 	///             res_type,
 	///             |name: w::IdStr| -&gt; bool {
-	///                 println!(&quot;Type: {}, name: {}&quot;, res_type2, name);
+	///                 println!("Type: {}, name: {}", res_type2, name);
 	///                 true
 	///             },
 	///         ).unwrap();
@@ -459,11 +459,11 @@
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let hexe = w::HINSTANCE::LoadLibrary(&quot;hand.exe&quot;)?;
+	/// let hexe = w::HINSTANCE::LoadLibrary("hand.exe")?;
 	///
 	/// hexe.EnumResourceTypes(
 	///     |res_type: w::RtStr| -&gt; bool {
-	///         println!(&quot;Type {}&quot;, res_type);
+	///         println!("Type {}", res_type);
 	///         true
 	///     },
 	/// )?;
@@ -543,7 +543,7 @@
 	///
 	/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
 	///
-	/// println!(&quot;EXE: {}&quot;, exe_name);
+	/// println!("EXE: {}", exe_name);
 	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
 	/// ```
 	</span><span class="attr">#[must_use]
@@ -630,7 +630,7 @@
 	/// This method should belong to [`HRSRCMEM`](crate::HRSRCMEM), but in order
 	/// to make it safe, we automatically call
 	/// [`HINSTANCE::SizeofResource`](crate::prelude::kernel_Hinstance::SizeofResource),
-	/// so it&#39;s implemented here.
+	/// so it's implemented here.
 	///
 	/// # Examples
 	///
@@ -644,7 +644,7 @@
 	/// const IDD_HAND_ABOUTBOX: u16 = 103;
 	/// const IDD_FOOT_ABOUTBOX: u16 = 110;
 	///
-	/// let hexe = w::HINSTANCE::LoadLibrary(&quot;hand.exe&quot;)?;
+	/// let hexe = w::HINSTANCE::LoadLibrary("hand.exe")?;
 	///
 	/// let hres = hexe.FindResource(
 	///     w::IdStr::Id(IDD_HAND_ABOUTBOX),
@@ -653,7 +653,7 @@
 	///
 	/// let hres_load = hexe.LoadResource(&amp;hres)?;
 	/// let hres_slice_lock = hexe.LockResource(&amp;hres, &amp;hres_load)?;
-	/// let hres_update = w::HUPDATERSRC::BeginUpdateResource(&quot;foot.exe&quot;, false)?;
+	/// let hres_update = w::HUPDATERSRC::BeginUpdateResource("foot.exe", false)?;
 	///
 	/// hres_update.UpdateResource(
 	///     w::RtStr::Rt(co::RT::DIALOG),
@@ -696,7 +696,7 @@
 
 <span class="comment">//------------------------------------------------------------------------------
 
-</span><span class="kw">extern </span><span class="string">&quot;system&quot; </span><span class="kw">fn </span>enum_resource_languages_proc&lt;F&gt;(
+</span><span class="kw">extern </span><span class="string">"system" </span><span class="kw">fn </span>enum_resource_languages_proc&lt;F&gt;(
 	<span class="kw">_</span>: HINSTANCE, <span class="kw">_</span>: <span class="kw-2">*const </span>u16, <span class="kw">_</span>: <span class="kw-2">*const </span>u16,
 	language_id: u16, lparam: isize) -&gt; BOOL
 	<span class="kw">where </span>F: FnMut(LANGID) -&gt; bool,
@@ -705,7 +705,7 @@
 	func(<span class="kw">unsafe </span>{ LANGID::from_raw(language_id) }) <span class="kw">as _
 </span>}
 
-<span class="kw">extern </span><span class="string">&quot;system&quot; </span><span class="kw">fn </span>enum_resource_names_proc&lt;F&gt;(
+<span class="kw">extern </span><span class="string">"system" </span><span class="kw">fn </span>enum_resource_names_proc&lt;F&gt;(
 	<span class="kw">_</span>: HINSTANCE, <span class="kw">_</span>: <span class="kw-2">*const </span>u16, resource_id: <span class="kw-2">*mut </span>u16, lparam: isize) -&gt; BOOL
 	<span class="kw">where </span>F: FnMut(IdStr) -&gt; bool,
 {
@@ -713,7 +713,7 @@
 	func(<span class="kw">unsafe </span>{ IdStr::from_ptr(resource_id) }) <span class="kw">as _
 </span>}
 
-<span class="kw">extern </span><span class="string">&quot;system&quot; </span><span class="kw">fn </span>enum_resource_types_proc&lt;F&gt;(
+<span class="kw">extern </span><span class="string">"system" </span><span class="kw">fn </span>enum_resource_types_proc&lt;F&gt;(
 	<span class="kw">_</span>: HINSTANCE, resource_type: <span class="kw-2">*const </span>u16, lparam: isize) -&gt; BOOL
 	<span class="kw">where </span>F: FnMut(RtStr) -&gt; bool,
 {

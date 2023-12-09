@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\events\window_events_traits.rs`."><title>window_events_traits.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e6a78389201e676c.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (87e1447aa 2023-11-30)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\events\window_events_traits.rs`."><title>window_events_traits.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (f967532a4 2023-12-08)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -837,7 +837,7 @@
 	<span class="doccomment">/// [`WM_TIMER`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
 	/// message, narrowed to a specific timer ID.
 	</span><span class="kw">fn </span>wm_timer&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, timer_id: usize, func: F)
-		<span class="kw">where </span>F: Fn() -&gt; AnyResult&lt;()&gt; + <span class="lifetime">&#39;static</span>;
+		<span class="kw">where </span>F: Fn() -&gt; AnyResult&lt;()&gt; + <span class="lifetime">'static</span>;
 
 	<span class="doccomment">/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
 	/// message, for specific code and control ID.
@@ -861,13 +861,13 @@
 	///
 	/// wnd.on().wm_command(co::BN::CLICKED, ID_BTN,
 	///     move || -&gt; w::AnyResult&lt;()&gt; {
-	///         println!(&quot;Button clicked!&quot;);
+	///         println!("Button clicked!");
 	///         Ok(())
 	///     },
 	/// );
 	/// ```
 	</span><span class="kw">fn </span>wm_command&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, code: <span class="kw">impl </span>Into&lt;co::CMD&gt;, ctrl_id: u16, func: F)
-		<span class="kw">where </span>F: Fn() -&gt; AnyResult&lt;()&gt; + <span class="lifetime">&#39;static</span>;
+		<span class="kw">where </span>F: Fn() -&gt; AnyResult&lt;()&gt; + <span class="lifetime">'static</span>;
 
 	<span class="doccomment">/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
 	/// message, handling both `CMD::Accelerator` and `CMD::Menu`, for a
@@ -876,7 +876,7 @@
 	/// Ideal to be used with menu commands whose IDs are shared with
 	/// accelerators.
 	</span><span class="kw">fn </span>wm_command_accel_menu&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, ctrl_id: u16, func: F)
-		<span class="kw">where </span>F: Fn() -&gt; AnyResult&lt;()&gt; + <span class="lifetime">&#39;static</span>,
+		<span class="kw">where </span>F: Fn() -&gt; AnyResult&lt;()&gt; + <span class="lifetime">'static</span>,
 	{
 		<span class="kw">let </span>shared_func = Rc::new(func);
 
@@ -899,7 +899,7 @@
 	/// struct. This generic method should be used only when you have a custom,
 	/// non-standard window notification.
 	</span><span class="kw">fn </span>wm_notify&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, id_from: u16, code: <span class="kw">impl </span>Into&lt;co::NM&gt;, func: F)
-		<span class="kw">where </span>F: Fn(wm::Notify) -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;isize&gt;&gt; + <span class="lifetime">&#39;static</span>;
+		<span class="kw">where </span>F: Fn(wm::Notify) -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;isize&gt;&gt; + <span class="lifetime">'static</span>;
 }
 
 <span class="comment">//------------------------------------------------------------------------------
@@ -927,13 +927,13 @@
 	///
 	/// wnd.on().wm(CUSTOM_MSG,
 	///     move |p: msg::WndMsg| -&gt; w::AnyResult&lt;Option&lt;isize&gt;&gt; {
-	///         println!(&quot;Msg ID: {}&quot;, p.msg_id);
+	///         println!("Msg ID: {}", p.msg_id);
 	///         Ok(Some(0))
 	///     },
 	/// );
 	/// ```
 	</span><span class="kw">fn </span>wm&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, ident: co::WM, func: F)
-		<span class="kw">where </span>F: Fn(WndMsg) -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;isize&gt;&gt; + <span class="lifetime">&#39;static</span>;
+		<span class="kw">where </span>F: Fn(WndMsg) -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;isize&gt;&gt; + <span class="lifetime">'static</span>;
 
 	<span class="macro">fn_wm_withparm_noret! </span>{ wm_activate, co::WM::ACTIVATE, wm::Activate;
 		<span class="doccomment">/// [`WM_ACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
@@ -948,7 +948,7 @@
 	<span class="doccomment">/// [`WM_APPCOMMAND`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
 	/// message.
 	</span><span class="kw">fn </span>wm_app_command&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: Fn(wm::AppCommand) -&gt; AnyResult&lt;()&gt; + <span class="lifetime">&#39;static</span>,
+		<span class="kw">where </span>F: Fn(wm::AppCommand) -&gt; AnyResult&lt;()&gt; + <span class="lifetime">'static</span>,
 	{
 		<span class="self">self</span>.wm(co::WM::APPCOMMAND, <span class="kw">move </span>|p| {
 			func(wm::AppCommand::from_generic_wm(p))<span class="question-mark">?</span>;
@@ -982,7 +982,7 @@
 		///
 		/// # Default handling
 		///
-		/// If you handle this event, you&#39;ll overwrite the default handling in:
+		/// If you handle this event, you'll overwrite the default handling in:
 		///
 		/// * dialog [`WindowMain`](crate::gui::WindowMain) – calls [`DestroyWindow`](crate::prelude::user_Hwnd::DestroyWindow);
 		/// * dialog [`WindowModal`](crate::gui::WindowModal) – calls [`EndDialog`](crate::prelude::user_Hwnd::EndDialog);
@@ -1009,7 +1009,7 @@
 	///
 	/// wnd.on().wm_create(
 	///     move |p: msg::wm::Create| -&gt; w::AnyResult&lt;i32&gt; {
-	///         println!(&quot;Client area: {}x{}&quot;,
+	///         println!("Client area: {}x{}",
 	///             p.createstruct.cx,
 	///             p.createstruct.cy,
 	///         );
@@ -1018,7 +1018,7 @@
 	/// );
 	/// ```
 	</span><span class="kw">fn </span>wm_create&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: Fn(wm::Create) -&gt; AnyResult&lt;i32&gt; + <span class="lifetime">&#39;static</span>,
+		<span class="kw">where </span>F: Fn(wm::Create) -&gt; AnyResult&lt;i32&gt; + <span class="lifetime">'static</span>,
 	{
 		<span class="self">self</span>.wm(co::WM::CREATE,
 			<span class="kw">move </span>|p| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func(wm::Create::from_generic_wm(p))<span class="question-mark">? </span><span class="kw">as _</span>)));
@@ -1077,7 +1077,7 @@
 		///
 		/// wnd.on().wm_destroy(
 		///     move || -&gt; w::AnyResult&lt;()&gt; {
-		///         println!(&quot;Window is gone, goodbye!&quot;);
+		///         println!("Window is gone, goodbye!");
 		///         Ok(())
 		///     },
 		/// );
@@ -1110,7 +1110,7 @@
 		///     move |mut p: msg::wm::DropFiles| -&gt; w::AnyResult&lt;()&gt; {
 		///         for dropped_file in p.hdrop.DragQueryFile()? {
 		///             let dropped_file = dropped_file?;
-		///             println!(&quot;Dropped: {}&quot;, dropped_file);
+		///             println!("Dropped: {}", dropped_file);
 		///         }
 		///         Ok(())
 		///     },
@@ -1146,7 +1146,7 @@
 	<span class="doccomment">/// [`WM_ERASEBKGND`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd)
 	/// message.
 	</span><span class="kw">fn </span>wm_erase_bkgnd&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: Fn(wm::EraseBkgnd) -&gt; AnyResult&lt;i32&gt; + <span class="lifetime">&#39;static</span>,
+		<span class="kw">where </span>F: Fn(wm::EraseBkgnd) -&gt; AnyResult&lt;i32&gt; + <span class="lifetime">'static</span>,
 	{
 		<span class="self">self</span>.wm(co::WM::ERASEBKGND,
 			<span class="kw">move </span>|p| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func(wm::EraseBkgnd::from_generic_wm(p))<span class="question-mark">? </span><span class="kw">as _</span>)));
@@ -1170,7 +1170,7 @@
 	<span class="doccomment">/// [`WM_GETFONT`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-getfont)
 	/// message.
 	</span><span class="kw">fn </span>wm_get_font&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: Fn() -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;HFONT&gt;&gt; + <span class="lifetime">&#39;static</span>,
+		<span class="kw">where </span>F: Fn() -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;HFONT&gt;&gt; + <span class="lifetime">'static</span>,
 	{
 		<span class="self">self</span>.wm(co::WM::GETFONT,
 			<span class="kw">move </span>|<span class="kw">_</span>| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func()<span class="question-mark">?</span>.map_or(<span class="number">0</span>, |h| h.ptr() <span class="kw">as _</span>))));
@@ -1179,7 +1179,7 @@
 	<span class="doccomment">/// [`WM_GETHMENU`](https://learn.microsoft.com/en-us/windows/win32/winmsg/mn-gethmenu)
 	/// message. Originally has `MN` prefix.
 	</span><span class="kw">fn </span>wm_get_hmenu&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: Fn() -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;HMENU&gt;&gt; + <span class="lifetime">&#39;static
+		<span class="kw">where </span>F: Fn() -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;HMENU&gt;&gt; + <span class="lifetime">'static
 	</span>{
 		<span class="self">self</span>.wm(co::WM::MN_GETHMENU,
 			<span class="kw">move </span>|<span class="kw">_</span>| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func()<span class="question-mark">?</span>.map_or(<span class="number">0</span>, |h| h.ptr() <span class="kw">as _</span>))));
@@ -1193,7 +1193,7 @@
 	<span class="doccomment">/// [`WM_GETTEXT`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-gettext)
 	/// message.
 	</span><span class="kw">fn </span>wm_get_text&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: Fn(wm::GetText) -&gt; AnyResult&lt;u32&gt; + <span class="lifetime">&#39;static</span>,
+		<span class="kw">where </span>F: Fn(wm::GetText) -&gt; AnyResult&lt;u32&gt; + <span class="lifetime">'static</span>,
 	{
 		<span class="self">self</span>.wm(co::WM::GETTEXT,
 			<span class="kw">move </span>|p| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func(wm::GetText::from_generic_wm(p))<span class="question-mark">? </span><span class="kw">as _</span>)));
@@ -1202,7 +1202,7 @@
 	<span class="doccomment">/// [`WM_GETTEXTLENGTH`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-gettextlength)
 	/// message.
 	</span><span class="kw">fn </span>wm_get_text_length&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: Fn() -&gt; AnyResult&lt;u32&gt; + <span class="lifetime">&#39;static</span>,
+		<span class="kw">where </span>F: Fn() -&gt; AnyResult&lt;u32&gt; + <span class="lifetime">'static</span>,
 	{
 		<span class="self">self</span>.wm(co::WM::GETTEXTLENGTH,
 			<span class="kw">move </span>|<span class="kw">_</span>| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func()<span class="question-mark">? </span><span class="kw">as _</span>)));
@@ -1241,7 +1241,7 @@
 		///
 		/// wnd.on().wm_init_dialog(
 		///     move |p: msg::wm::InitDialog| -&gt; w::AnyResult&lt;bool&gt; {
-		///         println!(&quot;Focused HWND: {}&quot;, p.hwnd_focus);
+		///         println!("Focused HWND: {}", p.hwnd_focus);
 		///         Ok(true)
 		///     },
 		/// );
@@ -1300,7 +1300,7 @@
 		///
 		/// wnd.on().wm_l_button_dbl_clk(
 		///     move |p: msg::wm::LButtonDblClk| -&gt; w::AnyResult&lt;()&gt; {
-		///         println!(&quot;Point: {}x{}&quot;, p.coords.x, p.coords.y);
+		///         println!("Point: {}x{}", p.coords.x, p.coords.y);
 		///         Ok(())
 		///     },
 		/// );
@@ -1321,7 +1321,7 @@
 		///
 		/// wnd.on().wm_l_button_down(
 		///     move |p: msg::wm::LButtonDown| -&gt; w::AnyResult&lt;()&gt; {
-		///         println!(&quot;Point: {}x{}&quot;, p.coords.x, p.coords.y);
+		///         println!("Point: {}x{}", p.coords.x, p.coords.y);
 		///         Ok(())
 		///     },
 		/// );
@@ -1404,7 +1404,7 @@
 		///
 		/// # Default handling
 		///
-		/// If you handle this event, you&#39;ll overwrite the default handling in:
+		/// If you handle this event, you'll overwrite the default handling in:
 		///
 		/// * non-dialog [`WindowMain`](crate::gui::WindowMain);
 		/// * dialog [`WindowMain`](crate::gui::WindowMain).
@@ -1507,7 +1507,7 @@
 	<span class="doccomment">/// [`WM_SETICON`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-seticon)
 	/// message.
 	</span><span class="kw">fn </span>wm_set_icon&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: Fn(wm::SetIcon) -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;HICON&gt;&gt; + <span class="lifetime">&#39;static</span>,
+		<span class="kw">where </span>F: Fn(wm::SetIcon) -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;HICON&gt;&gt; + <span class="lifetime">'static</span>,
 	{
 		<span class="self">self</span>.wm(co::WM::SETICON, <span class="kw">move </span>|p|
 			<span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(
@@ -1545,7 +1545,7 @@
 		///
 		/// wnd.on().wm_size(
 		///     move |p: msg::wm::Size| -&gt; w::AnyResult&lt;()&gt; {
-		///         println!(&quot;Client area: {}x{}&quot;,
+		///         println!("Client area: {}x{}",
 		///             p.client_area.cx,
 		///             p.client_area.cy,
 		///         );

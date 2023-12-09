@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\funcs.rs`."><title>funcs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e6a78389201e676c.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (87e1447aa 2023-11-30)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\funcs.rs`."><title>funcs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (f967532a4 2023-12-08)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1747,6 +1747,8 @@
 <a href="#1747" id="1747">1747</a>
 <a href="#1748" id="1748">1748</a>
 <a href="#1749" id="1749">1749</a>
+<a href="#1750" id="1750">1750</a>
+<a href="#1751" id="1751">1751</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span>std::collections::HashMap;
@@ -1805,7 +1807,7 @@
 ) -&gt; SysResult&lt;FreeSidGuard&gt;
 {
 	<span class="kw">if </span>sub_authorities.len() &gt; <span class="number">8 </span>{
-		<span class="macro">panic!</span>(<span class="string">&quot;You must specify at most 8 sub authorities.&quot;</span>);
+		<span class="macro">panic!</span>(<span class="string">"You must specify at most 8 sub authorities."</span>);
 	}
 
 	<span class="kw">let </span><span class="kw-2">mut </span>psid = std::ptr::null_mut() <span class="kw">as </span><span class="kw-2">*mut </span>SID;
@@ -1832,7 +1834,7 @@
 <span class="doccomment">/// [`ConvertSidToStringSid`](https://learn.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsidw)
 /// function.
 ///
-/// You don&#39;t need to call this function directly, because [`SID`](crate::SID)
+/// You don't need to call this function directly, because [`SID`](crate::SID)
 /// implements [`Display`](std::fmt::Display) and
 /// [`ToString`](std::string::ToString) traits, which call it.
 </span><span class="attr">#[must_use]
@@ -2068,10 +2070,10 @@
 /// use winsafe::{self as w, prelude::*};
 ///
 /// let expanded = w::ExpandEnvironmentStrings(
-///     &quot;Os %OS%, home %HOMEPATH% and temp %TEMP%&quot;,
+///     "Os %OS%, home %HOMEPATH% and temp %TEMP%",
 /// )?;
 ///
-/// println!(&quot;{}&quot;, expanded);
+/// println!("{}", expanded);
 /// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
 /// ```
 </span><span class="attr">#[must_use]
@@ -2123,7 +2125,7 @@
 <span class="doccomment">/// [`FormatMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-formatmessagew)
 /// function.
 ///
-/// You don&#39;t need to call this function: all error types implement the
+/// You don't need to call this function: all error types implement the
 /// [`FormattedError`](crate::prelude::FormattedError) trait which will
 /// automatically call `FormatMessage`.
 </span><span class="attr">#[must_use]
@@ -2291,7 +2293,7 @@
 ///
 /// let env_vars = w::GetEnvironmentStrings()?;
 /// for (k, v) in env_vars.iter() {
-///     println!(&quot;{} = {}&quot;, k, v);
+///     println!("{} = {}", k, v);
 /// }
 /// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
 /// ```
@@ -2303,7 +2305,7 @@
 			<span class="kw">unsafe </span>{ ffi::FreeEnvironmentStringsW(ptr); }
 			vec_env_strs.iter()
 				.map(|env_str| {
-					<span class="kw">let </span><span class="kw-2">mut </span>pair = env_str.split(<span class="string">&quot;=&quot;</span>); <span class="comment">// assumes correctly formatted pairs
+					<span class="kw">let </span><span class="kw-2">mut </span>pair = env_str.split(<span class="string">"="</span>); <span class="comment">// assumes correctly formatted pairs
 					</span><span class="kw">let </span>key = pair.next().unwrap();
 					<span class="kw">let </span>val = pair.next().unwrap();
 					(key.to_owned(), val.to_owned())
@@ -2332,7 +2334,7 @@
 /// function.
 ///
 /// This function is automatically called every time a
-/// [`SysResult`](crate::SysResult) evaluates to `Err`, so it&#39;s unlikely that
+/// [`SysResult`](crate::SysResult) evaluates to `Err`, so it's unlikely that
 /// you ever need to call it.
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetLastError() -&gt; co::ERROR {
@@ -2381,7 +2383,7 @@
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
 ///
-/// let file_exists = w::GetFileAttributes(&quot;C:\\Temp\\test.txt&quot;).is_ok();
+/// let file_exists = w::GetFileAttributes("C:\\Temp\\test.txt").is_ok();
 /// ```
 ///
 /// Retrieving various information about a file or folder path:
@@ -2389,7 +2391,7 @@
 /// ```no_run
 /// use winsafe::{self as w, prelude::*, co};
 ///
-/// let flags = w::GetFileAttributes(&quot;C:\\Temp\\test.txt&quot;)?;
+/// let flags = w::GetFileAttributes("C:\\Temp\\test.txt")?;
 ///
 /// let is_compressed = flags.has(co::FILE_ATTRIBUTE::COMPRESSED);
 /// let is_directory  = flags.has(co::FILE_ATTRIBUTE::DIRECTORY);
@@ -2620,7 +2622,7 @@
 /// let mut sys_name = String::default();
 ///
 /// w::GetVolumeInformation(
-///     Some(&quot;C:\\&quot;),
+///     Some("C:\\"),
 ///     Some(&amp;mut name),
 ///     Some(&amp;mut serial_no),
 ///     Some(&amp;mut max_comp_len),
@@ -2628,11 +2630,11 @@
 ///     Some(&amp;mut sys_name),
 /// )?;
 ///
-/// println!(&quot;Name: {}&quot;, name);
-/// println!(&quot;Serial no: {:#010x}&quot;, serial_no);
-/// println!(&quot;Max comp len: {}&quot;, max_comp_len);
-/// println!(&quot;Sys flags: {:?}&quot;, sys_flags);
-/// println!(&quot;Sys name: {}&quot;, sys_name);
+/// println!("Name: {}", name);
+/// println!("Serial no: {:#010x}", serial_no);
+/// println!("Max comp len: {}", max_comp_len);
+/// println!("Sys flags: {:?}", sys_flags);
+/// println!("Sys name: {}", sys_name);
 /// # Ok::&lt;_, co::ERROR&gt;(())
 /// ```
 </span><span class="kw">pub fn </span>GetVolumeInformation(
@@ -2760,7 +2762,7 @@
 <span class="doccomment">/// [`InitializeSecurityDescriptor`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-initializesecuritydescriptor)
 /// function.
 ///
-/// You don&#39;t need to call this function directly, because
+/// You don't need to call this function directly, because
 /// [`SECURITY_DESCRIPTOR`](crate::SECURITY_DESCRIPTOR) implements the
 /// [`Default`](std::default::Default) trait, which calls it.
 </span><span class="attr">#[must_use]
@@ -2985,7 +2987,7 @@
 <span class="doccomment">/// [`LookupAccountName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-lookupaccountnamew)
 /// function.
 ///
-/// Returns account&#39;s domain name, `SID` and type, respectively.
+/// Returns account's domain name, `SID` and type, respectively.
 ///
 /// # Examples
 ///
@@ -3209,7 +3211,8 @@
 <span class="doccomment">/// [`MultiByteToWideChar`](https://learn.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar)
 /// function.
 ///
-/// The resulting `Vec&lt;u16&gt;` includes a terminating null.
+/// If `multi_byte_str` doesn't have a terminating null, the resulting
+/// `Vec&lt;u16&gt;` also won't include one.
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>MultiByteToWideChar(
 	code_page: co::CP,
@@ -3229,9 +3232,9 @@
 	} {
 		<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
 		num_bytes =&gt; <span class="prelude-val">Ok</span>(num_bytes),
-	}<span class="question-mark">? </span>+ <span class="number">1</span>; <span class="comment">// room for terminating null
+	}<span class="question-mark">?</span>;
 
-	</span><span class="kw">let </span><span class="kw-2">mut </span>buf = <span class="macro">vec!</span>[<span class="number">0u16</span>; num_bytes <span class="kw">as _</span>];
+	<span class="kw">let </span><span class="kw-2">mut </span>buf = <span class="macro">vec!</span>[<span class="number">0u16</span>; num_bytes <span class="kw">as _</span>];
 
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{
@@ -3271,7 +3274,7 @@
 /// let duration_ms =
 ///     ((w::QueryPerformanceCounter()? - t0) as f64 / freq as f64) * 1000.0;
 ///
-/// println!(&quot;Operation lasted {:.2} ms&quot;, duration_ms);
+/// println!("Operation lasted {:.2} ms", duration_ms);
 /// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
 /// ```
 </span><span class="attr">#[must_use]
@@ -3445,7 +3448,8 @@
 <span class="doccomment">/// [`WideCharToMultiByte`](https://learn.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte)
 /// function.
 ///
-/// The resulting `Vec&lt;u16&gt;` includes a terminating null.
+/// If `wide_char_str` doesn't have a terminating null, the resulting `Vec&lt;u8&gt;`
+/// also won't include one.
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>WideCharToMultiByte(
 	code_page: co::CP,
@@ -3471,9 +3475,9 @@
 	} {
 		<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
 		num_bytes =&gt; <span class="prelude-val">Ok</span>(num_bytes),
-	}<span class="question-mark">? </span>+ <span class="number">1</span>; <span class="comment">// room for terminating null
+	}<span class="question-mark">?</span>;
 
-	</span><span class="kw">let </span><span class="kw-2">mut </span>u8_buf = <span class="macro">vec!</span>[<span class="number">0u8</span>; num_bytes <span class="kw">as _</span>];
+	<span class="kw">let </span><span class="kw-2">mut </span>u8_buf = <span class="macro">vec!</span>[<span class="number">0u8</span>; num_bytes <span class="kw">as _</span>];
 	<span class="kw">let </span><span class="kw-2">mut </span>bool_buf: BOOL = <span class="number">0</span>;
 
 	bool_to_sysresult(

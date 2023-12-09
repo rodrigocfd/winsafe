@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\structs.rs`."><title>structs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e6a78389201e676c.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (87e1447aa 2023-11-30)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\structs.rs`."><title>structs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (f967532a4 2023-12-08)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1341,8 +1341,8 @@
 }
 
 <span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>GUID {
-	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
-		<span class="macro">write!</span>(f, <span class="string">&quot;{:08x}-{:04x}-{:04x}-{:04x}-{:012x}&quot;</span>,
+	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
+		<span class="macro">write!</span>(f, <span class="string">"{:08x}-{:04x}-{:04x}-{:04x}-{:012x}"</span>,
 			<span class="self">self</span>.data1, <span class="self">self</span>.data2, <span class="self">self</span>.data3,
 			<span class="self">self</span>.data4.swap_bytes() &gt;&gt; <span class="number">48</span>,
 			<span class="self">self</span>.data4.swap_bytes() &amp; <span class="number">0x0000_ffff_ffff_ffff</span>,
@@ -1350,7 +1350,7 @@
 	}
 }
 <span class="kw">impl </span>std::fmt::Debug <span class="kw">for </span>GUID {
-	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
 		std::fmt::Display::fmt(<span class="self">self</span>, f)
 	}
 }
@@ -1368,12 +1368,12 @@
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let g = w::GUID::new(&quot;43826d1e-e718-42ee-bc55-a1e261c37bfe&quot;);
+	/// let g = w::GUID::new("43826d1e-e718-42ee-bc55-a1e261c37bfe");
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub const fn </span>new(guid_str: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
 		<span class="kw">if </span>guid_str.len() != <span class="number">36 </span>{
-			<span class="macro">panic!</span>(<span class="string">&quot;Bad number of GUID chars.&quot;</span>);
+			<span class="macro">panic!</span>(<span class="string">"Bad number of GUID chars."</span>);
 		}
 
 		<span class="kw">let </span>chs = guid_str.as_bytes();
@@ -1399,7 +1399,7 @@
 		<span class="kw">while </span>idx &lt; N {
 			<span class="kw">let </span>ch = chars[idx];
 			<span class="kw">if </span>!<span class="self">Self</span>::valid_char(ch) {
-				<span class="macro">panic!</span>(<span class="string">&quot;Bad GUID char.&quot;</span>);
+				<span class="macro">panic!</span>(<span class="string">"Bad GUID char."</span>);
 			}
 			res += <span class="self">Self</span>::char_to_num(ch) * <span class="number">16_u64</span>.pow((N - idx - <span class="number">1</span>) <span class="kw">as _</span>);
 			idx += <span class="number">1</span>;
@@ -1421,7 +1421,7 @@
 		</span>} <span class="kw">else if </span>ch &gt;= <span class="number">97 </span>&amp;&amp; ch &lt;= <span class="number">102 </span>{
 			ch <span class="kw">as </span>u64 - <span class="number">97 </span>+ <span class="number">10
 		</span>} <span class="kw">else </span>{
-			<span class="macro">panic!</span>(<span class="string">&quot;Bad GUID char in conversion.&quot;</span>);
+			<span class="macro">panic!</span>(<span class="string">"Bad GUID char in conversion."</span>);
 		}
 	}
 }
@@ -1536,8 +1536,8 @@
 }
 
 <span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>LUID {
-	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
-		<span class="macro">write!</span>(f, <span class="string">&quot;LUID lo: {:#04x}, hi: {:#04x}&quot;</span>, <span class="self">self</span>.low_part(), <span class="self">self</span>.high_part())
+	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
+		<span class="macro">write!</span>(f, <span class="string">"LUID lo: {:#04x}, hi: {:#04x}"</span>, <span class="self">self</span>.low_part(), <span class="self">self</span>.high_part())
 	}
 }
 
@@ -1778,18 +1778,18 @@
 <span class="doccomment">/// [`SECURITY_ATTRIBUTES`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/aa379560(v=vs.85))
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>SECURITY_ATTRIBUTES&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>SECURITY_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt; {
 	nLength: u32,
 	lpSecurityDescriptor: <span class="kw-2">*mut </span>SECURITY_DESCRIPTOR,
 	bInheritHandle: i32,
 
-	_lpSecurityDescriptor: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>SECURITY_DESCRIPTOR&gt;,
+	_lpSecurityDescriptor: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>SECURITY_DESCRIPTOR&gt;,
 }
 
-<span class="macro">impl_default_with_size!</span>(SECURITY_ATTRIBUTES, nLength, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default_with_size!</span>(SECURITY_ATTRIBUTES, nLength, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; SECURITY_ATTRIBUTES&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, lpSecurityDescriptor, set_lpSecurityDescriptor, SECURITY_DESCRIPTOR);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; SECURITY_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">'a</span>, lpSecurityDescriptor, set_lpSecurityDescriptor, SECURITY_DESCRIPTOR);
 	<span class="macro">pub_fn_bool_get_set!</span>(bInheritHandle, set_bInheritHandle);
 }
 
@@ -1873,10 +1873,10 @@
 <span class="kw">impl </span>VariableSized <span class="kw">for </span>SID {}
 
 <span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>SID {
-	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
 		<span class="kw">match </span>ConvertSidToStringSid(<span class="self">self</span>) {
-			<span class="prelude-val">Ok</span>(name) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, name),
-			<span class="prelude-val">Err</span>(err) =&gt; <span class="macro">write!</span>(f, <span class="string">&quot;{}&quot;</span>, err),
+			<span class="prelude-val">Ok</span>(name) =&gt; <span class="macro">write!</span>(f, <span class="string">"{}"</span>, name),
+			<span class="prelude-val">Err</span>(err) =&gt; <span class="macro">write!</span>(f, <span class="string">"{}"</span>, err),
 		}
 	}
 }
@@ -1902,17 +1902,17 @@
 /// struct.
 </span><span class="attr">#[repr(C)]
 #[derive(Clone)]
-</span><span class="kw">pub struct </span>SID_AND_ATTRIBUTES&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>SID_AND_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt; {
 	Sid: <span class="kw-2">*mut </span>SID,
 	<span class="kw">pub </span>Attributes: u32,
 
-	_Sid: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>SID&gt;,
+	_Sid: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>SID&gt;,
 }
 
-<span class="macro">impl_default!</span>(SID_AND_ATTRIBUTES, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(SID_AND_ATTRIBUTES, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; SID_AND_ATTRIBUTES&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, Sid, set_Sid, SID);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; SID_AND_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">'a</span>, Sid, set_Sid, SID);
 }
 
 <span class="doccomment">/// [`SID_IDENTIFIER_AUTHORITY`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid_identifier_authority)
@@ -1924,7 +1924,7 @@
 }
 
 <span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>SID_IDENTIFIER_AUTHORITY {
-	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">&#39;_</span>&gt;) -&gt; std::fmt::Result {
+	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
 		std::fmt::Debug::fmt(<span class="kw-2">&amp;</span><span class="self">self</span>.Value, f) <span class="comment">// delegate to array Debug
 	</span>}
 }
@@ -1955,7 +1955,7 @@
 <span class="doccomment">/// [`STARTUPINFO`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/ns-processthreadsapi-startupinfow)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>STARTUPINFO&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+</span><span class="kw">pub struct </span>STARTUPINFO&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	cb: u32,
 	lpReserved: <span class="kw-2">*mut </span>u16,
 	lpDesktop: <span class="kw-2">*mut </span>u16,
@@ -1975,15 +1975,15 @@
 	<span class="kw">pub </span>hStdOutput: HPIPE,
 	<span class="kw">pub </span>hStdError: HPIPE,
 
-	_lpDesktop: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
-	_lpTitle: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>u16&gt;,
+	_lpDesktop: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
+	_lpTitle: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default_with_size!</span>(STARTUPINFO, cb, <span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>);
+<span class="macro">impl_default_with_size!</span>(STARTUPINFO, cb, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; STARTUPINFO&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, lpDesktop, set_lpDesktop);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, lpTitle, set_lpTitle);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; STARTUPINFO&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, lpDesktop, set_lpDesktop);
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, lpTitle, set_lpTitle);
 
 	<span class="doccomment">/// Returns the `wShowWindow` field.
 	</span><span class="attr">#[must_use]
@@ -2071,31 +2071,31 @@
 <span class="doccomment">/// [`TOKEN_APPCONTAINER_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_appcontainer_information)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>TOKEN_APPCONTAINER_INFORMATION&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>TOKEN_APPCONTAINER_INFORMATION&lt;<span class="lifetime">'a</span>&gt; {
 	TokenAppContainer: <span class="kw-2">*mut </span>SID,
 
-	_TokenAppContainer: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>SID&gt;,
+	_TokenAppContainer: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>SID&gt;,
 }
 
-<span class="macro">impl_default!</span>(TOKEN_APPCONTAINER_INFORMATION, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(TOKEN_APPCONTAINER_INFORMATION, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TOKEN_APPCONTAINER_INFORMATION&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, TokenAppContainer, set_TokenAppContainer, SID);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TOKEN_APPCONTAINER_INFORMATION&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">'a</span>, TokenAppContainer, set_TokenAppContainer, SID);
 }
 
 <span class="doccomment">/// [`TOKEN_DEFAULT_DACL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_default_dacl)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>TOKEN_DEFAULT_DACL&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>TOKEN_DEFAULT_DACL&lt;<span class="lifetime">'a</span>&gt; {
 	DefaultDacl: <span class="kw-2">*mut </span>ACL,
 
-	_DefaultDacl: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>ACL&gt;,
+	_DefaultDacl: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>ACL&gt;,
 }
 
-<span class="macro">impl_default!</span>(TOKEN_DEFAULT_DACL, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(TOKEN_DEFAULT_DACL, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TOKEN_DEFAULT_DACL&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, DefaultDacl, set_DefaultDacl, ACL);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TOKEN_DEFAULT_DACL&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">'a</span>, DefaultDacl, set_DefaultDacl, ACL);
 }
 
 <span class="doccomment">/// [`TOKEN_ELEVATION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_elevation)
@@ -2117,24 +2117,24 @@
 /// [`VariableSized`](crate::prelude::VariableSized) struct, managed by
 /// [`TokenGroupsGuard`](crate::guard::TokenGroupsGuard).
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>TOKEN_GROUPS&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>TOKEN_GROUPS&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) GroupCount: u32,
-	Groups: [SID_AND_ATTRIBUTES&lt;<span class="lifetime">&#39;a</span>&gt;; <span class="number">1</span>],
+	Groups: [SID_AND_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt;; <span class="number">1</span>],
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; VariableSized <span class="kw">for </span>TOKEN_GROUPS&lt;<span class="lifetime">&#39;a</span>&gt; {}
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; VariableSized <span class="kw">for </span>TOKEN_GROUPS&lt;<span class="lifetime">'a</span>&gt; {}
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TOKEN_GROUPS&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TOKEN_GROUPS&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="doccomment">/// Returns a dynamically allocated
 	/// [`TokenGroupsGuard`](crate::guard::TokenGroupsGuard).
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>new(groups: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[SID_AND_ATTRIBUTES&lt;<span class="lifetime">&#39;a</span>&gt;]) -&gt; TokenGroupsGuard&lt;<span class="lifetime">&#39;a</span>&gt; {
+	</span><span class="kw">pub fn </span>new(groups: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[SID_AND_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt;]) -&gt; TokenGroupsGuard&lt;<span class="lifetime">'a</span>&gt; {
 		TokenGroupsGuard::new(groups)
 	}
 
 	<span class="doccomment">/// Returns a constant slice over the `Groups` entries.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub const fn </span>Groups(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[SID_AND_ATTRIBUTES&lt;<span class="lifetime">&#39;a</span>&gt;] {
+	</span><span class="kw">pub const fn </span>Groups(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[SID_AND_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt;] {
 		<span class="kw">unsafe </span>{
 			std::slice::from_raw_parts(
 				<span class="self">self</span>.Groups.as_ptr(),
@@ -2145,7 +2145,7 @@
 
 	<span class="doccomment">/// Returns a mutable slice over the `Groups` entries.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>Groups_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[SID_AND_ATTRIBUTES&lt;<span class="lifetime">&#39;a</span>&gt;] {
+	</span><span class="kw">pub fn </span>Groups_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[SID_AND_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt;] {
 		<span class="kw">unsafe </span>{
 			std::slice::from_raw_parts_mut(
 				<span class="self">self</span>.Groups.as_mut_ptr(),
@@ -2167,11 +2167,11 @@
 <span class="doccomment">/// [`TOKEN_MANDATORY_LABEL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_mandatory_label)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>TOKEN_MANDATORY_LABEL&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>Label: SID_AND_ATTRIBUTES&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub struct </span>TOKEN_MANDATORY_LABEL&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>Label: SID_AND_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="macro">impl_default!</span>(TOKEN_MANDATORY_LABEL, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(TOKEN_MANDATORY_LABEL, <span class="lifetime">'a</span>);
 
 <span class="doccomment">/// [`TOKEN_MANDATORY_POLICY`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_mandatory_policy)
 /// struct.
@@ -2194,31 +2194,31 @@
 <span class="doccomment">/// [`TOKEN_OWNER`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_owner)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>TOKEN_OWNER&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>TOKEN_OWNER&lt;<span class="lifetime">'a</span>&gt; {
 	Owner: <span class="kw-2">*mut </span>SID,
 
-	_Owner: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>SID&gt;,
+	_Owner: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>SID&gt;,
 }
 
-<span class="macro">impl_default!</span>(TOKEN_OWNER, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(TOKEN_OWNER, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TOKEN_OWNER&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, Owner, set_Owner, SID);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TOKEN_OWNER&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">'a</span>, Owner, set_Owner, SID);
 }
 
 <span class="doccomment">/// [`TOKEN_PRIMARY_GROUP`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_primary_group)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>TOKEN_PRIMARY_GROUP&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>TOKEN_PRIMARY_GROUP&lt;<span class="lifetime">'a</span>&gt; {
 	PrimaryGroup: <span class="kw-2">*mut </span>SID,
 
-	_Owner: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>SID&gt;,
+	_Owner: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>SID&gt;,
 }
 
-<span class="macro">impl_default!</span>(TOKEN_PRIMARY_GROUP, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(TOKEN_PRIMARY_GROUP, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TOKEN_PRIMARY_GROUP&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, PrimaryGroup, set_PrimaryGroup, SID);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TOKEN_PRIMARY_GROUP&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">'a</span>, PrimaryGroup, set_PrimaryGroup, SID);
 }
 
 <span class="doccomment">/// [`TOKEN_PRIVILEGES`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_privileges)
@@ -2270,8 +2270,8 @@
 /// struct.
 </span><span class="attr">#[repr(C)]
 #[derive(Default)]
-</span><span class="kw">pub struct </span>TOKEN_USER&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>User: SID_AND_ATTRIBUTES&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub struct </span>TOKEN_USER&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>User: SID_AND_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt;,
 }
 
 <span class="doccomment">/// [`VALENT`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/ns-winreg-valentw)
@@ -2290,7 +2290,7 @@
 <span class="kw">impl </span>VALENT {
 	<span class="doccomment">/// Returns a projection over `src`, delimited by `ve_valueptr` and
 	/// `ve_valuelen` fields.
-	</span><span class="kw">pub unsafe fn </span>buf_projection&lt;<span class="lifetime">&#39;a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="self">self</span>, src: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8]) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u8] {
+	</span><span class="kw">pub unsafe fn </span>buf_projection&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, src: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8]) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8] {
 		<span class="kw">let </span>proj_idx = <span class="self">self</span>.ve_valueptr - src.as_ptr() <span class="kw">as </span>usize;
 		<span class="kw">let </span>proj_past_idx = proj_idx + <span class="self">self</span>.ve_valuelen <span class="kw">as </span>usize;
 		<span class="kw-2">&amp;</span>src[proj_idx..proj_past_idx]

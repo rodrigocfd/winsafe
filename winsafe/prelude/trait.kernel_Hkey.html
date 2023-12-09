@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="This trait is enabled with the `kernel` feature, and provides methods for `HKEY`."><title>kernel_Hkey in winsafe::prelude - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e6a78389201e676c.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (87e1447aa 2023-11-30)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../winsafe/index.html">winsafe</a><span class="version">0.0.18</span></h2></div><h2 class="location"><a href="#">kernel_Hkey</a></h2><div class="sidebar-elems"><section><h3><a href="#provided-associated-consts">Provided Associated Constants</a></h3><ul class="block"><li><a href="#associatedconstant.CLASSES_ROOT">CLASSES_ROOT</a></li><li><a href="#associatedconstant.CURRENT_CONFIG">CURRENT_CONFIG</a></li><li><a href="#associatedconstant.CURRENT_USER">CURRENT_USER</a></li><li><a href="#associatedconstant.CURRENT_USER_LOCAL_SETTINGS">CURRENT_USER_LOCAL_SETTINGS</a></li><li><a href="#associatedconstant.DYN_DATA">DYN_DATA</a></li><li><a href="#associatedconstant.LOCAL_MACHINE">LOCAL_MACHINE</a></li><li><a href="#associatedconstant.PERFORMANCE_DATA">PERFORMANCE_DATA</a></li><li><a href="#associatedconstant.PERFORMANCE_NLSTEXT">PERFORMANCE_NLSTEXT</a></li><li><a href="#associatedconstant.PERFORMANCE_TEXT">PERFORMANCE_TEXT</a></li><li><a href="#associatedconstant.USERS">USERS</a></li></ul><h3><a href="#provided-methods">Provided Methods</a></h3><ul class="block"><li><a href="#method.RegConnectRegistry">RegConnectRegistry</a></li><li><a href="#method.RegCopyTree">RegCopyTree</a></li><li><a href="#method.RegCreateKeyEx">RegCreateKeyEx</a></li><li><a href="#method.RegCreateKeyTransacted">RegCreateKeyTransacted</a></li><li><a href="#method.RegDeleteKey">RegDeleteKey</a></li><li><a href="#method.RegDeleteKeyEx">RegDeleteKeyEx</a></li><li><a href="#method.RegDeleteKeyTransacted">RegDeleteKeyTransacted</a></li><li><a href="#method.RegDeleteTree">RegDeleteTree</a></li><li><a href="#method.RegDeleteValue">RegDeleteValue</a></li><li><a href="#method.RegDisablePredefinedCache">RegDisablePredefinedCache</a></li><li><a href="#method.RegDisablePredefinedCacheEx">RegDisablePredefinedCacheEx</a></li><li><a href="#method.RegDisableReflectionKey">RegDisableReflectionKey</a></li><li><a href="#method.RegEnableReflectionKey">RegEnableReflectionKey</a></li><li><a href="#method.RegEnumKeyEx">RegEnumKeyEx</a></li><li><a href="#method.RegEnumValue">RegEnumValue</a></li><li><a href="#method.RegFlushKey">RegFlushKey</a></li><li><a href="#method.RegGetValue">RegGetValue</a></li><li><a href="#method.RegLoadKey">RegLoadKey</a></li><li><a href="#method.RegOpenCurrentUser">RegOpenCurrentUser</a></li><li><a href="#method.RegOpenKeyEx">RegOpenKeyEx</a></li><li><a href="#method.RegOpenKeyTransacted">RegOpenKeyTransacted</a></li><li><a href="#method.RegQueryInfoKey">RegQueryInfoKey</a></li><li><a href="#method.RegQueryMultipleValues">RegQueryMultipleValues</a></li><li><a href="#method.RegQueryReflectionKey">RegQueryReflectionKey</a></li><li><a href="#method.RegQueryValueEx">RegQueryValueEx</a></li><li><a href="#method.RegRenameKey">RegRenameKey</a></li><li><a href="#method.RegReplaceKey">RegReplaceKey</a></li><li><a href="#method.RegRestoreKey">RegRestoreKey</a></li><li><a href="#method.RegSaveKey">RegSaveKey</a></li><li><a href="#method.RegSaveKeyEx">RegSaveKeyEx</a></li><li><a href="#method.RegSetKeyValue">RegSetKeyValue</a></li><li><a href="#method.RegSetValueEx">RegSetValueEx</a></li><li><a href="#method.RegUnLoadKey">RegUnLoadKey</a></li></ul><h3><a href="#object-safety">Object Safety</a></h3><h3><a href="#implementors">Implementors</a></h3></section><h2><a href="index.html">In winsafe::prelude</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Trait <a href="../index.html">winsafe</a>::<wbr><a href="index.html">prelude</a>::<wbr><a class="trait" href="#">kernel_Hkey</a><button id="copy-path" title="Copy item path to clipboard"><img src="../../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="src" href="../../src/winsafe/kernel\handles/hkey.rs.html#36-1026">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><code>pub trait kernel_Hkey: <a class="trait" href="trait.Handle.html" title="trait winsafe::prelude::Handle">Handle</a> {
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="This trait is enabled with the `kernel` feature, and provides methods for `HKEY`."><title>kernel_Hkey in winsafe::prelude - Rust</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../" data-static-root-path="../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (f967532a4 2023-12-08)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="sidebar-items.js"></script><script defer src="../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc trait"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="mobile-topbar"><button class="sidebar-menu-toggle">&#9776;</button></nav><nav class="sidebar"><div class="sidebar-crate"><h2><a href="../../winsafe/index.html">winsafe</a><span class="version">0.0.18</span></h2></div><h2 class="location"><a href="#">kernel_Hkey</a></h2><div class="sidebar-elems"><section><h3><a href="#provided-associated-consts">Provided Associated Constants</a></h3><ul class="block"><li><a href="#associatedconstant.CLASSES_ROOT">CLASSES_ROOT</a></li><li><a href="#associatedconstant.CURRENT_CONFIG">CURRENT_CONFIG</a></li><li><a href="#associatedconstant.CURRENT_USER">CURRENT_USER</a></li><li><a href="#associatedconstant.CURRENT_USER_LOCAL_SETTINGS">CURRENT_USER_LOCAL_SETTINGS</a></li><li><a href="#associatedconstant.DYN_DATA">DYN_DATA</a></li><li><a href="#associatedconstant.LOCAL_MACHINE">LOCAL_MACHINE</a></li><li><a href="#associatedconstant.PERFORMANCE_DATA">PERFORMANCE_DATA</a></li><li><a href="#associatedconstant.PERFORMANCE_NLSTEXT">PERFORMANCE_NLSTEXT</a></li><li><a href="#associatedconstant.PERFORMANCE_TEXT">PERFORMANCE_TEXT</a></li><li><a href="#associatedconstant.USERS">USERS</a></li></ul><h3><a href="#provided-methods">Provided Methods</a></h3><ul class="block"><li><a href="#method.RegConnectRegistry">RegConnectRegistry</a></li><li><a href="#method.RegCopyTree">RegCopyTree</a></li><li><a href="#method.RegCreateKeyEx">RegCreateKeyEx</a></li><li><a href="#method.RegCreateKeyTransacted">RegCreateKeyTransacted</a></li><li><a href="#method.RegDeleteKey">RegDeleteKey</a></li><li><a href="#method.RegDeleteKeyEx">RegDeleteKeyEx</a></li><li><a href="#method.RegDeleteKeyTransacted">RegDeleteKeyTransacted</a></li><li><a href="#method.RegDeleteTree">RegDeleteTree</a></li><li><a href="#method.RegDeleteValue">RegDeleteValue</a></li><li><a href="#method.RegDisablePredefinedCache">RegDisablePredefinedCache</a></li><li><a href="#method.RegDisablePredefinedCacheEx">RegDisablePredefinedCacheEx</a></li><li><a href="#method.RegDisableReflectionKey">RegDisableReflectionKey</a></li><li><a href="#method.RegEnableReflectionKey">RegEnableReflectionKey</a></li><li><a href="#method.RegEnumKeyEx">RegEnumKeyEx</a></li><li><a href="#method.RegEnumValue">RegEnumValue</a></li><li><a href="#method.RegFlushKey">RegFlushKey</a></li><li><a href="#method.RegGetValue">RegGetValue</a></li><li><a href="#method.RegLoadKey">RegLoadKey</a></li><li><a href="#method.RegOpenCurrentUser">RegOpenCurrentUser</a></li><li><a href="#method.RegOpenKeyEx">RegOpenKeyEx</a></li><li><a href="#method.RegOpenKeyTransacted">RegOpenKeyTransacted</a></li><li><a href="#method.RegQueryInfoKey">RegQueryInfoKey</a></li><li><a href="#method.RegQueryMultipleValues">RegQueryMultipleValues</a></li><li><a href="#method.RegQueryReflectionKey">RegQueryReflectionKey</a></li><li><a href="#method.RegQueryValueEx">RegQueryValueEx</a></li><li><a href="#method.RegRenameKey">RegRenameKey</a></li><li><a href="#method.RegReplaceKey">RegReplaceKey</a></li><li><a href="#method.RegRestoreKey">RegRestoreKey</a></li><li><a href="#method.RegSaveKey">RegSaveKey</a></li><li><a href="#method.RegSaveKeyEx">RegSaveKeyEx</a></li><li><a href="#method.RegSetKeyValue">RegSetKeyValue</a></li><li><a href="#method.RegSetValueEx">RegSetValueEx</a></li><li><a href="#method.RegUnLoadKey">RegUnLoadKey</a></li></ul><h3><a href="#object-safety">Object Safety</a></h3><h3><a href="#implementors">Implementors</a></h3></section><h2><a href="index.html">In winsafe::prelude</a></h2></div></nav><main><div class="width-limiter"><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="main-heading"><h1>Trait <a href="../index.html">winsafe</a>::<wbr><a href="index.html">prelude</a>::<wbr><a class="trait" href="#">kernel_Hkey</a><button id="copy-path" title="Copy item path to clipboard"><img src="../../static.files/clipboard-7571035ce49a181d.svg" width="19" height="18" alt="Copy item path"></button></h1><span class="out-of-band"><a class="src" href="../../src/winsafe/kernel\handles/hkey.rs.html#36-1026">source</a> · <button id="toggle-all-docs" title="collapse all docs">[<span>&#x2212;</span>]</button></span></div><pre class="rust item-decl"><code>pub trait kernel_Hkey: <a class="trait" href="trait.Handle.html" title="trait winsafe::prelude::Handle">Handle</a> {
     const <a href="#associatedconstant.CLASSES_ROOT" class="constant">CLASSES_ROOT</a>: <a class="struct" href="../struct.HKEY.html" title="struct winsafe::HKEY">HKEY</a> = _;
     const <a href="#associatedconstant.CURRENT_USER" class="constant">CURRENT_USER</a>: <a class="struct" href="../struct.HKEY.html" title="struct winsafe::HKEY">HKEY</a> = _;
     const <a href="#associatedconstant.LOCAL_MACHINE" class="constant">LOCAL_MACHINE</a>: <a class="struct" href="../struct.HKEY.html" title="struct winsafe::HKEY">HKEY</a> = _;
@@ -222,14 +222,14 @@ repeatedly.</p>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, co};
 
 <span class="kw">let </span>hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
-    <span class="prelude-val">Some</span>(<span class="string">&quot;Control Panel&quot;</span>),
+    <span class="prelude-val">Some</span>(<span class="string">"Control Panel"</span>),
     co::REG_OPTION::default(),
     co::KEY::READ,
 )<span class="question-mark">?</span>;
 
 <span class="kw">for </span>key_name <span class="kw">in </span>hkey.RegEnumKeyEx()<span class="question-mark">? </span>{
     <span class="kw">let </span>key_name = key_name<span class="question-mark">?</span>;
-    <span class="macro">println!</span>(<span class="string">&quot;{}&quot;</span>, key_name);
+    <span class="macro">println!</span>(<span class="string">"{}"</span>, key_name);
 }</code></pre></div>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.RegEnumValue" class="method"><a class="src rightside" href="../../src/winsafe/kernel\handles/hkey.rs.html#333-337">source</a><h4 class="code-header">fn <a href="#method.RegEnumValue" class="fn">RegEnumValue</a>(
     &amp;self
@@ -240,14 +240,14 @@ repeatedly.</p>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, co};
 
 <span class="kw">let </span>hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
-    <span class="prelude-val">Some</span>(<span class="string">&quot;Control Panel\\Appearance&quot;</span>),
+    <span class="prelude-val">Some</span>(<span class="string">"Control Panel\\Appearance"</span>),
     co::REG_OPTION::default(),
     co::KEY::READ,
 )<span class="question-mark">?</span>;
 
 <span class="kw">for </span>value_and_type <span class="kw">in </span>hkey.RegEnumValue()<span class="question-mark">? </span>{
     <span class="kw">let </span>(value, reg_type) = value_and_type<span class="question-mark">?</span>;
-    <span class="macro">println!</span>(<span class="string">&quot;{}, {}&quot;</span>, value, reg_type);
+    <span class="macro">println!</span>(<span class="string">"{}, {}"</span>, value, reg_type);
 }
 
 <span class="comment">// Collecting into a Vec
@@ -269,32 +269,32 @@ and <a href="../co/struct.ERROR.html#associatedconstant.INVALID_DATA" title="ass
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>};
 
 <span class="kw">let </span>val = w::HKEY::CURRENT_USER.RegGetValue(
-    <span class="prelude-val">Some</span>(<span class="string">&quot;Control Panel\\Mouse&quot;</span>),
-    <span class="prelude-val">Some</span>(<span class="string">&quot;Beep&quot;</span>),
+    <span class="prelude-val">Some</span>(<span class="string">"Control Panel\\Mouse"</span>),
+    <span class="prelude-val">Some</span>(<span class="string">"Beep"</span>),
 )<span class="question-mark">?</span>;
 
 <span class="kw">match </span>val {
-    w::RegistryValue::Dword(n) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Number u32: {}&quot;</span>, n),
-    w::RegistryValue::Qword(n) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Number u64: {}&quot;</span>, n),
-    w::RegistryValue::Sz(s) =&gt; <span class="macro">println!</span>(<span class="string">&quot;String: {}&quot;</span>, s),
+    w::RegistryValue::Dword(n) =&gt; <span class="macro">println!</span>(<span class="string">"Number u32: {}"</span>, n),
+    w::RegistryValue::Qword(n) =&gt; <span class="macro">println!</span>(<span class="string">"Number u64: {}"</span>, n),
+    w::RegistryValue::Sz(s) =&gt; <span class="macro">println!</span>(<span class="string">"String: {}"</span>, s),
     w::RegistryValue::ExpandSz(s) =&gt; {
-        <span class="macro">println!</span>(<span class="string">&quot;Env string: {}&quot;</span>, w::ExpandEnvironmentStrings(<span class="kw-2">&amp;</span>s)<span class="question-mark">?</span>);
+        <span class="macro">println!</span>(<span class="string">"Env string: {}"</span>, w::ExpandEnvironmentStrings(<span class="kw-2">&amp;</span>s)<span class="question-mark">?</span>);
     },
     w::RegistryValue::MultiSz(strs) =&gt; {
-       <span class="macro">println!</span>(<span class="string">&quot;Multi string:&quot;</span>);
+       <span class="macro">println!</span>(<span class="string">"Multi string:"</span>);
        <span class="kw">for </span>s <span class="kw">in </span>strs.iter() {
-           <span class="macro">print!</span>(<span class="string">&quot;[{}] &quot;</span>, s);
+           <span class="macro">print!</span>(<span class="string">"[{}] "</span>, s);
        }
-       <span class="macro">println!</span>(<span class="string">&quot;&quot;</span>);
+       <span class="macro">println!</span>(<span class="string">""</span>);
     },
     w::RegistryValue::Binary(bin) =&gt; {
-        <span class="macro">println!</span>(<span class="string">&quot;Binary:&quot;</span>);
+        <span class="macro">println!</span>(<span class="string">"Binary:"</span>);
         <span class="kw">for </span>b <span class="kw">in </span>bin.iter() {
-            <span class="macro">print!</span>(<span class="string">&quot;{:02x} &quot;</span>, b);
+            <span class="macro">print!</span>(<span class="string">"{:02x} "</span>, b);
         }
-        <span class="macro">println!</span>(<span class="string">&quot;&quot;</span>);
+        <span class="macro">println!</span>(<span class="string">""</span>);
     },
-    w::RegistryValue::None =&gt; <span class="macro">println!</span>(<span class="string">&quot;No value&quot;</span>),
+    w::RegistryValue::None =&gt; <span class="macro">println!</span>(<span class="string">"No value"</span>),
 }</code></pre></div>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.RegLoadKey" class="method"><a class="src rightside" href="../../src/winsafe/kernel\handles/hkey.rs.html#443-457">source</a><h4 class="code-header">fn <a href="#method.RegLoadKey" class="fn">RegLoadKey</a>(&amp;self, sub_key: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;, file_path: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="type" href="../type.SysResult.html" title="type winsafe::SysResult">SysResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regloadkeyw"><code>RegLoadKey</code></a>
 function.</p>
@@ -311,7 +311,7 @@ function.</p>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, co};
 
 <span class="kw">let </span>hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
-    <span class="prelude-val">Some</span>(<span class="string">&quot;Control Panel\\Mouse&quot;</span>),
+    <span class="prelude-val">Some</span>(<span class="string">"Control Panel\\Mouse"</span>),
     co::REG_OPTION::default(),
     co::KEY::READ,
 )<span class="question-mark">?</span>;</code></pre></div>
@@ -349,34 +349,34 @@ function.</p>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, co};
 
 <span class="kw">let </span>hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
-    <span class="prelude-val">Some</span>(<span class="string">&quot;Control Panel\\Desktop&quot;</span>),
+    <span class="prelude-val">Some</span>(<span class="string">"Control Panel\\Desktop"</span>),
     co::REG_OPTION::default(),
     co::KEY::READ,
 )<span class="question-mark">?</span>;
 
-<span class="kw">for </span>val <span class="kw">in </span>hkey.RegQueryMultipleValues(<span class="kw-2">&amp;</span>[<span class="string">&quot;DpiScalingVer&quot;</span>, <span class="string">&quot;WallPaper&quot;</span>])<span class="question-mark">? </span>{
+<span class="kw">for </span>val <span class="kw">in </span>hkey.RegQueryMultipleValues(<span class="kw-2">&amp;</span>[<span class="string">"DpiScalingVer"</span>, <span class="string">"WallPaper"</span>])<span class="question-mark">? </span>{
     <span class="kw">match </span>val {
-        w::RegistryValue::Dword(n) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Number u32: {}&quot;</span>, n),
-        w::RegistryValue::Qword(n) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Number u64: {}&quot;</span>, n),
-        w::RegistryValue::Sz(s) =&gt; <span class="macro">println!</span>(<span class="string">&quot;String: {}&quot;</span>, s),
+        w::RegistryValue::Dword(n) =&gt; <span class="macro">println!</span>(<span class="string">"Number u32: {}"</span>, n),
+        w::RegistryValue::Qword(n) =&gt; <span class="macro">println!</span>(<span class="string">"Number u64: {}"</span>, n),
+        w::RegistryValue::Sz(s) =&gt; <span class="macro">println!</span>(<span class="string">"String: {}"</span>, s),
         w::RegistryValue::ExpandSz(s) =&gt; {
-            <span class="macro">println!</span>(<span class="string">&quot;Env string: {}&quot;</span>, w::ExpandEnvironmentStrings(<span class="kw-2">&amp;</span>s)<span class="question-mark">?</span>);
+            <span class="macro">println!</span>(<span class="string">"Env string: {}"</span>, w::ExpandEnvironmentStrings(<span class="kw-2">&amp;</span>s)<span class="question-mark">?</span>);
         },
         w::RegistryValue::MultiSz(strs) =&gt; {
-           <span class="macro">println!</span>(<span class="string">&quot;Multi string:&quot;</span>);
+           <span class="macro">println!</span>(<span class="string">"Multi string:"</span>);
            <span class="kw">for </span>s <span class="kw">in </span>strs.iter() {
-               <span class="macro">print!</span>(<span class="string">&quot;[{}] &quot;</span>, s);
+               <span class="macro">print!</span>(<span class="string">"[{}] "</span>, s);
            }
-           <span class="macro">println!</span>(<span class="string">&quot;&quot;</span>);
+           <span class="macro">println!</span>(<span class="string">""</span>);
         },
         w::RegistryValue::Binary(bin) =&gt; {
-            <span class="macro">println!</span>(<span class="string">&quot;Binary:&quot;</span>);
+            <span class="macro">println!</span>(<span class="string">"Binary:"</span>);
             <span class="kw">for </span>b <span class="kw">in </span>bin.iter() {
-                <span class="macro">print!</span>(<span class="string">&quot;{:02x} &quot;</span>, b);
+                <span class="macro">print!</span>(<span class="string">"{:02x} "</span>, b);
             }
-            <span class="macro">println!</span>(<span class="string">&quot;&quot;</span>);
+            <span class="macro">println!</span>(<span class="string">""</span>);
         },
-        w::RegistryValue::None =&gt; <span class="macro">println!</span>(<span class="string">&quot;No value&quot;</span>),
+        w::RegistryValue::None =&gt; <span class="macro">println!</span>(<span class="string">"No value"</span>),
     }
 }
 </code></pre></div>
@@ -393,35 +393,35 @@ and <a href="../co/struct.ERROR.html#associatedconstant.INVALID_DATA" title="ass
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, co};
 
 <span class="kw">let </span>hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
-    <span class="prelude-val">Some</span>(<span class="string">&quot;Control Panel\\Mouse&quot;</span>),
+    <span class="prelude-val">Some</span>(<span class="string">"Control Panel\\Mouse"</span>),
     co::REG_OPTION::default(),
     co::KEY::READ,
 )<span class="question-mark">?</span>;
 
-<span class="kw">let </span>val = hkey.RegQueryValueEx(<span class="prelude-val">Some</span>(<span class="string">&quot;Beep&quot;</span>))<span class="question-mark">?</span>;
+<span class="kw">let </span>val = hkey.RegQueryValueEx(<span class="prelude-val">Some</span>(<span class="string">"Beep"</span>))<span class="question-mark">?</span>;
 
 <span class="kw">match </span>val {
-    w::RegistryValue::Dword(n) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Number u32: {}&quot;</span>, n),
-    w::RegistryValue::Qword(n) =&gt; <span class="macro">println!</span>(<span class="string">&quot;Number u64: {}&quot;</span>, n),
-    w::RegistryValue::Sz(s) =&gt; <span class="macro">println!</span>(<span class="string">&quot;String: {}&quot;</span>, s),
+    w::RegistryValue::Dword(n) =&gt; <span class="macro">println!</span>(<span class="string">"Number u32: {}"</span>, n),
+    w::RegistryValue::Qword(n) =&gt; <span class="macro">println!</span>(<span class="string">"Number u64: {}"</span>, n),
+    w::RegistryValue::Sz(s) =&gt; <span class="macro">println!</span>(<span class="string">"String: {}"</span>, s),
     w::RegistryValue::ExpandSz(s) =&gt; {
-        <span class="macro">println!</span>(<span class="string">&quot;Env string: {}&quot;</span>, w::ExpandEnvironmentStrings(<span class="kw-2">&amp;</span>s)<span class="question-mark">?</span>);
+        <span class="macro">println!</span>(<span class="string">"Env string: {}"</span>, w::ExpandEnvironmentStrings(<span class="kw-2">&amp;</span>s)<span class="question-mark">?</span>);
     },
     w::RegistryValue::MultiSz(strs) =&gt; {
-       <span class="macro">println!</span>(<span class="string">&quot;Multi string:&quot;</span>);
+       <span class="macro">println!</span>(<span class="string">"Multi string:"</span>);
        <span class="kw">for </span>s <span class="kw">in </span>strs.iter() {
-           <span class="macro">print!</span>(<span class="string">&quot;[{}] &quot;</span>, s);
+           <span class="macro">print!</span>(<span class="string">"[{}] "</span>, s);
        }
-       <span class="macro">println!</span>(<span class="string">&quot;&quot;</span>);
+       <span class="macro">println!</span>(<span class="string">""</span>);
     },
     w::RegistryValue::Binary(bin) =&gt; {
-        <span class="macro">println!</span>(<span class="string">&quot;Binary:&quot;</span>);
+        <span class="macro">println!</span>(<span class="string">"Binary:"</span>);
         <span class="kw">for </span>b <span class="kw">in </span>bin.iter() {
-            <span class="macro">print!</span>(<span class="string">&quot;{:02x} &quot;</span>, b);
+            <span class="macro">print!</span>(<span class="string">"{:02x} "</span>, b);
         }
-        <span class="macro">println!</span>(<span class="string">&quot;&quot;</span>);
+        <span class="macro">println!</span>(<span class="string">""</span>);
     },
-    w::RegistryValue::None =&gt; <span class="macro">println!</span>(<span class="string">&quot;No value&quot;</span>),
+    w::RegistryValue::None =&gt; <span class="macro">println!</span>(<span class="string">"No value"</span>),
 }</code></pre></div>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.RegRenameKey" class="method"><a class="src rightside" href="../../src/winsafe/kernel\handles/hkey.rs.html#836-850">source</a><h4 class="code-header">fn <a href="#method.RegRenameKey" class="fn">RegRenameKey</a>(&amp;self, sub_key_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>, new_key_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="type" href="../type.SysResult.html" title="type winsafe::SysResult">SysResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regrenamekey"><code>RegRenameKey</code></a>
 function.</p>
@@ -460,9 +460,9 @@ from current type, new type will take over.</p>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>};
 
 w::HKEY::CURRENT_USER.RegSetKeyValue(
-    <span class="prelude-val">Some</span>(<span class="string">&quot;Software\\My Company&quot;</span>),
-    <span class="prelude-val">Some</span>(<span class="string">&quot;Color&quot;</span>),
-    w::RegistryValue::Sz(<span class="string">&quot;blue&quot;</span>.to_owned()),
+    <span class="prelude-val">Some</span>(<span class="string">"Software\\My Company"</span>),
+    <span class="prelude-val">Some</span>(<span class="string">"Color"</span>),
+    w::RegistryValue::Sz(<span class="string">"blue"</span>.to_owned()),
 )<span class="question-mark">?</span>;</code></pre></div>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.RegSetValueEx" class="method"><a class="src rightside" href="../../src/winsafe/kernel\handles/hkey.rs.html#992-1012">source</a><h4 class="code-header">fn <a href="#method.RegSetValueEx" class="fn">RegSetValueEx</a>(
     &amp;self,
@@ -476,14 +476,14 @@ from current type, new type will prevail.</p>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, co};
 
 <span class="kw">let </span>hkey = w::HKEY::CURRENT_USER.RegOpenKeyEx(
-    <span class="prelude-val">Some</span>(<span class="string">&quot;Console\\Git Bash&quot;</span>),
+    <span class="prelude-val">Some</span>(<span class="string">"Console\\Git Bash"</span>),
     co::REG_OPTION::default(),
     co::KEY::ALL_ACCESS,
 )<span class="question-mark">?</span>;
 
 hkey.RegSetValueEx(
-    <span class="prelude-val">Some</span>(<span class="string">&quot;Color&quot;</span>),
-    w::RegistryValue::Sz(<span class="string">&quot;blue&quot;</span>.to_owned()),
+    <span class="prelude-val">Some</span>(<span class="string">"Color"</span>),
+    w::RegistryValue::Sz(<span class="string">"blue"</span>.to_owned()),
 )<span class="question-mark">?</span>;</code></pre></div>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.RegUnLoadKey" class="method"><a class="src rightside" href="../../src/winsafe/kernel\handles/hkey.rs.html#1016-1025">source</a><h4 class="code-header">fn <a href="#method.RegUnLoadKey" class="fn">RegUnLoadKey</a>(&amp;self, sub_key: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;) -&gt; <a class="type" href="../type.SysResult.html" title="type winsafe::SysResult">SysResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regunloadkeyw"><code>RegUnLoadKey</code></a>
 function.</p>

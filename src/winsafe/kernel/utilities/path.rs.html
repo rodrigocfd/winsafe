@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\utilities\path.rs`."><title>path.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e6a78389201e676c.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (87e1447aa 2023-11-30)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\utilities\path.rs`."><title>path.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (f967532a4 2023-12-08)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -457,17 +457,17 @@
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
 ///
-/// for file_path in w::path::dir_list(&quot;C:\\temp&quot;, Some(&quot;*.txt&quot;)) {
+/// for file_path in w::path::dir_list("C:\\temp", Some("*.txt")) {
 ///     let file_path = file_path?;
-///     println!(&quot;{}&quot;, file_path);
+///     println!("{}", file_path);
 /// }
 /// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
 /// ```
 </span><span class="attr">#[must_use]
-</span><span class="kw">pub fn </span>dir_list&lt;<span class="lifetime">&#39;a</span>&gt;(
-	dir_path: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
-	filter: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
-) -&gt; <span class="kw">impl </span>Iterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">&#39;a
+</span><span class="kw">pub fn </span>dir_list&lt;<span class="lifetime">'a</span>&gt;(
+	dir_path: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
+	filter: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
+) -&gt; <span class="kw">impl </span>Iterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">'a
 </span>{
 	DirListIter::new(dir_path.to_owned(), filter)
 }
@@ -484,36 +484,36 @@
 /// use winsafe::{self as w, prelude::*};
 ///
 /// // Ordinary for loop
-/// for file_path in w::path::dir_walk(&quot;C:\\Temp&quot;) {
+/// for file_path in w::path::dir_walk("C:\\Temp") {
 ///     let file_path = file_path?;
-///     println!(&quot;{}&quot;, file_path);
+///     println!("{}", file_path);
 /// }
 ///
 /// // Closure with try_for_each
-/// w::path::dir_walk(&quot;C:\\Temp&quot;)
+/// w::path::dir_walk("C:\\Temp")
 ///     .try_for_each(|file_path| {
 ///         let file_path = file_path?;
-///         println!(&quot;{}&quot;, file_path);
+///         println!("{}", file_path);
 ///         Ok(())
 ///     })?;
 ///
 /// // Collecting into a Vec
-/// let all = w::path::dir_walk(&quot;C:\\Temp&quot;)
+/// let all = w::path::dir_walk("C:\\Temp")
 ///     .collect::&lt;w::SysResult&lt;Vec&lt;_&gt;&gt;&gt;()?;
 ///
 /// // Transforming and collecting into a Vec
-/// let all = w::path::dir_walk(&quot;C:\\Temp&quot;)
+/// let all = w::path::dir_walk("C:\\Temp")
 ///     .map(|file_path| {
 ///         let file_path = file_path?;
-///         Ok(format!(&quot;PATH: {}&quot;, file_path))
+///         Ok(format!("PATH: {}", file_path))
 ///     })
 ///     .collect::&lt;w::SysResult&lt;Vec&lt;_&gt;&gt;&gt;()?;
 /// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
 /// ```
 </span><span class="attr">#[must_use]
-</span><span class="kw">pub fn </span>dir_walk&lt;<span class="lifetime">&#39;a</span>&gt;(
-	dir_path: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str,
-) -&gt; <span class="kw">impl </span>Iterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">&#39;a
+</span><span class="kw">pub fn </span>dir_walk&lt;<span class="lifetime">'a</span>&gt;(
+	dir_path: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>str,
+) -&gt; <span class="kw">impl </span>Iterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">'a
 </span>{
 	DirWalkIter::new(dir_path.to_owned())
 }
@@ -562,14 +562,14 @@
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
 ///
-/// let f = w::path::get_file_name(&quot;C:\\Temp\\foo.txt&quot;); // foo.txt
+/// let f = w::path::get_file_name("C:\\Temp\\foo.txt"); // foo.txt
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>get_file_name(full_path: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt; {
-	<span class="kw">match </span>full_path.rfind(<span class="string">&#39;\\&#39;</span>) {
+	<span class="kw">match </span>full_path.rfind(<span class="string">'\\'</span>) {
 		<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Some</span>(full_path), <span class="comment">// if no backslash, the whole string is the file name
 		</span><span class="prelude-val">Some</span>(idx) =&gt; <span class="kw">if </span>idx == full_path.chars().count() - <span class="number">1 </span>{
-			<span class="prelude-val">None </span><span class="comment">// last char is &#39;\\&#39;, no file name
+			<span class="prelude-val">None </span><span class="comment">// last char is '\\', no file name
 		</span>} <span class="kw">else </span>{
 			<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>full_path[idx + <span class="number">1</span>..])
 		},
@@ -583,13 +583,13 @@
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
 ///
-/// let p = w::path::get_path(&quot;C:\\Temp\\xx\\a.txt&quot;); // C:\Temp\xx
-/// let q = w::path::get_path(&quot;C:\\Temp\\xx\\&quot;);      // C:\Temp\xx
-/// let r = w::path::get_path(&quot;C:\\Temp\\xx&quot;);        // C:\Temp&quot;
+/// let p = w::path::get_path("C:\\Temp\\xx\\a.txt"); // C:\Temp\xx
+/// let q = w::path::get_path("C:\\Temp\\xx\\");      // C:\Temp\xx
+/// let r = w::path::get_path("C:\\Temp\\xx");        // C:\Temp"
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>get_path(full_path: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt; {
-	full_path.rfind(<span class="string">&#39;\\&#39;</span>) <span class="comment">// if no backslash, the whole string is the file name, so no path
+	full_path.rfind(<span class="string">'\\'</span>) <span class="comment">// if no backslash, the whole string is the file name, so no path
 		</span>.map(|idx| <span class="kw-2">&amp;</span>full_path[<span class="number">0</span>..idx])
 }
 
@@ -601,8 +601,8 @@
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
 ///
-/// println!(&quot;{}&quot;,
-///     w::path::has_extension(&quot;file.txt&quot;, &amp;[&quot;.txt&quot;, &quot;.bat&quot;]));
+/// println!("{}",
+///     w::path::has_extension("file.txt", &amp;[".txt", ".bat"]));
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>has_extension(full_path: <span class="kw-2">&amp;</span>str, extensions: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;]) -&gt; bool {
@@ -645,26 +645,26 @@
 /// use winsafe::{self as w, prelude::*};
 ///
 /// let p = w::path::replace_extension(
-///     &quot;C:\\Temp\\something.txt&quot;, &quot;.sh&quot;); // C:\Temp\something.sh
+///     "C:\\Temp\\something.txt", ".sh"); // C:\Temp\something.sh
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>replace_extension(full_path: <span class="kw-2">&amp;</span>str, new_extension: <span class="kw-2">&amp;</span>str) -&gt; String {
 	<span class="kw">if let </span><span class="prelude-val">Some</span>(last) = full_path.chars().last() {
-		<span class="kw">if </span>last == <span class="string">&#39;\\&#39; </span>{ <span class="comment">// full_path is a directory, do nothing
+		<span class="kw">if </span>last == <span class="string">'\\' </span>{ <span class="comment">// full_path is a directory, do nothing
 			</span><span class="kw">return </span>rtrim_backslash(full_path).to_owned();
 		}
 	}
 
-	<span class="kw">let </span>new_has_dot = new_extension.chars().next() == <span class="prelude-val">Some</span>(<span class="string">&#39;.&#39;</span>);
-	<span class="kw">match </span>full_path.rfind(<span class="string">&#39;.&#39;</span>) {
-		<span class="prelude-val">None </span>=&gt; <span class="macro">format!</span>(<span class="string">&quot;{}{}{}&quot;</span>, <span class="comment">// file name without extension, just append it
+	<span class="kw">let </span>new_has_dot = new_extension.chars().next() == <span class="prelude-val">Some</span>(<span class="string">'.'</span>);
+	<span class="kw">match </span>full_path.rfind(<span class="string">'.'</span>) {
+		<span class="prelude-val">None </span>=&gt; <span class="macro">format!</span>(<span class="string">"{}{}{}"</span>, <span class="comment">// file name without extension, just append it
 			</span>full_path,
-			<span class="kw">if </span>new_has_dot { <span class="string">&quot;&quot; </span>} <span class="kw">else </span>{ <span class="string">&quot;.&quot; </span>},
+			<span class="kw">if </span>new_has_dot { <span class="string">"" </span>} <span class="kw">else </span>{ <span class="string">"." </span>},
 			new_extension,
 		),
-		<span class="prelude-val">Some</span>(idx) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}{}{}&quot;</span>,
+		<span class="prelude-val">Some</span>(idx) =&gt; <span class="macro">format!</span>(<span class="string">"{}{}{}"</span>,
 			<span class="kw-2">&amp;</span>full_path[<span class="number">0</span>..idx],
-			<span class="kw">if </span>new_has_dot { <span class="string">&quot;&quot; </span>} <span class="kw">else </span>{ <span class="string">&quot;.&quot; </span>},
+			<span class="kw">if </span>new_has_dot { <span class="string">"" </span>} <span class="kw">else </span>{ <span class="string">"." </span>},
 			new_extension,
 		),
 	}
@@ -675,7 +675,7 @@
 </span><span class="kw">pub fn </span>replace_file_name(full_path: <span class="kw-2">&amp;</span>str, new_file: <span class="kw-2">&amp;</span>str) -&gt; String {
 	<span class="kw">match </span>get_path(full_path) {
 		<span class="prelude-val">None </span>=&gt; new_file.to_owned(),
-		<span class="prelude-val">Some</span>(path) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}\\{}&quot;</span>, path, new_file),
+		<span class="prelude-val">Some</span>(path) =&gt; <span class="macro">format!</span>(<span class="string">"{}\\{}"</span>, path, new_file),
 	}
 }
 
@@ -687,17 +687,17 @@
 /// use winsafe::{self as w, prelude::*};
 ///
 /// let p = w::path::replace_path( // C:\another\foo.txt
-///     &quot;C:\\Temp\\foo.txt&quot;,
-///     &quot;C:\\another&quot;,
+///     "C:\\Temp\\foo.txt",
+///     "C:\\another",
 /// );
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>replace_path(full_path: <span class="kw-2">&amp;</span>str, new_path: <span class="kw-2">&amp;</span>str) -&gt; String {
 	<span class="kw">let </span>file_name = get_file_name(full_path);
-	<span class="macro">format!</span>(<span class="string">&quot;{}{}{}&quot;</span>,
+	<span class="macro">format!</span>(<span class="string">"{}{}{}"</span>,
 		rtrim_backslash(new_path),
-		<span class="kw">if </span>file_name.is_some() { <span class="string">&quot;\\&quot; </span>} <span class="kw">else </span>{ <span class="string">&quot;&quot; </span>},
-		file_name.unwrap_or(<span class="string">&quot;&quot;</span>))
+		<span class="kw">if </span>file_name.is_some() { <span class="string">"\\" </span>} <span class="kw">else </span>{ <span class="string">"" </span>},
+		file_name.unwrap_or(<span class="string">""</span>))
 }
 
 <span class="doccomment">/// Removes a trailing backslash, if any.
@@ -707,13 +707,13 @@
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
 ///
-/// let p = w::path::rtrim_backslash(&quot;C:\\Temp\\&quot;); // C:\Temp
+/// let p = w::path::rtrim_backslash("C:\\Temp\\"); // C:\Temp
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>rtrim_backslash(full_path: <span class="kw-2">&amp;</span>str) -&gt; <span class="kw-2">&amp;</span>str {
 	<span class="kw">match </span>full_path.chars().last() {
 		<span class="prelude-val">None </span>=&gt; full_path, <span class="comment">// empty string
-		</span><span class="prelude-val">Some</span>(last_ch) =&gt; <span class="kw">if </span>last_ch == <span class="string">&#39;\\&#39; </span>{
+		</span><span class="prelude-val">Some</span>(last_ch) =&gt; <span class="kw">if </span>last_ch == <span class="string">'\\' </span>{
 			<span class="kw">let </span><span class="kw-2">mut </span>chars = full_path.chars();
 			chars.next_back(); <span class="comment">// remove last char
 			</span>chars.as_str()
@@ -727,20 +727,20 @@
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>split_parts(full_path: <span class="kw-2">&amp;</span>str) -&gt; Vec&lt;<span class="kw-2">&amp;</span>str&gt; {
 	<span class="kw">let </span>no_bs = rtrim_backslash(full_path);
-	no_bs.split(<span class="string">&#39;\\&#39;</span>).collect()
+	no_bs.split(<span class="string">'\\'</span>).collect()
 }
 
 <span class="comment">//------------------------------------------------------------------------------
 
-</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">struct </span>DirListIter&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">struct </span>DirListIter&lt;<span class="lifetime">'a</span>&gt; {
 	dir_path: String,
-	filter: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+	filter: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
 	hfind: <span class="prelude-ty">Option</span>&lt;FindCloseGuard&gt;,
 	wfd: WIN32_FIND_DATA,
 	no_more: bool,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>DirListIter&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>DirListIter&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>Item = SysResult&lt;String&gt;;
 
 	<span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
@@ -751,8 +751,8 @@
 		<span class="kw">let </span>found = <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.hfind {
 			<span class="prelude-val">None </span>=&gt; { <span class="comment">// first pass
 				</span><span class="kw">let </span>dir_final = <span class="kw">match </span><span class="self">self</span>.filter {
-					<span class="prelude-val">None </span>=&gt; <span class="macro">format!</span>(<span class="string">&quot;{}\\*&quot;</span>, <span class="self">self</span>.dir_path),
-					<span class="prelude-val">Some</span>(filter) =&gt; <span class="macro">format!</span>(<span class="string">&quot;{}\\{}&quot;</span>, <span class="self">self</span>.dir_path, filter),
+					<span class="prelude-val">None </span>=&gt; <span class="macro">format!</span>(<span class="string">"{}\\*"</span>, <span class="self">self</span>.dir_path),
+					<span class="prelude-val">Some</span>(filter) =&gt; <span class="macro">format!</span>(<span class="string">"{}\\{}"</span>, <span class="self">self</span>.dir_path, filter),
 				};
 
 				<span class="kw">let </span>found = <span class="kw">match </span>HFINDFILE::FindFirstFile(<span class="kw-2">&amp;</span>dir_final, <span class="kw-2">&amp;mut </span><span class="self">self</span>.wfd) {
@@ -780,10 +780,10 @@
 
 		<span class="kw">if </span>found {
 			<span class="kw">let </span>file_name = <span class="self">self</span>.wfd.cFileName();
-			<span class="kw">if </span>file_name == <span class="string">&quot;.&quot; </span>|| file_name == <span class="string">&quot;..&quot; </span>{ <span class="comment">// skip these
+			<span class="kw">if </span>file_name == <span class="string">"." </span>|| file_name == <span class="string">".." </span>{ <span class="comment">// skip these
 				</span><span class="self">self</span>.next()
 			} <span class="kw">else </span>{
-				<span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">&quot;{}\\{}&quot;</span>, <span class="self">self</span>.dir_path, <span class="self">self</span>.wfd.cFileName())))
+				<span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">"{}\\{}"</span>, <span class="self">self</span>.dir_path, <span class="self">self</span>.wfd.cFileName())))
 			}
 		} <span class="kw">else </span>{
 			<span class="prelude-val">None
@@ -791,10 +791,10 @@
 	}
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DirListIter&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DirListIter&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(
 		dir_path: String,
-		filter: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>str&gt;,
+		filter: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
 	) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			dir_path: rtrim_backslash(<span class="kw-2">&amp;</span>dir_path).to_owned(),
@@ -808,13 +808,13 @@
 
 <span class="comment">//------------------------------------------------------------------------------
 
-</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">struct </span>DirWalkIter&lt;<span class="lifetime">&#39;a</span>&gt; {
-	runner: DirListIter&lt;<span class="lifetime">&#39;a</span>&gt;,
-	subdir_runner: <span class="prelude-ty">Option</span>&lt;Box&lt;DirWalkIter&lt;<span class="lifetime">&#39;a</span>&gt;&gt;&gt;,
+</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">struct </span>DirWalkIter&lt;<span class="lifetime">'a</span>&gt; {
+	runner: DirListIter&lt;<span class="lifetime">'a</span>&gt;,
+	subdir_runner: <span class="prelude-ty">Option</span>&lt;Box&lt;DirWalkIter&lt;<span class="lifetime">'a</span>&gt;&gt;&gt;,
 	no_more: bool,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>DirWalkIter&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>DirWalkIter&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>Item = SysResult&lt;String&gt;;
 
 	<span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
@@ -861,7 +861,7 @@
 	}
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; DirWalkIter&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DirWalkIter&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(dir_path: String) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			runner: DirListIter::new(dir_path, <span class="prelude-val">None</span>),

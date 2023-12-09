@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\dshow\co\guids.rs`."><title>guids.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e6a78389201e676c.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (87e1447aa 2023-11-30)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\dshow\co\guids.rs`."><title>guids.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (f967532a4 2023-12-08)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -60,56 +60,56 @@
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
 
 <span class="macro">const_guid_values! </span>{ CLSID;
-	AviDest <span class="string">&quot;e2510970-f137-11ce-8b67-00aa00a3f1a6&quot;
-	</span>EnhancedVideoRenderer <span class="string">&quot;fa10746c-9b63-4b6c-bc49-fc300ea5f256&quot;
-	</span>FileWriter <span class="string">&quot;8596e5f0-0da5-11d0-bd21-00a0c911ce86&quot;
-	</span>FilterGraph <span class="string">&quot;e436ebb3-524f-11ce-9f53-0020af0ba770&quot;
-	</span>NullRenderer <span class="string">&quot;c1f400a4-3f08-11d3-9f0b-006008039e37&quot;
+	AviDest <span class="string">"e2510970-f137-11ce-8b67-00aa00a3f1a6"
+	</span>EnhancedVideoRenderer <span class="string">"fa10746c-9b63-4b6c-bc49-fc300ea5f256"
+	</span>FileWriter <span class="string">"8596e5f0-0da5-11d0-bd21-00a0c911ce86"
+	</span>FilterGraph <span class="string">"e436ebb3-524f-11ce-9f53-0020af0ba770"
+	</span>NullRenderer <span class="string">"c1f400a4-3f08-11d3-9f0b-006008039e37"
 </span>}
 
 <span class="macro">const_guid! </span>{ MEDIA_FORMAT;
 	<span class="doccomment">/// [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE) `formattype`, originally with
 	/// `FORMAT` prefix (`GUID`).
 	</span>=&gt;
-	DvInfo <span class="string">&quot;05589f84-c356-11ce-bf01-00aa0055595a&quot;
-	</span>MPEG2Video <span class="string">&quot;e06d80e3-db46-11cf-b4d1-00805f6cbbea&quot;
-	</span>MPEGStreams <span class="string">&quot;05589f83-c356-11ce-bf01-00aa0055595a&quot;
-	</span>MPEGVideo <span class="string">&quot;05589f82-c356-11ce-bf01-00aa0055595a&quot;
-	</span><span class="prelude-val">None </span><span class="string">&quot;0f6417d6-c318-11d0-a43f-00a0c9223196&quot;
-	</span>VideoInfo <span class="string">&quot;05589f80-c356-11ce-bf01-00aa0055595a&quot;
-	</span>VideoInfo2 <span class="string">&quot;f72a76a0-eb0a-11d0-ace4-0000c0cc16ba&quot;
-	</span>WaveFormatEx <span class="string">&quot;05589f81-c356-11ce-bf01-00aa0055595a&quot;
+	DvInfo <span class="string">"05589f84-c356-11ce-bf01-00aa0055595a"
+	</span>MPEG2Video <span class="string">"e06d80e3-db46-11cf-b4d1-00805f6cbbea"
+	</span>MPEGStreams <span class="string">"05589f83-c356-11ce-bf01-00aa0055595a"
+	</span>MPEGVideo <span class="string">"05589f82-c356-11ce-bf01-00aa0055595a"
+	</span><span class="prelude-val">None </span><span class="string">"0f6417d6-c318-11d0-a43f-00a0c9223196"
+	</span>VideoInfo <span class="string">"05589f80-c356-11ce-bf01-00aa0055595a"
+	</span>VideoInfo2 <span class="string">"f72a76a0-eb0a-11d0-ace4-0000c0cc16ba"
+	</span>WaveFormatEx <span class="string">"05589f81-c356-11ce-bf01-00aa0055595a"
 </span>}
 
 <span class="macro">const_guid! </span>{ MEDIATYPE;
 	<span class="doccomment">/// [`AM_MEDIA_TYPE`](crate::AM_MEDIA_TYPE) `majortype` (`GUID`).
 	</span>=&gt;
-	AnalogAudio <span class="string">&quot;0482dee1-7817-11cf-8a03-00aa006ecb65&quot;
-	</span>AnalogVideo <span class="string">&quot;0482dde1-7817-11cf-8a03-00aa006ecb65&quot;
-	</span>Audio <span class="string">&quot;73647561-0000-0010-8000-00aa00389b71&quot;
-	</span>AUXLine21Data <span class="string">&quot;670aea80-3a82-11d0-b79b-00aa003767a7&quot;
-	</span>File <span class="string">&quot;656c6966-0000-0010-8000-00aa00389b71&quot;
-	</span>Interleaved <span class="string">&quot;73766169-0000-0010-8000-00aa00389b71&quot;
-	</span>Midi <span class="string">&quot;7364696d-0000-0010-8000-00aa00389b71&quot;
-	</span>MPEG2_PES <span class="string">&quot;e06d8020-db46-11cf-b4d1-00805f6cbbea&quot;
-	</span>MPEG2_SECTIONS <span class="string">&quot;455f176c-4b06-47ce-9aef-8caef73df7b5&quot;
-	</span>ScriptCommand <span class="string">&quot;73636d64-0000-0010-8000-00aa00389b71&quot;
-	</span>Stream <span class="string">&quot;e436eb83-524f-11ce-9f53-0020af0ba770&quot;
-	</span>Text <span class="string">&quot;73747874-0000-0010-8000-00aa00389b71&quot;
-	</span>Timecode <span class="string">&quot;0482dee3-7817-11cf-8a03-00aa006ecb65&quot;
-	</span>VBI <span class="string">&quot;f72a76e1-eb0a-11d0-ace4-0000c0cc16ba&quot;
-	</span>Video <span class="string">&quot;73646976-0000-0010-8000-00aa00389b71&quot;
+	AnalogAudio <span class="string">"0482dee1-7817-11cf-8a03-00aa006ecb65"
+	</span>AnalogVideo <span class="string">"0482dde1-7817-11cf-8a03-00aa006ecb65"
+	</span>Audio <span class="string">"73647561-0000-0010-8000-00aa00389b71"
+	</span>AUXLine21Data <span class="string">"670aea80-3a82-11d0-b79b-00aa003767a7"
+	</span>File <span class="string">"656c6966-0000-0010-8000-00aa00389b71"
+	</span>Interleaved <span class="string">"73766169-0000-0010-8000-00aa00389b71"
+	</span>Midi <span class="string">"7364696d-0000-0010-8000-00aa00389b71"
+	</span>MPEG2_PES <span class="string">"e06d8020-db46-11cf-b4d1-00805f6cbbea"
+	</span>MPEG2_SECTIONS <span class="string">"455f176c-4b06-47ce-9aef-8caef73df7b5"
+	</span>ScriptCommand <span class="string">"73636d64-0000-0010-8000-00aa00389b71"
+	</span>Stream <span class="string">"e436eb83-524f-11ce-9f53-0020af0ba770"
+	</span>Text <span class="string">"73747874-0000-0010-8000-00aa00389b71"
+	</span>Timecode <span class="string">"0482dee3-7817-11cf-8a03-00aa006ecb65"
+	</span>VBI <span class="string">"f72a76e1-eb0a-11d0-ace4-0000c0cc16ba"
+	</span>Video <span class="string">"73646976-0000-0010-8000-00aa00389b71"
 </span>}
 
 <span class="macro">const_guid! </span>{ TIME_FORMAT;
 	<span class="doccomment">/// [`IMediaSeeking::SetTimeFormat`](crate::prelude::dshow_IMediaSeeking::SetTimeFormat)
 	/// `format` (`GUID`).
 	</span>=&gt;
-	NONE <span class="string">&quot;00000000-0000-0000-0000-000000000000&quot;
-	</span>FRAME <span class="string">&quot;7b785570-8c82-11cf-bc0c-00aa00ac74f6&quot;
-	</span>BYTE <span class="string">&quot;7b785571-8c82-11cf-bc0c-00aa00ac74f6&quot;
-	</span>SAMPLE <span class="string">&quot;7b785572-8c82-11cf-bc0c-00aa00ac74f6&quot;
-	</span>FIELD <span class="string">&quot;7b785573-8c82-11cf-bc0c-00aa00ac74f6&quot;
-	</span>MEDIA_TIME <span class="string">&quot;7b785574-8c82-11cf-bc0c-00aa00ac74f6&quot;
+	NONE <span class="string">"00000000-0000-0000-0000-000000000000"
+	</span>FRAME <span class="string">"7b785570-8c82-11cf-bc0c-00aa00ac74f6"
+	</span>BYTE <span class="string">"7b785571-8c82-11cf-bc0c-00aa00ac74f6"
+	</span>SAMPLE <span class="string">"7b785572-8c82-11cf-bc0c-00aa00ac74f6"
+	</span>FIELD <span class="string">"7b785573-8c82-11cf-bc0c-00aa00ac74f6"
+	</span>MEDIA_TIME <span class="string">"7b785574-8c82-11cf-bc0c-00aa00ac74f6"
 </span>}
 </code></pre></div></section></main></body></html>

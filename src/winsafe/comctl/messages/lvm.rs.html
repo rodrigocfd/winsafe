@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\messages\lvm.rs`."><title>lvm.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e6a78389201e676c.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (87e1447aa 2023-11-30)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\messages\lvm.rs`."><title>lvm.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (f967532a4 2023-12-08)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -3025,12 +3025,12 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;HIMAGELIST&gt;`.
-</span><span class="kw">pub struct </span>CreateDragImage&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>CreateDragImage&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>index: u32,
-	<span class="kw">pub </span>img_location: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>RECT,
+	<span class="kw">pub </span>img_location: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>CreateDragImage&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>CreateDragImage&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;HIMAGELIST&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3193,12 +3193,12 @@
 /// message parameters.
 ///
 /// Return type: `Option&lt;u32&gt;`.
-</span><span class="kw">pub struct </span>FindItem&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+</span><span class="kw">pub struct </span>FindItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">pub </span>start_index: <span class="prelude-ty">Option</span>&lt;u32&gt;,
-	<span class="kw">pub </span>lvfindinfo: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>LVFINDINFO&lt;<span class="lifetime">&#39;a</span>&gt;,
+	<span class="kw">pub </span>lvfindinfo: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>LVFINDINFO&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>FindItem&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>FindItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;u32&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3240,11 +3240,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetBkImage&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
-	<span class="kw">pub </span>lvbkimage: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>LVBKIMAGE&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub struct </span>GetBkImage&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="kw">pub </span>lvbkimage: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>LVBKIMAGE&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>GetBkImage&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>GetBkImage&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3286,12 +3286,12 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetColumn&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+</span><span class="kw">pub struct </span>GetColumn&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">pub </span>index: u32,
-	<span class="kw">pub </span>lvcolumn: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>LVCOLUMN&lt;<span class="lifetime">&#39;a</span>&gt;,
+	<span class="kw">pub </span>lvcolumn: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>LVCOLUMN&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>GetColumn&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>GetColumn&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3311,11 +3311,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetColumnOrderArray&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>indexes: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>Vec&lt;u32&gt;,
+</span><span class="kw">pub struct </span>GetColumnOrderArray&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>indexes: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>Vec&lt;u32&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetColumnOrderArray&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetColumnOrderArray&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3403,11 +3403,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetEmptyText&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>text: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>WString,
+</span><span class="kw">pub struct </span>GetEmptyText&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>text: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>WString,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetEmptyText&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetEmptyText&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3471,11 +3471,11 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>GetFooterInfo&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>LVFOOTERINFO&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub struct </span>GetFooterInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>LVFOOTERINFO&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>GetFooterInfo&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>GetFooterInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3495,12 +3495,12 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetFooterItem&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+</span><span class="kw">pub struct </span>GetFooterItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">pub </span>index: u32,
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>LVFOOTERITEM&lt;<span class="lifetime">&#39;a</span>&gt;,
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>LVFOOTERITEM&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>GetFooterItem&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>GetFooterItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3520,12 +3520,12 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetFooterItemRect&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>GetFooterItemRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>index: u32,
-	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>RECT,
+	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetFooterItemRect&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetFooterItemRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3545,11 +3545,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetFooterRect&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>RECT,
+</span><span class="kw">pub struct </span>GetFooterRect&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetFooterRect&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetFooterRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3591,12 +3591,12 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;u32&gt;`.
-</span><span class="kw">pub struct </span>GetGroupInfo&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>&gt; {
+</span><span class="kw">pub struct </span>GetGroupInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>&gt; {
 	<span class="kw">pub </span>id: u32,
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;h </span><span class="kw-2">mut </span>LVGROUP&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>&gt;,
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'h </span><span class="kw-2">mut </span>LVGROUP&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>&gt; MsgSend <span class="kw">for </span>GetGroupInfo&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>&gt; MsgSend <span class="kw">for </span>GetGroupInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;u32&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3616,12 +3616,12 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetGroupInfoByIndex&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>&gt; {
+</span><span class="kw">pub struct </span>GetGroupInfoByIndex&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>&gt; {
 	<span class="kw">pub </span>index: u32,
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;h </span><span class="kw-2">mut </span>LVGROUP&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>&gt;,
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'h </span><span class="kw-2">mut </span>LVGROUP&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>&gt; MsgSend <span class="kw">for </span>GetGroupInfoByIndex&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>&gt; MsgSend <span class="kw">for </span>GetGroupInfoByIndex&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3641,11 +3641,11 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>GetGroupMetrics&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>LVGROUPMETRICS,
+</span><span class="kw">pub struct </span>GetGroupMetrics&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>LVGROUPMETRICS,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetGroupMetrics&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetGroupMetrics&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3665,13 +3665,13 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetGroupRect&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>GetGroupRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>id: u32,
 	<span class="kw">pub </span>flags: co::LVGGR,
-	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>RECT,
+	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetGroupRect&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetGroupRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3830,11 +3830,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetInsertMark&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>LVINSERTMARK,
+</span><span class="kw">pub struct </span>GetInsertMark&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>LVINSERTMARK,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetInsertMark&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetInsertMark&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3876,11 +3876,11 @@
 /// message parameters.
 ///
 /// Return type: `bool`.
-</span><span class="kw">pub struct </span>GetInsertMarkRect&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>RECT,
+</span><span class="kw">pub struct </span>GetInsertMarkRect&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetInsertMarkRect&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetInsertMarkRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = bool;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3900,11 +3900,11 @@
 /// message parameters.
 ///
 /// Return type: `Option&lt;u32&gt;`.
-</span><span class="kw">pub struct </span>GetISearchString&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>buffer: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>WString&gt;,
+</span><span class="kw">pub struct </span>GetISearchString&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>buffer: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>WString&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetISearchString&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetISearchString&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;u32&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3924,11 +3924,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetItem&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
-	<span class="kw">pub </span>lvitem: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>LVITEM&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub struct </span>GetItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="kw">pub </span>lvitem: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>LVITEM&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>GetItem&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>GetItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3970,14 +3970,14 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetItemIndexRect&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
-	<span class="kw">pub </span>lvitemindex: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>LVITEMINDEX,
-	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>RECT,
+</span><span class="kw">pub struct </span>GetItemIndexRect&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="kw">pub </span>lvitemindex: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>LVITEMINDEX,
+	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>RECT,
 	<span class="kw">pub </span>index: u32,
 	<span class="kw">pub </span>portion: co::LVIR,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>GetItemIndexRect&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>GetItemIndexRect&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4000,12 +4000,12 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetItemPosition&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>GetItemPosition&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>index: u32,
-	<span class="kw">pub </span>pos: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>POINT,
+	<span class="kw">pub </span>pos: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>POINT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetItemPosition&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetItemPosition&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4025,13 +4025,13 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetItemRect&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>GetItemRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>index: u32,
-	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>RECT,
+	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 	<span class="kw">pub </span>portion: co::LVIR,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetItemRect&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetItemRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4102,12 +4102,12 @@
 /// message parameters.
 ///
 /// Return type: `u32`.
-</span><span class="kw">pub struct </span>GetItemText&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+</span><span class="kw">pub struct </span>GetItemText&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">pub </span>index: u32,
-	<span class="kw">pub </span>lvitem: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>LVITEM&lt;<span class="lifetime">&#39;a</span>&gt;,
+	<span class="kw">pub </span>lvitem: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>LVITEM&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>GetItemText&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>GetItemText&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = u32;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4152,12 +4152,12 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetNextItemIndex&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>initial_item: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>LVITEMINDEX,
+</span><span class="kw">pub struct </span>GetNextItemIndex&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>initial_item: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>LVITEMINDEX,
 	<span class="kw">pub </span>relationship: co::LVNI,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetNextItemIndex&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetNextItemIndex&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4177,11 +4177,11 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>GetNumberOfWorkAreas&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>num: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u32,
+</span><span class="kw">pub struct </span>GetNumberOfWorkAreas&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>num: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u32,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetNumberOfWorkAreas&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetNumberOfWorkAreas&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4201,11 +4201,11 @@
 /// message parameters.
 ///
 /// Return type: `bool`.
-</span><span class="kw">pub struct </span>GetOrigin&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>origin: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>POINT,
+</span><span class="kw">pub struct </span>GetOrigin&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>origin: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>POINT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetOrigin&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetOrigin&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = bool;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4337,14 +4337,14 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetSubItemRect&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>GetSubItemRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>item_index: u32,
 	<span class="kw">pub </span>subitem_index: u32,
-	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>RECT,
+	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 	<span class="kw">pub </span>portion: co::LVIR,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetSubItemRect&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetSubItemRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4411,11 +4411,11 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>GetTileInfo&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>LVTILEINFO&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub struct </span>GetTileInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>LVTILEINFO&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>GetTileInfo&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>GetTileInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4435,11 +4435,11 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>GetTileViewInfo&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>LVTILEVIEWINFO,
+</span><span class="kw">pub struct </span>GetTileViewInfo&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>LVTILEVIEWINFO,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetTileViewInfo&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetTileViewInfo&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4550,11 +4550,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>GetViewRect&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>RECT,
+</span><span class="kw">pub struct </span>GetViewRect&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetViewRect&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetViewRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4574,11 +4574,11 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>GetWorkAreas&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>rects: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>[RECT],
+</span><span class="kw">pub struct </span>GetWorkAreas&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>rects: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>[RECT],
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetWorkAreas&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetWorkAreas&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4622,11 +4622,11 @@
 /// message parameters.
 ///
 /// Return type: `Option&lt;u32&gt;`.
-</span><span class="kw">pub struct </span>HitTest&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>LVHITTESTINFO,
+</span><span class="kw">pub struct </span>HitTest&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>LVHITTESTINFO,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>HitTest&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>HitTest&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;u32&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4646,12 +4646,12 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;u32&gt;`.
-</span><span class="kw">pub struct </span>InsertColumn&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+</span><span class="kw">pub struct </span>InsertColumn&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">pub </span>index: u32,
-	<span class="kw">pub </span>column: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>LVCOLUMN&lt;<span class="lifetime">&#39;a</span>&gt;,
+	<span class="kw">pub </span>column: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>LVCOLUMN&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>InsertColumn&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>InsertColumn&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;u32&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4671,11 +4671,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;u32&gt;`.
-</span><span class="kw">pub struct </span>InsertGroup&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>&gt; {
-	<span class="kw">pub </span>group: <span class="kw-2">&amp;</span><span class="lifetime">&#39;h </span>LVGROUP&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>&gt;,
+</span><span class="kw">pub struct </span>InsertGroup&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>&gt; {
+	<span class="kw">pub </span>group: <span class="kw-2">&amp;</span><span class="lifetime">'h </span>LVGROUP&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>&gt; MsgSend <span class="kw">for </span>InsertGroup&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>&gt; MsgSend <span class="kw">for </span>InsertGroup&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;u32&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4695,11 +4695,11 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>InsertGroupSorted&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>&gt; {
-	<span class="kw">pub </span>group: <span class="kw-2">&amp;</span><span class="lifetime">&#39;h </span>LVINSERTGROUPSORTED&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>&gt;,
+</span><span class="kw">pub struct </span>InsertGroupSorted&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>&gt; {
+	<span class="kw">pub </span>group: <span class="kw-2">&amp;</span><span class="lifetime">'h </span>LVINSERTGROUPSORTED&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>&gt; MsgSend <span class="kw">for </span>InsertGroupSorted&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>&gt; MsgSend <span class="kw">for </span>InsertGroupSorted&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4719,11 +4719,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;u32&gt;`.
-</span><span class="kw">pub struct </span>InsertItem&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
-	<span class="kw">pub </span>item: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>LVITEM&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub struct </span>InsertItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="kw">pub </span>item: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>LVITEM&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>InsertItem&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>InsertItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;u32&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4743,12 +4743,12 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>InsertMarkHitTest&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>InsertMarkHitTest&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>point: POINT,
-	<span class="kw">pub </span>insert_mark: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>LVINSERTMARK,
+	<span class="kw">pub </span>insert_mark: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>LVINSERTMARK,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>InsertMarkHitTest&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>InsertMarkHitTest&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4967,11 +4967,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>SetBkImage&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
-	<span class="kw">pub </span>lvbkimage: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>LVBKIMAGE&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub struct </span>SetBkImage&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="kw">pub </span>lvbkimage: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>LVBKIMAGE&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>SetBkImage&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>SetBkImage&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5015,12 +5015,12 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>SetColumn&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+</span><span class="kw">pub struct </span>SetColumn&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">pub </span>index: u32,
-	<span class="kw">pub </span>lvcolumn: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>LVCOLUMN&lt;<span class="lifetime">&#39;a</span>&gt;,
+	<span class="kw">pub </span>lvcolumn: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>LVCOLUMN&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>SetColumn&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>SetColumn&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5040,11 +5040,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>SetColumnOrderArray&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>order: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[u32],
+</span><span class="kw">pub struct </span>SetColumnOrderArray&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>order: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u32],
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>SetColumnOrderArray&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetColumnOrderArray&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5114,12 +5114,12 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;u32&gt;`.
-</span><span class="kw">pub struct </span>SetGroupInfo&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>&gt; {
+</span><span class="kw">pub struct </span>SetGroupInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>&gt; {
 	<span class="kw">pub </span>id: u32,
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;h </span>LVGROUP&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>&gt;
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'h </span>LVGROUP&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt;
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>&gt; MsgSend <span class="kw">for </span>SetGroupInfo&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>&gt; MsgSend <span class="kw">for </span>SetGroupInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;u32&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5139,11 +5139,11 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>SetGroupMetrics&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>LVGROUPMETRICS,
+</span><span class="kw">pub struct </span>SetGroupMetrics&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>LVGROUPMETRICS,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>SetGroupMetrics&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetGroupMetrics&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5163,11 +5163,11 @@
 /// message parameters.
 ///
 /// Return type: `Option&lt;HCURSOR&gt;`.
-</span><span class="kw">pub struct </span>SetHotCursor&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>hcursor: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>HCURSOR&gt;,
+</span><span class="kw">pub struct </span>SetHotCursor&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>hcursor: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>HCURSOR&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>SetHotCursor&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetHotCursor&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HCURSOR&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5259,12 +5259,12 @@
 /// message parameters.
 ///
 /// Return type: `Option&lt;HIMAGELIST&gt;`.
-</span><span class="kw">pub struct </span>SetImageList&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>SetImageList&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>kind: co::LVSIL,
-	<span class="kw">pub </span>himagelist: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>HIMAGELIST,
+	<span class="kw">pub </span>himagelist: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HIMAGELIST,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>SetImageList&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetImageList&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5284,11 +5284,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>SetInfoTip&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>LVSETINFOTIP&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub struct </span>SetInfoTip&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>LVSETINFOTIP&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>SetInfoTip&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>SetInfoTip&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5308,11 +5308,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>SetInsertMark&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>LVINSERTMARK,
+</span><span class="kw">pub struct </span>SetInsertMark&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>LVINSERTMARK,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>SetInsertMark&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetInsertMark&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5356,11 +5356,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>SetItem&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
-	<span class="kw">pub </span>lvitem: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>LVITEM&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub struct </span>SetItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="kw">pub </span>lvitem: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>LVITEM&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>SetItem&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>SetItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5405,12 +5405,12 @@
 /// message parameters.
 ///
 /// Return type: `HrResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>SetItemIndexState&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>&gt; {
-	<span class="kw">pub </span>lvitemindex: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>LVITEMINDEX,
-	<span class="kw">pub </span>lvitem: <span class="kw-2">&amp;</span><span class="lifetime">&#39;c </span>LVITEM&lt;<span class="lifetime">&#39;b</span>&gt;,
+</span><span class="kw">pub struct </span>SetItemIndexState&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; {
+	<span class="kw">pub </span>lvitemindex: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>LVITEMINDEX,
+	<span class="kw">pub </span>lvitem: <span class="kw-2">&amp;</span><span class="lifetime">'c </span>LVITEM&lt;<span class="lifetime">'b</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>&gt; MsgSend <span class="kw">for </span>SetItemIndexState&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; MsgSend <span class="kw">for </span>SetItemIndexState&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; {
 	<span class="kw">type </span>RetType = HrResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5480,12 +5480,12 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>SetItemState&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+</span><span class="kw">pub struct </span>SetItemState&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">pub </span>index: <span class="prelude-ty">Option</span>&lt;u32&gt;,
-	<span class="kw">pub </span>lvitem: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>LVITEM&lt;<span class="lifetime">&#39;a</span>&gt;,
+	<span class="kw">pub </span>lvitem: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>LVITEM&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>SetItemState&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>SetItemState&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5505,12 +5505,12 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>SetItemText&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+</span><span class="kw">pub struct </span>SetItemText&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">pub </span>index: u32,
-	<span class="kw">pub </span>lvitem: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>LVITEM&lt;<span class="lifetime">&#39;a</span>&gt;,
+	<span class="kw">pub </span>lvitem: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>LVITEM&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>SetItemText&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>SetItemText&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5650,11 +5650,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>SetTileInfo&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span>LVTILEINFO&lt;<span class="lifetime">&#39;a</span>&gt;,
+</span><span class="kw">pub struct </span>SetTileInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>LVTILEINFO&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>SetTileInfo&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>SetTileInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5674,11 +5674,11 @@
 /// message parameters.
 ///
 /// Return type: `SysResult&lt;()&gt;`.
-</span><span class="kw">pub struct </span>SetTileViewInfo&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>LVTILEVIEWINFO,
+</span><span class="kw">pub struct </span>SetTileViewInfo&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>LVTILEVIEWINFO,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>SetTileViewInfo&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetTileViewInfo&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5698,11 +5698,11 @@
 /// message parameters.
 ///
 /// Return type: `Option&lt;HWND&gt;`.
-</span><span class="kw">pub struct </span>SetTooltips&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>htooltips: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>HWND&gt;,
+</span><span class="kw">pub struct </span>SetTooltips&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>htooltips: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>HWND&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>SetTooltips&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetTooltips&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HWND&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5770,11 +5770,11 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>SetWorkAreas&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>rects: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>[RECT]&gt;,
+</span><span class="kw">pub struct </span>SetWorkAreas&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>rects: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>[RECT]&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>SetWorkAreas&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetWorkAreas&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -5869,11 +5869,11 @@
 /// message parameters.
 ///
 /// Return type: `Option&lt;u32&gt;`.
-</span><span class="kw">pub struct </span>SubItemHitTest&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>LVHITTESTINFO,
+</span><span class="kw">pub struct </span>SubItemHitTest&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>LVHITTESTINFO,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>SubItemHitTest&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SubItemHitTest&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;u32&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {

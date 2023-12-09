@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\structs.rs`."><title>structs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e6a78389201e676c.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (87e1447aa 2023-11-30)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\structs.rs`."><title>structs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (f967532a4 2023-12-08)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1578,27 +1578,27 @@
 <span class="doccomment">/// [`EDITBALLOONTIP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-editballoontip)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>EDITBALLOONTIP&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+</span><span class="kw">pub struct </span>EDITBALLOONTIP&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	cbStruct: u32,
 	pszTitle: <span class="kw-2">*mut </span>u16,
 	pszText: <span class="kw-2">*mut </span>u16,
 	<span class="kw">pub </span>ttiIcon: co::TTI,
 
-	_pszTitle: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
-	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>u16&gt;,
+	_pszTitle: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default_with_size!</span>(EDITBALLOONTIP, cbStruct, <span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>);
+<span class="macro">impl_default_with_size!</span>(EDITBALLOONTIP, cbStruct, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; EDITBALLOONTIP&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, pszTitle, set_pszTitle);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;b</span>, pszText, set_pszText);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; EDITBALLOONTIP&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pszTitle, set_pszTitle);
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'b</span>, pszText, set_pszText);
 }
 
 <span class="doccomment">/// [`HDITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-hditemw)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>HDITEM&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>HDITEM&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>mask: co::HDI,
 	<span class="kw">pub </span>cxy: i32,
 	pszText: <span class="kw-2">*mut </span>u16,
@@ -1612,13 +1612,13 @@
 	<span class="kw">pub </span>pvFilter: <span class="kw-2">*mut </span>std::ffi::c_void,
 	<span class="kw">pub </span>state: co::HDIS,
 
-	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(HDITEM, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(HDITEM, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; HDITEM&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; HDITEM&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 <span class="doccomment">/// [`HDHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-hdhittestinfo)
@@ -1634,19 +1634,19 @@
 <span class="doccomment">/// [`HDLAYOUT`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-hdlayout)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>HDLAYOUT&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+</span><span class="kw">pub struct </span>HDLAYOUT&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	prc: <span class="kw-2">*mut </span>RECT,
 	pwpos: <span class="kw-2">*mut </span>WINDOWPOS,
 
-	_prc: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>RECT&gt;,
-	_pwpos: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>WINDOWPOS&gt;,
+	_prc: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT&gt;,
+	_pwpos: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>WINDOWPOS&gt;,
 }
 
-<span class="macro">impl_default!</span>(HDLAYOUT, <span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>);
+<span class="macro">impl_default!</span>(HDLAYOUT, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; HDLAYOUT&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
-	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, prc, set_prc, RECT);
-	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">&#39;b</span>, pwpos, set_pwpos, WINDOWPOS);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; HDLAYOUT&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">'a</span>, prc, set_prc, RECT);
+	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">'b</span>, pwpos, set_pwpos, WINDOWPOS);
 }
 
 <span class="doccomment">/// [`INITCOMMONCONTROLSEX`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-initcommoncontrolsex)
@@ -1681,7 +1681,7 @@
 <span class="doccomment">/// [`LVBKIMAGE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvbkimagew)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>LVBKIMAGE&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>LVBKIMAGE&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>uFlags: co::LVBKIF,
 	<span class="kw">pub </span>hbm: HBITMAP,
 	pszImage: <span class="kw-2">*mut </span>u16,
@@ -1689,19 +1689,19 @@
 	<span class="kw">pub </span>xOffsetPercent: i32,
 	<span class="kw">pub </span>yOffsetPercent: i32,
 
-	_pszImage: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszImage: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(LVBKIMAGE, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(LVBKIMAGE, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; LVBKIMAGE&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;a</span>, pszImage, set_pszImage, raw_pszImage, cchImageMax);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; LVBKIMAGE&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'a</span>, pszImage, set_pszImage, raw_pszImage, cchImageMax);
 }
 
 <span class="doccomment">/// [`LVCOLUMN`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvcolumnw)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>LVCOLUMN&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>LVCOLUMN&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>mask: co::LVCF,
 	<span class="kw">pub </span>fmt: co::LVCFMT_C,
 	<span class="kw">pub </span>cx: i32,
@@ -1714,56 +1714,56 @@
 	<span class="kw">pub </span>cxDefault: i32,
 	<span class="kw">pub </span>cxIdeal: i32,
 
-	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(LVCOLUMN, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(LVCOLUMN, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; LVCOLUMN&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; LVCOLUMN&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 <span class="doccomment">/// [`LVFINDINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfindinfow)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>LVFINDINFO&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>LVFINDINFO&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>flags: co::LVFI,
 	psz: <span class="kw-2">*mut </span>u16,
 	<span class="kw">pub </span>lParam: isize,
 	<span class="kw">pub </span>pt: POINT,
 	<span class="kw">pub </span>vkDirection: co::VK_DIR,
 
-	_psz: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_psz: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(LVFINDINFO, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(LVFINDINFO, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; LVFINDINFO&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, psz, set_psz);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; LVFINDINFO&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, psz, set_psz);
 }
 
 <span class="doccomment">/// [`LVFOOTERINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfooterinfo)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>LVFOOTERINFO&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>LVFOOTERINFO&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>mask: co::LVFF,
 	pszText: <span class="kw-2">*mut </span>u16,
 	cchTextMax: i32,
 	<span class="kw">pub </span>cItems: u32,
 
-	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(LVFOOTERINFO, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(LVFOOTERINFO, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; LVFOOTERINFO&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; LVFOOTERINFO&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 <span class="doccomment">/// [`LVFOOTERITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvfooteritem)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>LVFOOTERITEM&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>LVFOOTERITEM&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>mask: co::LVFIF,
 	<span class="kw">pub </span>iItem: i32,
 	pszText: <span class="kw-2">*mut </span>u16,
@@ -1771,19 +1771,19 @@
 	<span class="kw">pub </span>state: co::LVFIS,
 	<span class="kw">pub </span>stateMask: co::LVFIS,
 
-	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(LVFOOTERITEM, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(LVFOOTERITEM, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; LVFOOTERITEM&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; LVFOOTERITEM&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 <span class="doccomment">/// [`LVGROUP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvgroup)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>LVGROUP&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>&gt; {
+</span><span class="kw">pub struct </span>LVGROUP&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt; {
 	cbSize: u32,
 	<span class="kw">pub </span>mask: co::LVGF,
 	pszHeader: <span class="kw-2">*mut </span>u16,
@@ -1809,25 +1809,25 @@
 	pszSubsetTitle: <span class="kw-2">*mut </span>u16,
 	cchSubsetTitle: i32,
 
-	_pszHeader: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
-	_pszFooter: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>u16&gt;,
-	_pszSubtitle: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;c </span><span class="kw-2">mut </span>u16&gt;,
-	_pszTask: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;d </span><span class="kw-2">mut </span>u16&gt;,
-	_pszDescriptionTop: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;e </span><span class="kw-2">mut </span>u16&gt;,
-	_pszDescriptionBottom: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;f </span><span class="kw-2">mut </span>u16&gt;,
-	_pszSubsetTitle: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;g </span><span class="kw-2">mut </span>u16&gt;,
+	_pszHeader: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszFooter: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>u16&gt;,
+	_pszSubtitle: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'c </span><span class="kw-2">mut </span>u16&gt;,
+	_pszTask: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'d </span><span class="kw-2">mut </span>u16&gt;,
+	_pszDescriptionTop: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'e </span><span class="kw-2">mut </span>u16&gt;,
+	_pszDescriptionBottom: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'f </span><span class="kw-2">mut </span>u16&gt;,
+	_pszSubsetTitle: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'g </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default_with_size!</span>(LVGROUP, cbSize, <span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>);
+<span class="macro">impl_default_with_size!</span>(LVGROUP, cbSize, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>&gt; LVGROUP&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>&gt; {
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;a</span>, pszHeader, set_pszHeader, raw_pszHeader, cchHeader);
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;b</span>, pszFooter, set_pszFooter, raw_pszFooter, cchFooter);
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;c</span>, pszSubtitle, set_pszSubtitle, raw_pszSubtitle, cchSubtitle);
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;d</span>, pszTask, set_pszTask, raw_pszTask, cchTask);
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;e</span>, pszDescriptionTop, set_pszDescriptionTop, raw_pszDescriptionTop, cchDescriptionTop);
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;f</span>, pszDescriptionBottom, set_pszDescriptionBottom, raw_pszDescriptionBottom, cchDescriptionBottom);
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;g</span>, pszSubsetTitle, set_pszSubsetTitle, raw_pszSubsetTitle, cchSubsetTitle);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt; LVGROUP&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt; {
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'a</span>, pszHeader, set_pszHeader, raw_pszHeader, cchHeader);
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'b</span>, pszFooter, set_pszFooter, raw_pszFooter, cchFooter);
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'c</span>, pszSubtitle, set_pszSubtitle, raw_pszSubtitle, cchSubtitle);
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'d</span>, pszTask, set_pszTask, raw_pszTask, cchTask);
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'e</span>, pszDescriptionTop, set_pszDescriptionTop, raw_pszDescriptionTop, cchDescriptionTop);
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'f</span>, pszDescriptionBottom, set_pszDescriptionBottom, raw_pszDescriptionBottom, cchDescriptionBottom);
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'g</span>, pszSubsetTitle, set_pszSubsetTitle, raw_pszSubsetTitle, cchSubsetTitle);
 }
 
 <span class="doccomment">/// [`LVGROUPMETRICS`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvgroupmetrics)
@@ -1865,18 +1865,18 @@
 <span class="doccomment">/// [`LVINSERTGROUPSORTED`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvinsertgroupsorted)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>LVINSERTGROUPSORTED&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>&gt; {
+</span><span class="kw">pub struct </span>LVINSERTGROUPSORTED&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt; {
 	<span class="kw">pub </span>pfnGroupCompare: <span class="prelude-ty">Option</span>&lt;PFNLVGROUPCOMPARE&gt;,
 	<span class="kw">pub </span>pvData: usize,
-	<span class="kw">pub </span>lvGroup: LVGROUP&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>&gt;,
+	<span class="kw">pub </span>lvGroup: LVGROUP&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>&gt; Default <span class="kw">for </span>LVINSERTGROUPSORTED&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt; Default <span class="kw">for </span>LVINSERTGROUPSORTED&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt; {
 	<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			pfnGroupCompare: <span class="prelude-val">None</span>,
 			pvData: <span class="number">0</span>,
-			lvGroup: LVGROUP::default(), <span class="comment">// has cbSize, so we can&#39;t use impl_default_size macro
+			lvGroup: LVGROUP::default(), <span class="comment">// has cbSize, so we can't use impl_default_size macro
 		</span>}
 	}
 }
@@ -1896,7 +1896,7 @@
 <span class="doccomment">/// [`LVITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemw)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>LVITEM&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>LVITEM&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>mask: co::LVIF,
 	<span class="kw">pub </span>iItem: i32,
 	<span class="kw">pub </span>iSubItem: i32,
@@ -1913,13 +1913,13 @@
 	<span class="kw">pub </span>piColFmt: <span class="kw-2">*mut </span>co::LVCFMT_I,
 	<span class="kw">pub </span>iGroup: i32,
 
-	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(LVITEM, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(LVITEM, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; LVITEM&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; LVITEM&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 <span class="doccomment">/// [`LVITEMINDEX`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvitemindex)
@@ -1934,41 +1934,41 @@
 <span class="doccomment">/// [`LVSETINFOTIP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvsetinfotip)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>LVSETINFOTIP&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>LVSETINFOTIP&lt;<span class="lifetime">'a</span>&gt; {
 	cbSize: u32,
 	<span class="kw">pub </span>dwFlags: u32, <span class="comment">// unspecified
 	</span>pszText: <span class="kw-2">*mut </span>u16,
 	<span class="kw">pub </span>iItem: i32,
 	<span class="kw">pub </span>iSubItem: i32,
 
-	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default_with_size!</span>(LVSETINFOTIP, cbSize, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default_with_size!</span>(LVSETINFOTIP, cbSize, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; LVSETINFOTIP&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, pszText, set_pszText);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; LVSETINFOTIP&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pszText, set_pszText);
 }
 
 <span class="doccomment">/// [`LVTILEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvtileinfo)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>LVTILEINFO&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>LVTILEINFO&lt;<span class="lifetime">'a</span>&gt; {
 	cbSize: u32,
 	<span class="kw">pub </span>iItem: i32,
 	cColumns: u32,
 	puColumns: <span class="kw-2">*mut </span>u32,
 	piColFmt: <span class="kw-2">*mut </span>co::LVCFMT_C,
 
-	_puColumns: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u32&gt;,
+	_puColumns: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u32&gt;,
 }
 
-<span class="macro">impl_default_with_size!</span>(LVTILEINFO, cbSize, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default_with_size!</span>(LVTILEINFO, cbSize, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; LVTILEINFO&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; LVTILEINFO&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="doccomment">/// Returns the `puColumns` field.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>puColumns(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>[u32]&gt; {
+	</span><span class="kw">pub fn </span>puColumns(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>[u32]&gt; {
 		<span class="kw">unsafe </span>{
 			<span class="self">self</span>.puColumns.as_mut()
 				.map(|<span class="kw">_</span>| std::slice::from_raw_parts_mut(<span class="self">self</span>.puColumns, <span class="self">self</span>.cColumns <span class="kw">as _</span>))
@@ -1977,7 +1977,7 @@
 
 	<span class="doccomment">/// Returns the `piColFmt` field.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>piColFmt(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>[co::LVCFMT_C]&gt; {
+	</span><span class="kw">pub fn </span>piColFmt(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>[co::LVCFMT_C]&gt; {
 		<span class="kw">unsafe </span>{
 			<span class="self">self</span>.puColumns.as_mut()
 				.map(|<span class="kw">_</span>| std::slice::from_raw_parts_mut(<span class="self">self</span>.piColFmt, <span class="self">self</span>.cColumns <span class="kw">as _</span>))
@@ -1987,11 +1987,11 @@
 	<span class="doccomment">/// Sets the `puColumns` and `piColFmt` fields. The slices must have the
 	/// same length.
 	</span><span class="kw">pub fn </span>set_puColumns_piColFmt(<span class="kw-2">&amp;mut </span><span class="self">self</span>,
-		val: <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>[u32], <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>[co::LVCFMT_C])&gt;,
+		val: <span class="prelude-ty">Option</span>&lt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>[u32], <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>[co::LVCFMT_C])&gt;,
 	) {
 		<span class="kw">if let </span><span class="prelude-val">Some</span>(val) = val {
 			<span class="kw">if </span>val.<span class="number">0</span>.len() != val.<span class="number">1</span>.len() {
-				<span class="macro">panic!</span>(<span class="string">&quot;Different slice lengths: {} and {}.&quot;</span>, val.<span class="number">0</span>.len(), val.<span class="number">1</span>.len());
+				<span class="macro">panic!</span>(<span class="string">"Different slice lengths: {} and {}."</span>, val.<span class="number">0</span>.len(), val.<span class="number">1</span>.len());
 			}
 			<span class="self">self</span>.cColumns = val.<span class="number">0</span>.len() <span class="kw">as _</span>;
 			<span class="self">self</span>.puColumns = val.<span class="number">0</span>.as_mut_ptr();
@@ -2021,7 +2021,7 @@
 <span class="doccomment">/// [`MCGRIDINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mcgridinfo)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>MCGRIDINFO&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>MCGRIDINFO&lt;<span class="lifetime">'a</span>&gt; {
 	cbSize: u32,
 	<span class="kw">pub </span>dwPart: co::MCGIP,
 	<span class="kw">pub </span>dwFlags: co::MCGIF,
@@ -2035,14 +2035,14 @@
 	pszName: <span class="kw-2">*mut </span>u16,
 	cchName: usize,
 
-	_pszName: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszName: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default_with_size!</span>(MCGRIDINFO, cbSize, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default_with_size!</span>(MCGRIDINFO, cbSize, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MCGRIDINFO&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MCGRIDINFO&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="macro">pub_fn_bool_get_set!</span>(bSelected, set_bSelected);
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;a</span>, pszName, set_pszName, raw_pszName, cchName);
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'a</span>, pszName, set_pszName, raw_pszName, cchName);
 }
 
 <span class="doccomment">/// [`MCHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mchittestinfo)
@@ -2075,7 +2075,7 @@
 	/// Panics if `index` is greater than 31.
 	</span><span class="kw">pub fn </span>get_day(<span class="kw-2">&amp;</span><span class="self">self</span>, index: u8) -&gt; bool {
 		<span class="kw">if </span>index &gt; <span class="number">31 </span>{
-			<span class="macro">panic!</span>(<span class="string">&quot;MONTHDAYSTATE max index is 31, tried to get {}.&quot;</span>, index)
+			<span class="macro">panic!</span>(<span class="string">"MONTHDAYSTATE max index is 31, tried to get {}."</span>, index)
 		} <span class="kw">else </span>{
 			((<span class="self">self</span>.<span class="number">0 </span>&gt;&gt; index) &amp; <span class="number">1</span>) != <span class="number">0
 		</span>}
@@ -2088,7 +2088,7 @@
 	/// Panics if `index` is greater than 31.
 	</span><span class="kw">pub fn </span>set_day(<span class="kw-2">&amp;mut </span><span class="self">self</span>, index: u8, state: bool) {
 		<span class="kw">if </span>index &gt; <span class="number">31 </span>{
-			<span class="macro">panic!</span>(<span class="string">&quot;MONTHDAYSTATE max index is 31, tried to set {}.&quot;</span>, index)
+			<span class="macro">panic!</span>(<span class="string">"MONTHDAYSTATE max index is 31, tried to set {}."</span>, index)
 		} <span class="kw">else if </span>state {
 			<span class="self">self</span>.<span class="number">0 </span>|= <span class="number">1 </span>&lt;&lt; index;
 		} <span class="kw">else </span>{
@@ -2148,20 +2148,20 @@
 <span class="doccomment">/// [`NMDATETIMEFORMAT`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimeformatw)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>NMDATETIMEFORMAT&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>NMDATETIMEFORMAT&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>nmhdr: NMHDR,
 	pszFormat: <span class="kw-2">*mut </span>u16,
 	<span class="kw">pub </span>st: SYSTEMTIME,
 	pszDisplay: <span class="kw-2">*mut </span>u16,
 	szDisplay: [u16; <span class="number">64</span>], <span class="comment">// used as a buffer to pszDisplay
 
-	</span>_pszFormat: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	</span>_pszFormat: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(NMDATETIMEFORMAT, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(NMDATETIMEFORMAT, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; NMDATETIMEFORMAT&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, pszFormat, set_pszFormat);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; NMDATETIMEFORMAT&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pszFormat, set_pszFormat);
 
 	<span class="doccomment">/// Returns the `pszDisplay` field.
 	</span><span class="attr">#[must_use]
@@ -2178,72 +2178,72 @@
 <span class="doccomment">/// [`NMDATETIMEFORMATQUERY`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimeformatqueryw)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>NMDATETIMEFORMATQUERY&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>NMDATETIMEFORMATQUERY&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>nmhdr: NMHDR,
 	pszFormat: <span class="kw-2">*mut </span>u16,
 	<span class="kw">pub </span>szMax: SIZE,
 
-	_pszFormat: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszFormat: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(NMDATETIMEFORMATQUERY, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(NMDATETIMEFORMATQUERY, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; NMDATETIMEFORMATQUERY&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, pszFormat, set_pszFormat);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; NMDATETIMEFORMATQUERY&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pszFormat, set_pszFormat);
 }
 
 <span class="doccomment">/// [`NMDATETIMESTRING`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimestringw)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>NMDATETIMESTRING&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>NMDATETIMESTRING&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>nmhdr: NMHDR,
 	pszUserString: <span class="kw-2">*mut </span>u16,
 	<span class="kw">pub </span>st: SYSTEMTIME,
 	<span class="kw">pub </span>dwFlags: co::GDT,
 
-	_pszUserString: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszUserString: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(NMDATETIMESTRING, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(NMDATETIMESTRING, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; NMDATETIMESTRING&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, pszUserString, set_pszUserString);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; NMDATETIMESTRING&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pszUserString, set_pszUserString);
 }
 
 <span class="doccomment">/// [`NMDATETIMEWMKEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdatetimewmkeydownw)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>NMDATETIMEWMKEYDOWN&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>NMDATETIMEWMKEYDOWN&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>nmhdr: NMHDR,
 	<span class="kw">pub </span>nVirtKey: i32,
 	pszFormat: <span class="kw-2">*mut </span>u16,
 	<span class="kw">pub </span>st: SYSTEMTIME,
 
-	_pszFormat: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszFormat: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(NMDATETIMEWMKEYDOWN, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(NMDATETIMEWMKEYDOWN, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; NMDATETIMEWMKEYDOWN&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, pszFormat, set_pszFormat);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; NMDATETIMEWMKEYDOWN&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pszFormat, set_pszFormat);
 }
 
 <span class="doccomment">/// [`NMDAYSTATE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmdaystate)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>NMDAYSTATE&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>NMDAYSTATE&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>nmhdr: NMHDR,
 	<span class="kw">pub </span>stStart: SYSTEMTIME,
 	cDayState: i32,
 	prgDayState: <span class="kw-2">*mut </span>MONTHDAYSTATE,
 
-	_prgDayState: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>MONTHDAYSTATE&gt;,
+	_prgDayState: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>MONTHDAYSTATE&gt;,
 }
 
-<span class="macro">impl_default!</span>(NMDAYSTATE, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(NMDAYSTATE, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; NMDAYSTATE&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_array_buf_get_set!</span>(<span class="lifetime">&#39;a</span>, prgDayState, set_prgDayState, cDayState, MONTHDAYSTATE);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; NMDAYSTATE&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_array_buf_get_set!</span>(<span class="lifetime">'a</span>, prgDayState, set_prgDayState, cDayState, MONTHDAYSTATE);
 }
 
 <span class="doccomment">/// [`NMHDR`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nmhdr)
@@ -2292,7 +2292,7 @@
 <span class="doccomment">/// [`NMOBJECTNOTIFY`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmobjectnotify)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>NMOBJECTNOTIFY&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>NMOBJECTNOTIFY&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>hdr: NMHDR,
 	<span class="kw">pub </span>iItem: i32,
 	piid: <span class="kw-2">*mut </span>co::IID,
@@ -2300,14 +2300,14 @@
 	<span class="kw">pub </span>hrResult: co::HRESULT,
 	<span class="kw">pub </span>dwFlags: u32,
 
-	_piid: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>co::IID&gt;,
+	_piid: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>co::IID&gt;,
 }
 
-<span class="macro">impl_default!</span>(NMOBJECTNOTIFY, <span class="lifetime">&#39;a</span>);
-<span class="macro">impl_drop_comptr!</span>(Object, NMOBJECTNOTIFY, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(NMOBJECTNOTIFY, <span class="lifetime">'a</span>);
+<span class="macro">impl_drop_comptr!</span>(Object, NMOBJECTNOTIFY, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; NMOBJECTNOTIFY&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, piid, set_piid, co::IID);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; NMOBJECTNOTIFY&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">'a</span>, piid, set_piid, co::IID);
 	<span class="macro">pub_fn_comptr_get_set!</span>(Object, set_Object, ole_IUnknown);
 }
 
@@ -2372,9 +2372,9 @@
 <span class="doccomment">/// [`NMLVDISPINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvdispinfow)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>NMLVDISPINFO&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>NMLVDISPINFO&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>hdr: NMHDR,
-	<span class="kw">pub </span>item: LVITEM&lt;<span class="lifetime">&#39;a</span>&gt;,
+	<span class="kw">pub </span>item: LVITEM&lt;<span class="lifetime">'a</span>&gt;,
 }
 
 <span class="doccomment">/// [`NMLVEMPTYMARKUP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvemptymarkup)
@@ -2395,16 +2395,16 @@
 <span class="doccomment">/// [`NMLVFINDITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvfinditemw)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>NMLVFINDITEM&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>NMLVFINDITEM&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>hdr: NMHDR,
 	<span class="kw">pub </span>iStart: i32,
-	<span class="kw">pub </span>lvfi: LVFINDINFO&lt;<span class="lifetime">&#39;a</span>&gt;,
+	<span class="kw">pub </span>lvfi: LVFINDINFO&lt;<span class="lifetime">'a</span>&gt;,
 }
 
 <span class="doccomment">/// [`NMLVGETINFOTIP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvgetinfotipw)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>NMLVGETINFOTIP&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>NMLVGETINFOTIP&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>hdr: NMHDR,
 	<span class="kw">pub </span>dwFlags: co::LVGIT,
 	pszText: <span class="kw-2">*mut </span>u16,
@@ -2413,13 +2413,13 @@
 	<span class="kw">pub </span>iSubItem: i32,
 	<span class="kw">pub </span>lParam: isize,
 
-	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(NMLVGETINFOTIP, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(NMLVGETINFOTIP, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; NMLVGETINFOTIP&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; NMLVGETINFOTIP&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 <span class="doccomment">/// [`NMLVKEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmlvkeydown)
@@ -2506,11 +2506,11 @@
 <span class="doccomment">/// [`NMTREEVIEW`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtreevieww)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>NMTREEVIEW&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+</span><span class="kw">pub struct </span>NMTREEVIEW&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">pub </span>hdr: NMHDR,
 	<span class="kw">pub </span>action: u32, <span class="comment">// actual type varies
-	</span><span class="kw">pub </span>itemOld: TVITEM&lt;<span class="lifetime">&#39;a</span>&gt;,
-	<span class="kw">pub </span>itemNew: TVITEM&lt;<span class="lifetime">&#39;b</span>&gt;,
+	</span><span class="kw">pub </span>itemOld: TVITEM&lt;<span class="lifetime">'a</span>&gt;,
+	<span class="kw">pub </span>itemNew: TVITEM&lt;<span class="lifetime">'b</span>&gt;,
 	<span class="kw">pub </span>ptDrag: POINT,
 }
 
@@ -2566,24 +2566,24 @@
 <span class="doccomment">/// [`TASKDIALOG_BUTTON`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialog_button)
 /// struct.
 </span><span class="attr">#[repr(C, packed)]
-</span><span class="kw">pub struct </span>TASKDIALOG_BUTTON&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>TASKDIALOG_BUTTON&lt;<span class="lifetime">'a</span>&gt; {
 	nButtonID: i32,
 	pszButtonText: <span class="kw-2">*mut </span>u16,
 
-	_pszButtonText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszButtonText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(TASKDIALOG_BUTTON, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(TASKDIALOG_BUTTON, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TASKDIALOG_BUTTON&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TASKDIALOG_BUTTON&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="macro">pub_fn_resource_id_get_set!</span>(nButtonID, set_nButtonID);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, pszButtonText, set_pszButtonText);
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pszButtonText, set_pszButtonText);
 }
 
 <span class="doccomment">/// [`TASKDIALOGCONFIG`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialogconfig)
 /// struct.
 </span><span class="attr">#[repr(C, packed)]
-</span><span class="kw">pub struct </span>TASKDIALOGCONFIG&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>, <span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;j</span>&gt; {
+</span><span class="kw">pub struct </span>TASKDIALOGCONFIG&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>, <span class="lifetime">'i</span>, <span class="lifetime">'j</span>&gt; {
 	cbSize: u32,
 	<span class="kw">pub </span>hwndParent: HWND,
 	<span class="kw">pub </span>hInstance: HINSTANCE,
@@ -2594,10 +2594,10 @@
 	</span>pszMainInstruction: <span class="kw-2">*mut </span>u16,
 	pszContent: <span class="kw-2">*mut </span>u16,
 	cButtons: u32,
-	pButtons: <span class="kw-2">*mut </span>TASKDIALOG_BUTTON&lt;<span class="lifetime">&#39;d</span>&gt;,
+	pButtons: <span class="kw-2">*mut </span>TASKDIALOG_BUTTON&lt;<span class="lifetime">'d</span>&gt;,
 	<span class="kw">pub </span>nDefaultButton: i32, <span class="comment">// actually co::DLGID, which is u16
 	</span>cRadioButtons: u32,
-	pRadioButtons: <span class="kw-2">*mut </span>TASKDIALOG_BUTTON&lt;<span class="lifetime">&#39;e</span>&gt;,
+	pRadioButtons: <span class="kw-2">*mut </span>TASKDIALOG_BUTTON&lt;<span class="lifetime">'e</span>&gt;,
 	<span class="kw">pub </span>nDefaultRadioButton: i32,
 	pszVerificationText: <span class="kw-2">*mut </span>u16,
 	pszExpandedInformation: <span class="kw-2">*mut </span>u16,
@@ -2609,24 +2609,24 @@
 	<span class="kw">pub </span>lpCallbackData: usize,
 	<span class="kw">pub </span>cxWidth: u32,
 
-	_pszWindowTitle: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
-	_pszMainInstruction: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;b </span><span class="kw-2">mut </span>u16&gt;,
-	_pszContent: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;c </span><span class="kw-2">mut </span>u16&gt;,
-	_pButtons: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;d </span><span class="kw-2">mut </span>TASKDIALOG_BUTTON&lt;<span class="lifetime">&#39;d</span>&gt;&gt;,
-	_pRadioButtons: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;e </span><span class="kw-2">mut </span>TASKDIALOG_BUTTON&lt;<span class="lifetime">&#39;e</span>&gt;&gt;,
-	_pszVerificationText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;f </span><span class="kw-2">mut </span>u16&gt;,
-	_pszExpandedInformation: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;g </span><span class="kw-2">mut </span>u16&gt;,
-	_pszExpandedControlText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;h </span><span class="kw-2">mut </span>u16&gt;,
-	_pszCollapsedControlText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;i </span><span class="kw-2">mut </span>u16&gt;,
-	_pszFooter: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;j </span><span class="kw-2">mut </span>u16&gt;,
+	_pszWindowTitle: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszMainInstruction: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>u16&gt;,
+	_pszContent: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'c </span><span class="kw-2">mut </span>u16&gt;,
+	_pButtons: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'d </span><span class="kw-2">mut </span>TASKDIALOG_BUTTON&lt;<span class="lifetime">'d</span>&gt;&gt;,
+	_pRadioButtons: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'e </span><span class="kw-2">mut </span>TASKDIALOG_BUTTON&lt;<span class="lifetime">'e</span>&gt;&gt;,
+	_pszVerificationText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'f </span><span class="kw-2">mut </span>u16&gt;,
+	_pszExpandedInformation: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'g </span><span class="kw-2">mut </span>u16&gt;,
+	_pszExpandedControlText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'h </span><span class="kw-2">mut </span>u16&gt;,
+	_pszCollapsedControlText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'i </span><span class="kw-2">mut </span>u16&gt;,
+	_pszFooter: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'j </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default_with_size!</span>(TASKDIALOGCONFIG, cbSize, <span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>, <span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;j</span>);
+<span class="macro">impl_default_with_size!</span>(TASKDIALOGCONFIG, cbSize, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>, <span class="lifetime">'i</span>, <span class="lifetime">'j</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>, <span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;j</span>&gt;
-	TASKDIALOGCONFIG&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>, <span class="lifetime">&#39;d</span>, <span class="lifetime">&#39;e</span>, <span class="lifetime">&#39;f</span>, <span class="lifetime">&#39;g</span>, <span class="lifetime">&#39;h</span>, <span class="lifetime">&#39;i</span>, <span class="lifetime">&#39;j</span>&gt;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>, <span class="lifetime">'i</span>, <span class="lifetime">'j</span>&gt;
+	TASKDIALOGCONFIG&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>, <span class="lifetime">'i</span>, <span class="lifetime">'j</span>&gt;
 {
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, pszWindowTitle, set_pszWindowTitle);
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pszWindowTitle, set_pszWindowTitle);
 
 	<span class="doccomment">/// Returns the `pszMainIcon` field.
 	</span><span class="attr">#[must_use]
@@ -2652,14 +2652,14 @@
 		}
 	}
 
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;b</span>, pszMainInstruction, set_pszMainInstruction);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;c</span>, pszContent, set_pszContent);
-	<span class="macro">pub_fn_array_buf_get_set!</span>(<span class="lifetime">&#39;d</span>, pButtons, set_pButtons, cButtons, TASKDIALOG_BUTTON);
-	<span class="macro">pub_fn_array_buf_get_set!</span>(<span class="lifetime">&#39;e</span>, pRadioButtons, set_pRadioButtons, cRadioButtons, TASKDIALOG_BUTTON);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;f</span>, pszVerificationText, set_pszVerificationText);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;g</span>, pszExpandedInformation, set_pszExpandedInformation);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;h</span>, pszExpandedControlText, set_pszExpandedControlText);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;i</span>, pszCollapsedControlText, set_pszCollapsedControlText);
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'b</span>, pszMainInstruction, set_pszMainInstruction);
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'c</span>, pszContent, set_pszContent);
+	<span class="macro">pub_fn_array_buf_get_set!</span>(<span class="lifetime">'d</span>, pButtons, set_pButtons, cButtons, TASKDIALOG_BUTTON);
+	<span class="macro">pub_fn_array_buf_get_set!</span>(<span class="lifetime">'e</span>, pRadioButtons, set_pRadioButtons, cRadioButtons, TASKDIALOG_BUTTON);
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'f</span>, pszVerificationText, set_pszVerificationText);
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'g</span>, pszExpandedInformation, set_pszExpandedInformation);
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'h</span>, pszExpandedControlText, set_pszExpandedControlText);
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'i</span>, pszCollapsedControlText, set_pszCollapsedControlText);
 
 	<span class="doccomment">/// Returns the `pszFooterIcon` field.
 	</span><span class="attr">#[must_use]
@@ -2680,7 +2680,7 @@
 		}
 	}
 
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;j</span>, pszFooter, set_pszFooter);
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'j</span>, pszFooter, set_pszFooter);
 }
 
 <span class="doccomment">/// [`TBADDBITMAP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbaddbitmap)
@@ -2733,7 +2733,7 @@
 <span class="doccomment">/// [`TBBUTTON`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbbutton)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>TBBUTTON&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>TBBUTTON&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>iBitmap: i32,
 	<span class="kw">pub </span>idCommand: i32,
 	<span class="kw">pub </span>fsState: co::TBSTATE,
@@ -2742,12 +2742,12 @@
 	</span><span class="kw">pub </span>dwData: usize,
 	iString: isize,
 
-	_iString: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_iString: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(TBBUTTON, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(TBBUTTON, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TBBUTTON&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TBBUTTON&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="doccomment">/// Returns the `iString` field.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>iString(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; IdxStr {
@@ -2759,7 +2759,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `iString` field.
-	</span><span class="kw">pub fn </span>set_iString(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>IdxStr) {
+	</span><span class="kw">pub fn </span>set_iString(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>IdxStr) {
 		<span class="self">self</span>.iString = <span class="kw">match </span>val {
 			IdxStr::Idx(i) =&gt; <span class="kw-2">*</span>i <span class="kw">as _</span>,
 			IdxStr::Str(s) =&gt; <span class="kw">unsafe </span>{ s.as_mut_ptr() <span class="kw">as _ </span>},
@@ -2770,7 +2770,7 @@
 <span class="doccomment">/// [`TBBUTTONINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbbuttoninfow)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>TBBUTTONINFO&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>TBBUTTONINFO&lt;<span class="lifetime">'a</span>&gt; {
 	cbSize: u32,
 	<span class="kw">pub </span>dwMask: co::TBIF,
 	<span class="kw">pub </span>idCommand: i32,
@@ -2782,13 +2782,13 @@
 	pszText: <span class="kw-2">*mut </span>u16,
 	cchText: i32,
 
-	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default_with_size!</span>(TBBUTTONINFO, cbSize, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default_with_size!</span>(TBBUTTONINFO, cbSize, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TBBUTTONINFO&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;a</span>, pszText, set_pszText, raw_pszText, cchText);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TBBUTTONINFO&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'a</span>, pszText, set_pszText, raw_pszText, cchText);
 }
 
 <span class="doccomment">/// [`TBINSERTMARK`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbinsertmark)
@@ -2888,20 +2888,20 @@
 <span class="doccomment">/// [`TBSAVEPARAMS`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbsaveparamsw)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>TBSAVEPARAMS&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>TBSAVEPARAMS&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>hkr: HKEY,
 	pszSubKey: <span class="kw-2">*mut </span>u16,
 	pszValueName: <span class="kw-2">*mut </span>u16,
 
-	_pszSubKey: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
-	_pszValueName: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszSubKey: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszValueName: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(TBSAVEPARAMS, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(TBSAVEPARAMS, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TBSAVEPARAMS&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, pszSubKey, set_pszSubKey);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">&#39;a</span>, pszValueName, set_pszValueName);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TBSAVEPARAMS&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pszSubKey, set_pszSubKey);
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pszValueName, set_pszValueName);
 }
 
 <span class="doccomment">/// [`TCHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tchittestinfo)
@@ -2917,7 +2917,7 @@
 <span class="doccomment">/// [`TCITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tcitemw)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>TCITEM&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>TCITEM&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>mask: co::TCIF,
 	<span class="kw">pub </span>dwState: co::TCIS,
 	<span class="kw">pub </span>dwStateMask: co::TCIS,
@@ -2926,13 +2926,13 @@
 	<span class="kw">pub </span>iImage: i32,
 	<span class="kw">pub </span>lParam: isize,
 
-	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(TCITEM, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(TCITEM, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TCITEM&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TCITEM&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 <span class="doccomment">/// [`TVHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvhittestinfo)
@@ -2947,15 +2947,15 @@
 <span class="doccomment">/// [`TVINSERTSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvinsertstructw)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>TVINSERTSTRUCT&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>TVINSERTSTRUCT&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>hParent: HTREEITEM,
 	hInsertAfter: isize,
-	<span class="kw">pub </span>itemex: TVITEMEX&lt;<span class="lifetime">&#39;a</span>&gt;,
+	<span class="kw">pub </span>itemex: TVITEMEX&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="macro">impl_default!</span>(TVINSERTSTRUCT, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(TVINSERTSTRUCT, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TVINSERTSTRUCT&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TVINSERTSTRUCT&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="doccomment">/// Returns the `hInsertAfter` field.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>hInsertAfter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TreeitemTvi {
@@ -2971,7 +2971,7 @@
 <span class="doccomment">/// [`TVITEMEX`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvitemexw)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>TVITEMEX&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>TVITEMEX&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>mask: co::TVIF,
 	<span class="kw">pub </span>hItem: HTREEITEM,
 	<span class="kw">pub </span>state: co::TVIS,
@@ -2988,19 +2988,19 @@
 	<span class="kw">pub </span>iExpandedImage: i32,
 	iReserved: i32,
 
-	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(TVITEMEX, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(TVITEMEX, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TVITEMEX&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TVITEMEX&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 <span class="doccomment">/// [`TVITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvitemw)
 /// struct.
 </span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>TVITEM&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>TVITEM&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>mask: co::TVIF,
 	<span class="kw">pub </span>hItem: HTREEITEM,
 	<span class="kw">pub </span>state: co::TVIS,
@@ -3012,13 +3012,13 @@
 	<span class="kw">pub </span>cChildren: i32,
 	<span class="kw">pub </span>lParam: isize,
 
-	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>u16&gt;,
+	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default!</span>(TVITEM, <span class="lifetime">&#39;a</span>);
+<span class="macro">impl_default!</span>(TVITEM, <span class="lifetime">'a</span>);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; TVITEM&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">&#39;a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TVITEM&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'a</span>, pszText, set_pszText, raw_pszText, cchTextMax);
 }
 
 <span class="doccomment">/// [`TVSORTCB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tvsortcb)

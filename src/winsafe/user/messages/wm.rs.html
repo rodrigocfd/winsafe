@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\user\messages\wm.rs`."><title>wm.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e6a78389201e676c.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (87e1447aa 2023-11-30)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\user\messages\wm.rs`."><title>wm.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (f967532a4 2023-12-08)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -2323,11 +2323,11 @@
 /// message parameters.
 ///
 /// Return type: `i32`.
-</span><span class="kw">pub struct </span>Create&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>&gt; {
-	<span class="kw">pub </span>createstruct: <span class="kw-2">&amp;</span><span class="lifetime">&#39;c </span>CREATESTRUCT&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt;,
+</span><span class="kw">pub struct </span>Create&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; {
+	<span class="kw">pub </span>createstruct: <span class="kw-2">&amp;</span><span class="lifetime">'c </span>CREATESTRUCT&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>&gt; MsgSend <span class="kw">for </span>Create&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; MsgSend <span class="kw">for </span>Create&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; {
 	<span class="kw">type </span>RetType = i32;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -2343,7 +2343,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>&gt; MsgSendRecv <span class="kw">for </span>Create&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; MsgSendRecv <span class="kw">for </span>Create&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			createstruct: <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>(p.lparam <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>) },
@@ -2355,12 +2355,12 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>DeleteItem&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>DeleteItem&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>control_id: u16,
-	<span class="kw">pub </span>deleteitemstruct: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>DELETEITEMSTRUCT,
+	<span class="kw">pub </span>deleteitemstruct: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>DELETEITEMSTRUCT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>DeleteItem&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>DeleteItem&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -2376,7 +2376,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSendRecv <span class="kw">for </span>DeleteItem&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSendRecv <span class="kw">for </span>DeleteItem&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			control_id: p.wparam <span class="kw">as _</span>,
@@ -2393,12 +2393,12 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>DeviceChange&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>DeviceChange&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>event: co::DBT,
-	<span class="kw">pub </span>data: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>DEV_BROADCAST_HDR&gt;,
+	<span class="kw">pub </span>data: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>DEV_BROADCAST_HDR&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>DeviceChange&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>DeviceChange&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -2414,7 +2414,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSendRecv <span class="kw">for </span>DeviceChange&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSendRecv <span class="kw">for </span>DeviceChange&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			event: <span class="kw">unsafe </span>{ co::DBT::from_raw(p.wparam <span class="kw">as _</span>) },
@@ -2639,13 +2639,13 @@
 /// message parameters.
 ///
 /// Return type: `co::DLGC`.
-</span><span class="kw">pub struct </span>GetDlgCode&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>GetDlgCode&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>vkey_code: co::VK,
-	<span class="kw">pub </span>msg: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>MSG&gt;,
+	<span class="kw">pub </span>msg: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>MSG&gt;,
 	<span class="kw">pub </span>is_query: bool,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetDlgCode&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetDlgCode&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = co::DLGC;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -2661,7 +2661,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSendRecv <span class="kw">for </span>GetDlgCode&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSendRecv <span class="kw">for </span>GetDlgCode&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			vkey_code: <span class="kw">unsafe </span>{ co::VK::from_raw(p.wparam <span class="kw">as _</span>) },
@@ -2706,11 +2706,11 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>GetMinMaxInfo&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>MINMAXINFO,
+</span><span class="kw">pub struct </span>GetMinMaxInfo&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>MINMAXINFO,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetMinMaxInfo&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetMinMaxInfo&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -2726,7 +2726,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSendRecv <span class="kw">for </span>GetMinMaxInfo&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSendRecv <span class="kw">for </span>GetMinMaxInfo&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			info: <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(p.lparam <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>) },
@@ -2756,13 +2756,13 @@
 ///     },
 /// );
 ///
-/// println!(&quot;Text: {}&quot;, buf.to_string());
+/// println!("Text: {}", buf.to_string());
 /// ```
-</span><span class="kw">pub struct </span>GetText&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>buffer: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>[u16], <span class="comment">// can&#39;t be WString because this message can be received
+</span><span class="kw">pub struct </span>GetText&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>buffer: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>[u16], <span class="comment">// can't be WString because this message can be received
 </span>}
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetText&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetText&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = u32;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -2778,7 +2778,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSendRecv <span class="kw">for </span>GetText&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSendRecv <span class="kw">for </span>GetText&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			buffer: <span class="kw">unsafe </span>{ std::slice::from_raw_parts_mut(p.lparam <span class="kw">as _</span>, p.wparam) },
@@ -2818,11 +2818,11 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>GetTitleBarInfoEx&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>TITLEBARINFOEX,
+</span><span class="kw">pub struct </span>GetTitleBarInfoEx&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>TITLEBARINFOEX,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>GetTitleBarInfoEx&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetTitleBarInfoEx&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -2838,7 +2838,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSendRecv <span class="kw">for </span>GetTitleBarInfoEx&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSendRecv <span class="kw">for </span>GetTitleBarInfoEx&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			info: <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(p.lparam <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>) },
@@ -2850,11 +2850,11 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>Help&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>helpinfo: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>HELPINFO,
+</span><span class="kw">pub struct </span>Help&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>helpinfo: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HELPINFO,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>Help&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>Help&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -2870,7 +2870,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSendRecv <span class="kw">for </span>Help&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSendRecv <span class="kw">for </span>Help&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			helpinfo: <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(p.lparam <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>) },
@@ -3204,11 +3204,11 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>Moving&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>window_pos: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>RECT,
+</span><span class="kw">pub struct </span>Moving&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>window_pos: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>Moving&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>Moving&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3224,7 +3224,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSendRecv <span class="kw">for </span>Moving&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSendRecv <span class="kw">for </span>Moving&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			window_pos: <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(p.lparam <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>) },
@@ -3236,11 +3236,11 @@
 /// message parameters.
 ///
 /// Return type: `co::WVR`.
-</span><span class="kw">pub struct </span>NcCalcSize&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
-	<span class="kw">pub </span>data: NccspRect&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt;,
+</span><span class="kw">pub struct </span>NcCalcSize&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="kw">pub </span>data: NccspRect&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSend <span class="kw">for </span>NcCalcSize&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>NcCalcSize&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = co::WVR;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3262,7 +3262,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; MsgSendRecv <span class="kw">for </span>NcCalcSize&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSendRecv <span class="kw">for </span>NcCalcSize&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			data: <span class="kw">match </span>p.wparam {
@@ -3277,11 +3277,11 @@
 /// message parameters.
 ///
 /// Return type: `bool`.
-</span><span class="kw">pub struct </span>NcCreate&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>&gt; {
-	<span class="kw">pub </span>createstruct: <span class="kw-2">&amp;</span><span class="lifetime">&#39;c </span>CREATESTRUCT&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>&gt;,
+</span><span class="kw">pub struct </span>NcCreate&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; {
+	<span class="kw">pub </span>createstruct: <span class="kw-2">&amp;</span><span class="lifetime">'c </span>CREATESTRUCT&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>&gt; MsgSend <span class="kw">for </span>NcCreate&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; MsgSend <span class="kw">for </span>NcCreate&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; {
 	<span class="kw">type </span>RetType = bool;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3297,7 +3297,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>&gt; MsgSendRecv <span class="kw">for </span>NcCreate&lt;<span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;b</span>, <span class="lifetime">&#39;c</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; MsgSendRecv <span class="kw">for </span>NcCreate&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			createstruct: <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>(p.lparam <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>) },
@@ -3432,12 +3432,12 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>PowerBroadcast&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>PowerBroadcast&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>event: co::PBT,
-	<span class="kw">pub </span>data: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>POWERBROADCAST_SETTING&gt;,
+	<span class="kw">pub </span>data: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>POWERBROADCAST_SETTING&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>PowerBroadcast&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>PowerBroadcast&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3453,7 +3453,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSendRecv <span class="kw">for </span>PowerBroadcast&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSendRecv <span class="kw">for </span>PowerBroadcast&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			event: <span class="kw">unsafe </span>{ co::PBT::from_raw(p.wparam <span class="kw">as _</span>) },
@@ -3623,7 +3623,7 @@
 /// let hwnd: w::HWND; // initialized somewhere
 /// # let hwnd = w::HWND::NULL;
 ///
-/// let new_text = w::WString::from_str(&quot;some text&quot;);
+/// let new_text = w::WString::from_str("some text");
 ///
 /// hwnd.SendMessage(
 ///     msg::wm::SetText {
@@ -3632,7 +3632,7 @@
 /// );
 /// ```
 </span><span class="kw">pub struct </span>SetText {
-	<span class="kw">pub </span>text: <span class="kw-2">*const </span>u16, <span class="comment">// can&#39;t be WString because this message can be received
+	<span class="kw">pub </span>text: <span class="kw-2">*const </span>u16, <span class="comment">// can't be WString because this message can be received
 </span>}
 
 <span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetText {
@@ -3737,12 +3737,12 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>Sizing&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>Sizing&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>window_edge: co::WMSZ,
-	<span class="kw">pub </span>coords: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span><span class="kw-2">mut </span>RECT,
+	<span class="kw">pub </span>coords: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>Sizing&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>Sizing&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3758,7 +3758,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSendRecv <span class="kw">for </span>Sizing&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSendRecv <span class="kw">for </span>Sizing&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="kw">unsafe </span>{
 			<span class="self">Self </span>{
@@ -3773,12 +3773,12 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>StyleChanged&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>StyleChanged&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>change: co::GWL_C,
-	<span class="kw">pub </span>stylestruct: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>STYLESTRUCT,
+	<span class="kw">pub </span>stylestruct: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>STYLESTRUCT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>StyleChanged&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>StyleChanged&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3794,7 +3794,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSendRecv <span class="kw">for </span>StyleChanged&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSendRecv <span class="kw">for </span>StyleChanged&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="kw">unsafe </span>{
 			<span class="self">Self </span>{
@@ -3809,12 +3809,12 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>StyleChanging&lt;<span class="lifetime">&#39;a</span>&gt; {
+</span><span class="kw">pub struct </span>StyleChanging&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>change: co::GWL_C,
-	<span class="kw">pub </span>stylestruct: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>STYLESTRUCT,
+	<span class="kw">pub </span>stylestruct: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>STYLESTRUCT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>StyleChanging&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>StyleChanging&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -3830,7 +3830,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSendRecv <span class="kw">for </span>StyleChanging&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSendRecv <span class="kw">for </span>StyleChanging&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="kw">unsafe </span>{
 			<span class="self">Self </span>{
@@ -4039,11 +4039,11 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>WindowPosChanged&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>windowpos: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>WINDOWPOS,
+</span><span class="kw">pub struct </span>WindowPosChanged&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>windowpos: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>WINDOWPOS,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>WindowPosChanged&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>WindowPosChanged&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4059,7 +4059,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSendRecv <span class="kw">for </span>WindowPosChanged&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSendRecv <span class="kw">for </span>WindowPosChanged&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			windowpos: <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>(p.lparam <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>) },
@@ -4071,11 +4071,11 @@
 /// message parameters.
 ///
 /// Return type: `()`.
-</span><span class="kw">pub struct </span>WindowPosChanging&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub </span>windowpos: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>WINDOWPOS,
+</span><span class="kw">pub struct </span>WindowPosChanging&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub </span>windowpos: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>WINDOWPOS,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSend <span class="kw">for </span>WindowPosChanging&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>WindowPosChanging&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -4091,7 +4091,7 @@
 	}
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; MsgSendRecv <span class="kw">for </span>WindowPosChanging&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSendRecv <span class="kw">for </span>WindowPosChanging&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			windowpos: <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>(p.lparam <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>) },

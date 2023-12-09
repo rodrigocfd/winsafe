@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\list_view_items.rs`."><title>list_view_items.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e6a78389201e676c.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (87e1447aa 2023-11-30)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\list_view_items.rs`."><title>list_view_items.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (f967532a4 2023-12-08)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -317,12 +317,12 @@
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-</span><span class="kw">pub struct </span>ListViewItems&lt;<span class="lifetime">&#39;a</span>&gt; {
-	owner: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>ListView,
+</span><span class="kw">pub struct </span>ListViewItems&lt;<span class="lifetime">'a</span>&gt; {
+	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; ListViewItems&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>ListView) -&gt; <span class="self">Self </span>{
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; ListViewItems&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{ owner }
 	}
 
@@ -348,8 +348,8 @@
 	///
 	/// let new_item = my_list.items().add(
 	///     &amp;[
-	///         &quot;First column text&quot;,
-	///         &quot;Second column text&quot;,
+	///         "First column text",
+	///         "Second column text",
 	///     ],
 	///     None, // no icon; requires a previous set_image_list()
 	/// );
@@ -357,12 +357,12 @@
 	</span><span class="kw">pub fn </span>add(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		texts: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;],
 		icon_index: <span class="prelude-ty">Option</span>&lt;u32&gt;,
-	) -&gt; ListViewItem&lt;<span class="lifetime">&#39;a</span>&gt;
+	) -&gt; ListViewItem&lt;<span class="lifetime">'a</span>&gt;
 	{
 		<span class="kw">if </span>texts.is_empty() {
-			<span class="macro">panic!</span>(<span class="string">&quot;No texts passed when adding a ListView item.&quot;</span>);
+			<span class="macro">panic!</span>(<span class="string">"No texts passed when adding a ListView item."</span>);
 		} <span class="kw">else if </span>texts.len() &gt; <span class="self">self</span>.owner.columns().count() <span class="kw">as </span>usize {
-			<span class="macro">panic!</span>(<span class="string">&quot;Cannot set {} text(s) to {} column(s).&quot;</span>,
+			<span class="macro">panic!</span>(<span class="string">"Cannot set {} text(s) to {} column(s)."</span>,
 				texts.len(), <span class="self">self</span>.owner.columns().count());
 		}
 
@@ -429,7 +429,7 @@
 	<span class="doccomment">/// Searches for an item with the given text, case-insensitive, by sending
 	/// an [`lvm::FindItem`](crate::msg::lvm::FindItem) message.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>find(<span class="kw-2">&amp;</span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+	</span><span class="kw">pub fn </span>find(<span class="kw-2">&amp;</span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">'a</span>&gt;&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::from_str(text);
 
 		<span class="kw">let </span><span class="kw-2">mut </span>lvfi = LVFINDINFO::default();
@@ -447,7 +447,7 @@
 	<span class="doccomment">/// Retrieves the focused item by sending an
 	/// [`lvm::GetNextItem`](crate::msg::lvm::GetNextItem) message.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>focused(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+	</span><span class="kw">pub fn </span>focused(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">'a</span>&gt;&gt; {
 		<span class="self">self</span>.owner.hwnd()
 			.SendMessage(lvm::GetNextItem {
 				initial_index: <span class="prelude-val">None</span>,
@@ -462,7 +462,7 @@
 	/// existing items, an object will still be returned. However, operations
 	/// upon this object will fail.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub const fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, index: u32) -&gt; ListViewItem&lt;<span class="lifetime">&#39;a</span>&gt; {
+	</span><span class="kw">pub const fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, index: u32) -&gt; ListViewItem&lt;<span class="lifetime">'a</span>&gt; {
 		ListViewItem::new(<span class="self">self</span>.owner, index)
 	}
 
@@ -471,7 +471,7 @@
 	///
 	/// `coords` must be relative to the list view.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>hit_test(<span class="kw-2">&amp;</span><span class="self">self</span>, coords: POINT) -&gt; <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">&#39;a</span>&gt;&gt; {
+	</span><span class="kw">pub fn </span>hit_test(<span class="kw-2">&amp;</span><span class="self">self</span>, coords: POINT) -&gt; <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">'a</span>&gt;&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>lvhti = LVHITTESTINFO::default();
 		lvhti.pt = coords;
 
@@ -492,7 +492,7 @@
 	/// # let my_list = gui::ListView::new(&amp;wnd, gui::ListViewOpts::default());
 	///
 	/// for item in my_list.items().iter() {
-	///     println!(&quot;Item {}, text of the first column: {}&quot;,
+	///     println!("Item {}, text of the first column: {}",
 	///         item.index(), item.text(0));
 	/// }
 	/// ```
@@ -513,26 +513,26 @@
 	/// # let my_list = gui::ListView::new(&amp;wnd, gui::ListViewOpts::default());
 	///
 	/// for item in my_list.items().iter_selected() {
-	///     println!(&quot;Selected item {}, text of the first column: {}&quot;,
+	///     println!("Selected item {}, text of the first column: {}",
 	///         item.index(), item.text(0));
 	/// }
 	/// ```
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>iter_selected(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = ListViewItem&lt;<span class="lifetime">&#39;a</span>&gt;&gt; + <span class="lifetime">&#39;a </span>{
+	</span><span class="kw">pub fn </span>iter_selected(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = ListViewItem&lt;<span class="lifetime">'a</span>&gt;&gt; + <span class="lifetime">'a </span>{
 		ListViewItemIter::new(<span class="self">self</span>.owner, co::LVNI::ALL | co::LVNI::SELECTED)
 	}
 
 	<span class="doccomment">/// Retrieves the item of the unique ID by sending an
 	/// [`lvm::MapIdToIndex`](crate::msg::lvm::MapIdToIndex) message.
 	///
-	/// If the item of the given unique ID doesn&#39;t exist anymore, returns
+	/// If the item of the given unique ID doesn't exist anymore, returns
 	/// `None`.
 	///
 	/// # Panics
 	///
-	/// Panics if the given ID doesn&#39;t exist among the items.
+	/// Panics if the given ID doesn't exist among the items.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>map_id_to_index(<span class="kw-2">&amp;</span><span class="self">self</span>, item_id: u32) -&gt; ListViewItem&lt;<span class="lifetime">&#39;a</span>&gt; {
+	</span><span class="kw">pub fn </span>map_id_to_index(<span class="kw-2">&amp;</span><span class="self">self</span>, item_id: u32) -&gt; ListViewItem&lt;<span class="lifetime">'a</span>&gt; {
 		<span class="self">self</span>.get(
 			<span class="self">self</span>.owner.hwnd()
 				.SendMessage(lvm::MapIdToIndex { id: item_id })
@@ -582,14 +582,14 @@
 
 <span class="comment">//------------------------------------------------------------------------------
 
-</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>ListViewItemIter&lt;<span class="lifetime">&#39;a</span>&gt; {
-	owner: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>ListView,
-	current: <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">&#39;a</span>&gt;&gt;,
+</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>ListViewItemIter&lt;<span class="lifetime">'a</span>&gt; {
+	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView,
+	current: <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">'a</span>&gt;&gt;,
 	relationship: co::LVNI,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; Iterator <span class="kw">for </span>ListViewItemIter&lt;<span class="lifetime">&#39;a</span>&gt; {
-	<span class="kw">type </span>Item = ListViewItem&lt;<span class="lifetime">&#39;a</span>&gt;;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>ListViewItemIter&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="kw">type </span>Item = ListViewItem&lt;<span class="lifetime">'a</span>&gt;;
 
 	<span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
 		<span class="self">self</span>.current = <span class="self">self</span>.owner.hwnd()
@@ -603,9 +603,9 @@
 	}
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; ListViewItemIter&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; ListViewItemIter&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(
-		owner: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>ListView,
+		owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView,
 		relationship: co::LVNI,
 	) -&gt; <span class="self">Self
 	</span>{

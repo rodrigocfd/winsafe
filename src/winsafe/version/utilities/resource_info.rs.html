@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\version\utilities\resource_info.rs`."><title>resource_info.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e6a78389201e676c.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (87e1447aa 2023-11-30)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\version\utilities\resource_info.rs`."><title>resource_info.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (f967532a4 2023-12-08)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -152,7 +152,7 @@
 ///
 /// if let Some(ver_info) = res_info.version_info() {
 ///     let ver = ver_info.dwFileVersion();
-///     println!(&quot;Version: {}.{}.{}.{}&quot;,
+///     println!("Version: {}.{}.{}.{}",
 ///         ver[0], ver[1], ver[2], ver[3]);
 /// }
 /// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
@@ -170,10 +170,10 @@
 ///
 /// for block in res_info.blocks() {
 ///     if let Some(product_name) = block.product_name() {
-///         println!(&quot;Product name: {}&quot;, product_name);
+///         println!("Product name: {}", product_name);
 ///     }
 ///     if let Some(copyright) = block.legal_copyright() {
-///         println!(&quot;Copyright: {}&quot;, copyright);
+///         println!("Copyright: {}", copyright);
 ///     }
 /// }
 /// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
@@ -195,11 +195,11 @@
 	/// These blocks allow retrieval of version information strings in their
 	/// respective languages.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>blocks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = ResourceInfoBlock&gt; + <span class="lifetime">&#39;_ </span>{
+	</span><span class="kw">pub fn </span>blocks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = ResourceInfoBlock&gt; + <span class="lifetime">'_ </span>{
 		<span class="kw">unsafe </span>{
 			VarQueryValue::&lt;(LANGID, co::CP)&gt;(
 				<span class="self">self</span>.res_buf.as_slice(),
-				<span class="string">&quot;\\VarFileInfo\\Translation&quot;</span>,
+				<span class="string">"\\VarFileInfo\\Translation"</span>,
 			).ok()
 				.map(|(plangs, sz)|
 					std::slice::from_raw_parts(
@@ -223,7 +223,7 @@
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>version_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>VS_FIXEDFILEINFO&gt; {
 		<span class="kw">unsafe </span>{
-			VarQueryValue::&lt;VS_FIXEDFILEINFO&gt;(<span class="self">self</span>.res_buf.as_slice(), <span class="string">&quot;\\&quot;</span>)
+			VarQueryValue::&lt;VS_FIXEDFILEINFO&gt;(<span class="self">self</span>.res_buf.as_slice(), <span class="string">"\\"</span>)
 				.ok()
 				.map(|(pvsf, <span class="kw">_</span>)| <span class="kw-2">&amp;*</span>pvsf)
 		}
@@ -232,34 +232,34 @@
 
 <span class="doccomment">/// An language block of [`ResourceInfo`](crate::ResourceInfo), composed of a
 /// language ID and a code page.
-</span><span class="kw">pub struct </span>ResourceInfoBlock&lt;<span class="lifetime">&#39;a</span>&gt; {
-	res_info: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a </span>ResourceInfo,
+</span><span class="kw">pub struct </span>ResourceInfoBlock&lt;<span class="lifetime">'a</span>&gt; {
+	res_info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ResourceInfo,
 	lang_id: LANGID,
 	code_page: co::CP,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">&#39;a</span>&gt; ResourceInfoBlock&lt;<span class="lifetime">&#39;a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; ResourceInfoBlock&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="attr">#[must_use] </span><span class="kw">pub const fn </span>lang_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; LANGID { <span class="self">self</span>.lang_id }
 	<span class="attr">#[must_use] </span><span class="kw">pub const fn </span>code_page(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::CP { <span class="self">self</span>.code_page }
 
-	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>comments(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">&quot;Comments&quot;</span>) }
-	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>company_name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">&quot;CompanyName&quot;</span>) }
-	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>file_description(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">&quot;FileDescrition&quot;</span>) }
-	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>file_version(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">&quot;FileVersion&quot;</span>) }
-	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>internal_name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">&quot;InternalName&quot;</span>) }
-	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>legal_copyright(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">&quot;LegalCopyright&quot;</span>) }
-	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>legal_trademarks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">&quot;LegalTrademarks&quot;</span>) }
-	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>original_filename(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">&quot;OriginalFilename&quot;</span>) }
-	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>product_name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">&quot;ProductName&quot;</span>) }
-	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>product_version(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">&quot;ProductVersion&quot;</span>) }
-	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>private_build(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">&quot;PrivateBuild&quot;</span>) }
-	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>special_build(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">&quot;SpecialBuild&quot;</span>) }
+	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>comments(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">"Comments"</span>) }
+	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>company_name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">"CompanyName"</span>) }
+	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>file_description(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">"FileDescrition"</span>) }
+	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>file_version(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">"FileVersion"</span>) }
+	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>internal_name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">"InternalName"</span>) }
+	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>legal_copyright(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">"LegalCopyright"</span>) }
+	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>legal_trademarks(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">"LegalTrademarks"</span>) }
+	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>original_filename(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">"OriginalFilename"</span>) }
+	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>product_name(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">"ProductName"</span>) }
+	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>product_version(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">"ProductVersion"</span>) }
+	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>private_build(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">"PrivateBuild"</span>) }
+	<span class="attr">#[must_use] </span><span class="kw">pub fn </span>special_build(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; { <span class="self">self</span>.generic_string_info(<span class="string">"SpecialBuild"</span>) }
 
 	<span class="kw">fn </span>generic_string_info(<span class="kw-2">&amp;</span><span class="self">self</span>, info: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
 		<span class="kw">unsafe </span>{
 			VarQueryValue::&lt;u16&gt;(
 				<span class="self">self</span>.res_info.res_buf.as_slice(),
-				<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">&quot;\\StringFileInfo\\{:04x}{:04x}\\{}&quot;</span>,
+				<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"\\StringFileInfo\\{:04x}{:04x}\\{}"</span>,
 					u16::from(<span class="self">self</span>.lang_id), u16::from(<span class="self">self</span>.code_page), info),
 			).ok()
 				.map(|(pstr, len)| {

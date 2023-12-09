@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\user\handles\hwnd.rs`."><title>hwnd.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e6a78389201e676c.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (87e1447aa 2023-11-30)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-fec3eaa3851e447d.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\user\handles\hwnd.rs`."><title>hwnd.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e883e87179a81222.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.76.0-nightly (f967532a4 2023-12-08)" data-channel="nightly" data-search-js="search-5a66c239c06b3a66.js" data-settings-js="settings-fe03fdc259827cd2.js" ><script src="../../..\../static.files/storage-bc37acceda91d44a.js"></script><script defer src="../../..\../static.files/src-script-3280b574d94e47b4.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-77dede896d6ac08e.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-5d8b3c7633ad77ba.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"></nav><main><nav class="sub"><form class="search-form"><span></span><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" title="help" tabindex="-1"><a href="../../..\../help.html">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1911,7 +1911,7 @@
 	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
 	/// ```
 	///
-	/// If you don&#39;t use the returned device context handle, you must still keep
+	/// If you don't use the returned device context handle, you must still keep
 	/// the guard alive:
 	///
 	/// ```no_run
@@ -1928,7 +1928,7 @@
 	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
 	/// ```
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">fn </span>BeginPaint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;EndPaintGuard&lt;<span class="lifetime">&#39;_</span>, <span class="self">Self</span>&gt;&gt; {
+	</span><span class="kw">fn </span>BeginPaint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;EndPaintGuard&lt;<span class="lifetime">'_</span>, <span class="self">Self</span>&gt;&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>ps = PAINTSTRUCT::default();
 		<span class="kw">unsafe </span>{
 			ptr_to_sysresult_handle(
@@ -1993,7 +1993,7 @@
 	/// # Safety
 	///
 	/// This method will create raw dynamic windows and controls outside the
-	/// library safety – it&#39;s up to you to handle all the messages. You must use
+	/// library safety – it's up to you to handle all the messages. You must use
 	/// a properly registered class name and, if creating a custom window,
 	/// provide its own window procedure.
 	///
@@ -2052,7 +2052,7 @@
 	<span class="doccomment">/// [`DestroyWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow)
 	/// function.
 	///
-	/// Usually you don&#39;t need to call this method directly, since it&#39;s
+	/// Usually you don't need to call this method directly, since it's
 	/// automatically called inside the internal message loop. The ordinary way
 	/// to close a window is sending a [`wm::Close`](crate::msg::wm::Close)
 	/// message.
@@ -2135,7 +2135,7 @@
 	/// # let hwnd = w::HWND::NULL;
 	///
 	/// hwnd.EnumChildWindows(|hchild: w::HWND| -&gt; bool {
-	///     println!(&quot;Child HWND: {}&quot;, hchild);
+	///     println!("Child HWND: {}", hchild);
 	///     true
 	/// });
 	/// ```
@@ -2304,7 +2304,7 @@
 	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
 	/// ```
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">fn </span>GetDC(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;ReleaseDCGuard&lt;<span class="lifetime">&#39;_</span>, <span class="self">Self</span>&gt;&gt; {
+	</span><span class="kw">fn </span>GetDC(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;ReleaseDCGuard&lt;<span class="lifetime">'_</span>, <span class="self">Self</span>&gt;&gt; {
 		<span class="kw">unsafe </span>{
 			ptr_to_sysresult_handle(ffi::GetDC(<span class="self">self</span>.ptr()))
 				.map(|h| ReleaseDCGuard::new(<span class="self">self</span>, h))
@@ -2549,7 +2549,7 @@
 	<span class="doccomment">/// [`GetWindowDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdc)
 	/// function.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">fn </span>GetWindowDC(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;ReleaseDCGuard&lt;<span class="lifetime">&#39;_</span>, <span class="self">Self</span>&gt;&gt; {
+	</span><span class="kw">fn </span>GetWindowDC(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;ReleaseDCGuard&lt;<span class="lifetime">'_</span>, <span class="self">Self</span>&gt;&gt; {
 		<span class="kw">unsafe </span>{
 			ptr_to_sysresult_handle(ffi::GetWindowDC(<span class="self">self</span>.ptr()))
 				.map(|h| ReleaseDCGuard::new(<span class="self">self</span>, h))
@@ -2583,10 +2583,10 @@
 	/// function.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>GetWindowLongPtr(<span class="kw-2">&amp;</span><span class="self">self</span>, index: co::GWLP) -&gt; isize {
-		<span class="attr">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]
+		<span class="attr">#[cfg(target_pointer_width = <span class="string">"32"</span>)]
 		</span><span class="kw">unsafe </span>{ ffi::GetWindowLongW(<span class="self">self</span>.ptr(), index.raw()) }
 
-		<span class="attr">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]
+		<span class="attr">#[cfg(target_pointer_width = <span class="string">"64"</span>)]
 		</span><span class="kw">unsafe </span>{ ffi::GetWindowLongPtrW(<span class="self">self</span>.ptr(), index.raw()) }
 	}
 
@@ -2658,7 +2658,7 @@
 	/// # let hwnd = w::HWND::NULL;
 	///
 	/// let text = hwnd.GetWindowText()?;
-	/// println!(&quot;Text: {}&quot;, text);
+	/// println!("Text: {}", text);
 	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
 	/// ```
 	</span><span class="attr">#[must_use]
@@ -2685,7 +2685,7 @@
 	///
 	/// Does not count the terminating null.
 	///
-	/// You usually don&#39;t need to call this method directly, since
+	/// You usually don't need to call this method directly, since
 	/// [`GetWindowText`](crate::prelude::user_Hwnd::GetWindowText) returns a
 	/// [`String`](std::string::String), performing all necessary allocations.
 	</span><span class="attr">#[must_use]
@@ -2737,7 +2737,7 @@
 	///
 	/// # Examples
 	///
-	/// Most of the time you&#39;ll just want update the entire client area:
+	/// Most of the time you'll just want update the entire client area:
 	///
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*};
@@ -2825,7 +2825,7 @@
 	<span class="doccomment">/// [`KillTimer`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-killtimer)
 	/// function.
 	///
-	/// This function ends the timer calls for the given timer ID. If you don&#39;t
+	/// This function ends the timer calls for the given timer ID. If you don't
 	/// call this function, the timer calls will continue until the window is
 	/// destroyed – at this point, any remaining timers will be automatically
 	/// cleared.
@@ -2943,20 +2943,20 @@
 	/// let hwnd: w::HWND; // initialized somewhere
 	/// # let hwnd = w::HWND::NULL;
 	///
-	/// hwnd.MessageBox(&quot;Hello, world&quot;, &quot;title&quot;,
+	/// hwnd.MessageBox("Hello, world", "title",
 	///     co::MB::OKCANCEL | co::MB::ICONINFORMATION)?;
 	/// # Ok::&lt;_, co::ERROR&gt;(())
 	/// ```
 	///
 	/// Usually the message box has a valid parent window, however, if for some
-	/// reason you don&#39;t have a window to serve as parent, you still can show a
+	/// reason you don't have a window to serve as parent, you still can show a
 	/// non-modal, parent-less message box by retrieving the desktop handle:
 	///
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*, co};
 	///
 	/// w::HWND::GetDesktopWindow()
-	///     .MessageBox(&quot;Hello, world&quot;, &quot;Title&quot;, co::MB::ICONEXCLAMATION)?;
+	///     .MessageBox("Hello, world", "Title", co::MB::ICONEXCLAMATION)?;
 	/// # Ok::&lt;_, co::ERROR&gt;(())
 	/// ```
 	</span><span class="kw">fn </span>MessageBox(<span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -3041,7 +3041,7 @@
 	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
 	/// ```
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">fn </span>OpenClipboard(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;CloseClipboardGuard&lt;<span class="lifetime">&#39;_</span>&gt;&gt; {
+	</span><span class="kw">fn </span>OpenClipboard(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;CloseClipboardGuard&lt;<span class="lifetime">'_</span>&gt;&gt; {
 		<span class="kw">unsafe </span>{
 			bool_to_sysresult(ffi::OpenClipboard(<span class="self">self</span>.ptr()))
 				.map(|<span class="kw">_</span>| CloseClipboardGuard::new(PhantomData))
@@ -3053,7 +3053,7 @@
 	///
 	/// Note that this method is asychronous.
 	</span><span class="kw">fn </span>PostMessage&lt;M&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, msg: M) -&gt; SysResult&lt;()&gt;
-		<span class="kw">where </span>M: MsgSend + Send + Copy + <span class="lifetime">&#39;static</span>,
+		<span class="kw">where </span>M: MsgSend + Send + Copy + <span class="lifetime">'static</span>,
 	{
 		<span class="kw">let </span><span class="kw-2">mut </span>msg = msg;
 		<span class="kw">let </span>wm_any = msg.as_generic_wm();
@@ -3268,7 +3268,7 @@
 
 	<span class="doccomment">/// [`SetCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcapture)
 	/// function.
-	</span><span class="kw">fn </span>SetCapture(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ReleaseCaptureGuard&lt;<span class="lifetime">&#39;_</span>, <span class="self">Self</span>&gt; {
+	</span><span class="kw">fn </span>SetCapture(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ReleaseCaptureGuard&lt;<span class="lifetime">'_</span>, <span class="self">Self</span>&gt; {
 		<span class="kw">unsafe </span>{
 			ReleaseCaptureGuard::new(
 				<span class="self">self</span>,
@@ -3391,7 +3391,7 @@
 	/// The timer calls – either
 	/// [`wm_timer`](crate::prelude::GuiEventsAll::wm_timer) message or callback
 	/// function – will continuously be executed until you call `KillTimer`. If
-	/// you don&#39;t call `KillTimer`, the timer calls will continue until the
+	/// you don't call `KillTimer`, the timer calls will continue until the
 	/// window is destroyed – at this point, any remaining timers will be
 	/// automatically cleared.
 	///
@@ -3408,7 +3408,7 @@
 	/// closure and free it somehow after the closure finishes.
 	///
 	/// Such approach is, obviously, incredibly unsafe, and only possible within
-	/// Rust&#39;s rigid ownership rules if we use some sort of garbage-collection,
+	/// Rust's rigid ownership rules if we use some sort of garbage-collection,
 	/// which will free the allocated closure some time after `KillTimer` is
 	/// called and the closure itself finishes. Since that would incur in a
 	/// performance penalty, the current implementation of `SetTimer` will only
@@ -3446,10 +3446,10 @@
 	<span class="doccomment">/// [`SetWindowLongPtr`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowlongptrw)
 	/// function.
 	</span><span class="kw">fn </span>SetWindowLongPtr(<span class="kw-2">&amp;</span><span class="self">self</span>, index: co::GWLP, new_long: isize) -&gt; isize {
-		<span class="attr">#[cfg(target_pointer_width = <span class="string">&quot;32&quot;</span>)]
+		<span class="attr">#[cfg(target_pointer_width = <span class="string">"32"</span>)]
 		</span><span class="kw">unsafe </span>{ ffi::SetWindowLongW(<span class="self">self</span>.ptr(), index.raw(), new_long) }
 
-		<span class="attr">#[cfg(target_pointer_width = <span class="string">&quot;64&quot;</span>)]
+		<span class="attr">#[cfg(target_pointer_width = <span class="string">"64"</span>)]
 		</span><span class="kw">unsafe </span>{ ffi::SetWindowLongPtrW(<span class="self">self</span>.ptr(), index.raw(), new_long) }
 	}
 
@@ -3647,7 +3647,7 @@
 
 <span class="comment">//------------------------------------------------------------------------------
 
-</span><span class="kw">extern </span><span class="string">&quot;system&quot; </span><span class="kw">fn </span>enum_child_windows_proc&lt;F&gt;(
+</span><span class="kw">extern </span><span class="string">"system" </span><span class="kw">fn </span>enum_child_windows_proc&lt;F&gt;(
 	hwnd: HWND, lparam: isize) -&gt; BOOL
 	<span class="kw">where </span>F: FnMut(HWND) -&gt; bool,
 {
