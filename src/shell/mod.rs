@@ -4,6 +4,7 @@ mod com_interfaces;
 mod funcs;
 mod handles;
 mod structs;
+mod utilities;
 
 pub(in crate::shell) mod ffi;
 pub(in crate::shell) mod iterators;
@@ -17,6 +18,7 @@ pub mod decl {
 	pub use super::funcs::*;
 	pub use super::handles::decl::*;
 	pub use super::structs::*;
+	pub use super::utilities::*;
 }
 
 pub mod traits {
