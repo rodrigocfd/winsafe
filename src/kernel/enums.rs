@@ -280,7 +280,7 @@ impl RtStr {
 /// Notification content for
 /// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::kernel_Hservicestatus::RegisterServiceCtrlHandlerEx)
 /// callback, describing [`co::SERVICE_CONTROL`](crate::co::SERVICE_CONTROL).
-pub enum ServiceControl<'a> {
+pub enum SvcCtl<'a> {
 	Continue,
 	Interrogate,
 	NetBindAdd,
@@ -293,7 +293,7 @@ pub enum ServiceControl<'a> {
 	Shutdown,
 	Stop,
 
-	DeviceEvent(co::DBT, Option<&'a DEV_BROADCAST_HDR>),
+	DeviceEvent(co::DBT, SvcCtlDeviceEvent<'a>),
 	HardwareProfileChange(co::DBT),
 	PowerEvent(co::PBT, Option<&'a POWERBROADCAST_SETTING>),
 	SessionChange(co::WTS, &'a WTSSESSION_NOTIFICATION),
@@ -304,7 +304,7 @@ pub enum ServiceControl<'a> {
 	UserDefined(u8, u32, usize),
 }
 
-impl<'a> ServiceControl<'a> {
+impl<'a> SvcCtl<'a> {
 	/// Constructs the enum according to the raw data.
 	///
 	/// # Safety
@@ -334,11 +334,7 @@ impl<'a> ServiceControl<'a> {
 
 			co::SERVICE_CONTROL::DEVICEEVENT => Self::DeviceEvent(
 				co::DBT::from_raw(event_type as _),
-				if event_data.is_null() {
-					None
-				} else {
-					Some(&*(event_data as *const _))
-				},
+				SvcCtlDeviceEvent::from_raw(&*(event_data as *const _)),
 			),
 			co::SERVICE_CONTROL::HARDWAREPROFILECHANGE => Self::HardwareProfileChange(
 				co::DBT::from_raw(event_type as _),
@@ -362,6 +358,41 @@ impl<'a> ServiceControl<'a> {
 			co::SERVICE_CONTROL::USERMODEREBOOT => Self::UserModeReboot,
 
 			_ => Self::UserDefined(control as _, event_type, event_data as _),
+		}
+	}
+}
+
+/// Notification content for [`SvcCtl`](crate::SvcCtl).
+pub enum SvcCtlDeviceEvent<'a> {
+	Interface(&'a DEV_BROADCAST_DEVICEINTERFACE),
+	Handle(&'a DEV_BROADCAST_HANDLE),
+	Oem(&'a DEV_BROADCAST_OEM),
+	Port(&'a DEV_BROADCAST_PORT),
+	Volume(&'a DEV_BROADCAST_VOLUME),
+}
+
+impl<'a> SvcCtlDeviceEvent<'a> {
+	/// Constructs the enum according to the raw data.
+	///
+	/// # Panics
+	///
+	/// Panics if `dbch_devicetype` field is invalid.
+	///
+	/// # Safety
+	///
+	/// This enum is constructed when building the output of
+	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::kernel_Hservicestatus::RegisterServiceCtrlHandlerEx)
+	/// callback, make sure all parameters are correct.
+	#[must_use]
+	pub unsafe fn from_raw(event_data: &DEV_BROADCAST_HDR) -> Self {
+		let ptr = event_data as *const DEV_BROADCAST_HDR;
+		match event_data.dbch_devicetype {
+			co::DBT_DEVTYP::DEVICEINTERFACE => Self::Interface(&*(ptr as *const _)),
+			co::DBT_DEVTYP::HANDLE => Self::Handle(&*(ptr as *const _)),
+			co::DBT_DEVTYP::OEM => Self::Oem(&*(ptr as *const _)),
+			co::DBT_DEVTYP::PORT => Self::Port(&*(ptr as *const _)),
+			co::DBT_DEVTYP::VOLUME => Self::Volume(&*(ptr as *const _)),
+			_ => panic!("Invalid co::DBT_DEVTYP."),
 		}
 	}
 }

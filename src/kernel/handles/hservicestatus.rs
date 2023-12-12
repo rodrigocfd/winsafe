@@ -27,7 +27,7 @@ pub trait kernel_Hservicestatus: Handle {
 		service_name: &str,
 		handler_proc: F,
 	) -> SysResult<HSERVICESTATUS>
-		where F: FnMut(ServiceControl) -> u32,
+		where F: FnMut(SvcCtl) -> u32,
 	{
 		ptr_to_sysresult_handle(
 			unsafe {
@@ -45,8 +45,8 @@ pub trait kernel_Hservicestatus: Handle {
 
 extern "system" fn register_service_ctrl_handler_ex_proc<F>(
 	control: u32, event_type: u32, event_data: PVOID, context: PVOID) -> u32
-	where F: FnMut(ServiceControl) -> u32,
+	where F: FnMut(SvcCtl) -> u32,
 {
 	let func = unsafe { &mut *(context as *mut F) };
-	func(unsafe { ServiceControl::from_raw(control, event_type, event_data) })
+	func(unsafe { SvcCtl::from_raw(control, event_type, event_data) })
 }
