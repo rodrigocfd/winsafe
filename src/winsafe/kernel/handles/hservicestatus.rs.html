@@ -79,7 +79,7 @@
 		service_name: <span class="kw-2">&amp;</span>str,
 		handler_proc: F,
 	) -&gt; SysResult&lt;HSERVICESTATUS&gt;
-		<span class="kw">where </span>F: FnMut(ServiceControl) -&gt; u32,
+		<span class="kw">where </span>F: FnMut(SvcCtl) -&gt; u32,
 	{
 		ptr_to_sysresult_handle(
 			<span class="kw">unsafe </span>{
@@ -97,9 +97,9 @@
 
 </span><span class="kw">extern </span><span class="string">"system" </span><span class="kw">fn </span>register_service_ctrl_handler_ex_proc&lt;F&gt;(
 	control: u32, event_type: u32, event_data: PVOID, context: PVOID) -&gt; u32
-	<span class="kw">where </span>F: FnMut(ServiceControl) -&gt; u32,
+	<span class="kw">where </span>F: FnMut(SvcCtl) -&gt; u32,
 {
 	<span class="kw">let </span>func = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(context <span class="kw">as </span><span class="kw-2">*mut </span>F) };
-	func(<span class="kw">unsafe </span>{ ServiceControl::from_raw(control, event_type, event_data) })
+	func(<span class="kw">unsafe </span>{ SvcCtl::from_raw(control, event_type, event_data) })
 }
 </code></pre></div></section></main></body></html>
