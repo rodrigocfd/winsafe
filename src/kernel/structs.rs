@@ -1172,6 +1172,35 @@ impl TOKEN_PRIVILEGES {
 	}
 }
 
+/// [`TOKEN_SOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_source)
+/// struct.
+#[repr(C)]
+#[derive(PartialEq, Eq)]
+pub struct TOKEN_SOURCE {
+	pub SourceName: [i8; TOKEN_SOURCE_LENGTH],
+	pub SourceIdentifier: LUID,
+}
+
+impl_default!(TOKEN_SOURCE);
+
+/// [`TOKEN_STATISTICS`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_statistics)
+/// struct.
+#[repr(C)]
+pub struct TOKEN_STATISTICS {
+	pub TokenId: LUID,
+	pub AuthenticationId: LUID,
+	pub ExpirationTime: i64,
+	pub TokenType: co::TOKEN_TYPE,
+	pub ImpersonationLevel: co::SECURITY_IMPERSONATION,
+	pub DynamicCharged: u32,
+	pub DynamicAvailable: u32,
+	pub GroupCount: u32,
+	pub PrivilegeCount: u32,
+	pub ModifiedId: LUID,
+}
+
+impl_default!(TOKEN_STATISTICS);
+
 /// [`TOKEN_USER`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_user)
 /// struct.
 #[repr(C)]

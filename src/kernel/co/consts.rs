@@ -2155,6 +2155,15 @@ const_ordinary! { TOKEN_MANDATORY_POLICY: u32;
 	VALID_MASK 0x3
 }
 
+const_ordinary! { TOKEN_TYPE: u32;
+	/// [`TOKEN_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_type)
+	/// enumeration (`u32`).
+	=>
+	=>
+	Primary 1
+	Impersonation 2
+}
+
 const_bitflag! { TRANSACTION: u32;
 	/// [`Transaction access masks`](https://learn.microsoft.com/en-us/windows/win32/ktm/transaction-access-masks)
 	/// (`u32`).
