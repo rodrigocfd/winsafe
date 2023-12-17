@@ -2503,6 +2503,15 @@
 <a href="#2502" id="2502">2502</a>
 <a href="#2503" id="2503">2503</a>
 <a href="#2504" id="2504">2504</a>
+<a href="#2505" id="2505">2505</a>
+<a href="#2506" id="2506">2506</a>
+<a href="#2507" id="2507">2507</a>
+<a href="#2508" id="2508">2508</a>
+<a href="#2509" id="2509">2509</a>
+<a href="#2510" id="2510">2510</a>
+<a href="#2511" id="2511">2511</a>
+<a href="#2512" id="2512">2512</a>
+<a href="#2513" id="2513">2513</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="macro">const_bitflag! </span>{ ACCESS_RIGHTS: u32;
@@ -4658,6 +4667,15 @@
 	</span>NO_WRITE_UP <span class="number">0x1
 	</span>NEW_PROCESS_MIN <span class="number">0x2
 	</span>VALID_MASK <span class="number">0x3
+</span>}
+
+<span class="macro">const_ordinary! </span>{ TOKEN_TYPE: u32;
+	<span class="doccomment">/// [`TOKEN_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_type)
+	/// enumeration (`u32`).
+	</span>=&gt;
+	=&gt;
+	Primary <span class="number">1
+	</span>Impersonation <span class="number">2
 </span>}
 
 <span class="macro">const_bitflag! </span>{ TRANSACTION: u32;

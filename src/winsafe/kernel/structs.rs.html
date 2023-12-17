@@ -1241,6 +1241,35 @@
 <a href="#1240" id="1240">1240</a>
 <a href="#1241" id="1241">1241</a>
 <a href="#1242" id="1242">1242</a>
+<a href="#1243" id="1243">1243</a>
+<a href="#1244" id="1244">1244</a>
+<a href="#1245" id="1245">1245</a>
+<a href="#1246" id="1246">1246</a>
+<a href="#1247" id="1247">1247</a>
+<a href="#1248" id="1248">1248</a>
+<a href="#1249" id="1249">1249</a>
+<a href="#1250" id="1250">1250</a>
+<a href="#1251" id="1251">1251</a>
+<a href="#1252" id="1252">1252</a>
+<a href="#1253" id="1253">1253</a>
+<a href="#1254" id="1254">1254</a>
+<a href="#1255" id="1255">1255</a>
+<a href="#1256" id="1256">1256</a>
+<a href="#1257" id="1257">1257</a>
+<a href="#1258" id="1258">1258</a>
+<a href="#1259" id="1259">1259</a>
+<a href="#1260" id="1260">1260</a>
+<a href="#1261" id="1261">1261</a>
+<a href="#1262" id="1262">1262</a>
+<a href="#1263" id="1263">1263</a>
+<a href="#1264" id="1264">1264</a>
+<a href="#1265" id="1265">1265</a>
+<a href="#1266" id="1266">1266</a>
+<a href="#1267" id="1267">1267</a>
+<a href="#1268" id="1268">1268</a>
+<a href="#1269" id="1269">1269</a>
+<a href="#1270" id="1270">1270</a>
+<a href="#1271" id="1271">1271</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -2414,6 +2443,35 @@
 		}
 	}
 }
+
+<span class="doccomment">/// [`TOKEN_SOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_source)
+/// struct.
+</span><span class="attr">#[repr(C)]
+#[derive(PartialEq, Eq)]
+</span><span class="kw">pub struct </span>TOKEN_SOURCE {
+	<span class="kw">pub </span>SourceName: [i8; TOKEN_SOURCE_LENGTH],
+	<span class="kw">pub </span>SourceIdentifier: LUID,
+}
+
+<span class="macro">impl_default!</span>(TOKEN_SOURCE);
+
+<span class="doccomment">/// [`TOKEN_STATISTICS`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_statistics)
+/// struct.
+</span><span class="attr">#[repr(C)]
+</span><span class="kw">pub struct </span>TOKEN_STATISTICS {
+	<span class="kw">pub </span>TokenId: LUID,
+	<span class="kw">pub </span>AuthenticationId: LUID,
+	<span class="kw">pub </span>ExpirationTime: i64,
+	<span class="kw">pub </span>TokenType: co::TOKEN_TYPE,
+	<span class="kw">pub </span>ImpersonationLevel: co::SECURITY_IMPERSONATION,
+	<span class="kw">pub </span>DynamicCharged: u32,
+	<span class="kw">pub </span>DynamicAvailable: u32,
+	<span class="kw">pub </span>GroupCount: u32,
+	<span class="kw">pub </span>PrivilegeCount: u32,
+	<span class="kw">pub </span>ModifiedId: LUID,
+}
+
+<span class="macro">impl_default!</span>(TOKEN_STATISTICS);
 
 <span class="doccomment">/// [`TOKEN_USER`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_user)
 /// struct.
