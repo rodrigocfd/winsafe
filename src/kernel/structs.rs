@@ -498,10 +498,84 @@ impl_default!(OVERLAPPED);
 pub struct POWERBROADCAST_SETTING {
 	pub PowerSetting: co::POWER_SETTING,
 	pub DataLength: u32,
-	pub Data: [u8; 1],
+	Data: [u8; 1],
 }
 
 impl VariableSized for POWERBROADCAST_SETTING {}
+
+impl POWERBROADCAST_SETTING {
+	/// Returns the `Data` field according to `PowerSetting` identifier.
+	///
+	/// # Panics
+	///
+	/// Panics if `PowerSetting` identifier is invalid.
+	///
+	/// # Safety
+	///
+	/// Make sure the struct contains the correct size and data described by the
+	/// `PowerSetting` identifier.
+	#[must_use]
+	pub unsafe fn data(&self) -> PowerSetting {
+		match self.PowerSetting {
+			co::POWER_SETTING::ACDC_POWER_SOURCE => PowerSetting::AcDcPowerSource(
+				co::SYSTEM_POWER_CONDITION::from_raw(
+					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
+				),
+			),
+			co::POWER_SETTING::BATTERY_PERCENTAGE_REMAINING => PowerSetting::BatteryPercentageRemaining(
+				std::slice::from_raw_parts(self.Data.as_ptr() as *const u32, 1)[0] as _
+			),
+			co::POWER_SETTING::CONSOLE_DISPLAY_STATE => PowerSetting::ConsoleDisplayState(
+				co::MONITOR_DISPLAY_STATE::from_raw(
+					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
+				),
+			),
+			co::POWER_SETTING::GLOBAL_USER_PRESENCE => PowerSetting::GlobalUserPresence(
+				co::USER_ACTIVITY_PRESENCE::from_raw(
+					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
+				),
+			),
+			co::POWER_SETTING::IDLE_BACKGROUND_TASK => PowerSetting::IdleBackgroundTask,
+			co::POWER_SETTING::MONITOR_POWER_ON => PowerSetting::MonitorPowerOn(
+				co::MONITOR_DISPLAY_STATE::from_raw(
+					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
+				),
+			),
+			co::POWER_SETTING::POWER_SAVING_STATUS => PowerSetting::PowerSavingStatus(
+				match std::slice::from_raw_parts(self.Data.as_ptr() as *const u32, 1)[0] {
+					0 => false,
+					_ => true,
+				},
+			),
+			co::POWER_SETTING::POWERSCHEME_PERSONALITY => PowerSetting::PowerSchemePersonality(
+				std::slice::from_raw_parts(self.Data.as_ptr() as *const co::POWER_SAVINGS, 1)[0],
+			),
+			co::POWER_SETTING::SESSION_DISPLAY_STATUS => PowerSetting::SessionDisplayStatus(
+				co::MONITOR_DISPLAY_STATE::from_raw(
+					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
+				),
+			),
+			co::POWER_SETTING::SESSION_USER_PRESENCE => PowerSetting::SessionUserPresence(
+				co::USER_ACTIVITY_PRESENCE::from_raw(
+					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
+				),
+			),
+			co::POWER_SETTING::LIDSWITCH_STATE_CHANGE => PowerSetting::LidSwitchStateChange(
+				match std::slice::from_raw_parts(self.Data.as_ptr() as *const u8, 1)[0] {
+					0 => PowerSettingLid::Closed,
+					_ => PowerSettingLid::Opened,
+				},
+			),
+			co::POWER_SETTING::SYSTEM_AWAYMODE => PowerSetting::SystemAwayMode(
+				match std::slice::from_raw_parts(self.Data.as_ptr() as *const u8, 1)[0] {
+					0 => PowerSettingAwayMode::Exiting,
+					_ => PowerSettingAwayMode::Entering,
+				},
+			),
+			_ => panic!("Invalid co::POWER_SETTING."),
+		}
+	}
+}
 
 /// [`PROCESS_HEAP_ENTRY`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-process_heap_entry)
 /// struct.
@@ -521,7 +595,7 @@ union PROCESS_HEAP_ENTRY_union0 {
 	Region: PROCESS_HEAP_ENTRY_Region,
 }
 
-/// [`PROCESS_HEAP_ENTRY`]`(crate::PROCESS_HEAP_ENTRY) `Block`.
+/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) `Block`.
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub struct PROCESS_HEAP_ENTRY_Block {
@@ -529,7 +603,7 @@ pub struct PROCESS_HEAP_ENTRY_Block {
 	dwReserved: [u32; 3],
 }
 
-/// [`PROCESS_HEAP_ENTRY`]`(crate::PROCESS_HEAP_ENTRY) `Region`.
+/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) `Region`.
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub struct PROCESS_HEAP_ENTRY_Region {

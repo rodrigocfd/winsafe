@@ -795,6 +795,16 @@ const_bitflag! { MBC: u32;
 	USEGLYPHCHARS 0x0000_0004
 }
 
+const_ordinary! { MONITOR_DISPLAY_STATE: u32;
+	/// [`MONITOR_DISPLAY_STATE`](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ne-wdm-_monitor_display_state)
+	/// enumeration (`u32`).
+	=>
+	=>
+	Off 0
+	On 1
+	Dim 2
+}
+
 const_ordinary! { PAGE: u32;
 	/// [`HFILE::CreateFileMapping`](crate::prelude::kernel_Hfile::CreateFileMapping)
 	/// `protect` (`u32`).
@@ -1995,6 +2005,17 @@ const_ordinary! { SW: i32;
 	FORCEMINIMIZE 11
 }
 
+const_ordinary! { SYSTEM_POWER_CONDITION: u32;
+	/// [`SYSTEM_POWER_CONDITION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-system_power_condition)
+	/// enumeration (`u32`).
+	=>
+	=>
+	Ac 0
+	Dc 1
+	Hot 2
+	ConditionMaximum 3
+}
+
 const_bitflag! { TH32CS: u32;
 	/// [`HPROCESSLIST::CreateToolhelp32Snapshot`](crate::HPROCESSLIST) `flags`
 	/// (`u32`).
@@ -2163,6 +2184,18 @@ const_bitflag! { TRANSACTION_OPT: u32;
 	/// None of the actual values (zero).
 	NoValue 0
 	DO_NOT_PROMOTE 0x0000_0001
+}
+
+const_ordinary! { USER_ACTIVITY_PRESENCE: u32;
+	/// [`PowerSetting::GlobalUserPresence`](crate::PowerSetting::GlobalUserPresence)
+	/// enumeration (`u32`).
+	=>
+	=>
+	Present 0
+    NotPresent 1
+    Inactive 2
+    Maximum 3
+    Invalid Self::Maximum.0
 }
 
 const_ordinary! { VER_COND: u8;

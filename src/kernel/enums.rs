@@ -75,6 +75,42 @@ impl IdStr {
 	}
 }
 
+/// Variant parameter for:
+///
+/// * [`POWERBROADCAST_SETTING`](crate::POWERBROADCAST_SETTING).
+pub enum PowerSetting {
+	AcDcPowerSource(co::SYSTEM_POWER_CONDITION),
+	BatteryPercentageRemaining(u8),
+	ConsoleDisplayState(co::MONITOR_DISPLAY_STATE),
+	GlobalUserPresence(co::USER_ACTIVITY_PRESENCE),
+	IdleBackgroundTask,
+	MonitorPowerOn(co::MONITOR_DISPLAY_STATE),
+	PowerSavingStatus(bool),
+	PowerSchemePersonality(co::POWER_SAVINGS),
+	SessionDisplayStatus(co::MONITOR_DISPLAY_STATE),
+	SessionUserPresence(co::USER_ACTIVITY_PRESENCE),
+	LidSwitchStateChange(PowerSettingLid),
+	SystemAwayMode(PowerSettingAwayMode),
+}
+
+/// Variant parameter for:
+///
+/// * [`PowerSetting::SystemAwayMode`](crate::PowerSetting::SystemAwayMode).
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum PowerSettingAwayMode {
+	Exiting,
+	Entering,
+}
+
+/// Variant parameter for:
+///
+/// * [`PowerSetting::LidSwitchStateChange`](crate::PowerSetting::LidSwitchStateChange).
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum PowerSettingLid {
+	Closed,
+	Opened,
+}
+
 /// Registry value types.
 ///
 /// This is a high-level abstraction over the [`co::REG`](crate::co::REG)
@@ -295,7 +331,7 @@ pub enum SvcCtl<'a> {
 
 	DeviceEvent(co::DBT, SvcCtlDeviceEvent<'a>),
 	HardwareProfileChange(co::DBT),
-	PowerEvent(co::PBT, Option<&'a POWERBROADCAST_SETTING>),
+	PowerEvent(SvcCtlPowerEvent<'a>),
 	SessionChange(co::WTS, &'a WTSSESSION_NOTIFICATION),
 	TimeChange(&'a SERVICE_TIMECHANGE_INFO),
 	TriggerEvent,
@@ -340,12 +376,7 @@ impl<'a> SvcCtl<'a> {
 				co::DBT::from_raw(event_type as _),
 			),
 			co::SERVICE_CONTROL::POWEREVENT => Self::PowerEvent(
-				co::PBT::from_raw(event_type),
-				if event_data.is_null() {
-					None
-				} else {
-					Some(&*(event_data as *const _))
-				},
+				SvcCtlPowerEvent::from_raw(co::PBT::from_raw(event_type), event_data),
 			),
 			co::SERVICE_CONTROL::SESSIONCHANGE => Self::SessionChange(
 				co::WTS::from_raw(event_type as _),
@@ -393,6 +424,40 @@ impl<'a> SvcCtlDeviceEvent<'a> {
 			co::DBT_DEVTYP::PORT => Self::Port(&*(ptr as *const _)),
 			co::DBT_DEVTYP::VOLUME => Self::Volume(&*(ptr as *const _)),
 			_ => panic!("Invalid co::DBT_DEVTYP."),
+		}
+	}
+}
+
+/// Notification content for [`SvcCtl`](crate::SvcCtl).
+pub enum SvcCtlPowerEvent<'a> {
+	StatusChange,
+	ResumeAutomatic,
+	ResumeSuspend,
+	Suspend,
+	PowerSettingChange(&'a POWERBROADCAST_SETTING),
+}
+
+impl<'a> SvcCtlPowerEvent<'a> {
+	/// Constructs the enum according to the raw data.
+	///
+	/// # Panics
+	///
+	/// Panics if `event` is invalid.
+	///
+	/// # Safety
+	///
+	/// This enum is constructed when building the output of
+	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::kernel_Hservicestatus::RegisterServiceCtrlHandlerEx)
+	/// callback, make sure all parameters are correct.
+	#[must_use]
+	pub unsafe fn from_raw(event: co::PBT, event_data: PVOID) -> Self {
+		match event {
+			co::PBT::APMPOWERSTATUSCHANGE => Self::StatusChange,
+			co::PBT::APMRESUMEAUTOMATIC => Self::ResumeAutomatic,
+			co::PBT::APMRESUMESUSPEND => Self::ResumeSuspend,
+			co::PBT::APMSUSPEND => Self::Suspend,
+			co::PBT::POWERSETTINGCHANGE => Self::PowerSettingChange(&*(event_data as *const _)),
+			_ => panic!("Invalid co::PBT."),
 		}
 	}
 }
