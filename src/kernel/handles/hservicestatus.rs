@@ -40,13 +40,13 @@ pub trait kernel_Hservicestatus: Handle {
 		)
 	}
 
-    /// [`SetServiceStatus`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-setservicestatus)
-    /// function
-    fn SetServiceStatus(&self, status: &mut SERVICE_STATUS) -> SysResult<()> {
-        bool_to_sysresult(unsafe {
-            ffi::SetServiceStatus(self.ptr(), status as *const _ as _)
-        })
-    }
+  /// [`SetServiceStatus`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-setservicestatus)
+  /// function
+  fn SetServiceStatus(&self, status: &mut SERVICE_STATUS) -> SysResult<()> {
+      bool_to_sysresult(unsafe {
+          ffi::SetServiceStatus(self.ptr(), status as *const _ as _)
+      })
+  }
 }
 
 //------------------------------------------------------------------------------

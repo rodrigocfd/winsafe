@@ -540,6 +540,10 @@ impl POWERBROADCAST_SETTING {
 				co::MONITOR_DISPLAY_STATE::from_raw(
 					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
 				),
+				match std::slice::from_raw_parts(self.Data.as_ptr() as *const u32, 1)[0] {
+					0 => false,
+					_ => true,
+				},
 			),
 			co::POWER_SETTING::POWER_SAVING_STATUS => PowerSetting::PowerSavingStatus(
 				match std::slice::from_raw_parts(self.Data.as_ptr() as *const u32, 1)[0] {
