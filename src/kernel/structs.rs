@@ -537,9 +537,6 @@ impl POWERBROADCAST_SETTING {
 			),
 			co::POWER_SETTING::IDLE_BACKGROUND_TASK => PowerSetting::IdleBackgroundTask,
 			co::POWER_SETTING::MONITOR_POWER_ON => PowerSetting::MonitorPowerOn(
-				co::MONITOR_DISPLAY_STATE::from_raw(
-					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
-				),
 				match std::slice::from_raw_parts(self.Data.as_ptr() as *const u32, 1)[0] {
 					0 => false,
 					_ => true,
