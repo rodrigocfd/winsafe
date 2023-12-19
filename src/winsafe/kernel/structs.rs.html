@@ -1270,6 +1270,7 @@
 <a href="#1269" id="1269">1269</a>
 <a href="#1270" id="1270">1270</a>
 <a href="#1271" id="1271">1271</a>
+<a href="#1272" id="1272">1272</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -1809,9 +1810,10 @@
 			),
 			co::POWER_SETTING::IDLE_BACKGROUND_TASK =&gt; PowerSetting::IdleBackgroundTask,
 			co::POWER_SETTING::MONITOR_POWER_ON =&gt; PowerSetting::MonitorPowerOn(
-				co::MONITOR_DISPLAY_STATE::from_raw(
-					std::slice::from_raw_parts(<span class="self">self</span>.Data.as_ptr() <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>, <span class="number">1</span>)[<span class="number">0</span>],
-				),
+				<span class="kw">match </span>std::slice::from_raw_parts(<span class="self">self</span>.Data.as_ptr() <span class="kw">as </span><span class="kw-2">*const </span>u32, <span class="number">1</span>)[<span class="number">0</span>] {
+					<span class="number">0 </span>=&gt; <span class="bool-val">false</span>,
+					<span class="kw">_ </span>=&gt; <span class="bool-val">true</span>,
+				},
 			),
 			co::POWER_SETTING::POWER_SAVING_STATUS =&gt; PowerSetting::PowerSavingStatus(
 				<span class="kw">match </span>std::slice::from_raw_parts(<span class="self">self</span>.Data.as_ptr() <span class="kw">as </span><span class="kw-2">*const </span>u32, <span class="number">1</span>)[<span class="number">0</span>] {
