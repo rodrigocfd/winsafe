@@ -84,7 +84,7 @@ pub enum PowerSetting {
 	ConsoleDisplayState(co::MONITOR_DISPLAY_STATE),
 	GlobalUserPresence(co::USER_ACTIVITY_PRESENCE),
 	IdleBackgroundTask,
-	MonitorPowerOn(co::MONITOR_DISPLAY_STATE),
+	MonitorPowerOn(bool),
 	PowerSavingStatus(bool),
 	PowerSchemePersonality(co::POWER_SAVINGS),
 	SessionDisplayStatus(co::MONITOR_DISPLAY_STATE),
