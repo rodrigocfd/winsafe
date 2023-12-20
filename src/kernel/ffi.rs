@@ -81,6 +81,7 @@ extern_sys! { "advapi32";
 	RegSetValueExW(HANDLE, PCSTR, u32, u32, *const u8, u32) -> i32
 	RegUnLoadKeyW(HANDLE, PCSTR) -> i32
 	ReportEventW(HANDLE, u16, u16, u32, PCVOID, u16, u32, *const PCSTR, PCVOID) -> BOOL
+	SetServiceStatus(HANDLE, PCVOID) -> BOOL
 }
 
 extern_sys! { "kernel32";

@@ -758,6 +758,18 @@ impl SERVICE_TIMECHANGE_INFO {
 	}
 }
 
+/// [`SERVICE_STATUS`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status)
+#[repr(C)]
+pub struct SERVICE_STATUS {
+	dwServiceType: co::SERVICE_TYPE,
+	dwCurrentState: co::SERVICE_STATE,
+	dwControlsAccepted: co::SERVICE_ACCEPT,
+	dwWin32ExitCode: u32,
+	dwServiceSpecificExitCode: u32,
+	dwCheckPoint: u32,
+	dwWaitPoint: u32,
+}
+
 /// [`SID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid)
 /// struct.
 ///
