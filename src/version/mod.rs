@@ -1,14 +1,16 @@
 #![cfg(feature = "version")]
 
-mod funcs;
+mod handles;
 mod structs;
-mod utilities;
 
 pub(in crate::version) mod ffi;
 pub mod co;
 
 pub mod decl {
-	pub use super::funcs::*;
+	pub use super::handles::decl::*;
 	pub use super::structs::*;
-	pub use super::utilities::*;
+}
+
+pub mod traits {
+	pub use super::handles::traits::*;
 }

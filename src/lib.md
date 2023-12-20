@@ -189,6 +189,5 @@ Beyond the [GUI](crate::gui) API, WinSafe features a few high-level abstractions
 | [`FileMapped`](crate::FileMapped) | Memory-mapped file operations. |
 | [`Ini`](crate::Ini) | Managing key/value pairs of a `.ini` file. |
 | [`path`](crate::path) | File path operations. |
-| [`ResourceInfo`](crate::ResourceInfo) | Retrieve embedded data from executables or DLLs. |
 | [`task_dlg`](crate::task_dlg) | Various dialog prompts. |
 | [`WString`](crate::WString) | Managing native wide strings. |
