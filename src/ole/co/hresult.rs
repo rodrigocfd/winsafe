@@ -56,17 +56,21 @@ impl std::error::Error for HRESULT {
 impl std::fmt::Display for HRESULT {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		if self.0 > 0xffff {
-			write!(f, "[{:#010x} {}] {}",
-				self.0, self.0, self.FormatMessage())
+			write!(f, "[{:#010x}] {}", self.0, self.FormatMessage().trim_end())
 		} else {
-			write!(f, "[{:#06x} {}] {}",
-				self.0, self.0, self.FormatMessage())
+			write!(f, "[{:#06x}] {}", self.0, self.FormatMessage().trim_end())
 		}
 	}
 }
 impl std::fmt::Debug for HRESULT {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		std::fmt::Display::fmt(self, f)
+		if self.0 > 0xffff {
+			write!(f, "HRESULT({:#010x} {}) {}",
+				self.0, self.0, self.FormatMessage().trim_end())
+		} else {
+			write!(f, "HRESULT({:#06x} {}) {}",
+				self.0, self.0, self.FormatMessage().trim_end())
+		}
 	}
 }
 

@@ -90,17 +90,21 @@ macro_rules! const_ordinary {
 
 		impl std::fmt::Display for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-				write!(f, "{:#010x}", self.0 as usize)
+				if self.0 as usize > 0xffff {
+					write!(f, "{}({:#010x})", stringify!($name), self.0)
+				} else {
+					write!(f, "{}({:#06x})", stringify!($name), self.0)
+				}
 			}
 		}
 		impl std::fmt::Debug for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 				if self.0 as usize > 0xffff {
-					write!(f, "[{:#010x} {}] {}",
-						self.0, self.0, stringify!($name))
+					write!(f, "{}({:#010x} {})",
+						stringify!($name), self.0, self.0)
 				} else {
-					write!(f, "[{:#06x} {}] {}",
-						self.0, self.0, stringify!($name))
+					write!(f, "{}({:#06x} {})",
+						stringify!($name), self.0, self.0)
 				}
 			}
 		}

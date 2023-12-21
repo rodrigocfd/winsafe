@@ -22,16 +22,16 @@ impl std::error::Error for CDERR {
 
 impl std::fmt::Display for CDERR {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		if self.0 > 0xffff {
-			write!(f, "[{:#010x} {}] Common dialog error.", self.0, self.0)
-		} else {
-			write!(f, "[{:#06x} {}] Common dialog error.", self.0, self.0)
-		}
+		write!(f, "[{}] Common dialog error.", self.0)
 	}
 }
 impl std::fmt::Debug for CDERR {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		std::fmt::Display::fmt(self, f)
+		if self.0 > 0xffff {
+			write!(f, "CDERR({:#010x} {}) Common dialog error.", self.0, self.0)
+		} else {
+			write!(f, "CDERR({:#06x} {}) Common dialog error.", self.0, self.0)
+		}
 	}
 }
 
