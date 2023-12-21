@@ -32,9 +32,14 @@ impl WndMain {
 
 			let target_dir = self2.txt_path.text();
 			if !w::path::exists(&target_dir) {
-				w::task_dlg::error(self2.wnd.hwnd(), "Bad path",
+				self2.wnd.hwnd().TaskDialog(
+					None,
+					Some("Bad path"),
 					Some("Process cannot be done"),
-					&format!("Path does not exist:\n{}", target_dir) )?;
+					Some(&format!("Path does not exist:\n{}", target_dir)),
+					co::TDCBF::OK,
+					w::IconRes::Error,
+				)?;
 				return Ok(()); // halt processing
 			}
 
