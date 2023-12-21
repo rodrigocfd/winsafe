@@ -2163,12 +2163,19 @@ const_wsex! { TCS_EX;
 const_ordinary! { TD_ICON: u16;
 	/// [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog)
 	/// `pszIcon` and [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG)
-	/// `pszMainIcon` (`u16`). Originally has `TD` prefix and `ICON` suffix.
+	/// `pszMainIcon` (`u16`).
+	///
+	/// Originally has `TD` prefix and `ICON` suffix.
 	=>
 	=>
+	/// An exclamation-point icon appears in the task dialog.
 	WARNING 0xffff
+	/// A stop-sign icon appears in the task dialog.
 	ERROR 0xfffe
+	/// An icon consisting of a lowercase letter i in a circle appears in the
+	/// task dialog.
 	INFORMATION 0xfffd
+	/// A security shield icon appears in the task dialog.
 	SHIELD 0xfffc
 }
 

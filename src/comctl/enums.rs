@@ -86,29 +86,33 @@ pub enum IconIdTdicon {
 ///
 /// * [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog).
 #[derive(Clone)]
-pub enum IdTdiconStr {
+pub enum IconRes {
 	/// No icon.
 	None,
-	/// A resource ID.
-	Id(u16),
-	/// A predefined icon.
-	Tdicon(co::TD_ICON),
-	/// A resource string identifier.
-	Str(String),
+	/// An icon resource.
+	Res(IdStr),
+	/// The [`co::TD_ICON::WARNING`](crate::co::TD_ICON::WARNING) constant.
+	Warn,
+	/// The [`co::TD_ICON::ERROR`](crate::co::TD_ICON::ERROR) constant.
+	Error,
+	/// The [`co::TD_ICON::INFORMATION`](crate::co::TD_ICON::INFORMATION)
+	/// constant.
+	Info,
+	/// The [`co::TD_ICON::SHIELD`](crate::co::TD_ICON::SHIELD) constant.
+	Shield,
 }
 
-impl IdTdiconStr {
+impl IconRes {
 	/// Returns a pointer to the raw data content.
 	#[must_use]
-	pub fn as_ptr(&self, str_buf: &mut WString) -> *const u16 {
+	pub fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::None => std::ptr::null(),
-			Self::Id(id) => MAKEINTRESOURCE(*id as _),
-			Self::Tdicon(tdi) => MAKEINTRESOURCE(tdi.raw() as _),
-			Self::Str(s) => {
-				*str_buf = WString::from_str(s);
-				str_buf.as_ptr()
-			},
+			Self::Res(id_str) => id_str.as_ptr(),
+			Self::Warn => MAKEINTRESOURCE(co::TD_ICON::WARNING.raw() as _),
+			Self::Error => MAKEINTRESOURCE(co::TD_ICON::ERROR.raw() as _),
+			Self::Info => MAKEINTRESOURCE(co::TD_ICON::INFORMATION.raw() as _),
+			Self::Shield => MAKEINTRESOURCE(co::TD_ICON::SHIELD.raw() as _),
 		}
 	}
 }

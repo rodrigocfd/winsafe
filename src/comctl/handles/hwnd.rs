@@ -89,9 +89,6 @@ pub trait comctl_Hwnd: user_Hwnd {
 	/// [`TaskDialog`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialog)
 	/// function.
 	///
-	/// Unless you need something specific, consider using the
-	/// [`task_dlg`](crate::task_dlg) high-level abstractions.
-	///
 	/// If you need more customization, see the
 	/// [`TaskDialogIndirect`](crate::TaskDialogIndirect) function.
 	///
@@ -111,7 +108,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 	///     Some("Operation successful"),
 	///     Some("The operation completed successfully."),
 	///     co::TDCBF::OK,
-	///     w::IdTdiconStr::Tdicon(co::TD_ICON::INFORMATION),
+	///     w::IconRes::Info,
 	/// )?;
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
@@ -130,7 +127,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 	///     Some("File modified"),
 	///     Some("The file has been modified.\nProceed closing the application?"),
 	///     co::TDCBF::OK | co::TDCBF::CANCEL,
-	///     w::IdTdiconStr::Tdicon(co::TD_ICON::WARNING),
+	///     w::IconRes::Warn,
 	/// )?;
 	///
 	/// if answer == co::DLGID::OK {
@@ -144,11 +141,10 @@ pub trait comctl_Hwnd: user_Hwnd {
 		main_instruction: Option<&str>,
 		content: Option<&str>,
 		common_buttons: co::TDCBF,
-		icon: IdTdiconStr,
+		icon: IconRes,
 	) -> HrResult<co::DLGID>
 	{
 		// https://weblogs.asp.net/kennykerr/Windows-Vista-for-Developers-_1320_-Part-2-_1320_-Task-Dialogs-in-Depth
-		let mut str_buf = WString::default();
 		let mut pn_button = i32::default();
 		ok_to_hrresult(
 			unsafe {
@@ -159,7 +155,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 					WString::from_opt_str(main_instruction).as_ptr(),
 					WString::from_opt_str(content).as_ptr(),
 					common_buttons.raw(),
-					icon.as_ptr(&mut str_buf),
+					icon.as_ptr(),
 					&mut pn_button,
 				)
 			},

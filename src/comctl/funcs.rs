@@ -35,9 +35,6 @@ pub fn InitMUILanguage(ui_lang: LANGID) {
 /// was set, the `u16` control ID of one of the specified radio buttons;
 /// otherwise zero.
 ///
-/// Unless you need something specific, consider using the
-/// [`task_dlg`](crate::task_dlg) high-level abstractions.
-///
 /// If you don't need all customizations, consider the
 /// [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog) method.
 ///
