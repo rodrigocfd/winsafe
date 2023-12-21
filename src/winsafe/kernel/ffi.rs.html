@@ -281,6 +281,7 @@
 <a href="#280" id="280">280</a>
 <a href="#281" id="281">281</a>
 <a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys! </span>{ <span class="string">"advapi32"</span>;
@@ -364,6 +365,7 @@
 	RegSetValueExW(HANDLE, PCSTR, u32, u32, <span class="kw-2">*const </span>u8, u32) -&gt; i32
 	RegUnLoadKeyW(HANDLE, PCSTR) -&gt; i32
 	ReportEventW(HANDLE, u16, u16, u32, PCVOID, u16, u32, <span class="kw-2">*const </span>PCSTR, PCVOID) -&gt; BOOL
+	SetServiceStatus(HANDLE, PCVOID) -&gt; BOOL
 }
 
 <span class="macro">extern_sys! </span>{ <span class="string">"kernel32"</span>;

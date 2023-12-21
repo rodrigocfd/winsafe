@@ -1271,6 +1271,20 @@
 <a href="#1270" id="1270">1270</a>
 <a href="#1271" id="1271">1271</a>
 <a href="#1272" id="1272">1272</a>
+<a href="#1273" id="1273">1273</a>
+<a href="#1274" id="1274">1274</a>
+<a href="#1275" id="1275">1275</a>
+<a href="#1276" id="1276">1276</a>
+<a href="#1277" id="1277">1277</a>
+<a href="#1278" id="1278">1278</a>
+<a href="#1279" id="1279">1279</a>
+<a href="#1280" id="1280">1280</a>
+<a href="#1281" id="1281">1281</a>
+<a href="#1282" id="1282">1282</a>
+<a href="#1283" id="1283">1283</a>
+<a href="#1284" id="1284">1284</a>
+<a href="#1285" id="1285">1285</a>
+<a href="#1286" id="1286">1286</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -2029,6 +2043,20 @@
 	</span><span class="kw">pub fn </span>set_liOldTime(<span class="kw-2">&amp;mut </span><span class="self">self</span>, ft: FILETIME) {
 		<span class="self">self</span>.liOldTime = MAKEQWORD(ft.dwLowDateTime, ft.dwHighDateTime) <span class="kw">as _</span>;
 	}
+}
+
+<span class="doccomment">/// [`SERVICE_STATUS`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status)
+/// struct.
+</span><span class="attr">#[repr(C)]
+#[derive(Default, Clone, Copy)]
+</span><span class="kw">pub struct </span>SERVICE_STATUS {
+	<span class="kw">pub </span>dwServiceType: co::SERVICE_TYPE,
+	<span class="kw">pub </span>dwCurrentState: co::SERVICE_STATE,
+	<span class="kw">pub </span>dwControlsAccepted: co::SERVICE_ACCEPT,
+	<span class="kw">pub </span>dwWin32ExitCode: u32,
+	<span class="kw">pub </span>dwServiceSpecificExitCode: u32,
+	<span class="kw">pub </span>dwCheckPoint: u32,
+	<span class="kw">pub </span>dwWaitPoint: u32,
 }
 
 <span class="doccomment">/// [`SID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid)
