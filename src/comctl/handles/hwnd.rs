@@ -104,8 +104,8 @@ pub trait comctl_Hwnd: user_Hwnd {
 	///
 	/// hwnd.TaskDialog(
 	///     None,
-	///     Some("My app name"),
 	///     Some("Operation successful"),
+	///     None,
 	///     Some("The operation completed successfully."),
 	///     co::TDCBF::OK,
 	///     w::IconRes::Info,

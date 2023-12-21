@@ -2,9 +2,7 @@ use std::cmp::Ordering;
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi;
-
-pub const SSO_LEN: usize = 20;
+use crate::kernel::{ffi, privs::*};
 
 /// Stores a `[u16]` buffer for a null-terminated
 /// [Unicode UTF-16](https://learn.microsoft.com/en-us/windows/win32/intl/unicode-in-the-windows-api)

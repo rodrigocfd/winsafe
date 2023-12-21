@@ -1,6 +1,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::gui::*;
+use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -217,9 +218,7 @@ impl<'a> ListViewItem<'a> {
 	#[must_use]
 	pub fn text(&self, column_index: u32) -> String {
 		// https://forums.codeguru.com/showthread.php?351972-Getting-listView-item-text-length
-		const BLOCK_SZ: usize = 64; // arbitrary
-		let mut buf_sz = BLOCK_SZ;
-
+		let mut buf_sz = SSO_LEN; // start with no string heap allocation
 		loop {
 			let mut lvi = LVITEM::default();
 			lvi.iSubItem = column_index as _;
@@ -227,17 +226,17 @@ impl<'a> ListViewItem<'a> {
 			let mut buf = WString::new_alloc_buf(buf_sz);
 			lvi.set_pszText(Some(&mut buf));
 
-			let num_chars = self.owner.hwnd()
-				.SendMessage(lvm::GetItemText { // char count without terminating null
+			let num_chars = self.owner.hwnd() // char count without terminating null
+				.SendMessage(lvm::GetItemText {
 					index: self.index,
 					lvitem: &mut lvi,
-				});
+				}) + 1; // plus terminating null count
 
-			if (num_chars as usize) + 1 < buf_sz { // to break, must have at least 1 char gap
+			if (num_chars as usize) < buf_sz { // to break, must have at least 1 char gap
 				return buf.to_string();
 			}
 
-			buf_sz += BLOCK_SZ; // increase buffer size to try again
+			buf_sz *= 2; // double the buffer size to try again
 		}
 	}
 }

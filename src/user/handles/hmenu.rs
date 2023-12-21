@@ -422,13 +422,11 @@ pub trait user_Hmenu: Handle {
 	/// function.
 	#[must_use]
 	fn GetMenuString(&self, id_or_pos: IdPos) -> SysResult<String> {
-		const BLOCK_SZ: usize = 64; // arbitrary
-		let mut buf_sz = BLOCK_SZ;
-
+		let mut buf_sz = SSO_LEN; // start with no string heap allocation
 		loop {
 			let mut buf = WString::new_alloc_buf(buf_sz);
 
-			let nchars = match unsafe {
+			let nchars = match unsafe { // char count without terminating null
 				ffi::GetMenuStringW(
 					self.ptr(),
 					id_or_pos.id_or_pos_u32(),
@@ -438,14 +436,14 @@ pub trait user_Hmenu: Handle {
 				)
 			} {
 				0 => return Err(GetLastError()),
-				n => n,
+				n => n + 1, // plus terminating null count
 			};
 
-			if (nchars as usize) + 1 < buf_sz { // to break, must have at least 1 char gap
+			if (nchars as usize) < buf_sz { // to break, must have at least 1 char gap
 				return Ok(buf.to_string());
 			}
 
-			buf_sz += BLOCK_SZ; // increase buffer size to try again
+			buf_sz *= 2; // double the buffer size to try again
 		}
 	}
 
