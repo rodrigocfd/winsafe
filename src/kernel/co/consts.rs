@@ -1500,9 +1500,29 @@ const_bitflag! { SERVICE: u32;
 	GENERIC_EXECUTE STANDARD_RIGHTS::EXECUTE.0 | Self::START.0 | Self::STOP.0 | Self::PAUSE_CONTINUE.0 | Self::USER_DEFINED_CONTROL.0
 }
 
+const_bitflag! { SERVICE_ACCEPT: u32;
+	/// [`SERVICE_STATUS`](crate::SERVICE_STATUS) `dwControlsAccepted` (`u32`).
+	=>
+	=>
+	NETBINDCHANGE 0x0000_0010
+	PARAMCHANGE 0x0000_0008
+	PAUSE_CONTINUE 0x0000_0002
+	PRESHUTDOWN 0x0000_0100
+	SHUTDOWN 0x0000_0004
+	STOP 0x0000_0001
+	HARDWAREPROFILECHANGE 0x0000_0020
+	POWEREVENT 0x0000_0040
+	SESSIONCHANGE 0x0000_0080
+	TIMECHANGE 0x0000_0200
+	TRIGGEREVENT 0x0000_0400
+	USERMODEREBOOT 0x0000_0800
+}
+
 const_bitflag! { SERVICE_CONTROL: u32;
 	/// [`LPHANDLER_FUNCTION_EX`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nc-winsvc-lphandler_function_ex)
 	/// `dwControl` (`u32`).
+	///
+	/// Used within [`SvcCtl`](crate::SvcCtl) parsing.
 	=>
 	=>
 	CONTINUE 0x0000_0003
@@ -1551,6 +1571,20 @@ const_ordinary! { SERVICE_START: u32;
 	SYSTEM_START 0x0000_0001
 }
 
+const_ordinary! { SERVICE_STATE: u32;
+	/// [`HSERVICESTATUS::SetServiceStatus`](crate::prelude::kernel_Hservicestatus::SetServiceStatus)
+	/// `current_state` (u32)
+	=>
+	=>
+	CONTINUE_PENDING 0x0000_0005
+	PAUSE_PENDING 0x0000_0006
+	PAUSED 0x0000_0007
+	RUNNING 0x0000_0004
+	START_PENDING 0x0000_0002
+	STOP_PENDING 0x0000_0003
+	STOPPED 0x0000_0001
+}
+
 const_ordinary! { SERVICE_TYPE: u32;
 	/// [`HSC::CreateService`](crate::prelude::kernel_Hsc::CreateService)
 	/// `service_type` (`u32`).
@@ -1567,40 +1601,6 @@ const_ordinary! { SERVICE_TYPE: u32;
 
 	WIN32_OWN_PROCESS_INTERACTIVE Self::WIN32_OWN_PROCESS.0 | 0x0000_0100
 	WIN32_SHARE_PROCESS_INTERACTIVE Self::WIN32_SHARE_PROCESS.0 | 0x0000_0100
-}
-
-const_ordinary! { SERVICE_STATE: u32;
-	/// [`HSERVICESTATUS::SetServiceStatus`](crate::prelude::kernel_HserviceStatus::SetServiceStatus)
-	/// `current_state` (u32)
-	=>
-	=>
-	CONTINUE_PENDING 0x0000_0005
-	PAUSE_PENDING 0x0000_0006
-	PAUSED 0x0000_0007
-	RUNNING 0x0000_0004
-	START_PENDING 0x0000_0002
-	STOP_PENDING 0x0000_0003
-	STOPPED 0x0000_0001
-}
-
-const_bitflag! { SERVICE_ACCEPT: u32;
-	/// [`SERVICE_ACCEPT`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/ns-winsvc-service_status)
-	/// Originally `Controls Accepted`
-	/// (`u32`)
-    =>
-    =>
-	NETBINDCHANGE 0x0000_0010
-	PARAMCHANGE 0x0000_0008
-	PAUSE_CONTINUE 0x0000_0002
-	PRESHUTDOWN 0x0000_0100
-	SHUTDOWN 0x0000_0004
-	STOP 0x0000_0001
-	HARDWAREPROFILECHANGE 0x0000_0020
-	POWEREVENT 0x0000_0040
-	SESSIONCHANGE 0x0000_0080
-	TIMECHANGE 0x0000_0200
-	TRIGGEREVENT 0x0000_0400
-	USERMODEREBOOT 0x0000_0800
 }
 
 const_bitflag! { SHTDN_REASON: u32;
