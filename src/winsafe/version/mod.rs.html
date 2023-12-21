@@ -15,6 +15,7 @@
 <a href="#14" id="14">14</a>
 <a href="#15" id="15">15</a>
 <a href="#16" id="16">16</a>
+<a href="#17" id="17">17</a>
 </pre></div><pre class="rust"><code><span class="attr">#![cfg(feature = <span class="string">"version"</span>)]
 
 </span><span class="kw">mod </span>handles;
@@ -22,6 +23,7 @@
 
 <span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::version) <span class="kw">mod </span>ffi;
 <span class="kw">pub mod </span>co;
+<span class="kw">pub mod </span>guard;
 
 <span class="kw">pub mod </span>decl {
 	<span class="kw">pub use </span><span class="kw">super</span>::handles::decl::<span class="kw-2">*</span>;

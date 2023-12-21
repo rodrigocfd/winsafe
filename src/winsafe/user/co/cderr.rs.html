@@ -96,16 +96,16 @@
 
 <span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>CDERR {
 	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
-		<span class="kw">if </span><span class="self">self</span>.<span class="number">0 </span>&gt; <span class="number">0xffff </span>{
-			<span class="macro">write!</span>(f, <span class="string">"[{:#010x} {}] Common dialog error."</span>, <span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">0</span>)
-		} <span class="kw">else </span>{
-			<span class="macro">write!</span>(f, <span class="string">"[{:#06x} {}] Common dialog error."</span>, <span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">0</span>)
-		}
+		<span class="macro">write!</span>(f, <span class="string">"[{}] Common dialog error."</span>, <span class="self">self</span>.<span class="number">0</span>)
 	}
 }
 <span class="kw">impl </span>std::fmt::Debug <span class="kw">for </span>CDERR {
 	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
-		std::fmt::Display::fmt(<span class="self">self</span>, f)
+		<span class="kw">if </span><span class="self">self</span>.<span class="number">0 </span>&gt; <span class="number">0xffff </span>{
+			<span class="macro">write!</span>(f, <span class="string">"CDERR({:#010x} {}) Common dialog error."</span>, <span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">0</span>)
+		} <span class="kw">else </span>{
+			<span class="macro">write!</span>(f, <span class="string">"CDERR({:#06x} {}) Common dialog error."</span>, <span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">0</span>)
+		}
 	}
 }
 
