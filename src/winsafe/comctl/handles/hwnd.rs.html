@@ -169,10 +169,6 @@
 <a href="#168" id="168">168</a>
 <a href="#169" id="169">169</a>
 <a href="#170" id="170">170</a>
-<a href="#171" id="171">171</a>
-<a href="#172" id="172">172</a>
-<a href="#173" id="173">173</a>
-<a href="#174" id="174">174</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -264,9 +260,6 @@
 	<span class="doccomment">/// [`TaskDialog`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialog)
 	/// function.
 	///
-	/// Unless you need something specific, consider using the
-	/// [`task_dlg`](crate::task_dlg) high-level abstractions.
-	///
 	/// If you need more customization, see the
 	/// [`TaskDialogIndirect`](crate::TaskDialogIndirect) function.
 	///
@@ -286,7 +279,7 @@
 	///     Some("Operation successful"),
 	///     Some("The operation completed successfully."),
 	///     co::TDCBF::OK,
-	///     w::IdTdiconStr::Tdicon(co::TD_ICON::INFORMATION),
+	///     w::IconRes::Info,
 	/// )?;
 	/// # Ok::&lt;_, co::HRESULT&gt;(())
 	/// ```
@@ -305,7 +298,7 @@
 	///     Some("File modified"),
 	///     Some("The file has been modified.\nProceed closing the application?"),
 	///     co::TDCBF::OK | co::TDCBF::CANCEL,
-	///     w::IdTdiconStr::Tdicon(co::TD_ICON::WARNING),
+	///     w::IconRes::Warn,
 	/// )?;
 	///
 	/// if answer == co::DLGID::OK {
@@ -319,12 +312,11 @@
 		main_instruction: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
 		content: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
 		common_buttons: co::TDCBF,
-		icon: IdTdiconStr,
+		icon: IconRes,
 	) -&gt; HrResult&lt;co::DLGID&gt;
 	{
 		<span class="comment">// https://weblogs.asp.net/kennykerr/Windows-Vista-for-Developers-_1320_-Part-2-_1320_-Task-Dialogs-in-Depth
-		</span><span class="kw">let </span><span class="kw-2">mut </span>str_buf = WString::default();
-		<span class="kw">let </span><span class="kw-2">mut </span>pn_button = i32::default();
+		</span><span class="kw">let </span><span class="kw-2">mut </span>pn_button = i32::default();
 		ok_to_hrresult(
 			<span class="kw">unsafe </span>{
 				ffi::TaskDialog(
@@ -334,7 +326,7 @@
 					WString::from_opt_str(main_instruction).as_ptr(),
 					WString::from_opt_str(content).as_ptr(),
 					common_buttons.raw(),
-					icon.as_ptr(<span class="kw-2">&amp;mut </span>str_buf),
+					icon.as_ptr(),
 					<span class="kw-2">&amp;mut </span>pn_button,
 				)
 			},

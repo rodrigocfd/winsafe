@@ -1,1 +1,0 @@
-window.SIDEBAR_ITEMS = {"fn":["error","info","ok_cancel","warn","yes_no","yes_no_cancel"]};

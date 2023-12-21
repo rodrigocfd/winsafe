@@ -24,8 +24,6 @@
 <a href="#23" id="23">23</a>
 <a href="#24" id="24">24</a>
 <a href="#25" id="25">25</a>
-<a href="#26" id="26">26</a>
-<a href="#27" id="27">27</a>
 </pre></div><pre class="rust"><code><span class="attr">#![cfg(feature = <span class="string">"comctl"</span>)]
 
 </span><span class="kw">mod </span>aliases;
@@ -33,7 +31,6 @@
 <span class="kw">mod </span>funcs;
 <span class="kw">mod </span>handles;
 <span class="kw">mod </span>structs;
-<span class="kw">mod </span>utilities;
 
 <span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::comctl) <span class="kw">mod </span>ffi;
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>privs;
@@ -47,7 +44,6 @@
 	<span class="kw">pub use </span><span class="kw">super</span>::handles::decl::<span class="kw-2">*</span>;
 	<span class="kw">pub use </span><span class="kw">super</span>::funcs::<span class="kw-2">*</span>;
 	<span class="kw">pub use </span><span class="kw">super</span>::structs::<span class="kw-2">*</span>;
-	<span class="kw">pub use </span><span class="kw">super</span>::utilities::<span class="kw-2">*</span>;
 }
 
 <span class="kw">pub mod </span>traits {

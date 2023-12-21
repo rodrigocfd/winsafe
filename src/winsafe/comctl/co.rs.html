@@ -2653,6 +2653,13 @@
 <a href="#2652" id="2652">2652</a>
 <a href="#2653" id="2653">2653</a>
 <a href="#2654" id="2654">2654</a>
+<a href="#2655" id="2655">2655</a>
+<a href="#2656" id="2656">2656</a>
+<a href="#2657" id="2657">2657</a>
+<a href="#2658" id="2658">2658</a>
+<a href="#2659" id="2659">2659</a>
+<a href="#2660" id="2660">2660</a>
+<a href="#2661" id="2661">2661</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
@@ -4818,12 +4825,19 @@
 <span class="macro">const_ordinary! </span>{ TD_ICON: u16;
 	<span class="doccomment">/// [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog)
 	/// `pszIcon` and [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG)
-	/// `pszMainIcon` (`u16`). Originally has `TD` prefix and `ICON` suffix.
+	/// `pszMainIcon` (`u16`).
+	///
+	/// Originally has `TD` prefix and `ICON` suffix.
 	</span>=&gt;
 	=&gt;
-	WARNING <span class="number">0xffff
+	<span class="doccomment">/// An exclamation-point icon appears in the task dialog.
+	</span>WARNING <span class="number">0xffff
+	</span><span class="doccomment">/// A stop-sign icon appears in the task dialog.
 	</span>ERROR <span class="number">0xfffe
+	</span><span class="doccomment">/// An icon consisting of a lowercase letter i in a circle appears in the
+	/// task dialog.
 	</span>INFORMATION <span class="number">0xfffd
+	</span><span class="doccomment">/// A security shield icon appears in the task dialog.
 	</span>SHIELD <span class="number">0xfffc
 </span>}
 
