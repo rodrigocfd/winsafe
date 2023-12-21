@@ -25,6 +25,7 @@ pub enum DisabPriv<'a> {
 /// * [`HINSTANCE::LoadMenu`](crate::prelude::user_Hinstance::LoadMenu);
 /// * [`HUPDATERSRC::UpdateResource`](crate::prelude::kernel_Hupdatersrc::UpdateResource);
 /// * [`BmpIdbRes`](crate::BmpIdbRes);
+/// * [`IconRes`](crate::IconRes);
 /// * [`ResStrs`](crate::ResStrs).
 #[derive(Clone)]
 pub enum IdStr {
