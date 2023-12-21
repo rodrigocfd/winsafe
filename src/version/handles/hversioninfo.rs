@@ -17,15 +17,6 @@ impl_handle! { HVERSIONINFO;
 
 impl version_Hversioninfo for HVERSIONINFO {}
 
-impl Drop for HVERSIONINFO {
-	fn drop(&mut self) {
-		if let Some(h) = self.as_opt() {
-			let hglobal_ptr = unsafe { HGLOBAL::from_ptr(h.ptr()) };
-			let _ = unsafe { GlobalFreeGuard::new(hglobal_ptr) };
-		}
-	}
-}
-
 /// This trait is enabled with the `version` feature, and provides methods for
 /// [`HVERSIONINFO`](crate::HVERSIONINFO).
 ///
@@ -41,7 +32,7 @@ pub trait version_Hversioninfo: Handle {
 	/// The returned buffer will be automatically allocated with
 	/// [`HVERSIONINFO::GetFileVersionInfoSize`](crate::prelude::version_Hversioninfo::GetFileVersionInfoSize).
 	#[must_use]
-	fn GetFileVersionInfo(file_name: &str) -> SysResult<HVERSIONINFO> {
+	fn GetFileVersionInfo(file_name: &str) -> SysResult<VersionInfoGuard> {
 		let block_sz = Self::GetFileVersionInfoSize(file_name)?;
 		let mut hglobal = HGLOBAL::GlobalAlloc(
 			Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
@@ -58,7 +49,11 @@ pub trait version_Hversioninfo: Handle {
 					hglobal_ptr.ptr(),
 				)
 			},
-		).map(|_| unsafe { HVERSIONINFO::from_ptr(hglobal_ptr.ptr()) }) // simply use the HGLOBAL pointer
+		).map(|_| unsafe {
+			VersionInfoGuard::new(
+				HVERSIONINFO::from_ptr(hglobal_ptr.ptr()), // simply use the HGLOBAL pointer
+			)
+		})
 	}
 
 	/// [`GetFileVersionInfoSize`](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew)
@@ -84,6 +79,22 @@ pub trait version_Hversioninfo: Handle {
 	/// Calls
 	/// [`HVERSIONINFO::VarQueryValue`](crate::prelude::version_Hversioninfo::VarQueryValue)
 	/// to retrieve a reference to a slice with all languages and code pages.
+	///
+	/// # Examples
+	///
+	/// Listing all pairs of language and code page:
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*};
+	///
+	/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
+	/// let hversion = w::HVERSIONINFO::GetFileVersionInfo(&exe_name)?;
+	///
+	/// for (lang, cp) in hversion.langs_and_cps()?.iter() {
+	///     println!("{} {}", lang, cp);
+	/// }
+	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// ```
 	#[must_use]
 	fn langs_and_cps(&self) -> SysResult<&[(LANGID, co::CP)]> {
 		unsafe {
@@ -164,6 +175,26 @@ pub trait version_Hversioninfo: Handle {
 	/// * ProductVersion
 	/// * PrivateBuild
 	/// * SpecialBuild
+	///
+	/// # Examples
+	///
+	/// Reading product name and legal copyright from resource:
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*};
+	///
+	/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
+	/// let hversion = w::HVERSIONINFO::GetFileVersionInfo(&exe_name)?;
+	///
+	/// let (lang0, cp0) = hversion.langs_and_cps()?[0]; // first language and code page
+	///
+	/// println!(
+	///     "{}\n{}",
+	///     hversion.str_val(lang0, cp0, "ProductName")?,
+	///     hversion.str_val(lang0, cp0, "LegalCopyright")?,
+	/// );
+	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// ```
 	#[must_use]
 	fn str_val(&self,
 		lang_id: LANGID,

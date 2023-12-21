@@ -278,6 +278,12 @@ pub struct LANGID(u16);
 
 impl_intunderlying!(LANGID, u16);
 
+impl std::fmt::Display for LANGID {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		std::fmt::Debug::fmt(self, f)
+	}
+}
+
 impl LANGID {
 	/// [`LANGID`](crate::LANGID) composed of
 	/// [`LANG::NEUTRAL`](crate::co::LANG::NEUTRAL) and

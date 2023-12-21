@@ -93,6 +93,7 @@ pub mod guard {
 	#[cfg(feature = "shell")] pub use super::shell::guard::*;
 	#[cfg(feature = "user")] pub use super::user::guard::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::guard::*;
+	#[cfg(feature = "version")] pub use super::version::guard::*;
 }
 
 #[cfg(feature = "user")]
