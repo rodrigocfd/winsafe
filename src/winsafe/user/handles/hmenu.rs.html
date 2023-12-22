@@ -614,8 +614,6 @@
 <a href="#613" id="613">613</a>
 <a href="#614" id="614">614</a>
 <a href="#615" id="615">615</a>
-<a href="#616" id="616">616</a>
-<a href="#617" id="617">617</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -1040,14 +1038,12 @@
 	/// function.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>GetMenuString(<span class="kw-2">&amp;</span><span class="self">self</span>, id_or_pos: IdPos) -&gt; SysResult&lt;String&gt; {
-		<span class="kw">const </span>BLOCK_SZ: usize = <span class="number">64</span>; <span class="comment">// arbitrary
-		</span><span class="kw">let </span><span class="kw-2">mut </span>buf_sz = BLOCK_SZ;
-
-		<span class="kw">loop </span>{
+		<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = SSO_LEN; <span class="comment">// start with no string heap allocation
+		</span><span class="kw">loop </span>{
 			<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
 
-			<span class="kw">let </span>nchars = <span class="kw">match unsafe </span>{
-				ffi::GetMenuStringW(
+			<span class="kw">let </span>returned_chars = <span class="kw">match unsafe </span>{ <span class="comment">// char count without terminating null
+				</span>ffi::GetMenuStringW(
 					<span class="self">self</span>.ptr(),
 					id_or_pos.id_or_pos_u32(),
 					buf.as_mut_ptr(),
@@ -1056,14 +1052,14 @@
 				)
 			} {
 				<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
-				n =&gt; n,
-			};
+				n =&gt; n + <span class="number">1</span>, <span class="comment">// plus terminating null count
+			</span>};
 
-			<span class="kw">if </span>(nchars <span class="kw">as </span>usize) + <span class="number">1 </span>&lt; buf_sz { <span class="comment">// to break, must have at least 1 char gap
+			<span class="kw">if </span>(returned_chars <span class="kw">as </span>usize) &lt; buf_sz { <span class="comment">// to break, must have at least 1 char gap
 				</span><span class="kw">return </span><span class="prelude-val">Ok</span>(buf.to_string());
 			}
 
-			buf_sz += BLOCK_SZ; <span class="comment">// increase buffer size to try again
+			buf_sz <span class="kw-2">*</span>= <span class="number">2</span>; <span class="comment">// double the buffer size to try again
 		</span>}
 	}
 

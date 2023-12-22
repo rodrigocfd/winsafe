@@ -145,6 +145,7 @@
 <a href="#144" id="144">144</a>
 <a href="#145" id="145">145</a>
 <a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -161,7 +162,8 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>MAX_PATH: usize = <span class="number">260</span>;
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>SECURITY_DESCRIPTOR_REVISION: u32 = <span class="number">1</span>;
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>SECURITY_SQOS_PRESENT: u32 = <span class="number">0x0010_0000</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>TOKEN_SOURCE_LENGTH: usize = <span class="number">8</span>;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>SSO_LEN: usize = <span class="number">20</span>; <span class="comment">// defines WString SSO stack buffer size
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>TOKEN_SOURCE_LENGTH: usize = <span class="number">8</span>;
 
 <span class="doccomment">/// [`IS_INTRESOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-is_intresource)
 /// macro.

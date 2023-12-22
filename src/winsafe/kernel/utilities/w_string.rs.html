@@ -501,15 +501,11 @@
 <a href="#500" id="500">500</a>
 <a href="#501" id="501">501</a>
 <a href="#502" id="502">502</a>
-<a href="#503" id="503">503</a>
-<a href="#504" id="504">504</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cmp::Ordering;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi;
-
-<span class="kw">pub const </span>SSO_LEN: usize = <span class="number">20</span>;
+<span class="kw">use </span><span class="kw">crate</span>::kernel::{ffi, privs::<span class="kw-2">*</span>};
 
 <span class="doccomment">/// Stores a `[u16]` buffer for a null-terminated
 /// [Unicode UTF-16](https://learn.microsoft.com/en-us/windows/win32/intl/unicode-in-the-windows-api)

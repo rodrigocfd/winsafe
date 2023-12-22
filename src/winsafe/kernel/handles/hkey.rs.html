@@ -1072,8 +1072,6 @@
 <a href="#1071" id="1071">1071</a>
 <a href="#1072" id="1072">1072</a>
 <a href="#1073" id="1073">1073</a>
-<a href="#1074" id="1074">1074</a>
-<a href="#1075" id="1075">1075</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -1623,12 +1621,10 @@
 		last_write_time: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>FILETIME&gt;,
 	) -&gt; SysResult&lt;()&gt;
 	{
-		<span class="kw">const </span>BLOCK_SZ: usize = <span class="number">32</span>; <span class="comment">// arbitrary
-
-		</span><span class="kw">let </span>(<span class="kw-2">mut </span>class_ptr, <span class="kw-2">mut </span>class_len) = <span class="kw">match </span><span class="kw-2">&amp;mut </span>class {
+		<span class="kw">let </span>(<span class="kw-2">mut </span>class_ptr, <span class="kw-2">mut </span>class_len) = <span class="kw">match </span><span class="kw-2">&amp;mut </span>class {
 			<span class="prelude-val">Some</span>(class) =&gt; {
-				<span class="kw">if </span>class.buf_len() &lt; BLOCK_SZ {
-					<span class="kw-2">**</span>class = WString::new_alloc_buf(BLOCK_SZ); <span class="comment">// make it at least BLOCK_SZ
+				<span class="kw">if </span>class.buf_len() &lt; SSO_LEN { <span class="comment">// start with no string heap allocation
+					</span><span class="kw-2">**</span>class = WString::new_alloc_buf(SSO_LEN); <span class="comment">// make buffer at least this length
 				</span>}
 				(<span class="kw">unsafe </span>{ class.as_mut_ptr() }, class.buf_len() <span class="kw">as </span>u32)
 			},
@@ -1665,8 +1661,8 @@
 			} {
 				co::ERROR::MORE_DATA =&gt; <span class="kw">match </span><span class="kw-2">&amp;mut </span>class {
 					<span class="prelude-val">Some</span>(class) =&gt; {
-						<span class="kw-2">**</span>class = WString::new_alloc_buf(class.buf_len() + BLOCK_SZ);
-						class_ptr = <span class="kw">unsafe </span>{ class.as_mut_ptr() };
+						<span class="kw-2">**</span>class = WString::new_alloc_buf(class.buf_len() * <span class="number">2</span>); <span class="comment">// double the buffer size to try again
+						</span>class_ptr = <span class="kw">unsafe </span>{ class.as_mut_ptr() };
 						class_len = class.buf_len() <span class="kw">as _</span>;
 					},
 					<span class="prelude-val">None </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(co::ERROR::MORE_DATA),

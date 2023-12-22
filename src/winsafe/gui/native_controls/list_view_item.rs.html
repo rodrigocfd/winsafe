@@ -241,10 +241,10 @@
 <a href="#240" id="240">240</a>
 <a href="#241" id="241">241</a>
 <a href="#242" id="242">242</a>
-<a href="#243" id="243">243</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::kernel::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
@@ -461,27 +461,25 @@
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>, column_index: u32) -&gt; String {
 		<span class="comment">// https://forums.codeguru.com/showthread.php?351972-Getting-listView-item-text-length
-		</span><span class="kw">const </span>BLOCK_SZ: usize = <span class="number">64</span>; <span class="comment">// arbitrary
-		</span><span class="kw">let </span><span class="kw-2">mut </span>buf_sz = BLOCK_SZ;
-
-		<span class="kw">loop </span>{
+		</span><span class="kw">let </span><span class="kw-2">mut </span>buf_sz = SSO_LEN; <span class="comment">// start with no string heap allocation
+		</span><span class="kw">loop </span>{
 			<span class="kw">let </span><span class="kw-2">mut </span>lvi = LVITEM::default();
 			lvi.iSubItem = column_index <span class="kw">as _</span>;
 
 			<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
 			lvi.set_pszText(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>buf));
 
-			<span class="kw">let </span>num_chars = <span class="self">self</span>.owner.hwnd()
-				.SendMessage(lvm::GetItemText { <span class="comment">// char count without terminating null
-					</span>index: <span class="self">self</span>.index,
+			<span class="kw">let </span>returned_chars = <span class="self">self</span>.owner.hwnd() <span class="comment">// char count without terminating null
+				</span>.SendMessage(lvm::GetItemText {
+					index: <span class="self">self</span>.index,
 					lvitem: <span class="kw-2">&amp;mut </span>lvi,
-				});
+				}) + <span class="number">1</span>; <span class="comment">// plus terminating null count
 
-			<span class="kw">if </span>(num_chars <span class="kw">as </span>usize) + <span class="number">1 </span>&lt; buf_sz { <span class="comment">// to break, must have at least 1 char gap
+			</span><span class="kw">if </span>(returned_chars <span class="kw">as </span>usize) &lt; buf_sz { <span class="comment">// to break, must have at least 1 char gap
 				</span><span class="kw">return </span>buf.to_string();
 			}
 
-			buf_sz += BLOCK_SZ; <span class="comment">// increase buffer size to try again
+			buf_sz <span class="kw-2">*</span>= <span class="number">2</span>; <span class="comment">// double the buffer size to try again
 		</span>}
 	}
 }
