@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -15,7 +16,7 @@ pub struct IPersistFileVT {
 	pub Load: fn(COMPTR, PCSTR, u32) -> HRES,
 	pub Save: fn(COMPTR, PCSTR, i32) -> HRES,
 	pub SaveCompleted: fn(COMPTR, PCSTR) -> HRES,
-	pub GetCurFile: fn(COMPTR, PVOID) -> HRES,
+	pub GetCurFile: fn(COMPTR, *mut PSTR) -> HRES,
 }
 
 com_interface! { IPersistFile: "0000010b-0000-0000-c000-000000000046";
@@ -39,6 +40,22 @@ impl ole_IPersistFile for IPersistFile {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait ole_IPersistFile: ole_IUnknown {
+	/// [`IPersistFile::GetCurFile`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersistfile-getcurfile)
+	/// method.
+	#[must_use]
+	fn GetCurFile(&self) -> HrResult<String> {
+		let mut pstr = std::ptr::null_mut::<u16>();
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IPersistFileVT>(self).GetCurFile)(self.ptr(), &mut pstr)
+			},
+		).map(|_| {
+			let name = unsafe { WString::from_wchars_nullt(pstr) };
+			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) }; // https://stackoverflow.com/q/3079508/6923555
+			name.to_string()
+		})
+	}
+
 	/// [`IPersistFile::IsDirty`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersistfile-isdirty)
 	/// method.
 	#[must_use]
@@ -69,8 +86,21 @@ pub trait ole_IPersistFile: ole_IUnknown {
 			unsafe {
 				(vt::<IPersistFileVT>(self).Save)(
 					self.ptr(),
-					file_name.map_or(std::ptr::null(), |f| WString::from_str(f).as_ptr()),
+					WString::from_opt_str(file_name).as_ptr(),
 					remember as _,
+				)
+			},
+		)
+	}
+
+	/// [`IPersistFile::SaveCompleted`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersistfile-savecompleted)
+	/// method.
+	fn SaveCompleted(&self, file_name: &str) -> HrResult<()> {
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IPersistFileVT>(self).SaveCompleted)(
+					self.ptr(),
+					WString::from_str(file_name).as_ptr(),
 				)
 			},
 		)

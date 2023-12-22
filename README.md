@@ -31,7 +31,7 @@ Native FFI items implemented:
 | Window messages | 651 |
 | Handles | 45 |
 | COM interfaces | 82 |
-| COM methods | 448 |
+| COM methods | 450 |
 
 High-level GUI controls:
 
