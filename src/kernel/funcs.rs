@@ -684,6 +684,158 @@ pub fn GetNativeSystemInfo(si: &mut SYSTEM_INFO) {
 	unsafe { ffi::GetNativeSystemInfo(si as *mut _ as _) }
 }
 
+/// [`GetPrivateProfileSection`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getprivateprofilesectionw)
+/// function.
+///
+/// # Examples
+///
+/// Reading all key/value pairs of a section from an INI file:
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let pairs = w::GetPrivateProfileSection(
+///     "MySection",
+///     "C:\\Temp\\foo.ini",
+/// )?;
+///
+/// for (key, val) in pairs.iter() {
+///     println!("{} = {}", key, val);
+/// }
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
+#[must_use]
+pub fn GetPrivateProfileSection(
+	section_name: &str,
+	file_name: &str,
+) -> SysResult<Vec<(String, String)>> {
+	let mut buf_sz = SSO_LEN; // start with no string heap allocation
+	loop {
+		let mut buf = WString::new_alloc_buf(buf_sz);
+		let returned_chars = unsafe { // char count without terminating null
+			ffi::GetPrivateProfileSectionW(
+				WString::from_str(section_name).as_ptr(),
+				buf.as_mut_ptr(),
+				buf.buf_len() as _,
+				WString::from_str(file_name).as_ptr(),
+			)
+		} + 1 + 1; // plus terminating null count, plus weird extra count
+
+		if GetLastError() == co::ERROR::FILE_NOT_FOUND {
+			return Err(co::ERROR::FILE_NOT_FOUND);
+		} else if (returned_chars as usize) < buf_sz { // to break, must have at least 1 char gap
+			return Ok(
+				parse_multi_z_str(buf.as_ptr())
+					.iter()
+					.map(|line| match line.split_once('=') {
+						Some((key, val)) => (key.to_owned(), val.to_owned()),
+						None => (String::default(), String::default()),
+					})
+					.collect(),
+			);
+		}
+
+		buf_sz *= 2; // double the buffer size to try again
+	}
+}
+
+/// [`GetPrivateProfileSectionNames`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getprivateprofilesectionnamesw)
+/// function.
+///
+/// # Examples
+///
+/// Reading all section names from an INI file:
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let sections = w::GetPrivateProfileSectionNames(
+///     Some("C:\\Temp\\foo.ini"),
+/// )?;
+///
+/// for section in sections.iter() {
+///     println!("{}", section);
+/// }
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
+#[must_use]
+pub fn GetPrivateProfileSectionNames(
+	file_name: Option<&str>,
+) -> SysResult<Vec<String>>
+{
+	let mut buf_sz = SSO_LEN; // start with no string heap allocation
+	loop {
+		let mut buf = WString::new_alloc_buf(buf_sz);
+		let returned_chars = unsafe { // char count without terminating null
+			ffi::GetPrivateProfileSectionNamesW(
+				buf.as_mut_ptr(),
+				buf.buf_len() as _,
+				WString::from_opt_str(file_name).as_ptr(),
+			)
+		} + 1 + 1; // plus terminating null count, plus weird extra count
+
+		if GetLastError() == co::ERROR::FILE_NOT_FOUND {
+			return Err(co::ERROR::FILE_NOT_FOUND);
+		} else if (returned_chars as usize) < buf_sz { // to break, must have at least 1 char gap
+			return Ok(parse_multi_z_str(buf.as_ptr()));
+		}
+
+		buf_sz *= 2; // double the buffer size to try again
+	}
+}
+
+/// [`GetPrivateProfileString`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getprivateprofilestringw)
+/// function.
+///
+/// # Examples
+///
+/// Reading from an INI file:
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let val = w::GetPrivateProfileString(
+///     Some("MySection"),
+///     Some("MyKey"),
+///     None,
+///     "C:\\Temp\\foo.ini",
+/// )?;
+///
+/// println!("{}", val);
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
+#[must_use]
+pub fn GetPrivateProfileString(
+	section_name: Option<&str>,
+	key_name: Option<&str>,
+	default_val: Option<&str>,
+	file_name: &str,
+) -> SysResult<String>
+{
+	let mut buf_sz = SSO_LEN; // start with no string heap allocation
+	loop {
+		let mut buf = WString::new_alloc_buf(buf_sz);
+		let returned_chars = unsafe { // char count without terminating null
+			ffi::GetPrivateProfileStringW(
+				WString::from_opt_str(section_name).as_ptr(),
+				WString::from_opt_str(key_name).as_ptr(),
+				WString::from_opt_str(default_val).as_ptr(),
+				buf.as_mut_ptr(),
+				buf.buf_len() as _,
+				WString::from_str(file_name).as_ptr(),
+			)
+		} + 1; // plus terminating null count
+
+		if GetLastError() == co::ERROR::FILE_NOT_FOUND {
+			return Err(co::ERROR::FILE_NOT_FOUND);
+		} else if (returned_chars as usize) < buf_sz { // to break, must have at least 1 char gap
+			return Ok(buf.to_string());
+		}
+
+		buf_sz *= 2; // double the buffer size to try again
+	}
+}
+
 /// [`GetSidLengthRequired`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidlengthrequired)
 /// function.
 #[must_use]
@@ -1748,4 +1900,41 @@ pub fn WideCharToMultiByte(
 		}
 		u8_buf
 	})
+}
+
+/// [`WritePrivateProfileString`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-writeprivateprofilestringw)
+/// function.
+///
+/// # Examples
+///
+/// Writing from an INI file:
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let val = w::WritePrivateProfileString(
+///     "MySection",
+///     Some("MyKey"),
+///     Some("new value"),
+///     "C:\\Temp\\foo.ini",
+/// )?;
+/// # Ok::<_, winsafe::co::ERROR>(())
+/// ```
+pub fn WritePrivateProfileString(
+	section_name: &str,
+	key_name: Option<&str>,
+	new_val: Option<&str>,
+	file_name: &str,
+) -> SysResult<()>
+{
+	bool_to_sysresult(
+		unsafe {
+			ffi::WritePrivateProfileStringW(
+				WString::from_str(section_name).as_ptr(),
+				WString::from_opt_str(key_name).as_ptr(),
+				WString::from_opt_str(new_val).as_ptr(),
+				WString::from_str(file_name).as_ptr(),
+			)
+		},
+	)
 }

@@ -226,13 +226,13 @@ impl<'a> ListViewItem<'a> {
 			let mut buf = WString::new_alloc_buf(buf_sz);
 			lvi.set_pszText(Some(&mut buf));
 
-			let num_chars = self.owner.hwnd() // char count without terminating null
+			let returned_chars = self.owner.hwnd() // char count without terminating null
 				.SendMessage(lvm::GetItemText {
 					index: self.index,
 					lvitem: &mut lvi,
 				}) + 1; // plus terminating null count
 
-			if (num_chars as usize) < buf_sz { // to break, must have at least 1 char gap
+			if (returned_chars as usize) < buf_sz { // to break, must have at least 1 char gap
 				return buf.to_string();
 			}
 

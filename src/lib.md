@@ -187,6 +187,5 @@ Beyond the [GUI](crate::gui) API, WinSafe features a few high-level abstractions
 | [`Encoding`](crate::Encoding) | String encodings. |
 | [`File`](crate::File) | File read/write and other operations. |
 | [`FileMapped`](crate::FileMapped) | Memory-mapped file operations. |
-| [`Ini`](crate::Ini) | Managing key/value pairs of a `.ini` file. |
 | [`path`](crate::path) | File path operations. |
 | [`WString`](crate::WString) | Managing native wide strings. |

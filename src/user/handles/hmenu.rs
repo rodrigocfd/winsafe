@@ -426,7 +426,7 @@ pub trait user_Hmenu: Handle {
 		loop {
 			let mut buf = WString::new_alloc_buf(buf_sz);
 
-			let nchars = match unsafe { // char count without terminating null
+			let returned_chars = match unsafe { // char count without terminating null
 				ffi::GetMenuStringW(
 					self.ptr(),
 					id_or_pos.id_or_pos_u32(),
@@ -439,7 +439,7 @@ pub trait user_Hmenu: Handle {
 				n => n + 1, // plus terminating null count
 			};
 
-			if (nchars as usize) < buf_sz { // to break, must have at least 1 char gap
+			if (returned_chars as usize) < buf_sz { // to break, must have at least 1 char gap
 				return Ok(buf.to_string());
 			}
 

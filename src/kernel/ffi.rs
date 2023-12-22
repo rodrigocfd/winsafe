@@ -149,6 +149,9 @@ extern_sys! { "kernel32";
 	GetModuleHandleW(PCSTR) -> HANDLE
 	GetNativeSystemInfo(PVOID)
 	GetPriorityClass(HANDLE) -> u32
+	GetPrivateProfileSectionNamesW(PSTR, u32, PCSTR) -> u32
+	GetPrivateProfileSectionW(PCSTR, PSTR, u32, PCSTR) -> u32
+	GetPrivateProfileStringW(PCSTR, PCSTR, PCSTR, PSTR, u32, PCSTR) -> u32
 	GetProcAddress(HANDLE, *const u8) -> PCVOID
 	GetProcessHandleCount(HANDLE, &mut u32) -> BOOL
 	GetProcessHeap() -> HANDLE
@@ -266,6 +269,7 @@ extern_sys! { "kernel32";
 	WideCharToMultiByte(u32, u32, PCSTR, i32, PSTR, i32, *const u8, *mut BOOL) -> i32
 	WriteConsoleW(HANDLE, PCVOID, u32, *mut u32, PVOID) -> BOOL
 	WriteFile(HANDLE, PCVOID, u32, *mut u32, PVOID) -> BOOL
+	WritePrivateProfileStringW(PCSTR, PCSTR, PCSTR, PCSTR) -> BOOL
 }
 
 extern_sys! { "ktmw32";
