@@ -13,7 +13,7 @@ function.</p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>};
 
-<span class="kw">let </span>val = w::WritePrivateProfileString(
+w::WritePrivateProfileString(
     <span class="string">"MySection"</span>,
     <span class="prelude-val">Some</span>(<span class="string">"MyKey"</span>),
     <span class="prelude-val">Some</span>(<span class="string">"new value"</span>),
