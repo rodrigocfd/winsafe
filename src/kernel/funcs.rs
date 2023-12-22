@@ -787,6 +787,9 @@ pub fn GetPrivateProfileSectionNames(
 /// [`GetPrivateProfileString`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getprivateprofilestringw)
 /// function.
 ///
+/// The related writing function is
+/// [`WritePrivateProfileString`](crate::WritePrivateProfileString).
+///
 /// # Examples
 ///
 /// Reading from an INI file:
@@ -1905,14 +1908,17 @@ pub fn WideCharToMultiByte(
 /// [`WritePrivateProfileString`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-writeprivateprofilestringw)
 /// function.
 ///
+/// The related reading function is
+/// [`GetPrivateProfileString`](crate::GetPrivateProfileString).
+///
 /// # Examples
 ///
-/// Writing from an INI file:
+/// Writing value into an INI file:
 ///
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
 ///
-/// let val = w::WritePrivateProfileString(
+/// w::WritePrivateProfileString(
 ///     "MySection",
 ///     Some("MyKey"),
 ///     Some("new value"),
