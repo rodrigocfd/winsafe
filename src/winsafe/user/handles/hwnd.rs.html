@@ -2081,7 +2081,7 @@
 				ffi::DrawCaption(
 					<span class="self">self</span>.ptr(),
 					hdc.ptr(),
-					rect <span class="kw">as </span>* <span class="kw">const _ as _</span>,
+					rect <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
 					flags.unwrap_or_default().raw(),
 				)
 			},

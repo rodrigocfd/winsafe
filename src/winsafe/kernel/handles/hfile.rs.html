@@ -633,9 +633,9 @@
 			<span class="kw">unsafe </span>{
 				ffi::SetFileTime(
 					<span class="self">self</span>.ptr(),
-					creation_time.map_or(std::ptr::null(), |p| p <span class="kw">as </span>* <span class="kw">const _ as _</span>),
-					last_access_time.map_or(std::ptr::null(), |p| p <span class="kw">as </span>* <span class="kw">const _ as _</span>),
-					last_write_time.map_or(std::ptr::null(), |p| p <span class="kw">as </span>* <span class="kw">const _ as _</span>),
+					creation_time.map_or(std::ptr::null(), |p| p <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>),
+					last_access_time.map_or(std::ptr::null(), |p| p <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>),
+					last_write_time.map_or(std::ptr::null(), |p| p <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>),
 				)
 			},
 		)

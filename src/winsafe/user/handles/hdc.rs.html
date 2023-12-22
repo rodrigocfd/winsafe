@@ -176,7 +176,7 @@
 	/// function.
 	</span><span class="kw">fn </span>DrawFocusRect(<span class="kw-2">&amp;</span><span class="self">self</span>, rect: <span class="kw-2">&amp;</span>RECT) -&gt; SysResult&lt;()&gt; {
 		bool_to_sysresult(
-			<span class="kw">unsafe </span>{ ffi::DrawFocusRect(<span class="self">self</span>.ptr(), rect <span class="kw">as </span>* <span class="kw">const _ as _</span>) },
+			<span class="kw">unsafe </span>{ ffi::DrawFocusRect(<span class="self">self</span>.ptr(), rect <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>) },
 		)
 	}
 

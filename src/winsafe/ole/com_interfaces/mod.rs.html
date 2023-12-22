@@ -56,12 +56,17 @@
 <a href="#55" id="55">55</a>
 <a href="#56" id="56">56</a>
 <a href="#57" id="57">57</a>
+<a href="#58" id="58">58</a>
+<a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
 </pre></div><pre class="rust"><code><span class="kw">mod </span>iadvisesink;
 <span class="kw">mod </span>ibindctx;
 <span class="kw">mod </span>idataobject;
 <span class="kw">mod </span>idroptarget;
 <span class="kw">mod </span>imoniker;
 <span class="kw">mod </span>ipersist;
+<span class="kw">mod </span>ipersistfile;
 <span class="kw">mod </span>ipersiststream;
 <span class="kw">mod </span>ipicture;
 <span class="kw">mod </span>isequentialstream;
@@ -76,6 +81,7 @@
 	<span class="kw">pub use </span><span class="kw">super</span>::idroptarget::IDropTarget;
 	<span class="kw">pub use </span><span class="kw">super</span>::imoniker::IMoniker;
 	<span class="kw">pub use </span><span class="kw">super</span>::ipersist::IPersist;
+	<span class="kw">pub use </span><span class="kw">super</span>::ipersistfile::IPersistFile;
 	<span class="kw">pub use </span><span class="kw">super</span>::ipersiststream::IPersistStream;
 	<span class="kw">pub use </span><span class="kw">super</span>::ipicture::IPicture;
 	<span class="kw">pub use </span><span class="kw">super</span>::isequentialstream::ISequentialStream;
@@ -91,6 +97,7 @@
 	<span class="kw">pub use </span><span class="kw">super</span>::idroptarget::ole_IDropTarget;
 	<span class="kw">pub use </span><span class="kw">super</span>::imoniker::ole_IMoniker;
 	<span class="kw">pub use </span><span class="kw">super</span>::ipersist::ole_IPersist;
+	<span class="kw">pub use </span><span class="kw">super</span>::ipersistfile::ole_IPersistFile;
 	<span class="kw">pub use </span><span class="kw">super</span>::ipersiststream::ole_IPersistStream;
 	<span class="kw">pub use </span><span class="kw">super</span>::ipicture::ole_IPicture;
 	<span class="kw">pub use </span><span class="kw">super</span>::isequentialstream::ole_ISequentialStream;
@@ -106,6 +113,7 @@
 	<span class="kw">pub use </span><span class="kw">super</span>::idroptarget::IDropTargetVT;
 	<span class="kw">pub use </span><span class="kw">super</span>::imoniker::IMonikerVT;
 	<span class="kw">pub use </span><span class="kw">super</span>::ipersist::IPersistVT;
+	<span class="kw">pub use </span><span class="kw">super</span>::ipersistfile::IPersistFileVT;
 	<span class="kw">pub use </span><span class="kw">super</span>::ipersiststream::IPersistStreamVT;
 	<span class="kw">pub use </span><span class="kw">super</span>::ipicture::IPictureVT;
 	<span class="kw">pub use </span><span class="kw">super</span>::isequentialstream::ISequentialStreamVT;
