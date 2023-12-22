@@ -77,10 +77,41 @@
 <a href="#76" id="76">76</a>
 <a href="#77" id="77">77</a>
 <a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a>
+<a href="#81" id="81">81</a>
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
+<a href="#86" id="86">86</a>
+<a href="#87" id="87">87</a>
+<a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -94,7 +125,7 @@
 	<span class="kw">pub </span>Load: <span class="kw">fn</span>(COMPTR, PCSTR, u32) -&gt; HRES,
 	<span class="kw">pub </span>Save: <span class="kw">fn</span>(COMPTR, PCSTR, i32) -&gt; HRES,
 	<span class="kw">pub </span>SaveCompleted: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>GetCurFile: <span class="kw">fn</span>(COMPTR, PVOID) -&gt; HRES,
+	<span class="kw">pub </span>GetCurFile: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
 }
 
 <span class="macro">com_interface! </span>{ IPersistFile: <span class="string">"0000010b-0000-0000-c000-000000000046"</span>;
@@ -118,6 +149,22 @@
 /// use winsafe::prelude::*;
 /// ```
 </span><span class="kw">pub trait </span>ole_IPersistFile: ole_IUnknown {
+	<span class="doccomment">/// [`IPersistFile::GetCurFile`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersistfile-getcurfile)
+	/// method.
+	</span><span class="attr">#[must_use]
+	</span><span class="kw">fn </span>GetCurFile(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;String&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>pstr = std::ptr::null_mut::&lt;u16&gt;();
+		ok_to_hrresult(
+			<span class="kw">unsafe </span>{
+				(vt::&lt;IPersistFileVT&gt;(<span class="self">self</span>).GetCurFile)(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>pstr)
+			},
+		).map(|<span class="kw">_</span>| {
+			<span class="kw">let </span>name = <span class="kw">unsafe </span>{ WString::from_wchars_nullt(pstr) };
+			<span class="kw">let _ </span>= <span class="kw">unsafe </span>{ CoTaskMemFreeGuard::new(pstr <span class="kw">as _</span>, <span class="number">0</span>) }; <span class="comment">// https://stackoverflow.com/q/3079508/6923555
+			</span>name.to_string()
+		})
+	}
+
 	<span class="doccomment">/// [`IPersistFile::IsDirty`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersistfile-isdirty)
 	/// method.
 	</span><span class="attr">#[must_use]
@@ -148,8 +195,21 @@
 			<span class="kw">unsafe </span>{
 				(vt::&lt;IPersistFileVT&gt;(<span class="self">self</span>).Save)(
 					<span class="self">self</span>.ptr(),
-					file_name.map_or(std::ptr::null(), |f| WString::from_str(f).as_ptr()),
+					WString::from_opt_str(file_name).as_ptr(),
 					remember <span class="kw">as _</span>,
+				)
+			},
+		)
+	}
+
+	<span class="doccomment">/// [`IPersistFile::SaveCompleted`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersistfile-savecompleted)
+	/// method.
+	</span><span class="kw">fn </span>SaveCompleted(<span class="kw-2">&amp;</span><span class="self">self</span>, file_name: <span class="kw-2">&amp;</span>str) -&gt; HrResult&lt;()&gt; {
+		ok_to_hrresult(
+			<span class="kw">unsafe </span>{
+				(vt::&lt;IPersistFileVT&gt;(<span class="self">self</span>).SaveCompleted)(
+					<span class="self">self</span>.ptr(),
+					WString::from_str(file_name).as_ptr(),
 				)
 			},
 		)
