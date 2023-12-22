@@ -1939,6 +1939,12 @@
 <a href="#1938" id="1938">1938</a>
 <a href="#1939" id="1939">1939</a>
 <a href="#1940" id="1940">1940</a>
+<a href="#1941" id="1941">1941</a>
+<a href="#1942" id="1942">1942</a>
+<a href="#1943" id="1943">1943</a>
+<a href="#1944" id="1944">1944</a>
+<a href="#1945" id="1945">1945</a>
+<a href="#1946" id="1946">1946</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span>std::collections::HashMap;
@@ -2727,6 +2733,9 @@
 
 <span class="doccomment">/// [`GetPrivateProfileString`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getprivateprofilestringw)
 /// function.
+///
+/// The related writing function is
+/// [`WritePrivateProfileString`](crate::WritePrivateProfileString).
 ///
 /// # Examples
 ///
@@ -3846,9 +3855,12 @@
 <span class="doccomment">/// [`WritePrivateProfileString`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-writeprivateprofilestringw)
 /// function.
 ///
+/// The related reading function is
+/// [`GetPrivateProfileString`](crate::GetPrivateProfileString).
+///
 /// # Examples
 ///
-/// Writing from an INI file:
+/// Writing value into an INI file:
 ///
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
