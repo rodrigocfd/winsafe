@@ -26,7 +26,7 @@ pub trait user_Hdc: Handle {
 	/// function.
 	fn DrawFocusRect(&self, rect: &RECT) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { ffi::DrawFocusRect(self.ptr(), rect as * const _ as _) },
+			unsafe { ffi::DrawFocusRect(self.ptr(), rect as *const _ as _) },
 		)
 	}
 

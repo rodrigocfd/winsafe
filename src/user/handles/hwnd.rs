@@ -252,7 +252,7 @@ pub trait user_Hwnd: Handle {
 				ffi::DrawCaption(
 					self.ptr(),
 					hdc.ptr(),
-					rect as * const _ as _,
+					rect as *const _ as _,
 					flags.unwrap_or_default().raw(),
 				)
 			},

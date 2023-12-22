@@ -299,9 +299,9 @@ pub trait kernel_Hfile: Handle {
 			unsafe {
 				ffi::SetFileTime(
 					self.ptr(),
-					creation_time.map_or(std::ptr::null(), |p| p as * const _ as _),
-					last_access_time.map_or(std::ptr::null(), |p| p as * const _ as _),
-					last_write_time.map_or(std::ptr::null(), |p| p as * const _ as _),
+					creation_time.map_or(std::ptr::null(), |p| p as *const _ as _),
+					last_access_time.map_or(std::ptr::null(), |p| p as *const _ as _),
+					last_write_time.map_or(std::ptr::null(), |p| p as *const _ as _),
 				)
 			},
 		)
