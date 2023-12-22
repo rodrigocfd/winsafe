@@ -4,6 +4,7 @@ mod idataobject;
 mod idroptarget;
 mod imoniker;
 mod ipersist;
+mod ipersistfile;
 mod ipersiststream;
 mod ipicture;
 mod isequentialstream;
@@ -18,6 +19,7 @@ pub mod decl {
 	pub use super::idroptarget::IDropTarget;
 	pub use super::imoniker::IMoniker;
 	pub use super::ipersist::IPersist;
+	pub use super::ipersistfile::IPersistFile;
 	pub use super::ipersiststream::IPersistStream;
 	pub use super::ipicture::IPicture;
 	pub use super::isequentialstream::ISequentialStream;
@@ -33,6 +35,7 @@ pub mod traits {
 	pub use super::idroptarget::ole_IDropTarget;
 	pub use super::imoniker::ole_IMoniker;
 	pub use super::ipersist::ole_IPersist;
+	pub use super::ipersistfile::ole_IPersistFile;
 	pub use super::ipersiststream::ole_IPersistStream;
 	pub use super::ipicture::ole_IPicture;
 	pub use super::isequentialstream::ole_ISequentialStream;
@@ -48,6 +51,7 @@ pub mod vt {
 	pub use super::idroptarget::IDropTargetVT;
 	pub use super::imoniker::IMonikerVT;
 	pub use super::ipersist::IPersistVT;
+	pub use super::ipersistfile::IPersistFileVT;
 	pub use super::ipersiststream::IPersistStreamVT;
 	pub use super::ipicture::IPictureVT;
 	pub use super::isequentialstream::ISequentialStreamVT;
