@@ -62,7 +62,9 @@ automatically calls
 when the object goes out of scope.</div></li><li><div class="item-name"><a class="struct" href="struct.FreeLibraryGuard.html" title="struct winsafe::guard::FreeLibraryGuard">FreeLibraryGuard</a></div><div class="desc docblock-short">RAII implementation for <a href="../struct.HINSTANCE.html" title="struct winsafe::HINSTANCE"><code>HINSTANCE</code></a> which
 automatically calls
 <a href="https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-freelibrary"><code>FreeLibrary</code></a>
-when the object goes out of scope.</div></li><li><div class="item-name"><a class="struct" href="struct.FreeSidGuard.html" title="struct winsafe::guard::FreeSidGuard">FreeSidGuard</a></div><div class="desc docblock-short">RAII implementation for <a href="../struct.SID.html" title="struct winsafe::SID"><code>SID</code></a> which automatically calls
+when the object goes out of scope.</div></li><li><div class="item-name"><a class="struct" href="struct.FreeSidGuard.html" title="struct winsafe::guard::FreeSidGuard">FreeSidGuard</a></div><div class="desc docblock-short">RAII implementation for <a href="../struct.SID.html" title="struct winsafe::SID"><code>SID</code></a>, returned by
+<a href="../fn.AllocateAndInitializeSid.html" title="fn winsafe::AllocateAndInitializeSid"><code>AllocateAndInitializeSid</code></a>, which
+automatically calls
 <a href="https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-freesid"><code>FreeSid</code></a>
 when the object goes out of scope.</div></li><li><div class="item-name"><a class="struct" href="struct.GlobalFreeGuard.html" title="struct winsafe::guard::GlobalFreeGuard">GlobalFreeGuard</a></div><div class="desc docblock-short">RAII implementation for <a href="../struct.HGLOBAL.html" title="struct winsafe::HGLOBAL"><code>HGLOBAL</code></a> which automatically
 calls
@@ -87,7 +89,9 @@ when the object goes out of scope.</div></li><li><div class="item-name"><a class
 when the object goes out of scope.</div></li><li><div class="item-name"><a class="struct" href="struct.LocalFreeGuard.html" title="struct winsafe::guard::LocalFreeGuard">LocalFreeGuard</a></div><div class="desc docblock-short">RAII implementation for <a href="../struct.HLOCAL.html" title="struct winsafe::HLOCAL"><code>HLOCAL</code></a> which automatically
 calls
 <a href="https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree"><code>LocalFree</code></a>
-when the object goes out of scope.</div></li><li><div class="item-name"><a class="struct" href="struct.LocalFreeSidGuard.html" title="struct winsafe::guard::LocalFreeSidGuard">LocalFreeSidGuard</a></div><div class="desc docblock-short">RAII implementation for <a href="../struct.SID.html" title="struct winsafe::SID"><code>SID</code></a> which automatically calls
+when the object goes out of scope.</div></li><li><div class="item-name"><a class="struct" href="struct.LocalFreeSidGuard.html" title="struct winsafe::guard::LocalFreeSidGuard">LocalFreeSidGuard</a></div><div class="desc docblock-short">RAII implementation for <a href="../struct.SID.html" title="struct winsafe::SID"><code>SID</code></a>, returned by
+<a href="../fn.ConvertStringSidToSid.html" title="fn winsafe::ConvertStringSidToSid"><code>ConvertStringSidToSid</code></a>, which automatically
+calls
 <a href="https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree"><code>LocalFree</code></a>
 when the object goes out of scope.</div></li><li><div class="item-name"><a class="struct" href="struct.LocalUnlockGuard.html" title="struct winsafe::guard::LocalUnlockGuard">LocalUnlockGuard</a></div><div class="desc docblock-short">RAII implementation for <a href="../struct.HLOCAL.html" title="struct winsafe::HLOCAL"><code>HLOCAL</code></a> lock which automatically
 calls
@@ -101,8 +105,11 @@ when the object goes out of scope.</div></li><li><div class="item-name"><a class
 <a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc"><code>ReleaseDC</code></a>
 when the object goes out of scope.</div></li><li><div class="item-name"><a class="struct" href="struct.SelectObjectGuard.html" title="struct winsafe::guard::SelectObjectGuard">SelectObjectGuard</a><span class="stab portability" title="Available on crate feature `gdi` only"><code>gdi</code></span></div><div class="desc docblock-short">RAII implementation for
 <a href="../prelude/trait.gdi_Hdc.html#method.SelectObject" title="method winsafe::prelude::gdi_Hdc::SelectObject"><code>HDC::SelectObject</code></a> calls, which
-automatically selects the previous GDI object at the end of the scope.</div></li><li><div class="item-name"><a class="struct" href="struct.SidGuard.html" title="struct winsafe::guard::SidGuard">SidGuard</a></div><div class="desc docblock-short">RAII implementation for <a href="../struct.SID.html" title="struct winsafe::SID"><code>SID</code></a> which automatically frees the
-underlying memory block when the object goes out of scope.</div></li><li><div class="item-name"><a class="struct" href="struct.TokenGroupsGuard.html" title="struct winsafe::guard::TokenGroupsGuard">TokenGroupsGuard</a></div><div class="desc docblock-short">RAII implementation for <a href="../struct.TOKEN_GROUPS.html" title="struct winsafe::TOKEN_GROUPS"><code>TOKEN_GROUPS</code></a> which manages
+automatically selects the previous GDI object at the end of the scope.</div></li><li><div class="item-name"><a class="struct" href="struct.SidGuard.html" title="struct winsafe::guard::SidGuard">SidGuard</a></div><div class="desc docblock-short">RAII implementation for <a href="../struct.SID.html" title="struct winsafe::SID"><code>SID</code></a>, returned by
+<a href="../fn.CopySid.html" title="fn winsafe::CopySid"><code>CopySid</code></a> and
+<a href="../fn.GetWindowsAccountDomainSid.html" title="fn winsafe::GetWindowsAccountDomainSid"><code>GetWindowsAccountDomainSid</code></a>, which
+automatically frees the underlying memory block when the object goes out of
+scope.</div></li><li><div class="item-name"><a class="struct" href="struct.TokenGroupsGuard.html" title="struct winsafe::guard::TokenGroupsGuard">TokenGroupsGuard</a></div><div class="desc docblock-short">RAII implementation for <a href="../struct.TOKEN_GROUPS.html" title="struct winsafe::TOKEN_GROUPS"><code>TOKEN_GROUPS</code></a> which manages
 the allocated memory.</div></li><li><div class="item-name"><a class="struct" href="struct.TokenPrivilegesGuard.html" title="struct winsafe::guard::TokenPrivilegesGuard">TokenPrivilegesGuard</a></div><div class="desc docblock-short">RAII implementation for <a href="../struct.TOKEN_PRIVILEGES.html" title="struct winsafe::TOKEN_PRIVILEGES"><code>TOKEN_PRIVILEGES</code></a> which
 manages the allocated memory.</div></li><li><div class="item-name"><a class="struct" href="struct.UnlockFileGuard.html" title="struct winsafe::guard::UnlockFileGuard">UnlockFileGuard</a></div><div class="desc docblock-short">RAII implementation for the <a href="../struct.HFILE.html" title="struct winsafe::HFILE"><code>HFILE</code></a> lock which automatically
 calls
