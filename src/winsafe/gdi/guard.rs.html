@@ -195,11 +195,18 @@
 <a href="#194" id="194">194</a>
 <a href="#195" id="195">195</a>
 <a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::{Deref, DerefMut};
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gdi::ffi;
+<span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="macro">handle_guard! </span>{ DeleteDCGuard: HDC;
@@ -281,20 +288,20 @@
 </span><span class="doccomment">/// RAII implementation for [`LOGPALETTE`](crate::LOGPALETTE) which manages the
 /// allocated memory.
 </span><span class="kw">pub struct </span>LogpaletteGuard {
-	raw: HeapBlock,
+	ptr: GlobalFreeGuard,
 }
 
 <span class="kw">impl </span>Deref <span class="kw">for </span>LogpaletteGuard {
 	<span class="kw">type </span>Target = LOGPALETTE;
 
 	<span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
-		<span class="kw">unsafe </span>{ std::mem::transmute::&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;(<span class="self">self</span>.raw.as_ptr()) }
+		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>(<span class="self">self</span>.ptr.ptr() <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>) }
 	}
 }
 
 <span class="kw">impl </span>DerefMut <span class="kw">for </span>LogpaletteGuard {
 	<span class="kw">fn </span>deref_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Target {
-		<span class="kw">unsafe </span>{ std::mem::transmute::&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;(<span class="self">self</span>.raw.as_mut_ptr()) }
+		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(<span class="self">self</span>.ptr.ptr() <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>) }
 	}
 }
 
@@ -302,18 +309,23 @@
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gdi) <span class="kw">fn </span>new(
 		pal_version: u16,
 		entries: <span class="kw-2">&amp;</span>[PALETTEENTRY],
-	) -&gt; <span class="self">Self
-	</span>{
+	) -&gt; SysResult&lt;<span class="self">Self</span>&gt;
+	{
 		<span class="kw">let </span>sz = std::mem::size_of::&lt;LOGPALETTE&gt;() <span class="comment">// size in bytes of the allocated struct
 			</span>- std::mem::size_of::&lt;PALETTEENTRY&gt;()
 			+ (entries.len() * std::mem::size_of::&lt;PALETTEENTRY&gt;());
-		<span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self </span>{ raw: HeapBlock::alloc(sz).unwrap() }; <span class="comment">// assume no allocation errors
-		</span>new_self.palVersion = pal_version;
+		<span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self </span>{
+			ptr: HGLOBAL::GlobalAlloc(
+				<span class="prelude-val">Some</span>(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+				sz,
+			)<span class="question-mark">?</span>,
+		};
+		new_self.palVersion = pal_version;
 		new_self.palNumEntries = entries.len() <span class="kw">as _</span>;
 		entries.iter()
 			.zip(new_self.palPalEntry_mut())
 			.for_each(|(src, dest)| <span class="kw-2">*</span>dest = <span class="kw-2">*</span>src); <span class="comment">// copy all PALETTEENTRY into struct room
-		</span>new_self
+		</span><span class="prelude-val">Ok</span>(new_self)
 	}
 }
 

@@ -1945,6 +1945,18 @@
 <a href="#1944" id="1944">1944</a>
 <a href="#1945" id="1945">1945</a>
 <a href="#1946" id="1946">1946</a>
+<a href="#1947" id="1947">1947</a>
+<a href="#1948" id="1948">1948</a>
+<a href="#1949" id="1949">1949</a>
+<a href="#1950" id="1950">1950</a>
+<a href="#1951" id="1951">1951</a>
+<a href="#1952" id="1952">1952</a>
+<a href="#1953" id="1953">1953</a>
+<a href="#1954" id="1954">1954</a>
+<a href="#1955" id="1955">1955</a>
+<a href="#1956" id="1956">1956</a>
+<a href="#1957" id="1957">1957</a>
+<a href="#1958" id="1958">1958</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span>std::collections::HashMap;
@@ -2083,13 +2095,16 @@
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>CopySid(src: <span class="kw-2">&amp;</span>SID) -&gt; SysResult&lt;SidGuard&gt; {
 	<span class="kw">let </span>sid_sz = GetLengthSid(<span class="kw-2">&amp;</span>src);
-	<span class="kw">let </span><span class="kw-2">mut </span>sid_buf = HeapBlock::alloc(sid_sz <span class="kw">as _</span>).unwrap(); <span class="comment">// assume no allocation errors
+	<span class="kw">let </span>sid_buf = HGLOBAL::GlobalAlloc(
+		<span class="prelude-val">Some</span>(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+		sid_sz <span class="kw">as _</span>,
+	)<span class="question-mark">?</span>;
 
-	</span><span class="kw">unsafe </span>{
+	<span class="kw">unsafe </span>{
 		bool_to_sysresult(
 			ffi::CopySid(
 				sid_sz,
-				sid_buf.as_mut_ptr(),
+				sid_buf.ptr(),
 				src <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
 			),
 		).map(|<span class="kw">_</span>| SidGuard::new(sid_buf))
@@ -2148,14 +2163,17 @@
 		<span class="kw">return </span><span class="prelude-val">Err</span>(get_size_err);
 	}
 
-	<span class="kw">let </span><span class="kw-2">mut </span>sid_buf = HeapBlock::alloc(sid_sz <span class="kw">as _</span>).unwrap(); <span class="comment">// assume no allocation errors
+	<span class="kw">let </span>sid_buf = HGLOBAL::GlobalAlloc(
+		<span class="prelude-val">Some</span>(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+		sid_sz <span class="kw">as _</span>,
+	)<span class="question-mark">?</span>;
 
-	</span><span class="kw">unsafe </span>{
+	<span class="kw">unsafe </span>{
 		bool_to_sysresult(
 			ffi::CreateWellKnownSid(
 				well_known_sid.raw(),
 				domain_sid.map_or(std::ptr::null(), |s| s <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>),
-				sid_buf.as_mut_ptr(),
+				sid_buf.ptr(),
 				<span class="kw-2">&amp;mut </span>sid_sz,
 			),
 		).map(|<span class="kw">_</span>| SidGuard::new(sid_buf))
@@ -3069,13 +3087,16 @@
 		<span class="kw">return </span><span class="prelude-val">Err</span>(get_size_err);
 	}
 
-	<span class="kw">let </span><span class="kw-2">mut </span>ad_sid_buf = HeapBlock::alloc(ad_sid_sz <span class="kw">as _</span>).unwrap(); <span class="comment">// assume no allocation errors
+	<span class="kw">let </span>ad_sid_buf = HGLOBAL::GlobalAlloc(
+		<span class="prelude-val">Some</span>(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+		ad_sid_sz <span class="kw">as _</span>,
+	)<span class="question-mark">?</span>;
 
-	</span><span class="kw">unsafe </span>{
+	<span class="kw">unsafe </span>{
 		bool_to_sysresult(
 			ffi::GetWindowsAccountDomainSid(
 				sid <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-				ad_sid_buf.as_mut_ptr(),
+				ad_sid_buf.ptr(),
 				<span class="kw-2">&amp;mut </span>ad_sid_sz,
 			),
 		).map(|<span class="kw">_</span>| SidGuard::new(ad_sid_buf))
@@ -3375,15 +3396,18 @@
 		<span class="kw">return </span><span class="prelude-val">Err</span>(get_size_err);
 	}
 
-	<span class="kw">let </span><span class="kw-2">mut </span>sid_buf = HeapBlock::alloc(sid_sz <span class="kw">as _</span>).unwrap(); <span class="comment">// assume no allocation errors
-	</span><span class="kw">let </span><span class="kw-2">mut </span>domain_buf = WString::new_alloc_buf(domain_sz <span class="kw">as _</span>);
+	<span class="kw">let </span>sid_buf = HGLOBAL::GlobalAlloc(
+		<span class="prelude-val">Some</span>(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+		sid_sz <span class="kw">as _</span>,
+	)<span class="question-mark">?</span>;
+	<span class="kw">let </span><span class="kw-2">mut </span>domain_buf = WString::new_alloc_buf(domain_sz <span class="kw">as _</span>);
 
 	<span class="kw">unsafe </span>{
 		bool_to_sysresult(
 			ffi::LookupAccountNameW(
 				WString::from_opt_str(system_name).as_ptr(),
 				WString::from_str(account_name).as_ptr(),
-				sid_buf.as_mut_ptr(),
+				sid_buf.ptr(),
 				<span class="kw-2">&amp;mut </span>sid_sz,
 				domain_buf.as_mut_ptr(),
 				<span class="kw-2">&amp;mut </span>domain_sz,

@@ -37,7 +37,7 @@ function.</p>
 
 <span class="kw">let </span>privs = w::TOKEN_PRIVILEGES::new(<span class="kw-2">&amp;</span>[
     w::LUID_AND_ATTRIBUTES::new(luid, co::SE_PRIV_ATTR::ENABLED),
-]);
+])<span class="question-mark">?</span>;
 
 htoken.AdjustTokenPrivileges(w::DisabPriv::Privs(<span class="kw-2">&amp;</span>privs))<span class="question-mark">?</span>;</code></pre></div>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.CheckTokenCapability" class="method"><a class="src rightside" href="../../src/winsafe/kernel\handles/haccesstoken.rs.html#70-84">source</a><h4 class="code-header">fn <a href="#method.CheckTokenCapability" class="fn">CheckTokenCapability</a>(&amp;self, capability_sid_to_check: &amp;<a class="struct" href="../struct.SID.html" title="struct winsafe::SID">SID</a>) -&gt; <a class="type" href="../type.SysResult.html" title="type winsafe::SysResult">SysResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.bool.html">bool</a>&gt;</h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokencapability"><code>CheckTokenCapability</code></a>

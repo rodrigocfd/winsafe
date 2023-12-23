@@ -284,6 +284,7 @@
 <a href="#283" id="283">283</a>
 <a href="#284" id="284">284</a>
 <a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -411,10 +412,6 @@
 <span class="doccomment">/// [`LOGPALETTE`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logpalette)
 /// struct.
 ///
-/// Note that you cannot directly instantiate this struct. This is a
-/// [`VariableSized`](crate::prelude::VariableSized) struct, managed by
-/// [`LogpaletteGuard`](crate::guard::LogpaletteGuard).
-///
 /// # Examples
 ///
 /// ```no_run
@@ -423,7 +420,7 @@
 /// let mut log_pal = w::LOGPALETTE::new(0x300, &amp;[
 ///     w::PALETTEENTRY { peRed: 1, peGreen: 2, peBlue: 3, ..Default::default() },
 ///     w::PALETTEENTRY { peRed: 10, peGreen: 20, peBlue: 30, ..Default::default() },
-/// ]);
+/// ])?;
 ///
 /// // Setting a new entry value
 /// log_pal.palPalEntry_mut()[0].peRed = 255;
@@ -432,6 +429,7 @@
 /// for entry in log_pal.palPalEntry().iter() {
 ///     println!("{} {} {}", entry.peRed, entry.peGreen, entry.peBlue);
 /// }
+/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
 /// ```
 </span><span class="attr">#[repr(C)]
 </span><span class="kw">pub struct </span>LOGPALETTE {
@@ -446,7 +444,11 @@
 	<span class="doccomment">/// Returns a dynamically allocated
 	/// [`LogpaletteGuard`](crate::guard::LogpaletteGuard).
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>new(palVersion: u16, entries: <span class="kw-2">&amp;</span>[PALETTEENTRY]) -&gt; LogpaletteGuard {
+	</span><span class="kw">pub fn </span>new(
+		palVersion: u16,
+		entries: <span class="kw-2">&amp;</span>[PALETTEENTRY],
+	) -&gt; SysResult&lt;LogpaletteGuard&gt;
+	{
 		LogpaletteGuard::new(palVersion, entries)
 	}
 

@@ -309,18 +309,6 @@
 <a href="#308" id="308">308</a>
 <a href="#309" id="309">309</a>
 <a href="#310" id="310">310</a>
-<a href="#311" id="311">311</a>
-<a href="#312" id="312">312</a>
-<a href="#313" id="313">313</a>
-<a href="#314" id="314">314</a>
-<a href="#315" id="315">315</a>
-<a href="#316" id="316">316</a>
-<a href="#317" id="317">317</a>
-<a href="#318" id="318">318</a>
-<a href="#319" id="319">319</a>
-<a href="#320" id="320">320</a>
-<a href="#321" id="321">321</a>
-<a href="#322" id="322">322</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -333,12 +321,6 @@
 	<span class="doccomment">/// Handle to a
 	/// [heap object](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcreate).
 	/// Originally just a `HANDLE`.
-	///
-	/// If you're allocating memory using just the default process heap – that
-	/// is, by calling
-	/// [`HHEAP::GetProcessHeap`](crate::prelude::kernel_Hheap::GetProcessHeap)
-	/// –, consider using the [`HeapBlock`](crate::HeapBlock) high-level
-	/// abstraction.
 </span>}
 
 <span class="kw">impl </span>kernel_Hheap <span class="kw">for </span>HHEAP {}
@@ -403,12 +385,6 @@
 	<span class="doccomment">/// [`HeapAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapalloc)
 	/// function.
 	///
-	/// If you're allocating memory using just the default process heap – that
-	/// is, by calling
-	/// [`HHEAP::GetProcessHeap`](crate::prelude::kernel_Hheap::GetProcessHeap)
-	/// –, consider using the [`HeapBlock`](crate::HeapBlock) high-level
-	/// abstraction.
-	///
 	/// # Examples
 	///
 	/// ```no_run
@@ -424,7 +400,7 @@
 	///     println!("{} ", byte);
 	/// }
 	///
-	/// println!("End.");
+	/// // HeapFree() automatically called
 	/// # Ok::&lt;_, co::ERROR&gt;(())
 	/// ```
 	</span><span class="attr">#[must_use]

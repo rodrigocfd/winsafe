@@ -2085,7 +2085,9 @@
 /// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid) as [`FreeSidGuard`](crate::guard::FreeSidGuard);
 /// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid) as [`LocalFreeSidGuard`](crate::guard::LocalFreeSidGuard);
 /// * [`CopySid`](crate::CopySid) as [`SidGuard`](crate::guard::SidGuard);
-/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid) as [`SidGuard`](crate::guard::SidGuard).
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid) as [`SidGuard`](crate::guard::SidGuard);
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid) as [`SidGuard`](crate::guard::SidGuard);
+/// * [`LookupAccountName`](crate::LookupAccountName) as [`SidGuard`](crate::guard::SidGuard).
 </span><span class="attr">#[repr(C)]
 </span><span class="kw">pub struct </span>SID {
 	<span class="kw">pub </span>Revision: u8,
@@ -2336,10 +2338,6 @@
 
 <span class="doccomment">/// [`TOKEN_GROUPS`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_groups)
 /// struct.
-///
-/// Note that you cannot directly instantiate this struct. This is a
-/// [`VariableSized`](crate::prelude::VariableSized) struct, managed by
-/// [`TokenGroupsGuard`](crate::guard::TokenGroupsGuard).
 </span><span class="attr">#[repr(C)]
 </span><span class="kw">pub struct </span>TOKEN_GROUPS&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) GroupCount: u32,
@@ -2352,7 +2350,10 @@
 	<span class="doccomment">/// Returns a dynamically allocated
 	/// [`TokenGroupsGuard`](crate::guard::TokenGroupsGuard).
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>new(groups: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[SID_AND_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt;]) -&gt; TokenGroupsGuard&lt;<span class="lifetime">'a</span>&gt; {
+	</span><span class="kw">pub fn </span>new(
+		groups: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[SID_AND_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt;],
+	) -&gt; SysResult&lt;TokenGroupsGuard&lt;<span class="lifetime">'a</span>&gt;&gt;
+	{
 		TokenGroupsGuard::new(groups)
 	}
 
@@ -2447,10 +2448,6 @@
 
 <span class="doccomment">/// [`TOKEN_PRIVILEGES`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_privileges)
 /// struct.
-///
-/// Note that you cannot directly instantiate this struct. This is a
-/// [`VariableSized`](crate::prelude::VariableSized) struct, managed by
-/// [`TokenPrivilegesGuard`](crate::guard::TokenPrivilegesGuard).
 </span><span class="attr">#[repr(C)]
 </span><span class="kw">pub struct </span>TOKEN_PRIVILEGES {
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) PrivilegeCount: u32,
@@ -2463,7 +2460,10 @@
 	<span class="doccomment">/// Returns a dynamically allocated
 	/// [`TokenPrivilegesGuard`](crate::guard::TokenPrivilegesGuard).
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>new(privileges: <span class="kw-2">&amp;</span>[LUID_AND_ATTRIBUTES]) -&gt; TokenPrivilegesGuard {
+	</span><span class="kw">pub fn </span>new(
+		privileges: <span class="kw-2">&amp;</span>[LUID_AND_ATTRIBUTES],
+	) -&gt; SysResult&lt;TokenPrivilegesGuard&gt;
+	{
 		TokenPrivilegesGuard::new(privileges)
 	}
 

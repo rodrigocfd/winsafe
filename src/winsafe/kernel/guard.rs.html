@@ -796,9 +796,27 @@
 <a href="#795" id="795">795</a>
 <a href="#796" id="796">796</a>
 <a href="#797" id="797">797</a>
+<a href="#798" id="798">798</a>
+<a href="#799" id="799">799</a>
+<a href="#800" id="800">800</a>
+<a href="#801" id="801">801</a>
+<a href="#802" id="802">802</a>
+<a href="#803" id="803">803</a>
+<a href="#804" id="804">804</a>
+<a href="#805" id="805">805</a>
+<a href="#806" id="806">806</a>
+<a href="#807" id="807">807</a>
+<a href="#808" id="808">808</a>
+<a href="#809" id="809">809</a>
+<a href="#810" id="810">810</a>
+<a href="#811" id="811">811</a>
+<a href="#812" id="812">812</a>
+<a href="#813" id="813">813</a>
+<a href="#814" id="814">814</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomData;
 <span class="kw">use </span>std::ops::{Deref, DerefMut};
 
+<span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::kernel::ffi;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -1409,19 +1427,20 @@
 <span class="comment">//------------------------------------------------------------------------------
 
 </span><span class="doccomment">/// RAII implementation for [`SID`](crate::SID), returned by
-/// [`CopySid`](crate::CopySid) and
-/// [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid), which
-/// automatically frees the underlying memory block when the object goes out of
-/// scope.
+/// [`CopySid`](crate::CopySid),
+/// [`CreateWellKnownSid`](crate::CreateWellKnownSid),
+/// [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid) and
+/// [`LookupAccountName`](crate::LookupAccountName), which automatically frees
+/// the underlying memory block when the object goes out of scope.
 </span><span class="kw">pub struct </span>SidGuard {
-	raw: HeapBlock,
+	ptr: GlobalFreeGuard,
 }
 
 <span class="kw">impl </span>Deref <span class="kw">for </span>SidGuard {
 	<span class="kw">type </span>Target = SID;
 
 	<span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
-		<span class="kw">unsafe </span>{ std::mem::transmute::&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;(<span class="self">self</span>.raw.as_ptr()) }
+		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>(<span class="self">self</span>.ptr.ptr() <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>) }
 	}
 }
 
@@ -1438,8 +1457,8 @@
 	///
 	/// Be sure the data is an allocated [`SID`](crate::SID) structure.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub const unsafe fn </span>new(raw: HeapBlock) -&gt; <span class="self">Self </span>{
-		<span class="self">Self </span>{ raw }
+	</span><span class="kw">pub const unsafe fn </span>new(ptr: GlobalFreeGuard) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{ ptr }
 	}
 }
 
@@ -1448,7 +1467,7 @@
 </span><span class="doccomment">/// RAII implementation for [`TOKEN_GROUPS`](crate::TOKEN_GROUPS) which manages
 /// the allocated memory.
 </span><span class="kw">pub struct </span>TokenGroupsGuard&lt;<span class="lifetime">'a</span>&gt; {
-	raw: HeapBlock,
+	ptr: GlobalFreeGuard,
 	_groups: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>()&gt;,
 }
 
@@ -1456,30 +1475,37 @@
 	<span class="kw">type </span>Target = TOKEN_GROUPS&lt;<span class="lifetime">'a</span>&gt;;
 
 	<span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
-		<span class="kw">unsafe </span>{ std::mem::transmute::&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;(<span class="self">self</span>.raw.as_ptr()) }
+		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>(<span class="self">self</span>.ptr.ptr() <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>) }
 	}
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DerefMut <span class="kw">for </span>TokenGroupsGuard&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">fn </span>deref_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Target {
-		<span class="kw">unsafe </span>{ std::mem::transmute::&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;(<span class="self">self</span>.raw.as_mut_ptr()) }
+		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(<span class="self">self</span>.ptr.ptr() <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>) }
 	}
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TokenGroupsGuard&lt;<span class="lifetime">'a</span>&gt; {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(groups: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[SID_AND_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt;]) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(
+		groups: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[SID_AND_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt;],
+	) -&gt; SysResult&lt;<span class="self">Self</span>&gt;
+	{
 		<span class="kw">let </span>sz = std::mem::size_of::&lt;TOKEN_GROUPS&gt;() <span class="comment">// size in bytes of the allocated struct
 			</span>- std::mem::size_of::&lt;SID_AND_ATTRIBUTES&gt;()
 			+ (groups.len() * std::mem::size_of::&lt;SID_AND_ATTRIBUTES&gt;());
 		<span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self </span>{
-			raw: HeapBlock::alloc(sz).unwrap(), <span class="comment">// assume no allocation errors
-			</span>_groups: PhantomData,
+			ptr: HGLOBAL::GlobalAlloc(
+				<span class="prelude-val">Some</span>(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+				sz,
+			)<span class="question-mark">?</span>,
+			_groups: PhantomData,
 		};
 		new_self.GroupCount = groups.len() <span class="kw">as _</span>;
 		groups.iter()
 			.zip(new_self.Groups_mut())
 			.for_each(|(src, dest)| <span class="kw-2">*</span>dest = src.clone()); <span class="comment">// copy all SID_AND_ATTRIBUTES into struct room
-		</span>new_self
+		</span><span class="prelude-val">Ok</span>(new_self)
 	}
 }
 
@@ -1488,34 +1514,42 @@
 </span><span class="doccomment">/// RAII implementation for [`TOKEN_PRIVILEGES`](crate::TOKEN_PRIVILEGES) which
 /// manages the allocated memory.
 </span><span class="kw">pub struct </span>TokenPrivilegesGuard {
-	raw: HeapBlock,
+	ptr: GlobalFreeGuard,
 }
 
 <span class="kw">impl </span>Deref <span class="kw">for </span>TokenPrivilegesGuard {
 	<span class="kw">type </span>Target = TOKEN_PRIVILEGES;
 
 	<span class="kw">fn </span>deref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="self">Self</span>::Target {
-		<span class="kw">unsafe </span>{ std::mem::transmute::&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;(<span class="self">self</span>.raw.as_ptr()) }
+		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>(<span class="self">self</span>.ptr.ptr() <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_</span>) }
 	}
 }
 
 <span class="kw">impl </span>DerefMut <span class="kw">for </span>TokenPrivilegesGuard {
 	<span class="kw">fn </span>deref_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span><span class="self">Self</span>::Target {
-		<span class="kw">unsafe </span>{ std::mem::transmute::&lt;<span class="kw">_</span>, <span class="kw">_</span>&gt;(<span class="self">self</span>.raw.as_mut_ptr()) }
+		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(<span class="self">self</span>.ptr.ptr() <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_</span>) }
 	}
 }
 
 <span class="kw">impl </span>TokenPrivilegesGuard {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(privileges: <span class="kw-2">&amp;</span>[LUID_AND_ATTRIBUTES]) -&gt; <span class="self">Self </span>{
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(
+		privileges: <span class="kw-2">&amp;</span>[LUID_AND_ATTRIBUTES],
+	) -&gt; SysResult&lt;<span class="self">Self</span>&gt;
+	{
 		<span class="kw">let </span>sz = std::mem::size_of::&lt;TOKEN_PRIVILEGES&gt;() <span class="comment">// size in bytes of the allocated struct
 			</span>- std::mem::size_of::&lt;LUID_AND_ATTRIBUTES&gt;()
 			+ (privileges.len() * std::mem::size_of::&lt;LUID_AND_ATTRIBUTES&gt;());
-		<span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self </span>{ raw: HeapBlock::alloc(sz).unwrap() }; <span class="comment">// assume no allocation errors
-		</span>new_self.PrivilegeCount = privileges.len() <span class="kw">as _</span>;
+		<span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self </span>{
+			ptr: HGLOBAL::GlobalAlloc(
+				<span class="prelude-val">Some</span>(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+				sz,
+			)<span class="question-mark">?</span>,
+		};
+		new_self.PrivilegeCount = privileges.len() <span class="kw">as _</span>;
 		privileges.iter()
 			.zip(new_self.Privileges_mut())
 			.for_each(|(src, dest)| <span class="kw-2">*</span>dest = <span class="kw-2">*</span>src); <span class="comment">// copy all LUID_AND_ATTRIBUTES into struct room
-		</span>new_self
+		</span><span class="prelude-val">Ok</span>(new_self)
 	}
 }
 

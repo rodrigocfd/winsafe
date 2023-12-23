@@ -239,7 +239,7 @@
 	///
 	/// let privs = w::TOKEN_PRIVILEGES::new(&amp;[
 	///     w::LUID_AND_ATTRIBUTES::new(luid, co::SE_PRIV_ATTR::ENABLED),
-	/// ]);
+	/// ])?;
 	///
 	/// htoken.AdjustTokenPrivileges(w::DisabPriv::Privs(&amp;privs))?;
 	/// # Ok::&lt;_, co::ERROR&gt;(())
