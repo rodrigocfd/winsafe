@@ -2,7 +2,9 @@ use std::cmp::Ordering;
 
 use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
+use crate::prelude::*;
 
 /// Stores a `[u16]` buffer for a null-terminated
 /// [Unicode UTF-16](https://learn.microsoft.com/en-us/windows/win32/intl/unicode-in-the-windows-api)
@@ -316,7 +318,7 @@ impl WString {
 
 enum Buffer {
 	Stack([u16; SSO_LEN]),
-	Heap(HeapBlock),
+	Heap(usize, GlobalFreeGuard), // keep memory size in bytes
 	Unallocated,
 }
 
@@ -345,13 +347,17 @@ impl Clone for Buffer {
 impl std::fmt::Debug for Buffer {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		write!(f, "{}", match self {
-			Self::Stack(arr) =>
-				format!("STACK({}) \"{}\"", arr.len(), self.to_string_checked().unwrap()),
-			Self::Heap(block) =>
-				format!("HEAP({}) \"{}\"",
-					block.len() / std::mem::size_of::<u16>(), self.to_string_checked().unwrap()),
-			Self::Unallocated =>
-				"UNALLOCATED \"\"".to_owned(),
+			Self::Stack(_) => format!(
+				"STACK({}) \"{}\"",
+				self.buf_len(),
+				self.to_string_checked().unwrap(),
+			),
+			Self::Heap(_, _) => format!(
+				"HEAP({}) \"{}\"",
+				self.buf_len(),
+				self.to_string_checked().unwrap(),
+			),
+			Self::Unallocated => "UNALLOCATED \"\"".to_owned(),
 		})
 	}
 }
@@ -434,8 +440,11 @@ impl Buffer {
 			Self::Stack([0x0000; SSO_LEN])
 		} else {
 			Self::Heap(
-				HeapBlock::alloc(num_chars * std::mem::size_of::<u16>())
-					.unwrap(), // assume no allocation errors
+				num_chars * std::mem::size_of::<u16>(),
+				HGLOBAL::GlobalAlloc(
+					Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+					num_chars * std::mem::size_of::<u16>(),
+				).unwrap(), // assume no allocation errors
 			)
 		}
 	}
@@ -443,7 +452,7 @@ impl Buffer {
 	unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
 		match self {
 			Self::Stack(arr) => arr.as_mut_ptr(),
-			Self::Heap(block) => block.as_mut_ptr() as _,
+			Self::Heap(_, ptr) => ptr.ptr() as _,
 			Self::Unallocated => panic!("Trying to use an unallocated WString buffer."),
 		}
 	}
@@ -451,7 +460,9 @@ impl Buffer {
 	fn as_mut_slice(&mut self) -> &mut [u16] {
 		match self {
 			Self::Stack(arr) => arr,
-			Self::Heap(block) => unsafe { block.as_mut_slice_aligned::<_>() },
+			Self::Heap(_, ptr) => unsafe {
+				std::slice::from_raw_parts_mut(ptr.ptr() as _, self.buf_len())
+			},
 			Self::Unallocated => &mut [],
 		}
 	}
@@ -459,7 +470,7 @@ impl Buffer {
 	fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Stack(arr) => arr.as_ptr(),
-			Self::Heap(block) => block.as_ptr() as _,
+			Self::Heap(_, ptr) => ptr.ptr() as _,
 			Self::Unallocated => std::ptr::null(),
 		}
 	}
@@ -467,7 +478,9 @@ impl Buffer {
 	fn as_slice(&self) -> &[u16] {
 		match self {
 			Self::Stack(arr) => arr,
-			Self::Heap(block) => unsafe { block.as_slice_aligned::<_>() },
+			Self::Heap(_, ptr) => unsafe {
+				std::slice::from_raw_parts(ptr.ptr() as _, self.buf_len())
+			},
 			Self::Unallocated => &[],
 		}
 	}
@@ -475,7 +488,7 @@ impl Buffer {
 	const fn buf_len(&self) -> usize {
 		match self {
 			Self::Stack(arr) => arr.len(),
-			Self::Heap(block) => block.len() / std::mem::size_of::<u16>(),
+			Self::Heap(sz_bytes, _) => *sz_bytes / std::mem::size_of::<u16>(),
 			Self::Unallocated => 0,
 		}
 	}

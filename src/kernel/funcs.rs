@@ -136,13 +136,16 @@ pub fn CopyFile(
 #[must_use]
 pub fn CopySid(src: &SID) -> SysResult<SidGuard> {
 	let sid_sz = GetLengthSid(&src);
-	let mut sid_buf = HeapBlock::alloc(sid_sz as _).unwrap(); // assume no allocation errors
+	let sid_buf = HGLOBAL::GlobalAlloc(
+		Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+		sid_sz as _,
+	)?;
 
 	unsafe {
 		bool_to_sysresult(
 			ffi::CopySid(
 				sid_sz,
-				sid_buf.as_mut_ptr(),
+				sid_buf.ptr(),
 				src as *const _ as _,
 			),
 		).map(|_| SidGuard::new(sid_buf))
@@ -201,14 +204,17 @@ pub fn CreateWellKnownSid(
 		return Err(get_size_err);
 	}
 
-	let mut sid_buf = HeapBlock::alloc(sid_sz as _).unwrap(); // assume no allocation errors
+	let sid_buf = HGLOBAL::GlobalAlloc(
+		Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+		sid_sz as _,
+	)?;
 
 	unsafe {
 		bool_to_sysresult(
 			ffi::CreateWellKnownSid(
 				well_known_sid.raw(),
 				domain_sid.map_or(std::ptr::null(), |s| s as *const _ as _),
-				sid_buf.as_mut_ptr(),
+				sid_buf.ptr(),
 				&mut sid_sz,
 			),
 		).map(|_| SidGuard::new(sid_buf))
@@ -1122,13 +1128,16 @@ pub fn GetWindowsAccountDomainSid(sid: &SID) -> SysResult<SidGuard> {
 		return Err(get_size_err);
 	}
 
-	let mut ad_sid_buf = HeapBlock::alloc(ad_sid_sz as _).unwrap(); // assume no allocation errors
+	let ad_sid_buf = HGLOBAL::GlobalAlloc(
+		Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+		ad_sid_sz as _,
+	)?;
 
 	unsafe {
 		bool_to_sysresult(
 			ffi::GetWindowsAccountDomainSid(
 				sid as *const _ as _,
-				ad_sid_buf.as_mut_ptr(),
+				ad_sid_buf.ptr(),
 				&mut ad_sid_sz,
 			),
 		).map(|_| SidGuard::new(ad_sid_buf))
@@ -1428,7 +1437,10 @@ pub fn LookupAccountName(
 		return Err(get_size_err);
 	}
 
-	let mut sid_buf = HeapBlock::alloc(sid_sz as _).unwrap(); // assume no allocation errors
+	let sid_buf = HGLOBAL::GlobalAlloc(
+		Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+		sid_sz as _,
+	)?;
 	let mut domain_buf = WString::new_alloc_buf(domain_sz as _);
 
 	unsafe {
@@ -1436,7 +1448,7 @@ pub fn LookupAccountName(
 			ffi::LookupAccountNameW(
 				WString::from_opt_str(system_name).as_ptr(),
 				WString::from_str(account_name).as_ptr(),
-				sid_buf.as_mut_ptr(),
+				sid_buf.ptr(),
 				&mut sid_sz,
 				domain_buf.as_mut_ptr(),
 				&mut domain_sz,

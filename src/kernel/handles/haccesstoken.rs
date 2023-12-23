@@ -38,7 +38,7 @@ pub trait kernel_Haccesstoken: Handle {
 	///
 	/// let privs = w::TOKEN_PRIVILEGES::new(&[
 	///     w::LUID_AND_ATTRIBUTES::new(luid, co::SE_PRIV_ATTR::ENABLED),
-	/// ]);
+	/// ])?;
 	///
 	/// htoken.AdjustTokenPrivileges(w::DisabPriv::Privs(&privs))?;
 	/// # Ok::<_, co::ERROR>(())

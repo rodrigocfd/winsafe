@@ -125,10 +125,6 @@ impl LOGFONT {
 /// [`LOGPALETTE`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logpalette)
 /// struct.
 ///
-/// Note that you cannot directly instantiate this struct. This is a
-/// [`VariableSized`](crate::prelude::VariableSized) struct, managed by
-/// [`LogpaletteGuard`](crate::guard::LogpaletteGuard).
-///
 /// # Examples
 ///
 /// ```no_run
@@ -137,7 +133,7 @@ impl LOGFONT {
 /// let mut log_pal = w::LOGPALETTE::new(0x300, &[
 ///     w::PALETTEENTRY { peRed: 1, peGreen: 2, peBlue: 3, ..Default::default() },
 ///     w::PALETTEENTRY { peRed: 10, peGreen: 20, peBlue: 30, ..Default::default() },
-/// ]);
+/// ])?;
 ///
 /// // Setting a new entry value
 /// log_pal.palPalEntry_mut()[0].peRed = 255;
@@ -146,6 +142,7 @@ impl LOGFONT {
 /// for entry in log_pal.palPalEntry().iter() {
 ///     println!("{} {} {}", entry.peRed, entry.peGreen, entry.peBlue);
 /// }
+/// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 #[repr(C)]
 pub struct LOGPALETTE {
@@ -160,7 +157,11 @@ impl LOGPALETTE {
 	/// Returns a dynamically allocated
 	/// [`LogpaletteGuard`](crate::guard::LogpaletteGuard).
 	#[must_use]
-	pub fn new(palVersion: u16, entries: &[PALETTEENTRY]) -> LogpaletteGuard {
+	pub fn new(
+		palVersion: u16,
+		entries: &[PALETTEENTRY],
+	) -> SysResult<LogpaletteGuard>
+	{
 		LogpaletteGuard::new(palVersion, entries)
 	}
 

@@ -1,6 +1,7 @@
 use std::marker::PhantomData;
 use std::ops::{Deref, DerefMut};
 
+use crate::co;
 use crate::decl::*;
 use crate::kernel::ffi;
 use crate::prelude::*;
@@ -611,19 +612,20 @@ impl RegCloseKeyGuard {
 //------------------------------------------------------------------------------
 
 /// RAII implementation for [`SID`](crate::SID), returned by
-/// [`CopySid`](crate::CopySid) and
-/// [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid), which
-/// automatically frees the underlying memory block when the object goes out of
-/// scope.
+/// [`CopySid`](crate::CopySid),
+/// [`CreateWellKnownSid`](crate::CreateWellKnownSid),
+/// [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid) and
+/// [`LookupAccountName`](crate::LookupAccountName), which automatically frees
+/// the underlying memory block when the object goes out of scope.
 pub struct SidGuard {
-	raw: HeapBlock,
+	ptr: GlobalFreeGuard,
 }
 
 impl Deref for SidGuard {
 	type Target = SID;
 
 	fn deref(&self) -> &Self::Target {
-		unsafe { std::mem::transmute::<_, _>(self.raw.as_ptr()) }
+		unsafe { &*(self.ptr.ptr() as *const _) }
 	}
 }
 
@@ -640,8 +642,8 @@ impl SidGuard {
 	///
 	/// Be sure the data is an allocated [`SID`](crate::SID) structure.
 	#[must_use]
-	pub const unsafe fn new(raw: HeapBlock) -> Self {
-		Self { raw }
+	pub const unsafe fn new(ptr: GlobalFreeGuard) -> Self {
+		Self { ptr }
 	}
 }
 
@@ -650,7 +652,7 @@ impl SidGuard {
 /// RAII implementation for [`TOKEN_GROUPS`](crate::TOKEN_GROUPS) which manages
 /// the allocated memory.
 pub struct TokenGroupsGuard<'a> {
-	raw: HeapBlock,
+	ptr: GlobalFreeGuard,
 	_groups: PhantomData<&'a ()>,
 }
 
@@ -658,30 +660,37 @@ impl<'a> Deref for TokenGroupsGuard<'a> {
 	type Target = TOKEN_GROUPS<'a>;
 
 	fn deref(&self) -> &Self::Target {
-		unsafe { std::mem::transmute::<_, _>(self.raw.as_ptr()) }
+		unsafe { &*(self.ptr.ptr() as *const _) }
 	}
 }
 
 impl<'a> DerefMut for TokenGroupsGuard<'a> {
 	fn deref_mut(&mut self) -> &mut Self::Target {
-		unsafe { std::mem::transmute::<_, _>(self.raw.as_mut_ptr()) }
+		unsafe { &mut *(self.ptr.ptr() as *mut _) }
 	}
 }
 
 impl<'a> TokenGroupsGuard<'a> {
-	pub(in crate::kernel) fn new(groups: &'a [SID_AND_ATTRIBUTES<'a>]) -> Self {
+	#[must_use]
+	pub(in crate::kernel) fn new(
+		groups: &'a [SID_AND_ATTRIBUTES<'a>],
+	) -> SysResult<Self>
+	{
 		let sz = std::mem::size_of::<TOKEN_GROUPS>() // size in bytes of the allocated struct
 			- std::mem::size_of::<SID_AND_ATTRIBUTES>()
 			+ (groups.len() * std::mem::size_of::<SID_AND_ATTRIBUTES>());
 		let mut new_self = Self {
-			raw: HeapBlock::alloc(sz).unwrap(), // assume no allocation errors
+			ptr: HGLOBAL::GlobalAlloc(
+				Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+				sz,
+			)?,
 			_groups: PhantomData,
 		};
 		new_self.GroupCount = groups.len() as _;
 		groups.iter()
 			.zip(new_self.Groups_mut())
 			.for_each(|(src, dest)| *dest = src.clone()); // copy all SID_AND_ATTRIBUTES into struct room
-		new_self
+		Ok(new_self)
 	}
 }
 
@@ -690,34 +699,42 @@ impl<'a> TokenGroupsGuard<'a> {
 /// RAII implementation for [`TOKEN_PRIVILEGES`](crate::TOKEN_PRIVILEGES) which
 /// manages the allocated memory.
 pub struct TokenPrivilegesGuard {
-	raw: HeapBlock,
+	ptr: GlobalFreeGuard,
 }
 
 impl Deref for TokenPrivilegesGuard {
 	type Target = TOKEN_PRIVILEGES;
 
 	fn deref(&self) -> &Self::Target {
-		unsafe { std::mem::transmute::<_, _>(self.raw.as_ptr()) }
+		unsafe { &*(self.ptr.ptr() as *const _) }
 	}
 }
 
 impl DerefMut for TokenPrivilegesGuard {
 	fn deref_mut(&mut self) -> &mut Self::Target {
-		unsafe { std::mem::transmute::<_, _>(self.raw.as_mut_ptr()) }
+		unsafe { &mut *(self.ptr.ptr() as *mut _) }
 	}
 }
 
 impl TokenPrivilegesGuard {
-	pub(in crate::kernel) fn new(privileges: &[LUID_AND_ATTRIBUTES]) -> Self {
+	pub(in crate::kernel) fn new(
+		privileges: &[LUID_AND_ATTRIBUTES],
+	) -> SysResult<Self>
+	{
 		let sz = std::mem::size_of::<TOKEN_PRIVILEGES>() // size in bytes of the allocated struct
 			- std::mem::size_of::<LUID_AND_ATTRIBUTES>()
 			+ (privileges.len() * std::mem::size_of::<LUID_AND_ATTRIBUTES>());
-		let mut new_self = Self { raw: HeapBlock::alloc(sz).unwrap() }; // assume no allocation errors
+		let mut new_self = Self {
+			ptr: HGLOBAL::GlobalAlloc(
+				Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+				sz,
+			)?,
+		};
 		new_self.PrivilegeCount = privileges.len() as _;
 		privileges.iter()
 			.zip(new_self.Privileges_mut())
 			.for_each(|(src, dest)| *dest = *src); // copy all LUID_AND_ATTRIBUTES into struct room
-		new_self
+		Ok(new_self)
 	}
 }
 

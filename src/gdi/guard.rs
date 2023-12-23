@@ -3,6 +3,7 @@ use std::ops::{Deref, DerefMut};
 use crate::co;
 use crate::decl::*;
 use crate::gdi::ffi;
+use crate::guard::*;
 use crate::prelude::*;
 
 handle_guard! { DeleteDCGuard: HDC;
@@ -84,20 +85,20 @@ impl<T> DeleteObjectGuard<T>
 /// RAII implementation for [`LOGPALETTE`](crate::LOGPALETTE) which manages the
 /// allocated memory.
 pub struct LogpaletteGuard {
-	raw: HeapBlock,
+	ptr: GlobalFreeGuard,
 }
 
 impl Deref for LogpaletteGuard {
 	type Target = LOGPALETTE;
 
 	fn deref(&self) -> &Self::Target {
-		unsafe { std::mem::transmute::<_, _>(self.raw.as_ptr()) }
+		unsafe { &*(self.ptr.ptr() as *const _) }
 	}
 }
 
 impl DerefMut for LogpaletteGuard {
 	fn deref_mut(&mut self) -> &mut Self::Target {
-		unsafe { std::mem::transmute::<_, _>(self.raw.as_mut_ptr()) }
+		unsafe { &mut *(self.ptr.ptr() as *mut _) }
 	}
 }
 
@@ -105,18 +106,23 @@ impl LogpaletteGuard {
 	pub(in crate::gdi) fn new(
 		pal_version: u16,
 		entries: &[PALETTEENTRY],
-	) -> Self
+	) -> SysResult<Self>
 	{
 		let sz = std::mem::size_of::<LOGPALETTE>() // size in bytes of the allocated struct
 			- std::mem::size_of::<PALETTEENTRY>()
 			+ (entries.len() * std::mem::size_of::<PALETTEENTRY>());
-		let mut new_self = Self { raw: HeapBlock::alloc(sz).unwrap() }; // assume no allocation errors
+		let mut new_self = Self {
+			ptr: HGLOBAL::GlobalAlloc(
+				Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+				sz,
+			)?,
+		};
 		new_self.palVersion = pal_version;
 		new_self.palNumEntries = entries.len() as _;
 		entries.iter()
 			.zip(new_self.palPalEntry_mut())
 			.for_each(|(src, dest)| *dest = *src); // copy all PALETTEENTRY into struct room
-		new_self
+		Ok(new_self)
 	}
 }
 

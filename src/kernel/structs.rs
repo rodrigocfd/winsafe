@@ -790,7 +790,9 @@ pub struct SERVICE_STATUS {
 /// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid) as [`FreeSidGuard`](crate::guard::FreeSidGuard);
 /// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid) as [`LocalFreeSidGuard`](crate::guard::LocalFreeSidGuard);
 /// * [`CopySid`](crate::CopySid) as [`SidGuard`](crate::guard::SidGuard);
-/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid) as [`SidGuard`](crate::guard::SidGuard).
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid) as [`SidGuard`](crate::guard::SidGuard);
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid) as [`SidGuard`](crate::guard::SidGuard);
+/// * [`LookupAccountName`](crate::LookupAccountName) as [`SidGuard`](crate::guard::SidGuard).
 #[repr(C)]
 pub struct SID {
 	pub Revision: u8,
@@ -1041,10 +1043,6 @@ impl TOKEN_ELEVATION {
 
 /// [`TOKEN_GROUPS`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_groups)
 /// struct.
-///
-/// Note that you cannot directly instantiate this struct. This is a
-/// [`VariableSized`](crate::prelude::VariableSized) struct, managed by
-/// [`TokenGroupsGuard`](crate::guard::TokenGroupsGuard).
 #[repr(C)]
 pub struct TOKEN_GROUPS<'a> {
 	pub(in crate::kernel) GroupCount: u32,
@@ -1057,7 +1055,10 @@ impl<'a> TOKEN_GROUPS<'a> {
 	/// Returns a dynamically allocated
 	/// [`TokenGroupsGuard`](crate::guard::TokenGroupsGuard).
 	#[must_use]
-	pub fn new(groups: &'a [SID_AND_ATTRIBUTES<'a>]) -> TokenGroupsGuard<'a> {
+	pub fn new(
+		groups: &'a [SID_AND_ATTRIBUTES<'a>],
+	) -> SysResult<TokenGroupsGuard<'a>>
+	{
 		TokenGroupsGuard::new(groups)
 	}
 
@@ -1152,10 +1153,6 @@ impl<'a> TOKEN_PRIMARY_GROUP<'a> {
 
 /// [`TOKEN_PRIVILEGES`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_privileges)
 /// struct.
-///
-/// Note that you cannot directly instantiate this struct. This is a
-/// [`VariableSized`](crate::prelude::VariableSized) struct, managed by
-/// [`TokenPrivilegesGuard`](crate::guard::TokenPrivilegesGuard).
 #[repr(C)]
 pub struct TOKEN_PRIVILEGES {
 	pub(in crate::kernel) PrivilegeCount: u32,
@@ -1168,7 +1165,10 @@ impl TOKEN_PRIVILEGES {
 	/// Returns a dynamically allocated
 	/// [`TokenPrivilegesGuard`](crate::guard::TokenPrivilegesGuard).
 	#[must_use]
-	pub fn new(privileges: &[LUID_AND_ATTRIBUTES]) -> TokenPrivilegesGuard {
+	pub fn new(
+		privileges: &[LUID_AND_ATTRIBUTES],
+	) -> SysResult<TokenPrivilegesGuard>
+	{
 		TokenPrivilegesGuard::new(privileges)
 	}
 
