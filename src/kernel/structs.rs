@@ -783,12 +783,14 @@ pub struct SERVICE_STATUS {
 ///
 /// Note that you cannot directly instantiate this
 /// [`VariableSized`](crate::prelude::VariableSized) struct, because the
-/// `SubAuthority` field is dynamically allocated. There are 3 possible types of
-/// allocations:
+/// `SubAuthority` field is dynamically allocated.
 ///
-/// * handled by the OS, which yields a [`FreeSidGuard`](crate::guard::FreeSidGuard);
-/// * handled by the OS, which yields a [`LocalFreeSidGuard`](crate::guard::LocalFreeSidGuard);
-/// * handled by WinSafe, which yields a [`SidGuard`](crate::guard::SidGuard).
+/// Possible ways:
+///
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid) as [`FreeSidGuard`](crate::guard::FreeSidGuard);
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid) as [`LocalFreeSidGuard`](crate::guard::LocalFreeSidGuard);
+/// * [`CopySid`](crate::CopySid) as [`SidGuard`](crate::guard::SidGuard);
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid) as [`SidGuard`](crate::guard::SidGuard).
 #[repr(C)]
 pub struct SID {
 	pub Revision: u8,

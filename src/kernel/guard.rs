@@ -233,7 +233,9 @@ handle_guard! { FreeLibraryGuard: HINSTANCE;
 
 //------------------------------------------------------------------------------
 
-/// RAII implementation for [`SID`](crate::SID) which automatically calls
+/// RAII implementation for [`SID`](crate::SID), returned by
+/// [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid), which
+/// automatically calls
 /// [`FreeSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-freesid)
 /// when the object goes out of scope.
 pub struct FreeSidGuard {
@@ -465,7 +467,9 @@ handle_guard! { LocalFreeGuard: HLOCAL;
 
 //------------------------------------------------------------------------------
 
-/// RAII implementation for [`SID`](crate::SID) which automatically calls
+/// RAII implementation for [`SID`](crate::SID), returned by
+/// [`ConvertStringSidToSid`](crate::ConvertStringSidToSid), which automatically
+/// calls
 /// [`LocalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
 /// when the object goes out of scope.
 pub struct LocalFreeSidGuard {
@@ -606,8 +610,11 @@ impl RegCloseKeyGuard {
 
 //------------------------------------------------------------------------------
 
-/// RAII implementation for [`SID`](crate::SID) which automatically frees the
-/// underlying memory block when the object goes out of scope.
+/// RAII implementation for [`SID`](crate::SID), returned by
+/// [`CopySid`](crate::CopySid) and
+/// [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid), which
+/// automatically frees the underlying memory block when the object goes out of
+/// scope.
 pub struct SidGuard {
 	raw: HeapBlock,
 }
