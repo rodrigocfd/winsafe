@@ -15,6 +15,33 @@ const_bitflag! { ACCESS_RIGHTS: u32;
 	SYNCHRONIZE 0x0010_0000
 }
 
+const_bitflag! { CLAIM_SECURITY_ATTRIBUTE: u16;
+	/// [`CLAIM_SECURITY_ATTRIBUTE_V1`](crate::CLAIM_SECURITY_ATTRIBUTE_V1)
+	/// `Flags` (`u16`);
+	=>
+	=>
+	NON_INHERITABLE 0x0001
+	VALUE_CASE_SENSITIVE 0x0002
+	USE_FOR_DENY_ONLY 0x0004
+	DISABLED_BY_DEFAULT 0x0008
+	DISABLED 0x0010
+	MANDATORY 0x0020
+}
+
+const_ordinary! { CLAIM_SECURITY_ATTRIBUTE_TYPE: u16;
+	/// [`CLAIM_SECURITY_ATTRIBUTE_V1`](crate::CLAIM_SECURITY_ATTRIBUTE_V1)
+	/// `ValueType` (`u16`);
+	=>
+	=>
+	INT64 0x0001
+	UINT64 0x0002
+	STRING 0x0003
+	FQBN 0x0004
+	SID 0x0005
+	BOOLEAN 0x0006
+	OCTET_STRING 0x0010
+}
+
 const_bitflag! { CONSOLE: u32;
 	/// [`HSTD::SetConsoleMode`](crate::prelude::kernel_Hstd::SetConsoleMode)
 	/// `mode` (`u32`).
@@ -2146,7 +2173,7 @@ const_ordinary! { TOKEN_INFORMATION_CLASS: u32;
 	AuditPolicy 16
 	Origin 17
 	ElevationType 18
-	Linked 19
+	LinkedToken 19
 	Elevation 20
 	HasRestrictions 21
 	AccessInformation 22

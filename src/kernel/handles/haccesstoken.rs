@@ -135,14 +135,12 @@ pub trait kernel_Haccesstoken: Handle {
 	/// [`GetTokenInformation`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-gettokeninformation)
 	/// function.
 	///
-	/// # Safety
-	///
-	/// Make sure the `information` type is the correct one, matching that in
+	/// The returned enum variant will correspond to the passed
 	/// `information_class`.
 	///
 	/// # Examples
 	///
-	/// Checking if the current process has elevated privileges:
+	/// Retrieving the `Groups` information:
 	///
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*, co};
@@ -150,33 +148,150 @@ pub trait kernel_Haccesstoken: Handle {
 	/// let htoken = w::HPROCESS::GetCurrentProcess()
 	///     .OpenProcessToken(co::TOKEN::QUERY)?;
 	///
-	/// let mut elevation = w::TOKEN_ELEVATION::default();
-	/// unsafe {
-	///     htoken.GetTokenInformation(
-	///         co::TOKEN_INFORMATION_CLASS::Elevation,
-	///         &mut elevation,
-	///      )?;
+	/// let nfo = htoken.GetTokenInformation(co::TOKEN_INFORMATION_CLASS::Groups)?;
+	/// let w::TokenInfo::Groups(groups) = nfo else { panic!("never") };
+	///
+	/// for (idx, g) in groups.Groups().iter().enumerate() {
+	///     println!("{}: {}", idx, g.Sid().unwrap());
 	/// }
-	/// println!("Is elevated: {}", elevation.TokenIsElevated());
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
-	unsafe fn GetTokenInformation<T>(&self,
+	fn GetTokenInformation(&self,
 		information_class: co::TOKEN_INFORMATION_CLASS,
-		information: &mut T,
-	) -> SysResult<()>
+	) -> SysResult<TokenInfo>
 	{
-		let mut ret_len = u32::default();
-		bool_to_sysresult(
+		let mut num_bytes = u32::default();
+		match bool_to_sysresult(
 			unsafe {
 				ffi::GetTokenInformation(
 					self.ptr(),
 					information_class.raw(),
-					information as *mut _ as _,
-					std::mem::size_of::<T>() as _,
-					&mut ret_len,
+					std::ptr::null_mut(),
+					0,
+					&mut num_bytes,
 				)
 			},
-		)
+		) {
+			Err(err) => match err {
+				co::ERROR::INSUFFICIENT_BUFFER => {}, // all good
+				err => return Err(err),
+			},
+			Ok(_) => return Err(co::ERROR::INVALID_PARAMETER), // should never happen
+		};
+
+		let mut buf = vec![0u8; num_bytes as usize].into_boxed_slice();
+
+		unsafe {
+			bool_to_sysresult(
+				ffi::GetTokenInformation(
+					self.ptr(),
+					information_class.raw(),
+					buf.as_mut_ptr() as _,
+					num_bytes,
+					&mut num_bytes,
+				),
+			).map(|_| {
+				match information_class {
+					co::TOKEN_INFORMATION_CLASS::User => TokenInfo::User(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_USER),
+					),
+					co::TOKEN_INFORMATION_CLASS::Groups => TokenInfo::Groups(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS),
+					),
+					co::TOKEN_INFORMATION_CLASS::Privileges => TokenInfo::Privileges(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_PRIVILEGES),
+					),
+					co::TOKEN_INFORMATION_CLASS::Owner => TokenInfo::Owner(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_OWNER),
+					),
+					co::TOKEN_INFORMATION_CLASS::PrimaryGroup => TokenInfo::PrimaryGroup(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_PRIMARY_GROUP),
+					),
+					co::TOKEN_INFORMATION_CLASS::DefaultDacl => TokenInfo::DefaultDacl(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_DEFAULT_DACL),
+					),
+					co::TOKEN_INFORMATION_CLASS::Source => TokenInfo::Source(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_SOURCE),
+					),
+					co::TOKEN_INFORMATION_CLASS::Type => TokenInfo::Type(
+						Box::from_raw(Box::into_raw(buf) as *mut co::TOKEN_TYPE),
+					),
+					co::TOKEN_INFORMATION_CLASS::ImpersonationLevel => TokenInfo::ImpersonationLevel(
+						Box::from_raw(Box::into_raw(buf) as *mut co::SECURITY_IMPERSONATION),
+					),
+					co::TOKEN_INFORMATION_CLASS::Statistics => TokenInfo::Statistics(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_STATISTICS),
+					),
+					co::TOKEN_INFORMATION_CLASS::RestrictedSids => TokenInfo::RestrictedSids(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS),
+					),
+					co::TOKEN_INFORMATION_CLASS::SessionId => TokenInfo::SessionId(
+						Box::from_raw(Box::into_raw(buf) as *mut u32),
+					),
+					co::TOKEN_INFORMATION_CLASS::GroupsAndPrivileges => TokenInfo::GroupsAndPrivileges(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS_AND_PRIVILEGES),
+					),
+					co::TOKEN_INFORMATION_CLASS::SandBoxInert => TokenInfo::SandBoxInert(
+						Box::from_raw(Box::into_raw(buf) as *mut u32),
+					),
+					co::TOKEN_INFORMATION_CLASS::Origin => TokenInfo::Origin(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_ORIGIN),
+					),
+					co::TOKEN_INFORMATION_CLASS::ElevationType => TokenInfo::ElevationType(
+						Box::from_raw(Box::into_raw(buf) as *mut co::TOKEN_ELEVATION_TYPE),
+					),
+					co::TOKEN_INFORMATION_CLASS::LinkedToken => TokenInfo::LinkedToken(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_LINKED_TOKEN),
+					),
+					co::TOKEN_INFORMATION_CLASS::Elevation => TokenInfo::Elevation(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_ELEVATION),
+					),
+					co::TOKEN_INFORMATION_CLASS::HasRestrictions => TokenInfo::HasRestrictions(
+						Box::from_raw(Box::into_raw(buf) as *mut u32),
+					),
+					co::TOKEN_INFORMATION_CLASS::AccessInformation => TokenInfo::AccessInformation(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_ACCESS_INFORMATION),
+					),
+					co::TOKEN_INFORMATION_CLASS::VirtualizationAllowed => TokenInfo::VirtualizationAllowed(
+						Box::from_raw(Box::into_raw(buf) as *mut u32),
+					),
+					co::TOKEN_INFORMATION_CLASS::VirtualizationEnabled => TokenInfo::VirtualizationEnabled(
+						Box::from_raw(Box::into_raw(buf) as *mut u32),
+					),
+					co::TOKEN_INFORMATION_CLASS::IntegrityLevel => TokenInfo::IntegrityLevel(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_MANDATORY_LABEL),
+					),
+					co::TOKEN_INFORMATION_CLASS::UIAccess => TokenInfo::UIAccess(
+						Box::from_raw(Box::into_raw(buf) as *mut u32),
+					),
+					co::TOKEN_INFORMATION_CLASS::MandatoryPolicy => TokenInfo::MandatoryPolicy(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_MANDATORY_POLICY),
+					),
+					co::TOKEN_INFORMATION_CLASS::LogonSid => TokenInfo::LogonSid(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS),
+					),
+					co::TOKEN_INFORMATION_CLASS::IsAppContainer => TokenInfo::IsAppContainer(
+						Box::from_raw(Box::into_raw(buf) as *mut u32),
+					),
+					co::TOKEN_INFORMATION_CLASS::Capabilities => TokenInfo::Capabilities(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS),
+					),
+					co::TOKEN_INFORMATION_CLASS::AppContainerNumber => TokenInfo::AppContainerNumber(
+						Box::from_raw(Box::into_raw(buf) as *mut u32),
+					),
+					co::TOKEN_INFORMATION_CLASS::DeviceClaimAttributes => TokenInfo::DeviceClaimAttributes(
+						Box::from_raw(Box::into_raw(buf) as *mut CLAIM_SECURITY_ATTRIBUTES_INFORMATION),
+					),
+					co::TOKEN_INFORMATION_CLASS::DeviceGroups => TokenInfo::DeviceGroups(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS),
+					),
+					co::TOKEN_INFORMATION_CLASS::RestrictedDeviceGroups => TokenInfo::RestrictedDeviceGroups(
+						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS),
+					),
+					_ => panic!("co::TOKEN_INFORMATION_CLASS not implemented yet: {}", information_class),
+				}
+			})
+		}
 	}
 
 	/// [`ImpersonateLoggedOnUser`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-impersonateloggedonuser)

@@ -4,6 +4,17 @@ use crate::kernel::{ffi_types::*, privs::*};
 
 /// Variable parameter for:
 ///
+/// * [`CLAIM_SECURITY_ATTRIBUTE_V1`](crate::CLAIM_SECURITY_ATTRIBUTE_V1).
+pub enum ClaimSecurityAttr<'a> {
+	Int64(&'a [i64]),
+	Uint64(&'a [u64]),
+	String(Vec<String>),
+	Fbqn(&'a [CLAIM_SECURITY_ATTRIBUTE_FQBN_VALUE<'a>]),
+	OctetString(&'a [CLAIM_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE<'a>]),
+}
+
+/// Variable parameter for:
+///
 /// * [`HACCESSTOKEN::AdjustTokenPrivileges`](crate::prelude::kernel_Haccesstoken::AdjustTokenPrivileges).
 pub enum DisabPriv<'a> {
 	/// Disables all privileges.
@@ -461,4 +472,46 @@ impl<'a> SvcCtlPowerEvent<'a> {
 			_ => panic!("Invalid co::PBT."),
 		}
 	}
+}
+
+/// Variant parameter for:
+///
+/// * [`HACCESSTOKEN::GetTokenInformation`](crate::prelude::kernel_Haccesstoken::GetTokenInformation).
+///
+/// The enum values match those in
+/// [`co::TOKEN_INFORMATION_CLASS`](crate::co::TOKEN_INFORMATION_CLASS) constant
+/// type.
+pub enum TokenInfo<'a, 'b, 'c, 'd, 'e, 'f> {
+	User(Box<TOKEN_USER<'a>>),
+	Groups(Box<TOKEN_GROUPS<'a>>),
+	Privileges(Box<TOKEN_PRIVILEGES>),
+	Owner(Box<TOKEN_OWNER<'a>>),
+	PrimaryGroup(Box<TOKEN_PRIMARY_GROUP<'a>>),
+	DefaultDacl(Box<TOKEN_DEFAULT_DACL<'a>>),
+	Source(Box<TOKEN_SOURCE>),
+	Type(Box<co::TOKEN_TYPE>),
+	ImpersonationLevel(Box<co::SECURITY_IMPERSONATION>),
+	Statistics(Box<TOKEN_STATISTICS>),
+	RestrictedSids(Box<TOKEN_GROUPS<'a>>),
+	SessionId(Box<u32>),
+	GroupsAndPrivileges(Box<TOKEN_GROUPS_AND_PRIVILEGES<'a, 'b, 'c>>),
+	SandBoxInert(Box<u32>),
+	Origin(Box<TOKEN_ORIGIN>),
+	ElevationType(Box<co::TOKEN_ELEVATION_TYPE>),
+	LinkedToken(Box<TOKEN_LINKED_TOKEN>),
+	Elevation(Box<TOKEN_ELEVATION>),
+	HasRestrictions(Box<u32>),
+	AccessInformation(Box<TOKEN_ACCESS_INFORMATION<'a, 'b, 'c, 'd, 'e, 'f>>),
+	VirtualizationAllowed(Box<u32>),
+	VirtualizationEnabled(Box<u32>),
+	IntegrityLevel(Box<TOKEN_MANDATORY_LABEL<'a>>),
+	UIAccess(Box<u32>),
+	MandatoryPolicy(Box<TOKEN_MANDATORY_POLICY>),
+	LogonSid(Box<TOKEN_GROUPS<'a>>),
+	IsAppContainer(Box<u32>),
+	Capabilities(Box<TOKEN_GROUPS<'a>>),
+	AppContainerNumber(Box<u32>),
+	DeviceClaimAttributes(Box<CLAIM_SECURITY_ATTRIBUTES_INFORMATION<'a, 'b>>),
+	DeviceGroups(Box<TOKEN_GROUPS<'a>>),
+	RestrictedDeviceGroups(Box<TOKEN_GROUPS<'a>>),
 }

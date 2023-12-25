@@ -74,21 +74,6 @@ macro_rules! impl_intunderlying {
 	};
 }
 
-/// Implements a serialization method.
-macro_rules! pub_fn_serialize {
-	() => {
-		/// Serializes the struct into `&[u8]`.
-		pub fn serialize<'seri>(&'seri self) -> &'seri [u8] {
-			unsafe {
-				std::slice::from_raw_parts(
-					self as *const _ as _,
-					std::mem::size_of::<Self>(),
-				)
-			}
-		}
-	};
-}
-
 /// Implements getter and setter methods for the given `BOOL` field.
 macro_rules! pub_fn_bool_get_set {
 	($field:ident, $setter:ident) => {
@@ -192,7 +177,7 @@ macro_rules! pub_fn_string_buf_get_set {
 		/// This method can be used as an escape hatch to interoperate with
 		/// other libraries.
 		#[must_use]
-		pub fn $raw(&self) -> (*mut u16, i32) {
+		pub const fn $raw(&self) -> (*mut u16, i32) {
 			(self.$field, self.$cch as _) // some u32 and usize exist
 		}
 

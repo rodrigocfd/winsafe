@@ -41,7 +41,15 @@ impl Default for BITMAPFILEHEADER {
 }
 
 impl BITMAPFILEHEADER {
-	pub_fn_serialize!();
+	/// Serializes the struct into `&[u8]`.
+	pub const fn serialize(&self) -> &[u8] {
+		unsafe {
+			std::slice::from_raw_parts(
+				self as *const _ as _,
+				std::mem::size_of::<Self>(),
+			)
+		}
+	}
 }
 
 /// [`BITMAPINFO`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo)
@@ -83,7 +91,15 @@ pub struct BITMAPINFOHEADER {
 impl_default_with_size!(BITMAPINFOHEADER, biSize);
 
 impl BITMAPINFOHEADER {
-	pub_fn_serialize!();
+	/// Serializes the struct into `&[u8]`.
+	pub const fn serialize(&self) -> &[u8] {
+		unsafe {
+			std::slice::from_raw_parts(
+				self as *const _ as _,
+				std::mem::size_of::<Self>(),
+			)
+		}
+	}
 }
 
 /// [`LOGBRUSH`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logbrush)

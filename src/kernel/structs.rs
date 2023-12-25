@@ -37,6 +37,143 @@ pub struct BY_HANDLE_FILE_INFORMATION {
 	pub nFileIndexLow: u32,
 }
 
+/// [`CLAIM_SECURITY_ATTRIBUTE_FQBN_VALUE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-claim_security_attribute_fqbn_value)
+/// struct.
+#[repr(C)]
+pub struct CLAIM_SECURITY_ATTRIBUTE_FQBN_VALUE<'a> {
+	pub Version: u64,
+	Name: *mut u16,
+
+	_Name: PhantomData<&'a mut u16>,
+}
+
+impl_default!(CLAIM_SECURITY_ATTRIBUTE_FQBN_VALUE, 'a);
+
+impl<'a> CLAIM_SECURITY_ATTRIBUTE_FQBN_VALUE<'a> {
+	pub_fn_string_ptr_get_set!('a, Name, set_Name);
+}
+
+/// [`CLAIM_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-claim_security_attribute_octet_string_value)
+/// struct.
+#[repr(C)]
+pub struct CLAIM_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE<'a> {
+	pValue: *mut u8,
+	ValueLength: u32,
+
+	_pValue: PhantomData<&'a mut ()>,
+}
+
+impl_default!(CLAIM_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE, 'a);
+
+impl<'a> CLAIM_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE<'a> {
+	pub_fn_array_buf_get_set!('a, pValue, set_pValue, ValueLength, u8);
+}
+
+/// [`CLAIM_SECURITY_ATTRIBUTE_V1`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-claim_security_attribute_v1)
+/// struct.
+#[repr(C)]
+pub struct CLAIM_SECURITY_ATTRIBUTE_V1<'a, 'b> {
+	Name: *mut u16,
+	ValueType: co::CLAIM_SECURITY_ATTRIBUTE_TYPE,
+	Reserved: u16,
+	Flags: u32,
+	ValueCount: u32,
+	Values: CLAIM_SECURITY_ATTRIBUTE_V1_union0<'b>,
+
+	_Name: PhantomData<&'a mut u16>,
+}
+
+#[repr(C)]
+union CLAIM_SECURITY_ATTRIBUTE_V1_union0<'a> {
+	pInt64: *mut i64, // pointers because these are all arrays with ValueCount items
+	pUint64: *mut u64,
+	ppString: *mut *mut u16,
+	pFqbn: *mut CLAIM_SECURITY_ATTRIBUTE_FQBN_VALUE<'a>,
+	pOctetString: *mut CLAIM_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE<'a>,
+}
+
+impl_default!(CLAIM_SECURITY_ATTRIBUTE_V1, 'a, 'b);
+
+impl<'a, 'b> CLAIM_SECURITY_ATTRIBUTE_V1<'a, 'b> {
+	pub_fn_string_ptr_get_set!('a, Name, set_Name);
+
+	/// Returns the low-word part of `Flags`.
+	#[must_use]
+	pub const fn FlagsLo(&self) -> co::CLAIM_SECURITY_ATTRIBUTE {
+		unsafe { co::CLAIM_SECURITY_ATTRIBUTE::from_raw(LOWORD(self.Flags)) }
+	}
+
+	/// Sets the low-word part of `Flags`.
+	pub fn set_FlagsLo(&mut self, claim: co::CLAIM_SECURITY_ATTRIBUTE) {
+		self.Flags = MAKEDWORD(claim.raw(), self.FlagsHi());
+	}
+
+	/// Returns the high-word part of `Flags`.
+	#[must_use]
+	pub const fn FlagsHi(&self) -> u16 {
+		HIWORD(self.Flags)
+	}
+
+	/// Sets the high-word part of `Flags`.
+	pub fn set_FlagsHi(&mut self, flags: u16) {
+		self.Flags = MAKEDWORD(self.FlagsLo().raw(), flags);
+	}
+
+	/// Returns the `Values` field.
+	///
+	/// # Panics
+	///
+	/// Panics if `ValueType` field is invalid.
+	#[must_use]
+	pub fn Values(&self) -> ClaimSecurityAttr {
+		unsafe {
+			match self.ValueType {
+				co::CLAIM_SECURITY_ATTRIBUTE_TYPE::INT64 => ClaimSecurityAttr::Int64(
+					std::slice::from_raw_parts(self.Values.pInt64, self.ValueCount as _),
+				),
+				co::CLAIM_SECURITY_ATTRIBUTE_TYPE::UINT64 => ClaimSecurityAttr::Uint64(
+					std::slice::from_raw_parts(self.Values.pUint64, self.ValueCount as _),
+				),
+				co::CLAIM_SECURITY_ATTRIBUTE_TYPE::STRING => ClaimSecurityAttr::String(
+					std::slice::from_raw_parts(self.Values.ppString, self.ValueCount as _)
+						.iter()
+						.map(|str_ptr| WString::from_wchars_nullt(*str_ptr).to_string())
+						.collect(),
+				),
+				co::CLAIM_SECURITY_ATTRIBUTE_TYPE::FQBN => ClaimSecurityAttr::Fbqn(
+					std::slice::from_raw_parts(self.Values.pFqbn, self.ValueCount as _),
+				),
+				co::CLAIM_SECURITY_ATTRIBUTE_TYPE::OCTET_STRING => ClaimSecurityAttr::OctetString(
+					std::slice::from_raw_parts(self.Values.pOctetString, self.ValueCount as _),
+				),
+				_ => panic!("Invalid ValueType.")
+			}
+		}
+	}
+}
+
+/// [`CLAIM_SECURITY_ATTRIBUTES_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-claim_security_attributes_information)
+/// struct.
+#[repr(C)]
+pub struct CLAIM_SECURITY_ATTRIBUTES_INFORMATION<'a, 'b> {
+	pub Version: u16,
+	Reserved: u16,
+	AttributeCount: u32,
+	pAttributeV1: *mut CLAIM_SECURITY_ATTRIBUTE_V1<'a, 'b>,
+}
+
+impl_default!(CLAIM_SECURITY_ATTRIBUTES_INFORMATION, 'a, 'b);
+
+impl<'a, 'b> CLAIM_SECURITY_ATTRIBUTES_INFORMATION<'a, 'b> {
+	/// Returns the `pAttributeV1` field.
+	#[must_use]
+	pub fn pAttributeV1(&self) -> &[CLAIM_SECURITY_ATTRIBUTE_V1<'a, 'b>] {
+		unsafe {
+			std::slice::from_raw_parts(self.pAttributeV1, self.AttributeCount as _)
+		}
+	}
+}
+
 /// [`CONSOLE_READCONSOLE_CONTROL`](https://learn.microsoft.com/en-us/windows/console/console-readconsole-control)
 /// struct.
 #[repr(C)]
@@ -846,6 +983,21 @@ impl<'a> SID_AND_ATTRIBUTES<'a> {
 	pub_fn_ptr_get_set!('a, Sid, set_Sid, SID);
 }
 
+/// [`SID_AND_ATTRIBUTES_HASH`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid_and_attributes_hash)
+/// struct.
+#[repr(C)]
+pub struct SID_AND_ATTRIBUTES_HASH<'a> {
+	SidCount: u32,
+	SidAttr: *mut SID_AND_ATTRIBUTES<'a>,
+	pub Hash: [usize; SID_HASH_SIZE],
+}
+
+impl_default!(SID_AND_ATTRIBUTES_HASH, 'a);
+
+impl<'a> SID_AND_ATTRIBUTES_HASH<'a> {
+	pub_fn_array_buf_get_set!('a, SidAttr, set_SidAttr, SidCount, SID_AND_ATTRIBUTES);
+}
+
 /// [`SID_IDENTIFIER_AUTHORITY`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid_identifier_authority)
 /// struct.
 #[repr(C)]
@@ -999,6 +1151,40 @@ impl TIME_ZONE_INFORMATION {
 	pub_fn_string_arr_get_set!(daylightName, set_daylightName);
 }
 
+/// [`TOKEN_ACCESS_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_access_information)
+/// struct.
+#[repr(C)]
+pub struct TOKEN_ACCESS_INFORMATION<'a, 'b, 'c, 'd, 'e, 'f> {
+	SidHash: *mut SID_AND_ATTRIBUTES_HASH<'a>,
+	RestrictedSidHash: *mut SID_AND_ATTRIBUTES_HASH<'b>,
+	Privileges: *mut TOKEN_PRIVILEGES,
+	pub AuthenticationId: LUID,
+	pub TokenType: LUID,
+	pub ImpersonationLevel: co::SECURITY_IMPERSONATION,
+	pub MandatoryPolicy: TOKEN_MANDATORY_POLICY,
+	Flags: u32,
+	pub AppContainerNumber: u32,
+	PackageSid: *mut SID,
+	CapabilitiesHash: *mut SID_AND_ATTRIBUTES_HASH<'e>,
+	TrustLevelSid: *mut SID,
+	SecurityAttributes: *mut std::ffi::c_void,
+
+	_Privileges: PhantomData<&'c mut TOKEN_PRIVILEGES>,
+	_PackageSid: PhantomData<&'d mut SID>,
+	_TrustLevelSid: PhantomData<&'f mut SID>,
+}
+
+impl<'a, 'b, 'c, 'd, 'e, 'f> TOKEN_ACCESS_INFORMATION<'a, 'b, 'c, 'd, 'e, 'f> {
+	pub_fn_ptr_get_set!('a, SidHash, set_SidHash, SID_AND_ATTRIBUTES_HASH<'a>);
+	pub_fn_ptr_get_set!('b, RestrictedSidHash, set_RestrictedSidHash, SID_AND_ATTRIBUTES_HASH<'b>);
+	pub_fn_ptr_get_set!('c, Privileges, set_Privileges, TOKEN_PRIVILEGES);
+	pub_fn_ptr_get_set!('d, PackageSid, set_PackageSid, SID);
+	pub_fn_ptr_get_set!('e, CapabilitiesHash, set_CapabilitiesHash, SID_AND_ATTRIBUTES_HASH<'e>);
+	pub_fn_ptr_get_set!('f, TrustLevelSid, set_TrustLevelSid, SID);
+}
+
+impl_default!(TOKEN_ACCESS_INFORMATION, 'a, 'b, 'c, 'd, 'e, 'f);
+
 /// [`TOKEN_APPCONTAINER_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_appcontainer_information)
 /// struct.
 #[repr(C)]
@@ -1083,6 +1269,32 @@ impl<'a> TOKEN_GROUPS<'a> {
 			)
 		}
 	}
+}
+
+/// [`TOKEN_GROUPS_AND_PRIVILEGES`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_groups_and_privileges)
+/// struct.
+#[repr(C)]
+pub struct TOKEN_GROUPS_AND_PRIVILEGES<'a, 'b, 'c> {
+	pub SidCount: u32,
+	pub SidLength: u32,
+	Sids: *mut SID_AND_ATTRIBUTES<'a>,
+	pub RestrictedSidCount: u32,
+	pub RestrictedSidLength: u32,
+	RestrictedSids: *mut SID_AND_ATTRIBUTES<'b>,
+	pub PrivilegeCount: u32,
+	pub PrivilegeLength: u32,
+	Privileges: *mut LUID_AND_ATTRIBUTES,
+	pub AuthenticationId: LUID,
+
+	_Privileges: PhantomData<&'c LUID_AND_ATTRIBUTES>,
+}
+
+impl_default!(TOKEN_GROUPS_AND_PRIVILEGES, 'a, 'b, 'c);
+
+impl<'a, 'b, 'c> TOKEN_GROUPS_AND_PRIVILEGES<'a, 'b, 'c> {
+	pub_fn_ptr_get_set!('a, Sids, set_Sids, SID_AND_ATTRIBUTES<'a>);
+	pub_fn_ptr_get_set!('b, RestrictedSids, set_RestrictedSids, SID_AND_ATTRIBUTES<'b>);
+	pub_fn_ptr_get_set!('c, Privileges, set_Privileges, LUID_AND_ATTRIBUTES);
 }
 
 /// [`TOKEN_LINKED_TOKEN`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_linked_token)
