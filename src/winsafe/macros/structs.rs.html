@@ -366,21 +366,6 @@
 <a href="#365" id="365">365</a>
 <a href="#366" id="366">366</a>
 <a href="#367" id="367">367</a>
-<a href="#368" id="368">368</a>
-<a href="#369" id="369">369</a>
-<a href="#370" id="370">370</a>
-<a href="#371" id="371">371</a>
-<a href="#372" id="372">372</a>
-<a href="#373" id="373">373</a>
-<a href="#374" id="374">374</a>
-<a href="#375" id="375">375</a>
-<a href="#376" id="376">376</a>
-<a href="#377" id="377">377</a>
-<a href="#378" id="378">378</a>
-<a href="#379" id="379">379</a>
-<a href="#380" id="380">380</a>
-<a href="#381" id="381">381</a>
-<a href="#382" id="382">382</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(unused_macros)]
 
 </span><span class="doccomment">/// Implements `Default` trait by zeroing all fields.
@@ -453,21 +438,6 @@
 			</span><span class="kw">pub const fn </span>raw(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="macro-nonterminal">$ntype </span>{
 				<span class="self">self</span>.<span class="number">0
 			</span>}
-		}
-	};
-}
-
-<span class="doccomment">/// Implements a serialization method.
-</span><span class="macro">macro_rules! </span>pub_fn_serialize {
-	() =&gt; {
-		<span class="doccomment">/// Serializes the struct into `&amp;[u8]`.
-		</span><span class="kw">pub fn </span>serialize&lt;<span class="lifetime">'seri</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'seri </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'seri </span>[u8] {
-			<span class="kw">unsafe </span>{
-				std::slice::from_raw_parts(
-					<span class="self">self </span><span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-					std::mem::size_of::&lt;<span class="self">Self</span>&gt;(),
-				)
-			}
 		}
 	};
 }
@@ -575,7 +545,7 @@
 		/// This method can be used as an escape hatch to interoperate with
 		/// other libraries.
 		</span><span class="attr">#[must_use]
-		</span><span class="kw">pub fn </span><span class="macro-nonterminal">$raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="kw-2">*mut </span>u16, i32) {
+		</span><span class="kw">pub const fn </span><span class="macro-nonterminal">$raw</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (<span class="kw-2">*mut </span>u16, i32) {
 			(<span class="self">self</span>.<span class="macro-nonterminal">$field</span>, <span class="self">self</span>.<span class="macro-nonterminal">$cch </span><span class="kw">as _</span>) <span class="comment">// some u32 and usize exist
 		</span>}
 

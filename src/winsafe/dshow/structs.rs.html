@@ -121,7 +121,7 @@
 	cbFormat: u32,
 	pbFormat: <span class="kw-2">*mut </span>std::ffi::c_void,
 
-	_pbFormat: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>usize&gt;,
+	_pbFormat: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>()&gt;,
 }
 
 <span class="macro">impl_default!</span>(AM_MEDIA_TYPE, <span class="lifetime">'a</span>);

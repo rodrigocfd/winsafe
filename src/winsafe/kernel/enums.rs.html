@@ -463,9 +463,73 @@
 <a href="#462" id="462">462</a>
 <a href="#463" id="463">463</a>
 <a href="#464" id="464">464</a>
+<a href="#465" id="465">465</a>
+<a href="#466" id="466">466</a>
+<a href="#467" id="467">467</a>
+<a href="#468" id="468">468</a>
+<a href="#469" id="469">469</a>
+<a href="#470" id="470">470</a>
+<a href="#471" id="471">471</a>
+<a href="#472" id="472">472</a>
+<a href="#473" id="473">473</a>
+<a href="#474" id="474">474</a>
+<a href="#475" id="475">475</a>
+<a href="#476" id="476">476</a>
+<a href="#477" id="477">477</a>
+<a href="#478" id="478">478</a>
+<a href="#479" id="479">479</a>
+<a href="#480" id="480">480</a>
+<a href="#481" id="481">481</a>
+<a href="#482" id="482">482</a>
+<a href="#483" id="483">483</a>
+<a href="#484" id="484">484</a>
+<a href="#485" id="485">485</a>
+<a href="#486" id="486">486</a>
+<a href="#487" id="487">487</a>
+<a href="#488" id="488">488</a>
+<a href="#489" id="489">489</a>
+<a href="#490" id="490">490</a>
+<a href="#491" id="491">491</a>
+<a href="#492" id="492">492</a>
+<a href="#493" id="493">493</a>
+<a href="#494" id="494">494</a>
+<a href="#495" id="495">495</a>
+<a href="#496" id="496">496</a>
+<a href="#497" id="497">497</a>
+<a href="#498" id="498">498</a>
+<a href="#499" id="499">499</a>
+<a href="#500" id="500">500</a>
+<a href="#501" id="501">501</a>
+<a href="#502" id="502">502</a>
+<a href="#503" id="503">503</a>
+<a href="#504" id="504">504</a>
+<a href="#505" id="505">505</a>
+<a href="#506" id="506">506</a>
+<a href="#507" id="507">507</a>
+<a href="#508" id="508">508</a>
+<a href="#509" id="509">509</a>
+<a href="#510" id="510">510</a>
+<a href="#511" id="511">511</a>
+<a href="#512" id="512">512</a>
+<a href="#513" id="513">513</a>
+<a href="#514" id="514">514</a>
+<a href="#515" id="515">515</a>
+<a href="#516" id="516">516</a>
+<a href="#517" id="517">517</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::kernel::{ffi_types::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
+
+<span class="doccomment">/// Variable parameter for:
+///
+/// * [`CLAIM_SECURITY_ATTRIBUTE_V1`](crate::CLAIM_SECURITY_ATTRIBUTE_V1).
+</span><span class="kw">pub enum </span>ClaimSecurityAttr&lt;<span class="lifetime">'a</span>&gt; {
+	Int64(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>[i64]),
+	Uint64(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u64]),
+	String(Vec&lt;String&gt;),
+	Fbqn(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>[CLAIM_SECURITY_ATTRIBUTE_FQBN_VALUE&lt;<span class="lifetime">'a</span>&gt;]),
+	OctetString(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>[CLAIM_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE&lt;<span class="lifetime">'a</span>&gt;]),
+}
 
 <span class="doccomment">/// Variable parameter for:
 ///
@@ -926,5 +990,47 @@
 			<span class="kw">_ </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Invalid co::PBT."</span>),
 		}
 	}
+}
+
+<span class="doccomment">/// Variant parameter for:
+///
+/// * [`HACCESSTOKEN::GetTokenInformation`](crate::prelude::kernel_Haccesstoken::GetTokenInformation).
+///
+/// The enum values match those in
+/// [`co::TOKEN_INFORMATION_CLASS`](crate::co::TOKEN_INFORMATION_CLASS) constant
+/// type.
+</span><span class="kw">pub enum </span>TokenInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>&gt; {
+	User(Box&lt;TOKEN_USER&lt;<span class="lifetime">'a</span>&gt;&gt;),
+	Groups(Box&lt;TOKEN_GROUPS&lt;<span class="lifetime">'a</span>&gt;&gt;),
+	Privileges(Box&lt;TOKEN_PRIVILEGES&gt;),
+	Owner(Box&lt;TOKEN_OWNER&lt;<span class="lifetime">'a</span>&gt;&gt;),
+	PrimaryGroup(Box&lt;TOKEN_PRIMARY_GROUP&lt;<span class="lifetime">'a</span>&gt;&gt;),
+	DefaultDacl(Box&lt;TOKEN_DEFAULT_DACL&lt;<span class="lifetime">'a</span>&gt;&gt;),
+	Source(Box&lt;TOKEN_SOURCE&gt;),
+	Type(Box&lt;co::TOKEN_TYPE&gt;),
+	ImpersonationLevel(Box&lt;co::SECURITY_IMPERSONATION&gt;),
+	Statistics(Box&lt;TOKEN_STATISTICS&gt;),
+	RestrictedSids(Box&lt;TOKEN_GROUPS&lt;<span class="lifetime">'a</span>&gt;&gt;),
+	SessionId(Box&lt;u32&gt;),
+	GroupsAndPrivileges(Box&lt;TOKEN_GROUPS_AND_PRIVILEGES&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt;&gt;),
+	SandBoxInert(Box&lt;u32&gt;),
+	Origin(Box&lt;TOKEN_ORIGIN&gt;),
+	ElevationType(Box&lt;co::TOKEN_ELEVATION_TYPE&gt;),
+	LinkedToken(Box&lt;TOKEN_LINKED_TOKEN&gt;),
+	Elevation(Box&lt;TOKEN_ELEVATION&gt;),
+	HasRestrictions(Box&lt;u32&gt;),
+	AccessInformation(Box&lt;TOKEN_ACCESS_INFORMATION&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>&gt;&gt;),
+	VirtualizationAllowed(Box&lt;u32&gt;),
+	VirtualizationEnabled(Box&lt;u32&gt;),
+	IntegrityLevel(Box&lt;TOKEN_MANDATORY_LABEL&lt;<span class="lifetime">'a</span>&gt;&gt;),
+	UIAccess(Box&lt;u32&gt;),
+	MandatoryPolicy(Box&lt;TOKEN_MANDATORY_POLICY&gt;),
+	LogonSid(Box&lt;TOKEN_GROUPS&lt;<span class="lifetime">'a</span>&gt;&gt;),
+	IsAppContainer(Box&lt;u32&gt;),
+	Capabilities(Box&lt;TOKEN_GROUPS&lt;<span class="lifetime">'a</span>&gt;&gt;),
+	AppContainerNumber(Box&lt;u32&gt;),
+	DeviceClaimAttributes(Box&lt;CLAIM_SECURITY_ATTRIBUTES_INFORMATION&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt;&gt;),
+	DeviceGroups(Box&lt;TOKEN_GROUPS&lt;<span class="lifetime">'a</span>&gt;&gt;),
+	RestrictedDeviceGroups(Box&lt;TOKEN_GROUPS&lt;<span class="lifetime">'a</span>&gt;&gt;),
 }
 </code></pre></div></section></main></body></html>
