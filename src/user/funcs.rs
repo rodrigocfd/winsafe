@@ -2,9 +2,9 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::{ffi_types::*, privs::*};
+use crate::kernel::privs::*;
 use crate::prelude::*;
-use crate::user::{ffi, iterators::*, privs::*};
+use crate::user::{ffi, iterators::*, privs::*, proc};
 
 /// [`AdjustWindowRectEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)
 /// function.
@@ -408,18 +408,11 @@ pub fn EnumThreadWindows<F>(thread_id: u32, func: F) -> SysResult<()>
 		unsafe {
 			ffi::EnumThreadWindows(
 				thread_id,
-				enum_thread_wnd_proc::<F> as _,
+				proc::func_enum_thread_wnd::<F> as _,
 				&func as *const _ as _,
 			)
 		},
 	)
-}
-
-extern "system" fn enum_thread_wnd_proc<F>(hwnd: HWND, lparam: isize) -> BOOL
-	where F: FnMut(HWND) -> bool,
-{
-	let func = unsafe { &mut *(lparam as *mut F) };
-	func(hwnd) as _
 }
 
 /// [`EnumWindows`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enumwindows)
@@ -442,17 +435,11 @@ pub fn EnumWindows<F>(func: F) -> SysResult<()>
 	bool_to_sysresult(
 		unsafe {
 			ffi::EnumWindows(
-				enum_windows_proc::<F> as _,
+				proc::func_enum_windows::<F> as _,
 				&func as *const _ as _,
 			)
 		},
 	)
-}
-extern "system" fn enum_windows_proc<F>(hwnd: HWND, lparam: isize) -> BOOL
-	where F: FnMut(HWND) -> bool,
-{
-	let func = unsafe { &mut *(lparam as *mut F) };
-	func(hwnd) as _
 }
 
 /// [`ExitWindowsEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-exitwindowsex)

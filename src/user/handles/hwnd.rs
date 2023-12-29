@@ -5,9 +5,9 @@ use std::marker::PhantomData;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::{ffi_types::*, privs::*};
+use crate::kernel::privs::*;
 use crate::prelude::*;
-use crate::user::{ffi, privs::*};
+use crate::user::{ffi, privs::*, proc};
 
 impl_handle! { HWND;
 	/// Handle to a
@@ -317,7 +317,7 @@ pub trait user_Hwnd: Handle {
 		unsafe {
 			ffi::EnumChildWindows(
 				self.ptr(),
-				enum_child_windows_proc::<F> as _, // https://redd.it/npehj9
+				proc::hwnd_enum_child_windows::<F> as _, // https://redd.it/npehj9
 				&func as *const _ as _,
 			);
 		}
@@ -1815,14 +1815,4 @@ pub trait user_Hwnd: Handle {
 			},
 		)
 	}
-}
-
-//------------------------------------------------------------------------------
-
-extern "system" fn enum_child_windows_proc<F>(
-	hwnd: HWND, lparam: isize) -> BOOL
-	where F: FnMut(HWND) -> bool,
-{
-	let func = unsafe { &mut *(lparam as *mut F) };
-	func(hwnd) as _
 }

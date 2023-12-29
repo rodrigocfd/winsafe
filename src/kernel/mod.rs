@@ -6,6 +6,7 @@ mod enums;
 mod ffi;
 mod funcs;
 mod handles;
+mod proc;
 mod structs;
 mod utilities;
 

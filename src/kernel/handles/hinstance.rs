@@ -3,7 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::{ffi, ffi_types::*, privs::*};
+use crate::kernel::{ffi, privs::*, proc};
 use crate::prelude::*;
 
 impl_handle! { HINSTANCE;
@@ -38,7 +38,7 @@ pub trait kernel_Hinstance: Handle {
 					self.ptr(),
 					resource_type.as_ptr(),
 					resource_id.as_ptr(),
-					enum_resource_languages_proc::<F> as _,
+					proc::hinstance_enum_resource_languages::<F> as _,
 					&func as *const _ as _,
 				)
 			},
@@ -83,7 +83,7 @@ pub trait kernel_Hinstance: Handle {
 				ffi::EnumResourceNamesW(
 					self.ptr(),
 					resource_type.as_ptr(),
-					enum_resource_names_proc::<F> as _,
+					proc::hinstance_enum_resource_names::<F> as _,
 					&func as *const _ as _,
 				)
 			},
@@ -117,7 +117,7 @@ pub trait kernel_Hinstance: Handle {
 			unsafe {
 				ffi::EnumResourceTypesW(
 					self.ptr(),
-					enum_resource_types_proc::<F> as _,
+					proc::hinstance_enum_resource_types::<F> as _,
 					&func as *const _ as _,
 				)
 			},
@@ -331,31 +331,4 @@ pub trait kernel_Hinstance: Handle {
 			sz => Ok(sz)
 		}
 	}
-}
-
-//------------------------------------------------------------------------------
-
-extern "system" fn enum_resource_languages_proc<F>(
-	_: HINSTANCE, _: *const u16, _: *const u16,
-	language_id: u16, lparam: isize) -> BOOL
-	where F: FnMut(LANGID) -> bool,
-{
-	let func = unsafe { &mut *(lparam as *mut F) };
-	func(unsafe { LANGID::from_raw(language_id) }) as _
-}
-
-extern "system" fn enum_resource_names_proc<F>(
-	_: HINSTANCE, _: *const u16, resource_id: *mut u16, lparam: isize) -> BOOL
-	where F: FnMut(IdStr) -> bool,
-{
-	let func = unsafe { &mut *(lparam as *mut F) };
-	func(unsafe { IdStr::from_ptr(resource_id) }) as _
-}
-
-extern "system" fn enum_resource_types_proc<F>(
-	_: HINSTANCE, resource_type: *const u16, lparam: isize) -> BOOL
-	where F: FnMut(RtStr) -> bool,
-{
-	let func = unsafe { &mut *(lparam as *mut F) };
-	func(unsafe { RtStr::from_ptr(resource_type) }) as _
 }

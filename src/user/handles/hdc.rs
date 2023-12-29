@@ -2,9 +2,9 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::{ffi_types::*, privs::*};
+use crate::kernel::privs::*;
 use crate::prelude::*;
-use crate::user::ffi;
+use crate::user::{ffi, proc};
 
 impl_handle! { HDC;
 	/// Handle to a
@@ -109,7 +109,7 @@ pub trait user_Hdc: Handle {
 				ffi::EnumDisplayMonitors(
 					self.ptr(),
 					rc_clip.map_or(std::ptr::null_mut(), |rc| &rc as *const _ as _),
-					enum_display_monitors_proc::<F> as _,
+					proc::hdc_enum_display_monitors::<F> as _,
 					&func as *const _ as _,
 				)
 			},
@@ -136,14 +136,4 @@ pub trait user_Hdc: Handle {
 	fn WindowFromDC(&self) -> Option<HWND> {
 		ptr_to_option_handle(unsafe { ffi::WindowFromDC(self.ptr()) })
 	}
-}
-
-//------------------------------------------------------------------------------
-
-extern "system" fn enum_display_monitors_proc<F>(
-	hmon: HMONITOR, hdc: HDC, rc: *const RECT, lparam: isize) -> BOOL
-	where F: FnMut(HMONITOR, HDC, &RECT) -> bool,
-{
-	let func = unsafe { &mut *(lparam as *mut F) };
-	func(hmon, hdc, unsafe { &*rc }) as _
 }

@@ -4,8 +4,9 @@ mod aliases;
 mod enums;
 mod funcs;
 mod handles;
-mod structs;
 mod msg_traits;
+mod proc;
+mod structs;
 
 pub(in crate::user) mod ffi;
 pub(in crate::user) mod iterators;
