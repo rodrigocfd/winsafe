@@ -277,6 +277,7 @@ impl RawBase {
 				hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as _); // store
 				let ref_self = unsafe { &mut *ptr_self };
 				ref_self.base.set_hwnd(unsafe { hwnd.raw_copy() }); // store HWND in struct field
+				ref_self.base.init_layout_arranger();
 				ptr_self
 			},
 			_ => hwnd.GetWindowLongPtr(co::GWLP::USERDATA) as *mut Self, // retrieve

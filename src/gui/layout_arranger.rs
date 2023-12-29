@@ -49,7 +49,7 @@ struct ChildInfo {
 
 struct Obj { // actual fields of LayoutArranger
 	ctrls: UnsafeCell<Vec<ChildInfo>>,
-	sz_parent_orig: UnsafeCell<Option<SIZE>>, // original parent client area, filled at 1st WM_SIZE
+	sz_parent_orig: UnsafeCell<Option<SIZE>>, // original parent client area, filled at WM_CREATE/INITDIALOG
 	_pin: PhantomPinned,
 }
 
@@ -99,6 +99,14 @@ impl LayoutArranger {
 		Ok(())
 	}
 
+	/// Saves the original client area of the parent window.
+	pub(in crate::gui) fn save_original_client_area(&self, hparent: &HWND) {
+		let rc_parent = hparent.GetClientRect().unwrap();
+		*unsafe { &mut *self.0.sz_parent_orig.get() } = Some(
+			SIZE::new(rc_parent.right, rc_parent.bottom),
+		);
+	}
+
 	/// Rearranges all child controls to fit the new width/height of parent
 	/// window.
 	pub(in crate::gui) fn rearrange(&self, p: &wm::Size) -> SysResult<()> {
@@ -110,10 +118,7 @@ impl LayoutArranger {
 
 		let sz_parent_orig = match unsafe { &mut *self.0.sz_parent_orig.get() } {
 			Some(sz) => *sz,
-			None => {
-				*unsafe { &mut *self.0.sz_parent_orig.get() } = Some(p.client_area); // save original parent size
-				p.client_area
-			},
+			None => panic!("Original parent client area was not saved."),
 		};
 
 		let mut hdwp = HDWP::BeginDeferWindowPos(ctrls.len() as _)?;

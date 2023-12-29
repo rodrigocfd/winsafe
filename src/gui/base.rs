@@ -127,6 +127,13 @@ impl Base {
 		Ok(())
 	}
 
+	pub(in crate::gui) fn init_layout_arranger(&self) {
+		// Note that the controls are added to LayoutArranger during new(),
+		// which happens before WM_CREATE/INITDIALOG, which is when this method
+		// is called.
+		self.layout_arranger.save_original_client_area(&self.hwnd);
+	}
+
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
 		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
