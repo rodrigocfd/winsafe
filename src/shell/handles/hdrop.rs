@@ -60,8 +60,9 @@ pub trait shell_Hdrop: Handle {
 	/// ```
 	#[must_use]
 	fn DragQueryFile(&mut self,
-	) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + '_>> {
-		Ok(Box::new(HdropIter::new(self)?))
+	) -> SysResult<impl Iterator<Item = SysResult<String>> + '_>
+	{
+		Ok(HdropIter::new(self)?)
 	}
 
 	/// [`DragQueryPoint`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragquerypoint)

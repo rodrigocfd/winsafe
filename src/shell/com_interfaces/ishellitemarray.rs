@@ -84,9 +84,9 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn iter(&self,
-	) -> HrResult<Box<dyn Iterator<Item = HrResult<IShellItem>> + '_>>
+	) -> HrResult<impl Iterator<Item = HrResult<IShellItem>> + '_>
 	{
-		Ok(Box::new(IshellitemarrayIter::new(self)?))
+		Ok(IshellitemarrayIter::new(self)?)
 	}
 
 	/// [`IShellItemArray::GetCount`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getcount)

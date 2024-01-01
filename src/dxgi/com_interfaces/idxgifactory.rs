@@ -118,9 +118,9 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	/// ```
 	#[must_use]
 	fn EnumAdapters(&self,
-	) -> Box<dyn Iterator<Item = HrResult<IDXGIAdapter>> + '_>
+	) -> impl Iterator<Item = HrResult<IDXGIAdapter>> + '_
 	{
-		Box::new(IdxgifactoryEnumadaptersIter::new(self))
+		IdxgifactoryEnumadaptersIter::new(self)
 	}
 
 	/// [`IDXGIFactory::GetWindowAssociation`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-getwindowassociation)

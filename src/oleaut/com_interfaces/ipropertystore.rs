@@ -65,9 +65,9 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn iter(&self,
-	) -> HrResult<Box<dyn Iterator<Item = HrResult<PROPERTYKEY>> + '_>>
+	) -> HrResult<impl Iterator<Item = HrResult<PROPERTYKEY>> + '_>
 	{
-		Ok(Box::new(IpropertystoreIter::new(self)?))
+		Ok(IpropertystoreIter::new(self)?)
 	}
 
 	fn_com_noparm! { Commit: IPropertyStoreVT;

@@ -78,10 +78,8 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 	#[must_use]
-	fn EnumOutputs(&self,
-	) -> Box<dyn Iterator<Item = HrResult<IDXGIOutput>> + '_>
-	{
-		Box::new(IdxgiadapterEnumoutputsIter::new(self))
+	fn EnumOutputs(&self) -> impl Iterator<Item = HrResult<IDXGIOutput>> + '_ {
+		IdxgiadapterEnumoutputsIter::new(self)
 	}
 
 	/// [`IDXGIAdapter::GetDesc`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiadapter-getdesc)

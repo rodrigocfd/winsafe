@@ -137,10 +137,8 @@ pub trait user_Hmenu: Handle {
 	/// # Ok::<_, winsafe::co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn iter_items(&self,
-	) -> Box<dyn Iterator<Item = SysResult<MenuItemInfo>> + '_>
-	{
-		Box::new(HmenuIteritems::new(self))
+	fn iter_items(&self) -> impl Iterator<Item = SysResult<MenuItemInfo>> + '_ {
+		HmenuIteritems::new(self)
 	}
 
 	/// [`AppendMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-appendmenuw)

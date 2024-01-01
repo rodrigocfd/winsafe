@@ -298,9 +298,9 @@ pub trait kernel_Hkey: Handle {
 	/// ```
 	#[must_use]
 	fn RegEnumKeyEx(&self,
-	) -> SysResult<Box<dyn Iterator<Item = SysResult<String>> + '_>>
+	) -> SysResult<impl Iterator<Item = SysResult<String>> + '_>
 	{
-		Ok(Box::new(HkeyKeyIter::new(self)?))
+		Ok(HkeyKeyIter::new(self)?)
 	}
 
 	/// Returns an iterator of the names and types of the values, which calls
@@ -331,9 +331,9 @@ pub trait kernel_Hkey: Handle {
 	/// ```
 	#[must_use]
 	fn RegEnumValue(&self,
-	) -> SysResult<Box<dyn Iterator<Item = SysResult<(String, co::REG)>> + '_>>
+	) -> SysResult<impl Iterator<Item = SysResult<(String, co::REG)>> + '_>
 	{
-		Ok(Box::new(HkeyValueIter::new(self)?))
+		Ok(HkeyValueIter::new(self)?)
 	}
 
 	/// [`RegFlushKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regflushkey)

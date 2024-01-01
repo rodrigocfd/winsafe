@@ -58,8 +58,8 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 	#[must_use]
-	fn iter(&self) -> Box<dyn Iterator<Item = HrResult<IBaseFilter>> + '_> {
-		Box::new(IenumfiltersIter::new(self))
+	fn iter(&self) -> impl Iterator<Item = HrResult<IBaseFilter>> + '_ {
+		IenumfiltersIter::new(self)
 	}
 
 	/// [`IEnumFilters::Next`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-next)

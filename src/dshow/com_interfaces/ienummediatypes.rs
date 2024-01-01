@@ -59,9 +59,9 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn iter(&self,
-	) -> Box<dyn Iterator<Item = HrResult<&'_ AM_MEDIA_TYPE<'_>>> + '_>
+	) -> impl Iterator<Item = HrResult<&'_ AM_MEDIA_TYPE<'_>>> + '_
 	{
-		Box::new(IenummediatypesIter::new(self))
+		IenummediatypesIter::new(self)
 	}
 
 	/// [`IEnumMediaTypes::Next`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienummediatypes-next)

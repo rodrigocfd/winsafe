@@ -68,8 +68,8 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 	/// # Ok::<_, co::HRESULT>(())
 	/// ```
 	#[must_use]
-	fn iter(&self) -> Box<dyn Iterator<Item = HrResult<IShellItem>> + '_> {
-		Box::new(IenumshellitemsIter::new(self))
+	fn iter(&self) -> impl Iterator<Item = HrResult<IShellItem>> + '_ {
+		IenumshellitemsIter::new(self)
 	}
 
 	/// [`IEnumShellItems::Next`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-next)

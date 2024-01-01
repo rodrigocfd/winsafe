@@ -48,9 +48,9 @@ pub trait kernel_Hprocesslist: Handle {
 	/// ```
 	#[must_use]
 	fn iter_heaps(&mut self,
-	) -> Box<dyn Iterator<Item = SysResult<&HEAPLIST32>> + '_>
+	) -> impl Iterator<Item = SysResult<&HEAPLIST32>> + '_
 	{
-		Box::new(HprocesslistHeapIter::new(self))
+		HprocesslistHeapIter::new(self)
 	}
 
 	/// Returns an iterator over the modules of a process, with
@@ -77,9 +77,9 @@ pub trait kernel_Hprocesslist: Handle {
 	/// ```
 	#[must_use]
 	fn iter_modules(&mut self,
-	) -> Box<dyn Iterator<Item = SysResult<&MODULEENTRY32>> + '_>
+	) -> impl Iterator<Item = SysResult<&MODULEENTRY32>> + '_
 	{
-		Box::new(HprocesslistModuleIter::new(self))
+		HprocesslistModuleIter::new(self)
 	}
 
 	/// Returns an iterator over the processes of a process, with
@@ -106,9 +106,9 @@ pub trait kernel_Hprocesslist: Handle {
 	/// ```
 	#[must_use]
 	fn iter_processes(&mut self,
-	) -> Box<dyn Iterator<Item = SysResult<&PROCESSENTRY32>> + '_>
+	) -> impl Iterator<Item = SysResult<&PROCESSENTRY32>> + '_
 	{
-		Box::new(HprocesslistProcessIter::new(self))
+		HprocesslistProcessIter::new(self)
 	}
 
 	/// Returns an iterator over the threads of a process, with
@@ -137,9 +137,9 @@ pub trait kernel_Hprocesslist: Handle {
 	/// ```
 	#[must_use]
 	fn iter_threads(&mut self,
-	) -> Box<dyn Iterator<Item = SysResult<&THREADENTRY32>> + '_>
+	) -> impl Iterator<Item = SysResult<&THREADENTRY32>> + '_
 	{
-		Box::new(HprocesslistThreadIter::new(self))
+		HprocesslistThreadIter::new(self)
 	}
 
 	/// [`CreateToolhelp32Snapshot`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/nf-tlhelp32-createtoolhelp32snapshot)

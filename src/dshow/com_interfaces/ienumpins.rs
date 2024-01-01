@@ -56,8 +56,8 @@ pub trait dshow_IEnumPins: ole_IUnknown {
 	/// # Ok::<_, winsafe::co::HRESULT>(())
 	/// ```
 	#[must_use]
-	fn iter(&self) -> Box<dyn Iterator<Item = HrResult<IPin>> + '_> {
-		Box::new(IenumpinsIter::new(self))
+	fn iter(&self) -> impl Iterator<Item = HrResult<IPin>> + '_ {
+		IenumpinsIter::new(self)
 	}
 
 	/// [`IEnumPins::Next`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumpins-next)

@@ -302,9 +302,9 @@ pub trait kernel_Hheap: Handle {
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
 	#[must_use]
-	fn HeapWalk(&self
-	) -> Box<dyn Iterator<Item = SysResult<&PROCESS_HEAP_ENTRY>> + '_>
+	fn HeapWalk(&self,
+	) -> impl Iterator<Item = SysResult<&PROCESS_HEAP_ENTRY>> + '_
 	{
-		Box::new(HheapHeapwalkIter::new(self))
+		HheapHeapwalkIter::new(self)
 	}
 }
