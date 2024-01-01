@@ -207,9 +207,9 @@
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>,
-	) -&gt; HrResult&lt;Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = HrResult&lt;IShellItem&gt;&gt; + <span class="lifetime">'_</span>&gt;&gt;
+	) -&gt; HrResult&lt;<span class="kw">impl </span>Iterator&lt;Item = HrResult&lt;IShellItem&gt;&gt; + <span class="lifetime">'_</span>&gt;
 	{
-		<span class="prelude-val">Ok</span>(Box::new(IshellitemarrayIter::new(<span class="self">self</span>)<span class="question-mark">?</span>))
+		<span class="prelude-val">Ok</span>(IshellitemarrayIter::new(<span class="self">self</span>)<span class="question-mark">?</span>)
 	}
 
 	<span class="doccomment">/// [`IShellItemArray::GetCount`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getcount)

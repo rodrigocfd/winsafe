@@ -1372,9 +1372,9 @@
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>RegEnumKeyEx(<span class="kw-2">&amp;</span><span class="self">self</span>,
-	) -&gt; SysResult&lt;Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">'_</span>&gt;&gt;
+	) -&gt; SysResult&lt;<span class="kw">impl </span>Iterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">'_</span>&gt;
 	{
-		<span class="prelude-val">Ok</span>(Box::new(HkeyKeyIter::new(<span class="self">self</span>)<span class="question-mark">?</span>))
+		<span class="prelude-val">Ok</span>(HkeyKeyIter::new(<span class="self">self</span>)<span class="question-mark">?</span>)
 	}
 
 	<span class="doccomment">/// Returns an iterator of the names and types of the values, which calls
@@ -1405,9 +1405,9 @@
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>RegEnumValue(<span class="kw-2">&amp;</span><span class="self">self</span>,
-	) -&gt; SysResult&lt;Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = SysResult&lt;(String, co::REG)&gt;&gt; + <span class="lifetime">'_</span>&gt;&gt;
+	) -&gt; SysResult&lt;<span class="kw">impl </span>Iterator&lt;Item = SysResult&lt;(String, co::REG)&gt;&gt; + <span class="lifetime">'_</span>&gt;
 	{
-		<span class="prelude-val">Ok</span>(Box::new(HkeyValueIter::new(<span class="self">self</span>)<span class="question-mark">?</span>))
+		<span class="prelude-val">Ok</span>(HkeyValueIter::new(<span class="self">self</span>)<span class="question-mark">?</span>)
 	}
 
 	<span class="doccomment">/// [`RegFlushKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regflushkey)

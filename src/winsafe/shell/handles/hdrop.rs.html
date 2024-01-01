@@ -83,6 +83,7 @@
 <a href="#82" id="82">82</a>
 <a href="#83" id="83">83</a>
 <a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -145,8 +146,9 @@
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>DragQueryFile(<span class="kw-2">&amp;mut </span><span class="self">self</span>,
-	) -&gt; SysResult&lt;Box&lt;<span class="kw">dyn </span>Iterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">'_</span>&gt;&gt; {
-		<span class="prelude-val">Ok</span>(Box::new(HdropIter::new(<span class="self">self</span>)<span class="question-mark">?</span>))
+	) -&gt; SysResult&lt;<span class="kw">impl </span>Iterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">'_</span>&gt;
+	{
+		<span class="prelude-val">Ok</span>(HdropIter::new(<span class="self">self</span>)<span class="question-mark">?</span>)
 	}
 
 	<span class="doccomment">/// [`DragQueryPoint`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragquerypoint)
