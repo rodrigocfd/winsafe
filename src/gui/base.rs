@@ -123,15 +123,14 @@ impl Base {
 		resize_behavior: (Horz, Vert),
 	) -> SysResult<()>
 	{
-		self.layout_arranger.add_child(&self.hwnd, hchild, resize_behavior)?;
-		Ok(())
+		self.layout_arranger.add_child(&self.hwnd, hchild, resize_behavior)
 	}
 
-	pub(in crate::gui) fn init_layout_arranger(&self) {
+	pub(in crate::gui) fn init_layout_arranger(&self) -> SysResult<()> {
 		// Note that the controls are added to LayoutArranger during new(),
 		// which happens before WM_CREATE/INITDIALOG, which is when this method
 		// is called.
-		self.layout_arranger.save_original_client_area(&self.hwnd);
+		self.layout_arranger.save_original_client_area(&self.hwnd)
 	}
 
 	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)

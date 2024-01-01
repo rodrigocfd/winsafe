@@ -100,11 +100,15 @@ impl LayoutArranger {
 	}
 
 	/// Saves the original client area of the parent window.
-	pub(in crate::gui) fn save_original_client_area(&self, hparent: &HWND) {
-		let rc_parent = hparent.GetClientRect().unwrap();
+	pub(in crate::gui) fn save_original_client_area(&self,
+		hparent: &HWND,
+	) -> SysResult<()>
+	{
+		let rc_parent = hparent.GetClientRect()?;
 		*unsafe { &mut *self.0.sz_parent_orig.get() } = Some(
 			SIZE::new(rc_parent.right, rc_parent.bottom),
 		);
+		Ok(())
 	}
 
 	/// Rearranges all child controls to fit the new width/height of parent

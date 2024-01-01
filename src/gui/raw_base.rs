@@ -277,7 +277,6 @@ impl RawBase {
 				hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as _); // store
 				let ref_self = unsafe { &mut *ptr_self };
 				ref_self.base.set_hwnd(unsafe { hwnd.raw_copy() }); // store HWND in struct field
-				ref_self.base.init_layout_arranger();
 				ptr_self
 			},
 			_ => hwnd.GetWindowLongPtr(co::GWLP::USERDATA) as *mut Self, // retrieve
@@ -291,6 +290,9 @@ impl RawBase {
 
 		// Execute privileged closures, keep track if at least one was executed.
 		let ref_self = unsafe { &mut *ptr_self };
+		if wm_any.msg_id == co::WM::CREATE {
+			ref_self.base.init_layout_arranger().unwrap(); // shoule be privileged, but we need HWND
+		}
 		let at_least_one_privileged = ref_self.base.process_privileged_messages(wm_any)?;
 
 		// Execute user closure, if any.
