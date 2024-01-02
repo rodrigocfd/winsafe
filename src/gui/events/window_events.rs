@@ -183,36 +183,6 @@ pub trait GuiEvents {
 		/// message.
 	}
 
-	/// [`WM_CREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create)
-	/// message, sent only to non-dialog windows. Dialog windows receive
-	/// [`WM_INITDIALOG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
-	/// instead.
-	///
-	/// # Examples
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*, gui, msg};
-	///
-	/// let wnd: gui::WindowMain; // initialized somewhere
-	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-	///
-	/// wnd.on().wm_create(
-	///     move |p: msg::wm::Create| -> w::AnyResult<i32> {
-	///         println!("Client area: {}x{}",
-	///             p.createstruct.cx,
-	///             p.createstruct.cy,
-	///         );
-	///         Ok(0)
-	///     },
-	/// );
-	/// ```
-	fn wm_create<F>(&self, func: F)
-		where F: Fn(wm::Create) -> AnyResult<i32> + 'static,
-	{
-		self.wm(co::WM::CREATE,
-			move |p| Ok(Some(func(wm::Create::from_generic_wm(p))? as _)));
-	}
-
 	fn_wm_ctlcolor! { wm_ctl_color_btn, co::WM::CTLCOLORBTN, wm::CtlColorBtn;
 		/// [`WM_CTLCOLORBTN`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
 		/// message.
@@ -410,31 +380,6 @@ pub trait GuiEvents {
 	fn_wm_withparm_noret! { wm_help, co::WM::HELP, wm::Help;
 		/// [`WM_HELP`](https://learn.microsoft.com/en-us/windows/win32/shell/wm-help)
 		/// message.
-	}
-
-	fn_wm_withparm_boolret! { wm_init_dialog, co::WM::INITDIALOG, wm::InitDialog;
-		/// [`WM_INITDIALOG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
-		/// message, sent only to dialog windows. Non-dialog windows receive
-		/// [`WM_CREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create)
-		/// instead.
-		///
-		/// Return `true` to set the focus to the first control in the dialog.
-		///
-		/// # Examples
-		///
-		/// ```no_run
-		/// use winsafe::{self as w, prelude::*, gui, msg};
-		///
-		/// let wnd: gui::WindowMain; // initialized somewhere
-		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-		///
-		/// wnd.on().wm_init_dialog(
-		///     move |p: msg::wm::InitDialog| -> w::AnyResult<bool> {
-		///         println!("Focused HWND: {}", p.hwnd_focus);
-		///         Ok(true)
-		///     },
-		/// );
-		/// ```
 	}
 
 	fn_wm_withparm_noret! { wm_init_menu_popup, co::WM::INITMENUPOPUP, wm::InitMenuPopup;
