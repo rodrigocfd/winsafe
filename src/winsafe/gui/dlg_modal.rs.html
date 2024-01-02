@@ -86,8 +86,6 @@
 <a href="#84" id="84">84</a>
 <a href="#85" id="85">85</a>
 <a href="#86" id="86">86</a>
-<a href="#87" id="87">87</a>
-<a href="#88" id="88">88</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
 <span class="kw">use </span>std::sync::Arc;
@@ -152,9 +150,7 @@
 	}
 
 	<span class="kw">fn </span>default_message_handlers(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-		<span class="self">self</span>.<span class="number">0</span>.dlg_base.privileged_on().wm_init_dialog(<span class="kw">move </span>|<span class="kw">_</span>| {
-			<span class="kw">let </span>hwnd = self2.hwnd();
+		<span class="self">self</span>.<span class="number">0</span>.dlg_base.privileged_on().wm(co::WM::INITDIALOG, <span class="kw">move </span>|hwnd, <span class="kw">_</span>| {
 			<span class="kw">let </span>rc = hwnd.GetWindowRect()<span class="question-mark">?</span>;
 			<span class="kw">let </span>rc_parent = hwnd.GetParent()<span class="question-mark">?</span>.GetWindowRect()<span class="question-mark">?</span>;
 			hwnd.SetWindowPos( <span class="comment">// center modal on parent
@@ -166,8 +162,8 @@
 				SIZE::default(),
 				co::SWP::NOSIZE | co::SWP::NOZORDER,
 			)<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(<span class="bool-val">true</span>) <span class="comment">// not meaningful
-		</span>});
+			<span class="prelude-val">Ok</span>(())
+		});
 
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
 		<span class="self">self</span>.on().wm_close(<span class="kw">move </span>|| { <span class="comment">// user clicked the X button

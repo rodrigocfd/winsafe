@@ -150,7 +150,7 @@
 
 	<span class="kw">fn </span>default_message_handlers(<span class="kw-2">&amp;</span><span class="self">self</span>, parent: <span class="kw-2">&amp;</span>Base) {
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-		parent.privileged_on().wm(parent.wm_create_or_initdialog(), <span class="kw">move </span>|<span class="kw">_</span>| {
+		parent.privileged_on().wm_create_or_initdialog(<span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
 			self2.<span class="number">0</span>.dlg_base.create_dialog_param()<span class="question-mark">?</span>;
 			self2.hwnd().ShowWindow(co::SW::SHOW);
 
@@ -162,8 +162,8 @@
 				dlg_pos, SIZE::default(),
 				co::SWP::NOZORDER | co::SWP::NOSIZE,
 			)<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) <span class="comment">// not meaningful
-		</span>});
+			<span class="prelude-val">Ok</span>(())
+		});
 	}
 }
 </code></pre></div></section></main></body></html>

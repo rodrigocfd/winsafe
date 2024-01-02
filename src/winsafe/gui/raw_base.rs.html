@@ -314,9 +314,6 @@
 <a href="#312" id="312">312</a>
 <a href="#313" id="313">313</a>
 <a href="#314" id="314">314</a>
-<a href="#315" id="315">315</a>
-<a href="#316" id="316">316</a>
-<a href="#317" id="317">317</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::{events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
@@ -446,7 +443,7 @@
 		<span class="self">self</span>.base.on()
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>privileged_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsAll {
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>privileged_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsPriv {
 		<span class="self">self</span>.base.privileged_on()
 	}
 
@@ -609,10 +606,7 @@
 
 		<span class="comment">// Execute privileged closures, keep track if at least one was executed.
 		</span><span class="kw">let </span>ref_self = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>ptr_self };
-		<span class="kw">if </span>wm_any.msg_id == co::WM::CREATE {
-			ref_self.base.init_layout_arranger().unwrap(); <span class="comment">// shoule be privileged, but we need HWND
-		</span>}
-		<span class="kw">let </span>at_least_one_privileged = ref_self.base.process_privileged_messages(wm_any)<span class="question-mark">?</span>;
+		<span class="kw">let </span>at_least_one_privileged = ref_self.base.process_privileged_messages(<span class="kw-2">&amp;</span>hwnd, wm_any)<span class="question-mark">?</span>;
 
 		<span class="comment">// Execute user closure, if any.
 		</span><span class="kw">let </span>process_result = ref_self.base.process_user_message(wm_any)<span class="question-mark">?</span>;

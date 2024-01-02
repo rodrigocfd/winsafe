@@ -305,7 +305,7 @@
 		<span class="self">self</span>.<span class="number">0</span>.raw_base.on()
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>privileged_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsAll {
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>privileged_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsPriv {
 		<span class="self">self</span>.<span class="number">0</span>.raw_base.privileged_on()
 	}
 
@@ -413,7 +413,7 @@
 
 	<span class="kw">fn </span>default_message_handlers(<span class="kw-2">&amp;</span><span class="self">self</span>) {
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-		<span class="self">self</span>.privileged_on().wm_set_focus(<span class="kw">move </span>|<span class="kw">_</span>| {
+		<span class="self">self</span>.privileged_on().wm(co::WM::SETFOCUS, <span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
 			self2.<span class="number">0</span>.raw_base.delegate_focus_to_first_child();
 			<span class="prelude-val">Ok</span>(())
 		});

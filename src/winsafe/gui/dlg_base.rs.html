@@ -176,7 +176,6 @@
 <a href="#174" id="174">174</a>
 <a href="#175" id="175">175</a>
 <a href="#176" id="176">176</a>
-<a href="#177" id="177">177</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::{events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
@@ -220,7 +219,7 @@
 		<span class="self">self</span>.base.on()
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>privileged_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsAll {
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>privileged_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsPriv {
 		<span class="self">self</span>.base.privileged_on()
 	}
 
@@ -302,8 +301,7 @@
 				hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self <span class="kw">as _</span>); <span class="comment">// store
 				</span><span class="kw">let </span>ref_self = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>ptr_self };
 				ref_self.base.set_hwnd(<span class="kw">unsafe </span>{ hwnd.raw_copy() }); <span class="comment">// store HWND in struct field
-				</span>ref_self.base.init_layout_arranger().unwrap();
-				ptr_self
+				</span>ptr_self
 			},
 			<span class="kw">_ </span>=&gt; hwnd.GetWindowLongPtr(co::GWLP::DWLP_USER) <span class="kw">as </span><span class="kw-2">*mut </span><span class="self">Self</span>, <span class="comment">// retrieve
 		</span>};
@@ -316,7 +314,7 @@
 
 		<span class="comment">// Execute privileged closures, keep track if at least one was executed.
 		</span><span class="kw">let </span>ref_self = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>ptr_self };
-		<span class="kw">let </span>at_least_one_privileged = ref_self.base.process_privileged_messages(wm_any)<span class="question-mark">?</span>;
+		<span class="kw">let </span>at_least_one_privileged = ref_self.base.process_privileged_messages(<span class="kw-2">&amp;</span>hwnd, wm_any)<span class="question-mark">?</span>;
 
 		<span class="kw">if </span>wm_any.msg_id == co::WM::INITDIALOG {
 			<span class="comment">// Child controls are created in privileged closures, so we set the

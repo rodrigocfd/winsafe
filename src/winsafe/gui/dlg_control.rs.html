@@ -107,7 +107,6 @@
 <a href="#105" id="105">105</a>
 <a href="#106" id="106">106</a>
 <a href="#107" id="107">107</a>
-<a href="#108" id="108">108</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
 <span class="kw">use </span>std::sync::Arc;
@@ -115,6 +114,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
+<span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">struct </span>Obj { <span class="comment">// actual fields of DlgControl
@@ -169,7 +169,7 @@
 		<span class="self">self</span>.<span class="number">0</span>.dlg_base.on()
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>privileged_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsAll {
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>privileged_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsPriv {
 		<span class="self">self</span>.<span class="number">0</span>.dlg_base.privileged_on()
 	}
 
@@ -188,10 +188,9 @@
 	<span class="kw">fn </span>default_message_handlers(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		parent: <span class="kw-2">&amp;</span>Base,
 		resize_behavior: (Horz, Vert),
-	)
-	{
+	) {
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-		parent.privileged_on().wm(parent.wm_create_or_initdialog(), <span class="kw">move </span>|<span class="kw">_</span>| {
+		parent.privileged_on().wm_create_or_initdialog(<span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
 			self2.<span class="number">0</span>.dlg_base.create_dialog_param()<span class="question-mark">?</span>;
 			<span class="kw">let </span>parent_base_ref = self2.<span class="number">0</span>.dlg_base.parent().unwrap();
 
@@ -206,12 +205,11 @@
 			self2.hwnd().SetWindowLongPtr(co::GWLP::ID, self2.<span class="number">0</span>.ctrl_id <span class="kw">as _</span>);
 
 			parent_base_ref.add_to_layout_arranger(self2.hwnd(), resize_behavior)<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) <span class="comment">// not meaningful
-		</span>});
+			<span class="prelude-val">Ok</span>(())
+		});
 
-		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-		<span class="self">self</span>.privileged_on().wm_nc_paint(<span class="kw">move </span>|p| {
-			paint_control_borders(self2.hwnd(), p)<span class="question-mark">?</span>;
+		<span class="self">self</span>.privileged_on().wm(co::WM::NCPAINT, <span class="kw">move </span>|hwnd, p| {
+			paint_control_borders(hwnd, wm::NcPaint::from_generic_wm(p))<span class="question-mark">?</span>;
 			<span class="prelude-val">Ok</span>(())
 		});
 	}

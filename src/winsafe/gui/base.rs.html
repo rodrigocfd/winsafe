@@ -239,10 +239,6 @@
 <a href="#237" id="237">237</a>
 <a href="#238" id="238">238</a>
 <a href="#239" id="239">239</a>
-<a href="#240" id="240">240</a>
-<a href="#241" id="241">241</a>
-<a href="#242" id="242">242</a>
-<a href="#243" id="243">243</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::ptr::NonNull;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -263,8 +259,8 @@
 	hwnd: HWND,
 	is_dialog: bool,
 	parent_ptr: <span class="prelude-ty">Option</span>&lt;NonNull&lt;<span class="self">Self</span>&gt;&gt;, <span class="comment">// used only during creation stuff
+	</span>privileged_events: WindowEventsPriv, <span class="comment">// inserted internally to automate tasks: all will be executed
 	</span>user_events: WindowEventsAll, <span class="comment">// ordinary window events, inserted by user: only last added is executed (overwrite previous)
-	</span>privileged_events: WindowEventsAll, <span class="comment">// inserted internally to automate tasks: all will be executed
 	</span>layout_arranger: LayoutArranger,
 }
 
@@ -288,8 +284,8 @@
 			hwnd: HWND::NULL,
 			is_dialog,
 			parent_ptr: parent.map(|parent| NonNull::from(parent)),
+			privileged_events: WindowEventsPriv::new(is_dialog),
 			user_events: WindowEventsAll::new(),
-			privileged_events: WindowEventsAll::new(),
 			layout_arranger: LayoutArranger::new(),
 		};
 		new_self.default_message_handlers();
@@ -306,10 +302,6 @@
 
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>is_dialog(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
 		<span class="self">self</span>.is_dialog
-	}
-
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>wm_create_or_initdialog(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::WM {
-		<span class="kw">if </span><span class="self">self</span>.is_dialog { co::WM::INITDIALOG } <span class="kw">else </span>{ co::WM::CREATE }
 	}
 
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Base&gt; {
@@ -340,7 +332,7 @@
 	}
 
 	<span class="doccomment">/// Internal events are always executed.
-	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>privileged_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsAll {
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>privileged_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsPriv {
 		<span class="kw">if </span><span class="self">self</span>.hwnd != HWND::NULL {
 			<span class="macro">panic!</span>(<span class="string">"Cannot add privileged event after window creation."</span>);
 		}
@@ -351,16 +343,17 @@
 	///
 	/// Returns `true` if at least one message was processed.
 	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>process_privileged_messages(<span class="kw-2">&amp;</span><span class="self">self</span>,
+		hwnd: <span class="kw-2">&amp;</span>HWND,
 		wm_any: WndMsg,
 	) -&gt; AnyResult&lt;bool&gt;
 	{
-		<span class="self">self</span>.privileged_events.process_all_messages(wm_any)
+		<span class="self">self</span>.privileged_events.process_all_messages(hwnd, wm_any)
 	}
 
 	<span class="doccomment">/// Removes all user and privileged events.
 	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>clear_events(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="self">self</span>.user_events.clear_events();
 		<span class="self">self</span>.privileged_events.clear_events();
+		<span class="self">self</span>.user_events.clear_events();
 	}
 
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>add_to_layout_arranger(<span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -369,13 +362,6 @@
 	) -&gt; SysResult&lt;()&gt;
 	{
 		<span class="self">self</span>.layout_arranger.add_child(<span class="kw-2">&amp;</span><span class="self">self</span>.hwnd, hchild, resize_behavior)
-	}
-
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>init_layout_arranger(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;()&gt; {
-		<span class="comment">// Note that the controls are added to LayoutArranger during new(),
-		// which happens before WM_CREATE/INITDIALOG, which is when this method
-		// is called.
-		</span><span class="self">self</span>.layout_arranger.save_original_client_area(<span class="kw-2">&amp;</span><span class="self">self</span>.hwnd)
 	}
 
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>spawn_new_thread&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
@@ -430,20 +416,26 @@
 		// struct isn't created and pinned yet, so we make LayoutArranger
 		// clonable.
 		</span><span class="kw">let </span>layout_arranger = <span class="self">self</span>.layout_arranger.clone();
-		<span class="self">self</span>.privileged_events.wm_size(<span class="kw">move </span>|p| {
-			layout_arranger.rearrange(<span class="kw-2">&amp;</span>p)<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(()) <span class="comment">// not meaningful
-		</span>});
+		<span class="self">self</span>.privileged_events.wm_create_or_initdialog(<span class="kw">move </span>|hwnd, <span class="kw">_</span>| {
+			layout_arranger.save_original_client_area(hwnd)<span class="question-mark">?</span>; <span class="comment">// must be done before the first WM_SIZE
+			</span><span class="prelude-val">Ok</span>(())
+		});
 
-		<span class="self">self</span>.privileged_events.wm(<span class="self">Self</span>::WM_UI_THREAD, |p| {
+		<span class="kw">let </span>layout_arranger = <span class="self">self</span>.layout_arranger.clone();
+		<span class="self">self</span>.privileged_events.wm(co::WM::SIZE, <span class="kw">move </span>|<span class="kw">_</span>, p| {
+			layout_arranger.rearrange(wm::Size::from_generic_wm(p))<span class="question-mark">?</span>;
+			<span class="prelude-val">Ok</span>(())
+		});
+
+		<span class="self">self</span>.privileged_events.wm(<span class="self">Self</span>::WM_UI_THREAD, |<span class="kw">_</span>, p| {
 			<span class="kw">if unsafe </span>{ co::WM::from_raw(p.wparam <span class="kw">as _</span>) } == <span class="self">Self</span>::WM_UI_THREAD { <span class="comment">// additional safety check
 				</span><span class="kw">let </span>ptr_pack = p.lparam <span class="kw">as </span><span class="kw-2">*mut </span>ThreadPack; <span class="comment">// retrieve pointer
 				</span><span class="kw">let </span>pack = <span class="kw">unsafe </span>{ Box::from_raw(ptr_pack) };
 				<span class="kw">let </span>func = pack.func;
 				func().unwrap_or_else(|err| post_quit_error(p, err));
 			}
-			<span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) <span class="comment">// not meaningful
-		</span>});
+			<span class="prelude-val">Ok</span>(())
+		});
 	}
 
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>run_main_loop(

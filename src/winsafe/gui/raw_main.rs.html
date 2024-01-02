@@ -252,6 +252,8 @@
 <a href="#250" id="250">250</a>
 <a href="#251" id="251">251</a>
 <a href="#252" id="252">252</a>
+<a href="#253" id="253">253</a>
+<a href="#254" id="254">254</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::UnsafeCell;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -260,6 +262,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
+<span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::user::guard::<span class="kw-2">*</span>;
 
@@ -304,7 +307,7 @@
 		<span class="self">self</span>.<span class="number">0</span>.raw_base.on()
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>privileged_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsAll {
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>privileged_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsPriv {
 		<span class="self">self</span>.<span class="number">0</span>.raw_base.privileged_on()
 	}
 
@@ -381,12 +384,13 @@
 
 	<span class="kw">fn </span>default_message_handlers(<span class="kw-2">&amp;</span><span class="self">self</span>) {
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-		<span class="self">self</span>.privileged_on().wm_activate(<span class="kw">move </span>|p| {
+		<span class="self">self</span>.privileged_on().wm(co::WM::ACTIVATE, <span class="kw">move </span>|hwnd, p| {
+			<span class="kw">let </span>p = wm::Activate::from_generic_wm(p);
 			<span class="kw">if </span>!p.is_minimized {
 				<span class="kw">let </span>hchild_prev_focus = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>self2.<span class="number">0</span>.hchild_prev_focus.get() };
 				<span class="kw">if </span>p.event == co::WA::INACTIVE {
 					<span class="kw">if let </span><span class="prelude-val">Some</span>(hwnd_cur_focus) = HWND::GetFocus() {
-						<span class="kw">if </span>self2.hwnd().IsChild(<span class="kw-2">&amp;</span>hwnd_cur_focus) {
+						<span class="kw">if </span>hwnd.IsChild(<span class="kw-2">&amp;</span>hwnd_cur_focus) {
 							<span class="kw-2">*</span>hchild_prev_focus = hwnd_cur_focus; <span class="comment">// save previously focused control
 						</span>}
 					}
@@ -398,7 +402,7 @@
 		});
 
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-		<span class="self">self</span>.privileged_on().wm_set_focus(<span class="kw">move </span>|<span class="kw">_</span>| {
+		<span class="self">self</span>.privileged_on().wm(co::WM::SETFOCUS, <span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
 			self2.<span class="number">0</span>.raw_base.delegate_focus_to_first_child();
 			<span class="prelude-val">Ok</span>(())
 		});

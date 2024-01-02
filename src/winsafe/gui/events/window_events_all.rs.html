@@ -263,51 +263,6 @@
 <a href="#261" id="261">261</a>
 <a href="#262" id="262">262</a>
 <a href="#263" id="263">263</a>
-<a href="#264" id="264">264</a>
-<a href="#265" id="265">265</a>
-<a href="#266" id="266">266</a>
-<a href="#267" id="267">267</a>
-<a href="#268" id="268">268</a>
-<a href="#269" id="269">269</a>
-<a href="#270" id="270">270</a>
-<a href="#271" id="271">271</a>
-<a href="#272" id="272">272</a>
-<a href="#273" id="273">273</a>
-<a href="#274" id="274">274</a>
-<a href="#275" id="275">275</a>
-<a href="#276" id="276">276</a>
-<a href="#277" id="277">277</a>
-<a href="#278" id="278">278</a>
-<a href="#279" id="279">279</a>
-<a href="#280" id="280">280</a>
-<a href="#281" id="281">281</a>
-<a href="#282" id="282">282</a>
-<a href="#283" id="283">283</a>
-<a href="#284" id="284">284</a>
-<a href="#285" id="285">285</a>
-<a href="#286" id="286">286</a>
-<a href="#287" id="287">287</a>
-<a href="#288" id="288">288</a>
-<a href="#289" id="289">289</a>
-<a href="#290" id="290">290</a>
-<a href="#291" id="291">291</a>
-<a href="#292" id="292">292</a>
-<a href="#293" id="293">293</a>
-<a href="#294" id="294">294</a>
-<a href="#295" id="295">295</a>
-<a href="#296" id="296">296</a>
-<a href="#297" id="297">297</a>
-<a href="#298" id="298">298</a>
-<a href="#299" id="299">299</a>
-<a href="#300" id="300">300</a>
-<a href="#301" id="301">301</a>
-<a href="#302" id="302">302</a>
-<a href="#303" id="303">303</a>
-<a href="#304" id="304">304</a>
-<a href="#305" id="305">305</a>
-<a href="#306" id="306">306</a>
-<a href="#307" id="307">307</a>
-<a href="#308" id="308">308</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::UnsafeCell;
 <span class="kw">use </span>std::rc::Rc;
 
@@ -441,51 +396,6 @@
 			}
 			<span class="kw">_ </span>=&gt; <span class="self">self</span>.window_events.process_one_message(wm_any)<span class="question-mark">?</span>,
 		})
-	}
-
-	<span class="doccomment">/// Searches for all user functions for the given message, and runs all of
-	/// them, discarding the results.
-	///
-	/// Returns `true` if at least one message was processed.
-	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>process_all_messages(<span class="kw-2">&amp;</span><span class="self">self</span>,
-		wm_any: WndMsg,
-	) -&gt; AnyResult&lt;bool&gt;
-	{
-		<span class="kw">let </span><span class="kw-2">mut </span>at_least_one = <span class="bool-val">false</span>;
-
-		<span class="kw">match </span>wm_any.msg_id {
-			co::WM::NOTIFY =&gt; {
-				<span class="kw">let </span>wm_nfy = wm::Notify::from_generic_wm(wm_any);
-				<span class="kw">let </span>key = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
-				<span class="kw">let </span>nfys = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.nfys.get() };
-				<span class="kw">for </span>func <span class="kw">in </span>nfys.find_all(key) {
-					at_least_one = <span class="bool-val">true</span>;
-					func(wm::Notify::from_generic_wm(wm_any))<span class="question-mark">?</span>; <span class="comment">// execute stored function
-				</span>}
-			},
-			co::WM::COMMAND =&gt; {
-				<span class="kw">let </span>wm_cmd = wm::Command::from_generic_wm(wm_any);
-				<span class="kw">let </span>key = wm_cmd.event.code_id();
-				<span class="kw">let </span>cmds = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.cmds.get() };
-				<span class="kw">for </span>func <span class="kw">in </span>cmds.find_all(key) {
-					at_least_one = <span class="bool-val">true</span>;
-					func()<span class="question-mark">?</span>; <span class="comment">// execute stored function
-				</span>}
-			},
-			co::WM::TIMER =&gt; {
-				<span class="kw">let </span>wm_tmr = wm::Timer::from_generic_wm(wm_any);
-				<span class="kw">let </span>tmrs = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.tmrs.get() };
-				<span class="kw">for </span>func <span class="kw">in </span>tmrs.find_all(wm_tmr.timer_id) {
-					at_least_one = <span class="bool-val">true</span>;
-					func()<span class="question-mark">?</span>; <span class="comment">// execute stored function
-				</span>}
-			},
-			<span class="kw">_ </span>=&gt; {
-				at_least_one = <span class="self">self</span>.window_events.process_all_messages(wm_any)<span class="question-mark">?</span>;
-			},
-		}
-
-		<span class="prelude-val">Ok</span>(at_least_one)
 	}
 }
 

@@ -292,7 +292,7 @@
 
 	<span class="doccomment">/// Rearranges all child controls to fit the new width/height of parent
 	/// window.
-	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>rearrange(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;</span>wm::Size) -&gt; SysResult&lt;()&gt; {
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>rearrange(<span class="kw-2">&amp;</span><span class="self">self</span>, p: wm::Size) -&gt; SysResult&lt;()&gt; {
 		<span class="kw">let </span>ctrls = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.<span class="number">0</span>.ctrls.get() };
 		<span class="kw">if </span>ctrls.is_empty() <span class="comment">// no controls
 			</span>|| p.request == co::SIZE_R::MINIMIZED { <span class="comment">// we're minimized

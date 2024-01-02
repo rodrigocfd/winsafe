@@ -216,6 +216,7 @@
 <a href="#214" id="214">214</a>
 <a href="#215" id="215">215</a>
 <a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::ops::Index;
 <span class="kw">use </span>std::pin::Pin;
@@ -314,10 +315,10 @@
 		);
 
 		<span class="kw">let </span>self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(parent_base_ref.wm_create_or_initdialog(), <span class="kw">move </span>|<span class="kw">_</span>| {
+		parent_base_ref.privileged_on().wm_create_or_initdialog(<span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
 			self2.create(<span class="kw-2">&amp;</span>opts_resz_s)<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>) <span class="comment">// not meaningful
-		</span>});
+			<span class="prelude-val">Ok</span>(())
+		});
 
 		new_self
 	}
@@ -368,16 +369,17 @@
 		);
 
 		<span class="kw">let </span>self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_init_dialog(<span class="kw">move </span>|<span class="kw">_</span>| {
+		parent_base_ref.privileged_on().wm(co::WM::INITDIALOG, <span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
 			self2.create(<span class="kw-2">&amp;</span>opts_resz_s)<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(<span class="bool-val">true</span>) <span class="comment">// not meaningful
-		</span>});
+			<span class="prelude-val">Ok</span>(())
+		});
 
 		new_self
 	}
 
 	<span class="kw">fn </span>create(<span class="kw-2">&amp;</span><span class="self">self</span>,
-		opts_resz_s: <span class="kw-2">&amp;</span>Vec&lt;OptsResz&lt;RadioButtonOpts&gt;&gt;) -&gt; SysResult&lt;()&gt;
+		opts_resz_s: <span class="kw-2">&amp;</span>Vec&lt;OptsResz&lt;RadioButtonOpts&gt;&gt;,
+	) -&gt; SysResult&lt;()&gt;
 	{
 		<span class="self">self</span>.<span class="number">0</span>.radios.iter()
 			.zip(opts_resz_s.iter())
