@@ -1,11 +1,9 @@
 use std::any::Any;
 
-use crate::co;
 use crate::decl::*;
 use crate::gui::{*, events::*};
 use crate::msg::*;
 use crate::prelude::*;
-use crate::user::privs::*;
 
 /// Any window. Exposes the underlying window handle.
 pub trait GuiWindow {
@@ -237,8 +235,7 @@ pub trait GuiChildFocus: GuiChild {
 	/// needs.
 	fn focus(&self) {
 		let hparent = self.hwnd().GetParent().unwrap();
-		let atom = hparent.GetClassLongPtr(co::GCLP::ATOM) as u16;
-		if atom == WC_DIALOG { // https://stackoverflow.com/a/64437627/6923555
+		if hparent.is_dialog() {
 			hparent.SendMessage(wm::NextDlgCtl {
 				hwnd_focus: HwndFocus::Hwnd(unsafe { self.hwnd().raw_copy() }),
 			});

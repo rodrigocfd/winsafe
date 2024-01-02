@@ -34,12 +34,40 @@ pub trait user_Hwnd: Handle {
 	/// [`HWND::GetDC`](crate::prelude::user_Hwnd::GetDC).
 	const DESKTOP: HWND = HWND(std::ptr::null_mut());
 
-	/// [`GetWindowLongPtr`](crate::prelude::user_Hwnd::GetWindowLongPtr)
-	/// wrapper to retrieve the window [`HINSTANCE`](crate::HINSTANCE).
+	/// Calls
+	/// [`HWND::GetWindowLongPtr`](crate::prelude::user_Hwnd::GetWindowLongPtr)
+	/// to retrieve the window [`HINSTANCE`](crate::HINSTANCE).
 	#[must_use]
 	fn hinstance(&self) -> HINSTANCE {
 		unsafe {
 			HINSTANCE::from_ptr(self.GetWindowLongPtr(co::GWLP::HINSTANCE) as _)
+		}
+	}
+
+	/// Calls
+	/// [`HWND::GetClassLongPtr`](crate::prelude::user_Hwnd::GetClassLongPtr) to
+	/// retrieve the [class atom](https://stackoverflow.com/a/64437627/6923555)
+	/// and check whether the window was created from a dialog resource.
+	#[must_use]
+	fn is_dialog(&self) -> bool {
+		self.GetClassLongPtr(co::GCLP::ATOM) as u16 == WC_DIALOG
+	}
+
+	/// Calls
+	/// [`HWND::GetWindowLongPtr`](crate::prelude::user_Hwnd::GetWindowLongPtr)
+	/// to retrieve the window styles.
+	#[must_use]
+	fn styles(&self) -> co::WS {
+		unsafe { co::WS::from_raw(self.GetWindowLongPtr(co::GWLP::STYLE) as _) }
+	}
+
+	/// Calls
+	/// [`HWND::GetWindowLongPtr`](crate::prelude::user_Hwnd::GetWindowLongPtr)
+	/// to retrieve the extended window styles.
+	#[must_use]
+	fn styles_ex(&self) -> co::WS_EX {
+		unsafe {
+			co::WS_EX::from_raw(self.GetWindowLongPtr(co::GWLP::EXSTYLE) as _)
 		}
 	}
 
@@ -431,6 +459,9 @@ pub trait user_Hwnd: Handle {
 
 	/// [`GetClassLongPtr`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclasslongptrw)
 	/// function.
+	///
+	/// If you just want to check whether the window is a dialog, prefer using
+	/// [`HWND::is_dialog`](crate::prelude::user_Hwnd::is_dialog) method.
 	#[must_use]
 	fn GetClassLongPtr(&self, index: co::GCLP) -> usize {
 		unsafe { ffi::GetClassLongPtrW(self.ptr(), index.raw()) }
@@ -751,8 +782,17 @@ pub trait user_Hwnd: Handle {
 		)
 	}
 
+	/// [`GetWindowLong`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowlongw)
+	/// function (x32) or
 	/// [`GetWindowLongPtr`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowlongptrw)
-	/// function.
+	/// function (x64).
+	///
+	/// If you just want to retrieve the window [`HINSTANCE`](crate::HINSTANCE),
+	/// prefer using [`HWND::hinstance`](crate::prelude::user_Hwnd::hinstance).
+	///
+	/// If you just want to retrieve the window styles, prefer using
+	/// [`HWND::styles`](crate::prelude::user_Hwnd::styles) and
+	/// [`HWND::styles_ex`](crate::prelude::user_Hwnd::styles_ex).
 	#[must_use]
 	fn GetWindowLongPtr(&self, index: co::GWLP) -> isize {
 		#[cfg(target_pointer_width = "32")]
