@@ -1,4 +1,5 @@
 use std::cell::UnsafeCell;
+use std::rc::Rc;
 
 use crate::co;
 use crate::decl::*;
@@ -176,4 +177,77 @@ impl WindowEventsAll {
 
 		Ok(at_least_one)
 	}
+}
+
+//------------------------------------------------------------------------------
+
+/// Exposes methods to handle the basic window messages, plus timer and native
+/// control notifications.
+pub trait GuiEventsAll: GuiEvents {
+	/// [`WM_TIMER`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
+	/// message, narrowed to a specific timer ID.
+	fn wm_timer<F>(&self, timer_id: usize, func: F)
+		where F: Fn() -> AnyResult<()> + 'static;
+
+	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
+	/// message, for specific code and control ID.
+	///
+	/// A command notification must be narrowed by the
+	/// [command code](crate::co::CMD) and the control ID, so the closure will
+	/// be fired for that specific control at that specific event.
+	///
+	/// **Note:** Instead of using this event, you should always prefer the
+	/// specific command notifications, which will give you the correct message
+	/// parameters. This generic method should be used only when you have a
+	/// custom, non-standard window notification.
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co, gui};
+	///
+	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	///
+	/// const ID_BTN: u16 = 1000;
+	///
+	/// wnd.on().wm_command(co::BN::CLICKED, ID_BTN,
+	///     move || -> w::AnyResult<()> {
+	///         println!("Button clicked!");
+	///         Ok(())
+	///     },
+	/// );
+	/// ```
+	fn wm_command<F>(&self, code: impl Into<co::CMD>, ctrl_id: u16, func: F)
+		where F: Fn() -> AnyResult<()> + 'static;
+
+	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
+	/// message, handling both `CMD::Accelerator` and `CMD::Menu`, for a
+	/// specific command ID.
+	///
+	/// Ideal to be used with menu commands whose IDs are shared with
+	/// accelerators.
+	fn wm_command_accel_menu<F>(&self, ctrl_id: u16, func: F)
+		where F: Fn() -> AnyResult<()> + 'static,
+	{
+		let shared_func = Rc::new(func);
+
+		self.wm_command(co::CMD::Menu, ctrl_id, {
+			let shared_func = shared_func.clone();
+			move || shared_func()
+		});
+
+		self.wm_command(co::CMD::Accelerator, ctrl_id, {
+			let shared_func = shared_func.clone();
+			move || shared_func()
+		});
+	}
+
+	/// [`WM_NOTIFY`](crate::msg::wm::Notify) message, for specific ID and
+	/// notification code.
+	///
+	/// **Note:** Instead of using this event, you should always prefer the
+	/// specific notifications, which will give you the correct notification
+	/// struct. This generic method should be used only when you have a custom,
+	/// non-standard window notification.
+	fn wm_notify<F>(&self, id_from: u16, code: impl Into<co::NM>, func: F)
+		where F: Fn(wm::Notify) -> AnyResult<Option<isize>> + 'static;
 }
