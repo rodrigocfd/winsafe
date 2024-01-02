@@ -601,22 +601,18 @@ pub trait user_Hwnd: Handle {
 
 	/// [`GetMenuItemRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemrect)
 	/// function.
-	fn GetMenuItemRect(&self,
-		hmenu: &HMENU,
-		item_pos: u32,
-		rc_item: &mut RECT,
-	) -> SysResult<()>
-	{
+	fn GetMenuItemRect(&self, hmenu: &HMENU, item_pos: u32) -> SysResult<RECT> {
+		let mut rc = RECT::default();
 		bool_to_sysresult(
 			unsafe {
 				ffi::GetMenuItemRect(
 					self.ptr(),
 					hmenu.ptr(),
 					item_pos,
-					rc_item as *mut _ as _,
+					&mut rc as *mut _ as _,
 				)
 			},
-		)
+		).map(|_| rc)
 	}
 
 	/// [`GetNextDlgGroupItem`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getnextdlggroupitem)
@@ -848,10 +844,13 @@ pub trait user_Hwnd: Handle {
 	/// [`GetWindowRgnBox`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowrgnbox)
 	/// function.
 	#[must_use]
-	fn GetWindowRgnBox(&self, rc: &mut RECT) -> SysResult<co::REGION> {
-		match unsafe { ffi::GetWindowRgnBox(self.ptr(), rc as *mut _ as _) } {
+	fn GetWindowRgnBox(&self) -> SysResult<(RECT, co::REGION)> {
+		let mut rc = RECT::default();
+		match unsafe {
+			ffi::GetWindowRgnBox(self.ptr(), &mut rc as *mut _ as _)
+		} {
 			0 => Err(GetLastError()),
-			ret => Ok(unsafe { co::REGION::from_raw(ret) }),
+			ret => Ok((rc, unsafe { co::REGION::from_raw(ret) })),
 		}
 	}
 
