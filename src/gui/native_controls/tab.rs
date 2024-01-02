@@ -88,9 +88,9 @@ impl Tab {
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(parent_base_ref.wm_create_or_initdialog(), move |_| {
+		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(OptsResz::Wnd(&opts))?;
-			Ok(None) // not meaningful
+			Ok(())
 		});
 
 		new_self.default_message_handlers(parent_base_ref, ctrl_id);
@@ -126,9 +126,9 @@ impl Tab {
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_init_dialog(move |_| {
+		parent_base_ref.privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(OptsResz::Dlg(resize_behavior))?;
-			Ok(true) // not meaningful
+			Ok(())
 		});
 
 		new_self.default_message_handlers(parent_base_ref, ctrl_id);
@@ -175,11 +175,11 @@ impl Tab {
 
 	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {
 		let self2 = self.clone();
-		parent.privileged_on().wm_notify(ctrl_id, co::TCN::SELCHANGE, move |_| {
+		parent.privileged_on().wm_notify(ctrl_id, co::TCN::SELCHANGE, move |_, _| {
 			if let Some(sel_item) = self2.items().selected() {
 				self2.display_tab(sel_item.index())?;
 			}
-			Ok(None) // not meaningful
+			Ok(())
 		})
 	}
 

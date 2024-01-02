@@ -113,7 +113,7 @@ impl LayoutArranger {
 
 	/// Rearranges all child controls to fit the new width/height of parent
 	/// window.
-	pub(in crate::gui) fn rearrange(&self, p: &wm::Size) -> SysResult<()> {
+	pub(in crate::gui) fn rearrange(&self, p: wm::Size) -> SysResult<()> {
 		let ctrls = unsafe { &mut *self.0.ctrls.get() };
 		if ctrls.is_empty() // no controls
 			|| p.request == co::SIZE_R::MINIMIZED { // we're minimized

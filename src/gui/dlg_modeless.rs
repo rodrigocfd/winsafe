@@ -65,7 +65,7 @@ impl DlgModeless {
 
 	fn default_message_handlers(&self, parent: &Base) {
 		let self2 = self.clone();
-		parent.privileged_on().wm(parent.wm_create_or_initdialog(), move |_| {
+		parent.privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.0.dlg_base.create_dialog_param()?;
 			self2.hwnd().ShowWindow(co::SW::SHOW);
 
@@ -77,7 +77,7 @@ impl DlgModeless {
 				dlg_pos, SIZE::default(),
 				co::SWP::NOZORDER | co::SWP::NOSIZE,
 			)?;
-			Ok(None) // not meaningful
+			Ok(())
 		});
 	}
 }

@@ -41,7 +41,7 @@ impl DlgBase {
 		self.base.on()
 	}
 
-	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsAll {
+	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsPriv {
 		self.base.privileged_on()
 	}
 
@@ -123,7 +123,6 @@ impl DlgBase {
 				hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as _); // store
 				let ref_self = unsafe { &mut *ptr_self };
 				ref_self.base.set_hwnd(unsafe { hwnd.raw_copy() }); // store HWND in struct field
-				ref_self.base.init_layout_arranger().unwrap();
 				ptr_self
 			},
 			_ => hwnd.GetWindowLongPtr(co::GWLP::DWLP_USER) as *mut Self, // retrieve
@@ -137,7 +136,7 @@ impl DlgBase {
 
 		// Execute privileged closures, keep track if at least one was executed.
 		let ref_self = unsafe { &mut *ptr_self };
-		let at_least_one_privileged = ref_self.base.process_privileged_messages(wm_any)?;
+		let at_least_one_privileged = ref_self.base.process_privileged_messages(&hwnd, wm_any)?;
 
 		if wm_any.msg_id == co::WM::INITDIALOG {
 			// Child controls are created in privileged closures, so we set the

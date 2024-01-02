@@ -127,14 +127,14 @@ impl StatusBar {
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(parent_base_ref.wm_create_or_initdialog(), move |_| {
+		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.create()?;
-			Ok(None) // not meaningful
+			Ok(())
 		});
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_size(move |p| {
-			let mut p = p;
+		parent_base_ref.privileged_on().wm(co::WM::SIZE, move |_, p| {
+			let mut p = wm::Size::from_generic_wm(p);
 			self2.resize(&mut p);
 			Ok(())
 		});

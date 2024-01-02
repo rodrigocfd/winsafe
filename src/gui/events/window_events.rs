@@ -24,8 +24,8 @@ pub(in crate::gui) enum ProcessResult {
 /// You cannot directly instantiate this object, it is created internally by the
 /// window.
 pub struct WindowEvents {
-	msgs: UnsafeCell< // ordinary WM messages
-		FuncStore<
+	msgs: UnsafeCell<
+		FuncStore< // ordinary WM messages
 			co::WM,
 			Box<dyn Fn(WndMsg) -> AnyResult<Option<isize>>>, // return value may be meaningful
 		>,
@@ -70,24 +70,6 @@ impl WindowEvents {
 			},
 			None => ProcessResult::NotHandled, // no stored function
 		})
-	}
-
-	/// Searches for all user functions for the given message, and runs all of
-	/// them, discarding the results.
-	///
-	/// Returns `true` if at least one message was processed.
-	pub(in crate::gui) fn process_all_messages(&self,
-		wm_any: WndMsg,
-	) -> AnyResult<bool>
-	{
-		let mut at_least_one = false;
-		let msgs = unsafe { &mut *self.msgs.get() };
-
-		for func in msgs.find_all(wm_any.msg_id) {
-			at_least_one = true;
-			func(wm_any)?; // execute each stored function
-		}
-		Ok(at_least_one)
 	}
 }
 

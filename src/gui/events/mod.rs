@@ -18,11 +18,13 @@ mod trackbar_events;
 mod tree_view_events;
 mod up_down_events;
 mod window_events_all;
+mod window_events_priv;
 mod window_events;
 
 pub(in crate::gui) mod privs {
 	pub(in crate::gui) use super::base_events_proxy::BaseEventsProxy;
 	pub(in crate::gui) use super::func_store::FuncStore;
+	pub(in crate::gui) use super::window_events_priv::WindowEventsPriv;
 	pub(in crate::gui) use super::window_events::ProcessResult;
 }
 

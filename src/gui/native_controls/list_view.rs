@@ -90,9 +90,9 @@ impl ListView {
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(parent_base_ref.wm_create_or_initdialog(), move |_| {
+		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(OptsResz::Wnd(&opts))?;
-			Ok(None) // not meaningful
+			Ok(())
 		});
 
 		new_self.default_message_handlers(parent_base_ref, ctrl_id);
@@ -133,9 +133,9 @@ impl ListView {
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_init_dialog(move |_| {
+		parent_base_ref.privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(OptsResz::Dlg(resize_behavior))?;
-			Ok(true) // not meaningful
+			Ok(())
 		});
 
 		new_self.default_message_handlers(parent_base_ref, ctrl_id);
@@ -191,7 +191,7 @@ impl ListView {
 		});
 
 		let self2 = self.clone();
-		parent.privileged_on().wm_notify(ctrl_id, co::LVN::KEYDOWN, move |p| {
+		parent.privileged_on().wm_notify(ctrl_id, co::LVN::KEYDOWN, move |_, p| {
 			let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };
 			let has_ctrl = GetAsyncKeyState(co::VK::CONTROL);
 			let has_shift = GetAsyncKeyState(co::VK::SHIFT);
@@ -201,17 +201,17 @@ impl ListView {
 			} else if lvnk.wVKey == co::VK::APPS { // context menu key
 				self2.show_context_menu(false, has_ctrl, has_shift);
 			}
-			Ok(None) // not meaningful
+			Ok(())
 		});
 
 		let self2 = self.clone();
-		parent.privileged_on().wm_notify(ctrl_id, co::NM::RCLICK, move |p| {
+		parent.privileged_on().wm_notify(ctrl_id, co::NM::RCLICK, move |_, p| {
 			let nmia = unsafe { p.cast_nmhdr::<NMITEMACTIVATE>() };
 			let has_ctrl = nmia.uKeyFlags.has(co::LVKF::CONTROL);
 			let has_shift = nmia.uKeyFlags.has(co::LVKF::SHIFT);
 
 			self2.show_context_menu(true, has_ctrl, has_shift);
-			Ok(None) // not meaningful
+			Ok(())
 		});
 	}
 

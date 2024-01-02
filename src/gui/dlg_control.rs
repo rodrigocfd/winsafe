@@ -5,6 +5,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::gui::{*, events::*, privs::*};
+use crate::msg::*;
 use crate::prelude::*;
 
 struct Obj { // actual fields of DlgControl
@@ -59,7 +60,7 @@ impl DlgControl {
 		self.0.dlg_base.on()
 	}
 
-	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsAll {
+	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsPriv {
 		self.0.dlg_base.privileged_on()
 	}
 
@@ -78,10 +79,9 @@ impl DlgControl {
 	fn default_message_handlers(&self,
 		parent: &Base,
 		resize_behavior: (Horz, Vert),
-	)
-	{
+	) {
 		let self2 = self.clone();
-		parent.privileged_on().wm(parent.wm_create_or_initdialog(), move |_| {
+		parent.privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.0.dlg_base.create_dialog_param()?;
 			let parent_base_ref = self2.0.dlg_base.parent().unwrap();
 
@@ -96,12 +96,11 @@ impl DlgControl {
 			self2.hwnd().SetWindowLongPtr(co::GWLP::ID, self2.0.ctrl_id as _);
 
 			parent_base_ref.add_to_layout_arranger(self2.hwnd(), resize_behavior)?;
-			Ok(None) // not meaningful
+			Ok(())
 		});
 
-		let self2 = self.clone();
-		self.privileged_on().wm_nc_paint(move |p| {
-			paint_control_borders(self2.hwnd(), p)?;
+		self.privileged_on().wm(co::WM::NCPAINT, move |hwnd, p| {
+			paint_control_borders(hwnd, wm::NcPaint::from_generic_wm(p))?;
 			Ok(())
 		});
 	}

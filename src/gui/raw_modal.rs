@@ -49,7 +49,7 @@ impl RawModal {
 		self.0.raw_base.on()
 	}
 
-	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsAll {
+	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsPriv {
 		self.0.raw_base.privileged_on()
 	}
 
@@ -157,7 +157,7 @@ impl RawModal {
 
 	fn default_message_handlers(&self) {
 		let self2 = self.clone();
-		self.privileged_on().wm_set_focus(move |_| {
+		self.privileged_on().wm(co::WM::SETFOCUS, move |_, _| {
 			self2.0.raw_base.delegate_focus_to_first_child();
 			Ok(())
 		});

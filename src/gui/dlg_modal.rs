@@ -62,9 +62,7 @@ impl DlgModal {
 	}
 
 	fn default_message_handlers(&self) {
-		let self2 = self.clone();
-		self.0.dlg_base.privileged_on().wm_init_dialog(move |_| {
-			let hwnd = self2.hwnd();
+		self.0.dlg_base.privileged_on().wm(co::WM::INITDIALOG, move |hwnd, _| {
 			let rc = hwnd.GetWindowRect()?;
 			let rc_parent = hwnd.GetParent()?.GetWindowRect()?;
 			hwnd.SetWindowPos( // center modal on parent
@@ -76,7 +74,7 @@ impl DlgModal {
 				SIZE::default(),
 				co::SWP::NOSIZE | co::SWP::NOZORDER,
 			)?;
-			Ok(true) // not meaningful
+			Ok(())
 		});
 
 		let self2 = self.clone();

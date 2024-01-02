@@ -96,9 +96,9 @@ impl RadioGroup {
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(parent_base_ref.wm_create_or_initdialog(), move |_| {
+		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(&opts_resz_s)?;
-			Ok(None) // not meaningful
+			Ok(())
 		});
 
 		new_self
@@ -150,16 +150,17 @@ impl RadioGroup {
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_init_dialog(move |_| {
+		parent_base_ref.privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(&opts_resz_s)?;
-			Ok(true) // not meaningful
+			Ok(())
 		});
 
 		new_self
 	}
 
 	fn create(&self,
-		opts_resz_s: &Vec<OptsResz<RadioButtonOpts>>) -> SysResult<()>
+		opts_resz_s: &Vec<OptsResz<RadioButtonOpts>>,
+	) -> SysResult<()>
 	{
 		self.0.radios.iter()
 			.zip(opts_resz_s.iter())

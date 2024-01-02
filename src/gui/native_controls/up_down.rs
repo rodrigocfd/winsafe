@@ -121,9 +121,9 @@ impl UpDown {
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(parent_base_ref.wm_create_or_initdialog(), move |_| {
+		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(Some(&opts))?;
-			Ok(None) // not meaningful
+			Ok(())
 		});
 
 		new_self
@@ -152,9 +152,9 @@ impl UpDown {
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_init_dialog(move |_| {
+		parent_base_ref.privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(None)?;
-			Ok(true) // not meaningful
+			Ok(())
 		});
 
 		new_self

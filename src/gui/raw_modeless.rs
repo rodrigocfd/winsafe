@@ -60,7 +60,7 @@ impl RawModeless {
 
 	fn default_message_handlers(&self, parent: &Base) {
 		let self2 = self.clone();
-		parent.privileged_on().wm(parent.wm_create_or_initdialog(), move |_| {
+		parent.privileged_on().wm_create_or_initdialog(move |_, _| {
 			let parent_base_ref = self2.0.raw_base.parent().unwrap();
 			let opts = &self2.0.opts;
 
@@ -88,7 +88,7 @@ impl RawModeless {
 				wnd_pos, wnd_sz,
 				opts.ex_style, opts.style,
 			)?;
-			Ok(None) // not meaningful
+			Ok(())
 		});
 	}
 }

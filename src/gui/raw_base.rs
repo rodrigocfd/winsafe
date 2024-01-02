@@ -127,7 +127,7 @@ impl RawBase {
 		self.base.on()
 	}
 
-	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsAll {
+	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsPriv {
 		self.base.privileged_on()
 	}
 
@@ -290,10 +290,7 @@ impl RawBase {
 
 		// Execute privileged closures, keep track if at least one was executed.
 		let ref_self = unsafe { &mut *ptr_self };
-		if wm_any.msg_id == co::WM::CREATE {
-			ref_self.base.init_layout_arranger().unwrap(); // shoule be privileged, but we need HWND
-		}
-		let at_least_one_privileged = ref_self.base.process_privileged_messages(wm_any)?;
+		let at_least_one_privileged = ref_self.base.process_privileged_messages(&hwnd, wm_any)?;
 
 		// Execute user closure, if any.
 		let process_result = ref_self.base.process_user_message(wm_any)?;
