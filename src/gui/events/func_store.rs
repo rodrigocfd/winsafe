@@ -1,12 +1,6 @@
-/// An identifier and a closure.
-struct Pair<K: Copy + Eq, F> {
-	id: K,
-	func: F,
-}
-
 /// Stores closures, associating them with an identifier.
 pub(in crate::gui) struct FuncStore<K: Copy + Eq, F> {
-	elems: Vec<Pair<K, F>>,
+	elems: Vec<(K, F)>,
 }
 
 impl<K: Copy + Eq, F> FuncStore<K, F> {
@@ -20,7 +14,7 @@ impl<K: Copy + Eq, F> FuncStore<K, F> {
 		if self.elems.is_empty() {
 			self.elems.reserve(16); // arbitrary, prealloc for speed
 		}
-		self.elems.push(Pair { id, func });
+		self.elems.push((id, func));
 	}
 
 	/// Finds the last added function associated to the given identifier, if
@@ -29,8 +23,8 @@ impl<K: Copy + Eq, F> FuncStore<K, F> {
 		// Linear search, more performant for small collections.
 		// Searches backwards, so the function added last will be chosen.
 		self.elems.iter().rev()
-			.find(move |elem| elem.id == id)
-			.map(|elem| &elem.func)
+			.find(move |(elem_id, _)| *elem_id == id)
+			.map(|(_, func)| func)
 	}
 
 	/// Finds all the functions associated to the given identifier, if any, and
@@ -38,8 +32,8 @@ impl<K: Copy + Eq, F> FuncStore<K, F> {
 	pub(in crate::gui) fn find_all(&self, id: K) -> impl Iterator<Item = &F> {
 		// https://depth-first.com/articles/2020/06/22/returning-rust-iterators
 		self.elems.iter()
-			.filter(move |elem| elem.id == id)
-			.map(|elem| &elem.func)
+			.filter(move |(elem_id, _)| *elem_id == id)
+			.map(|(_, func)| func)
 	}
 
 	/// Tells whether no functions have been added.
