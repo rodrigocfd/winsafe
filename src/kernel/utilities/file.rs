@@ -123,7 +123,7 @@ impl File {
 	/// internal file pointer, which is then incremented by the size of
 	/// `buffer`.
 	pub fn read(&self, buffer: &mut [u8]) -> SysResult<u64> {
-		self.hfile.ReadFile(buffer, None)
+		self.hfile.ReadFile(buffer)
 			.map(|n| n as _)
 	}
 
@@ -185,7 +185,7 @@ impl File {
 	/// Writes the given bytes. The content will be written at the position
 	/// currently pointed by the internal file pointer.
 	pub fn write(&self, data: &[u8]) -> SysResult<()> {
-		self.hfile.WriteFile(data, None)?;
+		self.hfile.WriteFile(data)?;
 		Ok(())
 	}
 }
