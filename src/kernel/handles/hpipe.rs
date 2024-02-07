@@ -49,23 +49,27 @@ pub trait kernel_Hpipe: Handle {
 	/// function.
 	///
 	/// Returns the number of bytes read.
-	fn ReadFile(&self,
-		buffer: &mut [u8],
-		overlapped: Option<&mut OVERLAPPED>,
-	) -> SysResult<u32>
-	{
+	///
+	/// Note that asynchronous reading – which use the
+	/// [`OVERLAPPED`](crate::OVERLAPPED) struct – is not currently supported by
+	/// this method, because the buffer must remain untouched until the async
+	/// operation is complete, thus making the method unsound.
+	fn ReadFile(&self, buffer: &mut [u8]) -> SysResult<u32> {
 		unsafe { HFILE::from_ptr(self.ptr()) }
-			.ReadFile(buffer, overlapped)
+			.ReadFile(buffer)
 	}
 
 	/// [`WriteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
 	/// function.
-	fn WriteFile(&self,
-		data: &[u8],
-		overlapped: Option<&mut OVERLAPPED>,
-	) -> SysResult<u32>
-	{
+	///
+	/// Returns the number of bytes written.
+	///
+	/// Note that asynchronous writing – which use the
+	/// [`OVERLAPPED`](crate::OVERLAPPED) struct – is not currently supported by
+	/// this method, because the buffer must remain untouched until the async
+	/// operation is complete, thus making the method unsound.
+	fn WriteFile(&self, data: &[u8]) -> SysResult<u32> {
 		unsafe { HFILE::from_ptr(self.ptr()) }
-			.WriteFile(data, overlapped)
+			.WriteFile(data)
 	}
 }

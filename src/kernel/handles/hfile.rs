@@ -241,11 +241,12 @@ pub trait kernel_Hfile: Handle {
 	/// function.
 	///
 	/// Returns the number of bytes read.
-	fn ReadFile(&self,
-		buffer: &mut [u8],
-		overlapped: Option<&mut OVERLAPPED>,
-	) -> SysResult<u32>
-	{
+	///
+	/// Note that asynchronous reading – which use the
+	/// [`OVERLAPPED`](crate::OVERLAPPED) struct – is not currently supported by
+	/// this method, because the buffer must remain untouched until the async
+	/// operation is complete, thus making the method unsound.
+	fn ReadFile(&self, buffer: &mut [u8]) -> SysResult<u32> {
 		let mut bytes_read = u32::default();
 		bool_to_sysresult(
 			unsafe {
@@ -254,7 +255,7 @@ pub trait kernel_Hfile: Handle {
 					buffer.as_mut_ptr() as _,
 					buffer.len() as _,
 					&mut bytes_read,
-					overlapped.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+					std::ptr::null_mut(),
 				)
 			},
 		).map(|_| bytes_read)
@@ -311,11 +312,12 @@ pub trait kernel_Hfile: Handle {
 	/// function.
 	///
 	/// Returns the number of bytes written.
-	fn WriteFile(&self,
-		data: &[u8],
-		overlapped: Option<&mut OVERLAPPED>,
-	) -> SysResult<u32>
-	{
+	///
+	/// Note that asynchronous writing – which use the
+	/// [`OVERLAPPED`](crate::OVERLAPPED) struct – is not currently supported by
+	/// this method, because the buffer must remain untouched until the async
+	/// operation is complete, thus making the method unsound.
+	fn WriteFile(&self, data: &[u8]) -> SysResult<u32> {
 		let mut bytes_written = u32::default();
 
 		bool_to_sysresult(
@@ -325,7 +327,7 @@ pub trait kernel_Hfile: Handle {
 					vec_ptr(data) as _,
 					data.len() as _,
 					&mut bytes_written,
-					overlapped.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+					std::ptr::null_mut(),
 				)
 			},
 		).map(|_| bytes_written)
