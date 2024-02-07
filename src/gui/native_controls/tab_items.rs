@@ -69,7 +69,7 @@ impl<'a> TabItems<'a> {
 	///
 	/// **Note:** This method is cheap – even if `index` is beyond the range of
 	/// existing items, an object will still be returned. However, operations
-	/// upon this object will fail.
+	/// upon this object will produce no effect.
 	#[must_use]
 	pub const fn get(&self, index: u32) -> TabItem<'a> {
 		TabItem::new(self.owner, index)

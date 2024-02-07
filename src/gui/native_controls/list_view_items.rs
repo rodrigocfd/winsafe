@@ -151,14 +151,14 @@ impl<'a> ListViewItems<'a> {
 	///
 	/// **Note:** This method is cheap – even if `index` is beyond the range of
 	/// existing items, an object will still be returned. However, operations
-	/// upon this object will fail.
+	/// upon this object will produce no effect.
 	#[must_use]
 	pub const fn get(&self, index: u32) -> ListViewItem<'a> {
 		ListViewItem::new(self.owner, index)
 	}
 
 	/// Retrieves the item at the specified position by sending an
-	/// [`lvm::HitTest`](crate::msg::lvm::HitTest) message
+	/// [`lvm::HitTest`](crate::msg::lvm::HitTest) message.
 	///
 	/// `coords` must be relative to the list view.
 	#[must_use]

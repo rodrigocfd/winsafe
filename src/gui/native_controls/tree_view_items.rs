@@ -81,7 +81,7 @@ impl<'a> TreeViewItems<'a> {
 	///
 	/// **Note:** This method is cheap – even if `htreeitem` is invalid, an
 	/// object will still be returned. However, operations upon this object will
-	/// fail.
+	/// produce no effect.
 	#[must_use]
 	pub const fn get(&self, hitem: HTREEITEM) -> TreeViewItem<'a> {
 		TreeViewItem::new(self.owner, hitem)
