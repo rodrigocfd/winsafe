@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\list_view.rs`."><title>list_view.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (b11fbfbf3 2024-02-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\list_view.rs`."><title>list_view.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (8ace7ea1f 2024-02-07)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -425,6 +425,11 @@
 <a href="#423" id="423">423</a>
 <a href="#424" id="424">424</a>
 <a href="#425" id="425">425</a>
+<a href="#426" id="426">426</a>
+<a href="#427" id="427">427</a>
+<a href="#428" id="428">428</a>
+<a href="#429" id="429">429</a>
+<a href="#430" id="430">430</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -530,20 +535,18 @@
 	/// resource with
 	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
 	///
-	/// **Note:** The optional `context_menu` is shared: it must be destroyed
-	/// manually after the control is destroyed. But note that menus loaded from
-	/// resources don't need to be destroyed.
-	///
 	/// # Panics
 	///
 	/// Panics if the parent dialog was already created – that is, you cannot
 	/// dynamically create a `ListView` in an event closure.
+	///
+	/// Panics if the context menu, when specified, does not exist.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>new_dlg(
 		parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>GuiParent,
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
-		context_menu: <span class="prelude-ty">Option</span>&lt;HMENU&gt;,
+		context_menu_id: <span class="prelude-ty">Option</span>&lt;u16&gt;,
 	) -&gt; <span class="self">Self
 	</span>{
 		<span class="kw">let </span>parent_base_ref = <span class="kw">unsafe </span>{ Base::from_guiparent(parent) };
@@ -553,7 +556,10 @@
 				Obj {
 					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
 					events: ListViewEvents::new(parent_base_ref, ctrl_id),
-					context_menu,
+					context_menu: context_menu_id.map(
+						|id| HINSTANCE::NULL.LoadMenu(IdStr::Id(id)).unwrap()
+							.GetSubMenu(<span class="number">0</span>).unwrap(), <span class="comment">// usually this is how it's set in the resources
+					</span>),
 					_pin: PhantomPinned,
 				},
 			),
@@ -699,7 +705,9 @@
 	///
 	/// Returns the previous image list, if any.
 	</span><span class="kw">pub fn </span>set_image_list(<span class="kw-2">&amp;</span><span class="self">self</span>,
-		kind: co::LVSIL, himagelist: <span class="kw-2">&amp;</span>HIMAGELIST) -&gt; <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;
+		kind: co::LVSIL,
+		himagelist: <span class="kw-2">&amp;</span>HIMAGELIST,
+	) -&gt; <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;
 	{
 		<span class="self">self</span>.hwnd().SendMessage(lvm::SetImageList { kind, himagelist })
 	}
@@ -711,8 +719,10 @@
 	}
 
 	<span class="kw">fn </span>show_context_menu(<span class="kw-2">&amp;</span><span class="self">self</span>,
-		follow_cursor: bool, has_ctrl: bool, has_shift: bool)
-	{
+		follow_cursor: bool,
+		has_ctrl: bool,
+		has_shift: bool,
+	) {
 		<span class="kw">let </span>hmenu = <span class="kw">match </span><span class="self">self</span>.<span class="number">0</span>.context_menu.as_ref() {
 			<span class="prelude-val">Some</span>(h) =&gt; h,
 			<span class="prelude-val">None </span>=&gt; <span class="kw">return</span>, <span class="comment">// no menu, nothing to do
