@@ -103,20 +103,18 @@ impl ListView {
 	/// resource with
 	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
 	///
-	/// **Note:** The optional `context_menu` is shared: it must be destroyed
-	/// manually after the control is destroyed. But note that menus loaded from
-	/// resources don't need to be destroyed.
-	///
 	/// # Panics
 	///
 	/// Panics if the parent dialog was already created – that is, you cannot
 	/// dynamically create a `ListView` in an event closure.
+	///
+	/// Panics if the context menu, when specified, does not exist.
 	#[must_use]
 	pub fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
-		context_menu: Option<HMENU>,
+		context_menu_id: Option<u16>,
 	) -> Self
 	{
 		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
@@ -126,7 +124,10 @@ impl ListView {
 				Obj {
 					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
 					events: ListViewEvents::new(parent_base_ref, ctrl_id),
-					context_menu,
+					context_menu: context_menu_id.map(
+						|id| HINSTANCE::NULL.LoadMenu(IdStr::Id(id)).unwrap()
+							.GetSubMenu(0).unwrap(), // usually this is how it's set in the resources
+					),
 					_pin: PhantomPinned,
 				},
 			),
@@ -272,7 +273,9 @@ impl ListView {
 	///
 	/// Returns the previous image list, if any.
 	pub fn set_image_list(&self,
-		kind: co::LVSIL, himagelist: &HIMAGELIST) -> Option<HIMAGELIST>
+		kind: co::LVSIL,
+		himagelist: &HIMAGELIST,
+	) -> Option<HIMAGELIST>
 	{
 		self.hwnd().SendMessage(lvm::SetImageList { kind, himagelist })
 	}
@@ -284,8 +287,10 @@ impl ListView {
 	}
 
 	fn show_context_menu(&self,
-		follow_cursor: bool, has_ctrl: bool, has_shift: bool)
-	{
+		follow_cursor: bool,
+		has_ctrl: bool,
+		has_shift: bool,
+	) {
 		let hmenu = match self.0.context_menu.as_ref() {
 			Some(h) => h,
 			None => return, // no menu, nothing to do
