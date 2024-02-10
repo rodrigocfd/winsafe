@@ -800,7 +800,7 @@ pub struct PROCESSENTRY32 {
 	dwSize: u32,
 	cntUsage: u32,
 	pub th32ProcessID: u32,
-	th32DefaultHeapID: u64,
+	th32DefaultHeapID: usize,
 	th32ModuleID: u32,
 	pub cntThreads: u32,
 	pub th32ParentProcessID: u32,
