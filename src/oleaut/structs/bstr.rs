@@ -29,8 +29,8 @@ impl Default for BSTR {
 }
 
 impl From<BSTR> for WString {
-	fn from(value: BSTR) -> WString {
-		unsafe { WString::from_wchars_nullt(value.as_ptr()) }
+	fn from(v: BSTR) -> WString {
+		unsafe { WString::from_wchars_nullt(v.as_ptr()) }
 	}
 }
 

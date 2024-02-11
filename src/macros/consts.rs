@@ -454,8 +454,8 @@ macro_rules! const_str {
 		}
 
 		impl From<$name> for crate::kernel::decl::WString {
-			fn from(value: $name) -> Self {
-				crate::kernel::decl::WString::from_str(value.0)
+			fn from(v: $name) -> Self {
+				crate::kernel::decl::WString::from_str(v.0)
 			}
 		}
 

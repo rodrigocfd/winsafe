@@ -710,11 +710,18 @@ pub fn GetNativeSystemInfo(si: &mut SYSTEM_INFO) {
 /// }
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
+///
+/// # Related functions
+///
+/// * [`GetPrivateProfileSectionNames`](crate::GetPrivateProfileSectionNames)
+/// * [`GetPrivateProfileString`](crate::GetPrivateProfileString)
+/// * [`WritePrivateProfileString`](crate::WritePrivateProfileString)
 #[must_use]
 pub fn GetPrivateProfileSection(
 	section_name: &str,
 	file_name: &str,
-) -> SysResult<Vec<(String, String)>> {
+) -> SysResult<Vec<(String, String)>>
+{
 	let mut buf_sz = SSO_LEN; // start with no string heap allocation
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz);
@@ -764,6 +771,12 @@ pub fn GetPrivateProfileSection(
 /// }
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
+///
+/// # Related functions
+///
+/// * [`GetPrivateProfileSection`](crate::GetPrivateProfileSection)
+/// * [`GetPrivateProfileString`](crate::GetPrivateProfileString)
+/// * [`WritePrivateProfileString`](crate::WritePrivateProfileString)
 #[must_use]
 pub fn GetPrivateProfileSectionNames(
 	file_name: Option<&str>,
@@ -793,9 +806,6 @@ pub fn GetPrivateProfileSectionNames(
 /// [`GetPrivateProfileString`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getprivateprofilestringw)
 /// function.
 ///
-/// The related writing function is
-/// [`WritePrivateProfileString`](crate::WritePrivateProfileString).
-///
 /// # Examples
 ///
 /// Reading from an INI file:
@@ -813,6 +823,12 @@ pub fn GetPrivateProfileSectionNames(
 /// println!("{}", val);
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
+///
+/// # Related functions
+///
+/// * [`GetPrivateProfileSection`](crate::GetPrivateProfileSection)
+/// * [`GetPrivateProfileSectionNames`](crate::GetPrivateProfileSectionNames)
+/// * [`WritePrivateProfileString`](crate::WritePrivateProfileString)
 #[must_use]
 pub fn GetPrivateProfileString(
 	section_name: Option<&str>,
@@ -1920,9 +1936,6 @@ pub fn WideCharToMultiByte(
 /// [`WritePrivateProfileString`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-writeprivateprofilestringw)
 /// function.
 ///
-/// The related reading function is
-/// [`GetPrivateProfileString`](crate::GetPrivateProfileString).
-///
 /// # Examples
 ///
 /// Writing value into an INI file:
@@ -1938,6 +1951,12 @@ pub fn WideCharToMultiByte(
 /// )?;
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
+///
+/// # Related functions
+///
+/// * [`GetPrivateProfileSection`](crate::GetPrivateProfileSection)
+/// * [`GetPrivateProfileSectionNames`](crate::GetPrivateProfileSectionNames)
+/// * [`GetPrivateProfileString`](crate::GetPrivateProfileString)
 pub fn WritePrivateProfileString(
 	section_name: &str,
 	key_name: Option<&str>,
