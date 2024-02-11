@@ -47,6 +47,23 @@ use crate::prelude::*;
 /// // FreeSid() automatically called
 /// # Ok::<_, co::ERROR>(())
 /// ```
+///
+/// # Related functions
+///
+/// * [`ConvertSidToStringSid`](crate::ConvertSidToStringSid)
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid)
+/// * [`CopySid`](crate::CopySid)
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid)
+/// * [`EqualDomainSid`](crate::EqualDomainSid)
+/// * [`EqualPrefixSid`](crate::EqualPrefixSid)
+/// * [`EqualSid`](crate::EqualSid)
+/// * [`GetLengthSid`](crate::GetLengthSid)
+/// * [`GetSidLengthRequired`](crate::GetSidLengthRequired)
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid)
+/// * [`IsValidSid`](crate::IsValidSid)
+/// * [`IsWellKnownSid`](crate::IsWellKnownSid)
+/// * [`LookupAccountName`](crate::LookupAccountName)
+/// * [`LookupAccountSid`](crate::LookupAccountSid)
 #[must_use]
 pub fn AllocateAndInitializeSid(
 	identifier_authority: &SID_IDENTIFIER_AUTHORITY,
@@ -84,6 +101,23 @@ pub fn AllocateAndInitializeSid(
 /// You don't need to call this function directly, because [`SID`](crate::SID)
 /// implements [`Display`](std::fmt::Display) and
 /// [`ToString`](std::string::ToString) traits, which call it.
+///
+/// # Related functions
+///
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid)
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid)
+/// * [`CopySid`](crate::CopySid)
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid)
+/// * [`EqualDomainSid`](crate::EqualDomainSid)
+/// * [`EqualPrefixSid`](crate::EqualPrefixSid)
+/// * [`EqualSid`](crate::EqualSid)
+/// * [`GetLengthSid`](crate::GetLengthSid)
+/// * [`GetSidLengthRequired`](crate::GetSidLengthRequired)
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid)
+/// * [`IsValidSid`](crate::IsValidSid)
+/// * [`IsWellKnownSid`](crate::IsWellKnownSid)
+/// * [`LookupAccountName`](crate::LookupAccountName)
+/// * [`LookupAccountSid`](crate::LookupAccountSid)
 #[must_use]
 pub fn ConvertSidToStringSid(sid: &SID) -> SysResult<String> {
 	let mut pstr = std::ptr::null_mut() as *mut u16;
@@ -97,6 +131,23 @@ pub fn ConvertSidToStringSid(sid: &SID) -> SysResult<String> {
 
 /// [`ConvertStringSidToSid`](https://learn.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertstringsidtosidw)
 /// function.
+///
+/// # Related functions
+///
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid)
+/// * [`ConvertSidToStringSid`](crate::ConvertSidToStringSid)
+/// * [`CopySid`](crate::CopySid)
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid)
+/// * [`EqualDomainSid`](crate::EqualDomainSid)
+/// * [`EqualPrefixSid`](crate::EqualPrefixSid)
+/// * [`EqualSid`](crate::EqualSid)
+/// * [`GetLengthSid`](crate::GetLengthSid)
+/// * [`GetSidLengthRequired`](crate::GetSidLengthRequired)
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid)
+/// * [`IsValidSid`](crate::IsValidSid)
+/// * [`IsWellKnownSid`](crate::IsWellKnownSid)
+/// * [`LookupAccountName`](crate::LookupAccountName)
+/// * [`LookupAccountSid`](crate::LookupAccountSid)
 #[must_use]
 pub fn ConvertStringSidToSid(str_sid: &str) -> SysResult<LocalFreeSidGuard> {
 	let mut pbuf = std::ptr::null_mut() as *mut u8;
@@ -131,6 +182,23 @@ pub fn CopyFile(
 
 /// [`CopySid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-copysid)
 /// function.
+///
+/// # Related functions
+///
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid)
+/// * [`ConvertSidToStringSid`](crate::ConvertSidToStringSid)
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid)
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid)
+/// * [`EqualDomainSid`](crate::EqualDomainSid)
+/// * [`EqualPrefixSid`](crate::EqualPrefixSid)
+/// * [`EqualSid`](crate::EqualSid)
+/// * [`GetLengthSid`](crate::GetLengthSid)
+/// * [`GetSidLengthRequired`](crate::GetSidLengthRequired)
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid)
+/// * [`IsValidSid`](crate::IsValidSid)
+/// * [`IsWellKnownSid`](crate::IsWellKnownSid)
+/// * [`LookupAccountName`](crate::LookupAccountName)
+/// * [`LookupAccountSid`](crate::LookupAccountSid)
 #[must_use]
 pub fn CopySid(src: &SID) -> SysResult<SidGuard> {
 	let sid_sz = GetLengthSid(&src);
@@ -181,6 +249,23 @@ pub fn CreateDirectory(
 /// )?;
 /// # Ok::<_, co::ERROR>(())
 /// ```
+///
+/// # Related functions
+///
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid)
+/// * [`ConvertSidToStringSid`](crate::ConvertSidToStringSid)
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid)
+/// * [`CopySid`](crate::CopySid)
+/// * [`EqualDomainSid`](crate::EqualDomainSid)
+/// * [`EqualPrefixSid`](crate::EqualPrefixSid)
+/// * [`EqualSid`](crate::EqualSid)
+/// * [`GetLengthSid`](crate::GetLengthSid)
+/// * [`GetSidLengthRequired`](crate::GetSidLengthRequired)
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid)
+/// * [`IsValidSid`](crate::IsValidSid)
+/// * [`IsWellKnownSid`](crate::IsWellKnownSid)
+/// * [`LookupAccountName`](crate::LookupAccountName)
+/// * [`LookupAccountSid`](crate::LookupAccountSid)
 #[must_use]
 pub fn CreateWellKnownSid(
 	well_known_sid: co::WELL_KNOWN_SID_TYPE,
@@ -258,6 +343,23 @@ pub fn EncryptionDisable(dir_path: &str, disable: bool) -> SysResult<()> {
 
 /// [`EqualDomainSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-equaldomainsid)
 /// function.
+///
+/// # Related functions
+///
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid)
+/// * [`ConvertSidToStringSid`](crate::ConvertSidToStringSid)
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid)
+/// * [`CopySid`](crate::CopySid)
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid)
+/// * [`EqualPrefixSid`](crate::EqualPrefixSid)
+/// * [`EqualSid`](crate::EqualSid)
+/// * [`GetLengthSid`](crate::GetLengthSid)
+/// * [`GetSidLengthRequired`](crate::GetSidLengthRequired)
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid)
+/// * [`IsValidSid`](crate::IsValidSid)
+/// * [`IsWellKnownSid`](crate::IsWellKnownSid)
+/// * [`LookupAccountName`](crate::LookupAccountName)
+/// * [`LookupAccountSid`](crate::LookupAccountSid)
 #[must_use]
 pub fn EqualDomainSid(sid1: &SID, sid2: &SID) -> SysResult<bool> {
 	let mut is_equal: BOOL = 0;
@@ -274,6 +376,23 @@ pub fn EqualDomainSid(sid1: &SID, sid2: &SID) -> SysResult<bool> {
 
 /// [`EqualPrefixSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-equalprefixsid)
 /// function.
+///
+/// # Related functions
+///
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid)
+/// * [`ConvertSidToStringSid`](crate::ConvertSidToStringSid)
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid)
+/// * [`CopySid`](crate::CopySid)
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid)
+/// * [`EqualDomainSid`](crate::EqualDomainSid)
+/// * [`EqualSid`](crate::EqualSid)
+/// * [`GetLengthSid`](crate::GetLengthSid)
+/// * [`GetSidLengthRequired`](crate::GetSidLengthRequired)
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid)
+/// * [`IsValidSid`](crate::IsValidSid)
+/// * [`IsWellKnownSid`](crate::IsWellKnownSid)
+/// * [`LookupAccountName`](crate::LookupAccountName)
+/// * [`LookupAccountSid`](crate::LookupAccountSid)
 #[must_use]
 pub fn EqualPrefixSid(sid1: &SID, sid2: &SID) -> SysResult<bool> {
 	match unsafe {
@@ -289,6 +408,23 @@ pub fn EqualPrefixSid(sid1: &SID, sid2: &SID) -> SysResult<bool> {
 
 /// [`EqualSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-equalsid)
 /// function.
+///
+/// # Related functions
+///
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid)
+/// * [`ConvertSidToStringSid`](crate::ConvertSidToStringSid)
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid)
+/// * [`CopySid`](crate::CopySid)
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid)
+/// * [`EqualDomainSid`](crate::EqualDomainSid)
+/// * [`EqualPrefixSid`](crate::EqualPrefixSid)
+/// * [`GetLengthSid`](crate::GetLengthSid)
+/// * [`GetSidLengthRequired`](crate::GetSidLengthRequired)
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid)
+/// * [`IsValidSid`](crate::IsValidSid)
+/// * [`IsWellKnownSid`](crate::IsWellKnownSid)
+/// * [`LookupAccountName`](crate::LookupAccountName)
+/// * [`LookupAccountSid`](crate::LookupAccountSid)
 #[must_use]
 pub fn EqualSid(sid1: &SID, sid2: &SID) -> SysResult<bool> {
 	match unsafe {
@@ -596,6 +732,23 @@ pub fn GetLastError() -> co::ERROR {
 
 /// [`GetLengthSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getlengthsid)
 /// function.
+///
+/// # Related functions
+///
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid)
+/// * [`ConvertSidToStringSid`](crate::ConvertSidToStringSid)
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid)
+/// * [`CopySid`](crate::CopySid)
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid)
+/// * [`EqualDomainSid`](crate::EqualDomainSid)
+/// * [`EqualPrefixSid`](crate::EqualPrefixSid)
+/// * [`EqualSid`](crate::EqualSid)
+/// * [`GetSidLengthRequired`](crate::GetSidLengthRequired)
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid)
+/// * [`IsValidSid`](crate::IsValidSid)
+/// * [`IsWellKnownSid`](crate::IsWellKnownSid)
+/// * [`LookupAccountName`](crate::LookupAccountName)
+/// * [`LookupAccountSid`](crate::LookupAccountSid)
 #[must_use]
 pub fn GetLengthSid(sid: &SID) -> u32 {
 	unsafe { ffi::GetLengthSid(sid as *const _ as _) }
@@ -861,6 +1014,23 @@ pub fn GetPrivateProfileString(
 
 /// [`GetSidLengthRequired`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidlengthrequired)
 /// function.
+///
+/// # Related functions
+///
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid)
+/// * [`ConvertSidToStringSid`](crate::ConvertSidToStringSid)
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid)
+/// * [`CopySid`](crate::CopySid)
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid)
+/// * [`EqualDomainSid`](crate::EqualDomainSid)
+/// * [`EqualPrefixSid`](crate::EqualPrefixSid)
+/// * [`EqualSid`](crate::EqualSid)
+/// * [`GetLengthSid`](crate::GetLengthSid)
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid)
+/// * [`IsValidSid`](crate::IsValidSid)
+/// * [`IsWellKnownSid`](crate::IsWellKnownSid)
+/// * [`LookupAccountName`](crate::LookupAccountName)
+/// * [`LookupAccountSid`](crate::LookupAccountSid)
 #[must_use]
 pub fn GetSidLengthRequired(sub_authority_count: u8) -> u32 {
 	unsafe { ffi::GetSidLengthRequired(sub_authority_count) }
@@ -1126,6 +1296,23 @@ pub fn GetVolumePathName(file_name: &str) -> SysResult<String> {
 
 /// [`GetWindowsAccountDomainSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getwindowsaccountdomainsid)
 /// function.
+///
+/// # Related functions
+///
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid)
+/// * [`ConvertSidToStringSid`](crate::ConvertSidToStringSid)
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid)
+/// * [`CopySid`](crate::CopySid)
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid)
+/// * [`EqualDomainSid`](crate::EqualDomainSid)
+/// * [`EqualPrefixSid`](crate::EqualPrefixSid)
+/// * [`EqualSid`](crate::EqualSid)
+/// * [`GetLengthSid`](crate::GetLengthSid)
+/// * [`GetSidLengthRequired`](crate::GetSidLengthRequired)
+/// * [`IsValidSid`](crate::IsValidSid)
+/// * [`IsWellKnownSid`](crate::IsWellKnownSid)
+/// * [`LookupAccountName`](crate::LookupAccountName)
+/// * [`LookupAccountSid`](crate::LookupAccountSid)
 #[must_use]
 pub fn GetWindowsAccountDomainSid(sid: &SID) -> SysResult<SidGuard> {
 	let mut ad_sid_sz = u32::default();
@@ -1278,6 +1465,23 @@ pub fn IsValidSecurityDescriptor(sd: &SECURITY_DESCRIPTOR) -> bool {
 
 /// [`IsValidSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-isvalidsid)
 /// function.
+///
+/// # Related functions
+///
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid)
+/// * [`ConvertSidToStringSid`](crate::ConvertSidToStringSid)
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid)
+/// * [`CopySid`](crate::CopySid)
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid)
+/// * [`EqualDomainSid`](crate::EqualDomainSid)
+/// * [`EqualPrefixSid`](crate::EqualPrefixSid)
+/// * [`EqualSid`](crate::EqualSid)
+/// * [`GetLengthSid`](crate::GetLengthSid)
+/// * [`GetSidLengthRequired`](crate::GetSidLengthRequired)
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid)
+/// * [`IsWellKnownSid`](crate::IsWellKnownSid)
+/// * [`LookupAccountName`](crate::LookupAccountName)
+/// * [`LookupAccountSid`](crate::LookupAccountSid)
 #[must_use]
 pub fn IsValidSid(sid: &SID) -> SysResult<bool> {
 	match unsafe { ffi::IsValidSid(sid as *const _ as _) } {
@@ -1291,6 +1495,23 @@ pub fn IsValidSid(sid: &SID) -> SysResult<bool> {
 
 /// [`IsWellKnownSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-iswellknownsid)
 /// function.
+///
+/// # Related functions
+///
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid)
+/// * [`ConvertSidToStringSid`](crate::ConvertSidToStringSid)
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid)
+/// * [`CopySid`](crate::CopySid)
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid)
+/// * [`EqualDomainSid`](crate::EqualDomainSid)
+/// * [`EqualPrefixSid`](crate::EqualPrefixSid)
+/// * [`EqualSid`](crate::EqualSid)
+/// * [`GetLengthSid`](crate::GetLengthSid)
+/// * [`GetSidLengthRequired`](crate::GetSidLengthRequired)
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid)
+/// * [`IsValidSid`](crate::IsValidSid)
+/// * [`LookupAccountName`](crate::LookupAccountName)
+/// * [`LookupAccountSid`](crate::LookupAccountSid)
 #[must_use]
 pub fn IsWellKnownSid(
 	sid: &SID,
@@ -1425,6 +1646,23 @@ pub const fn LODWORD(v: u64) -> u32 {
 /// let (domain_name, sid, kind) = w::LookupAccountName(None, &user_name)?;
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
+///
+/// # Related functions
+///
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid)
+/// * [`ConvertSidToStringSid`](crate::ConvertSidToStringSid)
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid)
+/// * [`CopySid`](crate::CopySid)
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid)
+/// * [`EqualDomainSid`](crate::EqualDomainSid)
+/// * [`EqualPrefixSid`](crate::EqualPrefixSid)
+/// * [`EqualSid`](crate::EqualSid)
+/// * [`GetLengthSid`](crate::GetLengthSid)
+/// * [`GetSidLengthRequired`](crate::GetSidLengthRequired)
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid)
+/// * [`IsValidSid`](crate::IsValidSid)
+/// * [`IsWellKnownSid`](crate::IsWellKnownSid)
+/// * [`LookupAccountSid`](crate::LookupAccountSid)
 #[must_use]
 pub fn LookupAccountName(
 	system_name: Option<&str>,
@@ -1476,6 +1714,23 @@ pub fn LookupAccountName(
 /// function.
 ///
 /// Returns account name, domain name and type, respectively.
+///
+/// # Related functions
+///
+/// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid)
+/// * [`ConvertSidToStringSid`](crate::ConvertSidToStringSid)
+/// * [`ConvertStringSidToSid`](crate::ConvertStringSidToSid)
+/// * [`CopySid`](crate::CopySid)
+/// * [`CreateWellKnownSid`](crate::CreateWellKnownSid)
+/// * [`EqualDomainSid`](crate::EqualDomainSid)
+/// * [`EqualPrefixSid`](crate::EqualPrefixSid)
+/// * [`EqualSid`](crate::EqualSid)
+/// * [`GetLengthSid`](crate::GetLengthSid)
+/// * [`GetSidLengthRequired`](crate::GetSidLengthRequired)
+/// * [`GetWindowsAccountDomainSid`](crate::GetWindowsAccountDomainSid)
+/// * [`IsValidSid`](crate::IsValidSid)
+/// * [`IsWellKnownSid`](crate::IsWellKnownSid)
+/// * [`LookupAccountName`](crate::LookupAccountName)
 #[must_use]
 pub fn LookupAccountSid(
 	system_name: Option<&str>,
