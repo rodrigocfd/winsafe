@@ -936,8 +936,8 @@
 		}
 
 		<span class="kw">impl </span>From&lt;<span class="macro-nonterminal">$name</span>&gt; <span class="kw">for </span><span class="kw">crate</span>::kernel::decl::WString {
-			<span class="kw">fn </span>from(value: <span class="macro-nonterminal">$name</span>) -&gt; <span class="self">Self </span>{
-				<span class="kw">crate</span>::kernel::decl::WString::from_str(value.<span class="number">0</span>)
+			<span class="kw">fn </span>from(v: <span class="macro-nonterminal">$name</span>) -&gt; <span class="self">Self </span>{
+				<span class="kw">crate</span>::kernel::decl::WString::from_str(v.<span class="number">0</span>)
 			}
 		}
 
