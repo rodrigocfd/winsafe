@@ -409,6 +409,10 @@ pub fn EqualPrefixSid(sid1: &SID, sid2: &SID) -> SysResult<bool> {
 /// [`EqualSid`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-equalsid)
 /// function.
 ///
+/// You don't need to call this function directly, because [`SID`](crate::SID)
+/// implements [`PartialEq`](std::cmp::PartialEq) and [`Eq`](std::cmp::Eq)
+/// traits, which call it.
+///
 /// # Related functions
 ///
 /// * [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid)

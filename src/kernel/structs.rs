@@ -949,6 +949,14 @@ impl std::fmt::Display for SID {
 	}
 }
 
+impl PartialEq<SID> for SID {
+	fn eq(&self, other: &SID) -> bool {
+		EqualSid(self, other).unwrap() // assumes valid references
+	}
+}
+
+impl Eq for SID {}
+
 impl SID {
 	/// Returns the `SubAuthorityCount` field.
 	#[must_use]
