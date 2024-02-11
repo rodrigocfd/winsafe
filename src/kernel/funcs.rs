@@ -1,7 +1,5 @@
 #![allow(non_snake_case)]
 
-use std::collections::HashMap;
-
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
@@ -553,12 +551,12 @@ pub fn GetDiskSpaceInformation(
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
 #[must_use]
-pub fn GetEnvironmentStrings() -> SysResult<HashMap<String, String>> {
+pub fn GetEnvironmentStrings() -> SysResult<Vec<(String, String)>> {
 	ptr_to_sysresult(unsafe { ffi::GetEnvironmentStringsW() } as _)
 		.map(|ptr| {
-			let vec_env_strs = parse_multi_z_str(ptr as *mut _ as _);
+			let vec_entries = parse_multi_z_str(ptr as *mut _ as _);
 			unsafe { ffi::FreeEnvironmentStringsW(ptr); }
-			vec_env_strs.iter()
+			vec_entries.iter()
 				.map(|env_str| {
 					let mut pair = env_str.split("="); // assumes correctly formatted pairs
 					let key = pair.next().unwrap();
