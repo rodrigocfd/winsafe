@@ -494,6 +494,13 @@ pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 
 /// [`FileTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime)
 /// function.
+///
+/// # Related functions
+///
+/// * [`GetLocalTime`](crate::GetLocalTime)
+/// * [`GetSystemTime`](crate::GetSystemTime)
+/// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
+/// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
 pub fn FileTimeToSystemTime(
 	file_time: &FILETIME,
 	system_time: &mut SYSTEMTIME,
@@ -758,6 +765,31 @@ pub fn GetLengthSid(sid: &SID) -> u32 {
 	unsafe { ffi::GetLengthSid(sid as *const _ as _) }
 }
 
+/// [`GetLocalTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlocaltime)
+/// function.
+///
+/// This function retrieves local time; for UTC time use
+/// [`GetSystemTime`](crate::GetSystemTime).
+///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let mut st = w::SYSTEMTIME::default();
+/// w::GetLocalTime(&mut st);
+/// ```
+///
+/// # Related functions
+///
+/// * [`FileTimeToSystemTime`](crate::FileTimeToSystemTime)
+/// * [`GetSystemTime`](crate::GetSystemTime)
+/// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
+/// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
+pub fn GetLocalTime(st: &mut SYSTEMTIME) {
+	unsafe { ffi::GetLocalTime(st as *mut _ as _) }
+}
+
 /// [`GetLogicalDrives`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlogicaldrives)
 /// function.
 #[must_use]
@@ -819,24 +851,6 @@ pub fn GetFileAttributes(file_name: &str) -> SysResult<co::FILE_ATTRIBUTE> {
 		INVALID => Err(GetLastError()),
 		flags => Ok(unsafe { co::FILE_ATTRIBUTE::from_raw(flags) }),
 	}
-}
-
-/// [`GetLocalTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getlocaltime)
-/// function.
-///
-/// This function retrieves local time; for UTC time use
-/// [`GetSystemTime`](crate::GetSystemTime).
-///
-/// # Examples
-///
-/// ```no_run
-/// use winsafe::{self as w, prelude::*};
-///
-/// let mut st = w::SYSTEMTIME::default();
-/// w::GetLocalTime(&mut st);
-/// ```
-pub fn GetLocalTime(st: &mut SYSTEMTIME) {
-	unsafe { ffi::GetLocalTime(st as *mut _ as _) }
 }
 
 /// [`GetNativeSystemInfo`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getnativesysteminfo)
@@ -1112,6 +1126,13 @@ pub fn GetSystemInfo(si: &mut SYSTEM_INFO) {
 /// let mut st = w::SYSTEMTIME::default();
 /// w::GetSystemTime(&mut st);
 /// ```
+///
+/// # Related functions
+///
+/// * [`FileTimeToSystemTime`](crate::FileTimeToSystemTime)
+/// * [`GetLocalTime`](crate::GetLocalTime)
+/// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
+/// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
 pub fn GetSystemTime(st: &mut SYSTEMTIME) {
 	unsafe { ffi::GetSystemTime(st as *mut _ as _) }
 }
@@ -2065,6 +2086,13 @@ pub fn SwitchToThread() -> SysResult<()> {
 
 /// [`SystemTimeToFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetofiletime)
 /// function.
+///
+/// # Related functions
+///
+/// * [`FileTimeToSystemTime`](crate::FileTimeToSystemTime)
+/// * [`GetLocalTime`](crate::GetLocalTime)
+/// * [`GetSystemTime`](crate::GetSystemTime)
+/// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
 pub fn SystemTimeToFileTime(
 	st: &SYSTEMTIME,
 	ft: &mut FILETIME,
@@ -2079,6 +2107,13 @@ pub fn SystemTimeToFileTime(
 
 /// [`SystemTimeToTzSpecificLocalTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetotzspecificlocaltime)
 /// function.
+///
+/// # Related functions
+///
+/// * [`FileTimeToSystemTime`](crate::FileTimeToSystemTime)
+/// * [`GetLocalTime`](crate::GetLocalTime)
+/// * [`GetSystemTime`](crate::GetSystemTime)
+/// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
 pub fn SystemTimeToTzSpecificLocalTime(
 	time_zone: Option<&TIME_ZONE_INFORMATION>,
 	universal_time: &SYSTEMTIME,
