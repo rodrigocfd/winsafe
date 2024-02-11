@@ -1380,12 +1380,34 @@ pub fn GlobalMemoryStatusEx(msx: &mut MEMORYSTATUSEX) -> SysResult<()> {
 
 /// [`HIBYTE`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632656(v=vs.85))
 /// macro.
+///
+/// # Related functions
+///
+/// * [`HIDWORD`](crate::HIDWORD)
+/// * [`HIWORD`](crate::HIWORD)
+/// * [`LOBYTE`](crate::LOBYTE)
+/// * [`LODWORD`](crate::LODWORD)
+/// * [`LOWORD`](crate::LOWORD)
+/// * [`MAKEDWORD`](crate::MAKEDWORD)
+/// * [`MAKEQWORD`](crate::MAKEQWORD)
+/// * [`MAKEWORD`](crate::MAKEWORD)
 #[must_use]
 pub const fn HIBYTE(v: u16) -> u8 {
 	(v >> 8 & 0xff) as _
 }
 
 /// Returns the high-order `u32` of an `u64`.
+///
+/// # Related functions
+///
+/// * [`HIBYTE`](crate::HIBYTE)
+/// * [`HIWORD`](crate::HIWORD)
+/// * [`LOBYTE`](crate::LOBYTE)
+/// * [`LODWORD`](crate::LODWORD)
+/// * [`LOWORD`](crate::LOWORD)
+/// * [`MAKEDWORD`](crate::MAKEDWORD)
+/// * [`MAKEQWORD`](crate::MAKEQWORD)
+/// * [`MAKEWORD`](crate::MAKEWORD)
 #[must_use]
 pub const fn HIDWORD(v: u64) -> u32 {
 	(v >> 32 & 0xffff_ffff) as _
@@ -1393,6 +1415,17 @@ pub const fn HIDWORD(v: u64) -> u32 {
 
 /// [`HIWORD`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632657(v=vs.85))
 /// macro.
+///
+/// # Related functions
+///
+/// * [`HIBYTE`](crate::HIBYTE)
+/// * [`HIDWORD`](crate::HIDWORD)
+/// * [`LOBYTE`](crate::LOBYTE)
+/// * [`LODWORD`](crate::LODWORD)
+/// * [`LOWORD`](crate::LOWORD)
+/// * [`MAKEDWORD`](crate::MAKEDWORD)
+/// * [`MAKEQWORD`](crate::MAKEQWORD)
+/// * [`MAKEWORD`](crate::MAKEWORD)
 #[must_use]
 pub const fn HIWORD(v: u32) -> u16 {
 	(v >> 16 & 0xffff) as _
@@ -1646,12 +1679,34 @@ pub fn IsWindowsVistaOrGreater() -> SysResult<bool> {
 
 /// [`LOBYTE`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632658(v=vs.85))
 /// macro.
+///
+/// # Related functions
+///
+/// * [`HIBYTE`](crate::HIBYTE)
+/// * [`HIDWORD`](crate::HIDWORD)
+/// * [`HIWORD`](crate::HIWORD)
+/// * [`LODWORD`](crate::LODWORD)
+/// * [`LOWORD`](crate::LOWORD)
+/// * [`MAKEDWORD`](crate::MAKEDWORD)
+/// * [`MAKEQWORD`](crate::MAKEQWORD)
+/// * [`MAKEWORD`](crate::MAKEWORD)
 #[must_use]
 pub const fn LOBYTE(v: u16) -> u8 {
 	(v & 0xff) as _
 }
 
 /// Returns the low-order `u32` of an `u64`.
+///
+/// # Related functions
+///
+/// * [`HIBYTE`](crate::HIBYTE)
+/// * [`HIDWORD`](crate::HIDWORD)
+/// * [`HIWORD`](crate::HIWORD)
+/// * [`LOBYTE`](crate::LOBYTE)
+/// * [`LOWORD`](crate::LOWORD)
+/// * [`MAKEDWORD`](crate::MAKEDWORD)
+/// * [`MAKEQWORD`](crate::MAKEQWORD)
+/// * [`MAKEWORD`](crate::MAKEWORD)
 #[must_use]
 pub const fn LODWORD(v: u64) -> u32 {
 	(v & 0xffff_ffff) as _
@@ -1869,23 +1924,56 @@ pub fn LookupPrivilegeValue(
 
 /// [`LOWORD`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632659(v=vs.85))
 /// macro.
+///
+/// # Related functions
+///
+/// * [`HIBYTE`](crate::HIBYTE)
+/// * [`HIDWORD`](crate::HIDWORD)
+/// * [`HIWORD`](crate::HIWORD)
+/// * [`LOBYTE`](crate::LOBYTE)
+/// * [`LODWORD`](crate::LODWORD)
+/// * [`MAKEDWORD`](crate::MAKEDWORD)
+/// * [`MAKEQWORD`](crate::MAKEQWORD)
+/// * [`MAKEWORD`](crate::MAKEWORD)
 #[must_use]
 pub const fn LOWORD(v: u32) -> u16 {
 	(v & 0xffff) as _
 }
 
-/// Function that implements
+/// Function analog to
 /// [`MAKELONG`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632660(v=vs.85)),
 /// [`MAKEWPARAM`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makewparam),
 /// and
 /// [`MAKELPARAM`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makelparam)
 /// macros.
+///
+/// # Related functions
+///
+/// * [`HIBYTE`](crate::HIBYTE)
+/// * [`HIDWORD`](crate::HIDWORD)
+/// * [`HIWORD`](crate::HIWORD)
+/// * [`LOBYTE`](crate::LOBYTE)
+/// * [`LODWORD`](crate::LODWORD)
+/// * [`LOWORD`](crate::LOWORD)
+/// * [`MAKEQWORD`](crate::MAKEQWORD)
+/// * [`MAKEWORD`](crate::MAKEWORD)
 #[must_use]
 pub const fn MAKEDWORD(lo: u16, hi: u16) -> u32 {
 	((lo as u32 & 0xffff) | ((hi as u32 & 0xffff) << 16)) as _
 }
 
 /// Similar to [`MAKEDWORD`](crate::MAKEDWORD), but for `u64`.
+///
+/// # Related functions
+///
+/// * [`HIBYTE`](crate::HIBYTE)
+/// * [`HIDWORD`](crate::HIDWORD)
+/// * [`HIWORD`](crate::HIWORD)
+/// * [`LOBYTE`](crate::LOBYTE)
+/// * [`LODWORD`](crate::LODWORD)
+/// * [`LOWORD`](crate::LOWORD)
+/// * [`MAKEDWORD`](crate::MAKEDWORD)
+/// * [`MAKEWORD`](crate::MAKEWORD)
 #[must_use]
 pub const fn MAKEQWORD(lo: u32, hi: u32) -> u64 {
 	((lo as u64 & 0xffff_ffff) | ((hi as u64 & 0xffff_ffff) << 32)) as _
@@ -1893,6 +1981,17 @@ pub const fn MAKEQWORD(lo: u32, hi: u32) -> u64 {
 
 /// [`MAKEWORD`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632663(v=vs.85))
 /// macro.
+///
+/// # Related functions
+///
+/// * [`HIBYTE`](crate::HIBYTE)
+/// * [`HIDWORD`](crate::HIDWORD)
+/// * [`HIWORD`](crate::HIWORD)
+/// * [`LOBYTE`](crate::LOBYTE)
+/// * [`LODWORD`](crate::LODWORD)
+/// * [`LOWORD`](crate::LOWORD)
+/// * [`MAKEDWORD`](crate::MAKEDWORD)
+/// * [`MAKEQWORD`](crate::MAKEQWORD)
 #[must_use]
 pub const fn MAKEWORD(lo: u8, hi: u8) -> u16 {
 	(lo as u16 & 0xff) | ((hi as u16 & 0xff) << 8) as u16
@@ -1923,6 +2022,10 @@ pub fn MulDiv(number: i32, numerator: i32, denominator: i32) -> i32 {
 ///
 /// If `multi_byte_str` doesn't have a terminating null, the resulting
 /// `Vec<u16>` also won't include one.
+///
+/// # Related functions
+///
+/// * [`WideCharToMultiByte`](crate::WideCharToMultiByte)
 #[must_use]
 pub fn MultiByteToWideChar(
 	code_page: co::CP,
@@ -1987,6 +2090,10 @@ pub fn OutputDebugString(output_string: &str) {
 /// println!("Operation lasted {:.2} ms", duration_ms);
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
+///
+/// # Related functions
+///
+/// * [`QueryPerformanceFrequency`](crate::QueryPerformanceFrequency)
 #[must_use]
 pub fn QueryPerformanceCounter() -> SysResult<i64> {
 	let mut perf_count = i64::default();
@@ -1997,8 +2104,9 @@ pub fn QueryPerformanceCounter() -> SysResult<i64> {
 /// [`QueryPerformanceFrequency`](https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
 /// function.
 ///
-/// Usually used with
-/// [`QueryPerformanceCounter`](crate::QueryPerformanceCounter).
+/// # Related functions
+///
+/// * [`QueryPerformanceCounter`](crate::QueryPerformanceCounter)
 #[must_use]
 pub fn QueryPerformanceFrequency() -> SysResult<i64> {
 	let mut freq = i64::default();
@@ -2174,6 +2282,10 @@ pub fn VerSetConditionMask(
 ///
 /// If `wide_char_str` doesn't have a terminating null, the resulting `Vec<u8>`
 /// also won't include one.
+///
+/// # Related functions
+///
+/// * [`MultiByteToWideChar`](crate::MultiByteToWideChar)
 #[must_use]
 pub fn WideCharToMultiByte(
 	code_page: co::CP,
