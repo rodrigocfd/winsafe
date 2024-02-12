@@ -39,10 +39,16 @@ pub trait kernel_Hfindfile: Handle {
 				WString::from_str(file_name).as_ptr(),
 				wfd as *mut _ as _,
 			).as_mut() {
-				Some(ptr) => Ok((
-					FindCloseGuard::new(HFINDFILE::from_ptr(ptr)), // first file found
-					true,
-				)),
+				Some(ptr) => {
+					let h = HFINDFILE::from_ptr(ptr);
+					// When using a filter, if no files are found, the function
+					// is successful but it returns an invalid handle.
+					let has_something = h != HFINDFILE::INVALID;
+					Ok((
+						FindCloseGuard::new(h),
+						has_something,
+					))
+				},
 				None => match GetLastError() {
 					co::ERROR::FILE_NOT_FOUND => Ok((
 						FindCloseGuard::new(HFINDFILE::NULL), // not an error, first file not found
