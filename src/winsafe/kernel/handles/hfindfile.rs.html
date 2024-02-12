@@ -72,6 +72,12 @@
 <a href="#70" id="70">70</a>
 <a href="#71" id="71">71</a>
 <a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -113,10 +119,16 @@
 				WString::from_str(file_name).as_ptr(),
 				wfd <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
 			).as_mut() {
-				<span class="prelude-val">Some</span>(ptr) =&gt; <span class="prelude-val">Ok</span>((
-					FindCloseGuard::new(HFINDFILE::from_ptr(ptr)), <span class="comment">// first file found
-					</span><span class="bool-val">true</span>,
-				)),
+				<span class="prelude-val">Some</span>(ptr) =&gt; {
+					<span class="kw">let </span>h = HFINDFILE::from_ptr(ptr);
+					<span class="comment">// When using a filter, if no files are found, the function
+					// is successful but it returns an invalid handle.
+					</span><span class="kw">let </span>has_something = h != HFINDFILE::INVALID;
+					<span class="prelude-val">Ok</span>((
+						FindCloseGuard::new(h),
+						has_something,
+					))
+				},
 				<span class="prelude-val">None </span>=&gt; <span class="kw">match </span>GetLastError() {
 					co::ERROR::FILE_NOT_FOUND =&gt; <span class="prelude-val">Ok</span>((
 						FindCloseGuard::new(HFINDFILE::NULL), <span class="comment">// not an error, first file not found

@@ -985,6 +985,38 @@
 <a href="#983" id="983">983</a>
 <a href="#984" id="984">984</a>
 <a href="#985" id="985">985</a>
+<a href="#986" id="986">986</a>
+<a href="#987" id="987">987</a>
+<a href="#988" id="988">988</a>
+<a href="#989" id="989">989</a>
+<a href="#990" id="990">990</a>
+<a href="#991" id="991">991</a>
+<a href="#992" id="992">992</a>
+<a href="#993" id="993">993</a>
+<a href="#994" id="994">994</a>
+<a href="#995" id="995">995</a>
+<a href="#996" id="996">996</a>
+<a href="#997" id="997">997</a>
+<a href="#998" id="998">998</a>
+<a href="#999" id="999">999</a>
+<a href="#1000" id="1000">1000</a>
+<a href="#1001" id="1001">1001</a>
+<a href="#1002" id="1002">1002</a>
+<a href="#1003" id="1003">1003</a>
+<a href="#1004" id="1004">1004</a>
+<a href="#1005" id="1005">1005</a>
+<a href="#1006" id="1006">1006</a>
+<a href="#1007" id="1007">1007</a>
+<a href="#1008" id="1008">1008</a>
+<a href="#1009" id="1009">1009</a>
+<a href="#1010" id="1010">1010</a>
+<a href="#1011" id="1011">1011</a>
+<a href="#1012" id="1012">1012</a>
+<a href="#1013" id="1013">1013</a>
+<a href="#1014" id="1014">1014</a>
+<a href="#1015" id="1015">1015</a>
+<a href="#1016" id="1016">1016</a>
+<a href="#1017" id="1017">1017</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -995,6 +1027,10 @@
 
 <span class="doccomment">/// [`AdjustWindowRectEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)
 /// function.
+///
+/// # Related functions
+///
+/// * [`AdjustWindowRectExForDpi`](crate::AdjustWindowRectExForDpi)
 </span><span class="kw">pub fn </span>AdjustWindowRectEx(
 	rc: <span class="kw-2">&amp;mut </span>RECT,
 	style: co::WS,
@@ -1016,6 +1052,10 @@
 
 <span class="doccomment">/// [`AdjustWindowRectExForDpi`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectexfordpi)
 /// function.
+///
+/// # Related functions
+///
+/// * [`AdjustWindowRectEx`](crate::AdjustWindowRectEx)
 </span><span class="kw">pub fn </span>AdjustWindowRectExForDpi(
 	rc: <span class="kw-2">&amp;mut </span>RECT,
 	style: co::WS,
@@ -1219,6 +1259,12 @@
 
 <span class="doccomment">/// [`EmptyClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-emptyclipboard)
 /// function.
+///
+/// # Related functions
+///
+/// * [`GetClipboardData`](crate::GetClipboardData)
+/// * [`GetClipboardSequenceNumber`](crate::GetClipboardSequenceNumber)
+/// * [`SetClipboardData`](crate::SetClipboardData)
 </span><span class="kw">pub fn </span>EmptyClipboard() -&gt; SysResult&lt;()&gt; {
 	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::EmptyClipboard() })
 }
@@ -1461,6 +1507,12 @@
 ///
 /// The returned pointer must be correctly cast to the memory block specified by
 /// `format`.
+///
+/// # Related functions
+///
+/// * [`EmptyClipboard`](crate::EmptyClipboard)
+/// * [`GetClipboardSequenceNumber`](crate::GetClipboardSequenceNumber)
+/// * [`SetClipboardData`](crate::SetClipboardData)
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub unsafe fn </span>GetClipboardData(format: co::CF) -&gt; SysResult&lt;<span class="kw-2">*mut </span>u8&gt; {
 	ptr_to_sysresult(ffi::GetClipboardData(format.raw()))
@@ -1469,6 +1521,12 @@
 
 <span class="doccomment">/// [`GetClipboardSequenceNumber`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboardsequencenumber)
 /// function.
+///
+/// # Related functions
+///
+/// * [`EmptyClipboard`](crate::EmptyClipboard)
+/// * [`GetClipboardData`](crate::GetClipboardData)
+/// * [`SetClipboardData`](crate::SetClipboardData)
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetClipboardSequenceNumber() -&gt; u32 {
 	<span class="kw">unsafe </span>{ ffi::GetClipboardSequenceNumber() }
@@ -1726,7 +1784,7 @@
 		<span class="kw">unsafe </span>{
 			ffi::PostThreadMessageW(
 				thread_id, wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam)
-		}
+		},
 	)
 }
 
@@ -1838,6 +1896,12 @@
 ///
 /// The `hmem` memory block must be correctly allocated and contain the type
 /// specified by `format`.
+///
+/// # Related functions
+///
+/// * [`EmptyClipboard`](crate::EmptyClipboard)
+/// * [`GetClipboardData`](crate::GetClipboardData)
+/// * [`GetClipboardSequenceNumber`](crate::GetClipboardSequenceNumber)
 </span><span class="kw">pub unsafe fn </span>SetClipboardData(
 	format: co::CF,
 	hmem: <span class="kw-2">*mut </span>u8,
