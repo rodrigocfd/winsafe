@@ -10,6 +10,8 @@ macro_rules! com_interface {
 		#[repr(transparent)]
 		pub struct $name(crate::kernel::ffi_types::COMPTR);
 
+		unsafe impl Send for $name {}
+
 		impl Drop for $name {
 			fn drop(&mut self) {
 				if !self.0.is_null() {
