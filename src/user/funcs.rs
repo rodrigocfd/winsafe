@@ -8,6 +8,10 @@ use crate::user::{ffi, iterators::*, privs::*, proc};
 
 /// [`AdjustWindowRectEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)
 /// function.
+///
+/// # Related functions
+///
+/// * [`AdjustWindowRectExForDpi`](crate::AdjustWindowRectExForDpi)
 pub fn AdjustWindowRectEx(
 	rc: &mut RECT,
 	style: co::WS,
@@ -29,6 +33,10 @@ pub fn AdjustWindowRectEx(
 
 /// [`AdjustWindowRectExForDpi`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectexfordpi)
 /// function.
+///
+/// # Related functions
+///
+/// * [`AdjustWindowRectEx`](crate::AdjustWindowRectEx)
 pub fn AdjustWindowRectExForDpi(
 	rc: &mut RECT,
 	style: co::WS,
@@ -232,6 +240,12 @@ pub unsafe fn DispatchMessage(msg: &MSG) -> isize {
 
 /// [`EmptyClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-emptyclipboard)
 /// function.
+///
+/// # Related functions
+///
+/// * [`GetClipboardData`](crate::GetClipboardData)
+/// * [`GetClipboardSequenceNumber`](crate::GetClipboardSequenceNumber)
+/// * [`SetClipboardData`](crate::SetClipboardData)
 pub fn EmptyClipboard() -> SysResult<()> {
 	bool_to_sysresult(unsafe { ffi::EmptyClipboard() })
 }
@@ -474,6 +488,12 @@ pub fn GetAsyncKeyState(virt_key: co::VK) -> bool {
 ///
 /// The returned pointer must be correctly cast to the memory block specified by
 /// `format`.
+///
+/// # Related functions
+///
+/// * [`EmptyClipboard`](crate::EmptyClipboard)
+/// * [`GetClipboardSequenceNumber`](crate::GetClipboardSequenceNumber)
+/// * [`SetClipboardData`](crate::SetClipboardData)
 #[must_use]
 pub unsafe fn GetClipboardData(format: co::CF) -> SysResult<*mut u8> {
 	ptr_to_sysresult(ffi::GetClipboardData(format.raw()))
@@ -482,6 +502,12 @@ pub unsafe fn GetClipboardData(format: co::CF) -> SysResult<*mut u8> {
 
 /// [`GetClipboardSequenceNumber`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboardsequencenumber)
 /// function.
+///
+/// # Related functions
+///
+/// * [`EmptyClipboard`](crate::EmptyClipboard)
+/// * [`GetClipboardData`](crate::GetClipboardData)
+/// * [`SetClipboardData`](crate::SetClipboardData)
 #[must_use]
 pub fn GetClipboardSequenceNumber() -> u32 {
 	unsafe { ffi::GetClipboardSequenceNumber() }
@@ -739,7 +765,7 @@ pub fn PostThreadMessage<M>(thread_id: u32, msg: M) -> SysResult<()>
 		unsafe {
 			ffi::PostThreadMessageW(
 				thread_id, wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam)
-		}
+		},
 	)
 }
 
@@ -851,6 +877,12 @@ pub fn SetCaretPos(x: i32, y: i32) -> SysResult<()> {
 ///
 /// The `hmem` memory block must be correctly allocated and contain the type
 /// specified by `format`.
+///
+/// # Related functions
+///
+/// * [`EmptyClipboard`](crate::EmptyClipboard)
+/// * [`GetClipboardData`](crate::GetClipboardData)
+/// * [`GetClipboardSequenceNumber`](crate::GetClipboardSequenceNumber)
 pub unsafe fn SetClipboardData(
 	format: co::CF,
 	hmem: *mut u8,
