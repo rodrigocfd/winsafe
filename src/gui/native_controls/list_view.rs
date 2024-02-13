@@ -327,7 +327,7 @@ impl ListView {
 			}
 		};
 
-		hmenu.TrackPopupMenuAtPoint(
+		hmenu.track_popup_menu_at_point(
 			menu_pos, &self.hwnd().GetParent().unwrap(), self.hwnd())
 			.unwrap();
 	}

@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, privs::*};
+use crate::gui::{*, native_controls::iterators::*};
 use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
@@ -18,7 +18,9 @@ pub struct TreeViewItem<'a> {
 
 impl<'a> TreeViewItem<'a> {
 	pub(in crate::gui) const fn new(
-		owner: &'a TreeView, hitem: HTREEITEM) -> Self
+		owner: &'a TreeView,
+		hitem: HTREEITEM,
+	) -> Self
 	{
 		Self { owner, hitem }
 	}
@@ -34,7 +36,9 @@ impl<'a> TreeViewItem<'a> {
 	/// [`tvm::InsertItem`](crate::msg::tvm::InsertItem) message, and returns
 	/// the newly added item.
 	pub fn add_child(&self,
-		text: &str, icon_index: Option<u32>) -> Self
+		text: &str,
+		icon_index: Option<u32>,
+	) -> Self
 	{
 		let mut buf = WString::from_str(text);
 

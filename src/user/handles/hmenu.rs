@@ -141,6 +141,25 @@ pub trait user_Hmenu: Handle {
 		HmenuIteritems::new(self)
 	}
 
+	/// Shows the popup menu anchored at the given coordinates using
+	/// [`TrackPopupMenu`](crate::prelude::user_Hmenu::TrackPopupMenu), and
+	/// performs other needed operations.
+	///
+	/// This method will block until the menu disappears.
+	fn track_popup_menu_at_point(&self,
+		pos: POINT,
+		hwnd_parent: &HWND,
+		hwnd_coords_relative_to: &HWND,
+	) -> SysResult<()>
+	{
+		let mut pos = pos;
+		hwnd_coords_relative_to.ClientToScreen(&mut pos)?; // now relative to screen
+		hwnd_parent.SetForegroundWindow();
+		self.TrackPopupMenu(co::TPM::LEFTBUTTON, pos, hwnd_parent)?;
+		hwnd_parent.PostMessage(wm::Null {})?; // necessary according to TrackPopupMenu docs
+		Ok(())
+	}
+
 	/// [`AppendMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-appendmenuw)
 	/// function.
 	///
@@ -558,7 +577,7 @@ pub trait user_Hmenu: Handle {
 	/// function.
 	///
 	/// **Note:** If you just want to display a popup menu, consider the simpler
-	/// [`HMENU::TrackPopupMenuAtPoint`](crate::prelude::user_Hmenu::TrackPopupMenuAtPoint).
+	/// [`HMENU::track_popup_menu_at_point`](crate::prelude::user_Hmenu::track_popup_menu_at_point).
 	fn TrackPopupMenu(&self,
 		flags: co::TPM,
 		location: POINT,
@@ -590,24 +609,5 @@ pub trait user_Hmenu: Handle {
 				_ => Ok(None),
 			}
 		}
-	}
-
-	/// Shows the popup menu anchored at the given coordinates using
-	/// [`TrackPopupMenu`](crate::prelude::user_Hmenu::TrackPopupMenu), and
-	/// performs other needed operations.
-	///
-	/// This method will block until the menu disappears.
-	fn TrackPopupMenuAtPoint(&self,
-		pos: POINT,
-		hwnd_parent: &HWND,
-		hwnd_coords_relative_to: &HWND,
-	) -> SysResult<()>
-	{
-		let mut pos = pos;
-		hwnd_coords_relative_to.ClientToScreen(&mut pos)?; // now relative to screen
-		hwnd_parent.SetForegroundWindow();
-		self.TrackPopupMenu(co::TPM::LEFTBUTTON, pos, hwnd_parent)?;
-		hwnd_parent.PostMessage(wm::Null {})?; // necessary according to TrackPopupMenu docs
-		Ok(())
 	}
 }

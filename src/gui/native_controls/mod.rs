@@ -7,6 +7,7 @@ mod combo_box_items;
 mod combo_box;
 mod date_time_picker;
 mod edit;
+mod iterators;
 mod label;
 mod list_box_items;
 mod list_box;
@@ -33,7 +34,6 @@ mod up_down;
 
 pub(in crate::gui) mod privs {
 	pub(in crate::gui) use super::base_native_control::*;
-	pub(in crate::gui) use super::tree_view_items::{TreeViewChildItemIter, TreeViewItemIter};
 }
 
 pub use button::{Button, ButtonOpts};

@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::{*, events::*, native_controls::iterators::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -203,7 +203,7 @@ impl Edit {
 	/// ```
 	#[must_use]
 	pub fn iter_lines<'a>(&'a self) -> impl Iterator<Item = String> + 'a {
-		LinesIter::new(self)
+		EditLineIter::new(self)
 	}
 
 	/// Limits the number of characters that can be type by sending an
@@ -276,47 +276,6 @@ impl Edit {
 		self.hwnd()
 			.SendMessage(em::ShowBalloonTip { info: &info })
 			.unwrap();
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct LinesIter<'a> {
-	owner: &'a Edit,
-	count: u32,
-	current: u32,
-	buffer: WString,
-}
-
-impl<'a> Iterator for LinesIter<'a> {
-	type Item = String;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		self.owner.hwnd()
-			.SendMessage(em::GetLine {
-				index: self.current as _,
-				buffer: &mut self.buffer,
-			})
-			.unwrap();
-		self.current += 1;
-		Some(self.buffer.to_string())
-	}
-}
-
-impl<'a> LinesIter<'a> {
-	fn new(owner: &'a Edit) -> Self {
-		Self {
-			owner,
-			count: owner.hwnd().SendMessage(em::GetLineCount {}),
-			current: 0,
-			buffer: WString::new_alloc_buf(
-				owner.hwnd().GetWindowTextLength().unwrap() as usize + 1,
-			),
-		}
 	}
 }
 

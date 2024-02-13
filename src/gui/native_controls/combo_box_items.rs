@@ -1,5 +1,5 @@
 use crate::decl::*;
-use crate::gui::*;
+use crate::gui::{*, native_controls::iterators::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -125,49 +125,5 @@ impl<'a> ComboBoxItems<'a> {
 			.SendMessage(cb::GetLbText { index, text: &mut buf })
 			.unwrap();
 		buf.to_string()
-	}
-}
-
-//------------------------------------------------------------------------------
-
-struct ComboBoxItemIter<'a> {
-	owner: &'a ComboBox,
-	count: u32,
-	current: u32,
-	buffer: WString,
-}
-
-impl<'a> Iterator for ComboBoxItemIter<'a> {
-	type Item = String;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		let num_chars = self.owner.hwnd()
-			.SendMessage(cb::GetLbTextLen { index: self.current })
-			.unwrap();
-		self.buffer = WString::new_alloc_buf(num_chars as usize + 1);
-
-		self.owner.hwnd()
-			.SendMessage(cb::GetLbText {
-				index: self.current,
-				text: &mut self.buffer,
-			})
-			.unwrap();
-		self.current += 1;
-		Some(self.buffer.to_string())
-	}
-}
-
-impl<'a> ComboBoxItemIter<'a> {
-	fn new(owner: &'a ComboBox) -> Self {
-		Self {
-			owner,
-			count: owner.items().count(),
-			current: 0,
-			buffer: WString::new_alloc_buf(40), // arbitrary
-		}
 	}
 }

@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, spec::*};
+use crate::gui::{*, native_controls::iterators::*, spec::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -268,42 +268,5 @@ impl<'a> ListViewItems<'a> {
 		self.owner.hwnd()
 			.SendMessage(lvm::SetItemCount { count, behavior })
 			.unwrap();
-	}
-}
-
-//------------------------------------------------------------------------------
-
-pub(in crate::gui) struct ListViewItemIter<'a> {
-	owner: &'a ListView,
-	current: Option<ListViewItem<'a>>,
-	relationship: co::LVNI,
-}
-
-impl<'a> Iterator for ListViewItemIter<'a> {
-	type Item = ListViewItem<'a>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		self.current = self.owner.hwnd()
-			.SendMessage(lvm::GetNextItem {
-				initial_index: self.current.map(|item| item.index()),
-				relationship: self.relationship,
-			})
-			.map(|index| self.owner.items().get(index));
-
-		self.current
-	}
-}
-
-impl<'a> ListViewItemIter<'a> {
-	pub(in crate::gui) const fn new(
-		owner: &'a ListView,
-		relationship: co::LVNI,
-	) -> Self
-	{
-		Self {
-			owner,
-			current: None,
-			relationship,
-		}
 	}
 }

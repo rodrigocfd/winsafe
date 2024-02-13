@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, spec::*};
+use crate::gui::{*, native_controls::iterators::*, spec::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -97,96 +97,5 @@ impl<'a> TreeViewItems<'a> {
 	#[must_use]
 	pub fn iter_root(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
 		TreeViewChildItemIter::new(self.owner, None)
-	}
-}
-
-//------------------------------------------------------------------------------
-
-pub(in crate::gui) struct TreeViewItemIter<'a> {
-	owner: &'a TreeView,
-	current: Option<TreeViewItem<'a>>,
-	relationship: co::TVGN,
-}
-
-impl<'a> Iterator for TreeViewItemIter<'a> {
-	type Item = TreeViewItem<'a>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		self.current = self.owner.hwnd()
-			.SendMessage(tvm::GetNextItem {
-				relationship: self.relationship,
-				hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
-			})
-			.map(|hitem| self.owner.items().get(hitem));
-
-		self.current.as_ref()
-			.map(|tvi| TreeViewItem::new(
-				self.owner,
-				unsafe { tvi.htreeitem().raw_copy() },
-			))
-	}
-}
-
-impl<'a> TreeViewItemIter<'a> {
-	pub(in crate::gui) const fn new(
-		owner: &'a TreeView,
-		current: Option<TreeViewItem<'a>>,
-		relationship: co::TVGN,
-	) -> Self
-	{
-		Self { owner, current, relationship }
-	}
-}
-
-//------------------------------------------------------------------------------
-
-pub(in crate::gui) struct TreeViewChildItemIter<'a> {
-	owner: &'a TreeView,
-	current: Option<TreeViewItem<'a>>,
-	first_call: bool,
-}
-
-impl<'a> Iterator for TreeViewChildItemIter<'a> {
-	type Item = TreeViewItem<'a>;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if self.first_call { // search for the first child
-			self.current = self.owner.hwnd()
-				.SendMessage(tvm::GetNextItem {
-					relationship: co::TVGN::CHILD,
-					hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
-				})
-				.map(|hitem| self.owner.items().get(hitem));
-
-			self.first_call = false;
-
-		} else { // search for next siblings
-			self.current = self.owner.hwnd()
-				.SendMessage(tvm::GetNextItem {
-					relationship: co::TVGN::NEXT,
-					hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
-				})
-				.map(|hitem| self.owner.items().get(hitem));
-		}
-
-		self.current.as_ref()
-			.map(|tvi| TreeViewItem::new(
-				self.owner,
-				unsafe { tvi.htreeitem().raw_copy() },
-			))
-	}
-}
-
-impl<'a> TreeViewChildItemIter<'a> {
-	pub(in crate::gui) fn new(
-		owner: &'a TreeView,
-		current: Option<TreeViewItem<'a>>,
-	) -> Self
-	{
-		Self {
-			owner,
-			current,
-			first_call: true,
-		}
 	}
 }
