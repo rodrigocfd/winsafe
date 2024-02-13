@@ -41,7 +41,7 @@ impl<'a> ComboBoxItemIter<'a> {
 			owner,
 			count: owner.items().count(),
 			current: 0,
-			buffer: WString::new_alloc_buf(40), // arbitrary
+			buffer: WString::default(),
 		}
 	}
 }
@@ -126,7 +126,7 @@ impl<'a> ListBoxItemIter<'a> {
 			owner,
 			count: owner.items().count(),
 			current: 0,
-			buffer: WString::new_alloc_buf(40), // arbitrary
+			buffer: WString::default(),
 		}
 	}
 }
