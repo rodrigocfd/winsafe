@@ -198,9 +198,7 @@ pub trait oleaut_Variant: Default {
 	fn time(&self) -> Option<SYSTEMTIME> {
 		if self.vt() == co::VT::DATE {
 			let double = f64::from_ne_bytes(self.raw()[..8].try_into().unwrap());
-			let mut st = SYSTEMTIME::default();
-			VariantTimeToSystemTime(double, &mut st).unwrap();
-			Some(st)
+			Some(VariantTimeToSystemTime(double).unwrap())
 		} else {
 			None
 		}

@@ -88,7 +88,8 @@ pub trait shell_IFileOpenDialog: shell_IFileDialog {
 		/// let fo: w::IFileOpenDialog; // initialized somewhere
 		/// # let fo = unsafe { w::IFileOpenDialog::null() };
 		///
-		/// let paths = fo.GetResults()?.iter()?
+		/// let paths = fo.GetResults()?
+		///     .iter()?
 		///     .map(|shi| {
 		///         let shi = shi?;
 		///         let name = shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;

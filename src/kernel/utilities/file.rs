@@ -172,13 +172,12 @@ impl File {
 		let (mut ft_creation, mut ft_last_write) = (FILETIME::default(), FILETIME::default());
 		self.hfile.GetFileTime(Some(&mut ft_creation), None, Some(&mut ft_last_write))?;
 
-		let (mut st_creation_utc, mut st_last_write_utc) = (SYSTEMTIME::default(), SYSTEMTIME::default());
-		FileTimeToSystemTime(&ft_creation, &mut st_creation_utc)?;
-		FileTimeToSystemTime(&ft_last_write, &mut st_last_write_utc)?;
+		let st_creation_utc = FileTimeToSystemTime(&ft_creation)?;
+		let st_last_write_utc = FileTimeToSystemTime(&ft_last_write)?;
 
-		let (mut st_creation_local, mut st_last_write_local) = (SYSTEMTIME::default(), SYSTEMTIME::default());
-		SystemTimeToTzSpecificLocalTime(None, &st_creation_utc, &mut st_creation_local)?;
-		SystemTimeToTzSpecificLocalTime(None, &st_last_write_utc, &mut st_last_write_local)?;
+		let st_creation_local = SystemTimeToTzSpecificLocalTime(None, &st_creation_utc)?;
+		let st_last_write_local = SystemTimeToTzSpecificLocalTime(None, &st_last_write_utc)?;
+
 		Ok((st_creation_local, st_last_write_local))
 	}
 

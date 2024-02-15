@@ -90,11 +90,14 @@ pub fn PSGetNameFromPropertyKey(prop_key: &PROPERTYKEY) -> HrResult<String> {
 }
 
 /// [`SystemTimeToVariantTime`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-systemtimetovarianttime)
-/// function. The inverse operation is performed by
-/// [`VariantTimeToSystemTime`](crate::VariantTimeToSystemTime).
+/// function.
 ///
 /// Note that this function resolves the time to one second; milliseconds are
 /// ignored.
+///
+/// # Related functions
+///
+/// * [`VariantTimeToSystemTime`](crate::VariantTimeToSystemTime)
 #[must_use]
 pub fn SystemTimeToVariantTime(st: &SYSTEMTIME) -> SysResult<f64> {
 	let mut double = f64::default();
@@ -107,18 +110,18 @@ pub fn SystemTimeToVariantTime(st: &SYSTEMTIME) -> SysResult<f64> {
 }
 
 /// [`VariantTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-varianttimetosystemtime)
-/// function. The inverse operation is performed by
-/// [`SystemTimeToVariantTime`](SystemTimeToVariantTime).
+/// function.
+///
+/// # Related functions
+///
+/// * [`SystemTimeToVariantTime`](crate::SystemTimeToVariantTime)
 #[must_use]
-pub fn VariantTimeToSystemTime(
-	var_time: f64,
-	st: &mut SYSTEMTIME,
-) -> SysResult<()>
-{
+pub fn VariantTimeToSystemTime(var_time: f64) -> SysResult<SYSTEMTIME> {
+	let mut st = SYSTEMTIME::default();
 	match unsafe {
-		ffi::VariantTimeToSystemTime(var_time, st as *mut _ as _)
+		ffi::VariantTimeToSystemTime(var_time, &mut st as *mut _ as _)
 	} {
 		0 => Err(co::ERROR::INVALID_PARAMETER),
-		_ => Ok(()),
+		_ => Ok(st),
 	}
 }

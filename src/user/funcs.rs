@@ -223,6 +223,7 @@ pub fn ClipCursor(rc: Option<&RECT>) -> SysResult<()> {
 
 /// [`CommDlgExtendedError`](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror)
 /// function.
+#[must_use]
 pub fn CommDlgExtendedError() -> co::CDERR {
 	unsafe { co::CDERR::from_raw(ffi::CommDlgExtendedError()) }
 }
@@ -557,21 +558,17 @@ pub fn GetDoubleClickTime() -> u32 {
 /// # let hwnd = w::HWND::NULL;
 ///
 /// let (thread_id, _) = hwnd.GetWindowThreadProcessId();
-///
-/// let mut gti = w::GUITHREADINFO::default();
-/// w::GetGUIThreadInfo(thread_id, &mut gti)?;
+/// let gti = w::GetGUIThreadInfo(thread_id)?;
 ///
 /// println!("Caret rect: {}", gti.rcCaret);
 /// # Ok::<_, winsafe::co::ERROR>(())
 /// ```
-pub fn GetGUIThreadInfo(
-	thread_id: u32,
-	gti: &mut GUITHREADINFO,
-) -> SysResult<()>
-{
+#[must_use]
+pub fn GetGUIThreadInfo(thread_id: u32) -> SysResult<GUITHREADINFO> {
+	let mut gti = GUITHREADINFO::default();
 	bool_to_sysresult(
-		unsafe { ffi::GetGUIThreadInfo(thread_id, gti as *mut _ as _) },
-	)
+		unsafe { ffi::GetGUIThreadInfo(thread_id, &mut gti as *mut _ as _) },
+	).map(|_| gti)
 }
 
 /// [`GetMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
@@ -771,6 +768,7 @@ pub fn PostThreadMessage<M>(thread_id: u32, msg: M) -> SysResult<()>
 
 /// [`PtInRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ptinrect)
 /// function.
+#[must_use]
 pub fn PtInRect(rc: &RECT, pt: POINT) -> bool {
 	unsafe { ffi::PtInRect(rc as *const _ as _, pt.x, pt.y) != 0 }
 }

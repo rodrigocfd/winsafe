@@ -501,19 +501,14 @@ pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 /// * [`GetSystemTime`](crate::GetSystemTime)
 /// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
 /// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
-pub fn FileTimeToSystemTime(
-	file_time: &FILETIME,
-	system_time: &mut SYSTEMTIME,
-) -> SysResult<()>
-{
+#[must_use]
+pub fn FileTimeToSystemTime(ft: &FILETIME) -> SysResult<SYSTEMTIME> {
+	let mut st = SYSTEMTIME::default();
 	bool_to_sysresult(
 		unsafe {
-			ffi::FileTimeToSystemTime(
-				file_time as *const _ as _,
-				system_time as *mut _ as _,
-			)
+			ffi::FileTimeToSystemTime(ft as *const _ as _, &mut st as *mut _ as _)
 		},
-	)
+	).map(|_| st)
 }
 
 /// [`FlushProcessWriteBuffers`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushprocesswritebuffers)
@@ -658,21 +653,22 @@ pub fn GetDiskFreeSpaceEx(
 
 /// [`GetDiskSpaceInformation`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getdiskspaceinformationw)
 /// function.
+#[must_use]
 pub fn GetDiskSpaceInformation(
 	root_path: &str,
-	disk_space_info: &mut DISK_SPACE_INFORMATION,
-) -> SysResult<()>
+) -> SysResult<DISK_SPACE_INFORMATION>
 {
+	let mut disk_space_info = DISK_SPACE_INFORMATION::default();
 	match unsafe {
 		co::ERROR::from_raw(
 			ffi::GetDiskSpaceInformationW(
 				WString::from_str(root_path).as_ptr(),
-				disk_space_info as *mut _ as _,
+				&mut disk_space_info as *mut _ as _,
 			),
 		)
 	} {
 		co::ERROR::SUCCESS
-			| co::ERROR::MORE_DATA => Ok(()),
+			| co::ERROR::MORE_DATA => Ok(disk_space_info),
 		err => Err(err),
 	}
 }
@@ -771,23 +767,17 @@ pub fn GetLengthSid(sid: &SID) -> u32 {
 /// This function retrieves local time; for UTC time use
 /// [`GetSystemTime`](crate::GetSystemTime).
 ///
-/// # Examples
-///
-/// ```no_run
-/// use winsafe::{self as w, prelude::*};
-///
-/// let mut st = w::SYSTEMTIME::default();
-/// w::GetLocalTime(&mut st);
-/// ```
-///
 /// # Related functions
 ///
 /// * [`FileTimeToSystemTime`](crate::FileTimeToSystemTime)
 /// * [`GetSystemTime`](crate::GetSystemTime)
 /// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
 /// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
-pub fn GetLocalTime(st: &mut SYSTEMTIME) {
-	unsafe { ffi::GetLocalTime(st as *mut _ as _) }
+#[must_use]
+pub fn GetLocalTime() -> SYSTEMTIME {
+	let mut st = SYSTEMTIME::default();
+	unsafe { ffi::GetLocalTime(&mut st as *mut _ as _); }
+	st
 }
 
 /// [`GetLogicalDrives`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlogicaldrives)
@@ -855,8 +845,11 @@ pub fn GetFileAttributes(file_name: &str) -> SysResult<co::FILE_ATTRIBUTE> {
 
 /// [`GetNativeSystemInfo`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getnativesysteminfo)
 /// function.
-pub fn GetNativeSystemInfo(si: &mut SYSTEM_INFO) {
-	unsafe { ffi::GetNativeSystemInfo(si as *mut _ as _) }
+#[must_use]
+pub fn GetNativeSystemInfo() -> SYSTEM_INFO {
+	let mut si = SYSTEM_INFO::default();
+	unsafe { ffi::GetNativeSystemInfo(&mut si as *mut _ as _); }
+	si
 }
 
 /// [`GetPrivateProfileSection`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getprivateprofilesectionw)
@@ -1056,17 +1049,11 @@ pub fn GetSidLengthRequired(sub_authority_count: u8) -> u32 {
 
 /// [`GetStartupInfo`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getstartupinfow)
 /// function.
-///
-/// # Examples
-///
-/// ```no_run
-/// use winsafe::{self as w, prelude::*};
-///
-/// let mut si = w::STARTUPINFO::default();
-/// w::GetStartupInfo(&mut si);
-/// ```
-pub fn GetStartupInfo(si: &mut STARTUPINFO) {
-	unsafe { ffi::GetStartupInfoW(si as *mut _ as _) }
+#[must_use]
+pub fn GetStartupInfo<'a, 'b>() -> STARTUPINFO<'a, 'b> {
+	let mut si = STARTUPINFO::default();
+	unsafe { ffi::GetStartupInfoW(&mut si as *mut _ as _); }
+	si
 }
 
 /// [`GetSystemDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemdirectoryw)
@@ -1099,17 +1086,11 @@ pub fn GetSystemFileCacheSize() -> SysResult<(usize, usize, co::FILE_CACHE)> {
 
 /// [`GetSystemInfo`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsysteminfo)
 /// function.
-///
-/// # Examples
-///
-/// ```no_run
-/// use winsafe::{self as w, prelude::*};
-///
-/// let mut si = w::SYSTEM_INFO::default();
-/// w::GetSystemInfo(&mut si);
-/// ```
-pub fn GetSystemInfo(si: &mut SYSTEM_INFO) {
-	unsafe { ffi::GetSystemInfo(si as *mut _ as _) }
+#[must_use]
+pub fn GetSystemInfo() -> SYSTEM_INFO {
+	let mut si = SYSTEM_INFO::default();
+	unsafe { ffi::GetSystemInfo(&mut si as *mut _ as _); }
+	si
 }
 
 /// [`GetSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtime)
@@ -1118,54 +1099,67 @@ pub fn GetSystemInfo(si: &mut SYSTEM_INFO) {
 /// This function retrieves UTC time; for local time use
 /// [`GetLocalTime`](crate::GetLocalTime).
 ///
-/// # Examples
-///
-/// ```no_run
-/// use winsafe::{self as w, prelude::*};
-///
-/// let mut st = w::SYSTEMTIME::default();
-/// w::GetSystemTime(&mut st);
-/// ```
-///
 /// # Related functions
 ///
 /// * [`FileTimeToSystemTime`](crate::FileTimeToSystemTime)
 /// * [`GetLocalTime`](crate::GetLocalTime)
 /// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
 /// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
-pub fn GetSystemTime(st: &mut SYSTEMTIME) {
-	unsafe { ffi::GetSystemTime(st as *mut _ as _) }
+#[must_use]
+pub fn GetSystemTime() -> SYSTEMTIME {
+	let mut st = SYSTEMTIME::default();
+	unsafe { ffi::GetSystemTime(&mut st as *mut _ as _); }
+	st
 }
 
 /// [`GetSystemTimeAsFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimeasfiletime)
 /// function.
-pub fn GetSystemTimeAsFileTime(ft: &mut FILETIME) {
-	unsafe { ffi::GetSystemTimeAsFileTime(ft as *mut _ as _) }
+#[must_use]
+pub fn GetSystemTimeAsFileTime() -> FILETIME {
+	let mut ft = FILETIME::default();
+	unsafe { ffi::GetSystemTimeAsFileTime(&mut ft as *mut _ as _); }
+	ft
 }
 
 /// [`GetSystemTimePreciseAsFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimepreciseasfiletime)
 /// function.
-pub fn GetSystemTimePreciseAsFileTime(ft: &mut FILETIME) {
-	unsafe { ffi::GetSystemTimePreciseAsFileTime(ft as *mut _ as _) }
+#[must_use]
+pub fn GetSystemTimePreciseAsFileTime() -> FILETIME {
+	let mut ft = FILETIME::default();
+	unsafe { ffi::GetSystemTimePreciseAsFileTime(&mut ft as *mut _ as _); }
+	ft
 }
 
 /// [`GetSystemTimes`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getsystemtimes)
 /// function.
-pub fn GetSystemTimes(
-	idle_time: &mut FILETIME,
-	kernel_time: &mut FILETIME,
-	user_time: &mut FILETIME,
-) -> SysResult<()>
-{
+///
+/// Returns idle, kernel and user times.
+///
+/// # Examples
+///
+/// Retrieving just the kernel time:
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let (_, kernel_time, _) = w::GetSystemTimes()?;
+/// # Ok::<_, w::co::ERROR>(())
+/// ```
+#[must_use]
+pub fn GetSystemTimes() -> SysResult<(FILETIME, FILETIME, FILETIME)> {
+	let mut idle_time = FILETIME::default();
+	let mut kernel_time = FILETIME::default();
+	let mut user_time = FILETIME::default();
+
 	bool_to_sysresult(
 		unsafe {
 			ffi::GetSystemTimes(
-				idle_time as *mut _ as _,
-				kernel_time as *mut _ as _,
-				user_time as *mut _ as _,
+				&mut idle_time as *mut _ as _,
+				&mut kernel_time as *mut _ as _,
+				&mut user_time as *mut _ as _,
 			)
 		},
-	)
+	).map(|_| (idle_time, kernel_time, user_time))
 }
 
 /// [`GetTempFileName`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-gettempfilenamew)
@@ -1372,10 +1366,12 @@ pub fn GetWindowsAccountDomainSid(sid: &SID) -> SysResult<SidGuard> {
 
 /// [`GlobalMemoryStatusEx`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex)
 /// function.
-pub fn GlobalMemoryStatusEx(msx: &mut MEMORYSTATUSEX) -> SysResult<()> {
+#[must_use]
+pub fn GlobalMemoryStatusEx() -> SysResult<MEMORYSTATUSEX> {
+	let mut msx = MEMORYSTATUSEX::default();
 	bool_to_sysresult(
-		unsafe { ffi::GlobalMemoryStatusEx(msx as *mut _ as _) },
-	)
+		unsafe { ffi::GlobalMemoryStatusEx(&mut msx as *mut _ as _) },
+	).map(|_| msx)
 }
 
 /// [`HIBYTE`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632656(v=vs.85))
@@ -2201,16 +2197,14 @@ pub fn SwitchToThread() -> SysResult<()> {
 /// * [`GetLocalTime`](crate::GetLocalTime)
 /// * [`GetSystemTime`](crate::GetSystemTime)
 /// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
-pub fn SystemTimeToFileTime(
-	st: &SYSTEMTIME,
-	ft: &mut FILETIME,
-) -> SysResult<()>
-{
+#[must_use]
+pub fn SystemTimeToFileTime(st: &SYSTEMTIME) -> SysResult<FILETIME> {
+	let mut ft = FILETIME::default();
 	bool_to_sysresult(
 		unsafe {
-			ffi::SystemTimeToFileTime(st as *const _ as _, ft as *mut _ as _)
+			ffi::SystemTimeToFileTime(st as *const _ as _, &mut ft as *mut _ as _)
 		},
-	)
+	).map(|_| ft)
 }
 
 /// [`SystemTimeToTzSpecificLocalTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetotzspecificlocaltime)
@@ -2222,21 +2216,22 @@ pub fn SystemTimeToFileTime(
 /// * [`GetLocalTime`](crate::GetLocalTime)
 /// * [`GetSystemTime`](crate::GetSystemTime)
 /// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
+#[must_use]
 pub fn SystemTimeToTzSpecificLocalTime(
 	time_zone: Option<&TIME_ZONE_INFORMATION>,
 	universal_time: &SYSTEMTIME,
-	local_time: &mut SYSTEMTIME,
-) -> SysResult<()>
+) -> SysResult<SYSTEMTIME>
 {
+	let mut local_time = SYSTEMTIME::default();
 	bool_to_sysresult(
 		unsafe {
 			ffi::SystemTimeToTzSpecificLocalTime(
 				time_zone.map_or(std::ptr::null(), |lp| lp as *const _ as _),
 				universal_time as *const _ as _,
-				local_time as *mut _ as _,
+				&mut local_time as *mut _ as _,
 			)
 		},
-	)
+	).map(|_| local_time)
 }
 
 /// [`VerifyVersionInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-verifyversioninfow)
