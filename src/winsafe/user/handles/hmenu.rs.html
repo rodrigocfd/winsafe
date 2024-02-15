@@ -756,6 +756,25 @@
 		HmenuIteritems::new(<span class="self">self</span>)
 	}
 
+	<span class="doccomment">/// Shows the popup menu anchored at the given coordinates using
+	/// [`TrackPopupMenu`](crate::prelude::user_Hmenu::TrackPopupMenu), and
+	/// performs other needed operations.
+	///
+	/// This method will block until the menu disappears.
+	</span><span class="kw">fn </span>track_popup_menu_at_point(<span class="kw-2">&amp;</span><span class="self">self</span>,
+		pos: POINT,
+		hwnd_parent: <span class="kw-2">&amp;</span>HWND,
+		hwnd_coords_relative_to: <span class="kw-2">&amp;</span>HWND,
+	) -&gt; SysResult&lt;()&gt;
+	{
+		<span class="kw">let </span><span class="kw-2">mut </span>pos = pos;
+		hwnd_coords_relative_to.ClientToScreen(<span class="kw-2">&amp;mut </span>pos)<span class="question-mark">?</span>; <span class="comment">// now relative to screen
+		</span>hwnd_parent.SetForegroundWindow();
+		<span class="self">self</span>.TrackPopupMenu(co::TPM::LEFTBUTTON, pos, hwnd_parent)<span class="question-mark">?</span>;
+		hwnd_parent.PostMessage(wm::Null {})<span class="question-mark">?</span>; <span class="comment">// necessary according to TrackPopupMenu docs
+		</span><span class="prelude-val">Ok</span>(())
+	}
+
 	<span class="doccomment">/// [`AppendMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-appendmenuw)
 	/// function.
 	///
@@ -1173,7 +1192,7 @@
 	/// function.
 	///
 	/// **Note:** If you just want to display a popup menu, consider the simpler
-	/// [`HMENU::TrackPopupMenuAtPoint`](crate::prelude::user_Hmenu::TrackPopupMenuAtPoint).
+	/// [`HMENU::track_popup_menu_at_point`](crate::prelude::user_Hmenu::track_popup_menu_at_point).
 	</span><span class="kw">fn </span>TrackPopupMenu(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		flags: co::TPM,
 		location: POINT,
@@ -1205,25 +1224,6 @@
 				<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>),
 			}
 		}
-	}
-
-	<span class="doccomment">/// Shows the popup menu anchored at the given coordinates using
-	/// [`TrackPopupMenu`](crate::prelude::user_Hmenu::TrackPopupMenu), and
-	/// performs other needed operations.
-	///
-	/// This method will block until the menu disappears.
-	</span><span class="kw">fn </span>TrackPopupMenuAtPoint(<span class="kw-2">&amp;</span><span class="self">self</span>,
-		pos: POINT,
-		hwnd_parent: <span class="kw-2">&amp;</span>HWND,
-		hwnd_coords_relative_to: <span class="kw-2">&amp;</span>HWND,
-	) -&gt; SysResult&lt;()&gt;
-	{
-		<span class="kw">let </span><span class="kw-2">mut </span>pos = pos;
-		hwnd_coords_relative_to.ClientToScreen(<span class="kw-2">&amp;mut </span>pos)<span class="question-mark">?</span>; <span class="comment">// now relative to screen
-		</span>hwnd_parent.SetForegroundWindow();
-		<span class="self">self</span>.TrackPopupMenu(co::TPM::LEFTBUTTON, pos, hwnd_parent)<span class="question-mark">?</span>;
-		hwnd_parent.PostMessage(wm::Null {})<span class="question-mark">?</span>; <span class="comment">// necessary according to TrackPopupMenu docs
-		</span><span class="prelude-val">Ok</span>(())
 	}
 }
 </code></pre></div></section></main></body></html>

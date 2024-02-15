@@ -124,6 +124,9 @@
 <a href="#122" id="122">122</a>
 <a href="#123" id="123">123</a>
 <a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -216,11 +219,14 @@
 }
 
 <span class="doccomment">/// [`SystemTimeToVariantTime`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-systemtimetovarianttime)
-/// function. The inverse operation is performed by
-/// [`VariantTimeToSystemTime`](crate::VariantTimeToSystemTime).
+/// function.
 ///
 /// Note that this function resolves the time to one second; milliseconds are
 /// ignored.
+///
+/// # Related functions
+///
+/// * [`VariantTimeToSystemTime`](crate::VariantTimeToSystemTime)
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>SystemTimeToVariantTime(st: <span class="kw-2">&amp;</span>SYSTEMTIME) -&gt; SysResult&lt;f64&gt; {
 	<span class="kw">let </span><span class="kw-2">mut </span>double = f64::default();
@@ -233,19 +239,19 @@
 }
 
 <span class="doccomment">/// [`VariantTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-varianttimetosystemtime)
-/// function. The inverse operation is performed by
-/// [`SystemTimeToVariantTime`](SystemTimeToVariantTime).
+/// function.
+///
+/// # Related functions
+///
+/// * [`SystemTimeToVariantTime`](crate::SystemTimeToVariantTime)
 </span><span class="attr">#[must_use]
-</span><span class="kw">pub fn </span>VariantTimeToSystemTime(
-	var_time: f64,
-	st: <span class="kw-2">&amp;mut </span>SYSTEMTIME,
-) -&gt; SysResult&lt;()&gt;
-{
+</span><span class="kw">pub fn </span>VariantTimeToSystemTime(var_time: f64) -&gt; SysResult&lt;SYSTEMTIME&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>st = SYSTEMTIME::default();
 	<span class="kw">match unsafe </span>{
-		ffi::VariantTimeToSystemTime(var_time, st <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
+		ffi::VariantTimeToSystemTime(var_time, <span class="kw-2">&amp;mut </span>st <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
 	} {
 		<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::ERROR::INVALID_PARAMETER),
-		<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
+		<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(st),
 	}
 }
 </code></pre></div></section></main></body></html>

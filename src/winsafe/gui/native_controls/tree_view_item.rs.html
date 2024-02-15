@@ -189,9 +189,13 @@
 <a href="#187" id="187">187</a>
 <a href="#188" id="188">188</a>
 <a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
+<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, native_controls::iterators::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::kernel::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -209,7 +213,9 @@
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TreeViewItem&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(
-		owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TreeView, hitem: HTREEITEM) -&gt; <span class="self">Self
+		owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TreeView,
+		hitem: HTREEITEM,
+	) -&gt; <span class="self">Self
 	</span>{
 		<span class="self">Self </span>{ owner, hitem }
 	}
@@ -225,7 +231,9 @@
 	/// [`tvm::InsertItem`](crate::msg::tvm::InsertItem) message, and returns
 	/// the newly added item.
 	</span><span class="kw">pub fn </span>add_child(<span class="kw-2">&amp;</span><span class="self">self</span>,
-		text: <span class="kw-2">&amp;</span>str, icon_index: <span class="prelude-ty">Option</span>&lt;u32&gt;) -&gt; <span class="self">Self
+		text: <span class="kw-2">&amp;</span>str,
+		icon_index: <span class="prelude-ty">Option</span>&lt;u32&gt;,
+	) -&gt; <span class="self">Self
 	</span>{
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::from_str(text);
 

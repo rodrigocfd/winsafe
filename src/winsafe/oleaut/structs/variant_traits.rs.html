@@ -260,8 +260,6 @@
 <a href="#258" id="258">258</a>
 <a href="#259" id="259">259</a>
 <a href="#260" id="260">260</a>
-<a href="#261" id="261">261</a>
-<a href="#262" id="262">262</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types)]
 
 </span><span class="kw">use </span>std::mem::ManuallyDrop;
@@ -462,9 +460,7 @@
 	</span><span class="kw">fn </span>time(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;SYSTEMTIME&gt; {
 		<span class="kw">if </span><span class="self">self</span>.vt() == co::VT::DATE {
 			<span class="kw">let </span>double = f64::from_ne_bytes(<span class="self">self</span>.raw()[..<span class="number">8</span>].try_into().unwrap());
-			<span class="kw">let </span><span class="kw-2">mut </span>st = SYSTEMTIME::default();
-			VariantTimeToSystemTime(double, <span class="kw-2">&amp;mut </span>st).unwrap();
-			<span class="prelude-val">Some</span>(st)
+			<span class="prelude-val">Some</span>(VariantTimeToSystemTime(double).unwrap())
 		} <span class="kw">else </span>{
 			<span class="prelude-val">None
 		</span>}

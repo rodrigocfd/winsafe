@@ -1015,8 +1015,6 @@
 <a href="#1013" id="1013">1013</a>
 <a href="#1014" id="1014">1014</a>
 <a href="#1015" id="1015">1015</a>
-<a href="#1016" id="1016">1016</a>
-<a href="#1017" id="1017">1017</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -1242,6 +1240,7 @@
 
 <span class="doccomment">/// [`CommDlgExtendedError`](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror)
 /// function.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>CommDlgExtendedError() -&gt; co::CDERR {
 	<span class="kw">unsafe </span>{ co::CDERR::from_raw(ffi::CommDlgExtendedError()) }
 }
@@ -1576,21 +1575,17 @@
 /// # let hwnd = w::HWND::NULL;
 ///
 /// let (thread_id, _) = hwnd.GetWindowThreadProcessId();
-///
-/// let mut gti = w::GUITHREADINFO::default();
-/// w::GetGUIThreadInfo(thread_id, &amp;mut gti)?;
+/// let gti = w::GetGUIThreadInfo(thread_id)?;
 ///
 /// println!("Caret rect: {}", gti.rcCaret);
 /// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
 /// ```
-</span><span class="kw">pub fn </span>GetGUIThreadInfo(
-	thread_id: u32,
-	gti: <span class="kw-2">&amp;mut </span>GUITHREADINFO,
-) -&gt; SysResult&lt;()&gt;
-{
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetGUIThreadInfo(thread_id: u32) -&gt; SysResult&lt;GUITHREADINFO&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>gti = GUITHREADINFO::default();
 	bool_to_sysresult(
-		<span class="kw">unsafe </span>{ ffi::GetGUIThreadInfo(thread_id, gti <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) },
-	)
+		<span class="kw">unsafe </span>{ ffi::GetGUIThreadInfo(thread_id, <span class="kw-2">&amp;mut </span>gti <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) },
+	).map(|<span class="kw">_</span>| gti)
 }
 
 <span class="doccomment">/// [`GetMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
@@ -1790,6 +1785,7 @@
 
 <span class="doccomment">/// [`PtInRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ptinrect)
 /// function.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>PtInRect(rc: <span class="kw-2">&amp;</span>RECT, pt: POINT) -&gt; bool {
 	<span class="kw">unsafe </span>{ ffi::PtInRect(rc <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>, pt.x, pt.y) != <span class="number">0 </span>}
 }

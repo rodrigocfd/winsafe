@@ -2376,11 +2376,6 @@
 <a href="#2374" id="2374">2374</a>
 <a href="#2375" id="2375">2375</a>
 <a href="#2376" id="2376">2376</a>
-<a href="#2377" id="2377">2377</a>
-<a href="#2378" id="2378">2378</a>
-<a href="#2379" id="2379">2379</a>
-<a href="#2380" id="2380">2380</a>
-<a href="#2381" id="2381">2381</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -2884,19 +2879,14 @@
 /// * [`GetSystemTime`](crate::GetSystemTime)
 /// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
 /// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
-</span><span class="kw">pub fn </span>FileTimeToSystemTime(
-	file_time: <span class="kw-2">&amp;</span>FILETIME,
-	system_time: <span class="kw-2">&amp;mut </span>SYSTEMTIME,
-) -&gt; SysResult&lt;()&gt;
-{
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>FileTimeToSystemTime(ft: <span class="kw-2">&amp;</span>FILETIME) -&gt; SysResult&lt;SYSTEMTIME&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>st = SYSTEMTIME::default();
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{
-			ffi::FileTimeToSystemTime(
-				file_time <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-				system_time <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
-			)
+			ffi::FileTimeToSystemTime(ft <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>, <span class="kw-2">&amp;mut </span>st <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
 		},
-	)
+	).map(|<span class="kw">_</span>| st)
 }
 
 <span class="doccomment">/// [`FlushProcessWriteBuffers`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushprocesswritebuffers)
@@ -3041,21 +3031,22 @@
 
 <span class="doccomment">/// [`GetDiskSpaceInformation`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getdiskspaceinformationw)
 /// function.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetDiskSpaceInformation(
 	root_path: <span class="kw-2">&amp;</span>str,
-	disk_space_info: <span class="kw-2">&amp;mut </span>DISK_SPACE_INFORMATION,
-) -&gt; SysResult&lt;()&gt;
+) -&gt; SysResult&lt;DISK_SPACE_INFORMATION&gt;
 {
+	<span class="kw">let </span><span class="kw-2">mut </span>disk_space_info = DISK_SPACE_INFORMATION::default();
 	<span class="kw">match unsafe </span>{
 		co::ERROR::from_raw(
 			ffi::GetDiskSpaceInformationW(
 				WString::from_str(root_path).as_ptr(),
-				disk_space_info <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;mut </span>disk_space_info <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
 			),
 		)
 	} {
 		co::ERROR::SUCCESS
-			| co::ERROR::MORE_DATA =&gt; <span class="prelude-val">Ok</span>(()),
+			| co::ERROR::MORE_DATA =&gt; <span class="prelude-val">Ok</span>(disk_space_info),
 		err =&gt; <span class="prelude-val">Err</span>(err),
 	}
 }
@@ -3154,23 +3145,17 @@
 /// This function retrieves local time; for UTC time use
 /// [`GetSystemTime`](crate::GetSystemTime).
 ///
-/// # Examples
-///
-/// ```no_run
-/// use winsafe::{self as w, prelude::*};
-///
-/// let mut st = w::SYSTEMTIME::default();
-/// w::GetLocalTime(&amp;mut st);
-/// ```
-///
 /// # Related functions
 ///
 /// * [`FileTimeToSystemTime`](crate::FileTimeToSystemTime)
 /// * [`GetSystemTime`](crate::GetSystemTime)
 /// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
 /// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
-</span><span class="kw">pub fn </span>GetLocalTime(st: <span class="kw-2">&amp;mut </span>SYSTEMTIME) {
-	<span class="kw">unsafe </span>{ ffi::GetLocalTime(st <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) }
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetLocalTime() -&gt; SYSTEMTIME {
+	<span class="kw">let </span><span class="kw-2">mut </span>st = SYSTEMTIME::default();
+	<span class="kw">unsafe </span>{ ffi::GetLocalTime(<span class="kw-2">&amp;mut </span>st <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>); }
+	st
 }
 
 <span class="doccomment">/// [`GetLogicalDrives`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlogicaldrives)
@@ -3238,8 +3223,11 @@
 
 <span class="doccomment">/// [`GetNativeSystemInfo`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getnativesysteminfo)
 /// function.
-</span><span class="kw">pub fn </span>GetNativeSystemInfo(si: <span class="kw-2">&amp;mut </span>SYSTEM_INFO) {
-	<span class="kw">unsafe </span>{ ffi::GetNativeSystemInfo(si <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) }
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetNativeSystemInfo() -&gt; SYSTEM_INFO {
+	<span class="kw">let </span><span class="kw-2">mut </span>si = SYSTEM_INFO::default();
+	<span class="kw">unsafe </span>{ ffi::GetNativeSystemInfo(<span class="kw-2">&amp;mut </span>si <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>); }
+	si
 }
 
 <span class="doccomment">/// [`GetPrivateProfileSection`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getprivateprofilesectionw)
@@ -3439,17 +3427,11 @@
 
 <span class="doccomment">/// [`GetStartupInfo`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getstartupinfow)
 /// function.
-///
-/// # Examples
-///
-/// ```no_run
-/// use winsafe::{self as w, prelude::*};
-///
-/// let mut si = w::STARTUPINFO::default();
-/// w::GetStartupInfo(&amp;mut si);
-/// ```
-</span><span class="kw">pub fn </span>GetStartupInfo(si: <span class="kw-2">&amp;mut </span>STARTUPINFO) {
-	<span class="kw">unsafe </span>{ ffi::GetStartupInfoW(si <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) }
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetStartupInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt;() -&gt; STARTUPINFO&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>si = STARTUPINFO::default();
+	<span class="kw">unsafe </span>{ ffi::GetStartupInfoW(<span class="kw-2">&amp;mut </span>si <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>); }
+	si
 }
 
 <span class="doccomment">/// [`GetSystemDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemdirectoryw)
@@ -3482,17 +3464,11 @@
 
 <span class="doccomment">/// [`GetSystemInfo`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsysteminfo)
 /// function.
-///
-/// # Examples
-///
-/// ```no_run
-/// use winsafe::{self as w, prelude::*};
-///
-/// let mut si = w::SYSTEM_INFO::default();
-/// w::GetSystemInfo(&amp;mut si);
-/// ```
-</span><span class="kw">pub fn </span>GetSystemInfo(si: <span class="kw-2">&amp;mut </span>SYSTEM_INFO) {
-	<span class="kw">unsafe </span>{ ffi::GetSystemInfo(si <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) }
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetSystemInfo() -&gt; SYSTEM_INFO {
+	<span class="kw">let </span><span class="kw-2">mut </span>si = SYSTEM_INFO::default();
+	<span class="kw">unsafe </span>{ ffi::GetSystemInfo(<span class="kw-2">&amp;mut </span>si <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>); }
+	si
 }
 
 <span class="doccomment">/// [`GetSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtime)
@@ -3501,54 +3477,67 @@
 /// This function retrieves UTC time; for local time use
 /// [`GetLocalTime`](crate::GetLocalTime).
 ///
-/// # Examples
-///
-/// ```no_run
-/// use winsafe::{self as w, prelude::*};
-///
-/// let mut st = w::SYSTEMTIME::default();
-/// w::GetSystemTime(&amp;mut st);
-/// ```
-///
 /// # Related functions
 ///
 /// * [`FileTimeToSystemTime`](crate::FileTimeToSystemTime)
 /// * [`GetLocalTime`](crate::GetLocalTime)
 /// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
 /// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
-</span><span class="kw">pub fn </span>GetSystemTime(st: <span class="kw-2">&amp;mut </span>SYSTEMTIME) {
-	<span class="kw">unsafe </span>{ ffi::GetSystemTime(st <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) }
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetSystemTime() -&gt; SYSTEMTIME {
+	<span class="kw">let </span><span class="kw-2">mut </span>st = SYSTEMTIME::default();
+	<span class="kw">unsafe </span>{ ffi::GetSystemTime(<span class="kw-2">&amp;mut </span>st <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>); }
+	st
 }
 
 <span class="doccomment">/// [`GetSystemTimeAsFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimeasfiletime)
 /// function.
-</span><span class="kw">pub fn </span>GetSystemTimeAsFileTime(ft: <span class="kw-2">&amp;mut </span>FILETIME) {
-	<span class="kw">unsafe </span>{ ffi::GetSystemTimeAsFileTime(ft <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) }
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetSystemTimeAsFileTime() -&gt; FILETIME {
+	<span class="kw">let </span><span class="kw-2">mut </span>ft = FILETIME::default();
+	<span class="kw">unsafe </span>{ ffi::GetSystemTimeAsFileTime(<span class="kw-2">&amp;mut </span>ft <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>); }
+	ft
 }
 
 <span class="doccomment">/// [`GetSystemTimePreciseAsFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsystemtimepreciseasfiletime)
 /// function.
-</span><span class="kw">pub fn </span>GetSystemTimePreciseAsFileTime(ft: <span class="kw-2">&amp;mut </span>FILETIME) {
-	<span class="kw">unsafe </span>{ ffi::GetSystemTimePreciseAsFileTime(ft <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) }
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetSystemTimePreciseAsFileTime() -&gt; FILETIME {
+	<span class="kw">let </span><span class="kw-2">mut </span>ft = FILETIME::default();
+	<span class="kw">unsafe </span>{ ffi::GetSystemTimePreciseAsFileTime(<span class="kw-2">&amp;mut </span>ft <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>); }
+	ft
 }
 
 <span class="doccomment">/// [`GetSystemTimes`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getsystemtimes)
 /// function.
-</span><span class="kw">pub fn </span>GetSystemTimes(
-	idle_time: <span class="kw-2">&amp;mut </span>FILETIME,
-	kernel_time: <span class="kw-2">&amp;mut </span>FILETIME,
-	user_time: <span class="kw-2">&amp;mut </span>FILETIME,
-) -&gt; SysResult&lt;()&gt;
-{
+///
+/// Returns idle, kernel and user times.
+///
+/// # Examples
+///
+/// Retrieving just the kernel time:
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let (_, kernel_time, _) = w::GetSystemTimes()?;
+/// # Ok::&lt;_, w::co::ERROR&gt;(())
+/// ```
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetSystemTimes() -&gt; SysResult&lt;(FILETIME, FILETIME, FILETIME)&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>idle_time = FILETIME::default();
+	<span class="kw">let </span><span class="kw-2">mut </span>kernel_time = FILETIME::default();
+	<span class="kw">let </span><span class="kw-2">mut </span>user_time = FILETIME::default();
+
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{
 			ffi::GetSystemTimes(
-				idle_time <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
-				kernel_time <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
-				user_time <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;mut </span>idle_time <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;mut </span>kernel_time <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;mut </span>user_time <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
 			)
 		},
-	)
+	).map(|<span class="kw">_</span>| (idle_time, kernel_time, user_time))
 }
 
 <span class="doccomment">/// [`GetTempFileName`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-gettempfilenamew)
@@ -3755,10 +3744,12 @@
 
 <span class="doccomment">/// [`GlobalMemoryStatusEx`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex)
 /// function.
-</span><span class="kw">pub fn </span>GlobalMemoryStatusEx(msx: <span class="kw-2">&amp;mut </span>MEMORYSTATUSEX) -&gt; SysResult&lt;()&gt; {
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GlobalMemoryStatusEx() -&gt; SysResult&lt;MEMORYSTATUSEX&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>msx = MEMORYSTATUSEX::default();
 	bool_to_sysresult(
-		<span class="kw">unsafe </span>{ ffi::GlobalMemoryStatusEx(msx <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) },
-	)
+		<span class="kw">unsafe </span>{ ffi::GlobalMemoryStatusEx(<span class="kw-2">&amp;mut </span>msx <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) },
+	).map(|<span class="kw">_</span>| msx)
 }
 
 <span class="doccomment">/// [`HIBYTE`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632656(v=vs.85))
@@ -4584,16 +4575,14 @@
 /// * [`GetLocalTime`](crate::GetLocalTime)
 /// * [`GetSystemTime`](crate::GetSystemTime)
 /// * [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime)
-</span><span class="kw">pub fn </span>SystemTimeToFileTime(
-	st: <span class="kw-2">&amp;</span>SYSTEMTIME,
-	ft: <span class="kw-2">&amp;mut </span>FILETIME,
-) -&gt; SysResult&lt;()&gt;
-{
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>SystemTimeToFileTime(st: <span class="kw-2">&amp;</span>SYSTEMTIME) -&gt; SysResult&lt;FILETIME&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>ft = FILETIME::default();
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{
-			ffi::SystemTimeToFileTime(st <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>, ft <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
+			ffi::SystemTimeToFileTime(st <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>, <span class="kw-2">&amp;mut </span>ft <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
 		},
-	)
+	).map(|<span class="kw">_</span>| ft)
 }
 
 <span class="doccomment">/// [`SystemTimeToTzSpecificLocalTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetotzspecificlocaltime)
@@ -4605,21 +4594,22 @@
 /// * [`GetLocalTime`](crate::GetLocalTime)
 /// * [`GetSystemTime`](crate::GetSystemTime)
 /// * [`SystemTimeToFileTime`](crate::SystemTimeToFileTime)
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>SystemTimeToTzSpecificLocalTime(
 	time_zone: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>TIME_ZONE_INFORMATION&gt;,
 	universal_time: <span class="kw-2">&amp;</span>SYSTEMTIME,
-	local_time: <span class="kw-2">&amp;mut </span>SYSTEMTIME,
-) -&gt; SysResult&lt;()&gt;
+) -&gt; SysResult&lt;SYSTEMTIME&gt;
 {
+	<span class="kw">let </span><span class="kw-2">mut </span>local_time = SYSTEMTIME::default();
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{
 			ffi::SystemTimeToTzSpecificLocalTime(
 				time_zone.map_or(std::ptr::null(), |lp| lp <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>),
 				universal_time <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-				local_time <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;mut </span>local_time <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
 			)
 		},
-	)
+	).map(|<span class="kw">_</span>| local_time)
 }
 
 <span class="doccomment">/// [`VerifyVersionInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-verifyversioninfow)

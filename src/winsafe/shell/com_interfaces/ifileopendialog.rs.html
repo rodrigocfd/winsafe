@@ -106,6 +106,7 @@
 <a href="#104" id="104">104</a>
 <a href="#105" id="105">105</a>
 <a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -196,7 +197,8 @@
 		/// let fo: w::IFileOpenDialog; // initialized somewhere
 		/// # let fo = unsafe { w::IFileOpenDialog::null() };
 		///
-		/// let paths = fo.GetResults()?.iter()?
+		/// let paths = fo.GetResults()?
+		///     .iter()?
 		///     .map(|shi| {
 		///         let shi = shi?;
 		///         let name = shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;

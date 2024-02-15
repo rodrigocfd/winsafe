@@ -190,7 +190,6 @@
 <a href="#188" id="188">188</a>
 <a href="#189" id="189">189</a>
 <a href="#190" id="190">190</a>
-<a href="#191" id="191">191</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
@@ -365,13 +364,12 @@
 		<span class="kw">let </span>(<span class="kw-2">mut </span>ft_creation, <span class="kw-2">mut </span>ft_last_write) = (FILETIME::default(), FILETIME::default());
 		<span class="self">self</span>.hfile.GetFileTime(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>ft_creation), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>ft_last_write))<span class="question-mark">?</span>;
 
-		<span class="kw">let </span>(<span class="kw-2">mut </span>st_creation_utc, <span class="kw-2">mut </span>st_last_write_utc) = (SYSTEMTIME::default(), SYSTEMTIME::default());
-		FileTimeToSystemTime(<span class="kw-2">&amp;</span>ft_creation, <span class="kw-2">&amp;mut </span>st_creation_utc)<span class="question-mark">?</span>;
-		FileTimeToSystemTime(<span class="kw-2">&amp;</span>ft_last_write, <span class="kw-2">&amp;mut </span>st_last_write_utc)<span class="question-mark">?</span>;
+		<span class="kw">let </span>st_creation_utc = FileTimeToSystemTime(<span class="kw-2">&amp;</span>ft_creation)<span class="question-mark">?</span>;
+		<span class="kw">let </span>st_last_write_utc = FileTimeToSystemTime(<span class="kw-2">&amp;</span>ft_last_write)<span class="question-mark">?</span>;
 
-		<span class="kw">let </span>(<span class="kw-2">mut </span>st_creation_local, <span class="kw-2">mut </span>st_last_write_local) = (SYSTEMTIME::default(), SYSTEMTIME::default());
-		SystemTimeToTzSpecificLocalTime(<span class="prelude-val">None</span>, <span class="kw-2">&amp;</span>st_creation_utc, <span class="kw-2">&amp;mut </span>st_creation_local)<span class="question-mark">?</span>;
-		SystemTimeToTzSpecificLocalTime(<span class="prelude-val">None</span>, <span class="kw-2">&amp;</span>st_last_write_utc, <span class="kw-2">&amp;mut </span>st_last_write_local)<span class="question-mark">?</span>;
+		<span class="kw">let </span>st_creation_local = SystemTimeToTzSpecificLocalTime(<span class="prelude-val">None</span>, <span class="kw-2">&amp;</span>st_creation_utc)<span class="question-mark">?</span>;
+		<span class="kw">let </span>st_last_write_local = SystemTimeToTzSpecificLocalTime(<span class="prelude-val">None</span>, <span class="kw-2">&amp;</span>st_last_write_utc)<span class="question-mark">?</span>;
+
 		<span class="prelude-val">Ok</span>((st_creation_local, st_last_write_local))
 	}
 
