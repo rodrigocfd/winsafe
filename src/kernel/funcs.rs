@@ -976,11 +976,10 @@ pub fn GetPrivateProfileSectionNames(
 /// use winsafe::{self as w, prelude::*};
 ///
 /// let val = w::GetPrivateProfileString(
-///     Some("MySection"),
-///     Some("MyKey"),
-///     None,
+///     "MySection",
+///     "MyKey",
 ///     "C:\\Temp\\foo.ini",
-/// )?;
+/// )?.unwrap_or("not found!".to_owned());
 ///
 /// println!("{}", val);
 /// # Ok::<_, winsafe::co::ERROR>(())
@@ -993,33 +992,39 @@ pub fn GetPrivateProfileSectionNames(
 /// * [`WritePrivateProfileString`](crate::WritePrivateProfileString)
 #[must_use]
 pub fn GetPrivateProfileString(
-	section_name: Option<&str>,
-	key_name: Option<&str>,
-	default_val: Option<&str>,
+	section_name: &str,
+	key_name: &str,
 	file_name: &str,
-) -> SysResult<String>
+) -> SysResult<Option<String>>
 {
 	let mut buf_sz = SSO_LEN; // start with no string heap allocation
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz);
-		let returned_chars = unsafe { // char count without terminating null
+		unsafe { // char count without terminating null
 			ffi::GetPrivateProfileStringW(
-				WString::from_opt_str(section_name).as_ptr(),
-				WString::from_opt_str(key_name).as_ptr(),
-				WString::from_opt_str(default_val).as_ptr(),
+				WString::from_str(section_name).as_ptr(),
+				WString::from_str(key_name).as_ptr(),
+				std::ptr::null_mut(),
 				buf.as_mut_ptr(),
 				buf.buf_len() as _,
 				WString::from_str(file_name).as_ptr(),
-			)
-		} + 1; // plus terminating null count
-
-		if GetLastError() == co::ERROR::FILE_NOT_FOUND {
-			return Err(co::ERROR::FILE_NOT_FOUND);
-		} else if (returned_chars as usize) < buf_sz { // to break, must have at least 1 char gap
-			return Ok(buf.to_string());
+			);
 		}
 
-		buf_sz *= 2; // double the buffer size to try again
+		match GetLastError() {
+			co::ERROR::SUCCESS => {
+				return Ok(Some(buf.to_string()));
+			},
+			co::ERROR::MORE_DATA => {
+				buf_sz *= 2; // double the buffer size to try again
+			},
+			co::ERROR::FILE_NOT_FOUND => {
+				return Ok(None);
+			},
+			e => {
+				return Err(e);
+			},
+		}
 	}
 }
 
