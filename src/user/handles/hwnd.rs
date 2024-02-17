@@ -1161,12 +1161,12 @@ pub trait user_Hwnd: Handle {
 	///
 	/// Usually the message box has a valid parent window, however, if for some
 	/// reason you don't have a window to serve as parent, you still can show a
-	/// non-modal, parent-less message box by retrieving the desktop handle:
+	/// non-modal, parent-less message box by using the null window handle:
 	///
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// w::HWND::GetDesktopWindow()
+	/// w::HWND::NULL
 	///     .MessageBox("Hello, world", "Title", co::MB::ICONEXCLAMATION)?;
 	/// # Ok::<_, co::ERROR>(())
 	/// ```
