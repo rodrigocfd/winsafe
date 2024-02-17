@@ -2376,6 +2376,11 @@
 <a href="#2374" id="2374">2374</a>
 <a href="#2375" id="2375">2375</a>
 <a href="#2376" id="2376">2376</a>
+<a href="#2377" id="2377">2377</a>
+<a href="#2378" id="2378">2378</a>
+<a href="#2379" id="2379">2379</a>
+<a href="#2380" id="2380">2380</a>
+<a href="#2381" id="2381">2381</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -3354,11 +3359,10 @@
 /// use winsafe::{self as w, prelude::*};
 ///
 /// let val = w::GetPrivateProfileString(
-///     Some("MySection"),
-///     Some("MyKey"),
-///     None,
+///     "MySection",
+///     "MyKey",
 ///     "C:\\Temp\\foo.ini",
-/// )?;
+/// )?.unwrap_or("not found!".to_owned());
 ///
 /// println!("{}", val);
 /// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
@@ -3371,34 +3375,40 @@
 /// * [`WritePrivateProfileString`](crate::WritePrivateProfileString)
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetPrivateProfileString(
-	section_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
-	key_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
-	default_val: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
+	section_name: <span class="kw-2">&amp;</span>str,
+	key_name: <span class="kw-2">&amp;</span>str,
 	file_name: <span class="kw-2">&amp;</span>str,
-) -&gt; SysResult&lt;String&gt;
+) -&gt; SysResult&lt;<span class="prelude-ty">Option</span>&lt;String&gt;&gt;
 {
 	<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = SSO_LEN; <span class="comment">// start with no string heap allocation
 	</span><span class="kw">loop </span>{
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
-		<span class="kw">let </span>returned_chars = <span class="kw">unsafe </span>{ <span class="comment">// char count without terminating null
+		<span class="kw">unsafe </span>{ <span class="comment">// char count without terminating null
 			</span>ffi::GetPrivateProfileStringW(
-				WString::from_opt_str(section_name).as_ptr(),
-				WString::from_opt_str(key_name).as_ptr(),
-				WString::from_opt_str(default_val).as_ptr(),
+				WString::from_str(section_name).as_ptr(),
+				WString::from_str(key_name).as_ptr(),
+				std::ptr::null_mut(),
 				buf.as_mut_ptr(),
 				buf.buf_len() <span class="kw">as _</span>,
 				WString::from_str(file_name).as_ptr(),
-			)
-		} + <span class="number">1</span>; <span class="comment">// plus terminating null count
-
-		</span><span class="kw">if </span>GetLastError() == co::ERROR::FILE_NOT_FOUND {
-			<span class="kw">return </span><span class="prelude-val">Err</span>(co::ERROR::FILE_NOT_FOUND);
-		} <span class="kw">else if </span>(returned_chars <span class="kw">as </span>usize) &lt; buf_sz { <span class="comment">// to break, must have at least 1 char gap
-			</span><span class="kw">return </span><span class="prelude-val">Ok</span>(buf.to_string());
+			);
 		}
 
-		buf_sz <span class="kw-2">*</span>= <span class="number">2</span>; <span class="comment">// double the buffer size to try again
-	</span>}
+		<span class="kw">match </span>GetLastError() {
+			co::ERROR::SUCCESS =&gt; {
+				<span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(buf.to_string()));
+			},
+			co::ERROR::MORE_DATA =&gt; {
+				buf_sz <span class="kw-2">*</span>= <span class="number">2</span>; <span class="comment">// double the buffer size to try again
+			</span>},
+			co::ERROR::FILE_NOT_FOUND =&gt; {
+				<span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>);
+			},
+			e =&gt; {
+				<span class="kw">return </span><span class="prelude-val">Err</span>(e);
+			},
+		}
+	}
 }
 
 <span class="doccomment">/// [`GetSidLengthRequired`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-getsidlengthrequired)
