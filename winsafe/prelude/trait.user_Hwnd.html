@@ -604,11 +604,11 @@ function.</p>
     co::MB::OKCANCEL | co::MB::ICONINFORMATION)<span class="question-mark">?</span>;</code></pre></div>
 <p>Usually the message box has a valid parent window, however, if for some
 reason you don’t have a window to serve as parent, you still can show a
-non-modal, parent-less message box by retrieving the desktop handle:</p>
+non-modal, parent-less message box by using the null window handle:</p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, co};
 
-w::HWND::GetDesktopWindow()
+w::HWND::NULL
     .MessageBox(<span class="string">"Hello, world"</span>, <span class="string">"Title"</span>, co::MB::ICONEXCLAMATION)<span class="question-mark">?</span>;</code></pre></div>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.MonitorFromWindow" class="method"><a class="src rightside" href="../../src/winsafe/user\handles/hwnd.rs.html#1195-1199">source</a><h4 class="code-header">fn <a href="#method.MonitorFromWindow" class="fn">MonitorFromWindow</a>(&amp;self, flags: <a class="struct" href="../co/struct.MONITOR.html" title="struct winsafe::co::MONITOR">MONITOR</a>) -&gt; <a class="struct" href="../struct.HMONITOR.html" title="struct winsafe::HMONITOR">HMONITOR</a></h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfromwindow"><code>MonitorFromWindow</code></a>
 function.</p>
