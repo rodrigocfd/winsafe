@@ -23,7 +23,11 @@ pub struct WString {
 
 impl std::fmt::Display for WString {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		std::fmt::Display::fmt(&self.buf.to_string_checked().unwrap(), f)
+		let txt = match self.buf.to_string_checked() {
+			Ok(t) => t,
+			Err(e) => format!("PARSING ERROR: {}", e.to_string()),
+		};
+		std::fmt::Display::fmt(&txt, f)
 	}
 }
 impl std::fmt::Debug for WString {
@@ -346,17 +350,13 @@ impl Clone for Buffer {
 
 impl std::fmt::Debug for Buffer {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		let txt = match self.to_string_checked() {
+			Ok(t) => t,
+			Err(e) => format!("PARSING ERROR: {}", e.to_string()),
+		};
 		write!(f, "{}", match self {
-			Self::Stack(_) => format!(
-				"STACK({}) \"{}\"",
-				self.buf_len(),
-				self.to_string_checked().unwrap(),
-			),
-			Self::Heap(_, _) => format!(
-				"HEAP({}) \"{}\"",
-				self.buf_len(),
-				self.to_string_checked().unwrap(),
-			),
+			Self::Stack(_) => format!("STACK({}) \"{}\"", self.buf_len(), txt),
+			Self::Heap(_, _) => format!("HEAP({}) \"{}\"", self.buf_len(), txt),
 			Self::Unallocated => "UNALLOCATED \"\"".to_owned(),
 		})
 	}
