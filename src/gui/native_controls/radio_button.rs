@@ -266,7 +266,8 @@ impl RadioButtonOpts {
 		self
 	}
 
-	pub(in crate::gui) fn manual_clone(&self) -> RadioButtonOpts { // avoids a public clone method
+	/// Manually clones the object, avoiding a public clone method.
+	pub(in crate::gui) fn manual_clone(&self) -> RadioButtonOpts {
 		Self {
 			text: self.text.clone(),
 			position: self.position,

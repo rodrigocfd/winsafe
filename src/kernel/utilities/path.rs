@@ -82,8 +82,8 @@ pub fn dir_walk<'a>(
 	DirWalkIter::new(dir_path.to_owned())
 }
 
-/// Returns the path of the current EXE file, without the EXE filename, and
-/// without a trailing backslash.
+/// Returns a new string with the path of the current EXE file, without the EXE
+/// filename, and without a trailing backslash.
 ///
 /// In a debug build, the `target\debug` folders will be suppressed.
 #[cfg(debug_assertions)]
@@ -100,8 +100,8 @@ pub fn exe_path() -> SysResult<String> {
 	)
 }
 
-/// Returns the path of the current EXE file, without the EXE filename, and
-/// without a trailing backslash.
+/// Returns a new string with the path of the current EXE file, without the EXE
+/// filename, and without a trailing backslash.
 ///
 /// In a debug build, the `target\debug` folders will be suppressed.
 #[cfg(not(debug_assertions))]
@@ -179,7 +179,8 @@ pub fn has_extension(full_path: &str, extensions: &[impl AsRef<str>]) -> bool {
 		.is_some()
 }
 
-/// Returns true if the path is a directory.
+/// Returns true if the path is a directory. Calls
+/// [`GetFileAttributes`](crate::GetFileAttributes).
 ///
 /// # Panics
 ///
@@ -190,7 +191,8 @@ pub fn is_directory(full_path: &str) -> bool {
 	flags.has(co::FILE_ATTRIBUTE::DIRECTORY)
 }
 
-/// Returns true if the path is hidden.
+/// Returns true if the path is hidden. Calls
+/// [`GetFileAttributes`](crate::GetFileAttributes).
 ///
 /// # Panics
 ///
@@ -201,7 +203,7 @@ pub fn is_hidden(full_path: &str) -> bool {
 	flags.has(co::FILE_ATTRIBUTE::HIDDEN)
 }
 
-/// Replaces the extension by the given one.
+/// Replaces the file extension by the given one, returning a new string.
 ///
 /// # Examples
 ///
@@ -234,7 +236,7 @@ pub fn replace_extension(full_path: &str, new_extension: &str) -> String {
 	}
 }
 
-/// Replaces the file name by the given one.
+/// Replaces the file name by the given one, returning a new string.
 #[must_use]
 pub fn replace_file_name(full_path: &str, new_file: &str) -> String {
 	match get_path(full_path) {
@@ -243,7 +245,8 @@ pub fn replace_file_name(full_path: &str, new_file: &str) -> String {
 	}
 }
 
-/// Keeps the file name and replaces the path by the given one.
+/// Keeps the file name and replaces the path by the given one, returning a new
+/// string.
 ///
 /// # Examples
 ///

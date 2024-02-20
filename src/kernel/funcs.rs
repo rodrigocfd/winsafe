@@ -163,6 +163,12 @@ pub fn ConvertStringSidToSid(str_sid: &str) -> SysResult<LocalFreeSidGuard> {
 
 /// [`CopyFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
 /// function.
+///
+/// # Related functions
+///
+/// * [`DeleteFile`](crate::DeleteFile)
+/// * [`MoveFile`](crate::MoveFile)
+/// * [`ReplaceFile`](crate::ReplaceFile)
 pub fn CopyFile(
 	existing_file: &str,
 	new_file: &str,
@@ -306,6 +312,12 @@ pub fn CreateWellKnownSid(
 
 /// [`DeleteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilew)
 /// function.
+///
+/// # Related functions
+///
+/// * [`CopyFile`](crate::CopyFile)
+/// * [`MoveFile`](crate::MoveFile)
+/// * [`ReplaceFile`](crate::ReplaceFile)
 pub fn DeleteFile(file_name: &str) -> SysResult<()> {
 	bool_to_sysresult(
 		unsafe { ffi::DeleteFileW(WString::from_str(file_name).as_ptr()) },
@@ -314,6 +326,11 @@ pub fn DeleteFile(file_name: &str) -> SysResult<()> {
 
 /// [`DecryptFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-decryptfilew)
 /// function.
+///
+/// # Related functions
+///
+/// * [`EncryptFile`](crate::EncryptFile)
+/// * [`EncryptionDisable`](crate::EncryptionDisable)
 pub fn DecryptFile(file_name: &str) -> SysResult<()> {
 	bool_to_sysresult(
 		unsafe { ffi::DecryptFileW(WString::from_str(file_name).as_ptr(), 0) },
@@ -322,6 +339,11 @@ pub fn DecryptFile(file_name: &str) -> SysResult<()> {
 
 /// [`EncryptFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-encryptfilew)
 /// function.
+///
+/// # Related functions
+///
+/// * [`DecryptFile`](crate::DecryptFile)
+/// * [`EncryptionDisable`](crate::EncryptionDisable)
 pub fn EncryptFile(file_name: &str) -> SysResult<()> {
 	bool_to_sysresult(
 		unsafe { ffi::EncryptFileW(WString::from_str(file_name).as_ptr()) },
@@ -330,6 +352,11 @@ pub fn EncryptFile(file_name: &str) -> SysResult<()> {
 
 /// [`EncryptionDisable`](https://learn.microsoft.com/en-us/windows/win32/api/winefs/nf-winefs-encryptiondisable)
 /// function.
+///
+/// # Related functions
+///
+/// * [`EncryptFile`](crate::EncryptFile)
+/// * [`DecryptFile`](crate::DecryptFile)
 pub fn EncryptionDisable(dir_path: &str, disable: bool) -> SysResult<()> {
 	bool_to_sysresult(
 		unsafe {
@@ -2000,6 +2027,12 @@ pub const fn MAKEWORD(lo: u8, hi: u8) -> u16 {
 
 /// [`MoveFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefilew)
 /// function.
+///
+/// # Related functions
+///
+/// * [`CopyFile`](crate::CopyFile)
+/// * [`DeleteFile`](crate::DeleteFile)
+/// * [`ReplaceFile`](crate::ReplaceFile)
 pub fn MoveFile(existing_file: &str, new_file: &str) -> SysResult<()> {
 	bool_to_sysresult(
 		unsafe {
@@ -2117,6 +2150,12 @@ pub fn QueryPerformanceFrequency() -> SysResult<i64> {
 
 /// [`ReplaceFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew)
 /// function.
+///
+/// # Related functions
+///
+/// * [`CopyFile`](crate::CopyFile)
+/// * [`DeleteFile`](crate::DeleteFile)
+/// * [`MoveFile`](crate::MoveFile)
 pub fn ReplaceFile(
 	replaced: &str,
 	replacement: &str,

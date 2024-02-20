@@ -90,11 +90,7 @@ pub trait shell_IFileOpenDialog: shell_IFileDialog {
 		///
 		/// let paths = fo.GetResults()?
 		///     .iter()?
-		///     .map(|shi| {
-		///         let shi = shi?;
-		///         let name = shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;
-		///         Ok(name)
-		///     })
+		///     .map(|shi| shi?.GetDisplayName(co::SIGDN::FILESYSPATH))
 		///     .collect::<w::HrResult<Vec<_>>>()?;
 		/// # Ok::<_, co::HRESULT>(())
 		/// ```
