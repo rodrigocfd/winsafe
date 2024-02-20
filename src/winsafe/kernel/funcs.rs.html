@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\funcs.rs`."><title>funcs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-5bc39a1768837dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (1a648b397 2024-02-11)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-48f368f3872407c8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\funcs.rs`."><title>funcs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (2bf78d12d 2024-02-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-c37d3936c59ababd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -2381,6 +2381,45 @@
 <a href="#2379" id="2379">2379</a>
 <a href="#2380" id="2380">2380</a>
 <a href="#2381" id="2381">2381</a>
+<a href="#2382" id="2382">2382</a>
+<a href="#2383" id="2383">2383</a>
+<a href="#2384" id="2384">2384</a>
+<a href="#2385" id="2385">2385</a>
+<a href="#2386" id="2386">2386</a>
+<a href="#2387" id="2387">2387</a>
+<a href="#2388" id="2388">2388</a>
+<a href="#2389" id="2389">2389</a>
+<a href="#2390" id="2390">2390</a>
+<a href="#2391" id="2391">2391</a>
+<a href="#2392" id="2392">2392</a>
+<a href="#2393" id="2393">2393</a>
+<a href="#2394" id="2394">2394</a>
+<a href="#2395" id="2395">2395</a>
+<a href="#2396" id="2396">2396</a>
+<a href="#2397" id="2397">2397</a>
+<a href="#2398" id="2398">2398</a>
+<a href="#2399" id="2399">2399</a>
+<a href="#2400" id="2400">2400</a>
+<a href="#2401" id="2401">2401</a>
+<a href="#2402" id="2402">2402</a>
+<a href="#2403" id="2403">2403</a>
+<a href="#2404" id="2404">2404</a>
+<a href="#2405" id="2405">2405</a>
+<a href="#2406" id="2406">2406</a>
+<a href="#2407" id="2407">2407</a>
+<a href="#2408" id="2408">2408</a>
+<a href="#2409" id="2409">2409</a>
+<a href="#2410" id="2410">2410</a>
+<a href="#2411" id="2411">2411</a>
+<a href="#2412" id="2412">2412</a>
+<a href="#2413" id="2413">2413</a>
+<a href="#2414" id="2414">2414</a>
+<a href="#2415" id="2415">2415</a>
+<a href="#2416" id="2416">2416</a>
+<a href="#2417" id="2417">2417</a>
+<a href="#2418" id="2418">2418</a>
+<a href="#2419" id="2419">2419</a>
+<a href="#2420" id="2420">2420</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -2546,6 +2585,12 @@
 
 <span class="doccomment">/// [`CopyFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
 /// function.
+///
+/// # Related functions
+///
+/// * [`DeleteFile`](crate::DeleteFile)
+/// * [`MoveFile`](crate::MoveFile)
+/// * [`ReplaceFile`](crate::ReplaceFile)
 </span><span class="kw">pub fn </span>CopyFile(
 	existing_file: <span class="kw-2">&amp;</span>str,
 	new_file: <span class="kw-2">&amp;</span>str,
@@ -2689,6 +2734,12 @@
 
 <span class="doccomment">/// [`DeleteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilew)
 /// function.
+///
+/// # Related functions
+///
+/// * [`CopyFile`](crate::CopyFile)
+/// * [`MoveFile`](crate::MoveFile)
+/// * [`ReplaceFile`](crate::ReplaceFile)
 </span><span class="kw">pub fn </span>DeleteFile(file_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;()&gt; {
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{ ffi::DeleteFileW(WString::from_str(file_name).as_ptr()) },
@@ -2697,6 +2748,11 @@
 
 <span class="doccomment">/// [`DecryptFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-decryptfilew)
 /// function.
+///
+/// # Related functions
+///
+/// * [`EncryptFile`](crate::EncryptFile)
+/// * [`EncryptionDisable`](crate::EncryptionDisable)
 </span><span class="kw">pub fn </span>DecryptFile(file_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;()&gt; {
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{ ffi::DecryptFileW(WString::from_str(file_name).as_ptr(), <span class="number">0</span>) },
@@ -2705,6 +2761,11 @@
 
 <span class="doccomment">/// [`EncryptFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-encryptfilew)
 /// function.
+///
+/// # Related functions
+///
+/// * [`DecryptFile`](crate::DecryptFile)
+/// * [`EncryptionDisable`](crate::EncryptionDisable)
 </span><span class="kw">pub fn </span>EncryptFile(file_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;()&gt; {
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{ ffi::EncryptFileW(WString::from_str(file_name).as_ptr()) },
@@ -2713,6 +2774,11 @@
 
 <span class="doccomment">/// [`EncryptionDisable`](https://learn.microsoft.com/en-us/windows/win32/api/winefs/nf-winefs-encryptiondisable)
 /// function.
+///
+/// # Related functions
+///
+/// * [`EncryptFile`](crate::EncryptFile)
+/// * [`DecryptFile`](crate::DecryptFile)
 </span><span class="kw">pub fn </span>EncryptionDisable(dir_path: <span class="kw-2">&amp;</span>str, disable: bool) -&gt; SysResult&lt;()&gt; {
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{
@@ -4383,6 +4449,12 @@
 
 <span class="doccomment">/// [`MoveFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefilew)
 /// function.
+///
+/// # Related functions
+///
+/// * [`CopyFile`](crate::CopyFile)
+/// * [`DeleteFile`](crate::DeleteFile)
+/// * [`ReplaceFile`](crate::ReplaceFile)
 </span><span class="kw">pub fn </span>MoveFile(existing_file: <span class="kw-2">&amp;</span>str, new_file: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;()&gt; {
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{
@@ -4500,6 +4572,12 @@
 
 <span class="doccomment">/// [`ReplaceFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew)
 /// function.
+///
+/// # Related functions
+///
+/// * [`CopyFile`](crate::CopyFile)
+/// * [`DeleteFile`](crate::DeleteFile)
+/// * [`MoveFile`](crate::MoveFile)
 </span><span class="kw">pub fn </span>ReplaceFile(
 	replaced: <span class="kw-2">&amp;</span>str,
 	replacement: <span class="kw-2">&amp;</span>str,
