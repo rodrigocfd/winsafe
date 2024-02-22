@@ -125,9 +125,8 @@ pub fn CoCreateInstanceEx(
 ) -> HrResult<()>
 {
 	let mut queried_outer = unsafe { IUnknown::null() };
-
-	unsafe {
-		match co::HRESULT::from_raw(
+	ok_to_hrresult(
+		unsafe {
 			ffi::CoCreateInstanceEx(
 				clsid as *const _ as _,
 				iunk_outer.as_ref()
@@ -136,14 +135,9 @@ pub fn CoCreateInstanceEx(
 				server_info.map_or(std::ptr::null(), |si| si as *const _ as _),
 				results.len() as _,
 				results.as_mut_ptr() as _,
-			),
-		) {
-			co::HRESULT::S_OK
-				| co::HRESULT::REGDB_E_CLASSNOTREG
-				| co::HRESULT::CO_S_NOTALLINTERFACES => Ok(()),
-			hr => Err(hr),
-		}
-	}.map(|_| {
+			)
+		},
+	).map(|_| {
 		if let Some(iunk_outer) = iunk_outer {
 			*iunk_outer = queried_outer; // create outer IUnknown if due
 		}
