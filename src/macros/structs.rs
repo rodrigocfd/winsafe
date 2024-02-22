@@ -249,7 +249,7 @@ macro_rules! pub_fn_array_buf_get_set {
 	};
 }
 
-/// Implements getter and setter methods for the given `ComPtr` field.
+/// Implements getter and setter methods for the given `COMPTR` field.
 macro_rules! pub_fn_comptr_get_set {
 	($field:ident, $setter:ident, $trait:ident) => {
 		/// Returns the COM object field, by cloning the underlying COM pointer.
@@ -284,7 +284,7 @@ macro_rules! pub_fn_comptr_get_set {
 	};
 }
 
-/// Implements `Drop` for a `ComPtr` field.
+/// Implements `Drop` for a struct with one `COMPTR` field.
 macro_rules! impl_drop_comptr {
 	($field:ident, $name:ident $(, $life:lifetime)*) => {
 		impl<$($life),*> Drop for $name<$($life),*> {

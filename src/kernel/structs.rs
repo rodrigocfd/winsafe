@@ -299,7 +299,8 @@ pub struct FILETIME {
 /// struct.
 ///
 /// The [`Default`](std::default::Default) implementation returns `GUID::NULL`
-/// (all zeros).
+/// (all zeros). To create a new random `GUID`, use
+/// [`CoCreateGuid`](crate::CoCreateGuid).
 #[repr(C)]
 #[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct GUID {

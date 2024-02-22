@@ -136,9 +136,6 @@ impl VariableSized for DVTARGETDEVICE {}
 
 /// [`MULTI_QI`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-multi_qi)
 /// struct.
-///
-/// Used to query multiple interfaces with
-/// [`CoCreateInstanceEx`](crate::CoCreateInstanceEx).
 #[repr(C)]
 pub struct MULTI_QI<'a> {
 	pIID: *mut co::IID,
