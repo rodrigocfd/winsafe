@@ -322,16 +322,15 @@ pub trait user_Hmenu: Handle {
 	/// let hmenu: w::HMENU; // initialized somewhere
 	/// # let hmenu = w::HMENU::NULL;
 	///
-	/// [
-	///     (ID_FILE_OPEN, "Open\tCtrl+O"),
-	///     (ID_FILE_SAVE, "&Save"),
-	/// ].iter()
-	///     .map(|(id, txt)| hmenu.EnableMenuItem(
-	///         w::IdPos::Id(*id),
-	///         false,
-	///     ))
-	///     .collect::<w::SysResult<Vec<_>>>()?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// [ID_FILE_OPEN, ID_FILE_SAVE]
+	///     .into_iter()
+	///     .try_for_each(|id|
+	///         hmenu.EnableMenuItem(
+	///             w::IdPos::Id(id),
+	///             false,
+	///         ).map(|_| ())
+	///     )?;
+	/// # Ok::<_, w::co::ERROR>(())
 	/// ```
 	fn EnableMenuItem(&self,
 		id_or_pos: IdPos,
