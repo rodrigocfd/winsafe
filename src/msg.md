@@ -2,6 +2,8 @@ Parameters of [window messages](https://learn.microsoft.com/en-us/windows/win32/
 
 [`WndMsg`](crate::msg::WndMsg) is the generic message, with `WPARAM` and `LPARAM` fields. Other messages belong to a module according to its prefix, for example, [`BM_CLICK`](crate::msg::bm::Click) can be found in [`bm`](crate::msg::bm) module.
 
+All messages can be sent, so they all implement the [`MsgSend`](crate::prelude::MsgSend) trait. Some messages can also be received – that means you can handle them if you're implementing a custom window from scratch –, and these implement the [`MsgSendRecv`](crate::prelude::MsgSendRecv) trait.
+
 # Sending messages
 
 We want to delete the 3rd element of a [`ListView`](crate::gui::ListView) control. This can be done by sending it an [`LVM_DELETEITEM`](crate::msg::lvm::DeleteItem) message via [`HWND::SendMessage`](crate::prelude::user_Hwnd::SendMessage). The message itself is a struct, which is initialized with the specific message parameters.
@@ -30,8 +32,10 @@ In order to create a custom message, you must create a struct with the data it c
 ```rust,ignore
 use winsafe::{self as w, prelude::*, co, msg};
 
+/// The integer value of our message ID.
 pub const MAKE_TOAST: co::WM = unsafe { co::WM::from_raw(co::WM::USER.raw() + 20) };
 
+/// Our message with its parameter.
 struct MakeToast {
     how_many: u32,
 }

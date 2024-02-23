@@ -1,14 +1,14 @@
 use crate::msg::*;
 
-/// Parameters of a message which can be sent. Implemented by [all undefined
-/// messages](crate::msg).
+/// Parameters of a message which can be sent. Implemented by
+/// [all defined messages](crate::msg).
 ///
 /// Allows the conversion to the generic [`WndMsg`](crate::msg::WndMsg)
 /// parameters, and also defines the return type of the message.
 ///
 /// Used in functions like
 /// [`SendMessage`](crate::prelude::user_Hwnd::SendMessage) and
-/// [`DefWindowProc`](`crate::prelude::user_Hwnd::DefWindowProc`).
+/// [`DefWindowProc`](crate::prelude::user_Hwnd::DefWindowProc).
 pub unsafe trait MsgSend {
 	/// The specific type of the value returned by the message.
 	type RetType;
