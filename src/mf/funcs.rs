@@ -37,7 +37,7 @@ pub fn MFCreateAsyncResult(
 /// use winsafe::{self as w, prelude::*};
 ///
 /// let media_session = w::MFCreateMediaSession(None::<&w::IMFAttributes>)?;
-/// # Ok::<_, winsafe::co::HRESULT>(())
+/// # w::HrResult::Ok(())
 /// ```
 #[must_use]
 pub fn MFCreateMediaSession(
@@ -64,7 +64,7 @@ pub fn MFCreateMediaSession(
 /// use winsafe::{self as w, prelude::*};
 ///
 /// let source_resolver = w::MFCreateSourceResolver()?;
-/// # Ok::<_, winsafe::co::HRESULT>(())
+/// # w::HrResult::Ok(())
 /// ```
 #[must_use]
 pub fn MFCreateSourceResolver() -> HrResult<IMFSourceResolver> {
@@ -82,7 +82,7 @@ pub fn MFCreateSourceResolver() -> HrResult<IMFSourceResolver> {
 /// use winsafe::{self as w, prelude::*};
 ///
 /// let topology = w::MFCreateTopology()?;
-/// # Ok::<_, winsafe::co::HRESULT>(())
+/// # w::HrResult::Ok(())
 /// ```
 #[must_use]
 pub fn MFCreateTopology() -> HrResult<IMFTopology> {
@@ -100,7 +100,7 @@ pub fn MFCreateTopology() -> HrResult<IMFTopology> {
 /// use winsafe::{self as w, prelude::*, co};
 ///
 /// let topology_node = w::MFCreateTopologyNode(co::MF_TOPOLOGY::OUTPUT_NODE)?;
-/// # Ok::<_, winsafe::co::HRESULT>(())
+/// # w::HrResult::Ok(())
 /// ```
 #[must_use]
 pub fn MFCreateTopologyNode(

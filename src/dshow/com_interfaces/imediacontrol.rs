@@ -40,7 +40,7 @@ com_interface! { IMediaControl: "56a868b1-0ad4-11ce-b03a-0020af0ba770";
 	///
 	/// let media_control = graph_builder
 	///     .QueryInterface::<w::IMediaControl>()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

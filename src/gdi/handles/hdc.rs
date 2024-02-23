@@ -347,7 +347,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// fo.write(bfh.serialize())?;
 	/// fo.write(bi.bmiHeader.serialize())?;
 	/// fo.write(&data_buf)?;
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	unsafe fn GetDIBits(&self,
 		hbm: &HBITMAP,
@@ -719,7 +719,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// )?;
 	///
 	/// let _pen_guard = hdc.SelectObject(&*hpen); // keep guard alive
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn SelectObject<G>(&self,

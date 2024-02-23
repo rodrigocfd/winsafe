@@ -53,7 +53,7 @@ pub trait kernel_Hfile: Handle {
 	///     None,
 	///     None,
 	/// )?;
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	///
 	/// Opening a file for read and write. If the file doesn't exist, create it:
@@ -72,7 +72,7 @@ pub trait kernel_Hfile: Handle {
 	///     None,
 	///     None,
 	/// )?;
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn CreateFile(
@@ -216,7 +216,7 @@ pub trait kernel_Hfile: Handle {
 	/// // file read/write operations...
 	///
 	/// // UnlockFile() called automatically
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn LockFile(&self,

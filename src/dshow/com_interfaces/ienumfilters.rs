@@ -55,7 +55,7 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 	///     let filter = filter?;
 	///     // ...
 	/// }
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
 	fn iter(&self) -> impl Iterator<Item = HrResult<IBaseFilter>> + '_ {

@@ -37,7 +37,7 @@ pub trait user_Hmonitor: Handle {
 	/// hmon.GetMonitorInfo(&mut mi)?;
 	///
 	/// println!("{}", mi.szDevice());
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn GetMonitorInfo(&self, mi: &mut MONITORINFOEX) -> SysResult<()> {
 		bool_to_sysresult(

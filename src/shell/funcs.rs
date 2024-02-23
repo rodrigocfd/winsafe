@@ -20,7 +20,7 @@ use crate::shell::ffi;
 /// for arg in args.iter() {
 ///     println!("{}", arg);
 /// }
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 #[must_use]
 pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
@@ -58,7 +58,7 @@ pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 /// )?;
 ///
 /// // full = "C:\\One\\Two\\Three"
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 pub fn PathCombine(
 	str_dir: Option<&str>,
@@ -173,7 +173,7 @@ pub fn Shell_NotifyIcon(
 ///     "C:\\Temp\\foo.txt",
 ///     None::<&w::IBindCtx>,
 /// )?;
-/// # Ok::<_, winsafe::co::HRESULT>(())
+/// # w::HrResult::Ok(())
 /// ```
 #[must_use]
 pub fn SHCreateItemFromParsingName<T>(
@@ -209,7 +209,7 @@ pub fn SHCreateItemFromParsingName<T>(
 /// # let raw_data = Vec::<u8>::default();
 ///
 /// let stream = w::SHCreateMemStream(&raw_data)?;
-/// # Ok::<_, winsafe::co::HRESULT>(())
+/// # w::HrResult::Ok(())
 /// ```
 #[must_use]
 pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
@@ -267,7 +267,7 @@ pub fn SHGetFileInfo(
 /// )?;
 ///
 /// println!("Docs folder: {}", docs_folder);
-/// # Ok::<_, co::HRESULT>(())
+/// # w::HrResult::Ok(())
 /// ```
 #[must_use]
 pub fn SHGetKnownFolderPath(
@@ -309,7 +309,7 @@ pub fn SHGetKnownFolderPath(
 /// )?;
 ///
 /// println!("HICON handle: {}", sii.hIcon);
-/// # Ok::<_, Box<dyn std::error::Error>>(())
+/// # w::AnyResult::Ok(())
 /// ```
 pub fn SHGetStockIconInfo(
 	siid: co::SIID,

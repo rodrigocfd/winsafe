@@ -31,7 +31,7 @@ com_interface! { IMFGetService: "fa993888-4383-415a-a930-dd472a8cf6f7";
 	/// # let vmr = unsafe { w::IBaseFilter::null() };
 	///
 	/// let get_svc = vmr.QueryInterface::<w::IMFGetService>()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 
@@ -61,7 +61,7 @@ pub trait mf_IMFGetService: ole_IUnknown {
 	///     .GetService::<w::IMFVideoDisplayControl>(
 	///         &co::MF_SERVICE::MR_VIDEO_RENDER_SERVICE,
 	///     )?;
-	/// # Ok::<_, co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
 	fn GetService<T>(&self, service_id: &co::MF_SERVICE) -> HrResult<T>

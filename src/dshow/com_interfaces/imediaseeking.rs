@@ -49,7 +49,7 @@ com_interface! { IMediaSeeking: "36b73880-c2c8-11cf-8b46-00805f6cef60";
 	///
 	/// let media_seeking = graph_builder
 	///     .QueryInterface::<w::IMediaSeeking>()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

@@ -61,7 +61,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	///     let ppk = ppk?;
 	///     // ...
 	/// }
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
 	fn iter(&self,

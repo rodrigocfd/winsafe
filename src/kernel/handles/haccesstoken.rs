@@ -41,7 +41,7 @@ pub trait kernel_Haccesstoken: Handle {
 	/// ])?;
 	///
 	/// htoken.AdjustTokenPrivileges(w::DisabPriv::Privs(&privs))?;
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn AdjustTokenPrivileges(&self, new_state: DisabPriv) -> SysResult<()> {
 		bool_to_sysresult(
@@ -154,7 +154,7 @@ pub trait kernel_Haccesstoken: Handle {
 	/// for (idx, g) in groups.Groups().iter().enumerate() {
 	///     println!("{}: {}", idx, g.Sid().unwrap());
 	/// }
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn GetTokenInformation(&self,
 		information_class: co::TOKEN_INFORMATION_CLASS,

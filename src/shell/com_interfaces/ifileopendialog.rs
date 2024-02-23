@@ -54,7 +54,7 @@ com_interface! { IFileOpenDialog: "d57c7288-d4ad-4768-be02-9d969532d960";
 	///         .GetDisplayName(co::SIGDN::FILESYSPATH)?;
 	///     println!("{}", chosen_file);
 	/// }
-	/// # Ok::<_, co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 
@@ -92,7 +92,7 @@ pub trait shell_IFileOpenDialog: shell_IFileDialog {
 		///     .iter()?
 		///     .map(|shi| shi?.GetDisplayName(co::SIGDN::FILESYSPATH))
 		///     .collect::<w::HrResult<Vec<_>>>()?;
-		/// # Ok::<_, co::HRESULT>(())
+		/// # w::HrResult::Ok(())
 		/// ```
 	}
 

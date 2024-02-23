@@ -73,7 +73,7 @@ pub trait kernel_Hlocal: Handle {
 	/// // LocalUnlock() called automatically
 	///
 	/// // LocalFree() called automatically
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn LocalLock(&self) -> SysResult<LocalUnlockGuard<'_, Self>> {

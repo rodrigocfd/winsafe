@@ -70,7 +70,7 @@ pub trait kernel_Hinstance: Handle {
 	/// )?;
 	///
 	/// // FreeLibrary() called automatically
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn EnumResourceNames<F>(&self,
 		resource_type: RtStr,
@@ -108,7 +108,7 @@ pub trait kernel_Hinstance: Handle {
 	/// )?;
 	///
 	/// // FreeLibrary() called automatically
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn EnumResourceTypes<F>(&self, func: F) -> SysResult<()>
 		where F: FnMut(RtStr) -> bool,
@@ -183,7 +183,7 @@ pub trait kernel_Hinstance: Handle {
 	/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
 	///
 	/// println!("EXE: {}", exe_name);
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn GetModuleFileName(&self) -> SysResult<String> {
@@ -210,7 +210,7 @@ pub trait kernel_Hinstance: Handle {
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let hinstance = w::HINSTANCE::GetModuleHandle(None)?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn GetModuleHandle(module_name: Option<&str>) -> SysResult<HINSTANCE> {
@@ -304,7 +304,7 @@ pub trait kernel_Hinstance: Handle {
 	/// // EndUpdateResource() called automatically
 	///
 	/// // FreeLibrary() called automatically
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn LockResource(&self,

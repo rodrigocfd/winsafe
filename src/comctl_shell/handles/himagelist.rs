@@ -32,7 +32,7 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 	/// )?;
 	///
 	/// himgl.add_icon_from_shell(&["mp3", "wav"])?;
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn add_icon_from_shell(&self,
 		file_extensions: &[impl AsRef<str>],

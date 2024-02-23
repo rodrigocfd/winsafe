@@ -292,7 +292,7 @@ pub fn EndMenu() -> SysResult<()> {
 ///         Ok(name)
 ///     })
 ///     .collect::<w::SysResult<Vec<_>>>()?;
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 #[must_use]
 pub fn EnumDisplayDevices(
@@ -333,7 +333,7 @@ pub fn EnumDisplayDevices(
 ///
 ///     graphics_mode_idx += 1;
 /// }
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// Retrieving from the predefined enum.
@@ -351,7 +351,7 @@ pub fn EnumDisplayDevices(
 ///
 /// println!("{}, {}, {}",
 ///     dm.dmDeviceName(), dm.dmDisplayFrequency, dm.dmBitsPerPel);
-/// # Ok::<_, co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 pub fn EnumDisplaySettings(
 	device_name: Option<&str>,
@@ -414,7 +414,7 @@ pub fn EnumDisplaySettingsEx(
 ///         true
 ///     },
 /// )?;
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 pub fn EnumThreadWindows<F>(thread_id: u32, func: F) -> SysResult<()>
 	where F: FnMut(HWND) -> bool,
@@ -442,7 +442,7 @@ pub fn EnumThreadWindows<F>(thread_id: u32, func: F) -> SysResult<()>
 ///     println!("HWND: {}", hwnd);
 ///     true
 /// })?;
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 pub fn EnumWindows<F>(func: F) -> SysResult<()>
 	where F: FnMut(HWND) -> bool,
@@ -561,7 +561,7 @@ pub fn GetDoubleClickTime() -> u32 {
 /// let gti = w::GetGUIThreadInfo(thread_id)?;
 ///
 /// println!("Caret rect: {}", gti.rcCaret);
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 #[must_use]
 pub fn GetGUIThreadInfo(thread_id: u32) -> SysResult<GUITHREADINFO> {
@@ -837,7 +837,7 @@ pub fn RegisterWindowMessage(s: &str) -> SysResult<u32> {
 ///         },
 ///     ),
 /// ])?;
-/// # Ok::<_, co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 pub fn SendInput(inputs: &[HwKbMouse]) -> SysResult<u32> {
 	let objs = inputs.iter()

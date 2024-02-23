@@ -53,7 +53,7 @@ pub trait dshow_IEnumPins: ole_IUnknown {
 	///     let pin = pin?;
 	///     // ...
 	/// }
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
 	fn iter(&self) -> impl Iterator<Item = HrResult<IPin>> + '_ {

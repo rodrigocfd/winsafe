@@ -34,7 +34,7 @@ com_interface! { IComHandlerAction: "6d2fd252-75c5-4f66-90ba-2a7d8cc3039f";
 	///
 	/// let ch_action = action
 	///     .QueryInterface::<w::IComHandlerAction>()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

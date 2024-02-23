@@ -221,7 +221,7 @@ pub trait kernel_Hprocess: Handle {
 	///
 	/// let htoken = w::HPROCESS::GetCurrentProcess()
 	///     .OpenProcessToken(co::TOKEN::ADJUST_PRIVILEGES | co::TOKEN::QUERY)?;
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn OpenProcessToken(&self,

@@ -80,7 +80,7 @@ pub fn CoCreateGuid() -> HrResult<GUID> {
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
 /// )?;
-/// # Ok::<_, co::HRESULT>(())
+/// # w::HrResult::Ok(())
 /// ```
 #[must_use]
 pub fn CoCreateInstance<T>(
@@ -172,7 +172,7 @@ pub fn CoCreateInstanceEx(
 /// // program runs...
 ///
 /// // CoUninitialize() automatically called
-/// # Ok::<_, co::HRESULT>(())
+/// # w::HrResult::Ok(())
 /// ```
 #[must_use]
 pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<CoUninitializeGuard> {
@@ -219,7 +219,7 @@ pub fn CoLockObjectExternal<T>(
 /// // use memory block...
 ///
 /// // CoTaskMemFree() automatically called
-/// # Ok::<_, winsafe::co::HRESULT>(())
+/// # w::HrResult::Ok(())
 #[must_use]
 pub fn CoTaskMemAlloc(cb: usize) -> HrResult<CoTaskMemFreeGuard> {
 	let p = unsafe { ffi::CoTaskMemAlloc(cb) };
@@ -247,7 +247,7 @@ pub fn CoTaskMemAlloc(cb: usize) -> HrResult<CoTaskMemFreeGuard> {
 /// // use memory block...
 ///
 /// // CoTaskMemFree() automatically called
-/// # Ok::<_, winsafe::co::HRESULT>(())
+/// # w::HrResult::Ok(())
 #[must_use]
 pub fn CoTaskMemRealloc(
 	pv: &mut CoTaskMemFreeGuard,

@@ -294,7 +294,7 @@ pub trait kernel_Hkey: Handle {
 	///     let key_name = key_name?;
 	///     println!("{}", key_name);
 	/// }
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn RegEnumKeyEx(&self,
@@ -327,7 +327,7 @@ pub trait kernel_Hkey: Handle {
 	/// let values_and_types: Vec<(String, co::REG)> =
 	///     hkey.RegEnumValue()?
 	///         .collect::<w::SysResult<Vec<_>>>()?;
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn RegEnumValue(&self,
@@ -382,7 +382,7 @@ pub trait kernel_Hkey: Handle {
 	///     },
 	///     w::RegistryValue::None => println!("No value"),
 	/// }
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn RegGetValue(&self,
@@ -484,7 +484,7 @@ pub trait kernel_Hkey: Handle {
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn RegOpenKeyEx(&self,
@@ -645,7 +645,7 @@ pub trait kernel_Hkey: Handle {
 	///     }
 	/// }
 	///
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn RegQueryMultipleValues(&self,
@@ -777,7 +777,7 @@ pub trait kernel_Hkey: Handle {
 	///     },
 	///     w::RegistryValue::None => println!("No value"),
 	/// }
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn RegQueryValueEx(&self,
@@ -939,7 +939,7 @@ pub trait kernel_Hkey: Handle {
 	///     Some("Color"),
 	///     w::RegistryValue::Sz("blue".to_owned()),
 	/// )?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn RegSetKeyValue(&self,
 		sub_key: Option<&str>,
@@ -985,7 +985,7 @@ pub trait kernel_Hkey: Handle {
 	///     Some("Color"),
 	///     w::RegistryValue::Sz("blue".to_owned()),
 	/// )?;
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn RegSetValueEx(&self,
 		value_name: Option<&str>,

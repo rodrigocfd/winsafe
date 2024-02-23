@@ -43,7 +43,7 @@ pub enum FileAccess {
 /// )?;
 /// let raw_bytes = f.read_all()?;
 /// let text = w::WString::parse(&raw_bytes)?.to_string();
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// Writing a string:
@@ -56,7 +56,7 @@ pub enum FileAccess {
 ///     w::FileAccess::OpenOrCreateRW,
 /// )?;
 /// f.erase_and_write("My text".as_bytes())?;
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 pub struct File {
 	hfile: CloseHandleGuard<HFILE>,

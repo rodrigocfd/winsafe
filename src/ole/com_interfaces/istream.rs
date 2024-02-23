@@ -41,7 +41,7 @@ com_interface! { IStream: "0000000c-0000-0000-c000-000000000046";
 	/// # let raw_data = Vec::<u8>::default();
 	///
 	/// let stream = w::SHCreateMemStream(&raw_data)?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

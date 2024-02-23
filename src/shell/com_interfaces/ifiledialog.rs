@@ -259,7 +259,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	///     ("Images", "*.jpg;*.png;*.bmp"),
 	///     ("All files", "*.*"),
 	/// ])?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	fn SetFileTypes<S: AsRef<str>>(&self,
 		filter_spec: &[(S, S)],

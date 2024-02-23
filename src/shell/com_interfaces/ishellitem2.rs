@@ -47,7 +47,7 @@ com_interface! { IShellItem2: "7e9fb0d3-919f-4307-ab2e-9b1860310c93";
 	///     "C:\\Temp\\foo.txt",
 	///     None::<&w::IBindCtx>,
 	/// )?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

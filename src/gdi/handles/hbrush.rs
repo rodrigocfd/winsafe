@@ -97,7 +97,7 @@ pub trait gdi_Hbrush: Handle {
 	///
 	/// let mut brush = w::LOGBRUSH::default();
 	/// hbr.GetObject(&mut brush)?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn GetObject(&self, pv: &mut LOGBRUSH) -> SysResult<()> {
 		match unsafe {

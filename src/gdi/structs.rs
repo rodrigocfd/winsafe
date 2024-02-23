@@ -158,7 +158,7 @@ impl LOGFONT {
 /// for entry in log_pal.palPalEntry().iter() {
 ///     println!("{} {} {}", entry.peRed, entry.peGreen, entry.peBlue);
 /// }
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 #[repr(C)]
 pub struct LOGPALETTE {

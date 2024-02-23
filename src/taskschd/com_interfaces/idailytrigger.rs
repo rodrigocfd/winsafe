@@ -34,7 +34,7 @@ com_interface! { IDailyTrigger: "126c5cd8-b288-41d5-8dbf-e491446adc5c";
 	///
 	/// let daily_trigger = trigger
 	///     .QueryInterface::<w::IDailyTrigger>()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

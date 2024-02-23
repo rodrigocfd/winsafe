@@ -48,7 +48,7 @@ pub trait user_Hmenu: Handle {
 	///     w::MenuItem::Separator,
 	///     w::MenuItem::Entry(ID_FILE_EXIT, "E&xit"),
 	/// ])?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn append_item(&self, items: &[MenuItem]) -> SysResult<()> {
 		items.iter().map(|item| {
@@ -93,7 +93,7 @@ pub trait user_Hmenu: Handle {
 	///     w::MenuItemInfo::Separator => println!("separator"),
 	///     w::MenuItemInfo::Submenu(hsub, txt) => println!("submenu {} {}", hsub, txt),
 	/// }
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn item_info(&self, id_or_pos: IdPos) -> SysResult<MenuItemInfo> {
@@ -134,7 +134,7 @@ pub trait user_Hmenu: Handle {
 	///         w::MenuItemInfo::Submenu(hsub, txt) => println!("submenu {} {}", hsub, txt),
 	///     }
 	/// }
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn iter_items(&self) -> impl Iterator<Item = SysResult<MenuItemInfo>> + '_ {
@@ -306,7 +306,7 @@ pub trait user_Hmenu: Handle {
 	///     w::IdPos::Id(ID_FILE_OPEN),
 	///     false,
 	/// )?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	///
 	/// Disabling multiple menu items at once:
@@ -330,7 +330,7 @@ pub trait user_Hmenu: Handle {
 	///             false,
 	///         ).map(|_| ())
 	///     )?;
-	/// # Ok::<_, w::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn EnableMenuItem(&self,
 		id_or_pos: IdPos,

@@ -111,7 +111,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// let mut wcx = w::WNDCLASSEX::default();
 	/// w::HINSTANCE::GetModuleHandle(None)?
 	///     .GetClassInfoEx("SOME_CLASS_NAME", &mut wcx)?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn GetClassInfoEx(&self,
 		class_name: &str,
@@ -151,7 +151,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	///
 	/// let sys_cursor = w::HINSTANCE::NULL
 	///     .LoadCursor(w::IdIdcStr::Idc(co::IDC::ARROW))?;
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn LoadCursor(&self,
@@ -177,7 +177,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	///
 	/// let sys_icon = w::HINSTANCE::NULL
 	///     .LoadIcon(w::IdIdiStr::Idi(co::IDI::INFORMATION))?;
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn LoadIcon(&self, icon_id: IdIdiStr) -> SysResult<DestroyIconGuard> {

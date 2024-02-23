@@ -49,7 +49,7 @@ com_interface! { IEmailAction: "10f62c64-7e16-4314-a0c2-0c3683f99d40";
 	///
 	/// let email_action = action
 	///     .QueryInterface::<w::IEmailAction>()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

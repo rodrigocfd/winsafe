@@ -75,7 +75,7 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	/// let outputs: Vec<w::IDXGIOutput> =
 	///     adapter.EnumOutputs()
 	///         .collect::<w::HrResult<Vec<_>>>()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
 	fn EnumOutputs(&self) -> impl Iterator<Item = HrResult<IDXGIOutput>> + '_ {
@@ -95,7 +95,7 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	/// let mut desc = w::DXGI_ADAPTER_DESC::default();
 	///
 	/// adapter.GetDesc(&mut desc)?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	fn GetDesc(&self, desc: &mut DXGI_ADAPTER_DESC) -> HrResult<()> {
 		ok_to_hrresult(

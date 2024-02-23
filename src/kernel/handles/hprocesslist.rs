@@ -44,7 +44,7 @@ pub trait kernel_Hprocesslist: Handle {
 	///     println!("{} {}",
 	///         heap_entry.th32HeapID, heap_entry.th32ProcessID);
 	/// }
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn iter_heaps(&mut self,
@@ -73,7 +73,7 @@ pub trait kernel_Hprocesslist: Handle {
 	///     println!("{} {}",
 	///         mod_entry.szModule(), mod_entry.th32ProcessID);
 	/// }
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn iter_modules(&mut self,
@@ -102,7 +102,7 @@ pub trait kernel_Hprocesslist: Handle {
 	///     println!("{} {} {}",
 	///         proc_entry.szExeFile(), proc_entry.th32ProcessID, proc_entry.cntThreads);
 	/// }
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn iter_processes(&mut self,
@@ -133,7 +133,7 @@ pub trait kernel_Hprocesslist: Handle {
 	///     println!("{} {}",
 	///         thread_entry.th32ThreadID, thread_entry.th32OwnerProcessID);
 	/// }
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn iter_threads(&mut self,

@@ -39,7 +39,7 @@ com_interface! { IMFTopology: "83cf873a-f6da-4bc8-823f-bacfd55dc433";
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let topology = w::MFCreateTopology()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

@@ -35,7 +35,7 @@ com_interface! { IExecAction: "4c3d624d-fd6b-49a3-b9b7-09cb3cd3f047";
 	///
 	/// let exec_action = action
 	///     .QueryInterface::<w::IExecAction>()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

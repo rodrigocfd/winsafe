@@ -35,7 +35,7 @@ com_interface! { IMFSourceResolver: "fbe5a32d-a497-4b61-bb85-97b1a848a6e3";
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let source_resolver = w::MFCreateSourceResolver()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

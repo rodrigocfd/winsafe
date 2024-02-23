@@ -99,7 +99,7 @@ pub trait comctl_Himagelist: Handle {
 	/// # let himgl = w::HIMAGELIST::NULL;
 	///
 	/// let _drag = himgl.BeginDrag(0, w::POINT::new(0, 0))?; // keep guard alive
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn BeginDrag(&self,
 		itrack: u32,
@@ -133,7 +133,7 @@ pub trait comctl_Himagelist: Handle {
 	/// )?;
 	///
 	/// // ImageList_Destroy() automatically called
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn Create(

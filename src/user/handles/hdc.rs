@@ -96,7 +96,7 @@ pub trait user_Hdc: Handle {
 	///         true
 	///     },
 	/// )?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn EnumDisplayMonitors<F>(&self,
 		rc_clip: Option<RECT>,

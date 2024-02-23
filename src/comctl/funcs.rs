@@ -69,7 +69,7 @@ pub fn InitMUILanguage(ui_lang: LANGID) {
 /// tdc.set_pButtons(Some(btns_slice));
 ///
 /// w::TaskDialogIndirect(&tdc, None)?;
-/// # Ok::<_, co::HRESULT>(())
+/// # w::HrResult::Ok(())
 /// ```
 pub fn TaskDialogIndirect(
 	task_config: &TASKDIALOGCONFIG,

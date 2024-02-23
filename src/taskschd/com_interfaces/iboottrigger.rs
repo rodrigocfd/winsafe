@@ -31,7 +31,7 @@ com_interface! { IBootTrigger: "2a9c35da-d357-41f4-bbc1-207ac1b1f3cb";
 	///
 	/// let boot_trigger = trigger
 	///     .QueryInterface::<w::IBootTrigger>()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

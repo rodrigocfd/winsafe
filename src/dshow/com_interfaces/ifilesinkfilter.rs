@@ -61,7 +61,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	///         let _ = guard::CoTaskMemFreeGuard::new(pb_format as *mut _  as _, 0);
 	///     }
 	/// }
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
 	unsafe fn GetCurFile(&self,

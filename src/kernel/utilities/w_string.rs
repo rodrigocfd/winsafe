@@ -263,7 +263,7 @@ impl WString {
 	/// )?;
 	/// let wstr = w::WString::parse(file_in.as_slice())?;
 	/// let str_contents = wstr.to_string();
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	pub fn parse(data: &[u8]) -> SysResult<Self> {

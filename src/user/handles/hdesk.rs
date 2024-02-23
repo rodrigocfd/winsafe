@@ -85,7 +85,7 @@ pub trait user_Hdesk: Handle {
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let hdesk = w::HDESK::GetThreadDesktop(w::GetCurrentThreadId())?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	#[must_use]
 	fn GetThreadDesktop(
 		thread_id: u32,

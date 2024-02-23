@@ -186,7 +186,7 @@ impl RadioGroup {
 	/// for single_radio in radio_group.iter() {
 	///     single_radio.hwnd().SetWindowText("One");
 	/// }
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	pub fn iter(&self) -> std::slice::Iter<'_, RadioButton> {

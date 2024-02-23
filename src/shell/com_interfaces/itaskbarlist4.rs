@@ -32,7 +32,7 @@ com_interface! { ITaskbarList4: "c43dc798-95d1-4bea-9030-bb99e2983a1a";
 	///     None,
 	///     co::CLSCTX::INPROC_SERVER,
 	/// )?;
-	/// # Ok::<_, co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

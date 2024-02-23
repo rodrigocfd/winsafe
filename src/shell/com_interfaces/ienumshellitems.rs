@@ -65,7 +65,7 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 	///     let item = item?;
 	///     println!("{}", item.GetDisplayName(co::SIGDN::FILESYSPATH)?);
 	/// }
-	/// # Ok::<_, co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
 	fn iter(&self) -> impl Iterator<Item = HrResult<IShellItem>> + '_ {

@@ -43,7 +43,7 @@ pub trait shell_Hdrop: Handle {
 	///     let file_path = file_path?;
 	///     println!("File: {}", file_path);
 	/// }
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	///
 	/// Collecting the strings into a [`Vec`](std::vec::Vec):
@@ -56,7 +56,7 @@ pub trait shell_Hdrop: Handle {
 	///
 	/// let file_paths = hdrop.DragQueryFile()?
 	///     .collect::<w::SysResult<Vec<_>>>()?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn DragQueryFile(&mut self,

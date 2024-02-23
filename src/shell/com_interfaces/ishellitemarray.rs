@@ -62,7 +62,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	///     println!("Path: {}",
 	///         ish_item.GetDisplayName(co::SIGDN::FILESYSPATH)?);
 	/// }
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	///
 	/// Collecting the file paths into a [`Vec`](std::vec::Vec):
@@ -80,7 +80,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	///         Ok(name)
 	///     })
 	///     .collect::<w::HrResult<Vec<_>>>()?;
-	/// # Ok::<_, co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
 	fn iter(&self,

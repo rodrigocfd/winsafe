@@ -25,7 +25,7 @@ use crate::prelude::*;
 ///     let file_path = file_path?;
 ///     println!("{}", file_path);
 /// }
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 #[must_use]
 pub fn dir_list<'a>(
@@ -72,7 +72,7 @@ pub fn dir_list<'a>(
 ///         Ok(format!("PATH: {}", file_path))
 ///     })
 ///     .collect::<w::SysResult<Vec<_>>>()?;
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 #[must_use]
 pub fn dir_walk<'a>(

@@ -40,7 +40,7 @@ com_interface! { IShellItem: "43826d1e-e718-42ee-bc55-a1e261c37bfe";
 	///     "C:\\Temp\\foo.txt",
 	///     None::<&w::IBindCtx>,
 	/// )?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 
@@ -72,7 +72,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 	///     None::<&w::IBindCtx>,
 	///     &co::BHID::EnumItems,
 	/// )?;
-	/// # Ok::<_, co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
 	fn BindToHandler<T>(&self,
@@ -152,7 +152,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 	/// let full_path = shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;
 	///
 	/// println!("{}", full_path);
-	/// # Ok::<_, co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
 	fn GetDisplayName(&self, sigdn_name: co::SIGDN) -> HrResult<String> {
@@ -190,7 +190,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 		/// let full_path = parent_shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;
 		///
 		/// println!("{}", full_path);
-		/// # Ok::<_, co::HRESULT>(())
+		/// # w::HrResult::Ok(())
 		/// ```
 	}
 }

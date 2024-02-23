@@ -49,7 +49,7 @@ pub trait gdi_Hbitmap: Handle {
 	///
 	/// let mut bitmap = w::BITMAP::default();
 	/// hbmp.GetObject(&mut bitmap)?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn GetObject(&self, pv: &mut BITMAP) -> SysResult<()> {
 		bool_to_sysresult(

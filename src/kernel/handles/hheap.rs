@@ -90,7 +90,7 @@ pub trait kernel_Hheap: Handle {
 	/// }
 	///
 	/// // HeapFree() automatically called
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn HeapAlloc(&self,
@@ -154,7 +154,7 @@ pub trait kernel_Hheap: Handle {
 	/// // HeapUnlock() automatically called
 	///
 	/// // HeapDestroy() automatically called
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn HeapLock(&self) -> SysResult<HeapUnlockGuard<'_, Self>> {
@@ -183,7 +183,7 @@ pub trait kernel_Hheap: Handle {
 	/// heap.HeapReAlloc(Some(co::HEAP_REALLOC::ZERO_MEMORY), &mut array, 65)?;
 	///
 	/// // HeapFree() automatically called
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn HeapReAlloc<'a>(&'a self,
 		flags: Option<co::HEAP_REALLOC>,
@@ -263,7 +263,7 @@ pub trait kernel_Hheap: Handle {
 	/// let is_ok = heap.HeapValidate(None, Some(&array));
 	///
 	/// // HeapFree() automatically called
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn HeapValidate(&self,
@@ -299,7 +299,7 @@ pub trait kernel_Hheap: Handle {
 	///     println!("Size: {}, overhead? {}",
 	///         block.cbData, block.cbOverhead);
 	/// }
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn HeapWalk(&self,

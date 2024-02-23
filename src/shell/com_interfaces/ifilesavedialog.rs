@@ -53,7 +53,7 @@ com_interface! { IFileSaveDialog: "84bccd23-5fde-4cdb-aea4-af64b83d78ab";
 	///         .GetDisplayName(co::SIGDN::FILESYSPATH)?;
 	///     println!("{}", chosen_file);
 	/// }
-	/// # Ok::<_, co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

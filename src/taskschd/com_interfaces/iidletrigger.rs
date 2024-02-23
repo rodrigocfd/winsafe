@@ -27,7 +27,7 @@ com_interface! { IIdleTrigger: "d537d2b0-9fb3-4d34-9739-1ff5ce7b1ef3";
 	///
 	/// let idle_trigger = trigger
 	///     .QueryInterface::<w::IIdleTrigger>()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

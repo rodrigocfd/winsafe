@@ -21,7 +21,7 @@ use crate::prelude::*;
 /// )?;
 /// let raw_bytes = f.as_slice();
 /// let text = w::WString::parse(raw_bytes)?.to_string();
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 pub struct FileMapped {
 	access: FileAccess,

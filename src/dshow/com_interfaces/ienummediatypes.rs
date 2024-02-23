@@ -55,7 +55,7 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	///     println!("{} {}",
 	///         amt.majortype.to_string(), amt.lSampleSize);
 	/// }
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
 	fn iter(&self,

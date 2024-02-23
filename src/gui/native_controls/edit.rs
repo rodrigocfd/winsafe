@@ -199,7 +199,7 @@ impl Edit {
 	/// for line in my_edit.iter_lines() {
 	///     println!("{}", line);
 	/// }
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	pub fn iter_lines<'a>(&'a self) -> impl Iterator<Item = String> + 'a {

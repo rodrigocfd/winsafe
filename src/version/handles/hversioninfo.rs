@@ -93,7 +93,7 @@ pub trait version_Hversioninfo: Handle {
 	/// for (lang, cp) in hversion.langs_and_cps()?.iter() {
 	///     println!("{} {}", lang, cp);
 	/// }
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn langs_and_cps(&self) -> SysResult<&[(LANGID, co::CP)]> {
@@ -138,7 +138,7 @@ pub trait version_Hversioninfo: Handle {
 	/// let ver = unsafe { &*pvsf }.dwFileVersion();
 	/// println!("Version {}.{}.{}.{}",
 	///     ver[0], ver[1], ver[2], ver[3]);
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	unsafe fn VarQueryValue<T>(&self,
@@ -193,7 +193,7 @@ pub trait version_Hversioninfo: Handle {
 	///     hversion.str_val(lang0, cp0, "ProductName")?,
 	///     hversion.str_val(lang0, cp0, "LegalCopyright")?,
 	/// );
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn str_val(&self,

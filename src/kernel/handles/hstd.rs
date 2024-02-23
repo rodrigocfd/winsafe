@@ -70,7 +70,7 @@ pub trait kernel_Hstd: Handle {
 	/// hstd.ReadConsole(&mut buffer, None)?;
 	///
 	/// let text = buffer.to_string();
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn ReadConsole(&self,

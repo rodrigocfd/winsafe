@@ -71,7 +71,7 @@ pub trait kernel_Hfilemapview: Handle {
 	/// let text = std::str::from_utf8(slice)?;
 	///
 	/// println!("{}", text);
-	/// # Ok::<_, Box<dyn std::error::Error>>(())
+	/// # w::AnyResult::Ok(())
 	/// ```
 	#[must_use]
 	fn as_slice(&self, len: usize) -> &[u8] {

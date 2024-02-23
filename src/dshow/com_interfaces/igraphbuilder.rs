@@ -37,7 +37,7 @@ com_interface! { IGraphBuilder: "56a868a9-0ad4-11ce-b03a-0020af0ba770";
 	///     None,
 	///     co::CLSCTX::INPROC_SERVER,
 	/// )?;
-	/// # Ok::<_, co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

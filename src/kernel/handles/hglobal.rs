@@ -74,7 +74,7 @@ pub trait kernel_Hglobal: Handle {
 	/// // GlobalUnlock() called automatically
 	///
 	/// // GlobalFree() called automatically
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn GlobalLock(&self) -> SysResult<GlobalUnlockGuard<'_, Self>> {

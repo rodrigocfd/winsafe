@@ -43,7 +43,7 @@ com_interface! { ITaskbarList3: "ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf";
 	///     None,
 	///     co::CLSCTX::INPROC_SERVER,
 	/// )?;
-	/// # Ok::<_, co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 
@@ -128,7 +128,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 	/// # let hwnd = w::HWND::NULL;
 	///
 	/// tbar.SetProgressValue(&hwnd, 50, 100)?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	fn SetProgressValue(&self,
 		hwnd: &HWND,

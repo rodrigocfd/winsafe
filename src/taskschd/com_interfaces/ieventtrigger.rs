@@ -35,7 +35,7 @@ com_interface! { IEventTrigger: "d45b0167-9653-4eef-b94f-0732ca7af251";
 	///
 	/// let event_trigger = trigger
 	///     .QueryInterface::<w::IEventTrigger>()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

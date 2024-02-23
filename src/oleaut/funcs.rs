@@ -21,7 +21,7 @@ use crate::prelude::*;
 /// # let stream = unsafe { w::IStream::null() };
 ///
 /// let picture = w::OleLoadPicture(&stream, None, true)?;
-/// # Ok::<_, winsafe::co::HRESULT>(())
+/// # w::HrResult::Ok(())
 /// ```
 #[must_use]
 pub fn OleLoadPicture(

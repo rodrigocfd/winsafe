@@ -110,7 +110,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 	///     co::TDCBF::OK,
 	///     w::IconRes::Info,
 	/// )?;
-	/// # Ok::<_, co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	///
 	/// Prompt the user to click OK or Cancel upon a question:
@@ -133,7 +133,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 	/// if answer == co::DLGID::OK {
 	///     println!("User clicked OK.");
 	/// }
-	/// # Ok::<_, co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	fn TaskDialog(&self,
 		hinstance: Option<&HINSTANCE>,

@@ -37,7 +37,7 @@ com_interface! { IMFMediaSession: "90377834-21d0-4dee-8214-ba2e3e6c1127";
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let media_session = w::MFCreateMediaSession(None::<&w::IMFAttributes>)?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 
@@ -147,7 +147,7 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 	///     co::MF_TIME_FORMAT::NULL,
 	///     &w::PROPVARIANT::default(),
 	/// )?;
-	/// # Ok::<_, co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	fn Start(&self,
 		time_format: co::MF_TIME_FORMAT,

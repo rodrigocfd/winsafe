@@ -33,7 +33,7 @@ com_interface! { ILogonTrigger: "72dade38-fae4-4b3e-baf4-5d009af02b1c";
 	///
 	/// let logon_trigger = trigger
 	///     .QueryInterface::<w::ILogonTrigger>()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 

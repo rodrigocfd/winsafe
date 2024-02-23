@@ -28,7 +28,7 @@ use crate::prelude::*;
 /// )?;
 ///
 /// // FreeSid() automatically called
-/// # Ok::<_, co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// Create a SID for the BUILTIN\Administrators group:
@@ -45,7 +45,7 @@ use crate::prelude::*;
 /// )?;
 ///
 /// // FreeSid() automatically called
-/// # Ok::<_, co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions
@@ -253,7 +253,7 @@ pub fn CreateDirectory(
 ///     co::WELL_KNOWN_SID_TYPE::LocalSystem,
 ///     None,
 /// )?;
-/// # Ok::<_, co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions
@@ -494,7 +494,7 @@ pub fn ExitThread(exit_code: u32) {
 /// )?;
 ///
 /// println!("{}", expanded);
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 #[must_use]
 pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
@@ -718,7 +718,7 @@ pub fn GetDiskSpaceInformation(
 /// for (k, v) in env_vars.iter() {
 ///     println!("{} = {}", k, v);
 /// }
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 #[must_use]
 pub fn GetEnvironmentStrings() -> SysResult<Vec<(String, String)>> {
@@ -857,7 +857,7 @@ pub fn GetLogicalDriveStrings() -> SysResult<Vec<String>> {
 /// let is_encrypted  = flags.has(co::FILE_ATTRIBUTE::ENCRYPTED);
 /// let is_hidden     = flags.has(co::FILE_ATTRIBUTE::HIDDEN);
 /// let is_temporary  = flags.has(co::FILE_ATTRIBUTE::TEMPORARY);
-/// # Ok::<_, co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 #[must_use]
 pub fn GetFileAttributes(file_name: &str) -> SysResult<co::FILE_ATTRIBUTE> {
@@ -897,7 +897,7 @@ pub fn GetNativeSystemInfo() -> SYSTEM_INFO {
 /// for (key, val) in pairs.iter() {
 ///     println!("{} = {}", key, val);
 /// }
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions
@@ -958,7 +958,7 @@ pub fn GetPrivateProfileSection(
 /// for section in sections.iter() {
 ///     println!("{}", section);
 /// }
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions
@@ -1009,7 +1009,7 @@ pub fn GetPrivateProfileSectionNames(
 /// )?.unwrap_or("not found!".to_owned());
 ///
 /// println!("{}", val);
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions
@@ -1175,7 +1175,7 @@ pub fn GetSystemTimePreciseAsFileTime() -> FILETIME {
 /// use winsafe::{self as w, prelude::*};
 ///
 /// let (_, kernel_time, _) = w::GetSystemTimes()?;
-/// # Ok::<_, w::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 #[must_use]
 pub fn GetSystemTimes() -> SysResult<(FILETIME, FILETIME, FILETIME)> {
@@ -1280,7 +1280,7 @@ pub fn GetUserName() -> SysResult<String> {
 /// println!("Max comp len: {}", max_comp_len);
 /// println!("Sys flags: {:?}", sys_flags);
 /// println!("Sys name: {}", sys_name);
-/// # Ok::<_, co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 pub fn GetVolumeInformation(
 	root_path_name: Option<&str>,
@@ -1752,7 +1752,7 @@ pub const fn LODWORD(v: u64) -> u32 {
 ///
 /// let user_name = w::GetUserName()?;
 /// let (domain_name, sid, kind) = w::LookupAccountName(None, &user_name)?;
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions
@@ -1930,7 +1930,7 @@ pub fn LookupPrivilegeName(
 ///     .OpenProcessToken(co::TOKEN::ADJUST_PRIVILEGES | co::TOKEN::QUERY)?;
 ///
 /// let luid = w::LookupPrivilegeValue(None, co::SE_PRIV::SHUTDOWN_NAME)?;
-/// # Ok::<_, co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 #[must_use]
 pub fn LookupPrivilegeValue(
@@ -2122,7 +2122,7 @@ pub fn OutputDebugString(output_string: &str) {
 ///     ((w::QueryPerformanceCounter()? - t0) as f64 / freq as f64) * 1000.0;
 ///
 /// println!("Operation lasted {:.2} ms", duration_ms);
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions
@@ -2392,7 +2392,7 @@ pub fn WideCharToMultiByte(
 ///     Some("new value"),
 ///     "C:\\Temp\\foo.ini",
 /// )?;
-/// # Ok::<_, winsafe::co::ERROR>(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions

@@ -89,7 +89,7 @@ pub trait gdi_Hfont: Handle {
 	///
 	/// let mut log_font = w::LOGFONT::default();
 	/// hfont.GetObject(&mut log_font)?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	fn GetObject(&self, lf: &mut LOGFONT) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {

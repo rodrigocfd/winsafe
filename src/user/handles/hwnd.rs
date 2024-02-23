@@ -108,7 +108,7 @@ pub trait user_Hwnd: Handle {
 	/// // do your hdc painting...
 	///
 	/// // EndPaint() called automatically
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	///
 	/// If you don't use the returned device context handle, you must still keep
@@ -125,7 +125,7 @@ pub trait user_Hwnd: Handle {
 	/// // do your hdc painting...
 	///
 	/// // EndPaint() called automatically
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn BeginPaint(&self) -> SysResult<EndPaintGuard<'_, Self>> {
@@ -504,7 +504,7 @@ pub trait user_Hwnd: Handle {
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let hdc_desktop = w::HWND::DESKTOP.GetDC()?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn GetDC(&self) -> SysResult<ReleaseDCGuard<'_, Self>> {
@@ -870,7 +870,7 @@ pub trait user_Hwnd: Handle {
 	///
 	/// let text = hwnd.GetWindowText()?;
 	/// println!("Text: {}", text);
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn GetWindowText(&self) -> SysResult<String> {
@@ -957,7 +957,7 @@ pub trait user_Hwnd: Handle {
 	/// # let hwnd = w::HWND::NULL;
 	///
 	/// hwnd.InvalidateRect(None, true)?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn InvalidateRect(&self, rc: Option<&RECT>, erase: bool) -> SysResult<()> {
 		bool_to_sysresult(
@@ -1066,7 +1066,7 @@ pub trait user_Hwnd: Handle {
 	///
 	/// // After all operations, unlock the currently locked window.
 	/// w::HWND::NULL.LockWindowUpdate()?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn LockWindowUpdate(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::LockWindowUpdate(self.ptr()) })
@@ -1110,7 +1110,7 @@ pub trait user_Hwnd: Handle {
 	///     &hwnd_dest,
 	///     w::PtsRc::Pts(&mut points),
 	/// )?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn MapWindowPoints(&self,
 		hdest: &HWND,
@@ -1156,7 +1156,7 @@ pub trait user_Hwnd: Handle {
 	///
 	/// hwnd.MessageBox("Hello, world", "title",
 	///     co::MB::OKCANCEL | co::MB::ICONINFORMATION)?;
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	///
 	/// Usually the message box has a valid parent window, however, if for some
@@ -1168,7 +1168,7 @@ pub trait user_Hwnd: Handle {
 	///
 	/// w::HWND::NULL
 	///     .MessageBox("Hello, world", "Title", co::MB::ICONEXCLAMATION)?;
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn MessageBox(&self,
 		text: &str,
@@ -1240,7 +1240,7 @@ pub trait user_Hwnd: Handle {
 	/// # let hwnd = w::HWND::NULL;
 	///
 	/// let _hclip = hwnd.OpenClipboard()?; // keep guard alive
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	///
 	/// You can also open the clipboard without an `HWND` owner:
@@ -1249,7 +1249,7 @@ pub trait user_Hwnd: Handle {
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let _hclip = w::HWND::NULL.OpenClipboard()?; // keep guard alive
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
 	fn OpenClipboard(&self) -> SysResult<CloseClipboardGuard<'_>> {
@@ -1411,7 +1411,7 @@ pub trait user_Hwnd: Handle {
 	///         img_type: co::IMAGE_TYPE::BITMAP,
 	///     },
 	/// )?;
-	/// # Ok::<_, co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	///
 	/// Sending an [`em::CharFromPos`](crate::msg::em::CharFromPos) edit message,
@@ -1689,7 +1689,7 @@ pub trait user_Hwnd: Handle {
 	///     w::SIZE::default(),
 	///     co::SWP::NOZORDER | co::SWP::NOSIZE,
 	/// )?;
-	/// # Ok::<_, winsafe::co::ERROR>(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	fn SetWindowPos(&self,
 		hwnd_insert_after: HwndPlace,

@@ -36,7 +36,7 @@ com_interface! { IDXGIFactory: "7b7166ec-21c7-44ae-b21a-c9ae321ae369";
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let factory = w::CreateDXGIFactory()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 }
 
@@ -114,7 +114,7 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	/// let adapters: Vec<w::IDXGIAdapter> =
 	///     factory.EnumAdapters()
 	///         .collect::<w::HrResult<Vec<_>>>()?;
-	/// # Ok::<_, winsafe::co::HRESULT>(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
 	fn EnumAdapters(&self,

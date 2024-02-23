@@ -119,7 +119,7 @@ use winsafe::{prelude::*, co::MB, HWND};
 
 let hwnd = HWND::GetDesktopWindow();
 hwnd.MessageBox("Hello, world", "Title", MB::OKCANCEL | MB::ICONINFORMATION)?;
-# Ok::<_, winsafe::co::ERROR>(())
+# w::SysResult::Ok(())
 ```
 
 The method [`MessageBox`](crate::prelude::user_Hwnd::MessageBox), like most functions that can return errors, will return [`SysResult`](crate::SysResult), which can contain an [`ERROR`](crate::co::ERROR) constant.
