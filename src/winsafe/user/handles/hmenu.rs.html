@@ -612,7 +612,6 @@
 <a href="#610" id="610">610</a>
 <a href="#611" id="611">611</a>
 <a href="#612" id="612">612</a>
-<a href="#613" id="613">613</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -937,16 +936,15 @@
 	/// let hmenu: w::HMENU; // initialized somewhere
 	/// # let hmenu = w::HMENU::NULL;
 	///
-	/// [
-	///     (ID_FILE_OPEN, "Open\tCtrl+O"),
-	///     (ID_FILE_SAVE, "&amp;Save"),
-	/// ].iter()
-	///     .map(|(id, txt)| hmenu.EnableMenuItem(
-	///         w::IdPos::Id(*id),
-	///         false,
-	///     ))
-	///     .collect::&lt;w::SysResult&lt;Vec&lt;_&gt;&gt;&gt;()?;
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// [ID_FILE_OPEN, ID_FILE_SAVE]
+	///     .into_iter()
+	///     .try_for_each(|id|
+	///         hmenu.EnableMenuItem(
+	///             w::IdPos::Id(id),
+	///             false,
+	///         ).map(|_| ())
+	///     )?;
+	/// # Ok::&lt;_, w::co::ERROR&gt;(())
 	/// ```
 	</span><span class="kw">fn </span>EnableMenuItem(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		id_or_pos: IdPos,

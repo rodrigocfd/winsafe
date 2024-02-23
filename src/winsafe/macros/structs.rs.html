@@ -618,7 +618,7 @@
 	};
 }
 
-<span class="doccomment">/// Implements getter and setter methods for the given `ComPtr` field.
+<span class="doccomment">/// Implements getter and setter methods for the given `COMPTR` field.
 </span><span class="macro">macro_rules! </span>pub_fn_comptr_get_set {
 	(<span class="macro-nonterminal">$field</span>:ident, <span class="macro-nonterminal">$setter</span>:ident, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>) =&gt; {
 		<span class="doccomment">/// Returns the COM object field, by cloning the underlying COM pointer.
@@ -653,7 +653,7 @@
 	};
 }
 
-<span class="doccomment">/// Implements `Drop` for a `ComPtr` field.
+<span class="doccomment">/// Implements `Drop` for a struct with one `COMPTR` field.
 </span><span class="macro">macro_rules! </span>impl_drop_comptr {
 	(<span class="macro-nonterminal">$field</span>:ident, <span class="macro-nonterminal">$name</span>:ident $(, <span class="macro-nonterminal">$life</span>:lifetime)<span class="kw-2">*</span>) =&gt; {
 		<span class="kw">impl</span>&lt;$(<span class="macro-nonterminal">$life</span>),<span class="kw-2">*</span>&gt; Drop <span class="kw">for </span><span class="macro-nonterminal">$name</span>&lt;$(<span class="macro-nonterminal">$life</span>),<span class="kw-2">*</span>&gt; {
