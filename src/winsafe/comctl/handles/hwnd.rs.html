@@ -282,7 +282,7 @@
 	///     co::TDCBF::OK,
 	///     w::IconRes::Info,
 	/// )?;
-	/// # Ok::&lt;_, co::HRESULT&gt;(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	///
 	/// Prompt the user to click OK or Cancel upon a question:
@@ -305,7 +305,7 @@
 	/// if answer == co::DLGID::OK {
 	///     println!("User clicked OK.");
 	/// }
-	/// # Ok::&lt;_, co::HRESULT&gt;(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>TaskDialog(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		hinstance: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>HINSTANCE&gt;,

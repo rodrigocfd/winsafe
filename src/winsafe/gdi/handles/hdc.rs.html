@@ -1396,7 +1396,7 @@
 	/// fo.write(bfh.serialize())?;
 	/// fo.write(bi.bmiHeader.serialize())?;
 	/// fo.write(&amp;data_buf)?;
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">unsafe fn </span>GetDIBits(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		hbm: <span class="kw-2">&amp;</span>HBITMAP,
@@ -1768,7 +1768,7 @@
 	/// )?;
 	///
 	/// let _pen_guard = hdc.SelectObject(&amp;*hpen); // keep guard alive
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>SelectObject&lt;G&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,

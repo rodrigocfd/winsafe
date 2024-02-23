@@ -351,7 +351,7 @@
 /// for arg in args.iter() {
 ///     println!("{}", arg);
 /// }
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>CommandLineToArgv(cmd_line: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;Vec&lt;String&gt;&gt; {
@@ -389,7 +389,7 @@
 /// )?;
 ///
 /// // full = "C:\\One\\Two\\Three"
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="kw">pub fn </span>PathCombine(
 	str_dir: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
@@ -504,7 +504,7 @@
 ///     "C:\\Temp\\foo.txt",
 ///     None::&lt;&amp;w::IBindCtx&gt;,
 /// )?;
-/// # Ok::&lt;_, winsafe::co::HRESULT&gt;(())
+/// # w::HrResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>SHCreateItemFromParsingName&lt;T&gt;(
@@ -540,7 +540,7 @@
 /// # let raw_data = Vec::&lt;u8&gt;::default();
 ///
 /// let stream = w::SHCreateMemStream(&amp;raw_data)?;
-/// # Ok::&lt;_, winsafe::co::HRESULT&gt;(())
+/// # w::HrResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>SHCreateMemStream(src: <span class="kw-2">&amp;</span>[u8]) -&gt; HrResult&lt;IStream&gt; {
@@ -598,7 +598,7 @@
 /// )?;
 ///
 /// println!("Docs folder: {}", docs_folder);
-/// # Ok::&lt;_, co::HRESULT&gt;(())
+/// # w::HrResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>SHGetKnownFolderPath(
@@ -640,7 +640,7 @@
 /// )?;
 ///
 /// println!("HICON handle: {}", sii.hIcon);
-/// # Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+/// # w::AnyResult::Ok(())
 /// ```
 </span><span class="kw">pub fn </span>SHGetStockIconInfo(
 	siid: co::SIID,

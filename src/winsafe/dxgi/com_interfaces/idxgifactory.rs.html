@@ -196,7 +196,7 @@
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let factory = w::CreateDXGIFactory()?;
-	/// # Ok::&lt;_, winsafe::co::HRESULT&gt;(())
+	/// # w::HrResult::Ok(())
 	/// ```
 </span>}
 
@@ -274,7 +274,7 @@
 	/// let adapters: Vec&lt;w::IDXGIAdapter&gt; =
 	///     factory.EnumAdapters()
 	///         .collect::&lt;w::HrResult&lt;Vec&lt;_&gt;&gt;&gt;()?;
-	/// # Ok::&lt;_, winsafe::co::HRESULT&gt;(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>EnumAdapters(<span class="kw-2">&amp;</span><span class="self">self</span>,

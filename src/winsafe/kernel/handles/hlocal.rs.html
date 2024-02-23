@@ -192,7 +192,7 @@
 	/// // LocalUnlock() called automatically
 	///
 	/// // LocalFree() called automatically
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>LocalLock(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;LocalUnlockGuard&lt;<span class="lifetime">'_</span>, <span class="self">Self</span>&gt;&gt; {

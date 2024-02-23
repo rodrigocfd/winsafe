@@ -116,7 +116,7 @@
 	///
 	/// let mut bitmap = w::BITMAP::default();
 	/// hbmp.GetObject(&amp;mut bitmap)?;
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>GetObject(<span class="kw-2">&amp;</span><span class="self">self</span>, pv: <span class="kw-2">&amp;mut </span>BITMAP) -&gt; SysResult&lt;()&gt; {
 		bool_to_sysresult(

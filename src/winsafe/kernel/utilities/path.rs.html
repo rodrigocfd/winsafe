@@ -325,7 +325,7 @@
 ///     let file_path = file_path?;
 ///     println!("{}", file_path);
 /// }
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>dir_list&lt;<span class="lifetime">'a</span>&gt;(
@@ -372,7 +372,7 @@
 ///         Ok(format!("PATH: {}", file_path))
 ///     })
 ///     .collect::&lt;w::SysResult&lt;Vec&lt;_&gt;&gt;&gt;()?;
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>dir_walk&lt;<span class="lifetime">'a</span>&gt;(

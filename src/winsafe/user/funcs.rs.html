@@ -1309,7 +1309,7 @@
 ///         Ok(name)
 ///     })
 ///     .collect::&lt;w::SysResult&lt;Vec&lt;_&gt;&gt;&gt;()?;
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>EnumDisplayDevices(
@@ -1350,7 +1350,7 @@
 ///
 ///     graphics_mode_idx += 1;
 /// }
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// Retrieving from the predefined enum.
@@ -1368,7 +1368,7 @@
 ///
 /// println!("{}, {}, {}",
 ///     dm.dmDeviceName(), dm.dmDisplayFrequency, dm.dmBitsPerPel);
-/// # Ok::&lt;_, co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="kw">pub fn </span>EnumDisplaySettings(
 	device_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
@@ -1431,7 +1431,7 @@
 ///         true
 ///     },
 /// )?;
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="kw">pub fn </span>EnumThreadWindows&lt;F&gt;(thread_id: u32, func: F) -&gt; SysResult&lt;()&gt;
 	<span class="kw">where </span>F: FnMut(HWND) -&gt; bool,
@@ -1459,7 +1459,7 @@
 ///     println!("HWND: {}", hwnd);
 ///     true
 /// })?;
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="kw">pub fn </span>EnumWindows&lt;F&gt;(func: F) -&gt; SysResult&lt;()&gt;
 	<span class="kw">where </span>F: FnMut(HWND) -&gt; bool,
@@ -1578,7 +1578,7 @@
 /// let gti = w::GetGUIThreadInfo(thread_id)?;
 ///
 /// println!("Caret rect: {}", gti.rcCaret);
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetGUIThreadInfo(thread_id: u32) -&gt; SysResult&lt;GUITHREADINFO&gt; {
@@ -1854,7 +1854,7 @@
 ///         },
 ///     ),
 /// ])?;
-/// # Ok::&lt;_, co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="kw">pub fn </span>SendInput(inputs: <span class="kw-2">&amp;</span>[HwKbMouse]) -&gt; SysResult&lt;u32&gt; {
 	<span class="kw">let </span>objs = inputs.iter()

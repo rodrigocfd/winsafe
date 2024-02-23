@@ -390,7 +390,7 @@
 	///     None,
 	///     None,
 	/// )?;
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	///
 	/// Opening a file for read and write. If the file doesn't exist, create it:
@@ -409,7 +409,7 @@
 	///     None,
 	///     None,
 	/// )?;
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>CreateFile(
@@ -553,7 +553,7 @@
 	/// // file read/write operations...
 	///
 	/// // UnlockFile() called automatically
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>LockFile(<span class="kw-2">&amp;</span><span class="self">self</span>,

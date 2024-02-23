@@ -186,7 +186,7 @@
 	///     println!("Path: {}",
 	///         ish_item.GetDisplayName(co::SIGDN::FILESYSPATH)?);
 	/// }
-	/// # Ok::&lt;_, winsafe::co::HRESULT&gt;(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	///
 	/// Collecting the file paths into a [`Vec`](std::vec::Vec):
@@ -204,7 +204,7 @@
 	///         Ok(name)
 	///     })
 	///     .collect::&lt;w::HrResult&lt;Vec&lt;_&gt;&gt;&gt;()?;
-	/// # Ok::&lt;_, co::HRESULT&gt;(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>,

@@ -402,7 +402,7 @@
 	/// }
 	///
 	/// // HeapFree() automatically called
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>HeapAlloc(<span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -466,7 +466,7 @@
 	/// // HeapUnlock() automatically called
 	///
 	/// // HeapDestroy() automatically called
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>HeapLock(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;HeapUnlockGuard&lt;<span class="lifetime">'_</span>, <span class="self">Self</span>&gt;&gt; {
@@ -495,7 +495,7 @@
 	/// heap.HeapReAlloc(Some(co::HEAP_REALLOC::ZERO_MEMORY), &amp;mut array, 65)?;
 	///
 	/// // HeapFree() automatically called
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>HeapReAlloc&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>,
 		flags: <span class="prelude-ty">Option</span>&lt;co::HEAP_REALLOC&gt;,
@@ -575,7 +575,7 @@
 	/// let is_ok = heap.HeapValidate(None, Some(&amp;array));
 	///
 	/// // HeapFree() automatically called
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>HeapValidate(<span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -611,7 +611,7 @@
 	///     println!("Size: {}, overhead? {}",
 	///         block.cbData, block.cbOverhead);
 	/// }
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>HeapWalk(<span class="kw-2">&amp;</span><span class="self">self</span>,

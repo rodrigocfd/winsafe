@@ -235,7 +235,7 @@
 /// )?;
 /// let raw_bytes = f.read_all()?;
 /// let text = w::WString::parse(&amp;raw_bytes)?.to_string();
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// Writing a string:
@@ -248,7 +248,7 @@
 ///     w::FileAccess::OpenOrCreateRW,
 /// )?;
 /// f.erase_and_write("My text".as_bytes())?;
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="kw">pub struct </span>File {
 	hfile: CloseHandleGuard&lt;HFILE&gt;,

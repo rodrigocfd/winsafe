@@ -187,7 +187,7 @@
 	/// let outputs: Vec&lt;w::IDXGIOutput&gt; =
 	///     adapter.EnumOutputs()
 	///         .collect::&lt;w::HrResult&lt;Vec&lt;_&gt;&gt;&gt;()?;
-	/// # Ok::&lt;_, winsafe::co::HRESULT&gt;(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>EnumOutputs(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = HrResult&lt;IDXGIOutput&gt;&gt; + <span class="lifetime">'_ </span>{
@@ -207,7 +207,7 @@
 	/// let mut desc = w::DXGI_ADAPTER_DESC::default();
 	///
 	/// adapter.GetDesc(&amp;mut desc)?;
-	/// # Ok::&lt;_, winsafe::co::HRESULT&gt;(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>GetDesc(<span class="kw-2">&amp;</span><span class="self">self</span>, desc: <span class="kw-2">&amp;mut </span>DXGI_ADAPTER_DESC) -&gt; HrResult&lt;()&gt; {
 		ok_to_hrresult(

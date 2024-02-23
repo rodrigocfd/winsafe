@@ -406,7 +406,7 @@
 	/// )?;
 	///
 	/// // FreeLibrary() called automatically
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>EnumResourceNames&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		resource_type: RtStr,
@@ -444,7 +444,7 @@
 	/// )?;
 	///
 	/// // FreeLibrary() called automatically
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>EnumResourceTypes&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F) -&gt; SysResult&lt;()&gt;
 		<span class="kw">where </span>F: FnMut(RtStr) -&gt; bool,
@@ -519,7 +519,7 @@
 	/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
 	///
 	/// println!("EXE: {}", exe_name);
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>GetModuleFileName(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;String&gt; {
@@ -546,7 +546,7 @@
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let hinstance = w::HINSTANCE::GetModuleHandle(None)?;
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>GetModuleHandle(module_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; SysResult&lt;HINSTANCE&gt; {
@@ -640,7 +640,7 @@
 	/// // EndUpdateResource() called automatically
 	///
 	/// // FreeLibrary() called automatically
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>LockResource(<span class="kw-2">&amp;</span><span class="self">self</span>,

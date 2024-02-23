@@ -40,15 +40,15 @@
 <a href="#38" id="38">38</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 
-<span class="doccomment">/// Parameters of a message which can be sent. Implemented by [all undefined
-/// messages](crate::msg).
+<span class="doccomment">/// Parameters of a message which can be sent. Implemented by
+/// [all defined messages](crate::msg).
 ///
 /// Allows the conversion to the generic [`WndMsg`](crate::msg::WndMsg)
 /// parameters, and also defines the return type of the message.
 ///
 /// Used in functions like
 /// [`SendMessage`](crate::prelude::user_Hwnd::SendMessage) and
-/// [`DefWindowProc`](`crate::prelude::user_Hwnd::DefWindowProc`).
+/// [`DefWindowProc`](crate::prelude::user_Hwnd::DefWindowProc).
 </span><span class="kw">pub unsafe trait </span>MsgSend {
 	<span class="doccomment">/// The specific type of the value returned by the message.
 	</span><span class="kw">type </span>RetType;

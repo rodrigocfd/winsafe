@@ -153,7 +153,7 @@
 	/// let text = std::str::from_utf8(slice)?;
 	///
 	/// println!("{}", text);
-	/// # Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+	/// # w::AnyResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>, len: usize) -&gt; <span class="kw-2">&amp;</span>[u8] {

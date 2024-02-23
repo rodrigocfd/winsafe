@@ -195,7 +195,7 @@
 	/// // GlobalUnlock() called automatically
 	///
 	/// // GlobalFree() called automatically
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>GlobalLock(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;GlobalUnlockGuard&lt;<span class="lifetime">'_</span>, <span class="self">Self</span>&gt;&gt; {

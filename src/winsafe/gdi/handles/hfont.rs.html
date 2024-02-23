@@ -202,7 +202,7 @@
 	///
 	/// let mut log_font = w::LOGFONT::default();
 	/// hfont.GetObject(&amp;mut log_font)?;
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	</span><span class="kw">fn </span>GetObject(<span class="kw-2">&amp;</span><span class="self">self</span>, lf: <span class="kw-2">&amp;mut </span>LOGFONT) -&gt; SysResult&lt;()&gt; {
 		bool_to_sysresult(
 			<span class="kw">unsafe </span>{

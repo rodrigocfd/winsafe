@@ -2450,7 +2450,7 @@
 /// )?;
 ///
 /// // FreeSid() automatically called
-/// # Ok::&lt;_, co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// Create a SID for the BUILTIN\Administrators group:
@@ -2467,7 +2467,7 @@
 /// )?;
 ///
 /// // FreeSid() automatically called
-/// # Ok::&lt;_, co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions
@@ -2675,7 +2675,7 @@
 ///     co::WELL_KNOWN_SID_TYPE::LocalSystem,
 ///     None,
 /// )?;
-/// # Ok::&lt;_, co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions
@@ -2916,7 +2916,7 @@
 /// )?;
 ///
 /// println!("{}", expanded);
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>ExpandEnvironmentStrings(src: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;String&gt; {
@@ -3140,7 +3140,7 @@
 /// for (k, v) in env_vars.iter() {
 ///     println!("{} = {}", k, v);
 /// }
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetEnvironmentStrings() -&gt; SysResult&lt;Vec&lt;(String, String)&gt;&gt; {
@@ -3279,7 +3279,7 @@
 /// let is_encrypted  = flags.has(co::FILE_ATTRIBUTE::ENCRYPTED);
 /// let is_hidden     = flags.has(co::FILE_ATTRIBUTE::HIDDEN);
 /// let is_temporary  = flags.has(co::FILE_ATTRIBUTE::TEMPORARY);
-/// # Ok::&lt;_, co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetFileAttributes(file_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;co::FILE_ATTRIBUTE&gt; {
@@ -3319,7 +3319,7 @@
 /// for (key, val) in pairs.iter() {
 ///     println!("{} = {}", key, val);
 /// }
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions
@@ -3380,7 +3380,7 @@
 /// for section in sections.iter() {
 ///     println!("{}", section);
 /// }
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions
@@ -3431,7 +3431,7 @@
 /// )?.unwrap_or("not found!".to_owned());
 ///
 /// println!("{}", val);
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions
@@ -3597,7 +3597,7 @@
 /// use winsafe::{self as w, prelude::*};
 ///
 /// let (_, kernel_time, _) = w::GetSystemTimes()?;
-/// # Ok::&lt;_, w::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetSystemTimes() -&gt; SysResult&lt;(FILETIME, FILETIME, FILETIME)&gt; {
@@ -3702,7 +3702,7 @@
 /// println!("Max comp len: {}", max_comp_len);
 /// println!("Sys flags: {:?}", sys_flags);
 /// println!("Sys name: {}", sys_name);
-/// # Ok::&lt;_, co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="kw">pub fn </span>GetVolumeInformation(
 	root_path_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
@@ -4174,7 +4174,7 @@
 ///
 /// let user_name = w::GetUserName()?;
 /// let (domain_name, sid, kind) = w::LookupAccountName(None, &amp;user_name)?;
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions
@@ -4352,7 +4352,7 @@
 ///     .OpenProcessToken(co::TOKEN::ADJUST_PRIVILEGES | co::TOKEN::QUERY)?;
 ///
 /// let luid = w::LookupPrivilegeValue(None, co::SE_PRIV::SHUTDOWN_NAME)?;
-/// # Ok::&lt;_, co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>LookupPrivilegeValue(
@@ -4544,7 +4544,7 @@
 ///     ((w::QueryPerformanceCounter()? - t0) as f64 / freq as f64) * 1000.0;
 ///
 /// println!("Operation lasted {:.2} ms", duration_ms);
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions
@@ -4814,7 +4814,7 @@
 ///     Some("new value"),
 ///     "C:\\Temp\\foo.ini",
 /// )?;
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 ///
 /// # Related functions

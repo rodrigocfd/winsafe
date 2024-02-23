@@ -400,7 +400,7 @@
 	///     println!("{} {}",
 	///         heap_entry.th32HeapID, heap_entry.th32ProcessID);
 	/// }
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>iter_heaps(<span class="kw-2">&amp;mut </span><span class="self">self</span>,
@@ -429,7 +429,7 @@
 	///     println!("{} {}",
 	///         mod_entry.szModule(), mod_entry.th32ProcessID);
 	/// }
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>iter_modules(<span class="kw-2">&amp;mut </span><span class="self">self</span>,
@@ -458,7 +458,7 @@
 	///     println!("{} {} {}",
 	///         proc_entry.szExeFile(), proc_entry.th32ProcessID, proc_entry.cntThreads);
 	/// }
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>iter_processes(<span class="kw-2">&amp;mut </span><span class="self">self</span>,
@@ -489,7 +489,7 @@
 	///     println!("{} {}",
 	///         thread_entry.th32ThreadID, thread_entry.th32OwnerProcessID);
 	/// }
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>iter_threads(<span class="kw-2">&amp;mut </span><span class="self">self</span>,

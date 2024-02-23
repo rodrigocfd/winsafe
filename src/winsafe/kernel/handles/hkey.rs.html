@@ -1369,7 +1369,7 @@
 	///     let key_name = key_name?;
 	///     println!("{}", key_name);
 	/// }
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>RegEnumKeyEx(<span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -1402,7 +1402,7 @@
 	/// let values_and_types: Vec&lt;(String, co::REG)&gt; =
 	///     hkey.RegEnumValue()?
 	///         .collect::&lt;w::SysResult&lt;Vec&lt;_&gt;&gt;&gt;()?;
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>RegEnumValue(<span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -1457,7 +1457,7 @@
 	///     },
 	///     w::RegistryValue::None =&gt; println!("No value"),
 	/// }
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>RegGetValue(<span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -1559,7 +1559,7 @@
 	///     co::REG_OPTION::default(),
 	///     co::KEY::READ,
 	/// )?;
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>RegOpenKeyEx(<span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -1720,7 +1720,7 @@
 	///     }
 	/// }
 	///
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>RegQueryMultipleValues(<span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -1852,7 +1852,7 @@
 	///     },
 	///     w::RegistryValue::None =&gt; println!("No value"),
 	/// }
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>RegQueryValueEx(<span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -2014,7 +2014,7 @@
 	///     Some("Color"),
 	///     w::RegistryValue::Sz("blue".to_owned()),
 	/// )?;
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>RegSetKeyValue(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		sub_key: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
@@ -2060,7 +2060,7 @@
 	///     Some("Color"),
 	///     w::RegistryValue::Sz("blue".to_owned()),
 	/// )?;
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>RegSetValueEx(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		value_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,

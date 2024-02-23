@@ -150,7 +150,7 @@
 /// # let stream = unsafe { w::IStream::null() };
 ///
 /// let picture = w::OleLoadPicture(&amp;stream, None, true)?;
-/// # Ok::&lt;_, winsafe::co::HRESULT&gt;(())
+/// # w::HrResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>OleLoadPicture(

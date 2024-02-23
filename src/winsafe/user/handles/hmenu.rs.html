@@ -662,7 +662,7 @@
 	///     w::MenuItem::Separator,
 	///     w::MenuItem::Entry(ID_FILE_EXIT, "E&amp;xit"),
 	/// ])?;
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>append_item(<span class="kw-2">&amp;</span><span class="self">self</span>, items: <span class="kw-2">&amp;</span>[MenuItem]) -&gt; SysResult&lt;()&gt; {
 		items.iter().map(|item| {
@@ -707,7 +707,7 @@
 	///     w::MenuItemInfo::Separator =&gt; println!("separator"),
 	///     w::MenuItemInfo::Submenu(hsub, txt) =&gt; println!("submenu {} {}", hsub, txt),
 	/// }
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>item_info(<span class="kw-2">&amp;</span><span class="self">self</span>, id_or_pos: IdPos) -&gt; SysResult&lt;MenuItemInfo&gt; {
@@ -748,7 +748,7 @@
 	///         w::MenuItemInfo::Submenu(hsub, txt) =&gt; println!("submenu {} {}", hsub, txt),
 	///     }
 	/// }
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>iter_items(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = SysResult&lt;MenuItemInfo&gt;&gt; + <span class="lifetime">'_ </span>{
@@ -920,7 +920,7 @@
 	///     w::IdPos::Id(ID_FILE_OPEN),
 	///     false,
 	/// )?;
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	///
 	/// Disabling multiple menu items at once:
@@ -944,7 +944,7 @@
 	///             false,
 	///         ).map(|_| ())
 	///     )?;
-	/// # Ok::&lt;_, w::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>EnableMenuItem(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		id_or_pos: IdPos,

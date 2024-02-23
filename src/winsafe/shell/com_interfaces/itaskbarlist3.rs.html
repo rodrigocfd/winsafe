@@ -260,7 +260,7 @@
 	///     None,
 	///     co::CLSCTX::INPROC_SERVER,
 	/// )?;
-	/// # Ok::&lt;_, co::HRESULT&gt;(())
+	/// # w::HrResult::Ok(())
 	/// ```
 </span>}
 
@@ -345,7 +345,7 @@
 	/// # let hwnd = w::HWND::NULL;
 	///
 	/// tbar.SetProgressValue(&amp;hwnd, 50, 100)?;
-	/// # Ok::&lt;_, winsafe::co::HRESULT&gt;(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>SetProgressValue(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		hwnd: <span class="kw-2">&amp;</span>HWND,

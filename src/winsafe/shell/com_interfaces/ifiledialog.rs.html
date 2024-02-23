@@ -607,7 +607,7 @@
 	///     ("Images", "*.jpg;*.png;*.bmp"),
 	///     ("All files", "*.*"),
 	/// ])?;
-	/// # Ok::&lt;_, winsafe::co::HRESULT&gt;(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>SetFileTypes&lt;S: AsRef&lt;str&gt;&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		filter_spec: <span class="kw-2">&amp;</span>[(S, S)],

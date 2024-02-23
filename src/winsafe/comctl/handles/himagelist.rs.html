@@ -329,7 +329,7 @@
 	/// # let himgl = w::HIMAGELIST::NULL;
 	///
 	/// let _drag = himgl.BeginDrag(0, w::POINT::new(0, 0))?; // keep guard alive
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>BeginDrag(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		itrack: u32,
@@ -363,7 +363,7 @@
 	/// )?;
 	///
 	/// // ImageList_Destroy() automatically called
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>Create(

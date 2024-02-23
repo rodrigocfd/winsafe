@@ -272,7 +272,7 @@
 	///
 	/// let (_, height) = hdc.HiMetricToPixel(0, pic.get_Height()?);
 	/// println!("Height: {} px", height);
-	/// # Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+	/// # w::AnyResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>get_Height(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;i32&gt; {
@@ -311,7 +311,7 @@
 	///
 	/// let (width, _) = hdc.HiMetricToPixel(pic.get_Width()?, 0);
 	/// println!("Width: {} px", width);
-	/// # Ok::&lt;_, Box&lt;dyn std::error::Error&gt;&gt;(())
+	/// # w::AnyResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>get_Width(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;i32&gt; {

@@ -780,7 +780,7 @@
 	/// )?;
 	/// let wstr = w::WString::parse(file_in.as_slice())?;
 	/// let str_contents = wstr.to_string();
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>parse(data: <span class="kw-2">&amp;</span>[u8]) -&gt; SysResult&lt;<span class="self">Self</span>&gt; {

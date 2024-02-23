@@ -240,7 +240,7 @@
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let hdesk = w::HDESK::GetThreadDesktop(w::GetCurrentThreadId())?;
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>GetThreadDesktop(
 		thread_id: u32,

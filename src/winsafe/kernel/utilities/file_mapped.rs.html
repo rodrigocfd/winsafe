@@ -152,7 +152,7 @@
 /// )?;
 /// let raw_bytes = f.as_slice();
 /// let text = w::WString::parse(raw_bytes)?.to_string();
-/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+/// # w::SysResult::Ok(())
 /// ```
 </span><span class="kw">pub struct </span>FileMapped {
 	access: FileAccess,

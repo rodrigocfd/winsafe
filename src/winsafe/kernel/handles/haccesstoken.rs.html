@@ -358,7 +358,7 @@
 	/// ])?;
 	///
 	/// htoken.AdjustTokenPrivileges(w::DisabPriv::Privs(&amp;privs))?;
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>AdjustTokenPrivileges(<span class="kw-2">&amp;</span><span class="self">self</span>, new_state: DisabPriv) -&gt; SysResult&lt;()&gt; {
 		bool_to_sysresult(
@@ -471,7 +471,7 @@
 	/// for (idx, g) in groups.Groups().iter().enumerate() {
 	///     println!("{}: {}", idx, g.Sid().unwrap());
 	/// }
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>GetTokenInformation(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		information_class: co::TOKEN_INFORMATION_CLASS,

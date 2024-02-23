@@ -1967,7 +1967,7 @@
 	/// // do your hdc painting...
 	///
 	/// // EndPaint() called automatically
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	///
 	/// If you don't use the returned device context handle, you must still keep
@@ -1984,7 +1984,7 @@
 	/// // do your hdc painting...
 	///
 	/// // EndPaint() called automatically
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>BeginPaint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;EndPaintGuard&lt;<span class="lifetime">'_</span>, <span class="self">Self</span>&gt;&gt; {
@@ -2363,7 +2363,7 @@
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let hdc_desktop = w::HWND::DESKTOP.GetDC()?;
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>GetDC(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;ReleaseDCGuard&lt;<span class="lifetime">'_</span>, <span class="self">Self</span>&gt;&gt; {
@@ -2729,7 +2729,7 @@
 	///
 	/// let text = hwnd.GetWindowText()?;
 	/// println!("Text: {}", text);
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>GetWindowText(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;String&gt; {
@@ -2816,7 +2816,7 @@
 	/// # let hwnd = w::HWND::NULL;
 	///
 	/// hwnd.InvalidateRect(None, true)?;
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>InvalidateRect(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>RECT&gt;, erase: bool) -&gt; SysResult&lt;()&gt; {
 		bool_to_sysresult(
@@ -2925,7 +2925,7 @@
 	///
 	/// // After all operations, unlock the currently locked window.
 	/// w::HWND::NULL.LockWindowUpdate()?;
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>LockWindowUpdate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;()&gt; {
 		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::LockWindowUpdate(<span class="self">self</span>.ptr()) })
@@ -2969,7 +2969,7 @@
 	///     &amp;hwnd_dest,
 	///     w::PtsRc::Pts(&amp;mut points),
 	/// )?;
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>MapWindowPoints(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		hdest: <span class="kw-2">&amp;</span>HWND,
@@ -3015,7 +3015,7 @@
 	///
 	/// hwnd.MessageBox("Hello, world", "title",
 	///     co::MB::OKCANCEL | co::MB::ICONINFORMATION)?;
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	///
 	/// Usually the message box has a valid parent window, however, if for some
@@ -3027,7 +3027,7 @@
 	///
 	/// w::HWND::NULL
 	///     .MessageBox("Hello, world", "Title", co::MB::ICONEXCLAMATION)?;
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>MessageBox(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		text: <span class="kw-2">&amp;</span>str,
@@ -3099,7 +3099,7 @@
 	/// # let hwnd = w::HWND::NULL;
 	///
 	/// let _hclip = hwnd.OpenClipboard()?; // keep guard alive
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	///
 	/// You can also open the clipboard without an `HWND` owner:
@@ -3108,7 +3108,7 @@
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let _hclip = w::HWND::NULL.OpenClipboard()?; // keep guard alive
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>OpenClipboard(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;CloseClipboardGuard&lt;<span class="lifetime">'_</span>&gt;&gt; {
@@ -3270,7 +3270,7 @@
 	///         img_type: co::IMAGE_TYPE::BITMAP,
 	///     },
 	/// )?;
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	///
 	/// Sending an [`em::CharFromPos`](crate::msg::em::CharFromPos) edit message,
@@ -3548,7 +3548,7 @@
 	///     w::SIZE::default(),
 	///     co::SWP::NOZORDER | co::SWP::NOSIZE,
 	/// )?;
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>SetWindowPos(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		hwnd_insert_after: HwndPlace,

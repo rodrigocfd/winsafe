@@ -328,7 +328,7 @@
 	/// let mut wcx = w::WNDCLASSEX::default();
 	/// w::HINSTANCE::GetModuleHandle(None)?
 	///     .GetClassInfoEx("SOME_CLASS_NAME", &amp;mut wcx)?;
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>GetClassInfoEx(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		class_name: <span class="kw-2">&amp;</span>str,
@@ -368,7 +368,7 @@
 	///
 	/// let sys_cursor = w::HINSTANCE::NULL
 	///     .LoadCursor(w::IdIdcStr::Idc(co::IDC::ARROW))?;
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>LoadCursor(<span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -394,7 +394,7 @@
 	///
 	/// let sys_icon = w::HINSTANCE::NULL
 	///     .LoadIcon(w::IdIdiStr::Idi(co::IDI::INFORMATION))?;
-	/// # Ok::&lt;_, co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>LoadIcon(<span class="kw-2">&amp;</span><span class="self">self</span>, icon_id: IdIdiStr) -&gt; SysResult&lt;DestroyIconGuard&gt; {

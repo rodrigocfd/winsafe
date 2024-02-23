@@ -321,7 +321,7 @@
 	/// for (lang, cp) in hversion.langs_and_cps()?.iter() {
 	///     println!("{} {}", lang, cp);
 	/// }
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>langs_and_cps(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;<span class="kw-2">&amp;</span>[(LANGID, co::CP)]&gt; {
@@ -366,7 +366,7 @@
 	/// let ver = unsafe { &amp;*pvsf }.dwFileVersion();
 	/// println!("Version {}.{}.{}.{}",
 	///     ver[0], ver[1], ver[2], ver[3]);
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">unsafe fn </span>VarQueryValue&lt;T&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -421,7 +421,7 @@
 	///     hversion.str_val(lang0, cp0, "ProductName")?,
 	///     hversion.str_val(lang0, cp0, "LegalCopyright")?,
 	/// );
-	/// # Ok::&lt;_, winsafe::co::ERROR&gt;(())
+	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>str_val(<span class="kw-2">&amp;</span><span class="self">self</span>,

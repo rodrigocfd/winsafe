@@ -424,7 +424,7 @@
 ///     None,
 ///     co::CLSCTX::INPROC_SERVER,
 /// )?;
-/// # Ok::&lt;_, co::HRESULT&gt;(())
+/// # w::HrResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>CoCreateInstance&lt;T&gt;(
@@ -516,7 +516,7 @@
 /// // program runs...
 ///
 /// // CoUninitialize() automatically called
-/// # Ok::&lt;_, co::HRESULT&gt;(())
+/// # w::HrResult::Ok(())
 /// ```
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>CoInitializeEx(coinit: co::COINIT) -&gt; HrResult&lt;CoUninitializeGuard&gt; {
@@ -563,7 +563,7 @@
 /// // use memory block...
 ///
 /// // CoTaskMemFree() automatically called
-/// # Ok::&lt;_, winsafe::co::HRESULT&gt;(())
+/// # w::HrResult::Ok(())
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>CoTaskMemAlloc(cb: usize) -&gt; HrResult&lt;CoTaskMemFreeGuard&gt; {
 	<span class="kw">let </span>p = <span class="kw">unsafe </span>{ ffi::CoTaskMemAlloc(cb) };
@@ -591,7 +591,7 @@
 /// // use memory block...
 ///
 /// // CoTaskMemFree() automatically called
-/// # Ok::&lt;_, winsafe::co::HRESULT&gt;(())
+/// # w::HrResult::Ok(())
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>CoTaskMemRealloc(
 	pv: <span class="kw-2">&amp;mut </span>CoTaskMemFreeGuard,
