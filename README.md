@@ -36,7 +36,7 @@ Native FFI items implemented:
 High-level GUI controls:
 
 * User custom window/dialog – main, modal, modeless, control, message-only.
-* Native controls – button, check box, combo box, date and time picker, edit, label, list box, list view, month calendar, progress bar, radio button, status bar, tab, track bar, tree view, up down.
+* Native controls – button, check box, combo box, date and time picker, edit, header, label, list box, list view, month calendar, progress bar, radio button, status bar, tab, track bar, tree view, up down.
 
 ## Usage
 

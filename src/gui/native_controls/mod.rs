@@ -7,6 +7,9 @@ mod combo_box_items;
 mod combo_box;
 mod date_time_picker;
 mod edit;
+mod header_item;
+mod header_items;
+mod header;
 mod iterators;
 mod label;
 mod list_box_items;
@@ -41,6 +44,7 @@ pub use check_box::{CheckBox, CheckBoxOpts, CheckState};
 pub use combo_box::{ComboBox, ComboBoxOpts};
 pub use date_time_picker::{DateTimePicker, DateTimePickerOpts};
 pub use edit::{Edit, EditOpts};
+pub use header::{Header, HeaderOpts};
 pub use label::{Label, LabelOpts};
 pub use list_box::{ListBox, ListBoxOpts};
 pub use list_view::{ListView, ListViewOpts};
@@ -58,6 +62,8 @@ pub mod spec {
 	//! Structs which expose specialized methods of controls.
 
 	pub use super::combo_box_items::ComboBoxItems;
+	pub use super::header_item::HeaderItem;
+	pub use super::header_items::HeaderItems;
 	pub use super::list_box_items::ListBoxItems;
 	pub use super::list_view_column::ListViewColumn;
 	pub use super::list_view_columns::ListViewColumns;
