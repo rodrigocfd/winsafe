@@ -421,7 +421,8 @@ const_ordinary! { HDFT: u32;
 }
 
 const_bitflag! { HDI: i32;
-	/// [`HDITEM`](crate::HDITEM) `mask` (`i32`).
+	/// [`HDITEM`](crate::HDITEM) and [`NMHDDISPINFO`](crate::NMHDDISPINFO)
+	/// `mask` (`i32`).
 	=>
 	=>
 	WIDTH 0x0001

@@ -725,6 +725,38 @@ impl<'a> NMDAYSTATE<'a> {
 	pub_fn_array_buf_get_set!('a, prgDayState, set_prgDayState, cDayState, MONTHDAYSTATE);
 }
 
+/// [`NMHDDISPINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmhddispinfow)
+/// struct.
+#[repr(C)]
+pub struct NMHDDISPINFO<'a> {
+	pub hdr: NMHDR,
+	pub iItem: i32,
+	pub mask: co::HDI,
+	pszText: *mut u16,
+	cchTextMax: i32,
+	pub iImage: i32,
+	pub lParam: isize,
+
+	_pszText: PhantomData<&'a mut u16>,
+}
+
+impl_default!(NMHDDISPINFO, 'a);
+
+impl<'a> NMHDDISPINFO<'a> {
+	pub_fn_string_buf_get_set!('a, pszText, set_pszText, raw_pszText, cchTextMax);
+}
+
+/// [`NMHDFILTERBTNCLICK`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmhdfilterbtnclick)
+/// struct.
+#[repr(C)]
+pub struct NMHDFILTERBTNCLICK {
+	pub hdr: NMHDR,
+	pub iItem: i32,
+	pub rc: RECT,
+}
+
+impl_default!(NMHDFILTERBTNCLICK);
+
 /// [`NMHDR`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nmhdr)
 /// struct.
 #[repr(C)]
@@ -751,6 +783,24 @@ impl NMHDR {
 	pub fn set_idFrom(&mut self, val: u16) {
 		self.idFrom = val as _
 	}
+}
+
+/// [`NMHEADER`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmheaderw)
+/// struct.
+#[repr(C)]
+pub struct NMHEADER<'a> {
+	pub hdr: NMHDR,
+	pub iItem: i32,
+	pub iButton: i32,
+	pitem: *mut HDITEM<'a>,
+
+	_pitem: PhantomData<&'a mut HDITEM<'a>>,
+}
+
+impl_default!(NMHEADER, 'a);
+
+impl<'a> NMHEADER<'a> {
+	pub_fn_ptr_get_set!('a, pitem, set_pitem, HDITEM<'a>);
 }
 
 /// [`NMITEMACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmitemactivate)
