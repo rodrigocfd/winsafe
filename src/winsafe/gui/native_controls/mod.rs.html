@@ -72,6 +72,12 @@
 <a href="#70" id="70">70</a>
 <a href="#71" id="71">71</a>
 <a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Native Win32 controls.
 
 </span><span class="kw">mod </span>base_native_control;
@@ -81,6 +87,9 @@
 <span class="kw">mod </span>combo_box;
 <span class="kw">mod </span>date_time_picker;
 <span class="kw">mod </span>edit;
+<span class="kw">mod </span>header_item;
+<span class="kw">mod </span>header_items;
+<span class="kw">mod </span>header;
 <span class="kw">mod </span>iterators;
 <span class="kw">mod </span>label;
 <span class="kw">mod </span>list_box_items;
@@ -115,6 +124,7 @@
 <span class="kw">pub use </span>combo_box::{ComboBox, ComboBoxOpts};
 <span class="kw">pub use </span>date_time_picker::{DateTimePicker, DateTimePickerOpts};
 <span class="kw">pub use </span>edit::{Edit, EditOpts};
+<span class="kw">pub use </span>header::{Header, HeaderOpts};
 <span class="kw">pub use </span>label::{Label, LabelOpts};
 <span class="kw">pub use </span>list_box::{ListBox, ListBoxOpts};
 <span class="kw">pub use </span>list_view::{ListView, ListViewOpts};
@@ -132,6 +142,8 @@
 	<span class="doccomment">//! Structs which expose specialized methods of controls.
 
 	</span><span class="kw">pub use </span><span class="kw">super</span>::combo_box_items::ComboBoxItems;
+	<span class="kw">pub use </span><span class="kw">super</span>::header_item::HeaderItem;
+	<span class="kw">pub use </span><span class="kw">super</span>::header_items::HeaderItems;
 	<span class="kw">pub use </span><span class="kw">super</span>::list_box_items::ListBoxItems;
 	<span class="kw">pub use </span><span class="kw">super</span>::list_view_column::ListViewColumn;
 	<span class="kw">pub use </span><span class="kw">super</span>::list_view_columns::ListViewColumns;

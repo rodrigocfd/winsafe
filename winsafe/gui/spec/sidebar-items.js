@@ -1,1 +1,1 @@
-window.SIDEBAR_ITEMS = {"struct":["ComboBoxItems","ListBoxItems","ListViewColumn","ListViewColumns","ListViewItem","ListViewItems","StatusBarPart","StatusBarParts","TabItem","TabItems","TreeViewItem","TreeViewItems"]};
+window.SIDEBAR_ITEMS = {"struct":["ComboBoxItems","HeaderItem","HeaderItems","ListBoxItems","ListViewColumn","ListViewColumns","ListViewItem","ListViewItems","StatusBarPart","StatusBarParts","TabItem","TabItems","TreeViewItem","TreeViewItems"]};
