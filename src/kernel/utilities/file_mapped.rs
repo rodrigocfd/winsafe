@@ -9,8 +9,8 @@ use crate::prelude::*;
 ///
 /// # Examples
 ///
-/// [Parsing](crate::WString::parse) a file as string by memory-mapping the file
-/// (usually the fastest method):
+/// Usually the fastest way to read a file as string is by memory-mapping it,
+/// like:
 ///
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
@@ -24,10 +24,9 @@ use crate::prelude::*;
 /// # w::SysResult::Ok(())
 /// ```
 pub struct FileMapped {
-	access: FileAccess,
+	hview: UnmapViewOfFileGuard, // drop order is important
+	_hmap: CloseHandleGuard<HFILEMAP>,
 	file: File,
-	hmap: CloseHandleGuard<HFILEMAP>,
-	hview: UnmapViewOfFileGuard,
 	size: u64,
 }
 
@@ -36,17 +35,6 @@ impl FileMapped {
 	#[must_use]
 	pub fn open(file_path: &str, access: FileAccess) -> SysResult<Self> {
 		let file = File::open(file_path, access)?;
-		let (hmap, hview) = Self::map_in_memory(&file, access)?;
-		let size = file.hfile().GetFileSizeEx()?; // cache
-		Ok(Self { access, file, hmap, hview, size })
-	}
-
-	#[must_use]
-	fn map_in_memory(
-		file: &File,
-		access: FileAccess,
-	) -> SysResult<(CloseHandleGuard<HFILEMAP>, UnmapViewOfFileGuard)>
-	{
 		let hmap = file.hfile().CreateFileMapping(
 			None,
 			match access {
@@ -58,7 +46,6 @@ impl FileMapped {
 			None,
 			None,
 		)?;
-
 		let hview = hmap.MapViewOfFile(
 			match access {
 				FileAccess::ExistingReadOnly => co::FILE_MAP::READ,
@@ -69,8 +56,8 @@ impl FileMapped {
 			0,
 			None,
 		)?;
-
-		Ok((hmap, hview))
+		let size = file.hfile().GetFileSizeEx()?; // cache
+		Ok(Self { file, _hmap: hmap, hview, size })
 	}
 
 	/// Returns a mutable slice to the mapped memory.
@@ -89,27 +76,6 @@ impl FileMapped {
 	#[must_use]
 	pub fn hfile(&self) -> &HFILE {
 		self.file.hfile()
-	}
-
-	/// Resizes the file, which will be remapped in memory.
-	///
-	/// **Note:** Since the mapping pointers will change, any existing slices
-	/// must be recreated. The following functions must be called again:
-	/// * [`as_mut_slice`](crate::FileMapped::as_mut_slice);
-	/// * [`as_slice`](crate::FileMapped::as_slice).
-	pub fn resize(&mut self, num_bytes: u64) -> SysResult<()> {
-		unsafe {
-			self.hview = UnmapViewOfFileGuard::new(HFILEMAPVIEW::NULL); // close mapping handles
-			self.hmap = CloseHandleGuard::new(HFILEMAP::NULL);
-		}
-
-		self.file.resize(num_bytes)?;
-		let (hmap, hview) = Self::map_in_memory(&self.file, self.access)?;
-
-		self.hmap = hmap;
-		self.hview = hview;
-		self.size = num_bytes;
-		Ok(())
 	}
 
 	/// Returns the size of the file.

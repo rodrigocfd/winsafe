@@ -18,6 +18,17 @@ pub enum FileAccess {
 	CreateRW,
 }
 
+impl std::fmt::Display for FileAccess {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "{}", match self {
+			FileAccess::ExistingReadOnly => "Existing file, read-only",
+			FileAccess::ExistingRW => "Existing file, read and write",
+			FileAccess::OpenOrCreateRW => "Open existing file or create new file, read and write",
+			FileAccess::CreateRW => "Create new file, read and write",
+		})
+	}
+}
+
 //------------------------------------------------------------------------------
 
 /// Manages an [`HFILE`](crate::HFILE) handle, which provides file read/write
@@ -46,7 +57,7 @@ pub enum FileAccess {
 /// # w::SysResult::Ok(())
 /// ```
 ///
-/// Writing a string:
+/// Erasing the file and writing a string:
 ///
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
@@ -55,7 +66,8 @@ pub enum FileAccess {
 ///     "C:\\Temp\\foo.txt",
 ///     w::FileAccess::OpenOrCreateRW,
 /// )?;
-/// f.erase_and_write("My text".as_bytes())?;
+/// f.set_size(0)?; // truncate
+/// f.write("My text".as_bytes())?;
 /// # w::SysResult::Ok(())
 /// ```
 pub struct File {
@@ -95,71 +107,67 @@ impl File {
 		Ok(Self { hfile })
 	}
 
-	/// Erases the file content, then writes the new bytes.
-	///
-	/// The internal file pointer will be rewound to the beginning of the file.
-	pub fn erase_and_write(&self, data: &[u8]) -> SysResult<()> {
-		self.resize(data.len() as _)?;
-		self.write(data)?;
-		self.rewind_pointer()
-	}
-
 	/// Returns the underlying file handle.
 	#[must_use]
 	pub fn hfile(&self) -> &HFILE {
 		&*self.hfile
 	}
 
-	/// Returns the current offset of the internal pointer.
+	/// Returns the position of the file pointer by calling
+	/// [`HFILE::SetFilePointerEx`](crate::prelude::kernel_Hfile::SetFilePointerEx).
 	#[must_use]
 	pub fn pointer_offset(&self) -> SysResult<u64> {
 		self.hfile.SetFilePointerEx(0, co::FILE_STARTING_POINT::CURRENT) // https://stackoverflow.com/a/17707021/6923555
 			.map(|off| off as _)
 	}
 
-	/// Reads bytes from the file.
+	/// Calls [`HFILE::ReadFile`](crate::prelude::kernel_Hfile::ReadFile) to
+	/// read at most `buffer.len()` bytes from the file, starting at the current
+	/// file pointer offset. Returns how many bytes were actually read. The file
+	/// pointer is then incremented by the number of bytes read.
 	///
-	/// Note that the bytes will start being read from the current offset of the
-	/// internal file pointer, which is then incremented by the size of
-	/// `buffer`.
-	pub fn read(&self, buffer: &mut [u8]) -> SysResult<u64> {
+	/// Note that the API limits the reading up to 4 GB.
+	pub fn read(&self, buffer: &mut [u8]) -> SysResult<u32> {
 		self.hfile.ReadFile(buffer)
-			.map(|n| n as _)
 	}
 
-	/// Reads all the bytes from the file into a new `Vec`.
+	/// Returns the size of the file by calling
+	/// [`HFILE::GetFileSizeEx`](crate::prelude::kernel_Hfile::GetFileSizeEx),
+	/// allocates the `Vec` buffer, then reads all the file bytes by calling
+	/// [`HFILE::ReadFile`](crate::prelude::kernel_Hfile::ReadFile).
 	///
-	/// The internal file pointer will be rewound to the beginning of the file.
+	/// Note that the API limits the reading up to 4 GB.
 	#[must_use]
 	pub fn read_all(&self) -> SysResult<Vec<u8>> {
-		self.rewind_pointer()?;
-		let mut data = vec![0u8; self.size()? as _];
-		let bytes_read = self.read(&mut data)?;
-		data.resize(bytes_read as _, 0);
-		self.rewind_pointer()?;
-		Ok(data)
+		self.set_pointer_offset(0)?;
+		let mut buf = vec![0x00; self.size()? as _];
+		self.read(&mut buf)?;
+		Ok(buf)
 	}
 
-	/// Truncates or expands the file, according to the new size. Zero will empty
-	/// the file.
+	/// Sets the position of the file pointer by calling
+	/// [`HFILE::SetFilePointerEx`](crate::prelude::kernel_Hfile::SetFilePointerEx).
+	pub fn set_pointer_offset(&self, offset: u64) -> SysResult<()> {
+		self.hfile.SetFilePointerEx(offset as _, co::FILE_STARTING_POINT::BEGIN)
+			.map(|_| ())
+	}
+
+	/// Truncates or expands the file by calling
+	/// [`HFILE::SetFilePointerEx`](crate::prelude::kernel_Hfile::SetFilePointerEx)
+	/// and
+	/// [`HFILE::SetEndOfFile`](crate::prelude::kernel_Hfile::SetEndOfFile),
+	/// then sets the file pointer to the beginning of the file.
 	///
-	/// The internal file pointer will be rewound to the beginning of the file.
-	pub fn resize(&self, num_bytes: u64) -> SysResult<()> {
-		self.hfile.SetFilePointerEx(num_bytes as _, co::FILE_STARTING_POINT::BEGIN)?;
+	/// If the size is increased, the contents in the new area are undefined.
+	pub fn set_size(&self, num_bytes: u64) -> SysResult<()> {
+		self.set_pointer_offset(num_bytes)?;
 		self.hfile.SetEndOfFile()?;
-		self.rewind_pointer()
+		self.set_pointer_offset(0)
 	}
 
-	/// Rewinds the internal file pointer to the beginning of the file.
-	pub fn rewind_pointer(&self) -> SysResult<()> {
-		self.hfile.SetFilePointerEx(0, co::FILE_STARTING_POINT::BEGIN)?;
-		Ok(())
-	}
 
-	/// Returns the size of the file.
-	///
-	/// This value is retrieved with
-	/// [`GetFileSizeEx`](crate::prelude::kernel_Hfile).
+	/// Returns the size of the file by calling
+	/// [`HFILE::GetFileSizeEx`](crate::prelude::kernel_Hfile::GetFileSizeEx).
 	#[must_use]
 	pub fn size(&self) -> SysResult<u64> {
 		self.hfile.GetFileSizeEx()
@@ -181,10 +189,13 @@ impl File {
 		Ok((st_creation_local, st_last_write_local))
 	}
 
-	/// Writes the given bytes. The content will be written at the position
-	/// currently pointed by the internal file pointer.
+	/// Writes the bytes at the current file pointer by calling
+	/// [`HFILE::WriteFile`](crate::prelude::kernel_Hfile::WriteFile).
+	///
+	/// This method will fail if the file was opened with
+	/// [`FileAccess::ExistingReadOnly`](crate::FileAccess::ExistingReadOnly).
 	pub fn write(&self, data: &[u8]) -> SysResult<()> {
-		self.hfile.WriteFile(data)?;
-		Ok(())
+		self.hfile.WriteFile(data)
+			.map(|_| ())
 	}
 }

@@ -240,7 +240,9 @@ pub trait kernel_Hfile: Handle {
 	/// [`ReadFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
 	/// function.
 	///
-	/// Returns the number of bytes read.
+	/// Reads at most `buffer.len()` bytes from the file, starting at the
+	/// current file pointer offset. Returns how many bytes were actually read.
+	/// The file pointer is then incremented by the number of bytes read.
 	///
 	/// Note that asynchronous reading – which use the
 	/// [`OVERLAPPED`](crate::OVERLAPPED) struct – is not currently supported by
