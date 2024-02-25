@@ -95,40 +95,6 @@
 <a href="#93" id="93">93</a>
 <a href="#94" id="94">94</a>
 <a href="#95" id="95">95</a>
-<a href="#96" id="96">96</a>
-<a href="#97" id="97">97</a>
-<a href="#98" id="98">98</a>
-<a href="#99" id="99">99</a>
-<a href="#100" id="100">100</a>
-<a href="#101" id="101">101</a>
-<a href="#102" id="102">102</a>
-<a href="#103" id="103">103</a>
-<a href="#104" id="104">104</a>
-<a href="#105" id="105">105</a>
-<a href="#106" id="106">106</a>
-<a href="#107" id="107">107</a>
-<a href="#108" id="108">108</a>
-<a href="#109" id="109">109</a>
-<a href="#110" id="110">110</a>
-<a href="#111" id="111">111</a>
-<a href="#112" id="112">112</a>
-<a href="#113" id="113">113</a>
-<a href="#114" id="114">114</a>
-<a href="#115" id="115">115</a>
-<a href="#116" id="116">116</a>
-<a href="#117" id="117">117</a>
-<a href="#118" id="118">118</a>
-<a href="#119" id="119">119</a>
-<a href="#120" id="120">120</a>
-<a href="#121" id="121">121</a>
-<a href="#122" id="122">122</a>
-<a href="#123" id="123">123</a>
-<a href="#124" id="124">124</a>
-<a href="#125" id="125">125</a>
-<a href="#126" id="126">126</a>
-<a href="#127" id="127">127</a>
-<a href="#128" id="128">128</a>
-<a href="#129" id="129">129</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
@@ -140,8 +106,8 @@
 ///
 /// # Examples
 ///
-/// [Parsing](crate::WString::parse) a file as string by memory-mapping the file
-/// (usually the fastest method):
+/// Usually the fastest way to read a file as string is by memory-mapping it,
+/// like:
 ///
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
@@ -155,10 +121,9 @@
 /// # w::SysResult::Ok(())
 /// ```
 </span><span class="kw">pub struct </span>FileMapped {
-	access: FileAccess,
+	hview: UnmapViewOfFileGuard, <span class="comment">// drop order is important
+	</span>_hmap: CloseHandleGuard&lt;HFILEMAP&gt;,
 	file: File,
-	hmap: CloseHandleGuard&lt;HFILEMAP&gt;,
-	hview: UnmapViewOfFileGuard,
 	size: u64,
 }
 
@@ -167,17 +132,6 @@
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>open(file_path: <span class="kw-2">&amp;</span>str, access: FileAccess) -&gt; SysResult&lt;<span class="self">Self</span>&gt; {
 		<span class="kw">let </span>file = File::open(file_path, access)<span class="question-mark">?</span>;
-		<span class="kw">let </span>(hmap, hview) = <span class="self">Self</span>::map_in_memory(<span class="kw-2">&amp;</span>file, access)<span class="question-mark">?</span>;
-		<span class="kw">let </span>size = file.hfile().GetFileSizeEx()<span class="question-mark">?</span>; <span class="comment">// cache
-		</span><span class="prelude-val">Ok</span>(<span class="self">Self </span>{ access, file, hmap, hview, size })
-	}
-
-	<span class="attr">#[must_use]
-	</span><span class="kw">fn </span>map_in_memory(
-		file: <span class="kw-2">&amp;</span>File,
-		access: FileAccess,
-	) -&gt; SysResult&lt;(CloseHandleGuard&lt;HFILEMAP&gt;, UnmapViewOfFileGuard)&gt;
-	{
 		<span class="kw">let </span>hmap = file.hfile().CreateFileMapping(
 			<span class="prelude-val">None</span>,
 			<span class="kw">match </span>access {
@@ -189,7 +143,6 @@
 			<span class="prelude-val">None</span>,
 			<span class="prelude-val">None</span>,
 		)<span class="question-mark">?</span>;
-
 		<span class="kw">let </span>hview = hmap.MapViewOfFile(
 			<span class="kw">match </span>access {
 				FileAccess::ExistingReadOnly =&gt; co::FILE_MAP::READ,
@@ -200,8 +153,8 @@
 			<span class="number">0</span>,
 			<span class="prelude-val">None</span>,
 		)<span class="question-mark">?</span>;
-
-		<span class="prelude-val">Ok</span>((hmap, hview))
+		<span class="kw">let </span>size = file.hfile().GetFileSizeEx()<span class="question-mark">?</span>; <span class="comment">// cache
+		</span><span class="prelude-val">Ok</span>(<span class="self">Self </span>{ file, _hmap: hmap, hview, size })
 	}
 
 	<span class="doccomment">/// Returns a mutable slice to the mapped memory.
@@ -220,27 +173,6 @@
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>hfile(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HFILE {
 		<span class="self">self</span>.file.hfile()
-	}
-
-	<span class="doccomment">/// Resizes the file, which will be remapped in memory.
-	///
-	/// **Note:** Since the mapping pointers will change, any existing slices
-	/// must be recreated. The following functions must be called again:
-	/// * [`as_mut_slice`](crate::FileMapped::as_mut_slice);
-	/// * [`as_slice`](crate::FileMapped::as_slice).
-	</span><span class="kw">pub fn </span>resize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, num_bytes: u64) -&gt; SysResult&lt;()&gt; {
-		<span class="kw">unsafe </span>{
-			<span class="self">self</span>.hview = UnmapViewOfFileGuard::new(HFILEMAPVIEW::NULL); <span class="comment">// close mapping handles
-			</span><span class="self">self</span>.hmap = CloseHandleGuard::new(HFILEMAP::NULL);
-		}
-
-		<span class="self">self</span>.file.resize(num_bytes)<span class="question-mark">?</span>;
-		<span class="kw">let </span>(hmap, hview) = <span class="self">Self</span>::map_in_memory(<span class="kw-2">&amp;</span><span class="self">self</span>.file, <span class="self">self</span>.access)<span class="question-mark">?</span>;
-
-		<span class="self">self</span>.hmap = hmap;
-		<span class="self">self</span>.hview = hview;
-		<span class="self">self</span>.size = num_bytes;
-		<span class="prelude-val">Ok</span>(())
 	}
 
 	<span class="doccomment">/// Returns the size of the file.

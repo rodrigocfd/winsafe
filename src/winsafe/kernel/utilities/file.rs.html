@@ -190,6 +190,17 @@
 <a href="#188" id="188">188</a>
 <a href="#189" id="189">189</a>
 <a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
@@ -208,6 +219,17 @@
 	</span>OpenOrCreateRW,
 	<span class="doccomment">/// Creates a new file as read/write. Fails if the file already exists.
 	</span>CreateRW,
+}
+
+<span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>FileAccess {
+	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
+		<span class="macro">write!</span>(f, <span class="string">"{}"</span>, <span class="kw">match </span><span class="self">self </span>{
+			FileAccess::ExistingReadOnly =&gt; <span class="string">"Existing file, read-only"</span>,
+			FileAccess::ExistingRW =&gt; <span class="string">"Existing file, read and write"</span>,
+			FileAccess::OpenOrCreateRW =&gt; <span class="string">"Open existing file or create new file, read and write"</span>,
+			FileAccess::CreateRW =&gt; <span class="string">"Create new file, read and write"</span>,
+		})
+	}
 }
 
 <span class="comment">//------------------------------------------------------------------------------
@@ -238,7 +260,7 @@
 /// # w::SysResult::Ok(())
 /// ```
 ///
-/// Writing a string:
+/// Erasing the file and writing a string:
 ///
 /// ```no_run
 /// use winsafe::{self as w, prelude::*};
@@ -247,7 +269,8 @@
 ///     "C:\\Temp\\foo.txt",
 ///     w::FileAccess::OpenOrCreateRW,
 /// )?;
-/// f.erase_and_write("My text".as_bytes())?;
+/// f.set_size(0)?; // truncate
+/// f.write("My text".as_bytes())?;
 /// # w::SysResult::Ok(())
 /// ```
 </span><span class="kw">pub struct </span>File {
@@ -287,71 +310,67 @@
 		<span class="prelude-val">Ok</span>(<span class="self">Self </span>{ hfile })
 	}
 
-	<span class="doccomment">/// Erases the file content, then writes the new bytes.
-	///
-	/// The internal file pointer will be rewound to the beginning of the file.
-	</span><span class="kw">pub fn </span>erase_and_write(<span class="kw-2">&amp;</span><span class="self">self</span>, data: <span class="kw-2">&amp;</span>[u8]) -&gt; SysResult&lt;()&gt; {
-		<span class="self">self</span>.resize(data.len() <span class="kw">as _</span>)<span class="question-mark">?</span>;
-		<span class="self">self</span>.write(data)<span class="question-mark">?</span>;
-		<span class="self">self</span>.rewind_pointer()
-	}
-
 	<span class="doccomment">/// Returns the underlying file handle.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>hfile(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HFILE {
 		<span class="kw-2">&amp;*</span><span class="self">self</span>.hfile
 	}
 
-	<span class="doccomment">/// Returns the current offset of the internal pointer.
+	<span class="doccomment">/// Returns the position of the file pointer by calling
+	/// [`HFILE::SetFilePointerEx`](crate::prelude::kernel_Hfile::SetFilePointerEx).
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>pointer_offset(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;u64&gt; {
 		<span class="self">self</span>.hfile.SetFilePointerEx(<span class="number">0</span>, co::FILE_STARTING_POINT::CURRENT) <span class="comment">// https://stackoverflow.com/a/17707021/6923555
 			</span>.map(|off| off <span class="kw">as _</span>)
 	}
 
-	<span class="doccomment">/// Reads bytes from the file.
+	<span class="doccomment">/// Calls [`HFILE::ReadFile`](crate::prelude::kernel_Hfile::ReadFile) to
+	/// read at most `buffer.len()` bytes from the file, starting at the current
+	/// file pointer offset. Returns how many bytes were actually read. The file
+	/// pointer is then incremented by the number of bytes read.
 	///
-	/// Note that the bytes will start being read from the current offset of the
-	/// internal file pointer, which is then incremented by the size of
-	/// `buffer`.
-	</span><span class="kw">pub fn </span>read(<span class="kw-2">&amp;</span><span class="self">self</span>, buffer: <span class="kw-2">&amp;mut </span>[u8]) -&gt; SysResult&lt;u64&gt; {
+	/// Note that the API limits the reading up to 4 GB.
+	</span><span class="kw">pub fn </span>read(<span class="kw-2">&amp;</span><span class="self">self</span>, buffer: <span class="kw-2">&amp;mut </span>[u8]) -&gt; SysResult&lt;u32&gt; {
 		<span class="self">self</span>.hfile.ReadFile(buffer)
-			.map(|n| n <span class="kw">as _</span>)
 	}
 
-	<span class="doccomment">/// Reads all the bytes from the file into a new `Vec`.
+	<span class="doccomment">/// Returns the size of the file by calling
+	/// [`HFILE::GetFileSizeEx`](crate::prelude::kernel_Hfile::GetFileSizeEx),
+	/// allocates the `Vec` buffer, then reads all the file bytes by calling
+	/// [`HFILE::ReadFile`](crate::prelude::kernel_Hfile::ReadFile).
 	///
-	/// The internal file pointer will be rewound to the beginning of the file.
+	/// Note that the API limits the reading up to 4 GB.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>read_all(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;Vec&lt;u8&gt;&gt; {
-		<span class="self">self</span>.rewind_pointer()<span class="question-mark">?</span>;
-		<span class="kw">let </span><span class="kw-2">mut </span>data = <span class="macro">vec!</span>[<span class="number">0u8</span>; <span class="self">self</span>.size()<span class="question-mark">? </span><span class="kw">as _</span>];
-		<span class="kw">let </span>bytes_read = <span class="self">self</span>.read(<span class="kw-2">&amp;mut </span>data)<span class="question-mark">?</span>;
-		data.resize(bytes_read <span class="kw">as _</span>, <span class="number">0</span>);
-		<span class="self">self</span>.rewind_pointer()<span class="question-mark">?</span>;
-		<span class="prelude-val">Ok</span>(data)
+		<span class="self">self</span>.set_pointer_offset(<span class="number">0</span>)<span class="question-mark">?</span>;
+		<span class="kw">let </span><span class="kw-2">mut </span>buf = <span class="macro">vec!</span>[<span class="number">0x00</span>; <span class="self">self</span>.size()<span class="question-mark">? </span><span class="kw">as _</span>];
+		<span class="self">self</span>.read(<span class="kw-2">&amp;mut </span>buf)<span class="question-mark">?</span>;
+		<span class="prelude-val">Ok</span>(buf)
 	}
 
-	<span class="doccomment">/// Truncates or expands the file, according to the new size. Zero will empty
-	/// the file.
+	<span class="doccomment">/// Sets the position of the file pointer by calling
+	/// [`HFILE::SetFilePointerEx`](crate::prelude::kernel_Hfile::SetFilePointerEx).
+	</span><span class="kw">pub fn </span>set_pointer_offset(<span class="kw-2">&amp;</span><span class="self">self</span>, offset: u64) -&gt; SysResult&lt;()&gt; {
+		<span class="self">self</span>.hfile.SetFilePointerEx(offset <span class="kw">as _</span>, co::FILE_STARTING_POINT::BEGIN)
+			.map(|<span class="kw">_</span>| ())
+	}
+
+	<span class="doccomment">/// Truncates or expands the file by calling
+	/// [`HFILE::SetFilePointerEx`](crate::prelude::kernel_Hfile::SetFilePointerEx)
+	/// and
+	/// [`HFILE::SetEndOfFile`](crate::prelude::kernel_Hfile::SetEndOfFile),
+	/// then sets the file pointer to the beginning of the file.
 	///
-	/// The internal file pointer will be rewound to the beginning of the file.
-	</span><span class="kw">pub fn </span>resize(<span class="kw-2">&amp;</span><span class="self">self</span>, num_bytes: u64) -&gt; SysResult&lt;()&gt; {
-		<span class="self">self</span>.hfile.SetFilePointerEx(num_bytes <span class="kw">as _</span>, co::FILE_STARTING_POINT::BEGIN)<span class="question-mark">?</span>;
+	/// If the size is increased, the contents in the new area are undefined.
+	</span><span class="kw">pub fn </span>set_size(<span class="kw-2">&amp;</span><span class="self">self</span>, num_bytes: u64) -&gt; SysResult&lt;()&gt; {
+		<span class="self">self</span>.set_pointer_offset(num_bytes)<span class="question-mark">?</span>;
 		<span class="self">self</span>.hfile.SetEndOfFile()<span class="question-mark">?</span>;
-		<span class="self">self</span>.rewind_pointer()
+		<span class="self">self</span>.set_pointer_offset(<span class="number">0</span>)
 	}
 
-	<span class="doccomment">/// Rewinds the internal file pointer to the beginning of the file.
-	</span><span class="kw">pub fn </span>rewind_pointer(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;()&gt; {
-		<span class="self">self</span>.hfile.SetFilePointerEx(<span class="number">0</span>, co::FILE_STARTING_POINT::BEGIN)<span class="question-mark">?</span>;
-		<span class="prelude-val">Ok</span>(())
-	}
 
-	<span class="doccomment">/// Returns the size of the file.
-	///
-	/// This value is retrieved with
-	/// [`GetFileSizeEx`](crate::prelude::kernel_Hfile).
+	<span class="doccomment">/// Returns the size of the file by calling
+	/// [`HFILE::GetFileSizeEx`](crate::prelude::kernel_Hfile::GetFileSizeEx).
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>size(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;u64&gt; {
 		<span class="self">self</span>.hfile.GetFileSizeEx()
@@ -373,11 +392,14 @@
 		<span class="prelude-val">Ok</span>((st_creation_local, st_last_write_local))
 	}
 
-	<span class="doccomment">/// Writes the given bytes. The content will be written at the position
-	/// currently pointed by the internal file pointer.
+	<span class="doccomment">/// Writes the bytes at the current file pointer by calling
+	/// [`HFILE::WriteFile`](crate::prelude::kernel_Hfile::WriteFile).
+	///
+	/// This method will fail if the file was opened with
+	/// [`FileAccess::ExistingReadOnly`](crate::FileAccess::ExistingReadOnly).
 	</span><span class="kw">pub fn </span>write(<span class="kw-2">&amp;</span><span class="self">self</span>, data: <span class="kw-2">&amp;</span>[u8]) -&gt; SysResult&lt;()&gt; {
-		<span class="self">self</span>.hfile.WriteFile(data)<span class="question-mark">?</span>;
-		<span class="prelude-val">Ok</span>(())
+		<span class="self">self</span>.hfile.WriteFile(data)
+			.map(|<span class="kw">_</span>| ())
 	}
 }
 </code></pre></div></section></main></body></html>

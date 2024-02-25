@@ -335,6 +335,8 @@
 <a href="#333" id="333">333</a>
 <a href="#334" id="334">334</a>
 <a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+<a href="#337" id="337">337</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -577,7 +579,9 @@
 	<span class="doccomment">/// [`ReadFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
 	/// function.
 	///
-	/// Returns the number of bytes read.
+	/// Reads at most `buffer.len()` bytes from the file, starting at the
+	/// current file pointer offset. Returns how many bytes were actually read.
+	/// The file pointer is then incremented by the number of bytes read.
 	///
 	/// Note that asynchronous reading – which use the
 	/// [`OVERLAPPED`](crate::OVERLAPPED) struct – is not currently supported by
