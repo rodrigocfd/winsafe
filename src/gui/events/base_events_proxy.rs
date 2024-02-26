@@ -10,7 +10,7 @@ use crate::prelude::*;
 /// the parent window; events added to a native control are actually added as
 /// `WM_COMMAND` or `WM_NOTIFY` messages under the parent window.
 pub(in crate::gui) struct BaseEventsProxy {
-	parent_ptr: NonNull<Base>,
+	parent_ptr: NonNull<Base>, // used only to add the events to parent, before the first message is processed
 	ctrl_id: u16,
 }
 
@@ -32,7 +32,7 @@ impl BaseEventsProxy {
 
 	/// Adds a `WM_NOTIFY` event to the parent window.
 	pub(in crate::gui) fn wm_notify<F>(&self, code: impl Into<co::NM>, func: F)
-		where F: Fn(wm::Notify) -> AnyResult<Option<isize>> + 'static
+		where F: Fn(wm::Notify) -> AnyResult<Option<isize>> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		parent_base_ref.on().wm_notify(self.ctrl_id as _, code, func);

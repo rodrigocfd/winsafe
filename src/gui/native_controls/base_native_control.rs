@@ -51,7 +51,7 @@ impl BaseNativeControl {
 		unsafe { &mut *self.hwnd.get() }
 	}
 
-	pub(in crate::gui) fn parent(&self) -> &Base {
+	pub(in crate::gui) const fn parent(&self) -> &Base {
 		unsafe { self.parent_ptr.as_ref() }
 	}
 
@@ -119,7 +119,7 @@ impl BaseNativeControl {
 	}
 
 	fn install_subclass_if_needed(&self) -> SysResult<()> {
-		if !self.subclass_events.is_empty() {
+		if !self.subclass_events.is_empty() { // at least 1 subclass message handling?
 			let subclass_id = unsafe {
 				BASE_SUBCLASS_ID += 1;
 				BASE_SUBCLASS_ID
@@ -127,7 +127,8 @@ impl BaseNativeControl {
 
 			unsafe {
 				self.hwnd().SetWindowSubclass(
-					Self::subclass_proc, subclass_id,
+					Self::subclass_proc,
+					subclass_id,
 					self as *const _ as _, // pass pointer to self
 				)?;
 			}

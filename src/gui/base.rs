@@ -6,7 +6,7 @@ use crate::gui::{*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-/// Allocated on the heap and passed through WM_UI_THREAD.
+/// Allocated on the heap and passed through `WM_UI_THREAD`.
 struct ThreadPack {
 	func: Box<dyn FnOnce() -> AnyResult<()>>,
 }
@@ -63,8 +63,11 @@ impl Base {
 		self.is_dialog
 	}
 
-	pub(in crate::gui) fn parent(&self) -> Option<&Base> {
-		self.parent_ptr.map(|parent| unsafe { parent.as_ref() })
+	pub(in crate::gui) const fn parent(&self) -> Option<&Base> {
+		match self.parent_ptr {
+			Some(parent_ptr) => Some(unsafe { parent_ptr.as_ref() }),
+			None => None,
+		}
 	}
 
 	pub(in crate::gui) fn parent_hinstance(&self) -> SysResult<HINSTANCE> {

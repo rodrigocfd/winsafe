@@ -45,7 +45,7 @@ impl DlgBase {
 		self.base.privileged_on()
 	}
 
-	pub(in crate::gui) fn parent(&self) -> Option<&Base> {
+	pub(in crate::gui) const fn parent(&self) -> Option<&Base> {
 		self.base.parent()
 	}
 
