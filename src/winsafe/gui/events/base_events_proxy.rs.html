@@ -52,8 +52,8 @@
 /// the parent window; events added to a native control are actually added as
 /// `WM_COMMAND` or `WM_NOTIFY` messages under the parent window.
 </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>BaseEventsProxy {
-	parent_ptr: NonNull&lt;Base&gt;,
-	ctrl_id: u16,
+	parent_ptr: NonNull&lt;Base&gt;, <span class="comment">// used only to add the events to parent, before the first message is processed
+	</span>ctrl_id: u16,
 }
 
 <span class="kw">impl </span>BaseEventsProxy {
@@ -74,8 +74,8 @@
 
 	<span class="doccomment">/// Adds a `WM_NOTIFY` event to the parent window.
 	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>wm_notify&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, code: <span class="kw">impl </span>Into&lt;co::NM&gt;, func: F)
-		<span class="kw">where </span>F: Fn(wm::Notify) -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;isize&gt;&gt; + <span class="lifetime">'static
-	</span>{
+		<span class="kw">where </span>F: Fn(wm::Notify) -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;isize&gt;&gt; + <span class="lifetime">'static</span>,
+	{
 		<span class="kw">let </span>parent_base_ref = <span class="kw">unsafe </span>{ <span class="self">self</span>.parent_ptr.as_ref() };
 		parent_base_ref.on().wm_notify(<span class="self">self</span>.ctrl_id <span class="kw">as _</span>, code, func);
 	}

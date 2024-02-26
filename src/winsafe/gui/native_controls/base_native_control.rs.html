@@ -183,6 +183,7 @@
 <a href="#181" id="181">181</a>
 <a href="#182" id="182">182</a>
 <a href="#183" id="183">183</a>
+<a href="#184" id="184">184</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::UnsafeCell;
 <span class="kw">use </span>std::ptr::NonNull;
 
@@ -236,7 +237,7 @@
 		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.hwnd.get() }
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Base {
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Base {
 		<span class="kw">unsafe </span>{ <span class="self">self</span>.parent_ptr.as_ref() }
 	}
 
@@ -304,15 +305,16 @@
 	}
 
 	<span class="kw">fn </span>install_subclass_if_needed(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;()&gt; {
-		<span class="kw">if </span>!<span class="self">self</span>.subclass_events.is_empty() {
-			<span class="kw">let </span>subclass_id = <span class="kw">unsafe </span>{
+		<span class="kw">if </span>!<span class="self">self</span>.subclass_events.is_empty() { <span class="comment">// at least 1 subclass message handling?
+			</span><span class="kw">let </span>subclass_id = <span class="kw">unsafe </span>{
 				BASE_SUBCLASS_ID += <span class="number">1</span>;
 				BASE_SUBCLASS_ID
 			};
 
 			<span class="kw">unsafe </span>{
 				<span class="self">self</span>.hwnd().SetWindowSubclass(
-					<span class="self">Self</span>::subclass_proc, subclass_id,
+					<span class="self">Self</span>::subclass_proc,
+					subclass_id,
 					<span class="self">self </span><span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>, <span class="comment">// pass pointer to self
 				</span>)<span class="question-mark">?</span>;
 			}

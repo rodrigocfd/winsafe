@@ -239,6 +239,9 @@
 <a href="#237" id="237">237</a>
 <a href="#238" id="238">238</a>
 <a href="#239" id="239">239</a>
+<a href="#240" id="240">240</a>
+<a href="#241" id="241">241</a>
+<a href="#242" id="242">242</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::ptr::NonNull;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -247,7 +250,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="doccomment">/// Allocated on the heap and passed through WM_UI_THREAD.
+<span class="doccomment">/// Allocated on the heap and passed through `WM_UI_THREAD`.
 </span><span class="kw">struct </span>ThreadPack {
 	func: Box&lt;<span class="kw">dyn </span>FnOnce() -&gt; AnyResult&lt;()&gt;&gt;,
 }
@@ -304,8 +307,11 @@
 		<span class="self">self</span>.is_dialog
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Base&gt; {
-		<span class="self">self</span>.parent_ptr.map(|parent| <span class="kw">unsafe </span>{ parent.as_ref() })
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Base&gt; {
+		<span class="kw">match </span><span class="self">self</span>.parent_ptr {
+			<span class="prelude-val">Some</span>(parent_ptr) =&gt; <span class="prelude-val">Some</span>(<span class="kw">unsafe </span>{ parent_ptr.as_ref() }),
+			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
+		}
 	}
 
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>parent_hinstance(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;HINSTANCE&gt; {
