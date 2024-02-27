@@ -46,6 +46,11 @@ pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 
 /// [`GetAllUsersProfileDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-getallusersprofiledirectoryw)
 /// function.
+///
+/// # Related functions
+///
+/// * [`GetDefaultUserProfileDirectory`](crate::GetDefaultUserProfileDirectory)
+/// * [`GetProfilesDirectory`](crate::GetProfilesDirectory)
 #[must_use]
 pub fn GetAllUsersProfileDirectory() -> SysResult<String> {
 	let mut len = u32::default();
@@ -63,6 +68,11 @@ pub fn GetAllUsersProfileDirectory() -> SysResult<String> {
 
 /// [`GetDefaultUserProfileDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-getdefaultuserprofiledirectoryw)
 /// function.
+///
+/// # Related functions
+///
+/// * [`GetAllUsersProfileDirectory`](crate::GetAllUsersProfileDirectory)
+/// * [`GetProfilesDirectory`](crate::GetProfilesDirectory)
 #[must_use]
 pub fn GetDefaultUserProfileDirectory() -> SysResult<String> {
 	let mut len = u32::default();
@@ -80,6 +90,11 @@ pub fn GetDefaultUserProfileDirectory() -> SysResult<String> {
 
 /// [`GetProfilesDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-getprofilesdirectoryw)
 /// function.
+///
+/// # Related functions
+///
+/// * [`GetAllUsersProfileDirectory`](crate::GetAllUsersProfileDirectory)
+/// * [`GetDefaultUserProfileDirectory`](crate::GetDefaultUserProfileDirectory)
 #[must_use]
 pub fn GetProfilesDirectory() -> SysResult<String> {
 	let mut len = u32::default();
