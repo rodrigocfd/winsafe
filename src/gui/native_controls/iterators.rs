@@ -234,6 +234,38 @@ impl<'a> ListBoxSelItemIter<'a> {
 
 //------------------------------------------------------------------------------
 
+pub(in crate::gui) struct ListViewColumnIter<'a> {
+	owner: &'a ListView,
+	count: u32,
+	current: u32,
+}
+
+impl<'a> Iterator for ListViewColumnIter<'a> {
+	type Item = ListViewColumn<'a>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if self.current == self.count {
+			return None;
+		}
+
+		let item = self.owner.columns().get(self.current);
+		self.current += 1;
+		Some(item)
+	}
+}
+
+impl<'a> ListViewColumnIter<'a> {
+	pub(in crate::gui) fn new(owner: &'a ListView) -> Self {
+		Self {
+			owner,
+			count: owner.items().count(),
+			current: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 pub(in crate::gui) struct ListViewItemIter<'a> {
 	owner: &'a ListView,
 	current: Option<ListViewItem<'a>>,

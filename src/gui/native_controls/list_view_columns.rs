@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, privs::*, spec::*};
+use crate::gui::{*, native_controls::iterators::*, privs::*, spec::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -77,5 +77,11 @@ impl<'a> ListViewColumns<'a> {
 	#[must_use]
 	pub const fn get(&self, index: u32) -> ListViewColumn<'a> {
 		ListViewColumn::new(self.owner, index)
+	}
+
+	/// Returns an iterator over all columns.
+	#[must_use]
+	pub fn iter(&self) -> impl Iterator<Item = ListViewColumn<'a>> + 'a {
+		ListViewColumnIter::new(self.owner)
 	}
 }
