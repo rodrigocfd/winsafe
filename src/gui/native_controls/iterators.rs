@@ -89,6 +89,38 @@ impl<'a> EditLineIter<'a> {
 
 //------------------------------------------------------------------------------
 
+pub(in crate::gui) struct HeaderItemIter<'a> {
+	owner: &'a Header,
+	count: u32,
+	current: u32,
+}
+
+impl<'a> Iterator for HeaderItemIter<'a> {
+	type Item = HeaderItem<'a>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if self.current == self.count {
+			return None;
+		}
+
+		let item = self.owner.items().get(self.current);
+		self.current += 1;
+		Some(item)
+	}
+}
+
+impl<'a> HeaderItemIter<'a> {
+	pub(in crate::gui) fn new(owner: &'a Header) -> Self {
+		Self {
+			owner,
+			count: owner.items().count(),
+			current: 0,
+		}
+	}
+}
+
+//------------------------------------------------------------------------------
+
 pub(in crate::gui) struct ListBoxItemIter<'a> {
 	owner: &'a ListBox,
 	count: u32,

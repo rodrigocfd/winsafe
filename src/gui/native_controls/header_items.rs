@@ -1,4 +1,4 @@
-use crate::gui::{*, spec::*};
+use crate::gui::{*, native_controls::iterators::*, spec::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -31,5 +31,11 @@ impl<'a> HeaderItems<'a> {
 	#[must_use]
 	pub const fn get(&self, index: u32) -> HeaderItem<'a> {
 		HeaderItem::new(self.owner, index)
+	}
+
+	/// Returns an iterator over all items.
+	#[must_use]
+	pub fn iter(&self) -> impl Iterator<Item = HeaderItem<'a>> + 'a {
+		HeaderItemIter::new(self.owner)
 	}
 }
