@@ -329,6 +329,57 @@
 <a href="#327" id="327">327</a>
 <a href="#328" id="328">328</a>
 <a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
+<a href="#336" id="336">336</a>
+<a href="#337" id="337">337</a>
+<a href="#338" id="338">338</a>
+<a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
+<a href="#353" id="353">353</a>
+<a href="#354" id="354">354</a>
+<a href="#355" id="355">355</a>
+<a href="#356" id="356">356</a>
+<a href="#357" id="357">357</a>
+<a href="#358" id="358">358</a>
+<a href="#359" id="359">359</a>
+<a href="#360" id="360">360</a>
+<a href="#361" id="361">361</a>
+<a href="#362" id="362">362</a>
+<a href="#363" id="363">363</a>
+<a href="#364" id="364">364</a>
+<a href="#365" id="365">365</a>
+<a href="#366" id="366">366</a>
+<a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -373,6 +424,57 @@
 
 	<span class="kw">let _ </span>= <span class="kw">unsafe </span>{ LocalFreeGuard::new(HLOCAL::from_ptr(lp_arr <span class="kw">as _</span>)) };
 	<span class="prelude-val">Ok</span>(strs)
+}
+
+<span class="doccomment">/// [`GetAllUsersProfileDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-getallusersprofiledirectoryw)
+/// function.
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetAllUsersProfileDirectory() -&gt; SysResult&lt;String&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>len = u32::default();
+	<span class="kw">unsafe </span>{ ffi::GetAllUsersProfileDirectoryW(std::ptr::null_mut(), <span class="kw-2">&amp;mut </span>len); }
+	<span class="kw">match </span>GetLastError() {
+		co::ERROR::INSUFFICIENT_BUFFER =&gt; {},
+		e =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e),
+	}
+
+	<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(len <span class="kw">as _</span>);
+	bool_to_sysresult(
+		<span class="kw">unsafe </span>{ ffi::GetAllUsersProfileDirectoryW(buf.as_mut_ptr(), <span class="kw-2">&amp;mut </span>len) },
+	).map(|<span class="kw">_</span>| buf.to_string())
+}
+
+<span class="doccomment">/// [`GetDefaultUserProfileDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-getdefaultuserprofiledirectoryw)
+/// function.
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetDefaultUserProfileDirectory() -&gt; SysResult&lt;String&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>len = u32::default();
+	<span class="kw">unsafe </span>{ ffi::GetDefaultUserProfileDirectoryW(std::ptr::null_mut(), <span class="kw-2">&amp;mut </span>len); }
+	<span class="kw">match </span>GetLastError() {
+		co::ERROR::INSUFFICIENT_BUFFER =&gt; {},
+		e =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e),
+	}
+
+	<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(len <span class="kw">as _</span>);
+	bool_to_sysresult(
+		<span class="kw">unsafe </span>{ ffi::GetDefaultUserProfileDirectoryW(buf.as_mut_ptr(), <span class="kw-2">&amp;mut </span>len) },
+	).map(|<span class="kw">_</span>| buf.to_string())
+}
+
+<span class="doccomment">/// [`GetProfilesDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-getprofilesdirectoryw)
+/// function.
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetProfilesDirectory() -&gt; SysResult&lt;String&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>len = u32::default();
+	<span class="kw">unsafe </span>{ ffi::GetProfilesDirectoryW(std::ptr::null_mut(), <span class="kw-2">&amp;mut </span>len); }
+	<span class="kw">match </span>GetLastError() {
+		co::ERROR::INSUFFICIENT_BUFFER =&gt; {},
+		e =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e),
+	}
+
+	<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(len <span class="kw">as _</span>);
+	bool_to_sysresult(
+		<span class="kw">unsafe </span>{ ffi::GetProfilesDirectoryW(buf.as_mut_ptr(), <span class="kw-2">&amp;mut </span>len) },
+	).map(|<span class="kw">_</span>| buf.to_string())
 }
 
 <span class="doccomment">/// [`PathCombine`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathcombinew)

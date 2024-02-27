@@ -28,6 +28,12 @@
 <a href="#26" id="26">26</a>
 <a href="#27" id="27">27</a>
 <a href="#28" id="28">28</a>
+<a href="#29" id="29">29</a>
+<a href="#30" id="30">30</a>
+<a href="#31" id="31">31</a>
+<a href="#32" id="32">32</a>
+<a href="#33" id="33">33</a>
+<a href="#34" id="34">34</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys! </span>{ <span class="string">"shell32"</span>;
@@ -55,5 +61,11 @@
 	PathUndecorateW(PSTR)
 	PathUnquoteSpacesW(PSTR) -&gt; BOOL
 	SHCreateMemStream(<span class="kw-2">*const </span>u8, u32) -&gt; COMPTR
+}
+
+<span class="macro">extern_sys! </span>{ <span class="string">"userenv"</span>;
+	GetAllUsersProfileDirectoryW(PSTR, <span class="kw-2">*mut </span>u32) -&gt; BOOL
+	GetDefaultUserProfileDirectoryW(PSTR, <span class="kw-2">*mut </span>u32) -&gt; BOOL
+	GetProfilesDirectoryW(PSTR, <span class="kw-2">*mut </span>u32) -&gt; BOOL
 }
 </code></pre></div></section></main></body></html>
