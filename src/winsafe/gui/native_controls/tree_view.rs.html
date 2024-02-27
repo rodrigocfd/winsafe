@@ -421,7 +421,7 @@
 
 	<span class="doccomment">/// Exposes the item methods.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub const fn </span>items(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TreeViewItems {
+	</span><span class="kw">pub const fn </span>items(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TreeViewItems&lt;<span class="lifetime">'_</span>&gt; {
 		TreeViewItems::new(<span class="self">self</span>)
 	}
 

@@ -456,7 +456,7 @@
 
 	<span class="doccomment">/// Exposes the part methods.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub const fn </span>parts(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; StatusBarParts {
+	</span><span class="kw">pub const fn </span>parts(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; StatusBarParts&lt;<span class="lifetime">'_</span>&gt; {
 		StatusBarParts::new(<span class="self">self</span>)
 	}
 }

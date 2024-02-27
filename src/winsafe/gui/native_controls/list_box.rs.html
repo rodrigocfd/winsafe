@@ -420,7 +420,7 @@
 
 	<span class="doccomment">/// Item methods.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub const fn </span>items(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ListBoxItems {
+	</span><span class="kw">pub const fn </span>items(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ListBoxItems&lt;<span class="lifetime">'_</span>&gt; {
 		ListBoxItems::new(<span class="self">self</span>)
 	}
 

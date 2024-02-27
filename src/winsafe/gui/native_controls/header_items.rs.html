@@ -35,7 +35,13 @@
 <a href="#33" id="33">33</a>
 <a href="#34" id="34">34</a>
 <a href="#35" id="35">35</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, spec::<span class="kw-2">*</span>};
+<a href="#36" id="36">36</a>
+<a href="#37" id="37">37</a>
+<a href="#38" id="38">38</a>
+<a href="#39" id="39">39</a>
+<a href="#40" id="40">40</a>
+<a href="#41" id="41">41</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, native_controls::iterators::<span class="kw-2">*</span>, spec::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
@@ -68,6 +74,12 @@
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub const fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, index: u32) -&gt; HeaderItem&lt;<span class="lifetime">'a</span>&gt; {
 		HeaderItem::new(<span class="self">self</span>.owner, index)
+	}
+
+	<span class="doccomment">/// Returns an iterator over all items.
+	</span><span class="attr">#[must_use]
+	</span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = HeaderItem&lt;<span class="lifetime">'a</span>&gt;&gt; + <span class="lifetime">'a </span>{
+		HeaderItemIter::new(<span class="self">self</span>.owner)
 	}
 }
 </code></pre></div></section></main></body></html>

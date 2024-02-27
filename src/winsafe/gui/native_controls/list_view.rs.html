@@ -650,7 +650,7 @@
 
 	<span class="doccomment">/// Exposes the column methods.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub const fn </span>columns(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ListViewColumns {
+	</span><span class="kw">pub const fn </span>columns(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ListViewColumns&lt;<span class="lifetime">'_</span>&gt; {
 		ListViewColumns::new(<span class="self">self</span>)
 	}
 
@@ -673,7 +673,7 @@
 
 	<span class="doccomment">/// Exposes the item methods.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub const fn </span>items(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ListViewItems {
+	</span><span class="kw">pub const fn </span>items(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; ListViewItems&lt;<span class="lifetime">'_</span>&gt; {
 		ListViewItems::new(<span class="self">self</span>)
 	}
 
