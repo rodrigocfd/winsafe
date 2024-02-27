@@ -25,7 +25,7 @@ Native FFI items implemented:
 
 | Native FFI item | Count |
 | - | -: |
-| Functions | 744 |
+| Functions | 747 |
 | Structs | 230 |
 | Constants | 13,317 |
 | Window messages | 651 |
@@ -70,7 +70,7 @@ The following Cargo features are available so far:
 | `mf` | [Media Foundation](https://learn.microsoft.com/en-us/windows/win32/medfound/microsoft-media-foundation-sdk) |
 | `ole` | OLE and basic COM support |
 | `oleaut` | [OLE Automation](https://learn.microsoft.com/en-us/windows/win32/api/_automat/) |
-| `shell` | Shell32.dll and Shlwapi.dll, the COM-based [Windows Shell](https://learn.microsoft.com/en-us/windows/win32/shell/shell-entry) |
+| `shell` | Shell32.dll, Shlwapi.dll, and Userenv.dll, the COM-based [Windows Shell](https://learn.microsoft.com/en-us/windows/win32/shell/shell-entry) |
 | `taskschd` | [Task Scheduler](https://learn.microsoft.com/en-us/windows/win32/taskschd/task-scheduler-start-page) |
 | `user` | User32.dll and ComDlg32.dll, the basic Windows GUI support |
 | `uxtheme` | UxTheme.dll, extended window theming |

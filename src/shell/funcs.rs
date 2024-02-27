@@ -44,6 +44,57 @@ pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 	Ok(strs)
 }
 
+/// [`GetAllUsersProfileDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-getallusersprofiledirectoryw)
+/// function.
+#[must_use]
+pub fn GetAllUsersProfileDirectory() -> SysResult<String> {
+	let mut len = u32::default();
+	unsafe { ffi::GetAllUsersProfileDirectoryW(std::ptr::null_mut(), &mut len); }
+	match GetLastError() {
+		co::ERROR::INSUFFICIENT_BUFFER => {},
+		e => return Err(e),
+	}
+
+	let mut buf = WString::new_alloc_buf(len as _);
+	bool_to_sysresult(
+		unsafe { ffi::GetAllUsersProfileDirectoryW(buf.as_mut_ptr(), &mut len) },
+	).map(|_| buf.to_string())
+}
+
+/// [`GetDefaultUserProfileDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-getdefaultuserprofiledirectoryw)
+/// function.
+#[must_use]
+pub fn GetDefaultUserProfileDirectory() -> SysResult<String> {
+	let mut len = u32::default();
+	unsafe { ffi::GetDefaultUserProfileDirectoryW(std::ptr::null_mut(), &mut len); }
+	match GetLastError() {
+		co::ERROR::INSUFFICIENT_BUFFER => {},
+		e => return Err(e),
+	}
+
+	let mut buf = WString::new_alloc_buf(len as _);
+	bool_to_sysresult(
+		unsafe { ffi::GetDefaultUserProfileDirectoryW(buf.as_mut_ptr(), &mut len) },
+	).map(|_| buf.to_string())
+}
+
+/// [`GetProfilesDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-getprofilesdirectoryw)
+/// function.
+#[must_use]
+pub fn GetProfilesDirectory() -> SysResult<String> {
+	let mut len = u32::default();
+	unsafe { ffi::GetProfilesDirectoryW(std::ptr::null_mut(), &mut len); }
+	match GetLastError() {
+		co::ERROR::INSUFFICIENT_BUFFER => {},
+		e => return Err(e),
+	}
+
+	let mut buf = WString::new_alloc_buf(len as _);
+	bool_to_sysresult(
+		unsafe { ffi::GetProfilesDirectoryW(buf.as_mut_ptr(), &mut len) },
+	).map(|_| buf.to_string())
+}
+
 /// [`PathCombine`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathcombinew)
 /// function.
 ///

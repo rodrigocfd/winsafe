@@ -26,3 +26,9 @@ extern_sys! { "shlwapi";
 	PathUnquoteSpacesW(PSTR) -> BOOL
 	SHCreateMemStream(*const u8, u32) -> COMPTR
 }
+
+extern_sys! { "userenv";
+	GetAllUsersProfileDirectoryW(PSTR, *mut u32) -> BOOL
+	GetDefaultUserProfileDirectoryW(PSTR, *mut u32) -> BOOL
+	GetProfilesDirectoryW(PSTR, *mut u32) -> BOOL
+}
