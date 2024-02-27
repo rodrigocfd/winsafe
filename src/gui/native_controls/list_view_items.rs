@@ -188,7 +188,7 @@ impl<'a> ListViewItems<'a> {
 	/// }
 	/// ```
 	#[must_use]
-	pub fn iter(&self) -> impl Iterator<Item = ListViewItem> {
+	pub fn iter(&self) -> impl Iterator<Item = ListViewItem<'a>> + 'a {
 		ListViewItemIter::new(self.owner, co::LVNI::ALL)
 	}
 

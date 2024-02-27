@@ -163,7 +163,7 @@ impl ListBox {
 
 	/// Item methods.
 	#[must_use]
-	pub const fn items(&self) -> ListBoxItems {
+	pub const fn items(&self) -> ListBoxItems<'_> {
 		ListBoxItems::new(self)
 	}
 

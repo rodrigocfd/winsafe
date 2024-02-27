@@ -218,7 +218,7 @@ impl ListView {
 
 	/// Exposes the column methods.
 	#[must_use]
-	pub const fn columns(&self) -> ListViewColumns {
+	pub const fn columns(&self) -> ListViewColumns<'_> {
 		ListViewColumns::new(self)
 	}
 
@@ -241,7 +241,7 @@ impl ListView {
 
 	/// Exposes the item methods.
 	#[must_use]
-	pub const fn items(&self) -> ListViewItems {
+	pub const fn items(&self) -> ListViewItems<'_> {
 		ListViewItems::new(self)
 	}
 

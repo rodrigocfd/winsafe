@@ -161,7 +161,7 @@ impl TreeView {
 
 	/// Exposes the item methods.
 	#[must_use]
-	pub const fn items(&self) -> TreeViewItems {
+	pub const fn items(&self) -> TreeViewItems<'_> {
 		TreeViewItems::new(self)
 	}
 

@@ -224,7 +224,7 @@ impl StatusBar {
 
 	/// Exposes the part methods.
 	#[must_use]
-	pub const fn parts(&self) -> StatusBarParts {
+	pub const fn parts(&self) -> StatusBarParts<'_> {
 		StatusBarParts::new(self)
 	}
 }

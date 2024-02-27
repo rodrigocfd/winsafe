@@ -192,7 +192,7 @@ impl ComboBox {
 
 	/// Item methods.
 	#[must_use]
-	pub const fn items(&self) -> ComboBoxItems {
+	pub const fn items(&self) -> ComboBoxItems<'_> {
 		ComboBoxItems::new(self)
 	}
 }
