@@ -3791,6 +3791,27 @@
 <a href="#3789" id="3789">3789</a>
 <a href="#3790" id="3790">3790</a>
 <a href="#3791" id="3791">3791</a>
+<a href="#3792" id="3792">3792</a>
+<a href="#3793" id="3793">3793</a>
+<a href="#3794" id="3794">3794</a>
+<a href="#3795" id="3795">3795</a>
+<a href="#3796" id="3796">3796</a>
+<a href="#3797" id="3797">3797</a>
+<a href="#3798" id="3798">3798</a>
+<a href="#3799" id="3799">3799</a>
+<a href="#3800" id="3800">3800</a>
+<a href="#3801" id="3801">3801</a>
+<a href="#3802" id="3802">3802</a>
+<a href="#3803" id="3803">3803</a>
+<a href="#3804" id="3804">3804</a>
+<a href="#3805" id="3805">3805</a>
+<a href="#3806" id="3806">3806</a>
+<a href="#3807" id="3807">3807</a>
+<a href="#3808" id="3808">3808</a>
+<a href="#3809" id="3809">3809</a>
+<a href="#3810" id="3810">3810</a>
+<a href="#3811" id="3811">3811</a>
+<a href="#3812" id="3812">3812</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
@@ -4258,6 +4279,17 @@
 	</span>INBUTTON <span class="number">0x0010
 	</span>GRADIENT <span class="number">0x0020
 	</span>BUTTONS <span class="number">0x1000
+</span>}
+
+<span class="macro">const_ordinary! </span>{ DDC: u32;
+	<span class="doccomment">/// [`DIALOG_DPI_CHANGE_BEHAVIORS`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ne-winuser-dialog_dpi_change_behaviors)
+	/// enumeration (`u32`).
+	</span>=&gt;
+	=&gt;
+	DEFAULT <span class="number">0x0000
+	</span>DISABLE_ALL <span class="number">0x0001
+	</span>DISABLE_RESIZE <span class="number">0x0002
+	</span>DISABLE_CONTROL_RELAYOUT <span class="number">0x0004
 </span>}
 
 <span class="macro">const_bitflag! </span>{ DDL: u16;
@@ -4866,6 +4898,16 @@
 	</span>NO <span class="number">7
 	</span>TRYAGAIN <span class="number">10
 	</span>CONTINUE <span class="number">11
+</span>}
+
+<span class="macro">const_ordinary! </span>{ DPI_HOSTING_BEHAVIOR: u32;
+	<span class="doccomment">/// [`DPI_HOSTING_BEHAVIOR`](https://learn.microsoft.com/en-us/windows/win32/api/windef/ne-windef-dpi_hosting_behavior)
+	/// enumeration (`u32`).
+	</span>=&gt;
+	=&gt;
+	INVALID -<span class="number">1i32 </span><span class="kw">as _
+	</span>DEFAULT <span class="number">0
+	</span>MIXED <span class="number">1
 </span>}
 
 <span class="macro">const_bitflag! </span>{ DT: u32;

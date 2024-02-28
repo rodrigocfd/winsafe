@@ -1015,6 +1015,27 @@
 <a href="#1013" id="1013">1013</a>
 <a href="#1014" id="1014">1014</a>
 <a href="#1015" id="1015">1015</a>
+<a href="#1016" id="1016">1016</a>
+<a href="#1017" id="1017">1017</a>
+<a href="#1018" id="1018">1018</a>
+<a href="#1019" id="1019">1019</a>
+<a href="#1020" id="1020">1020</a>
+<a href="#1021" id="1021">1021</a>
+<a href="#1022" id="1022">1022</a>
+<a href="#1023" id="1023">1023</a>
+<a href="#1024" id="1024">1024</a>
+<a href="#1025" id="1025">1025</a>
+<a href="#1026" id="1026">1026</a>
+<a href="#1027" id="1027">1027</a>
+<a href="#1028" id="1028">1028</a>
+<a href="#1029" id="1029">1029</a>
+<a href="#1030" id="1030">1030</a>
+<a href="#1031" id="1031">1031</a>
+<a href="#1032" id="1032">1032</a>
+<a href="#1033" id="1033">1033</a>
+<a href="#1034" id="1034">1034</a>
+<a href="#1035" id="1035">1035</a>
+<a href="#1036" id="1036">1036</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -1658,6 +1679,15 @@
 	}
 }
 
+<span class="doccomment">/// [`GetThreadDpiHostingBehavior`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getthreaddpihostingbehavior)
+/// function.
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetThreadDpiHostingBehavior() -&gt; co::DPI_HOSTING_BEHAVIOR {
+	<span class="kw">unsafe </span>{
+		co::DPI_HOSTING_BEHAVIOR::from_raw(ffi::GetThreadDpiHostingBehavior())
+	}
+}
+
 <span class="doccomment">/// [`InSendMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insendmessage)
 /// function.
 </span><span class="attr">#[must_use]
@@ -1924,6 +1954,18 @@
 /// function.
 </span><span class="kw">pub fn </span>SetProcessDPIAware() -&gt; SysResult&lt;()&gt; {
 	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::SetProcessDPIAware() })
+}
+
+<span class="doccomment">/// [`SetThreadDpiHostingBehavior`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setthreaddpihostingbehavior)
+/// function.
+</span><span class="kw">pub fn </span>SetThreadDpiHostingBehavior(
+	value: co::DPI_HOSTING_BEHAVIOR,
+) -&gt; co::DPI_HOSTING_BEHAVIOR {
+	<span class="kw">unsafe </span>{
+		co::DPI_HOSTING_BEHAVIOR::from_raw(
+			ffi::SetThreadDpiHostingBehavior(value.raw()),
+		)
+	}
 }
 
 <span class="doccomment">/// [`ShowCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcursor)

@@ -269,6 +269,12 @@
 <a href="#267" id="267">267</a>
 <a href="#268" id="268">268</a>
 <a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys! </span>{ <span class="string">"comdlg32"</span>;
@@ -372,6 +378,7 @@
 	GetDC(HANDLE) -&gt; HANDLE
 	GetDesktopWindow() -&gt; HANDLE
 	GetDialogBaseUnits() -&gt; i32
+	GetDialogDpiChangeBehavior(HANDLE) -&gt; u32
 	GetDlgCtrlID(HANDLE) -&gt; i32
 	GetDlgItem(HANDLE, i32) -&gt; HANDLE
 	GetDoubleClickTime() -&gt; u32
@@ -407,12 +414,14 @@
 	GetSystemMetrics(i32) -&gt; i32
 	GetSystemMetricsForDpi(i32, u32) -&gt; i32
 	GetThreadDesktop(u32) -&gt; HANDLE
+	GetThreadDpiHostingBehavior() -&gt; u32
 	GetTopWindow(HANDLE) -&gt; HANDLE
 	GetUpdateRect(HANDLE, PVOID, BOOL) -&gt; BOOL
 	GetUpdateRgn(HANDLE, HANDLE, BOOL) -&gt; i32
 	GetWindow(HANDLE, u32) -&gt; HANDLE
 	GetWindowDC(HANDLE) -&gt; HANDLE
 	GetWindowDisplayAffinity(HANDLE, PVOID) -&gt; BOOL
+	GetWindowDpiHostingBehavior(HANDLE) -&gt; u32
 	GetWindowInfo(HANDLE, PVOID) -&gt; BOOL
 	GetWindowModuleFileNameW(HANDLE, PSTR, u32) -&gt; u32
 	GetWindowPlacement(HANDLE, PVOID) -&gt; BOOL
@@ -424,6 +433,7 @@
 	GetWindowThreadProcessId(HANDLE, <span class="kw-2">*mut </span>u32) -&gt; u32
 	HiliteMenuItem(HANDLE, HANDLE, u32, u32) -&gt; BOOL
 	InflateRect(PVOID, i32, i32) -&gt; BOOL
+	InheritWindowMonitor(HANDLE, HANDLE) -&gt; BOOL
 	InSendMessage() -&gt; BOOL
 	InsertMenuItemW(HANDLE, u32, BOOL, PCVOID) -&gt; BOOL
 	IntersectRect(PVOID, PCVOID, PCVOID) -&gt; BOOL
@@ -487,6 +497,7 @@
 	SetCaretPos(i32, i32) -&gt; BOOL
 	SetClipboardData(u32, HANDLE) -&gt; HANDLE
 	SetCursorPos(i32, i32) -&gt; BOOL
+	SetDialogDpiChangeBehavior(HANDLE, u32, u32) -&gt; BOOL
 	SetDoubleClickTime(u32) -&gt; BOOL
 	SetFocus(HANDLE) -&gt; HANDLE
 	SetForegroundWindow(HANDLE) -&gt; BOOL
@@ -503,6 +514,7 @@
 	SetScrollRange(HANDLE, i32, i32, i32, BOOL) -&gt; BOOL
 	SetSystemCursor(HANDLE, u32) -&gt; BOOL
 	SetThreadDesktop(HANDLE) -&gt; BOOL
+	SetThreadDpiHostingBehavior(u32) -&gt; u32
 	SetTimer(HANDLE, usize, u32, PFUNC) -&gt; usize
 	SetUserObjectInformationW(HANDLE, i32, PVOID, u32) -&gt; BOOL
 	SetWindowDisplayAffinity(HANDLE, u32) -&gt; BOOL
