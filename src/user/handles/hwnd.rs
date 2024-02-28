@@ -521,6 +521,21 @@ pub trait user_Hwnd: Handle {
 		unsafe { HWND::from_ptr(ffi::GetDesktopWindow()) }
 	}
 
+	/// [`GetDialogDpiChangeBehavior`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdialogdpichangebehavior)
+	/// function.
+	#[must_use]
+	fn GetDialogDpiChangeBehavior(&self) -> SysResult<co::DDC> {
+		match unsafe {
+			co::DDC::from_raw(ffi::GetDialogDpiChangeBehavior(self.ptr()))
+		} {
+			co::DDC::DEFAULT => match GetLastError() {
+				co::ERROR::SUCCESS => Ok(co::DDC::DEFAULT), // actual return value is zero
+				err => Err(err),
+			},
+			ddc => Ok(ddc),
+		}
+	}
+
 	/// [`GetDlgCtrlID`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdlgctrlid)
 	/// function.
 	#[must_use]
@@ -770,6 +785,17 @@ pub trait user_Hwnd: Handle {
 		).map(|_| affinity)
 	}
 
+	/// [`GetWindowDpiHostingBehavior`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowdpihostingbehavior)
+	/// function.
+	#[must_use]
+	fn GetWindowDpiHostingBehavior(&self) -> co::DPI_HOSTING_BEHAVIOR {
+		unsafe {
+			co::DPI_HOSTING_BEHAVIOR::from_raw(
+				ffi::GetWindowDpiHostingBehavior(self.ptr()),
+			)
+		}
+	}
+
 	/// [`GetWindowInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getwindowinfo)
 	/// function.
 	fn GetWindowInfo(&self, wi: &mut WINDOWINFO) -> SysResult<()> {
@@ -941,6 +967,14 @@ pub trait user_Hwnd: Handle {
 					| if hilite { co::MF::HILITE } else { co::MF::UNHILITE }.raw(),
 			) != 0
 		}
+	}
+
+	/// [`InheritWindowMonitor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-inheritwindowmonitor)
+	/// function.
+	fn InheritWindowMonitor(&self, hwnd_inherit: &HWND) -> SysResult<()> {
+		bool_to_sysresult(
+			unsafe { ffi::InheritWindowMonitor(self.ptr(), hwnd_inherit.ptr()) },
+		)
 	}
 
 	/// [`InvalidateRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invalidaterect)
@@ -1488,6 +1522,24 @@ pub trait user_Hwnd: Handle {
 					.map(|ptr| HWND::from_ptr(ptr)),
 			)
 		}
+	}
+
+	/// [`SetDialogDpiChangeBehavior`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setdialogdpichangebehavior)
+	/// function.
+	fn SetDialogDpiChangeBehavior(&self,
+		mask: co::DDC,
+		values: co::DDC,
+	) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				ffi::SetDialogDpiChangeBehavior(
+					self.ptr(),
+					mask.raw(),
+					values.raw(),
+				)
+			},
+		)
 	}
 
 	/// [`SetFocus`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setfocus)

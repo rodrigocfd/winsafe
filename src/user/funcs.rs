@@ -641,6 +641,15 @@ pub fn GetSystemMetricsForDpi(index: co::SM, dpi: u32) -> SysResult<i32> {
 	}
 }
 
+/// [`GetThreadDpiHostingBehavior`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getthreaddpihostingbehavior)
+/// function.
+#[must_use]
+pub fn GetThreadDpiHostingBehavior() -> co::DPI_HOSTING_BEHAVIOR {
+	unsafe {
+		co::DPI_HOSTING_BEHAVIOR::from_raw(ffi::GetThreadDpiHostingBehavior())
+	}
+}
+
 /// [`InSendMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insendmessage)
 /// function.
 #[must_use]
@@ -907,6 +916,18 @@ pub fn SetDoubleClickTime(ms: u32) -> SysResult<()> {
 /// function.
 pub fn SetProcessDPIAware() -> SysResult<()> {
 	bool_to_sysresult(unsafe { ffi::SetProcessDPIAware() })
+}
+
+/// [`SetThreadDpiHostingBehavior`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setthreaddpihostingbehavior)
+/// function.
+pub fn SetThreadDpiHostingBehavior(
+	value: co::DPI_HOSTING_BEHAVIOR,
+) -> co::DPI_HOSTING_BEHAVIOR {
+	unsafe {
+		co::DPI_HOSTING_BEHAVIOR::from_raw(
+			ffi::SetThreadDpiHostingBehavior(value.raw()),
+		)
+	}
 }
 
 /// [`ShowCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showcursor)

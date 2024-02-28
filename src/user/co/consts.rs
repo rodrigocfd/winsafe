@@ -467,6 +467,17 @@ const_bitflag! { DC: u32;
 	BUTTONS 0x1000
 }
 
+const_ordinary! { DDC: u32;
+	/// [`DIALOG_DPI_CHANGE_BEHAVIORS`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ne-winuser-dialog_dpi_change_behaviors)
+	/// enumeration (`u32`).
+	=>
+	=>
+	DEFAULT 0x0000
+	DISABLE_ALL 0x0001
+	DISABLE_RESIZE 0x0002
+	DISABLE_CONTROL_RELAYOUT 0x0004
+}
+
 const_bitflag! { DDL: u16;
 	/// [`cb::Dir`](crate::msg::cb::Dir) and [`lb::Dir`](crate::msg::lb::Dir)
 	/// attributes (`u16`).
@@ -1073,6 +1084,16 @@ const_ordinary! { DLGID: u16;
 	NO 7
 	TRYAGAIN 10
 	CONTINUE 11
+}
+
+const_ordinary! { DPI_HOSTING_BEHAVIOR: u32;
+	/// [`DPI_HOSTING_BEHAVIOR`](https://learn.microsoft.com/en-us/windows/win32/api/windef/ne-windef-dpi_hosting_behavior)
+	/// enumeration (`u32`).
+	=>
+	=>
+	INVALID -1i32 as _
+	DEFAULT 0
+	MIXED 1
 }
 
 const_bitflag! { DT: u32;

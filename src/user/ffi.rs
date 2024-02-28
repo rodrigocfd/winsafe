@@ -101,6 +101,7 @@ extern_sys! { "user32";
 	GetDC(HANDLE) -> HANDLE
 	GetDesktopWindow() -> HANDLE
 	GetDialogBaseUnits() -> i32
+	GetDialogDpiChangeBehavior(HANDLE) -> u32
 	GetDlgCtrlID(HANDLE) -> i32
 	GetDlgItem(HANDLE, i32) -> HANDLE
 	GetDoubleClickTime() -> u32
@@ -136,12 +137,14 @@ extern_sys! { "user32";
 	GetSystemMetrics(i32) -> i32
 	GetSystemMetricsForDpi(i32, u32) -> i32
 	GetThreadDesktop(u32) -> HANDLE
+	GetThreadDpiHostingBehavior() -> u32
 	GetTopWindow(HANDLE) -> HANDLE
 	GetUpdateRect(HANDLE, PVOID, BOOL) -> BOOL
 	GetUpdateRgn(HANDLE, HANDLE, BOOL) -> i32
 	GetWindow(HANDLE, u32) -> HANDLE
 	GetWindowDC(HANDLE) -> HANDLE
 	GetWindowDisplayAffinity(HANDLE, PVOID) -> BOOL
+	GetWindowDpiHostingBehavior(HANDLE) -> u32
 	GetWindowInfo(HANDLE, PVOID) -> BOOL
 	GetWindowModuleFileNameW(HANDLE, PSTR, u32) -> u32
 	GetWindowPlacement(HANDLE, PVOID) -> BOOL
@@ -153,6 +156,7 @@ extern_sys! { "user32";
 	GetWindowThreadProcessId(HANDLE, *mut u32) -> u32
 	HiliteMenuItem(HANDLE, HANDLE, u32, u32) -> BOOL
 	InflateRect(PVOID, i32, i32) -> BOOL
+	InheritWindowMonitor(HANDLE, HANDLE) -> BOOL
 	InSendMessage() -> BOOL
 	InsertMenuItemW(HANDLE, u32, BOOL, PCVOID) -> BOOL
 	IntersectRect(PVOID, PCVOID, PCVOID) -> BOOL
@@ -216,6 +220,7 @@ extern_sys! { "user32";
 	SetCaretPos(i32, i32) -> BOOL
 	SetClipboardData(u32, HANDLE) -> HANDLE
 	SetCursorPos(i32, i32) -> BOOL
+	SetDialogDpiChangeBehavior(HANDLE, u32, u32) -> BOOL
 	SetDoubleClickTime(u32) -> BOOL
 	SetFocus(HANDLE) -> HANDLE
 	SetForegroundWindow(HANDLE) -> BOOL
@@ -232,6 +237,7 @@ extern_sys! { "user32";
 	SetScrollRange(HANDLE, i32, i32, i32, BOOL) -> BOOL
 	SetSystemCursor(HANDLE, u32) -> BOOL
 	SetThreadDesktop(HANDLE) -> BOOL
+	SetThreadDpiHostingBehavior(u32) -> u32
 	SetTimer(HANDLE, usize, u32, PFUNC) -> usize
 	SetUserObjectInformationW(HANDLE, i32, PVOID, u32) -> BOOL
 	SetWindowDisplayAffinity(HANDLE, u32) -> BOOL
