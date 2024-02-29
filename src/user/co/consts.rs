@@ -2,6 +2,15 @@
 
 use crate::co::*;
 
+const_ordinary! { AC_SRC: u8;
+	/// [`BLENDFUNCTION`](crate::BLENDFUNCTION) `BlendOp` and `AlphaFormat`
+	/// (`u8`).
+	=>
+	=>
+	OVER 0x00
+	ALPHA 0x01
+}
+
 const_bitflag! { ACCELF: u8;
 	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`).
 	///
@@ -2858,6 +2867,19 @@ const_bitflag! { TPM: u32;
 	NOANIMATION 0x4000
 	LAYOUTRTL 0x8000
 	WORKAREA 0x10000
+}
+
+const_ordinary! { ULW: u32;
+	/// [`UpdateLayeredWindow`](crate::prelude::user_Hwnd::UpdateLayeredWindow)
+	/// `flags` (`u32`).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	ALPHA 0x0000_0002
+	COLORKEY 0x0000_0001
+	OPAQUE 0x0000_0004
+	EX_NORESIZE 0x0000_0008
 }
 
 const_ordinary! { UOI: i32;

@@ -54,6 +54,36 @@ impl std::fmt::Debug for ATOM {
 	}
 }
 
+/// [`BLENDFUNCTION`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-blendfunction)
+/// struct.
+///
+/// The [`Default`](std::default::Default) trait is implemented with the
+/// following values:
+///
+/// * `BlendOp`: [`co::AC_SRC::OVER`](crate::co::AC_SRC::OVER)
+/// * `BlendFlags`: `0`
+/// * `SourceConstantAlpha`: `0`
+/// * `AlphaFormat`: [`co::AC_SRC::ALPHA`](crate::co::AC_SRC::ALPHA)
+#[repr(C)]
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub struct BLENDFUNCTION {
+	BlendOp: co::AC_SRC,
+	BlendFlags: u8,
+	pub SourceConstantAlpha: u8,
+	AlphaFormat: co::AC_SRC,
+}
+
+impl Default for BLENDFUNCTION {
+	fn default() -> Self {
+		Self {
+			BlendOp: co::AC_SRC::OVER,
+			BlendFlags: 0,
+			SourceConstantAlpha: 0,
+			AlphaFormat: co::AC_SRC::ALPHA,
+		}
+	}
+}
+
 /// [`CHOOSECOLOR`](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/ns-commdlg-choosecolorw-r1)
 /// struct.
 #[repr(C)]

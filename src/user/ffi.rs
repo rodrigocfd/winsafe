@@ -264,6 +264,7 @@ extern_sys! { "user32";
 	UnhookWindowsHookEx(HANDLE) -> BOOL
 	UnionRect(PVOID, PCVOID, PCVOID) -> BOOL
 	UnregisterClassW(PCSTR, HANDLE) -> BOOL
+	UpdateLayeredWindow(HANDLE, HANDLE, PCVOID, PCVOID, HANDLE, PCVOID, u32, PCVOID, u32) -> BOOL
 	UpdateWindow(HANDLE) -> BOOL
 	ValidateRect(HANDLE, PCVOID) -> BOOL
 	ValidateRgn(HANDLE, HANDLE) -> BOOL

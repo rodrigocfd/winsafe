@@ -1853,6 +1853,36 @@ pub trait user_Hwnd: Handle {
 		)
 	}
 
+	/// [`UpdateLayeredWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-updatelayeredwindow)
+	/// function.
+	fn UpdateLayeredWindow(&self,
+		hdc_dest: Option<&HDC>,
+		pt_dest: Option<&POINT>,
+		size: Option<&SIZE>,
+		hdc_src: Option<&HDC>,
+		pt_src: Option<&POINT>,
+		key: COLORREF,
+		blend: &BLENDFUNCTION,
+		flags: co::ULW,
+	) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				ffi::UpdateLayeredWindow(
+					self.ptr(),
+					hdc_dest.map_or(std::ptr::null_mut(), |hdc| hdc.ptr()),
+					pt_dest.map_or(std::ptr::null(), |pt| pt as *const _ as _),
+					size.map_or(std::ptr::null(), |sz| sz as *const _ as _),
+					hdc_src.map_or(std::ptr::null_mut(), |hdc| hdc.ptr()),
+					pt_src.map_or(std::ptr::null(), |pt| pt as *const _ as _),
+					key.raw(),
+					blend as *const _ as _,
+					flags.raw(),
+				)
+			},
+		)
+	}
+
 	/// [`UpdateWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-updatewindow)
 	/// function.
 	fn UpdateWindow(&self) -> SysResult<()> {
