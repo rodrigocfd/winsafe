@@ -127,6 +127,14 @@
 <a href="#125" id="125">125</a>
 <a href="#126" id="126">126</a>
 <a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -152,6 +160,10 @@
 /// let picture = w::OleLoadPicture(&amp;stream, None, true)?;
 /// # w::HrResult::Ok(())
 /// ```
+///
+/// # Related functions
+///
+/// * [`OleLoadPicturePath`](crate::OleLoadPicturePath)
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>OleLoadPicture(
 	stream: <span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IStream,
@@ -178,6 +190,10 @@
 ///
 /// The picture must be in BMP (bitmap), JPEG, WMF (metafile), ICO (icon), or
 /// GIF format.
+///
+/// # Related functions
+///
+/// * [`OleLoadPicture`](crate::OleLoadPicture)
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>OleLoadPicturePath(
 	path: <span class="kw-2">&amp;</span>str,

@@ -342,6 +342,16 @@
 <a href="#340" id="340">340</a>
 <a href="#341" id="341">341</a>
 <a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -564,6 +574,11 @@
 ///
 /// // CoTaskMemFree() automatically called
 /// # w::HrResult::Ok(())
+/// ```
+///
+/// # Related functions
+///
+/// * [`CoTaskMemRealloc`](crate::CoTaskMemRealloc)
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>CoTaskMemAlloc(cb: usize) -&gt; HrResult&lt;CoTaskMemFreeGuard&gt; {
 	<span class="kw">let </span>p = <span class="kw">unsafe </span>{ ffi::CoTaskMemAlloc(cb) };
@@ -592,6 +607,11 @@
 ///
 /// // CoTaskMemFree() automatically called
 /// # w::HrResult::Ok(())
+/// ```
+///
+/// # Related functions
+///
+/// * [`CoTaskMemAlloc`](crate::CoTaskMemAlloc)
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>CoTaskMemRealloc(
 	pv: <span class="kw-2">&amp;mut </span>CoTaskMemFreeGuard,
