@@ -105,6 +105,7 @@ extern_sys! { "gdi32";
 }
 
 extern_sys! { "msimg32";
+	AlphaBlend(HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, i32, i32, PCVOID) -> BOOL
 	TransparentBlt(HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, i32, i32, u32) -> BOOL
 }
 

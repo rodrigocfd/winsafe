@@ -26,6 +26,30 @@ pub trait gdi_Hdc: user_Hdc {
 		bool_to_sysresult(unsafe { ffi::AbortPath(self.ptr()) })
 	}
 
+	/// [`AlphaBlend`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-alphablend)
+	/// function.
+	fn AlphaBlend(&self,
+		origin_dest: RECT,
+		hdc_src: &HDC,
+		origin_src: RECT,
+		ftn: &BLENDFUNCTION,
+	) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				ffi::AlphaBlend(
+					self.ptr(),
+					origin_dest.left, origin_dest.top,
+					origin_dest.right, origin_dest.bottom,
+					hdc_src.ptr(),
+					origin_src.left, origin_src.top,
+					origin_src.right, origin_src.bottom,
+					ftn as *const _ as _,
+				)
+			},
+		)
+	}
+
 	/// [`AngleArc`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-anglearc)
 	/// function.
 	fn AngleArc(&self,
