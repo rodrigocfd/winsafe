@@ -12,6 +12,10 @@ pub fn GdiFlush() -> SysResult<()> {
 
 /// [`GdiGetBatchLimit`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gdigetbatchlimit)
 /// function.
+///
+/// # Related functions
+///
+/// * [`GdiSetBatchLimit`](crate::GdiSetBatchLimit)
 #[must_use]
 pub fn GdiGetBatchLimit() -> u32 {
 	unsafe { ffi::GdiGetBatchLimit() }
@@ -19,6 +23,10 @@ pub fn GdiGetBatchLimit() -> u32 {
 
 /// [`GdiSetBatchLimit`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gdisetbatchlimit)
 /// function.
+///
+/// # Related functions
+///
+/// * [`GdiGetBatchLimit`](crate::GdiGetBatchLimit)
 pub fn GdiSetBatchLimit(limit: u32) -> SysResult<u32> {
 	match unsafe { ffi::GdiSetBatchLimit(limit) } {
 		0 => Err(GetLastError()),

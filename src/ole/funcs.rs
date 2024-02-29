@@ -220,6 +220,11 @@ pub fn CoLockObjectExternal<T>(
 ///
 /// // CoTaskMemFree() automatically called
 /// # w::HrResult::Ok(())
+/// ```
+///
+/// # Related functions
+///
+/// * [`CoTaskMemRealloc`](crate::CoTaskMemRealloc)
 #[must_use]
 pub fn CoTaskMemAlloc(cb: usize) -> HrResult<CoTaskMemFreeGuard> {
 	let p = unsafe { ffi::CoTaskMemAlloc(cb) };
@@ -248,6 +253,11 @@ pub fn CoTaskMemAlloc(cb: usize) -> HrResult<CoTaskMemFreeGuard> {
 ///
 /// // CoTaskMemFree() automatically called
 /// # w::HrResult::Ok(())
+/// ```
+///
+/// # Related functions
+///
+/// * [`CoTaskMemAlloc`](crate::CoTaskMemAlloc)
 #[must_use]
 pub fn CoTaskMemRealloc(
 	pv: &mut CoTaskMemFreeGuard,

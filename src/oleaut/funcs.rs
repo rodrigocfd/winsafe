@@ -23,6 +23,10 @@ use crate::prelude::*;
 /// let picture = w::OleLoadPicture(&stream, None, true)?;
 /// # w::HrResult::Ok(())
 /// ```
+///
+/// # Related functions
+///
+/// * [`OleLoadPicturePath`](crate::OleLoadPicturePath)
 #[must_use]
 pub fn OleLoadPicture(
 	stream: &impl ole_IStream,
@@ -49,6 +53,10 @@ pub fn OleLoadPicture(
 ///
 /// The picture must be in BMP (bitmap), JPEG, WMF (metafile), ICO (icon), or
 /// GIF format.
+///
+/// # Related functions
+///
+/// * [`OleLoadPicture`](crate::OleLoadPicture)
 #[must_use]
 pub fn OleLoadPicturePath(
 	path: &str,
