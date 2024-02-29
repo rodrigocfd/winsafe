@@ -113,6 +113,7 @@
 <a href="#111" id="111">111</a>
 <a href="#112" id="112">112</a>
 <a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys! </span>{ <span class="string">"gdi32"</span>;
@@ -220,6 +221,7 @@
 }
 
 <span class="macro">extern_sys! </span>{ <span class="string">"msimg32"</span>;
+	AlphaBlend(HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, i32, i32, PCVOID) -&gt; BOOL
 	TransparentBlt(HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, i32, i32, u32) -&gt; BOOL
 }
 
