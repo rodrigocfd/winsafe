@@ -3812,9 +3812,40 @@
 <a href="#3810" id="3810">3810</a>
 <a href="#3811" id="3811">3811</a>
 <a href="#3812" id="3812">3812</a>
+<a href="#3813" id="3813">3813</a>
+<a href="#3814" id="3814">3814</a>
+<a href="#3815" id="3815">3815</a>
+<a href="#3816" id="3816">3816</a>
+<a href="#3817" id="3817">3817</a>
+<a href="#3818" id="3818">3818</a>
+<a href="#3819" id="3819">3819</a>
+<a href="#3820" id="3820">3820</a>
+<a href="#3821" id="3821">3821</a>
+<a href="#3822" id="3822">3822</a>
+<a href="#3823" id="3823">3823</a>
+<a href="#3824" id="3824">3824</a>
+<a href="#3825" id="3825">3825</a>
+<a href="#3826" id="3826">3826</a>
+<a href="#3827" id="3827">3827</a>
+<a href="#3828" id="3828">3828</a>
+<a href="#3829" id="3829">3829</a>
+<a href="#3830" id="3830">3830</a>
+<a href="#3831" id="3831">3831</a>
+<a href="#3832" id="3832">3832</a>
+<a href="#3833" id="3833">3833</a>
+<a href="#3834" id="3834">3834</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
+
+<span class="macro">const_ordinary! </span>{ AC_SRC: u8;
+	<span class="doccomment">/// [`BLENDFUNCTION`](crate::BLENDFUNCTION) `BlendOp` and `AlphaFormat`
+	/// (`u8`).
+	</span>=&gt;
+	=&gt;
+	OVER <span class="number">0x00
+	</span>ALPHA <span class="number">0x01
+</span>}
 
 <span class="macro">const_bitflag! </span>{ ACCELF: u8;
 	<span class="doccomment">/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`).
@@ -6672,6 +6703,19 @@
 	</span>NOANIMATION <span class="number">0x4000
 	</span>LAYOUTRTL <span class="number">0x8000
 	</span>WORKAREA <span class="number">0x10000
+</span>}
+
+<span class="macro">const_ordinary! </span>{ ULW: u32;
+	<span class="doccomment">/// [`UpdateLayeredWindow`](crate::prelude::user_Hwnd::UpdateLayeredWindow)
+	/// `flags` (`u32`).
+	</span>=&gt;
+	=&gt;
+	<span class="doccomment">/// None of the actual values (zero).
+	</span>NoValue <span class="number">0
+	</span>ALPHA <span class="number">0x0000_0002
+	</span>COLORKEY <span class="number">0x0000_0001
+	</span>OPAQUE <span class="number">0x0000_0004
+	</span>EX_NORESIZE <span class="number">0x0000_0008
 </span>}
 
 <span class="macro">const_ordinary! </span>{ UOI: i32;

@@ -1909,6 +1909,36 @@
 <a href="#1907" id="1907">1907</a>
 <a href="#1908" id="1908">1908</a>
 <a href="#1909" id="1909">1909</a>
+<a href="#1910" id="1910">1910</a>
+<a href="#1911" id="1911">1911</a>
+<a href="#1912" id="1912">1912</a>
+<a href="#1913" id="1913">1913</a>
+<a href="#1914" id="1914">1914</a>
+<a href="#1915" id="1915">1915</a>
+<a href="#1916" id="1916">1916</a>
+<a href="#1917" id="1917">1917</a>
+<a href="#1918" id="1918">1918</a>
+<a href="#1919" id="1919">1919</a>
+<a href="#1920" id="1920">1920</a>
+<a href="#1921" id="1921">1921</a>
+<a href="#1922" id="1922">1922</a>
+<a href="#1923" id="1923">1923</a>
+<a href="#1924" id="1924">1924</a>
+<a href="#1925" id="1925">1925</a>
+<a href="#1926" id="1926">1926</a>
+<a href="#1927" id="1927">1927</a>
+<a href="#1928" id="1928">1928</a>
+<a href="#1929" id="1929">1929</a>
+<a href="#1930" id="1930">1930</a>
+<a href="#1931" id="1931">1931</a>
+<a href="#1932" id="1932">1932</a>
+<a href="#1933" id="1933">1933</a>
+<a href="#1934" id="1934">1934</a>
+<a href="#1935" id="1935">1935</a>
+<a href="#1936" id="1936">1936</a>
+<a href="#1937" id="1937">1937</a>
+<a href="#1938" id="1938">1938</a>
+<a href="#1939" id="1939">1939</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -3759,6 +3789,36 @@
 					<span class="self">self</span>.ptr(),
 					haccel_table.ptr(),
 					msg <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+				)
+			},
+		)
+	}
+
+	<span class="doccomment">/// [`UpdateLayeredWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-updatelayeredwindow)
+	/// function.
+	</span><span class="kw">fn </span>UpdateLayeredWindow(<span class="kw-2">&amp;</span><span class="self">self</span>,
+		hdc_dest: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>HDC&gt;,
+		pt_dest: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>POINT&gt;,
+		size: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>SIZE&gt;,
+		hdc_src: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>HDC&gt;,
+		pt_src: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>POINT&gt;,
+		key: COLORREF,
+		blend: <span class="kw-2">&amp;</span>BLENDFUNCTION,
+		flags: co::ULW,
+	) -&gt; SysResult&lt;()&gt;
+	{
+		bool_to_sysresult(
+			<span class="kw">unsafe </span>{
+				ffi::UpdateLayeredWindow(
+					<span class="self">self</span>.ptr(),
+					hdc_dest.map_or(std::ptr::null_mut(), |hdc| hdc.ptr()),
+					pt_dest.map_or(std::ptr::null(), |pt| pt <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>),
+					size.map_or(std::ptr::null(), |sz| sz <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>),
+					hdc_src.map_or(std::ptr::null_mut(), |hdc| hdc.ptr()),
+					pt_src.map_or(std::ptr::null(), |pt| pt <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>),
+					key.raw(),
+					blend <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+					flags.raw(),
 				)
 			},
 		)

@@ -1045,6 +1045,36 @@
 <a href="#1043" id="1043">1043</a>
 <a href="#1044" id="1044">1044</a>
 <a href="#1045" id="1045">1045</a>
+<a href="#1046" id="1046">1046</a>
+<a href="#1047" id="1047">1047</a>
+<a href="#1048" id="1048">1048</a>
+<a href="#1049" id="1049">1049</a>
+<a href="#1050" id="1050">1050</a>
+<a href="#1051" id="1051">1051</a>
+<a href="#1052" id="1052">1052</a>
+<a href="#1053" id="1053">1053</a>
+<a href="#1054" id="1054">1054</a>
+<a href="#1055" id="1055">1055</a>
+<a href="#1056" id="1056">1056</a>
+<a href="#1057" id="1057">1057</a>
+<a href="#1058" id="1058">1058</a>
+<a href="#1059" id="1059">1059</a>
+<a href="#1060" id="1060">1060</a>
+<a href="#1061" id="1061">1061</a>
+<a href="#1062" id="1062">1062</a>
+<a href="#1063" id="1063">1063</a>
+<a href="#1064" id="1064">1064</a>
+<a href="#1065" id="1065">1065</a>
+<a href="#1066" id="1066">1066</a>
+<a href="#1067" id="1067">1067</a>
+<a href="#1068" id="1068">1068</a>
+<a href="#1069" id="1069">1069</a>
+<a href="#1070" id="1070">1070</a>
+<a href="#1071" id="1071">1071</a>
+<a href="#1072" id="1072">1072</a>
+<a href="#1073" id="1073">1073</a>
+<a href="#1074" id="1074">1074</a>
+<a href="#1075" id="1075">1075</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -1098,6 +1128,36 @@
 <span class="kw">impl </span>std::fmt::Debug <span class="kw">for </span>ATOM {
 	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
 		<span class="macro">write!</span>(f, <span class="string">"ATOM [{:#06x} {}]"</span>, <span class="self">self</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="number">0</span>)
+	}
+}
+
+<span class="doccomment">/// [`BLENDFUNCTION`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-blendfunction)
+/// struct.
+///
+/// The [`Default`](std::default::Default) trait is implemented with the
+/// following values:
+///
+/// * `BlendOp`: [`co::AC_SRC::OVER`](crate::co::AC_SRC::OVER)
+/// * `BlendFlags`: `0`
+/// * `SourceConstantAlpha`: `0`
+/// * `AlphaFormat`: [`co::AC_SRC::ALPHA`](crate::co::AC_SRC::ALPHA)
+</span><span class="attr">#[repr(C)]
+#[derive(Clone, Copy, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>BLENDFUNCTION {
+	BlendOp: co::AC_SRC,
+	BlendFlags: u8,
+	<span class="kw">pub </span>SourceConstantAlpha: u8,
+	AlphaFormat: co::AC_SRC,
+}
+
+<span class="kw">impl </span>Default <span class="kw">for </span>BLENDFUNCTION {
+	<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{
+			BlendOp: co::AC_SRC::OVER,
+			BlendFlags: <span class="number">0</span>,
+			SourceConstantAlpha: <span class="number">0</span>,
+			AlphaFormat: co::AC_SRC::ALPHA,
+		}
 	}
 }
 

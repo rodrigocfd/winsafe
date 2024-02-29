@@ -275,6 +275,7 @@
 <a href="#273" id="273">273</a>
 <a href="#274" id="274">274</a>
 <a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys! </span>{ <span class="string">"comdlg32"</span>;
@@ -541,6 +542,7 @@
 	UnhookWindowsHookEx(HANDLE) -&gt; BOOL
 	UnionRect(PVOID, PCVOID, PCVOID) -&gt; BOOL
 	UnregisterClassW(PCSTR, HANDLE) -&gt; BOOL
+	UpdateLayeredWindow(HANDLE, HANDLE, PCVOID, PCVOID, HANDLE, PCVOID, u32, PCVOID, u32) -&gt; BOOL
 	UpdateWindow(HANDLE) -&gt; BOOL
 	ValidateRect(HANDLE, PCVOID) -&gt; BOOL
 	ValidateRgn(HANDLE, HANDLE) -&gt; BOOL
