@@ -17,7 +17,7 @@ Add the dependency in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-winsafe = { version = "0.0.19", features = [] }
+winsafe = { version = "0.0.20", features = [] }
 ```
 
 Then you must enable the [Cargo features](https://doc.rust-lang.org/cargo/reference/features.html#the-features-section) you want to be included – these modules are named after native Windows DLL and library names, mostly.
