@@ -104,22 +104,21 @@ impl Stats {
 				if line.starts_with("}") {
 					inside_block = false;
 				} else {
-					if !line.starts_with("\t//") && // skip comments
-						!line.starts_with("\t=>") {  // skip separators
+					if !line.starts_with("\t//") // skip comments
+							&& !line.starts_with("\t=>") {  // skip separators
 						self.consts += 1;
 					}
 				}
 			} else {
-				if line.starts_with("const_values!") ||
-					line.starts_with("const_bitflag!") ||
-					line.starts_with("const_ordinary!") ||
-					line.starts_with("const_wm!") ||
-					line.starts_with("const_nm!") ||
-					line.starts_with("const_cmd!") ||
-					line.starts_with("const_ws!") ||
-					line.starts_with("const_wsex!") ||
-					line.starts_with("const_str!") {
-
+				if line.starts_with("const_values!")
+						|| line.starts_with("const_bitflag!")
+						|| line.starts_with("const_ordinary!")
+						|| line.starts_with("const_wm!")
+						|| line.starts_with("const_nm!")
+						|| line.starts_with("const_cmd!")
+						|| line.starts_with("const_ws!")
+						|| line.starts_with("const_wsex!")
+						|| line.starts_with("const_str!") {
 					inside_block = true;
 				}
 			}
@@ -155,11 +154,13 @@ impl Stats {
 		let mut inside_block = false;
 
 		for line in contents.lines() {
-			if line.starts_with("com_interface! { ") {
+			if line.starts_with("com_interface! { ")
+					|| line.starts_with("com_interface_custom! { ") {
 				self.com_interfaces += 1;
 			}
 
-			if !is_com_interface_impl_file && line.starts_with("/// This trait is enabled with `") {
+			if !is_com_interface_impl_file
+					&& line.starts_with("/// This trait is enabled with `") {
 				is_com_interface_impl_file = true;
 			} else {
 				if !inside_block && line.starts_with("pub trait ") {
@@ -167,12 +168,12 @@ impl Stats {
 				} else {
 					if line.starts_with("}") {
 						inside_block = false;
-					} else if line.starts_with("\tfn ") ||
-						line.starts_with("\tfn_com_noparm!") ||
-						line.starts_with("\tfn_com_interface_get!") ||
-						line.starts_with("\tfn_com_bstr_get!") ||
-						line.starts_with("\tfn_com_bstr_set!") {
-
+					} else if line.starts_with("\tfn ")
+							|| line.starts_with("\tfn_com_noparm!")
+							|| line.starts_with("\tfn_com_interface_get!")
+							|| line.starts_with("\tfn_com_bstr_get!")
+							|| line.starts_with("\tfn_com_bstr_set!")
+							|| line.starts_with("\tfn_com_closure!") {
 						self.com_methods += 1;
 					}
 				}
