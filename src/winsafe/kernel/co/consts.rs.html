@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\co\consts.rs`."><title>consts.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (2bf78d12d 2024-02-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-c37d3936c59ababd.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\co\consts.rs`."><title>consts.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (516b6162a 2024-03-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -2576,7 +2576,7 @@
 <a href="#2574" id="2574">2574</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
-</span><span class="macro">const_bitflag! </span>{ ACCESS_RIGHTS: u32;
+</span><span class="macro">const_bitflag!</span> { ACCESS_RIGHTS: u32;
 	<span class="doccomment">/// Standard access rights
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
 	/// (`u32`).
@@ -2591,7 +2591,7 @@
 	</span>SYNCHRONIZE <span class="number">0x0010_0000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ CLAIM_SECURITY_ATTRIBUTE: u16;
+<span class="macro">const_bitflag!</span> { CLAIM_SECURITY_ATTRIBUTE: u16;
 	<span class="doccomment">/// [`CLAIM_SECURITY_ATTRIBUTE_V1`](crate::CLAIM_SECURITY_ATTRIBUTE_V1)
 	/// `Flags` (`u16`);
 	</span>=&gt;
@@ -2604,7 +2604,7 @@
 	</span>MANDATORY <span class="number">0x0020
 </span>}
 
-<span class="macro">const_ordinary! </span>{ CLAIM_SECURITY_ATTRIBUTE_TYPE: u16;
+<span class="macro">const_ordinary!</span> { CLAIM_SECURITY_ATTRIBUTE_TYPE: u16;
 	<span class="doccomment">/// [`CLAIM_SECURITY_ATTRIBUTE_V1`](crate::CLAIM_SECURITY_ATTRIBUTE_V1)
 	/// `ValueType` (`u16`);
 	</span>=&gt;
@@ -2618,7 +2618,7 @@
 	</span>OCTET_STRING <span class="number">0x0010
 </span>}
 
-<span class="macro">const_bitflag! </span>{ CONSOLE: u32;
+<span class="macro">const_bitflag!</span> { CONSOLE: u32;
 	<span class="doccomment">/// [`HSTD::SetConsoleMode`](crate::prelude::kernel_Hstd::SetConsoleMode)
 	/// `mode` (`u32`).
 	///
@@ -2645,7 +2645,7 @@
 	</span>ENABLE_LVB_GRID_WORLDWIDE <span class="number">0x0010
 </span>}
 
-<span class="macro">const_ordinary! </span>{ CP: u16;
+<span class="macro">const_ordinary!</span> { CP: u16;
 	<span class="doccomment">/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) and
 	/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `code_page`
 	/// [identifiers](https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers)
@@ -2708,7 +2708,7 @@
 	</span>UTF8 <span class="number">65001
 </span>}
 
-<span class="macro">const_bitflag! </span>{ CREATE: u32;
+<span class="macro">const_bitflag!</span> { CREATE: u32;
 	<span class="doccomment">/// Process creation
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/procthread/process-creation-flags)
 	/// (`u32`).
@@ -2740,7 +2740,7 @@
 	</span>INHERIT_PARENT_AFFINITY <span class="number">0x0001_0000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ CREATE_EVENT: u32;
+<span class="macro">const_bitflag!</span> { CREATE_EVENT: u32;
 	<span class="doccomment">/// [`HEVENT::CreateEventEx`](crate::prelude::kernel_Hevent::CreateEventEx)
 	/// `flags` (`u32`).
 	</span>=&gt;
@@ -2749,7 +2749,7 @@
 	</span>MANUAL_RESET <span class="number">0x0000_0001
 </span>}
 
-<span class="macro">const_ordinary! </span>{ DBT: u16;
+<span class="macro">const_ordinary!</span> { DBT: u16;
 	<span class="doccomment">/// [`wm::DeviceChange`](crate::msg::wm::DeviceChange) event (`u16`).
 	</span>=&gt;
 	=&gt;
@@ -2767,7 +2767,7 @@
 	</span>USERDEFINED <span class="number">0xffff
 </span>}
 
-<span class="macro">const_ordinary! </span>{ DBT_DEVTYP: u32;
+<span class="macro">const_ordinary!</span> { DBT_DEVTYP: u32;
 	<span class="doccomment">/// [`DEV_BROADCAST_HDR`](crate::DEV_BROADCAST_HDR) `dbch_devicetype`
 	/// (`u32`).
 	</span>=&gt;
@@ -2779,7 +2779,7 @@
 	</span>VOLUME <span class="number">0x0000_0002
 </span>}
 
-<span class="macro">const_bitflag! </span>{ DBTF: u16;
+<span class="macro">const_bitflag!</span> { DBTF: u16;
 	<span class="doccomment">/// [`DEV_BROADCAST_VOLUME`](crate::DEV_BROADCAST_VOLUME) `dbcv_flags`
 	/// (`u16`).
 	</span>=&gt;
@@ -2788,7 +2788,7 @@
 	</span>NET <span class="number">0x0002
 </span>}
 
-<span class="macro">const_ordinary! </span>{ DISPOSITION: u32;
+<span class="macro">const_ordinary!</span> { DISPOSITION: u32;
 	<span class="doccomment">/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
 	/// `creation_disposition` (`u32`).
 	///
@@ -2842,7 +2842,7 @@
 	</span>TRUNCATE_EXISTING <span class="number">5
 </span>}
 
-<span class="macro">const_ordinary! </span>{ DRIVE: u32;
+<span class="macro">const_ordinary!</span> { DRIVE: u32;
 	<span class="doccomment">/// [`GetDriveType`](crate::GetDriveType) return type (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -2855,7 +2855,7 @@
 	</span>RAMDISK <span class="number">6
 </span>}
 
-<span class="macro">const_ordinary! </span>{ EVENTLOG: u16;
+<span class="macro">const_ordinary!</span> { EVENTLOG: u16;
 	<span class="doccomment">/// [`HEVENTLOG::ReportEvent`](crate::prelude::kernel_Heventlog::ReportEvent)
 	/// `event_type` [`u16`].
 	</span>=&gt;
@@ -2868,7 +2868,7 @@
 	</span>WARNING_TYPE <span class="number">0x0002
 </span>}
 
-<span class="macro">const_bitflag! </span>{ EVENT_RIGHTS: u32;
+<span class="macro">const_bitflag!</span> { EVENT_RIGHTS: u32;
 	<span class="doccomment">/// Event
 	/// [access rights](https://learn.microsoft.com/en-us/windows/win32/sync/synchronization-object-security-and-access-rights)
 	/// (`u32`).
@@ -2884,7 +2884,7 @@
 	</span>MODIFY_STATE <span class="number">0x0002
 </span>}
 
-<span class="macro">const_bitflag! </span>{ FILE_ATTRIBUTE: u32;
+<span class="macro">const_bitflag!</span> { FILE_ATTRIBUTE: u32;
 	<span class="doccomment">/// File
 	/// [attributes](https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants)
 	/// (`u32`).
@@ -2914,7 +2914,7 @@
 	</span>RECALL_ON_DATA_ACCESS <span class="number">0x0040_0000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ FILE_CACHE: u32;
+<span class="macro">const_bitflag!</span> { FILE_CACHE: u32;
 	<span class="doccomment">/// [`GetSystemFileCacheSize`](crate::GetSystemFileCacheSize) returned flags
 	/// (`u32`).
 	</span>=&gt;
@@ -2925,7 +2925,7 @@
 	</span>MIN_HARD_ENABLE <span class="number">0x4
 </span>}
 
-<span class="macro">const_bitflag! </span>{ FILE_FLAG: u32;
+<span class="macro">const_bitflag!</span> { FILE_FLAG: u32;
 	<span class="doccomment">/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile) `flags`
 	/// (`u32`).
 	</span>=&gt;
@@ -2943,7 +2943,7 @@
 	</span>WRITE_THROUGH <span class="number">0x8000_0000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ FILE_MAP: u32;
+<span class="macro">const_bitflag!</span> { FILE_MAP: u32;
 	<span class="doccomment">/// [`HFILEMAP::MapViewOfFile`](crate::prelude::kernel_Hfilemap::MapViewOfFile)
 	/// `desired_access` (`u32`).
 	</span>=&gt;
@@ -2958,7 +2958,7 @@
 	</span>TARGETS_INVALID <span class="number">0x4000_0000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ FILE_SHARE: u32;
+<span class="macro">const_bitflag!</span> { FILE_SHARE: u32;
 	<span class="doccomment">/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
 	/// `share_mode` (`u32`).
 	</span>=&gt;
@@ -2968,7 +2968,7 @@
 	</span>DELETE <span class="number">0x0000_0004
 </span>}
 
-<span class="macro">const_bitflag! </span>{ FILE_SECURITY: u32;
+<span class="macro">const_bitflag!</span> { FILE_SECURITY: u32;
 	<span class="doccomment">/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
 	/// `security` (`u32`).
 	///
@@ -2983,7 +2983,7 @@
 	</span>EFFECTIVE_ONLY <span class="number">0x0008_0000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ FILE_STARTING_POINT: u32;
+<span class="macro">const_ordinary!</span> { FILE_STARTING_POINT: u32;
 	<span class="doccomment">/// [`HFILE::SetFilePointerEx`](crate::prelude::kernel_Hfile::SetFilePointerEx)
 	/// `move_method` (`u32`).
 	///
@@ -3000,7 +3000,7 @@
 	</span>END <span class="number">2
 </span>}
 
-<span class="macro">const_ordinary! </span>{ FILE_TYPE: u32;
+<span class="macro">const_ordinary!</span> { FILE_TYPE: u32;
 	<span class="doccomment">/// [`HFILE::GetFileType`](crate::prelude::kernel_Hfile::GetFileType) return
 	/// value (`u32`).
 	</span>=&gt;
@@ -3019,7 +3019,7 @@
 	</span>UNKNOWN <span class="number">0x0000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ FILE_VOL: u32;
+<span class="macro">const_bitflag!</span> { FILE_VOL: u32;
 	<span class="doccomment">/// [`GetVolumeInformation`](crate::GetVolumeInformation) `flags` (`u32`).
 	///
 	/// Originally has `FILE` prefix.
@@ -3048,7 +3048,7 @@
 	</span>SUPPORTS_BLOCK_REFCOUNTING <span class="number">0x0800_0000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ FIRMWARE_TYPE: u32;
+<span class="macro">const_ordinary!</span> { FIRMWARE_TYPE: u32;
 	<span class="doccomment">/// [`FIRMWARE_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-firmware_type)
 	/// enumeration (`u32`).
 	</span>=&gt;
@@ -3058,7 +3058,7 @@
 	</span>Uefi <span class="number">2
 </span>}
 
-<span class="macro">const_bitflag! </span>{ FORMAT_MESSAGE: u32;
+<span class="macro">const_bitflag!</span> { FORMAT_MESSAGE: u32;
 	<span class="doccomment">/// [`FormatMessage`](crate::prelude::FormattedError::FormatMessage)
 	/// `dwFlags` (`u32`).
 	</span>=&gt;
@@ -3072,7 +3072,7 @@
 	</span>MAX_WIDTH_MASK <span class="number">0x0000_00ff
 </span>}
 
-<span class="macro">const_bitflag! </span>{ GENERIC: u32;
+<span class="macro">const_bitflag!</span> { GENERIC: u32;
 	<span class="doccomment">/// Generic access rights
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/secauthz/generic-access-rights)
 	/// (`u32`).
@@ -3088,7 +3088,7 @@
 	</span>ALL <span class="number">0x1000_0000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ GMEM: u32;
+<span class="macro">const_bitflag!</span> { GMEM: u32;
 	<span class="doccomment">/// [`HGLOBAL::GlobalAlloc`](crate::prelude::kernel_Hglobal::GlobalAlloc)
 	/// and
 	/// [`HGLOBAL::GlobalReAlloc`](crate::prelude::kernel_Hglobal::GlobalReAlloc)
@@ -3113,7 +3113,7 @@
 	</span>GPTR <span class="self">Self</span>::FIXED.<span class="number">0 </span>| <span class="self">Self</span>::ZEROINIT.<span class="number">0
 </span>}
 
-<span class="macro">const_bitflag! </span>{ GR: u32;
+<span class="macro">const_bitflag!</span> { GR: u32;
 	<span class="doccomment">/// [`HPROCESS::GetGuiResources`](crate::prelude::kernel_Hprocess::GetGuiResources)
 	/// `flags` (`u32`).
 	</span>=&gt;
@@ -3124,7 +3124,7 @@
 	</span>USEROBJECTS_PEAK <span class="number">4
 </span>}
 
-<span class="macro">const_bitflag! </span>{ HEAP_ALLOC: u32;
+<span class="macro">const_bitflag!</span> { HEAP_ALLOC: u32;
 	<span class="doccomment">/// [`HHEAP::HeapAlloc`](crate::prelude::kernel_Hheap::HeapAlloc) `flags`
 	/// (`u32`).
 	///
@@ -3136,7 +3136,7 @@
 	</span>ZERO_MEMORY <span class="number">0x0000_0008
 </span>}
 
-<span class="macro">const_bitflag! </span>{ HEAP_CREATE: u32;
+<span class="macro">const_bitflag!</span> { HEAP_CREATE: u32;
 	<span class="doccomment">/// [`HHEAP::HeapCreate`](crate::prelude::kernel_Hheap::HeapCreate)
 	/// `options` (`u32`).
 	///
@@ -3148,7 +3148,7 @@
 	</span>NO_SERIALIZE <span class="number">0x0000_0001
 </span>}
 
-<span class="macro">const_ordinary! </span>{ HEAP_INFORMATION: u32;
+<span class="macro">const_ordinary!</span> { HEAP_INFORMATION: u32;
 	<span class="doccomment">/// [`HHEAP::HeapSetInformation`](crate::prelude::kernel_Hheap::HeapSetInformation)
 	/// information class (`u32`).
 	</span>=&gt;
@@ -3158,7 +3158,7 @@
 	</span>OptimizeResources <span class="number">3
 </span>}
 
-<span class="macro">const_bitflag! </span>{ HEAP_REALLOC: u32;
+<span class="macro">const_bitflag!</span> { HEAP_REALLOC: u32;
 	<span class="doccomment">/// [`HHEAP::HeapReAlloc`](crate::prelude::kernel_Hheap::HeapReAlloc)
 	/// `options` (`u32`).
 	///
@@ -3171,7 +3171,7 @@
 	</span>ZERO_MEMORY <span class="number">0x0000_0008
 </span>}
 
-<span class="macro">const_bitflag! </span>{ HEAP_SIZE: u32;
+<span class="macro">const_bitflag!</span> { HEAP_SIZE: u32;
 	<span class="doccomment">/// [`HHEAP::HeapSize`](crate::prelude::kernel_Hheap::HeapSize) and
 	/// [`HHEAP::HeapCompact`](crate::prelude::kernel_Hheap::HeapCompact)
 	/// `options` (`u32`).
@@ -3182,7 +3182,7 @@
 	NO_SERIALIZE <span class="number">0x0000_0001
 </span>}
 
-<span class="macro">const_ordinary! </span>{ HF32: u32;
+<span class="macro">const_ordinary!</span> { HF32: u32;
 	<span class="doccomment">/// [`HEAPLIST32`](crate::HEAPLIST32) `dwFlags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3192,7 +3192,7 @@
 	</span>DEFAULT <span class="number">1
 </span>}
 
-<span class="macro">const_bitflag! </span>{ KEY: u32;
+<span class="macro">const_bitflag!</span> { KEY: u32;
 	<span class="doccomment">/// [Registry access rights](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights)
 	/// (`u32`).
 	</span>=&gt;
@@ -3212,7 +3212,7 @@
 	</span>ALL_ACCESS (STANDARD_RIGHTS::ALL.<span class="number">0 </span>| <span class="self">Self</span>::QUERY_VALUE.<span class="number">0 </span>| <span class="self">Self</span>::SET_VALUE.<span class="number">0 </span>| <span class="self">Self</span>::CREATE_SUB_KEY.<span class="number">0 </span>| <span class="self">Self</span>::ENUMERATE_SUB_KEYS.<span class="number">0 </span>| <span class="self">Self</span>::NOTIFY.<span class="number">0 </span>| <span class="self">Self</span>::CREATE_LINK.<span class="number">0</span>) &amp; !ACCESS_RIGHTS::SYNCHRONIZE.<span class="number">0
 </span>}
 
-<span class="macro">const_ordinary! </span>{ LANG: u16;
+<span class="macro">const_ordinary!</span> { LANG: u16;
 	<span class="doccomment">/// Language
 	/// [identifier](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
 	/// (`u16`).
@@ -3360,7 +3360,7 @@
 	</span>ZULU <span class="number">0x35
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LMEM: u32;
+<span class="macro">const_bitflag!</span> { LMEM: u32;
 	<span class="doccomment">/// [`HLOCAL::LocalAlloc`](crate::prelude::kernel_Hlocal::LocalAlloc) and
 	/// [`HLOCAL::LocalReAlloc`](crate::prelude::kernel_Hlocal::LocalReAlloc)
 	/// `flags` (`u32`).
@@ -3384,7 +3384,7 @@
 	</span>LPTR <span class="self">Self</span>::FIXED.<span class="number">0 </span>| <span class="self">Self</span>::ZEROINIT.<span class="number">0
 </span>}
 
-<span class="macro">const_bitflag! </span>{ MBC: u32;
+<span class="macro">const_bitflag!</span> { MBC: u32;
 	<span class="doccomment">/// [`MultiByteToWideChar`](crate::MultiByteToWideChar) `flags` (`u32`).
 	///
 	/// Originally has `MB` prefix.
@@ -3398,7 +3398,7 @@
 	</span>USEGLYPHCHARS <span class="number">0x0000_0004
 </span>}
 
-<span class="macro">const_ordinary! </span>{ MONITOR_DISPLAY_STATE: u32;
+<span class="macro">const_ordinary!</span> { MONITOR_DISPLAY_STATE: u32;
 	<span class="doccomment">/// [`MONITOR_DISPLAY_STATE`](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ne-wdm-_monitor_display_state)
 	/// enumeration (`u32`).
 	</span>=&gt;
@@ -3408,7 +3408,7 @@
 	</span>Dim <span class="number">2
 </span>}
 
-<span class="macro">const_ordinary! </span>{ PAGE: u32;
+<span class="macro">const_ordinary!</span> { PAGE: u32;
 	<span class="doccomment">/// [`HFILE::CreateFileMapping`](crate::prelude::kernel_Hfile::CreateFileMapping)
 	/// `protect` (`u32`).
 	</span>=&gt;
@@ -3464,7 +3464,7 @@
 	</span>SEC_WRITECOMBINE <span class="number">0x4000_0000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ PBT: u32;
+<span class="macro">const_ordinary!</span> { PBT: u32;
 	<span class="doccomment">/// [`wm::PowerBroadcast`](crate::msg::wm::PowerBroadcast) power-management
 	/// event (`u32`).
 	</span>=&gt;
@@ -3476,7 +3476,7 @@
 	</span>POWERSETTINGCHANGE <span class="number">0x8013
 </span>}
 
-<span class="macro">const_bitflag! </span>{ PRIORITY_CLASS: u32;
+<span class="macro">const_bitflag!</span> { PRIORITY_CLASS: u32;
 	<span class="doccomment">/// [`GetPriorityClass`](crate::prelude::kernel_Hprocess::GetPriorityClass)
 	/// and
 	/// [`SetPriorityClass`](crate::prelude::kernel_Hprocess::SetPriorityClass)
@@ -3493,7 +3493,7 @@
 	</span>REALTIME <span class="number">0x0000_0100
 </span>}
 
-<span class="macro">const_bitflag! </span>{ PROCESS: u32;
+<span class="macro">const_bitflag!</span> { PROCESS: u32;
 	<span class="doccomment">/// Process
 	/// [security and access rights](https://learn.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights)
 	/// (`u32`).
@@ -3520,7 +3520,7 @@
 	</span>VM_WRITE <span class="number">0x0020
 </span>}
 
-<span class="macro">const_bitflag! </span>{ PROCESS_AFFINITY: u32;
+<span class="macro">const_bitflag!</span> { PROCESS_AFFINITY: u32;
 	<span class="doccomment">/// [`QueryProcessAffinityUpdateMode`](crate::prelude::kernel_Hprocess::QueryProcessAffinityUpdateMode)
 	/// and
 	/// [`SetProcessAffinityUpdateMode`](crate::prelude::kernel_Hprocess::SetProcessAffinityUpdateMode)
@@ -3532,7 +3532,7 @@
 	</span>ENABLE_AUTO_UPDATE <span class="number">0x0000_0001
 </span>}
 
-<span class="macro">const_bitflag! </span>{ PROCESS_HEAP: u16;
+<span class="macro">const_bitflag!</span> { PROCESS_HEAP: u16;
 	<span class="doccomment">/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) `wFlags` (`u16`).
 	</span>=&gt;
 	=&gt;
@@ -3543,7 +3543,7 @@
 	</span>UNCOMMITTED_RANGE <span class="number">0x0002
 </span>}
 
-<span class="macro">const_ordinary! </span>{ PROCESS_NAME: u32;
+<span class="macro">const_ordinary!</span> { PROCESS_NAME: u32;
 	<span class="doccomment">/// [`QueryFullProcessImageName`](crate::prelude::kernel_Hprocess::QueryFullProcessImageName)
 	/// flags (`u32`).
 	</span>=&gt;
@@ -3554,7 +3554,7 @@
 	</span>NATIVE <span class="number">0x0000_0001
 </span>}
 
-<span class="macro">const_ordinary! </span>{ PROCESSOR: u32;
+<span class="macro">const_ordinary!</span> { PROCESSOR: u32;
 	<span class="doccomment">/// [`SYSTEM_INFO`](crate::SYSTEM_INFO) `dwProcessorType` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3583,7 +3583,7 @@
 	</span>OPTIL <span class="number">0x494f
 </span>}
 
-<span class="macro">const_ordinary! </span>{ PROCESSOR_ARCHITECTURE: u16;
+<span class="macro">const_ordinary!</span> { PROCESSOR_ARCHITECTURE: u16;
 	<span class="doccomment">/// [`SYSTEM_INFO`](crate::SYSTEM_INFO) `wProcessorArchitecture` (`u16`).
 	</span>=&gt;
 	=&gt;
@@ -3605,7 +3605,7 @@
 	</span>UNKNOWN <span class="number">0xffff
 </span>}
 
-<span class="macro">const_ordinary! </span>{ REG: u32;
+<span class="macro">const_ordinary!</span> { REG: u32;
 	<span class="doccomment">/// Registry
 	/// [value types](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types)
 	/// (`u32`).
@@ -3627,7 +3627,7 @@
 	</span>QWORD_LITTLE_ENDIAN <span class="number">11
 </span>}
 
-<span class="macro">const_ordinary! </span>{ REG_DISPOSITION: u32;
+<span class="macro">const_ordinary!</span> { REG_DISPOSITION: u32;
 	<span class="doccomment">/// [`HKEY::RegCreateKeyEx`](crate::prelude::kernel_Hkey::RegCreateKeyEx)
 	/// creation disposition (`u32`).
 	</span>=&gt;
@@ -3640,7 +3640,7 @@
 	</span>OPENED_EXISTING_KEY <span class="number">0x0000_0002
 </span>}
 
-<span class="macro">const_bitflag! </span>{ REG_OPTION: u32;
+<span class="macro">const_bitflag!</span> { REG_OPTION: u32;
 	<span class="doccomment">/// [`HKEY::RegOpenKeyEx`](crate::prelude::kernel_Hkey::RegOpenKeyEx)
 	/// `options` (`u32`).
 	</span>=&gt;
@@ -3655,7 +3655,7 @@
 	</span>OPEN_LINK <span class="number">0x0000_0008
 </span>}
 
-<span class="macro">const_ordinary! </span>{ REG_RESTORE: u32;
+<span class="macro">const_ordinary!</span> { REG_RESTORE: u32;
 	<span class="doccomment">/// Registry restore
 	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regrestorekeyw)
 	/// (`u32`).
@@ -3667,7 +3667,7 @@
 	</span>WHOLE_HIVE_VOLATILE <span class="number">0x0000_0001
 </span>}
 
-<span class="macro">const_ordinary! </span>{ REG_SAVE: u32;
+<span class="macro">const_ordinary!</span> { REG_SAVE: u32;
 	<span class="doccomment">/// Registry save
 	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regsavekeyexw)
 	/// (`u32`).
@@ -3680,7 +3680,7 @@
 	</span>NO_COMPRESSION <span class="number">4
 </span>}
 
-<span class="macro">const_bitflag! </span>{ REPLACEFILE: u32;
+<span class="macro">const_bitflag!</span> { REPLACEFILE: u32;
 	<span class="doccomment">/// [`ReplaceFile`](crate::ReplaceFile) `flags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3689,7 +3689,7 @@
 	</span>IGNORE_ACL_ERRORS <span class="number">0x0000_0004
 </span>}
 
-<span class="macro">const_ordinary! </span>{ RID: u32;
+<span class="macro">const_ordinary!</span> { RID: u32;
 	<span class="doccomment">/// The
 	/// [portion](https://learn.microsoft.com/en-us/windows/win32/secgloss/r-gly)
 	/// of a [`SID`](crate::SID) that identifies a user or group in relation to
@@ -3861,7 +3861,7 @@
 	</span>SECURITY_TRUSTED_INSTALLER_5 <span class="number">22_7147_8464
 </span>}
 
-<span class="macro">const_bitflag! </span>{ RRF: u32;
+<span class="macro">const_bitflag!</span> { RRF: u32;
 	<span class="doccomment">/// [`HKEY::GetValue`](crate::prelude::kernel_Hkey::RegGetValue) `dwFlags`
 	/// (`u32`).
 	</span>=&gt;
@@ -3885,7 +3885,7 @@
 	</span>ZEROONFAILURE <span class="number">0x2000_0000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ RT: u16;
+<span class="macro">const_ordinary!</span> { RT: u16;
 	<span class="doccomment">/// Predefined resource
 	/// [types](https://learn.microsoft.com/en-us/windows/win32/menurc/resource-types)
 	/// (`u16`).
@@ -3914,7 +3914,7 @@
 	</span>VXD <span class="number">20
 </span>}
 
-<span class="macro">const_bitflag! </span>{ SC_MANAGER: u32;
+<span class="macro">const_bitflag!</span> { SC_MANAGER: u32;
 	<span class="doccomment">/// Service Control Manager access rights
 	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights)
 	/// (`u32`).
@@ -3934,7 +3934,7 @@
 	</span>GENERIC_ALL <span class="self">Self</span>::ALL_ACCESS.<span class="number">0
 </span>}
 
-<span class="macro">const_ordinary! </span>{ SCS: u32;
+<span class="macro">const_ordinary!</span> { SCS: u32;
 	<span class="doccomment">/// [`GetBinaryType`](crate::GetBinaryType) return value (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3947,7 +3947,7 @@
 	</span>W_64BIT_BINARY <span class="number">6
 </span>}
 
-<span class="macro">const_bitflag! </span>{ SE: u16;
+<span class="macro">const_bitflag!</span> { SE: u16;
 	<span class="doccomment">/// [`SECURITY_DESCRIPTOR_CONTROL`](https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptor-control)
 	/// bit flags (`u16`).
 	</span>=&gt;
@@ -3968,7 +3968,7 @@
 	</span>SELF_RELATIVE <span class="number">0x8000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ SE_PRIV_ATTR: u32;
+<span class="macro">const_bitflag!</span> { SE_PRIV_ATTR: u32;
 	<span class="doccomment">/// [Privilege attributes](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-adjusttokenprivileges)
 	/// (`u32`).
 	///
@@ -3984,7 +3984,7 @@
 	</span>VALID_ATTRIBUTES <span class="self">Self</span>::ENABLED_BY_DEFAULT.<span class="number">0 </span>| <span class="self">Self</span>::ENABLED.<span class="number">0 </span>| <span class="self">Self</span>::REMOVED.<span class="number">0 </span>| <span class="self">Self</span>::USED_FOR_ACCESS.<span class="number">0
 </span>}
 
-<span class="macro">const_str! </span>{ SE_PRIV;
+<span class="macro">const_str!</span> { SE_PRIV;
 	<span class="doccomment">/// [Privilege constants](https://learn.microsoft.com/en-us/windows/win32/secauthz/privilege-constants)
 	/// (`&amp;'static str`).
 	///
@@ -4028,7 +4028,7 @@
 	</span>DELEGATE_SESSION_USER_IMPERSONATE_NAME <span class="string">"SeDelegateSessionUserImpersonatePrivilege"
 </span>}
 
-<span class="macro">const_bitflag! </span>{ SECTION: u32;
+<span class="macro">const_bitflag!</span> { SECTION: u32;
 	<span class="doccomment">/// Composes [`FILE_MAP`](crate::co::FILE_MAP) (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4041,7 +4041,7 @@
 	</span>ALL_ACCESS STANDARD_RIGHTS::REQUIRED.<span class="number">0 </span>| <span class="self">Self</span>::QUERY.<span class="number">0 </span>| <span class="self">Self</span>::MAP_WRITE.<span class="number">0 </span>| <span class="self">Self</span>::MAP_EXECUTE.<span class="number">0 </span>| <span class="self">Self</span>::EXTEND_SIZE.<span class="number">0
 </span>}
 
-<span class="macro">const_bitflag! </span>{ SECURITY_IMPERSONATION: u32;
+<span class="macro">const_bitflag!</span> { SECURITY_IMPERSONATION: u32;
 	<span class="doccomment">/// [`SECURITY_IMPERSONATION_LEVEL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-security_impersonation_level)
 	/// enumeration (`u32`).
 	</span>=&gt;
@@ -4052,7 +4052,7 @@
 	</span>Delegation <span class="number">3
 </span>}
 
-<span class="macro">const_bitflag! </span>{ SECURITY_INFORMATION: u32;
+<span class="macro">const_bitflag!</span> { SECURITY_INFORMATION: u32;
 	<span class="doccomment">/// [`SECURITY_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/secauthz/security-information)
 	/// flags (`u32`).
 	///
@@ -4075,7 +4075,7 @@
 	</span>UNPROTECTED_SACL <span class="number">0x1000_0000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ SERVICE: u32;
+<span class="macro">const_bitflag!</span> { SERVICE: u32;
 	<span class="doccomment">/// Service access rights
 	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights)
 	/// (`u32`).
@@ -4103,7 +4103,7 @@
 	</span>GENERIC_EXECUTE STANDARD_RIGHTS::EXECUTE.<span class="number">0 </span>| <span class="self">Self</span>::START.<span class="number">0 </span>| <span class="self">Self</span>::STOP.<span class="number">0 </span>| <span class="self">Self</span>::PAUSE_CONTINUE.<span class="number">0 </span>| <span class="self">Self</span>::USER_DEFINED_CONTROL.<span class="number">0
 </span>}
 
-<span class="macro">const_bitflag! </span>{ SERVICE_ACCEPT: u32;
+<span class="macro">const_bitflag!</span> { SERVICE_ACCEPT: u32;
 	<span class="doccomment">/// [`SERVICE_STATUS`](crate::SERVICE_STATUS) `dwControlsAccepted` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4121,7 +4121,7 @@
 	</span>USERMODEREBOOT <span class="number">0x0000_0800
 </span>}
 
-<span class="macro">const_bitflag! </span>{ SERVICE_CONTROL: u32;
+<span class="macro">const_bitflag!</span> { SERVICE_CONTROL: u32;
 	<span class="doccomment">/// [`LPHANDLER_FUNCTION_EX`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nc-winsvc-lphandler_function_ex)
 	/// `dwControl` (`u32`).
 	///
@@ -4149,7 +4149,7 @@
 	</span>USERMODEREBOOT <span class="number">0x0000_0040
 </span>}
 
-<span class="macro">const_ordinary! </span>{ SERVICE_ERROR: u32;
+<span class="macro">const_ordinary!</span> { SERVICE_ERROR: u32;
 	<span class="doccomment">/// [`HSC::CreateService`](crate::prelude::kernel_Hsc::CreateService)
 	/// `error_control` (`u32`).
 	</span>=&gt;
@@ -4160,7 +4160,7 @@
 	</span>SEVERE <span class="number">0x0000_0002
 </span>}
 
-<span class="macro">const_ordinary! </span>{ SERVICE_START: u32;
+<span class="macro">const_ordinary!</span> { SERVICE_START: u32;
 	<span class="doccomment">/// [`HSC::CreateService`](crate::prelude::kernel_Hsc::CreateService)
 	/// `start_type` (`u32`).
 	///
@@ -4174,7 +4174,7 @@
 	</span>SYSTEM_START <span class="number">0x0000_0001
 </span>}
 
-<span class="macro">const_ordinary! </span>{ SERVICE_STATE: u32;
+<span class="macro">const_ordinary!</span> { SERVICE_STATE: u32;
 	<span class="doccomment">/// [`HSERVICESTATUS::SetServiceStatus`](crate::prelude::kernel_Hservicestatus::SetServiceStatus)
 	/// `current_state` (u32)
 	</span>=&gt;
@@ -4188,7 +4188,7 @@
 	</span>STOPPED <span class="number">0x0000_0001
 </span>}
 
-<span class="macro">const_ordinary! </span>{ SERVICE_TYPE: u32;
+<span class="macro">const_ordinary!</span> { SERVICE_TYPE: u32;
 	<span class="doccomment">/// [`HSC::CreateService`](crate::prelude::kernel_Hsc::CreateService)
 	/// `service_type` (`u32`).
 	///
@@ -4206,7 +4206,7 @@
 	</span>WIN32_SHARE_PROCESS_INTERACTIVE <span class="self">Self</span>::WIN32_SHARE_PROCESS.<span class="number">0 </span>| <span class="number">0x0000_0100
 </span>}
 
-<span class="macro">const_bitflag! </span>{ SHTDN_REASON: u32;
+<span class="macro">const_bitflag!</span> { SHTDN_REASON: u32;
 	<span class="doccomment">/// Shutdown reason
 	/// [`codes`](https://learn.microsoft.com/en-us/windows/win32/shutdown/system-shutdown-reason-codes)
 	/// (`u32`).
@@ -4253,7 +4253,7 @@
 	</span>FLAG_PLANNED <span class="number">0x8000_0000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ SID_NAME_USE: u32;
+<span class="macro">const_ordinary!</span> { SID_NAME_USE: u32;
 	<span class="doccomment">/// [`SID_NAME_USE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-sid_name_use)
 	/// enumeration (`u32`).
 	///
@@ -4273,7 +4273,7 @@
 	</span>LogonSession <span class="number">11
 </span>}
 
-<span class="macro">const_ordinary! </span>{ SORT: u16;
+<span class="macro">const_ordinary!</span> { SORT: u16;
 	<span class="doccomment">/// Sort order
 	/// [identifiers](https://learn.microsoft.com/en-us/windows/win32/intl/sort-order-identifiers)
 	/// (`u16`).
@@ -4299,7 +4299,7 @@
 	</span>GEORGIAN_MODERN <span class="number">0x1
 </span>}
 
-<span class="macro">const_bitflag! </span>{ STANDARD_RIGHTS: u32;
+<span class="macro">const_bitflag!</span> { STANDARD_RIGHTS: u32;
 	<span class="doccomment">/// Standard access rights
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
 	/// (`u32`).
@@ -4312,7 +4312,7 @@
 	</span>ALL <span class="number">0x001_f0000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ STARTF: u32;
+<span class="macro">const_bitflag!</span> { STARTF: u32;
 	<span class="doccomment">/// [`HPROCESS::CreateProcess`](crate::prelude::kernel_Hprocess::CreateProcess)
 	/// `dwFlags` (`u32`).
 	</span>=&gt;
@@ -4333,7 +4333,7 @@
 	</span>USESTDHANDLES <span class="number">0x0000_0100
 </span>}
 
-<span class="macro">const_ordinary! </span>{ STD_HANDLE: u32;
+<span class="macro">const_ordinary!</span> { STD_HANDLE: u32;
 	<span class="doccomment">/// [`GetStdHandle`](crate::prelude::kernel_Hstd::GetStdHandle) `std_handle`
 	/// (`u32`).
 	///
@@ -4345,7 +4345,7 @@
 	ERROR -<span class="number">12i32 </span><span class="kw">as </span>u32
 }
 
-<span class="macro">const_ordinary! </span>{ SUBLANG: u16;
+<span class="macro">const_ordinary!</span> { SUBLANG: u16;
 	<span class="doccomment">/// Sublanguage
 	/// [identifier](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
 	/// (`u16`).
@@ -4597,7 +4597,7 @@
 	</span>ZULU_SOUTH_AFRICA <span class="number">0x01
 </span>}
 
-<span class="macro">const_ordinary! </span>{ SW: i32;
+<span class="macro">const_ordinary!</span> { SW: i32;
 	<span class="doccomment">/// [`HWND::ShowWindow`](crate::prelude::user_Hwnd::ShowWindow) `show_cmd`
 	/// (`i32`).
 	</span>=&gt;
@@ -4642,7 +4642,7 @@
 	</span>FORCEMINIMIZE <span class="number">11
 </span>}
 
-<span class="macro">const_ordinary! </span>{ SYSTEM_POWER_CONDITION: u32;
+<span class="macro">const_ordinary!</span> { SYSTEM_POWER_CONDITION: u32;
 	<span class="doccomment">/// [`SYSTEM_POWER_CONDITION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-system_power_condition)
 	/// enumeration (`u32`).
 	</span>=&gt;
@@ -4653,7 +4653,7 @@
 	</span>ConditionMaximum <span class="number">3
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TH32CS: u32;
+<span class="macro">const_bitflag!</span> { TH32CS: u32;
 	<span class="doccomment">/// [`HPROCESSLIST::CreateToolhelp32Snapshot`](crate::HPROCESSLIST) `flags`
 	/// (`u32`).
 	</span>=&gt;
@@ -4676,7 +4676,7 @@
 	</span>INHERIT <span class="number">0x8000_0000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ THREAD_CREATE: u32;
+<span class="macro">const_bitflag!</span> { THREAD_CREATE: u32;
 	<span class="doccomment">/// [`HTHREAD::CreateThread`](crate::prelude::kernel_Hthread::CreateThread)
 	/// `flags` (`u32`).
 	///
@@ -4689,7 +4689,7 @@
 	</span>STACK_SIZE_PARAM_IS_A_RESERVATION <span class="number">0x0001_0000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TOKEN: u32;
+<span class="macro">const_bitflag!</span> { TOKEN: u32;
 	<span class="doccomment">/// [Token access rights](https://learn.microsoft.com/en-us/windows/win32/secauthz/access-rights-for-access-token-objects).
 	</span>=&gt;
 	=&gt;
@@ -4716,7 +4716,7 @@
 	</span>ACCESS_PSEUDO_HANDLE <span class="self">Self</span>::QUERY.<span class="number">0 </span>| <span class="self">Self</span>::QUERY_SOURCE.<span class="number">0
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TOKEN_ELEVATION_TYPE: u32;
+<span class="macro">const_ordinary!</span> { TOKEN_ELEVATION_TYPE: u32;
 	<span class="doccomment">/// [`TOKEN_ELEVATION_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_elevation_type)
 	/// enumeration (`u32`).
 	</span>=&gt;
@@ -4726,7 +4726,7 @@
 	</span>Limited <span class="number">3
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TOKEN_INFORMATION_CLASS: u32;
+<span class="macro">const_ordinary!</span> { TOKEN_INFORMATION_CLASS: u32;
 	<span class="doccomment">/// [`TOKEN_INFORMATION_CLASS`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_information_class)
 	/// enumeration (`u32`).
 	</span>=&gt;
@@ -4781,7 +4781,7 @@
 	</span>OriginatingProcessTrustLevel <span class="number">48
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TOKEN_MANDATORY_POLICY: u32;
+<span class="macro">const_ordinary!</span> { TOKEN_MANDATORY_POLICY: u32;
 	<span class="doccomment">/// [`TOKEN_MANDATORY_POLICY`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_mandatory_policy)
 	/// `Policy` (`u32`).
 	</span>=&gt;
@@ -4792,7 +4792,7 @@
 	</span>VALID_MASK <span class="number">0x3
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TOKEN_TYPE: u32;
+<span class="macro">const_ordinary!</span> { TOKEN_TYPE: u32;
 	<span class="doccomment">/// [`TOKEN_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_type)
 	/// enumeration (`u32`).
 	</span>=&gt;
@@ -4801,7 +4801,7 @@
 	</span>Impersonation <span class="number">2
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TRANSACTION: u32;
+<span class="macro">const_bitflag!</span> { TRANSACTION: u32;
 	<span class="doccomment">/// [`Transaction access masks`](https://learn.microsoft.com/en-us/windows/win32/ktm/transaction-access-masks)
 	/// (`u32`).
 	</span>=&gt;
@@ -4820,7 +4820,7 @@
 	</span>RESOURCE_MANAGER_RIGHTS TRANSACTION::GENERIC_READ.<span class="number">0 </span>| STANDARD_RIGHTS::WRITE.<span class="number">0 </span>| TRANSACTION::SET_INFORMATION.<span class="number">0 </span>| TRANSACTION::ENLIST.<span class="number">0 </span>| TRANSACTION::ROLLBACK.<span class="number">0 </span>| TRANSACTION::PROPAGATE.<span class="number">0 </span>| ACCESS_RIGHTS::SYNCHRONIZE.<span class="number">0
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TRANSACTION_OPT: u32;
+<span class="macro">const_bitflag!</span> { TRANSACTION_OPT: u32;
 	<span class="doccomment">/// [`CrateTransaction`](crate::prelude::kernel_Htransaction::CreateTransaction)
 	/// `options` (`u32`).
 	///
@@ -4832,7 +4832,7 @@
 	</span>DO_NOT_PROMOTE <span class="number">0x0000_0001
 </span>}
 
-<span class="macro">const_ordinary! </span>{ USER_ACTIVITY_PRESENCE: u32;
+<span class="macro">const_ordinary!</span> { USER_ACTIVITY_PRESENCE: u32;
 	<span class="doccomment">/// [`PowerSetting::GlobalUserPresence`](crate::PowerSetting::GlobalUserPresence)
 	/// enumeration (`u32`).
 	</span>=&gt;
@@ -4844,7 +4844,7 @@
     </span>Invalid <span class="self">Self</span>::Maximum.<span class="number">0
 </span>}
 
-<span class="macro">const_ordinary! </span>{ VER_COND: u8;
+<span class="macro">const_ordinary!</span> { VER_COND: u8;
 	<span class="doccomment">/// [`VerSetConditionMask`](crate::VerSetConditionMask) `condition` (`u8`).
 	</span>=&gt;
 	=&gt;
@@ -4858,7 +4858,7 @@
 	</span>CONDITION_MASK <span class="number">7
 </span>}
 
-<span class="macro">const_bitflag! </span>{ VER_MASK: u32;
+<span class="macro">const_bitflag!</span> { VER_MASK: u32;
 	<span class="doccomment">/// [`VerifyVersionInfo`](crate::VerifyVersionInfo) and
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `type_mask` (`u32`).
 	</span>=&gt;
@@ -4873,7 +4873,7 @@
 	</span>PRODUCT_TYPE <span class="number">0x000_0080
 </span>}
 
-<span class="macro">const_ordinary! </span>{ VER_NT: u8;
+<span class="macro">const_ordinary!</span> { VER_NT: u8;
 	<span class="doccomment">/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wProductType` (`u8`).
 	</span>=&gt;
 	=&gt;
@@ -4882,7 +4882,7 @@
 	</span>SERVER <span class="number">0x000_0003
 </span>}
 
-<span class="macro">const_bitflag! </span>{ VER_SUITE: u16;
+<span class="macro">const_bitflag!</span> { VER_SUITE: u16;
 	<span class="doccomment">/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wSuiteMask` (`u16`).
 	</span>=&gt;
 	=&gt;
@@ -4905,7 +4905,7 @@
 	</span><span class="comment">//MULTIUSERTS 0x00020000 // Win32 bug, truncated to zero as u16
 </span>}
 
-<span class="macro">const_ordinary! </span>{ VER_PLATFORM: u32;
+<span class="macro">const_ordinary!</span> { VER_PLATFORM: u32;
 	<span class="doccomment">/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `dwPlatformId` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4914,7 +4914,7 @@
 	</span>WIN32_NT <span class="number">2
 </span>}
 
-<span class="macro">const_ordinary! </span>{ WAIT: u32;
+<span class="macro">const_ordinary!</span> { WAIT: u32;
 	<span class="doccomment">/// [`HPROCESS::WaitForSingleObject`](crate::prelude::kernel_Hprocess::WaitForSingleObject)
 	/// return value (`u32`).
 	</span>=&gt;
@@ -4925,7 +4925,7 @@
 	</span>FAILED <span class="number">0xffff_ffff
 </span>}
 
-<span class="macro">const_bitflag! </span>{ WC: u32;
+<span class="macro">const_bitflag!</span> { WC: u32;
 	<span class="doccomment">/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) `flags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4939,7 +4939,7 @@
 	</span>SEPCHARS <span class="number">0x0000_0020
 </span>}
 
-<span class="macro">const_ordinary! </span>{ WELL_KNOWN_SID_TYPE: u32;
+<span class="macro">const_ordinary!</span> { WELL_KNOWN_SID_TYPE: u32;
 	<span class="doccomment">/// [`WELL_KNOWN_SID_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-well_known_sid_type)
 	/// enumeration (`u32`).
 	</span>=&gt;
@@ -5066,7 +5066,7 @@
 	</span>BuiltinDeviceOwners <span class="number">119
 </span>}
 
-<span class="macro">const_ordinary! </span>{ WIN32: u16;
+<span class="macro">const_ordinary!</span> { WIN32: u16;
 	<span class="doccomment">/// [`_WIN32`](https://learn.microsoft.com/en-us/windows/win32/winprog/using-the-windows-headers)
 	/// version definitions (`u16`).
 	</span>=&gt;
@@ -5131,7 +5131,7 @@
 	</span>IE_WIN10 <span class="self">Self</span>::IE_IE110.<span class="number">0
 </span>}
 
-<span class="macro">const_ordinary! </span>{ WTS: u8;
+<span class="macro">const_ordinary!</span> { WTS: u8;
 	<span class="doccomment">/// [`wm::WtsSessionChange`](crate::msg::wm::WtsSessionChange) `state`
 	/// (`u32`).
 	</span>=&gt;

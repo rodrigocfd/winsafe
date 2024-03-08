@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\macros\structs.rs`."><title>structs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (2bf78d12d 2024-02-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-c37d3936c59ababd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\macros\structs.rs`."><title>structs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (516b6162a 2024-03-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -370,7 +370,7 @@
 </pre></div><pre class="rust"><code><span class="attr">#![allow(unused_macros)]
 
 </span><span class="doccomment">/// Implements `Default` trait by zeroing all fields.
-</span><span class="macro">macro_rules! </span>impl_default {
+</span><span class="macro">macro_rules!</span> impl_default {
 	(<span class="macro-nonterminal">$name</span>:ident $(, <span class="macro-nonterminal">$life</span>:lifetime)<span class="kw-2">*</span>) =&gt; {
 		<span class="kw">impl</span>&lt;$(<span class="macro-nonterminal">$life</span>),<span class="kw-2">*</span>&gt; Default <span class="kw">for </span><span class="macro-nonterminal">$name</span>&lt;$(<span class="macro-nonterminal">$life</span>),<span class="kw-2">*</span>&gt; {
 			<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
@@ -382,7 +382,7 @@
 
 <span class="doccomment">/// Implements `Default` trait by zeroing all fields. Also sets the size field
 /// to struct size.
-</span><span class="macro">macro_rules! </span>impl_default_with_size {
+</span><span class="macro">macro_rules!</span> impl_default_with_size {
 	(<span class="macro-nonterminal">$name</span>:ident, <span class="macro-nonterminal">$field</span>:ident $(, <span class="macro-nonterminal">$life</span>:lifetime)<span class="kw-2">*</span>) =&gt; {
 		<span class="kw">impl</span>&lt;$(<span class="macro-nonterminal">$life</span>),<span class="kw-2">*</span>&gt; Default <span class="kw">for </span><span class="macro-nonterminal">$name</span>&lt;$(<span class="macro-nonterminal">$life</span>),<span class="kw-2">*</span>&gt; {
 			<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
@@ -395,7 +395,7 @@
 }
 
 <span class="doccomment">/// Implements `IntUnderlying`, and other needed traits.
-</span><span class="macro">macro_rules! </span>impl_intunderlying {
+</span><span class="macro">macro_rules!</span> impl_intunderlying {
 	(<span class="macro-nonterminal">$name</span>:ident, <span class="macro-nonterminal">$ntype</span>:ty) =&gt; {
 		<span class="kw">unsafe impl </span>Send <span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
 
@@ -444,7 +444,7 @@
 }
 
 <span class="doccomment">/// Implements getter and setter methods for the given `BOOL` field.
-</span><span class="macro">macro_rules! </span>pub_fn_bool_get_set {
+</span><span class="macro">macro_rules!</span> pub_fn_bool_get_set {
 	(<span class="macro-nonterminal">$field</span>:ident, <span class="macro-nonterminal">$setter</span>:ident) =&gt; {
 		<span class="doccomment">/// Returns the bool field.
 		</span><span class="attr">#[must_use]
@@ -461,7 +461,7 @@
 
 <span class="doccomment">/// Implements getter and setter methods for the given resource ID field, stored
 /// as `*mut u16`.
-</span><span class="macro">macro_rules! </span>pub_fn_resource_id_get_set {
+</span><span class="macro">macro_rules!</span> pub_fn_resource_id_get_set {
 	(<span class="macro-nonterminal">$field</span>:ident, <span class="macro-nonterminal">$setter</span>:ident) =&gt; {
 		<span class="doccomment">/// Returns the resource ID field.
 		</span><span class="attr">#[must_use]
@@ -477,7 +477,7 @@
 }
 
 <span class="doccomment">/// Implements getter and setter methods for the given `*mut u16` field.
-</span><span class="macro">macro_rules! </span>pub_fn_string_ptr_get_set {
+</span><span class="macro">macro_rules!</span> pub_fn_string_ptr_get_set {
 	(<span class="macro-nonterminal">$life</span>:lifetime, <span class="macro-nonterminal">$field</span>:ident, <span class="macro-nonterminal">$setter</span>:ident) =&gt; {
 		<span class="doccomment">/// Returns the string field, if any.
 		</span><span class="attr">#[must_use]
@@ -500,7 +500,7 @@
 <span class="doccomment">/// Implements getter and setter methods for the given `*mut u16` and `u32`
 /// fields, setting pointer and its actual chars length without terminating
 /// null.
-</span><span class="macro">macro_rules! </span>pub_fn_string_ptrlen_get_set {
+</span><span class="macro">macro_rules!</span> pub_fn_string_ptrlen_get_set {
 	(<span class="macro-nonterminal">$life</span>:lifetime, <span class="macro-nonterminal">$field</span>:ident, <span class="macro-nonterminal">$setter</span>:ident, <span class="macro-nonterminal">$length</span>:ident) =&gt; {
 		<span class="doccomment">/// Returns the string field, if any.
 		</span><span class="attr">#[must_use]
@@ -522,7 +522,7 @@
 }
 
 <span class="doccomment">/// Implements getter and setter methods for the given `[u16; N]` field.
-</span><span class="macro">macro_rules! </span>pub_fn_string_arr_get_set {
+</span><span class="macro">macro_rules!</span> pub_fn_string_arr_get_set {
 	(<span class="macro-nonterminal">$field</span>:ident, <span class="macro-nonterminal">$setter</span>:ident) =&gt; {
 		<span class="doccomment">/// Returns the string field.
 		</span><span class="attr">#[must_use]
@@ -539,7 +539,7 @@
 
 <span class="doccomment">/// Implements getter and setter methods for the given `*mut u16` and `i32`
 /// fields, setting buffer and its size.
-</span><span class="macro">macro_rules! </span>pub_fn_string_buf_get_set {
+</span><span class="macro">macro_rules!</span> pub_fn_string_buf_get_set {
 	(<span class="macro-nonterminal">$life</span>:lifetime, <span class="macro-nonterminal">$field</span>:ident, <span class="macro-nonterminal">$setter</span>:ident, <span class="macro-nonterminal">$raw</span>:ident, <span class="macro-nonterminal">$cch</span>:ident) =&gt; {
 		<span class="doccomment">/// Returns the raw pointer to the string field, and its declared size.
 		///
@@ -573,7 +573,7 @@
 }
 
 <span class="doccomment">/// Implements getter and setter methods for the given pointer field.
-</span><span class="macro">macro_rules! </span>pub_fn_ptr_get_set {
+</span><span class="macro">macro_rules!</span> pub_fn_ptr_get_set {
 	(<span class="macro-nonterminal">$life</span>:lifetime, <span class="macro-nonterminal">$field</span>:ident, <span class="macro-nonterminal">$setter</span>:ident, <span class="macro-nonterminal">$ty</span>:ty) =&gt; {
 		<span class="doccomment">/// Returns the pointer field.
 		</span><span class="attr">#[must_use]
@@ -590,7 +590,7 @@
 
 <span class="doccomment">/// Implements getter and setter methods for the given array + size fields,
 /// setting buffer and its size.
-</span><span class="macro">macro_rules! </span>pub_fn_array_buf_get_set {
+</span><span class="macro">macro_rules!</span> pub_fn_array_buf_get_set {
 	(<span class="macro-nonterminal">$life</span>:lifetime, <span class="macro-nonterminal">$field</span>:ident, <span class="macro-nonterminal">$setter</span>:ident, <span class="macro-nonterminal">$cch</span>:ident, <span class="macro-nonterminal">$ty</span>:ty) =&gt; {
 		<span class="doccomment">/// Returns the array field.
 		</span><span class="attr">#[must_use]
@@ -619,7 +619,7 @@
 }
 
 <span class="doccomment">/// Implements getter and setter methods for the given `COMPTR` field.
-</span><span class="macro">macro_rules! </span>pub_fn_comptr_get_set {
+</span><span class="macro">macro_rules!</span> pub_fn_comptr_get_set {
 	(<span class="macro-nonterminal">$field</span>:ident, <span class="macro-nonterminal">$setter</span>:ident, <span class="macro-nonterminal">$</span><span class="kw">trait</span>:<span class="macro-nonterminal">ident</span>) =&gt; {
 		<span class="doccomment">/// Returns the COM object field, by cloning the underlying COM pointer.
 		</span><span class="attr">#[must_use]
@@ -654,7 +654,7 @@
 }
 
 <span class="doccomment">/// Implements `Drop` for a struct with one `COMPTR` field.
-</span><span class="macro">macro_rules! </span>impl_drop_comptr {
+</span><span class="macro">macro_rules!</span> impl_drop_comptr {
 	(<span class="macro-nonterminal">$field</span>:ident, <span class="macro-nonterminal">$name</span>:ident $(, <span class="macro-nonterminal">$life</span>:lifetime)<span class="kw-2">*</span>) =&gt; {
 		<span class="kw">impl</span>&lt;$(<span class="macro-nonterminal">$life</span>),<span class="kw-2">*</span>&gt; Drop <span class="kw">for </span><span class="macro-nonterminal">$name</span>&lt;$(<span class="macro-nonterminal">$life</span>),<span class="kw-2">*</span>&gt; {
 			<span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
@@ -671,7 +671,7 @@
 
 <span class="doccomment">/// Implements accessor methods over `pmem` and `sz` fields of an allocated
 /// memory block.
-</span><span class="macro">macro_rules! </span>pub_fn_mem_block {
+</span><span class="macro">macro_rules!</span> pub_fn_mem_block {
 	() =&gt; {
 		<span class="doccomment">/// Returns a pointer to the allocated memory block, or null if not
 		/// allocated.

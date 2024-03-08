@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\user\messages\wm.rs`."><title>wm.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (2bf78d12d 2024-02-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-c37d3936c59ababd.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\user\messages\wm.rs`."><title>wm.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (516b6162a 2024-03-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -2189,7 +2189,7 @@
 	}
 }
 
-<span class="macro">pub_struct_msg_empty_handleable! </span>{ CancelMode: co::WM::CANCELMODE;
+<span class="macro">pub_struct_msg_empty_handleable!</span> { CancelMode: co::WM::CANCELMODE;
 	<span class="doccomment">/// [`WM_CANCELMODE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-cancelmode)
 </span>}
 
@@ -2225,15 +2225,15 @@
 	}
 }
 
-<span class="macro">pub_struct_msg_char_code! </span>{ Char: co::WM::CHAR;
+<span class="macro">pub_struct_msg_char_code!</span> { Char: co::WM::CHAR;
 	<span class="doccomment">/// [`WM_CHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-char)
 </span>}
 
-<span class="macro">pub_struct_msg_empty_handleable! </span>{ ChildActivate: co::WM::CHILDACTIVATE;
+<span class="macro">pub_struct_msg_empty_handleable!</span> { ChildActivate: co::WM::CHILDACTIVATE;
 	<span class="doccomment">/// [`WM_CHILDACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-childactivate)
 </span>}
 
-<span class="macro">pub_struct_msg_empty_handleable! </span>{ Close: co::WM::CLOSE;
+<span class="macro">pub_struct_msg_empty_handleable!</span> { Close: co::WM::CLOSE;
 	<span class="doccomment">/// [`WM_CLOSE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-close)
 </span>}
 
@@ -2387,7 +2387,7 @@
 	}
 }
 
-<span class="macro">pub_struct_msg_empty_handleable! </span>{ Destroy: co::WM::DESTROY;
+<span class="macro">pub_struct_msg_empty_handleable!</span> { Destroy: co::WM::DESTROY;
 	<span class="doccomment">/// [`WM_DESTROY`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-destroy)
 </span>}
 
@@ -2565,7 +2565,7 @@
 	}
 }
 
-<span class="macro">pub_struct_msg_empty_handleable! </span>{ EnterSizeMove: co::WM::ENTERSIZEMOVE;
+<span class="macro">pub_struct_msg_empty_handleable!</span> { EnterSizeMove: co::WM::ENTERSIZEMOVE;
 	<span class="doccomment">/// [`WM_ENTERSIZEMOVE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-entersizemove)
 </span>}
 
@@ -2633,7 +2633,7 @@
 	}
 }
 
-<span class="macro">pub_struct_msg_empty_handleable! </span>{ ExitSizeMove: co::WM::EXITSIZEMOVE;
+<span class="macro">pub_struct_msg_empty_handleable!</span> { ExitSizeMove: co::WM::EXITSIZEMOVE;
 	<span class="doccomment">/// [`WM_EXITSIZEMOVE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-exitsizemove)
 </span>}
 
@@ -2989,11 +2989,11 @@
 	}
 }
 
-<span class="macro">pub_struct_msg_char_key! </span>{ KeyDown: co::WM::KEYDOWN;
+<span class="macro">pub_struct_msg_char_key!</span> { KeyDown: co::WM::KEYDOWN;
 	<span class="doccomment">/// [`WM_KEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keydown)
 </span>}
 
-<span class="macro">pub_struct_msg_char_key! </span>{ KeyUp: co::WM::KEYUP;
+<span class="macro">pub_struct_msg_char_key!</span> { KeyUp: co::WM::KEYUP;
 	<span class="doccomment">/// [`WM_KEYUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keyup)
 </span>}
 
@@ -3032,27 +3032,27 @@
 	}
 }
 
-<span class="macro">pub_struct_msg_button! </span>{ LButtonDblClk: co::WM::LBUTTONDBLCLK;
+<span class="macro">pub_struct_msg_button!</span> { LButtonDblClk: co::WM::LBUTTONDBLCLK;
 	<span class="doccomment">/// [`WM_LBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondblclk)
 </span>}
 
-<span class="macro">pub_struct_msg_button! </span>{ LButtonDown: co::WM::LBUTTONDOWN;
+<span class="macro">pub_struct_msg_button!</span> { LButtonDown: co::WM::LBUTTONDOWN;
 	<span class="doccomment">/// [`WM_LBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondown)
 </span>}
 
-<span class="macro">pub_struct_msg_button! </span>{ LButtonUp: co::WM::LBUTTONUP;
+<span class="macro">pub_struct_msg_button!</span> { LButtonUp: co::WM::LBUTTONUP;
 	<span class="doccomment">/// [`WM_LBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttonup)
 </span>}
 
-<span class="macro">pub_struct_msg_button! </span>{ MButtonDblClk: co::WM::MBUTTONDBLCLK;
+<span class="macro">pub_struct_msg_button!</span> { MButtonDblClk: co::WM::MBUTTONDBLCLK;
 	<span class="doccomment">/// [`WM_MBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondblclk)
 </span>}
 
-<span class="macro">pub_struct_msg_button! </span>{ MButtonDown: co::WM::MBUTTONDOWN;
+<span class="macro">pub_struct_msg_button!</span> { MButtonDown: co::WM::MBUTTONDOWN;
 	<span class="doccomment">/// [`WM_MBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondown)
 </span>}
 
-<span class="macro">pub_struct_msg_button! </span>{ MButtonUp: co::WM::MBUTTONUP;
+<span class="macro">pub_struct_msg_button!</span> { MButtonUp: co::WM::MBUTTONUP;
 	<span class="doccomment">/// [`WM_MBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttonup)
 </span>}
 
@@ -3158,15 +3158,15 @@
 	}
 }
 
-<span class="macro">pub_struct_msg_button! </span>{ MouseHover: co::WM::MOUSEHOVER;
+<span class="macro">pub_struct_msg_button!</span> { MouseHover: co::WM::MOUSEHOVER;
 	<span class="doccomment">/// [`WM_MOUSEHOVER`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
 </span>}
 
-<span class="macro">pub_struct_msg_empty_handleable! </span>{ MouseLeave: co::WM::MOUSELEAVE;
+<span class="macro">pub_struct_msg_empty_handleable!</span> { MouseLeave: co::WM::MOUSELEAVE;
 	<span class="doccomment">/// [`WM_MOUSELEAVE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mouseleave)
 </span>}
 
-<span class="macro">pub_struct_msg_button! </span>{ MouseMove: co::WM::MOUSEMOVE;
+<span class="macro">pub_struct_msg_button!</span> { MouseMove: co::WM::MOUSEMOVE;
 	<span class="doccomment">/// [`WM_MOUSEMOVE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove)
 </span>}
 
@@ -3307,7 +3307,7 @@
 	}
 }
 
-<span class="macro">pub_struct_msg_empty_handleable! </span>{ NcDestroy: co::WM::NCDESTROY;
+<span class="macro">pub_struct_msg_empty_handleable!</span> { NcDestroy: co::WM::NCDESTROY;
 	<span class="doccomment">/// [`WM_NCDESTROY`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-ncdestroy)
 </span>}
 
@@ -3384,7 +3384,7 @@
 	}
 }
 
-<span class="macro">pub_struct_msg_empty_handleable! </span>{ Null: co::WM::NULL;
+<span class="macro">pub_struct_msg_empty_handleable!</span> { Null: co::WM::NULL;
 	<span class="doccomment">/// [`WM_NULL`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-null)
 </span>}
 
@@ -3496,15 +3496,15 @@
 	}
 }
 
-<span class="macro">pub_struct_msg_button! </span>{ RButtonDblClk: co::WM::RBUTTONDBLCLK;
+<span class="macro">pub_struct_msg_button!</span> { RButtonDblClk: co::WM::RBUTTONDBLCLK;
 	<span class="doccomment">/// [`WM_RBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondblclk)
 </span>}
 
-<span class="macro">pub_struct_msg_button! </span>{ RButtonDown: co::WM::RBUTTONDOWN;
+<span class="macro">pub_struct_msg_button!</span> { RButtonDown: co::WM::RBUTTONDOWN;
 	<span class="doccomment">/// [`WM_RBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondown)
 </span>}
 
-<span class="macro">pub_struct_msg_button! </span>{ RButtonUp: co::WM::RBUTTONUP;
+<span class="macro">pub_struct_msg_button!</span> { RButtonUp: co::WM::RBUTTONUP;
 	<span class="doccomment">/// [`WM_RBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup)
 </span>}
 
@@ -3843,7 +3843,7 @@
 	}
 }
 
-<span class="macro">pub_struct_msg_char_code! </span>{ SysChar: co::WM::SYSCHAR;
+<span class="macro">pub_struct_msg_char_code!</span> { SysChar: co::WM::SYSCHAR;
 	<span class="doccomment">/// [`WM_SYSCHAR`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-syschar)
 </span>}
 
@@ -3881,19 +3881,19 @@
 	}
 }
 
-<span class="macro">pub_struct_msg_char_code! </span>{ SysDeadChar: co::WM::SYSDEADCHAR;
+<span class="macro">pub_struct_msg_char_code!</span> { SysDeadChar: co::WM::SYSDEADCHAR;
 	<span class="doccomment">/// [`WM_SYSDEADCHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-sysdeadchar)
 </span>}
 
-<span class="macro">pub_struct_msg_char_key! </span>{ SysKeyDown: co::WM::SYSKEYDOWN;
+<span class="macro">pub_struct_msg_char_key!</span> { SysKeyDown: co::WM::SYSKEYDOWN;
 	<span class="doccomment">/// [`WM_SYSKEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-syskeydown)
 </span>}
 
-<span class="macro">pub_struct_msg_char_key! </span>{ SysKeyUp: co::WM::SYSKEYUP;
+<span class="macro">pub_struct_msg_char_key!</span> { SysKeyUp: co::WM::SYSKEYUP;
 	<span class="doccomment">/// [`WM_SYSKEYUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-syskeyup)
 </span>}
 
-<span class="macro">pub_struct_msg_empty_handleable! </span>{ ThemeChanged: co::WM::THEMECHANGED;
+<span class="macro">pub_struct_msg_empty_handleable!</span> { ThemeChanged: co::WM::THEMECHANGED;
 	<span class="doccomment">/// [`WM_THEMECHANGED`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-themechanged)
 </span>}
 
@@ -4135,15 +4135,15 @@
 	}
 }
 
-<span class="macro">pub_struct_msg_button! </span>{ XButtonDblClk: co::WM::XBUTTONDBLCLK;
+<span class="macro">pub_struct_msg_button!</span> { XButtonDblClk: co::WM::XBUTTONDBLCLK;
 	<span class="doccomment">/// [`WM_XBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondblclk)
 </span>}
 
-<span class="macro">pub_struct_msg_button! </span>{ XButtonDown: co::WM::XBUTTONDOWN;
+<span class="macro">pub_struct_msg_button!</span> { XButtonDown: co::WM::XBUTTONDOWN;
 	<span class="doccomment">/// [`WM_XBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondown)
 </span>}
 
-<span class="macro">pub_struct_msg_button! </span>{ XButtonUp: co::WM::XBUTTONUP;
+<span class="macro">pub_struct_msg_button!</span> { XButtonUp: co::WM::XBUTTONUP;
 	<span class="doccomment">/// [`WM_XBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttonup)
 </span>}
 </code></pre></div></section></main></body></html>

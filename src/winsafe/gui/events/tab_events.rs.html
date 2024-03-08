@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\events\tab_events.rs`."><title>tab_events.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (2bf78d12d 2024-02-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-c37d3936c59ababd.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\events\tab_events.rs`."><title>tab_events.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (516b6162a 2024-03-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -108,47 +108,47 @@
 		<span class="self">Self</span>(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	<span class="macro">pub_fn_nfy_noparm_noret! </span>{ nm_click, co::NM::CLICK;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_click, co::NM::CLICK;
 		<span class="doccomment">/// [`NM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-click-tab)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_i32ret! </span>{ nm_dbl_clk, co::NM::DBLCLK;
+	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_dbl_clk, co::NM::DBLCLK;
 		<span class="doccomment">/// [`NM_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-dblclk-tab)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_i32ret! </span>{ nm_r_click, co::NM::RCLICK;
+	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_r_click, co::NM::RCLICK;
 		<span class="doccomment">/// [`NM_RCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rclick-tab)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_i32ret! </span>{ nm_r_dbl_clk, co::NM::RDBLCLK;
+	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_r_dbl_clk, co::NM::RDBLCLK;
 		<span class="doccomment">/// [`NM_RDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rdblclk-tab)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_noret! </span>{ nm_released_capture, co::NM::RELEASEDCAPTURE;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_released_capture, co::NM::RELEASEDCAPTURE;
 		<span class="doccomment">/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-tab-)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_noret! </span>{ tcn_focus_change, co::TCN::FOCUSCHANGE;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { tcn_focus_change, co::TCN::FOCUSCHANGE;
 		<span class="doccomment">/// [`TCN_FOCUSCHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/tcn-focuschange)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ tcn_get_object, co::TCN::GETOBJECT, NMOBJECTNOTIFY;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { tcn_get_object, co::TCN::GETOBJECT, NMOBJECTNOTIFY;
 		<span class="doccomment">/// [`TCN_GETOBJECT`](https://learn.microsoft.com/en-us/windows/win32/controls/tcn-getobject)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ tcn_key_down, co::TCN::KEYDOWN, NMTCKEYDOWN;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { tcn_key_down, co::TCN::KEYDOWN, NMTCKEYDOWN;
 		<span class="doccomment">/// [`TCN_KEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/controls/tcn-keydown)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_noret! </span>{ tcn_sel_change, co::TCN::SELCHANGE;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { tcn_sel_change, co::TCN::SELCHANGE;
 		<span class="doccomment">/// [`TCN_SELCHANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/tcn-selchange)
 		/// notification.
 		///
@@ -171,7 +171,7 @@
 		/// ```
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_boolret! </span>{ tcn_sel_changing, co::TCN::SELCHANGING;
+	<span class="macro">pub_fn_nfy_noparm_boolret!</span> { tcn_sel_changing, co::TCN::SELCHANGING;
 		<span class="doccomment">/// [`TCN_SELCHANGING`](https://learn.microsoft.com/en-us/windows/win32/controls/tcn-selchanging)
 		/// notification.
 	</span>}

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\events\list_view_events.rs`."><title>list_view_events.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (2bf78d12d 2024-02-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-c37d3936c59ababd.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\events\list_view_events.rs`."><title>list_view_events.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (516b6162a 2024-03-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -315,42 +315,42 @@
 		<span class="self">Self</span>(BaseEventsProxy::new(parent_base, ctrl_id))
 	}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_begin_drag, co::LVN::BEGINDRAG, NMLISTVIEW;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_begin_drag, co::LVN::BEGINDRAG, NMLISTVIEW;
 		<span class="doccomment">/// [`LVN_BEGINDRAG`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-begindrag)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_boolret! </span>{ lvn_begin_label_edit, co::LVN::BEGINLABELEDIT, NMLVDISPINFO;
+	<span class="macro">pub_fn_nfy_withparm_boolret!</span> { lvn_begin_label_edit, co::LVN::BEGINLABELEDIT, NMLVDISPINFO;
 		<span class="doccomment">/// [`LVN_BEGINLABELEDIT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-beginlabeledit)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_begin_r_drag, co::LVN::BEGINRDRAG, NMLISTVIEW;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_begin_r_drag, co::LVN::BEGINRDRAG, NMLISTVIEW;
 		<span class="doccomment">/// [`LVN_BEGINRDRAG`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-beginrdrag)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_begin_scroll, co::LVN::BEGINSCROLL, NMLVSCROLL;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_begin_scroll, co::LVN::BEGINSCROLL, NMLVSCROLL;
 		<span class="doccomment">/// [`LVN_BEGINSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-beginscroll)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_column_click, co::LVN::COLUMNCLICK, NMLISTVIEW;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_column_click, co::LVN::COLUMNCLICK, NMLISTVIEW;
 		<span class="doccomment">/// [`LVN_COLUMNCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-columnclick)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_column_drop_down, co::LVN::COLUMNDROPDOWN, NMLISTVIEW;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_column_drop_down, co::LVN::COLUMNDROPDOWN, NMLISTVIEW;
 		<span class="doccomment">/// [`LVN_COLUMNDROPDOWN`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-columndropdown)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_column_overflow_click, co::LVN::COLUMNOVERFLOWCLICK, NMLISTVIEW;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_column_overflow_click, co::LVN::COLUMNOVERFLOWCLICK, NMLISTVIEW;
 		<span class="doccomment">/// [`LVN_COLUMNOVERFLOWCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-columnoverflowclick)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_boolret! </span>{ lvn_delete_all_items, co::LVN::DELETEALLITEMS;
+	<span class="macro">pub_fn_nfy_noparm_boolret!</span> { lvn_delete_all_items, co::LVN::DELETEALLITEMS;
 		<span class="doccomment">/// [`LVN_DELETEALLITEMS`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-deleteallitems)
 		/// notification.
 		///
@@ -373,7 +373,7 @@
 		/// ```
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_delete_item, co::LVN::DELETEITEM, NMLISTVIEW;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_delete_item, co::LVN::DELETEITEM, NMLISTVIEW;
 		<span class="doccomment">/// [`LVN_DELETEITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-deleteitem)
 		/// notification.
 		///
@@ -396,17 +396,17 @@
 		/// ```
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_boolret! </span>{ lvn_end_label_edit, co::LVN::ENDLABELEDIT, NMLVDISPINFO;
+	<span class="macro">pub_fn_nfy_withparm_boolret!</span> { lvn_end_label_edit, co::LVN::ENDLABELEDIT, NMLVDISPINFO;
 		<span class="doccomment">/// [`LVN_ENDLABELEDIT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-endlabeledit)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_end_scroll, co::LVN::ENDSCROLL, NMLVSCROLL;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_end_scroll, co::LVN::ENDSCROLL, NMLVSCROLL;
 		<span class="doccomment">/// [`LVN_ENDSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-endscroll)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withmutparm_noret! </span>{ lvn_get_disp_info, co::LVN::GETDISPINFO, NMLVDISPINFO;
+	<span class="macro">pub_fn_nfy_withmutparm_noret!</span> { lvn_get_disp_info, co::LVN::GETDISPINFO, NMLVDISPINFO;
 		<span class="doccomment">/// [`LVN_GETDISPINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-getdispinfo)
 		/// notification.
 	</span>}
@@ -420,32 +420,32 @@
 			<span class="kw">move </span>|p| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMLVEMPTYMARKUP&gt;() })<span class="question-mark">? </span><span class="kw">as _</span>)));
 	}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_get_info_tip, co::LVN::GETINFOTIP, NMLVGETINFOTIP;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_get_info_tip, co::LVN::GETINFOTIP, NMLVGETINFOTIP;
 		<span class="doccomment">/// [`LVN_GETINFOTIP`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-getinfotip)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_hot_track, co::LVN::HOTTRACK, NMLISTVIEW;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_hot_track, co::LVN::HOTTRACK, NMLISTVIEW;
 		<span class="doccomment">/// [`LVN_HOTTRACK`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-hottrack)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_incremental_search, co::LVN::INCREMENTALSEARCH, NMLVFINDITEM;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_incremental_search, co::LVN::INCREMENTALSEARCH, NMLVFINDITEM;
 		<span class="doccomment">/// [`LVN_INCREMENTALSEARCH`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-incrementalsearch)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_insert_item, co::LVN::INSERTITEM, NMLISTVIEW;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_insert_item, co::LVN::INSERTITEM, NMLISTVIEW;
 		<span class="doccomment">/// [`LVN_INSERTITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-insertitem)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_item_activate, co::LVN::ITEMACTIVATE, NMITEMACTIVATE;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_item_activate, co::LVN::ITEMACTIVATE, NMITEMACTIVATE;
 		<span class="doccomment">/// [`LVN_ITEMACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-itemactivate)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_item_changed, co::LVN::ITEMCHANGED, NMLISTVIEW;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_item_changed, co::LVN::ITEMCHANGED, NMLISTVIEW;
 		<span class="doccomment">/// [`LVN_ITEMCHANGED`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-itemchanged)
 		/// notification.
 		///
@@ -468,12 +468,12 @@
 		/// ```
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_boolret! </span>{ lvn_item_changing, co::LVN::ITEMCHANGING, NMLISTVIEW;
+	<span class="macro">pub_fn_nfy_withparm_boolret!</span> { lvn_item_changing, co::LVN::ITEMCHANGING, NMLISTVIEW;
 		<span class="doccomment">/// [`LVN_ITEMCHANGING`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-itemchanging)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_key_down, co::LVN::KEYDOWN, NMLVKEYDOWN;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_key_down, co::LVN::KEYDOWN, NMLVKEYDOWN;
 		<span class="doccomment">/// [`LVN_KEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-keydown)
 		/// notification.
 		///
@@ -498,17 +498,17 @@
 		/// ```
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_link_click, co::LVN::LINKCLICK, NMLVLINK;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_link_click, co::LVN::LINKCLICK, NMLVLINK;
 		<span class="doccomment">/// [`LVN_LINKCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-linkclick)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_noret! </span>{ lvn_marquee_begin, co::LVN::MARQUEEBEGIN;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { lvn_marquee_begin, co::LVN::MARQUEEBEGIN;
 		<span class="doccomment">/// [`LVN_MARQUEEBEGIN`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-marqueebegin)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_od_cache_hint, co::LVN::ODCACHEHINT, NMLVCACHEHINT;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_od_cache_hint, co::LVN::ODCACHEHINT, NMLVCACHEHINT;
 		<span class="doccomment">/// [`LVN_ODCACHEHINT`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-odcachehint)
 		/// notification.
 	</span>}
@@ -526,17 +526,17 @@
 		});
 	}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_od_state_changed, co::LVN::ODSTATECHANGED, NMLVODSTATECHANGE;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_od_state_changed, co::LVN::ODSTATECHANGED, NMLVODSTATECHANGE;
 		<span class="doccomment">/// [`LVN_ODSTATECHANGED`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-odstatechanged)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ lvn_set_disp_info, co::LVN::SETDISPINFO, NMLVDISPINFO;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_set_disp_info, co::LVN::SETDISPINFO, NMLVDISPINFO;
 		<span class="doccomment">/// [`LVN_SETDISPINFO`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-setdispinfo)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ nm_click, co::NM::CLICK, NMITEMACTIVATE;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { nm_click, co::NM::CLICK, NMITEMACTIVATE;
 		<span class="doccomment">/// [`NM_CLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-click-list-view)
 		/// notification.
 	</span>}
@@ -550,42 +550,42 @@
 			<span class="kw">move </span>|p| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMLVCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as _</span>)));
 	}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ nm_dbl_clk, co::NM::DBLCLK, NMITEMACTIVATE;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { nm_dbl_clk, co::NM::DBLCLK, NMITEMACTIVATE;
 		<span class="doccomment">/// [`NM_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-dblclk-list-view)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_i32ret! </span>{ nm_hover, co::NM::HOVER;
+	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_hover, co::NM::HOVER;
 		<span class="doccomment">/// [`NM_HOVER`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-hover-list-view)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_noret! </span>{ nm_kill_focus, co::NM::KILLFOCUS;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_kill_focus, co::NM::KILLFOCUS;
 		<span class="doccomment">/// [`NM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-killfocus-list-view)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_i32ret! </span>{ nm_r_click, co::NM::RCLICK, NMITEMACTIVATE;
+	<span class="macro">pub_fn_nfy_withparm_i32ret!</span> { nm_r_click, co::NM::RCLICK, NMITEMACTIVATE;
 		<span class="doccomment">/// [`NM_RCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rclick-list-view)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret! </span>{ nm_r_dbl_clk, co::NM::RDBLCLK, NMITEMACTIVATE;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { nm_r_dbl_clk, co::NM::RDBLCLK, NMITEMACTIVATE;
 		<span class="doccomment">/// [`NM_RDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rdblclk-list-view)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_noret! </span>{ nm_released_capture, co::NM::RELEASEDCAPTURE;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_released_capture, co::NM::RELEASEDCAPTURE;
 		<span class="doccomment">/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-list-view-)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_noret! </span>{ nm_return, co::NM::RETURN;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_return, co::NM::RETURN;
 		<span class="doccomment">/// [`NM_RETURN`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-return-list-view-)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_noret! </span>{ nm_set_focus, co::NM::SETFOCUS;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_set_focus, co::NM::SETFOCUS;
 		<span class="doccomment">/// [`NM_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setfocus-list-view-)
 		/// notification.
 	</span>}

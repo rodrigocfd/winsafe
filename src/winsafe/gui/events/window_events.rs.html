@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\events\window_events.rs`."><title>window_events.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (2bf78d12d 2024-02-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-c37d3936c59ababd.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\events\window_events.rs`."><title>window_events.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (516b6162a 2024-03-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -876,12 +876,12 @@
 	</span><span class="kw">fn </span>wm&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, ident: co::WM, func: F)
 		<span class="kw">where </span>F: Fn(WndMsg) -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;isize&gt;&gt; + <span class="lifetime">'static</span>;
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_activate, co::WM::ACTIVATE, wm::Activate;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_activate, co::WM::ACTIVATE, wm::Activate;
 		<span class="doccomment">/// [`WM_ACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_activate_app, co::WM::ACTIVATEAPP, wm::ActivateApp;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_activate_app, co::WM::ACTIVATEAPP, wm::ActivateApp;
 		<span class="doccomment">/// [`WM_ACTIVATEAPP`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-activateapp)
 		/// message.
 	</span>}
@@ -897,27 +897,27 @@
 		</span>});
 	}
 
-	<span class="macro">fn_wm_noparm_noret! </span>{ wm_cancel_mode, co::WM::CANCELMODE;
+	<span class="macro">fn_wm_noparm_noret!</span> { wm_cancel_mode, co::WM::CANCELMODE;
 		<span class="doccomment">/// [`WM_CANCELMODE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-cancelmode)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_capture_changed, co::WM::CAPTURECHANGED, wm::CaptureChanged;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_capture_changed, co::WM::CAPTURECHANGED, wm::CaptureChanged;
 		<span class="doccomment">/// [`WM_CAPTURECHANGED`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-capturechanged)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_char, co::WM::CHAR, wm::Char;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_char, co::WM::CHAR, wm::Char;
 		<span class="doccomment">/// [`WM_CHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-char)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_noparm_noret! </span>{ wm_child_activate, co::WM::CHILDACTIVATE;
+	<span class="macro">fn_wm_noparm_noret!</span> { wm_child_activate, co::WM::CHILDACTIVATE;
 		<span class="doccomment">/// [`WM_CHILDACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-childactivate)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_noparm_noret! </span>{ wm_close, co::WM::CLOSE;
+	<span class="macro">fn_wm_noparm_noret!</span> { wm_close, co::WM::CLOSE;
 		<span class="doccomment">/// [`WM_CLOSE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-close)
 		/// message.
 		///
@@ -930,52 +930,52 @@
 		/// * non-dialog [`WindowModal`](crate::gui::WindowModal) – re-enables parent and calls [`DestroyWindow`](crate::prelude::user_Hwnd::DestroyWindow).
 	</span>}
 
-	<span class="macro">fn_wm_noparm_noret! </span>{ wm_context_menu, co::WM::CONTEXTMENU;
+	<span class="macro">fn_wm_noparm_noret!</span> { wm_context_menu, co::WM::CONTEXTMENU;
 		<span class="doccomment">/// [`WM_CONTEXTMENU`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-contextmenu)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_ctlcolor! </span>{ wm_ctl_color_btn, co::WM::CTLCOLORBTN, wm::CtlColorBtn;
+	<span class="macro">fn_wm_ctlcolor!</span> { wm_ctl_color_btn, co::WM::CTLCOLORBTN, wm::CtlColorBtn;
 		<span class="doccomment">/// [`WM_CTLCOLORBTN`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorbtn)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_ctlcolor! </span>{ wm_ctl_color_dlg, co::WM::CTLCOLORDLG, wm::CtlColorDlg;
+	<span class="macro">fn_wm_ctlcolor!</span> { wm_ctl_color_dlg, co::WM::CTLCOLORDLG, wm::CtlColorDlg;
 		<span class="doccomment">/// [`WM_CTLCOLORDLG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-ctlcolordlg)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_ctlcolor! </span>{ wm_ctl_color_edit, co::WM::CTLCOLOREDIT, wm::CtlColorEdit;
+	<span class="macro">fn_wm_ctlcolor!</span> { wm_ctl_color_edit, co::WM::CTLCOLOREDIT, wm::CtlColorEdit;
 		<span class="doccomment">/// [`WM_CTLCOLOREDIT`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcoloredit)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_ctlcolor! </span>{ wm_ctl_color_list_box, co::WM::CTLCOLORLISTBOX, wm::CtlColorListBox;
+	<span class="macro">fn_wm_ctlcolor!</span> { wm_ctl_color_list_box, co::WM::CTLCOLORLISTBOX, wm::CtlColorListBox;
 		<span class="doccomment">/// [`WM_CTLCOLORLISTBOX`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorlistbox)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_ctlcolor! </span>{ wm_ctl_color_scroll_bar, co::WM::CTLCOLORSCROLLBAR, wm::CtlColorScrollBar;
+	<span class="macro">fn_wm_ctlcolor!</span> { wm_ctl_color_scroll_bar, co::WM::CTLCOLORSCROLLBAR, wm::CtlColorScrollBar;
 		<span class="doccomment">/// [`WM_CTLCOLORSCROLLBAR`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorscrollbar)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_ctlcolor! </span>{ wm_ctl_color_static, co::WM::CTLCOLORSTATIC, wm::CtlColorStatic;
+	<span class="macro">fn_wm_ctlcolor!</span> { wm_ctl_color_static, co::WM::CTLCOLORSTATIC, wm::CtlColorStatic;
 		<span class="doccomment">/// [`WM_CTLCOLORSTATIC`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorstatic)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_dead_char, co::WM::DEADCHAR, wm::DeadChar;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_dead_char, co::WM::DEADCHAR, wm::DeadChar;
 		<span class="doccomment">/// [`WM_DEADCHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-deadchar)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_boolret! </span>{ wm_delete_item, co::WM::DELETEITEM, wm::DeleteItem;
+	<span class="macro">fn_wm_withparm_boolret!</span> { wm_delete_item, co::WM::DELETEITEM, wm::DeleteItem;
 		<span class="doccomment">/// [`WM_DELETEITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-deleteitem)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_noparm_noret! </span>{ wm_destroy, co::WM::DESTROY;
+	<span class="macro">fn_wm_noparm_noret!</span> { wm_destroy, co::WM::DESTROY;
 		<span class="doccomment">/// [`WM_DESTROY`](crate::msg::wm::Destroy) message.
 		///
 		/// # Examples
@@ -995,17 +995,17 @@
 		/// ```
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_device_change, co::WM::DEVICECHANGE, wm::DeviceChange;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_device_change, co::WM::DEVICECHANGE, wm::DeviceChange;
 		<span class="doccomment">/// [`WM_DEVICECHANGE`](https://learn.microsoft.com/en-us/windows/win32/devio/wm-devicechange)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_display_change, co::WM::DISPLAYCHANGE, wm::DisplayChange;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_display_change, co::WM::DISPLAYCHANGE, wm::DisplayChange;
 		<span class="doccomment">/// [`WM_DISPLAYCHANGE`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-displaychange)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_drop_files, co::WM::DROPFILES, wm::DropFiles;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_drop_files, co::WM::DROPFILES, wm::DropFiles;
 		<span class="doccomment">/// [`WM_DROPFILES`](https://learn.microsoft.com/en-us/windows/win32/shell/wm-dropfiles)
 		/// message.
 		///
@@ -1029,27 +1029,27 @@
 		/// ```
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_enable, co::WM::ENABLE, wm::Enable;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_enable, co::WM::ENABLE, wm::Enable;
 		<span class="doccomment">/// [`WM_ENABLE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-enable)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_end_session, co::WM::ENDSESSION, wm::EndSession;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_end_session, co::WM::ENDSESSION, wm::EndSession;
 		<span class="doccomment">/// [`WM_ENDSESSION`](https://learn.microsoft.com/en-us/windows/win32/shutdown/wm-endsession)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_enter_idle, co::WM::ENTERIDLE, wm::EnterIdle;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_enter_idle, co::WM::ENTERIDLE, wm::EnterIdle;
 		<span class="doccomment">/// [`WM_ENTERIDLE`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-enteridle)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_enter_menu_loop, co::WM::ENTERMENULOOP, wm::EnterMenuLoop;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_enter_menu_loop, co::WM::ENTERMENULOOP, wm::EnterMenuLoop;
 		<span class="doccomment">/// [`WM_ENTERMENULOOP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-entermenuloop)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_noparm_noret! </span>{ wm_enter_size_move, co::WM::ENTERSIZEMOVE;
+	<span class="macro">fn_wm_noparm_noret!</span> { wm_enter_size_move, co::WM::ENTERSIZEMOVE;
 		<span class="doccomment">/// [`WM_ENTERSIZEMOVE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-entersizemove)
 		/// message.
 	</span>}
@@ -1063,17 +1063,17 @@
 			<span class="kw">move </span>|p| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func(wm::EraseBkgnd::from_generic_wm(p))<span class="question-mark">? </span><span class="kw">as _</span>)));
 	}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_exit_menu_loop, co::WM::EXITMENULOOP, wm::ExitMenuLoop;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_exit_menu_loop, co::WM::EXITMENULOOP, wm::ExitMenuLoop;
 		<span class="doccomment">/// [`WM_EXITMENULOOP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-exitmenuloop)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_noparm_noret! </span>{ wm_exit_size_move, co::WM::EXITSIZEMOVE;
+	<span class="macro">fn_wm_noparm_noret!</span> { wm_exit_size_move, co::WM::EXITSIZEMOVE;
 		<span class="doccomment">/// [`WM_EXITSIZEMOVE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-exitsizemove)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_coret! </span>{ wm_get_dlg_code, co::WM::GETDLGCODE, wm::GetDlgCode, co::DLGC;
+	<span class="macro">fn_wm_withparm_coret!</span> { wm_get_dlg_code, co::WM::GETDLGCODE, wm::GetDlgCode, co::DLGC;
 		<span class="doccomment">/// [`WM_GETDLGCODE`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-getdlgcode)
 		/// message.
 	</span>}
@@ -1096,7 +1096,7 @@
 			<span class="kw">move </span>|<span class="kw">_</span>| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func()<span class="question-mark">?</span>.map_or(<span class="number">0</span>, |h| h.ptr() <span class="kw">as _</span>))));
 	}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_get_min_max_info, co::WM::GETMINMAXINFO, wm::GetMinMaxInfo;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_get_min_max_info, co::WM::GETMINMAXINFO, wm::GetMinMaxInfo;
 		<span class="doccomment">/// [`WM_GETMINMAXINFO`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-getminmaxinfo)
 		/// message.
 	</span>}
@@ -1119,22 +1119,22 @@
 			<span class="kw">move </span>|<span class="kw">_</span>| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func()<span class="question-mark">? </span><span class="kw">as _</span>)));
 	}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_get_title_bar_info_ex, co::WM::GETTITLEBARINFOEX, wm::GetTitleBarInfoEx;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_get_title_bar_info_ex, co::WM::GETTITLEBARINFOEX, wm::GetTitleBarInfoEx;
 		<span class="doccomment">/// [`WM_GETTITLEBARINFOEX`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-gettitlebarinfoex)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_h_scroll, co::WM::HSCROLL, wm::HScroll;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_h_scroll, co::WM::HSCROLL, wm::HScroll;
 		<span class="doccomment">/// [`WM_HSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-hscroll)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_help, co::WM::HELP, wm::Help;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_help, co::WM::HELP, wm::Help;
 		<span class="doccomment">/// [`WM_HELP`](https://learn.microsoft.com/en-us/windows/win32/shell/wm-help)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_init_menu_popup, co::WM::INITMENUPOPUP, wm::InitMenuPopup;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_init_menu_popup, co::WM::INITMENUPOPUP, wm::InitMenuPopup;
 		<span class="doccomment">/// [`WM_INITMENUPOPUP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-initmenupopup)
 		/// message.
 		///
@@ -1157,22 +1157,22 @@
 		/// ```
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_key_down, co::WM::KEYDOWN, wm::KeyDown;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_key_down, co::WM::KEYDOWN, wm::KeyDown;
 		<span class="doccomment">/// [`WM_KEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keydown)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_key_up, co::WM::KEYUP, wm::KeyUp;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_key_up, co::WM::KEYUP, wm::KeyUp;
 		<span class="doccomment">/// [`WM_KEYUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-keyup)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_kill_focus, co::WM::KILLFOCUS, wm::KillFocus;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_kill_focus, co::WM::KILLFOCUS, wm::KillFocus;
 		<span class="doccomment">/// [`WM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-killfocus)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_l_button_dbl_clk, co::WM::LBUTTONDBLCLK, wm::LButtonDblClk;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_l_button_dbl_clk, co::WM::LBUTTONDBLCLK, wm::LButtonDblClk;
 		<span class="doccomment">/// [`WM_LBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondblclk)
 		/// message.
 		///
@@ -1193,7 +1193,7 @@
 		/// ```
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_l_button_down, co::WM::LBUTTONDOWN, wm::LButtonDown;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_l_button_down, co::WM::LBUTTONDOWN, wm::LButtonDown;
 		<span class="doccomment">/// [`WM_LBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttondown)
 		/// message.
 		///
@@ -1214,77 +1214,77 @@
 		/// ```
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_l_button_up, co::WM::LBUTTONUP, wm::LButtonUp;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_l_button_up, co::WM::LBUTTONUP, wm::LButtonUp;
 		<span class="doccomment">/// [`WM_LBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-lbuttonup)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_m_button_dbl_clk, co::WM::MBUTTONDBLCLK, wm::MButtonDblClk;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_m_button_dbl_clk, co::WM::MBUTTONDBLCLK, wm::MButtonDblClk;
 		<span class="doccomment">/// [`WM_MBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondblclk)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_m_button_down, co::WM::MBUTTONDOWN, wm::MButtonDown;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_m_button_down, co::WM::MBUTTONDOWN, wm::MButtonDown;
 		<span class="doccomment">/// [`WM_MBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttondown)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_m_button_up, co::WM::MBUTTONUP, wm::MButtonUp;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_m_button_up, co::WM::MBUTTONUP, wm::MButtonUp;
 		<span class="doccomment">/// [`WM_MBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mbuttonup)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_menu_command, co::WM::MENUCOMMAND, wm::MenuCommand;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_menu_command, co::WM::MENUCOMMAND, wm::MenuCommand;
 		<span class="doccomment">/// [`WM_MENUCOMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-menucommand)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_coret! </span>{ wm_menu_drag, co::WM::MENUDRAG, wm::MenuDrag, co::MND;
+	<span class="macro">fn_wm_withparm_coret!</span> { wm_menu_drag, co::WM::MENUDRAG, wm::MenuDrag, co::MND;
 		<span class="doccomment">/// [`WM_MENUDRAG`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-menudrag)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_menu_r_button_up, co::WM::MENURBUTTONUP, wm::MenuRButtonUp;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_menu_r_button_up, co::WM::MENURBUTTONUP, wm::MenuRButtonUp;
 		<span class="doccomment">/// [`WM_MENURBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-menurbuttonup)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_mouse_hover, co::WM::MOUSEHOVER, wm::MouseHover;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_mouse_hover, co::WM::MOUSEHOVER, wm::MouseHover;
 		<span class="doccomment">/// [`WM_MOUSEHOVER`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_noparm_noret! </span>{ wm_mouse_leave, co::WM::MOUSELEAVE;
+	<span class="macro">fn_wm_noparm_noret!</span> { wm_mouse_leave, co::WM::MOUSELEAVE;
 		<span class="doccomment">/// [`WM_MOUSELEAVE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mouseleave)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_mouse_move, co::WM::MOUSEMOVE, wm::MouseMove;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_mouse_move, co::WM::MOUSEMOVE, wm::MouseMove;
 		<span class="doccomment">/// [`WM_MOUSEMOVE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_move, co::WM::MOVE, wm::Move;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_move, co::WM::MOVE, wm::Move;
 		<span class="doccomment">/// [`WM_MOVE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-move)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_moving, co::WM::MOVING, wm::Moving;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_moving, co::WM::MOVING, wm::Moving;
 		<span class="doccomment">/// [`WM_MOVING`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-moving)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_coret! </span>{ wm_nc_calc_size, co::WM::NCCALCSIZE, wm::NcCalcSize, co::WVR;
+	<span class="macro">fn_wm_withparm_coret!</span> { wm_nc_calc_size, co::WM::NCCALCSIZE, wm::NcCalcSize, co::WVR;
 		<span class="doccomment">/// [`WM_NCCALCSIZE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-nccalcsize)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_boolret! </span>{ wm_nc_create, co::WM::NCCREATE, wm::NcCreate;
+	<span class="macro">fn_wm_withparm_boolret!</span> { wm_nc_create, co::WM::NCCREATE, wm::NcCreate;
 		<span class="doccomment">/// [`WM_NCCREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-nccreate)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_noparm_noret! </span>{ wm_nc_destroy, co::WM::NCDESTROY;
+	<span class="macro">fn_wm_noparm_noret!</span> { wm_nc_destroy, co::WM::NCDESTROY;
 		<span class="doccomment">/// [`WM_NCDESTROY`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-ncdestroy)
 		/// message.
 		///
@@ -1298,27 +1298,27 @@
 		/// In both cases, [`PostQuitMessage`](crate::PostQuitMessage) is called.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_coret! </span>{ wm_nc_hit_test, co::WM::NCHITTEST, wm::NcHitTest, co::HT;
+	<span class="macro">fn_wm_withparm_coret!</span> { wm_nc_hit_test, co::WM::NCHITTEST, wm::NcHitTest, co::HT;
 		<span class="doccomment">/// [`WM_NCHITTEST`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-nchittest)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_nc_paint, co::WM::NCPAINT, wm::NcPaint;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_nc_paint, co::WM::NCPAINT, wm::NcPaint;
 		<span class="doccomment">/// [`WM_NCPAINT`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-ncpaint)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_next_dlg_ctl, co::WM::NEXTDLGCTL, wm::NextDlgCtl;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_next_dlg_ctl, co::WM::NEXTDLGCTL, wm::NextDlgCtl;
 		<span class="doccomment">/// [`WM_NEXTDLGCTL`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-nextdlgctl)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_noparm_noret! </span>{ wm_null, co::WM::NULL;
+	<span class="macro">fn_wm_noparm_noret!</span> { wm_null, co::WM::NULL;
 		<span class="doccomment">/// [`WM_NULL`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-null)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_noparm_noret! </span>{ wm_paint, co::WM::PAINT;
+	<span class="macro">fn_wm_noparm_noret!</span> { wm_paint, co::WM::PAINT;
 		<span class="doccomment">/// [`WM_PAINT`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-paint)
 		/// message.
 		///
@@ -1346,46 +1346,46 @@
 		/// ```
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_parent_notify, co::WM::PARENTNOTIFY, wm::ParentNotify;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_parent_notify, co::WM::PARENTNOTIFY, wm::ParentNotify;
 		<span class="doccomment">/// [`WM_PARENTNOTIFY`](https://learn.microsoft.com/en-us/windows/win32/inputmsg/wm-parentnotify)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_power_broadcast, co::WM::POWERBROADCAST, wm::PowerBroadcast;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_power_broadcast, co::WM::POWERBROADCAST, wm::PowerBroadcast;
 		<span class="doccomment">/// [`WM_POWERBROADCAST`](https://learn.microsoft.com/en-us/windows/win32/power/wm-powerbroadcast)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_noparm_boolret! </span>{ wm_query_open, co::WM::QUERYOPEN;
+	<span class="macro">fn_wm_noparm_boolret!</span> { wm_query_open, co::WM::QUERYOPEN;
 		<span class="doccomment">/// [`WM_QUERYOPEN`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-queryopen)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_r_button_dbl_clk, co::WM::RBUTTONDBLCLK, wm::RButtonDblClk;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_r_button_dbl_clk, co::WM::RBUTTONDBLCLK, wm::RButtonDblClk;
 		<span class="doccomment">/// [`WM_RBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondblclk)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_r_button_down, co::WM::RBUTTONDOWN, wm::RButtonDown;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_r_button_down, co::WM::RBUTTONDOWN, wm::RButtonDown;
 		<span class="doccomment">/// [`WM_RBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttondown)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_r_button_up, co::WM::RBUTTONUP, wm::RButtonUp;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_r_button_up, co::WM::RBUTTONUP, wm::RButtonUp;
 		<span class="doccomment">/// [`WM_RBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-rbuttonup)
 	</span>}
 
-	<span class="macro">fn_wm_withparm_boolret! </span>{ wm_set_cursor, co::WM::SETCURSOR, wm::SetCursor;
+	<span class="macro">fn_wm_withparm_boolret!</span> { wm_set_cursor, co::WM::SETCURSOR, wm::SetCursor;
 		<span class="doccomment">/// [`WM_SETCURSOR`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-setcursor)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_set_focus, co::WM::SETFOCUS, wm::SetFocus;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_set_focus, co::WM::SETFOCUS, wm::SetFocus;
 		<span class="doccomment">/// [`WM_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-setfocus)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_set_font, co::WM::SETFONT, wm::SetFont;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_set_font, co::WM::SETFONT, wm::SetFont;
 		<span class="doccomment">/// [`WM_SETFONT`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-setfont)
 		/// message.
 	</span>}
@@ -1402,22 +1402,22 @@
 		);
 	}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_set_redraw, co::WM::SETREDRAW, wm::SetRedraw;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_set_redraw, co::WM::SETREDRAW, wm::SetRedraw;
 		<span class="doccomment">/// [`WM_SETREDRAW`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-setredraw)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_boolret! </span>{ wm_set_text, co::WM::SETTEXT, wm::SetText;
+	<span class="macro">fn_wm_withparm_boolret!</span> { wm_set_text, co::WM::SETTEXT, wm::SetText;
 		<span class="doccomment">/// [`WM_SETTEXT`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-settext)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_show_window, co::WM::SHOWWINDOW, wm::ShowWindow;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_show_window, co::WM::SHOWWINDOW, wm::ShowWindow;
 		<span class="doccomment">/// [`WM_SHOWWINDOW`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-showwindow)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_size, co::WM::SIZE, wm::Size;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_size, co::WM::SIZE, wm::Size;
 		<span class="doccomment">/// [`WM_SIZE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-size)
 		/// message.
 		///
@@ -1441,97 +1441,97 @@
 		/// ```
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_sizing, co::WM::SIZING, wm::Sizing;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_sizing, co::WM::SIZING, wm::Sizing;
 		<span class="doccomment">/// [`WM_SIZING`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-sizing)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_style_changed, co::WM::STYLECHANGED, wm::StyleChanged;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_style_changed, co::WM::STYLECHANGED, wm::StyleChanged;
 		<span class="doccomment">/// [`WM_STYLECHANGED`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-stylechanged)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_style_changing, co::WM::STYLECHANGING, wm::StyleChanging;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_style_changing, co::WM::STYLECHANGING, wm::StyleChanging;
 		<span class="doccomment">/// [`WM_STYLECHANGING`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-stylechanging)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_noparm_noret! </span>{ wm_sync_paint, co::WM::SYNCPAINT;
+	<span class="macro">fn_wm_noparm_noret!</span> { wm_sync_paint, co::WM::SYNCPAINT;
 		<span class="doccomment">/// [`WM_SYNCPAINT`](https://learn.microsoft.com/en-us/windows/win32/gdi/wm-syncpaint)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_sys_char, co::WM::SYSCHAR, wm::SysChar;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_sys_char, co::WM::SYSCHAR, wm::SysChar;
 		<span class="doccomment">/// [`WM_SYSCHAR`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-syschar)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_sys_command, co::WM::SYSCOMMAND, wm::SysCommand;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_sys_command, co::WM::SYSCOMMAND, wm::SysCommand;
 		<span class="doccomment">/// [`WM_SYSCOMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-syscommand)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_sys_dead_char, co::WM::SYSDEADCHAR, wm::SysDeadChar;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_sys_dead_char, co::WM::SYSDEADCHAR, wm::SysDeadChar;
 		<span class="doccomment">/// [`WM_SYSDEADCHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-sysdeadchar)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_sys_key_down, co::WM::SYSKEYDOWN, wm::SysKeyDown;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_sys_key_down, co::WM::SYSKEYDOWN, wm::SysKeyDown;
 		<span class="doccomment">/// [`WM_SYSKEYDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-syskeydown)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_sys_key_up, co::WM::SYSKEYUP, wm::SysKeyUp;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_sys_key_up, co::WM::SYSKEYUP, wm::SysKeyUp;
 		<span class="doccomment">/// [`WM_SYSKEYUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-syskeyup)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_noparm_noret! </span>{ wm_theme_changed, co::WM::THEMECHANGED;
+	<span class="macro">fn_wm_noparm_noret!</span> { wm_theme_changed, co::WM::THEMECHANGED;
 		<span class="doccomment">/// [`WM_THEMECHANGED`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-themechanged)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_uninit_menu_popup, co::WM::UNINITMENUPOPUP, wm::UninitMenuPopup;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_uninit_menu_popup, co::WM::UNINITMENUPOPUP, wm::UninitMenuPopup;
 		<span class="doccomment">/// [`WM_UNINITMENUPOPUP`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-uninitmenupopup)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_noparm_boolret! </span>{ wm_undo, co::WM::UNDO;
+	<span class="macro">fn_wm_noparm_boolret!</span> { wm_undo, co::WM::UNDO;
 		<span class="doccomment">/// [`WM_UNDO`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-undo)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_v_scroll, co::WM::VSCROLL, wm::VScroll;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_v_scroll, co::WM::VSCROLL, wm::VScroll;
 		<span class="doccomment">/// [`WM_VSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-vscroll)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_window_pos_changed, co::WM::WINDOWPOSCHANGED, wm::WindowPosChanged;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_window_pos_changed, co::WM::WINDOWPOSCHANGED, wm::WindowPosChanged;
 		<span class="doccomment">/// [`WM_WINDOWPOSCHANGED`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanged)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_window_pos_changing, co::WM::WINDOWPOSCHANGING, wm::WindowPosChanging;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_window_pos_changing, co::WM::WINDOWPOSCHANGING, wm::WindowPosChanging;
 		<span class="doccomment">/// [`WM_WINDOWPOSCHANGING`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-windowposchanging)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_wts_session_change, co::WM::WTSSESSION_CHANGE, wm::WtsSessionChange;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_wts_session_change, co::WM::WTSSESSION_CHANGE, wm::WtsSessionChange;
 		<span class="doccomment">/// [`WM_WTSSESSION_CHANGE`](https://learn.microsoft.com/en-us/windows/win32/termserv/wm-wtssession-change)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_x_button_dbl_clk, co::WM::XBUTTONDBLCLK, wm::XButtonDblClk;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_x_button_dbl_clk, co::WM::XBUTTONDBLCLK, wm::XButtonDblClk;
 		<span class="doccomment">/// [`WM_XBUTTONDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondblclk)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_x_button_down, co::WM::XBUTTONDOWN, wm::XButtonDown;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_x_button_down, co::WM::XBUTTONDOWN, wm::XButtonDown;
 		<span class="doccomment">/// [`WM_XBUTTONDOWN`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttondown)
 		/// message.
 	</span>}
 
-	<span class="macro">fn_wm_withparm_noret! </span>{ wm_x_button_up, co::WM::XBUTTONUP, wm::XButtonUp;
+	<span class="macro">fn_wm_withparm_noret!</span> { wm_x_button_up, co::WM::XBUTTONUP, wm::XButtonUp;
 		<span class="doccomment">/// [`WM_XBUTTONUP`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-xbuttonup)
 		/// message.
 	</span>}

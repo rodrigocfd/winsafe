@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gdi\co.rs`."><title>co.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (2bf78d12d 2024-02-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-c37d3936c59ababd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gdi\co.rs`."><title>co.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (516b6162a 2024-03-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -483,7 +483,7 @@
 <a href="#481" id="481">481</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
-</span><span class="macro">const_ordinary! </span>{ AD: i32;
+</span><span class="macro">const_ordinary!</span> { AD: i32;
 	<span class="doccomment">/// [`HDC::SetArcDirection`](crate::prelude::gdi_Hdc::SetArcDirection) `dir`
 	/// (`i32`).
 	</span>=&gt;
@@ -492,7 +492,7 @@
 	</span>CLOCKWISE <span class="number">2
 </span>}
 
-<span class="macro">const_ordinary! </span>{ BI: u32;
+<span class="macro">const_ordinary!</span> { BI: u32;
 	<span class="doccomment">/// [`BITMAPINFOHEADER`](crate::BITMAPINFOHEADER) `biCompression` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -504,7 +504,7 @@
 	</span>PNG <span class="number">5
 </span>}
 
-<span class="macro">const_ordinary! </span>{ BKMODE: i32;
+<span class="macro">const_ordinary!</span> { BKMODE: i32;
 	<span class="doccomment">/// [`HDC::SetBkMode`](crate::prelude::gdi_Hdc::SetBkMode) `mode` (`i32`).
 	</span>=&gt;
 	=&gt;
@@ -512,7 +512,7 @@
 	</span>OPAQUE <span class="number">2
 </span>}
 
-<span class="macro">const_ordinary! </span>{ BSS: u32;
+<span class="macro">const_ordinary!</span> { BSS: u32;
 	<span class="doccomment">/// [`LOGBRUSH`](crate::LOGBRUSH) `lbStyle` (`u32`).
 	///
 	/// Originally has `BS` prefix.
@@ -531,7 +531,7 @@
 	</span>MONOPATTERN <span class="number">9
 </span>}
 
-<span class="macro">const_ordinary! </span>{ CHARSET: u8;
+<span class="macro">const_ordinary!</span> { CHARSET: u8;
 	<span class="doccomment">/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `char_set`
 	/// and [`LOGFONT`](crate::LOGFONT) `lfCharset` (`u8`).
 	</span>=&gt;
@@ -558,7 +558,7 @@
 	</span>BALTIC <span class="number">186
 </span>}
 
-<span class="macro">const_ordinary! </span>{ CLIP: u8;
+<span class="macro">const_ordinary!</span> { CLIP: u8;
 	<span class="doccomment">/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont)
 	/// `clip_precision` and [`LOGFONT`](crate::LOGFONT) `lfClipPrecision`
 	/// (`u8`).
@@ -574,7 +574,7 @@
 	</span>EMBEDDED <span class="number">8 </span>&lt;&lt; <span class="number">4
 </span>}
 
-<span class="macro">const_ordinary! </span>{ DIB: u32;
+<span class="macro">const_ordinary!</span> { DIB: u32;
 	<span class="doccomment">/// [`LOGBRUSH`](crate::LOGBRUSH) `lbColor` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -585,7 +585,7 @@
 	</span>PAL_COLORS <span class="number">1
 </span>}
 
-<span class="macro">const_ordinary! </span>{ FF: u8;
+<span class="macro">const_ordinary!</span> { FF: u8;
 	<span class="doccomment">/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`) used with
 	/// [`PITCH`](crate::co::PITCH).
 	</span>=&gt;
@@ -598,7 +598,7 @@
 	</span>DECORATIVE <span class="number">5 </span>&lt;&lt; <span class="number">4
 </span>}
 
-<span class="macro">const_ordinary! </span>{ FW: u32;
+<span class="macro">const_ordinary!</span> { FW: u32;
 	<span class="doccomment">/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `weight`
 	/// and [`LOGFONT`](crate::LOGFONT) `lfWeight` (`u32`).
 	</span>=&gt;
@@ -620,7 +620,7 @@
 	</span>BLACK <span class="self">Self</span>::HEAVY.<span class="number">0
 </span>}
 
-<span class="macro">const_ordinary! </span>{ GDC: i32;
+<span class="macro">const_ordinary!</span> { GDC: i32;
 	<span class="doccomment">/// [`HDC::GetDeviceCaps`](crate::prelude::gdi_Hdc::GetDeviceCaps) `index`
 	/// (`i32`).
 	///
@@ -669,7 +669,7 @@
 	</span>COLORMGMTCAPS <span class="number">121
 </span>}
 
-<span class="macro">const_ordinary! </span>{ GM: i32;
+<span class="macro">const_ordinary!</span> { GM: i32;
 	<span class="doccomment">/// [`HDC::SetGraphicsMode`](crate::prelude::gdi_Hdc::SetGraphicsMode)
 	/// `mode` (`i32`).
 	</span>=&gt;
@@ -678,7 +678,7 @@
 	</span>ADVANCED <span class="number">2
 </span>}
 
-<span class="macro">const_ordinary! </span>{ HS: i32;
+<span class="macro">const_ordinary!</span> { HS: i32;
 	<span class="doccomment">/// [`HBRUSH::CreateHatchBrush`](crate::prelude::gdi_Hbrush::CreateHatchBrush)
 	/// `hatch` (`i32`).
 	</span>=&gt;
@@ -697,7 +697,7 @@
 	</span>DIAGCROSS <span class="number">5
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LR: u32;
+<span class="macro">const_bitflag!</span> { LR: u32;
 	<span class="doccomment">/// [`HINSTANCE::LoadImageBitmap`](crate::prelude::gdi_Hinstance::LoadImageBitmap),
 	/// [`HINSTANCE::LoadImageCursor`](crate::prelude::gdi_Hinstance::LoadImageCursor)
 	/// and
@@ -720,7 +720,7 @@
 	</span>SHARED <span class="number">0x0000_8000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ OUT_PRECIS: u8;
+<span class="macro">const_ordinary!</span> { OUT_PRECIS: u8;
 	<span class="doccomment">/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont)
 	/// `out_precision` and [`LOGFONT`](crate::LOGFONT) `lfOutPrecision` (`u8`).
 	</span>=&gt;
@@ -738,7 +738,7 @@
 	</span>PS_ONLY <span class="number">10
 </span>}
 
-<span class="macro">const_ordinary! </span>{ PC: u8;
+<span class="macro">const_ordinary!</span> { PC: u8;
 	<span class="doccomment">/// [`PALETTEENTRY`](crate::PALETTEENTRY) `peFlags` (`u8`).
 	</span>=&gt;
 	=&gt;
@@ -749,7 +749,7 @@
 	</span>NOCOLLAPSE <span class="number">0x04
 </span>}
 
-<span class="macro">const_ordinary! </span>{ PITCH: u8;
+<span class="macro">const_ordinary!</span> { PITCH: u8;
 	<span class="doccomment">/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont)
 	/// `pitch_and_family` and [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily`
 	/// (`u8`) used with [`FF`](crate::co::FF).
@@ -767,7 +767,7 @@
 	</span>}
 }
 
-<span class="macro">const_ordinary! </span>{ PS: i32;
+<span class="macro">const_ordinary!</span> { PS: i32;
 	<span class="doccomment">/// [`HPEN::CreatePen`](crate::prelude::gdi_Hpen::CreatePen) `style`
 	/// (`i32`).
 	</span>=&gt;
@@ -781,7 +781,7 @@
 	</span>INSIDEFRAME <span class="number">6
 </span>}
 
-<span class="macro">const_ordinary! </span>{ QUALITY: u8;
+<span class="macro">const_ordinary!</span> { QUALITY: u8;
 	<span class="doccomment">/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `quality`
 	/// and [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).
 	</span>=&gt;
@@ -795,7 +795,7 @@
 	</span>CLEARTYPE_NATURAL <span class="number">6
 </span>}
 
-<span class="macro">const_ordinary! </span>{ RGN: i32;
+<span class="macro">const_ordinary!</span> { RGN: i32;
 	<span class="doccomment">/// [`HDC::SelectClipPath`](crate::prelude::gdi_Hdc::SelectClipPath) `mode`
 	/// (`i32`).
 	</span>=&gt;
@@ -807,7 +807,7 @@
 	</span>COPY <span class="number">5
 </span>}
 
-<span class="macro">const_ordinary! </span>{ ROP: u32;
+<span class="macro">const_ordinary!</span> { ROP: u32;
 	<span class="doccomment">/// Raster operation code (`u32`).
 	/// [`HDC::BitBlt`](crate::prelude::gdi_Hdc::BitBlt) `rop`,
 	/// [`HDC::PatBlt`](crate::prelude::gdi_Hdc::PatBlt) `rop` and
@@ -870,7 +870,7 @@
 	</span>CAPTUREBLT <span class="number">0x4000_0000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ STOCK_BRUSH: i32;
+<span class="macro">const_ordinary!</span> { STOCK_BRUSH: i32;
 	<span class="doccomment">/// [`HBRUSH::GetStockObject`](crate::prelude::gdi_Hbrush::GetStockObject)
 	/// `i` (`i32`).
 	</span>=&gt;
@@ -885,7 +885,7 @@
 	</span>WHITE <span class="number">0
 </span>}
 
-<span class="macro">const_ordinary! </span>{ STOCK_FONT: i32;
+<span class="macro">const_ordinary!</span> { STOCK_FONT: i32;
 	<span class="doccomment">/// [`HFONT::GetStockObject`](crate::prelude::gdi_Hfont::GetStockObject) `i`
 	/// (`i32`).
 	</span>=&gt;
@@ -899,7 +899,7 @@
 	</span>SYSTEM_FIXED <span class="number">16
 </span>}
 
-<span class="macro">const_ordinary! </span>{ STOCK_PEN: i32;
+<span class="macro">const_ordinary!</span> { STOCK_PEN: i32;
 	<span class="doccomment">/// [`HPEN::GetStockObject`](crate::prelude::gdi_Hpen::GetStockObject) `i`
 	/// (`i32`).
 	</span>=&gt;
@@ -910,7 +910,7 @@
 	</span>WHITE <span class="number">6
 </span>}
 
-<span class="macro">const_ordinary! </span>{ STRETCH_MODE: i32;
+<span class="macro">const_ordinary!</span> { STRETCH_MODE: i32;
 	<span class="doccomment">/// [`HDC::SetStretchBltMode`](crate::prelude::gdi_Hdc::SetStretchBltMode)
 	/// `mode` (`i32`).
 	</span>=&gt;
@@ -945,7 +945,7 @@
 	</span>WHITEONBLACK <span class="number">2
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TA: u32;
+<span class="macro">const_bitflag!</span> { TA: u32;
 	<span class="doccomment">/// [`HDC::SetTextAlign`](crate::prelude::gdi_Hdc::SetTextAlign) `align`
 	/// (`u32`).
 	///

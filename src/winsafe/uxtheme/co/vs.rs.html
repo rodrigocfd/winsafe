@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\uxtheme\co\vs.rs`."><title>vs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (2bf78d12d 2024-02-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-c37d3936c59ababd.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\uxtheme\co\vs.rs`."><title>vs.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (516b6162a 2024-03-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -1414,7 +1414,7 @@
 	}
 }
 
-<span class="macro">macro_rules! </span>impl_pub_const_vs {
+<span class="macro">macro_rules!</span> impl_pub_const_vs {
 	( $( <span class="macro-nonterminal">$pubvalname</span>:ident <span class="macro-nonterminal">$part</span>:expr, <span class="macro-nonterminal">$state</span>:expr )* ) =&gt; {
 		<span class="kw">impl </span>VS {
 			$( <span class="kw">pub const </span><span class="macro-nonterminal">$pubvalname</span>: <span class="self">Self </span>= <span class="self">Self</span>::new(<span class="macro-nonterminal">$part</span>, <span class="macro-nonterminal">$state</span>); )*
@@ -1422,7 +1422,7 @@
 	};
 }
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	AEROWIZARD_TITLEBAR_S_TITLEBAR_ACTIVE <span class="number">1</span>, <span class="number">1
 	</span>AEROWIZARD_TITLEBAR_S_TITLEBAR_INACTIVE <span class="number">1</span>, <span class="number">2
 
@@ -1435,7 +1435,7 @@
 	</span>AEROWIZARD_BUTTON <span class="number">5</span>, <span class="number">0
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	BUTTON_PUSHBUTTON_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>BUTTON_PUSHBUTTON_HOT <span class="number">1</span>, <span class="number">2
 	</span>BUTTON_PUSHBUTTON_PRESSED <span class="number">1</span>, <span class="number">3
@@ -1501,7 +1501,7 @@
 	</span>BUTTON_PUSHBUTTONDROPDOWN_DISABLED <span class="number">11</span>, <span class="number">2
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	COMBOBOX_DROPDOWNBUTTON_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>COMBOBOX_DROPDOWNBUTTON_HOT <span class="number">1</span>, <span class="number">2
 	</span>COMBOBOX_DROPDOWNBUTTON_PRESSED <span class="number">1</span>, <span class="number">3
@@ -1543,13 +1543,13 @@
 	</span>COMBOBOX_DROPDOWNITEM_HIGHLIGHTED <span class="number">9</span>, <span class="number">2
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	COMMUNICATIONS_TAB_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>COMMUNICATIONS_TAB_HOT <span class="number">1</span>, <span class="number">2
 	</span>COMMUNICATIONS_TAB_SELECTED <span class="number">1</span>, <span class="number">3
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	CONTROLPANEL_NAVIGATIONPANE <span class="number">1</span>, <span class="number">0
 
 	</span>CONTROLPANEL_CONTENTPANE <span class="number">2</span>, <span class="number">0
@@ -1600,7 +1600,7 @@
 	</span>CONTROLPANEL_BODYTITLE <span class="number">19</span>, <span class="number">0
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	DATEPICKER_DATETEXT_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>DATEPICKER_DATETEXT_DISABLED <span class="number">1</span>, <span class="number">2
 	</span>DATEPICKER_DATETEXT_SELECTED <span class="number">1</span>, <span class="number">3
@@ -1616,7 +1616,7 @@
 	</span>DATEPICKER_SHOWCALENDARBUTTONRIGHT_DISABLED <span class="number">3</span>, <span class="number">4
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	DRAGDROP_COPY_HIGHLIGHT <span class="number">1</span>, <span class="number">1
 	</span>DRAGDROP_COPY_NOHIGHLIGHT <span class="number">1</span>, <span class="number">2
 
@@ -1640,7 +1640,7 @@
 	</span>DRAGDROP_TEXTBG <span class="number">8</span>, <span class="number">0
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	EDIT_EDITTEXT_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>EDIT_EDITTEXT_HOT <span class="number">1</span>, <span class="number">2
 	</span>EDIT_EDITTEXT_SELECTED <span class="number">1</span>, <span class="number">3
@@ -1687,7 +1687,7 @@
 	</span>EDIT_EDITBORDER_HVSCROLL_DISABLED <span class="number">9</span>, <span class="number">4
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	EXPLORERBAR_HEADERBACKGROUND <span class="number">1</span>, <span class="number">0
 
 	</span>EXPLORERBAR_HEADERCLOSE_NORMAL <span class="number">2</span>, <span class="number">1
@@ -1730,7 +1730,7 @@
 	</span>EXPLORERBAR_SPECIALGROUPHEAD <span class="number">12</span>, <span class="number">0
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	FLYOUT_HEADER <span class="number">1</span>, <span class="number">0
 
 	</span>FLYOUT_BODY_NORMAL <span class="number">2</span>, <span class="number">1
@@ -1754,7 +1754,7 @@
 	</span>FLYOUT_LINKHEADER_HOVER <span class="number">8</span>, <span class="number">2
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	HEADER_HEADERITEM_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>HEADER_HEADERITEM_HOT <span class="number">1</span>, <span class="number">2
 	</span>HEADER_HEADERITEM_PRESSED <span class="number">1</span>, <span class="number">3
@@ -1791,7 +1791,7 @@
 	</span>HEADER_HEADEROVERFLOW_HOT <span class="number">7</span>, <span class="number">2
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	LISTBOX_BORDER_HSCROLL_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>LISTBOX_BORDER_HSCROLL_FOCUSED <span class="number">1</span>, <span class="number">2
 	</span>LISTBOX_BORDER_HSCROLL_HOT <span class="number">1</span>, <span class="number">3
@@ -1818,7 +1818,7 @@
 	</span>LISTBOX_ITEM_SELECTEDNOTFOCUS <span class="number">5</span>, <span class="number">4
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	LISTVIEW_LISTITEM_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>LISTVIEW_LISTITEM_HOT <span class="number">1</span>, <span class="number">2
 	</span>LISTVIEW_LISTITEM_SELECTED <span class="number">1</span>, <span class="number">3
@@ -1879,7 +1879,7 @@
 	</span>LISTVIEW_COLUMNDETAIL <span class="number">10</span>, <span class="number">0
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	MENU_MENUITEM_TMSCHEMA <span class="number">1</span>, <span class="number">0
 
 	</span>MENU_MENUDROPDOWN_TMSCHEMA <span class="number">2</span>, <span class="number">0
@@ -1940,7 +1940,7 @@
 	</span>MENU_SYSTEMRESTORE_DISABLED <span class="number">20</span>, <span class="number">2
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	NAVIGATION_BACKBUTTON_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>NAVIGATION_BACKBUTTON_HOT <span class="number">1</span>, <span class="number">2
 	</span>NAVIGATION_BACKBUTTON_PRESSED <span class="number">1</span>, <span class="number">3
@@ -1957,7 +1957,7 @@
 	</span>NAVIGATION_MENUBUTTON_DISABLED <span class="number">3</span>, <span class="number">4
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	PROGRESS_BAR <span class="number">1</span>, <span class="number">0
 
 	</span>PROGRESS_BARVERT <span class="number">2</span>, <span class="number">0
@@ -1991,7 +1991,7 @@
 	</span>PROGRESS_TRANSPARENTBARVERT_PARTIAL <span class="number">12</span>, <span class="number">2
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	REBAR_GRIPPER <span class="number">1</span>, <span class="number">0
 
 	</span>REBAR_GRIPPERVERT <span class="number">2</span>, <span class="number">0
@@ -2017,7 +2017,7 @@
 	</span>REBAR_SPLITTERVERT_PRESSED <span class="number">8</span>, <span class="number">3
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	SCROLLBAR_ARROWBTN_UPNORMAL <span class="number">1</span>, <span class="number">1
 	</span>SCROLLBAR_ARROWBTN_UPHOT <span class="number">1</span>, <span class="number">2
 	</span>SCROLLBAR_ARROWBTN_UPPRESSED <span class="number">1</span>, <span class="number">3
@@ -2103,7 +2103,7 @@
 	</span>SCROLLBAR_SIZEBOXBKGND_HOVER <span class="number">11</span>, <span class="number">5
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	SPIN_UP_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>SPIN_UP_HOT <span class="number">1</span>, <span class="number">2
 	</span>SPIN_UP_PRESSED <span class="number">1</span>, <span class="number">3
@@ -2125,7 +2125,7 @@
 	</span>SPIN_DOWNHORZ_DISABLED <span class="number">4</span>, <span class="number">4
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	STATUS_PANE <span class="number">1</span>, <span class="number">0
 
 	</span>STATUS_GRIPPERPANE <span class="number">2</span>, <span class="number">0
@@ -2133,7 +2133,7 @@
 	</span>STATUS_GRIPPER <span class="number">3</span>, <span class="number">0
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	TAB_TABITEM_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>TAB_TABITEM_HOT <span class="number">1</span>, <span class="number">2
 	</span>TAB_TABITEM_SELECTED <span class="number">1</span>, <span class="number">3
@@ -2189,7 +2189,7 @@
 	</span>TAB_AEROWIZARDBODY <span class="number">11</span>, <span class="number">0
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	TASKDIALOG_PRIMARYPANEL <span class="number">1</span>, <span class="number">0
 
 	</span>TASKDIALOG_MAININSTRUCTIONPANE <span class="number">2</span>, <span class="number">0
@@ -2240,7 +2240,7 @@
 	</span>TASKDIALOG_RADIOBUTTONPANE <span class="number">21</span>, <span class="number">0
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	TEXTSTYLE_MAININSTRUCTION <span class="number">1</span>, <span class="number">0
 
 	</span>TEXTSTYLE_INSTRUCTION <span class="number">2</span>, <span class="number">0
@@ -2264,7 +2264,7 @@
 	</span>TEXTSTYLE_CONTROLLABEL_CONTROLLABEL_DISABLED <span class="number">9</span>, <span class="number">2
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	TOOLBAR_BUTTON_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>TOOLBAR_BUTTON_HOT <span class="number">1</span>, <span class="number">2
 	</span>TOOLBAR_BUTTON_PRESSED <span class="number">1</span>, <span class="number">3
@@ -2329,7 +2329,7 @@
 	</span>TOOLBAR_DROPDOWNBUTTONGLYPH_OTHERSIDEHOT <span class="number">7</span>, <span class="number">8
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	TOOLTIP_STANDARD_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>TOOLTIP_STANDARD_LINK <span class="number">1</span>, <span class="number">2
 
@@ -2356,7 +2356,7 @@
 	</span>TOOLTIP_WRENCH_PRESSED <span class="number">7</span>, <span class="number">3
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	TRACKBAR_TRACK_NORMAL <span class="number">1</span>, <span class="number">1
 
 	</span>TRACKBAR_TRACKVERT_NORMAL <span class="number">2</span>, <span class="number">1
@@ -2402,7 +2402,7 @@
 	</span>TRACKBAR_TICSVERT_NORMAL <span class="number">10</span>, <span class="number">1
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	TREEVIEW_TREEITEM_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>TREEVIEW_TREEITEM_HOT <span class="number">1</span>, <span class="number">2
 	</span>TREEVIEW_TREEITEM_SELECTED <span class="number">1</span>, <span class="number">3
@@ -2419,7 +2419,7 @@
 	</span>TREEVIEW_HOTGLYPH_OPENED <span class="number">4</span>, <span class="number">2
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	USERTILE_STROKEBACKGROUND <span class="number">1</span>, <span class="number">0
 
 	</span>USERTILE_HOVERBACKGROUND_NORMAL <span class="number">2</span>, <span class="number">1
@@ -2427,12 +2427,12 @@
 	</span>USERTILE_HOVERBACKGROUND_PRESSED <span class="number">2</span>, <span class="number">3
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	TEXTSELECTIONGRIPPER_GRIPPER_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>TEXTSELECTIONGRIPPER_GRIPPER_CENTERED <span class="number">1</span>, <span class="number">2
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	WINDOW_CAPTION_ACTIVE <span class="number">1</span>, <span class="number">1
 	</span>WINDOW_CAPTION_INACTIVE <span class="number">1</span>, <span class="number">2
 	</span>WINDOW_CAPTION_DISABLED <span class="number">1</span>, <span class="number">3
@@ -2569,21 +2569,21 @@
 	</span>WINDOW_BORDER <span class="number">39</span>, <span class="number">0
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	LINK_HYPERLINK_NORMALTEXT <span class="number">1</span>, <span class="number">1
 	</span>LINK_HYPERLINK_LINKTEXT <span class="number">1</span>, <span class="number">2
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	EMPTYMARKUP_MARKUPTEXT_NORMALTEXT <span class="number">1</span>, <span class="number">1
 	</span>EMPTYMARKUP_MARKUPTEXT_LINKTEXT <span class="number">1</span>, <span class="number">2
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	STATIC_TEXT <span class="number">1</span>, <span class="number">0
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	PAGE_UP <span class="number">1</span>, <span class="number">0
 
 	</span>PAGE_DOWN <span class="number">2</span>, <span class="number">0
@@ -2593,7 +2593,7 @@
 	</span>PAGE_DOWNHORZ <span class="number">4</span>, <span class="number">0
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	MONTHCAL_BACKGROUND <span class="number">1</span>, <span class="number">0
 
 	</span>MONTHCAL_BORDERS <span class="number">2</span>, <span class="number">0
@@ -2648,19 +2648,19 @@
 	</span>MONTHCAL_NAVPREV_DISABLED <span class="number">11</span>, <span class="number">4
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	CLOCK_TIME_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>CLOCK_TIME_HOT <span class="number">1</span>, <span class="number">2
 	</span>CLOCK_TIME_PRESSED <span class="number">1</span>, <span class="number">3
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	TRAYNOTIFY_BACKGROUND <span class="number">1</span>, <span class="number">0
 
 	</span>TRAYNOTIFY_ANIMBACKGROUND <span class="number">2</span>, <span class="number">0
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	TASKBAR_BACKGROUNDBOTTOM <span class="number">1</span>, <span class="number">0
 
 	</span>TASKBAR_BACKGROUNDRIGHT <span class="number">2</span>, <span class="number">0
@@ -2678,7 +2678,7 @@
 	</span>TASKBAR_SIZINGBARLEFT <span class="number">8</span>, <span class="number">0
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	TASKBAND_GROUPCOUNT <span class="number">1</span>, <span class="number">0
 
 	</span>TASKBAND_FLASHBUTTON <span class="number">2</span>, <span class="number">0
@@ -2686,7 +2686,7 @@
 	</span>TASKBAND_FLASHBUTTONGROUPMENU <span class="number">3</span>, <span class="number">0
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	STARTPANEL_USERPANE <span class="number">1</span>, <span class="number">0
 
 	</span>STARTPANEL_MOREPROGRAMS <span class="number">2</span>, <span class="number">0
@@ -2744,7 +2744,7 @@
 	</span>STARTPANEL_LOGOFFSPLITBUTTONDROPDOWN <span class="number">19</span>, <span class="number">0
 </span>}
 
-<span class="macro">impl_pub_const_vs! </span>{
+<span class="macro">impl_pub_const_vs!</span> {
 	MENUBAND_NEWAPPBUTTON_NORMAL <span class="number">1</span>, <span class="number">1
 	</span>MENUBAND_NEWAPPBUTTON_HOT <span class="number">1</span>, <span class="number">2
 	</span>MENUBAND_NEWAPPBUTTON_PRESSED <span class="number">1</span>, <span class="number">3

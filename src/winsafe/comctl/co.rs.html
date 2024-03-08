@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\co.rs`."><title>co.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (2bf78d12d 2024-02-18)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-c37d3936c59ababd.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\co.rs`."><title>co.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (516b6162a 2024-03-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -2666,7 +2666,7 @@
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
 
-<span class="macro">const_ordinary! </span>{ ADRF: u32;
+<span class="macro">const_ordinary!</span> { ADRF: u32;
 	<span class="doccomment">/// [`NMTVASYNCDRAW`](crate::NMTVASYNCDRAW) `dwRetFlags` (`u32`).
 	///
 	/// Don't seem to be defined anywhere; unconfirmed values.
@@ -2678,7 +2678,7 @@
 	</span>DRAWIMAGE <span class="number">3
 </span>}
 
-<span class="macro">const_wm! </span>{ BCM;
+<span class="macro">const_wm!</span> { BCM;
 	<span class="doccomment">/// Button control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)
 	/// (`u32`) from comctl.
@@ -2699,7 +2699,7 @@
 	</span>SETSHIELD <span class="self">Self</span>::FIRST.<span class="number">0 </span>+ <span class="number">0x000c
 </span>}
 
-<span class="macro">const_nm! </span>{ BCN;
+<span class="macro">const_nm!</span> { BCN;
 	<span class="doccomment">/// Button control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
 	/// (`i32`).
@@ -2710,7 +2710,7 @@
 	</span>DROPDOWN <span class="self">Self</span>::FIRST.<span class="number">0 </span>+ <span class="number">0x0002
 </span>}
 
-<span class="macro">const_bitflag! </span>{ BCSIF: u32;
+<span class="macro">const_bitflag!</span> { BCSIF: u32;
 	<span class="doccomment">/// [`BUTTON_SPLITINFO`](crate::BUTTON_SPLITINFO) `mask` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -2720,7 +2720,7 @@
 	</span>SIZE <span class="number">0x0008
 </span>}
 
-<span class="macro">const_bitflag! </span>{ BCSS: u32;
+<span class="macro">const_bitflag!</span> { BCSS: u32;
 	<span class="doccomment">/// [`BUTTON_SPLITINFO`](crate::BUTTON_SPLITINFO) `uSplitStyle` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -2730,7 +2730,7 @@
 	</span>IMAGE <span class="number">0x0008
 </span>}
 
-<span class="macro">const_ordinary! </span>{ BIA: u32;
+<span class="macro">const_ordinary!</span> { BIA: u32;
 	<span class="doccomment">/// [`BUTTON_IMAGELIST`](crate::BUTTON_IMAGELIST) `uAlign` (`u32`).
 	///
 	/// Originally has `BUTTON_IMAGELIST_ALIGN_` prefix.
@@ -2743,7 +2743,7 @@
 	</span>CENTER <span class="number">4
 </span>}
 
-<span class="macro">const_ws! </span>{ BTNS: u8;
+<span class="macro">const_ws!</span> { BTNS: u8;
 	<span class="doccomment">/// Toolbar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/toolbar-control-and-button-styles)
 	/// (`u8`).
@@ -2763,7 +2763,7 @@
 	</span>WHOLEDROPDOWN <span class="number">0x80
 </span>}
 
-<span class="macro">const_ordinary! </span>{ CAL: u32;
+<span class="macro">const_ordinary!</span> { CAL: u32;
 	<span class="doccomment">/// [`MCM_GETCALID`](https://learn.microsoft.com/en-us/windows/win32/controls/mcm-getcalid)
 	/// return type calendar IDs (`u32`).
 	</span>=&gt;
@@ -2798,7 +2798,7 @@
 	</span>UMALQURA <span class="number">23
 </span>}
 
-<span class="macro">const_values! </span>{ CB;
+<span class="macro">const_values!</span> { CB;
 	FIRST <span class="number">0x1700
 	</span>=&gt;
 	SETMINVISIBLE <span class="self">Self</span>::FIRST.raw() + <span class="number">1
@@ -2807,7 +2807,7 @@
 	</span>GETCUEBANNER <span class="self">Self</span>::FIRST.raw() + <span class="number">4
 </span>}
 
-<span class="macro">const_wm! </span>{ CBEM;
+<span class="macro">const_wm!</span> { CBEM;
 	<span class="doccomment">/// ComboBoxEx control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-comboboxex-control-reference-messages)
 	/// (`u32`).
@@ -2828,7 +2828,7 @@
 	</span>GETITEM WM::USER.raw() + <span class="number">13
 </span>}
 
-<span class="macro">const_wsex! </span>{ CBES_EX;
+<span class="macro">const_wsex!</span> { CBES_EX;
 	<span class="doccomment">/// Extended combo box
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/comboboxex-control-extended-styles)
 	/// (`u32`).
@@ -2844,7 +2844,7 @@
 	</span>TEXTENDELLIPSIS <span class="number">0x0000_0020
 </span>}
 
-<span class="macro">const_wm! </span>{ CCM;
+<span class="macro">const_wm!</span> { CCM;
 	<span class="doccomment">/// Generic common controls
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/common-controls-intro)
 	/// (`u32`).
@@ -2864,7 +2864,7 @@
 	</span>DPISCALE <span class="self">Self</span>::FIRST.<span class="number">0 </span>+ <span class="number">0xc
 </span>}
 
-<span class="macro">const_bitflag! </span>{ CDDS: u32;
+<span class="macro">const_bitflag!</span> { CDDS: u32;
 	<span class="doccomment">/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `dwDrawStage` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -2880,7 +2880,7 @@
 	</span>SUBITEM <span class="number">0x0002_0000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ CDIS: u32;
+<span class="macro">const_bitflag!</span> { CDIS: u32;
 	<span class="doccomment">/// [`NMCUSTOMDRAW`](crate::NMCUSTOMDRAW) `uItemState` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -2899,7 +2899,7 @@
 	</span>DROPHILITED <span class="number">0x1000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ CDRF: u32;
+<span class="macro">const_ordinary!</span> { CDRF: u32;
 	<span class="doccomment">/// [`NM_CUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-customdraw)
 	/// return value (`u32`).
 	</span>=&gt;
@@ -2915,7 +2915,7 @@
 	</span>NOTIFYPOSTERASE <span class="number">0x0000_0040
 </span>}
 
-<span class="macro">const_wm! </span>{ DTM;
+<span class="macro">const_wm!</span> { DTM;
 	<span class="doccomment">/// Date and time picker control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-messages)
 	/// (`u32`).
@@ -2939,7 +2939,7 @@
 	</span>GETIDEALSIZE <span class="self">Self</span>::FIRST.<span class="number">0 </span>+ <span class="number">15
 </span>}
 
-<span class="macro">const_nm! </span>{ DTN;
+<span class="macro">const_nm!</span> { DTN;
 	<span class="doccomment">/// Date and time picker control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-date-and-time-picker-control-reference-notifications)
 	/// (`i32`).
@@ -2956,7 +2956,7 @@
 	</span>WMKEYDOWN <span class="self">Self</span>::FIRST.<span class="number">0 </span>- <span class="number">4
 </span>}
 
-<span class="macro">const_ws! </span>{ DTS: u32;
+<span class="macro">const_ws!</span> { DTS: u32;
 	<span class="doccomment">/// Date and time picker control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-control-styles)
 	/// (`u32`).
@@ -2974,7 +2974,7 @@
 	</span>RIGHTALIGN <span class="number">0x0020
 </span>}
 
-<span class="macro">const_values! </span>{ EM;
+<span class="macro">const_values!</span> { EM;
 	FIRST <span class="number">0x1500
 	</span>=&gt;
 	SETCUEBANNER <span class="self">Self</span>::FIRST.raw() + <span class="number">1
@@ -3002,7 +3002,7 @@
 	</span>GETFILELINECOUNT <span class="self">Self</span>::FIRST.raw() + <span class="number">23
 </span>}
 
-<span class="macro">const_bitflag! </span>{ EMF: u32;
+<span class="macro">const_bitflag!</span> { EMF: u32;
 	<span class="doccomment">/// [`NMLVEMPTYMARKUP`](crate::NMLVEMPTYMARKUP) `dwFlags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3010,7 +3010,7 @@
 	</span>CENTERED <span class="number">0x0000_0001
 </span>}
 
-<span class="macro">const_bitflag! </span>{ GDT: u32;
+<span class="macro">const_bitflag!</span> { GDT: u32;
 	<span class="doccomment">/// [`NMDATETIMECHANGE`](crate::NMDATETIMECHANGE) and
 	/// [`NMDATETIMESTRING`](crate::NMDATETIMESTRING) `dwFlags` (`u32`).
 	</span>=&gt;
@@ -3019,7 +3019,7 @@
 	</span>NONE <span class="number">1
 </span>}
 
-<span class="macro">const_ordinary! </span>{ GDTR: u32;
+<span class="macro">const_ordinary!</span> { GDTR: u32;
 	<span class="doccomment">/// [`dtm::GetRange`](crate::msg::dtm::GetRange) return value (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3027,14 +3027,14 @@
 	</span>MAX <span class="number">0x0002
 </span>}
 
-<span class="macro">const_ordinary! </span>{ GMR: u32;
+<span class="macro">const_ordinary!</span> { GMR: u32;
 	=&gt;
 	=&gt;
 	VISIBLE <span class="number">0
 	</span>DAYSTATE <span class="number">1
 </span>}
 
-<span class="macro">const_bitflag! </span>{ HICF: u32;
+<span class="macro">const_bitflag!</span> { HICF: u32;
 	<span class="doccomment">/// [NMBCHOTITEM](crate::NMBCHOTITEM) `dwFlags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3049,7 +3049,7 @@
 	</span>TOGGLEDROPDOWN <span class="number">0x0000_0100
 </span>}
 
-<span class="macro">const_bitflag! </span>{ HDF: i32;
+<span class="macro">const_bitflag!</span> { HDF: i32;
 	<span class="doccomment">/// [`HDITEM`](crate::HDITEM) `fmt` (`i32`).
 	</span>=&gt;
 	=&gt;
@@ -3074,7 +3074,7 @@
 	</span>SPLITBUTTON <span class="number">0x100_0000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ HDFT: u32;
+<span class="macro">const_ordinary!</span> { HDFT: u32;
 	<span class="doccomment">/// [`HDITEM`](crate::HDITEM) `typeFilter` (`i32`).
 	</span>=&gt;
 	=&gt;
@@ -3084,7 +3084,7 @@
 	</span>HASNOVALUE <span class="number">0x8000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ HDI: i32;
+<span class="macro">const_bitflag!</span> { HDI: i32;
 	<span class="doccomment">/// [`HDITEM`](crate::HDITEM) and [`NMHDDISPINFO`](crate::NMHDDISPINFO)
 	/// `mask` (`i32`).
 	</span>=&gt;
@@ -3102,7 +3102,7 @@
 	</span>STATE <span class="number">0x0200
 </span>}
 
-<span class="macro">const_ordinary! </span>{ HDIS: u32;
+<span class="macro">const_ordinary!</span> { HDIS: u32;
 	<span class="doccomment">/// [`HDITEM`](crate::HDITEM) `state` (`i32`).
 	</span>=&gt;
 	=&gt;
@@ -3111,7 +3111,7 @@
 	</span>FOCUSED <span class="number">0x0000_0001
 </span>}
 
-<span class="macro">const_wm! </span>{ HDM;
+<span class="macro">const_wm!</span> { HDM;
 	<span class="doccomment">/// Header control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-messages)
 	/// (`u32`).
@@ -3146,7 +3146,7 @@
 	</span>SETFOCUSEDITEM <span class="self">Self</span>::FIRST.<span class="number">0 </span>+ <span class="number">28
 </span>}
 
-<span class="macro">const_nm! </span>{ HDN;
+<span class="macro">const_nm!</span> { HDN;
 	<span class="doccomment">/// Header control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-notifications)
 	/// (`i32`).
@@ -3174,7 +3174,7 @@
 	</span>OVERFLOWCLICK <span class="self">Self</span>::FIRST.<span class="number">0 </span>- <span class="number">19
 </span>}
 
-<span class="macro">const_ws! </span>{ HDS: u32;
+<span class="macro">const_ws!</span> { HDS: u32;
 	<span class="doccomment">/// Header control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/header-control-styles)
 	/// (`u32`).
@@ -3195,7 +3195,7 @@
 	</span>OVERFLOW <span class="number">0x1000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ HDSIL: u8;
+<span class="macro">const_ordinary!</span> { HDSIL: u8;
 	<span class="doccomment">/// [`hdm::GetImageList`](crate::msg::hdm::GetImageList) and
 	/// [`hdm::SetImageList`](crate::msg::hdm::SetImageList) `which` (`u8`).
 	</span>=&gt;
@@ -3204,7 +3204,7 @@
 	</span>STATE <span class="number">1
 </span>}
 
-<span class="macro">const_bitflag! </span>{ HHT: u32;
+<span class="macro">const_bitflag!</span> { HHT: u32;
 	<span class="doccomment">/// [`HDHITTESTINFO`](crate::HDHITTESTINFO) `flags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3223,7 +3223,7 @@
 	</span>ONOVERFLOW <span class="number">0x4000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ ICC: u32;
+<span class="macro">const_bitflag!</span> { ICC: u32;
 	<span class="doccomment">/// [`INITCOMMONCONTROLSEX`](crate::INITCOMMONCONTROLSEX) `icc` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3266,7 +3266,7 @@
 	</span>WIN95_CLASSES <span class="number">0x0000_00ff
 </span>}
 
-<span class="macro">const_ordinary! </span>{ IDB: usize;
+<span class="macro">const_ordinary!</span> { IDB: usize;
 	<span class="doccomment">/// [`TBADDBITMAP`](crate::TBADDBITMAP) `nID` (`usize`).
 	</span>=&gt;
 	=&gt;
@@ -3282,7 +3282,7 @@
 	</span>HIST_PRESSED <span class="number">15
 </span>}
 
-<span class="macro">const_bitflag! </span>{ ILC: u32;
+<span class="macro">const_bitflag!</span> { ILC: u32;
 	<span class="doccomment">/// [`HIMAGELIST::Create`](crate::prelude::comctl_Himagelist::Create)
 	/// `flags` (`u32`).
 	</span>=&gt;
@@ -3319,7 +3319,7 @@
 	</span>ORIGINALSIZE <span class="number">0x0001_0000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ ILD: u32;
+<span class="macro">const_bitflag!</span> { ILD: u32;
 	<span class="doccomment">/// [`IMAGELISTDRAWFLAGS`](https://learn.microsoft.com/en-us/windows/win32/controls/imagelistdrawflags)
 	/// enumeration (`u32`).
 	</span>=&gt;
@@ -3341,7 +3341,7 @@
 	</span>BLEND <span class="self">Self</span>::BLEND50.<span class="number">0
 </span>}
 
-<span class="macro">const_bitflag! </span>{ ILS: u32;
+<span class="macro">const_bitflag!</span> { ILS: u32;
 	<span class="doccomment">/// [`IMAGELISTSTATEFLAGS`](https://learn.microsoft.com/en-us/windows/win32/controls/imageliststateflags)
 	/// enumeration (`u32`).
 	</span>=&gt;
@@ -3353,7 +3353,7 @@
 	</span>ALPHA <span class="number">0x0000_0008
 </span>}
 
-<span class="macro">const_wm! </span>{ IPM;
+<span class="macro">const_wm!</span> { IPM;
 	<span class="doccomment">/// IP address control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-messages)
 	/// (`u32`).
@@ -3367,7 +3367,7 @@
 	</span>ISBLANK WM::USER.raw() + <span class="number">105
 </span>}
 
-<span class="macro">const_nm! </span>{ IPN;
+<span class="macro">const_nm!</span> { IPN;
 	<span class="doccomment">/// IP address control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-ip-address-control-reference-notifications)
 	/// (`i32`).
@@ -3377,7 +3377,7 @@
 	FIELDCHANGED <span class="self">Self</span>::FIRST.<span class="number">0 </span>- <span class="number">0
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LIF: u32;
+<span class="macro">const_bitflag!</span> { LIF: u32;
 	<span class="doccomment">/// [`LITEM`](crate::LITEM) `mask` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3387,7 +3387,7 @@
 	</span>URL <span class="number">0x0000_0008
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LIS: u32;
+<span class="macro">const_bitflag!</span> { LIS: u32;
 	<span class="doccomment">/// [`LITEM`](crate::LITEM) `state` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3398,7 +3398,7 @@
 	</span>DEFAULTCOLORS <span class="number">0x0000_0010
 </span>}
 
-<span class="macro">const_wm! </span>{ LM;
+<span class="macro">const_wm!</span> { LM;
 	<span class="doccomment">/// SysLink control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-syslink-control-reference-messages)
 	/// (`u32`).
@@ -3411,7 +3411,7 @@
 	</span>GETIDEALSIZE <span class="self">Self</span>::GETIDEALHEIGHT.<span class="number">0
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVKF: u32;
+<span class="macro">const_bitflag!</span> { LVKF: u32;
 	<span class="doccomment">/// [`NMITEMACTIVATE`](crate::NMITEMACTIVATE) `uKeyFlags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3420,7 +3420,7 @@
 	</span>SHIFT <span class="number">0x0004
 </span>}
 
-<span class="macro">const_ordinary! </span>{ LV_VIEW: u32;
+<span class="macro">const_ordinary!</span> { LV_VIEW: u32;
 	<span class="doccomment">/// ListView
 	/// [views](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
 	/// (`u32`).
@@ -3433,7 +3433,7 @@
 	</span>TILE <span class="number">0x0004
 </span>}
 
-<span class="macro">const_ordinary! </span>{ LVA: u16;
+<span class="macro">const_ordinary!</span> { LVA: u16;
 	<span class="doccomment">/// [`lvm::Arrange`](crate::msg::lvm::Arrange) arrangement (`u16`).
 	</span>=&gt;
 	=&gt;
@@ -3441,7 +3441,7 @@
 	</span>SNAPTOGRID <span class="number">0x0005
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVBKIF: u32;
+<span class="macro">const_bitflag!</span> { LVBKIF: u32;
 	<span class="doccomment">/// [`LVBKIMAGE`](crate::LVBKIMAGE) `uFlags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3457,7 +3457,7 @@
 	</span>FLAG_ALPHABLEND <span class="number">0x2000_0000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ LVCDI: u32;
+<span class="macro">const_ordinary!</span> { LVCDI: u32;
 	<span class="doccomment">/// [`NMLVCUSTOMDRAW`](crate::NMLVCUSTOMDRAW) `dwItemType` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3466,7 +3466,7 @@
 	</span>ITEMSLIST <span class="number">0x0000_0002
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVCF: u32;
+<span class="macro">const_bitflag!</span> { LVCF: u32;
 	<span class="doccomment">/// [`LVCOLUMN`](crate::LVCOLUMN) `mask` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3481,7 +3481,7 @@
 	</span>WIDTH <span class="number">0x0002
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVCFMT_C: i32;
+<span class="macro">const_bitflag!</span> { LVCFMT_C: i32;
 	<span class="doccomment">/// [`LVCOLUMN`](crate::LVCOLUMN) `mask` (`i32`).
 	</span>=&gt;
 	=&gt;
@@ -3498,7 +3498,7 @@
 	</span>SPLITBUTTON <span class="number">0x100_0000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVCFMT_I: i32;
+<span class="macro">const_bitflag!</span> { LVCFMT_I: i32;
 	<span class="doccomment">/// [`LVITEM`](crate::LVITEM) `piColFmt` (`i32`).
 	</span>=&gt;
 	=&gt;
@@ -3509,7 +3509,7 @@
 	</span>TILE_PLACEMENTMASK <span class="self">Self</span>::LINE_BREAK.<span class="number">0 </span>| <span class="self">Self</span>::FILL.<span class="number">0
 </span>}
 
-<span class="macro">const_ordinary! </span>{ LVFF: u32;
+<span class="macro">const_ordinary!</span> { LVFF: u32;
 	<span class="doccomment">/// [`LVFOOTERINFO`](crate::LVFOOTERINFO) `mask` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3518,7 +3518,7 @@
 	</span>ITEMCOUNT <span class="number">0x0001
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVFI: u32;
+<span class="macro">const_bitflag!</span> { LVFI: u32;
 	<span class="doccomment">/// [`LVFINDINFO`](crate::LVFINDINFO) `flags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3530,7 +3530,7 @@
 	</span>NEARESTXY <span class="number">0x0040
 </span>}
 
-<span class="macro">const_ordinary! </span>{ LVFIF: u32;
+<span class="macro">const_ordinary!</span> { LVFIF: u32;
 	<span class="doccomment">/// [`LVFOOTERITEM`](crate::LVFOOTERITEM) `mask` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3538,7 +3538,7 @@
 	</span>STATE <span class="number">0x0002
 </span>}
 
-<span class="macro">const_ordinary! </span>{ LVFIS: u32;
+<span class="macro">const_ordinary!</span> { LVFIS: u32;
 	<span class="doccomment">/// [`LVFOOTERITEM`](crate::LVFOOTERITEM) `state` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3547,7 +3547,7 @@
 	</span>FOCUSED <span class="number">0x0001
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVGA_FH: u32;
+<span class="macro">const_bitflag!</span> { LVGA_FH: u32;
 	<span class="doccomment">/// [`LVGROUP`](crate::LVGROUP) `uAlign` (`u32`).
 	///
 	/// These constants are composed of both
@@ -3562,7 +3562,7 @@
 	</span>HEADER_RIGHT LVGA_HEADER::RIGHT.<span class="number">0
 </span>}
 
-<span class="macro">const_ordinary! </span>{ LVGA_HEADER: u32;
+<span class="macro">const_ordinary!</span> { LVGA_HEADER: u32;
 	<span class="doccomment">/// [`NMLVCUSTOMDRAW`](crate::NMLVCUSTOMDRAW) `uAlign` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3571,7 +3571,7 @@
 	</span>RIGHT <span class="number">0x0000_0004
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVGF: u32;
+<span class="macro">const_bitflag!</span> { LVGF: u32;
 	<span class="doccomment">/// [`LVGROUP`](crate::LVGROUP) `mask` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3592,7 +3592,7 @@
 	</span>SUBSETITEMS <span class="number">0x0001_0000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ LVGGR: i32;
+<span class="macro">const_ordinary!</span> { LVGGR: i32;
 	<span class="doccomment">/// [`lvm::GetGroupRect`](crate::msg::lvm::GetGroupRect) `flags` (`i32`).
 	</span>=&gt;
 	=&gt;
@@ -3602,7 +3602,7 @@
 	</span>SUBSETLINK <span class="number">3
 </span>}
 
-<span class="macro">const_ordinary! </span>{ LVGIT: u32;
+<span class="macro">const_ordinary!</span> { LVGIT: u32;
 	<span class="doccomment">/// [`NMLVGETINFOTIP`](crate::NMLVGETINFOTIP) `dwFlags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3610,7 +3610,7 @@
 	</span>UNFOLDED <span class="number">0x0001
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVGMF: u32;
+<span class="macro">const_bitflag!</span> { LVGMF: u32;
 	<span class="doccomment">/// [`LVGROUPMETRICS`](crate::LVGROUPMETRICS) `mask` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3620,7 +3620,7 @@
 	</span>TEXTCOLOR <span class="number">0x0000_0004
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVGS: u32;
+<span class="macro">const_bitflag!</span> { LVGS: u32;
 	<span class="doccomment">/// [`LVGROUP`](crate::LVGROUP) `state` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3635,7 +3635,7 @@
 	</span>SUBSETLINKFOCUSED <span class="number">0x0000_0080
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVHT: u32;
+<span class="macro">const_bitflag!</span> { LVHT: u32;
 	<span class="doccomment">/// [`LVHITTESTINFO`](crate::LVHITTESTINFO) `flags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3660,7 +3660,7 @@
 	</span>EX_FOOTER <span class="number">0x0800_0000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ LVI_GROUPID: i32;
+<span class="macro">const_ordinary!</span> { LVI_GROUPID: i32;
 	<span class="doccomment">/// [`LVITEM`](crate::LVITEM) `iGroupId` (`i32`).
 	</span>=&gt;
 	=&gt;
@@ -3668,7 +3668,7 @@
 	</span>I_GROUPIDNONE -<span class="number">2
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVIF: u32;
+<span class="macro">const_bitflag!</span> { LVIF: u32;
 	<span class="doccomment">/// [`LVITEM`](crate::LVITEM) `mask` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3683,7 +3683,7 @@
 	</span>TEXT <span class="number">0x0000_0001
 </span>}
 
-<span class="macro">const_ordinary! </span>{ LVIM: u32;
+<span class="macro">const_ordinary!</span> { LVIM: u32;
 	<span class="doccomment">/// [`LVINSERTMARK`](crate::LVINSERTMARK) `dwFlags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3692,7 +3692,7 @@
 	</span>AFTER <span class="number">0x0000_0001
 </span>}
 
-<span class="macro">const_ordinary! </span>{ LVIR: u8;
+<span class="macro">const_ordinary!</span> { LVIR: u8;
 	<span class="doccomment">/// [`lvm::GetItemRect`](crate::msg::lvm::GetItemRect) `portion` (`u8`).
 	</span>=&gt;
 	=&gt;
@@ -3702,7 +3702,7 @@
 	</span>SELECTBOUNDS <span class="number">3
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVIS: u32;
+<span class="macro">const_bitflag!</span> { LVIS: u32;
 	<span class="doccomment">/// ListView item
 	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-item-states)
 	/// (`u32`).
@@ -3720,7 +3720,7 @@
 	</span>STATEIMAGEMASK <span class="number">0xf000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ LVSIL: u8;
+<span class="macro">const_ordinary!</span> { LVSIL: u8;
 	<span class="doccomment">/// [`lvm::GetImageList`](crate::msg::lvm::GetImageList) `kind` (`u8`).
 	</span>=&gt;
 	=&gt;
@@ -3730,7 +3730,7 @@
 	</span>GROUPHEADER <span class="number">3
 </span>}
 
-<span class="macro">const_wm! </span>{ LVM;
+<span class="macro">const_wm!</span> { LVM;
 	<span class="doccomment">/// List view control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-messages)
 	/// (`u32`).
@@ -3865,7 +3865,7 @@
 	</span>GETNEXTITEMINDEX <span class="self">Self</span>::FIRST.<span class="number">0 </span>+ <span class="number">211
 </span>}
 
-<span class="macro">const_nm! </span>{ LVN;
+<span class="macro">const_nm!</span> { LVN;
 	<span class="doccomment">/// List view control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications)
 	/// (`i32`).
@@ -3901,7 +3901,7 @@
 	</span>GETEMPTYMARKUP <span class="self">Self</span>::FIRST.<span class="number">0 </span>- <span class="number">87
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVNI: u32;
+<span class="macro">const_bitflag!</span> { LVNI: u32;
 	<span class="doccomment">/// [`lvm::GetNextItem`](crate::msg::lvm::GetNextItem) relationship (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -3920,7 +3920,7 @@
 	</span>TORIGHT <span class="number">0x0800
 </span>}
 
-<span class="macro">const_ws! </span>{ LVS: u32;
+<span class="macro">const_ws!</span> { LVS: u32;
 	<span class="doccomment">/// List view control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-window-styles)
 	/// (`u32`).
@@ -3952,7 +3952,7 @@
 	</span>NOSORTHEADER <span class="number">0x8000
 </span>}
 
-<span class="macro">const_wsex! </span>{ LVS_EX;
+<span class="macro">const_wsex!</span> { LVS_EX;
 	<span class="doccomment">/// Extended list view control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/extended-list-view-styles)
 	/// (`u32`).
@@ -3992,7 +3992,7 @@
 	</span>UNDERLINEHOT <span class="number">0x0000_0800
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVSICF: u32;
+<span class="macro">const_bitflag!</span> { LVSICF: u32;
 	<span class="doccomment">/// [`lvm::SetItemCount`](crate::msg::lvm::SetItemCount) `behavior` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4000,7 +4000,7 @@
 	</span>NOSCROLL <span class="number">0x0000_0002
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVTVIF: u32;
+<span class="macro">const_bitflag!</span> { LVTVIF: u32;
 	<span class="doccomment">/// [`LVTILEVIEWINFO`](crate::LVTILEVIEWINFO) `dwFlags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4011,7 +4011,7 @@
 	</span>EXTENDED <span class="number">0x0000_0004
 </span>}
 
-<span class="macro">const_bitflag! </span>{ LVTVIM: u32;
+<span class="macro">const_bitflag!</span> { LVTVIM: u32;
 	<span class="doccomment">/// [`LVTILEVIEWINFO`](crate::LVTILEVIEWINFO) `dwMask` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4020,7 +4020,7 @@
 	</span>LABELMARGIN <span class="number">0x0000_0004
 </span>}
 
-<span class="macro">const_ws! </span>{ LWS: u32;
+<span class="macro">const_ws!</span> { LWS: u32;
 	<span class="doccomment">/// SysLink control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/syslink-control-styles)
 	/// (`u32`).
@@ -4045,7 +4045,7 @@
 	</span>RIGHT <span class="number">0x0020
 </span>}
 
-<span class="macro">const_bitflag! </span>{ MCGIF: u32;
+<span class="macro">const_bitflag!</span> { MCGIF: u32;
 	=&gt;
 	=&gt;
 	DATE <span class="number">0x0000_0001
@@ -4053,7 +4053,7 @@
 	</span>NAME <span class="number">0x0000_0004
 </span>}
 
-<span class="macro">const_ordinary! </span>{ MCGIP: u32;
+<span class="macro">const_ordinary!</span> { MCGIP: u32;
 	<span class="doccomment">/// [`MCGRIDINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mcgridinfo)
 	/// `dwPart` (`u32`).
 	</span>=&gt;
@@ -4069,7 +4069,7 @@
 	</span>CALENDARCELL <span class="number">8
 </span>}
 
-<span class="macro">const_bitflag! </span>{ MCHT: u32;
+<span class="macro">const_bitflag!</span> { MCHT: u32;
 	<span class="doccomment">/// [`MCHITTESTINFO`](crate::MCHITTESTINFO) `uHit` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4095,7 +4095,7 @@
 	</span>CALENDARDATEMAX MCHT::CALENDAR.<span class="number">0 </span>| <span class="number">0x0005
 </span>}
 
-<span class="macro">const_wm! </span>{ MCM;
+<span class="macro">const_wm!</span> { MCM;
 	<span class="doccomment">/// Month calendar control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-messages)
 	/// (`u32`).
@@ -4136,7 +4136,7 @@
 	</span>SETCURRENTVIEW <span class="self">Self</span>::FIRST.<span class="number">0 </span>+ <span class="number">32
 </span>}
 
-<span class="macro">const_ordinary! </span>{ MCMV: u32;
+<span class="macro">const_ordinary!</span> { MCMV: u32;
 	<span class="doccomment">/// [`NMVIEWCHANGE`](crate::NMVIEWCHANGE) `dwOldView` and `dwNewView` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4146,7 +4146,7 @@
 	</span>CENTURY <span class="number">3
 </span>}
 
-<span class="macro">const_nm! </span>{ MCN;
+<span class="macro">const_nm!</span> { MCN;
 	<span class="doccomment">/// Month calendar control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-month-calendar-control-reference-notifications)
 	/// (`i32`).
@@ -4159,7 +4159,7 @@
 	</span>VIEWCHANGE <span class="self">Self</span>::FIRST.<span class="number">0 </span>- <span class="number">4
 </span>}
 
-<span class="macro">const_ws! </span>{ MCS: u32;
+<span class="macro">const_ws!</span> { MCS: u32;
 	<span class="doccomment">/// Month calendar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/month-calendar-control-styles)
 	/// (`u32`).
@@ -4177,7 +4177,7 @@
 	</span>NOSELCHANGEONNAV <span class="number">0x0100
 </span>}
 
-<span class="macro">const_ordinary! </span>{ MCSC: u8;
+<span class="macro">const_ordinary!</span> { MCSC: u8;
 	<span class="doccomment">/// [`dtm::GetMcColor`](crate::msg::dtm::GetMcColor) color (`u8`).
 	</span>=&gt;
 	=&gt;
@@ -4189,7 +4189,7 @@
 	</span>TRAILINGTEXT <span class="number">5
 </span>}
 
-<span class="macro">const_ordinary! </span>{ NM: i32;
+<span class="macro">const_ordinary!</span> { NM: i32;
 	<span class="doccomment">/// [`wm::Notify`](crate::msg::wm::Notify) notification codes (`i32`).
 	///
 	/// **Note:** Control-specific notification codes have their own types,
@@ -4218,7 +4218,7 @@
 	</span>THEMECHANGED <span class="self">Self</span>::FIRST.<span class="number">0 </span>- <span class="number">22
 </span>}
 
-<span class="macro">const_ws! </span>{ PBS: u32;
+<span class="macro">const_ws!</span> { PBS: u32;
 	<span class="doccomment">/// Progress bar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/progress-bar-control-styles)
 	/// (`u32`).
@@ -4232,7 +4232,7 @@
 	</span>SMOOTHREVERSE <span class="number">0x10
 </span>}
 
-<span class="macro">const_wm! </span>{ PBM;
+<span class="macro">const_wm!</span> { PBM;
 	<span class="doccomment">/// Progress bar control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-progress-bar-control-reference-messages)
 	/// (`u32`).
@@ -4256,7 +4256,7 @@
 	</span>GETSTATE WM::USER.raw() + <span class="number">17
 </span>}
 
-<span class="macro">const_ordinary! </span>{ PBST: u32;
+<span class="macro">const_ordinary!</span> { PBST: u32;
 	<span class="doccomment">/// Progress bar
 	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/pbm-setstate)
 	/// (`u32`).
@@ -4269,7 +4269,7 @@
 	</span>PAUSED <span class="number">0x0003
 </span>}
 
-<span class="macro">const_wm! </span>{ RB;
+<span class="macro">const_wm!</span> { RB;
 	<span class="doccomment">/// Rebar control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-rebar-control-reference-messages)
 	/// (`u32`).
@@ -4319,7 +4319,7 @@
 	</span>SETBANDWIDTH WM::USER.raw() + <span class="number">44
 </span>}
 
-<span class="macro">const_nm! </span>{ RBN;
+<span class="macro">const_nm!</span> { RBN;
 	<span class="doccomment">/// Rebar control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-rebar-control-reference-notifications)
 	/// (`i32`).
@@ -4341,7 +4341,7 @@
 	</span>AUTOBREAK <span class="self">Self</span>::FIRST.<span class="number">0 </span>- <span class="number">22
 </span>}
 
-<span class="macro">const_ws! </span>{ RBS: u32;
+<span class="macro">const_ws!</span> { RBS: u32;
 	<span class="doccomment">/// Rebar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/rebar-control-styles)
 	/// (`u32`).
@@ -4359,7 +4359,7 @@
 	</span>DBLCLKTOGGLE <span class="number">0x0000_8000
 </span>}
 
-<span class="macro">const_wm! </span>{ SB;
+<span class="macro">const_wm!</span> { SB;
 	<span class="doccomment">/// Status bar control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-messages)
 	/// (`u32`).
@@ -4384,7 +4384,7 @@
 	</span>SETBKCOLOR CCM::SETBKCOLOR.<span class="number">0
 </span>}
 
-<span class="macro">const_ws! </span>{ SBARS: u32;
+<span class="macro">const_ws!</span> { SBARS: u32;
 	<span class="doccomment">/// Status bar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/status-bar-styles)
 	/// (`u32`).
@@ -4396,7 +4396,7 @@
 	</span>TOOLTIPS <span class="number">0x0800
 </span>}
 
-<span class="macro">const_nm! </span>{ SBN;
+<span class="macro">const_nm!</span> { SBN;
 	<span class="doccomment">/// Status bar control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications)
 	/// (`i32`).
@@ -4406,7 +4406,7 @@
 	SIMPLEMODECHANGE <span class="self">Self</span>::FIRST.<span class="number">0 </span>- <span class="number">0
 </span>}
 
-<span class="macro">const_ordinary! </span>{ SBT: u16;
+<span class="macro">const_ordinary!</span> { SBT: u16;
 	<span class="doccomment">/// [`sb::GetText`](crate::msg::sb::GetText),
 	/// [`sb::GetTextLength`](crate::msg::sb::GetTextLength) and
 	/// [`sb::SetText`](crate::msg::sb::SetText) drawing operation (`u16`).
@@ -4420,7 +4420,7 @@
 	</span>NOTABPARSING <span class="number">0x0800
 </span>}
 
-<span class="macro">const_wm! </span>{ STM;
+<span class="macro">const_wm!</span> { STM;
 	<span class="doccomment">/// Static control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-messages)
 	/// (`u32`).
@@ -4432,7 +4432,7 @@
 	</span>GETIMAGE <span class="number">0x0173
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TB: i32;
+<span class="macro">const_ordinary!</span> { TB: i32;
 	<span class="doccomment">/// [`NMTRBTHUMBPOSCHANGING`](crate::NMTRBTHUMBPOSCHANGING) `nReason`
 	/// (`i32`).
 	</span>=&gt;
@@ -4448,7 +4448,7 @@
 	</span>ENDTRACK <span class="number">8
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TBBF: u32;
+<span class="macro">const_bitflag!</span> { TBBF: u32;
 	<span class="doccomment">/// [`tbm::GetBitmapFlags`](crate::msg::tbm::GetBitmapFlags) return value
 	/// (`u32`).
 	</span>=&gt;
@@ -4456,7 +4456,7 @@
 	LARGE <span class="number">0x0001
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TBIF: u32;
+<span class="macro">const_bitflag!</span> { TBIF: u32;
 	<span class="doccomment">/// [`TBBUTTONINFO`](crate::TBBUTTONINFO) `dwFlags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4470,7 +4470,7 @@
 	</span>BYINDEX <span class="number">0x8000_0000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TBIMHT: u32;
+<span class="macro">const_ordinary!</span> { TBIMHT: u32;
 	<span class="doccomment">/// [`TBINSERTMARK`](crate::TBINSERTMARK) `dwFlags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4480,7 +4480,7 @@
 	</span>BACKGROUND <span class="number">0x0000_0002
 </span>}
 
-<span class="macro">const_wm! </span>{ TBM;
+<span class="macro">const_wm!</span> { TBM;
 	<span class="doccomment">/// Toolbar control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-messages)
 	/// (`u32`).
@@ -4584,7 +4584,7 @@
 	</span>SETWINDOWTHEME CCM::SETWINDOWTHEME.<span class="number">0
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TBMF: u32;
+<span class="macro">const_bitflag!</span> { TBMF: u32;
 	<span class="doccomment">/// [`TBMETRICS`](crate::TBMETRICS) `dwMask` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4593,7 +4593,7 @@
 	</span>BUTTONSPACING <span class="number">0x0000_0004
 </span>}
 
-<span class="macro">const_nm! </span>{ TBN;
+<span class="macro">const_nm!</span> { TBN;
 	<span class="doccomment">/// Toolbar control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-toolbar-control-reference-notifications)
 	/// (`i32`).
@@ -4627,7 +4627,7 @@
 	</span>WRAPHOTITEM <span class="self">Self</span>::FIRST.<span class="number">0 </span>- <span class="number">24
 </span>}
 
-<span class="macro">const_ws! </span>{ TBS: u32;
+<span class="macro">const_ws!</span> { TBS: u32;
 	<span class="doccomment">/// Trackbar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/trackbar-control-styles)
 	/// (`u32`).
@@ -4654,7 +4654,7 @@
 	</span>TRANSPARENTBKGND <span class="number">0x1000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TBSTATE: u8;
+<span class="macro">const_bitflag!</span> { TBSTATE: u8;
 	<span class="doccomment">/// Toolbar button
 	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/toolbar-button-states)
 	/// (`u8`).
@@ -4672,7 +4672,7 @@
 	</span>MARKED <span class="number">0x80
 </span>}
 
-<span class="macro">const_wsex! </span>{ TBSTYLE_EX;
+<span class="macro">const_wsex!</span> { TBSTYLE_EX;
 	<span class="doccomment">/// Extended toolbar control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/toolbar-extended-styles)
 	/// (`u32`).
@@ -4688,7 +4688,7 @@
 	</span>DOUBLEBUFFER <span class="number">0x0000_0080
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TBTS: u8;
+<span class="macro">const_ordinary!</span> { TBTS: u8;
 	<span class="doccomment">/// [`trbm::SetTipSide`](crate::msg::trbm::SetTipSide) `location` (`u8`).
 	</span>=&gt;
 	=&gt;
@@ -4698,7 +4698,7 @@
 	</span>RIGHT <span class="number">3
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TCHT: u32;
+<span class="macro">const_ordinary!</span> { TCHT: u32;
 	<span class="doccomment">/// [`TCHITTESTINFO`](crate::TCHITTESTINFO) `flags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4708,7 +4708,7 @@
 	</span>ONITEM TCHT::ONITEMICON.<span class="number">0 </span>| TCHT::ONITEMLABEL.<span class="number">0
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TCIF: u32;
+<span class="macro">const_bitflag!</span> { TCIF: u32;
 	<span class="doccomment">/// [`TCITEM`](crate::TCITEM) `mask` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4719,7 +4719,7 @@
 	</span>STATE <span class="number">0x0010
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TCIS: u32;
+<span class="macro">const_bitflag!</span> { TCIS: u32;
 	<span class="doccomment">/// Tab control item
 	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/tab-control-item-states)
 	/// (`u32`).
@@ -4731,7 +4731,7 @@
 	</span>HIGHLIGHTED <span class="number">0x0002
 </span>}
 
-<span class="macro">const_wm! </span>{ TCM;
+<span class="macro">const_wm!</span> { TCM;
 	<span class="doccomment">/// Tab control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-messages)
 	/// (`u32`).
@@ -4769,7 +4769,7 @@
 	</span>GETUNICODEFORMAT CCM::GETUNICODEFORMAT.<span class="number">0
 </span>}
 
-<span class="macro">const_nm! </span>{ TCN;
+<span class="macro">const_nm!</span> { TCN;
 	<span class="doccomment">/// Tab control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-notifications)
 	/// (`i32`).
@@ -4783,7 +4783,7 @@
 	</span>SELCHANGING <span class="self">Self</span>::FIRST.<span class="number">0 </span>- <span class="number">2
 </span>}
 
-<span class="macro">const_ws! </span>{ TCS: u32;
+<span class="macro">const_ws!</span> { TCS: u32;
 	<span class="doccomment">/// Tab control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/tab-control-styles)
 	/// (`u32`).
@@ -4813,7 +4813,7 @@
 	</span>FOCUSNEVER <span class="number">0x8000
 </span>}
 
-<span class="macro">const_wsex! </span>{ TCS_EX;
+<span class="macro">const_wsex!</span> { TCS_EX;
 	<span class="doccomment">/// Extended tab control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/tab-control-extended-styles)
 	/// (`u32`).
@@ -4825,7 +4825,7 @@
 	</span>REGISTERDROP <span class="number">0x0000_0002
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TD_ICON: u16;
+<span class="macro">const_ordinary!</span> { TD_ICON: u16;
 	<span class="doccomment">/// [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog)
 	/// `pszIcon` and [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG)
 	/// `pszMainIcon` (`u16`).
@@ -4844,7 +4844,7 @@
 	</span>SHIELD <span class="number">0xfffc
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TDCBF: i32;
+<span class="macro">const_bitflag!</span> { TDCBF: i32;
 	<span class="doccomment">/// [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog) and
 	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `dwCommonButtons` (`i32`).
 	///
@@ -4859,7 +4859,7 @@
 	</span>CLOSE <span class="number">0x0020
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TDF: i32;
+<span class="macro">const_bitflag!</span> { TDF: i32;
 	<span class="doccomment">/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `dwFlags` (`i32`).
 	</span>=&gt;
 	=&gt;
@@ -4883,7 +4883,7 @@
 	</span>SIZE_TO_CONTENT <span class="number">0x0100_0000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TDN: u32;
+<span class="macro">const_ordinary!</span> { TDN: u32;
 	<span class="doccomment">/// [`PFTASKDIALOGCALLBACK`](crate::PFTASKDIALOGCALLBACK) `msg` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4900,7 +4900,7 @@
     </span>EXPANDO_BUTTON_CLICKED <span class="number">10   </span><span class="comment">// wParam = 0 (dialog is now collapsed), wParam != 0 (dialog is now expanded)
 </span>}
 
-<span class="macro">const_wm! </span>{ TRBM;
+<span class="macro">const_wm!</span> { TRBM;
 	<span class="doccomment">/// Trackbar control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-messages)
 	/// (`u32`).
@@ -4946,7 +4946,7 @@
 	</span>GETUNICODEFORMAT CCM::GETUNICODEFORMAT.<span class="number">0
 </span>}
 
-<span class="macro">const_nm! </span>{ TRBN;
+<span class="macro">const_nm!</span> { TRBN;
 	<span class="doccomment">/// Trackbar control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications)
 	/// (`i32`).
@@ -4956,7 +4956,7 @@
 	THUMBPOSCHANGING <span class="self">Self</span>::FIRST.<span class="number">0 </span>- <span class="number">1
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TTI: i32;
+<span class="macro">const_ordinary!</span> { TTI: i32;
 	<span class="doccomment">/// [`EDITBALLOONTIP`](crate::EDITBALLOONTIP) ttiIcon (`i32`).
 	</span>=&gt;
 	=&gt;
@@ -4969,7 +4969,7 @@
 	</span>ERROR_LARGE <span class="number">6
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TVC: u32;
+<span class="macro">const_ordinary!</span> { TVC: u32;
 	<span class="doccomment">/// [`NMTREEVIEW`](crate::NMTREEVIEW) `action` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4978,7 +4978,7 @@
 	</span>BYKEYBOARD <span class="number">0x0002
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TVE: u32;
+<span class="macro">const_ordinary!</span> { TVE: u32;
 	<span class="doccomment">/// [`tvm::Expand`](crate::msg::tvm::Expand) `action` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -4989,7 +4989,7 @@
 	</span>COLLAPSERESET <span class="number">0x8000
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TVGN: u32;
+<span class="macro">const_ordinary!</span> { TVGN: u32;
 	<span class="doccomment">/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) `which` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -5009,7 +5009,7 @@
 	</span>TVSI_NOSINGLEEXPAND <span class="number">0x8000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TVHT: u32;
+<span class="macro">const_bitflag!</span> { TVHT: u32;
 	<span class="doccomment">/// [`TVHITTESTINFO`](crate::TVHITTESTINFO) `flags` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -5027,7 +5027,7 @@
 	</span>TOLEFT <span class="number">0x0800
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TVI: isize;
+<span class="macro">const_ordinary!</span> { TVI: isize;
 	<span class="doccomment">/// [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT) `hInsertAfter` (`isize`).
 	</span>=&gt;
 	=&gt;
@@ -5037,7 +5037,7 @@
 	</span>SORT -<span class="number">0x0fffd
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TVIF: u32;
+<span class="macro">const_bitflag!</span> { TVIF: u32;
 	<span class="doccomment">/// [`TVITEM`](crate::TVITEM) `mask` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -5053,7 +5053,7 @@
 	</span>EXPANDEDIMAGE <span class="number">0x0200
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TVIS: u32;
+<span class="macro">const_bitflag!</span> { TVIS: u32;
 	<span class="doccomment">/// Tree view item
 	/// [states](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-control-item-states)
 	/// (`u32`)
@@ -5073,7 +5073,7 @@
 	</span>USERMASK <span class="number">0xf000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TVIS_EX: u32;
+<span class="macro">const_bitflag!</span> { TVIS_EX: u32;
 	<span class="doccomment">/// [`TVITEMEX`](crate::TVITEMEX) `uStateEx` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -5085,7 +5085,7 @@
 	</span>HWND <span class="number">0x0000
 </span>}
 
-<span class="macro">const_bitflag! </span>{ TVSBF: u32;
+<span class="macro">const_bitflag!</span> { TVSBF: u32;
 	<span class="doccomment">/// [`tvm::SetBorder`](crate::msg::tvm::SetBorder) `action` (`u32`).
 	</span>=&gt;
 	=&gt;
@@ -5093,7 +5093,7 @@
 	</span>YBORDER <span class="number">0x0000_0002
 </span>}
 
-<span class="macro">const_wm! </span>{ TVM;
+<span class="macro">const_wm!</span> { TVM;
 	<span class="doccomment">/// Tree view control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-messages)
 	/// (`u32`).
@@ -5153,7 +5153,7 @@
 	</span>GETITEMPARTRECT <span class="self">Self</span>::FIRST.<span class="number">0 </span>+ <span class="number">72
 </span>}
 
-<span class="macro">const_nm! </span>{ TVN;
+<span class="macro">const_nm!</span> { TVN;
 	<span class="doccomment">/// Tree view control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-notifications)
 	/// (`i32`).
@@ -5179,7 +5179,7 @@
 	</span>ASYNCDRAW <span class="self">Self</span>::FIRST.<span class="number">0 </span>- <span class="number">20
 </span>}
 
-<span class="macro">const_ws! </span>{ TVS: u32;
+<span class="macro">const_ws!</span> { TVS: u32;
 	<span class="doccomment">/// Tree view control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-styles)
 	/// (`u32`).
@@ -5205,7 +5205,7 @@
 	</span>NOHSCROLL <span class="number">0x8000
 </span>}
 
-<span class="macro">const_wsex! </span>{ TVS_EX;
+<span class="macro">const_wsex!</span> { TVS_EX;
 	<span class="doccomment">/// Extended tree view control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-control-window-extended-styles)
 	/// (`u32`).
@@ -5226,7 +5226,7 @@
 	</span>DRAWIMAGEASYNC <span class="number">0x0400
 </span>}
 
-<span class="macro">const_ordinary! </span>{ TVSIL: u8;
+<span class="macro">const_ordinary!</span> { TVSIL: u8;
 	<span class="doccomment">/// [`tvm::GetImageList`](crate::msg::tvm::GetImageList) and
 	/// [`tvm::SetImageList`](crate::msg::tvm::SetImageList) `kind`.
 	</span>=&gt;
@@ -5235,7 +5235,7 @@
 	</span>STATE <span class="number">2
 </span>}
 
-<span class="macro">const_wm! </span>{ UDM;
+<span class="macro">const_wm!</span> { UDM;
 	<span class="doccomment">/// Up-down control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-messages)
 	/// (`u32`).
@@ -5259,7 +5259,7 @@
 	</span>GETPOS32 WM::USER.raw() + <span class="number">114
 </span>}
 
-<span class="macro">const_nm! </span>{ UDN;
+<span class="macro">const_nm!</span> { UDN;
 	<span class="doccomment">/// Up-down control `WM_NOTIFY`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-notifications)
 	/// (`i32`).
@@ -5269,7 +5269,7 @@
 	DELTAPOS <span class="self">Self</span>::FIRST.<span class="number">0 </span>- <span class="number">1
 </span>}
 
-<span class="macro">const_ws! </span>{ UDS: u32;
+<span class="macro">const_ws!</span> { UDS: u32;
 	<span class="doccomment">/// Up-down control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/up-down-control-styles)
 	/// (`u32`).
@@ -5311,7 +5311,7 @@
 	</span>HOTTRACK <span class="number">0x0100
 </span>}
 
-<span class="macro">const_ordinary! </span>{ VK_DIR: u16;
+<span class="macro">const_ordinary!</span> { VK_DIR: u16;
 	<span class="doccomment">/// [`LVFINDINFO`](crate::LVFINDINFO) `vkDirection` (`u16`).
 	</span>=&gt;
 	=&gt;
