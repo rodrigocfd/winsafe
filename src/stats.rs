@@ -159,6 +159,10 @@ impl Stats {
 				self.com_interfaces += 1;
 			}
 
+			if line.starts_with("\tfn_com_closure! { ") {
+				self.com_methods += 1;
+			}
+
 			if !is_com_interface_impl_file
 					&& line.starts_with("/// This trait is enabled with `") {
 				is_com_interface_impl_file = true;
@@ -169,11 +173,11 @@ impl Stats {
 					if line.starts_with("}") {
 						inside_block = false;
 					} else if line.starts_with("\tfn ")
-							|| line.starts_with("\tfn_com_noparm!")
-							|| line.starts_with("\tfn_com_interface_get!")
-							|| line.starts_with("\tfn_com_bstr_get!")
-							|| line.starts_with("\tfn_com_bstr_set!")
-							|| line.starts_with("\tfn_com_closure!") {
+							|| line.starts_with("\tfn_com_noparm! { ")
+							|| line.starts_with("\tfn_com_noparm_noret! { ")
+							|| line.starts_with("\tfn_com_interface_get! { ")
+							|| line.starts_with("\tfn_com_bstr_get! { ")
+							|| line.starts_with("\tfn_com_bstr_set! { ") {
 						self.com_methods += 1;
 					}
 				}
