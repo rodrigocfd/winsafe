@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use std::mem::ManuallyDrop;
-use std::sync::atomic::{AtomicU32, Ordering};
+use std::sync::atomic::AtomicU32;
 
 use crate::co;
 use crate::decl::*;
@@ -225,14 +225,6 @@ com_interface_custom! { IFileDialogEvents, IFileDialogEventsImpl: "973510db-7d7f
 }
 
 impl IFileDialogEvents {
-	/// Creates a custom COM implementation, to which you can add closures to
-	/// handle events.
-	#[must_use]
-	pub fn new_impl() -> Self {
-		let box_impl = Box::new(IFileDialogEventsImpl::new());
-		Self(Box::into_raw(box_impl))
-	}
-
 	fn_com_closure! { OnFileOk: Fn(&IFileDialog) -> HrResult<()>;
 		/// [`IFileDialogEvents::OnFileOk`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfileok)
 		/// method.

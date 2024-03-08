@@ -95,6 +95,16 @@ macro_rules! com_interface_custom {
 				p as *mut _
 			}
 		}
+
+		impl $name {
+			/// Creates a custom COM implementation, to which you can add
+			/// closures to handle events.
+			#[must_use]
+			pub fn new_impl() -> Self {
+				let box_impl = Box::new($impl::new());
+				Self(Box::into_raw(box_impl))
+			}
+		}
 	};
 }
 
@@ -109,15 +119,15 @@ macro_rules! com_interface_custom_iunknown_methods {
 
 		fn AddRef(p: COMPTR) -> u32 {
 			let box_impl = box_impl::<Self>(p);
-			let cc = box_impl.counter.fetch_add(1, Ordering::Relaxed) + 1;
+			let cc = box_impl.counter.fetch_add(1, std::sync::atomic::Ordering::Relaxed) + 1;
 			cc
 		}
 
 		fn Release(p: COMPTR) -> u32 {
 			let mut box_impl = box_impl::<Self>(p);
-			let count = box_impl.counter.fetch_sub(1, Ordering::Relaxed) - 1;
+			let count = box_impl.counter.fetch_sub(1, std::sync::atomic::Ordering::Relaxed) - 1;
 			if count == 0 {
-				unsafe { ManuallyDrop::drop(&mut box_impl); }
+				unsafe { std::mem::ManuallyDrop::drop(&mut box_impl); }
 			}
 			count
 		}

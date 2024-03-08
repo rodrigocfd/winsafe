@@ -32,7 +32,6 @@ pub mod traits {
 	pub use super::iadvisesink::ole_IAdviseSink;
 	pub use super::ibindctx::ole_IBindCtx;
 	pub use super::idataobject::ole_IDataObject;
-	pub use super::idroptarget::ole_IDropTarget;
 	pub use super::imoniker::ole_IMoniker;
 	pub use super::ipersist::ole_IPersist;
 	pub use super::ipersistfile::ole_IPersistFile;

@@ -756,15 +756,11 @@ unsafe impl<'a> MsgSend for GetMetrics<'a> {
 /// message parameters.
 ///
 /// Return type: `HrResult<()>`.
-pub struct GetObject<'a, T>
-	where T: ole_IDropTarget,
-{
-	pub obj: &'a mut T,
+pub struct GetObject<'a> {
+	pub obj: &'a IDropTarget,
 }
 
-unsafe impl<'a, T> MsgSend for GetObject<'a, T>
-	where T: ole_IDropTarget,
-{
+unsafe impl<'a> MsgSend for GetObject<'a> {
 	type RetType = HrResult<()>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
