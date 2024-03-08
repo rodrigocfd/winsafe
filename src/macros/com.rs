@@ -62,7 +62,7 @@ macro_rules! com_interface_custom {
 
 		unsafe impl Send for $name {}
 
-		impl Drop for IFileDialogEvents {
+		impl Drop for $name {
 			fn drop(&mut self) {
 				if !self.0.is_null() {
 					let ppvt = &self.0 as *const *mut $impl;
@@ -71,9 +71,10 @@ macro_rules! com_interface_custom {
 			}
 		}
 
-		impl Clone for IFileDialogEvents {
+		impl Clone for $name {
 			fn clone(&self) -> Self {
-				$impl::AddRef(self.0 as _);
+				let ppvt = &self.0 as *const *mut $impl;
+				$impl::AddRef(ppvt as _);
 				Self(self.0)
 			}
 		}
@@ -90,7 +91,7 @@ macro_rules! com_interface_custom {
 			}
 
 			fn ptr(&self) -> *mut std::ffi::c_void {
-				let p = &self.0 as *const *mut IFileDialogEventsImpl;
+				let p = &self.0 as *const *mut $impl;
 				p as *mut _
 			}
 		}
