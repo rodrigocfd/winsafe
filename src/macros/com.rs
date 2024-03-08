@@ -98,6 +98,32 @@ macro_rules! com_interface_custom {
 	};
 }
 
+/// Declares the static `QueryInterface`, `AddRef` and `Release` methods for a
+/// custom COM interface implementation.
+macro_rules! com_interface_custom_iunknown_methods {
+	($impl:ident) => {
+		fn QueryInterface(_p: COMPTR, _riid: PCVOID, ppv: *mut COMPTR) -> HRES {
+			unsafe { *ppv = std::ptr::null_mut(); }
+			co::HRESULT::E_NOTIMPL.raw()
+		}
+
+		fn AddRef(p: COMPTR) -> u32 {
+			let box_impl = box_impl::<Self>(p);
+			let cc = box_impl.counter.fetch_add(1, Ordering::Relaxed) + 1;
+			cc
+		}
+
+		fn Release(p: COMPTR) -> u32 {
+			let mut box_impl = box_impl::<Self>(p);
+			let count = box_impl.counter.fetch_sub(1, Ordering::Relaxed) - 1;
+			if count == 0 {
+				unsafe { ManuallyDrop::drop(&mut box_impl); }
+			}
+			count
+		}
+	};
+}
+
 /// Creates multiple `GUID`-derived pub const values.
 macro_rules! const_guid_values {
 	(
