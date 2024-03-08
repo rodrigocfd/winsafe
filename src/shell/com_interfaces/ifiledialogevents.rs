@@ -212,6 +212,34 @@ com_interface_custom! { IFileDialogEvents, IFileDialogEventsImpl: "973510db-7d7f
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let hparent: w::HWND; // initialized somewhere
+	/// # let hparent = w::HWND::NULL;
+	///
+	/// let file_open = w::CoCreateInstance::<w::IFileOpenDialog>(
+	///     &co::CLSID::FileOpenDialog,
+	///     None,
+	///     co::CLSCTX::INPROC_SERVER,
+	/// )?;
+	///
+	/// let file_dialog_events = w::IFileDialogEvents::new_impl();
+	///
+	/// file_dialog_events.OnFolderChanging(
+	///     move |fd: &w::IFileDialog, si: &w::IShellItem| -> w::HrResult<()> {
+	///         println!("New folder: {}",
+	///             si.GetDisplayName(co::SIGDN::FILESYSPATH)?);
+	///         Ok(())
+	///     },
+	/// );
+	///
+	/// file_open.Advise(&file_dialog_events)?;
+	/// # w::HrResult::Ok(())
+	/// ```
 }
 
 impl IFileDialogEvents {
