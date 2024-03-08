@@ -33,7 +33,6 @@ pub mod decl {
 pub mod traits {
 	pub use super::ienumshellitems::shell_IEnumShellItems;
 	pub use super::ifiledialog::shell_IFileDialog;
-	pub use super::ifiledialogevents::shell_IFileDialogEvents;
 	pub use super::ifileopendialog::shell_IFileOpenDialog;
 	pub use super::ifilesavedialog::shell_IFileSaveDialog;
 	pub use super::imodalwindow::shell_IModalWindow;

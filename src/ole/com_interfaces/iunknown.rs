@@ -54,6 +54,10 @@ pub trait ole_IUnknown: Clone {
 	/// This method can be used as an escape hatch to interoperate with other
 	/// libraries.
 	///
+	/// # Panics
+	///
+	/// Panics if trying to create a custom COM implementation object.
+	///
 	/// # Safety
 	///
 	/// Be sure the pointer points to a properly allocated COM virtual table.
@@ -71,6 +75,10 @@ pub trait ole_IUnknown: Clone {
 	///
 	/// This method can be used as an escape hatch to interoperate with other
 	/// libraries.
+	///
+	/// # Panics
+	///
+	/// Panics if trying to modify a custom COM implementation object.
 	///
 	/// # Safety
 	///

@@ -49,6 +49,54 @@ macro_rules! com_interface {
 	};
 }
 
+/// Declares a custom COM interface implementation, and implements ole_IUnknown
+/// trait.
+macro_rules! com_interface_custom {
+	(
+		$name:ident, $impl:ident : $guid:expr;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		#[repr(transparent)]
+		pub struct $name(*mut $impl);
+
+		unsafe impl Send for $name {}
+
+		impl Drop for IFileDialogEvents {
+			fn drop(&mut self) {
+				if !self.0.is_null() {
+					let ppvt = &self.0 as *const *mut $impl;
+					$impl::Release(ppvt as _);
+				}
+			}
+		}
+
+		impl Clone for IFileDialogEvents {
+			fn clone(&self) -> Self {
+				$impl::AddRef(self.0 as _);
+				Self(self.0)
+			}
+		}
+
+		impl crate::prelude::ole_IUnknown for $name {
+			const IID: crate::co::IID = unsafe { crate::co::IID::from_raw($guid) };
+
+			unsafe fn from_ptr(_p: *mut std::ffi::c_void) -> Self {
+				panic!("Cannot create a custom COM implementation from a pointer, use new_impl().");
+			}
+
+			unsafe fn as_mut(&mut self) -> &mut *mut std::ffi::c_void {
+				panic!("Cannot modify a custom COM implementation pointer.");
+			}
+
+			fn ptr(&self) -> *mut std::ffi::c_void {
+				let p = &self.0 as *const *mut IFileDialogEventsImpl;
+				p as *mut _
+			}
+		}
+	};
+}
+
 /// Creates multiple `GUID`-derived pub const values.
 macro_rules! const_guid_values {
 	(
@@ -207,6 +255,23 @@ macro_rules! fn_com_bstr_set {
 					)
 				},
 			)
+		}
+	};
+}
+
+/// Implements a function which stores a callback to a custom COM
+/// implementation.
+macro_rules! fn_com_closure {
+	(
+		$method:ident: $fun: path;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		pub fn $method<F>(&self, func: F)
+			where F: $fun + 'static,
+		{
+			let mut box_impl = std::mem::ManuallyDrop::new(unsafe { Box::from_raw(self.0) });
+			box_impl.$method = Some(Box::new(func));
 		}
 	};
 }

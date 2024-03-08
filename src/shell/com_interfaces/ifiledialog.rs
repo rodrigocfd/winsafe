@@ -78,7 +78,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 
 	/// [`IFileDialog::Advise`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-advise)
 	/// method.
-	fn Advise(&self, fde: &impl shell_IFileDialogEvents) -> HrResult<u32> {
+	fn Advise(&self, fde: &IFileDialogEvents) -> HrResult<u32> {
 		let mut cookie = u32::default();
 		ok_to_hrresult(
 			unsafe {

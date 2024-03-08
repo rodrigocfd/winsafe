@@ -2,6 +2,26 @@
 
 use crate::co::*;
 
+const_ordinary! { FDEOR: u32;
+	/// [`FDE_OVERWRITE_RESPONSE`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-fde_overwrite_response)
+	/// enumeration (`u32`).
+	=>
+	=>
+	DEFAULT 0
+	ACCEPT 1
+	REFUSE 2
+}
+
+const_ordinary! { FDESVR: u32;
+	/// [`FDE_SHAREVIOLATION_RESPONSE`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-fde_shareviolation_response)
+	/// enumeration (`u32`).
+	=>
+	=>
+	DEFAULT 0
+	ACCEPT 1
+	REFUSE 2
+}
+
 const_ordinary! { FO: u32;
 	/// [`SHFILEOPSTRUCT`](crate::SHFILEOPSTRUCT) `wFunc` (`u32`).
 	=>
