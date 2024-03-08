@@ -277,6 +277,43 @@
 <a href="#275" id="275">275</a>
 <a href="#276" id="276">276</a>
 <a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(unused_macros)]
 
 </span><span class="doccomment">/// Declares an ordinary COM interface, and implements ole_IUnknown trait.
@@ -341,7 +378,7 @@
 
 		<span class="kw">unsafe impl </span><span class="macro-nonterminal">Send </span><span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
 
-		<span class="kw">impl </span>Drop <span class="kw">for </span>IFileDialogEvents {
+		<span class="kw">impl </span>Drop <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
 			<span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
 				<span class="kw">if </span>!<span class="self">self</span>.<span class="number">0</span>.is_null() {
 					<span class="kw">let </span>ppvt = <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span><span class="kw">as </span><span class="kw-2">*const *mut </span><span class="macro-nonterminal">$</span><span class="kw">impl</span>;
@@ -350,9 +387,10 @@
 			}
 		}
 
-		<span class="kw">impl </span>Clone <span class="kw">for </span>IFileDialogEvents {
+		<span class="kw">impl </span>Clone <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
 			<span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-				<span class="macro-nonterminal">$</span><span class="kw">impl</span><span class="macro-nonterminal">::AddRef</span>(<span class="self">self</span>.<span class="number">0 </span><span class="kw">as _</span>);
+				<span class="kw">let </span>ppvt = <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span><span class="kw">as </span><span class="kw-2">*const *mut </span><span class="macro-nonterminal">$</span><span class="kw">impl</span>;
+				<span class="macro-nonterminal">$</span><span class="kw">impl</span><span class="macro-nonterminal">::AddRef</span>(ppvt <span class="kw">as _</span>);
 				<span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>)
 			}
 		}
@@ -369,9 +407,45 @@
 			}
 
 			<span class="kw">fn </span>ptr(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut </span>std::ffi::c_void {
-				<span class="kw">let </span>p = <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span><span class="kw">as </span><span class="kw-2">*const *mut </span>IFileDialogEventsImpl;
-				p <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_
+				<span class="kw">let </span>p = <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span><span class="kw">as </span><span class="kw-2">*const *mut </span><span class="macro-nonterminal">$</span><span class="kw">impl</span>;
+				<span class="macro-nonterminal">p </span><span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_
 			</span>}
+		}
+
+		<span class="kw">impl </span><span class="macro-nonterminal">$name </span>{
+			<span class="doccomment">/// Creates a custom COM implementation, to which you can add
+			/// closures to handle events.
+			</span><span class="attr">#[must_use]
+			</span><span class="kw">pub fn </span>new_impl() -&gt; <span class="self">Self </span>{
+				<span class="kw">let </span>box_impl = Box::new(<span class="macro-nonterminal">$</span><span class="kw">impl</span><span class="macro-nonterminal">::new</span>());
+				<span class="self">Self</span>(Box::into_raw(box_impl))
+			}
+		}
+	};
+}
+
+<span class="doccomment">/// Declares the static `QueryInterface`, `AddRef` and `Release` methods for a
+/// custom COM interface implementation.
+</span><span class="macro">macro_rules!</span> com_interface_custom_iunknown_methods {
+	(<span class="macro-nonterminal">$</span><span class="kw">impl</span>:<span class="macro-nonterminal">ident</span>) =&gt; {
+		<span class="kw">fn </span>QueryInterface(_p: COMPTR, _riid: PCVOID, ppv: <span class="kw-2">*mut </span>COMPTR) -&gt; HRES {
+			<span class="kw">unsafe </span>{ <span class="kw-2">*</span>ppv = std::ptr::null_mut(); }
+			co::HRESULT::E_NOTIMPL.raw()
+		}
+
+		<span class="kw">fn </span>AddRef(p: COMPTR) -&gt; u32 {
+			<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
+			<span class="kw">let </span>cc = box_impl.counter.fetch_add(<span class="number">1</span>, std::sync::atomic::Ordering::Relaxed) + <span class="number">1</span>;
+			cc
+		}
+
+		<span class="kw">fn </span>Release(p: COMPTR) -&gt; u32 {
+			<span class="kw">let </span><span class="kw-2">mut </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
+			<span class="kw">let </span>count = box_impl.counter.fetch_sub(<span class="number">1</span>, std::sync::atomic::Ordering::Relaxed) - <span class="number">1</span>;
+			<span class="kw">if </span>count == <span class="number">0 </span>{
+				<span class="kw">unsafe </span>{ std::mem::ManuallyDrop::drop(<span class="kw-2">&amp;mut </span>box_impl); }
+			}
+			count
 		}
 	};
 }
