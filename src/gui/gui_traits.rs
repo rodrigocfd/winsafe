@@ -6,7 +6,7 @@ use crate::msg::*;
 use crate::prelude::*;
 
 /// Any window. Exposes the underlying window handle.
-pub trait GuiWindow {
+pub trait GuiWindow: Send {
 	/// Returns the underlying handle for this control.
 	///
 	/// Note that the handle is initially null, receiving an actual value only

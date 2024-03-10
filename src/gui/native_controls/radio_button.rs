@@ -1,4 +1,7 @@
 use std::any::Any;
+use std::marker::PhantomPinned;
+use std::pin::Pin;
+use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
@@ -6,20 +9,28 @@ use crate::gui::{*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
+struct Obj { // actual fields of RadioButton
+	base: BaseNativeControl,
+	events: ButtonEvents,
+	_pin: PhantomPinned,
+}
+
+//------------------------------------------------------------------------------
+
 /// Native
 /// [radio button](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#radio-buttons)
 /// control.
 ///
 /// You cannot directly instantiate this object, you must use
 /// [`RadioGroup`](crate::gui::RadioGroup).
-pub struct RadioButton {
-	base: BaseNativeControl,
-	events: ButtonEvents,
-}
+#[derive(Clone)]
+pub struct RadioButton(Pin<Arc<Obj>>);
+
+unsafe impl Send for RadioButton {}
 
 impl GuiWindow for RadioButton {
 	fn hwnd(&self) -> &HWND {
-		self.base.hwnd()
+		self.0.base.hwnd()
 	}
 
 	fn as_any(&self) -> &dyn Any {
@@ -31,7 +42,7 @@ impl GuiWindowText for RadioButton {}
 
 impl GuiChild for RadioButton {
 	fn ctrl_id(&self) -> u16 {
-		self.base.ctrl_id()
+		self.0.base.ctrl_id()
 	}
 }
 
@@ -39,7 +50,7 @@ impl GuiChildFocus for RadioButton {}
 
 impl GuiNativeControl for RadioButton {
 	fn on_subclass(&self) -> &WindowEvents {
-		self.base.on_subclass()
+		self.0.base.on_subclass()
 	}
 }
 
@@ -47,10 +58,10 @@ impl GuiNativeControlEvents<ButtonEvents> for RadioButton {
 	fn on(&self) -> &ButtonEvents {
 		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add events after the control creation.");
-		} else if *self.base.parent().hwnd() != HWND::NULL {
+		} else if *self.0.base.parent().hwnd() != HWND::NULL {
 			panic!("Cannot add events after the parent window creation.");
 		}
-		&self.events
+		&self.0.events
 	}
 }
 
@@ -64,10 +75,15 @@ impl RadioButton {
 		let opts = RadioButtonOpts::define_ctrl_id(opts);
 		let ctrl_id = opts.ctrl_id;
 
-		Self {
-			base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-			events: ButtonEvents::new(parent_base_ref, ctrl_id),
-		}
+		Self(
+			Arc::pin(
+				Obj {
+					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
+					events: ButtonEvents::new(parent_base_ref, ctrl_id),
+					_pin: PhantomPinned,
+				},
+			),
+		)
 	}
 
 	pub(in crate::gui) fn new_dlg(
@@ -77,10 +93,15 @@ impl RadioButton {
 	{
 		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 
-		Self {
-			base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-			events: ButtonEvents::new(parent_base_ref, ctrl_id),
-		}
+		Self(
+			Arc::pin(
+				Obj {
+					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
+					events: ButtonEvents::new(parent_base_ref, ctrl_id),
+					_pin: PhantomPinned,
+				},
+			),
+		)
 	}
 
 	pub(in crate::gui) fn create(&self,
@@ -96,17 +117,17 @@ impl RadioButton {
 			OptsResz::Wnd(opts) => {
 				let mut pos = POINT::new(opts.position.0, opts.position.1);
 				multiply_dpi_or_dtu(
-					self.base.parent(), Some(&mut pos), None)?;
+					self.0.base.parent(), Some(&mut pos), None)?;
 
 				let mut sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
 					if sz.cx == -1 && sz.cy == -1 {
 						sz = calc_text_bound_box_check(&opts.text)?; // resize to fit text
 					} else {
 						multiply_dpi_or_dtu(
-							self.base.parent(), None, Some(&mut sz))?; // user-defined size
+							self.0.base.parent(), None, Some(&mut sz))?; // user-defined size
 					}
 
-				self.base.create_window( // may panic
+				self.0.base.create_window( // may panic
 					"BUTTON", Some(&opts.text), pos, sz,
 					opts.window_ex_style,
 					opts.window_style | opts.button_style.into(),
@@ -118,10 +139,10 @@ impl RadioButton {
 				});
 				if opts.selected { self.select(true); }
 			},
-			OptsResz::Dlg(_) => self.base.create_dlg()?,
+			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
 		}
 
-		self.base.parent().add_to_layout_arranger(self.hwnd(), resize_behavior)?;
+		self.0.base.parent().add_to_layout_arranger(self.hwnd(), resize_behavior)?;
 		self.hwnd().SendMessage(bm::SetDontClick { dont_click: true });
 		Ok(())
 	}
