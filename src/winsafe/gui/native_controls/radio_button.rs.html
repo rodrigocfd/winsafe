@@ -283,7 +283,31 @@
 <a href="#281" id="281">281</a>
 <a href="#282" id="282">282</a>
 <a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
+<span class="kw">use </span>std::marker::PhantomPinned;
+<span class="kw">use </span>std::pin::Pin;
+<span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -291,20 +315,28 @@
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="doccomment">/// Native
+<span class="kw">struct </span>Obj { <span class="comment">// actual fields of RadioButton
+	</span>base: BaseNativeControl,
+	events: ButtonEvents,
+	_pin: PhantomPinned,
+}
+
+<span class="comment">//------------------------------------------------------------------------------
+
+</span><span class="doccomment">/// Native
 /// [radio button](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#radio-buttons)
 /// control.
 ///
 /// You cannot directly instantiate this object, you must use
 /// [`RadioGroup`](crate::gui::RadioGroup).
-</span><span class="kw">pub struct </span>RadioButton {
-	base: BaseNativeControl,
-	events: ButtonEvents,
-}
+</span><span class="attr">#[derive(Clone)]
+</span><span class="kw">pub struct </span>RadioButton(Pin&lt;Arc&lt;Obj&gt;&gt;);
+
+<span class="kw">unsafe impl </span>Send <span class="kw">for </span>RadioButton {}
 
 <span class="kw">impl </span>GuiWindow <span class="kw">for </span>RadioButton {
 	<span class="kw">fn </span>hwnd(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HWND {
-		<span class="self">self</span>.base.hwnd()
+		<span class="self">self</span>.<span class="number">0</span>.base.hwnd()
 	}
 
 	<span class="kw">fn </span>as_any(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Any {
@@ -316,7 +348,7 @@
 
 <span class="kw">impl </span>GuiChild <span class="kw">for </span>RadioButton {
 	<span class="kw">fn </span>ctrl_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u16 {
-		<span class="self">self</span>.base.ctrl_id()
+		<span class="self">self</span>.<span class="number">0</span>.base.ctrl_id()
 	}
 }
 
@@ -324,7 +356,7 @@
 
 <span class="kw">impl </span>GuiNativeControl <span class="kw">for </span>RadioButton {
 	<span class="kw">fn </span>on_subclass(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEvents {
-		<span class="self">self</span>.base.on_subclass()
+		<span class="self">self</span>.<span class="number">0</span>.base.on_subclass()
 	}
 }
 
@@ -332,10 +364,10 @@
 	<span class="kw">fn </span>on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>ButtonEvents {
 		<span class="kw">if </span><span class="kw-2">*</span><span class="self">self</span>.hwnd() != HWND::NULL {
 			<span class="macro">panic!</span>(<span class="string">"Cannot add events after the control creation."</span>);
-		} <span class="kw">else if </span><span class="kw-2">*</span><span class="self">self</span>.base.parent().hwnd() != HWND::NULL {
+		} <span class="kw">else if </span><span class="kw-2">*</span><span class="self">self</span>.<span class="number">0</span>.base.parent().hwnd() != HWND::NULL {
 			<span class="macro">panic!</span>(<span class="string">"Cannot add events after the parent window creation."</span>);
 		}
-		<span class="kw-2">&amp;</span><span class="self">self</span>.events
+		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.events
 	}
 }
 
@@ -349,10 +381,15 @@
 		<span class="kw">let </span>opts = RadioButtonOpts::define_ctrl_id(opts);
 		<span class="kw">let </span>ctrl_id = opts.ctrl_id;
 
-		<span class="self">Self </span>{
-			base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-			events: ButtonEvents::new(parent_base_ref, ctrl_id),
-		}
+		<span class="self">Self</span>(
+			Arc::pin(
+				Obj {
+					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
+					events: ButtonEvents::new(parent_base_ref, ctrl_id),
+					_pin: PhantomPinned,
+				},
+			),
+		)
 	}
 
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new_dlg(
@@ -362,10 +399,15 @@
 	</span>{
 		<span class="kw">let </span>parent_base_ref = <span class="kw">unsafe </span>{ Base::from_guiparent(parent) };
 
-		<span class="self">Self </span>{
-			base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-			events: ButtonEvents::new(parent_base_ref, ctrl_id),
-		}
+		<span class="self">Self</span>(
+			Arc::pin(
+				Obj {
+					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
+					events: ButtonEvents::new(parent_base_ref, ctrl_id),
+					_pin: PhantomPinned,
+				},
+			),
+		)
 	}
 
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>create(<span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -381,17 +423,17 @@
 			OptsResz::Wnd(opts) =&gt; {
 				<span class="kw">let </span><span class="kw-2">mut </span>pos = POINT::new(opts.position.<span class="number">0</span>, opts.position.<span class="number">1</span>);
 				multiply_dpi_or_dtu(
-					<span class="self">self</span>.base.parent(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>pos), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
+					<span class="self">self</span>.<span class="number">0</span>.base.parent(), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>pos), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
 
 				<span class="kw">let </span><span class="kw-2">mut </span>sz = SIZE::new(opts.size.<span class="number">0 </span><span class="kw">as _</span>, opts.size.<span class="number">1 </span><span class="kw">as _</span>);
 					<span class="kw">if </span>sz.cx == -<span class="number">1 </span>&amp;&amp; sz.cy == -<span class="number">1 </span>{
 						sz = calc_text_bound_box_check(<span class="kw-2">&amp;</span>opts.text)<span class="question-mark">?</span>; <span class="comment">// resize to fit text
 					</span>} <span class="kw">else </span>{
 						multiply_dpi_or_dtu(
-							<span class="self">self</span>.base.parent(), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>sz))<span class="question-mark">?</span>; <span class="comment">// user-defined size
+							<span class="self">self</span>.<span class="number">0</span>.base.parent(), <span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>sz))<span class="question-mark">?</span>; <span class="comment">// user-defined size
 					</span>}
 
-				<span class="self">self</span>.base.create_window( <span class="comment">// may panic
+				<span class="self">self</span>.<span class="number">0</span>.base.create_window( <span class="comment">// may panic
 					</span><span class="string">"BUTTON"</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>opts.text), pos, sz,
 					opts.window_ex_style,
 					opts.window_style | opts.button_style.into(),
@@ -403,10 +445,10 @@
 				});
 				<span class="kw">if </span>opts.selected { <span class="self">self</span>.select(<span class="bool-val">true</span>); }
 			},
-			OptsResz::Dlg(<span class="kw">_</span>) =&gt; <span class="self">self</span>.base.create_dlg()<span class="question-mark">?</span>,
+			OptsResz::Dlg(<span class="kw">_</span>) =&gt; <span class="self">self</span>.<span class="number">0</span>.base.create_dlg()<span class="question-mark">?</span>,
 		}
 
-		<span class="self">self</span>.base.parent().add_to_layout_arranger(<span class="self">self</span>.hwnd(), resize_behavior)<span class="question-mark">?</span>;
+		<span class="self">self</span>.<span class="number">0</span>.base.parent().add_to_layout_arranger(<span class="self">self</span>.hwnd(), resize_behavior)<span class="question-mark">?</span>;
 		<span class="self">self</span>.hwnd().SendMessage(bm::SetDontClick { dont_click: <span class="bool-val">true </span>});
 		<span class="prelude-val">Ok</span>(())
 	}

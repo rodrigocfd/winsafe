@@ -291,7 +291,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// Any window. Exposes the underlying window handle.
-</span><span class="kw">pub trait </span>GuiWindow {
+</span><span class="kw">pub trait </span>GuiWindow: Send {
 	<span class="doccomment">/// Returns the underlying handle for this control.
 	///
 	/// Note that the handle is initially null, receiving an actual value only
