@@ -15,7 +15,8 @@ pub trait VariableSized {}
 
 /// A type which has a primitive integer as its underlying type.
 pub trait IntUnderlying: Sized
-	+ Clone + Copy + PartialEq + Eq + hash::Hash + Send
+	+ Clone + Copy + PartialEq + Eq + PartialOrd + Ord
+	+ hash::Hash + Send
 	+ Into<Self::Raw> + AsRef<Self::Raw>
 {
 	/// The underlying raw integer type.
