@@ -1,17 +1,29 @@
 use std::any::Any;
 use std::marker::PhantomPinned;
 use std::pin::Pin;
+use std::ptr::NonNull;
 use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
 use crate::gui::{*, events::*, privs::*, spec::*};
+use crate::msg::*;
 use crate::prelude::*;
 
 struct Obj { // actual fields of Header
 	base: BaseNativeControl,
 	_pin: PhantomPinned,
 	events: HeaderEvents,
+}
+
+/// Variant field for creating a `Header` control.
+enum OptsReszLv<'a> {
+	/// Options for a raw control creation.
+	Wnd(&'a HeaderOpts),
+	/// Resize behavior for a dialog control creation.
+	Dlg((Horz, Vert)),
+	/// The `Header` belongs to an existing `ListView` control.
+	Lv(NonNull<ListView>),
 }
 
 //------------------------------------------------------------------------------
@@ -86,7 +98,7 @@ impl Header {
 
 		let self2 = new_self.clone();
 		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
-			self2.create(OptsResz::Wnd(&opts))?;
+			self2.create(OptsReszLv::Wnd(&opts))?;
 			Ok(())
 		});
 
@@ -122,16 +134,47 @@ impl Header {
 
 		let self2 = new_self.clone();
 		parent_base_ref.privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
-			self2.create(OptsResz::Dlg(resize_behavior))?;
+			self2.create(OptsReszLv::Dlg(resize_behavior))?;
 			Ok(())
 		});
 
 		new_self
 	}
 
-	fn create(&self, opts_resz: OptsResz<&HeaderOpts>) -> SysResult<()> {
-		match opts_resz {
-			OptsResz::Wnd(opts) => {
+	/// Instantiates a new `Header` object to be loaded from a
+	/// [`ListView`](crate::gui::ListView) control. This will give you access to
+	/// the inner `Header` control of that `ListView`.
+	///
+	/// You must inform an unique control ID for this `Header`. This is
+	/// necessary because, by default, these headers are created with an ID of
+	/// zero, and this would make it impossible to attach event handlers.
+	#[must_use]
+	pub fn from_list_view(list_view: &ListView, header_ctrl_id: u16) -> Self {
+		let parent_base_ref = list_view.parent_base_ref();
+
+		let new_self = Self(
+			Arc::pin(
+				Obj {
+					base: BaseNativeControl::new(parent_base_ref, header_ctrl_id),
+					events: HeaderEvents::new(parent_base_ref, header_ctrl_id),
+					_pin: PhantomPinned,
+				},
+			),
+		);
+
+		let lv_ptr = NonNull::from(list_view);
+		let self2 = new_self.clone();
+		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
+			self2.create(OptsReszLv::Lv(lv_ptr))?;
+			Ok(())
+		});
+
+		new_self
+	}
+
+	fn create(&self, opts_resz_lv: OptsReszLv) -> SysResult<()> {
+		match &opts_resz_lv {
+			OptsReszLv::Wnd(opts) => {
 				let mut pos = POINT::new(opts.position.0, opts.position.1);
 				let mut sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
 				multiply_dpi_or_dtu(
@@ -142,12 +185,23 @@ impl Header {
 					opts.window_ex_style,
 					opts.window_style | opts.header_style.into(),
 				)?;
-			},
-			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
-		}
 
-		self.0.base.parent()
-			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
+				self.0.base.parent()
+					.add_to_layout_arranger(self.hwnd(), opts.resize_behavior)
+			},
+			OptsReszLv::Dlg(resize_behavior) => {
+				self.0.base.create_dlg()?;
+				self.0.base.parent()
+					.add_to_layout_arranger(self.hwnd(), *resize_behavior)
+			},
+			OptsReszLv::Lv(lv_ptr) => {
+				let lv_ref = unsafe { lv_ptr.as_ref() };
+				let hheader = lv_ref.hwnd().SendMessage(lvm::GetHeader {})?;
+				hheader.SetWindowLongPtr(co::GWLP::ID, self.ctrl_id() as _); // give the header its new ID
+				self.0.base.assign_hctrl(hheader);
+				Ok(())
+			},
+		}
 	}
 
 	/// Exposes the item methods.

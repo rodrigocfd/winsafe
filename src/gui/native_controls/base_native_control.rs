@@ -77,6 +77,15 @@ impl BaseNativeControl {
 		&self.subclass_events
 	}
 
+	/// To be used during control creation. Usage after control creation will
+	/// panic.
+	pub(in crate::gui) fn assign_hctrl(&self, hctrl: HWND) {
+		if *self.hwnd() != HWND::NULL {
+			panic!("Control HWND is already assigned, cannot create it twice.");
+		}
+		*unsafe { &mut *self.hwnd.get() } = hctrl;
+	}
+
 	/// Creates the child control with `CreateWindowEx`.
 	pub(in crate::gui) fn create_window(&self,
 		class_name: &str,
@@ -95,19 +104,20 @@ impl BaseNativeControl {
 			panic!("Cannot create control before parent window creation.");
 		}
 
-		unsafe {
-			*&mut *self.hwnd.get() = HWND::CreateWindowEx(
-				ex_styles,
-				AtomStr::from_str(class_name),
-				title, styles,
-				pos, sz,
-				Some(hparent),
-				IdMenu::Id(self.ctrl_id),
-				&hparent.hinstance(),
-				None,
-			)?;
-		}
-
+		self.assign_hctrl(
+			unsafe {
+				HWND::CreateWindowEx(
+					ex_styles,
+					AtomStr::from_str(class_name),
+					title, styles,
+					pos, sz,
+					Some(hparent),
+					IdMenu::Id(self.ctrl_id),
+					&hparent.hinstance(),
+					None,
+				)?
+			},
+		);
 		self.install_subclass_if_needed()?;
 		Ok(())
 	}
@@ -126,7 +136,7 @@ impl BaseNativeControl {
 			panic!("Cannot create control before parent window creation.");
 		}
 
-		*unsafe { &mut *self.hwnd.get() } = hparent.GetDlgItem(self.ctrl_id)?;
+		self.assign_hctrl(hparent.GetDlgItem(self.ctrl_id)?);
 		self.install_subclass_if_needed()?;
 		Ok(())
 	}

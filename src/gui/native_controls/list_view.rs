@@ -188,6 +188,16 @@ impl ListView {
 		});
 
 		let self2 = self.clone();
+		self.on_subclass().wm(co::WM::NOTIFY, move |p| {
+			let wm_nfy = wm::Notify::from_generic_wm(p);
+			if wm_nfy.nmhdr.code >= co::HDN::GETDISPINFO.into()
+					&& wm_nfy.nmhdr.code <= co::HDN::BEGINDRAG.into() {
+				self2.hwnd().GetAncestor(co::GA::PARENT).unwrap().SendMessage(wm_nfy); // forward HDN messages to parent
+			}
+			Ok(None)
+		});
+
+		let self2 = self.clone();
 		parent.privileged_on().wm_notify(ctrl_id, co::LVN::KEYDOWN, move |_, p| {
 			let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };
 			let has_ctrl = GetAsyncKeyState(co::VK::CONTROL);
@@ -210,6 +220,11 @@ impl ListView {
 			self2.show_context_menu(true, has_ctrl, has_shift);
 			Ok(())
 		});
+	}
+
+	/// Required by `Header` constructor.
+	pub(in crate::gui) fn parent_base_ref(&self) -> &Base {
+		self.0.base.parent()
 	}
 
 	/// Exposes the column methods.
