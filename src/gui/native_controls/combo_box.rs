@@ -156,11 +156,7 @@ impl ComboBox {
 	}
 
 	fn create(&self, opts_resz: OptsResz<&ComboBoxOpts>) -> SysResult<()> {
-		let resize_behavior = match opts_resz {
-			OptsResz::Wnd(opts) => opts.resize_behavior,
-			OptsResz::Dlg(resize_behavior) => resize_behavior,
-		};
-		if resize_behavior.1 == Vert::Resize {
+		if opts_resz.resize_behavior().1 == Vert::Resize {
 			panic!("ComboBox cannot be resized with Vert::Resize.");
 		}
 
@@ -187,7 +183,8 @@ impl ComboBox {
 			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
 		}
 
-		self.0.base.parent().add_to_layout_arranger(self.hwnd(), resize_behavior)
+		self.0.base.parent()
+			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
 	}
 
 	/// Item methods.
@@ -277,6 +274,12 @@ impl Default for ComboBoxOpts {
 			items: Vec::<String>::default(),
 			selected_item: None,
 		}
+	}
+}
+
+impl ResizeBehavior for &ComboBoxOpts {
+	fn resize_behavior(&self) -> (Horz, Vert) {
+		self.resize_behavior
 	}
 }
 

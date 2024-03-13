@@ -150,12 +150,7 @@ impl Button {
 	}
 
 	fn create(&self, opts_resz: OptsResz<&ButtonOpts>) -> SysResult<()> {
-		let resize_behavior = match opts_resz {
-			OptsResz::Wnd(opts) => opts.resize_behavior,
-			OptsResz::Dlg(resize_behavior) => resize_behavior,
-		};
-
-		match opts_resz {
+		match &opts_resz {
 			OptsResz::Wnd(opts) => {
 				let mut pos = POINT::new(opts.position.0, opts.position.1);
 				let mut sz = SIZE::new(opts.width as _, opts.height as _);
@@ -176,7 +171,8 @@ impl Button {
 			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
 		}
 
-		self.0.base.parent().add_to_layout_arranger(self.hwnd(), resize_behavior)
+		self.0.base.parent()
+			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
 	}
 
 	/// Fires the click event for the button by sending a
@@ -268,6 +264,12 @@ impl Default for ButtonOpts {
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
 		}
+	}
+}
+
+impl ResizeBehavior for &ButtonOpts {
+	fn resize_behavior(&self) -> (Horz, Vert) {
+		self.resize_behavior
 	}
 }
 

@@ -115,11 +115,6 @@ impl ProgressBar {
 	}
 
 	fn create(&self, opts_resz: OptsResz<&ProgressBarOpts>) -> SysResult<()> {
-		let resize_behavior = match opts_resz {
-			OptsResz::Wnd(opts) => opts.resize_behavior,
-			OptsResz::Dlg(resize_behavior) => resize_behavior,
-		};
-
 		match opts_resz {
 			OptsResz::Wnd(opts) => {
 				let mut pos = POINT::new(opts.position.0, opts.position.1);
@@ -136,7 +131,8 @@ impl ProgressBar {
 			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
 		}
 
-		self.0.base.parent().add_to_layout_arranger(self.hwnd(), resize_behavior)
+		self.0.base.parent()
+			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
 	}
 
 	/// Retrieves the current position by sending a
@@ -292,6 +288,12 @@ impl Default for ProgressBarOpts {
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
 		}
+	}
+}
+
+impl ResizeBehavior for &ProgressBarOpts {
+	fn resize_behavior(&self) -> (Horz, Vert) {
+		self.resize_behavior
 	}
 }
 

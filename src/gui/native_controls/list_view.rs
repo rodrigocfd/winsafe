@@ -144,11 +144,6 @@ impl ListView {
 	}
 
 	fn create(&self, opts_resz: OptsResz<&ListViewOpts>) -> SysResult<()> {
-		let resize_behavior = match opts_resz {
-			OptsResz::Wnd(opts) => opts.resize_behavior,
-			OptsResz::Dlg(resize_behavior) => resize_behavior,
-		};
-
 		match opts_resz {
 			OptsResz::Wnd(opts) => {
 				let mut pos = POINT::new(opts.position.0, opts.position.1);
@@ -171,7 +166,8 @@ impl ListView {
 			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
 		}
 
-		self.0.base.parent().add_to_layout_arranger(self.hwnd(), resize_behavior)
+		self.0.base.parent()
+			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
 	}
 
 	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {
@@ -417,6 +413,12 @@ impl Default for ListViewOpts {
 			context_menu: None,
 			columns: Vec::<(String, u32)>::default(),
 		}
+	}
+}
+
+impl ResizeBehavior for &ListViewOpts {
+	fn resize_behavior(&self) -> (Horz, Vert) {
+		self.resize_behavior
 	}
 }
 

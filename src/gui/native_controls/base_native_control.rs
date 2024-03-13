@@ -17,6 +17,19 @@ pub(in crate::gui) enum OptsResz<T> {
 	Dlg((Horz, Vert)),
 }
 
+pub(in crate::gui) trait ResizeBehavior {
+	fn resize_behavior(&self) -> (Horz, Vert);
+}
+
+impl<T: ResizeBehavior> OptsResz<T> {
+	pub(in crate::gui) fn resize_behavior(&self) -> (Horz, Vert) {
+		match self {
+			OptsResz::Wnd(opts) => opts.resize_behavior(),
+			OptsResz::Dlg(horz_vert) => *horz_vert,
+		}
+	}
+}
+
 //------------------------------------------------------------------------------
 
 /// Base to all native child controls.

@@ -136,11 +136,6 @@ impl Tab {
 	}
 
 	fn create(&self, opts_resz: OptsResz<&TabOpts>) -> SysResult<()> {
-		let resize_behavior = match opts_resz {
-			OptsResz::Wnd(opts) => opts.resize_behavior,
-			OptsResz::Dlg(resize_behavior) => resize_behavior,
-		};
-
 		match opts_resz {
 			OptsResz::Wnd(opts) => {
 				let mut pos = POINT::new(opts.position.0, opts.position.1);
@@ -170,7 +165,8 @@ impl Tab {
 			.for_each(|(text, _)| unsafe { self.items().add(text); }); // add the tabs
 		self.display_tab(0)?; // 1st tab selected by default
 
-		self.0.base.parent().add_to_layout_arranger(self.hwnd(), resize_behavior)
+		self.0.base.parent()
+			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
 	}
 
 	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {
@@ -306,6 +302,12 @@ impl Default for TabOpts {
 			resize_behavior: (Horz::None, Vert::None),
 			items: Vec::default(),
 		}
+	}
+}
+
+impl ResizeBehavior for &TabOpts {
+	fn resize_behavior(&self) -> (Horz, Vert) {
+		self.resize_behavior
 	}
 }
 
