@@ -430,6 +430,23 @@
 <a href="#428" id="428">428</a>
 <a href="#429" id="429">429</a>
 <a href="#430" id="430">430</a>
+<a href="#431" id="431">431</a>
+<a href="#432" id="432">432</a>
+<a href="#433" id="433">433</a>
+<a href="#434" id="434">434</a>
+<a href="#435" id="435">435</a>
+<a href="#436" id="436">436</a>
+<a href="#437" id="437">437</a>
+<a href="#438" id="438">438</a>
+<a href="#439" id="439">439</a>
+<a href="#440" id="440">440</a>
+<a href="#441" id="441">441</a>
+<a href="#442" id="442">442</a>
+<a href="#443" id="443">443</a>
+<a href="#444" id="444">444</a>
+<a href="#445" id="445">445</a>
+<a href="#446" id="446">446</a>
+<a href="#447" id="447">447</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -576,11 +593,6 @@
 	}
 
 	<span class="kw">fn </span>create(<span class="kw-2">&amp;</span><span class="self">self</span>, opts_resz: OptsResz&lt;<span class="kw-2">&amp;</span>ListViewOpts&gt;) -&gt; SysResult&lt;()&gt; {
-		<span class="kw">let </span>resize_behavior = <span class="kw">match </span>opts_resz {
-			OptsResz::Wnd(opts) =&gt; opts.resize_behavior,
-			OptsResz::Dlg(resize_behavior) =&gt; resize_behavior,
-		};
-
 		<span class="kw">match </span>opts_resz {
 			OptsResz::Wnd(opts) =&gt; {
 				<span class="kw">let </span><span class="kw-2">mut </span>pos = POINT::new(opts.position.<span class="number">0</span>, opts.position.<span class="number">1</span>);
@@ -603,7 +615,8 @@
 			OptsResz::Dlg(<span class="kw">_</span>) =&gt; <span class="self">self</span>.<span class="number">0</span>.base.create_dlg()<span class="question-mark">?</span>,
 		}
 
-		<span class="self">self</span>.<span class="number">0</span>.base.parent().add_to_layout_arranger(<span class="self">self</span>.hwnd(), resize_behavior)
+		<span class="self">self</span>.<span class="number">0</span>.base.parent()
+			.add_to_layout_arranger(<span class="self">self</span>.hwnd(), opts_resz.resize_behavior())
 	}
 
 	<span class="kw">fn </span>default_message_handlers(<span class="kw-2">&amp;</span><span class="self">self</span>, parent: <span class="kw-2">&amp;</span>Base, ctrl_id: u16) {
@@ -621,6 +634,16 @@
 			</span>}
 			<span class="kw">let </span>dlgc_system = self2.hwnd().DefSubclassProc::&lt;wm::GetDlgCode&gt;(p.into());
 			<span class="prelude-val">Ok</span>(dlgc_system)
+		});
+
+		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
+		<span class="self">self</span>.on_subclass().wm(co::WM::NOTIFY, <span class="kw">move </span>|p| {
+			<span class="kw">let </span>wm_nfy = wm::Notify::from_generic_wm(p);
+			<span class="kw">if </span>wm_nfy.nmhdr.code &gt;= co::HDN::GETDISPINFO.into()
+					&amp;&amp; wm_nfy.nmhdr.code &lt;= co::HDN::BEGINDRAG.into() {
+				self2.hwnd().GetAncestor(co::GA::PARENT).unwrap().SendMessage(wm_nfy); <span class="comment">// forward HDN messages to parent
+			</span>}
+			<span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
 		});
 
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
@@ -646,6 +669,11 @@
 			self2.show_context_menu(<span class="bool-val">true</span>, has_ctrl, has_shift);
 			<span class="prelude-val">Ok</span>(())
 		});
+	}
+
+	<span class="doccomment">/// Required by `Header` constructor.
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>parent_base_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Base {
+		<span class="self">self</span>.<span class="number">0</span>.base.parent()
 	}
 
 	<span class="doccomment">/// Exposes the column methods.
@@ -849,6 +877,12 @@
 			context_menu: <span class="prelude-val">None</span>,
 			columns: Vec::&lt;(String, u32)&gt;::default(),
 		}
+	}
+}
+
+<span class="kw">impl </span>ResizeBehavior <span class="kw">for </span><span class="kw-2">&amp;</span>ListViewOpts {
+	<span class="kw">fn </span>resize_behavior(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (Horz, Vert) {
+		<span class="self">self</span>.resize_behavior
 	}
 }
 

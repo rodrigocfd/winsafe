@@ -273,6 +273,8 @@
 <a href="#271" id="271">271</a>
 <a href="#272" id="272">272</a>
 <a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -406,11 +408,6 @@
 	}
 
 	<span class="kw">fn </span>create(<span class="kw-2">&amp;</span><span class="self">self</span>, opts_resz: OptsResz&lt;<span class="kw-2">&amp;</span>TrackbarOpts&gt;) -&gt; SysResult&lt;()&gt; {
-		<span class="kw">let </span>resize_behavior = <span class="kw">match </span>opts_resz {
-			OptsResz::Wnd(opts) =&gt; opts.resize_behavior,
-			OptsResz::Dlg(resize_behavior) =&gt; resize_behavior,
-		};
-
 		<span class="kw">match </span>opts_resz {
 			OptsResz::Wnd(opts) =&gt; {
 				<span class="kw">let </span><span class="kw-2">mut </span>pos = POINT::new(opts.position.<span class="number">0</span>, opts.position.<span class="number">1</span>);
@@ -431,7 +428,8 @@
 			OptsResz::Dlg(<span class="kw">_</span>) =&gt; <span class="self">self</span>.<span class="number">0</span>.base.create_dlg()<span class="question-mark">?</span>,
 		}
 
-		<span class="self">self</span>.<span class="number">0</span>.base.parent().add_to_layout_arranger(<span class="self">self</span>.hwnd(), resize_behavior)
+		<span class="self">self</span>.<span class="number">0</span>.base.parent()
+			.add_to_layout_arranger(<span class="self">self</span>.hwnd(), opts_resz.resize_behavior())
 	}
 
 	<span class="doccomment">/// Retrieves the current position by sending a
@@ -535,6 +533,12 @@
 			resize_behavior: (Horz::None, Vert::None),
 			range: (<span class="number">0</span>, <span class="number">100</span>),
 		}
+	}
+}
+
+<span class="kw">impl </span>ResizeBehavior <span class="kw">for </span><span class="kw-2">&amp;</span>TrackbarOpts {
+	<span class="kw">fn </span>resize_behavior(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (Horz, Vert) {
+		<span class="self">self</span>.resize_behavior
 	}
 }
 

@@ -249,6 +249,9 @@
 <a href="#247" id="247">247</a>
 <a href="#248" id="248">248</a>
 <a href="#249" id="249">249</a>
+<a href="#250" id="250">250</a>
+<a href="#251" id="251">251</a>
+<a href="#252" id="252">252</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -382,13 +385,9 @@
 	}
 
 	<span class="kw">fn </span>create(<span class="kw-2">&amp;</span><span class="self">self</span>, opts_resz: OptsResz&lt;<span class="kw-2">&amp;</span>MonthCalendarOpts&gt;) -&gt; SysResult&lt;()&gt; {
-		<span class="kw">let </span>resize_behavior = <span class="kw">match </span>opts_resz {
-			OptsResz::Wnd(opts) =&gt; opts.resize_behavior,
-			OptsResz::Dlg(resize_behavior) =&gt; resize_behavior,
-		};
-		<span class="kw">if </span>resize_behavior.<span class="number">0 </span>== Horz::Resize {
+		<span class="kw">if </span>opts_resz.resize_behavior().<span class="number">0 </span>== Horz::Resize {
 			<span class="macro">panic!</span>(<span class="string">"MonthCalendar cannot be resized with Horz::Resize."</span>);
-		} <span class="kw">else if </span>resize_behavior.<span class="number">1 </span>== Vert::Resize {
+		} <span class="kw">else if </span>opts_resz.resize_behavior().<span class="number">1 </span>== Vert::Resize {
 			<span class="macro">panic!</span>(<span class="string">"MonthCalendar cannot be resized with Vert::Resize."</span>);
 		}
 
@@ -414,7 +413,8 @@
 			OptsResz::Dlg(<span class="kw">_</span>) =&gt; <span class="self">self</span>.<span class="number">0</span>.base.create_dlg()<span class="question-mark">?</span>,
 		}
 
-		<span class="self">self</span>.<span class="number">0</span>.base.parent().add_to_layout_arranger(<span class="self">self</span>.hwnd(), resize_behavior)
+		<span class="self">self</span>.<span class="number">0</span>.base.parent()
+			.add_to_layout_arranger(<span class="self">self</span>.hwnd(), opts_resz.resize_behavior())
 	}
 
 	<span class="doccomment">/// Retrieves the currently selected date by sending a
@@ -487,6 +487,12 @@
 			ctrl_id: <span class="number">0</span>,
 			resize_behavior: (Horz::None, Vert::None),
 		}
+	}
+}
+
+<span class="kw">impl </span>ResizeBehavior <span class="kw">for </span><span class="kw-2">&amp;</span>MonthCalendarOpts {
+	<span class="kw">fn </span>resize_behavior(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (Horz, Vert) {
+		<span class="self">self</span>.resize_behavior
 	}
 }
 

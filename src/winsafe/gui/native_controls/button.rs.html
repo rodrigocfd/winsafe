@@ -281,6 +281,8 @@
 <a href="#279" id="279">279</a>
 <a href="#280" id="280">280</a>
 <a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -433,12 +435,7 @@
 	}
 
 	<span class="kw">fn </span>create(<span class="kw-2">&amp;</span><span class="self">self</span>, opts_resz: OptsResz&lt;<span class="kw-2">&amp;</span>ButtonOpts&gt;) -&gt; SysResult&lt;()&gt; {
-		<span class="kw">let </span>resize_behavior = <span class="kw">match </span>opts_resz {
-			OptsResz::Wnd(opts) =&gt; opts.resize_behavior,
-			OptsResz::Dlg(resize_behavior) =&gt; resize_behavior,
-		};
-
-		<span class="kw">match </span>opts_resz {
+		<span class="kw">match </span><span class="kw-2">&amp;</span>opts_resz {
 			OptsResz::Wnd(opts) =&gt; {
 				<span class="kw">let </span><span class="kw-2">mut </span>pos = POINT::new(opts.position.<span class="number">0</span>, opts.position.<span class="number">1</span>);
 				<span class="kw">let </span><span class="kw-2">mut </span>sz = SIZE::new(opts.width <span class="kw">as _</span>, opts.height <span class="kw">as _</span>);
@@ -459,7 +456,8 @@
 			OptsResz::Dlg(<span class="kw">_</span>) =&gt; <span class="self">self</span>.<span class="number">0</span>.base.create_dlg()<span class="question-mark">?</span>,
 		}
 
-		<span class="self">self</span>.<span class="number">0</span>.base.parent().add_to_layout_arranger(<span class="self">self</span>.hwnd(), resize_behavior)
+		<span class="self">self</span>.<span class="number">0</span>.base.parent()
+			.add_to_layout_arranger(<span class="self">self</span>.hwnd(), opts_resz.resize_behavior())
 	}
 
 	<span class="doccomment">/// Fires the click event for the button by sending a
@@ -551,6 +549,12 @@
 			ctrl_id: <span class="number">0</span>,
 			resize_behavior: (Horz::None, Vert::None),
 		}
+	}
+}
+
+<span class="kw">impl </span>ResizeBehavior <span class="kw">for </span><span class="kw-2">&amp;</span>ButtonOpts {
+	<span class="kw">fn </span>resize_behavior(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (Horz, Vert) {
+		<span class="self">self</span>.resize_behavior
 	}
 }
 

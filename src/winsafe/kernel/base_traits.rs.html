@@ -103,6 +103,7 @@
 <a href="#101" id="101">101</a>
 <a href="#102" id="102">102</a>
 <a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span>std::{fmt, hash, ops};
@@ -120,7 +121,8 @@
 
 <span class="doccomment">/// A type which has a primitive integer as its underlying type.
 </span><span class="kw">pub trait </span>IntUnderlying: Sized
-	+ Clone + Copy + PartialEq + Eq + hash::Hash + Send
+	+ Clone + Copy + PartialEq + Eq + PartialOrd + Ord
+	+ hash::Hash + Send
 	+ Into&lt;<span class="self">Self</span>::Raw&gt; + AsRef&lt;<span class="self">Self</span>::Raw&gt;
 {
 	<span class="doccomment">/// The underlying raw integer type.
