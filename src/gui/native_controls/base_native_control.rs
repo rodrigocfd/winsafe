@@ -9,6 +9,8 @@ use crate::prelude::*;
 
 static mut BASE_SUBCLASS_ID: usize = 0;
 
+//------------------------------------------------------------------------------
+
 /// Variant field for creating child controls.
 pub(in crate::gui) enum OptsResz<T> {
 	/// Options for a raw control creation.

@@ -62,12 +62,25 @@ pub(in crate::gui) fn ui_font() -> &'static HFONT {
 static mut BASE_CTRL_ID: u16 = 0xdfff; // https://stackoverflow.com/a/18192766/6923555
 
 /// Returns the next sequential control ID.
-pub(in crate::gui) fn auto_ctrl_id() -> u16 {
+pub(in crate::gui) fn next_auto_ctrl_id() -> u16 {
 	unsafe {
 		let your_id = BASE_CTRL_ID;
 		BASE_CTRL_ID -= 1; // go down
 		your_id
 	}
+}
+
+/// To be implemented for control options structs.
+pub(in crate::gui) trait AutoCtrlId {
+	fn ctrl_id_mut(&mut self) -> &mut u16;
+}
+
+/// If the control ID is zero, give it the next sequential ID.
+pub(in crate::gui) fn auto_ctrl_id_if_zero<T: AutoCtrlId>(mut obj: T) -> T {
+	if *obj.ctrl_id_mut() == 0 {
+		*obj.ctrl_id_mut() = next_auto_ctrl_id();
+	}
+	obj
 }
 
 //------------------------------------------------------------------------------

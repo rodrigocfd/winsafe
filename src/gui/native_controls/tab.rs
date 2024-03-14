@@ -72,7 +72,7 @@ impl Tab {
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: TabOpts) -> Self {
 		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
-		let mut opts = TabOpts::define_ctrl_id(opts);
+		let mut opts = auto_ctrl_id_if_zero(opts);
 		let ctrl_id = opts.ctrl_id;
 		let children = opts.items.drain(..).collect::<Vec<_>>();
 
@@ -311,11 +311,8 @@ impl ResizeBehavior for &TabOpts {
 	}
 }
 
-impl TabOpts {
-	fn define_ctrl_id(mut self) -> Self {
-		if self.ctrl_id == 0 {
-			self.ctrl_id = auto_ctrl_id();
-		}
-		self
+impl AutoCtrlId for TabOpts {
+	fn ctrl_id_mut(&mut self) -> &mut u16 {
+		&mut self.ctrl_id
 	}
 }

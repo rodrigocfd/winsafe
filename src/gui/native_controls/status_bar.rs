@@ -112,7 +112,7 @@ impl StatusBar {
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, parts: &[SbPart]) -> Self {
 		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
-		let ctrl_id = auto_ctrl_id();
+		let ctrl_id = next_auto_ctrl_id();
 
 		let new_self = Self(
 			Arc::pin(

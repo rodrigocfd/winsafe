@@ -23,7 +23,7 @@ pub(in crate::gui) struct RawControl(Pin<Arc<Obj>>);
 impl RawControl {
 	pub(in crate::gui) fn new(parent: &Base, opts: WindowControlOpts) -> Self {
 		let resize_behavior = opts.resize_behavior;
-		let opts = WindowControlOpts::define_ctrl_id(opts);
+		let opts = auto_ctrl_id_if_zero(opts);
 		let new_self = Self(
 			Arc::pin(
 				Obj {
@@ -205,11 +205,8 @@ impl Default for WindowControlOpts {
 	}
 }
 
-impl WindowControlOpts {
-	fn define_ctrl_id(mut self) -> Self {
-		if self.ctrl_id == 0 {
-			self.ctrl_id = auto_ctrl_id();
-		}
-		self
+impl AutoCtrlId for WindowControlOpts {
+	fn ctrl_id_mut(&mut self) -> &mut u16 {
+		&mut self.ctrl_id
 	}
 }

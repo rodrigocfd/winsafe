@@ -35,7 +35,7 @@ impl DlgControl {
 				Obj {
 					dlg_base: DlgBase::new(Some(parent), dialog_id),
 					position,
-					ctrl_id: ctrl_id.unwrap_or_else(|| auto_ctrl_id()),
+					ctrl_id: ctrl_id.unwrap_or_else(|| next_auto_ctrl_id()),
 					_pin: PhantomPinned,
 				},
 			),

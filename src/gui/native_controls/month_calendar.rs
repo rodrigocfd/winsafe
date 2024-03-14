@@ -72,7 +72,7 @@ impl MonthCalendar {
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: MonthCalendarOpts) -> Self {
 		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
-		let opts = MonthCalendarOpts::define_ctrl_id(opts);
+		let opts = auto_ctrl_id_if_zero(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		let new_self = Self(
@@ -242,11 +242,8 @@ impl ResizeBehavior for &MonthCalendarOpts {
 	}
 }
 
-impl MonthCalendarOpts {
-	fn define_ctrl_id(mut self) -> Self {
-		if self.ctrl_id == 0 {
-			self.ctrl_id = auto_ctrl_id();
-		}
-		self
+impl AutoCtrlId for MonthCalendarOpts {
+	fn ctrl_id_mut(&mut self) -> &mut u16 {
+		&mut self.ctrl_id
 	}
 }

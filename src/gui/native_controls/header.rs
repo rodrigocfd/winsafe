@@ -83,7 +83,7 @@ impl Header {
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: HeaderOpts) -> Self {
 		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
-		let opts = HeaderOpts::define_ctrl_id(opts);
+		let opts = auto_ctrl_id_if_zero(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		let new_self = Self(
@@ -147,7 +147,7 @@ impl Header {
 	#[must_use]
 	pub fn from_list_view(list_view: &ListView) -> Self {
 		let parent_base_ref = list_view.parent_base_ref();
-		let ctrl_id = auto_ctrl_id();
+		let ctrl_id = next_auto_ctrl_id();
 
 		let new_self = Self(
 			Arc::pin(
@@ -279,11 +279,8 @@ impl ResizeBehavior for &HeaderOpts {
 	}
 }
 
-impl HeaderOpts {
-	fn define_ctrl_id(mut self) -> Self {
-		if self.ctrl_id == 0 {
-			self.ctrl_id = auto_ctrl_id();
-		}
-		self
+impl AutoCtrlId for HeaderOpts {
+	fn ctrl_id_mut(&mut self) -> &mut u16 {
+		&mut self.ctrl_id
 	}
 }
