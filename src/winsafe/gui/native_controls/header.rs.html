@@ -289,10 +289,6 @@
 <a href="#287" id="287">287</a>
 <a href="#288" id="288">288</a>
 <a href="#289" id="289">289</a>
-<a href="#290" id="290">290</a>
-<a href="#291" id="291">291</a>
-<a href="#292" id="292">292</a>
-<a href="#293" id="293">293</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -439,20 +435,16 @@
 	<span class="doccomment">/// Instantiates a new `Header` object to be loaded from a
 	/// [`ListView`](crate::gui::ListView) control. This will give you access to
 	/// the inner `Header` control of that `ListView`.
-	///
-	/// You must inform an unique control ID for this `Header`. This is
-	/// necessary because the list view header is created with an ID of zero,
-	/// making it impossible to attach event handlers. By giving it an ID, we
-	/// make the `on()` method possible.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>from_list_view(list_view: <span class="kw-2">&amp;</span>ListView, header_ctrl_id: u16) -&gt; <span class="self">Self </span>{
+	</span><span class="kw">pub fn </span>from_list_view(list_view: <span class="kw-2">&amp;</span>ListView) -&gt; <span class="self">Self </span>{
 		<span class="kw">let </span>parent_base_ref = list_view.parent_base_ref();
+		<span class="kw">let </span>ctrl_id = auto_ctrl_id();
 
 		<span class="kw">let </span>new_self = <span class="self">Self</span>(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, header_ctrl_id),
-					events: HeaderEvents::new(parent_base_ref, header_ctrl_id),
+					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
+					events: HeaderEvents::new(parent_base_ref, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
@@ -502,7 +494,7 @@
 
 	<span class="doccomment">/// Exposes the item methods.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub const fn </span>items(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HeaderItems {
+	</span><span class="kw">pub const fn </span>items(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HeaderItems&lt;<span class="lifetime">'_</span>&gt; {
 		HeaderItems::new(<span class="self">self</span>)
 	}
 }

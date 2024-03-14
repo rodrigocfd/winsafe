@@ -311,14 +311,14 @@
 
 <span class="comment">//------------------------------------------------------------------------------
 
-</span><span class="kw">static </span><span class="kw-2">mut </span>BASE_CTRL_ID: u16 = <span class="number">20_000</span>; <span class="comment">// in-between Visual Studio Resource Editor values
+</span><span class="kw">static </span><span class="kw-2">mut </span>BASE_CTRL_ID: u16 = <span class="number">0xdfff</span>; <span class="comment">// https://stackoverflow.com/a/18192766/6923555
 
 </span><span class="doccomment">/// Returns the next sequential control ID.
 </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>auto_ctrl_id() -&gt; u16 {
 	<span class="kw">unsafe </span>{
-		<span class="kw">let </span>new_id = BASE_CTRL_ID;
-		BASE_CTRL_ID += <span class="number">1</span>;
-		new_id
+		<span class="kw">let </span>your_id = BASE_CTRL_ID;
+		BASE_CTRL_ID -= <span class="number">1</span>; <span class="comment">// go down
+		</span>your_id
 	}
 }
 
