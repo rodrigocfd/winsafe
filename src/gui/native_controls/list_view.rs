@@ -22,6 +22,9 @@ struct Obj { // atual fields of ListView
 /// [list view](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
 /// control. Not to be confused with the simpler [list box](crate::gui::ListBox)
 /// control.
+///
+/// You can have access to the internal header of the list view by creating a
+/// [`Header`](crate::gui::Header) object.
 #[derive(Clone)]
 pub struct ListView(Pin<Arc<Obj>>);
 

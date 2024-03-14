@@ -144,19 +144,16 @@ impl Header {
 	/// Instantiates a new `Header` object to be loaded from a
 	/// [`ListView`](crate::gui::ListView) control. This will give you access to
 	/// the inner `Header` control of that `ListView`.
-	///
-	/// You must inform an unique control ID for this `Header`. This is
-	/// necessary because, by default, these headers are created with an ID of
-	/// zero, and this would make it impossible to attach event handlers.
 	#[must_use]
-	pub fn from_list_view(list_view: &ListView, header_ctrl_id: u16) -> Self {
+	pub fn from_list_view(list_view: &ListView) -> Self {
 		let parent_base_ref = list_view.parent_base_ref();
+		let ctrl_id = auto_ctrl_id();
 
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, header_ctrl_id),
-					events: HeaderEvents::new(parent_base_ref, header_ctrl_id),
+					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
+					events: HeaderEvents::new(parent_base_ref, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
@@ -206,7 +203,7 @@ impl Header {
 
 	/// Exposes the item methods.
 	#[must_use]
-	pub const fn items(&self) -> HeaderItems {
+	pub const fn items(&self) -> HeaderItems<'_> {
 		HeaderItems::new(self)
 	}
 }

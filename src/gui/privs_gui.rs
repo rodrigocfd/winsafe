@@ -59,14 +59,14 @@ pub(in crate::gui) fn ui_font() -> &'static HFONT {
 
 //------------------------------------------------------------------------------
 
-static mut BASE_CTRL_ID: u16 = 20_000; // in-between Visual Studio Resource Editor values
+static mut BASE_CTRL_ID: u16 = 0xdfff; // https://stackoverflow.com/a/18192766/6923555
 
 /// Returns the next sequential control ID.
 pub(in crate::gui) fn auto_ctrl_id() -> u16 {
 	unsafe {
-		let new_id = BASE_CTRL_ID;
-		BASE_CTRL_ID += 1;
-		new_id
+		let your_id = BASE_CTRL_ID;
+		BASE_CTRL_ID -= 1; // go down
+		your_id
 	}
 }
 
