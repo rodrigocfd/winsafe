@@ -22,8 +22,8 @@ enum OptsReszLv<'a> {
 	Wnd(&'a HeaderOpts),
 	/// Resize behavior for a dialog control creation.
 	Dlg((Horz, Vert)),
-	/// The `Header` belongs to an existing `ListView` control.
-	Lv(NonNull<ListView>),
+	/// `BaseNativeControl` of the owner `ListView`.
+	Lv(NonNull<BaseNativeControl>),
 }
 
 //------------------------------------------------------------------------------
@@ -146,7 +146,8 @@ impl Header {
 	/// the inner `Header` control of that `ListView`.
 	#[must_use]
 	pub fn from_list_view(list_view: &ListView) -> Self {
-		let parent_base_ref = list_view.parent_base_ref();
+		let lv_base_ref = list_view.as_base();
+		let parent_base_ref = lv_base_ref.parent();
 		let ctrl_id = next_auto_ctrl_id();
 
 		let new_self = Self(
@@ -159,10 +160,10 @@ impl Header {
 			),
 		);
 
-		let lv_ptr = NonNull::from(list_view);
+		let lv_base_ptr = NonNull::from(lv_base_ref);
 		let self2 = new_self.clone();
 		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
-			self2.create(OptsReszLv::Lv(lv_ptr))?;
+			self2.create(OptsReszLv::Lv(lv_base_ptr))?;
 			Ok(())
 		});
 
@@ -191,9 +192,9 @@ impl Header {
 				self.0.base.parent()
 					.add_to_layout_arranger(self.hwnd(), *resize_behavior)
 			},
-			OptsReszLv::Lv(lv_ptr) => {
-				let lv_ref = unsafe { lv_ptr.as_ref() };
-				let hheader = lv_ref.hwnd().SendMessage(lvm::GetHeader {})?;
+			OptsReszLv::Lv(lv_base_ptr) => {
+				let lv_base_ref = unsafe { lv_base_ptr.as_ref() };
+				let hheader = lv_base_ref.hwnd().SendMessage(lvm::GetHeader {})?;
 				hheader.SetWindowLongPtr(co::GWLP::ID, self.ctrl_id() as _); // give the header its new ID
 				self.0.base.assign_hctrl(hheader);
 				Ok(())

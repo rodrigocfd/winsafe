@@ -225,9 +225,9 @@ impl ListView {
 		});
 	}
 
-	/// Required by `Header` constructor.
-	pub(in crate::gui) fn parent_base_ref(&self) -> &Base {
-		self.0.base.parent()
+	/// Required by `Header` constructon phase.
+	pub(in crate::gui) fn as_base(&self) -> &BaseNativeControl {
+		&self.0.base
 	}
 
 	/// Exposes the column methods.
