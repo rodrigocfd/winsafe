@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::decl::*;
+use crate::kernel::{ffi, privs::*};
 use crate::prelude::*;
 
 impl_handle! { HFILEMAPVIEW;
@@ -76,5 +78,22 @@ pub trait kernel_Hfilemapview: Handle {
 	#[must_use]
 	fn as_slice(&self, len: usize) -> &[u8] {
 		unsafe { std::slice::from_raw_parts(self.ptr() as _, len) }
+	}
+
+	/// [`FlushViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-flushviewoffile)
+	/// function.
+	fn FlushViewOfFile(&self,
+		start_at_byte: usize,
+		num_bytes: usize,
+	) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				ffi::FlushViewOfFile(
+					self.ptr().offset(start_at_byte as _),
+					num_bytes,
+				)
+			},
+		)
 	}
 }
