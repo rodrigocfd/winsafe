@@ -287,6 +287,7 @@
 <a href="#285" id="285">285</a>
 <a href="#286" id="286">286</a>
 <a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys!</span> { <span class="string">"advapi32"</span>;
@@ -404,6 +405,7 @@
 	FlushConsoleInputBuffer(HANDLE) -&gt; BOOL
 	FlushInstructionCache(HANDLE, PCVOID, usize) -&gt; BOOL
 	FlushProcessWriteBuffers()
+	FlushViewOfFile(PVOID, usize) -&gt; BOOL
 	FormatMessageW(u32, PCVOID, u32, u32, PSTR, u32, PVOID) -&gt; u32
 	FreeEnvironmentStringsW(HANDLE) -&gt; BOOL
 	FreeLibrary(HANDLE) -&gt; BOOL

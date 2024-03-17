@@ -287,8 +287,6 @@
 <a href="#285" id="285">285</a>
 <a href="#286" id="286">286</a>
 <a href="#287" id="287">287</a>
-<a href="#288" id="288">288</a>
-<a href="#289" id="289">289</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -313,8 +311,8 @@
 	</span>Wnd(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>HeaderOpts),
 	<span class="doccomment">/// Resize behavior for a dialog control creation.
 	</span>Dlg((Horz, Vert)),
-	<span class="doccomment">/// The `Header` belongs to an existing `ListView` control.
-	</span>Lv(NonNull&lt;ListView&gt;),
+	<span class="doccomment">/// `BaseNativeControl` of the owner `ListView`.
+	</span>Lv(NonNull&lt;BaseNativeControl&gt;),
 }
 
 <span class="comment">//------------------------------------------------------------------------------
@@ -374,7 +372,7 @@
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>GuiParent, opts: HeaderOpts) -&gt; <span class="self">Self </span>{
 		<span class="kw">let </span>parent_base_ref = <span class="kw">unsafe </span>{ Base::from_guiparent(parent) };
-		<span class="kw">let </span>opts = HeaderOpts::define_ctrl_id(opts);
+		<span class="kw">let </span>opts = auto_ctrl_id_if_zero(opts);
 		<span class="kw">let </span>ctrl_id = opts.ctrl_id;
 
 		<span class="kw">let </span>new_self = <span class="self">Self</span>(
@@ -437,8 +435,9 @@
 	/// the inner `Header` control of that `ListView`.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>from_list_view(list_view: <span class="kw-2">&amp;</span>ListView) -&gt; <span class="self">Self </span>{
-		<span class="kw">let </span>parent_base_ref = list_view.parent_base_ref();
-		<span class="kw">let </span>ctrl_id = auto_ctrl_id();
+		<span class="kw">let </span>lv_base_ref = list_view.as_base();
+		<span class="kw">let </span>parent_base_ref = lv_base_ref.parent();
+		<span class="kw">let </span>ctrl_id = next_auto_ctrl_id();
 
 		<span class="kw">let </span>new_self = <span class="self">Self</span>(
 			Arc::pin(
@@ -450,10 +449,10 @@
 			),
 		);
 
-		<span class="kw">let </span>lv_ptr = NonNull::from(list_view);
+		<span class="kw">let </span>lv_base_ptr = NonNull::from(lv_base_ref);
 		<span class="kw">let </span>self2 = new_self.clone();
 		parent_base_ref.privileged_on().wm_create_or_initdialog(<span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
-			self2.create(OptsReszLv::Lv(lv_ptr))<span class="question-mark">?</span>;
+			self2.create(OptsReszLv::Lv(lv_base_ptr))<span class="question-mark">?</span>;
 			<span class="prelude-val">Ok</span>(())
 		});
 
@@ -482,9 +481,9 @@
 				<span class="self">self</span>.<span class="number">0</span>.base.parent()
 					.add_to_layout_arranger(<span class="self">self</span>.hwnd(), <span class="kw-2">*</span>resize_behavior)
 			},
-			OptsReszLv::Lv(lv_ptr) =&gt; {
-				<span class="kw">let </span>lv_ref = <span class="kw">unsafe </span>{ lv_ptr.as_ref() };
-				<span class="kw">let </span>hheader = lv_ref.hwnd().SendMessage(lvm::GetHeader {})<span class="question-mark">?</span>;
+			OptsReszLv::Lv(lv_base_ptr) =&gt; {
+				<span class="kw">let </span>lv_base_ref = <span class="kw">unsafe </span>{ lv_base_ptr.as_ref() };
+				<span class="kw">let </span>hheader = lv_base_ref.hwnd().SendMessage(lvm::GetHeader {})<span class="question-mark">?</span>;
 				hheader.SetWindowLongPtr(co::GWLP::ID, <span class="self">self</span>.ctrl_id() <span class="kw">as _</span>); <span class="comment">// give the header its new ID
 				</span><span class="self">self</span>.<span class="number">0</span>.base.assign_hctrl(hheader);
 				<span class="prelude-val">Ok</span>(())
@@ -570,12 +569,9 @@
 	}
 }
 
-<span class="kw">impl </span>HeaderOpts {
-	<span class="kw">fn </span>define_ctrl_id(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-		<span class="kw">if </span><span class="self">self</span>.ctrl_id == <span class="number">0 </span>{
-			<span class="self">self</span>.ctrl_id = auto_ctrl_id();
-		}
-		<span class="self">self
-	</span>}
+<span class="kw">impl </span>AutoCtrlId <span class="kw">for </span>HeaderOpts {
+	<span class="kw">fn </span>ctrl_id_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>u16 {
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>.ctrl_id
+	}
 }
 </code></pre></div></section></main></body></html>

@@ -207,6 +207,8 @@
 <a href="#205" id="205">205</a>
 <a href="#206" id="206">206</a>
 <a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::UnsafeCell;
 <span class="kw">use </span>std::ptr::NonNull;
 
@@ -218,7 +220,9 @@
 
 <span class="kw">static </span><span class="kw-2">mut </span>BASE_SUBCLASS_ID: usize = <span class="number">0</span>;
 
-<span class="doccomment">/// Variant field for creating child controls.
+<span class="comment">//------------------------------------------------------------------------------
+
+</span><span class="doccomment">/// Variant field for creating child controls.
 </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">enum </span>OptsResz&lt;T&gt; {
 	<span class="doccomment">/// Options for a raw control creation.
 	</span>Wnd(T),

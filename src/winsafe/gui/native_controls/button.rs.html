@@ -280,9 +280,6 @@
 <a href="#278" id="278">278</a>
 <a href="#279" id="279">279</a>
 <a href="#280" id="280">280</a>
-<a href="#281" id="281">281</a>
-<a href="#282" id="282">282</a>
-<a href="#283" id="283">283</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -377,7 +374,7 @@
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>GuiParent, opts: ButtonOpts) -&gt; <span class="self">Self </span>{
 		<span class="kw">let </span>parent_base_ref = <span class="kw">unsafe </span>{ Base::from_guiparent(parent) };
-		<span class="kw">let </span>opts = ButtonOpts::define_ctrl_id(opts);
+		<span class="kw">let </span>opts = auto_ctrl_id_if_zero(opts);
 		<span class="kw">let </span>ctrl_id = opts.ctrl_id;
 
 		<span class="kw">let </span>new_self = <span class="self">Self</span>(
@@ -558,12 +555,9 @@
 	}
 }
 
-<span class="kw">impl </span>ButtonOpts {
-	<span class="kw">fn </span>define_ctrl_id(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-		<span class="kw">if </span><span class="self">self</span>.ctrl_id == <span class="number">0 </span>{
-			<span class="self">self</span>.ctrl_id = auto_ctrl_id();
-		}
-		<span class="self">self
-	</span>}
+<span class="kw">impl </span>AutoCtrlId <span class="kw">for </span>ButtonOpts {
+	<span class="kw">fn </span>ctrl_id_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>u16 {
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>.ctrl_id
+	}
 }
 </code></pre></div></section></main></body></html>

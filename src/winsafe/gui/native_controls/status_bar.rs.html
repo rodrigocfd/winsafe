@@ -344,7 +344,7 @@
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>GuiParent, parts: <span class="kw-2">&amp;</span>[SbPart]) -&gt; <span class="self">Self </span>{
 		<span class="kw">let </span>parent_base_ref = <span class="kw">unsafe </span>{ Base::from_guiparent(parent) };
-		<span class="kw">let </span>ctrl_id = auto_ctrl_id();
+		<span class="kw">let </span>ctrl_id = next_auto_ctrl_id();
 
 		<span class="kw">let </span>new_self = <span class="self">Self</span>(
 			Arc::pin(

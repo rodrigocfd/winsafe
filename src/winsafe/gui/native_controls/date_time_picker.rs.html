@@ -273,9 +273,6 @@
 <a href="#271" id="271">271</a>
 <a href="#272" id="272">272</a>
 <a href="#273" id="273">273</a>
-<a href="#274" id="274">274</a>
-<a href="#275" id="275">275</a>
-<a href="#276" id="276">276</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -350,7 +347,7 @@
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>GuiParent, opts: DateTimePickerOpts) -&gt; <span class="self">Self </span>{
 		<span class="kw">let </span>parent_base_ref = <span class="kw">unsafe </span>{ Base::from_guiparent(parent) };
-		<span class="kw">let </span>opts = DateTimePickerOpts::define_ctrl_id(opts);
+		<span class="kw">let </span>opts = auto_ctrl_id_if_zero(opts);
 		<span class="kw">let </span>ctrl_id = opts.ctrl_id;
 
 		<span class="kw">let </span>new_self = <span class="self">Self</span>(
@@ -544,12 +541,9 @@
 	}
 }
 
-<span class="kw">impl </span>DateTimePickerOpts {
-	<span class="kw">fn </span>define_ctrl_id(<span class="kw-2">mut </span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-		<span class="kw">if </span><span class="self">self</span>.ctrl_id == <span class="number">0 </span>{
-			<span class="self">self</span>.ctrl_id = auto_ctrl_id();
-		}
-		<span class="self">self
-	</span>}
+<span class="kw">impl </span>AutoCtrlId <span class="kw">for </span>DateTimePickerOpts {
+	<span class="kw">fn </span>ctrl_id_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>u16 {
+		<span class="kw-2">&amp;mut </span><span class="self">self</span>.ctrl_id
+	}
 }
 </code></pre></div></section></main></body></html>
