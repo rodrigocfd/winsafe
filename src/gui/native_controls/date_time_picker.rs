@@ -161,7 +161,7 @@ impl DateTimePicker {
 				}
 
 				self.hwnd().SendMessage(wm::SetFont {
-					hfont: unsafe { ui_font().raw_copy() },
+					hfont: ui_font(),
 					redraw: true,
 				});
 			},

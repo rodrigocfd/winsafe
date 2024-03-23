@@ -48,10 +48,10 @@ pub(in crate::gui) fn delete_ui_font() {
 }
 
 /// Retrieves the global UI font object, or panics if not created yet.
-pub(in crate::gui) fn ui_font() -> &'static HFONT {
+pub(in crate::gui) fn ui_font() -> HFONT {
 	unsafe {
-		match &UI_HFONT {
-			Some(hfont) => hfont,
+		match &*std::ptr::addr_of!(UI_HFONT) {
+			Some(hfont) => hfont.raw_copy(),
 			None => panic!("Global UI font not created."),
 		}
 	}
@@ -156,7 +156,7 @@ pub(in crate::gui) fn calc_text_bound_box(text: &str) -> SysResult<SIZE> {
 	let desktop_hwnd = HWND::GetDesktopWindow();
 	let desktop_hdc = desktop_hwnd.GetDC()?;
 	let clone_dc = desktop_hdc.CreateCompatibleDC()?;
-	let _prev_font = clone_dc.SelectObject(ui_font())?;
+	let _prev_font = clone_dc.SelectObject(&ui_font())?;
 
 	let mut bounds = if text.is_empty() {
 		clone_dc.GetTextExtentPoint32("Pj")? // just a placeholder to get the text height
