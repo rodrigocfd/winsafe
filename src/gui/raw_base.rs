@@ -262,6 +262,9 @@ impl RawBase {
 		// Execute user closure, if any.
 		let process_result = ref_self.base.process_user_message(wm_any)?;
 
+		// Execute post-user privileged closures, keep track if at least one was executed.
+		let at_least_one_privileged_post = ref_self.base.process_privileged_post_messages(&hwnd, wm_any)?;
+
 		if wm_any.msg_id == co::WM::NCDESTROY { // always check
 			hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
 			ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
@@ -271,7 +274,7 @@ impl RawBase {
 		Ok(match process_result {
 			ProcessResult::HandledWithRet(res) => res,
 			ProcessResult::HandledWithoutRet => 0,
-			ProcessResult::NotHandled => if at_least_one_privileged {
+			ProcessResult::NotHandled => if at_least_one_privileged || at_least_one_privileged_post {
 				0
 			} else {
 				hwnd.DefWindowProc(wm_any).into()
