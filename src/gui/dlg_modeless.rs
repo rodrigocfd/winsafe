@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*};
+use crate::gui::privs::*;
 use crate::prelude::*;
 
 struct Obj { // actual fields of DlgModeless
@@ -39,40 +39,20 @@ impl DlgModeless {
 		new_self
 	}
 
-	pub(in crate::gui) unsafe fn as_base(&self) -> *mut std::ffi::c_void {
-		self.0.dlg_base.as_base()
-	}
-
-	pub(in crate::gui) fn hwnd(&self) -> &HWND {
-		self.0.dlg_base.hwnd()
-	}
-
-	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
-		self.0.dlg_base.on()
-	}
-
-	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static,
-	{
-		self.0.dlg_base.spawn_new_thread(func);
-	}
-
-	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static
-	{
-		self.0.dlg_base.run_ui_thread(func);
+	pub(in crate::gui) fn base(&self) -> &Base {
+		self.0.dlg_base.base()
 	}
 
 	fn default_message_handlers(&self, parent: &Base) {
 		let self2 = self.clone();
 		parent.privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.0.dlg_base.create_dialog_param()?;
-			self2.hwnd().ShowWindow(co::SW::SHOW);
+			self2.base().hwnd().ShowWindow(co::SW::SHOW);
 
 			let dlg_pos = adjust_modeless_pos(
-				self2.0.dlg_base.parent().unwrap(), self2.0.position)?;
+				self2.base().parent().unwrap(), self2.0.position)?;
 
-			self2.hwnd().SetWindowPos(
+			self2.base().hwnd().SetWindowPos(
 				HwndPlace::None,
 				dlg_pos, SIZE::default(),
 				co::SWP::NOZORDER | co::SWP::NOSIZE,

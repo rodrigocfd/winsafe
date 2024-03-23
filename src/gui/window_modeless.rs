@@ -19,10 +19,7 @@ unsafe impl Send for WindowModeless {}
 
 impl GuiWindow for WindowModeless {
 	fn hwnd(&self) -> &HWND {
-		match &self.0 {
-			RawDlg::Raw(r) => r.hwnd(),
-			RawDlg::Dlg(d) => d.hwnd(),
-		}
+		self.base().hwnd()
 	}
 
 	fn as_any(&self) -> &dyn Any {
@@ -34,17 +31,11 @@ impl GuiWindowText for WindowModeless {}
 
 impl GuiParent for WindowModeless {
 	fn on(&self) -> &WindowEventsAll {
-		match &self.0 {
-			RawDlg::Raw(r) => r.on(),
-			RawDlg::Dlg(d) => d.on(),
-		}
+		self.base().on()
 	}
 
 	unsafe fn as_base(&self) -> *mut std::ffi::c_void {
-		match &self.0 {
-			RawDlg::Raw(r) => r.as_base(),
-			RawDlg::Dlg(d) => d.as_base(),
-		}
+		self.base() as *const _ as _
 	}
 }
 
@@ -52,19 +43,13 @@ impl GuiThread for WindowModeless {
 	fn spawn_new_thread<F>(&self, func: F)
 		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
-		match &self.0 {
-			RawDlg::Raw(r) => r.spawn_new_thread(func),
-			RawDlg::Dlg(d) => d.spawn_new_thread(func),
-		}
+		self.base().spawn_new_thread(func)
 	}
 
 	fn run_ui_thread<F>(&self, func: F)
 		where F: FnOnce() -> AnyResult<()> + Send + 'static
 	{
-		match &self.0 {
-			RawDlg::Raw(r) => r.run_ui_thread(func),
-			RawDlg::Dlg(d) => d.run_ui_thread(func),
-		}
+		self.base().run_ui_thread(func)
 	}
 }
 
@@ -124,5 +109,12 @@ impl WindowModeless {
 				),
 			),
 		)
+	}
+
+	fn base(&self) -> &Base {
+		match &self.0 {
+			RawDlg::Raw(r) => r.base(),
+			RawDlg::Dlg(d) => d.base(),
+		}
 	}
 }

@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*};
+use crate::gui::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -42,28 +42,8 @@ impl DlgMain {
 		new_self
 	}
 
-	pub(in crate::gui) unsafe fn as_base(&self) -> *mut std::ffi::c_void {
-		self.0.dlg_base.as_base()
-	}
-
-	pub(in crate::gui) fn hwnd(&self) -> &HWND {
-		self.0.dlg_base.hwnd()
-	}
-
-	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
-		self.0.dlg_base.on()
-	}
-
-	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static,
-	{
-		self.0.dlg_base.spawn_new_thread(func);
-	}
-
-	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static
-	{
-		self.0.dlg_base.run_ui_thread(func);
+	pub(in crate::gui) fn base(&self) -> &Base {
+		self.0.dlg_base.base()
 	}
 
 	pub(in crate::gui) fn run_main(&self,
@@ -78,19 +58,19 @@ impl DlgMain {
 			.unwrap();
 
 		self.set_icon_if_any(&hinst).unwrap();
-		self.hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
+		self.base().hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 
 		Base::run_main_loop(haccel.as_ref()) // blocks until window is closed
 	}
 
 	fn default_message_handlers(&self) {
 		let self2 = self.clone();
-		self.on().wm_close(move || {
-			self2.hwnd().DestroyWindow().ok(); // ignore errors
+		self.base().on().wm_close(move || {
+			self2.base().hwnd().DestroyWindow().ok(); // ignore errors
 			Ok(())
 		});
 
-		self.on().wm_nc_destroy(|| {
+		self.base().on().wm_nc_destroy(|| {
 			PostQuitMessage(0);
 			Ok(())
 		});
@@ -100,13 +80,13 @@ impl DlgMain {
 		// If an icon ID was specified, load it from the resources.
 		// Resource icons are automatically released by the system.
 		if let Some(id) = self.0.icon_id {
-			self.hwnd().SendMessage(wm::SetIcon {
+			self.base().hwnd().SendMessage(wm::SetIcon {
 				hicon: hinst.LoadImageIcon(
 					IdOicStr::Id(id), SIZE::new(16, 16), co::LR::DEFAULTCOLOR)?.leak(),
 				size: co::ICON_SZ::SMALL,
 			});
 
-			self.hwnd().SendMessage(wm::SetIcon {
+			self.base().hwnd().SendMessage(wm::SetIcon {
 				hicon: hinst.LoadImageIcon(
 					IdOicStr::Id(id), SIZE::new(32, 32), co::LR::DEFAULTCOLOR)?.leak(),
 				size: co::ICON_SZ::BIG,

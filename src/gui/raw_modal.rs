@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::{*, privs::*};
 use crate::prelude::*;
 
 struct Obj { // actual fields of RawModal
@@ -37,39 +37,15 @@ impl RawModal {
 		new_self
 	}
 
-	pub(in crate::gui) unsafe fn as_base(&self) -> *mut std::ffi::c_void {
-		self.0.raw_base.as_base()
-	}
-
-	pub(in crate::gui) fn hwnd(&self) -> &HWND {
-		self.0.raw_base.hwnd()
-	}
-
-	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
-		self.0.raw_base.on()
-	}
-
-	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsPriv {
-		self.0.raw_base.privileged_on()
-	}
-
-	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static,
-	{
-		self.0.raw_base.spawn_new_thread(func);
-	}
-
-	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static
-	{
-		self.0.raw_base.run_ui_thread(func);
+	pub(in crate::gui) fn base(&self) -> &Base {
+		self.0.raw_base.base()
 	}
 
 	pub(in crate::gui) fn show_modal(&self) -> AnyResult<i32> {
-		let hparent = self.0.raw_base.parent().unwrap().hwnd();
+		let hparent = self.base().parent().unwrap().hwnd();
 		let opts = &self.0.opts;
 
-		let parent_hinst = self.0.raw_base.parent_hinstance()?;
+		let parent_hinst = self.base().parent_hinstance()?;
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::default();
 		RawBase::fill_wndclassex(
@@ -127,7 +103,7 @@ impl RawModal {
 				return Ok(0); // raw modals will always return 0
 			}
 
-			if *self.hwnd() == HWND::NULL || !self.hwnd().IsWindow() {
+			if *self.base().hwnd() == HWND::NULL || !self.base().hwnd().IsWindow() {
 				return Ok(0); // our modal was destroyed, terminate loop
 			}
 
@@ -139,7 +115,7 @@ impl RawModal {
 			// Try to process keyboard actions for child controls.
 			if hwnd_top_level.IsDialogMessage(&mut msg) {
 				// Processed all keyboard actions for child controls.
-				if *self.hwnd() == HWND::NULL {
+				if *self.base().hwnd() == HWND::NULL {
 					return Ok(0); // our modal was destroyed, terminate loop
 				} else {
 					continue;
@@ -149,7 +125,7 @@ impl RawModal {
 			TranslateMessage(&msg);
 			unsafe { DispatchMessage(&msg); }
 
-			if *self.hwnd() == HWND::NULL || !self.hwnd().IsWindow() {
+			if *self.base().hwnd() == HWND::NULL || !self.base().hwnd().IsWindow() {
 				return Ok(0); // our modal was destroyed, terminate loop
 			}
 		}
@@ -157,16 +133,16 @@ impl RawModal {
 
 	fn default_message_handlers(&self) {
 		let self2 = self.clone();
-		self.privileged_on().wm(co::WM::SETFOCUS, move |_, _| {
+		self.base().privileged_on().wm(co::WM::SETFOCUS, move |_, _| {
 			self2.0.raw_base.delegate_focus_to_first_child();
 			Ok(())
 		});
 
 		let self2 = self.clone();
-		self.on().wm_close(move || {
-			if let Ok(hparent) = self2.hwnd().GetWindow(co::GW::OWNER) {
+		self.base().on().wm_close(move || {
+			if let Ok(hparent) = self2.base().hwnd().GetWindow(co::GW::OWNER) {
 				hparent.EnableWindow(true); // re-enable parent
-				self2.hwnd().DestroyWindow()?; // then destroy modal
+				self2.base().hwnd().DestroyWindow()?; // then destroy modal
 				let hchild_prev_focus_parent = unsafe { &mut *self2.0.hchild_prev_focus_parent.get() };
 				if *hchild_prev_focus_parent != HWND::NULL {
 					hchild_prev_focus_parent.SetFocus(); // this focus could be set on WM_DESTROY as well

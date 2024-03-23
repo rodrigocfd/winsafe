@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*};
+use crate::gui::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -114,36 +114,15 @@ impl RawBase {
 		Self { base: Base::new(false, parent) }
 	}
 
-	pub(in crate::gui) unsafe fn as_base(&self) -> *mut std::ffi::c_void {
-		// At this moment, the parent struct is already created and pinned.
-		&self.base as *const _ as _
-	}
-
-	pub(in crate::gui) const fn hwnd(&self) -> &HWND {
-		self.base.hwnd()
-	}
-
-	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
-		self.base.on()
-	}
-
-	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsPriv {
-		self.base.privileged_on()
-	}
-
-	pub(in crate::gui) const fn parent(&self) -> Option<&Base> {
-		self.base.parent()
-	}
-
-	pub(in crate::gui) fn parent_hinstance(&self) -> SysResult<HINSTANCE> {
-		self.base.parent_hinstance()
+	pub(in crate::gui) const fn base(&self) -> &Base {
+		&self.base
 	}
 
 	pub(in crate::gui) fn delegate_focus_to_first_child(&self) {
 		if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-			if *self.hwnd() == hwnd_cur_focus {
+			if *self.base.hwnd() == hwnd_cur_focus {
 				// https://stackoverflow.com/a/2835220/6923555
-				if let Ok(hchild_first) = self.hwnd().GetWindow(co::GW::CHILD) {
+				if let Ok(hchild_first) = self.base.hwnd().GetWindow(co::GW::CHILD) {
 					hchild_first.SetFocus(); // if window receives focus, delegate to first child
 				}
 			}
@@ -221,7 +200,7 @@ impl RawBase {
 		styles: co::WS,
 	) -> SysResult<()>
 	{
-		if *self.hwnd() != HWND::NULL {
+		if *self.base.hwnd() != HWND::NULL {
 			panic!("Cannot create window twice.");
 		}
 
@@ -243,18 +222,6 @@ impl RawBase {
 		}
 
 		Ok(())
-	}
-
-	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static,
-	{
-		self.base.spawn_new_thread(func);
-	}
-
-	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static
-	{
-		self.base.run_ui_thread(func);
 	}
 
 	extern "system" fn window_proc(

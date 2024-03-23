@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::{*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 use crate::user::guard::*;
@@ -39,32 +39,8 @@ impl RawMain {
 		new_self
 	}
 
-	pub(in crate::gui) unsafe fn as_base(&self) -> *mut std::ffi::c_void {
-		self.0.raw_base.as_base()
-	}
-
-	pub(in crate::gui) fn hwnd(&self) -> &HWND {
-		self.0.raw_base.hwnd()
-	}
-
-	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
-		self.0.raw_base.on()
-	}
-
-	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsPriv {
-		self.0.raw_base.privileged_on()
-	}
-
-	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static,
-	{
-		self.0.raw_base.spawn_new_thread(func);
-	}
-
-	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static
-	{
-		self.0.raw_base.run_ui_thread(func);
+	pub(in crate::gui) fn base(&self) -> &Base {
+		self.0.raw_base.base()
 	}
 
 	pub(in crate::gui) fn run_main(&self,
@@ -120,15 +96,15 @@ impl RawMain {
 			opts.ex_style, opts.style,
 		).unwrap();
 
-		self.hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
-		self.hwnd().UpdateWindow().unwrap();
+		self.base().hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
+		self.base().hwnd().UpdateWindow().unwrap();
 
 		Base::run_main_loop(opts.accel_table.as_deref()) // blocks until window is closed
 	}
 
 	fn default_message_handlers(&self) {
 		let self2 = self.clone();
-		self.privileged_on().wm(co::WM::ACTIVATE, move |hwnd, p| {
+		self.base().privileged_on().wm(co::WM::ACTIVATE, move |hwnd, p| {
 			let p = wm::Activate::from_generic_wm(p);
 			if !p.is_minimized {
 				let hchild_prev_focus = unsafe { &mut *self2.0.hchild_prev_focus.get() };
@@ -146,12 +122,12 @@ impl RawMain {
 		});
 
 		let self2 = self.clone();
-		self.privileged_on().wm(co::WM::SETFOCUS, move |_, _| {
+		self.base().privileged_on().wm(co::WM::SETFOCUS, move |_, _| {
 			self2.0.raw_base.delegate_focus_to_first_child();
 			Ok(())
 		});
 
-		self.on().wm_nc_destroy(move || {
+		self.base().on().wm_nc_destroy(move || {
 			PostQuitMessage(0);
 			Ok(())
 		});

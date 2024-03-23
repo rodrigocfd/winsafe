@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::{*, privs::*};
 use crate::prelude::*;
 
 struct Obj { // actual fields of RawModeless
@@ -34,37 +34,17 @@ impl RawModeless {
 		new_self
 	}
 
-	pub(in crate::gui) unsafe fn as_base(&self) -> *mut std::ffi::c_void {
-		self.0.raw_base.as_base()
-	}
-
-	pub(in crate::gui) fn hwnd(&self) -> &HWND {
-		self.0.raw_base.hwnd()
-	}
-
-	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
-		self.0.raw_base.on()
-	}
-
-	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static,
-	{
-		self.0.raw_base.spawn_new_thread(func);
-	}
-
-	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static
-	{
-		self.0.raw_base.run_ui_thread(func);
+	pub(in crate::gui) fn base(&self) -> &Base {
+		self.0.raw_base.base()
 	}
 
 	fn default_message_handlers(&self, parent: &Base) {
 		let self2 = self.clone();
 		parent.privileged_on().wm_create_or_initdialog(move |_, _| {
-			let parent_base_ref = self2.0.raw_base.parent().unwrap();
+			let parent_base_ref = self2.base().parent().unwrap();
 			let opts = &self2.0.opts;
 
-			let parent_hinst = self2.0.raw_base.parent_hinstance()?;
+			let parent_hinst = self2.base().parent_hinstance()?;
 			let mut wcx = WNDCLASSEX::default();
 			let mut class_name_buf = WString::default();
 			RawBase::fill_wndclassex(

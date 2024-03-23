@@ -18,7 +18,7 @@ unsafe impl Send for WindowMessageOnly {}
 
 impl GuiWindow for WindowMessageOnly {
 	fn hwnd(&self) -> &HWND {
-		self.0.hwnd()
+		self.0.base().hwnd()
 	}
 
 	fn as_any(&self) -> &dyn Any {
@@ -28,11 +28,11 @@ impl GuiWindow for WindowMessageOnly {
 
 impl GuiParent for WindowMessageOnly {
 	fn on(&self) -> &WindowEventsAll {
-		self.0.on()
+		self.0.base().on()
 	}
 
 	unsafe fn as_base(&self) -> *mut std::ffi::c_void {
-		self.0.as_base()
+		self.0.base() as *const _ as _
 	}
 }
 
@@ -68,7 +68,7 @@ impl WindowMessageOnly {
 		let hparent_msg = unsafe { HWND::from_ptr(HWND_MESSAGE as _) };
 
 		self.0.create_window(
-			Some(match self.0.parent() {
+			Some(match self.0.base().parent() {
 				Some(parent) => parent.hwnd(),
 				None => &hparent_msg, // special case: message-only window with no parent
 			}),

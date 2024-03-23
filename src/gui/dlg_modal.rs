@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*};
+use crate::gui::privs::*;
 use crate::prelude::*;
 
 struct Obj { // actual fields of DlgModal
@@ -32,28 +32,8 @@ impl DlgModal {
 		new_self
 	}
 
-	pub(in crate::gui) unsafe fn as_base(&self) -> *mut std::ffi::c_void {
-		self.0.dlg_base.as_base()
-	}
-
-	pub(in crate::gui) fn hwnd(&self) -> &HWND {
-		self.0.dlg_base.hwnd()
-	}
-
-	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
-		self.0.dlg_base.on()
-	}
-
-	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static,
-	{
-		self.0.dlg_base.spawn_new_thread(func);
-	}
-
-	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static
-	{
-		self.0.dlg_base.run_ui_thread(func);
+	pub(in crate::gui) fn base(&self) -> &Base {
+		self.0.dlg_base.base()
 	}
 
 	pub(in crate::gui) fn show_modal(&self) -> AnyResult<i32> {
@@ -62,7 +42,7 @@ impl DlgModal {
 	}
 
 	fn default_message_handlers(&self) {
-		self.0.dlg_base.privileged_on().wm(co::WM::INITDIALOG, move |hwnd, _| {
+		self.base().privileged_on().wm(co::WM::INITDIALOG, move |hwnd, _| {
 			let rc = hwnd.GetWindowRect()?;
 			let rc_parent = hwnd.GetParent()?.GetWindowRect()?;
 			hwnd.SetWindowPos( // center modal on parent
@@ -78,8 +58,8 @@ impl DlgModal {
 		});
 
 		let self2 = self.clone();
-		self.on().wm_close(move || { // user clicked the X button
-			self2.hwnd().EndDialog(0)?;
+		self.base().on().wm_close(move || { // user clicked the X button
+			self2.base().hwnd().EndDialog(0)?;
 			Ok(())
 		});
 	}
