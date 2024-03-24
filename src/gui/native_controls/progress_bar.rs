@@ -168,10 +168,12 @@ impl ProgressBar {
 		if marquee {
 			// We must also adjust the window style before/after sending
 			// PBM_SETMARQUEE message.
-			self.hwnd().SetWindowLongPtr(
-				co::GWLP::STYLE,
-				u32::from(self.cur_style() | co::PBS::MARQUEE) as _,
-			);
+			unsafe {
+				self.hwnd().SetWindowLongPtr(
+					co::GWLP::STYLE,
+					u32::from(self.cur_style() | co::PBS::MARQUEE) as _,
+				);
+			}
 		}
 
 		self.hwnd().SendMessage(pbm::SetMarquee {
@@ -180,10 +182,12 @@ impl ProgressBar {
 		});
 
 		if !marquee {
-			self.hwnd().SetWindowLongPtr(
-				co::GWLP::STYLE,
-				u32::from(self.cur_style() & !co::PBS::MARQUEE) as _,
-			);
+			unsafe {
+				self.hwnd().SetWindowLongPtr(
+					co::GWLP::STYLE,
+					u32::from(self.cur_style() & !co::PBS::MARQUEE) as _,
+				);
+			}
 		}
 	}
 

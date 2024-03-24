@@ -69,7 +69,9 @@ impl DlgControl {
 				co::SWP::NOZORDER | co::SWP::NOSIZE,
 			)?;
 
-			self2.base().hwnd().SetWindowLongPtr(co::GWLP::ID, self2.0.ctrl_id as _);
+			unsafe {
+				self2.base().hwnd().SetWindowLongPtr(co::GWLP::ID, self2.0.ctrl_id as _); // give ID to the control
+			}
 
 			parent_base_ref.add_to_layout_arranger(self2.base().hwnd(), resize_behavior)?;
 			Ok(())

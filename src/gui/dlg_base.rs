@@ -15,7 +15,7 @@ pub(in crate::gui) struct DlgBase {
 impl Drop for DlgBase {
 	fn drop(&mut self) {
 		if *self.base.hwnd() != HWND::NULL {
-			self.base.hwnd().SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
+			unsafe { self.base.hwnd().SetWindowLongPtr(co::GWLP::DWLP_USER, 0); } // clear passed pointer
 		}
 	}
 }
@@ -91,7 +91,7 @@ impl DlgBase {
 			co::WM::INITDIALOG => { // first message being handled
 				let wm_idlg = wm::InitDialog::from_generic_wm(wm_any);
 				let ptr_self = wm_idlg.additional_data as *mut Self;
-				hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as _); // store
+				unsafe { hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as _); } // store
 				let ref_self = unsafe { &mut *ptr_self };
 				ref_self.base.set_hwnd(unsafe { hwnd.raw_copy() }); // store HWND in struct field
 				ptr_self
@@ -132,7 +132,7 @@ impl DlgBase {
 		let at_least_one_privileged_post = ref_self.base.process_privileged_post_messages(&hwnd, wm_any)?;
 
 		if wm_any.msg_id == co::WM::NCDESTROY { // always check
-			hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
+			unsafe { hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); } // clear passed pointer
 			ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
 			ref_self.base.clear_events(); // prevents circular references
 		}

@@ -104,7 +104,7 @@ pub(in crate::gui) struct RawBase {
 impl Drop for RawBase {
 	fn drop(&mut self) {
 		if *self.base.hwnd() != HWND::NULL {
-			self.base.hwnd().SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
+			unsafe { self.base.hwnd().SetWindowLongPtr(co::GWLP::USERDATA, 0); } // clear passed pointer
 		}
 	}
 }
@@ -241,7 +241,7 @@ impl RawBase {
 			co::WM::NCCREATE => { // first message being handled
 				let wm_ncc = wm::NcCreate::from_generic_wm(wm_any);
 				let ptr_self = wm_ncc.createstruct.lpCreateParams as *mut Self;
-				hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as _); // store
+				unsafe { hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as _); } // store
 				let ref_self = unsafe { &mut *ptr_self };
 				ref_self.base.set_hwnd(unsafe { hwnd.raw_copy() }); // store HWND in struct field
 				ptr_self
@@ -266,7 +266,7 @@ impl RawBase {
 		let at_least_one_privileged_post = ref_self.base.process_privileged_post_messages(&hwnd, wm_any)?;
 
 		if wm_any.msg_id == co::WM::NCDESTROY { // always check
-			hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
+			unsafe { hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); } // clear passed pointer
 			ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
 			ref_self.base.clear_events(); // prevents circular references
 		}

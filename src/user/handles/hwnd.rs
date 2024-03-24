@@ -1708,7 +1708,16 @@ pub trait user_Hwnd: Handle {
 
 	/// [`SetWindowLongPtr`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowlongptrw)
 	/// function.
-	fn SetWindowLongPtr(&self, index: co::GWLP, new_long: isize) -> isize {
+	///
+	/// # Safety
+	///
+	/// Changing these values may potentially cause undefined behavior to the
+	/// window, and passed pointers must be handled correctly.
+	unsafe fn SetWindowLongPtr(&self,
+		index: co::GWLP,
+		new_long: isize,
+	) -> isize
+	{
 		#[cfg(target_pointer_width = "32")]
 		unsafe { ffi::SetWindowLongW(self.ptr(), index.raw(), new_long) }
 

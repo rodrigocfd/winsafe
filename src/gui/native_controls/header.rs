@@ -195,7 +195,9 @@ impl Header {
 			OptsReszLv::Lv(lv_base_ptr) => {
 				let lv_base_ref = unsafe { lv_base_ptr.as_ref() };
 				let hheader = lv_base_ref.hwnd().SendMessage(lvm::GetHeader {})?;
-				hheader.SetWindowLongPtr(co::GWLP::ID, self.ctrl_id() as _); // give the header its new ID
+				unsafe {
+					hheader.SetWindowLongPtr(co::GWLP::ID, self.ctrl_id() as _); // give the header its new ID
+				}
 				self.0.base.assign_hctrl(hheader);
 				Ok(())
 			},
