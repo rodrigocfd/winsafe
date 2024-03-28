@@ -1427,6 +1427,11 @@ pub trait user_Hwnd: Handle {
 	/// type of the [`MsgSend`](crate::prelude::MsgSend) trait. That means each
 	/// message can define its own return type.
 	///
+	/// # Safety
+	///
+	/// Messages manipulate pointers, copies and window states. Improper use may
+	/// lead to undefined behavior.
+	///
 	/// # Examples
 	///
 	/// Sending a [`bm::GetImage`](crate::msg::bm::GetImage) button message,
@@ -1440,11 +1445,13 @@ pub trait user_Hwnd: Handle {
 	/// let hwnd: w::HWND; // initialized somewhere
 	/// # let hwnd = w::HWND::NULL;
 	///
-	/// let bmp = hwnd.SendMessage(
-	///     msg::bm::GetImage {
-	///         img_type: co::IMAGE_TYPE::BITMAP,
-	///     },
-	/// )?;
+	/// let bmp = unsafe {
+	///     hwnd.SendMessage(
+	///         msg::bm::GetImage {
+	///             img_type: co::IMAGE_TYPE::BITMAP,
+	///         },
+	///     )
+	/// }?;
 	/// # w::SysResult::Ok(())
 	/// ```
 	///
@@ -1457,13 +1464,15 @@ pub trait user_Hwnd: Handle {
 	/// let hwnd: w::HWND; // initialized somewhere
 	/// # let hwnd = w::HWND::NULL;
 	///
-	/// let (char_pos, line_pos) = hwnd.SendMessage(
-	///     msg::em::CharFromPos {
-	///         coords: w::POINT::new(12, 20),
-	///     },
-	/// );
+	/// let (char_pos, line_pos) = unsafe {
+	///     hwnd.SendMessage(
+	///         msg::em::CharFromPos {
+	///             coords: w::POINT::new(12, 20),
+	///         },
+	///     )
+	/// };
 	/// ```
-	fn SendMessage<M>(&self, msg: M) -> M::RetType
+	unsafe fn SendMessage<M>(&self, msg: M) -> M::RetType
 		where M: MsgSend,
 	{
 		let mut msg = msg;

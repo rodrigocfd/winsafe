@@ -193,11 +193,12 @@ impl Header {
 					.add_to_layout_arranger(self.hwnd(), *resize_behavior)
 			},
 			OptsReszLv::Lv(lv_base_ptr) => {
-				let lv_base_ref = unsafe { lv_base_ptr.as_ref() };
-				let hheader = lv_base_ref.hwnd().SendMessage(lvm::GetHeader {})?;
-				unsafe {
+				let hheader = unsafe {
+					let lv_base_ref = lv_base_ptr.as_ref();
+					let hheader = lv_base_ref.hwnd().SendMessage(lvm::GetHeader {})?;
 					hheader.SetWindowLongPtr(co::GWLP::ID, self.ctrl_id() as _); // give the header its new ID
-				}
+					hheader
+				};
 				self.0.base.assign_hctrl(hheader);
 				Ok(())
 			},

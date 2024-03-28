@@ -9,6 +9,11 @@ use crate::msg::*;
 /// Used in functions like
 /// [`SendMessage`](crate::prelude::user_Hwnd::SendMessage) and
 /// [`DefWindowProc`](crate::prelude::user_Hwnd::DefWindowProc).
+///
+/// # Safety
+///
+/// Messages manipulate pointers, copies and window states. Improper use may
+/// lead to undefined behavior.
 pub unsafe trait MsgSend {
 	/// The specific type of the value returned by the message.
 	type RetType;
@@ -30,6 +35,11 @@ pub unsafe trait MsgSend {
 ///
 /// Allows the conversion from and to the generic [`WndMsg`](crate::msg::WndMsg)
 /// parameters, and also defines the return type of the message.
+///
+/// # Safety
+///
+/// Messages manipulate pointers, copies and window states. Improper use may
+/// lead to undefined behavior.
 pub unsafe trait MsgSendRecv: MsgSend {
 	/// Converts the generic [`WndMsg`](crate::msg::WndMsg) parameters struct
 	/// into the specific message struct.

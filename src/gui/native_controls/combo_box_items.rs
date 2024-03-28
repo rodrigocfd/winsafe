@@ -32,11 +32,12 @@ impl<'a> ComboBoxItems<'a> {
 	/// ```
 	pub fn add(&self, items: &[impl AsRef<str>]) {
 		for text in items.iter() {
-			self.owner.hwnd()
-				.SendMessage(cb::AddString {
-					text: WString::from_str(text.as_ref()),
-				})
-				.unwrap();
+			unsafe {
+				self.owner.hwnd()
+					.SendMessage(cb::AddString {
+						text: WString::from_str(text.as_ref()),
+					})
+			}.unwrap();
 		}
 	}
 
@@ -44,9 +45,10 @@ impl<'a> ComboBoxItems<'a> {
 	/// [`cb::GetCount`](crate::msg::cb::GetCount) message.
 	#[must_use]
 	pub fn count(&self) -> u32 {
-		self.owner.hwnd()
-			.SendMessage(cb::GetCount {})
-			.unwrap()
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(cb::GetCount {})
+		}.unwrap()
 	}
 
 	/// Deletes the item at the given index by sending a
@@ -56,15 +58,16 @@ impl<'a> ComboBoxItems<'a> {
 	///
 	/// Panics if the index is invalid.
 	pub fn delete(&self, index: u32) {
-		self.owner.hwnd()
-			.SendMessage(cb::DeleteString { index })
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(cb::DeleteString { index })
+		}.unwrap();
 	}
 
 	/// Deletes all items by sending a
 	/// [`cb::ResetContent`](crate::msg::cb::ResetContent) message.
 	pub fn delete_all(&self) {
-		self.owner.hwnd().SendMessage(cb::ResetContent {});
+		unsafe { self.owner.hwnd().SendMessage(cb::ResetContent {}); }
 	}
 
 	/// Returns an iterator over the texts.
@@ -90,14 +93,17 @@ impl<'a> ComboBoxItems<'a> {
 	/// Sets the currently selected index, or clears it, by sending a
 	/// [`cb::SetCurSel`](crate::msg::cb::SetCurSel) message.
 	pub fn select(&self, index: Option<u32>) {
-		self.owner.hwnd().SendMessage(cb::SetCurSel { index });
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(cb::SetCurSel { index });
+		}
 	}
 
 	/// Retrieves the index of the currently selected item, if any, by sending a
 	/// [`cb::GetCurSel`](crate::msg::cb::GetCurSel) message.
 	#[must_use]
 	pub fn selected_index(&self) -> Option<u32> {
-		self.owner.hwnd().SendMessage(cb::GetCurSel {})
+		unsafe { self.owner.hwnd().SendMessage(cb::GetCurSel {}) }
 	}
 
 	/// Retrieves the currently selected text, if any, by calling
@@ -117,13 +123,18 @@ impl<'a> ComboBoxItems<'a> {
 	/// Panics if the index is invalid.
 	#[must_use]
 	pub fn text(&self, index: u32) -> String {
-		let num_chars = self.owner.hwnd()
-			.SendMessage(cb::GetLbTextLen { index })
-			.unwrap();
+		let num_chars = unsafe {
+			self.owner.hwnd()
+				.SendMessage(cb::GetLbTextLen { index })
+		}.unwrap();
+
 		let mut buf = WString::new_alloc_buf(num_chars as usize + 1);
-		self.owner.hwnd()
-			.SendMessage(cb::GetLbText { index, text: &mut buf })
-			.unwrap();
+
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(cb::GetLbText { index, text: &mut buf })
+		}.unwrap();
+
 		buf.to_string()
 	}
 }

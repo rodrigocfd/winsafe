@@ -49,12 +49,14 @@ impl<'a> TabItem<'a> {
 		let mut tci = TCITEM::default();
 		tci.mask = co::TCIF::PARAM;
 
-		self.owner.hwnd()
-			.SendMessage(tcm::GetItem {
-				index: self.index,
-				item: &mut tci,
-			})
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tcm::GetItem {
+					index: self.index,
+					item: &mut tci,
+				})
+		}.unwrap();
+
 		tci.lParam
 	}
 
@@ -65,12 +67,13 @@ impl<'a> TabItem<'a> {
 		tci.mask = co::TCIF::PARAM;
 		tci.lParam = lparam;
 
-		self.owner.hwnd()
-			.SendMessage(tcm::SetItem {
-				index: self.index,
-				item: &mut tci,
-			})
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tcm::SetItem {
+					index: self.index,
+					item: &mut tci,
+				})
+		}.unwrap();
 	}
 
 	/// Sets the text by sending a
@@ -81,12 +84,13 @@ impl<'a> TabItem<'a> {
 		tci.mask = co::TCIF::TEXT;
 		tci.set_pszText(Some(&mut wtext));
 
-		self.owner.hwnd()
-			.SendMessage(tcm::SetItem {
-				index: self.index,
-				item: &mut tci,
-			})
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tcm::SetItem {
+					index: self.index,
+					item: &mut tci,
+				})
+		}.unwrap();
 	}
 
 	/// Retrieves the text by sending a
@@ -98,12 +102,14 @@ impl<'a> TabItem<'a> {
 		tci.mask = co::TCIF::TEXT;
 		tci.set_pszText(Some(&mut buf));
 
-		self.owner.hwnd()
-			.SendMessage(tcm::GetItem {
-				index: self.index,
-				item: &mut tci,
-			})
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tcm::GetItem {
+					index: self.index,
+					item: &mut tci,
+				})
+		}.unwrap();
+
 		buf.to_string()
 	}
 }

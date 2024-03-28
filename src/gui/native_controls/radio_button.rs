@@ -128,10 +128,12 @@ impl RadioButton {
 					opts.window_style | opts.button_style.into(),
 				)?;
 
-				self.hwnd().SendMessage(wm::SetFont {
-					hfont: ui_font(),
-					redraw: true,
-				});
+				unsafe {
+					self.hwnd().SendMessage(wm::SetFont {
+						hfont: ui_font(),
+						redraw: true,
+					});
+				}
 				if opts.selected { self.select(true); }
 			},
 			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
@@ -139,29 +141,34 @@ impl RadioButton {
 
 		self.0.base.parent()
 			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())?;
-		self.hwnd().SendMessage(bm::SetDontClick { dont_click: true });
+		unsafe {
+			self.hwnd()
+				.SendMessage(bm::SetDontClick { dont_click: true });
+		}
 		Ok(())
 	}
 
 	/// Emulates the click event for the radio button by sending a
 	/// [`bm::Click`](crate::msg::bm::Click) message.
 	pub fn emulate_click(&self) {
-		self.hwnd().SendMessage(bm::Click {});
+		unsafe {self.hwnd().SendMessage(bm::Click {}); }
 	}
 
 	/// Tells if this radio button is the currently selected one by sending a
 	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) message.
 	#[must_use]
 	pub fn is_selected(&self) -> bool {
-		self.hwnd().SendMessage(bm::GetCheck {}) == co::BST::CHECKED
+		unsafe { self.hwnd().SendMessage(bm::GetCheck {}) == co::BST::CHECKED }
 	}
 
 	/// Sets the this radio button as the currently selected one by sending a
 	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message.
 	pub fn select(&self, selected: bool) {
-		self.hwnd().SendMessage(bm::SetCheck {
-			state: if selected { co::BST::CHECKED } else { co::BST::UNCHECKED },
-		});
+		unsafe {
+			self.hwnd().SendMessage(bm::SetCheck {
+				state: if selected { co::BST::CHECKED } else { co::BST::UNCHECKED },
+			});
+		}
 	}
 
 	/// Sets the this radio button as the currently selected one by sending a
@@ -170,15 +177,17 @@ impl RadioButton {
 	/// can handle the event.
 	pub fn select_and_trigger(&self, selected: bool) -> SysResult<()> {
 		self.select(selected);
-		self.hwnd().GetParent()?.SendMessage(wm::Command {
-			event: AccelMenuCtrl::Ctrl(
-				AccelMenuCtrlData {
-					notif_code: co::BN::CLICKED.into(),
-					ctrl_id: self.ctrl_id(),
-					ctrl_hwnd: unsafe { self.hwnd().raw_copy() },
-				},
-			),
-		});
+		unsafe {
+			self.hwnd().GetParent()?.SendMessage(wm::Command {
+				event: AccelMenuCtrl::Ctrl(
+					AccelMenuCtrlData {
+						notif_code: co::BN::CLICKED.into(),
+						ctrl_id: self.ctrl_id(),
+						ctrl_hwnd: self.hwnd().raw_copy(),
+					},
+				),
+			});
+		}
 		Ok(())
 	}
 

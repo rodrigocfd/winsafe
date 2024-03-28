@@ -27,21 +27,23 @@ impl<'a> ListViewItem<'a> {
 	/// Deletes the item by sending an
 	/// [`lvm::DeleteItem`](crate::msg::lvm::DeleteItem) message.
 	pub fn delete(&self) {
-		self.owner.hwnd()
-			.SendMessage(lvm::DeleteItem { index: self.index, })
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::DeleteItem { index: self.index, })
+		}.unwrap();
 	}
 
 	/// Scrolls the list by sending an
 	/// [`lvm::EnsureVisible`](crate::msg::lvm::EnsureVisible) message so that
 	/// the item is visible in the list.
 	pub fn ensure_visible(&self) {
-		self.owner.hwnd()
-			.SendMessage(lvm::EnsureVisible {
-				index: self.index,
-				entirely_visible: true,
-			})
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::EnsureVisible {
+					index: self.index,
+					entirely_visible: true,
+				})
+		}.unwrap();
 	}
 
 	/// Sets the item as the focused one sending an
@@ -51,12 +53,13 @@ impl<'a> ListViewItem<'a> {
 		lvi.stateMask = co::LVIS::FOCUSED;
 		lvi.state = co::LVIS::FOCUSED;
 
-		self.owner.hwnd()
-			.SendMessage(lvm::SetItemState {
-				index: Some(self.index),
-				lvitem: &lvi,
-			})
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::SetItemState {
+					index: Some(self.index),
+					lvitem: &lvi,
+				})
+		}.unwrap();
 	}
 
 	/// Retrieves the icon index of the item by sending an
@@ -67,9 +70,10 @@ impl<'a> ListViewItem<'a> {
 		lvi.iItem = self.index as _;
 		lvi.mask = co::LVIF::IMAGE;
 
-		self.owner.hwnd()
-			.SendMessage(lvm::SetItem { lvitem: &mut lvi })
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::SetItem { lvitem: &mut lvi })
+		}.unwrap();
 
 		match lvi.iImage {
 			-1 => None,
@@ -87,32 +91,36 @@ impl<'a> ListViewItem<'a> {
 	/// [`lvm::GetItemState`](crate::msg::lvm::GetItemState) message.
 	#[must_use]
 	pub fn is_focused(&self) -> bool {
-		self.owner.hwnd()
-			.SendMessage(lvm::GetItemState {
-				index: self.index,
-				mask: co::LVIS::FOCUSED,
-			})
-			.has(co::LVIS::FOCUSED)
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::GetItemState {
+					index: self.index,
+					mask: co::LVIS::FOCUSED,
+				})
+		}.has(co::LVIS::FOCUSED)
 	}
 
 	/// Tells if the item is selected by sending an
 	/// [`lvm::GetItemState`](crate::msg::lvm::GetItemState) message.
 	#[must_use]
 	pub fn is_selected(&self) -> bool {
-		self.owner.hwnd()
-			.SendMessage(lvm::GetItemState {
-				index: self.index,
-				mask: co::LVIS::SELECTED,
-			})
-			.has(co::LVIS::SELECTED)
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::GetItemState {
+					index: self.index,
+					mask: co::LVIS::SELECTED,
+				})
+		}.has(co::LVIS::SELECTED)
 	}
 
 	/// Tells if the item is currently visible by sending an
 	/// [`lvm::IsItemVisible`](crate::msg::lvm::IsItemVisible) message.
 	#[must_use]
 	pub fn is_visible(&self) -> bool {
-		self.owner.hwnd()
-			.SendMessage(lvm::IsItemVisible { index: self.index })
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::IsItemVisible { index: self.index })
+		}
 	}
 
 	/// Retrieves the user-defined value by sending an
@@ -123,9 +131,11 @@ impl<'a> ListViewItem<'a> {
 		lvi.iItem = self.index as _;
 		lvi.mask = co::LVIF::PARAM;
 
-		self.owner.hwnd()
-			.SendMessage(lvm::GetItem { lvitem: &mut lvi })
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::GetItem { lvitem: &mut lvi })
+		}.unwrap();
+
 		lvi.lParam
 	}
 
@@ -135,9 +145,10 @@ impl<'a> ListViewItem<'a> {
 	/// If the item index has became invalid, returns `None`.
 	#[must_use]
 	pub fn map_index_to_id(&self) -> u32 {
-		self.owner.hwnd()
-			.SendMessage(lvm::MapIndexToId { index: self.index })
-			.unwrap()
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::MapIndexToId { index: self.index })
+		}.unwrap()
 	}
 
 	/// Retrieves the bound rectangle of item by sending an
@@ -145,13 +156,14 @@ impl<'a> ListViewItem<'a> {
 	#[must_use]
 	pub fn rect(&self, portion: co::LVIR) -> RECT {
 		let mut rc = RECT::default();
-		self.owner.hwnd()
-			.SendMessage(lvm::GetItemRect {
-				index: self.index,
-				rect: &mut rc,
-				portion,
-			})
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::GetItemRect {
+					index: self.index,
+					rect: &mut rc,
+					portion,
+				})
+		}.unwrap();
 		rc
 	}
 
@@ -162,12 +174,13 @@ impl<'a> ListViewItem<'a> {
 		lvi.stateMask = co::LVIS::SELECTED;
 		if set { lvi.state = co::LVIS::SELECTED; }
 
-		self.owner.hwnd()
-			.SendMessage(lvm::SetItemState {
-				index: Some(self.index),
-				lvitem: &lvi,
-			})
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::SetItemState {
+					index: Some(self.index),
+					lvitem: &lvi,
+				})
+		}.unwrap();
 	}
 
 	/// Sets the icon index of the item by sending an
@@ -178,9 +191,10 @@ impl<'a> ListViewItem<'a> {
 		lvi.mask = co::LVIF::IMAGE;
 		lvi.iImage = icon_index.map_or(-1, |idx| idx as _);
 
-		self.owner.hwnd()
-			.SendMessage(lvm::SetItem { lvitem: &mut lvi })
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::SetItem { lvitem: &mut lvi })
+		}.unwrap();
 	}
 
 	/// Sets the user-defined value by sending an
@@ -191,9 +205,10 @@ impl<'a> ListViewItem<'a> {
 		lvi.mask = co::LVIF::PARAM;
 		lvi.lParam = lparam;
 
-		self.owner.hwnd()
-			.SendMessage(lvm::SetItem { lvitem: &mut lvi })
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::SetItem { lvitem: &mut lvi })
+		}.unwrap();
 	}
 
 	/// Sets the text of the item under a column by sending an
@@ -205,12 +220,13 @@ impl<'a> ListViewItem<'a> {
 		let mut wtext = WString::from_str(text);
 		lvi.set_pszText(Some(&mut wtext));
 
-		self.owner.hwnd()
-			.SendMessage(lvm::SetItemText {
-				index: self.index,
-				lvitem: &lvi,
-			})
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::SetItemText {
+					index: self.index,
+					lvitem: &lvi,
+				})
+		}.unwrap();
 	}
 
 	/// Retrieves the text of an item under a column by sending an
@@ -226,11 +242,13 @@ impl<'a> ListViewItem<'a> {
 			let mut buf = WString::new_alloc_buf(buf_sz);
 			lvi.set_pszText(Some(&mut buf));
 
-			let returned_chars = self.owner.hwnd() // char count without terminating null
-				.SendMessage(lvm::GetItemText {
-					index: self.index,
-					lvitem: &mut lvi,
-				}) + 1; // plus terminating null count
+			let returned_chars = unsafe {
+				self.owner.hwnd() // char count without terminating null
+					.SendMessage(lvm::GetItemText {
+						index: self.index,
+						lvitem: &mut lvi,
+					})
+			} + 1; // plus terminating null count
 
 			if (returned_chars as usize) < buf_sz { // to break, must have at least 1 char gap
 				return buf.to_string();

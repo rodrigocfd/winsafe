@@ -80,17 +80,19 @@ impl DlgMain {
 		// If an icon ID was specified, load it from the resources.
 		// Resource icons are automatically released by the system.
 		if let Some(id) = self.0.icon_id {
-			self.base().hwnd().SendMessage(wm::SetIcon {
-				hicon: hinst.LoadImageIcon(
-					IdOicStr::Id(id), SIZE::new(16, 16), co::LR::DEFAULTCOLOR)?.leak(),
-				size: co::ICON_SZ::SMALL,
-			});
+			unsafe {
+				self.base().hwnd().SendMessage(wm::SetIcon {
+					hicon: hinst.LoadImageIcon(
+						IdOicStr::Id(id), SIZE::new(16, 16), co::LR::DEFAULTCOLOR)?.leak(),
+					size: co::ICON_SZ::SMALL,
+				});
 
-			self.base().hwnd().SendMessage(wm::SetIcon {
-				hicon: hinst.LoadImageIcon(
-					IdOicStr::Id(id), SIZE::new(32, 32), co::LR::DEFAULTCOLOR)?.leak(),
-				size: co::ICON_SZ::BIG,
-			});
+				self.base().hwnd().SendMessage(wm::SetIcon {
+					hicon: hinst.LoadImageIcon(
+						IdOicStr::Id(id), SIZE::new(32, 32), co::LR::DEFAULTCOLOR)?.leak(),
+					size: co::ICON_SZ::BIG,
+				});
+			}
 		}
 		Ok(())
 	}

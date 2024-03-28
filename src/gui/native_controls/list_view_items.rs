@@ -70,9 +70,10 @@ impl<'a> ListViewItems<'a> {
 		lvi.set_pszText(Some(&mut wtext));
 
 		let new_item = self.get( // insert new item; retrieve newly added
-			self.owner.hwnd()
-				.SendMessage(lvm::InsertItem { item: &lvi })
-				.unwrap(),
+			unsafe {
+				self.owner.hwnd()
+					.SendMessage(lvm::InsertItem { item: &lvi })
+			}.unwrap(),
 		);
 
 		texts.iter()
@@ -89,27 +90,32 @@ impl<'a> ListViewItems<'a> {
 	/// [`lvm::GetItemCount`](crate::msg::lvm::GetItemCount) message.
 	#[must_use]
 	pub fn count(&self) -> u32 {
-		self.owner.hwnd()
-			.SendMessage(lvm::GetItemCount {})
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::GetItemCount {})
+		}
 	}
 
 	/// Deletes all items by sending an
 	/// [`lvm::DeleteAllItems`](crate::msg::lvm::DeleteAllItems) message.
 	pub fn delete_all(&self) {
-		self.owner.hwnd()
-			.SendMessage(lvm::DeleteAllItems {})
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::DeleteAllItems {})
+		}.unwrap();
 	}
 
 	/// Deletes all selected items by sending
 	/// [`lvm::DeleteItem`](crate::msg::lvm::DeleteItem) messages.
 	pub fn delete_selected(&self) {
 		loop {
-			let next_idx = self.owner.hwnd()
-				.SendMessage(lvm::GetNextItem {
-					initial_index: None,
-					relationship: co::LVNI::SELECTED,
-				});
+			let next_idx = unsafe {
+				self.owner.hwnd()
+					.SendMessage(lvm::GetNextItem {
+						initial_index: None,
+						relationship: co::LVNI::SELECTED,
+					})
+			};
 			match next_idx {
 				Some(next_idx) => self.get(next_idx).delete(),
 				None => break,
@@ -127,24 +133,26 @@ impl<'a> ListViewItems<'a> {
 		lvfi.flags = co::LVFI::STRING;
 		lvfi.set_psz(Some(&mut buf));
 
-		self.owner.hwnd()
-			.SendMessage(lvm::FindItem {
-				start_index: None,
-				lvfindinfo: &mut lvfi,
-			})
-			.map(|idx| self.get(idx))
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::FindItem {
+					start_index: None,
+					lvfindinfo: &mut lvfi,
+				})
+		}.map(|idx| self.get(idx))
 	}
 
 	/// Retrieves the focused item by sending an
 	/// [`lvm::GetNextItem`](crate::msg::lvm::GetNextItem) message.
 	#[must_use]
 	pub fn focused(&self) -> Option<ListViewItem<'a>> {
-		self.owner.hwnd()
-			.SendMessage(lvm::GetNextItem {
-				initial_index: None,
-				relationship: co::LVNI::FOCUSED,
-			})
-			.map(|idx| self.get(idx))
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::GetNextItem {
+					initial_index: None,
+					relationship: co::LVNI::FOCUSED,
+				})
+		}.map(|idx| self.get(idx))
 	}
 
 	/// Retrieves the item at the given zero-based position.
@@ -166,9 +174,10 @@ impl<'a> ListViewItems<'a> {
 		let mut lvhti = LVHITTESTINFO::default();
 		lvhti.pt = coords;
 
-		self.owner.hwnd()
-			.SendMessage(lvm::HitTest { info: &mut lvhti })
-			.map(|index| self.get(index))
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::HitTest { info: &mut lvhti })
+		}.map(|index| self.get(index))
 	}
 
 	/// Returns an iterator over all items.
@@ -225,9 +234,10 @@ impl<'a> ListViewItems<'a> {
 	#[must_use]
 	pub fn map_id_to_index(&self, item_id: u32) -> ListViewItem<'a> {
 		self.get(
-			self.owner.hwnd()
-				.SendMessage(lvm::MapIdToIndex { id: item_id })
-				.unwrap(),
+			unsafe {
+				self.owner.hwnd()
+					.SendMessage(lvm::MapIdToIndex { id: item_id })
+			}.unwrap(),
 		)
 	}
 
@@ -245,28 +255,32 @@ impl<'a> ListViewItems<'a> {
 		lvi.stateMask = co::LVIS::SELECTED;
 		if set { lvi.state = co::LVIS::SELECTED; }
 
-		self.owner.hwnd()
-			.SendMessage(lvm::SetItemState {
-				index: None,
-				lvitem: &lvi,
-			})
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::SetItemState {
+					index: None,
+					lvitem: &lvi,
+				})
+		}.unwrap();
 	}
 
 	/// Retrieves the number of selected items by sending an
 	/// [`lvm::GetSelectedCount`](crate::msg::lvm::GetSelectedCount) message.
 	#[must_use]
 	pub fn selected_count(&self) -> u32 {
-		self.owner.hwnd()
-			.SendMessage(lvm::GetSelectedCount {})
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::GetSelectedCount {})
+		}
 	}
 
 	/// Sets the number of items in a virtual list view – that is, a list view
 	/// created with [`LVS::OWNERDATA`](crate::co::LVS::OWNERDATA) style – by
 	/// sending an [`lvm::SetItemCount`](crate::msg::lvm::SetItemCount) message.
 	pub fn set_count(&self, count: u32, behavior: Option<co::LVSICF>) {
-		self.owner.hwnd()
-			.SendMessage(lvm::SetItemCount { count, behavior })
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::SetItemCount { count, behavior })
+		}.unwrap();
 	}
 }

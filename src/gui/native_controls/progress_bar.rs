@@ -139,7 +139,7 @@ impl ProgressBar {
 	/// [`pbm::GetPos`](crate::msg::pbm::GetPos) message.
 	#[must_use]
 	pub fn position(&self) -> u32 {
-		self.hwnd().SendMessage(pbm::GetPos {})
+		unsafe { self.hwnd().SendMessage(pbm::GetPos {}) }
 	}
 
 	/// Retrieves the current minimum and maximum values by sending a
@@ -149,15 +149,17 @@ impl ProgressBar {
 	pub fn range(&self) -> (u32, u32) {
 		// For some reason, pbm::GetRange is returning all zeros when passing a
 		// PBRANGE pointer.
-		let low = self.hwnd().SendMessage(pbm::GetRange {
-			return_low: true,
-			ranges: None,
-		});
-		let high = self.hwnd().SendMessage(pbm::GetRange {
-			return_low: false,
-			ranges: None,
-		});
-		(low as _, high as _)
+		unsafe {
+			let low = self.hwnd().SendMessage(pbm::GetRange {
+				return_low: true,
+				ranges: None,
+			});
+			let high = self.hwnd().SendMessage(pbm::GetRange {
+				return_low: false,
+				ranges: None,
+			});
+			(low as _, high as _)
+		}
 	}
 
 	/// Sets or unsets the marquee mode by sending a
@@ -176,10 +178,12 @@ impl ProgressBar {
 			}
 		}
 
-		self.hwnd().SendMessage(pbm::SetMarquee {
-			turn_on: marquee,
-			time_ms: None,
-		});
+		unsafe {
+			self.hwnd().SendMessage(pbm::SetMarquee {
+				turn_on: marquee,
+				time_ms: None,
+			});
+		}
 
 		if !marquee {
 			unsafe {
@@ -199,28 +203,37 @@ impl ProgressBar {
 			self.set_marquee(false); // avoid crash
 		}
 
-		self.hwnd().SendMessage(pbm::SetPos { position })
+		unsafe {
+			self.hwnd()
+				.SendMessage(pbm::SetPos { position })
+		}
 	}
 
 	/// Sets the minimum and maximum values by sending a
 	/// [`pbm::SetRange32`](crate::msg::pbm::SetRange32) message. Default values
 	/// are 0 and 100.
 	pub fn set_range(&self, min: u32, max: u32) {
-		self.hwnd().SendMessage(pbm::SetRange32 { min, max })
+		unsafe {
+			self.hwnd()
+				.SendMessage(pbm::SetRange32 { min, max })
+		}
 	}
 
 	/// Sets the current state by sending a
 	/// [`pbm::SetState`](crate::msg::pbm::SetState) message, retuning the
 	/// previous state.
 	pub fn set_state(&self, state: co::PBST) -> co::PBST {
-		self.hwnd().SendMessage(pbm::SetState { state })
+		unsafe {
+			self.hwnd()
+				.SendMessage(pbm::SetState { state })
+		}
 	}
 
 	/// Retrieves the current state by sending a
 	/// [`pbm::GetState`](crate::msg::pbm::GetState) message.
 	#[must_use]
 	pub fn state(&self) -> co::PBST {
-		self.hwnd().SendMessage(pbm::GetState {})
+		unsafe { self.hwnd().SendMessage(pbm::GetState {}) }
 	}
 
 	fn cur_style(&self) -> co::PBS {

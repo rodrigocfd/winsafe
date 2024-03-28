@@ -112,15 +112,19 @@ impl DlgBase {
 		if wm_any.msg_id == co::WM::INITDIALOG {
 			// Child controls are created in privileged closures, so we set the
 			// system font only now.
-			ref_self.base.hwnd().SendMessage(wm::SetFont { // on the window itself
-				hfont: ui_font(),
-				redraw: false,
-			});
-			ref_self.base.hwnd().EnumChildWindows(|hchild| {
-				hchild.SendMessage(wm::SetFont { // on each child control
+			unsafe {
+				ref_self.base.hwnd().SendMessage(wm::SetFont { // on the window itself
 					hfont: ui_font(),
 					redraw: false,
 				});
+			}
+			ref_self.base.hwnd().EnumChildWindows(|hchild| {
+				unsafe {
+					hchild.SendMessage(wm::SetFont { // on each child control
+						hfont: ui_font(),
+						redraw: false,
+					});
+				}
 				true
 			});
 		}

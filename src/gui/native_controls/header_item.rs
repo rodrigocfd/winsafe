@@ -27,9 +27,10 @@ impl<'a> HeaderItem<'a> {
 	/// Deletes the item by sending a
 	/// [`hdm::DeleteItem`](crate::msg::hdm::DeleteItem) message.
 	pub fn delete(&self) {
-		self.owner.hwnd()
-			.SendMessage(hdm::DeleteItem { index: self.index, })
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(hdm::DeleteItem { index: self.index, })
+		}.unwrap();
 	}
 
 	/// Return the format of the item by sending a
@@ -39,11 +40,14 @@ impl<'a> HeaderItem<'a> {
 		let mut hdi = HDITEM::default();
 		hdi.mask = co::HDI::FORMAT;
 
-		self.owner.hwnd()
-			.SendMessage(hdm::GetItem {
-				index: self.index,
-				hditem: &mut hdi,
-			}).unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(hdm::GetItem {
+					index: self.index,
+					hditem: &mut hdi,
+				})
+		}.unwrap();
+
 		hdi.fmt
 	}
 
@@ -60,11 +64,14 @@ impl<'a> HeaderItem<'a> {
 		let mut hdi = HDITEM::default();
 		hdi.mask = co::HDI::LPARAM;
 
-		self.owner.hwnd()
-			.SendMessage(hdm::GetItem {
-				index: self.index,
-				hditem: &mut hdi,
-			}).unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(hdm::GetItem {
+					index: self.index,
+					hditem: &mut hdi,
+				})
+		}.unwrap();
+
 		hdi.lParam
 	}
 
@@ -75,11 +82,14 @@ impl<'a> HeaderItem<'a> {
 		let mut hdi = HDITEM::default();
 		hdi.mask = co::HDI::ORDER;
 
-		self.owner.hwnd()
-			.SendMessage(hdm::GetItem {
-				index: self.index,
-				hditem: &mut hdi,
-			}).unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(hdm::GetItem {
+					index: self.index,
+					hditem: &mut hdi,
+				})
+		}.unwrap();
+
 		hdi.iOrder as _
 	}
 
@@ -90,11 +100,13 @@ impl<'a> HeaderItem<'a> {
 		hdi.mask = co::HDI::LPARAM;
 		hdi.lParam = lparam;
 
-		self.owner.hwnd()
-			.SendMessage(hdm::SetItem {
-				index: self.index,
-				hditem: &hdi,
-			}).unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(hdm::SetItem {
+					index: self.index,
+					hditem: &hdi,
+				})
+		}.unwrap();
 	}
 
 	/// Sets the order of the item by sending a
@@ -104,11 +116,13 @@ impl<'a> HeaderItem<'a> {
 		hdi.mask = co::HDI::ORDER;
 		hdi.iOrder = order as _;
 
-		self.owner.hwnd()
-			.SendMessage(hdm::SetItem {
-				index: self.index,
-				hditem: &hdi,
-			}).unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(hdm::SetItem {
+					index: self.index,
+					hditem: &hdi,
+				})
+		}.unwrap();
 	}
 
 	/// Sets the text of the item by sending a
@@ -120,11 +134,13 @@ impl<'a> HeaderItem<'a> {
 		let mut wtext = WString::from_str(text);
 		hdi.set_pszText(Some(&mut wtext));
 
-		self.owner.hwnd()
-			.SendMessage(hdm::SetItem {
-				index: self.index,
-				hditem: &hdi,
-			}).unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(hdm::SetItem {
+					index: self.index,
+					hditem: &hdi,
+				})
+		}.unwrap();
 	}
 
 	/// Retrieves the text of the item by sending a
@@ -137,11 +153,13 @@ impl<'a> HeaderItem<'a> {
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
 		hdi.set_pszText(Some(&mut buf));
 
-		self.owner.hwnd()
-			.SendMessage(hdm::GetItem {
-				index: self.index,
-				hditem: &mut hdi,
-			}).unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(hdm::GetItem {
+					index: self.index,
+					hditem: &mut hdi,
+				})
+		}.unwrap();
 
 		let (psz, _) = hdi.raw_pszText();
 		unsafe { WString::from_wchars_nullt(psz) }.to_string()

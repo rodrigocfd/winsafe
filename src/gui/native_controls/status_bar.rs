@@ -188,7 +188,7 @@ impl StatusBar {
 			return; // nothing to do
 		}
 
-		self.hwnd().SendMessage(p.as_generic_wm()); // send WM_SIZE to status bar, so it resizes itself to fit parent
+		unsafe { self.hwnd().SendMessage(p.as_generic_wm()); } // send WM_SIZE to status bar, so it resizes itself to fit parent
 
 		let mut total_proportions: u8 = 0;
 		let mut cx_available = p.client_area.cx as u32;
@@ -217,9 +217,10 @@ impl StatusBar {
 		}
 		*right_edges.last_mut().unwrap() = -1;
 
-		self.hwnd()
-			.SendMessage(sb::SetParts { right_edges: &right_edges })
-			.unwrap();
+		unsafe {
+			self.hwnd()
+				.SendMessage(sb::SetParts { right_edges: &right_edges })
+		}.unwrap();
 	}
 
 	/// Exposes the part methods.

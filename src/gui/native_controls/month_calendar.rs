@@ -149,9 +149,11 @@ impl MonthCalendar {
 				)?;
 
 				let mut bounds_rect = RECT::default();
-				self.hwnd().SendMessage(mcm::GetMinReqRect {
-					bounds_rect: &mut bounds_rect,
-				})?;
+				unsafe {
+					self.hwnd().SendMessage(mcm::GetMinReqRect {
+						bounds_rect: &mut bounds_rect,
+					})?;
+				}
 				self.hwnd().SetWindowPos(HwndPlace::None, POINT::default(),
 					SIZE::new(bounds_rect.right, bounds_rect.bottom),
 					co::SWP::NOZORDER | co::SWP::NOMOVE)?;
@@ -165,14 +167,22 @@ impl MonthCalendar {
 
 	/// Retrieves the currently selected date by sending a
 	/// [`mcm::GetCurSel`](crate::msg::mcm::GetCurSel) message.
-	pub fn date(&self, st: &mut SYSTEMTIME) {
-		self.hwnd().SendMessage(mcm::GetCurSel { info: st }).unwrap();
+	pub fn date(&self) -> SYSTEMTIME {
+		let mut st = SYSTEMTIME::default();
+		unsafe {
+			self.hwnd()
+				.SendMessage(mcm::GetCurSel { info: &mut st })
+		}.unwrap();
+		st
 	}
 
 	/// Sets the currently selected date by sending a
 	/// [`mcm::SetCurSel`](crate::msg::mcm::SetCurSel) message.
 	pub fn set_date(&self, st: &SYSTEMTIME) {
-		self.hwnd().SendMessage(mcm::SetCurSel { info: st }).unwrap();
+		unsafe {
+			self.hwnd()
+				.SendMessage(mcm::SetCurSel { info: st })
+		}.unwrap();
 	}
 }
 

@@ -163,10 +163,12 @@ impl Button {
 					opts.window_style | opts.button_style.into(),
 				)?;
 
-				self.hwnd().SendMessage(wm::SetFont {
-					hfont: ui_font(),
-					redraw: true,
-				});
+				unsafe {
+					self.hwnd().SendMessage(wm::SetFont {
+						hfont: ui_font(),
+						redraw: true,
+					});
+				}
 			},
 			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
 		}
@@ -178,7 +180,7 @@ impl Button {
 	/// Fires the click event for the button by sending a
 	/// [`bm::Click`](crate::msg::bm::Click) message.
 	pub fn trigger_click(&self) {
-		self.hwnd().SendMessage(bm::Click {});
+		unsafe { self.hwnd().SendMessage(bm::Click {}); }
 	}
 }
 

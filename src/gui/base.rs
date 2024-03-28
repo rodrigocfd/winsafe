@@ -159,7 +159,7 @@ impl Base {
 				let pack = Box::new(ThreadPack { func: Box::new(|| Err(err)) });
 				let ptr_pack = Box::into_raw(pack);
 				hwnd.GetAncestor(co::GA::ROOTOWNER)
-					.map(|hwnd| {
+					.map(|hwnd| unsafe {
 						hwnd.SendMessage(WndMsg {
 							msg_id: Self::WM_UI_THREAD,
 							wparam: Self::WM_UI_THREAD.raw() as _,
@@ -186,7 +186,7 @@ impl Base {
 		// Bypass any modals and send straight to main window. This avoids any
 		// blind spots of unhandled messages by a modal being created/destroyed.
 		self.hwnd.GetAncestor(co::GA::ROOTOWNER)
-			.map(|hwnd| {
+			.map(|hwnd| unsafe {
 				hwnd.SendMessage(WndMsg {
 					msg_id: Self::WM_UI_THREAD,
 					wparam: Self::WM_UI_THREAD.raw() as _,

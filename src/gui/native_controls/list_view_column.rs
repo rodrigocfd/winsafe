@@ -23,27 +23,6 @@ impl<'a> ListViewColumn<'a> {
 		Self { owner, index }
 	}
 
-	/// Retrieves information about the column by sending an
-	/// [`lvm::GetColumn`](crate::msg::lvm::GetColumn) message.
-	pub fn info(&self, lvc: &mut LVCOLUMN) {
-		self.owner.hwnd()
-			.SendMessage(lvm::GetColumn {
-				index: self.index,
-				lvcolumn: lvc,
-			})
-			.unwrap();
-	}
-
-	/// Sets information of the column by sending an
-	/// [`lvm::SetColumn`](crate::msg::lvm::SetColumn) message.
-	pub fn set_info(&self, lvc: &LVCOLUMN) {
-		self.owner.hwnd()
-			.SendMessage(lvm::SetColumn {
-				index: self.index,
-				lvcolumn: lvc,
-			})
-			.unwrap();
-	}
 
 	/// Sets the title of the column by calling
 	/// [`set_info`](crate::gui::spec::ListViewColumn::set_info).
@@ -55,7 +34,13 @@ impl<'a> ListViewColumn<'a> {
 		let mut buf = WString::from_str(text);
 		lvc.set_pszText(Some(&mut buf));
 
-		self.set_info(&lvc);
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::SetColumn {
+					index: self.index,
+					lvcolumn: &mut lvc,
+				})
+		}.unwrap();
 	}
 
 	/// Sets the width of the column by sending an
@@ -66,12 +51,13 @@ impl<'a> ListViewColumn<'a> {
 		let mut col_cx = SIZE::new(width as _, 0);
 		multiply_dpi(None, Some(&mut col_cx)).unwrap();
 
-		self.owner.hwnd()
-			.SendMessage(lvm::SetColumnWidth {
-				index: self.index,
-				width: col_cx.cx as _,
-			})
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::SetColumnWidth {
+					index: self.index,
+					width: col_cx.cx as _,
+				})
+		}.unwrap();
 	}
 
 	/// Sets the width of the column by sending an
@@ -89,12 +75,14 @@ impl<'a> ListViewColumn<'a> {
 			}
 
 			let rc = self.owner.hwnd().GetClientRect().unwrap(); // list view client area
-			self.owner.hwnd()
-				.SendMessage(lvm::SetColumnWidth {
-					index: self.index,
-					width: rc.right as u32 - cx_used,
-				})
-				.unwrap();
+
+			unsafe {
+				self.owner.hwnd()
+					.SendMessage(lvm::SetColumnWidth {
+						index: self.index,
+						width: rc.right as u32 - cx_used,
+					})
+			}.unwrap();
 		}
 	}
 
@@ -109,7 +97,14 @@ impl<'a> ListViewColumn<'a> {
 		let mut buf = WString::new_alloc_buf(128); // arbitrary
 		lvc.set_pszText(Some(&mut buf));
 
-		self.info(&mut lvc);
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::GetColumn {
+					index: self.index,
+					lvcolumn: &mut lvc,
+				})
+		}.unwrap();
+
 		buf.to_string()
 	}
 
@@ -117,8 +112,9 @@ impl<'a> ListViewColumn<'a> {
 	/// [`lvm::GetColumnWidth`](crate::msg::lvm::GetColumnWidth) message.
 	#[must_use]
 	pub fn width(&self) -> u32 {
-		self.owner.hwnd()
-			.SendMessage(lvm::GetColumnWidth { index: self.index })
-			.unwrap()
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::GetColumnWidth { index: self.index })
+		}.unwrap()
 	}
 }

@@ -150,9 +150,11 @@ impl DateTimePicker {
 
 				if sz.cx == 0 { // use ideal width?
 					let mut sz_ideal = SIZE::default();
-					self.hwnd().SendMessage(dtm::GetIdealSize {
-						size: &mut sz_ideal,
-					});
+					unsafe {
+						self.hwnd().SendMessage(dtm::GetIdealSize {
+							size: &mut sz_ideal,
+						});
+					}
 					sz.cx = sz_ideal.cx; // already adjusted for DPI
 
 					self.hwnd().SetWindowPos(
@@ -160,10 +162,12 @@ impl DateTimePicker {
 						co::SWP::NOZORDER | co::SWP::NOMOVE)?;
 				}
 
-				self.hwnd().SendMessage(wm::SetFont {
-					hfont: ui_font(),
-					redraw: true,
-				});
+				unsafe {
+					self.hwnd().SendMessage(wm::SetFont {
+						hfont: ui_font(),
+						redraw: true,
+					});
+				}
 			},
 			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
 		}
@@ -175,17 +179,19 @@ impl DateTimePicker {
 	/// Retrieves the currently selected date by sending a
 	/// [`dtm::GetSystemTime`](crate::msg::dtm::GetSystemTime) message.
 	pub fn date(&self, st: &mut SYSTEMTIME) {
-		self.hwnd()
-			.SendMessage(dtm::GetSystemTime { system_time: st })
-			.unwrap()
+		unsafe {
+			self.hwnd()
+				.SendMessage(dtm::GetSystemTime { system_time: st })
+		}.unwrap()
 	}
 
 	/// Sets the currently selected date by sending a
 	/// [`dtm::SetSystemTime`](crate::msg::dtm::SetSystemTime) message.
 	pub fn set_date(&self, st: &SYSTEMTIME) {
-		self.hwnd()
-			.SendMessage(dtm::SetSystemTime { system_time: Some(st) })
-			.unwrap()
+		unsafe {
+			self.hwnd()
+				.SendMessage(dtm::SetSystemTime { system_time: Some(st) })
+		}.unwrap()
 	}
 }
 

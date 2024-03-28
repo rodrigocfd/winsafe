@@ -26,24 +26,26 @@ impl<'a> StatusBarPart<'a> {
 	/// Sets the icon of a part by sending an
 	/// [`sb::SetIcon`](crate::msg::sb::SetIcon) message.
 	pub fn set_icon(&self, hicon: Option<&HICON>) {
-		self.owner.hwnd()
-			.SendMessage(sb::SetIcon {
-				part_index: self.index,
-				hicon,
-			})
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(sb::SetIcon {
+					part_index: self.index,
+					hicon,
+				})
+		}.unwrap();
 	}
 
 	/// Sets the text of a part by sending an
 	/// [`sb::SetText`](crate::msg::sb::SetText) message.
 	pub fn set_text(&self, text: &str) {
-		self.owner.hwnd()
-			.SendMessage(sb::SetText {
-				part_index: self.index,
-				draw_operation: co::SBT::BORDER,
-				text: WString::from_str(text),
-			})
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(sb::SetText {
+					part_index: self.index,
+					draw_operation: co::SBT::BORDER,
+					text: WString::from_str(text),
+				})
+		}.unwrap();
 	}
 
 	/// Retrieves the text of the item by sending a
@@ -62,15 +64,19 @@ impl<'a> StatusBarPart<'a> {
 	/// ```
 	#[must_use]
 	pub fn text(&self) -> String {
-		let (num_chars, _) = self.owner.hwnd()
-			.SendMessage(sb::GetTextLength { part_index: self.index });
+		let (num_chars, _) = unsafe {
+			self.owner.hwnd()
+				.SendMessage(sb::GetTextLength { part_index: self.index })
+		};
 
 		let mut buf = WString::new_alloc_buf(num_chars as usize + 1);
-		self.owner.hwnd()
-			.SendMessage(sb::GetText {
-				part_index: self.index,
-				text: &mut buf,
-			});
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(sb::GetText {
+					part_index: self.index,
+					text: &mut buf,
+				});
+		}
 		buf.to_string()
 	}
 }

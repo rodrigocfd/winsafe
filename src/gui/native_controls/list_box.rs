@@ -144,10 +144,13 @@ impl ListBox {
 					opts.window_style | opts.list_box_style.into(),
 				)?;
 
-				self.hwnd().SendMessage(wm::SetFont {
-					hfont: ui_font(),
-					redraw: true,
-				});
+				unsafe {
+					self.hwnd().SendMessage(wm::SetFont {
+						hfont: ui_font(),
+						redraw: true,
+					});
+				}
+
 				self.items().add(&opts.items);
 			},
 			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
@@ -166,7 +169,10 @@ impl ListBox {
 	/// Sets the scrollable width by sending an
 	/// [`lb::SetHorizontalExtent`](crate::msg::lb::SetHorizontalExtent) message.
 	pub fn set_horizontal_extend(&self, pixels: u32) {
-		self.hwnd().SendMessage(lb::SetHorizontalExtent { width: pixels });
+		unsafe {
+			self.hwnd()
+				.SendMessage(lb::SetHorizontalExtent { width: pixels });
+		}
 	}
 }
 

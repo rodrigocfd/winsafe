@@ -236,9 +236,11 @@ pub trait GuiChildFocus: GuiChild {
 	fn focus(&self) {
 		let hparent = self.hwnd().GetParent().unwrap();
 		if hparent.is_dialog() {
-			hparent.SendMessage(wm::NextDlgCtl {
-				hwnd_focus: HwndFocus::Hwnd(unsafe { self.hwnd().raw_copy() }),
-			});
+			unsafe {
+				hparent.SendMessage(wm::NextDlgCtl {
+					hwnd_focus: HwndFocus::Hwnd(self.hwnd().raw_copy()),
+				});
+			}
 		} else {
 			self.hwnd().SetFocus();
 		}

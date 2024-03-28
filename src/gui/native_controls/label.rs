@@ -151,10 +151,12 @@ impl Label {
 					opts.window_style | opts.label_style.into(),
 				)?;
 
-				self.hwnd().SendMessage(wm::SetFont {
-					hfont: ui_font(),
-					redraw: true,
-				});
+				unsafe {
+					self.hwnd().SendMessage(wm::SetFont {
+						hfont: ui_font(),
+						redraw: true,
+					});
+				}
 			},
 			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
 		}

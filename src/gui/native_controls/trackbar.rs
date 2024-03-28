@@ -159,7 +159,7 @@ impl Trackbar {
 	/// [`trbm::GetPos`](crate::msg::trbm::GetPos) message.
 	#[must_use]
 	pub fn pos(&self) -> u32 {
-		self.hwnd().SendMessage(trbm::GetPos {})
+		unsafe { self.hwnd().SendMessage(trbm::GetPos {}) }
 	}
 
 	/// Retrieves the minimum and maximum position values by sending
@@ -167,24 +167,31 @@ impl Trackbar {
 	/// [`trbm::GetRangeMax`](crate::msg::trbm::GetRangeMax) messages.
 	#[must_use]
 	pub fn range(&self) -> (u32, u32) {
-		(
+		unsafe { (
 			self.hwnd().SendMessage(trbm::GetRangeMin {}),
 			self.hwnd().SendMessage(trbm::GetRangeMax {}),
-		)
+		) }
 	}
 
 	/// Sets the current position by sending a
 	/// [`trbm::SetPos`](crate::msg::trbm::SetPos) message.
 	pub fn set_pos(&self, pos: u32) {
-		self.hwnd().SendMessage(trbm::SetPos { redraw: true, pos });
+		unsafe {
+			self.hwnd()
+				.SendMessage(trbm::SetPos { redraw: true, pos });
+		}
 	}
 
 	/// Sets the minimum and maximum position values by sending
 	/// [`trbm::SetRangeMin`](crate::msg::trbm::SetRangeMin) and
 	/// [`trbm::SetRangeMax`](crate::msg::trbm::SetRangeMax) messages.
 	pub fn set_range(&self, min: u32, max: u32) {
-		self.hwnd().SendMessage(trbm::SetRangeMin { redraw: false, min });
-		self.hwnd().SendMessage(trbm::SetRangeMax { redraw: true, max });
+		unsafe {
+			self.hwnd()
+				.SendMessage(trbm::SetRangeMin { redraw: false, min });
+			self.hwnd()
+				.SendMessage(trbm::SetRangeMax { redraw: true, max });
+		}
 	}
 }
 

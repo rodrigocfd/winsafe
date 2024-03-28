@@ -19,8 +19,10 @@ impl<'a> StatusBarParts<'a> {
 	/// [`sb::GetParts`](crate::msg::sb::GetParts) message.
 	#[must_use]
 	pub fn count(&self) -> u8 {
-		self.owner.hwnd()
-			.SendMessage(sb::GetParts { right_edges: None })
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(sb::GetParts { right_edges: None })
+		}
 	}
 
 	/// Retrieves the part at the given zero-based position.

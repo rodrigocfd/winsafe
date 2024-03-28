@@ -192,7 +192,10 @@ impl UpDown {
 	/// [`udm::GetPos32`](crate::msg::udm::GetPos32) message.
 	#[must_use]
 	pub fn pos(&self) -> i32 {
-		self.hwnd().SendMessage(udm::GetPos32 { success_flag: None })
+		unsafe {
+			self.hwnd()
+				.SendMessage(udm::GetPos32 { success_flag: None })
+		}
 	}
 
 	/// Retrieves the minimum and maximum position values by sending an
@@ -200,23 +203,31 @@ impl UpDown {
 	#[must_use]
 	pub fn range(&self) -> (i32, i32) {
 		let (mut min, mut max) = (i32::default(), i32::default());
-		self.hwnd().SendMessage(udm::GetRange32 {
-			min: &mut min,
-			max: &mut max,
-		});
+		unsafe {
+			self.hwnd().SendMessage(udm::GetRange32 {
+				min: &mut min,
+				max: &mut max,
+			});
+		}
 		(min, max)
 	}
 
 	/// Sets the current position by sending an
 	/// [`udm::SetPos32`](crate::msg::udm::SetPos32) message.
 	pub fn set_pos(&self, pos: i32) {
-		self.hwnd().SendMessage(udm::SetPos32 { pos });
+		unsafe {
+			self.hwnd()
+				.SendMessage(udm::SetPos32 { pos });
+		}
 	}
 
 	/// Set the control range by sending an
 	/// [`udm::SetRange32`](crate::msg::udm::SetRange32) message.
 	pub fn set_range(&self, min: i32, max: i32) {
-		self.hwnd().SendMessage(udm::SetRange32 { min, max });
+		unsafe {
+			self.hwnd()
+				.SendMessage(udm::SetRange32 { min, max });
+		}
 	}
 }
 

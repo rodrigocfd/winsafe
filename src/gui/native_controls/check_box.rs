@@ -167,10 +167,12 @@ impl CheckBox {
 					opts.window_style | opts.button_style.into(),
 				)?;
 
-				self.hwnd().SendMessage(wm::SetFont {
-					hfont: ui_font(),
-					redraw: true,
-				});
+				unsafe {
+					self.hwnd().SendMessage(wm::SetFont {
+						hfont: ui_font(),
+						redraw: true,
+					});
+				}
 				if opts.check_state != CheckState::Unchecked {
 					self.set_check_state(opts.check_state);
 				}
@@ -186,7 +188,7 @@ impl CheckBox {
 	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) message.
 	#[must_use]
 	pub fn check_state(&self) -> CheckState {
-		match self.hwnd().SendMessage(bm::GetCheck {}) {
+		match unsafe { self.hwnd().SendMessage(bm::GetCheck {}) } {
 			co::BST::CHECKED => CheckState::Checked,
 			co::BST::INDETERMINATE => CheckState::Indeterminate,
 			_ => CheckState::Unchecked,
@@ -196,7 +198,7 @@ impl CheckBox {
 	/// Emulates the click event for the check box by sending a
 	/// [`bm::Click`](crate::msg::bm::Click) message.
 	pub fn emulate_click(&self) {
-		self.hwnd().SendMessage(bm::Click {});
+		unsafe { self.hwnd().SendMessage(bm::Click {}); }
 	}
 
 	/// Calls [`check_state`](crate::gui::CheckBox::check_state) and compares
@@ -210,13 +212,15 @@ impl CheckBox {
 	/// Sets the current check state by sending a
 	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message.
 	pub fn set_check_state(&self, state: CheckState) {
-		self.hwnd().SendMessage(bm::SetCheck {
-			state: match state {
-				CheckState::Checked => co::BST::CHECKED,
-				CheckState::Indeterminate => co::BST::INDETERMINATE,
-				CheckState::Unchecked => co::BST::UNCHECKED,
-			},
-		});
+		unsafe {
+			self.hwnd().SendMessage(bm::SetCheck {
+				state: match state {
+					CheckState::Checked => co::BST::CHECKED,
+					CheckState::Indeterminate => co::BST::INDETERMINATE,
+					CheckState::Unchecked => co::BST::UNCHECKED,
+				},
+			});
+		}
 	}
 
 	/// Sets the current check state by sending a
@@ -225,17 +229,19 @@ impl CheckBox {
 	/// can handle the event.
 	pub fn set_check_state_and_trigger(&self, state: CheckState) {
 		self.set_check_state(state);
-		self.hwnd().GetParent().unwrap().SendMessage(
-			wm::Command {
-				event: AccelMenuCtrl::Ctrl(
-					AccelMenuCtrlData {
-						notif_code: co::BN::CLICKED.into(),
-						ctrl_id: self.ctrl_id(),
-						ctrl_hwnd: unsafe { self.hwnd().raw_copy() },
-					},
-				),
-			},
-		);
+		unsafe {
+			self.hwnd().GetParent().unwrap().SendMessage(
+				wm::Command {
+					event: AccelMenuCtrl::Ctrl(
+						AccelMenuCtrlData {
+							notif_code: co::BN::CLICKED.into(),
+							ctrl_id: self.ctrl_id(),
+							ctrl_hwnd: self.hwnd().raw_copy(),
+						},
+					),
+				},
+			);
+		}
 	}
 
 	/// Calls [`set_text`](crate::prelude::GuiWindowText::set_text) and resizes

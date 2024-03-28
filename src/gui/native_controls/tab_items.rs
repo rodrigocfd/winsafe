@@ -47,9 +47,10 @@ impl<'a> TabItems<'a> {
 	/// [`tcm::GetItemCount`](crate::msg::tcm::GetItemCount) message.
 	#[must_use]
 	pub fn count(&self) -> u32 {
-		self.owner.hwnd()
-			.SendMessage(tcm::GetItemCount {})
-			.unwrap()
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tcm::GetItemCount {})
+		}.unwrap()
 	}
 
 	/// Deletes all items by sending a
@@ -79,17 +80,19 @@ impl<'a> TabItems<'a> {
 	/// [`tcm::GetCurSel`](crate::msg::tcm::GetCurSel) message.
 	#[must_use]
 	pub fn focused(&self) -> Option<TabItem<'a>> {
-		self.owner.hwnd()
-			.SendMessage(tcm::GetCurFocus {})
-			.map(|i| self.get(i))
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tcm::GetCurFocus {})
+		}.map(|i| self.get(i))
 	}
 
 	/// Returns the selected item by sending a
 	/// [`tcm::GetCurSel`](crate::msg::tcm::GetCurSel) message.
 	#[must_use]
 	pub fn selected(&self) -> Option<TabItem<'a>> {
-		self.owner.hwnd()
-			.SendMessage(tcm::GetCurSel {})
-			.map(|i| self.get(i))
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tcm::GetCurSel {})
+		}.map(|i| self.get(i))
 	}
 }

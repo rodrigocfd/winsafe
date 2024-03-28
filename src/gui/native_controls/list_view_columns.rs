@@ -48,12 +48,13 @@ impl<'a> ListViewColumns<'a> {
 			let mut wtext = WString::from_str(text.as_ref());
 			lvc.set_pszText(Some(&mut wtext));
 
-			self.owner.hwnd()
-				.SendMessage(lvm::InsertColumn {
-					index: 0xffff, // insert as the last columns
-					column: &lvc,
-				})
-				.unwrap();
+			unsafe {
+				self.owner.hwnd()
+					.SendMessage(lvm::InsertColumn {
+						index: 0xffff, // insert as the last columns
+						column: &lvc,
+					})
+			}.unwrap();
 		}
 	}
 
@@ -62,11 +63,13 @@ impl<'a> ListViewColumns<'a> {
 	/// handle returned by [`lvm::GetHeader`](crate::msg::lvm::GetHeader).
 	#[must_use]
 	pub fn count(&self) -> u32 {
-		self.owner.hwnd()
-			.SendMessage(lvm::GetHeader {})
-			.unwrap()
-			.SendMessage(hdm::GetItemCount {})
-			.unwrap()
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::GetHeader {})
+				.unwrap()
+				.SendMessage(hdm::GetItemCount {})
+				.unwrap()
+		}
 	}
 
 	/// Retrieves the column at the given zero-based position.

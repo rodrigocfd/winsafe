@@ -55,18 +55,21 @@ impl<'a> TreeViewItem<'a> {
 		tvis.set_hInsertAfter(TreeitemTvi::Tvi(co::TVI::LAST));
 		tvis.itemex = tvix;
 
-		let new_hitem = self.owner.hwnd()
-			.SendMessage(tvm::InsertItem { item: &mut tvis })
-			.unwrap();
+		let new_hitem = unsafe {
+			self.owner.hwnd()
+				.SendMessage(tvm::InsertItem { item: &mut tvis })
+		}.unwrap();
+
 		Self::new(self.owner, new_hitem)
 	}
 
 	/// Deletes the item by sending a
 	/// [`tvm::DeleteItem`](crate::msg::tvm::DeleteItem) message.
 	pub fn delete(&self) {
-		self.owner.hwnd()
-			.SendMessage(tvm::DeleteItem { hitem: &self.hitem })
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tvm::DeleteItem { hitem: &self.hitem })
+		}.unwrap();
 	}
 
 	/// Begins in-place editing of the item's text by sending a
@@ -74,9 +77,10 @@ impl<'a> TreeViewItem<'a> {
 	///
 	/// Returns a handle to the edit control.
 	pub fn edit_label(&self) -> HWND {
-		self.owner.hwnd()
-			.SendMessage(tvm::EditLabel { hitem: &self.hitem })
-			.unwrap()
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tvm::EditLabel { hitem: &self.hitem })
+		}.unwrap()
 	}
 
 	/// Ensures that a tree-view item is visible, expanding the parent item or
@@ -85,19 +89,22 @@ impl<'a> TreeViewItem<'a> {
 	///
 	/// Returns whether a scroll occurred and no items were expanded.
 	pub fn ensure_visible(&self) -> bool {
-		self.owner.hwnd()
-			.SendMessage(tvm::EnsureVisible { hitem: &self.hitem }) != 0
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tvm::EnsureVisible { hitem: &self.hitem }) != 0
+		}
 	}
 
 	/// Expands or collapse the item by sending a
 	/// [`tvm::Expand`](crate::msg::tvm::Expand) message.
 	pub fn expand(&self, expand: bool) {
-		self.owner.hwnd()
-			.SendMessage(tvm::Expand {
-				hitem: &self.hitem,
-				action: if expand { co::TVE::EXPAND } else { co::TVE::COLLAPSE },
-			})
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tvm::Expand {
+					hitem: &self.hitem,
+					action: if expand { co::TVE::EXPAND } else { co::TVE::COLLAPSE },
+				})
+		}.unwrap();
 	}
 
 	/// Returns the underlying handle of the item.
@@ -110,12 +117,13 @@ impl<'a> TreeViewItem<'a> {
 	/// [`tvm::GetItemState`](crate::msg::tvm::GetItemState) message.
 	#[must_use]
 	pub fn is_expanded(&self) -> bool {
-		self.owner.hwnd()
-			.SendMessage(tvm::GetItemState {
-				hitem: &self.hitem,
-				mask: co::TVIS::EXPANDED,
-			})
-			.has(co::TVIS::EXPANDED)
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tvm::GetItemState {
+					hitem: &self.hitem,
+					mask: co::TVIS::EXPANDED,
+				})
+		}.has(co::TVIS::EXPANDED)
 	}
 
 	/// Tells if the item is a root by sending a
@@ -151,12 +159,13 @@ impl<'a> TreeViewItem<'a> {
 	/// [`tvm::GetNextItem`](crate::msg::tvm::GetNextItem) message.
 	#[must_use]
 	pub fn parent(&self) -> Option<Self> {
-		self.owner.hwnd()
-			.SendMessage(tvm::GetNextItem {
-				relationship: co::TVGN::PARENT,
-				hitem: Some(&self.hitem),
-			})
-			.map(|hitem| TreeViewItem::new(self.owner, hitem))
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tvm::GetNextItem {
+					relationship: co::TVGN::PARENT,
+					hitem: Some(&self.hitem),
+				})
+		}.map(|hitem| TreeViewItem::new(self.owner, hitem))
 	}
 
 	/// Sets the text of the item by sending a
@@ -169,9 +178,10 @@ impl<'a> TreeViewItem<'a> {
 		tvi.mask = co::TVIF::TEXT;
 		tvi.set_pszText(Some(&mut buf));
 
-		self.owner.hwnd()
-			.SendMessage(tvm::SetItem { tvitem: &tvi })
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tvm::SetItem { tvitem: &tvi })
+		}.unwrap();
 	}
 
 	/// Retrieves the text of the item by sending a
@@ -185,9 +195,11 @@ impl<'a> TreeViewItem<'a> {
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
 		tvi.set_pszText(Some(&mut buf));
 
-		self.owner.hwnd()
-			.SendMessage(tvm::GetItem { tvitem: &mut tvi })
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tvm::GetItem { tvitem: &mut tvi })
+		}.unwrap();
+
 		buf.to_string()
 	}
 }

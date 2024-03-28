@@ -183,8 +183,12 @@ impl ListView {
 				nmlvkd.hdr.code = co::LVN::KEYDOWN.into();
 				nmlvkd.wVKey = co::VK::RETURN;
 
-				self2.hwnd().GetAncestor(co::GA::PARENT).unwrap()
-					.SendMessage(wm::Notify { nmhdr: &mut nmlvkd.hdr }); // send Enter key to parent
+				unsafe {
+					self2.hwnd()
+						.GetAncestor(co::GA::PARENT)
+						.unwrap()
+						.SendMessage(wm::Notify { nmhdr: &mut nmlvkd.hdr }); // send Enter key to parent
+				}
 			}
 			let dlgc_system = self2.hwnd().DefSubclassProc::<wm::GetDlgCode>(p.into());
 			Ok(dlgc_system)
@@ -195,7 +199,12 @@ impl ListView {
 			let wm_nfy = wm::Notify::from_generic_wm(p);
 			if wm_nfy.nmhdr.code >= co::HDN::GETDISPINFO.into()
 					&& wm_nfy.nmhdr.code <= co::HDN::BEGINDRAG.into() {
-				self2.hwnd().GetAncestor(co::GA::PARENT).unwrap().SendMessage(wm_nfy); // forward HDN messages to parent
+				unsafe {
+					self2.hwnd()
+						.GetAncestor(co::GA::PARENT)
+						.unwrap()
+						.SendMessage(wm_nfy); // forward HDN messages to parent
+				}
 			}
 			Ok(None)
 		});
@@ -250,7 +259,10 @@ impl ListView {
 	/// [`lvm::GetImageList`](crate::msg::lvm::GetImageList) message.
 	#[must_use]
 	pub fn image_list(&self, kind: co::LVSIL) -> Option<HIMAGELIST> {
-		self.hwnd().SendMessage(lvm::GetImageList { kind })
+		unsafe {
+			self.hwnd()
+				.SendMessage(lvm::GetImageList { kind })
+		}
 	}
 
 	/// Exposes the item methods.
@@ -263,23 +275,28 @@ impl ListView {
 	/// [`lvm::GetView`](crate::msg::lvm::GetView) message.
 	#[must_use]
 	pub fn current_view(&self) -> co::LV_VIEW {
-		self.hwnd().SendMessage(lvm::GetView {})
+		unsafe { self.hwnd().SendMessage(lvm::GetView {}) }
 	}
 
 	/// Sets the current view by sending an
 	/// [`lvm::SetView`](crate::msg::lvm::SetView) message.
 	pub fn set_current_view(&self, view: co::LV_VIEW) {
-		self.hwnd().SendMessage(lvm::SetView { view }).unwrap();
+		unsafe {
+			self.hwnd()
+				.SendMessage(lvm::SetView { view })
+		}.unwrap();
 	}
 
 	/// Sets or unsets the given extended list view styles by sending an
 	/// [`lvm::SetExtendedListViewStyle`](crate::msg::lvm::SetExtendedListViewStyle)
 	/// message.
 	pub fn set_extended_style(&self, set: bool, ex_style: co::LVS_EX) {
-		self.hwnd().SendMessage(lvm::SetExtendedListViewStyle {
-			mask: ex_style,
-			style: if set { ex_style } else { co::LVS_EX::NoValue },
-		});
+		unsafe {
+			self.hwnd().SendMessage(lvm::SetExtendedListViewStyle {
+				mask: ex_style,
+				style: if set { ex_style } else { co::LVS_EX::NoValue },
+			});
+		}
 	}
 
 	/// Sets the one of the associated image lists by sending an
@@ -291,13 +308,19 @@ impl ListView {
 		himagelist: &HIMAGELIST,
 	) -> Option<HIMAGELIST>
 	{
-		self.hwnd().SendMessage(lvm::SetImageList { kind, himagelist })
+		unsafe {
+			self.hwnd()
+				.SendMessage(lvm::SetImageList { kind, himagelist })
+		}
 	}
 
 	/// Allows or disallows the redrawing of the control by sending a
 	/// [`wm::SetRedraw`](crate::msg::wm::SetRedraw) message.
 	pub fn set_redraw(&self, can_redraw: bool) {
-		self.hwnd().SendMessage(wm::SetRedraw { can_redraw });
+		unsafe {
+			self.hwnd()
+				.SendMessage(wm::SetRedraw { can_redraw });
+		}
 	}
 
 	fn show_context_menu(&self,

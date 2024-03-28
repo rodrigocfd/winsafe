@@ -18,9 +18,10 @@ impl<'a> HeaderItems<'a> {
 	/// Retrieves the total number of items by sending a
 	/// [`hdm::GetItemCount`](crate::msg::hdm::GetItemCount) message.
 	pub fn count(&self) -> u32 {
-		self.owner.hwnd()
-			.SendMessage(hdm::GetItemCount {})
-			.unwrap()
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(hdm::GetItemCount {})
+		}.unwrap()
 	}
 
 	/// Retrieves the item at the given zero-based position.

@@ -173,10 +173,12 @@ impl ComboBox {
 					opts.window_style | opts.combo_box_style.into(),
 				)?;
 
-				self.hwnd().SendMessage(wm::SetFont {
-					hfont: ui_font(),
-					redraw: true,
-				});
+				unsafe {
+					self.hwnd().SendMessage(wm::SetFont {
+						hfont: ui_font(),
+						redraw: true,
+					});
+				}
 				self.items().add(&opts.items);
 				self.items().select(opts.selected_item);
 			},

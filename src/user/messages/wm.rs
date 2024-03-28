@@ -674,14 +674,16 @@ unsafe impl<'a> MsgSendRecv for GetMinMaxInfo<'a> {
 /// let hwnd: w::HWND; // initialized somewhere
 /// # let hwnd = w::HWND::NULL;
 ///
-/// let needed_len = hwnd.SendMessage(msg::wm::GetTextLength {});
+/// let needed_len = unsafe { hwnd.SendMessage(msg::wm::GetTextLength {}) };
 /// let mut buf = w::WString::new_alloc_buf(needed_len as _);
 ///
-/// hwnd.SendMessage(
-///     msg::wm::GetText {
-///         buffer: buf.as_mut_slice(),
-///     },
-/// );
+/// unsafe {
+///     hwnd.SendMessage(
+///         msg::wm::GetText {
+///             buffer: buf.as_mut_slice(),
+///         },
+///     );
+/// }
 ///
 /// println!("Text: {}", buf.to_string());
 /// ```
@@ -1552,11 +1554,13 @@ unsafe impl MsgSendRecv for SetIcon {
 ///
 /// let new_text = w::WString::from_str("some text");
 ///
-/// hwnd.SendMessage(
-///     msg::wm::SetText {
-///         text: unsafe { new_text.as_ptr() },
-///     },
-/// );
+/// unsafe {
+///     hwnd.SendMessage(
+///         msg::wm::SetText {
+///             text: unsafe { new_text.as_ptr() },
+///         },
+///     );
+/// }
 /// ```
 pub struct SetText {
 	pub text: *const u16, // can't be WString because this message can be received

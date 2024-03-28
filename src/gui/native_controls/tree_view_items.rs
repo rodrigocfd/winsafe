@@ -39,42 +39,50 @@ impl<'a> TreeViewItems<'a> {
 		tvis.set_hInsertAfter(TreeitemTvi::Tvi(co::TVI::LAST));
 		tvis.itemex = tvix;
 
-		let new_hitem = self.owner.hwnd()
-			.SendMessage(tvm::InsertItem { item: &mut tvis })
-			.unwrap();
+		let new_hitem = unsafe {
+			self.owner.hwnd()
+				.SendMessage(tvm::InsertItem { item: &mut tvis })
+		}.unwrap();
+
 		self.get(new_hitem)
 	}
 
 	/// Deletes all items by sending a
 	/// [`tvm::DeleteItem`](crate::msg::tvm::DeleteItem) message.
 	pub fn delete_all(&self) {
-		self.owner.hwnd()
-			.SendMessage(tvm::DeleteItem { hitem: &HTREEITEM::NULL })
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tvm::DeleteItem { hitem: &HTREEITEM::NULL })
+		}.unwrap();
 	}
 
 	/// Retrieves the total number of items by sending a
 	/// [`tvm::GetCount`](crate::msg::tvm::GetCount) message.
 	#[must_use]
 	pub fn count(&self) -> u32 {
-		self.owner.hwnd()
-			.SendMessage(tvm::GetCount {})
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tvm::GetCount {})
+		}
 	}
 
 	/// Retrieves the number of visible items by sending a
 	/// [`tvm::GetVisibleCount`](crate::msg::tvm::GetVisibleCount) message.
 	#[must_use]
 	pub fn count_visible(&self) -> u32 {
-		self.owner.hwnd()
-			.SendMessage(tvm::GetVisibleCount {})
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tvm::GetVisibleCount {})
+		}
 	}
 
 	/// Ends the editing of the item's text by sending a
 	/// [`tvm::EndEditLabelNow`](crate::msg::tvm::EndEditLabelNow) message.
 	pub fn end_edit_label_now(&self, save: bool) {
-		self.owner.hwnd()
-			.SendMessage(tvm::EndEditLabelNow { save })
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tvm::EndEditLabelNow { save })
+		}.unwrap();
 	}
 
 	/// Retrieves the item of the given handle.

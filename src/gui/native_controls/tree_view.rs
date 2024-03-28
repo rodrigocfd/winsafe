@@ -164,12 +164,13 @@ impl TreeView {
 	/// Sets or unsets the given extended list view styles by sending a
 	/// [`tvm::SetExtendedStyle`](crate::msg::tvm::SetExtendedStyle) message.
 	pub fn set_extended_style(&self, set: bool, ex_style: co::TVS_EX) {
-		self.hwnd()
-			.SendMessage(tvm::SetExtendedStyle {
-				mask: ex_style,
-				style: if set { ex_style } else { co::TVS_EX::NoValue },
-			})
-			.unwrap();
+		unsafe {
+			self.hwnd()
+				.SendMessage(tvm::SetExtendedStyle {
+					mask: ex_style,
+					style: if set { ex_style } else { co::TVS_EX::NoValue },
+				})
+		}.unwrap();
 	}
 }
 

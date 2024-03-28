@@ -149,10 +149,12 @@ impl Tab {
 					opts.window_style | opts.tab_style.into(),
 				)?;
 
-				self.hwnd().SendMessage(wm::SetFont {
-					hfont: ui_font(),
-					redraw: true,
-				});
+				unsafe {
+					self.hwnd().SendMessage(wm::SetFont {
+						hfont: ui_font(),
+						redraw: true,
+					});
+				}
 
 				if opts.tab_ex_style != co::TCS_EX::NoValue {
 					self.set_extended_style(true, opts.tab_ex_style);
@@ -190,10 +192,12 @@ impl Tab {
 		if let Some((_, item)) = self.0.children.get(index as usize) {
 			let mut rc = self.hwnd().GetWindowRect()?;
 			self.hwnd().GetParent()?.ScreenToClientRc(&mut rc)?;
-			self.hwnd().SendMessage(tcm::AdjustRect {
-				display_rect: false,
-				rect: &mut rc,
-			});
+			unsafe {
+				self.hwnd().SendMessage(tcm::AdjustRect {
+					display_rect: false,
+					rect: &mut rc,
+				});
+			}
 			item.as_ctrl().hwnd().SetWindowPos(
 				HwndPlace::None,
 				POINT::new(rc.left, rc.top),
@@ -214,11 +218,12 @@ impl Tab {
 	/// Sets or unsets the given extended list view styles by sending a
 	/// [`tcm::SetExtendedStyle`](crate::msg::tcm::SetExtendedStyle) message.
 	pub fn set_extended_style(&self, set: bool, ex_style: co::TCS_EX) {
-		self.hwnd()
-			.SendMessage(tcm::SetExtendedStyle {
+		unsafe {
+			self.hwnd().SendMessage(tcm::SetExtendedStyle {
 				mask: ex_style,
 				style: if set { ex_style } else { co::TCS_EX::NoValue },
 			});
+		}
 	}
 }
 

@@ -163,10 +163,12 @@ impl Edit {
 					opts.window_style | opts.edit_style.into(),
 				)?;
 
-				self.hwnd().SendMessage(wm::SetFont {
-					hfont: ui_font(),
-					redraw: true,
-				});
+				unsafe {
+					self.hwnd().SendMessage(wm::SetFont {
+						hfont: ui_font(),
+						redraw: true,
+					});
+				}
 			},
 			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
 		}
@@ -178,7 +180,7 @@ impl Edit {
 	/// Hides any balloon tip by sending an
 	/// [`em::HideBalloonTip`](crate::msg::em::HideBalloonTip) message.
 	pub fn hide_balloon_tip(&self) {
-		self.hwnd().SendMessage(em::HideBalloonTip {}).unwrap();
+		unsafe { self.hwnd().SendMessage(em::HideBalloonTip {}) }.unwrap();
 	}
 
 	/// Returns an iterator over the lines in the Edit.
@@ -205,14 +207,14 @@ impl Edit {
 	/// Limits the number of characters that can be type by sending an
 	/// [`em::SetLimitText`](crate::msg::em::SetLimitText) message.
 	pub fn limit_text(&self, max_chars: Option<u32>) {
-		self.hwnd().SendMessage(em::SetLimitText { max_chars });
+		unsafe { self.hwnd().SendMessage(em::SetLimitText { max_chars }); }
 	}
 
 	/// Returns the number of lines by sending an
 	/// [`em::GetLineCount`](crate::msg::em::GetLineCount) message.
 	#[must_use]
 	pub fn line_count(&self) -> u32 {
-		self.hwnd().SendMessage(em::GetLineCount {})
+		unsafe { self.hwnd().SendMessage(em::GetLineCount {}) }
 	}
 
 	/// Sets the font to the `Edit` by sending an
@@ -220,10 +222,12 @@ impl Edit {
 	///
 	/// Note that the font must remain alive while being used in the control.
 	pub fn set_font(&self, font: &HFONT) {
-		self.hwnd().SendMessage(wm::SetFont {
-			hfont: unsafe { font.raw_copy() },
-			redraw: true,
-		});
+		unsafe {
+			self.hwnd().SendMessage(wm::SetFont {
+				hfont: font.raw_copy(),
+				redraw: true,
+			});
+		}
 	}
 
 	/// Sets the selection range of the text by sending an
@@ -255,7 +259,7 @@ impl Edit {
 	/// my_edit.set_selection(-1, -1);
 	/// ```
 	pub fn set_selection(&self, start: i32, end: i32) {
-		self.hwnd().SendMessage(em::SetSel { start, end });
+		unsafe { self.hwnd().SendMessage(em::SetSel { start, end }); }
 	}
 
 	/// Displays a balloon tip by sending an
@@ -269,9 +273,10 @@ impl Edit {
 		info.set_pszText(Some(&mut text16));
 		info.ttiIcon = icon;
 
-		self.hwnd()
-			.SendMessage(em::ShowBalloonTip { info: &info })
-			.unwrap();
+		unsafe {
+			self.hwnd()
+				.SendMessage(em::ShowBalloonTip { info: &info })
+		}.unwrap();
 	}
 }
 

@@ -32,11 +32,12 @@ impl<'a> ListBoxItems<'a> {
 	/// ```
 	pub fn add(&self, items: &[impl AsRef<str>]) {
 		for text in items.iter() {
-			self.owner.hwnd()
-				.SendMessage(lb::AddString {
-					text: WString::from_str(text.as_ref()),
-				})
-				.unwrap();
+			unsafe {
+				self.owner.hwnd()
+					.SendMessage(lb::AddString {
+						text: WString::from_str(text.as_ref()),
+					})
+			}.unwrap();
 		}
 	}
 
@@ -44,31 +45,34 @@ impl<'a> ListBoxItems<'a> {
 	/// [`lb::GetCount`](crate::msg::lb::GetCount) message.
 	#[must_use]
 	pub fn count(&self) -> u32 {
-		self.owner.hwnd()
-			.SendMessage(lb::GetCount {})
-			.unwrap()
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lb::GetCount {})
+		}.unwrap()
 	}
 
 	/// Deletes the item at the given index by sending an
 	/// [`lb::DeleteString`](crate::msg::lb::DeleteString) message.
 	pub fn delete(&self, index: u32) {
-		self.owner.hwnd()
-			.SendMessage(lb::DeleteString { index })
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lb::DeleteString { index })
+		}.unwrap();
 	}
 
 	/// Deletes all items by sending an
 	/// [`lb::ResetContent`](crate::msg::lb::ResetContent) message.
 	pub fn delete_all(&self) {
-		self.owner.hwnd().SendMessage(lb::ResetContent {});
+		unsafe { self.owner.hwnd().SendMessage(lb::ResetContent {}); }
 	}
 
 	/// Ensures that the specified item in a list box is visible by sending an
 	/// [`lb::SetTopIndex`](crate::msg::lb::SetTopIndex) message.
 	pub fn ensure_visible(&self, index: u32) {
-		self.owner.hwnd()
-			.SendMessage(lb::SetTopIndex { index })
-			.unwrap();
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lb::SetTopIndex { index })
+		}.unwrap();
 	}
 
 	/// Returns an iterator over the texts.
@@ -117,22 +121,28 @@ impl<'a> ListBoxItems<'a> {
 	/// [`lb::GetSelCount`](crate::msg::lb::GetSelCount) message.
 	#[must_use]
 	pub fn selected_count(&self) -> u32 {
-		self.owner.hwnd()
-			.SendMessage(lb::GetSelCount {})
-			.unwrap()
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lb::GetSelCount {})
+		}.unwrap()
 	}
 
 	/// Retrieves the text at the given position, if any, by sending a
 	/// [`lb::GetText`](crate::msg::lb::GetText) message.
 	#[must_use]
 	pub fn text(&self, index: u32) -> String {
-		let num_chars = self.owner.hwnd()
-			.SendMessage(lb::GetTextLen { index })
-			.unwrap();
+		let num_chars = unsafe {
+			self.owner.hwnd()
+				.SendMessage(lb::GetTextLen { index })
+		}.unwrap();
+
 		let mut buf = WString::new_alloc_buf(num_chars as usize + 1);
-		self.owner.hwnd()
-			.SendMessage(lb::GetText { index, text: &mut buf })
-			.unwrap();
+
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lb::GetText { index, text: &mut buf })
+		}.unwrap();
+
 		buf.to_string()
 	}
 }
