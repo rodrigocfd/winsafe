@@ -203,7 +203,7 @@ impl BaseNativeControl {
 		Ok(match process_result {
 			ProcessResult::HandledWithRet(res) => res,
 			ProcessResult::HandledWithoutRet => 0,
-			ProcessResult::NotHandled => hwnd.DefSubclassProc(wm_any).into(),
+			ProcessResult::NotHandled => unsafe { hwnd.DefSubclassProc(wm_any) }.into(),
 		})
 	}
 }

@@ -204,7 +204,9 @@ impl<T> ListView<T> {
 						.SendMessage(wm::Notify { nmhdr: &mut nmlvkd.hdr }); // send Enter key to parent
 				}
 			}
-			let dlgc_system = self2.hwnd().DefSubclassProc::<wm::GetDlgCode>(p.into());
+			let dlgc_system = unsafe {
+				self2.hwnd().DefSubclassProc::<wm::GetDlgCode>(p.into())
+			};
 			Ok(dlgc_system)
 		});
 

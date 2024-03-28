@@ -235,17 +235,20 @@ pub trait user_Hwnd: Handle {
 	/// The return type is variable, being defined by the `RetType` associated
 	/// type of the [`MsgSend`](crate::prelude::MsgSend) trait. That means each
 	/// message can define its own return type.
-	fn DefWindowProc<M>(&self, msg: M) -> M::RetType
+	///
+	/// # Safety
+	///
+	/// Messages manipulate pointers, copies and window states. Improper use may
+	/// lead to undefined behavior.
+	unsafe fn DefWindowProc<M>(&self, msg: M) -> M::RetType
 		where M: MsgSend,
 	{
 		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
 		msg.convert_ret(
-			unsafe {
-				ffi::DefWindowProcW(
-					self.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
-				)
-			},
+			ffi::DefWindowProcW(
+				self.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
+			),
 		)
 	}
 
@@ -1297,17 +1300,20 @@ pub trait user_Hwnd: Handle {
 	/// function.
 	///
 	/// Note that this method is asychronous.
-	fn PostMessage<M>(&self, msg: M) -> SysResult<()>
+	///
+	/// # Safety
+	///
+	/// Messages manipulate pointers, copies and window states. Improper use may
+	/// lead to undefined behavior.
+	unsafe fn PostMessage<M>(&self, msg: M) -> SysResult<()>
 		where M: MsgSend + Send + Copy + 'static,
 	{
 		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
 		bool_to_sysresult(
-			unsafe {
-				ffi::PostMessageW(
-					self.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
-				)
-			},
+			ffi::PostMessageW(
+				self.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
+			),
 		)
 	}
 
@@ -1478,17 +1484,20 @@ pub trait user_Hwnd: Handle {
 		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
 		msg.convert_ret(
-			unsafe {
-				ffi::SendMessageW(
-					self.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
-				)
-			},
+			ffi::SendMessageW(
+				self.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
+			),
 		)
 	}
 
 	/// [`SendMessageTimeout`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagetimeoutw)
 	/// function.
-	fn SendMessageTimeout<M>(&self,
+	///
+	/// # Safety
+	///
+	/// Messages manipulate pointers, copies and window states. Improper use may
+	/// lead to undefined behavior.
+	unsafe fn SendMessageTimeout<M>(&self,
 		msg: M,
 		flags: co::SMTO,
 		timeout_ms: u32,
@@ -1500,17 +1509,15 @@ pub trait user_Hwnd: Handle {
 		let mut result = isize::default();
 
 		bool_to_sysresult(
-			unsafe {
-				ffi::SendMessageTimeoutW(
-					self.ptr(),
-					wm_any.msg_id.raw(),
-					wm_any.wparam,
-					wm_any.lparam,
-					flags.raw(),
-					timeout_ms,
-					&mut result,
-				)
-			} as _,
+			ffi::SendMessageTimeoutW(
+				self.ptr(),
+				wm_any.msg_id.raw(),
+				wm_any.wparam,
+				wm_any.lparam,
+				flags.raw(),
+				timeout_ms,
+				&mut result,
+			) as _,
 		).map(|_| msg.convert_ret(result))
 	}
 

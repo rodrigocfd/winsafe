@@ -156,7 +156,7 @@ pub trait user_Hmenu: Handle {
 		hwnd_coords_relative_to.ClientToScreen(&mut pos)?; // now relative to screen
 		hwnd_parent.SetForegroundWindow();
 		self.TrackPopupMenu(co::TPM::LEFTBUTTON, pos, hwnd_parent)?;
-		hwnd_parent.PostMessage(wm::Null {})?; // necessary according to TrackPopupMenu docs
+		unsafe { hwnd_parent.PostMessage(wm::Null {})?; } // necessary according to TrackPopupMenu docs
 		Ok(())
 	}
 

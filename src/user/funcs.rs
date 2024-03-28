@@ -96,7 +96,12 @@ pub fn BlockInput(block_it: bool) -> bool {
 
 /// [`BroadcastSystemMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-broadcastsystemmessage)
 /// function.
-pub fn BroadcastSystemMessage<M>(
+///
+/// # Safety
+///
+/// Messages manipulate pointers, copies and window states. Improper use may
+/// lead to undefined behavior.
+pub unsafe fn BroadcastSystemMessage<M>(
 	flags: co::BSF,
 	info: co::BSM,
 	msg: M,
@@ -108,7 +113,7 @@ pub fn BroadcastSystemMessage<M>(
 
 	let mut info_ret = info;
 
-	if unsafe {
+	if {
 		ffi::BroadcastSystemMessageW(
 			flags.raw(),
 			info_ret.as_mut(),
@@ -762,16 +767,19 @@ pub fn PostQuitMessage(exit_code: i32) {
 
 /// [`PostThreadMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postthreadmessagew)
 /// function.
-pub fn PostThreadMessage<M>(thread_id: u32, msg: M) -> SysResult<()>
+///
+/// # Safety
+///
+/// Messages manipulate pointers, copies and window states. Improper use may
+/// lead to undefined behavior.
+pub unsafe fn PostThreadMessage<M>(thread_id: u32, msg: M) -> SysResult<()>
 	where M: MsgSend + Send + Copy + 'static,
 {
 	let mut msg = msg;
 	let wm_any = msg.as_generic_wm();
 	bool_to_sysresult(
-		unsafe {
-			ffi::PostThreadMessageW(
-				thread_id, wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam)
-		},
+		ffi::PostThreadMessageW(
+			thread_id, wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam),
 	)
 }
 

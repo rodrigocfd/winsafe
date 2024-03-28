@@ -24,17 +24,20 @@ pub trait comctl_Hwnd: user_Hwnd {
 	/// The return type is variable, being defined by the `RetType` associated
 	/// type of the [`MsgSend`](crate::prelude::MsgSend) trait. That means each
 	/// message can define its own return type.
-	fn DefSubclassProc<M>(&self, msg: M) -> M::RetType
+	///
+	/// # Safety
+	///
+	/// Messages manipulate pointers, copies and window states. Improper use may
+	/// lead to undefined behavior.
+	unsafe fn DefSubclassProc<M>(&self, msg: M) -> M::RetType
 		where M: MsgSend,
 	{
 		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
 		msg.convert_ret(
-			unsafe {
-				ffi::DefSubclassProc(
-					self.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
-				)
-			},
+			ffi::DefSubclassProc(
+				self.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
+			),
 		)
 	}
 

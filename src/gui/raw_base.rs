@@ -252,7 +252,7 @@ impl RawBase {
 		// If no pointer stored, then no processing is done.
 		// Prevents processing before WM_NCCREATE and after WM_NCDESTROY.
 		if ptr_self.is_null() {
-			return Ok(hwnd.DefWindowProc(wm_any));
+			return Ok(unsafe { hwnd.DefWindowProc(wm_any) });
 		}
 
 		// Execute privileged closures, keep track if at least one was executed.
@@ -277,7 +277,7 @@ impl RawBase {
 			ProcessResult::NotHandled => if at_least_one_privileged || at_least_one_privileged_post {
 				0
 			} else {
-				hwnd.DefWindowProc(wm_any).into()
+				unsafe { hwnd.DefWindowProc(wm_any) }.into()
 			},
 		})
 	}
