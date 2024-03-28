@@ -1957,6 +1957,13 @@
 <a href="#1955" id="1955">1955</a>
 <a href="#1956" id="1956">1956</a>
 <a href="#1957" id="1957">1957</a>
+<a href="#1958" id="1958">1958</a>
+<a href="#1959" id="1959">1959</a>
+<a href="#1960" id="1960">1960</a>
+<a href="#1961" id="1961">1961</a>
+<a href="#1962" id="1962">1962</a>
+<a href="#1963" id="1963">1963</a>
+<a href="#1964" id="1964">1964</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -2194,17 +2201,20 @@
 	/// The return type is variable, being defined by the `RetType` associated
 	/// type of the [`MsgSend`](crate::prelude::MsgSend) trait. That means each
 	/// message can define its own return type.
-	</span><span class="kw">fn </span>DefWindowProc&lt;M&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, msg: M) -&gt; M::RetType
+	///
+	/// # Safety
+	///
+	/// Messages manipulate pointers, copies and window states. Improper use may
+	/// lead to undefined behavior.
+	</span><span class="kw">unsafe fn </span>DefWindowProc&lt;M&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, msg: M) -&gt; M::RetType
 		<span class="kw">where </span>M: MsgSend,
 	{
 		<span class="kw">let </span><span class="kw-2">mut </span>msg = msg;
 		<span class="kw">let </span>wm_any = msg.as_generic_wm();
 		msg.convert_ret(
-			<span class="kw">unsafe </span>{
-				ffi::DefWindowProcW(
-					<span class="self">self</span>.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
-				)
-			},
+			ffi::DefWindowProcW(
+				<span class="self">self</span>.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
+			),
 		)
 	}
 
@@ -3256,17 +3266,20 @@
 	/// function.
 	///
 	/// Note that this method is asychronous.
-	</span><span class="kw">fn </span>PostMessage&lt;M&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, msg: M) -&gt; SysResult&lt;()&gt;
+	///
+	/// # Safety
+	///
+	/// Messages manipulate pointers, copies and window states. Improper use may
+	/// lead to undefined behavior.
+	</span><span class="kw">unsafe fn </span>PostMessage&lt;M&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, msg: M) -&gt; SysResult&lt;()&gt;
 		<span class="kw">where </span>M: MsgSend + Send + Copy + <span class="lifetime">'static</span>,
 	{
 		<span class="kw">let </span><span class="kw-2">mut </span>msg = msg;
 		<span class="kw">let </span>wm_any = msg.as_generic_wm();
 		bool_to_sysresult(
-			<span class="kw">unsafe </span>{
-				ffi::PostMessageW(
-					<span class="self">self</span>.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
-				)
-			},
+			ffi::PostMessageW(
+				<span class="self">self</span>.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
+			),
 		)
 	}
 
@@ -3437,17 +3450,20 @@
 		<span class="kw">let </span><span class="kw-2">mut </span>msg = msg;
 		<span class="kw">let </span>wm_any = msg.as_generic_wm();
 		msg.convert_ret(
-			<span class="kw">unsafe </span>{
-				ffi::SendMessageW(
-					<span class="self">self</span>.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
-				)
-			},
+			ffi::SendMessageW(
+				<span class="self">self</span>.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
+			),
 		)
 	}
 
 	<span class="doccomment">/// [`SendMessageTimeout`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagetimeoutw)
 	/// function.
-	</span><span class="kw">fn </span>SendMessageTimeout&lt;M&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
+	///
+	/// # Safety
+	///
+	/// Messages manipulate pointers, copies and window states. Improper use may
+	/// lead to undefined behavior.
+	</span><span class="kw">unsafe fn </span>SendMessageTimeout&lt;M&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		msg: M,
 		flags: co::SMTO,
 		timeout_ms: u32,
@@ -3459,17 +3475,15 @@
 		<span class="kw">let </span><span class="kw-2">mut </span>result = isize::default();
 
 		bool_to_sysresult(
-			<span class="kw">unsafe </span>{
-				ffi::SendMessageTimeoutW(
-					<span class="self">self</span>.ptr(),
-					wm_any.msg_id.raw(),
-					wm_any.wparam,
-					wm_any.lparam,
-					flags.raw(),
-					timeout_ms,
-					<span class="kw-2">&amp;mut </span>result,
-				)
-			} <span class="kw">as _</span>,
+			ffi::SendMessageTimeoutW(
+				<span class="self">self</span>.ptr(),
+				wm_any.msg_id.raw(),
+				wm_any.wparam,
+				wm_any.lparam,
+				flags.raw(),
+				timeout_ms,
+				<span class="kw-2">&amp;mut </span>result,
+			) <span class="kw">as _</span>,
 		).map(|<span class="kw">_</span>| msg.convert_ret(result))
 	}
 

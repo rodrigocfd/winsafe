@@ -770,7 +770,7 @@
 		hwnd_coords_relative_to.ClientToScreen(<span class="kw-2">&amp;mut </span>pos)<span class="question-mark">?</span>; <span class="comment">// now relative to screen
 		</span>hwnd_parent.SetForegroundWindow();
 		<span class="self">self</span>.TrackPopupMenu(co::TPM::LEFTBUTTON, pos, hwnd_parent)<span class="question-mark">?</span>;
-		hwnd_parent.PostMessage(wm::Null {})<span class="question-mark">?</span>; <span class="comment">// necessary according to TrackPopupMenu docs
+		<span class="kw">unsafe </span>{ hwnd_parent.PostMessage(wm::Null {})<span class="question-mark">?</span>; } <span class="comment">// necessary according to TrackPopupMenu docs
 		</span><span class="prelude-val">Ok</span>(())
 	}
 

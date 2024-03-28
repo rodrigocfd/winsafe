@@ -170,6 +170,9 @@
 <a href="#168" id="168">168</a>
 <a href="#169" id="169">169</a>
 <a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -196,17 +199,20 @@
 	/// The return type is variable, being defined by the `RetType` associated
 	/// type of the [`MsgSend`](crate::prelude::MsgSend) trait. That means each
 	/// message can define its own return type.
-	</span><span class="kw">fn </span>DefSubclassProc&lt;M&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, msg: M) -&gt; M::RetType
+	///
+	/// # Safety
+	///
+	/// Messages manipulate pointers, copies and window states. Improper use may
+	/// lead to undefined behavior.
+	</span><span class="kw">unsafe fn </span>DefSubclassProc&lt;M&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, msg: M) -&gt; M::RetType
 		<span class="kw">where </span>M: MsgSend,
 	{
 		<span class="kw">let </span><span class="kw-2">mut </span>msg = msg;
 		<span class="kw">let </span>wm_any = msg.as_generic_wm();
 		msg.convert_ret(
-			<span class="kw">unsafe </span>{
-				ffi::DefSubclassProc(
-					<span class="self">self</span>.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
-				)
-			},
+			ffi::DefSubclassProc(
+				<span class="self">self</span>.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
+			),
 		)
 	}
 

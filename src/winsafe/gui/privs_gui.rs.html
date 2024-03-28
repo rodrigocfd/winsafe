@@ -492,7 +492,7 @@
 	wm_ncp: wm::NcPaint,
 ) -&gt; AnyResult&lt;()&gt;
 {
-	hwnd.DefWindowProc(wm_ncp); <span class="comment">// let the system draw the scrollbar for us
+	<span class="kw">unsafe </span>{ hwnd.DefWindowProc(wm_ncp); } <span class="comment">// let the system draw the scrollbar for us
 
 	</span><span class="kw">let </span>ex_style = <span class="kw">unsafe </span>{ co::WS_EX::from_raw(hwnd.GetWindowLongPtr(co::GWLP::EXSTYLE) <span class="kw">as _</span>) };
 	<span class="kw">if </span>!ex_style.has(co::WS_EX::CLIENTEDGE) <span class="comment">// no border

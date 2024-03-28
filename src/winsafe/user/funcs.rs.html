@@ -1036,6 +1036,14 @@
 <a href="#1034" id="1034">1034</a>
 <a href="#1035" id="1035">1035</a>
 <a href="#1036" id="1036">1036</a>
+<a href="#1037" id="1037">1037</a>
+<a href="#1038" id="1038">1038</a>
+<a href="#1039" id="1039">1039</a>
+<a href="#1040" id="1040">1040</a>
+<a href="#1041" id="1041">1041</a>
+<a href="#1042" id="1042">1042</a>
+<a href="#1043" id="1043">1043</a>
+<a href="#1044" id="1044">1044</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -1134,7 +1142,12 @@
 
 <span class="doccomment">/// [`BroadcastSystemMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-broadcastsystemmessage)
 /// function.
-</span><span class="kw">pub fn </span>BroadcastSystemMessage&lt;M&gt;(
+///
+/// # Safety
+///
+/// Messages manipulate pointers, copies and window states. Improper use may
+/// lead to undefined behavior.
+</span><span class="kw">pub unsafe fn </span>BroadcastSystemMessage&lt;M&gt;(
 	flags: co::BSF,
 	info: co::BSM,
 	msg: M,
@@ -1146,7 +1159,7 @@
 
 	<span class="kw">let </span><span class="kw-2">mut </span>info_ret = info;
 
-	<span class="kw">if unsafe </span>{
+	<span class="kw">if </span>{
 		ffi::BroadcastSystemMessageW(
 			flags.raw(),
 			info_ret.as_mut(),
@@ -1800,16 +1813,19 @@
 
 <span class="doccomment">/// [`PostThreadMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postthreadmessagew)
 /// function.
-</span><span class="kw">pub fn </span>PostThreadMessage&lt;M&gt;(thread_id: u32, msg: M) -&gt; SysResult&lt;()&gt;
+///
+/// # Safety
+///
+/// Messages manipulate pointers, copies and window states. Improper use may
+/// lead to undefined behavior.
+</span><span class="kw">pub unsafe fn </span>PostThreadMessage&lt;M&gt;(thread_id: u32, msg: M) -&gt; SysResult&lt;()&gt;
 	<span class="kw">where </span>M: MsgSend + Send + Copy + <span class="lifetime">'static</span>,
 {
 	<span class="kw">let </span><span class="kw-2">mut </span>msg = msg;
 	<span class="kw">let </span>wm_any = msg.as_generic_wm();
 	bool_to_sysresult(
-		<span class="kw">unsafe </span>{
-			ffi::PostThreadMessageW(
-				thread_id, wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam)
-		},
+		ffi::PostThreadMessageW(
+			thread_id, wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam),
 	)
 }
 

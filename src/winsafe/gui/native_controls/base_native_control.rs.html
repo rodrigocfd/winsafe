@@ -414,7 +414,7 @@
 		<span class="prelude-val">Ok</span>(<span class="kw">match </span>process_result {
 			ProcessResult::HandledWithRet(res) =&gt; res,
 			ProcessResult::HandledWithoutRet =&gt; <span class="number">0</span>,
-			ProcessResult::NotHandled =&gt; hwnd.DefSubclassProc(wm_any).into(),
+			ProcessResult::NotHandled =&gt; <span class="kw">unsafe </span>{ hwnd.DefSubclassProc(wm_any) }.into(),
 		})
 	}
 }
