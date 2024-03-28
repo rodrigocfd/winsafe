@@ -2,7 +2,7 @@ use crate::co;
 use crate::decl::*;
 
 /// Type alias to
-/// [`PFNLVCOMPARE`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-listview_sortitems)
+/// [`PFNLVCOMPARE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-sortitems)
 /// callback function.
 pub type PFNLVCOMPARE =
 	extern "system" fn(

@@ -44,7 +44,7 @@ impl<'a> Notify<'a> {
 	///
 	/// You should always prefer the specific notifications, which perform this
 	/// conversion for you.
-	pub unsafe fn cast_nmhdr<T>(&self) -> &T {
+	pub const unsafe fn cast_nmhdr<T>(&self) -> &T {
 		&*(self.nmhdr as *const _ as *const _)
 	}
 
