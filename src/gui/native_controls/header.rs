@@ -145,7 +145,7 @@ impl Header {
 	/// [`ListView`](crate::gui::ListView) control. This will give you access to
 	/// the inner `Header` control of that `ListView`.
 	#[must_use]
-	pub fn from_list_view(list_view: &ListView) -> Self {
+	pub fn from_list_view<T: 'static>(list_view: &ListView<T>) -> Self {
 		let lv_base_ref = list_view.as_base();
 		let parent_base_ref = lv_base_ref.parent();
 		let ctrl_id = next_auto_ctrl_id();

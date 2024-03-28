@@ -1,3 +1,7 @@
+use std::any::TypeId;
+use std::cell::RefCell;
+use std::rc::Rc;
+
 use crate::co;
 use crate::decl::*;
 use crate::gui::{*, native_controls::iterators::*, spec::*};
@@ -8,12 +12,12 @@ use crate::prelude::*;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-pub struct ListViewItems<'a> {
-	owner: &'a ListView,
+pub struct ListViewItems<'a, T: 'static> {
+	owner: &'a ListView<T>,
 }
 
-impl<'a> ListViewItems<'a> {
-	pub(in crate::gui) const fn new(owner: &'a ListView) -> Self {
+impl<'a, T> ListViewItems<'a, T> {
+	pub(in crate::gui) const fn new(owner: &'a ListView<T>) -> Self {
 		Self { owner }
 	}
 
@@ -43,12 +47,14 @@ impl<'a> ListViewItems<'a> {
 	///         "Second column text",
 	///     ],
 	///     None, // no icon; requires a previous set_image_list()
+	///     (),   // no object data; requires specifying the generic `ListView` type
 	/// );
 	/// ```
 	pub fn add(&self,
 		texts: &[impl AsRef<str>],
 		icon_index: Option<u32>,
-	) -> ListViewItem<'a>
+		data: T,
+	) -> ListViewItem<'a, T>
 	{
 		if texts.is_empty() {
 			panic!("No texts passed when adding a ListView item.");
@@ -58,7 +64,7 @@ impl<'a> ListViewItems<'a> {
 		}
 
 		let mut lvi = LVITEM::default();
-		lvi.mask = co::LVIF::TEXT;
+		lvi.mask = co::LVIF::TEXT | co::LVIF::PARAM;
 		lvi.iItem = 0x0fff_ffff; // insert as the last item
 
 		if let Some(icon_index) = icon_index { // will it have an icon?
@@ -68,6 +74,11 @@ impl<'a> ListViewItems<'a> {
 
 		let mut wtext = WString::from_str(texts[0].as_ref()); // text of 1st column
 		lvi.set_pszText(Some(&mut wtext));
+
+		if TypeId::of::<T>() != TypeId::of::<()>() { // user defined an actual type?
+			let rc_data = Rc::new(RefCell::new(data));
+			lvi.lParam = Rc::into_raw(rc_data) as _;
+		}
 
 		let new_item = self.get( // insert new item; retrieve newly added
 			unsafe {
@@ -126,7 +137,7 @@ impl<'a> ListViewItems<'a> {
 	/// Searches for an item with the given text, case-insensitive, by sending
 	/// an [`lvm::FindItem`](crate::msg::lvm::FindItem) message.
 	#[must_use]
-	pub fn find(&self, text: &str) -> Option<ListViewItem<'a>> {
+	pub fn find(&self, text: &str) -> Option<ListViewItem<'a, T>> {
 		let mut buf = WString::from_str(text);
 
 		let mut lvfi = LVFINDINFO::default();
@@ -145,7 +156,7 @@ impl<'a> ListViewItems<'a> {
 	/// Retrieves the focused item by sending an
 	/// [`lvm::GetNextItem`](crate::msg::lvm::GetNextItem) message.
 	#[must_use]
-	pub fn focused(&self) -> Option<ListViewItem<'a>> {
+	pub fn focused(&self) -> Option<ListViewItem<'a, T>> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(lvm::GetNextItem {
@@ -161,7 +172,7 @@ impl<'a> ListViewItems<'a> {
 	/// existing items, an object will still be returned. However, operations
 	/// upon this object will produce no effect.
 	#[must_use]
-	pub const fn get(&self, index: u32) -> ListViewItem<'a> {
+	pub const fn get(&self, index: u32) -> ListViewItem<'a, T> {
 		ListViewItem::new(self.owner, index)
 	}
 
@@ -170,7 +181,7 @@ impl<'a> ListViewItems<'a> {
 	///
 	/// `coords` must be relative to the list view.
 	#[must_use]
-	pub fn hit_test(&self, coords: POINT) -> Option<ListViewItem<'a>> {
+	pub fn hit_test(&self, coords: POINT) -> Option<ListViewItem<'a, T>> {
 		let mut lvhti = LVHITTESTINFO::default();
 		lvhti.pt = coords;
 
@@ -189,7 +200,7 @@ impl<'a> ListViewItems<'a> {
 	///
 	/// let my_list: gui::ListView; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-	/// # let my_list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
+	/// # let my_list = gui::ListView::<()>::new(&wnd, gui::ListViewOpts::default());
 	///
 	/// for item in my_list.items().iter() {
 	///     println!("Item {}, text of the first column: {}",
@@ -197,7 +208,7 @@ impl<'a> ListViewItems<'a> {
 	/// }
 	/// ```
 	#[must_use]
-	pub fn iter(&self) -> impl Iterator<Item = ListViewItem<'a>> + 'a {
+	pub fn iter(&self) -> impl Iterator<Item = ListViewItem<'a, T>> + 'a {
 		ListViewItemIter::new(self.owner, co::LVNI::ALL)
 	}
 
@@ -210,7 +221,7 @@ impl<'a> ListViewItems<'a> {
 	///
 	/// let my_list: gui::ListView; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-	/// # let my_list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
+	/// # let my_list = gui::ListView::<()>::new(&wnd, gui::ListViewOpts::default());
 	///
 	/// for item in my_list.items().iter_selected() {
 	///     println!("Selected item {}, text of the first column: {}",
@@ -218,7 +229,7 @@ impl<'a> ListViewItems<'a> {
 	/// }
 	/// ```
 	#[must_use]
-	pub fn iter_selected(&self) -> impl Iterator<Item = ListViewItem<'a>> + 'a {
+	pub fn iter_selected(&self) -> impl Iterator<Item = ListViewItem<'a, T>> + 'a {
 		ListViewItemIter::new(self.owner, co::LVNI::ALL | co::LVNI::SELECTED)
 	}
 
@@ -232,7 +243,7 @@ impl<'a> ListViewItems<'a> {
 	///
 	/// Panics if the given ID doesn't exist among the items.
 	#[must_use]
-	pub fn map_id_to_index(&self, item_id: u32) -> ListViewItem<'a> {
+	pub fn map_id_to_index(&self, item_id: u32) -> ListViewItem<'a, T> {
 		self.get(
 			unsafe {
 				self.owner.hwnd()

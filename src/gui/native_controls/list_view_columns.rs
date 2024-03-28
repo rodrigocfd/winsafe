@@ -8,12 +8,12 @@ use crate::prelude::*;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-pub struct ListViewColumns<'a> {
-	owner: &'a ListView,
+pub struct ListViewColumns<'a, T: 'static> {
+	owner: &'a ListView<T>,
 }
 
-impl<'a> ListViewColumns<'a> {
-	pub(in crate::gui) const fn new(owner: &'a ListView) -> Self {
+impl<'a, T> ListViewColumns<'a, T> {
+	pub(in crate::gui) const fn new(owner: &'a ListView<T>) -> Self {
 		Self { owner }
 	}
 
@@ -29,7 +29,7 @@ impl<'a> ListViewColumns<'a> {
 	///
 	/// let my_list: gui::ListView; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-	/// # let my_list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
+	/// # let my_list = gui::ListView::<()>::new(&wnd, gui::ListViewOpts::default());
 	///
 	/// my_list.columns().add(&[
 	///     ("Name", 300),
@@ -78,13 +78,13 @@ impl<'a> ListViewColumns<'a> {
 	/// existing columns, an object will still be returned. However, operations
 	/// upon this object will produce no effect.
 	#[must_use]
-	pub const fn get(&self, index: u32) -> ListViewColumn<'a> {
+	pub const fn get(&self, index: u32) -> ListViewColumn<'a, T> {
 		ListViewColumn::new(self.owner, index)
 	}
 
 	/// Returns an iterator over all columns.
 	#[must_use]
-	pub fn iter(&self) -> impl Iterator<Item = ListViewColumn<'a>> + 'a {
+	pub fn iter(&self) -> impl Iterator<Item = ListViewColumn<'a, T>> + 'a {
 		ListViewColumnIter::new(self.owner)
 	}
 }

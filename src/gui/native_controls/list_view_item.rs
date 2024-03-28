@@ -1,3 +1,7 @@
+use std::cell::RefCell;
+use std::mem::ManuallyDrop;
+use std::rc::Rc;
+
 use crate::co;
 use crate::decl::*;
 use crate::gui::*;
@@ -13,15 +17,55 @@ use crate::prelude::*;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-#[derive(Clone, Copy)]
-pub struct ListViewItem<'a> {
-	owner: &'a ListView,
+pub struct ListViewItem<'a, T: 'static = ()> {
+	owner: &'a ListView<T>,
 	index: u32,
 }
 
-impl<'a> ListViewItem<'a> {
-	pub(in crate::gui) const fn new(owner: &'a ListView, index: u32) -> Self {
+impl<'a, T> Clone for ListViewItem<'a, T> { // https://stackoverflow.com/q/39415052/6923555
+	fn clone(&self) -> Self {
+		Self {
+			owner: self.owner,
+			index: self.index,
+		}
+	}
+}
+impl<'a, T> Copy for ListViewItem<'a, T> {}
+
+impl<'a, T> ListViewItem<'a, T> {
+	pub(in crate::gui) const fn new(owner: &'a ListView<T>, index: u32) -> Self {
 		Self { owner, index }
+	}
+
+	/// Returns a [`Rc`](std::rc::Rc)/[`RefCell`](std::cell::RefCell) with the
+	/// stored data by sending an [`lvm::GetItem`](crate::msg::lvm::GetItem)
+	/// message.
+	///
+	/// Returns `None` if the `ListView` holds a `()`, or if the item holds an
+	/// invalid index.
+	#[must_use]
+	pub fn data(&self) -> Option<Rc<RefCell<T>>> {
+		self.data_lparam()
+			.map(|pdata| {
+				let rc_data = ManuallyDrop::new(unsafe { Rc::from_raw(pdata) });
+				Rc::clone(&rc_data)
+			})
+	}
+
+	pub(in crate::gui) fn data_lparam(&self) -> Option<*mut RefCell<T>> {
+		let mut lvi = LVITEM::default();
+		lvi.iItem = self.index as _;
+		lvi.mask = co::LVIF::PARAM;
+
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::GetItem { lvitem: &mut lvi })
+		}.unwrap();
+
+		match lvi.lParam {
+			0 => None,
+			lp => Some(lp as _),
+		}
 	}
 
 	/// Deletes the item by sending an
@@ -123,22 +167,6 @@ impl<'a> ListViewItem<'a> {
 		}
 	}
 
-	/// Retrieves the user-defined value by sending an
-	/// [`lvm::GetItem`](crate::msg::lvm::GetItem) message.
-	#[must_use]
-	pub fn lparam(&self) -> isize {
-		let mut lvi = LVITEM::default();
-		lvi.iItem = self.index as _;
-		lvi.mask = co::LVIF::PARAM;
-
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::GetItem { lvitem: &mut lvi })
-		}.unwrap();
-
-		lvi.lParam
-	}
-
 	/// Retrieves the unique ID for the item index by sending an
 	/// [`lvm::MapIndexToId`](crate::msg::lvm::MapIndexToId) message.
 	///
@@ -190,20 +218,6 @@ impl<'a> ListViewItem<'a> {
 		lvi.iItem = self.index as _;
 		lvi.mask = co::LVIF::IMAGE;
 		lvi.iImage = icon_index.map_or(-1, |idx| idx as _);
-
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::SetItem { lvitem: &mut lvi })
-		}.unwrap();
-	}
-
-	/// Sets the user-defined value by sending an
-	/// [`lvm::SetItem`](crate::msg::lvm::SetItem) message.
-	pub fn set_lparam(&self, lparam: isize) {
-		let mut lvi = LVITEM::default();
-		lvi.iItem = self.index as _;
-		lvi.mask = co::LVIF::PARAM;
-		lvi.lParam = lparam;
 
 		unsafe {
 			self.owner.hwnd()

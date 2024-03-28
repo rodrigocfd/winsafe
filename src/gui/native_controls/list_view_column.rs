@@ -13,13 +13,13 @@ use crate::prelude::*;
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
 #[derive(Clone, Copy)]
-pub struct ListViewColumn<'a> {
-	owner: &'a ListView,
+pub struct ListViewColumn<'a, T: 'static = ()> {
+	owner: &'a ListView<T>,
 	index: u32,
 }
 
-impl<'a> ListViewColumn<'a> {
-	pub(in crate::gui) const fn new(owner: &'a ListView, index: u32) -> Self {
+impl<'a, T> ListViewColumn<'a, T> {
+	pub(in crate::gui) const fn new(owner: &'a ListView<T>, index: u32) -> Self {
 		Self { owner, index }
 	}
 

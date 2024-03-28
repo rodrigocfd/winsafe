@@ -65,7 +65,7 @@ impl ListViewEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// let list: gui::ListView;
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-		/// # let list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
+		/// # let list = gui::ListView::<()>::new(&wnd, gui::ListViewOpts::default());
 		///
 		/// list.on().lvn_delete_all_items(
 		///     move || -> w::AnyResult<bool> {
@@ -88,7 +88,7 @@ impl ListViewEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// let list: gui::ListView;
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-		/// # let list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
+		/// # let list = gui::ListView::<()>::new(&wnd, gui::ListViewOpts::default());
 		///
 		/// list.on().lvn_delete_item(
 		///     move |p: &w::NMLISTVIEW| -> w::AnyResult<()> {
@@ -160,7 +160,7 @@ impl ListViewEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// let list: gui::ListView;
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-		/// # let list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
+		/// # let list = gui::ListView::<()>::new(&wnd, gui::ListViewOpts::default());
 		///
 		/// list.on().lvn_item_changed(
 		///     move |p: &w::NMLISTVIEW| -> w::AnyResult<()> {
@@ -188,7 +188,7 @@ impl ListViewEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// let list: gui::ListView;
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-		/// # let list = gui::ListView::new(&wnd, gui::ListViewOpts::default());
+		/// # let list = gui::ListView::<()>::new(&wnd, gui::ListViewOpts::default());
 		///
 		/// list.on().lvn_key_down(
 		///     move |p: &w::NMLVKEYDOWN| -> w::AnyResult<()> {

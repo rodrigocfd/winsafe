@@ -1,6 +1,7 @@
 use std::any::Any;
-use std::marker::PhantomPinned;
+use std::marker::{PhantomData, PhantomPinned};
 use std::pin::Pin;
+use std::rc::Rc;
 use std::sync::Arc;
 
 use crate::co;
@@ -9,11 +10,12 @@ use crate::gui::{*, events::*, privs::*, spec::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-struct Obj { // atual fields of ListView
+struct Obj<T> { // atual fields of ListView
 	base: BaseNativeControl,
 	events: ListViewEvents,
 	context_menu: Option<HMENU>,
 	_pin: PhantomPinned,
+	_data: PhantomData<T>,
 }
 
 //------------------------------------------------------------------------------
@@ -23,14 +25,24 @@ struct Obj { // atual fields of ListView
 /// control. Not to be confused with the simpler [list box](crate::gui::ListBox)
 /// control.
 ///
+/// The generic parameter specifies the type of the object that will be embedded
+/// on each item – if you don't want to store anything, just use `()` as the
+/// type. Internally, this storage is implemented with pointers in the item's
+/// `LPARAM` fields.
+///
 /// You can have access to the internal header of the list view by creating a
 /// [`Header`](crate::gui::Header) object.
-#[derive(Clone)]
-pub struct ListView(Pin<Arc<Obj>>);
+pub struct ListView<T: 'static = ()>(Pin<Arc<Obj<T>>>);
 
-unsafe impl Send for ListView {}
+impl<T> Clone for ListView<T> { // https://stackoverflow.com/q/39415052/6923555
+	fn clone(&self) -> Self {
+		Self(self.0.clone())
+	}
+}
 
-impl GuiWindow for ListView {
+unsafe impl<T> Send for ListView<T> {}
+
+impl<T> GuiWindow for ListView<T> {
 	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
 	}
@@ -40,21 +52,21 @@ impl GuiWindow for ListView {
 	}
 }
 
-impl GuiChild for ListView {
+impl<T> GuiChild for ListView<T> {
 	fn ctrl_id(&self) -> u16 {
 		self.0.base.ctrl_id()
 	}
 }
 
-impl GuiChildFocus for ListView {}
+impl<T> GuiChildFocus for ListView<T> {}
 
-impl GuiNativeControl for ListView {
+impl<T> GuiNativeControl for ListView<T> {
 	fn on_subclass(&self) -> &WindowEvents {
 		self.0.base.on_subclass()
 	}
 }
 
-impl GuiNativeControlEvents<ListViewEvents> for ListView {
+impl<T> GuiNativeControlEvents<ListViewEvents> for ListView<T> {
 	fn on(&self) -> &ListViewEvents {
 		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add events after the control creation.");
@@ -65,7 +77,7 @@ impl GuiNativeControlEvents<ListViewEvents> for ListView {
 	}
 }
 
-impl ListView {
+impl<T> ListView<T> {
 	/// Instantiates a new `ListView` object, to be created on the parent window
 	/// with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
@@ -88,6 +100,7 @@ impl ListView {
 					events: ListViewEvents::new(parent_base_ref, ctrl_id),
 					context_menu,
 					_pin: PhantomPinned,
+					_data: PhantomData,
 				},
 			),
 		);
@@ -132,6 +145,7 @@ impl ListView {
 							.GetSubMenu(0).unwrap(), // usually this is how it's set in the resources
 					),
 					_pin: PhantomPinned,
+					_data: PhantomData,
 				},
 			),
 		);
@@ -232,6 +246,18 @@ impl ListView {
 			self2.show_context_menu(true, has_ctrl, has_shift);
 			Ok(())
 		});
+
+		let self2 = self.clone();
+		parent.privileged_post_on().wm_notify(ctrl_id, co::LVN::DELETEITEM, move |_, p| {
+			let nmlv = unsafe { p.cast_nmhdr::<NMLISTVIEW>() };
+			self2.items()
+				.get(nmlv.iItem as _)
+				.data_lparam()
+				.map(|pdata| {
+					let _ = unsafe { Rc::from_raw(pdata) }; // free allocated LPARAM, if any
+				});
+			Ok(())
+		});
 	}
 
 	/// Required by `Header` constructon phase.
@@ -241,7 +267,7 @@ impl ListView {
 
 	/// Exposes the column methods.
 	#[must_use]
-	pub const fn columns(&self) -> ListViewColumns<'_> {
+	pub const fn columns(&self) -> ListViewColumns<'_, T> {
 		ListViewColumns::new(self)
 	}
 
@@ -267,7 +293,7 @@ impl ListView {
 
 	/// Exposes the item methods.
 	#[must_use]
-	pub const fn items(&self) -> ListViewItems<'_> {
+	pub const fn items(&self) -> ListViewItems<'_, T> {
 		ListViewItems::new(self)
 	}
 
@@ -283,7 +309,7 @@ impl ListView {
 	pub fn set_current_view(&self, view: co::LV_VIEW) {
 		unsafe {
 			self.hwnd()
-				.SendMessage(lvm::SetView { view })
+			.SendMessage(lvm::SetView { view })
 		}.unwrap();
 	}
 

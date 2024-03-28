@@ -251,14 +251,14 @@ impl<'a> ListBoxSelItemIter<'a> {
 
 //------------------------------------------------------------------------------
 
-pub(in crate::gui) struct ListViewColumnIter<'a> {
-	owner: &'a ListView,
+pub(in crate::gui) struct ListViewColumnIter<'a, T: 'static> {
+	owner: &'a ListView<T>,
 	count: u32,
 	current: u32,
 }
 
-impl<'a> Iterator for ListViewColumnIter<'a> {
-	type Item = ListViewColumn<'a>;
+impl<'a, T> Iterator for ListViewColumnIter<'a, T> {
+	type Item = ListViewColumn<'a, T>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		if self.current == self.count {
@@ -271,8 +271,8 @@ impl<'a> Iterator for ListViewColumnIter<'a> {
 	}
 }
 
-impl<'a> ListViewColumnIter<'a> {
-	pub(in crate::gui) fn new(owner: &'a ListView) -> Self {
+impl<'a, T> ListViewColumnIter<'a, T> {
+	pub(in crate::gui) fn new(owner: &'a ListView<T>) -> Self {
 		Self {
 			owner,
 			count: owner.items().count(),
@@ -283,14 +283,14 @@ impl<'a> ListViewColumnIter<'a> {
 
 //------------------------------------------------------------------------------
 
-pub(in crate::gui) struct ListViewItemIter<'a> {
-	owner: &'a ListView,
-	current: Option<ListViewItem<'a>>,
+pub(in crate::gui) struct ListViewItemIter<'a, T: 'static> {
+	owner: &'a ListView<T>,
+	current: Option<ListViewItem<'a, T>>,
 	relationship: co::LVNI,
 }
 
-impl<'a> Iterator for ListViewItemIter<'a> {
-	type Item = ListViewItem<'a>;
+impl<'a, T> Iterator for ListViewItemIter<'a, T> {
+	type Item = ListViewItem<'a, T>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		self.current = unsafe {
@@ -305,9 +305,9 @@ impl<'a> Iterator for ListViewItemIter<'a> {
 	}
 }
 
-impl<'a> ListViewItemIter<'a> {
+impl<'a, T> ListViewItemIter<'a, T> {
 	pub(in crate::gui) const fn new(
-		owner: &'a ListView,
+		owner: &'a ListView<T>,
 		relationship: co::LVNI,
 	) -> Self
 	{
