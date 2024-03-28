@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\list_view_items.rs`."><title>list_view_items.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (516b6162a 2024-03-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\list_view_items.rs`."><title>list_view_items.rs - source</title><script> if (window.location.protocol !== "file:") document.write(`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2">`)</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (0824b300e 2024-03-24)" data-channel="nightly" data-search-js="search-42d8da7a6b9792c2.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -272,7 +272,36 @@
 <a href="#270" id="270">270</a>
 <a href="#271" id="271">271</a>
 <a href="#272" id="272">272</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>std::any::TypeId;
+<span class="kw">use </span>std::cell::RefCell;
+<span class="kw">use </span>std::rc::Rc;
+
+<span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, native_controls::iterators::<span class="kw-2">*</span>, spec::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
@@ -282,12 +311,12 @@
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-</span><span class="kw">pub struct </span>ListViewItems&lt;<span class="lifetime">'a</span>&gt; {
-	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView,
+</span><span class="kw">pub struct </span>ListViewItems&lt;<span class="lifetime">'a</span>, T: <span class="lifetime">'static</span>&gt; {
+	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; ListViewItems&lt;<span class="lifetime">'a</span>&gt; {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView) -&gt; <span class="self">Self </span>{
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; ListViewItems&lt;<span class="lifetime">'a</span>, T&gt; {
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{ owner }
 	}
 
@@ -317,12 +346,14 @@
 	///         "Second column text",
 	///     ],
 	///     None, // no icon; requires a previous set_image_list()
+	///     (),   // no object data; requires specifying the generic `ListView` type
 	/// );
 	/// ```
 	</span><span class="kw">pub fn </span>add(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		texts: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;],
 		icon_index: <span class="prelude-ty">Option</span>&lt;u32&gt;,
-	) -&gt; ListViewItem&lt;<span class="lifetime">'a</span>&gt;
+		data: T,
+	) -&gt; ListViewItem&lt;<span class="lifetime">'a</span>, T&gt;
 	{
 		<span class="kw">if </span>texts.is_empty() {
 			<span class="macro">panic!</span>(<span class="string">"No texts passed when adding a ListView item."</span>);
@@ -332,7 +363,7 @@
 		}
 
 		<span class="kw">let </span><span class="kw-2">mut </span>lvi = LVITEM::default();
-		lvi.mask = co::LVIF::TEXT;
+		lvi.mask = co::LVIF::TEXT | co::LVIF::PARAM;
 		lvi.iItem = <span class="number">0x0fff_ffff</span>; <span class="comment">// insert as the last item
 
 		</span><span class="kw">if let </span><span class="prelude-val">Some</span>(icon_index) = icon_index { <span class="comment">// will it have an icon?
@@ -343,10 +374,16 @@
 		<span class="kw">let </span><span class="kw-2">mut </span>wtext = WString::from_str(texts[<span class="number">0</span>].as_ref()); <span class="comment">// text of 1st column
 		</span>lvi.set_pszText(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>wtext));
 
+		<span class="kw">if </span>TypeId::of::&lt;T&gt;() != TypeId::of::&lt;()&gt;() { <span class="comment">// user defined an actual type?
+			</span><span class="kw">let </span>rc_data = Rc::new(RefCell::new(data));
+			lvi.lParam = Rc::into_raw(rc_data) <span class="kw">as _</span>;
+		}
+
 		<span class="kw">let </span>new_item = <span class="self">self</span>.get( <span class="comment">// insert new item; retrieve newly added
-			</span><span class="self">self</span>.owner.hwnd()
-				.SendMessage(lvm::InsertItem { item: <span class="kw-2">&amp;</span>lvi })
-				.unwrap(),
+			</span><span class="kw">unsafe </span>{
+				<span class="self">self</span>.owner.hwnd()
+					.SendMessage(lvm::InsertItem { item: <span class="kw-2">&amp;</span>lvi })
+			}.unwrap(),
 		);
 
 		texts.iter()
@@ -363,27 +400,32 @@
 	/// [`lvm::GetItemCount`](crate::msg::lvm::GetItemCount) message.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::GetItemCount {})
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::GetItemCount {})
+		}
 	}
 
 	<span class="doccomment">/// Deletes all items by sending an
 	/// [`lvm::DeleteAllItems`](crate::msg::lvm::DeleteAllItems) message.
 	</span><span class="kw">pub fn </span>delete_all(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::DeleteAllItems {})
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::DeleteAllItems {})
+		}.unwrap();
 	}
 
 	<span class="doccomment">/// Deletes all selected items by sending
 	/// [`lvm::DeleteItem`](crate::msg::lvm::DeleteItem) messages.
 	</span><span class="kw">pub fn </span>delete_selected(<span class="kw-2">&amp;</span><span class="self">self</span>) {
 		<span class="kw">loop </span>{
-			<span class="kw">let </span>next_idx = <span class="self">self</span>.owner.hwnd()
-				.SendMessage(lvm::GetNextItem {
-					initial_index: <span class="prelude-val">None</span>,
-					relationship: co::LVNI::SELECTED,
-				});
+			<span class="kw">let </span>next_idx = <span class="kw">unsafe </span>{
+				<span class="self">self</span>.owner.hwnd()
+					.SendMessage(lvm::GetNextItem {
+						initial_index: <span class="prelude-val">None</span>,
+						relationship: co::LVNI::SELECTED,
+					})
+			};
 			<span class="kw">match </span>next_idx {
 				<span class="prelude-val">Some</span>(next_idx) =&gt; <span class="self">self</span>.get(next_idx).delete(),
 				<span class="prelude-val">None </span>=&gt; <span class="kw">break</span>,
@@ -394,31 +436,33 @@
 	<span class="doccomment">/// Searches for an item with the given text, case-insensitive, by sending
 	/// an [`lvm::FindItem`](crate::msg::lvm::FindItem) message.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>find(<span class="kw-2">&amp;</span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">'a</span>&gt;&gt; {
+	</span><span class="kw">pub fn </span>find(<span class="kw-2">&amp;</span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">'a</span>, T&gt;&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::from_str(text);
 
 		<span class="kw">let </span><span class="kw-2">mut </span>lvfi = LVFINDINFO::default();
 		lvfi.flags = co::LVFI::STRING;
 		lvfi.set_psz(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>buf));
 
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::FindItem {
-				start_index: <span class="prelude-val">None</span>,
-				lvfindinfo: <span class="kw-2">&amp;mut </span>lvfi,
-			})
-			.map(|idx| <span class="self">self</span>.get(idx))
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::FindItem {
+					start_index: <span class="prelude-val">None</span>,
+					lvfindinfo: <span class="kw-2">&amp;mut </span>lvfi,
+				})
+		}.map(|idx| <span class="self">self</span>.get(idx))
 	}
 
 	<span class="doccomment">/// Retrieves the focused item by sending an
 	/// [`lvm::GetNextItem`](crate::msg::lvm::GetNextItem) message.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>focused(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">'a</span>&gt;&gt; {
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::GetNextItem {
-				initial_index: <span class="prelude-val">None</span>,
-				relationship: co::LVNI::FOCUSED,
-			})
-			.map(|idx| <span class="self">self</span>.get(idx))
+	</span><span class="kw">pub fn </span>focused(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">'a</span>, T&gt;&gt; {
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::GetNextItem {
+					initial_index: <span class="prelude-val">None</span>,
+					relationship: co::LVNI::FOCUSED,
+				})
+		}.map(|idx| <span class="self">self</span>.get(idx))
 	}
 
 	<span class="doccomment">/// Retrieves the item at the given zero-based position.
@@ -427,7 +471,7 @@
 	/// existing items, an object will still be returned. However, operations
 	/// upon this object will produce no effect.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub const fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, index: u32) -&gt; ListViewItem&lt;<span class="lifetime">'a</span>&gt; {
+	</span><span class="kw">pub const fn </span>get(<span class="kw-2">&amp;</span><span class="self">self</span>, index: u32) -&gt; ListViewItem&lt;<span class="lifetime">'a</span>, T&gt; {
 		ListViewItem::new(<span class="self">self</span>.owner, index)
 	}
 
@@ -436,13 +480,14 @@
 	///
 	/// `coords` must be relative to the list view.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>hit_test(<span class="kw-2">&amp;</span><span class="self">self</span>, coords: POINT) -&gt; <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">'a</span>&gt;&gt; {
+	</span><span class="kw">pub fn </span>hit_test(<span class="kw-2">&amp;</span><span class="self">self</span>, coords: POINT) -&gt; <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">'a</span>, T&gt;&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>lvhti = LVHITTESTINFO::default();
 		lvhti.pt = coords;
 
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::HitTest { info: <span class="kw-2">&amp;mut </span>lvhti })
-			.map(|index| <span class="self">self</span>.get(index))
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::HitTest { info: <span class="kw-2">&amp;mut </span>lvhti })
+		}.map(|index| <span class="self">self</span>.get(index))
 	}
 
 	<span class="doccomment">/// Returns an iterator over all items.
@@ -454,7 +499,7 @@
 	///
 	/// let my_list: gui::ListView; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-	/// # let my_list = gui::ListView::new(&amp;wnd, gui::ListViewOpts::default());
+	/// # let my_list = gui::ListView::&lt;()&gt;::new(&amp;wnd, gui::ListViewOpts::default());
 	///
 	/// for item in my_list.items().iter() {
 	///     println!("Item {}, text of the first column: {}",
@@ -462,7 +507,7 @@
 	/// }
 	/// ```
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = ListViewItem&lt;<span class="lifetime">'a</span>&gt;&gt; + <span class="lifetime">'a </span>{
+	</span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = ListViewItem&lt;<span class="lifetime">'a</span>, T&gt;&gt; + <span class="lifetime">'a </span>{
 		ListViewItemIter::new(<span class="self">self</span>.owner, co::LVNI::ALL)
 	}
 
@@ -475,7 +520,7 @@
 	///
 	/// let my_list: gui::ListView; // initialized somewhere
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-	/// # let my_list = gui::ListView::new(&amp;wnd, gui::ListViewOpts::default());
+	/// # let my_list = gui::ListView::&lt;()&gt;::new(&amp;wnd, gui::ListViewOpts::default());
 	///
 	/// for item in my_list.items().iter_selected() {
 	///     println!("Selected item {}, text of the first column: {}",
@@ -483,7 +528,7 @@
 	/// }
 	/// ```
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>iter_selected(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = ListViewItem&lt;<span class="lifetime">'a</span>&gt;&gt; + <span class="lifetime">'a </span>{
+	</span><span class="kw">pub fn </span>iter_selected(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = ListViewItem&lt;<span class="lifetime">'a</span>, T&gt;&gt; + <span class="lifetime">'a </span>{
 		ListViewItemIter::new(<span class="self">self</span>.owner, co::LVNI::ALL | co::LVNI::SELECTED)
 	}
 
@@ -497,11 +542,12 @@
 	///
 	/// Panics if the given ID doesn't exist among the items.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>map_id_to_index(<span class="kw-2">&amp;</span><span class="self">self</span>, item_id: u32) -&gt; ListViewItem&lt;<span class="lifetime">'a</span>&gt; {
+	</span><span class="kw">pub fn </span>map_id_to_index(<span class="kw-2">&amp;</span><span class="self">self</span>, item_id: u32) -&gt; ListViewItem&lt;<span class="lifetime">'a</span>, T&gt; {
 		<span class="self">self</span>.get(
-			<span class="self">self</span>.owner.hwnd()
-				.SendMessage(lvm::MapIdToIndex { id: item_id })
-				.unwrap(),
+			<span class="kw">unsafe </span>{
+				<span class="self">self</span>.owner.hwnd()
+					.SendMessage(lvm::MapIdToIndex { id: item_id })
+			}.unwrap(),
 		)
 	}
 
@@ -519,29 +565,33 @@
 		lvi.stateMask = co::LVIS::SELECTED;
 		<span class="kw">if </span>set { lvi.state = co::LVIS::SELECTED; }
 
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::SetItemState {
-				index: <span class="prelude-val">None</span>,
-				lvitem: <span class="kw-2">&amp;</span>lvi,
-			})
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::SetItemState {
+					index: <span class="prelude-val">None</span>,
+					lvitem: <span class="kw-2">&amp;</span>lvi,
+				})
+		}.unwrap();
 	}
 
 	<span class="doccomment">/// Retrieves the number of selected items by sending an
 	/// [`lvm::GetSelectedCount`](crate::msg::lvm::GetSelectedCount) message.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>selected_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::GetSelectedCount {})
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::GetSelectedCount {})
+		}
 	}
 
 	<span class="doccomment">/// Sets the number of items in a virtual list view – that is, a list view
 	/// created with [`LVS::OWNERDATA`](crate::co::LVS::OWNERDATA) style – by
 	/// sending an [`lvm::SetItemCount`](crate::msg::lvm::SetItemCount) message.
 	</span><span class="kw">pub fn </span>set_count(<span class="kw-2">&amp;</span><span class="self">self</span>, count: u32, behavior: <span class="prelude-ty">Option</span>&lt;co::LVSICF&gt;) {
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::SetItemCount { count, behavior })
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::SetItemCount { count, behavior })
+		}.unwrap();
 	}
 }
 </code></pre></div></section></main></body></html>

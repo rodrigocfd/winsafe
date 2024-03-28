@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\edit.rs`."><title>edit.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (516b6162a 2024-03-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\edit.rs`."><title>edit.rs - source</title><script> if (window.location.protocol !== "file:") document.write(`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2">`)</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (0824b300e 2024-03-24)" data-channel="nightly" data-search-js="search-42d8da7a6b9792c2.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -379,6 +379,11 @@
 <a href="#377" id="377">377</a>
 <a href="#378" id="378">378</a>
 <a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -544,10 +549,12 @@
 					opts.window_style | opts.edit_style.into(),
 				)<span class="question-mark">?</span>;
 
-				<span class="self">self</span>.hwnd().SendMessage(wm::SetFont {
-					hfont: <span class="kw">unsafe </span>{ ui_font().raw_copy() },
-					redraw: <span class="bool-val">true</span>,
-				});
+				<span class="kw">unsafe </span>{
+					<span class="self">self</span>.hwnd().SendMessage(wm::SetFont {
+						hfont: ui_font(),
+						redraw: <span class="bool-val">true</span>,
+					});
+				}
 			},
 			OptsResz::Dlg(<span class="kw">_</span>) =&gt; <span class="self">self</span>.<span class="number">0</span>.base.create_dlg()<span class="question-mark">?</span>,
 		}
@@ -559,7 +566,7 @@
 	<span class="doccomment">/// Hides any balloon tip by sending an
 	/// [`em::HideBalloonTip`](crate::msg::em::HideBalloonTip) message.
 	</span><span class="kw">pub fn </span>hide_balloon_tip(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="self">self</span>.hwnd().SendMessage(em::HideBalloonTip {}).unwrap();
+		<span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd().SendMessage(em::HideBalloonTip {}) }.unwrap();
 	}
 
 	<span class="doccomment">/// Returns an iterator over the lines in the Edit.
@@ -586,14 +593,14 @@
 	<span class="doccomment">/// Limits the number of characters that can be type by sending an
 	/// [`em::SetLimitText`](crate::msg::em::SetLimitText) message.
 	</span><span class="kw">pub fn </span>limit_text(<span class="kw-2">&amp;</span><span class="self">self</span>, max_chars: <span class="prelude-ty">Option</span>&lt;u32&gt;) {
-		<span class="self">self</span>.hwnd().SendMessage(em::SetLimitText { max_chars });
+		<span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd().SendMessage(em::SetLimitText { max_chars }); }
 	}
 
 	<span class="doccomment">/// Returns the number of lines by sending an
 	/// [`em::GetLineCount`](crate::msg::em::GetLineCount) message.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>line_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
-		<span class="self">self</span>.hwnd().SendMessage(em::GetLineCount {})
+		<span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd().SendMessage(em::GetLineCount {}) }
 	}
 
 	<span class="doccomment">/// Sets the font to the `Edit` by sending an
@@ -601,10 +608,12 @@
 	///
 	/// Note that the font must remain alive while being used in the control.
 	</span><span class="kw">pub fn </span>set_font(<span class="kw-2">&amp;</span><span class="self">self</span>, font: <span class="kw-2">&amp;</span>HFONT) {
-		<span class="self">self</span>.hwnd().SendMessage(wm::SetFont {
-			hfont: <span class="kw">unsafe </span>{ font.raw_copy() },
-			redraw: <span class="bool-val">true</span>,
-		});
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.hwnd().SendMessage(wm::SetFont {
+				hfont: font.raw_copy(),
+				redraw: <span class="bool-val">true</span>,
+			});
+		}
 	}
 
 	<span class="doccomment">/// Sets the selection range of the text by sending an
@@ -636,7 +645,7 @@
 	/// my_edit.set_selection(-1, -1);
 	/// ```
 	</span><span class="kw">pub fn </span>set_selection(<span class="kw-2">&amp;</span><span class="self">self</span>, start: i32, end: i32) {
-		<span class="self">self</span>.hwnd().SendMessage(em::SetSel { start, end });
+		<span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd().SendMessage(em::SetSel { start, end }); }
 	}
 
 	<span class="doccomment">/// Displays a balloon tip by sending an
@@ -650,9 +659,10 @@
 		info.set_pszText(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>text16));
 		info.ttiIcon = icon;
 
-		<span class="self">self</span>.hwnd()
-			.SendMessage(em::ShowBalloonTip { info: <span class="kw-2">&amp;</span>info })
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.hwnd()
+				.SendMessage(em::ShowBalloonTip { info: <span class="kw-2">&amp;</span>info })
+		}.unwrap();
 	}
 }
 

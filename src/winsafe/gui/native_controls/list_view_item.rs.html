@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\list_view_item.rs`."><title>list_view_item.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (516b6162a 2024-03-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\list_view_item.rs`."><title>list_view_item.rs - source</title><script> if (window.location.protocol !== "file:") document.write(`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2">`)</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (0824b300e 2024-03-24)" data-channel="nightly" data-search-js="search-42d8da7a6b9792c2.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -242,7 +242,43 @@
 <a href="#240" id="240">240</a>
 <a href="#241" id="241">241</a>
 <a href="#242" id="242">242</a>
-</pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
+<a href="#243" id="243">243</a>
+<a href="#244" id="244">244</a>
+<a href="#245" id="245">245</a>
+<a href="#246" id="246">246</a>
+<a href="#247" id="247">247</a>
+<a href="#248" id="248">248</a>
+<a href="#249" id="249">249</a>
+<a href="#250" id="250">250</a>
+<a href="#251" id="251">251</a>
+<a href="#252" id="252">252</a>
+<a href="#253" id="253">253</a>
+<a href="#254" id="254">254</a>
+<a href="#255" id="255">255</a>
+<a href="#256" id="256">256</a>
+<a href="#257" id="257">257</a>
+<a href="#258" id="258">258</a>
+<a href="#259" id="259">259</a>
+<a href="#260" id="260">260</a>
+<a href="#261" id="261">261</a>
+<a href="#262" id="262">262</a>
+<a href="#263" id="263">263</a>
+<a href="#264" id="264">264</a>
+<a href="#265" id="265">265</a>
+<a href="#266" id="266">266</a>
+<a href="#267" id="267">267</a>
+<a href="#268" id="268">268</a>
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+</pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::RefCell;
+<span class="kw">use </span>std::mem::ManuallyDrop;
+<span class="kw">use </span>std::rc::Rc;
+
+<span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::kernel::privs::<span class="kw-2">*</span>;
@@ -257,35 +293,77 @@
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-</span><span class="attr">#[derive(Clone, Copy)]
-</span><span class="kw">pub struct </span>ListViewItem&lt;<span class="lifetime">'a</span>&gt; {
-	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView,
+</span><span class="kw">pub struct </span>ListViewItem&lt;<span class="lifetime">'a</span>, T: <span class="lifetime">'static </span>= ()&gt; {
+	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;,
 	index: u32,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; ListViewItem&lt;<span class="lifetime">'a</span>&gt; {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView, index: u32) -&gt; <span class="self">Self </span>{
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; Clone <span class="kw">for </span>ListViewItem&lt;<span class="lifetime">'a</span>, T&gt; { <span class="comment">// https://stackoverflow.com/q/39415052/6923555
+	</span><span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{
+			owner: <span class="self">self</span>.owner,
+			index: <span class="self">self</span>.index,
+		}
+	}
+}
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; Copy <span class="kw">for </span>ListViewItem&lt;<span class="lifetime">'a</span>, T&gt; {}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; ListViewItem&lt;<span class="lifetime">'a</span>, T&gt; {
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;, index: u32) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{ owner, index }
+	}
+
+	<span class="doccomment">/// Returns a [`Rc`](std::rc::Rc)/[`RefCell`](std::cell::RefCell) with the
+	/// stored data by sending an [`lvm::GetItem`](crate::msg::lvm::GetItem)
+	/// message.
+	///
+	/// Returns `None` if the `ListView` holds a `()`, or if the item holds an
+	/// invalid index.
+	</span><span class="attr">#[must_use]
+	</span><span class="kw">pub fn </span>data(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;Rc&lt;RefCell&lt;T&gt;&gt;&gt; {
+		<span class="self">self</span>.data_lparam()
+			.map(|pdata| {
+				<span class="kw">let </span>rc_data = ManuallyDrop::new(<span class="kw">unsafe </span>{ Rc::from_raw(pdata) });
+				Rc::clone(<span class="kw-2">&amp;</span>rc_data)
+			})
+	}
+
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>data_lparam(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">*mut </span>RefCell&lt;T&gt;&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>lvi = LVITEM::default();
+		lvi.iItem = <span class="self">self</span>.index <span class="kw">as _</span>;
+		lvi.mask = co::LVIF::PARAM;
+
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::GetItem { lvitem: <span class="kw-2">&amp;mut </span>lvi })
+		}.unwrap();
+
+		<span class="kw">match </span>lvi.lParam {
+			<span class="number">0 </span>=&gt; <span class="prelude-val">None</span>,
+			lp =&gt; <span class="prelude-val">Some</span>(lp <span class="kw">as _</span>),
+		}
 	}
 
 	<span class="doccomment">/// Deletes the item by sending an
 	/// [`lvm::DeleteItem`](crate::msg::lvm::DeleteItem) message.
 	</span><span class="kw">pub fn </span>delete(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::DeleteItem { index: <span class="self">self</span>.index, })
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::DeleteItem { index: <span class="self">self</span>.index, })
+		}.unwrap();
 	}
 
 	<span class="doccomment">/// Scrolls the list by sending an
 	/// [`lvm::EnsureVisible`](crate::msg::lvm::EnsureVisible) message so that
 	/// the item is visible in the list.
 	</span><span class="kw">pub fn </span>ensure_visible(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::EnsureVisible {
-				index: <span class="self">self</span>.index,
-				entirely_visible: <span class="bool-val">true</span>,
-			})
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::EnsureVisible {
+					index: <span class="self">self</span>.index,
+					entirely_visible: <span class="bool-val">true</span>,
+				})
+		}.unwrap();
 	}
 
 	<span class="doccomment">/// Sets the item as the focused one sending an
@@ -295,12 +373,13 @@
 		lvi.stateMask = co::LVIS::FOCUSED;
 		lvi.state = co::LVIS::FOCUSED;
 
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::SetItemState {
-				index: <span class="prelude-val">Some</span>(<span class="self">self</span>.index),
-				lvitem: <span class="kw-2">&amp;</span>lvi,
-			})
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::SetItemState {
+					index: <span class="prelude-val">Some</span>(<span class="self">self</span>.index),
+					lvitem: <span class="kw-2">&amp;</span>lvi,
+				})
+		}.unwrap();
 	}
 
 	<span class="doccomment">/// Retrieves the icon index of the item by sending an
@@ -311,9 +390,10 @@
 		lvi.iItem = <span class="self">self</span>.index <span class="kw">as _</span>;
 		lvi.mask = co::LVIF::IMAGE;
 
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::SetItem { lvitem: <span class="kw-2">&amp;mut </span>lvi })
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::SetItem { lvitem: <span class="kw-2">&amp;mut </span>lvi })
+		}.unwrap();
 
 		<span class="kw">match </span>lvi.iImage {
 			-<span class="number">1 </span>=&gt; <span class="prelude-val">None</span>,
@@ -331,46 +411,36 @@
 	/// [`lvm::GetItemState`](crate::msg::lvm::GetItemState) message.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>is_focused(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::GetItemState {
-				index: <span class="self">self</span>.index,
-				mask: co::LVIS::FOCUSED,
-			})
-			.has(co::LVIS::FOCUSED)
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::GetItemState {
+					index: <span class="self">self</span>.index,
+					mask: co::LVIS::FOCUSED,
+				})
+		}.has(co::LVIS::FOCUSED)
 	}
 
 	<span class="doccomment">/// Tells if the item is selected by sending an
 	/// [`lvm::GetItemState`](crate::msg::lvm::GetItemState) message.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>is_selected(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::GetItemState {
-				index: <span class="self">self</span>.index,
-				mask: co::LVIS::SELECTED,
-			})
-			.has(co::LVIS::SELECTED)
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::GetItemState {
+					index: <span class="self">self</span>.index,
+					mask: co::LVIS::SELECTED,
+				})
+		}.has(co::LVIS::SELECTED)
 	}
 
 	<span class="doccomment">/// Tells if the item is currently visible by sending an
 	/// [`lvm::IsItemVisible`](crate::msg::lvm::IsItemVisible) message.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>is_visible(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::IsItemVisible { index: <span class="self">self</span>.index })
-	}
-
-	<span class="doccomment">/// Retrieves the user-defined value by sending an
-	/// [`lvm::GetItem`](crate::msg::lvm::GetItem) message.
-	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>lparam(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; isize {
-		<span class="kw">let </span><span class="kw-2">mut </span>lvi = LVITEM::default();
-		lvi.iItem = <span class="self">self</span>.index <span class="kw">as _</span>;
-		lvi.mask = co::LVIF::PARAM;
-
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::GetItem { lvitem: <span class="kw-2">&amp;mut </span>lvi })
-			.unwrap();
-		lvi.lParam
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::IsItemVisible { index: <span class="self">self</span>.index })
+		}
 	}
 
 	<span class="doccomment">/// Retrieves the unique ID for the item index by sending an
@@ -379,9 +449,10 @@
 	/// If the item index has became invalid, returns `None`.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>map_index_to_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::MapIndexToId { index: <span class="self">self</span>.index })
-			.unwrap()
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::MapIndexToId { index: <span class="self">self</span>.index })
+		}.unwrap()
 	}
 
 	<span class="doccomment">/// Retrieves the bound rectangle of item by sending an
@@ -389,13 +460,14 @@
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>rect(<span class="kw-2">&amp;</span><span class="self">self</span>, portion: co::LVIR) -&gt; RECT {
 		<span class="kw">let </span><span class="kw-2">mut </span>rc = RECT::default();
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::GetItemRect {
-				index: <span class="self">self</span>.index,
-				rect: <span class="kw-2">&amp;mut </span>rc,
-				portion,
-			})
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::GetItemRect {
+					index: <span class="self">self</span>.index,
+					rect: <span class="kw-2">&amp;mut </span>rc,
+					portion,
+				})
+		}.unwrap();
 		rc
 	}
 
@@ -406,12 +478,13 @@
 		lvi.stateMask = co::LVIS::SELECTED;
 		<span class="kw">if </span>set { lvi.state = co::LVIS::SELECTED; }
 
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::SetItemState {
-				index: <span class="prelude-val">Some</span>(<span class="self">self</span>.index),
-				lvitem: <span class="kw-2">&amp;</span>lvi,
-			})
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::SetItemState {
+					index: <span class="prelude-val">Some</span>(<span class="self">self</span>.index),
+					lvitem: <span class="kw-2">&amp;</span>lvi,
+				})
+		}.unwrap();
 	}
 
 	<span class="doccomment">/// Sets the icon index of the item by sending an
@@ -422,22 +495,10 @@
 		lvi.mask = co::LVIF::IMAGE;
 		lvi.iImage = icon_index.map_or(-<span class="number">1</span>, |idx| idx <span class="kw">as _</span>);
 
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::SetItem { lvitem: <span class="kw-2">&amp;mut </span>lvi })
-			.unwrap();
-	}
-
-	<span class="doccomment">/// Sets the user-defined value by sending an
-	/// [`lvm::SetItem`](crate::msg::lvm::SetItem) message.
-	</span><span class="kw">pub fn </span>set_lparam(<span class="kw-2">&amp;</span><span class="self">self</span>, lparam: isize) {
-		<span class="kw">let </span><span class="kw-2">mut </span>lvi = LVITEM::default();
-		lvi.iItem = <span class="self">self</span>.index <span class="kw">as _</span>;
-		lvi.mask = co::LVIF::PARAM;
-		lvi.lParam = lparam;
-
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::SetItem { lvitem: <span class="kw-2">&amp;mut </span>lvi })
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::SetItem { lvitem: <span class="kw-2">&amp;mut </span>lvi })
+		}.unwrap();
 	}
 
 	<span class="doccomment">/// Sets the text of the item under a column by sending an
@@ -449,12 +510,13 @@
 		<span class="kw">let </span><span class="kw-2">mut </span>wtext = WString::from_str(text);
 		lvi.set_pszText(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>wtext));
 
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::SetItemText {
-				index: <span class="self">self</span>.index,
-				lvitem: <span class="kw-2">&amp;</span>lvi,
-			})
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::SetItemText {
+					index: <span class="self">self</span>.index,
+					lvitem: <span class="kw-2">&amp;</span>lvi,
+				})
+		}.unwrap();
 	}
 
 	<span class="doccomment">/// Retrieves the text of an item under a column by sending an
@@ -470,11 +532,13 @@
 			<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
 			lvi.set_pszText(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>buf));
 
-			<span class="kw">let </span>returned_chars = <span class="self">self</span>.owner.hwnd() <span class="comment">// char count without terminating null
-				</span>.SendMessage(lvm::GetItemText {
-					index: <span class="self">self</span>.index,
-					lvitem: <span class="kw-2">&amp;mut </span>lvi,
-				}) + <span class="number">1</span>; <span class="comment">// plus terminating null count
+			<span class="kw">let </span>returned_chars = <span class="kw">unsafe </span>{
+				<span class="self">self</span>.owner.hwnd() <span class="comment">// char count without terminating null
+					</span>.SendMessage(lvm::GetItemText {
+						index: <span class="self">self</span>.index,
+						lvitem: <span class="kw-2">&amp;mut </span>lvi,
+					})
+			} + <span class="number">1</span>; <span class="comment">// plus terminating null count
 
 			</span><span class="kw">if </span>(returned_chars <span class="kw">as </span>usize) &lt; buf_sz { <span class="comment">// to break, must have at least 1 char gap
 				</span><span class="kw">return </span>buf.to_string();

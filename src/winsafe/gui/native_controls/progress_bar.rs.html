@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\progress_bar.rs`."><title>progress_bar.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (516b6162a 2024-03-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\progress_bar.rs`."><title>progress_bar.rs - source</title><script> if (window.location.protocol !== "file:") document.write(`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2">`)</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (0824b300e 2024-03-24)" data-channel="nightly" data-search-js="search-42d8da7a6b9792c2.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -304,6 +304,23 @@
 <a href="#302" id="302">302</a>
 <a href="#303" id="303">303</a>
 <a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -445,7 +462,7 @@
 	/// [`pbm::GetPos`](crate::msg::pbm::GetPos) message.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>position(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
-		<span class="self">self</span>.hwnd().SendMessage(pbm::GetPos {})
+		<span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd().SendMessage(pbm::GetPos {}) }
 	}
 
 	<span class="doccomment">/// Retrieves the current minimum and maximum values by sending a
@@ -455,15 +472,17 @@
 	</span><span class="kw">pub fn </span>range(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u32, u32) {
 		<span class="comment">// For some reason, pbm::GetRange is returning all zeros when passing a
 		// PBRANGE pointer.
-		</span><span class="kw">let </span>low = <span class="self">self</span>.hwnd().SendMessage(pbm::GetRange {
-			return_low: <span class="bool-val">true</span>,
-			ranges: <span class="prelude-val">None</span>,
-		});
-		<span class="kw">let </span>high = <span class="self">self</span>.hwnd().SendMessage(pbm::GetRange {
-			return_low: <span class="bool-val">false</span>,
-			ranges: <span class="prelude-val">None</span>,
-		});
-		(low <span class="kw">as _</span>, high <span class="kw">as _</span>)
+		</span><span class="kw">unsafe </span>{
+			<span class="kw">let </span>low = <span class="self">self</span>.hwnd().SendMessage(pbm::GetRange {
+				return_low: <span class="bool-val">true</span>,
+				ranges: <span class="prelude-val">None</span>,
+			});
+			<span class="kw">let </span>high = <span class="self">self</span>.hwnd().SendMessage(pbm::GetRange {
+				return_low: <span class="bool-val">false</span>,
+				ranges: <span class="prelude-val">None</span>,
+			});
+			(low <span class="kw">as _</span>, high <span class="kw">as _</span>)
+		}
 	}
 
 	<span class="doccomment">/// Sets or unsets the marquee mode by sending a
@@ -474,22 +493,28 @@
 		<span class="kw">if </span>marquee {
 			<span class="comment">// We must also adjust the window style before/after sending
 			// PBM_SETMARQUEE message.
-			</span><span class="self">self</span>.hwnd().SetWindowLongPtr(
-				co::GWLP::STYLE,
-				u32::from(<span class="self">self</span>.cur_style() | co::PBS::MARQUEE) <span class="kw">as _</span>,
-			);
+			</span><span class="kw">unsafe </span>{
+				<span class="self">self</span>.hwnd().SetWindowLongPtr(
+					co::GWLP::STYLE,
+					u32::from(<span class="self">self</span>.cur_style() | co::PBS::MARQUEE) <span class="kw">as _</span>,
+				);
+			}
 		}
 
-		<span class="self">self</span>.hwnd().SendMessage(pbm::SetMarquee {
-			turn_on: marquee,
-			time_ms: <span class="prelude-val">None</span>,
-		});
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.hwnd().SendMessage(pbm::SetMarquee {
+				turn_on: marquee,
+				time_ms: <span class="prelude-val">None</span>,
+			});
+		}
 
 		<span class="kw">if </span>!marquee {
-			<span class="self">self</span>.hwnd().SetWindowLongPtr(
-				co::GWLP::STYLE,
-				u32::from(<span class="self">self</span>.cur_style() &amp; !co::PBS::MARQUEE) <span class="kw">as _</span>,
-			);
+			<span class="kw">unsafe </span>{
+				<span class="self">self</span>.hwnd().SetWindowLongPtr(
+					co::GWLP::STYLE,
+					u32::from(<span class="self">self</span>.cur_style() &amp; !co::PBS::MARQUEE) <span class="kw">as _</span>,
+				);
+			}
 		}
 	}
 
@@ -501,28 +526,37 @@
 			<span class="self">self</span>.set_marquee(<span class="bool-val">false</span>); <span class="comment">// avoid crash
 		</span>}
 
-		<span class="self">self</span>.hwnd().SendMessage(pbm::SetPos { position })
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.hwnd()
+				.SendMessage(pbm::SetPos { position })
+		}
 	}
 
 	<span class="doccomment">/// Sets the minimum and maximum values by sending a
 	/// [`pbm::SetRange32`](crate::msg::pbm::SetRange32) message. Default values
 	/// are 0 and 100.
 	</span><span class="kw">pub fn </span>set_range(<span class="kw-2">&amp;</span><span class="self">self</span>, min: u32, max: u32) {
-		<span class="self">self</span>.hwnd().SendMessage(pbm::SetRange32 { min, max })
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.hwnd()
+				.SendMessage(pbm::SetRange32 { min, max })
+		}
 	}
 
 	<span class="doccomment">/// Sets the current state by sending a
 	/// [`pbm::SetState`](crate::msg::pbm::SetState) message, retuning the
 	/// previous state.
 	</span><span class="kw">pub fn </span>set_state(<span class="kw-2">&amp;</span><span class="self">self</span>, state: co::PBST) -&gt; co::PBST {
-		<span class="self">self</span>.hwnd().SendMessage(pbm::SetState { state })
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.hwnd()
+				.SendMessage(pbm::SetState { state })
+		}
 	}
 
 	<span class="doccomment">/// Retrieves the current state by sending a
 	/// [`pbm::GetState`](crate::msg::pbm::GetState) message.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>state(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::PBST {
-		<span class="self">self</span>.hwnd().SendMessage(pbm::GetState {})
+		<span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd().SendMessage(pbm::GetState {}) }
 	}
 
 	<span class="kw">fn </span>cur_style(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::PBS {

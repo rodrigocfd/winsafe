@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\iterators.rs`."><title>iterators.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (516b6162a 2024-03-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\iterators.rs`."><title>iterators.rs - source</title><script> if (window.location.protocol !== "file:") document.write(`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2">`)</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (0824b300e 2024-03-24)" data-channel="nightly" data-search-js="search-42d8da7a6b9792c2.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -393,6 +393,27 @@
 <a href="#391" id="391">391</a>
 <a href="#392" id="392">392</a>
 <a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a>
+<a href="#396" id="396">396</a>
+<a href="#397" id="397">397</a>
+<a href="#398" id="398">398</a>
+<a href="#399" id="399">399</a>
+<a href="#400" id="400">400</a>
+<a href="#401" id="401">401</a>
+<a href="#402" id="402">402</a>
+<a href="#403" id="403">403</a>
+<a href="#404" id="404">404</a>
+<a href="#405" id="405">405</a>
+<a href="#406" id="406">406</a>
+<a href="#407" id="407">407</a>
+<a href="#408" id="408">408</a>
+<a href="#409" id="409">409</a>
+<a href="#410" id="410">410</a>
+<a href="#411" id="411">411</a>
+<a href="#412" id="412">412</a>
+<a href="#413" id="413">413</a>
+<a href="#414" id="414">414</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, spec::<span class="kw-2">*</span>};
@@ -414,17 +435,21 @@
 			<span class="kw">return </span><span class="prelude-val">None</span>;
 		}
 
-		<span class="kw">let </span>num_chars = <span class="self">self</span>.owner.hwnd()
-			.SendMessage(cb::GetLbTextLen { index: <span class="self">self</span>.current })
-			.unwrap();
+		<span class="kw">let </span>num_chars = <span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(cb::GetLbTextLen { index: <span class="self">self</span>.current })
+		}.unwrap();
+
 		<span class="self">self</span>.buffer = WString::new_alloc_buf(num_chars <span class="kw">as </span>usize + <span class="number">1</span>);
 
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(cb::GetLbText {
-				index: <span class="self">self</span>.current,
-				text: <span class="kw-2">&amp;mut </span><span class="self">self</span>.buffer,
-			})
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(cb::GetLbText {
+					index: <span class="self">self</span>.current,
+					text: <span class="kw-2">&amp;mut </span><span class="self">self</span>.buffer,
+				})
+		}.unwrap();
+
 		<span class="self">self</span>.current += <span class="number">1</span>;
 		<span class="prelude-val">Some</span>(<span class="self">self</span>.buffer.to_string())
 	}
@@ -458,12 +483,14 @@
 			<span class="kw">return </span><span class="prelude-val">None</span>;
 		}
 
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(em::GetLine {
-				index: <span class="self">self</span>.current <span class="kw">as _</span>,
-				buffer: <span class="kw-2">&amp;mut </span><span class="self">self</span>.buffer,
-			})
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(em::GetLine {
+					index: <span class="self">self</span>.current <span class="kw">as _</span>,
+					buffer: <span class="kw-2">&amp;mut </span><span class="self">self</span>.buffer,
+				})
+		}.unwrap();
+
 		<span class="self">self</span>.current += <span class="number">1</span>;
 		<span class="prelude-val">Some</span>(<span class="self">self</span>.buffer.to_string())
 	}
@@ -473,7 +500,7 @@
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>Edit) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			owner,
-			count: owner.hwnd().SendMessage(em::GetLineCount {}),
+			count: <span class="kw">unsafe </span>{ owner.hwnd().SendMessage(em::GetLineCount {}) },
 			current: <span class="number">0</span>,
 			buffer: WString::new_alloc_buf(
 				owner.hwnd().GetWindowTextLength().unwrap() <span class="kw">as </span>usize + <span class="number">1</span>,
@@ -531,17 +558,21 @@
 			<span class="kw">return </span><span class="prelude-val">None</span>;
 		}
 
-		<span class="kw">let </span>num_chars = <span class="self">self</span>.owner.hwnd()
-			.SendMessage(lb::GetTextLen { index: <span class="self">self</span>.current })
-			.unwrap();
+		<span class="kw">let </span>num_chars = <span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lb::GetTextLen { index: <span class="self">self</span>.current })
+		}.unwrap();
+
 		<span class="self">self</span>.buffer = WString::new_alloc_buf(num_chars <span class="kw">as </span>usize + <span class="number">1</span>);
 
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lb::GetText {
-				index: <span class="self">self</span>.current,
-				text: <span class="kw-2">&amp;mut </span><span class="self">self</span>.buffer,
-			})
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lb::GetText {
+					index: <span class="self">self</span>.current,
+					text: <span class="kw-2">&amp;mut </span><span class="self">self</span>.buffer,
+				})
+		}.unwrap();
+
 		<span class="self">self</span>.current += <span class="number">1</span>;
 		<span class="prelude-val">Some</span>(<span class="self">self</span>.buffer.to_string())
 	}
@@ -577,17 +608,21 @@
 
 		<span class="kw">let </span>cur_sel_index = <span class="self">self</span>.indexes[<span class="self">self</span>.current <span class="kw">as </span>usize];
 
-		<span class="kw">let </span>num_chars = <span class="self">self</span>.owner.hwnd()
-			.SendMessage(lb::GetTextLen { index: cur_sel_index })
-			.unwrap();
+		<span class="kw">let </span>num_chars = <span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lb::GetTextLen { index: cur_sel_index })
+		}.unwrap();
+
 		<span class="self">self</span>.buffer = WString::new_alloc_buf(num_chars <span class="kw">as </span>usize + <span class="number">1</span>);
 
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lb::GetText {
-				index: cur_sel_index,
-				text: <span class="kw-2">&amp;mut </span><span class="self">self</span>.buffer,
-			})
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lb::GetText {
+					index: cur_sel_index,
+					text: <span class="kw-2">&amp;mut </span><span class="self">self</span>.buffer,
+				})
+		}.unwrap();
+
 		<span class="self">self</span>.current += <span class="number">1</span>;
 		<span class="prelude-val">Some</span>((cur_sel_index, <span class="self">self</span>.buffer.to_string()))
 	}
@@ -602,17 +637,20 @@
 		};
 
 		<span class="kw">let </span>indexes = <span class="kw">if </span>styles.has(co::LBS::EXTENDEDSEL) { <span class="comment">// multiple selection?
-			</span><span class="kw">let </span>num_indexes = owner.hwnd()
-				.SendMessage(lb::GetSelCount {})
-				.unwrap();
-			<span class="kw">let </span><span class="kw-2">mut </span>indexes = <span class="macro">vec!</span>[<span class="number">0</span>; num_indexes <span class="kw">as _</span>];
+			</span><span class="kw">let </span>num_indexes = <span class="kw">unsafe </span>{
+				owner.hwnd()
+					.SendMessage(lb::GetSelCount {})
+			}.unwrap();
 
-			owner.hwnd()
-				.SendMessage(lb::GetSelItems { buffer: <span class="kw-2">&amp;mut </span>indexes })
-				.unwrap();
+			<span class="kw">let </span><span class="kw-2">mut </span>indexes = <span class="macro">vec!</span>[<span class="number">0</span>; num_indexes <span class="kw">as _</span>];
+			<span class="kw">unsafe </span>{
+				owner.hwnd()
+					.SendMessage(lb::GetSelItems { buffer: <span class="kw-2">&amp;mut </span>indexes })
+			}.unwrap();
 			indexes
+
 		} <span class="kw">else </span>{
-			<span class="kw">match </span>owner.hwnd().SendMessage(lb::GetCurSel {}) {
+			<span class="kw">match unsafe </span>{ owner.hwnd().SendMessage(lb::GetCurSel {}) } {
 				<span class="prelude-val">Some</span>(index) =&gt; <span class="macro">vec!</span>[index], <span class="comment">// single selection: at max 1
 				</span><span class="prelude-val">None </span>=&gt; Vec::&lt;u32&gt;::default(),
 			}
@@ -629,14 +667,14 @@
 
 <span class="comment">//------------------------------------------------------------------------------
 
-</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>ListViewColumnIter&lt;<span class="lifetime">'a</span>&gt; {
-	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView,
+</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>ListViewColumnIter&lt;<span class="lifetime">'a</span>, T: <span class="lifetime">'static</span>&gt; {
+	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;,
 	count: u32,
 	current: u32,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>ListViewColumnIter&lt;<span class="lifetime">'a</span>&gt; {
-	<span class="kw">type </span>Item = ListViewColumn&lt;<span class="lifetime">'a</span>&gt;;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; Iterator <span class="kw">for </span>ListViewColumnIter&lt;<span class="lifetime">'a</span>, T&gt; {
+	<span class="kw">type </span>Item = ListViewColumn&lt;<span class="lifetime">'a</span>, T&gt;;
 
 	<span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
 		<span class="kw">if </span><span class="self">self</span>.current == <span class="self">self</span>.count {
@@ -649,8 +687,8 @@
 	}
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; ListViewColumnIter&lt;<span class="lifetime">'a</span>&gt; {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView) -&gt; <span class="self">Self </span>{
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; ListViewColumnIter&lt;<span class="lifetime">'a</span>, T&gt; {
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			owner,
 			count: owner.items().count(),
@@ -661,30 +699,31 @@
 
 <span class="comment">//------------------------------------------------------------------------------
 
-</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>ListViewItemIter&lt;<span class="lifetime">'a</span>&gt; {
-	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView,
-	current: <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">'a</span>&gt;&gt;,
+</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>ListViewItemIter&lt;<span class="lifetime">'a</span>, T: <span class="lifetime">'static</span>&gt; {
+	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;,
+	current: <span class="prelude-ty">Option</span>&lt;ListViewItem&lt;<span class="lifetime">'a</span>, T&gt;&gt;,
 	relationship: co::LVNI,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>ListViewItemIter&lt;<span class="lifetime">'a</span>&gt; {
-	<span class="kw">type </span>Item = ListViewItem&lt;<span class="lifetime">'a</span>&gt;;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; Iterator <span class="kw">for </span>ListViewItemIter&lt;<span class="lifetime">'a</span>, T&gt; {
+	<span class="kw">type </span>Item = ListViewItem&lt;<span class="lifetime">'a</span>, T&gt;;
 
 	<span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
-		<span class="self">self</span>.current = <span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::GetNextItem {
-				initial_index: <span class="self">self</span>.current.map(|item| item.index()),
-				relationship: <span class="self">self</span>.relationship,
-			})
-			.map(|index| <span class="self">self</span>.owner.items().get(index));
+		<span class="self">self</span>.current = <span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::GetNextItem {
+					initial_index: <span class="self">self</span>.current.map(|item| item.index()),
+					relationship: <span class="self">self</span>.relationship,
+				})
+		}.map(|index| <span class="self">self</span>.owner.items().get(index));
 
 		<span class="self">self</span>.current
 	}
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; ListViewItemIter&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; ListViewItemIter&lt;<span class="lifetime">'a</span>, T&gt; {
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(
-		owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView,
+		owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;,
 		relationship: co::LVNI,
 	) -&gt; <span class="self">Self
 	</span>{
@@ -708,12 +747,13 @@
 	<span class="kw">type </span>Item = TreeViewItem&lt;<span class="lifetime">'a</span>&gt;;
 
 	<span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
-		<span class="self">self</span>.current = <span class="self">self</span>.owner.hwnd()
-			.SendMessage(tvm::GetNextItem {
-				relationship: <span class="self">self</span>.relationship,
-				hitem: <span class="self">self</span>.current.as_ref().map(|tvi| tvi.htreeitem()),
-			})
-			.map(|hitem| <span class="self">self</span>.owner.items().get(hitem));
+		<span class="self">self</span>.current = <span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(tvm::GetNextItem {
+					relationship: <span class="self">self</span>.relationship,
+					hitem: <span class="self">self</span>.current.as_ref().map(|tvi| tvi.htreeitem()),
+				})
+		}.map(|hitem| <span class="self">self</span>.owner.items().get(hitem));
 
 		<span class="self">self</span>.current.as_ref()
 			.map(|tvi| TreeViewItem::new(
@@ -747,22 +787,24 @@
 
 	<span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
 		<span class="kw">if </span><span class="self">self</span>.first_call { <span class="comment">// search for the first child
-			</span><span class="self">self</span>.current = <span class="self">self</span>.owner.hwnd()
-				.SendMessage(tvm::GetNextItem {
-					relationship: co::TVGN::CHILD,
-					hitem: <span class="self">self</span>.current.as_ref().map(|tvi| tvi.htreeitem()),
-				})
-				.map(|hitem| <span class="self">self</span>.owner.items().get(hitem));
+			</span><span class="self">self</span>.current = <span class="kw">unsafe </span>{
+				<span class="self">self</span>.owner.hwnd()
+					.SendMessage(tvm::GetNextItem {
+						relationship: co::TVGN::CHILD,
+						hitem: <span class="self">self</span>.current.as_ref().map(|tvi| tvi.htreeitem()),
+					})
+			}.map(|hitem| <span class="self">self</span>.owner.items().get(hitem));
 
 			<span class="self">self</span>.first_call = <span class="bool-val">false</span>;
 
 		} <span class="kw">else </span>{ <span class="comment">// search for next siblings
-			</span><span class="self">self</span>.current = <span class="self">self</span>.owner.hwnd()
-				.SendMessage(tvm::GetNextItem {
-					relationship: co::TVGN::NEXT,
-					hitem: <span class="self">self</span>.current.as_ref().map(|tvi| tvi.htreeitem()),
-				})
-				.map(|hitem| <span class="self">self</span>.owner.items().get(hitem));
+			</span><span class="self">self</span>.current = <span class="kw">unsafe </span>{
+				<span class="self">self</span>.owner.hwnd()
+					.SendMessage(tvm::GetNextItem {
+						relationship: co::TVGN::NEXT,
+						hitem: <span class="self">self</span>.current.as_ref().map(|tvi| tvi.htreeitem()),
+					})
+			}.map(|hitem| <span class="self">self</span>.owner.items().get(hitem));
 		}
 
 		<span class="self">self</span>.current.as_ref()

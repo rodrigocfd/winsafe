@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\list_view_column.rs`."><title>list_view_column.rs - source</title><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2"><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.78.0-nightly (516b6162a 2024-03-03)" data-channel="nightly" data-search-js="search-dd67cee4cfa65049.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\list_view_column.rs`."><title>list_view_column.rs - source</title><script> if (window.location.protocol !== "file:") document.write(`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2">`)</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-e935ef01ae1c1829.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (0824b300e 2024-03-24)" data-channel="nightly" data-search-js="search-42d8da7a6b9792c2.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-4c98445ec4002617.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-12cf3b4f4f9dc36d.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-04d5337699b92874.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
             <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
     <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../..\../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
@@ -120,10 +120,6 @@
 <a href="#118" id="118">118</a>
 <a href="#119" id="119">119</a>
 <a href="#120" id="120">120</a>
-<a href="#121" id="121">121</a>
-<a href="#122" id="122">122</a>
-<a href="#123" id="123">123</a>
-<a href="#124" id="124">124</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
@@ -139,37 +135,16 @@
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
 </span><span class="attr">#[derive(Clone, Copy)]
-</span><span class="kw">pub struct </span>ListViewColumn&lt;<span class="lifetime">'a</span>&gt; {
-	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView,
+</span><span class="kw">pub struct </span>ListViewColumn&lt;<span class="lifetime">'a</span>, T: <span class="lifetime">'static </span>= ()&gt; {
+	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;,
 	index: u32,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; ListViewColumn&lt;<span class="lifetime">'a</span>&gt; {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView, index: u32) -&gt; <span class="self">Self </span>{
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; ListViewColumn&lt;<span class="lifetime">'a</span>, T&gt; {
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;, index: u32) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{ owner, index }
 	}
 
-	<span class="doccomment">/// Retrieves information about the column by sending an
-	/// [`lvm::GetColumn`](crate::msg::lvm::GetColumn) message.
-	</span><span class="kw">pub fn </span>info(<span class="kw-2">&amp;</span><span class="self">self</span>, lvc: <span class="kw-2">&amp;mut </span>LVCOLUMN) {
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::GetColumn {
-				index: <span class="self">self</span>.index,
-				lvcolumn: lvc,
-			})
-			.unwrap();
-	}
-
-	<span class="doccomment">/// Sets information of the column by sending an
-	/// [`lvm::SetColumn`](crate::msg::lvm::SetColumn) message.
-	</span><span class="kw">pub fn </span>set_info(<span class="kw-2">&amp;</span><span class="self">self</span>, lvc: <span class="kw-2">&amp;</span>LVCOLUMN) {
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::SetColumn {
-				index: <span class="self">self</span>.index,
-				lvcolumn: lvc,
-			})
-			.unwrap();
-	}
 
 	<span class="doccomment">/// Sets the title of the column by calling
 	/// [`set_info`](crate::gui::spec::ListViewColumn::set_info).
@@ -181,7 +156,13 @@
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::from_str(text);
 		lvc.set_pszText(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>buf));
 
-		<span class="self">self</span>.set_info(<span class="kw-2">&amp;</span>lvc);
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::SetColumn {
+					index: <span class="self">self</span>.index,
+					lvcolumn: <span class="kw-2">&amp;mut </span>lvc,
+				})
+		}.unwrap();
 	}
 
 	<span class="doccomment">/// Sets the width of the column by sending an
@@ -192,12 +173,13 @@
 		<span class="kw">let </span><span class="kw-2">mut </span>col_cx = SIZE::new(width <span class="kw">as _</span>, <span class="number">0</span>);
 		multiply_dpi(<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>col_cx)).unwrap();
 
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::SetColumnWidth {
-				index: <span class="self">self</span>.index,
-				width: col_cx.cx <span class="kw">as _</span>,
-			})
-			.unwrap();
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::SetColumnWidth {
+					index: <span class="self">self</span>.index,
+					width: col_cx.cx <span class="kw">as _</span>,
+				})
+		}.unwrap();
 	}
 
 	<span class="doccomment">/// Sets the width of the column by sending an
@@ -215,12 +197,14 @@
 			}
 
 			<span class="kw">let </span>rc = <span class="self">self</span>.owner.hwnd().GetClientRect().unwrap(); <span class="comment">// list view client area
-			</span><span class="self">self</span>.owner.hwnd()
-				.SendMessage(lvm::SetColumnWidth {
-					index: <span class="self">self</span>.index,
-					width: rc.right <span class="kw">as </span>u32 - cx_used,
-				})
-				.unwrap();
+
+			</span><span class="kw">unsafe </span>{
+				<span class="self">self</span>.owner.hwnd()
+					.SendMessage(lvm::SetColumnWidth {
+						index: <span class="self">self</span>.index,
+						width: rc.right <span class="kw">as </span>u32 - cx_used,
+					})
+			}.unwrap();
 		}
 	}
 
@@ -235,7 +219,14 @@
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(<span class="number">128</span>); <span class="comment">// arbitrary
 		</span>lvc.set_pszText(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>buf));
 
-		<span class="self">self</span>.info(<span class="kw-2">&amp;mut </span>lvc);
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::GetColumn {
+					index: <span class="self">self</span>.index,
+					lvcolumn: <span class="kw-2">&amp;mut </span>lvc,
+				})
+		}.unwrap();
+
 		buf.to_string()
 	}
 
@@ -243,9 +234,10 @@
 	/// [`lvm::GetColumnWidth`](crate::msg::lvm::GetColumnWidth) message.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>width(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u32 {
-		<span class="self">self</span>.owner.hwnd()
-			.SendMessage(lvm::GetColumnWidth { index: <span class="self">self</span>.index })
-			.unwrap()
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::GetColumnWidth { index: <span class="self">self</span>.index })
+		}.unwrap()
 	}
 }
 </code></pre></div></section></main></body></html>
