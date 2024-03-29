@@ -37,9 +37,7 @@ impl GuiParent for WindowModeless {
 	unsafe fn as_base(&self) -> *mut std::ffi::c_void {
 		self.base() as *const _ as _
 	}
-}
 
-impl GuiThread for WindowModeless {
 	fn spawn_new_thread<F>(&self, func: F)
 		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{

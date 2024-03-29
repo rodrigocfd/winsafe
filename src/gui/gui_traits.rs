@@ -83,11 +83,7 @@ pub trait GuiParent: GuiWindow {
 	/// **Do not use this method** – it's for internal use of the library only.
 	#[must_use]
 	unsafe fn as_base(&self) -> *mut std::ffi::c_void;
-}
 
-/// Allows a window to spawn new threads which can return errors, and run
-/// closures in the original UI thread.
-pub trait GuiThread: GuiParent {
 	/// This method calls [`std::thread::spawn`], but it allows the returning of
 	/// an error value. This error value will be forwarded to the original UI
 	/// thread, allowing it to be caught at

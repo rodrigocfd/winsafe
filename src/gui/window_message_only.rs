@@ -34,6 +34,18 @@ impl GuiParent for WindowMessageOnly {
 	unsafe fn as_base(&self) -> *mut std::ffi::c_void {
 		self.0.base() as *const _ as _
 	}
+
+	fn spawn_new_thread<F>(&self, func: F)
+		where F: FnOnce() -> AnyResult<()> + Send + 'static,
+	{
+		self.0.base().spawn_new_thread(func)
+	}
+
+	fn run_ui_thread<F>(&self, func: F)
+		where F: FnOnce() -> AnyResult<()> + Send + 'static
+	{
+		self.0.base().run_ui_thread(func)
+	}
 }
 
 impl WindowMessageOnly {

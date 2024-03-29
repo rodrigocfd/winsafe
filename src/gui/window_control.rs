@@ -35,9 +35,7 @@ impl GuiParent for WindowControl {
 	unsafe fn as_base(&self) -> *mut std::ffi::c_void {
 		self.base() as *const _ as _
 	}
-}
 
-impl GuiThread for WindowControl {
 	fn spawn_new_thread<F>(&self, func: F)
 		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
