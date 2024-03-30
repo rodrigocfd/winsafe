@@ -6,6 +6,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::gui::{*, events::*, privs::*, spec::*};
 use crate::msg::*;
 use crate::prelude::*;
@@ -266,6 +267,18 @@ impl<T> ListView<T> {
 				});
 			Ok(())
 		});
+
+		let self2 = self.clone();
+		parent.privileged_after_on().wm(co::WM::DESTROY, move |_, _| {
+			[co::LVSIL::NORMAL, co::LVSIL::SMALL, co::LVSIL::STATE, co::LVSIL::GROUPHEADER]
+				.iter()
+				.for_each(|lvsil| {
+					self2.image_list(*lvsil).map(|hil| { // destroy each image list, if any
+						let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) };
+					});
+				});
+			Ok(())
+		});
 	}
 
 	/// Required by `Header` constructon phase.
@@ -289,14 +302,19 @@ impl<T> ListView<T> {
 		self.0.context_menu.as_ref()
 	}
 
-	/// Retrieves one of the associated image lists by sending an
+	/// Retrieves a reference to one of the associated image lists by sending an
 	/// [`lvm::GetImageList`](crate::msg::lvm::GetImageList) message.
+	///
+	/// The image list is owned by the control.
 	#[must_use]
-	pub fn image_list(&self, kind: co::LVSIL) -> Option<HIMAGELIST> {
+	pub fn image_list(&self, kind: co::LVSIL) -> Option<&HIMAGELIST> {
 		unsafe {
 			self.hwnd()
 				.SendMessage(lvm::GetImageList { kind })
-		}
+		}.map(|hil| {
+			let hil_ptr = &hil as *const HIMAGELIST;
+			unsafe { &*hil_ptr }
+		})
 	}
 
 	/// Exposes the item methods.
@@ -336,15 +354,20 @@ impl<T> ListView<T> {
 	/// Sets the one of the associated image lists by sending an
 	/// [`lvm::SetImageList`](crate::msg::lvm::SetImageList) message.
 	///
-	/// Returns the previous image list, if any.
+	/// The image list will be owned by the control. Returns the previous one,
+	/// if any.
 	pub fn set_image_list(&self,
 		kind: co::LVSIL,
-		himagelist: &HIMAGELIST,
-	) -> Option<HIMAGELIST>
+		himagelist: ImageListDestroyGuard,
+	) -> Option<ImageListDestroyGuard>
 	{
+		let mut himagelist = himagelist;
+		let hil = himagelist.leak();
+
 		unsafe {
 			self.hwnd()
-				.SendMessage(lvm::SetImageList { kind, himagelist })
+				.SendMessage(lvm::SetImageList { kind, himagelist: Some(&hil) })
+				.map(|prev_hil| ImageListDestroyGuard::new(prev_hil))
 		}
 	}
 

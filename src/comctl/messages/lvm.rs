@@ -2304,7 +2304,7 @@ unsafe impl MsgSend for SetIconSpacing {
 /// Return type: `Option<HIMAGELIST>`.
 pub struct SetImageList<'a> {
 	pub kind: co::LVSIL,
-	pub himagelist: &'a HIMAGELIST,
+	pub himagelist: Option<&'a HIMAGELIST>,
 }
 
 unsafe impl<'a> MsgSend for SetImageList<'a> {
@@ -2318,7 +2318,7 @@ unsafe impl<'a> MsgSend for SetImageList<'a> {
 		WndMsg {
 			msg_id: co::LVM::SETIMAGELIST.into(),
 			wparam: self.kind.raw() as _,
-			lparam: self.himagelist.ptr() as _,
+			lparam: self.himagelist.map_or(0, |h| h.ptr() as _),
 		}
 	}
 }

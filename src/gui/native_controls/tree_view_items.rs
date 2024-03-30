@@ -26,7 +26,7 @@ impl<'a, T> TreeViewItems<'a, T> {
 		data: T,
 	) -> TreeViewItem<'a, T>
 	{
-		self.owner.insert_item(None, text, icon_index, data)
+		self.owner.raw_insert_item(None, text, icon_index, data)
 	}
 
 	/// Deletes all items by sending a

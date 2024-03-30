@@ -45,7 +45,7 @@ impl<'a, T> TreeViewItem<'a, T> {
 		data: T,
 	) -> Self
 	{
-		self.owner.insert_item(Some(&self.hitem), text, icon_index, data)
+		self.owner.raw_insert_item(Some(&self.hitem), text, icon_index, data)
 	}
 
 	/// Returns a [`Rc`](std::rc::Rc)/[`RefCell`](std::cell::RefCell) with the

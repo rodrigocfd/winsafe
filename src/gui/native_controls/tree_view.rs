@@ -7,6 +7,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::gui::{*, events::*, privs::*, spec::*};
 use crate::msg::*;
 use crate::prelude::*;
@@ -183,9 +184,21 @@ impl<T> TreeView<T> {
 				});
 			Ok(())
 		});
+
+		let self2 = self.clone();
+		parent.privileged_after_on().wm(co::WM::DESTROY, move |_, _| {
+			[co::TVSIL::NORMAL, co::TVSIL::STATE]
+				.iter()
+				.for_each(|tvsil| {
+					self2.image_list(*tvsil).map(|hil| { // destroy each image list, if any
+						let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) };
+					});
+				});
+			Ok(())
+		});
 	}
 
-	pub(in crate::gui) fn insert_item(&self,
+	pub(in crate::gui) fn raw_insert_item(&self,
 		hparent: Option<&HTREEITEM>,
 		text: &str,
 		icon_index: Option<u32>,
@@ -225,6 +238,21 @@ impl<T> TreeView<T> {
 		TreeViewItem::new(self, new_hitem)
 	}
 
+	/// Retrieves a reference to one of the associated image lists by sending a
+	/// [`tvm::GetImageList`](crate::msg::tvm::GetImageList) message.
+	///
+	/// The image list is owned by the control.
+	#[must_use]
+	pub fn image_list(&self, kind: co::TVSIL) -> Option<&HIMAGELIST> {
+		unsafe {
+			self.hwnd()
+				.SendMessage(tvm::GetImageList { kind })
+		}.map(|hil| {
+			let hil_ptr = &hil as *const HIMAGELIST;
+			unsafe { &*hil_ptr }
+		})
+	}
+
 	/// Exposes the item methods.
 	#[must_use]
 	pub const fn items(&self) -> TreeViewItems<'_, T> {
@@ -241,6 +269,26 @@ impl<T> TreeView<T> {
 					style: if set { ex_style } else { co::TVS_EX::NoValue },
 				})
 		}.unwrap();
+	}
+
+	/// Sets the one of the associated image lists by sending a
+	/// [`tvm::SetImageList`](crate::msg::tvm::SetImageList) message.
+	///
+	/// The image list will be owned by the control. Returns the previous one,
+	/// if any.
+	pub fn set_image_list(&self,
+		kind: co::TVSIL,
+		himagelist: ImageListDestroyGuard,
+	) -> Option<ImageListDestroyGuard>
+	{
+		let mut himagelist = himagelist;
+		let hil = himagelist.leak();
+
+		unsafe {
+			self.hwnd()
+				.SendMessage(tvm::SetImageList { kind, himagelist: Some(&hil) })
+				.map(|prev_hil| ImageListDestroyGuard::new(prev_hil))
+		}
 	}
 }
 
