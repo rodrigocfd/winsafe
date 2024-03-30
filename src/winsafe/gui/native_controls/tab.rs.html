@@ -336,7 +336,7 @@
 <span class="kw">struct </span>Obj { <span class="comment">// actual fields of Tab
 	</span>base: BaseNativeControl,
 	events: TabEvents,
-	children: Vec&lt;(String, Box&lt;<span class="kw">dyn </span>GuiTab&gt;)&gt;,
+	children: Vec&lt;(String, Box&lt;<span class="kw">dyn </span>AsRef&lt;WindowControl&gt;&gt;)&gt;,
 	_pin: PhantomPinned,
 }
 
@@ -434,7 +434,7 @@
 		parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>GuiParent,
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
-		items: Vec&lt;(String, Box&lt;<span class="kw">dyn </span>GuiTab&gt;)&gt;,
+		items: Vec&lt;(String, Box&lt;<span class="kw">dyn </span>AsRef&lt;WindowControl&gt;&gt;)&gt;,
 	) -&gt; <span class="self">Self
 	</span>{
 		<span class="kw">let </span>new_self = <span class="self">Self</span>(
@@ -509,7 +509,7 @@
 			.enumerate()
 			.filter(|(i, <span class="kw">_</span>)| <span class="kw-2">*</span>i != index <span class="kw">as </span>usize)
 			.for_each(|(<span class="kw">_</span>, (<span class="kw">_</span>, item))| {
-				item.as_ctrl().hwnd().ShowWindow(co::SW::HIDE); <span class="comment">// hide all others
+				item.as_ref().as_ref().hwnd().ShowWindow(co::SW::HIDE); <span class="comment">// hide all others
 			</span>});
 
 		<span class="kw">if let </span><span class="prelude-val">Some</span>((<span class="kw">_</span>, item)) = <span class="self">self</span>.<span class="number">0</span>.children.get(index <span class="kw">as </span>usize) {
@@ -521,7 +521,7 @@
 					rect: <span class="kw-2">&amp;mut </span>rc,
 				});
 			}
-			item.as_ctrl().hwnd().SetWindowPos(
+			item.as_ref().as_ref().hwnd().SetWindowPos(
 				HwndPlace::None,
 				POINT::new(rc.left, rc.top),
 				SIZE::new(rc.right - rc.left, rc.bottom - rc.top),
@@ -614,7 +614,7 @@
 	/// style.
 	///
 	/// Defaults to none.
-	</span><span class="kw">pub </span>items: Vec&lt;(String, Box&lt;<span class="kw">dyn </span>GuiTab&gt;)&gt;,
+	</span><span class="kw">pub </span>items: Vec&lt;(String, Box&lt;<span class="kw">dyn </span>AsRef&lt;WindowControl&gt;&gt;)&gt;,
 }
 
 <span class="kw">impl </span>Default <span class="kw">for </span>TabOpts {
