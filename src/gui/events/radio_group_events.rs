@@ -69,7 +69,7 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(co::BN::CLICKED, *ctrl_id as _, {
+			self.parent_user_events().wm_command(co::BN::CLICKED, *ctrl_id, {
 				let shared_func = shared_func.clone();
 				move || shared_func()
 			});
@@ -90,7 +90,7 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(co::BN::DBLCLK, *ctrl_id as _, {
+			self.parent_user_events().wm_command(co::BN::DBLCLK, *ctrl_id, {
 				let shared_func = shared_func.clone();
 				move || shared_func()
 			});
@@ -109,7 +109,7 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(co::BN::KILLFOCUS, *ctrl_id as _, {
+			self.parent_user_events().wm_command(co::BN::KILLFOCUS, *ctrl_id, {
 				let shared_func = shared_func.clone();
 				move || shared_func()
 			});
@@ -128,7 +128,7 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(co::BN::SETFOCUS, *ctrl_id as _, {
+			self.parent_user_events().wm_command(co::BN::SETFOCUS, *ctrl_id, {
 				let shared_func = shared_func.clone();
 				move || shared_func()
 			});

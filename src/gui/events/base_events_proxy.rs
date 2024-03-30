@@ -35,6 +35,6 @@ impl BaseEventsProxy {
 		where F: Fn(wm::Notify) -> AnyResult<Option<isize>> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
-		parent_base_ref.on().wm_notify(self.ctrl_id as _, code, func);
+		parent_base_ref.on().wm_notify(self.ctrl_id, code, func);
 	}
 }

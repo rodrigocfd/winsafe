@@ -50,18 +50,26 @@ impl GuiEventsAll for WindowEventsAll {
 		unsafe { &mut *self.tmrs.get() }.push(timer_id, Box::new(func));
 	}
 
-	fn wm_command<F>(&self, code: impl Into<co::CMD>, ctrl_id: u16, func: F)
+	fn wm_command<F>(&self,
+		code: impl Into<co::CMD>,
+		ctrl_id: impl Into<u16>,
+		func: F,
+	)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
 		let code: co::CMD = code.into();
-		unsafe { &mut *self.cmds.get() }.push((code, ctrl_id), Box::new(func));
+		unsafe { &mut *self.cmds.get() }.push((code, ctrl_id.into()), Box::new(func));
 	}
 
-	fn wm_notify<F>(&self, id_from: u16, code: impl Into<co::NM>, func: F)
+	fn wm_notify<F>(&self,
+		id_from: impl Into<u16>,
+		code: impl Into<co::NM>,
+		func: F,
+	)
 		where F: Fn(wm::Notify) -> AnyResult<Option<isize>> + 'static,
 	{
 		let code: co::NM = code.into();
-		unsafe { &mut *self.nfys.get() }.push((id_from, code), Box::new(func));
+		unsafe { &mut *self.nfys.get() }.push((id_from.into(), code), Box::new(func));
 	}
 }
 
@@ -226,7 +234,11 @@ pub trait GuiEventsAll: GuiEvents {
 	///     },
 	/// );
 	/// ```
-	fn wm_command<F>(&self, code: impl Into<co::CMD>, ctrl_id: u16, func: F)
+	fn wm_command<F>(&self,
+		code: impl Into<co::CMD>,
+		ctrl_id: impl Into<u16>,
+		func: F,
+	)
 		where F: Fn() -> AnyResult<()> + 'static;
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
@@ -235,7 +247,7 @@ pub trait GuiEventsAll: GuiEvents {
 	///
 	/// Ideal to be used with menu commands whose IDs are shared with
 	/// accelerators.
-	fn wm_command_accel_menu<F>(&self, ctrl_id: u16, func: F)
+	fn wm_command_accel_menu<F>(&self, ctrl_id: impl Into<u16> + Copy, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
 		let shared_func = Rc::new(func);
@@ -258,6 +270,10 @@ pub trait GuiEventsAll: GuiEvents {
 	/// specific notifications, which will give you the correct notification
 	/// struct. This generic method should be used only when you have a custom,
 	/// non-standard window notification.
-	fn wm_notify<F>(&self, id_from: u16, code: impl Into<co::NM>, func: F)
+	fn wm_notify<F>(&self,
+		id_from: impl Into<u16>,
+		code: impl Into<co::NM>,
+		func: F,
+	)
 		where F: Fn(wm::Notify) -> AnyResult<Option<isize>> + 'static;
 }
