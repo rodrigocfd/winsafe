@@ -119,7 +119,6 @@
 <a href="#117" id="117">117</a>
 <a href="#118" id="118">118</a>
 <a href="#119" id="119">119</a>
-<a href="#120" id="120">120</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
@@ -145,9 +144,8 @@
 		<span class="self">Self </span>{ owner, index }
 	}
 
-
-	<span class="doccomment">/// Sets the title of the column by calling
-	/// [`set_info`](crate::gui::spec::ListViewColumn::set_info).
+	<span class="doccomment">/// Sets the title of the column by sending an
+	/// [`lvm::SetColumn`](crate::msg::lvm::SetColumn) message.
 	</span><span class="kw">pub fn </span>set_title(<span class="kw-2">&amp;</span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) {
 		<span class="kw">let </span><span class="kw-2">mut </span>lvc = LVCOLUMN::default();
 		lvc.iSubItem = <span class="self">self</span>.index <span class="kw">as _</span>;
@@ -208,8 +206,8 @@
 		}
 	}
 
-	<span class="doccomment">/// Retrieves the title of the column by calling
-	/// [`info`](crate::gui::spec::ListViewColumn::info).
+	<span class="doccomment">/// Retrieves the title of the column by sending an
+	/// [`lvm::GetColumn`](crate::msg::lvm::GetColumn) message.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>title(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
 		<span class="kw">let </span><span class="kw-2">mut </span>lvc = LVCOLUMN::default();
