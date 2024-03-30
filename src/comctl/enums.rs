@@ -86,11 +86,12 @@ pub enum IconIdTdicon {
 ///
 /// * [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog).
 #[derive(Clone)]
-pub enum IconRes {
+pub enum IconRes<'a> {
 	/// No icon.
 	None,
-	/// An icon resource.
-	Res(IdStr),
+	/// Handle to the instance to load the icon from, and the icon resource
+	/// identifier.
+	Res(&'a HINSTANCE, IdStr),
 	/// The [`co::TD_ICON::WARNING`](crate::co::TD_ICON::WARNING) constant.
 	Warn,
 	/// The [`co::TD_ICON::ERROR`](crate::co::TD_ICON::ERROR) constant.
@@ -102,17 +103,17 @@ pub enum IconRes {
 	Shield,
 }
 
-impl IconRes {
-	/// Returns a pointer to the raw data content.
+impl<'a> IconRes<'a> {
+	/// Returns the `HINSTANCE`, if any, and a pointer to the raw data content.
 	#[must_use]
-	pub fn as_ptr(&self) -> *const u16 {
+	pub fn as_ptr(&self) -> (HINSTANCE, *const u16) {
 		match self {
-			Self::None => std::ptr::null(),
-			Self::Res(id_str) => id_str.as_ptr(),
-			Self::Warn => MAKEINTRESOURCE(co::TD_ICON::WARNING.raw() as _),
-			Self::Error => MAKEINTRESOURCE(co::TD_ICON::ERROR.raw() as _),
-			Self::Info => MAKEINTRESOURCE(co::TD_ICON::INFORMATION.raw() as _),
-			Self::Shield => MAKEINTRESOURCE(co::TD_ICON::SHIELD.raw() as _),
+			Self::None => (HINSTANCE::NULL, std::ptr::null()),
+			Self::Res(hinst, id_str) => (unsafe { hinst.raw_copy() }, id_str.as_ptr()),
+			Self::Warn => (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::WARNING.raw() as _)),
+			Self::Error => (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::ERROR.raw() as _)),
+			Self::Info => (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::INFORMATION.raw() as _)),
+			Self::Shield => (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::SHIELD.raw() as _)),
 		}
 	}
 }

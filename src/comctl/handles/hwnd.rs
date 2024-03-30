@@ -106,7 +106,6 @@ pub trait comctl_Hwnd: user_Hwnd {
 	/// # let hwnd = w::HWND::NULL;
 	///
 	/// hwnd.TaskDialog(
-	///     None,
 	///     Some("Operation successful"),
 	///     None,
 	///     Some("The operation completed successfully."),
@@ -125,7 +124,6 @@ pub trait comctl_Hwnd: user_Hwnd {
 	/// # let hwnd = w::HWND::NULL;
 	///
 	/// let answer = hwnd.TaskDialog(
-	///     None,
 	///     Some("My app name"),
 	///     Some("File modified"),
 	///     Some("The file has been modified.\nProceed closing the application?"),
@@ -139,7 +137,6 @@ pub trait comctl_Hwnd: user_Hwnd {
 	/// # w::HrResult::Ok(())
 	/// ```
 	fn TaskDialog(&self,
-		hinstance: Option<&HINSTANCE>,
 		window_title: Option<&str>,
 		main_instruction: Option<&str>,
 		content: Option<&str>,
@@ -149,16 +146,18 @@ pub trait comctl_Hwnd: user_Hwnd {
 	{
 		// https://weblogs.asp.net/kennykerr/Windows-Vista-for-Developers-_1320_-Part-2-_1320_-Task-Dialogs-in-Depth
 		let mut pn_button = i32::default();
+		let (hinst, raw_ico) = icon.as_ptr();
+
 		ok_to_hrresult(
 			unsafe {
 				ffi::TaskDialog(
 					self.ptr(),
-					hinstance.map_or(std::ptr::null_mut(), |h| h.ptr()),
+					hinst.ptr(),
 					WString::from_opt_str(window_title).as_ptr(),
 					WString::from_opt_str(main_instruction).as_ptr(),
 					WString::from_opt_str(content).as_ptr(),
 					common_buttons.raw(),
-					icon.as_ptr(),
+					raw_ico,
 					&mut pn_button,
 				)
 			},
