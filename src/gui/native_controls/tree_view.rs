@@ -1,4 +1,5 @@
-use std::any::Any;
+use std::any::{Any, TypeId};
+use std::cell::RefCell;
 use std::marker::{PhantomData, PhantomPinned};
 use std::pin::Pin;
 use std::rc::Rc;
@@ -182,6 +183,46 @@ impl<T> TreeView<T> {
 				});
 			Ok(())
 		});
+	}
+
+	pub(in crate::gui) fn insert_item(&self,
+		hparent: Option<&HTREEITEM>,
+		text: &str,
+		icon_index: Option<u32>,
+		data: T,
+	) -> TreeViewItem<'_, T>
+	{
+		let mut tvix = TVITEMEX::default();
+		tvix.mask = co::TVIF::TEXT;
+
+		let mut buf = WString::from_str(text);
+		tvix.set_pszText(Some(&mut buf));
+
+		if let Some(icon_index) = icon_index {
+			tvix.mask |= co::TVIF::IMAGE;
+			tvix.iImage = icon_index as _;
+		}
+
+		if TypeId::of::<T>() != TypeId::of::<()>() { // user defined an actual type?
+			tvix.mask |= co::TVIF::PARAM;
+			let rc_data = Rc::new(RefCell::new(data));
+			tvix.lParam = Rc::into_raw(rc_data) as _;
+		}
+
+		let mut tvis = TVINSERTSTRUCT::default();
+		if let Some(hparent) = hparent {
+			tvis.hParent = unsafe { hparent.raw_copy() };
+		}
+
+		tvis.set_hInsertAfter(TreeitemTvi::Tvi(co::TVI::LAST));
+		tvis.itemex = tvix;
+
+		let new_hitem = unsafe {
+			self.hwnd()
+				.SendMessage(tvm::InsertItem { item: &mut tvis })
+		}.unwrap();
+
+		TreeViewItem::new(self, new_hitem)
 	}
 
 	/// Exposes the item methods.

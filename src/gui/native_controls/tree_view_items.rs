@@ -1,7 +1,3 @@
-use std::any::TypeId;
-use std::cell::RefCell;
-use std::rc::Rc;
-
 use crate::co;
 use crate::decl::*;
 use crate::gui::{*, native_controls::iterators::*, spec::*};
@@ -30,33 +26,7 @@ impl<'a, T> TreeViewItems<'a, T> {
 		data: T,
 	) -> TreeViewItem<'a, T>
 	{
-		let mut buf = WString::from_str(text);
-
-		let mut tvix = TVITEMEX::default();
-		tvix.mask = co::TVIF::TEXT;
-		tvix.set_pszText(Some(&mut buf));
-
-		if let Some(icon_index) = icon_index {
-			tvix.mask |= co::TVIF::IMAGE;
-			tvix.iImage = icon_index as _;
-		}
-
-		if TypeId::of::<T>() != TypeId::of::<()>() { // user defined an actual type?
-			tvix.mask |= co::TVIF::PARAM;
-			let rc_data = Rc::new(RefCell::new(data));
-			tvix.lParam = Rc::into_raw(rc_data) as _;
-		}
-
-		let mut tvis = TVINSERTSTRUCT::default();
-		tvis.set_hInsertAfter(TreeitemTvi::Tvi(co::TVI::LAST));
-		tvis.itemex = tvix;
-
-		let new_hitem = unsafe {
-			self.owner.hwnd()
-				.SendMessage(tvm::InsertItem { item: &mut tvis })
-		}.unwrap();
-
-		self.get(&new_hitem)
+		self.owner.insert_item(None, text, icon_index, data)
 	}
 
 	/// Deletes all items by sending a

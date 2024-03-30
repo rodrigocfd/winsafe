@@ -1,4 +1,3 @@
-use std::any::TypeId;
 use std::cell::RefCell;
 use std::mem::ManuallyDrop;
 use std::rc::Rc;
@@ -46,34 +45,7 @@ impl<'a, T> TreeViewItem<'a, T> {
 		data: T,
 	) -> Self
 	{
-		let mut buf = WString::from_str(text);
-
-		let mut tvix = TVITEMEX::default();
-		tvix.mask = co::TVIF::TEXT;
-		tvix.set_pszText(Some(&mut buf));
-
-		if let Some(icon_index) = icon_index {
-			tvix.mask |= co::TVIF::IMAGE;
-			tvix.iImage = icon_index as _;
-		}
-
-		if TypeId::of::<T>() != TypeId::of::<()>() { // user defined an actual type?
-			tvix.mask |= co::TVIF::PARAM;
-			let rc_data = Rc::new(RefCell::new(data));
-			tvix.lParam = Rc::into_raw(rc_data) as _;
-		}
-
-		let mut tvis = TVINSERTSTRUCT::default();
-		tvis.hParent = unsafe { self.hitem.raw_copy() };
-		tvis.set_hInsertAfter(TreeitemTvi::Tvi(co::TVI::LAST));
-		tvis.itemex = tvix;
-
-		let new_hitem = unsafe {
-			self.owner.hwnd()
-				.SendMessage(tvm::InsertItem { item: &mut tvis })
-		}.unwrap();
-
-		Self::new(self.owner, new_hitem)
+		self.owner.insert_item(Some(&self.hitem), text, icon_index, data)
 	}
 
 	/// Returns a [`Rc`](std::rc::Rc)/[`RefCell`](std::cell::RefCell) with the
