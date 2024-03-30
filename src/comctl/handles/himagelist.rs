@@ -167,6 +167,15 @@ pub trait comctl_Himagelist: Handle {
 		bool_to_sysresult(unsafe { ffi::ImageList_DragShowNolock(show as _) })
 	}
 
+	/// [`ImageList_Duplicate`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_duplicate)
+	/// function.
+	fn Duplicate(&self) -> SysResult<ImageListDestroyGuard> {
+		unsafe {
+			ptr_to_sysresult_handle(ffi::ImageList_Duplicate(self.ptr()))
+				.map(|h| ImageListDestroyGuard::new(h))
+		}
+	}
+
 	/// [`ImageList_GetIconSize`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_geticonsize)
 	/// function.
 	#[must_use]

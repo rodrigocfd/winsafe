@@ -51,7 +51,8 @@ pub(crate) fn ptr_to_sysresult(ptr: HANDLE) -> SysResult<HANDLE> {
 pub(crate) fn ptr_to_sysresult_handle<H>(ptr: HANDLE) -> SysResult<H>
 	where H: Handle,
 {
-	ptr_to_sysresult(ptr).map(|ptr| unsafe { Handle::from_ptr(ptr) })
+	ptr_to_sysresult(ptr)
+		.map(|ptr| unsafe { Handle::from_ptr(ptr) })
 }
 
 /// If the pointer is null, yields `None`, otherwise `Some(Handle)`.

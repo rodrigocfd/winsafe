@@ -9,6 +9,7 @@ extern_sys! { "comctl32";
 	ImageList_Destroy(HANDLE) -> BOOL
 	ImageList_DragMove(HANDLE, i32, i32) -> BOOL
 	ImageList_DragShowNolock(BOOL) -> BOOL
+	ImageList_Duplicate(HANDLE) -> HANDLE
 	ImageList_EndDrag()
 	ImageList_GetIconSize(HANDLE, *mut i32, *mut i32) -> BOOL
 	ImageList_GetImageCount(HANDLE) -> i32
