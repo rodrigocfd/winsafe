@@ -10,17 +10,19 @@ impl WndMain {
 			let target_dir = "D:\\Stuff\\Core\\rs\\winsafe\\src"; // arbitrary initial dir
 			self2.txt_path.set_text(target_dir);
 
-			self2.txt_out.hwnd().SendMessage(msg::wm::SetFont { // fixed-width font for output
-				hfont: unsafe { self2.mono_font.raw_copy() },
-				redraw: true,
-			});
+			unsafe {
+				self2.txt_out.hwnd().SendMessage(msg::wm::SetFont { // fixed-width font for output
+					hfont: self2.mono_font.raw_copy(),
+					redraw: true,
+				});
+			}
 
 			Ok(true)
 		});
 
 		let self2 = self.clone();
-		self.wnd.on().wm_command_accel_menu(co::DLGID::CANCEL.into(), move || {
-			self2.wnd.hwnd().SendMessage(msg::wm::Close {});
+		self.wnd.on().wm_command_accel_menu(co::DLGID::CANCEL, move || {
+			self2.wnd.close(); // close on Esc
 			Ok(())
 		});
 
