@@ -215,6 +215,7 @@
 <a href="#213" id="213">213</a>
 <a href="#214" id="214">214</a>
 <a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::comctl::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -303,11 +304,12 @@
 ///
 /// * [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog).
 </span><span class="attr">#[derive(Clone)]
-</span><span class="kw">pub enum </span>IconRes {
+</span><span class="kw">pub enum </span>IconRes&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="doccomment">/// No icon.
 	</span><span class="prelude-val">None</span>,
-	<span class="doccomment">/// An icon resource.
-	</span>Res(IdStr),
+	<span class="doccomment">/// Handle to the instance to load the icon from, and the icon resource
+	/// identifier.
+	</span>Res(<span class="kw-2">&amp;</span><span class="lifetime">'a </span>HINSTANCE, IdStr),
 	<span class="doccomment">/// The [`co::TD_ICON::WARNING`](crate::co::TD_ICON::WARNING) constant.
 	</span>Warn,
 	<span class="doccomment">/// The [`co::TD_ICON::ERROR`](crate::co::TD_ICON::ERROR) constant.
@@ -319,17 +321,17 @@
 	</span>Shield,
 }
 
-<span class="kw">impl </span>IconRes {
-	<span class="doccomment">/// Returns a pointer to the raw data content.
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; IconRes&lt;<span class="lifetime">'a</span>&gt; {
+	<span class="doccomment">/// Returns the `HINSTANCE`, if any, and a pointer to the raw data content.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>as_ptr(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const </span>u16 {
+	</span><span class="kw">pub fn </span>as_ptr(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (HINSTANCE, <span class="kw-2">*const </span>u16) {
 		<span class="kw">match </span><span class="self">self </span>{
-			<span class="self">Self</span>::None =&gt; std::ptr::null(),
-			<span class="self">Self</span>::Res(id_str) =&gt; id_str.as_ptr(),
-			<span class="self">Self</span>::Warn =&gt; MAKEINTRESOURCE(co::TD_ICON::WARNING.raw() <span class="kw">as _</span>),
-			<span class="self">Self</span>::Error =&gt; MAKEINTRESOURCE(co::TD_ICON::ERROR.raw() <span class="kw">as _</span>),
-			<span class="self">Self</span>::Info =&gt; MAKEINTRESOURCE(co::TD_ICON::INFORMATION.raw() <span class="kw">as _</span>),
-			<span class="self">Self</span>::Shield =&gt; MAKEINTRESOURCE(co::TD_ICON::SHIELD.raw() <span class="kw">as _</span>),
+			<span class="self">Self</span>::None =&gt; (HINSTANCE::NULL, std::ptr::null()),
+			<span class="self">Self</span>::Res(hinst, id_str) =&gt; (<span class="kw">unsafe </span>{ hinst.raw_copy() }, id_str.as_ptr()),
+			<span class="self">Self</span>::Warn =&gt; (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::WARNING.raw() <span class="kw">as _</span>)),
+			<span class="self">Self</span>::Error =&gt; (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::ERROR.raw() <span class="kw">as _</span>)),
+			<span class="self">Self</span>::Info =&gt; (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::INFORMATION.raw() <span class="kw">as _</span>)),
+			<span class="self">Self</span>::Shield =&gt; (HINSTANCE::NULL, MAKEINTRESOURCE(co::TD_ICON::SHIELD.raw() <span class="kw">as _</span>)),
 		}
 	}
 }

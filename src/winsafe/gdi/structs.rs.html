@@ -302,6 +302,14 @@
 <a href="#300" id="300">300</a>
 <a href="#301" id="301">301</a>
 <a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -440,6 +448,14 @@
 
 <span class="kw">impl </span>LOGFONT {
 	<span class="macro">pub_fn_string_arr_get_set!</span>(lfFaceName, set_lfFaceName);
+
+	<span class="doccomment">/// Creates a `LOGFONT` and automatically sets `lfHeight` and `lfFaceName`.
+	</span><span class="kw">pub fn </span>new_face(height: i32, face_name: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
+		<span class="kw">let </span><span class="kw-2">mut </span>lf = <span class="self">Self</span>::default();
+		lf.lfHeight = height;
+		lf.set_lfFaceName(face_name);
+		lf
+	}
 }
 
 <span class="doccomment">/// [`LOGPALETTE`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logpalette)

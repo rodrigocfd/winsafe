@@ -293,6 +293,9 @@
 <a href="#291" id="291">291</a>
 <a href="#292" id="292">292</a>
 <a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -508,7 +511,10 @@
 <span class="doccomment">/// A closeable popup parent window.
 </span><span class="kw">pub trait </span>GuiParentPopup: GuiParent {
 	<span class="doccomment">/// Closes the window by posting a [`wm::close`](crate::msg::wm::Close)
-	/// message.
+	/// message. This is the safest way to close any popup window, because
+	/// you're able to process the
+	/// [`wm_close`](crate::prelude::GuiEvents::wm_close) event, just like if
+	/// the user clicked the window "X" button.
 	</span><span class="kw">fn </span>close(<span class="kw-2">&amp;</span><span class="self">self</span>) {
 		<span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd().PostMessage(wm::Close {}).unwrap(); }
 	}
