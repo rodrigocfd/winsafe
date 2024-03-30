@@ -307,19 +307,6 @@
 <a href="#305" id="305">305</a>
 <a href="#306" id="306">306</a>
 <a href="#307" id="307">307</a>
-<a href="#308" id="308">308</a>
-<a href="#309" id="309">309</a>
-<a href="#310" id="310">310</a>
-<a href="#311" id="311">311</a>
-<a href="#312" id="312">312</a>
-<a href="#313" id="313">313</a>
-<a href="#314" id="314">314</a>
-<a href="#315" id="315">315</a>
-<a href="#316" id="316">316</a>
-<a href="#317" id="317">317</a>
-<a href="#318" id="318">318</a>
-<a href="#319" id="319">319</a>
-<a href="#320" id="320">320</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -491,12 +478,8 @@
 		<span class="kw">if </span>marquee {
 			<span class="comment">// We must also adjust the window style before/after sending
 			// PBM_SETMARQUEE message.
-			</span><span class="kw">unsafe </span>{
-				<span class="self">self</span>.hwnd().SetWindowLongPtr(
-					co::GWLP::STYLE,
-					u32::from(<span class="self">self</span>.cur_style() | co::PBS::MARQUEE) <span class="kw">as _</span>,
-				);
-			}
+			</span><span class="kw">let </span>cur_style: co::PBS = <span class="self">self</span>.hwnd().style().into();
+			<span class="self">self</span>.hwnd().set_style(cur_style | co::PBS::MARQUEE);
 		}
 
 		<span class="kw">unsafe </span>{
@@ -507,12 +490,8 @@
 		}
 
 		<span class="kw">if </span>!marquee {
-			<span class="kw">unsafe </span>{
-				<span class="self">self</span>.hwnd().SetWindowLongPtr(
-					co::GWLP::STYLE,
-					u32::from(<span class="self">self</span>.cur_style() &amp; !co::PBS::MARQUEE) <span class="kw">as _</span>,
-				);
-			}
+			<span class="kw">let </span>cur_style: co::PBS = <span class="self">self</span>.hwnd().style().into();
+			<span class="self">self</span>.hwnd().set_style(cur_style &amp; !co::PBS::MARQUEE);
 		}
 	}
 
@@ -520,7 +499,8 @@
 	/// [`pbm::SetPos`](crate::msg::pbm::SetPos) message, returning the previous
 	/// position.
 	</span><span class="kw">pub fn </span>set_position(<span class="kw-2">&amp;</span><span class="self">self</span>, position: u32) -&gt; u32 {
-		<span class="kw">if </span><span class="self">self</span>.cur_style().has(co::PBS::MARQUEE) {
+		<span class="kw">let </span>cur_style: co::PBS = <span class="self">self</span>.hwnd().style().into();
+		<span class="kw">if </span>cur_style.has(co::PBS::MARQUEE) {
 			<span class="self">self</span>.set_marquee(<span class="bool-val">false</span>); <span class="comment">// avoid crash
 		</span>}
 
@@ -555,12 +535,6 @@
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>state(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::PBST {
 		<span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd().SendMessage(pbm::GetState {}) }
-	}
-
-	<span class="kw">fn </span>cur_style(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::PBS {
-		<span class="kw">unsafe </span>{
-			co::PBS::from_raw(<span class="self">self</span>.hwnd().GetWindowLongPtr(co::GWLP::STYLE) <span class="kw">as _</span>)
-		}
 	}
 }
 

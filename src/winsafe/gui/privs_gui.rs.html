@@ -262,7 +262,6 @@
 <a href="#260" id="260">260</a>
 <a href="#261" id="261">261</a>
 <a href="#262" id="262">262</a>
-<a href="#263" id="263">263</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Global objects used within `gui` module.
 
 </span><span class="kw">use </span>std::error::Error;
@@ -494,8 +493,7 @@
 {
 	<span class="kw">unsafe </span>{ hwnd.DefWindowProc(wm_ncp); } <span class="comment">// let the system draw the scrollbar for us
 
-	</span><span class="kw">let </span>ex_style = <span class="kw">unsafe </span>{ co::WS_EX::from_raw(hwnd.GetWindowLongPtr(co::GWLP::EXSTYLE) <span class="kw">as _</span>) };
-	<span class="kw">if </span>!ex_style.has(co::WS_EX::CLIENTEDGE) <span class="comment">// no border
+	</span><span class="kw">if </span>!hwnd.style_ex().has(co::WS_EX::CLIENTEDGE) <span class="comment">// no border
 		</span>|| !IsThemeActive()
 		|| !IsAppThemed()
 	{

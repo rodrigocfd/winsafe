@@ -296,8 +296,6 @@
 <a href="#294" id="294">294</a>
 <a href="#295" id="295">295</a>
 <a href="#296" id="296">296</a>
-<a href="#297" id="297">297</a>
-<a href="#298" id="298">298</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::TypeId;
 <span class="kw">use </span>std::cell::RefCell;
 <span class="kw">use </span>std::rc::Rc;
@@ -556,9 +554,7 @@
 	<span class="doccomment">/// Sets or remove the selection for all items by sending an
 	/// [`lvm::SetItemState`](crate::msg::lvm::SetItemState) message.
 	</span><span class="kw">pub fn </span>select_all(<span class="kw-2">&amp;</span><span class="self">self</span>, set: bool) {
-		<span class="kw">let </span>styles = <span class="kw">unsafe </span>{
-			co::LVS::from_raw(<span class="self">self</span>.owner.hwnd().GetWindowLongPtr(co::GWLP::STYLE) <span class="kw">as _</span>)
-		};
+		<span class="kw">let </span>styles: co::LVS = <span class="self">self</span>.owner.hwnd().style().into();
 		<span class="kw">if </span>styles.has(co::LVS::SINGLESEL) {
 			<span class="kw">return</span>; <span class="comment">// LVM_SETITEMSTATE fails for all items in single-sel list views
 		</span>}

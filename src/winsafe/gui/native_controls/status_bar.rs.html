@@ -228,10 +228,6 @@
 <a href="#226" id="226">226</a>
 <a href="#227" id="227">227</a>
 <a href="#228" id="228">228</a>
-<a href="#229" id="229">229</a>
-<a href="#230" id="230">230</a>
-<a href="#231" id="231">231</a>
-<a href="#232" id="232">232</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::cell::UnsafeCell;
 <span class="kw">use </span>std::marker::PhantomPinned;
@@ -388,11 +384,7 @@
 		}
 
 		<span class="kw">let </span>hparent = <span class="self">self</span>.<span class="number">0</span>.base.parent().hwnd();
-		<span class="kw">let </span>parent_style = <span class="kw">unsafe </span>{
-			co::WS::from_raw(
-				hparent.GetWindowLongPtr(co::GWLP::STYLE) <span class="kw">as _</span>,
-			)
-		};
+		<span class="kw">let </span>parent_style = hparent.style();
 		<span class="kw">let </span>is_parent_resizable = parent_style.has(co::WS::MAXIMIZEBOX)
 			|| parent_style.has(co::WS::SIZEBOX);
 

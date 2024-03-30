@@ -1964,6 +1964,26 @@
 <a href="#1962" id="1962">1962</a>
 <a href="#1963" id="1963">1963</a>
 <a href="#1964" id="1964">1964</a>
+<a href="#1965" id="1965">1965</a>
+<a href="#1966" id="1966">1966</a>
+<a href="#1967" id="1967">1967</a>
+<a href="#1968" id="1968">1968</a>
+<a href="#1969" id="1969">1969</a>
+<a href="#1970" id="1970">1970</a>
+<a href="#1971" id="1971">1971</a>
+<a href="#1972" id="1972">1972</a>
+<a href="#1973" id="1973">1973</a>
+<a href="#1974" id="1974">1974</a>
+<a href="#1975" id="1975">1975</a>
+<a href="#1976" id="1976">1976</a>
+<a href="#1977" id="1977">1977</a>
+<a href="#1978" id="1978">1978</a>
+<a href="#1979" id="1979">1979</a>
+<a href="#1980" id="1980">1980</a>
+<a href="#1981" id="1981">1981</a>
+<a href="#1982" id="1982">1982</a>
+<a href="#1983" id="1983">1983</a>
+<a href="#1984" id="1984">1984</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -2020,10 +2040,26 @@
 	}
 
 	<span class="doccomment">/// Calls
+	/// [`HWND::SetWindowLongPtr`](crate::prelude::user_Hwnd::SetWindowLongPtr)
+	/// to set the window styles.
+	</span><span class="kw">fn </span>set_style(<span class="kw-2">&amp;</span><span class="self">self</span>, style: <span class="kw">impl </span>Into&lt;co::WS&gt;) {
+		<span class="kw">let </span>style: co::WS = style.into();
+		<span class="kw">unsafe </span>{ <span class="self">self</span>.SetWindowLongPtr(co::GWLP::STYLE, style.raw() <span class="kw">as _</span>); }
+	}
+
+	<span class="doccomment">/// Calls
+	/// [`HWND::SetWindowLongPtr`](crate::prelude::user_Hwnd::SetWindowLongPtr)
+	/// to set the extended window styles.
+	</span><span class="kw">fn </span>set_style_ex(<span class="kw-2">&amp;</span><span class="self">self</span>, ex_style: <span class="kw">impl </span>Into&lt;co::WS_EX&gt;) {
+		<span class="kw">let </span>ex_style: co::WS_EX = ex_style.into();
+		<span class="kw">unsafe </span>{ <span class="self">self</span>.SetWindowLongPtr(co::GWLP::EXSTYLE, ex_style.raw() <span class="kw">as _</span>); }
+	}
+
+	<span class="doccomment">/// Calls
 	/// [`HWND::GetWindowLongPtr`](crate::prelude::user_Hwnd::GetWindowLongPtr)
 	/// to retrieve the window styles.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">fn </span>styles(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::WS {
+	</span><span class="kw">fn </span>style(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::WS {
 		<span class="kw">unsafe </span>{ co::WS::from_raw(<span class="self">self</span>.GetWindowLongPtr(co::GWLP::STYLE) <span class="kw">as _</span>) }
 	}
 
@@ -2031,7 +2067,7 @@
 	/// [`HWND::GetWindowLongPtr`](crate::prelude::user_Hwnd::GetWindowLongPtr)
 	/// to retrieve the extended window styles.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">fn </span>styles_ex(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::WS_EX {
+	</span><span class="kw">fn </span>style_ex(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::WS_EX {
 		<span class="kw">unsafe </span>{
 			co::WS_EX::from_raw(<span class="self">self</span>.GetWindowLongPtr(co::GWLP::EXSTYLE) <span class="kw">as _</span>)
 		}
@@ -2782,8 +2818,8 @@
 	/// prefer using [`HWND::hinstance`](crate::prelude::user_Hwnd::hinstance).
 	///
 	/// If you just want to retrieve the window styles, prefer using
-	/// [`HWND::styles`](crate::prelude::user_Hwnd::styles) and
-	/// [`HWND::styles_ex`](crate::prelude::user_Hwnd::styles_ex).
+	/// [`HWND::style`](crate::prelude::user_Hwnd::style) and
+	/// [`HWND::style_ex`](crate::prelude::user_Hwnd::style_ex).
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>GetWindowLongPtr(<span class="kw-2">&amp;</span><span class="self">self</span>, index: co::GWLP) -&gt; isize {
 		<span class="attr">#[cfg(target_pointer_width = <span class="string">"32"</span>)]
@@ -3690,6 +3726,10 @@
 
 	<span class="doccomment">/// [`SetWindowLongPtr`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowlongptrw)
 	/// function.
+	///
+	/// If you just want to set the window styles, prefer using
+	/// [`HWND::set_style`](crate::prelude::user_Hwnd::set_style) and
+	/// [`HWND::set_style_ex`](crate::prelude::user_Hwnd::set_style_ex).
 	///
 	/// # Safety
 	///
