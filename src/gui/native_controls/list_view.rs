@@ -120,6 +120,10 @@ impl<T> ListView<T> {
 	/// resource with
 	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
 	///
+	/// Since the image list is always managed by the control itself,
+	/// [`LVS::SHAREIMAGELISTS`](crate::co::LVS::SHAREIMAGELISTS) style will
+	/// always be added.
+	///
 	/// # Panics
 	///
 	/// Panics if the parent dialog was already created – that is, you cannot
@@ -181,6 +185,9 @@ impl<T> ListView<T> {
 			},
 			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
 		}
+
+		let style: co::LVS = self.hwnd().style().into();
+		self.hwnd().set_style(style | co::LVS::SHAREIMAGELISTS);
 
 		self.0.base.parent()
 			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
@@ -424,7 +431,11 @@ pub struct ListViewOpts {
 	/// List view styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `LVS::REPORT | LVS::NOSORTHEADER | LVS::SHOWSELALWAYS | LVS::SHAREIMAGELISTS`.
+	/// Since the image list is always managed by the control itself,
+	/// [`LVS::SHAREIMAGELISTS`](crate::co::LVS::SHAREIMAGELISTS) style will
+	/// always be added.
+	///
+	/// Defaults to `LVS::REPORT | LVS::NOSORTHEADER | LVS::SHOWSELALWAYS`.
 	pub list_view_style: co::LVS,
 	/// Extended list view styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -472,7 +483,7 @@ impl Default for ListViewOpts {
 		Self {
 			position: (0, 0),
 			size: (50, 50),
-			list_view_style: co::LVS::REPORT | co::LVS::NOSORTHEADER | co::LVS::SHOWSELALWAYS | co::LVS::SHAREIMAGELISTS,
+			list_view_style: co::LVS::REPORT | co::LVS::NOSORTHEADER | co::LVS::SHOWSELALWAYS,
 			list_view_ex_style: co::LVS_EX::NoValue,
 			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
 			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
