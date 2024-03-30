@@ -257,9 +257,40 @@
 <a href="#255" id="255">255</a>
 <a href="#256" id="256">256</a>
 <a href="#257" id="257">257</a>
+<a href="#258" id="258">258</a>
+<a href="#259" id="259">259</a>
+<a href="#260" id="260">260</a>
+<a href="#261" id="261">261</a>
+<a href="#262" id="262">262</a>
+<a href="#263" id="263">263</a>
+<a href="#264" id="264">264</a>
+<a href="#265" id="265">265</a>
+<a href="#266" id="266">266</a>
+<a href="#267" id="267">267</a>
+<a href="#268" id="268">268</a>
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
-<span class="kw">use </span>std::marker::PhantomPinned;
+<span class="kw">use </span>std::marker::{PhantomData, PhantomPinned};
 <span class="kw">use </span>std::pin::Pin;
+<span class="kw">use </span>std::rc::Rc;
 <span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -268,10 +299,11 @@
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">struct </span>Obj { <span class="comment">// actual fields of TreeView
+<span class="kw">struct </span>Obj&lt;T&gt; { <span class="comment">// actual fields of TreeView
 	</span>base: BaseNativeControl,
 	events: TreeViewEvents,
 	_pin: PhantomPinned,
+	_data: PhantomData&lt;T&gt;,
 }
 
 <span class="comment">//------------------------------------------------------------------------------
@@ -279,18 +311,28 @@
 </span><span class="doccomment">/// Native
 /// [tree view](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-controls)
 /// control.
-</span><span class="attr">#[derive(Clone)]
-</span><span class="kw">pub struct </span>TreeView(Pin&lt;Arc&lt;Obj&gt;&gt;);
+///
+/// The generic parameter specifies the type of the object that will be embedded
+/// on each item – if you don't want to store anything, just use `()` as the
+/// type. Internally, this storage is implemented with pointers in the item's
+/// `LPARAM` fields.
+</span><span class="kw">pub struct </span>TreeView&lt;T: <span class="lifetime">'static </span>= ()&gt;(Pin&lt;Arc&lt;Obj&lt;T&gt;&gt;&gt;);
 
-<span class="kw">unsafe impl </span>Send <span class="kw">for </span>TreeView {}
+<span class="kw">impl</span>&lt;T&gt; Clone <span class="kw">for </span>TreeView&lt;T&gt; { <span class="comment">// https://stackoverflow.com/q/39415052/6923555
+	</span><span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>(<span class="self">self</span>.<span class="number">0</span>.clone())
+	}
+}
 
-<span class="kw">impl </span>AsRef&lt;BaseNativeControl&gt; <span class="kw">for </span>TreeView {
+<span class="kw">unsafe impl</span>&lt;T&gt; Send <span class="kw">for </span>TreeView&lt;T&gt; {}
+
+<span class="kw">impl</span>&lt;T&gt; AsRef&lt;BaseNativeControl&gt; <span class="kw">for </span>TreeView&lt;T&gt; {
 	<span class="kw">fn </span>as_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>BaseNativeControl {
 		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.base
 	}
 }
 
-<span class="kw">impl </span>GuiWindow <span class="kw">for </span>TreeView {
+<span class="kw">impl</span>&lt;T&gt; GuiWindow <span class="kw">for </span>TreeView&lt;T&gt; {
 	<span class="kw">fn </span>hwnd(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HWND {
 		<span class="self">self</span>.<span class="number">0</span>.base.hwnd()
 	}
@@ -300,17 +342,17 @@
 	</span>}
 }
 
-<span class="kw">impl </span>GuiChild <span class="kw">for </span>TreeView {
+<span class="kw">impl</span>&lt;T&gt; GuiChild <span class="kw">for </span>TreeView&lt;T&gt; {
 	<span class="kw">fn </span>ctrl_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u16 {
 		<span class="self">self</span>.<span class="number">0</span>.base.ctrl_id()
 	}
 }
 
-<span class="kw">impl </span>GuiChildFocus <span class="kw">for </span>TreeView {}
+<span class="kw">impl</span>&lt;T&gt; GuiChildFocus <span class="kw">for </span>TreeView&lt;T&gt; {}
 
-<span class="kw">impl </span>GuiNativeControl <span class="kw">for </span>TreeView {}
+<span class="kw">impl</span>&lt;T&gt; GuiNativeControl <span class="kw">for </span>TreeView&lt;T&gt; {}
 
-<span class="kw">impl </span>GuiNativeControlEvents&lt;TreeViewEvents&gt; <span class="kw">for </span>TreeView {
+<span class="kw">impl</span>&lt;T&gt; GuiNativeControlEvents&lt;TreeViewEvents&gt; <span class="kw">for </span>TreeView&lt;T&gt; {
 	<span class="kw">fn </span>on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>TreeViewEvents {
 		<span class="kw">if </span><span class="kw-2">*</span><span class="self">self</span>.hwnd() != HWND::NULL {
 			<span class="macro">panic!</span>(<span class="string">"Cannot add events after the control creation."</span>);
@@ -321,7 +363,7 @@
 	}
 }
 
-<span class="kw">impl </span>TreeView {
+<span class="kw">impl</span>&lt;T&gt; TreeView&lt;T&gt; {
 	<span class="doccomment">/// Instantiates a new `TreeView` object, to be created on the parent window
 	/// with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
@@ -341,6 +383,7 @@
 					base: BaseNativeControl::new(parent, ctrl_id),
 					events: TreeViewEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
+					_data: PhantomData,
 				},
 			),
 		);
@@ -351,6 +394,7 @@
 			<span class="prelude-val">Ok</span>(())
 		});
 
+		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
 		new_self
 	}
 
@@ -375,6 +419,7 @@
 					base: BaseNativeControl::new(parent, ctrl_id),
 					events: TreeViewEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
+					_data: PhantomData,
 				},
 			),
 		);
@@ -385,6 +430,7 @@
 			<span class="prelude-val">Ok</span>(())
 		});
 
+		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
 		new_self
 	}
 
@@ -413,9 +459,23 @@
 			.add_to_layout_arranger(<span class="self">self</span>.hwnd(), opts_resz.resize_behavior())
 	}
 
+	<span class="kw">fn </span>default_message_handlers(<span class="kw-2">&amp;</span><span class="self">self</span>, parent: <span class="kw-2">&amp;</span>Base, ctrl_id: u16) {
+		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
+		parent.privileged_post_on().wm_notify(ctrl_id, co::TVN::DELETEITEM, <span class="kw">move </span>|<span class="kw">_</span>, p| {
+			<span class="kw">let </span>nmtv = <span class="kw">unsafe </span>{ p.cast_nmhdr::&lt;NMTREEVIEW&gt;() };
+			self2.items()
+				.get(<span class="kw-2">&amp;</span>nmtv.itemOld.hItem)
+				.data_lparam()
+				.map(|pdata| {
+					<span class="kw">let _ </span>= <span class="kw">unsafe </span>{ Rc::from_raw(pdata) }; <span class="comment">// free allocated LPARAM, if any
+				</span>});
+			<span class="prelude-val">Ok</span>(())
+		});
+	}
+
 	<span class="doccomment">/// Exposes the item methods.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub const fn </span>items(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TreeViewItems&lt;<span class="lifetime">'_</span>&gt; {
+	</span><span class="kw">pub const fn </span>items(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TreeViewItems&lt;<span class="lifetime">'_</span>, T&gt; {
 		TreeViewItems::new(<span class="self">self</span>)
 	}
 

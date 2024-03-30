@@ -737,14 +737,14 @@
 
 <span class="comment">//------------------------------------------------------------------------------
 
-</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>TreeViewItemIter&lt;<span class="lifetime">'a</span>&gt; {
-	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TreeView,
-	current: <span class="prelude-ty">Option</span>&lt;TreeViewItem&lt;<span class="lifetime">'a</span>&gt;&gt;,
+</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>TreeViewItemIter&lt;<span class="lifetime">'a</span>, T: <span class="lifetime">'static</span>&gt; {
+	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TreeView&lt;T&gt;,
+	current: <span class="prelude-ty">Option</span>&lt;TreeViewItem&lt;<span class="lifetime">'a</span>, T&gt;&gt;,
 	relationship: co::TVGN,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>TreeViewItemIter&lt;<span class="lifetime">'a</span>&gt; {
-	<span class="kw">type </span>Item = TreeViewItem&lt;<span class="lifetime">'a</span>&gt;;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; Iterator <span class="kw">for </span>TreeViewItemIter&lt;<span class="lifetime">'a</span>, T&gt; {
+	<span class="kw">type </span>Item = TreeViewItem&lt;<span class="lifetime">'a</span>, T&gt;;
 
 	<span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
 		<span class="self">self</span>.current = <span class="kw">unsafe </span>{
@@ -753,7 +753,7 @@
 					relationship: <span class="self">self</span>.relationship,
 					hitem: <span class="self">self</span>.current.as_ref().map(|tvi| tvi.htreeitem()),
 				})
-		}.map(|hitem| <span class="self">self</span>.owner.items().get(hitem));
+		}.map(|hitem| <span class="self">self</span>.owner.items().get(<span class="kw-2">&amp;</span>hitem));
 
 		<span class="self">self</span>.current.as_ref()
 			.map(|tvi| TreeViewItem::new(
@@ -763,10 +763,10 @@
 	}
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TreeViewItemIter&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; TreeViewItemIter&lt;<span class="lifetime">'a</span>, T&gt; {
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(
-		owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TreeView,
-		current: <span class="prelude-ty">Option</span>&lt;TreeViewItem&lt;<span class="lifetime">'a</span>&gt;&gt;,
+		owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TreeView&lt;T&gt;,
+		current: <span class="prelude-ty">Option</span>&lt;TreeViewItem&lt;<span class="lifetime">'a</span>, T&gt;&gt;,
 		relationship: co::TVGN,
 	) -&gt; <span class="self">Self
 	</span>{
@@ -776,14 +776,14 @@
 
 <span class="comment">//------------------------------------------------------------------------------
 
-</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>TreeViewChildItemIter&lt;<span class="lifetime">'a</span>&gt; {
-	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TreeView,
-	current: <span class="prelude-ty">Option</span>&lt;TreeViewItem&lt;<span class="lifetime">'a</span>&gt;&gt;,
+</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>TreeViewChildItemIter&lt;<span class="lifetime">'a</span>, T: <span class="lifetime">'static</span>&gt; {
+	owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TreeView&lt;T&gt;,
+	current: <span class="prelude-ty">Option</span>&lt;TreeViewItem&lt;<span class="lifetime">'a</span>, T&gt;&gt;,
 	first_call: bool,
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; Iterator <span class="kw">for </span>TreeViewChildItemIter&lt;<span class="lifetime">'a</span>&gt; {
-	<span class="kw">type </span>Item = TreeViewItem&lt;<span class="lifetime">'a</span>&gt;;
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; Iterator <span class="kw">for </span>TreeViewChildItemIter&lt;<span class="lifetime">'a</span>, T&gt; {
+	<span class="kw">type </span>Item = TreeViewItem&lt;<span class="lifetime">'a</span>, T&gt;;
 
 	<span class="kw">fn </span>next(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="self">Self</span>::Item&gt; {
 		<span class="kw">if </span><span class="self">self</span>.first_call { <span class="comment">// search for the first child
@@ -793,7 +793,7 @@
 						relationship: co::TVGN::CHILD,
 						hitem: <span class="self">self</span>.current.as_ref().map(|tvi| tvi.htreeitem()),
 					})
-			}.map(|hitem| <span class="self">self</span>.owner.items().get(hitem));
+			}.map(|hitem| <span class="self">self</span>.owner.items().get(<span class="kw-2">&amp;</span>hitem));
 
 			<span class="self">self</span>.first_call = <span class="bool-val">false</span>;
 
@@ -804,7 +804,7 @@
 						relationship: co::TVGN::NEXT,
 						hitem: <span class="self">self</span>.current.as_ref().map(|tvi| tvi.htreeitem()),
 					})
-			}.map(|hitem| <span class="self">self</span>.owner.items().get(hitem));
+			}.map(|hitem| <span class="self">self</span>.owner.items().get(<span class="kw-2">&amp;</span>hitem));
 		}
 
 		<span class="self">self</span>.current.as_ref()
@@ -815,10 +815,10 @@
 	}
 }
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TreeViewChildItemIter&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; TreeViewChildItemIter&lt;<span class="lifetime">'a</span>, T&gt; {
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
-		owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TreeView,
-		current: <span class="prelude-ty">Option</span>&lt;TreeViewItem&lt;<span class="lifetime">'a</span>&gt;&gt;,
+		owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TreeView&lt;T&gt;,
+		current: <span class="prelude-ty">Option</span>&lt;TreeViewItem&lt;<span class="lifetime">'a</span>, T&gt;&gt;,
 	) -&gt; <span class="self">Self
 	</span>{
 		<span class="self">Self </span>{

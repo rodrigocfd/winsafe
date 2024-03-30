@@ -297,6 +297,7 @@
 <a href="#295" id="295">295</a>
 <a href="#296" id="296">296</a>
 <a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::TypeId;
 <span class="kw">use </span>std::cell::RefCell;
 <span class="kw">use </span>std::rc::Rc;
@@ -363,19 +364,20 @@
 		}
 
 		<span class="kw">let </span><span class="kw-2">mut </span>lvi = LVITEM::default();
-		lvi.mask = co::LVIF::TEXT | co::LVIF::PARAM;
 		lvi.iItem = <span class="number">0x0fff_ffff</span>; <span class="comment">// insert as the last item
-
-		</span><span class="kw">if let </span><span class="prelude-val">Some</span>(icon_index) = icon_index { <span class="comment">// will it have an icon?
-			</span>lvi.mask |= co::LVIF::IMAGE;
-			lvi.iImage = icon_index <span class="kw">as _</span>;
-		}
+		</span>lvi.mask = co::LVIF::TEXT;
 
 		<span class="kw">let </span><span class="kw-2">mut </span>wtext = WString::from_str(texts[<span class="number">0</span>].as_ref()); <span class="comment">// text of 1st column
 		</span>lvi.set_pszText(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>wtext));
 
+		<span class="kw">if let </span><span class="prelude-val">Some</span>(icon_index) = icon_index { <span class="comment">// will it have an icon?
+			</span>lvi.mask |= co::LVIF::IMAGE;
+			lvi.iImage = icon_index <span class="kw">as _</span>;
+		}
+
 		<span class="kw">if </span>TypeId::of::&lt;T&gt;() != TypeId::of::&lt;()&gt;() { <span class="comment">// user defined an actual type?
-			</span><span class="kw">let </span>rc_data = Rc::new(RefCell::new(data));
+			</span>lvi.mask |= co::LVIF::PARAM;
+			<span class="kw">let </span>rc_data = Rc::new(RefCell::new(data));
 			lvi.lParam = Rc::into_raw(rc_data) <span class="kw">as _</span>;
 		}
 
