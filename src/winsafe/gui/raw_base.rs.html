@@ -549,7 +549,7 @@
 		</span><span class="kw">let </span>process_result = ref_self.base.process_user_message(wm_any)<span class="question-mark">?</span>;
 
 		<span class="comment">// Execute post-user privileged closures, keep track if at least one was executed.
-		</span><span class="kw">let </span>at_least_one_privileged_post = ref_self.base.process_privileged_post_messages(<span class="kw-2">&amp;</span>hwnd, wm_any)<span class="question-mark">?</span>;
+		</span><span class="kw">let </span>at_least_one_privileged_post = ref_self.base.process_privileged_after_messages(<span class="kw-2">&amp;</span>hwnd, wm_any)<span class="question-mark">?</span>;
 
 		<span class="kw">if </span>wm_any.msg_id == co::WM::NCDESTROY { <span class="comment">// always check
 			</span><span class="kw">unsafe </span>{ hwnd.SetWindowLongPtr(co::GWLP::USERDATA, <span class="number">0</span>); } <span class="comment">// clear passed pointer

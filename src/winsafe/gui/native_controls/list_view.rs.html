@@ -508,6 +508,29 @@
 <a href="#506" id="506">506</a>
 <a href="#507" id="507">507</a>
 <a href="#508" id="508">508</a>
+<a href="#509" id="509">509</a>
+<a href="#510" id="510">510</a>
+<a href="#511" id="511">511</a>
+<a href="#512" id="512">512</a>
+<a href="#513" id="513">513</a>
+<a href="#514" id="514">514</a>
+<a href="#515" id="515">515</a>
+<a href="#516" id="516">516</a>
+<a href="#517" id="517">517</a>
+<a href="#518" id="518">518</a>
+<a href="#519" id="519">519</a>
+<a href="#520" id="520">520</a>
+<a href="#521" id="521">521</a>
+<a href="#522" id="522">522</a>
+<a href="#523" id="523">523</a>
+<a href="#524" id="524">524</a>
+<a href="#525" id="525">525</a>
+<a href="#526" id="526">526</a>
+<a href="#527" id="527">527</a>
+<a href="#528" id="528">528</a>
+<a href="#529" id="529">529</a>
+<a href="#530" id="530">530</a>
+<a href="#531" id="531">531</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::{PhantomData, PhantomPinned};
 <span class="kw">use </span>std::pin::Pin;
@@ -516,6 +539,7 @@
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>, spec::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -766,7 +790,7 @@
 		});
 
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-		parent.privileged_post_on().wm_notify(ctrl_id, co::LVN::DELETEITEM, <span class="kw">move </span>|<span class="kw">_</span>, p| {
+		parent.privileged_after_on().wm_notify(ctrl_id, co::LVN::DELETEITEM, <span class="kw">move </span>|<span class="kw">_</span>, p| {
 			<span class="kw">let </span>nmlv = <span class="kw">unsafe </span>{ p.cast_nmhdr::&lt;NMLISTVIEW&gt;() };
 			self2.items()
 				.get(nmlv.iItem <span class="kw">as _</span>)
@@ -774,6 +798,18 @@
 				.map(|pdata| {
 					<span class="kw">let _ </span>= <span class="kw">unsafe </span>{ Rc::from_raw(pdata) }; <span class="comment">// free allocated LPARAM, if any
 				</span>});
+			<span class="prelude-val">Ok</span>(())
+		});
+
+		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
+		parent.privileged_after_on().wm(co::WM::DESTROY, <span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
+			[co::LVSIL::NORMAL, co::LVSIL::SMALL, co::LVSIL::STATE, co::LVSIL::GROUPHEADER]
+				.iter()
+				.for_each(|lvsil| {
+					self2.image_list(<span class="kw-2">*</span>lvsil).map(|hil| { <span class="comment">// destroy each image list, if any
+						</span><span class="kw">let _ </span>= <span class="kw">unsafe </span>{ ImageListDestroyGuard::new(hil.raw_copy()) };
+					});
+				});
 			<span class="prelude-val">Ok</span>(())
 		});
 	}
@@ -799,14 +835,19 @@
 		<span class="self">self</span>.<span class="number">0</span>.context_menu.as_ref()
 	}
 
-	<span class="doccomment">/// Retrieves one of the associated image lists by sending an
+	<span class="doccomment">/// Retrieves a reference to one of the associated image lists by sending an
 	/// [`lvm::GetImageList`](crate::msg::lvm::GetImageList) message.
+	///
+	/// The image list is owned by the control.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>image_list(<span class="kw-2">&amp;</span><span class="self">self</span>, kind: co::LVSIL) -&gt; <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt; {
+	</span><span class="kw">pub fn </span>image_list(<span class="kw-2">&amp;</span><span class="self">self</span>, kind: co::LVSIL) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>HIMAGELIST&gt; {
 		<span class="kw">unsafe </span>{
 			<span class="self">self</span>.hwnd()
 				.SendMessage(lvm::GetImageList { kind })
-		}
+		}.map(|hil| {
+			<span class="kw">let </span>hil_ptr = <span class="kw-2">&amp;</span>hil <span class="kw">as </span><span class="kw-2">*const </span>HIMAGELIST;
+			<span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>hil_ptr }
+		})
 	}
 
 	<span class="doccomment">/// Exposes the item methods.
@@ -846,15 +887,20 @@
 	<span class="doccomment">/// Sets the one of the associated image lists by sending an
 	/// [`lvm::SetImageList`](crate::msg::lvm::SetImageList) message.
 	///
-	/// Returns the previous image list, if any.
+	/// The image list will be owned by the control. Returns the previous one,
+	/// if any.
 	</span><span class="kw">pub fn </span>set_image_list(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		kind: co::LVSIL,
-		himagelist: <span class="kw-2">&amp;</span>HIMAGELIST,
-	) -&gt; <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;
+		himagelist: ImageListDestroyGuard,
+	) -&gt; <span class="prelude-ty">Option</span>&lt;ImageListDestroyGuard&gt;
 	{
+		<span class="kw">let </span><span class="kw-2">mut </span>himagelist = himagelist;
+		<span class="kw">let </span>hil = himagelist.leak();
+
 		<span class="kw">unsafe </span>{
 			<span class="self">self</span>.hwnd()
-				.SendMessage(lvm::SetImageList { kind, himagelist })
+				.SendMessage(lvm::SetImageList { kind, himagelist: <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>hil) })
+				.map(|prev_hil| ImageListDestroyGuard::new(prev_hil))
 		}
 	}
 

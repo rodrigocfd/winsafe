@@ -5263,7 +5263,7 @@
 /// Return type: `Option&lt;HIMAGELIST&gt;`.
 </span><span class="kw">pub struct </span>SetImageList&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">pub </span>kind: co::LVSIL,
-	<span class="kw">pub </span>himagelist: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HIMAGELIST,
+	<span class="kw">pub </span>himagelist: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>HIMAGELIST&gt;,
 }
 
 <span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetImageList&lt;<span class="lifetime">'a</span>&gt; {
@@ -5277,7 +5277,7 @@
 		WndMsg {
 			msg_id: co::LVM::SETIMAGELIST.into(),
 			wparam: <span class="self">self</span>.kind.raw() <span class="kw">as _</span>,
-			lparam: <span class="self">self</span>.himagelist.ptr() <span class="kw">as _</span>,
+			lparam: <span class="self">self</span>.himagelist.map_or(<span class="number">0</span>, |h| h.ptr() <span class="kw">as _</span>),
 		}
 	}
 }

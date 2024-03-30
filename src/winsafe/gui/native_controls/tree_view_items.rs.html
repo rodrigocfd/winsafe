@@ -121,7 +121,7 @@
 		data: T,
 	) -&gt; TreeViewItem&lt;<span class="lifetime">'a</span>, T&gt;
 	{
-		<span class="self">self</span>.owner.insert_item(<span class="prelude-val">None</span>, text, icon_index, data)
+		<span class="self">self</span>.owner.raw_insert_item(<span class="prelude-val">None</span>, text, icon_index, data)
 	}
 
 	<span class="doccomment">/// Deletes all items by sending a
