@@ -377,6 +377,12 @@ macro_rules! const_ws {
 				unsafe { Self::from_raw(v.0 as _) }
 			}
 		}
+
+		impl From<crate::co::WS> for $name {
+			fn from(v: crate::co::WS) -> Self {
+				unsafe { Self::from_raw(v.raw() as _) }
+			}
+		}
 	};
 }
 
@@ -419,6 +425,12 @@ macro_rules! const_wsex {
 		impl From<$name> for crate::co::WS_EX {
 			fn from(v: $name) -> Self {
 				unsafe { Self::from_raw(v.0) }
+			}
+		}
+
+		impl From<crate::co::WS_EX> for $name {
+			fn from(v: crate::co::WS_EX) -> Self {
+				unsafe { Self::from_raw(v.raw() as _) }
 			}
 		}
 	};

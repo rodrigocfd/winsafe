@@ -214,13 +214,8 @@ impl<'a> Iterator for ListBoxSelItemIter<'a> {
 
 impl<'a> ListBoxSelItemIter<'a> {
 	pub(in crate::gui) fn new(owner: &'a ListBox) -> Self {
-		let styles = unsafe {
-			co::LBS::from_raw(
-				owner.hwnd().GetWindowLongPtr(co::GWLP::STYLE) as _,
-			)
-		};
-
-		let indexes = if styles.has(co::LBS::EXTENDEDSEL) { // multiple selection?
+		let style: co::LBS = owner.hwnd().style().into();
+		let indexes = if style.has(co::LBS::EXTENDEDSEL) { // multiple selection?
 			let num_indexes = unsafe {
 				owner.hwnd()
 					.SendMessage(lb::GetSelCount {})

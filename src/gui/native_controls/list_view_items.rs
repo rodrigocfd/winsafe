@@ -256,9 +256,7 @@ impl<'a, T> ListViewItems<'a, T> {
 	/// Sets or remove the selection for all items by sending an
 	/// [`lvm::SetItemState`](crate::msg::lvm::SetItemState) message.
 	pub fn select_all(&self, set: bool) {
-		let styles = unsafe {
-			co::LVS::from_raw(self.owner.hwnd().GetWindowLongPtr(co::GWLP::STYLE) as _)
-		};
+		let styles: co::LVS = self.owner.hwnd().style().into();
 		if styles.has(co::LVS::SINGLESEL) {
 			return; // LVM_SETITEMSTATE fails for all items in single-sel list views
 		}

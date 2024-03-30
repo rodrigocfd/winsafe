@@ -169,12 +169,8 @@ impl ProgressBar {
 		if marquee {
 			// We must also adjust the window style before/after sending
 			// PBM_SETMARQUEE message.
-			unsafe {
-				self.hwnd().SetWindowLongPtr(
-					co::GWLP::STYLE,
-					u32::from(self.cur_style() | co::PBS::MARQUEE) as _,
-				);
-			}
+			let cur_style: co::PBS = self.hwnd().style().into();
+			self.hwnd().set_style(cur_style | co::PBS::MARQUEE);
 		}
 
 		unsafe {
@@ -185,12 +181,8 @@ impl ProgressBar {
 		}
 
 		if !marquee {
-			unsafe {
-				self.hwnd().SetWindowLongPtr(
-					co::GWLP::STYLE,
-					u32::from(self.cur_style() & !co::PBS::MARQUEE) as _,
-				);
-			}
+			let cur_style: co::PBS = self.hwnd().style().into();
+			self.hwnd().set_style(cur_style & !co::PBS::MARQUEE);
 		}
 	}
 
@@ -198,7 +190,8 @@ impl ProgressBar {
 	/// [`pbm::SetPos`](crate::msg::pbm::SetPos) message, returning the previous
 	/// position.
 	pub fn set_position(&self, position: u32) -> u32 {
-		if self.cur_style().has(co::PBS::MARQUEE) {
+		let cur_style: co::PBS = self.hwnd().style().into();
+		if cur_style.has(co::PBS::MARQUEE) {
 			self.set_marquee(false); // avoid crash
 		}
 
@@ -233,12 +226,6 @@ impl ProgressBar {
 	#[must_use]
 	pub fn state(&self) -> co::PBST {
 		unsafe { self.hwnd().SendMessage(pbm::GetState {}) }
-	}
-
-	fn cur_style(&self) -> co::PBS {
-		unsafe {
-			co::PBS::from_raw(self.hwnd().GetWindowLongPtr(co::GWLP::STYLE) as _)
-		}
 	}
 }
 

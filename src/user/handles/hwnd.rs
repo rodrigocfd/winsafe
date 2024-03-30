@@ -54,10 +54,26 @@ pub trait user_Hwnd: Handle {
 	}
 
 	/// Calls
+	/// [`HWND::SetWindowLongPtr`](crate::prelude::user_Hwnd::SetWindowLongPtr)
+	/// to set the window styles.
+	fn set_style(&self, style: impl Into<co::WS>) {
+		let style: co::WS = style.into();
+		unsafe { self.SetWindowLongPtr(co::GWLP::STYLE, style.raw() as _); }
+	}
+
+	/// Calls
+	/// [`HWND::SetWindowLongPtr`](crate::prelude::user_Hwnd::SetWindowLongPtr)
+	/// to set the extended window styles.
+	fn set_style_ex(&self, ex_style: impl Into<co::WS_EX>) {
+		let ex_style: co::WS_EX = ex_style.into();
+		unsafe { self.SetWindowLongPtr(co::GWLP::EXSTYLE, ex_style.raw() as _); }
+	}
+
+	/// Calls
 	/// [`HWND::GetWindowLongPtr`](crate::prelude::user_Hwnd::GetWindowLongPtr)
 	/// to retrieve the window styles.
 	#[must_use]
-	fn styles(&self) -> co::WS {
+	fn style(&self) -> co::WS {
 		unsafe { co::WS::from_raw(self.GetWindowLongPtr(co::GWLP::STYLE) as _) }
 	}
 
@@ -65,7 +81,7 @@ pub trait user_Hwnd: Handle {
 	/// [`HWND::GetWindowLongPtr`](crate::prelude::user_Hwnd::GetWindowLongPtr)
 	/// to retrieve the extended window styles.
 	#[must_use]
-	fn styles_ex(&self) -> co::WS_EX {
+	fn style_ex(&self) -> co::WS_EX {
 		unsafe {
 			co::WS_EX::from_raw(self.GetWindowLongPtr(co::GWLP::EXSTYLE) as _)
 		}
@@ -816,8 +832,8 @@ pub trait user_Hwnd: Handle {
 	/// prefer using [`HWND::hinstance`](crate::prelude::user_Hwnd::hinstance).
 	///
 	/// If you just want to retrieve the window styles, prefer using
-	/// [`HWND::styles`](crate::prelude::user_Hwnd::styles) and
-	/// [`HWND::styles_ex`](crate::prelude::user_Hwnd::styles_ex).
+	/// [`HWND::style`](crate::prelude::user_Hwnd::style) and
+	/// [`HWND::style_ex`](crate::prelude::user_Hwnd::style_ex).
 	#[must_use]
 	fn GetWindowLongPtr(&self, index: co::GWLP) -> isize {
 		#[cfg(target_pointer_width = "32")]
@@ -1724,6 +1740,10 @@ pub trait user_Hwnd: Handle {
 
 	/// [`SetWindowLongPtr`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setwindowlongptrw)
 	/// function.
+	///
+	/// If you just want to set the window styles, prefer using
+	/// [`HWND::set_style`](crate::prelude::user_Hwnd::set_style) and
+	/// [`HWND::set_style_ex`](crate::prelude::user_Hwnd::set_style_ex).
 	///
 	/// # Safety
 	///
