@@ -12,7 +12,7 @@ use crate::prelude::*;
 struct Obj { // actual fields of Tab
 	base: BaseNativeControl,
 	events: TabEvents,
-	children: Vec<(String, Box<dyn GuiTab>)>,
+	children: Vec<(String, Box<dyn AsRef<WindowControl>>)>,
 	_pin: PhantomPinned,
 }
 
@@ -110,7 +110,7 @@ impl Tab {
 		parent: &impl GuiParent,
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
-		items: Vec<(String, Box<dyn GuiTab>)>,
+		items: Vec<(String, Box<dyn AsRef<WindowControl>>)>,
 	) -> Self
 	{
 		let new_self = Self(
@@ -185,7 +185,7 @@ impl Tab {
 			.enumerate()
 			.filter(|(i, _)| *i != index as usize)
 			.for_each(|(_, (_, item))| {
-				item.as_ctrl().hwnd().ShowWindow(co::SW::HIDE); // hide all others
+				item.as_ref().as_ref().hwnd().ShowWindow(co::SW::HIDE); // hide all others
 			});
 
 		if let Some((_, item)) = self.0.children.get(index as usize) {
@@ -197,7 +197,7 @@ impl Tab {
 					rect: &mut rc,
 				});
 			}
-			item.as_ctrl().hwnd().SetWindowPos(
+			item.as_ref().as_ref().hwnd().SetWindowPos(
 				HwndPlace::None,
 				POINT::new(rc.left, rc.top),
 				SIZE::new(rc.right - rc.left, rc.bottom - rc.top),
@@ -290,7 +290,7 @@ pub struct TabOpts {
 	/// style.
 	///
 	/// Defaults to none.
-	pub items: Vec<(String, Box<dyn GuiTab>)>,
+	pub items: Vec<(String, Box<dyn AsRef<WindowControl>>)>,
 }
 
 impl Default for TabOpts {
