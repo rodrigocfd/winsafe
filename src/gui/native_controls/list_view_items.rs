@@ -64,18 +64,19 @@ impl<'a, T> ListViewItems<'a, T> {
 		}
 
 		let mut lvi = LVITEM::default();
-		lvi.mask = co::LVIF::TEXT | co::LVIF::PARAM;
 		lvi.iItem = 0x0fff_ffff; // insert as the last item
+		lvi.mask = co::LVIF::TEXT;
+
+		let mut wtext = WString::from_str(texts[0].as_ref()); // text of 1st column
+		lvi.set_pszText(Some(&mut wtext));
 
 		if let Some(icon_index) = icon_index { // will it have an icon?
 			lvi.mask |= co::LVIF::IMAGE;
 			lvi.iImage = icon_index as _;
 		}
 
-		let mut wtext = WString::from_str(texts[0].as_ref()); // text of 1st column
-		lvi.set_pszText(Some(&mut wtext));
-
 		if TypeId::of::<T>() != TypeId::of::<()>() { // user defined an actual type?
+			lvi.mask |= co::LVIF::PARAM;
 			let rc_data = Rc::new(RefCell::new(data));
 			lvi.lParam = Rc::into_raw(rc_data) as _;
 		}

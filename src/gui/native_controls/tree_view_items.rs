@@ -1,3 +1,7 @@
+use std::any::TypeId;
+use std::cell::RefCell;
+use std::rc::Rc;
+
 use crate::co;
 use crate::decl::*;
 use crate::gui::{*, native_controls::iterators::*, spec::*};
@@ -8,12 +12,12 @@ use crate::prelude::*;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-pub struct TreeViewItems<'a> {
-	owner: &'a TreeView,
+pub struct TreeViewItems<'a, T: 'static> {
+	owner: &'a TreeView<T>,
 }
 
-impl<'a> TreeViewItems<'a> {
-	pub(in crate::gui) const fn new(owner: &'a TreeView) -> Self {
+impl<'a, T> TreeViewItems<'a, T> {
+	pub(in crate::gui) const fn new(owner: &'a TreeView<T>) -> Self {
 		Self { owner }
 	}
 
@@ -23,17 +27,25 @@ impl<'a> TreeViewItems<'a> {
 	pub fn add_root(&self,
 		text: &str,
 		icon_index: Option<u32>,
-	) -> TreeViewItem<'a>
+		data: T,
+	) -> TreeViewItem<'a, T>
 	{
 		let mut buf = WString::from_str(text);
 
 		let mut tvix = TVITEMEX::default();
 		tvix.mask = co::TVIF::TEXT;
+		tvix.set_pszText(Some(&mut buf));
+
 		if let Some(icon_index) = icon_index {
 			tvix.mask |= co::TVIF::IMAGE;
 			tvix.iImage = icon_index as _;
 		}
-		tvix.set_pszText(Some(&mut buf));
+
+		if TypeId::of::<T>() != TypeId::of::<()>() { // user defined an actual type?
+			tvix.mask |= co::TVIF::PARAM;
+			let rc_data = Rc::new(RefCell::new(data));
+			tvix.lParam = Rc::into_raw(rc_data) as _;
+		}
 
 		let mut tvis = TVINSERTSTRUCT::default();
 		tvis.set_hInsertAfter(TreeitemTvi::Tvi(co::TVI::LAST));
@@ -44,7 +56,7 @@ impl<'a> TreeViewItems<'a> {
 				.SendMessage(tvm::InsertItem { item: &mut tvis })
 		}.unwrap();
 
-		self.get(new_hitem)
+		self.get(&new_hitem)
 	}
 
 	/// Deletes all items by sending a
@@ -91,19 +103,21 @@ impl<'a> TreeViewItems<'a> {
 	/// object will still be returned. However, operations upon this object will
 	/// produce no effect.
 	#[must_use]
-	pub const fn get(&self, hitem: HTREEITEM) -> TreeViewItem<'a> {
-		TreeViewItem::new(self.owner, hitem)
+	pub fn get(&self, hitem: &HTREEITEM) -> TreeViewItem<'a, T> {
+		TreeViewItem::new(self.owner, unsafe { hitem.raw_copy() })
 	}
 
 	/// Returns an iterator over the selected items.
 	#[must_use]
-	pub fn iter_selected(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
+	pub fn iter_selected(&self,
+	) -> impl Iterator<Item = TreeViewItem<'a, T>> + 'a
+	{
 		TreeViewItemIter::new(self.owner, None, co::TVGN::CARET)
 	}
 
 	/// Returns an iterator over the root items.
 	#[must_use]
-	pub fn iter_root(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
+	pub fn iter_root(&self) -> impl Iterator<Item = TreeViewItem<'a, T>> + 'a {
 		TreeViewChildItemIter::new(self.owner, None)
 	}
 }

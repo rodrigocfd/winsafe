@@ -1,3 +1,8 @@
+use std::any::TypeId;
+use std::cell::RefCell;
+use std::mem::ManuallyDrop;
+use std::rc::Rc;
+
 use crate::co;
 use crate::decl::*;
 use crate::gui::{*, native_controls::iterators::*};
@@ -11,21 +16,21 @@ use crate::prelude::*;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-pub struct TreeViewItem<'a> {
-	owner: &'a TreeView,
+pub struct TreeViewItem<'a, T: 'static = ()> {
+	owner: &'a TreeView<T>,
 	hitem: HTREEITEM,
 }
 
-impl<'a> TreeViewItem<'a> {
+impl<'a, T> TreeViewItem<'a, T> {
 	pub(in crate::gui) const fn new(
-		owner: &'a TreeView,
+		owner: &'a TreeView<T>,
 		hitem: HTREEITEM,
 	) -> Self
 	{
 		Self { owner, hitem }
 	}
 
-	pub(in crate::gui) fn raw_clone(&self) -> Self {
+	fn raw_clone(&self) -> Self {
 		Self {
 			owner: self.owner,
 			hitem: unsafe { self.hitem.raw_copy() },
@@ -38,17 +43,25 @@ impl<'a> TreeViewItem<'a> {
 	pub fn add_child(&self,
 		text: &str,
 		icon_index: Option<u32>,
+		data: T,
 	) -> Self
 	{
 		let mut buf = WString::from_str(text);
 
 		let mut tvix = TVITEMEX::default();
 		tvix.mask = co::TVIF::TEXT;
+		tvix.set_pszText(Some(&mut buf));
+
 		if let Some(icon_index) = icon_index {
 			tvix.mask |= co::TVIF::IMAGE;
 			tvix.iImage = icon_index as _;
 		}
-		tvix.set_pszText(Some(&mut buf));
+
+		if TypeId::of::<T>() != TypeId::of::<()>() { // user defined an actual type?
+			tvix.mask |= co::TVIF::PARAM;
+			let rc_data = Rc::new(RefCell::new(data));
+			tvix.lParam = Rc::into_raw(rc_data) as _;
+		}
 
 		let mut tvis = TVINSERTSTRUCT::default();
 		tvis.hParent = unsafe { self.hitem.raw_copy() };
@@ -61,6 +74,37 @@ impl<'a> TreeViewItem<'a> {
 		}.unwrap();
 
 		Self::new(self.owner, new_hitem)
+	}
+
+	/// Returns a [`Rc`](std::rc::Rc)/[`RefCell`](std::cell::RefCell) with the
+	/// stored data by sending an [`lvm::GetItem`](crate::msg::lvm::GetItem)
+	/// message.
+	///
+	/// Returns `None` if the `ListView` holds a `()`, or if the item holds an
+	/// invalid index.
+	#[must_use]
+	pub fn data(&self) -> Option<Rc<RefCell<T>>> {
+		self.data_lparam()
+			.map(|pdata| {
+				let rc_data = ManuallyDrop::new(unsafe { Rc::from_raw(pdata) });
+				Rc::clone(&rc_data)
+			})
+	}
+
+	pub(in crate::gui) fn data_lparam(&self) -> Option<*mut RefCell<T>> {
+		let mut tvix = TVITEMEX::default();
+		tvix.hItem = unsafe { self.hitem.raw_copy() };
+		tvix.mask = co::TVIF::PARAM;
+
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(tvm::GetItem { tvitem: &mut tvix })
+		}.unwrap();
+
+		match tvix.lParam {
+			0 => None,
+			lp => Some(lp as _),
+		}
 	}
 
 	/// Deletes the item by sending a
@@ -135,14 +179,16 @@ impl<'a> TreeViewItem<'a> {
 
 	/// Returns an iterator over the child items.
 	#[must_use]
-	pub fn iter_children(&self) -> impl Iterator<Item = TreeViewItem<'a>> + 'a {
+	pub fn iter_children(&self,
+	) -> impl Iterator<Item = TreeViewItem<'a, T>> + 'a
+	{
 		TreeViewChildItemIter::new(self.owner, Some(self.raw_clone()))
 	}
 
 	/// Returns an iterator over the next sibling items.
 	#[must_use]
 	pub fn iter_next_siblings(&self,
-	) -> impl Iterator<Item = TreeViewItem<'a>> + 'a
+	) -> impl Iterator<Item = TreeViewItem<'a, T>> + 'a
 	{
 		TreeViewItemIter::new(self.owner, Some(self.raw_clone()), co::TVGN::NEXT)
 	}
@@ -150,7 +196,7 @@ impl<'a> TreeViewItem<'a> {
 	/// Returns an iterator over the previous sibling items.
 	#[must_use]
 	pub fn iter_prev_siblings(&self,
-	) -> impl Iterator<Item = TreeViewItem<'a>> + 'a
+	) -> impl Iterator<Item = TreeViewItem<'a, T>> + 'a
 	{
 		TreeViewItemIter::new(self.owner, Some(self.raw_clone()), co::TVGN::PREVIOUS)
 	}
@@ -173,14 +219,14 @@ impl<'a> TreeViewItem<'a> {
 	pub fn set_text(&self, text: &str) {
 		let mut buf = WString::from_str(text);
 
-		let mut tvi = TVITEMEX::default();
-		tvi.hItem = unsafe { self.hitem.raw_copy() };
-		tvi.mask = co::TVIF::TEXT;
-		tvi.set_pszText(Some(&mut buf));
+		let mut tvix = TVITEMEX::default();
+		tvix.hItem = unsafe { self.hitem.raw_copy() };
+		tvix.mask = co::TVIF::TEXT;
+		tvix.set_pszText(Some(&mut buf));
 
 		unsafe {
 			self.owner.hwnd()
-				.SendMessage(tvm::SetItem { tvitem: &tvi })
+				.SendMessage(tvm::SetItem { tvitem: &tvix })
 		}.unwrap();
 	}
 
@@ -188,16 +234,16 @@ impl<'a> TreeViewItem<'a> {
 	/// [`tvm::GetItem`](crate::msg::tvm::GetItem) message.
 	#[must_use]
 	pub fn text(&self) -> String {
-		let mut tvi = TVITEMEX::default();
-		tvi.hItem = unsafe { self.hitem.raw_copy() };
-		tvi.mask = co::TVIF::TEXT;
+		let mut tvix = TVITEMEX::default();
+		tvix.hItem = unsafe { self.hitem.raw_copy() };
+		tvix.mask = co::TVIF::TEXT;
 
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
-		tvi.set_pszText(Some(&mut buf));
+		tvix.set_pszText(Some(&mut buf));
 
 		unsafe {
 			self.owner.hwnd()
-				.SendMessage(tvm::GetItem { tvitem: &mut tvi })
+				.SendMessage(tvm::GetItem { tvitem: &mut tvix })
 		}.unwrap();
 
 		buf.to_string()

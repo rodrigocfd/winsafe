@@ -321,14 +321,14 @@ impl<'a, T> ListViewItemIter<'a, T> {
 
 //------------------------------------------------------------------------------
 
-pub(in crate::gui) struct TreeViewItemIter<'a> {
-	owner: &'a TreeView,
-	current: Option<TreeViewItem<'a>>,
+pub(in crate::gui) struct TreeViewItemIter<'a, T: 'static> {
+	owner: &'a TreeView<T>,
+	current: Option<TreeViewItem<'a, T>>,
 	relationship: co::TVGN,
 }
 
-impl<'a> Iterator for TreeViewItemIter<'a> {
-	type Item = TreeViewItem<'a>;
+impl<'a, T> Iterator for TreeViewItemIter<'a, T> {
+	type Item = TreeViewItem<'a, T>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		self.current = unsafe {
@@ -337,7 +337,7 @@ impl<'a> Iterator for TreeViewItemIter<'a> {
 					relationship: self.relationship,
 					hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
 				})
-		}.map(|hitem| self.owner.items().get(hitem));
+		}.map(|hitem| self.owner.items().get(&hitem));
 
 		self.current.as_ref()
 			.map(|tvi| TreeViewItem::new(
@@ -347,10 +347,10 @@ impl<'a> Iterator for TreeViewItemIter<'a> {
 	}
 }
 
-impl<'a> TreeViewItemIter<'a> {
+impl<'a, T> TreeViewItemIter<'a, T> {
 	pub(in crate::gui) const fn new(
-		owner: &'a TreeView,
-		current: Option<TreeViewItem<'a>>,
+		owner: &'a TreeView<T>,
+		current: Option<TreeViewItem<'a, T>>,
 		relationship: co::TVGN,
 	) -> Self
 	{
@@ -360,14 +360,14 @@ impl<'a> TreeViewItemIter<'a> {
 
 //------------------------------------------------------------------------------
 
-pub(in crate::gui) struct TreeViewChildItemIter<'a> {
-	owner: &'a TreeView,
-	current: Option<TreeViewItem<'a>>,
+pub(in crate::gui) struct TreeViewChildItemIter<'a, T: 'static> {
+	owner: &'a TreeView<T>,
+	current: Option<TreeViewItem<'a, T>>,
 	first_call: bool,
 }
 
-impl<'a> Iterator for TreeViewChildItemIter<'a> {
-	type Item = TreeViewItem<'a>;
+impl<'a, T> Iterator for TreeViewChildItemIter<'a, T> {
+	type Item = TreeViewItem<'a, T>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		if self.first_call { // search for the first child
@@ -377,7 +377,7 @@ impl<'a> Iterator for TreeViewChildItemIter<'a> {
 						relationship: co::TVGN::CHILD,
 						hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
 					})
-			}.map(|hitem| self.owner.items().get(hitem));
+			}.map(|hitem| self.owner.items().get(&hitem));
 
 			self.first_call = false;
 
@@ -388,7 +388,7 @@ impl<'a> Iterator for TreeViewChildItemIter<'a> {
 						relationship: co::TVGN::NEXT,
 						hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
 					})
-			}.map(|hitem| self.owner.items().get(hitem));
+			}.map(|hitem| self.owner.items().get(&hitem));
 		}
 
 		self.current.as_ref()
@@ -399,10 +399,10 @@ impl<'a> Iterator for TreeViewChildItemIter<'a> {
 	}
 }
 
-impl<'a> TreeViewChildItemIter<'a> {
+impl<'a, T> TreeViewChildItemIter<'a, T> {
 	pub(in crate::gui) fn new(
-		owner: &'a TreeView,
-		current: Option<TreeViewItem<'a>>,
+		owner: &'a TreeView<T>,
+		current: Option<TreeViewItem<'a, T>>,
 	) -> Self
 	{
 		Self {

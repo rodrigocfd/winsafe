@@ -55,7 +55,7 @@ impl TreeViewEvents {
 		/// let wnd: gui::WindowMain; // initialized somewhere
 		/// let tree: gui::TreeView;
 		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-		/// # let tree = gui::TreeView::new(&wnd, gui::TreeViewOpts::default());
+		/// # let tree = gui::TreeView::<()>::new(&wnd, gui::TreeViewOpts::default());
 		///
 		/// tree.on().tvn_sel_changed(
 		///     move |p: &w::NMTREEVIEW| -> w::AnyResult<()> {

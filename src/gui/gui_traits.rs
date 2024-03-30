@@ -212,8 +212,11 @@ pub trait GuiParent: GuiWindow + AsRef<Base> {
 
 /// A closeable popup parent window.
 pub trait GuiParentPopup: GuiParent {
-	/// Closes the window by posting a [`wm::close`](crate::msg::wm::Close)
-	/// message.
+	/// Closes the window by posting a [`WM_CLOSE`](crate::msg::wm::Close)
+	/// message. This is the safest way to close any popup window, because
+	/// you're able to process the
+	/// [`wm_close`](crate::prelude::GuiEvents::wm_close) event, just like if
+	/// the user clicked the window "X" button.
 	fn close(&self) {
 		unsafe { self.hwnd().PostMessage(wm::Close {}).unwrap(); }
 	}

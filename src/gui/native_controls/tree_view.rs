@@ -1,6 +1,7 @@
 use std::any::Any;
-use std::marker::PhantomPinned;
+use std::marker::{PhantomData, PhantomPinned};
 use std::pin::Pin;
+use std::rc::Rc;
 use std::sync::Arc;
 
 use crate::co;
@@ -9,10 +10,11 @@ use crate::gui::{*, events::*, privs::*, spec::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-struct Obj { // actual fields of TreeView
+struct Obj<T> { // actual fields of TreeView
 	base: BaseNativeControl,
 	events: TreeViewEvents,
 	_pin: PhantomPinned,
+	_data: PhantomData<T>,
 }
 
 //------------------------------------------------------------------------------
@@ -20,18 +22,28 @@ struct Obj { // actual fields of TreeView
 /// Native
 /// [tree view](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-controls)
 /// control.
-#[derive(Clone)]
-pub struct TreeView(Pin<Arc<Obj>>);
+///
+/// The generic parameter specifies the type of the object that will be embedded
+/// on each item – if you don't want to store anything, just use `()` as the
+/// type. Internally, this storage is implemented with pointers in the item's
+/// `LPARAM` fields.
+pub struct TreeView<T: 'static = ()>(Pin<Arc<Obj<T>>>);
 
-unsafe impl Send for TreeView {}
+impl<T> Clone for TreeView<T> { // https://stackoverflow.com/q/39415052/6923555
+	fn clone(&self) -> Self {
+		Self(self.0.clone())
+	}
+}
 
-impl AsRef<BaseNativeControl> for TreeView {
+unsafe impl<T> Send for TreeView<T> {}
+
+impl<T> AsRef<BaseNativeControl> for TreeView<T> {
 	fn as_ref(&self) -> &BaseNativeControl {
 		&self.0.base
 	}
 }
 
-impl GuiWindow for TreeView {
+impl<T> GuiWindow for TreeView<T> {
 	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
 	}
@@ -41,17 +53,17 @@ impl GuiWindow for TreeView {
 	}
 }
 
-impl GuiChild for TreeView {
+impl<T> GuiChild for TreeView<T> {
 	fn ctrl_id(&self) -> u16 {
 		self.0.base.ctrl_id()
 	}
 }
 
-impl GuiChildFocus for TreeView {}
+impl<T> GuiChildFocus for TreeView<T> {}
 
-impl GuiNativeControl for TreeView {}
+impl<T> GuiNativeControl for TreeView<T> {}
 
-impl GuiNativeControlEvents<TreeViewEvents> for TreeView {
+impl<T> GuiNativeControlEvents<TreeViewEvents> for TreeView<T> {
 	fn on(&self) -> &TreeViewEvents {
 		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add events after the control creation.");
@@ -62,7 +74,7 @@ impl GuiNativeControlEvents<TreeViewEvents> for TreeView {
 	}
 }
 
-impl TreeView {
+impl<T> TreeView<T> {
 	/// Instantiates a new `TreeView` object, to be created on the parent window
 	/// with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
@@ -82,6 +94,7 @@ impl TreeView {
 					base: BaseNativeControl::new(parent, ctrl_id),
 					events: TreeViewEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
+					_data: PhantomData,
 				},
 			),
 		);
@@ -92,6 +105,7 @@ impl TreeView {
 			Ok(())
 		});
 
+		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
 		new_self
 	}
 
@@ -116,6 +130,7 @@ impl TreeView {
 					base: BaseNativeControl::new(parent, ctrl_id),
 					events: TreeViewEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
+					_data: PhantomData,
 				},
 			),
 		);
@@ -126,6 +141,7 @@ impl TreeView {
 			Ok(())
 		});
 
+		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
 		new_self
 	}
 
@@ -154,9 +170,23 @@ impl TreeView {
 			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
 	}
 
+	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {
+		let self2 = self.clone();
+		parent.privileged_post_on().wm_notify(ctrl_id, co::TVN::DELETEITEM, move |_, p| {
+			let nmtv = unsafe { p.cast_nmhdr::<NMTREEVIEW>() };
+			self2.items()
+				.get(&nmtv.itemOld.hItem)
+				.data_lparam()
+				.map(|pdata| {
+					let _ = unsafe { Rc::from_raw(pdata) }; // free allocated LPARAM, if any
+				});
+			Ok(())
+		});
+	}
+
 	/// Exposes the item methods.
 	#[must_use]
-	pub const fn items(&self) -> TreeViewItems<'_> {
+	pub const fn items(&self) -> TreeViewItems<'_, T> {
 		TreeViewItems::new(self)
 	}
 
