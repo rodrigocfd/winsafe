@@ -23,7 +23,7 @@ pub(in crate::gui) struct DlgControl(Pin<Arc<Obj>>);
 
 impl DlgControl {
 	pub(in crate::gui) fn new(
-		parent: &Base,
+		parent: &impl AsRef<Base>,
 		dialog_id: u16,
 		position: POINT,
 		resize_behavior: (Horz, Vert),
@@ -33,14 +33,14 @@ impl DlgControl {
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					dlg_base: DlgBase::new(Some(parent), dialog_id),
+					dlg_base: DlgBase::new(Some(&parent), dialog_id),
 					position,
 					ctrl_id: ctrl_id.unwrap_or_else(|| next_auto_ctrl_id()),
 					_pin: PhantomPinned,
 				},
 			),
 		);
-		new_self.default_message_handlers(parent, resize_behavior);
+		new_self.default_message_handlers(parent.as_ref(), resize_behavior);
 		new_self
 	}
 

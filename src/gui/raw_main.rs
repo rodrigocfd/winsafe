@@ -28,7 +28,7 @@ impl RawMain {
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					raw_base: RawBase::new(None),
+					raw_base: RawBase::new(None::<&WindowMain>),
 					opts,
 					hchild_prev_focus: UnsafeCell::new(HWND::NULL),
 					_pin: PhantomPinned,

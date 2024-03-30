@@ -45,15 +45,15 @@ pub(in crate::gui) struct BaseNativeControl {
 }
 
 impl BaseNativeControl {
-	pub(in crate::gui) fn new(parent: &Base, ctrl_id: u16) -> Self {
-		if *parent.hwnd() != HWND::NULL {
+	pub(in crate::gui) fn new(parent: &impl AsRef<Base>, ctrl_id: u16) -> Self {
+		if *parent.as_ref().hwnd() != HWND::NULL {
 			panic!("Cannot create a child control after the parent window is created.");
 		}
 
 		Self {
 			ctrl_id,
 			hwnd: UnsafeCell::new(HWND::NULL),
-			parent_ptr: NonNull::from(parent),
+			parent_ptr: NonNull::from(parent.as_ref()),
 			subclass_events: WindowEvents::new(),
 		}
 	}

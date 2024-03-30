@@ -26,6 +26,12 @@ pub struct Tab(Pin<Arc<Obj>>);
 
 unsafe impl Send for Tab {}
 
+impl AsRef<BaseNativeControl> for Tab {
+	fn as_ref(&self) -> &BaseNativeControl {
+		&self.0.base
+	}
+}
+
 impl GuiWindow for Tab {
 	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
@@ -44,11 +50,7 @@ impl GuiChild for Tab {
 
 impl GuiChildFocus for Tab {}
 
-impl GuiNativeControl for Tab {
-	fn on_subclass(&self) -> &WindowEvents {
-		self.0.base.on_subclass()
-	}
-}
+impl GuiNativeControl for Tab {}
 
 impl GuiNativeControlEvents<TabEvents> for Tab {
 	fn on(&self) -> &TabEvents {
@@ -71,7 +73,6 @@ impl Tab {
 	/// dynamically create a `TreeView` in an event closure.
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: TabOpts) -> Self {
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		let mut opts = auto_ctrl_id_if_zero(opts);
 		let ctrl_id = opts.ctrl_id;
 		let children = opts.items.drain(..).collect::<Vec<_>>();
@@ -79,8 +80,8 @@ impl Tab {
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: TabEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: TabEvents::new(parent, ctrl_id),
 					children,
 					_pin: PhantomPinned,
 				},
@@ -88,12 +89,12 @@ impl Tab {
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.as_ref().privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(OptsResz::Wnd(&opts))?;
 			Ok(())
 		});
 
-		new_self.default_message_handlers(parent_base_ref, ctrl_id);
+		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
 		new_self
 	}
 
@@ -112,13 +113,11 @@ impl Tab {
 		items: Vec<(String, Box<dyn GuiTab>)>,
 	) -> Self
 	{
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
-
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: TabEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: TabEvents::new(parent, ctrl_id),
 					children: items,
 					_pin: PhantomPinned,
 				},
@@ -126,12 +125,12 @@ impl Tab {
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
+		parent.as_ref().privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(OptsResz::Dlg(resize_behavior))?;
 			Ok(())
 		});
 
-		new_self.default_message_handlers(parent_base_ref, ctrl_id);
+		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
 		new_self
 	}
 

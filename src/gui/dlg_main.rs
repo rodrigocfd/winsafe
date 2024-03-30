@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::privs::*;
+use crate::gui::{*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -31,7 +31,7 @@ impl DlgMain {
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					dlg_base: DlgBase::new(None, dialog_id),
+					dlg_base: DlgBase::new(None::<&WindowMain>, dialog_id),
 					icon_id,
 					accel_table_id,
 					_pin: PhantomPinned,

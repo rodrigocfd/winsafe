@@ -22,7 +22,11 @@ struct Obj { // actual fields of RawModal
 pub(in crate::gui) struct RawModal(Pin<Arc<Obj>>);
 
 impl RawModal {
-	pub(in crate::gui) fn new(parent: &Base, opts: WindowModalOpts) -> Self {
+	pub(in crate::gui) fn new(
+		parent: &impl AsRef<Base>,
+		opts: WindowModalOpts,
+	) -> Self
+	{
 		let new_self = Self(
 			Arc::pin(
 				Obj {

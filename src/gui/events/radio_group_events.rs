@@ -23,12 +23,12 @@ pub struct RadioGroupEvents {
 
 impl RadioGroupEvents {
 	pub(in crate::gui) fn new(
-		parent_base: &Base,
+		parent: &impl AsRef<Base>,
 		ctrl_ids: Vec<u16>,
 	) -> Self
 	{
 		Self {
-			parent_ptr: NonNull::from(parent_base),
+			parent_ptr: NonNull::from(parent.as_ref()),
 			ctrl_ids,
 		}
 	}

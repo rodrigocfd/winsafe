@@ -64,8 +64,6 @@ impl RadioGroup {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
 
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
-
 		let radios = opts.iter().enumerate()
 			.map(|(i, opt)| {
 				let mut radio_opt = opt.manual_clone();
@@ -87,16 +85,16 @@ impl RadioGroup {
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					parent_ptr: NonNull::from(parent_base_ref),
+					parent_ptr: NonNull::from(parent.as_ref()),
 					radios,
-					events: RadioGroupEvents::new(parent_base_ref, ctrl_ids),
+					events: RadioGroupEvents::new(parent, ctrl_ids),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.as_ref().privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(&opts_resz_s)?;
 			Ok(())
 		});
@@ -124,8 +122,6 @@ impl RadioGroup {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
 
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
-
 		let radios = ctrls.iter()
 			.map(|(ctrl_id, _, _)| RadioButton::new_dlg(parent, *ctrl_id))
 			.collect::<Vec<_>>();
@@ -141,16 +137,16 @@ impl RadioGroup {
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					parent_ptr: NonNull::from(parent_base_ref),
+					parent_ptr: NonNull::from(parent.as_ref()),
 					radios,
-					events: RadioGroupEvents::new(parent_base_ref, ctrl_ids),
+					events: RadioGroupEvents::new(parent, ctrl_ids),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
+		parent.as_ref().privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(&opts_resz_s)?;
 			Ok(())
 		});

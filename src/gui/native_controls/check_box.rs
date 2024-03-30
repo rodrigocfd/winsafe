@@ -39,6 +39,12 @@ pub struct CheckBox(Pin<Arc<Obj>>);
 
 unsafe impl Send for CheckBox {}
 
+impl AsRef<BaseNativeControl> for CheckBox {
+	fn as_ref(&self) -> &BaseNativeControl {
+		&self.0.base
+	}
+}
+
 impl GuiWindow for CheckBox {
 	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
@@ -59,11 +65,7 @@ impl GuiChild for CheckBox {
 
 impl GuiChildFocus for CheckBox {}
 
-impl GuiNativeControl for CheckBox {
-	fn on_subclass(&self) -> &WindowEvents {
-		self.0.base.on_subclass()
-	}
-}
+impl GuiNativeControl for CheckBox {}
 
 impl GuiNativeControlEvents<ButtonEvents> for CheckBox {
 	fn on(&self) -> &ButtonEvents {
@@ -87,22 +89,21 @@ impl CheckBox {
 	/// dynamically create a `CheckBox` in an event closure.
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: CheckBoxOpts) -> Self {
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = auto_ctrl_id_if_zero(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: ButtonEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: ButtonEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.as_ref().privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(OptsResz::Wnd(&opts))?;
 			Ok(())
 		});
@@ -125,20 +126,18 @@ impl CheckBox {
 		resize_behavior: (Horz, Vert),
 	) -> Self
 	{
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
-
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: ButtonEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: ButtonEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
+		parent.as_ref().privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(OptsResz::Dlg(resize_behavior))?;
 			Ok(())
 		});

@@ -24,26 +24,24 @@ pub(in crate::gui) struct Base {
 	layout_arranger: LayoutArranger,
 }
 
+impl AsRef<Base> for Base {
+	fn as_ref(&self) -> &Base {
+		self
+	}
+}
+
 impl Base {
 	const WM_UI_THREAD: co::WM = unsafe { co::WM::from_raw(co::WM::APP.raw() + 0x3fff) };
 
-	pub(in crate::gui) unsafe fn from_guiparent<'a>(
-		p: &impl GuiParent,
-	) -> &'a Self
-	{
-		let ptr = p.as_base() as *mut Self;
-		ptr.as_ref().unwrap()
-	}
-
 	pub(in crate::gui) fn new(
 		is_dialog: bool,
-		parent: Option<&Base>,
+		parent: Option<&impl AsRef<Base>>,
 	) -> Self
 	{
 		let new_self = Self {
 			hwnd: HWND::NULL,
 			is_dialog,
-			parent_ptr: parent.map(|parent| NonNull::from(parent)),
+			parent_ptr: parent.map(|parent| NonNull::from(parent.as_ref())),
 			privileged_events: WindowEventsPriv::new(is_dialog),
 			user_events: WindowEventsAll::new(),
 			privileged_events_post: WindowEventsPriv::new(is_dialog),

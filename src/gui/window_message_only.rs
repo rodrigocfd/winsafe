@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::{*, privs::*};
 use crate::prelude::*;
 use crate::user::privs::*;
 
@@ -16,6 +16,12 @@ pub struct WindowMessageOnly(Pin<Arc<RawBase>>);
 
 unsafe impl Send for WindowMessageOnly {}
 
+impl AsRef<Base> for WindowMessageOnly {
+	fn as_ref(&self) -> &Base {
+		self.0.base()
+	}
+}
+
 impl GuiWindow for WindowMessageOnly {
 	fn hwnd(&self) -> &HWND {
 		self.0.base().hwnd()
@@ -26,27 +32,7 @@ impl GuiWindow for WindowMessageOnly {
 	}
 }
 
-impl GuiParent for WindowMessageOnly {
-	fn on(&self) -> &WindowEventsAll {
-		self.0.base().on()
-	}
-
-	unsafe fn as_base(&self) -> *mut std::ffi::c_void {
-		self.0.base() as *const _ as _
-	}
-
-	fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static,
-	{
-		self.0.base().spawn_new_thread(func)
-	}
-
-	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static
-	{
-		self.0.base().run_ui_thread(func)
-	}
-}
+impl GuiParent for WindowMessageOnly {}
 
 impl WindowMessageOnly {
 	/// Instantiates a new `WindowMessageOnly` object, to be created internally
@@ -54,13 +40,8 @@ impl WindowMessageOnly {
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: Option<&WindowMessageOnly>) -> Self {
-		let parent_base_ref = parent.map(|parent| {
-			let base_ptr = unsafe { parent.as_base() } as *mut Base;
-			unsafe { base_ptr.as_ref() }.unwrap()
-		});
-
 		let new_self = Self(
-			Arc::pin(RawBase::new(parent_base_ref)),
+			Arc::pin(RawBase::new(parent)),
 		);
 		new_self.create();
 		new_self

@@ -25,6 +25,12 @@ pub struct Label(Pin<Arc<Obj>>);
 
 unsafe impl Send for Label {}
 
+impl AsRef<BaseNativeControl> for Label {
+	fn as_ref(&self) -> &BaseNativeControl {
+		&self.0.base
+	}
+}
+
 impl GuiWindow for Label {
 	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
@@ -43,11 +49,7 @@ impl GuiChild for Label {
 	}
 }
 
-impl GuiNativeControl for Label {
-	fn on_subclass(&self) -> &WindowEvents {
-		self.0.base.on_subclass()
-	}
-}
+impl GuiNativeControl for Label {}
 
 impl GuiNativeControlEvents<LabelEvents> for Label {
 	fn on(&self) -> &LabelEvents {
@@ -71,22 +73,21 @@ impl Label {
 	/// dynamically create a `Label` in an event closure.
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: LabelOpts) -> Self {
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = auto_ctrl_id_if_zero(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: LabelEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: LabelEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.as_ref().privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(OptsResz::Wnd(&opts))?;
 			Ok(())
 		});
@@ -109,20 +110,18 @@ impl Label {
 		resize_behavior: (Horz, Vert)
 	) -> Self
 	{
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
-
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: LabelEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: LabelEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
+		parent.as_ref().privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(OptsResz::Dlg(resize_behavior))?;
 			Ok(())
 		});

@@ -15,9 +15,9 @@ pub(in crate::gui) struct BaseEventsProxy {
 }
 
 impl BaseEventsProxy {
-	pub(in crate::gui) fn new(parent_base: &Base, ctrl_id: u16) -> Self {
+	pub(in crate::gui) fn new(parent: &impl AsRef<Base>, ctrl_id: u16) -> Self {
 		Self {
-			parent_ptr: NonNull::from(parent_base),
+			parent_ptr: NonNull::from(parent.as_ref()),
 			ctrl_id,
 		}
 	}

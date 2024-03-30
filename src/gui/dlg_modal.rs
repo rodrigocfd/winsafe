@@ -19,7 +19,11 @@ struct Obj { // actual fields of DlgModal
 pub(in crate::gui) struct DlgModal(Pin<Arc<Obj>>);
 
 impl DlgModal {
-	pub(in crate::gui) fn new(parent: &Base, dialog_id: u16) -> Self {
+	pub(in crate::gui) fn new(
+		parent: &impl AsRef<Base>,
+		dialog_id: u16,
+	) -> Self
+	{
 		let new_self = Self(
 			Arc::pin(
 				Obj {

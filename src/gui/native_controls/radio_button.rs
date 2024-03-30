@@ -28,6 +28,12 @@ pub struct RadioButton(Pin<Arc<Obj>>);
 
 unsafe impl Send for RadioButton {}
 
+impl AsRef<BaseNativeControl> for RadioButton {
+	fn as_ref(&self) -> &BaseNativeControl {
+		&self.0.base
+	}
+}
+
 impl GuiWindow for RadioButton {
 	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
@@ -48,11 +54,7 @@ impl GuiChild for RadioButton {
 
 impl GuiChildFocus for RadioButton {}
 
-impl GuiNativeControl for RadioButton {
-	fn on_subclass(&self) -> &WindowEvents {
-		self.0.base.on_subclass()
-	}
-}
+impl GuiNativeControl for RadioButton {}
 
 impl GuiNativeControlEvents<ButtonEvents> for RadioButton {
 	fn on(&self) -> &ButtonEvents {
@@ -71,15 +73,14 @@ impl RadioButton {
 		opts: RadioButtonOpts,
 	) -> Self
 	{
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = auto_ctrl_id_if_zero(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: ButtonEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: ButtonEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
@@ -91,13 +92,11 @@ impl RadioButton {
 		ctrl_id: u16,
 	) -> Self
 	{
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
-
 		Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: ButtonEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: ButtonEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),

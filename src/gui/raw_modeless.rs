@@ -20,7 +20,11 @@ struct Obj { // actual fields of RawModeless
 pub(in crate::gui) struct RawModeless(Pin<Arc<Obj>>);
 
 impl RawModeless {
-	pub(in crate::gui) fn new(parent: &Base, opts: WindowModelessOpts) -> Self {
+	pub(in crate::gui) fn new(
+		parent: &impl AsRef<Base>,
+		opts: WindowModelessOpts,
+	) -> Self
+	{
 		let new_self = Self(
 			Arc::pin(
 				Obj {
@@ -30,7 +34,7 @@ impl RawModeless {
 				},
 			),
 		);
-		new_self.default_message_handlers(parent);
+		new_self.default_message_handlers(parent.as_ref());
 		new_self
 	}
 

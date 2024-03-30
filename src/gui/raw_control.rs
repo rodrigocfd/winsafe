@@ -21,7 +21,11 @@ struct Obj { // actual fields of RawControl
 pub(in crate::gui) struct RawControl(Pin<Arc<Obj>>);
 
 impl RawControl {
-	pub(in crate::gui) fn new(parent: &Base, opts: WindowControlOpts) -> Self {
+	pub(in crate::gui) fn new(
+		parent: &impl AsRef<Base>,
+		opts: WindowControlOpts,
+	) -> Self
+	{
 		let resize_behavior = opts.resize_behavior;
 		let opts = auto_ctrl_id_if_zero(opts);
 		let new_self = Self(
@@ -33,7 +37,7 @@ impl RawControl {
 				},
 			),
 		);
-		new_self.default_message_handlers(parent, resize_behavior);
+		new_self.default_message_handlers(parent.as_ref(), resize_behavior);
 		new_self
 	}
 

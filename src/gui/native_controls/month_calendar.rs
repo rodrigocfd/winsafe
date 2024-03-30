@@ -25,6 +25,12 @@ pub struct MonthCalendar(Pin<Arc<Obj>>);
 
 unsafe impl Send for MonthCalendar {}
 
+impl AsRef<BaseNativeControl> for MonthCalendar {
+	fn as_ref(&self) -> &BaseNativeControl {
+		&self.0.base
+	}
+}
+
 impl GuiWindow for MonthCalendar {
 	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
@@ -43,11 +49,7 @@ impl GuiChild for MonthCalendar {
 
 impl GuiChildFocus for MonthCalendar {}
 
-impl GuiNativeControl for MonthCalendar {
-	fn on_subclass(&self) -> &WindowEvents {
-		self.0.base.on_subclass()
-	}
-}
+impl GuiNativeControl for MonthCalendar {}
 
 impl GuiNativeControlEvents<MonthCalendarEvents> for MonthCalendar {
 	fn on(&self) -> &MonthCalendarEvents {
@@ -71,22 +73,21 @@ impl MonthCalendar {
 	/// dynamically create a `MonthCalendar` in an event closure.
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: MonthCalendarOpts) -> Self {
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = auto_ctrl_id_if_zero(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: MonthCalendarEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: MonthCalendarEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.as_ref().privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(OptsResz::Wnd(&opts))?;
 			Ok(())
 		});
@@ -109,20 +110,18 @@ impl MonthCalendar {
 		resize_behavior: (Horz, Vert),
 	) -> Self
 	{
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
-
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: MonthCalendarEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: MonthCalendarEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
+		parent.as_ref().privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(OptsResz::Dlg(resize_behavior))?;
 			Ok(())
 		});

@@ -14,8 +14,8 @@ use crate::gui::privs::*;
 pub struct TreeViewEvents(BaseEventsProxy);
 
 impl TreeViewEvents {
-	pub(in crate::gui) fn new(parent_base: &Base, ctrl_id: u16) -> Self {
-		Self(BaseEventsProxy::new(parent_base, ctrl_id))
+	pub(in crate::gui) fn new(parent: &impl AsRef<Base>, ctrl_id: u16) -> Self {
+		Self(BaseEventsProxy::new(parent, ctrl_id))
 	}
 
 	pub_fn_nfy_withparm_noret! { tvn_delete_item, co::TVN::DELETEITEM, NMTREEVIEW;

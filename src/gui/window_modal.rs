@@ -1,7 +1,7 @@
 use std::any::Any;
 
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::{*, privs::*};
 use crate::prelude::*;
 
 /// Keeps a raw or dialog window.
@@ -17,9 +17,18 @@ pub struct WindowModal(RawDlg);
 
 unsafe impl Send for WindowModal {}
 
+impl AsRef<Base> for WindowModal {
+	fn as_ref(&self) -> &Base {
+		match &self.0 {
+			RawDlg::Raw(r) => r.base(),
+			RawDlg::Dlg(d) => d.base(),
+		}
+	}
+}
+
 impl GuiWindow for WindowModal {
 	fn hwnd(&self) -> &HWND {
-		self.base().hwnd()
+		self.as_ref().hwnd()
 	}
 
 	fn as_any(&self) -> &dyn Any {
@@ -29,37 +38,16 @@ impl GuiWindow for WindowModal {
 
 impl GuiWindowText for WindowModal {}
 
-impl GuiParent for WindowModal {
-	fn on(&self) -> &WindowEventsAll {
-		self.base().on()
-	}
-
-	unsafe fn as_base(&self) -> *mut std::ffi::c_void {
-		self.base() as *const _ as _
-	}
-
-	fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static,
-	{
-		self.base().spawn_new_thread(func)
-	}
-
-	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static
-	{
-		self.base().run_ui_thread(func)
-	}
-}
+impl GuiParent for WindowModal {}
 
 impl WindowModal {
 	/// Instantiates a new `WindowModal` object, to be created internally with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: WindowModalOpts) -> Self {
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		Self(
 			RawDlg::Raw(
-				RawModal::new(parent_base_ref, opts),
+				RawModal::new(parent, opts),
 			),
 		)
 	}
@@ -69,10 +57,9 @@ impl WindowModal {
 	/// [`HINSTANCE::DialogBoxParam`](crate::prelude::user_Hinstance::DialogBoxParam).
 	#[must_use]
 	pub fn new_dlg(parent: &impl GuiParent, dialog_id: u16) -> Self {
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		Self(
 			RawDlg::Dlg(
-				DlgModal::new(parent_base_ref, dialog_id),
+				DlgModal::new(parent, dialog_id),
 			),
 		)
 	}
@@ -99,13 +86,6 @@ impl WindowModal {
 		match &self.0 {
 			RawDlg::Raw(r) => r.show_modal(),
 			RawDlg::Dlg(d) => d.show_modal(),
-		}
-	}
-
-	fn base(&self) -> &Base {
-		match &self.0 {
-			RawDlg::Raw(r) => r.base(),
-			RawDlg::Dlg(d) => d.base(),
 		}
 	}
 }

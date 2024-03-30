@@ -1,7 +1,7 @@
 use std::any::Any;
 
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::{*, privs::*};
 use crate::prelude::*;
 
 /// Keeps a raw or dialog window.
@@ -17,9 +17,18 @@ pub struct WindowControl(RawDlg);
 
 unsafe impl Send for WindowControl {}
 
+impl AsRef<Base> for WindowControl {
+	fn as_ref(&self) -> &Base {
+		match &self.0 {
+			RawDlg::Raw(r) => r.base(),
+			RawDlg::Dlg(d) => d.base(),
+		}
+	}
+}
+
 impl GuiWindow for WindowControl {
 	fn hwnd(&self) -> &HWND {
-		self.base().hwnd()
+		self.as_ref().hwnd()
 	}
 
 	fn as_any(&self) -> &dyn Any {
@@ -27,27 +36,7 @@ impl GuiWindow for WindowControl {
 	}
 }
 
-impl GuiParent for WindowControl {
-	fn on(&self) -> &WindowEventsAll {
-		self.base().on()
-	}
-
-	unsafe fn as_base(&self) -> *mut std::ffi::c_void {
-		self.base() as *const _ as _
-	}
-
-	fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static,
-	{
-		self.base().spawn_new_thread(func)
-	}
-
-	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static
-	{
-		self.base().run_ui_thread(func)
-	}
-}
+impl GuiParent for WindowControl {}
 
 impl GuiChild for WindowControl {
 	fn ctrl_id(&self) -> u16 {
@@ -72,10 +61,9 @@ impl WindowControl {
 			panic!("Cannot create a custom child control after the parent window is created.");
 		}
 
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		Self(
 			RawDlg::Raw(
-				RawControl::new(parent_base_ref, opts),
+				RawControl::new(parent, opts),
 			),
 		)
 	}
@@ -105,11 +93,10 @@ impl WindowControl {
 			panic!("Cannot create a custom child control after the parent window is created.");
 		}
 
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		Self(
 			RawDlg::Dlg(
 				DlgControl::new(
-					parent_base_ref,
+					parent,
 					dialog_id,
 					position,
 					resize_behavior,
@@ -117,12 +104,5 @@ impl WindowControl {
 				),
 			),
 		)
-	}
-
-	fn base(&self) -> &Base {
-		match &self.0 {
-			RawDlg::Raw(r) => r.base(),
-			RawDlg::Dlg(d) => d.base(),
-		}
 	}
 }

@@ -49,6 +49,12 @@ pub struct StatusBar(Pin<Arc<Obj>>);
 
 unsafe impl Send for StatusBar {}
 
+impl AsRef<BaseNativeControl> for StatusBar {
+	fn as_ref(&self) -> &BaseNativeControl {
+		&self.0.base
+	}
+}
+
 impl GuiWindow for StatusBar {
 	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
@@ -65,11 +71,7 @@ impl GuiChild for StatusBar {
 	}
 }
 
-impl GuiNativeControl for StatusBar {
-	fn on_subclass(&self) -> &WindowEvents {
-		self.0.base.on_subclass()
-	}
-}
+impl GuiNativeControl for StatusBar {}
 
 impl GuiNativeControlEvents<StatusBarEvents> for StatusBar {
 	fn on(&self) -> &StatusBarEvents {
@@ -111,14 +113,13 @@ impl StatusBar {
 	/// ```
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, parts: &[SbPart]) -> Self {
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		let ctrl_id = next_auto_ctrl_id();
 
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: StatusBarEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: StatusBarEvents::new(parent, ctrl_id),
 					parts_info: UnsafeCell::new(parts.to_vec()),
 					right_edges: UnsafeCell::new(vec![0; parts.len()]),
 					_pin: PhantomPinned,
@@ -127,13 +128,13 @@ impl StatusBar {
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.as_ref().privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.create()?;
 			Ok(())
 		});
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(co::WM::SIZE, move |_, p| {
+		parent.as_ref().privileged_on().wm(co::WM::SIZE, move |_, p| {
 			let mut p = wm::Size::from_generic_wm(p);
 			self2.resize(&mut p);
 			Ok(())

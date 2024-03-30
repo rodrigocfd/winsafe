@@ -2,7 +2,7 @@ use std::any::Any;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::{*, privs::*};
 use crate::kernel::ffi_types::*;
 use crate::prelude::*;
 
@@ -20,9 +20,18 @@ pub struct WindowMain(RawDlg);
 
 unsafe impl Send for WindowMain {}
 
+impl AsRef<Base> for WindowMain {
+	fn as_ref(&self) -> &Base {
+		match &self.0 {
+			RawDlg::Raw(r) => r.base(),
+			RawDlg::Dlg(d) => d.base(),
+		}
+	}
+}
+
 impl GuiWindow for WindowMain {
 	fn hwnd(&self) -> &HWND {
-		self.base().hwnd()
+		self.as_ref().hwnd()
 	}
 
 	fn as_any(&self) -> &dyn Any {
@@ -32,27 +41,7 @@ impl GuiWindow for WindowMain {
 
 impl GuiWindowText for WindowMain {}
 
-impl GuiParent for WindowMain {
-	fn on(&self) -> &WindowEventsAll {
-		self.base().on()
-	}
-
-	unsafe fn as_base(&self) -> *mut std::ffi::c_void {
-		self.base() as *const _ as _
-	}
-
-	fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static,
-	{
-		self.base().spawn_new_thread(func)
-	}
-
-	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static
-	{
-		self.base().run_ui_thread(func)
-	}
-}
+impl GuiParent for WindowMain {}
 
 impl WindowMain {
 	/// Instantiates a new `WindowMain` object, to be created internally with
@@ -123,12 +112,5 @@ impl WindowMain {
 
 		delete_ui_font(); // cleanup
 		res
-	}
-
-	fn base(&self) -> &Base {
-		match &self.0 {
-			RawDlg::Raw(r) => r.base(),
-			RawDlg::Dlg(d) => d.base(),
-		}
 	}
 }

@@ -42,6 +42,12 @@ impl<T> Clone for ListView<T> { // https://stackoverflow.com/q/39415052/6923555
 
 unsafe impl<T> Send for ListView<T> {}
 
+impl<T> AsRef<BaseNativeControl> for ListView<T> {
+	fn as_ref(&self) -> &BaseNativeControl {
+		&self.0.base
+	}
+}
+
 impl<T> GuiWindow for ListView<T> {
 	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
@@ -60,11 +66,7 @@ impl<T> GuiChild for ListView<T> {
 
 impl<T> GuiChildFocus for ListView<T> {}
 
-impl<T> GuiNativeControl for ListView<T> {
-	fn on_subclass(&self) -> &WindowEvents {
-		self.0.base.on_subclass()
-	}
-}
+impl<T> GuiNativeControl for ListView<T> {}
 
 impl<T> GuiNativeControlEvents<ListViewEvents> for ListView<T> {
 	fn on(&self) -> &ListViewEvents {
@@ -88,7 +90,6 @@ impl<T> ListView<T> {
 	/// dynamically create a `ListView` in an event closure.
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ListViewOpts) -> Self {
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = auto_ctrl_id_if_zero(opts);
 		let ctrl_id = opts.ctrl_id;
 		let context_menu = opts.context_menu.as_ref().map(|h| unsafe { h.raw_copy() });
@@ -96,8 +97,8 @@ impl<T> ListView<T> {
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: ListViewEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: ListViewEvents::new(parent, ctrl_id),
 					context_menu,
 					_pin: PhantomPinned,
 					_data: PhantomData,
@@ -106,12 +107,12 @@ impl<T> ListView<T> {
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.as_ref().privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(OptsResz::Wnd(&opts))?;
 			Ok(())
 		});
 
-		new_self.default_message_handlers(parent_base_ref, ctrl_id);
+		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
 		new_self
 	}
 
@@ -133,13 +134,11 @@ impl<T> ListView<T> {
 		context_menu_id: Option<u16>,
 	) -> Self
 	{
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
-
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: ListViewEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: ListViewEvents::new(parent, ctrl_id),
 					context_menu: context_menu_id.map(
 						|id| HINSTANCE::NULL.LoadMenu(IdStr::Id(id)).unwrap()
 							.GetSubMenu(0).unwrap(), // usually this is how it's set in the resources
@@ -151,12 +150,12 @@ impl<T> ListView<T> {
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
+		parent.as_ref().privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(OptsResz::Dlg(resize_behavior))?;
 			Ok(())
 		});
 
-		new_self.default_message_handlers(parent_base_ref, ctrl_id);
+		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
 		new_self
 	}
 

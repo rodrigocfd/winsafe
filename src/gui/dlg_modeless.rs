@@ -21,7 +21,7 @@ pub(in crate::gui) struct DlgModeless(Pin<Arc<Obj>>);
 
 impl DlgModeless {
 	pub(in crate::gui) fn new(
-		parent: &Base,
+		parent: &impl AsRef<Base>,
 		dialog_id: u16,
 		position: POINT,
 	) -> Self
@@ -35,7 +35,7 @@ impl DlgModeless {
 				},
 			),
 		);
-		new_self.default_message_handlers(parent);
+		new_self.default_message_handlers(parent.as_ref());
 		new_self
 	}
 

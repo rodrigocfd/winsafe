@@ -25,6 +25,12 @@ pub struct Edit(Pin<Arc<Obj>>);
 
 unsafe impl Send for Edit {}
 
+impl AsRef<BaseNativeControl> for Edit {
+	fn as_ref(&self) -> &BaseNativeControl {
+		&self.0.base
+	}
+}
+
 impl GuiWindow for Edit {
 	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
@@ -45,11 +51,7 @@ impl GuiChild for Edit {
 
 impl GuiChildFocus for Edit {}
 
-impl GuiNativeControl for Edit {
-	fn on_subclass(&self) -> &WindowEvents {
-		self.0.base.on_subclass()
-	}
-}
+impl GuiNativeControl for Edit {}
 
 impl GuiNativeControlEvents<EditEvents> for Edit {
 	fn on(&self) -> &EditEvents {
@@ -91,22 +93,21 @@ impl Edit {
 	/// ```
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: EditOpts) -> Self {
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = auto_ctrl_id_if_zero(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: EditEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: EditEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.as_ref().privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(OptsResz::Wnd(&opts))?;
 			Ok(())
 		});
@@ -128,20 +129,18 @@ impl Edit {
 		resize_behavior: (Horz, Vert),
 	) -> Self
 	{
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
-
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: EditEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: EditEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
+		parent.as_ref().privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(OptsResz::Dlg(resize_behavior))?;
 			Ok(())
 		});

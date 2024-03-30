@@ -1,7 +1,7 @@
 use std::any::Any;
 
 use crate::decl::*;
-use crate::gui::{*, events::*};
+use crate::gui::{*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -64,7 +64,8 @@ pub trait GuiWindowText: GuiWindow {
 }
 
 /// Any window which can host child controls.
-pub trait GuiParent: GuiWindow {
+#[allow(private_bounds)]
+pub trait GuiParent: GuiWindow + AsRef<Base> {
 	/// Exposes methods to handle the basic window messages, plus timer and
 	/// native control notifications.
 	///
@@ -73,16 +74,9 @@ pub trait GuiParent: GuiWindow {
 	/// Panics if the window is already created. Events must be set before
 	/// window creation.
 	#[must_use]
-	fn on(&self) -> &WindowEventsAll;
-
-	/// Returns a pointer to the inner base window structure, declared
-	/// internally in the library.
-	///
-	/// # Safety
-	///
-	/// **Do not use this method** – it's for internal use of the library only.
-	#[must_use]
-	unsafe fn as_base(&self) -> *mut std::ffi::c_void;
+	fn on(&self) -> &WindowEventsAll {
+		self.as_ref().on()
+	}
 
 	/// This method calls [`std::thread::spawn`], but it allows the returning of
 	/// an error value. This error value will be forwarded to the original UI
@@ -128,7 +122,10 @@ pub trait GuiParent: GuiWindow {
 	/// });
 	/// ```
 	fn spawn_new_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static;
+		where F: FnOnce() -> AnyResult<()> + Send + 'static
+	{
+		self.as_ref().spawn_new_thread(func)
+	}
 
 	/// Runs a closure synchronously in the window's original UI thread,
 	/// allowing UI updates without the risk of a deadlock.
@@ -207,7 +204,10 @@ pub trait GuiParent: GuiWindow {
 	/// });
 	/// ```
 	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static;
+		where F: FnOnce() -> AnyResult<()> + Send + 'static
+	{
+		self.as_ref().run_ui_thread(func)
+	}
 }
 
 /// Any child window.
@@ -244,7 +244,8 @@ pub trait GuiChildFocus: GuiChild {
 }
 
 /// Any native control, which can be subclassed.
-pub trait GuiNativeControl: GuiChild {
+#[allow(private_bounds)]
+pub trait GuiNativeControl: GuiChild + AsRef<BaseNativeControl> {
 	/// Exposes the subclass events. If at least one event exists, the control
 	/// will be
 	/// [subclassed](https://learn.microsoft.com/en-us/windows/win32/controls/subclassing-overview).
@@ -256,7 +257,9 @@ pub trait GuiNativeControl: GuiChild {
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
 	#[must_use]
-	fn on_subclass(&self) -> &WindowEvents;
+	fn on_subclass(&self) -> &WindowEvents {
+		self.as_ref().on_subclass()
+	}
 }
 
 /// Events of a native control.

@@ -110,7 +110,7 @@ impl Drop for RawBase {
 }
 
 impl RawBase {
-	pub(in crate::gui) fn new(parent: Option<&Base>) -> Self {
+	pub(in crate::gui) fn new(parent: Option<&impl AsRef<Base>>) -> Self {
 		Self { base: Base::new(false, parent) }
 	}
 

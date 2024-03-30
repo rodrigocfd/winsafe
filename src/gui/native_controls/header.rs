@@ -36,6 +36,12 @@ pub struct Header(Pin<Arc<Obj>>);
 
 unsafe impl Send for Header {}
 
+impl AsRef<BaseNativeControl> for Header {
+	fn as_ref(&self) -> &BaseNativeControl {
+		&self.0.base
+	}
+}
+
 impl GuiWindow for Header {
 	fn hwnd(&self) -> &HWND {
 		self.0.base.hwnd()
@@ -54,11 +60,7 @@ impl GuiChild for Header {
 
 impl GuiChildFocus for Header {}
 
-impl GuiNativeControl for Header {
-	fn on_subclass(&self) -> &WindowEvents {
-		self.0.base.on_subclass()
-	}
-}
+impl GuiNativeControl for Header {}
 
 impl GuiNativeControlEvents<HeaderEvents> for Header {
 	fn on(&self) -> &HeaderEvents {
@@ -82,22 +84,21 @@ impl Header {
 	/// dynamically create a `Header` in an event closure.
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: HeaderOpts) -> Self {
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
 		let opts = auto_ctrl_id_if_zero(opts);
 		let ctrl_id = opts.ctrl_id;
 
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: HeaderEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: HeaderEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.as_ref().privileged_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(OptsReszLv::Wnd(&opts))?;
 			Ok(())
 		});
@@ -120,20 +121,18 @@ impl Header {
 		resize_behavior: (Horz, Vert),
 	) -> Self
 	{
-		let parent_base_ref = unsafe { Base::from_guiparent(parent) };
-
 		let new_self = Self(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: HeaderEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: HeaderEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
+		parent.as_ref().privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(OptsReszLv::Dlg(resize_behavior))?;
 			Ok(())
 		});
