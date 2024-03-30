@@ -100,30 +100,10 @@
 <a href="#98" id="98">98</a>
 <a href="#99" id="99">99</a>
 <a href="#100" id="100">100</a>
-<a href="#101" id="101">101</a>
-<a href="#102" id="102">102</a>
-<a href="#103" id="103">103</a>
-<a href="#104" id="104">104</a>
-<a href="#105" id="105">105</a>
-<a href="#106" id="106">106</a>
-<a href="#107" id="107">107</a>
-<a href="#108" id="108">108</a>
-<a href="#109" id="109">109</a>
-<a href="#110" id="110">110</a>
-<a href="#111" id="111">111</a>
-<a href="#112" id="112">112</a>
-<a href="#113" id="113">113</a>
-<a href="#114" id="114">114</a>
-<a href="#115" id="115">115</a>
-<a href="#116" id="116">116</a>
-<a href="#117" id="117">117</a>
-<a href="#118" id="118">118</a>
-<a href="#119" id="119">119</a>
-<a href="#120" id="120">120</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
+<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// Keeps a raw or dialog window.
@@ -139,9 +119,18 @@
 
 <span class="kw">unsafe impl </span>Send <span class="kw">for </span>WindowModeless {}
 
+<span class="kw">impl </span>AsRef&lt;Base&gt; <span class="kw">for </span>WindowModeless {
+	<span class="kw">fn </span>as_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Base {
+		<span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span>{
+			RawDlg::Raw(r) =&gt; r.base(),
+			RawDlg::Dlg(d) =&gt; d.base(),
+		}
+	}
+}
+
 <span class="kw">impl </span>GuiWindow <span class="kw">for </span>WindowModeless {
 	<span class="kw">fn </span>hwnd(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HWND {
-		<span class="self">self</span>.base().hwnd()
+		<span class="self">self</span>.as_ref().hwnd()
 	}
 
 	<span class="kw">fn </span>as_any(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span><span class="kw">dyn </span>Any {
@@ -151,29 +140,9 @@
 
 <span class="kw">impl </span>GuiWindowText <span class="kw">for </span>WindowModeless {}
 
-<span class="kw">impl </span>GuiParent <span class="kw">for </span>WindowModeless {
-	<span class="kw">fn </span>on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsAll {
-		<span class="self">self</span>.base().on()
-	}
+<span class="kw">impl </span>GuiParent <span class="kw">for </span>WindowModeless {}
 
-	<span class="kw">unsafe fn </span>as_base(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut </span>std::ffi::c_void {
-		<span class="self">self</span>.base() <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _
-	</span>}
-}
-
-<span class="kw">impl </span>GuiThread <span class="kw">for </span>WindowModeless {
-	<span class="kw">fn </span>spawn_new_thread&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static</span>,
-	{
-		<span class="self">self</span>.base().spawn_new_thread(func)
-	}
-
-	<span class="kw">fn </span>run_ui_thread&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static
-	</span>{
-		<span class="self">self</span>.base().run_ui_thread(func)
-	}
-}
+<span class="kw">impl </span>GuiParentPopup <span class="kw">for </span>WindowModeless {}
 
 <span class="kw">impl </span>WindowModeless {
 	<span class="doccomment">/// Instantiates a new `WindowModeless` object, to be created internally
@@ -190,10 +159,9 @@
 			<span class="macro">panic!</span>(<span class="string">"Cannot create a modeless window after the parent window is created."</span>);
 		}
 
-		<span class="kw">let </span>parent_base_ref = <span class="kw">unsafe </span>{ Base::from_guiparent(parent) };
 		<span class="self">Self</span>(
 			RawDlg::Raw(
-				RawModeless::new(parent_base_ref, opts),
+				RawModeless::new(parent, opts),
 			),
 		)
 	}
@@ -221,23 +189,15 @@
 			<span class="macro">panic!</span>(<span class="string">"Cannot create a modeless window after the parent window is created."</span>);
 		}
 
-		<span class="kw">let </span>parent_base_ref = <span class="kw">unsafe </span>{ Base::from_guiparent(parent) };
 		<span class="self">Self</span>(
 			RawDlg::Dlg(
 				DlgModeless::new(
-					parent_base_ref,
+					parent,
 					dialog_id,
 					position,
 				),
 			),
 		)
-	}
-
-	<span class="kw">fn </span>base(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Base {
-		<span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span>{
-			RawDlg::Raw(r) =&gt; r.base(),
-			RawDlg::Dlg(d) =&gt; d.base(),
-		}
 	}
 }
 </code></pre></div></section></main></body></html>

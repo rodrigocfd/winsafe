@@ -263,6 +263,22 @@
 <a href="#261" id="261">261</a>
 <a href="#262" id="262">262</a>
 <a href="#263" id="263">263</a>
+<a href="#264" id="264">264</a>
+<a href="#265" id="265">265</a>
+<a href="#266" id="266">266</a>
+<a href="#267" id="267">267</a>
+<a href="#268" id="268">268</a>
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::UnsafeCell;
 <span class="kw">use </span>std::rc::Rc;
 
@@ -315,18 +331,26 @@
 		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.tmrs.get() }.push(timer_id, Box::new(func));
 	}
 
-	<span class="kw">fn </span>wm_command&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, code: <span class="kw">impl </span>Into&lt;co::CMD&gt;, ctrl_id: u16, func: F)
+	<span class="kw">fn </span>wm_command&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
+		code: <span class="kw">impl </span>Into&lt;co::CMD&gt;,
+		ctrl_id: <span class="kw">impl </span>Into&lt;u16&gt;,
+		func: F,
+	)
 		<span class="kw">where </span>F: Fn() -&gt; AnyResult&lt;()&gt; + <span class="lifetime">'static</span>,
 	{
 		<span class="kw">let </span>code: co::CMD = code.into();
-		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.cmds.get() }.push((code, ctrl_id), Box::new(func));
+		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.cmds.get() }.push((code, ctrl_id.into()), Box::new(func));
 	}
 
-	<span class="kw">fn </span>wm_notify&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, id_from: u16, code: <span class="kw">impl </span>Into&lt;co::NM&gt;, func: F)
+	<span class="kw">fn </span>wm_notify&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
+		id_from: <span class="kw">impl </span>Into&lt;u16&gt;,
+		code: <span class="kw">impl </span>Into&lt;co::NM&gt;,
+		func: F,
+	)
 		<span class="kw">where </span>F: Fn(wm::Notify) -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;isize&gt;&gt; + <span class="lifetime">'static</span>,
 	{
 		<span class="kw">let </span>code: co::NM = code.into();
-		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.nfys.get() }.push((id_from, code), Box::new(func));
+		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.nfys.get() }.push((id_from.into(), code), Box::new(func));
 	}
 }
 
@@ -491,7 +515,11 @@
 	///     },
 	/// );
 	/// ```
-	</span><span class="kw">fn </span>wm_command&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, code: <span class="kw">impl </span>Into&lt;co::CMD&gt;, ctrl_id: u16, func: F)
+	</span><span class="kw">fn </span>wm_command&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
+		code: <span class="kw">impl </span>Into&lt;co::CMD&gt;,
+		ctrl_id: <span class="kw">impl </span>Into&lt;u16&gt;,
+		func: F,
+	)
 		<span class="kw">where </span>F: Fn() -&gt; AnyResult&lt;()&gt; + <span class="lifetime">'static</span>;
 
 	<span class="doccomment">/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
@@ -500,7 +528,7 @@
 	///
 	/// Ideal to be used with menu commands whose IDs are shared with
 	/// accelerators.
-	</span><span class="kw">fn </span>wm_command_accel_menu&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, ctrl_id: u16, func: F)
+	</span><span class="kw">fn </span>wm_command_accel_menu&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, ctrl_id: <span class="kw">impl </span>Into&lt;u16&gt; + Copy, func: F)
 		<span class="kw">where </span>F: Fn() -&gt; AnyResult&lt;()&gt; + <span class="lifetime">'static</span>,
 	{
 		<span class="kw">let </span>shared_func = Rc::new(func);
@@ -523,7 +551,11 @@
 	/// specific notifications, which will give you the correct notification
 	/// struct. This generic method should be used only when you have a custom,
 	/// non-standard window notification.
-	</span><span class="kw">fn </span>wm_notify&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, id_from: u16, code: <span class="kw">impl </span>Into&lt;co::NM&gt;, func: F)
+	</span><span class="kw">fn </span>wm_notify&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
+		id_from: <span class="kw">impl </span>Into&lt;u16&gt;,
+		code: <span class="kw">impl </span>Into&lt;co::NM&gt;,
+		func: F,
+	)
 		<span class="kw">where </span>F: Fn(wm::Notify) -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;isize&gt;&gt; + <span class="lifetime">'static</span>;
 }
 </code></pre></div></section></main></body></html>

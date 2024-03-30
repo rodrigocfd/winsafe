@@ -162,12 +162,12 @@
 
 <span class="kw">impl </span>RadioGroupEvents {
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
-		parent_base: <span class="kw-2">&amp;</span>Base,
+		parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;,
 		ctrl_ids: Vec&lt;u16&gt;,
 	) -&gt; <span class="self">Self
 	</span>{
 		<span class="self">Self </span>{
-			parent_ptr: NonNull::from(parent_base),
+			parent_ptr: NonNull::from(parent.as_ref()),
 			ctrl_ids,
 		}
 	}
@@ -208,7 +208,7 @@
 		<span class="kw">let </span>shared_func = Rc::new(func);
 
 		<span class="kw">for </span>ctrl_id <span class="kw">in </span><span class="self">self</span>.ctrl_ids.iter() {
-			<span class="self">self</span>.parent_user_events().wm_command(co::BN::CLICKED, <span class="kw-2">*</span>ctrl_id <span class="kw">as _</span>, {
+			<span class="self">self</span>.parent_user_events().wm_command(co::BN::CLICKED, <span class="kw-2">*</span>ctrl_id, {
 				<span class="kw">let </span>shared_func = shared_func.clone();
 				<span class="kw">move </span>|| shared_func()
 			});
@@ -229,7 +229,7 @@
 		<span class="kw">let </span>shared_func = Rc::new(func);
 
 		<span class="kw">for </span>ctrl_id <span class="kw">in </span><span class="self">self</span>.ctrl_ids.iter() {
-			<span class="self">self</span>.parent_user_events().wm_command(co::BN::DBLCLK, <span class="kw-2">*</span>ctrl_id <span class="kw">as _</span>, {
+			<span class="self">self</span>.parent_user_events().wm_command(co::BN::DBLCLK, <span class="kw-2">*</span>ctrl_id, {
 				<span class="kw">let </span>shared_func = shared_func.clone();
 				<span class="kw">move </span>|| shared_func()
 			});
@@ -248,7 +248,7 @@
 		<span class="kw">let </span>shared_func = Rc::new(func);
 
 		<span class="kw">for </span>ctrl_id <span class="kw">in </span><span class="self">self</span>.ctrl_ids.iter() {
-			<span class="self">self</span>.parent_user_events().wm_command(co::BN::KILLFOCUS, <span class="kw-2">*</span>ctrl_id <span class="kw">as _</span>, {
+			<span class="self">self</span>.parent_user_events().wm_command(co::BN::KILLFOCUS, <span class="kw-2">*</span>ctrl_id, {
 				<span class="kw">let </span>shared_func = shared_func.clone();
 				<span class="kw">move </span>|| shared_func()
 			});
@@ -267,7 +267,7 @@
 		<span class="kw">let </span>shared_func = Rc::new(func);
 
 		<span class="kw">for </span>ctrl_id <span class="kw">in </span><span class="self">self</span>.ctrl_ids.iter() {
-			<span class="self">self</span>.parent_user_events().wm_command(co::BN::SETFOCUS, <span class="kw-2">*</span>ctrl_id <span class="kw">as _</span>, {
+			<span class="self">self</span>.parent_user_events().wm_command(co::BN::SETFOCUS, <span class="kw-2">*</span>ctrl_id, {
 				<span class="kw">let </span>shared_func = shared_func.clone();
 				<span class="kw">move </span>|| shared_func()
 			});

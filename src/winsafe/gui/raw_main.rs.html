@@ -260,7 +260,7 @@
 		<span class="kw">let </span>new_self = <span class="self">Self</span>(
 			Arc::pin(
 				Obj {
-					raw_base: RawBase::new(<span class="prelude-val">None</span>),
+					raw_base: RawBase::new(<span class="prelude-val">None</span>::&lt;<span class="kw-2">&amp;</span>WindowMain&gt;),
 					opts,
 					hchild_prev_focus: UnsafeCell::new(HWND::NULL),
 					_pin: PhantomPinned,

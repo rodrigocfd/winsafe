@@ -105,7 +105,7 @@
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::gui::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
@@ -132,7 +132,7 @@
 		<span class="kw">let </span>new_self = <span class="self">Self</span>(
 			Arc::pin(
 				Obj {
-					dlg_base: DlgBase::new(<span class="prelude-val">None</span>, dialog_id),
+					dlg_base: DlgBase::new(<span class="prelude-val">None</span>::&lt;<span class="kw-2">&amp;</span>WindowMain&gt;, dialog_id),
 					icon_id,
 					accel_table_id,
 					_pin: PhantomPinned,

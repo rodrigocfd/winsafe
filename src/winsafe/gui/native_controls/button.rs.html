@@ -281,7 +281,6 @@
 <a href="#279" id="279">279</a>
 <a href="#280" id="280">280</a>
 <a href="#281" id="281">281</a>
-<a href="#282" id="282">282</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -309,6 +308,12 @@
 
 <span class="kw">unsafe impl </span>Send <span class="kw">for </span>Button {}
 
+<span class="kw">impl </span>AsRef&lt;BaseNativeControl&gt; <span class="kw">for </span>Button {
+	<span class="kw">fn </span>as_ref(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>BaseNativeControl {
+		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.base
+	}
+}
+
 <span class="kw">impl </span>GuiWindow <span class="kw">for </span>Button {
 	<span class="kw">fn </span>hwnd(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HWND {
 		<span class="self">self</span>.<span class="number">0</span>.base.hwnd()
@@ -329,11 +334,7 @@
 
 <span class="kw">impl </span>GuiChildFocus <span class="kw">for </span>Button {}
 
-<span class="kw">impl </span>GuiNativeControl <span class="kw">for </span>Button {
-	<span class="kw">fn </span>on_subclass(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEvents {
-		<span class="self">self</span>.<span class="number">0</span>.base.on_subclass()
-	}
-}
+<span class="kw">impl </span>GuiNativeControl <span class="kw">for </span>Button {}
 
 <span class="kw">impl </span>GuiNativeControlEvents&lt;ButtonEvents&gt; <span class="kw">for </span>Button {
 	<span class="kw">fn </span>on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>ButtonEvents {
@@ -375,22 +376,21 @@
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>GuiParent, opts: ButtonOpts) -&gt; <span class="self">Self </span>{
-		<span class="kw">let </span>parent_base_ref = <span class="kw">unsafe </span>{ Base::from_guiparent(parent) };
 		<span class="kw">let </span>opts = auto_ctrl_id_if_zero(opts);
 		<span class="kw">let </span>ctrl_id = opts.ctrl_id;
 
 		<span class="kw">let </span>new_self = <span class="self">Self</span>(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: ButtonEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: ButtonEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		<span class="kw">let </span>self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_create_or_initdialog(<span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
+		parent.as_ref().privileged_on().wm_create_or_initdialog(<span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
  			self2.create(OptsResz::Wnd(<span class="kw-2">&amp;</span>opts))<span class="question-mark">?</span>;
 			<span class="prelude-val">Ok</span>(())
 		});
@@ -412,20 +412,18 @@
 		resize_behavior: (Horz, Vert),
 	) -&gt; <span class="self">Self
 	</span>{
-		<span class="kw">let </span>parent_base_ref = <span class="kw">unsafe </span>{ Base::from_guiparent(parent) };
-
 		<span class="kw">let </span>new_self = <span class="self">Self</span>(
 			Arc::pin(
 				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: ButtonEvents::new(parent_base_ref, ctrl_id),
+					base: BaseNativeControl::new(parent, ctrl_id),
+					events: ButtonEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
 		);
 
 		<span class="kw">let </span>self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm(co::WM::INITDIALOG, <span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
+		parent.as_ref().privileged_on().wm(co::WM::INITDIALOG, <span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
 			self2.create(OptsResz::Dlg(resize_behavior))<span class="question-mark">?</span>;
 			<span class="prelude-val">Ok</span>(())
 		});

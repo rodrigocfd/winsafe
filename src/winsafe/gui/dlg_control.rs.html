@@ -110,7 +110,7 @@
 
 <span class="kw">impl </span>DlgControl {
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
-		parent: <span class="kw-2">&amp;</span>Base,
+		parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;,
 		dialog_id: u16,
 		position: POINT,
 		resize_behavior: (Horz, Vert),
@@ -120,14 +120,14 @@
 		<span class="kw">let </span>new_self = <span class="self">Self</span>(
 			Arc::pin(
 				Obj {
-					dlg_base: DlgBase::new(<span class="prelude-val">Some</span>(parent), dialog_id),
+					dlg_base: DlgBase::new(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>parent), dialog_id),
 					position,
 					ctrl_id: ctrl_id.unwrap_or_else(|| next_auto_ctrl_id()),
 					_pin: PhantomPinned,
 				},
 			),
 		);
-		new_self.default_message_handlers(parent, resize_behavior);
+		new_self.default_message_handlers(parent.as_ref(), resize_behavior);
 		new_self
 	}
 

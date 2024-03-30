@@ -285,10 +285,18 @@
 <a href="#283" id="283">283</a>
 <a href="#284" id="284">284</a>
 <a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, events::<span class="kw-2">*</span>};
+<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
@@ -351,7 +359,8 @@
 }
 
 <span class="doccomment">/// Any window which can host child controls.
-</span><span class="kw">pub trait </span>GuiParent: GuiWindow {
+</span><span class="attr">#[allow(private_bounds)]
+</span><span class="kw">pub trait </span>GuiParent: GuiWindow + AsRef&lt;Base&gt; {
 	<span class="doccomment">/// Exposes methods to handle the basic window messages, plus timer and
 	/// native control notifications.
 	///
@@ -360,21 +369,10 @@
 	/// Panics if the window is already created. Events must be set before
 	/// window creation.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">fn </span>on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsAll;
+	</span><span class="kw">fn </span>on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsAll {
+		<span class="self">self</span>.as_ref().on()
+	}
 
-	<span class="doccomment">/// Returns a pointer to the inner base window structure, declared
-	/// internally in the library.
-	///
-	/// # Safety
-	///
-	/// **Do not use this method** – it's for internal use of the library only.
-	</span><span class="attr">#[must_use]
-	</span><span class="kw">unsafe fn </span>as_base(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut </span>std::ffi::c_void;
-}
-
-<span class="doccomment">/// Allows a window to spawn new threads which can return errors, and run
-/// closures in the original UI thread.
-</span><span class="kw">pub trait </span>GuiThread: GuiParent {
 	<span class="doccomment">/// This method calls [`std::thread::spawn`], but it allows the returning of
 	/// an error value. This error value will be forwarded to the original UI
 	/// thread, allowing it to be caught at
@@ -419,7 +417,10 @@
 	/// });
 	/// ```
 	</span><span class="kw">fn </span>spawn_new_thread&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static</span>;
+		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static
+	</span>{
+		<span class="self">self</span>.as_ref().spawn_new_thread(func)
+	}
 
 	<span class="doccomment">/// Runs a closure synchronously in the window's original UI thread,
 	/// allowing UI updates without the risk of a deadlock.
@@ -498,7 +499,19 @@
 	/// });
 	/// ```
 	</span><span class="kw">fn </span>run_ui_thread&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static</span>;
+		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static
+	</span>{
+		<span class="self">self</span>.as_ref().run_ui_thread(func)
+	}
+}
+
+<span class="doccomment">/// A closeable popup parent window.
+</span><span class="kw">pub trait </span>GuiParentPopup: GuiParent {
+	<span class="doccomment">/// Closes the window by posting a [`wm::close`](crate::msg::wm::Close)
+	/// message.
+	</span><span class="kw">fn </span>close(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+		<span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd().PostMessage(wm::Close {}).unwrap(); }
+	}
 }
 
 <span class="doccomment">/// Any child window.
@@ -535,7 +548,8 @@
 }
 
 <span class="doccomment">/// Any native control, which can be subclassed.
-</span><span class="kw">pub trait </span>GuiNativeControl: GuiChild {
+</span><span class="attr">#[allow(private_bounds)]
+</span><span class="kw">pub trait </span>GuiNativeControl: GuiChild + AsRef&lt;BaseNativeControl&gt; {
 	<span class="doccomment">/// Exposes the subclass events. If at least one event exists, the control
 	/// will be
 	/// [subclassed](https://learn.microsoft.com/en-us/windows/win32/controls/subclassing-overview).
@@ -547,7 +561,9 @@
 	/// Panics if the control or the parent window are already created. Events
 	/// must be set before control and parent window creation.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">fn </span>on_subclass(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEvents;
+	</span><span class="kw">fn </span>on_subclass(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEvents {
+		<span class="self">self</span>.as_ref().on_subclass()
+	}
 }
 
 <span class="doccomment">/// Events of a native control.

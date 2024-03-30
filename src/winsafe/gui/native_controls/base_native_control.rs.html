@@ -256,15 +256,15 @@
 </span>}
 
 <span class="kw">impl </span>BaseNativeControl {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span>Base, ctrl_id: u16) -&gt; <span class="self">Self </span>{
-		<span class="kw">if </span><span class="kw-2">*</span>parent.hwnd() != HWND::NULL {
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
+		<span class="kw">if </span><span class="kw-2">*</span>parent.as_ref().hwnd() != HWND::NULL {
 			<span class="macro">panic!</span>(<span class="string">"Cannot create a child control after the parent window is created."</span>);
 		}
 
 		<span class="self">Self </span>{
 			ctrl_id,
 			hwnd: UnsafeCell::new(HWND::NULL),
-			parent_ptr: NonNull::from(parent),
+			parent_ptr: NonNull::from(parent.as_ref()),
 			subclass_events: WindowEvents::new(),
 		}
 	}

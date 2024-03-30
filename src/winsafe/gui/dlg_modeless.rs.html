@@ -86,7 +86,7 @@
 
 <span class="kw">impl </span>DlgModeless {
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
-		parent: <span class="kw-2">&amp;</span>Base,
+		parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;,
 		dialog_id: u16,
 		position: POINT,
 	) -&gt; <span class="self">Self
@@ -100,7 +100,7 @@
 				},
 			),
 		);
-		new_self.default_message_handlers(parent);
+		new_self.default_message_handlers(parent.as_ref());
 		new_self
 	}
 

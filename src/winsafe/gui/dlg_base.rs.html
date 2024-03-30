@@ -154,6 +154,10 @@
 <a href="#152" id="152">152</a>
 <a href="#153" id="153">153</a>
 <a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::privs::<span class="kw-2">*</span>;
@@ -177,7 +181,11 @@
 }
 
 <span class="kw">impl </span>DlgBase {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Base&gt;, dialog_id: u16) -&gt; <span class="self">Self </span>{
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
+		parent: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;&gt;,
+		dialog_id: u16,
+	) -&gt; <span class="self">Self
+	</span>{
 		<span class="self">Self </span>{
 			base: Base::new(<span class="bool-val">true</span>, parent),
 			dialog_id,

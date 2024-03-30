@@ -99,8 +99,8 @@
 </span><span class="kw">pub struct </span>DateTimePickerEvents(BaseEventsProxy);
 
 <span class="kw">impl </span>DateTimePickerEvents {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent_base: <span class="kw-2">&amp;</span>Base, ctrl_id: u16) -&gt; <span class="self">Self </span>{
-		<span class="self">Self</span>(BaseEventsProxy::new(parent_base, ctrl_id))
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>(BaseEventsProxy::new(parent, ctrl_id))
 	}
 
 	<span class="macro">pub_fn_nfy_noparm_noret!</span> { dtn_close_up, co::DTN::CLOSEUP;

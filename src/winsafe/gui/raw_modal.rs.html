@@ -230,6 +230,10 @@
 <a href="#228" id="228">228</a>
 <a href="#229" id="229">229</a>
 <a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
+<a href="#233" id="233">233</a>
+<a href="#234" id="234">234</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::UnsafeCell;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -254,7 +258,11 @@
 </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>RawModal(Pin&lt;Arc&lt;Obj&gt;&gt;);
 
 <span class="kw">impl </span>RawModal {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span>Base, opts: WindowModalOpts) -&gt; <span class="self">Self </span>{
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
+		parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;,
+		opts: WindowModalOpts,
+	) -&gt; <span class="self">Self
+	</span>{
 		<span class="kw">let </span>new_self = <span class="self">Self</span>(
 			Arc::pin(
 				Obj {
