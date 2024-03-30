@@ -136,6 +136,14 @@ pub struct LOGFONT {
 
 impl LOGFONT {
 	pub_fn_string_arr_get_set!(lfFaceName, set_lfFaceName);
+
+	/// Creates a `LOGFONT` and automatically sets `lfHeight` and `lfFaceName`.
+	pub fn new_face(height: i32, face_name: &str) -> Self {
+		let mut lf = Self::default();
+		lf.lfHeight = height;
+		lf.set_lfFaceName(face_name);
+		lf
+	}
 }
 
 /// [`LOGPALETTE`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logpalette)
