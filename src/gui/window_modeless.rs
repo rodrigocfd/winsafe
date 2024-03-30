@@ -40,6 +40,8 @@ impl GuiWindowText for WindowModeless {}
 
 impl GuiParent for WindowModeless {}
 
+impl GuiParentPopup for WindowModeless {}
+
 impl WindowModeless {
 	/// Instantiates a new `WindowModeless` object, to be created internally
 	/// with

@@ -210,6 +210,15 @@ pub trait GuiParent: GuiWindow + AsRef<Base> {
 	}
 }
 
+/// A closeable popup parent window.
+pub trait GuiParentPopup: GuiParent {
+	/// Closes the window by posting a [`wm::close`](crate::msg::wm::Close)
+	/// message.
+	fn close(&self) {
+		unsafe { self.hwnd().PostMessage(wm::Close {}).unwrap(); }
+	}
+}
+
 /// Any child window.
 pub trait GuiChild: GuiWindow {
 	/// Returns the control ID, which is defined at control creation.
