@@ -22,7 +22,7 @@ impl WndMain {
 
 		let self2 = self.clone();
 		self.wnd.on().wm_command_accel_menu(co::DLGID::CANCEL, move || {
-			self2.wnd.close(); // close on Esc
+			self2.wnd.close();
 			Ok(())
 		});
 
@@ -35,7 +35,6 @@ impl WndMain {
 			let target_dir = self2.txt_path.text();
 			if !w::path::exists(&target_dir) {
 				self2.wnd.hwnd().TaskDialog(
-					None,
 					Some("Bad path"),
 					Some("Process cannot be done"),
 					Some(&format!("Path does not exist:\n{}", target_dir)),
