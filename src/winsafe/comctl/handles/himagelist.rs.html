@@ -228,6 +228,15 @@
 <a href="#226" id="226">226</a>
 <a href="#227" id="227">227</a>
 <a href="#228" id="228">228</a>
+<a href="#229" id="229">229</a>
+<a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
+<a href="#233" id="233">233</a>
+<a href="#234" id="234">234</a>
+<a href="#235" id="235">235</a>
+<a href="#236" id="236">236</a>
+<a href="#237" id="237">237</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -395,6 +404,15 @@
 	/// function.
 	</span><span class="kw">fn </span>DragShowNolock(show: bool) -&gt; SysResult&lt;()&gt; {
 		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::ImageList_DragShowNolock(show <span class="kw">as _</span>) })
+	}
+
+	<span class="doccomment">/// [`ImageList_Duplicate`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_duplicate)
+	/// function.
+	</span><span class="kw">fn </span>Duplicate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;ImageListDestroyGuard&gt; {
+		<span class="kw">unsafe </span>{
+			ptr_to_sysresult_handle(ffi::ImageList_Duplicate(<span class="self">self</span>.ptr()))
+				.map(|h| ImageListDestroyGuard::new(h))
+		}
 	}
 
 	<span class="doccomment">/// [`ImageList_GetIconSize`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_geticonsize)

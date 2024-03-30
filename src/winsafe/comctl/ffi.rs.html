@@ -27,6 +27,7 @@
 <a href="#25" id="25">25</a>
 <a href="#26" id="26">26</a>
 <a href="#27" id="27">27</a>
+<a href="#28" id="28">28</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys!</span> { <span class="string">"comctl32"</span>;
@@ -38,6 +39,7 @@
 	ImageList_Destroy(HANDLE) -&gt; BOOL
 	ImageList_DragMove(HANDLE, i32, i32) -&gt; BOOL
 	ImageList_DragShowNolock(BOOL) -&gt; BOOL
+	ImageList_Duplicate(HANDLE) -&gt; HANDLE
 	ImageList_EndDrag()
 	ImageList_GetIconSize(HANDLE, <span class="kw-2">*mut </span>i32, <span class="kw-2">*mut </span>i32) -&gt; BOOL
 	ImageList_GetImageCount(HANDLE) -&gt; i32

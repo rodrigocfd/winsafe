@@ -148,6 +148,7 @@
 <a href="#146" id="146">146</a>
 <a href="#147" id="147">147</a>
 <a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -201,7 +202,8 @@
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>ptr_to_sysresult_handle&lt;H&gt;(ptr: HANDLE) -&gt; SysResult&lt;H&gt;
 	<span class="kw">where </span>H: Handle,
 {
-	ptr_to_sysresult(ptr).map(|ptr| <span class="kw">unsafe </span>{ Handle::from_ptr(ptr) })
+	ptr_to_sysresult(ptr)
+		.map(|ptr| <span class="kw">unsafe </span>{ Handle::from_ptr(ptr) })
 }
 
 <span class="doccomment">/// If the pointer is null, yields `None`, otherwise `Some(Handle)`.
