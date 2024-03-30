@@ -256,7 +256,7 @@ impl<T> ListView<T> {
 		});
 
 		let self2 = self.clone();
-		parent.privileged_post_on().wm_notify(ctrl_id, co::LVN::DELETEITEM, move |_, p| {
+		parent.privileged_after_on().wm_notify(ctrl_id, co::LVN::DELETEITEM, move |_, p| {
 			let nmlv = unsafe { p.cast_nmhdr::<NMLISTVIEW>() };
 			self2.items()
 				.get(nmlv.iItem as _)

@@ -173,7 +173,7 @@ impl<T> TreeView<T> {
 
 	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {
 		let self2 = self.clone();
-		parent.privileged_post_on().wm_notify(ctrl_id, co::TVN::DELETEITEM, move |_, p| {
+		parent.privileged_after_on().wm_notify(ctrl_id, co::TVN::DELETEITEM, move |_, p| {
 			let nmtv = unsafe { p.cast_nmhdr::<NMTREEVIEW>() };
 			self2.items()
 				.get(&nmtv.itemOld.hItem)

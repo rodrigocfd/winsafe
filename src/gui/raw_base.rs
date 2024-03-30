@@ -263,7 +263,7 @@ impl RawBase {
 		let process_result = ref_self.base.process_user_message(wm_any)?;
 
 		// Execute post-user privileged closures, keep track if at least one was executed.
-		let at_least_one_privileged_post = ref_self.base.process_privileged_post_messages(&hwnd, wm_any)?;
+		let at_least_one_privileged_post = ref_self.base.process_privileged_after_messages(&hwnd, wm_any)?;
 
 		if wm_any.msg_id == co::WM::NCDESTROY { // always check
 			unsafe { hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); } // clear passed pointer

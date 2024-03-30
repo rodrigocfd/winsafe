@@ -20,7 +20,7 @@ pub(in crate::gui) struct Base {
 	parent_ptr: Option<NonNull<Self>>, // used only during creation stuff
 	privileged_events: WindowEventsPriv, // inserted internally to automate tasks: all will be executed
 	user_events: WindowEventsAll, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
-	privileged_events_post: WindowEventsPriv, // all will be executed after user events
+	privileged_events_after: WindowEventsPriv, // all will be executed after user events
 	layout_arranger: LayoutArranger,
 }
 
@@ -44,7 +44,7 @@ impl Base {
 			parent_ptr: parent.map(|parent| NonNull::from(parent.as_ref())),
 			privileged_events: WindowEventsPriv::new(is_dialog),
 			user_events: WindowEventsAll::new(),
-			privileged_events_post: WindowEventsPriv::new(is_dialog),
+			privileged_events_after: WindowEventsPriv::new(is_dialog),
 			layout_arranger: LayoutArranger::new(),
 		};
 		new_self.default_message_handlers();
@@ -101,12 +101,12 @@ impl Base {
 		&self.privileged_events
 	}
 
-	/// Internal post-user events are always executed.
-	pub(in crate::gui) fn privileged_post_on(&self) -> &WindowEventsPriv {
+	/// Internal after-user events are always executed.
+	pub(in crate::gui) fn privileged_after_on(&self) -> &WindowEventsPriv {
 		if self.hwnd != HWND::NULL {
-			panic!("Cannot add post-user privileged event after window creation.");
+			panic!("Cannot add after-user privileged event after window creation.");
 		}
-		&self.privileged_events_post
+		&self.privileged_events_after
 	}
 
 	/// Processes all messages added internally by the library.
@@ -120,22 +120,22 @@ impl Base {
 		self.privileged_events.process_all_messages(hwnd, wm_any)
 	}
 
-	/// Processes all post-user messages added internally by the library.
+	/// Processes all after-user messages added internally by the library.
 	///
 	/// Returns `true` if at least one message was processed.
-	pub(in crate::gui) fn process_privileged_post_messages(&self,
+	pub(in crate::gui) fn process_privileged_after_messages(&self,
 		hwnd: &HWND,
 		wm_any: WndMsg,
 	) -> AnyResult<bool>
 	{
-		self.privileged_events_post.process_all_messages(hwnd, wm_any)
+		self.privileged_events_after.process_all_messages(hwnd, wm_any)
 	}
 
 	/// Removes all user and privileged events.
 	pub(in crate::gui) fn clear_events(&self) {
 		self.privileged_events.clear_events();
 		self.user_events.clear_events();
-		self.privileged_events_post.clear_events();
+		self.privileged_events_after.clear_events();
 	}
 
 	pub(in crate::gui) fn add_to_layout_arranger(&self,
