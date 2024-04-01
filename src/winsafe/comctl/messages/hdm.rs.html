@@ -788,7 +788,7 @@
 ///
 /// Return type: `Option&lt;HIMAGELIST&gt;`.
 </span><span class="kw">pub struct </span>GetImageList {
-	<span class="kw">pub </span>which: co::HDSIL,
+	<span class="kw">pub </span>kind: co::HDSIL,
 }
 
 <span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetImageList {
@@ -801,7 +801,7 @@
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
 		WndMsg {
 			msg_id: co::HDM::GETIMAGELIST.into(),
-			wparam: <span class="self">self</span>.which.raw() <span class="kw">as _</span>,
+			wparam: <span class="self">self</span>.kind.raw() <span class="kw">as _</span>,
 			lparam: <span class="number">0</span>,
 		}
 	}
@@ -1178,8 +1178,8 @@
 ///
 /// Return type: `Option&lt;HIMAGELIST&gt;`.
 </span><span class="kw">pub struct </span>SetImageList {
-	<span class="kw">pub </span>which: co::HDSIL,
-	<span class="kw">pub </span>himagelist: HIMAGELIST,
+	<span class="kw">pub </span>kind: co::HDSIL,
+	<span class="kw">pub </span>himagelist: <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;,
 }
 
 <span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetImageList {
@@ -1192,8 +1192,8 @@
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
 		WndMsg {
 			msg_id: co::HDM::SETIMAGELIST.into(),
-			wparam: <span class="self">self</span>.which.raw() <span class="kw">as _</span>,
-			lparam: <span class="self">self</span>.himagelist.ptr() <span class="kw">as _</span>,
+			wparam: <span class="self">self</span>.kind.raw() <span class="kw">as _</span>,
+			lparam: <span class="self">self</span>.himagelist.as_ref().map_or(<span class="number">0</span>, |h| h.ptr() <span class="kw">as _</span>),
 		}
 	}
 }

@@ -526,11 +526,6 @@
 <a href="#524" id="524">524</a>
 <a href="#525" id="525">525</a>
 <a href="#526" id="526">526</a>
-<a href="#527" id="527">527</a>
-<a href="#528" id="528">528</a>
-<a href="#529" id="529">529</a>
-<a href="#530" id="530">530</a>
-<a href="#531" id="531">531</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::{PhantomData, PhantomPinned};
 <span class="kw">use </span>std::pin::Pin;
@@ -812,11 +807,6 @@
 				});
 			<span class="prelude-val">Ok</span>(())
 		});
-	}
-
-	<span class="doccomment">/// Required by `Header` constructon phase.
-	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>as_base(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>BaseNativeControl {
-		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.base
 	}
 
 	<span class="doccomment">/// Exposes the column methods.

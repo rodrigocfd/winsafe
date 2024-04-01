@@ -289,6 +289,42 @@
 <a href="#287" id="287">287</a>
 <a href="#288" id="288">288</a>
 <a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -297,6 +333,7 @@
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>, spec::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -436,7 +473,7 @@
 	/// the inner `Header` control of that `ListView`.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>from_list_view&lt;T: <span class="lifetime">'static</span>&gt;(list_view: <span class="kw-2">&amp;</span>ListView&lt;T&gt;) -&gt; <span class="self">Self </span>{
-		<span class="kw">let </span>lv_base_ref = list_view.as_base();
+		<span class="kw">let </span>lv_base_ref: <span class="kw-2">&amp;</span>BaseNativeControl = list_view.as_ref();
 		<span class="kw">let </span>parent_base_ref = lv_base_ref.parent();
 		<span class="kw">let </span>ctrl_id = next_auto_ctrl_id();
 
@@ -495,10 +532,45 @@
 		}
 	}
 
+	<span class="doccomment">/// Retrieves a reference to one of the associated image lists by sending an
+	/// [`hdm::GetImageList`](crate::msg::hdm::GetImageList) message.
+	///
+	/// The image list is owned by the control.
+	</span><span class="attr">#[must_use]
+	</span><span class="kw">pub fn </span>image_list(<span class="kw-2">&amp;</span><span class="self">self</span>, kind: co::HDSIL) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>HIMAGELIST&gt; {
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.hwnd()
+				.SendMessage(hdm::GetImageList { kind })
+		}.map(|hil| {
+			<span class="kw">let </span>hil_ptr = <span class="kw-2">&amp;</span>hil <span class="kw">as </span><span class="kw-2">*const </span>HIMAGELIST;
+			<span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>hil_ptr }
+		})
+	}
+
 	<span class="doccomment">/// Exposes the item methods.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub const fn </span>items(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HeaderItems&lt;<span class="lifetime">'_</span>&gt; {
 		HeaderItems::new(<span class="self">self</span>)
+	}
+
+	<span class="doccomment">/// Sets the one of the associated image lists by sending an
+	/// [`hdm::SetImageList`](crate::msg::hdm::SetImageList) message.
+	///
+	/// The image list will be owned by the control. Returns the previous one,
+	/// if any.
+	</span><span class="kw">pub fn </span>set_image_list(<span class="kw-2">&amp;</span><span class="self">self</span>,
+		kind: co::HDSIL,
+		himagelist: ImageListDestroyGuard,
+	) -&gt; <span class="prelude-ty">Option</span>&lt;ImageListDestroyGuard&gt;
+	{
+		<span class="kw">let </span><span class="kw-2">mut </span>himagelist = himagelist;
+		<span class="kw">let </span>hil = himagelist.leak();
+
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.hwnd()
+				.SendMessage(hdm::SetImageList { kind, himagelist: <span class="prelude-val">Some</span>(hil) })
+				.map(|prev_hil| ImageListDestroyGuard::new(prev_hil))
+		}
 	}
 }
 

@@ -862,14 +862,14 @@
 <span class="doccomment">/// [`TCM_GETIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/tcm-getimagelist)
 /// message, which has no parameters.
 ///
-/// Return type: `SysResult&lt;HIMAGELIST&gt;`.
+/// Return type: `Option&lt;HIMAGELIST&gt;`.
 </span><span class="kw">pub struct </span>GetImageList {}
 
 <span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetImageList {
-	<span class="kw">type </span>RetType = SysResult&lt;HIMAGELIST&gt;;
+	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;;
 
 	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		zero_as_badargs(v).map(|p| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(p <span class="kw">as _</span>) })
+		zero_as_none(v).map(|p| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(p <span class="kw">as _</span>) })
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1195,7 +1195,7 @@
 ///
 /// Return type: `Option&lt;HIMAGELIST&gt;`.
 </span><span class="kw">pub struct </span>SetImageList {
-	<span class="kw">pub </span>himagelist: HIMAGELIST,
+	<span class="kw">pub </span>himagelist: <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;,
 }
 
 <span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetImageList {
@@ -1209,7 +1209,7 @@
 		WndMsg {
 			msg_id: co::TCM::SETIMAGELIST.into(),
 			wparam: <span class="number">0</span>,
-			lparam: <span class="self">self</span>.himagelist.ptr() <span class="kw">as _</span>,
+			lparam: <span class="self">self</span>.himagelist.as_ref().map_or(<span class="number">0</span>, |h| h.ptr() <span class="kw">as _</span>),
 		}
 	}
 }
