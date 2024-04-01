@@ -540,12 +540,12 @@ unsafe impl MsgSend for SetHotDivider {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-pub struct SetImageList<'a> {
+pub struct SetImageList {
 	pub which: co::HDSIL,
-	pub himagelist: &'a HIMAGELIST,
+	pub himagelist: HIMAGELIST,
 }
 
-unsafe impl<'a> MsgSend for SetImageList<'a> {
+unsafe impl MsgSend for SetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

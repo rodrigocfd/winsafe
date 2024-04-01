@@ -500,11 +500,11 @@ unsafe impl MsgSend for SetExtendedStyle {
 /// message parameters.
 ///
 /// Return type: `Option<HIMAGELIST>`.
-pub struct SetImageList<'a> {
-	pub himagelist: &'a HIMAGELIST,
+pub struct SetImageList {
+	pub himagelist: HIMAGELIST,
 }
 
-unsafe impl<'a> MsgSend for SetImageList<'a> {
+unsafe impl MsgSend for SetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {

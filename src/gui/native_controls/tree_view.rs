@@ -286,7 +286,7 @@ impl<T> TreeView<T> {
 
 		unsafe {
 			self.hwnd()
-				.SendMessage(tvm::SetImageList { kind, himagelist: Some(&hil) })
+				.SendMessage(tvm::SetImageList { kind, himagelist: Some(hil) })
 				.map(|prev_hil| ImageListDestroyGuard::new(prev_hil))
 		}
 	}

@@ -366,7 +366,7 @@ impl<T> ListView<T> {
 
 		unsafe {
 			self.hwnd()
-				.SendMessage(lvm::SetImageList { kind, himagelist: Some(&hil) })
+				.SendMessage(lvm::SetImageList { kind, himagelist: Some(hil) })
 				.map(|prev_hil| ImageListDestroyGuard::new(prev_hil))
 		}
 	}
