@@ -5,6 +5,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::gui::{*, events::*, privs::*, spec::*};
 use crate::msg::*;
 use crate::prelude::*;
@@ -208,6 +209,19 @@ impl Tab {
 		Ok(())
 	}
 
+	/// Retrieves a reference to the associated image list by sending a
+	/// [`tcm::GetImageList`](crate::msg::tcm::GetImageList) message.
+	///
+	/// The image list is owned by the control.
+	#[must_use]
+	pub fn image_list(&self) -> Option<&HIMAGELIST> {
+		unsafe { self.hwnd().SendMessage(tcm::GetImageList {}) }
+			.map(|hil| {
+				let hil_ptr = &hil as *const HIMAGELIST;
+				unsafe { &*hil_ptr }
+			})
+	}
+
 	/// Exposes the item methods.
 	#[must_use]
 	pub const fn items(&self) -> TabItems {
@@ -222,6 +236,25 @@ impl Tab {
 				mask: ex_style,
 				style: if set { ex_style } else { co::TCS_EX::NoValue },
 			});
+		}
+	}
+
+	/// Sets the associated image list by sending a
+	/// [`tcm::SetImageList`](crate::msg::tcm::SetImageList) message.
+	///
+	/// The image list will be owned by the control. Returns the previous one,
+	/// if any.
+	pub fn set_image_list(&self,
+		himagelist: ImageListDestroyGuard,
+	) -> Option<ImageListDestroyGuard>
+	{
+		let mut himagelist = himagelist;
+		let hil = himagelist.leak();
+
+		unsafe {
+			self.hwnd()
+				.SendMessage(tcm::SetImageList { himagelist: Some(hil) })
+				.map(|prev_hil| ImageListDestroyGuard::new(prev_hil))
 		}
 	}
 }

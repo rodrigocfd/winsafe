@@ -168,14 +168,14 @@ unsafe impl MsgSend for GetExtendedStyle {
 /// [`TCM_GETIMAGELIST`](https://learn.microsoft.com/en-us/windows/win32/controls/tcm-getimagelist)
 /// message, which has no parameters.
 ///
-/// Return type: `SysResult<HIMAGELIST>`.
+/// Return type: `Option<HIMAGELIST>`.
 pub struct GetImageList {}
 
 unsafe impl MsgSend for GetImageList {
-	type RetType = SysResult<HIMAGELIST>;
+	type RetType = Option<HIMAGELIST>;
 
 	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
+		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -501,7 +501,7 @@ unsafe impl MsgSend for SetExtendedStyle {
 ///
 /// Return type: `Option<HIMAGELIST>`.
 pub struct SetImageList {
-	pub himagelist: HIMAGELIST,
+	pub himagelist: Option<HIMAGELIST>,
 }
 
 unsafe impl MsgSend for SetImageList {
@@ -515,7 +515,7 @@ unsafe impl MsgSend for SetImageList {
 		WndMsg {
 			msg_id: co::TCM::SETIMAGELIST.into(),
 			wparam: 0,
-			lparam: self.himagelist.ptr() as _,
+			lparam: self.himagelist.as_ref().map_or(0, |h| h.ptr() as _),
 		}
 	}
 }
