@@ -281,11 +281,6 @@ impl<T> ListView<T> {
 		});
 	}
 
-	/// Required by `Header` constructon phase.
-	pub(in crate::gui) fn as_base(&self) -> &BaseNativeControl {
-		&self.0.base
-	}
-
 	/// Exposes the column methods.
 	#[must_use]
 	pub const fn columns(&self) -> ListViewColumns<'_, T> {

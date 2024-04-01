@@ -145,7 +145,7 @@ impl Header {
 	/// the inner `Header` control of that `ListView`.
 	#[must_use]
 	pub fn from_list_view<T: 'static>(list_view: &ListView<T>) -> Self {
-		let lv_base_ref = list_view.as_base();
+		let lv_base_ref: &BaseNativeControl = list_view.as_ref();
 		let parent_base_ref = lv_base_ref.parent();
 		let ctrl_id = next_auto_ctrl_id();
 
