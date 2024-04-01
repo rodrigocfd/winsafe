@@ -151,7 +151,7 @@ unsafe impl MsgSend for GetFocusedItem {
 ///
 /// Return type: `Option<HIMAGELIST>`.
 pub struct GetImageList {
-	pub which: co::HDSIL,
+	pub kind: co::HDSIL,
 }
 
 unsafe impl MsgSend for GetImageList {
@@ -164,7 +164,7 @@ unsafe impl MsgSend for GetImageList {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::HDM::GETIMAGELIST.into(),
-			wparam: self.which.raw() as _,
+			wparam: self.kind.raw() as _,
 			lparam: 0,
 		}
 	}
@@ -541,8 +541,8 @@ unsafe impl MsgSend for SetHotDivider {
 ///
 /// Return type: `Option<HIMAGELIST>`.
 pub struct SetImageList {
-	pub which: co::HDSIL,
-	pub himagelist: HIMAGELIST,
+	pub kind: co::HDSIL,
+	pub himagelist: Option<HIMAGELIST>,
 }
 
 unsafe impl MsgSend for SetImageList {
@@ -555,8 +555,8 @@ unsafe impl MsgSend for SetImageList {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::HDM::SETIMAGELIST.into(),
-			wparam: self.which.raw() as _,
-			lparam: self.himagelist.ptr() as _,
+			wparam: self.kind.raw() as _,
+			lparam: self.himagelist.as_ref().map_or(0, |h| h.ptr() as _),
 		}
 	}
 }

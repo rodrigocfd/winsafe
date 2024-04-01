@@ -6,6 +6,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::gui::{*, events::*, privs::*, spec::*};
 use crate::msg::*;
 use crate::prelude::*;
@@ -204,10 +205,45 @@ impl Header {
 		}
 	}
 
+	/// Retrieves a reference to one of the associated image lists by sending an
+	/// [`hdm::GetImageList`](crate::msg::hdm::GetImageList) message.
+	///
+	/// The image list is owned by the control.
+	#[must_use]
+	pub fn image_list(&self, kind: co::HDSIL) -> Option<&HIMAGELIST> {
+		unsafe {
+			self.hwnd()
+				.SendMessage(hdm::GetImageList { kind })
+		}.map(|hil| {
+			let hil_ptr = &hil as *const HIMAGELIST;
+			unsafe { &*hil_ptr }
+		})
+	}
+
 	/// Exposes the item methods.
 	#[must_use]
 	pub const fn items(&self) -> HeaderItems<'_> {
 		HeaderItems::new(self)
+	}
+
+	/// Sets the one of the associated image lists by sending an
+	/// [`hdm::SetImageList`](crate::msg::hdm::SetImageList) message.
+	///
+	/// The image list will be owned by the control. Returns the previous one,
+	/// if any.
+	pub fn set_image_list(&self,
+		kind: co::HDSIL,
+		himagelist: ImageListDestroyGuard,
+	) -> Option<ImageListDestroyGuard>
+	{
+		let mut himagelist = himagelist;
+		let hil = himagelist.leak();
+
+		unsafe {
+			self.hwnd()
+				.SendMessage(hdm::SetImageList { kind, himagelist: Some(hil) })
+				.map(|prev_hil| ImageListDestroyGuard::new(prev_hil))
+		}
 	}
 }
 
