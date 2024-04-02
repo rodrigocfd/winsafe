@@ -28,6 +28,13 @@
 <a href="#26" id="26">26</a>
 <a href="#27" id="27">27</a>
 <a href="#28" id="28">28</a>
+<a href="#29" id="29">29</a>
+<a href="#30" id="30">30</a>
+<a href="#31" id="31">31</a>
+<a href="#32" id="32">32</a>
+<a href="#33" id="33">33</a>
+<a href="#34" id="34">34</a>
+<a href="#35" id="35">35</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys!</span> { <span class="string">"comctl32"</span>;
@@ -39,13 +46,20 @@
 	ImageList_Destroy(HANDLE) -&gt; BOOL
 	ImageList_DragMove(HANDLE, i32, i32) -&gt; BOOL
 	ImageList_DragShowNolock(BOOL) -&gt; BOOL
+	ImageList_Draw(HANDLE, i32, HANDLE, i32, i32, u32) -&gt; BOOL
+	ImageList_DrawEx(HANDLE, i32, HANDLE, i32, i32, i32, i32, u32, u32, u32) -&gt; BOOL
+	ImageList_DrawIndirect(HANDLE, PCVOID) -&gt; BOOL
 	ImageList_Duplicate(HANDLE) -&gt; HANDLE
 	ImageList_EndDrag()
+	ImageList_GetBkColor(HANDLE) -&gt; u32
+	ImageList_GetIcon(HANDLE, i32, u32) -&gt; HANDLE
 	ImageList_GetIconSize(HANDLE, <span class="kw-2">*mut </span>i32, <span class="kw-2">*mut </span>i32) -&gt; BOOL
 	ImageList_GetImageCount(HANDLE) -&gt; i32
 	ImageList_Remove(HANDLE, i32) -&gt; BOOL
 	ImageList_ReplaceIcon(HANDLE, i32, HANDLE) -&gt; i32
+	ImageList_SetBkColor(HANDLE, u32) -&gt; u32
 	ImageList_SetImageCount(HANDLE, u32) -&gt; BOOL
+	ImageList_Write(HANDLE, COMPTR) -&gt; BOOL
 	InitCommonControls()
 	InitCommonControlsEx(PVOID) -&gt; BOOL
 	InitializeFlatSB(HANDLE) -&gt; HRES
