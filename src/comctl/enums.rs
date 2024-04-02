@@ -58,6 +58,30 @@ pub enum BmpInstId {
 
 /// Variant parameter for:
 ///
+/// * [`HIMAGELIST::DrawEx`](crate::prelude::comctl_Himagelist::DrawEx).
+pub enum ClrDefNone {
+	/// A RGB color value.
+	Clr(COLORREF),
+	/// No color.
+	None,
+	/// The default color.
+	Default,
+}
+
+impl ClrDefNone {
+	/// Converts the contents into an `u32`.
+	#[must_use]
+	pub const fn as_u32(&self) -> u32 {
+		match self {
+			Self::Clr(c) => c.raw(),
+			Self::None => CLR_NONE,
+			Self::Default => CLR_DEFAULT,
+		}
+	}
+}
+
+/// Variant parameter for:
+///
 /// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG).
 pub enum IconId {
 	/// No icon.

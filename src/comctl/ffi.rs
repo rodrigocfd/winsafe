@@ -9,13 +9,20 @@ extern_sys! { "comctl32";
 	ImageList_Destroy(HANDLE) -> BOOL
 	ImageList_DragMove(HANDLE, i32, i32) -> BOOL
 	ImageList_DragShowNolock(BOOL) -> BOOL
+	ImageList_Draw(HANDLE, i32, HANDLE, i32, i32, u32) -> BOOL
+	ImageList_DrawEx(HANDLE, i32, HANDLE, i32, i32, i32, i32, u32, u32, u32) -> BOOL
+	ImageList_DrawIndirect(HANDLE, PCVOID) -> BOOL
 	ImageList_Duplicate(HANDLE) -> HANDLE
 	ImageList_EndDrag()
+	ImageList_GetBkColor(HANDLE) -> u32
+	ImageList_GetIcon(HANDLE, i32, u32) -> HANDLE
 	ImageList_GetIconSize(HANDLE, *mut i32, *mut i32) -> BOOL
 	ImageList_GetImageCount(HANDLE) -> i32
 	ImageList_Remove(HANDLE, i32) -> BOOL
 	ImageList_ReplaceIcon(HANDLE, i32, HANDLE) -> i32
+	ImageList_SetBkColor(HANDLE, u32) -> u32
 	ImageList_SetImageCount(HANDLE, u32) -> BOOL
+	ImageList_Write(HANDLE, COMPTR) -> BOOL
 	InitCommonControls()
 	InitCommonControlsEx(PVOID) -> BOOL
 	InitializeFlatSB(HANDLE) -> HRES

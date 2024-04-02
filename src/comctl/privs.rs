@@ -1,4 +1,5 @@
 pub(crate) const CLR_DEFAULT: u32 = 0xff00_0000;
+pub(crate) const CLR_NONE: u32 = 0xffff_ffff;
 pub(crate) const GDT_ERROR: i32 = -1;
 pub(crate) const HINST_COMMCTRL: isize = -1;
 pub(crate) const I_IMAGECALLBACK: isize = -1;
