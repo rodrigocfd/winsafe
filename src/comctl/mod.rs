@@ -7,6 +7,7 @@ mod handles;
 mod structs;
 
 pub(in crate::comctl) mod ffi;
+pub(in crate::comctl) mod iterators;
 pub(crate) mod privs;
 pub mod co;
 pub mod guard;

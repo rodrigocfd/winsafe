@@ -3,7 +3,7 @@
 use std::marker::PhantomData;
 
 use crate::co;
-use crate::comctl::{ffi, privs::*};
+use crate::comctl::{ffi, iterators::*, privs::*};
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::privs::*;
@@ -25,6 +25,14 @@ impl comctl_Himagelist for HIMAGELIST {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait comctl_Himagelist: Handle {
+	/// Returns an iterator over all icons in the image list, by calling
+	/// [`HIMAGELIST::ExtractIcon`](crate::prelude::comctl_Himagelist::ExtractIcon)
+	/// for each one.
+	#[must_use]
+	fn iter(&self) -> impl Iterator<Item = SysResult<DestroyIconGuard>> + '_ {
+		HimagelistIter::new(self)
+	}
+
 	/// [`ImageList_Add`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_add)
 	/// function.
 	///
