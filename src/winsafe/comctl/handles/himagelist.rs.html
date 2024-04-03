@@ -361,16 +361,6 @@
 <a href="#359" id="359">359</a>
 <a href="#360" id="360">360</a>
 <a href="#361" id="361">361</a>
-<a href="#362" id="362">362</a>
-<a href="#363" id="363">363</a>
-<a href="#364" id="364">364</a>
-<a href="#365" id="365">365</a>
-<a href="#366" id="366">366</a>
-<a href="#367" id="367">367</a>
-<a href="#368" id="368">368</a>
-<a href="#369" id="369">369</a>
-<a href="#370" id="370">370</a>
-<a href="#371" id="371">371</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -598,16 +588,6 @@
 					foreground_color.as_u32(),
 					style.raw(),
 				)
-			},
-		)
-	}
-
-	<span class="doccomment">/// [`DrawIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_drawindirect)
-	/// function.
-	</span><span class="kw">fn </span>DrawIndirect(<span class="kw-2">&amp;</span><span class="self">self</span>, imldp: <span class="kw-2">&amp;</span>IMAGELISTDRAWPARAMS) -&gt; SysResult&lt;()&gt; {
-		bool_to_sysresult(
-			<span class="kw">unsafe </span>{
-				ffi::ImageList_DrawIndirect(<span class="self">self</span>.ptr(), imldp <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>)
 			},
 		)
 	}
