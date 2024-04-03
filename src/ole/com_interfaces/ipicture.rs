@@ -34,6 +34,21 @@ com_interface! { IPicture: "7bf80980-bf32-101a-8bbb-00aa00300cab";
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// Loading an image from bytes:
+	///
+	/// ```rust,ignore
+	/// use winsafe::{self as w, prelude::*};
+	///
+	/// let image_bytes: Vec<u8>; // initialized somewhere
+	/// # let image_bytes = Vec::<u8>::default();
+	///
+	/// let stream = w::SHCreateMemStream(&image_bytes)?;
+	/// let ipic = w::OleLoadPicture(&stream, None, true)?;
+	/// # w::HrResult::Ok(())
+	/// ```
 }
 
 impl ole_IPicture for IPicture {}
