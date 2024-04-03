@@ -229,16 +229,6 @@ pub trait comctl_Himagelist: Handle {
 		)
 	}
 
-	/// [`DrawIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_drawindirect)
-	/// function.
-	fn DrawIndirect(&self, imldp: &IMAGELISTDRAWPARAMS) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe {
-				ffi::ImageList_DrawIndirect(self.ptr(), imldp as *const _ as _)
-			},
-		)
-	}
-
 	/// [`ImageList_Duplicate`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_duplicate)
 	/// function.
 	fn Duplicate(&self) -> SysResult<ImageListDestroyGuard> {

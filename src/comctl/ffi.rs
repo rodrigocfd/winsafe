@@ -11,7 +11,6 @@ extern_sys! { "comctl32";
 	ImageList_DragShowNolock(BOOL) -> BOOL
 	ImageList_Draw(HANDLE, i32, HANDLE, i32, i32, u32) -> BOOL
 	ImageList_DrawEx(HANDLE, i32, HANDLE, i32, i32, i32, i32, u32, u32, u32) -> BOOL
-	ImageList_DrawIndirect(HANDLE, PCVOID) -> BOOL
 	ImageList_Duplicate(HANDLE) -> HANDLE
 	ImageList_EndDrag()
 	ImageList_GetBkColor(HANDLE) -> u32
