@@ -1,10 +1,11 @@
 use std::any::TypeId;
 use std::cell::RefCell;
+use std::cmp::Ordering;
 use std::rc::Rc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, native_controls::iterators::*, spec::*};
+use crate::gui::{*, native_controls::iterators::*, proc::*, spec::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -291,6 +292,41 @@ impl<'a, T> ListViewItems<'a, T> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(lvm::SetItemCount { count, behavior })
+		}.unwrap();
+	}
+
+	/// Sorts the items according to a callback by sending an
+	/// [`lvm::SortItemEx`](crate::msg::lvm::SortItemEx) message.
+	///
+	/// The callback receives the two items to be compared.
+	///
+	/// # Examples
+	///
+	/// Sorting by the text of the first column:
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, gui};
+	///
+	/// let my_list: gui::ListView; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_list = gui::ListView::<()>::new(&wnd, gui::ListViewOpts::default());
+	///
+	/// my_list.items().sort(|itemA, itemB| -> std::cmp::Ordering {
+	///     itemA.text(0).cmp( &itemB.text(0) )
+	/// });
+	/// ```
+	pub fn sort<F>(&self, func: F)
+		where F: FnMut(ListViewItem, ListViewItem) -> Ordering,
+	{
+		let mut func = func;
+		let data = (self.owner, &mut func);
+
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::SortItemsEx {
+					param: &data as *const _ as _,
+					callback: list_view_item_sort::<F>,
+				})
 		}.unwrap();
 	}
 }

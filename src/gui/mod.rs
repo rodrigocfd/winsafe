@@ -19,6 +19,7 @@ mod layout_arranger;
 mod msg_error;
 mod native_controls;
 mod privs_gui;
+mod proc;
 mod raw_base;
 mod raw_control;
 mod raw_main;
