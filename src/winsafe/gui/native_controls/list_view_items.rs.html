@@ -296,13 +296,50 @@
 <a href="#294" id="294">294</a>
 <a href="#295" id="295">295</a>
 <a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::TypeId;
 <span class="kw">use </span>std::cell::RefCell;
+<span class="kw">use </span>std::cmp::Ordering;
 <span class="kw">use </span>std::rc::Rc;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, native_controls::iterators::<span class="kw-2">*</span>, spec::<span class="kw-2">*</span>};
+<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, native_controls::iterators::<span class="kw-2">*</span>, proc::<span class="kw-2">*</span>, spec::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
@@ -589,6 +626,41 @@
 		<span class="kw">unsafe </span>{
 			<span class="self">self</span>.owner.hwnd()
 				.SendMessage(lvm::SetItemCount { count, behavior })
+		}.unwrap();
+	}
+
+	<span class="doccomment">/// Sorts the items according to a callback by sending an
+	/// [`lvm::SortItemEx`](crate::msg::lvm::SortItemEx) message.
+	///
+	/// The callback receives the two items to be compared.
+	///
+	/// # Examples
+	///
+	/// Sorting by the text of the first column:
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, gui};
+	///
+	/// let my_list: gui::ListView; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_list = gui::ListView::&lt;()&gt;::new(&amp;wnd, gui::ListViewOpts::default());
+	///
+	/// my_list.items().sort(|itemA, itemB| -&gt; std::cmp::Ordering {
+	///     itemA.text(0).cmp( &amp;itemB.text(0) )
+	/// });
+	/// ```
+	</span><span class="kw">pub fn </span>sort&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
+		<span class="kw">where </span>F: FnMut(ListViewItem, ListViewItem) -&gt; Ordering,
+	{
+		<span class="kw">let </span><span class="kw-2">mut </span>func = func;
+		<span class="kw">let </span>data = (<span class="self">self</span>.owner, <span class="kw-2">&amp;mut </span>func);
+
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(lvm::SortItemsEx {
+					param: <span class="kw-2">&amp;</span>data <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+					callback: list_view_item_sort::&lt;F&gt;,
+				})
 		}.unwrap();
 	}
 }
