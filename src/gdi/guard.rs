@@ -82,6 +82,16 @@ impl<T> DeleteObjectGuard<T>
 
 //------------------------------------------------------------------------------
 
+handle_guard! { DeleteObjectPaletteGuard: HPALETTE;
+	ffi::DeleteObject;
+	/// RAII implementation for [`HPALETTE`](crate::HPALETTE) which
+	/// automatically calls
+	/// [`DeleteObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
+	/// when the object goes out of scope.
+}
+
+//------------------------------------------------------------------------------
+
 /// RAII implementation for [`LOGPALETTE`](crate::LOGPALETTE) which manages the
 /// allocated memory.
 pub struct LogpaletteGuard {

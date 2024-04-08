@@ -8,7 +8,6 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 
 impl GdiObject for HRGN {}
-impl GdiObjectSelect for HRGN {}
 impl gdi_Hrgn for HRGN {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for

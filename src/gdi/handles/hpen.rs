@@ -14,7 +14,6 @@ impl_handle! { HPEN;
 }
 
 impl GdiObject for HPEN {}
-impl GdiObjectSelect for HPEN {}
 impl gdi_Hpen for HPEN {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for

@@ -15,15 +15,3 @@ use crate::prelude::*;
 /// use winsafe::prelude::*;
 /// ```
 pub trait GdiObject: Handle + Any {}
-
-/// This trait is enabled with the `gdi` feature, and implements methods for any
-/// [`HGDIOBJ`](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hgdiobj)
-/// handle which can be passed to
-/// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait GdiObjectSelect: GdiObject {}

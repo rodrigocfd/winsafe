@@ -11,7 +11,6 @@ impl_handle! { HPALETTE;
 	/// [palette](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hpalette).
 }
 
-impl GdiObject for HPALETTE {}
 impl gdi_Hpalette for HPALETTE {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for
@@ -26,13 +25,10 @@ pub trait gdi_Hpalette: Handle {
 	/// [`CreatePalette`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpalette)
 	/// function.
 	#[must_use]
-	fn CreatePalette(
-		pal: &LOGPALETTE,
-	) -> SysResult<DeleteObjectGuard<HPALETTE>>
-	{
+	fn CreatePalette(pal: &LOGPALETTE) -> SysResult<DeleteObjectPaletteGuard> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::CreatePalette(pal as *const _ as _))
-				.map(|h| DeleteObjectGuard::new(h))
+				.map(|h| DeleteObjectPaletteGuard::new(h))
 		}
 	}
 }

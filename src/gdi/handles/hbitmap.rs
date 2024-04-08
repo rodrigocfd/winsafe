@@ -7,7 +7,6 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 
 impl GdiObject for HBITMAP {}
-impl GdiObjectSelect for HBITMAP {}
 impl gdi_Hbitmap for HBITMAP {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for

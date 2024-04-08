@@ -8,7 +8,6 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 
 impl GdiObject for HBRUSH {}
-impl GdiObjectSelect for HBRUSH {}
 impl gdi_Hbrush for HBRUSH {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for

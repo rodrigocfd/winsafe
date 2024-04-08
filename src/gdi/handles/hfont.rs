@@ -13,7 +13,6 @@ impl_handle! { HFONT;
 }
 
 impl GdiObject for HFONT {}
-impl GdiObjectSelect for HFONT {}
 impl gdi_Hfont for HFONT {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for

@@ -202,10 +202,10 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`CreateHalftonePalette`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createhalftonepalette)
 	/// function.
 	#[must_use]
-	fn CreateHalftonePalette(&self) -> SysResult<DeleteObjectGuard<HPALETTE>> {
+	fn CreateHalftonePalette(&self) -> SysResult<DeleteObjectPaletteGuard> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::CreateHalftonePalette(self.ptr()))
-				.map(|h| DeleteObjectGuard::new(h))
+				.map(|h| DeleteObjectPaletteGuard::new(h))
 		}
 	}
 
@@ -749,7 +749,7 @@ pub trait gdi_Hdc: user_Hdc {
 	fn SelectObject<G>(&self,
 		hgdiobj: &G,
 	) -> SysResult<SelectObjectGuard<'_, Self, G>>
-		where G: GdiObjectSelect,
+		where G: GdiObject,
 	{
 		unsafe {
 			ptr_to_sysresult(ffi::SelectObject(self.ptr(), hgdiobj.ptr()))
