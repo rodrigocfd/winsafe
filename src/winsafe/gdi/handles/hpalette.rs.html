@@ -34,10 +34,6 @@
 <a href="#32" id="32">32</a>
 <a href="#33" id="33">33</a>
 <a href="#34" id="34">34</a>
-<a href="#35" id="35">35</a>
-<a href="#36" id="36">36</a>
-<a href="#37" id="37">37</a>
-<a href="#38" id="38">38</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -51,7 +47,6 @@
 	/// [palette](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hpalette).
 </span>}
 
-<span class="kw">impl </span>GdiObject <span class="kw">for </span>HPALETTE {}
 <span class="kw">impl </span>gdi_Hpalette <span class="kw">for </span>HPALETTE {}
 
 <span class="doccomment">/// This trait is enabled with the `gdi` feature, and provides methods for
@@ -66,13 +61,10 @@
 	<span class="doccomment">/// [`CreatePalette`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpalette)
 	/// function.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">fn </span>CreatePalette(
-		pal: <span class="kw-2">&amp;</span>LOGPALETTE,
-	) -&gt; SysResult&lt;DeleteObjectGuard&lt;HPALETTE&gt;&gt;
-	{
+	</span><span class="kw">fn </span>CreatePalette(pal: <span class="kw-2">&amp;</span>LOGPALETTE) -&gt; SysResult&lt;DeleteObjectPaletteGuard&gt; {
 		<span class="kw">unsafe </span>{
 			ptr_to_sysresult_handle(ffi::CreatePalette(pal <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>))
-				.map(|h| DeleteObjectGuard::new(h))
+				.map(|h| DeleteObjectPaletteGuard::new(h))
 		}
 	}
 }

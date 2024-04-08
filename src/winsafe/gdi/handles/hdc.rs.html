@@ -1275,10 +1275,10 @@
 	<span class="doccomment">/// [`CreateHalftonePalette`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createhalftonepalette)
 	/// function.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">fn </span>CreateHalftonePalette(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;DeleteObjectGuard&lt;HPALETTE&gt;&gt; {
+	</span><span class="kw">fn </span>CreateHalftonePalette(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;DeleteObjectPaletteGuard&gt; {
 		<span class="kw">unsafe </span>{
 			ptr_to_sysresult_handle(ffi::CreateHalftonePalette(<span class="self">self</span>.ptr()))
-				.map(|h| DeleteObjectGuard::new(h))
+				.map(|h| DeleteObjectPaletteGuard::new(h))
 		}
 	}
 
@@ -1822,7 +1822,7 @@
 	</span><span class="kw">fn </span>SelectObject&lt;G&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		hgdiobj: <span class="kw-2">&amp;</span>G,
 	) -&gt; SysResult&lt;SelectObjectGuard&lt;<span class="lifetime">'_</span>, <span class="self">Self</span>, G&gt;&gt;
-		<span class="kw">where </span>G: GdiObjectSelect,
+		<span class="kw">where </span>G: GdiObject,
 	{
 		<span class="kw">unsafe </span>{
 			ptr_to_sysresult(ffi::SelectObject(<span class="self">self</span>.ptr(), hgdiobj.ptr()))
