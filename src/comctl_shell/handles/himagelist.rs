@@ -31,10 +31,10 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 	///     1,
 	/// )?;
 	///
-	/// himgl.add_icon_from_shell(&["mp3", "wav"])?;
+	/// himgl.add_icons_from_shell(&["mp3", "wav"])?;
 	/// # w::SysResult::Ok(())
 	/// ```
-	fn add_icon_from_shell(&self,
+	fn add_icons_from_shell(&self,
 		file_extensions: &[impl AsRef<str>],
 	) -> SysResult<()>
 	{
