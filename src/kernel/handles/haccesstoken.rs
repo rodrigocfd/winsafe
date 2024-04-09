@@ -156,6 +156,7 @@ pub trait kernel_Haccesstoken: Handle {
 	/// }
 	/// # w::SysResult::Ok(())
 	/// ```
+	#[must_use]
 	fn GetTokenInformation(&self,
 		information_class: co::TOKEN_INFORMATION_CLASS,
 	) -> SysResult<TokenInfo>
