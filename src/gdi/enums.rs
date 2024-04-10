@@ -4,6 +4,20 @@ use crate::kernel::privs::*;
 
 /// Variant parameter for:
 ///
+/// * [`HDC::GetCurrentObject`](crate::prelude::gdi_Hdc::GetCurrentObject).
+///
+/// The enum values match those in [`co::CUR_OBJ`](crate::co::CUR_OBJ) constant
+/// type.
+pub enum CurObj {
+	Bitmap(HBITMAP),
+	Brush(HBRUSH),
+	Font(HFONT),
+	Pal(HPALETTE),
+	Pen(HPEN),
+}
+
+/// Variant parameter for:
+///
 /// * [`HINSTANCE::LoadImageBitmap`](crate::prelude::gdi_Hinstance::LoadImageBitmap).
 #[derive(Clone)]
 pub enum IdObmStr {

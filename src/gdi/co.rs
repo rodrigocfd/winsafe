@@ -91,6 +91,20 @@ const_ordinary! { CLIP: u8;
 	EMBEDDED 8 << 4
 }
 
+const_ordinary! { CUR_OBJ: u32;
+	/// [`HDC::GetCurrentObject`](crate::prelude::gdi_Hdc::GetCurrentObject)
+	/// `kind` (`u32`).
+	///
+	/// Originally has `OBJ` prefix.
+	=>
+	=>
+	BITMAP 7
+	BRUSH 2
+	FONT 6
+	PAL 5
+	PEN 1
+}
+
 const_ordinary! { DIB: u32;
 	/// [`LOGBRUSH`](crate::LOGBRUSH) `lbColor` (`u32`).
 	=>
@@ -219,7 +233,7 @@ const_bitflag! { LR: u32;
 	/// [`HINSTANCE::LoadImageCursor`](crate::prelude::gdi_Hinstance::LoadImageCursor)
 	/// and
 	/// [`HINSTANCE::LoadImageIcon`](crate::prelude::gdi_Hinstance::LoadImageIcon)
-	/// `load`.
+	/// `load` (`u32`).
 	=>
 	=>
 	DEFAULTCOLOR 0x0000_0000

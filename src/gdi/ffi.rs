@@ -40,6 +40,7 @@ extern_sys! { "gdi32";
 	GdiSetBatchLimit(u32) -> u32
 	GetBkColor(HANDLE) -> u32
 	GetBkMode(HANDLE) -> i32
+	GetCurrentObject(HANDLE, u32) -> HANDLE
 	GetDCBrushColor(HANDLE) -> u32
 	GetDCPenColor(HANDLE) -> u32
 	GetDeviceCaps(HANDLE, i32) -> i32

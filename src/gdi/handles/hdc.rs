@@ -308,6 +308,39 @@ pub trait gdi_Hdc: user_Hdc {
 		}
 	}
 
+	/// [`GetCurrentObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getcurrentobject)
+	/// function.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let hdc: w::HDC; // initialized somewhere
+	/// # let hdc = w::HDC::NULL;
+	///
+	/// let obj = hdc.GetCurrentObject(co::CUR_OBJ::BRUSH)?;
+	/// let w::CurObj::Brush(hbrush) = obj else { panic!("never") };
+	///
+	/// println!("HBRUSH: {}", hbrush);
+	/// w::SysResult::Ok(())
+	/// ```
+	#[must_use]
+	fn GetCurrentObject(&self, kind: co::CUR_OBJ) -> SysResult<CurObj> {
+		unsafe {
+			ptr_to_sysresult(
+				ffi::GetCurrentObject(self.ptr(), kind.raw()),
+			).map(|h| match kind {
+				co::CUR_OBJ::BITMAP => CurObj::Bitmap(HBITMAP::from_ptr(h)),
+				co::CUR_OBJ::BRUSH => CurObj::Brush(HBRUSH::from_ptr(h)),
+				co::CUR_OBJ::FONT => CurObj::Font(HFONT::from_ptr(h)),
+				co::CUR_OBJ::PAL => CurObj::Pal(HPALETTE::from_ptr(h)),
+				co::CUR_OBJ::PEN => CurObj::Pen(HPEN::from_ptr(h)),
+				_ => panic!("co::OBJ_CUR not implemented yet: {}", kind),
+			})
+		}
+	}
+
 	/// [`GetDCPenColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdcpencolor)
 	/// function.
 	#[must_use]
