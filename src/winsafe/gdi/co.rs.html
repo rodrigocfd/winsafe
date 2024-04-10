@@ -481,6 +481,20 @@
 <a href="#479" id="479">479</a>
 <a href="#480" id="480">480</a>
 <a href="#481" id="481">481</a>
+<a href="#482" id="482">482</a>
+<a href="#483" id="483">483</a>
+<a href="#484" id="484">484</a>
+<a href="#485" id="485">485</a>
+<a href="#486" id="486">486</a>
+<a href="#487" id="487">487</a>
+<a href="#488" id="488">488</a>
+<a href="#489" id="489">489</a>
+<a href="#490" id="490">490</a>
+<a href="#491" id="491">491</a>
+<a href="#492" id="492">492</a>
+<a href="#493" id="493">493</a>
+<a href="#494" id="494">494</a>
+<a href="#495" id="495">495</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="macro">const_ordinary!</span> { AD: i32;
@@ -572,6 +586,20 @@
 	</span>TT_ALWAYS <span class="number">2 </span>&lt;&lt; <span class="number">4
 	</span>DFA_DISABLE <span class="number">4 </span>&lt;&lt; <span class="number">4
 	</span>EMBEDDED <span class="number">8 </span>&lt;&lt; <span class="number">4
+</span>}
+
+<span class="macro">const_ordinary!</span> { CUR_OBJ: u32;
+	<span class="doccomment">/// [`HDC::GetCurrentObject`](crate::prelude::gdi_Hdc::GetCurrentObject)
+	/// `kind` (`u32`).
+	///
+	/// Originally has `OBJ` prefix.
+	</span>=&gt;
+	=&gt;
+	BITMAP <span class="number">7
+	</span>BRUSH <span class="number">2
+	</span>FONT <span class="number">6
+	</span>PAL <span class="number">5
+	</span>PEN <span class="number">1
 </span>}
 
 <span class="macro">const_ordinary!</span> { DIB: u32;
@@ -702,7 +730,7 @@
 	/// [`HINSTANCE::LoadImageCursor`](crate::prelude::gdi_Hinstance::LoadImageCursor)
 	/// and
 	/// [`HINSTANCE::LoadImageIcon`](crate::prelude::gdi_Hinstance::LoadImageIcon)
-	/// `load`.
+	/// `load` (`u32`).
 	</span>=&gt;
 	=&gt;
 	DEFAULTCOLOR <span class="number">0x0000_0000

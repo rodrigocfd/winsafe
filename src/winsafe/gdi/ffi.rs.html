@@ -114,6 +114,7 @@
 <a href="#112" id="112">112</a>
 <a href="#113" id="113">113</a>
 <a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys!</span> { <span class="string">"gdi32"</span>;
@@ -156,6 +157,7 @@
 	GdiSetBatchLimit(u32) -&gt; u32
 	GetBkColor(HANDLE) -&gt; u32
 	GetBkMode(HANDLE) -&gt; i32
+	GetCurrentObject(HANDLE, u32) -&gt; HANDLE
 	GetDCBrushColor(HANDLE) -&gt; u32
 	GetDCPenColor(HANDLE) -&gt; u32
 	GetDeviceCaps(HANDLE, i32) -&gt; i32

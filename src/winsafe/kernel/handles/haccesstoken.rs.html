@@ -315,6 +315,7 @@
 <a href="#313" id="313">313</a>
 <a href="#314" id="314">314</a>
 <a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -473,6 +474,7 @@
 	/// }
 	/// # w::SysResult::Ok(())
 	/// ```
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>GetTokenInformation(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		information_class: co::TOKEN_INFORMATION_CLASS,
 	) -&gt; SysResult&lt;TokenInfo&gt;
