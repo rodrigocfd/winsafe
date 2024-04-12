@@ -276,6 +276,7 @@
 <a href="#274" id="274">274</a>
 <a href="#275" id="275">275</a>
 <a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys!</span> { <span class="string">"comdlg32"</span>;
@@ -546,6 +547,7 @@
 	UpdateWindow(HANDLE) -&gt; BOOL
 	ValidateRect(HANDLE, PCVOID) -&gt; BOOL
 	ValidateRgn(HANDLE, HANDLE) -&gt; BOOL
+	WaitForInputIdle(HANDLE, u32) -&gt; u32
 	WaitMessage() -&gt; BOOL
 	WindowFromDC(HANDLE) -&gt; HANDLE
 	WindowFromPhysicalPoint(i32, i32) -&gt; HANDLE
