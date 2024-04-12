@@ -94,10 +94,10 @@
 
 	<span class="doccomment">/// [`WaitForInputIdle`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-waitforinputidle)
 	/// function.
-	</span><span class="kw">fn </span>WaitForInputIdle(<span class="kw-2">&amp;</span><span class="self">self</span>, milliseconds: u32) -&gt; SysResult&lt;SuccessWait&gt; {
+	</span><span class="kw">fn </span>WaitForInputIdle(<span class="kw-2">&amp;</span><span class="self">self</span>, milliseconds: u32) -&gt; SysResult&lt;SuccessTimeout&gt; {
 		<span class="kw">match unsafe </span>{ ffi::WaitForInputIdle(<span class="self">self</span>.ptr(), milliseconds) } {
-			<span class="number">0 </span>=&gt; <span class="prelude-val">Ok</span>(SuccessWait::Success),
-			<span class="number">0x0000_0102 </span>=&gt; <span class="prelude-val">Ok</span>(SuccessWait::Timeout),
+			<span class="number">0 </span>=&gt; <span class="prelude-val">Ok</span>(SuccessTimeout::Success),
+			<span class="number">0x0000_0102 </span>=&gt; <span class="prelude-val">Ok</span>(SuccessTimeout::Timeout),
 			<span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
 		}
 	}
