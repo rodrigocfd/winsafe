@@ -268,6 +268,7 @@ extern_sys! { "user32";
 	UpdateWindow(HANDLE) -> BOOL
 	ValidateRect(HANDLE, PCVOID) -> BOOL
 	ValidateRgn(HANDLE, HANDLE) -> BOOL
+	WaitForInputIdle(HANDLE, u32) -> u32
 	WaitMessage() -> BOOL
 	WindowFromDC(HANDLE) -> HANDLE
 	WindowFromPhysicalPoint(i32, i32) -> HANDLE

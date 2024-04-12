@@ -38,4 +38,14 @@ pub trait user_Hprocess: kernel_Hprocess {
 			),
 		)
 	}
+
+	/// [`WaitForInputIdle`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-waitforinputidle)
+	/// function.
+	fn WaitForInputIdle(&self, milliseconds: u32) -> SysResult<SuccessWait> {
+		match unsafe { ffi::WaitForInputIdle(self.ptr(), milliseconds) } {
+			0 => Ok(SuccessWait::Success),
+			0x0000_0102 => Ok(SuccessWait::Timeout),
+			_ => Err(GetLastError()),
+		}
+	}
 }

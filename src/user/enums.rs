@@ -449,3 +449,13 @@ pub enum PtsRc<'a> {
 	/// A single [`RECT`](crate::RECT) struct.
 	Rc(&'a mut RECT),
 }
+
+/// Variant parameter for:
+///
+/// * [`HPROCESS::WaitForInputIdle`](crate::prelude::user_Hprocess::WaitForInputIdle).
+pub enum SuccessWait {
+	/// The wait was satisfied successfully.
+	Success,
+	/// The wait was terminated because the time-out interval elapsed.
+	Timeout,
+}
