@@ -277,6 +277,8 @@
 <a href="#275" id="275">275</a>
 <a href="#276" id="276">276</a>
 <a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys!</span> { <span class="string">"comdlg32"</span>;
@@ -484,6 +486,7 @@
 	RealGetWindowClassW(HANDLE, PSTR, i32) -&gt; u32
 	RedrawWindow(HANDLE, PCVOID, HANDLE, u32) -&gt; BOOL
 	RegisterClassExW(PCVOID) -&gt; u16
+	RegisterHotKey(HANDLE, i32, u32, u32) -&gt; BOOL
 	RegisterWindowMessageW(PCSTR) -&gt; u32
 	ReleaseCapture() -&gt; BOOL
 	ReleaseDC(HANDLE, HANDLE) -&gt; i32
@@ -543,6 +546,7 @@
 	UnhookWindowsHookEx(HANDLE) -&gt; BOOL
 	UnionRect(PVOID, PCVOID, PCVOID) -&gt; BOOL
 	UnregisterClassW(PCSTR, HANDLE) -&gt; BOOL
+	UnregisterHotKey(HANDLE, i32) -&gt; BOOL
 	UpdateLayeredWindow(HANDLE, HANDLE, PCVOID, PCVOID, HANDLE, PCVOID, u32, PCVOID, u32) -&gt; BOOL
 	UpdateWindow(HANDLE) -&gt; BOOL
 	ValidateRect(HANDLE, PCVOID) -&gt; BOOL

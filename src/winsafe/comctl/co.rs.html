@@ -2662,6 +2662,17 @@
 <a href="#2660" id="2660">2660</a>
 <a href="#2661" id="2661">2661</a>
 <a href="#2662" id="2662">2662</a>
+<a href="#2663" id="2663">2663</a>
+<a href="#2664" id="2664">2664</a>
+<a href="#2665" id="2665">2665</a>
+<a href="#2666" id="2666">2666</a>
+<a href="#2667" id="2667">2667</a>
+<a href="#2668" id="2668">2668</a>
+<a href="#2669" id="2669">2669</a>
+<a href="#2670" id="2670">2670</a>
+<a href="#2671" id="2671">2671</a>
+<a href="#2672" id="2672">2672</a>
+<a href="#2673" id="2673">2673</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
@@ -3221,6 +3232,17 @@
 	</span>ONITEMSTATEICON <span class="number">0x1000
 	</span>ONDROPDOWN <span class="number">0x2000
 	</span>ONOVERFLOW <span class="number">0x4000
+</span>}
+
+<span class="macro">const_bitflag!</span> { HOTKEYF: u16;
+	<span class="doccomment">/// [`wm::AppCommand`](crate::msg::wm::SetHotkey) and
+	/// [`wm::AppCommand`](crate::msg::wm::SetHotkey) modifiers (`u16`).
+	</span>=&gt;
+	=&gt;
+	ALT <span class="number">0x04
+	</span>CONTROL <span class="number">0x02
+	</span>EXT <span class="number">0x08
+	</span>SHIFT <span class="number">0x01
 </span>}
 
 <span class="macro">const_bitflag!</span> { ICC: u32;

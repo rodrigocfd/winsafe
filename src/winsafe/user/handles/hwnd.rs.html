@@ -1984,6 +1984,32 @@
 <a href="#1982" id="1982">1982</a>
 <a href="#1983" id="1983">1983</a>
 <a href="#1984" id="1984">1984</a>
+<a href="#1985" id="1985">1985</a>
+<a href="#1986" id="1986">1986</a>
+<a href="#1987" id="1987">1987</a>
+<a href="#1988" id="1988">1988</a>
+<a href="#1989" id="1989">1989</a>
+<a href="#1990" id="1990">1990</a>
+<a href="#1991" id="1991">1991</a>
+<a href="#1992" id="1992">1992</a>
+<a href="#1993" id="1993">1993</a>
+<a href="#1994" id="1994">1994</a>
+<a href="#1995" id="1995">1995</a>
+<a href="#1996" id="1996">1996</a>
+<a href="#1997" id="1997">1997</a>
+<a href="#1998" id="1998">1998</a>
+<a href="#1999" id="1999">1999</a>
+<a href="#2000" id="2000">2000</a>
+<a href="#2001" id="2001">2001</a>
+<a href="#2002" id="2002">2002</a>
+<a href="#2003" id="2003">2003</a>
+<a href="#2004" id="2004">2004</a>
+<a href="#2005" id="2005">2005</a>
+<a href="#2006" id="2006">2006</a>
+<a href="#2007" id="2007">2007</a>
+<a href="#2008" id="2008">2008</a>
+<a href="#2009" id="2009">2009</a>
+<a href="#2010" id="2010">2010</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -3373,6 +3399,26 @@
 		)
 	}
 
+	<span class="doccomment">/// [`RegisterHotKey`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerhotkey)
+	/// function.
+	</span><span class="kw">fn </span>RegisterHotKey(<span class="kw-2">&amp;</span><span class="self">self</span>,
+		id: i32,
+		modifiers: co::MOD,
+		vkey_code: co::VK,
+	) -&gt; SysResult&lt;()&gt;
+	{
+		bool_to_sysresult(
+			<span class="kw">unsafe </span>{
+				ffi::RegisterHotKey(
+					<span class="self">self</span>.ptr(),
+					id,
+					modifiers.raw() <span class="kw">as _</span>,
+					vkey_code.raw() <span class="kw">as _</span>,
+				)
+			},
+		)
+	}
+
 	<span class="doccomment">/// [`ScreenToClient`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-screentoclient)
 	/// function.
 	///
@@ -3882,6 +3928,12 @@
 				)
 			},
 		)
+	}
+
+	<span class="doccomment">/// [`UnregisterHotKey`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterhotkey)
+	/// function.
+	</span><span class="kw">fn </span>UnregisterHotKey(<span class="kw-2">&amp;</span><span class="self">self</span>, id: i32) -&gt; SysResult&lt;()&gt; {
+		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::UnregisterHotKey(<span class="self">self</span>.ptr(), id) })
 	}
 
 	<span class="doccomment">/// [`UpdateLayeredWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-updatelayeredwindow)

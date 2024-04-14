@@ -3834,6 +3834,18 @@
 <a href="#3832" id="3832">3832</a>
 <a href="#3833" id="3833">3833</a>
 <a href="#3834" id="3834">3834</a>
+<a href="#3835" id="3835">3835</a>
+<a href="#3836" id="3836">3836</a>
+<a href="#3837" id="3837">3837</a>
+<a href="#3838" id="3838">3838</a>
+<a href="#3839" id="3839">3839</a>
+<a href="#3840" id="3840">3840</a>
+<a href="#3841" id="3841">3841</a>
+<a href="#3842" id="3842">3842</a>
+<a href="#3843" id="3843">3843</a>
+<a href="#3844" id="3844">3844</a>
+<a href="#3845" id="3845">3845</a>
+<a href="#3846" id="3846">3846</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
@@ -5864,6 +5876,18 @@
 	</span>AUTODISMISS <span class="number">0x1000_0000
 	</span>NOTIFYBYPOS <span class="number">0x0800_0000
 	</span>CHECKORBMP <span class="number">0x0400_0000
+</span>}
+
+<span class="macro">const_bitflag!</span> { MOD: u16;
+	<span class="doccomment">/// [`RegisterHotKey`](crate::prelude::user_Hwnd::RegisterHotKey) modifiers
+	/// (`u16`).
+	</span>=&gt;
+	=&gt;
+	ALT <span class="number">0x0001
+	</span>CONTROL <span class="number">0x0002
+	</span>NOREPEAT <span class="number">0x4000
+	</span>SHIFT <span class="number">0x0004
+	</span>WIN <span class="number">0x0008
 </span>}
 
 <span class="macro">const_ordinary!</span> { MONITOR: u32;
