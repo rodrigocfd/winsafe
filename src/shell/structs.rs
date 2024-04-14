@@ -5,6 +5,7 @@ use std::marker::PhantomData;
 use crate::co;
 use crate::decl::*;
 use crate::kernel::{ffi_types::*, privs::*};
+use crate::prelude::*;
 
 /// [`COMDLG_FILTERSPEC`](https://learn.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-comdlg_filterspec)
 /// struct.
@@ -101,6 +102,49 @@ impl<'a, 'b, 'c, 'd, 'e> SHELLEXECUTEINFO<'a, 'b, 'c, 'd, 'e> {
 	/// Sets the `dwHotKey` field.
 	pub fn set_dwHotKey(&mut self, val: (co::VK, co::HOTKEYF)) {
 		self.dwHotKey = MAKEDWORD(val.0.raw(), val.1.raw())
+	}
+
+	/// Retrieves the `hIcon`/`hMonitor` union field.
+	///
+	/// # Safety
+	///
+	/// Both `hIcon` and `hMonitor` fields share the same memory space so both
+	/// are returned, and you must choose which one you want.
+	///
+	/// # Examples
+	///
+	/// Retrieving `hIcon`:
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*};
+	///
+	/// let sei = w::SHELLEXECUTEINFO::default();
+	///
+	/// let (hicon, _) = unsafe { sei.hIcon_hMonitor() };
+	/// ```
+	pub unsafe fn hIcon_hMonitor(&self) -> (HICON, HMONITOR) {
+		(HICON::from_ptr(self.hIcon_hMonitor),
+			HMONITOR::from_ptr(self.hIcon_hMonitor))
+	}
+
+	/// Sets the `hIcon`/`hMonitor` union field as `hIcon`.
+	///
+	/// # Safety
+	///
+	/// Both `hIcon` and `hMonitor` fields share the same memory space, so when
+	/// setting one, you replace the other.
+	pub unsafe fn set_hIcon(&mut self, hicon: &HICON) {
+		self.hIcon_hMonitor = hicon.ptr();
+	}
+
+	/// Sets the `hIcon`/`hMonitor` union field as `hMonitor`.
+	///
+	/// # Safety
+	///
+	/// Both `hIcon` and `hMonitor` fields share the same memory space, so when
+	/// setting one, you replace the other.
+	pub unsafe fn set_hMonitor(&mut self, hmonitor: &HMONITOR) {
+		self.hIcon_hMonitor = hmonitor.ptr();
 	}
 }
 

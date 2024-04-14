@@ -290,6 +290,12 @@ pub fn Shell_NotifyIcon(
 /// [`ShellExecuteEx`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecuteexw)
 /// function.
 ///
+/// # Safety
+///
+/// The [`SHELLEXECUTEINFO`](crate::SHELLEXECUTEINFO) struct is tricky. Improper
+/// use can lead to invalid memory
+/// access.
+///
 /// # Examples
 ///
 /// ```no_run
