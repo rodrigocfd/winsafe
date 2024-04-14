@@ -1387,6 +1387,26 @@ pub trait user_Hwnd: Handle {
 		)
 	}
 
+	/// [`RegisterHotKey`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerhotkey)
+	/// function.
+	fn RegisterHotKey(&self,
+		id: i32,
+		modifiers: co::MOD,
+		vkey_code: co::VK,
+	) -> SysResult<()>
+	{
+		bool_to_sysresult(
+			unsafe {
+				ffi::RegisterHotKey(
+					self.ptr(),
+					id,
+					modifiers.raw() as _,
+					vkey_code.raw() as _,
+				)
+			},
+		)
+	}
+
 	/// [`ScreenToClient`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-screentoclient)
 	/// function.
 	///
@@ -1896,6 +1916,12 @@ pub trait user_Hwnd: Handle {
 				)
 			},
 		)
+	}
+
+	/// [`UnregisterHotKey`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterhotkey)
+	/// function.
+	fn UnregisterHotKey(&self, id: i32) -> SysResult<()> {
+		bool_to_sysresult(unsafe { ffi::UnregisterHotKey(self.ptr(), id) })
 	}
 
 	/// [`UpdateLayeredWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-updatelayeredwindow)

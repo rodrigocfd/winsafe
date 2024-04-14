@@ -2030,6 +2030,18 @@ const_bitflag! { MNS: u32;
 	CHECKORBMP 0x0400_0000
 }
 
+const_bitflag! { MOD: u16;
+	/// [`RegisterHotKey`](crate::prelude::user_Hwnd::RegisterHotKey) modifiers
+	/// (`u16`).
+	=>
+	=>
+	ALT 0x0001
+	CONTROL 0x0002
+	NOREPEAT 0x4000
+	SHIFT 0x0004
+	WIN 0x0008
+}
+
 const_ordinary! { MONITOR: u32;
 	/// [`HMONITOR::MonitorFromPoint`](crate::prelude::user_Hmonitor::MonitorFromPoint),
 	/// [`HMONITOR::MonitorFromRect`](crate::prelude::user_Hmonitor::MonitorFromRect),

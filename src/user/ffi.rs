@@ -205,6 +205,7 @@ extern_sys! { "user32";
 	RealGetWindowClassW(HANDLE, PSTR, i32) -> u32
 	RedrawWindow(HANDLE, PCVOID, HANDLE, u32) -> BOOL
 	RegisterClassExW(PCVOID) -> u16
+	RegisterHotKey(HANDLE, i32, u32, u32) -> BOOL
 	RegisterWindowMessageW(PCSTR) -> u32
 	ReleaseCapture() -> BOOL
 	ReleaseDC(HANDLE, HANDLE) -> i32
@@ -264,6 +265,7 @@ extern_sys! { "user32";
 	UnhookWindowsHookEx(HANDLE) -> BOOL
 	UnionRect(PVOID, PCVOID, PCVOID) -> BOOL
 	UnregisterClassW(PCSTR, HANDLE) -> BOOL
+	UnregisterHotKey(HANDLE, i32) -> BOOL
 	UpdateLayeredWindow(HANDLE, HANDLE, PCVOID, PCVOID, HANDLE, PCVOID, u32, PCVOID, u32) -> BOOL
 	UpdateWindow(HANDLE) -> BOOL
 	ValidateRect(HANDLE, PCVOID) -> BOOL
