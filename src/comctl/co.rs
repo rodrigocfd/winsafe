@@ -559,6 +559,17 @@ const_bitflag! { HHT: u32;
 	ONOVERFLOW 0x4000
 }
 
+const_bitflag! { HOTKEYF: u16;
+	/// [`wm::AppCommand`](crate::msg::wm::SetHotkey) and
+	/// [`wm::AppCommand`](crate::msg::wm::SetHotkey) modifiers (`u16`).
+	=>
+	=>
+	ALT 0x04
+	CONTROL 0x02
+	EXT 0x08
+	SHIFT 0x01
+}
+
 const_bitflag! { ICC: u32;
 	/// [`INITCOMMONCONTROLSEX`](crate::INITCOMMONCONTROLSEX) `icc` (`u32`).
 	=>
