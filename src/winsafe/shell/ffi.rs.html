@@ -34,6 +34,7 @@
 <a href="#32" id="32">32</a>
 <a href="#33" id="33">33</a>
 <a href="#34" id="34">34</a>
+<a href="#35" id="35">35</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys!</span> { <span class="string">"shell32"</span>;
@@ -46,6 +47,7 @@
 	SHCreateItemFromParsingName(PCSTR, PVOID, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES
 	Shell_NotifyIconW(u32, PVOID) -&gt; BOOL
 	ShellAboutW(HANDLE, PCSTR, PCSTR, HANDLE) -&gt; i32
+	ShellExecuteExW(PVOID) -&gt; BOOL
 	ShellExecuteW(HANDLE, PCSTR, PCSTR, PCSTR, PCSTR, i32) -&gt; HANDLE
 	SHFileOperationW(PVOID) -&gt; i32
 	SHGetFileInfoW(PCSTR, u32, PVOID, u32, u32) -&gt; usize
