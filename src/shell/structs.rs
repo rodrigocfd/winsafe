@@ -53,6 +53,57 @@ impl NOTIFYICONDATA {
 	pub_fn_string_arr_get_set!(szInfoTitle, set_szInfoTitle);
 }
 
+/// [`SHELLEXECUTEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shellexecuteinfow)
+/// struct.
+#[repr(C)]
+pub struct SHELLEXECUTEINFO<'a, 'b, 'c, 'd, 'e> {
+	cbSize: u32,
+	pub fMask: co::SEE_MASK,
+	pub hwnd: HWND,
+	lpVerb: *mut u16,
+	lpFile: *mut u16,
+	lpParameters: *mut u16,
+	lpDirectory: *mut u16,
+	pub nShow: co::SW,
+	pub hInstApp: HINSTANCE,
+	pub lpIDList: *mut std::ffi::c_void,
+	lpClass: *mut u16,
+	pub hkeyClass: HKEY,
+	dwHotKey: u32,
+	hIcon_hMonitor: HANDLE, // union HICON and HMONITOR
+	pub hProcess: HPROCESS,
+
+	_lpVerb: PhantomData<&'a mut u16>,
+	_lpFile: PhantomData<&'b mut u16>,
+	_lpParameters: PhantomData<&'c mut u16>,
+	_lpDirectory: PhantomData<&'d mut u16>,
+	_lpClass: PhantomData<&'e mut u16>,
+}
+
+impl_default_with_size!(SHELLEXECUTEINFO, cbSize, 'a, 'b, 'c, 'd, 'e);
+
+impl<'a, 'b, 'c, 'd, 'e> SHELLEXECUTEINFO<'a, 'b, 'c, 'd, 'e> {
+	pub_fn_string_ptr_get_set!('a, lpVerb, set_lpVerb);
+	pub_fn_string_ptr_get_set!('b, lpFile, set_lpFile);
+	pub_fn_string_ptr_get_set!('c, lpParameters, set_lpParameters);
+	pub_fn_string_ptr_get_set!('d, lpDirectory, set_lpDirectory);
+	pub_fn_string_ptr_get_set!('e, lpClass, set_lpClass);
+
+	/// Retrieves the `dwHotKey` field.
+	#[must_use]
+	pub const fn dwHotKey(&self) -> (co::VK, co::HOTKEYF) {
+		unsafe {(
+			co::VK::from_raw(LOWORD(self.dwHotKey)),
+			co::HOTKEYF::from_raw(HIWORD(self.dwHotKey)),
+		)}
+	}
+
+	/// Sets the `dwHotKey` field.
+	pub fn set_dwHotKey(&mut self, val: (co::VK, co::HOTKEYF)) {
+		self.dwHotKey = MAKEDWORD(val.0.raw(), val.1.raw())
+	}
+}
+
 /// [`SHFILEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shfileinfow)
 /// struct.
 #[repr(C)]

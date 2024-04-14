@@ -215,18 +215,6 @@ pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
 	ffi::SHAddToRecentDocs(flags.raw(), pv as *const _ as _);
 }
 
-/// [`Shell_NotifyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)
-/// function.
-pub fn Shell_NotifyIcon(
-	message: co::NIM,
-	data: &mut NOTIFYICONDATA,
-) -> SysResult<()>
-{
-	bool_to_sysresult(
-		unsafe { ffi::Shell_NotifyIconW(message.raw(), data as *mut _ as _) },
-	)
-}
-
 /// [`SHCreateItemFromParsingName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromparsingname)
 /// function.
 ///
@@ -285,6 +273,36 @@ pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
 	} else {
 		Ok(unsafe { IStream::from_ptr(p) })
 	}
+}
+
+/// [`Shell_NotifyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)
+/// function.
+pub fn Shell_NotifyIcon(
+	message: co::NIM,
+	data: &mut NOTIFYICONDATA,
+) -> SysResult<()>
+{
+	bool_to_sysresult(
+		unsafe { ffi::Shell_NotifyIconW(message.raw(), data as *mut _ as _) },
+	)
+}
+
+/// [`ShellExecuteEx`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecuteexw)
+/// function.
+///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let mut sei = w::SHELLEXECUTEINFO::default();
+/// unsafe { w::ShellExecuteEx(&mut sei)?; }
+/// # w::SysResult::Ok(())
+/// ```
+pub unsafe fn ShellExecuteEx(
+	exec_info: &mut SHELLEXECUTEINFO,
+) -> SysResult<()> {
+	bool_to_sysresult(unsafe { ffi::ShellExecuteExW(exec_info as *mut _ as _) })
 }
 
 /// [`SHFileOperation`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)
