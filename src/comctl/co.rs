@@ -560,8 +560,8 @@ const_bitflag! { HHT: u32;
 }
 
 const_bitflag! { HOTKEYF: u16;
-	/// [`wm::AppCommand`](crate::msg::wm::SetHotkey) and
-	/// [`wm::AppCommand`](crate::msg::wm::SetHotkey) modifiers (`u16`).
+	/// [`wm::GetHotkey`](crate::msg::wm::GetHotKey) and
+	/// [`wm::SetHotKey`](crate::msg::wm::SetHotKey) modifiers (`u16`).
 	=>
 	=>
 	ALT 0x04

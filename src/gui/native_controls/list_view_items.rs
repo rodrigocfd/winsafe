@@ -296,7 +296,7 @@ impl<'a, T> ListViewItems<'a, T> {
 	}
 
 	/// Sorts the items according to a callback by sending an
-	/// [`lvm::SortItemEx`](crate::msg::lvm::SortItemEx) message.
+	/// [`lvm::SortItemsEx`](crate::msg::lvm::SortItemsEx) message.
 	///
 	/// The callback receives the two items to be compared.
 	///
