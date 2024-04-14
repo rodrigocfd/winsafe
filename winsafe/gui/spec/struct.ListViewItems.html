@@ -79,7 +79,7 @@ created with <a href="../../co/struct.LVS.html#associatedconstant.OWNERDATA" tit
 sending an <a href="../../msg/lvm/struct.SetItemCount.html" title="struct winsafe::msg::lvm::SetItemCount"><code>lvm::SetItemCount</code></a> message.</p>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.sort" class="method"><a class="src rightside" href="../../../src/winsafe/gui\native_controls/list_view_items.rs.html#318-331">source</a><h4 class="code-header">pub fn <a href="#method.sort" class="fn">sort</a>&lt;F&gt;(&amp;self, func: F)<div class="where">where
     F: <a class="trait" href="https://doc.rust-lang.org/nightly/core/ops/function/trait.FnMut.html" title="trait core::ops::function::FnMut">FnMut</a>(<a class="struct" href="struct.ListViewItem.html" title="struct winsafe::gui::spec::ListViewItem">ListViewItem</a>&lt;'_&gt;, <a class="struct" href="struct.ListViewItem.html" title="struct winsafe::gui::spec::ListViewItem">ListViewItem</a>&lt;'_&gt;) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/cmp/enum.Ordering.html" title="enum core::cmp::Ordering">Ordering</a>,</div></h4></section></summary><div class="docblock"><p>Sorts the items according to a callback by sending an
-<a href="crate::msg::lvm::SortItemEx"><code>lvm::SortItemEx</code></a> message.</p>
+<a href="../../msg/lvm/struct.SortItemsEx.html" title="struct winsafe::msg::lvm::SortItemsEx"><code>lvm::SortItemsEx</code></a> message.</p>
 <p>The callback receives the two items to be compared.</p>
 <h5 id="examples-3"><a class="doc-anchor" href="#examples-3">§</a>Examples</h5>
 <p>Sorting by the text of the first column:</p>
