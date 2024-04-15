@@ -173,17 +173,17 @@ unsafe impl MsgSend for GetImageList {
 /// [`HDM_GETITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-getitem)
 /// message parameters.
 ///
-/// Return type: `SysResult<()>`.
+/// Return type: `()`.
 pub struct GetItem<'a, 'b> {
 	pub index: u32,
 	pub hditem: &'b mut HDITEM<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
-	type RetType = SysResult<()>;
+	type RetType = ();
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|_| ())
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		() // docs are wrong: always returns zero
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -564,17 +564,17 @@ unsafe impl MsgSend for SetImageList {
 /// [`HDM_SETITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/hdm-setitem)
 /// message parameters.
 ///
-/// Return type: `SysResult<()>`.
+/// Return type: `()`.
 pub struct SetItem<'a, 'b> {
 	pub index: u32,
 	pub hditem: &'b HDITEM<'a>,
 }
 
 unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
-	type RetType = SysResult<()>;
+	type RetType = ();
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|_| ())
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		() // docs are wrong: always returns zero
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

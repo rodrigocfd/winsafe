@@ -54,8 +54,8 @@ impl<'a> HeaderItem<'a> {
 				.SendMessage(hdm::GetItem {
 					index: self.index,
 					hditem: &mut hdi,
-				})
-		}.unwrap();
+				});
+		}
 
 		hdi.fmt
 	}
@@ -78,8 +78,8 @@ impl<'a> HeaderItem<'a> {
 				.SendMessage(hdm::GetItem {
 					index: self.index,
 					hditem: &mut hdi,
-				})
-		}.unwrap();
+				});
+		}
 
 		hdi.lParam
 	}
@@ -96,10 +96,48 @@ impl<'a> HeaderItem<'a> {
 				.SendMessage(hdm::GetItem {
 					index: self.index,
 					hditem: &mut hdi,
-				})
-		}.unwrap();
+				});
+		}
 
 		hdi.iOrder as _
+	}
+
+	/// Sets the arrow state of the item by sending a
+	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
+	pub fn set_arrow(&self, arrow_state: HeaderArrow) {
+		let cur_fmt = {
+			let mut hdi = HDITEM::default();
+			hdi.mask = co::HDI::FORMAT;
+
+			unsafe {
+				self.owner.hwnd()
+					.SendMessage(hdm::GetItem {
+						index: self.index,
+						hditem: &mut hdi,
+					});
+			}
+
+			hdi.fmt
+		};
+
+		let mut hdi = HDITEM::default();
+		hdi.mask = co::HDI::FORMAT;
+
+		hdi.fmt = cur_fmt;
+		hdi.fmt &= !(co::HDF::SORTUP | co::HDF::SORTDOWN); // remove both
+		match arrow_state {
+			HeaderArrow::Asc => { hdi.fmt |= co::HDF::SORTUP; },
+			HeaderArrow::Desc => { hdi.fmt |= co::HDF::SORTDOWN },
+			_ => {},
+		}
+
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(hdm::SetItem {
+					index: self.index,
+					hditem: &mut hdi,
+				});
+		}
 	}
 
 	/// Sets the user-defined value of the item by sending a
@@ -114,8 +152,8 @@ impl<'a> HeaderItem<'a> {
 				.SendMessage(hdm::SetItem {
 					index: self.index,
 					hditem: &hdi,
-				})
-		}.unwrap();
+				});
+		}
 	}
 
 	/// Sets the order of the item by sending a
@@ -130,8 +168,8 @@ impl<'a> HeaderItem<'a> {
 				.SendMessage(hdm::SetItem {
 					index: self.index,
 					hditem: &hdi,
-				})
-		}.unwrap();
+				});
+		}
 	}
 
 	/// Sets the text of the item by sending a
@@ -148,8 +186,8 @@ impl<'a> HeaderItem<'a> {
 				.SendMessage(hdm::SetItem {
 					index: self.index,
 					hditem: &hdi,
-				})
-		}.unwrap();
+				});
+		}
 	}
 
 	/// Retrieves the text of the item by sending a
@@ -167,8 +205,8 @@ impl<'a> HeaderItem<'a> {
 				.SendMessage(hdm::GetItem {
 					index: self.index,
 					hditem: &mut hdi,
-				})
-		}.unwrap();
+				});
+		}
 
 		let (psz, _) = hdi.raw_pszText();
 		unsafe { WString::from_wchars_nullt(psz) }.to_string()

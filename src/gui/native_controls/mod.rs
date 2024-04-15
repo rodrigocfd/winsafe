@@ -44,7 +44,7 @@ pub use check_box::{CheckBox, CheckBoxOpts, CheckState};
 pub use combo_box::{ComboBox, ComboBoxOpts};
 pub use date_time_picker::{DateTimePicker, DateTimePickerOpts};
 pub use edit::{Edit, EditOpts};
-pub use header::{Header, HeaderOpts};
+pub use header::{Header, HeaderArrow, HeaderOpts};
 pub use label::{Label, LabelOpts};
 pub use list_box::{ListBox, ListBoxOpts};
 pub use list_view::{ListView, ListViewOpts};

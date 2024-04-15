@@ -11,6 +11,18 @@ use crate::gui::{*, events::*, privs::*, spec::*};
 use crate::msg::*;
 use crate::prelude::*;
 
+/// Possible states of the arrow in a
+/// [`HeaderItem`](crate::gui::spec::HeaderItem).
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum HeaderArrow {
+	/// No arrow.
+	None,
+	/// An arrow pointing up, indicating sorting in ascending order.
+	Asc,
+	/// An arrow pointing down, indicating sorting in descending order.
+	Desc,
+}
+
 struct Obj { // actual fields of Header
 	base: BaseNativeControl,
 	_pin: PhantomPinned,
