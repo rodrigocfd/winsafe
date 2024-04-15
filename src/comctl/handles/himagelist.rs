@@ -28,6 +28,21 @@ pub trait comctl_Himagelist: Handle {
 	/// Returns an iterator over all icons in the image list, by calling
 	/// [`HIMAGELIST::ExtractIcon`](crate::prelude::comctl_Himagelist::ExtractIcon)
 	/// for each one.
+	///
+	/// # Examples
+	///
+	/// Collecting the icons into a [`Vec`](std::vec::Vec):
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*};
+	///
+	/// let himgl: w::HIMAGELIST; // initialized somewhere
+	/// # let himgl = w::HIMAGELIST::NULL;
+	///
+	/// let icons = himgl.iter()
+	///     .collect::<w::SysResult<Vec<_>>>()?;
+	/// # w::SysResult::Ok(())
+	/// ```
 	#[must_use]
 	fn iter(&self) -> impl Iterator<Item = SysResult<DestroyIconGuard>> + '_ {
 		HimagelistIter::new(self)
