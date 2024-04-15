@@ -178,7 +178,15 @@ impl Tab {
 				self2.display_tab(sel_item.index())?;
 			}
 			Ok(())
-		})
+		});
+
+		let self2 = self.clone();
+		parent.privileged_after_on().wm(co::WM::DESTROY, move |_, _| {
+			self2.image_list().map(|hil| {
+				let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) };
+			});
+			Ok(())
+		});
 	}
 
 	fn display_tab(&self, index: u32) -> SysResult<()> {
