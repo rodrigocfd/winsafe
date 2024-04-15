@@ -33,6 +33,15 @@ impl<'a> HeaderItem<'a> {
 		}.unwrap();
 	}
 
+	/// Sets the item as the focused one sending an
+	/// [`hdm:SetFocusedItem`](crate::msg::hdm::SetFocusedItem) message.
+	pub fn focus(&self) {
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(hdm::SetFocusedItem { index: self.index })
+		}.unwrap();
+	}
+
 	/// Return the format of the item by sending a
 	/// [`hdm::GetItem`](crate::msg::hdm::GetItem) message.
 	#[must_use]
