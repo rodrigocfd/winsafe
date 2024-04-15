@@ -361,6 +361,21 @@
 <a href="#359" id="359">359</a>
 <a href="#360" id="360">360</a>
 <a href="#361" id="361">361</a>
+<a href="#362" id="362">362</a>
+<a href="#363" id="363">363</a>
+<a href="#364" id="364">364</a>
+<a href="#365" id="365">365</a>
+<a href="#366" id="366">366</a>
+<a href="#367" id="367">367</a>
+<a href="#368" id="368">368</a>
+<a href="#369" id="369">369</a>
+<a href="#370" id="370">370</a>
+<a href="#371" id="371">371</a>
+<a href="#372" id="372">372</a>
+<a href="#373" id="373">373</a>
+<a href="#374" id="374">374</a>
+<a href="#375" id="375">375</a>
+<a href="#376" id="376">376</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -391,6 +406,21 @@
 	<span class="doccomment">/// Returns an iterator over all icons in the image list, by calling
 	/// [`HIMAGELIST::ExtractIcon`](crate::prelude::comctl_Himagelist::ExtractIcon)
 	/// for each one.
+	///
+	/// # Examples
+	///
+	/// Collecting the icons into a [`Vec`](std::vec::Vec):
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*};
+	///
+	/// let himgl: w::HIMAGELIST; // initialized somewhere
+	/// # let himgl = w::HIMAGELIST::NULL;
+	///
+	/// let icons = himgl.iter()
+	///     .collect::&lt;w::SysResult&lt;Vec&lt;_&gt;&gt;&gt;()?;
+	/// # w::SysResult::Ok(())
+	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = SysResult&lt;DestroyIconGuard&gt;&gt; + <span class="lifetime">'_ </span>{
 		HimagelistIter::new(<span class="self">self</span>)
