@@ -104,6 +104,7 @@ impl Header {
 			Ok(())
 		});
 
+		new_self.default_message_handlers(parent.as_ref());
 		new_self
 	}
 
@@ -138,6 +139,7 @@ impl Header {
 			Ok(())
 		});
 
+		new_self.default_message_handlers(parent.as_ref());
 		new_self
 	}
 
@@ -167,6 +169,7 @@ impl Header {
 			Ok(())
 		});
 
+		new_self.default_message_handlers(parent_base_ref);
 		new_self
 	}
 
@@ -203,6 +206,20 @@ impl Header {
 				Ok(())
 			},
 		}
+	}
+
+	fn default_message_handlers(&self, parent: &Base) {
+		let self2 = self.clone();
+		parent.privileged_after_on().wm(co::WM::DESTROY, move |_, _| {
+			[co::HDSIL::NORMAL, co::HDSIL::STATE]
+				.iter()
+				.for_each(|hdsil| {
+					self2.image_list(*hdsil).map(|hil| { // destroy each image list, if any
+						let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) };
+					});
+				});
+			Ok(())
+		});
 	}
 
 	/// Retrieves a reference to one of the associated image lists by sending an
