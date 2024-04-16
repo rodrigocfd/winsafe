@@ -137,7 +137,7 @@ impl RawModal {
 
 	fn default_message_handlers(&self) {
 		let self2 = self.clone();
-		self.base().privileged_on().wm(co::WM::SETFOCUS, move |_, _| {
+		self.base().before_user_on().wm(co::WM::SETFOCUS, move |_, _| {
 			self2.0.raw_base.delegate_focus_to_first_child();
 			Ok(())
 		});

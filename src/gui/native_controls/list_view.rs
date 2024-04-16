@@ -108,7 +108,7 @@ impl<T> ListView<T> {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(OptsResz::Wnd(&opts))?;
 			Ok(())
 		});
@@ -155,7 +155,7 @@ impl<T> ListView<T> {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
+		parent.as_ref().before_user_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(OptsResz::Dlg(resize_behavior))?;
 			Ok(())
 		});
@@ -233,7 +233,7 @@ impl<T> ListView<T> {
 		});
 
 		let self2 = self.clone();
-		parent.privileged_on().wm_notify(ctrl_id, co::LVN::KEYDOWN, move |_, p| {
+		parent.before_user_on().wm_notify(ctrl_id, co::LVN::KEYDOWN, move |_, p| {
 			let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };
 			let has_ctrl = GetAsyncKeyState(co::VK::CONTROL);
 			let has_shift = GetAsyncKeyState(co::VK::SHIFT);
@@ -247,7 +247,7 @@ impl<T> ListView<T> {
 		});
 
 		let self2 = self.clone();
-		parent.privileged_on().wm_notify(ctrl_id, co::NM::RCLICK, move |_, p| {
+		parent.before_user_on().wm_notify(ctrl_id, co::NM::RCLICK, move |_, p| {
 			let nmia = unsafe { p.cast_nmhdr::<NMITEMACTIVATE>() };
 			let has_ctrl = nmia.uKeyFlags.has(co::LVKF::CONTROL);
 			let has_shift = nmia.uKeyFlags.has(co::LVKF::SHIFT);
@@ -257,7 +257,7 @@ impl<T> ListView<T> {
 		});
 
 		let self2 = self.clone();
-		parent.privileged_after_on().wm_notify(ctrl_id, co::LVN::DELETEITEM, move |_, p| {
+		parent.after_user_on().wm_notify(ctrl_id, co::LVN::DELETEITEM, move |_, p| {
 			let nmlv = unsafe { p.cast_nmhdr::<NMLISTVIEW>() };
 			self2.items()
 				.get(nmlv.iItem as _)
@@ -269,7 +269,7 @@ impl<T> ListView<T> {
 		});
 
 		let self2 = self.clone();
-		parent.privileged_after_on().wm(co::WM::DESTROY, move |_, _| {
+		parent.after_user_on().wm(co::WM::DESTROY, move |_, _| {
 			[co::LVSIL::NORMAL, co::LVSIL::SMALL, co::LVSIL::STATE, co::LVSIL::GROUPHEADER]
 				.iter()
 				.for_each(|lvsil| {

@@ -18,9 +18,9 @@ pub(in crate::gui) struct Base {
 	hwnd: HWND,
 	is_dialog: bool,
 	parent_ptr: Option<NonNull<Self>>, // used only during creation stuff
-	privileged_events: WindowEventsPriv, // inserted internally to automate tasks: all will be executed
+	before_user_events: WindowEventsPriv, // inserted internally to automate tasks: all will be executed before user events
 	user_events: WindowEventsAll, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
-	privileged_events_after: WindowEventsPriv, // all will be executed after user events
+	after_user_events: WindowEventsPriv, // all will be executed after user events
 	layout_arranger: LayoutArranger,
 }
 
@@ -42,9 +42,9 @@ impl Base {
 			hwnd: HWND::NULL,
 			is_dialog,
 			parent_ptr: parent.map(|parent| NonNull::from(parent.as_ref())),
-			privileged_events: WindowEventsPriv::new(is_dialog),
+			before_user_events: WindowEventsPriv::new(is_dialog),
 			user_events: WindowEventsAll::new(),
-			privileged_events_after: WindowEventsPriv::new(is_dialog),
+			after_user_events: WindowEventsPriv::new(is_dialog),
 			layout_arranger: LayoutArranger::new(),
 		};
 		new_self.default_message_handlers();
@@ -77,12 +77,39 @@ impl Base {
 		}
 	}
 
+	/// Internal before-user events are always executed.
+	pub(in crate::gui) fn before_user_on(&self) -> &WindowEventsPriv {
+		if self.hwnd != HWND::NULL {
+			panic!("Cannot add privileged event after window creation.");
+		}
+		&self.before_user_events
+	}
+
 	/// User events can be overriden; only the last one is executed.
 	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
 		if self.hwnd != HWND::NULL {
 			panic!("Cannot add event after window creation.");
 		}
 		&self.user_events
+	}
+
+	/// Internal after-user events are always executed.
+	pub(in crate::gui) fn after_user_on(&self) -> &WindowEventsPriv {
+		if self.hwnd != HWND::NULL {
+			panic!("Cannot add after-user privileged event after window creation.");
+		}
+		&self.after_user_events
+	}
+
+	/// Processes all before-user messages added internally by the library.
+	///
+	/// Returns `true` if at least one message was processed.
+	pub(in crate::gui) fn process_before_user_messages(&self,
+		hwnd: &HWND,
+		wm_any: WndMsg,
+	) -> AnyResult<bool>
+	{
+		self.before_user_events.process_all_messages(hwnd, wm_any)
 	}
 
 	/// If the user added a closure to the given message, run it.
@@ -93,49 +120,22 @@ impl Base {
 		self.user_events.process_one_message(wm_any)
 	}
 
-	/// Internal events are always executed.
-	pub(in crate::gui) fn privileged_on(&self) -> &WindowEventsPriv {
-		if self.hwnd != HWND::NULL {
-			panic!("Cannot add privileged event after window creation.");
-		}
-		&self.privileged_events
-	}
-
-	/// Internal after-user events are always executed.
-	pub(in crate::gui) fn privileged_after_on(&self) -> &WindowEventsPriv {
-		if self.hwnd != HWND::NULL {
-			panic!("Cannot add after-user privileged event after window creation.");
-		}
-		&self.privileged_events_after
-	}
-
-	/// Processes all messages added internally by the library.
-	///
-	/// Returns `true` if at least one message was processed.
-	pub(in crate::gui) fn process_privileged_messages(&self,
-		hwnd: &HWND,
-		wm_any: WndMsg,
-	) -> AnyResult<bool>
-	{
-		self.privileged_events.process_all_messages(hwnd, wm_any)
-	}
-
 	/// Processes all after-user messages added internally by the library.
 	///
 	/// Returns `true` if at least one message was processed.
-	pub(in crate::gui) fn process_privileged_after_messages(&self,
+	pub(in crate::gui) fn process_after_user_messages(&self,
 		hwnd: &HWND,
 		wm_any: WndMsg,
 	) -> AnyResult<bool>
 	{
-		self.privileged_events_after.process_all_messages(hwnd, wm_any)
+		self.after_user_events.process_all_messages(hwnd, wm_any)
 	}
 
-	/// Removes all user and privileged events.
+	/// Removes all user and before/after events.
 	pub(in crate::gui) fn clear_events(&self) {
-		self.privileged_events.clear_events();
+		self.before_user_events.clear_events();
 		self.user_events.clear_events();
-		self.privileged_events_after.clear_events();
+		self.after_user_events.clear_events();
 	}
 
 	pub(in crate::gui) fn add_to_layout_arranger(&self,
@@ -198,18 +198,18 @@ impl Base {
 		// struct isn't created and pinned yet, so we make LayoutArranger
 		// clonable.
 		let layout_arranger = self.layout_arranger.clone();
-		self.privileged_events.wm_create_or_initdialog(move |hwnd, _| {
+		self.before_user_events.wm_create_or_initdialog(move |hwnd, _| {
 			layout_arranger.save_original_client_area(hwnd)?; // must be done before the first WM_SIZE
 			Ok(())
 		});
 
 		let layout_arranger = self.layout_arranger.clone();
-		self.privileged_events.wm(co::WM::SIZE, move |_, p| {
+		self.before_user_events.wm(co::WM::SIZE, move |_, p| {
 			layout_arranger.rearrange(wm::Size::from_generic_wm(p))?;
 			Ok(())
 		});
 
-		self.privileged_events.wm(Self::WM_UI_THREAD, |_, p| {
+		self.before_user_events.wm(Self::WM_UI_THREAD, |_, p| {
 			if unsafe { co::WM::from_raw(p.wparam as _) } == Self::WM_UI_THREAD { // additional safety check
 				let ptr_pack = p.lparam as *mut ThreadPack; // retrieve pointer
 				let pack = unsafe { Box::from_raw(ptr_pack) };

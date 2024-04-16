@@ -46,7 +46,7 @@ impl DlgModal {
 	}
 
 	fn default_message_handlers(&self) {
-		self.base().privileged_on().wm(co::WM::INITDIALOG, move |hwnd, _| {
+		self.base().before_user_on().wm(co::WM::INITDIALOG, move |hwnd, _| {
 			let rc = hwnd.GetWindowRect()?;
 			let rc_parent = hwnd.GetParent()?.GetWindowRect()?;
 			hwnd.SetWindowPos( // center modal on parent

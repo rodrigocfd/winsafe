@@ -111,7 +111,7 @@ impl Header {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(OptsReszLv::Wnd(&opts))?;
 			Ok(())
 		});
@@ -146,7 +146,7 @@ impl Header {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
+		parent.as_ref().before_user_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(OptsReszLv::Dlg(resize_behavior))?;
 			Ok(())
 		});
@@ -176,7 +176,7 @@ impl Header {
 
 		let lv_base_ptr = NonNull::from(lv_base_ref);
 		let self2 = new_self.clone();
-		parent_base_ref.privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent_base_ref.before_user_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(OptsReszLv::Lv(lv_base_ptr))?;
 			Ok(())
 		});
@@ -222,7 +222,7 @@ impl Header {
 
 	fn default_message_handlers(&self, parent: &Base) {
 		let self2 = self.clone();
-		parent.privileged_after_on().wm(co::WM::DESTROY, move |_, _| {
+		parent.after_user_on().wm(co::WM::DESTROY, move |_, _| {
 			[co::HDSIL::NORMAL, co::HDSIL::STATE]
 				.iter()
 				.for_each(|hdsil| {

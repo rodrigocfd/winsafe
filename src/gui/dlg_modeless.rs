@@ -45,7 +45,7 @@ impl DlgModeless {
 
 	fn default_message_handlers(&self, parent: &Base) {
 		let self2 = self.clone();
-		parent.privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.before_user_on().wm_create_or_initdialog(move |_, _| {
 			self2.0.dlg_base.create_dialog_param()?;
 			self2.base().hwnd().ShowWindow(co::SW::SHOW);
 

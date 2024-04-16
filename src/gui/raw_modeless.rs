@@ -44,7 +44,7 @@ impl RawModeless {
 
 	fn default_message_handlers(&self, parent: &Base) {
 		let self2 = self.clone();
-		parent.privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.before_user_on().wm_create_or_initdialog(move |_, _| {
 			let parent_base_ref = self2.base().parent().unwrap();
 			let opts = &self2.0.opts;
 

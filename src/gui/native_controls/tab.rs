@@ -90,7 +90,7 @@ impl Tab {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(OptsResz::Wnd(&opts))?;
 			Ok(())
 		});
@@ -126,7 +126,7 @@ impl Tab {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
+		parent.as_ref().before_user_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(OptsResz::Dlg(resize_behavior))?;
 			Ok(())
 		});
@@ -173,7 +173,7 @@ impl Tab {
 
 	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {
 		let self2 = self.clone();
-		parent.privileged_on().wm_notify(ctrl_id, co::TCN::SELCHANGE, move |_, _| {
+		parent.before_user_on().wm_notify(ctrl_id, co::TCN::SELCHANGE, move |_, _| {
 			if let Some(sel_item) = self2.items().selected() {
 				self2.display_tab(sel_item.index())?;
 			}
@@ -181,7 +181,7 @@ impl Tab {
 		});
 
 		let self2 = self.clone();
-		parent.privileged_after_on().wm(co::WM::DESTROY, move |_, _| {
+		parent.after_user_on().wm(co::WM::DESTROY, move |_, _| {
 			self2.image_list().map(|hil| {
 				let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) };
 			});

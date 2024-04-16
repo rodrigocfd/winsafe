@@ -57,7 +57,7 @@ impl DlgControl {
 		resize_behavior: (Horz, Vert),
 	) {
 		let self2 = self.clone();
-		parent.privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.before_user_on().wm_create_or_initdialog(move |_, _| {
 			self2.0.dlg_base.create_dialog_param()?;
 			let parent_base_ref = self2.base().parent().unwrap();
 
@@ -77,7 +77,7 @@ impl DlgControl {
 			Ok(())
 		});
 
-		self.base().privileged_on().wm(co::WM::NCPAINT, move |hwnd, p| {
+		self.base().before_user_on().wm(co::WM::NCPAINT, move |hwnd, p| {
 			paint_control_borders(hwnd, wm::NcPaint::from_generic_wm(p))?;
 			Ok(())
 		});

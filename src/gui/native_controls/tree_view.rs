@@ -102,7 +102,7 @@ impl<T> TreeView<T> {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(OptsResz::Wnd(&opts))?;
 			Ok(())
 		});
@@ -138,7 +138,7 @@ impl<T> TreeView<T> {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
+		parent.as_ref().before_user_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(OptsResz::Dlg(resize_behavior))?;
 			Ok(())
 		});
@@ -174,7 +174,7 @@ impl<T> TreeView<T> {
 
 	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {
 		let self2 = self.clone();
-		parent.privileged_after_on().wm_notify(ctrl_id, co::TVN::DELETEITEM, move |_, p| {
+		parent.after_user_on().wm_notify(ctrl_id, co::TVN::DELETEITEM, move |_, p| {
 			let nmtv = unsafe { p.cast_nmhdr::<NMTREEVIEW>() };
 			self2.items()
 				.get(&nmtv.itemOld.hItem)
@@ -186,7 +186,7 @@ impl<T> TreeView<T> {
 		});
 
 		let self2 = self.clone();
-		parent.privileged_after_on().wm(co::WM::DESTROY, move |_, _| {
+		parent.after_user_on().wm(co::WM::DESTROY, move |_, _| {
 			[co::TVSIL::NORMAL, co::TVSIL::STATE]
 				.iter()
 				.for_each(|tvsil| {

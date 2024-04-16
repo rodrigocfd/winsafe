@@ -107,7 +107,7 @@ impl Button {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().privileged_on().wm_create_or_initdialog(move |_, _| {
+		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
  			self2.create(OptsResz::Wnd(&opts))?;
 			Ok(())
 		});
@@ -140,7 +140,7 @@ impl Button {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().privileged_on().wm(co::WM::INITDIALOG, move |_, _| {
+		parent.as_ref().before_user_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(OptsResz::Dlg(resize_behavior))?;
 			Ok(())
 		});
