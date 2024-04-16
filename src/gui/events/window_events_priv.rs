@@ -6,7 +6,7 @@ use crate::gui::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 
-/// Exposes window messages for privileged events, used internally.
+/// Exposes window messages for before/after-user events, used internally.
 pub(in crate::gui) struct WindowEventsPriv {
 	is_dialog: bool,
 	msgs: UnsafeCell< // ordinary WM messages

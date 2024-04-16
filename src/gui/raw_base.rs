@@ -255,14 +255,14 @@ impl RawBase {
 			return Ok(unsafe { hwnd.DefWindowProc(wm_any) });
 		}
 
-		// Execute privileged closures, keep track if at least one was executed.
+		// Execute before-user closures, keep track if at least one was executed.
 		let ref_self = unsafe { &mut *ptr_self };
 		let at_least_one_before_user = ref_self.base.process_before_user_messages(&hwnd, wm_any)?;
 
 		// Execute user closure, if any.
 		let process_result = ref_self.base.process_user_message(wm_any)?;
 
-		// Execute post-user privileged closures, keep track if at least one was executed.
+		// Execute post-user closures, keep track if at least one was executed.
 		let at_least_one_after_user = ref_self.base.process_after_user_messages(&hwnd, wm_any)?;
 
 		if wm_any.msg_id == co::WM::NCDESTROY { // always check

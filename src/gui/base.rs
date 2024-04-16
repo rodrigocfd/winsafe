@@ -80,7 +80,7 @@ impl Base {
 	/// Internal before-user events are always executed.
 	pub(in crate::gui) fn before_user_on(&self) -> &WindowEventsPriv {
 		if self.hwnd != HWND::NULL {
-			panic!("Cannot add privileged event after window creation.");
+			panic!("Cannot add before-user event after window creation.");
 		}
 		&self.before_user_events
 	}
@@ -96,7 +96,7 @@ impl Base {
 	/// Internal after-user events are always executed.
 	pub(in crate::gui) fn after_user_on(&self) -> &WindowEventsPriv {
 		if self.hwnd != HWND::NULL {
-			panic!("Cannot add after-user privileged event after window creation.");
+			panic!("Cannot add after-user event after window creation.");
 		}
 		&self.after_user_events
 	}
