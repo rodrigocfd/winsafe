@@ -1,9 +1,10 @@
 # WinSafe
 
 [![Crates.io](https://img.shields.io/crates/v/winsafe.svg)](https://crates.io/crates/winsafe)
+[![Crates.io total downloads](https://img.shields.io/crates/d/winsafe?color=mediumorchid&label=crates.io)](https://crates.io/crates/winsafe)
 [![Docs.rs](https://docs.rs/winsafe/badge.svg)](https://docs.rs/winsafe)
-[![Lines of code](https://tokei.rs/b1/github/rodrigocfd/winsafe)](https://github.com/rodrigocfd/winsafe)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?label=license)](https://opensource.org/licenses/MIT)
+[![Lines of code](https://tokei.rs/b1/github/rodrigocfd/winsafe?label=LoC)](https://github.com/rodrigocfd/winsafe)
 
 Windows API and GUI in safe, idiomatic Rust.
 
