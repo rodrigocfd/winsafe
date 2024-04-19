@@ -1,6 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\user\structs.rs`."><title>structs.rs - source</title><script> if (window.location.protocol !== "file:") document.write(`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceSerif4-Regular-46f98efaafac5295.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Regular-018c141bf0843ffd.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/FiraSans-Medium-8f9a781e4970d388.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2"><link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2">`)</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-9e1300b5663a8a03.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (9d5cdf75a 2024-04-07)" data-channel="nightly" data-search-js="search-ffac13a0df2b1870.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-c97aec732c613ca4.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-16x16-8b506e7a72182f1c.png"><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title">
-            <h2>Files</h2></div></nav><div class="sidebar-resizer"></div>
-    <main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings"><img width="22" height="22" alt="Change settings" src="../../../static.files/wheel-7b819b6101059cd0.svg"></a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\user\structs.rs`."><title>structs.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-2c208a72533b4dd0.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (0d8b3346a 2024-04-14)" data-channel="nightly" data-search-js="search-ffac13a0df2b1870.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-c97aec732c613ca4.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -1075,13 +1073,65 @@
 <a href="#1073" id="1073">1073</a>
 <a href="#1074" id="1074">1074</a>
 <a href="#1075" id="1075">1075</a>
+<a href="#1076" id="1076">1076</a>
+<a href="#1077" id="1077">1077</a>
+<a href="#1078" id="1078">1078</a>
+<a href="#1079" id="1079">1079</a>
+<a href="#1080" id="1080">1080</a>
+<a href="#1081" id="1081">1081</a>
+<a href="#1082" id="1082">1082</a>
+<a href="#1083" id="1083">1083</a>
+<a href="#1084" id="1084">1084</a>
+<a href="#1085" id="1085">1085</a>
+<a href="#1086" id="1086">1086</a>
+<a href="#1087" id="1087">1087</a>
+<a href="#1088" id="1088">1088</a>
+<a href="#1089" id="1089">1089</a>
+<a href="#1090" id="1090">1090</a>
+<a href="#1091" id="1091">1091</a>
+<a href="#1092" id="1092">1092</a>
+<a href="#1093" id="1093">1093</a>
+<a href="#1094" id="1094">1094</a>
+<a href="#1095" id="1095">1095</a>
+<a href="#1096" id="1096">1096</a>
+<a href="#1097" id="1097">1097</a>
+<a href="#1098" id="1098">1098</a>
+<a href="#1099" id="1099">1099</a>
+<a href="#1100" id="1100">1100</a>
+<a href="#1101" id="1101">1101</a>
+<a href="#1102" id="1102">1102</a>
+<a href="#1103" id="1103">1103</a>
+<a href="#1104" id="1104">1104</a>
+<a href="#1105" id="1105">1105</a>
+<a href="#1106" id="1106">1106</a>
+<a href="#1107" id="1107">1107</a>
+<a href="#1108" id="1108">1108</a>
+<a href="#1109" id="1109">1109</a>
+<a href="#1110" id="1110">1110</a>
+<a href="#1111" id="1111">1111</a>
+<a href="#1112" id="1112">1112</a>
+<a href="#1113" id="1113">1113</a>
+<a href="#1114" id="1114">1114</a>
+<a href="#1115" id="1115">1115</a>
+<a href="#1116" id="1116">1116</a>
+<a href="#1117" id="1117">1117</a>
+<a href="#1118" id="1118">1118</a>
+<a href="#1119" id="1119">1119</a>
+<a href="#1120" id="1120">1120</a>
+<a href="#1121" id="1121">1121</a>
+<a href="#1122" id="1122">1122</a>
+<a href="#1123" id="1123">1123</a>
+<a href="#1124" id="1124">1124</a>
+<a href="#1125" id="1125">1125</a>
+<a href="#1126" id="1126">1126</a>
+<a href="#1127" id="1127">1127</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::kernel::{ffi_types::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::user::privs::<span class="kw-2">*</span>;
 
@@ -1310,6 +1360,18 @@
 	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, lpszName, set_lpszName);
 	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'b</span>, lpszClass, set_lpszClass);
 }
+
+<span class="doccomment">/// [`CURSORINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-cursorinfo)
+/// struct.
+</span><span class="attr">#[repr(C)]
+</span><span class="kw">pub struct </span>CURSORINFO {
+	cbSize: u32,
+	<span class="kw">pub </span>flags: co::CURSOR,
+	<span class="kw">pub </span>hCursor: HCURSOR,
+	<span class="kw">pub </span>ptScreenPost: POINT,
+}
+
+<span class="macro">impl_default_with_size!</span>(CURSORINFO, cbSize);
 
 <span class="doccomment">/// [`DELETEITEMSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-deleteitemstruct)
 /// struct.
@@ -1682,6 +1744,46 @@
 			),
 		}
 	}
+}
+
+<span class="doccomment">/// [`ICONINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-geticoninfo)
+/// struct.
+</span><span class="attr">#[repr(C)]
+</span><span class="kw">pub struct </span>ICONINFO {
+	fIcon: BOOL,
+	<span class="kw">pub </span>xHotspot: u32,
+	<span class="kw">pub </span>yHotspot: u32,
+	<span class="kw">pub </span>hbmMask: HBITMAP,
+	<span class="kw">pub </span>hbmColor: HBITMAP,
+}
+
+<span class="macro">impl_default!</span>(ICONINFO);
+
+<span class="kw">impl </span>ICONINFO {
+	<span class="macro">pub_fn_bool_get_set!</span>(fIcon, set_fIcon);
+}
+
+<span class="doccomment">/// [`ICONINFOEX`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-iconinfoexw)
+/// struct.
+</span><span class="attr">#[repr(C)]
+</span><span class="kw">pub struct </span>ICONINFOEX {
+	cbSize: u32,
+	fIcon: BOOL,
+	<span class="kw">pub </span>xHotspot: u32,
+	<span class="kw">pub </span>yHotspot: u32,
+	<span class="kw">pub </span>hbmMask: HBITMAP,
+	<span class="kw">pub </span>hbmColor: HBITMAP,
+	<span class="kw">pub </span>wResID: u16,
+	szModName: [u16; MAX_PATH],
+	szResName: [u16; MAX_PATH],
+}
+
+<span class="macro">impl_default_with_size!</span>(ICONINFOEX, cbSize);
+
+<span class="kw">impl </span>ICONINFOEX {
+	<span class="macro">pub_fn_bool_get_set!</span>(fIcon, set_fIcon);
+	<span class="macro">pub_fn_string_arr_get_set!</span>(szModName, set_szModName);
+	<span class="macro">pub_fn_string_arr_get_set!</span>(szResName, set_szResName);
 }
 
 <span class="doccomment">/// [`INPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-input)
