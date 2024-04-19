@@ -487,6 +487,25 @@ pub fn GetAsyncKeyState(virt_key: co::VK) -> bool {
 	unsafe { (ffi::GetAsyncKeyState(virt_key.raw() as _) as u16) & 0x8000 != 0 }
 }
 
+/// [`GetCaretBlinkTime`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcaretblinktime)
+/// function.
+#[must_use]
+pub fn GetCaretBlinkTime() -> SysResult<u32> {
+	match unsafe { ffi::GetCaretBlinkTime() } {
+		INFINITE => Err(GetLastError()),
+		n => Ok(n),
+	}
+}
+
+/// [`GetCaretPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcaretpos)
+/// function.
+#[must_use]
+pub fn GetCaretPos() -> SysResult<POINT> {
+	let mut pt = POINT::default();
+	bool_to_sysresult(unsafe { ffi::GetCaretPos(&mut pt as *mut _ as _) })
+		.map(|_| pt)
+}
+
 /// [`GetClipboardData`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboarddata)
 /// function.
 ///
@@ -526,6 +545,12 @@ pub fn GetClipCursor() -> SysResult<RECT> {
 	let mut rc = RECT::default();
 	bool_to_sysresult(unsafe { ffi::GetClipCursor(&mut rc as *mut _ as _) })
 		.map(|_| rc)
+}
+
+/// [`GetCursorInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorinfo)
+/// function.
+pub fn GetCursorInfo(ci: &mut CURSORINFO) -> SysResult<()> {
+	bool_to_sysresult(unsafe { ffi::GetCursorInfo(ci as *mut _ as _) })
 }
 
 /// [`GetCursorPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursorpos)

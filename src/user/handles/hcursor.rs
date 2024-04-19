@@ -33,6 +33,13 @@ pub trait user_Hcursor: Handle {
 		}
 	}
 
+	/// [`GetCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getcursor)
+	/// function.
+	#[must_use]
+	fn GetCursor() -> Option<HCURSOR> {
+		ptr_to_option_handle(unsafe { ffi::GetCursor() })
+	}
+
 	/// [`SetSystemCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setsystemcursor)
 	/// function.
 	fn SetSystemCursor(&self, id: co::OCR) -> SysResult<()> {

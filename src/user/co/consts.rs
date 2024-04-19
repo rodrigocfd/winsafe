@@ -462,6 +462,16 @@ const_bitflag! { CS: u32;
 	DROPSHADOW 0x00020000
 }
 
+const_bitflag! { CURSOR: u32;
+	/// [`CURSORINFO`](crate::CURSORINFO) `flags` (`u32`).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	SHOWING 0x0000_0001
+	SUPPRESSED 0x0000_0002
+}
+
 const_bitflag! { DC: u32;
 	/// [`HWND::DrawCaption`](crate::prelude::user_Hwnd::DrawCaption) `flags`
 	/// (`u32`).

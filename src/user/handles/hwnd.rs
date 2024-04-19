@@ -969,6 +969,12 @@ pub trait user_Hwnd: Handle {
 		(thread_id, proc_id)
 	}
 
+	/// [`HideCaret`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-hidecaret)
+	/// function.
+	fn HideCaret(&self) -> SysResult<()> {
+		bool_to_sysresult(unsafe { ffi::HideCaret(self.ptr()) })
+	}
+
 	/// [`HiliteMenuItem`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-hilitemenuitem)
 	/// function.
 	fn HiliteMenuItem(&self,

@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::kernel::{ffi_types::*, privs::*};
 use crate::prelude::*;
 use crate::user::privs::*;
 
@@ -233,6 +233,18 @@ impl<'a, 'b> CREATESTRUCT<'a, 'b> {
 	pub_fn_string_ptr_get_set!('a, lpszName, set_lpszName);
 	pub_fn_string_ptr_get_set!('b, lpszClass, set_lpszClass);
 }
+
+/// [`CURSORINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-cursorinfo)
+/// struct.
+#[repr(C)]
+pub struct CURSORINFO {
+	cbSize: u32,
+	pub flags: co::CURSOR,
+	pub hCursor: HCURSOR,
+	pub ptScreenPost: POINT,
+}
+
+impl_default_with_size!(CURSORINFO, cbSize);
 
 /// [`DELETEITEMSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-deleteitemstruct)
 /// struct.
@@ -605,6 +617,46 @@ impl HELPINFO {
 			),
 		}
 	}
+}
+
+/// [`ICONINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-geticoninfo)
+/// struct.
+#[repr(C)]
+pub struct ICONINFO {
+	fIcon: BOOL,
+	pub xHotspot: u32,
+	pub yHotspot: u32,
+	pub hbmMask: HBITMAP,
+	pub hbmColor: HBITMAP,
+}
+
+impl_default!(ICONINFO);
+
+impl ICONINFO {
+	pub_fn_bool_get_set!(fIcon, set_fIcon);
+}
+
+/// [`ICONINFOEX`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-iconinfoexw)
+/// struct.
+#[repr(C)]
+pub struct ICONINFOEX {
+	cbSize: u32,
+	fIcon: BOOL,
+	pub xHotspot: u32,
+	pub yHotspot: u32,
+	pub hbmMask: HBITMAP,
+	pub hbmColor: HBITMAP,
+	pub wResID: u16,
+	szModName: [u16; MAX_PATH],
+	szResName: [u16; MAX_PATH],
+}
+
+impl_default_with_size!(ICONINFOEX, cbSize);
+
+impl ICONINFOEX {
+	pub_fn_bool_get_set!(fIcon, set_fIcon);
+	pub_fn_string_arr_get_set!(szModName, set_szModName);
+	pub_fn_string_arr_get_set!(szResName, set_szResName);
 }
 
 /// [`INPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-input)

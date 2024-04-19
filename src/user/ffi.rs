@@ -90,6 +90,8 @@ extern_sys! { "user32";
 	GetAncestor(HANDLE, u32) -> HANDLE
 	GetAsyncKeyState(i32) -> i16
 	GetCapture() -> HANDLE
+	GetCaretBlinkTime() -> u32
+	GetCaretPos(PVOID) -> BOOL
 	GetClassInfoExW(HANDLE, PCSTR, PVOID) -> BOOL
 	GetClassLongPtrW(HANDLE, i32) -> usize
 	GetClassNameW(HANDLE, PSTR, i32) -> i32
@@ -97,6 +99,8 @@ extern_sys! { "user32";
 	GetClipboardData(u32) -> HANDLE
 	GetClipboardSequenceNumber() -> u32
 	GetClipCursor(PVOID) -> BOOL
+	GetCursor() -> HANDLE
+	GetCursorInfo(PVOID) -> BOOL
 	GetCursorPos(PVOID) -> BOOL
 	GetDC(HANDLE) -> HANDLE
 	GetDesktopWindow() -> HANDLE
@@ -109,6 +113,8 @@ extern_sys! { "user32";
 	GetFocus() -> HANDLE
 	GetForegroundWindow() -> HANDLE
 	GetGUIThreadInfo(u32, PVOID) -> BOOL
+	GetIconInfo(HANDLE, PVOID) -> BOOL
+	GetIconInfoExW(HANDLE, PVOID) -> BOOL
 	GetLastActivePopup(HANDLE) -> HANDLE
 	GetMenu(HANDLE) -> HANDLE
 	GetMenuBarInfo(HANDLE, i32, i32, PVOID) -> BOOL
@@ -154,6 +160,7 @@ extern_sys! { "user32";
 	GetWindowTextLengthW(HANDLE) -> i32
 	GetWindowTextW(HANDLE, PSTR, i32) -> i32
 	GetWindowThreadProcessId(HANDLE, *mut u32) -> u32
+	HideCaret(HANDLE) -> BOOL
 	HiliteMenuItem(HANDLE, HANDLE, u32, u32) -> BOOL
 	InflateRect(PVOID, i32, i32) -> BOOL
 	InheritWindowMonitor(HANDLE, HANDLE) -> BOOL
