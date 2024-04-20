@@ -22,6 +22,7 @@ pub struct RadioGroupEvents {
 }
 
 impl RadioGroupEvents {
+	#[must_use]
 	pub(in crate::gui) fn new(
 		parent: &impl AsRef<Base>,
 		ctrl_ids: Vec<u16>,
@@ -33,6 +34,7 @@ impl RadioGroupEvents {
 		}
 	}
 
+	#[must_use]
 	fn parent_user_events(&self) -> &WindowEventsAll {
 		unsafe { self.parent_ptr.as_ref().on() }
 	}

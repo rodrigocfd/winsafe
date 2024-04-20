@@ -40,6 +40,7 @@ impl<'a> Iterator for ComboBoxItemIter<'a> {
 }
 
 impl<'a> ComboBoxItemIter<'a> {
+	#[must_use]
 	pub(in crate::gui) fn new(owner: &'a ComboBox) -> Self {
 		Self {
 			owner,
@@ -81,6 +82,7 @@ impl<'a> Iterator for EditLineIter<'a> {
 }
 
 impl<'a> EditLineIter<'a> {
+	#[must_use]
 	pub(in crate::gui) fn new(owner: &'a Edit) -> Self {
 		Self {
 			owner,
@@ -116,6 +118,7 @@ impl<'a> Iterator for HeaderItemIter<'a> {
 }
 
 impl<'a> HeaderItemIter<'a> {
+	#[must_use]
 	pub(in crate::gui) fn new(owner: &'a Header) -> Self {
 		Self {
 			owner,
@@ -163,6 +166,7 @@ impl<'a> Iterator for ListBoxItemIter<'a> {
 }
 
 impl<'a> ListBoxItemIter<'a> {
+	#[must_use]
 	pub(in crate::gui) fn new(owner: &'a ListBox) -> Self {
 		Self {
 			owner,
@@ -213,6 +217,7 @@ impl<'a> Iterator for ListBoxSelItemIter<'a> {
 }
 
 impl<'a> ListBoxSelItemIter<'a> {
+	#[must_use]
 	pub(in crate::gui) fn new(owner: &'a ListBox) -> Self {
 		let style: co::LBS = owner.hwnd().style().into();
 		let indexes = if style.has(co::LBS::EXTENDEDSEL) { // multiple selection?
@@ -267,6 +272,7 @@ impl<'a, T> Iterator for ListViewColumnIter<'a, T> {
 }
 
 impl<'a, T> ListViewColumnIter<'a, T> {
+	#[must_use]
 	pub(in crate::gui) fn new(owner: &'a ListView<T>) -> Self {
 		Self {
 			owner,
@@ -301,6 +307,7 @@ impl<'a, T> Iterator for ListViewItemIter<'a, T> {
 }
 
 impl<'a, T> ListViewItemIter<'a, T> {
+	#[must_use]
 	pub(in crate::gui) const fn new(
 		owner: &'a ListView<T>,
 		relationship: co::LVNI,
@@ -343,6 +350,7 @@ impl<'a, T> Iterator for TreeViewItemIter<'a, T> {
 }
 
 impl<'a, T> TreeViewItemIter<'a, T> {
+	#[must_use]
 	pub(in crate::gui) const fn new(
 		owner: &'a TreeView<T>,
 		current: Option<TreeViewItem<'a, T>>,
@@ -395,6 +403,7 @@ impl<'a, T> Iterator for TreeViewChildItemIter<'a, T> {
 }
 
 impl<'a, T> TreeViewChildItemIter<'a, T> {
+	#[must_use]
 	pub(in crate::gui) fn new(
 		owner: &'a TreeView<T>,
 		current: Option<TreeViewItem<'a, T>>,

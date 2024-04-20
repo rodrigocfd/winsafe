@@ -53,6 +53,7 @@ impl<'a, H> Iterator for HdropIter<'a, H>
 impl<'a, H> HdropIter<'a, H>
 	where H: shell_Hdrop,
 {
+	#[must_use]
 	pub(in crate::shell) fn new(hdrop: &'a mut H) -> SysResult<Self> {
 		let count = unsafe {
 			ffi::DragQueryFileW( // preliminar call to retrieve the file count
@@ -96,6 +97,7 @@ impl<'a, I> Iterator for IenumshellitemsIter<'a, I>
 impl<'a, I> IenumshellitemsIter<'a, I>
 	where I: shell_IEnumShellItems,
 {
+	#[must_use]
 	pub(in crate::shell) fn new(enum_shi: &'a I) -> Self {
 		Self { enum_shi }
 	}
@@ -137,6 +139,7 @@ impl<'a, I> Iterator for IshellitemarrayIter<'a, I>
 impl<'a, I> IshellitemarrayIter<'a, I>
 	where I: shell_IShellItemArray,
 {
+	#[must_use]
 	pub(in crate::shell) fn new(shi_arr: &'a I) -> HrResult<Self> {
 		let count = shi_arr.GetCount()?;
 		Ok(Self { shi_arr, count, current: 0 })

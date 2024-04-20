@@ -12,6 +12,7 @@ pub struct ListBoxItems<'a> {
 }
 
 impl<'a> ListBoxItems<'a> {
+	#[must_use]
 	pub(in crate::gui) const fn new(owner: &'a ListBox) -> Self {
 		Self { owner }
 	}

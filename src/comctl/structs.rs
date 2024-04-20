@@ -552,6 +552,7 @@ impl MONTHDAYSTATE {
 	/// # Panics
 	///
 	/// Panics if `index` is greater than 31.
+	#[must_use]
 	pub fn get_day(&self, index: u8) -> bool {
 		if index > 31 {
 			panic!("MONTHDAYSTATE max index is 31, tried to get {}.", index)

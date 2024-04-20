@@ -17,6 +17,7 @@ pub(crate) const LB_ERRSPACE: i32 = -2;
 pub(crate) const WC_DIALOG: u16 = 0x8002;
 
 /// Takes an `isize` and returns `Err` if `-1`.
+#[must_use]
 pub(crate) const fn minus1_as_badargs(v: isize) -> SysResult<isize> {
 	match v {
 		-1 => Err(co::ERROR::BAD_ARGUMENTS), // all message errors will return this code
@@ -25,6 +26,7 @@ pub(crate) const fn minus1_as_badargs(v: isize) -> SysResult<isize> {
 }
 
 /// Takes an `isize` and returns `None` if `-1`.
+#[must_use]
 pub(crate) const fn minus1_as_none(v: isize) -> Option<isize> {
 	match v {
 		-1 => None,
@@ -33,6 +35,7 @@ pub(crate) const fn minus1_as_none(v: isize) -> Option<isize> {
 }
 
 /// Takes an `isize` and returns `Err` if zero.
+#[must_use]
 pub(crate) const fn zero_as_badargs(v: isize) -> SysResult<isize> {
 	match v {
 		0 => Err(co::ERROR::BAD_ARGUMENTS), // all message errors will return this code
@@ -41,6 +44,7 @@ pub(crate) const fn zero_as_badargs(v: isize) -> SysResult<isize> {
 }
 
 /// Takes an `isize` and returns `None` if zero.
+#[must_use]
 pub(crate) const fn zero_as_none(v: isize) -> Option<isize> {
 	match v {
 		0 => None,

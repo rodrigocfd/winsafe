@@ -66,6 +66,7 @@ impl Encoding {
 		}
 	}
 
+	#[must_use]
 	fn guess_bom(data: &[u8]) -> Option<(Self, usize)> {
 		let has_bom = |bom_bytes: &[u8]| -> bool {
 			data.len() >= bom_bytes.len()
@@ -110,6 +111,7 @@ impl Encoding {
 		None // no BOM found
 	}
 
+	#[must_use]
 	fn guess_utf8(data: &[u8]) -> bool {
 		let mut i = 0; // https://stackoverflow.com/a/1031773/6923555
 		while i < data.len() {

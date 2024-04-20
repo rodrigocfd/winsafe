@@ -21,6 +21,7 @@ impl Drop for DlgBase {
 }
 
 impl DlgBase {
+	#[must_use]
 	pub(in crate::gui) fn new(
 		parent: Option<&impl AsRef<Base>>,
 		dialog_id: u16,
@@ -32,6 +33,7 @@ impl DlgBase {
 		}
 	}
 
+	#[must_use]
 	pub(in crate::gui) const fn base(&self) -> &Base {
 		&self.base
 	}

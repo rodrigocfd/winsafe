@@ -20,6 +20,7 @@ struct Obj { // actual fields of DlgModeless
 pub(in crate::gui) struct DlgModeless(Pin<Arc<Obj>>);
 
 impl DlgModeless {
+	#[must_use]
 	pub(in crate::gui) fn new(
 		parent: &impl AsRef<Base>,
 		dialog_id: u16,
@@ -39,6 +40,7 @@ impl DlgModeless {
 		new_self
 	}
 
+	#[must_use]
 	pub(in crate::gui) fn base(&self) -> &Base {
 		self.0.dlg_base.base()
 	}

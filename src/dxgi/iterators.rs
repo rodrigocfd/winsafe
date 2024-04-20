@@ -49,6 +49,7 @@ impl<'a, I> Iterator for IdxgiadapterEnumoutputsIter<'a, I>
 impl<'a, I> IdxgiadapterEnumoutputsIter<'a, I>
 	where I: dxgi_IDXGIAdapter,
 {
+	#[must_use]
 	pub(in crate::dxgi) const fn new(adapter: &'a I) -> Self {
 		Self { adapter, cur_index: 0 }
 	}
@@ -101,6 +102,7 @@ impl<'a, I> Iterator for IdxgifactoryEnumadaptersIter<'a, I>
 impl<'a, I> IdxgifactoryEnumadaptersIter<'a, I>
 	where I: dxgi_IDXGIFactory,
 {
+	#[must_use]
 	pub(in crate::dxgi) const fn new(fact: &'a I) -> Self {
 		Self { fact, cur_index: 0 }
 	}

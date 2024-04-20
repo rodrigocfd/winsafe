@@ -15,6 +15,7 @@ impl_default!(PROPERTYKEY);
 impl PROPERTYKEY {
 	/// Creates a new `PROPERTYKEY` by setting `pid` to `PID_FIRST_USABLE`
 	/// (`0x02`).
+	#[must_use]
 	pub const fn new(fmtid: GUID) -> Self {
 		Self { fmtid, pid: PID_FIRST_USABLE }
 	}

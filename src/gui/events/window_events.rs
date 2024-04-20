@@ -41,10 +41,12 @@ impl GuiEvents for WindowEvents {
 }
 
 impl WindowEvents {
+	#[must_use]
 	pub(in crate::gui) fn new() -> Self {
 		Self { msgs: UnsafeCell::new(FuncStore::new()) }
 	}
 
+	#[must_use]
 	pub(in crate::gui) fn is_empty(&self) -> bool {
 		unsafe { &mut *self.msgs.get() }.is_empty()
 	}

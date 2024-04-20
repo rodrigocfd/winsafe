@@ -68,6 +68,7 @@ impl GuiNativeControlEvents<ButtonEvents> for RadioButton {
 }
 
 impl RadioButton {
+	#[must_use]
 	pub(in crate::gui) fn new(
 		parent: &impl GuiParent,
 		opts: RadioButtonOpts,
@@ -87,6 +88,7 @@ impl RadioButton {
 		)
 	}
 
+	#[must_use]
 	pub(in crate::gui) fn new_dlg(
 		parent: &impl GuiParent,
 		ctrl_id: u16,
@@ -297,6 +299,7 @@ impl AutoCtrlId for RadioButtonOpts {
 
 impl RadioButtonOpts {
 	/// Manually clones the object, avoiding a public clone method.
+	#[must_use]
 	pub(in crate::gui) fn manual_clone(&self) -> RadioButtonOpts {
 		Self {
 			text: self.text.clone(),

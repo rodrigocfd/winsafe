@@ -717,6 +717,7 @@ impl DerefMut for TokenPrivilegesGuard {
 }
 
 impl TokenPrivilegesGuard {
+	#[must_use]
 	pub(in crate::kernel) fn new(
 		privileges: &[LUID_AND_ATTRIBUTES],
 	) -> SysResult<Self>

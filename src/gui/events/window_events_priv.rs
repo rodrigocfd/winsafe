@@ -24,6 +24,7 @@ pub(in crate::gui) struct WindowEventsPriv {
 }
 
 impl WindowEventsPriv {
+	#[must_use]
 	pub(in crate::gui) fn new(is_dialog: bool) -> Self {
 		Self {
 			is_dialog,

@@ -363,6 +363,7 @@ impl GUID {
 		}
 	}
 
+	#[must_use]
 	const fn parse_block<const N: usize>(chars: [u8; N]) -> u64 {
 		let mut res: u64 = 0;
 		let mut idx: usize = 0;
@@ -377,12 +378,14 @@ impl GUID {
 		res
 	}
 
+	#[must_use]
 	const fn valid_char(ch: u8) -> bool {
 		(ch >= 48 && ch <= 57) // 0-9
 			|| (ch >= 65 && ch <= 70) // A-F
 			|| (ch >= 97 && ch <= 102) // a-f
 	}
 
+	#[must_use]
 	const fn char_to_num(ch: u8) -> u64 {
 		if ch >= 48 && ch <= 57 {
 			ch as u64 - 48
@@ -1469,6 +1472,7 @@ impl_default!(VALENT);
 impl VALENT {
 	/// Returns a projection over `src`, delimited by `ve_valueptr` and
 	/// `ve_valuelen` fields.
+	#[must_use]
 	pub unsafe fn buf_projection<'a>(&'a self, src: &'a [u8]) -> &'a [u8] {
 		let proj_idx = self.ve_valueptr - src.as_ptr() as usize;
 		let proj_past_idx = proj_idx + self.ve_valuelen as usize;

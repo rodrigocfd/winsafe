@@ -24,6 +24,7 @@ struct Obj { // actual fields of RawMain
 pub(in crate::gui) struct RawMain(Pin<Arc<Obj>>);
 
 impl RawMain {
+	#[must_use]
 	pub(in crate::gui) fn new(opts: WindowMainOpts) -> Self {
 		let new_self = Self(
 			Arc::pin(
@@ -39,6 +40,7 @@ impl RawMain {
 		new_self
 	}
 
+	#[must_use]
 	pub(in crate::gui) fn base(&self) -> &Base {
 		self.0.raw_base.base()
 	}

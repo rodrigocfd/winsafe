@@ -363,6 +363,7 @@ impl std::fmt::Debug for Buffer {
 }
 
 impl Buffer {
+	#[must_use]
 	fn from_opt_str(s: Option<impl AsRef<str>>) -> Self {
 		match s {
 			Some(s) => Self::from_str(s),
@@ -370,6 +371,7 @@ impl Buffer {
 		}
 	}
 
+	#[must_use]
 	fn from_str(s: impl AsRef<str>) -> Self {
 		let s_len = s.as_ref().encode_utf16().count();
 		if s_len == 0 {
@@ -385,6 +387,7 @@ impl Buffer {
 		}
 	}
 
+	#[must_use]
 	fn from_str_vec(v: &[impl AsRef<str>]) -> Self {
 		let tot_chars = v.iter() // number of chars of all strings, including terminating nulls
 			.fold(0, |tot, s| tot + s.as_ref().chars().count() + 1) // include terminating null
@@ -402,6 +405,7 @@ impl Buffer {
 		new_self
 	}
 
+	#[must_use]
 	fn from_wchars_count(src: *const u16, num_chars: usize) -> Self {
 		if src.is_null() || num_chars == 0 {
 			Self::Unallocated
@@ -412,10 +416,12 @@ impl Buffer {
 		}
 	}
 
+	#[must_use]
 	unsafe fn from_wchars_nullt(src: *const u16) -> Self {
 		Self::from_wchars_count(src, unsafe { ffi::lstrlenW(src) as _ })
 	}
 
+	#[must_use]
 	fn from_wchars_slice(src: &[u16]) -> Self {
 		if src.is_empty() {
 			Self::Unallocated
@@ -433,6 +439,7 @@ impl Buffer {
 		}
 	}
 
+	#[must_use]
 	fn new_alloc_buf(num_chars: usize) -> Self {
 		if num_chars == 0 {
 			Self::Unallocated
@@ -449,6 +456,7 @@ impl Buffer {
 		}
 	}
 
+	#[must_use]
 	unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
 		match self {
 			Self::Stack(arr) => arr.as_mut_ptr(),
@@ -457,6 +465,7 @@ impl Buffer {
 		}
 	}
 
+	#[must_use]
 	fn as_mut_slice(&mut self) -> &mut [u16] {
 		match self {
 			Self::Stack(arr) => arr,
@@ -467,6 +476,7 @@ impl Buffer {
 		}
 	}
 
+	#[must_use]
 	fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Stack(arr) => arr.as_ptr(),
@@ -475,6 +485,7 @@ impl Buffer {
 		}
 	}
 
+	#[must_use]
 	fn as_slice(&self) -> &[u16] {
 		match self {
 			Self::Stack(arr) => arr,
@@ -485,6 +496,7 @@ impl Buffer {
 		}
 	}
 
+	#[must_use]
 	const fn buf_len(&self) -> usize {
 		match self {
 			Self::Stack(arr) => arr.len(),
@@ -493,6 +505,7 @@ impl Buffer {
 		}
 	}
 
+	#[must_use]
 	const fn is_allocated(&self) -> bool {
 		match self {
 			Self::Unallocated => false,
@@ -500,6 +513,7 @@ impl Buffer {
 		}
 	}
 
+	#[must_use]
 	fn to_string_checked(&self) -> Result<String, std::string::FromUtf16Error> {
 		match self {
 			Self::Unallocated => Ok(String::default()),

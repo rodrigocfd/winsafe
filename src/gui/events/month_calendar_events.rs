@@ -14,6 +14,7 @@ use crate::gui::privs::*;
 pub struct MonthCalendarEvents(BaseEventsProxy);
 
 impl MonthCalendarEvents {
+	#[must_use]
 	pub(in crate::gui) fn new(parent: &impl AsRef<Base>, ctrl_id: u16) -> Self {
 		Self(BaseEventsProxy::new(parent, ctrl_id))
 	}

@@ -27,6 +27,7 @@ impl<'a, H> Iterator for HimagelistIter<'a, H>
 impl<'a, H> HimagelistIter<'a, H>
 	where H: comctl_Himagelist,
 {
+	#[must_use]
 	pub(in crate::comctl) fn new(himagelist: &'a H) -> Self {
 		Self {
 			himagelist,

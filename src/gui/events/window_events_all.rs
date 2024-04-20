@@ -74,6 +74,7 @@ impl GuiEventsAll for WindowEventsAll {
 }
 
 impl WindowEventsAll {
+	#[must_use]
 	pub(in crate::gui) fn new() -> Self {
 		Self {
 			window_events: WindowEvents::new(),

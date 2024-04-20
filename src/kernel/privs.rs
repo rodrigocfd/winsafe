@@ -20,17 +20,20 @@ pub(crate) const TOKEN_SOURCE_LENGTH: usize = 8;
 
 /// [`IS_INTRESOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-is_intresource)
 /// macro.
+#[must_use]
 pub(crate) const fn IS_INTRESOURCE(val: *const u16) -> bool {
 	(unsafe { std::mem::transmute::<_, usize>(val) } >> 16) == 0
 }
 
 /// [`MAKEINTRESOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makeintresourcew)
 /// macro.
+#[must_use]
 pub(crate) const fn MAKEINTRESOURCE(val: isize) -> *const u16 {
 	val as u16 as _
 }
 
 /// If value is `FALSE`, yields `Err(GetLastError)`, otherwise `Ok()`.
+#[must_use]
 pub(crate) fn bool_to_sysresult(expr: BOOL) -> SysResult<()> {
 	match expr {
 		0 => Err(GetLastError()),
@@ -39,6 +42,7 @@ pub(crate) fn bool_to_sysresult(expr: BOOL) -> SysResult<()> {
 }
 
 /// If pointer is null, yields `Err(GetLastError)`, otherwise `Ok(ptr)`.
+#[must_use]
 pub(crate) fn ptr_to_sysresult(ptr: HANDLE) -> SysResult<HANDLE> {
 	if ptr.is_null() {
 		Err(GetLastError())
@@ -48,6 +52,7 @@ pub(crate) fn ptr_to_sysresult(ptr: HANDLE) -> SysResult<HANDLE> {
 }
 
 /// If pointer is null, yields `Err(GetLastError)`, otherwise `Ok(Handle)`.
+#[must_use]
 pub(crate) fn ptr_to_sysresult_handle<H>(ptr: HANDLE) -> SysResult<H>
 	where H: Handle,
 {
@@ -56,6 +61,7 @@ pub(crate) fn ptr_to_sysresult_handle<H>(ptr: HANDLE) -> SysResult<H>
 }
 
 /// If the pointer is null, yields `None`, otherwise `Some(Handle)`.
+#[must_use]
 pub(crate) fn ptr_to_option_handle<H>(ptr: HANDLE) -> Option<H>
 	where H: Handle,
 {
@@ -67,6 +73,7 @@ pub(crate) fn ptr_to_option_handle<H>(ptr: HANDLE) -> Option<H>
 }
 
 /// If value is `ERROR::SUCCESS`, yields `Ok(())`, otherwise `Err(err)`.
+#[must_use]
 pub(crate) const fn error_to_sysresult(lstatus: i32) -> SysResult<()> {
 	match unsafe { co::ERROR::from_raw(lstatus as _) } {
 		co::ERROR::SUCCESS => Ok(()),
@@ -75,6 +82,7 @@ pub(crate) const fn error_to_sysresult(lstatus: i32) -> SysResult<()> {
 }
 
 /// If value is -1, yields `Err(GetLastError())`, otherwise `Ok(dword)`.
+#[must_use]
 pub(crate) fn minus1_as_error(dword: u32) -> SysResult<u32> {
 	const MINUS_ONE: u32 = -1i32 as u32;
 	match dword {
@@ -84,6 +92,7 @@ pub(crate) fn minus1_as_error(dword: u32) -> SysResult<u32> {
 }
 
 /// Converts a string to an ISO-8859-1 null-terminated byte array.
+#[must_use]
 pub(crate) fn str_to_iso88591(s: &str) -> Vec<u8> {
 	s.chars().map(|ch| ch as u8)
 		.chain(std::iter::once(0)) // append a terminating null
@@ -91,6 +100,7 @@ pub(crate) fn str_to_iso88591(s: &str) -> Vec<u8> {
 }
 
 /// Parses a null-delimited multi-string, which must terminate with two nulls.
+#[must_use]
 pub(crate) fn parse_multi_z_str(src: *const u16) -> Vec<String> {
 	let mut src = src;
 	let mut strings = Vec::<String>::default();
@@ -117,6 +127,7 @@ pub(crate) fn parse_multi_z_str(src: *const u16) -> Vec<String> {
 /// This is necessary because an empty vector returns garbage as its underlying
 /// pointer, see:
 /// * https://github.com/rust-lang/rust/issues/39625
+#[must_use]
 pub(crate) fn vec_ptr<T>(v: &[T]) -> *const T {
 	if v.is_empty() {
 		std::ptr::null()
@@ -128,6 +139,7 @@ pub(crate) fn vec_ptr<T>(v: &[T]) -> *const T {
 /// Creates two vectors:
 /// * the first with each string converted to `WString`;
 /// * the second with the pointers to each `WString` in the first vector.
+#[must_use]
 pub(crate) fn create_wstr_ptr_vecs(
 	strings: Option<&[impl AsRef<str>]>,
 ) -> (Vec<WString>, Vec<*const u16>)

@@ -33,6 +33,7 @@ impl<'a, T> Clone for ListViewItem<'a, T> { // https://stackoverflow.com/q/39415
 impl<'a, T> Copy for ListViewItem<'a, T> {}
 
 impl<'a, T> ListViewItem<'a, T> {
+	#[must_use]
 	pub(in crate::gui) const fn new(owner: &'a ListView<T>, index: u32) -> Self {
 		Self { owner, index }
 	}
@@ -52,6 +53,7 @@ impl<'a, T> ListViewItem<'a, T> {
 			})
 	}
 
+	#[must_use]
 	pub(in crate::gui) fn data_lparam(&self) -> Option<*mut RefCell<T>> {
 		let mut lvi = LVITEM::default();
 		lvi.iItem = self.index as _;

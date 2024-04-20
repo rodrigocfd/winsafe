@@ -20,6 +20,7 @@ pub struct HeaderItem<'a> {
 }
 
 impl<'a> HeaderItem<'a> {
+	#[must_use]
 	pub(in crate::gui) const fn new(owner: &'a Header, index: u32) -> Self {
 		Self { owner, index }
 	}

@@ -6,12 +6,14 @@ use crate::kernel::ffi_types::*;
 use crate::prelude::*;
 
 /// Returns a reference to the virtual table of the COM object.
+#[must_use]
 pub(crate) unsafe fn vt<T>(obj: &impl ole_IUnknown) -> &T {
 	let ppvt = obj.ptr() as *mut *mut T;
 	&**ppvt
 }
 
 /// Converts the pointer into the Box for the COM implementation.
+#[must_use]
 pub(crate) fn box_impl<T>(p: COMPTR) -> ManuallyDrop<Box<T>> {
 	let pp = p as *mut *mut T;
 	let box_impl = ManuallyDrop::new(unsafe { Box::from_raw(*pp) });
@@ -19,6 +21,7 @@ pub(crate) fn box_impl<T>(p: COMPTR) -> ManuallyDrop<Box<T>> {
 }
 
 /// If value is `S_OK` yields `Ok()`, othersize `Err(hresult)`.
+#[must_use]
 pub(crate) const fn ok_to_hrresult(hr: HRES) -> HrResult<()> {
 	match unsafe { co::HRESULT::from_raw(hr) } {
 		co::HRESULT::S_OK => Ok(()),
@@ -28,6 +31,7 @@ pub(crate) const fn ok_to_hrresult(hr: HRES) -> HrResult<()> {
 
 /// If value is `S_OK` yields `Ok(true)`, if `S_FALSE` yields `Ok(false)`
 /// othersize `Err(hresult)`.
+#[must_use]
 pub(crate) const fn okfalse_to_hrresult(hr: HRES) -> HrResult<bool> {
 	match unsafe { co::HRESULT::from_raw(hr) } {
 		co::HRESULT::S_OK => Ok(true),
@@ -37,6 +41,7 @@ pub(crate) const fn okfalse_to_hrresult(hr: HRES) -> HrResult<bool> {
 }
 
 /// If value is `Ok` yields 0, otherwise the error code.
+#[must_use]
 pub(crate) const fn hrresult_to_hres<T>(hrr: &HrResult<T>) -> HRES {
 	match hrr {
 		Ok(_) => co::HRESULT::S_OK.raw(),

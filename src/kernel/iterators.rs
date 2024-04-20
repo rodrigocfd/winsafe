@@ -64,6 +64,7 @@ impl<'a> Iterator for DirListIter<'a> {
 }
 
 impl<'a> DirListIter<'a> {
+	#[must_use]
 	pub(in crate::kernel) fn new(
 		dir_path: String,
 		filter: Option<&'a str>,
@@ -134,6 +135,7 @@ impl<'a> Iterator for DirWalkIter<'a> {
 }
 
 impl<'a> DirWalkIter<'a> {
+	#[must_use]
 	pub(in crate::kernel) fn new(dir_path: String) -> Self {
 		Self {
 			runner: DirListIter::new(dir_path, None),
@@ -186,6 +188,7 @@ impl<'a, H> Iterator for HheapHeapwalkIter<'a, H>
 impl<'a, H> HheapHeapwalkIter<'a, H>
 	where H: kernel_Hheap,
 {
+	#[must_use]
 	pub(in crate::kernel) fn new(hheap: &'a H) -> Self {
 		Self {
 			hheap,
@@ -246,6 +249,7 @@ impl<'a, H> Iterator for HkeyKeyIter<'a, H>
 impl<'a, H> HkeyKeyIter<'a, H>
 	where H: kernel_Hkey,
 {
+	#[must_use]
 	pub(in crate::kernel) fn new(hkey: &'a H) -> SysResult<Self> {
 		let mut num_keys = u32::default();
 		let mut max_key_name_len = u32::default();
@@ -314,6 +318,7 @@ impl<'a, H> Iterator for HkeyValueIter<'a, H>
 impl<'a, H> HkeyValueIter<'a, H>
 	where H: kernel_Hkey,
 {
+	#[must_use]
 	pub(in crate::kernel) fn new(hkey: &'a H) -> SysResult<Self> {
 		let mut num_vals = u32::default();
 		let mut max_val_name_len = u32::default();
@@ -381,6 +386,7 @@ impl<'a, H> Iterator for HprocesslistHeapIter<'a, H>
 impl<'a, H> HprocesslistHeapIter<'a, H>
 	where H: kernel_Hprocesslist,
 {
+	#[must_use]
 	pub(in crate::kernel) fn new(hpl: &'a mut H) -> Self {
 		Self {
 			hpl,
@@ -442,6 +448,7 @@ impl<'a, H> Iterator for HprocesslistModuleIter<'a, H>
 impl<'a, H> HprocesslistModuleIter<'a, H>
 	where H: kernel_Hprocesslist,
 {
+	#[must_use]
 	pub(in crate::kernel) fn new(hpl: &'a mut H) -> Self {
 		Self {
 			hpl,
@@ -503,6 +510,7 @@ impl<'a, H> Iterator for HprocesslistProcessIter<'a, H>
 impl<'a, H> HprocesslistProcessIter<'a, H>
 	where H: kernel_Hprocesslist,
 {
+	#[must_use]
 	pub(in crate::kernel) fn new(hpl: &'a mut H) -> Self {
 		Self {
 			hpl,
@@ -564,6 +572,7 @@ impl<'a, H> Iterator for HprocesslistThreadIter<'a, H>
 impl<'a, H> HprocesslistThreadIter<'a, H>
 	where H: kernel_Hprocesslist,
 {
+	#[must_use]
 	pub(in crate::kernel) fn new(hpl: &'a mut H) -> Self {
 		Self {
 			hpl,

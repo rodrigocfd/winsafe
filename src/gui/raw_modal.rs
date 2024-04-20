@@ -22,6 +22,7 @@ struct Obj { // actual fields of RawModal
 pub(in crate::gui) struct RawModal(Pin<Arc<Obj>>);
 
 impl RawModal {
+	#[must_use]
 	pub(in crate::gui) fn new(
 		parent: &impl AsRef<Base>,
 		opts: WindowModalOpts,
@@ -41,6 +42,7 @@ impl RawModal {
 		new_self
 	}
 
+	#[must_use]
 	pub(in crate::gui) fn base(&self) -> &Base {
 		self.0.raw_base.base()
 	}

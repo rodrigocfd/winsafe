@@ -13,6 +13,7 @@ pub struct TabItems<'a> {
 }
 
 impl<'a> TabItems<'a> {
+	#[must_use]
 	pub(in crate::gui) const fn new(owner: &'a Tab) -> Self {
 		Self { owner }
 	}

@@ -42,6 +42,7 @@ impl Default for BITMAPFILEHEADER {
 
 impl BITMAPFILEHEADER {
 	/// Serializes the struct into `&[u8]`.
+	#[must_use]
 	pub const fn serialize(&self) -> &[u8] {
 		unsafe {
 			std::slice::from_raw_parts(
@@ -92,6 +93,7 @@ impl_default_with_size!(BITMAPINFOHEADER, biSize);
 
 impl BITMAPINFOHEADER {
 	/// Serializes the struct into `&[u8]`.
+	#[must_use]
 	pub const fn serialize(&self) -> &[u8] {
 		unsafe {
 			std::slice::from_raw_parts(
@@ -138,6 +140,7 @@ impl LOGFONT {
 	pub_fn_string_arr_get_set!(lfFaceName, set_lfFaceName);
 
 	/// Creates a `LOGFONT` and automatically sets `lfHeight` and `lfFaceName`.
+	#[must_use]
 	pub fn new_face(height: i32, face_name: &str) -> Self {
 		let mut lf = Self::default();
 		lf.lfHeight = height;

@@ -41,10 +41,12 @@ impl RawControl {
 		new_self
 	}
 
+	#[must_use]
 	pub(in crate::gui) fn base(&self) -> &Base {
 		self.0.raw_base.base()
 	}
 
+	#[must_use]
 	pub(in crate::gui) fn ctrl_id(&self) -> u16 {
 		self.0.opts.ctrl_id
 	}

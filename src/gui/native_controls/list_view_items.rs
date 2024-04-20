@@ -18,6 +18,7 @@ pub struct ListViewItems<'a, T: 'static> {
 }
 
 impl<'a, T> ListViewItems<'a, T> {
+	#[must_use]
 	pub(in crate::gui) const fn new(owner: &'a ListView<T>) -> Self {
 		Self { owner }
 	}

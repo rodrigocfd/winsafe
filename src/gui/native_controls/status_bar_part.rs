@@ -19,6 +19,7 @@ pub struct StatusBarPart<'a> {
 }
 
 impl<'a> StatusBarPart<'a> {
+	#[must_use]
 	pub(in crate::gui) const fn new(owner: &'a StatusBar, index: u8) -> Self {
 		Self { owner, index }
 	}

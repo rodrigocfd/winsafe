@@ -19,6 +19,7 @@ pub enum Brush {
 
 impl Brush {
 	/// Converts the contents of `Brush` to `HBRUSH`.
+	#[must_use]
 	pub fn as_hbrush(&self) -> HBRUSH {
 		match self {
 			Brush::Color(c) => HBRUSH::from_sys_color(*c),
@@ -47,6 +48,7 @@ pub enum Cursor {
 
 impl Cursor {
 	/// Converts the contents of `Cursor` to `HCURSOR`.
+	#[must_use]
 	pub fn as_hcursor(&self, hinst: &HINSTANCE) -> SysResult<HCURSOR> {
 		unsafe {
 			Ok(match self {
@@ -79,6 +81,7 @@ pub enum Icon {
 
 impl Icon {
 	/// Converts the contents of `Icon` to `HICON`.
+	#[must_use]
 	pub fn as_hicon(&self, hinst: &HINSTANCE) -> SysResult<HICON> {
 		unsafe {
 			Ok(match self {
@@ -110,10 +113,12 @@ impl Drop for RawBase {
 }
 
 impl RawBase {
+	#[must_use]
 	pub(in crate::gui) fn new(parent: Option<&impl AsRef<Base>>) -> Self {
 		Self { base: Base::new(false, parent) }
 	}
 
+	#[must_use]
 	pub(in crate::gui) const fn base(&self) -> &Base {
 		&self.base
 	}

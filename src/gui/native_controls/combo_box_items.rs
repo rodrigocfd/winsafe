@@ -12,6 +12,7 @@ pub struct ComboBoxItems<'a> {
 }
 
 impl<'a> ComboBoxItems<'a> {
+	#[must_use]
 	pub(in crate::gui) const fn new(owner: &'a ComboBox) -> Self {
 		Self { owner }
 	}

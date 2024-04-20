@@ -43,6 +43,7 @@ impl<'a> Iterator for EnumdisplaydevicesIter<'a> {
 }
 
 impl<'a> EnumdisplaydevicesIter<'a> {
+	#[must_use]
 	pub(in crate::user) fn new(
 		device_name: Option<&'a str>,
 		flags: Option<co::EDD>,
@@ -85,6 +86,7 @@ impl<'a, H> Iterator for HmenuIteritems<'a, H>
 impl<'a, H> HmenuIteritems<'a, H>
 	where H: user_Hmenu,
 {
+	#[must_use]
 	pub(in crate::user) fn new(hmenu: &'a H) -> Self {
 		Self {
 			hmenu,

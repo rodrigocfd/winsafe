@@ -60,6 +60,7 @@ struct Obj { // actual fields of LayoutArranger
 pub(in crate::gui) struct LayoutArranger(Pin<Arc<Obj>>);
 
 impl LayoutArranger {
+	#[must_use]
 	pub(in crate::gui) fn new() -> Self {
 		Self(
 			Arc::pin(

@@ -122,6 +122,7 @@ impl<'a, 'b, 'c, 'd, 'e> SHELLEXECUTEINFO<'a, 'b, 'c, 'd, 'e> {
 	///
 	/// let (hicon, _) = unsafe { sei.hIcon_hMonitor() };
 	/// ```
+	#[must_use]
 	pub unsafe fn hIcon_hMonitor(&self) -> (HICON, HMONITOR) {
 		(HICON::from_ptr(self.hIcon_hMonitor),
 			HMONITOR::from_ptr(self.hIcon_hMonitor))

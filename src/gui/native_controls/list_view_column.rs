@@ -19,6 +19,7 @@ pub struct ListViewColumn<'a, T: 'static = ()> {
 }
 
 impl<'a, T> ListViewColumn<'a, T> {
+	#[must_use]
 	pub(in crate::gui) const fn new(owner: &'a ListView<T>, index: u32) -> Self {
 		Self { owner, index }
 	}

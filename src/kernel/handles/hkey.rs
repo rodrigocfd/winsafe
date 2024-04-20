@@ -1024,6 +1024,7 @@ pub trait kernel_Hkey: Handle {
 }
 
 impl HKEY {
+	#[must_use]
 	pub(in crate::kernel) fn is_predef_key(&self) -> bool {
 		// Note that we are not constructing HKEY objects, so no drop() is called.
 		(self.0 as usize) >= (Self::CLASSES_ROOT.0 as usize)

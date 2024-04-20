@@ -22,6 +22,7 @@ struct Obj { // actual fields of DlgMain
 pub(in crate::gui) struct DlgMain(Pin<Arc<Obj>>);
 
 impl DlgMain {
+	#[must_use]
 	pub(in crate::gui) fn new(
 		dialog_id: u16,
 		icon_id: Option<u16>,
@@ -42,6 +43,7 @@ impl DlgMain {
 		new_self
 	}
 
+	#[must_use]
 	pub(in crate::gui) fn base(&self) -> &Base {
 		self.0.dlg_base.base()
 	}

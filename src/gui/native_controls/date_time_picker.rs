@@ -177,11 +177,14 @@ impl DateTimePicker {
 
 	/// Retrieves the currently selected date by sending a
 	/// [`dtm::GetSystemTime`](crate::msg::dtm::GetSystemTime) message.
-	pub fn date(&self, st: &mut SYSTEMTIME) {
+	#[must_use]
+	pub fn date(&self) -> SYSTEMTIME {
+		let mut st = SYSTEMTIME::default();
 		unsafe {
 			self.hwnd()
-				.SendMessage(dtm::GetSystemTime { system_time: st })
-		}.unwrap()
+				.SendMessage(dtm::GetSystemTime { system_time: &mut st })
+		}.unwrap();
+		st
 	}
 
 	/// Sets the currently selected date by sending a

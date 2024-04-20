@@ -113,6 +113,7 @@ impl DerefMut for LogpaletteGuard {
 }
 
 impl LogpaletteGuard {
+	#[must_use]
 	pub(in crate::gdi) fn new(
 		pal_version: u16,
 		entries: &[PALETTEENTRY],

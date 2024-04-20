@@ -23,6 +23,7 @@ impl<'a, I> Iterator for IenumfiltersIter<'a, I>
 impl<'a, I> IenumfiltersIter<'a, I>
 	where I: dshow_IEnumFilters,
 {
+	#[must_use]
 	pub(in crate::dshow) const fn new(enum_filters: &'a I) -> Self {
 		Self { enum_filters }
 	}
@@ -60,6 +61,7 @@ impl<'a, I> Iterator for IenummediatypesIter<'a, I>
 impl<'a, I> IenummediatypesIter<'a, I>
 	where I: dshow_IEnumMediaTypes,
 {
+	#[must_use]
 	pub(in crate::dshow) fn new(enum_mt: &'a I) -> Self {
 		Self { enum_mt, amt: AM_MEDIA_TYPE::default() }
 	}
@@ -89,6 +91,7 @@ impl<'a, I> Iterator for IenumpinsIter<'a, I>
 impl<'a, I> IenumpinsIter<'a, I>
 	where I: dshow_IEnumPins,
 {
+	#[must_use]
 	pub(in crate::dshow) const fn new(enum_pins: &'a I) -> Self {
 		Self { enum_pins }
 	}

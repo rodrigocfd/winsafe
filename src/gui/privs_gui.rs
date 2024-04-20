@@ -48,6 +48,7 @@ pub(in crate::gui) fn delete_ui_font() {
 }
 
 /// Retrieves the global UI font object, or panics if not created yet.
+#[must_use]
 pub(in crate::gui) fn ui_font() -> HFONT {
 	unsafe {
 		match &*std::ptr::addr_of!(UI_HFONT) {
@@ -62,6 +63,7 @@ pub(in crate::gui) fn ui_font() -> HFONT {
 static mut BASE_CTRL_ID: u16 = 0xdfff; // https://stackoverflow.com/a/18192766/6923555
 
 /// Returns the next sequential control ID.
+#[must_use]
 pub(in crate::gui) fn next_auto_ctrl_id() -> u16 {
 	unsafe {
 		let your_id = BASE_CTRL_ID;
@@ -72,10 +74,12 @@ pub(in crate::gui) fn next_auto_ctrl_id() -> u16 {
 
 /// To be implemented for control options structs.
 pub(in crate::gui) trait AutoCtrlId {
+	#[must_use]
 	fn ctrl_id_mut(&mut self) -> &mut u16;
 }
 
 /// If the control ID is zero, give it the next sequential ID.
+#[must_use]
 pub(in crate::gui) fn auto_ctrl_id_if_zero<T: AutoCtrlId>(mut obj: T) -> T {
 	if *obj.ctrl_id_mut() == 0 {
 		*obj.ctrl_id_mut() = next_auto_ctrl_id();
@@ -152,6 +156,7 @@ pub(in crate::gui) fn multiply_dpi_or_dtu(
 //------------------------------------------------------------------------------
 
 /// Calculates the bound rectangle to fit the text with current system font.
+#[must_use]
 pub(in crate::gui) fn calc_text_bound_box(text: &str) -> SysResult<SIZE> {
 	let desktop_hwnd = HWND::GetDesktopWindow();
 	let desktop_hdc = desktop_hwnd.GetDC()?;
@@ -172,6 +177,7 @@ pub(in crate::gui) fn calc_text_bound_box(text: &str) -> SysResult<SIZE> {
 
 /// Calculates the bound rectangle to fit the text with current system font,
 /// adding a check box.
+#[must_use]
 pub(in crate::gui) fn calc_text_bound_box_check(text: &str) -> SysResult<SIZE> {
 	let mut bound_box = calc_text_bound_box(text)?;
 	bound_box.cx += GetSystemMetrics(co::SM::CXMENUCHECK) // https://stackoverflow.com/a/1165052/6923555
@@ -185,6 +191,7 @@ pub(in crate::gui) fn calc_text_bound_box_check(text: &str) -> SysResult<SIZE> {
 	Ok(bound_box)
 }
 
+#[must_use]
 fn remove_accelerator_ampersands(text: &str) -> String {
 	let mut txt_no_ampersands = String::with_capacity(text.len());
 	let mut last_ch = 'a'; // initial value will be skipped
@@ -206,6 +213,7 @@ fn remove_accelerator_ampersands(text: &str) -> String {
 //------------------------------------------------------------------------------
 
 /// Adjusts the position of a modeless window on parent.
+#[must_use]
 pub(in crate::gui) fn adjust_modeless_pos(
 	parent_base: &Base,
 	mut user_pos: POINT,

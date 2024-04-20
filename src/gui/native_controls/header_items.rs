@@ -11,12 +11,14 @@ pub struct HeaderItems<'a> {
 }
 
 impl<'a> HeaderItems<'a> {
+	#[must_use]
 	pub(in crate::gui) const fn new(owner: &'a Header) -> Self {
 		Self { owner }
 	}
 
 	/// Retrieves the total number of items by sending a
 	/// [`hdm::GetItemCount`](crate::msg::hdm::GetItemCount) message.
+	#[must_use]
 	pub fn count(&self) -> u32 {
 		unsafe {
 			self.owner.hwnd()

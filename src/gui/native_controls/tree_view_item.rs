@@ -21,6 +21,7 @@ pub struct TreeViewItem<'a, T: 'static = ()> {
 }
 
 impl<'a, T> TreeViewItem<'a, T> {
+	#[must_use]
 	pub(in crate::gui) const fn new(
 		owner: &'a TreeView<T>,
 		hitem: HTREEITEM,
@@ -29,6 +30,7 @@ impl<'a, T> TreeViewItem<'a, T> {
 		Self { owner, hitem }
 	}
 
+	#[must_use]
 	fn raw_clone(&self) -> Self {
 		Self {
 			owner: self.owner,
@@ -63,6 +65,7 @@ impl<'a, T> TreeViewItem<'a, T> {
 			})
 	}
 
+	#[must_use]
 	pub(in crate::gui) fn data_lparam(&self) -> Option<*mut RefCell<T>> {
 		let mut tvix = TVITEMEX::default();
 		tvix.hItem = unsafe { self.hitem.raw_copy() };

@@ -22,6 +22,7 @@ struct Obj { // actual fields of DlgControl
 pub(in crate::gui) struct DlgControl(Pin<Arc<Obj>>);
 
 impl DlgControl {
+	#[must_use]
 	pub(in crate::gui) fn new(
 		parent: &impl AsRef<Base>,
 		dialog_id: u16,
@@ -44,10 +45,12 @@ impl DlgControl {
 		new_self
 	}
 
+	#[must_use]
 	pub(in crate::gui) fn base(&self) -> &Base {
 		self.0.dlg_base.base()
 	}
 
+	#[must_use]
 	pub(in crate::gui) fn ctrl_id(&self) -> u16 {
 		self.0.ctrl_id
 	}

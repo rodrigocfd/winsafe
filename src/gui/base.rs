@@ -33,6 +33,7 @@ impl AsRef<Base> for Base {
 impl Base {
 	const WM_UI_THREAD: co::WM = unsafe { co::WM::from_raw(co::WM::APP.raw() + 0x3fff) };
 
+	#[must_use]
 	pub(in crate::gui) fn new(
 		is_dialog: bool,
 		parent: Option<&impl AsRef<Base>>,
@@ -51,6 +52,7 @@ impl Base {
 		new_self
 	}
 
+	#[must_use]
 	pub(in crate::gui) const fn hwnd(&self) -> &HWND {
 		&self.hwnd
 	}
@@ -59,10 +61,12 @@ impl Base {
 		self.hwnd = hwnd
 	}
 
+	#[must_use]
 	pub(in crate::gui) const fn is_dialog(&self) -> bool {
 		self.is_dialog
 	}
 
+	#[must_use]
 	pub(in crate::gui) const fn parent(&self) -> Option<&Base> {
 		match self.parent_ptr {
 			Some(parent_ptr) => Some(unsafe { parent_ptr.as_ref() }),
@@ -70,6 +74,7 @@ impl Base {
 		}
 	}
 
+	#[must_use]
 	pub(in crate::gui) fn parent_hinstance(&self) -> SysResult<HINSTANCE> {
 		match self.parent() {
 			Some(parent) => Ok(parent.hwnd().hinstance()),
@@ -78,6 +83,7 @@ impl Base {
 	}
 
 	/// Internal before-user events are always executed.
+	#[must_use]
 	pub(in crate::gui) fn before_user_on(&self) -> &WindowEventsPriv {
 		if self.hwnd != HWND::NULL {
 			panic!("Cannot add before-user event after window creation.");
@@ -86,6 +92,7 @@ impl Base {
 	}
 
 	/// User events can be overriden; only the last one is executed.
+	#[must_use]
 	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
 		if self.hwnd != HWND::NULL {
 			panic!("Cannot add event after window creation.");
@@ -94,6 +101,7 @@ impl Base {
 	}
 
 	/// Internal after-user events are always executed.
+	#[must_use]
 	pub(in crate::gui) fn after_user_on(&self) -> &WindowEventsPriv {
 		if self.hwnd != HWND::NULL {
 			panic!("Cannot add after-user event after window creation.");

@@ -35,6 +35,7 @@ impl<'a, I> Iterator for IpropertystoreIter<'a, I>
 impl<'a, I> IpropertystoreIter<'a, I>
 	where I: oleaut_IPropertyStore,
 {
+	#[must_use]
 	pub(in crate::oleaut) fn new(prop_st: &'a I) -> HrResult<Self> {
 		let count = prop_st.GetCount()?;
 		Ok(Self { prop_st, count, current: 0 })

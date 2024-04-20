@@ -77,6 +77,7 @@ impl_default!(DXGI_MAPPED_RECT);
 
 impl DXGI_MAPPED_RECT {
 	/// Returns a slice over the `pBits` buffer.
+	#[must_use]
 	pub fn pBits(&self) -> Option<&[u8]> {
 		if self.pBits.is_null() {
 			None

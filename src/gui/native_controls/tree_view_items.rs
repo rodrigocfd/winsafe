@@ -13,6 +13,7 @@ pub struct TreeViewItems<'a, T: 'static> {
 }
 
 impl<'a, T> TreeViewItems<'a, T> {
+	#[must_use]
 	pub(in crate::gui) const fn new(owner: &'a TreeView<T>) -> Self {
 		Self { owner }
 	}

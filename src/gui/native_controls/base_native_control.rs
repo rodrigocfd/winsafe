@@ -20,10 +20,12 @@ pub(in crate::gui) enum OptsResz<T> {
 }
 
 pub(in crate::gui) trait ResizeBehavior {
+	#[must_use]
 	fn resize_behavior(&self) -> (Horz, Vert);
 }
 
 impl<T: ResizeBehavior> OptsResz<T> {
+	#[must_use]
 	pub(in crate::gui) fn resize_behavior(&self) -> (Horz, Vert) {
 		match self {
 			OptsResz::Wnd(opts) => opts.resize_behavior(),
@@ -45,6 +47,7 @@ pub(in crate::gui) struct BaseNativeControl {
 }
 
 impl BaseNativeControl {
+	#[must_use]
 	pub(in crate::gui) fn new(parent: &impl AsRef<Base>, ctrl_id: u16) -> Self {
 		if *parent.as_ref().hwnd() != HWND::NULL {
 			panic!("Cannot create a child control after the parent window is created.");
@@ -58,18 +61,22 @@ impl BaseNativeControl {
 		}
 	}
 
+	#[must_use]
 	pub(in crate::gui) const fn ctrl_id(&self) -> u16 {
 		self.ctrl_id
 	}
 
+	#[must_use]
 	pub(in crate::gui) fn hwnd(&self) -> &HWND {
 		unsafe { &mut *self.hwnd.get() }
 	}
 
+	#[must_use]
 	pub(in crate::gui) const fn parent(&self) -> &Base {
 		unsafe { self.parent_ptr.as_ref() }
 	}
 
+	#[must_use]
 	pub(in crate::gui) fn on_subclass(&self) -> &WindowEvents {
 		if *self.hwnd() != HWND::NULL {
 			panic!("Cannot add subclass events after control creation.");
