@@ -11,12 +11,12 @@ use crate::gui::privs::*;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-pub struct DateTimePickerEvents(BaseEventsProxy);
+pub struct DateTimePickerEvents(BaseCtrlEventsProxy);
 
 impl DateTimePickerEvents {
 	#[must_use]
 	pub(in crate::gui) fn new(parent: &impl AsRef<Base>, ctrl_id: u16) -> Self {
-		Self(BaseEventsProxy::new(parent, ctrl_id))
+		Self(BaseCtrlEventsProxy::new(parent, ctrl_id))
 	}
 
 	pub_fn_nfy_noparm_noret! { dtn_close_up, co::DTN::CLOSEUP;

@@ -1,7 +1,7 @@
 //! Events exposed by windows and controls, which allow the handling of native
 //! Windows messages.
 
-mod base_events_proxy;
+mod base_ctrl_events_proxy;
 mod button_events;
 mod combo_box_events;
 mod date_time_picker_events;
@@ -23,7 +23,7 @@ mod window_events_priv;
 mod window_events;
 
 pub(in crate::gui) mod privs {
-	pub(in crate::gui) use super::base_events_proxy::BaseEventsProxy;
+	pub(in crate::gui) use super::base_ctrl_events_proxy::BaseCtrlEventsProxy;
 	pub(in crate::gui) use super::func_store::FuncStore;
 	pub(in crate::gui) use super::window_events_priv::WindowEventsPriv;
 	pub(in crate::gui) use super::window_events::ProcessResult;
