@@ -105,6 +105,8 @@
 <a href="#105" id="105">105</a>
 <a href="#106" id="106">106</a>
 <a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
@@ -156,7 +158,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, I&gt; IdxgiadapterEnumoutputsIter&lt;<span class="lifetime">'a</span>, I&gt;
 	<span class="kw">where </span>I: dxgi_IDXGIAdapter,
 {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::dxgi) <span class="kw">const fn </span>new(adapter: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>I) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::dxgi) <span class="kw">const fn </span>new(adapter: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>I) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{ adapter, cur_index: <span class="number">0 </span>}
 	}
 }
@@ -208,7 +211,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, I&gt; IdxgifactoryEnumadaptersIter&lt;<span class="lifetime">'a</span>, I&gt;
 	<span class="kw">where </span>I: dxgi_IDXGIFactory,
 {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::dxgi) <span class="kw">const fn </span>new(fact: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>I) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::dxgi) <span class="kw">const fn </span>new(fact: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>I) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{ fact, cur_index: <span class="number">0 </span>}
 	}
 }

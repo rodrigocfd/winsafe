@@ -1513,6 +1513,10 @@
 <a href="#1513" id="1513">1513</a>
 <a href="#1514" id="1514">1514</a>
 <a href="#1515" id="1515">1515</a>
+<a href="#1516" id="1516">1516</a>
+<a href="#1517" id="1517">1517</a>
+<a href="#1518" id="1518">1518</a>
+<a href="#1519" id="1519">1519</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -1878,7 +1882,8 @@
 		}
 	}
 
-	<span class="kw">const fn </span>parse_block&lt;<span class="kw">const </span>N: usize&gt;(chars: [u8; N]) -&gt; u64 {
+	<span class="attr">#[must_use]
+	</span><span class="kw">const fn </span>parse_block&lt;<span class="kw">const </span>N: usize&gt;(chars: [u8; N]) -&gt; u64 {
 		<span class="kw">let </span><span class="kw-2">mut </span>res: u64 = <span class="number">0</span>;
 		<span class="kw">let </span><span class="kw-2">mut </span>idx: usize = <span class="number">0</span>;
 		<span class="kw">while </span>idx &lt; N {
@@ -1892,13 +1897,15 @@
 		res
 	}
 
-	<span class="kw">const fn </span>valid_char(ch: u8) -&gt; bool {
+	<span class="attr">#[must_use]
+	</span><span class="kw">const fn </span>valid_char(ch: u8) -&gt; bool {
 		(ch &gt;= <span class="number">48 </span>&amp;&amp; ch &lt;= <span class="number">57</span>) <span class="comment">// 0-9
 			</span>|| (ch &gt;= <span class="number">65 </span>&amp;&amp; ch &lt;= <span class="number">70</span>) <span class="comment">// A-F
 			</span>|| (ch &gt;= <span class="number">97 </span>&amp;&amp; ch &lt;= <span class="number">102</span>) <span class="comment">// a-f
 	</span>}
 
-	<span class="kw">const fn </span>char_to_num(ch: u8) -&gt; u64 {
+	<span class="attr">#[must_use]
+	</span><span class="kw">const fn </span>char_to_num(ch: u8) -&gt; u64 {
 		<span class="kw">if </span>ch &gt;= <span class="number">48 </span>&amp;&amp; ch &lt;= <span class="number">57 </span>{
 			ch <span class="kw">as </span>u64 - <span class="number">48
 		</span>} <span class="kw">else if </span>ch &gt;= <span class="number">65 </span>&amp;&amp; ch &lt;= <span class="number">70 </span>{
@@ -2984,6 +2991,7 @@
 <span class="kw">impl </span>VALENT {
 	<span class="doccomment">/// Returns a projection over `src`, delimited by `ve_valueptr` and
 	/// `ve_valuelen` fields.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub unsafe fn </span>buf_projection&lt;<span class="lifetime">'a</span>&gt;(<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="self">self</span>, src: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8]) -&gt; <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u8] {
 		<span class="kw">let </span>proj_idx = <span class="self">self</span>.ve_valueptr - src.as_ptr() <span class="kw">as </span>usize;
 		<span class="kw">let </span>proj_past_idx = proj_idx + <span class="self">self</span>.ve_valuelen <span class="kw">as </span>usize;

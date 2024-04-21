@@ -93,6 +93,9 @@
 <a href="#93" id="93">93</a>
 <a href="#94" id="94">94</a>
 <a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
@@ -118,7 +121,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, I&gt; IenumfiltersIter&lt;<span class="lifetime">'a</span>, I&gt;
 	<span class="kw">where </span>I: dshow_IEnumFilters,
 {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::dshow) <span class="kw">const fn </span>new(enum_filters: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>I) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::dshow) <span class="kw">const fn </span>new(enum_filters: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>I) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{ enum_filters }
 	}
 }
@@ -155,7 +159,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, I&gt; IenummediatypesIter&lt;<span class="lifetime">'a</span>, I&gt;
 	<span class="kw">where </span>I: dshow_IEnumMediaTypes,
 {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::dshow) <span class="kw">fn </span>new(enum_mt: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>I) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::dshow) <span class="kw">fn </span>new(enum_mt: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>I) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{ enum_mt, amt: AM_MEDIA_TYPE::default() }
 	}
 }
@@ -184,7 +189,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, I&gt; IenumpinsIter&lt;<span class="lifetime">'a</span>, I&gt;
 	<span class="kw">where </span>I: dshow_IEnumPins,
 {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::dshow) <span class="kw">const fn </span>new(enum_pins: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>I) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::dshow) <span class="kw">const fn </span>new(enum_pins: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>I) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{ enum_pins }
 	}
 }

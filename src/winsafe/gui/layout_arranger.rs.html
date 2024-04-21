@@ -175,6 +175,7 @@
 <a href="#175" id="175">175</a>
 <a href="#176" id="176">176</a>
 <a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::UnsafeCell;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -237,11 +238,12 @@
 </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>LayoutArranger(Pin&lt;Arc&lt;Obj&gt;&gt;);
 
 <span class="kw">impl </span>LayoutArranger {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
 		<span class="self">Self</span>(
 			Arc::pin(
 				Obj {
-					ctrls: UnsafeCell::new(Vec::default()),
+					ctrls: UnsafeCell::new(Vec::new()),
 					sz_parent_orig: UnsafeCell::new(<span class="prelude-val">None</span>),
 					_pin: PhantomPinned,
 				},

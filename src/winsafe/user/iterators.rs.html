@@ -93,6 +93,8 @@
 <a href="#93" id="93">93</a>
 <a href="#94" id="94">94</a>
 <a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -138,7 +140,8 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; EnumdisplaydevicesIter&lt;<span class="lifetime">'a</span>&gt; {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::user) <span class="kw">fn </span>new(
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::user) <span class="kw">fn </span>new(
 		device_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
 		flags: <span class="prelude-ty">Option</span>&lt;co::EDD&gt;,
 	) -&gt; <span class="self">Self </span>{
@@ -180,7 +183,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, H&gt; HmenuIteritems&lt;<span class="lifetime">'a</span>, H&gt;
 	<span class="kw">where </span>H: user_Hmenu,
 {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::user) <span class="kw">fn </span>new(hmenu: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>H) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::user) <span class="kw">fn </span>new(hmenu: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>H) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			hmenu,
 			num_items: hmenu.GetMenuItemCount().unwrap_or_default(), <span class="comment">// zero if any error

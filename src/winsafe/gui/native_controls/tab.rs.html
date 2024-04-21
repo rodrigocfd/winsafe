@@ -455,7 +455,7 @@
 		<span class="kw">let </span>self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm_create_or_initdialog(<span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
 			self2.create(OptsResz::Wnd(<span class="kw-2">&amp;</span>opts))<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::NotHandled)
 		});
 
 		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
@@ -491,7 +491,7 @@
 		<span class="kw">let </span>self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm(co::WM::INITDIALOG, <span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
 			self2.create(OptsResz::Dlg(resize_behavior))<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::NotHandled)
 		});
 
 		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
@@ -536,11 +536,11 @@
 
 	<span class="kw">fn </span>default_message_handlers(<span class="kw-2">&amp;</span><span class="self">self</span>, parent: <span class="kw-2">&amp;</span>Base, ctrl_id: u16) {
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-		parent.before_user_on().wm_notify(ctrl_id, co::TCN::SELCHANGE, <span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
+		parent.before_user_on().wm_notify(ctrl_id, co::TCN::SELCHANGE, <span class="kw">move </span>|<span class="kw">_</span>| {
 			<span class="kw">if let </span><span class="prelude-val">Some</span>(sel_item) = self2.items().selected() {
 				self2.display_tab(sel_item.index())<span class="question-mark">?</span>;
 			}
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::HandledOk)
 		});
 
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
@@ -548,7 +548,7 @@
 			self2.image_list().map(|hil| {
 				<span class="kw">let _ </span>= <span class="kw">unsafe </span>{ ImageListDestroyGuard::new(hil.raw_copy()) };
 			});
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::NotHandled)
 		});
 	}
 

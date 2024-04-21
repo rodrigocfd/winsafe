@@ -360,7 +360,7 @@
 		<span class="kw">let </span>self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm_create_or_initdialog(<span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
 			self2.create(OptsResz::Wnd(<span class="kw-2">&amp;</span>opts))<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::NotHandled)
 		});
 
 		new_self
@@ -394,7 +394,7 @@
 		<span class="kw">let </span>self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm(co::WM::INITDIALOG, <span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
 			self2.create(OptsResz::Dlg(resize_behavior))<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::NotHandled)
 		});
 
 		new_self

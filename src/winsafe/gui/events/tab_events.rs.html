@@ -86,6 +86,7 @@
 <a href="#86" id="86">86</a>
 <a href="#87" id="87">87</a>
 <a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::privs::<span class="kw-2">*</span>;
@@ -99,11 +100,12 @@
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-</span><span class="kw">pub struct </span>TabEvents(BaseEventsProxy);
+</span><span class="kw">pub struct </span>TabEvents(BaseCtrlEventsProxy);
 
 <span class="kw">impl </span>TabEvents {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
-		<span class="self">Self</span>(BaseEventsProxy::new(parent, ctrl_id))
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>(BaseCtrlEventsProxy::new(parent, ctrl_id))
 	}
 
 	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_click, co::NM::CLICK;

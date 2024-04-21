@@ -818,11 +818,11 @@ function.</p>
 ) -&gt; <a class="type" href="../type.SysResult.html" title="type winsafe::SysResult">SysResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.usize.html">usize</a>&gt;</h4></section></summary><div class="docblock"><p>This method returns the timer ID, to be passed to
 <a href="trait.user_Hwnd.html#method.KillTimer" title="method winsafe::prelude::user_Hwnd::KillTimer"><code>HWND::KillTimer</code></a>.</p>
 <p>The timer calls – either
-<a href="trait.GuiEventsAll.html#tymethod.wm_timer" title="method winsafe::prelude::GuiEventsAll::wm_timer"><code>wm_timer</code></a> message or callback
-function – will continuously be executed until you call <code>KillTimer</code>. If
-you don’t call <code>KillTimer</code>, the timer calls will continue until the
-window is destroyed – at this point, any remaining timers will be
-automatically cleared.</p>
+<a href="../gui/events/struct.WindowEvents.html#method.wm_timer" title="method winsafe::gui::events::WindowEvents::wm_timer"><code>wm_timer</code></a> message or
+callback function – will continuously be executed until you call
+<code>KillTimer</code>. If you don’t call <code>KillTimer</code>, the timer calls will
+continue until the window is destroyed – at this point, any remaining
+timers will be automatically cleared.</p>
 <h5 id="why-not-closures"><a class="doc-anchor" href="#why-not-closures">§</a>Why not closures?</h5>
 <p>A common C++ technique to use closures with <code>SetTimer</code> is allocating a
 closure on the heap and use its pointer as the timer ID. When the

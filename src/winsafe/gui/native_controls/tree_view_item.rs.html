@@ -221,6 +221,9 @@
 <a href="#221" id="221">221</a>
 <a href="#222" id="222">222</a>
 <a href="#223" id="223">223</a>
+<a href="#224" id="224">224</a>
+<a href="#225" id="225">225</a>
+<a href="#226" id="226">226</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::RefCell;
 <span class="kw">use </span>std::mem::ManuallyDrop;
 <span class="kw">use </span>std::rc::Rc;
@@ -244,7 +247,8 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; TreeViewItem&lt;<span class="lifetime">'a</span>, T&gt; {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(
 		owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TreeView&lt;T&gt;,
 		hitem: HTREEITEM,
 	) -&gt; <span class="self">Self
@@ -252,7 +256,8 @@
 		<span class="self">Self </span>{ owner, hitem }
 	}
 
-	<span class="kw">fn </span>raw_clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>raw_clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			owner: <span class="self">self</span>.owner,
 			hitem: <span class="kw">unsafe </span>{ <span class="self">self</span>.hitem.raw_copy() },
@@ -286,7 +291,8 @@
 			})
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>data_lparam(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">*mut </span>RefCell&lt;T&gt;&gt; {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>data_lparam(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">*mut </span>RefCell&lt;T&gt;&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>tvix = TVITEMEX::default();
 		tvix.hItem = <span class="kw">unsafe </span>{ <span class="self">self</span>.hitem.raw_copy() };
 		tvix.mask = co::TVIF::PARAM;

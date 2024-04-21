@@ -117,6 +117,7 @@
 <a href="#117" id="117">117</a>
 <a href="#118" id="118">118</a>
 <a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
@@ -138,7 +139,8 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; ListViewColumn&lt;<span class="lifetime">'a</span>, T&gt; {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;, index: u32) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;, index: u32) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{ owner, index }
 	}
 

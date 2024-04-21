@@ -513,6 +513,20 @@
 <a href="#513" id="513">513</a>
 <a href="#514" id="514">514</a>
 <a href="#515" id="515">515</a>
+<a href="#516" id="516">516</a>
+<a href="#517" id="517">517</a>
+<a href="#518" id="518">518</a>
+<a href="#519" id="519">519</a>
+<a href="#520" id="520">520</a>
+<a href="#521" id="521">521</a>
+<a href="#522" id="522">522</a>
+<a href="#523" id="523">523</a>
+<a href="#524" id="524">524</a>
+<a href="#525" id="525">525</a>
+<a href="#526" id="526">526</a>
+<a href="#527" id="527">527</a>
+<a href="#528" id="528">528</a>
+<a href="#529" id="529">529</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cmp::Ordering;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -878,14 +892,16 @@
 }
 
 <span class="kw">impl </span>Buffer {
-	<span class="kw">fn </span>from_opt_str(s: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>AsRef&lt;str&gt;&gt;) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>from_opt_str(s: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>AsRef&lt;str&gt;&gt;) -&gt; <span class="self">Self </span>{
 		<span class="kw">match </span>s {
 			<span class="prelude-val">Some</span>(s) =&gt; <span class="self">Self</span>::from_str(s),
 			<span class="prelude-val">None </span>=&gt; <span class="self">Self</span>::Unallocated,
 		}
 	}
 
-	<span class="kw">fn </span>from_str(s: <span class="kw">impl </span>AsRef&lt;str&gt;) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>from_str(s: <span class="kw">impl </span>AsRef&lt;str&gt;) -&gt; <span class="self">Self </span>{
 		<span class="kw">let </span>s_len = s.as_ref().encode_utf16().count();
 		<span class="kw">if </span>s_len == <span class="number">0 </span>{
 			<span class="self">Self</span>::Unallocated
@@ -900,7 +916,8 @@
 		}
 	}
 
-	<span class="kw">fn </span>from_str_vec(v: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;]) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>from_str_vec(v: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;]) -&gt; <span class="self">Self </span>{
 		<span class="kw">let </span>tot_chars = v.iter() <span class="comment">// number of chars of all strings, including terminating nulls
 			</span>.fold(<span class="number">0</span>, |tot, s| tot + s.as_ref().chars().count() + <span class="number">1</span>) <span class="comment">// include terminating null
 			</span>+ <span class="number">1</span>; <span class="comment">// double terminating null
@@ -917,7 +934,8 @@
 		new_self
 	}
 
-	<span class="kw">fn </span>from_wchars_count(src: <span class="kw-2">*const </span>u16, num_chars: usize) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>from_wchars_count(src: <span class="kw-2">*const </span>u16, num_chars: usize) -&gt; <span class="self">Self </span>{
 		<span class="kw">if </span>src.is_null() || num_chars == <span class="number">0 </span>{
 			<span class="self">Self</span>::Unallocated
 		} <span class="kw">else </span>{
@@ -927,11 +945,13 @@
 		}
 	}
 
-	<span class="kw">unsafe fn </span>from_wchars_nullt(src: <span class="kw-2">*const </span>u16) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">unsafe fn </span>from_wchars_nullt(src: <span class="kw-2">*const </span>u16) -&gt; <span class="self">Self </span>{
 		<span class="self">Self</span>::from_wchars_count(src, <span class="kw">unsafe </span>{ ffi::lstrlenW(src) <span class="kw">as _ </span>})
 	}
 
-	<span class="kw">fn </span>from_wchars_slice(src: <span class="kw-2">&amp;</span>[u16]) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>from_wchars_slice(src: <span class="kw-2">&amp;</span>[u16]) -&gt; <span class="self">Self </span>{
 		<span class="kw">if </span>src.is_empty() {
 			<span class="self">Self</span>::Unallocated
 		} <span class="kw">else </span>{
@@ -948,7 +968,8 @@
 		}
 	}
 
-	<span class="kw">fn </span>new_alloc_buf(num_chars: usize) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>new_alloc_buf(num_chars: usize) -&gt; <span class="self">Self </span>{
 		<span class="kw">if </span>num_chars == <span class="number">0 </span>{
 			<span class="self">Self</span>::Unallocated
 		} <span class="kw">else if </span>num_chars &lt;= SSO_LEN {
@@ -964,7 +985,8 @@
 		}
 	}
 
-	<span class="kw">unsafe fn </span>as_mut_ptr(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">*mut </span>u16 {
+	<span class="attr">#[must_use]
+	</span><span class="kw">unsafe fn </span>as_mut_ptr(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">*mut </span>u16 {
 		<span class="kw">match </span><span class="self">self </span>{
 			<span class="self">Self</span>::Stack(arr) =&gt; arr.as_mut_ptr(),
 			<span class="self">Self</span>::Heap(<span class="kw">_</span>, ptr) =&gt; ptr.ptr() <span class="kw">as _</span>,
@@ -972,7 +994,8 @@
 		}
 	}
 
-	<span class="kw">fn </span>as_mut_slice(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[u16] {
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>as_mut_slice(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[u16] {
 		<span class="kw">match </span><span class="self">self </span>{
 			<span class="self">Self</span>::Stack(arr) =&gt; arr,
 			<span class="self">Self</span>::Heap(<span class="kw">_</span>, ptr) =&gt; <span class="kw">unsafe </span>{
@@ -982,7 +1005,8 @@
 		}
 	}
 
-	<span class="kw">fn </span>as_ptr(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const </span>u16 {
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>as_ptr(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*const </span>u16 {
 		<span class="kw">match </span><span class="self">self </span>{
 			<span class="self">Self</span>::Stack(arr) =&gt; arr.as_ptr(),
 			<span class="self">Self</span>::Heap(<span class="kw">_</span>, ptr) =&gt; ptr.ptr() <span class="kw">as _</span>,
@@ -990,7 +1014,8 @@
 		}
 	}
 
-	<span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u16] {
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>as_slice(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u16] {
 		<span class="kw">match </span><span class="self">self </span>{
 			<span class="self">Self</span>::Stack(arr) =&gt; arr,
 			<span class="self">Self</span>::Heap(<span class="kw">_</span>, ptr) =&gt; <span class="kw">unsafe </span>{
@@ -1000,7 +1025,8 @@
 		}
 	}
 
-	<span class="kw">const fn </span>buf_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+	<span class="attr">#[must_use]
+	</span><span class="kw">const fn </span>buf_len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
 		<span class="kw">match </span><span class="self">self </span>{
 			<span class="self">Self</span>::Stack(arr) =&gt; arr.len(),
 			<span class="self">Self</span>::Heap(sz_bytes, <span class="kw">_</span>) =&gt; <span class="kw-2">*</span>sz_bytes / std::mem::size_of::&lt;u16&gt;(),
@@ -1008,14 +1034,16 @@
 		}
 	}
 
-	<span class="kw">const fn </span>is_allocated(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+	<span class="attr">#[must_use]
+	</span><span class="kw">const fn </span>is_allocated(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
 		<span class="kw">match </span><span class="self">self </span>{
 			<span class="self">Self</span>::Unallocated =&gt; <span class="bool-val">false</span>,
 			<span class="kw">_ </span>=&gt; <span class="bool-val">true</span>,
 		}
 	}
 
-	<span class="kw">fn </span>to_string_checked(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;String, std::string::FromUtf16Error&gt; {
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>to_string_checked(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;String, std::string::FromUtf16Error&gt; {
 		<span class="kw">match </span><span class="self">self </span>{
 			<span class="self">Self</span>::Unallocated =&gt; <span class="prelude-val">Ok</span>(String::default()),
 			<span class="kw">_ </span>=&gt; String::from_utf16(

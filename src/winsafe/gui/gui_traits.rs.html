@@ -285,6 +285,54 @@
 <a href="#285" id="285">285</a>
 <a href="#286" id="286">286</a>
 <a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
+<a href="#302" id="302">302</a>
+<a href="#303" id="303">303</a>
+<a href="#304" id="304">304</a>
+<a href="#305" id="305">305</a>
+<a href="#306" id="306">306</a>
+<a href="#307" id="307">307</a>
+<a href="#308" id="308">308</a>
+<a href="#309" id="309">309</a>
+<a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a>
+<a href="#321" id="321">321</a>
+<a href="#322" id="322">322</a>
+<a href="#323" id="323">323</a>
+<a href="#324" id="324">324</a>
+<a href="#325" id="325">325</a>
+<a href="#326" id="326">326</a>
+<a href="#327" id="327">327</a>
+<a href="#328" id="328">328</a>
+<a href="#329" id="329">329</a>
+<a href="#330" id="330">330</a>
+<a href="#331" id="331">331</a>
+<a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
+<a href="#334" id="334">334</a>
+<a href="#335" id="335">335</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -293,6 +341,12 @@
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// Any window. Exposes the underlying window handle.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 </span><span class="kw">pub trait </span>GuiWindow: Send {
 	<span class="doccomment">/// Returns the underlying handle for this control.
 	///
@@ -335,6 +389,12 @@
 }
 
 <span class="doccomment">/// Any window which can get/set text.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 </span><span class="kw">pub trait </span>GuiWindowText: GuiWindow {
 	<span class="doccomment">/// Sets the text by calling
 	/// [`HWND::SetWindowText`](crate::prelude::user_Hwnd::SetWindowText).
@@ -351,6 +411,12 @@
 }
 
 <span class="doccomment">/// Any window which can host child controls.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 </span><span class="attr">#[allow(private_bounds)]
 </span><span class="kw">pub trait </span>GuiParent: GuiWindow + AsRef&lt;Base&gt; {
 	<span class="doccomment">/// Exposes methods to handle the basic window messages, plus timer and
@@ -361,7 +427,7 @@
 	/// Panics if the window is already created. Events must be set before
 	/// window creation.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">fn </span>on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsAll {
+	</span><span class="kw">fn </span>on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEvents {
 		<span class="self">self</span>.as_ref().on()
 	}
 
@@ -409,8 +475,8 @@
 	/// });
 	/// ```
 	</span><span class="kw">fn </span>spawn_new_thread&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static
-	</span>{
+		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static</span>,
+	{
 		<span class="self">self</span>.as_ref().spawn_new_thread(func)
 	}
 
@@ -491,25 +557,37 @@
 	/// });
 	/// ```
 	</span><span class="kw">fn </span>run_ui_thread&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static
-	</span>{
+		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static</span>,
+	{
 		<span class="self">self</span>.as_ref().run_ui_thread(func)
 	}
 }
 
 <span class="doccomment">/// A closeable popup parent window.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 </span><span class="kw">pub trait </span>GuiParentPopup: GuiParent {
 	<span class="doccomment">/// Closes the window by posting a [`WM_CLOSE`](crate::msg::wm::Close)
 	/// message. This is the safest way to close any popup window, because
 	/// you're able to process the
-	/// [`wm_close`](crate::prelude::GuiEvents::wm_close) event, just like if
-	/// the user clicked the window "X" button.
+	/// [`wm_close`](crate::gui::events::WindowEvents::wm_close) event, just
+	/// like if the user clicked the window "X" button.
 	</span><span class="kw">fn </span>close(<span class="kw-2">&amp;</span><span class="self">self</span>) {
 		<span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd().PostMessage(wm::Close {}).unwrap(); }
 	}
 }
 
 <span class="doccomment">/// Any child window.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 </span><span class="kw">pub trait </span>GuiChild: GuiWindow {
 	<span class="doccomment">/// Returns the control ID, which is defined at control creation.
 	///
@@ -519,6 +597,12 @@
 }
 
 <span class="doccomment">/// Any child window which can be focused.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 </span><span class="kw">pub trait </span>GuiChildFocus: GuiChild {
 	<span class="doccomment">/// In a raw, ordinary window, simply calls
 	/// [`HWND:SetFocus`](crate::prelude::user_Hwnd::SetFocus).
@@ -543,6 +627,12 @@
 }
 
 <span class="doccomment">/// Any native control, which can be subclassed.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 </span><span class="attr">#[allow(private_bounds)]
 </span><span class="kw">pub trait </span>GuiNativeControl: GuiChild + AsRef&lt;BaseNativeControl&gt; {
 	<span class="doccomment">/// Exposes the subclass events. If at least one event exists, the control
@@ -562,6 +652,12 @@
 }
 
 <span class="doccomment">/// Events of a native control.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 </span><span class="kw">pub trait </span>GuiNativeControlEvents&lt;E&gt; {
 	<span class="doccomment">/// Exposes the specific control events.
 	///

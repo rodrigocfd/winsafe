@@ -163,6 +163,8 @@
 <a href="#163" id="163">163</a>
 <a href="#164" id="164">164</a>
 <a href="#165" id="165">165</a>
+<a href="#166" id="166">166</a>
+<a href="#167" id="167">167</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
 <span class="kw">use </span>std::sync::Arc;
@@ -185,7 +187,8 @@
 </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>RawModeless(Pin&lt;Arc&lt;Obj&gt;&gt;);
 
 <span class="kw">impl </span>RawModeless {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
 		parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;,
 		opts: WindowModelessOpts,
 	) -&gt; <span class="self">Self
@@ -203,7 +206,8 @@
 		new_self
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>base(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Base {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>base(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Base {
 		<span class="self">self</span>.<span class="number">0</span>.raw_base.base()
 	}
 
@@ -237,7 +241,7 @@
 				wnd_pos, wnd_sz,
 				opts.ex_style, opts.style,
 			)<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::NotHandled)
 		});
 	}
 }

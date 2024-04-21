@@ -310,6 +310,7 @@
 <a href="#310" id="310">310</a>
 <a href="#311" id="311">311</a>
 <a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
 </pre></div><pre class="rust"><code><span class="attr">#![doc = <span class="macro">include_str!</span>(<span class="string">"lib.md"</span>)]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 
@@ -575,6 +576,7 @@
 		<span class="attr">#[cfg(feature = <span class="string">"comctl"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::<span class="kw">super</span>::comctl::messages::wm::<span class="kw-2">*</span>;
 		<span class="attr">#[cfg(feature = <span class="string">"gdi"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::<span class="kw">super</span>::gdi::messages::wm::<span class="kw-2">*</span>;
 		<span class="attr">#[cfg(feature = <span class="string">"shell"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::<span class="kw">super</span>::shell::messages::wm::<span class="kw-2">*</span>;
+		<span class="attr">#[cfg(all(feature = <span class="string">"comctl"</span>, feature = <span class="string">"shell"</span>))] </span><span class="kw">pub use </span><span class="kw">super</span>::<span class="kw">super</span>::comctl_shell::messages::wm::<span class="kw-2">*</span>;
 	}
 }
 

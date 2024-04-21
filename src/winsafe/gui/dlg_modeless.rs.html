@@ -61,13 +61,15 @@
 <a href="#61" id="61">61</a>
 <a href="#62" id="62">62</a>
 <a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
 <span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::gui::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">struct </span>Obj { <span class="comment">// actual fields of DlgModeless
@@ -83,7 +85,8 @@
 </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>DlgModeless(Pin&lt;Arc&lt;Obj&gt;&gt;);
 
 <span class="kw">impl </span>DlgModeless {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
 		parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;,
 		dialog_id: u16,
 		position: POINT,
@@ -102,7 +105,8 @@
 		new_self
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>base(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Base {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>base(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Base {
 		<span class="self">self</span>.<span class="number">0</span>.dlg_base.base()
 	}
 
@@ -120,7 +124,7 @@
 				dlg_pos, SIZE::default(),
 				co::SWP::NOZORDER | co::SWP::NOSIZE,
 			)<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::NotHandled)
 		});
 	}
 }

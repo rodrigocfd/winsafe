@@ -228,6 +228,8 @@
 <a href="#228" id="228">228</a>
 <a href="#229" id="229">229</a>
 <a href="#230" id="230">230</a>
+<a href="#231" id="231">231</a>
+<a href="#232" id="232">232</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::UnsafeCell;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -254,7 +256,8 @@
 </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>RawMain(Pin&lt;Arc&lt;Obj&gt;&gt;);
 
 <span class="kw">impl </span>RawMain {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(opts: WindowMainOpts) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(opts: WindowMainOpts) -&gt; <span class="self">Self </span>{
 		<span class="kw">let </span>new_self = <span class="self">Self</span>(
 			Arc::pin(
 				Obj {
@@ -269,7 +272,8 @@
 		new_self
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>base(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Base {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>base(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Base {
 		<span class="self">self</span>.<span class="number">0</span>.raw_base.base()
 	}
 
@@ -348,13 +352,13 @@
 					hchild_prev_focus.SetFocus(); <span class="comment">// put focus back
 				</span>}
 			}
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::HandledOk)
 		});
 
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
 		<span class="self">self</span>.base().before_user_on().wm(co::WM::SETFOCUS, <span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
 			self2.<span class="number">0</span>.raw_base.delegate_focus_to_first_child();
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::HandledOk)
 		});
 
 		<span class="self">self</span>.base().on().wm_nc_destroy(<span class="kw">move </span>|| {

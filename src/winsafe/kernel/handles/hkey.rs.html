@@ -1071,6 +1071,7 @@
 <a href="#1071" id="1071">1071</a>
 <a href="#1072" id="1072">1072</a>
 <a href="#1073" id="1073">1073</a>
+<a href="#1074" id="1074">1074</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -2097,7 +2098,8 @@
 }
 
 <span class="kw">impl </span>HKEY {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>is_predef_key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>is_predef_key(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
 		<span class="comment">// Note that we are not constructing HKEY objects, so no drop() is called.
 		</span>(<span class="self">self</span>.<span class="number">0 </span><span class="kw">as </span>usize) &gt;= (<span class="self">Self</span>::CLASSES_ROOT.<span class="number">0 </span><span class="kw">as </span>usize)
 			&amp;&amp; (<span class="self">self</span>.<span class="number">0 </span><span class="kw">as </span>usize) &lt;= (<span class="self">Self</span>::PERFORMANCE_NLSTEXT.<span class="number">0 </span><span class="kw">as </span>usize)

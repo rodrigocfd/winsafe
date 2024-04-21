@@ -37,9 +37,12 @@
 <a href="#37" id="37">37</a>
 <a href="#38" id="38">38</a>
 <a href="#39" id="39">39</a>
+<a href="#40" id="40">40</a>
+<a href="#41" id="41">41</a>
+<a href="#42" id="42">42</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::gui::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
 
 <span class="doccomment">/// Exposes trackbar control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications).
@@ -50,11 +53,12 @@
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-</span><span class="kw">pub struct </span>TrackbarEvents(BaseEventsProxy);
+</span><span class="kw">pub struct </span>TrackbarEvents(BaseCtrlEventsProxy);
 
 <span class="kw">impl </span>TrackbarEvents {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
-		<span class="self">Self</span>(BaseEventsProxy::new(parent, ctrl_id))
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>(BaseCtrlEventsProxy::new(parent, ctrl_id))
 	}
 
 	<span class="macro">pub_fn_nfy_withparm_noret!</span> { trbn_thumb_pos_changing, co::TRBN::THUMBPOSCHANGING, NMTRBTHUMBPOSCHANGING;
@@ -67,8 +71,10 @@
 	</span><span class="kw">pub fn </span>nm_custom_draw&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
 		<span class="kw">where </span>F: Fn(<span class="kw-2">&amp;</span>NMCUSTOMDRAW) -&gt; AnyResult&lt;co::CDRF&gt; + <span class="lifetime">'static</span>,
 	{
-		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::NM::CUSTOMDRAW,
-			<span class="kw">move </span>|p| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func(<span class="kw">unsafe </span>{ p.cast_nmhdr::&lt;NMCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as _</span>)));
+		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::NM::CUSTOMDRAW, <span class="kw">move </span>|p| {
+			<span class="kw">let </span>ret_val = func(<span class="kw">unsafe </span>{ p.cast_nmhdr::&lt;NMCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as </span>isize;
+			<span class="prelude-val">Ok</span>(WmRet::HandledWithRet(ret_val))
+		});
 	}
 
 	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_released_capture, co::NM::RELEASEDCAPTURE;

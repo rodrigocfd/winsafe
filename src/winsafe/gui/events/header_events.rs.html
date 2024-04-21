@@ -136,9 +136,14 @@
 <a href="#136" id="136">136</a>
 <a href="#137" id="137">137</a>
 <a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::gui::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::gui::{* ,privs::<span class="kw-2">*</span>};
 
 <span class="doccomment">/// Exposes header control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-notifications).
@@ -149,11 +154,12 @@
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-</span><span class="kw">pub struct </span>HeaderEvents(BaseEventsProxy);
+</span><span class="kw">pub struct </span>HeaderEvents(BaseCtrlEventsProxy);
 
 <span class="kw">impl </span>HeaderEvents {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
-		<span class="self">Self</span>(BaseEventsProxy::new(parent, ctrl_id))
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>(BaseCtrlEventsProxy::new(parent, ctrl_id))
 	}
 
 	<span class="macro">pub_fn_nfy_withparm_boolret!</span> { hdn_begin_drag, co::HDN::BEGINDRAG, NMHEADER;
@@ -211,8 +217,10 @@
 	</span><span class="kw">pub fn </span>hdn_get_disp_info&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
 		<span class="kw">where </span>F: Fn(<span class="kw-2">&amp;mut </span>NMHDDISPINFO) -&gt; AnyResult&lt;isize&gt; + <span class="lifetime">'static</span>,
 	{
-		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::HDN::GETDISPINFO,
-			<span class="kw">move </span>|p| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMHDDISPINFO&gt;() })<span class="question-mark">?</span>)));
+		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::HDN::GETDISPINFO, <span class="kw">move </span>|p| {
+			<span class="kw">let </span>ret_val = func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMHDDISPINFO&gt;() })<span class="question-mark">?</span>;
+			<span class="prelude-val">Ok</span>(WmRet::HandledWithRet(ret_val))
+		});
 	}
 
 	<span class="macro">pub_fn_nfy_withparm_noret!</span> { hdn_item_changed, co::HDN::ITEMCHANGED, NMHEADER;
@@ -260,8 +268,10 @@
 	</span><span class="kw">pub fn </span>nm_custom_draw&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
 		<span class="kw">where </span>F: Fn(<span class="kw-2">&amp;mut </span>NMCUSTOMDRAW) -&gt; AnyResult&lt;co::CDRF&gt; + <span class="lifetime">'static</span>,
 	{
-		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::NM::CUSTOMDRAW,
-			<span class="kw">move </span>|p| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as _</span>)));
+		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::NM::CUSTOMDRAW, <span class="kw">move </span>|p| {
+			<span class="kw">let </span>ret_val = func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as </span>isize;
+			<span class="prelude-val">Ok</span>(WmRet::HandledWithRet(ret_val))
+		});
 	}
 
 	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_r_click, co::NM::RCLICK;

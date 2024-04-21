@@ -62,6 +62,7 @@
 <a href="#62" id="62">62</a>
 <a href="#63" id="63">63</a>
 <a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::privs::<span class="kw-2">*</span>;
@@ -75,11 +76,12 @@
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-</span><span class="kw">pub struct </span>MonthCalendarEvents(BaseEventsProxy);
+</span><span class="kw">pub struct </span>MonthCalendarEvents(BaseCtrlEventsProxy);
 
 <span class="kw">impl </span>MonthCalendarEvents {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
-		<span class="self">Self</span>(BaseEventsProxy::new(parent, ctrl_id))
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>(BaseCtrlEventsProxy::new(parent, ctrl_id))
 	}
 
 	<span class="macro">pub_fn_nfy_withparm_noret!</span> { mcn_get_day_state, co::MCN::GETDAYSTATE, NMDAYSTATE;

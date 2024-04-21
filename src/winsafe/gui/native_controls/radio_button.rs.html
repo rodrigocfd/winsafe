@@ -311,6 +311,9 @@
 <a href="#311" id="311">311</a>
 <a href="#312" id="312">312</a>
 <a href="#313" id="313">313</a>
+<a href="#314" id="314">314</a>
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -381,7 +384,8 @@
 }
 
 <span class="kw">impl </span>RadioButton {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
 		parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>GuiParent,
 		opts: RadioButtonOpts,
 	) -&gt; <span class="self">Self
@@ -400,7 +404,8 @@
 		)
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new_dlg(
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new_dlg(
 		parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>GuiParent,
 		ctrl_id: u16,
 	) -&gt; <span class="self">Self
@@ -610,6 +615,7 @@
 
 <span class="kw">impl </span>RadioButtonOpts {
 	<span class="doccomment">/// Manually clones the object, avoiding a public clone method.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>manual_clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; RadioButtonOpts {
 		<span class="self">Self </span>{
 			text: <span class="self">self</span>.text.clone(),

@@ -480,13 +480,13 @@
 }
 
 <span class="kw">impl </span>AccelMenuCtrl {
-	<span class="doccomment">/// Returns the notification code and the control ID pair.
+	<span class="doccomment">/// Returns the control ID and the notification code pair.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub const fn </span>code_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (co::CMD, u16) {
+	</span><span class="kw">pub const fn </span>id_code(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u16, co::CMD) {
 		<span class="kw">match </span><span class="self">self </span>{
-			AccelMenuCtrl::Accel(id) =&gt; (co::CMD::Accelerator, <span class="kw-2">*</span>id),
-			AccelMenuCtrl::Menu(id) =&gt; (co::CMD::Menu, <span class="kw-2">*</span>id),
-			AccelMenuCtrl::Ctrl(data) =&gt; (data.notif_code, data.ctrl_id),
+			AccelMenuCtrl::Accel(id) =&gt; (<span class="kw-2">*</span>id, co::CMD::Accelerator),
+			AccelMenuCtrl::Menu(id) =&gt; (<span class="kw-2">*</span>id, co::CMD::Menu),
+			AccelMenuCtrl::Ctrl(data) =&gt; (data.ctrl_id, data.notif_code),
 		}
 	}
 }

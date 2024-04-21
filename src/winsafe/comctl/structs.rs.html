@@ -1569,6 +1569,7 @@
 <a href="#1569" id="1569">1569</a>
 <a href="#1570" id="1570">1570</a>
 <a href="#1571" id="1571">1571</a>
+<a href="#1572" id="1572">1572</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -2123,6 +2124,7 @@
 	/// # Panics
 	///
 	/// Panics if `index` is greater than 31.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>get_day(<span class="kw-2">&amp;</span><span class="self">self</span>, index: u8) -&gt; bool {
 		<span class="kw">if </span>index &gt; <span class="number">31 </span>{
 			<span class="macro">panic!</span>(<span class="string">"MONTHDAYSTATE max index is 31, tried to get {}."</span>, index)

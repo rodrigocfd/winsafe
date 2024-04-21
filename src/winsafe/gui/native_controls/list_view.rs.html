@@ -524,6 +524,8 @@
 <a href="#524" id="524">524</a>
 <a href="#525" id="525">525</a>
 <a href="#526" id="526">526</a>
+<a href="#527" id="527">527</a>
+<a href="#528" id="528">528</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::{PhantomData, PhantomPinned};
 <span class="kw">use </span>std::pin::Pin;
@@ -636,7 +638,7 @@
 		<span class="kw">let </span>self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm_create_or_initdialog(<span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
 			self2.create(OptsResz::Wnd(<span class="kw-2">&amp;</span>opts))<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::NotHandled)
 		});
 
 		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
@@ -683,7 +685,7 @@
 		<span class="kw">let </span>self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm(co::WM::INITDIALOG, <span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
 			self2.create(OptsResz::Dlg(resize_behavior))<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::NotHandled)
 		});
 
 		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
@@ -754,12 +756,14 @@
 						.unwrap()
 						.SendMessage(wm_nfy); <span class="comment">// forward HDN messages to parent
 				</span>}
+				<span class="prelude-val">Ok</span>(WmRet::HandledOk)
+			} <span class="kw">else </span>{
+				<span class="prelude-val">Ok</span>(WmRet::NotHandled)
 			}
-			<span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>)
 		});
 
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-		parent.before_user_on().wm_notify(ctrl_id, co::LVN::KEYDOWN, <span class="kw">move </span>|<span class="kw">_</span>, p| {
+		parent.before_user_on().wm_notify(ctrl_id, co::LVN::KEYDOWN, <span class="kw">move </span>|p| {
 			<span class="kw">let </span>lvnk = <span class="kw">unsafe </span>{ p.cast_nmhdr::&lt;NMLVKEYDOWN&gt;() };
 			<span class="kw">let </span>has_ctrl = GetAsyncKeyState(co::VK::CONTROL);
 			<span class="kw">let </span>has_shift = GetAsyncKeyState(co::VK::SHIFT);
@@ -769,21 +773,21 @@
 			} <span class="kw">else if </span>lvnk.wVKey == co::VK::APPS { <span class="comment">// context menu key
 				</span>self2.show_context_menu(<span class="bool-val">false</span>, has_ctrl, has_shift);
 			}
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::HandledOk)
 		});
 
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-		parent.before_user_on().wm_notify(ctrl_id, co::NM::RCLICK, <span class="kw">move </span>|<span class="kw">_</span>, p| {
+		parent.before_user_on().wm_notify(ctrl_id, co::NM::RCLICK, <span class="kw">move </span>|p| {
 			<span class="kw">let </span>nmia = <span class="kw">unsafe </span>{ p.cast_nmhdr::&lt;NMITEMACTIVATE&gt;() };
 			<span class="kw">let </span>has_ctrl = nmia.uKeyFlags.has(co::LVKF::CONTROL);
 			<span class="kw">let </span>has_shift = nmia.uKeyFlags.has(co::LVKF::SHIFT);
 
 			self2.show_context_menu(<span class="bool-val">true</span>, has_ctrl, has_shift);
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::HandledOk)
 		});
 
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-		parent.after_user_on().wm_notify(ctrl_id, co::LVN::DELETEITEM, <span class="kw">move </span>|<span class="kw">_</span>, p| {
+		parent.after_user_on().wm_notify(ctrl_id, co::LVN::DELETEITEM, <span class="kw">move </span>|p| {
 			<span class="kw">let </span>nmlv = <span class="kw">unsafe </span>{ p.cast_nmhdr::&lt;NMLISTVIEW&gt;() };
 			self2.items()
 				.get(nmlv.iItem <span class="kw">as _</span>)
@@ -791,7 +795,7 @@
 				.map(|pdata| {
 					<span class="kw">let _ </span>= <span class="kw">unsafe </span>{ Rc::from_raw(pdata) }; <span class="comment">// free allocated LPARAM, if any
 				</span>});
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::HandledOk)
 		});
 
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
@@ -803,7 +807,7 @@
 						</span><span class="kw">let _ </span>= <span class="kw">unsafe </span>{ ImageListDestroyGuard::new(hil.raw_copy()) };
 					});
 				});
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::NotHandled)
 		});
 	}
 

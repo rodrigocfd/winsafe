@@ -640,6 +640,18 @@
 <a href="#640" id="640">640</a>
 <a href="#641" id="641">641</a>
 <a href="#642" id="642">642</a>
+<a href="#643" id="643">643</a>
+<a href="#644" id="644">644</a>
+<a href="#645" id="645">645</a>
+<a href="#646" id="646">646</a>
+<a href="#647" id="647">647</a>
+<a href="#648" id="648">648</a>
+<a href="#649" id="649">649</a>
+<a href="#650" id="650">650</a>
+<a href="#651" id="651">651</a>
+<a href="#652" id="652">652</a>
+<a href="#653" id="653">653</a>
+<a href="#654" id="654">654</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
@@ -828,6 +840,18 @@
 	</span>VOLATILEPROPERTIES <span class="number">0x800
 	</span>VOLATILEPROPERTIESONLY <span class="number">0x1000
 	</span>MASK_VALID <span class="number">0x1fff
+</span>}
+
+<span class="macro">const_bitflag!</span> { HOTKEYF: u16;
+	<span class="doccomment">/// [`wm::GetHotkey`](crate::msg::wm::GetHotKey) and
+	/// [`wm::SetHotKey`](crate::msg::wm::SetHotKey) modifiers;
+	/// [`SHELLEXECUTEINFO`](crate::SHELLEXECUTEINFO) `dwHotKey` (`u16`).
+	</span>=&gt;
+	=&gt;
+	ALT <span class="number">0x04
+	</span>CONTROL <span class="number">0x02
+	</span>EXT <span class="number">0x08
+	</span>SHIFT <span class="number">0x01
 </span>}
 
 <span class="macro">const_bitflag!</span> { KF: u32;

@@ -573,6 +573,15 @@
 <a href="#573" id="573">573</a>
 <a href="#574" id="574">574</a>
 <a href="#575" id="575">575</a>
+<a href="#576" id="576">576</a>
+<a href="#577" id="577">577</a>
+<a href="#578" id="578">578</a>
+<a href="#579" id="579">579</a>
+<a href="#580" id="580">580</a>
+<a href="#581" id="581">581</a>
+<a href="#582" id="582">582</a>
+<a href="#583" id="583">583</a>
+<a href="#584" id="584">584</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
@@ -639,7 +648,8 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DirListIter&lt;<span class="lifetime">'a</span>&gt; {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(
 		dir_path: String,
 		filter: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>str&gt;,
 	) -&gt; <span class="self">Self </span>{
@@ -709,7 +719,8 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; DirWalkIter&lt;<span class="lifetime">'a</span>&gt; {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(dir_path: String) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(dir_path: String) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			runner: DirListIter::new(dir_path, <span class="prelude-val">None</span>),
 			subdir_runner: <span class="prelude-val">None</span>,
@@ -761,7 +772,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, H&gt; HheapHeapwalkIter&lt;<span class="lifetime">'a</span>, H&gt;
 	<span class="kw">where </span>H: kernel_Hheap,
 {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(hheap: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>H) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(hheap: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>H) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			hheap,
 			entry: PROCESS_HEAP_ENTRY::default(),
@@ -821,7 +833,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, H&gt; HkeyKeyIter&lt;<span class="lifetime">'a</span>, H&gt;
 	<span class="kw">where </span>H: kernel_Hkey,
 {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(hkey: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>H) -&gt; SysResult&lt;<span class="self">Self</span>&gt; {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(hkey: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>H) -&gt; SysResult&lt;<span class="self">Self</span>&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>num_keys = u32::default();
 		<span class="kw">let </span><span class="kw-2">mut </span>max_key_name_len = u32::default();
 		hkey.RegQueryInfoKey(
@@ -889,7 +902,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, H&gt; HkeyValueIter&lt;<span class="lifetime">'a</span>, H&gt;
 	<span class="kw">where </span>H: kernel_Hkey,
 {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(hkey: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>H) -&gt; SysResult&lt;<span class="self">Self</span>&gt; {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(hkey: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>H) -&gt; SysResult&lt;<span class="self">Self</span>&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>num_vals = u32::default();
 		<span class="kw">let </span><span class="kw-2">mut </span>max_val_name_len = u32::default();
 		hkey.RegQueryInfoKey(
@@ -956,7 +970,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, H&gt; HprocesslistHeapIter&lt;<span class="lifetime">'a</span>, H&gt;
 	<span class="kw">where </span>H: kernel_Hprocesslist,
 {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(hpl: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>H) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(hpl: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>H) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			hpl,
 			hl32: HEAPLIST32::default(),
@@ -1017,7 +1032,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, H&gt; HprocesslistModuleIter&lt;<span class="lifetime">'a</span>, H&gt;
 	<span class="kw">where </span>H: kernel_Hprocesslist,
 {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(hpl: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>H) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(hpl: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>H) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			hpl,
 			me32: MODULEENTRY32::default(),
@@ -1078,7 +1094,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, H&gt; HprocesslistProcessIter&lt;<span class="lifetime">'a</span>, H&gt;
 	<span class="kw">where </span>H: kernel_Hprocesslist,
 {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(hpl: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>H) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(hpl: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>H) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			hpl,
 			pe32: PROCESSENTRY32::default(),
@@ -1139,7 +1156,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, H&gt; HprocesslistThreadIter&lt;<span class="lifetime">'a</span>, H&gt;
 	<span class="kw">where </span>H: kernel_Hprocesslist,
 {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(hpl: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>H) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(hpl: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>H) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			hpl,
 			te32: THREADENTRY32::default(),

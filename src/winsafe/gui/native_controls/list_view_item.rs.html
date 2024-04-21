@@ -272,6 +272,8 @@
 <a href="#272" id="272">272</a>
 <a href="#273" id="273">273</a>
 <a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::RefCell;
 <span class="kw">use </span>std::mem::ManuallyDrop;
 <span class="kw">use </span>std::rc::Rc;
@@ -307,7 +309,8 @@
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; Copy <span class="kw">for </span>ListViewItem&lt;<span class="lifetime">'a</span>, T&gt; {}
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; ListViewItem&lt;<span class="lifetime">'a</span>, T&gt; {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;, index: u32) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;, index: u32) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{ owner, index }
 	}
 
@@ -326,7 +329,8 @@
 			})
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>data_lparam(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">*mut </span>RefCell&lt;T&gt;&gt; {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>data_lparam(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">*mut </span>RefCell&lt;T&gt;&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>lvi = LVITEM::default();
 		lvi.iItem = <span class="self">self</span>.index <span class="kw">as _</span>;
 		lvi.mask = co::LVIF::PARAM;

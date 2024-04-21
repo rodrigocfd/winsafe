@@ -250,6 +250,7 @@
 <a href="#250" id="250">250</a>
 <a href="#251" id="251">251</a>
 <a href="#252" id="252">252</a>
+<a href="#253" id="253">253</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -421,6 +422,7 @@
 <span class="kw">impl </span>SNB {
 	<span class="doccomment">/// Creates a new `SNB` by allocating a contiguous memory block for pointers
 	/// and strings.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>new(strs: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;]) -&gt; HrResult&lt;<span class="self">Self</span>&gt; {
 		<span class="kw">if </span>strs.is_empty() {
 			<span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="self">Self</span>::default());

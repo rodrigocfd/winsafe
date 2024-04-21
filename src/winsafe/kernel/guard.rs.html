@@ -812,6 +812,7 @@
 <a href="#812" id="812">812</a>
 <a href="#813" id="813">813</a>
 <a href="#814" id="814">814</a>
+<a href="#815" id="815">815</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomData;
 <span class="kw">use </span>std::ops::{Deref, DerefMut};
 
@@ -1531,7 +1532,8 @@
 }
 
 <span class="kw">impl </span>TokenPrivilegesGuard {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">fn </span>new(
 		privileges: <span class="kw-2">&amp;</span>[LUID_AND_ATTRIBUTES],
 	) -&gt; SysResult&lt;<span class="self">Self</span>&gt;
 	{

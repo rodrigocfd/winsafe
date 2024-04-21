@@ -282,9 +282,14 @@
 <a href="#282" id="282">282</a>
 <a href="#283" id="283">283</a>
 <a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::gui::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
@@ -303,6 +308,7 @@
 
 <span class="kw">impl </span>Brush {
 	<span class="doccomment">/// Converts the contents of `Brush` to `HBRUSH`.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>as_hbrush(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HBRUSH {
 		<span class="kw">match </span><span class="self">self </span>{
 			Brush::Color(c) =&gt; HBRUSH::from_sys_color(<span class="kw-2">*</span>c),
@@ -331,6 +337,7 @@
 
 <span class="kw">impl </span>Cursor {
 	<span class="doccomment">/// Converts the contents of `Cursor` to `HCURSOR`.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>as_hcursor(<span class="kw-2">&amp;</span><span class="self">self</span>, hinst: <span class="kw-2">&amp;</span>HINSTANCE) -&gt; SysResult&lt;HCURSOR&gt; {
 		<span class="kw">unsafe </span>{
 			<span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="self">self </span>{
@@ -363,6 +370,7 @@
 
 <span class="kw">impl </span>Icon {
 	<span class="doccomment">/// Converts the contents of `Icon` to `HICON`.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>as_hicon(<span class="kw-2">&amp;</span><span class="self">self</span>, hinst: <span class="kw-2">&amp;</span>HINSTANCE) -&gt; SysResult&lt;HICON&gt; {
 		<span class="kw">unsafe </span>{
 			<span class="prelude-val">Ok</span>(<span class="kw">match </span><span class="self">self </span>{
@@ -394,11 +402,13 @@
 }
 
 <span class="kw">impl </span>RawBase {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;&gt;) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;&gt;) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{ base: Base::new(<span class="bool-val">false</span>, parent) }
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>base(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Base {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>base(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Base {
 		<span class="kw-2">&amp;</span><span class="self">self</span>.base
 	}
 
@@ -541,13 +551,13 @@
 
 		<span class="comment">// Execute before-user closures, keep track if at least one was executed.
 		</span><span class="kw">let </span>ref_self = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>ptr_self };
-		<span class="kw">let </span>at_least_one_before_user = ref_self.base.process_before_user_messages(<span class="kw-2">&amp;</span>hwnd, wm_any)<span class="question-mark">?</span>;
+		<span class="kw">let </span>at_least_one_before_user = ref_self.base.process_before_user_messages(wm_any)<span class="question-mark">?</span>;
 
 		<span class="comment">// Execute user closure, if any.
 		</span><span class="kw">let </span>process_result = ref_self.base.process_user_message(wm_any)<span class="question-mark">?</span>;
 
 		<span class="comment">// Execute post-user closures, keep track if at least one was executed.
-		</span><span class="kw">let </span>at_least_one_after_user = ref_self.base.process_after_user_messages(<span class="kw-2">&amp;</span>hwnd, wm_any)<span class="question-mark">?</span>;
+		</span><span class="kw">let </span>at_least_one_after_user = ref_self.base.process_after_user_messages(wm_any)<span class="question-mark">?</span>;
 
 		<span class="kw">if </span>wm_any.msg_id == co::WM::NCDESTROY { <span class="comment">// always check
 			</span><span class="kw">unsafe </span>{ hwnd.SetWindowLongPtr(co::GWLP::USERDATA, <span class="number">0</span>); } <span class="comment">// clear passed pointer
@@ -556,9 +566,9 @@
 		</span>}
 
 		<span class="prelude-val">Ok</span>(<span class="kw">match </span>process_result {
-			ProcessResult::HandledWithRet(res) =&gt; res,
-			ProcessResult::HandledWithoutRet =&gt; <span class="number">0</span>,
-			ProcessResult::NotHandled =&gt; <span class="kw">if </span>at_least_one_before_user || at_least_one_after_user {
+			WmRet::HandledWithRet(res) =&gt; res,
+			WmRet::HandledOk =&gt; <span class="number">0</span>,
+			WmRet::NotHandled =&gt; <span class="kw">if </span>at_least_one_before_user || at_least_one_after_user {
 				<span class="number">0
 			</span>} <span class="kw">else </span>{
 				<span class="kw">unsafe </span>{ hwnd.DefWindowProc(wm_any) }.into()

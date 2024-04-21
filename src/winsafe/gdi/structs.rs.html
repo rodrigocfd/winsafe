@@ -308,6 +308,9 @@
 <a href="#308" id="308">308</a>
 <a href="#309" id="309">309</a>
 <a href="#310" id="310">310</a>
+<a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
+<a href="#313" id="313">313</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -352,6 +355,7 @@
 
 <span class="kw">impl </span>BITMAPFILEHEADER {
 	<span class="doccomment">/// Serializes the struct into `&amp;[u8]`.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub const fn </span>serialize(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u8] {
 		<span class="kw">unsafe </span>{
 			std::slice::from_raw_parts(
@@ -402,6 +406,7 @@
 
 <span class="kw">impl </span>BITMAPINFOHEADER {
 	<span class="doccomment">/// Serializes the struct into `&amp;[u8]`.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub const fn </span>serialize(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u8] {
 		<span class="kw">unsafe </span>{
 			std::slice::from_raw_parts(
@@ -448,6 +453,7 @@
 	<span class="macro">pub_fn_string_arr_get_set!</span>(lfFaceName, set_lfFaceName);
 
 	<span class="doccomment">/// Creates a `LOGFONT` and automatically sets `lfHeight` and `lfFaceName`.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>new_face(height: i32, face_name: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
 		<span class="kw">let </span><span class="kw-2">mut </span>lf = <span class="self">Self</span>::default();
 		lf.lfHeight = height;

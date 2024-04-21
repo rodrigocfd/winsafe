@@ -91,6 +91,7 @@
 <a href="#91" id="91">91</a>
 <a href="#92" id="92">92</a>
 <a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -171,8 +172,9 @@
 	/// `i32` is the value passed to
 	/// [`HWND::EndDialog`](crate::prelude::user_Hwnd::EndDialog). Note that, if
 	/// the user clicks the "X" to close the modal, the default behavior is to
-	/// call `EndDialog(0)`. To override this behavior, simply handle the
-	/// modal's [`wm_close`](crate::prelude::GuiEvents::wm_close) yourself.
+	/// call `EndDialog(0)`. To override this behavior, handle the
+	/// modal's [`wm_close`](crate::gui::events::WindowEvents::wm_close)
+	/// yourself.
 	///
 	/// # Panics
 	///

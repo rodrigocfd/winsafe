@@ -260,6 +260,14 @@
 <a href="#260" id="260">260</a>
 <a href="#261" id="261">261</a>
 <a href="#262" id="262">262</a>
+<a href="#263" id="263">263</a>
+<a href="#264" id="264">264</a>
+<a href="#265" id="265">265</a>
+<a href="#266" id="266">266</a>
+<a href="#267" id="267">267</a>
+<a href="#268" id="268">268</a>
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Global objects used within `gui` module.
 
 </span><span class="kw">use </span>std::error::Error;
@@ -310,6 +318,7 @@
 </span>}
 
 <span class="doccomment">/// Retrieves the global UI font object, or panics if not created yet.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>ui_font() -&gt; HFONT {
 	<span class="kw">unsafe </span>{
 		<span class="kw">match </span><span class="kw-2">&amp;*</span><span class="macro">std::ptr::addr_of!</span>(UI_HFONT) {
@@ -324,6 +333,7 @@
 </span><span class="kw">static </span><span class="kw-2">mut </span>BASE_CTRL_ID: u16 = <span class="number">0xdfff</span>; <span class="comment">// https://stackoverflow.com/a/18192766/6923555
 
 </span><span class="doccomment">/// Returns the next sequential control ID.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>next_auto_ctrl_id() -&gt; u16 {
 	<span class="kw">unsafe </span>{
 		<span class="kw">let </span>your_id = BASE_CTRL_ID;
@@ -334,10 +344,12 @@
 
 <span class="doccomment">/// To be implemented for control options structs.
 </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">trait </span>AutoCtrlId {
-	<span class="kw">fn </span>ctrl_id_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>u16;
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>ctrl_id_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>u16;
 }
 
 <span class="doccomment">/// If the control ID is zero, give it the next sequential ID.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>auto_ctrl_id_if_zero&lt;T: AutoCtrlId&gt;(<span class="kw-2">mut </span>obj: T) -&gt; T {
 	<span class="kw">if </span><span class="kw-2">*</span>obj.ctrl_id_mut() == <span class="number">0 </span>{
 		<span class="kw-2">*</span>obj.ctrl_id_mut() = next_auto_ctrl_id();
@@ -414,6 +426,7 @@
 <span class="comment">//------------------------------------------------------------------------------
 
 </span><span class="doccomment">/// Calculates the bound rectangle to fit the text with current system font.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>calc_text_bound_box(text: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;SIZE&gt; {
 	<span class="kw">let </span>desktop_hwnd = HWND::GetDesktopWindow();
 	<span class="kw">let </span>desktop_hdc = desktop_hwnd.GetDC()<span class="question-mark">?</span>;
@@ -434,6 +447,7 @@
 
 <span class="doccomment">/// Calculates the bound rectangle to fit the text with current system font,
 /// adding a check box.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>calc_text_bound_box_check(text: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;SIZE&gt; {
 	<span class="kw">let </span><span class="kw-2">mut </span>bound_box = calc_text_bound_box(text)<span class="question-mark">?</span>;
 	bound_box.cx += GetSystemMetrics(co::SM::CXMENUCHECK) <span class="comment">// https://stackoverflow.com/a/1165052/6923555
@@ -447,7 +461,8 @@
 	<span class="prelude-val">Ok</span>(bound_box)
 }
 
-<span class="kw">fn </span>remove_accelerator_ampersands(text: <span class="kw-2">&amp;</span>str) -&gt; String {
+<span class="attr">#[must_use]
+</span><span class="kw">fn </span>remove_accelerator_ampersands(text: <span class="kw-2">&amp;</span>str) -&gt; String {
 	<span class="kw">let </span><span class="kw-2">mut </span>txt_no_ampersands = String::with_capacity(text.len());
 	<span class="kw">let </span><span class="kw-2">mut </span>last_ch = <span class="string">'a'</span>; <span class="comment">// initial value will be skipped
 
@@ -468,6 +483,7 @@
 <span class="comment">//------------------------------------------------------------------------------
 
 </span><span class="doccomment">/// Adjusts the position of a modeless window on parent.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>adjust_modeless_pos(
 	parent_base: <span class="kw-2">&amp;</span>Base,
 	<span class="kw-2">mut </span>user_pos: POINT,

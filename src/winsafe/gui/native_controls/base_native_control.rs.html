@@ -207,6 +207,14 @@
 <a href="#207" id="207">207</a>
 <a href="#208" id="208">208</a>
 <a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::UnsafeCell;
 <span class="kw">use </span>std::ptr::NonNull;
 
@@ -229,11 +237,13 @@
 }
 
 <span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">trait </span>ResizeBehavior {
-	<span class="kw">fn </span>resize_behavior(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (Horz, Vert);
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>resize_behavior(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (Horz, Vert);
 }
 
 <span class="kw">impl</span>&lt;T: ResizeBehavior&gt; OptsResz&lt;T&gt; {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>resize_behavior(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (Horz, Vert) {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>resize_behavior(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (Horz, Vert) {
 		<span class="kw">match </span><span class="self">self </span>{
 			OptsResz::Wnd(opts) =&gt; opts.resize_behavior(),
 			OptsResz::Dlg(horz_vert) =&gt; <span class="kw-2">*</span>horz_vert,
@@ -254,7 +264,8 @@
 </span>}
 
 <span class="kw">impl </span>BaseNativeControl {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
 		<span class="kw">if </span><span class="kw-2">*</span>parent.as_ref().hwnd() != HWND::NULL {
 			<span class="macro">panic!</span>(<span class="string">"Cannot create a child control after the parent window is created."</span>);
 		}
@@ -263,23 +274,27 @@
 			ctrl_id,
 			hwnd: UnsafeCell::new(HWND::NULL),
 			parent_ptr: NonNull::from(parent.as_ref()),
-			subclass_events: WindowEvents::new(),
+			subclass_events: WindowEvents::new(<span class="bool-val">false</span>),
 		}
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>ctrl_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u16 {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>ctrl_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u16 {
 		<span class="self">self</span>.ctrl_id
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>hwnd(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HWND {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>hwnd(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HWND {
 		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.hwnd.get() }
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Base {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>Base {
 		<span class="kw">unsafe </span>{ <span class="self">self</span>.parent_ptr.as_ref() }
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>on_subclass(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEvents {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>on_subclass(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEvents {
 		<span class="kw">if </span><span class="kw-2">*</span><span class="self">self</span>.hwnd() != HWND::NULL {
 			<span class="macro">panic!</span>(<span class="string">"Cannot add subclass events after control creation."</span>);
 		} <span class="kw">else if </span><span class="kw-2">*</span><span class="self">self</span>.parent().hwnd() != HWND::NULL {
@@ -392,12 +407,13 @@
 	) -&gt; AnyResult&lt;isize&gt;
 	{
 		<span class="kw">let </span>ptr_self = ref_data <span class="kw">as </span><span class="kw-2">*mut </span><span class="self">Self</span>; <span class="comment">// retrieve
-		</span><span class="kw">let </span><span class="kw-2">mut </span>process_result = ProcessResult::NotHandled;
+		</span><span class="kw">let </span><span class="kw-2">mut </span>process_result = WmRet::NotHandled;
 
 		<span class="kw">if </span>!ptr_self.is_null() {
 			<span class="kw">let </span>ref_self = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>ptr_self };
 			<span class="kw">if </span><span class="kw-2">*</span>ref_self.hwnd() != HWND::NULL {
-				process_result = ref_self.subclass_events.process_one_message(wm_any)<span class="question-mark">?</span>;
+				process_result = ref_self.subclass_events
+					.process_last_message(ref_self.hwnd(), wm_any)<span class="question-mark">?</span>;
 			}
 		}
 
@@ -410,9 +426,9 @@
 		}
 
 		<span class="prelude-val">Ok</span>(<span class="kw">match </span>process_result {
-			ProcessResult::HandledWithRet(res) =&gt; res,
-			ProcessResult::HandledWithoutRet =&gt; <span class="number">0</span>,
-			ProcessResult::NotHandled =&gt; <span class="kw">unsafe </span>{ hwnd.DefSubclassProc(wm_any) }.into(),
+			WmRet::HandledWithRet(res) =&gt; res,
+			WmRet::HandledOk =&gt; <span class="number">0</span>,
+			WmRet::NotHandled =&gt; <span class="kw">unsafe </span>{ hwnd.DefSubclassProc(wm_any) }.into(),
 		})
 	}
 }

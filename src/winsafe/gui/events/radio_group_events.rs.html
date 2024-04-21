@@ -135,13 +135,25 @@
 <a href="#135" id="135">135</a>
 <a href="#136" id="136">136</a>
 <a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::ptr::NonNull;
 <span class="kw">use </span>std::rc::Rc;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::gui::{events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
-<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
 
 <span class="doccomment">/// Exposes button control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
@@ -159,7 +171,8 @@
 }
 
 <span class="kw">impl </span>RadioGroupEvents {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
 		parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;,
 		ctrl_ids: Vec&lt;u16&gt;,
 	) -&gt; <span class="self">Self
@@ -170,7 +183,8 @@
 		}
 	}
 
-	<span class="kw">fn </span>parent_user_events(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsAll {
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>parent_user_events(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEvents {
 		<span class="kw">unsafe </span>{ <span class="self">self</span>.parent_ptr.as_ref().on() }
 	}
 
@@ -206,9 +220,12 @@
 		<span class="kw">let </span>shared_func = Rc::new(func);
 
 		<span class="kw">for </span>ctrl_id <span class="kw">in </span><span class="self">self</span>.ctrl_ids.iter() {
-			<span class="self">self</span>.parent_user_events().wm_command(co::BN::CLICKED, <span class="kw-2">*</span>ctrl_id, {
+			<span class="self">self</span>.parent_user_events().wm_command(<span class="kw-2">*</span>ctrl_id, co::BN::CLICKED, {
 				<span class="kw">let </span>shared_func = shared_func.clone();
-				<span class="kw">move </span>|| shared_func()
+				<span class="kw">move </span>|| {
+					shared_func()<span class="question-mark">?</span>;
+					<span class="prelude-val">Ok</span>(WmRet::HandledOk)
+				}
 			});
 		}
 	}
@@ -227,9 +244,12 @@
 		<span class="kw">let </span>shared_func = Rc::new(func);
 
 		<span class="kw">for </span>ctrl_id <span class="kw">in </span><span class="self">self</span>.ctrl_ids.iter() {
-			<span class="self">self</span>.parent_user_events().wm_command(co::BN::DBLCLK, <span class="kw-2">*</span>ctrl_id, {
+			<span class="self">self</span>.parent_user_events().wm_command(<span class="kw-2">*</span>ctrl_id, co::BN::DBLCLK, {
 				<span class="kw">let </span>shared_func = shared_func.clone();
-				<span class="kw">move </span>|| shared_func()
+				<span class="kw">move </span>|| {
+					shared_func()<span class="question-mark">?</span>;
+					<span class="prelude-val">Ok</span>(WmRet::HandledOk)
+				}
 			});
 		}
 	}
@@ -246,9 +266,12 @@
 		<span class="kw">let </span>shared_func = Rc::new(func);
 
 		<span class="kw">for </span>ctrl_id <span class="kw">in </span><span class="self">self</span>.ctrl_ids.iter() {
-			<span class="self">self</span>.parent_user_events().wm_command(co::BN::KILLFOCUS, <span class="kw-2">*</span>ctrl_id, {
+			<span class="self">self</span>.parent_user_events().wm_command(<span class="kw-2">*</span>ctrl_id, co::BN::KILLFOCUS, {
 				<span class="kw">let </span>shared_func = shared_func.clone();
-				<span class="kw">move </span>|| shared_func()
+				<span class="kw">move </span>|| {
+					shared_func()<span class="question-mark">?</span>;
+					<span class="prelude-val">Ok</span>(WmRet::HandledOk)
+				}
 			});
 		}
 	}
@@ -265,9 +288,12 @@
 		<span class="kw">let </span>shared_func = Rc::new(func);
 
 		<span class="kw">for </span>ctrl_id <span class="kw">in </span><span class="self">self</span>.ctrl_ids.iter() {
-			<span class="self">self</span>.parent_user_events().wm_command(co::BN::SETFOCUS, <span class="kw-2">*</span>ctrl_id, {
+			<span class="self">self</span>.parent_user_events().wm_command(<span class="kw-2">*</span>ctrl_id, co::BN::SETFOCUS, {
 				<span class="kw">let </span>shared_func = shared_func.clone();
-				<span class="kw">move </span>|| shared_func()
+				<span class="kw">move </span>|| {
+					shared_func()<span class="question-mark">?</span>;
+					<span class="prelude-val">Ok</span>(WmRet::HandledOk)
+				}
 			});
 		}
 	}

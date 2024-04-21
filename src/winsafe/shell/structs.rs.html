@@ -238,6 +238,7 @@
 <a href="#238" id="238">238</a>
 <a href="#239" id="239">239</a>
 <a href="#240" id="240">240</a>
+<a href="#241" id="241">241</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -362,6 +363,7 @@
 	///
 	/// let (hicon, _) = unsafe { sei.hIcon_hMonitor() };
 	/// ```
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub unsafe fn </span>hIcon_hMonitor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (HICON, HMONITOR) {
 		(HICON::from_ptr(<span class="self">self</span>.hIcon_hMonitor),
 			HMONITOR::from_ptr(<span class="self">self</span>.hIcon_hMonitor))

@@ -234,7 +234,7 @@
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::gui::{events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>, spec::<span class="kw-2">*</span>};
+<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>, spec::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
@@ -358,14 +358,14 @@
 		<span class="kw">let </span>self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm_create_or_initdialog(<span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
 			self2.create()<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::NotHandled)
 		});
 
 		<span class="kw">let </span>self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm(co::WM::SIZE, <span class="kw">move </span>|<span class="kw">_</span>, p| {
 			<span class="kw">let </span><span class="kw-2">mut </span>p = wm::Size::from_generic_wm(p);
 			self2.resize(<span class="kw-2">&amp;mut </span>p);
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::HandledOk)
 		});
 
 		new_self

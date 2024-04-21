@@ -147,6 +147,18 @@
 <a href="#147" id="147">147</a>
 <a href="#148" id="148">148</a>
 <a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -169,17 +181,20 @@
 
 <span class="doccomment">/// [`IS_INTRESOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-is_intresource)
 /// macro.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const fn </span>IS_INTRESOURCE(val: <span class="kw-2">*const </span>u16) -&gt; bool {
 	(<span class="kw">unsafe </span>{ std::mem::transmute::&lt;<span class="kw">_</span>, usize&gt;(val) } &gt;&gt; <span class="number">16</span>) == <span class="number">0
 </span>}
 
 <span class="doccomment">/// [`MAKEINTRESOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-makeintresourcew)
 /// macro.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const fn </span>MAKEINTRESOURCE(val: isize) -&gt; <span class="kw-2">*const </span>u16 {
 	val <span class="kw">as </span>u16 <span class="kw">as _
 </span>}
 
 <span class="doccomment">/// If value is `FALSE`, yields `Err(GetLastError)`, otherwise `Ok()`.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>bool_to_sysresult(expr: BOOL) -&gt; SysResult&lt;()&gt; {
 	<span class="kw">match </span>expr {
 		<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
@@ -188,6 +203,7 @@
 }
 
 <span class="doccomment">/// If pointer is null, yields `Err(GetLastError)`, otherwise `Ok(ptr)`.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>ptr_to_sysresult(ptr: HANDLE) -&gt; SysResult&lt;HANDLE&gt; {
 	<span class="kw">if </span>ptr.is_null() {
 		<span class="prelude-val">Err</span>(GetLastError())
@@ -197,6 +213,7 @@
 }
 
 <span class="doccomment">/// If pointer is null, yields `Err(GetLastError)`, otherwise `Ok(Handle)`.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>ptr_to_sysresult_handle&lt;H&gt;(ptr: HANDLE) -&gt; SysResult&lt;H&gt;
 	<span class="kw">where </span>H: Handle,
 {
@@ -205,6 +222,7 @@
 }
 
 <span class="doccomment">/// If the pointer is null, yields `None`, otherwise `Some(Handle)`.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>ptr_to_option_handle&lt;H&gt;(ptr: HANDLE) -&gt; <span class="prelude-ty">Option</span>&lt;H&gt;
 	<span class="kw">where </span>H: Handle,
 {
@@ -216,6 +234,7 @@
 }
 
 <span class="doccomment">/// If value is `ERROR::SUCCESS`, yields `Ok(())`, otherwise `Err(err)`.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const fn </span>error_to_sysresult(lstatus: i32) -&gt; SysResult&lt;()&gt; {
 	<span class="kw">match unsafe </span>{ co::ERROR::from_raw(lstatus <span class="kw">as _</span>) } {
 		co::ERROR::SUCCESS =&gt; <span class="prelude-val">Ok</span>(()),
@@ -224,6 +243,7 @@
 }
 
 <span class="doccomment">/// If value is -1, yields `Err(GetLastError())`, otherwise `Ok(dword)`.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>minus1_as_error(dword: u32) -&gt; SysResult&lt;u32&gt; {
 	<span class="kw">const </span>MINUS_ONE: u32 = -<span class="number">1i32 </span><span class="kw">as </span>u32;
 	<span class="kw">match </span>dword {
@@ -233,6 +253,7 @@
 }
 
 <span class="doccomment">/// Converts a string to an ISO-8859-1 null-terminated byte array.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>str_to_iso88591(s: <span class="kw-2">&amp;</span>str) -&gt; Vec&lt;u8&gt; {
 	s.chars().map(|ch| ch <span class="kw">as </span>u8)
 		.chain(std::iter::once(<span class="number">0</span>)) <span class="comment">// append a terminating null
@@ -240,6 +261,7 @@
 }
 
 <span class="doccomment">/// Parses a null-delimited multi-string, which must terminate with two nulls.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_multi_z_str(src: <span class="kw-2">*const </span>u16) -&gt; Vec&lt;String&gt; {
 	<span class="kw">let </span><span class="kw-2">mut </span>src = src;
 	<span class="kw">let </span><span class="kw-2">mut </span>strings = Vec::&lt;String&gt;::default();
@@ -266,6 +288,7 @@
 /// This is necessary because an empty vector returns garbage as its underlying
 /// pointer, see:
 /// * https://github.com/rust-lang/rust/issues/39625
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>vec_ptr&lt;T&gt;(v: <span class="kw-2">&amp;</span>[T]) -&gt; <span class="kw-2">*const </span>T {
 	<span class="kw">if </span>v.is_empty() {
 		std::ptr::null()
@@ -277,6 +300,7 @@
 <span class="doccomment">/// Creates two vectors:
 /// * the first with each string converted to `WString`;
 /// * the second with the pointers to each `WString` in the first vector.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>create_wstr_ptr_vecs(
 	strings: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;]&gt;,
 ) -&gt; (Vec&lt;WString&gt;, Vec&lt;<span class="kw-2">*const </span>u16&gt;)

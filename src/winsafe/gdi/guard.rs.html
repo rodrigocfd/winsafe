@@ -210,6 +210,7 @@
 <a href="#210" id="210">210</a>
 <a href="#211" id="211">211</a>
 <a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::ops::{Deref, DerefMut};
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -325,7 +326,8 @@
 }
 
 <span class="kw">impl </span>LogpaletteGuard {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gdi) <span class="kw">fn </span>new(
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gdi) <span class="kw">fn </span>new(
 		pal_version: u16,
 		entries: <span class="kw-2">&amp;</span>[PALETTEENTRY],
 	) -&gt; SysResult&lt;<span class="self">Self</span>&gt;

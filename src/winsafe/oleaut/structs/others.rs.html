@@ -19,6 +19,7 @@
 <a href="#19" id="19">19</a>
 <a href="#20" id="20">20</a>
 <a href="#21" id="21">21</a>
+<a href="#22" id="22">22</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::oleaut::privs::<span class="kw-2">*</span>;
 
@@ -36,6 +37,7 @@
 <span class="kw">impl </span>PROPERTYKEY {
 	<span class="doccomment">/// Creates a new `PROPERTYKEY` by setting `pid` to `PID_FIRST_USABLE`
 	/// (`0x02`).
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub const fn </span>new(fmtid: GUID) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{ fmtid, pid: PID_FIRST_USABLE }
 	}

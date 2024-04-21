@@ -330,6 +330,7 @@
 <a href="#330" id="330">330</a>
 <a href="#331" id="331">331</a>
 <a href="#332" id="332">332</a>
+<a href="#333" id="333">333</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::TypeId;
 <span class="kw">use </span>std::cell::RefCell;
 <span class="kw">use </span>std::cmp::Ordering;
@@ -350,7 +351,8 @@
 }
 
 <span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; ListViewItems&lt;<span class="lifetime">'a</span>, T&gt; {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;) -&gt; <span class="self">Self </span>{
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>ListView&lt;T&gt;) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{ owner }
 	}
 

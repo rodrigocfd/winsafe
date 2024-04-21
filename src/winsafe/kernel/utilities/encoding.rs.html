@@ -196,6 +196,8 @@
 <a href="#196" id="196">196</a>
 <a href="#197" id="197">197</a>
 <a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cmp::Ordering;
 
 <span class="doccomment">/// String encodings.
@@ -264,7 +266,8 @@
 		}
 	}
 
-	<span class="kw">fn </span>guess_bom(data: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="self">Self</span>, usize)&gt; {
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>guess_bom(data: <span class="kw-2">&amp;</span>[u8]) -&gt; <span class="prelude-ty">Option</span>&lt;(<span class="self">Self</span>, usize)&gt; {
 		<span class="kw">let </span>has_bom = |bom_bytes: <span class="kw-2">&amp;</span>[u8]| -&gt; bool {
 			data.len() &gt;= bom_bytes.len()
 				&amp;&amp; data[..bom_bytes.len()].cmp(bom_bytes) == Ordering::Equal
@@ -308,7 +311,8 @@
 		<span class="prelude-val">None </span><span class="comment">// no BOM found
 	</span>}
 
-	<span class="kw">fn </span>guess_utf8(data: <span class="kw-2">&amp;</span>[u8]) -&gt; bool {
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>guess_utf8(data: <span class="kw-2">&amp;</span>[u8]) -&gt; bool {
 		<span class="kw">let </span><span class="kw-2">mut </span>i = <span class="number">0</span>; <span class="comment">// https://stackoverflow.com/a/1031773/6923555
 		</span><span class="kw">while </span>i &lt; data.len() {
 			<span class="kw">let </span>ch0 = <span class="kw">unsafe </span>{ <span class="kw-2">*</span>data.get_unchecked(i) };

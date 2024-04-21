@@ -293,9 +293,15 @@
 <a href="#293" id="293">293</a>
 <a href="#294" id="294">294</a>
 <a href="#295" id="295">295</a>
+<a href="#296" id="296">296</a>
+<a href="#297" id="297">297</a>
+<a href="#298" id="298">298</a>
+<a href="#299" id="299">299</a>
+<a href="#300" id="300">300</a>
+<a href="#301" id="301">301</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::gui::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
 
 <span class="doccomment">/// Exposes list view control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications).
@@ -306,11 +312,12 @@
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-</span><span class="kw">pub struct </span>ListViewEvents(BaseEventsProxy);
+</span><span class="kw">pub struct </span>ListViewEvents(BaseCtrlEventsProxy);
 
 <span class="kw">impl </span>ListViewEvents {
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
-		<span class="self">Self</span>(BaseEventsProxy::new(parent, ctrl_id))
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>(BaseCtrlEventsProxy::new(parent, ctrl_id))
 	}
 
 	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_begin_drag, co::LVN::BEGINDRAG, NMLISTVIEW;
@@ -414,8 +421,10 @@
 	</span><span class="kw">pub fn </span>lvn_get_empty_markup&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
 		<span class="kw">where </span>F: Fn(<span class="kw-2">&amp;mut </span>NMLVEMPTYMARKUP) -&gt; AnyResult&lt;bool&gt; + <span class="lifetime">'static</span>,
 	{
-		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::LVN::GETEMPTYMARKUP,
-			<span class="kw">move </span>|p| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMLVEMPTYMARKUP&gt;() })<span class="question-mark">? </span><span class="kw">as _</span>)));
+		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::LVN::GETEMPTYMARKUP, <span class="kw">move </span>|p| {
+			<span class="kw">let </span>ret_val = func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMLVEMPTYMARKUP&gt;() })<span class="question-mark">? </span><span class="kw">as </span>isize;
+			<span class="prelude-val">Ok</span>(WmRet::HandledWithRet(ret_val))
+		});
 	}
 
 	<span class="macro">pub_fn_nfy_withparm_noret!</span> { lvn_get_info_tip, co::LVN::GETINFOTIP, NMLVGETINFOTIP;
@@ -517,10 +526,11 @@
 		<span class="kw">where </span>F: Fn(<span class="kw-2">&amp;mut </span>NMLVFINDITEM) -&gt; AnyResult&lt;<span class="prelude-ty">Option</span>&lt;u32&gt;&gt; + <span class="lifetime">'static</span>,
 	{
 		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::LVN::ODFINDITEM, <span class="kw">move </span>|p| {
-			<span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(<span class="kw">match </span>func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMLVFINDITEM&gt;() })<span class="question-mark">? </span>{
-				<span class="prelude-val">Some</span>(idx) =&gt; idx <span class="kw">as _</span>,
+			<span class="kw">let </span>ret_val = <span class="kw">match </span>func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMLVFINDITEM&gt;() })<span class="question-mark">? </span>{
+				<span class="prelude-val">Some</span>(idx) =&gt; idx <span class="kw">as </span>isize,
 				<span class="prelude-val">None </span>=&gt; -<span class="number">1</span>,
-			}))
+			};
+			<span class="prelude-val">Ok</span>(WmRet::HandledWithRet(ret_val))
 		});
 	}
 
@@ -544,8 +554,10 @@
 	</span><span class="kw">pub fn </span>nm_custom_draw&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
 		<span class="kw">where </span>F: Fn(<span class="kw-2">&amp;mut </span>NMLVCUSTOMDRAW) -&gt; AnyResult&lt;co::CDRF&gt; + <span class="lifetime">'static</span>,
 	{
-		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::NM::CUSTOMDRAW,
-			<span class="kw">move </span>|p| <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMLVCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as _</span>)));
+		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::NM::CUSTOMDRAW, <span class="kw">move </span>|p| {
+			<span class="kw">let </span>ret_val = func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMLVCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as </span>isize;
+			<span class="prelude-val">Ok</span>(WmRet::HandledWithRet(ret_val))
+		});
 	}
 
 	<span class="macro">pub_fn_nfy_withparm_noret!</span> { nm_dbl_clk, co::NM::DBLCLK, NMITEMACTIVATE;

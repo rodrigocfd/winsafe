@@ -260,6 +260,37 @@
 <a href="#260" id="260">260</a>
 <a href="#261" id="261">261</a>
 <a href="#262" id="262">262</a>
+<a href="#263" id="263">263</a>
+<a href="#264" id="264">264</a>
+<a href="#265" id="265">265</a>
+<a href="#266" id="266">266</a>
+<a href="#267" id="267">267</a>
+<a href="#268" id="268">268</a>
+<a href="#269" id="269">269</a>
+<a href="#270" id="270">270</a>
+<a href="#271" id="271">271</a>
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a>
+<a href="#275" id="275">275</a>
+<a href="#276" id="276">276</a>
+<a href="#277" id="277">277</a>
+<a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a>
+<a href="#293" id="293">293</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::ptr::NonNull;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -267,6 +298,31 @@
 <span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
+
+<span class="doccomment">/// The result of processing a raw [`co::WM`](crate::co::WM),
+/// [`co::WM::COMMAND`](crate::co::WM::COMMAND) or
+/// [`co::WM::NOTIFY`](crate::co::WM::NOTIFY) message.
+</span><span class="kw">pub enum </span>WmRet {
+	<span class="doccomment">/// Behave as if the message was not handled, that means returning:
+	///
+	/// * [`DefWindowProc`](crate::prelude::user_Hwnd::DefWindowProc) for non-dialog windows;
+	/// * `FALSE` for dialog windows.
+	///
+	/// This type of return should be rare. It means you handled the message,
+	/// but you want the OS to behave like you didn't.
+	</span>NotHandled,
+	<span class="doccomment">/// The message was handled, but the window procedure may return the default
+	/// value:
+	///
+	/// * `0` for non-dialog windows;
+	/// * `TRUE` for dialog windows.
+	///
+	/// This is the most common type of return.
+	</span>HandledOk,
+	<span class="doccomment">/// The message was handled, and the specific value must be returned by the
+	/// window procedure.
+	</span>HandledWithRet(isize),
+}
 
 <span class="doccomment">/// Allocated on the heap and passed through `WM_UI_THREAD`.
 </span><span class="kw">struct </span>ThreadPack {
@@ -281,7 +337,7 @@
 	is_dialog: bool,
 	parent_ptr: <span class="prelude-ty">Option</span>&lt;NonNull&lt;<span class="self">Self</span>&gt;&gt;, <span class="comment">// used only during creation stuff
 	</span>before_user_events: WindowEventsPriv, <span class="comment">// inserted internally to automate tasks: all will be executed before user events
-	</span>user_events: WindowEventsAll, <span class="comment">// ordinary window events, inserted by user: only last added is executed (overwrite previous)
+	</span>user_events: WindowEvents, <span class="comment">// ordinary window events, inserted by user: only last added is executed (overwrite previous)
 	</span>after_user_events: WindowEventsPriv, <span class="comment">// all will be executed after user events
 	</span>layout_arranger: LayoutArranger,
 }
@@ -295,7 +351,8 @@
 <span class="kw">impl </span>Base {
 	<span class="kw">const </span>WM_UI_THREAD: co::WM = <span class="kw">unsafe </span>{ co::WM::from_raw(co::WM::APP.raw() + <span class="number">0x3fff</span>) };
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(
 		is_dialog: bool,
 		parent: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;&gt;,
 	) -&gt; <span class="self">Self
@@ -305,7 +362,7 @@
 			is_dialog,
 			parent_ptr: parent.map(|parent| NonNull::from(parent.as_ref())),
 			before_user_events: WindowEventsPriv::new(is_dialog),
-			user_events: WindowEventsAll::new(),
+			user_events: WindowEvents::new(is_dialog),
 			after_user_events: WindowEventsPriv::new(is_dialog),
 			layout_arranger: LayoutArranger::new(),
 		};
@@ -313,7 +370,8 @@
 		new_self
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>hwnd(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HWND {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>hwnd(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HWND {
 		<span class="kw-2">&amp;</span><span class="self">self</span>.hwnd
 	}
 
@@ -321,18 +379,21 @@
 		<span class="self">self</span>.hwnd = hwnd
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>is_dialog(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>is_dialog(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
 		<span class="self">self</span>.is_dialog
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Base&gt; {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>parent(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>Base&gt; {
 		<span class="kw">match </span><span class="self">self</span>.parent_ptr {
 			<span class="prelude-val">Some</span>(parent_ptr) =&gt; <span class="prelude-val">Some</span>(<span class="kw">unsafe </span>{ parent_ptr.as_ref() }),
 			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
 		}
 	}
 
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>parent_hinstance(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;HINSTANCE&gt; {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>parent_hinstance(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;HINSTANCE&gt; {
 		<span class="kw">match </span><span class="self">self</span>.parent() {
 			<span class="prelude-val">Some</span>(parent) =&gt; <span class="prelude-val">Ok</span>(parent.hwnd().hinstance()),
 			<span class="prelude-val">None </span>=&gt; HINSTANCE::GetModuleHandle(<span class="prelude-val">None</span>),
@@ -340,6 +401,7 @@
 	}
 
 	<span class="doccomment">/// Internal before-user events are always executed.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>before_user_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsPriv {
 		<span class="kw">if </span><span class="self">self</span>.hwnd != HWND::NULL {
 			<span class="macro">panic!</span>(<span class="string">"Cannot add before-user event after window creation."</span>);
@@ -348,7 +410,8 @@
 	}
 
 	<span class="doccomment">/// User events can be overriden; only the last one is executed.
-	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsAll {
+	</span><span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEvents {
 		<span class="kw">if </span><span class="self">self</span>.hwnd != HWND::NULL {
 			<span class="macro">panic!</span>(<span class="string">"Cannot add event after window creation."</span>);
 		}
@@ -356,6 +419,7 @@
 	}
 
 	<span class="doccomment">/// Internal after-user events are always executed.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>after_user_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsPriv {
 		<span class="kw">if </span><span class="self">self</span>.hwnd != HWND::NULL {
 			<span class="macro">panic!</span>(<span class="string">"Cannot add after-user event after window creation."</span>);
@@ -367,30 +431,28 @@
 	///
 	/// Returns `true` if at least one message was processed.
 	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>process_before_user_messages(<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hwnd: <span class="kw-2">&amp;</span>HWND,
 		wm_any: WndMsg,
 	) -&gt; AnyResult&lt;bool&gt;
 	{
-		<span class="self">self</span>.before_user_events.process_all_messages(hwnd, wm_any)
+		<span class="self">self</span>.before_user_events.process_all_messages(<span class="self">self</span>.hwnd(), wm_any)
 	}
 
 	<span class="doccomment">/// If the user added a closure to the given message, run it.
 	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>process_user_message(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		wm_any: WndMsg,
-	) -&gt; AnyResult&lt;ProcessResult&gt;
+	) -&gt; AnyResult&lt;WmRet&gt;
 	{
-		<span class="self">self</span>.user_events.process_one_message(wm_any)
+		<span class="self">self</span>.user_events.process_last_message(<span class="self">self</span>.hwnd(), wm_any)
 	}
 
 	<span class="doccomment">/// Processes all after-user messages added internally by the library.
 	///
 	/// Returns `true` if at least one message was processed.
 	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>process_after_user_messages(<span class="kw-2">&amp;</span><span class="self">self</span>,
-		hwnd: <span class="kw-2">&amp;</span>HWND,
 		wm_any: WndMsg,
 	) -&gt; AnyResult&lt;bool&gt;
 	{
-		<span class="self">self</span>.after_user_events.process_all_messages(hwnd, wm_any)
+		<span class="self">self</span>.after_user_events.process_all_messages(<span class="self">self</span>.hwnd(), wm_any)
 	}
 
 	<span class="doccomment">/// Removes all user and before/after events.
@@ -462,13 +524,13 @@
 		</span><span class="kw">let </span>layout_arranger = <span class="self">self</span>.layout_arranger.clone();
 		<span class="self">self</span>.before_user_events.wm_create_or_initdialog(<span class="kw">move </span>|hwnd, <span class="kw">_</span>| {
 			layout_arranger.save_original_client_area(hwnd)<span class="question-mark">?</span>; <span class="comment">// must be done before the first WM_SIZE
-			</span><span class="prelude-val">Ok</span>(())
+			</span><span class="prelude-val">Ok</span>(WmRet::HandledOk)
 		});
 
 		<span class="kw">let </span>layout_arranger = <span class="self">self</span>.layout_arranger.clone();
 		<span class="self">self</span>.before_user_events.wm(co::WM::SIZE, <span class="kw">move </span>|<span class="kw">_</span>, p| {
 			layout_arranger.rearrange(wm::Size::from_generic_wm(p))<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::HandledOk)
 		});
 
 		<span class="self">self</span>.before_user_events.wm(<span class="self">Self</span>::WM_UI_THREAD, |<span class="kw">_</span>, p| {
@@ -478,7 +540,7 @@
 				<span class="kw">let </span>func = pack.func;
 				func().unwrap_or_else(|err| post_quit_error(p, err));
 			}
-			<span class="prelude-val">Ok</span>(())
+			<span class="prelude-val">Ok</span>(WmRet::HandledOk)
 		});
 	}
 
