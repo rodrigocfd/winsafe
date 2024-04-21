@@ -50,7 +50,7 @@ WinSafe features idiomatic bindings for the Win32 API, but on top of that, it fe
 
 One of the greatest strenghts of the GUI API is supporting the use of resource files, which can be created with a WYSIWYG [resource editor](https://en.wikipedia.org/wiki/Resource_(Windows)#Resource_software).
 
-GUI structs can be found in module [`gui`](crate::gui).
+GUI structs can be found in module [`gui`].
 
 # Native function calls
 
@@ -72,7 +72,7 @@ let hwnd = HWND::GetDesktopWindow();
 hwnd.SetFocus();
 ```
 
-Note how [`GetDesktopWindow`](crate::prelude::user_Hwnd::GetDesktopWindow) is a static method of [`HWND`](crate::HWND), and [`SetFocus`](crate::prelude::user_Hwnd::SetFocus) is an instance method called directly upon `hwnd`. All native handles (`HWND`, [`HDC`](crate::HDC), [`HINSTANCE`](crate::HINSTANCE), etc.) are structs, thus:
+Note how [`GetDesktopWindow`](crate::prelude::user_Hwnd::GetDesktopWindow) is a static method of [`HWND`], and [`SetFocus`](crate::prelude::user_Hwnd::SetFocus) is an instance method called directly upon `hwnd`. All native handles (`HWND`, [`HDC`], [`HINSTANCE`], etc.) are structs, thus:
 
 * native Win32 functions that return a handle are *static methods* in WinSafe;
 * native Win32 functions whose *first parameter* is a handle are *instance methods*.
@@ -91,15 +91,15 @@ use winsafe::PostQuitMessage;
 PostQuitMessage(0);
 ```
 
-Since [`PostQuitMessage`](crate::PostQuitMessage) is a free function, it's simply at the root of the crate.
+Since [`PostQuitMessage`] is a free function, it's simply at the root of the crate.
 
-Also note that some functions which require a cleanup routine – like [`BeginPaint`](crate::prelude::user_Hwnd::BeginPaint), for example – will return the resource wrapped in a [guard](crate::guard), which will perform the cleanup automatically. You'll never have to manually call [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint).
+Also note that some functions which require a cleanup routine – like [`BeginPaint`](crate::prelude::user_Hwnd::BeginPaint), for example – will return the resource wrapped in a [guard], which will perform the cleanup automatically. You'll never have to manually call [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint).
 
-Sending messages are a special case, see the [`msg`](crate::msg) module.
+Sending messages are a special case, see the [`msg`] module.
 
 # Native constants
 
-All native Win32 constants can be found in the [`co`](crate::co) module. They're all *typed*, what means that different constant types cannot be mixed (unless you explicitly say so).
+All native Win32 constants can be found in the [`co`] module. They're all *typed*, what means that different constant types cannot be mixed (unless you explicitly say so).
 
 Technically, each constant type is simply a [newtype](https://doc.rust-lang.org/rust-by-example/generics/new_types.html) with a couple implementations, including those allowing bitflag operations. Also, all constant values can be converted to its underlying [integer type](https://doc.rust-lang.org/book/ch03-02-data-types.html#integer-types).
 
@@ -122,13 +122,13 @@ hwnd.MessageBox("Hello, world", "Title", MB::OKCANCEL | MB::ICONINFORMATION)?;
 # w::SysResult::Ok(())
 ```
 
-The method [`MessageBox`](crate::prelude::user_Hwnd::MessageBox), like most functions that can return errors, will return [`SysResult`](crate::SysResult), which can contain an [`ERROR`](crate::co::ERROR) constant.
+The method [`MessageBox`](crate::prelude::user_Hwnd::MessageBox), like most functions that can return errors, will return [`SysResult`], which can contain an [`ERROR`](crate::co::ERROR) constant.
 
 # Native structs
 
 WinSafe implements native Win32 structs in a very restricted way. First off, fields which control the size of the struct – often named `cbSize` – are *private* and automatically set when the struct is instantiated.
 
-Pointer fields are also private, and they can be set and retrieved *only* through getter and setter methods. In particular, when setting a string pointer field, you need to pass a reference to a [`WString`](crate::WString) buffer, which will keep the actual string contents.
+Pointer fields are also private, and they can be set and retrieved *only* through getter and setter methods. In particular, when setting a string pointer field, you need to pass a reference to a [`WString`] buffer, which will keep the actual string contents.
 
 For example, the following C code:
 
@@ -158,7 +158,7 @@ if let Err(err) = RegisterClassEx(&wcx) {
 }
 ```
 
-Note how you *don't need* to call [`GetLastError`](crate::GetLastError) to retrieve the error code: it's returned by the method itself in the [`SysResult`](crate::SysResult).
+Note how you *don't need* to call [`GetLastError`] to retrieve the error code: it's returned by the method itself in the [`SysResult`].
 
 # Text encoding
 
@@ -166,7 +166,7 @@ Windows natively uses [Unicode UTF-16](https://learn.microsoft.com/en-us/windows
 
 WinSafe uses Unicode UTF-16 internally but exposes idiomatic UTF-8, performing conversions automatically when needed, so you don't have to worry about [`OsString`](std::ffi::OsString) or any low-level conversion.
 
-However, there are cases where a string conversion is still needed, like when dealing with native Win32 structs. In such cases, you can use the [`WString`](crate::WString) struct, which is also capable of working as a buffer to receive text from Win32 calls.
+However, there are cases where a string conversion is still needed, like when dealing with native Win32 structs. In such cases, you can use the [`WString`] struct, which is also capable of working as a buffer to receive text from Win32 calls.
 
 # Errors and result aliases
 
@@ -174,9 +174,9 @@ WinSafe declares a few [`Result` aliases](https://doc.rust-lang.org/rust-by-exam
 
 | Alias | Error | Used for |
 | - | - | - |
-| [`SysResult`](crate::SysResult) | [`ERROR`](crate::co::ERROR) | Standard [system errors](https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes). |
-| [`HrResult`](crate::HrResult) | [`HRESULT`](crate::co::HRESULT) | [COM errors](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a).
-| [`AnyResult`](crate::AnyResult) | `Box<dyn Error + Send + Sync>` | Holding different error types. All other `Result` aliases can be converted into it. |
+| [`SysResult`] | [`ERROR`](crate::co::ERROR) | Standard [system errors](https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes). |
+| [`HrResult`] | [`HRESULT`](crate::co::HRESULT) | [COM errors](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a).
+| [`AnyResult`] | `Box<dyn Error + Send + Sync>` | Holding different error types. All other `Result` aliases can be converted into it. |
 
 # Utilities
 
@@ -184,8 +184,8 @@ Beyond the [GUI](crate::gui) API, WinSafe features a few high-level abstractions
 
 | Utility | Used for |
 | - | - |
-| [`Encoding`](crate::Encoding) | String encodings. |
-| [`File`](crate::File) | File read/write and other operations. |
-| [`FileMapped`](crate::FileMapped) | Memory-mapped file operations. |
-| [`path`](crate::path) | File path operations. |
-| [`WString`](crate::WString) | Managing native wide strings. |
+| [`Encoding`] | String encodings. |
+| [`File`] | File read/write and other operations. |
+| [`FileMapped`] | Memory-mapped file operations. |
+| [`path`] | File path operations. |
+| [`WString`] | Managing native wide strings. |

@@ -1710,11 +1710,11 @@ pub trait user_Hwnd: Handle {
 	/// [`HWND::KillTimer`](crate::prelude::user_Hwnd::KillTimer).
 	///
 	/// The timer calls – either
-	/// [`wm_timer`](crate::prelude::GuiEventsAll::wm_timer) message or callback
-	/// function – will continuously be executed until you call `KillTimer`. If
-	/// you don't call `KillTimer`, the timer calls will continue until the
-	/// window is destroyed – at this point, any remaining timers will be
-	/// automatically cleared.
+	/// [`wm_timer`](crate::gui::events::WindowEvents::wm_timer) message or
+	/// callback function – will continuously be executed until you call
+	/// `KillTimer`. If you don't call `KillTimer`, the timer calls will
+	/// continue until the window is destroyed – at this point, any remaining
+	/// timers will be automatically cleared.
 	///
 	/// # Why not closures?
 	///

@@ -1,6 +1,6 @@
 Parameters of [window messages](https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues).
 
-[`WndMsg`](crate::msg::WndMsg) is the generic message, with `WPARAM` and `LPARAM` fields. Other messages belong to a module according to its prefix, for example, [`BM_CLICK`](crate::msg::bm::Click) can be found in [`bm`](crate::msg::bm) module.
+[`WndMsg`] is the generic message, with `WPARAM` and `LPARAM` fields. Other messages belong to a module according to its prefix, for example, [`BM_CLICK`](crate::msg::bm::Click) can be found in [`bm`] module.
 
 All messages can be sent, so they all implement the [`MsgSend`](crate::prelude::MsgSend) trait. Some messages can also be received – that means you can handle them if you're implementing a custom window from scratch –, and these implement the [`MsgSendRecv`](crate::prelude::MsgSendRecv) trait.
 
@@ -23,7 +23,7 @@ hlistview.SendMessage(
 ).expect("Failed to delete item 2.");
 ```
 
-Messages are organized into modules according to their prefixes: [`wm`](crate::msg::wm) (window messages), [`lvm`](crate::msg::lvm) (list view messages), and so on.
+Messages are organized into modules according to their prefixes: [`wm`] (window messages), [`lvm`] (list view messages), and so on.
 
 # Custom messages
 

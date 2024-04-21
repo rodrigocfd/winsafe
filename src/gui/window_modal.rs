@@ -78,8 +78,9 @@ impl WindowModal {
 	/// `i32` is the value passed to
 	/// [`HWND::EndDialog`](crate::prelude::user_Hwnd::EndDialog). Note that, if
 	/// the user clicks the "X" to close the modal, the default behavior is to
-	/// call `EndDialog(0)`. To override this behavior, simply handle the
-	/// modal's [`wm_close`](crate::prelude::GuiEvents::wm_close) yourself.
+	/// call `EndDialog(0)`. To override this behavior, handle the
+	/// modal's [`wm_close`](crate::gui::events::WindowEvents::wm_close)
+	/// yourself.
 	///
 	/// # Panics
 	///
