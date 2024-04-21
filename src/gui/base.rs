@@ -6,6 +6,31 @@ use crate::gui::{*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
+/// The result of processing a raw [`co::WM`](crate::co::WM),
+/// [`co::WM::COMMAND`](crate::co::WM::COMMAND) or
+/// [`co::WM::NOTIFY`](crate::co::WM::NOTIFY) message.
+pub enum WmRet {
+	/// Behave as if the message was not handled, that means returning:
+	///
+	/// * [`DefWindowProc`](crate::prelude::user_Hwnd::DefWindowProc) for non-dialog windows;
+	/// * `FALSE` for dialog windows.
+	///
+	/// This type of return should be rare. It means you handled the message,
+	/// but you want the OS to behave like you didn't.
+	NotHandled,
+	/// The message was handled, but the window procedure may return the default
+	/// value:
+	///
+	/// * `0` for non-dialog windows;
+	/// * `TRUE` for dialog windows.
+	///
+	/// This is the most common type of return.
+	HandledOk,
+	/// The message was handled, and the specific value must be returned by the
+	/// window procedure.
+	HandledWithRet(isize),
+}
+
 /// Allocated on the heap and passed through `WM_UI_THREAD`.
 struct ThreadPack {
 	func: Box<dyn FnOnce() -> AnyResult<()>>,
@@ -19,7 +44,7 @@ pub(in crate::gui) struct Base {
 	is_dialog: bool,
 	parent_ptr: Option<NonNull<Self>>, // used only during creation stuff
 	before_user_events: WindowEventsPriv, // inserted internally to automate tasks: all will be executed before user events
-	user_events: WindowEventsAll, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
+	user_events: WindowEvents, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
 	after_user_events: WindowEventsPriv, // all will be executed after user events
 	layout_arranger: LayoutArranger,
 }
@@ -44,7 +69,7 @@ impl Base {
 			is_dialog,
 			parent_ptr: parent.map(|parent| NonNull::from(parent.as_ref())),
 			before_user_events: WindowEventsPriv::new(is_dialog),
-			user_events: WindowEventsAll::new(),
+			user_events: WindowEvents::new(is_dialog),
 			after_user_events: WindowEventsPriv::new(is_dialog),
 			layout_arranger: LayoutArranger::new(),
 		};
@@ -93,7 +118,7 @@ impl Base {
 
 	/// User events can be overriden; only the last one is executed.
 	#[must_use]
-	pub(in crate::gui) fn on(&self) -> &WindowEventsAll {
+	pub(in crate::gui) fn on(&self) -> &WindowEvents {
 		if self.hwnd != HWND::NULL {
 			panic!("Cannot add event after window creation.");
 		}
@@ -113,30 +138,28 @@ impl Base {
 	///
 	/// Returns `true` if at least one message was processed.
 	pub(in crate::gui) fn process_before_user_messages(&self,
-		hwnd: &HWND,
 		wm_any: WndMsg,
 	) -> AnyResult<bool>
 	{
-		self.before_user_events.process_all_messages(hwnd, wm_any)
+		self.before_user_events.process_all_messages(self.hwnd(), wm_any)
 	}
 
 	/// If the user added a closure to the given message, run it.
 	pub(in crate::gui) fn process_user_message(&self,
 		wm_any: WndMsg,
-	) -> AnyResult<ProcessResult>
+	) -> AnyResult<WmRet>
 	{
-		self.user_events.process_one_message(wm_any)
+		self.user_events.process_last_message(self.hwnd(), wm_any)
 	}
 
 	/// Processes all after-user messages added internally by the library.
 	///
 	/// Returns `true` if at least one message was processed.
 	pub(in crate::gui) fn process_after_user_messages(&self,
-		hwnd: &HWND,
 		wm_any: WndMsg,
 	) -> AnyResult<bool>
 	{
-		self.after_user_events.process_all_messages(hwnd, wm_any)
+		self.after_user_events.process_all_messages(self.hwnd(), wm_any)
 	}
 
 	/// Removes all user and before/after events.
@@ -208,13 +231,13 @@ impl Base {
 		let layout_arranger = self.layout_arranger.clone();
 		self.before_user_events.wm_create_or_initdialog(move |hwnd, _| {
 			layout_arranger.save_original_client_area(hwnd)?; // must be done before the first WM_SIZE
-			Ok(())
+			Ok(WmRet::HandledOk)
 		});
 
 		let layout_arranger = self.layout_arranger.clone();
 		self.before_user_events.wm(co::WM::SIZE, move |_, p| {
 			layout_arranger.rearrange(wm::Size::from_generic_wm(p))?;
-			Ok(())
+			Ok(WmRet::HandledOk)
 		});
 
 		self.before_user_events.wm(Self::WM_UI_THREAD, |_, p| {
@@ -224,7 +247,7 @@ impl Base {
 				let func = pack.func;
 				func().unwrap_or_else(|err| post_quit_error(p, err));
 			}
-			Ok(())
+			Ok(WmRet::HandledOk)
 		});
 	}
 

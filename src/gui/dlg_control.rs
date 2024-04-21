@@ -77,12 +77,12 @@ impl DlgControl {
 			}
 
 			parent_base_ref.add_to_layout_arranger(self2.base().hwnd(), resize_behavior)?;
-			Ok(())
+			Ok(WmRet::NotHandled)
 		});
 
 		self.base().before_user_on().wm(co::WM::NCPAINT, move |hwnd, p| {
 			paint_control_borders(hwnd, wm::NcPaint::from_generic_wm(p))?;
-			Ok(())
+			Ok(WmRet::HandledOk)
 		});
 	}
 }

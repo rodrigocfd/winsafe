@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::privs::*;
+use crate::gui::{*, privs::*};
 
 /// Exposes button control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications).
@@ -72,7 +72,9 @@ impl ButtonEvents {
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: Fn(&NMCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
-		self.0.wm_notify(co::NM::CUSTOMDRAW,
-			move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })?.raw() as _)));
+		self.0.wm_notify(co::NM::CUSTOMDRAW, move |p| {
+			let ret_val = func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })?.raw() as isize;
+			Ok(WmRet::HandledWithRet(ret_val))
+		});
 	}
 }

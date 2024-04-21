@@ -120,13 +120,13 @@ impl RawMain {
 					hchild_prev_focus.SetFocus(); // put focus back
 				}
 			}
-			Ok(())
+			Ok(WmRet::HandledOk)
 		});
 
 		let self2 = self.clone();
 		self.base().before_user_on().wm(co::WM::SETFOCUS, move |_, _| {
 			self2.0.raw_base.delegate_focus_to_first_child();
-			Ok(())
+			Ok(WmRet::HandledOk)
 		});
 
 		self.base().on().wm_nc_destroy(move || {

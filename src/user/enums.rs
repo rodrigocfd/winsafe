@@ -19,13 +19,13 @@ pub enum AccelMenuCtrl {
 }
 
 impl AccelMenuCtrl {
-	/// Returns the notification code and the control ID pair.
+	/// Returns the control ID and the notification code pair.
 	#[must_use]
-	pub const fn code_id(&self) -> (co::CMD, u16) {
+	pub const fn id_code(&self) -> (u16, co::CMD) {
 		match self {
-			AccelMenuCtrl::Accel(id) => (co::CMD::Accelerator, *id),
-			AccelMenuCtrl::Menu(id) => (co::CMD::Menu, *id),
-			AccelMenuCtrl::Ctrl(data) => (data.notif_code, data.ctrl_id),
+			AccelMenuCtrl::Accel(id) => (*id, co::CMD::Accelerator),
+			AccelMenuCtrl::Menu(id) => (*id, co::CMD::Menu),
+			AccelMenuCtrl::Ctrl(data) => (data.ctrl_id, data.notif_code),
 		}
 	}
 }

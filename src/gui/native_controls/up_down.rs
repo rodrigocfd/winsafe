@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*};
+use crate::gui::{*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -124,7 +124,7 @@ impl UpDown {
 		let self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(Some(&opts))?;
-			Ok(())
+			Ok(WmRet::NotHandled)
 		});
 
 		new_self
@@ -153,7 +153,7 @@ impl UpDown {
 		let self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(None)?;
-			Ok(())
+			Ok(WmRet::NotHandled)
 		});
 
 		new_self

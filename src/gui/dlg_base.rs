@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::privs::*;
+use crate::gui::{*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -113,7 +113,7 @@ impl DlgBase {
 
 		// Execute before-user closures, keep track if at least one was executed.
 		let ref_self = unsafe { &mut *ptr_self };
-		let at_least_one_before_user = ref_self.base.process_before_user_messages(&hwnd, wm_any)?;
+		let at_least_one_before_user = ref_self.base.process_before_user_messages(wm_any)?;
 
 		if wm_any.msg_id == co::WM::INITDIALOG {
 			// Child controls are created in before-user closures, so we set the
@@ -139,7 +139,7 @@ impl DlgBase {
 		let process_result = ref_self.base.process_user_message(wm_any)?;
 
 		// Execute post-user closures, keep track if at least one was executed.
-		let at_least_one_after_user = ref_self.base.process_after_user_messages(&hwnd, wm_any)?;
+		let at_least_one_after_user = ref_self.base.process_after_user_messages(wm_any)?;
 
 		if wm_any.msg_id == co::WM::NCDESTROY { // always check
 			unsafe { hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); } // clear passed pointer
@@ -148,9 +148,9 @@ impl DlgBase {
 		}
 
 		Ok(match process_result {
-			ProcessResult::HandledWithRet(res) => res,
-			ProcessResult::HandledWithoutRet => 1, // TRUE
-			ProcessResult::NotHandled => if at_least_one_before_user || at_least_one_after_user {
+			WmRet::HandledWithRet(res) => res,
+			WmRet::HandledOk => 1, // TRUE
+			WmRet::NotHandled => if at_least_one_before_user || at_least_one_after_user {
 				1 // TRUE
 			} else {
 				0 // FALSE

@@ -74,7 +74,7 @@ impl RawModeless {
 				wnd_pos, wnd_sz,
 				opts.ex_style, opts.style,
 			)?;
-			Ok(())
+			Ok(WmRet::NotHandled)
 		});
 	}
 }

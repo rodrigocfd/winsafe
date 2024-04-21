@@ -1,101 +1,109 @@
 #![allow(unused_macros)]
 
 /// Ordinary window message, no parameters, no meaningful return.
-macro_rules! fn_wm_noparm_noret {
+macro_rules! pub_fn_wm_noparm_noret {
 	(
 		$name:ident, $wmconst:expr;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F)
 			where F: Fn() -> AnyResult<()> + 'static,
 		{
 			self.wm($wmconst, move |_| {
 				func()?;
-				Ok(None)
+				Ok(crate::gui::WmRet::HandledOk)
 			});
 		}
 	};
 }
 
 /// Ordinary window message, no parameters, returns bool.
-macro_rules! fn_wm_noparm_boolret {
+macro_rules! pub_fn_wm_noparm_boolret {
 	(
 		$name:ident, $wmconst:expr;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F)
 			where F: Fn() -> AnyResult<bool> + 'static,
 		{
-			self.wm($wmconst,
-				move |_| Ok(Some(func()? as _)));
+			self.wm($wmconst, move |_| {
+				let ret_val = func()? as isize;
+				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+			});
 		}
 	};
 }
 
 /// Ordinary window message, with parameters, no meaningful return.
-macro_rules! fn_wm_withparm_noret {
+macro_rules! pub_fn_wm_withparm_noret {
 	(
 		$name:ident, $wmconst:expr, $parm:ty;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F)
 			where F: Fn($parm) -> AnyResult<()> + 'static,
 		{
 			self.wm($wmconst, move |p| {
 				func(<$parm>::from_generic_wm(p))?;
-				Ok(None)
+				Ok(crate::gui::WmRet::HandledOk)
 			});
 		}
 	};
 }
 
 /// Ordinary window message, with parameters, returns bool.
-macro_rules! fn_wm_withparm_boolret {
+macro_rules! pub_fn_wm_withparm_boolret {
 	(
 		$name:ident, $wmconst:expr, $parm:ty;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F)
 			where F: Fn($parm) -> AnyResult<bool> + 'static,
 		{
-			self.wm($wmconst,
-				move |p| Ok(Some(func(<$parm>::from_generic_wm(p))? as _)));
+			self.wm($wmconst, move |p| {
+				let ret_val = func(<$parm>::from_generic_wm(p))? as isize;
+				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+			});
 		}
 	};
 }
 
 /// Ordinary window message, with parameters, returns constant.
-macro_rules! fn_wm_withparm_coret {
+macro_rules! pub_fn_wm_withparm_coret {
 	(
 		$name:ident, $wmconst:expr, $parm:ty, $coret:ty;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F)
 			where F: Fn($parm) -> AnyResult<$coret> + 'static,
 		{
-			self.wm($wmconst,
-				move |p| Ok(Some(func(<$parm>::from_generic_wm(p))?.raw() as _)));
+			self.wm($wmconst, move |p| {
+				let ret_val = func(<$parm>::from_generic_wm(p))?.raw() as isize;
+				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+			});
 		}
 	};
 }
 
 /// WM_CTLCOLOR* message.
-macro_rules! fn_wm_ctlcolor {
+macro_rules! pub_fn_wm_ctlcolor {
 	(
 		$name:ident, $wmconst:expr, $parm:ty;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F)
 			where F: Fn($parm) -> AnyResult<crate::user::decl::HBRUSH> + 'static,
 		{
-			self.wm($wmconst,
-				move |p| Ok(Some(func(<$parm>::from_generic_wm(p))?.ptr() as _)));
+			self.wm($wmconst, move |p| {
+				let ret_val = func(<$parm>::from_generic_wm(p))?.ptr() as isize;
+				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+			});
 		}
 	};
 }
@@ -112,8 +120,10 @@ macro_rules! pub_fn_cmd_noparm_noret {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn() -> AnyResult<()> + 'static,
 		{
-			self.0.wm_command($cmd,
-				move || func());
+			self.0.wm_command($cmd, move || {
+				func()?;
+				Ok(crate::gui::WmRet::HandledOk)
+			});
 		}
 	};
 }
@@ -130,7 +140,7 @@ macro_rules! pub_fn_nfy_noparm_noret {
 		{
 			self.0.wm_notify($nfy, move |_| {
 				func()?;
-				Ok(None)
+				Ok(crate::gui::WmRet::HandledOk)
 			});
 		}
 	};
@@ -148,7 +158,7 @@ macro_rules! pub_fn_nfy_withparm_noret {
 		{
 			self.0.wm_notify($nfy, move |p| {
 				func(unsafe { p.cast_nmhdr::<$param>() })?;
-				Ok(None)
+				Ok(crate::gui::WmRet::HandledOk)
 			});
 		}
 	};
@@ -166,7 +176,7 @@ macro_rules! pub_fn_nfy_withmutparm_noret {
 		{
 			self.0.wm_notify($nfy, move |p| {
 				func(unsafe { p.cast_nmhdr_mut::<$param>() })?;
-				Ok(None)
+				Ok(crate::gui::WmRet::HandledOk)
 			});
 		}
 	};
@@ -182,8 +192,10 @@ macro_rules! pub_fn_nfy_noparm_boolret {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn() -> AnyResult<bool> + 'static,
 		{
-			self.0.wm_notify($nfy,
-				move |_| Ok(Some(func()? as _)));
+			self.0.wm_notify($nfy, move |_| {
+				let ret_val = func()? as isize;
+				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+			});
 		}
 	};
 }
@@ -198,8 +210,10 @@ macro_rules! pub_fn_nfy_withparm_boolret {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn(&$param) -> AnyResult<bool> + 'static,
 		{
-			self.0.wm_notify($nfy,
-				move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<$param>() })? as _)));
+			self.0.wm_notify($nfy, move |p| {
+				let ret_val = func(unsafe { p.cast_nmhdr::<$param>() })? as isize;
+				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+			});
 		}
 	};
 }
@@ -214,8 +228,10 @@ macro_rules! pub_fn_nfy_noparm_i32ret {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn() -> AnyResult<i32> + 'static,
 		{
-			self.0.wm_notify($nfy,
-				move |_| Ok(Some(func()? as _)));
+			self.0.wm_notify($nfy, move |_| {
+				let ret_val = func()? as isize;
+				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+			});
 		}
 	};
 }
@@ -230,8 +246,10 @@ macro_rules! pub_fn_nfy_withparm_i32ret {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn(&$param) -> AnyResult<i32> + 'static,
 		{
-			self.0.wm_notify($nfy,
-				move |p| Ok(Some(func(unsafe { p.cast_nmhdr::<$param>() })? as _)));
+			self.0.wm_notify($nfy, move |p| {
+				let ret_val = func(unsafe { p.cast_nmhdr::<$param>() })? as isize;
+				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+			});
 		}
 	};
 }

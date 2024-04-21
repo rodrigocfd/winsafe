@@ -51,6 +51,7 @@ pub(in crate::gui) mod privs {
 
 pub mod events;
 
+pub use base::WmRet;
 pub use layout_arranger::{Horz, Vert};
 pub use msg_error::MsgError;
 pub use native_controls::*;
@@ -66,6 +67,5 @@ pub use window_modal::WindowModal;
 pub use window_modeless::WindowModeless;
 
 pub(crate) mod traits {
-	pub use super::events::traits::*;
 	pub use super::gui_traits::*;
 }

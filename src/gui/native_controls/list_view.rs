@@ -110,7 +110,7 @@ impl<T> ListView<T> {
 		let self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(OptsResz::Wnd(&opts))?;
-			Ok(())
+			Ok(WmRet::NotHandled)
 		});
 
 		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
@@ -157,7 +157,7 @@ impl<T> ListView<T> {
 		let self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(OptsResz::Dlg(resize_behavior))?;
-			Ok(())
+			Ok(WmRet::NotHandled)
 		});
 
 		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
@@ -228,12 +228,14 @@ impl<T> ListView<T> {
 						.unwrap()
 						.SendMessage(wm_nfy); // forward HDN messages to parent
 				}
+				Ok(WmRet::HandledOk)
+			} else {
+				Ok(WmRet::NotHandled)
 			}
-			Ok(None)
 		});
 
 		let self2 = self.clone();
-		parent.before_user_on().wm_notify(ctrl_id, co::LVN::KEYDOWN, move |_, p| {
+		parent.before_user_on().wm_notify(ctrl_id, co::LVN::KEYDOWN, move |p| {
 			let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };
 			let has_ctrl = GetAsyncKeyState(co::VK::CONTROL);
 			let has_shift = GetAsyncKeyState(co::VK::SHIFT);
@@ -243,21 +245,21 @@ impl<T> ListView<T> {
 			} else if lvnk.wVKey == co::VK::APPS { // context menu key
 				self2.show_context_menu(false, has_ctrl, has_shift);
 			}
-			Ok(())
+			Ok(WmRet::HandledOk)
 		});
 
 		let self2 = self.clone();
-		parent.before_user_on().wm_notify(ctrl_id, co::NM::RCLICK, move |_, p| {
+		parent.before_user_on().wm_notify(ctrl_id, co::NM::RCLICK, move |p| {
 			let nmia = unsafe { p.cast_nmhdr::<NMITEMACTIVATE>() };
 			let has_ctrl = nmia.uKeyFlags.has(co::LVKF::CONTROL);
 			let has_shift = nmia.uKeyFlags.has(co::LVKF::SHIFT);
 
 			self2.show_context_menu(true, has_ctrl, has_shift);
-			Ok(())
+			Ok(WmRet::HandledOk)
 		});
 
 		let self2 = self.clone();
-		parent.after_user_on().wm_notify(ctrl_id, co::LVN::DELETEITEM, move |_, p| {
+		parent.after_user_on().wm_notify(ctrl_id, co::LVN::DELETEITEM, move |p| {
 			let nmlv = unsafe { p.cast_nmhdr::<NMLISTVIEW>() };
 			self2.items()
 				.get(nmlv.iItem as _)
@@ -265,7 +267,7 @@ impl<T> ListView<T> {
 				.map(|pdata| {
 					let _ = unsafe { Rc::from_raw(pdata) }; // free allocated LPARAM, if any
 				});
-			Ok(())
+			Ok(WmRet::HandledOk)
 		});
 
 		let self2 = self.clone();
@@ -277,7 +279,7 @@ impl<T> ListView<T> {
 						let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) };
 					});
 				});
-			Ok(())
+			Ok(WmRet::NotHandled)
 		});
 	}
 

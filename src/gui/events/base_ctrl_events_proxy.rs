@@ -2,9 +2,8 @@ use std::ptr::NonNull;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::privs::*;
+use crate::gui::{*, privs::*};
 use crate::msg::*;
-use crate::prelude::*;
 
 /// Base to all native control events. This is actually a proxy to the events of
 /// the parent window; events added to a native control are actually added as
@@ -25,15 +24,15 @@ impl BaseCtrlEventsProxy {
 
 	/// Adds a `WM_COMMAND` event to the parent window.
 	pub(in crate::gui) fn wm_command<F>(&self, code: impl Into<co::CMD>, func: F)
-		where F: Fn() -> AnyResult<()> + 'static,
+		where F: Fn() -> AnyResult<WmRet> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
-		parent_base_ref.on().wm_command(code, self.ctrl_id, func);
+		parent_base_ref.on().wm_command(self.ctrl_id, code, func);
 	}
 
 	/// Adds a `WM_NOTIFY` event to the parent window.
 	pub(in crate::gui) fn wm_notify<F>(&self, code: impl Into<co::NM>, func: F)
-		where F: Fn(wm::Notify) -> AnyResult<Option<isize>> + 'static,
+		where F: Fn(wm::Notify) -> AnyResult<WmRet> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		parent_base_ref.on().wm_notify(self.ctrl_id, code, func);

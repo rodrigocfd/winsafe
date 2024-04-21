@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::privs::*;
+use crate::gui::{* ,privs::*};
 
 /// Exposes header control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-notifications).
@@ -74,8 +74,10 @@ impl HeaderEvents {
 	pub fn hdn_get_disp_info<F>(&self, func: F)
 		where F: Fn(&mut NMHDDISPINFO) -> AnyResult<isize> + 'static,
 	{
-		self.0.wm_notify(co::HDN::GETDISPINFO,
-			move |p| Ok(Some(func(unsafe { p.cast_nmhdr_mut::<NMHDDISPINFO>() })?)));
+		self.0.wm_notify(co::HDN::GETDISPINFO, move |p| {
+			let ret_val = func(unsafe { p.cast_nmhdr_mut::<NMHDDISPINFO>() })?;
+			Ok(WmRet::HandledWithRet(ret_val))
+		});
 	}
 
 	pub_fn_nfy_withparm_noret! { hdn_item_changed, co::HDN::ITEMCHANGED, NMHEADER;
@@ -123,8 +125,10 @@ impl HeaderEvents {
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: Fn(&mut NMCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
-		self.0.wm_notify(co::NM::CUSTOMDRAW,
-			move |p| Ok(Some(func(unsafe { p.cast_nmhdr_mut::<NMCUSTOMDRAW>() })?.raw() as _)));
+		self.0.wm_notify(co::NM::CUSTOMDRAW, move |p| {
+			let ret_val = func(unsafe { p.cast_nmhdr_mut::<NMCUSTOMDRAW>() })?.raw() as isize;
+			Ok(WmRet::HandledWithRet(ret_val))
+		});
 	}
 
 	pub_fn_nfy_noparm_i32ret! { nm_r_click, co::NM::RCLICK;

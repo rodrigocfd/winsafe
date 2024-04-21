@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::privs::*;
+use crate::gui::{*, privs::*};
 use crate::prelude::*;
 
 struct Obj { // actual fields of DlgModeless
@@ -59,7 +59,7 @@ impl DlgModeless {
 				dlg_pos, SIZE::default(),
 				co::SWP::NOZORDER | co::SWP::NOSIZE,
 			)?;
-			Ok(())
+			Ok(WmRet::NotHandled)
 		});
 	}
 }

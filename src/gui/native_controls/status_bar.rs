@@ -6,7 +6,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*, spec::*};
+use crate::gui::{*, events::*, privs::*, spec::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -130,14 +130,14 @@ impl StatusBar {
 		let self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
 			self2.create()?;
-			Ok(())
+			Ok(WmRet::NotHandled)
 		});
 
 		let self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm(co::WM::SIZE, move |_, p| {
 			let mut p = wm::Size::from_generic_wm(p);
 			self2.resize(&mut p);
-			Ok(())
+			Ok(WmRet::HandledOk)
 		});
 
 		new_self

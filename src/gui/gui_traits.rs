@@ -6,6 +6,12 @@ use crate::msg::*;
 use crate::prelude::*;
 
 /// Any window. Exposes the underlying window handle.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 pub trait GuiWindow: Send {
 	/// Returns the underlying handle for this control.
 	///
@@ -48,6 +54,12 @@ pub trait GuiWindow: Send {
 }
 
 /// Any window which can get/set text.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 pub trait GuiWindowText: GuiWindow {
 	/// Sets the text by calling
 	/// [`HWND::SetWindowText`](crate::prelude::user_Hwnd::SetWindowText).
@@ -64,6 +76,12 @@ pub trait GuiWindowText: GuiWindow {
 }
 
 /// Any window which can host child controls.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 #[allow(private_bounds)]
 pub trait GuiParent: GuiWindow + AsRef<Base> {
 	/// Exposes methods to handle the basic window messages, plus timer and
@@ -74,7 +92,7 @@ pub trait GuiParent: GuiWindow + AsRef<Base> {
 	/// Panics if the window is already created. Events must be set before
 	/// window creation.
 	#[must_use]
-	fn on(&self) -> &WindowEventsAll {
+	fn on(&self) -> &WindowEvents {
 		self.as_ref().on()
 	}
 
@@ -211,6 +229,12 @@ pub trait GuiParent: GuiWindow + AsRef<Base> {
 }
 
 /// A closeable popup parent window.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 pub trait GuiParentPopup: GuiParent {
 	/// Closes the window by posting a [`WM_CLOSE`](crate::msg::wm::Close)
 	/// message. This is the safest way to close any popup window, because
@@ -223,6 +247,12 @@ pub trait GuiParentPopup: GuiParent {
 }
 
 /// Any child window.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 pub trait GuiChild: GuiWindow {
 	/// Returns the control ID, which is defined at control creation.
 	///
@@ -232,6 +262,12 @@ pub trait GuiChild: GuiWindow {
 }
 
 /// Any child window which can be focused.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 pub trait GuiChildFocus: GuiChild {
 	/// In a raw, ordinary window, simply calls
 	/// [`HWND:SetFocus`](crate::prelude::user_Hwnd::SetFocus).
@@ -256,6 +292,12 @@ pub trait GuiChildFocus: GuiChild {
 }
 
 /// Any native control, which can be subclassed.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 #[allow(private_bounds)]
 pub trait GuiNativeControl: GuiChild + AsRef<BaseNativeControl> {
 	/// Exposes the subclass events. If at least one event exists, the control
@@ -275,6 +317,12 @@ pub trait GuiNativeControl: GuiChild + AsRef<BaseNativeControl> {
 }
 
 /// Events of a native control.
+///
+/// Prefer importing this trait through the prelude:
+///
+/// ```no_run
+/// use winsafe::prelude::*;
+/// ```
 pub trait GuiNativeControlEvents<E> {
 	/// Exposes the specific control events.
 	///

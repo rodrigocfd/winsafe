@@ -6,8 +6,8 @@ pub(in crate::gui) struct FuncStore<K: Copy + Eq, F> {
 impl<K: Copy + Eq, F> FuncStore<K, F> {
 	/// Creates a new, empty store.
 	#[must_use]
-	pub(in crate::gui) fn new() -> Self {
-		Self { elems: Vec::default() }
+	pub(in crate::gui) const fn new() -> Self {
+		Self { elems: Vec::new() }
 	}
 
 	/// Adds a new function into the store, associated to the given identifier.
@@ -21,10 +21,11 @@ impl<K: Copy + Eq, F> FuncStore<K, F> {
 	/// Finds the last added function associated to the given identifier, if
 	/// any.
 	#[must_use]
-	pub(in crate::gui) fn find(&self, id: K) -> Option<&F> {
+	pub(in crate::gui) fn find_last(&self, id: K) -> Option<&F> {
 		// Linear search, more performant for small collections.
 		// Searches backwards, so the function added last will be chosen.
-		self.elems.iter().rev()
+		self.elems.iter()
+			.rev()
 			.find(move |(elem_id, _)| *elem_id == id)
 			.map(|(_, func)| func)
 	}

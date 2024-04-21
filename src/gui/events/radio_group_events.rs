@@ -3,8 +3,7 @@ use std::rc::Rc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{events::*, privs::*};
-use crate::prelude::*;
+use crate::gui::{*, events::*, privs::*};
 
 /// Exposes button control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
@@ -35,7 +34,7 @@ impl RadioGroupEvents {
 	}
 
 	#[must_use]
-	fn parent_user_events(&self) -> &WindowEventsAll {
+	fn parent_user_events(&self) -> &WindowEvents {
 		unsafe { self.parent_ptr.as_ref().on() }
 	}
 
@@ -71,9 +70,12 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(co::BN::CLICKED, *ctrl_id, {
+			self.parent_user_events().wm_command(*ctrl_id, co::BN::CLICKED, {
 				let shared_func = shared_func.clone();
-				move || shared_func()
+				move || {
+					shared_func()?;
+					Ok(WmRet::HandledOk)
+				}
 			});
 		}
 	}
@@ -92,9 +94,12 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(co::BN::DBLCLK, *ctrl_id, {
+			self.parent_user_events().wm_command(*ctrl_id, co::BN::DBLCLK, {
 				let shared_func = shared_func.clone();
-				move || shared_func()
+				move || {
+					shared_func()?;
+					Ok(WmRet::HandledOk)
+				}
 			});
 		}
 	}
@@ -111,9 +116,12 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(co::BN::KILLFOCUS, *ctrl_id, {
+			self.parent_user_events().wm_command(*ctrl_id, co::BN::KILLFOCUS, {
 				let shared_func = shared_func.clone();
-				move || shared_func()
+				move || {
+					shared_func()?;
+					Ok(WmRet::HandledOk)
+				}
 			});
 		}
 	}
@@ -130,9 +138,12 @@ impl RadioGroupEvents {
 		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(co::BN::SETFOCUS, *ctrl_id, {
+			self.parent_user_events().wm_command(*ctrl_id, co::BN::SETFOCUS, {
 				let shared_func = shared_func.clone();
-				move || shared_func()
+				move || {
+					shared_func()?;
+					Ok(WmRet::HandledOk)
+				}
 			});
 		}
 	}

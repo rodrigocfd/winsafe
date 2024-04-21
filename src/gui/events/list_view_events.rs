@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::privs::*;
+use crate::gui::{*, privs::*};
 
 /// Exposes list view control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications).
@@ -120,8 +120,10 @@ impl ListViewEvents {
 	pub fn lvn_get_empty_markup<F>(&self, func: F)
 		where F: Fn(&mut NMLVEMPTYMARKUP) -> AnyResult<bool> + 'static,
 	{
-		self.0.wm_notify(co::LVN::GETEMPTYMARKUP,
-			move |p| Ok(Some(func(unsafe { p.cast_nmhdr_mut::<NMLVEMPTYMARKUP>() })? as _)));
+		self.0.wm_notify(co::LVN::GETEMPTYMARKUP, move |p| {
+			let ret_val = func(unsafe { p.cast_nmhdr_mut::<NMLVEMPTYMARKUP>() })? as isize;
+			Ok(WmRet::HandledWithRet(ret_val))
+		});
 	}
 
 	pub_fn_nfy_withparm_noret! { lvn_get_info_tip, co::LVN::GETINFOTIP, NMLVGETINFOTIP;
@@ -223,10 +225,11 @@ impl ListViewEvents {
 		where F: Fn(&mut NMLVFINDITEM) -> AnyResult<Option<u32>> + 'static,
 	{
 		self.0.wm_notify(co::LVN::ODFINDITEM, move |p| {
-			Ok(Some(match func(unsafe { p.cast_nmhdr_mut::<NMLVFINDITEM>() })? {
-				Some(idx) => idx as _,
+			let ret_val = match func(unsafe { p.cast_nmhdr_mut::<NMLVFINDITEM>() })? {
+				Some(idx) => idx as isize,
 				None => -1,
-			}))
+			};
+			Ok(WmRet::HandledWithRet(ret_val))
 		});
 	}
 
@@ -250,8 +253,10 @@ impl ListViewEvents {
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: Fn(&mut NMLVCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
-		self.0.wm_notify(co::NM::CUSTOMDRAW,
-			move |p| Ok(Some(func(unsafe { p.cast_nmhdr_mut::<NMLVCUSTOMDRAW>() })?.raw() as _)));
+		self.0.wm_notify(co::NM::CUSTOMDRAW, move |p| {
+			let ret_val = func(unsafe { p.cast_nmhdr_mut::<NMLVCUSTOMDRAW>() })?.raw() as isize;
+			Ok(WmRet::HandledWithRet(ret_val))
+		});
 	}
 
 	pub_fn_nfy_withparm_noret! { nm_dbl_clk, co::NM::DBLCLK, NMITEMACTIVATE;

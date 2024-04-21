@@ -57,7 +57,7 @@ impl BaseNativeControl {
 			ctrl_id,
 			hwnd: UnsafeCell::new(HWND::NULL),
 			parent_ptr: NonNull::from(parent.as_ref()),
-			subclass_events: WindowEvents::new(),
+			subclass_events: WindowEvents::new(false),
 		}
 	}
 
@@ -190,12 +190,13 @@ impl BaseNativeControl {
 	) -> AnyResult<isize>
 	{
 		let ptr_self = ref_data as *mut Self; // retrieve
-		let mut process_result = ProcessResult::NotHandled;
+		let mut process_result = WmRet::NotHandled;
 
 		if !ptr_self.is_null() {
 			let ref_self = unsafe { &mut *ptr_self };
 			if *ref_self.hwnd() != HWND::NULL {
-				process_result = ref_self.subclass_events.process_one_message(wm_any)?;
+				process_result = ref_self.subclass_events
+					.process_last_message(ref_self.hwnd(), wm_any)?;
 			}
 		}
 
@@ -208,9 +209,9 @@ impl BaseNativeControl {
 		}
 
 		Ok(match process_result {
-			ProcessResult::HandledWithRet(res) => res,
-			ProcessResult::HandledWithoutRet => 0,
-			ProcessResult::NotHandled => unsafe { hwnd.DefSubclassProc(wm_any) }.into(),
+			WmRet::HandledWithRet(res) => res,
+			WmRet::HandledOk => 0,
+			WmRet::NotHandled => unsafe { hwnd.DefSubclassProc(wm_any) }.into(),
 		})
 	}
 }

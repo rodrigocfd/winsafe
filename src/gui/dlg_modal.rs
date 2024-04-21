@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::privs::*;
+use crate::gui::{*, privs::*};
 use crate::prelude::*;
 
 struct Obj { // actual fields of DlgModal
@@ -60,7 +60,7 @@ impl DlgModal {
 				SIZE::default(),
 				co::SWP::NOSIZE | co::SWP::NOZORDER,
 			)?;
-			Ok(())
+			Ok(WmRet::NotHandled)
 		});
 
 		let self2 = self.clone();

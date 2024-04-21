@@ -96,7 +96,7 @@ impl RadioGroup {
 		let self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
 			self2.create(&opts_resz_s)?;
-			Ok(())
+			Ok(WmRet::NotHandled)
 		});
 
 		new_self
@@ -148,7 +148,7 @@ impl RadioGroup {
 		let self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm(co::WM::INITDIALOG, move |_, _| {
 			self2.create(&opts_resz_s)?;
-			Ok(())
+			Ok(WmRet::NotHandled)
 		});
 
 		new_self
