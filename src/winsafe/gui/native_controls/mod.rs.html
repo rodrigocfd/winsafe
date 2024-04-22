@@ -75,7 +75,6 @@
 <a href="#75" id="75">75</a>
 <a href="#76" id="76">76</a>
 <a href="#77" id="77">77</a>
-<a href="#78" id="78">78</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! Native Win32 controls.
 
 </span><span class="kw">mod </span>base_native_control;
@@ -88,7 +87,6 @@
 <span class="kw">mod </span>header_item;
 <span class="kw">mod </span>header_items;
 <span class="kw">mod </span>header;
-<span class="kw">mod </span>iterators;
 <span class="kw">mod </span>label;
 <span class="kw">mod </span>list_box_items;
 <span class="kw">mod </span>list_box;
@@ -117,29 +115,29 @@
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">use </span><span class="kw">super</span>::base_native_control::<span class="kw-2">*</span>;
 }
 
-<span class="kw">pub use </span>button::{Button, ButtonOpts};
-<span class="kw">pub use </span>check_box::{CheckBox, CheckBoxOpts, CheckState};
-<span class="kw">pub use </span>combo_box::{ComboBox, ComboBoxOpts};
-<span class="kw">pub use </span>date_time_picker::{DateTimePicker, DateTimePickerOpts};
-<span class="kw">pub use </span>edit::{Edit, EditOpts};
-<span class="kw">pub use </span>header::{Header, HeaderArrow, HeaderOpts};
-<span class="kw">pub use </span>label::{Label, LabelOpts};
-<span class="kw">pub use </span>list_box::{ListBox, ListBoxOpts};
-<span class="kw">pub use </span>list_view::{ListView, ListViewOpts};
-<span class="kw">pub use </span>month_calendar::{MonthCalendar, MonthCalendarOpts};
-<span class="kw">pub use </span>progress_bar::{ProgressBar, ProgressBarOpts};
-<span class="kw">pub use </span>radio_button::{RadioButton, RadioButtonOpts};
-<span class="kw">pub use </span>radio_group::RadioGroup;
-<span class="kw">pub use </span>status_bar::{StatusBar, SbPart};
-<span class="kw">pub use </span>tab::{Tab, TabOpts};
-<span class="kw">pub use </span>trackbar::{Trackbar, TrackbarOpts};
-<span class="kw">pub use </span>tree_view::{TreeView, TreeViewOpts};
-<span class="kw">pub use </span>up_down::{UpDown, UpDownOpts};
+<span class="kw">pub mod </span>decl {
+	<span class="kw">pub use </span><span class="kw">super</span>::button::{Button, ButtonOpts};
+	<span class="kw">pub use </span><span class="kw">super</span>::check_box::{CheckBox, CheckBoxOpts, CheckState};
+	<span class="kw">pub use </span><span class="kw">super</span>::combo_box::{ComboBox, ComboBoxOpts};
+	<span class="kw">pub use </span><span class="kw">super</span>::date_time_picker::{DateTimePicker, DateTimePickerOpts};
+	<span class="kw">pub use </span><span class="kw">super</span>::edit::{Edit, EditOpts};
+	<span class="kw">pub use </span><span class="kw">super</span>::header::{Header, HeaderArrow, HeaderOpts};
+	<span class="kw">pub use </span><span class="kw">super</span>::label::{Label, LabelOpts};
+	<span class="kw">pub use </span><span class="kw">super</span>::list_box::{ListBox, ListBoxOpts};
+	<span class="kw">pub use </span><span class="kw">super</span>::list_view::{ListView, ListViewOpts};
+	<span class="kw">pub use </span><span class="kw">super</span>::month_calendar::{MonthCalendar, MonthCalendarOpts};
+	<span class="kw">pub use </span><span class="kw">super</span>::progress_bar::{ProgressBar, ProgressBarOpts};
+	<span class="kw">pub use </span><span class="kw">super</span>::radio_button::{RadioButton, RadioButtonOpts};
+	<span class="kw">pub use </span><span class="kw">super</span>::radio_group::RadioGroup;
+	<span class="kw">pub use </span><span class="kw">super</span>::status_bar::{StatusBar, SbPart};
+	<span class="kw">pub use </span><span class="kw">super</span>::tab::{Tab, TabOpts};
+	<span class="kw">pub use </span><span class="kw">super</span>::trackbar::{Trackbar, TrackbarOpts};
+	<span class="kw">pub use </span><span class="kw">super</span>::tree_view::{TreeView, TreeViewOpts};
+	<span class="kw">pub use </span><span class="kw">super</span>::up_down::{UpDown, UpDownOpts};
+}
 
 <span class="kw">pub mod </span>spec {
-	<span class="doccomment">//! Structs which expose specialized methods of controls.
-
-	</span><span class="kw">pub use </span><span class="kw">super</span>::combo_box_items::ComboBoxItems;
+	<span class="kw">pub use </span><span class="kw">super</span>::combo_box_items::ComboBoxItems;
 	<span class="kw">pub use </span><span class="kw">super</span>::header_item::HeaderItem;
 	<span class="kw">pub use </span><span class="kw">super</span>::header_items::HeaderItems;
 	<span class="kw">pub use </span><span class="kw">super</span>::list_box_items::ListBoxItems;
