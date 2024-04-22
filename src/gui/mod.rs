@@ -8,6 +8,7 @@
 
 #![cfg(feature = "gui")]
 
+mod iterators;
 mod native_controls;
 mod privs_gui;
 mod proc;

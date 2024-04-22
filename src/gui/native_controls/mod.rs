@@ -10,7 +10,6 @@ mod edit;
 mod header_item;
 mod header_items;
 mod header;
-mod iterators;
 mod label;
 mod list_box_items;
 mod list_box;
