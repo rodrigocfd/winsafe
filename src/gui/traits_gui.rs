@@ -25,9 +25,8 @@ pub trait GuiWindow: Send {
 	#[must_use]
 	fn hwnd(&self) -> &HWND;
 
-	/// Converts a reference to the [`Any`](std::any::Any) trait. This is useful
-	/// when storing a collection of polymorphic controls, because `Any` allows
-	/// downcasting.
+	/// Converts a reference to the [`Any`] trait. This is useful when storing a
+	/// collection of polymorphic controls, because `Any` allows downcasting.
 	///
 	/// # Examples
 	///
@@ -273,10 +272,9 @@ pub trait GuiChildFocus: GuiChild {
 	/// [`HWND:SetFocus`](crate::prelude::user_Hwnd::SetFocus).
 	///
 	/// In a dialog window, sends a
-	/// [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl) message. This is
-	/// preferable to the `HWND::SetFocus` because it takes care of border
-	/// highlighting, like the native [`Button`](crate::gui::Button) control
-	/// needs.
+	/// [`wm::NextDlgCtl`] message. This is preferable to the `HWND::SetFocus`
+	/// because it takes care of border highlighting, like the native
+	/// [`Button`](crate::gui::Button) control needs.
 	fn focus(&self) {
 		let hparent = self.hwnd().GetParent().unwrap();
 		if hparent.is_dialog() {

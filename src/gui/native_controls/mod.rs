@@ -39,28 +39,28 @@ pub(in crate::gui) mod privs {
 	pub(in crate::gui) use super::base_native_control::*;
 }
 
-pub use button::{Button, ButtonOpts};
-pub use check_box::{CheckBox, CheckBoxOpts, CheckState};
-pub use combo_box::{ComboBox, ComboBoxOpts};
-pub use date_time_picker::{DateTimePicker, DateTimePickerOpts};
-pub use edit::{Edit, EditOpts};
-pub use header::{Header, HeaderArrow, HeaderOpts};
-pub use label::{Label, LabelOpts};
-pub use list_box::{ListBox, ListBoxOpts};
-pub use list_view::{ListView, ListViewOpts};
-pub use month_calendar::{MonthCalendar, MonthCalendarOpts};
-pub use progress_bar::{ProgressBar, ProgressBarOpts};
-pub use radio_button::{RadioButton, RadioButtonOpts};
-pub use radio_group::RadioGroup;
-pub use status_bar::{StatusBar, SbPart};
-pub use tab::{Tab, TabOpts};
-pub use trackbar::{Trackbar, TrackbarOpts};
-pub use tree_view::{TreeView, TreeViewOpts};
-pub use up_down::{UpDown, UpDownOpts};
+pub mod decl {
+	pub use super::button::{Button, ButtonOpts};
+	pub use super::check_box::{CheckBox, CheckBoxOpts, CheckState};
+	pub use super::combo_box::{ComboBox, ComboBoxOpts};
+	pub use super::date_time_picker::{DateTimePicker, DateTimePickerOpts};
+	pub use super::edit::{Edit, EditOpts};
+	pub use super::header::{Header, HeaderArrow, HeaderOpts};
+	pub use super::label::{Label, LabelOpts};
+	pub use super::list_box::{ListBox, ListBoxOpts};
+	pub use super::list_view::{ListView, ListViewOpts};
+	pub use super::month_calendar::{MonthCalendar, MonthCalendarOpts};
+	pub use super::progress_bar::{ProgressBar, ProgressBarOpts};
+	pub use super::radio_button::{RadioButton, RadioButtonOpts};
+	pub use super::radio_group::RadioGroup;
+	pub use super::status_bar::{StatusBar, SbPart};
+	pub use super::tab::{Tab, TabOpts};
+	pub use super::trackbar::{Trackbar, TrackbarOpts};
+	pub use super::tree_view::{TreeView, TreeViewOpts};
+	pub use super::up_down::{UpDown, UpDownOpts};
+}
 
 pub mod spec {
-	//! Structs which expose specialized methods of controls.
-
 	pub use super::combo_box_items::ComboBoxItems;
 	pub use super::header_item::HeaderItem;
 	pub use super::header_items::HeaderItems;

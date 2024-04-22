@@ -1,5 +1,3 @@
-//! Global objects used within `gui` module.
-
 use std::error::Error;
 
 use crate::co;

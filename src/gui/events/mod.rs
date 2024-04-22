@@ -1,5 +1,5 @@
 //! Events exposed by windows and controls, which allow the handling of native
-//! Windows messages.
+//! window messages.
 
 mod base_ctrl_events_proxy;
 mod button_events;

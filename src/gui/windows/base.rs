@@ -6,9 +6,9 @@ use crate::gui::{*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-/// The result of processing a raw [`co::WM`](crate::co::WM),
-/// [`co::WM::COMMAND`](crate::co::WM::COMMAND) or
-/// [`co::WM::NOTIFY`](crate::co::WM::NOTIFY) message.
+/// The result of processing a raw [`WM`](crate::gui::events::WindowEvents::wm),
+/// [`WM_COMMAND`](crate::gui::events::WindowEvents::wm_command) or
+/// [`WM_NOTIFY`](crate::gui::events::WindowEvents::wm_notify) message.
 pub enum WmRet {
 	/// Behave as if the message was not handled, that means returning:
 	///

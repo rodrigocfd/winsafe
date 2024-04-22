@@ -5,7 +5,7 @@ use std::rc::Rc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, native_controls::iterators::*, proc::*, spec::*};
+use crate::gui::{*, native_controls::iterators::*, proc, spec::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -326,7 +326,7 @@ impl<'a, T> ListViewItems<'a, T> {
 			self.owner.hwnd()
 				.SendMessage(lvm::SortItemsEx {
 					param: &data as *const _ as _,
-					callback: list_view_item_sort::<F>,
+					callback: proc::list_view_item_sort::<F>,
 				})
 		}.unwrap();
 	}
