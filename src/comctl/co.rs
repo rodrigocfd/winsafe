@@ -389,6 +389,9 @@ const_bitflag! { HDF: i32;
 	/// [`HDITEM`](crate::HDITEM) `fmt` (`i32`).
 	=>
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
+
 	LEFT 0x0000
 	RIGHT 0x0001
 	CENTER 0x0002

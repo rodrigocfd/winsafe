@@ -85,6 +85,36 @@ pub enum HeaderArrow {
 	Desc,
 }
 
+impl From<HeaderArrow> for co::HDF {
+	fn from(v: HeaderArrow) -> Self {
+		use HeaderArrow as H;
+		match v {
+			H::Asc => co::HDF::SORTUP,
+			H::Desc => co::HDF::SORTDOWN,
+			H::None => co::HDF::NoValue,
+		}
+	}
+}
+
+/// Text justification for a [`HeaderItem`](crate::gui::spec::HeaderItem).
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+pub enum HeaderJustify {
+	Left,
+	Center,
+	Right
+}
+
+impl From<HeaderJustify> for co::HDF {
+	fn from(v: HeaderJustify) -> Self {
+		use HeaderJustify as H;
+		match v {
+			H::Left => co::HDF::LEFT,
+			H::Center => co::HDF::CENTER,
+			H::Right => co::HDF::RIGHT,
+		}
+	}
+}
+
 /// Specifies the horizontal behavior of the control when the parent window is
 /// resized.
 ///
