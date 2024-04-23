@@ -228,10 +228,8 @@ impl<T> ListView<T> {
 						.unwrap()
 						.SendMessage(wm_nfy); // forward HDN messages to parent
 				}
-				Ok(WmRet::HandledOk)
-			} else {
-				Ok(WmRet::NotHandled)
 			}
+			Ok(WmRet::NotHandled) // HDN notifications still need to be processed by parent list view
 		});
 
 		let self2 = self.clone();

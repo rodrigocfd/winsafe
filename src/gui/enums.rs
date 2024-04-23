@@ -204,6 +204,7 @@ pub enum Vert {
 /// The result of processing a raw [`WM`](crate::gui::events::WindowEvents::wm),
 /// [`WM_COMMAND`](crate::gui::events::WindowEvents::wm_command) or
 /// [`WM_NOTIFY`](crate::gui::events::WindowEvents::wm_notify) message.
+#[derive(Debug)]
 pub enum WmRet {
 	/// Behave as if the message was not handled, that means returning:
 	///
