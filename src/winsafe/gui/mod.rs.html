@@ -36,6 +36,8 @@
 <a href="#36" id="36">36</a>
 <a href="#37" id="37">37</a>
 <a href="#38" id="38">38</a>
+<a href="#39" id="39">39</a>
+<a href="#40" id="40">40</a>
 </pre></div><pre class="rust"><code><span class="doccomment">//! High-level GUI abstractions for user windows and native controls. They can
 //! be created programmatically or by loading resources from a `.res` file.
 //! These files can be created with a WYSIWYG
@@ -46,7 +48,8 @@
 
 </span><span class="attr">#![cfg(feature = <span class="string">"gui"</span>)]
 
-</span><span class="kw">mod </span>iterators;
+</span><span class="kw">mod </span>enums;
+<span class="kw">mod </span>iterators;
 <span class="kw">mod </span>native_controls;
 <span class="kw">mod </span>privs_gui;
 <span class="kw">mod </span>proc;
@@ -62,6 +65,7 @@
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">use </span><span class="kw">super</span>::windows::privs::<span class="kw-2">*</span>;
 }
 
+<span class="kw">pub use </span>enums::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>native_controls::decl::<span class="kw-2">*</span>;
 <span class="kw">pub use </span>windows::decl::<span class="kw-2">*</span>;
 

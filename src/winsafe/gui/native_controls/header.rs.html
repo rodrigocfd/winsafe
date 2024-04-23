@@ -340,18 +340,6 @@
 <a href="#340" id="340">340</a>
 <a href="#341" id="341">341</a>
 <a href="#342" id="342">342</a>
-<a href="#343" id="343">343</a>
-<a href="#344" id="344">344</a>
-<a href="#345" id="345">345</a>
-<a href="#346" id="346">346</a>
-<a href="#347" id="347">347</a>
-<a href="#348" id="348">348</a>
-<a href="#349" id="349">349</a>
-<a href="#350" id="350">350</a>
-<a href="#351" id="351">351</a>
-<a href="#352" id="352">352</a>
-<a href="#353" id="353">353</a>
-<a href="#354" id="354">354</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
@@ -364,18 +352,6 @@
 <span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>, spec::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// Possible states of the arrow in a
-/// [`HeaderItem`](crate::gui::spec::HeaderItem).
-</span><span class="attr">#[derive(Clone, Copy, PartialEq, Eq)]
-</span><span class="kw">pub enum </span>HeaderArrow {
-	<span class="doccomment">/// No arrow.
-	</span><span class="prelude-val">None</span>,
-	<span class="doccomment">/// An arrow pointing up, indicating sorting in ascending order.
-	</span>Asc,
-	<span class="doccomment">/// An arrow pointing down, indicating sorting in descending order.
-	</span>Desc,
-}
 
 <span class="kw">struct </span>Obj { <span class="comment">// actual fields of Header
 	</span>base: BaseNativeControl,

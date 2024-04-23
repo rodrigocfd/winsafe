@@ -258,7 +258,7 @@
 		}.unwrap();
 	}
 
-	<span class="doccomment">/// Return the format of the item by sending a
+	<span class="doccomment">/// Return the format flags of the item by sending a
 	/// [`hdm::GetItem`](crate::msg::hdm::GetItem) message.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>format(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::HDF {
@@ -321,31 +321,31 @@
 	<span class="doccomment">/// Sets the arrow state of the item by sending a
 	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
 	</span><span class="kw">pub fn </span>set_arrow(<span class="kw-2">&amp;</span><span class="self">self</span>, arrow_state: HeaderArrow) {
-		<span class="kw">let </span>cur_fmt = {
-			<span class="kw">let </span><span class="kw-2">mut </span>hdi = HDITEM::default();
-			hdi.mask = co::HDI::FORMAT;
-
-			<span class="kw">unsafe </span>{
-				<span class="self">self</span>.owner.hwnd()
-					.SendMessage(hdm::GetItem {
-						index: <span class="self">self</span>.index,
-						hditem: <span class="kw-2">&amp;mut </span>hdi,
-					});
-			}
-
-			hdi.fmt
-		};
-
 		<span class="kw">let </span><span class="kw-2">mut </span>hdi = HDITEM::default();
 		hdi.mask = co::HDI::FORMAT;
 
-		hdi.fmt = cur_fmt;
+		hdi.fmt = <span class="self">self</span>.format();
 		hdi.fmt &amp;= !(co::HDF::SORTUP | co::HDF::SORTDOWN); <span class="comment">// remove both
-		</span><span class="kw">match </span>arrow_state {
-			HeaderArrow::Asc =&gt; { hdi.fmt |= co::HDF::SORTUP; },
-			HeaderArrow::Desc =&gt; { hdi.fmt |= co::HDF::SORTDOWN },
-			<span class="kw">_ </span>=&gt; {},
+		</span>hdi.fmt |= arrow_state.into();
+
+		<span class="kw">unsafe </span>{
+			<span class="self">self</span>.owner.hwnd()
+				.SendMessage(hdm::SetItem {
+					index: <span class="self">self</span>.index,
+					hditem: <span class="kw-2">&amp;mut </span>hdi,
+				});
 		}
+	}
+
+	<span class="doccomment">/// Sets the text justification of the column by sending a
+	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
+	</span><span class="kw">pub fn </span>set_justify(<span class="kw-2">&amp;</span><span class="self">self</span>, text_justification: HeaderJustify) {
+		<span class="kw">let </span><span class="kw-2">mut </span>hdi = HDITEM::default();
+		hdi.mask = co::HDI::FORMAT;
+
+		hdi.fmt = <span class="self">self</span>.format();
+		hdi.fmt &amp;= !(co::HDF::LEFT | co::HDF::CENTER | co::HDF::RIGHT); <span class="comment">// remove all
+		</span>hdi.fmt |= text_justification.into();
 
 		<span class="kw">unsafe </span>{
 			<span class="self">self</span>.owner.hwnd()
