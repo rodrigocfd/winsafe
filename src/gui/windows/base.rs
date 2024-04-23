@@ -6,31 +6,6 @@ use crate::gui::{*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-/// The result of processing a raw [`WM`](crate::gui::events::WindowEvents::wm),
-/// [`WM_COMMAND`](crate::gui::events::WindowEvents::wm_command) or
-/// [`WM_NOTIFY`](crate::gui::events::WindowEvents::wm_notify) message.
-pub enum WmRet {
-	/// Behave as if the message was not handled, that means returning:
-	///
-	/// * [`DefWindowProc`](crate::prelude::user_Hwnd::DefWindowProc) for non-dialog windows;
-	/// * `FALSE` for dialog windows.
-	///
-	/// This type of return should be rare. It means you handled the message,
-	/// but you want the OS to behave like you didn't.
-	NotHandled,
-	/// The message was handled, but the window procedure may return the default
-	/// value:
-	///
-	/// * `0` for non-dialog windows;
-	/// * `TRUE` for dialog windows.
-	///
-	/// This is the most common type of return.
-	HandledOk,
-	/// The message was handled, and the specific value must be returned by the
-	/// window procedure.
-	HandledWithRet(isize),
-}
-
 /// Allocated on the heap and passed through `WM_UI_THREAD`.
 struct ThreadPack {
 	func: Box<dyn FnOnce() -> AnyResult<()>>,

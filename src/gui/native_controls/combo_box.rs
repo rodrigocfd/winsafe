@@ -15,6 +15,8 @@ struct Obj { // actual fields of ComboBox
 	_pin: PhantomPinned,
 }
 
+//------------------------------------------------------------------------------
+
 /// Native
 /// [combo box](https://learn.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
 /// control.

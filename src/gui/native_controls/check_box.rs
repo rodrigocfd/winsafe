@@ -9,19 +9,6 @@ use crate::gui::{*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-/// Possible states of a [`CheckBox`](crate::gui::CheckBox) control.
-#[derive(Clone, Copy, PartialEq, Eq)]
-pub enum CheckState {
-	/// CheckBox is checked.
-	Checked,
-	/// CheckBox is grayed, indicating an indeterminate state. Applicable only
-	/// if the CheckBox was created with [`BS::R3STATE`](crate::co::BS::R3STATE)
-	/// or [`BS::AUTO3STATE`](crate::co::BS::AUTO3STATE) styles.
-	Indeterminate,
-	/// CheckBox is cleared.
-	Unchecked,
-}
-
 struct Obj { // actual fields of CheckBox
 	base: BaseNativeControl,
 	events: ButtonEvents,

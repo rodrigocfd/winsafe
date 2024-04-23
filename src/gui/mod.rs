@@ -8,6 +8,7 @@
 
 #![cfg(feature = "gui")]
 
+mod enums;
 mod iterators;
 mod native_controls;
 mod privs_gui;
@@ -24,6 +25,7 @@ pub(in crate::gui) mod privs {
 	pub(in crate::gui) use super::windows::privs::*;
 }
 
+pub use enums::*;
 pub use native_controls::decl::*;
 pub use windows::decl::*;
 

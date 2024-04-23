@@ -5,40 +5,9 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
+use crate::gui::*;
 use crate::msg::*;
 use crate::prelude::*;
-
-/// Specifies the horizontal behavior of the control when the parent window is
-/// resized.
-///
-/// The values are analog to [`gui::Vert`](crate::gui::Vert).
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
-pub enum Horz {
-	/// Nothing will be done when parent window is resized.
-	None,
-	/// When parent window resizes, the control will move anchored at right.
-	/// Size of the control will remain fixed.
-	Repos,
-	/// When parent window resizes, the control width will stretch/shrink
-	/// accordingly. Position will remain fixed.
-	Resize,
-}
-
-/// Specifies the vertical behavior of the control when the parent window is
-/// resized.
-///
-/// The values are analog to [`gui::Horz`](crate::gui::Horz).
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
-pub enum Vert {
-	/// Nothing will be done when parent window is resized.
-	None,
-	/// When parent window resizes, the control will move anchored at bottom.
-	/// Size of the control will remain fixed.
-	Repos,
-	/// When parent window resizes, the control height will stretch/shrink
-	/// accordingly. Position will remain fixed.
-	Resize,
-}
 
 struct ChildInfo {
 	hchild: HWND,

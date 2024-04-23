@@ -40,11 +40,11 @@ pub(in crate::gui) mod privs {
 
 pub mod decl {
 	pub use super::button::{Button, ButtonOpts};
-	pub use super::check_box::{CheckBox, CheckBoxOpts, CheckState};
+	pub use super::check_box::{CheckBox, CheckBoxOpts};
 	pub use super::combo_box::{ComboBox, ComboBoxOpts};
 	pub use super::date_time_picker::{DateTimePicker, DateTimePickerOpts};
 	pub use super::edit::{Edit, EditOpts};
-	pub use super::header::{Header, HeaderArrow, HeaderOpts};
+	pub use super::header::{Header, HeaderOpts};
 	pub use super::label::{Label, LabelOpts};
 	pub use super::list_box::{ListBox, ListBoxOpts};
 	pub use super::list_view::{ListView, ListViewOpts};
@@ -52,7 +52,7 @@ pub mod decl {
 	pub use super::progress_bar::{ProgressBar, ProgressBarOpts};
 	pub use super::radio_button::{RadioButton, RadioButtonOpts};
 	pub use super::radio_group::RadioGroup;
-	pub use super::status_bar::{StatusBar, SbPart};
+	pub use super::status_bar::StatusBar;
 	pub use super::tab::{Tab, TabOpts};
 	pub use super::trackbar::{Trackbar, TrackbarOpts};
 	pub use super::tree_view::{TreeView, TreeViewOpts};

@@ -35,10 +35,7 @@ pub(in crate::gui) mod privs {
 }
 
 pub mod decl {
-	pub use super::base::WmRet;
-	pub use super::layout_arranger::{Horz, Vert};
 	pub use super::msg_error::MsgError;
-	pub use super::raw_base::{Brush, Cursor, Icon};
 	pub use super::raw_control::WindowControlOpts;
 	pub use super::raw_main::WindowMainOpts;
 	pub use super::raw_modal::WindowModalOpts;
