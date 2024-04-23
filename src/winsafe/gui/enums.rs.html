@@ -225,6 +225,7 @@
 <a href="#225" id="225">225</a>
 <a href="#226" id="226">226</a>
 <a href="#227" id="227">227</a>
+<a href="#228" id="228">228</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -431,6 +432,7 @@
 <span class="doccomment">/// The result of processing a raw [`WM`](crate::gui::events::WindowEvents::wm),
 /// [`WM_COMMAND`](crate::gui::events::WindowEvents::wm_command) or
 /// [`WM_NOTIFY`](crate::gui::events::WindowEvents::wm_notify) message.
+</span><span class="attr">#[derive(Debug)]
 </span><span class="kw">pub enum </span>WmRet {
 	<span class="doccomment">/// Behave as if the message was not handled, that means returning:
 	///
