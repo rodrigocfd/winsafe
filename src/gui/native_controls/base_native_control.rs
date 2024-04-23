@@ -189,11 +189,11 @@ impl BaseNativeControl {
 		ref_data: usize,
 	) -> AnyResult<isize>
 	{
-		let ptr_self = ref_data as *mut Self; // retrieve
+		let ptr_self = ref_data as *const Self; // retrieve
 		let mut process_result = WmRet::NotHandled;
 
 		if !ptr_self.is_null() {
-			let ref_self = unsafe { &mut *ptr_self };
+			let ref_self = unsafe { &*ptr_self };
 			if *ref_self.hwnd() != HWND::NULL {
 				process_result = ref_self.subclass_events
 					.process_last_message(ref_self.hwnd(), wm_any)?;
@@ -203,7 +203,7 @@ impl BaseNativeControl {
 		if wm_any.msg_id == co::WM::NCDESTROY { // always check
 			hwnd.RemoveWindowSubclass(Self::subclass_proc, subclass_id)?;
 			if !ptr_self.is_null() {
-				let ref_self = unsafe { &mut *ptr_self };
+				let ref_self = unsafe { &*ptr_self };
 				ref_self.subclass_events.clear_events(); // prevents circular references
 			}
 		}

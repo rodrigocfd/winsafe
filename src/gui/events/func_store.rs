@@ -18,24 +18,22 @@ impl<K: Copy + Eq, F> FuncStore<K, F> {
 		self.elems.push((id, func));
 	}
 
-	/// Finds the last added function associated to the given identifier, if
-	/// any.
+	/// Returns an iterator over all the functions associated to the given
+	/// identifier, if any.
 	#[must_use]
-	pub(in crate::gui) fn find_last(&self, id: K) -> Option<&F> {
-		// Linear search, more performant for small collections.
-		// Searches backwards, so the function added last will be chosen.
+	pub(in crate::gui) fn filter(&self, id: K) -> impl Iterator<Item = &F> {
+		// https://depth-first.com/articles/2020/06/22/returning-rust-iterators
 		self.elems.iter()
-			.rev()
-			.find(move |(elem_id, _)| *elem_id == id)
+			.filter(move |(elem_id, _)| *elem_id == id)
 			.map(|(_, func)| func)
 	}
 
-	/// Finds all the functions associated to the given identifier, if any, and
-	/// returns an iterator to it.
+	/// Returns an iterator, in reverse order, over all the functions associated
+	/// to the given identifier, if any.
 	#[must_use]
-	pub(in crate::gui) fn find_all(&self, id: K) -> impl Iterator<Item = &F> {
-		// https://depth-first.com/articles/2020/06/22/returning-rust-iterators
+	pub(in crate::gui) fn filter_rev(&self, id: K) -> impl Iterator<Item = &F> {
 		self.elems.iter()
+			.rev()
 			.filter(move |(elem_id, _)| *elem_id == id)
 			.map(|(_, func)| func)
 	}

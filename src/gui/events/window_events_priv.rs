@@ -49,10 +49,10 @@ impl WindowEventsPriv {
 
 	pub(in crate::gui) fn is_empty(&self) -> bool {
 		unsafe {
-			{ &mut *self.msgs.get() }.is_empty()
-				&& { &mut *self.cmds.get() }.is_empty()
-				&& { &mut *self.nfys.get() }.is_empty()
-				&& { &mut *self.tmrs.get() }.is_empty()
+			{ &*self.msgs.get() }.is_empty()
+				&& { &*self.cmds.get() }.is_empty()
+				&& { &*self.nfys.get() }.is_empty()
+				&& { &*self.tmrs.get() }.is_empty()
 		}
 	}
 
@@ -79,8 +79,8 @@ impl WindowEventsPriv {
 		if wm_any.msg_id == co::WM::COMMAND {
 			let wm_cmd = wm::Command::from_generic_wm(wm_any);
 			let key_cmd = wm_cmd.event.id_code();
-			let cmds = unsafe { &mut *self.cmds.get() };
-			for func in cmds.find_all(key_cmd) {
+			let cmds = unsafe { &*self.cmds.get() };
+			for func in cmds.filter(key_cmd) {
 				match func()? {
 					WmRet::HandledWithRet(_)
 						| WmRet::HandledOk => { at_least_one = true; }
@@ -90,8 +90,8 @@ impl WindowEventsPriv {
 		} else if wm_any.msg_id == co::WM::NOTIFY {
 			let wm_nfy = wm::Notify::from_generic_wm(wm_any);
 			let key_nfy = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
-			let nfys = unsafe { &mut *self.nfys.get() };
-			for func in nfys.find_all(key_nfy) {
+			let nfys = unsafe { &*self.nfys.get() };
+			for func in nfys.filter(key_nfy) {
 				match func(wm::Notify::from_generic_wm(wm_any))? { // wm::Notify cannot be Copy
 					WmRet::HandledWithRet(_)
 						| WmRet::HandledOk => { at_least_one = true; }
@@ -100,22 +100,21 @@ impl WindowEventsPriv {
 			}
 		} else if wm_any.msg_id == co::WM::TIMER {
 			let wm_tmr = wm::Timer::from_generic_wm(wm_any);
-			let tmrs = unsafe { &mut *self.tmrs.get() };
-			for func in tmrs.find_all(wm_tmr.timer_id) {
+			let tmrs = unsafe { &*self.tmrs.get() };
+			for func in tmrs.filter(wm_tmr.timer_id) {
 				func()?;
 				at_least_one = true;
 			}
 		}
 
-		let msgs = unsafe { &mut *self.msgs.get() };
-		for func in msgs.find_all(wm_any.msg_id) {
+		let msgs = unsafe { &*self.msgs.get() };
+		for func in msgs.filter(wm_any.msg_id) {
 			match func(hwnd, wm_any)? {
 				WmRet::HandledWithRet(_)
 					| WmRet::HandledOk => { at_least_one = true; }
 				_ => {},
 			}
 		}
-
 		Ok(at_least_one)
 	}
 
@@ -126,44 +125,43 @@ impl WindowEventsPriv {
 		wm_any: WndMsg,
 	) -> AnyResult<WmRet>
 	{
-		Ok(match wm_any.msg_id {
-			co::WM::COMMAND => {
-				let wm_cmd = wm::Command::from_generic_wm(wm_any);
-				let key_cmd = wm_cmd.event.id_code();
-				let cmds = unsafe { &mut *self.cmds.get() };
-				match cmds.find_last(key_cmd) {
-					Some(func) => func()?, // we have a stored function to handle this WM_COMMAND notification
-					None => WmRet::NotHandled, // no stored WM_COMMAND notification
-				}
-			},
-			co::WM::NOTIFY => {
-				let wm_nfy = wm::Notify::from_generic_wm(wm_any);
-				let key_nfy = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
-				let nfys = unsafe { &mut *self.nfys.get() };
-				match nfys.find_last(key_nfy) {
-					Some(func) => func(wm_nfy)?, // we have a stored function to handle this WM_NOTIFY notification
-					None => WmRet::NotHandled, // no stored WM_NOTIFY notification
-				}
-			},
-			co::WM::TIMER => {
-				let wm_tmr = wm::Timer::from_generic_wm(wm_any);
-				let tmrs = unsafe { &mut *self.tmrs.get() };
-				match tmrs.find_last(wm_tmr.timer_id) {
-					Some(func) => { // we have a stored function to handle this WM_TIMER message
-						func()?; // execute user function
-						WmRet::HandledOk
-					},
-					None => WmRet::NotHandled, // no stored WM_TIMER message
+		if wm_any.msg_id == co::WM::COMMAND {
+			let wm_cmd = wm::Command::from_generic_wm(wm_any);
+			let key_cmd = wm_cmd.event.id_code();
+			let cmds = unsafe { &*self.cmds.get() };
+			for func in cmds.filter_rev(key_cmd) {
+				match func()? {
+					WmRet::NotHandled => {},
+					r => return Ok(r), // handled: stop here
 				}
 			}
-			_ => {
-				let msgs = unsafe { &mut *self.msgs.get() };
-				match msgs.find_last(wm_any.msg_id) {
-					Some(func) => func(hwnd, wm_any)?, // we have a stored function to handle this message
-					None => WmRet::NotHandled, // no stored function
+		} else if wm_any.msg_id == co::WM::NOTIFY {
+			let wm_nfy = wm::Notify::from_generic_wm(wm_any);
+			let key_nfy = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
+			let nfys = unsafe { &*self.nfys.get() };
+			for func in nfys.filter_rev(key_nfy) {
+				match func(wm::Notify::from_generic_wm(wm_any))? { // wm::Notify cannot be Copy
+					WmRet::NotHandled => {},
+					r => return Ok(r), // handled: stop here
 				}
-			},
-		})
+			}
+		} else if wm_any.msg_id == co::WM::TIMER {
+			let wm_tmr = wm::Timer::from_generic_wm(wm_any);
+			let tmrs = unsafe { &*self.tmrs.get() };
+			if let Some(func) = tmrs.filter_rev(wm_tmr.timer_id).next() { // just execute the last, if any
+				func()?;
+				return Ok(WmRet::HandledOk);
+			}
+		}
+
+		let msgs = unsafe { &*self.msgs.get() };
+		for func in msgs.filter_rev(wm_any.msg_id) {
+			match func(hwnd, wm_any)? {
+				WmRet::NotHandled => {},
+				r => return Ok(r), // handled: stop here
+			}
+		}
+		Ok(WmRet::NotHandled)
 	}
 
 	pub(in crate::gui) fn wm<F>(&self, ident: co::WM, func: F)
@@ -177,7 +175,7 @@ impl WindowEventsPriv {
 	pub(in crate::gui) fn wm_create_or_initdialog<F>(&self, func: F)
 		where F: Fn(&HWND, WndMsg) -> AnyResult<WmRet> + 'static,
 	{
-		unsafe { &mut *self.msgs.get() }.push(
+		self.wm(
 			if self.is_dialog { co::WM::INITDIALOG } else { co::WM::CREATE },
 			Box::new(func),
 		);
