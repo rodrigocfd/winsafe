@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\events\window_events_priv.rs`."><title>window_events_priv.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-2c208a72533b4dd0.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (0d8b3346a 2024-04-14)" data-channel="nightly" data-search-js="search-ffac13a0df2b1870.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-c97aec732c613ca4.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\events\window_events_priv.rs`."><title>window_events_priv.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-081576b923113409.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.79.0-nightly (fb898629a 2024-04-21)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -215,8 +215,6 @@
 <a href="#215" id="215">215</a>
 <a href="#216" id="216">216</a>
 <a href="#217" id="217">217</a>
-<a href="#218" id="218">218</a>
-<a href="#219" id="219">219</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::UnsafeCell;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -268,10 +266,10 @@
 
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>is_empty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
 		<span class="kw">unsafe </span>{
-			{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.msgs.get() }.is_empty()
-				&amp;&amp; { <span class="kw-2">&amp;mut *</span><span class="self">self</span>.cmds.get() }.is_empty()
-				&amp;&amp; { <span class="kw-2">&amp;mut *</span><span class="self">self</span>.nfys.get() }.is_empty()
-				&amp;&amp; { <span class="kw-2">&amp;mut *</span><span class="self">self</span>.tmrs.get() }.is_empty()
+			{ <span class="kw-2">&amp;*</span><span class="self">self</span>.msgs.get() }.is_empty()
+				&amp;&amp; { <span class="kw-2">&amp;*</span><span class="self">self</span>.cmds.get() }.is_empty()
+				&amp;&amp; { <span class="kw-2">&amp;*</span><span class="self">self</span>.nfys.get() }.is_empty()
+				&amp;&amp; { <span class="kw-2">&amp;*</span><span class="self">self</span>.tmrs.get() }.is_empty()
 		}
 	}
 
@@ -298,8 +296,8 @@
 		<span class="kw">if </span>wm_any.msg_id == co::WM::COMMAND {
 			<span class="kw">let </span>wm_cmd = wm::Command::from_generic_wm(wm_any);
 			<span class="kw">let </span>key_cmd = wm_cmd.event.id_code();
-			<span class="kw">let </span>cmds = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.cmds.get() };
-			<span class="kw">for </span>func <span class="kw">in </span>cmds.find_all(key_cmd) {
+			<span class="kw">let </span>cmds = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span><span class="self">self</span>.cmds.get() };
+			<span class="kw">for </span>func <span class="kw">in </span>cmds.filter(key_cmd) {
 				<span class="kw">match </span>func()<span class="question-mark">? </span>{
 					WmRet::HandledWithRet(<span class="kw">_</span>)
 						| WmRet::HandledOk =&gt; { at_least_one = <span class="bool-val">true</span>; }
@@ -309,8 +307,8 @@
 		} <span class="kw">else if </span>wm_any.msg_id == co::WM::NOTIFY {
 			<span class="kw">let </span>wm_nfy = wm::Notify::from_generic_wm(wm_any);
 			<span class="kw">let </span>key_nfy = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
-			<span class="kw">let </span>nfys = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.nfys.get() };
-			<span class="kw">for </span>func <span class="kw">in </span>nfys.find_all(key_nfy) {
+			<span class="kw">let </span>nfys = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span><span class="self">self</span>.nfys.get() };
+			<span class="kw">for </span>func <span class="kw">in </span>nfys.filter(key_nfy) {
 				<span class="kw">match </span>func(wm::Notify::from_generic_wm(wm_any))<span class="question-mark">? </span>{ <span class="comment">// wm::Notify cannot be Copy
 					</span>WmRet::HandledWithRet(<span class="kw">_</span>)
 						| WmRet::HandledOk =&gt; { at_least_one = <span class="bool-val">true</span>; }
@@ -319,22 +317,21 @@
 			}
 		} <span class="kw">else if </span>wm_any.msg_id == co::WM::TIMER {
 			<span class="kw">let </span>wm_tmr = wm::Timer::from_generic_wm(wm_any);
-			<span class="kw">let </span>tmrs = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.tmrs.get() };
-			<span class="kw">for </span>func <span class="kw">in </span>tmrs.find_all(wm_tmr.timer_id) {
+			<span class="kw">let </span>tmrs = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span><span class="self">self</span>.tmrs.get() };
+			<span class="kw">for </span>func <span class="kw">in </span>tmrs.filter(wm_tmr.timer_id) {
 				func()<span class="question-mark">?</span>;
 				at_least_one = <span class="bool-val">true</span>;
 			}
 		}
 
-		<span class="kw">let </span>msgs = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.msgs.get() };
-		<span class="kw">for </span>func <span class="kw">in </span>msgs.find_all(wm_any.msg_id) {
+		<span class="kw">let </span>msgs = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span><span class="self">self</span>.msgs.get() };
+		<span class="kw">for </span>func <span class="kw">in </span>msgs.filter(wm_any.msg_id) {
 			<span class="kw">match </span>func(hwnd, wm_any)<span class="question-mark">? </span>{
 				WmRet::HandledWithRet(<span class="kw">_</span>)
 					| WmRet::HandledOk =&gt; { at_least_one = <span class="bool-val">true</span>; }
 				<span class="kw">_ </span>=&gt; {},
 			}
 		}
-
 		<span class="prelude-val">Ok</span>(at_least_one)
 	}
 
@@ -345,44 +342,43 @@
 		wm_any: WndMsg,
 	) -&gt; AnyResult&lt;WmRet&gt;
 	{
-		<span class="prelude-val">Ok</span>(<span class="kw">match </span>wm_any.msg_id {
-			co::WM::COMMAND =&gt; {
-				<span class="kw">let </span>wm_cmd = wm::Command::from_generic_wm(wm_any);
-				<span class="kw">let </span>key_cmd = wm_cmd.event.id_code();
-				<span class="kw">let </span>cmds = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.cmds.get() };
-				<span class="kw">match </span>cmds.find_last(key_cmd) {
-					<span class="prelude-val">Some</span>(func) =&gt; func()<span class="question-mark">?</span>, <span class="comment">// we have a stored function to handle this WM_COMMAND notification
-					</span><span class="prelude-val">None </span>=&gt; WmRet::NotHandled, <span class="comment">// no stored WM_COMMAND notification
-				</span>}
-			},
-			co::WM::NOTIFY =&gt; {
-				<span class="kw">let </span>wm_nfy = wm::Notify::from_generic_wm(wm_any);
-				<span class="kw">let </span>key_nfy = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
-				<span class="kw">let </span>nfys = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.nfys.get() };
-				<span class="kw">match </span>nfys.find_last(key_nfy) {
-					<span class="prelude-val">Some</span>(func) =&gt; func(wm_nfy)<span class="question-mark">?</span>, <span class="comment">// we have a stored function to handle this WM_NOTIFY notification
-					</span><span class="prelude-val">None </span>=&gt; WmRet::NotHandled, <span class="comment">// no stored WM_NOTIFY notification
-				</span>}
-			},
-			co::WM::TIMER =&gt; {
-				<span class="kw">let </span>wm_tmr = wm::Timer::from_generic_wm(wm_any);
-				<span class="kw">let </span>tmrs = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.tmrs.get() };
-				<span class="kw">match </span>tmrs.find_last(wm_tmr.timer_id) {
-					<span class="prelude-val">Some</span>(func) =&gt; { <span class="comment">// we have a stored function to handle this WM_TIMER message
-						</span>func()<span class="question-mark">?</span>; <span class="comment">// execute user function
-						</span>WmRet::HandledOk
-					},
-					<span class="prelude-val">None </span>=&gt; WmRet::NotHandled, <span class="comment">// no stored WM_TIMER message
+		<span class="kw">if </span>wm_any.msg_id == co::WM::COMMAND {
+			<span class="kw">let </span>wm_cmd = wm::Command::from_generic_wm(wm_any);
+			<span class="kw">let </span>key_cmd = wm_cmd.event.id_code();
+			<span class="kw">let </span>cmds = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span><span class="self">self</span>.cmds.get() };
+			<span class="kw">for </span>func <span class="kw">in </span>cmds.filter_rev(key_cmd) {
+				<span class="kw">match </span>func()<span class="question-mark">? </span>{
+					WmRet::NotHandled =&gt; {},
+					r =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(r), <span class="comment">// handled: stop here
 				</span>}
 			}
-			<span class="kw">_ </span>=&gt; {
-				<span class="kw">let </span>msgs = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.msgs.get() };
-				<span class="kw">match </span>msgs.find_last(wm_any.msg_id) {
-					<span class="prelude-val">Some</span>(func) =&gt; func(hwnd, wm_any)<span class="question-mark">?</span>, <span class="comment">// we have a stored function to handle this message
-					</span><span class="prelude-val">None </span>=&gt; WmRet::NotHandled, <span class="comment">// no stored function
+		} <span class="kw">else if </span>wm_any.msg_id == co::WM::NOTIFY {
+			<span class="kw">let </span>wm_nfy = wm::Notify::from_generic_wm(wm_any);
+			<span class="kw">let </span>key_nfy = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
+			<span class="kw">let </span>nfys = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span><span class="self">self</span>.nfys.get() };
+			<span class="kw">for </span>func <span class="kw">in </span>nfys.filter_rev(key_nfy) {
+				<span class="kw">match </span>func(wm::Notify::from_generic_wm(wm_any))<span class="question-mark">? </span>{ <span class="comment">// wm::Notify cannot be Copy
+					</span>WmRet::NotHandled =&gt; {},
+					r =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(r), <span class="comment">// handled: stop here
 				</span>}
-			},
-		})
+			}
+		} <span class="kw">else if </span>wm_any.msg_id == co::WM::TIMER {
+			<span class="kw">let </span>wm_tmr = wm::Timer::from_generic_wm(wm_any);
+			<span class="kw">let </span>tmrs = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span><span class="self">self</span>.tmrs.get() };
+			<span class="kw">if let </span><span class="prelude-val">Some</span>(func) = tmrs.filter_rev(wm_tmr.timer_id).next() { <span class="comment">// just execute the last, if any
+				</span>func()<span class="question-mark">?</span>;
+				<span class="kw">return </span><span class="prelude-val">Ok</span>(WmRet::HandledOk);
+			}
+		}
+
+		<span class="kw">let </span>msgs = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span><span class="self">self</span>.msgs.get() };
+		<span class="kw">for </span>func <span class="kw">in </span>msgs.filter_rev(wm_any.msg_id) {
+			<span class="kw">match </span>func(hwnd, wm_any)<span class="question-mark">? </span>{
+				WmRet::NotHandled =&gt; {},
+				r =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(r), <span class="comment">// handled: stop here
+			</span>}
+		}
+		<span class="prelude-val">Ok</span>(WmRet::NotHandled)
 	}
 
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>wm&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, ident: co::WM, func: F)
@@ -396,7 +392,7 @@
 	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>wm_create_or_initdialog&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
 		<span class="kw">where </span>F: Fn(<span class="kw-2">&amp;</span>HWND, WndMsg) -&gt; AnyResult&lt;WmRet&gt; + <span class="lifetime">'static</span>,
 	{
-		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.msgs.get() }.push(
+		<span class="self">self</span>.wm(
 			<span class="kw">if </span><span class="self">self</span>.is_dialog { co::WM::INITDIALOG } <span class="kw">else </span>{ co::WM::CREATE },
 			Box::new(func),
 		);
