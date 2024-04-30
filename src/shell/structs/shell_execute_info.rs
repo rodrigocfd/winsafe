@@ -34,16 +34,16 @@ impl<'a, 'b, 'c> SHELLEXECUTEINFO<'a, 'b, 'c> {
 		raw.fMask = self.mask;
 		raw.hwnd = unsafe { self.hwnd.unwrap_or_else(|| &HWND::NULL).raw_copy() };
 
-		let w_verb = self.verb.as_ref().map_or_else(|| WString::default(), |s| WString::from_str(s));
+		let w_verb = WString::from_opt_str(self.verb.as_ref()) ;
 		raw.lpVerb = w_verb.as_ptr();
 
 		let w_file = WString::from_str(&self.file);
 		raw.lpFile = w_file.as_ptr();
 
-		let w_parms = self.parameters.as_ref().map_or_else(|| WString::default(), |s| WString::from_str(s));
+		let w_parms = WString::from_opt_str(self.parameters.as_ref());
 		raw.lpParameters = w_parms.as_ptr();
 
-		let w_dir = self.directory.as_ref().map_or_else(|| WString::default(), |s| WString::from_str(s));
+		let w_dir = WString::from_opt_str(self.directory.as_ref());
 		raw.lpDirectory = w_dir.as_ptr();
 
 		raw.nShow = self.show;
