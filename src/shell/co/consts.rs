@@ -271,27 +271,6 @@ const_bitflag! { NIS: u32;
 	SHAREDICON 0x0000_0002
 }
 
-const_ordinary! { SE_ERR: u32;
-	/// [`HWND::ShellExecute`](crate::prelude::shell_Hwnd::ShellExecute) return
-	/// value (`u32`).
-	=>
-	=>
-	FILE_NOT_FOUND 2
-	PATH_NOT_FOUND 3
-	BAD_FORMAT 11
-
-	ACCESSDENIED 5
-	OOM 8
-	DLLNOTFOUND 32
-
-	SHARE 26
-	ASSOCINCOMPLETE 27
-	DDETIMEOUT 28
-	DDEFAIL 29
-	DDEBUSY 30
-	NOASSOC 31
-}
-
 const_bitflag! { SEE_MASK: u32;
 	/// [`SHELLEXECUTEINFO`](crate::SHELLEXECUTEINFO) `fMask` (`u32`).
 	=>

@@ -57,7 +57,7 @@ pub trait shell_Hwnd: ole_Hwnd {
 		parameters: Option<&str>,
 		directory: Option<&str>,
 		show_cmd: co::SW,
-	) -> Result<HINSTANCE, co::SE_ERR>
+	) -> SysResult<()>
 	{
 		let ret = unsafe {
 			ffi::ShellExecuteW(
@@ -70,12 +70,10 @@ pub trait shell_Hwnd: ole_Hwnd {
 			)
 		};
 
-		unsafe {
-			if ret <= 32 as _ {
-				Err(co::SE_ERR::from_raw(ret as _))
-			} else {
-				Ok(HINSTANCE::from_ptr(ret as _))
-			}
+		if ret as usize > 32 {
+			Ok(())
+		} else {
+			Err(GetLastError())
 		}
 	}
 }
