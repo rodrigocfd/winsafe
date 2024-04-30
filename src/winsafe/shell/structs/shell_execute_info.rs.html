@@ -145,16 +145,16 @@
 		raw.fMask = <span class="self">self</span>.mask;
 		raw.hwnd = <span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd.unwrap_or_else(|| <span class="kw-2">&amp;</span>HWND::NULL).raw_copy() };
 
-		<span class="kw">let </span>w_verb = <span class="self">self</span>.verb.as_ref().map_or_else(|| WString::default(), |s| WString::from_str(s));
+		<span class="kw">let </span>w_verb = WString::from_opt_str(<span class="self">self</span>.verb.as_ref()) ;
 		raw.lpVerb = w_verb.as_ptr();
 
 		<span class="kw">let </span>w_file = WString::from_str(<span class="kw-2">&amp;</span><span class="self">self</span>.file);
 		raw.lpFile = w_file.as_ptr();
 
-		<span class="kw">let </span>w_parms = <span class="self">self</span>.parameters.as_ref().map_or_else(|| WString::default(), |s| WString::from_str(s));
+		<span class="kw">let </span>w_parms = WString::from_opt_str(<span class="self">self</span>.parameters.as_ref());
 		raw.lpParameters = w_parms.as_ptr();
 
-		<span class="kw">let </span>w_dir = <span class="self">self</span>.directory.as_ref().map_or_else(|| WString::default(), |s| WString::from_str(s));
+		<span class="kw">let </span>w_dir = WString::from_opt_str(<span class="self">self</span>.directory.as_ref());
 		raw.lpDirectory = w_dir.as_ptr();
 
 		raw.nShow = <span class="self">self</span>.show;
