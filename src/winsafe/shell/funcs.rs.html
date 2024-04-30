@@ -709,31 +709,31 @@
 <span class="doccomment">/// [`ShellExecuteEx`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecuteexw)
 /// function.
 ///
-/// # Safety
-///
-/// The [`SHELLEXECUTEINFO`](crate::SHELLEXECUTEINFO) struct is tricky. Improper
-/// use can lead to invalid memory
-/// access.
+/// Fill the [`SHELLEXECUTEINFO`](crate::SHELLEXECUTEINFO) fields you need, and
+/// leave the others as default. The needed mask flags will be automatically
+/// set.
 ///
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::{self as w, prelude::*};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let mut sei = w::SHELLEXECUTEINFO::default();
-/// unsafe { w::ShellExecuteEx(&amp;mut sei)?; }
+/// w::ShellExecuteEx(&amp;w::SHELLEXECUTEINFO {
+///     file: "C:\\Temp\\foo.exe".to_owned(),
+///     show: co::SW::SHOW,
+///     ..Default::default()
+/// })?;
 /// # w::SysResult::Ok(())
 /// ```
-</span><span class="kw">pub unsafe fn </span>ShellExecuteEx(
-	exec_info: <span class="kw-2">&amp;mut </span>SHELLEXECUTEINFO,
-) -&gt; SysResult&lt;()&gt; {
-	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::ShellExecuteExW(exec_info <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) })
+</span><span class="kw">pub fn </span>ShellExecuteEx(exec_info: <span class="kw-2">&amp;</span>SHELLEXECUTEINFO) -&gt; SysResult&lt;()&gt; {
+	<span class="kw">let </span>(<span class="kw-2">mut </span>raw, _s0, _s1, _s2, _s3, _s4) = exec_info.to_raw();
+	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::ShellExecuteExW(<span class="kw-2">&amp;mut </span>raw <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) })
 }
 
 <span class="doccomment">/// [`SHFileOperation`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)
 /// function.
 </span><span class="kw">pub fn </span>SHFileOperation(file_op: <span class="kw-2">&amp;mut </span>SHFILEOPSTRUCT) -&gt; SysResult&lt;()&gt; {
-	bool_to_sysresult( <span class="kw">unsafe </span>{ ffi::SHFileOperationW(file_op <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) })
+	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::SHFileOperationW(file_op <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) })
 }
 
 <span class="doccomment">/// [`SHGetFileInfo`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow)

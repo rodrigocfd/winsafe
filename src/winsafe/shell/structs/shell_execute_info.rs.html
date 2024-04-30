@@ -101,107 +101,123 @@
 <a href="#101" id="101">101</a>
 <a href="#102" id="102">102</a>
 <a href="#103" id="103">103</a>
-</pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+</pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
-</span><span class="kw">use </span>std::marker::PhantomData;
-
-<span class="kw">use </span><span class="kw">crate</span>::co;
+</span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// [`SHELLEXECUTEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shellexecuteinfow)
 /// struct.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>SHELLEXECUTEINFO&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>&gt; {
+///
+/// Not all `mask` constants are available, some of them are automatically set
+/// as you fill other parameters.
+</span><span class="attr">#[derive(Default)]
+</span><span class="kw">pub struct </span>SHELLEXECUTEINFO&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; {
+	<span class="kw">pub </span>mask: co::SEE_MASK,
+	<span class="kw">pub </span>hwnd: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>HWND&gt;,
+	<span class="kw">pub </span>verb: <span class="prelude-ty">Option</span>&lt;String&gt;,
+	<span class="kw">pub </span>file: String,
+	<span class="kw">pub </span>parameters: <span class="prelude-ty">Option</span>&lt;String&gt;,
+	<span class="kw">pub </span>directory: <span class="prelude-ty">Option</span>&lt;String&gt;,
+	<span class="kw">pub </span>show: co::SW,
+	<span class="kw">pub </span>id_list: <span class="prelude-ty">Option</span>&lt;Vec&lt;u8&gt;&gt;,
+	<span class="kw">pub </span>class: <span class="prelude-ty">Option</span>&lt;String&gt;,
+	<span class="kw">pub </span>hkey_class: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span>HKEY&gt;,
+	<span class="kw">pub </span>hot_key: <span class="prelude-ty">Option</span>&lt;(co::VK, co::HOTKEYF)&gt;,
+	<span class="kw">pub </span>hicon_hmonitor: IcoMon&lt;<span class="lifetime">'c</span>&gt;,
+}
+
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; SHELLEXECUTEINFO&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; {
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::shell) <span class="kw">fn </span>to_raw(<span class="kw-2">&amp;</span><span class="self">self</span>,
+	) -&gt; (SHELLEXECUTEINFO_raw, WString, WString, WString, WString, WString)
+	{
+		<span class="kw">let </span><span class="kw-2">mut </span>raw = SHELLEXECUTEINFO_raw::default();
+		raw.fMask = <span class="self">self</span>.mask;
+		raw.hwnd = <span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd.unwrap_or_else(|| <span class="kw-2">&amp;</span>HWND::NULL).raw_copy() };
+
+		<span class="kw">let </span>w_verb = <span class="self">self</span>.verb.as_ref().map_or_else(|| WString::default(), |s| WString::from_str(s));
+		raw.lpVerb = w_verb.as_ptr();
+
+		<span class="kw">let </span>w_file = WString::from_str(<span class="kw-2">&amp;</span><span class="self">self</span>.file);
+		raw.lpFile = w_file.as_ptr();
+
+		<span class="kw">let </span>w_parms = <span class="self">self</span>.parameters.as_ref().map_or_else(|| WString::default(), |s| WString::from_str(s));
+		raw.lpParameters = w_parms.as_ptr();
+
+		<span class="kw">let </span>w_dir = <span class="self">self</span>.directory.as_ref().map_or_else(|| WString::default(), |s| WString::from_str(s));
+		raw.lpDirectory = w_dir.as_ptr();
+
+		raw.nShow = <span class="self">self</span>.show;
+
+		<span class="self">self</span>.id_list.as_ref().map(|l| {
+			raw.lpIDList = l.as_ptr() <span class="kw">as _</span>;
+			raw.fMask |= co::SEE_MASK::IDLIST;
+		});
+
+		<span class="kw">let </span>w_class = <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.class {
+			<span class="prelude-val">Some</span>(c) =&gt; {
+				<span class="kw">let </span>w_class = WString::from_str(c);
+				raw.lpClass = w_class.as_ptr();
+				raw.fMask |= co::SEE_MASK::CLASSNAME;
+				w_class
+			},
+			<span class="prelude-val">None </span>=&gt; WString::default(),
+		};
+
+		<span class="self">self</span>.hkey_class.map(|h| {
+			raw.hkeyClass = <span class="kw">unsafe </span>{ h.raw_copy() };
+			raw.fMask |= co::SEE_MASK::CLASSKEY;
+		});
+
+		<span class="self">self</span>.hot_key.as_ref().map(|hk| {
+			raw.dwHotKey = MAKEDWORD(hk.<span class="number">0</span>.raw(), hk.<span class="number">1</span>.raw());
+			raw.fMask |= co::SEE_MASK::HOTKEY;
+		});
+
+		<span class="kw">match </span><span class="self">self</span>.hicon_hmonitor {
+			IcoMon::None =&gt; {},
+			IcoMon::Ico(i) =&gt; {
+				raw.hIcon_hMonitor = i.ptr();
+				raw.fMask |= co::SEE_MASK::ICON;
+			},
+			IcoMon::Mon(m) =&gt; {
+				raw.hIcon_hMonitor = m.ptr();
+				raw.fMask |= co::SEE_MASK::HMONITOR;
+			},
+		}
+
+		(raw, w_verb, w_file, w_parms, w_dir, w_class)
+	}
+}
+
+<span class="attr">#[repr(C)]
+</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::shell) <span class="kw">struct </span>SHELLEXECUTEINFO_raw {
 	cbSize: u32,
 	<span class="kw">pub </span>fMask: co::SEE_MASK,
 	<span class="kw">pub </span>hwnd: HWND,
-	lpVerb: <span class="kw-2">*mut </span>u16,
-	lpFile: <span class="kw-2">*mut </span>u16,
-	lpParameters: <span class="kw-2">*mut </span>u16,
-	lpDirectory: <span class="kw-2">*mut </span>u16,
+	<span class="kw">pub </span>lpVerb: <span class="kw-2">*const </span>u16,
+	<span class="kw">pub </span>lpFile: <span class="kw-2">*const </span>u16,
+	<span class="kw">pub </span>lpParameters: <span class="kw-2">*const </span>u16,
+	<span class="kw">pub </span>lpDirectory: <span class="kw-2">*const </span>u16,
 	<span class="kw">pub </span>nShow: co::SW,
-	<span class="kw">pub </span>hInstApp: HINSTANCE,
-	<span class="kw">pub </span>lpIDList: <span class="kw-2">*mut </span>std::ffi::c_void,
-	lpClass: <span class="kw-2">*mut </span>u16,
+	hInstApp: HINSTANCE,
+	<span class="kw">pub </span>lpIDList: <span class="kw-2">*const </span>std::ffi::c_void,
+	<span class="kw">pub </span>lpClass: <span class="kw-2">*const </span>u16,
 	<span class="kw">pub </span>hkeyClass: HKEY,
-	dwHotKey: u32,
-	hIcon_hMonitor: HANDLE, <span class="comment">// union HICON and HMONITOR
+	<span class="kw">pub </span>dwHotKey: u32,
+	<span class="kw">pub </span>hIcon_hMonitor: HANDLE, <span class="comment">// union HICON and HMONITOR
 	</span><span class="kw">pub </span>hProcess: HPROCESS,
-
-	_lpVerb: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
-	_lpFile: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>u16&gt;,
-	_lpParameters: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'c </span><span class="kw-2">mut </span>u16&gt;,
-	_lpDirectory: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'d </span><span class="kw-2">mut </span>u16&gt;,
-	_lpClass: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'e </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default_with_size!</span>(SHELLEXECUTEINFO, cbSize, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>);
-
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>&gt; SHELLEXECUTEINFO&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>&gt; {
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, lpVerb, set_lpVerb);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'b</span>, lpFile, set_lpFile);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'c</span>, lpParameters, set_lpParameters);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'d</span>, lpDirectory, set_lpDirectory);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'e</span>, lpClass, set_lpClass);
-
-	<span class="doccomment">/// Retrieves the `dwHotKey` field.
-	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub const fn </span>dwHotKey(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (co::VK, co::HOTKEYF) {
-		<span class="kw">unsafe </span>{(
-			co::VK::from_raw(LOWORD(<span class="self">self</span>.dwHotKey)),
-			co::HOTKEYF::from_raw(HIWORD(<span class="self">self</span>.dwHotKey)),
-		)}
-	}
-
-	<span class="doccomment">/// Sets the `dwHotKey` field.
-	</span><span class="kw">pub fn </span>set_dwHotKey(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: (co::VK, co::HOTKEYF)) {
-		<span class="self">self</span>.dwHotKey = MAKEDWORD(val.<span class="number">0</span>.raw(), val.<span class="number">1</span>.raw())
-	}
-
-	<span class="doccomment">/// Retrieves the `hIcon`/`hMonitor` union field.
-	///
-	/// # Safety
-	///
-	/// Both `hIcon` and `hMonitor` fields share the same memory space so both
-	/// are returned, and you must choose which one you want.
-	///
-	/// # Examples
-	///
-	/// Retrieving `hIcon`:
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*};
-	///
-	/// let sei = w::SHELLEXECUTEINFO::default();
-	///
-	/// let (hicon, _) = unsafe { sei.hIcon_hMonitor() };
-	/// ```
-	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub unsafe fn </span>hIcon_hMonitor(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (HICON, HMONITOR) {
-		(HICON::from_ptr(<span class="self">self</span>.hIcon_hMonitor),
-			HMONITOR::from_ptr(<span class="self">self</span>.hIcon_hMonitor))
-	}
-
-	<span class="doccomment">/// Sets the `hIcon`/`hMonitor` union field as `hIcon`.
-	///
-	/// # Safety
-	///
-	/// Both `hIcon` and `hMonitor` fields share the same memory space, so when
-	/// setting one, you replace the other.
-	</span><span class="kw">pub unsafe fn </span>set_hIcon(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hicon: <span class="kw-2">&amp;</span>HICON) {
-		<span class="self">self</span>.hIcon_hMonitor = hicon.ptr();
-	}
-
-	<span class="doccomment">/// Sets the `hIcon`/`hMonitor` union field as `hMonitor`.
-	///
-	/// # Safety
-	///
-	/// Both `hIcon` and `hMonitor` fields share the same memory space, so when
-	/// setting one, you replace the other.
-	</span><span class="kw">pub unsafe fn </span>set_hMonitor(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hmonitor: <span class="kw-2">&amp;</span>HMONITOR) {
-		<span class="self">self</span>.hIcon_hMonitor = hmonitor.ptr();
-	}
-}
+<span class="macro">impl_default_with_size!</span>(SHELLEXECUTEINFO_raw, cbSize);
 </code></pre></div></section></main></body></html>

@@ -27,9 +27,12 @@
 <a href="#27" id="27">27</a>
 <a href="#28" id="28">28</a>
 <a href="#29" id="29">29</a>
+<a href="#30" id="30">30</a>
+<a href="#31" id="31">31</a>
 </pre></div><pre class="rust"><code><span class="attr">#![cfg(feature = <span class="string">"shell"</span>)]
 
 </span><span class="kw">mod </span>com_interfaces;
+<span class="kw">mod </span>enums;
 <span class="kw">mod </span>funcs;
 <span class="kw">mod </span>handles;
 <span class="kw">mod </span>structs;
@@ -43,6 +46,7 @@
 
 <span class="kw">pub mod </span>decl {
 	<span class="kw">pub use </span><span class="kw">super</span>::com_interfaces::decl::<span class="kw-2">*</span>;
+	<span class="kw">pub use </span><span class="kw">super</span>::enums::<span class="kw-2">*</span>;
 	<span class="kw">pub use </span><span class="kw">super</span>::funcs::<span class="kw-2">*</span>;
 	<span class="kw">pub use </span><span class="kw">super</span>::handles::decl::<span class="kw-2">*</span>;
 	<span class="kw">pub use </span><span class="kw">super</span>::structs::<span class="kw-2">*</span>;

@@ -631,6 +631,10 @@
 <a href="#631" id="631">631</a>
 <a href="#632" id="632">632</a>
 <a href="#633" id="633">633</a>
+<a href="#634" id="634">634</a>
+<a href="#635" id="635">635</a>
+<a href="#636" id="636">636</a>
+<a href="#637" id="637">637</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
@@ -827,7 +831,9 @@
 	/// [`SHELLEXECUTEINFO`](crate::SHELLEXECUTEINFO) `dwHotKey` (`u16`).
 	</span>=&gt;
 	=&gt;
-	ALT <span class="number">0x04
+	<span class="doccomment">/// None of the actual values (zero).
+	</span>NoValue <span class="number">0
+	</span>ALT <span class="number">0x04
 	</span>CONTROL <span class="number">0x02
 	</span>EXT <span class="number">0x08
 	</span>SHIFT <span class="number">0x01
@@ -906,15 +912,20 @@
 
 <span class="macro">const_bitflag!</span> { SEE_MASK: u32;
 	<span class="doccomment">/// [`SHELLEXECUTEINFO`](crate::SHELLEXECUTEINFO) `fMask` (`u32`).
+	///
+	/// Some constants are set internally, not being publicly available.
 	</span>=&gt;
-	=&gt;
-	DEFAULT <span class="number">0x0000_0000
+	IDLIST <span class="number">0x0000_0004
 	</span>CLASSNAME <span class="number">0x0000_0001
 	</span>CLASSKEY <span class="number">0x0000_0003
-	</span>IDLIST <span class="number">0x0000_0004
-	</span>INVOKEIDLIST <span class="number">0x0000_000c
-	</span>ICON <span class="number">0x0000_0010
 	</span>HOTKEY <span class="number">0x0000_0020
+	</span>ICON <span class="number">0x0000_0010
+	</span>HMONITOR <span class="number">0x0020_0000
+	</span>_NOQUERYCLASSSTORE <span class="number">0x0100_0000
+	</span>_FLAG_HINST_IS_SITE <span class="number">0x0800_0000
+	</span>=&gt;
+	DEFAULT <span class="number">0x0000_0000
+	</span>INVOKEIDLIST <span class="number">0x0000_000c
 	</span>NOCLOSEPROCESS <span class="number">0x0000_0040
 	</span>CONNECTNETDRV <span class="number">0x0000_0080
 	</span>NOASYNC <span class="number">0x0000_0100
@@ -924,12 +935,9 @@
 	</span>UNICODE <span class="number">0x0000_4000
 	</span>NO_CONSOLE <span class="number">0x0000_8000
 	</span>ASYNCOK <span class="number">0x0010_0000
-	</span>NOQUERYCLASSSTORE <span class="number">0x0100_0000
-	</span>HMONITOR <span class="number">0x0020_0000
 	</span>NOZONECHECKS <span class="number">0x0080_0000
 	</span>WAITFORINPUTIDLE <span class="number">0x0200_0000
 	</span>FLAG_LOG_USAGE <span class="number">0x0400_0000
-	</span>FLAG_HINST_IS_SITE <span class="number">0x0800_0000
 </span>}
 
 <span class="macro">const_bitflag!</span> { SFGAO: u32;
