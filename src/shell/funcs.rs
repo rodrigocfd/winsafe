@@ -290,31 +290,31 @@ pub fn Shell_NotifyIcon(
 /// [`ShellExecuteEx`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecuteexw)
 /// function.
 ///
-/// # Safety
-///
-/// The [`SHELLEXECUTEINFO`](crate::SHELLEXECUTEINFO) struct is tricky. Improper
-/// use can lead to invalid memory
-/// access.
+/// Fill the [`SHELLEXECUTEINFO`](crate::SHELLEXECUTEINFO) fields you need, and
+/// leave the others as default. The needed mask flags will be automatically
+/// set.
 ///
 /// # Examples
 ///
 /// ```no_run
-/// use winsafe::{self as w, prelude::*};
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let mut sei = w::SHELLEXECUTEINFO::default();
-/// unsafe { w::ShellExecuteEx(&mut sei)?; }
+/// w::ShellExecuteEx(&w::SHELLEXECUTEINFO {
+///     file: "C:\\Temp\\foo.exe".to_owned(),
+///     show: co::SW::SHOW,
+///     ..Default::default()
+/// })?;
 /// # w::SysResult::Ok(())
 /// ```
-pub unsafe fn ShellExecuteEx(
-	exec_info: &mut SHELLEXECUTEINFO,
-) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::ShellExecuteExW(exec_info as *mut _ as _) })
+pub fn ShellExecuteEx(exec_info: &SHELLEXECUTEINFO) -> SysResult<()> {
+	let (mut raw, _s0, _s1, _s2, _s3, _s4) = exec_info.to_raw();
+	bool_to_sysresult(unsafe { ffi::ShellExecuteExW(&mut raw as *mut _ as _) })
 }
 
 /// [`SHFileOperation`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)
 /// function.
 pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> SysResult<()> {
-	bool_to_sysresult( unsafe { ffi::SHFileOperationW(file_op as *mut _ as _) })
+	bool_to_sysresult(unsafe { ffi::SHFileOperationW(file_op as *mut _ as _) })
 }
 
 /// [`SHGetFileInfo`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow)

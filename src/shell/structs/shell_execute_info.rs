@@ -1,6 +1,4 @@
-#![allow(non_snake_case)]
-
-use std::marker::PhantomData;
+#![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
 use crate::decl::*;
@@ -9,95 +7,105 @@ use crate::prelude::*;
 
 /// [`SHELLEXECUTEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shellexecuteinfow)
 /// struct.
+///
+/// Not all `mask` constants are available, some of them are automatically set
+/// as you fill other parameters.
+#[derive(Default)]
+pub struct SHELLEXECUTEINFO<'a, 'b, 'c> {
+	pub mask: co::SEE_MASK,
+	pub hwnd: Option<&'a HWND>,
+	pub verb: Option<String>,
+	pub file: String,
+	pub parameters: Option<String>,
+	pub directory: Option<String>,
+	pub show: co::SW,
+	pub id_list: Option<Vec<u8>>,
+	pub class: Option<String>,
+	pub hkey_class: Option<&'b HKEY>,
+	pub hot_key: Option<(co::VK, co::HOTKEYF)>,
+	pub hicon_hmonitor: IcoMon<'c>,
+}
+
+impl<'a, 'b, 'c> SHELLEXECUTEINFO<'a, 'b, 'c> {
+	pub(in crate::shell) fn to_raw(&self,
+	) -> (SHELLEXECUTEINFO_raw, WString, WString, WString, WString, WString)
+	{
+		let mut raw = SHELLEXECUTEINFO_raw::default();
+		raw.fMask = self.mask;
+		raw.hwnd = unsafe { self.hwnd.unwrap_or_else(|| &HWND::NULL).raw_copy() };
+
+		let w_verb = self.verb.as_ref().map_or_else(|| WString::default(), |s| WString::from_str(s));
+		raw.lpVerb = w_verb.as_ptr();
+
+		let w_file = WString::from_str(&self.file);
+		raw.lpFile = w_file.as_ptr();
+
+		let w_parms = self.parameters.as_ref().map_or_else(|| WString::default(), |s| WString::from_str(s));
+		raw.lpParameters = w_parms.as_ptr();
+
+		let w_dir = self.directory.as_ref().map_or_else(|| WString::default(), |s| WString::from_str(s));
+		raw.lpDirectory = w_dir.as_ptr();
+
+		raw.nShow = self.show;
+
+		self.id_list.as_ref().map(|l| {
+			raw.lpIDList = l.as_ptr() as _;
+			raw.fMask |= co::SEE_MASK::IDLIST;
+		});
+
+		let w_class = match &self.class {
+			Some(c) => {
+				let w_class = WString::from_str(c);
+				raw.lpClass = w_class.as_ptr();
+				raw.fMask |= co::SEE_MASK::CLASSNAME;
+				w_class
+			},
+			None => WString::default(),
+		};
+
+		self.hkey_class.map(|h| {
+			raw.hkeyClass = unsafe { h.raw_copy() };
+			raw.fMask |= co::SEE_MASK::CLASSKEY;
+		});
+
+		self.hot_key.as_ref().map(|hk| {
+			raw.dwHotKey = MAKEDWORD(hk.0.raw(), hk.1.raw());
+			raw.fMask |= co::SEE_MASK::HOTKEY;
+		});
+
+		match self.hicon_hmonitor {
+			IcoMon::None => {},
+			IcoMon::Ico(i) => {
+				raw.hIcon_hMonitor = i.ptr();
+				raw.fMask |= co::SEE_MASK::ICON;
+			},
+			IcoMon::Mon(m) => {
+				raw.hIcon_hMonitor = m.ptr();
+				raw.fMask |= co::SEE_MASK::HMONITOR;
+			},
+		}
+
+		(raw, w_verb, w_file, w_parms, w_dir, w_class)
+	}
+}
+
 #[repr(C)]
-pub struct SHELLEXECUTEINFO<'a, 'b, 'c, 'd, 'e> {
+pub(in crate::shell) struct SHELLEXECUTEINFO_raw {
 	cbSize: u32,
 	pub fMask: co::SEE_MASK,
 	pub hwnd: HWND,
-	lpVerb: *mut u16,
-	lpFile: *mut u16,
-	lpParameters: *mut u16,
-	lpDirectory: *mut u16,
+	pub lpVerb: *const u16,
+	pub lpFile: *const u16,
+	pub lpParameters: *const u16,
+	pub lpDirectory: *const u16,
 	pub nShow: co::SW,
-	pub hInstApp: HINSTANCE,
-	pub lpIDList: *mut std::ffi::c_void,
-	lpClass: *mut u16,
+	hInstApp: HINSTANCE,
+	pub lpIDList: *const std::ffi::c_void,
+	pub lpClass: *const u16,
 	pub hkeyClass: HKEY,
-	dwHotKey: u32,
-	hIcon_hMonitor: HANDLE, // union HICON and HMONITOR
+	pub dwHotKey: u32,
+	pub hIcon_hMonitor: HANDLE, // union HICON and HMONITOR
 	pub hProcess: HPROCESS,
-
-	_lpVerb: PhantomData<&'a mut u16>,
-	_lpFile: PhantomData<&'b mut u16>,
-	_lpParameters: PhantomData<&'c mut u16>,
-	_lpDirectory: PhantomData<&'d mut u16>,
-	_lpClass: PhantomData<&'e mut u16>,
 }
 
-impl_default_with_size!(SHELLEXECUTEINFO, cbSize, 'a, 'b, 'c, 'd, 'e);
-
-impl<'a, 'b, 'c, 'd, 'e> SHELLEXECUTEINFO<'a, 'b, 'c, 'd, 'e> {
-	pub_fn_string_ptr_get_set!('a, lpVerb, set_lpVerb);
-	pub_fn_string_ptr_get_set!('b, lpFile, set_lpFile);
-	pub_fn_string_ptr_get_set!('c, lpParameters, set_lpParameters);
-	pub_fn_string_ptr_get_set!('d, lpDirectory, set_lpDirectory);
-	pub_fn_string_ptr_get_set!('e, lpClass, set_lpClass);
-
-	/// Retrieves the `dwHotKey` field.
-	#[must_use]
-	pub const fn dwHotKey(&self) -> (co::VK, co::HOTKEYF) {
-		unsafe {(
-			co::VK::from_raw(LOWORD(self.dwHotKey)),
-			co::HOTKEYF::from_raw(HIWORD(self.dwHotKey)),
-		)}
-	}
-
-	/// Sets the `dwHotKey` field.
-	pub fn set_dwHotKey(&mut self, val: (co::VK, co::HOTKEYF)) {
-		self.dwHotKey = MAKEDWORD(val.0.raw(), val.1.raw())
-	}
-
-	/// Retrieves the `hIcon`/`hMonitor` union field.
-	///
-	/// # Safety
-	///
-	/// Both `hIcon` and `hMonitor` fields share the same memory space so both
-	/// are returned, and you must choose which one you want.
-	///
-	/// # Examples
-	///
-	/// Retrieving `hIcon`:
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*};
-	///
-	/// let sei = w::SHELLEXECUTEINFO::default();
-	///
-	/// let (hicon, _) = unsafe { sei.hIcon_hMonitor() };
-	/// ```
-	#[must_use]
-	pub unsafe fn hIcon_hMonitor(&self) -> (HICON, HMONITOR) {
-		(HICON::from_ptr(self.hIcon_hMonitor),
-			HMONITOR::from_ptr(self.hIcon_hMonitor))
-	}
-
-	/// Sets the `hIcon`/`hMonitor` union field as `hIcon`.
-	///
-	/// # Safety
-	///
-	/// Both `hIcon` and `hMonitor` fields share the same memory space, so when
-	/// setting one, you replace the other.
-	pub unsafe fn set_hIcon(&mut self, hicon: &HICON) {
-		self.hIcon_hMonitor = hicon.ptr();
-	}
-
-	/// Sets the `hIcon`/`hMonitor` union field as `hMonitor`.
-	///
-	/// # Safety
-	///
-	/// Both `hIcon` and `hMonitor` fields share the same memory space, so when
-	/// setting one, you replace the other.
-	pub unsafe fn set_hMonitor(&mut self, hmonitor: &HMONITOR) {
-		self.hIcon_hMonitor = hmonitor.ptr();
-	}
-}
+impl_default_with_size!(SHELLEXECUTEINFO_raw, cbSize);
