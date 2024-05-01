@@ -307,8 +307,10 @@ pub fn Shell_NotifyIcon(
 /// # w::SysResult::Ok(())
 /// ```
 pub fn ShellExecuteEx(exec_info: &SHELLEXECUTEINFO) -> SysResult<()> {
-	let (mut raw, _s0, _s1, _s2, _s3, _s4) = exec_info.to_raw();
-	bool_to_sysresult(unsafe { ffi::ShellExecuteExW(&mut raw as *mut _ as _) })
+	let mut buf = exec_info.to_raw();
+	bool_to_sysresult(
+		unsafe { ffi::ShellExecuteExW(&mut buf.raw as *mut _ as _) },
+	)
 }
 
 /// [`SHFileOperation`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)

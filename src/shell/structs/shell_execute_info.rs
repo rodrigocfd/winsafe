@@ -27,9 +27,7 @@ pub struct SHELLEXECUTEINFO<'a, 'b, 'c> {
 }
 
 impl<'a, 'b, 'c> SHELLEXECUTEINFO<'a, 'b, 'c> {
-	pub(in crate::shell) fn to_raw(&self,
-	) -> (SHELLEXECUTEINFO_raw, WString, WString, WString, WString, WString)
-	{
+	pub(in crate::shell) fn to_raw(&self) -> SHELLEXECUTEINFO_buf {
 		let mut raw = SHELLEXECUTEINFO_raw::default();
 		raw.fMask = self.mask;
 		raw.hwnd = unsafe { self.hwnd.unwrap_or_else(|| &HWND::NULL).raw_copy() };
@@ -85,8 +83,18 @@ impl<'a, 'b, 'c> SHELLEXECUTEINFO<'a, 'b, 'c> {
 			},
 		}
 
-		(raw, w_verb, w_file, w_parms, w_dir, w_class)
+		SHELLEXECUTEINFO_buf { raw, w_verb, w_file, w_parms, w_dir, w_class }
 	}
+}
+
+#[allow(unused)]
+pub(in crate::shell) struct SHELLEXECUTEINFO_buf {
+	pub raw: SHELLEXECUTEINFO_raw,
+	w_verb: WString,
+	w_file: WString,
+	w_parms: WString,
+	w_dir: WString,
+	w_class: WString,
 }
 
 #[repr(C)]
