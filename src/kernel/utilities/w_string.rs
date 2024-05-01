@@ -64,16 +64,29 @@ impl std::cmp::Ord for WString {
 impl WString {
 	/// Stores an UTF-16 null-terminated string from an optional [`&str`](str).
 	///
-	/// If `s` is `None`, no allocation is made.
+	/// If `s` is `None` or the string is empty, no allocation is made.
 	#[must_use]
 	pub fn from_opt_str(s: Option<impl AsRef<str>>) -> Self {
 		Self { buf: Buffer::from_opt_str(s) }
 	}
 
 	/// Stores an UTF-16 null-terminated string from a [`&str`](str).
+	///
+	/// If the string is empty, no allocation is made.
 	#[must_use]
 	pub fn from_str(s: impl AsRef<str>) -> Self {
-		Self { buf: Buffer::from_str(s) }
+		Self { buf: Buffer::from_str(s, ForceHeap::No) }
+	}
+
+	/// Stores an UTF-16 null-terminated string from a [`&str`](str), bypassing
+	/// [Short String Optimization](https://joellaity.com/2020/01/31/string.html)
+	/// – that is, forcing the internal allocation on the heap. This should be
+	/// rarely needed.
+	///
+	/// If the string is empty, no allocation is made.
+	#[must_use]
+	pub fn from_str_force_heap(s: impl AsRef<str>) -> Self {
+		Self { buf: Buffer::from_str(s, ForceHeap::Yes) }
 	}
 
 	/// Stores a series of UTF-16 null-terminated strings. The buffer will end
@@ -121,7 +134,7 @@ impl WString {
 	/// set to zero.
 	#[must_use]
 	pub fn new_alloc_buf(sz: usize) -> Self {
-		Self { buf: Buffer::new_alloc_buf(sz) }
+		Self { buf: Buffer::new_alloc_buf(sz, ForceHeap::No) }
 	}
 
 	/// Returns a mutable
@@ -320,6 +333,9 @@ impl WString {
 
 //------------------------------------------------------------------------------
 
+#[derive(PartialEq, Eq)]
+enum ForceHeap { Yes, No }
+
 enum Buffer {
 	Stack([u16; SSO_LEN]),
 	Heap(usize, GlobalFreeGuard), // keep memory size in bytes
@@ -337,7 +353,7 @@ impl Clone for Buffer {
 		match self {
 			Self::Unallocated => Self::Unallocated,
 			_ => {
-				let mut new_self = Self::new_alloc_buf(self.buf_len());
+				let mut new_self = Self::new_alloc_buf(self.buf_len(), ForceHeap::No);
 				self.as_slice()
 					.iter()
 					.zip(new_self.as_mut_slice())
@@ -366,19 +382,19 @@ impl Buffer {
 	#[must_use]
 	fn from_opt_str(s: Option<impl AsRef<str>>) -> Self {
 		match s {
-			Some(s) => Self::from_str(s),
+			Some(s) => Self::from_str(s, ForceHeap::No),
 			None => Self::Unallocated,
 		}
 	}
 
 	#[must_use]
-	fn from_str(s: impl AsRef<str>) -> Self {
+	fn from_str(s: impl AsRef<str>, force_heap: ForceHeap) -> Self {
 		let s_len = s.as_ref().encode_utf16().count();
 		if s_len == 0 {
 			Self::Unallocated
 		} else {
 			let num_chars = s_len + 1; // room for terminating null
-			let mut new_self = Self::new_alloc_buf(num_chars);
+			let mut new_self = Self::new_alloc_buf(num_chars, force_heap);
 			s.as_ref()
 				.encode_utf16()
 				.zip(new_self.as_mut_slice())
@@ -392,7 +408,7 @@ impl Buffer {
 		let tot_chars = v.iter() // number of chars of all strings, including terminating nulls
 			.fold(0, |tot, s| tot + s.as_ref().chars().count() + 1) // include terminating null
 			+ 1; // double terminating null
-		let mut new_self = Self::new_alloc_buf(tot_chars);
+		let mut new_self = Self::new_alloc_buf(tot_chars, ForceHeap::No);
 		v.iter()
 			.map(|s| {
 				s.as_ref()
@@ -430,7 +446,7 @@ impl Buffer {
 				.take_while(|ch| **ch != 0x0000) // skip terminating null, if any
 				.count()
 				+ 1; // room for terminating null
-			let mut new_self = Self::new_alloc_buf(num_chars);
+			let mut new_self = Self::new_alloc_buf(num_chars, ForceHeap::No);
 			src.iter()
 				.take_while(|ch| **ch != 0x0000) // skip terminating null, if any
 				.zip(new_self.as_mut_slice())
@@ -440,12 +456,10 @@ impl Buffer {
 	}
 
 	#[must_use]
-	fn new_alloc_buf(num_chars: usize) -> Self {
+	fn new_alloc_buf(num_chars: usize, force_heap: ForceHeap) -> Self {
 		if num_chars == 0 {
 			Self::Unallocated
-		} else if num_chars <= SSO_LEN {
-			Self::Stack([0x0000; SSO_LEN])
-		} else {
+		} else if force_heap == ForceHeap::Yes || num_chars > SSO_LEN {
 			Self::Heap(
 				num_chars * std::mem::size_of::<u16>(),
 				HGLOBAL::GlobalAlloc(
@@ -453,6 +467,8 @@ impl Buffer {
 					num_chars * std::mem::size_of::<u16>(),
 				).unwrap(), // assume no allocation errors
 			)
+		} else {
+			Self::Stack([0x0000; SSO_LEN])
 		}
 	}
 
