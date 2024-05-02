@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\structs\task_dialog.rs`."><title>task_dialog.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-b21aa549bf6d91ff.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.0-nightly (1fffb2a35 2024-04-28)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\structs\task_dialog.rs`."><title>task_dialog.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-b21aa549bf6d91ff.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.0-nightly (c987ad527 2024-05-01)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../..\../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../..\../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../..\../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -126,132 +126,310 @@
 <a href="#126" id="126">126</a>
 <a href="#127" id="127">127</a>
 <a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
+<a href="#147" id="147">147</a>
+<a href="#148" id="148">148</a>
+<a href="#149" id="149">149</a>
+<a href="#150" id="150">150</a>
+<a href="#151" id="151">151</a>
+<a href="#152" id="152">152</a>
+<a href="#153" id="153">153</a>
+<a href="#154" id="154">154</a>
+<a href="#155" id="155">155</a>
+<a href="#156" id="156">156</a>
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a>
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
+<a href="#162" id="162">162</a>
+<a href="#163" id="163">163</a>
+<a href="#164" id="164">164</a>
+<a href="#165" id="165">165</a>
+<a href="#166" id="166">166</a>
+<a href="#167" id="167">167</a>
+<a href="#168" id="168">168</a>
+<a href="#169" id="169">169</a>
+<a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a>
+<a href="#176" id="176">176</a>
+<a href="#177" id="177">177</a>
+<a href="#178" id="178">178</a>
+<a href="#179" id="179">179</a>
+<a href="#180" id="180">180</a>
+<a href="#181" id="181">181</a>
+<a href="#182" id="182">182</a>
+<a href="#183" id="183">183</a>
+<a href="#184" id="184">184</a>
+<a href="#185" id="185">185</a>
+<a href="#186" id="186">186</a>
+<a href="#187" id="187">187</a>
+<a href="#188" id="188">188</a>
+<a href="#189" id="189">189</a>
+<a href="#190" id="190">190</a>
+<a href="#191" id="191">191</a>
+<a href="#192" id="192">192</a>
+<a href="#193" id="193">193</a>
+<a href="#194" id="194">194</a>
+<a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
-</span><span class="kw">use </span>std::marker::PhantomData;
-
-<span class="kw">use </span><span class="kw">crate</span>::co;
+</span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::kernel::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// [`TASKDIALOG_BUTTON`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialog_button)
 /// struct.
-</span><span class="attr">#[repr(C, packed)]
-</span><span class="kw">pub struct </span>TASKDIALOG_BUTTON&lt;<span class="lifetime">'a</span>&gt; {
-	nButtonID: i32,
-	pszButtonText: <span class="kw-2">*mut </span>u16,
-
-	_pszButtonText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
+///
+/// Not all `flags` constants are available, some of them are automatically set
+/// as you fill other parameters.
+</span><span class="attr">#[derive(Default)]
+</span><span class="kw">pub struct </span>TASKDIALOGCONFIG&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>, <span class="lifetime">'i</span>, <span class="lifetime">'j</span>, <span class="lifetime">'k</span>, <span class="lifetime">'l</span>, <span class="lifetime">'m</span>, <span class="lifetime">'n</span>, <span class="lifetime">'o</span>, <span class="lifetime">'p</span>&gt; {
+	<span class="kw">pub </span>hwnd_parent: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>HWND&gt;,
+	<span class="kw">pub </span>hinstance: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span>HINSTANCE&gt;,
+	<span class="kw">pub </span>flags: co::TDF,
+	<span class="doccomment">/// Predefined buttons. Will be placed after the custom `buttons`.
+	</span><span class="kw">pub </span>common_buttons: co::TDCBF,
+	<span class="doccomment">/// Window caption. If not specified, the .exe name is used.
+	</span><span class="kw">pub </span>window_title: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'c </span>str&gt;,
+	<span class="kw">pub </span>main_icon: IconIdTd&lt;<span class="lifetime">'d</span>&gt;,
+	<span class="doccomment">/// Text shown before the main content, in a larger font.
+	</span><span class="kw">pub </span>main_instruction: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'e </span>str&gt;,
+	<span class="doccomment">/// The main text of the dialog.
+	</span><span class="kw">pub </span>content: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'f </span>str&gt;,
+	<span class="doccomment">/// Command ID and button text. Will be placed before the predefined
+	/// `common_buttons`.
+	</span><span class="kw">pub </span>buttons: <span class="kw-2">&amp;</span><span class="lifetime">'g </span>[(u16, <span class="kw-2">&amp;</span><span class="lifetime">'h </span>str)],
+	<span class="doccomment">/// Any ID from `common_buttons` or `buttons`.
+	</span><span class="kw">pub </span>default_button_id: u16,
+	<span class="doccomment">/// Command ID and radio button text.
+	</span><span class="kw">pub </span>radio_buttons: <span class="kw-2">&amp;</span><span class="lifetime">'i </span>[(u16, <span class="kw-2">&amp;</span><span class="lifetime">'j </span>str)],
+	<span class="doccomment">/// Any ID from `radio_buttons`.
+	</span><span class="kw">pub </span>default_radio_button_id: u16,
+	<span class="doccomment">/// Text of the label of the verification check box.
+	</span><span class="kw">pub </span>verification_text: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'k </span>str&gt;,
+	<span class="doccomment">/// Text of the collapsible section.
+	</span><span class="kw">pub </span>more_info: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'l </span>str&gt;,
+	<span class="doccomment">/// Text of the button that expands/collapses `more_info`, when the section
+	/// is expanded.
+	</span><span class="kw">pub </span>more_info_btn_expanded: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'m </span>str&gt;,
+	<span class="doccomment">/// Text of the button that expands/collapses `more_info`, when the section
+	/// is collapsed.
+	</span><span class="kw">pub </span>more_info_btn_collapsed: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'n </span>str&gt;,
+	<span class="kw">pub </span>footer_icon: IconId&lt;<span class="lifetime">'o</span>&gt;,
+	<span class="kw">pub </span>footer_text: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'p </span>str&gt;,
+	<span class="kw">pub </span>callback: <span class="prelude-ty">Option</span>&lt;PFTASKDIALOGCALLBACK&gt;,
+	<span class="kw">pub </span>callback_data: usize,
+	<span class="kw">pub </span>width: u32,
 }
 
-<span class="macro">impl_default!</span>(TASKDIALOG_BUTTON, <span class="lifetime">'a</span>);
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>, <span class="lifetime">'i</span>, <span class="lifetime">'j</span>, <span class="lifetime">'k</span>, <span class="lifetime">'l</span>, <span class="lifetime">'m</span>, <span class="lifetime">'n</span>, <span class="lifetime">'o</span>, <span class="lifetime">'p</span>&gt;
+	TASKDIALOGCONFIG&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>, <span class="lifetime">'i</span>, <span class="lifetime">'j</span>, <span class="lifetime">'k</span>, <span class="lifetime">'l</span>, <span class="lifetime">'m</span>, <span class="lifetime">'n</span>, <span class="lifetime">'o</span>, <span class="lifetime">'p</span>&gt;
+{
+	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::comctl) <span class="kw">fn </span>to_raw(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; TASKDIALOGCONFIG_buf {
+		<span class="kw">let </span><span class="kw-2">mut </span>raw = TASKDIALOGCONFIG_raw::default();
+		raw.hwndParent = <span class="kw">unsafe </span>{ <span class="self">self</span>.hwnd_parent.unwrap_or(<span class="kw-2">&amp;</span>HWND::NULL).raw_copy() };
+		raw.hInstance = <span class="kw">unsafe </span>{ <span class="self">self</span>.hinstance.unwrap_or(<span class="kw-2">&amp;</span>HINSTANCE::NULL).raw_copy() };
+		raw.dwFlags = <span class="self">self</span>.flags;
+		raw.dwCommonButtons = <span class="self">self</span>.common_buttons;
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TASKDIALOG_BUTTON&lt;<span class="lifetime">'a</span>&gt; {
-	<span class="macro">pub_fn_resource_id_get_set!</span>(nButtonID, set_nButtonID);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pszButtonText, set_pszButtonText);
+		<span class="kw">let </span>w_title = <span class="self">self</span>.window_title <span class="comment">// must force heap because variable will be moved
+			</span>.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszWindowTitle = w_title.as_ptr();
+
+		<span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.main_icon {
+			IconIdTd::None =&gt; {
+				<span class="kw">let </span>new_flags = raw.dwFlags | co::TDF::USE_HICON_MAIN;
+				raw.dwFlags = new_flags;
+			},
+			IconIdTd::Icon(h) =&gt; {
+				raw.hMainIcon = h.ptr();
+				<span class="kw">let </span>new_flags = raw.dwFlags | co::TDF::USE_HICON_MAIN;
+				raw.dwFlags = new_flags;
+			},
+			IconIdTd::Id(id) =&gt; {
+				raw.hMainIcon = MAKEINTRESOURCE(<span class="kw-2">*</span>id <span class="kw">as _</span>) <span class="kw">as _</span>;
+			},
+			IconIdTd::Td(td) =&gt; {
+				raw.hMainIcon = td.raw() <span class="kw">as _</span>;
+			},
+		}
+
+		<span class="kw">let </span>w_instruc = <span class="self">self</span>.main_instruction
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszMainInstruction = w_instruc.as_ptr();
+
+		<span class="kw">let </span>w_content = <span class="self">self</span>.content
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszContent = w_content.as_ptr();
+
+		<span class="kw">let </span>btns_buf: (Vec&lt;<span class="kw">_</span>&gt;, Vec&lt;<span class="kw">_</span>&gt;) = <span class="self">self</span>.buttons.iter()
+			.map(|(id, txt)| {
+				<span class="kw">let </span>txt_buf = WString::from_str_force_heap(<span class="kw-2">*</span>txt);
+				<span class="kw">let </span>btn_buf = TASKDIALOG_BUTTON {
+					nButtonID: <span class="kw-2">*</span>id <span class="kw">as _</span>,
+					pszButtonText: txt_buf.as_ptr(),
+				};
+				(txt_buf, btn_buf)
+			})
+			.unzip();
+		raw.cButtons = btns_buf.<span class="number">1</span>.len() <span class="kw">as _</span>;
+		raw.pButtons = btns_buf.<span class="number">1</span>.as_ptr() <span class="kw">as _</span>;
+		raw.nDefaultButton = <span class="self">self</span>.default_button_id <span class="kw">as _</span>;
+
+		<span class="kw">let </span>radios_buf: (Vec&lt;<span class="kw">_</span>&gt;, Vec&lt;<span class="kw">_</span>&gt;) = <span class="self">self</span>.radio_buttons.iter()
+			.map(|(id, txt)| {
+				<span class="kw">let </span>txt_buf = WString::from_str_force_heap(<span class="kw-2">*</span>txt);
+				<span class="kw">let </span>btn_buf = TASKDIALOG_BUTTON {
+					nButtonID: <span class="kw-2">*</span>id <span class="kw">as _</span>,
+					pszButtonText: txt_buf.as_ptr(),
+				};
+				(txt_buf, btn_buf)
+			})
+			.unzip();
+		raw.cRadioButtons = radios_buf.<span class="number">1</span>.len() <span class="kw">as _</span>;
+		raw.pRadioButtons = radios_buf.<span class="number">1</span>.as_ptr() <span class="kw">as _</span>;
+		raw.nDefaultRadioButton = <span class="self">self</span>.default_radio_button_id <span class="kw">as _</span>;
+
+		<span class="kw">let </span>w_verif = <span class="self">self</span>.verification_text
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszVerificationText = w_verif. as_ptr();
+
+		<span class="kw">let </span>w_more_info = <span class="self">self</span>.more_info
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszExpandedInformation = w_more_info.as_ptr();
+
+		<span class="kw">let </span>w_expanded_info = <span class="self">self</span>.more_info_btn_expanded
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszExpandedControlText = w_expanded_info.as_ptr();
+
+		<span class="kw">let </span>w_collapsed_info = <span class="self">self</span>.more_info_btn_collapsed
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszCollapsedControlText = w_collapsed_info.as_ptr();
+
+		<span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.footer_icon {
+			IconId::None =&gt; {
+				<span class="kw">let </span>new_flags = raw.dwFlags | co::TDF::USE_HICON_FOOTER;
+				raw.dwFlags = new_flags;
+			},
+			IconId::Icon(h) =&gt; {
+				raw.hFooterIcon = h.ptr();
+				<span class="kw">let </span>new_flags = raw.dwFlags | co::TDF::USE_HICON_FOOTER;
+				raw.dwFlags = new_flags;
+			},
+			IconId::Id(id) =&gt; {
+				raw.hFooterIcon = MAKEINTRESOURCE(<span class="kw-2">*</span>id <span class="kw">as _</span>) <span class="kw">as _</span>;
+			},
+		}
+
+		<span class="kw">let </span>w_footer = <span class="self">self</span>.footer_text
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszFooter = w_footer.as_ptr();
+
+		raw.pfCallback = <span class="self">self</span>.callback;
+		raw.lpCallbackData = <span class="self">self</span>.callback_data;
+		raw.cxWidth = <span class="self">self</span>.width;
+
+		TASKDIALOGCONFIG_buf { raw, w_title, w_instruc, w_content,
+			btns_buf, radios_buf, w_verif,
+			w_more_info, w_expanded_info, w_collapsed_info, w_footer }
+	}
 }
 
-<span class="doccomment">/// [`TASKDIALOGCONFIG`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialogconfig)
-/// struct.
-</span><span class="attr">#[repr(C, packed)]
-</span><span class="kw">pub struct </span>TASKDIALOGCONFIG&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>, <span class="lifetime">'i</span>, <span class="lifetime">'j</span>&gt; {
+<span class="attr">#[allow(unused)]
+</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::comctl) <span class="kw">struct </span>TASKDIALOGCONFIG_buf {
+	<span class="kw">pub </span>raw: TASKDIALOGCONFIG_raw,
+	w_title: WString,
+	w_instruc: WString,
+	w_content: WString,
+	btns_buf: (Vec&lt;WString&gt;, Vec&lt;TASKDIALOG_BUTTON&gt;),
+	radios_buf: (Vec&lt;WString&gt;, Vec&lt;TASKDIALOG_BUTTON&gt;),
+	w_verif: WString,
+	w_more_info: WString,
+	w_expanded_info: WString,
+	w_collapsed_info: WString,
+	w_footer: WString,
+}
+
+<span class="attr">#[repr(C, packed)]
+</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::comctl) <span class="kw">struct </span>TASKDIALOGCONFIG_raw {
 	cbSize: u32,
 	<span class="kw">pub </span>hwndParent: HWND,
 	<span class="kw">pub </span>hInstance: HINSTANCE,
 	<span class="kw">pub </span>dwFlags: co::TDF,
 	<span class="kw">pub </span>dwCommonButtons: co::TDCBF,
-	pszWindowTitle: <span class="kw-2">*mut </span>u16,
-	pszMainIcon: <span class="kw-2">*const </span>u16, <span class="comment">// union with HICON
-	</span>pszMainInstruction: <span class="kw-2">*mut </span>u16,
-	pszContent: <span class="kw-2">*mut </span>u16,
-	cButtons: u32,
-	pButtons: <span class="kw-2">*mut </span>TASKDIALOG_BUTTON&lt;<span class="lifetime">'d</span>&gt;,
+	<span class="kw">pub </span>pszWindowTitle: <span class="kw-2">*const </span>u16,
+	<span class="kw">pub </span>hMainIcon: <span class="kw-2">*const </span>std::ffi::c_void, <span class="comment">// union with pszMainIcon
+	</span><span class="kw">pub </span>pszMainInstruction: <span class="kw-2">*const </span>u16,
+	<span class="kw">pub </span>pszContent: <span class="kw-2">*const </span>u16,
+	<span class="kw">pub </span>cButtons: u32,
+	<span class="kw">pub </span>pButtons: <span class="kw-2">*const </span>TASKDIALOG_BUTTON,
 	<span class="kw">pub </span>nDefaultButton: i32, <span class="comment">// actually co::DLGID, which is u16
-	</span>cRadioButtons: u32,
-	pRadioButtons: <span class="kw-2">*mut </span>TASKDIALOG_BUTTON&lt;<span class="lifetime">'e</span>&gt;,
+	</span><span class="kw">pub </span>cRadioButtons: u32,
+	<span class="kw">pub </span>pRadioButtons: <span class="kw-2">*mut </span>TASKDIALOG_BUTTON,
 	<span class="kw">pub </span>nDefaultRadioButton: i32,
-	pszVerificationText: <span class="kw-2">*mut </span>u16,
-	pszExpandedInformation: <span class="kw-2">*mut </span>u16,
-	pszExpandedControlText: <span class="kw-2">*mut </span>u16,
-	pszCollapsedControlText: <span class="kw-2">*mut </span>u16,
-	pszFooterIcon: <span class="kw-2">*const </span>u16, <span class="comment">// union with HICON
-	</span>pszFooter: <span class="kw-2">*mut </span>u16,
+	<span class="kw">pub </span>pszVerificationText: <span class="kw-2">*const </span>u16,
+	<span class="kw">pub </span>pszExpandedInformation: <span class="kw-2">*const </span>u16,
+	<span class="kw">pub </span>pszExpandedControlText: <span class="kw-2">*const </span>u16,
+	<span class="kw">pub </span>pszCollapsedControlText: <span class="kw-2">*const </span>u16,
+	<span class="kw">pub </span>hFooterIcon: <span class="kw-2">*const </span>std::ffi::c_void, <span class="comment">// union with pszFooterIcon
+	</span><span class="kw">pub </span>pszFooter: <span class="kw-2">*const </span>u16,
 	<span class="kw">pub </span>pfCallback: <span class="prelude-ty">Option</span>&lt;PFTASKDIALOGCALLBACK&gt;,
 	<span class="kw">pub </span>lpCallbackData: usize,
 	<span class="kw">pub </span>cxWidth: u32,
-
-	_pszWindowTitle: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
-	_pszMainInstruction: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>u16&gt;,
-	_pszContent: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'c </span><span class="kw-2">mut </span>u16&gt;,
-	_pButtons: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'d </span><span class="kw-2">mut </span>TASKDIALOG_BUTTON&lt;<span class="lifetime">'d</span>&gt;&gt;,
-	_pRadioButtons: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'e </span><span class="kw-2">mut </span>TASKDIALOG_BUTTON&lt;<span class="lifetime">'e</span>&gt;&gt;,
-	_pszVerificationText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'f </span><span class="kw-2">mut </span>u16&gt;,
-	_pszExpandedInformation: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'g </span><span class="kw-2">mut </span>u16&gt;,
-	_pszExpandedControlText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'h </span><span class="kw-2">mut </span>u16&gt;,
-	_pszCollapsedControlText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'i </span><span class="kw-2">mut </span>u16&gt;,
-	_pszFooter: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'j </span><span class="kw-2">mut </span>u16&gt;,
 }
 
-<span class="macro">impl_default_with_size!</span>(TASKDIALOGCONFIG, cbSize, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>, <span class="lifetime">'i</span>, <span class="lifetime">'j</span>);
+<span class="macro">impl_default_with_size!</span>(TASKDIALOGCONFIG_raw, cbSize);
 
-<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>, <span class="lifetime">'i</span>, <span class="lifetime">'j</span>&gt;
-	TASKDIALOGCONFIG&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>, <span class="lifetime">'i</span>, <span class="lifetime">'j</span>&gt;
-{
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pszWindowTitle, set_pszWindowTitle);
-
-	<span class="doccomment">/// Returns the `pszMainIcon` field.
-	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>pszMainIcon(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; IconIdTdicon {
-		<span class="kw">if </span>IS_INTRESOURCE(<span class="self">self</span>.pszMainIcon) {
-			<span class="kw">if </span><span class="self">self</span>.pszMainIcon <span class="kw">as </span>u16 &gt;= <span class="number">0xfffc </span>{
-				IconIdTdicon::Tdicon(<span class="kw">unsafe </span>{ co::TD_ICON::from_raw(<span class="self">self</span>.pszMainIcon <span class="kw">as _</span>) })
-			} <span class="kw">else </span>{
-				IconIdTdicon::Id(<span class="self">self</span>.pszMainIcon <span class="kw">as _</span>)
-			}
-		} <span class="kw">else </span>{
-			IconIdTdicon::Icon(<span class="kw">unsafe </span>{ HICON::from_ptr(<span class="self">self</span>.pszMainIcon <span class="kw">as _</span>) })
-		}
-	}
-
-	<span class="doccomment">/// Sets the `pszMainIcon` field.
-	</span><span class="kw">pub fn </span>set_pszMainIcon(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: IconIdTdicon) {
-		<span class="kw">match </span>val {
-			IconIdTdicon::None =&gt; <span class="self">self</span>.pszMainIcon = std::ptr::null_mut(),
-			IconIdTdicon::Icon(hicon) =&gt; <span class="self">self</span>.pszMainIcon = hicon.ptr() <span class="kw">as _</span>,
-			IconIdTdicon::Id(id) =&gt; <span class="self">self</span>.pszMainIcon = MAKEINTRESOURCE(id <span class="kw">as _</span>),
-			IconIdTdicon::Tdicon(tdi) =&gt; <span class="self">self</span>.pszMainIcon = MAKEINTRESOURCE(tdi.raw() <span class="kw">as _</span>),
-		}
-	}
-
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'b</span>, pszMainInstruction, set_pszMainInstruction);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'c</span>, pszContent, set_pszContent);
-	<span class="macro">pub_fn_array_buf_get_set!</span>(<span class="lifetime">'d</span>, pButtons, set_pButtons, cButtons, TASKDIALOG_BUTTON);
-	<span class="macro">pub_fn_array_buf_get_set!</span>(<span class="lifetime">'e</span>, pRadioButtons, set_pRadioButtons, cRadioButtons, TASKDIALOG_BUTTON);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'f</span>, pszVerificationText, set_pszVerificationText);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'g</span>, pszExpandedInformation, set_pszExpandedInformation);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'h</span>, pszExpandedControlText, set_pszExpandedControlText);
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'i</span>, pszCollapsedControlText, set_pszCollapsedControlText);
-
-	<span class="doccomment">/// Returns the `pszFooterIcon` field.
-	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>pszFooterIcon(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; IconId {
-		<span class="kw">if </span>IS_INTRESOURCE(<span class="self">self</span>.pszFooterIcon) {
-			IconId::Id(<span class="self">self</span>.pszFooterIcon <span class="kw">as _</span>)
-		} <span class="kw">else </span>{
-			IconId::Icon(<span class="kw">unsafe </span>{ HICON::from_ptr(<span class="self">self</span>.pszFooterIcon <span class="kw">as _</span>) })
-		}
-	}
-
-	<span class="doccomment">/// Sets the `pszFooterIcon` field.
-	</span><span class="kw">pub fn </span>set_pszFooterIcon(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: IconId) {
-		<span class="kw">match </span>val {
-			IconId::None =&gt; <span class="self">self</span>.pszFooterIcon = std::ptr::null_mut(),
-			IconId::Icon(hicon) =&gt; <span class="self">self</span>.pszFooterIcon = hicon.ptr() <span class="kw">as _</span>,
-			IconId::Id(id) =&gt; <span class="self">self</span>.pszFooterIcon = MAKEINTRESOURCE(id <span class="kw">as _</span>),
-		}
-	}
-
-	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'j</span>, pszFooter, set_pszFooter);
+<span class="attr">#[repr(C, packed)]
+</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::comctl) <span class="kw">struct </span>TASKDIALOG_BUTTON {
+	<span class="kw">pub </span>nButtonID: i32,
+	<span class="kw">pub </span>pszButtonText: <span class="kw-2">*const </span>u16,
 }
+
+<span class="macro">impl_default!</span>(TASKDIALOG_BUTTON);
 </code></pre></div></section></main></body></html>

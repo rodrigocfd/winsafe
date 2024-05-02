@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\funcs.rs`."><title>funcs.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-b21aa549bf6d91ff.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.0-nightly (1fffb2a35 2024-04-28)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\funcs.rs`."><title>funcs.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-b21aa549bf6d91ff.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.80.0-nightly (c987ad527 2024-05-01)" data-channel="nightly" data-search-js="search-bf21c90c8c1d92b1.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-e32f0c247825364d.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-09095024cf37855e.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><nav class="sub"><form class="search-form"><span></span><div id="sidebar-button" tabindex="-1"><a href="../../../winsafe/all.html" title="show sidebar"></a></div><input class="search-input" name="search" aria-label="Run search in the documentation" autocomplete="off" spellcheck="false" placeholder="Type ‘S’ or ‘/’ to search, ‘?’ for more options…" type="search"><div id="help-button" tabindex="-1"><a href="../../../help.html" title="help">?</a></div><div id="settings-menu" tabindex="-1"><a href="../../../settings.html" title="settings">Settings</a></div></form></nav><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -97,6 +97,17 @@
 <a href="#97" id="97">97</a>
 <a href="#98" id="98">98</a>
 <a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -128,53 +139,64 @@
 <span class="doccomment">/// [`TaskDialogIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
 /// function.
 ///
-/// Returns:
-/// * the selected `co::DLGID` button;
-/// * if `pRadioButtons` of [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) struct
-/// was set, the `u16` control ID of one of the specified radio buttons;
-/// otherwise zero.
+/// Fill the [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) fields you need, and
+/// leave the others as default. The needed flags will be automatically set.
 ///
-/// If you don't need all customizations, consider the
-/// [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog) method.
+/// Returns:
+/// 1. the ID of the button clicked by the user. If you passed custom
+/// buttons in the `buttons` field, the corresponding ID will be wrapped in a
+/// [`co::DLGID`](crate::co::DLGID) constant, whose `u16` can be retrieved by
+/// calling [`co::DLGID::raw`](crate::co::DLGID::raw) method;
+/// 2. the ID of the radio button selected by the user, if you used the
+/// `radio_buttons` field;
+/// 3. `true` if the custom check box is checked, if you used the
+/// `verification_text` field.
+///
+/// [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog) is a simpler
+/// version of this function.
 ///
 /// # Examples
+///
+/// Simple information dialog:
 ///
 /// ```no_run
 /// use winsafe::{self as w, prelude::*, co};
 ///
-/// let hwnd: w::HWND; // initialized somewhere
-/// # let hwnd = w::HWND::NULL;
+/// w::TaskDialogIndirect(&amp;w::TASKDIALOGCONFIG {
+///     common_buttons: co::TDCBF::OK,
+///     main_icon: w::IconIdTd::Td(co::TD_ICON::INFORMATION),
+///     flags: co::TDF::ALLOW_DIALOG_CANCELLATION,
+///     window_title: Some("Title"),
+///     content: Some("Content"),
+///     ..Default::default()
+/// })?;
+/// # w::HrResult::Ok(())
+/// ```
 ///
-/// let mut tdc = w::TASKDIALOGCONFIG::default();
-/// tdc.hwndParent = hwnd;
-/// tdc.dwCommonButtons = co::TDCBF::YES | co::TDCBF::NO;
-/// tdc.set_pszMainIcon(w::IconIdTdicon::Tdicon(co::TD_ICON::INFORMATION));
+/// OK/Cancel confirmation:
 ///
-/// let mut title = w::WString::from_str("Title");
-/// tdc.set_pszWindowTitle(Some(&amp;mut title));
+/// ```no_run
+/// use winsafe::{self as w, prelude::*, co};
 ///
-/// let mut header = w::WString::from_str("Header");
-/// tdc.set_pszMainInstruction(Some(&amp;mut header));
+/// let (ret, _, _) = w::TaskDialogIndirect(&amp;w::TASKDIALOGCONFIG {
+///     common_buttons: co::TDCBF::OK | co::TDCBF::CANCEL,
+///     main_icon: w::IconIdTd::Td(co::TD_ICON::WARNING),
+///     flags: co::TDF::ALLOW_DIALOG_CANCELLATION,
+///     window_title: Some("Title"),
+///     content: Some("Do you want?"),
+///     ..Default::default()
+/// })?;
 ///
-/// let mut body = w::WString::from_str("Body");
-/// tdc.set_pszContent(Some(&amp;mut body));
-///
-/// // A custom button to appear before Yes and No.
-/// let mut btn1 = w::TASKDIALOG_BUTTON::default();
-/// let mut btn1_text = w::WString::from_str("Hello");
-/// btn1.set_pszButtonText(Some(&amp;mut btn1_text));
-/// btn1.set_nButtonID(333); // this ID is returned if user clicks this button
-/// let btns_slice = &amp;mut [btn1];
-/// tdc.set_pButtons(Some(btns_slice));
-///
-/// w::TaskDialogIndirect(&amp;tdc, None)?;
+/// if ret == co::DLGID::OK {
+///    println!("Yes.");
+/// }
 /// # w::HrResult::Ok(())
 /// ```
 </span><span class="kw">pub fn </span>TaskDialogIndirect(
-	task_config: <span class="kw-2">&amp;</span>TASKDIALOGCONFIG,
-	verification_flag_checked: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>bool&gt;,
-) -&gt; HrResult&lt;(co::DLGID, u16)&gt;
+	config: <span class="kw-2">&amp;</span>TASKDIALOGCONFIG,
+) -&gt; HrResult&lt;(co::DLGID, u16, bool)&gt;
 {
+	<span class="kw">let </span>buf = config.to_raw();
 	<span class="kw">let </span><span class="kw-2">mut </span>pn_button = i32::default();
 	<span class="kw">let </span><span class="kw-2">mut </span>pn_radio_button = i32::default();
 	<span class="kw">let </span><span class="kw-2">mut </span>pf_bool: BOOL = <span class="number">0</span>;
@@ -182,18 +204,18 @@
 	ok_to_hrresult(
 		<span class="kw">unsafe </span>{
 			ffi::TaskDialogIndirect(
-				task_config <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;</span>buf.raw <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
 				<span class="kw-2">&amp;mut </span>pn_button,
 				<span class="kw-2">&amp;mut </span>pn_radio_button,
-				verification_flag_checked.as_ref()
-					.map_or(std::ptr::null_mut(), |<span class="kw">_</span>| <span class="kw-2">&amp;mut </span>pf_bool),
+				<span class="kw-2">&amp;mut </span>pf_bool,
 			)
 		},
 	)<span class="question-mark">?</span>;
 
-	<span class="kw">if let </span><span class="prelude-val">Some</span>(pf) = verification_flag_checked {
-		<span class="kw-2">*</span>pf = pf_bool != <span class="number">0</span>;
-	}
-	<span class="prelude-val">Ok</span>((<span class="kw">unsafe </span>{ co::DLGID::from_raw(pn_button <span class="kw">as _</span>) }, pn_radio_button <span class="kw">as _</span>))
+	<span class="prelude-val">Ok</span>((
+		<span class="kw">unsafe </span>{ co::DLGID::from_raw(pn_button <span class="kw">as _</span>) },
+		pn_radio_button <span class="kw">as _</span>,
+		pf_bool != <span class="number">0</span>,
+	))
 }
 </code></pre></div></section></main></body></html>
