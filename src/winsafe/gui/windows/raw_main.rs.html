@@ -285,7 +285,7 @@
 
 		<span class="kw">let </span>hinst = HINSTANCE::GetModuleHandle(<span class="prelude-val">None</span>).unwrap();
 		<span class="kw">let </span><span class="kw-2">mut </span>wcx = WNDCLASSEX::default();
-		<span class="kw">let </span><span class="kw-2">mut </span>class_name_buf = WString::default();
+		<span class="kw">let </span><span class="kw-2">mut </span>class_name_buf = WString::new();
 		RawBase::fill_wndclassex(
 			<span class="kw-2">&amp;</span>hinst,
 			opts.class_style, <span class="kw-2">&amp;</span>opts.class_icon, <span class="kw-2">&amp;</span>opts.class_icon,

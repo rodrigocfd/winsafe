@@ -250,7 +250,7 @@
 	/// use winsafe::{self as w, prelude::*};
 	///
 	/// let image_bytes: Vec&lt;u8&gt;; // initialized somewhere
-	/// # let image_bytes = Vec::&lt;u8&gt;::default();
+	/// # let image_bytes = Vec::&lt;u8&gt;::new();
 	///
 	/// let stream = w::SHCreateMemStream(&amp;image_bytes)?;
 	/// let ipic = w::OleLoadPicture(&amp;stream, None, true)?;

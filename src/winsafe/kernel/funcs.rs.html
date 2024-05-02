@@ -3712,11 +3712,11 @@
 ) -&gt; SysResult&lt;()&gt;
 {
 	<span class="kw">let </span><span class="kw-2">mut </span>name_buf = <span class="kw">match </span>name {
-		<span class="prelude-val">None </span>=&gt; (WString::default(), <span class="number">0</span>),
+		<span class="prelude-val">None </span>=&gt; (WString::new(), <span class="number">0</span>),
 		<span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; (WString::new_alloc_buf(MAX_PATH + <span class="number">1</span>), MAX_PATH + <span class="number">1</span>),
 	};
 	<span class="kw">let </span><span class="kw-2">mut </span>sys_name_buf = <span class="kw">match </span>file_system_name {
-		<span class="prelude-val">None </span>=&gt; (WString::default(), <span class="number">0</span>),
+		<span class="prelude-val">None </span>=&gt; (WString::new(), <span class="number">0</span>),
 		<span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; (WString::new_alloc_buf(MAX_PATH + <span class="number">1</span>), MAX_PATH + <span class="number">1</span>),
 	};
 

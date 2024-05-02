@@ -485,7 +485,7 @@
 	<span class="doccomment">/// Converts the internal UTF-16 blocks into strings.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>to_strings(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;String&gt; {
-		<span class="kw">let </span><span class="kw-2">mut </span>vec = Vec::&lt;String&gt;::default();
+		<span class="kw">let </span><span class="kw-2">mut </span>vec = Vec::&lt;String&gt;::new();
 		<span class="kw">if </span>!<span class="self">self</span>.<span class="number">0</span>.is_null() {
 			<span class="kw">let </span><span class="kw-2">mut </span>idx_ptr = <span class="number">0</span>;
 			<span class="kw">loop </span>{

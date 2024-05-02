@@ -464,7 +464,7 @@
 			owner,
 			count: owner.items().count(),
 			current: <span class="number">0</span>,
-			buffer: WString::default(),
+			buffer: WString::new(),
 		}
 	}
 }
@@ -590,7 +590,7 @@
 			owner,
 			count: owner.items().count(),
 			current: <span class="number">0</span>,
-			buffer: WString::default(),
+			buffer: WString::new(),
 		}
 	}
 }
@@ -654,7 +654,7 @@
 		} <span class="kw">else </span>{
 			<span class="kw">match unsafe </span>{ owner.hwnd().SendMessage(lb::GetCurSel {}) } {
 				<span class="prelude-val">Some</span>(index) =&gt; <span class="macro">vec!</span>[index], <span class="comment">// single selection: at max 1
-				</span><span class="prelude-val">None </span>=&gt; Vec::&lt;u32&gt;::default(),
+				</span><span class="prelude-val">None </span>=&gt; Vec::&lt;u32&gt;::new(),
 			}
 		};
 
@@ -662,7 +662,7 @@
 			owner,
 			indexes,
 			current: <span class="number">0</span>,
-			buffer: WString::default(),
+			buffer: WString::new(),
 		}
 	}
 }
