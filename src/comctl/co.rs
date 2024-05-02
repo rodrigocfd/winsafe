@@ -2165,9 +2165,8 @@ const_wsex! { TCS_EX;
 }
 
 const_ordinary! { TD_ICON: u16;
-	/// [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog)
-	/// `pszIcon` and [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG)
-	/// `pszMainIcon` (`u16`).
+	/// [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog) `pszIcon`
+	/// and [`IconIdTd`](crate::IconIdTd) `Td` (`u16`).
 	///
 	/// Originally has `TD` prefix and `ICON` suffix.
 	=>
@@ -2200,11 +2199,13 @@ const_bitflag! { TDCBF: i32;
 
 const_bitflag! { TDF: i32;
 	/// [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG) `dwFlags` (`i32`).
+	///
+	/// Some constants are set internally, not being publicly available.
 	=>
-	=>
-	ENABLE_HYPERLINKS 0x0001
 	USE_HICON_MAIN 0x0002
 	USE_HICON_FOOTER 0x0004
+	=>
+	ENABLE_HYPERLINKS 0x0001
 	ALLOW_DIALOG_CANCELLATION 0x0008
 	USE_COMMAND_LINKS 0x0010
 	USE_COMMAND_LINKS_NO_ICON 0x0020

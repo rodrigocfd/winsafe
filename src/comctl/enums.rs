@@ -83,27 +83,39 @@ impl ClrDefNone {
 /// Variant parameter for:
 ///
 /// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG).
-pub enum IconId {
+pub enum IconId<'a> {
 	/// No icon.
 	None,
 	/// An icon handle.
-	Icon(HICON),
+	Icon(&'a HICON),
 	/// A resource ID.
 	Id(u16),
+}
+
+impl<'a> Default for IconId<'a> {
+	fn default() -> Self {
+		Self::None
+	}
 }
 
 /// Variant parameter for:
 ///
 /// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG).
-pub enum IconIdTdicon {
+pub enum IconIdTd<'a> {
 	/// No icon.
 	None,
 	/// An icon handle.
-	Icon(HICON),
+	Icon(&'a HICON),
 	/// A resource ID.
 	Id(u16),
 	/// A predefined icon.
-	Tdicon(co::TD_ICON),
+	Td(co::TD_ICON),
+}
+
+impl<'a> Default for IconIdTd<'a> {
+	fn default() -> Self {
+		Self::None
+	}
 }
 
 /// Variant parameter for:

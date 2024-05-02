@@ -1,7 +1,5 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use std::marker::PhantomData;
-
 use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
@@ -9,120 +7,211 @@ use crate::prelude::*;
 
 /// [`TASKDIALOG_BUTTON`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialog_button)
 /// struct.
-#[repr(C, packed)]
-pub struct TASKDIALOG_BUTTON<'a> {
-	nButtonID: i32,
-	pszButtonText: *mut u16,
-
-	_pszButtonText: PhantomData<&'a mut u16>,
+///
+/// Not all `flags` constants are available, some of them are automatically set
+/// as you fill other parameters.
+#[derive(Default)]
+pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p> {
+	pub hwnd_parent: Option<&'a HWND>,
+	pub hinstance: Option<&'b HINSTANCE>,
+	pub flags: co::TDF,
+	/// Predefined buttons. Will be placed after the custom `buttons`.
+	pub common_buttons: co::TDCBF,
+	/// Window caption. If not specified, the .exe name is used.
+	pub window_title: Option<&'c str>,
+	pub main_icon: IconIdTd<'d>,
+	/// Text shown before the main content, in a larger font.
+	pub main_instruction: Option<&'e str>,
+	/// The main text of the dialog.
+	pub content: Option<&'f str>,
+	/// Command ID and button text. Will be placed before the predefined
+	/// `common_buttons`.
+	pub buttons: &'g [(u16, &'h str)],
+	/// Any ID from `common_buttons` or `buttons`.
+	pub default_button_id: u16,
+	/// Command ID and radio button text.
+	pub radio_buttons: &'i [(u16, &'j str)],
+	/// Any ID from `radio_buttons`.
+	pub default_radio_button_id: u16,
+	/// Text of the label of the verification check box.
+	pub verification_text: Option<&'k str>,
+	/// Text of the collapsible section.
+	pub more_info: Option<&'l str>,
+	/// Text of the button that expands/collapses `more_info`, when the section
+	/// is expanded.
+	pub more_info_btn_expanded: Option<&'m str>,
+	/// Text of the button that expands/collapses `more_info`, when the section
+	/// is collapsed.
+	pub more_info_btn_collapsed: Option<&'n str>,
+	pub footer_icon: IconId<'o>,
+	pub footer_text: Option<&'p str>,
+	pub callback: Option<PFTASKDIALOGCALLBACK>,
+	pub callback_data: usize,
+	pub width: u32,
 }
 
-impl_default!(TASKDIALOG_BUTTON, 'a);
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p>
+	TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p>
+{
+	pub(in crate::comctl) fn to_raw(&self) -> TASKDIALOGCONFIG_buf {
+		let mut raw = TASKDIALOGCONFIG_raw::default();
+		raw.hwndParent = unsafe { self.hwnd_parent.unwrap_or(&HWND::NULL).raw_copy() };
+		raw.hInstance = unsafe { self.hinstance.unwrap_or(&HINSTANCE::NULL).raw_copy() };
+		raw.dwFlags = self.flags;
+		raw.dwCommonButtons = self.common_buttons;
 
-impl<'a> TASKDIALOG_BUTTON<'a> {
-	pub_fn_resource_id_get_set!(nButtonID, set_nButtonID);
-	pub_fn_string_ptr_get_set!('a, pszButtonText, set_pszButtonText);
+		let w_title = self.window_title // must force heap because variable will be moved
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszWindowTitle = w_title.as_ptr();
+
+		match &self.main_icon {
+			IconIdTd::None => {
+				let new_flags = raw.dwFlags | co::TDF::USE_HICON_MAIN;
+				raw.dwFlags = new_flags;
+			},
+			IconIdTd::Icon(h) => {
+				raw.hMainIcon = h.ptr();
+				let new_flags = raw.dwFlags | co::TDF::USE_HICON_MAIN;
+				raw.dwFlags = new_flags;
+			},
+			IconIdTd::Id(id) => {
+				raw.hMainIcon = MAKEINTRESOURCE(*id as _) as _;
+			},
+			IconIdTd::Td(td) => {
+				raw.hMainIcon = td.raw() as _;
+			},
+		}
+
+		let w_instruc = self.main_instruction
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszMainInstruction = w_instruc.as_ptr();
+
+		let w_content = self.content
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszContent = w_content.as_ptr();
+
+		let btns_buf: (Vec<_>, Vec<_>) = self.buttons.iter()
+			.map(|(id, txt)| {
+				let txt_buf = WString::from_str_force_heap(*txt);
+				let btn_buf = TASKDIALOG_BUTTON {
+					nButtonID: *id as _,
+					pszButtonText: txt_buf.as_ptr(),
+				};
+				(txt_buf, btn_buf)
+			})
+			.unzip();
+		raw.cButtons = btns_buf.1.len() as _;
+		raw.pButtons = btns_buf.1.as_ptr() as _;
+		raw.nDefaultButton = self.default_button_id as _;
+
+		let radios_buf: (Vec<_>, Vec<_>) = self.radio_buttons.iter()
+			.map(|(id, txt)| {
+				let txt_buf = WString::from_str_force_heap(*txt);
+				let btn_buf = TASKDIALOG_BUTTON {
+					nButtonID: *id as _,
+					pszButtonText: txt_buf.as_ptr(),
+				};
+				(txt_buf, btn_buf)
+			})
+			.unzip();
+		raw.cRadioButtons = radios_buf.1.len() as _;
+		raw.pRadioButtons = radios_buf.1.as_ptr() as _;
+		raw.nDefaultRadioButton = self.default_radio_button_id as _;
+
+		let w_verif = self.verification_text
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszVerificationText = w_verif. as_ptr();
+
+		let w_more_info = self.more_info
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszExpandedInformation = w_more_info.as_ptr();
+
+		let w_expanded_info = self.more_info_btn_expanded
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszExpandedControlText = w_expanded_info.as_ptr();
+
+		let w_collapsed_info = self.more_info_btn_collapsed
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszCollapsedControlText = w_collapsed_info.as_ptr();
+
+		match &self.footer_icon {
+			IconId::None => {
+				let new_flags = raw.dwFlags | co::TDF::USE_HICON_FOOTER;
+				raw.dwFlags = new_flags;
+			},
+			IconId::Icon(h) => {
+				raw.hFooterIcon = h.ptr();
+				let new_flags = raw.dwFlags | co::TDF::USE_HICON_FOOTER;
+				raw.dwFlags = new_flags;
+			},
+			IconId::Id(id) => {
+				raw.hFooterIcon = MAKEINTRESOURCE(*id as _) as _;
+			},
+		}
+
+		let w_footer = self.footer_text
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
+		raw.pszFooter = w_footer.as_ptr();
+
+		raw.pfCallback = self.callback;
+		raw.lpCallbackData = self.callback_data;
+		raw.cxWidth = self.width;
+
+		TASKDIALOGCONFIG_buf { raw, w_title, w_instruc, w_content,
+			btns_buf, radios_buf, w_verif,
+			w_more_info, w_expanded_info, w_collapsed_info, w_footer }
+	}
 }
 
-/// [`TASKDIALOGCONFIG`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialogconfig)
-/// struct.
+#[allow(unused)]
+pub(in crate::comctl) struct TASKDIALOGCONFIG_buf {
+	pub raw: TASKDIALOGCONFIG_raw,
+	w_title: WString,
+	w_instruc: WString,
+	w_content: WString,
+	btns_buf: (Vec<WString>, Vec<TASKDIALOG_BUTTON>),
+	radios_buf: (Vec<WString>, Vec<TASKDIALOG_BUTTON>),
+	w_verif: WString,
+	w_more_info: WString,
+	w_expanded_info: WString,
+	w_collapsed_info: WString,
+	w_footer: WString,
+}
+
 #[repr(C, packed)]
-pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j> {
+pub(in crate::comctl) struct TASKDIALOGCONFIG_raw {
 	cbSize: u32,
 	pub hwndParent: HWND,
 	pub hInstance: HINSTANCE,
 	pub dwFlags: co::TDF,
 	pub dwCommonButtons: co::TDCBF,
-	pszWindowTitle: *mut u16,
-	pszMainIcon: *const u16, // union with HICON
-	pszMainInstruction: *mut u16,
-	pszContent: *mut u16,
-	cButtons: u32,
-	pButtons: *mut TASKDIALOG_BUTTON<'d>,
+	pub pszWindowTitle: *const u16,
+	pub hMainIcon: *const std::ffi::c_void, // union with pszMainIcon
+	pub pszMainInstruction: *const u16,
+	pub pszContent: *const u16,
+	pub cButtons: u32,
+	pub pButtons: *const TASKDIALOG_BUTTON,
 	pub nDefaultButton: i32, // actually co::DLGID, which is u16
-	cRadioButtons: u32,
-	pRadioButtons: *mut TASKDIALOG_BUTTON<'e>,
+	pub cRadioButtons: u32,
+	pub pRadioButtons: *mut TASKDIALOG_BUTTON,
 	pub nDefaultRadioButton: i32,
-	pszVerificationText: *mut u16,
-	pszExpandedInformation: *mut u16,
-	pszExpandedControlText: *mut u16,
-	pszCollapsedControlText: *mut u16,
-	pszFooterIcon: *const u16, // union with HICON
-	pszFooter: *mut u16,
+	pub pszVerificationText: *const u16,
+	pub pszExpandedInformation: *const u16,
+	pub pszExpandedControlText: *const u16,
+	pub pszCollapsedControlText: *const u16,
+	pub hFooterIcon: *const std::ffi::c_void, // union with pszFooterIcon
+	pub pszFooter: *const u16,
 	pub pfCallback: Option<PFTASKDIALOGCALLBACK>,
 	pub lpCallbackData: usize,
 	pub cxWidth: u32,
-
-	_pszWindowTitle: PhantomData<&'a mut u16>,
-	_pszMainInstruction: PhantomData<&'b mut u16>,
-	_pszContent: PhantomData<&'c mut u16>,
-	_pButtons: PhantomData<&'d mut TASKDIALOG_BUTTON<'d>>,
-	_pRadioButtons: PhantomData<&'e mut TASKDIALOG_BUTTON<'e>>,
-	_pszVerificationText: PhantomData<&'f mut u16>,
-	_pszExpandedInformation: PhantomData<&'g mut u16>,
-	_pszExpandedControlText: PhantomData<&'h mut u16>,
-	_pszCollapsedControlText: PhantomData<&'i mut u16>,
-	_pszFooter: PhantomData<&'j mut u16>,
 }
 
-impl_default_with_size!(TASKDIALOGCONFIG, cbSize, 'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j);
+impl_default_with_size!(TASKDIALOGCONFIG_raw, cbSize);
 
-impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
-	TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j>
-{
-	pub_fn_string_ptr_get_set!('a, pszWindowTitle, set_pszWindowTitle);
-
-	/// Returns the `pszMainIcon` field.
-	#[must_use]
-	pub fn pszMainIcon(&self) -> IconIdTdicon {
-		if IS_INTRESOURCE(self.pszMainIcon) {
-			if self.pszMainIcon as u16 >= 0xfffc {
-				IconIdTdicon::Tdicon(unsafe { co::TD_ICON::from_raw(self.pszMainIcon as _) })
-			} else {
-				IconIdTdicon::Id(self.pszMainIcon as _)
-			}
-		} else {
-			IconIdTdicon::Icon(unsafe { HICON::from_ptr(self.pszMainIcon as _) })
-		}
-	}
-
-	/// Sets the `pszMainIcon` field.
-	pub fn set_pszMainIcon(&mut self, val: IconIdTdicon) {
-		match val {
-			IconIdTdicon::None => self.pszMainIcon = std::ptr::null_mut(),
-			IconIdTdicon::Icon(hicon) => self.pszMainIcon = hicon.ptr() as _,
-			IconIdTdicon::Id(id) => self.pszMainIcon = MAKEINTRESOURCE(id as _),
-			IconIdTdicon::Tdicon(tdi) => self.pszMainIcon = MAKEINTRESOURCE(tdi.raw() as _),
-		}
-	}
-
-	pub_fn_string_ptr_get_set!('b, pszMainInstruction, set_pszMainInstruction);
-	pub_fn_string_ptr_get_set!('c, pszContent, set_pszContent);
-	pub_fn_array_buf_get_set!('d, pButtons, set_pButtons, cButtons, TASKDIALOG_BUTTON);
-	pub_fn_array_buf_get_set!('e, pRadioButtons, set_pRadioButtons, cRadioButtons, TASKDIALOG_BUTTON);
-	pub_fn_string_ptr_get_set!('f, pszVerificationText, set_pszVerificationText);
-	pub_fn_string_ptr_get_set!('g, pszExpandedInformation, set_pszExpandedInformation);
-	pub_fn_string_ptr_get_set!('h, pszExpandedControlText, set_pszExpandedControlText);
-	pub_fn_string_ptr_get_set!('i, pszCollapsedControlText, set_pszCollapsedControlText);
-
-	/// Returns the `pszFooterIcon` field.
-	#[must_use]
-	pub fn pszFooterIcon(&self) -> IconId {
-		if IS_INTRESOURCE(self.pszFooterIcon) {
-			IconId::Id(self.pszFooterIcon as _)
-		} else {
-			IconId::Icon(unsafe { HICON::from_ptr(self.pszFooterIcon as _) })
-		}
-	}
-
-	/// Sets the `pszFooterIcon` field.
-	pub fn set_pszFooterIcon(&mut self, val: IconId) {
-		match val {
-			IconId::None => self.pszFooterIcon = std::ptr::null_mut(),
-			IconId::Icon(hicon) => self.pszFooterIcon = hicon.ptr() as _,
-			IconId::Id(id) => self.pszFooterIcon = MAKEINTRESOURCE(id as _),
-		}
-	}
-
-	pub_fn_string_ptr_get_set!('j, pszFooter, set_pszFooter);
+#[repr(C, packed)]
+pub(in crate::comctl) struct TASKDIALOG_BUTTON {
+	pub nButtonID: i32,
+	pub pszButtonText: *const u16,
 }
+
+impl_default!(TASKDIALOG_BUTTON);
