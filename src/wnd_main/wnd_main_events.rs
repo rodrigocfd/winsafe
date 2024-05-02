@@ -34,13 +34,16 @@ impl WndMain {
 
 			let target_dir = self2.txt_path.text();
 			if !w::path::exists(&target_dir) {
-				self2.wnd.hwnd().TaskDialog(
-					Some("Bad path"),
-					Some("Process cannot be done"),
-					Some(&format!("Path does not exist:\n{}", target_dir)),
-					co::TDCBF::OK,
-					w::IconRes::Error,
-				)?;
+				w::TaskDialogIndirect(&w::TASKDIALOGCONFIG {
+					hwnd_parent: Some(self2.wnd.hwnd()),
+					window_title: Some("Bas path"),
+					main_instruction: Some("Process cannot be done"),
+					content: Some(&format!("Path does not exist:\n{}", target_dir)),
+					main_icon: w::IconIdTd::Td(co::TD_ICON::ERROR),
+					common_buttons: co::TDCBF::OK,
+					flags: co::TDF::ALLOW_DIALOG_CANCELLATION | co::TDF::POSITION_RELATIVE_TO_WINDOW,
+					..Default::default()
+				})?;
 				return Ok(()); // halt processing
 			}
 
