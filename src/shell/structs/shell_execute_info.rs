@@ -30,18 +30,21 @@ impl<'a, 'b, 'c> SHELLEXECUTEINFO<'a, 'b, 'c> {
 	pub(in crate::shell) fn to_raw(&self) -> SHELLEXECUTEINFO_buf {
 		let mut raw = SHELLEXECUTEINFO_raw::default();
 		raw.fMask = self.mask;
-		raw.hwnd = unsafe { self.hwnd.unwrap_or_else(|| &HWND::NULL).raw_copy() };
+		raw.hwnd = unsafe { self.hwnd.unwrap_or(&HWND::NULL).raw_copy() };
 
-		let w_verb = WString::from_opt_str(self.verb.as_ref()) ;
+		let w_verb = self.verb.as_ref()
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.lpVerb = w_verb.as_ptr();
 
-		let w_file = WString::from_str(&self.file);
+		let w_file = WString::from_str_force_heap(&self.file);
 		raw.lpFile = w_file.as_ptr();
 
-		let w_parms = WString::from_opt_str(self.parameters.as_ref());
+		let w_parms = self.parameters.as_ref()
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.lpParameters = w_parms.as_ptr();
 
-		let w_dir = WString::from_opt_str(self.directory.as_ref());
+		let w_dir = self.directory.as_ref()
+			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.lpDirectory = w_dir.as_ptr();
 
 		raw.nShow = self.show;
@@ -53,12 +56,12 @@ impl<'a, 'b, 'c> SHELLEXECUTEINFO<'a, 'b, 'c> {
 
 		let w_class = match &self.class {
 			Some(c) => {
-				let w_class = WString::from_str(c);
+				let w_class = WString::from_str_force_heap(c);
 				raw.lpClass = w_class.as_ptr();
 				raw.fMask |= co::SEE_MASK::CLASSNAME;
 				w_class
 			},
-			None => WString::default(),
+			None => WString::new(),
 		};
 
 		self.hkey_class.map(|h| {
