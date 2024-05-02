@@ -300,7 +300,7 @@ pub fn Shell_NotifyIcon(
 /// use winsafe::{self as w, prelude::*, co};
 ///
 /// w::ShellExecuteEx(&w::SHELLEXECUTEINFO {
-///     file: "C:\\Temp\\foo.exe".to_owned(),
+///     file: "C:\\Temp\\foo.exe",
 ///     show: co::SW::SHOW,
 ///     ..Default::default()
 /// })?;

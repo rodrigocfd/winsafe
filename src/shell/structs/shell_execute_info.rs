@@ -11,50 +11,52 @@ use crate::prelude::*;
 /// Not all `mask` constants are available, some of them are automatically set
 /// as you fill other parameters.
 #[derive(Default)]
-pub struct SHELLEXECUTEINFO<'a, 'b, 'c> {
+pub struct SHELLEXECUTEINFO<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> {
 	pub mask: co::SEE_MASK,
 	pub hwnd: Option<&'a HWND>,
-	pub verb: Option<String>,
-	pub file: String,
-	pub parameters: Option<String>,
-	pub directory: Option<String>,
+	pub verb: Option<&'b str>,
+	pub file: &'c str,
+	pub parameters: Option<&'d str>,
+	pub directory: Option<&'e str>,
 	pub show: co::SW,
-	pub id_list: Option<Vec<u8>>,
-	pub class: Option<String>,
-	pub hkey_class: Option<&'b HKEY>,
+	pub id_list: Option<&'f [u8]>,
+	pub class: Option<&'g str>,
+	pub hkey_class: Option<&'h HKEY>,
 	pub hot_key: Option<(co::VK, co::HOTKEYF)>,
-	pub hicon_hmonitor: IcoMon<'c>,
+	pub hicon_hmonitor: IcoMon<'i>,
 }
 
-impl<'a, 'b, 'c> SHELLEXECUTEINFO<'a, 'b, 'c> {
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i>
+	SHELLEXECUTEINFO<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i>
+{
 	pub(in crate::shell) fn to_raw(&self) -> SHELLEXECUTEINFO_buf {
 		let mut raw = SHELLEXECUTEINFO_raw::default();
 		raw.fMask = self.mask;
 		raw.hwnd = unsafe { self.hwnd.unwrap_or(&HWND::NULL).raw_copy() };
 
-		let w_verb = self.verb.as_ref()
+		let w_verb = self.verb
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.lpVerb = w_verb.as_ptr();
 
-		let w_file = WString::from_str_force_heap(&self.file);
+		let w_file = WString::from_str_force_heap(self.file);
 		raw.lpFile = w_file.as_ptr();
 
-		let w_parms = self.parameters.as_ref()
+		let w_parms = self.parameters
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.lpParameters = w_parms.as_ptr();
 
-		let w_dir = self.directory.as_ref()
+		let w_dir = self.directory
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.lpDirectory = w_dir.as_ptr();
 
 		raw.nShow = self.show;
 
-		self.id_list.as_ref().map(|l| {
+		self.id_list.map(|l| {
 			raw.lpIDList = l.as_ptr() as _;
 			raw.fMask |= co::SEE_MASK::IDLIST;
 		});
 
-		let w_class = match &self.class {
+		let w_class = match self.class {
 			Some(c) => {
 				let w_class = WString::from_str_force_heap(c);
 				raw.lpClass = w_class.as_ptr();
