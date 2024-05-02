@@ -130,6 +130,12 @@ impl WString {
 		Self { buf: Buffer::from_wchars_slice(src) }
 	}
 
+	/// Creates a new, empty `WString`.
+	#[must_use]
+	pub const fn new() -> Self {
+		Self { buf: Buffer::new() }
+	}
+
 	/// Allocates an UTF-16 buffer with an specific length. All elements will be
 	/// set to zero.
 	#[must_use]
@@ -282,7 +288,7 @@ impl WString {
 	pub fn parse(data: &[u8]) -> SysResult<Self> {
 		let mut data = data;
 		if data.is_empty() { // nothing to parse
-			return Ok(Self::default());
+			return Ok(Self::new());
 		}
 
 		let (encoding, sz_bom) = Encoding::guess(data);
@@ -456,6 +462,11 @@ impl Buffer {
 	}
 
 	#[must_use]
+	const fn new() -> Self {
+		Self::Unallocated
+	}
+
+	#[must_use]
 	fn new_alloc_buf(num_chars: usize, force_heap: ForceHeap) -> Self {
 		if num_chars == 0 {
 			Self::Unallocated
@@ -532,7 +543,7 @@ impl Buffer {
 	#[must_use]
 	fn to_string_checked(&self) -> Result<String, std::string::FromUtf16Error> {
 		match self {
-			Self::Unallocated => Ok(String::default()),
+			Self::Unallocated => Ok(String::new()),
 			_ => String::from_utf16(
 				&self.as_slice()
 					.into_iter()
