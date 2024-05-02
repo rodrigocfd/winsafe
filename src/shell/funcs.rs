@@ -260,7 +260,7 @@ pub fn SHCreateItemFromParsingName<T>(
 /// use winsafe::{self as w, prelude::*};
 ///
 /// let raw_data: Vec<u8>; // initialized somewhere
-/// # let raw_data = Vec::<u8>::default();
+/// # let raw_data = Vec::<u8>::new();
 ///
 /// let stream = w::SHCreateMemStream(&raw_data)?;
 /// # w::HrResult::Ok(())

@@ -1292,11 +1292,11 @@ pub fn GetVolumeInformation(
 ) -> SysResult<()>
 {
 	let mut name_buf = match name {
-		None => (WString::default(), 0),
+		None => (WString::new(), 0),
 		Some(_) => (WString::new_alloc_buf(MAX_PATH + 1), MAX_PATH + 1),
 	};
 	let mut sys_name_buf = match file_system_name {
-		None => (WString::default(), 0),
+		None => (WString::new(), 0),
 		Some(_) => (WString::new_alloc_buf(MAX_PATH + 1), MAX_PATH + 1),
 	};
 

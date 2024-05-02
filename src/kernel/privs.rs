@@ -103,7 +103,7 @@ pub(crate) fn str_to_iso88591(s: &str) -> Vec<u8> {
 #[must_use]
 pub(crate) fn parse_multi_z_str(src: *const u16) -> Vec<String> {
 	let mut src = src;
-	let mut strings = Vec::<String>::default();
+	let mut strings = Vec::<String>::new();
 	let mut i = 0;
 
 	loop {

@@ -445,7 +445,7 @@ pub trait user_Hwnd: Handle {
 	{
 		let buf_sz = sz_item_text.unwrap_or(100) + 1;
 		let mut buf = match item {
-			None => WString::default(),
+			None => WString::new(),
 			Some(_) => WString::new_alloc_buf(buf_sz as _), // room for terminating null
 		};
 

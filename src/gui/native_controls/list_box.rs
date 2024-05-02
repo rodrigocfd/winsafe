@@ -241,7 +241,7 @@ impl Default for ListBoxOpts {
 			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
-			items: Vec::<String>::default(),
+			items: Vec::<String>::new(),
 		}
 	}
 }

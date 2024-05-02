@@ -46,7 +46,7 @@ impl<'a> ComboBoxItemIter<'a> {
 			owner,
 			count: owner.items().count(),
 			current: 0,
-			buffer: WString::default(),
+			buffer: WString::new(),
 		}
 	}
 }
@@ -172,7 +172,7 @@ impl<'a> ListBoxItemIter<'a> {
 			owner,
 			count: owner.items().count(),
 			current: 0,
-			buffer: WString::default(),
+			buffer: WString::new(),
 		}
 	}
 }
@@ -236,7 +236,7 @@ impl<'a> ListBoxSelItemIter<'a> {
 		} else {
 			match unsafe { owner.hwnd().SendMessage(lb::GetCurSel {}) } {
 				Some(index) => vec![index], // single selection: at max 1
-				None => Vec::<u32>::default(),
+				None => Vec::<u32>::new(),
 			}
 		};
 
@@ -244,7 +244,7 @@ impl<'a> ListBoxSelItemIter<'a> {
 			owner,
 			indexes,
 			current: 0,
-			buffer: WString::default(),
+			buffer: WString::new(),
 		}
 	}
 }

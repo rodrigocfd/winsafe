@@ -52,7 +52,7 @@ impl RawModeless {
 
 			let parent_hinst = self2.base().parent_hinstance()?;
 			let mut wcx = WNDCLASSEX::default();
-			let mut class_name_buf = WString::default();
+			let mut class_name_buf = WString::new();
 			RawBase::fill_wndclassex(
 				&parent_hinst,
 				opts.class_style, &opts.class_icon, &opts.class_icon,

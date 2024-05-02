@@ -947,7 +947,7 @@ pub trait kernel_Hkey: Handle {
 		data: RegistryValue,
 	) -> SysResult<()>
 	{
-		let mut str_buf = WString::default();
+		let mut str_buf = WString::new();
 		let (data_ptr, data_len) = data.as_ptr_with_len(&mut str_buf);
 
 		error_to_sysresult(
@@ -992,7 +992,7 @@ pub trait kernel_Hkey: Handle {
 		data: RegistryValue,
 	) -> SysResult<()>
 	{
-		let mut str_buf = WString::default();
+		let mut str_buf = WString::new();
 		let (data_ptr, data_len) = data.as_ptr_with_len(&mut str_buf);
 
 		error_to_sysresult(

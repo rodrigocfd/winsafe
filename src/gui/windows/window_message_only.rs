@@ -50,7 +50,7 @@ impl WindowMessageOnly {
 	fn create(&self) {
 		let hinst = HINSTANCE::GetModuleHandle(None).unwrap();
 		let mut wcx = WNDCLASSEX::default();
-		let mut class_name_buf = WString::default();
+		let mut class_name_buf = WString::new();
 		RawBase::fill_wndclassex(
 			&hinst,
 			co::CS::default(), &Icon::None, &Icon::None,

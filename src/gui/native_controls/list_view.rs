@@ -508,7 +508,7 @@ impl Default for ListViewOpts {
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
 			context_menu: None,
-			columns: Vec::<(String, u32)>::default(),
+			columns: Vec::<(String, u32)>::new(),
 		}
 	}
 }

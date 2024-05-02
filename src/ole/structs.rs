@@ -232,7 +232,7 @@ impl SNB {
 	/// Converts the internal UTF-16 blocks into strings.
 	#[must_use]
 	pub fn to_strings(&self) -> Vec<String> {
-		let mut vec = Vec::<String>::default();
+		let mut vec = Vec::<String>::new();
 		if !self.0.is_null() {
 			let mut idx_ptr = 0;
 			loop {
