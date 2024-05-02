@@ -527,6 +527,33 @@
 <a href="#527" id="527">527</a>
 <a href="#528" id="528">528</a>
 <a href="#529" id="529">529</a>
+<a href="#530" id="530">530</a>
+<a href="#531" id="531">531</a>
+<a href="#532" id="532">532</a>
+<a href="#533" id="533">533</a>
+<a href="#534" id="534">534</a>
+<a href="#535" id="535">535</a>
+<a href="#536" id="536">536</a>
+<a href="#537" id="537">537</a>
+<a href="#538" id="538">538</a>
+<a href="#539" id="539">539</a>
+<a href="#540" id="540">540</a>
+<a href="#541" id="541">541</a>
+<a href="#542" id="542">542</a>
+<a href="#543" id="543">543</a>
+<a href="#544" id="544">544</a>
+<a href="#545" id="545">545</a>
+<a href="#546" id="546">546</a>
+<a href="#547" id="547">547</a>
+<a href="#548" id="548">548</a>
+<a href="#549" id="549">549</a>
+<a href="#550" id="550">550</a>
+<a href="#551" id="551">551</a>
+<a href="#552" id="552">552</a>
+<a href="#553" id="553">553</a>
+<a href="#554" id="554">554</a>
+<a href="#555" id="555">555</a>
+<a href="#556" id="556">556</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::cmp::Ordering;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -593,16 +620,29 @@
 <span class="kw">impl </span>WString {
 	<span class="doccomment">/// Stores an UTF-16 null-terminated string from an optional [`&amp;str`](str).
 	///
-	/// If `s` is `None`, no allocation is made.
+	/// If `s` is `None` or the string is empty, no allocation is made.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>from_opt_str(s: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>AsRef&lt;str&gt;&gt;) -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{ buf: Buffer::from_opt_str(s) }
 	}
 
 	<span class="doccomment">/// Stores an UTF-16 null-terminated string from a [`&amp;str`](str).
+	///
+	/// If the string is empty, no allocation is made.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>from_str(s: <span class="kw">impl </span>AsRef&lt;str&gt;) -&gt; <span class="self">Self </span>{
-		<span class="self">Self </span>{ buf: Buffer::from_str(s) }
+		<span class="self">Self </span>{ buf: Buffer::from_str(s, ForceHeap::No) }
+	}
+
+	<span class="doccomment">/// Stores an UTF-16 null-terminated string from a [`&amp;str`](str), bypassing
+	/// [Short String Optimization](https://joellaity.com/2020/01/31/string.html)
+	/// – that is, forcing the internal allocation on the heap. This should be
+	/// rarely needed.
+	///
+	/// If the string is empty, no allocation is made.
+	</span><span class="attr">#[must_use]
+	</span><span class="kw">pub fn </span>from_str_force_heap(s: <span class="kw">impl </span>AsRef&lt;str&gt;) -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{ buf: Buffer::from_str(s, ForceHeap::Yes) }
 	}
 
 	<span class="doccomment">/// Stores a series of UTF-16 null-terminated strings. The buffer will end
@@ -646,11 +686,17 @@
 		<span class="self">Self </span>{ buf: Buffer::from_wchars_slice(src) }
 	}
 
+	<span class="doccomment">/// Creates a new, empty `WString`.
+	</span><span class="attr">#[must_use]
+	</span><span class="kw">pub const fn </span>new() -&gt; <span class="self">Self </span>{
+		<span class="self">Self </span>{ buf: Buffer::new() }
+	}
+
 	<span class="doccomment">/// Allocates an UTF-16 buffer with an specific length. All elements will be
 	/// set to zero.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>new_alloc_buf(sz: usize) -&gt; <span class="self">Self </span>{
-		<span class="self">Self </span>{ buf: Buffer::new_alloc_buf(sz) }
+		<span class="self">Self </span>{ buf: Buffer::new_alloc_buf(sz, ForceHeap::No) }
 	}
 
 	<span class="doccomment">/// Returns a mutable
@@ -798,7 +844,7 @@
 	</span><span class="kw">pub fn </span>parse(data: <span class="kw-2">&amp;</span>[u8]) -&gt; SysResult&lt;<span class="self">Self</span>&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>data = data;
 		<span class="kw">if </span>data.is_empty() { <span class="comment">// nothing to parse
-			</span><span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="self">Self</span>::default());
+			</span><span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="self">Self</span>::new());
 		}
 
 		<span class="kw">let </span>(encoding, sz_bom) = Encoding::guess(data);
@@ -849,7 +895,10 @@
 
 <span class="comment">//------------------------------------------------------------------------------
 
-</span><span class="kw">enum </span>Buffer {
+</span><span class="attr">#[derive(PartialEq, Eq)]
+</span><span class="kw">enum </span>ForceHeap { Yes, No }
+
+<span class="kw">enum </span>Buffer {
 	Stack([u16; SSO_LEN]),
 	Heap(usize, GlobalFreeGuard), <span class="comment">// keep memory size in bytes
 	</span>Unallocated,
@@ -866,7 +915,7 @@
 		<span class="kw">match </span><span class="self">self </span>{
 			<span class="self">Self</span>::Unallocated =&gt; <span class="self">Self</span>::Unallocated,
 			<span class="kw">_ </span>=&gt; {
-				<span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self</span>::new_alloc_buf(<span class="self">self</span>.buf_len());
+				<span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self</span>::new_alloc_buf(<span class="self">self</span>.buf_len(), ForceHeap::No);
 				<span class="self">self</span>.as_slice()
 					.iter()
 					.zip(new_self.as_mut_slice())
@@ -895,19 +944,19 @@
 	<span class="attr">#[must_use]
 	</span><span class="kw">fn </span>from_opt_str(s: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>AsRef&lt;str&gt;&gt;) -&gt; <span class="self">Self </span>{
 		<span class="kw">match </span>s {
-			<span class="prelude-val">Some</span>(s) =&gt; <span class="self">Self</span>::from_str(s),
+			<span class="prelude-val">Some</span>(s) =&gt; <span class="self">Self</span>::from_str(s, ForceHeap::No),
 			<span class="prelude-val">None </span>=&gt; <span class="self">Self</span>::Unallocated,
 		}
 	}
 
 	<span class="attr">#[must_use]
-	</span><span class="kw">fn </span>from_str(s: <span class="kw">impl </span>AsRef&lt;str&gt;) -&gt; <span class="self">Self </span>{
+	</span><span class="kw">fn </span>from_str(s: <span class="kw">impl </span>AsRef&lt;str&gt;, force_heap: ForceHeap) -&gt; <span class="self">Self </span>{
 		<span class="kw">let </span>s_len = s.as_ref().encode_utf16().count();
 		<span class="kw">if </span>s_len == <span class="number">0 </span>{
 			<span class="self">Self</span>::Unallocated
 		} <span class="kw">else </span>{
 			<span class="kw">let </span>num_chars = s_len + <span class="number">1</span>; <span class="comment">// room for terminating null
-			</span><span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self</span>::new_alloc_buf(num_chars);
+			</span><span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self</span>::new_alloc_buf(num_chars, force_heap);
 			s.as_ref()
 				.encode_utf16()
 				.zip(new_self.as_mut_slice())
@@ -921,7 +970,7 @@
 		<span class="kw">let </span>tot_chars = v.iter() <span class="comment">// number of chars of all strings, including terminating nulls
 			</span>.fold(<span class="number">0</span>, |tot, s| tot + s.as_ref().chars().count() + <span class="number">1</span>) <span class="comment">// include terminating null
 			</span>+ <span class="number">1</span>; <span class="comment">// double terminating null
-		</span><span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self</span>::new_alloc_buf(tot_chars);
+		</span><span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self</span>::new_alloc_buf(tot_chars, ForceHeap::No);
 		v.iter()
 			.map(|s| {
 				s.as_ref()
@@ -959,7 +1008,7 @@
 				.take_while(|ch| <span class="kw-2">**</span>ch != <span class="number">0x0000</span>) <span class="comment">// skip terminating null, if any
 				</span>.count()
 				+ <span class="number">1</span>; <span class="comment">// room for terminating null
-			</span><span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self</span>::new_alloc_buf(num_chars);
+			</span><span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self</span>::new_alloc_buf(num_chars, ForceHeap::No);
 			src.iter()
 				.take_while(|ch| <span class="kw-2">**</span>ch != <span class="number">0x0000</span>) <span class="comment">// skip terminating null, if any
 				</span>.zip(new_self.as_mut_slice())
@@ -969,12 +1018,15 @@
 	}
 
 	<span class="attr">#[must_use]
-	</span><span class="kw">fn </span>new_alloc_buf(num_chars: usize) -&gt; <span class="self">Self </span>{
+	</span><span class="kw">const fn </span>new() -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>::Unallocated
+	}
+
+	<span class="attr">#[must_use]
+	</span><span class="kw">fn </span>new_alloc_buf(num_chars: usize, force_heap: ForceHeap) -&gt; <span class="self">Self </span>{
 		<span class="kw">if </span>num_chars == <span class="number">0 </span>{
 			<span class="self">Self</span>::Unallocated
-		} <span class="kw">else if </span>num_chars &lt;= SSO_LEN {
-			<span class="self">Self</span>::Stack([<span class="number">0x0000</span>; SSO_LEN])
-		} <span class="kw">else </span>{
+		} <span class="kw">else if </span>force_heap == ForceHeap::Yes || num_chars &gt; SSO_LEN {
 			<span class="self">Self</span>::Heap(
 				num_chars * std::mem::size_of::&lt;u16&gt;(),
 				HGLOBAL::GlobalAlloc(
@@ -982,6 +1034,8 @@
 					num_chars * std::mem::size_of::&lt;u16&gt;(),
 				).unwrap(), <span class="comment">// assume no allocation errors
 			</span>)
+		} <span class="kw">else </span>{
+			<span class="self">Self</span>::Stack([<span class="number">0x0000</span>; SSO_LEN])
 		}
 	}
 
@@ -1045,7 +1099,7 @@
 	<span class="attr">#[must_use]
 	</span><span class="kw">fn </span>to_string_checked(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Result</span>&lt;String, std::string::FromUtf16Error&gt; {
 		<span class="kw">match </span><span class="self">self </span>{
-			<span class="self">Self</span>::Unallocated =&gt; <span class="prelude-val">Ok</span>(String::default()),
+			<span class="self">Self</span>::Unallocated =&gt; <span class="prelude-val">Ok</span>(String::new()),
 			<span class="kw">_ </span>=&gt; String::from_utf16(
 				<span class="kw-2">&amp;</span><span class="self">self</span>.as_slice()
 					.into_iter()
