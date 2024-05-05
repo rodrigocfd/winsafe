@@ -84,6 +84,26 @@ pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {
 		).map(|_| priority as _)
 	}
 
+	/// [`IDXGIDevice::QueryResourceResidency`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-queryresourceresidency)
+	/// method.
+	#[must_use]
+	fn QueryResourceResidency(&self,
+		resources: &[&impl dxgi_IDXGIResource],
+	) -> HrResult<Vec<co::DXGI_RESIDENCY>>
+	{
+		let mut status = vec![co::DXGI_RESIDENCY::default(); resources.len()];
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGIDeviceVT>(self).QueryResourceResidency)(
+					self.ptr(),
+					resources.as_ptr() as _,
+					status.as_mut_ptr() as _,
+					resources.len() as _,
+				)
+			},
+		).map(|_| status)
+	}
+
 	/// [`IDXGIDevice::SetGPUThreadPriority`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-setgputhreadpriority)
 	/// method.
 	fn SetGPUThreadPriority(&self, priority: i8) -> HrResult<()> {
