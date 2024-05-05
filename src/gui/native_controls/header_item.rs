@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::*;
+use crate::gui::{*, privs::*};
 use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
@@ -181,6 +181,27 @@ impl<'a> HeaderItem<'a> {
 
 		let mut wtext = WString::from_str(text);
 		hdi.set_pszText(Some(&mut wtext));
+
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(hdm::SetItem {
+					index: self.index,
+					hditem: &hdi,
+				});
+		}
+	}
+
+	/// Sets the width of the item by sending a
+	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
+	///
+	/// Width will be adjusted to match current system DPI.
+	pub fn set_width(&self, width: u32) {
+		let mut col_cx = SIZE::new(width as _, 0);
+		multiply_dpi(None, Some(&mut col_cx)).unwrap();
+
+		let mut hdi = HDITEM::default();
+		hdi.mask = co::HDI::WIDTH;
+		hdi.cxy = col_cx.cx;
 
 		unsafe {
 			self.owner.hwnd()
