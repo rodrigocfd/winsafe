@@ -3,9 +3,11 @@
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
 <a href="#5" id="5">5</a>
+<a href="#6" id="6">6</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys!</span> { <span class="string">"dxgi"</span>;
 	CreateDXGIFactory(PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES
+	CreateDXGIFactory1(PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES
 }
 </code></pre></div></section></main></body></html>

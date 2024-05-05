@@ -19,6 +19,21 @@
 <a href="#19" id="19">19</a>
 <a href="#20" id="20">20</a>
 <a href="#21" id="21">21</a>
+<a href="#22" id="22">22</a>
+<a href="#23" id="23">23</a>
+<a href="#24" id="24">24</a>
+<a href="#25" id="25">25</a>
+<a href="#26" id="26">26</a>
+<a href="#27" id="27">27</a>
+<a href="#28" id="28">28</a>
+<a href="#29" id="29">29</a>
+<a href="#30" id="30">30</a>
+<a href="#31" id="31">31</a>
+<a href="#32" id="32">32</a>
+<a href="#33" id="33">33</a>
+<a href="#34" id="34">34</a>
+<a href="#35" id="35">35</a>
+<a href="#36" id="36">36</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -35,6 +50,21 @@
 		<span class="kw">unsafe </span>{
 			ffi::CreateDXGIFactory(
 				<span class="kw-2">&amp;</span>IDXGIFactory::IID <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+				queried.as_mut(),
+			)
+		},
+	).map(|<span class="kw">_</span>| queried)
+}
+
+<span class="doccomment">/// [`CreateDXGIFactory1`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-createdxgifactory1)
+/// function.
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>CreateDXGIFactory1() -&gt; HrResult&lt;IDXGIFactory1&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ IDXGIFactory1::null() };
+	ok_to_hrresult(
+		<span class="kw">unsafe </span>{
+			ffi::CreateDXGIFactory1(
+				<span class="kw-2">&amp;</span>IDXGIFactory1::IID <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
 				queried.as_mut(),
 			)
 		},

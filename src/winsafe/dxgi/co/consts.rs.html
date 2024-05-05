@@ -276,9 +276,29 @@
 <a href="#276" id="276">276</a>
 <a href="#277" id="277">277</a>
 <a href="#278" id="278">278</a>
+<a href="#279" id="279">279</a>
+<a href="#280" id="280">280</a>
+<a href="#281" id="281">281</a>
+<a href="#282" id="282">282</a>
+<a href="#283" id="283">283</a>
+<a href="#284" id="284">284</a>
+<a href="#285" id="285">285</a>
+<a href="#286" id="286">286</a>
+<a href="#287" id="287">287</a>
+<a href="#288" id="288">288</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
-</span><span class="macro">const_bitflag!</span> { DXGI_ENUM_MODES: u32;
+</span><span class="macro">const_bitflag!</span> { DXGI_ADAPTER_FLAG: u32;
+	<span class="doccomment">/// [`DXGI_ADAPTER_FLAG`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_adapter_flag)
+	/// enumeration (`u32`).
+	</span>=&gt;
+	=&gt;
+	NONE <span class="number">0
+	</span>REMOTE <span class="number">1
+	</span>SOFTWARE <span class="number">2
+</span>}
+
+<span class="macro">const_bitflag!</span> { DXGI_ENUM_MODES: u32;
 	<span class="doccomment">/// [`DXGI_ENUM_MODES`](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-enum-modes)
 	/// enumeration (`u32`).
 	</span>=&gt;
