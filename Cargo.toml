@@ -33,6 +33,23 @@ taskschd = ["oleaut"]
 user = ["kernel"]
 uxtheme = ["gdi", "ole"]
 version = ["kernel"]
+full = [
+    "comctl",
+    "dshow",
+    "dwm",
+    "dxgi",
+    "gdi",
+    "gui",
+    "kernel",
+    "mf",
+    "ole",
+    "oleaut",
+    "shell",
+    "taskschd",
+    "user",
+    "uxtheme",
+    "version",
+]
 
 # Generate docs locally:
 # RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc --all-features
