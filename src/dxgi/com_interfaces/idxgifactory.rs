@@ -113,7 +113,7 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	/// // Collecting into a Vec
 	/// let adapters: Vec<w::IDXGIAdapter> =
 	///     factory.EnumAdapters()
-	///         .collect::<w::HrResult<Vec<_>>>()?;
+	///         .collect::<w::HrResult<_>>()?;
 	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]

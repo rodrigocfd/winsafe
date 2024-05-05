@@ -1,5 +1,15 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
+const_bitflag! { DXGI_ADAPTER_FLAG: u32;
+	/// [`DXGI_ADAPTER_FLAG`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_adapter_flag)
+	/// enumeration (`u32`).
+	=>
+	=>
+	NONE 0
+	REMOTE 1
+	SOFTWARE 2
+}
+
 const_bitflag! { DXGI_ENUM_MODES: u32;
 	/// [`DXGI_ENUM_MODES`](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-enum-modes)
 	/// enumeration (`u32`).
