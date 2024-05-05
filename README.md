@@ -26,12 +26,12 @@ Native FFI items implemented:
 | Native FFI item | Count |
 | - | -: |
 | Functions | 776 |
-| Structs | 235 |
+| Structs | 234 |
 | Constants | 13,365 |
 | Window messages | 653 |
 | Handles | 45 |
 | COM interfaces | 82 |
-| COM methods | 470 |
+| COM methods | 473 |
 
 High-level GUI controls:
 

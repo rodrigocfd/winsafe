@@ -100,6 +100,21 @@ pub trait dxgi_IDXGISwapChain: dxgi_IDXGIDeviceSubObject {
 		))
 	}
 
+	/// [`IDXGISwapChain::GetLastPresentCount`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-getlastpresentcount)
+	/// method.
+	#[must_use]
+	fn GetLastPresentCount(&self) -> HrResult<u32> {
+		let mut count = u32::default();
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGISwapChainVT>(self).GetLastPresentCount)(
+					self.ptr(),
+					&mut count,
+				)
+			},
+		).map(|_| count)
+	}
+
 	/// [`IDXGISwapChain::Present`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-present)
 	/// method.
 	fn Present(&self,
@@ -112,6 +127,30 @@ pub trait dxgi_IDXGISwapChain: dxgi_IDXGIDeviceSubObject {
 					self.ptr(),
 					sync_interval,
 					flags.raw(),
+				)
+			},
+		)
+	}
+
+	/// [`IDXGISwapChain::ResizeBuffers`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-resizebuffers)
+	/// method.
+	fn ResizeBuffers(&self,
+		buffer_count: u32,
+		width: u32,
+		height: u32,
+		new_format: co::DXGI_FORMAT,
+		swap_chain_flags: co::DXGI_SWAP_CHAIN_FLAG,
+	) -> HrResult<()>
+	{
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGISwapChainVT>(self).ResizeBuffers)(
+					self.ptr(),
+					buffer_count,
+					width,
+					height,
+					new_format.raw(),
+					swap_chain_flags.raw(),
 				)
 			},
 		)
