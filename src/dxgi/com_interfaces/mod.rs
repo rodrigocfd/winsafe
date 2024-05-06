@@ -4,6 +4,7 @@ mod idxgidevice;
 mod idxgidevicesubobject;
 mod idxgifactory;
 mod idxgifactory1;
+mod idxgikeyedmutex;
 mod idxgiobject;
 mod idxgioutput;
 mod idxgiresource;
@@ -17,6 +18,7 @@ pub mod decl {
 	pub use super::idxgidevicesubobject::IDXGIDeviceSubObject;
 	pub use super::idxgifactory::IDXGIFactory;
 	pub use super::idxgifactory1::IDXGIFactory1;
+	pub use super::idxgikeyedmutex::IDXGIKeyedMutex;
 	pub use super::idxgiobject::IDXGIObject;
 	pub use super::idxgioutput::IDXGIOutput;
 	pub use super::idxgiresource::IDXGIResource;
@@ -31,6 +33,7 @@ pub mod traits {
 	pub use super::idxgidevicesubobject::dxgi_IDXGIDeviceSubObject;
 	pub use super::idxgifactory::dxgi_IDXGIFactory;
 	pub use super::idxgifactory1::dxgi_IDXGIFactory1;
+	pub use super::idxgikeyedmutex::dxgi_IDXGIKeyedMutex;
 	pub use super::idxgiobject::dxgi_IDXGIObject;
 	pub use super::idxgioutput::dxgi_IDXGIOutput;
 	pub use super::idxgiresource::dxgi_IDXGIResource;
@@ -45,6 +48,7 @@ pub mod vt {
 	pub use super::idxgidevicesubobject::IDXGIDeviceSubObjectVT;
 	pub use super::idxgifactory::IDXGIFactoryVT;
 	pub use super::idxgifactory1::IDXGIFactory1VT;
+	pub use super::idxgikeyedmutex::IDXGIKeyedMutexVT;
 	pub use super::idxgiobject::IDXGIObjectVT;
 	pub use super::idxgioutput::IDXGIOutputVT;
 	pub use super::idxgiresource::IDXGIResourceVT;
