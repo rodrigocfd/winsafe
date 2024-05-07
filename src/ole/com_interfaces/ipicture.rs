@@ -162,29 +162,53 @@ pub trait ole_IPicture: ole_IUnknown {
 
 	/// [`IPicture::Render`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-render)
 	/// method.
+	///
+	/// This method will automatically convert `src_extent_himetric.cy` to
+	/// negative coordinates, and compensate `src_offset_himetric.y`. This
+	/// operation is necessary because HIMETRIC height is rendered in reverse
+	/// order (bottom to top) when compared to HDC height.
+	///
+	/// Default values:
+	/// * `dest_pt`: `0, 0`;
+	/// * `dest_sz`: `HDC` client rect;
+	/// * `src_offset_himetric`: `0, 0`
+	/// * `src_extent_himetric`: image size as `get_Width(), get_Height()`.
 	fn Render(&self,
 		hdc: &HDC,
-		dest_pt: POINT,
-		dest_sz: SIZE,
-		src_offset: Option<POINT>,
-		src_extent: SIZE,
+		dest_pt: Option<POINT>,
+		dest_sz: Option<SIZE>,
+		src_offset_himetric: Option<POINT>,
+		src_extent_himetric: Option<SIZE>,
 		metafile_bounds: Option<&RECT>,
-	) -> HrResult<()>
+	) -> AnyResult<()>
 	{
+		let dest_sz_hdc = match dest_sz {
+			Some(sz) => sz,
+			None => {
+				let rc = hdc.WindowFromDC().unwrap().GetClientRect()?;
+				SIZE::new(rc.right - rc.left, rc.bottom - rc.top)
+			},
+		};
+		let src_extent_compensated = match src_extent_himetric {
+			Some(sz) => SIZE::new(sz.cx, -sz.cy),
+			None => SIZE::new(self.get_Width()?, -self.get_Height()?),
+		};
+
 		ok_to_hrresult(
 			unsafe {
 				(vt::<IPictureVT>(self).Render)(
 					self.ptr(),
 					hdc.ptr(),
-					dest_pt.x, dest_pt.y,
-					dest_sz.cx, dest_sz.cy,
-					src_offset.map_or(0, |off| off.x),
-					src_offset.map_or(0, |off| off.y),
-					src_extent.cx, src_extent.cy,
+					dest_pt.map_or(0, |pt| pt.x),
+					dest_pt.map_or(0, |pt| pt.y),
+					dest_sz_hdc.cx, dest_sz_hdc.cy,
+					src_offset_himetric.map_or(0, |off| off.x),
+					src_offset_himetric.map_or(0, |off| off.y) - src_extent_compensated.cy,
+					src_extent_compensated.cx, src_extent_compensated.cy,
 					metafile_bounds.map_or(std::ptr::null_mut(), |rc| rc as *const _ as _),
 				)
 			},
-		)
+		).map_err(|e| e.into())
 	}
 
 	/// [`IPicture::SelectPicture`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-selectpicture)

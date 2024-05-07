@@ -931,7 +931,7 @@ pub fn GetPrivateProfileSection(
 					.iter()
 					.map(|line| match line.split_once('=') {
 						Some((key, val)) => (key.to_owned(), val.to_owned()),
-						None => (String::default(), String::default()),
+						None => (String::new(), String::new()),
 					})
 					.collect(),
 			);

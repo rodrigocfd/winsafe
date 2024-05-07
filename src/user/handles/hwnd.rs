@@ -921,7 +921,7 @@ pub trait user_Hwnd: Handle {
 	fn GetWindowText(&self) -> SysResult<String> {
 		let len = self.GetWindowTextLength()?;
 		if len == 0 {
-			return Ok(String::default()); // window has no text
+			return Ok(String::new()); // window has no text
 		}
 
 		let mut buf = WString::new_alloc_buf(len as usize + 1); // plus terminating null
@@ -929,7 +929,7 @@ pub trait user_Hwnd: Handle {
 			ffi::GetWindowTextW(self.ptr(), buf.as_mut_ptr(), len + 1)
 		} {
 			0 => match GetLastError() {
-				co::ERROR::SUCCESS => Ok(String::default()), // no chars copied for some reason
+				co::ERROR::SUCCESS => Ok(String::new()), // no chars copied for some reason
 				err => Err(err),
 			},
 			_ => Ok(buf.to_string()),

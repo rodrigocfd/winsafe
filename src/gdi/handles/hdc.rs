@@ -336,7 +336,7 @@ pub trait gdi_Hdc: user_Hdc {
 				co::CUR_OBJ::FONT => CurObj::Font(HFONT::from_ptr(h)),
 				co::CUR_OBJ::PAL => CurObj::Pal(HPALETTE::from_ptr(h)),
 				co::CUR_OBJ::PEN => CurObj::Pen(HPEN::from_ptr(h)),
-				_ => panic!("co::OBJ_CUR not implemented yet: {}", kind),
+				_ => panic!("co::OBJ_CUR not implemented: {}", kind),
 			})
 		}
 	}
@@ -497,10 +497,11 @@ pub trait gdi_Hdc: user_Hdc {
 
 	/// [`GetTextMetrics`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-gettextmetricsw)
 	/// function.
-	fn GetTextMetrics(&self, tm: &mut TEXTMETRIC) -> SysResult<()> {
+	fn GetTextMetrics(&self) -> SysResult<TEXTMETRIC> {
+		let mut tm = TEXTMETRIC::default();
 		bool_to_sysresult(
-			unsafe { ffi::GetTextMetricsW(self.ptr(), tm as *mut _ as _) },
-		)
+			unsafe { ffi::GetTextMetricsW(self.ptr(), &mut tm as *mut _ as _) },
+		).map(|_| tm)
 	}
 
 	/// [`GetViewportExtEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getviewportextex)
@@ -796,7 +797,7 @@ pub trait gdi_Hdc: user_Hdc {
 					} else {
 						SelectObjectGuard::new(
 							self,
-							G::from_ptr(ptr), // GDI object to cleanup
+							G::from_ptr(ptr), // GDI object to be passed to SelectObject at the end of scope
 							None,
 						)
 					}
