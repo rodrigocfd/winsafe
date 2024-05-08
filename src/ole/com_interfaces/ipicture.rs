@@ -77,11 +77,12 @@ pub trait ole_IPicture: ole_IUnknown {
 	/// [`IPicture::get_Height`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_height)
 	/// method.
 	///
-	/// **Note:** Returns a value in HIMETRIC units. To convert it to pixels,
-	/// use
+	/// Returns a value in HIMETRIC units. To convert it to pixels, use
 	/// [`HDC::HiMetricToPixel`](crate::prelude::gdi_Hdc::HiMetricToPixel).
 	///
 	/// # Examples
+	///
+	/// Converting height from HIMETRIC to pixels:
 	///
 	/// ```rust,ignore
 	/// use winsafe::{self as w, prelude::*};
@@ -116,11 +117,12 @@ pub trait ole_IPicture: ole_IUnknown {
 	/// [`IPicture::get_Width`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_width)
 	/// method.
 	///
-	/// **Note:** Returns a value in HIMETRIC units. To convert it to pixels,
-	/// use
+	/// Returns a value in HIMETRIC units. To convert it to pixels, use
 	/// [`HDC::HiMetricToPixel`](crate::prelude::gdi_Hdc::HiMetricToPixel).
 	///
 	/// # Examples
+	///
+	/// Converting width from HIMETRIC to pixels:
 	///
 	/// ```rust,ignore
 	/// use winsafe::{self as w, prelude::*};
@@ -163,16 +165,19 @@ pub trait ole_IPicture: ole_IUnknown {
 	/// [`IPicture::Render`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-render)
 	/// method.
 	///
-	/// This method will automatically convert `src_extent_himetric.cy` to
-	/// negative coordinates, and compensate `src_offset_himetric.y`. This
-	/// operation is necessary because HIMETRIC height is rendered in reverse
-	/// order (bottom to top) when compared to HDC height.
+	/// This method will automatically perform the inverse height calculations –
+	/// convert `src_extent_himetric.cy` to a negative value and compensate
+	/// `src_offset_himetric.y`. This is necessary because HIMETRIC height is
+	/// rendered in reverse order (bottom to top) when compared to HDC height.
 	///
 	/// Default values:
-	/// * `dest_pt`: `0, 0`;
-	/// * `dest_sz`: `HDC` client rect;
-	/// * `src_offset_himetric`: `0, 0`
-	/// * `src_extent_himetric`: image size as `get_Width(), get_Height()`.
+	///
+	/// | Parameter | Default value |
+	/// | -- | :--: |
+	/// | `dest_pt` | `0`, `0` |
+	/// | `dest_sz` | [`HDC`](crate::HDC) client rect |
+	/// | `src_offset_himetric` | `0`, `0` |
+	/// | `src_extent_himetric` | image size from [`get_Width`](crate::prelude::ole_IPicture::get_Width), [`get_Height`](crate::prelude::ole_IPicture::get_Height) |
 	fn Render(&self,
 		hdc: &HDC,
 		dest_pt: Option<POINT>,
