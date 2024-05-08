@@ -19,7 +19,7 @@ macro_rules! extern_sys {
 			$func:ident( $( $parm:ty ),* ) $( -> $ret:ty )?
 		)*
 	) => {
-		#[link(name = $dll)]
+		#[link(name = $dll, kind = "raw-dylib")]
 		extern "system" {
 			$(
 				one_func!( $func( $( $parm ),* ) $(-> $ret)? );
