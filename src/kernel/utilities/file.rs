@@ -177,8 +177,7 @@ impl File {
 	/// time zone.
 	#[must_use]
 	pub fn times(&self) -> SysResult<(SYSTEMTIME, SYSTEMTIME)> {
-		let (mut ft_creation, mut ft_last_write) = (FILETIME::default(), FILETIME::default());
-		self.hfile.GetFileTime(Some(&mut ft_creation), None, Some(&mut ft_last_write))?;
+		let (ft_creation, _, ft_last_write) = self.hfile.GetFileTime()?;
 
 		let st_creation_utc = FileTimeToSystemTime(&ft_creation)?;
 		let st_last_write_utc = FileTimeToSystemTime(&ft_last_write)?;

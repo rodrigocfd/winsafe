@@ -157,22 +157,37 @@ pub trait kernel_Hfile: Handle {
 
 	/// [`GetFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletime)
 	/// function.
-	fn GetFileTime(&self,
-		creation_time: Option<&mut FILETIME>,
-		last_access_time: Option<&mut FILETIME>,
-		last_write_time: Option<&mut FILETIME>,
-	) -> SysResult<()>
-	{
+	///
+	/// Returns, respectively:
+	/// 1. creation time;
+	/// 2. last access time;
+	/// 3. last write time.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let hfile: w::HFILE; // initialized somewhere
+	/// # let hfile = w::HFILE::NULL;
+	///
+	/// let (creation, last_access, last_write) = hfile.GetFileTime()?;
+	/// # w::SysResult::Ok(())
+	/// ```
+	fn GetFileTime(&self) -> SysResult<(FILETIME, FILETIME, FILETIME)> {
+		let (mut creation, mut last_access, mut last_write) =
+			(FILETIME::default(), FILETIME::default(), FILETIME::default());
+
 		bool_to_sysresult(
 			unsafe {
 				ffi::GetFileTime(
 					self.ptr(),
-					creation_time.map_or(std::ptr::null_mut(), |p| p as * mut _ as _),
-					last_access_time.map_or(std::ptr::null_mut(), |p| p as * mut _ as _),
-					last_write_time.map_or(std::ptr::null_mut(), |p| p as * mut _ as _),
+					&mut creation as *mut _ as _,
+					&mut last_access as *mut _ as _,
+					&mut last_write as *mut _ as _,
 				)
 			},
-		)
+		).map(|_| (creation, last_access, last_write))
 	}
 
 	/// [`GetFileType`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype)
