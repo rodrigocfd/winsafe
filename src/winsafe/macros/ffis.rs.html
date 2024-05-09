@@ -48,7 +48,7 @@
 			<span class="macro-nonterminal">$func</span>:ident( $( <span class="macro-nonterminal">$parm</span>:ty ),* ) $( -&gt; <span class="macro-nonterminal">$ret</span>:ty )<span class="question-mark">?
 		</span>)*
 	) =&gt; {
-		<span class="attr">#[link(name = <span class="macro-nonterminal">$dll</span>)]
+		<span class="attr">#[link(name = <span class="macro-nonterminal">$dll</span>, kind = <span class="string">"raw-dylib"</span>)]
 		</span><span class="kw">extern </span><span class="string">"system" </span>{
 			$(
 				<span class="macro">one_func!</span>( <span class="macro-nonterminal">$func</span>( $( <span class="macro-nonterminal">$parm </span>),* ) $(-&gt; <span class="macro-nonterminal">$ret</span>)<span class="question-mark">? </span>);

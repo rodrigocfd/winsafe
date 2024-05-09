@@ -335,6 +335,21 @@
 <a href="#335" id="335">335</a>
 <a href="#336" id="336">336</a>
 <a href="#337" id="337">337</a>
+<a href="#338" id="338">338</a>
+<a href="#339" id="339">339</a>
+<a href="#340" id="340">340</a>
+<a href="#341" id="341">341</a>
+<a href="#342" id="342">342</a>
+<a href="#343" id="343">343</a>
+<a href="#344" id="344">344</a>
+<a href="#345" id="345">345</a>
+<a href="#346" id="346">346</a>
+<a href="#347" id="347">347</a>
+<a href="#348" id="348">348</a>
+<a href="#349" id="349">349</a>
+<a href="#350" id="350">350</a>
+<a href="#351" id="351">351</a>
+<a href="#352" id="352">352</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -494,22 +509,37 @@
 
 	<span class="doccomment">/// [`GetFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletime)
 	/// function.
-	</span><span class="kw">fn </span>GetFileTime(<span class="kw-2">&amp;</span><span class="self">self</span>,
-		creation_time: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>FILETIME&gt;,
-		last_access_time: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>FILETIME&gt;,
-		last_write_time: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>FILETIME&gt;,
-	) -&gt; SysResult&lt;()&gt;
-	{
+	///
+	/// Returns, respectively:
+	/// 1. creation time;
+	/// 2. last access time;
+	/// 3. last write time.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let hfile: w::HFILE; // initialized somewhere
+	/// # let hfile = w::HFILE::NULL;
+	///
+	/// let (creation, last_access, last_write) = hfile.GetFileTime()?;
+	/// # w::SysResult::Ok(())
+	/// ```
+	</span><span class="kw">fn </span>GetFileTime(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;(FILETIME, FILETIME, FILETIME)&gt; {
+		<span class="kw">let </span>(<span class="kw-2">mut </span>creation, <span class="kw-2">mut </span>last_access, <span class="kw-2">mut </span>last_write) =
+			(FILETIME::default(), FILETIME::default(), FILETIME::default());
+
 		bool_to_sysresult(
 			<span class="kw">unsafe </span>{
 				ffi::GetFileTime(
 					<span class="self">self</span>.ptr(),
-					creation_time.map_or(std::ptr::null_mut(), |p| p <span class="kw">as </span>* <span class="kw-2">mut </span><span class="kw">_ as _</span>),
-					last_access_time.map_or(std::ptr::null_mut(), |p| p <span class="kw">as </span>* <span class="kw-2">mut </span><span class="kw">_ as _</span>),
-					last_write_time.map_or(std::ptr::null_mut(), |p| p <span class="kw">as </span>* <span class="kw-2">mut </span><span class="kw">_ as _</span>),
+					<span class="kw-2">&amp;mut </span>creation <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+					<span class="kw-2">&amp;mut </span>last_access <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+					<span class="kw-2">&amp;mut </span>last_write <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
 				)
 			},
-		)
+		).map(|<span class="kw">_</span>| (creation, last_access, last_write))
 	}
 
 	<span class="doccomment">/// [`GetFileType`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype)
