@@ -84,28 +84,30 @@ impl WindowMain {
 	///
 	/// Panics if the window is already created.
 	pub fn run_main(&self, cmd_show: Option<co::SW>) -> AnyResult<i32> {
-		if IsWindowsVistaOrGreater().unwrap() {
-			SetProcessDPIAware().unwrap();
+		if IsWindowsVistaOrGreater()? {
+			SetProcessDPIAware()?;
 		}
 
 		InitCommonControls();
 
-		let mut b_val: BOOL = 0; // false
-		match unsafe {
-			HPROCESS::GetCurrentProcess().SetUserObjectInformation( // SetTimer() safety
-				co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION,
-				&mut b_val,
-			)
-		} {
-			Err(e) if e == co::ERROR::INVALID_PARAMETER => {
-				// Do nothing: Wine doesn't support SetUserObjectInformation for now.
-				// https://bugs.winehq.org/show_bug.cgi?id=54951
-			},
-			Err(e) => panic!("TIMERPROC_EXCEPTION_SUPPRESSION failed: {e:?}"),
-			_ => {},
+		if IsWindows8OrGreater()? { // https://github.com/rodrigocfd/winsafe-examples/issues/6
+			let mut b_val: BOOL = 0; // false
+			match unsafe {
+				HPROCESS::GetCurrentProcess().SetUserObjectInformation( // SetTimer() safety
+					co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION,
+					&mut b_val,
+				)
+			} {
+				Err(e) if e == co::ERROR::INVALID_PARAMETER => {
+					// Do nothing: Wine doesn't support SetUserObjectInformation for now.
+					// https://bugs.winehq.org/show_bug.cgi?id=54951
+				},
+				Err(e) => panic!("TIMERPROC_EXCEPTION_SUPPRESSION failed: {e:?}"),
+				_ => {},
+			}
 		}
 
-		create_ui_font().unwrap();
+		create_ui_font()?;
 
 		let res = match &self.0 {
 			RawDlg::Raw(r) => r.run_main(cmd_show),
