@@ -26,13 +26,13 @@ pub trait user_Haccel: Handle {
 	/// function.
 	#[must_use]
 	fn CreateAcceleratorTable(
-		accel: &mut [ACCEL],
+		accel: &[ACCEL],
 	) -> SysResult<DestroyAcceleratorTableGuard>
 	{
 		unsafe {
 			ptr_to_sysresult_handle(
 				ffi::CreateAcceleratorTableW(
-					accel.as_mut_ptr() as _,
+					accel.as_ptr() as _,
 					accel.len() as _,
 				),
 			).map(|h| DestroyAcceleratorTableGuard::new(h))

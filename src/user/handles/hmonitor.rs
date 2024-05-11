@@ -24,25 +24,11 @@ impl user_Hmonitor for HMONITOR {}
 pub trait user_Hmonitor: Handle {
 	/// [`GetMonitorInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmonitorinfow)
 	/// function.
-	///
-	/// # Examples
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*};
-	///
-	/// let hmon: w::HMONITOR; // initialized somewhere
-	/// # let hmon = w::HMONITOR::NULL;
-	///
-	/// let mut mi = w::MONITORINFOEX::default();
-	/// hmon.GetMonitorInfo(&mut mi)?;
-	///
-	/// println!("{}", mi.szDevice());
-	/// # w::SysResult::Ok(())
-	/// ```
-	fn GetMonitorInfo(&self, mi: &mut MONITORINFOEX) -> SysResult<()> {
+	fn GetMonitorInfo(&self) -> SysResult<MONITORINFOEX> {
+		let mut mi = MONITORINFOEX::default();
 		bool_to_sysresult(
-			unsafe { ffi::GetMonitorInfoW(self.ptr(), mi as *mut _ as _) },
-		)
+			unsafe { ffi::GetMonitorInfoW(self.ptr(), &mut mi as *mut _ as _) },
+		).map(|_| mi)
 	}
 
 	/// [`MonitorFromPoint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint)

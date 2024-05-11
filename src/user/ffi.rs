@@ -43,7 +43,7 @@ extern_sys! { "user32";
 	CloseDesktop(HANDLE) -> BOOL
 	CloseWindow(HANDLE) -> BOOL
 	CopyIcon(HANDLE) -> HANDLE
-	CreateAcceleratorTableW(PVOID, i32) -> HANDLE
+	CreateAcceleratorTableW(PCVOID, i32) -> HANDLE
 	CreateDesktopExW(PCSTR, PCSTR, PCVOID, u32, u32, PVOID, u32, PVOID) -> HANDLE
 	CreateDesktopW(PCSTR, PCSTR, PCVOID, u32, u32, PVOID) -> HANDLE
 	CreateDialogParamW(HANDLE, PCSTR, HANDLE, PFUNC, isize) -> HANDLE

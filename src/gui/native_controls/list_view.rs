@@ -386,8 +386,9 @@ impl<T> ListView<T> {
 		};
 
 		let menu_pos = if follow_cursor { // usually when fired by a right-click
-			let mut menu_pos = GetCursorPos().unwrap(); // relative to screen
-			self.hwnd().ScreenToClient(&mut menu_pos).unwrap(); // now relative to list view
+			let menu_pos = self.hwnd().ScreenToClient(
+				GetCursorPos().unwrap(), // relative to screen
+			).unwrap(); // now relative to list view
 
 			match self.items().hit_test(menu_pos) {
 				Some(item_over) => {

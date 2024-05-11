@@ -90,24 +90,43 @@ pub trait kernel_Hthread: Handle {
 
 	/// [`GetThreadTimes`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadtimes)
 	/// function.
+	///
+	/// Returns, respectively:
+	///
+	/// 1. creation time;
+	/// 2. exit time;
+	/// 3. kernel time;
+	/// 4. user time.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let hthread: w::HTHREAD; // initialized somewhere
+	/// # let hthread = w::HTHREAD::NULL;
+	///
+	/// let (creation, exit, kernel, user) = hthread.GetThreadTimes()?;
+	/// # w::SysResult::Ok(())
+	/// ```
 	fn GetThreadTimes(&self,
-		creation: &mut FILETIME,
-		exit: &mut FILETIME,
-		kernel: &mut FILETIME,
-		user: &mut FILETIME,
-	) -> SysResult<()>
+	) -> SysResult<(FILETIME, FILETIME, FILETIME, FILETIME)>
 	{
+		let (mut creation, mut exit, mut kernel, mut user) =
+			(FILETIME::default(), FILETIME::default(),
+			FILETIME::default(), FILETIME::default());
+
 		bool_to_sysresult(
 			unsafe {
 				ffi::GetThreadTimes(
 					self.ptr(),
-					creation as *mut _ as _,
-					exit as *mut _ as _,
-					kernel as *mut _ as _,
-					user as *mut _ as _,
+					&mut creation as *mut _ as _,
+					&mut exit as *mut _ as _,
+					&mut kernel as *mut _ as _,
+					&mut user as *mut _ as _,
 				)
 			},
-		)
+		).map(|_| (creation, exit, kernel, user))
 	}
 
 	/// [`OpenThreadToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openthreadtoken)

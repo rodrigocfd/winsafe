@@ -108,25 +108,21 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let mut wcx = w::WNDCLASSEX::default();
-	/// w::HINSTANCE::GetModuleHandle(None)?
-	///     .GetClassInfoEx("SOME_CLASS_NAME", &mut wcx)?;
+	/// let (atom, wcx) = w::HINSTANCE::GetModuleHandle(None)?
+	///     .GetClassInfoEx("SOME_CLASS_NAME")?;
 	/// # w::SysResult::Ok(())
 	/// ```
-	fn GetClassInfoEx(&self,
-		class_name: &str,
-		wcx: &mut WNDCLASSEX,
-	) -> SysResult<ATOM>
-	{
+	fn GetClassInfoEx(&self, class_name: &str) -> SysResult<(ATOM, WNDCLASSEX)> {
+		let mut wcx = WNDCLASSEX::default();
 		match unsafe {
 			ffi::GetClassInfoExW(
 				self.ptr(),
 				WString::from_str(class_name).as_ptr(),
-				wcx as *mut _ as _,
+				&mut wcx as *mut _ as _,
 			)
 		} {
 			0 => Err(GetLastError()),
-			atom => Ok(unsafe { ATOM::from_raw(atom as _) }),
+			atom => Ok((unsafe { ATOM::from_raw(atom as _) }, wcx)),
 		}
 	}
 

@@ -146,24 +146,43 @@ pub trait kernel_Hprocess: Handle {
 
 	/// [`GetProcessTimes`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocesstimes)
 	/// function.
+	///
+	/// Returns, respectively:
+	///
+	/// 1. creation time;
+	/// 2. exit time;
+	/// 3. kernel time;
+	/// 4. user time.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let hprocess: w::HPROCESS; // initialized somewhere
+	/// # let hprocess = w::HPROCESS::NULL;
+	///
+	/// let (creation, exit, kernel, user) = hprocess.GetProcessTimes()?;
+	/// # w::SysResult::Ok(())
+	/// ```
 	fn GetProcessTimes(&self,
-		creation: &mut FILETIME,
-		exit: &mut FILETIME,
-		kernel: &mut FILETIME,
-		user: &mut FILETIME,
-	) -> SysResult<()>
+	) -> SysResult<(FILETIME, FILETIME, FILETIME, FILETIME)>
 	{
+		let (mut creation, mut exit, mut kernel, mut user) =
+			(FILETIME::default(), FILETIME::default(),
+			FILETIME::default(), FILETIME::default());
+
 		bool_to_sysresult(
 			unsafe {
 				ffi::GetProcessTimes(
 					self.ptr(),
-					creation as *mut _ as _,
-					exit as *mut _ as _,
-					kernel as *mut _ as _,
-					user as *mut _ as _,
+					&mut creation as *mut _ as _,
+					&mut exit as *mut _ as _,
+					&mut kernel as *mut _ as _,
+					&mut user as *mut _ as _,
 				)
 			},
-		)
+		).map(|_| (creation, exit, kernel, user))
 	}
 
 	/// [`IsProcessCritical`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-isprocesscritical)

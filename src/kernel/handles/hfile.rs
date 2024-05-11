@@ -136,14 +136,14 @@ pub trait kernel_Hfile: Handle {
 	/// [`GetFileInformationByHandle`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)
 	/// function.
 	fn GetFileInformationByHandle(&self,
-		fi: &mut BY_HANDLE_FILE_INFORMATION,
-	) -> SysResult<()>
+	) -> SysResult<BY_HANDLE_FILE_INFORMATION>
 	{
+		let mut fi = BY_HANDLE_FILE_INFORMATION::default();
 		bool_to_sysresult(
 			unsafe {
-				ffi::GetFileInformationByHandle(self.ptr(), fi as *mut _ as _)
+				ffi::GetFileInformationByHandle(self.ptr(), &mut fi as *mut _ as _)
 			},
-		)
+		).map(|_| fi)
 	}
 
 	/// [`GetFileSizeEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesizeex)

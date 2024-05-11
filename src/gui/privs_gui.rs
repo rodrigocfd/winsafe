@@ -133,7 +133,7 @@ pub(in crate::gui) fn multiply_dpi_or_dtu(
 			rc.bottom = sz.cy;
 		});
 
-		parent_base.hwnd().MapDialogRect(&mut rc)?;
+		rc = parent_base.hwnd().MapDialogRect(rc)?;
 		let (mut pt, mut sz) = (pt, sz);
 		pt.as_mut().map(|pt| {
 			pt.x = rc.left;
@@ -220,8 +220,7 @@ pub(in crate::gui) fn adjust_modeless_pos(
 	// For a modeless (0,0) is the left/topmost point in parent's client area.
 	multiply_dpi_or_dtu(parent_base, Some(&mut user_pos), None)?;
 	let hparent = parent_base.hwnd();
-	let mut parent_rc = hparent.GetClientRect()?;
-	hparent.ClientToScreenRc(&mut parent_rc)?;
+	let parent_rc = hparent.ClientToScreenRc(hparent.GetClientRect()?)?;
 	user_pos.x += parent_rc.left;
 	user_pos.y += parent_rc.top;
 	Ok(user_pos)
@@ -242,8 +241,7 @@ pub(in crate::gui) fn paint_control_borders(
 		return Ok(());
 	}
 
-	let mut rc = hwnd.GetWindowRect()?; // window outmost coordinates, including margins
-	hwnd.ScreenToClientRc(&mut rc)?;
+	let mut rc = hwnd.ScreenToClientRc(hwnd.GetWindowRect()?)?; // window outmost coordinates, including margins
 	rc.left += 2; rc.top += 2; rc.right += 2; rc.bottom += 2; // because it comes up anchored at -2,-2
 
 	let hdc = hwnd.GetWindowDC()?;

@@ -8,7 +8,7 @@ extern_sys! { "shell32";
 	DragQueryPoint(HANDLE, PVOID) -> BOOL
 	SHAddToRecentDocs(u32, PCVOID)
 	SHCreateItemFromParsingName(PCSTR, PVOID, PCVOID, *mut COMPTR) -> HRES
-	Shell_NotifyIconW(u32, PVOID) -> BOOL
+	Shell_NotifyIconW(u32, PCVOID) -> BOOL
 	ShellAboutW(HANDLE, PCSTR, PCSTR, HANDLE) -> i32
 	ShellExecuteExW(PVOID) -> BOOL
 	ShellExecuteW(HANDLE, PCSTR, PCSTR, PCSTR, PCSTR, i32) -> HANDLE

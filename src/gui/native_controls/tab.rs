@@ -198,8 +198,9 @@ impl Tab {
 			});
 
 		if let Some((_, item)) = self.0.children.get(index as usize) {
-			let mut rc = self.hwnd().GetWindowRect()?;
-			self.hwnd().GetParent()?.ScreenToClientRc(&mut rc)?;
+			let mut rc = self.hwnd()
+				.GetParent()?
+				.ScreenToClientRc(self.hwnd().GetWindowRect()?)?;
 			unsafe {
 				self.hwnd().SendMessage(tcm::AdjustRect {
 					display_rect: false,

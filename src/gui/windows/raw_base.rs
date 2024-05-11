@@ -93,7 +93,8 @@ impl RawBase {
 					// https://devblogs.microsoft.com/oldnewthing/20041011-00/?p=37603
 					// Retrieve ATOM of existing window class.
 					let hinst = unsafe { wcx.hInstance.raw_copy() };
-					Ok(hinst.GetClassInfoEx(&wcx.lpszClassName().unwrap(), wcx)?)
+					let (atom, _) = hinst.GetClassInfoEx(&wcx.lpszClassName().unwrap())?;
+					Ok(atom)
 				},
 				err => Err(err),
 			},

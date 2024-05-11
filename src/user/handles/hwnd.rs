@@ -174,25 +174,27 @@ pub trait user_Hwnd: Handle {
 	/// If you need to convert a [`RECT`](crate::RECT), see the
 	/// [`HWND::ClientToScreenRc`](crate::prelude::user_Hwnd::ClientToScreenRc)
 	/// function.
-	fn ClientToScreen(&self, pt: &mut POINT) -> SysResult<()> {
+	fn ClientToScreen(&self, pt: POINT) -> SysResult<POINT> {
+		let mut buf = pt;
 		bool_to_sysresult(
-			unsafe { ffi::ClientToScreen(self.ptr(), pt as *mut _ as _) },
-		)
+			unsafe { ffi::ClientToScreen(self.ptr(), &mut buf as *mut _ as _) },
+		).map(|_| buf)
 	}
 
 	/// [`ClientToScreen`](crate::prelude::user_Hwnd::ClientToScreen) method for
 	/// a [`RECT`](crate::RECT).
-	fn ClientToScreenRc(&self, rc: &mut RECT) -> SysResult<()> {
+	fn ClientToScreenRc(&self, rc: RECT) -> SysResult<RECT> {
+		let mut buf = rc;
 		bool_to_sysresult(
 			unsafe {
-				ffi::ClientToScreen(self.ptr(), &mut rc.left as *mut _ as _)
+				ffi::ClientToScreen(self.ptr(), &mut buf.left as *mut _ as _)
 			},
 		)?;
 		bool_to_sysresult(
 			unsafe {
-				ffi::ClientToScreen(self.ptr(), &mut rc.right as *mut _ as _)
+				ffi::ClientToScreen(self.ptr(), &mut buf.right as *mut _ as _)
 			},
-		)
+		).map(|_| buf)
 	}
 
 	/// [`CloseWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closewindow)
@@ -1141,10 +1143,11 @@ pub trait user_Hwnd: Handle {
 
 	/// [`MapDialogRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapdialogrect)
 	/// function.
-	fn MapDialogRect(&self, rc: &mut RECT) -> SysResult<()> {
+	fn MapDialogRect(&self, rc: RECT) -> SysResult<RECT> {
+		let mut buf = rc;
 		bool_to_sysresult(
-			unsafe { ffi::MapDialogRect(self.ptr(), rc as *mut _ as _) },
-		)
+			unsafe { ffi::MapDialogRect(self.ptr(), &mut buf as *mut _ as _) },
+		).map(|_| buf)
 	}
 
 	/// [`MapWindowPoints`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapwindowpoints)
@@ -1419,25 +1422,27 @@ pub trait user_Hwnd: Handle {
 	/// If you need to convert a [`RECT`](crate::RECT), see the
 	/// [`HWND::ScreenToClientRc`](crate::prelude::user_Hwnd::ScreenToClientRc)
 	/// function.
-	fn ScreenToClient(&self, pt: &mut POINT) -> SysResult<()> {
+	fn ScreenToClient(&self, pt: POINT) -> SysResult<POINT> {
+		let mut buf = pt;
 		bool_to_sysresult(
-			unsafe { ffi::ScreenToClient(self.ptr(), pt as *mut _ as _) },
-		)
+			unsafe { ffi::ScreenToClient(self.ptr(), &mut buf as *mut _ as _) },
+		).map(|_| buf)
 	}
 
 	/// [`ScreenToClient`](crate::prelude::user_Hwnd::ScreenToClient) method for
 	/// a [`RECT`](crate::RECT).
-	fn ScreenToClientRc(&self, rc: &mut RECT) -> SysResult<()> {
+	fn ScreenToClientRc(&self, rc: RECT) -> SysResult<RECT> {
+		let mut buf = rc;
 		bool_to_sysresult(
 			unsafe {
-				ffi::ScreenToClient(self.ptr(), &mut rc.left as *mut _ as _)
+				ffi::ScreenToClient(self.ptr(), &mut buf.left as *mut _ as _)
 			},
 		)?;
 		bool_to_sysresult(
 			unsafe {
-				ffi::ScreenToClient(self.ptr(), &mut rc.right as *mut _ as _)
+				ffi::ScreenToClient(self.ptr(), &mut buf.right as *mut _ as _)
 			},
-		)
+		).map(|_| buf)
 	}
 
 	/// [`ScrollWindowEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-scrollwindowex)

@@ -279,11 +279,11 @@ pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
 /// function.
 pub fn Shell_NotifyIcon(
 	message: co::NIM,
-	data: &mut NOTIFYICONDATA,
+	data: &NOTIFYICONDATA,
 ) -> SysResult<()>
 {
 	bool_to_sysresult(
-		unsafe { ffi::Shell_NotifyIconW(message.raw(), data as *mut _ as _) },
+		unsafe { ffi::Shell_NotifyIconW(message.raw(), data as *const _ as _) },
 	)
 }
 

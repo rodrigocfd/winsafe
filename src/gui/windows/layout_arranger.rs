@@ -108,8 +108,8 @@ impl LayoutArranger {
 			let rc_orig = match &ctrl.rc_orig {
 				Some(rc) => *rc,
 				None => {
-					let mut rc = ctrl.hchild.GetWindowRect()?;
-					ctrl.hchild.GetParent()?.ScreenToClientRc(&mut rc)?;
+					let rc = ctrl.hchild.GetParent()?
+						.ScreenToClientRc(ctrl.hchild.GetWindowRect()?)?;
 					ctrl.rc_orig = Some(rc); // save control client coordinates relative to parent
 					rc
 				},
