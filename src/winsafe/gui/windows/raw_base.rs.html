@@ -194,6 +194,7 @@
 <a href="#194" id="194">194</a>
 <a href="#195" id="195">195</a>
 <a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
@@ -289,7 +290,8 @@
 					// https://devblogs.microsoft.com/oldnewthing/20041011-00/?p=37603
 					// Retrieve ATOM of existing window class.
 					</span><span class="kw">let </span>hinst = <span class="kw">unsafe </span>{ wcx.hInstance.raw_copy() };
-					<span class="prelude-val">Ok</span>(hinst.GetClassInfoEx(<span class="kw-2">&amp;</span>wcx.lpszClassName().unwrap(), wcx)<span class="question-mark">?</span>)
+					<span class="kw">let </span>(atom, <span class="kw">_</span>) = hinst.GetClassInfoEx(<span class="kw-2">&amp;</span>wcx.lpszClassName().unwrap())<span class="question-mark">?</span>;
+					<span class="prelude-val">Ok</span>(atom)
 				},
 				err =&gt; <span class="prelude-val">Err</span>(err),
 			},

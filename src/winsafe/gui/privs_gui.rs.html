@@ -264,8 +264,6 @@
 <a href="#264" id="264">264</a>
 <a href="#265" id="265">265</a>
 <a href="#266" id="266">266</a>
-<a href="#267" id="267">267</a>
-<a href="#268" id="268">268</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::error::Error;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -401,7 +399,7 @@
 			rc.bottom = sz.cy;
 		});
 
-		parent_base.hwnd().MapDialogRect(<span class="kw-2">&amp;mut </span>rc)<span class="question-mark">?</span>;
+		rc = parent_base.hwnd().MapDialogRect(rc)<span class="question-mark">?</span>;
 		<span class="kw">let </span>(<span class="kw-2">mut </span>pt, <span class="kw-2">mut </span>sz) = (pt, sz);
 		pt.as_mut().map(|pt| {
 			pt.x = rc.left;
@@ -488,8 +486,7 @@
 	<span class="comment">// For a modeless (0,0) is the left/topmost point in parent's client area.
 	</span>multiply_dpi_or_dtu(parent_base, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>user_pos), <span class="prelude-val">None</span>)<span class="question-mark">?</span>;
 	<span class="kw">let </span>hparent = parent_base.hwnd();
-	<span class="kw">let </span><span class="kw-2">mut </span>parent_rc = hparent.GetClientRect()<span class="question-mark">?</span>;
-	hparent.ClientToScreenRc(<span class="kw-2">&amp;mut </span>parent_rc)<span class="question-mark">?</span>;
+	<span class="kw">let </span>parent_rc = hparent.ClientToScreenRc(hparent.GetClientRect()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 	user_pos.x += parent_rc.left;
 	user_pos.y += parent_rc.top;
 	<span class="prelude-val">Ok</span>(user_pos)
@@ -510,9 +507,8 @@
 		<span class="kw">return </span><span class="prelude-val">Ok</span>(());
 	}
 
-	<span class="kw">let </span><span class="kw-2">mut </span>rc = hwnd.GetWindowRect()<span class="question-mark">?</span>; <span class="comment">// window outmost coordinates, including margins
-	</span>hwnd.ScreenToClientRc(<span class="kw-2">&amp;mut </span>rc)<span class="question-mark">?</span>;
-	rc.left += <span class="number">2</span>; rc.top += <span class="number">2</span>; rc.right += <span class="number">2</span>; rc.bottom += <span class="number">2</span>; <span class="comment">// because it comes up anchored at -2,-2
+	<span class="kw">let </span><span class="kw-2">mut </span>rc = hwnd.ScreenToClientRc(hwnd.GetWindowRect()<span class="question-mark">?</span>)<span class="question-mark">?</span>; <span class="comment">// window outmost coordinates, including margins
+	</span>rc.left += <span class="number">2</span>; rc.top += <span class="number">2</span>; rc.right += <span class="number">2</span>; rc.bottom += <span class="number">2</span>; <span class="comment">// because it comes up anchored at -2,-2
 
 	</span><span class="kw">let </span>hdc = hwnd.GetWindowDC()<span class="question-mark">?</span>;
 

@@ -255,8 +255,8 @@
 			<span class="kw">let </span>rc_orig = <span class="kw">match </span><span class="kw-2">&amp;</span>ctrl.rc_orig {
 				<span class="prelude-val">Some</span>(rc) =&gt; <span class="kw-2">*</span>rc,
 				<span class="prelude-val">None </span>=&gt; {
-					<span class="kw">let </span><span class="kw-2">mut </span>rc = ctrl.hchild.GetWindowRect()<span class="question-mark">?</span>;
-					ctrl.hchild.GetParent()<span class="question-mark">?</span>.ScreenToClientRc(<span class="kw-2">&amp;mut </span>rc)<span class="question-mark">?</span>;
+					<span class="kw">let </span>rc = ctrl.hchild.GetParent()<span class="question-mark">?
+						</span>.ScreenToClientRc(ctrl.hchild.GetWindowRect()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
 					ctrl.rc_orig = <span class="prelude-val">Some</span>(rc); <span class="comment">// save control client coordinates relative to parent
 					</span>rc
 				},

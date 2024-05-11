@@ -116,6 +116,8 @@
 <a href="#116" id="116">116</a>
 <a href="#117" id="117">117</a>
 <a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -202,28 +204,30 @@
 	///
 	/// Panics if the window is already created.
 	</span><span class="kw">pub fn </span>run_main(<span class="kw-2">&amp;</span><span class="self">self</span>, cmd_show: <span class="prelude-ty">Option</span>&lt;co::SW&gt;) -&gt; AnyResult&lt;i32&gt; {
-		<span class="kw">if </span>IsWindowsVistaOrGreater().unwrap() {
-			SetProcessDPIAware().unwrap();
+		<span class="kw">if </span>IsWindowsVistaOrGreater()<span class="question-mark">? </span>{
+			SetProcessDPIAware()<span class="question-mark">?</span>;
 		}
 
 		InitCommonControls();
 
-		<span class="kw">let </span><span class="kw-2">mut </span>b_val: BOOL = <span class="number">0</span>; <span class="comment">// false
-		</span><span class="kw">match unsafe </span>{
-			HPROCESS::GetCurrentProcess().SetUserObjectInformation( <span class="comment">// SetTimer() safety
-				</span>co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION,
-				<span class="kw-2">&amp;mut </span>b_val,
-			)
-		} {
-			<span class="prelude-val">Err</span>(e) <span class="kw">if </span>e == co::ERROR::INVALID_PARAMETER =&gt; {
-				<span class="comment">// Do nothing: Wine doesn't support SetUserObjectInformation for now.
-				// https://bugs.winehq.org/show_bug.cgi?id=54951
-			</span>},
-			<span class="prelude-val">Err</span>(e) =&gt; <span class="macro">panic!</span>(<span class="string">"TIMERPROC_EXCEPTION_SUPPRESSION failed: {e:?}"</span>),
-			<span class="kw">_ </span>=&gt; {},
+		<span class="kw">if </span>IsWindows8OrGreater()<span class="question-mark">? </span>{ <span class="comment">// https://github.com/rodrigocfd/winsafe-examples/issues/6
+			</span><span class="kw">let </span><span class="kw-2">mut </span>b_val: BOOL = <span class="number">0</span>; <span class="comment">// false
+			</span><span class="kw">match unsafe </span>{
+				HPROCESS::GetCurrentProcess().SetUserObjectInformation( <span class="comment">// SetTimer() safety
+					</span>co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION,
+					<span class="kw-2">&amp;mut </span>b_val,
+				)
+			} {
+				<span class="prelude-val">Err</span>(e) <span class="kw">if </span>e == co::ERROR::INVALID_PARAMETER =&gt; {
+					<span class="comment">// Do nothing: Wine doesn't support SetUserObjectInformation for now.
+					// https://bugs.winehq.org/show_bug.cgi?id=54951
+				</span>},
+				<span class="prelude-val">Err</span>(e) =&gt; <span class="macro">panic!</span>(<span class="string">"TIMERPROC_EXCEPTION_SUPPRESSION failed: {e:?}"</span>),
+				<span class="kw">_ </span>=&gt; {},
+			}
 		}
 
-		create_ui_font().unwrap();
+		create_ui_font()<span class="question-mark">?</span>;
 
 		<span class="kw">let </span>res = <span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span>{
 			RawDlg::Raw(r) =&gt; r.run_main(cmd_show),

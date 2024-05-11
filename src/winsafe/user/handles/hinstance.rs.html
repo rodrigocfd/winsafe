@@ -209,10 +209,6 @@
 <a href="#209" id="209">209</a>
 <a href="#210" id="210">210</a>
 <a href="#211" id="211">211</a>
-<a href="#212" id="212">212</a>
-<a href="#213" id="213">213</a>
-<a href="#214" id="214">214</a>
-<a href="#215" id="215">215</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -323,25 +319,21 @@
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let mut wcx = w::WNDCLASSEX::default();
-	/// w::HINSTANCE::GetModuleHandle(None)?
-	///     .GetClassInfoEx("SOME_CLASS_NAME", &amp;mut wcx)?;
+	/// let (atom, wcx) = w::HINSTANCE::GetModuleHandle(None)?
+	///     .GetClassInfoEx("SOME_CLASS_NAME")?;
 	/// # w::SysResult::Ok(())
 	/// ```
-	</span><span class="kw">fn </span>GetClassInfoEx(<span class="kw-2">&amp;</span><span class="self">self</span>,
-		class_name: <span class="kw-2">&amp;</span>str,
-		wcx: <span class="kw-2">&amp;mut </span>WNDCLASSEX,
-	) -&gt; SysResult&lt;ATOM&gt;
-	{
+	</span><span class="kw">fn </span>GetClassInfoEx(<span class="kw-2">&amp;</span><span class="self">self</span>, class_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;(ATOM, WNDCLASSEX)&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>wcx = WNDCLASSEX::default();
 		<span class="kw">match unsafe </span>{
 			ffi::GetClassInfoExW(
 				<span class="self">self</span>.ptr(),
 				WString::from_str(class_name).as_ptr(),
-				wcx <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;mut </span>wcx <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
 			)
 		} {
 			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
-			atom =&gt; <span class="prelude-val">Ok</span>(<span class="kw">unsafe </span>{ ATOM::from_raw(atom <span class="kw">as _</span>) }),
+			atom =&gt; <span class="prelude-val">Ok</span>((<span class="kw">unsafe </span>{ ATOM::from_raw(atom <span class="kw">as _</span>) }, wcx)),
 		}
 	}
 

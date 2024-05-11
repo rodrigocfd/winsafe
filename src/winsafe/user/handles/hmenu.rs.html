@@ -609,7 +609,6 @@
 <a href="#609" id="609">609</a>
 <a href="#610" id="610">610</a>
 <a href="#611" id="611">611</a>
-<a href="#612" id="612">612</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -764,8 +763,7 @@
 		hwnd_coords_relative_to: <span class="kw-2">&amp;</span>HWND,
 	) -&gt; SysResult&lt;()&gt;
 	{
-		<span class="kw">let </span><span class="kw-2">mut </span>pos = pos;
-		hwnd_coords_relative_to.ClientToScreen(<span class="kw-2">&amp;mut </span>pos)<span class="question-mark">?</span>; <span class="comment">// now relative to screen
+		<span class="kw">let </span>pos = hwnd_coords_relative_to.ClientToScreen(pos)<span class="question-mark">?</span>; <span class="comment">// now relative to screen
 		</span>hwnd_parent.SetForegroundWindow();
 		<span class="self">self</span>.TrackPopupMenu(co::TPM::LEFTBUTTON, pos, hwnd_parent)<span class="question-mark">?</span>;
 		<span class="kw">unsafe </span>{ hwnd_parent.PostMessage(wm::Null {})<span class="question-mark">?</span>; } <span class="comment">// necessary according to TrackPopupMenu docs

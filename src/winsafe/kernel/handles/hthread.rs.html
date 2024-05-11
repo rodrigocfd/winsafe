@@ -197,6 +197,25 @@
 <a href="#197" id="197">197</a>
 <a href="#198" id="198">198</a>
 <a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
+<a href="#216" id="216">216</a>
+<a href="#217" id="217">217</a>
+<a href="#218" id="218">218</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -289,24 +308,43 @@
 
 	<span class="doccomment">/// [`GetThreadTimes`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadtimes)
 	/// function.
+	///
+	/// Returns, respectively:
+	///
+	/// 1. creation time;
+	/// 2. exit time;
+	/// 3. kernel time;
+	/// 4. user time.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let hthread: w::HTHREAD; // initialized somewhere
+	/// # let hthread = w::HTHREAD::NULL;
+	///
+	/// let (creation, exit, kernel, user) = hthread.GetThreadTimes()?;
+	/// # w::SysResult::Ok(())
+	/// ```
 	</span><span class="kw">fn </span>GetThreadTimes(<span class="kw-2">&amp;</span><span class="self">self</span>,
-		creation: <span class="kw-2">&amp;mut </span>FILETIME,
-		exit: <span class="kw-2">&amp;mut </span>FILETIME,
-		kernel: <span class="kw-2">&amp;mut </span>FILETIME,
-		user: <span class="kw-2">&amp;mut </span>FILETIME,
-	) -&gt; SysResult&lt;()&gt;
+	) -&gt; SysResult&lt;(FILETIME, FILETIME, FILETIME, FILETIME)&gt;
 	{
+		<span class="kw">let </span>(<span class="kw-2">mut </span>creation, <span class="kw-2">mut </span>exit, <span class="kw-2">mut </span>kernel, <span class="kw-2">mut </span>user) =
+			(FILETIME::default(), FILETIME::default(),
+			FILETIME::default(), FILETIME::default());
+
 		bool_to_sysresult(
 			<span class="kw">unsafe </span>{
 				ffi::GetThreadTimes(
 					<span class="self">self</span>.ptr(),
-					creation <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
-					exit <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
-					kernel <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
-					user <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+					<span class="kw-2">&amp;mut </span>creation <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+					<span class="kw-2">&amp;mut </span>exit <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+					<span class="kw-2">&amp;mut </span>kernel <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+					<span class="kw-2">&amp;mut </span>user <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
 				)
 			},
-		)
+		).map(|<span class="kw">_</span>| (creation, exit, kernel, user))
 	}
 
 	<span class="doccomment">/// [`OpenThreadToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openthreadtoken)

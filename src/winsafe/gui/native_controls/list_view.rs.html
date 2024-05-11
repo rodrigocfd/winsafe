@@ -524,6 +524,7 @@
 <a href="#524" id="524">524</a>
 <a href="#525" id="525">525</a>
 <a href="#526" id="526">526</a>
+<a href="#527" id="527">527</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::marker::{PhantomData, PhantomPinned};
 <span class="kw">use </span>std::pin::Pin;
@@ -912,8 +913,9 @@
 		</span>};
 
 		<span class="kw">let </span>menu_pos = <span class="kw">if </span>follow_cursor { <span class="comment">// usually when fired by a right-click
-			</span><span class="kw">let </span><span class="kw-2">mut </span>menu_pos = GetCursorPos().unwrap(); <span class="comment">// relative to screen
-			</span><span class="self">self</span>.hwnd().ScreenToClient(<span class="kw-2">&amp;mut </span>menu_pos).unwrap(); <span class="comment">// now relative to list view
+			</span><span class="kw">let </span>menu_pos = <span class="self">self</span>.hwnd().ScreenToClient(
+				GetCursorPos().unwrap(), <span class="comment">// relative to screen
+			</span>).unwrap(); <span class="comment">// now relative to list view
 
 			</span><span class="kw">match </span><span class="self">self</span>.items().hit_test(menu_pos) {
 				<span class="prelude-val">Some</span>(item_over) =&gt; {

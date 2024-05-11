@@ -2014,6 +2014,11 @@
 <a href="#2014" id="2014">2014</a>
 <a href="#2015" id="2015">2015</a>
 <a href="#2016" id="2016">2016</a>
+<a href="#2017" id="2017">2017</a>
+<a href="#2018" id="2018">2018</a>
+<a href="#2019" id="2019">2019</a>
+<a href="#2020" id="2020">2020</a>
+<a href="#2021" id="2021">2021</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -2190,25 +2195,27 @@
 	/// If you need to convert a [`RECT`](crate::RECT), see the
 	/// [`HWND::ClientToScreenRc`](crate::prelude::user_Hwnd::ClientToScreenRc)
 	/// function.
-	</span><span class="kw">fn </span>ClientToScreen(<span class="kw-2">&amp;</span><span class="self">self</span>, pt: <span class="kw-2">&amp;mut </span>POINT) -&gt; SysResult&lt;()&gt; {
+	</span><span class="kw">fn </span>ClientToScreen(<span class="kw-2">&amp;</span><span class="self">self</span>, pt: POINT) -&gt; SysResult&lt;POINT&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>buf = pt;
 		bool_to_sysresult(
-			<span class="kw">unsafe </span>{ ffi::ClientToScreen(<span class="self">self</span>.ptr(), pt <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) },
-		)
+			<span class="kw">unsafe </span>{ ffi::ClientToScreen(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>buf <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) },
+		).map(|<span class="kw">_</span>| buf)
 	}
 
 	<span class="doccomment">/// [`ClientToScreen`](crate::prelude::user_Hwnd::ClientToScreen) method for
 	/// a [`RECT`](crate::RECT).
-	</span><span class="kw">fn </span>ClientToScreenRc(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: <span class="kw-2">&amp;mut </span>RECT) -&gt; SysResult&lt;()&gt; {
+	</span><span class="kw">fn </span>ClientToScreenRc(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: RECT) -&gt; SysResult&lt;RECT&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>buf = rc;
 		bool_to_sysresult(
 			<span class="kw">unsafe </span>{
-				ffi::ClientToScreen(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>rc.left <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
+				ffi::ClientToScreen(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>buf.left <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
 			},
 		)<span class="question-mark">?</span>;
 		bool_to_sysresult(
 			<span class="kw">unsafe </span>{
-				ffi::ClientToScreen(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>rc.right <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
+				ffi::ClientToScreen(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>buf.right <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
 			},
-		)
+		).map(|<span class="kw">_</span>| buf)
 	}
 
 	<span class="doccomment">/// [`CloseWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closewindow)
@@ -3157,10 +3164,11 @@
 
 	<span class="doccomment">/// [`MapDialogRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapdialogrect)
 	/// function.
-	</span><span class="kw">fn </span>MapDialogRect(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: <span class="kw-2">&amp;mut </span>RECT) -&gt; SysResult&lt;()&gt; {
+	</span><span class="kw">fn </span>MapDialogRect(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: RECT) -&gt; SysResult&lt;RECT&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>buf = rc;
 		bool_to_sysresult(
-			<span class="kw">unsafe </span>{ ffi::MapDialogRect(<span class="self">self</span>.ptr(), rc <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) },
-		)
+			<span class="kw">unsafe </span>{ ffi::MapDialogRect(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>buf <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) },
+		).map(|<span class="kw">_</span>| buf)
 	}
 
 	<span class="doccomment">/// [`MapWindowPoints`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapwindowpoints)
@@ -3435,25 +3443,27 @@
 	/// If you need to convert a [`RECT`](crate::RECT), see the
 	/// [`HWND::ScreenToClientRc`](crate::prelude::user_Hwnd::ScreenToClientRc)
 	/// function.
-	</span><span class="kw">fn </span>ScreenToClient(<span class="kw-2">&amp;</span><span class="self">self</span>, pt: <span class="kw-2">&amp;mut </span>POINT) -&gt; SysResult&lt;()&gt; {
+	</span><span class="kw">fn </span>ScreenToClient(<span class="kw-2">&amp;</span><span class="self">self</span>, pt: POINT) -&gt; SysResult&lt;POINT&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>buf = pt;
 		bool_to_sysresult(
-			<span class="kw">unsafe </span>{ ffi::ScreenToClient(<span class="self">self</span>.ptr(), pt <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) },
-		)
+			<span class="kw">unsafe </span>{ ffi::ScreenToClient(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>buf <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) },
+		).map(|<span class="kw">_</span>| buf)
 	}
 
 	<span class="doccomment">/// [`ScreenToClient`](crate::prelude::user_Hwnd::ScreenToClient) method for
 	/// a [`RECT`](crate::RECT).
-	</span><span class="kw">fn </span>ScreenToClientRc(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: <span class="kw-2">&amp;mut </span>RECT) -&gt; SysResult&lt;()&gt; {
+	</span><span class="kw">fn </span>ScreenToClientRc(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: RECT) -&gt; SysResult&lt;RECT&gt; {
+		<span class="kw">let </span><span class="kw-2">mut </span>buf = rc;
 		bool_to_sysresult(
 			<span class="kw">unsafe </span>{
-				ffi::ScreenToClient(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>rc.left <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
+				ffi::ScreenToClient(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>buf.left <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
 			},
 		)<span class="question-mark">?</span>;
 		bool_to_sysresult(
 			<span class="kw">unsafe </span>{
-				ffi::ScreenToClient(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>rc.right <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
+				ffi::ScreenToClient(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>buf.right <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
 			},
-		)
+		).map(|<span class="kw">_</span>| buf)
 	}
 
 	<span class="doccomment">/// [`ScrollWindowEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-scrollwindowex)
