@@ -74,7 +74,7 @@ impl RawModal {
 			right: wnd_sz.cx,
 			bottom: wnd_sz.cy,
 		};
-		AdjustWindowRectEx(&mut wnd_rc, opts.style, false, opts.ex_style)?;
+		wnd_rc = AdjustWindowRectEx(wnd_rc, opts.style, false, opts.ex_style)?;
 		wnd_sz.cx = wnd_rc.right - wnd_rc.left;
 		wnd_sz.cy = wnd_rc.bottom - wnd_rc.top;
 

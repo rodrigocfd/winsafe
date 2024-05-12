@@ -24,9 +24,9 @@ impl user_Hdc for HDC {}
 pub trait user_Hdc: Handle {
 	/// [`DrawFocusRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawfocusrect)
 	/// function.
-	fn DrawFocusRect(&self, rect: &RECT) -> SysResult<()> {
+	fn DrawFocusRect(&self, rect: RECT) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { ffi::DrawFocusRect(self.ptr(), rect as *const _ as _) },
+			unsafe { ffi::DrawFocusRect(self.ptr(), &rect as *const _ as _) },
 		)
 	}
 
@@ -34,7 +34,7 @@ pub trait user_Hdc: Handle {
 	/// function.
 	fn DrawText(&self,
 		text: &str,
-		bounds: &RECT,
+		bounds: RECT,
 		format: co::DT,
 	) -> SysResult<i32>
 	{
@@ -44,7 +44,7 @@ pub trait user_Hdc: Handle {
 				self.ptr(),
 				wtext.as_ptr(),
 				wtext.str_len() as _,
-				bounds as *const _ as _,
+				&bounds as *const _ as _,
 				format.raw(),
 			)
 		} {
@@ -57,7 +57,7 @@ pub trait user_Hdc: Handle {
 	/// function.
 	fn DrawTextEx(&self,
 		text: &str,
-		bounds: &RECT,
+		bounds: RECT,
 		format: co::DT,
 		dtp: Option<&DRAWTEXTPARAMS>,
 	) -> SysResult<i32>
@@ -68,7 +68,7 @@ pub trait user_Hdc: Handle {
 				self.ptr(),
 				wtext.as_ptr(),
 				wtext.str_len() as _,
-				bounds as *const _ as _,
+				&bounds as *const _ as _,
 				format.raw(),
 				dtp.map_or(std::ptr::null(), |p| p as *const _ as _),
 			)
@@ -118,9 +118,9 @@ pub trait user_Hdc: Handle {
 
 	/// [`InvertRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invertrect)
 	/// function.
-	fn InvertRect(&self, rc: &RECT) -> SysResult<()> {
+	fn InvertRect(&self, rc: RECT) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { ffi::InvertRect(self.ptr(), rc as *const _ as _) },
+			unsafe { ffi::InvertRect(self.ptr(), &rc as *const _ as _) },
 		)
 	}
 

@@ -88,7 +88,7 @@ pub trait gdi_Hrgn: Handle {
 	/// [`RectInRegion`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectinregion)
 	/// function.
 	#[must_use]
-	fn RectInRegion(&self, rc: &RECT) -> bool {
-		unsafe { ffi::RectInRegion(self.ptr(), rc as *const _ as _) != 0 }
+	fn RectInRegion(&self, rc: RECT) -> bool {
+		unsafe { ffi::RectInRegion(self.ptr(), &rc as *const _ as _) != 0 }
 	}
 }

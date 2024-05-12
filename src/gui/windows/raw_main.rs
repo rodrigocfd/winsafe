@@ -80,7 +80,7 @@ impl RawMain {
 			right: wnd_pos.x + wnd_sz.cx,
 			bottom: wnd_pos.y + wnd_sz.cy,
 		};
-		AdjustWindowRectEx(&mut wnd_rc, opts.style,
+		wnd_rc = AdjustWindowRectEx(wnd_rc, opts.style,
 			opts.menu != HMENU::NULL, opts.ex_style).unwrap();
 		wnd_sz.cx = wnd_rc.right - wnd_rc.left;
 		wnd_sz.cy = wnd_rc.bottom - wnd_rc.top;

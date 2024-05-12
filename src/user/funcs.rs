@@ -13,22 +13,23 @@ use crate::user::{ffi, iterators::*, privs::*, proc};
 ///
 /// * [`AdjustWindowRectExForDpi`](crate::AdjustWindowRectExForDpi)
 pub fn AdjustWindowRectEx(
-	rc: &mut RECT,
+	rc: RECT,
 	style: co::WS,
 	has_menu: bool,
 	ex_style: co::WS_EX,
-) -> SysResult<()>
+) -> SysResult<RECT>
 {
+	let mut buf = rc;
 	bool_to_sysresult(
 		unsafe {
 			ffi::AdjustWindowRectEx(
-				rc as *mut _ as _,
+				&mut buf as *mut _ as _,
 				style.raw(),
 				has_menu as _,
 				ex_style.raw(),
 			)
 		},
-	)
+	).map(|_| buf)
 }
 
 /// [`AdjustWindowRectExForDpi`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectexfordpi)
@@ -38,24 +39,25 @@ pub fn AdjustWindowRectEx(
 ///
 /// * [`AdjustWindowRectEx`](crate::AdjustWindowRectEx)
 pub fn AdjustWindowRectExForDpi(
-	rc: &mut RECT,
+	rc: RECT,
 	style: co::WS,
 	has_menu: bool,
 	ex_style: co::WS_EX,
 	dpi: u32,
-) -> SysResult<()>
+) -> SysResult<RECT>
 {
+	let mut buf = rc;
 	bool_to_sysresult(
 		unsafe {
 			ffi::AdjustWindowRectExForDpi(
-				rc as *mut _ as _,
+				&mut buf as *mut _ as _,
 				style.raw(),
 				has_menu as _,
 				ex_style.raw(),
 				dpi,
 			)
 		},
-	)
+	).map(|_| buf)
 }
 
 /// [`AllowSetForegroundWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-allowsetforegroundwindow)
@@ -689,8 +691,11 @@ pub fn InSendMessage() -> bool {
 
 /// [`InflateRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-inflaterect)
 /// function.
-pub fn InflateRect(rc: &mut RECT, dx: i32, dy: i32) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::InflateRect(rc as *mut _ as _, dx, dy) })
+pub fn InflateRect(rc: RECT, dx: i32, dy: i32) -> SysResult<RECT> {
+	let mut buf = rc;
+	bool_to_sysresult(
+		unsafe { ffi::InflateRect(&mut buf as *mut _ as _, dx, dy) },
+	).map(|_| buf)
 }
 
 /// [`InSendMessageEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insendmessageex)
@@ -705,21 +710,17 @@ pub fn InSendMessageEx() -> co::ISMEX {
 
 /// [`IntersectRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-intersectrect)
 /// function.
-pub fn IntersectRect(
-	dest: &mut RECT,
-	src1: &RECT,
-	src2: &RECT,
-) -> SysResult<()>
-{
+pub fn IntersectRect(src1: RECT, src2: RECT) -> SysResult<RECT> {
+	let mut dest = RECT::default();
 	bool_to_sysresult(
 		unsafe {
 			ffi::IntersectRect(
-				dest as *mut _ as _,
-				src1 as *const _ as _,
-				src2 as *const _ as _,
+				&mut dest as *mut _ as _,
+				&src1 as *const _ as _,
+				&src2 as *const _ as _,
 			)
 		},
-	)
+	).map(|_| dest)
 }
 
 /// [`IsGUIThread`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isguithread)
@@ -740,8 +741,8 @@ pub fn IsGUIThread(convert_to_gui_thread: bool) -> SysResult<bool> {
 /// [`IsRectEmpty`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isrectempty)
 /// function.
 #[must_use]
-pub fn IsRectEmpty(rc: &RECT) -> bool {
-	unsafe { ffi::IsRectEmpty(rc as *const _ as _) != 0 }
+pub fn IsRectEmpty(rc: RECT) -> bool {
+	unsafe { ffi::IsRectEmpty(&rc as *const _ as _) != 0 }
 }
 
 /// [`IsWow64Message`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswow64message)
@@ -759,8 +760,11 @@ pub fn LockSetForegroundWindow(lock_code: co::LSFW) -> SysResult<()> {
 
 /// [`OffsetRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-offsetrect)
 /// function.
-pub fn OffsetRect(rc: &mut RECT, dx: i32, dy: i32) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::OffsetRect(rc as *mut _ as _, dx, dy) })
+pub fn OffsetRect(rc: RECT, dx: i32, dy: i32) -> SysResult<RECT> {
+	let mut buf = rc;
+	bool_to_sysresult(
+		unsafe { ffi::OffsetRect(&mut buf as *mut _ as _, dx, dy) },
+	).map(|_| buf)
 }
 
 /// [`PeekMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)
@@ -811,8 +815,8 @@ pub unsafe fn PostThreadMessage<M>(thread_id: u32, msg: M) -> SysResult<()>
 /// [`PtInRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ptinrect)
 /// function.
 #[must_use]
-pub fn PtInRect(rc: &RECT, pt: POINT) -> bool {
-	unsafe { ffi::PtInRect(rc as *const _ as _, pt.x, pt.y) != 0 }
+pub fn PtInRect(rc: RECT, pt: POINT) -> bool {
+	unsafe { ffi::PtInRect(&rc as *const _ as _, pt.x, pt.y) != 0 }
 }
 
 /// [`RegisterClassEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
@@ -977,21 +981,17 @@ pub fn SoundSentry() -> bool {
 
 /// [`SubtractRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-subtractrect)
 /// function.
-pub fn SubtractRect(
-	dest: &mut RECT,
-	src1: &RECT,
-	src2: &RECT,
-) -> SysResult<()>
-{
+pub fn SubtractRect(src1: RECT, src2: RECT) -> SysResult<RECT> {
+	let mut dest = RECT::default();
 	bool_to_sysresult(
 		unsafe {
 			ffi::SubtractRect(
-				dest as *mut _ as _,
-				src1 as *const _ as _,
-				src2 as *const _ as _,
+				&mut dest as *mut _ as _,
+				&src1 as *const _ as _,
+				&src2 as *const _ as _,
 			)
 		},
-	)
+	).map(|_| dest)
 }
 
 /// [`SwapMouseButton`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-swapmousebutton)
@@ -1038,16 +1038,17 @@ pub fn TranslateMessage(msg: &MSG) -> bool {
 
 /// [`UnionRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unionrect)
 /// function.
-pub fn UnionRect(dest: &mut RECT, src1: &RECT, src2: &RECT) -> SysResult<()> {
+pub fn UnionRect(src1: RECT, src2: RECT) -> SysResult<RECT> {
+	let mut dest = RECT::default();
 	bool_to_sysresult(
 		unsafe {
 			ffi::UnionRect(
-				dest as *mut _ as _,
-				src1 as *const _ as _,
-				src2 as *const _ as _,
+				&mut dest as *mut _ as _,
+				&src1 as *const _ as _,
+				&src2 as *const _ as _,
 			)
 		},
-	)
+	).map(|_| dest)
 }
 
 /// [`UnregisterClass`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw)

@@ -292,7 +292,7 @@ pub trait user_Hwnd: Handle {
 	/// function.
 	fn DrawCaption(&self,
 		hdc: &HDC,
-		rect: &RECT,
+		rect: RECT,
 		flags: Option<co::DC>,
 	) -> SysResult<()>
 	{
@@ -301,7 +301,7 @@ pub trait user_Hwnd: Handle {
 				ffi::DrawCaption(
 					self.ptr(),
 					hdc.ptr(),
-					rect as *const _ as _,
+					&rect as *const _ as _,
 					flags.unwrap_or_default().raw(),
 				)
 			},
@@ -1379,7 +1379,7 @@ pub trait user_Hwnd: Handle {
 	/// [`RedrawWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-redrawwindow)
 	/// function.
 	fn RedrawWindow(&self,
-		rc_update: &RECT,
+		rc_update: RECT,
 		hrgn_update: &HRGN,
 		flags: co::RDW,
 	) -> SysResult<()>
@@ -1388,7 +1388,7 @@ pub trait user_Hwnd: Handle {
 			unsafe {
 				ffi::RedrawWindow(
 					self.ptr(),
-					rc_update as *const _ as _,
+					&rc_update as *const _ as _,
 					hrgn_update.ptr(),
 					flags.raw(),
 				)
@@ -1973,9 +1973,9 @@ pub trait user_Hwnd: Handle {
 
 	/// [`ValidateRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-validaterect)
 	/// function.
-	fn ValidateRect(&self, rc: &RECT) -> SysResult<()> {
+	fn ValidateRect(&self, rc: RECT) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { ffi::ValidateRect(self.ptr(), rc as *const _ as _) },
+			unsafe { ffi::ValidateRect(self.ptr(), &rc as *const _ as _) },
 		)
 	}
 
