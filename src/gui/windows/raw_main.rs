@@ -51,18 +51,18 @@ impl RawMain {
 	{
 		let opts = &self.0.opts;
 
-		let hinst = HINSTANCE::GetModuleHandle(None).unwrap();
+		let hinst = HINSTANCE::GetModuleHandle(None)?;
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
 		RawBase::fill_wndclassex(
 			&hinst,
 			opts.class_style, &opts.class_icon, &opts.class_icon,
 			&opts.class_bg_brush, &opts.class_cursor, &mut wcx,
-			&mut class_name_buf).unwrap();
-		let atom = self.0.raw_base.register_class(&mut wcx).unwrap();
+			&mut class_name_buf)?;
+		let atom = self.0.raw_base.register_class(&mut wcx)?;
 
 		let mut wnd_sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
-		multiply_dpi(None, Some(&mut wnd_sz)).unwrap();
+		multiply_dpi(None, Some(&mut wnd_sz))?;
 
 		let screen_sz = SIZE::new(
 			GetSystemMetrics(co::SM::CXSCREEN),
@@ -81,7 +81,7 @@ impl RawMain {
 			bottom: wnd_pos.y + wnd_sz.cy,
 		};
 		wnd_rc = AdjustWindowRectEx(wnd_rc, opts.style,
-			opts.menu != HMENU::NULL, opts.ex_style).unwrap();
+			opts.menu != HMENU::NULL, opts.ex_style)?;
 		wnd_sz.cx = wnd_rc.right - wnd_rc.left;
 		wnd_sz.cy = wnd_rc.bottom - wnd_rc.top;
 
@@ -96,10 +96,10 @@ impl RawMain {
 			},
 			POINT::new(wnd_rc.left, wnd_rc.top), wnd_sz,
 			opts.ex_style, opts.style,
-		).unwrap();
+		)?;
 
 		self.base().hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
-		self.base().hwnd().UpdateWindow().unwrap();
+		self.base().hwnd().UpdateWindow()?;
 
 		Base::run_main_loop(opts.accel_table.as_deref()) // blocks until window is closed
 	}

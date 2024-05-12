@@ -39,24 +39,24 @@ impl WindowMessageOnly {
 	/// with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
-	pub fn new(parent: Option<&WindowMessageOnly>) -> Self {
+	pub fn new(parent: Option<&WindowMessageOnly>) -> AnyResult<Self> {
 		let new_self = Self(
 			Arc::pin(RawBase::new(parent)),
 		);
-		new_self.create();
-		new_self
+		new_self.create()?;
+		Ok(new_self)
 	}
 
-	fn create(&self) {
-		let hinst = HINSTANCE::GetModuleHandle(None).unwrap();
+	fn create(&self) -> AnyResult<()> {
+		let hinst = HINSTANCE::GetModuleHandle(None)?;
 		let mut wcx = WNDCLASSEX::default();
 		let mut class_name_buf = WString::new();
 		RawBase::fill_wndclassex(
 			&hinst,
 			co::CS::default(), &Icon::None, &Icon::None,
 			&Brush::None, &Cursor::None, &mut wcx,
-			&mut class_name_buf).unwrap();
-		let atom = self.0.register_class(&mut wcx).unwrap();
+			&mut class_name_buf)?;
+		let atom = self.0.register_class(&mut wcx)?;
 
 		let hparent_msg = unsafe { HWND::from_ptr(HWND_MESSAGE as _) };
 
@@ -68,6 +68,8 @@ impl WindowMessageOnly {
 			atom, None, IdMenu::None,
 			POINT::default(), SIZE::default(),
 			co::WS_EX::NoValue, co::WS::NoValue,
-		).unwrap();
+		)?;
+
+		Ok(())
 	}
 }
