@@ -68,16 +68,19 @@ impl<'a> Iterator for EditLineIter<'a> {
 			return None;
 		}
 
-		unsafe {
+		let ret_str = match unsafe {
 			self.owner.hwnd()
 				.SendMessage(em::GetLine {
 					index: self.current as _,
 					buffer: &mut self.buffer,
 				})
-		}.unwrap();
+		} {
+			Some(_) => self.buffer.to_string(),
+			None => String::new(), // no chars returned, or an error (no way to know)
+		};
 
 		self.current += 1;
-		Some(self.buffer.to_string())
+		Some(ret_str)
 	}
 }
 
