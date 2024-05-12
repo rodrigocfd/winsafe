@@ -906,6 +906,16 @@
 <a href="#906" id="906">906</a>
 <a href="#907" id="907">907</a>
 <a href="#908" id="908">908</a>
+<a href="#909" id="909">909</a>
+<a href="#910" id="910">910</a>
+<a href="#911" id="911">911</a>
+<a href="#912" id="912">912</a>
+<a href="#913" id="913">913</a>
+<a href="#914" id="914">914</a>
+<a href="#915" id="915">915</a>
+<a href="#916" id="916">916</a>
+<a href="#917" id="917">917</a>
+<a href="#918" id="918">918</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::rc::Rc;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -1528,6 +1538,11 @@
 		/// message.
 	</span>}
 
+	<span class="macro">pub_fn_wm_withparm_noret!</span> { wm_mouse_h_wheel, co::WM::MOUSEHWHEEL, wm::MouseHWheel;
+		<span class="doccomment">/// [`WM_MOUSEHWHEEL`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousehwheel)
+		/// message.
+	</span>}
+
 	<span class="macro">pub_fn_wm_withparm_noret!</span> { wm_mouse_hover, co::WM::MOUSEHOVER, wm::MouseHover;
 		<span class="doccomment">/// [`WM_MOUSEHOVER`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
 		/// message.
@@ -1545,6 +1560,11 @@
 
 	<span class="macro">pub_fn_wm_withparm_noret!</span> { wm_move, co::WM::MOVE, wm::Move;
 		<span class="doccomment">/// [`WM_MOVE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-move)
+		/// message.
+	</span>}
+
+	<span class="macro">pub_fn_wm_withparm_noret!</span> { wm_mouse_wheel, co::WM::MOUSEWHEEL, wm::MouseWheel;
+		<span class="doccomment">/// [`WM_MOUSEWHEEL`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousewheel)
 		/// message.
 	</span>}
 
