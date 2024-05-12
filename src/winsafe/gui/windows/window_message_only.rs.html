@@ -71,6 +71,8 @@
 <a href="#71" id="71">71</a>
 <a href="#72" id="72">72</a>
 <a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span>std::any::Any;
 <span class="kw">use </span>std::pin::Pin;
 <span class="kw">use </span>std::sync::Arc;
@@ -112,24 +114,24 @@
 	/// with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>new(parent: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>WindowMessageOnly&gt;) -&gt; <span class="self">Self </span>{
+	</span><span class="kw">pub fn </span>new(parent: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>WindowMessageOnly&gt;) -&gt; AnyResult&lt;<span class="self">Self</span>&gt; {
 		<span class="kw">let </span>new_self = <span class="self">Self</span>(
 			Arc::pin(RawBase::new(parent)),
 		);
-		new_self.create();
-		new_self
+		new_self.create()<span class="question-mark">?</span>;
+		<span class="prelude-val">Ok</span>(new_self)
 	}
 
-	<span class="kw">fn </span>create(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="kw">let </span>hinst = HINSTANCE::GetModuleHandle(<span class="prelude-val">None</span>).unwrap();
+	<span class="kw">fn </span>create(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; AnyResult&lt;()&gt; {
+		<span class="kw">let </span>hinst = HINSTANCE::GetModuleHandle(<span class="prelude-val">None</span>)<span class="question-mark">?</span>;
 		<span class="kw">let </span><span class="kw-2">mut </span>wcx = WNDCLASSEX::default();
 		<span class="kw">let </span><span class="kw-2">mut </span>class_name_buf = WString::new();
 		RawBase::fill_wndclassex(
 			<span class="kw-2">&amp;</span>hinst,
 			co::CS::default(), <span class="kw-2">&amp;</span>Icon::None, <span class="kw-2">&amp;</span>Icon::None,
 			<span class="kw-2">&amp;</span>Brush::None, <span class="kw-2">&amp;</span>Cursor::None, <span class="kw-2">&amp;mut </span>wcx,
-			<span class="kw-2">&amp;mut </span>class_name_buf).unwrap();
-		<span class="kw">let </span>atom = <span class="self">self</span>.<span class="number">0</span>.register_class(<span class="kw-2">&amp;mut </span>wcx).unwrap();
+			<span class="kw-2">&amp;mut </span>class_name_buf)<span class="question-mark">?</span>;
+		<span class="kw">let </span>atom = <span class="self">self</span>.<span class="number">0</span>.register_class(<span class="kw-2">&amp;mut </span>wcx)<span class="question-mark">?</span>;
 
 		<span class="kw">let </span>hparent_msg = <span class="kw">unsafe </span>{ HWND::from_ptr(HWND_MESSAGE <span class="kw">as _</span>) };
 
@@ -141,7 +143,9 @@
 			atom, <span class="prelude-val">None</span>, IdMenu::None,
 			POINT::default(), SIZE::default(),
 			co::WS_EX::NoValue, co::WS::NoValue,
-		).unwrap();
+		)<span class="question-mark">?</span>;
+
+		<span class="prelude-val">Ok</span>(())
 	}
 }
 </code></pre></div></section></main></body></html>

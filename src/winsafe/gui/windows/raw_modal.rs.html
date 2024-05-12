@@ -310,7 +310,7 @@
 			right: wnd_sz.cx,
 			bottom: wnd_sz.cy,
 		};
-		AdjustWindowRectEx(<span class="kw-2">&amp;mut </span>wnd_rc, opts.style, <span class="bool-val">false</span>, opts.ex_style)<span class="question-mark">?</span>;
+		wnd_rc = AdjustWindowRectEx(wnd_rc, opts.style, <span class="bool-val">false</span>, opts.ex_style)<span class="question-mark">?</span>;
 		wnd_sz.cx = wnd_rc.right - wnd_rc.left;
 		wnd_sz.cy = wnd_rc.bottom - wnd_rc.top;
 

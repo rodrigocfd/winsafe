@@ -283,18 +283,18 @@
 	{
 		<span class="kw">let </span>opts = <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.opts;
 
-		<span class="kw">let </span>hinst = HINSTANCE::GetModuleHandle(<span class="prelude-val">None</span>).unwrap();
+		<span class="kw">let </span>hinst = HINSTANCE::GetModuleHandle(<span class="prelude-val">None</span>)<span class="question-mark">?</span>;
 		<span class="kw">let </span><span class="kw-2">mut </span>wcx = WNDCLASSEX::default();
 		<span class="kw">let </span><span class="kw-2">mut </span>class_name_buf = WString::new();
 		RawBase::fill_wndclassex(
 			<span class="kw-2">&amp;</span>hinst,
 			opts.class_style, <span class="kw-2">&amp;</span>opts.class_icon, <span class="kw-2">&amp;</span>opts.class_icon,
 			<span class="kw-2">&amp;</span>opts.class_bg_brush, <span class="kw-2">&amp;</span>opts.class_cursor, <span class="kw-2">&amp;mut </span>wcx,
-			<span class="kw-2">&amp;mut </span>class_name_buf).unwrap();
-		<span class="kw">let </span>atom = <span class="self">self</span>.<span class="number">0</span>.raw_base.register_class(<span class="kw-2">&amp;mut </span>wcx).unwrap();
+			<span class="kw-2">&amp;mut </span>class_name_buf)<span class="question-mark">?</span>;
+		<span class="kw">let </span>atom = <span class="self">self</span>.<span class="number">0</span>.raw_base.register_class(<span class="kw-2">&amp;mut </span>wcx)<span class="question-mark">?</span>;
 
 		<span class="kw">let </span><span class="kw-2">mut </span>wnd_sz = SIZE::new(opts.size.<span class="number">0 </span><span class="kw">as _</span>, opts.size.<span class="number">1 </span><span class="kw">as _</span>);
-		multiply_dpi(<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>wnd_sz)).unwrap();
+		multiply_dpi(<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>wnd_sz))<span class="question-mark">?</span>;
 
 		<span class="kw">let </span>screen_sz = SIZE::new(
 			GetSystemMetrics(co::SM::CXSCREEN),
@@ -312,8 +312,8 @@
 			right: wnd_pos.x + wnd_sz.cx,
 			bottom: wnd_pos.y + wnd_sz.cy,
 		};
-		AdjustWindowRectEx(<span class="kw-2">&amp;mut </span>wnd_rc, opts.style,
-			opts.menu != HMENU::NULL, opts.ex_style).unwrap();
+		wnd_rc = AdjustWindowRectEx(wnd_rc, opts.style,
+			opts.menu != HMENU::NULL, opts.ex_style)<span class="question-mark">?</span>;
 		wnd_sz.cx = wnd_rc.right - wnd_rc.left;
 		wnd_sz.cy = wnd_rc.bottom - wnd_rc.top;
 
@@ -328,10 +328,10 @@
 			},
 			POINT::new(wnd_rc.left, wnd_rc.top), wnd_sz,
 			opts.ex_style, opts.style,
-		).unwrap();
+		)<span class="question-mark">?</span>;
 
 		<span class="self">self</span>.base().hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
-		<span class="self">self</span>.base().hwnd().UpdateWindow().unwrap();
+		<span class="self">self</span>.base().hwnd().UpdateWindow()<span class="question-mark">?</span>;
 
 		Base::run_main_loop(opts.accel_table.as_deref()) <span class="comment">// blocks until window is closed
 	</span>}

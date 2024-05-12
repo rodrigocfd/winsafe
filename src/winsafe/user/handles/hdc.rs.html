@@ -163,9 +163,9 @@
 </span><span class="kw">pub trait </span>user_Hdc: Handle {
 	<span class="doccomment">/// [`DrawFocusRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawfocusrect)
 	/// function.
-	</span><span class="kw">fn </span>DrawFocusRect(<span class="kw-2">&amp;</span><span class="self">self</span>, rect: <span class="kw-2">&amp;</span>RECT) -&gt; SysResult&lt;()&gt; {
+	</span><span class="kw">fn </span>DrawFocusRect(<span class="kw-2">&amp;</span><span class="self">self</span>, rect: RECT) -&gt; SysResult&lt;()&gt; {
 		bool_to_sysresult(
-			<span class="kw">unsafe </span>{ ffi::DrawFocusRect(<span class="self">self</span>.ptr(), rect <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>) },
+			<span class="kw">unsafe </span>{ ffi::DrawFocusRect(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;</span>rect <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>) },
 		)
 	}
 
@@ -173,7 +173,7 @@
 	/// function.
 	</span><span class="kw">fn </span>DrawText(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		text: <span class="kw-2">&amp;</span>str,
-		bounds: <span class="kw-2">&amp;</span>RECT,
+		bounds: RECT,
 		format: co::DT,
 	) -&gt; SysResult&lt;i32&gt;
 	{
@@ -183,7 +183,7 @@
 				<span class="self">self</span>.ptr(),
 				wtext.as_ptr(),
 				wtext.str_len() <span class="kw">as _</span>,
-				bounds <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;</span>bounds <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
 				format.raw(),
 			)
 		} {
@@ -196,7 +196,7 @@
 	/// function.
 	</span><span class="kw">fn </span>DrawTextEx(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		text: <span class="kw-2">&amp;</span>str,
-		bounds: <span class="kw-2">&amp;</span>RECT,
+		bounds: RECT,
 		format: co::DT,
 		dtp: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>DRAWTEXTPARAMS&gt;,
 	) -&gt; SysResult&lt;i32&gt;
@@ -207,7 +207,7 @@
 				<span class="self">self</span>.ptr(),
 				wtext.as_ptr(),
 				wtext.str_len() <span class="kw">as _</span>,
-				bounds <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;</span>bounds <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
 				format.raw(),
 				dtp.map_or(std::ptr::null(), |p| p <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>),
 			)
@@ -257,9 +257,9 @@
 
 	<span class="doccomment">/// [`InvertRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invertrect)
 	/// function.
-	</span><span class="kw">fn </span>InvertRect(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: <span class="kw-2">&amp;</span>RECT) -&gt; SysResult&lt;()&gt; {
+	</span><span class="kw">fn </span>InvertRect(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: RECT) -&gt; SysResult&lt;()&gt; {
 		bool_to_sysresult(
-			<span class="kw">unsafe </span>{ ffi::InvertRect(<span class="self">self</span>.ptr(), rc <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>) },
+			<span class="kw">unsafe </span>{ ffi::InvertRect(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;</span>rc <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>) },
 		)
 	}
 

@@ -2313,7 +2313,7 @@
 	/// function.
 	</span><span class="kw">fn </span>DrawCaption(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		hdc: <span class="kw-2">&amp;</span>HDC,
-		rect: <span class="kw-2">&amp;</span>RECT,
+		rect: RECT,
 		flags: <span class="prelude-ty">Option</span>&lt;co::DC&gt;,
 	) -&gt; SysResult&lt;()&gt;
 	{
@@ -2322,7 +2322,7 @@
 				ffi::DrawCaption(
 					<span class="self">self</span>.ptr(),
 					hdc.ptr(),
-					rect <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+					<span class="kw-2">&amp;</span>rect <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
 					flags.unwrap_or_default().raw(),
 				)
 			},
@@ -3400,7 +3400,7 @@
 	<span class="doccomment">/// [`RedrawWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-redrawwindow)
 	/// function.
 	</span><span class="kw">fn </span>RedrawWindow(<span class="kw-2">&amp;</span><span class="self">self</span>,
-		rc_update: <span class="kw-2">&amp;</span>RECT,
+		rc_update: RECT,
 		hrgn_update: <span class="kw-2">&amp;</span>HRGN,
 		flags: co::RDW,
 	) -&gt; SysResult&lt;()&gt;
@@ -3409,7 +3409,7 @@
 			<span class="kw">unsafe </span>{
 				ffi::RedrawWindow(
 					<span class="self">self</span>.ptr(),
-					rc_update <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+					<span class="kw-2">&amp;</span>rc_update <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
 					hrgn_update.ptr(),
 					flags.raw(),
 				)
@@ -3994,9 +3994,9 @@
 
 	<span class="doccomment">/// [`ValidateRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-validaterect)
 	/// function.
-	</span><span class="kw">fn </span>ValidateRect(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: <span class="kw-2">&amp;</span>RECT) -&gt; SysResult&lt;()&gt; {
+	</span><span class="kw">fn </span>ValidateRect(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: RECT) -&gt; SysResult&lt;()&gt; {
 		bool_to_sysresult(
-			<span class="kw">unsafe </span>{ ffi::ValidateRect(<span class="self">self</span>.ptr(), rc <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>) },
+			<span class="kw">unsafe </span>{ ffi::ValidateRect(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;</span>rc <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>) },
 		)
 	}
 

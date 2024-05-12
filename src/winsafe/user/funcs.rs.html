@@ -1067,6 +1067,7 @@
 <a href="#1067" id="1067">1067</a>
 <a href="#1068" id="1068">1068</a>
 <a href="#1069" id="1069">1069</a>
+<a href="#1070" id="1070">1070</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -1082,22 +1083,23 @@
 ///
 /// * [`AdjustWindowRectExForDpi`](crate::AdjustWindowRectExForDpi)
 </span><span class="kw">pub fn </span>AdjustWindowRectEx(
-	rc: <span class="kw-2">&amp;mut </span>RECT,
+	rc: RECT,
 	style: co::WS,
 	has_menu: bool,
 	ex_style: co::WS_EX,
-) -&gt; SysResult&lt;()&gt;
+) -&gt; SysResult&lt;RECT&gt;
 {
+	<span class="kw">let </span><span class="kw-2">mut </span>buf = rc;
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{
 			ffi::AdjustWindowRectEx(
-				rc <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;mut </span>buf <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
 				style.raw(),
 				has_menu <span class="kw">as _</span>,
 				ex_style.raw(),
 			)
 		},
-	)
+	).map(|<span class="kw">_</span>| buf)
 }
 
 <span class="doccomment">/// [`AdjustWindowRectExForDpi`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectexfordpi)
@@ -1107,24 +1109,25 @@
 ///
 /// * [`AdjustWindowRectEx`](crate::AdjustWindowRectEx)
 </span><span class="kw">pub fn </span>AdjustWindowRectExForDpi(
-	rc: <span class="kw-2">&amp;mut </span>RECT,
+	rc: RECT,
 	style: co::WS,
 	has_menu: bool,
 	ex_style: co::WS_EX,
 	dpi: u32,
-) -&gt; SysResult&lt;()&gt;
+) -&gt; SysResult&lt;RECT&gt;
 {
+	<span class="kw">let </span><span class="kw-2">mut </span>buf = rc;
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{
 			ffi::AdjustWindowRectExForDpi(
-				rc <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;mut </span>buf <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
 				style.raw(),
 				has_menu <span class="kw">as _</span>,
 				ex_style.raw(),
 				dpi,
 			)
 		},
-	)
+	).map(|<span class="kw">_</span>| buf)
 }
 
 <span class="doccomment">/// [`AllowSetForegroundWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-allowsetforegroundwindow)
@@ -1758,8 +1761,11 @@
 
 <span class="doccomment">/// [`InflateRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-inflaterect)
 /// function.
-</span><span class="kw">pub fn </span>InflateRect(rc: <span class="kw-2">&amp;mut </span>RECT, dx: i32, dy: i32) -&gt; SysResult&lt;()&gt; {
-	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::InflateRect(rc <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>, dx, dy) })
+</span><span class="kw">pub fn </span>InflateRect(rc: RECT, dx: i32, dy: i32) -&gt; SysResult&lt;RECT&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>buf = rc;
+	bool_to_sysresult(
+		<span class="kw">unsafe </span>{ ffi::InflateRect(<span class="kw-2">&amp;mut </span>buf <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>, dx, dy) },
+	).map(|<span class="kw">_</span>| buf)
 }
 
 <span class="doccomment">/// [`InSendMessageEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-insendmessageex)
@@ -1774,21 +1780,17 @@
 
 <span class="doccomment">/// [`IntersectRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-intersectrect)
 /// function.
-</span><span class="kw">pub fn </span>IntersectRect(
-	dest: <span class="kw-2">&amp;mut </span>RECT,
-	src1: <span class="kw-2">&amp;</span>RECT,
-	src2: <span class="kw-2">&amp;</span>RECT,
-) -&gt; SysResult&lt;()&gt;
-{
+</span><span class="kw">pub fn </span>IntersectRect(src1: RECT, src2: RECT) -&gt; SysResult&lt;RECT&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>dest = RECT::default();
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{
 			ffi::IntersectRect(
-				dest <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
-				src1 <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-				src2 <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;mut </span>dest <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;</span>src1 <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;</span>src2 <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
 			)
 		},
-	)
+	).map(|<span class="kw">_</span>| dest)
 }
 
 <span class="doccomment">/// [`IsGUIThread`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isguithread)
@@ -1809,8 +1811,8 @@
 <span class="doccomment">/// [`IsRectEmpty`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isrectempty)
 /// function.
 </span><span class="attr">#[must_use]
-</span><span class="kw">pub fn </span>IsRectEmpty(rc: <span class="kw-2">&amp;</span>RECT) -&gt; bool {
-	<span class="kw">unsafe </span>{ ffi::IsRectEmpty(rc <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>) != <span class="number">0 </span>}
+</span><span class="kw">pub fn </span>IsRectEmpty(rc: RECT) -&gt; bool {
+	<span class="kw">unsafe </span>{ ffi::IsRectEmpty(<span class="kw-2">&amp;</span>rc <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>) != <span class="number">0 </span>}
 }
 
 <span class="doccomment">/// [`IsWow64Message`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-iswow64message)
@@ -1828,8 +1830,11 @@
 
 <span class="doccomment">/// [`OffsetRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-offsetrect)
 /// function.
-</span><span class="kw">pub fn </span>OffsetRect(rc: <span class="kw-2">&amp;mut </span>RECT, dx: i32, dy: i32) -&gt; SysResult&lt;()&gt; {
-	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::OffsetRect(rc <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>, dx, dy) })
+</span><span class="kw">pub fn </span>OffsetRect(rc: RECT, dx: i32, dy: i32) -&gt; SysResult&lt;RECT&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>buf = rc;
+	bool_to_sysresult(
+		<span class="kw">unsafe </span>{ ffi::OffsetRect(<span class="kw-2">&amp;mut </span>buf <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>, dx, dy) },
+	).map(|<span class="kw">_</span>| buf)
 }
 
 <span class="doccomment">/// [`PeekMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)
@@ -1880,8 +1885,8 @@
 <span class="doccomment">/// [`PtInRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ptinrect)
 /// function.
 </span><span class="attr">#[must_use]
-</span><span class="kw">pub fn </span>PtInRect(rc: <span class="kw-2">&amp;</span>RECT, pt: POINT) -&gt; bool {
-	<span class="kw">unsafe </span>{ ffi::PtInRect(rc <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>, pt.x, pt.y) != <span class="number">0 </span>}
+</span><span class="kw">pub fn </span>PtInRect(rc: RECT, pt: POINT) -&gt; bool {
+	<span class="kw">unsafe </span>{ ffi::PtInRect(<span class="kw-2">&amp;</span>rc <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>, pt.x, pt.y) != <span class="number">0 </span>}
 }
 
 <span class="doccomment">/// [`RegisterClassEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassexw)
@@ -2046,21 +2051,17 @@
 
 <span class="doccomment">/// [`SubtractRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-subtractrect)
 /// function.
-</span><span class="kw">pub fn </span>SubtractRect(
-	dest: <span class="kw-2">&amp;mut </span>RECT,
-	src1: <span class="kw-2">&amp;</span>RECT,
-	src2: <span class="kw-2">&amp;</span>RECT,
-) -&gt; SysResult&lt;()&gt;
-{
+</span><span class="kw">pub fn </span>SubtractRect(src1: RECT, src2: RECT) -&gt; SysResult&lt;RECT&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>dest = RECT::default();
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{
 			ffi::SubtractRect(
-				dest <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
-				src1 <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-				src2 <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;mut </span>dest <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;</span>src1 <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;</span>src2 <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
 			)
 		},
-	)
+	).map(|<span class="kw">_</span>| dest)
 }
 
 <span class="doccomment">/// [`SwapMouseButton`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-swapmousebutton)
@@ -2107,16 +2108,17 @@
 
 <span class="doccomment">/// [`UnionRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unionrect)
 /// function.
-</span><span class="kw">pub fn </span>UnionRect(dest: <span class="kw-2">&amp;mut </span>RECT, src1: <span class="kw-2">&amp;</span>RECT, src2: <span class="kw-2">&amp;</span>RECT) -&gt; SysResult&lt;()&gt; {
+</span><span class="kw">pub fn </span>UnionRect(src1: RECT, src2: RECT) -&gt; SysResult&lt;RECT&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>dest = RECT::default();
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{
 			ffi::UnionRect(
-				dest <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
-				src1 <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-				src2 <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;mut </span>dest <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;</span>src1 <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+				<span class="kw-2">&amp;</span>src2 <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
 			)
 		},
-	)
+	).map(|<span class="kw">_</span>| dest)
 }
 
 <span class="doccomment">/// [`UnregisterClass`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterclassw)
