@@ -1089,12 +1089,84 @@ pub_struct_msg_button! { MouseHover: co::WM::MOUSEHOVER;
 	/// [`WM_MOUSEHOVER`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
 }
 
+/// [`WM_MOUSEHWHEEL`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousehwheel)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct MouseHWheel {
+	pub wheel_distance: i16,
+	pub keys: co::MK,
+	pub coords: POINT,
+}
+
+unsafe impl MsgSend for MouseHWheel {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::MOUSEHWHEEL,
+			wparam: MAKEDWORD(self.wheel_distance as _, self.keys.raw()) as _,
+			lparam: u32::from(self.coords) as _,
+		}
+	}
+}
+
+unsafe impl MsgSendRecv for MouseHWheel {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			wheel_distance: LOWORD(p.wparam as _) as _,
+			keys: unsafe { co::MK::from_raw(HIWORD(p.wparam as _)) },
+			coords: POINT::from(p.lparam as u32),
+		}
+	}
+}
+
 pub_struct_msg_empty_handleable! { MouseLeave: co::WM::MOUSELEAVE;
 	/// [`WM_MOUSELEAVE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mouseleave)
 }
 
 pub_struct_msg_button! { MouseMove: co::WM::MOUSEMOVE;
 	/// [`WM_MOUSEMOVE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousemove)
+}
+
+/// [`WM_MOUSEWHEEL`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousewheel)
+/// message parameters.
+///
+/// Return type: `()`.
+pub struct MouseWheel {
+	pub wheel_distance: i16,
+	pub keys: co::MK,
+	pub coords: POINT,
+}
+
+unsafe impl MsgSend for MouseWheel {
+	type RetType = ();
+
+	fn convert_ret(&self, _: isize) -> Self::RetType {
+		()
+	}
+
+	fn as_generic_wm(&mut self) -> WndMsg {
+		WndMsg {
+			msg_id: co::WM::MOUSEWHEEL,
+			wparam: MAKEDWORD(self.wheel_distance as _, self.keys.raw()) as _,
+			lparam: u32::from(self.coords) as _,
+		}
+	}
+}
+
+unsafe impl MsgSendRecv for MouseWheel {
+	fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			wheel_distance: LOWORD(p.wparam as _) as _,
+			keys: unsafe { co::MK::from_raw(HIWORD(p.wparam as _)) },
+			coords: POINT::from(p.lparam as u32),
+		}
+	}
 }
 
 /// [`WM_MOVE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-move)

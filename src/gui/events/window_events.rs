@@ -620,6 +620,11 @@ impl WindowEvents {
 		/// message.
 	}
 
+	pub_fn_wm_withparm_noret! { wm_mouse_h_wheel, co::WM::MOUSEHWHEEL, wm::MouseHWheel;
+		/// [`WM_MOUSEHWHEEL`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousehwheel)
+		/// message.
+	}
+
 	pub_fn_wm_withparm_noret! { wm_mouse_hover, co::WM::MOUSEHOVER, wm::MouseHover;
 		/// [`WM_MOUSEHOVER`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousehover)
 		/// message.
@@ -637,6 +642,11 @@ impl WindowEvents {
 
 	pub_fn_wm_withparm_noret! { wm_move, co::WM::MOVE, wm::Move;
 		/// [`WM_MOVE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-move)
+		/// message.
+	}
+
+	pub_fn_wm_withparm_noret! { wm_mouse_wheel, co::WM::MOUSEWHEEL, wm::MouseWheel;
+		/// [`WM_MOUSEWHEEL`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-mousewheel)
 		/// message.
 	}
 
