@@ -2019,6 +2019,12 @@
 <a href="#2019" id="2019">2019</a>
 <a href="#2020" id="2020">2020</a>
 <a href="#2021" id="2021">2021</a>
+<a href="#2022" id="2022">2022</a>
+<a href="#2023" id="2023">2023</a>
+<a href="#2024" id="2024">2024</a>
+<a href="#2025" id="2025">2025</a>
+<a href="#2026" id="2026">2026</a>
+<a href="#2027" id="2027">2027</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -2195,6 +2201,7 @@
 	/// If you need to convert a [`RECT`](crate::RECT), see the
 	/// [`HWND::ClientToScreenRc`](crate::prelude::user_Hwnd::ClientToScreenRc)
 	/// function.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>ClientToScreen(<span class="kw-2">&amp;</span><span class="self">self</span>, pt: POINT) -&gt; SysResult&lt;POINT&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = pt;
 		bool_to_sysresult(
@@ -2204,6 +2211,7 @@
 
 	<span class="doccomment">/// [`ClientToScreen`](crate::prelude::user_Hwnd::ClientToScreen) method for
 	/// a [`RECT`](crate::RECT).
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>ClientToScreenRc(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: RECT) -&gt; SysResult&lt;RECT&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = rc;
 		bool_to_sysresult(
@@ -2658,6 +2666,7 @@
 
 	<span class="doccomment">/// [`GetMenuItemRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemrect)
 	/// function.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>GetMenuItemRect(<span class="kw-2">&amp;</span><span class="self">self</span>, hmenu: <span class="kw-2">&amp;</span>HMENU, item_pos: u32) -&gt; SysResult&lt;RECT&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>rc = RECT::default();
 		bool_to_sysresult(
@@ -3164,6 +3173,7 @@
 
 	<span class="doccomment">/// [`MapDialogRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapdialogrect)
 	/// function.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>MapDialogRect(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: RECT) -&gt; SysResult&lt;RECT&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = rc;
 		bool_to_sysresult(
@@ -3443,6 +3453,7 @@
 	/// If you need to convert a [`RECT`](crate::RECT), see the
 	/// [`HWND::ScreenToClientRc`](crate::prelude::user_Hwnd::ScreenToClientRc)
 	/// function.
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>ScreenToClient(<span class="kw-2">&amp;</span><span class="self">self</span>, pt: POINT) -&gt; SysResult&lt;POINT&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = pt;
 		bool_to_sysresult(
@@ -3452,6 +3463,7 @@
 
 	<span class="doccomment">/// [`ScreenToClient`](crate::prelude::user_Hwnd::ScreenToClient) method for
 	/// a [`RECT`](crate::RECT).
+	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>ScreenToClientRc(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: RECT) -&gt; SysResult&lt;RECT&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = rc;
 		bool_to_sysresult(

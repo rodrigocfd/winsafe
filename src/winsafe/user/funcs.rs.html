@@ -1068,6 +1068,13 @@
 <a href="#1068" id="1068">1068</a>
 <a href="#1069" id="1069">1069</a>
 <a href="#1070" id="1070">1070</a>
+<a href="#1071" id="1071">1071</a>
+<a href="#1072" id="1072">1072</a>
+<a href="#1073" id="1073">1073</a>
+<a href="#1074" id="1074">1074</a>
+<a href="#1075" id="1075">1075</a>
+<a href="#1076" id="1076">1076</a>
+<a href="#1077" id="1077">1077</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -1082,6 +1089,7 @@
 /// # Related functions
 ///
 /// * [`AdjustWindowRectExForDpi`](crate::AdjustWindowRectExForDpi)
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>AdjustWindowRectEx(
 	rc: RECT,
 	style: co::WS,
@@ -1108,6 +1116,7 @@
 /// # Related functions
 ///
 /// * [`AdjustWindowRectEx`](crate::AdjustWindowRectEx)
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>AdjustWindowRectExForDpi(
 	rc: RECT,
 	style: co::WS,
@@ -1761,6 +1770,7 @@
 
 <span class="doccomment">/// [`InflateRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-inflaterect)
 /// function.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>InflateRect(rc: RECT, dx: i32, dy: i32) -&gt; SysResult&lt;RECT&gt; {
 	<span class="kw">let </span><span class="kw-2">mut </span>buf = rc;
 	bool_to_sysresult(
@@ -1780,6 +1790,7 @@
 
 <span class="doccomment">/// [`IntersectRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-intersectrect)
 /// function.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>IntersectRect(src1: RECT, src2: RECT) -&gt; SysResult&lt;RECT&gt; {
 	<span class="kw">let </span><span class="kw-2">mut </span>dest = RECT::default();
 	bool_to_sysresult(
@@ -1830,6 +1841,7 @@
 
 <span class="doccomment">/// [`OffsetRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-offsetrect)
 /// function.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>OffsetRect(rc: RECT, dx: i32, dy: i32) -&gt; SysResult&lt;RECT&gt; {
 	<span class="kw">let </span><span class="kw-2">mut </span>buf = rc;
 	bool_to_sysresult(
@@ -2051,6 +2063,7 @@
 
 <span class="doccomment">/// [`SubtractRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-subtractrect)
 /// function.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>SubtractRect(src1: RECT, src2: RECT) -&gt; SysResult&lt;RECT&gt; {
 	<span class="kw">let </span><span class="kw-2">mut </span>dest = RECT::default();
 	bool_to_sysresult(
@@ -2108,6 +2121,7 @@
 
 <span class="doccomment">/// [`UnionRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unionrect)
 /// function.
+</span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>UnionRect(src1: RECT, src2: RECT) -&gt; SysResult&lt;RECT&gt; {
 	<span class="kw">let </span><span class="kw-2">mut </span>dest = RECT::default();
 	bool_to_sysresult(
