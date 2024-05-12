@@ -12,6 +12,7 @@ use crate::user::{ffi, iterators::*, privs::*, proc};
 /// # Related functions
 ///
 /// * [`AdjustWindowRectExForDpi`](crate::AdjustWindowRectExForDpi)
+#[must_use]
 pub fn AdjustWindowRectEx(
 	rc: RECT,
 	style: co::WS,
@@ -38,6 +39,7 @@ pub fn AdjustWindowRectEx(
 /// # Related functions
 ///
 /// * [`AdjustWindowRectEx`](crate::AdjustWindowRectEx)
+#[must_use]
 pub fn AdjustWindowRectExForDpi(
 	rc: RECT,
 	style: co::WS,
@@ -691,6 +693,7 @@ pub fn InSendMessage() -> bool {
 
 /// [`InflateRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-inflaterect)
 /// function.
+#[must_use]
 pub fn InflateRect(rc: RECT, dx: i32, dy: i32) -> SysResult<RECT> {
 	let mut buf = rc;
 	bool_to_sysresult(
@@ -710,6 +713,7 @@ pub fn InSendMessageEx() -> co::ISMEX {
 
 /// [`IntersectRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-intersectrect)
 /// function.
+#[must_use]
 pub fn IntersectRect(src1: RECT, src2: RECT) -> SysResult<RECT> {
 	let mut dest = RECT::default();
 	bool_to_sysresult(
@@ -760,6 +764,7 @@ pub fn LockSetForegroundWindow(lock_code: co::LSFW) -> SysResult<()> {
 
 /// [`OffsetRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-offsetrect)
 /// function.
+#[must_use]
 pub fn OffsetRect(rc: RECT, dx: i32, dy: i32) -> SysResult<RECT> {
 	let mut buf = rc;
 	bool_to_sysresult(
@@ -981,6 +986,7 @@ pub fn SoundSentry() -> bool {
 
 /// [`SubtractRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-subtractrect)
 /// function.
+#[must_use]
 pub fn SubtractRect(src1: RECT, src2: RECT) -> SysResult<RECT> {
 	let mut dest = RECT::default();
 	bool_to_sysresult(
@@ -1038,6 +1044,7 @@ pub fn TranslateMessage(msg: &MSG) -> bool {
 
 /// [`UnionRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unionrect)
 /// function.
+#[must_use]
 pub fn UnionRect(src1: RECT, src2: RECT) -> SysResult<RECT> {
 	let mut dest = RECT::default();
 	bool_to_sysresult(

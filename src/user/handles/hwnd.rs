@@ -174,6 +174,7 @@ pub trait user_Hwnd: Handle {
 	/// If you need to convert a [`RECT`](crate::RECT), see the
 	/// [`HWND::ClientToScreenRc`](crate::prelude::user_Hwnd::ClientToScreenRc)
 	/// function.
+	#[must_use]
 	fn ClientToScreen(&self, pt: POINT) -> SysResult<POINT> {
 		let mut buf = pt;
 		bool_to_sysresult(
@@ -183,6 +184,7 @@ pub trait user_Hwnd: Handle {
 
 	/// [`ClientToScreen`](crate::prelude::user_Hwnd::ClientToScreen) method for
 	/// a [`RECT`](crate::RECT).
+	#[must_use]
 	fn ClientToScreenRc(&self, rc: RECT) -> SysResult<RECT> {
 		let mut buf = rc;
 		bool_to_sysresult(
@@ -637,6 +639,7 @@ pub trait user_Hwnd: Handle {
 
 	/// [`GetMenuItemRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemrect)
 	/// function.
+	#[must_use]
 	fn GetMenuItemRect(&self, hmenu: &HMENU, item_pos: u32) -> SysResult<RECT> {
 		let mut rc = RECT::default();
 		bool_to_sysresult(
@@ -1143,6 +1146,7 @@ pub trait user_Hwnd: Handle {
 
 	/// [`MapDialogRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-mapdialogrect)
 	/// function.
+	#[must_use]
 	fn MapDialogRect(&self, rc: RECT) -> SysResult<RECT> {
 		let mut buf = rc;
 		bool_to_sysresult(
@@ -1422,6 +1426,7 @@ pub trait user_Hwnd: Handle {
 	/// If you need to convert a [`RECT`](crate::RECT), see the
 	/// [`HWND::ScreenToClientRc`](crate::prelude::user_Hwnd::ScreenToClientRc)
 	/// function.
+	#[must_use]
 	fn ScreenToClient(&self, pt: POINT) -> SysResult<POINT> {
 		let mut buf = pt;
 		bool_to_sysresult(
@@ -1431,6 +1436,7 @@ pub trait user_Hwnd: Handle {
 
 	/// [`ScreenToClient`](crate::prelude::user_Hwnd::ScreenToClient) method for
 	/// a [`RECT`](crate::RECT).
+	#[must_use]
 	fn ScreenToClientRc(&self, rc: RECT) -> SysResult<RECT> {
 		let mut buf = rc;
 		bool_to_sysresult(
