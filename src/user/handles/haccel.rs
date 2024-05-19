@@ -38,4 +38,14 @@ pub trait user_Haccel: Handle {
 			).map(|h| DestroyAcceleratorTableGuard::new(h))
 		}
 	}
+
+    /// [`LoadAccelerators`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
+    /// function.
+    #[must_use]
+    fn LoadAccelerators(hinst: HINSTANCE, id: IdStr) -> SysResult<DestroyAcceleratorTableGuard> {
+        unsafe {
+            ptr_to_sysresult_handle(ffi::LoadAcceleratorsW(hinst.ptr() as _, id.as_ptr() as _))
+                .map(|h| DestroyAcceleratorTableGuard::new(h))
+        }
+    }
 }
