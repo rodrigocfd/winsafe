@@ -129,10 +129,12 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// [`LoadAccelerators`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
 	/// function.
 	#[must_use]
-	fn LoadAccelerators(&self, table_name: IdStr) -> SysResult<DestroyAcceleratorTableGuard> {
+	fn LoadAccelerators(&self,
+		table_name: IdStr,
+	) -> SysResult<DestroyAcceleratorTableGuard> {
 		unsafe {
 			ptr_to_sysresult_handle(
-				ffi::LoadAcceleratorsW(self.ptr(), table_name.as_ptr())
+				ffi::LoadAcceleratorsW(self.ptr(), table_name.as_ptr()),
 			).map(|h| DestroyAcceleratorTableGuard::new(h))
 		}
 	}
