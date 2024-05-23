@@ -719,6 +719,16 @@ pub struct KEYBDINPUT {
 	pub dwExtraInfo: usize,
 }
 
+/// ['LASTINPUTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-lastinputinfo)
+/// struct.
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct LASTINPUTINFO {
+	cbSize: u32,
+	pub dwTime: u32,
+}
+impl_default_with_size!(LASTINPUTINFO, cbSize);
+
 /// [`MENUBARINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menubarinfo)
 /// struct.
 #[repr(C)]
