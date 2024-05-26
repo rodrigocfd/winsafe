@@ -605,6 +605,14 @@ pub fn GetGUIThreadInfo(thread_id: u32) -> SysResult<GUITHREADINFO> {
 	).map(|_| gti)
 }
 
+/// [`GetLastInputInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getlastinputinfo)
+/// function.
+#[must_use]
+pub fn GetLastInputInfo() -> SysResult<LASTINPUTINFO> {
+	let mut lii = LASTINPUTINFO::default();
+	bool_to_sysresult(unsafe {ffi::GetLastInputInfo(&mut lii as *mut _ as _)}).map(|_|lii)
+}
+
 /// [`GetMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
 /// function.
 pub fn GetMessage(

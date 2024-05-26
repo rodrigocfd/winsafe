@@ -116,6 +116,7 @@ extern_sys! { "user32";
 	GetIconInfo(HANDLE, PVOID) -> BOOL
 	GetIconInfoExW(HANDLE, PVOID) -> BOOL
 	GetLastActivePopup(HANDLE) -> HANDLE
+	GetLastInputInfo(PVOID) -> BOOL
 	GetMenu(HANDLE) -> HANDLE
 	GetMenuBarInfo(HANDLE, i32, i32, PVOID) -> BOOL
 	GetMenuCheckMarkDimensions() -> u32
