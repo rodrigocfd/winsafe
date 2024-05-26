@@ -1075,6 +1075,14 @@
 <a href="#1075" id="1075">1075</a>
 <a href="#1076" id="1076">1076</a>
 <a href="#1077" id="1077">1077</a>
+<a href="#1078" id="1078">1078</a>
+<a href="#1079" id="1079">1079</a>
+<a href="#1080" id="1080">1080</a>
+<a href="#1081" id="1081">1081</a>
+<a href="#1082" id="1082">1082</a>
+<a href="#1083" id="1083">1083</a>
+<a href="#1084" id="1084">1084</a>
+<a href="#1085" id="1085">1085</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -1680,6 +1688,14 @@
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{ ffi::GetGUIThreadInfo(thread_id, <span class="kw-2">&amp;mut </span>gti <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) },
 	).map(|<span class="kw">_</span>| gti)
+}
+
+<span class="doccomment">/// [`GetLastInputInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getlastinputinfo)
+/// function.
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetLastInputInfo() -&gt; SysResult&lt;LASTINPUTINFO&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>lii = LASTINPUTINFO::default();
+	bool_to_sysresult(<span class="kw">unsafe </span>{ffi::GetLastInputInfo(<span class="kw-2">&amp;mut </span>lii <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)}).map(|<span class="kw">_</span>|lii)
 }
 
 <span class="doccomment">/// [`GetMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
