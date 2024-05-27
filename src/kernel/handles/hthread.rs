@@ -150,6 +150,16 @@ pub trait kernel_Hthread: Handle {
 		}
 	}
 
+	/// [`QueryThreadCycleTime`](https://learn.microsoft.com/en-us/windows/win32/api/realtimeapiset/nf-realtimeapiset-querythreadcycletime)
+	/// function.
+	#[must_use]
+	fn QueryThreadCycleTime(&self) -> SysResult<u64> {
+		let mut t = u64::default();
+		bool_to_sysresult(
+			unsafe { ffi::QueryThreadCycleTime(self.ptr(), &mut t) },
+		).map(|_| t)
+	}
+
 	/// [`ResumeThread`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-resumethread)
 	/// function.
 	fn ResumeThread(&self) -> SysResult<u32> {

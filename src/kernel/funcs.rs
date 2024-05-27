@@ -2148,6 +2148,24 @@ pub fn QueryPerformanceFrequency() -> SysResult<i64> {
 		.map(|_| freq)
 }
 
+/// [`QueryUnbiasedInterruptTime`](https://learn.microsoft.com/en-us/windows/win32/api/realtimeapiset/nf-realtimeapiset-queryunbiasedinterrupttime)
+/// function.
+#[must_use]
+pub fn QueryUnbiasedInterruptTime() -> SysResult<u64> {
+	let mut t = u64::default();
+	bool_to_sysresult(unsafe { ffi::QueryUnbiasedInterruptTime(&mut t) })
+		.map(|_| t)
+}
+
+/// [`QueryUnbiasedInterruptTimePrecise`](https://learn.microsoft.com/en-us/windows/win32/api/realtimeapiset/nf-realtimeapiset-queryunbiasedinterrupttimeprecise)
+/// function.
+#[must_use]
+pub fn QueryUnbiasedInterruptTimePrecise() -> u64 {
+	let mut t = u64::default();
+	unsafe { ffi::QueryUnbiasedInterruptTimePrecise(&mut t); }
+	t
+}
+
 /// [`ReplaceFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew)
 /// function.
 ///

@@ -231,6 +231,10 @@ extern_sys! { "kernel32";
 	QueryPerformanceCounter(*mut i64) -> BOOL
 	QueryPerformanceFrequency(*mut i64) -> BOOL
 	QueryProcessAffinityUpdateMode(HANDLE, *mut u32) -> BOOL
+	QueryProcessCycleTime(HANDLE, &mut u64) -> BOOL
+	QueryThreadCycleTime(HANDLE, &mut u64) -> BOOL
+	QueryUnbiasedInterruptTime(&mut u64) -> BOOL
+	QueryUnbiasedInterruptTimePrecise(&mut u64)
 	ReadConsoleW(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
 	ReadFile(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
 	ReplaceFileW(PCSTR, PCSTR, PCSTR, u32, PVOID, PVOID) -> BOOL

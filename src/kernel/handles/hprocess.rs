@@ -296,6 +296,16 @@ pub trait kernel_Hprocess: Handle {
 		).map(|_| affinity)
 	}
 
+	/// [`QueryProcessCycleTime`](https://learn.microsoft.com/en-us/windows/win32/api/realtimeapiset/nf-realtimeapiset-queryprocesscycletime)
+	/// function.
+	#[must_use]
+	fn QueryProcessCycleTime(&self) -> SysResult<u64> {
+		let mut t = u64::default();
+		bool_to_sysresult(
+			unsafe { ffi::QueryProcessCycleTime(self.ptr(), &mut t) }
+		).map(|_| t)
+	}
+
 	/// [`SetPriorityClass`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setpriorityclass)
 	/// function.
 	fn SetPriorityClass(&self,
