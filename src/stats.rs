@@ -11,29 +11,30 @@ pub struct Stats {
 	pub com_methods: usize,
 }
 
-impl Stats {
-	/// Returns the stats as the formatted output.
-	pub fn format(&self) -> String {
-		format!("{}\r\n{}\r\n{}\r\n{}\r\n{}\r\n{}\r\n{}",
-			format!("| Functions | {} |", Self::fmt_thou(self.ffis)),
-			format!("| Structs | {} |", Self::fmt_thou(self.structs)),
-			format!("| Constants | {} |", Self::fmt_thou(self.consts)),
-			format!("| Window messages | {} |", Self::fmt_thou(self.wmsgs)),
-			format!("| Handles | {} |", Self::fmt_thou(self.handles)),
-			format!("| COM interfaces | {} |", Self::fmt_thou(self.com_interfaces)),
-			format!("| COM methods | {} |", Self::fmt_thou(self.com_methods)),
+fn fmt_thousand(n: usize) -> String {
+	let thou = (n - (n % 1000)) / 1000;
+	if thou > 0 {
+		format!("{},{:03}", thou, n % 1000)
+	} else {
+		n.to_string()
+	}
+}
+
+impl std::fmt::Display for Stats {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "{}\r\n{}\r\n{}\r\n{}\r\n{}\r\n{}\r\n{}",
+			format!("| Functions | {} |", fmt_thousand(self.ffis)),
+			format!("| Structs | {} |", fmt_thousand(self.structs)),
+			format!("| Constants | {} |", fmt_thousand(self.consts)),
+			format!("| Window messages | {} |", fmt_thousand(self.wmsgs)),
+			format!("| Handles | {} |", fmt_thousand(self.handles)),
+			format!("| COM interfaces | {} |", fmt_thousand(self.com_interfaces)),
+			format!("| COM methods | {} |", fmt_thousand(self.com_methods)),
 		)
 	}
+}
 
-	fn fmt_thou(n: usize) -> String {
-		let thou = (n - (n % 1000)) / 1000;
-		if thou > 0 {
-			format!("{},{:03}", thou, n % 1000)
-		} else {
-			n.to_string()
-		}
-	}
-
+impl Stats {
 	/// Reads all files in the target directory and processes all the stats.
 	///
 	/// The callback is called after processing each file, to give a progressive

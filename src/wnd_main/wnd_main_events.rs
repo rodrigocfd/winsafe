@@ -36,7 +36,7 @@ impl WndMain {
 			if !w::path::exists(&target_dir) {
 				w::TaskDialogIndirect(&w::TASKDIALOGCONFIG {
 					hwnd_parent: Some(self2.wnd.hwnd()),
-					window_title: Some("Bas path"),
+					window_title: Some("Bad path"),
 					main_instruction: Some("Process cannot be done"),
 					content: Some(&format!("Path does not exist:\n{}", target_dir)),
 					main_icon: w::IconIdTd::Td(co::TD_ICON::ERROR),
@@ -63,7 +63,7 @@ impl WndMain {
 				self3.pro_load.set_position(pass_idx as _);
 			})?;
 
-			self2.txt_out.set_text(&stats.format());
+			self2.txt_out.set_text(&stats.to_string());
 			self2.txt_out.focus();
 
 			self2.txt_path.hwnd().EnableWindow(true);
