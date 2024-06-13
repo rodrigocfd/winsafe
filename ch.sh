@@ -1,11 +1,17 @@
 # Runs cargo check on each feature.
 
 FEATS=(
+	advapi
+	'advapi comctl'
+	'advapi shell'
 	comctl
+	'comctl gdi'
+	'comctl shell'
 	dshow
 	dwm
 	dxgi
 	gdi
+	'gdi mf'
 	gui
 	kernel
 	mf

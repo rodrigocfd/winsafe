@@ -21,7 +21,7 @@ WinSafe documentation:
 
 ## Current status
 
-Native FFI items implemented:
+### Native FFI items implemented
 
 | Native FFI item | Count |
 | - | -: |
@@ -33,7 +33,9 @@ Native FFI items implemented:
 | COM interfaces | 85 |
 | COM methods | 478 |
 
-High-level GUI controls:
+Although WinSafe already has a lot of Win32 APIs, it doesn't have *everything*, simply because Win32 API is gigantic. So if you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but have everything.
+
+### High-level GUI controls implemented
 
 * User custom window/dialog – main, modal, modeless, control, message-only.
 * Native controls – button, check box, combo box, date and time picker, edit, header, label, list box, list view, month calendar, progress bar, radio button, status bar, tab, track bar, tree view, up down.
@@ -56,19 +58,24 @@ winsafe = { git = "https://github.com/rodrigocfd/winsafe", features = [] }
 
 Then you must enable the [Cargo features](https://doc.rust-lang.org/cargo/reference/features.html#the-features-section) you want to be included – these modules are named after native Windows DLL and library names, mostly.
 
+### Cargo features
+
+The APIs in WinSafe are split into Cargo features to speed up compilation time. Only the features you include will be compiled.
+
 The following Cargo features are available so far:
 
 | Feature | Description |
 | - | - |
-| `comctl` | ComCtl32.dll, for [Common Controls](https://learn.microsoft.com/en-us/windows/win32/api/_controls/) |
+| `advapi` | Advapi32.dll and Ktmw32.dll, advanced kernel functions |
+| `comctl` | ComCtl32.dll, the [Common Controls](https://learn.microsoft.com/en-us/windows/win32/api/_controls/) |
 | `dshow` | [DirectShow](https://learn.microsoft.com/en-us/windows/win32/directshow/directshow) |
-| `dwm` | Dwmapi.dll, the [Desktop Window Manager](https://learn.microsoft.com/en-us/windows/win32/dwm/dwm-overview) |
+| `dwm` | [Desktop Window Manager](https://learn.microsoft.com/en-us/windows/win32/dwm/dwm-overview) |
 | `dxgi` | [DirectX Graphics Infrastructure](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dx-graphics-dxgi) |
 | `gdi` | Gdi32.dll, the [Windows GDI](https://learn.microsoft.com/en-us/windows/win32/gdi/windows-gdi) |
 | **`gui`** | **The WinSafe high-level GUI abstractions** |
-| `kernel` | Kernel32.dll, Advapi32.dll and Ktmw32.dll – all others will include it |
+| `kernel` | Kernel32.dll, basic kernel functions |
 | `mf` | [Media Foundation](https://learn.microsoft.com/en-us/windows/win32/medfound/microsoft-media-foundation-sdk) |
-| `ole` | OLE and basic COM support |
+| `ole` | Basic OLE/COM support |
 | `oleaut` | [OLE Automation](https://learn.microsoft.com/en-us/windows/win32/api/_automat/) |
 | `shell` | Shell32.dll, Shlwapi.dll, and Userenv.dll, the COM-based [Windows Shell](https://learn.microsoft.com/en-us/windows/win32/shell/shell-entry) |
 | `taskschd` | [Task Scheduler](https://learn.microsoft.com/en-us/windows/win32/taskschd/task-scheduler-start-page) |
@@ -76,7 +83,30 @@ The following Cargo features are available so far:
 | `uxtheme` | UxTheme.dll, extended window theming |
 | `version` | Version.dll, to manipulate *.exe version info |
 
-Although WinSafe already has a lot of Win32 APIs, it doesn't have *everything*, simply because Win32 API is gigantic. So if you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but have everything.
+```mermaid
+graph LR
+    kernel
+    kernel --> advapi
+    kernel --> user
+    kernel --> version
+    user --> gdi
+    user --> ole
+    gdi --> uxtheme
+    ole --> oleaut
+    ole --> comctl
+    ole --> dxgi
+    ole --> uxtheme
+    comctl --> gui
+    oleaut --> dshow
+    oleaut --> mf
+    oleaut --> shell
+    oleaut --> taskschd
+    shell --> gui
+    uxtheme --> dwm
+uxtheme --> gui
+```
+
+Don't worry about including dependency features. Once you use a feature, Cargo will add and resolve all dependencies automatically.
 
 ## Example
 
@@ -142,7 +172,7 @@ impl MyWindow {
     fn events(&self) {
         let wnd = self.wnd.clone(); // clone so it can be passed into the closure
         self.btn_hello.on().bn_clicked(move || {
-            wnd.hwnd().SetWindowText("Hello, world!")?;
+            wnd.hwnd().SetWindowText("Hello, world!")?; // call native Windows API
             Ok(())
         });
     }

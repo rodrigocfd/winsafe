@@ -1,9 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::advapi::ffi;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::{ffi, ffi_types::*, privs::*};
+use crate::kernel::{ffi_types::*, privs::*};
 use crate::prelude::*;
 
 impl_handle! { HACCESSTOKEN;
@@ -12,9 +13,9 @@ impl_handle! { HACCESSTOKEN;
 	/// Originally just a `HANDLE`.
 }
 
-impl kernel_Haccesstoken for HACCESSTOKEN {}
+impl advapi_Haccesstoken for HACCESSTOKEN {}
 
-/// This trait is enabled with the `kernel` feature, and provides methods for
+/// This trait is enabled with the `advapi` feature, and provides methods for
 /// [`HACCESSTOKEN`](crate::HACCESSTOKEN).
 ///
 /// Prefer importing this trait through the prelude:
@@ -22,7 +23,7 @@ impl kernel_Haccesstoken for HACCESSTOKEN {}
 /// ```no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait kernel_Haccesstoken: Handle {
+pub trait advapi_Haccesstoken: Handle {
 	/// [`AdjustTokenPrivileges`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-adjusttokenprivileges)
 	/// function.
 	///

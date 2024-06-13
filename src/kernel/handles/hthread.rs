@@ -129,27 +129,6 @@ pub trait kernel_Hthread: Handle {
 		).map(|_| (creation, exit, kernel, user))
 	}
 
-	/// [`OpenThreadToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openthreadtoken)
-	/// function.
-	#[must_use]
-	fn OpenThreadToken(&self,
-		desired_access: co::TOKEN,
-		open_as_self: bool,
-	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
-	{
-		let mut handle = HACCESSTOKEN::NULL;
-		unsafe {
-			bool_to_sysresult(
-				ffi::OpenThreadToken(
-					self.ptr(),
-					desired_access.raw(),
-					open_as_self as _,
-					handle.as_mut(),
-				),
-			).map(|_| CloseHandleGuard::new(handle))
-		}
-	}
-
 	/// [`QueryThreadCycleTime`](https://learn.microsoft.com/en-us/windows/win32/api/realtimeapiset/nf-realtimeapiset-querythreadcycletime)
 	/// function.
 	#[must_use]

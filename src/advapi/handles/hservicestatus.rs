@@ -1,7 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::advapi::{ffi, proc};
 use crate::decl::*;
-use crate::kernel::{ffi, privs::*, proc};
+use crate::kernel::privs::*;
 use crate::prelude::*;
 
 impl_handle! { HSERVICESTATUS;
@@ -10,9 +11,9 @@ impl_handle! { HSERVICESTATUS;
 	/// Originally `SERVICE_STATUS_HANDLE`.
 }
 
-impl kernel_Hservicestatus for HSERVICESTATUS {}
+impl advapi_Hservicestatus for HSERVICESTATUS {}
 
-/// This trait is enabled with the `kernel` feature, and provides methods for
+/// This trait is enabled with the `advapi` feature, and provides methods for
 /// [`HSERVICESTATUS`](crate::HSERVICESTATUS).
 ///
 /// Prefer importing this trait through the prelude:
@@ -20,7 +21,7 @@ impl kernel_Hservicestatus for HSERVICESTATUS {}
 /// ```no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait kernel_Hservicestatus: Handle {
+pub trait advapi_Hservicestatus: Handle {
 	/// [`RegisterServiceCtrlHandlerEx`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-registerservicectrlhandlerexw)
 	/// function.
 	fn RegisterServiceCtrlHandlerEx<F>(

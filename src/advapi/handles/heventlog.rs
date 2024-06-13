@@ -1,9 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::advapi::ffi;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::{ffi, privs::*};
+use crate::kernel::privs::*;
 use crate::prelude::*;
 
 impl_handle! { HEVENTLOG;
@@ -12,9 +13,9 @@ impl_handle! { HEVENTLOG;
 	/// Originally just a `HANDLE`.
 }
 
-impl kernel_Heventlog for HEVENTLOG {}
+impl advapi_Heventlog for HEVENTLOG {}
 
-/// This trait is enabled with the `kernel` feature, and provides methods for
+/// This trait is enabled with the `advapi` feature, and provides methods for
 /// [`HEVENTLOG`](crate::HEVENTLOG).
 ///
 /// Prefer importing this trait through the prelude:
@@ -22,7 +23,7 @@ impl kernel_Heventlog for HEVENTLOG {}
 /// ```no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait kernel_Heventlog: Handle {
+pub trait advapi_Heventlog: Handle {
 	/// [`RegisterEventSource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-registereventsourcew)
 	/// function.
 	#[must_use]

@@ -26,15 +26,16 @@ The following Cargo features are available so far:
 
 | Feature | Description |
 | - | - |
-| `comctl` | ComCtl32.dll, for [Common Controls](https://learn.microsoft.com/en-us/windows/win32/api/_controls/) |
+| `advapi` | Advapi32.dll and Ktmw32.dll, advanced kernel functions |
+| `comctl` | ComCtl32.dll, the [Common Controls](https://learn.microsoft.com/en-us/windows/win32/api/_controls/) |
 | `dshow` | [DirectShow](https://learn.microsoft.com/en-us/windows/win32/directshow/directshow) |
 | `dwm` | [Desktop Window Manager](https://learn.microsoft.com/en-us/windows/win32/dwm/dwm-overview) |
 | `dxgi` | [DirectX Graphics Infrastructure](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dx-graphics-dxgi) |
 | `gdi` | Gdi32.dll, the [Windows GDI](https://learn.microsoft.com/en-us/windows/win32/gdi/windows-gdi) |
 | **`gui`** | **The WinSafe high-level GUI abstractions** |
-| `kernel` | Kernel32.dll, Advapi32.dll and Ktmw32.dll – all others will include it |
+| `kernel` | Kernel32.dll, basic kernel functions |
 | `mf` | [Media Foundation](https://learn.microsoft.com/en-us/windows/win32/medfound/microsoft-media-foundation-sdk) |
-| `ole` | OLE and basic COM support |
+| `ole` | Basic OLE/COM support |
 | `oleaut` | [OLE Automation](https://learn.microsoft.com/en-us/windows/win32/api/_automat/) |
 | `shell` | Shell32.dll, Shlwapi.dll, and Userenv.dll, the COM-based [Windows Shell](https://learn.microsoft.com/en-us/windows/win32/shell/shell-entry) |
 | `taskschd` | [Task Scheduler](https://learn.microsoft.com/en-us/windows/win32/taskschd/task-scheduler-start-page) |

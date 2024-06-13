@@ -18,6 +18,7 @@ all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
+advapi = ["kernel"]
 comctl = ["ole"]
 dshow = ["oleaut"]
 dwm = ["uxtheme"]

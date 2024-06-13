@@ -1,9 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::advapi::{ffi, iterators::*};
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::{ffi, ffi_types::*, iterators::*, privs::*};
+use crate::kernel::{ffi_types::*, privs::*};
 use crate::prelude::*;
 
 impl_handle! { HKEY;
@@ -16,7 +17,7 @@ impl_handle! { HKEY;
 	/// Usually, they are the starting point to open a registry key.
 }
 
-impl kernel_Hkey for HKEY {}
+impl advapi_Hkey for HKEY {}
 
 macro_rules! predef_key {
 	($name:ident, $val:expr) => {
@@ -25,7 +26,7 @@ macro_rules! predef_key {
 	};
 }
 
-/// This trait is enabled with the `kernel` feature, and provides methods for
+/// This trait is enabled with the `advapi` feature, and provides methods for
 /// [`HKEY`](crate::HKEY).
 ///
 /// Prefer importing this trait through the prelude:
@@ -33,7 +34,7 @@ macro_rules! predef_key {
 /// ```no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait kernel_Hkey: Handle {
+pub trait advapi_Hkey: Handle {
 	predef_key!(CLASSES_ROOT, 0x8000_0000);
 	predef_key!(CURRENT_USER, 0x8000_0001);
 	predef_key!(LOCAL_MACHINE, 0x8000_0002);
@@ -52,9 +53,9 @@ pub trait kernel_Hkey: Handle {
 	///
 	/// Panics if `predef_key` is different from:
 	///
-	/// - [`HKEY::LOCAL_MACHINE`](crate::prelude::kernel_Hkey::LOCAL_MACHINE);
-	/// - [`HKEY::PERFORMANCE_DATA`](crate::prelude::kernel_Hkey::PERFORMANCE_DATA);
-	/// - [`HKEY::USERS`](crate::prelude::kernel_Hkey::USERS).
+	/// - [`HKEY::LOCAL_MACHINE`](crate::prelude::advapi_Hkey::LOCAL_MACHINE);
+	/// - [`HKEY::PERFORMANCE_DATA`](crate::prelude::advapi_Hkey::PERFORMANCE_DATA);
+	/// - [`HKEY::USERS`](crate::prelude::advapi_Hkey::USERS).
 	#[must_use]
 	fn RegConnectRegistry(
 		machine_name: Option<&str>,
@@ -603,7 +604,7 @@ pub trait kernel_Hkey: Handle {
 	/// function.
 	///
 	/// This method is a multi-value version of
-	/// [`HKEY::RegQueryValueEx`](crate::prelude::kernel_Hkey::RegQueryValueEx).
+	/// [`HKEY::RegQueryValueEx`](crate::prelude::advapi_Hkey::RegQueryValueEx).
 	///
 	/// Note that this method validates some race conditions, returning
 	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID).
@@ -735,7 +736,7 @@ pub trait kernel_Hkey: Handle {
 	/// function.
 	///
 	/// This method is a single-value version of
-	/// [`HKEY::RegQueryMultipleValues`](crate::prelude::kernel_Hkey::RegQueryMultipleValues).
+	/// [`HKEY::RegQueryMultipleValues`](crate::prelude::advapi_Hkey::RegQueryMultipleValues).
 	///
 	/// Note that this method validates some race conditions, returning
 	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID)
@@ -1025,7 +1026,7 @@ pub trait kernel_Hkey: Handle {
 
 impl HKEY {
 	#[must_use]
-	pub(in crate::kernel) fn is_predef_key(&self) -> bool {
+	pub(in crate::advapi) fn is_predef_key(&self) -> bool {
 		// Note that we are not constructing HKEY objects, so no drop() is called.
 		(self.0 as usize) >= (Self::CLASSES_ROOT.0 as usize)
 			&& (self.0 as usize) <= (Self::PERFORMANCE_NLSTEXT.0 as usize)

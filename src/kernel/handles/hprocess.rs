@@ -230,35 +230,6 @@ pub trait kernel_Hprocess: Handle {
 		}
 	}
 
-	/// [`OpenProcessToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken)
-	/// function.
-	///
-	/// # Examples
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*, co};
-	///
-	/// let htoken = w::HPROCESS::GetCurrentProcess()
-	///     .OpenProcessToken(co::TOKEN::ADJUST_PRIVILEGES | co::TOKEN::QUERY)?;
-	/// # w::SysResult::Ok(())
-	/// ```
-	#[must_use]
-	fn OpenProcessToken(&self,
-		desired_access: co::TOKEN,
-	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
-	{
-		let mut handle = HACCESSTOKEN::NULL;
-		unsafe {
-			bool_to_sysresult(
-				ffi::OpenProcessToken(
-					self.ptr(),
-					desired_access.raw(),
-					handle.as_mut(),
-				),
-			).map(|_| CloseHandleGuard::new(handle))
-		}
-	}
-
 	/// [`QueryFullProcessImageName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew)
 	/// function.
 	#[must_use]

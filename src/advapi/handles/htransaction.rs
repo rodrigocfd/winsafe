@@ -1,9 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::advapi::ffi;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::{ffi, privs::*};
+use crate::kernel::privs::*;
 use crate::prelude::*;
 
 impl_handle! { HTRANSACTION;
@@ -12,9 +13,9 @@ impl_handle! { HTRANSACTION;
 	/// Originally just a `HANDLE`.
 }
 
-impl kernel_Htransaction for HTRANSACTION {}
+impl advapi_Htransaction for HTRANSACTION {}
 
-/// This trait is enabled with the `kernel` feature, and provides methods for
+/// This trait is enabled with the `advapi` feature, and provides methods for
 /// [`HTRANSACTION`](crate::HTRANSACTION).
 ///
 /// Prefer importing this trait through the prelude:
@@ -22,7 +23,7 @@ impl kernel_Htransaction for HTRANSACTION {}
 /// ```no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait kernel_Htransaction: Handle {
+pub trait advapi_Htransaction: Handle {
 	/// [`CommitTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-committransaction)
 	/// function.
 	fn CommitTransaction(&self) -> SysResult<()> {

@@ -29,7 +29,7 @@ pub struct SHELLEXECUTEINFO<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> {
 impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i>
 	SHELLEXECUTEINFO<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i>
 {
-	pub(in crate::shell) fn to_raw(&self) -> SHELLEXECUTEINFO_buf {
+	pub(in crate::advapi_shell) fn to_raw(&self) -> SHELLEXECUTEINFO_buf {
 		let mut raw = SHELLEXECUTEINFO_raw::default();
 		raw.fMask = self.mask;
 		raw.hwnd = unsafe { self.hwnd.unwrap_or(&HWND::NULL).raw_copy() };
@@ -93,7 +93,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i>
 }
 
 #[allow(unused)]
-pub(in crate::shell) struct SHELLEXECUTEINFO_buf {
+pub(in crate::advapi_shell) struct SHELLEXECUTEINFO_buf {
 	pub raw: SHELLEXECUTEINFO_raw,
 	w_verb: WString,
 	w_file: WString,
@@ -103,7 +103,7 @@ pub(in crate::shell) struct SHELLEXECUTEINFO_buf {
 }
 
 #[repr(C)]
-pub(in crate::shell) struct SHELLEXECUTEINFO_raw {
+pub(in crate::advapi_shell) struct SHELLEXECUTEINFO_raw {
 	cbSize: u32,
 	pub fMask: co::SEE_MASK,
 	pub hwnd: HWND,

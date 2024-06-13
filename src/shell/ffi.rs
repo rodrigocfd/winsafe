@@ -10,11 +10,9 @@ extern_sys! { "shell32";
 	SHCreateItemFromParsingName(PCSTR, PVOID, PCVOID, *mut COMPTR) -> HRES
 	Shell_NotifyIconW(u32, PCVOID) -> BOOL
 	ShellAboutW(HANDLE, PCSTR, PCSTR, HANDLE) -> i32
-	ShellExecuteExW(PVOID) -> BOOL
 	ShellExecuteW(HANDLE, PCSTR, PCSTR, PCSTR, PCSTR, i32) -> HANDLE
 	SHFileOperationW(PVOID) -> i32
 	SHGetFileInfoW(PCSTR, u32, PVOID, u32, u32) -> usize
-	SHGetKnownFolderPath(PCVOID, u32, HANDLE, *mut PSTR) -> HRES
 	SHGetStockIconInfo(u32, u32, PVOID) -> HRES
 }
 

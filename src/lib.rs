@@ -8,6 +8,7 @@
 
 // Declarations of modules themselves.
 
+#[cfg(feature = "advapi")] mod advapi;
 #[cfg(feature = "comctl")] mod comctl;
 #[cfg(feature = "dshow")] mod dshow;
 #[cfg(feature = "dwm")] mod dwm;
@@ -22,6 +23,8 @@
 #[cfg(feature = "user")] mod user;
 #[cfg(feature = "uxtheme")] mod uxtheme;
 #[cfg(feature = "version")] mod version;
+#[cfg(all(feature = "advapi", feature = "comctl"))] mod advapi_comctl;
+#[cfg(all(feature = "advapi", feature = "shell"))] mod advapi_shell;
 #[cfg(all(feature = "comctl", feature = "gdi"))] mod comctl_gdi;
 #[cfg(all(feature = "comctl", feature = "shell"))] mod comctl_shell;
 #[cfg(all(feature = "gdi", feature = "mf"))] mod gdi_mf;
@@ -33,6 +36,7 @@
 // Declarations inside decl are public, placed at the root of the crate.
 
 mod decl {
+	#[cfg(feature = "advapi")] pub use super::advapi::decl::*;
 	#[cfg(feature = "comctl")] pub use super::comctl::decl::*;
 	#[cfg(feature = "dshow")] pub use super::dshow::decl::*;
 	#[cfg(feature = "dwm")] pub use super::dwm::decl::*;
@@ -47,6 +51,8 @@ mod decl {
 	#[cfg(feature = "user")] pub use super::user::decl::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::decl::*;
 	#[cfg(feature = "version")] pub use super::version::decl::*;
+	#[cfg(all(feature = "advapi", feature = "comctl"))] pub use super::advapi_comctl::decl::*;
+	#[cfg(all(feature = "advapi", feature = "shell"))] pub use super::advapi_shell::decl::*;
 	#[cfg(all(feature = "comctl", feature = "gdi"))] pub use super::comctl_gdi::decl::*;
 }
 pub use decl::*;
@@ -63,6 +69,7 @@ pub mod co {
 	//! Among these constant types, three are error types:
 	//! [`CDERR`], [`ERROR`] and [`HRESULT`].
 
+	#[cfg(feature = "advapi")] pub use super::advapi::co::*;
 	#[cfg(feature = "comctl")] pub use super::comctl::co::*;
 	#[cfg(feature = "dshow")] pub use super::dshow::co::*;
 	#[cfg(feature = "dwm")] pub use super::dwm::co::*;
@@ -77,6 +84,7 @@ pub mod co {
 	#[cfg(feature = "user")] pub use super::user::co::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::co::*;
 	#[cfg(feature = "version")] pub use super::version::co::*;
+	#[cfg(all(feature = "advapi", feature = "shell"))] pub use super::advapi_shell::co::*;
 }
 
 #[cfg(feature = "kernel")]
@@ -86,6 +94,7 @@ pub mod guard {
 	//!
 	//! The guards are named after the functions they call.
 
+	#[cfg(feature = "advapi")] pub use super::advapi::guard::*;
 	#[cfg(feature = "comctl")] pub use super::comctl::guard::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::guard::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::guard::*;
@@ -213,6 +222,7 @@ pub mod msg {
 		//! whose constants have [`TBM`](crate::co::TBM) prefix.
 
 		pub use super::super::comctl::messages::tbm::*;
+		#[cfg(feature = "advapi")] pub use super::super::advapi_comctl::messages::tbm::*;
 	}
 
 	#[cfg(feature = "comctl")]
@@ -279,6 +289,7 @@ pub mod prelude {
 	//! use winsafe::prelude::*;
 	//! ```
 
+	#[cfg(feature = "advapi")] pub use super::advapi::traits::*;
 	#[cfg(feature = "comctl")] pub use super::comctl::traits::*;
 	#[cfg(feature = "dshow")] pub use super::dshow::traits::*;
 	#[cfg(feature = "dwm")] pub use super::dwm::traits::*;
