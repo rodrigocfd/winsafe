@@ -8,6 +8,8 @@ use crate::prelude::*;
 /// [`SHELLEXECUTEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shellexecuteinfow)
 /// struct.
 ///
+/// Used with [`ShellExecuteEx`](crate::ShellExecuteEx) function.
+///
 /// Not all `mask` constants are available, some of them are automatically set
 /// as you fill other parameters.
 #[derive(Default)]

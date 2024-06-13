@@ -5,8 +5,10 @@ use crate::decl::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
 
-/// [`TASKDIALOG_BUTTON`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialog_button)
+/// [`TASKDIALOGCONFIG`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-taskdialog_button)
 /// struct.
+///
+/// Used with [`TaskDialogIndirect`](crate::TaskDialogIndirect) function.
 ///
 /// Not all `flags` constants are available, some of them are automatically set
 /// as you fill other parameters.
