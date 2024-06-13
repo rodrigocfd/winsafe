@@ -350,75 +350,6 @@
 <a href="#350" id="350">350</a>
 <a href="#351" id="351">351</a>
 <a href="#352" id="352">352</a>
-<a href="#353" id="353">353</a>
-<a href="#354" id="354">354</a>
-<a href="#355" id="355">355</a>
-<a href="#356" id="356">356</a>
-<a href="#357" id="357">357</a>
-<a href="#358" id="358">358</a>
-<a href="#359" id="359">359</a>
-<a href="#360" id="360">360</a>
-<a href="#361" id="361">361</a>
-<a href="#362" id="362">362</a>
-<a href="#363" id="363">363</a>
-<a href="#364" id="364">364</a>
-<a href="#365" id="365">365</a>
-<a href="#366" id="366">366</a>
-<a href="#367" id="367">367</a>
-<a href="#368" id="368">368</a>
-<a href="#369" id="369">369</a>
-<a href="#370" id="370">370</a>
-<a href="#371" id="371">371</a>
-<a href="#372" id="372">372</a>
-<a href="#373" id="373">373</a>
-<a href="#374" id="374">374</a>
-<a href="#375" id="375">375</a>
-<a href="#376" id="376">376</a>
-<a href="#377" id="377">377</a>
-<a href="#378" id="378">378</a>
-<a href="#379" id="379">379</a>
-<a href="#380" id="380">380</a>
-<a href="#381" id="381">381</a>
-<a href="#382" id="382">382</a>
-<a href="#383" id="383">383</a>
-<a href="#384" id="384">384</a>
-<a href="#385" id="385">385</a>
-<a href="#386" id="386">386</a>
-<a href="#387" id="387">387</a>
-<a href="#388" id="388">388</a>
-<a href="#389" id="389">389</a>
-<a href="#390" id="390">390</a>
-<a href="#391" id="391">391</a>
-<a href="#392" id="392">392</a>
-<a href="#393" id="393">393</a>
-<a href="#394" id="394">394</a>
-<a href="#395" id="395">395</a>
-<a href="#396" id="396">396</a>
-<a href="#397" id="397">397</a>
-<a href="#398" id="398">398</a>
-<a href="#399" id="399">399</a>
-<a href="#400" id="400">400</a>
-<a href="#401" id="401">401</a>
-<a href="#402" id="402">402</a>
-<a href="#403" id="403">403</a>
-<a href="#404" id="404">404</a>
-<a href="#405" id="405">405</a>
-<a href="#406" id="406">406</a>
-<a href="#407" id="407">407</a>
-<a href="#408" id="408">408</a>
-<a href="#409" id="409">409</a>
-<a href="#410" id="410">410</a>
-<a href="#411" id="411">411</a>
-<a href="#412" id="412">412</a>
-<a href="#413" id="413">413</a>
-<a href="#414" id="414">414</a>
-<a href="#415" id="415">415</a>
-<a href="#416" id="416">416</a>
-<a href="#417" id="417">417</a>
-<a href="#418" id="418">418</a>
-<a href="#419" id="419">419</a>
-<a href="#420" id="420">420</a>
-<a href="#421" id="421">421</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -708,32 +639,6 @@
 	)
 }
 
-<span class="doccomment">/// [`ShellExecuteEx`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecuteexw)
-/// function.
-///
-/// Fill the [`SHELLEXECUTEINFO`](crate::SHELLEXECUTEINFO) fields you need, and
-/// leave the others as default. The needed mask flags will be automatically
-/// set.
-///
-/// # Examples
-///
-/// ```no_run
-/// use winsafe::{self as w, prelude::*, co};
-///
-/// w::ShellExecuteEx(&amp;w::SHELLEXECUTEINFO {
-///     file: "C:\\Temp\\foo.exe",
-///     show: co::SW::SHOW,
-///     ..Default::default()
-/// })?;
-/// # w::SysResult::Ok(())
-/// ```
-</span><span class="kw">pub fn </span>ShellExecuteEx(exec_info: <span class="kw-2">&amp;</span>SHELLEXECUTEINFO) -&gt; SysResult&lt;()&gt; {
-	<span class="kw">let </span><span class="kw-2">mut </span>buf = exec_info.to_raw();
-	bool_to_sysresult(
-		<span class="kw">unsafe </span>{ ffi::ShellExecuteExW(<span class="kw-2">&amp;mut </span>buf.raw <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) },
-	)
-}
-
 <span class="doccomment">/// [`SHFileOperation`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)
 /// function.
 </span><span class="kw">pub fn </span>SHFileOperation(file_op: <span class="kw-2">&amp;mut </span>SHFILEOPSTRUCT) -&gt; SysResult&lt;()&gt; {
@@ -761,49 +666,6 @@
 			n =&gt; <span class="prelude-val">Ok</span>((n <span class="kw">as _</span>, DestroyIconShfiGuard::new(shfi))),
 		}
 	}
-}
-
-<span class="doccomment">/// [`SHGetKnownFolderPath`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath)
-/// function.
-///
-/// # Examples
-///
-/// Retrieving documents folder:
-///
-/// ```no_run
-/// use winsafe::{self as w, prelude::*, co};
-///
-/// let docs_folder = w::SHGetKnownFolderPath(
-///     &amp;co::KNOWNFOLDERID::Documents,
-///     co::KF::DEFAULT,
-///     None,
-/// )?;
-///
-/// println!("Docs folder: {}", docs_folder);
-/// # w::HrResult::Ok(())
-/// ```
-</span><span class="attr">#[must_use]
-</span><span class="kw">pub fn </span>SHGetKnownFolderPath(
-	folder_id: <span class="kw-2">&amp;</span>co::KNOWNFOLDERID,
-	flags: co::KF,
-	token: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>HACCESSTOKEN&gt;,
-) -&gt; HrResult&lt;String&gt;
-{
-	<span class="kw">let </span><span class="kw-2">mut </span>pstr = std::ptr::null_mut::&lt;u16&gt;();
-	ok_to_hrresult(
-		<span class="kw">unsafe </span>{
-			ffi::SHGetKnownFolderPath(
-				folder_id <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-				flags.raw(),
-				token.map_or(std::ptr::null_mut(), |t| t.ptr()),
-				<span class="kw-2">&amp;mut </span>pstr,
-			)
-		},
-	).map(|<span class="kw">_</span>| {
-		<span class="kw">let </span>path = <span class="kw">unsafe </span>{ WString::from_wchars_nullt(pstr) };
-		<span class="kw">let _ </span>= <span class="kw">unsafe </span>{ CoTaskMemFreeGuard::new(pstr <span class="kw">as _</span>, <span class="number">0</span>) };
-		path.to_string()
-	})
 }
 
 <span class="doccomment">/// [`SHGetStockIconInfo`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetstockiconinfo)

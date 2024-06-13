@@ -2127,31 +2127,6 @@
 <a href="#2127" id="2127">2127</a>
 <a href="#2128" id="2128">2128</a>
 <a href="#2129" id="2129">2129</a>
-<a href="#2130" id="2130">2130</a>
-<a href="#2131" id="2131">2131</a>
-<a href="#2132" id="2132">2132</a>
-<a href="#2133" id="2133">2133</a>
-<a href="#2134" id="2134">2134</a>
-<a href="#2135" id="2135">2135</a>
-<a href="#2136" id="2136">2136</a>
-<a href="#2137" id="2137">2137</a>
-<a href="#2138" id="2138">2138</a>
-<a href="#2139" id="2139">2139</a>
-<a href="#2140" id="2140">2140</a>
-<a href="#2141" id="2141">2141</a>
-<a href="#2142" id="2142">2142</a>
-<a href="#2143" id="2143">2143</a>
-<a href="#2144" id="2144">2144</a>
-<a href="#2145" id="2145">2145</a>
-<a href="#2146" id="2146">2146</a>
-<a href="#2147" id="2147">2147</a>
-<a href="#2148" id="2148">2148</a>
-<a href="#2149" id="2149">2149</a>
-<a href="#2150" id="2150">2150</a>
-<a href="#2151" id="2151">2151</a>
-<a href="#2152" id="2152">2152</a>
-<a href="#2153" id="2153">2153</a>
-<a href="#2154" id="2154">2154</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::comctl::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -3569,31 +3544,6 @@
 		WndMsg {
 			msg_id: co::TBM::REPLACEBITMAP.into(),
 			wparam: <span class="number">0</span>,
-			lparam: <span class="self">self</span>.info <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-		}
-	}
-}
-
-<span class="doccomment">/// [`TB_SAVERESTORE`](https://learn.microsoft.com/en-us/windows/win32/controls/tb-saverestore)
-/// message parameters.
-///
-/// Return type: `()`.
-</span><span class="kw">pub struct </span>SaveRestore&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
-	<span class="kw">pub </span>save: bool,
-	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>TBSAVEPARAMS&lt;<span class="lifetime">'a</span>&gt;,
-}
-
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>SaveRestore&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
-	<span class="kw">type </span>RetType = ();
-
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
-		()
-	}
-
-	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
-		WndMsg {
-			msg_id: co::TBM::SAVERESTORE.into(),
-			wparam: <span class="self">self</span>.save <span class="kw">as _</span>,
 			lparam: <span class="self">self</span>.info <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
 		}
 	}

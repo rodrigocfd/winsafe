@@ -156,9 +156,6 @@
 <a href="#156" id="156">156</a>
 <a href="#157" id="157">157</a>
 <a href="#158" id="158">158</a>
-<a href="#159" id="159">159</a>
-<a href="#160" id="160">160</a>
-<a href="#161" id="161">161</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -173,13 +170,10 @@
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>MAX_COMPUTERNAME_LENGTH: usize = <span class="number">15</span>;
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>MAX_MODULE_NAME32: usize = <span class="number">255</span>;
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>MAX_PATH: usize = <span class="number">260</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>SECURITY_DESCRIPTOR_REVISION: u32 = <span class="number">1</span>;
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>SECURITY_SQOS_PRESENT: u32 = <span class="number">0x0010_0000</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>SID_HASH_SIZE: usize = <span class="number">32</span>;
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>SSO_LEN: usize = <span class="number">20</span>; <span class="comment">// defines WString SSO stack buffer size
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>TOKEN_SOURCE_LENGTH: usize = <span class="number">8</span>;
 
-<span class="doccomment">/// [`IS_INTRESOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-is_intresource)
+</span><span class="doccomment">/// [`IS_INTRESOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-is_intresource)
 /// macro.
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const fn </span>IS_INTRESOURCE(val: <span class="kw-2">*const </span>u16) -&gt; bool {
