@@ -37,27 +37,15 @@ impl dxgi_IDXGIAdapter1 for IDXGIAdapter1 {}
 pub trait dxgi_IDXGIAdapter1: dxgi_IDXGIAdapter {
 	/// [`IDXGIAdapter::GetDesc1`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ns-dxgi-dxgi_adapter_desc1)
 	/// method.
-	///
-	/// # Examples
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*};
-	///
-	/// let adapter: w::IDXGIAdapter1; // initialized somewhere
-	/// # let adapter = unsafe { w::IDXGIAdapter1::null() };
-	/// let mut desc = w::DXGI_ADAPTER_DESC1::default();
-	///
-	/// adapter.GetDesc1(&mut desc)?;
-	/// # w::HrResult::Ok(())
-	/// ```
-	fn GetDesc1(&self, desc: &mut DXGI_ADAPTER_DESC1) -> HrResult<()> {
+	fn GetDesc1(&self) -> HrResult<DXGI_ADAPTER_DESC1> {
+		let mut desc = DXGI_ADAPTER_DESC1::default();
 		ok_to_hrresult(
 			unsafe {
 				(vt::<IDXGIAdapter1VT>(self).GetDesc1)(
 					self.ptr(),
-					desc as *mut _ as _,
+					&mut desc as *mut _ as _,
 				)
 			},
-		)
+		).map(|_| desc)
 	}
 }

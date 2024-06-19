@@ -38,27 +38,15 @@ com_interface! { IDXGIAdapter2: "0aa1ae0a-fa0e-4b84-8644-e05ff8e5acb5";
 pub trait dxgi_IDXGIAdapter2: dxgi_IDXGIAdapter1 {
 	/// [`IDXGIAdapter::GetDesc2`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/nf-dxgi1_2-idxgiadapter2-getdesc2)
 	/// method.
-	///
-	/// # Examples
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*};
-	///
-	/// let adapter: w::IDXGIAdapter2; // initialized somewhere
-	/// # let adapter = unsafe { w::IDXGIAdapter2::null() };
-	/// let mut desc = w::DXGI_ADAPTER_DESC2::default();
-	///
-	/// adapter.GetDesc2(&mut desc)?;
-	/// # w::HrResult::Ok(())
-	/// ```
-	fn GetDesc2(&self, desc: &mut DXGI_ADAPTER_DESC2) -> HrResult<()> {
+	fn GetDesc2(&self) -> HrResult<DXGI_ADAPTER_DESC2> {
+		let mut desc = DXGI_ADAPTER_DESC2::default();
 		ok_to_hrresult(
 			unsafe {
 				(vt::<IDXGIAdapter2VT>(self).GetDesc2)(
 					self.ptr(),
-					desc as *mut _ as _,
+					&mut desc as *mut _ as _,
 				)
 			},
-		)
+		).map(|_| desc)
 	}
 }

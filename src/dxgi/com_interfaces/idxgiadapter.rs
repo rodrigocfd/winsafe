@@ -84,27 +84,15 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 
 	/// [`IDXGIAdapter::GetDesc`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiadapter-getdesc)
 	/// method.
-	///
-	/// # Examples
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*};
-	///
-	/// let adapter: w::IDXGIAdapter; // initialized somewhere
-	/// # let adapter = unsafe { w::IDXGIAdapter::null() };
-	/// let mut desc = w::DXGI_ADAPTER_DESC::default();
-	///
-	/// adapter.GetDesc(&mut desc)?;
-	/// # w::HrResult::Ok(())
-	/// ```
-	fn GetDesc(&self, desc: &mut DXGI_ADAPTER_DESC) -> HrResult<()> {
+	fn GetDesc(&self) -> HrResult<DXGI_ADAPTER_DESC> {
+		let mut desc = DXGI_ADAPTER_DESC::default();
 		ok_to_hrresult(
 			unsafe {
 				(vt::<IDXGIAdapterVT>(self).GetDesc)(
 					self.ptr(),
-					desc as *mut _ as _,
+					&mut desc as *mut _ as _,
 				)
 			},
-		)
+		).map(|_| desc)
 	}
 }
