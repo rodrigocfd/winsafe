@@ -10,6 +10,18 @@ const_bitflag! { DXGI_ADAPTER_FLAG: u32;
 	SOFTWARE 2
 }
 
+const_ordinary! { DXGI_COMPUTE_PREEMPTION: u32;
+	/// [`DXGI_COMPUTE_PREEMPTION_GRANULARITY`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/ne-dxgi1_2-dxgi_compute_preemption_granularity)
+	/// enumeration.
+	=>
+	=>
+	DMA_BUFFER_BOUNDARY 0
+	DISPATCH_BOUNDARY 1
+	THREAD_GROUP_BOUNDARY 2
+	THREAD_BOUNDARY 3
+	INSTRUCTION_BOUNDARY 4
+}
+
 const_bitflag! { DXGI_ENUM_MODES: u32;
 	/// [`DXGI_ENUM_MODES`](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-enum-modes)
 	/// enumeration (`u32`).
@@ -145,6 +157,18 @@ const_ordinary! { DXGI_FORMAT: u32;
 	P208 130
 	V208 131
 	V408 132
+}
+
+const_ordinary! { DXGI_GRAPHICS_PREEMPTION: u32;
+	/// [`DXGI_GRAPHICS_PREEMPTION_GRANULARITY`]()
+	/// enumeration (`u32`).
+	=>
+	=>
+	DMA_BUFFER_BOUNDARY 0
+	PRIMITIVE_BOUNDARY 1
+	TRIANGLE_BOUNDARY 2
+	PIXEL_BOUNDARY 3
+	INSTRUCTION_BOUNDARY 4
 }
 
 const_bitflag! { DXGI_MAP: u32;
