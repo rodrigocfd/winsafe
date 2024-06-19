@@ -55,8 +55,13 @@
 <a href="#55" id="55">55</a>
 <a href="#56" id="56">56</a>
 <a href="#57" id="57">57</a>
+<a href="#58" id="58">58</a>
+<a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
 </pre></div><pre class="rust"><code><span class="kw">mod </span>idxgiadapter;
 <span class="kw">mod </span>idxgiadapter1;
+<span class="kw">mod </span>idxgiadapter2;
 <span class="kw">mod </span>idxgidevice;
 <span class="kw">mod </span>idxgidevicesubobject;
 <span class="kw">mod </span>idxgifactory;
@@ -71,6 +76,7 @@
 <span class="kw">pub mod </span>decl {
 	<span class="kw">pub use </span><span class="kw">super</span>::idxgiadapter::IDXGIAdapter;
 	<span class="kw">pub use </span><span class="kw">super</span>::idxgiadapter1::IDXGIAdapter1;
+	<span class="kw">pub use </span><span class="kw">super</span>::idxgiadapter2::IDXGIAdapter2;
 	<span class="kw">pub use </span><span class="kw">super</span>::idxgidevice::IDXGIDevice;
 	<span class="kw">pub use </span><span class="kw">super</span>::idxgidevicesubobject::IDXGIDeviceSubObject;
 	<span class="kw">pub use </span><span class="kw">super</span>::idxgifactory::IDXGIFactory;
@@ -86,6 +92,7 @@
 <span class="kw">pub mod </span>traits {
 	<span class="kw">pub use </span><span class="kw">super</span>::idxgiadapter::dxgi_IDXGIAdapter;
 	<span class="kw">pub use </span><span class="kw">super</span>::idxgiadapter1::dxgi_IDXGIAdapter1;
+	<span class="kw">pub use </span><span class="kw">super</span>::idxgiadapter2::dxgi_IDXGIAdapter2;
 	<span class="kw">pub use </span><span class="kw">super</span>::idxgidevice::dxgi_IDXGIDevice;
 	<span class="kw">pub use </span><span class="kw">super</span>::idxgidevicesubobject::dxgi_IDXGIDeviceSubObject;
 	<span class="kw">pub use </span><span class="kw">super</span>::idxgifactory::dxgi_IDXGIFactory;
@@ -101,6 +108,7 @@
 <span class="kw">pub mod </span>vt {
 	<span class="kw">pub use </span><span class="kw">super</span>::idxgiadapter::IDXGIAdapterVT;
 	<span class="kw">pub use </span><span class="kw">super</span>::idxgiadapter1::IDXGIAdapter1VT;
+	<span class="kw">pub use </span><span class="kw">super</span>::idxgiadapter2::IDXGIAdapter2VT;
 	<span class="kw">pub use </span><span class="kw">super</span>::idxgidevice::IDXGIDeviceVT;
 	<span class="kw">pub use </span><span class="kw">super</span>::idxgidevicesubobject::IDXGIDeviceSubObjectVT;
 	<span class="kw">pub use </span><span class="kw">super</span>::idxgifactory::IDXGIFactoryVT;
