@@ -131,7 +131,7 @@ pub struct IMFSourceResolverVT {
 	pub CreateObjectFromURL: fn(COMPTR, PCSTR, u32, COMPTR, *mut u32, *mut COMPTR) -> HRES,
 	pub CreateObjectFromByteStream: fn(COMPTR, COMPTR, PCSTR, u32, COMPTR, *mut u32, *mut COMPTR) -> HRES,
 	pub BeginCreateObjectFromURL: fn(COMPTR, PCSTR, u32, COMPTR, *mut COMPTR, COMPTR, COMPTR) -> HRES,
-	pub EndCreateObjectFromURL: fn(COMPTR, *mut u32, *mut COMPTR) -> HRES,
+	pub EndCreateObjectFromURL: fn(COMPTR, COMPTR, *mut u32, *mut COMPTR) -> HRES,
 	pub BeginCreateObjectFromByteStream: fn(COMPTR, COMPTR, PCSTR, u32, COMPTR, *mut COMPTR, COMPTR, COMPTR) -> HRES,
 	pub EndCreateObjectFromByteStream: fn(COMPTR, COMPTR, *mut u32, *mut COMPTR) -> HRES,
 	pub CancelObjectCreation: fn(COMPTR, COMPTR) -> HRES,

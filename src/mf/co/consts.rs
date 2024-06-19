@@ -134,6 +134,34 @@ const_ordinary! { MF_EVENT_FLAG: u32;
 	NO_WAIT 0x0000_0001
 }
 
+const_ordinary! { MF_OBJECT: u32;
+	/// [`MF_OBJECT_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mf_object_type)
+	/// enumeration (`u32`).
+	=>
+	=>
+	MEDIASOURCE 0
+	BYTESTREAM 1
+	INVALID 2
+}
+
+const_bitflag! { MF_RESOLUTION: u32;
+	/// Source resolver [flags](https://learn.microsoft.com/en-us/windows/win32/medfound/source-resolver-flags)
+	/// (`u32`).
+	=>
+	=>
+	MEDIASOURCE 0x1
+	BYTESTREAM 0x2
+	CONTENT_DOES_NOT_HAVE_TO_MATCH_EXTENSION_OR_MIME_TYPE 0x10
+	KEEP_BYTE_STREAM_ALIVE_ON_FAIL 0x20
+	DISABLE_LOCAL_PLUGINS 0x40
+	PLUGIN_CONTROL_POLICY_APPROVED_ONLY 0x80
+	PLUGIN_CONTROL_POLICY_WEB_ONLY 0x100
+	PLUGIN_CONTROL_POLICY_WEB_ONLY_EDGEMODE 0x200
+	ENABLE_STORE_PLUGINS 0x400
+	REA 0x1_0000
+	WRITE 0x2_0000
+}
+
 const_ordinary! { MF_TOPOLOGY: u32;
 	/// [`MF_TOPOLOGY_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mf_topology_type)
 	/// enumeration ([`u32`]).
