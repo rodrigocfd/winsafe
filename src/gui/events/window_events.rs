@@ -270,8 +270,8 @@ impl WindowEvents {
 	}
 
 	/// [`WM_CREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create)
-	/// message, sent only to non-dialog windows. Dialog windows receive
-	/// [`WM_INITDIALOG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
+	/// message, sent only to non-dialog windows. Dialog windows must handle
+	/// [`wm_init_dialog`](crate::gui::events::WindowEvents::wm_init_dialog)
 	/// instead.
 	///
 	/// # Examples
@@ -341,9 +341,13 @@ impl WindowEvents {
 		/// message.
 	}
 
+	#[cfg(feature = "shell")]
 	pub_fn_wm_withparm_noret! { wm_drop_files, co::WM::DROPFILES, wm::DropFiles;
 		/// [`WM_DROPFILES`](https://learn.microsoft.com/en-us/windows/win32/shell/wm-dropfiles)
 		/// message.
+		///
+		/// **Note:** To use this method, enable the `shell`
+		/// [Cargo feature](https://doc.rust-lang.org/cargo/reference/features.html#the-features-section).
 		///
 		/// # Examples
 		///
@@ -482,9 +486,8 @@ impl WindowEvents {
 
 	pub_fn_wm_withparm_boolret! { wm_init_dialog, co::WM::INITDIALOG, wm::InitDialog;
 		/// [`WM_INITDIALOG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
-		/// message, sent only to dialog windows. Non-dialog windows receive
-		/// [`WM_CREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create)
-		/// instead.
+		/// message, sent only to dialog windows. Non-dialog windows must handle
+		/// [`wm_create`](crate::gui::events::WindowEvents::wm_create) instead.
 		///
 		/// Return `true` to set the focus to the first control in the dialog.
 		///

@@ -13,6 +13,7 @@ FEATS=(
 	gdi
 	'gdi mf'
 	gui
+	'gui shell'
 	kernel
 	mf
 	ole

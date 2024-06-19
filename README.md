@@ -101,7 +101,6 @@ graph LR
     oleaut --> mf
     oleaut --> shell
     oleaut --> taskschd
-    shell --> gui
     uxtheme --> dwm
 uxtheme --> gui
 ```
