@@ -1,25 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IExecAction`](crate::IExecAction) virtual table.
-#[repr(C)]
-pub struct IExecActionVT {
-	pub IAction: IActionVT,
-	pub get_Path: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Path: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Arguments: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Arguments: fn(COMPTR, PCSTR) -> HRES,
-	pub get_WorkingDirectory: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_WorkingDirectory: fn(COMPTR, PCSTR) -> HRES,
-}
+use crate::taskschd::vts::*;
 
 com_interface! { IExecAction: "4c3d624d-fd6b-49a3-b9b7-09cb3cd3f047";
 	/// [`IExecAction`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-iexecaction)
-	/// COM interface over [`IExecActionVT`](crate::vt::IExecActionVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

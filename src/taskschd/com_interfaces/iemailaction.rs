@@ -1,39 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IEmailAction`](crate::IEmailAction) virtual table.
-#[repr(C)]
-pub struct IEmailActionVT {
-	pub IAction: IActionVT,
-	pub get_Server: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Server: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Subject: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Subject: fn(COMPTR, PCSTR) -> HRES,
-	pub get_To: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_To: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Cc: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Cc: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Bcc: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Bcc: fn(COMPTR, PCSTR) -> HRES,
-	pub get_ReplyTo: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_ReplyTo: fn(COMPTR, PCSTR) -> HRES,
-	pub get_From: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_From: fn(COMPTR, PCSTR) -> HRES,
-	pub get_HeaderFields: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_HeaderFields: fn(COMPTR, COMPTR) -> HRES,
-	pub get_Body: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Body: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Attachments: fn(COMPTR, PVOID) -> HRES,
-	pub put_Attachments: fn(COMPTR, PCVOID) -> HRES,
-}
+use crate::taskschd::vts::*;
 
 com_interface! { IEmailAction: "10f62c64-7e16-4314-a0c2-0c3683f99d40";
 	/// [`IEmailAction`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-iemailaction)
-	/// COM interface over [`IEmailActionVT`](crate::vt::IEmailActionVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

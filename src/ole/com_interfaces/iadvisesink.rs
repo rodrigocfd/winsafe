@@ -1,25 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::kernel::ffi_types::*;
-use crate::ole::privs::*;
+use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IAdviseSink`](crate::IAdviseSink) virtual table.
-#[repr(C)]
-pub struct IAdviseSinkVT {
-	pub IUnknownVT: IUnknownVT,
-	pub OnDataChange: fn(COMPTR, PVOID, PVOID),
-	pub OnViewChange: fn(COMPTR, u32, i32),
-	pub OnRename: fn(COMPTR, COMPTR),
-	pub OnSave: fn(COMPTR),
-	pub OnClose: fn(COMPTR),
-}
 
 com_interface! { IAdviseSink: "0000010f-0000-0000-c000-000000000046";
 	/// [`IAdviseSink`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-iadvisesink)
-	/// COM interface over [`IAdviseSinkVT`](crate::vt::IAdviseSinkVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

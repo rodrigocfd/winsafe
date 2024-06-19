@@ -2,38 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IRegisteredTask`](crate::IRegisteredTask) virtual table.
-#[repr(C)]
-pub struct IRegisteredTaskVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_Name: fn(COMPTR, *mut PSTR) -> HRES,
-	pub get_Path: fn(COMPTR, *mut PSTR) -> HRES,
-	pub get_State: fn(COMPTR, *mut u32) -> HRES,
-	pub get_Enabled: fn(COMPTR, *mut i16) -> HRES,
-	pub put_Enabled: fn(COMPTR, i16) -> HRES,
-	pub Run: fn(COMPTR, VARIANT, *mut COMPTR) -> HRES,
-	pub RunEx: fn(COMPTR, VARIANT, i32, i32, PCSTR, *mut COMPTR) -> HRES,
-	pub GetInstances: fn(COMPTR, i32, *mut COMPTR) -> HRES,
-	pub get_LastRunTime: fn(COMPTR, *mut f64) -> HRES,
-	pub get_LastTaskResult: fn(COMPTR, *mut i32) -> HRES,
-	pub get_NumberOfMissedRuns: fn(COMPTR, *mut i32) -> HRES,
-	pub get_NextRunTime: fn(COMPTR, *mut f64) -> HRES,
-	pub get_Definition: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub get_Xml: fn(COMPTR, *mut PSTR) -> HRES,
-	pub GetSecurityDescriptor: fn(COMPTR, i32, *mut PSTR) -> HRES,
-	pub SetSecurityDescriptor: fn(COMPTR, PCSTR, i32) -> HRES,
-	pub Stop: fn(COMPTR, i32) -> HRES,
-	pub GetRunTimes: fn(COMPTR, PCVOID, PCVOID, *mut u32, PVOID) -> HRES,
-}
+use crate::taskschd::vts::*;
 
 com_interface! { IRegisteredTask: "9c86f320-dee3-4dd1-b972-a303f26b061e";
 	/// [`IRegisteredTask`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-iregisteredtask)
-	/// COM interface over [`IRegisteredTaskVT`](crate::vt::IRegisteredTaskVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

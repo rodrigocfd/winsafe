@@ -1,24 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IDailyTrigger`](crate::IDailyTrigger) virtual table.
-#[repr(C)]
-pub struct IDailyTriggerVT {
-	pub ITriggerVT: ITriggerVT,
-	pub get_DaysInterval: fn(COMPTR, *mut i16) -> HRES,
-	pub put_DaysInterval: fn(COMPTR, i16) -> HRES,
-	pub get_RandomDelay: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_RandomDelay: fn(COMPTR, PCSTR) -> HRES,
-}
+use crate::taskschd::vts::*;
 
 com_interface! { IDailyTrigger: "126c5cd8-b288-41d5-8dbf-e491446adc5c";
 	/// [`IDailyTrigger`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-idailytrigger)
-	/// COM interface over [`IDailyTriggerVT`](crate::vt::IDailyTriggerVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

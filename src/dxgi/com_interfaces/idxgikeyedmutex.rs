@@ -1,22 +1,14 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::{ffi_types::*, privs::*};
+use crate::dxgi::vts::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IDXGIKeyedMutex`](crate::IDXGIKeyedMutex) virtual table.
-#[repr(C)]
-pub struct IDXGIKeyedMutexVT {
-	pub IDXGIDeviceSubObjectVT: IDXGIDeviceSubObjectVT,
-	pub AcquireSync: fn(COMPTR, u64, u32) -> HRES,
-	pub ReleaseSync: fn(COMPTR, u64) -> HRES,
-}
 
 com_interface! { IDXGIKeyedMutex: "9d8e1289-d7b3-465f-8126-250e349af85d";
 	/// [`IDXGIKeyedMutex`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgikeyedmutex)
-	/// COM interface over [`IDXGIKeyedMutexVT`](crate::vt::IDXGIKeyedMutexVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
@@ -28,7 +20,7 @@ impl dxgi_IDXGIDeviceSubObject for IDXGIKeyedMutex {}
 impl dxgi_IDXGIKeyedMutex for IDXGIKeyedMutex {}
 
 /// This trait is enabled with the `dxgi` feature, and provides methods for
-/// [`IDXGIDeviceSubObject`](crate::IDXGIDeviceSubObject).
+/// [`IDXGIKeyedMutex`](crate::IDXGIKeyedMutex).
 ///
 /// Prefer importing this trait through the prelude:
 ///

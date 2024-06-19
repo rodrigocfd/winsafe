@@ -2,30 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IActionCollection`](crate::IActionCollection) virtual table.
-#[repr(C)]
-pub struct IActionCollectionVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_Count: fn(COMPTR, *mut i32) -> HRES,
-	pub get_Item: fn(COMPTR, i32, *mut COMPTR) -> HRES,
-	pub get__NewEnum: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub get_XmlText: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_XmlText: fn(COMPTR, PCSTR) -> HRES,
-	pub Create: fn(COMPTR, u32, *mut COMPTR) -> HRES,
-	pub Remove: fn(COMPTR, VARIANT) -> HRES,
-	pub Clear: fn(COMPTR) -> HRES,
-	pub get_Context: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Context: fn(COMPTR, PCSTR) -> HRES,
-}
+use crate::taskschd::vts::*;
 
 com_interface! { IActionCollection: "02820e19-7b98-4ed2-b2e8-fdccceff619b";
 	/// [`IActionCollection`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-iactioncollection)
-	/// COM interface over [`IActionCollectionVT`](crate::vt::IActionCollectionVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

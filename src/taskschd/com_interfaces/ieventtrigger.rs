@@ -1,25 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IEventTrigger`](crate::IEventTrigger) virtual table.
-#[repr(C)]
-pub struct IEventTriggerVT {
-	pub ITriggerVT: ITriggerVT,
-	pub get_Subscription: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Subscription: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Delay: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Delay: fn(COMPTR, PCSTR) -> HRES,
-	pub get_ValueQueries: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_ValueQueries: fn(COMPTR, COMPTR) -> HRES,
-}
+use crate::taskschd::vts::*;
 
 com_interface! { IEventTrigger: "d45b0167-9653-4eef-b94f-0732ca7af251";
 	/// [`IEventTrigger`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-ieventtrigger)
-	/// COM interface over [`IEventTriggerVT`](crate::vt::IEventTriggerVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

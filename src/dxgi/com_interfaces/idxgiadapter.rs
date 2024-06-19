@@ -1,24 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::dxgi::iterators::*;
-use crate::kernel::ffi_types::*;
+use crate::dxgi::{iterators::*, vts::*};
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IDXGIAdapter`](crate::IDXGIAdapter) virtual table.
-#[repr(C)]
-pub struct IDXGIAdapterVT {
-	pub IDXGIObjectVT: IDXGIObjectVT,
-	pub EnumOutputs: fn(COMPTR, u32, *mut COMPTR) -> HRES,
-	pub GetDesc: fn(COMPTR, PVOID) -> HRES,
-	pub CheckInterfaceSupport: fn(COMPTR, PCVOID, *mut i64) -> HRES,
-}
 
 com_interface! { IDXGIAdapter: "2411e7e1-12ac-4ccf-bd14-9798e8534dc0";
 	/// [`IDXGIAdapter`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgiadapter)
-	/// COM interface over [`IDXGIAdapterVT`](crate::vt::IDXGIAdapterVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

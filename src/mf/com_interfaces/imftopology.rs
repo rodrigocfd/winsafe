@@ -1,30 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMFTopology`](crate::IMFTopology) virtual table.
-#[repr(C)]
-pub struct IMFTopologyVT {
-	pub IMFAttributesVT: IMFAttributesVT,
-	pub GetTopologyID: fn(COMPTR, *mut u64) -> HRES,
-	pub AddNode: fn(COMPTR, COMPTR) -> HRES,
-	pub RemoveNode: fn(COMPTR, COMPTR) -> HRES,
-	pub GetNodeCount: fn(COMPTR, *mut u16) -> HRES,
-	pub GetNode: fn(COMPTR, u16, *mut COMPTR) -> HRES,
-	pub Clear: fn(COMPTR) -> HRES,
-	pub CloneFrom: fn(COMPTR, COMPTR) -> HRES,
-	pub GetNodeByID: fn(COMPTR, u64, *mut COMPTR) -> HRES,
-	pub GetSourceNodeCollection: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub GetOutputNodeCollection: fn(COMPTR, *mut COMPTR) -> HRES,
-}
 
 com_interface! { IMFTopology: "83cf873a-f6da-4bc8-823f-bacfd55dc433";
 	/// [`IMFTopology`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imftopology)
-	/// COM interface over [`IMFTopologyVT`](crate::vt::IMFTopologyVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

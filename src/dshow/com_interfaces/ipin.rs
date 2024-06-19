@@ -3,35 +3,13 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::ffi_types::*;
+use crate::dshow::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IPin`](crate::IPin) virtual table.
-#[repr(C)]
-pub struct IPinVT {
-	pub IUnknownVT: IUnknownVT,
-	pub Connect: fn(COMPTR, COMPTR, PCVOID) -> HRES,
-	pub ReceiveConnection: fn(COMPTR, COMPTR, PCVOID) -> HRES,
-	pub Disconnect: fn(COMPTR) -> HRES,
-	pub ConnectedTo: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub ConnectionMediaType: fn(COMPTR, PVOID) -> HRES,
-	pub QueryPinInfo: fn(COMPTR, PVOID) -> HRES,
-	pub QueryDirection: fn(COMPTR, PVOID) -> HRES,
-	pub QueryId: fn(COMPTR, *mut PSTR) -> HRES,
-	pub QueryAccept: fn(COMPTR, PCVOID) -> HRES,
-	pub EnumMediaTypes: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub QueryInternalConnections: fn(COMPTR, *mut COMPTR, *mut u32) -> HRES,
-	pub EndOfStream: fn(COMPTR) -> HRES,
-	pub BeginFlush: fn(COMPTR) -> HRES,
-	pub EndFlush: fn(COMPTR) -> HRES,
-	pub NewSegment: fn(COMPTR, i64, i64, f64) -> HRES,
-}
 
 com_interface! { IPin: "56a86891-0ad4-11ce-b03a-0020af0ba770";
 	/// [`IPin`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ipin)
-	/// COM interface over [`IPinVT`](crate::vt::IPinVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

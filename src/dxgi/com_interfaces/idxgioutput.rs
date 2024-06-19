@@ -2,32 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::dxgi::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IDXGIAdapter`](crate::IDXGIAdapter) virtual table.
-#[repr(C)]
-pub struct IDXGIOutputVT {
-	pub IDXGIObjectVT: IDXGIObjectVT,
-	pub GetDesc: fn(COMPTR, PVOID) -> HRES,
-	pub GetDisplayModeList: fn(COMPTR, u32, u32, *mut u32, PVOID) -> HRES,
-	pub FindClosestMatchingMode: fn(COMPTR, PCVOID, PVOID, COMPTR) -> HRES,
-	pub WaitForVBlank: fn(COMPTR) -> HRES,
-	pub TakeOwnership: fn(COMPTR, COMPTR, BOOL) -> HRES,
-	pub ReleaseOwnership: fn(COMPTR),
-	pub GetGammaControlCapabilities: fn(COMPTR, PVOID) -> HRES,
-	pub SetGammaControl: fn(COMPTR, PCVOID) -> HRES,
-	pub GetGammaControl: fn(COMPTR, PVOID) -> HRES,
-	pub SetDisplaySurface: fn(COMPTR, COMPTR) -> HRES,
-	pub GetDisplaySurfaceData: fn(COMPTR, COMPTR) -> HRES,
-	pub GetFrameStatistics: fn(COMPTR, PVOID) -> HRES,
-}
 
 com_interface! { IDXGIOutput: "ae02eedb-c735-4690-8d52-5a8dc20213aa";
 	/// [`IDXGIOutput`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgioutput)
-	/// COM interface over [`IDXGIOutputVT`](crate::vt::IDXGIOutputVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

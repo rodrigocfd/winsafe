@@ -1,27 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMFPresentationDescriptor`](crate::IMFPresentationDescriptor) virtual
-/// table.
-#[repr(C)]
-pub struct IMFPresentationDescriptorVT {
-	pub IMFAttributesVT: IMFAttributesVT,
-	pub GetStreamDescriptorCount: fn(COMPTR, *mut u32) -> HRES,
-	pub GetStreamDescriptorByIndex: fn(COMPTR, u32, *mut BOOL, *mut COMPTR) -> HRES,
-	pub SelectStream: fn(COMPTR, u32) -> HRES,
-	pub DeselectStream: fn(COMPTR, u32) -> HRES,
-	pub Clone: fn(COMPTR, *mut COMPTR) -> HRES,
-}
 
 com_interface! { IMFPresentationDescriptor: "03cb2711-24d7-4db6-a17f-f3a7a479a536";
 	/// [`IMFPresentationDescriptor`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfpresentationdescriptor)
-	/// COM interface over
-	/// [`IMFPresentationDescriptorVT`](crate::vt::IMFPresentationDescriptorVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

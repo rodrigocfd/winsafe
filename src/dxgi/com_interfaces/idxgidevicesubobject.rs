@@ -1,21 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::dxgi::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IDXGIDeviceSubObject`](crate::IDXGIDeviceSubObject) virtual table.
-#[repr(C)]
-pub struct IDXGIDeviceSubObjectVT {
-	pub IDXGIObjectVT: IDXGIObjectVT,
-	pub GetDevice: fn(COMPTR, PCVOID, *mut COMPTR) -> HRES,
-}
 
 com_interface! { IDXGIDeviceSubObject: "3d3e0379-f9de-4d58-bb6c-18d62992f1a6";
 	/// [`IDXGIDeviceSubObject`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgidevicesubobject)
-	/// COM interface over [`IDXGIDeviceSubObjectVT`](crate::vt::IDXGIDeviceSubObjectVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

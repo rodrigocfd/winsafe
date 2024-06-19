@@ -2,26 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMFMediaSource`](crate::IMFMediaSource) virtual table.
-#[repr(C)]
-pub struct IMFMediaSourceVT {
-	pub IMFMediaEventGeneratorVT: IMFMediaEventGeneratorVT,
-	pub GetCharacteristics: fn(COMPTR, *mut u32) -> HRES,
-	pub CreatePresentationDescriptor: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub Start: fn(COMPTR, COMPTR, PCVOID, PCVOID) -> HRES,
-	pub Stop: fn(COMPTR) -> HRES,
-	pub Pause: fn(COMPTR) -> HRES,
-	pub Shutdown: fn(COMPTR) -> HRES,
-}
 
 com_interface! { IMFMediaSource: "279a808d-aec7-40c8-9c6b-a6b492c78a66";
 	/// [`IMFMediaSource`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfmediasource)
-	/// COM interface over [`IMFMediaSourceVT`](crate::vt::IMFMediaSourceVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

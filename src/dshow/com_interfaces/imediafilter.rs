@@ -2,26 +2,14 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::{ffi_types::*, privs::*};
+use crate::dshow::vts::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMediaFilter`](crate::IMediaFilter) virtual table.
-#[repr(C)]
-pub struct IMediaFilterVT {
-	pub IPersistVT: IPersistVT,
-	pub Stop: fn(COMPTR) -> HRES,
-	pub Pause: fn(COMPTR) -> HRES,
-   pub Run: fn(COMPTR, i64) -> HRES,
-	pub GetState: fn(COMPTR, u32, *mut u32) -> HRES,
-	pub SetSyncSource: fn(COMPTR, COMPTR) -> HRES,
-	pub GetSyncSource: fn(COMPTR, *mut COMPTR) -> HRES,
-}
 
 com_interface! { IMediaFilter: "56a86899-0ad4-11ce-b03a-0020af0ba770";
 	/// [`IMediaFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediafilter)
-	/// COM interface over [`IMediaFilterVT`](crate::vt::IMediaFilterVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

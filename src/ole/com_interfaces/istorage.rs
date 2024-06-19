@@ -2,35 +2,12 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
-use crate::ole::privs::*;
+use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IStorage`](crate::IStorage) virtual table.
-#[repr(C)]
-pub struct IStorageVT {
-	pub IUnknownVT: IUnknownVT,
-	pub CreateStream: fn(COMPTR, PCSTR, u32, u32, u32, *mut COMPTR) -> HRES,
-	pub OpenStream: fn(COMPTR, PCSTR, PVOID, u32, u32, *mut COMPTR) -> HRES,
-	pub CreateStorage: fn(COMPTR, PCSTR, u32, u32, u32, *mut COMPTR) -> HRES,
-	pub OpenStorage: fn(COMPTR, PCSTR, COMPTR, u32, *mut PSTR, u32, *mut COMPTR) -> HRES,
-	pub CopyTo: fn(COMPTR, u32, PCVOID, *mut PSTR, COMPTR) -> HRES,
-	pub MoveElementTo: fn(COMPTR, PCSTR, COMPTR, PCSTR, u32) -> HRES,
-	pub Commit: fn(COMPTR, u32) -> HRES,
-	pub Revert: fn(COMPTR) -> HRES,
-	pub EnumElements: fn(COMPTR, u32, PVOID, u32, *mut COMPTR) -> HRES,
-	pub DestroyElement: fn(COMPTR, PCSTR) -> HRES,
-	pub RenameElement: fn(COMPTR, PCSTR, PCSTR) -> HRES,
-	pub SetElementTimes: fn(COMPTR, PCSTR, PCVOID, PCVOID, PCVOID) -> HRES,
-	pub SetClass: fn(COMPTR, PCVOID) -> HRES,
-	pub SetStateBits: fn(COMPTR, u32, u32) -> HRES,
-	pub Stat: fn(COMPTR, PVOID, u32) -> HRES,
-}
 
 com_interface! { IStorage: "0000000b-0000-0000-c000-000000000046";
 	/// [`IStorage`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-istorage)
-	/// COM interface over [`IStorageVT`](crate::vt::IStorageVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

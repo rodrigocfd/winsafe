@@ -2,25 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::shell::iterators::*;
-use crate::vt::*;
-
-/// [`IEnumShellItems`](crate::IEnumShellItems) virtual table.
-#[repr(C)]
-pub struct IEnumShellItemsVT {
-	pub IUnknownVT: IUnknownVT,
-	pub Next: fn(COMPTR, u32, *mut COMPTR, *mut u32) -> HRES,
-	pub Skip: fn(COMPTR, u32) -> HRES,
-	pub Reset: fn(COMPTR) -> HRES,
-	pub Clone: fn(COMPTR, *mut COMPTR) -> HRES,
-}
+use crate::shell::{iterators::*, vts::*};
 
 com_interface! { IEnumShellItems: "70629033-e363-4a28-a567-0db78006e6d7";
 	/// [`IEnumShellItems`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ienumshellitems)
-	/// COM interface over [`IEnumShellItemsVT`](crate::vt::IEnumShellItemsVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

@@ -1,23 +1,14 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
+use crate::dshow::vts::*;
 use crate::guard::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IFileSinkFilter`](crate::IFileSinkFilter) virtual table.
-#[repr(C)]
-pub struct IFileSinkFilterVT {
-	pub IUnknownVT: IUnknownVT,
-	pub SetFileName: fn(COMPTR, PCSTR, PCVOID) -> HRES,
-	pub GetCurFile: fn(COMPTR, *mut PSTR, PVOID) -> HRES,
-}
 
 com_interface! { IFileSinkFilter: "a2104830-7c70-11cf-8bce-00aa00a3f1a6";
 	/// [`IFileSinkFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifilesinkfilter)
-	/// COM interface over [`IFileSinkFilterVT`](crate::vt::IFileSinkFilterVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

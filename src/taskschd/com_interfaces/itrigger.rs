@@ -2,33 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`ITrigger`](crate::ITrigger) virtual table.
-#[repr(C)]
-pub struct ITriggerVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_Type: fn(COMPTR, *mut u32) -> HRES,
-	pub get_Id: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Id: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Repetition: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_Repetition: fn(COMPTR, COMPTR) -> HRES,
-	pub get_ExecutionTimeLimit: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_ExecutionTimeLimit: fn(COMPTR, PCSTR) -> HRES,
-	pub get_StartBoundary: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_StartBoundary: fn(COMPTR, PCSTR) -> HRES,
-	pub get_EndBoundary: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_EndBoundary: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Enabled: fn(COMPTR, *mut i16) -> HRES,
-	pub put_Enabled: fn(COMPTR, i16) -> HRES,
-}
+use crate::taskschd::vts::*;
 
 com_interface! { ITrigger: "09941815-ea89-4b5b-89e0-2a773801fac3";
 	/// [`ITrigger`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itrigger)
-	/// COM interface over [`ITriggerVT`](crate::vt::ITriggerVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

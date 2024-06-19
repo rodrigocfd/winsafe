@@ -2,37 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMFTopologyNode`](crate::IMFTopologyNode) virtual table.
-#[repr(C)]
-pub struct IMFTopologyNodeVT {
-	pub IMFAttributesVT: IMFAttributesVT,
-	pub SetObject: fn(COMPTR, COMPTR) -> HRES,
-	pub GetObject: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub GetNodeType: fn(COMPTR, *mut u32) -> HRES,
-	pub GetTopoNodeID: fn(COMPTR,*mut u64) -> HRES,
-	pub SetTopoNodeID: fn(COMPTR, u64) -> HRES,
-	pub GetInputCount: fn(COMPTR, *mut u32) -> HRES,
-	pub GetOutputCount: fn(COMPTR, *mut u32) -> HRES,
-	pub ConnectOutput: fn(COMPTR, u32, COMPTR, u32) -> HRES,
-	pub DisconnectOutput: fn(COMPTR, u32) -> HRES,
-	pub GetInput: fn(COMPTR, u32, *mut COMPTR, *mut u32) -> HRES,
-	pub GetOutput: fn(COMPTR, u32, *mut COMPTR, *mut u32) -> HRES,
-	pub SetOutputPrefType: fn(COMPTR, u32, COMPTR) -> HRES,
-	pub GetOutputPrefType: fn(COMPTR, u32, *mut COMPTR) -> HRES,
-	pub SetInputPrefType: fn(COMPTR, u32, COMPTR) -> HRES,
-	pub GetInputPrefType: fn(COMPTR, u32, *mut COMPTR) -> HRES,
-	pub CloneFrom: fn(COMPTR, COMPTR) -> HRES,
-}
 
 com_interface! { IMFTopologyNode: "83cf873a-f6da-4bc8-823f-bacfd55dc430";
 	/// [`IMFTopologyNode`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imftopologynode)
-	/// COM interface over
-	/// [`IMFTopologyNodeVT`](crate::vt::IMFTopologyNodeVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

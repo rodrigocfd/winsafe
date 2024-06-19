@@ -2,21 +2,11 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
-use crate::ole::privs::*;
-
-/// [`IUnknown`](crate::IUnknown) virtual table, base to all COM virtual tables.
-#[repr(C)]
-pub struct IUnknownVT {
-	pub QueryInterface: fn(COMPTR, PCVOID, *mut COMPTR) -> HRES,
-	pub AddRef: fn(COMPTR) -> u32,
-	pub Release: fn(COMPTR) -> u32,
-}
+use crate::ole::{privs::*, vts::*};
 
 com_interface! { IUnknown: "00000000-0000-0000-c000-000000000046";
 	/// [`IUnknown`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nn-unknwn-iunknown)
-	/// COM interface over [`IUnknownVT`](crate::vt::IUnknownVT). It's the base to
-	/// all COM interfaces.
+	/// COM interface. It's the base to all COM interfaces.
 	///
 	/// The `clone` method calls
 	/// [`AddRef`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-addref)
@@ -36,9 +26,9 @@ com_interface! { IUnknown: "00000000-0000-0000-c000-000000000046";
 /// use winsafe::prelude::*;
 /// ```
 ///
-/// Note that the [`IUnknownVT`](crate::vt::IUnknownVT) virtual table has two
-/// other methods: `AddRef` and `Release`. While these methods are relevant in
-/// C++, here they are abstracted away as it follows:
+/// Note that the `IUnknown` virtual table has two other methods: `AddRef` and
+/// `Release`. While these methods are relevant in C++, here they are abstracted
+/// away as it follows:
 ///
 /// * `AddRef` – called along the `clone` method from the
 /// [`Clone`](std::clone::Clone) trait;

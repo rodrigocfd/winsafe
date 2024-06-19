@@ -4,6 +4,7 @@ mod com_interfaces;
 mod structs;
 
 pub (in crate::dshow) mod iterators;
+pub (in crate::dshow) mod vts;
 pub mod co;
 
 pub mod decl {
@@ -13,8 +14,4 @@ pub mod decl {
 
 pub mod traits {
 	pub use super::com_interfaces::traits::*;
-}
-
-pub mod vt {
-	pub use super::com_interfaces::vt::*;
 }

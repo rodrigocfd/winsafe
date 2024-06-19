@@ -1,28 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::dshow::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IFilterGraph`](crate::IFilterGraph) virtual table.
-#[repr(C)]
-pub struct IFilterGraphVT {
-	pub IUnknownVT: IUnknownVT,
-	pub AddFilter: fn(COMPTR, COMPTR, PCSTR) -> HRES,
-	pub RemoveFilter: fn(COMPTR, COMPTR) -> HRES,
-	pub EnumFilters: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub FindFilterByName: fn(COMPTR, PCSTR, *mut COMPTR) -> HRES,
-	pub ConnectDirect: fn(COMPTR, COMPTR, COMPTR, PCVOID) -> HRES,
-	pub Reconnect: fn(COMPTR, COMPTR) -> HRES,
-	pub Disconnect: fn(COMPTR, COMPTR) -> HRES,
-	pub SetDefaultSyncSource: fn(COMPTR) -> HRES,
-}
 
 com_interface! { IFilterGraph: "56a8689f-0ad4-11ce-b03a-0020af0ba770";
 	/// [`IFilterGraph`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifiltergraph)
-	/// COM interface over [`IFilterGraphVT`](crate::vt::IFilterGraphVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

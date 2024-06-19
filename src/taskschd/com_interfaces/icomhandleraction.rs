@@ -1,24 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IComHandlerAction`](crate::IComHandlerAction) virtual table.
-#[repr(C)]
-pub struct IComHandlerActionVT {
-	pub IAction: IActionVT,
-	pub get_ClassId: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_ClassId: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Data: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Data: fn(COMPTR, PCSTR) -> HRES,
-}
+use crate::taskschd::vts::*;
 
 com_interface! { IComHandlerAction: "6d2fd252-75c5-4f66-90ba-2a7d8cc3039f";
 	/// [`IComHandlerAction`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-icomhandleraction)
-	/// COM interface over
-	/// [`IComHandlerActionVT`](crate::vt::IComHandlerActionVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

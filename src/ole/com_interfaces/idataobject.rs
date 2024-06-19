@@ -2,29 +2,12 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
-use crate::ole::privs::*;
+use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IDataObject`](crate::IDataObject) virtual table.
-#[repr(C)]
-pub struct IDataObjectVT {
-	pub IUnknownVT: IUnknownVT,
-	pub GetData: fn(COMPTR, PVOID, PVOID) -> HRES,
-	pub GetDataHere: fn(COMPTR, PVOID, PVOID) -> HRES,
-	pub QueryGetData: fn(COMPTR, PVOID) -> HRES,
-	pub GetCanonicalFormatEtc: fn(COMPTR, PVOID, PVOID) -> HRES,
-	pub SetData: fn(COMPTR, PVOID, PVOID, BOOL) -> HRES,
-	pub EnumFormatEtc: fn(COMPTR, u32, *mut COMPTR) -> HRES,
-	pub DAdvise: fn(COMPTR, PVOID, u32, COMPTR, *mut u32) -> HRES,
-	pub DUnadvise: fn(COMPTR, u32) -> HRES,
-	pub EnumDAdvise: fn(COMPTR, *mut COMPTR) -> HRES,
-}
 
 com_interface! { IDataObject: "0000010e-0000-0000-c000-000000000046";
 	/// [`IDataObject`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-idataobject)
-	/// COM interface over [`IDataObjectVT`](crate::vt::IDataObjectVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

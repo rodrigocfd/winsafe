@@ -1,33 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`ITaskDefinition`](crate::ITaskDefinition) virtual table.
-#[repr(C)]
-pub struct ITaskDefinitionVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_RegistrationInfo: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_RegistrationInfo: fn(COMPTR, COMPTR) -> HRES,
-	pub get_Triggers: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_Triggers: fn(COMPTR, COMPTR) -> HRES,
-	pub get_Settings: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_Settings: fn(COMPTR, COMPTR) -> HRES,
-	pub get_Data: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Data: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Principal: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_Principal: fn(COMPTR, COMPTR) -> HRES,
-	pub get_Actions: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub put_Actions: fn(COMPTR, COMPTR) -> HRES,
-	pub get_XmlText: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_XmlText: fn(COMPTR, PCSTR) -> HRES,
-}
+use crate::taskschd::vts::*;
 
 com_interface! { ITaskDefinition: "f5bc8fc5-536d-4f77-b852-fbc1356fdeb6";
 	/// [`ITaskDefinition`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskdefinition)
-	/// COM interface over [`ITaskDefinitionVT`](crate::vt::ITaskDefinitionVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

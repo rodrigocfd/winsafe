@@ -2,30 +2,14 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::dxgi::vts::*;
 use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IDXGISwapChain`](crate::IDXGISwapChain) virtual table.
-#[repr(C)]
-pub struct IDXGISwapChainVT {
-	pub IDXGIDeviceSubObjectVT: IDXGIDeviceSubObjectVT,
-	pub Present: fn(COMPTR, u32, u32) -> HRES,
-	pub GetBuffer: fn(COMPTR, u32, PCVOID, *mut COMPTR) -> HRES,
-	pub SetFullscreenState: fn(COMPTR, BOOL, COMPTR) -> HRES,
-	pub GetFullscreenState: fn(COMPTR, *mut BOOL, *mut COMPTR) -> HRES,
-	pub GetDesc: fn(COMPTR, PVOID) -> HRES,
-	pub ResizeBuffers: fn(COMPTR, u32, u32, u32, u32, u32) -> HRES,
-	pub ResizeTarget: fn(COMPTR, PCVOID) -> HRES,
-	pub GetContainingOutput: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub GetFrameStatistics: fn(COMPTR, PVOID) -> HRES,
-	pub GetLastPresentCount: fn(COMPTR, *mut u32) -> HRES,
-}
 
 com_interface! { IDXGISwapChain: "310d36a0-d2e7-4c0a-aa04-6a9d23b8886a";
 	/// [`IDXGISwapChain`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgiswapchain)
-	/// COM interface over [`IDXGISwapChainVT`](crate::vt::IDXGISwapChainVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

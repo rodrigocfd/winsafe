@@ -1,25 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::dshow::iterators::*;
-use crate::kernel::ffi_types::*;
+use crate::dshow::{iterators::*, vts::*};
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IEnumMediaTypes`](crate::IEnumMediaTypes) virtual table.
-#[repr(C)]
-pub struct IEnumMediaTypesVT {
-	pub IUnknownVT: IUnknownVT,
-	pub Next: fn(COMPTR, u32, *mut PVOID, *mut u32) -> HRES,
-	pub Skip: fn(COMPTR, u32) -> HRES,
-	pub Reset: fn(COMPTR) -> HRES,
-	pub Clone: fn(COMPTR, *mut COMPTR) -> HRES,
-}
 
 com_interface! { IEnumMediaTypes: "89c31040-846b-11ce-97d3-00aa0055595a";
 	/// [`IEnumMediaTypes`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ienummediatypes)
-	/// COM interface over [`IEnumMediaTypesVT`](crate::vt::IEnumMediaTypesVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

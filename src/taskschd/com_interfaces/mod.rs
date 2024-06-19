@@ -55,23 +55,3 @@ pub mod traits {
 	pub use super::itrigger::taskschd_ITrigger;
 	pub use super::itriggercollection::taskschd_ITriggerCollection;
 }
-
-pub mod vt {
-	pub use super::iaction::IActionVT;
-	pub use super::iactioncollection::IActionCollectionVT;
-	pub use super::iboottrigger::IBootTriggerVT;
-	pub use super::icomhandleraction::IComHandlerActionVT;
-	pub use super::idailytrigger::IDailyTriggerVT;
-	pub use super::iemailaction::IEmailActionVT;
-	pub use super::ieventtrigger::IEventTriggerVT;
-	pub use super::iexecaction::IExecActionVT;
-	pub use super::iidletrigger::IIdleTriggerVT;
-	pub use super::ilogontrigger::ILogonTriggerVT;
-	pub use super::iregisteredtask::IRegisteredTaskVT;
-	pub use super::iregistrationinfo::IRegistrationInfoVT;
-	pub use super::itaskdefinition::ITaskDefinitionVT;
-	pub use super::itaskfolder::ITaskFolderVT;
-	pub use super::itaskservice::ITaskServiceVT;
-	pub use super::itrigger::ITriggerVT;
-	pub use super::itriggercollection::ITriggerCollectionVT;
-}

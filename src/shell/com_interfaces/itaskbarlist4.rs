@@ -2,21 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`ITaskbarList4`](crate::ITaskbarList4) virtual table.
-#[repr(C)]
-pub struct ITaskbarList4VT {
-	pub ITaskbarList3VT: ITaskbarList3VT,
-	pub SetTabProperties: fn(COMPTR, HANDLE, u32) -> HRES,
-}
+use crate::shell::vts::*;
 
 com_interface! { ITaskbarList4: "c43dc798-95d1-4bea-9030-bb99e2983a1a";
 	/// [`ITaskbarList4`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist4)
-	/// COM interface over [`ITaskbarList4VT`](crate::vt::ITaskbarList4VT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

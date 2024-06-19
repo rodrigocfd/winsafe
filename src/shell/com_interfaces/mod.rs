@@ -45,20 +45,3 @@ pub mod traits {
 	pub use super::itaskbarlist3::shell_ITaskbarList3;
 	pub use super::itaskbarlist4::shell_ITaskbarList4;
 }
-
-pub mod vt {
-	pub use super::ienumshellitems::IEnumShellItemsVT;
-	pub use super::ifiledialog::IFileDialogVT;
-	pub use super::ifiledialogevents::IFileDialogEventsVT;
-	pub use super::ifileopendialog::IFileOpenDialogVT;
-	pub use super::ifilesavedialog::IFileSaveDialogVT;
-	pub use super::imodalwindow::IModalWindowVT;
-	pub use super::ishellitem::IShellItemVT;
-	pub use super::ishellitem2::IShellItem2VT;
-	pub use super::ishellitemarray::IShellItemArrayVT;
-	pub use super::ishelllink::IShellLinkVT;
-	pub use super::itaskbarlist::ITaskbarListVT;
-	pub use super::itaskbarlist2::ITaskbarList2VT;
-	pub use super::itaskbarlist3::ITaskbarList3VT;
-	pub use super::itaskbarlist4::ITaskbarList4VT;
-}

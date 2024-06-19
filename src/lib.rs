@@ -309,16 +309,3 @@ pub mod prelude {
 	#[cfg(all(feature = "comctl", feature = "shell"))] pub use super::comctl_shell::traits::*;
 	#[cfg(all(feature = "gdi", feature = "mf"))] pub use super::gdi_mf::traits::*;
 }
-
-#[cfg(feature = "ole")]
-pub mod vt {
-	//! Virtual tables of COM interfaces.
-
-	#[cfg(feature = "dshow")] pub use super::dshow::vt::*;
-	#[cfg(feature = "dxgi")] pub use super::dxgi::vt::*;
-	#[cfg(feature = "mf")] pub use super::mf::vt::*;
-	#[cfg(feature = "ole")] pub use super::ole::vt::*;
-	#[cfg(feature = "oleaut")] pub use super::oleaut::vt::*;
-	#[cfg(feature = "shell")] pub use super::shell::vt::*;
-	#[cfg(feature = "taskschd")] pub use super::taskschd::vt::*;
-}

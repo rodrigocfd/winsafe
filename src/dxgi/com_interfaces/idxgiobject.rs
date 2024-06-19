@@ -1,24 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::dxgi::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IDXGIObject`](crate::IDXGIObject) virtual table.
-#[repr(C)]
-pub struct IDXGIObjectVT {
-	pub IUnknownVT: IUnknownVT,
-	pub SetPrivateData: fn(COMPTR, PCVOID, u32, PCVOID) -> HRES,
-	pub SetPrivateDataInterface: fn(COMPTR, PCVOID, COMPTR) -> HRES,
-	pub GetPrivateData: fn(COMPTR, PCVOID, *mut u32, PVOID) -> HRES,
-	pub GetParent: fn(COMPTR, PCVOID, *mut COMPTR) -> HRES,
-}
 
 com_interface! { IDXGIObject: "aec22fb8-76f3-4639-9be0-28eb43a67a2e";
 	/// [`IDXGIObject`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgiobject)
-	/// COM interface over [`IDXGIObjectVT`](crate::vt::IDXGIObjectVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

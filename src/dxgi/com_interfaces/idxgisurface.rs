@@ -2,23 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::dxgi::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IDXGISurface`](crate::IDXGISurface) virtual table.
-#[repr(C)]
-pub struct IDXGISurfaceVT {
-	pub IDXGIDeviceSubObjectVT: IDXGIDeviceSubObjectVT,
-	pub GetDesc: fn(COMPTR, PVOID) -> HRES,
-	pub Map: fn(COMPTR, PVOID, u32) -> HRES,
-	pub Unmap: fn(COMPTR) -> HRES,
-}
 
 com_interface! { IDXGISurface: "cafcb56c-6ac3-4889-bf47-9e23bbd260ec";
 	/// [`IDXGISurface`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgisurface)
-	/// COM interface over [`IDXGISurfaceVT`](crate::vt::IDXGISurfaceVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

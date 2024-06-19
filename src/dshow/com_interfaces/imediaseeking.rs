@@ -2,38 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::dshow::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMediaSeeking`](crate::IMediaSeeking) virtual table.
-#[repr(C)]
-pub struct IMediaSeekingVT {
-	pub IUnknownVT: IUnknownVT,
-	pub GetCapabilities: fn(COMPTR, *mut u32) -> HRES,
-	pub CheckCapabilities: fn(COMPTR, *mut u32) -> HRES,
-	pub IsFormatSupported: fn(COMPTR, PCVOID) -> HRES,
-	pub QueryPreferredFormat: fn(COMPTR, PVOID) -> HRES,
-	pub GetTimeFormat: fn(COMPTR, PVOID) -> HRES,
-	pub IsUsingTimeFormat: fn(COMPTR, PCVOID) -> HRES,
-	pub SetTimeFormat: fn(COMPTR, PCVOID) -> HRES,
-	pub GetDuration: fn(COMPTR, *mut i64) -> HRES,
-	pub GetStopPosition: fn(COMPTR, *mut i64) -> HRES,
-	pub GetCurrentPosition: fn(COMPTR, *mut i64) -> HRES,
-	pub ConvertTimeFormat: fn(COMPTR, *mut i64, PCVOID, i64, PCVOID) -> HRES,
-	pub SetPositions: fn(COMPTR, *mut i64, u32, *mut i64, u32) -> HRES,
-	pub GetPositions: fn(COMPTR, *mut i64, *mut i64) -> HRES,
-	pub GetAvailable: fn(COMPTR, *mut i64, *mut i64) -> HRES,
-	pub SetRate: fn(COMPTR, f64) -> HRES,
-	pub GetRate: fn(COMPTR, *mut f64) -> HRES,
-	pub GetPreroll: fn(COMPTR, *mut i64) -> HRES,
-}
 
 com_interface! { IMediaSeeking: "36b73880-c2c8-11cf-8b46-00805f6cef60";
 	/// [`IMediaSeeking`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-imediaseeking)
-	/// COM interface over [`IMediaSeekingVT`](crate::vt::IMediaSeekingVT). Inherits
-	/// from [`IUnknown`](crate::IUnknown).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

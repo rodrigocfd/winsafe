@@ -4,26 +4,13 @@ use std::mem::ManuallyDrop;
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMFAsyncResult`](crate::IMFAsyncResult) virtual table.
-#[repr(C)]
-pub struct IMFAsyncResultVT {
-	pub IUnknownVT: IUnknownVT,
-	pub GetState: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub GetStatus: fn(COMPTR) -> HRES,
-	pub SetStatus: fn(COMPTR, HRES) -> HRES,
-	pub GetObject: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub GetStateNoAddRef: fn(COMPTR) -> COMPTR,
-}
 
 com_interface! { IMFAsyncResult: "ac6b7889-0740-4d51-8619-905994a55cc6";
 	/// [`IMFAsyncResult`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nn-mfobjects-imfasyncresult)
-	/// COM interface over
-	/// [`IMFAsyncResultVT`](crate::vt::IMFAsyncResultVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

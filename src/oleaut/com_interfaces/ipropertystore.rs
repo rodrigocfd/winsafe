@@ -2,26 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
-use crate::oleaut::iterators::*;
+use crate::oleaut::{iterators::*, vts::*};
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IPropertyStore`](crate::IPropertyStore) virtual table.
-#[repr(C)]
-pub struct IPropertyStoreVT {
-	pub IUnknownVT: IUnknownVT,
-	pub GetCount: fn(COMPTR, *mut u32) -> HRES,
-	pub GetAt: fn(COMPTR, u32, PVOID) -> HRES,
-	pub GetValue: fn(COMPTR, PCVOID, PVOID) -> HRES,
-	pub SetValue: fn(COMPTR, PCVOID, PCVOID) -> HRES,
-	pub Commit: fn(COMPTR) -> HRES,
-}
 
 com_interface! { IPropertyStore: "886d8eeb-8cf2-4446-8d02-cdba1dbdcf99";
 	/// [`IPropertyStore`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nn-propsys-ipropertystore)
-	/// COM interface over [`IPropertyStoreVT`](crate::vt::IPropertyStoreVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

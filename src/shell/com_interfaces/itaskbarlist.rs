@@ -1,25 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`ITaskbarList`](crate::ITaskbarList) virtual table.
-#[repr(C)]
-pub struct ITaskbarListVT {
-	pub IUnknownVT: IUnknownVT,
-	pub HrInit: fn(COMPTR) -> HRES,
-	pub AddTab: fn(COMPTR, HANDLE) -> HRES,
-	pub DeleteTab: fn(COMPTR, HANDLE) -> HRES,
-	pub ActivateTab: fn(COMPTR, HANDLE) -> HRES,
-	pub SetActiveAlt: fn(COMPTR, HANDLE) -> HRES,
-}
+use crate::shell::vts::*;
 
 com_interface! { ITaskbarList: "56fdf342-fd6d-11d0-958a-006097c9a090";
 	/// [`ITaskbarList`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
-	/// COM interface over [`ITaskbarListVT`](crate::vt::ITaskbarListVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

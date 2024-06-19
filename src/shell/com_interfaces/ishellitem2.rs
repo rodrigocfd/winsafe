@@ -5,30 +5,11 @@ use crate::decl::*;
 use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IShellItem2`](crate::IShellItem2) virtual table.
-#[repr(C)]
-pub struct IShellItem2VT {
-	pub IShellItemVT: IShellItemVT,
-	pub GetPropertyStore: fn(COMPTR, u32, PCVOID, *mut COMPTR) -> HRES,
-	pub GetPropertyStoreWithCreateObject: fn(COMPTR, u32, COMPTR, PCVOID, *mut COMPTR) -> HRES,
-	pub GetPropertyStoreForKeys: fn(COMPTR, PCVOID, u32, u32, PCVOID, *mut COMPTR) -> HRES,
-	pub GetPropertyDescriptionList: fn(COMPTR, PCVOID, PCVOID, *mut COMPTR) -> HRES,
-	pub Update: fn(COMPTR, COMPTR) -> HRES,
-	pub GetProperty: fn(COMPTR, PCVOID, PVOID) -> HRES,
-	pub GetCLSID: fn(COMPTR, PCVOID, PVOID) -> HRES,
-	pub GetFileTime: fn(COMPTR, PCVOID, PVOID) -> HRES,
-	pub GetInt32: fn(COMPTR, PCVOID, *mut i32) -> HRES,
-	pub GetString: fn(COMPTR, PCVOID, *mut PSTR) -> HRES,
-	pub GetUInt32: fn(COMPTR, PCVOID, *mut u32) -> HRES,
-	pub GetUInt64: fn(COMPTR, PCVOID, *mut u64) -> HRES,
-	pub GetBool: fn(COMPTR, PCVOID, *mut BOOL) -> HRES,
-}
+use crate::shell::vts::*;
 
 com_interface! { IShellItem2: "7e9fb0d3-919f-4307-ab2e-9b1860310c93";
 	/// [`IShellItem2`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem2)
-	/// COM interface over [`IShellItem2VT`](crate::vt::IShellItem2VT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

@@ -2,21 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IModalWindow`](crate::IModalWindow) virtual table.
-#[repr(C)]
-pub struct IModalWindowVT {
-	pub IUnknownVT: IUnknownVT,
-	pub Show: fn(COMPTR, HANDLE) -> u32,
-}
+use crate::shell::vts::*;
 
 com_interface! { IModalWindow: "b4db1657-70d7-485e-8e3e-6fcb5a5c1802";
 	/// [`IModalWindow`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-imodalwindow)
-	/// COM interface over [`IModalWindowVT`](crate::vt::IModalWindowVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

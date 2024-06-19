@@ -2,26 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`ITriggerCollection`](crate::ITriggerCollection) virtual table.
-#[repr(C)]
-pub struct ITriggerCollectionVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_Count: fn(COMPTR, *mut i32) -> HRES,
-	pub get_Item: fn(COMPTR, i32, *mut COMPTR) -> HRES,
-	pub get__NewEnum: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub Create: fn(COMPTR, u32, *mut COMPTR) -> HRES,
-	pub Remove: fn(COMPTR, VARIANT) -> HRES,
-	pub Clear: fn(COMPTR) -> HRES,
-}
+use crate::taskschd::vts::*;
 
 com_interface! { ITriggerCollection: "85df5081-1b24-4f32-878a-d9d14df4cb77";
 	/// [`ITriggerCollection`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itriggercollection)
-	/// COM interface over [`ITriggerCollectionVT`](crate::vt::ITriggerCollectionVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

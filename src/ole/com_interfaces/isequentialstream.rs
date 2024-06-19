@@ -1,23 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::kernel::privs::*;
-use crate::ole::privs::*;
+use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`ISequentialStream`](crate::ISequentialStream) virtual table.
-#[repr(C)]
-pub struct ISequentialStreamVT {
-	pub IUnknownVT: IUnknownVT,
-	pub Read: fn(COMPTR, PVOID, u32, *mut u32) -> HRES,
-	pub Write: fn(COMPTR, PCVOID, u32, *mut u32) -> HRES,
-}
 
 com_interface! { ISequentialStream: "0c733a30-2a1c-11ce-ade5-00aa0044773d";
 	/// [`ISequentialStream`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-isequentialstream)
-	/// COM interface over [`ISequentialStreamVT`](crate::vt::ISequentialStreamVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

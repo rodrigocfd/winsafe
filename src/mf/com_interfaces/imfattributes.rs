@@ -1,51 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMFAttributes`](crate::IMFAttributes) virtual table.
-#[repr(C)]
-pub struct IMFAttributesVT {
-	pub IUnknownVT: IUnknownVT,
-	pub GetItem: fn(COMPTR, PCVOID, PVOID) -> HRES,
-	pub GetItemType: fn(COMPTR, PCVOID, *mut u32) -> HRES,
-	pub CompareItem: fn(COMPTR, PCVOID, PCVOID, *mut BOOL) -> HRES,
-	pub Compare: fn(COMPTR, COMPTR, u32, *mut BOOL) -> HRES,
-	pub GetUINT32: fn(COMPTR, PCVOID, *mut u32) -> HRES,
-	pub GetUINT64: fn(COMPTR, PCVOID, *mut u64) -> HRES,
-	pub GetDouble: fn(COMPTR, PCVOID, *mut f64) -> HRES,
-	pub GetGUID: fn(COMPTR, COMPTR, PVOID) -> HRES,
-	pub GetStringLength: fn(COMPTR, PCVOID, *mut u32) -> HRES,
-	pub GetString: fn(COMPTR, PCVOID, PSTR, u32, *mut u32) -> HRES,
-	pub GetAllocatedString: fn(COMPTR, PCVOID, PSTR, *mut u32) -> HRES,
-	pub GetBlobSize: fn(COMPTR, PCVOID, *mut u32) -> HRES,
-	pub GetBlob: fn(COMPTR, PCVOID, *mut u8, u32, *mut u32) -> HRES,
-	pub GetAllocatedBlob: fn(COMPTR, PCVOID, *mut *mut u8, *mut u32) -> HRES,
-	pub GetUnknown: fn(COMPTR, PCVOID, PCVOID, *mut COMPTR) -> HRES,
-	pub SetItem: fn(COMPTR, PCVOID, PCVOID) -> HRES,
-	pub DeleteItem: fn(COMPTR, PCVOID) -> HRES,
-	pub DeleteAllItems: fn(COMPTR) -> HRES,
-	pub SetUINT32: fn(COMPTR, PCVOID, u32) -> HRES,
-	pub SetUINT64: fn(COMPTR, PCVOID, u64) -> HRES,
-	pub SetDouble: fn(COMPTR, PCVOID, f64) -> HRES,
-	pub SetGUID: fn(COMPTR, PCVOID, PCVOID) -> HRES,
-	pub SetString: fn(COMPTR, PCVOID, PCSTR) -> HRES,
-	pub SetBlob: fn(COMPTR, PCVOID, *const u8, u32) -> HRES,
-	pub SetUnknown: fn(COMPTR, PCVOID, *mut COMPTR) -> HRES,
-	pub LockStore: fn(COMPTR) -> HRES,
-	pub UnlockStore: fn(COMPTR) -> HRES,
-	pub GetCount: fn(COMPTR, *mut u32) -> HRES,
-	pub GetItemByIndex: fn(COMPTR, u32, PVOID, PVOID) -> HRES,
-	pub CopyAllItems: fn(COMPTR, COMPTR) -> HRES,
-}
 
 com_interface! { IMFAttributes: "2cd2d921-c447-44a7-a13c-4adabfc247e3";
 	/// [`IMFAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nn-mfobjects-imfattributes)
-	/// COM interface over
-	/// [`IMFAttributesVT`](crate::vt::IMFAttributesVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

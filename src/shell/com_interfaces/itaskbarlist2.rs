@@ -1,21 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`ITaskbarList2`](crate::ITaskbarList2) virtual table.
-#[repr(C)]
-pub struct ITaskbarList2VT {
-	pub ITaskbarListVT: ITaskbarListVT,
-	pub MarkFullscreenWindow: fn(COMPTR, HANDLE, BOOL) -> HRES,
-}
+use crate::shell::vts::*;
 
 com_interface! { ITaskbarList2: "602d4995-b13a-429b-a66e-1935e44f4317";
 	/// [`ITaskbarList2`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
-	/// COM interface over [`ITaskbarList2VT`](crate::vt::ITaskbarList2VT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

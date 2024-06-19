@@ -13,9 +13,3 @@ pub mod traits {
 	pub use super::ipropertystore::oleaut_IPropertyStore;
 	pub use super::itypeinfo::oleaut_ITypeInfo;
 }
-
-pub mod vt {
-	pub use super::idispatch::IDispatchVT;
-	pub use super::ipropertystore::IPropertyStoreVT;
-	pub use super::itypeinfo::ITypeInfoVT;
-}

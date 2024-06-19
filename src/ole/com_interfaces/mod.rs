@@ -42,19 +42,3 @@ pub mod traits {
 	pub use super::istream::ole_IStream;
 	pub use super::iunknown::ole_IUnknown;
 }
-
-pub mod vt {
-	pub use super::iadvisesink::IAdviseSinkVT;
-	pub use super::ibindctx::IBindCtxVT;
-	pub use super::idataobject::IDataObjectVT;
-	pub use super::idroptarget::IDropTargetVT;
-	pub use super::imoniker::IMonikerVT;
-	pub use super::ipersist::IPersistVT;
-	pub use super::ipersistfile::IPersistFileVT;
-	pub use super::ipersiststream::IPersistStreamVT;
-	pub use super::ipicture::IPictureVT;
-	pub use super::isequentialstream::ISequentialStreamVT;
-	pub use super::istorage::IStorageVT;
-	pub use super::istream::IStreamVT;
-	pub use super::iunknown::IUnknownVT;
-}

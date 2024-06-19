@@ -1,17 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IIdleTrigger`](crate::IIdleTrigger) virtual table.
-#[repr(C)]
-pub struct IIdleTriggerVT {
-	pub ITriggerVT: ITriggerVT,
-}
 
 com_interface! { IIdleTrigger: "d537d2b0-9fb3-4d34-9739-1ff5ce7b1ef3";
 	/// [`IIdleTrigger`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-iidletrigger)
-	/// COM interface over [`IIdleTriggerVT`](crate::vt::IIdleTriggerVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

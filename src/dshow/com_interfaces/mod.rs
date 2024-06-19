@@ -40,18 +40,3 @@ pub mod traits {
 	pub use super::imediaseeking::dshow_IMediaSeeking;
 	pub use super::ipin::dshow_IPin;
 }
-
-pub mod vt {
-	pub use super::ibasefilter::IBaseFilterVT;
-	pub use super::ienumfilters::IEnumFiltersVT;
-	pub use super::ienummediatypes::IEnumMediaTypesVT;
-	pub use super::ienumpins::IEnumPinsVT;
-	pub use super::ifilesinkfilter::IFileSinkFilterVT;
-	pub use super::ifiltergraph::IFilterGraphVT;
-	pub use super::ifiltergraph2::IFilterGraph2VT;
-	pub use super::igraphbuilder::IGraphBuilderVT;
-	pub use super::imediacontrol::IMediaControlVT;
-	pub use super::imediafilter::IMediaFilterVT;
-	pub use super::imediaseeking::IMediaSeekingVT;
-	pub use super::ipin::IPinVT;
-}

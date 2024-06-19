@@ -2,32 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`ITaskbarList3`](crate::ITaskbarList3) virtual table.
-#[repr(C)]
-pub struct ITaskbarList3VT {
-	pub ITaskbarList2VT: ITaskbarList2VT,
-	pub SetProgressValue: fn(COMPTR, HANDLE, u64, u64) -> HRES,
-	pub SetProgressState: fn(COMPTR, HANDLE, u32) -> HRES,
-	pub RegisterTab: fn(COMPTR, HANDLE, HANDLE) -> HRES,
-	pub UnregisterTab: fn(COMPTR, HANDLE) -> HRES,
-	pub SetTabOrder: fn(COMPTR, HANDLE, HANDLE) -> HRES,
-	pub SetTabActive: fn(COMPTR, HANDLE, HANDLE, u32) -> HRES,
-	pub ThumbBarAddButtons: fn(COMPTR, HANDLE, u32, PVOID) -> HRES,
-	pub ThumbBarUpdateButtons: fn(COMPTR, HANDLE, u32, PVOID) -> HRES,
-	pub ThumbBarSetImageList: fn(COMPTR, HANDLE, HANDLE) -> HRES,
-	pub SetOverlayIcon: fn(COMPTR, HANDLE, HANDLE, PCSTR) -> HRES,
-	pub SetThumbnailTooltip: fn(COMPTR, HANDLE, PCSTR) -> HRES,
-	pub SetThumbnailClip: fn(COMPTR, HANDLE, PVOID) -> HRES,
-}
+use crate::shell::vts::*;
 
 com_interface! { ITaskbarList3: "ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf";
 	/// [`ITaskbarList3`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
-	/// COM interface over [`ITaskbarList3VT`](crate::vt::ITaskbarList3VT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

@@ -1,28 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::shell::iterators::*;
-use crate::vt::*;
-
-/// [`IShellItemArray`](crate::IShellItemArray) virtual table.
-#[repr(C)]
-pub struct IShellItemArrayVT {
-	pub IUnknownVT: IUnknownVT,
-	pub BindToHandler: fn(COMPTR, PVOID, PCVOID, PCVOID, *mut COMPTR) -> HRES,
-	pub GetPropertyStore: fn(COMPTR, u32, PCVOID, *mut COMPTR) -> HRES,
-	pub GetPropertyDescriptionList: fn(COMPTR, PVOID, PCVOID, *mut COMPTR) -> HRES,
-	pub GetAttributes: fn(COMPTR, u32, u32, PVOID) -> HRES,
-	pub GetCount: fn(COMPTR, *mut u32) -> HRES,
-	pub GetItemAt: fn(COMPTR, u32, *mut COMPTR) -> HRES,
-	pub EnumItems: fn(COMPTR, *mut PVOID) -> HRES,
-}
+use crate::shell::{iterators::*, vts::*};
 
 com_interface! { IShellItemArray: "b63ea76d-1f85-456f-a19c-48159efa858b";
 	/// [`IShellItemArray`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitemarray)
-	/// COM interface over [`IShellItemArrayVT`](crate::vt::IShellItemArrayVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

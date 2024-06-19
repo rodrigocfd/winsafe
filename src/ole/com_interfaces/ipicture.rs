@@ -2,34 +2,12 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
-use crate::ole::privs::*;
+use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IPicture`](crate::IPicture) virtual table.
-#[repr(C)]
-pub struct IPictureVT {
-	pub IUnknownVT: IUnknownVT,
-	pub get_Handle: fn(COMPTR, *mut u32) -> HRES,
-	pub get_hPal: fn(COMPTR, *mut u32) -> HRES,
-	pub get_Type: fn(COMPTR, *mut i16) -> HRES,
-	pub get_Width: fn(COMPTR, *mut i32) -> HRES,
-	pub get_Height: fn(COMPTR, *mut i32) -> HRES,
-	pub Render: fn(COMPTR, HANDLE, i32, i32, i32, i32, i32, i32, i32, i32, PCVOID) -> HRES,
-	pub set_hPal: fn(COMPTR, u32) -> HRES,
-	pub get_CurDC: fn(COMPTR, *mut HANDLE) -> HRES,
-	pub SelectPicture: fn(COMPTR, HANDLE, *mut HANDLE, *mut HANDLE) -> HRES,
-	pub get_KeepOriginalFormat: fn(COMPTR, *mut BOOL) -> HRES,
-	pub put_KeepOriginalFormat: fn(COMPTR, BOOL) -> HRES,
-	pub PictureChanged: fn(COMPTR) -> HRES,
-	pub SaveAsFile: fn(COMPTR, *mut COMPTR, BOOL, *mut i32) -> HRES,
-	pub get_Attributes: fn(COMPTR, *mut u32) -> HRES,
-}
 
 com_interface! { IPicture: "7bf80980-bf32-101a-8bbb-00aa00300cab";
 	/// [`IPicture`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nn-ocidl-ipicture)
-	/// COM interface over [`IPictureVT`](crate::vt::IPictureVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

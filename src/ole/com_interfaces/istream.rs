@@ -2,29 +2,12 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
-use crate::ole::privs::*;
+use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IStream`](crate::IStream) virtual table.
-#[repr(C)]
-pub struct IStreamVT {
-	pub ISequentialStreamVT: ISequentialStreamVT,
-	pub Seek: fn(COMPTR, i64, u32, *mut u64) -> HRES,
-	pub SetSize: fn(COMPTR, u64) -> HRES,
-	pub CopyTo: fn(COMPTR, COMPTR, u64, *mut u64, *mut u64) -> HRES,
-	pub Commit: fn(COMPTR, u32)-> HRES,
-	pub Revert: fn(COMPTR) -> HRES,
-	pub LockRegion: fn(COMPTR, u64, u64, u32) -> HRES,
-	pub UnlockRegion: fn(COMPTR, u64, u64, u32) -> HRES,
-	pub Stat: fn(COMPTR, PVOID, u32) -> HRES,
-	pub Clone: fn(COMPTR, *mut COMPTR) -> HRES,
-}
 
 com_interface! { IStream: "0000000c-0000-0000-c000-000000000046";
 	/// [`IStream`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-istream)
-	/// COM interface over [`IStreamVT`](crate::vt::IStreamVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

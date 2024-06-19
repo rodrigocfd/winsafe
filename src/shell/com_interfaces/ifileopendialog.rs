@@ -1,21 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IFileOpenDialog`](crate::IFileOpenDialog) virtual table.
-#[repr(C)]
-pub struct IFileOpenDialogVT {
-	pub IFileDialogVT: IFileDialogVT,
-	pub GetResults: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub GetSelectedItems: fn(COMPTR, *mut COMPTR) -> HRES,
-}
+use crate::shell::vts::*;
 
 com_interface! { IFileOpenDialog: "d57c7288-d4ad-4768-be02-9d969532d960";
 	/// [`IFileOpenDialog`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileopendialog)
-	/// COM interface over [`IFileOpenDialogVT`](crate::vt::IFileOpenDialogVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

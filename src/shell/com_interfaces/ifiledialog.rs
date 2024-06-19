@@ -3,43 +3,13 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IFileDialog`](crate::IFileDialog) virtual table.
-#[repr(C)]
-pub struct IFileDialogVT {
-	pub IModalWindowVT: IModalWindowVT,
-	pub SetFileTypes: fn(COMPTR, u32, PCVOID) -> HRES,
-	pub SetFileTypeIndex: fn(COMPTR, u32) -> HRES,
-	pub GetFileTypeIndex: fn(COMPTR, *mut u32) -> HRES,
-	pub Advise: fn(COMPTR, PVOID, *mut u32) -> HRES,
-	pub Unadvise: fn(COMPTR, u32) -> HRES,
-	pub SetOptions: fn(COMPTR, u32) -> HRES,
-	pub GetOptions: fn(COMPTR, *mut u32) -> HRES,
-	pub SetDefaultFolder: fn(COMPTR, COMPTR) -> HRES,
-	pub SetFolder: fn(COMPTR, COMPTR) -> HRES,
-	pub GetFolder: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub GetCurrentSelection: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub SetFileName: fn(COMPTR, PCSTR) -> HRES,
-	pub GetFileName: fn(COMPTR, *mut PSTR) -> HRES,
-	pub SetTitle: fn(COMPTR, PCSTR) -> HRES,
-	pub SetOkButtonLabel: fn(COMPTR, PCSTR) -> HRES,
-	pub SetFileNameLabel: fn(COMPTR, PCSTR) -> HRES,
-	pub GetResult: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub AddPlace: fn(COMPTR, COMPTR, u32) -> HRES,
-	pub SetDefaultExtension: fn(COMPTR, PCSTR) -> HRES,
-	pub Close: fn(COMPTR, HRES) -> HRES,
-	pub SetClientGuid: fn(COMPTR, PCVOID) -> HRES,
-	pub ClearClientData: fn(COMPTR) -> HRES,
-	pub SetFilter: fn(COMPTR, PVOID) -> HRES,
-}
+use crate::shell::vts::*;
 
 com_interface! { IFileDialog: "42f85136-db7e-439c-85f1-e4075d135fc8";
 	/// [`IFileDialog`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialog)
-	/// COM interface over [`IFileDialogVT`](crate::vt::IFileDialogVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

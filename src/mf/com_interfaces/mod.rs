@@ -46,20 +46,3 @@ pub mod traits {
 	pub use super::imftopologynode::mf_IMFTopologyNode;
 	pub use super::imfvideodisplaycontrol::mf_IMFVideoDisplayControl;
 }
-
-pub mod vt {
-	pub use super::imfasynccallback::IMFAsyncCallbackVT;
-	pub use super::imfasyncresult::IMFAsyncResultVT;
-	pub use super::imfattributes::IMFAttributesVT;
-	pub use super::imfclock::IMFClockVT;
-	pub use super::imfgetservice::IMFGetServiceVT;
-	pub use super::imfmediaevent::IMFMediaEventVT;
-	pub use super::imfmediaeventgenerator::IMFMediaEventGeneratorVT;
-	pub use super::imfmediasession::IMFMediaSessionVT;
-	pub use super::imfmediasource::IMFMediaSourceVT;
-	pub use super::imfpresentationdescriptor::IMFPresentationDescriptorVT;
-	pub use super::imfsourceresolver::IMFSourceResolverVT;
-	pub use super::imftopology::IMFTopologyVT;
-	pub use super::imftopologynode::IMFTopologyNodeVT;
-	pub use super::imfvideodisplaycontrol::IMFVideoDisplayControlVT;
-}

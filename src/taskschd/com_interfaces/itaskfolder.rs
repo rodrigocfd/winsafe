@@ -2,33 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`ITaskFolder`](crate::ITaskFolder) virtual table.
-#[repr(C)]
-pub struct ITaskFolderVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_Name: fn(COMPTR, *mut PSTR) -> HRES,
-	pub get_Path: fn(COMPTR, *mut PSTR) -> HRES,
-	pub GetFolder: fn(COMPTR, PCSTR, *mut COMPTR) -> HRES,
-	pub GetFolders: fn(COMPTR, i32, *mut COMPTR) -> HRES,
-	pub CreateFolder: fn(COMPTR, PCSTR, VARIANT, *mut COMPTR) -> HRES,
-	pub DeleteFolder: fn(COMPTR, PCSTR, i32) -> HRES,
-	pub GetTask: fn(COMPTR, PCSTR, *mut COMPTR) -> HRES,
-	pub GetTasks: fn(COMPTR, i32, *mut COMPTR) -> HRES,
-	pub DeleteTask: fn(COMPTR, PCSTR, i32) -> HRES,
-	pub RegisterTask: fn(COMPTR, PCSTR, PCSTR, i32, VARIANT, VARIANT, u32, VARIANT, *mut COMPTR) -> HRES,
-	pub RegisterTaskDefinition: fn(COMPTR, PCSTR, COMPTR, i32, VARIANT, VARIANT, u32, VARIANT, *mut COMPTR) -> HRES,
-	pub GetSecurityDescriptor: fn(COMPTR, i32, *mut PSTR) -> HRES,
-	pub SetSecurityDescriptor: fn(COMPTR, PCSTR, i32) -> HRES,
-}
+use crate::taskschd::vts::*;
 
 com_interface! { ITaskFolder: "8cfac062-a080-4c15-9a88-aa7c2af80dfc";
 	/// [`ITaskFolder`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskfolder)
-	/// COM interface over [`ITaskFolderVT`](crate::vt::ITaskFolderVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

@@ -2,39 +2,14 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::{ffi_types::*, privs::*};
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::shell::privs::*;
-use crate::vt::*;
-
-/// [`IShellLink`](crate::IShellLink) virtual table.
-#[repr(C)]
-pub struct IShellLinkVT {
-	pub IUnknownVT: IUnknownVT,
-	pub GetPath: fn(COMPTR, PCSTR, i32, PVOID, u32) -> HRES,
-	pub GetIDList: fn(COMPTR, PVOID) -> HRES,
-	pub SetIDList: fn(COMPTR, PVOID) -> HRES,
-	pub GetDescription: fn(COMPTR, PSTR, i32) -> HRES,
-	pub SetDescription: fn(COMPTR, PCSTR) -> HRES,
-	pub GetWorkingDirectory: fn(COMPTR, PSTR, i32) -> HRES,
-	pub SetWorkingDirectory: fn(COMPTR, PCSTR) -> HRES,
-	pub GetArguments: fn(COMPTR, PSTR, i32) -> HRES,
-	pub SetArguments: fn(COMPTR, PCSTR) -> HRES,
-	pub GetHotkey: fn(COMPTR, *mut u16) -> HRES,
-	pub SetHotkey: fn(COMPTR, u16) -> HRES,
-	pub GetShowCmd: fn(COMPTR, *mut i32) -> HRES,
-	pub SetShowCmd: fn(COMPTR, i32) -> HRES,
-	pub GetIconLocation: fn(COMPTR, PSTR, i32, *mut i32) -> HRES,
-	pub SetIconLocation: fn(COMPTR, PCSTR, i32) -> HRES,
-	pub SetRelativePath: fn(COMPTR, PCSTR, u32) -> HRES,
-	pub Resolve: fn(COMPTR, HANDLE, u32) -> HRES,
-	pub SetPath: fn(COMPTR, PCSTR) -> HRES,
-}
+use crate::shell::{privs::*, vts::*};
 
 com_interface! { IShellLink: "000214f9-0000-0000-c000-000000000046";
 	/// [`IShellLink`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishelllinkw)
-	/// COM interface over [`IShellLinkVT`](crate::vt::IShellLinkVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

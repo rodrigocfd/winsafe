@@ -1,25 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IFileSaveDialog`](crate::IFileSaveDialog) virtual table.
-#[repr(C)]
-pub struct IFileSaveDialogVT {
-	pub IFileDialogVT: IFileDialogVT,
-	pub SetSaveAsItem: fn(COMPTR, COMPTR) -> HRES,
-	pub SetProperties: fn(COMPTR, COMPTR) -> HRES,
-	pub SetCollectedProperties: fn(COMPTR, COMPTR, BOOL) -> HRES,
-	pub GetProperties: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub ApplyProperties: fn(COMPTR, COMPTR, COMPTR, HANDLE, COMPTR) -> HRES,
-}
+use crate::shell::vts::*;
 
 com_interface! { IFileSaveDialog: "84bccd23-5fde-4cdb-aea4-af64b83d78ab";
 	/// [`IFileSaveDialog`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifilesavedialog)
-	/// COM interface over [`IFileSaveDialogVT`](crate::vt::IFileSaveDialogVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

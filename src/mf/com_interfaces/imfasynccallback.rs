@@ -2,23 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMFAsyncCallback`](crate::IMFAsyncCallback) virtual table.
-#[repr(C)]
-pub struct IMFAsyncCallbackVT {
-	pub IUnknownVT: IUnknownVT,
-	pub GetParameters: fn(COMPTR, *mut u32, *mut u32) -> HRES,
-	pub Invoke: fn(COMPTR, COMPTR) -> HRES,
-}
 
 com_interface! { IMFAsyncCallback: "a27003cf-2354-4f2a-8d6a-ab7cff15437e";
 	/// [`IMFAsyncCallback`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nn-mfobjects-imfasynccallback)
-	/// COM interface over
-	/// [`IMFAsyncCallbackVT`](crate::vt::IMFAsyncCallbackVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

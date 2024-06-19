@@ -1,23 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::dxgi::iterators::*;
-use crate::kernel::ffi_types::*;
+use crate::dxgi::{iterators::*, vts::*};
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IDXGIFactory1`](crate::IDXGIFactory1) virtual table.
-#[repr(C)]
-pub struct IDXGIFactory1VT {
-	pub IDXGIFactoryVT: IDXGIFactoryVT,
-	pub EnumAdapters1: fn(COMPTR, u32, *mut COMPTR) -> HRES,
-	pub IsCurrent: fn(COMPTR) -> BOOL,
-}
 
 com_interface! { IDXGIFactory1: "770aae78-f26f-4dba-a829-253c83d1b387";
 	/// [`IDXGIFactory1`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgifactory1)
-	/// COM interface over [`IDXGIFactory1VT`](crate::vt::IDXGIFactory1VT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

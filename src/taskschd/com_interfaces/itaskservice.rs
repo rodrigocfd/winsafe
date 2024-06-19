@@ -1,29 +1,13 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`ITaskService`](crate::ITaskService) virtual table.
-#[repr(C)]
-pub struct ITaskServiceVT {
-	pub IDispatchVT: IDispatchVT,
-	pub GetFolder: fn(COMPTR, PCSTR, *mut COMPTR) -> HRES,
-	pub GetRunningTasks: fn(COMPTR, i32, *mut COMPTR) -> HRES,
-	pub NewTask: fn(COMPTR, u32, *mut COMPTR) -> HRES,
-	pub Connect: fn(COMPTR, VARIANT, VARIANT, VARIANT, VARIANT) -> HRES,
-	pub get_Connected: fn(COMPTR, *mut i16) -> HRES,
-	pub get_TargetServer: fn(COMPTR, *mut PSTR) -> HRES,
-	pub get_ConnectedUser: fn(COMPTR, *mut PSTR) -> HRES,
-	pub get_ConnectedDomain: fn(COMPTR, *mut PSTR) -> HRES,
-	pub get_HighestVersion: fn(COMPTR, *mut u32) -> HRES,
-}
+use crate::taskschd::vts::*;
 
 com_interface! { ITaskService: "2faba4c7-4da9-4013-9697-20cc3fd40f85";
 	/// [`ITaskService`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskservice)
-	/// COM interface over [`ITaskServiceVT`](crate::vt::ITaskServiceVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

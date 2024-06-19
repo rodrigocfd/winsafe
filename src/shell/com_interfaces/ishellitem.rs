@@ -3,25 +3,13 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IShellItem`](crate::IShellItem) virtual table.
-#[repr(C)]
-pub struct IShellItemVT {
-	pub IUnknownVT: IUnknownVT,
-	pub BindToHandler: fn(COMPTR, PVOID, PCVOID, PCVOID, *mut COMPTR) -> HRES,
-	pub GetParent: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub GetDisplayName: fn(COMPTR, u32, *mut PSTR) -> HRES,
-	pub GetAttributes: fn(COMPTR, u32, *mut u32) -> HRES,
-	pub Compare: fn(COMPTR, PVOID, u32, *mut i32) -> HRES,
-}
+use crate::shell::vts::*;
 
 com_interface! { IShellItem: "43826d1e-e718-42ee-bc55-a1e261c37bfe";
 	/// [`IShellItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem)
-	/// COM interface over [`IShellItemVT`](crate::vt::IShellItemVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

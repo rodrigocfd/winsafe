@@ -8,6 +8,7 @@ mod structs;
 
 pub(in crate::shell) mod ffi;
 pub(in crate::shell) mod iterators;
+pub(in crate::shell) mod vts;
 pub(crate) mod privs;
 pub mod co;
 pub mod guard;
@@ -24,8 +25,4 @@ pub mod decl {
 pub mod traits {
 	pub use super::com_interfaces::traits::*;
 	pub use super::handles::traits::*;
-}
-
-pub mod vt {
-	pub use super::com_interfaces::vt::*;
 }

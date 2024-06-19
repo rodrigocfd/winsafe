@@ -2,37 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMFVideoDisplayControl`](crate::IMFVideoDisplayControl) virtual table.
-#[repr(C)]
-pub struct IMFVideoDisplayControlVT {
-	pub IUnknownVT: IUnknownVT,
-	pub GetNativeVideoSize: fn(COMPTR, PVOID, PVOID) -> HRES,
-	pub GetIdealVideoSize: fn(COMPTR, PVOID, PVOID) -> HRES,
-	pub SetVideoPosition: fn(COMPTR, PCVOID, PCVOID) -> HRES,
-	pub GetVideoPosition: fn(COMPTR, PVOID, PCVOID) -> HRES,
-	pub SetAspectRatioMode: fn(COMPTR, u32) -> HRES,
-	pub GetAspectRatioMode: fn(COMPTR, *mut u32) -> HRES,
-	pub SetVideoWindow: fn(COMPTR, HANDLE) -> HRES,
-	pub GetVideoWindow: fn(COMPTR, *mut HANDLE) -> HRES,
-	pub RepaintVideo: fn(COMPTR) -> HRES,
-	pub GetCurrentImage: fn(COMPTR, PVOID, *mut *mut u8, *mut u32, *mut i64) -> HRES,
-	pub SetBorderColor: fn(COMPTR, u32) -> HRES,
-	pub GetBorderColor: fn(COMPTR, *mut u32) -> HRES,
-	pub SetRenderingPrefs: fn(COMPTR, u32) -> HRES,
-	pub GetRenderingPrefs: fn(COMPTR, *mut u32) -> HRES,
-	pub SetFullscreen: fn(COMPTR, BOOL) -> HRES,
-	pub GetFullscreen: fn(COMPTR, *mut BOOL) -> HRES,
-}
 
 com_interface! { IMFVideoDisplayControl: "a490b1e4-ab84-4d31-a1b2-181e03b1077a";
 	/// [`IMFVideoDisplayControl`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)
-	/// COM interface over
-	/// [`IMFVideoDisplayControlVT`](crate::vt::IMFVideoDisplayControlVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

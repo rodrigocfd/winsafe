@@ -2,25 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMFMediaEventGenerator`](crate::IMFMediaEventGenerator) virtual table.
-#[repr(C)]
-pub struct IMFMediaEventGeneratorVT {
-	pub IUnknownVT: IUnknownVT,
-	pub GetEvent: fn(COMPTR, u32, *mut COMPTR) -> HRES,
-	pub BeginGetEvent: fn(COMPTR, COMPTR, COMPTR) -> HRES,
-	pub EndGetEvent: fn(COMPTR, COMPTR, *mut COMPTR) -> HRES,
-	pub QueueEvent: fn(COMPTR, u32, PCVOID, HRES, PCVOID) -> HRES,
-}
 
 com_interface! { IMFMediaEventGenerator: "2cd0bd52-bcd5-4b89-b62c-eadc0c031e7d";
 	/// [`IMFMediaEventGenerator`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nn-mfobjects-imfmediaeventgenerator)
-	/// COM interface over
-	/// [`IMFMediaEventGeneratorVT`](crate::vt::IMFMediaEventGeneratorVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

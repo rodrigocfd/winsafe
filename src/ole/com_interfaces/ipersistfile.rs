@@ -3,25 +3,12 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::ffi_types::*;
-use crate::ole::privs::*;
+use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IPersistFile`](crate::IPersistFile) virtual table.
-#[repr(C)]
-pub struct IPersistFileVT {
-	pub IPersistVT: IPersistVT,
-	pub IsDirty: fn(COMPTR) -> HRES,
-	pub Load: fn(COMPTR, PCSTR, u32) -> HRES,
-	pub Save: fn(COMPTR, PCSTR, i32) -> HRES,
-	pub SaveCompleted: fn(COMPTR, PCSTR) -> HRES,
-	pub GetCurFile: fn(COMPTR, *mut PSTR) -> HRES,
-}
 
 com_interface! { IPersistFile: "0000010b-0000-0000-c000-000000000046";
 	/// [`IPersistFile`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersistfile)
-	/// COM interface over [`IPersistFileVT`](crate::vt::IPersistFileVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

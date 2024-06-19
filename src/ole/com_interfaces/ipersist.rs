@@ -2,21 +2,12 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
-use crate::ole::privs::*;
+use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IPersist`](crate::IPersist) virtual table.
-#[repr(C)]
-pub struct IPersistVT {
-	pub IUnknownVT: IUnknownVT,
-	pub GetClassID: fn(COMPTR, PVOID) -> HRES,
-}
 
 com_interface! { IPersist: "0000010c-0000-0000-c000-000000000046";
 	/// [`IPersist`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersist)
-	/// COM interface over [`IPersistVT`](crate::vt::IPersistVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

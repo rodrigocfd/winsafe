@@ -2,23 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IAction`](crate::IAction) virtual table.
-#[repr(C)]
-pub struct IActionVT {
-	pub IDispatchVT: IDispatchVT,
-	pub get_Id: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Id: fn(COMPTR, PCSTR) -> HRES,
-	pub get_Type: fn(COMPTR, *mut u32) -> HRES,
-}
+use crate::taskschd::vts::*;
 
 com_interface! { IAction: "bae54997-48b1-4cbe-9965-d6be263ebea4";
 	/// [`IAction`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-iaction)
-	/// COM interface over [`IActionVT`](crate::vt::IActionVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

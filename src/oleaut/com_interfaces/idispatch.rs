@@ -2,24 +2,14 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::{ffi_types::*, privs::*};
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
+use crate::oleaut::vts::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IDispatch`](crate::IDispatch) virtual table.
-#[repr(C)]
-pub struct IDispatchVT {
-	pub IUnknownVT: IUnknownVT,
-	pub GetTypeInfoCount: fn(COMPTR, *mut u32) -> HRES,
-	pub GetTypeInfo: fn(COMPTR, u32, u32, *mut COMPTR) -> HRES,
-	pub GetIDsOfNames: fn(COMPTR, PCVOID, *const PCSTR, u32, u32, PVOID) -> HRES,
-	pub Invoke: fn(COMPTR, i32, PCVOID, u32, u16, PVOID, PVOID, PVOID, *mut u32) -> HRES,
-}
 
 com_interface! { IDispatch: "00020400-0000-0000-c000-000000000046";
 	/// [`IDispatch`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-idispatch)
-	/// COM interface over [`IDispatchVT`](crate::vt::IDispatchVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

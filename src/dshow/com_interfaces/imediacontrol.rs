@@ -2,29 +2,14 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::{ffi_types::*, privs::*};
+use crate::dshow::vts::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMediaControl`](crate::IMediaControl) virtual table.
-#[repr(C)]
-pub struct IMediaControlVT {
-	pub IDispatchVT: IDispatchVT,
-	pub Run: fn(COMPTR) -> HRES,
-	pub Pause: fn(COMPTR) -> HRES,
-	pub Stop: fn(COMPTR) -> HRES,
-	pub GetState: fn(COMPTR, i32, *mut u32) -> HRES,
-	pub RenderFile: fn(COMPTR, PSTR) -> HRES,
-	pub AddSourceFilter: fn(COMPTR, PSTR, *mut COMPTR) -> HRES,
-	pub GetFilterCollection: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub GetRegFilterCollection: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub StopWhenReady: fn(COMPTR) -> HRES,
-}
 
 com_interface! { IMediaControl: "56a868b1-0ad4-11ce-b03a-0020af0ba770";
 	/// [`IMediaControl`](https://learn.microsoft.com/en-us/windows/win32/api/control/nn-control-imediacontrol)
-	/// COM interface over [`IMediaControlVT`](crate::vt::IMediaControlVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

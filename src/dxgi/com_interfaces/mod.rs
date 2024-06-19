@@ -43,19 +43,3 @@ pub mod traits {
 	pub use super::idxgisurface::dxgi_IDXGISurface;
 	pub use super::idxgiswapchain::dxgi_IDXGISwapChain;
 }
-
-pub mod vt {
-	pub use super::idxgiadapter::IDXGIAdapterVT;
-	pub use super::idxgiadapter1::IDXGIAdapter1VT;
-	pub use super::idxgiadapter2::IDXGIAdapter2VT;
-	pub use super::idxgidevice::IDXGIDeviceVT;
-	pub use super::idxgidevicesubobject::IDXGIDeviceSubObjectVT;
-	pub use super::idxgifactory::IDXGIFactoryVT;
-	pub use super::idxgifactory1::IDXGIFactory1VT;
-	pub use super::idxgikeyedmutex::IDXGIKeyedMutexVT;
-	pub use super::idxgiobject::IDXGIObjectVT;
-	pub use super::idxgioutput::IDXGIOutputVT;
-	pub use super::idxgiresource::IDXGIResourceVT;
-	pub use super::idxgisurface::IDXGISurfaceVT;
-	pub use super::idxgiswapchain::IDXGISwapChainVT;
-}

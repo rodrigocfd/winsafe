@@ -1,23 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`ILogonTrigger`](crate::ILogonTrigger) interface.
-#[repr(C)]
-pub struct ILogonTriggerVT {
-	pub ITriggerVT: ITriggerVT,
-	pub get_Delay: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Delay: fn(COMPTR, PCSTR) -> HRES,
-	pub get_UserId: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_UserId: fn(COMPTR, PCSTR) -> HRES,
-}
+use crate::taskschd::vts::*;
 
 com_interface! { ILogonTrigger: "72dade38-fae4-4b3e-baf4-5d009af02b1c";
 	/// [`ILogonTrigger`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-iLogontrigger)
-	/// COM interface over [`ILogonTriggerVT`](crate::vt::ILogonTriggerVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

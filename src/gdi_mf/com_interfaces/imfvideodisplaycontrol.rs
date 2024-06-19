@@ -2,9 +2,9 @@
 
 use crate::decl::*;
 use crate::guard::*;
+use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
 
 impl gdi_mf_IMFVideoDisplayControl for IMFVideoDisplayControl {}
 

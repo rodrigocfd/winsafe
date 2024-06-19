@@ -16,7 +16,7 @@ macro_rules! com_interface {
 			fn drop(&mut self) {
 				if !self.0.is_null() {
 					unsafe {
-						use crate::{prelude::ole_IUnknown, vt::IUnknownVT};
+						use crate::{prelude::ole_IUnknown, ole::vts::IUnknownVT};
 						(crate::ole::privs::vt::<IUnknownVT>(self).Release)(self.ptr());
 					}
 				}
@@ -25,7 +25,7 @@ macro_rules! com_interface {
 
 		impl Clone for $name {
 			fn clone(&self) -> Self {
-				use crate::{prelude::ole_IUnknown, vt::IUnknownVT};
+				use crate::{prelude::ole_IUnknown, ole::vts::IUnknownVT};
 				unsafe { (crate::ole::privs::vt::<IUnknownVT>(self).AddRef)(self.ptr()); }
 				Self(self.ptr())
 			}

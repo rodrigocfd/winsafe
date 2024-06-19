@@ -6,24 +6,83 @@ use std::sync::atomic::AtomicU32;
 use crate::co;
 use crate::decl::*;
 use crate::kernel::ffi_types::*;
-use crate::ole::privs::*;
+use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
-use crate::vt::*;
+use crate::shell::vts::*;
 
-/// [`IFileDialogEvents`](crate::IFileDialogEvents) virtual table.
-#[repr(C)]
-pub struct IFileDialogEventsVT {
-	pub IUnknownVT: IUnknownVT,
-	pub OnFileOk: fn(COMPTR, COMPTR) -> HRES,
-	pub OnFolderChanging: fn(COMPTR, COMPTR, COMPTR) -> HRES,
-	pub OnFolderChange: fn(COMPTR, COMPTR) -> HRES,
-	pub OnSelectionChange: fn(COMPTR, COMPTR) -> HRES,
-	pub OnShareViolation: fn(COMPTR, COMPTR, COMPTR, *mut u32) -> HRES,
-	pub OnTypeChange: fn(COMPTR, COMPTR) -> HRES,
-	pub OnOverwrite: fn(COMPTR, COMPTR, COMPTR, *mut u32) -> HRES,
+com_interface_custom! { IFileDialogEvents, IFileDialogEventsImpl: "973510db-7d7f-452b-8975-74a85828d354";
+	/// [`IFileDialogEvents`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialogevents)
+	/// COM interface.
+	///
+	/// Automatically calls
+	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let hparent: w::HWND; // initialized somewhere
+	/// # let hparent = w::HWND::NULL;
+	///
+	/// let file_open = w::CoCreateInstance::<w::IFileOpenDialog>(
+	///     &co::CLSID::FileOpenDialog,
+	///     None,
+	///     co::CLSCTX::INPROC_SERVER,
+	/// )?;
+	///
+	/// let file_dialog_events = w::IFileDialogEvents::new_impl();
+	///
+	/// file_dialog_events.OnFolderChanging(
+	///     move |fd: &w::IFileDialog, si: &w::IShellItem| -> w::HrResult<()> {
+	///         println!("New folder: {}",
+	///             si.GetDisplayName(co::SIGDN::FILESYSPATH)?);
+	///         Ok(())
+	///     },
+	/// );
+	///
+	/// file_open.Advise(&file_dialog_events)?;
+	/// # w::HrResult::Ok(())
+	/// ```
 }
 
-//------------------------------------------------------------------------------
+impl IFileDialogEvents {
+	fn_com_closure! { OnFileOk: Fn(&IFileDialog) -> HrResult<()>;
+		/// [`IFileDialogEvents::OnFileOk`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfileok)
+		/// method.
+	}
+
+	fn_com_closure! { OnFolderChange: Fn(&IFileDialog) -> HrResult<()>;
+		/// [`IFileDialogEvents::OnFolderChange`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfolderchange)
+		/// method.
+	}
+
+	fn_com_closure! { OnFolderChanging: Fn(&IFileDialog, &IShellItem) -> HrResult<()>;
+		/// [`IFileDialogEvents::OnFolderChanging`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfolderchanging)
+		/// method.
+	}
+
+	fn_com_closure! { OnOverwrite: Fn(&IFileDialog, &IShellItem) -> HrResult<co::FDEOR>;
+		/// [`IFileDialogEvents::OnOverwrite`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onoverwrite)
+		/// method.
+	}
+
+	fn_com_closure! { OnSelectionChange: Fn(&IFileDialog) -> HrResult<()>;
+		/// [`IFileDialogEvents::OnSelectionChange`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onselectionchange)
+		/// method.
+	}
+
+	fn_com_closure! { OnShareViolation: Fn(&IFileDialog, &IShellItem) -> HrResult<co::FDESVR>;
+		/// [`IFileDialogEvents::OnShareViolation`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onshareviolation)
+		/// method.
+	}
+
+	fn_com_closure! { OnTypeChange: Fn(&IFileDialog) -> HrResult<()>;
+		/// [`IFileDialogEvents::OnTypeChange`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-ontypechange)
+		/// method.
+	}
+}
 
 #[repr(C)]
 struct IFileDialogEventsImpl {
@@ -182,81 +241,5 @@ impl IFileDialogEventsImpl {
 			},
 			Err(e) => e.raw(),
 		}
-	}
-}
-
-//------------------------------------------------------------------------------
-
-com_interface_custom! { IFileDialogEvents, IFileDialogEventsImpl: "973510db-7d7f-452b-8975-74a85828d354";
-	/// [`IFileDialogEvents`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialogevents)
-	/// COM interface over [`IFileDialogEventsVT`](crate::vt::IFileDialogEventsVT).
-	///
-	/// Automatically calls
-	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-	/// when the object goes out of scope.
-	///
-	/// # Examples
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*, co};
-	///
-	/// let hparent: w::HWND; // initialized somewhere
-	/// # let hparent = w::HWND::NULL;
-	///
-	/// let file_open = w::CoCreateInstance::<w::IFileOpenDialog>(
-	///     &co::CLSID::FileOpenDialog,
-	///     None,
-	///     co::CLSCTX::INPROC_SERVER,
-	/// )?;
-	///
-	/// let file_dialog_events = w::IFileDialogEvents::new_impl();
-	///
-	/// file_dialog_events.OnFolderChanging(
-	///     move |fd: &w::IFileDialog, si: &w::IShellItem| -> w::HrResult<()> {
-	///         println!("New folder: {}",
-	///             si.GetDisplayName(co::SIGDN::FILESYSPATH)?);
-	///         Ok(())
-	///     },
-	/// );
-	///
-	/// file_open.Advise(&file_dialog_events)?;
-	/// # w::HrResult::Ok(())
-	/// ```
-}
-
-impl IFileDialogEvents {
-	fn_com_closure! { OnFileOk: Fn(&IFileDialog) -> HrResult<()>;
-		/// [`IFileDialogEvents::OnFileOk`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfileok)
-		/// method.
-	}
-
-	fn_com_closure! { OnFolderChange: Fn(&IFileDialog) -> HrResult<()>;
-		/// [`IFileDialogEvents::OnFolderChange`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfolderchange)
-		/// method.
-	}
-
-	fn_com_closure! { OnFolderChanging: Fn(&IFileDialog, &IShellItem) -> HrResult<()>;
-		/// [`IFileDialogEvents::OnFolderChanging`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfolderchanging)
-		/// method.
-	}
-
-	fn_com_closure! { OnOverwrite: Fn(&IFileDialog, &IShellItem) -> HrResult<co::FDEOR>;
-		/// [`IFileDialogEvents::OnOverwrite`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onoverwrite)
-		/// method.
-	}
-
-	fn_com_closure! { OnSelectionChange: Fn(&IFileDialog) -> HrResult<()>;
-		/// [`IFileDialogEvents::OnSelectionChange`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onselectionchange)
-		/// method.
-	}
-
-	fn_com_closure! { OnShareViolation: Fn(&IFileDialog, &IShellItem) -> HrResult<co::FDESVR>;
-		/// [`IFileDialogEvents::OnShareViolation`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onshareviolation)
-		/// method.
-	}
-
-	fn_com_closure! { OnTypeChange: Fn(&IFileDialog) -> HrResult<()>;
-		/// [`IFileDialogEvents::OnTypeChange`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-ontypechange)
-		/// method.
 	}
 }

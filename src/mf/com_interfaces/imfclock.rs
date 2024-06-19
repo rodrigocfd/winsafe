@@ -2,25 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMFClock`](crate::IMFClock) virtual table.
-#[repr(C)]
-pub struct IMFClockVT {
-	pub IUnknownVT: IUnknownVT,
-	pub GetClockCharacteristics: fn(COMPTR, *mut u32) -> HRES,
-	pub GetCorrelatedTime: fn(COMPTR, u32, *mut i64, *mut i64) -> HRES,
-	pub GetContinuityKey: fn(COMPTR, *mut u32) -> HRES,
-	pub GetState: fn(COMPTR, u32, *mut u32) -> HRES,
-	pub GetProperties: fn(COMPTR, PVOID) -> HRES,
-}
 
 com_interface! { IMFClock: "2eb1e945-18b8-4139-9b1a-d5d584818530";
 	/// [`IMFClock`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfclock)
-	/// COM interface over [`IMFClockVT`](crate::vt::IMFClockVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

@@ -1,8 +1,8 @@
 use crate::co;
 use crate::decl::*;
+use crate::dxgi::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
 
 pub(in crate::dxgi) struct IdxgiadapterEnumoutputsIter<'a, I>
 	where I: dxgi_IDXGIAdapter,

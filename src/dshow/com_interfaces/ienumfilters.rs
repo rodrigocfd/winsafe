@@ -2,25 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::dshow::iterators::*;
-use crate::kernel::ffi_types::*;
+use crate::dshow::{iterators::*, vts::*};
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IEnumFilters`](crate::IEnumFilters) virtual table.
-#[repr(C)]
-pub struct IEnumFiltersVT {
-	pub IUnknownVT: IUnknownVT,
-	pub Next: fn(COMPTR, u32, *mut COMPTR, *mut u32) -> HRES,
-	pub Skip: fn(COMPTR, u32) -> HRES,
-	pub Reset: fn(COMPTR) -> HRES,
-	pub Clone: fn(COMPTR, *mut COMPTR) -> HRES,
-}
 
 com_interface! { IEnumFilters: "56a86893-0ad4-11ce-b03a-0020af0ba770";
 	/// [`IEnumFilters`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ienumfilters)
-	/// COM interface over [`IEnumFiltersVT`](crate::vt::IEnumFiltersVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

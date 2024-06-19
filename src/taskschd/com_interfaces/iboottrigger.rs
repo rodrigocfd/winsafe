@@ -1,21 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IBootTrigger`](crate::IBootTrigger) virtual table.
-#[repr(C)]
-pub struct IBootTriggerVT {
-	pub ITriggerVT: ITriggerVT,
-	pub get_Delay: fn(COMPTR, *mut PSTR) -> HRES,
-	pub put_Delay: fn(COMPTR, PCSTR) -> HRES,
-}
+use crate::taskschd::vts::*;
 
 com_interface! { IBootTrigger: "2a9c35da-d357-41f4-bbc1-207ac1b1f3cb";
 	/// [`IBootTrigger`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-iboottrigger)
-	/// COM interface over [`IBootTriggerVT`](crate::vt::IBootTriggerVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

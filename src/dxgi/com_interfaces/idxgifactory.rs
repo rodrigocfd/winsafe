@@ -2,26 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::dxgi::iterators::*;
-use crate::kernel::ffi_types::*;
+use crate::dxgi::{iterators::*, vts::*};
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IDXGIFactory`](crate::IDXGIFactory) virtual table.
-#[repr(C)]
-pub struct IDXGIFactoryVT {
-	pub IDXGIObjectVT: IDXGIObjectVT,
-	pub EnumAdapters: fn(COMPTR, u32, *const COMPTR) -> HRES,
-	pub MakeWindowAssociation: fn(COMPTR, HANDLE, u32) -> HRES,
-	pub GetWindowAssociation: fn(COMPTR, *mut HANDLE) -> HRES,
-	pub CreateSwapChain: fn(COMPTR, COMPTR, PCVOID, *mut COMPTR) -> HRES,
-	pub CreateSoftwareAdapter: fn(COMPTR, HANDLE, *mut COMPTR) -> HRES,
-}
 
 com_interface! { IDXGIFactory: "7b7166ec-21c7-44ae-b21a-c9ae321ae369";
 	/// [`IDXGIFactory`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgifactory)
-	/// COM interface over [`IDXGIFactoryVT`](crate::vt::IDXGIFactoryVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

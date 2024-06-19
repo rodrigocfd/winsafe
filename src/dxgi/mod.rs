@@ -6,6 +6,7 @@ mod structs;
 
 pub(in crate::dxgi) mod ffi;
 pub(in crate::dxgi) mod iterators;
+pub(in crate::dxgi) mod vts;
 pub mod co;
 
 pub mod decl {
@@ -16,8 +17,4 @@ pub mod decl {
 
 pub mod traits {
 	pub use super::com_interfaces::traits::*;
-}
-
-pub mod vt {
-	pub use super::com_interfaces::vt::*;
 }

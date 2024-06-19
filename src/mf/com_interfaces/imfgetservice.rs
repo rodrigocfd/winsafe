@@ -2,21 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMFGetService`](crate::IMFGetService) virtual table.
-#[repr(C)]
-pub struct IMFGetServiceVT {
-	pub IUnknownVT: IUnknownVT,
-	pub GetService: fn(COMPTR, PCVOID, PCVOID, *mut COMPTR) -> HRES,
-}
 
 com_interface! { IMFGetService: "fa993888-4383-415a-a930-dd472a8cf6f7";
 	/// [`IMFGetService`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfgetservice)
-	/// COM interface over [`IMFGetServiceVT`](crate::vt::IMFGetServiceVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

@@ -3,35 +3,12 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::ffi_types::*;
-use crate::ole::privs::*;
+use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMoniker`](crate::IMoniker) virtual table.
-#[repr(C)]
-pub struct IMonikerVT {
-	pub IPersistStreamVT: IPersistStreamVT,
-	pub BindToObject: fn(COMPTR, COMPTR, COMPTR, PCVOID, *mut COMPTR) -> HRES,
-	pub BindToStorage: fn(COMPTR, COMPTR, COMPTR, PCVOID, *mut COMPTR) -> HRES,
-	pub Reduce: fn(COMPTR, COMPTR, u32, *mut COMPTR, *mut COMPTR) -> HRES,
-	pub ComposeWith: fn(COMPTR, COMPTR, BOOL, *mut COMPTR) -> HRES,
-	pub Enum: fn(COMPTR, BOOL, *mut COMPTR) -> HRES,
-	pub IsEqual: fn(COMPTR, COMPTR) -> HRES,
-	pub Hash: fn(COMPTR, *mut u32) -> HRES,
-	pub IsRunning: fn(COMPTR, COMPTR, COMPTR, COMPTR) -> HRES,
-	pub GetTimeOfLastChange: fn(COMPTR, COMPTR, COMPTR, PVOID) -> HRES,
-	pub Inverse: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub CommonPrefixWith: fn(COMPTR, COMPTR, *mut COMPTR) -> HRES,
-	pub RelativePathTo: fn(COMPTR, COMPTR, *mut COMPTR) -> HRES,
-	pub GetDisplayName: fn(COMPTR, COMPTR, COMPTR, *mut PSTR) -> HRES,
-	pub ParseDisplayName: fn(COMPTR, COMPTR, COMPTR, PCSTR, *mut u32, *mut COMPTR) -> HRES,
-	pub IsSystemMoniker: fn(COMPTR, *mut u32) -> HRES,
-}
 
 com_interface! { IMoniker: "0000000f-0000-0000-c000-000000000046";
 	/// [`IMoniker`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-imoniker)
-	/// COM interface over [`IMonikerVT`](crate::vt::IMonikerVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

@@ -1,31 +1,23 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::dxgi::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
 
-/// [`IDXGIAdapter2`](crate::IDXGIAdapter2) virtual table.
-#[repr(C)]
-pub struct IDXGIAdapter2VT {
-	pub IDXGIAdapter1VT: IDXGIAdapter1VT,
-	pub GetDesc2: fn(COMPTR, PVOID) -> HRES,
+com_interface! { IDXGIAdapter2: "0aa1ae0a-fa0e-4b84-8644-e05ff8e5acb5";
+	/// [`IDXGIAdapter2`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/nn-dxgi1_2-idxgiadapter2)
+	/// COM interface.
+	///
+	/// Automatically calls
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
 }
 
 impl dxgi_IDXGIObject for IDXGIAdapter2 {}
 impl dxgi_IDXGIAdapter for IDXGIAdapter2 {}
 impl dxgi_IDXGIAdapter1 for IDXGIAdapter2 {}
 impl dxgi_IDXGIAdapter2 for IDXGIAdapter2 {}
-
-com_interface! { IDXGIAdapter2: "0aa1ae0a-fa0e-4b84-8644-e05ff8e5acb5";
-	/// [`IDXGIAdapter2`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/nn-dxgi1_2-idxgiadapter2)
-	/// COM interface over [`IDXGIAdapter2VT`](crate::vt::IDXGIAdapter2VT).
-	///
-	/// Automatically calls
-	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-	/// when the object goes out of scope.
-}
 
 /// This trait is enabled with the `dxgi` feature, and provides methods for
 /// [`IDXGIAdapter2`](crate::IDXGIAdapter2).

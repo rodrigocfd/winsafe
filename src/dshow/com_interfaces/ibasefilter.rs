@@ -1,26 +1,14 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
+use crate::dshow::vts::*;
 use crate::guard::*;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IBaseFilter`](crate::IBaseFilter) virtual table.
-#[repr(C)]
-pub struct IBaseFilterVT {
-	pub IMediaFilterVT: IMediaFilterVT,
-	pub EnumPins: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub FindPin: fn(COMPTR, PCSTR, *mut COMPTR) -> HRES,
-	pub QueryFilterInfo: fn(COMPTR, PVOID) -> HRES,
-	pub JoinFilterGraph: fn(COMPTR, COMPTR, PCSTR) -> HRES,
-	pub QueryVendorInfo: fn(COMPTR, *mut PSTR) -> HRES,
-}
 
 com_interface! { IBaseFilter: "56a86895-0ad4-11ce-b03a-0020af0ba770";
 	/// [`IBaseFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ibasefilter)
-	/// COM interface over [`IBaseFilterVT`](crate::vt::IBaseFilterVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

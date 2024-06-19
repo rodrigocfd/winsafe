@@ -1,24 +1,12 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
-use crate::ole::privs::*;
+use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IPersistStream`](crate::IPersistStream) virtual table.
-#[repr(C)]
-pub struct IPersistStreamVT {
-	pub IPersistVT: IPersistVT,
-	pub IsDirty: fn(COMPTR) -> HRES,
-	pub Load: fn(COMPTR, COMPTR) -> HRES,
-	pub Save: fn(COMPTR, COMPTR, BOOL) -> HRES,
-	pub GetSizeMax: fn(COMPTR, *mut u64) -> HRES,
-}
 
 com_interface! { IPersistStream: "00000109-0000-0000-c000-000000000046";
 	/// [`IPersistStream`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersiststream)
-	/// COM interface over [`IPersistStreamVT`](crate::vt::IPersistStreamVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

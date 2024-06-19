@@ -6,21 +6,39 @@ use std::sync::atomic::AtomicU32;
 use crate::co;
 use crate::decl::*;
 use crate::kernel::ffi_types::*;
-use crate::ole::privs::*;
+use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
-use crate::vt::*;
 
-/// [`IDropTarget`](crate::IDropTarget) virtual table.
-#[repr(C)]
-pub struct IDropTargetVT {
-	pub IUnknownVT: IUnknownVT,
-	pub DragEnter: fn(COMPTR, COMPTR, u32, u64, *mut u32) -> HRES,
-	pub DragOver: fn(COMPTR, u32, u64, *mut u32) -> HRES,
-	pub DragLeave: fn(COMPTR) -> HRES,
-	pub Drop: fn(COMPTR, COMPTR, u32, u64, *mut u32) -> HRES,
+com_interface_custom! { IDropTarget, IDropTargetImpl: "00000122-0000-0000-c000-000000000046";
+	/// [`IDropTarget`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nn-oleidl-idroptarget)
+	/// COM interface.
+	///
+	/// Automatically calls
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
 }
 
-//------------------------------------------------------------------------------
+impl IDropTarget {
+	fn_com_closure! { DragEnter: Fn(&IDataObject, co::MK, POINT, co::DROPEFFECT) -> HrResult<co::DROPEFFECT>;
+		/// [`IDropTarget::DragEnter`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragenter)
+		/// method.
+	}
+
+	fn_com_closure! { DragLeave: Fn() -> HrResult<()>;
+		/// [`IDropTarget::DragLeave`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragleave)
+		/// method.
+	}
+
+	fn_com_closure! { DragOver: Fn(co::MK, POINT, co::DROPEFFECT) -> HrResult<co::DROPEFFECT>;
+		/// [`IDropTarget::DragOver`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragover)
+		/// method.
+	}
+
+	fn_com_closure! { Drop: Fn(&IDataObject, co::MK, POINT, co::DROPEFFECT) -> HrResult<co::DROPEFFECT>;
+		/// [`IDropTarget::Drop`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-drop)
+		/// method.
+	}
+}
 
 #[repr(C)]
 pub struct IDropTargetImpl {
@@ -146,38 +164,5 @@ impl IDropTargetImpl {
 			},
 			Err(e) => e.raw(),
 		}
-	}
-}
-
-//------------------------------------------------------------------------------
-
-com_interface_custom! { IDropTarget, IDropTargetImpl: "00000122-0000-0000-c000-000000000046";
-	/// [`IDropTarget`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nn-oleidl-idroptarget)
-	/// COM interface over [`IDropTargetVT`](crate::vt::IDropTargetVT).
-	///
-	/// Automatically calls
-	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-	/// when the object goes out of scope.
-}
-
-impl IDropTarget {
-	fn_com_closure! { DragEnter: Fn(&IDataObject, co::MK, POINT, co::DROPEFFECT) -> HrResult<co::DROPEFFECT>;
-		/// [`IDropTarget::DragEnter`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragenter)
-		/// method.
-	}
-
-	fn_com_closure! { DragLeave: Fn() -> HrResult<()>;
-		/// [`IDropTarget::DragLeave`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragleave)
-		/// method.
-	}
-
-	fn_com_closure! { DragOver: Fn(co::MK, POINT, co::DROPEFFECT) -> HrResult<co::DROPEFFECT>;
-		/// [`IDropTarget::DragOver`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragover)
-		/// method.
-	}
-
-	fn_com_closure! { Drop: Fn(&IDataObject, co::MK, POINT, co::DROPEFFECT) -> HrResult<co::DROPEFFECT>;
-		/// [`IDropTarget::Drop`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-drop)
-		/// method.
 	}
 }

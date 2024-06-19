@@ -2,24 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::dxgi::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IDXGIResource`](crate::IDXGIResource) virtual table.
-#[repr(C)]
-pub struct IDXGIResourceVT {
-	pub IDXGIDeviceSubObjectVT: IDXGIDeviceSubObjectVT,
-	pub GetSharedHandle: fn(COMPTR, *mut HANDLE) -> HRES,
-	pub GetUsage: fn(COMPTR, *mut u32) -> HRES,
-	pub SetEvictionPriority: fn(COMPTR, u32) -> HRES,
-	pub GetEvictionPriority: fn(COMPTR, *mut u32) -> HRES,
-}
 
 com_interface! { IDXGIResource: "035f3ab4-482e-4e50-b41f-8a7f8bd8960b";
 	/// [`IDXGIResource`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgiresource)
-	/// COM interface over [`IDXGIResourceVT`](crate::vt::IDXGIResourceVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

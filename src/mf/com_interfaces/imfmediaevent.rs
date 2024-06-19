@@ -2,25 +2,13 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
-use crate::vt::*;
-
-/// [`IMFMediaEvent`](crate::IMFMediaEvent) virtual table.
-#[repr(C)]
-pub struct IMFMediaEventVT {
-	pub IMFAttributesVT: IMFAttributesVT,
-	pub GetType: fn(COMPTR, *mut u32) -> HRES,
-	pub GetExtendedType: fn(COMPTR, PVOID) -> HRES,
-	pub GetStatus: fn(COMPTR, *mut HRES) -> HRES,
-	pub GetValue: fn(COMPTR, PVOID) -> HRES,
-}
 
 com_interface! { IMFMediaEvent: "df598932-f10c-4e39-bba2-c308f101daa3";
 	/// [`IMFMediaEvent`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nn-mfobjects-imfasyncresult)
-	/// COM interface over
-	/// [`IMFMediaEventVT`](crate::vt::IMFMediaEventVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
