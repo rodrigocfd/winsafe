@@ -104,41 +104,17 @@
 <a href="#104" id="104">104</a>
 <a href="#105" id="105">105</a>
 <a href="#106" id="106">106</a>
-<a href="#107" id="107">107</a>
-<a href="#108" id="108">108</a>
-<a href="#109" id="109">109</a>
-<a href="#110" id="110">110</a>
-<a href="#111" id="111">111</a>
-<a href="#112" id="112">112</a>
-<a href="#113" id="113">113</a>
-<a href="#114" id="114">114</a>
-<a href="#115" id="115">115</a>
-<a href="#116" id="116">116</a>
-<a href="#117" id="117">117</a>
-<a href="#118" id="118">118</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::mf::vts::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IMFMediaEventGenerator`](crate::IMFMediaEventGenerator) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IMFMediaEventGeneratorVT {
-	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
-	<span class="kw">pub </span>GetEvent: <span class="kw">fn</span>(COMPTR, u32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>BeginGetEvent: <span class="kw">fn</span>(COMPTR, COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>EndGetEvent: <span class="kw">fn</span>(COMPTR, COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>QueueEvent: <span class="kw">fn</span>(COMPTR, u32, PCVOID, HRES, PCVOID) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IMFMediaEventGenerator: <span class="string">"2cd0bd52-bcd5-4b89-b62c-eadc0c031e7d"</span>;
 	<span class="doccomment">/// [`IMFMediaEventGenerator`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nn-mfobjects-imfmediaeventgenerator)
-	/// COM interface over
-	/// [`IMFMediaEventGeneratorVT`](crate::vt::IMFMediaEventGeneratorVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

@@ -95,43 +95,17 @@
 <a href="#95" id="95">95</a>
 <a href="#96" id="96">96</a>
 <a href="#97" id="97">97</a>
-<a href="#98" id="98">98</a>
-<a href="#99" id="99">99</a>
-<a href="#100" id="100">100</a>
-<a href="#101" id="101">101</a>
-<a href="#102" id="102">102</a>
-<a href="#103" id="103">103</a>
-<a href="#104" id="104">104</a>
-<a href="#105" id="105">105</a>
-<a href="#106" id="106">106</a>
-<a href="#107" id="107">107</a>
-<a href="#108" id="108">108</a>
-<a href="#109" id="109">109</a>
-<a href="#110" id="110">110</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`ITriggerCollection`](crate::ITriggerCollection) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>ITriggerCollectionVT {
-	<span class="kw">pub </span>IDispatchVT: IDispatchVT,
-	<span class="kw">pub </span>get_Count: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>i32) -&gt; HRES,
-	<span class="kw">pub </span>get_Item: <span class="kw">fn</span>(COMPTR, i32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>get__NewEnum: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Create: <span class="kw">fn</span>(COMPTR, u32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Remove: <span class="kw">fn</span>(COMPTR, VARIANT) -&gt; HRES,
-	<span class="kw">pub </span>Clear: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-}
+<span class="kw">use </span><span class="kw">crate</span>::taskschd::vts::<span class="kw-2">*</span>;
 
 <span class="macro">com_interface!</span> { ITriggerCollection: <span class="string">"85df5081-1b24-4f32-878a-d9d14df4cb77"</span>;
 	<span class="doccomment">/// [`ITriggerCollection`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itriggercollection)
-	/// COM interface over [`ITriggerCollectionVT`](crate::vt::ITriggerCollectionVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

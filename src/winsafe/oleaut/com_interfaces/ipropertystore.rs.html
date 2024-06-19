@@ -110,43 +110,17 @@
 <a href="#110" id="110">110</a>
 <a href="#111" id="111">111</a>
 <a href="#112" id="112">112</a>
-<a href="#113" id="113">113</a>
-<a href="#114" id="114">114</a>
-<a href="#115" id="115">115</a>
-<a href="#116" id="116">116</a>
-<a href="#117" id="117">117</a>
-<a href="#118" id="118">118</a>
-<a href="#119" id="119">119</a>
-<a href="#120" id="120">120</a>
-<a href="#121" id="121">121</a>
-<a href="#122" id="122">122</a>
-<a href="#123" id="123">123</a>
-<a href="#124" id="124">124</a>
-<a href="#125" id="125">125</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::oleaut::iterators::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::oleaut::{iterators::<span class="kw-2">*</span>, vts::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IPropertyStore`](crate::IPropertyStore) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IPropertyStoreVT {
-	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
-	<span class="kw">pub </span>GetCount: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>GetAt: <span class="kw">fn</span>(COMPTR, u32, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>GetValue: <span class="kw">fn</span>(COMPTR, PCVOID, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>SetValue: <span class="kw">fn</span>(COMPTR, PCVOID, PCVOID) -&gt; HRES,
-	<span class="kw">pub </span>Commit: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IPropertyStore: <span class="string">"886d8eeb-8cf2-4446-8d02-cdba1dbdcf99"</span>;
 	<span class="doccomment">/// [`IPropertyStore`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nn-propsys-ipropertystore)
-	/// COM interface over [`IPropertyStoreVT`](crate::vt::IPropertyStoreVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

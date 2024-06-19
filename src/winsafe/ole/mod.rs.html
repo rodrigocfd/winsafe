@@ -23,9 +23,6 @@
 <a href="#23" id="23">23</a>
 <a href="#24" id="24">24</a>
 <a href="#25" id="25">25</a>
-<a href="#26" id="26">26</a>
-<a href="#27" id="27">27</a>
-<a href="#28" id="28">28</a>
 </pre></div><pre class="rust"><code><span class="attr">#![cfg(feature = <span class="string">"ole"</span>)]
 
 </span><span class="kw">mod </span>aliases;
@@ -36,6 +33,7 @@
 
 <span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::ole) <span class="kw">mod </span>ffi;
 <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>privs;
+<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">mod </span>vts;
 <span class="kw">pub mod </span>co;
 <span class="kw">pub mod </span>guard;
 
@@ -49,9 +47,5 @@
 <span class="kw">pub mod </span>traits {
 	<span class="kw">pub use </span><span class="kw">super</span>::com_interfaces::traits::<span class="kw-2">*</span>;
 	<span class="kw">pub use </span><span class="kw">super</span>::handles::traits::<span class="kw-2">*</span>;
-}
-
-<span class="kw">pub mod </span>vt {
-	<span class="kw">pub use </span><span class="kw">super</span>::com_interfaces::vt::<span class="kw-2">*</span>;
 }
 </code></pre></div></section></main></body></html>

@@ -65,37 +65,17 @@
 <a href="#65" id="65">65</a>
 <a href="#66" id="66">66</a>
 <a href="#67" id="67">67</a>
-<a href="#68" id="68">68</a>
-<a href="#69" id="69">69</a>
-<a href="#70" id="70">70</a>
-<a href="#71" id="71">71</a>
-<a href="#72" id="72">72</a>
-<a href="#73" id="73">73</a>
-<a href="#74" id="74">74</a>
-<a href="#75" id="75">75</a>
-<a href="#76" id="76">76</a>
-<a href="#77" id="77">77</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::dxgi::vts::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IDXGISurface`](crate::IDXGISurface) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IDXGISurfaceVT {
-	<span class="kw">pub </span>IDXGIDeviceSubObjectVT: IDXGIDeviceSubObjectVT,
-	<span class="kw">pub </span>GetDesc: <span class="kw">fn</span>(COMPTR, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>Map: <span class="kw">fn</span>(COMPTR, PVOID, u32) -&gt; HRES,
-	<span class="kw">pub </span>Unmap: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IDXGISurface: <span class="string">"cafcb56c-6ac3-4889-bf47-9e23bbd260ec"</span>;
 	<span class="doccomment">/// [`IDXGISurface`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgisurface)
-	/// COM interface over [`IDXGISurfaceVT`](crate::vt::IDXGISurfaceVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

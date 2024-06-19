@@ -83,40 +83,16 @@
 <a href="#83" id="83">83</a>
 <a href="#84" id="84">84</a>
 <a href="#85" id="85">85</a>
-<a href="#86" id="86">86</a>
-<a href="#87" id="87">87</a>
-<a href="#88" id="88">88</a>
-<a href="#89" id="89">89</a>
-<a href="#90" id="90">90</a>
-<a href="#91" id="91">91</a>
-<a href="#92" id="92">92</a>
-<a href="#93" id="93">93</a>
-<a href="#94" id="94">94</a>
-<a href="#95" id="95">95</a>
-<a href="#96" id="96">96</a>
-<a href="#97" id="97">97</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`ITaskbarList`](crate::ITaskbarList) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>ITaskbarListVT {
-	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
-	<span class="kw">pub </span>HrInit: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>AddTab: <span class="kw">fn</span>(COMPTR, HANDLE) -&gt; HRES,
-	<span class="kw">pub </span>DeleteTab: <span class="kw">fn</span>(COMPTR, HANDLE) -&gt; HRES,
-	<span class="kw">pub </span>ActivateTab: <span class="kw">fn</span>(COMPTR, HANDLE) -&gt; HRES,
-	<span class="kw">pub </span>SetActiveAlt: <span class="kw">fn</span>(COMPTR, HANDLE) -&gt; HRES,
-}
+<span class="kw">use </span><span class="kw">crate</span>::shell::vts::<span class="kw-2">*</span>;
 
 <span class="macro">com_interface!</span> { ITaskbarList: <span class="string">"56fdf342-fd6d-11d0-958a-006097c9a090"</span>;
 	<span class="doccomment">/// [`ITaskbarList`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist)
-	/// COM interface over [`ITaskbarListVT`](crate::vt::ITaskbarListVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

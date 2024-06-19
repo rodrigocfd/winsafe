@@ -77,36 +77,16 @@
 <a href="#77" id="77">77</a>
 <a href="#78" id="78">78</a>
 <a href="#79" id="79">79</a>
-<a href="#80" id="80">80</a>
-<a href="#81" id="81">81</a>
-<a href="#82" id="82">82</a>
-<a href="#83" id="83">83</a>
-<a href="#84" id="84">84</a>
-<a href="#85" id="85">85</a>
-<a href="#86" id="86">86</a>
-<a href="#87" id="87">87</a>
-<a href="#88" id="88">88</a>
-<a href="#89" id="89">89</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::dxgi::iterators::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::dxgi::{iterators::<span class="kw-2">*</span>, vts::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IDXGIFactory1`](crate::IDXGIFactory1) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IDXGIFactory1VT {
-	<span class="kw">pub </span>IDXGIFactoryVT: IDXGIFactoryVT,
-	<span class="kw">pub </span>EnumAdapters1: <span class="kw">fn</span>(COMPTR, u32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>IsCurrent: <span class="kw">fn</span>(COMPTR) -&gt; BOOL,
-}
 
 <span class="macro">com_interface!</span> { IDXGIFactory1: <span class="string">"770aae78-f26f-4dba-a829-253c83d1b387"</span>;
 	<span class="doccomment">/// [`IDXGIFactory1`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgifactory1)
-	/// COM interface over [`IDXGIFactory1VT`](crate::vt::IDXGIFactory1VT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

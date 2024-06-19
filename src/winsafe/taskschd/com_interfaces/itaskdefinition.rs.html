@@ -60,57 +60,15 @@
 <a href="#60" id="60">60</a>
 <a href="#61" id="61">61</a>
 <a href="#62" id="62">62</a>
-<a href="#63" id="63">63</a>
-<a href="#64" id="64">64</a>
-<a href="#65" id="65">65</a>
-<a href="#66" id="66">66</a>
-<a href="#67" id="67">67</a>
-<a href="#68" id="68">68</a>
-<a href="#69" id="69">69</a>
-<a href="#70" id="70">70</a>
-<a href="#71" id="71">71</a>
-<a href="#72" id="72">72</a>
-<a href="#73" id="73">73</a>
-<a href="#74" id="74">74</a>
-<a href="#75" id="75">75</a>
-<a href="#76" id="76">76</a>
-<a href="#77" id="77">77</a>
-<a href="#78" id="78">78</a>
-<a href="#79" id="79">79</a>
-<a href="#80" id="80">80</a>
-<a href="#81" id="81">81</a>
-<a href="#82" id="82">82</a>
-<a href="#83" id="83">83</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`ITaskDefinition`](crate::ITaskDefinition) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>ITaskDefinitionVT {
-	<span class="kw">pub </span>IDispatchVT: IDispatchVT,
-	<span class="kw">pub </span>get_RegistrationInfo: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>put_RegistrationInfo: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>get_Triggers: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>put_Triggers: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>get_Settings: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>put_Settings: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>get_Data: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>put_Data: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>get_Principal: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>put_Principal: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>get_Actions: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>put_Actions: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>get_XmlText: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>put_XmlText: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-}
+<span class="kw">use </span><span class="kw">crate</span>::taskschd::vts::<span class="kw-2">*</span>;
 
 <span class="macro">com_interface!</span> { ITaskDefinition: <span class="string">"f5bc8fc5-536d-4f77-b852-fbc1356fdeb6"</span>;
 	<span class="doccomment">/// [`ITaskDefinition`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskdefinition)
-	/// COM interface over [`ITaskDefinitionVT`](crate::vt::ITaskDefinitionVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

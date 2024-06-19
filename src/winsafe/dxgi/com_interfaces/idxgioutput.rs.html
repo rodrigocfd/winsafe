@@ -218,55 +218,17 @@
 <a href="#218" id="218">218</a>
 <a href="#219" id="219">219</a>
 <a href="#220" id="220">220</a>
-<a href="#221" id="221">221</a>
-<a href="#222" id="222">222</a>
-<a href="#223" id="223">223</a>
-<a href="#224" id="224">224</a>
-<a href="#225" id="225">225</a>
-<a href="#226" id="226">226</a>
-<a href="#227" id="227">227</a>
-<a href="#228" id="228">228</a>
-<a href="#229" id="229">229</a>
-<a href="#230" id="230">230</a>
-<a href="#231" id="231">231</a>
-<a href="#232" id="232">232</a>
-<a href="#233" id="233">233</a>
-<a href="#234" id="234">234</a>
-<a href="#235" id="235">235</a>
-<a href="#236" id="236">236</a>
-<a href="#237" id="237">237</a>
-<a href="#238" id="238">238</a>
-<a href="#239" id="239">239</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::dxgi::vts::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IDXGIAdapter`](crate::IDXGIAdapter) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IDXGIOutputVT {
-	<span class="kw">pub </span>IDXGIObjectVT: IDXGIObjectVT,
-	<span class="kw">pub </span>GetDesc: <span class="kw">fn</span>(COMPTR, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>GetDisplayModeList: <span class="kw">fn</span>(COMPTR, u32, u32, <span class="kw-2">*mut </span>u32, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>FindClosestMatchingMode: <span class="kw">fn</span>(COMPTR, PCVOID, PVOID, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>WaitForVBlank: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>TakeOwnership: <span class="kw">fn</span>(COMPTR, COMPTR, BOOL) -&gt; HRES,
-	<span class="kw">pub </span>ReleaseOwnership: <span class="kw">fn</span>(COMPTR),
-	<span class="kw">pub </span>GetGammaControlCapabilities: <span class="kw">fn</span>(COMPTR, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>SetGammaControl: <span class="kw">fn</span>(COMPTR, PCVOID) -&gt; HRES,
-	<span class="kw">pub </span>GetGammaControl: <span class="kw">fn</span>(COMPTR, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>SetDisplaySurface: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetDisplaySurfaceData: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetFrameStatistics: <span class="kw">fn</span>(COMPTR, PVOID) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IDXGIOutput: <span class="string">"ae02eedb-c735-4690-8d52-5a8dc20213aa"</span>;
 	<span class="doccomment">/// [`IDXGIOutput`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgioutput)
-	/// COM interface over [`IDXGIOutputVT`](crate::vt::IDXGIOutputVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

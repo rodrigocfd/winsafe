@@ -119,69 +119,15 @@
 <a href="#119" id="119">119</a>
 <a href="#120" id="120">120</a>
 <a href="#121" id="121">121</a>
-<a href="#122" id="122">122</a>
-<a href="#123" id="123">123</a>
-<a href="#124" id="124">124</a>
-<a href="#125" id="125">125</a>
-<a href="#126" id="126">126</a>
-<a href="#127" id="127">127</a>
-<a href="#128" id="128">128</a>
-<a href="#129" id="129">129</a>
-<a href="#130" id="130">130</a>
-<a href="#131" id="131">131</a>
-<a href="#132" id="132">132</a>
-<a href="#133" id="133">133</a>
-<a href="#134" id="134">134</a>
-<a href="#135" id="135">135</a>
-<a href="#136" id="136">136</a>
-<a href="#137" id="137">137</a>
-<a href="#138" id="138">138</a>
-<a href="#139" id="139">139</a>
-<a href="#140" id="140">140</a>
-<a href="#141" id="141">141</a>
-<a href="#142" id="142">142</a>
-<a href="#143" id="143">143</a>
-<a href="#144" id="144">144</a>
-<a href="#145" id="145">145</a>
-<a href="#146" id="146">146</a>
-<a href="#147" id="147">147</a>
-<a href="#148" id="148">148</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IEmailAction`](crate::IEmailAction) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IEmailActionVT {
-	<span class="kw">pub </span>IAction: IActionVT,
-	<span class="kw">pub </span>get_Server: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>put_Server: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>get_Subject: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>put_Subject: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>get_To: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>put_To: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>get_Cc: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>put_Cc: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>get_Bcc: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>put_Bcc: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>get_ReplyTo: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>put_ReplyTo: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>get_From: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>put_From: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>get_HeaderFields: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>put_HeaderFields: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>get_Body: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>put_Body: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>get_Attachments: <span class="kw">fn</span>(COMPTR, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>put_Attachments: <span class="kw">fn</span>(COMPTR, PCVOID) -&gt; HRES,
-}
+<span class="kw">use </span><span class="kw">crate</span>::taskschd::vts::<span class="kw-2">*</span>;
 
 <span class="macro">com_interface!</span> { IEmailAction: <span class="string">"10f62c64-7e16-4314-a0c2-0c3683f99d40"</span>;
 	<span class="doccomment">/// [`IEmailAction`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-iemailaction)
-	/// COM interface over [`IEmailActionVT`](crate::vt::IEmailActionVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

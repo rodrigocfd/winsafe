@@ -122,46 +122,16 @@
 <a href="#122" id="122">122</a>
 <a href="#123" id="123">123</a>
 <a href="#124" id="124">124</a>
-<a href="#125" id="125">125</a>
-<a href="#126" id="126">126</a>
-<a href="#127" id="127">127</a>
-<a href="#128" id="128">128</a>
-<a href="#129" id="129">129</a>
-<a href="#130" id="130">130</a>
-<a href="#131" id="131">131</a>
-<a href="#132" id="132">132</a>
-<a href="#133" id="133">133</a>
-<a href="#134" id="134">134</a>
-<a href="#135" id="135">135</a>
-<a href="#136" id="136">136</a>
-<a href="#137" id="137">137</a>
-<a href="#138" id="138">138</a>
-<a href="#139" id="139">139</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::dshow::vts::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IFilterGraph`](crate::IFilterGraph) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IFilterGraphVT {
-	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
-	<span class="kw">pub </span>AddFilter: <span class="kw">fn</span>(COMPTR, COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>RemoveFilter: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>EnumFilters: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>FindFilterByName: <span class="kw">fn</span>(COMPTR, PCSTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>ConnectDirect: <span class="kw">fn</span>(COMPTR, COMPTR, COMPTR, PCVOID) -&gt; HRES,
-	<span class="kw">pub </span>Reconnect: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Disconnect: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>SetDefaultSyncSource: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IFilterGraph: <span class="string">"56a8689f-0ad4-11ce-b03a-0020af0ba770"</span>;
 	<span class="doccomment">/// [`IFilterGraph`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifiltergraph)
-	/// COM interface over [`IFilterGraphVT`](crate::vt::IFilterGraphVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

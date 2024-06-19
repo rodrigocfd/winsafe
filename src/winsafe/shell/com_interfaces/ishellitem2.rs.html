@@ -149,25 +149,6 @@
 <a href="#149" id="149">149</a>
 <a href="#150" id="150">150</a>
 <a href="#151" id="151">151</a>
-<a href="#152" id="152">152</a>
-<a href="#153" id="153">153</a>
-<a href="#154" id="154">154</a>
-<a href="#155" id="155">155</a>
-<a href="#156" id="156">156</a>
-<a href="#157" id="157">157</a>
-<a href="#158" id="158">158</a>
-<a href="#159" id="159">159</a>
-<a href="#160" id="160">160</a>
-<a href="#161" id="161">161</a>
-<a href="#162" id="162">162</a>
-<a href="#163" id="163">163</a>
-<a href="#164" id="164">164</a>
-<a href="#165" id="165">165</a>
-<a href="#166" id="166">166</a>
-<a href="#167" id="167">167</a>
-<a href="#168" id="168">168</a>
-<a href="#169" id="169">169</a>
-<a href="#170" id="170">170</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -175,30 +156,11 @@
 <span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IShellItem2`](crate::IShellItem2) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IShellItem2VT {
-	<span class="kw">pub </span>IShellItemVT: IShellItemVT,
-	<span class="kw">pub </span>GetPropertyStore: <span class="kw">fn</span>(COMPTR, u32, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetPropertyStoreWithCreateObject: <span class="kw">fn</span>(COMPTR, u32, COMPTR, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetPropertyStoreForKeys: <span class="kw">fn</span>(COMPTR, PCVOID, u32, u32, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetPropertyDescriptionList: <span class="kw">fn</span>(COMPTR, PCVOID, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Update: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetProperty: <span class="kw">fn</span>(COMPTR, PCVOID, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>GetCLSID: <span class="kw">fn</span>(COMPTR, PCVOID, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>GetFileTime: <span class="kw">fn</span>(COMPTR, PCVOID, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>GetInt32: <span class="kw">fn</span>(COMPTR, PCVOID, <span class="kw-2">*mut </span>i32) -&gt; HRES,
-	<span class="kw">pub </span>GetString: <span class="kw">fn</span>(COMPTR, PCVOID, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>GetUInt32: <span class="kw">fn</span>(COMPTR, PCVOID, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>GetUInt64: <span class="kw">fn</span>(COMPTR, PCVOID, <span class="kw-2">*mut </span>u64) -&gt; HRES,
-	<span class="kw">pub </span>GetBool: <span class="kw">fn</span>(COMPTR, PCVOID, <span class="kw-2">*mut </span>BOOL) -&gt; HRES,
-}
+<span class="kw">use </span><span class="kw">crate</span>::shell::vts::<span class="kw-2">*</span>;
 
 <span class="macro">com_interface!</span> { IShellItem2: <span class="string">"7e9fb0d3-919f-4307-ab2e-9b1860310c93"</span>;
 	<span class="doccomment">/// [`IShellItem2`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ishellitem2)
-	/// COM interface over [`IShellItem2VT`](crate::vt::IShellItem2VT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

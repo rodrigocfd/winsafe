@@ -252,62 +252,16 @@
 <a href="#252" id="252">252</a>
 <a href="#253" id="253">253</a>
 <a href="#254" id="254">254</a>
-<a href="#255" id="255">255</a>
-<a href="#256" id="256">256</a>
-<a href="#257" id="257">257</a>
-<a href="#258" id="258">258</a>
-<a href="#259" id="259">259</a>
-<a href="#260" id="260">260</a>
-<a href="#261" id="261">261</a>
-<a href="#262" id="262">262</a>
-<a href="#263" id="263">263</a>
-<a href="#264" id="264">264</a>
-<a href="#265" id="265">265</a>
-<a href="#266" id="266">266</a>
-<a href="#267" id="267">267</a>
-<a href="#268" id="268">268</a>
-<a href="#269" id="269">269</a>
-<a href="#270" id="270">270</a>
-<a href="#271" id="271">271</a>
-<a href="#272" id="272">272</a>
-<a href="#273" id="273">273</a>
-<a href="#274" id="274">274</a>
-<a href="#275" id="275">275</a>
-<a href="#276" id="276">276</a>
-<a href="#277" id="277">277</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::ole::{privs::<span class="kw-2">*</span>, vts::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IStorage`](crate::IStorage) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IStorageVT {
-	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
-	<span class="kw">pub </span>CreateStream: <span class="kw">fn</span>(COMPTR, PCSTR, u32, u32, u32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>OpenStream: <span class="kw">fn</span>(COMPTR, PCSTR, PVOID, u32, u32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>CreateStorage: <span class="kw">fn</span>(COMPTR, PCSTR, u32, u32, u32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>OpenStorage: <span class="kw">fn</span>(COMPTR, PCSTR, COMPTR, u32, <span class="kw-2">*mut </span>PSTR, u32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>CopyTo: <span class="kw">fn</span>(COMPTR, u32, PCVOID, <span class="kw-2">*mut </span>PSTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>MoveElementTo: <span class="kw">fn</span>(COMPTR, PCSTR, COMPTR, PCSTR, u32) -&gt; HRES,
-	<span class="kw">pub </span>Commit: <span class="kw">fn</span>(COMPTR, u32) -&gt; HRES,
-	<span class="kw">pub </span>Revert: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>EnumElements: <span class="kw">fn</span>(COMPTR, u32, PVOID, u32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>DestroyElement: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>RenameElement: <span class="kw">fn</span>(COMPTR, PCSTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>SetElementTimes: <span class="kw">fn</span>(COMPTR, PCSTR, PCVOID, PCVOID, PCVOID) -&gt; HRES,
-	<span class="kw">pub </span>SetClass: <span class="kw">fn</span>(COMPTR, PCVOID) -&gt; HRES,
-	<span class="kw">pub </span>SetStateBits: <span class="kw">fn</span>(COMPTR, u32, u32) -&gt; HRES,
-	<span class="kw">pub </span>Stat: <span class="kw">fn</span>(COMPTR, PVOID, u32) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IStorage: <span class="string">"0000000b-0000-0000-c000-000000000046"</span>;
 	<span class="doccomment">/// [`IStorage`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-istorage)
-	/// COM interface over [`IStorageVT`](crate::vt::IStorageVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

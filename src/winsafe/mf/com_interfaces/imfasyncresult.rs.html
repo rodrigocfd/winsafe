@@ -100,45 +100,19 @@
 <a href="#100" id="100">100</a>
 <a href="#101" id="101">101</a>
 <a href="#102" id="102">102</a>
-<a href="#103" id="103">103</a>
-<a href="#104" id="104">104</a>
-<a href="#105" id="105">105</a>
-<a href="#106" id="106">106</a>
-<a href="#107" id="107">107</a>
-<a href="#108" id="108">108</a>
-<a href="#109" id="109">109</a>
-<a href="#110" id="110">110</a>
-<a href="#111" id="111">111</a>
-<a href="#112" id="112">112</a>
-<a href="#113" id="113">113</a>
-<a href="#114" id="114">114</a>
-<a href="#115" id="115">115</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::mem::ManuallyDrop;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::mf::vts::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IMFAsyncResult`](crate::IMFAsyncResult) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IMFAsyncResultVT {
-	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
-	<span class="kw">pub </span>GetState: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetStatus: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>SetStatus: <span class="kw">fn</span>(COMPTR, HRES) -&gt; HRES,
-	<span class="kw">pub </span>GetObject: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetStateNoAddRef: <span class="kw">fn</span>(COMPTR) -&gt; COMPTR,
-}
 
 <span class="macro">com_interface!</span> { IMFAsyncResult: <span class="string">"ac6b7889-0740-4d51-8619-905994a55cc6"</span>;
 	<span class="doccomment">/// [`IMFAsyncResult`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nn-mfobjects-imfasyncresult)
-	/// COM interface over
-	/// [`IMFAsyncResultVT`](crate::vt::IMFAsyncResultVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

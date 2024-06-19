@@ -49,33 +49,15 @@
 <a href="#49" id="49">49</a>
 <a href="#50" id="50">50</a>
 <a href="#51" id="51">51</a>
-<a href="#52" id="52">52</a>
-<a href="#53" id="53">53</a>
-<a href="#54" id="54">54</a>
-<a href="#55" id="55">55</a>
-<a href="#56" id="56">56</a>
-<a href="#57" id="57">57</a>
-<a href="#58" id="58">58</a>
-<a href="#59" id="59">59</a>
-<a href="#60" id="60">60</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IBootTrigger`](crate::IBootTrigger) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IBootTriggerVT {
-	<span class="kw">pub </span>ITriggerVT: ITriggerVT,
-	<span class="kw">pub </span>get_Delay: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>put_Delay: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-}
+<span class="kw">use </span><span class="kw">crate</span>::taskschd::vts::<span class="kw-2">*</span>;
 
 <span class="macro">com_interface!</span> { IBootTrigger: <span class="string">"2a9c35da-d357-41f4-bbc1-207ac1b1f3cb"</span>;
 	<span class="doccomment">/// [`IBootTrigger`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-iboottrigger)
-	/// COM interface over [`IBootTriggerVT`](crate::vt::IBootTriggerVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

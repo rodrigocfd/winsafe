@@ -105,41 +105,17 @@
 <a href="#105" id="105">105</a>
 <a href="#106" id="106">106</a>
 <a href="#107" id="107">107</a>
-<a href="#108" id="108">108</a>
-<a href="#109" id="109">109</a>
-<a href="#110" id="110">110</a>
-<a href="#111" id="111">111</a>
-<a href="#112" id="112">112</a>
-<a href="#113" id="113">113</a>
-<a href="#114" id="114">114</a>
-<a href="#115" id="115">115</a>
-<a href="#116" id="116">116</a>
-<a href="#117" id="117">117</a>
-<a href="#118" id="118">118</a>
-<a href="#119" id="119">119</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::dxgi::vts::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IDXGIDevice`](crate::IDXGIDevice) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IDXGIDeviceVT {
-	<span class="kw">pub </span>IDXGIObjectVT: IDXGIObjectVT,
-	<span class="kw">pub </span>GetAdapter: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>CreateSurface: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*const </span>u32, u32, u32, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>QueryResourceResidency: <span class="kw">fn</span>(COMPTR, COMPTR, <span class="kw-2">*mut </span>u32, u32) -&gt; HRES,
-	<span class="kw">pub </span>SetGPUThreadPriority: <span class="kw">fn</span>(COMPTR, i32) -&gt; HRES,
-	<span class="kw">pub </span>GetGPUThreadPriority: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>i32) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IDXGIDevice: <span class="string">"54ec77fa-1377-44e6-8c32-88fd5f44c84c"</span>;
 	<span class="doccomment">/// [`IDXGIDevice`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgidevice)
-	/// COM interface over [`IDXGIDeviceVT`](crate::vt::IDXGIDeviceVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

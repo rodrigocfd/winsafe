@@ -87,57 +87,17 @@
 <a href="#87" id="87">87</a>
 <a href="#88" id="88">88</a>
 <a href="#89" id="89">89</a>
-<a href="#90" id="90">90</a>
-<a href="#91" id="91">91</a>
-<a href="#92" id="92">92</a>
-<a href="#93" id="93">93</a>
-<a href="#94" id="94">94</a>
-<a href="#95" id="95">95</a>
-<a href="#96" id="96">96</a>
-<a href="#97" id="97">97</a>
-<a href="#98" id="98">98</a>
-<a href="#99" id="99">99</a>
-<a href="#100" id="100">100</a>
-<a href="#101" id="101">101</a>
-<a href="#102" id="102">102</a>
-<a href="#103" id="103">103</a>
-<a href="#104" id="104">104</a>
-<a href="#105" id="105">105</a>
-<a href="#106" id="106">106</a>
-<a href="#107" id="107">107</a>
-<a href="#108" id="108">108</a>
-<a href="#109" id="109">109</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`ITaskFolder`](crate::ITaskFolder) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>ITaskFolderVT {
-	<span class="kw">pub </span>IDispatchVT: IDispatchVT,
-	<span class="kw">pub </span>get_Name: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>get_Path: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>GetFolder: <span class="kw">fn</span>(COMPTR, PCSTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetFolders: <span class="kw">fn</span>(COMPTR, i32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>CreateFolder: <span class="kw">fn</span>(COMPTR, PCSTR, VARIANT, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>DeleteFolder: <span class="kw">fn</span>(COMPTR, PCSTR, i32) -&gt; HRES,
-	<span class="kw">pub </span>GetTask: <span class="kw">fn</span>(COMPTR, PCSTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetTasks: <span class="kw">fn</span>(COMPTR, i32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>DeleteTask: <span class="kw">fn</span>(COMPTR, PCSTR, i32) -&gt; HRES,
-	<span class="kw">pub </span>RegisterTask: <span class="kw">fn</span>(COMPTR, PCSTR, PCSTR, i32, VARIANT, VARIANT, u32, VARIANT, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>RegisterTaskDefinition: <span class="kw">fn</span>(COMPTR, PCSTR, COMPTR, i32, VARIANT, VARIANT, u32, VARIANT, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetSecurityDescriptor: <span class="kw">fn</span>(COMPTR, i32, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>SetSecurityDescriptor: <span class="kw">fn</span>(COMPTR, PCSTR, i32) -&gt; HRES,
-}
+<span class="kw">use </span><span class="kw">crate</span>::taskschd::vts::<span class="kw-2">*</span>;
 
 <span class="macro">com_interface!</span> { ITaskFolder: <span class="string">"8cfac062-a080-4c15-9a88-aa7c2af80dfc"</span>;
 	<span class="doccomment">/// [`ITaskFolder`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itaskfolder)
-	/// COM interface over [`ITaskFolderVT`](crate::vt::ITaskFolderVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

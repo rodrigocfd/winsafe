@@ -57,32 +57,16 @@
 <a href="#57" id="57">57</a>
 <a href="#58" id="58">58</a>
 <a href="#59" id="59">59</a>
-<a href="#60" id="60">60</a>
-<a href="#61" id="61">61</a>
-<a href="#62" id="62">62</a>
-<a href="#63" id="63">63</a>
-<a href="#64" id="64">64</a>
-<a href="#65" id="65">65</a>
-<a href="#66" id="66">66</a>
-<a href="#67" id="67">67</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`ITaskbarList2`](crate::ITaskbarList2) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>ITaskbarList2VT {
-	<span class="kw">pub </span>ITaskbarListVT: ITaskbarListVT,
-	<span class="kw">pub </span>MarkFullscreenWindow: <span class="kw">fn</span>(COMPTR, HANDLE, BOOL) -&gt; HRES,
-}
+<span class="kw">use </span><span class="kw">crate</span>::shell::vts::<span class="kw-2">*</span>;
 
 <span class="macro">com_interface!</span> { ITaskbarList2: <span class="string">"602d4995-b13a-429b-a66e-1935e44f4317"</span>;
 	<span class="doccomment">/// [`ITaskbarList2`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist2)
-	/// COM interface over [`ITaskbarList2VT`](crate::vt::ITaskbarList2VT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

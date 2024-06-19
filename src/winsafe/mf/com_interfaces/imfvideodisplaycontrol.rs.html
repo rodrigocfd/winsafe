@@ -259,65 +259,17 @@
 <a href="#259" id="259">259</a>
 <a href="#260" id="260">260</a>
 <a href="#261" id="261">261</a>
-<a href="#262" id="262">262</a>
-<a href="#263" id="263">263</a>
-<a href="#264" id="264">264</a>
-<a href="#265" id="265">265</a>
-<a href="#266" id="266">266</a>
-<a href="#267" id="267">267</a>
-<a href="#268" id="268">268</a>
-<a href="#269" id="269">269</a>
-<a href="#270" id="270">270</a>
-<a href="#271" id="271">271</a>
-<a href="#272" id="272">272</a>
-<a href="#273" id="273">273</a>
-<a href="#274" id="274">274</a>
-<a href="#275" id="275">275</a>
-<a href="#276" id="276">276</a>
-<a href="#277" id="277">277</a>
-<a href="#278" id="278">278</a>
-<a href="#279" id="279">279</a>
-<a href="#280" id="280">280</a>
-<a href="#281" id="281">281</a>
-<a href="#282" id="282">282</a>
-<a href="#283" id="283">283</a>
-<a href="#284" id="284">284</a>
-<a href="#285" id="285">285</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::mf::vts::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IMFVideoDisplayControl`](crate::IMFVideoDisplayControl) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IMFVideoDisplayControlVT {
-	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
-	<span class="kw">pub </span>GetNativeVideoSize: <span class="kw">fn</span>(COMPTR, PVOID, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>GetIdealVideoSize: <span class="kw">fn</span>(COMPTR, PVOID, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>SetVideoPosition: <span class="kw">fn</span>(COMPTR, PCVOID, PCVOID) -&gt; HRES,
-	<span class="kw">pub </span>GetVideoPosition: <span class="kw">fn</span>(COMPTR, PVOID, PCVOID) -&gt; HRES,
-	<span class="kw">pub </span>SetAspectRatioMode: <span class="kw">fn</span>(COMPTR, u32) -&gt; HRES,
-	<span class="kw">pub </span>GetAspectRatioMode: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>SetVideoWindow: <span class="kw">fn</span>(COMPTR, HANDLE) -&gt; HRES,
-	<span class="kw">pub </span>GetVideoWindow: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>HANDLE) -&gt; HRES,
-	<span class="kw">pub </span>RepaintVideo: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetCurrentImage: <span class="kw">fn</span>(COMPTR, PVOID, <span class="kw-2">*mut *mut </span>u8, <span class="kw-2">*mut </span>u32, <span class="kw-2">*mut </span>i64) -&gt; HRES,
-	<span class="kw">pub </span>SetBorderColor: <span class="kw">fn</span>(COMPTR, u32) -&gt; HRES,
-	<span class="kw">pub </span>GetBorderColor: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>SetRenderingPrefs: <span class="kw">fn</span>(COMPTR, u32) -&gt; HRES,
-	<span class="kw">pub </span>GetRenderingPrefs: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>SetFullscreen: <span class="kw">fn</span>(COMPTR, BOOL) -&gt; HRES,
-	<span class="kw">pub </span>GetFullscreen: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>BOOL) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IMFVideoDisplayControl: <span class="string">"a490b1e4-ab84-4d31-a1b2-181e03b1077a"</span>;
 	<span class="doccomment">/// [`IMFVideoDisplayControl`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nn-evr-imfvideodisplaycontrol)
-	/// COM interface over
-	/// [`IMFVideoDisplayControlVT`](crate::vt::IMFVideoDisplayControlVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

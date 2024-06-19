@@ -309,19 +309,6 @@
 <a href="#309" id="309">309</a>
 <a href="#310" id="310">310</a>
 <a href="#311" id="311">311</a>
-<a href="#312" id="312">312</a>
-<a href="#313" id="313">313</a>
-<a href="#314" id="314">314</a>
-<a href="#315" id="315">315</a>
-<a href="#316" id="316">316</a>
-<a href="#317" id="317">317</a>
-<a href="#318" id="318">318</a>
-<a href="#319" id="319">319</a>
-<a href="#320" id="320">320</a>
-<a href="#321" id="321">321</a>
-<a href="#322" id="322">322</a>
-<a href="#323" id="323">323</a>
-<a href="#324" id="324">324</a>
 </pre></div><pre class="rust"><code><span class="attr">#![doc = <span class="macro">include_str!</span>(<span class="string">"lib.md"</span>)]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 
@@ -632,18 +619,5 @@
 	<span class="attr">#[cfg(all(feature = <span class="string">"comctl"</span>, feature = <span class="string">"gdi"</span>))] </span><span class="kw">pub use </span><span class="kw">super</span>::comctl_gdi::traits::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(all(feature = <span class="string">"comctl"</span>, feature = <span class="string">"shell"</span>))] </span><span class="kw">pub use </span><span class="kw">super</span>::comctl_shell::traits::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(all(feature = <span class="string">"gdi"</span>, feature = <span class="string">"mf"</span>))] </span><span class="kw">pub use </span><span class="kw">super</span>::gdi_mf::traits::<span class="kw-2">*</span>;
-}
-
-<span class="attr">#[cfg(feature = <span class="string">"ole"</span>)]
-</span><span class="kw">pub mod </span>vt {
-	<span class="doccomment">//! Virtual tables of COM interfaces.
-
-	</span><span class="attr">#[cfg(feature = <span class="string">"dshow"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::dshow::vt::<span class="kw-2">*</span>;
-	<span class="attr">#[cfg(feature = <span class="string">"dxgi"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::dxgi::vt::<span class="kw-2">*</span>;
-	<span class="attr">#[cfg(feature = <span class="string">"mf"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::mf::vt::<span class="kw-2">*</span>;
-	<span class="attr">#[cfg(feature = <span class="string">"ole"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::ole::vt::<span class="kw-2">*</span>;
-	<span class="attr">#[cfg(feature = <span class="string">"oleaut"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::oleaut::vt::<span class="kw-2">*</span>;
-	<span class="attr">#[cfg(feature = <span class="string">"shell"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::shell::vt::<span class="kw-2">*</span>;
-	<span class="attr">#[cfg(feature = <span class="string">"taskschd"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::taskschd::vt::<span class="kw-2">*</span>;
 }
 </code></pre></div></section></main></body></html>

@@ -189,62 +189,18 @@
 <a href="#189" id="189">189</a>
 <a href="#190" id="190">190</a>
 <a href="#191" id="191">191</a>
-<a href="#192" id="192">192</a>
-<a href="#193" id="193">193</a>
-<a href="#194" id="194">194</a>
-<a href="#195" id="195">195</a>
-<a href="#196" id="196">196</a>
-<a href="#197" id="197">197</a>
-<a href="#198" id="198">198</a>
-<a href="#199" id="199">199</a>
-<a href="#200" id="200">200</a>
-<a href="#201" id="201">201</a>
-<a href="#202" id="202">202</a>
-<a href="#203" id="203">203</a>
-<a href="#204" id="204">204</a>
-<a href="#205" id="205">205</a>
-<a href="#206" id="206">206</a>
-<a href="#207" id="207">207</a>
-<a href="#208" id="208">208</a>
-<a href="#209" id="209">209</a>
-<a href="#210" id="210">210</a>
-<a href="#211" id="211">211</a>
-<a href="#212" id="212">212</a>
-<a href="#213" id="213">213</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::dshow::vts::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IPin`](crate::IPin) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IPinVT {
-	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
-	<span class="kw">pub </span>Connect: <span class="kw">fn</span>(COMPTR, COMPTR, PCVOID) -&gt; HRES,
-	<span class="kw">pub </span>ReceiveConnection: <span class="kw">fn</span>(COMPTR, COMPTR, PCVOID) -&gt; HRES,
-	<span class="kw">pub </span>Disconnect: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>ConnectedTo: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>ConnectionMediaType: <span class="kw">fn</span>(COMPTR, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>QueryPinInfo: <span class="kw">fn</span>(COMPTR, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>QueryDirection: <span class="kw">fn</span>(COMPTR, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>QueryId: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>QueryAccept: <span class="kw">fn</span>(COMPTR, PCVOID) -&gt; HRES,
-	<span class="kw">pub </span>EnumMediaTypes: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>QueryInternalConnections: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>EndOfStream: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>BeginFlush: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>EndFlush: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>NewSegment: <span class="kw">fn</span>(COMPTR, i64, i64, f64) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IPin: <span class="string">"56a86891-0ad4-11ce-b03a-0020af0ba770"</span>;
 	<span class="doccomment">/// [`IPin`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ipin)
-	/// COM interface over [`IPinVT`](crate::vt::IPinVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

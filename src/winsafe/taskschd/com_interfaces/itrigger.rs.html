@@ -99,57 +99,17 @@
 <a href="#99" id="99">99</a>
 <a href="#100" id="100">100</a>
 <a href="#101" id="101">101</a>
-<a href="#102" id="102">102</a>
-<a href="#103" id="103">103</a>
-<a href="#104" id="104">104</a>
-<a href="#105" id="105">105</a>
-<a href="#106" id="106">106</a>
-<a href="#107" id="107">107</a>
-<a href="#108" id="108">108</a>
-<a href="#109" id="109">109</a>
-<a href="#110" id="110">110</a>
-<a href="#111" id="111">111</a>
-<a href="#112" id="112">112</a>
-<a href="#113" id="113">113</a>
-<a href="#114" id="114">114</a>
-<a href="#115" id="115">115</a>
-<a href="#116" id="116">116</a>
-<a href="#117" id="117">117</a>
-<a href="#118" id="118">118</a>
-<a href="#119" id="119">119</a>
-<a href="#120" id="120">120</a>
-<a href="#121" id="121">121</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`ITrigger`](crate::ITrigger) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>ITriggerVT {
-	<span class="kw">pub </span>IDispatchVT: IDispatchVT,
-	<span class="kw">pub </span>get_Type: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>get_Id: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>put_Id: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>get_Repetition: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>put_Repetition: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>get_ExecutionTimeLimit: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>put_ExecutionTimeLimit: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>get_StartBoundary: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>put_StartBoundary: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>get_EndBoundary: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>put_EndBoundary: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>get_Enabled: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>i16) -&gt; HRES,
-	<span class="kw">pub </span>put_Enabled: <span class="kw">fn</span>(COMPTR, i16) -&gt; HRES,
-}
+<span class="kw">use </span><span class="kw">crate</span>::taskschd::vts::<span class="kw-2">*</span>;
 
 <span class="macro">com_interface!</span> { ITrigger: <span class="string">"09941815-ea89-4b5b-89e0-2a773801fac3"</span>;
 	<span class="doccomment">/// [`ITrigger`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nn-taskschd-itrigger)
-	/// COM interface over [`ITriggerVT`](crate::vt::ITriggerVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

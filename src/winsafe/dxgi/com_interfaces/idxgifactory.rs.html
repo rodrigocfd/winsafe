@@ -143,43 +143,17 @@
 <a href="#143" id="143">143</a>
 <a href="#144" id="144">144</a>
 <a href="#145" id="145">145</a>
-<a href="#146" id="146">146</a>
-<a href="#147" id="147">147</a>
-<a href="#148" id="148">148</a>
-<a href="#149" id="149">149</a>
-<a href="#150" id="150">150</a>
-<a href="#151" id="151">151</a>
-<a href="#152" id="152">152</a>
-<a href="#153" id="153">153</a>
-<a href="#154" id="154">154</a>
-<a href="#155" id="155">155</a>
-<a href="#156" id="156">156</a>
-<a href="#157" id="157">157</a>
-<a href="#158" id="158">158</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::dxgi::iterators::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::dxgi::{iterators::<span class="kw-2">*</span>, vts::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IDXGIFactory`](crate::IDXGIFactory) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IDXGIFactoryVT {
-	<span class="kw">pub </span>IDXGIObjectVT: IDXGIObjectVT,
-	<span class="kw">pub </span>EnumAdapters: <span class="kw">fn</span>(COMPTR, u32, <span class="kw-2">*const </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>MakeWindowAssociation: <span class="kw">fn</span>(COMPTR, HANDLE, u32) -&gt; HRES,
-	<span class="kw">pub </span>GetWindowAssociation: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>HANDLE) -&gt; HRES,
-	<span class="kw">pub </span>CreateSwapChain: <span class="kw">fn</span>(COMPTR, COMPTR, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>CreateSoftwareAdapter: <span class="kw">fn</span>(COMPTR, HANDLE, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IDXGIFactory: <span class="string">"7b7166ec-21c7-44ae-b21a-c9ae321ae369"</span>;
 	<span class="doccomment">/// [`IDXGIFactory`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgifactory)
-	/// COM interface over [`IDXGIFactoryVT`](crate::vt::IDXGIFactoryVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

@@ -330,7 +330,7 @@
 			<span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
 				<span class="kw">if </span>!<span class="self">self</span>.<span class="number">0</span>.is_null() {
 					<span class="kw">unsafe </span>{
-						<span class="kw">use crate</span>::{prelude::ole_IUnknown, vt::IUnknownVT};
+						<span class="kw">use crate</span>::{prelude::ole_IUnknown, ole::vts::IUnknownVT};
 						(<span class="kw">crate</span>::ole::privs::vt::&lt;IUnknownVT&gt;(<span class="self">self</span>).Release)(<span class="self">self</span>.ptr());
 					}
 				}
@@ -339,7 +339,7 @@
 
 		<span class="kw">impl </span>Clone <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
 			<span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-				<span class="kw">use crate</span>::{prelude::ole_IUnknown, vt::IUnknownVT};
+				<span class="kw">use crate</span>::{prelude::ole_IUnknown, ole::vts::IUnknownVT};
 				<span class="kw">unsafe </span>{ (<span class="kw">crate</span>::ole::privs::vt::&lt;IUnknownVT&gt;(<span class="self">self</span>).AddRef)(<span class="self">self</span>.ptr()); }
 				<span class="self">Self</span>(<span class="self">self</span>.ptr())
 			}

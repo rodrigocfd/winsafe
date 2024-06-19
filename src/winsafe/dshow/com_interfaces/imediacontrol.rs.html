@@ -110,48 +110,18 @@
 <a href="#110" id="110">110</a>
 <a href="#111" id="111">111</a>
 <a href="#112" id="112">112</a>
-<a href="#113" id="113">113</a>
-<a href="#114" id="114">114</a>
-<a href="#115" id="115">115</a>
-<a href="#116" id="116">116</a>
-<a href="#117" id="117">117</a>
-<a href="#118" id="118">118</a>
-<a href="#119" id="119">119</a>
-<a href="#120" id="120">120</a>
-<a href="#121" id="121">121</a>
-<a href="#122" id="122">122</a>
-<a href="#123" id="123">123</a>
-<a href="#124" id="124">124</a>
-<a href="#125" id="125">125</a>
-<a href="#126" id="126">126</a>
-<a href="#127" id="127">127</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::{ffi_types::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
+<span class="kw">use </span><span class="kw">crate</span>::dshow::vts::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::kernel::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IMediaControl`](crate::IMediaControl) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IMediaControlVT {
-	<span class="kw">pub </span>IDispatchVT: IDispatchVT,
-	<span class="kw">pub </span>Run: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Pause: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Stop: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetState: <span class="kw">fn</span>(COMPTR, i32, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>RenderFile: <span class="kw">fn</span>(COMPTR, PSTR) -&gt; HRES,
-	<span class="kw">pub </span>AddSourceFilter: <span class="kw">fn</span>(COMPTR, PSTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetFilterCollection: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetRegFilterCollection: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>StopWhenReady: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IMediaControl: <span class="string">"56a868b1-0ad4-11ce-b03a-0020af0ba770"</span>;
 	<span class="doccomment">/// [`IMediaControl`](https://learn.microsoft.com/en-us/windows/win32/api/control/nn-control-imediacontrol)
-	/// COM interface over [`IMediaControlVT`](crate::vt::IMediaControlVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

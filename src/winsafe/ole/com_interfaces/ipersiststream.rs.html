@@ -74,39 +74,15 @@
 <a href="#74" id="74">74</a>
 <a href="#75" id="75">75</a>
 <a href="#76" id="76">76</a>
-<a href="#77" id="77">77</a>
-<a href="#78" id="78">78</a>
-<a href="#79" id="79">79</a>
-<a href="#80" id="80">80</a>
-<a href="#81" id="81">81</a>
-<a href="#82" id="82">82</a>
-<a href="#83" id="83">83</a>
-<a href="#84" id="84">84</a>
-<a href="#85" id="85">85</a>
-<a href="#86" id="86">86</a>
-<a href="#87" id="87">87</a>
-<a href="#88" id="88">88</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::ole::{privs::<span class="kw-2">*</span>, vts::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IPersistStream`](crate::IPersistStream) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IPersistStreamVT {
-	<span class="kw">pub </span>IPersistVT: IPersistVT,
-	<span class="kw">pub </span>IsDirty: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Load: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Save: <span class="kw">fn</span>(COMPTR, COMPTR, BOOL) -&gt; HRES,
-	<span class="kw">pub </span>GetSizeMax: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u64) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IPersistStream: <span class="string">"00000109-0000-0000-c000-000000000046"</span>;
 	<span class="doccomment">/// [`IPersistStream`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersiststream)
-	/// COM interface over [`IPersistStreamVT`](crate::vt::IPersistStreamVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

@@ -93,43 +93,17 @@
 <a href="#93" id="93">93</a>
 <a href="#94" id="94">94</a>
 <a href="#95" id="95">95</a>
-<a href="#96" id="96">96</a>
-<a href="#97" id="97">97</a>
-<a href="#98" id="98">98</a>
-<a href="#99" id="99">99</a>
-<a href="#100" id="100">100</a>
-<a href="#101" id="101">101</a>
-<a href="#102" id="102">102</a>
-<a href="#103" id="103">103</a>
-<a href="#104" id="104">104</a>
-<a href="#105" id="105">105</a>
-<a href="#106" id="106">106</a>
-<a href="#107" id="107">107</a>
-<a href="#108" id="108">108</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::ole::{privs::<span class="kw-2">*</span>, vts::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IPersistFile`](crate::IPersistFile) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IPersistFileVT {
-	<span class="kw">pub </span>IPersistVT: IPersistVT,
-	<span class="kw">pub </span>IsDirty: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Load: <span class="kw">fn</span>(COMPTR, PCSTR, u32) -&gt; HRES,
-	<span class="kw">pub </span>Save: <span class="kw">fn</span>(COMPTR, PCSTR, i32) -&gt; HRES,
-	<span class="kw">pub </span>SaveCompleted: <span class="kw">fn</span>(COMPTR, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>GetCurFile: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IPersistFile: <span class="string">"0000010b-0000-0000-c000-000000000046"</span>;
 	<span class="doccomment">/// [`IPersistFile`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-ipersistfile)
-	/// COM interface over [`IPersistFileVT`](crate::vt::IPersistFileVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

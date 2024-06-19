@@ -81,38 +81,18 @@
 <a href="#81" id="81">81</a>
 <a href="#82" id="82">82</a>
 <a href="#83" id="83">83</a>
-<a href="#84" id="84">84</a>
-<a href="#85" id="85">85</a>
-<a href="#86" id="86">86</a>
-<a href="#87" id="87">87</a>
-<a href="#88" id="88">88</a>
-<a href="#89" id="89">89</a>
-<a href="#90" id="90">90</a>
-<a href="#91" id="91">91</a>
-<a href="#92" id="92">92</a>
-<a href="#93" id="93">93</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::{ffi_types::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
+<span class="kw">use </span><span class="kw">crate</span>::kernel::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::oleaut::vts::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IDispatch`](crate::IDispatch) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IDispatchVT {
-	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
-	<span class="kw">pub </span>GetTypeInfoCount: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>GetTypeInfo: <span class="kw">fn</span>(COMPTR, u32, u32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetIDsOfNames: <span class="kw">fn</span>(COMPTR, PCVOID, <span class="kw-2">*const </span>PCSTR, u32, u32, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>Invoke: <span class="kw">fn</span>(COMPTR, i32, PCVOID, u32, u16, PVOID, PVOID, PVOID, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IDispatch: <span class="string">"00020400-0000-0000-c000-000000000046"</span>;
 	<span class="doccomment">/// [`IDispatch`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nn-oaidl-idispatch)
-	/// COM interface over [`IDispatchVT`](crate::vt::IDispatchVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

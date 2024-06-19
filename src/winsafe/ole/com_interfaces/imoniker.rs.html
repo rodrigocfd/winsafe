@@ -308,63 +308,17 @@
 <a href="#308" id="308">308</a>
 <a href="#309" id="309">309</a>
 <a href="#310" id="310">310</a>
-<a href="#311" id="311">311</a>
-<a href="#312" id="312">312</a>
-<a href="#313" id="313">313</a>
-<a href="#314" id="314">314</a>
-<a href="#315" id="315">315</a>
-<a href="#316" id="316">316</a>
-<a href="#317" id="317">317</a>
-<a href="#318" id="318">318</a>
-<a href="#319" id="319">319</a>
-<a href="#320" id="320">320</a>
-<a href="#321" id="321">321</a>
-<a href="#322" id="322">322</a>
-<a href="#323" id="323">323</a>
-<a href="#324" id="324">324</a>
-<a href="#325" id="325">325</a>
-<a href="#326" id="326">326</a>
-<a href="#327" id="327">327</a>
-<a href="#328" id="328">328</a>
-<a href="#329" id="329">329</a>
-<a href="#330" id="330">330</a>
-<a href="#331" id="331">331</a>
-<a href="#332" id="332">332</a>
-<a href="#333" id="333">333</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::ole::{privs::<span class="kw-2">*</span>, vts::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IMoniker`](crate::IMoniker) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IMonikerVT {
-	<span class="kw">pub </span>IPersistStreamVT: IPersistStreamVT,
-	<span class="kw">pub </span>BindToObject: <span class="kw">fn</span>(COMPTR, COMPTR, COMPTR, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>BindToStorage: <span class="kw">fn</span>(COMPTR, COMPTR, COMPTR, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Reduce: <span class="kw">fn</span>(COMPTR, COMPTR, u32, <span class="kw-2">*mut </span>COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>ComposeWith: <span class="kw">fn</span>(COMPTR, COMPTR, BOOL, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Enum: <span class="kw">fn</span>(COMPTR, BOOL, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>IsEqual: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Hash: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>IsRunning: <span class="kw">fn</span>(COMPTR, COMPTR, COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetTimeOfLastChange: <span class="kw">fn</span>(COMPTR, COMPTR, COMPTR, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>Inverse: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>CommonPrefixWith: <span class="kw">fn</span>(COMPTR, COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>RelativePathTo: <span class="kw">fn</span>(COMPTR, COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetDisplayName: <span class="kw">fn</span>(COMPTR, COMPTR, COMPTR, <span class="kw-2">*mut </span>PSTR) -&gt; HRES,
-	<span class="kw">pub </span>ParseDisplayName: <span class="kw">fn</span>(COMPTR, COMPTR, COMPTR, PCSTR, <span class="kw-2">*mut </span>u32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>IsSystemMoniker: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IMoniker: <span class="string">"0000000f-0000-0000-c000-000000000046"</span>;
 	<span class="doccomment">/// [`IMoniker`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-imoniker)
-	/// COM interface over [`IMonikerVT`](crate::vt::IMonikerVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

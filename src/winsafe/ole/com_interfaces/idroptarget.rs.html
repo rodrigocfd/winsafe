@@ -166,21 +166,6 @@
 <a href="#166" id="166">166</a>
 <a href="#167" id="167">167</a>
 <a href="#168" id="168">168</a>
-<a href="#169" id="169">169</a>
-<a href="#170" id="170">170</a>
-<a href="#171" id="171">171</a>
-<a href="#172" id="172">172</a>
-<a href="#173" id="173">173</a>
-<a href="#174" id="174">174</a>
-<a href="#175" id="175">175</a>
-<a href="#176" id="176">176</a>
-<a href="#177" id="177">177</a>
-<a href="#178" id="178">178</a>
-<a href="#179" id="179">179</a>
-<a href="#180" id="180">180</a>
-<a href="#181" id="181">181</a>
-<a href="#182" id="182">182</a>
-<a href="#183" id="183">183</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::mem::ManuallyDrop;
@@ -189,23 +174,41 @@
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::ole::{privs::<span class="kw-2">*</span>, vts::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
 
-<span class="doccomment">/// [`IDropTarget`](crate::IDropTarget) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IDropTargetVT {
-	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
-	<span class="kw">pub </span>DragEnter: <span class="kw">fn</span>(COMPTR, COMPTR, u32, u64, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>DragOver: <span class="kw">fn</span>(COMPTR, u32, u64, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>DragLeave: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Drop: <span class="kw">fn</span>(COMPTR, COMPTR, u32, u64, <span class="kw-2">*mut </span>u32) -&gt; HRES,
+<span class="macro">com_interface_custom!</span> { IDropTarget, IDropTargetImpl: <span class="string">"00000122-0000-0000-c000-000000000046"</span>;
+	<span class="doccomment">/// [`IDropTarget`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nn-oleidl-idroptarget)
+	/// COM interface.
+	///
+	/// Automatically calls
+	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
+	/// when the object goes out of scope.
+</span>}
+
+<span class="kw">impl </span>IDropTarget {
+	<span class="macro">fn_com_closure!</span> { DragEnter: Fn(<span class="kw-2">&amp;</span>IDataObject, co::MK, POINT, co::DROPEFFECT) -&gt; HrResult&lt;co::DROPEFFECT&gt;;
+		<span class="doccomment">/// [`IDropTarget::DragEnter`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragenter)
+		/// method.
+	</span>}
+
+	<span class="macro">fn_com_closure!</span> { DragLeave: Fn() -&gt; HrResult&lt;()&gt;;
+		<span class="doccomment">/// [`IDropTarget::DragLeave`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragleave)
+		/// method.
+	</span>}
+
+	<span class="macro">fn_com_closure!</span> { DragOver: Fn(co::MK, POINT, co::DROPEFFECT) -&gt; HrResult&lt;co::DROPEFFECT&gt;;
+		<span class="doccomment">/// [`IDropTarget::DragOver`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragover)
+		/// method.
+	</span>}
+
+	<span class="macro">fn_com_closure!</span> { Drop: Fn(<span class="kw-2">&amp;</span>IDataObject, co::MK, POINT, co::DROPEFFECT) -&gt; HrResult&lt;co::DROPEFFECT&gt;;
+		<span class="doccomment">/// [`IDropTarget::Drop`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-drop)
+		/// method.
+	</span>}
 }
 
-<span class="comment">//------------------------------------------------------------------------------
-
-</span><span class="attr">#[repr(C)]
+<span class="attr">#[repr(C)]
 </span><span class="kw">pub struct </span>IDropTargetImpl {
 	vt: IDropTargetVT,
 	counter: AtomicU32,
@@ -330,38 +333,5 @@
 			<span class="prelude-val">Err</span>(e) =&gt; e.raw(),
 		}
 	}
-}
-
-<span class="comment">//------------------------------------------------------------------------------
-
-</span><span class="macro">com_interface_custom!</span> { IDropTarget, IDropTargetImpl: <span class="string">"00000122-0000-0000-c000-000000000046"</span>;
-	<span class="doccomment">/// [`IDropTarget`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nn-oleidl-idroptarget)
-	/// COM interface over [`IDropTargetVT`](crate::vt::IDropTargetVT).
-	///
-	/// Automatically calls
-	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
-	/// when the object goes out of scope.
-</span>}
-
-<span class="kw">impl </span>IDropTarget {
-	<span class="macro">fn_com_closure!</span> { DragEnter: Fn(<span class="kw-2">&amp;</span>IDataObject, co::MK, POINT, co::DROPEFFECT) -&gt; HrResult&lt;co::DROPEFFECT&gt;;
-		<span class="doccomment">/// [`IDropTarget::DragEnter`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragenter)
-		/// method.
-	</span>}
-
-	<span class="macro">fn_com_closure!</span> { DragLeave: Fn() -&gt; HrResult&lt;()&gt;;
-		<span class="doccomment">/// [`IDropTarget::DragLeave`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragleave)
-		/// method.
-	</span>}
-
-	<span class="macro">fn_com_closure!</span> { DragOver: Fn(co::MK, POINT, co::DROPEFFECT) -&gt; HrResult&lt;co::DROPEFFECT&gt;;
-		<span class="doccomment">/// [`IDropTarget::DragOver`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragover)
-		/// method.
-	</span>}
-
-	<span class="macro">fn_com_closure!</span> { Drop: Fn(<span class="kw-2">&amp;</span>IDataObject, co::MK, POINT, co::DROPEFFECT) -&gt; HrResult&lt;co::DROPEFFECT&gt;;
-		<span class="doccomment">/// [`IDropTarget::Drop`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-drop)
-		/// method.
-	</span>}
 }
 </code></pre></div></section></main></body></html>

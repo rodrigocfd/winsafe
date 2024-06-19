@@ -52,41 +52,15 @@
 <a href="#52" id="52">52</a>
 <a href="#53" id="53">53</a>
 <a href="#54" id="54">54</a>
-<a href="#55" id="55">55</a>
-<a href="#56" id="56">56</a>
-<a href="#57" id="57">57</a>
-<a href="#58" id="58">58</a>
-<a href="#59" id="59">59</a>
-<a href="#60" id="60">60</a>
-<a href="#61" id="61">61</a>
-<a href="#62" id="62">62</a>
-<a href="#63" id="63">63</a>
-<a href="#64" id="64">64</a>
-<a href="#65" id="65">65</a>
-<a href="#66" id="66">66</a>
-<a href="#67" id="67">67</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::ole::{privs::<span class="kw-2">*</span>, vts::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IAdviseSink`](crate::IAdviseSink) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IAdviseSinkVT {
-	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
-	<span class="kw">pub </span>OnDataChange: <span class="kw">fn</span>(COMPTR, PVOID, PVOID),
-	<span class="kw">pub </span>OnViewChange: <span class="kw">fn</span>(COMPTR, u32, i32),
-	<span class="kw">pub </span>OnRename: <span class="kw">fn</span>(COMPTR, COMPTR),
-	<span class="kw">pub </span>OnSave: <span class="kw">fn</span>(COMPTR),
-	<span class="kw">pub </span>OnClose: <span class="kw">fn</span>(COMPTR),
-}
 
 <span class="macro">com_interface!</span> { IAdviseSink: <span class="string">"0000010f-0000-0000-c000-000000000046"</span>;
 	<span class="doccomment">/// [`IAdviseSink`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-iadvisesink)
-	/// COM interface over [`IAdviseSinkVT`](crate::vt::IAdviseSinkVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

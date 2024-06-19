@@ -193,50 +193,18 @@
 <a href="#193" id="193">193</a>
 <a href="#194" id="194">194</a>
 <a href="#195" id="195">195</a>
-<a href="#196" id="196">196</a>
-<a href="#197" id="197">197</a>
-<a href="#198" id="198">198</a>
-<a href="#199" id="199">199</a>
-<a href="#200" id="200">200</a>
-<a href="#201" id="201">201</a>
-<a href="#202" id="202">202</a>
-<a href="#203" id="203">203</a>
-<a href="#204" id="204">204</a>
-<a href="#205" id="205">205</a>
-<a href="#206" id="206">206</a>
-<a href="#207" id="207">207</a>
-<a href="#208" id="208">208</a>
-<a href="#209" id="209">209</a>
-<a href="#210" id="210">210</a>
-<a href="#211" id="211">211</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::dxgi::vts::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IDXGISwapChain`](crate::IDXGISwapChain) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IDXGISwapChainVT {
-	<span class="kw">pub </span>IDXGIDeviceSubObjectVT: IDXGIDeviceSubObjectVT,
-	<span class="kw">pub </span>Present: <span class="kw">fn</span>(COMPTR, u32, u32) -&gt; HRES,
-	<span class="kw">pub </span>GetBuffer: <span class="kw">fn</span>(COMPTR, u32, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>SetFullscreenState: <span class="kw">fn</span>(COMPTR, BOOL, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetFullscreenState: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>BOOL, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetDesc: <span class="kw">fn</span>(COMPTR, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>ResizeBuffers: <span class="kw">fn</span>(COMPTR, u32, u32, u32, u32, u32) -&gt; HRES,
-	<span class="kw">pub </span>ResizeTarget: <span class="kw">fn</span>(COMPTR, PCVOID) -&gt; HRES,
-	<span class="kw">pub </span>GetContainingOutput: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetFrameStatistics: <span class="kw">fn</span>(COMPTR, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>GetLastPresentCount: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IDXGISwapChain: <span class="string">"310d36a0-d2e7-4c0a-aa04-6a9d23b8886a"</span>;
 	<span class="doccomment">/// [`IDXGISwapChain`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgiswapchain)
-	/// COM interface over [`IDXGISwapChainVT`](crate::vt::IDXGISwapChainVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

@@ -194,55 +194,17 @@
 <a href="#194" id="194">194</a>
 <a href="#195" id="195">195</a>
 <a href="#196" id="196">196</a>
-<a href="#197" id="197">197</a>
-<a href="#198" id="198">198</a>
-<a href="#199" id="199">199</a>
-<a href="#200" id="200">200</a>
-<a href="#201" id="201">201</a>
-<a href="#202" id="202">202</a>
-<a href="#203" id="203">203</a>
-<a href="#204" id="204">204</a>
-<a href="#205" id="205">205</a>
-<a href="#206" id="206">206</a>
-<a href="#207" id="207">207</a>
-<a href="#208" id="208">208</a>
-<a href="#209" id="209">209</a>
-<a href="#210" id="210">210</a>
-<a href="#211" id="211">211</a>
-<a href="#212" id="212">212</a>
-<a href="#213" id="213">213</a>
-<a href="#214" id="214">214</a>
-<a href="#215" id="215">215</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`ITaskbarList3`](crate::ITaskbarList3) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>ITaskbarList3VT {
-	<span class="kw">pub </span>ITaskbarList2VT: ITaskbarList2VT,
-	<span class="kw">pub </span>SetProgressValue: <span class="kw">fn</span>(COMPTR, HANDLE, u64, u64) -&gt; HRES,
-	<span class="kw">pub </span>SetProgressState: <span class="kw">fn</span>(COMPTR, HANDLE, u32) -&gt; HRES,
-	<span class="kw">pub </span>RegisterTab: <span class="kw">fn</span>(COMPTR, HANDLE, HANDLE) -&gt; HRES,
-	<span class="kw">pub </span>UnregisterTab: <span class="kw">fn</span>(COMPTR, HANDLE) -&gt; HRES,
-	<span class="kw">pub </span>SetTabOrder: <span class="kw">fn</span>(COMPTR, HANDLE, HANDLE) -&gt; HRES,
-	<span class="kw">pub </span>SetTabActive: <span class="kw">fn</span>(COMPTR, HANDLE, HANDLE, u32) -&gt; HRES,
-	<span class="kw">pub </span>ThumbBarAddButtons: <span class="kw">fn</span>(COMPTR, HANDLE, u32, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>ThumbBarUpdateButtons: <span class="kw">fn</span>(COMPTR, HANDLE, u32, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>ThumbBarSetImageList: <span class="kw">fn</span>(COMPTR, HANDLE, HANDLE) -&gt; HRES,
-	<span class="kw">pub </span>SetOverlayIcon: <span class="kw">fn</span>(COMPTR, HANDLE, HANDLE, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>SetThumbnailTooltip: <span class="kw">fn</span>(COMPTR, HANDLE, PCSTR) -&gt; HRES,
-	<span class="kw">pub </span>SetThumbnailClip: <span class="kw">fn</span>(COMPTR, HANDLE, PVOID) -&gt; HRES,
-}
+<span class="kw">use </span><span class="kw">crate</span>::shell::vts::<span class="kw-2">*</span>;
 
 <span class="macro">com_interface!</span> { ITaskbarList3: <span class="string">"ea1afb91-9e28-4b86-90e9-9e9f8a5eefaf"</span>;
 	<span class="doccomment">/// [`ITaskbarList3`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-itaskbarlist3)
-	/// COM interface over [`ITaskbarList3VT`](crate::vt::ITaskbarList3VT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

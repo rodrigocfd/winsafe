@@ -62,36 +62,16 @@
 <a href="#62" id="62">62</a>
 <a href="#63" id="63">63</a>
 <a href="#64" id="64">64</a>
-<a href="#65" id="65">65</a>
-<a href="#66" id="66">66</a>
-<a href="#67" id="67">67</a>
-<a href="#68" id="68">68</a>
-<a href="#69" id="69">69</a>
-<a href="#70" id="70">70</a>
-<a href="#71" id="71">71</a>
-<a href="#72" id="72">72</a>
-<a href="#73" id="73">73</a>
-<a href="#74" id="74">74</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::kernel::privs::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::ole::{privs::<span class="kw-2">*</span>, vts::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`ISequentialStream`](crate::ISequentialStream) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>ISequentialStreamVT {
-	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
-	<span class="kw">pub </span>Read: <span class="kw">fn</span>(COMPTR, PVOID, u32, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>Write: <span class="kw">fn</span>(COMPTR, PCVOID, u32, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { ISequentialStream: <span class="string">"0c733a30-2a1c-11ce-ade5-00aa0044773d"</span>;
 	<span class="doccomment">/// [`ISequentialStream`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-isequentialstream)
-	/// COM interface over [`ISequentialStreamVT`](crate::vt::ISequentialStreamVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

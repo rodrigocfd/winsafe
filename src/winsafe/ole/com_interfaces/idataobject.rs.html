@@ -70,50 +70,16 @@
 <a href="#70" id="70">70</a>
 <a href="#71" id="71">71</a>
 <a href="#72" id="72">72</a>
-<a href="#73" id="73">73</a>
-<a href="#74" id="74">74</a>
-<a href="#75" id="75">75</a>
-<a href="#76" id="76">76</a>
-<a href="#77" id="77">77</a>
-<a href="#78" id="78">78</a>
-<a href="#79" id="79">79</a>
-<a href="#80" id="80">80</a>
-<a href="#81" id="81">81</a>
-<a href="#82" id="82">82</a>
-<a href="#83" id="83">83</a>
-<a href="#84" id="84">84</a>
-<a href="#85" id="85">85</a>
-<a href="#86" id="86">86</a>
-<a href="#87" id="87">87</a>
-<a href="#88" id="88">88</a>
-<a href="#89" id="89">89</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::ole::{privs::<span class="kw-2">*</span>, vts::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IDataObject`](crate::IDataObject) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IDataObjectVT {
-	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
-	<span class="kw">pub </span>GetData: <span class="kw">fn</span>(COMPTR, PVOID, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>GetDataHere: <span class="kw">fn</span>(COMPTR, PVOID, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>QueryGetData: <span class="kw">fn</span>(COMPTR, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>GetCanonicalFormatEtc: <span class="kw">fn</span>(COMPTR, PVOID, PVOID) -&gt; HRES,
-	<span class="kw">pub </span>SetData: <span class="kw">fn</span>(COMPTR, PVOID, PVOID, BOOL) -&gt; HRES,
-	<span class="kw">pub </span>EnumFormatEtc: <span class="kw">fn</span>(COMPTR, u32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>DAdvise: <span class="kw">fn</span>(COMPTR, PVOID, u32, COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>DUnadvise: <span class="kw">fn</span>(COMPTR, u32) -&gt; HRES,
-	<span class="kw">pub </span>EnumDAdvise: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IDataObject: <span class="string">"0000010e-0000-0000-c000-000000000046"</span>;
 	<span class="doccomment">/// [`IDataObject`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-idataobject)
-	/// COM interface over [`IDataObjectVT`](crate::vt::IDataObjectVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

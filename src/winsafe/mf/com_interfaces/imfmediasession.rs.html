@@ -153,51 +153,17 @@
 <a href="#153" id="153">153</a>
 <a href="#154" id="154">154</a>
 <a href="#155" id="155">155</a>
-<a href="#156" id="156">156</a>
-<a href="#157" id="157">157</a>
-<a href="#158" id="158">158</a>
-<a href="#159" id="159">159</a>
-<a href="#160" id="160">160</a>
-<a href="#161" id="161">161</a>
-<a href="#162" id="162">162</a>
-<a href="#163" id="163">163</a>
-<a href="#164" id="164">164</a>
-<a href="#165" id="165">165</a>
-<a href="#166" id="166">166</a>
-<a href="#167" id="167">167</a>
-<a href="#168" id="168">168</a>
-<a href="#169" id="169">169</a>
-<a href="#170" id="170">170</a>
-<a href="#171" id="171">171</a>
-<a href="#172" id="172">172</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::mf::vts::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IMFMediaSession`](crate::IMFMediaSession) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IMFMediaSessionVT {
-	<span class="kw">pub </span>IMFMediaEventGeneratorVT: IMFMediaEventGeneratorVT,
-	<span class="kw">pub </span>SetTopology: <span class="kw">fn</span>(COMPTR, u32, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>ClearTopologies: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Start: <span class="kw">fn</span>(COMPTR, PCVOID, PCVOID) -&gt; HRES,
-	<span class="kw">pub </span>Pause: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Stop: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Close: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>Shutdown: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetClock: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>GetSessionCapabilities: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>GetFullTopology: <span class="kw">fn</span>(COMPTR, u32, u64, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IMFMediaSession: <span class="string">"90377834-21d0-4dee-8214-ba2e3e6c1127"</span>;
 	<span class="doccomment">/// [`IMFMediaSession`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfmediasession)
-	/// COM interface over [`IMFMediaSessionVT`](crate::vt::IMFMediaSessionVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

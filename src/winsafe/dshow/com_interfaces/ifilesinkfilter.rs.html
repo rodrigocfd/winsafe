@@ -91,35 +91,17 @@
 <a href="#91" id="91">91</a>
 <a href="#92" id="92">92</a>
 <a href="#93" id="93">93</a>
-<a href="#94" id="94">94</a>
-<a href="#95" id="95">95</a>
-<a href="#96" id="96">96</a>
-<a href="#97" id="97">97</a>
-<a href="#98" id="98">98</a>
-<a href="#99" id="99">99</a>
-<a href="#100" id="100">100</a>
-<a href="#101" id="101">101</a>
-<a href="#102" id="102">102</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::dshow::vts::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IFileSinkFilter`](crate::IFileSinkFilter) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IFileSinkFilterVT {
-	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
-	<span class="kw">pub </span>SetFileName: <span class="kw">fn</span>(COMPTR, PCSTR, PCVOID) -&gt; HRES,
-	<span class="kw">pub </span>GetCurFile: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR, PVOID) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IFileSinkFilter: <span class="string">"a2104830-7c70-11cf-8bce-00aa00a3f1a6"</span>;
 	<span class="doccomment">/// [`IFileSinkFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nn-strmif-ifilesinkfilter)
-	/// COM interface over [`IFileSinkFilterVT`](crate::vt::IFileSinkFilterVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

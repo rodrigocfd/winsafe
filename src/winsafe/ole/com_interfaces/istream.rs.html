@@ -143,50 +143,16 @@
 <a href="#143" id="143">143</a>
 <a href="#144" id="144">144</a>
 <a href="#145" id="145">145</a>
-<a href="#146" id="146">146</a>
-<a href="#147" id="147">147</a>
-<a href="#148" id="148">148</a>
-<a href="#149" id="149">149</a>
-<a href="#150" id="150">150</a>
-<a href="#151" id="151">151</a>
-<a href="#152" id="152">152</a>
-<a href="#153" id="153">153</a>
-<a href="#154" id="154">154</a>
-<a href="#155" id="155">155</a>
-<a href="#156" id="156">156</a>
-<a href="#157" id="157">157</a>
-<a href="#158" id="158">158</a>
-<a href="#159" id="159">159</a>
-<a href="#160" id="160">160</a>
-<a href="#161" id="161">161</a>
-<a href="#162" id="162">162</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::ole::{privs::<span class="kw-2">*</span>, vts::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IStream`](crate::IStream) virtual table.
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IStreamVT {
-	<span class="kw">pub </span>ISequentialStreamVT: ISequentialStreamVT,
-	<span class="kw">pub </span>Seek: <span class="kw">fn</span>(COMPTR, i64, u32, <span class="kw-2">*mut </span>u64) -&gt; HRES,
-	<span class="kw">pub </span>SetSize: <span class="kw">fn</span>(COMPTR, u64) -&gt; HRES,
-	<span class="kw">pub </span>CopyTo: <span class="kw">fn</span>(COMPTR, COMPTR, u64, <span class="kw-2">*mut </span>u64, <span class="kw-2">*mut </span>u64) -&gt; HRES,
-	<span class="kw">pub </span>Commit: <span class="kw">fn</span>(COMPTR, u32)-&gt; HRES,
-	<span class="kw">pub </span>Revert: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>LockRegion: <span class="kw">fn</span>(COMPTR, u64, u64, u32) -&gt; HRES,
-	<span class="kw">pub </span>UnlockRegion: <span class="kw">fn</span>(COMPTR, u64, u64, u32) -&gt; HRES,
-	<span class="kw">pub </span>Stat: <span class="kw">fn</span>(COMPTR, PVOID, u32) -&gt; HRES,
-	<span class="kw">pub </span>Clone: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IStream: <span class="string">"0000000c-0000-0000-c000-000000000046"</span>;
 	<span class="doccomment">/// [`IStream`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nn-objidl-istream)
-	/// COM interface over [`IStreamVT`](crate::vt::IStreamVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)

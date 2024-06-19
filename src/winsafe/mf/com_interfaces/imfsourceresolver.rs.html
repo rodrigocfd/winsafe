@@ -52,29 +52,109 @@
 <a href="#52" id="52">52</a>
 <a href="#53" id="53">53</a>
 <a href="#54" id="54">54</a>
+<a href="#55" id="55">55</a>
+<a href="#56" id="56">56</a>
+<a href="#57" id="57">57</a>
+<a href="#58" id="58">58</a>
+<a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a>
+<a href="#62" id="62">62</a>
+<a href="#63" id="63">63</a>
+<a href="#64" id="64">64</a>
+<a href="#65" id="65">65</a>
+<a href="#66" id="66">66</a>
+<a href="#67" id="67">67</a>
+<a href="#68" id="68">68</a>
+<a href="#69" id="69">69</a>
+<a href="#70" id="70">70</a>
+<a href="#71" id="71">71</a>
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a>
+<a href="#75" id="75">75</a>
+<a href="#76" id="76">76</a>
+<a href="#77" id="77">77</a>
+<a href="#78" id="78">78</a>
+<a href="#79" id="79">79</a>
+<a href="#80" id="80">80</a>
+<a href="#81" id="81">81</a>
+<a href="#82" id="82">82</a>
+<a href="#83" id="83">83</a>
+<a href="#84" id="84">84</a>
+<a href="#85" id="85">85</a>
+<a href="#86" id="86">86</a>
+<a href="#87" id="87">87</a>
+<a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a>
+<a href="#107" id="107">107</a>
+<a href="#108" id="108">108</a>
+<a href="#109" id="109">109</a>
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a>
+<a href="#117" id="117">117</a>
+<a href="#118" id="118">118</a>
+<a href="#119" id="119">119</a>
+<a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
+<a href="#136" id="136">136</a>
+<a href="#137" id="137">137</a>
+<a href="#138" id="138">138</a>
+<a href="#139" id="139">139</a>
+<a href="#140" id="140">140</a>
+<a href="#141" id="141">141</a>
+<a href="#142" id="142">142</a>
+<a href="#143" id="143">143</a>
+<a href="#144" id="144">144</a>
+<a href="#145" id="145">145</a>
+<a href="#146" id="146">146</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
-</span><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+</span><span class="kw">use </span><span class="kw">crate</span>::co;
+<span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::mf::vts::<span class="kw-2">*</span>;
+<span class="kw">use </span><span class="kw">crate</span>::ole::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::vt::<span class="kw-2">*</span>;
-
-<span class="doccomment">/// [`IMFSourceResolver`](crate::IMFSourceResolver).
-</span><span class="attr">#[repr(C)]
-</span><span class="kw">pub struct </span>IMFSourceResolverVT {
-	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
-	<span class="kw">pub </span>CreateObjectFromURL: <span class="kw">fn</span>(COMPTR, PCSTR, u32, COMPTR, <span class="kw-2">*mut </span>u32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>CreateObjectFromByteStream: <span class="kw">fn</span>(COMPTR, COMPTR, PCSTR, u32, COMPTR, <span class="kw-2">*mut </span>u32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>BeginCreateObjectFromURL: <span class="kw">fn</span>(COMPTR, PCSTR, u32, COMPTR, <span class="kw-2">*mut </span>COMPTR, COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>EndCreateObjectFromURL: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>BeginCreateObjectFromByteStream: <span class="kw">fn</span>(COMPTR, COMPTR, PCSTR, u32, COMPTR, <span class="kw-2">*mut </span>COMPTR, COMPTR, COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>EndCreateObjectFromByteStream: <span class="kw">fn</span>(COMPTR, COMPTR, <span class="kw-2">*mut </span>u32, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
-	<span class="kw">pub </span>CancelObjectCreation: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
-}
 
 <span class="macro">com_interface!</span> { IMFSourceResolver: <span class="string">"fbe5a32d-a497-4b61-bb85-97b1a848a6e3"</span>;
 	<span class="doccomment">/// [`IMFSourceResolver`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nn-mfidl-imfsourceresolver)
-	/// COM interface over
-	/// [`IMFSourceResolverVT`](crate::vt::IMFSourceResolverVT).
+	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
@@ -104,6 +184,110 @@
 /// use winsafe::prelude::*;
 /// ```
 </span><span class="kw">pub trait </span>mf_IMFSourceResolver: ole_IUnknown {
+	<span class="doccomment">/// [`IMFSourceResolver::BeginCreateObjectFromURL`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfsourceresolver-begincreateobjectfromurl)
+	/// method.
+	</span><span class="kw">fn </span>BeginCreateObjectFromURL(<span class="kw-2">&amp;</span><span class="self">self</span>,
+		url: <span class="kw-2">&amp;</span>str,
+		flags: co::MF_RESOLUTION,
+		props: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>oleaut_IPropertyStore&gt;,
+		callback: <span class="kw-2">&amp;</span><span class="kw">impl </span>mf_IMFAsyncCallback,
+		state: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IUnknown&gt;,
+	) -&gt; HrResult&lt;IUnknown&gt;
+	{
+		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ IUnknown::null() };
+		ok_to_hrresult(
+			<span class="kw">unsafe </span>{
+				(vt::&lt;IMFSourceResolverVT&gt;(<span class="self">self</span>).BeginCreateObjectFromURL)(
+					<span class="self">self</span>.ptr(),
+					WString::from_str(url).as_ptr(),
+					flags.raw(),
+					props.map_or(std::ptr::null_mut(), |p| p.ptr()),
+					queried.as_mut(),
+					callback.ptr(),
+					state.map_or(std::ptr::null_mut(), |s| s.ptr()),
+				)
+			},
+		).map(|<span class="kw">_</span>| queried)
+	}
 
+	<span class="doccomment">/// [`IMFSourceResolver::CancelObjectCreation`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfsourceresolver-cancelobjectcreation)
+	/// method.
+	</span><span class="kw">fn </span>CancelObjectCreation(<span class="kw-2">&amp;</span><span class="self">self</span>, cookie: <span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IUnknown) -&gt; HrResult&lt;()&gt; {
+		ok_to_hrresult(
+			<span class="kw">unsafe </span>{
+				(vt::&lt;IMFSourceResolverVT&gt;(<span class="self">self</span>).CancelObjectCreation)(
+					<span class="self">self</span>.ptr(),
+					cookie.ptr(),
+				)
+			},
+		)
+	}
+
+	<span class="doccomment">/// [`IMFSourceResolver::CreateObjectFromURL`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfsourceresolver-createobjectfromurl)
+	/// method.
+	</span><span class="kw">fn </span>CreateObjectFromURL(<span class="kw-2">&amp;</span><span class="self">self</span>,
+		url: <span class="kw-2">&amp;</span>str,
+		flags: co::MF_RESOLUTION,
+		props: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>oleaut_IPropertyStore&gt;,
+	) -&gt; HrResult&lt;(co::MF_OBJECT, IUnknown)&gt;
+	{
+		<span class="kw">let </span><span class="kw-2">mut </span>obj_type = co::MF_OBJECT::default();
+		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ IUnknown::null() };
+
+		ok_to_hrresult(
+			<span class="kw">unsafe </span>{
+				(vt::&lt;IMFSourceResolverVT&gt;(<span class="self">self</span>).CreateObjectFromURL)(
+					<span class="self">self</span>.ptr(),
+					WString::from_str(url).as_ptr(),
+					flags.raw(),
+					props.map_or(std::ptr::null_mut(), |p| p.ptr()),
+					obj_type.as_mut(),
+					queried.as_mut(),
+				)
+			},
+		).map(|<span class="kw">_</span>| (obj_type, queried))
+	}
+
+	<span class="doccomment">/// [`IMFSourceResolver::EndCreateObjectFromByteStream`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfsourceresolver-endcreateobjectfrombytestream)
+	/// method.
+	</span><span class="kw">fn </span>EndCreateObjectFromByteStream(<span class="kw-2">&amp;</span><span class="self">self</span>,
+		result: <span class="kw-2">&amp;</span><span class="kw">impl </span>mf_IMFAsyncResult,
+	) -&gt; HrResult&lt;(co::MF_OBJECT, IUnknown)&gt;
+	{
+		<span class="kw">let </span><span class="kw-2">mut </span>obj_type = co::MF_OBJECT::default();
+		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ IUnknown::null() };
+
+		ok_to_hrresult(
+			<span class="kw">unsafe </span>{
+				(vt::&lt;IMFSourceResolverVT&gt;(<span class="self">self</span>).EndCreateObjectFromByteStream)(
+					<span class="self">self</span>.ptr(),
+					result.ptr(),
+					obj_type.as_mut(),
+					queried.as_mut(),
+				)
+			},
+		).map(|<span class="kw">_</span>| (obj_type, queried))
+	}
+
+	<span class="doccomment">/// [`IMFSourceResolver::EndCreateObjectFromURL`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfsourceresolver-endcreateobjectfromurl)
+	/// method.
+	</span><span class="kw">fn </span>EndCreateObjectFromURL(<span class="kw-2">&amp;</span><span class="self">self</span>,
+		result: <span class="kw-2">&amp;</span><span class="kw">impl </span>mf_IMFAsyncResult,
+	) -&gt; HrResult&lt;(co::MF_OBJECT, IUnknown)&gt;
+	{
+		<span class="kw">let </span><span class="kw-2">mut </span>obj_type = co::MF_OBJECT::default();
+		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ IUnknown::null() };
+
+		ok_to_hrresult(
+			<span class="kw">unsafe </span>{
+				(vt::&lt;IMFSourceResolverVT&gt;(<span class="self">self</span>).EndCreateObjectFromURL)(
+					<span class="self">self</span>.ptr(),
+					result.ptr(),
+					obj_type.as_mut(),
+					queried.as_mut(),
+				)
+			},
+		).map(|<span class="kw">_</span>| (obj_type, queried))
+	}
 }
 </code></pre></div></section></main></body></html>
