@@ -84,6 +84,7 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 
 	/// [`IDXGIAdapter::GetDesc`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiadapter-getdesc)
 	/// method.
+	#[must_use]
 	fn GetDesc(&self) -> HrResult<DXGI_ADAPTER_DESC> {
 		let mut desc = DXGI_ADAPTER_DESC::default();
 		ok_to_hrresult(

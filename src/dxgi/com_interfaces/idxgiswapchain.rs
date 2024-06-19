@@ -45,6 +45,25 @@ impl dxgi_IDXGISwapChain for IDXGISwapChain {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait dxgi_IDXGISwapChain: dxgi_IDXGIDeviceSubObject {
+	/// [`IDXGISwapChain::GetBuffer`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-getbuffer)
+	/// method.
+	#[must_use]
+	fn GetBuffer<T>(&self, buffer_index: u32) -> HrResult<T>
+		where T: ole_IUnknown,
+	{
+		let mut queried = unsafe { T::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDXGISwapChainVT>(self).GetBuffer)(
+					self.ptr(),
+					buffer_index,
+					&T::IID as *const _ as _,
+					queried.as_mut(),
+				)
+			},
+		).map(|_| queried)
+	}
+
 	fn_com_interface_get! { GetContainingOutput: IDXGISwapChainVT, IDXGIOutput;
 		/// [`IDXGISwapChain::GetContainingOutput`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-getcontainingoutput)
 		/// method.
