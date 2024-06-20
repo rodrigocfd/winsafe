@@ -118,6 +118,21 @@
 <a href="#118" id="118">118</a>
 <a href="#119" id="119">119</a>
 <a href="#120" id="120">120</a>
+<a href="#121" id="121">121</a>
+<a href="#122" id="122">122</a>
+<a href="#123" id="123">123</a>
+<a href="#124" id="124">124</a>
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a>
+<a href="#131" id="131">131</a>
+<a href="#132" id="132">132</a>
+<a href="#133" id="133">133</a>
+<a href="#134" id="134">134</a>
+<a href="#135" id="135">135</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -171,6 +186,21 @@
 				configuration.map_or(std::ptr::null_mut(), |c| c.ptr()),
 				queried.as_mut(),
 			)
+		},
+	).map(|<span class="kw">_</span>| queried)
+}
+
+<span class="doccomment">/// [`MFCreateMFByteStreamOnStream`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-mfcreatemfbytestreamonstream)
+/// function.
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>MFCreateMFByteStreamOnStream(
+	stream: <span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IStream,
+) -&gt; HrResult&lt;IMFByteStream&gt;
+{
+	<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ IMFByteStream::null() };
+	ok_to_hrresult(
+		<span class="kw">unsafe </span>{
+			ffi::MFCreateMFByteStreamOnStream(stream.ptr(), queried.as_mut())
 		},
 	).map(|<span class="kw">_</span>| queried)
 }

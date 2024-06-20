@@ -193,6 +193,26 @@
 <a href="#193" id="193">193</a>
 <a href="#194" id="194">194</a>
 <a href="#195" id="195">195</a>
+<a href="#196" id="196">196</a>
+<a href="#197" id="197">197</a>
+<a href="#198" id="198">198</a>
+<a href="#199" id="199">199</a>
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a>
+<a href="#213" id="213">213</a>
+<a href="#214" id="214">214</a>
+<a href="#215" id="215">215</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
@@ -248,6 +268,26 @@
 	<span class="kw">pub </span>GetCount: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
 	<span class="kw">pub </span>GetItemByIndex: <span class="kw">fn</span>(COMPTR, u32, PVOID, PVOID) -&gt; HRES,
 	<span class="kw">pub </span>CopyAllItems: <span class="kw">fn</span>(COMPTR, COMPTR) -&gt; HRES,
+}
+
+<span class="attr">#[repr(C)]
+</span><span class="kw">pub struct </span>IMFByteStreamVT {
+	<span class="kw">pub </span>IUnknownVT: IUnknownVT,
+	<span class="kw">pub </span>GetCapabilities: <span class="kw">fn </span>(COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
+	<span class="kw">pub </span>GetLength: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u64) -&gt; HRES,
+	<span class="kw">pub </span>SetLength: <span class="kw">fn</span>(COMPTR, u64) -&gt; HRES,
+	<span class="kw">pub </span>GetCurrentPosition: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u64) -&gt; HRES,
+	<span class="kw">pub </span>SetCurrentPosition: <span class="kw">fn</span>(COMPTR, u64) -&gt; HRES,
+	<span class="kw">pub </span>IsEndOfStream: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>BOOL) -&gt; HRES,
+	<span class="kw">pub </span>Read: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u8, u32, <span class="kw-2">*mut </span>u32) -&gt; HRES,
+	<span class="kw">pub </span>BeginRead: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u8, u32, COMPTR, COMPTR) -&gt; HRES,
+	<span class="kw">pub </span>EndRead: <span class="kw">fn</span>(COMPTR, COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
+	<span class="kw">pub </span>Write: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*const </span>u8, u32, <span class="kw-2">*mut </span>u32) -&gt; HRES,
+	<span class="kw">pub </span>BeginWrite: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*const </span>u8, u32, COMPTR, COMPTR) -&gt; HRES,
+	<span class="kw">pub </span>EndWrite: <span class="kw">fn</span>(COMPTR, COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
+	<span class="kw">pub </span>Seek: <span class="kw">fn</span>(COMPTR, u32, i64, u32, <span class="kw-2">*mut </span>u64) -&gt; HRES,
+	<span class="kw">pub </span>Flush: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
+	<span class="kw">pub </span>Close: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
 }
 
 <span class="attr">#[repr(C)]
