@@ -248,7 +248,7 @@
 	<span class="kw">pub </span>GetGUID: <span class="kw">fn</span>(COMPTR, COMPTR, PVOID) -&gt; HRES,
 	<span class="kw">pub </span>GetStringLength: <span class="kw">fn</span>(COMPTR, PCVOID, <span class="kw-2">*mut </span>u32) -&gt; HRES,
 	<span class="kw">pub </span>GetString: <span class="kw">fn</span>(COMPTR, PCVOID, PSTR, u32, <span class="kw-2">*mut </span>u32) -&gt; HRES,
-	<span class="kw">pub </span>GetAllocatedString: <span class="kw">fn</span>(COMPTR, PCVOID, PSTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
+	<span class="kw">pub </span>GetAllocatedString: <span class="kw">fn</span>(COMPTR, PCVOID, <span class="kw-2">*mut </span>PSTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
 	<span class="kw">pub </span>GetBlobSize: <span class="kw">fn</span>(COMPTR, PCVOID, <span class="kw-2">*mut </span>u32) -&gt; HRES,
 	<span class="kw">pub </span>GetBlob: <span class="kw">fn</span>(COMPTR, PCVOID, <span class="kw-2">*mut </span>u8, u32, <span class="kw-2">*mut </span>u32) -&gt; HRES,
 	<span class="kw">pub </span>GetAllocatedBlob: <span class="kw">fn</span>(COMPTR, PCVOID, <span class="kw-2">*mut *mut </span>u8, <span class="kw-2">*mut </span>u32) -&gt; HRES,
