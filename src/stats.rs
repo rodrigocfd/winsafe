@@ -156,11 +156,11 @@ impl Stats {
 
 		for line in contents.lines() {
 			if line.starts_with("com_interface! { ")
-					|| line.starts_with("com_interface_custom! { ") {
+					|| line.starts_with("com_interface_userdef! { ") {
 				self.com_interfaces += 1;
 			}
 
-			if line.starts_with("\tfn_com_closure! { ") {
+			if line.starts_with("\tfn_com_userdef_closure! { ") {
 				self.com_methods += 1;
 			}
 
