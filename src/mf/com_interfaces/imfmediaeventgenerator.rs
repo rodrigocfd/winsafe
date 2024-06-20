@@ -29,7 +29,7 @@ pub trait mf_IMFMediaEventGenerator: ole_IUnknown {
 	/// [`IMFMediaEventGenerator::BeginGetEvent`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfmediaeventgenerator-begingetevent)
 	/// method.
 	fn BeginGetEvent(&self,
-		callback: &impl mf_IMFAsyncCallback,
+		callback: &IMFAsyncCallback,
 		state: Option<&impl ole_IUnknown>,
 	) -> HrResult<()>
 	{
@@ -48,7 +48,7 @@ pub trait mf_IMFMediaEventGenerator: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn EndGetEvent(&self,
-		result: &impl mf_IMFAsyncResult,
+		result: &IMFAsyncResult,
 	) -> HrResult<IMFMediaEvent>
 	{
 		let mut queried = unsafe { IMFMediaEvent::null() };

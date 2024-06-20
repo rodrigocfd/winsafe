@@ -1,12 +1,16 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use std::mem::ManuallyDrop;
+use std::sync::atomic::AtomicU32;
+
 use crate::co;
 use crate::decl::*;
+use crate::kernel::ffi_types::*;
 use crate::mf::vts::*;
-use crate::ole::privs::*;
+use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 
-com_interface! { IMFAsyncCallback: "a27003cf-2354-4f2a-8d6a-ab7cff15437e";
+com_interface_userdef! { IMFAsyncCallback, IMFAsyncCallbackImpl: "a27003cf-2354-4f2a-8d6a-ab7cff15437e";
 	/// [`IMFAsyncCallback`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nn-mfobjects-imfasynccallback)
 	/// COM interface.
 	///
@@ -15,44 +19,71 @@ com_interface! { IMFAsyncCallback: "a27003cf-2354-4f2a-8d6a-ab7cff15437e";
 	/// when the object goes out of scope.
 }
 
-impl mf_IMFAsyncCallback for IMFAsyncCallback {}
-
-/// This trait is enabled with the `mf` feature, and provides methods for
-/// [`IMFAsyncCallback`](crate::IMFAsyncCallback).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait mf_IMFAsyncCallback: ole_IUnknown {
-	/// [`IMFAsyncCallback::GetParameters`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasynccallback-getparameters)
-	/// method.
-	///
-	/// Returns the flag and the ID of the work queue.
-	#[must_use]
-	fn GetParameters(&self) -> HrResult<(co::MFASYNC, u32)> {
-		let (mut flags, mut queue) = (co::MFASYNC::default(), u32::default());
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAsyncCallbackVT>(self).GetParameters)(
-					self.ptr(),
-					flags.as_mut(),
-					&mut queue,
-				)
-			},
-		).map(|_| (flags, queue))
+impl IMFAsyncCallback {
+	fn_com_userdef_closure! { GetParameters: Fn() -> HrResult<(co::MFASYNC, u32)>;
+		/// [`IMFAsyncCallback::GetParameters`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasynccallback-getparameters)
+		/// method.
 	}
 
-	/// [`IMFAsyncCallback::Invoke`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasynccallback-invoke)
-	/// method.
-	fn Invoke(&self, async_result: &impl mf_IMFAsyncResult) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAsyncCallbackVT>(self).Invoke)(
-					self.ptr(),
-					async_result.ptr(),
-				)
+	fn_com_userdef_closure! { Invoke: Fn(&IMFAsyncResult) -> HrResult<()>;
+		/// [`IMFAsyncCallback::Invoke`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasynccallback-invoke)
+		/// method.
+	}
+}
+
+#[repr(C)]
+pub struct IMFAsyncCallbackImpl {
+	vt: IMFAsyncCallbackVT,
+	counter: AtomicU32,
+	GetParameters: Option<Box<dyn Fn() -> HrResult<(co::MFASYNC, u32)>>>,
+	Invoke: Option<Box<dyn Fn(&IMFAsyncResult) -> HrResult<()>>>,
+}
+
+impl IMFAsyncCallbackImpl {
+	const fn new() -> Self {
+		Self {
+			vt: IMFAsyncCallbackVT {
+				IUnknownVT: IUnknownVT {
+					QueryInterface: Self::QueryInterface,
+					AddRef: Self::AddRef,
+					Release: Self::Release,
+				},
+				GetParameters: Self::GetParameters,
+				Invoke: Self::Invoke,
+			},
+			counter: AtomicU32::new(1),
+			GetParameters: None,
+			Invoke: None,
+		}
+	}
+
+	com_interface_userdef_iunknown_methods!(Self);
+
+	fn GetParameters(p: COMPTR, pdwFlags: *mut u32, pdwQueue: *mut u32) -> HRES {
+		let box_impl = box_impl::<Self>(p);
+		let ret = match &box_impl.GetParameters {
+			Some(func) => func(),
+			None => Ok((co::MFASYNC::default(), u32::default())),
+		};
+		match ret {
+			Ok(ret) => unsafe {
+				*pdwFlags = ret.0.raw();
+				*pdwQueue = ret.1;
+				co::HRESULT::S_OK.raw()
+			},
+			Err(e) => e.raw(),
+		}
+	}
+
+	fn Invoke(p: COMPTR, pAsyncResult: COMPTR) -> HRES {
+		let box_impl = box_impl::<Self>(p);
+		hrresult_to_hres(
+			&match &box_impl.Invoke {
+				Some(func) => {
+					let ar = ManuallyDrop::new(unsafe { IMFAsyncResult::from_ptr(pAsyncResult) });
+					func(&ar)
+				},
+				None => Ok(()),
 			},
 		)
 	}

@@ -47,7 +47,7 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 		url: Option<&str>,
 		flags: co::MF_RESOLUTION,
 		props: Option<&impl oleaut_IPropertyStore>,
-		callback: &impl mf_IMFAsyncCallback,
+		callback: &IMFAsyncCallback,
 		state: Option<&impl ole_IUnknown>,
 	) -> HrResult<IUnknown>
 	{
@@ -76,7 +76,7 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 		url: &str,
 		flags: co::MF_RESOLUTION,
 		props: Option<&impl oleaut_IPropertyStore>,
-		callback: &impl mf_IMFAsyncCallback,
+		callback: &IMFAsyncCallback,
 		state: Option<&impl ole_IUnknown>,
 	) -> HrResult<IUnknown>
 	{

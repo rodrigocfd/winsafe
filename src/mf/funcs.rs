@@ -11,7 +11,7 @@ use crate::prelude::*;
 #[must_use]
 pub fn MFCreateAsyncResult(
 	object: Option<&impl ole_IUnknown>,
-	callback: &impl mf_IMFAsyncCallback,
+	callback: &IMFAsyncCallback,
 	state: Option<&impl ole_IUnknown>,
 ) -> HrResult<IMFAsyncResult>
 {

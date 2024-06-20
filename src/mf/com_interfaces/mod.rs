@@ -33,7 +33,6 @@ pub mod decl {
 }
 
 pub mod traits {
-	pub use super::imfasynccallback::mf_IMFAsyncCallback;
 	pub use super::imfasyncresult::mf_IMFAsyncResult;
 	pub use super::imfattributes::mf_IMFAttributes;
 	pub use super::imfbytestream::mf_IMFByteStream;

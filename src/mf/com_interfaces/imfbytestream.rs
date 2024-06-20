@@ -48,7 +48,7 @@ pub trait mf_IMFByteStream: ole_IUnknown {
 	/// method.
 	fn BeginRead(&self,
 		buffer: &mut [u8],
-		callback: &impl mf_IMFAsyncCallback,
+		callback: &IMFAsyncCallback,
 		state: Option<&impl ole_IUnknown>,
 	) -> HrResult<()>
 	{
@@ -69,7 +69,7 @@ pub trait mf_IMFByteStream: ole_IUnknown {
 	/// method.
 	fn BeginWrite(&self,
 		buffer: &[u8],
-		callback: &impl mf_IMFAsyncCallback,
+		callback: &IMFAsyncCallback,
 		state: Option<&impl ole_IUnknown>,
 	) -> HrResult<()>
 	{
