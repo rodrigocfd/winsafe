@@ -159,7 +159,7 @@
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>MFCreateAsyncResult(
 	object: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IUnknown&gt;,
-	callback: <span class="kw-2">&amp;</span><span class="kw">impl </span>mf_IMFAsyncCallback,
+	callback: <span class="kw-2">&amp;</span>IMFAsyncCallback,
 	state: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IUnknown&gt;,
 ) -&gt; HrResult&lt;IMFAsyncResult&gt;
 {

@@ -305,7 +305,7 @@
 	/// method.
 	</span><span class="kw">fn </span>BeginRead(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		buffer: <span class="kw-2">&amp;mut </span>[u8],
-		callback: <span class="kw-2">&amp;</span><span class="kw">impl </span>mf_IMFAsyncCallback,
+		callback: <span class="kw-2">&amp;</span>IMFAsyncCallback,
 		state: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IUnknown&gt;,
 	) -&gt; HrResult&lt;()&gt;
 	{
@@ -326,7 +326,7 @@
 	/// method.
 	</span><span class="kw">fn </span>BeginWrite(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		buffer: <span class="kw-2">&amp;</span>[u8],
-		callback: <span class="kw-2">&amp;</span><span class="kw">impl </span>mf_IMFAsyncCallback,
+		callback: <span class="kw-2">&amp;</span>IMFAsyncCallback,
 		state: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IUnknown&gt;,
 	) -&gt; HrResult&lt;()&gt;
 	{

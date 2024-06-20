@@ -3,13 +3,13 @@
     fn <a href="#method.BeginRead" class="fn">BeginRead</a>(
         &amp;self,
         buffer: &amp;mut [<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>],
-        callback: &amp;impl <a class="trait" href="trait.mf_IMFAsyncCallback.html" title="trait winsafe::prelude::mf_IMFAsyncCallback">mf_IMFAsyncCallback</a>,
+        callback: &amp;<a class="struct" href="../struct.IMFAsyncCallback.html" title="struct winsafe::IMFAsyncCallback">IMFAsyncCallback</a>,
         state: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;impl <a class="trait" href="trait.ole_IUnknown.html" title="trait winsafe::prelude::ole_IUnknown">ole_IUnknown</a>&gt;,
     ) -&gt; <a class="type" href="../type.HrResult.html" title="type winsafe::HrResult">HrResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; { ... }
 <span class="item-spacer"></span>    fn <a href="#method.BeginWrite" class="fn">BeginWrite</a>(
         &amp;self,
         buffer: &amp;[<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>],
-        callback: &amp;impl <a class="trait" href="trait.mf_IMFAsyncCallback.html" title="trait winsafe::prelude::mf_IMFAsyncCallback">mf_IMFAsyncCallback</a>,
+        callback: &amp;<a class="struct" href="../struct.IMFAsyncCallback.html" title="struct winsafe::IMFAsyncCallback">IMFAsyncCallback</a>,
         state: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;impl <a class="trait" href="trait.ole_IUnknown.html" title="trait winsafe::prelude::ole_IUnknown">ole_IUnknown</a>&gt;,
     ) -&gt; <a class="type" href="../type.HrResult.html" title="type winsafe::HrResult">HrResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; { ... }
 <span class="item-spacer"></span>    fn <a href="#method.Close" class="fn">Close</a>(&amp;self) -&gt; <a class="type" href="../type.HrResult.html" title="type winsafe::HrResult">HrResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; { ... }
@@ -38,14 +38,14 @@
 </div></details><h2 id="provided-methods" class="section-header">Provided Methods<a href="#provided-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="method.BeginRead" class="method"><a class="src rightside" href="../../src/winsafe/mf\com_interfaces/imfbytestream.rs.html#49-66">source</a><h4 class="code-header">fn <a href="#method.BeginRead" class="fn">BeginRead</a>(
     &amp;self,
     buffer: &amp;mut [<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>],
-    callback: &amp;impl <a class="trait" href="trait.mf_IMFAsyncCallback.html" title="trait winsafe::prelude::mf_IMFAsyncCallback">mf_IMFAsyncCallback</a>,
+    callback: &amp;<a class="struct" href="../struct.IMFAsyncCallback.html" title="struct winsafe::IMFAsyncCallback">IMFAsyncCallback</a>,
     state: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;impl <a class="trait" href="trait.ole_IUnknown.html" title="trait winsafe::prelude::ole_IUnknown">ole_IUnknown</a>&gt;,
 ) -&gt; <a class="type" href="../type.HrResult.html" title="type winsafe::HrResult">HrResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfbytestream-beginread"><code>IMFByteStream::BeginRead</code></a>
 method.</p>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.BeginWrite" class="method"><a class="src rightside" href="../../src/winsafe/mf\com_interfaces/imfbytestream.rs.html#70-87">source</a><h4 class="code-header">fn <a href="#method.BeginWrite" class="fn">BeginWrite</a>(
     &amp;self,
     buffer: &amp;[<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>],
-    callback: &amp;impl <a class="trait" href="trait.mf_IMFAsyncCallback.html" title="trait winsafe::prelude::mf_IMFAsyncCallback">mf_IMFAsyncCallback</a>,
+    callback: &amp;<a class="struct" href="../struct.IMFAsyncCallback.html" title="struct winsafe::IMFAsyncCallback">IMFAsyncCallback</a>,
     state: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;impl <a class="trait" href="trait.ole_IUnknown.html" title="trait winsafe::prelude::ole_IUnknown">ole_IUnknown</a>&gt;,
 ) -&gt; <a class="type" href="../type.HrResult.html" title="type winsafe::HrResult">HrResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfbytestream-beginwrite"><code>IMFByteStream::BeginWrite</code></a>
 method.</p>

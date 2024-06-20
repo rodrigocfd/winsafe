@@ -255,7 +255,7 @@
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::shell::vts::<span class="kw-2">*</span>;
 
-<span class="macro">com_interface_custom!</span> { IFileDialogEvents, IFileDialogEventsImpl: <span class="string">"973510db-7d7f-452b-8975-74a85828d354"</span>;
+<span class="macro">com_interface_userdef!</span> { IFileDialogEvents, IFileDialogEventsImpl: <span class="string">"973510db-7d7f-452b-8975-74a85828d354"</span>;
 	<span class="doccomment">/// [`IFileDialogEvents`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialogevents)
 	/// COM interface.
 	///
@@ -293,37 +293,37 @@
 </span>}
 
 <span class="kw">impl </span>IFileDialogEvents {
-	<span class="macro">fn_com_closure!</span> { OnFileOk: Fn(<span class="kw-2">&amp;</span>IFileDialog) -&gt; HrResult&lt;()&gt;;
+	<span class="macro">fn_com_userdef_closure!</span> { OnFileOk: Fn(<span class="kw-2">&amp;</span>IFileDialog) -&gt; HrResult&lt;()&gt;;
 		<span class="doccomment">/// [`IFileDialogEvents::OnFileOk`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfileok)
 		/// method.
 	</span>}
 
-	<span class="macro">fn_com_closure!</span> { OnFolderChange: Fn(<span class="kw-2">&amp;</span>IFileDialog) -&gt; HrResult&lt;()&gt;;
+	<span class="macro">fn_com_userdef_closure!</span> { OnFolderChange: Fn(<span class="kw-2">&amp;</span>IFileDialog) -&gt; HrResult&lt;()&gt;;
 		<span class="doccomment">/// [`IFileDialogEvents::OnFolderChange`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfolderchange)
 		/// method.
 	</span>}
 
-	<span class="macro">fn_com_closure!</span> { OnFolderChanging: Fn(<span class="kw-2">&amp;</span>IFileDialog, <span class="kw-2">&amp;</span>IShellItem) -&gt; HrResult&lt;()&gt;;
+	<span class="macro">fn_com_userdef_closure!</span> { OnFolderChanging: Fn(<span class="kw-2">&amp;</span>IFileDialog, <span class="kw-2">&amp;</span>IShellItem) -&gt; HrResult&lt;()&gt;;
 		<span class="doccomment">/// [`IFileDialogEvents::OnFolderChanging`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfolderchanging)
 		/// method.
 	</span>}
 
-	<span class="macro">fn_com_closure!</span> { OnOverwrite: Fn(<span class="kw-2">&amp;</span>IFileDialog, <span class="kw-2">&amp;</span>IShellItem) -&gt; HrResult&lt;co::FDEOR&gt;;
+	<span class="macro">fn_com_userdef_closure!</span> { OnOverwrite: Fn(<span class="kw-2">&amp;</span>IFileDialog, <span class="kw-2">&amp;</span>IShellItem) -&gt; HrResult&lt;co::FDEOR&gt;;
 		<span class="doccomment">/// [`IFileDialogEvents::OnOverwrite`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onoverwrite)
 		/// method.
 	</span>}
 
-	<span class="macro">fn_com_closure!</span> { OnSelectionChange: Fn(<span class="kw-2">&amp;</span>IFileDialog) -&gt; HrResult&lt;()&gt;;
+	<span class="macro">fn_com_userdef_closure!</span> { OnSelectionChange: Fn(<span class="kw-2">&amp;</span>IFileDialog) -&gt; HrResult&lt;()&gt;;
 		<span class="doccomment">/// [`IFileDialogEvents::OnSelectionChange`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onselectionchange)
 		/// method.
 	</span>}
 
-	<span class="macro">fn_com_closure!</span> { OnShareViolation: Fn(<span class="kw-2">&amp;</span>IFileDialog, <span class="kw-2">&amp;</span>IShellItem) -&gt; HrResult&lt;co::FDESVR&gt;;
+	<span class="macro">fn_com_userdef_closure!</span> { OnShareViolation: Fn(<span class="kw-2">&amp;</span>IFileDialog, <span class="kw-2">&amp;</span>IShellItem) -&gt; HrResult&lt;co::FDESVR&gt;;
 		<span class="doccomment">/// [`IFileDialogEvents::OnShareViolation`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onshareviolation)
 		/// method.
 	</span>}
 
-	<span class="macro">fn_com_closure!</span> { OnTypeChange: Fn(<span class="kw-2">&amp;</span>IFileDialog) -&gt; HrResult&lt;()&gt;;
+	<span class="macro">fn_com_userdef_closure!</span> { OnTypeChange: Fn(<span class="kw-2">&amp;</span>IFileDialog) -&gt; HrResult&lt;()&gt;;
 		<span class="doccomment">/// [`IFileDialogEvents::OnTypeChange`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-ontypechange)
 		/// method.
 	</span>}
@@ -370,7 +370,7 @@
 		}
 	}
 
-	<span class="macro">com_interface_custom_iunknown_methods!</span>(<span class="self">Self</span>);
+	<span class="macro">com_interface_userdef_iunknown_methods!</span>(<span class="self">Self</span>);
 
 	<span class="kw">fn </span>OnFileOk(p: COMPTR, pfd: COMPTR) -&gt; HRES {
 		<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);

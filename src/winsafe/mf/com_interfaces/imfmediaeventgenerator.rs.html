@@ -135,7 +135,7 @@
 	<span class="doccomment">/// [`IMFMediaEventGenerator::BeginGetEvent`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfmediaeventgenerator-begingetevent)
 	/// method.
 	</span><span class="kw">fn </span>BeginGetEvent(<span class="kw-2">&amp;</span><span class="self">self</span>,
-		callback: <span class="kw-2">&amp;</span><span class="kw">impl </span>mf_IMFAsyncCallback,
+		callback: <span class="kw-2">&amp;</span>IMFAsyncCallback,
 		state: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IUnknown&gt;,
 	) -&gt; HrResult&lt;()&gt;
 	{
@@ -154,7 +154,7 @@
 	/// method.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>EndGetEvent(<span class="kw-2">&amp;</span><span class="self">self</span>,
-		result: <span class="kw-2">&amp;</span><span class="kw">impl </span>mf_IMFAsyncResult,
+		result: <span class="kw-2">&amp;</span>IMFAsyncResult,
 	) -&gt; HrResult&lt;IMFMediaEvent&gt;
 	{
 		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ IMFMediaEvent::null() };
