@@ -126,6 +126,18 @@ const_ordinary! { ME: u32;
 	DeviceThermalStateChanged 950
 }
 
+const_ordinary! { MF_ATTRIBUTES_MATCH: u32;
+	/// [`MF_ATTRIBUTES_MATCH_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/ne-mfobjects-mf_attributes_match_type)
+	/// enumeration (`u32`).
+	=>
+	=>
+	OUR_ITEMS 0
+	THEIR_ITEMS 1
+	ALL_ITEMS 2
+	INTERSECTION 3
+	SMALLER 4
+}
+
 const_ordinary! { MF_EVENT_FLAG: u32;
 	/// [`IMFMediaEvent::GetType`](crate::prelude::mf_IMFMediaEvent::GetType)
 	/// return type (`u32`).

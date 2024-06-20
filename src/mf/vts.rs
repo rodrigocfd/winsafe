@@ -33,7 +33,7 @@ pub struct IMFAttributesVT {
 	pub GetGUID: fn(COMPTR, COMPTR, PVOID) -> HRES,
 	pub GetStringLength: fn(COMPTR, PCVOID, *mut u32) -> HRES,
 	pub GetString: fn(COMPTR, PCVOID, PSTR, u32, *mut u32) -> HRES,
-	pub GetAllocatedString: fn(COMPTR, PCVOID, PSTR, *mut u32) -> HRES,
+	pub GetAllocatedString: fn(COMPTR, PCVOID, *mut PSTR, *mut u32) -> HRES,
 	pub GetBlobSize: fn(COMPTR, PCVOID, *mut u32) -> HRES,
 	pub GetBlob: fn(COMPTR, PCVOID, *mut u8, u32, *mut u32) -> HRES,
 	pub GetAllocatedBlob: fn(COMPTR, PCVOID, *mut *mut u8, *mut u32) -> HRES,
