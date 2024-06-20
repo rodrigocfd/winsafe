@@ -55,6 +55,34 @@ pub fn MFCreateMediaSession(
 	).map(|_| queried)
 }
 
+/// [`MFCreateMFByteStreamOnStream`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-mfcreatemfbytestreamonstream)
+/// function.
+///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let raw_data: Vec<u8>; // initialized somewhere
+/// # let raw_data = Vec::<u8>::new();
+///
+/// let stream = w::SHCreateMemStream(&raw_data)?;
+/// let byte_stream = w::MFCreateMFByteStreamOnStream(&stream)?;
+/// # w::HrResult::Ok(())
+/// ```
+#[must_use]
+pub fn MFCreateMFByteStreamOnStream(
+	stream: &impl ole_IStream,
+) -> HrResult<IMFByteStream>
+{
+	let mut queried = unsafe { IMFByteStream::null() };
+	ok_to_hrresult(
+		unsafe {
+			ffi::MFCreateMFByteStreamOnStream(stream.ptr(), queried.as_mut())
+		},
+	).map(|_| queried)
+}
+
 /// [`MFCreateSourceResolver`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-mfcreatesourceresolver)
 /// function.
 ///

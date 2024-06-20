@@ -38,8 +38,40 @@ impl mf_IMFSourceResolver for IMFSourceResolver {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait mf_IMFSourceResolver: ole_IUnknown {
+	/// [`IMFSourceResolver::BeginCreateObjectFromByteStream`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfsourceresolver-begincreateobjectfrombytestream)
+	/// method.
+	///
+	/// Returns the cancel cookie.
+	fn BeginCreateObjectFromByteStream(&self,
+		byte_stream: &impl mf_IMFByteStream,
+		url: Option<&str>,
+		flags: co::MF_RESOLUTION,
+		props: Option<&impl oleaut_IPropertyStore>,
+		callback: &impl mf_IMFAsyncCallback,
+		state: Option<&impl ole_IUnknown>,
+	) -> HrResult<IUnknown>
+	{
+		let mut queried = unsafe { IUnknown::null() };
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFSourceResolverVT>(self).BeginCreateObjectFromByteStream)(
+					self.ptr(),
+					byte_stream.ptr(),
+					WString::from_opt_str(url).as_ptr(),
+					flags.raw(),
+					props.map_or(std::ptr::null_mut(), |p| p.ptr()),
+					queried.as_mut(),
+					callback.ptr(),
+					state.map_or(std::ptr::null_mut(), |s| s.ptr()),
+				)
+			},
+		).map(|_| queried)
+	}
+
 	/// [`IMFSourceResolver::BeginCreateObjectFromURL`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfsourceresolver-begincreateobjectfromurl)
 	/// method.
+	///
+	/// Returns the cancel cookie.
 	fn BeginCreateObjectFromURL(&self,
 		url: &str,
 		flags: co::MF_RESOLUTION,
@@ -75,6 +107,33 @@ pub trait mf_IMFSourceResolver: ole_IUnknown {
 				)
 			},
 		)
+	}
+
+	/// [`IMFSourceResolver::CreateObjectFromByteStream`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfsourceresolver-createobjectfrombytestream)
+	/// method.
+	fn CreateObjectFromByteStream(&self,
+		byte_stream: &impl mf_IMFByteStream,
+		url: Option<&str>,
+		flags: co::MF_RESOLUTION,
+		props: Option<&impl oleaut_IPropertyStore>,
+	) -> HrResult<(co::MF_OBJECT, IUnknown)>
+	{
+		let mut obj_type = co::MF_OBJECT::default();
+		let mut queried = unsafe { IUnknown::null() };
+
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFSourceResolverVT>(self).CreateObjectFromByteStream)(
+					self.ptr(),
+					byte_stream.ptr(),
+					WString::from_opt_str(url).as_ptr(),
+					flags.raw(),
+					props.map_or(std::ptr::null_mut(), |p| p.ptr()),
+					obj_type.as_mut(),
+					queried.as_mut(),
+				)
+			},
+		).map(|_| (obj_type, queried))
 	}
 
 	/// [`IMFSourceResolver::CreateObjectFromURL`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfsourceresolver-createobjectfromurl)

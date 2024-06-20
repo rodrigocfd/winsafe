@@ -2,7 +2,7 @@
 
 const_ordinary! { ME: u32;
 	/// [`IMFMediaEvent::GetType`](crate::prelude::mf_IMFMediaEvent::GetType)
-	/// return value ([`u32`]).
+	/// return value (`u32`).
 	=>
 	=>
 	Unknown 0
@@ -128,7 +128,7 @@ const_ordinary! { ME: u32;
 
 const_ordinary! { MF_EVENT_FLAG: u32;
 	/// [`IMFMediaEvent::GetType`](crate::prelude::mf_IMFMediaEvent::GetType)
-	/// return type ([`u32`]).
+	/// return type (`u32`).
 	=>
 	=>
 	NO_WAIT 0x0000_0001
@@ -164,7 +164,7 @@ const_bitflag! { MF_RESOLUTION: u32;
 
 const_ordinary! { MF_TOPOLOGY: u32;
 	/// [`MF_TOPOLOGY_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mf_topology_type)
-	/// enumeration ([`u32`]).
+	/// enumeration (`u32`).
 	=>
 	=>
 	OUTPUT_NODE 0
@@ -175,7 +175,7 @@ const_ordinary! { MF_TOPOLOGY: u32;
 
 const_bitflag! { MFASYNC: u32;
 	/// [`IMFAsyncCallback::GetParameters`](crate::prelude::mf_IMFAsyncCallback::GetParameters)
-	/// `flags` ([`u32`]).
+	/// `flags` (`u32`).
 	=>
 	=>
 	/// None of the actual values (zero).
@@ -186,9 +186,25 @@ const_bitflag! { MFASYNC: u32;
 	REPLY_CALLBACK 0x0000_0008
 }
 
+const_bitflag! { MFBYTESTREAM: u32;
+	/// [`IMFByteStream::GetCapabilities`](crate::prelude::mf_IMFByteStream::GetCapabilities)
+	/// flags (`u32`).
+	=>
+	=>
+	IS_READABLE 0x0000_0001
+	IS_WRITABLE 0x0000_0002
+	IS_SEEKABLE 0x0000_0004
+	IS_REMOTE 0x0000_0008
+	IS_DIRECTORY 0x0000_0080
+	HAS_SLOW_SEEK 0x0000_0100
+	IS_PARTIALLY_DOWNLOADED 0x0000_0200
+	SHARE_WRITE 0x0000_0400
+	DOES_NOT_USE_NETWORK 0x0000_0800
+}
+
 const_bitflag! { MFCLOCK_CHARACTERISTICS_FLAG: u32;
 	/// [`MFCLOCK_CHARACTERISTICS_FLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfclock_characteristics_flags)
-	/// enumeration ([`u32`]).
+	/// enumeration (`u32`).
 	=>
 	=>
 	FREQUENCY_10MHZ 0x2
@@ -198,7 +214,7 @@ const_bitflag! { MFCLOCK_CHARACTERISTICS_FLAG: u32;
 
 const_bitflag! { MFCLOCK_RELATIONAL_FLAG: u32;
 	/// [`MFCLOCK_RELATIONAL_FLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfclock_relational_flags)
-	/// enumeration ([`u32`]).
+	/// enumeration (`u32`).
 	=>
 	=>
 	/// None of the actual values (zero).
@@ -208,7 +224,7 @@ const_bitflag! { MFCLOCK_RELATIONAL_FLAG: u32;
 
 const_ordinary! { MFCLOCK_STATE: u32;
 	/// [`MFCLOCK_STATE`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfclock_state)
-	/// enumeration ([`u32`]).
+	/// enumeration (`u32`).
 	=>
 	=>
 	INVALID 0
@@ -219,7 +235,7 @@ const_ordinary! { MFCLOCK_STATE: u32;
 
 const_bitflag! { MFMEDIASOURCE: u32;
 	/// [`MFMEDIASOURCE_CHARACTERISTICS`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfmediasource_characteristics)
-	/// enumeration ([`u32`]).
+	/// enumeration (`u32`).
 	=>
 	=>
 	IS_LIVE 0x1
@@ -232,9 +248,26 @@ const_bitflag! { MFMEDIASOURCE: u32;
 	DOES_NOT_USE_NETWORK 0x80
 }
 
+const_bitflag! { MFBYTESTREAM_SEEK_FLAG: u32;
+	/// [`IMFByteStream::Seek`](crate::prelude::mf_IMFByteStream::Seek) flags
+	/// (`u32`).
+	=>
+	=>
+	CANCEL_PENDING_IO 1
+}
+
+const_ordinary! { MFBYTESTREAM_SEEK_ORIGIN: u32;
+	/// [`MFBYTESTREAM_SEEK_ORIGIN`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/ne-mfobjects-mfbytestream_seek_origin)
+	/// enumeration (`u32`).
+	=>
+	=>
+	Begin 0
+	Current 1
+}
+
 const_bitflag! { MFSESSION_GETFULLTOPOLOGY: u32;
 	/// [`MFSESSION_GETFULLTOPOLOGY_FLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfsession_getfulltopology_flags)
-	/// enumeration ([`u32`]).
+	/// enumeration (`u32`).
 	=>
 	=>
 	CURRENT 0x1
@@ -242,7 +275,7 @@ const_bitflag! { MFSESSION_GETFULLTOPOLOGY: u32;
 
 const_bitflag! { MFSESSION_SETTOPOLOGY: u32;
 	/// [`MFSESSION_SETTOPOLOGY_FLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfsession_settopology_flags)
-	/// enumeration ([`u32`]).
+	/// enumeration (`u32`).
 	=>
 	=>
 	IMMEDIATE 0x1
@@ -252,7 +285,7 @@ const_bitflag! { MFSESSION_SETTOPOLOGY: u32;
 
 const_bitflag! { MFSESSIONCAP: u32;
 	/// [`IMFMediaSession::GetSessionCapabilities`](crate::prelude::mf_IMFMediaSession::GetSessionCapabilities)
-	/// `caps` ([`u32`]).
+	/// `caps` (`u32`).
 	=>
 	=>
 	START 0x0000_0001
@@ -264,7 +297,7 @@ const_bitflag! { MFSESSIONCAP: u32;
 }
 
 const_ordinary! { MFSTARTUP: u32;
-	/// [`MFStartup`](crate::MFStartup) `flags` ([`u32`]).
+	/// [`MFStartup`](crate::MFStartup) `flags` (`u32`).
 	=>
 	=>
 	NOSOCKET 0x1
@@ -274,7 +307,7 @@ const_ordinary! { MFSTARTUP: u32;
 
 const_ordinary! { MFVideoARMode: u32;
 	/// [`MFVideoAspectRatioMode`](https://learn.microsoft.com/en-us/windows/win32/api/evr/ne-evr-mfvideoaspectratiomode)
-	/// enumeration ([`u32`]).
+	/// enumeration (`u32`).
 	=>
 	=>
 	None 0
@@ -285,7 +318,7 @@ const_ordinary! { MFVideoARMode: u32;
 
 const_bitflag! { MFVideoRenderPrefs: u32;
 	/// [`MFVideoRenderPrefs`](https://learn.microsoft.com/en-us/windows/win32/api/evr/ne-evr-mfvideorenderprefs)
-	/// enumeration ([`u32`]).
+	/// enumeration (`u32`).
 	=>
 	=>
 	DoNotRenderBorder 0x1

@@ -56,6 +56,26 @@ pub struct IMFAttributesVT {
 }
 
 #[repr(C)]
+pub struct IMFByteStreamVT {
+	pub IUnknownVT: IUnknownVT,
+	pub GetCapabilities: fn (COMPTR, *mut u32) -> HRES,
+	pub GetLength: fn(COMPTR, *mut u64) -> HRES,
+	pub SetLength: fn(COMPTR, u64) -> HRES,
+	pub GetCurrentPosition: fn(COMPTR, *mut u64) -> HRES,
+	pub SetCurrentPosition: fn(COMPTR, u64) -> HRES,
+	pub IsEndOfStream: fn(COMPTR, *mut BOOL) -> HRES,
+	pub Read: fn(COMPTR, *mut u8, u32, *mut u32) -> HRES,
+	pub BeginRead: fn(COMPTR, *mut u8, u32, COMPTR, COMPTR) -> HRES,
+	pub EndRead: fn(COMPTR, COMPTR, *mut u32) -> HRES,
+	pub Write: fn(COMPTR, *const u8, u32, *mut u32) -> HRES,
+	pub BeginWrite: fn(COMPTR, *const u8, u32, COMPTR, COMPTR) -> HRES,
+	pub EndWrite: fn(COMPTR, COMPTR, *mut u32) -> HRES,
+	pub Seek: fn(COMPTR, u32, i64, u32, *mut u64) -> HRES,
+	pub Flush: fn(COMPTR) -> HRES,
+	pub Close: fn(COMPTR) -> HRES,
+}
+
+#[repr(C)]
 pub struct IMFClockVT {
 	pub IUnknownVT: IUnknownVT,
 	pub GetClockCharacteristics: fn(COMPTR, *mut u32) -> HRES,
