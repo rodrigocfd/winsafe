@@ -9,32 +9,49 @@ use crate::kernel::ffi_types::*;
 use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 
-com_interface_custom! { IDropTarget, IDropTargetImpl: "00000122-0000-0000-c000-000000000046";
+com_interface_userdef! { IDropTarget, IDropTargetImpl: "00000122-0000-0000-c000-000000000046";
 	/// [`IDropTarget`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nn-oleidl-idroptarget)
 	/// COM interface.
 	///
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let drop_target = w::IDropTarget::new_impl();
+	///
+	/// drop_target.Drop(
+	///     |d: &w::IDataObject, mk: co::MK, pt: w::POINT, de: co::DROPEFFECT|
+	///         -> w::HrResult<co::DROPEFFECT>
+	///     {
+	///         println!("X: {}, Y: {}", pt.x, pt.y);
+	///         Ok(de | co::DROPEFFECT::COPY)
+	///     },
+	/// );
+	/// ```
 }
 
 impl IDropTarget {
-	fn_com_closure! { DragEnter: Fn(&IDataObject, co::MK, POINT, co::DROPEFFECT) -> HrResult<co::DROPEFFECT>;
+	fn_com_userdef_closure! { DragEnter: Fn(&IDataObject, co::MK, POINT, co::DROPEFFECT) -> HrResult<co::DROPEFFECT>;
 		/// [`IDropTarget::DragEnter`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragenter)
 		/// method.
 	}
 
-	fn_com_closure! { DragLeave: Fn() -> HrResult<()>;
+	fn_com_userdef_closure! { DragLeave: Fn() -> HrResult<()>;
 		/// [`IDropTarget::DragLeave`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragleave)
 		/// method.
 	}
 
-	fn_com_closure! { DragOver: Fn(co::MK, POINT, co::DROPEFFECT) -> HrResult<co::DROPEFFECT>;
+	fn_com_userdef_closure! { DragOver: Fn(co::MK, POINT, co::DROPEFFECT) -> HrResult<co::DROPEFFECT>;
 		/// [`IDropTarget::DragOver`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragover)
 		/// method.
 	}
 
-	fn_com_closure! { Drop: Fn(&IDataObject, co::MK, POINT, co::DROPEFFECT) -> HrResult<co::DROPEFFECT>;
+	fn_com_userdef_closure! { Drop: Fn(&IDataObject, co::MK, POINT, co::DROPEFFECT) -> HrResult<co::DROPEFFECT>;
 		/// [`IDropTarget::Drop`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-drop)
 		/// method.
 	}
@@ -72,7 +89,7 @@ impl IDropTargetImpl {
 		}
 	}
 
-	com_interface_custom_iunknown_methods!(Self);
+	com_interface_userdef_iunknown_methods!(Self);
 
 	fn DragEnter(
 		p: COMPTR,

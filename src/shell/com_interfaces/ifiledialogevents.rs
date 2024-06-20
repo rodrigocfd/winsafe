@@ -10,7 +10,7 @@ use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 use crate::shell::vts::*;
 
-com_interface_custom! { IFileDialogEvents, IFileDialogEventsImpl: "973510db-7d7f-452b-8975-74a85828d354";
+com_interface_userdef! { IFileDialogEvents, IFileDialogEventsImpl: "973510db-7d7f-452b-8975-74a85828d354";
 	/// [`IFileDialogEvents`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifiledialogevents)
 	/// COM interface.
 	///
@@ -48,37 +48,37 @@ com_interface_custom! { IFileDialogEvents, IFileDialogEventsImpl: "973510db-7d7f
 }
 
 impl IFileDialogEvents {
-	fn_com_closure! { OnFileOk: Fn(&IFileDialog) -> HrResult<()>;
+	fn_com_userdef_closure! { OnFileOk: Fn(&IFileDialog) -> HrResult<()>;
 		/// [`IFileDialogEvents::OnFileOk`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfileok)
 		/// method.
 	}
 
-	fn_com_closure! { OnFolderChange: Fn(&IFileDialog) -> HrResult<()>;
+	fn_com_userdef_closure! { OnFolderChange: Fn(&IFileDialog) -> HrResult<()>;
 		/// [`IFileDialogEvents::OnFolderChange`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfolderchange)
 		/// method.
 	}
 
-	fn_com_closure! { OnFolderChanging: Fn(&IFileDialog, &IShellItem) -> HrResult<()>;
+	fn_com_userdef_closure! { OnFolderChanging: Fn(&IFileDialog, &IShellItem) -> HrResult<()>;
 		/// [`IFileDialogEvents::OnFolderChanging`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfolderchanging)
 		/// method.
 	}
 
-	fn_com_closure! { OnOverwrite: Fn(&IFileDialog, &IShellItem) -> HrResult<co::FDEOR>;
+	fn_com_userdef_closure! { OnOverwrite: Fn(&IFileDialog, &IShellItem) -> HrResult<co::FDEOR>;
 		/// [`IFileDialogEvents::OnOverwrite`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onoverwrite)
 		/// method.
 	}
 
-	fn_com_closure! { OnSelectionChange: Fn(&IFileDialog) -> HrResult<()>;
+	fn_com_userdef_closure! { OnSelectionChange: Fn(&IFileDialog) -> HrResult<()>;
 		/// [`IFileDialogEvents::OnSelectionChange`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onselectionchange)
 		/// method.
 	}
 
-	fn_com_closure! { OnShareViolation: Fn(&IFileDialog, &IShellItem) -> HrResult<co::FDESVR>;
+	fn_com_userdef_closure! { OnShareViolation: Fn(&IFileDialog, &IShellItem) -> HrResult<co::FDESVR>;
 		/// [`IFileDialogEvents::OnShareViolation`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onshareviolation)
 		/// method.
 	}
 
-	fn_com_closure! { OnTypeChange: Fn(&IFileDialog) -> HrResult<()>;
+	fn_com_userdef_closure! { OnTypeChange: Fn(&IFileDialog) -> HrResult<()>;
 		/// [`IFileDialogEvents::OnTypeChange`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-ontypechange)
 		/// method.
 	}
@@ -125,7 +125,7 @@ impl IFileDialogEventsImpl {
 		}
 	}
 
-	com_interface_custom_iunknown_methods!(Self);
+	com_interface_userdef_iunknown_methods!(Self);
 
 	fn OnFileOk(p: COMPTR, pfd: COMPTR) -> HRES {
 		let box_impl = box_impl::<Self>(p);

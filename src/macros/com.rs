@@ -49,9 +49,9 @@ macro_rules! com_interface {
 	};
 }
 
-/// Declares a custom COM interface implementation, and implements ole_IUnknown
-/// trait.
-macro_rules! com_interface_custom {
+/// Declares an user-defined COM interface implementation, and implements
+/// ole_IUnknown trait.
+macro_rules! com_interface_userdef {
 	(
 		$name:ident, $impl:ident : $guid:expr;
 		$( #[$doc:meta] )*
@@ -108,9 +108,9 @@ macro_rules! com_interface_custom {
 	};
 }
 
-/// Declares the static `QueryInterface`, `AddRef` and `Release` methods for a
-/// custom COM interface implementation.
-macro_rules! com_interface_custom_iunknown_methods {
+/// Declares the static `QueryInterface`, `AddRef` and `Release` methods for an
+/// user-defined COM interface implementation.
+macro_rules! com_interface_userdef_iunknown_methods {
 	($impl:ident) => {
 		fn QueryInterface(_p: COMPTR, _riid: PCVOID, ppv: *mut COMPTR) -> HRES {
 			unsafe { *ppv = std::ptr::null_mut(); }
@@ -296,9 +296,9 @@ macro_rules! fn_com_bstr_set {
 	};
 }
 
-/// Implements a function which stores a callback to a custom COM
+/// Implements a function which stores a callback to an user-defined COM
 /// implementation.
-macro_rules! fn_com_closure {
+macro_rules! fn_com_userdef_closure {
 	(
 		$method:ident: $fun: path;
 		$( #[$doc:meta] )*

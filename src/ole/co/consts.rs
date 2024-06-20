@@ -94,7 +94,7 @@ const_bitflag! { COINIT: u32;
 	SPEED_OVER_MEMORY 0x8
 }
 
-const_ordinary! { DROPEFFECT: u32;
+const_bitflag! { DROPEFFECT: u32;
 	/// [`DROPEFFECT`](https://learn.microsoft.com/en-us/windows/win32/com/dropeffect-constants)
 	/// constants (`u32`).
 	=>
