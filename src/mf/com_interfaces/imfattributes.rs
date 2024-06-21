@@ -116,7 +116,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 			},
 		).map(|_| {
 			let raw = unsafe { CoTaskMemFreeGuard::new(pbuf as *mut _, sz as _) };
-			Vec::from_iter(raw.as_slice().iter().map(|b| *b))
+			raw.as_slice().to_vec()
 		})
 	}
 
@@ -141,6 +141,57 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 			let _ = unsafe { CoTaskMemFreeGuard::new(pbuf as _, 0) };
 			str.to_string()
 		})
+	}
+
+	/// [`IMFAttributes::GetBlob`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getblob)
+	/// method.
+	///
+	/// Calls
+	/// [`IMFAttributes::GetBlobSize`](crate::prelude::mf_IMFAttributes::GetBlobSize)
+	/// to alloc the buffer.
+	#[must_use]
+	fn GetBlob(&self, guid_key: &GUID) -> HrResult<Vec<u8>> {
+		let sz = self.GetBlobSize(guid_key)?;
+		let mut buf = vec![0u8; sz as _];
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFAttributesVT>(self).GetBlob)(
+					self.ptr(),
+					guid_key as *const _ as _,
+					buf.as_mut_ptr(),
+					sz,
+					std::ptr::null_mut(),
+				)
+			},
+		).map(|_| buf)
+	}
+
+	/// [`IMFAttributes::GetBlobSize`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getblobsize)
+	/// method.
+	#[must_use]
+	fn GetBlobSize(&self, guid_key: &GUID) -> HrResult<u32> {
+		let mut sz = u32::default();
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFAttributesVT>(self).GetBlobSize)(
+					self.ptr(),
+					guid_key as *const _ as _,
+					&mut sz,
+				)
+			},
+		).map(|_| sz)
+	}
+
+	/// [`IMFAttributes::GetCount`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getcount)
+	/// method.
+	#[must_use]
+	fn GetCount(&self) -> HrResult<u32> {
+		let mut count = u32::default();
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFAttributesVT>(self).GetCount)(self.ptr(), &mut count)
+			},
+		).map(|_| count)
 	}
 
 	/// [`IMFAttributes::GetUINT32`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getuint32)
