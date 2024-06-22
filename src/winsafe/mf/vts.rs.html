@@ -262,7 +262,7 @@
 	<span class="kw">pub </span>SetGUID: <span class="kw">fn</span>(COMPTR, PCVOID, PCVOID) -&gt; HRES,
 	<span class="kw">pub </span>SetString: <span class="kw">fn</span>(COMPTR, PCVOID, PCSTR) -&gt; HRES,
 	<span class="kw">pub </span>SetBlob: <span class="kw">fn</span>(COMPTR, PCVOID, <span class="kw-2">*const </span>u8, u32) -&gt; HRES,
-	<span class="kw">pub </span>SetUnknown: <span class="kw">fn</span>(COMPTR, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES,
+	<span class="kw">pub </span>SetUnknown: <span class="kw">fn</span>(COMPTR, PCVOID, COMPTR) -&gt; HRES,
 	<span class="kw">pub </span>LockStore: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
 	<span class="kw">pub </span>UnlockStore: <span class="kw">fn</span>(COMPTR) -&gt; HRES,
 	<span class="kw">pub </span>GetCount: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>u32) -&gt; HRES,
