@@ -1,5 +1,7 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
+use crate::co::*;
+
 const_ordinary! { ME: u32;
 	/// [`IMFMediaEvent::GetType`](crate::prelude::mf_IMFMediaEvent::GetType)
 	/// return value (`u32`).
@@ -126,6 +128,20 @@ const_ordinary! { ME: u32;
 	DeviceThermalStateChanged 950
 }
 
+const_ordinary! { MF_ATTRIBUTE: u32;
+	/// [`MF_ATTRIBUTE_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/ne-mfobjects-mf_attribute_type)
+	/// enumeration (`u32`).
+	=>
+	=>
+	UINT32 VT::UI4.raw() as _
+	UINT64 VT::UI8.raw() as _
+	DOUBLE VT::R8.raw() as _
+	GUID VT::CLSID.raw() as _
+	STRING VT::LPWSTR.raw() as _
+	BLOB (VT::VECTOR.raw() | VT::UI1.raw()) as _
+	IUNKNOWN VT::UNKNOWN.raw() as _
+}
+
 const_ordinary! { MF_ATTRIBUTES_MATCH: u32;
 	/// [`MF_ATTRIBUTES_MATCH_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/ne-mfobjects-mf_attributes_match_type)
 	/// enumeration (`u32`).
@@ -186,7 +202,7 @@ const_ordinary! { MF_TOPOLOGY: u32;
 }
 
 const_bitflag! { MFASYNC: u32;
-	/// [`IMFAsyncCallback::GetParameters`](crate::prelude::mf_IMFAsyncCallback::GetParameters)
+	/// [`IMFAsyncCallback::GetParameters`](crate::IMFAsyncCallback::GetParameters)
 	/// `flags` (`u32`).
 	=>
 	=>

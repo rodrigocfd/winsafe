@@ -47,7 +47,7 @@ pub struct IMFAttributesVT {
 	pub SetGUID: fn(COMPTR, PCVOID, PCVOID) -> HRES,
 	pub SetString: fn(COMPTR, PCVOID, PCSTR) -> HRES,
 	pub SetBlob: fn(COMPTR, PCVOID, *const u8, u32) -> HRES,
-	pub SetUnknown: fn(COMPTR, PCVOID, *mut COMPTR) -> HRES,
+	pub SetUnknown: fn(COMPTR, PCVOID, COMPTR) -> HRES,
 	pub LockStore: fn(COMPTR) -> HRES,
 	pub UnlockStore: fn(COMPTR) -> HRES,
 	pub GetCount: fn(COMPTR, *mut u32) -> HRES,
