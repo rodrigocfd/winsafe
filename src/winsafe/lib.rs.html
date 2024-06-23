@@ -309,6 +309,7 @@
 <a href="#309" id="309">309</a>
 <a href="#310" id="310">310</a>
 <a href="#311" id="311">311</a>
+<a href="#312" id="312">312</a>
 </pre></div><pre class="rust"><code><span class="attr">#![doc = <span class="macro">include_str!</span>(<span class="string">"lib.md"</span>)]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 
@@ -409,6 +410,7 @@
 	<span class="attr">#[cfg(feature = <span class="string">"comctl"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::comctl::guard::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(feature = <span class="string">"gdi"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::gdi::guard::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(feature = <span class="string">"kernel"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::kernel::guard::<span class="kw-2">*</span>;
+	<span class="attr">#[cfg(feature = <span class="string">"mf"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::mf::guard::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(feature = <span class="string">"ole"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::ole::guard::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(feature = <span class="string">"shell"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::shell::guard::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(feature = <span class="string">"user"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::user::guard::<span class="kw-2">*</span>;

@@ -13,7 +13,7 @@ right away.</p>
 <h2 id="examples"><a class="doc-anchor" href="#examples">§</a>Examples</h2>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, co};
 
-<span class="kw">let </span>_com_lib = w::CoInitializeEx( <span class="comment">// keep guard alive
+<span class="kw">let </span>_com_guard = w::CoInitializeEx( <span class="comment">// keep guard alive
     </span>co::COINIT::APARTMENTTHREADED
     | co::COINIT::DISABLE_OLE1DDE,
 )<span class="question-mark">?</span>;

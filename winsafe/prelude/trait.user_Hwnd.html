@@ -669,12 +669,12 @@ will be performed right away.</p>
 
 <span class="kw">let </span>hwnd: w::HWND; <span class="comment">// initialized somewhere
 
-</span><span class="kw">let </span>_hclip = hwnd.OpenClipboard()<span class="question-mark">?</span>; <span class="comment">// keep guard alive</span></code></pre></div>
+</span><span class="kw">let </span>_hclip_guard = hwnd.OpenClipboard()<span class="question-mark">?</span>; <span class="comment">// keep guard alive</span></code></pre></div>
 <p>You can also open the clipboard without an <code>HWND</code> owner:</p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>};
 
-<span class="kw">let </span>_hclip = w::HWND::NULL.OpenClipboard()<span class="question-mark">?</span>; <span class="comment">// keep guard alive</span></code></pre></div>
+<span class="kw">let </span>_hclip_guard = w::HWND::NULL.OpenClipboard()<span class="question-mark">?</span>; <span class="comment">// keep guard alive</span></code></pre></div>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.PostMessage" class="method"><a class="src rightside" href="../../src/winsafe/user\handles/hwnd.rs.html#1337-1347">source</a><h4 class="code-header">unsafe fn <a href="#method.PostMessage" class="fn">PostMessage</a>&lt;M&gt;(&amp;self, msg: M) -&gt; <a class="type" href="../type.SysResult.html" title="type winsafe::SysResult">SysResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;<div class="where">where
     M: <a class="trait" href="trait.MsgSend.html" title="trait winsafe::prelude::MsgSend">MsgSend</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Send.html" title="trait core::marker::Send">Send</a> + <a class="trait" href="https://doc.rust-lang.org/nightly/core/marker/trait.Copy.html" title="trait core::marker::Copy">Copy</a> + 'static,</div></h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-postmessagew"><code>PostMessage</code></a>
 function.</p>

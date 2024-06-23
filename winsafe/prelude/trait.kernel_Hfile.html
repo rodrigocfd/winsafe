@@ -146,7 +146,7 @@ performed right away.</p>
 
 </span><span class="kw">let </span>total_size = hfile.GetFileSizeEx()<span class="question-mark">?</span>;
 
-<span class="kw">let </span>_lock = hfile.LockFile(<span class="number">0</span>, total_size <span class="kw">as _</span>)<span class="question-mark">?</span>; <span class="comment">// keep guard alive
+<span class="kw">let </span>_lock_guard = hfile.LockFile(<span class="number">0</span>, total_size <span class="kw">as _</span>)<span class="question-mark">?</span>; <span class="comment">// keep guard alive
 
 // file read/write operations...
 
