@@ -1305,7 +1305,7 @@ pub trait user_Hwnd: Handle {
 	/// let hwnd: w::HWND; // initialized somewhere
 	/// # let hwnd = w::HWND::NULL;
 	///
-	/// let _hclip = hwnd.OpenClipboard()?; // keep guard alive
+	/// let _hclip_guard = hwnd.OpenClipboard()?; // keep guard alive
 	/// # w::SysResult::Ok(())
 	/// ```
 	///
@@ -1314,7 +1314,7 @@ pub trait user_Hwnd: Handle {
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let _hclip = w::HWND::NULL.OpenClipboard()?; // keep guard alive
+	/// let _hclip_guard = w::HWND::NULL.OpenClipboard()?; // keep guard alive
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]

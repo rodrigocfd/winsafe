@@ -226,7 +226,7 @@ pub trait kernel_Hfile: Handle {
 	///
 	/// let total_size = hfile.GetFileSizeEx()?;
 	///
-	/// let _lock = hfile.LockFile(0, total_size as _)?; // keep guard alive
+	/// let _lock_guard = hfile.LockFile(0, total_size as _)?; // keep guard alive
 	///
 	/// // file read/write operations...
 	///

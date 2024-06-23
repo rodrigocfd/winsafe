@@ -164,7 +164,7 @@ pub fn CoCreateInstanceEx(
 /// ```no_run
 /// use winsafe::{self as w, prelude::*, co};
 ///
-/// let _com_lib = w::CoInitializeEx( // keep guard alive
+/// let _com_guard = w::CoInitializeEx( // keep guard alive
 ///     co::COINIT::APARTMENTTHREADED
 ///     | co::COINIT::DISABLE_OLE1DDE,
 /// )?;

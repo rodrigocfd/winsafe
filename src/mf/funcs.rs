@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::mf::{ffi, privs::*};
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -143,6 +144,33 @@ pub fn MFCreateTopologyNode(
 
 /// [`MFStartup`](https://learn.microsoft.com/en-us/windows/win32/api/mfapi/nf-mfapi-mfstartup)
 /// function.
-pub fn MFStartup(flags: co::MFSTARTUP) -> HrResult<()> {
-	ok_to_hrresult(unsafe { ffi::MFStartup(MF_VERSION, flags.raw()) })
+///
+/// In the original C implementation, you must call
+/// [`MFShutdown`](https://learn.microsoft.com/en-us/windows/win32/api/mfapi/nf-mfapi-mfshutdown)
+/// as a cleanup operation.
+///
+/// Here, the cleanup is performed automatically, because `MFStartup` returns a
+/// [`MFShutdownGuard`](crate::guard::MFShutdownGuard), which automatically
+/// calls `MFShutdown` when the guard goes out of scope. You must, however, keep
+/// the guard alive, otherwise the cleanup will be performed right away.
+///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*, co};
+///
+/// let _mf_guard = w::MFStartup( // keep guard alive
+///     co::MFSTARTUP::NOSOCKET,
+/// )?;
+///
+/// // program runs...
+///
+/// // MFShutdown() automatically called
+/// # w::HrResult::Ok(())
+/// ```
+pub fn MFStartup(flags: co::MFSTARTUP) -> HrResult<MFShutdownGuard> {
+	unsafe {
+		ok_to_hrresult(ffi::MFStartup(MF_VERSION, flags.raw()))
+			.map(|_| MFShutdownGuard::new())
+	}
 }

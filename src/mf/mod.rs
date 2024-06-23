@@ -8,6 +8,7 @@ pub(in crate::mf) mod ffi;
 pub(crate) mod privs;
 pub(crate) mod vts;
 pub mod co;
+pub mod guard;
 
 pub mod decl {
 	pub use super::com_interfaces::decl::*;

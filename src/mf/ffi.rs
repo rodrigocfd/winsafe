@@ -10,5 +10,6 @@ extern_sys! { "mfplat";
 	MFCreateAsyncResult(COMPTR, COMPTR, COMPTR, *mut COMPTR) -> HRES
 	MFCreateMFByteStreamOnStream(COMPTR, *mut COMPTR) -> HRES
 	MFCreateSourceResolver(*mut COMPTR) -> HRES
+	MFShutdown() -> HRES
 	MFStartup(u32, u32) -> HRES
 }

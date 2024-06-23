@@ -98,6 +98,7 @@ pub mod guard {
 	#[cfg(feature = "comctl")] pub use super::comctl::guard::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::guard::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::guard::*;
+	#[cfg(feature = "mf")] pub use super::mf::guard::*;
 	#[cfg(feature = "ole")] pub use super::ole::guard::*;
 	#[cfg(feature = "shell")] pub use super::shell::guard::*;
 	#[cfg(feature = "user")] pub use super::user::guard::*;
