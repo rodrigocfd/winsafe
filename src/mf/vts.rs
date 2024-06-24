@@ -136,6 +136,17 @@ pub struct IMFMediaSourceVT {
 }
 
 #[repr(C)]
+pub struct IMFMediaTypeHandlerVT {
+	pub IUnknownVT: IUnknownVT,
+	pub IsMediaTypeSupported: fn(COMPTR, COMPTR, *mut COMPTR) -> HRES,
+	pub GetMediaTypeCount: fn(COMPTR, *mut u32) -> HRES,
+	pub GetMediaTypeByIndex: fn(COMPTR, u32, *mut COMPTR) -> HRES,
+	pub SetCurrentMediaType: fn(COMPTR, COMPTR) -> HRES,
+	pub GetCurrentMediaType: fn(COMPTR, *mut COMPTR) -> HRES,
+	pub GetMajorType: fn(COMPTR, PVOID) -> HRES,
+}
+
+#[repr(C)]
 pub struct IMFPresentationDescriptorVT {
 	pub IMFAttributesVT: IMFAttributesVT,
 	pub GetStreamDescriptorCount: fn(COMPTR, *mut u32) -> HRES,
@@ -155,6 +166,13 @@ pub struct IMFSourceResolverVT {
 	pub BeginCreateObjectFromByteStream: fn(COMPTR, COMPTR, PCSTR, u32, COMPTR, *mut COMPTR, COMPTR, COMPTR) -> HRES,
 	pub EndCreateObjectFromByteStream: fn(COMPTR, COMPTR, *mut u32, *mut COMPTR) -> HRES,
 	pub CancelObjectCreation: fn(COMPTR, COMPTR) -> HRES,
+}
+
+#[repr(C)]
+pub struct IMFStreamDescriptorVT {
+	pub IMFAttributesVT: IMFAttributesVT,
+	pub GetStreamIdentifier: fn(COMPTR, *mut u32) -> HRES,
+	pub GetMediaTypeHandler: fn(COMPTR, *mut COMPTR) -> HRES,
 }
 
 #[repr(C)]
