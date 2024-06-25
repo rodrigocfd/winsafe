@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::mf::vts::*;
+use crate::mf::{iterators::*, vts::*};
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -25,6 +25,47 @@ impl mf_IMFCollection for IMFCollection {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait mf_IMFCollection: ole_IUnknown {
+	/// Returns an iterator over the [`IUnknown`](crate::IUnknown) elements by
+	/// calling
+	/// [`IMFCollection::GetElementCount`](crate::prelude::mf_IMFCollection::GetElementCount)
+	/// and
+	/// [`IMFCollection::GetElement`](crate::prelude::mf_IMFCollection::GetElement)
+	/// consecutively.
+	///
+	/// # Examples
+	///
+	/// Iterating over the [`IUnknown`](crate::IUnknown) objects:
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let collection: w::IMFCollection; // initialized somewhere
+	/// # let collection = unsafe { w::IMFCollection::null() };
+	///
+	/// for element in collection.iter()? {
+	///     let element = element?;
+	///     println!("{:?}", element.ptr());
+	/// }
+	/// # w::HrResult::Ok(())
+	/// ```
+	///
+	/// Collecting the elements into a [`Vec`](std::vec::Vec):
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let collection: w::IMFCollection; // initialized somewhere
+	/// # let collection = unsafe { w::IMFCollection::null() };
+	///
+	/// let elements = collection.iter()?
+	///     .collect::<w::HrResult<Vec<_>>>()?;
+	/// # w::HrResult::Ok(())
+	/// ```
+	#[must_use]
+	fn iter(&self) -> HrResult<impl Iterator<Item = HrResult<IUnknown>> + '_> {
+		Ok(ImfcollectionIter::new(self)?)
+	}
+
 	/// [`IMFCollection::AddElement`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfcollection-addelement)
 	/// method.
 	fn AddElement(&self, element: &impl ole_IUnknown) -> HrResult<()> {

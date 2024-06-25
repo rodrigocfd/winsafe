@@ -107,7 +107,7 @@ pub trait mf_IMFTopology: mf_IMFAttributes {
 
 	fn_com_interface_get! { GetOutputNodeCollection: IMFTopologyVT, IMFCollection;
 		/// [`IMFTopology::GetOutputNodeCollection`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopology-getoutputnodecollection)
-		///
+		/// method.
 	}
 
 	fn_com_interface_get! { GetSourceNodeCollection: IMFTopologyVT, IMFCollection;
