@@ -251,6 +251,25 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 		).map(|_| value)
 	}
 
+	/// [`IMFAttributes::GetItemByIndex`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getitembyindex)
+	/// method.
+	#[must_use]
+	fn GetItemByIndex(&self, index: u32) -> HrResult<(GUID, PROPVARIANT)> {
+		let mut guid = GUID::default();
+		let mut value = PROPVARIANT::default();
+
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IMFAttributesVT>(self).GetItemByIndex)(
+					self.ptr(),
+					index,
+					&mut guid as *mut _ as _,
+					&mut value as *mut _ as _,
+				)
+			},
+		).map(|_| (guid, value))
+	}
+
 	/// [`IMFAttributes::GetItemType`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getitemtype)
 	/// method.
 	#[must_use]
