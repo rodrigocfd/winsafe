@@ -3,6 +3,7 @@ mod imfasyncresult;
 mod imfattributes;
 mod imfbytestream;
 mod imfclock;
+mod imfcollection;
 mod imfgetservice;
 mod imfmediaevent;
 mod imfmediaeventgenerator;
@@ -22,6 +23,7 @@ pub mod decl {
 	pub use super::imfattributes::IMFAttributes;
 	pub use super::imfbytestream::IMFByteStream;
 	pub use super::imfclock::IMFClock;
+	pub use super::imfcollection::IMFCollection;
 	pub use super::imfgetservice::IMFGetService;
 	pub use super::imfmediaevent::IMFMediaEvent;
 	pub use super::imfmediaeventgenerator::IMFMediaEventGenerator;
@@ -41,6 +43,7 @@ pub mod traits {
 	pub use super::imfattributes::mf_IMFAttributes;
 	pub use super::imfbytestream::mf_IMFByteStream;
 	pub use super::imfclock::mf_IMFClock;
+	pub use super::imfcollection::mf_IMFCollection;
 	pub use super::imfgetservice::mf_IMFGetService;
 	pub use super::imfmediaevent::mf_IMFMediaEvent;
 	pub use super::imfmediaeventgenerator::mf_IMFMediaEventGenerator;

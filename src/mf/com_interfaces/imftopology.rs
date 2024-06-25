@@ -105,6 +105,16 @@ pub trait mf_IMFTopology: mf_IMFAttributes {
 		).map(|_| nodes)
 	}
 
+	fn_com_interface_get! { GetOutputNodeCollection: IMFTopologyVT, IMFCollection;
+		/// [`IMFTopology::GetOutputNodeCollection`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopology-getoutputnodecollection)
+		///
+	}
+
+	fn_com_interface_get! { GetSourceNodeCollection: IMFTopologyVT, IMFCollection;
+		/// [`IMFTopology::GetSourceNodeCollection`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopology-getsourcenodecollection)
+		/// method.
+	}
+
 	/// [`IMFTopology::GetTopologyID`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imftopology-gettopologyid)
 	/// method.
 	#[must_use]

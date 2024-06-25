@@ -161,6 +161,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	fn GetBlob(&self, guid_key: &GUID) -> HrResult<Vec<u8>> {
 		let sz = self.GetBlobSize(guid_key)?;
 		let mut buf = vec![0u8; sz as _];
+
 		ok_to_hrresult(
 			unsafe {
 				(vt::<IMFAttributesVT>(self).GetBlob)(
@@ -276,6 +277,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	fn GetString(&self, guid_key: &GUID) -> HrResult<String> {
 		let len = self.GetStringLength(guid_key)? + 1;
 		let mut buf = WString::new_alloc_buf(len as _);
+
 		ok_to_hrresult(
 			unsafe {
 				(vt::<IMFAttributesVT>(self).GetString)(

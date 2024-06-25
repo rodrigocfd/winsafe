@@ -86,6 +86,17 @@ pub struct IMFClockVT {
 }
 
 #[repr(C)]
+pub struct IMFCollectionVT {
+	pub IUnknownVT: IUnknownVT,
+	pub GetElementCount: fn(COMPTR, *mut u32) -> HRES,
+	pub GetElement: fn(COMPTR, u32, *mut COMPTR) -> HRES,
+	pub AddElement: fn(COMPTR, COMPTR) -> HRES,
+	pub RemoveElement: fn(COMPTR, u32, *mut COMPTR) -> HRES,
+	pub InsertElementAt: fn(COMPTR, u32, COMPTR) -> HRES,
+	pub RemoveAllElements: fn(COMPTR) -> HRES,
+}
+
+#[repr(C)]
 pub struct IMFGetServiceVT {
 	pub IUnknownVT: IUnknownVT,
 	pub GetService: fn(COMPTR, PCVOID, PCVOID, *mut COMPTR) -> HRES,
