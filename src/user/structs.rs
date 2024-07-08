@@ -679,7 +679,7 @@ impl INPUT {
 	#[must_use]
 	pub fn new(event: HwKbMouse) -> INPUT {
 		let mut new_self = INPUT {
-			dwType: co::INPUT::HARDWARE,
+			dwType: co::INPUT::HARDWARE, // default value, will be replaced
 			union0: INPUT_union0 { hi: HARDWAREINPUT::default() },
 		};
 		new_self.set_event(event);
@@ -700,9 +700,18 @@ impl INPUT {
 	/// Sets the event tagged union field.
 	pub fn set_event(&mut self, event: HwKbMouse) {
 		match event {
-			HwKbMouse::Hw(hi) => self.union0.hi = hi,
-			HwKbMouse::Kb(ki) => self.union0.ki = ki,
-			HwKbMouse::Mouse(mi) => self.union0.mi = mi,
+			HwKbMouse::Hw(hi) => {
+				self.dwType = co::INPUT::HARDWARE;
+				self.union0.hi = hi;
+			},
+			HwKbMouse::Kb(ki) => {
+				self.dwType = co::INPUT::KEYBOARD;
+				self.union0.ki = ki;
+			},
+			HwKbMouse::Mouse(mi) => {
+				self.dwType = co::INPUT::MOUSE;
+				self.union0.mi = mi;
+			},
 		}
 	}
 }
