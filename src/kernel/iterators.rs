@@ -28,11 +28,11 @@ impl<'a> Iterator for DirListIter<'a> {
 				};
 
 				let found = match HFINDFILE::FindFirstFile(&dir_final, &mut self.wfd) {
-					Err(e) => {
+					Err(e) => { // an actual error happened
 						self.no_more = true; // prevent further iterations
-						return Some(Err(e));
+						return Some(Err(e)); // and return the error
 					},
-					Ok((hfind, found)) => {
+					Ok((hfind, found)) => { // call succeeded, bool returned
 						self.hfind = Some(hfind); // store our find handle
 						found
 					},
@@ -41,23 +41,23 @@ impl<'a> Iterator for DirListIter<'a> {
 			},
 			Some(hfind) => { // subsequent passes
 				match hfind.FindNextFile(&mut self.wfd) {
-					Err(e) => {
+					Err(e) => { // an actual error happened
 						self.no_more = true; // prevent further iterations
-						return Some(Err(e));
+						return Some(Err(e)); // and return the error
 					},
-					Ok(found) => found,
+					Ok(found) => found, // call succeeded, bool returned
 				}
 			},
 		};
 
-		if found {
+		if found { // a file was found
 			let file_name = self.wfd.cFileName();
 			if file_name == "." || file_name == ".." { // skip these
 				self.next()
-			} else {
+			} else { // assembly the full path and return it
 				Some(Ok(format!("{}\\{}", self.dir_path, self.wfd.cFileName())))
 			}
-		} else {
+		} else { // no file found, halt
 			None
 		}
 	}
@@ -99,12 +99,11 @@ impl<'a> Iterator for DirWalkIter<'a> {
 			None => {
 				let cur_file = self.runner.next();
 				match cur_file {
-					None => None,
-					Some(cur_file) => {
+					Some(cur_file) => { // a file was found
 						match cur_file {
-							Err(e) => {
+							Err(e) => { // actually an error
 								self.no_more = true; // prevent further iterations
-								Some(Err(e))
+								Some(Err(e)) // return the error
 							},
 							Ok(cur_file) => {
 								if path::is_directory(&cur_file) {
@@ -116,6 +115,7 @@ impl<'a> Iterator for DirWalkIter<'a> {
 							},
 						}
 					},
+					None => None, // no file found, halt
 				}
 			},
 			Some(subdir_runner) => {
