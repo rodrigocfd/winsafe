@@ -62,7 +62,7 @@ impl DlgMain {
 		self.set_icon_if_any(&hinst).unwrap();
 		self.base().hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 
-		Base::run_main_loop(haccel.as_deref()) // blocks until window is closed
+		Base::run_main_loop(haccel.as_deref(), true) // blocks until window is closed
 	}
 
 	fn default_message_handlers(&self) {

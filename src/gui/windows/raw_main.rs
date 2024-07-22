@@ -101,7 +101,7 @@ impl RawMain {
 		self.base().hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 		self.base().hwnd().UpdateWindow()?;
 
-		Base::run_main_loop(opts.accel_table.as_deref()) // blocks until window is closed
+		Base::run_main_loop(opts.accel_table.as_deref(), opts.process_dlg_msgs) // blocks until window is closed
 	}
 
 	fn default_message_handlers(&self) {
@@ -211,6 +211,20 @@ pub struct WindowMainOpts {
 	///
 	/// Defaults to `None`.
 	pub accel_table: Option<DestroyAcceleratorTableGuard>,
+	/// In most applications, the window loop calls
+	/// [`IsDialogMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-isdialogmessagew)
+	/// so child control messages will properly work. However, this has the side
+	/// effect of inhibiting
+	/// [`WM_CHAR`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-char)
+	/// messages from being sent to the window procedure. So, applications which
+	/// do not have child controls and deal directly with character processing –
+	/// like text editors – will never be able to receive `WM_CHAR`.
+	///
+	/// This flag, when `true`, will enable the normal `IsDialogMessage` call in
+	/// the window loop. When `false`, the call will be suppressed.
+	///
+	/// Defaults to `true`.
+	pub process_dlg_msgs: bool,
 }
 
 impl Default for WindowMainOpts {
@@ -227,6 +241,7 @@ impl Default for WindowMainOpts {
 			ex_style: co::WS_EX::LEFT,
 			menu: HMENU::NULL,
 			accel_table: None,
+			process_dlg_msgs: true,
 		}
 	}
 }

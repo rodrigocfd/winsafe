@@ -228,6 +228,7 @@ impl Base {
 
 	pub(in crate::gui) fn run_main_loop(
 		haccel: Option<&HACCEL>,
+		process_dlg_msgs: bool,
 	) -> AnyResult<i32>
 	{
 		let mut msg = MSG::default();
@@ -247,7 +248,7 @@ impl Base {
 			// If a child window, will retrieve its top-level parent.
 			// If a top-level, use itself.
 			let hwnd_top_level = msg.hwnd.GetAncestor(co::GA::ROOT)
-					.unwrap_or(unsafe { msg.hwnd.raw_copy() });
+				.unwrap_or(unsafe { msg.hwnd.raw_copy() });
 
 			// If we have an accelerator table, try to translate the message.
 			if let Some(haccel) = haccel {
@@ -257,7 +258,7 @@ impl Base {
 			}
 
 			// Try to process keyboard actions for child controls.
-			if hwnd_top_level.IsDialogMessage(&mut msg) {
+			if process_dlg_msgs && hwnd_top_level.IsDialogMessage(&mut msg) {
 				continue;
 			}
 
