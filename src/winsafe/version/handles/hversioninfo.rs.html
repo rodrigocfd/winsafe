@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\version\handles\hversioninfo.rs`."><title>hversioninfo.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.81.0-nightly (bcf94dec5 2024-06-23)" data-channel="nightly" data-search-js="search-0fe7219eb170c82e.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\version\handles\hversioninfo.rs`."><title>hversioninfo.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-d7a46bd0e1dce774.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.81.0-nightly (5affbb171 2024-07-18)" data-channel="nightly" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../..\../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -303,7 +303,7 @@
 	}
 
 	<span class="doccomment">/// Calls
-	/// [`HVERSIONINFO::VarQueryValue`](crate::prelude::version_Hversioninfo::VarQueryValue)
+	/// [`HVERSIONINFO::VerQueryValue`](crate::prelude::version_Hversioninfo::VerQueryValue)
 	/// to retrieve a reference to a slice with all languages and code pages.
 	///
 	/// # Examples
@@ -324,7 +324,7 @@
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>langs_and_cps(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;<span class="kw-2">&amp;</span>[(LANGID, co::CP)]&gt; {
 		<span class="kw">unsafe </span>{
-			<span class="self">self</span>.VarQueryValue::&lt;(LANGID, co::CP)&gt;(<span class="string">"\\VarFileInfo\\Translation"</span>)
+			<span class="self">self</span>.VerQueryValue::&lt;(LANGID, co::CP)&gt;(<span class="string">"\\VarFileInfo\\Translation"</span>)
 				.map(|(pblocks, sz)|
 					std::slice::from_raw_parts(
 						pblocks,
@@ -334,7 +334,7 @@
 		}
 	}
 
-	<span class="doccomment">/// [`VarQueryValue`](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-verqueryvaluew)
+	<span class="doccomment">/// [`VerQueryValue`](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-verqueryvaluew)
 	/// function.
 	///
 	/// # Safety
@@ -358,7 +358,7 @@
 	/// let hversion = w::HVERSIONINFO::GetFileVersionInfo(&amp;exe_name)?;
 	///
 	/// let (pvsf, sz_data) = unsafe {
-	///     hversion.VarQueryValue::&lt;w::VS_FIXEDFILEINFO&gt;("\\")?
+	///     hversion.VerQueryValue::&lt;w::VS_FIXEDFILEINFO&gt;("\\")?
 	/// };
 	///
 	/// let ver = unsafe { &amp;*pvsf }.dwFileVersion();
@@ -367,7 +367,7 @@
 	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">unsafe fn </span>VarQueryValue&lt;T&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
+	</span><span class="kw">unsafe fn </span>VerQueryValue&lt;T&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		sub_block: <span class="kw-2">&amp;</span>str,
 	) -&gt; SysResult&lt;(<span class="kw-2">*const </span>T, u32)&gt;
 	{
@@ -385,7 +385,7 @@
 	}
 
 	<span class="doccomment">/// Calls
-	/// [`HVERSIONINFO::VarQueryValue`](crate::prelude::version_Hversioninfo::VarQueryValue)
+	/// [`HVERSIONINFO::VerQueryValue`](crate::prelude::version_Hversioninfo::VerQueryValue)
 	/// to retrieve a string value.
 	///
 	/// Common value names are:
@@ -428,7 +428,7 @@
 		name: <span class="kw-2">&amp;</span>str,
 	) -&gt; SysResult&lt;String&gt; {
 		<span class="kw">unsafe </span>{
-			<span class="self">self</span>.VarQueryValue::&lt;u16&gt;(
+			<span class="self">self</span>.VerQueryValue::&lt;u16&gt;(
 				<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"\\StringFileInfo\\{:04x}{:04x}\\{}"</span>,
 					u16::from(lang_id), u16::from(code_page), name),
 			).map(|(pstr, len)|
@@ -440,12 +440,12 @@
 	}
 
 	<span class="doccomment">/// Calls
-	/// [`HVERSIONINFO::VarQueryValue`](crate::prelude::version_Hversioninfo::VarQueryValue)
+	/// [`HVERSIONINFO::VerQueryValue`](crate::prelude::version_Hversioninfo::VerQueryValue)
 	/// to retrieve a reference to the fixed version block, if any.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>version_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;<span class="kw-2">&amp;</span>VS_FIXEDFILEINFO&gt; {
 		<span class="kw">unsafe </span>{
-			<span class="self">self</span>.VarQueryValue::&lt;VS_FIXEDFILEINFO&gt;(<span class="string">"\\"</span>)
+			<span class="self">self</span>.VerQueryValue::&lt;VS_FIXEDFILEINFO&gt;(<span class="string">"\\"</span>)
 				.map(|(p, <span class="kw">_</span>)| <span class="kw-2">&amp;*</span>p)
 		}
 	}

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\iterators.rs`."><title>iterators.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-dd39b87e5fcfba68.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.81.0-nightly (bcf94dec5 2024-06-23)" data-channel="nightly" data-search-js="search-0fe7219eb170c82e.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\iterators.rs`."><title>iterators.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../../static.files/rustdoc-d7a46bd0e1dce774.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.81.0-nightly (5affbb171 2024-07-18)" data-channel="nightly" data-search-js="search-d234aafac6c221dd.js" data-settings-js="settings-4313503d2e1961c2.js" ><script src="../../../static.files/storage-118b08c4c78b968e.js"></script><script defer src="../../../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-20a3ad099b048cf2.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-df360f571f6edeae.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers"><a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
@@ -475,12 +475,12 @@
 				};
 
 				<span class="kw">let </span>found = <span class="kw">match </span>HFINDFILE::FindFirstFile(<span class="kw-2">&amp;</span>dir_final, <span class="kw-2">&amp;mut </span><span class="self">self</span>.wfd) {
-					<span class="prelude-val">Err</span>(e) =&gt; {
-						<span class="self">self</span>.no_more = <span class="bool-val">true</span>; <span class="comment">// prevent further iterations
-						</span><span class="kw">return </span><span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(e));
-					},
-					<span class="prelude-val">Ok</span>((hfind, found)) =&gt; {
-						<span class="self">self</span>.hfind = <span class="prelude-val">Some</span>(hfind); <span class="comment">// store our find handle
+					<span class="prelude-val">Err</span>(e) =&gt; { <span class="comment">// an actual error happened
+						</span><span class="self">self</span>.no_more = <span class="bool-val">true</span>; <span class="comment">// prevent further iterations
+						</span><span class="kw">return </span><span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(e)); <span class="comment">// and return the error
+					</span>},
+					<span class="prelude-val">Ok</span>((hfind, found)) =&gt; { <span class="comment">// call succeeded, bool returned
+						</span><span class="self">self</span>.hfind = <span class="prelude-val">Some</span>(hfind); <span class="comment">// store our find handle
 						</span>found
 					},
 				};
@@ -488,24 +488,24 @@
 			},
 			<span class="prelude-val">Some</span>(hfind) =&gt; { <span class="comment">// subsequent passes
 				</span><span class="kw">match </span>hfind.FindNextFile(<span class="kw-2">&amp;mut </span><span class="self">self</span>.wfd) {
-					<span class="prelude-val">Err</span>(e) =&gt; {
-						<span class="self">self</span>.no_more = <span class="bool-val">true</span>; <span class="comment">// prevent further iterations
-						</span><span class="kw">return </span><span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(e));
-					},
-					<span class="prelude-val">Ok</span>(found) =&gt; found,
-				}
+					<span class="prelude-val">Err</span>(e) =&gt; { <span class="comment">// an actual error happened
+						</span><span class="self">self</span>.no_more = <span class="bool-val">true</span>; <span class="comment">// prevent further iterations
+						</span><span class="kw">return </span><span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(e)); <span class="comment">// and return the error
+					</span>},
+					<span class="prelude-val">Ok</span>(found) =&gt; found, <span class="comment">// call succeeded, bool returned
+				</span>}
 			},
 		};
 
-		<span class="kw">if </span>found {
-			<span class="kw">let </span>file_name = <span class="self">self</span>.wfd.cFileName();
+		<span class="kw">if </span>found { <span class="comment">// a file was found
+			</span><span class="kw">let </span>file_name = <span class="self">self</span>.wfd.cFileName();
 			<span class="kw">if </span>file_name == <span class="string">"." </span>|| file_name == <span class="string">".." </span>{ <span class="comment">// skip these
 				</span><span class="self">self</span>.next()
-			} <span class="kw">else </span>{
-				<span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">"{}\\{}"</span>, <span class="self">self</span>.dir_path, <span class="self">self</span>.wfd.cFileName())))
+			} <span class="kw">else </span>{ <span class="comment">// assembly the full path and return it
+				</span><span class="prelude-val">Some</span>(<span class="prelude-val">Ok</span>(<span class="macro">format!</span>(<span class="string">"{}\\{}"</span>, <span class="self">self</span>.dir_path, <span class="self">self</span>.wfd.cFileName())))
 			}
-		} <span class="kw">else </span>{
-			<span class="prelude-val">None
+		} <span class="kw">else </span>{ <span class="comment">// no file found, halt
+			</span><span class="prelude-val">None
 		</span>}
 	}
 }
@@ -546,13 +546,12 @@
 			<span class="prelude-val">None </span>=&gt; {
 				<span class="kw">let </span>cur_file = <span class="self">self</span>.runner.next();
 				<span class="kw">match </span>cur_file {
-					<span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>,
-					<span class="prelude-val">Some</span>(cur_file) =&gt; {
-						<span class="kw">match </span>cur_file {
-							<span class="prelude-val">Err</span>(e) =&gt; {
-								<span class="self">self</span>.no_more = <span class="bool-val">true</span>; <span class="comment">// prevent further iterations
-								</span><span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(e))
-							},
+					<span class="prelude-val">Some</span>(cur_file) =&gt; { <span class="comment">// a file was found
+						</span><span class="kw">match </span>cur_file {
+							<span class="prelude-val">Err</span>(e) =&gt; { <span class="comment">// actually an error
+								</span><span class="self">self</span>.no_more = <span class="bool-val">true</span>; <span class="comment">// prevent further iterations
+								</span><span class="prelude-val">Some</span>(<span class="prelude-val">Err</span>(e)) <span class="comment">// return the error
+							</span>},
 							<span class="prelude-val">Ok</span>(cur_file) =&gt; {
 								<span class="kw">if </span>path::is_directory(<span class="kw-2">&amp;</span>cur_file) {
 									<span class="self">self</span>.subdir_runner = <span class="prelude-val">Some</span>(Box::new(<span class="self">Self</span>::new(cur_file))); <span class="comment">// recursively
@@ -563,7 +562,8 @@
 							},
 						}
 					},
-				}
+					<span class="prelude-val">None </span>=&gt; <span class="prelude-val">None</span>, <span class="comment">// no file found, halt
+				</span>}
 			},
 			<span class="prelude-val">Some</span>(subdir_runner) =&gt; {
 				<span class="kw">let </span>inner_file = subdir_runner.next();
