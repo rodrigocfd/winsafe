@@ -55,7 +55,8 @@ impl RawModeless {
 			let mut class_name_buf = WString::new();
 			RawBase::fill_wndclassex(
 				&parent_hinst,
-				opts.class_style, &opts.class_icon, &opts.class_icon,
+				&opts.class_name, opts.class_style,
+				&opts.class_icon, &opts.class_icon,
 				&opts.class_bg_brush, &opts.class_cursor, &mut wcx,
 				&mut class_name_buf)?;
 			let atom = self2.0.raw_base.register_class(&mut wcx)?;

@@ -45,6 +45,7 @@ impl RawBase {
 	/// a hash of all fields.
 	pub(in crate::gui) fn fill_wndclassex<'a>(
 		hinst: &'a HINSTANCE,
+		class_name: &'a str,
 		class_style: co::CS,
 		class_icon: &'a Icon,
 		class_icon_sm: &'a Icon,
@@ -62,7 +63,7 @@ impl RawBase {
 		wcx.hbrBackground = class_bg_brush.as_hbrush();
 		wcx.hCursor = class_cursor.as_hcursor(hinst)?;
 
-		if wcx.lpszClassName().is_none() { // an actual class name was not provided?
+		if class_name.trim().is_empty() { // an actual class name was not provided?
 			*class_name_buf = WString::from_str(
 				&format!(
 					"WNDCLASS.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}",
@@ -74,8 +75,10 @@ impl RawBase {
 					wcx.hIconSm,
 				),
 			);
-			wcx.set_lpszClassName(Some(class_name_buf));
+		} else {
+			*class_name_buf = WString::from_str(class_name);
 		}
+		wcx.set_lpszClassName(Some(class_name_buf));
 
 		Ok(())
 	}

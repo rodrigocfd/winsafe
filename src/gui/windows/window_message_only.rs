@@ -53,7 +53,8 @@ impl WindowMessageOnly {
 		let mut class_name_buf = WString::new();
 		RawBase::fill_wndclassex(
 			&hinst,
-			co::CS::default(), &Icon::None, &Icon::None,
+			"", co::CS::default(),
+			&Icon::None, &Icon::None,
 			&Brush::None, &Cursor::None, &mut wcx,
 			&mut class_name_buf)?;
 		let atom = self.0.register_class(&mut wcx)?;
