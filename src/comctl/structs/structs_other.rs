@@ -774,7 +774,7 @@ pub struct NMHDR {
 impl_default!(NMHDR);
 
 impl NMHDR {
-	/// `Returns the `idFrom` field, the ID of the control sending the message.
+	/// Returns the `idFrom` field, the ID of the control sending the message.
 	#[must_use]
 	pub const fn idFrom(&self) -> u16 {
 		self.idFrom as _
