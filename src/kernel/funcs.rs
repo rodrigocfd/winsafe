@@ -1288,15 +1288,6 @@ pub fn QueryUnbiasedInterruptTime() -> SysResult<u64> {
 		.map(|_| t)
 }
 
-/// [`QueryUnbiasedInterruptTimePrecise`](https://learn.microsoft.com/en-us/windows/win32/api/realtimeapiset/nf-realtimeapiset-queryunbiasedinterrupttimeprecise)
-/// function.
-#[must_use]
-pub fn QueryUnbiasedInterruptTimePrecise() -> u64 {
-	let mut t = u64::default();
-	unsafe { ffi::QueryUnbiasedInterruptTimePrecise(&mut t); }
-	t
-}
-
 /// [`ReplaceFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew)
 /// function.
 ///

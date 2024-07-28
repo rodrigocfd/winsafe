@@ -25,7 +25,7 @@ WinSafe documentation:
 
 | Native FFI item | Count |
 | - | -: |
-| Functions | 784 |
+| Functions | 783 |
 | Structs | 237 |
 | Constants | 13,417 |
 | Window messages | 655 |
@@ -77,6 +77,7 @@ The following Cargo features are available so far:
 | `mf` | [Media Foundation](https://learn.microsoft.com/en-us/windows/win32/medfound/microsoft-media-foundation-sdk) |
 | `ole` | Basic OLE/COM support |
 | `oleaut` | [OLE Automation](https://learn.microsoft.com/en-us/windows/win32/api/_automat/) |
+| **`raw-dylib`** | **Enables [raw-dylib](https://doc.rust-lang.org/reference/items/external-blocks.html#the-link-attribute) linking** |
 | `shell` | Shell32.dll, Shlwapi.dll, and Userenv.dll, the COM-based [Windows Shell](https://learn.microsoft.com/en-us/windows/win32/shell/shell-entry) |
 | `taskschd` | [Task Scheduler](https://learn.microsoft.com/en-us/windows/win32/taskschd/task-scheduler-start-page) |
 | `user` | User32.dll and ComDlg32.dll, the basic Windows GUI support |

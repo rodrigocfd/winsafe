@@ -19,7 +19,8 @@ macro_rules! extern_sys {
 			$func:ident( $( $parm:ty ),* ) $( -> $ret:ty )?
 		)*
 	) => {
-		#[link(name = $dll, kind = "raw-dylib")]
+		#[cfg_attr(not(feature = "raw-dylib"), link(name = $dll))]
+		#[cfg_attr(feature = "raw-dylib", link(name = $dll, kind = "raw-dylib"))]
 		extern "system" {
 			$(
 				one_func!( $func( $( $parm ),* ) $(-> $ret)? );

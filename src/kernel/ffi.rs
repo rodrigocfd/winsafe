@@ -150,7 +150,6 @@ extern_sys! { "kernel32";
 	QueryProcessCycleTime(HANDLE, &mut u64) -> BOOL
 	QueryThreadCycleTime(HANDLE, &mut u64) -> BOOL
 	QueryUnbiasedInterruptTime(&mut u64) -> BOOL
-	QueryUnbiasedInterruptTimePrecise(&mut u64)
 	ReadConsoleW(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
 	ReadFile(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
 	ReplaceFileW(PCSTR, PCSTR, PCSTR, u32, PVOID, PVOID) -> BOOL
