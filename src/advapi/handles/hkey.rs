@@ -432,6 +432,10 @@ pub trait advapi_Hkey: Handle {
 			},
 		)?;
 
+		if data_len1 == data_len2 + 2 { // https://stackoverflow.com/q/29223180
+			data_len1 -=2;
+		}
+
 		validate_retrieved_reg_val(
 			unsafe { co::REG::from_raw(raw_data_type1) }, data_len1,
 			unsafe { co::REG::from_raw(raw_data_type2) }, data_len2,
