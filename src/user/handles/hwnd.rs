@@ -1979,9 +1979,17 @@ pub trait user_Hwnd: Handle {
 
 	/// [`ValidateRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-validaterect)
 	/// function.
-	fn ValidateRect(&self, rc: RECT) -> SysResult<()> {
+	fn ValidateRect(&self, rc: Option<RECT>) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { ffi::ValidateRect(self.ptr(), &rc as *const _ as _) },
+			unsafe {
+				ffi::ValidateRect(
+					self.ptr(),
+					match rc {
+						Some(rc) => &rc as *const _ as _,
+						None => std::ptr::null_mut(),
+					},
+				)
+			},
 		)
 	}
 
