@@ -29,7 +29,7 @@ pub trait uxtheme_Htheme: Handle {
 		hdc: &HDC,
 		part_state: co::VS,
 		rc: RECT,
-		rc_clip: RECT,
+		rc_clip: Option<RECT>,
 	) -> HrResult<()>
 	{
 		ok_to_hrresult(
@@ -40,7 +40,10 @@ pub trait uxtheme_Htheme: Handle {
 					part_state.part,
 					part_state.state,
 					&rc as *const _ as _,
-					&rc_clip as *const _ as _,
+					match rc_clip {
+						Some(rc_clip) => &rc_clip as *const _ as _,
+						None => std::ptr::null(),
+					},
 				)
 			},
 		)

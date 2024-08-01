@@ -250,16 +250,16 @@ pub(in crate::gui) fn paint_control_borders(
 		// Draw only the borders to avoid flickering.
 		htheme.DrawThemeBackground(&hdc,
 			co::VS::LISTVIEW_LISTGROUP, rc,
-			RECT { left: rc.left, top: rc.top, right: rc.left + 2, bottom: rc.bottom })?;
+			Some(RECT { left: rc.left, top: rc.top, right: rc.left + 2, bottom: rc.bottom }))?;
 		htheme.DrawThemeBackground(&hdc,
 			co::VS::LISTVIEW_LISTGROUP, rc,
-			RECT { left: rc.left, top: rc.top, right: rc.right, bottom: rc.top + 2 })?;
+			Some(RECT { left: rc.left, top: rc.top, right: rc.right, bottom: rc.top + 2 }))?;
 		htheme.DrawThemeBackground(&hdc,
 			co::VS::LISTVIEW_LISTGROUP, rc,
-			RECT { left: rc.right - 2, top: rc.top, right: rc.right, bottom: rc.bottom })?;
+			Some(RECT { left: rc.right - 2, top: rc.top, right: rc.right, bottom: rc.bottom }))?;
 		htheme.DrawThemeBackground(&hdc,
 			co::VS::LISTVIEW_LISTGROUP, rc,
-			RECT { left: rc.left, top: rc.bottom - 2, right: rc.right, bottom: rc.bottom })?;
+			Some(RECT { left: rc.left, top: rc.bottom - 2, right: rc.right, bottom: rc.bottom }))?;
 	}
 
 	Ok(())
