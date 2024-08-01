@@ -46,7 +46,7 @@ Add the dependency in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-winsafe = { version = "0.0.21", features = [] }
+winsafe = { version = "0.0.22", features = [] }
 ```
 
 You can, alternatively, use the Nightly (master) branch [directly](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies-from-git-repositories), to get the latest features right away:
@@ -84,28 +84,6 @@ The following Cargo features are available so far:
 | `uxtheme` | UxTheme.dll, extended window theming |
 | `version` | Version.dll, to manipulate *.exe version info |
 
-```mermaid
-graph LR
-    kernel
-    kernel --> advapi
-    kernel --> user
-    kernel --> version
-    user --> gdi
-    user --> ole
-    gdi --> uxtheme
-    ole --> oleaut
-    ole --> comctl
-    ole --> dxgi
-    ole --> uxtheme
-    comctl --> gui
-    oleaut --> dshow
-    oleaut --> mf
-    oleaut --> shell
-    oleaut --> taskschd
-    uxtheme --> dwm
-uxtheme --> gui
-```
-
 Don't worry about including dependency features. Once you use a feature, Cargo will add and resolve all dependencies automatically.
 
 ## Example
@@ -123,7 +101,7 @@ The [example below](https://github.com/rodrigocfd/winsafe-examples/tree/master/0
 
 ```toml
 [dependencies]
-winsafe = { version = "0.0.21", features = ["gui"] }
+winsafe = { version = "0.0.22", features = ["gui"] }
 ```
 
 ```rust
