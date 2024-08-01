@@ -796,6 +796,7 @@
 <a href="#796" id="796">796</a>
 <a href="#797" id="797">797</a>
 <a href="#798" id="798">798</a>
+<a href="#799" id="799">799</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
@@ -1227,6 +1228,7 @@
 
 <span class="doccomment">/// [`POWERBROADCAST_SETTING`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-powerbroadcast_setting)
 /// struct.
+</span><span class="attr">#[allow(dead_code)] </span><span class="comment">// used by wm::PowerBroadcast in user
 </span><span class="attr">#[repr(C)]
 </span><span class="kw">pub struct </span>POWERBROADCAST_SETTING {
 	<span class="kw">pub </span>PowerSetting: co::POWER_SETTING,
