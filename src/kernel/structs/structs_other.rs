@@ -429,6 +429,7 @@ impl_default!(OVERLAPPED);
 
 /// [`POWERBROADCAST_SETTING`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-powerbroadcast_setting)
 /// struct.
+#[allow(dead_code)] // used by wm::PowerBroadcast in user
 #[repr(C)]
 pub struct POWERBROADCAST_SETTING {
 	pub PowerSetting: co::POWER_SETTING,
