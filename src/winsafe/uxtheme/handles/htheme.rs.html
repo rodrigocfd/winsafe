@@ -314,6 +314,9 @@
 <a href="#314" id="314">314</a>
 <a href="#315" id="315">315</a>
 <a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a>
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
@@ -345,7 +348,7 @@
 		hdc: <span class="kw-2">&amp;</span>HDC,
 		part_state: co::VS,
 		rc: RECT,
-		rc_clip: RECT,
+		rc_clip: <span class="prelude-ty">Option</span>&lt;RECT&gt;,
 	) -&gt; HrResult&lt;()&gt;
 	{
 		ok_to_hrresult(
@@ -356,7 +359,10 @@
 					part_state.part,
 					part_state.state,
 					<span class="kw-2">&amp;</span>rc <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-					<span class="kw-2">&amp;</span>rc_clip <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+					<span class="kw">match </span>rc_clip {
+						<span class="prelude-val">Some</span>(rc_clip) =&gt; <span class="kw-2">&amp;</span>rc_clip <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+						<span class="prelude-val">None </span>=&gt; std::ptr::null(),
+					},
 				)
 			},
 		)
