@@ -18,7 +18,7 @@ struct Obj { // actual fields of ListBox
 //------------------------------------------------------------------------------
 
 /// Native
-/// [list box](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
+/// [list box](https://learn.microsoft.com/en-us/windows/win32/controls/about-list-boxes)
 /// control. Not to be confused with the more complex
 /// [list view](crate::gui::ListView) control.
 #[derive(Clone)]
