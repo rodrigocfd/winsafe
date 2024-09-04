@@ -24,11 +24,15 @@
 <a href="#24" id="24">24</a>
 <a href="#25" id="25">25</a>
 <a href="#26" id="26">26</a>
+<a href="#27" id="27">27</a>
+<a href="#28" id="28">28</a>
 </pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::mf::ffi;
 
 <span class="doccomment">/// RAII implementation which automatically calls
 /// [`MFShutdown`](https://learn.microsoft.com/en-us/windows/win32/api/mfapi/nf-mfapi-mfshutdown)
 /// when the object goes out of scope.
+///
+/// Returned by [`MFStartup`](crate::MFStartup).
 </span><span class="kw">pub struct </span>MFShutdownGuard {}
 
 <span class="kw">impl </span>Drop <span class="kw">for </span>MFShutdownGuard {
