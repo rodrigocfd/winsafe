@@ -3,6 +3,8 @@ use crate::mf::ffi;
 /// RAII implementation which automatically calls
 /// [`MFShutdown`](https://learn.microsoft.com/en-us/windows/win32/api/mfapi/nf-mfapi-mfshutdown)
 /// when the object goes out of scope.
+///
+/// Returned by [`MFStartup`](crate::MFStartup).
 pub struct MFShutdownGuard {}
 
 impl Drop for MFShutdownGuard {

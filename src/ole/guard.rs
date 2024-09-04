@@ -125,6 +125,8 @@ impl CoUninitializeGuard {
 /// RAII implementation which automatically calls
 /// [`OleUninitialize`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-oleuninitialize)
 /// when the object goes out of scope.
+///
+/// Returned by [`OleInitialize`](crate::OleInitialize).
 pub struct OleUninitializeGuard {}
 
 impl Drop for OleUninitializeGuard {

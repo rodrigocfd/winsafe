@@ -360,7 +360,7 @@ pub fn CreatePointerMoniker(unk: &impl ole_IUnknown) -> HrResult<IMoniker> {
 ///
 /// // program runs...
 ///
-/// // OleUninitializeGuard() automatically called
+/// // OleUninitialize() automatically called
 /// # w::HrResult::Ok(())
 /// ```
 #[must_use]
