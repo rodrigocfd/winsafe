@@ -18,6 +18,8 @@ extern_sys! { "ole32";
 	CreateItemMoniker(PCSTR, PCSTR, *mut COMPTR) -> HRES
 	CreateObjrefMoniker(COMPTR, *mut COMPTR) -> HRES
 	CreatePointerMoniker(COMPTR, *mut COMPTR) -> HRES
+	OleInitialize(PVOID) -> HRES
+	OleUninitialize()
 	RegisterDragDrop(HANDLE, COMPTR) -> HRES
 	RevokeDragDrop(HANDLE) -> HRES
 	StringFromCLSID(PCVOID, *mut PSTR) -> HRES

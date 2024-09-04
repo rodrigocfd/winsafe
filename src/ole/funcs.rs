@@ -337,6 +337,40 @@ pub fn CreatePointerMoniker(unk: &impl ole_IUnknown) -> HrResult<IMoniker> {
 	).map(|_| queried)
 }
 
+/// [`OleInitialize`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-oleinitialize)
+/// function, which calls [`CoInitializeEx`](crate::CoInitializeEx) and enables
+/// OLE operations.
+///
+/// In the original C implementation, you must call
+/// [`OleUninitialize`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-oleuninitialize)
+/// as a cleanup operation.
+///
+/// Here, the cleanup is performed automatically, because `OleInitialize`
+/// returns an [`OleUninitializeGuard`](crate::guard::OleUninitializeGuard),
+/// which automatically calls `OleUninitialize` when the guard goes out of
+/// scope. You must, however, keep the guard alive, otherwise the cleanup will
+/// be performed right away.
+///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*, co};
+///
+/// let _ole_guard = w::OleInitialize()?;
+///
+/// // program runs...
+///
+/// // OleUninitializeGuard() automatically called
+/// # w::HrResult::Ok(())
+/// ```
+#[must_use]
+pub fn OleInitialize() -> HrResult<OleUninitializeGuard> {
+	unsafe {
+		ok_to_hrresult(ffi::OleInitialize(std::ptr::null_mut()))
+			.map(|_| OleUninitializeGuard::new())
+	}
+}
+
 /// [`StringFromCLSID`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-stringfromclsid)
 /// function.
 #[must_use]

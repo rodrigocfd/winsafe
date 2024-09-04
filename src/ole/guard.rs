@@ -119,3 +119,30 @@ impl CoUninitializeGuard {
 		self.hr
 	}
 }
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation which automatically calls
+/// [`OleUninitialize`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-oleuninitialize)
+/// when the object goes out of scope.
+pub struct OleUninitializeGuard {}
+
+impl Drop for OleUninitializeGuard {
+	fn drop(&mut self) {
+		unsafe { ffi::OleUninitialize(); }
+	}
+}
+
+impl OleUninitializeGuard {
+	/// Constructs the guard by taking ownership of the code.
+	///
+	/// # Safety
+	///
+	/// Be sure you need to call
+	/// [`OleUninitialize`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-oleuninitialize)
+	/// at the end of scope.
+	#[must_use]
+	pub const unsafe fn new() -> Self {
+		Self {}
+	}
+}
