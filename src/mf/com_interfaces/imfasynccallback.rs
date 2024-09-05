@@ -60,7 +60,7 @@ impl IMFAsyncCallbackImpl {
 	com_interface_userdef_iunknown_methods!(Self);
 
 	fn GetParameters(p: COMPTR, pdwFlags: *mut u32, pdwQueue: *mut u32) -> HRES {
-		let box_impl = box_impl::<Self>(p);
+		let box_impl = box_impl_of::<Self>(p);
 		let ret = match &box_impl.GetParameters {
 			Some(func) => func(),
 			None => Ok((co::MFASYNC::default(), u32::default())),
@@ -76,9 +76,9 @@ impl IMFAsyncCallbackImpl {
 	}
 
 	fn Invoke(p: COMPTR, pAsyncResult: COMPTR) -> HRES {
-		let box_impl = box_impl::<Self>(p);
+		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(
-			&match &box_impl.Invoke {
+			match &box_impl.Invoke {
 				Some(func) => {
 					let ar = ManuallyDrop::new(unsafe { IMFAsyncResult::from_ptr(pAsyncResult) });
 					func(&ar)

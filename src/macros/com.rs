@@ -58,7 +58,7 @@ macro_rules! com_interface_userdef {
 	) => {
 		$( #[$doc] )*
 		#[repr(transparent)]
-		pub struct $name(*mut $impl);
+		pub struct $name(*mut $impl); // wrap a pointer to the heap-allocated VT struct
 
 		unsafe impl Send for $name {}
 
@@ -66,7 +66,7 @@ macro_rules! com_interface_userdef {
 			fn drop(&mut self) {
 				if !self.0.is_null() {
 					let ppvt = &self.0 as *const *mut $impl;
-					$impl::Release(ppvt as _);
+					$impl::Release(ppvt as _); // Release() is responsible for freeing the memory
 				}
 			}
 		}
@@ -101,7 +101,7 @@ macro_rules! com_interface_userdef {
 			/// closures to handle events.
 			#[must_use]
 			pub fn new_impl() -> Self {
-				let box_impl = Box::new($impl::new());
+				let box_impl = Box::new($impl::new()); // alloc the VT struct in the heap
 				Self(Box::into_raw(box_impl))
 			}
 		}
@@ -118,16 +118,16 @@ macro_rules! com_interface_userdef_iunknown_methods {
 		}
 
 		fn AddRef(p: COMPTR) -> u32 {
-			let box_impl = box_impl::<Self>(p);
+			let box_impl = box_impl_of::<Self>(p);
 			let cc = box_impl.counter.fetch_add(1, std::sync::atomic::Ordering::Relaxed) + 1;
 			cc
 		}
 
 		fn Release(p: COMPTR) -> u32 {
-			let mut box_impl = box_impl::<Self>(p);
+			let mut box_impl = box_impl_of::<Self>(p);
 			let count = box_impl.counter.fetch_sub(1, std::sync::atomic::Ordering::Relaxed) - 1;
 			if count == 0 {
-				unsafe { std::mem::ManuallyDrop::drop(&mut box_impl); }
+				unsafe { std::mem::ManuallyDrop::drop(&mut box_impl); } // free the memory block
 			}
 			count
 		}

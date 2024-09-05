@@ -12,9 +12,10 @@ pub(crate) unsafe fn vt<T>(obj: &impl ole_IUnknown) -> &T {
 	&**ppvt
 }
 
-/// Converts the pointer into the Box for the COM implementation.
+/// Given the pointer to the memory block, converts it to the `Box` of the
+/// allocated VT struct.
 #[must_use]
-pub(crate) fn box_impl<T>(p: COMPTR) -> ManuallyDrop<Box<T>> {
+pub(crate) fn box_impl_of<T>(p: COMPTR) -> ManuallyDrop<Box<T>> {
 	let pp = p as *mut *mut T;
 	let box_impl = ManuallyDrop::new(unsafe { Box::from_raw(*pp) });
 	box_impl
@@ -42,7 +43,7 @@ pub(crate) const fn okfalse_to_hrresult(hr: HRES) -> HrResult<bool> {
 
 /// If value is `Ok` yields 0, otherwise the error code.
 #[must_use]
-pub(crate) const fn hrresult_to_hres<T>(hrr: &HrResult<T>) -> HRES {
+pub(crate) fn hrresult_to_hres<T>(hrr: HrResult<T>) -> HRES {
 	match hrr {
 		Ok(_) => co::HRESULT::S_OK.raw(),
 		Err(e) => e.raw(),

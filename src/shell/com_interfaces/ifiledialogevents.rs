@@ -128,9 +128,9 @@ impl IFileDialogEventsImpl {
 	com_interface_userdef_iunknown_methods!(Self);
 
 	fn OnFileOk(p: COMPTR, pfd: COMPTR) -> HRES {
-		let box_impl = box_impl::<Self>(p);
+		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(
-			&match &box_impl.OnFileOk {
+			match &box_impl.OnFileOk {
 				Some(func) => {
 					let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
 					func(&fd)
@@ -141,9 +141,9 @@ impl IFileDialogEventsImpl {
 	}
 
 	fn OnFolderChanging(p: COMPTR, pfd: COMPTR, psiFolder: COMPTR) -> HRES {
-		let box_impl = box_impl::<Self>(p);
+		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(
-			&match &box_impl.OnFolderChanging {
+			match &box_impl.OnFolderChanging {
 				Some(func) => {
 					let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
 					let si = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiFolder) });
@@ -155,9 +155,9 @@ impl IFileDialogEventsImpl {
 	}
 
 	fn OnFolderChange(p: COMPTR, pfd: COMPTR) -> HRES {
-		let box_impl = box_impl::<Self>(p);
+		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(
-			&match &box_impl.OnFolderChange {
+			match &box_impl.OnFolderChange {
 				Some(func) => {
 					let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
 					func(&fd)
@@ -168,9 +168,9 @@ impl IFileDialogEventsImpl {
 	}
 
 	fn OnSelectionChange(p: COMPTR, pfd: COMPTR) -> HRES {
-		let box_impl = box_impl::<Self>(p);
+		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(
-			&match &box_impl.OnSelectionChange {
+			match &box_impl.OnSelectionChange {
 				Some(func) => {
 					let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
 					func(&fd)
@@ -187,7 +187,7 @@ impl IFileDialogEventsImpl {
 		pResponse: *mut u32,
 	) -> HRES
 	{
-		let box_impl = box_impl::<Self>(p);
+		let box_impl = box_impl_of::<Self>(p);
 		let ret = match &box_impl.OnShareViolation {
 			Some(func) => {
 				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
@@ -206,9 +206,9 @@ impl IFileDialogEventsImpl {
 	}
 
 	fn OnTypeChange(p: COMPTR, pfd: COMPTR) -> HRES {
-		let box_impl = box_impl::<Self>(p);
+		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(
-			&match &box_impl.OnTypeChange {
+			match &box_impl.OnTypeChange {
 				Some(func) => {
 					let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
 					func(&fd)
@@ -225,7 +225,7 @@ impl IFileDialogEventsImpl {
 		pResponse: *mut u32,
 	) -> HRES
 	{
-		let box_impl = box_impl::<Self>(p);
+		let box_impl = box_impl_of::<Self>(p);
 		let ret = match &box_impl.OnOverwrite {
 			Some(func) => {
 				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
