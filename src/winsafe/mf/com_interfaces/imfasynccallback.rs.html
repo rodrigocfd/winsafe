@@ -86,8 +86,6 @@
 <a href="#86" id="86">86</a>
 <a href="#87" id="87">87</a>
 <a href="#88" id="88">88</a>
-<a href="#89" id="89">89</a>
-<a href="#90" id="90">90</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::mem::ManuallyDrop;
@@ -110,7 +108,7 @@
 </span>}
 
 <span class="kw">impl </span>IMFAsyncCallback {
-	<span class="macro">fn_com_userdef_closure!</span> { GetParameters: Fn() -&gt; HrResult&lt;(co::MFASYNC, u32)&gt;;
+	<span class="macro">fn_com_userdef_closure!</span> { GetParameters: Fn(<span class="kw-2">&amp;mut </span>co::MFASYNC, <span class="kw-2">&amp;mut </span>u32) -&gt; HrResult&lt;()&gt;;
 		<span class="doccomment">/// [`IMFAsyncCallback::GetParameters`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasynccallback-getparameters)
 		/// method.
 	</span>}
@@ -125,12 +123,12 @@
 </span><span class="kw">pub struct </span>IMFAsyncCallbackImpl {
 	vt: IMFAsyncCallbackVT,
 	counter: AtomicU32,
-	GetParameters: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn() -&gt; HrResult&lt;(co::MFASYNC, u32)&gt;&gt;&gt;,
+	GetParameters: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;mut </span>co::MFASYNC, <span class="kw-2">&amp;mut </span>u32) -&gt; HrResult&lt;()&gt;&gt;&gt;,
 	Invoke: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>IMFAsyncResult) -&gt; HrResult&lt;()&gt;&gt;&gt;,
 }
 
 <span class="kw">impl </span>IMFAsyncCallbackImpl {
-	<span class="kw">const fn </span>new() -&gt; <span class="self">Self </span>{
+	<span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			vt: IMFAsyncCallbackVT {
 				IUnknownVT: IUnknownVT {
@@ -150,25 +148,23 @@
 	<span class="macro">com_interface_userdef_iunknown_methods!</span>(<span class="self">Self</span>);
 
 	<span class="kw">fn </span>GetParameters(p: COMPTR, pdwFlags: <span class="kw-2">*mut </span>u32, pdwQueue: <span class="kw-2">*mut </span>u32) -&gt; HRES {
-		<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
-		<span class="kw">let </span>ret = <span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.GetParameters {
-			<span class="prelude-val">Some</span>(func) =&gt; func(),
-			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>((co::MFASYNC::default(), u32::default())),
-		};
-		<span class="kw">match </span>ret {
-			<span class="prelude-val">Ok</span>(ret) =&gt; <span class="kw">unsafe </span>{
-				<span class="kw-2">*</span>pdwFlags = ret.<span class="number">0</span>.raw();
-				<span class="kw-2">*</span>pdwQueue = ret.<span class="number">1</span>;
-				co::HRESULT::S_OK.raw()
+		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
+		hrresult_to_hres(
+			<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.GetParameters {
+				<span class="prelude-val">Some</span>(func) =&gt; {
+					<span class="kw">let </span>pflags = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(pdwFlags <span class="kw">as </span><span class="kw-2">*mut </span>co::MFASYNC) };
+					<span class="kw">let </span>pqueue = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(pdwQueue) };
+					func(pflags, pqueue)
+				},
+				<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(()),
 			},
-			<span class="prelude-val">Err</span>(e) =&gt; e.raw(),
-		}
+		)
 	}
 
 	<span class="kw">fn </span>Invoke(p: COMPTR, pAsyncResult: COMPTR) -&gt; HRES {
-		<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
+		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
 		hrresult_to_hres(
-			<span class="kw-2">&amp;</span><span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.Invoke {
+			<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.Invoke {
 				<span class="prelude-val">Some</span>(func) =&gt; {
 					<span class="kw">let </span>ar = ManuallyDrop::new(<span class="kw">unsafe </span>{ IMFAsyncResult::from_ptr(pAsyncResult) });
 					func(<span class="kw-2">&amp;</span>ar)

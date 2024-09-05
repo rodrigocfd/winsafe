@@ -235,14 +235,6 @@
 <a href="#235" id="235">235</a>
 <a href="#236" id="236">236</a>
 <a href="#237" id="237">237</a>
-<a href="#238" id="238">238</a>
-<a href="#239" id="239">239</a>
-<a href="#240" id="240">240</a>
-<a href="#241" id="241">241</a>
-<a href="#242" id="242">242</a>
-<a href="#243" id="243">243</a>
-<a href="#244" id="244">244</a>
-<a href="#245" id="245">245</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::mem::ManuallyDrop;
@@ -308,7 +300,7 @@
 		/// method.
 	</span>}
 
-	<span class="macro">fn_com_userdef_closure!</span> { OnOverwrite: Fn(<span class="kw-2">&amp;</span>IFileDialog, <span class="kw-2">&amp;</span>IShellItem) -&gt; HrResult&lt;co::FDEOR&gt;;
+	<span class="macro">fn_com_userdef_closure!</span> { OnOverwrite: Fn(<span class="kw-2">&amp;</span>IFileDialog, <span class="kw-2">&amp;</span>IShellItem, <span class="kw-2">&amp;mut </span>co::FDEOR) -&gt; HrResult&lt;()&gt;;
 		<span class="doccomment">/// [`IFileDialogEvents::OnOverwrite`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onoverwrite)
 		/// method.
 	</span>}
@@ -318,7 +310,7 @@
 		/// method.
 	</span>}
 
-	<span class="macro">fn_com_userdef_closure!</span> { OnShareViolation: Fn(<span class="kw-2">&amp;</span>IFileDialog, <span class="kw-2">&amp;</span>IShellItem) -&gt; HrResult&lt;co::FDESVR&gt;;
+	<span class="macro">fn_com_userdef_closure!</span> { OnShareViolation: Fn(<span class="kw-2">&amp;</span>IFileDialog, <span class="kw-2">&amp;</span>IShellItem, <span class="kw-2">&amp;mut </span>co::FDESVR) -&gt; HrResult&lt;()&gt;;
 		<span class="doccomment">/// [`IFileDialogEvents::OnShareViolation`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onshareviolation)
 		/// method.
 	</span>}
@@ -337,13 +329,13 @@
 	OnFolderChanging: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>IFileDialog, <span class="kw-2">&amp;</span>IShellItem) -&gt; HrResult&lt;()&gt;&gt;&gt;,
 	OnFolderChange: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>IFileDialog) -&gt; HrResult&lt;()&gt;&gt;&gt;,
 	OnSelectionChange: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>IFileDialog) -&gt; HrResult&lt;()&gt;&gt;&gt;,
-	OnShareViolation: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>IFileDialog, <span class="kw-2">&amp;</span>IShellItem) -&gt; HrResult&lt;co::FDESVR&gt;&gt;&gt;,
+	OnShareViolation: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>IFileDialog, <span class="kw-2">&amp;</span>IShellItem, <span class="kw-2">&amp;mut </span>co::FDESVR) -&gt; HrResult&lt;()&gt;&gt;&gt;,
 	OnTypeChange: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>IFileDialog) -&gt; HrResult&lt;()&gt;&gt;&gt;,
-	OnOverwrite: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>IFileDialog, <span class="kw-2">&amp;</span>IShellItem) -&gt; HrResult&lt;co::FDEOR&gt;&gt;&gt;,
+	OnOverwrite: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>IFileDialog, <span class="kw-2">&amp;</span>IShellItem, <span class="kw-2">&amp;mut </span>co::FDEOR) -&gt; HrResult&lt;()&gt;&gt;&gt;,
 }
 
 <span class="kw">impl </span>IFileDialogEventsImpl {
-	<span class="kw">const fn </span>new() -&gt; <span class="self">Self </span>{
+	<span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			vt: IFileDialogEventsVT {
 				IUnknownVT: IUnknownVT {
@@ -373,9 +365,9 @@
 	<span class="macro">com_interface_userdef_iunknown_methods!</span>(<span class="self">Self</span>);
 
 	<span class="kw">fn </span>OnFileOk(p: COMPTR, pfd: COMPTR) -&gt; HRES {
-		<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
+		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
 		hrresult_to_hres(
-			<span class="kw-2">&amp;</span><span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.OnFileOk {
+			<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.OnFileOk {
 				<span class="prelude-val">Some</span>(func) =&gt; {
 					<span class="kw">let </span>fd = ManuallyDrop::new(<span class="kw">unsafe </span>{ IFileDialog::from_ptr(pfd) });
 					func(<span class="kw-2">&amp;</span>fd)
@@ -386,9 +378,9 @@
 	}
 
 	<span class="kw">fn </span>OnFolderChanging(p: COMPTR, pfd: COMPTR, psiFolder: COMPTR) -&gt; HRES {
-		<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
+		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
 		hrresult_to_hres(
-			<span class="kw-2">&amp;</span><span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.OnFolderChanging {
+			<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.OnFolderChanging {
 				<span class="prelude-val">Some</span>(func) =&gt; {
 					<span class="kw">let </span>fd = ManuallyDrop::new(<span class="kw">unsafe </span>{ IFileDialog::from_ptr(pfd) });
 					<span class="kw">let </span>si = ManuallyDrop::new(<span class="kw">unsafe </span>{ IShellItem::from_ptr(psiFolder) });
@@ -400,9 +392,9 @@
 	}
 
 	<span class="kw">fn </span>OnFolderChange(p: COMPTR, pfd: COMPTR) -&gt; HRES {
-		<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
+		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
 		hrresult_to_hres(
-			<span class="kw-2">&amp;</span><span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.OnFolderChange {
+			<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.OnFolderChange {
 				<span class="prelude-val">Some</span>(func) =&gt; {
 					<span class="kw">let </span>fd = ManuallyDrop::new(<span class="kw">unsafe </span>{ IFileDialog::from_ptr(pfd) });
 					func(<span class="kw-2">&amp;</span>fd)
@@ -413,9 +405,9 @@
 	}
 
 	<span class="kw">fn </span>OnSelectionChange(p: COMPTR, pfd: COMPTR) -&gt; HRES {
-		<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
+		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
 		hrresult_to_hres(
-			<span class="kw-2">&amp;</span><span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.OnSelectionChange {
+			<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.OnSelectionChange {
 				<span class="prelude-val">Some</span>(func) =&gt; {
 					<span class="kw">let </span>fd = ManuallyDrop::new(<span class="kw">unsafe </span>{ IFileDialog::from_ptr(pfd) });
 					func(<span class="kw-2">&amp;</span>fd)
@@ -432,28 +424,24 @@
 		pResponse: <span class="kw-2">*mut </span>u32,
 	) -&gt; HRES
 	{
-		<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
-		<span class="kw">let </span>ret = <span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.OnShareViolation {
-			<span class="prelude-val">Some</span>(func) =&gt; {
-				<span class="kw">let </span>fd = ManuallyDrop::new(<span class="kw">unsafe </span>{ IFileDialog::from_ptr(pfd) });
-				<span class="kw">let </span>si = ManuallyDrop::new(<span class="kw">unsafe </span>{ IShellItem::from_ptr(psi) });
-				func(<span class="kw-2">&amp;</span>fd, <span class="kw-2">&amp;</span>si)
+		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
+		hrresult_to_hres(
+			<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.OnShareViolation {
+				<span class="prelude-val">Some</span>(func) =&gt; {
+					<span class="kw">let </span>fd = ManuallyDrop::new(<span class="kw">unsafe </span>{ IFileDialog::from_ptr(pfd) });
+					<span class="kw">let </span>si = ManuallyDrop::new(<span class="kw">unsafe </span>{ IShellItem::from_ptr(psi) });
+					<span class="kw">let </span>presp = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(pResponse <span class="kw">as </span><span class="kw-2">*mut </span>co::FDESVR) };
+					func(<span class="kw-2">&amp;</span>fd, <span class="kw-2">&amp;</span>si, presp)
+				},
+				<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(()),
 			},
-			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(co::FDESVR::DEFAULT),
-		};
-		<span class="kw">match </span>ret {
-			<span class="prelude-val">Ok</span>(ret) =&gt; {
-				<span class="kw">unsafe </span>{ <span class="kw-2">*</span>pResponse = ret.raw(); }
-				co::HRESULT::S_OK.raw()
-			},
-			<span class="prelude-val">Err</span>(e) =&gt; e.raw(),
-		}
+		)
 	}
 
 	<span class="kw">fn </span>OnTypeChange(p: COMPTR, pfd: COMPTR) -&gt; HRES {
-		<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
+		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
 		hrresult_to_hres(
-			<span class="kw-2">&amp;</span><span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.OnTypeChange {
+			<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.OnTypeChange {
 				<span class="prelude-val">Some</span>(func) =&gt; {
 					<span class="kw">let </span>fd = ManuallyDrop::new(<span class="kw">unsafe </span>{ IFileDialog::from_ptr(pfd) });
 					func(<span class="kw-2">&amp;</span>fd)
@@ -470,22 +458,18 @@
 		pResponse: <span class="kw-2">*mut </span>u32,
 	) -&gt; HRES
 	{
-		<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
-		<span class="kw">let </span>ret = <span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.OnOverwrite {
-			<span class="prelude-val">Some</span>(func) =&gt; {
-				<span class="kw">let </span>fd = ManuallyDrop::new(<span class="kw">unsafe </span>{ IFileDialog::from_ptr(pfd) });
-				<span class="kw">let </span>si = ManuallyDrop::new(<span class="kw">unsafe </span>{ IShellItem::from_ptr(psi) });
-				func(<span class="kw-2">&amp;</span>fd, <span class="kw-2">&amp;</span>si)
+		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
+		hrresult_to_hres(
+			<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.OnOverwrite {
+				<span class="prelude-val">Some</span>(func) =&gt; {
+					<span class="kw">let </span>fd = ManuallyDrop::new(<span class="kw">unsafe </span>{ IFileDialog::from_ptr(pfd) });
+					<span class="kw">let </span>si = ManuallyDrop::new(<span class="kw">unsafe </span>{ IShellItem::from_ptr(psi) });
+					<span class="kw">let </span>presp = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(pResponse <span class="kw">as </span><span class="kw-2">*mut </span>co::FDEOR) };
+					func(<span class="kw-2">&amp;</span>fd, <span class="kw-2">&amp;</span>si, presp)
+				},
+				<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(()),
 			},
-			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(co::FDEOR::DEFAULT),
-		};
-		<span class="kw">match </span>ret {
-			<span class="prelude-val">Ok</span>(ret) =&gt; {
-				<span class="kw">unsafe </span>{ <span class="kw-2">*</span>pResponse = ret.raw(); }
-				co::HRESULT::S_OK.raw()
-			},
-			<span class="prelude-val">Err</span>(e) =&gt; e.raw(),
-		}
+		)
 	}
 }
 </code></pre></div></section></main></body></html>

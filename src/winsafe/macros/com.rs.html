@@ -372,16 +372,16 @@
 	) =&gt; {
 		$( <span class="attr">#[<span class="macro-nonterminal">$doc</span>] </span>)*
 		<span class="attr">#[repr(transparent)]
-		</span><span class="kw">pub struct </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">*mut </span><span class="macro-nonterminal">$</span><span class="kw">impl</span>);
+		</span><span class="kw">pub struct </span><span class="macro-nonterminal">$name</span>(<span class="kw-2">*mut </span><span class="macro-nonterminal">$</span><span class="kw">impl</span>); <span class="comment">// wrap a pointer to the heap-allocated VT struct
 
-		<span class="kw">unsafe impl </span><span class="macro-nonterminal">Send </span><span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
+		</span><span class="kw">unsafe impl </span><span class="macro-nonterminal">Send </span><span class="kw">for </span><span class="macro-nonterminal">$name </span>{}
 
 		<span class="kw">impl </span>Drop <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
 			<span class="kw">fn </span>drop(<span class="kw-2">&amp;mut </span><span class="self">self</span>) {
 				<span class="kw">if </span>!<span class="self">self</span>.<span class="number">0</span>.is_null() {
 					<span class="kw">let </span>ppvt = <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span><span class="kw">as </span><span class="kw-2">*const *mut </span><span class="macro-nonterminal">$</span><span class="kw">impl</span>;
-					<span class="macro-nonterminal">$</span><span class="kw">impl</span><span class="macro-nonterminal">::Release</span>(ppvt <span class="kw">as _</span>);
-				}
+					<span class="macro-nonterminal">$</span><span class="kw">impl</span><span class="macro-nonterminal">::Release</span>(ppvt <span class="kw">as _</span>); <span class="comment">// Release() is responsible for freeing the memory
+				</span>}
 			}
 		}
 
@@ -415,8 +415,8 @@
 			/// closures to handle events.
 			</span><span class="attr">#[must_use]
 			</span><span class="kw">pub fn </span>new_impl() -&gt; <span class="self">Self </span>{
-				<span class="kw">let </span>box_impl = Box::new(<span class="macro-nonterminal">$</span><span class="kw">impl</span><span class="macro-nonterminal">::new</span>());
-				<span class="self">Self</span>(Box::into_raw(box_impl))
+				<span class="kw">let </span>box_impl = Box::new(<span class="macro-nonterminal">$</span><span class="kw">impl</span><span class="macro-nonterminal">::new</span>()); <span class="comment">// alloc the VT struct in the heap
+				</span><span class="self">Self</span>(Box::into_raw(box_impl))
 			}
 		}
 	};
@@ -432,17 +432,17 @@
 		}
 
 		<span class="kw">fn </span>AddRef(p: COMPTR) -&gt; u32 {
-			<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
+			<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
 			<span class="kw">let </span>cc = box_impl.counter.fetch_add(<span class="number">1</span>, std::sync::atomic::Ordering::Relaxed) + <span class="number">1</span>;
 			cc
 		}
 
 		<span class="kw">fn </span>Release(p: COMPTR) -&gt; u32 {
-			<span class="kw">let </span><span class="kw-2">mut </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
+			<span class="kw">let </span><span class="kw-2">mut </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
 			<span class="kw">let </span>count = box_impl.counter.fetch_sub(<span class="number">1</span>, std::sync::atomic::Ordering::Relaxed) - <span class="number">1</span>;
 			<span class="kw">if </span>count == <span class="number">0 </span>{
-				<span class="kw">unsafe </span>{ std::mem::ManuallyDrop::drop(<span class="kw-2">&amp;mut </span>box_impl); }
-			}
+				<span class="kw">unsafe </span>{ std::mem::ManuallyDrop::drop(<span class="kw-2">&amp;mut </span>box_impl); } <span class="comment">// free the memory block
+			</span>}
 			count
 		}
 	};

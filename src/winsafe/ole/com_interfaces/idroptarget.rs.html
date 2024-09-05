@@ -169,20 +169,6 @@
 <a href="#169" id="169">169</a>
 <a href="#170" id="170">170</a>
 <a href="#171" id="171">171</a>
-<a href="#172" id="172">172</a>
-<a href="#173" id="173">173</a>
-<a href="#174" id="174">174</a>
-<a href="#175" id="175">175</a>
-<a href="#176" id="176">176</a>
-<a href="#177" id="177">177</a>
-<a href="#178" id="178">178</a>
-<a href="#179" id="179">179</a>
-<a href="#180" id="180">180</a>
-<a href="#181" id="181">181</a>
-<a href="#182" id="182">182</a>
-<a href="#183" id="183">183</a>
-<a href="#184" id="184">184</a>
-<a href="#185" id="185">185</a>
 </pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::mem::ManuallyDrop;
@@ -210,18 +196,19 @@
 	/// let drop_target = w::IDropTarget::new_impl();
 	///
 	/// drop_target.Drop(
-	///     |d: &amp;w::IDataObject, mk: co::MK, pt: w::POINT, de: co::DROPEFFECT|
-	///         -&gt; w::HrResult&lt;co::DROPEFFECT&gt;
+	///     |d: &amp;w::IDataObject, mk: co::MK, pt: w::POINT, de: &amp;mut co::DROPEFFECT|
+	///         -&gt; w::HrResult&lt;()&gt;
 	///     {
 	///         println!("X: {}, Y: {}", pt.x, pt.y);
-	///         Ok(de | co::DROPEFFECT::COPY)
+	///         *de &amp;= co::DROPEFFECT::COPY;
+	///         Ok(())
 	///     },
 	/// );
 	/// ```
 </span>}
 
 <span class="kw">impl </span>IDropTarget {
-	<span class="macro">fn_com_userdef_closure!</span> { DragEnter: Fn(<span class="kw-2">&amp;</span>IDataObject, co::MK, POINT, co::DROPEFFECT) -&gt; HrResult&lt;co::DROPEFFECT&gt;;
+	<span class="macro">fn_com_userdef_closure!</span> { DragEnter: Fn(<span class="kw-2">&amp;</span>IDataObject, co::MK, POINT, <span class="kw-2">&amp;mut </span>co::DROPEFFECT) -&gt; HrResult&lt;()&gt;;
 		<span class="doccomment">/// [`IDropTarget::DragEnter`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragenter)
 		/// method.
 	</span>}
@@ -231,12 +218,12 @@
 		/// method.
 	</span>}
 
-	<span class="macro">fn_com_userdef_closure!</span> { DragOver: Fn(co::MK, POINT, co::DROPEFFECT) -&gt; HrResult&lt;co::DROPEFFECT&gt;;
+	<span class="macro">fn_com_userdef_closure!</span> { DragOver: Fn(co::MK, POINT, <span class="kw-2">&amp;mut </span>co::DROPEFFECT) -&gt; HrResult&lt;()&gt;;
 		<span class="doccomment">/// [`IDropTarget::DragOver`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragover)
 		/// method.
 	</span>}
 
-	<span class="macro">fn_com_userdef_closure!</span> { Drop: Fn(<span class="kw-2">&amp;</span>IDataObject, co::MK, POINT, co::DROPEFFECT) -&gt; HrResult&lt;co::DROPEFFECT&gt;;
+	<span class="macro">fn_com_userdef_closure!</span> { Drop: Fn(<span class="kw-2">&amp;</span>IDataObject, co::MK, POINT, <span class="kw-2">&amp;mut </span>co::DROPEFFECT) -&gt; HrResult&lt;()&gt;;
 		<span class="doccomment">/// [`IDropTarget::Drop`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-drop)
 		/// method.
 	</span>}
@@ -246,14 +233,14 @@
 </span><span class="kw">pub struct </span>IDropTargetImpl {
 	vt: IDropTargetVT,
 	counter: AtomicU32,
-	DragEnter: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>IDataObject, co::MK, POINT, co::DROPEFFECT) -&gt; HrResult&lt;co::DROPEFFECT&gt;&gt;&gt;,
-	DragOver: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(co::MK, POINT, co::DROPEFFECT) -&gt; HrResult&lt;co::DROPEFFECT&gt;&gt;&gt;,
+	DragEnter: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>IDataObject, co::MK, POINT, <span class="kw-2">&amp;mut </span>co::DROPEFFECT) -&gt; HrResult&lt;()&gt;&gt;&gt;,
+	DragOver: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(co::MK, POINT, <span class="kw-2">&amp;mut </span>co::DROPEFFECT) -&gt; HrResult&lt;()&gt;&gt;&gt;,
 	DragLeave: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn() -&gt; HrResult&lt;()&gt;&gt;&gt;,
-	Drop: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>IDataObject, co::MK, POINT, co::DROPEFFECT) -&gt; HrResult&lt;co::DROPEFFECT&gt;&gt;&gt;,
+	Drop: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>IDataObject, co::MK, POINT, <span class="kw-2">&amp;mut </span>co::DROPEFFECT) -&gt; HrResult&lt;()&gt;&gt;&gt;,
 }
 
 <span class="kw">impl </span>IDropTargetImpl {
-	<span class="kw">const fn </span>new() -&gt; <span class="self">Self </span>{
+	<span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
 		<span class="self">Self </span>{
 			vt: IDropTargetVT {
 				IUnknownVT: IUnknownVT {
@@ -274,7 +261,7 @@
 		}
 	}
 
-	<span class="macro">com_interface_userdef_iunknown_methods!</span>(<span class="self">Self</span>);
+ 	<span class="macro">com_interface_userdef_iunknown_methods!</span>(<span class="self">Self</span>);
 
 	<span class="kw">fn </span>DragEnter(
 		p: COMPTR,
@@ -284,24 +271,19 @@
 		pdwEffect: <span class="kw-2">*mut </span>u32,
 	) -&gt; HRES
 	{
-		<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
-		<span class="kw">let </span>ret = <span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.DragEnter {
-			<span class="prelude-val">Some</span>(func) =&gt; {
-				<span class="kw">let </span>dob = ManuallyDrop::new(<span class="kw">unsafe </span>{ IDataObject::from_ptr(pDataObj) });
-				<span class="kw">let </span>mk = <span class="kw">unsafe </span>{ co::MK::from_raw(grfKeyState <span class="kw">as _</span>) };
-				<span class="kw">let </span>pt = POINT::new(LODWORD(pt) <span class="kw">as _</span>, HIDWORD(pt) <span class="kw">as _</span>);
-				<span class="kw">let </span>dfx = <span class="kw">unsafe </span>{ co::DROPEFFECT::from_raw(<span class="kw-2">*</span>pdwEffect) };
-				func(<span class="kw-2">&amp;</span>dob, mk, pt, dfx)
+		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
+		hrresult_to_hres(
+			<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.DragEnter {
+				<span class="prelude-val">Some</span>(func) =&gt; {
+					<span class="kw">let </span>dob = ManuallyDrop::new(<span class="kw">unsafe </span>{ IDataObject::from_ptr(pDataObj) });
+					<span class="kw">let </span>mk = <span class="kw">unsafe </span>{ co::MK::from_raw(grfKeyState <span class="kw">as _</span>) };
+					<span class="kw">let </span>pt = POINT::new(LODWORD(pt) <span class="kw">as _</span>, HIDWORD(pt) <span class="kw">as _</span>);
+					<span class="kw">let </span>pfx = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(pdwEffect <span class="kw">as </span><span class="kw-2">*mut </span>co::DROPEFFECT) };
+					func(<span class="kw-2">&amp;</span>dob, mk, pt, pfx)
+				},
+				<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(()),
 			},
-			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(co::DROPEFFECT::NONE),
-		};
-		<span class="kw">match </span>ret {
-			<span class="prelude-val">Ok</span>(ret) =&gt; {
-				<span class="kw">unsafe </span>{ <span class="kw-2">*</span>pdwEffect = ret.raw(); }
-				co::HRESULT::S_OK.raw()
-			},
-			<span class="prelude-val">Err</span>(e) =&gt; e.raw(),
-		}
+		)
 	}
 
 	<span class="kw">fn </span>DragOver(
@@ -311,29 +293,24 @@
 		pdwEffect: <span class="kw-2">*mut </span>u32,
 	) -&gt; HRES
 	{
-		<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
-		<span class="kw">let </span>ret = <span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.DragOver {
-			<span class="prelude-val">Some</span>(func) =&gt; {
-				<span class="kw">let </span>mk = <span class="kw">unsafe </span>{ co::MK::from_raw(grfKeyState <span class="kw">as _</span>) };
-				<span class="kw">let </span>pt = POINT::new(LODWORD(pt) <span class="kw">as _</span>, HIDWORD(pt) <span class="kw">as _</span>);
-				<span class="kw">let </span>dfx = <span class="kw">unsafe </span>{ co::DROPEFFECT::from_raw(<span class="kw-2">*</span>pdwEffect) };
-				func(mk, pt, dfx)
+		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
+		hrresult_to_hres(
+			<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.DragOver {
+				<span class="prelude-val">Some</span>(func) =&gt; {
+					<span class="kw">let </span>mk = <span class="kw">unsafe </span>{ co::MK::from_raw(grfKeyState <span class="kw">as _</span>) };
+					<span class="kw">let </span>pt = POINT::new(LODWORD(pt) <span class="kw">as _</span>, HIDWORD(pt) <span class="kw">as _</span>);
+					<span class="kw">let </span>pfx = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(pdwEffect <span class="kw">as </span><span class="kw-2">*mut </span>co::DROPEFFECT) };
+					func(mk, pt, pfx)
+				},
+				<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(()),
 			},
-			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(co::DROPEFFECT::NONE),
-		};
-		<span class="kw">match </span>ret {
-			<span class="prelude-val">Ok</span>(ret) =&gt; {
-				<span class="kw">unsafe </span>{ <span class="kw-2">*</span>pdwEffect = ret.raw(); }
-				co::HRESULT::S_OK.raw()
-			},
-			<span class="prelude-val">Err</span>(e) =&gt; e.raw(),
-		}
+		)
 	}
 
 	<span class="kw">fn </span>DragLeave(p: COMPTR) -&gt; HRES {
-		<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
+		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
 		hrresult_to_hres(
-			<span class="kw-2">&amp;</span><span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.DragLeave {
+			<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.DragLeave {
 				<span class="prelude-val">Some</span>(func) =&gt; func(),
 				<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(()),
 			},
@@ -348,24 +325,19 @@
 		pdwEffect: <span class="kw-2">*mut </span>u32,
 	) -&gt; HRES
 	{
-		<span class="kw">let </span>box_impl = box_impl::&lt;<span class="self">Self</span>&gt;(p);
-		<span class="kw">let </span>ret = <span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.Drop {
-			<span class="prelude-val">Some</span>(func) =&gt; {
-				<span class="kw">let </span>dob = ManuallyDrop::new(<span class="kw">unsafe </span>{ IDataObject::from_ptr(pDataObj) });
-				<span class="kw">let </span>mk = <span class="kw">unsafe </span>{ co::MK::from_raw(grfKeyState <span class="kw">as _</span>) };
-				<span class="kw">let </span>pt = POINT::new(LODWORD(pt) <span class="kw">as _</span>, HIDWORD(pt) <span class="kw">as _</span>);
-				<span class="kw">let </span>dfx = <span class="kw">unsafe </span>{ co::DROPEFFECT::from_raw(<span class="kw-2">*</span>pdwEffect) };
-				func(<span class="kw-2">&amp;</span>dob, mk, pt, dfx)
+		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
+		hrresult_to_hres(
+			<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.Drop {
+				<span class="prelude-val">Some</span>(func) =&gt; {
+					<span class="kw">let </span>dob = ManuallyDrop::new(<span class="kw">unsafe </span>{ IDataObject::from_ptr(pDataObj) });
+					<span class="kw">let </span>mk = <span class="kw">unsafe </span>{ co::MK::from_raw(grfKeyState <span class="kw">as _</span>) };
+					<span class="kw">let </span>pt = POINT::new(LODWORD(pt) <span class="kw">as _</span>, HIDWORD(pt) <span class="kw">as _</span>);
+					<span class="kw">let </span>pfx = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(pdwEffect <span class="kw">as </span><span class="kw-2">*mut </span>co::DROPEFFECT) };
+					func(<span class="kw-2">&amp;</span>dob, mk, pt, pfx)
+				},
+				<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(()),
 			},
-			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(co::DROPEFFECT::NONE),
-		};
-		<span class="kw">match </span>ret {
-			<span class="prelude-val">Ok</span>(ret) =&gt; {
-				<span class="kw">unsafe </span>{ <span class="kw-2">*</span>pdwEffect = ret.raw(); }
-				co::HRESULT::S_OK.raw()
-			},
-			<span class="prelude-val">Err</span>(e) =&gt; e.raw(),
-		}
+		)
 	}
 }
 </code></pre></div></section></main></body></html>
