@@ -57,6 +57,25 @@ pub trait ole_IDataObject: ole_IUnknown {
 		)
 	}
 
+	/// [`IDataObject::GetData`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-getdata)
+	/// method.
+	///
+	/// # Safety
+	///
+	/// The returned struct may contain pointers that need to be deallocated.
+	unsafe fn GetData(&self, formatetc: &FORMATETC) -> HrResult<STGMEDIUM> {
+		let mut sm = STGMEDIUM::default();
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IDataObjectVT>(self).GetData)(
+					self.ptr(),
+					formatetc as *const _ as _,
+					&mut sm as *mut _ as _,
+				)
+			},
+		).map(|_| sm)
+	}
+
 	/// [`IDataObject::QueryGetData`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-querygetdata)
 	/// method.
 	fn QueryGetData(&self, formatetc: &FORMATETC) -> HrResult<()> {

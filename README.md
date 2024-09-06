@@ -26,12 +26,12 @@ WinSafe documentation:
 | Native FFI item | Count |
 | - | -: |
 | Functions | 785 |
-| Structs | 237 |
+| Structs | 238 |
 | Constants | 13,417 |
 | Window messages | 655 |
-| Handles | 45 |
+| Handles | 47 |
 | COM interfaces | 90 |
-| COM methods | 541 |
+| COM methods | 545 |
 
 Although WinSafe already has a lot of Win32 APIs, it doesn't have *everything*, simply because Win32 API is gigantic. So if you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but have everything.
 

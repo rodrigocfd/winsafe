@@ -251,3 +251,14 @@ impl SNB {
 		vec
 	}
 }
+
+/// [`STGMEDIUM`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-ustgmedium-r1)
+/// struct.
+#[repr(C)]
+pub struct STGMEDIUM {
+	pub tymed: co::TYMED,
+	pub ptr: usize,
+	pub pUnkForRelease: COMPTR,
+}
+
+impl_default!(STGMEDIUM);
