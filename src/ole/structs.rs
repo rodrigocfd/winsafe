@@ -251,3 +251,19 @@ pub struct STGMEDIUM {
 }
 
 impl_default!(STGMEDIUM);
+
+impl STGMEDIUM {
+	/// Returns `ptr` as [`HGLOBAL`](crate::HGLOBAL) if `tymed` is
+	/// [`TYMED::GDI`](crate::CO::TYMED::HGLOBAL).
+	///
+	/// # Safety
+	///
+	/// Make sure the struct has been properly initialized.
+	#[must_use]
+	pub unsafe fn ptr_hglobal(&self) -> Option<HGLOBAL> {
+		match &self.tymed {
+			&co::TYMED::HGLOBAL => Some(unsafe { HGLOBAL::from_ptr(self.ptr as _) }),
+			_ => None,
+		}
+	}
+}
