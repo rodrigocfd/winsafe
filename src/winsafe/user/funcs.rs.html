@@ -1610,7 +1610,7 @@
 /// * [`SetClipboardData`](crate::SetClipboardData)
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub unsafe fn </span>GetClipboardData(format: co::CF) -&gt; SysResult&lt;<span class="kw-2">*mut </span>u8&gt; {
-	ptr_to_sysresult(ffi::GetClipboardData(format.raw()))
+	ptr_to_sysresult(ffi::GetClipboardData(format.raw() <span class="kw">as _</span>))
 		.map(|hmem| hmem <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
 }
 
@@ -2030,7 +2030,7 @@
 	hmem: <span class="kw-2">*mut </span>u8,
 ) -&gt; SysResult&lt;<span class="kw-2">*mut </span>u8&gt;
 {
-	ptr_to_sysresult(ffi::SetClipboardData(format.raw(), hmem <span class="kw">as _</span>))
+	ptr_to_sysresult(ffi::SetClipboardData(format.raw() <span class="kw">as _</span>, hmem <span class="kw">as _</span>))
 		.map(|hmem| hmem <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
 }
 
