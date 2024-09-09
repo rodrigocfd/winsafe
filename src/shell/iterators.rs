@@ -6,18 +6,10 @@ use crate::shell::ffi;
 pub(in crate::shell) struct HdropIter<'a, H>
 	where H: shell_Hdrop,
 {
-	hdrop: &'a mut H,
+	hdrop: &'a H,
 	buffer: WString,
 	count: u32,
 	current: u32,
-}
-
-impl<'a, H> Drop for HdropIter<'a, H>
-	where H: shell_Hdrop,
-{
-	fn drop(&mut self) {
-		unsafe { ffi::DragFinish(self.hdrop.ptr()); }
-	}
 }
 
 impl<'a, H> Iterator for HdropIter<'a, H>
@@ -54,7 +46,7 @@ impl<'a, H> HdropIter<'a, H>
 	where H: shell_Hdrop,
 {
 	#[must_use]
-	pub(in crate::shell) fn new(hdrop: &'a mut H) -> SysResult<Self> {
+	pub(in crate::shell) fn new(hdrop: &'a H) -> SysResult<Self> {
 		let count = unsafe {
 			ffi::DragQueryFileW( // preliminar call to retrieve the file count
 				hdrop.ptr(),

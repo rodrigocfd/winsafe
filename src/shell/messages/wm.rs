@@ -1,5 +1,6 @@
 use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -8,7 +9,7 @@ use crate::prelude::*;
 ///
 /// Return type: `()`.
 pub struct DropFiles {
-	pub hdrop: HDROP,
+	pub hdrop: DragFinishGuard,
 }
 
 unsafe impl MsgSend for DropFiles {
@@ -30,7 +31,7 @@ unsafe impl MsgSend for DropFiles {
 unsafe impl MsgSendRecv for DropFiles {
 	fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hdrop: unsafe { HDROP::from_ptr(p.wparam as _) },
+			hdrop: unsafe { DragFinishGuard::new(HDROP::from_ptr(p.wparam as _)) },
 		}
 	}
 }

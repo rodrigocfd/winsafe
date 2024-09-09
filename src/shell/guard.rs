@@ -3,6 +3,7 @@ use std::ops::{Deref, DerefMut};
 use crate::decl::*;
 use crate::guard::*;
 use crate::prelude::*;
+use crate::shell::ffi;
 
 /// RAII implementation for [`SHFILEINFO`](crate::SHFILEINFO) which
 /// automatically calls
@@ -115,4 +116,14 @@ impl DestroyIconSiiGuard {
 	pub fn leak(&mut self) -> SHSTOCKICONINFO {
 		std::mem::take(&mut self.sii)
 	}
+}
+
+//------------------------------------------------------------------------------
+
+handle_guard! { DragFinishGuard: HDROP;
+	ffi::DragFinish;
+	/// RAII implementation for [`HDROP`](crate::HDROP) which automatically
+	/// calls
+	/// [`DragFinish`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragfinish)
+	/// when the object goes out of scope.
 }

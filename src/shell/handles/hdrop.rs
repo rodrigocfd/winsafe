@@ -23,11 +23,7 @@ pub trait shell_Hdrop: Handle {
 	/// [`DragQueryFile`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragqueryfilew)
 	/// function.
 	///
-	/// Returns an iterator over the dropped files. After the iterator is
-	/// consumed, calls
-	/// [`DragFinish`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragfinish)
-	/// and invalidates the `HDROP` handle, so further calls will fail with
-	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
+	/// Returns an iterator over the dropped files.
 	///
 	/// # Examples
 	///
@@ -59,7 +55,7 @@ pub trait shell_Hdrop: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn DragQueryFile(&mut self,
+	fn DragQueryFile(&self,
 	) -> SysResult<impl Iterator<Item = SysResult<String>> + '_>
 	{
 		Ok(HdropIter::new(self)?)
