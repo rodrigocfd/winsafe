@@ -82,9 +82,9 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> COSERVERINFO<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 /// The [`Default`] trait automatically initializes `lindex` to `-1`.
 #[repr(C)]
 pub struct FORMATETC<'a> {
-	cfFormat: u16,
+	pub cfFormat: co::CF,
 	ptd: *mut DVTARGETDEVICE,
-	pub dwAspect: u32,
+	pub dwAspect: co::DVASPECT,
 	pub lindex: i32,
 	pub tymed: co::TYMED,
 
@@ -94,9 +94,9 @@ pub struct FORMATETC<'a> {
 impl<'a> Default for FORMATETC<'a> {
 	fn default() -> Self {
 		Self {
-			cfFormat: 0,
+			cfFormat: co::CF::default(),
 			ptd: std::ptr::null_mut(),
-			dwAspect: 0,
+			dwAspect: co::DVASPECT::default(),
 			lindex: -1,
 			tymed: co::TYMED::default(),
 			_ptd: PhantomData,
@@ -105,17 +105,6 @@ impl<'a> Default for FORMATETC<'a> {
 }
 
 impl<'a> FORMATETC<'a> {
-	/// Returns the `cfFormat` field.
-	#[must_use]
-	pub fn cfFormat(&self) -> co::CF {
-		unsafe { co::CF::from_raw(self.cfFormat as _) }
-	}
-
-	/// Sets the `cfFormat` field.
-	pub fn set_cfFormat(&mut self, val: co::CF) {
-		self.cfFormat = val.raw() as _;
-	}
-
 	pub_fn_ptr_get_set!('a, ptd, set_ptd, DVTARGETDEVICE);
 }
 

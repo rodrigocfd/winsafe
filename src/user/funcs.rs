@@ -525,7 +525,7 @@ pub fn GetCaretPos() -> SysResult<POINT> {
 /// * [`SetClipboardData`](crate::SetClipboardData)
 #[must_use]
 pub unsafe fn GetClipboardData(format: co::CF) -> SysResult<*mut u8> {
-	ptr_to_sysresult(ffi::GetClipboardData(format.raw()))
+	ptr_to_sysresult(ffi::GetClipboardData(format.raw() as _))
 		.map(|hmem| hmem as *mut _ as _)
 }
 
@@ -945,7 +945,7 @@ pub unsafe fn SetClipboardData(
 	hmem: *mut u8,
 ) -> SysResult<*mut u8>
 {
-	ptr_to_sysresult(ffi::SetClipboardData(format.raw(), hmem as _))
+	ptr_to_sysresult(ffi::SetClipboardData(format.raw() as _, hmem as _))
 		.map(|hmem| hmem as *mut _ as _)
 }
 

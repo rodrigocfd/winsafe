@@ -344,10 +344,10 @@ const_bitflag! { CDS: u32;
 	VIDEOPARAMETERS 0x0000_0020
 }
 
-const_ordinary! { CF: u32;
+const_ordinary! { CF: u16;
 	/// Standard clipboard
 	/// [formats](https://learn.microsoft.com/en-us/windows/win32/dataxchg/standard-clipboard-formats)
-	/// (`u32`).
+	/// (`u16`).
 	=>
 	=>
 	TEXT 1
