@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 
@@ -63,17 +64,18 @@ pub trait ole_IDataObject: ole_IUnknown {
 	/// # Safety
 	///
 	/// The returned struct may contain pointers that need to be deallocated.
-	unsafe fn GetData(&self, formatetc: &FORMATETC) -> HrResult<STGMEDIUM> {
+	unsafe fn GetData(&self,
+		formatetc: &FORMATETC,
+	) -> HrResult<ReleaseStgMediumGuard>
+	{
 		let mut sm = STGMEDIUM::default();
 		ok_to_hrresult(
-			unsafe {
-				(vt::<IDataObjectVT>(self).GetData)(
-					self.ptr(),
-					formatetc as *const _ as _,
-					&mut sm as *mut _ as _,
-				)
-			},
-		).map(|_| sm)
+			(vt::<IDataObjectVT>(self).GetData)(
+				self.ptr(),
+				formatetc as *const _ as _,
+				&mut sm as *mut _ as _,
+			),
+		).map(|_| ReleaseStgMediumGuard::new(sm))
 	}
 
 	/// [`IDataObject::QueryGetData`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-querygetdata)

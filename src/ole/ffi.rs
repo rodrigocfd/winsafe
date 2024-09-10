@@ -21,6 +21,7 @@ extern_sys! { "ole32";
 	OleInitialize(PVOID) -> HRES
 	OleUninitialize()
 	RegisterDragDrop(HANDLE, COMPTR) -> HRES
+	ReleaseStgMedium(PVOID)
 	RevokeDragDrop(HANDLE) -> HRES
 	StringFromCLSID(PCVOID, *mut PSTR) -> HRES
 }

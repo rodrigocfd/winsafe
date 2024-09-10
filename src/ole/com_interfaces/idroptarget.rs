@@ -19,17 +19,36 @@ com_interface_userdef! { IDropTarget, IDropTargetImpl: "00000122-0000-0000-c000-
 	///
 	/// # Examples
 	///
+	/// Retrieving dropped files:
+	///
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*, co};
 	///
 	/// let drop_target = w::IDropTarget::new_impl();
 	///
 	/// drop_target.Drop(
-	///     |d: &w::IDataObject, mk: co::MK, pt: w::POINT, de: &mut co::DROPEFFECT|
+	///     |d: &w::IDataObject, key_st: co::MK, pt: w::POINT, fx: &mut co::DROPEFFECT|
 	///         -> w::HrResult<()>
 	///     {
-	///         println!("X: {}, Y: {}", pt.x, pt.y);
-	///         *de &= co::DROPEFFECT::COPY;
+	///         let mut fmt = w::FORMATETC::default();
+	///         fmt.cfFormat = co::CF::HDROP;
+	///         fmt.dwAspect = co::DVASPECT::CONTENT;
+	///         fmt.tymed = co::TYMED::HGLOBAL;
+	///
+	///         let medium = unsafe { d.GetData(&fmt)? };
+	///         let hglobal = unsafe { medium.ptr_hglobal().unwrap() };
+	///         let ptr_lock = hglobal.GlobalLock().map_err(|err| err.to_hresult())?;
+	///         let hdrop = unsafe { w::HDROP::from_ptr(ptr_lock.as_ptr() as _) };
+	///         let dropped_paths = hdrop.DragQueryFile()
+	///             .map_err(|err| err.to_hresult())?
+	///             .collect::<w::SysResult<Vec<_>>>()
+	///             .map_err(|err| err.to_hresult())?;
+	///
+	///         for f in dropped_paths {
+	///             println!("> {f}");
+	///         }
+	///
+	///         *fx &= co::DROPEFFECT::COPY;
 	///         Ok(())
 	///     },
 	/// );

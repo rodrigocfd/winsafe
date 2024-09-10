@@ -1,4 +1,7 @@
+use std::ops::Deref;
+
 use crate::co;
+use crate::decl::*;
 use crate::ole::ffi;
 use crate::prelude::*;
 
@@ -136,7 +139,7 @@ impl Drop for OleUninitializeGuard {
 }
 
 impl OleUninitializeGuard {
-	/// Constructs the guard by taking ownership of the code.
+	/// Constructs the guard.
 	///
 	/// # Safety
 	///
@@ -146,5 +149,42 @@ impl OleUninitializeGuard {
 	#[must_use]
 	pub const unsafe fn new() -> Self {
 		Self {}
+	}
+}
+
+//------------------------------------------------------------------------------
+
+/// RAII implementation which automatically calls
+/// [`ReleaseStgMedium`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-releasestgmedium)
+/// when the object goes out of scope.
+pub struct ReleaseStgMediumGuard {
+	stgm: STGMEDIUM,
+}
+
+impl Drop for ReleaseStgMediumGuard {
+	fn drop(&mut self) {
+		unsafe { ffi::ReleaseStgMedium(&mut self.stgm as *mut _ as _); }
+	}
+}
+
+impl Deref for ReleaseStgMediumGuard {
+	type Target = STGMEDIUM;
+
+	fn deref(&self) -> &Self::Target {
+		&self.stgm
+	}
+}
+
+impl ReleaseStgMediumGuard {
+	/// Constructs the guard by taking ownership of the struct.
+	///
+	/// # Safety
+	///
+	/// Be sure you need to call
+	/// [`ReleaseStgMedium`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-releasestgmedium)
+	/// at the end of the scope.
+	#[must_use]
+	pub const unsafe fn new(stgm: STGMEDIUM) -> Self {
+		Self { stgm }
 	}
 }
