@@ -49,7 +49,7 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 				co::FILE_ATTRIBUTE::NORMAL,
 				co::SHGFI::USEFILEATTRIBUTES | co::SHGFI::ICON |
 				if sz == SIZE::new(16, 16) { co::SHGFI::SMALLICON } else { co::SHGFI::LARGEICON },
-			).map_err(|err| err.to_hresult())?;
+			)?;
 			self.AddIcon(&shfi.hIcon)?;
 		}
 		Ok(())

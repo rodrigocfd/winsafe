@@ -124,23 +124,25 @@ pub fn GetProfilesDirectory() -> SysResult<String> {
 /// )?;
 ///
 /// // full = "C:\\One\\Two\\Three"
-/// # w::SysResult::Ok(())
+/// # w::HrResult::Ok(())
 /// ```
 pub fn PathCombine(
 	str_dir: Option<&str>,
 	str_file: Option<&str>,
-) -> SysResult<String>
+) -> HrResult<String>
 {
 	let mut buf = WString::new_alloc_buf(MAX_PATH);
-	ptr_to_sysresult(
-		unsafe {
-			ffi::PathCombineW(
-				buf.as_mut_ptr(),
-				WString::from_opt_str(str_dir).as_ptr(),
-				WString::from_opt_str(str_file).as_ptr(),
-			) as _
-		},
-	).map(|_| buf.to_string())
+	if unsafe {
+		ffi::PathCombineW(
+			buf.as_mut_ptr(),
+			WString::from_opt_str(str_dir).as_ptr(),
+			WString::from_opt_str(str_file).as_ptr(),
+		)
+	}.is_null() {
+		Err(co::HRESULT::E_INVALIDARG)
+	} else {
+		Ok(buf.to_string())
+	}
 }
 
 /// [`PathCommonPrefix`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-pathcommonprefixw)
@@ -280,17 +282,25 @@ pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
 pub fn Shell_NotifyIcon(
 	message: co::NIM,
 	data: &NOTIFYICONDATA,
-) -> SysResult<()>
+) -> HrResult<()>
 {
-	bool_to_sysresult(
-		unsafe { ffi::Shell_NotifyIconW(message.raw(), data as *const _ as _) },
-	)
+	match unsafe {
+		ffi::Shell_NotifyIconW(message.raw(), data as *const _ as _)
+	} {
+		0 => Err(co::HRESULT::E_FAIL),
+		_ => Ok(()),
+	}
 }
 
 /// [`SHFileOperation`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)
 /// function.
-pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::SHFileOperationW(file_op as *mut _ as _) })
+pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> HrResult<()> {
+	unsafe {
+		match { ffi::SHFileOperationW(file_op as *mut _ as _) } {
+			0 => Ok(()),
+			de => Err(co::HRESULT::from_raw(de as _)),
+		}
+	}
 }
 
 /// [`SHGetFileInfo`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow)
@@ -299,7 +309,7 @@ pub fn SHGetFileInfo(
 	path: &str,
 	file_attrs: co::FILE_ATTRIBUTE,
 	flags: co::SHGFI,
-) -> SysResult<(u32, DestroyIconShfiGuard)>
+) -> HrResult<(u32, DestroyIconShfiGuard)>
 {
 	let mut shfi = SHFILEINFO::default();
 	unsafe {
@@ -310,7 +320,7 @@ pub fn SHGetFileInfo(
 			std::mem::size_of::<SHFILEINFO>() as _,
 			flags.raw(),
 		) {
-			0 => Err(GetLastError()),
+			0 => Err(co::HRESULT::E_FAIL),
 			n => Ok((n as _, DestroyIconShfiGuard::new(shfi))),
 		}
 	}

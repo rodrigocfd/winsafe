@@ -254,7 +254,7 @@ impl_default!(STGMEDIUM);
 
 impl STGMEDIUM {
 	/// Returns `ptr` as [`HGLOBAL`](crate::HGLOBAL) if `tymed` is
-	/// [`TYMED::GDI`](crate::CO::TYMED::HGLOBAL).
+	/// [`TYMED::GDI`](crate::co::TYMED::HGLOBAL).
 	///
 	/// # Safety
 	///
