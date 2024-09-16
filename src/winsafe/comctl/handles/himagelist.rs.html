@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\handles\himagelist.rs`."><title>himagelist.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-405f8b29f52305f8.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.83.0-nightly (adf8d168a 2024-09-08)" data-channel="nightly" data-search-js="search-0cfde64e8ad3a7fe.js" data-settings-js="settings-7e3bb6c46e92e77c.js" ><script src="../../..\../static.files/storage-29b1d5a9048d38fe.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-14659ec02b58af51.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-40f72c9259523cb3.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\handles\himagelist.rs`."><title>himagelist.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-405f8b29f52305f8.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.83.0-nightly (04a318787 2024-09-15)" data-channel="nightly" data-search-js="search-0cfde64e8ad3a7fe.js" data-settings-js="settings-7e3bb6c46e92e77c.js" ><script src="../../..\../static.files/storage-29b1d5a9048d38fe.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-14659ec02b58af51.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-40f72c9259523cb3.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
 <a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
@@ -374,11 +374,28 @@
 <a href="#373" id="373">373</a>
 <a href="#374" id="374">374</a>
 <a href="#375" id="375">375</a>
-<a href="#376" id="376">376</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<a href="#376" id="376">376</a>
+<a href="#377" id="377">377</a>
+<a href="#378" id="378">378</a>
+<a href="#379" id="379">379</a>
+<a href="#380" id="380">380</a>
+<a href="#381" id="381">381</a>
+<a href="#382" id="382">382</a>
+<a href="#383" id="383">383</a>
+<a href="#384" id="384">384</a>
+<a href="#385" id="385">385</a>
+<a href="#386" id="386">386</a>
+<a href="#387" id="387">387</a>
+<a href="#388" id="388">388</a>
+<a href="#389" id="389">389</a>
+<a href="#390" id="390">390</a>
+<a href="#391" id="391">391</a>
+<a href="#392" id="392">392</a>
+<a href="#393" id="393">393</a>
+<a href="#394" id="394">394</a>
+<a href="#395" id="395">395</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
-</span><span class="kw">use </span>std::marker::PhantomData;
-
-<span class="kw">use </span><span class="kw">crate</span>::co;
+</span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::comctl::{ffi, iterators::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
@@ -416,11 +433,11 @@
 	/// # let himgl = w::HIMAGELIST::NULL;
 	///
 	/// let icons = himgl.iter()
-	///     .collect::&lt;w::SysResult&lt;Vec&lt;_&gt;&gt;&gt;()?;
-	/// # w::SysResult::Ok(())
+	///     .collect::&lt;w::HrResult&lt;Vec&lt;_&gt;&gt;&gt;()?;
+	/// # w::HrResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = SysResult&lt;DestroyIconGuard&gt;&gt; + <span class="lifetime">'_ </span>{
+	</span><span class="kw">fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = HrResult&lt;DestroyIconGuard&gt;&gt; + <span class="lifetime">'_ </span>{
 		HimagelistIter::new(<span class="self">self</span>)
 	}
 
@@ -432,7 +449,7 @@
 	</span><span class="kw">fn </span>Add(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		hbmp_image: <span class="kw-2">&amp;</span>HBITMAP,
 		hbmp_mask: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>HBITMAP&gt;,
-	) -&gt; SysResult&lt;u32&gt;
+	) -&gt; HrResult&lt;u32&gt;
 	{
 		<span class="kw">match unsafe </span>{
 			ffi::ImageList_Add(
@@ -441,7 +458,7 @@
 				hbmp_mask.map_or(std::ptr::null_mut(), |h| h.ptr()),
 			)
 		} {
-			-<span class="number">1 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
+			-<span class="number">1 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
 			idx =&gt; <span class="prelude-val">Ok</span>(idx <span class="kw">as _</span>),
 		}
 	}
@@ -451,9 +468,9 @@
 	///
 	/// A copy of the icon is made and stored in the image list, so you're free
 	/// to release the original icon.
-	</span><span class="kw">fn </span>AddIcon(<span class="kw-2">&amp;</span><span class="self">self</span>, hicon: <span class="kw-2">&amp;</span>HICON) -&gt; SysResult&lt;u32&gt; {
+	</span><span class="kw">fn </span>AddIcon(<span class="kw-2">&amp;</span><span class="self">self</span>, hicon: <span class="kw-2">&amp;</span>HICON) -&gt; HrResult&lt;u32&gt; {
 		<span class="kw">match unsafe </span>{ ffi::ImageList_ReplaceIcon(<span class="self">self</span>.ptr(), -<span class="number">1</span>, hicon.ptr()) } {
-			-<span class="number">1 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
+			-<span class="number">1 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
 			idx =&gt; <span class="prelude-val">Ok</span>(idx <span class="kw">as _</span>),
 		}
 	}
@@ -466,14 +483,14 @@
 	</span><span class="kw">fn </span>AddMasked(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		hbmp_image: <span class="kw-2">&amp;</span>HBITMAP,
 		color_mask: COLORREF,
-	) -&gt; SysResult&lt;u32&gt;
+	) -&gt; HrResult&lt;u32&gt;
 	{
 		<span class="kw">match unsafe </span>{
 			ffi::ImageList_AddMasked(
 				<span class="self">self</span>.ptr(), hbmp_image.ptr(), color_mask.into(),
 			)
 		} {
-			-<span class="number">1 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
+			-<span class="number">1 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
 			idx =&gt; <span class="prelude-val">Ok</span>(idx <span class="kw">as _</span>),
 		}
 	}
@@ -501,21 +518,22 @@
 	/// # let himgl = w::HIMAGELIST::NULL;
 	///
 	/// let _drag = himgl.BeginDrag(0, w::POINT::new(0, 0))?; // keep guard alive
-	/// # w::SysResult::Ok(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	</span><span class="kw">fn </span>BeginDrag(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		itrack: u32,
 		hotspot: POINT,
-	) -&gt; SysResult&lt;ImageListEndDragGuard&lt;<span class="lifetime">'_</span>&gt;&gt;
+	) -&gt; HrResult&lt;ImageListEndDragGuard&lt;<span class="lifetime">'_</span>&gt;&gt;
 	{
 		<span class="kw">unsafe </span>{
-			bool_to_sysresult(
-				ffi::ImageList_BeginDrag(
-					<span class="self">self</span>.ptr(),
-					itrack <span class="kw">as _</span>,
-					hotspot.x, hotspot.y,
-				),
-			).map(|<span class="kw">_</span>| ImageListEndDragGuard::new(PhantomData))
+			<span class="kw">match </span>ffi::ImageList_BeginDrag(
+				<span class="self">self</span>.ptr(),
+				itrack <span class="kw">as _</span>,
+				hotspot.x, hotspot.y,
+			) {
+				<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+				<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(ImageListEndDragGuard::new()),
+			}
 		}
 	}
 
@@ -535,7 +553,7 @@
 	/// )?;
 	///
 	/// // ImageList_Destroy() automatically called
-	/// # w::SysResult::Ok(())
+	/// # w::HrResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>Create(
@@ -543,30 +561,39 @@
 		flags: co::ILC,
 		initial_size: i32,
 		grow_size: i32,
-	) -&gt; SysResult&lt;ImageListDestroyGuard&gt;
+	) -&gt; HrResult&lt;ImageListDestroyGuard&gt;
 	{
 		<span class="kw">unsafe </span>{
-			ptr_to_sysresult_handle(
+			<span class="kw">match </span>ptr_to_option_handle(
 				ffi::ImageList_Create(
 					image_sz.cx, image_sz.cy,
 					flags.raw(),
 					initial_size,
 					grow_size,
 				),
-			).map(|h| ImageListDestroyGuard::new(h))
+			 ) {
+				<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+				<span class="prelude-val">Some</span>(h) =&gt; <span class="prelude-val">Ok</span>(ImageListDestroyGuard::new(h)),
+			}
 		}
 	}
 
 	<span class="doccomment">/// [`ImageList_DragMove`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragmove)
 	/// function.
-	</span><span class="kw">fn </span>DragMove(<span class="kw-2">&amp;</span><span class="self">self</span>, x: i32, y: i32) -&gt; SysResult&lt;()&gt; {
-		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::ImageList_DragMove(<span class="self">self</span>.ptr(), x, y) })
+	</span><span class="kw">fn </span>DragMove(<span class="kw-2">&amp;</span><span class="self">self</span>, x: i32, y: i32) -&gt; HrResult&lt;()&gt; {
+		<span class="kw">match unsafe </span>{ ffi::ImageList_DragMove(<span class="self">self</span>.ptr(), x, y) } {
+			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+			<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
+		}
 	}
 
 	<span class="doccomment">/// [`ImageList_DragShowNolock`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_dragshownolock)
 	/// function.
-	</span><span class="kw">fn </span>DragShowNolock(show: bool) -&gt; SysResult&lt;()&gt; {
-		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::ImageList_DragShowNolock(show <span class="kw">as _</span>) })
+	</span><span class="kw">fn </span>DragShowNolock(show: bool) -&gt; HrResult&lt;()&gt; {
+		<span class="kw">match unsafe </span>{ ffi::ImageList_DragShowNolock(show <span class="kw">as _</span>) } {
+			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+			<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
+		}
 	}
 
 	<span class="doccomment">/// [`ImageList_Draw`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_draw)
@@ -576,19 +603,20 @@
 		hdc_dest: <span class="kw-2">&amp;</span>HDC,
 		dest: POINT,
 		style: co::ILD,
-	) -&gt; SysResult&lt;()&gt;
+	) -&gt; HrResult&lt;()&gt;
 	{
-		bool_to_sysresult(
-			<span class="kw">unsafe </span>{
-				ffi::ImageList_Draw(
-					<span class="self">self</span>.ptr(),
-					index <span class="kw">as _</span>,
-					hdc_dest.ptr(),
-					dest.x, dest.y,
-					style.raw(),
-				)
-			},
-		)
+		<span class="kw">match unsafe </span>{
+			ffi::ImageList_Draw(
+				<span class="self">self</span>.ptr(),
+				index <span class="kw">as _</span>,
+				hdc_dest.ptr(),
+				dest.x, dest.y,
+				style.raw(),
+			)
+		} {
+			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+			<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
+		}
 	}
 
 	<span class="doccomment">/// [`ImageList_DrawEx`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_drawex)
@@ -601,31 +629,34 @@
 		background_color: ClrDefNone,
 		foreground_color: ClrDefNone,
 		style: co::ILD,
-	) -&gt; SysResult&lt;()&gt;
+	) -&gt; HrResult&lt;()&gt;
 	{
-		bool_to_sysresult(
-			<span class="kw">unsafe </span>{
-				ffi::ImageList_DrawEx(
-					<span class="self">self</span>.ptr(),
-					index <span class="kw">as _</span>,
-					hdc_dest.ptr(),
-					dest.x, dest.y,
-					img_portion.unwrap_or_default().cx,
-					img_portion.unwrap_or_default().cy,
-					background_color.as_u32(),
-					foreground_color.as_u32(),
-					style.raw(),
-				)
-			},
-		)
+		<span class="kw">match unsafe </span>{
+			ffi::ImageList_DrawEx(
+				<span class="self">self</span>.ptr(),
+				index <span class="kw">as _</span>,
+				hdc_dest.ptr(),
+				dest.x, dest.y,
+				img_portion.unwrap_or_default().cx,
+				img_portion.unwrap_or_default().cy,
+				background_color.as_u32(),
+				foreground_color.as_u32(),
+				style.raw(),
+			)
+		} {
+			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+			<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
+		}
 	}
 
 	<span class="doccomment">/// [`ImageList_Duplicate`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_duplicate)
 	/// function.
-	</span><span class="kw">fn </span>Duplicate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;ImageListDestroyGuard&gt; {
+	</span><span class="kw">fn </span>Duplicate(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;ImageListDestroyGuard&gt; {
 		<span class="kw">unsafe </span>{
-			ptr_to_sysresult_handle(ffi::ImageList_Duplicate(<span class="self">self</span>.ptr()))
-				.map(|h| ImageListDestroyGuard::new(h))
+			<span class="kw">match </span>ptr_to_option_handle(ffi::ImageList_Duplicate(<span class="self">self</span>.ptr())) {
+				<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+				<span class="prelude-val">Some</span>(h) =&gt; <span class="prelude-val">Ok</span>(ImageListDestroyGuard::new(h)),
+			}
 		}
 	}
 
@@ -634,7 +665,7 @@
 	///
 	/// A copy of the stored icon is returned.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">fn </span>ExtractIcon(<span class="kw-2">&amp;</span><span class="self">self</span>, index: u32) -&gt; SysResult&lt;DestroyIconGuard&gt; {
+	</span><span class="kw">fn </span>ExtractIcon(<span class="kw-2">&amp;</span><span class="self">self</span>, index: u32) -&gt; HrResult&lt;DestroyIconGuard&gt; {
 		<span class="self">self</span>.GetIcon(index, co::ILD::NORMAL)
 	}
 
@@ -653,29 +684,33 @@
 	</span><span class="kw">fn </span>GetIcon(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		index: u32,
 		flags: co::ILD,
-	) -&gt; SysResult&lt;DestroyIconGuard&gt;
+	) -&gt; HrResult&lt;DestroyIconGuard&gt;
 	{
 		<span class="kw">unsafe </span>{
-			ptr_to_sysresult_handle(
+			<span class="kw">match </span>ptr_to_option_handle(
 				ffi::ImageList_GetIcon(
 					<span class="self">self</span>.ptr(),
 					index <span class="kw">as _</span>,
 					flags.raw(),
-				)
-			).map(|h| DestroyIconGuard::new(h))
+				),
+			 ) {
+				<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+				<span class="prelude-val">Some</span>(h) =&gt; <span class="prelude-val">Ok</span>(DestroyIconGuard::new(h)),
+			}
 		}
 	}
 
 	<span class="doccomment">/// [`ImageList_GetIconSize`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_geticonsize)
 	/// function.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">fn </span>GetIconSize(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;SIZE&gt; {
+	</span><span class="kw">fn </span>GetIconSize(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;SIZE&gt; {
 		<span class="kw">let </span><span class="kw-2">mut </span>sz = SIZE::default();
-		bool_to_sysresult(
-			<span class="kw">unsafe </span>{
-				ffi::ImageList_GetIconSize(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>sz.cx, <span class="kw-2">&amp;mut </span>sz.cy)
-			},
-		).map(|<span class="kw">_</span>| sz)
+		<span class="kw">match unsafe </span>{
+			ffi::ImageList_GetIconSize(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>sz.cx, <span class="kw-2">&amp;mut </span>sz.cy)
+		} {
+			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+			<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(sz),
+		}
 	}
 
 	<span class="doccomment">/// [`ImageList_GetImageCount`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_getimagecount)
@@ -687,12 +722,13 @@
 
 	<span class="doccomment">/// [`ImageList_Remove`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_remove)
 	/// function.
-	</span><span class="kw">fn </span>Remove(<span class="kw-2">&amp;</span><span class="self">self</span>, index: <span class="prelude-ty">Option</span>&lt;u32&gt;) -&gt; SysResult&lt;()&gt; {
-		bool_to_sysresult(
-			<span class="kw">unsafe </span>{
-				ffi::ImageList_Remove(<span class="self">self</span>.ptr(), index.map_or(-<span class="number">1</span>, |i| i <span class="kw">as _</span>))
-			},
-		)
+	</span><span class="kw">fn </span>Remove(<span class="kw-2">&amp;</span><span class="self">self</span>, index: <span class="prelude-ty">Option</span>&lt;u32&gt;) -&gt; HrResult&lt;()&gt; {
+		<span class="kw">match unsafe </span>{
+			ffi::ImageList_Remove(<span class="self">self</span>.ptr(), index.map_or(-<span class="number">1</span>, |i| i <span class="kw">as _</span>))
+		} {
+			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+			<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
+		}
 	}
 
 	<span class="doccomment">/// [`ImageList_ReplaceIcon`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_replaceicon)
@@ -703,12 +739,12 @@
 	</span><span class="kw">fn </span>ReplaceIcon(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		index: u32,
 		hicon_new: <span class="kw-2">&amp;</span>HICON,
-	) -&gt; SysResult&lt;u32&gt;
+	) -&gt; HrResult&lt;u32&gt;
 	{
 		<span class="kw">match unsafe </span>{
 			ffi::ImageList_ReplaceIcon(<span class="self">self</span>.ptr(), index <span class="kw">as _</span>, hicon_new.ptr())
 		} {
-			-<span class="number">1 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
+			-<span class="number">1 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
 			idx =&gt; <span class="prelude-val">Ok</span>(idx <span class="kw">as _</span>),
 		}
 	}
@@ -736,18 +772,20 @@
 	/// [`HIMAGELIST::ReplaceIcon`](crate::prelude::comctl_Himagelist::ReplaceIcon)
 	/// to fill the new indexes, otherwise draw operations will be
 	/// unpredictable.
-	</span><span class="kw">unsafe fn </span>SetImageCount(<span class="kw-2">&amp;</span><span class="self">self</span>, new_count: u32) -&gt; SysResult&lt;()&gt; {
-		bool_to_sysresult(
-			<span class="kw">unsafe </span>{ ffi::ImageList_SetImageCount(<span class="self">self</span>.ptr(), new_count) },
-		)
+	</span><span class="kw">unsafe fn </span>SetImageCount(<span class="kw-2">&amp;</span><span class="self">self</span>, new_count: u32) -&gt; HrResult&lt;()&gt; {
+		<span class="kw">match unsafe </span>{ ffi::ImageList_SetImageCount(<span class="self">self</span>.ptr(), new_count) } {
+			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+			<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
+		}
 	}
 
 	<span class="doccomment">/// [`ImageList_Write`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_write)
 	/// function.
-	</span><span class="kw">fn </span>Write(<span class="kw-2">&amp;</span><span class="self">self</span>, stream: <span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IStream) -&gt; SysResult&lt;()&gt; {
-		bool_to_sysresult(
-			<span class="kw">unsafe </span>{ ffi::ImageList_Write(<span class="self">self</span>.ptr(), stream.ptr()) },
-		)
+	</span><span class="kw">fn </span>Write(<span class="kw-2">&amp;</span><span class="self">self</span>, stream: <span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IStream) -&gt; HrResult&lt;()&gt; {
+		<span class="kw">match unsafe </span>{ ffi::ImageList_Write(<span class="self">self</span>.ptr(), stream.ptr()) } {
+			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+			<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(())
+		}
 	}
 }
 </code></pre></div></section></main></body></html>
