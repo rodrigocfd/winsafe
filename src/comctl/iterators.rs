@@ -13,7 +13,7 @@ pub(in crate::comctl) struct HimagelistIter<'a, H>
 impl<'a, H> Iterator for HimagelistIter<'a, H>
 	where H: comctl_Himagelist,
 {
-	type Item = SysResult<DestroyIconGuard>;
+	type Item = HrResult<DestroyIconGuard>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		if self.current == self.num_items {

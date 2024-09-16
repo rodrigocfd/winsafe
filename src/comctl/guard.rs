@@ -28,15 +28,15 @@ impl<'a> Drop for ImageListEndDragGuard<'a> {
 }
 
 impl<'a> ImageListEndDragGuard<'a> {
-	/// Constructs the guard by taking ownership of the object.
+	/// Constructs the guard.
 	///
 	/// # Safety
 	///
-	/// Be sure the handle must be freed with
+	/// Be sure
 	/// [`ImageList_EndDrag`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_enddrag)
-	/// at the end of scope.
+	/// must be called at the end of scope.
 	#[must_use]
-	pub const unsafe fn new(himagelist: PhantomData<&'a ()>) -> Self {
-		Self { _himagelist: himagelist }
+	pub const unsafe fn new() -> Self {
+		Self { _himagelist: PhantomData }
 	}
 }
