@@ -26,11 +26,12 @@
 <a href="#25" id="25">25</a>
 <a href="#26" id="26">26</a>
 <a href="#27" id="27">27</a>
-<a href="#28" id="28">28</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<a href="#28" id="28">28</a>
+<a href="#29" id="29">29</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
-</span><span class="kw">use </span><span class="kw">crate</span>::comctl_gdi::ffi;
+</span><span class="kw">use </span><span class="kw">crate</span>::co;
+<span class="kw">use </span><span class="kw">crate</span>::comctl_gdi::ffi;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">impl </span>comctl_gdi_Himagelist <span class="kw">for </span>HIMAGELIST {}
@@ -44,14 +45,15 @@
 /// use winsafe::prelude::*;
 /// ```
 </span><span class="kw">pub trait </span>comctl_gdi_Himagelist: Handle {
-	<span class="doccomment">/// [`DrawIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_drawindirect)
+	<span class="doccomment">/// [`ImageList_DrawIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_drawindirect)
 	/// function.
-	</span><span class="kw">fn </span>DrawIndirect(<span class="kw-2">&amp;</span><span class="self">self</span>, imldp: <span class="kw-2">&amp;</span>IMAGELISTDRAWPARAMS) -&gt; SysResult&lt;()&gt; {
-		bool_to_sysresult(
-			<span class="kw">unsafe </span>{
-				ffi::ImageList_DrawIndirect(<span class="self">self</span>.ptr(), imldp <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>)
-			},
-		)
+	</span><span class="kw">fn </span>DrawIndirect(<span class="kw-2">&amp;</span><span class="self">self</span>, imldp: <span class="kw-2">&amp;</span>IMAGELISTDRAWPARAMS) -&gt; HrResult&lt;()&gt; {
+		<span class="kw">match unsafe </span>{
+			ffi::ImageList_DrawIndirect(<span class="self">self</span>.ptr(), imldp <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>)
+		} {
+			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+			<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(())
+		}
 	}
 }
 </code></pre></div></section></main></body></html>
