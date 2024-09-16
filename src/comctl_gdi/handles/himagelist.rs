@@ -1,8 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::co;
 use crate::comctl_gdi::ffi;
 use crate::decl::*;
-use crate::kernel::privs::*;
 use crate::prelude::*;
 
 impl comctl_gdi_Himagelist for HIMAGELIST {}
@@ -16,13 +16,14 @@ impl comctl_gdi_Himagelist for HIMAGELIST {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait comctl_gdi_Himagelist: Handle {
-	/// [`DrawIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_drawindirect)
+	/// [`ImageList_DrawIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_drawindirect)
 	/// function.
-	fn DrawIndirect(&self, imldp: &IMAGELISTDRAWPARAMS) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe {
-				ffi::ImageList_DrawIndirect(self.ptr(), imldp as *const _ as _)
-			},
-		)
+	fn DrawIndirect(&self, imldp: &IMAGELISTDRAWPARAMS) -> HrResult<()> {
+		match unsafe {
+			ffi::ImageList_DrawIndirect(self.ptr(), imldp as *const _ as _)
+		} {
+			0 => Err(co::HRESULT::E_FAIL),
+			_ => Ok(())
+		}
 	}
 }
