@@ -106,7 +106,7 @@
 				co::FILE_ATTRIBUTE::NORMAL,
 				co::SHGFI::USEFILEATTRIBUTES | co::SHGFI::ICON |
 				<span class="kw">if </span>sz == SIZE::new(<span class="number">16</span>, <span class="number">16</span>) { co::SHGFI::SMALLICON } <span class="kw">else </span>{ co::SHGFI::LARGEICON },
-			).map_err(|err| err.to_hresult())<span class="question-mark">?</span>;
+			)<span class="question-mark">?</span>;
 			<span class="self">self</span>.AddIcon(<span class="kw-2">&amp;</span>shfi.hIcon)<span class="question-mark">?</span>;
 		}
 		<span class="prelude-val">Ok</span>(())
