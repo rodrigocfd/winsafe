@@ -116,6 +116,14 @@ pub trait user_Hdc: Handle {
 		)
 	}
 
+	/// [`FrameRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-framerect)
+	/// function.
+	fn FrameRect(&self, rc: RECT, hbr: &HBRUSH) -> SysResult<()> {
+		bool_to_sysresult(
+			unsafe { ffi::FrameRect(self.ptr(), &rc as *const _ as _, hbr.ptr()) },
+		)
+	}
+
 	/// [`InvertRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invertrect)
 	/// function.
 	fn InvertRect(&self, rc: RECT) -> SysResult<()> {

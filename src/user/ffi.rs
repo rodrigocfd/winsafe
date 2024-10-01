@@ -86,6 +86,7 @@ extern_sys! { "user32";
 	FindWindowExW(HANDLE, HANDLE, PCSTR, PCSTR) -> HANDLE
 	FindWindowW(PCSTR, PCSTR) -> HANDLE
 	FlashWindowEx(PVOID) -> BOOL
+	FrameRect(HANDLE, PCVOID, HANDLE) -> i32
 	GetActiveWindow() -> HANDLE
 	GetAltTabInfoW(HANDLE, i32, PVOID, PSTR, u32) -> BOOL
 	GetAncestor(HANDLE, u32) -> HANDLE
