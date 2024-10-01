@@ -1365,6 +1365,18 @@ const_ordinary! { FAPPCOMMAND: u16;
 	OEM 0x1000
 }
 
+const_bitflag! { FLASHW: u32;
+	/// [`FLASHWINFO`](crate::FLASHWINFO) `dwFlags` (`u32`).
+	=>
+	=>
+	ALL 0x0000_0003
+	CAPTION 0x0000_0001
+	STOP 0
+	TIMER 0x0000_0004
+	TIMERNOFG 0x0000_000c
+	TRAY 0x0000_0002
+}
+
 const_ordinary! { GA: u32;
 	/// [`HWND::GetAncestor`](crate::prelude::user_Hwnd::GetAncestor) `flags`
 	/// (`u32`).

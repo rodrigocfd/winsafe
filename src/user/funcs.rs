@@ -476,6 +476,12 @@ pub fn ExitWindowsEx(
 	bool_to_sysresult(unsafe { ffi::ExitWindowsEx(flags.raw(), reason.raw()) })
 }
 
+/// [`FlashWindowEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-flashwindowex)
+/// function.
+pub fn FlashWindowEx(fwi: &FLASHWINFO) -> u32 {
+	unsafe { ffi::FlashWindowEx(fwi as *const _ as _) as _ }
+}
+
 /// [`GetAsyncKeyState`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getasynckeystate)
 /// function.
 ///

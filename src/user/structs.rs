@@ -549,19 +549,18 @@ pub struct DRAWTEXTPARAMS {
 
 impl_default_with_size!(DRAWTEXTPARAMS, cbSize);
 
-/// [`MSG`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msg)
+/// [`FLASHWINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-flashwinfo)
 /// struct.
 #[repr(C)]
-pub struct MSG {
+pub struct FLASHWINFO {
+	cbSize: u32,
 	pub hwnd: HWND,
-	pub message: co::WM,
-	pub wParam: usize,
-	pub lParam: isize,
-	pub time: u32,
-	pub pt: POINT,
+	pub dwFlags: co::FLASHW,
+	pub uCount: u32,
+	pub dwTimeout: u32,
 }
 
-impl_default!(MSG);
+impl_default_with_size!(FLASHWINFO, cbSize);
 
 /// [`GUITHREADINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-guithreadinfo)
 /// struct.
@@ -851,6 +850,20 @@ pub struct MOUSEINPUT {
 	pub time: u32,
 	pub dwExtraInfo: usize,
 }
+
+/// [`MSG`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msg)
+/// struct.
+#[repr(C)]
+pub struct MSG {
+	pub hwnd: HWND,
+	pub message: co::WM,
+	pub wParam: usize,
+	pub lParam: isize,
+	pub time: u32,
+	pub pt: POINT,
+}
+
+impl_default!(MSG);
 
 /// [`NCCALCSIZE_PARAMS`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-nccalcsize_params)
 /// struct.
