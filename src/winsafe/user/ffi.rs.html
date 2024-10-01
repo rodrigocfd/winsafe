@@ -286,7 +286,8 @@
 <a href="#285" id="285">285</a>
 <a href="#286" id="286">286</a>
 <a href="#287" id="287">287</a>
-<a href="#288" id="288">288</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<a href="#288" id="288">288</a>
+<a href="#289" id="289">289</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys!</span> { <span class="string">"comdlg32"</span>;
 	ChooseColorW(PVOID) -&gt; BOOL
@@ -374,6 +375,7 @@
 	FindWindowExW(HANDLE, HANDLE, PCSTR, PCSTR) -&gt; HANDLE
 	FindWindowW(PCSTR, PCSTR) -&gt; HANDLE
 	FlashWindowEx(PVOID) -&gt; BOOL
+	FrameRect(HANDLE, PCVOID, HANDLE) -&gt; i32
 	GetActiveWindow() -&gt; HANDLE
 	GetAltTabInfoW(HANDLE, i32, PVOID, PSTR, u32) -&gt; BOOL
 	GetAncestor(HANDLE, u32) -&gt; HANDLE
