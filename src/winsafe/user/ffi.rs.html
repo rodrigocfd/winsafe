@@ -288,7 +288,9 @@
 <a href="#287" id="287">287</a>
 <a href="#288" id="288">288</a>
 <a href="#289" id="289">289</a>
-<a href="#290" id="290">290</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<a href="#290" id="290">290</a>
+<a href="#291" id="291">291</a>
+<a href="#292" id="292">292</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys!</span> { <span class="string">"comdlg32"</span>;
 	ChooseColorW(PVOID) -&gt; BOOL
@@ -426,6 +428,7 @@
 	GetNextDlgGroupItem(HANDLE, HANDLE, BOOL) -&gt; HANDLE
 	GetNextDlgTabItem(HANDLE, HANDLE, BOOL) -&gt; HANDLE
 	GetParent(HANDLE) -&gt; HANDLE
+	GetPhysicalCursorPos(PVOID) -&gt; BOOL
 	GetQueueStatus(u32) -&gt; u32
 	GetScrollInfo(HANDLE, i32, PVOID) -&gt; BOOL
 	GetScrollPos(HANDLE, i32) -&gt; i32
@@ -533,6 +536,7 @@
 	SetMenuItemBitmaps(HANDLE, u32, u32, HANDLE, HANDLE) -&gt; BOOL
 	SetMenuItemInfoW(HANDLE, u32, BOOL, PCVOID) -&gt; BOOL
 	SetParent(HANDLE, HANDLE) -&gt; HANDLE
+	SetPhysicalCursorPos(i32, i32) -&gt; BOOL
 	SetProcessDPIAware() -&gt; BOOL
 	SetScrollInfo(HANDLE, i32, PCVOID, BOOL) -&gt; i32
 	SetScrollPos(HANDLE, i32, i32, BOOL) -&gt; i32

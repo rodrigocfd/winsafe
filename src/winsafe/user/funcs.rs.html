@@ -1095,7 +1095,24 @@
 <a href="#1094" id="1094">1094</a>
 <a href="#1095" id="1095">1095</a>
 <a href="#1096" id="1096">1096</a>
-<a href="#1097" id="1097">1097</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
+<a href="#1097" id="1097">1097</a>
+<a href="#1098" id="1098">1098</a>
+<a href="#1099" id="1099">1099</a>
+<a href="#1100" id="1100">1100</a>
+<a href="#1101" id="1101">1101</a>
+<a href="#1102" id="1102">1102</a>
+<a href="#1103" id="1103">1103</a>
+<a href="#1104" id="1104">1104</a>
+<a href="#1105" id="1105">1105</a>
+<a href="#1106" id="1106">1106</a>
+<a href="#1107" id="1107">1107</a>
+<a href="#1108" id="1108">1108</a>
+<a href="#1109" id="1109">1109</a>
+<a href="#1110" id="1110">1110</a>
+<a href="#1111" id="1111">1111</a>
+<a href="#1112" id="1112">1112</a>
+<a href="#1113" id="1113">1113</a>
+<a href="#1114" id="1114">1114</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -1713,7 +1730,18 @@
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetLastInputInfo() -&gt; SysResult&lt;LASTINPUTINFO&gt; {
 	<span class="kw">let </span><span class="kw-2">mut </span>lii = LASTINPUTINFO::default();
-	bool_to_sysresult(<span class="kw">unsafe </span>{ffi::GetLastInputInfo(<span class="kw-2">&amp;mut </span>lii <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)}).map(|<span class="kw">_</span>|lii)
+	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::GetLastInputInfo(<span class="kw-2">&amp;mut </span>lii <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) })
+		.map(|<span class="kw">_</span>|lii)
+}
+
+<span class="doccomment">/// [`GetPhysicalCursorPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getphysicalcursorpos)
+/// function.
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetPhysicalCursorPos() -&gt; SysResult&lt;POINT&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>pt = POINT::default();
+	bool_to_sysresult(
+		<span class="kw">unsafe </span>{ ffi::GetPhysicalCursorPos(<span class="kw-2">&amp;mut </span>pt <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) },
+	).map(|<span class="kw">_</span>| pt)
 }
 
 <span class="doccomment">/// [`GetMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
@@ -2069,6 +2097,12 @@
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>SetDoubleClickTime(ms: u32) -&gt; SysResult&lt;()&gt; {
 	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::SetDoubleClickTime(ms) })
+}
+
+<span class="doccomment">/// [`SetPhysicalCursorPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setphysicalcursorpos)
+/// function.
+</span><span class="kw">pub fn </span>SetPhysicalCursorPos(x: i32, y: i32) -&gt; SysResult&lt;()&gt; {
+	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::SetPhysicalCursorPos(x, y) })
 }
 
 <span class="doccomment">/// [`SetProcessDPIAware`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdpiaware)
