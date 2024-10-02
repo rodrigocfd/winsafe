@@ -136,6 +136,7 @@ extern_sys! { "user32";
 	GetNextDlgGroupItem(HANDLE, HANDLE, BOOL) -> HANDLE
 	GetNextDlgTabItem(HANDLE, HANDLE, BOOL) -> HANDLE
 	GetParent(HANDLE) -> HANDLE
+	GetPhysicalCursorPos(PVOID) -> BOOL
 	GetQueueStatus(u32) -> u32
 	GetScrollInfo(HANDLE, i32, PVOID) -> BOOL
 	GetScrollPos(HANDLE, i32) -> i32

@@ -616,7 +616,18 @@ pub fn GetGUIThreadInfo(thread_id: u32) -> SysResult<GUITHREADINFO> {
 #[must_use]
 pub fn GetLastInputInfo() -> SysResult<LASTINPUTINFO> {
 	let mut lii = LASTINPUTINFO::default();
-	bool_to_sysresult(unsafe {ffi::GetLastInputInfo(&mut lii as *mut _ as _)}).map(|_|lii)
+	bool_to_sysresult(unsafe { ffi::GetLastInputInfo(&mut lii as *mut _ as _) })
+		.map(|_|lii)
+}
+
+/// [`GetPhysicalCursorPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getphysicalcursorpos)
+/// function.
+#[must_use]
+pub fn GetPhysicalCursorPos() -> SysResult<POINT> {
+	let mut pt = POINT::default();
+	bool_to_sysresult(
+		unsafe { ffi::GetPhysicalCursorPos(&mut pt as *mut _ as _) },
+	).map(|_| pt)
 }
 
 /// [`GetMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmessagew)
