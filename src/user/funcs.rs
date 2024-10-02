@@ -974,6 +974,12 @@ pub fn SetDoubleClickTime(ms: u32) -> SysResult<()> {
 	bool_to_sysresult(unsafe { ffi::SetDoubleClickTime(ms) })
 }
 
+/// [`SetPhysicalCursorPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setphysicalcursorpos)
+/// function.
+pub fn SetPhysicalCursorPos(x: i32, y: i32) -> SysResult<()> {
+	bool_to_sysresult(unsafe { ffi::SetPhysicalCursorPos(x, y) })
+}
+
 /// [`SetProcessDPIAware`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdpiaware)
 /// function.
 pub fn SetProcessDPIAware() -> SysResult<()> {

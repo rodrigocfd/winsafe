@@ -243,6 +243,7 @@ extern_sys! { "user32";
 	SetMenuItemBitmaps(HANDLE, u32, u32, HANDLE, HANDLE) -> BOOL
 	SetMenuItemInfoW(HANDLE, u32, BOOL, PCVOID) -> BOOL
 	SetParent(HANDLE, HANDLE) -> HANDLE
+	SetPhysicalCursorPos(i32, i32) -> BOOL
 	SetProcessDPIAware() -> BOOL
 	SetScrollInfo(HANDLE, i32, PCVOID, BOOL) -> i32
 	SetScrollPos(HANDLE, i32, i32, BOOL) -> i32
