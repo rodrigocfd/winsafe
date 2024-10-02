@@ -1914,6 +1914,24 @@ const_bitflag! { MB: u32;
 	SERVICE_NOTIFICATION 0x0020_0000
 }
 
+const_ordinary! { MBP: u32;
+	/// [`MessageBeep`](crate::MessageBeep) `uType` (`u32`).
+	///
+	/// Originally a subset of the [`co::MB`](crate::co::MB) constants.
+	=>
+	=>
+	/// A simple beep. If the sound card is not available, the sound is
+	/// generated using the speaker. Maps to the `0xFFFFFFFF` value.
+	BEEP 0xffff_ffff
+	ASTERISK MB::ICONASTERISK.0
+	EXCLAMATION MB::ICONEXCLAMATION.0
+	ERROR MB::ICONERROR.0
+	INFORMATION MB::ICONINFORMATION.0
+	QUESTION MB::ICONQUESTION.0
+	WARNING MB::ICONWARNING.0
+	OK MB::OK.0
+}
+
 const_ordinary! { MDITILE: u32;
 	/// [`HWND::TileWindows`](crate::prelude::user_Hwnd::TileWindows) `how`
 	/// (`u32`).

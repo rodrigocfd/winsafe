@@ -196,6 +196,7 @@ extern_sys! { "user32";
 	LogicalToPhysicalPoint(HANDLE, PVOID) -> BOOL
 	MapDialogRect(HANDLE, PVOID) -> BOOL
 	MapWindowPoints(HANDLE, HANDLE, PVOID, u32) -> i32
+	MessageBeep(u32) -> BOOL
 	MessageBoxW(HANDLE, PCSTR, PCSTR, u32) -> i32
 	MonitorFromPoint(i32, i32, u32) -> HANDLE
 	MonitorFromRect(PCVOID, u32) -> HANDLE

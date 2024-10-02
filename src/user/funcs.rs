@@ -776,6 +776,12 @@ pub fn LockSetForegroundWindow(lock_code: co::LSFW) -> SysResult<()> {
 	bool_to_sysresult(unsafe { ffi::LockSetForegroundWindow(lock_code.raw()) })
 }
 
+/// [`MessageBeep`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebeep)
+/// function.
+pub fn MessageBeep(sound_type: co::MBP) -> SysResult<()> {
+	bool_to_sysresult(unsafe { ffi::MessageBeep(sound_type.raw()) })
+}
+
 /// [`OffsetRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-offsetrect)
 /// function.
 #[must_use]
