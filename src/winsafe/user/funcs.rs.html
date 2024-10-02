@@ -1089,7 +1089,13 @@
 <a href="#1088" id="1088">1088</a>
 <a href="#1089" id="1089">1089</a>
 <a href="#1090" id="1090">1090</a>
-<a href="#1091" id="1091">1091</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
+<a href="#1091" id="1091">1091</a>
+<a href="#1092" id="1092">1092</a>
+<a href="#1093" id="1093">1093</a>
+<a href="#1094" id="1094">1094</a>
+<a href="#1095" id="1095">1095</a>
+<a href="#1096" id="1096">1096</a>
+<a href="#1097" id="1097">1097</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -1865,6 +1871,12 @@
 /// function.
 </span><span class="kw">pub fn </span>LockSetForegroundWindow(lock_code: co::LSFW) -&gt; SysResult&lt;()&gt; {
 	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::LockSetForegroundWindow(lock_code.raw()) })
+}
+
+<span class="doccomment">/// [`MessageBeep`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-messagebeep)
+/// function.
+</span><span class="kw">pub fn </span>MessageBeep(sound_type: co::MBP) -&gt; SysResult&lt;()&gt; {
+	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::MessageBeep(sound_type.raw()) })
 }
 
 <span class="doccomment">/// [`OffsetRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-offsetrect)

@@ -287,7 +287,8 @@
 <a href="#286" id="286">286</a>
 <a href="#287" id="287">287</a>
 <a href="#288" id="288">288</a>
-<a href="#289" id="289">289</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<a href="#289" id="289">289</a>
+<a href="#290" id="290">290</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys!</span> { <span class="string">"comdlg32"</span>;
 	ChooseColorW(PVOID) -&gt; BOOL
@@ -485,6 +486,7 @@
 	LogicalToPhysicalPoint(HANDLE, PVOID) -&gt; BOOL
 	MapDialogRect(HANDLE, PVOID) -&gt; BOOL
 	MapWindowPoints(HANDLE, HANDLE, PVOID, u32) -&gt; i32
+	MessageBeep(u32) -&gt; BOOL
 	MessageBoxW(HANDLE, PCSTR, PCSTR, u32) -&gt; i32
 	MonitorFromPoint(i32, i32, u32) -&gt; HANDLE
 	MonitorFromRect(PCVOID, u32) -&gt; HANDLE

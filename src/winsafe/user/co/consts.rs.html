@@ -3867,7 +3867,25 @@
 <a href="#3866" id="3866">3866</a>
 <a href="#3867" id="3867">3867</a>
 <a href="#3868" id="3868">3868</a>
-<a href="#3869" id="3869">3869</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
+<a href="#3869" id="3869">3869</a>
+<a href="#3870" id="3870">3870</a>
+<a href="#3871" id="3871">3871</a>
+<a href="#3872" id="3872">3872</a>
+<a href="#3873" id="3873">3873</a>
+<a href="#3874" id="3874">3874</a>
+<a href="#3875" id="3875">3875</a>
+<a href="#3876" id="3876">3876</a>
+<a href="#3877" id="3877">3877</a>
+<a href="#3878" id="3878">3878</a>
+<a href="#3879" id="3879">3879</a>
+<a href="#3880" id="3880">3880</a>
+<a href="#3881" id="3881">3881</a>
+<a href="#3882" id="3882">3882</a>
+<a href="#3883" id="3883">3883</a>
+<a href="#3884" id="3884">3884</a>
+<a href="#3885" id="3885">3885</a>
+<a href="#3886" id="3886">3886</a>
+<a href="#3887" id="3887">3887</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
 
@@ -5781,6 +5799,24 @@
 	/// on a locked desktop and should therefore be used for only a very limited
 	/// set of scenarios such as resource exhaustion.
 	</span>SERVICE_NOTIFICATION <span class="number">0x0020_0000
+</span>}
+
+<span class="macro">const_ordinary!</span> { MBP: u32;
+	<span class="doccomment">/// [`MessageBeep`](crate::MessageBeep) `uType` (`u32`).
+	///
+	/// Originally a subset of the [`co::MB`](crate::co::MB) constants.
+	</span>=&gt;
+	=&gt;
+	<span class="doccomment">/// A simple beep. If the sound card is not available, the sound is
+	/// generated using the speaker. Maps to the `0xFFFFFFFF` value.
+	</span>BEEP <span class="number">0xffff_ffff
+	</span>ASTERISK MB::ICONASTERISK.<span class="number">0
+	</span>EXCLAMATION MB::ICONEXCLAMATION.<span class="number">0
+	</span>ERROR MB::ICONERROR.<span class="number">0
+	</span>INFORMATION MB::ICONINFORMATION.<span class="number">0
+	</span>QUESTION MB::ICONQUESTION.<span class="number">0
+	</span>WARNING MB::ICONWARNING.<span class="number">0
+	</span>OK MB::OK.<span class="number">0
 </span>}
 
 <span class="macro">const_ordinary!</span> { MDITILE: u32;
