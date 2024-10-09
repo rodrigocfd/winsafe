@@ -622,6 +622,10 @@ pub fn GetLastInputInfo() -> SysResult<LASTINPUTINFO> {
 
 /// [`GetPhysicalCursorPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getphysicalcursorpos)
 /// function.
+///
+/// # Related functions
+///
+/// * [`SetPhysicalCursorPos`](crate::SetPhysicalCursorPos)
 #[must_use]
 pub fn GetPhysicalCursorPos() -> SysResult<POINT> {
 	let mut pt = POINT::default();
@@ -987,6 +991,10 @@ pub fn SetDoubleClickTime(ms: u32) -> SysResult<()> {
 
 /// [`SetPhysicalCursorPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setphysicalcursorpos)
 /// function.
+///
+/// # Related functions
+///
+/// * [`GetPhysicalCursorPos`](crate::GetPhysicalCursorPos)
 pub fn SetPhysicalCursorPos(x: i32, y: i32) -> SysResult<()> {
 	bool_to_sysresult(unsafe { ffi::SetPhysicalCursorPos(x, y) })
 }
