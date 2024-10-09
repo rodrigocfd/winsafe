@@ -1672,6 +1672,18 @@ const_bitflag! { KEYEVENTF: u32;
 	SCANCODE 0x0008
 }
 
+const_ordinary! { LAYOUT: u32;
+	/// [`GetProcessDefaultLayout`](crate::GetProcessDefaultLayout) and
+	/// [`SetProcessDefaultLayout`](crate::SetProcessDefaultLayout) value
+	/// (`u32`).
+	=>
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	/// Default horizontal layout is right to left.
+	RTL 0x0000_0001
+}
+
 const_wm! { LB;
 	/// List box control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-messages)

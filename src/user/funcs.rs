@@ -670,6 +670,21 @@ pub fn GetMessagePos() -> POINT {
 	POINT::from(unsafe { ffi::GetMessagePos() })
 }
 
+/// [`GetProcessDefaultLayout`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getprocessdefaultlayout)
+/// function.
+///
+/// # Related functions
+///
+/// * [`SetProcessDefaultLayout`](crate::SetProcessDefaultLayout)
+#[must_use]
+pub fn GetProcessDefaultLayout() -> SysResult<co::LAYOUT> {
+	let mut dl = u32::default();
+	unsafe {
+		bool_to_sysresult(ffi::GetProcessDefaultLayout(&mut dl as _))
+			.map(|_| co::LAYOUT::from_raw(dl))
+	}
+}
+
 /// [`GetQueueStatus`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getqueuestatus)
 /// function.
 #[must_use]
@@ -997,6 +1012,16 @@ pub fn SetDoubleClickTime(ms: u32) -> SysResult<()> {
 /// * [`GetPhysicalCursorPos`](crate::GetPhysicalCursorPos)
 pub fn SetPhysicalCursorPos(x: i32, y: i32) -> SysResult<()> {
 	bool_to_sysresult(unsafe { ffi::SetPhysicalCursorPos(x, y) })
+}
+
+/// [`SetProcessDefaultLayout`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdefaultlayout)
+/// function.
+///
+/// # Related functions
+///
+/// * [`GetProcessDefaultLayout`](crate::GetProcessDefaultLayout)
+pub fn SetProcessDefaultLayout(layout: co::LAYOUT) -> SysResult<()> {
+	bool_to_sysresult(unsafe { ffi::SetProcessDefaultLayout(layout.raw()) })
 }
 
 /// [`SetProcessDPIAware`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdpiaware)

@@ -137,6 +137,7 @@ extern_sys! { "user32";
 	GetNextDlgTabItem(HANDLE, HANDLE, BOOL) -> HANDLE
 	GetParent(HANDLE) -> HANDLE
 	GetPhysicalCursorPos(PVOID) -> BOOL
+	GetProcessDefaultLayout(*mut u32) -> BOOL
 	GetQueueStatus(u32) -> u32
 	GetScrollInfo(HANDLE, i32, PVOID) -> BOOL
 	GetScrollPos(HANDLE, i32) -> i32
@@ -245,6 +246,7 @@ extern_sys! { "user32";
 	SetMenuItemInfoW(HANDLE, u32, BOOL, PCVOID) -> BOOL
 	SetParent(HANDLE, HANDLE) -> HANDLE
 	SetPhysicalCursorPos(i32, i32) -> BOOL
+	SetProcessDefaultLayout(u32) -> BOOL
 	SetProcessDPIAware() -> BOOL
 	SetScrollInfo(HANDLE, i32, PCVOID, BOOL) -> i32
 	SetScrollPos(HANDLE, i32, i32, BOOL) -> i32
