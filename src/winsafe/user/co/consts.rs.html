@@ -3885,7 +3885,19 @@
 <a href="#3884" id="3884">3884</a>
 <a href="#3885" id="3885">3885</a>
 <a href="#3886" id="3886">3886</a>
-<a href="#3887" id="3887">3887</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
+<a href="#3887" id="3887">3887</a>
+<a href="#3888" id="3888">3888</a>
+<a href="#3889" id="3889">3889</a>
+<a href="#3890" id="3890">3890</a>
+<a href="#3891" id="3891">3891</a>
+<a href="#3892" id="3892">3892</a>
+<a href="#3893" id="3893">3893</a>
+<a href="#3894" id="3894">3894</a>
+<a href="#3895" id="3895">3895</a>
+<a href="#3896" id="3896">3896</a>
+<a href="#3897" id="3897">3897</a>
+<a href="#3898" id="3898">3898</a>
+<a href="#3899" id="3899">3899</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
 
@@ -5557,6 +5569,18 @@
 	</span>KEYUP <span class="number">0x0002
 	</span>UNICODE <span class="number">0x0004
 	</span>SCANCODE <span class="number">0x0008
+</span>}
+
+<span class="macro">const_ordinary!</span> { LAYOUT: u32;
+	<span class="doccomment">/// [`GetProcessDefaultLayout`](crate::GetProcessDefaultLayout) and
+	/// [`SetProcessDefaultLayout`](crate::SetProcessDefaultLayout) value
+	/// (`u32`).
+	</span>=&gt;
+	=&gt;
+	<span class="doccomment">/// None of the actual values (zero).
+	</span>NoValue <span class="number">0
+	</span><span class="doccomment">/// Default horizontal layout is right to left.
+	</span>RTL <span class="number">0x0000_0001
 </span>}
 
 <span class="macro">const_wm!</span> { LB;

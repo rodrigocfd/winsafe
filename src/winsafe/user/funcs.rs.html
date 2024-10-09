@@ -1120,7 +1120,32 @@
 <a href="#1119" id="1119">1119</a>
 <a href="#1120" id="1120">1120</a>
 <a href="#1121" id="1121">1121</a>
-<a href="#1122" id="1122">1122</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
+<a href="#1122" id="1122">1122</a>
+<a href="#1123" id="1123">1123</a>
+<a href="#1124" id="1124">1124</a>
+<a href="#1125" id="1125">1125</a>
+<a href="#1126" id="1126">1126</a>
+<a href="#1127" id="1127">1127</a>
+<a href="#1128" id="1128">1128</a>
+<a href="#1129" id="1129">1129</a>
+<a href="#1130" id="1130">1130</a>
+<a href="#1131" id="1131">1131</a>
+<a href="#1132" id="1132">1132</a>
+<a href="#1133" id="1133">1133</a>
+<a href="#1134" id="1134">1134</a>
+<a href="#1135" id="1135">1135</a>
+<a href="#1136" id="1136">1136</a>
+<a href="#1137" id="1137">1137</a>
+<a href="#1138" id="1138">1138</a>
+<a href="#1139" id="1139">1139</a>
+<a href="#1140" id="1140">1140</a>
+<a href="#1141" id="1141">1141</a>
+<a href="#1142" id="1142">1142</a>
+<a href="#1143" id="1143">1143</a>
+<a href="#1144" id="1144">1144</a>
+<a href="#1145" id="1145">1145</a>
+<a href="#1146" id="1146">1146</a>
+<a href="#1147" id="1147">1147</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -1792,6 +1817,21 @@
 	POINT::from(<span class="kw">unsafe </span>{ ffi::GetMessagePos() })
 }
 
+<span class="doccomment">/// [`GetProcessDefaultLayout`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getprocessdefaultlayout)
+/// function.
+///
+/// # Related functions
+///
+/// * [`SetProcessDefaultLayout`](crate::SetProcessDefaultLayout)
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetProcessDefaultLayout() -&gt; SysResult&lt;co::LAYOUT&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>dl = u32::default();
+	<span class="kw">unsafe </span>{
+		bool_to_sysresult(ffi::GetProcessDefaultLayout(<span class="kw-2">&amp;mut </span>dl <span class="kw">as _</span>))
+			.map(|<span class="kw">_</span>| co::LAYOUT::from_raw(dl))
+	}
+}
+
 <span class="doccomment">/// [`GetQueueStatus`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getqueuestatus)
 /// function.
 </span><span class="attr">#[must_use]
@@ -2119,6 +2159,16 @@
 /// * [`GetPhysicalCursorPos`](crate::GetPhysicalCursorPos)
 </span><span class="kw">pub fn </span>SetPhysicalCursorPos(x: i32, y: i32) -&gt; SysResult&lt;()&gt; {
 	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::SetPhysicalCursorPos(x, y) })
+}
+
+<span class="doccomment">/// [`SetProcessDefaultLayout`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdefaultlayout)
+/// function.
+///
+/// # Related functions
+///
+/// * [`GetProcessDefaultLayout`](crate::GetProcessDefaultLayout)
+</span><span class="kw">pub fn </span>SetProcessDefaultLayout(layout: co::LAYOUT) -&gt; SysResult&lt;()&gt; {
+	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::SetProcessDefaultLayout(layout.raw()) })
 }
 
 <span class="doccomment">/// [`SetProcessDPIAware`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setprocessdpiaware)
