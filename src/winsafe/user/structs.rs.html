@@ -1158,7 +1158,8 @@
 <a href="#1157" id="1157">1157</a>
 <a href="#1158" id="1158">1158</a>
 <a href="#1159" id="1159">1159</a>
-<a href="#1160" id="1160">1160</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<a href="#1160" id="1160">1160</a>
+<a href="#1161" id="1161">1161</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
 
@@ -1327,6 +1328,7 @@
 	</span><span class="kw">pub const fn </span>GetGValue(<span class="self">self</span>) -&gt; u8 {
 		LOBYTE(LOWORD(<span class="self">self</span>.<span class="number">0 </span>&gt;&gt; <span class="number">8</span>))
 	}
+
 	<span class="doccomment">/// [`GetBValue`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getbvalue)
 	/// macro. Retrieves the blue intensity.
 	</span><span class="attr">#[must_use]

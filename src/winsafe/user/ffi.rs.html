@@ -292,7 +292,8 @@
 <a href="#291" id="291">291</a>
 <a href="#292" id="292">292</a>
 <a href="#293" id="293">293</a>
-<a href="#294" id="294">294</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<a href="#294" id="294">294</a>
+<a href="#295" id="295">295</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys!</span> { <span class="string">"comdlg32"</span>;
 	ChooseColorW(PVOID) -&gt; BOOL
@@ -545,6 +546,7 @@
 	SetScrollInfo(HANDLE, i32, PCVOID, BOOL) -&gt; i32
 	SetScrollPos(HANDLE, i32, i32, BOOL) -&gt; i32
 	SetScrollRange(HANDLE, i32, i32, i32, BOOL) -&gt; BOOL
+	SetSysColors(i32, <span class="kw-2">*const </span>i32, <span class="kw-2">*const </span>u32) -&gt; BOOL
 	SetSystemCursor(HANDLE, u32) -&gt; BOOL
 	SetThreadDesktop(HANDLE) -&gt; BOOL
 	SetThreadDpiHostingBehavior(u32) -&gt; u32
