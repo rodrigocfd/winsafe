@@ -26,12 +26,12 @@ macro_rules! impl_handle {
 		}
 
 		impl std::fmt::LowerHex for $name {
-			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 				std::fmt::LowerHex::fmt(&(self.0 as usize), f)
 			}
 		}
 		impl std::fmt::UpperHex for $name {
-			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 				std::fmt::UpperHex::fmt(&(self.0 as usize), f)
 			}
 		}

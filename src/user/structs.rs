@@ -167,6 +167,7 @@ impl COLORREF {
 	pub const fn GetGValue(self) -> u8 {
 		LOBYTE(LOWORD(self.0 >> 8))
 	}
+
 	/// [`GetBValue`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getbvalue)
 	/// macro. Retrieves the blue intensity.
 	#[must_use]

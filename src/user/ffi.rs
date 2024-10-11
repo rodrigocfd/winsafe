@@ -251,6 +251,7 @@ extern_sys! { "user32";
 	SetScrollInfo(HANDLE, i32, PCVOID, BOOL) -> i32
 	SetScrollPos(HANDLE, i32, i32, BOOL) -> i32
 	SetScrollRange(HANDLE, i32, i32, i32, BOOL) -> BOOL
+	SetSysColors(i32, *const i32, *const u32) -> BOOL
 	SetSystemCursor(HANDLE, u32) -> BOOL
 	SetThreadDesktop(HANDLE) -> BOOL
 	SetThreadDpiHostingBehavior(u32) -> u32

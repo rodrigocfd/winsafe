@@ -694,6 +694,10 @@ pub fn GetQueueStatus(flags: co::QS) -> u32 {
 
 /// [`GetSysColor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
 /// function.
+///
+/// # Related functions
+///
+/// * [`SetSysColors`](crate::SetSysColors)
 #[must_use]
 pub fn GetSysColor(index: co::COLOR) -> COLORREF {
 	unsafe { COLORREF::from_raw(ffi::GetSysColor(index.raw())) }
@@ -1030,11 +1034,40 @@ pub fn SetProcessDPIAware() -> SysResult<()> {
 	bool_to_sysresult(unsafe { ffi::SetProcessDPIAware() })
 }
 
+/// [`SetSysColors`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setsyscolors)
+/// function.
+///
+/// # Related functions
+///
+/// * [`GetSysColor`](crate::GetSysColor)
+pub fn SetSysColors(
+	elements_and_colors: &[(co::COLOR, COLORREF)],
+) -> SysResult<()>
+{
+	let elems = elements_and_colors.iter()
+		.map(|ec| ec.0.raw())
+		.collect::<Vec<_>>();
+	let colors = elements_and_colors.iter()
+		.map(|ec| ec.1.raw())
+		.collect::<Vec<_>>();
+
+	bool_to_sysresult(
+		unsafe {
+			ffi::SetSysColors(
+				elements_and_colors.len() as _,
+				elems.as_ptr(),
+				colors.as_ptr(),
+			)
+		},
+	)
+}
+
 /// [`SetThreadDpiHostingBehavior`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setthreaddpihostingbehavior)
 /// function.
 pub fn SetThreadDpiHostingBehavior(
 	value: co::DPI_HOSTING_BEHAVIOR,
-) -> co::DPI_HOSTING_BEHAVIOR {
+) -> co::DPI_HOSTING_BEHAVIOR
+{
 	unsafe {
 		co::DPI_HOSTING_BEHAVIOR::from_raw(
 			ffi::SetThreadDpiHostingBehavior(value.raw()),
