@@ -1044,12 +1044,9 @@ pub fn SetSysColors(
 	elements_and_colors: &[(co::COLOR, COLORREF)],
 ) -> SysResult<()>
 {
-	let elems = elements_and_colors.iter()
-		.map(|ec| ec.0.raw())
-		.collect::<Vec<_>>();
-	let colors = elements_and_colors.iter()
-		.map(|ec| ec.1.raw())
-		.collect::<Vec<_>>();
+	let (elems, colors): (Vec<_>, Vec<_>) = elements_and_colors.iter()
+		.map(|ec| (ec.0.raw(), ec.1.raw()))
+		.unzip();
 
 	bool_to_sysresult(
 		unsafe {
