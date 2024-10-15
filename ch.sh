@@ -18,6 +18,7 @@ FEATS=(
 	mf
 	ole
 	oleaut
+	psapi
 	shell
 	taskschd
 	user

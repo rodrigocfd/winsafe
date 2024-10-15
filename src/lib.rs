@@ -18,6 +18,7 @@
 #[cfg(feature = "mf")] mod mf;
 #[cfg(feature = "ole")] mod ole;
 #[cfg(feature = "oleaut")] mod oleaut;
+#[cfg(feature = "psapi")] mod psapi;
 #[cfg(feature = "shell")] mod shell;
 #[cfg(feature = "taskschd")] mod taskschd;
 #[cfg(feature = "user")] mod user;
@@ -46,6 +47,7 @@ mod decl {
 	#[cfg(feature = "mf")] pub use super::mf::decl::*;
 	#[cfg(feature = "ole")] pub use super::ole::decl::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::decl::*;
+	#[cfg(feature = "psapi")] pub use super::psapi::decl::*;
 	#[cfg(feature = "shell")] pub use super::shell::decl::*;
 	#[cfg(feature = "taskschd")] pub use super::taskschd::decl::*;
 	#[cfg(feature = "user")] pub use super::user::decl::*;
@@ -301,6 +303,7 @@ pub mod prelude {
 	#[cfg(feature = "mf")] pub use super::mf::traits::*;
 	#[cfg(feature = "ole")] pub use super::ole::traits::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::traits::*;
+	#[cfg(feature = "psapi")] pub use super::psapi::traits::*;
 	#[cfg(feature = "shell")] pub use super::shell::traits::*;
 	#[cfg(feature = "taskschd")] pub use super::taskschd::traits::*;
 	#[cfg(feature = "user")] pub use super::user::traits::*;
