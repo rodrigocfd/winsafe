@@ -10,5 +10,5 @@ pub mod decl {
 }
 
 pub mod traits {
-	pub use super::handles::*;
+	pub use super::handles::traits::*;
 }
