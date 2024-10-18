@@ -109,4 +109,18 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 			hr => Err(hr),
 		}
 	}
+
+	/// [`IPropertyStore::SetValue`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-setvalue)
+	/// method.
+	fn SetValue(&self, key: &PROPERTYKEY, value: &PROPVARIANT) -> HrResult<()> {
+		ok_to_hrresult(
+			unsafe {
+				(vt::<IPropertyStoreVT>(self).SetValue)(
+					self.ptr(),
+					key as *const _ as _,
+					value as *const _ as _,
+				)
+			},
+		)
+	}
 }
