@@ -197,18 +197,16 @@ impl<T> ListView<T> {
 	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {
 		let self2 = self.clone();
 		self.on_subclass().wm_get_dlg_code(move |p| {
-			if !p.is_query && p.vkey_code == co::VK::RETURN {
+			if !p.is_query && p.vkey_code == co::VK::RETURN { // Enter key
 				let mut nmlvkd = NMLVKEYDOWN::default();
 				nmlvkd.hdr.hwndFrom = unsafe { self2.hwnd().raw_copy() };
 				nmlvkd.hdr.set_idFrom(self2.ctrl_id());
 				nmlvkd.hdr.code = co::LVN::KEYDOWN.into();
 				nmlvkd.wVKey = co::VK::RETURN;
 
+				let hparent = self2.hwnd().GetAncestor(co::GA::PARENT).unwrap();
 				unsafe {
-					self2.hwnd()
-						.GetAncestor(co::GA::PARENT)
-						.unwrap()
-						.SendMessage(wm::Notify { nmhdr: &mut nmlvkd.hdr }); // send Enter key to parent
+					hparent.SendMessage(wm::Notify { nmhdr: &mut nmlvkd.hdr }); // send Enter key to parent
 				}
 			}
 			let dlgc_system = unsafe {
@@ -221,13 +219,9 @@ impl<T> ListView<T> {
 		self.on_subclass().wm(co::WM::NOTIFY, move |p| {
 			let wm_nfy = wm::Notify::from_generic_wm(p);
 			if wm_nfy.nmhdr.code >= co::HDN::GETDISPINFO.into()
-					&& wm_nfy.nmhdr.code <= co::HDN::BEGINDRAG.into() {
-				unsafe {
-					self2.hwnd()
-						.GetAncestor(co::GA::PARENT)
-						.unwrap()
-						.SendMessage(wm_nfy); // forward HDN messages to parent
-				}
+					&& wm_nfy.nmhdr.code <= co::HDN::BEGINDRAG.into() { // all HDN messages
+				let hparent = self2.hwnd().GetAncestor(co::GA::PARENT).unwrap();
+				unsafe { hparent.SendMessage(wm_nfy); } // simply forward to parent
 			}
 			Ok(WmRet::NotHandled) // HDN notifications still need to be processed by parent list view
 		});
@@ -330,7 +324,7 @@ impl<T> ListView<T> {
 	pub fn set_current_view(&self, view: co::LV_VIEW) {
 		unsafe {
 			self.hwnd()
-			.SendMessage(lvm::SetView { view })
+				.SendMessage(lvm::SetView { view })
 		}.unwrap();
 	}
 
