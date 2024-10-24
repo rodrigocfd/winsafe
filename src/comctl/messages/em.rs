@@ -12,10 +12,10 @@ pub struct GetCueBanner<'a> {
 	pub buffer: &'a mut WString,
 }
 
-unsafe impl<'a> MsgSend for GetCueBanner<'a> {
+impl<'a> MsgSend for GetCueBanner<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			0 | 1 => Ok(()),
 			_ => Err(co::ERROR::BAD_ARGUMENTS),
@@ -37,10 +37,10 @@ unsafe impl<'a> MsgSend for GetCueBanner<'a> {
 /// Return type: `SysResult<()>`.
 pub struct HideBalloonTip {}
 
-unsafe impl MsgSend for HideBalloonTip {
+impl MsgSend for HideBalloonTip {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -62,10 +62,10 @@ pub struct SetCueBanner {
 	pub text: WString,
 }
 
-unsafe impl MsgSend for SetCueBanner {
+impl MsgSend for SetCueBanner {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -86,10 +86,10 @@ pub struct ShowBalloonTip<'a, 'b, 'c> {
 	pub info: &'c EDITBALLOONTIP<'a, 'b>,
 }
 
-unsafe impl<'a, 'b, 'c> MsgSend for ShowBalloonTip<'a, 'b, 'c> {
+impl<'a, 'b, 'c> MsgSend for ShowBalloonTip<'a, 'b, 'c> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 

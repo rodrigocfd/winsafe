@@ -20,10 +20,10 @@ pub struct WndMsg {
 	pub lparam: isize,
 }
 
-unsafe impl MsgSend for WndMsg {
+impl MsgSend for WndMsg {
 	type RetType = isize;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v
 	}
 
@@ -32,8 +32,8 @@ unsafe impl MsgSend for WndMsg {
 	}
 }
 
-unsafe impl MsgSendRecv for WndMsg {
-	fn from_generic_wm(p: Self) -> Self {
+impl MsgSendRecv for WndMsg {
+	unsafe fn from_generic_wm(p: Self) -> Self {
 		p
 	}
 }

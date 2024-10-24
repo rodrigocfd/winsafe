@@ -15,10 +15,10 @@ pub struct AddBitmap<'a> {
 	pub info: &'a TBADDBITMAP,
 }
 
-unsafe impl<'a> MsgSend for AddBitmap<'a> {
+impl<'a> MsgSend for AddBitmap<'a> {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| v as _)
 	}
 
@@ -39,10 +39,10 @@ pub struct AddButtons<'a, 'b> {
 	pub buttons: &'a mut [TBBUTTON<'b>],
 }
 
-unsafe impl<'a, 'b> MsgSend for AddButtons<'a, 'b> {
+impl<'a, 'b> MsgSend for AddButtons<'a, 'b> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -63,10 +63,10 @@ pub struct AddString {
 	pub texts: ResStrs,
 }
 
-unsafe impl MsgSend for AddString {
+impl MsgSend for AddString {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| v as _)
 	}
 
@@ -95,10 +95,10 @@ pub_struct_msg_empty! { AutoSize: co::TBM::AUTOSIZE.into();
 /// Return type: `u32`.
 pub struct ButtonCount {}
 
-unsafe impl MsgSend for ButtonCount {
+impl MsgSend for ButtonCount {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -119,10 +119,10 @@ pub struct ButtonStructSize {
 	pub size: u32,
 }
 
-unsafe impl MsgSend for ButtonStructSize {
+impl MsgSend for ButtonStructSize {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -144,10 +144,10 @@ pub struct ChangeBitmap {
 	pub image: IdxCbNone,
 }
 
-unsafe impl MsgSend for ChangeBitmap {
+impl MsgSend for ChangeBitmap {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -169,10 +169,10 @@ pub struct CheckButton {
 	pub check: bool,
 }
 
-unsafe impl MsgSend for CheckButton {
+impl MsgSend for CheckButton {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -193,10 +193,10 @@ pub struct CommandToIndex {
 	pub btn_cmd_id: u16,
 }
 
-unsafe impl MsgSend for CommandToIndex {
+impl MsgSend for CommandToIndex {
 	type RetType = Option<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| v as _)
 	}
 
@@ -221,10 +221,10 @@ pub struct DeleteButton {
 	pub btn_index: u32,
 }
 
-unsafe impl MsgSend for DeleteButton {
+impl MsgSend for DeleteButton {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -246,10 +246,10 @@ pub struct EnableButton {
 	pub enable: bool,
 }
 
-unsafe impl MsgSend for EnableButton {
+impl MsgSend for EnableButton {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -268,10 +268,10 @@ unsafe impl MsgSend for EnableButton {
 /// Return type: `bool`.
 pub struct GetAnchorHighlight {}
 
-unsafe impl MsgSend for GetAnchorHighlight {
+impl MsgSend for GetAnchorHighlight {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -292,10 +292,10 @@ pub struct GetBitmap {
 	pub btn_cmd_id: u16,
 }
 
-unsafe impl MsgSend for GetBitmap {
+impl MsgSend for GetBitmap {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -314,11 +314,11 @@ unsafe impl MsgSend for GetBitmap {
 /// Return type: `co::TBBF`.
 pub struct GetBitmapFlags {}
 
-unsafe impl MsgSend for GetBitmapFlags {
+impl MsgSend for GetBitmapFlags {
 	type RetType = co::TBBF;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::TBBF::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::TBBF::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -339,10 +339,10 @@ pub struct GetButton<'a, 'b> {
 	pub info: &'a mut TBBUTTON<'b>,
 }
 
-unsafe impl<'a, 'b> MsgSend for GetButton<'a, 'b> {
+impl<'a, 'b> MsgSend for GetButton<'a, 'b> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -364,10 +364,10 @@ pub struct GetButtonInfo<'a, 'b> {
 	pub info: &'a mut TBBUTTONINFO<'b>,
 }
 
-unsafe impl<'a, 'b> MsgSend for GetButtonInfo<'a, 'b> {
+impl<'a, 'b> MsgSend for GetButtonInfo<'a, 'b> {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|v| v as _)
 	}
 
@@ -386,10 +386,10 @@ unsafe impl<'a, 'b> MsgSend for GetButtonInfo<'a, 'b> {
 /// Return type: `SIZE`.
 pub struct GetButtonSize {}
 
-unsafe impl MsgSend for GetButtonSize {
+impl MsgSend for GetButtonSize {
 	type RetType = SIZE;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		SIZE::from(v as u32)
 	}
 
@@ -411,10 +411,10 @@ pub struct GetButtonText<'a> {
 	pub text: &'a mut WString,
 }
 
-unsafe impl<'a> MsgSend for GetButtonText<'a> {
+impl<'a> MsgSend for GetButtonText<'a> {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| v as _)
 	}
 
@@ -435,10 +435,10 @@ pub struct GetColorScheme<'a> {
 	pub scheme: &'a mut COLORSCHEME,
 }
 
-unsafe impl<'a> MsgSend for GetColorScheme<'a> {
+impl<'a> MsgSend for GetColorScheme<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -457,11 +457,11 @@ unsafe impl<'a> MsgSend for GetColorScheme<'a> {
 /// Return type: `Option<HIMAGELIST>`.
 pub struct GetDisabledImageList {}
 
-unsafe impl MsgSend for GetDisabledImageList {
+impl MsgSend for GetDisabledImageList {
 	type RetType = Option<HIMAGELIST>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -479,11 +479,11 @@ unsafe impl MsgSend for GetDisabledImageList {
 /// Return type: `co::TBSTYLE_EX`.
 pub struct GetExtendedStyle {}
 
-unsafe impl MsgSend for GetExtendedStyle {
+impl MsgSend for GetExtendedStyle {
 	type RetType = co::TBSTYLE_EX;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::TBSTYLE_EX::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::TBSTYLE_EX::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -501,11 +501,11 @@ unsafe impl MsgSend for GetExtendedStyle {
 /// Return type: `Option<HIMAGELIST>`.
 pub struct GetHotImageList {}
 
-unsafe impl MsgSend for GetHotImageList {
+impl MsgSend for GetHotImageList {
 	type RetType = Option<HIMAGELIST>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -523,10 +523,10 @@ unsafe impl MsgSend for GetHotImageList {
 /// Return type: `Option<u32>`.
 pub struct GetHotItem {}
 
-unsafe impl MsgSend for GetHotItem {
+impl MsgSend for GetHotItem {
 	type RetType = Option<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|v| v as _)
 	}
 
@@ -548,10 +548,10 @@ pub struct GetIdealSize<'a> {
 	pub size: &'a mut SIZE,
 }
 
-unsafe impl<'a> MsgSend for GetIdealSize<'a> {
+impl<'a> MsgSend for GetIdealSize<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -570,11 +570,11 @@ unsafe impl<'a> MsgSend for GetIdealSize<'a> {
 /// Return type: `Option<HIMAGELIST>`.
 pub struct GetImageList {}
 
-unsafe impl MsgSend for GetImageList {
+impl MsgSend for GetImageList {
 	type RetType = Option<HIMAGELIST>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -592,10 +592,10 @@ unsafe impl MsgSend for GetImageList {
 /// Return type: `u32`.
 pub struct GetImageListCount {}
 
-unsafe impl MsgSend for GetImageListCount {
+impl MsgSend for GetImageListCount {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -616,10 +616,10 @@ pub struct GetInsertMark<'a> {
 	pub info: &'a mut TBINSERTMARK,
 }
 
-unsafe impl<'a> MsgSend for GetInsertMark<'a> {
+impl<'a> MsgSend for GetInsertMark<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -638,11 +638,11 @@ unsafe impl<'a> MsgSend for GetInsertMark<'a> {
 /// Return type: `COLORREF`.
 pub struct GetInsertMarkColor {}
 
-unsafe impl MsgSend for GetInsertMarkColor {
+impl MsgSend for GetInsertMarkColor {
 	type RetType = COLORREF;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { COLORREF::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		COLORREF::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -663,10 +663,10 @@ pub struct GetItemDropdownRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-unsafe impl<'a> MsgSend for GetItemDropdownRect<'a> {
+impl<'a> MsgSend for GetItemDropdownRect<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -688,10 +688,10 @@ pub struct GetItemRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-unsafe impl<'a> MsgSend for GetItemRect<'a> {
+impl<'a> MsgSend for GetItemRect<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -712,10 +712,10 @@ pub struct GetMaxSize<'a> {
 	pub size: &'a mut SIZE,
 }
 
-unsafe impl<'a> MsgSend for GetMaxSize<'a> {
+impl<'a> MsgSend for GetMaxSize<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -736,10 +736,10 @@ pub struct GetMetrics<'a> {
 	pub metrics: &'a mut TBMETRICS,
 }
 
-unsafe impl<'a> MsgSend for GetMetrics<'a> {
+impl<'a> MsgSend for GetMetrics<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -760,10 +760,10 @@ pub struct GetObject<'a> {
 	pub obj: &'a IDropTarget,
 }
 
-unsafe impl<'a> MsgSend for GetObject<'a> {
+impl<'a> MsgSend for GetObject<'a> {
 	type RetType = HrResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		ok_to_hrresult(v as _)
 	}
 
@@ -782,10 +782,10 @@ unsafe impl<'a> MsgSend for GetObject<'a> {
 /// Return type: `(u16, u16)`.
 pub struct GetPadding {}
 
-unsafe impl MsgSend for GetPadding {
+impl MsgSend for GetPadding {
 	type RetType = (u16, u16);
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		(LOWORD(v as _), HIWORD(v as _))
 	}
 
@@ -804,11 +804,11 @@ unsafe impl MsgSend for GetPadding {
 /// Return type: `Option<HIMAGELIST>`.
 pub struct GetPressedImageList {}
 
-unsafe impl MsgSend for GetPressedImageList {
+impl MsgSend for GetPressedImageList {
 	type RetType = Option<HIMAGELIST>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HIMAGELIST::from_ptr(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -829,10 +829,10 @@ pub struct GetRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-unsafe impl<'a> MsgSend for GetRect<'a> {
+impl<'a> MsgSend for GetRect<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -851,10 +851,10 @@ unsafe impl<'a> MsgSend for GetRect<'a> {
 /// Return type: `u32`.
 pub struct GetRows {}
 
-unsafe impl MsgSend for GetRows {
+impl MsgSend for GetRows {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -875,11 +875,11 @@ pub struct GetState {
 	pub cmd_id: u16,
 }
 
-unsafe impl MsgSend for GetState {
+impl MsgSend for GetState {
 	type RetType = SysResult<co::TBSTATE>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_badargs(v).map(|v| unsafe { co::TBSTATE::from_raw(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		minus1_as_badargs(v).map(|v| co::TBSTATE::from_raw(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -900,10 +900,10 @@ pub struct GetString<'a> {
 	pub text: &'a mut WString,
 }
 
-unsafe impl<'a> MsgSend for GetString<'a> {
+impl<'a> MsgSend for GetString<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -922,11 +922,11 @@ unsafe impl<'a> MsgSend for GetString<'a> {
 /// Return type: `co::BTNS`.
 pub struct GetStyle {}
 
-unsafe impl MsgSend for GetStyle {
+impl MsgSend for GetStyle {
 	type RetType = co::BTNS;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::BTNS::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::BTNS::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -944,10 +944,10 @@ unsafe impl MsgSend for GetStyle {
 /// Return type: `u32`.
 pub struct GetTextRows {}
 
-unsafe impl MsgSend for GetTextRows {
+impl MsgSend for GetTextRows {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -966,11 +966,11 @@ unsafe impl MsgSend for GetTextRows {
 /// Return type: `Option<HWND>`.
 pub struct GetTooltips {}
 
-unsafe impl MsgSend for GetTooltips {
+impl MsgSend for GetTooltips {
 	type RetType = Option<HWND>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| unsafe { HWND::from_ptr(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HWND::from_ptr(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -988,10 +988,10 @@ unsafe impl MsgSend for GetTooltips {
 /// Return type: `bool`.
 pub struct GetUnicodeFormat {}
 
-unsafe impl MsgSend for GetUnicodeFormat {
+impl MsgSend for GetUnicodeFormat {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -1013,10 +1013,10 @@ pub struct HideButton {
 	pub hide: bool,
 }
 
-unsafe impl MsgSend for HideButton {
+impl MsgSend for HideButton {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -1037,10 +1037,10 @@ pub struct HitTest<'a> {
 	pub coords: &'a mut POINT,
 }
 
-unsafe impl<'a> MsgSend for HitTest<'a> {
+impl<'a> MsgSend for HitTest<'a> {
 	type RetType = i32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -1062,10 +1062,10 @@ pub struct Indeterminate {
 	pub indeterminate: bool,
 }
 
-unsafe impl MsgSend for Indeterminate {
+impl MsgSend for Indeterminate {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -1087,10 +1087,10 @@ pub struct InsertButton<'a, 'b> {
 	pub button: &'a TBBUTTON<'b>,
 }
 
-unsafe impl<'a, 'b> MsgSend for InsertButton<'a, 'b> {
+impl<'a, 'b> MsgSend for InsertButton<'a, 'b> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -1112,10 +1112,10 @@ pub struct InsertMarkHitTest<'a, 'b> {
 	pub info: &'b mut TBINSERTMARK,
 }
 
-unsafe impl<'a, 'b> MsgSend for InsertMarkHitTest<'a, 'b> {
+impl<'a, 'b> MsgSend for InsertMarkHitTest<'a, 'b> {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -1136,10 +1136,10 @@ pub struct IsButtonChecked {
 	pub cmd_id: u16,
 }
 
-unsafe impl MsgSend for IsButtonChecked {
+impl MsgSend for IsButtonChecked {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -1160,10 +1160,10 @@ pub struct IsButtonEnabled {
 	pub cmd_id: u16,
 }
 
-unsafe impl MsgSend for IsButtonEnabled {
+impl MsgSend for IsButtonEnabled {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -1184,10 +1184,10 @@ pub struct IsButtonHidden {
 	pub cmd_id: u16,
 }
 
-unsafe impl MsgSend for IsButtonHidden {
+impl MsgSend for IsButtonHidden {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -1208,10 +1208,10 @@ pub struct IsButtonHighlighted {
 	pub cmd_id: u16,
 }
 
-unsafe impl MsgSend for IsButtonHighlighted {
+impl MsgSend for IsButtonHighlighted {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -1232,10 +1232,10 @@ pub struct IsButtonIndeterminate {
 	pub cmd_id: u16,
 }
 
-unsafe impl MsgSend for IsButtonIndeterminate {
+impl MsgSend for IsButtonIndeterminate {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -1256,10 +1256,10 @@ pub struct IsButtonPressed {
 	pub cmd_id: u16,
 }
 
-unsafe impl MsgSend for IsButtonPressed {
+impl MsgSend for IsButtonPressed {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -1280,10 +1280,10 @@ pub struct LoadImages {
 	pub img_list: co::IDB,
 }
 
-unsafe impl MsgSend for LoadImages {
+impl MsgSend for LoadImages {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -1305,10 +1305,10 @@ pub struct MapAccelerator<'a> {
 	pub cmd_id: &'a mut u16,
 }
 
-unsafe impl<'a> MsgSend for MapAccelerator<'a> {
+impl<'a> MsgSend for MapAccelerator<'a> {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -1330,10 +1330,10 @@ pub struct MarkButton {
 	pub highlight: bool,
 }
 
-unsafe impl MsgSend for MarkButton {
+impl MsgSend for MarkButton {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -1355,10 +1355,10 @@ pub struct MoveButton {
 	pub dest_index: u32,
 }
 
-unsafe impl MsgSend for MoveButton {
+impl MsgSend for MoveButton {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -1380,10 +1380,10 @@ pub struct PressButton {
 	pub press: bool,
 }
 
-unsafe impl MsgSend for PressButton {
+impl MsgSend for PressButton {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -1404,10 +1404,10 @@ pub struct ReplaceBitmap<'a> {
 	pub info: &'a TBREPLACEBITMAP,
 }
 
-unsafe impl<'a> MsgSend for ReplaceBitmap<'a> {
+impl<'a> MsgSend for ReplaceBitmap<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -1428,10 +1428,10 @@ pub struct SetAnchorHighlight {
 	pub enable: bool,
 }
 
-unsafe impl MsgSend for SetAnchorHighlight {
+impl MsgSend for SetAnchorHighlight {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -1453,10 +1453,10 @@ pub struct SetBitmapSize {
 	pub height: u16,
 }
 
-unsafe impl MsgSend for SetBitmapSize {
+impl MsgSend for SetBitmapSize {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -1478,10 +1478,10 @@ pub struct SetButtonInfo<'a, 'b> {
 	pub info: &'b TBBUTTONINFO<'a>,
 }
 
-unsafe impl<'a, 'b> MsgSend for SetButtonInfo<'a, 'b> {
+impl<'a, 'b> MsgSend for SetButtonInfo<'a, 'b> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -1503,10 +1503,10 @@ pub struct SetButtonSize {
 	pub height: u16,
 }
 
-unsafe impl MsgSend for SetButtonSize {
+impl MsgSend for SetButtonSize {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -1528,10 +1528,10 @@ pub struct SetButtonWidth {
 	pub max_width: u16,
 }
 
-unsafe impl MsgSend for SetButtonWidth {
+impl MsgSend for SetButtonWidth {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -1553,10 +1553,10 @@ pub struct SetCmdId {
 	pub cmd_id: u16,
 }
 
-unsafe impl MsgSend for SetCmdId {
+impl MsgSend for SetCmdId {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -1577,10 +1577,10 @@ pub struct SetColorScheme<'a> {
 	pub scheme: &'a COLORSCHEME,
 }
 
-unsafe impl<'a> MsgSend for SetColorScheme<'a> {
+impl<'a> MsgSend for SetColorScheme<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1601,11 +1601,11 @@ pub struct SetDisabledImageList<'a> {
 	pub himagelist: &'a HIMAGELIST,
 }
 
-unsafe impl<'a> MsgSend for SetDisabledImageList<'a> {
+impl<'a> MsgSend for SetDisabledImageList<'a> {
 	type RetType = Option<HIMAGELIST>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1626,11 +1626,11 @@ pub struct SetDrawTextFlags {
 	pub draw: co::DT,
 }
 
-unsafe impl MsgSend for SetDrawTextFlags {
+impl MsgSend for SetDrawTextFlags {
 	type RetType = co::DT;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::DT::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::DT::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1650,11 +1650,11 @@ pub struct SetExtendedStyle {
 	pub style: co::TBSTYLE_EX,
 }
 
-unsafe impl MsgSend for SetExtendedStyle {
+impl MsgSend for SetExtendedStyle {
 	type RetType = co::TBSTYLE_EX;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::TBSTYLE_EX::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::TBSTYLE_EX::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1674,11 +1674,11 @@ pub struct SetHotImageList<'a> {
 	pub himagelist: &'a HIMAGELIST,
 }
 
-unsafe impl<'a> MsgSend for SetHotImageList<'a> {
+impl<'a> MsgSend for SetHotImageList<'a> {
 	type RetType = Option<HIMAGELIST>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1698,10 +1698,10 @@ pub struct SetHotItem {
 	pub index: Option<u32>,
 }
 
-unsafe impl MsgSend for SetHotItem {
+impl MsgSend for SetHotItem {
 	type RetType = Option<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|idx| idx as _)
 	}
 
@@ -1723,10 +1723,10 @@ pub struct SetHotItem2 {
 	pub flags: co::HICF,
 }
 
-unsafe impl MsgSend for SetHotItem2 {
+impl MsgSend for SetHotItem2 {
 	type RetType = Option<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_none(v).map(|idx| idx as _)
 	}
 
@@ -1747,11 +1747,11 @@ pub struct SetImageList {
 	pub himagelist: HIMAGELIST,
 }
 
-unsafe impl MsgSend for SetImageList {
+impl MsgSend for SetImageList {
 	type RetType = Option<HIMAGELIST>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1771,10 +1771,10 @@ pub struct SetIndent {
 	pub pixels: u32,
 }
 
-unsafe impl MsgSend for SetIndent {
+impl MsgSend for SetIndent {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -1795,10 +1795,10 @@ pub struct SetInsertMark<'a> {
 	pub info: &'a TBINSERTMARK,
 }
 
-unsafe impl<'a> MsgSend for SetInsertMark<'a> {
+impl<'a> MsgSend for SetInsertMark<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1819,11 +1819,11 @@ pub struct SetInsertMarkColor {
 	pub color: COLORREF,
 }
 
-unsafe impl MsgSend for SetInsertMarkColor {
+impl MsgSend for SetInsertMarkColor {
 	type RetType = COLORREF;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { COLORREF::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		COLORREF::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1843,10 +1843,10 @@ pub struct SetListGap {
 	pub gap: u32,
 }
 
-unsafe impl MsgSend for SetListGap {
+impl MsgSend for SetListGap {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1867,10 +1867,10 @@ pub struct SetMaxTextRows {
 	pub max_rows: u32,
 }
 
-unsafe impl MsgSend for SetMaxTextRows {
+impl MsgSend for SetMaxTextRows {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -1891,10 +1891,10 @@ pub struct SetMetrics<'a> {
 	pub metrics: &'a TBMETRICS,
 }
 
-unsafe impl<'a> MsgSend for SetMetrics<'a> {
+impl<'a> MsgSend for SetMetrics<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1916,10 +1916,10 @@ pub struct SetPadding {
 	pub vertical: u16,
 }
 
-unsafe impl MsgSend for SetPadding {
+impl MsgSend for SetPadding {
 	type RetType = (u16, u16);
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		(LOWORD(v as _), HIWORD(v as _))
 	}
 
@@ -1940,11 +1940,11 @@ pub struct SetParent<'a> {
 	pub hparent: &'a HWND
 }
 
-unsafe impl<'a> MsgSend for SetParent<'a> {
+impl<'a> MsgSend for SetParent<'a> {
 	type RetType = Option<HWND>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| unsafe { HWND::from_ptr(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HWND::from_ptr(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1965,11 +1965,11 @@ pub struct SetPressedImageList<'a> {
 	pub himagelist: Option<&'a HIMAGELIST>,
 }
 
-unsafe impl<'a> MsgSend for SetPressedImageList<'a> {
+impl<'a> MsgSend for SetPressedImageList<'a> {
 	type RetType = Option<HIMAGELIST>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1991,10 +1991,10 @@ pub struct SetRows<'a> {
 	pub bounds: &'a mut RECT,
 }
 
-unsafe impl<'a> MsgSend for SetRows<'a> {
+impl<'a> MsgSend for SetRows<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -2016,10 +2016,10 @@ pub struct SetState {
 	pub state: co::BTNS,
 }
 
-unsafe impl MsgSend for SetState {
+impl MsgSend for SetState {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -2040,10 +2040,10 @@ pub struct SetStyle {
 	pub style: co::BTNS,
 }
 
-unsafe impl MsgSend for SetStyle {
+impl MsgSend for SetStyle {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -2064,10 +2064,10 @@ pub struct SetTooltips<'a> {
 	pub htooltips: Option<&'a HWND>,
 }
 
-unsafe impl<'a> MsgSend for SetTooltips<'a> {
+impl<'a> MsgSend for SetTooltips<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -2088,10 +2088,10 @@ pub struct SetUnicodeFormat {
 	pub use_unicode: bool,
 }
 
-unsafe impl MsgSend for SetUnicodeFormat {
+impl MsgSend for SetUnicodeFormat {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -2112,10 +2112,10 @@ pub struct SetWindowTheme {
 	pub visual_style: WString,
 }
 
-unsafe impl MsgSend for SetWindowTheme {
+impl MsgSend for SetWindowTheme {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 

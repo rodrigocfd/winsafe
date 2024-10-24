@@ -11,10 +11,10 @@ pub struct Notify<'a> {
 	pub nmhdr: &'a mut NMHDR,
 }
 
-unsafe impl<'a> MsgSend for Notify<'a> {
+impl<'a> MsgSend for Notify<'a> {
 	type RetType = isize;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v
 	}
 
@@ -27,10 +27,10 @@ unsafe impl<'a> MsgSend for Notify<'a> {
 	}
 }
 
-unsafe impl<'a> MsgSendRecv for Notify<'a> {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a> MsgSendRecv for Notify<'a> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			nmhdr: unsafe { &mut *(p.lparam as *mut _) },
+			nmhdr: &mut *(p.lparam as *mut _),
 		}
 	}
 }

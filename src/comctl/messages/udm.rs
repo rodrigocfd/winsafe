@@ -13,10 +13,10 @@ pub struct GetAccel<'a> {
 	pub info: &'a mut [UDACCEL],
 }
 
-unsafe impl<'a> MsgSend for GetAccel<'a> {
+impl<'a> MsgSend for GetAccel<'a> {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -35,10 +35,10 @@ unsafe impl<'a> MsgSend for GetAccel<'a> {
 /// Return type: `u8`.
 pub struct GetBase {}
 
-unsafe impl MsgSend for GetBase {
+impl MsgSend for GetBase {
 	type RetType = u8;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -57,11 +57,11 @@ unsafe impl MsgSend for GetBase {
 /// Return type: `Option<HWND>`.
 pub struct GetBuddy {}
 
-unsafe impl MsgSend for GetBuddy {
+impl MsgSend for GetBuddy {
 	type RetType = Option<HWND>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HWND::from_ptr(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -79,10 +79,10 @@ unsafe impl MsgSend for GetBuddy {
 /// Return type: `SysResult<i16>`.
 pub struct GetPos {}
 
-unsafe impl MsgSend for GetPos {
+impl MsgSend for GetPos {
 	type RetType = SysResult<i16>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match HIWORD(v as _) {
 			0 => Ok(LOWORD(v as _) as _),
 			_ => Err(co::ERROR::BAD_ARGUMENTS),
@@ -106,10 +106,10 @@ pub struct GetPos32<'a> {
 	pub success_flag: Option<&'a mut i32>,
 }
 
-unsafe impl<'a> MsgSend for GetPos32<'a> {
+impl<'a> MsgSend for GetPos32<'a> {
 	type RetType = i32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -128,10 +128,10 @@ unsafe impl<'a> MsgSend for GetPos32<'a> {
 /// Return type: `(i16, i16)`.
 pub struct GetRange {}
 
-unsafe impl MsgSend for GetRange {
+impl MsgSend for GetRange {
 	type RetType = (i16, i16);
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		(LOWORD(v as _) as _, HIWORD(v as _) as _)
 	}
 
@@ -153,10 +153,10 @@ pub struct GetRange32<'a, 'b> {
 	pub max: &'b mut i32,
 }
 
-unsafe impl<'a, 'b> MsgSend for GetRange32<'a, 'b> {
+impl<'a, 'b> MsgSend for GetRange32<'a, 'b> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -175,10 +175,10 @@ unsafe impl<'a, 'b> MsgSend for GetRange32<'a, 'b> {
 /// Return type: `bool`.
 pub struct GetUnicodeFormat {}
 
-unsafe impl MsgSend for GetUnicodeFormat {
+impl MsgSend for GetUnicodeFormat {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -199,10 +199,10 @@ pub struct SetAccel<'a> {
 	pub info: &'a [UDACCEL],
 }
 
-unsafe impl<'a> MsgSend for SetAccel<'a> {
+impl<'a> MsgSend for SetAccel<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -223,10 +223,10 @@ pub struct SetBase {
 	pub base: u8,
 }
 
-unsafe impl MsgSend for SetBase {
+impl MsgSend for SetBase {
 	type RetType = SysResult<u8>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|v| v as _)
 	}
 
@@ -247,11 +247,11 @@ pub struct SetBuddy<'a> {
 	pub hbuddy: &'a HWND,
 }
 
-unsafe impl<'a> MsgSend for SetBuddy<'a> {
+impl<'a> MsgSend for SetBuddy<'a> {
 	type RetType = Option<HWND>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HWND::from_ptr(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -271,10 +271,10 @@ pub struct SetPos {
 	pub pos: i16,
 }
 
-unsafe impl MsgSend for SetPos {
+impl MsgSend for SetPos {
 	type RetType = i16;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -295,10 +295,10 @@ pub struct SetPos32 {
 	pub pos: i32,
 }
 
-unsafe impl MsgSend for SetPos32 {
+impl MsgSend for SetPos32 {
 	type RetType = i32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -320,10 +320,10 @@ pub struct SetRange {
 	pub max: i16,
 }
 
-unsafe impl MsgSend for SetRange {
+impl MsgSend for SetRange {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -345,10 +345,10 @@ pub struct SetRange32 {
 	pub max: i32,
 }
 
-unsafe impl MsgSend for SetRange32 {
+impl MsgSend for SetRange32 {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -369,10 +369,10 @@ pub struct SetUnicodeFormat {
 	pub use_unicode: bool,
 }
 
-unsafe impl MsgSend for SetUnicodeFormat {
+impl MsgSend for SetUnicodeFormat {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 

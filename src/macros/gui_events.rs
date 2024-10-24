@@ -47,7 +47,7 @@ macro_rules! pub_fn_wm_withparm_noret {
 			where F: Fn($parm) -> AnyResult<()> + 'static,
 		{
 			self.wm($wmconst, move |p| {
-				func(<$parm>::from_generic_wm(p))?;
+				func(unsafe { <$parm>::from_generic_wm(p) })?;
 				Ok(crate::gui::WmRet::HandledOk)
 			});
 		}
@@ -65,7 +65,7 @@ macro_rules! pub_fn_wm_withparm_boolret {
 			where F: Fn($parm) -> AnyResult<bool> + 'static,
 		{
 			self.wm($wmconst, move |p| {
-				let ret_val = func(<$parm>::from_generic_wm(p))? as isize;
+				let ret_val = func(unsafe { <$parm>::from_generic_wm(p) })? as isize;
 				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
 			});
 		}
@@ -83,7 +83,7 @@ macro_rules! pub_fn_wm_withparm_coret {
 			where F: Fn($parm) -> AnyResult<$coret> + 'static,
 		{
 			self.wm($wmconst, move |p| {
-				let ret_val = func(<$parm>::from_generic_wm(p))?.raw() as isize;
+				let ret_val = func(unsafe { <$parm>::from_generic_wm(p) })?.raw() as isize;
 				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
 			});
 		}
@@ -101,7 +101,7 @@ macro_rules! pub_fn_wm_ctlcolor {
 			where F: Fn($parm) -> AnyResult<crate::user::decl::HBRUSH> + 'static,
 		{
 			self.wm($wmconst, move |p| {
-				let ret_val = func(<$parm>::from_generic_wm(p))?.ptr() as isize;
+				let ret_val = func(unsafe { <$parm>::from_generic_wm(p) })?.ptr() as isize;
 				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
 			});
 		}

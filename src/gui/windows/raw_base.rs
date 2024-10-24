@@ -155,7 +155,7 @@ impl RawBase {
 	fn window_proc_proc(hwnd: HWND, wm_any: WndMsg) -> AnyResult<isize> {
 		let ptr_self = match wm_any.msg_id {
 			co::WM::NCCREATE => { // first message being handled
-				let wm_ncc = wm::NcCreate::from_generic_wm(wm_any);
+				let wm_ncc = unsafe { wm::NcCreate::from_generic_wm(wm_any) };
 				let ptr_self = wm_ncc.createstruct.lpCreateParams as *mut Self;
 				unsafe { hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as _); } // store
 				let ref_self = unsafe { &mut *ptr_self };

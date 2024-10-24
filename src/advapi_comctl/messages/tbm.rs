@@ -12,10 +12,10 @@ pub struct SaveRestore<'a, 'b> {
 	pub info: &'b mut TBSAVEPARAMS<'a>,
 }
 
-unsafe impl<'a, 'b> MsgSend for SaveRestore<'a, 'b> {
+impl<'a, 'b> MsgSend for SaveRestore<'a, 'b> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 

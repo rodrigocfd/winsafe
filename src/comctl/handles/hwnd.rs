@@ -34,7 +34,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 	{
 		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
-		msg.convert_ret(
+		msg.isize_to_ret(
 			ffi::DefSubclassProc(
 				self.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
 			),

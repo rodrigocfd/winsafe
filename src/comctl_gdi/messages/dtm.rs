@@ -10,11 +10,11 @@ use crate::user::privs::*;
 /// Return type: `SysResult<HFONT>`.
 pub struct GetMcFont {}
 
-unsafe impl MsgSend for GetMcFont {
+impl MsgSend for GetMcFont {
 	type RetType = SysResult<HFONT>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|p| unsafe { HFONT::from_ptr(p as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_badargs(v).map(|p| HFONT::from_ptr(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -35,10 +35,10 @@ pub struct SetMcFont<'a> {
 	pub redraw: bool,
 }
 
-unsafe impl<'a> MsgSend for SetMcFont<'a> {
+impl<'a> MsgSend for SetMcFont<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 

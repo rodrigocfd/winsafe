@@ -13,10 +13,10 @@ pub struct DeltaPos {
 	pub advance_amount: u32,
 }
 
-unsafe impl MsgSend for DeltaPos {
+impl MsgSend for DeltaPos {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -35,13 +35,13 @@ unsafe impl MsgSend for DeltaPos {
 /// Return type: `Option<COLORREF>`.
 pub struct GetBarColor {}
 
-unsafe impl MsgSend for GetBarColor {
+impl MsgSend for GetBarColor {
 	type RetType = Option<COLORREF>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			v => Some(unsafe { COLORREF::from_raw(v) }),
+			v => Some(COLORREF::from_raw(v)),
 		}
 	}
 
@@ -60,13 +60,13 @@ unsafe impl MsgSend for GetBarColor {
 /// Return type: `Option<COLORREF>`.
 pub struct GetBkColor {}
 
-unsafe impl MsgSend for GetBkColor {
+impl MsgSend for GetBkColor {
 	type RetType = Option<COLORREF>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			v => Some(unsafe { COLORREF::from_raw(v) }),
+			v => Some(COLORREF::from_raw(v)),
 		}
 	}
 
@@ -85,10 +85,10 @@ unsafe impl MsgSend for GetBkColor {
 /// Return type: `u32`.
 pub struct GetPos {}
 
-unsafe impl MsgSend for GetPos {
+impl MsgSend for GetPos {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -110,10 +110,10 @@ pub struct GetRange<'a> {
 	pub ranges: Option<&'a mut PBRANGE>,
 }
 
-unsafe impl<'a> MsgSend for GetRange<'a> {
+impl<'a> MsgSend for GetRange<'a> {
 	type RetType = i32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -132,11 +132,11 @@ unsafe impl<'a> MsgSend for GetRange<'a> {
 /// Return type: `co::PBST`.
 pub struct GetState {}
 
-unsafe impl MsgSend for GetState {
+impl MsgSend for GetState {
 	type RetType = co::PBST;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::PBST::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::PBST::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -154,10 +154,10 @@ unsafe impl MsgSend for GetState {
 /// Return type: `u32`.
 pub struct GetStep {}
 
-unsafe impl MsgSend for GetStep {
+impl MsgSend for GetStep {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -178,13 +178,13 @@ pub struct SetBarColor {
 	pub color: Option<COLORREF>,
 }
 
-unsafe impl MsgSend for SetBarColor {
+impl MsgSend for SetBarColor {
 	type RetType = Option<COLORREF>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			v => Some(unsafe { COLORREF::from_raw(v) }),
+			v => Some(COLORREF::from_raw(v)),
 		}
 	}
 
@@ -205,13 +205,13 @@ pub struct SetBkColor {
 	pub color: Option<COLORREF>,
 }
 
-unsafe impl MsgSend for SetBkColor {
+impl MsgSend for SetBkColor {
 	type RetType = Option<COLORREF>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			v => Some(unsafe { COLORREF::from_raw(v) }),
+			v => Some(COLORREF::from_raw(v)),
 		}
 	}
 
@@ -233,10 +233,10 @@ pub struct SetMarquee {
 	pub time_ms: Option<u32>,
 }
 
-unsafe impl MsgSend for SetMarquee {
+impl MsgSend for SetMarquee {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -257,10 +257,10 @@ pub struct SetPos {
 	pub position: u32,
 }
 
-unsafe impl MsgSend for SetPos {
+impl MsgSend for SetPos {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -282,10 +282,10 @@ pub struct SetRange {
 	pub max: u16,
 }
 
-unsafe impl MsgSend for SetRange {
+impl MsgSend for SetRange {
 	type RetType = SysResult<(u16, u16)>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|v| (LOWORD(v as _), HIWORD(v as _)))
 	}
 
@@ -307,10 +307,10 @@ pub struct SetRange32 {
 	pub max: u32,
 }
 
-unsafe impl MsgSend for SetRange32 {
+impl MsgSend for SetRange32 {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -331,11 +331,11 @@ pub struct SetState {
 	pub state: co::PBST,
 }
 
-unsafe impl MsgSend for SetState {
+impl MsgSend for SetState {
 	type RetType = co::PBST;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::PBST::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::PBST::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -355,10 +355,10 @@ pub struct SetStep {
 	pub step: u32,
 }
 
-unsafe impl MsgSend for SetStep {
+impl MsgSend for SetStep {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -377,10 +377,10 @@ unsafe impl MsgSend for SetStep {
 /// Return type: `u32`.
 pub struct StepIt {}
 
-unsafe impl MsgSend for StepIt {
+impl MsgSend for StepIt {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 

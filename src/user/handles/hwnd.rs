@@ -265,7 +265,7 @@ pub trait user_Hwnd: Handle {
 	{
 		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
-		msg.convert_ret(
+		msg.isize_to_ret(
 			ffi::DefWindowProcW(
 				self.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
 			),
@@ -1536,7 +1536,7 @@ pub trait user_Hwnd: Handle {
 	{
 		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
-		msg.convert_ret(
+		msg.isize_to_ret(
 			ffi::SendMessageW(
 				self.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
 			),
@@ -1571,7 +1571,7 @@ pub trait user_Hwnd: Handle {
 				timeout_ms,
 				&mut result,
 			) as _,
-		).map(|_| msg.convert_ret(result))
+		).map(|_| msg.isize_to_ret(result))
 	}
 
 	/// [`SetActiveWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setactivewindow)

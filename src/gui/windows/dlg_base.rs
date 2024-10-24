@@ -95,7 +95,7 @@ impl DlgBase {
 	fn dialog_proc_proc(hwnd: HWND, wm_any: WndMsg) -> AnyResult<isize> {
 		let ptr_self = match wm_any.msg_id {
 			co::WM::INITDIALOG => { // first message being handled
-				let wm_idlg = wm::InitDialog::from_generic_wm(wm_any);
+				let wm_idlg = unsafe { wm::InitDialog::from_generic_wm(wm_any) };
 				let ptr_self = wm_idlg.additional_data as *mut Self;
 				unsafe { hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as _); } // store
 				let ref_self = unsafe { &mut *ptr_self };

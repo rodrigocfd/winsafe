@@ -14,10 +14,10 @@ pub struct Activate {
 	pub hwnd: HWND,
 }
 
-unsafe impl MsgSend for Activate {
+impl MsgSend for Activate {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -30,12 +30,12 @@ unsafe impl MsgSend for Activate {
 	}
 }
 
-unsafe impl MsgSendRecv for Activate {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for Activate {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			event: unsafe { co::WA::from_raw(LOWORD(p.wparam as _)) },
+			event: co::WA::from_raw(LOWORD(p.wparam as _)),
 			is_minimized: HIWORD(p.wparam as _) != 0,
-			hwnd: unsafe { HWND::from_ptr(p.lparam as _) },
+			hwnd: HWND::from_ptr(p.lparam as _),
 		}
 	}
 }
@@ -49,10 +49,10 @@ pub struct ActivateApp {
 	pub thread_id: u32,
 }
 
-unsafe impl MsgSend for ActivateApp {
+impl MsgSend for ActivateApp {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -65,8 +65,8 @@ unsafe impl MsgSend for ActivateApp {
 	}
 }
 
-unsafe impl MsgSendRecv for ActivateApp {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for ActivateApp {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			is_being_activated: p.wparam != 0,
 			thread_id: p.lparam as _,
@@ -85,10 +85,10 @@ pub struct AppCommand {
 	pub keys: co::MK,
 }
 
-unsafe impl MsgSend for AppCommand {
+impl MsgSend for AppCommand {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -101,15 +101,13 @@ unsafe impl MsgSend for AppCommand {
 	}
 }
 
-unsafe impl MsgSendRecv for AppCommand {
-	fn from_generic_wm(p: WndMsg) -> Self {
-		unsafe {
-			Self {
-				hwnd_owner: HWND::from_ptr(p.wparam as _),
-				app_command: co::APPCOMMAND::from_raw(HIWORD(p.lparam as _) & !FAPPCOMMAND_MASK),
-				u_device: co::FAPPCOMMAND::from_raw(HIWORD(p.lparam as _) & FAPPCOMMAND_MASK),
-				keys: co::MK::from_raw(LOWORD(p.lparam as _)),
-			}
+impl MsgSendRecv for AppCommand {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			hwnd_owner: HWND::from_ptr(p.wparam as _),
+			app_command: co::APPCOMMAND::from_raw(HIWORD(p.lparam as _) & !FAPPCOMMAND_MASK),
+			u_device: co::FAPPCOMMAND::from_raw(HIWORD(p.lparam as _) & FAPPCOMMAND_MASK),
+			keys: co::MK::from_raw(LOWORD(p.lparam as _)),
 		}
 	}
 }
@@ -126,10 +124,10 @@ pub struct CaptureChanged {
 	pub hwnd_gaining_mouse: HWND,
 }
 
-unsafe impl MsgSend for CaptureChanged {
+impl MsgSend for CaptureChanged {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -142,10 +140,10 @@ unsafe impl MsgSend for CaptureChanged {
 	}
 }
 
-unsafe impl MsgSendRecv for CaptureChanged {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for CaptureChanged {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hwnd_gaining_mouse: unsafe { HWND::from_ptr(p.wparam as _) },
+			hwnd_gaining_mouse: HWND::from_ptr(p.wparam as _),
 		}
 	}
 }
@@ -170,10 +168,10 @@ pub struct Command {
 	pub event: AccelMenuCtrl,
 }
 
-unsafe impl MsgSend for Command {
+impl MsgSend for Command {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -194,17 +192,17 @@ unsafe impl MsgSend for Command {
 	}
 }
 
-unsafe impl MsgSendRecv for Command {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for Command {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			event: match HIWORD(p.wparam as _) {
 				1 => AccelMenuCtrl::Accel(LOWORD(p.wparam as _)),
 				0 => AccelMenuCtrl::Menu(LOWORD(p.wparam as _)),
 				code => AccelMenuCtrl::Ctrl(
 					AccelMenuCtrlData {
-						notif_code: unsafe { co::CMD::from_raw(code) },
+						notif_code: co::CMD::from_raw(code),
 						ctrl_id: LOWORD(p.wparam as _),
-						ctrl_hwnd: unsafe { HWND::from_ptr(p.lparam as _) },
+						ctrl_hwnd: HWND::from_ptr(p.lparam as _),
 					},
 				),
 			},
@@ -221,10 +219,10 @@ pub struct ContextMenu {
 	pub cursor_pos: POINT,
 }
 
-unsafe impl MsgSend for ContextMenu {
+impl MsgSend for ContextMenu {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -237,10 +235,10 @@ unsafe impl MsgSend for ContextMenu {
 	}
 }
 
-unsafe impl MsgSendRecv for ContextMenu {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for ContextMenu {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hwnd: unsafe { HWND::from_ptr(p.wparam as _) },
+			hwnd: HWND::from_ptr(p.wparam as _),
 			cursor_pos: POINT::from(p.lparam as u32),
 		}
 	}
@@ -254,10 +252,10 @@ pub struct Create<'a, 'b, 'c> {
 	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
 
-unsafe impl<'a, 'b, 'c> MsgSend for Create<'a, 'b, 'c> {
+impl<'a, 'b, 'c> MsgSend for Create<'a, 'b, 'c> {
 	type RetType = i32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -270,10 +268,10 @@ unsafe impl<'a, 'b, 'c> MsgSend for Create<'a, 'b, 'c> {
 	}
 }
 
-unsafe impl<'a, 'b, 'c> MsgSendRecv for Create<'a, 'b, 'c> {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a, 'b, 'c> MsgSendRecv for Create<'a, 'b, 'c> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			createstruct: unsafe { &*(p.lparam as *const _) },
+			createstruct: &*(p.lparam as *const _),
 		}
 	}
 }
@@ -287,10 +285,10 @@ pub struct DeleteItem<'a> {
 	pub deleteitemstruct: &'a DELETEITEMSTRUCT,
 }
 
-unsafe impl<'a> MsgSend for DeleteItem<'a> {
+impl<'a> MsgSend for DeleteItem<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -303,11 +301,11 @@ unsafe impl<'a> MsgSend for DeleteItem<'a> {
 	}
 }
 
-unsafe impl<'a> MsgSendRecv for DeleteItem<'a> {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a> MsgSendRecv for DeleteItem<'a> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			control_id: p.wparam as _,
-			deleteitemstruct: unsafe { &mut *(p.lparam as *mut _) },
+			deleteitemstruct: &mut *(p.lparam as *mut _),
 		}
 	}
 }
@@ -325,10 +323,10 @@ pub struct DeviceChange<'a> {
 	pub data: Option<&'a DEV_BROADCAST_HDR>,
 }
 
-unsafe impl<'a> MsgSend for DeviceChange<'a> {
+impl<'a> MsgSend for DeviceChange<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -341,14 +339,14 @@ unsafe impl<'a> MsgSend for DeviceChange<'a> {
 	}
 }
 
-unsafe impl<'a> MsgSendRecv for DeviceChange<'a> {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a> MsgSendRecv for DeviceChange<'a> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			event: unsafe { co::DBT::from_raw(p.wparam as _) },
+			event: co::DBT::from_raw(p.wparam as _),
 			data: if p.lparam == 0 {
 				None
 			} else {
-				Some(unsafe { &*(p.lparam as *const _) })
+				Some(&*(p.lparam as *const _))
 			}
 		}
 	}
@@ -362,10 +360,10 @@ pub struct Enable {
 	pub has_been_enabled: bool,
 }
 
-unsafe impl MsgSend for Enable {
+impl MsgSend for Enable {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -378,8 +376,8 @@ unsafe impl MsgSend for Enable {
 	}
 }
 
-unsafe impl MsgSendRecv for Enable {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for Enable {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			has_been_enabled: p.wparam != 0,
 		}
@@ -395,10 +393,10 @@ pub struct EndSession {
 	pub event: co::ENDSESSION,
 }
 
-unsafe impl MsgSend for EndSession {
+impl MsgSend for EndSession {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -411,11 +409,11 @@ unsafe impl MsgSend for EndSession {
 	}
 }
 
-unsafe impl MsgSendRecv for EndSession {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for EndSession {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			is_session_being_ended: p.wparam != 0,
-			event: unsafe { co::ENDSESSION::from_raw(p.lparam as _) },
+			event: co::ENDSESSION::from_raw(p.lparam as _),
 		}
 	}
 }
@@ -429,10 +427,10 @@ pub struct EnterIdle {
 	pub handle: HwndHmenu,
 }
 
-unsafe impl MsgSend for EnterIdle {
+impl MsgSend for EnterIdle {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -445,14 +443,14 @@ unsafe impl MsgSend for EnterIdle {
 	}
 }
 
-unsafe impl MsgSendRecv for EnterIdle {
-	fn from_generic_wm(p: WndMsg) -> Self {
-		let reason = unsafe { co::MSGF::from_raw(p.wparam as _) };
+impl MsgSendRecv for EnterIdle {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
+		let reason = co::MSGF::from_raw(p.wparam as _);
 		Self {
 			reason,
 			handle: match reason {
-				co::MSGF::DIALOGBOX => HwndHmenu::Hwnd(unsafe { HWND::from_ptr(p.lparam as _) }),
-				_ => HwndHmenu::Hmenu(unsafe { HMENU::from_ptr(p.lparam as _) }),
+				co::MSGF::DIALOGBOX => HwndHmenu::Hwnd(HWND::from_ptr(p.lparam as _)),
+				_ => HwndHmenu::Hmenu(HMENU::from_ptr(p.lparam as _)),
 			},
 		}
 	}
@@ -466,10 +464,10 @@ pub struct EnterMenuLoop {
 	pub with_trackpopupmenu: bool,
 }
 
-unsafe impl MsgSend for EnterMenuLoop {
+impl MsgSend for EnterMenuLoop {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -482,8 +480,8 @@ unsafe impl MsgSend for EnterMenuLoop {
 	}
 }
 
-unsafe impl MsgSendRecv for EnterMenuLoop {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for EnterMenuLoop {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			with_trackpopupmenu: p.wparam != 0,
 		}
@@ -502,10 +500,10 @@ pub struct EraseBkgnd {
 	pub hdc: HDC,
 }
 
-unsafe impl MsgSend for EraseBkgnd {
+impl MsgSend for EraseBkgnd {
 	type RetType = i32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -518,10 +516,10 @@ unsafe impl MsgSend for EraseBkgnd {
 	}
 }
 
-unsafe impl MsgSendRecv for EraseBkgnd {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for EraseBkgnd {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hdc: unsafe { HDC::from_ptr(p.wparam as _) },
+			hdc: HDC::from_ptr(p.wparam as _),
 		}
 	}
 }
@@ -534,10 +532,10 @@ pub struct ExitMenuLoop {
 	pub is_shortcut: bool,
 }
 
-unsafe impl MsgSend for ExitMenuLoop {
+impl MsgSend for ExitMenuLoop {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -550,8 +548,8 @@ unsafe impl MsgSend for ExitMenuLoop {
 	}
 }
 
-unsafe impl MsgSendRecv for ExitMenuLoop {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for ExitMenuLoop {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			is_shortcut: p.wparam != 0,
 		}
@@ -572,11 +570,11 @@ pub struct GetDlgCode<'a> {
 	pub is_query: bool,
 }
 
-unsafe impl<'a> MsgSend for GetDlgCode<'a> {
+impl<'a> MsgSend for GetDlgCode<'a> {
 	type RetType = co::DLGC;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::DLGC::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::DLGC::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -588,13 +586,13 @@ unsafe impl<'a> MsgSend for GetDlgCode<'a> {
 	}
 }
 
-unsafe impl<'a> MsgSendRecv for GetDlgCode<'a> {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a> MsgSendRecv for GetDlgCode<'a> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			vkey_code: unsafe { co::VK::from_raw(p.wparam as _) },
+			vkey_code: co::VK::from_raw(p.wparam as _),
 			msg: match p.lparam {
 				0 => None,
-				ptr => Some(unsafe { &mut *(ptr as *mut _) })
+				ptr => Some(&mut *(ptr as *mut _))
 			},
 			is_query: p.lparam == 0,
 		}
@@ -607,11 +605,11 @@ unsafe impl<'a> MsgSendRecv for GetDlgCode<'a> {
 /// Return type: `Option<HMENU>`.
 pub struct GetHMenu {}
 
-unsafe impl MsgSend for GetHMenu {
+impl MsgSend for GetHMenu {
 	type RetType = Option<HMENU>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| unsafe { HMENU::from_ptr(p as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HMENU::from_ptr(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -623,8 +621,8 @@ unsafe impl MsgSend for GetHMenu {
 	}
 }
 
-unsafe impl MsgSendRecv for GetHMenu {
-	fn from_generic_wm(_: WndMsg) -> Self {
+impl MsgSendRecv for GetHMenu {
+	unsafe fn from_generic_wm(_: WndMsg) -> Self {
 		Self {}
 	}
 }
@@ -637,10 +635,10 @@ pub struct GetMinMaxInfo<'a> {
 	pub info: &'a mut MINMAXINFO,
 }
 
-unsafe impl<'a> MsgSend for GetMinMaxInfo<'a> {
+impl<'a> MsgSend for GetMinMaxInfo<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -653,10 +651,10 @@ unsafe impl<'a> MsgSend for GetMinMaxInfo<'a> {
 	}
 }
 
-unsafe impl<'a> MsgSendRecv for GetMinMaxInfo<'a> {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a> MsgSendRecv for GetMinMaxInfo<'a> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			info: unsafe { &mut *(p.lparam as *mut _) },
+			info: &mut *(p.lparam as *mut _),
 		}
 	}
 }
@@ -691,10 +689,10 @@ pub struct GetText<'a> {
 	pub buffer: &'a mut [u16], // can't be WString because this message can be received
 }
 
-unsafe impl<'a> MsgSend for GetText<'a> {
+impl<'a> MsgSend for GetText<'a> {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -707,10 +705,10 @@ unsafe impl<'a> MsgSend for GetText<'a> {
 	}
 }
 
-unsafe impl<'a> MsgSendRecv for GetText<'a> {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a> MsgSendRecv for GetText<'a> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			buffer: unsafe { std::slice::from_raw_parts_mut(p.lparam as _, p.wparam) },
+			buffer: std::slice::from_raw_parts_mut(p.lparam as _, p.wparam),
 		}
 	}
 }
@@ -721,10 +719,10 @@ unsafe impl<'a> MsgSendRecv for GetText<'a> {
 /// Return type: `u32`.
 pub struct GetTextLength {}
 
-unsafe impl MsgSend for GetTextLength {
+impl MsgSend for GetTextLength {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -737,8 +735,8 @@ unsafe impl MsgSend for GetTextLength {
 	}
 }
 
-unsafe impl MsgSendRecv for GetTextLength {
-	fn from_generic_wm(_: WndMsg) -> Self {
+impl MsgSendRecv for GetTextLength {
+	unsafe fn from_generic_wm(_: WndMsg) -> Self {
 		Self {}
 	}
 }
@@ -751,10 +749,10 @@ pub struct GetTitleBarInfoEx<'a> {
 	pub info: &'a mut TITLEBARINFOEX,
 }
 
-unsafe impl<'a> MsgSend for GetTitleBarInfoEx<'a> {
+impl<'a> MsgSend for GetTitleBarInfoEx<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -767,10 +765,10 @@ unsafe impl<'a> MsgSend for GetTitleBarInfoEx<'a> {
 	}
 }
 
-unsafe impl<'a> MsgSendRecv for GetTitleBarInfoEx<'a> {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a> MsgSendRecv for GetTitleBarInfoEx<'a> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			info: unsafe { &mut *(p.lparam as *mut _) },
+			info: &mut *(p.lparam as *mut _),
 		}
 	}
 }
@@ -783,10 +781,10 @@ pub struct Help<'a> {
 	pub helpinfo: &'a HELPINFO,
 }
 
-unsafe impl<'a> MsgSend for Help<'a> {
+impl<'a> MsgSend for Help<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -799,10 +797,10 @@ unsafe impl<'a> MsgSend for Help<'a> {
 	}
 }
 
-unsafe impl<'a> MsgSendRecv for Help<'a> {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a> MsgSendRecv for Help<'a> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			helpinfo: unsafe { &mut *(p.lparam as *mut _) },
+			helpinfo: &mut *(p.lparam as *mut _),
 		}
 	}
 }
@@ -817,10 +815,10 @@ pub struct HScroll {
 	pub hcontrol: Option<HWND>,
 }
 
-unsafe impl MsgSend for HScroll {
+impl MsgSend for HScroll {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -833,14 +831,14 @@ unsafe impl MsgSend for HScroll {
 	}
 }
 
-unsafe impl MsgSendRecv for HScroll {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for HScroll {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			scroll_box_pos: HIWORD(p.wparam as _),
-			request: unsafe { co::SB_REQ::from_raw(LOWORD(p.wparam as _)) },
+			request: co::SB_REQ::from_raw(LOWORD(p.wparam as _)),
 			hcontrol: match p.lparam {
 				0 => None,
-				ptr => Some(unsafe { HWND::from_ptr(ptr as _) }),
+				ptr => Some(HWND::from_ptr(ptr as _)),
 			},
 		}
 	}
@@ -855,10 +853,10 @@ pub struct InitDialog {
 	pub additional_data: isize,
 }
 
-unsafe impl MsgSend for InitDialog {
+impl MsgSend for InitDialog {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -871,10 +869,10 @@ unsafe impl MsgSend for InitDialog {
 	}
 }
 
-unsafe impl MsgSendRecv for InitDialog {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for InitDialog {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hwnd_focus: unsafe { HWND::from_ptr(p.wparam as _) },
+			hwnd_focus: HWND::from_ptr(p.wparam as _),
 			additional_data: p.lparam,
 		}
 	}
@@ -890,10 +888,10 @@ pub struct InitMenuPopup {
 	pub is_window_menu: bool,
 }
 
-unsafe impl MsgSend for InitMenuPopup {
+impl MsgSend for InitMenuPopup {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -906,10 +904,10 @@ unsafe impl MsgSend for InitMenuPopup {
 	}
 }
 
-unsafe impl MsgSendRecv for InitMenuPopup {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for InitMenuPopup {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hmenu: unsafe { HMENU::from_ptr(p.wparam as _) },
+			hmenu: HMENU::from_ptr(p.wparam as _),
 			item_pos: LOWORD(p.lparam as _),
 			is_window_menu: HIWORD(p.lparam as _) != 0,
 		}
@@ -932,10 +930,10 @@ pub struct KillFocus {
 	pub hwnd: Option<HWND>,
 }
 
-unsafe impl MsgSend for KillFocus {
+impl MsgSend for KillFocus {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -948,12 +946,12 @@ unsafe impl MsgSend for KillFocus {
 	}
 }
 
-unsafe impl MsgSendRecv for KillFocus {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for KillFocus {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			hwnd: match p.wparam {
 				0 => None,
-				ptr => Some(unsafe { HWND::from_ptr(ptr as _) }),
+				ptr => Some(HWND::from_ptr(ptr as _)),
 			},
 		}
 	}
@@ -992,10 +990,10 @@ pub struct MenuCommand {
 	pub hmenu: HMENU,
 }
 
-unsafe impl MsgSend for MenuCommand {
+impl MsgSend for MenuCommand {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1008,11 +1006,11 @@ unsafe impl MsgSend for MenuCommand {
 	}
 }
 
-unsafe impl MsgSendRecv for MenuCommand {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for MenuCommand {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			item_index: p.wparam as _,
-			hmenu: unsafe { HMENU::from_ptr(p.lparam as _) },
+			hmenu: HMENU::from_ptr(p.lparam as _),
 		}
 	}
 }
@@ -1026,11 +1024,11 @@ pub struct MenuDrag {
 	pub hmenu: HMENU,
 }
 
-unsafe impl MsgSend for MenuDrag {
+impl MsgSend for MenuDrag {
 	type RetType = co::MND;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::MND::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::MND::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1042,11 +1040,11 @@ unsafe impl MsgSend for MenuDrag {
 	}
 }
 
-unsafe impl MsgSendRecv for MenuDrag {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for MenuDrag {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			position: p.wparam as _,
-			hmenu: unsafe { HMENU::from_ptr(p.lparam as _) },
+			hmenu: HMENU::from_ptr(p.lparam as _),
 		}
 	}
 }
@@ -1060,10 +1058,10 @@ pub struct MenuRButtonUp {
 	pub hmenu: HMENU,
 }
 
-unsafe impl MsgSend for MenuRButtonUp {
+impl MsgSend for MenuRButtonUp {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1076,11 +1074,11 @@ unsafe impl MsgSend for MenuRButtonUp {
 	}
 }
 
-unsafe impl MsgSendRecv for MenuRButtonUp {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for MenuRButtonUp {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			position: p.wparam as _,
-			hmenu: unsafe { HMENU::from_ptr(p.lparam as _) },
+			hmenu: HMENU::from_ptr(p.lparam as _),
 		}
 	}
 }
@@ -1099,10 +1097,10 @@ pub struct MouseHWheel {
 	pub coords: POINT,
 }
 
-unsafe impl MsgSend for MouseHWheel {
+impl MsgSend for MouseHWheel {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1115,11 +1113,11 @@ unsafe impl MsgSend for MouseHWheel {
 	}
 }
 
-unsafe impl MsgSendRecv for MouseHWheel {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for MouseHWheel {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			wheel_distance: LOWORD(p.wparam as _) as _,
-			keys: unsafe { co::MK::from_raw(HIWORD(p.wparam as _)) },
+			keys: co::MK::from_raw(HIWORD(p.wparam as _)),
 			coords: POINT::from(p.lparam as u32),
 		}
 	}
@@ -1143,10 +1141,10 @@ pub struct MouseWheel {
 	pub coords: POINT,
 }
 
-unsafe impl MsgSend for MouseWheel {
+impl MsgSend for MouseWheel {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1159,11 +1157,11 @@ unsafe impl MsgSend for MouseWheel {
 	}
 }
 
-unsafe impl MsgSendRecv for MouseWheel {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for MouseWheel {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			wheel_distance: LOWORD(p.wparam as _) as _,
-			keys: unsafe { co::MK::from_raw(HIWORD(p.wparam as _)) },
+			keys: co::MK::from_raw(HIWORD(p.wparam as _)),
 			coords: POINT::from(p.lparam as u32),
 		}
 	}
@@ -1177,10 +1175,10 @@ pub struct Move {
 	pub coords: POINT,
 }
 
-unsafe impl MsgSend for Move {
+impl MsgSend for Move {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1193,8 +1191,8 @@ unsafe impl MsgSend for Move {
 	}
 }
 
-unsafe impl MsgSendRecv for Move {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for Move {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			coords: POINT::from(p.lparam as u32),
 		}
@@ -1209,10 +1207,10 @@ pub struct Moving<'a> {
 	pub window_pos: &'a mut RECT,
 }
 
-unsafe impl<'a> MsgSend for Moving<'a> {
+impl<'a> MsgSend for Moving<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1225,10 +1223,10 @@ unsafe impl<'a> MsgSend for Moving<'a> {
 	}
 }
 
-unsafe impl<'a> MsgSendRecv for Moving<'a> {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a> MsgSendRecv for Moving<'a> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			window_pos: unsafe { &mut *(p.lparam as *mut _) },
+			window_pos: &mut *(p.lparam as *mut _),
 		}
 	}
 }
@@ -1241,11 +1239,11 @@ pub struct NcCalcSize<'a, 'b> {
 	pub data: NccspRect<'a, 'b>,
 }
 
-unsafe impl<'a, 'b> MsgSend for NcCalcSize<'a, 'b> {
+impl<'a, 'b> MsgSend for NcCalcSize<'a, 'b> {
 	type RetType = co::WVR;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::WVR::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::WVR::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1263,12 +1261,12 @@ unsafe impl<'a, 'b> MsgSend for NcCalcSize<'a, 'b> {
 	}
 }
 
-unsafe impl<'a, 'b> MsgSendRecv for NcCalcSize<'a, 'b> {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a, 'b> MsgSendRecv for NcCalcSize<'a, 'b> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			data: match p.wparam {
-				0 => NccspRect::Rect(unsafe { &mut *(p.lparam as *mut _) }),
-				_ => NccspRect::Nccsp(unsafe { &mut *(p.lparam as *mut _) }),
+				0 => NccspRect::Rect(&mut *(p.lparam as *mut _)),
+				_ => NccspRect::Nccsp(&mut *(p.lparam as *mut _)),
 			},
 		}
 	}
@@ -1282,10 +1280,10 @@ pub struct NcCreate<'a, 'b, 'c> {
 	pub createstruct: &'c CREATESTRUCT<'a, 'b>,
 }
 
-unsafe impl<'a, 'b, 'c> MsgSend for NcCreate<'a, 'b, 'c> {
+impl<'a, 'b, 'c> MsgSend for NcCreate<'a, 'b, 'c> {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -1298,10 +1296,10 @@ unsafe impl<'a, 'b, 'c> MsgSend for NcCreate<'a, 'b, 'c> {
 	}
 }
 
-unsafe impl<'a, 'b, 'c> MsgSendRecv for NcCreate<'a, 'b, 'c> {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a, 'b, 'c> MsgSendRecv for NcCreate<'a, 'b, 'c> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			createstruct: unsafe { &*(p.lparam as *const _) },
+			createstruct: &*(p.lparam as *const _),
 		}
 	}
 }
@@ -1318,11 +1316,11 @@ pub struct NcHitTest{
 	pub cursor_pos: POINT,
 }
 
-unsafe impl MsgSend for NcHitTest {
+impl MsgSend for NcHitTest {
 	type RetType = co::HT;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::HT::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::HT::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1334,8 +1332,8 @@ unsafe impl MsgSend for NcHitTest {
 	}
 }
 
-unsafe impl MsgSendRecv for NcHitTest {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for NcHitTest {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			cursor_pos: POINT::from(p.lparam as u32),
 		}
@@ -1350,10 +1348,10 @@ pub struct NextDlgCtl {
 	pub hwnd_focus: HwndFocus,
 }
 
-unsafe impl MsgSend for NextDlgCtl {
+impl MsgSend for NextDlgCtl {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1372,11 +1370,11 @@ unsafe impl MsgSend for NextDlgCtl {
 	}
 }
 
-unsafe impl MsgSendRecv for NextDlgCtl {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for NextDlgCtl {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			hwnd_focus: match p.wparam {
-				1 => HwndFocus::Hwnd(unsafe { HWND::from_ptr(p.wparam as _) }),
+				1 => HwndFocus::Hwnd(HWND::from_ptr(p.wparam as _)),
 				_ => HwndFocus::FocusNext(p.wparam == 0),
 			},
 		}
@@ -1397,10 +1395,10 @@ pub struct ParentNotify {
 	pub data: HwndPointId,
 }
 
-unsafe impl MsgSend for ParentNotify {
+impl MsgSend for ParentNotify {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1413,15 +1411,15 @@ unsafe impl MsgSend for ParentNotify {
 	}
 }
 
-unsafe impl MsgSendRecv for ParentNotify {
-	fn from_generic_wm(p: WndMsg) -> Self {
-		let event = unsafe { co::WMPN::from_raw(LOWORD(p.wparam as _)) };
+impl MsgSendRecv for ParentNotify {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
+		let event = co::WMPN::from_raw(LOWORD(p.wparam as _));
 		Self {
 			event,
 			child_id: HIWORD(p.wparam as _),
 			data: match event {
 				co::WMPN::CREATE
-				| co::WMPN::DESTROY => HwndPointId::Hwnd(unsafe { HWND::from_ptr(p.lparam as _) }),
+				| co::WMPN::DESTROY => HwndPointId::Hwnd(HWND::from_ptr(p.lparam as _)),
 				co::WMPN::POINTERDOWN => HwndPointId::Id(p.lparam as _),
 				_ => HwndPointId::Point(POINT::from(p.lparam as u32)),
 			},
@@ -1438,10 +1436,10 @@ pub struct PowerBroadcast<'a> {
 	pub data: Option<&'a POWERBROADCAST_SETTING>,
 }
 
-unsafe impl<'a> MsgSend for PowerBroadcast<'a> {
+impl<'a> MsgSend for PowerBroadcast<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1454,14 +1452,14 @@ unsafe impl<'a> MsgSend for PowerBroadcast<'a> {
 	}
 }
 
-unsafe impl<'a> MsgSendRecv for PowerBroadcast<'a> {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a> MsgSendRecv for PowerBroadcast<'a> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			event: unsafe { co::PBT::from_raw(p.wparam as _) },
+			event: co::PBT::from_raw(p.wparam as _),
 			data: if p.lparam == 0 {
 				None
 			} else {
-				Some(unsafe { &*(p.lparam as *const _) })
+				Some(&*(p.lparam as *const _))
 			},
 		}
 	}
@@ -1473,10 +1471,10 @@ unsafe impl<'a> MsgSendRecv for PowerBroadcast<'a> {
 /// Return type: `bool`.
 pub struct QueryOpen {}
 
-unsafe impl MsgSend for QueryOpen {
+impl MsgSend for QueryOpen {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -1489,8 +1487,8 @@ unsafe impl MsgSend for QueryOpen {
 	}
 }
 
-unsafe impl MsgSendRecv for QueryOpen {
-	fn from_generic_wm(_: WndMsg) -> Self {
+impl MsgSendRecv for QueryOpen {
+	unsafe fn from_generic_wm(_: WndMsg) -> Self {
 		Self {}
 	}
 }
@@ -1517,10 +1515,10 @@ pub struct SetCursor {
 	pub mouse_msg: u16,
 }
 
-unsafe impl MsgSend for SetCursor {
+impl MsgSend for SetCursor {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -1533,11 +1531,11 @@ unsafe impl MsgSend for SetCursor {
 	}
 }
 
-unsafe impl MsgSendRecv for SetCursor {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for SetCursor {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hwnd: unsafe { HWND::from_ptr(p.wparam as _) },
-			hit_test: unsafe { co::HT::from_raw(LOWORD(p.lparam as _)) },
+			hwnd: HWND::from_ptr(p.wparam as _),
+			hit_test: co::HT::from_raw(LOWORD(p.lparam as _)),
 			mouse_msg: HIWORD(p.lparam as _),
 		}
 	}
@@ -1551,10 +1549,10 @@ pub struct SetFocus {
 	pub hwnd_losing_focus: HWND,
 }
 
-unsafe impl MsgSend for SetFocus {
+impl MsgSend for SetFocus {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1567,10 +1565,10 @@ unsafe impl MsgSend for SetFocus {
 	}
 }
 
-unsafe impl MsgSendRecv for SetFocus {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for SetFocus {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hwnd_losing_focus: unsafe { HWND::from_ptr(p.wparam as _) },
+			hwnd_losing_focus: HWND::from_ptr(p.wparam as _),
 		}
 	}
 }
@@ -1584,11 +1582,11 @@ pub struct SetIcon {
 	pub hicon: HICON,
 }
 
-unsafe impl MsgSend for SetIcon {
+impl MsgSend for SetIcon {
 	type RetType = Option<HICON>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| unsafe { HICON::from_ptr(p as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HICON::from_ptr(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1600,13 +1598,11 @@ unsafe impl MsgSend for SetIcon {
 	}
 }
 
-unsafe impl MsgSendRecv for SetIcon {
-	fn from_generic_wm(p: WndMsg) -> Self {
-		unsafe {
-			Self {
-				size: co::ICON_SZ::from_raw(p.wparam as _),
-				hicon: HICON::from_ptr(p.lparam as _),
-			}
+impl MsgSendRecv for SetIcon {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			size: co::ICON_SZ::from_raw(p.wparam as _),
+			hicon: HICON::from_ptr(p.lparam as _),
 		}
 	}
 }
@@ -1638,12 +1634,12 @@ pub struct SetText {
 	pub text: *const u16, // can't be WString because this message can be received
 }
 
-unsafe impl MsgSend for SetText {
+impl MsgSend for SetText {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
-			0 | LB_ERRSPACE | CB_ERR => false, // CB_ERRSPACE is equal to LB_ERRSPACE
+			0 | CB_ERRSPACE | CB_ERR => false,
 			_ => true,
 		}
 	}
@@ -1657,8 +1653,8 @@ unsafe impl MsgSend for SetText {
 	}
 }
 
-unsafe impl MsgSendRecv for SetText {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for SetText {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			text: p.lparam as _,
 		}
@@ -1674,10 +1670,10 @@ pub struct ShowWindow {
 	pub status: co::SW_S,
 }
 
-unsafe impl MsgSend for ShowWindow {
+impl MsgSend for ShowWindow {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1690,11 +1686,11 @@ unsafe impl MsgSend for ShowWindow {
 	}
 }
 
-unsafe impl MsgSendRecv for ShowWindow {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for ShowWindow {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			being_shown: p.wparam != 0,
-			status: unsafe { co::SW_S::from_raw(p.lparam as _) },
+			status: co::SW_S::from_raw(p.lparam as _),
 		}
 	}
 }
@@ -1708,10 +1704,10 @@ pub struct Size {
 	pub client_area: SIZE,
 }
 
-unsafe impl MsgSend for Size {
+impl MsgSend for Size {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1724,10 +1720,10 @@ unsafe impl MsgSend for Size {
 	}
 }
 
-unsafe impl MsgSendRecv for Size {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for Size {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			request: unsafe { co::SIZE_R::from_raw(p.wparam as _) },
+			request: co::SIZE_R::from_raw(p.wparam as _),
 			client_area: SIZE::new(
 				LOWORD(p.lparam as _) as _,
 				HIWORD(p.lparam as _) as _,
@@ -1745,10 +1741,10 @@ pub struct Sizing<'a> {
 	pub coords: &'a mut RECT,
 }
 
-unsafe impl<'a> MsgSend for Sizing<'a> {
+impl<'a> MsgSend for Sizing<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1761,13 +1757,11 @@ unsafe impl<'a> MsgSend for Sizing<'a> {
 	}
 }
 
-unsafe impl<'a> MsgSendRecv for Sizing<'a> {
-	fn from_generic_wm(p: WndMsg) -> Self {
-		unsafe {
-			Self {
-				window_edge: co::WMSZ::from_raw(p.wparam as _),
-				coords: &mut *(p.lparam as *mut _),
-			}
+impl<'a> MsgSendRecv for Sizing<'a> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			window_edge: co::WMSZ::from_raw(p.wparam as _),
+			coords: &mut *(p.lparam as *mut _),
 		}
 	}
 }
@@ -1781,10 +1775,10 @@ pub struct StyleChanged<'a> {
 	pub stylestruct: &'a STYLESTRUCT,
 }
 
-unsafe impl<'a> MsgSend for StyleChanged<'a> {
+impl<'a> MsgSend for StyleChanged<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1797,13 +1791,11 @@ unsafe impl<'a> MsgSend for StyleChanged<'a> {
 	}
 }
 
-unsafe impl<'a> MsgSendRecv for StyleChanged<'a> {
-	fn from_generic_wm(p: WndMsg) -> Self {
-		unsafe {
-			Self {
-				change: co::GWL_C::from_raw(p.wparam as _),
-				stylestruct: &*(p.lparam as *const _),
-			}
+impl<'a> MsgSendRecv for StyleChanged<'a> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			change: co::GWL_C::from_raw(p.wparam as _),
+			stylestruct: &*(p.lparam as *const _),
 		}
 	}
 }
@@ -1817,10 +1809,10 @@ pub struct StyleChanging<'a> {
 	pub stylestruct: &'a STYLESTRUCT,
 }
 
-unsafe impl<'a> MsgSend for StyleChanging<'a> {
+impl<'a> MsgSend for StyleChanging<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1833,13 +1825,11 @@ unsafe impl<'a> MsgSend for StyleChanging<'a> {
 	}
 }
 
-unsafe impl<'a> MsgSendRecv for StyleChanging<'a> {
-	fn from_generic_wm(p: WndMsg) -> Self {
-		unsafe {
-			Self {
-				change: co::GWL_C::from_raw(p.wparam as _),
-				stylestruct: &*(p.lparam as *const _),
-			}
+impl<'a> MsgSendRecv for StyleChanging<'a> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			change: co::GWL_C::from_raw(p.wparam as _),
+			stylestruct: &*(p.lparam as *const _),
 		}
 	}
 }
@@ -1857,10 +1847,10 @@ pub struct SysCommand {
 	pub position: POINT,
 }
 
-unsafe impl MsgSend for SysCommand {
+impl MsgSend for SysCommand {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1873,10 +1863,10 @@ unsafe impl MsgSend for SysCommand {
 	}
 }
 
-unsafe impl MsgSendRecv for SysCommand {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for SysCommand {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			request: unsafe { co::SC::from_raw(p.wparam as _) },
+			request: co::SC::from_raw(p.wparam as _),
 			position: POINT::from(p.lparam as u32),
 		}
 	}
@@ -1907,10 +1897,10 @@ pub struct Timer {
 	pub timer_proc: Option<TIMERPROC>,
 }
 
-unsafe impl MsgSend for Timer {
+impl MsgSend for Timer {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1923,13 +1913,13 @@ unsafe impl MsgSend for Timer {
 	}
 }
 
-unsafe impl MsgSendRecv for Timer {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for Timer {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			timer_id: p.wparam as _,
 			timer_proc: match p.lparam {
 				0 => None,
-				addr => unsafe { std::mem::transmute(addr) },
+				addr => std::mem::transmute(addr),
 			},
 		}
 	}
@@ -1944,10 +1934,10 @@ pub struct UninitMenuPopup {
 	pub which: co::MF,
 }
 
-unsafe impl MsgSend for UninitMenuPopup {
+impl MsgSend for UninitMenuPopup {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -1960,13 +1950,11 @@ unsafe impl MsgSend for UninitMenuPopup {
 	}
 }
 
-unsafe impl MsgSendRecv for UninitMenuPopup {
-	fn from_generic_wm(p: WndMsg) -> Self {
-		unsafe {
-			Self {
-				hmenu: HMENU::from_ptr(p.wparam as _),
-				which: co::MF::from_raw(LOWORD(p.lparam as _) as _),
-			}
+impl MsgSendRecv for UninitMenuPopup {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
+		Self {
+			hmenu: HMENU::from_ptr(p.wparam as _),
+			which: co::MF::from_raw(LOWORD(p.lparam as _) as _),
 		}
 	}
 }
@@ -1977,10 +1965,10 @@ unsafe impl MsgSendRecv for UninitMenuPopup {
 /// Return type: `bool`.
 pub struct Undo {}
 
-unsafe impl MsgSend for Undo {
+impl MsgSend for Undo {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -1993,8 +1981,8 @@ unsafe impl MsgSend for Undo {
 	}
 }
 
-unsafe impl MsgSendRecv for Undo {
-	fn from_generic_wm(_: WndMsg) -> Self {
+impl MsgSendRecv for Undo {
+	unsafe fn from_generic_wm(_: WndMsg) -> Self {
 		Self {}
 	}
 }
@@ -2009,10 +1997,10 @@ pub struct VScroll {
 	pub hcontrol: Option<HWND>,
 }
 
-unsafe impl MsgSend for VScroll {
+impl MsgSend for VScroll {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -2025,14 +2013,14 @@ unsafe impl MsgSend for VScroll {
 	}
 }
 
-unsafe impl MsgSendRecv for VScroll {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for VScroll {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			scroll_box_pos: HIWORD(p.wparam as _),
-			request: unsafe { co::SB_REQ::from_raw(LOWORD(p.wparam as _)) },
+			request: co::SB_REQ::from_raw(LOWORD(p.wparam as _)),
 			hcontrol: match p.lparam {
 				0 => None,
-				ptr => Some(unsafe { HWND::from_ptr(ptr as _) }),
+				ptr => Some(HWND::from_ptr(ptr as _)),
 			},
 		}
 	}
@@ -2046,10 +2034,10 @@ pub struct WindowPosChanged<'a> {
 	pub windowpos: &'a WINDOWPOS,
 }
 
-unsafe impl<'a> MsgSend for WindowPosChanged<'a> {
+impl<'a> MsgSend for WindowPosChanged<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -2062,10 +2050,10 @@ unsafe impl<'a> MsgSend for WindowPosChanged<'a> {
 	}
 }
 
-unsafe impl<'a> MsgSendRecv for WindowPosChanged<'a> {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a> MsgSendRecv for WindowPosChanged<'a> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			windowpos: unsafe { &*(p.lparam as *const _) },
+			windowpos: &*(p.lparam as *const _),
 		}
 	}
 }
@@ -2078,10 +2066,10 @@ pub struct WindowPosChanging<'a> {
 	pub windowpos: &'a WINDOWPOS,
 }
 
-unsafe impl<'a> MsgSend for WindowPosChanging<'a> {
+impl<'a> MsgSend for WindowPosChanging<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -2094,10 +2082,10 @@ unsafe impl<'a> MsgSend for WindowPosChanging<'a> {
 	}
 }
 
-unsafe impl<'a> MsgSendRecv for WindowPosChanging<'a> {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl<'a> MsgSendRecv for WindowPosChanging<'a> {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			windowpos: unsafe { &*(p.lparam as *const _) },
+			windowpos: &*(p.lparam as *const _),
 		}
 	}
 }
@@ -2111,10 +2099,10 @@ pub struct WtsSessionChange {
 	pub session_id: u32,
 }
 
-unsafe impl MsgSend for WtsSessionChange {
+impl MsgSend for WtsSessionChange {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -2127,10 +2115,10 @@ unsafe impl MsgSend for WtsSessionChange {
 	}
 }
 
-unsafe impl MsgSendRecv for WtsSessionChange {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for WtsSessionChange {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			state: unsafe { co::WTS::from_raw(p.wparam as _) },
+			state: co::WTS::from_raw(p.wparam as _),
 			session_id: p.lparam as _,
 		}
 	}

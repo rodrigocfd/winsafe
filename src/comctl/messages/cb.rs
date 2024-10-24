@@ -12,10 +12,10 @@ pub struct GetCueBanner<'a> {
 	pub buffer: &'a mut WString,
 }
 
-unsafe impl<'a> MsgSend for GetCueBanner<'a> {
+impl<'a> MsgSend for GetCueBanner<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			0 | 1 => Ok(()),
 			_ => Err(co::ERROR::BAD_ARGUMENTS),
@@ -37,10 +37,10 @@ unsafe impl<'a> MsgSend for GetCueBanner<'a> {
 /// Return type: `u32`.
 pub struct GetMinVisible {}
 
-unsafe impl MsgSend for GetMinVisible {
+impl MsgSend for GetMinVisible {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -61,10 +61,10 @@ pub struct SetCueBanner {
 	pub text: WString,
 }
 
-unsafe impl MsgSend for SetCueBanner {
+impl MsgSend for SetCueBanner {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			1 => Ok(()),
 			_ => Err(co::ERROR::BAD_ARGUMENTS),
@@ -88,10 +88,10 @@ pub struct SetMinVisible {
 	pub num_items: u32,
 }
 
-unsafe impl MsgSend for SetMinVisible {
+impl MsgSend for SetMinVisible {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 

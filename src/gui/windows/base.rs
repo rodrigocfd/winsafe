@@ -211,7 +211,7 @@ impl Base {
 
 		let layout_arranger = self.layout_arranger.clone();
 		self.before_user_events.wm(co::WM::SIZE, move |_, p| {
-			layout_arranger.rearrange(wm::Size::from_generic_wm(p))?;
+			layout_arranger.rearrange(unsafe { wm::Size::from_generic_wm(p) })?;
 			Ok(WmRet::HandledOk)
 		});
 

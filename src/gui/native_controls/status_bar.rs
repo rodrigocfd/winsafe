@@ -114,7 +114,7 @@ impl StatusBar {
 
 		let self2 = new_self.clone();
 		parent.as_ref().before_user_on().wm(co::WM::SIZE, move |_, p| {
-			let mut p = wm::Size::from_generic_wm(p);
+			let mut p = unsafe { wm::Size::from_generic_wm(p) };
 			self2.resize(&mut p);
 			Ok(WmRet::HandledOk)
 		});

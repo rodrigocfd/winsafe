@@ -40,7 +40,7 @@ struct MakeToast {
     how_many: u32,
 }
 
-unsafe impl MsgSend for MakeToast {
+impl MsgSend for MakeToast {
     type RetType = ();
 
     fn convert_ret(&self, _: isize) -> Self::RetType {
@@ -56,7 +56,7 @@ unsafe impl MsgSend for MakeToast {
     }
 }
 
-unsafe impl MsgSendRecv for MakeToast {
+impl MsgSendRecv for MakeToast {
     fn from_generic_wm(p: msg::WndMsg) -> Self {
         Self {
             how_many: p.wparam as _,

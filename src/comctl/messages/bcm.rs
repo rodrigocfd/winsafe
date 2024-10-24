@@ -12,10 +12,10 @@ pub struct GetIdealSize<'a> {
 	pub size: &'a mut SIZE,
 }
 
-unsafe impl<'a> MsgSend for GetIdealSize<'a> {
+impl<'a> MsgSend for GetIdealSize<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -36,10 +36,10 @@ pub struct GetImageList<'a> {
 	pub info: &'a mut BUTTON_IMAGELIST,
 }
 
-unsafe impl<'a> MsgSend for GetImageList<'a> {
+impl<'a> MsgSend for GetImageList<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -60,10 +60,10 @@ pub struct GetNote<'a> {
 	pub text: &'a mut WString,
 }
 
-unsafe impl<'a> MsgSend for GetNote<'a> {
+impl<'a> MsgSend for GetNote<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -82,10 +82,10 @@ unsafe impl<'a> MsgSend for GetNote<'a> {
 /// Return type: `u32`.
 pub struct GetNoteLength {}
 
-unsafe impl MsgSend for GetNoteLength {
+impl MsgSend for GetNoteLength {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -106,10 +106,10 @@ pub struct GetSplitInfo<'a> {
 	pub splitinfo: &'a mut BUTTON_SPLITINFO,
 }
 
-unsafe impl<'a> MsgSend for GetSplitInfo<'a> {
+impl<'a> MsgSend for GetSplitInfo<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -130,10 +130,10 @@ pub struct GetTextMargin<'a> {
 	pub margins: &'a mut RECT,
 }
 
-unsafe impl<'a> MsgSend for GetTextMargin<'a> {
+impl<'a> MsgSend for GetTextMargin<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -154,10 +154,10 @@ pub struct SetDropDownState {
 	pub is_pushed: bool,
 }
 
-unsafe impl MsgSend for SetDropDownState {
+impl MsgSend for SetDropDownState {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -178,10 +178,10 @@ pub struct SetImageList<'a> {
 	pub info: &'a BUTTON_IMAGELIST,
 }
 
-unsafe impl<'a> MsgSend for SetImageList<'a> {
+impl<'a> MsgSend for SetImageList<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -202,10 +202,10 @@ pub struct SetNote {
 	pub text: WString,
 }
 
-unsafe impl MsgSend for SetNote {
+impl MsgSend for SetNote {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -226,10 +226,10 @@ pub struct SetShield {
 	pub has_elevated_icon: bool,
 }
 
-unsafe impl MsgSend for SetShield {
+impl MsgSend for SetShield {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -250,10 +250,10 @@ pub struct SetSplitInfo<'a> {
 	pub splitinfo: &'a BUTTON_SPLITINFO,
 }
 
-unsafe impl<'a> MsgSend for SetSplitInfo<'a> {
+impl<'a> MsgSend for SetSplitInfo<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -274,10 +274,10 @@ pub struct SetTextMargin<'a> {
 	pub margins: &'a RECT,
 }
 
-unsafe impl<'a> MsgSend for SetTextMargin<'a> {
+impl<'a> MsgSend for SetTextMargin<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 

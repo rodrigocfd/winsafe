@@ -12,10 +12,10 @@ pub struct DropFiles {
 	pub hdrop: DragFinishGuard,
 }
 
-unsafe impl MsgSend for DropFiles {
+impl MsgSend for DropFiles {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -28,10 +28,10 @@ unsafe impl MsgSend for DropFiles {
 	}
 }
 
-unsafe impl MsgSendRecv for DropFiles {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for DropFiles {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hdrop: unsafe { DragFinishGuard::new(HDROP::from_ptr(p.wparam as _)) },
+			hdrop: DragFinishGuard::new(HDROP::from_ptr(p.wparam as _)),
 		}
 	}
 }

@@ -13,10 +13,10 @@ pub struct ClearFilter {
 	pub filter: Option<u32>,
 }
 
-unsafe impl MsgSend for ClearFilter {
+impl MsgSend for ClearFilter {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -37,11 +37,11 @@ pub struct CreateDragImage {
 	pub index: u32,
 }
 
-unsafe impl MsgSend for CreateDragImage {
+impl MsgSend for CreateDragImage {
 	type RetType = SysResult<HIMAGELIST>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_badargs(v).map(|p| HIMAGELIST::from_ptr(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -61,10 +61,10 @@ pub struct DeleteItem {
 	pub index: u32,
 }
 
-unsafe impl MsgSend for DeleteItem {
+impl MsgSend for DeleteItem {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -86,10 +86,10 @@ pub struct EditFilter {
 	pub discard_changes: bool,
 }
 
-unsafe impl MsgSend for EditFilter {
+impl MsgSend for EditFilter {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -108,10 +108,10 @@ unsafe impl MsgSend for EditFilter {
 /// Return type: `u32`.
 pub struct GetBitmapMargin {}
 
-unsafe impl MsgSend for GetBitmapMargin {
+impl MsgSend for GetBitmapMargin {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -130,10 +130,10 @@ unsafe impl MsgSend for GetBitmapMargin {
 /// Return type: `u32`.
 pub struct GetFocusedItem {}
 
-unsafe impl MsgSend for GetFocusedItem {
+impl MsgSend for GetFocusedItem {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -154,11 +154,11 @@ pub struct GetImageList {
 	pub kind: co::HDSIL,
 }
 
-unsafe impl MsgSend for GetImageList {
+impl MsgSend for GetImageList {
 	type RetType = Option<HIMAGELIST>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HIMAGELIST::from_ptr(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -179,10 +179,10 @@ pub struct GetItem<'a, 'b> {
 	pub hditem: &'b mut HDITEM<'a>,
 }
 
-unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
+impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		() // docs are wrong: always returns zero
 	}
 
@@ -201,10 +201,10 @@ unsafe impl<'a, 'b> MsgSend for GetItem<'a, 'b> {
 /// Return type: `SysResult<u32>`.
 pub struct GetItemCount {}
 
-unsafe impl MsgSend for GetItemCount {
+impl MsgSend for GetItemCount {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| v as _)
 	}
 
@@ -226,10 +226,10 @@ pub struct GetItemDropDownRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-unsafe impl<'a> MsgSend for GetItemDropDownRect<'a> {
+impl<'a> MsgSend for GetItemDropDownRect<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -251,10 +251,10 @@ pub struct GetItemRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-unsafe impl<'a> MsgSend for GetItemRect<'a> {
+impl<'a> MsgSend for GetItemRect<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -275,10 +275,10 @@ pub struct GetOrderArray<'a> {
 	pub buffer: &'a mut [u32],
 }
 
-unsafe impl<'a> MsgSend for GetOrderArray<'a> {
+impl<'a> MsgSend for GetOrderArray<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -299,10 +299,10 @@ pub struct GetOverflowRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-unsafe impl<'a> MsgSend for GetOverflowRect<'a> {
+impl<'a> MsgSend for GetOverflowRect<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -321,10 +321,10 @@ unsafe impl<'a> MsgSend for GetOverflowRect<'a> {
 /// Return type: `bool`.
 pub struct GetUnicodeFormat {}
 
-unsafe impl MsgSend for GetUnicodeFormat {
+impl MsgSend for GetUnicodeFormat {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -345,10 +345,10 @@ pub struct HitTest<'a> {
 	pub test_info: &'a mut HDHITTESTINFO,
 }
 
-unsafe impl<'a> MsgSend for HitTest<'a> {
+impl<'a> MsgSend for HitTest<'a> {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -370,10 +370,10 @@ pub struct InsertItem<'a, 'b> {
 	pub item: &'b HDITEM<'a>,
 }
 
-unsafe impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
+impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		minus1_as_badargs(v).map(|v| v as _)
 	}
 
@@ -394,10 +394,10 @@ pub struct Layout<'a, 'b, 'c> {
 	pub hdlayout: &'c mut HDLAYOUT<'a, 'b>,
 }
 
-unsafe impl<'a, 'b, 'c> MsgSend for Layout<'a, 'b, 'c> {
+impl<'a, 'b, 'c> MsgSend for Layout<'a, 'b, 'c> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -418,10 +418,10 @@ pub struct OrderToIndex {
 	pub order: u32,
 }
 
-unsafe impl MsgSend for OrderToIndex {
+impl MsgSend for OrderToIndex {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -442,10 +442,10 @@ pub struct SetBitmapMargin {
 	pub width: u32,
 }
 
-unsafe impl MsgSend for SetBitmapMargin {
+impl MsgSend for SetBitmapMargin {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -466,10 +466,10 @@ pub struct SetFilterChangeTimeout {
 	pub timeout_ms: u32,
 }
 
-unsafe impl MsgSend for SetFilterChangeTimeout {
+impl MsgSend for SetFilterChangeTimeout {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -490,10 +490,10 @@ pub struct SetFocusedItem {
 	pub index: u32,
 }
 
-unsafe impl MsgSend for SetFocusedItem {
+impl MsgSend for SetFocusedItem {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -514,10 +514,10 @@ pub struct SetHotDivider {
 	pub value: PtIdx,
 }
 
-unsafe impl MsgSend for SetHotDivider {
+impl MsgSend for SetHotDivider {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -545,11 +545,11 @@ pub struct SetImageList {
 	pub himagelist: Option<HIMAGELIST>,
 }
 
-unsafe impl MsgSend for SetImageList {
+impl MsgSend for SetImageList {
 	type RetType = Option<HIMAGELIST>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HIMAGELIST::from_ptr(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -570,10 +570,10 @@ pub struct SetItem<'a, 'b> {
 	pub hditem: &'b HDITEM<'a>,
 }
 
-unsafe impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
+impl<'a, 'b> MsgSend for SetItem<'a, 'b> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		() // docs are wrong: always returns zero
 	}
 
@@ -594,10 +594,10 @@ pub struct SetOrderArray<'a> {
 	pub buffer: &'a [u32],
 }
 
-unsafe impl<'a> MsgSend for SetOrderArray<'a> {
+impl<'a> MsgSend for SetOrderArray<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -618,10 +618,10 @@ pub struct SetUnicodeFormat {
 	pub use_unicode: bool,
 }
 
-unsafe impl MsgSend for SetUnicodeFormat {
+impl MsgSend for SetUnicodeFormat {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 

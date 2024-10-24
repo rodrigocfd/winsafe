@@ -77,7 +77,7 @@ impl WindowEventsPriv {
 		let mut at_least_one = false;
 
 		if wm_any.msg_id == co::WM::COMMAND {
-			let wm_cmd = wm::Command::from_generic_wm(wm_any);
+			let wm_cmd = unsafe { wm::Command::from_generic_wm(wm_any) };
 			let key_cmd = wm_cmd.event.id_code();
 			let cmds = unsafe { &*self.cmds.get() };
 			for func in cmds.filter(key_cmd) {
@@ -88,18 +88,18 @@ impl WindowEventsPriv {
 				}
 			}
 		} else if wm_any.msg_id == co::WM::NOTIFY {
-			let wm_nfy = wm::Notify::from_generic_wm(wm_any);
+			let wm_nfy = unsafe { wm::Notify::from_generic_wm(wm_any) };
 			let key_nfy = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
 			let nfys = unsafe { &*self.nfys.get() };
 			for func in nfys.filter(key_nfy) {
-				match func(wm::Notify::from_generic_wm(wm_any))? { // wm::Notify cannot be Copy
+				match func(unsafe { wm::Notify::from_generic_wm(wm_any) })? { // wm::Notify cannot be Copy
 					WmRet::HandledWithRet(_)
 						| WmRet::HandledOk => { at_least_one = true; }
 					_ => {},
 				}
 			}
 		} else if wm_any.msg_id == co::WM::TIMER {
-			let wm_tmr = wm::Timer::from_generic_wm(wm_any);
+			let wm_tmr = unsafe { wm::Timer::from_generic_wm(wm_any) };
 			let tmrs = unsafe { &*self.tmrs.get() };
 			for func in tmrs.filter(wm_tmr.timer_id) {
 				func()?;
@@ -126,7 +126,7 @@ impl WindowEventsPriv {
 	) -> AnyResult<WmRet>
 	{
 		if wm_any.msg_id == co::WM::COMMAND {
-			let wm_cmd = wm::Command::from_generic_wm(wm_any);
+			let wm_cmd = unsafe { wm::Command::from_generic_wm(wm_any) };
 			let key_cmd = wm_cmd.event.id_code();
 			let cmds = unsafe { &*self.cmds.get() };
 			for func in cmds.filter_rev(key_cmd) {
@@ -136,17 +136,17 @@ impl WindowEventsPriv {
 				}
 			}
 		} else if wm_any.msg_id == co::WM::NOTIFY {
-			let wm_nfy = wm::Notify::from_generic_wm(wm_any);
+			let wm_nfy = unsafe { wm::Notify::from_generic_wm(wm_any) };
 			let key_nfy = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
 			let nfys = unsafe { &*self.nfys.get() };
 			for func in nfys.filter_rev(key_nfy) {
-				match func(wm::Notify::from_generic_wm(wm_any))? { // wm::Notify cannot be Copy
+				match unsafe { func(wm::Notify::from_generic_wm(wm_any))? } { // wm::Notify cannot be Copy
 					WmRet::NotHandled => {},
 					r => return Ok(r), // handled: stop here
 				}
 			}
 		} else if wm_any.msg_id == co::WM::TIMER {
-			let wm_tmr = wm::Timer::from_generic_wm(wm_any);
+			let wm_tmr = unsafe { wm::Timer::from_generic_wm(wm_any) };
 			let tmrs = unsafe { &*self.tmrs.get() };
 			if let Some(func) = tmrs.filter_rev(wm_tmr.timer_id).next() { // just execute the last, if any
 				func()?;

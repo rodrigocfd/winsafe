@@ -217,7 +217,7 @@ impl<T> ListView<T> {
 
 		let self2 = self.clone();
 		self.on_subclass().wm(co::WM::NOTIFY, move |p| {
-			let wm_nfy = wm::Notify::from_generic_wm(p);
+			let wm_nfy = unsafe { wm::Notify::from_generic_wm(p) };
 			if wm_nfy.nmhdr.code >= co::HDN::GETDISPINFO.into()
 					&& wm_nfy.nmhdr.code <= co::HDN::BEGINDRAG.into() { // all HDN messages
 				let hparent = self2.hwnd().GetAncestor(co::GA::PARENT).unwrap();

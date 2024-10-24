@@ -13,10 +13,10 @@ pub struct AddFile {
 	pub text: WString,
 }
 
-unsafe impl MsgSend for AddFile {
+impl MsgSend for AddFile {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			LB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
@@ -41,10 +41,10 @@ pub struct AddString {
 	pub text: WString,
 }
 
-unsafe impl MsgSend for AddString {
+impl MsgSend for AddString {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			LB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
@@ -69,10 +69,10 @@ pub struct DeleteString {
 	pub index: u32,
 }
 
-unsafe impl MsgSend for DeleteString {
+impl MsgSend for DeleteString {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			count => Ok(count as _),
@@ -97,10 +97,10 @@ pub struct Dir {
 	pub path: WString,
 }
 
-unsafe impl MsgSend for Dir {
+impl MsgSend for Dir {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			LB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
@@ -126,10 +126,10 @@ pub struct FindString {
 	pub text: WString,
 }
 
-unsafe impl MsgSend for FindString {
+impl MsgSend for FindString {
 	type RetType = Option<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => None,
 			idx => Some(idx as _),
@@ -154,10 +154,10 @@ pub struct FindStringExact {
 	pub text: WString,
 }
 
-unsafe impl MsgSend for FindStringExact {
+impl MsgSend for FindStringExact {
 	type RetType = Option<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => None,
 			idx => Some(idx as _),
@@ -179,10 +179,10 @@ unsafe impl MsgSend for FindStringExact {
 /// Return type: `u32`.
 pub struct GetAnchorIndex {}
 
-unsafe impl MsgSend for GetAnchorIndex {
+impl MsgSend for GetAnchorIndex {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -201,10 +201,10 @@ unsafe impl MsgSend for GetAnchorIndex {
 /// Return type: `u32`.
 pub struct GetCaretIndex {}
 
-unsafe impl MsgSend for GetCaretIndex {
+impl MsgSend for GetCaretIndex {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -223,10 +223,10 @@ unsafe impl MsgSend for GetCaretIndex {
 /// Return type: `SysResult<u32>`.
 pub struct GetCount {}
 
-unsafe impl MsgSend for GetCount {
+impl MsgSend for GetCount {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			count => Ok(count as _),
@@ -248,10 +248,10 @@ unsafe impl MsgSend for GetCount {
 /// Return type: `Option<u32>`.
 pub struct GetCurSel {}
 
-unsafe impl MsgSend for GetCurSel {
+impl MsgSend for GetCurSel {
 	type RetType = Option<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => None,
 			idx => Some(idx as _),
@@ -273,10 +273,10 @@ unsafe impl MsgSend for GetCurSel {
 /// Return type: `u32`.
 pub struct GetHorizontalExtent {}
 
-unsafe impl MsgSend for GetHorizontalExtent {
+impl MsgSend for GetHorizontalExtent {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -297,10 +297,10 @@ pub struct GetItemData {
 	pub index: u32,
 }
 
-unsafe impl MsgSend for GetItemData {
+impl MsgSend for GetItemData {
 	type RetType = SysResult<isize>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		const LB_ERR_ISIZE: isize = LB_ERR as _;
 		match v {
 			LB_ERR_ISIZE => Err(co::ERROR::BAD_ARGUMENTS),
@@ -325,10 +325,10 @@ pub struct GetItemHeight {
 	pub index: Option<u32>,
 }
 
-unsafe impl MsgSend for GetItemHeight {
+impl MsgSend for GetItemHeight {
 	type RetType = SysResult<u8>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			height => Ok(height as _),
@@ -353,10 +353,10 @@ pub struct GetItemRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-unsafe impl<'a> MsgSend for GetItemRect<'a> {
+impl<'a> MsgSend for GetItemRect<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
@@ -378,10 +378,10 @@ unsafe impl<'a> MsgSend for GetItemRect<'a> {
 /// Return type: `u32`.
 pub struct GetListBoxInfo {}
 
-unsafe impl MsgSend for GetListBoxInfo {
+impl MsgSend for GetListBoxInfo {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -400,11 +400,11 @@ unsafe impl MsgSend for GetListBoxInfo {
 /// Return type: `LCID`.
 pub struct GetLocale {}
 
-unsafe impl MsgSend for GetLocale {
+impl MsgSend for GetLocale {
 	type RetType = LCID;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { LCID::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		LCID::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -424,10 +424,10 @@ pub struct GetSel {
 	pub index: u32,
 }
 
-unsafe impl MsgSend for GetSel {
+impl MsgSend for GetSel {
 	type RetType = SysResult<bool>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			status => Ok(status != 0),
@@ -449,10 +449,10 @@ unsafe impl MsgSend for GetSel {
 /// Return type: `SysResult<u32>`.
 pub struct GetSelCount {}
 
-unsafe impl MsgSend for GetSelCount {
+impl MsgSend for GetSelCount {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			count => Ok(count as _),
@@ -476,10 +476,10 @@ pub struct GetSelItems<'a> {
 	pub buffer: &'a mut [u32],
 }
 
-unsafe impl<'a> MsgSend for GetSelItems<'a> {
+impl<'a> MsgSend for GetSelItems<'a> {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			count => Ok(count as _),
@@ -504,10 +504,10 @@ pub struct GetText<'a> {
 	pub text: &'a mut WString,
 }
 
-unsafe impl<'a> MsgSend for GetText<'a> {
+impl<'a> MsgSend for GetText<'a> {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			nchars => Ok(nchars as _),
@@ -531,10 +531,10 @@ pub struct GetTextLen {
 	pub index: u32,
 }
 
-unsafe impl MsgSend for GetTextLen {
+impl MsgSend for GetTextLen {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			nchars => Ok(nchars as _),
@@ -556,10 +556,10 @@ unsafe impl MsgSend for GetTextLen {
 /// Return type: `SysResult<u32>`.
 pub struct GetTopIndex {}
 
-unsafe impl MsgSend for GetTopIndex {
+impl MsgSend for GetTopIndex {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			idx => Ok(idx as _),
@@ -584,10 +584,10 @@ pub struct InitStorage {
 	pub memory_bytes: u32,
 }
 
-unsafe impl MsgSend for InitStorage {
+impl MsgSend for InitStorage {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERRSPACE => Err(co::ERROR::BAD_ARGUMENTS),
 			n_items => Ok(n_items as _),
@@ -612,10 +612,10 @@ pub struct InsertString {
 	pub text: WString,
 }
 
-unsafe impl MsgSend for InsertString {
+impl MsgSend for InsertString {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			LB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
@@ -640,10 +640,10 @@ pub struct ItemFromPoint {
 	pub coords: POINT,
 }
 
-unsafe impl MsgSend for ItemFromPoint {
+impl MsgSend for ItemFromPoint {
 	type RetType = (i32, bool);
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		(LOWORD(v as _) as _, HIWORD(v as _) == 1)
 	}
 
@@ -669,10 +669,10 @@ pub struct SelectString {
 	pub prefix: WString,
 }
 
-unsafe impl MsgSend for SelectString {
+impl MsgSend for SelectString {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			LB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
@@ -699,10 +699,10 @@ pub struct SelItemRange {
 	pub last_item: u16,
 }
 
-unsafe impl MsgSend for SelItemRange {
+impl MsgSend for SelItemRange {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
@@ -727,10 +727,10 @@ pub struct SelItemRangeEx {
 	pub last_index: u32,
 }
 
-unsafe impl MsgSend for SelItemRangeEx {
+impl MsgSend for SelItemRangeEx {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
@@ -754,10 +754,10 @@ pub struct SetAnchorIndex {
 	pub index: u32,
 }
 
-unsafe impl MsgSend for SetAnchorIndex {
+impl MsgSend for SetAnchorIndex {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
@@ -782,10 +782,10 @@ pub struct SetCaretIndex {
 	pub at_least_partially_visible: bool,
 }
 
-unsafe impl MsgSend for SetCaretIndex {
+impl MsgSend for SetCaretIndex {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
@@ -809,10 +809,10 @@ pub struct SetColumnWidth {
 	pub width: u32,
 }
 
-unsafe impl MsgSend for SetColumnWidth {
+impl MsgSend for SetColumnWidth {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -833,10 +833,10 @@ pub struct SetCount {
 	pub new_count: u32,
 }
 
-unsafe impl MsgSend for SetCount {
+impl MsgSend for SetCount {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			LB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
@@ -861,10 +861,10 @@ pub struct SetCurSel {
 	pub index: Option<u32>,
 }
 
-unsafe impl MsgSend for SetCurSel {
+impl MsgSend for SetCurSel {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		if let None = self.index {
 			Ok(())
 		} else {
@@ -892,10 +892,10 @@ pub struct SetHorizontalExtent {
 	pub width: u32,
 }
 
-unsafe impl MsgSend for SetHorizontalExtent {
+impl MsgSend for SetHorizontalExtent {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -917,10 +917,10 @@ pub struct SetItemData {
 	pub data: isize,
 }
 
-unsafe impl MsgSend for SetItemData {
+impl MsgSend for SetItemData {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
@@ -945,10 +945,10 @@ pub struct SetItemHeight {
 	pub height: u8,
 }
 
-unsafe impl MsgSend for SetItemHeight {
+impl MsgSend for SetItemHeight {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
@@ -972,13 +972,13 @@ pub struct SetLocale {
 	pub locale: LCID,
 }
 
-unsafe impl MsgSend for SetLocale {
+impl MsgSend for SetLocale {
 	type RetType = SysResult<LCID>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			lcid => Ok(unsafe { LCID::from_raw(lcid as _) }),
+			lcid => Ok(LCID::from_raw(lcid as _)),
 		}
 	}
 
@@ -1000,10 +1000,10 @@ pub struct SetSel {
 	pub index: Option<u32>,
 }
 
-unsafe impl MsgSend for SetSel {
+impl MsgSend for SetSel {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
@@ -1027,10 +1027,10 @@ pub struct SetTabStops<'a> {
 	pub tab_stops: &'a [u32],
 }
 
-unsafe impl<'a> MsgSend for SetTabStops<'a> {
+impl<'a> MsgSend for SetTabStops<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -1051,10 +1051,10 @@ pub struct SetTopIndex {
 	pub index: u32,
 }
 
-unsafe impl MsgSend for SetTopIndex {
+impl MsgSend for SetTopIndex {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),

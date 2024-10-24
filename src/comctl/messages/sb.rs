@@ -14,10 +14,10 @@ pub struct GetBorders<'a> {
 	pub borders: &'a mut [u32; 3],
 }
 
-unsafe impl<'a> MsgSend for GetBorders<'a> {
+impl<'a> MsgSend for GetBorders<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -38,11 +38,11 @@ pub struct GetIcon {
 	pub part_index: u8,
 }
 
-unsafe impl MsgSend for GetIcon {
+impl MsgSend for GetIcon {
 	type RetType = SysResult<HICON>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|p| unsafe { HICON::from_ptr(p as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_badargs(v).map(|p| HICON::from_ptr(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -62,10 +62,10 @@ pub struct GetParts<'a> {
 	pub right_edges: Option<&'a mut [i32]>,
 }
 
-unsafe impl<'a> MsgSend for GetParts<'a> {
+impl<'a> MsgSend for GetParts<'a> {
 	type RetType = u8;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -87,10 +87,10 @@ pub struct GetRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-unsafe impl<'a> MsgSend for GetRect<'a> {
+impl<'a> MsgSend for GetRect<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -112,11 +112,11 @@ pub struct GetText<'a> {
 	pub text: &'a mut WString,
 }
 
-unsafe impl<'a> MsgSend for GetText<'a> {
+impl<'a> MsgSend for GetText<'a> {
 	type RetType = (u16, co::SBT);
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		(LOWORD(v as _), unsafe { co::SBT::from_raw(HIWORD(v as _)) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		(LOWORD(v as _), co::SBT::from_raw(HIWORD(v as _)))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -136,11 +136,11 @@ pub struct GetTextLength {
 	pub part_index: u8,
 }
 
-unsafe impl MsgSend for GetTextLength {
+impl MsgSend for GetTextLength {
 	type RetType = (u16, co::SBT);
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		(LOWORD(v as _), unsafe { co::SBT::from_raw(HIWORD(v as _)) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		(LOWORD(v as _), co::SBT::from_raw(HIWORD(v as _)))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -161,10 +161,10 @@ pub struct GetTipText<'a> {
 	pub text: &'a mut WString,
 }
 
-unsafe impl<'a> MsgSend for GetTipText<'a> {
+impl<'a> MsgSend for GetTipText<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -183,10 +183,10 @@ unsafe impl<'a> MsgSend for GetTipText<'a> {
 /// Return type: `bool`.
 pub struct GetUnicodeFormat {}
 
-unsafe impl MsgSend for GetUnicodeFormat {
+impl MsgSend for GetUnicodeFormat {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -205,10 +205,10 @@ unsafe impl MsgSend for GetUnicodeFormat {
 /// Return type: `bool`.
 pub struct IsSimple {}
 
-unsafe impl MsgSend for IsSimple {
+impl MsgSend for IsSimple {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -229,13 +229,13 @@ pub struct SetBkColor {
 	pub color: Option<COLORREF>,
 }
 
-unsafe impl MsgSend for SetBkColor {
+impl MsgSend for SetBkColor {
 	type RetType = Option<COLORREF>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			v => Some(unsafe { COLORREF::from_raw(v) }),
+			v => Some(COLORREF::from_raw(v)),
 		}
 	}
 
@@ -257,10 +257,10 @@ pub struct SetIcon<'a> {
 	pub hicon: Option<&'a HICON>,
 }
 
-unsafe impl<'a> MsgSend for SetIcon<'a> {
+impl<'a> MsgSend for SetIcon<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -281,10 +281,10 @@ pub struct SetMinHeight {
 	pub min_height: u32,
 }
 
-unsafe impl MsgSend for SetMinHeight {
+impl MsgSend for SetMinHeight {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -305,10 +305,10 @@ pub struct SetParts<'a> {
 	pub right_edges: &'a [i32],
 }
 
-unsafe impl<'a> MsgSend for SetParts<'a> {
+impl<'a> MsgSend for SetParts<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -331,10 +331,10 @@ pub struct SetText {
 	pub text: WString,
 }
 
-unsafe impl MsgSend for SetText {
+impl MsgSend for SetText {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -354,10 +354,10 @@ pub struct SetTipText {
 	pub text: WString,
 }
 
-unsafe impl MsgSend for SetTipText {
+impl MsgSend for SetTipText {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -378,10 +378,10 @@ pub struct SetUnicodeFormat {
 	pub use_unicode: bool,
 }
 
-unsafe impl MsgSend for SetUnicodeFormat {
+impl MsgSend for SetUnicodeFormat {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -400,10 +400,10 @@ pub struct Simple {
 	pub display_simple: bool,
 }
 
-unsafe impl MsgSend for Simple {
+impl MsgSend for Simple {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 

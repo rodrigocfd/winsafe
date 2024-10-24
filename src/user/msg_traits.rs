@@ -9,22 +9,22 @@ use crate::msg::*;
 /// Used in functions like
 /// [`SendMessage`](crate::prelude::user_Hwnd::SendMessage) and
 /// [`DefWindowProc`](crate::prelude::user_Hwnd::DefWindowProc).
-///
-/// # Safety
-///
-/// Messages manipulate pointers, copies and window states. Improper use may
-/// lead to undefined behavior.
-pub unsafe trait MsgSend {
+pub trait MsgSend {
 	/// The specific type of the value returned by the message.
 	type RetType;
 
-	/// Converts the generic `isize` return value to the specific type returned
-	/// by the message.
+	/// Unmarshaling method which converts the generic `isize` return value to
+	/// the specific type returned by the message.
+	///
+	/// # Safety
+	///
+	/// Return values often involve pointers and require casts, make sure the
+	/// conversions are correct.
 	#[must_use]
-	fn convert_ret(&self, v: isize) -> Self::RetType;
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType;
 
-	/// Converts the specific message parameters struct into the generic
-	/// [`WndMsg`](crate::msg::WndMsg) message struct.
+	/// Marshaling method which converts the specific message parameters struct
+	/// into the generic [`WndMsg`](crate::msg::WndMsg) message struct.
 	#[must_use]
 	fn as_generic_wm(&mut self) -> WndMsg;
 }
@@ -35,14 +35,15 @@ pub unsafe trait MsgSend {
 ///
 /// Allows the conversion from and to the generic [`WndMsg`](crate::msg::WndMsg)
 /// parameters, and also defines the return type of the message.
-///
-/// # Safety
-///
-/// Messages manipulate pointers, copies and window states. Improper use may
-/// lead to undefined behavior.
-pub unsafe trait MsgSendRecv: MsgSend {
-	/// Converts the generic [`WndMsg`](crate::msg::WndMsg) parameters struct
-	/// into the specific message struct.
+pub trait MsgSendRecv: MsgSend {
+	/// Unmarshaling method which converts the generic
+	/// [`WndMsg`](crate::msg::WndMsg) parameters struct into the specific
+	/// message struct.
+	///
+	/// # Safety
+	///
+	/// Message parameters often involve pointers and require casts, make sure
+	/// the conversions are correct.
 	#[must_use]
-	fn from_generic_wm(parm: WndMsg) -> Self;
+	unsafe fn from_generic_wm(parm: WndMsg) -> Self;
 }

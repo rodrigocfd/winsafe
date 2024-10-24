@@ -42,10 +42,10 @@ pub struct DisplayChange {
 	pub vert_res: u16,
 }
 
-unsafe impl MsgSend for DisplayChange {
+impl MsgSend for DisplayChange {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -58,8 +58,8 @@ unsafe impl MsgSend for DisplayChange {
 	}
 }
 
-unsafe impl MsgSendRecv for DisplayChange {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for DisplayChange {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			depth_bpp: p.wparam as _,
 			horz_res: LOWORD(p.lparam as _),
@@ -74,11 +74,11 @@ unsafe impl MsgSendRecv for DisplayChange {
 /// Return type: `Option<HFONT>`.
 pub struct GetFont {}
 
-unsafe impl MsgSend for GetFont {
+impl MsgSend for GetFont {
 	type RetType = Option<HFONT>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| unsafe { HFONT::from_ptr(p as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_none(v).map(|p| HFONT::from_ptr(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -90,8 +90,8 @@ unsafe impl MsgSend for GetFont {
 	}
 }
 
-unsafe impl MsgSendRecv for GetFont {
-	fn from_generic_wm(_: WndMsg) -> Self {
+impl MsgSendRecv for GetFont {
+	unsafe fn from_generic_wm(_: WndMsg) -> Self {
 		Self {}
 	}
 }
@@ -104,10 +104,10 @@ pub struct NcPaint {
 	pub updated_hrgn: HRGN,
 }
 
-unsafe impl MsgSend for NcPaint {
+impl MsgSend for NcPaint {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -120,10 +120,10 @@ unsafe impl MsgSend for NcPaint {
 	}
 }
 
-unsafe impl MsgSendRecv for NcPaint {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for NcPaint {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			updated_hrgn: unsafe { HRGN::from_ptr(p.wparam as _) },
+			updated_hrgn: HRGN::from_ptr(p.wparam as _),
 		}
 	}
 }
@@ -141,10 +141,10 @@ pub struct SetFont {
 	pub redraw: bool,
 }
 
-unsafe impl MsgSend for SetFont {
+impl MsgSend for SetFont {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -157,10 +157,10 @@ unsafe impl MsgSend for SetFont {
 	}
 }
 
-unsafe impl MsgSendRecv for SetFont {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for SetFont {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hfont: unsafe { HFONT::from_ptr(p.wparam as _) },
+			hfont: HFONT::from_ptr(p.wparam as _),
 			redraw: LOWORD(p.lparam as _) != 0,
 		}
 	}
@@ -174,10 +174,10 @@ pub struct SetRedraw {
 	pub can_redraw: bool,
 }
 
-unsafe impl MsgSend for SetRedraw {
+impl MsgSend for SetRedraw {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -190,8 +190,8 @@ unsafe impl MsgSend for SetRedraw {
 	}
 }
 
-unsafe impl MsgSendRecv for SetRedraw {
-	fn from_generic_wm(p: WndMsg) -> Self {
+impl MsgSendRecv for SetRedraw {
+	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			can_redraw: p.wparam != 0,
 		}

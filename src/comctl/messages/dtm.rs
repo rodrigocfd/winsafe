@@ -17,10 +17,10 @@ pub struct GetDateTimePickerInfo<'a> {
 	pub info: &'a mut DATETIMEPICKERINFO,
 }
 
-unsafe impl<'a> MsgSend for GetDateTimePickerInfo<'a> {
+impl<'a> MsgSend for GetDateTimePickerInfo<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -41,10 +41,10 @@ pub struct GetIdealSize<'a> {
 	pub size: &'a mut SIZE,
 }
 
-unsafe impl<'a> MsgSend for GetIdealSize<'a> {
+impl<'a> MsgSend for GetIdealSize<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -65,11 +65,11 @@ pub struct GetMcColor {
 	pub color_index: co::MCSC,
 }
 
-unsafe impl MsgSend for GetMcColor {
+impl MsgSend for GetMcColor {
 	type RetType = SysResult<COLORREF>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_badargs(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		minus1_as_badargs(v).map(|v| COLORREF::from_raw(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -87,11 +87,11 @@ unsafe impl MsgSend for GetMcColor {
 /// Return type: `SysResult<co::MCS>`.
 pub struct GetMcStyle {}
 
-unsafe impl MsgSend for GetMcStyle {
+impl MsgSend for GetMcStyle {
 	type RetType = SysResult<co::MCS>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|v| unsafe { co::MCS::from_raw(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_badargs(v).map(|v| co::MCS::from_raw(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -109,11 +109,11 @@ unsafe impl MsgSend for GetMcStyle {
 /// Return type: `SysResult<HWND>`.
 pub struct GetMonthCal {}
 
-unsafe impl MsgSend for GetMonthCal {
+impl MsgSend for GetMonthCal {
 	type RetType = SysResult<HWND>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|p| unsafe { HWND::from_ptr(p as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_badargs(v).map(|p| HWND::from_ptr(p as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -133,11 +133,11 @@ pub struct GetRange<'a> {
 	pub system_times: &'a mut [SYSTEMTIME; 2],
 }
 
-unsafe impl<'a> MsgSend for GetRange<'a> {
+impl<'a> MsgSend for GetRange<'a> {
 	type RetType = co::GDTR;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::GDTR::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::GDTR::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -157,10 +157,10 @@ pub struct GetSystemTime<'a> {
 	pub system_time: &'a mut SYSTEMTIME,
 }
 
-unsafe impl<'a> MsgSend for GetSystemTime<'a> {
+impl<'a> MsgSend for GetSystemTime<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		const GDT_NONE: i32 = co::GDT::NONE.raw() as _;
 		match v as i32 {
 			GDT_ERROR => Err(co::ERROR::BAD_ARGUMENTS),
@@ -186,10 +186,10 @@ pub struct SetFormat {
 	pub format_string: Option<WString>,
 }
 
-unsafe impl MsgSend for SetFormat {
+impl MsgSend for SetFormat {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -211,11 +211,11 @@ pub struct SetMcColor {
 	pub color: COLORREF,
 }
 
-unsafe impl MsgSend for SetMcColor {
+impl MsgSend for SetMcColor {
 	type RetType = SysResult<COLORREF>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_badargs(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		minus1_as_badargs(v).map(|v| COLORREF::from_raw(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -235,11 +235,11 @@ pub struct SetMcStyle {
 	pub style: co::MCS,
 }
 
-unsafe impl MsgSend for SetMcStyle {
+impl MsgSend for SetMcStyle {
 	type RetType = SysResult<co::MCS>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|v| unsafe { co::MCS::from_raw(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		zero_as_badargs(v).map(|v| co::MCS::from_raw(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -260,10 +260,10 @@ pub struct SetRange<'a> {
 	pub system_times: &'a mut [SYSTEMTIME; 2],
 }
 
-unsafe impl<'a> MsgSend for SetRange<'a> {
+impl<'a> MsgSend for SetRange<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -284,10 +284,10 @@ pub struct SetSystemTime<'a> {
 	pub system_time: Option<&'a SYSTEMTIME>,
 }
 
-unsafe impl<'a> MsgSend for SetSystemTime<'a> {
+impl<'a> MsgSend for SetSystemTime<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 

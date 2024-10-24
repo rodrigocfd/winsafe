@@ -12,10 +12,10 @@ pub struct AddString {
 	pub text: WString,
 }
 
-unsafe impl MsgSend for AddString {
+impl MsgSend for AddString {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			CB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
@@ -40,10 +40,10 @@ pub struct DeleteString {
 	pub index: u32,
 }
 
-unsafe impl MsgSend for DeleteString {
+impl MsgSend for DeleteString {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			count => Ok(count as _),
@@ -68,10 +68,10 @@ pub struct Dir {
 	pub path: WString,
 }
 
-unsafe impl MsgSend for Dir {
+impl MsgSend for Dir {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			CB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
@@ -97,10 +97,10 @@ pub struct FindString {
 	pub text: WString,
 }
 
-unsafe impl MsgSend for FindString {
+impl MsgSend for FindString {
 	type RetType = Option<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => None,
 			idx => Some(idx as _),
@@ -125,10 +125,10 @@ pub struct FindStringExact {
 	pub text: WString,
 }
 
-unsafe impl MsgSend for FindStringExact {
+impl MsgSend for FindStringExact {
 	type RetType = Option<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => None,
 			idx => Some(idx as _),
@@ -152,10 +152,10 @@ pub struct GetComboBoxInfo<'a> {
 	pub data: &'a mut COMBOBOXINFO,
 }
 
-unsafe impl<'a> MsgSend for GetComboBoxInfo<'a> {
+impl<'a> MsgSend for GetComboBoxInfo<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -174,10 +174,10 @@ unsafe impl<'a> MsgSend for GetComboBoxInfo<'a> {
 /// Return type: `SysResult<u32>`.
 pub struct GetCount {}
 
-unsafe impl MsgSend for GetCount {
+impl MsgSend for GetCount {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|count| count as _)
 	}
 
@@ -196,10 +196,10 @@ unsafe impl MsgSend for GetCount {
 /// Return type: `Option<u32>`.
 pub struct GetCurSel {}
 
-unsafe impl MsgSend for GetCurSel {
+impl MsgSend for GetCurSel {
 	type RetType = Option<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => None,
 			idx => Some(idx as _),
@@ -223,10 +223,10 @@ pub struct GetDroppedControlRect<'a> {
 	pub rect: &'a mut RECT,
 }
 
-unsafe impl<'a> MsgSend for GetDroppedControlRect<'a> {
+impl<'a> MsgSend for GetDroppedControlRect<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -245,10 +245,10 @@ unsafe impl<'a> MsgSend for GetDroppedControlRect<'a> {
 /// Return type: `bool`.
 pub struct GetDroppedState {}
 
-unsafe impl MsgSend for GetDroppedState {
+impl MsgSend for GetDroppedState {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -267,10 +267,10 @@ unsafe impl MsgSend for GetDroppedState {
 /// Return type: `SysResult<u32>`.
 pub struct GetDroppedWidth {}
 
-unsafe impl MsgSend for GetDroppedWidth {
+impl MsgSend for GetDroppedWidth {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			cx => Ok(cx as _),
@@ -292,10 +292,10 @@ unsafe impl MsgSend for GetDroppedWidth {
 /// Return type: `(i32, i32)`.
 pub struct GetEditSel {}
 
-unsafe impl MsgSend for GetEditSel {
+impl MsgSend for GetEditSel {
 	type RetType = (i32, i32);
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		(LOWORD(v as _) as _, HIWORD(v as _) as _)
 	}
 
@@ -314,10 +314,10 @@ unsafe impl MsgSend for GetEditSel {
 /// Return type: `bool`.
 pub struct GetExtendedUi {}
 
-unsafe impl MsgSend for GetExtendedUi {
+impl MsgSend for GetExtendedUi {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -336,10 +336,10 @@ unsafe impl MsgSend for GetExtendedUi {
 /// Return type: `u32`.
 pub struct GetHorizontalExtent {}
 
-unsafe impl MsgSend for GetHorizontalExtent {
+impl MsgSend for GetHorizontalExtent {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -360,10 +360,10 @@ pub struct GetItemData {
 	pub index: u32,
 }
 
-unsafe impl MsgSend for GetItemData {
+impl MsgSend for GetItemData {
 	type RetType = SysResult<isize>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(v),
@@ -387,10 +387,10 @@ pub struct GetItemHeight {
 	pub component: i32,
 }
 
-unsafe impl MsgSend for GetItemHeight {
+impl MsgSend for GetItemHeight {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			cy => Ok(cy as _),
@@ -415,10 +415,10 @@ pub struct GetLbText<'a> {
 	pub text: &'a mut WString,
 }
 
-unsafe impl<'a> MsgSend for GetLbText<'a> {
+impl<'a> MsgSend for GetLbText<'a> {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			n => Ok(n as _),
@@ -442,10 +442,10 @@ pub struct GetLbTextLen {
 	pub index: u32,
 }
 
-unsafe impl MsgSend for GetLbTextLen {
+impl MsgSend for GetLbTextLen {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			n => Ok(n as _),
@@ -467,11 +467,11 @@ unsafe impl MsgSend for GetLbTextLen {
 /// Return type: `LANGID`.
 pub struct GetLocale {}
 
-unsafe impl MsgSend for GetLocale {
+impl MsgSend for GetLocale {
 	type RetType = LANGID;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { LANGID::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		LANGID::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -489,10 +489,10 @@ unsafe impl MsgSend for GetLocale {
 /// Return type: `SysResult<u32>`.
 pub struct GetTopIndex {}
 
-unsafe impl MsgSend for GetTopIndex {
+impl MsgSend for GetTopIndex {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			idx => Ok(idx as _),
@@ -517,10 +517,10 @@ pub struct InitStorage {
 	pub memory_bytes: u32,
 }
 
-unsafe impl MsgSend for InitStorage {
+impl MsgSend for InitStorage {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
 			n => Ok(n as _),
@@ -545,10 +545,10 @@ pub struct InsertString {
 	pub text: WString,
 }
 
-unsafe impl MsgSend for InsertString {
+impl MsgSend for InsertString {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			CB_ERRSPACE => Err(co::ERROR::NOT_ENOUGH_MEMORY),
@@ -573,10 +573,10 @@ pub struct LimitText {
 	pub max_chars: Option<u32>,
 }
 
-unsafe impl MsgSend for LimitText {
+impl MsgSend for LimitText {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -602,10 +602,10 @@ pub struct SelectString {
 	pub search_text: WString,
 }
 
-unsafe impl MsgSend for SelectString {
+impl MsgSend for SelectString {
 	type RetType = Option<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => None,
 			idx => Some(idx as _),
@@ -629,10 +629,10 @@ pub struct SetCurSel {
 	pub index: Option<u32>,
 }
 
-unsafe impl MsgSend for SetCurSel {
+impl MsgSend for SetCurSel {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -656,10 +656,10 @@ pub struct SetDroppedWidth {
 	pub min_width: u32,
 }
 
-unsafe impl MsgSend for SetDroppedWidth {
+impl MsgSend for SetDroppedWidth {
 	type RetType = SysResult<u32>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			cx => Ok(cx as _),
@@ -684,10 +684,10 @@ pub struct SetEditSel {
 	pub end_pos: Option<u32>,
 }
 
-unsafe impl MsgSend for SetEditSel {
+impl MsgSend for SetEditSel {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
@@ -714,10 +714,10 @@ pub struct SetExtendedUi {
 	pub use_extended_ui: bool,
 }
 
-unsafe impl MsgSend for SetExtendedUi {
+impl MsgSend for SetExtendedUi {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
@@ -741,10 +741,10 @@ pub struct SetHorizontalExtent {
 	pub scrollable_width: u32,
 }
 
-unsafe impl MsgSend for SetHorizontalExtent {
+impl MsgSend for SetHorizontalExtent {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -766,10 +766,10 @@ pub struct SetItemData {
 	pub data: isize,
 }
 
-unsafe impl MsgSend for SetItemData {
+impl MsgSend for SetItemData {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
@@ -794,10 +794,10 @@ pub struct SetItemHeight {
 	pub height: u32,
 }
 
-unsafe impl MsgSend for SetItemHeight {
+impl MsgSend for SetItemHeight {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
@@ -821,10 +821,10 @@ pub struct SetLocale {
 	pub locale: LANGID,
 }
 
-unsafe impl MsgSend for SetLocale {
+impl MsgSend for SetLocale {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			CB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
 			_ => Ok(()),
@@ -848,10 +848,10 @@ pub struct SetTopIndex {
 	pub index: u32,
 }
 
-unsafe impl MsgSend for SetTopIndex {
+impl MsgSend for SetTopIndex {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -872,10 +872,10 @@ pub struct ShowDropDown {
 	pub show: bool,
 }
 
-unsafe impl MsgSend for ShowDropDown {
+impl MsgSend for ShowDropDown {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 

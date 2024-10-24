@@ -11,10 +11,10 @@ use crate::user::privs::*;
 /// Return type: `u32`.
 pub struct GetCalendarBorder {}
 
-unsafe impl MsgSend for GetCalendarBorder {
+impl MsgSend for GetCalendarBorder {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -33,10 +33,10 @@ unsafe impl MsgSend for GetCalendarBorder {
 /// Return type: `u32`.
 pub struct GetCalendarCount {}
 
-unsafe impl MsgSend for GetCalendarCount {
+impl MsgSend for GetCalendarCount {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -57,10 +57,10 @@ pub struct GetCalendarGridInfo<'a, 'b> {
 	pub info: &'b mut MCGRIDINFO<'a>,
 }
 
-unsafe impl<'a, 'b> MsgSend for GetCalendarGridInfo<'a, 'b> {
+impl<'a, 'b> MsgSend for GetCalendarGridInfo<'a, 'b> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -79,11 +79,11 @@ unsafe impl<'a, 'b> MsgSend for GetCalendarGridInfo<'a, 'b> {
 /// Return type: `co::CAL`.
 pub struct GetCalId {}
 
-unsafe impl MsgSend for GetCalId {
+impl MsgSend for GetCalId {
 	type RetType = co::CAL;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::CAL::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::CAL::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -103,11 +103,11 @@ pub struct GetColor {
 	pub which: co::MCSC,
 }
 
-unsafe impl MsgSend for GetColor {
+impl MsgSend for GetColor {
 	type RetType = SysResult<COLORREF>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_badargs(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		minus1_as_badargs(v).map(|v| COLORREF::from_raw(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -125,11 +125,11 @@ unsafe impl MsgSend for GetColor {
 /// Return type: `co::MCMV`.
 pub struct GetCurrentView {}
 
-unsafe impl MsgSend for GetCurrentView {
+impl MsgSend for GetCurrentView {
 	type RetType = co::MCMV;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::MCMV::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::MCMV::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -149,10 +149,10 @@ pub struct GetCurSel<'a> {
 	pub info: &'a mut SYSTEMTIME,
 }
 
-unsafe impl<'a> MsgSend for GetCurSel<'a> {
+impl<'a> MsgSend for GetCurSel<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -171,10 +171,10 @@ unsafe impl<'a> MsgSend for GetCurSel<'a> {
 /// Return type: `(bool, u16)`.
 pub struct GetFirstDayOfWeek {}
 
-unsafe impl MsgSend for GetFirstDayOfWeek {
+impl MsgSend for GetFirstDayOfWeek {
 	type RetType = (bool, u16);
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		(HIWORD(v as _) != 0, LOWORD(v as _))
 	}
 
@@ -193,10 +193,10 @@ unsafe impl MsgSend for GetFirstDayOfWeek {
 /// Return type: `u32`.
 pub struct GetMaxSelCount {}
 
-unsafe impl MsgSend for GetMaxSelCount {
+impl MsgSend for GetMaxSelCount {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -215,10 +215,10 @@ unsafe impl MsgSend for GetMaxSelCount {
 /// Return type: `u32`.
 pub struct GetMaxTodayWidth {}
 
-unsafe impl MsgSend for GetMaxTodayWidth {
+impl MsgSend for GetMaxTodayWidth {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -239,10 +239,10 @@ pub struct GetMinReqRect<'a> {
 	pub bounds_rect: &'a mut RECT,
 }
 
-unsafe impl<'a> MsgSend for GetMinReqRect<'a> {
+impl<'a> MsgSend for GetMinReqRect<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -261,10 +261,10 @@ unsafe impl<'a> MsgSend for GetMinReqRect<'a> {
 /// Return type: `u32`.
 pub struct GetMonthDelta {}
 
-unsafe impl MsgSend for GetMonthDelta {
+impl MsgSend for GetMonthDelta {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -286,10 +286,10 @@ pub struct GetMonthRange<'a> {
 	pub limits: &'a mut [SYSTEMTIME; 2],
 }
 
-unsafe impl<'a> MsgSend for GetMonthRange<'a> {
+impl<'a> MsgSend for GetMonthRange<'a> {
 	type RetType = u32;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -310,11 +310,11 @@ pub struct GetRange<'a> {
 	pub limits: &'a mut [SYSTEMTIME; 2],
 }
 
-unsafe impl<'a> MsgSend for GetRange<'a> {
+impl<'a> MsgSend for GetRange<'a> {
 	type RetType = co::GDTR;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::GDTR::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::GDTR::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -334,10 +334,10 @@ pub struct GetSelRange<'a> {
 	pub limits: &'a mut [SYSTEMTIME; 2],
 }
 
-unsafe impl<'a> MsgSend for GetSelRange<'a> {
+impl<'a> MsgSend for GetSelRange<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -358,10 +358,10 @@ pub struct GetToday<'a> {
 	pub info: &'a mut SYSTEMTIME,
 }
 
-unsafe impl<'a> MsgSend for GetToday<'a> {
+impl<'a> MsgSend for GetToday<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -380,10 +380,10 @@ unsafe impl<'a> MsgSend for GetToday<'a> {
 /// Return type: `bool`.
 pub struct GetUnicodeFormat {}
 
-unsafe impl MsgSend for GetUnicodeFormat {
+impl MsgSend for GetUnicodeFormat {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -404,10 +404,10 @@ pub struct HitTest<'a> {
 	pub test_info: &'a mut MCHITTESTINFO,
 }
 
-unsafe impl<'a> MsgSend for HitTest<'a> {
+impl<'a> MsgSend for HitTest<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -429,10 +429,10 @@ pub struct SetCalendarBorder {
 	pub pixels: u32,
 }
 
-unsafe impl MsgSend for SetCalendarBorder {
+impl MsgSend for SetCalendarBorder {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -453,10 +453,10 @@ pub struct SetCalId {
 	pub id: co::CAL,
 }
 
-unsafe impl MsgSend for SetCalId {
+impl MsgSend for SetCalId {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -478,11 +478,11 @@ pub struct SetColor {
 	pub color: COLORREF,
 }
 
-unsafe impl MsgSend for SetColor {
+impl MsgSend for SetColor {
 	type RetType = Option<COLORREF>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_none(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		minus1_as_none(v).map(|v| COLORREF::from_raw(v as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -502,10 +502,10 @@ pub struct SetCurrentView {
 	pub view: co::MCMV,
 }
 
-unsafe impl MsgSend for SetCurrentView {
+impl MsgSend for SetCurrentView {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -526,10 +526,10 @@ pub struct SetCurSel<'a> {
 	pub info: &'a SYSTEMTIME,
 }
 
-unsafe impl<'a> MsgSend for SetCurSel<'a> {
+impl<'a> MsgSend for SetCurSel<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -550,10 +550,10 @@ pub struct SetDayState<'a> {
 	pub months: &'a [MONTHDAYSTATE],
 }
 
-unsafe impl<'a> MsgSend for SetDayState<'a> {
+impl<'a> MsgSend for SetDayState<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -574,10 +574,10 @@ pub struct SetFirstDayOfWeek {
 	pub first_day: u8,
 }
 
-unsafe impl MsgSend for SetFirstDayOfWeek {
+impl MsgSend for SetFirstDayOfWeek {
 	type RetType = (bool, u16);
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		(HIWORD(v as _) != 0, LOWORD(v as _))
 	}
 
@@ -598,10 +598,10 @@ pub struct SetMaxSelCount {
 	pub max_days: u8,
 }
 
-unsafe impl MsgSend for SetMaxSelCount {
+impl MsgSend for SetMaxSelCount {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -622,10 +622,10 @@ pub struct SetMonthDelta {
 	pub num_months: u8,
 }
 
-unsafe impl MsgSend for SetMonthDelta {
+impl MsgSend for SetMonthDelta {
 	type RetType = u8;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v as _
 	}
 
@@ -647,10 +647,10 @@ pub struct SetRange<'a> {
 	pub limits: &'a [SYSTEMTIME; 2],
 }
 
-unsafe impl<'a> MsgSend for SetRange<'a> {
+impl<'a> MsgSend for SetRange<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -671,10 +671,10 @@ pub struct SetSelRange<'a> {
 	pub limits: &'a [SYSTEMTIME; 2],
 }
 
-unsafe impl<'a> MsgSend for SetSelRange<'a> {
+impl<'a> MsgSend for SetSelRange<'a> {
 	type RetType = SysResult<()>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		zero_as_badargs(v).map(|_| ())
 	}
 
@@ -695,10 +695,10 @@ pub struct SetToday<'a> {
 	pub today: Option<&'a SYSTEMTIME>,
 }
 
-unsafe impl<'a> MsgSend for SetToday<'a> {
+impl<'a> MsgSend for SetToday<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -719,10 +719,10 @@ pub struct SetUnicodeFormat {
 	pub use_unicode: bool,
 }
 
-unsafe impl MsgSend for SetUnicodeFormat {
+impl MsgSend for SetUnicodeFormat {
 	type RetType = bool;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		v != 0
 	}
 
@@ -743,10 +743,10 @@ pub struct SizeRectToMin<'a> {
 	pub region: &'a mut RECT,
 }
 
-unsafe impl<'a> MsgSend for SizeRectToMin<'a> {
+impl<'a> MsgSend for SizeRectToMin<'a> {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 

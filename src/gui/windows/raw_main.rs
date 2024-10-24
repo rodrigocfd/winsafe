@@ -108,7 +108,7 @@ impl RawMain {
 	fn default_message_handlers(&self) {
 		let self2 = self.clone();
 		self.base().before_user_on().wm(co::WM::ACTIVATE, move |hwnd, p| {
-			let p = wm::Activate::from_generic_wm(p);
+			let p = unsafe { wm::Activate::from_generic_wm(p) };
 			if !p.is_minimized {
 				let hchild_prev_focus = unsafe { &mut *self2.0.hchild_prev_focus.get() };
 				if p.event == co::WA::INACTIVE {

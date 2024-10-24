@@ -196,7 +196,7 @@ impl WindowEvents {
 		where F: Fn(wm::AppCommand) -> AnyResult<()> + 'static,
 	{
 		self.wm(co::WM::APPCOMMAND, move |p| {
-			func(wm::AppCommand::from_generic_wm(p))?;
+			func(unsafe { wm::AppCommand::from_generic_wm(p) })?;
 			Ok(WmRet::HandledWithRet(1)) // TRUE
 		});
 	}
@@ -296,7 +296,7 @@ impl WindowEvents {
 		where F: Fn(wm::Create) -> AnyResult<i32> + 'static,
 	{
 		self.wm(co::WM::CREATE, move |p| {
-			let ret_val = func(wm::Create::from_generic_wm(p))? as isize;
+			let ret_val = func(unsafe { wm::Create::from_generic_wm(p) })? as isize;
 			Ok(WmRet::HandledWithRet(ret_val))
 		});
 	}
@@ -400,7 +400,7 @@ impl WindowEvents {
 		where F: Fn(wm::EraseBkgnd) -> AnyResult<i32> + 'static,
 	{
 		self.wm(co::WM::ERASEBKGND, move |p| {
-			let ret_val = func(wm::EraseBkgnd::from_generic_wm(p))? as isize;
+			let ret_val = func(unsafe { wm::EraseBkgnd::from_generic_wm(p) })? as isize;
 			Ok(WmRet::HandledWithRet(ret_val))
 		});
 	}
@@ -453,7 +453,7 @@ impl WindowEvents {
 		where F: Fn(wm::GetText) -> AnyResult<u32> + 'static,
 	{
 		self.wm(co::WM::GETTEXT, move |p| {
-			let ret_val = func(wm::GetText::from_generic_wm(p))? as isize;
+			let ret_val = func(unsafe { wm::GetText::from_generic_wm(p) })? as isize;
 			Ok(WmRet::HandledWithRet(ret_val))
 		});
 	}
@@ -780,7 +780,8 @@ impl WindowEvents {
 		where F: Fn(wm::SetIcon) -> AnyResult<Option<HICON>> + 'static,
 	{
 		self.wm(co::WM::SETICON, move |p| {
-			let ret_val = func(wm::SetIcon::from_generic_wm(p))?.map_or(0, |h| h.ptr() as isize);
+			let ret_val = func(unsafe { wm::SetIcon::from_generic_wm(p) })?
+				.map_or(0, |h| h.ptr() as isize);
 			Ok(WmRet::HandledWithRet(ret_val))
 		});
 	}

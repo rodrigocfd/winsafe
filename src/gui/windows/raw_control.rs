@@ -89,7 +89,7 @@ impl RawControl {
 		});
 
 		self.base().before_user_on().wm(co::WM::NCPAINT, move |hwnd, p| {
-			paint_control_borders(hwnd, wm::NcPaint::from_generic_wm(p))?;
+			paint_control_borders(hwnd, unsafe { wm::NcPaint::from_generic_wm(p) })?;
 			Ok(WmRet::HandledOk)
 		});
 	}

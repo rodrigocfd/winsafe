@@ -13,11 +13,11 @@ pub_struct_msg_empty! { Click: co::BM::CLICK.into();
 /// Return type: `co::BST`.
 pub struct GetCheck {}
 
-unsafe impl MsgSend for GetCheck {
+impl MsgSend for GetCheck {
 	type RetType = co::BST;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::BST::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::BST::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -37,16 +37,14 @@ pub struct GetImage {
 	pub img_type: co::IMAGE_TYPE,
 }
 
-unsafe impl MsgSend for GetImage {
+impl MsgSend for GetImage {
 	type RetType = SysResult<BmpIcon>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe {
-			match self.img_type {
-				co::IMAGE_TYPE::BITMAP => Ok(BmpIcon::Bmp(HBITMAP::from_ptr(v as _))),
-				co::IMAGE_TYPE::ICON => Ok(BmpIcon::Icon(HICON::from_ptr(v as _))),
-				_ => Err(co::ERROR::BAD_ARGUMENTS),
-			}
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		match self.img_type {
+			co::IMAGE_TYPE::BITMAP => Ok(BmpIcon::Bmp(HBITMAP::from_ptr(v as _))),
+			co::IMAGE_TYPE::ICON => Ok(BmpIcon::Icon(HICON::from_ptr(v as _))),
+			_ => Err(co::ERROR::BAD_ARGUMENTS),
 		}
 	}
 
@@ -65,11 +63,11 @@ unsafe impl MsgSend for GetImage {
 /// Return type: `co::BST`.
 pub struct GetState {}
 
-unsafe impl MsgSend for GetState {
+impl MsgSend for GetState {
 	type RetType = co::BST;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
-		unsafe { co::BST::from_raw(v as _) }
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
+		co::BST::from_raw(v as _)
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -89,10 +87,10 @@ pub struct SetCheck {
 	pub state: co::BST,
 }
 
-unsafe impl MsgSend for SetCheck {
+impl MsgSend for SetCheck {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -113,10 +111,10 @@ pub struct SetDontClick {
 	pub dont_click: bool,
 }
 
-unsafe impl MsgSend for SetDontClick {
+impl MsgSend for SetDontClick {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -137,18 +135,16 @@ pub struct SetImage {
 	pub image: BmpIcon,
 }
 
-unsafe impl MsgSend for SetImage {
+impl MsgSend for SetImage {
 	type RetType = SysResult<BmpIcon>;
 
-	fn convert_ret(&self, v: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		if v == 0 {
 			Err(co::ERROR::BAD_ARGUMENTS)
 		} else {
-			unsafe {
-				match self.image {
-					BmpIcon::Bmp(_) => Ok(BmpIcon::Bmp(HBITMAP::from_ptr(v as _))),
-					BmpIcon::Icon(_) => Ok(BmpIcon::Icon(HICON::from_ptr(v as _))),
-				}
+			match self.image {
+				BmpIcon::Bmp(_) => Ok(BmpIcon::Bmp(HBITMAP::from_ptr(v as _))),
+				BmpIcon::Icon(_) => Ok(BmpIcon::Icon(HICON::from_ptr(v as _))),
 			}
 		}
 	}
@@ -173,10 +169,10 @@ pub struct SetState {
 	pub highlight: bool,
 }
 
-unsafe impl MsgSend for SetState {
+impl MsgSend for SetState {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
@@ -198,10 +194,10 @@ pub struct SetStyle {
 	pub redraw: bool,
 }
 
-unsafe impl MsgSend for SetStyle {
+impl MsgSend for SetStyle {
 	type RetType = ();
 
-	fn convert_ret(&self, _: isize) -> Self::RetType {
+	unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 		()
 	}
 
