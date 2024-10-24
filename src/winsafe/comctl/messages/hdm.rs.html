@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\messages\hdm.rs`."><title>hdm.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-b0742ba02757f159.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.84.0-nightly (3ed6e3cc6 2024-10-17)" data-channel="nightly" data-search-js="search-e056c65ede92db13.js" data-settings-js="settings-805db61a62df4bd2.js" ><script src="../../..\../static.files/storage-1d39b6787ed640ff.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-f070b9041d14864c.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-0111fcff984fae8f.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\comctl\messages/</div>hdm.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\messages\hdm.rs`."><title>hdm.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-a5dc3bae.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.84.0-nightly (662180b34 2024-10-20)" data-channel="nightly" data-search-js="search-c5a66128.js" data-settings-js="settings-0f613d39.js" ><script src="../../..\../static.files/storage-59e33391.js"></script><script defer src="../../..\../static.files/src-script-56102188.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\comctl\messages/</div>hdm.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
 <a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
@@ -648,10 +648,10 @@
 	<span class="kw">pub </span>filter: <span class="prelude-ty">Option</span>&lt;u32&gt;,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>ClearFilter {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>ClearFilter {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 
@@ -672,11 +672,11 @@
 	<span class="kw">pub </span>index: u32,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>CreateDragImage {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>CreateDragImage {
 	<span class="kw">type </span>RetType = SysResult&lt;HIMAGELIST&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		zero_as_badargs(v).map(|p| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(p <span class="kw">as _</span>) })
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		zero_as_badargs(v).map(|p| HIMAGELIST::from_ptr(p <span class="kw">as _</span>))
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -696,10 +696,10 @@
 	<span class="kw">pub </span>index: u32,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>DeleteItem {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>DeleteItem {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -721,10 +721,10 @@
 	<span class="kw">pub </span>discard_changes: bool,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>EditFilter {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>EditFilter {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 
@@ -743,10 +743,10 @@
 /// Return type: `u32`.
 </span><span class="kw">pub struct </span>GetBitmapMargin {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetBitmapMargin {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetBitmapMargin {
 	<span class="kw">type </span>RetType = u32;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v <span class="kw">as _
 	</span>}
 
@@ -765,10 +765,10 @@
 /// Return type: `u32`.
 </span><span class="kw">pub struct </span>GetFocusedItem {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetFocusedItem {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetFocusedItem {
 	<span class="kw">type </span>RetType = u32;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v <span class="kw">as _
 	</span>}
 
@@ -789,11 +789,11 @@
 	<span class="kw">pub </span>kind: co::HDSIL,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetImageList {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetImageList {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		zero_as_none(v).map(|p| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(p <span class="kw">as _</span>) })
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		zero_as_none(v).map(|p| HIMAGELIST::from_ptr(p <span class="kw">as _</span>))
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -814,10 +814,10 @@
 	<span class="kw">pub </span>hditem: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>HDITEM&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>GetItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>GetItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
 		() <span class="comment">// docs are wrong: always returns zero
 	</span>}
 
@@ -836,10 +836,10 @@
 /// Return type: `SysResult&lt;u32&gt;`.
 </span><span class="kw">pub struct </span>GetItemCount {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetItemCount {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetItemCount {
 	<span class="kw">type </span>RetType = SysResult&lt;u32&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		minus1_as_badargs(v).map(|v| v <span class="kw">as _</span>)
 	}
 
@@ -861,10 +861,10 @@
 	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetItemDropDownRect&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetItemDropDownRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -886,10 +886,10 @@
 	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetItemRect&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetItemRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -910,10 +910,10 @@
 	<span class="kw">pub </span>buffer: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>[u32],
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetOrderArray&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetOrderArray&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -934,10 +934,10 @@
 	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetOverflowRect&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetOverflowRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -956,10 +956,10 @@
 /// Return type: `bool`.
 </span><span class="kw">pub struct </span>GetUnicodeFormat {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetUnicodeFormat {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetUnicodeFormat {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 
@@ -980,10 +980,10 @@
 	<span class="kw">pub </span>test_info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>HDHITTESTINFO,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>HitTest&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>HitTest&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = u32;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v <span class="kw">as _
 	</span>}
 
@@ -1005,10 +1005,10 @@
 	<span class="kw">pub </span>item: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>HDITEM&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>InsertItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>InsertItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;u32&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		minus1_as_badargs(v).map(|v| v <span class="kw">as _</span>)
 	}
 
@@ -1029,10 +1029,10 @@
 	<span class="kw">pub </span>hdlayout: <span class="kw-2">&amp;</span><span class="lifetime">'c </span><span class="kw-2">mut </span>HDLAYOUT&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; MsgSend <span class="kw">for </span>Layout&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; MsgSend <span class="kw">for </span>Layout&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -1053,10 +1053,10 @@
 	<span class="kw">pub </span>order: u32,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>OrderToIndex {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>OrderToIndex {
 	<span class="kw">type </span>RetType = u32;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v <span class="kw">as _
 	</span>}
 
@@ -1077,10 +1077,10 @@
 	<span class="kw">pub </span>width: u32,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetBitmapMargin {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetBitmapMargin {
 	<span class="kw">type </span>RetType = u32;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v <span class="kw">as _
 	</span>}
 
@@ -1101,10 +1101,10 @@
 	<span class="kw">pub </span>timeout_ms: u32,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetFilterChangeTimeout {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetFilterChangeTimeout {
 	<span class="kw">type </span>RetType = u32;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v <span class="kw">as _
 	</span>}
 
@@ -1125,10 +1125,10 @@
 	<span class="kw">pub </span>index: u32,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetFocusedItem {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetFocusedItem {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -1149,10 +1149,10 @@
 	<span class="kw">pub </span>value: PtIdx,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetHotDivider {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetHotDivider {
 	<span class="kw">type </span>RetType = u32;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v <span class="kw">as _
 	</span>}
 
@@ -1180,11 +1180,11 @@
 	<span class="kw">pub </span>himagelist: <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetImageList {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetImageList {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		zero_as_none(v).map(|p| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(p <span class="kw">as _</span>) })
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		zero_as_none(v).map(|p| HIMAGELIST::from_ptr(p <span class="kw">as _</span>))
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1205,10 +1205,10 @@
 	<span class="kw">pub </span>hditem: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>HDITEM&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>SetItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>SetItem&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
 		() <span class="comment">// docs are wrong: always returns zero
 	</span>}
 
@@ -1229,10 +1229,10 @@
 	<span class="kw">pub </span>buffer: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>[u32],
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetOrderArray&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetOrderArray&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -1253,10 +1253,10 @@
 	<span class="kw">pub </span>use_unicode: bool,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetUnicodeFormat {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetUnicodeFormat {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 

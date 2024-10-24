@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\messages\tbm.rs`."><title>tbm.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-46f98efaafac5295.ttf.woff2,FiraSans-Regular-018c141bf0843ffd.woff2,FiraSans-Medium-8f9a781e4970d388.woff2,SourceCodePro-Regular-562dcc5011b6de7d.ttf.woff2,SourceCodePro-Semibold-d899c5a5c4aeb14a.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-76eba96aa4d2e634.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-b0742ba02757f159.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.84.0-nightly (3ed6e3cc6 2024-10-17)" data-channel="nightly" data-search-js="search-e056c65ede92db13.js" data-settings-js="settings-805db61a62df4bd2.js" ><script src="../../..\../static.files/storage-1d39b6787ed640ff.js"></script><script defer src="../../..\../static.files/src-script-e66d777a5a92e9b2.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-f070b9041d14864c.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-0111fcff984fae8f.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-422f7d1d52889060.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-2c020d218678b618.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\comctl\messages/</div>tbm.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\comctl\messages\tbm.rs`."><title>tbm.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-a5dc3bae.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.84.0-nightly (662180b34 2024-10-20)" data-channel="nightly" data-search-js="search-c5a66128.js" data-settings-js="settings-0f613d39.js" ><script src="../../..\../static.files/storage-59e33391.js"></script><script defer src="../../..\../static.files/src-script-56102188.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\comctl\messages/</div>tbm.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
 <a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
@@ -2144,10 +2144,10 @@
 	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TBADDBITMAP,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>AddBitmap&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>AddBitmap&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;u32&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		minus1_as_badargs(v).map(|v| v <span class="kw">as _</span>)
 	}
 
@@ -2168,10 +2168,10 @@
 	<span class="kw">pub </span>buttons: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>[TBBUTTON&lt;<span class="lifetime">'b</span>&gt;],
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>AddButtons&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>AddButtons&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -2192,10 +2192,10 @@
 	<span class="kw">pub </span>texts: ResStrs,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>AddString {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>AddString {
 	<span class="kw">type </span>RetType = SysResult&lt;u32&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		minus1_as_badargs(v).map(|v| v <span class="kw">as _</span>)
 	}
 
@@ -2224,10 +2224,10 @@
 /// Return type: `u32`.
 </span><span class="kw">pub struct </span>ButtonCount {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>ButtonCount {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>ButtonCount {
 	<span class="kw">type </span>RetType = u32;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v <span class="kw">as _
 	</span>}
 
@@ -2248,10 +2248,10 @@
 	<span class="kw">pub </span>size: u32,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>ButtonStructSize {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>ButtonStructSize {
 	<span class="kw">type </span>RetType = ();
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
 		()
 	}
 
@@ -2273,10 +2273,10 @@
 	<span class="kw">pub </span>image: IdxCbNone,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>ChangeBitmap {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>ChangeBitmap {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -2298,10 +2298,10 @@
 	<span class="kw">pub </span>check: bool,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>CheckButton {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>CheckButton {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -2322,10 +2322,10 @@
 	<span class="kw">pub </span>btn_cmd_id: u16,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>CommandToIndex {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>CommandToIndex {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;u32&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		minus1_as_none(v).map(|v| v <span class="kw">as _</span>)
 	}
 
@@ -2350,10 +2350,10 @@
 	<span class="kw">pub </span>btn_index: u32,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>DeleteButton {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>DeleteButton {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -2375,10 +2375,10 @@
 	<span class="kw">pub </span>enable: bool,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>EnableButton {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>EnableButton {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -2397,10 +2397,10 @@
 /// Return type: `bool`.
 </span><span class="kw">pub struct </span>GetAnchorHighlight {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetAnchorHighlight {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetAnchorHighlight {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 
@@ -2421,10 +2421,10 @@
 	<span class="kw">pub </span>btn_cmd_id: u16,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetBitmap {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetBitmap {
 	<span class="kw">type </span>RetType = u32;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v <span class="kw">as _
 	</span>}
 
@@ -2443,11 +2443,11 @@
 /// Return type: `co::TBBF`.
 </span><span class="kw">pub struct </span>GetBitmapFlags {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetBitmapFlags {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetBitmapFlags {
 	<span class="kw">type </span>RetType = co::TBBF;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		<span class="kw">unsafe </span>{ co::TBBF::from_raw(v <span class="kw">as _</span>) }
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		co::TBBF::from_raw(v <span class="kw">as _</span>)
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -2468,10 +2468,10 @@
 	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>TBBUTTON&lt;<span class="lifetime">'b</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>GetButton&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>GetButton&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -2493,10 +2493,10 @@
 	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>TBBUTTONINFO&lt;<span class="lifetime">'b</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>GetButtonInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>GetButtonInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;u32&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|v| v <span class="kw">as _</span>)
 	}
 
@@ -2515,10 +2515,10 @@
 /// Return type: `SIZE`.
 </span><span class="kw">pub struct </span>GetButtonSize {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetButtonSize {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetButtonSize {
 	<span class="kw">type </span>RetType = SIZE;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		SIZE::from(v <span class="kw">as </span>u32)
 	}
 
@@ -2540,10 +2540,10 @@
 	<span class="kw">pub </span>text: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>WString,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetButtonText&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetButtonText&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;u32&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		minus1_as_badargs(v).map(|v| v <span class="kw">as _</span>)
 	}
 
@@ -2564,10 +2564,10 @@
 	<span class="kw">pub </span>scheme: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>COLORSCHEME,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetColorScheme&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetColorScheme&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -2586,11 +2586,11 @@
 /// Return type: `Option&lt;HIMAGELIST&gt;`.
 </span><span class="kw">pub struct </span>GetDisabledImageList {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetDisabledImageList {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetDisabledImageList {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		zero_as_none(v).map(|v| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(v <span class="kw">as _</span>) })
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v <span class="kw">as _</span>))
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -2608,11 +2608,11 @@
 /// Return type: `co::TBSTYLE_EX`.
 </span><span class="kw">pub struct </span>GetExtendedStyle {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetExtendedStyle {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetExtendedStyle {
 	<span class="kw">type </span>RetType = co::TBSTYLE_EX;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		<span class="kw">unsafe </span>{ co::TBSTYLE_EX::from_raw(v <span class="kw">as _</span>) }
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		co::TBSTYLE_EX::from_raw(v <span class="kw">as _</span>)
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -2630,11 +2630,11 @@
 /// Return type: `Option&lt;HIMAGELIST&gt;`.
 </span><span class="kw">pub struct </span>GetHotImageList {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetHotImageList {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetHotImageList {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		zero_as_none(v).map(|v| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(v <span class="kw">as _</span>) })
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v <span class="kw">as _</span>))
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -2652,10 +2652,10 @@
 /// Return type: `Option&lt;u32&gt;`.
 </span><span class="kw">pub struct </span>GetHotItem {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetHotItem {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetHotItem {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;u32&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		minus1_as_none(v).map(|v| v <span class="kw">as _</span>)
 	}
 
@@ -2677,10 +2677,10 @@
 	<span class="kw">pub </span>size: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>SIZE,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetIdealSize&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetIdealSize&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -2699,11 +2699,11 @@
 /// Return type: `Option&lt;HIMAGELIST&gt;`.
 </span><span class="kw">pub struct </span>GetImageList {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetImageList {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetImageList {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		zero_as_none(v).map(|v| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(v <span class="kw">as _</span>) })
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v <span class="kw">as _</span>))
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -2721,10 +2721,10 @@
 /// Return type: `u32`.
 </span><span class="kw">pub struct </span>GetImageListCount {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetImageListCount {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetImageListCount {
 	<span class="kw">type </span>RetType = u32;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v <span class="kw">as _
 	</span>}
 
@@ -2745,10 +2745,10 @@
 	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>TBINSERTMARK,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetInsertMark&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetInsertMark&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
 		()
 	}
 
@@ -2767,11 +2767,11 @@
 /// Return type: `COLORREF`.
 </span><span class="kw">pub struct </span>GetInsertMarkColor {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetInsertMarkColor {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetInsertMarkColor {
 	<span class="kw">type </span>RetType = COLORREF;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		<span class="kw">unsafe </span>{ COLORREF::from_raw(v <span class="kw">as _</span>) }
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		COLORREF::from_raw(v <span class="kw">as _</span>)
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -2792,10 +2792,10 @@
 	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetItemDropdownRect&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetItemDropdownRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
 		()
 	}
 
@@ -2817,10 +2817,10 @@
 	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetItemRect&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetItemRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -2841,10 +2841,10 @@
 	<span class="kw">pub </span>size: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>SIZE,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetMaxSize&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetMaxSize&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -2865,10 +2865,10 @@
 	<span class="kw">pub </span>metrics: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>TBMETRICS,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetMetrics&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetMetrics&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
 		()
 	}
 
@@ -2889,10 +2889,10 @@
 	<span class="kw">pub </span>obj: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>IDropTarget,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetObject&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetObject&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = HrResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		ok_to_hrresult(v <span class="kw">as _</span>)
 	}
 
@@ -2911,10 +2911,10 @@
 /// Return type: `(u16, u16)`.
 </span><span class="kw">pub struct </span>GetPadding {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetPadding {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetPadding {
 	<span class="kw">type </span>RetType = (u16, u16);
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		(LOWORD(v <span class="kw">as _</span>), HIWORD(v <span class="kw">as _</span>))
 	}
 
@@ -2933,11 +2933,11 @@
 /// Return type: `Option&lt;HIMAGELIST&gt;`.
 </span><span class="kw">pub struct </span>GetPressedImageList {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetPressedImageList {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetPressedImageList {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		zero_as_none(v).map(|p| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(p <span class="kw">as _</span>) })
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		zero_as_none(v).map(|p| HIMAGELIST::from_ptr(p <span class="kw">as _</span>))
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -2958,10 +2958,10 @@
 	<span class="kw">pub </span>rect: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetRect&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetRect&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -2980,10 +2980,10 @@
 /// Return type: `u32`.
 </span><span class="kw">pub struct </span>GetRows {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetRows {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetRows {
 	<span class="kw">type </span>RetType = u32;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v <span class="kw">as _
 	</span>}
 
@@ -3004,11 +3004,11 @@
 	<span class="kw">pub </span>cmd_id: u16,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetState {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetState {
 	<span class="kw">type </span>RetType = SysResult&lt;co::TBSTATE&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		minus1_as_badargs(v).map(|v| <span class="kw">unsafe </span>{ co::TBSTATE::from_raw(v <span class="kw">as _</span>) })
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		minus1_as_badargs(v).map(|v| co::TBSTATE::from_raw(v <span class="kw">as _</span>))
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -3029,10 +3029,10 @@
 	<span class="kw">pub </span>text: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>WString,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetString&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetString&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -3051,11 +3051,11 @@
 /// Return type: `co::BTNS`.
 </span><span class="kw">pub struct </span>GetStyle {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetStyle {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetStyle {
 	<span class="kw">type </span>RetType = co::BTNS;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		<span class="kw">unsafe </span>{ co::BTNS::from_raw(v <span class="kw">as _</span>) }
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		co::BTNS::from_raw(v <span class="kw">as _</span>)
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -3073,10 +3073,10 @@
 /// Return type: `u32`.
 </span><span class="kw">pub struct </span>GetTextRows {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetTextRows {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetTextRows {
 	<span class="kw">type </span>RetType = u32;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v <span class="kw">as _
 	</span>}
 
@@ -3095,11 +3095,11 @@
 /// Return type: `Option&lt;HWND&gt;`.
 </span><span class="kw">pub struct </span>GetTooltips {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetTooltips {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetTooltips {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HWND&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		zero_as_none(v).map(|v| <span class="kw">unsafe </span>{ HWND::from_ptr(v <span class="kw">as _</span>) })
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		zero_as_none(v).map(|v| HWND::from_ptr(v <span class="kw">as _</span>))
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -3117,10 +3117,10 @@
 /// Return type: `bool`.
 </span><span class="kw">pub struct </span>GetUnicodeFormat {}
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>GetUnicodeFormat {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>GetUnicodeFormat {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 
@@ -3142,10 +3142,10 @@
 	<span class="kw">pub </span>hide: bool,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>HideButton {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>HideButton {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -3166,10 +3166,10 @@
 	<span class="kw">pub </span>coords: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>POINT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>HitTest&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>HitTest&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = i32;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v <span class="kw">as _
 	</span>}
 
@@ -3191,10 +3191,10 @@
 	<span class="kw">pub </span>indeterminate: bool,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>Indeterminate {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>Indeterminate {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -3216,10 +3216,10 @@
 	<span class="kw">pub </span>button: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TBBUTTON&lt;<span class="lifetime">'b</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>InsertButton&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>InsertButton&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -3241,10 +3241,10 @@
 	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>TBINSERTMARK,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>InsertMarkHitTest&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>InsertMarkHitTest&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 
@@ -3265,10 +3265,10 @@
 	<span class="kw">pub </span>cmd_id: u16,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>IsButtonChecked {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>IsButtonChecked {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 
@@ -3289,10 +3289,10 @@
 	<span class="kw">pub </span>cmd_id: u16,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>IsButtonEnabled {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>IsButtonEnabled {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 
@@ -3313,10 +3313,10 @@
 	<span class="kw">pub </span>cmd_id: u16,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>IsButtonHidden {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>IsButtonHidden {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 
@@ -3337,10 +3337,10 @@
 	<span class="kw">pub </span>cmd_id: u16,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>IsButtonHighlighted {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>IsButtonHighlighted {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 
@@ -3361,10 +3361,10 @@
 	<span class="kw">pub </span>cmd_id: u16,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>IsButtonIndeterminate {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>IsButtonIndeterminate {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 
@@ -3385,10 +3385,10 @@
 	<span class="kw">pub </span>cmd_id: u16,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>IsButtonPressed {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>IsButtonPressed {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 
@@ -3409,10 +3409,10 @@
 	<span class="kw">pub </span>img_list: co::IDB,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>LoadImages {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>LoadImages {
 	<span class="kw">type </span>RetType = u32;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v <span class="kw">as _
 	</span>}
 
@@ -3434,10 +3434,10 @@
 	<span class="kw">pub </span>cmd_id: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>MapAccelerator&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>MapAccelerator&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 
@@ -3459,10 +3459,10 @@
 	<span class="kw">pub </span>highlight: bool,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>MarkButton {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>MarkButton {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -3484,10 +3484,10 @@
 	<span class="kw">pub </span>dest_index: u32,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>MoveButton {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>MoveButton {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -3509,10 +3509,10 @@
 	<span class="kw">pub </span>press: bool,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>PressButton {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>PressButton {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -3533,10 +3533,10 @@
 	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TBREPLACEBITMAP,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>ReplaceBitmap&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>ReplaceBitmap&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -3557,10 +3557,10 @@
 	<span class="kw">pub </span>enable: bool,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetAnchorHighlight {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetAnchorHighlight {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 
@@ -3582,10 +3582,10 @@
 	<span class="kw">pub </span>height: u16,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetBitmapSize {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetBitmapSize {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -3607,10 +3607,10 @@
 	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'b </span>TBBUTTONINFO&lt;<span class="lifetime">'a</span>&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>SetButtonInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; MsgSend <span class="kw">for </span>SetButtonInfo&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -3632,10 +3632,10 @@
 	<span class="kw">pub </span>height: u16,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetButtonSize {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetButtonSize {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -3657,10 +3657,10 @@
 	<span class="kw">pub </span>max_width: u16,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetButtonWidth {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetButtonWidth {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -3682,10 +3682,10 @@
 	<span class="kw">pub </span>cmd_id: u16,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetCmdId {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetCmdId {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -3706,10 +3706,10 @@
 	<span class="kw">pub </span>scheme: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>COLORSCHEME,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetColorScheme&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetColorScheme&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
 		()
 	}
 
@@ -3730,11 +3730,11 @@
 	<span class="kw">pub </span>himagelist: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HIMAGELIST,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetDisabledImageList&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetDisabledImageList&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		zero_as_none(v).map(|v| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(v <span class="kw">as _</span>) })
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v <span class="kw">as _</span>))
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -3755,11 +3755,11 @@
 	<span class="kw">pub </span>draw: co::DT,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetDrawTextFlags {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetDrawTextFlags {
 	<span class="kw">type </span>RetType = co::DT;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		<span class="kw">unsafe </span>{ co::DT::from_raw(v <span class="kw">as _</span>) }
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		co::DT::from_raw(v <span class="kw">as _</span>)
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -3779,11 +3779,11 @@
 	<span class="kw">pub </span>style: co::TBSTYLE_EX,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetExtendedStyle {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetExtendedStyle {
 	<span class="kw">type </span>RetType = co::TBSTYLE_EX;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		<span class="kw">unsafe </span>{ co::TBSTYLE_EX::from_raw(v <span class="kw">as _</span>) }
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		co::TBSTYLE_EX::from_raw(v <span class="kw">as _</span>)
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -3803,11 +3803,11 @@
 	<span class="kw">pub </span>himagelist: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HIMAGELIST,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetHotImageList&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetHotImageList&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		zero_as_none(v).map(|v| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(v <span class="kw">as _</span>) })
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v <span class="kw">as _</span>))
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -3827,10 +3827,10 @@
 	<span class="kw">pub </span>index: <span class="prelude-ty">Option</span>&lt;u32&gt;,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetHotItem {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetHotItem {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;u32&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		minus1_as_none(v).map(|idx| idx <span class="kw">as _</span>)
 	}
 
@@ -3852,10 +3852,10 @@
 	<span class="kw">pub </span>flags: co::HICF,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetHotItem2 {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetHotItem2 {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;u32&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		minus1_as_none(v).map(|idx| idx <span class="kw">as _</span>)
 	}
 
@@ -3876,11 +3876,11 @@
 	<span class="kw">pub </span>himagelist: HIMAGELIST,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetImageList {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetImageList {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		zero_as_none(v).map(|v| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(v <span class="kw">as _</span>) })
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v <span class="kw">as _</span>))
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -3900,10 +3900,10 @@
 	<span class="kw">pub </span>pixels: u32,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetIndent {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetIndent {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -3924,10 +3924,10 @@
 	<span class="kw">pub </span>info: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TBINSERTMARK,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetInsertMark&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetInsertMark&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
 		()
 	}
 
@@ -3948,11 +3948,11 @@
 	<span class="kw">pub </span>color: COLORREF,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetInsertMarkColor {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetInsertMarkColor {
 	<span class="kw">type </span>RetType = COLORREF;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		<span class="kw">unsafe </span>{ COLORREF::from_raw(v <span class="kw">as _</span>) }
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		COLORREF::from_raw(v <span class="kw">as _</span>)
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -3972,10 +3972,10 @@
 	<span class="kw">pub </span>gap: u32,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetListGap {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetListGap {
 	<span class="kw">type </span>RetType = ();
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
 		()
 	}
 
@@ -3996,10 +3996,10 @@
 	<span class="kw">pub </span>max_rows: u32,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetMaxTextRows {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetMaxTextRows {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -4020,10 +4020,10 @@
 	<span class="kw">pub </span>metrics: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TBMETRICS,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetMetrics&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetMetrics&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
 		()
 	}
 
@@ -4045,10 +4045,10 @@
 	<span class="kw">pub </span>vertical: u16,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetPadding {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetPadding {
 	<span class="kw">type </span>RetType = (u16, u16);
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		(LOWORD(v <span class="kw">as _</span>), HIWORD(v <span class="kw">as _</span>))
 	}
 
@@ -4069,11 +4069,11 @@
 	<span class="kw">pub </span>hparent: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HWND
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetParent&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetParent&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HWND&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		zero_as_none(v).map(|v| <span class="kw">unsafe </span>{ HWND::from_ptr(v <span class="kw">as _</span>) })
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		zero_as_none(v).map(|v| HWND::from_ptr(v <span class="kw">as _</span>))
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -4094,11 +4094,11 @@
 	<span class="kw">pub </span>himagelist: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>HIMAGELIST&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetPressedImageList&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetPressedImageList&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-		zero_as_none(v).map(|v| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(v <span class="kw">as _</span>) })
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v <span class="kw">as _</span>))
 	}
 
 	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -4120,10 +4120,10 @@
 	<span class="kw">pub </span>bounds: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>RECT,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetRows&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetRows&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
 		()
 	}
 
@@ -4145,10 +4145,10 @@
 	<span class="kw">pub </span>state: co::BTNS,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetState {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetState {
 	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		zero_as_badargs(v).map(|<span class="kw">_</span>| ())
 	}
 
@@ -4169,10 +4169,10 @@
 	<span class="kw">pub </span>style: co::BTNS,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetStyle {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetStyle {
 	<span class="kw">type </span>RetType = ();
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
 		()
 	}
 
@@ -4193,10 +4193,10 @@
 	<span class="kw">pub </span>htooltips: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>HWND&gt;,
 }
 
-<span class="kw">unsafe impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetTooltips&lt;<span class="lifetime">'a</span>&gt; {
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetTooltips&lt;<span class="lifetime">'a</span>&gt; {
 	<span class="kw">type </span>RetType = ();
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
 		()
 	}
 
@@ -4217,10 +4217,10 @@
 	<span class="kw">pub </span>use_unicode: bool,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetUnicodeFormat {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetUnicodeFormat {
 	<span class="kw">type </span>RetType = bool;
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 		v != <span class="number">0
 	</span>}
 
@@ -4241,10 +4241,10 @@
 	<span class="kw">pub </span>visual_style: WString,
 }
 
-<span class="kw">unsafe impl </span>MsgSend <span class="kw">for </span>SetWindowTheme {
+<span class="kw">impl </span>MsgSend <span class="kw">for </span>SetWindowTheme {
 	<span class="kw">type </span>RetType = ();
 
-	<span class="kw">fn </span>convert_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
+	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
 		()
 	}
 
