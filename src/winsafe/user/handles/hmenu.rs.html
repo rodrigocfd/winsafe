@@ -1048,7 +1048,7 @@
 	/// function.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">fn </span>GetMenuString(<span class="kw-2">&amp;</span><span class="self">self</span>, id_or_pos: IdPos) -&gt; SysResult&lt;String&gt; {
-		<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = SSO_LEN; <span class="comment">// start with no string heap allocation
+		<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = WString::SSO_LEN; <span class="comment">// start with no string heap allocation
 		</span><span class="kw">loop </span>{
 			<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
 

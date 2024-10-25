@@ -2040,7 +2040,7 @@
 	file_name: <span class="kw-2">&amp;</span>str,
 ) -&gt; SysResult&lt;Vec&lt;(String, String)&gt;&gt;
 {
-	<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = SSO_LEN; <span class="comment">// start with no string heap allocation
+	<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = WString::SSO_LEN; <span class="comment">// start with no string heap allocation
 	</span><span class="kw">loop </span>{
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
 		<span class="kw">let </span>returned_chars = <span class="kw">unsafe </span>{ <span class="comment">// char count without terminating null
@@ -2100,7 +2100,7 @@
 	file_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
 ) -&gt; SysResult&lt;Vec&lt;String&gt;&gt;
 {
-	<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = SSO_LEN; <span class="comment">// start with no string heap allocation
+	<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = WString::SSO_LEN; <span class="comment">// start with no string heap allocation
 	</span><span class="kw">loop </span>{
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
 		<span class="kw">let </span>returned_chars = <span class="kw">unsafe </span>{ <span class="comment">// char count without terminating null
@@ -2153,7 +2153,7 @@
 	file_name: <span class="kw-2">&amp;</span>str,
 ) -&gt; SysResult&lt;<span class="prelude-ty">Option</span>&lt;String&gt;&gt;
 {
-	<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = SSO_LEN; <span class="comment">// start with no string heap allocation
+	<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = WString::SSO_LEN; <span class="comment">// start with no string heap allocation
 	</span><span class="kw">loop </span>{
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
 		<span class="kw">unsafe </span>{ <span class="comment">// char count without terminating null

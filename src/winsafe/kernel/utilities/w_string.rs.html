@@ -554,12 +554,18 @@
 <a href="#553" id="553">553</a>
 <a href="#554" id="554">554</a>
 <a href="#555" id="555">555</a>
-<a href="#556" id="556">556</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::cmp::Ordering;
+<a href="#556" id="556">556</a>
+<a href="#557" id="557">557</a>
+<a href="#558" id="558">558</a>
+<a href="#559" id="559">559</a>
+<a href="#560" id="560">560</a>
+<a href="#561" id="561">561</a>
+<a href="#562" id="562">562</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::cmp::Ordering;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::kernel::{ffi, privs::<span class="kw-2">*</span>};
+<span class="kw">use </span><span class="kw">crate</span>::kernel::ffi;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="doccomment">/// Stores a `[u16]` buffer for a null-terminated
@@ -618,6 +624,10 @@
 }
 
 <span class="kw">impl </span>WString {
+	<span class="doccomment">/// Stack size for internal
+	/// [Short String Optimization](https://joellaity.com/2020/01/31/string.html).
+	</span><span class="kw">pub const </span>SSO_LEN: usize = Buffer::SSO_LEN;
+
 	<span class="doccomment">/// Stores an UTF-16 null-terminated string from an optional [`&amp;str`](str).
 	///
 	/// If `s` is `None` or the string is empty, no allocation is made.
@@ -899,7 +909,7 @@
 </span><span class="kw">enum </span>ForceHeap { Yes, No }
 
 <span class="kw">enum </span>Buffer {
-	Stack([u16; SSO_LEN]),
+	Stack([u16; <span class="self">Self</span>::SSO_LEN]),
 	Heap(usize, GlobalFreeGuard), <span class="comment">// keep memory size in bytes
 	</span>Unallocated,
 }
@@ -941,6 +951,8 @@
 }
 
 <span class="kw">impl </span>Buffer {
+	<span class="kw">pub const </span>SSO_LEN: usize = <span class="number">20</span>;
+
 	<span class="attr">#[must_use]
 	</span><span class="kw">fn </span>from_opt_str(s: <span class="prelude-ty">Option</span>&lt;<span class="kw">impl </span>AsRef&lt;str&gt;&gt;) -&gt; <span class="self">Self </span>{
 		<span class="kw">match </span>s {
@@ -1026,7 +1038,7 @@
 	</span><span class="kw">fn </span>new_alloc_buf(num_chars: usize, force_heap: ForceHeap) -&gt; <span class="self">Self </span>{
 		<span class="kw">if </span>num_chars == <span class="number">0 </span>{
 			<span class="self">Self</span>::Unallocated
-		} <span class="kw">else if </span>force_heap == ForceHeap::Yes || num_chars &gt; SSO_LEN {
+		} <span class="kw">else if </span>force_heap == ForceHeap::Yes || num_chars &gt; <span class="self">Self</span>::SSO_LEN {
 			<span class="self">Self</span>::Heap(
 				num_chars * std::mem::size_of::&lt;u16&gt;(),
 				HGLOBAL::GlobalAlloc(
@@ -1035,7 +1047,7 @@
 				).unwrap(), <span class="comment">// assume no allocation errors
 			</span>)
 		} <span class="kw">else </span>{
-			<span class="self">Self</span>::Stack([<span class="number">0x0000</span>; SSO_LEN])
+			<span class="self">Self</span>::Stack([<span class="number">0x0000</span>; <span class="self">Self</span>::SSO_LEN])
 		}
 	}
 
