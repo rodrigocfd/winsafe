@@ -437,7 +437,7 @@ pub trait user_Hmenu: Handle {
 	/// function.
 	#[must_use]
 	fn GetMenuString(&self, id_or_pos: IdPos) -> SysResult<String> {
-		let mut buf_sz = SSO_LEN; // start with no string heap allocation
+		let mut buf_sz = WString::SSO_LEN; // start with no string heap allocation
 		loop {
 			let mut buf = WString::new_alloc_buf(buf_sz);
 

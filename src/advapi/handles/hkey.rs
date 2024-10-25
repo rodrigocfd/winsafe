@@ -554,8 +554,8 @@ pub trait advapi_Hkey: Handle {
 	{
 		let (mut class_ptr, mut class_len) = match &mut class {
 			Some(class) => {
-				if class.buf_len() < SSO_LEN { // start with no string heap allocation
-					**class = WString::new_alloc_buf(SSO_LEN); // make buffer at least this length
+				if class.buf_len() < WString::SSO_LEN { // start with no string heap allocation
+					**class = WString::new_alloc_buf(WString::SSO_LEN); // make buffer at least this length
 				}
 				(unsafe { class.as_mut_ptr() }, class.buf_len() as u32)
 			},

@@ -480,7 +480,7 @@ pub fn GetPrivateProfileSection(
 	file_name: &str,
 ) -> SysResult<Vec<(String, String)>>
 {
-	let mut buf_sz = SSO_LEN; // start with no string heap allocation
+	let mut buf_sz = WString::SSO_LEN; // start with no string heap allocation
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz);
 		let returned_chars = unsafe { // char count without terminating null
@@ -540,7 +540,7 @@ pub fn GetPrivateProfileSectionNames(
 	file_name: Option<&str>,
 ) -> SysResult<Vec<String>>
 {
-	let mut buf_sz = SSO_LEN; // start with no string heap allocation
+	let mut buf_sz = WString::SSO_LEN; // start with no string heap allocation
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz);
 		let returned_chars = unsafe { // char count without terminating null
@@ -593,7 +593,7 @@ pub fn GetPrivateProfileString(
 	file_name: &str,
 ) -> SysResult<Option<String>>
 {
-	let mut buf_sz = SSO_LEN; // start with no string heap allocation
+	let mut buf_sz = WString::SSO_LEN; // start with no string heap allocation
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz);
 		unsafe { // char count without terminating null

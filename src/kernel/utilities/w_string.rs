@@ -3,7 +3,7 @@ use std::cmp::Ordering;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::{ffi, privs::*};
+use crate::kernel::ffi;
 use crate::prelude::*;
 
 /// Stores a `[u16]` buffer for a null-terminated
@@ -62,6 +62,10 @@ impl std::cmp::Ord for WString {
 }
 
 impl WString {
+	/// Stack size for internal
+	/// [Short String Optimization](https://joellaity.com/2020/01/31/string.html).
+	pub const SSO_LEN: usize = Buffer::SSO_LEN;
+
 	/// Stores an UTF-16 null-terminated string from an optional [`&str`](str).
 	///
 	/// If `s` is `None` or the string is empty, no allocation is made.
@@ -343,7 +347,7 @@ impl WString {
 enum ForceHeap { Yes, No }
 
 enum Buffer {
-	Stack([u16; SSO_LEN]),
+	Stack([u16; Self::SSO_LEN]),
 	Heap(usize, GlobalFreeGuard), // keep memory size in bytes
 	Unallocated,
 }
@@ -385,6 +389,8 @@ impl std::fmt::Debug for Buffer {
 }
 
 impl Buffer {
+	pub const SSO_LEN: usize = 20;
+
 	#[must_use]
 	fn from_opt_str(s: Option<impl AsRef<str>>) -> Self {
 		match s {
@@ -470,7 +476,7 @@ impl Buffer {
 	fn new_alloc_buf(num_chars: usize, force_heap: ForceHeap) -> Self {
 		if num_chars == 0 {
 			Self::Unallocated
-		} else if force_heap == ForceHeap::Yes || num_chars > SSO_LEN {
+		} else if force_heap == ForceHeap::Yes || num_chars > Self::SSO_LEN {
 			Self::Heap(
 				num_chars * std::mem::size_of::<u16>(),
 				HGLOBAL::GlobalAlloc(
@@ -479,7 +485,7 @@ impl Buffer {
 				).unwrap(), // assume no allocation errors
 			)
 		} else {
-			Self::Stack([0x0000; SSO_LEN])
+			Self::Stack([0x0000; Self::SSO_LEN])
 		}
 	}
 

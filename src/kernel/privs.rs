@@ -13,7 +13,6 @@ pub(crate) const MAX_COMPUTERNAME_LENGTH: usize = 15;
 pub(crate) const MAX_MODULE_NAME32: usize = 255;
 pub(crate) const MAX_PATH: usize = 260;
 pub(crate) const SECURITY_SQOS_PRESENT: u32 = 0x0010_0000;
-pub(crate) const SSO_LEN: usize = 20; // defines WString SSO stack buffer size
 
 /// [`IS_INTRESOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-is_intresource)
 /// macro.

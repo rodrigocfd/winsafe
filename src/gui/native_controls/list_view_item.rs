@@ -5,7 +5,6 @@ use std::rc::Rc;
 use crate::co;
 use crate::decl::*;
 use crate::gui::*;
-use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -250,7 +249,7 @@ impl<'a, T> ListViewItem<'a, T> {
 	#[must_use]
 	pub fn text(&self, column_index: u32) -> String {
 		// https://forums.codeguru.com/showthread.php?351972-Getting-listView-item-text-length
-		let mut buf_sz = SSO_LEN; // start with no string heap allocation
+		let mut buf_sz = WString::SSO_LEN; // start with no string heap allocation
 		loop {
 			let mut lvi = LVITEM::default();
 			lvi.iSubItem = column_index as _;
