@@ -1058,7 +1058,7 @@
 	/// ```
 	</span><span class="kw">pub fn </span>wm_notify&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		id_from: <span class="kw">impl </span>Into&lt;u16&gt;,
-		code: <span class="kw">impl </span>Into&lt;co::NM&gt;,
+		code: <span class="kw">impl </span>Into&lt;NmhdrCode&gt;,
 		func: F,
 	)
 		<span class="kw">where </span>F: Fn(wm::Notify) -&gt; AnyResult&lt;WmRet&gt; + <span class="lifetime">'static</span>,

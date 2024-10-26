@@ -1747,82 +1747,7 @@
 <a href="#1746" id="1746">1746</a>
 <a href="#1747" id="1747">1747</a>
 <a href="#1748" id="1748">1748</a>
-<a href="#1749" id="1749">1749</a>
-<a href="#1750" id="1750">1750</a>
-<a href="#1751" id="1751">1751</a>
-<a href="#1752" id="1752">1752</a>
-<a href="#1753" id="1753">1753</a>
-<a href="#1754" id="1754">1754</a>
-<a href="#1755" id="1755">1755</a>
-<a href="#1756" id="1756">1756</a>
-<a href="#1757" id="1757">1757</a>
-<a href="#1758" id="1758">1758</a>
-<a href="#1759" id="1759">1759</a>
-<a href="#1760" id="1760">1760</a>
-<a href="#1761" id="1761">1761</a>
-<a href="#1762" id="1762">1762</a>
-<a href="#1763" id="1763">1763</a>
-<a href="#1764" id="1764">1764</a>
-<a href="#1765" id="1765">1765</a>
-<a href="#1766" id="1766">1766</a>
-<a href="#1767" id="1767">1767</a>
-<a href="#1768" id="1768">1768</a>
-<a href="#1769" id="1769">1769</a>
-<a href="#1770" id="1770">1770</a>
-<a href="#1771" id="1771">1771</a>
-<a href="#1772" id="1772">1772</a>
-<a href="#1773" id="1773">1773</a>
-<a href="#1774" id="1774">1774</a>
-<a href="#1775" id="1775">1775</a>
-<a href="#1776" id="1776">1776</a>
-<a href="#1777" id="1777">1777</a>
-<a href="#1778" id="1778">1778</a>
-<a href="#1779" id="1779">1779</a>
-<a href="#1780" id="1780">1780</a>
-<a href="#1781" id="1781">1781</a>
-<a href="#1782" id="1782">1782</a>
-<a href="#1783" id="1783">1783</a>
-<a href="#1784" id="1784">1784</a>
-<a href="#1785" id="1785">1785</a>
-<a href="#1786" id="1786">1786</a>
-<a href="#1787" id="1787">1787</a>
-<a href="#1788" id="1788">1788</a>
-<a href="#1789" id="1789">1789</a>
-<a href="#1790" id="1790">1790</a>
-<a href="#1791" id="1791">1791</a>
-<a href="#1792" id="1792">1792</a>
-<a href="#1793" id="1793">1793</a>
-<a href="#1794" id="1794">1794</a>
-<a href="#1795" id="1795">1795</a>
-<a href="#1796" id="1796">1796</a>
-<a href="#1797" id="1797">1797</a>
-<a href="#1798" id="1798">1798</a>
-<a href="#1799" id="1799">1799</a>
-<a href="#1800" id="1800">1800</a>
-<a href="#1801" id="1801">1801</a>
-<a href="#1802" id="1802">1802</a>
-<a href="#1803" id="1803">1803</a>
-<a href="#1804" id="1804">1804</a>
-<a href="#1805" id="1805">1805</a>
-<a href="#1806" id="1806">1806</a>
-<a href="#1807" id="1807">1807</a>
-<a href="#1808" id="1808">1808</a>
-<a href="#1809" id="1809">1809</a>
-<a href="#1810" id="1810">1810</a>
-<a href="#1811" id="1811">1811</a>
-<a href="#1812" id="1812">1812</a>
-<a href="#1813" id="1813">1813</a>
-<a href="#1814" id="1814">1814</a>
-<a href="#1815" id="1815">1815</a>
-<a href="#1816" id="1816">1816</a>
-<a href="#1817" id="1817">1817</a>
-<a href="#1818" id="1818">1818</a>
-<a href="#1819" id="1819">1819</a>
-<a href="#1820" id="1820">1820</a>
-<a href="#1821" id="1821">1821</a>
-<a href="#1822" id="1822">1822</a>
-<a href="#1823" id="1823">1823</a>
-<a href="#1824" id="1824">1824</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
+<a href="#1749" id="1749">1749</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="macro">const_bitflag!</span> { ACCESS_RIGHTS: u32;
 	<span class="doccomment">/// Standard access rights
@@ -1831,7 +1756,6 @@
 	///
 	/// Originally has no prefix.
 	</span>=&gt;
-	=&gt;
 	DELETE <span class="number">0x0001_0000
 	</span>READ_CONTROL <span class="number">0x0002_0000
 	</span>WRITE_DAC <span class="number">0x0004_0000
@@ -1843,7 +1767,6 @@
 	<span class="doccomment">/// [`CLAIM_SECURITY_ATTRIBUTE_V1`](crate::CLAIM_SECURITY_ATTRIBUTE_V1)
 	/// `Flags` (`u16`);
 	</span>=&gt;
-	=&gt;
 	NON_INHERITABLE <span class="number">0x0001
 	</span>VALUE_CASE_SENSITIVE <span class="number">0x0002
 	</span>USE_FOR_DENY_ONLY <span class="number">0x0004
@@ -1856,7 +1779,6 @@
 	<span class="doccomment">/// [`CLAIM_SECURITY_ATTRIBUTE_V1`](crate::CLAIM_SECURITY_ATTRIBUTE_V1)
 	/// `ValueType` (`u16`);
 	</span>=&gt;
-	=&gt;
 	INT64 <span class="number">0x0001
 	</span>UINT64 <span class="number">0x0002
 	</span>STRING <span class="number">0x0003
@@ -1872,7 +1794,6 @@
 	///
 	/// Originally has no prefix.
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span>ENABLE_PROCESSED_INPUT <span class="number">0x0001
@@ -1902,7 +1823,6 @@
 	/// Originally these functions receive an `u32` parameter, but these are in
 	/// fact `u16` constants.
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// The system default Windows ANSI code page.
 	</span>ACP <span class="number">0
 	</span><span class="doccomment">/// The current system OEM code page.
@@ -1961,7 +1881,6 @@
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/procthread/process-creation-flags)
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span>BREAKAWAY_FROM_JOB <span class="number">0x0100_0000
@@ -1992,7 +1911,6 @@
 	<span class="doccomment">/// [`HEVENT::CreateEventEx`](crate::prelude::kernel_Hevent::CreateEventEx)
 	/// `flags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	INITIAL_SET <span class="number">0x0000_0002
 	</span>MANUAL_RESET <span class="number">0x0000_0001
 </span>}
@@ -2000,7 +1918,6 @@
 <span class="macro">const_ordinary!</span> { DBT: u16;
 	<span class="doccomment">/// [`wm::DeviceChange`](crate::msg::wm::DeviceChange) event (`u16`).
 	</span>=&gt;
-	=&gt;
 	DEVNODES_CHANGED <span class="number">0x0007
 	</span>QUERYCHANGECONFIG <span class="number">0x0017
 	</span>CONFIGCHANGED <span class="number">0x0018
@@ -2019,7 +1936,6 @@
 	<span class="doccomment">/// [`DEV_BROADCAST_HDR`](crate::DEV_BROADCAST_HDR) `dbch_devicetype`
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	DEVICEINTERFACE <span class="number">0x0000_0005
 	</span>HANDLE <span class="number">0x0000_0006
 	</span>OEM <span class="number">0x0000_0000
@@ -2031,7 +1947,6 @@
 	<span class="doccomment">/// [`DEV_BROADCAST_VOLUME`](crate::DEV_BROADCAST_VOLUME) `dbcv_flags`
 	/// (`u16`).
 	</span>=&gt;
-	=&gt;
 	MEDIA <span class="number">0x0001
 	</span>NET <span class="number">0x0002
 </span>}
@@ -2042,7 +1957,6 @@
 	///
 	/// Originally has no prefix.
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// Creates a new file only if it does not already exist.
 	///
 	/// If the specified file exists the function fails and the last-error code
@@ -2093,7 +2007,6 @@
 <span class="macro">const_ordinary!</span> { DRIVE: u32;
 	<span class="doccomment">/// [`GetDriveType`](crate::GetDriveType) return type (`u32`).
 	</span>=&gt;
-	=&gt;
 	UNKNOWN <span class="number">0
 	</span>NO_ROOT_DIR <span class="number">1
 	</span>REMOVABLE <span class="number">2
@@ -2108,7 +2021,6 @@
 	/// [access rights](https://learn.microsoft.com/en-us/windows/win32/sync/synchronization-object-security-and-access-rights)
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	DELETE ACCESS_RIGHTS::DELETE.<span class="number">0
 	</span>READ_CONTROL ACCESS_RIGHTS::READ_CONTROL.<span class="number">0
 	</span>SYNCHRONIZE ACCESS_RIGHTS::SYNCHRONIZE.<span class="number">0
@@ -2124,7 +2036,6 @@
 	/// [attributes](https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants)
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	READONLY <span class="number">0x0000_0001
 	</span>HIDDEN <span class="number">0x0000_0002
 	</span>SYSTEM <span class="number">0x0000_0004
@@ -2153,7 +2064,6 @@
 	<span class="doccomment">/// [`GetSystemFileCacheSize`](crate::GetSystemFileCacheSize) returned flags
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span>MAX_HARD_ENABLE <span class="number">0x1
@@ -2164,7 +2074,6 @@
 	<span class="doccomment">/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile) `flags`
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	BACKUP_SEMANTICS <span class="number">0x0200_0000
 	</span>DELETE_ON_CLOSE <span class="number">0x0400_0000
 	</span>NO_BUFFERING <span class="number">0x2000_0000
@@ -2182,7 +2091,6 @@
 	<span class="doccomment">/// [`HFILEMAP::MapViewOfFile`](crate::prelude::kernel_Hfilemap::MapViewOfFile)
 	/// `desired_access` (`u32`).
 	</span>=&gt;
-	=&gt;
 	ALL_ACCESS SECTION::ALL_ACCESS.<span class="number">0
 	</span>READ SECTION::MAP_READ.<span class="number">0
 	</span>WRITE SECTION::MAP_WRITE.<span class="number">0
@@ -2197,7 +2105,6 @@
 	<span class="doccomment">/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
 	/// `share_mode` (`u32`).
 	</span>=&gt;
-	=&gt;
 	READ <span class="number">0x0000_0001
 	</span>WRITE <span class="number">0x0000_0002
 	</span>DELETE <span class="number">0x0000_0004
@@ -2209,7 +2116,6 @@
 	///
 	/// Originally has `SECURITY` prefix.
 	</span>=&gt;
-	=&gt;
 	ANONYMOUS <span class="number">0 </span>&lt;&lt; <span class="number">16
 	</span>IDENTIFICATION <span class="number">1 </span>&lt;&lt; <span class="number">16
 	</span>IMPERSONATION <span class="number">2 </span>&lt;&lt; <span class="number">16
@@ -2224,7 +2130,6 @@
 	///
 	/// Originally has `FILE` prefix.
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// The starting point is zero or the beginning of the file. If this flag is
 	/// specified then the `liDistanceToMove` parameter is interpreted as an
 	/// unsigned value.
@@ -2239,7 +2144,6 @@
 	<span class="doccomment">/// [`HFILE::GetFileType`](crate::prelude::kernel_Hfile::GetFileType) return
 	/// value (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// The specified file is a character file typically an LPT device or a
 	/// console.
 	</span>CHAR <span class="number">0x0002
@@ -2259,7 +2163,6 @@
 	///
 	/// Originally has `FILE` prefix.
 	</span>=&gt;
-	=&gt;
 	CASE_PRESERVED_NAMES <span class="number">0x0000_0002
 	</span>CASE_SENSITIVE_SEARCH <span class="number">0x0000_0001
 	</span>DAX_VOLUME <span class="number">0x2000_0000
@@ -2287,7 +2190,6 @@
 	<span class="doccomment">/// [`FIRMWARE_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-firmware_type)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	Unknown <span class="number">0
 	</span>Bios <span class="number">1
 	</span>Uefi <span class="number">2
@@ -2297,7 +2199,6 @@
 	<span class="doccomment">/// [`FormatMessage`](crate::prelude::FormattedError::FormatMessage)
 	/// `dwFlags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	ALLOCATE_BUFFER <span class="number">0x0000_0100
 	</span>ARGUMENT_ARRAY <span class="number">0x0000_2000
 	</span>FROM_HMODULE <span class="number">0x0000_0800
@@ -2312,7 +2213,6 @@
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/secauthz/generic-access-rights)
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// Read access.
 	</span>READ <span class="number">0x8000_0000
 	</span><span class="doccomment">/// Write access.
@@ -2329,7 +2229,6 @@
 	/// [`HGLOBAL::GlobalReAlloc`](crate::prelude::kernel_Hglobal::GlobalReAlloc)
 	/// `flags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// Allocates fixed memory. The return value is a pointer to the memory
 	/// object.
 	</span>FIXED <span class="number">0x0000
@@ -2352,7 +2251,6 @@
 	<span class="doccomment">/// [`HPROCESS::GetGuiResources`](crate::prelude::kernel_Hprocess::GetGuiResources)
 	/// `flags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	GDIOBJECTS <span class="number">0
 	</span>GDIOBJECTS_PEAK <span class="number">2
 	</span>USEROBJECTS <span class="number">1
@@ -2365,7 +2263,6 @@
 	///
 	/// Originally has `HEAP` prefix.
 	</span>=&gt;
-	=&gt;
 	GENERATE_EXCEPTIONS <span class="number">0x0000_0004
 	</span>NO_SERIALIZE <span class="number">0x0000_0001
 	</span>ZERO_MEMORY <span class="number">0x0000_0008
@@ -2377,7 +2274,6 @@
 	///
 	/// Originally has `HEAP` prefix.
 	</span>=&gt;
-	=&gt;
 	ENABLE_EXECUTE <span class="number">0x0004_0000
 	</span>GENERATE_EXCEPTIONS <span class="number">0x0000_0004
 	</span>NO_SERIALIZE <span class="number">0x0000_0001
@@ -2387,7 +2283,6 @@
 	<span class="doccomment">/// [`HHEAP::HeapSetInformation`](crate::prelude::kernel_Hheap::HeapSetInformation)
 	/// information class (`u32`).
 	</span>=&gt;
-	=&gt;
 	CompatibilityInformation <span class="number">0
 	</span>EnableTerminationOnCorruption <span class="number">1
 	</span>OptimizeResources <span class="number">3
@@ -2399,7 +2294,6 @@
 	///
 	/// Originally has `HEAP` prefix.
 	</span>=&gt;
-	=&gt;
 	GENERATE_EXCEPTIONS <span class="number">0x0000_0004
 	</span>NO_SERIALIZE <span class="number">0x0000_0001
 	</span>REALLOC_IN_PLACE_ONLY <span class="number">0x0000_0010
@@ -2413,14 +2307,12 @@
 	///
 	/// Originally has `HEAP` prefix.
 	</span>=&gt;
-	=&gt;
 	NO_SERIALIZE <span class="number">0x0000_0001
 </span>}
 
 <span class="macro">const_ordinary!</span> { HF32: u32;
 	<span class="doccomment">/// [`HEAPLIST32`](crate::HEAPLIST32) `dwFlags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span><span class="doccomment">/// Default heap of the process.
@@ -2432,7 +2324,6 @@
 	/// [identifier](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
 	/// (`u16`).
 	</span>=&gt;
-	=&gt;
 	NEUTRAL <span class="number">0x00
 	</span>INVARIANT <span class="number">0x7f
 	</span>AFRIKAANS <span class="number">0x36
@@ -2580,7 +2471,6 @@
 	/// [`HLOCAL::LocalReAlloc`](crate::prelude::kernel_Hlocal::LocalReAlloc)
 	/// `flags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// Allocates fixed memory. The return value is a pointer to the memory
 	/// object.
 	</span>FIXED <span class="number">0x0000
@@ -2604,7 +2494,6 @@
 	///
 	/// Originally has `MB` prefix.
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span>COMPOSITE <span class="number">0x0000_0002
@@ -2617,7 +2506,6 @@
 	<span class="doccomment">/// [`MONITOR_DISPLAY_STATE`](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ne-wdm-_monitor_display_state)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	Off <span class="number">0
 	</span>On <span class="number">1
 	</span>Dim <span class="number">2
@@ -2627,7 +2515,6 @@
 	<span class="doccomment">/// [`HFILE::CreateFileMapping`](crate::prelude::kernel_Hfile::CreateFileMapping)
 	/// `protect` (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// Allows views to be mapped for read-only copy-on-write or execute
 	/// access.
 	///
@@ -2683,7 +2570,6 @@
 	<span class="doccomment">/// [`wm::PowerBroadcast`](crate::msg::wm::PowerBroadcast) power-management
 	/// event (`u32`).
 	</span>=&gt;
-	=&gt;
 	APMPOWERSTATUSCHANGE <span class="number">0xa
 	</span>APMRESUMEAUTOMATIC <span class="number">0x12
 	</span>APMRESUMESUSPEND <span class="number">0x7
@@ -2699,7 +2585,6 @@
 	///
 	/// Originally has `PRIORITY_CLASS` suffix.
 	</span>=&gt;
-	=&gt;
 	ABOVE_NORMAL <span class="number">0x0000_8000
 	</span>BELOW_NORMAL <span class="number">0x0000_4000
 	</span>HIGH <span class="number">0x0000_0080
@@ -2713,7 +2598,6 @@
 	/// [security and access rights](https://learn.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights)
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	DELETE ACCESS_RIGHTS::DELETE.<span class="number">0
 	</span>READ_CONTROL ACCESS_RIGHTS::READ_CONTROL.<span class="number">0
 	</span>SYNCHRONIZE ACCESS_RIGHTS::SYNCHRONIZE.<span class="number">0
@@ -2741,7 +2625,6 @@
 	/// [`SetProcessAffinityUpdateMode`](crate::prelude::kernel_Hprocess::SetProcessAffinityUpdateMode)
 	/// `flags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span>ENABLE_AUTO_UPDATE <span class="number">0x0000_0001
@@ -2750,7 +2633,6 @@
 <span class="macro">const_bitflag!</span> { PROCESS_HEAP: u16;
 	<span class="doccomment">/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) `wFlags` (`u16`).
 	</span>=&gt;
-	=&gt;
 	ENTRY_BUSY <span class="number">0x0004
 	</span>ENTRY_DDESHARE <span class="number">0x0020
 	</span>ENTRY_MOVEABLE <span class="number">0x0010
@@ -2762,7 +2644,6 @@
 	<span class="doccomment">/// [`QueryFullProcessImageName`](crate::prelude::kernel_Hprocess::QueryFullProcessImageName)
 	/// flags (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// The name should use the Win32 path format.
 	</span>WIN32 <span class="number">0
 	</span><span class="doccomment">/// The name should use the native system path format.
@@ -2772,7 +2653,6 @@
 <span class="macro">const_ordinary!</span> { PROCESSOR: u32;
 	<span class="doccomment">/// [`SYSTEM_INFO`](crate::SYSTEM_INFO) `dwProcessorType` (`u32`).
 	</span>=&gt;
-	=&gt;
 	INTEL_386 <span class="number">386
 	</span>INTEL_486 <span class="number">486
 	</span>INTEL_PENTIUM <span class="number">586
@@ -2801,7 +2681,6 @@
 <span class="macro">const_ordinary!</span> { PROCESSOR_ARCHITECTURE: u16;
 	<span class="doccomment">/// [`SYSTEM_INFO`](crate::SYSTEM_INFO) `wProcessorArchitecture` (`u16`).
 	</span>=&gt;
-	=&gt;
 	INTEL <span class="number">0
 	</span>MIPS <span class="number">1
 	</span>ALPHA <span class="number">2
@@ -2823,7 +2702,6 @@
 <span class="macro">const_bitflag!</span> { REPLACEFILE: u32;
 	<span class="doccomment">/// [`ReplaceFile`](crate::ReplaceFile) `flags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	WRITE_THROUGH <span class="number">0x0000_0001
 	</span>IGNORE_MERGE_ERRORS <span class="number">0x0000_0002
 	</span>IGNORE_ACL_ERRORS <span class="number">0x0000_0004
@@ -2834,7 +2712,6 @@
 	/// [types](https://learn.microsoft.com/en-us/windows/win32/menurc/resource-types)
 	/// (`u16`).
 	</span>=&gt;
-	=&gt;
 	ACCELERATOR <span class="number">9
 	</span>ANICURSOR <span class="number">21
 	</span>ANIICON <span class="number">22
@@ -2861,7 +2738,6 @@
 <span class="macro">const_ordinary!</span> { SCS: u32;
 	<span class="doccomment">/// [`GetBinaryType`](crate::GetBinaryType) return value (`u32`).
 	</span>=&gt;
-	=&gt;
 	W_32BIT_BINARY <span class="number">0
 	</span>DOS_BINARY <span class="number">1
 	</span>WOW_BINARY <span class="number">2
@@ -2875,7 +2751,6 @@
 	<span class="doccomment">/// [`SECURITY_DESCRIPTOR_CONTROL`](https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptor-control)
 	/// bit flags (`u16`).
 	</span>=&gt;
-	=&gt;
 	OWNER_DEFAULTED <span class="number">0x0001
 	</span>GROUP_DEFAULTED <span class="number">0x0002
 	</span>DACL_PRESENT <span class="number">0x0004
@@ -2895,7 +2770,6 @@
 <span class="macro">const_bitflag!</span> { SECTION: u32;
 	<span class="doccomment">/// Composes [`FILE_MAP`](crate::co::FILE_MAP) (`u32`).
 	</span>=&gt;
-	=&gt;
 	QUERY <span class="number">0x0001
 	</span>MAP_WRITE <span class="number">0x0002
 	</span>MAP_READ <span class="number">0x0004
@@ -2911,7 +2785,6 @@
 	///
 	/// Originally has `SECURITY_INFORMATION` suffix.
 	</span>=&gt;
-	=&gt;
 	OWNER <span class="number">0x0000_0001
 	</span>GROUP <span class="number">0x0000_0002
 	</span>DACL <span class="number">0x0000_0004
@@ -2933,7 +2806,6 @@
 	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights)
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	ALL_ACCESS <span class="number">0xf01ff
 	</span>CHANGE_CONFIG <span class="number">0x0002
 	</span>ENUMERATE_DEPENDENTS <span class="number">0x0008
@@ -2961,7 +2833,6 @@
 	/// [`codes`](https://learn.microsoft.com/en-us/windows/win32/shutdown/system-shutdown-reason-codes)
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	MAJOR_APPLICATION <span class="number">0x0004_0000
 	</span>MAJOR_HARDWARE <span class="number">0x0001_0000
 	</span>MAJOR_LEGACY_API <span class="number">0x0007_0000
@@ -3008,7 +2879,6 @@
 	/// [identifiers](https://learn.microsoft.com/en-us/windows/win32/intl/sort-order-identifiers)
 	/// (`u16`).
 	</span>=&gt;
-	=&gt;
 	DEFAULT <span class="number">0x0
 	</span>INVARIANT_MATH <span class="number">0x1
 	</span>JAPANESE_XJIS <span class="number">0x0
@@ -3034,7 +2904,6 @@
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	REQUIRED <span class="number">0x000_f0000
 	</span>READ ACCESS_RIGHTS::READ_CONTROL.<span class="number">0
 	</span>WRITE ACCESS_RIGHTS::READ_CONTROL.<span class="number">0
@@ -3046,7 +2915,6 @@
 	<span class="doccomment">/// [`HPROCESS::CreateProcess`](crate::prelude::kernel_Hprocess::CreateProcess)
 	/// `dwFlags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	FORCEONFEEDBACK <span class="number">0x0000_0040
 	</span>FORCEOFFFEEDBACK <span class="number">0x0000_0080
 	</span>PREVENTPINNING <span class="number">0x0000_2000
@@ -3069,7 +2937,6 @@
 	///
 	/// Originally has `STD` prefix and `HANDLE` suffix.
 	</span>=&gt;
-	=&gt;
 	INPUT -<span class="number">10i32 </span><span class="kw">as </span>u32
 	OUTPUT -<span class="number">11i32 </span><span class="kw">as </span>u32
 	ERROR -<span class="number">12i32 </span><span class="kw">as </span>u32
@@ -3080,7 +2947,6 @@
 	/// [identifier](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
 	/// (`u16`).
 	</span>=&gt;
-	=&gt;
 	NEUTRAL <span class="number">0x00
 	</span>DEFAULT <span class="number">0x01
 	</span>SYS_DEFAULT <span class="number">0x02
@@ -3331,7 +3197,6 @@
 	<span class="doccomment">/// [`HWND::ShowWindow`](crate::prelude::user_Hwnd::ShowWindow) `show_cmd`
 	/// (`i32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// Hides the window and activates another window.
 	</span>HIDE <span class="number">0
 	</span><span class="doccomment">/// Activates and displays a window. If the window is minimized or
@@ -3376,7 +3241,6 @@
 	<span class="doccomment">/// [`SYSTEM_POWER_CONDITION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-system_power_condition)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	Ac <span class="number">0
 	</span>Dc <span class="number">1
 	</span>Hot <span class="number">2
@@ -3387,7 +3251,6 @@
 	<span class="doccomment">/// [`HPROCESSLIST::CreateToolhelp32Snapshot`](crate::HPROCESSLIST) `flags`
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// Includes all heaps of the process.
 	</span>SNAPHEAPLIST <span class="number">0x0000_0001
 	</span><span class="doccomment">/// Includes all processes of the process in the snapshot.
@@ -3412,7 +3275,6 @@
 	///
 	/// Originally has no prefix.
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// Originally just a zero.
 	</span>RUN_IMMEDIATELY <span class="number">0
 	</span>CREATE_SUSPENDED <span class="number">0x0000_0004
@@ -3422,7 +3284,6 @@
 <span class="macro">const_bitflag!</span> { TOKEN: u32;
 	<span class="doccomment">/// [Token access rights](https://learn.microsoft.com/en-us/windows/win32/secauthz/access-rights-for-access-token-objects).
 	</span>=&gt;
-	=&gt;
 	DELETE ACCESS_RIGHTS::DELETE.<span class="number">0
 	</span>READ_CONTROL ACCESS_RIGHTS::READ_CONTROL.<span class="number">0
 	</span>WRITE_DAC ACCESS_RIGHTS::WRITE_DAC.<span class="number">0
@@ -3450,7 +3311,6 @@
 	<span class="doccomment">/// [`TOKEN_MANDATORY_POLICY`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_mandatory_policy)
 	/// `Policy` (`u32`).
 	</span>=&gt;
-	=&gt;
 	OFF <span class="number">0x0
 	</span>NO_WRITE_UP <span class="number">0x1
 	</span>NEW_PROCESS_MIN <span class="number">0x2
@@ -3461,7 +3321,6 @@
 	<span class="doccomment">/// [`PowerSetting::GlobalUserPresence`](crate::PowerSetting::GlobalUserPresence)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	Present <span class="number">0
     </span>NotPresent <span class="number">1
     </span>Inactive <span class="number">2
@@ -3472,7 +3331,6 @@
 <span class="macro">const_ordinary!</span> { VER_COND: u8;
 	<span class="doccomment">/// [`VerSetConditionMask`](crate::VerSetConditionMask) `condition` (`u8`).
 	</span>=&gt;
-	=&gt;
 	EQUAL <span class="number">1
 	</span>GREATER <span class="number">2
 	</span>GREATER_EQUAL <span class="number">3
@@ -3487,7 +3345,6 @@
 	<span class="doccomment">/// [`VerifyVersionInfo`](crate::VerifyVersionInfo) and
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `type_mask` (`u32`).
 	</span>=&gt;
-	=&gt;
 	MINORVERSION <span class="number">0x000_0001
 	</span>MAJORVERSION <span class="number">0x000_0002
 	</span>BUILDNUMBER <span class="number">0x000_0004
@@ -3501,7 +3358,6 @@
 <span class="macro">const_ordinary!</span> { VER_NT: u8;
 	<span class="doccomment">/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wProductType` (`u8`).
 	</span>=&gt;
-	=&gt;
 	WORKSTATION <span class="number">0x000_0001
 	</span>DOMAIN_CONTROLLER <span class="number">0x000_0002
 	</span>SERVER <span class="number">0x000_0003
@@ -3510,7 +3366,6 @@
 <span class="macro">const_bitflag!</span> { VER_SUITE: u16;
 	<span class="doccomment">/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wSuiteMask` (`u16`).
 	</span>=&gt;
-	=&gt;
 	SMALLBUSINESS <span class="number">0x0001
 	</span>ENTERPRISE <span class="number">0x0002
 	</span>BACKOFFICE <span class="number">0x0004
@@ -3533,7 +3388,6 @@
 <span class="macro">const_ordinary!</span> { VER_PLATFORM: u32;
 	<span class="doccomment">/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `dwPlatformId` (`u32`).
 	</span>=&gt;
-	=&gt;
 	WIN32s <span class="number">0
 	</span>WIN32_WINDOWS <span class="number">1
 	</span>WIN32_NT <span class="number">2
@@ -3543,7 +3397,6 @@
 	<span class="doccomment">/// [`HPROCESS::WaitForSingleObject`](crate::prelude::kernel_Hprocess::WaitForSingleObject)
 	/// return value (`u32`).
 	</span>=&gt;
-	=&gt;
 	ABANDONED <span class="number">0x0000_0080
 	</span>OBJECT_0 <span class="number">0x0000_0000
 	</span>TIMEOUT <span class="number">0x0000_0102
@@ -3553,7 +3406,6 @@
 <span class="macro">const_bitflag!</span> { WC: u32;
 	<span class="doccomment">/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) `flags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span>COMPOSITECHECK <span class="number">0x0000_0200
@@ -3568,7 +3420,6 @@
 	<span class="doccomment">/// [`_WIN32`](https://learn.microsoft.com/en-us/windows/win32/winprog/using-the-windows-headers)
 	/// version definitions (`u16`).
 	</span>=&gt;
-	=&gt;
 	WINNT_NT4 <span class="number">0x0400
 	</span>WINNT_WIN2K <span class="number">0x0500
 	</span>WINNT_WINXP <span class="number">0x0501
@@ -3633,7 +3484,6 @@
 	<span class="doccomment">/// [`wm::WtsSessionChange`](crate::msg::wm::WtsSessionChange) `state`
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	CONSOLE_CONNECT <span class="number">0x1
 	</span>CONSOLE_DISCONNECT <span class="number">0x2
 	</span>REMOTE_CONNECT <span class="number">0x3

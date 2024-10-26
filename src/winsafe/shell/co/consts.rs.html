@@ -581,31 +581,7 @@
 <a href="#580" id="580">580</a>
 <a href="#581" id="581">581</a>
 <a href="#582" id="582">582</a>
-<a href="#583" id="583">583</a>
-<a href="#584" id="584">584</a>
-<a href="#585" id="585">585</a>
-<a href="#586" id="586">586</a>
-<a href="#587" id="587">587</a>
-<a href="#588" id="588">588</a>
-<a href="#589" id="589">589</a>
-<a href="#590" id="590">590</a>
-<a href="#591" id="591">591</a>
-<a href="#592" id="592">592</a>
-<a href="#593" id="593">593</a>
-<a href="#594" id="594">594</a>
-<a href="#595" id="595">595</a>
-<a href="#596" id="596">596</a>
-<a href="#597" id="597">597</a>
-<a href="#598" id="598">598</a>
-<a href="#599" id="599">599</a>
-<a href="#600" id="600">600</a>
-<a href="#601" id="601">601</a>
-<a href="#602" id="602">602</a>
-<a href="#603" id="603">603</a>
-<a href="#604" id="604">604</a>
-<a href="#605" id="605">605</a>
-<a href="#606" id="606">606</a>
-<a href="#607" id="607">607</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
+<a href="#583" id="583">583</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
 
@@ -613,7 +589,6 @@
 	<span class="doccomment">/// [`FDE_OVERWRITE_RESPONSE`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-fde_overwrite_response)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	DEFAULT <span class="number">0
 	</span>ACCEPT <span class="number">1
 	</span>REFUSE <span class="number">2
@@ -623,7 +598,6 @@
 	<span class="doccomment">/// [`FDE_SHAREVIOLATION_RESPONSE`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-fde_shareviolation_response)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	DEFAULT <span class="number">0
 	</span>ACCEPT <span class="number">1
 	</span>REFUSE <span class="number">2
@@ -632,7 +606,6 @@
 <span class="macro">const_ordinary!</span> { FO: u32;
 	<span class="doccomment">/// [`SHFILEOPSTRUCT`](crate::SHFILEOPSTRUCT) `wFunc` (`u32`).
 	</span>=&gt;
-	=&gt;
 	MOVE <span class="number">0x0001
 	</span>COPY <span class="number">0x0002
 	</span>DELETE <span class="number">0x0003
@@ -642,7 +615,6 @@
 <span class="macro">const_bitflag!</span> { FOF: u16;
 	<span class="doccomment">/// [`SHFILEOPSTRUCT`](crate::SHFILEOPSTRUCT) `fFlags` (`u16`).
 	</span>=&gt;
-	=&gt;
 	MULTIDESTFILES <span class="number">0x0001
 	</span>CONFIRMMOUSE <span class="number">0x0002
 	</span>SILENT <span class="number">0x0004
@@ -666,7 +638,6 @@
 	<span class="doccomment">/// [`_FILEOPENDIALOGOPTIONS`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_fileopendialogoptions)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// When saving a file prompt before overwriting an existing file of the
 	/// same name. This is a default value for the Save dialog.
 	</span>OVERWRITEPROMPT <span class="number">0x2
@@ -768,7 +739,6 @@
 	<span class="doccomment">/// [`FDAP`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-fdap)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	BOTTOM <span class="number">0
 	</span>TOP <span class="number">1
 </span>}
@@ -777,7 +747,6 @@
 	<span class="doccomment">/// [`GETPROPERTYSTOREFLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/ne-propsys-getpropertystoreflags)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	DEFAULT <span class="number">0
 	</span>HANDLERPROPERTIESONLY <span class="number">0x1
 	</span>READWRITE <span class="number">0x2
@@ -800,7 +769,6 @@
 	/// [`wm::SetHotKey`](crate::msg::wm::SetHotKey) modifiers;
 	/// [`SHELLEXECUTEINFO`](crate::SHELLEXECUTEINFO) `dwHotKey` (`u16`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span>ALT <span class="number">0x04
@@ -813,7 +781,6 @@
 	<span class="doccomment">/// [`KNOWN_FOLDER_FLAG`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/ne-shlobj_core-known_folder_flag)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	DEFAULT <span class="number">0x0000_0000
    </span>FORCE_APP_DATA_REDIRECTION <span class="number">0x0008_0000
 	</span>RETURN_FILTER_REDIRECTION_TARGET <span class="number">0x0004_0000
@@ -835,7 +802,6 @@
 <span class="macro">const_bitflag!</span> { NIF: u32;
 	<span class="doccomment">/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `uFlags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	MESSAGE <span class="number">0x0000_0001
 	</span>ICON <span class="number">0x0000_0002
 	</span>TIP <span class="number">0x0000_0004
@@ -849,7 +815,6 @@
 <span class="macro">const_bitflag!</span> { NIIF: u32;
 	<span class="doccomment">/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `dwInfoFlags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	NONE <span class="number">0x0000_0000
 	</span>INFO <span class="number">0x0000_0001
 	</span>WARNING <span class="number">0x0000_0002
@@ -863,7 +828,6 @@
 <span class="macro">const_ordinary!</span> { NIM: u32;
 	<span class="doccomment">/// [`Shell_NotifyIcon`](crate::Shell_NotifyIcon) `message` (`u32`).
 	</span>=&gt;
-	=&gt;
 	ADD <span class="number">0x0000_0000
 	</span>MODIFY <span class="number">0x0000_0001
 	</span>DELETE <span class="number">0x0000_0002
@@ -875,7 +839,6 @@
 	<span class="doccomment">/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `dwState` and `dwStateFlags`
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	HIDDEN <span class="number">0x0000_0001
 	</span>SHAREDICON <span class="number">0x0000_0002
 </span>}
@@ -884,7 +847,6 @@
 	<span class="doccomment">/// [`SFGAO`](https://learn.microsoft.com/en-us/windows/win32/shell/sfgao)
 	/// constants (`u32`).
 	</span>=&gt;
-	=&gt;
 	CANCOPY DROPEFFECT::COPY.raw()
 	CANMOVE DROPEFFECT::MOVE.raw()
 	CANLINK DROPEFFECT::LINK.raw()
@@ -925,7 +887,6 @@
 	<span class="doccomment">/// [`SHARD`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/ne-shlobj_core-shard)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	PIDL <span class="number">0x0000_0001
 	</span>PATHA <span class="number">0x0000_0002
 	</span>PATHW <span class="number">0x0000_0003
@@ -939,7 +900,6 @@
 <span class="macro">const_bitflag!</span> { SHGFI: u32;
 	<span class="doccomment">/// [`SHGetFileInfo`](crate::SHGetFileInfo) `flags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	ICON <span class="number">0x0000_0100
 	</span>DISPLAYNAME <span class="number">0x0000_0200
 	</span>TYPENAME <span class="number">0x0000_0400
@@ -963,7 +923,6 @@
 <span class="macro">const_bitflag!</span> { SHGSI: u32;
 	<span class="doccomment">/// [`SHGetStockIconInfo`](crate::SHGetStockIconInfo) `flags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span>ICONLOCATION <span class="number">0
@@ -980,7 +939,6 @@
 	<span class="doccomment">/// [`SICHINTF`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_sichintf)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	DISPLAY <span class="number">0
 	</span>ALLFIELDS <span class="number">0x8000_0000
 	</span>CANONICAL <span class="number">0x1000_0000
@@ -991,7 +949,6 @@
 	<span class="doccomment">/// [`SIGDN`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-sigdn)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// Returns the display name relative to the parent folder. In UI this name
 	/// is generally ideal for display to the user.
 	</span>NORMALDISPLAY <span class="number">0
@@ -1036,7 +993,6 @@
 	/// enumeration, [`SHGetStockIconInfo`](crate::SHGetStockIconInfo) `siid`
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	DOCNOASSOC <span class="number">0
 	</span>DOCASSOC <span class="number">1
 	</span>APPLICATION <span class="number">2
@@ -1137,7 +1093,6 @@
 	<span class="doccomment">/// [`IShellLink::GetPath`](crate::prelude::shell_IShellLink::GetPath)
 	/// `flags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	SHORTPATH <span class="number">0x1
 	</span>UNCPRIORITY <span class="number">0x2
 	</span>RAWPATH <span class="number">0x4
@@ -1148,7 +1103,6 @@
 	<span class="doccomment">/// [`IShellLink::Resolve`](crate::prelude::shell_IShellLink::GetPath)
 	/// `flags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	NONE <span class="number">0
 	</span>NO_UI <span class="number">0x1
 	</span>ANY_MATCH <span class="number">0x2
@@ -1170,7 +1124,6 @@
 	<span class="doccomment">/// [`STPFLAG`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-stpflag)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	NONE <span class="number">0
 	</span>USEAPPTHUMBNAILALWAYS <span class="number">0x1
 	</span>USEAPPTHUMBNAILWHENACTIVE <span class="number">0x2
@@ -1182,7 +1135,6 @@
 	<span class="doccomment">/// [`ITaskbarList3::SetProgressState`](crate::prelude::shell_ITaskbarList3::SetProgressState)
 	/// `tbpFlags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// Stops displaying progress and returns the button to its normal state.
 	/// Call this method with this flag to dismiss the progress bar when the
 	/// operation is complete or canceled.

@@ -1431,7 +1431,61 @@
 <a href="#1430" id="1430">1430</a>
 <a href="#1431" id="1431">1431</a>
 <a href="#1432" id="1432">1432</a>
-<a href="#1433" id="1433">1433</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<a href="#1433" id="1433">1433</a>
+<a href="#1434" id="1434">1434</a>
+<a href="#1435" id="1435">1435</a>
+<a href="#1436" id="1436">1436</a>
+<a href="#1437" id="1437">1437</a>
+<a href="#1438" id="1438">1438</a>
+<a href="#1439" id="1439">1439</a>
+<a href="#1440" id="1440">1440</a>
+<a href="#1441" id="1441">1441</a>
+<a href="#1442" id="1442">1442</a>
+<a href="#1443" id="1443">1443</a>
+<a href="#1444" id="1444">1444</a>
+<a href="#1445" id="1445">1445</a>
+<a href="#1446" id="1446">1446</a>
+<a href="#1447" id="1447">1447</a>
+<a href="#1448" id="1448">1448</a>
+<a href="#1449" id="1449">1449</a>
+<a href="#1450" id="1450">1450</a>
+<a href="#1451" id="1451">1451</a>
+<a href="#1452" id="1452">1452</a>
+<a href="#1453" id="1453">1453</a>
+<a href="#1454" id="1454">1454</a>
+<a href="#1455" id="1455">1455</a>
+<a href="#1456" id="1456">1456</a>
+<a href="#1457" id="1457">1457</a>
+<a href="#1458" id="1458">1458</a>
+<a href="#1459" id="1459">1459</a>
+<a href="#1460" id="1460">1460</a>
+<a href="#1461" id="1461">1461</a>
+<a href="#1462" id="1462">1462</a>
+<a href="#1463" id="1463">1463</a>
+<a href="#1464" id="1464">1464</a>
+<a href="#1465" id="1465">1465</a>
+<a href="#1466" id="1466">1466</a>
+<a href="#1467" id="1467">1467</a>
+<a href="#1468" id="1468">1468</a>
+<a href="#1469" id="1469">1469</a>
+<a href="#1470" id="1470">1470</a>
+<a href="#1471" id="1471">1471</a>
+<a href="#1472" id="1472">1472</a>
+<a href="#1473" id="1473">1473</a>
+<a href="#1474" id="1474">1474</a>
+<a href="#1475" id="1475">1475</a>
+<a href="#1476" id="1476">1476</a>
+<a href="#1477" id="1477">1477</a>
+<a href="#1478" id="1478">1478</a>
+<a href="#1479" id="1479">1479</a>
+<a href="#1480" id="1480">1480</a>
+<a href="#1481" id="1481">1481</a>
+<a href="#1482" id="1482">1482</a>
+<a href="#1483" id="1483">1483</a>
+<a href="#1484" id="1484">1484</a>
+<a href="#1485" id="1485">1485</a>
+<a href="#1486" id="1486">1486</a>
+<a href="#1487" id="1487">1487</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
 
@@ -1976,7 +2030,7 @@
 <span class="doccomment">/// [`MONTHDAYSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/monthdaystate)
 /// struct.
 </span><span class="attr">#[repr(transparent)]
-#[derive(Default, Clone, Copy)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 </span><span class="kw">pub struct </span>MONTHDAYSTATE(u32);
 
 <span class="kw">impl </span>MONTHDAYSTATE {
@@ -2201,7 +2255,7 @@
 	idFrom: usize,
 	<span class="doccomment">/// Notification code sent in
 	/// [`WM_NOTIFY`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-notify).
-	</span><span class="kw">pub </span>code: co::NM,
+	</span><span class="kw">pub </span>code: NmhdrCode,
 }
 
 <span class="macro">impl_default!</span>(NMHDR);
@@ -2216,6 +2270,60 @@
 	<span class="doccomment">/// Sets the `idFrom` field, the ID of the control sending the message.
 	</span><span class="kw">pub fn </span>set_idFrom(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: u16) {
 		<span class="self">self</span>.idFrom = val <span class="kw">as _
+	</span>}
+}
+
+<span class="doccomment">/// Notification code returned in [`NMHDR`](crate::NMHDR) struct. This code is
+/// convertible to/from the specific common control notification codes –
+/// [`LVN`](crate::co::LVN), [`TVN`](crate::co::TVN), etc.
+///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*, co};
+///
+/// // Convert LVN to NmhrCode:
+/// let code = w::NmhdrCode::from(co::LVN::ITEMCHANGED);
+///
+/// // Convert NmhrCode to LVN – fails it code is not a valid LVN:
+/// let lvn = co::LVN::try_from(code)?;
+/// # w::SysResult::Ok(())
+/// ```
+</span><span class="attr">#[repr(transparent)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
+</span><span class="kw">pub struct </span>NmhdrCode(i32);
+
+<span class="kw">impl </span>From&lt;i32&gt; <span class="kw">for </span>NmhdrCode {
+	<span class="kw">fn </span>from(v: i32) -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>(v)
+	}
+}
+
+<span class="kw">impl </span>PartialOrd <span class="kw">for </span>NmhdrCode {
+	<span class="kw">fn </span>partial_cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;std::cmp::Ordering&gt; {
+		<span class="self">self</span>.<span class="number">0</span>.partial_cmp(<span class="kw-2">&amp;</span>other.<span class="number">0</span>)
+	}
+}
+<span class="kw">impl </span>Ord <span class="kw">for </span>NmhdrCode {
+	<span class="kw">fn </span>cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; std::cmp::Ordering {
+		<span class="self">self</span>.<span class="number">0</span>.cmp(<span class="kw-2">&amp;</span>other.<span class="number">0</span>)
+	}
+}
+
+<span class="kw">impl </span>NmhdrCode {
+	<span class="attr">#[must_use]
+	</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const fn </span>new(v: i32) -&gt; <span class="self">Self </span>{
+		<span class="self">Self</span>(v)
+	}
+
+	<span class="doccomment">/// Returns the primitive integer underlying value.
+	///
+	/// This method is similar to [`Into`](std::convert::Into), but it is
+	/// `const`, therefore it can be used in
+	/// [const contexts](https://doc.rust-lang.org/reference/const_eval.html).
+	</span><span class="attr">#[must_use]
+	</span><span class="kw">pub const fn </span>raw(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; i32 {
+		<span class="self">self</span>.<span class="number">0
 	</span>}
 }
 

@@ -214,8 +214,7 @@
 <a href="#213" id="213">213</a>
 <a href="#214" id="214">214</a>
 <a href="#215" id="215">215</a>
-<a href="#216" id="216">216</a>
-<a href="#217" id="217">217</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::UnsafeCell;
+<a href="#216" id="216">216</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::cell::UnsafeCell;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -240,7 +239,7 @@
 	&gt;,
 	nfys: UnsafeCell&lt;
 		FuncStore&lt; <span class="comment">// WM_NOTIFY notifications
-			</span>(u16, co::NM), <span class="comment">// idFrom, code
+			</span>(u16, NmhdrCode), <span class="comment">// idFrom, code
 			</span>Box&lt;<span class="kw">dyn </span>Fn(wm::Notify) -&gt; AnyResult&lt;WmRet&gt;&gt;,
 		&gt;,
 	&gt;,
@@ -414,14 +413,13 @@
 
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>wm_notify&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
 		id_from: <span class="kw">impl </span>Into&lt;u16&gt;,
-		code: <span class="kw">impl </span>Into&lt;co::NM&gt;,
+		code: <span class="kw">impl </span>Into&lt;NmhdrCode&gt;,
 		func: F,
 	)
 		<span class="kw">where </span>F: Fn(wm::Notify) -&gt; AnyResult&lt;WmRet&gt; + <span class="lifetime">'static</span>,
 	{
-		<span class="kw">let </span>code: co::NM = code.into();
 		<span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.nfys.get() }.push(
-			(id_from.into(), code),
+			(id_from.into(), code.into()),
 			Box::new(func),
 		);
 	}

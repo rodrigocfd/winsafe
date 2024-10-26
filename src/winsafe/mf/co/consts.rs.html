@@ -338,28 +338,7 @@
 <a href="#337" id="337">337</a>
 <a href="#338" id="338">338</a>
 <a href="#339" id="339">339</a>
-<a href="#340" id="340">340</a>
-<a href="#341" id="341">341</a>
-<a href="#342" id="342">342</a>
-<a href="#343" id="343">343</a>
-<a href="#344" id="344">344</a>
-<a href="#345" id="345">345</a>
-<a href="#346" id="346">346</a>
-<a href="#347" id="347">347</a>
-<a href="#348" id="348">348</a>
-<a href="#349" id="349">349</a>
-<a href="#350" id="350">350</a>
-<a href="#351" id="351">351</a>
-<a href="#352" id="352">352</a>
-<a href="#353" id="353">353</a>
-<a href="#354" id="354">354</a>
-<a href="#355" id="355">355</a>
-<a href="#356" id="356">356</a>
-<a href="#357" id="357">357</a>
-<a href="#358" id="358">358</a>
-<a href="#359" id="359">359</a>
-<a href="#360" id="360">360</a>
-<a href="#361" id="361">361</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
+<a href="#340" id="340">340</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
 
@@ -367,7 +346,6 @@
 	<span class="doccomment">/// [`IMFMediaEvent::GetType`](crate::prelude::mf_IMFMediaEvent::GetType)
 	/// return value (`u32`).
 	</span>=&gt;
-	=&gt;
 	Unknown <span class="number">0
 	</span>Error <span class="number">1
 	</span>ExtendedType <span class="number">2
@@ -493,7 +471,6 @@
 	<span class="doccomment">/// [`MF_ATTRIBUTE_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/ne-mfobjects-mf_attribute_type)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	UINT32 VT::UI4.raw() <span class="kw">as _
 	</span>UINT64 VT::UI8.raw() <span class="kw">as _
 	</span>DOUBLE VT::R8.raw() <span class="kw">as _
@@ -507,7 +484,6 @@
 	<span class="doccomment">/// [`MF_ATTRIBUTES_MATCH_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/ne-mfobjects-mf_attributes_match_type)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	OUR_ITEMS <span class="number">0
 	</span>THEIR_ITEMS <span class="number">1
 	</span>ALL_ITEMS <span class="number">2
@@ -519,7 +495,6 @@
 	<span class="doccomment">/// [`IMFMediaEvent::GetType`](crate::prelude::mf_IMFMediaEvent::GetType)
 	/// return type (`u32`).
 	</span>=&gt;
-	=&gt;
 	NO_WAIT <span class="number">0x0000_0001
 </span>}
 
@@ -527,7 +502,6 @@
 	<span class="doccomment">/// [`MF_OBJECT_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mf_object_type)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	MEDIASOURCE <span class="number">0
 	</span>BYTESTREAM <span class="number">1
 	</span>INVALID <span class="number">2
@@ -537,7 +511,6 @@
 	<span class="doccomment">/// Source resolver [flags](https://learn.microsoft.com/en-us/windows/win32/medfound/source-resolver-flags)
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	MEDIASOURCE <span class="number">0x1
 	</span>BYTESTREAM <span class="number">0x2
 	</span>CONTENT_DOES_NOT_HAVE_TO_MATCH_EXTENSION_OR_MIME_TYPE <span class="number">0x10
@@ -555,7 +528,6 @@
 	<span class="doccomment">/// [`MF_TOPOLOGY_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mf_topology_type)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	OUTPUT_NODE <span class="number">0
 	</span>SOURCESTREAM_NODE <span class="number">1
 	</span>TRANSFORM_NODE <span class="number">2
@@ -566,7 +538,6 @@
 	<span class="doccomment">/// [`IMFAsyncCallback::GetParameters`](crate::IMFAsyncCallback::GetParameters)
 	/// `flags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span>FAST_IO_PROCESSING_CALLBACK <span class="number">0x0000_0001
@@ -579,7 +550,6 @@
 	<span class="doccomment">/// [`IMFByteStream::GetCapabilities`](crate::prelude::mf_IMFByteStream::GetCapabilities)
 	/// flags (`u32`).
 	</span>=&gt;
-	=&gt;
 	IS_READABLE <span class="number">0x0000_0001
 	</span>IS_WRITABLE <span class="number">0x0000_0002
 	</span>IS_SEEKABLE <span class="number">0x0000_0004
@@ -595,7 +565,6 @@
 	<span class="doccomment">/// [`MFCLOCK_CHARACTERISTICS_FLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfclock_characteristics_flags)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	FREQUENCY_10MHZ <span class="number">0x2
 	</span>ALWAYS_RUNNING <span class="number">0x4
 	</span>IS_SYSTEM_CLOCK <span class="number">0x8
@@ -605,7 +574,6 @@
 	<span class="doccomment">/// [`MFCLOCK_RELATIONAL_FLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfclock_relational_flags)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span>JITTER_NEVER_AHEAD <span class="number">0x1
@@ -615,7 +583,6 @@
 	<span class="doccomment">/// [`MFCLOCK_STATE`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfclock_state)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	INVALID <span class="number">0
 	</span>RUNNING <span class="number">1
 	</span>STOPPED <span class="number">2
@@ -626,7 +593,6 @@
 	<span class="doccomment">/// [`MFMEDIASOURCE_CHARACTERISTICS`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfmediasource_characteristics)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	IS_LIVE <span class="number">0x1
 	</span>CAN_SEEK <span class="number">0x2
 	</span>CAN_PAUSE <span class="number">0x4
@@ -641,7 +607,6 @@
 	<span class="doccomment">/// [`IMFByteStream::Seek`](crate::prelude::mf_IMFByteStream::Seek) flags
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	CANCEL_PENDING_IO <span class="number">1
 </span>}
 
@@ -649,7 +614,6 @@
 	<span class="doccomment">/// [`MFBYTESTREAM_SEEK_ORIGIN`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/ne-mfobjects-mfbytestream_seek_origin)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	Begin <span class="number">0
 	</span>Current <span class="number">1
 </span>}
@@ -658,7 +622,6 @@
 	<span class="doccomment">/// [`MFSESSION_GETFULLTOPOLOGY_FLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfsession_getfulltopology_flags)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	CURRENT <span class="number">0x1
 </span>}
 
@@ -666,7 +629,6 @@
 	<span class="doccomment">/// [`MFSESSION_SETTOPOLOGY_FLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/ne-mfidl-mfsession_settopology_flags)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	IMMEDIATE <span class="number">0x1
 	</span>NORESOLUTION <span class="number">0x2
 	</span>CLEAR_CURRENT <span class="number">0x4
@@ -676,7 +638,6 @@
 	<span class="doccomment">/// [`IMFMediaSession::GetSessionCapabilities`](crate::prelude::mf_IMFMediaSession::GetSessionCapabilities)
 	/// `caps` (`u32`).
 	</span>=&gt;
-	=&gt;
 	START <span class="number">0x0000_0001
 	</span>SEEK <span class="number">0x0000_0002
 	</span>PAUSE <span class="number">0x0000_0004
@@ -688,7 +649,6 @@
 <span class="macro">const_ordinary!</span> { MFSTARTUP: u32;
 	<span class="doccomment">/// [`MFStartup`](crate::MFStartup) `flags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	NOSOCKET <span class="number">0x1
 	</span>LITE <span class="self">Self</span>::NOSOCKET.<span class="number">0
 	</span>FULL <span class="number">0
@@ -698,7 +658,6 @@
 	<span class="doccomment">/// [`MFVideoAspectRatioMode`](https://learn.microsoft.com/en-us/windows/win32/api/evr/ne-evr-mfvideoaspectratiomode)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="prelude-val">None </span><span class="number">0
 	</span>PreservePicture <span class="number">0x1
 	</span>PreservePixel <span class="number">0x2
@@ -709,7 +668,6 @@
 	<span class="doccomment">/// [`MFVideoRenderPrefs`](https://learn.microsoft.com/en-us/windows/win32/api/evr/ne-evr-mfvideorenderprefs)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	DoNotRenderBorder <span class="number">0x1
 	</span>DoNotClipToDevice <span class="number">0x2
 	</span>AllowOutputThrottling <span class="number">0x4

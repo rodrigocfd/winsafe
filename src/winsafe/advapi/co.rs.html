@@ -726,32 +726,7 @@
 <a href="#725" id="725">725</a>
 <a href="#726" id="726">726</a>
 <a href="#727" id="727">727</a>
-<a href="#728" id="728">728</a>
-<a href="#729" id="729">729</a>
-<a href="#730" id="730">730</a>
-<a href="#731" id="731">731</a>
-<a href="#732" id="732">732</a>
-<a href="#733" id="733">733</a>
-<a href="#734" id="734">734</a>
-<a href="#735" id="735">735</a>
-<a href="#736" id="736">736</a>
-<a href="#737" id="737">737</a>
-<a href="#738" id="738">738</a>
-<a href="#739" id="739">739</a>
-<a href="#740" id="740">740</a>
-<a href="#741" id="741">741</a>
-<a href="#742" id="742">742</a>
-<a href="#743" id="743">743</a>
-<a href="#744" id="744">744</a>
-<a href="#745" id="745">745</a>
-<a href="#746" id="746">746</a>
-<a href="#747" id="747">747</a>
-<a href="#748" id="748">748</a>
-<a href="#749" id="749">749</a>
-<a href="#750" id="750">750</a>
-<a href="#751" id="751">751</a>
-<a href="#752" id="752">752</a>
-<a href="#753" id="753">753</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
+<a href="#728" id="728">728</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
 
@@ -759,7 +734,6 @@
 	<span class="doccomment">/// [`HEVENTLOG::ReportEvent`](crate::prelude::advapi_Heventlog::ReportEvent)
 	/// `event_type` [`u16`].
 	</span>=&gt;
-	=&gt;
 	SUCCESS <span class="number">0x0000
 	</span>AUDIT_FAILURE <span class="number">0x0010
 	</span>AUDIT_SUCCESS <span class="number">0x0008
@@ -772,7 +746,6 @@
 	<span class="doccomment">/// [Registry access rights](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights)
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	QUERY_VALUE <span class="number">0x0001
 	</span>SET_VALUE <span class="number">0x0002
 	</span>CREATE_SUB_KEY <span class="number">0x0004
@@ -793,7 +766,6 @@
 	/// [value types](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types)
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	NONE <span class="number">0
 	</span>SZ <span class="number">1
 	</span>EXPAND_SZ <span class="number">2
@@ -814,7 +786,6 @@
 	<span class="doccomment">/// [`HKEY::RegCreateKeyEx`](crate::prelude::advapi_Hkey::RegCreateKeyEx)
 	/// creation disposition (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span><span class="doccomment">/// The key did not exist and was created.
@@ -827,7 +798,6 @@
 	<span class="doccomment">/// [`HKEY::RegOpenKeyEx`](crate::prelude::advapi_Hkey::RegOpenKeyEx)
 	/// `options` (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span>RESERVED <span class="number">0x0000_0000
@@ -845,7 +815,6 @@
 	///
 	/// Originally has `REG` prefix.
 	</span>=&gt;
-	=&gt;
 	FORCE_RESTORE <span class="number">0x0000_0008
 	</span>WHOLE_HIVE_VOLATILE <span class="number">0x0000_0001
 </span>}
@@ -857,7 +826,6 @@
 	///
 	/// Originally has `REG` prefix.
 	</span>=&gt;
-	=&gt;
 	STANDARD_FORMAT <span class="number">1
 	</span>LATEST_FORMAT <span class="number">2
 	</span>NO_COMPRESSION <span class="number">4
@@ -871,7 +839,6 @@
 	///
 	/// Originally has `RID` suffix.
 	</span>=&gt;
-	=&gt;
 	SECURITY_NULL <span class="number">0x0000_0000
 	</span>SECURITY_WORLD <span class="number">0x0000_0000
 	</span>SECURITY_LOCAL <span class="number">0x0000_0000
@@ -1039,7 +1006,6 @@
 	<span class="doccomment">/// [`HKEY::GetValue`](crate::prelude::advapi_Hkey::RegGetValue) `dwFlags`
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	RT_REG_NONE <span class="number">0x0000_0001
 	</span>RT_REG_SZ <span class="number">0x0000_0002
 	</span>RT_REG_EXPAND_SZ <span class="number">0x0000_0004
@@ -1064,7 +1030,6 @@
 	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights)
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	ALL_ACCESS <span class="number">0xf003f
 	</span>CREATE_SERVICE <span class="number">0x0002
 	</span>CONNECT <span class="number">0x0001
@@ -1129,7 +1094,6 @@
 	///
 	/// Originally has `SE_PRIVILEGE` prefix.
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span>ENABLED_BY_DEFAULT <span class="number">0x0000_0001
@@ -1143,7 +1107,6 @@
 	<span class="doccomment">/// [`SECURITY_IMPERSONATION_LEVEL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-security_impersonation_level)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	Anonymous <span class="number">0
 	</span>Identification <span class="number">1
 	</span>Impersonation <span class="number">2
@@ -1153,7 +1116,6 @@
 <span class="macro">const_bitflag!</span> { SERVICE_ACCEPT: u32;
 	<span class="doccomment">/// [`SERVICE_STATUS`](crate::SERVICE_STATUS) `dwControlsAccepted` (`u32`).
 	</span>=&gt;
-	=&gt;
 	NETBINDCHANGE <span class="number">0x0000_0010
 	</span>PARAMCHANGE <span class="number">0x0000_0008
 	</span>PAUSE_CONTINUE <span class="number">0x0000_0002
@@ -1174,7 +1136,6 @@
 	///
 	/// Used within [`SvcCtl`](crate::SvcCtl) parsing.
 	</span>=&gt;
-	=&gt;
 	CONTINUE <span class="number">0x0000_0003
 	</span>INTERROGATE <span class="number">0x0000_0004
 	</span>NETBINDADD <span class="number">0x0000_0007
@@ -1200,7 +1161,6 @@
 	<span class="doccomment">/// [`HSC::CreateService`](crate::prelude::advapi_Hsc::CreateService)
 	/// `error_control` (`u32`).
 	</span>=&gt;
-	=&gt;
 	CRITICAL <span class="number">0x0000_0003
 	</span>IGNORE <span class="number">0x0000_0000
 	</span>NORMAL <span class="number">0x0000_0001
@@ -1213,7 +1173,6 @@
 	///
 	/// Originally has `SERVICE` prefix.
 	</span>=&gt;
-	=&gt;
 	AUTO_START <span class="number">0x0000_0002
 	</span>BOOT_START <span class="number">0x0000_0000
 	</span>DEMAND_START <span class="number">0x0000_0003
@@ -1225,7 +1184,6 @@
 	<span class="doccomment">/// [`HSERVICESTATUS::SetServiceStatus`](crate::prelude::advapi_Hservicestatus::SetServiceStatus)
 	/// `current_state` (u32)
 	</span>=&gt;
-	=&gt;
 	CONTINUE_PENDING <span class="number">0x0000_0005
 	</span>PAUSE_PENDING <span class="number">0x0000_0006
 	</span>PAUSED <span class="number">0x0000_0007
@@ -1241,7 +1199,6 @@
 	///
 	/// Originally has `SERVICE` prefix.
 	</span>=&gt;
-	=&gt;
 	ADAPTER <span class="number">0x0000_0004
 	</span>FILE_SYSTEM_DRIVER <span class="number">0x0000_0002
 	</span>KERNEL_DRIVER <span class="number">0x0000_0001
@@ -1259,7 +1216,6 @@
 	///
 	/// Originally has `Sid` prefix.
 	</span>=&gt;
-	=&gt;
 	User <span class="number">1
 	</span>Group <span class="number">2
 	</span>Domain <span class="number">3
@@ -1277,7 +1233,6 @@
 	<span class="doccomment">/// [`TOKEN_ELEVATION_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_elevation_type)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	Default <span class="number">1
 	</span>Full <span class="number">2
 	</span>Limited <span class="number">3
@@ -1287,7 +1242,6 @@
 	<span class="doccomment">/// [`TOKEN_INFORMATION_CLASS`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_information_class)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	User <span class="number">1
 	</span>Groups <span class="number">2
 	</span>Privileges <span class="number">3
@@ -1342,7 +1296,6 @@
 	<span class="doccomment">/// [`TOKEN_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_type)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	Primary <span class="number">1
 	</span>Impersonation <span class="number">2
 </span>}
@@ -1351,7 +1304,6 @@
 	<span class="doccomment">/// [`Transaction access masks`](https://learn.microsoft.com/en-us/windows/win32/ktm/transaction-access-masks)
 	/// (`u32`).
 	</span>=&gt;
-	=&gt;
 	QUERY_INFORMATION <span class="number">0x0001
 	</span>SET_INFORMATION <span class="number">0x0002
 	</span>ENLIST <span class="number">0x0004
@@ -1372,7 +1324,6 @@
 	///
 	/// Originally has `TRANSACTION` prefix.
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span>DO_NOT_PROMOTE <span class="number">0x0000_0001
@@ -1382,7 +1333,6 @@
 	<span class="doccomment">/// [`WELL_KNOWN_SID_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-well_known_sid_type)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	Null <span class="number">0
 	</span>World <span class="number">1
 	</span>Local <span class="number">2

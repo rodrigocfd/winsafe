@@ -438,89 +438,45 @@
 <a href="#437" id="437">437</a>
 <a href="#438" id="438">438</a>
 <a href="#439" id="439">439</a>
-<a href="#440" id="440">440</a>
-<a href="#441" id="441">441</a>
-<a href="#442" id="442">442</a>
-<a href="#443" id="443">443</a>
-<a href="#444" id="444">444</a>
-<a href="#445" id="445">445</a>
-<a href="#446" id="446">446</a>
-<a href="#447" id="447">447</a>
-<a href="#448" id="448">448</a>
-<a href="#449" id="449">449</a>
-<a href="#450" id="450">450</a>
-<a href="#451" id="451">451</a>
-<a href="#452" id="452">452</a>
-<a href="#453" id="453">453</a>
-<a href="#454" id="454">454</a>
-<a href="#455" id="455">455</a>
-<a href="#456" id="456">456</a>
-<a href="#457" id="457">457</a>
-<a href="#458" id="458">458</a>
-<a href="#459" id="459">459</a>
-<a href="#460" id="460">460</a>
-<a href="#461" id="461">461</a>
-<a href="#462" id="462">462</a>
-<a href="#463" id="463">463</a>
-<a href="#464" id="464">464</a>
-<a href="#465" id="465">465</a>
-<a href="#466" id="466">466</a>
-<a href="#467" id="467">467</a>
-<a href="#468" id="468">468</a>
-<a href="#469" id="469">469</a>
-<a href="#470" id="470">470</a>
-<a href="#471" id="471">471</a>
-<a href="#472" id="472">472</a>
-<a href="#473" id="473">473</a>
-<a href="#474" id="474">474</a>
-<a href="#475" id="475">475</a>
-<a href="#476" id="476">476</a>
-<a href="#477" id="477">477</a>
-<a href="#478" id="478">478</a>
-<a href="#479" id="479">479</a>
-<a href="#480" id="480">480</a>
-<a href="#481" id="481">481</a>
-<a href="#482" id="482">482</a>
-<a href="#483" id="483">483</a>
-<a href="#484" id="484">484</a>
-<a href="#485" id="485">485</a>
-<a href="#486" id="486">486</a>
-<a href="#487" id="487">487</a>
-<a href="#488" id="488">488</a>
-<a href="#489" id="489">489</a>
-<a href="#490" id="490">490</a>
-<a href="#491" id="491">491</a>
-<a href="#492" id="492">492</a></pre></div><pre class="rust"><code><span class="attr">#![allow(unused_macros)]
+<a href="#440" id="440">440</a></pre></div><pre class="rust"><code><span class="attr">#![allow(unused_macros)]
 
-</span><span class="doccomment">/// Writes `pub(crate)` and `pub` values of the given constant type.
+</span><span class="doccomment">/// Writes `pub` values of the given constant type.
 </span><span class="macro">macro_rules!</span> const_values {
 	(
 		<span class="macro-nonterminal">$name</span>:ident;
 		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$privvalname</span>:ident <span class="macro-nonterminal">$privval</span>:expr
-		)*
-		=&gt;
-		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$pubvalname</span>:ident <span class="macro-nonterminal">$pubval</span>:expr
+			$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>:meta] </span>)*
+			<span class="macro-nonterminal">$valname</span>:ident <span class="macro-nonterminal">$val</span>:expr
 		)*
 	) =&gt; {
 		<span class="kw">impl </span><span class="macro-nonterminal">$name </span>{
 			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>] </span>)*
-				<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span><span class="macro-nonterminal">$privvalname</span>: <span class="self">Self </span>= <span class="kw">unsafe </span>{ <span class="self">Self</span>::from_raw(<span class="macro-nonterminal">$privval</span>) };
-			)*
-			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>] </span>)*
-				<span class="kw">pub const </span><span class="macro-nonterminal">$pubvalname</span>: <span class="self">Self </span>= <span class="kw">unsafe </span>{ <span class="self">Self</span>::from_raw(<span class="macro-nonterminal">$pubval</span>) };
+				$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>] </span>)*
+				<span class="kw">pub const </span><span class="macro-nonterminal">$valname</span>: <span class="self">Self </span>= <span class="kw">unsafe </span>{ <span class="self">Self</span>::from_raw(<span class="macro-nonterminal">$val</span>) };
 			)*
 		}
 	};
 }
 
-<span class="doccomment">/// Declares the type of a constant, along with private and public values. Won't
-/// include `Debug` and `Display` impls.
+<span class="doccomment">/// Writes `pub(crate)` values of the given constant type.
+</span><span class="macro">macro_rules!</span> const_values_pubcrate {
+	(
+		<span class="macro-nonterminal">$name</span>:ident;
+		$(
+			$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>:meta] </span>)*
+			<span class="macro-nonterminal">$valname</span>:ident <span class="macro-nonterminal">$val</span>:expr
+		)*
+	) =&gt; {
+		<span class="kw">impl </span><span class="macro-nonterminal">$name </span>{
+			$(
+				$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>] </span>)*
+				<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span><span class="macro-nonterminal">$valname</span>: <span class="self">Self </span>= <span class="kw">unsafe </span>{ <span class="self">Self</span>::from_raw(<span class="macro-nonterminal">$val</span>) };
+			)*
+		}
+	};
+}
+
+<span class="doccomment">/// Declares the type of a constant. Won't include `Debug` and `Display` impls.
 </span><span class="macro">macro_rules!</span> const_no_debug_display {
 	(
 		<span class="macro-nonterminal">$name</span>:ident : <span class="macro-nonterminal">$ntype</span>:ty;
@@ -566,13 +522,8 @@
 		$( <span class="attr">#[<span class="macro-nonterminal">$doc</span>:meta] </span>)*
 		=&gt;
 		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$privvalname</span>:ident <span class="macro-nonterminal">$privval</span>:expr
-		)*
-		=&gt;
-		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$pubvalname</span>:ident <span class="macro-nonterminal">$pubval</span>:expr
+			$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>:meta] </span>)*
+			<span class="macro-nonterminal">$valname</span>:ident <span class="macro-nonterminal">$val</span>:expr
 		)*
 	) =&gt; {
 		<span class="macro">const_no_debug_display!</span> {
@@ -604,33 +555,22 @@
 		<span class="macro">const_values!</span> {
 			<span class="macro-nonterminal">$name</span>;
 			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>] </span>)*
-				<span class="macro-nonterminal">$privvalname $privval
-			</span>)*
-			=&gt;
-			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>] </span>)*
-				<span class="macro-nonterminal">$pubvalname $pubval
+				$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>] </span>)*
+				<span class="macro-nonterminal">$valname $val
 			</span>)*
 		}
 	};
 }
 
-<span class="doccomment">/// Declares the type of an ordinary bitflag constant, along with private and
-/// public values.
+<span class="doccomment">/// Declares the type of an ordinary bitflag constant, along with `pub` values.
 </span><span class="macro">macro_rules!</span> const_bitflag {
 	(
 		<span class="macro-nonterminal">$name</span>:ident : <span class="macro-nonterminal">$ntype</span>:ty;
 		$( <span class="attr">#[<span class="macro-nonterminal">$doc</span>:meta] </span>)*
 		=&gt;
 		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$privvalname</span>:ident <span class="macro-nonterminal">$privval</span>:expr
-		)*
-		=&gt;
-		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$pubvalname</span>:ident <span class="macro-nonterminal">$pubval</span>:expr
+			$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>:meta] </span>)*
+			<span class="macro-nonterminal">$valname</span>:ident <span class="macro-nonterminal">$val</span>:expr
 		)*
 	) =&gt; {
 		<span class="macro">const_ordinary!</span> {
@@ -641,13 +581,8 @@
 			/// [`NativeBitflag`](crate::prelude::NativeBitflag) trait.
 			</span>=&gt;
 			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>] </span>)*
-				<span class="macro-nonterminal">$privvalname $privval
-			</span>)*
-			=&gt;
-			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>] </span>)*
-				<span class="macro-nonterminal">$pubvalname $pubval
+				$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>] </span>)*
+				<span class="macro-nonterminal">$valname $val
 			</span>)*
 		}
 
@@ -701,20 +636,15 @@
 }
 
 <span class="doccomment">/// Declares the type of a constant for a window message, convertible to
-/// [`WM`](crate::co::WM) constant type, along with private and public values.
+/// [`WM`](crate::co::WM) constant type, along with `pub` values.
 </span><span class="macro">macro_rules!</span> const_wm {
 	(
 		<span class="macro-nonterminal">$name</span>:ident;
 		$( <span class="attr">#[<span class="macro-nonterminal">$doc</span>:meta] </span>)*
 		=&gt;
 		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$privvalname</span>:ident <span class="macro-nonterminal">$privval</span>:expr
-		)*
-		=&gt;
-		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$pubvalname</span>:ident <span class="macro-nonterminal">$pubval</span>:expr
+			$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>:meta] </span>)*
+			<span class="macro-nonterminal">$valname</span>:ident <span class="macro-nonterminal">$val</span>:expr
 		)*
 	) =&gt; {
 		<span class="macro">const_ordinary!</span> {
@@ -724,13 +654,8 @@
 			/// This is a window message, convertible to [`WM`](crate::co::WM).
 			</span>=&gt;
 			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>] </span>)*
-				<span class="macro-nonterminal">$privvalname $privval
-			</span>)*
-			=&gt;
-			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>] </span>)*
-				<span class="macro-nonterminal">$pubvalname $pubval
+				$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>] </span>)*
+				<span class="macro-nonterminal">$valname $val
 			</span>)*
 		}
 
@@ -743,21 +668,16 @@
 }
 
 <span class="doccomment">/// Declares the type of a constant for a WM_COMMAND notification code,
-/// convertible to [`CMD`](crate::co::CMD) constant type, along with private and
-/// public values.
+/// convertible to [`CMD`](crate::co::CMD) constant type, along with `pub`
+/// values.
 </span><span class="macro">macro_rules!</span> const_cmd {
 	(
 		<span class="macro-nonterminal">$name</span>:ident;
 		$( <span class="attr">#[<span class="macro-nonterminal">$doc</span>:meta] </span>)*
 		=&gt;
 		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$privvalname</span>:ident <span class="macro-nonterminal">$privval</span>:expr
-		)*
-		=&gt;
-		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$pubvalname</span>:ident <span class="macro-nonterminal">$pubval</span>:expr
+			$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>:meta] </span>)*
+			<span class="macro-nonterminal">$valname</span>:ident <span class="macro-nonterminal">$val</span>:expr
 		)*
 	) =&gt; {
 		<span class="macro">const_ordinary!</span> {
@@ -768,13 +688,8 @@
 			/// code, convertible to [`CMD`](crate::co::CMD).
 			</span>=&gt;
 			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>] </span>)*
-				<span class="macro-nonterminal">$privvalname $privval
-			</span>)*
-			=&gt;
-			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>] </span>)*
-				<span class="macro-nonterminal">$pubvalname $pubval
+				$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>] </span>)*
+				<span class="macro-nonterminal">$valname $val
 			</span>)*
 		}
 
@@ -787,21 +702,15 @@
 }
 
 <span class="doccomment">/// Declares the type of a constant for a WM_NOTIFY notification code,
-/// convertible to [`NM`](crate::co::NM) constant type, along with private and
-/// public values.
+/// convertible to NmhdrCode, along with `pub` values.
 </span><span class="macro">macro_rules!</span> const_nm {
 	(
 		<span class="macro-nonterminal">$name</span>:ident;
 		$( <span class="attr">#[<span class="macro-nonterminal">$doc</span>:meta] </span>)*
 		=&gt;
 		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$privvalname</span>:ident <span class="macro-nonterminal">$privval</span>:expr
-		)*
-		=&gt;
-		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$pubvalname</span>:ident <span class="macro-nonterminal">$pubval</span>:expr
+			$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>:meta] </span>)*
+			<span class="macro-nonterminal">$valname</span>:ident <span class="macro-nonterminal">$val</span>:expr
 		)*
 	) =&gt; {
 		<span class="macro">const_ordinary!</span> {
@@ -809,42 +718,45 @@
 			$( <span class="attr">#[<span class="macro-nonterminal">$doc</span>] </span>)*
 			<span class="doccomment">///
 			/// This is a [`wm::Notify`](crate::msg::wm::Notify) notification
-			/// code, convertible to [`NM`](crate::co::NM).
+			/// code, convertible to/from [`NmhdrCode`](crate::NmhdrCode).
 			</span>=&gt;
 			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>] </span>)*
-				<span class="macro-nonterminal">$privvalname $privval
-			</span>)*
-			=&gt;
-			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>] </span>)*
-				<span class="macro-nonterminal">$pubvalname $pubval
+				$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>] </span>)*
+				<span class="macro-nonterminal">$valname $val
 			</span>)*
 		}
 
-		<span class="kw">impl </span>From&lt;<span class="macro-nonterminal">$name</span>&gt; <span class="kw">for </span><span class="kw">crate</span>::co::NM {
+		<span class="kw">impl </span>From&lt;<span class="macro-nonterminal">$name</span>&gt; <span class="kw">for </span><span class="kw">crate</span>::NmhdrCode {
 			<span class="kw">fn </span>from(v: <span class="macro-nonterminal">$name</span>) -&gt; <span class="self">Self </span>{
-				<span class="self">Self</span>(v.<span class="number">0</span>)
+				<span class="self">Self</span>::new(v.raw())
+			}
+		}
+
+		<span class="kw">impl </span>TryFrom&lt;<span class="kw">crate</span>::NmhdrCode&gt; <span class="kw">for </span><span class="macro-nonterminal">$name </span>{
+			<span class="kw">type </span>Error = <span class="kw">crate</span>::co::ERROR;
+
+			<span class="kw">fn </span>try_from(value: <span class="kw">crate</span>::NmhdrCode) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
+				<span class="comment">// Can't use match because some values are defined as a sum, then:
+				// "arbitrary expressions aren't allowed in patterns"
+				</span>$(
+					<span class="kw">if </span>value.raw() == <span class="macro-nonterminal">$val </span>{ <span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="macro-nonterminal">$valname</span>); }
+				)*
+				<span class="prelude-val">Err</span>(<span class="kw">crate</span>::co::ERROR::INVALID_DATA)
 			}
 		}
 	};
 }
 
 <span class="doccomment">/// Declares the type of a constant for a window style, convertible to
-/// [`WS`](crate::co::WS) constant type, along with private and public values.
+/// [`WS`](crate::co::WS) constant type, along with `pub` values.
 </span><span class="macro">macro_rules!</span> const_ws {
 	(
 		<span class="macro-nonterminal">$name</span>:ident : <span class="macro-nonterminal">$ntype</span>:ty;
 		$( <span class="attr">#[<span class="macro-nonterminal">$doc</span>:meta] </span>)*
 		=&gt;
 		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$privvalname</span>:ident <span class="macro-nonterminal">$privval</span>:expr
-		)*
-		=&gt;
-		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$pubvalname</span>:ident <span class="macro-nonterminal">$pubval</span>:expr
+			$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>:meta] </span>)*
+			<span class="macro-nonterminal">$valname</span>:ident <span class="macro-nonterminal">$val</span>:expr
 		)*
 	) =&gt; {
 		<span class="macro">const_bitflag!</span> {
@@ -854,13 +766,8 @@
 			/// This is a window style, convertible to [`WS`](crate::co::WS).
 			</span>=&gt;
 			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>] </span>)*
-				<span class="macro-nonterminal">$privvalname $privval
-			</span>)*
-			=&gt;
-			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>] </span>)*
-				<span class="macro-nonterminal">$pubvalname $pubval
+				$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>] </span>)*
+				<span class="macro-nonterminal">$valname $val
 			</span>)*
 		}
 
@@ -879,21 +786,15 @@
 }
 
 <span class="doccomment">/// Declares the type of a constant for an extended window style, convertible to
-/// [`WS_EX`](crate::co::WS_EX) constant type, along with private and public
-/// values.
+/// [`WS_EX`](crate::co::WS_EX) constant type, along with `pub` values.
 </span><span class="macro">macro_rules!</span> const_wsex {
 	(
 		<span class="macro-nonterminal">$name</span>:ident;
 		$( <span class="attr">#[<span class="macro-nonterminal">$doc</span>:meta] </span>)*
 		=&gt;
 		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$privvalname</span>:ident <span class="macro-nonterminal">$privval</span>:expr
-		)*
-		=&gt;
-		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$pubvalname</span>:ident <span class="macro-nonterminal">$pubval</span>:expr
+			$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>:meta] </span>)*
+			<span class="macro-nonterminal">$valname</span>:ident <span class="macro-nonterminal">$val</span>:expr
 		)*
 	) =&gt; {
 		<span class="macro">const_bitflag!</span> {
@@ -904,13 +805,8 @@
 			/// [`WS_EX`](crate::co::WS_EX).
 			</span>=&gt;
 			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$privvaldoc</span>] </span>)*
-				<span class="macro-nonterminal">$privvalname $privval
-			</span>)*
-			=&gt;
-			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>] </span>)*
-				<span class="macro-nonterminal">$pubvalname $pubval
+				$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>] </span>)*
+				<span class="macro-nonterminal">$valname $val
 			</span>)*
 		}
 
@@ -936,8 +832,8 @@
 		$( <span class="attr">#[<span class="macro-nonterminal">$doc</span>:meta] </span>)*
 		=&gt;
 		$(
-			$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>:meta] </span>)*
-			<span class="macro-nonterminal">$pubvalname</span>:ident <span class="macro-nonterminal">$pubval</span>:literal
+			$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>:meta] </span>)*
+			<span class="macro-nonterminal">$valname</span>:ident <span class="macro-nonterminal">$val</span>:literal
 		)*
 	) =&gt; {
 		$( <span class="attr">#[<span class="macro-nonterminal">$doc</span>] </span>)*
@@ -951,7 +847,7 @@
 
 			<span class="kw">fn </span>try_from(value: <span class="kw-2">&amp;</span>str) -&gt; <span class="prelude-ty">Result</span>&lt;<span class="self">Self</span>, <span class="self">Self</span>::Error&gt; {
 				<span class="kw">match </span>value {
-					$( <span class="macro-nonterminal">$pubval </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="macro-nonterminal">$pubvalname</span>), )*
+					$( <span class="macro-nonterminal">$val </span>=&gt; <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="macro-nonterminal">$valname</span>), )*
 					<span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(<span class="kw">crate</span>::co::ERROR::INVALID_DATA),
 				}
 			}
@@ -976,8 +872,8 @@
 
 		<span class="kw">impl </span><span class="macro-nonterminal">$name </span>{
 			$(
-				$( <span class="attr">#[<span class="macro-nonterminal">$pubvaldoc</span>] </span>)*
-				<span class="kw">pub const </span><span class="macro-nonterminal">$pubvalname</span>: <span class="self">Self </span>= <span class="self">Self</span>(<span class="macro-nonterminal">$pubval</span>);
+				$( <span class="attr">#[<span class="macro-nonterminal">$valdoc</span>] </span>)*
+				<span class="kw">pub const </span><span class="macro-nonterminal">$valname</span>: <span class="self">Self </span>= <span class="self">Self</span>(<span class="macro-nonterminal">$val</span>);
 			)*
 		}
 	};

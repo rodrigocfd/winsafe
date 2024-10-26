@@ -294,29 +294,12 @@
 <a href="#293" id="293">293</a>
 <a href="#294" id="294">294</a>
 <a href="#295" id="295">295</a>
-<a href="#296" id="296">296</a>
-<a href="#297" id="297">297</a>
-<a href="#298" id="298">298</a>
-<a href="#299" id="299">299</a>
-<a href="#300" id="300">300</a>
-<a href="#301" id="301">301</a>
-<a href="#302" id="302">302</a>
-<a href="#303" id="303">303</a>
-<a href="#304" id="304">304</a>
-<a href="#305" id="305">305</a>
-<a href="#306" id="306">306</a>
-<a href="#307" id="307">307</a>
-<a href="#308" id="308">308</a>
-<a href="#309" id="309">309</a>
-<a href="#310" id="310">310</a>
-<a href="#311" id="311">311</a>
-<a href="#312" id="312">312</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
+<a href="#296" id="296">296</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="macro">const_bitflag!</span> { DXGI_ADAPTER_FLAG: u32;
 	<span class="doccomment">/// [`DXGI_ADAPTER_FLAG`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_adapter_flag)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	NONE <span class="number">0
 	</span>REMOTE <span class="number">1
 	</span>SOFTWARE <span class="number">2
@@ -326,7 +309,6 @@
 	<span class="doccomment">/// [`DXGI_COMPUTE_PREEMPTION_GRANULARITY`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/ne-dxgi1_2-dxgi_compute_preemption_granularity)
 	/// enumeration.
 	</span>=&gt;
-	=&gt;
 	DMA_BUFFER_BOUNDARY <span class="number">0
 	</span>DISPATCH_BOUNDARY <span class="number">1
 	</span>THREAD_GROUP_BOUNDARY <span class="number">2
@@ -338,7 +320,6 @@
 	<span class="doccomment">/// [`DXGI_ENUM_MODES`](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-enum-modes)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	INTERLACED <span class="number">1
 	</span>SCALING <span class="number">2
 	</span>STEREO <span class="number">4
@@ -349,7 +330,6 @@
 	<span class="doccomment">/// [`DXGI_FORMAT`](https://learn.microsoft.com/en-us/windows/win32/api/dxgiformat/ne-dxgiformat-dxgi_format)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	UNKNOWN <span class="number">0
 	</span>R32G32B32A32_TYPELESS <span class="number">1
 	</span>R32G32B32A32_FLOAT <span class="number">2
@@ -475,7 +455,6 @@
 	<span class="doccomment">/// [`DXGI_GRAPHICS_PREEMPTION_GRANULARITY`]()
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	DMA_BUFFER_BOUNDARY <span class="number">0
 	</span>PRIMITIVE_BOUNDARY <span class="number">1
 	</span>TRIANGLE_BOUNDARY <span class="number">2
@@ -487,7 +466,6 @@
 	<span class="doccomment">/// [`IDXGISurface::Map`](crate::prelude::dxgi_IDXGISurface::Map)
 	/// `map_flags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	READ <span class="number">1
 	</span>WRITE <span class="number">2
 	</span>DISCARD <span class="number">4
@@ -497,7 +475,6 @@
 	<span class="doccomment">/// [`IDXGIFactory::GetWindowAssociation`](crate::prelude::dxgi_IDXGIFactory::GetWindowAssociation)
 	/// `flags` (`u32`).
 	</span>=&gt;
-	=&gt;
 	NO_WINDOW_CHANGES (<span class="number">1 </span>&lt;&lt; <span class="number">0</span>)
 	NO_ALT_ENTER (<span class="number">1 </span>&lt;&lt; <span class="number">1</span>)
 	NO_PRINT_SCREEN (<span class="number">1 </span>&lt;&lt; <span class="number">2</span>)
@@ -507,7 +484,6 @@
 	<span class="doccomment">/// [`DXGI_MODE_ROTATION`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173065(v=vs.85))
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	UNSPECIFIED <span class="number">0
 	</span>IDENTITY <span class="number">1
 	</span>ROTATE90 <span class="number">2
@@ -519,7 +495,6 @@
 	<span class="doccomment">/// [`DXGI_MODE_SCALING`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173066(v=vs.85))
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	UNSPECIFIED <span class="number">0
 	</span>CENTERED <span class="number">1
 	</span>STRETCHED <span class="number">2
@@ -529,7 +504,6 @@
 	<span class="doccomment">/// [`DXGI_MODE_SCANLINE_ORDER`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173067(v=vs.85))
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	UNSPECIFIED <span class="number">0
 	</span>PROGRESSIVE <span class="number">1
 	</span>UPPER_FIELD_FIRST <span class="number">2
@@ -540,7 +514,6 @@
 	<span class="doccomment">/// [`DXGI_PRESENT`](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-present)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	<span class="doccomment">/// None of the actual values (zero).
 	</span>NoValue <span class="number">0
 	</span>DO_NOT_SEQUENCE <span class="number">0x0000_0002
@@ -558,7 +531,6 @@
 	<span class="doccomment">/// [`DXGI_RESIDENCY`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_residency)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	FULLY_RESIDENT <span class="number">1
 	</span>RESIDENT_IN_SHARED_MEMORY <span class="number">2
 	</span>EVICTED_TO_DISK <span class="number">3
@@ -570,7 +542,6 @@
 	/// [`IDXGIResource::SetEvictionPriority`](crate::prelude::dxgi_IDXGIResource::SetEvictionPriority)
 	/// `eviction_priority` (`u32`).
 	</span>=&gt;
-	=&gt;
 	MINIMUM <span class="number">0x2800_0000
 	</span>LOW <span class="number">0x5000_0000
 	</span>NORMAL <span class="number">0x7800_0000
@@ -582,7 +553,6 @@
 	<span class="doccomment">/// [`DXGI_SWAP_CHAIN_FLAG`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_swap_chain_flag)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	NONPREROTATED <span class="number">1
 	</span>ALLOW_MODE_SWITCH <span class="number">2
 	</span>GDI_COMPATIBLE <span class="number">4
@@ -602,7 +572,6 @@
 	<span class="doccomment">/// [`DXGI_SWAP_EFFECT`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_swap_effect)
 	/// enumeration (`u32`).
 	</span>=&gt;
-	=&gt;
 	DISCARD <span class="number">0
 	</span>SEQUENTIAL <span class="number">1
 	</span>FLIP_SEQUENTIAL <span class="number">3
@@ -613,7 +582,6 @@
 	<span class="doccomment">/// [`DXGI_USAGE`](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-usage)
 	/// flags (`u32`).
 	</span>=&gt;
-	=&gt;
 	SHADER_INPUT <span class="number">0x0000_0010
 	</span>RENDER_TARGET_OUTPUT <span class="number">0x0000_0020
 	</span>BACK_BUFFER <span class="number">0x0000_0040
