@@ -4,14 +4,12 @@ const_ordinary! { AD: i32;
 	/// [`HDC::SetArcDirection`](crate::prelude::gdi_Hdc::SetArcDirection) `dir`
 	/// (`i32`).
 	=>
-	=>
 	COUNTERCLOCKWISE 1
 	CLOCKWISE 2
 }
 
 const_ordinary! { BI: u32;
 	/// [`BITMAPINFOHEADER`](crate::BITMAPINFOHEADER) `biCompression` (`u32`).
-	=>
 	=>
 	RGB 0
 	RLE8 1
@@ -24,7 +22,6 @@ const_ordinary! { BI: u32;
 const_ordinary! { BKMODE: i32;
 	/// [`HDC::SetBkMode`](crate::prelude::gdi_Hdc::SetBkMode) `mode` (`i32`).
 	=>
-	=>
 	TRANSPARENT 1
 	OPAQUE 2
 }
@@ -33,7 +30,6 @@ const_ordinary! { BSS: u32;
 	/// [`LOGBRUSH`](crate::LOGBRUSH) `lbStyle` (`u32`).
 	///
 	/// Originally has `BS` prefix.
-	=>
 	=>
 	SOLID 0
 	NULL 1
@@ -51,7 +47,6 @@ const_ordinary! { BSS: u32;
 const_ordinary! { CHARSET: u8;
 	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `char_set`
 	/// and [`LOGFONT`](crate::LOGFONT) `lfCharset` (`u8`).
-	=>
 	=>
 	ANSI 0
 	DEFAULT 1
@@ -80,7 +75,6 @@ const_ordinary! { CLIP: u8;
 	/// `clip_precision` and [`LOGFONT`](crate::LOGFONT) `lfClipPrecision`
 	/// (`u8`).
 	=>
-	=>
 	DEFAULT_PRECIS 0
 	CHARACTER_PRECIS 1
 	STROKE_PRECIS 2
@@ -97,7 +91,6 @@ const_ordinary! { CUR_OBJ: u32;
 	///
 	/// Originally has `OBJ` prefix.
 	=>
-	=>
 	BITMAP 7
 	BRUSH 2
 	FONT 6
@@ -107,7 +100,6 @@ const_ordinary! { CUR_OBJ: u32;
 
 const_ordinary! { DIB: u32;
 	/// [`LOGBRUSH`](crate::LOGBRUSH) `lbColor` (`u32`).
-	=>
 	=>
 	/// The color table consists of an array of 16-bit indexes into the
 	/// currently realized logical palette.
@@ -120,7 +112,6 @@ const_ordinary! { FF: u8;
 	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`) used with
 	/// [`PITCH`](crate::co::PITCH).
 	=>
-	=>
 	DONTCARE 0 << 4
 	ROMAN 1 << 4
 	SWISS 2 << 4
@@ -132,7 +123,6 @@ const_ordinary! { FF: u8;
 const_ordinary! { FW: u32;
 	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `weight`
 	/// and [`LOGFONT`](crate::LOGFONT) `lfWeight` (`u32`).
-	=>
 	=>
 	DONTCARE 0
 	THIN 100
@@ -156,7 +146,6 @@ const_ordinary! { GDC: i32;
 	/// (`i32`).
 	///
 	/// Originally has no prefix.
-	=>
 	=>
 	DRIVERVERSION 0
 	TECHNOLOGY 2
@@ -204,7 +193,6 @@ const_ordinary! { GM: i32;
 	/// [`HDC::SetGraphicsMode`](crate::prelude::gdi_Hdc::SetGraphicsMode)
 	/// `mode` (`i32`).
 	=>
-	=>
 	COMPATIBLE 1
 	ADVANCED 2
 }
@@ -212,7 +200,6 @@ const_ordinary! { GM: i32;
 const_ordinary! { HS: i32;
 	/// [`HBRUSH::CreateHatchBrush`](crate::prelude::gdi_Hbrush::CreateHatchBrush)
 	/// `hatch` (`i32`).
-	=>
 	=>
 	/// Horizontal hatch: `-----`.
 	HORIZONTAL 0
@@ -235,7 +222,6 @@ const_bitflag! { LR: u32;
 	/// [`HINSTANCE::LoadImageIcon`](crate::prelude::gdi_Hinstance::LoadImageIcon)
 	/// `load` (`u32`).
 	=>
-	=>
 	DEFAULTCOLOR 0x0000_0000
 	MONOCHROME 0x0000_0001
 	COLOR 0x0000_0002
@@ -255,7 +241,6 @@ const_ordinary! { OUT_PRECIS: u8;
 	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont)
 	/// `out_precision` and [`LOGFONT`](crate::LOGFONT) `lfOutPrecision` (`u8`).
 	=>
-	=>
 	DEFAULT 0
 	STRING 1
 	CHARACTER 2
@@ -272,7 +257,6 @@ const_ordinary! { OUT_PRECIS: u8;
 const_ordinary! { PC: u8;
 	/// [`PALETTEENTRY`](crate::PALETTEENTRY) `peFlags` (`u8`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	RESERVED 0x01
@@ -284,7 +268,6 @@ const_ordinary! { PITCH: u8;
 	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont)
 	/// `pitch_and_family` and [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily`
 	/// (`u8`) used with [`FF`](crate::co::FF).
-	=>
 	=>
 	DEFAULT 0
 	FIXED 1
@@ -302,7 +285,6 @@ const_ordinary! { PS: i32;
 	/// [`HPEN::CreatePen`](crate::prelude::gdi_Hpen::CreatePen) `style`
 	/// (`i32`).
 	=>
-	=>
 	SOLID 0
 	DASH 1
 	DOT 2
@@ -316,7 +298,6 @@ const_ordinary! { QUALITY: u8;
 	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `quality`
 	/// and [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).
 	=>
-	=>
 	DEFAULT 0
 	DRAFT 1
 	PROOF 2
@@ -329,7 +310,6 @@ const_ordinary! { QUALITY: u8;
 const_ordinary! { RGN: i32;
 	/// [`HDC::SelectClipPath`](crate::prelude::gdi_Hdc::SelectClipPath) `mode`
 	/// (`i32`).
-	=>
 	=>
 	AND 1
 	OR 2
@@ -345,7 +325,6 @@ const_ordinary! { ROP: u32;
 	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `dwRop`.
 	///
 	/// Originally has no prefix.
-	=>
 	=>
 	/// Copies the source rectangle directly to the destination rectangle.
 	SRCCOPY 0x00cc_0020
@@ -405,7 +384,6 @@ const_ordinary! { STOCK_BRUSH: i32;
 	/// [`HBRUSH::GetStockObject`](crate::prelude::gdi_Hbrush::GetStockObject)
 	/// `i` (`i32`).
 	=>
-	=>
 	BLACK 4
 	DKGRAY 3
 	DC 18
@@ -420,7 +398,6 @@ const_ordinary! { STOCK_FONT: i32;
 	/// [`HFONT::GetStockObject`](crate::prelude::gdi_Hfont::GetStockObject) `i`
 	/// (`i32`).
 	=>
-	=>
 	ANSI_FIXED 11
 	ANSI_VAR 12
 	DEVICE_DEFAULT 14
@@ -434,7 +411,6 @@ const_ordinary! { STOCK_PEN: i32;
 	/// [`HPEN::GetStockObject`](crate::prelude::gdi_Hpen::GetStockObject) `i`
 	/// (`i32`).
 	=>
-	=>
 	BLACK 7
 	DC 19
 	NULL 8
@@ -444,7 +420,6 @@ const_ordinary! { STOCK_PEN: i32;
 const_ordinary! { STRETCH_MODE: i32;
 	/// [`HDC::SetStretchBltMode`](crate::prelude::gdi_Hdc::SetStretchBltMode)
 	/// `mode` (`i32`).
-	=>
 	=>
 	/// Performs a Boolean AND operation using the color values for the
 	/// eliminated and existing pixels. If the bitmap is a monochrome bitmap,
@@ -481,7 +456,6 @@ const_bitflag! { TA: u32;
 	/// (`u32`).
 	///
 	/// Also includes constants with `VTA` prefix.
-	=>
 	=>
 	NOUPDATECP 0
 	UPDATECP 1

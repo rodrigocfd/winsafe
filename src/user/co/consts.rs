@@ -6,7 +6,6 @@ const_ordinary! { AC_SRC: u8;
 	/// [`BLENDFUNCTION`](crate::BLENDFUNCTION) `BlendOp` and `AlphaFormat`
 	/// (`u8`).
 	=>
-	=>
 	OVER 0x00
 	ALPHA 0x01
 }
@@ -15,7 +14,6 @@ const_bitflag! { ACCELF: u8;
 	/// [`ACCELL`](crate::ACCEL) `fVirt` (`u8`).
 	///
 	/// Originally has `F` prefix.
-	=>
 	=>
 	/// The `key` member specifies a virtual-key code. If this flag is not
 	/// specified key is assumed to specify a character code.
@@ -30,7 +28,6 @@ const_bitflag! { ACCELF: u8;
 
 const_ordinary! { APPCOMMAND: u16;
 	/// [`wm::AppCommand`](crate::msg::wm::AppCommand) commands (`u16`).
-	=>
 	=>
 	BROWSER_BACKWARD 1
 	BROWSER_FORWARD 2
@@ -93,7 +90,6 @@ const_wm! { BM;
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-messages)
 	/// (`u32`).
 	=>
-	=>
 	GETCHECK 0x00f0
 	SETCHECK 0x00f1
 	GETSTATE 0x00f2
@@ -109,7 +105,6 @@ const_cmd! { BN;
 	/// Button control `WM_COMMAND`
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
 	/// (`u16`).
-	=>
 	=>
 	CLICKED 0
 	PAINT 1
@@ -128,7 +123,6 @@ const_ws! { BS: u32;
 	/// Button control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/button-styles)
 	/// (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -166,7 +160,6 @@ const_bitflag! { BSM: u32;
 	/// [`BroadcastSystemMessage`](crate::BroadcastSystemMessage) `info` and
 	/// return value (`u32`).
 	=>
-	=>
 	ALLCOMPONENTS 0x0000_0000
 	VXDS 0x0000_0001
 	NETDRIVER 0x0000_0002
@@ -178,7 +171,6 @@ const_bitflag! { BSM: u32;
 const_bitflag! { BSF: u32;
 	/// [`BroadcastSystemMessage`](crate::BroadcastSystemMessage) `flags`
 	/// (`u32`).
-	=>
 	=>
 	QUERY 0x0000_0001
 	IGNORECURRENTTASK 0x0000_0002
@@ -196,7 +188,6 @@ const_bitflag! { BSF: u32;
 const_ordinary! { BST: u32;
 	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) return value (`u32`).
 	=>
-	=>
 	UNCHECKED 0x0000
 	CHECKED 0x0001
 	INDETERMINATE 0x0002
@@ -208,7 +199,6 @@ const_wm! { CB;
 	/// Combo box control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-messages)
 	/// (`u32`).
-	=>
 	=>
 	GETEDITSEL 0x0140
 	LIMITTEXT 0x0141
@@ -252,7 +242,6 @@ const_cmd! { CBN;
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications)
 	/// (`u16`).
 	=>
-	=>
 	ERRSPACE -1i16 as _
 	SELCHANGE 1
 	DBLCLK 2
@@ -270,7 +259,6 @@ const_ws! { CBS: u32;
 	/// Combo box control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/combo-box-styles)
 	/// (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -291,7 +279,6 @@ const_ws! { CBS: u32;
 
 const_bitflag! { CC: u32;
 	/// [`CHOOSECOLOR`](crate::CHOOSECOLOR) `Flags` (`u32`).
-	=>
 	=>
 	/// Causes the dialog box to use the color specified in the `rgbResult`
 	/// member as the initial color selection.
@@ -330,7 +317,6 @@ const_bitflag! { CC: u32;
 const_bitflag! { CDS: u32;
 	/// [`ChangeDisplaySettings`](crate::ChangeDisplaySettings) `flags` (`u32`).
 	=>
-	=>
 	DISABLE_UNSAFE_MODES 0x0000_0200
 	DYNAMICALLY 0
 	ENABLE_UNSAFE_MODES 0x0000_0100
@@ -348,7 +334,6 @@ const_ordinary! { CF: u16;
 	/// Standard clipboard
 	/// [formats](https://learn.microsoft.com/en-us/windows/win32/dataxchg/standard-clipboard-formats)
 	/// (`u16`).
-	=>
 	=>
 	TEXT 1
 	BITMAP 2
@@ -382,7 +367,6 @@ const_ordinary! { COLOR: i32;
 	/// System
 	/// [colors](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolor)
 	/// (`i32`).
-	=>
 	=>
 	SCROLLBAR 0
 	BACKGROUND 1
@@ -425,7 +409,6 @@ const_ordinary! { COLOR: i32;
 const_ordinary! { CLR: u32;
 	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `rgbFg` (`u32`).
 	=>
-	=>
 	NONE 0xffff_ffff
 	DEFAULT 0xff00_0000
 }
@@ -436,7 +419,6 @@ const_ordinary! { CMD: u16;
 	/// **Note:** Control-specific notification codes have their own types,
 	/// which are convertible to `CMD`.
 	=>
-	=>
 	Menu 0
 	Accelerator 1
 }
@@ -445,7 +427,6 @@ const_bitflag! { CS: u32;
 	/// Window class
 	/// [`styles`](https://learn.microsoft.com/en-us/windows/win32/winmsg/window-class-styles)
 	/// (`u32`).
-	=>
 	=>
 	VREDRAW 0x0001
 	HREDRAW 0x0002
@@ -465,7 +446,6 @@ const_bitflag! { CS: u32;
 const_bitflag! { CURSOR: u32;
 	/// [`CURSORINFO`](crate::CURSORINFO) `flags` (`u32`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	SHOWING 0x0000_0001
@@ -475,7 +455,6 @@ const_bitflag! { CURSOR: u32;
 const_bitflag! { DC: u32;
 	/// [`HWND::DrawCaption`](crate::prelude::user_Hwnd::DrawCaption) `flags`
 	/// (`u32`).
-	=>
 	=>
 	ACTIVE 0x0001
 	SMALLCAP 0x0002
@@ -490,7 +469,6 @@ const_ordinary! { DDC: u32;
 	/// [`DIALOG_DPI_CHANGE_BEHAVIORS`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ne-winuser-dialog_dpi_change_behaviors)
 	/// enumeration (`u32`).
 	=>
-	=>
 	DEFAULT 0x0000
 	DISABLE_ALL 0x0001
 	DISABLE_RESIZE 0x0002
@@ -500,7 +478,6 @@ const_ordinary! { DDC: u32;
 const_bitflag! { DDL: u16;
 	/// [`cb::Dir`](crate::msg::cb::Dir) and [`lb::Dir`](crate::msg::lb::Dir)
 	/// attributes (`u16`).
-	=>
 	=>
 	READWRITE 0x0000
 	READONLY 0x0001
@@ -520,7 +497,6 @@ const_bitflag! { DESKTOP_RIGHTS: u32;
 	///
 	/// Originally aglutinates [`co::ACCESS_RIGHTS`](crate::co::ACCESS_RIGHTS)
 	/// and specific constants with `DESKTOP` prefix.
-	=>
 	=>
 	DELETE ACCESS_RIGHTS::DELETE.raw()
 	READ_CONTROL ACCESS_RIGHTS::READ_CONTROL.raw()
@@ -548,14 +524,12 @@ const_ordinary! { DF: u32;
 	/// [`HDESK::OpenDesktop`](crate::prelude::user_Hdesk::OpenDesktop) `flags`
 	/// (`u32`).
 	=>
-	=>
 	ALLOWOTHERACCOUNTHOOK 0x0001
 }
 
 const_ordinary! { DISP_CHANGE: i32;
 	/// [`ChangeDisplaySettings`](crate::ChangeDisplaySettings) return value
 	/// (`u32`).
-	=>
 	=>
 	SUCCESSFUL 0
 	RESTART 1
@@ -569,7 +543,6 @@ const_ordinary! { DISP_CHANGE: i32;
 
 const_bitflag! { DISPLAY_DEVICE: u32;
 	/// [`DISPLAY_DEVICE`](crate::DISPLAY_DEVICE) `StateFlags` (`u32`).
-	=>
 	=>
 	ATTACHED_TO_DESKTOP 0x0000_0001
 	MULTI_DRIVER 0x0000_0002
@@ -588,7 +561,6 @@ const_bitflag! { DISPLAY_DEVICE: u32;
 
 const_bitflag! { DM: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmFields` (`u32`).
-	=>
 	=>
 	ORIENTATION 0x0000_0001
 	PAPERSIZE 0x0000_0002
@@ -625,7 +597,6 @@ const_bitflag! { DM: u32;
 const_ordinary! { DMBIN: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDefaultSource` (`i16`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	UPPER 1
@@ -650,7 +621,6 @@ const_ordinary! { DMBIN: i16;
 const_ordinary! { DMCOLOR: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmColor` (`i16`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	MONOCHROME 1
@@ -660,7 +630,6 @@ const_ordinary! { DMCOLOR: i16;
 const_ordinary! { DMDFO: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDisplayFixedOutput` (`u32`).
 	=>
-	=>
 	DEFAULT 0
 	STRETCH 1
 	CENTER 2
@@ -668,7 +637,6 @@ const_ordinary! { DMDFO: u32;
 
 const_bitflag! { DMDISPLAYFLAGS: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDisplayFlags` (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -678,7 +646,6 @@ const_bitflag! { DMDISPLAYFLAGS: u32;
 
 const_ordinary! { DMDITHER: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDitherType` (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -709,7 +676,6 @@ const_ordinary! { DMDITHER: u32;
 const_ordinary! { DMDO: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDisplayOrientation` (`u32`).
 	=>
-	=>
 	DEFAULT 0
 	D90 1
 	D180 2
@@ -718,7 +684,6 @@ const_ordinary! { DMDO: u32;
 
 const_ordinary! { DMDUP: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmDuplex` (`i16`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -729,7 +694,6 @@ const_ordinary! { DMDUP: i16;
 
 const_ordinary! { DMICM: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmICMIntent` (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -748,7 +712,6 @@ const_ordinary! { DMICM: u32;
 const_ordinary! { DMICMMETHOD: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmICMMethod` (`u32`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	/// ICM disabled.
@@ -766,7 +729,6 @@ const_ordinary! { DMICMMETHOD: u32;
 const_ordinary! { DMMEDIA: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmMediaType` (`u32`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	/// Standard paper.
@@ -782,7 +744,6 @@ const_ordinary! { DMMEDIA: u32;
 const_ordinary! { DMNUP: u32;
 	/// [`DEVMODE`](crate::DEVMODE) `dmNup` (`u32`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	SYSTEM 1
@@ -792,7 +753,6 @@ const_ordinary! { DMNUP: u32;
 const_ordinary! { DMORIENT: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmOrientation` (`i16`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	PORTRAIT 1
@@ -801,7 +761,6 @@ const_ordinary! { DMORIENT: i16;
 
 const_ordinary! { DMPAPER: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmPaperSize` (`i16`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -1044,7 +1003,6 @@ const_ordinary! { DMPAPER: i16;
 const_ordinary! { DMRES: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmPrintQuality` (`i16`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	DRAFT -1
@@ -1055,7 +1013,6 @@ const_ordinary! { DMRES: i16;
 
 const_ordinary! { DMTT: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmTTOption` (`i16`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -1071,7 +1028,6 @@ const_ordinary! { DMTT: i16;
 
 const_ordinary! { DLGC: u16;
 	/// [`wm::GetDlgCode`](crate::msg::wm::GetDlgCode) return value (`u16`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -1093,7 +1049,6 @@ const_ordinary! { DLGID: u16;
 	/// [`HWND::MessageBox`](crate::prelude::user_Hwnd::MessageBox) and
 	/// [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog).
 	=>
-	=>
 	OK 1
 	CANCEL 2
 	ABORT 3
@@ -1109,7 +1064,6 @@ const_ordinary! { DPI_HOSTING_BEHAVIOR: u32;
 	/// [`DPI_HOSTING_BEHAVIOR`](https://learn.microsoft.com/en-us/windows/win32/api/windef/ne-windef-dpi_hosting_behavior)
 	/// enumeration (`u32`).
 	=>
-	=>
 	INVALID -1i32 as _
 	DEFAULT 0
 	MIXED 1
@@ -1117,7 +1071,6 @@ const_ordinary! { DPI_HOSTING_BEHAVIOR: u32;
 
 const_bitflag! { DT: u32;
 	/// [`HDC::DrawText`](crate::prelude::user_Hdc::DrawText) `format` (`u32`).
-	=>
 	=>
 	TOP 0x0000_0000
 	LEFT 0x0000_0000
@@ -1148,7 +1101,6 @@ const_bitflag! { DT: u32;
 const_bitflag! { EC: u16;
 	/// [`em::GetImeStatus`](crate::msg::em::SetMargins) margins to set (`u16`).
 	=>
-	=>
 	LEFTMARGIN 0x0001
 	RIGHTMARGIN 0x0002
 	USEFONTINFO 0xffff
@@ -1157,13 +1109,11 @@ const_bitflag! { EC: u16;
 const_bitflag! { EDD: u32;
 	/// [`EnumDisplayDevices`](crate::EnumDisplayDevices) `flags` (`u32`).
 	=>
-	=>
 	GET_DEVICE_INTERFACE_NAME 0x0000_0001
 }
 
 const_bitflag! { EDS: u32;
 	/// [`EnumDisplaySettingsEx`](crate::EnumDisplaySettingsEx) `flags` (`u32`).
-	=>
 	=>
 	RAWMODE 0x0000_0002
 	ROTATEDMODE 0x0000_0004
@@ -1172,7 +1122,6 @@ const_bitflag! { EDS: u32;
 const_bitflag! { EIMES: u16;
 	/// [`em::GetImeStatus`](crate::msg::em::GetImeStatus) and
 	/// [`em::SetImeStatus`](crate::msg::em::SetImeStatus) status (`u16`).
-	=>
 	=>
 	GETCOMPSTRATONCE 0x0001
 	CANCELCOMPSTRINFOCUS 0x0002
@@ -1183,7 +1132,6 @@ const_wm! { EM;
 	/// Edit control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-messages)
 	/// (`u32`).
-	=>
 	=>
 	GETSEL 0x00b0
 	SETSEL 0x00b1
@@ -1232,7 +1180,6 @@ const_cmd! { EN;
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications)
 	/// (`u16`).
 	=>
-	=>
 	SETFOCUS 0x0100
 	KILLFOCUS 0x0200
 	CHANGE 0x0300
@@ -1250,7 +1197,6 @@ const_cmd! { EN;
 const_bitflag! { ENDSESSION: u32;
 	/// [`wm::EndSession`](crate::msg::wm::EndSession) event (`u32`).
 	=>
-	=>
 	RESTARTORSHUTDOWN 0
 	CLOSEAPP 0x0000_0001
 	CRITICAL 0x4000_0000
@@ -1263,7 +1209,6 @@ const_ordinary! { ENUM_SETTINGS: u32;
 	///
 	/// Originally with `ENUM` prefix and `SETTINGS` suffix.
 	=>
-	=>
 	CURRENT -1i32 as u32
 	REGISTRY -2i32 as u32
 }
@@ -1272,7 +1217,6 @@ const_ws! { ES: u32;
 	/// Edit control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/edit-control-styles)
 	/// (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -1330,7 +1274,6 @@ const_ordinary! { ESB: u32;
 	/// [`HWND::EnableScrollBar`](crate::prelude::user_Hwnd::EnableScrollBar)
 	/// `arrows` (`u32`).
 	=>
-	=>
 	ENABLE_BOTH 0x0000
 	DISABLE_BOTH 0x0003
 	DISABLE_LEFT 0x0001
@@ -1343,7 +1286,6 @@ const_ordinary! { ESB: u32;
 
 const_bitflag! { EWX: u32;
 	/// [`ExitWindowsEx`](crate::ExitWindowsEx) `flags` (`u32`).
-	=>
 	=>
 	HYBRID_SHUTDOWN 0x0040_0000
 	LOGOFF 0
@@ -1359,7 +1301,6 @@ const_bitflag! { EWX: u32;
 const_ordinary! { FAPPCOMMAND: u16;
 	/// [`wm::AppCommand`](crate::msg::wm::AppCommand) input event (`u16`).
 	=>
-	=>
 	MOUSE 0x8000
 	KEY 0
 	OEM 0x1000
@@ -1367,7 +1308,6 @@ const_ordinary! { FAPPCOMMAND: u16;
 
 const_bitflag! { FLASHW: u32;
 	/// [`FLASHWINFO`](crate::FLASHWINFO) `dwFlags` (`u32`).
-	=>
 	=>
 	ALL 0x0000_0003
 	CAPTION 0x0000_0001
@@ -1380,7 +1320,6 @@ const_bitflag! { FLASHW: u32;
 const_ordinary! { GA: u32;
 	/// [`HWND::GetAncestor`](crate::prelude::user_Hwnd::GetAncestor) `flags`
 	/// (`u32`).
-	=>
 	=>
 	/// Retrieves the parent window. This does not include the owner as it does
 	/// with the [`HWND::GetParent`](crate::prelude::user_Hwnd::GetParent)
@@ -1411,7 +1350,6 @@ const_ordinary! { GCLP: i32;
 	///
 	/// Originally has `GCW` and `GCL` prefixes.
 	=>
-	=>
 	ATOM -32
 	CBWNDEXTRA -18
 	CBCLSEXTRA -20
@@ -1428,14 +1366,12 @@ const_bitflag! { GMDI: u32;
 	/// [`HMENU::GetMenuDefaultItem`](crate::prelude::user_Hmenu::GetMenuDefaultItem)
 	/// `flags` (`u32`).
 	=>
-	=>
 	USEDISABLED 0x0001
 	GOINTOPOPUPS 0x0002
 }
 
 const_bitflag! { GUI: u32;
 	/// [`GUITHREADINFO`](crate::GUITHREADINFO) `flags` (`u32`).
-	=>
 	=>
 	CARETBLINKING 0x0000_0001
 	INMENUMODE 0x0000_0004
@@ -1446,7 +1382,6 @@ const_bitflag! { GUI: u32;
 
 const_ordinary! { GW: u32;
 	/// [`HWND::GetWindow`](crate::prelude::user_Hwnd::GetWindow) `cmd` (`u32`).
-	=>
 	=>
 	HWNDFIRST 0
 	HWNDLAST 1
@@ -1464,7 +1399,6 @@ const_ordinary! { GWL_C: i8;
 	///
 	/// Originally has `GWL` prefix.
 	=>
-	=>
 	EXSTYLE -20
 	STYLE -16
 }
@@ -1476,7 +1410,6 @@ const_ordinary! { GWLP: i32;
 	/// `index` (`i32`).
 	///
 	/// Originally has prefixes `GWL`, `GWLP`, `DWL` and `DWLP`.
-	=>
 	=>
 	WNDPROC -4
 	HINSTANCE -6
@@ -1494,7 +1427,6 @@ const_ordinary! { GWLP: i32;
 const_ordinary! { HELPINFO: i32;
 	/// [`HELPINFO`](crate::HELPINFO) `iContextType` (`i32`).
 	=>
-	=>
 	WINDOW 0x0001
 	MENUITEM 0x0002
 }
@@ -1504,7 +1436,6 @@ const_ordinary! { HELPW: u32;
 	/// (`u32`).
 	///
 	/// Originally has `HELP` prefix.
-	=>
 	=>
 	CONTEXT 0x0001
 	QUIT 0x0002
@@ -1532,7 +1463,6 @@ const_ordinary! { HELPW: u32;
 const_ordinary! { HT: u16;
 	/// [`wm::NcHitTest`](crate::msg::wm::NcHitTest),
 	/// [`wm::SetCursor`](crate::msg::wm::SetCursor) `hit_test` (`u16`).
-	=>
 	=>
 	BORDER 18
 	BOTTOM 15
@@ -1566,7 +1496,6 @@ const_ordinary! { HWND_PLACE: isize;
 	/// [`HWND::SetWindowPos`](crate::prelude::user_Hwnd::SetWindowPos)
 	/// `hWndInsertAfter` (`isize`).
 	=>
-	=>
 	TOP 0
 	BOTTOM 1
 	TOPMOST -1
@@ -1578,7 +1507,6 @@ const_ordinary! { ICON_SZ: u8;
 	///
 	/// Originally has `ICON` prefix.
 	=>
-	=>
 	SMALL 0
 	BIG 1
 }
@@ -1586,7 +1514,6 @@ const_ordinary! { ICON_SZ: u8;
 const_ordinary! { IDC: u32;
 	/// [`HINSTANCE::LoadCursor`](crate::prelude::user_Hinstance::LoadCursor)
 	/// `lpCursorName` (`u32`).
-	=>
 	=>
 	ARROW 32512
 	IBEAM 32513
@@ -1610,7 +1537,6 @@ const_ordinary! { IDI: u32;
 	/// [`HINSTANCE::LoadIcon`](crate::prelude::user_Hinstance::LoadIcon)
 	/// `lpIconName` (`u32`).
 	=>
-	=>
 	APPLICATION 32512
 	HAND 32513
 	QUESTION 32514
@@ -1629,7 +1555,6 @@ const_ordinary! { IMAGE_TYPE: u8;
 	///
 	/// Originally has `IMAGE` prefix.
 	=>
-	=>
 	BITMAP 0
 	ICON 1
 	CURSOR 2
@@ -1638,7 +1563,6 @@ const_ordinary! { IMAGE_TYPE: u8;
 
 const_ordinary! { INPUT: u32;
 	/// [`INPUT`](crate::INPUT) `type` (`u32`).
-	=>
 	=>
 	MOUSE 0
 	KEYBOARD 1
@@ -1651,7 +1575,6 @@ const_bitflag! { ISMEX: u32;
 	///
 	/// **Note:** This constant doesn't exist in x32.
 	=>
-	=>
 	NOSEND 0x0000_0000
 	CALLBACK 0x0000_0004
 	NOTIFY 0x0000_0002
@@ -1662,7 +1585,6 @@ const_bitflag! { ISMEX: u32;
 const_bitflag! { KEYEVENTF: u32;
 	/// [`KEYBDINPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-keybdinput)
 	/// `dwFlags` (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -1677,7 +1599,6 @@ const_ordinary! { LAYOUT: u32;
 	/// [`SetProcessDefaultLayout`](crate::SetProcessDefaultLayout) value
 	/// (`u32`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	/// Default horizontal layout is right to left.
@@ -1688,7 +1609,6 @@ const_wm! { LB;
 	/// List box control
 	/// [messages](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-messages)
 	/// (`u32`).
-	=>
 	=>
 	ADDSTRING 0x0180
 	INSERTSTRING 0x0181
@@ -1738,7 +1658,6 @@ const_cmd! { LBN;
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-box-control-reference-notifications)
 	/// (`u16`).
 	=>
-	=>
 	ERRSPACE -2i16 as _
 	SELCHANGE 1
 	DBLCLK 2
@@ -1751,7 +1670,6 @@ const_ws! { LBS: u32;
 	/// List box control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/list-box-styles)
 	/// (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -1778,7 +1696,6 @@ const_ordinary! { LSFW: u32;
 	/// [`LockSetForegroundWindow`](crate::LockSetForegroundWindow) `lock_code`
 	/// (`u32`).
 	=>
-	=>
 	LOCK 1
 	UNLOCK 2
 }
@@ -1787,7 +1704,6 @@ const_bitflag! { LWA: u32;
 	/// [`HWND::SetLayeredWindowAttributes`](crate::prelude::user_Hwnd::SetLayeredWindowAttributes)
 	/// `flags` (`u32`).
 	=>
-	=>
 	ALPHA 0x0000_0002
 	COLORKEY 0x0000_0001
 }
@@ -1795,7 +1711,6 @@ const_bitflag! { LWA: u32;
 const_bitflag! { MB: u32;
 	/// [`HWND::MessageBox`](crate::prelude::user_Hwnd::MessageBox) `flags`
 	/// (`u32`).
-	=>
 	=>
 	/// The message box contains three push buttons: Abort Retry and Ignore.
 	ABORTRETRYIGNORE 0x0000_0002
@@ -1931,7 +1846,6 @@ const_ordinary! { MBP: u32;
 	///
 	/// Originally a subset of the [`co::MB`](crate::co::MB) constants.
 	=>
-	=>
 	/// A simple beep. If the sound card is not available, the sound is
 	/// generated using the speaker. Maps to the `0xFFFFFFFF` value.
 	BEEP 0xffff_ffff
@@ -1948,7 +1862,6 @@ const_ordinary! { MDITILE: u32;
 	/// [`HWND::TileWindows`](crate::prelude::user_Hwnd::TileWindows) `how`
 	/// (`u32`).
 	=>
-	=>
 	MDITILE_VERTICAL 0x0000
 	HORIZONTAL 0x0001
 	SKIPDISABLED 0x0002
@@ -1956,7 +1869,6 @@ const_ordinary! { MDITILE: u32;
 
 const_bitflag! { MIIM: u32;
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fMask` (`u32`).
-	=>
 	=>
 	BITMAP 0x0000_0080
 	CHECKMARKS 0x0000_0008
@@ -1972,7 +1884,6 @@ const_bitflag! { MIIM: u32;
 const_bitflag! { MIM: u32;
 	/// [`MENUINFO`](crate::MENUINFO) `fMask` (`u32`).
 	=>
-	=>
 	MAXHEIGHT 0x0000_0001
 	BACKGROUND 0x0000_0002
 	HELPID 0x0000_0004
@@ -1984,7 +1895,6 @@ const_bitflag! { MIM: u32;
 const_bitflag! { MK: u16;
 	/// [`wm::LButtonDown`](crate::msg::wm::LButtonDown) (and similar) virtual
 	/// keys (`u16`).
-	=>
 	=>
 	LBUTTON 0x0001
 	RBUTTON 0x0002
@@ -2002,7 +1912,6 @@ const_bitflag! { MF: u32;
 	/// value,
 	/// [`HWND::HiliteMenuItem`](crate::prelude::user_Hwnd::HiliteMenuItem)
 	/// `hilite` (`u32`).
-	=>
 	=>
 	INSERT 0x0000_0000
 	CHANGE 0x0000_0080
@@ -2036,7 +1945,6 @@ const_bitflag! { MF: u32;
 const_bitflag! { MFS: u32;
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fState` (`u32`).
 	=>
-	=>
 	GRAYED 0x0000_0003
 	DISABLED MFS::GRAYED.0
 	CHECKED MF::CHECKED.0
@@ -2049,7 +1957,6 @@ const_bitflag! { MFS: u32;
 
 const_bitflag! { MFT: u32;
 	/// [`MENUITEMINFO`](crate::MENUITEMINFO) `fType` (`u32`).
-	=>
 	=>
 	STRING MF::STRING.0
 	BITMAP MF::BITMAP.0
@@ -2065,14 +1972,12 @@ const_bitflag! { MFT: u32;
 const_ordinary! { MND: u8;
 	/// [`wm::MenuDrag`](crate::msg::wm::MenuDrag) return value (`u8`).
 	=>
-	=>
 	CONTINUE 0
 	ENDMENU 1
 }
 
 const_bitflag! { MNS: u32;
 	/// [`MENUINFO`](crate::MENUINFO) `dwStyle` (`u32`).
-	=>
 	=>
 	NOCHECK 0x8000_0000
 	MODELESS 0x4000_0000
@@ -2085,7 +1990,6 @@ const_bitflag! { MNS: u32;
 const_bitflag! { MOD: u16;
 	/// [`RegisterHotKey`](crate::prelude::user_Hwnd::RegisterHotKey) modifiers
 	/// (`u16`).
-	=>
 	=>
 	ALT 0x0001
 	CONTROL 0x0002
@@ -2100,7 +2004,6 @@ const_ordinary! { MONITOR: u32;
 	/// [`HWND::MonitorFromWindow`](crate::prelude::user_Hwnd::MonitorFromWindow)
 	/// flags (`u32`).
 	=>
-	=>
 	DEFAULTTONULL 0x0000_0000
 	DEFAULTTOPRIMARY 0x0000_0001
 	DEFAULTTONEAREST 0x0000_0002
@@ -2108,7 +2011,6 @@ const_ordinary! { MONITOR: u32;
 
 const_ordinary! { MONITORINFOF: u32;
 	/// [`MONITORINFOEX`](crate::MONITORINFOEX) `dwFlags` (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -2118,7 +2020,6 @@ const_ordinary! { MONITORINFOF: u32;
 const_bitflag! { MOUSEEVENTF: u32;
 	/// [`MOUSEINPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-mouseinput)
 	/// `dwFlags` (`u32`).
-	=>
 	=>
 	MOVE 0x0001
 	LEFTDOWN 0x0002
@@ -2139,7 +2040,6 @@ const_bitflag! { MOUSEEVENTF: u32;
 const_ordinary! { MSGF: u8;
 	/// [`wm::EnterIdle`](crate::msg::wm::EnterIdle) reason (`u8`).
 	=>
-	=>
 	DIALOGBOX 0
 	MENU 2
 }
@@ -2147,7 +2047,6 @@ const_ordinary! { MSGF: u8;
 const_ordinary! { OBJID: u32;
 	/// [`HWND::GetMenuBarInfo`](crate::prelude::user_Hwnd::GetMenuBarInfo)
 	/// `idObject` (`i32`).
-	=>
 	=>
 	CLIENT 0xffff_fffc
 	MENU 0xffff_fffd
@@ -2157,7 +2056,6 @@ const_ordinary! { OBJID: u32;
 const_ordinary! { OBM: u32;
 	/// [`HINSTANCE::LoadImageBitmap`](crate::prelude::gdi_Hinstance::LoadImageBitmap)
 	/// OEM image identifier (`u32`).
-	=>
 	=>
 	CLOSE 32754
 	UPARROW 32753
@@ -2202,7 +2100,6 @@ const_ordinary! { OCR: u32;
 	/// [`HCURSOR::SetSystemCursor`](crate::prelude::user_Hcursor::SetSystemCursor)
 	/// OEM cursor identifier (`u32`).
 	=>
-	=>
 	NORMAL 32512
 	IBEAM 32513
 	WAIT 32514
@@ -2223,7 +2120,6 @@ const_ordinary! { OCR: u32;
 const_bitflag! { ODA: u32;
 	/// [`DRAWITEMSTRUCT`](crate::DRAWITEMSTRUCT) `itemAction` (`u32`).
 	=>
-	=>
 	DRAWENTIRE 0x0001
 	SELECT 0x0002
 	FOCUS 0x0004
@@ -2231,7 +2127,6 @@ const_bitflag! { ODA: u32;
 
 const_bitflag! { ODS: u32;
 	/// [`DRAWITEMSTRUCT`](crate::DRAWITEMSTRUCT) `itemState` (`u32`).
-	=>
 	=>
 	SELECTED 0x0001
 	GRAYED 0x0002
@@ -2249,7 +2144,6 @@ const_bitflag! { ODS: u32;
 const_ordinary! { ODT: u32;
 	/// [`DRAWITEMSTRUCT`](crate::DRAWITEMSTRUCT) `CtlType` (`u32`).
 	=>
-	=>
 	MENU 1
 	LISTBOX 2
 	COMBOBOX 3
@@ -2265,7 +2159,6 @@ const_ordinary! { ODT_C: u32;
 	///
 	/// Originally has `ODT` prefix.
 	=>
-	=>
 	LISTBOX ODT::LISTBOX.0
 	COMBOBOX ODT::COMBOBOX.0
 }
@@ -2273,7 +2166,6 @@ const_ordinary! { ODT_C: u32;
 const_ordinary! { OIC: u32;
 	/// [`HINSTANCE::LoadImageIcon`](crate::prelude::gdi_Hinstance::LoadImageIcon)
 	/// OEM icon identifier (`u32`).
-	=>
 	=>
 	SAMPLE 32512
 	HAND 32513
@@ -2290,7 +2182,6 @@ const_ordinary! { OIC: u32;
 const_bitflag! { PM: u32;
 	/// [`PeekMessage`](crate::PeekMessage) `remove_msg` (`u32`).
 	=>
-	=>
 	NOREMOVE 0x0000
 	REMOVE 0x0001
 	NOYIELD 0x0002
@@ -2303,7 +2194,6 @@ const_bitflag! { PM: u32;
 
 const_bitflag! { QS: u32;
 	/// [`GetQueueStatus`](crate::GetQueueStatus) `flags` (`u32`).
-	=>
 	=>
 	KEY 0x0001
 	MOUSEMOVE 0x0002
@@ -2326,7 +2216,6 @@ const_bitflag! { RDW: u32;
 	/// [`HWND::RedrawWindow`](crate::prelude::user_Hwnd::RedrawWindow) `flags`
 	/// (`u32`).
 	=>
-	=>
 	INVALIDATE 0x0001
 	INTERNALPAINT 0x0002
 	ERASE 0x0004
@@ -2347,7 +2236,6 @@ const_ordinary! { REGION: i32;
 	/// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject) return
 	/// value (`i32`).
 	=>
-	=>
 	NULL 1
 	SIMPLE 2
 	COMPLEX 3
@@ -2357,7 +2245,6 @@ const_ordinary! { SB_EM: u16;
 	/// [`em::Scroll`](crate::msg::em::Scroll) action.
 	///
 	/// Originally has `SB` prefix.
-	=>
 	=>
 	LINEUP 0
 	LINEDOWN 1
@@ -2370,7 +2257,6 @@ const_ordinary! { SB_REQ: u16;
 	/// [`wm::VScroll`](crate::msg::wm::VScroll) request (`u16`).
 	///
 	/// Originally has `SB` prefix.
-	=>
 	=>
 	LINEUP 0
 	LINELEFT 0
@@ -2398,7 +2284,6 @@ const_ordinary! { SBB: i32;
 	///
 	/// Originally has `SB` prefix.
 	=>
-	=>
 	HORZ 0
 	VERT 1
 	CTL 2
@@ -2408,7 +2293,6 @@ const_ordinary! { SBB: i32;
 const_ordinary! { SC: u32;
 	/// [`wm::SysCommand`](crate::msg::wm::SysCommand) type of system command
 	/// requested (`u32`).
-	=>
 	=>
 	CLOSE 0xf060
 	CONTEXTHELP 0xf180
@@ -2437,7 +2321,6 @@ const_bitflag! { SCROLLW: u32;
 	///
 	/// Originally has `SW` prefix.
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	SCROLLCHILDREN 0x0001
@@ -2449,7 +2332,6 @@ const_bitflag! { SCROLLW: u32;
 const_bitflag! { SIF: u32;
 	/// [`SCROLLINFO`](crate::SCROLLINFO) `fMask` (`u32`).
 	=>
-	=>
 	RANGE 0x0001
 	PAGE 0x0002
 	POS 0x0004
@@ -2460,7 +2342,6 @@ const_bitflag! { SIF: u32;
 
 const_ordinary! { SIZE_R: u8;
 	/// [`wm::Size`](crate::msg::wm::Size) request (`u8`).
-	=>
 	=>
 	/// The window has been resized but neither the `SIZE_R::MINIMIZED` nor
 	/// `SIZE_R::MAXIMIZED` value applies.
@@ -2479,7 +2360,6 @@ const_ordinary! { SIZE_R: u8;
 
 const_ordinary! { SM: i32;
 	/// [`GetSystemMetrics`](crate::GetSystemMetrics) `index` (`i32`).
-	=>
 	=>
 	CXSCREEN 0
 	CYSCREEN 1
@@ -2600,7 +2480,6 @@ const_bitflag! { SMTO: u32;
 	/// [`SendMessageTimeout`](crate::prelude::user_Hwnd::SendMessageTimeout)
 	/// `flags` (`u32`).
 	=>
-	=>
 	ABORTIFHUNG 0x0002
 	BLOCK 0x0001
 	NORMAL 0x0000
@@ -2610,7 +2489,6 @@ const_bitflag! { SMTO: u32;
 
 const_ordinary! { SPI: u32;
 	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `action` (`u32`).
-	=>
 	=>
 	GETBEEP 0x0001
 	SETBEEP 0x0002
@@ -2758,7 +2636,6 @@ const_ordinary! { SPI: u32;
 const_bitflag! { SPIF: u32;
 	/// [`SystemParametersInfo`](crate::SystemParametersInfo) `win_ini` (`u32`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	UPDATEINIFILE 0x0001
@@ -2770,7 +2647,6 @@ const_ws! { SS: u32;
 	/// Label control
 	/// [styles](https://learn.microsoft.com/en-us/windows/win32/controls/static-control-styles)
 	/// (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -2811,7 +2687,6 @@ const_bitflag! { STATE_SYSTEM: u32;
 	/// [`DATETIMEPICKERINFO`](crate::DATETIMEPICKERINFO) `stateCheck` and
 	/// `stateButton`, [`TITLEBARINFOEX`](crate::TITLEBARINFOEX) `rgstate`,
 	/// [`COMBOBOXINFO`](crate::COMBOBOXINFO) `stateButton` (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -2854,7 +2729,6 @@ const_cmd! { STN;
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-notifications)
 	/// (`u16`).
 	=>
-	=>
 	CLICKED 0
 	DBLCLK 1
 	ENABLE 2
@@ -2864,7 +2738,6 @@ const_cmd! { STN;
 const_bitflag! { SWP: u32;
 	/// [`HWND::SetWindowPos`](crate::prelude::user_Hwnd::SetWindowPos) `flags`
 	/// (`u32`).
-	=>
 	=>
 	NOSIZE 0x0001
 	NOMOVE 0x0002
@@ -2888,7 +2761,6 @@ const_ordinary! { SW_S: u8;
 	///
 	/// Originally has `SW` prefix.
 	=>
-	=>
 	PARENTCLOSING 1
 	OTHERZOOM 2
 	PARENTOPENING 3
@@ -2897,7 +2769,6 @@ const_ordinary! { SW_S: u8;
 
 const_bitflag! { TME: u32;
 	/// [`TrackMouseEvent`](crate::TrackMouseEvent) `dwFlags` (`u32`).
-	=>
 	=>
 	CANCEL 0x8000_0000
 	HOVER 0x0000_0001
@@ -2909,7 +2780,6 @@ const_bitflag! { TME: u32;
 const_bitflag! { TPM: u32;
 	/// [`TrackPopupMenu`](crate::prelude::user_Hmenu::TrackPopupMenu) `flags`
 	/// (`u32`).
-	=>
 	=>
 	LEFTBUTTON 0x0000
 	RIGHTBUTTON 0x0002
@@ -2937,7 +2807,6 @@ const_ordinary! { ULW: u32;
 	/// [`UpdateLayeredWindow`](crate::prelude::user_Hwnd::UpdateLayeredWindow)
 	/// `flags` (`u32`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	ALPHA 0x0000_0002
@@ -2950,7 +2819,6 @@ const_ordinary! { UOI: i32;
 	/// [`HPROCESS::SetUserObjectInformation`](crate::prelude::user_Hprocess::SetUserObjectInformation)
 	/// `index` (`i32`).
 	=>
-	=>
 	FLAGS 1
 	TIMERPROC_EXCEPTION_SUPPRESSION 7
 }
@@ -2958,7 +2826,6 @@ const_ordinary! { UOI: i32;
 const_ordinary! { VK: u16;
 	/// [Virtual key codes](https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes)
 	/// (`u16`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -3272,7 +3139,6 @@ const_ordinary! { VK: u16;
 const_ordinary! { WA: u16;
 	/// [`wm::Activate`](crate::msg::wm::Activate) activation state (`u16`).
 	=>
-	=>
 	INACTIVE 0
 	ACTIVE 1
 	CLICKACTIVE 2
@@ -3284,7 +3150,6 @@ const_ordinary! { WDA: u32;
 	/// [`HWND::SetWindowDisplayAffinity`](crate::prelude::user_Hwnd::SetWindowDisplayAffinity)
 	/// `dwAffinity` (`u32`).
 	=>
-	=>
 	NONE 0x0000_0000
 	MONITOR 0x0000_0001
 	EXCLUDEFROMCAPTURE 0x0000_0011
@@ -3295,7 +3160,6 @@ const_ordinary! { WH: i32;
 	/// `code` and
 	/// [`HHOOK::SetWindowsHookEx`](crate::prelude::user_Hhook::SetWindowsHookEx)
 	/// `hook_id` (`i32`).
-	=>
 	=>
 	MSGFILTER -1
 	JOURNALRECORD 0
@@ -3317,7 +3181,6 @@ const_ordinary! { WH: i32;
 const_bitflag! { WPF: u32;
 	/// [`WINDOWPLACEMENT`](crate::WINDOWPLACEMENT) `flags` (`u32`).
 	=>
-	=>
 	SETMINPOSITION 0x0001
 	RESTORETOMAXIMIZED 0x0002
 	ASYNCWINDOWPLACEMENT 0x0004
@@ -3328,7 +3191,6 @@ const_ordinary! { WM: u32;
 	///
 	/// **Note:** Control-specific messages have their own types, which are
 	/// convertible to `WM`.
-	=>
 	=>
 	NULL 0x0000
 	CREATE 0x0001
@@ -3593,7 +3455,6 @@ const_ordinary! { WM: u32;
 const_ordinary! { WMPN: u16;
 	/// [`wm::ParentNotify`](crate::msg::wm::ParentNotify) event (`u16`).
 	=>
-	=>
 	CREATE WM::CREATE.0 as u16
 	DESTROY WM::DESTROY.0 as u16
 	LBUTTONDOWN WM::LBUTTONDOWN.0 as u16
@@ -3605,7 +3466,6 @@ const_ordinary! { WMPN: u16;
 
 const_ordinary! { WMSZ: u8;
 	/// [`wm::Sizing`](crate::msg::wm::Sizing) window edge (`u8`).
-	=>
 	=>
 	LEFT 1
 	RIGHT 2
@@ -3624,7 +3484,6 @@ const_bitflag! { WS: u32;
 	///
 	/// **Note:** Control-specific styles have their own types, which are
 	/// convertible to `WS`.
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -3737,7 +3596,6 @@ const_bitflag! { WS_EX: u32;
 	///
 	/// **Note:** Control-specific extended styles have their own types, which
 	/// are convertible to `WS`.
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -3884,7 +3742,6 @@ const_bitflag! { WS_EX: u32;
 
 const_bitflag! { WVR: u32;
 	/// [`wm::NcCalcSize`](crate::msg::wm::NcCalcSize) return flags (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0

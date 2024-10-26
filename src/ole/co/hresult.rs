@@ -115,7 +115,6 @@ impl HRESULT {
 }
 
 const_values! { HRESULT;
-	=>
 	/// Operation successful.
 	S_OK 0
 	S_FALSE 1

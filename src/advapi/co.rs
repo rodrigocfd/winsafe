@@ -6,7 +6,6 @@ const_ordinary! { EVENTLOG: u16;
 	/// [`HEVENTLOG::ReportEvent`](crate::prelude::advapi_Heventlog::ReportEvent)
 	/// `event_type` [`u16`].
 	=>
-	=>
 	SUCCESS 0x0000
 	AUDIT_FAILURE 0x0010
 	AUDIT_SUCCESS 0x0008
@@ -18,7 +17,6 @@ const_ordinary! { EVENTLOG: u16;
 const_bitflag! { KEY: u32;
 	/// [Registry access rights](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights)
 	/// (`u32`).
-	=>
 	=>
 	QUERY_VALUE 0x0001
 	SET_VALUE 0x0002
@@ -40,7 +38,6 @@ const_ordinary! { REG: u32;
 	/// [value types](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-value-types)
 	/// (`u32`).
 	=>
-	=>
 	NONE 0
 	SZ 1
 	EXPAND_SZ 2
@@ -61,7 +58,6 @@ const_ordinary! { REG_DISPOSITION: u32;
 	/// [`HKEY::RegCreateKeyEx`](crate::prelude::advapi_Hkey::RegCreateKeyEx)
 	/// creation disposition (`u32`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	/// The key did not exist and was created.
@@ -73,7 +69,6 @@ const_ordinary! { REG_DISPOSITION: u32;
 const_bitflag! { REG_OPTION: u32;
 	/// [`HKEY::RegOpenKeyEx`](crate::prelude::advapi_Hkey::RegOpenKeyEx)
 	/// `options` (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -92,7 +87,6 @@ const_ordinary! { REG_RESTORE: u32;
 	///
 	/// Originally has `REG` prefix.
 	=>
-	=>
 	FORCE_RESTORE 0x0000_0008
 	WHOLE_HIVE_VOLATILE 0x0000_0001
 }
@@ -103,7 +97,6 @@ const_ordinary! { REG_SAVE: u32;
 	/// (`u32`).
 	///
 	/// Originally has `REG` prefix.
-	=>
 	=>
 	STANDARD_FORMAT 1
 	LATEST_FORMAT 2
@@ -117,7 +110,6 @@ const_ordinary! { RID: u32;
 	/// the authority that issued the `SID`.
 	///
 	/// Originally has `RID` suffix.
-	=>
 	=>
 	SECURITY_NULL 0x0000_0000
 	SECURITY_WORLD 0x0000_0000
@@ -286,7 +278,6 @@ const_bitflag! { RRF: u32;
 	/// [`HKEY::GetValue`](crate::prelude::advapi_Hkey::RegGetValue) `dwFlags`
 	/// (`u32`).
 	=>
-	=>
 	RT_REG_NONE 0x0000_0001
 	RT_REG_SZ 0x0000_0002
 	RT_REG_EXPAND_SZ 0x0000_0004
@@ -310,7 +301,6 @@ const_bitflag! { SC_MANAGER: u32;
 	/// Service Control Manager access rights
 	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights)
 	/// (`u32`).
-	=>
 	=>
 	ALL_ACCESS 0xf003f
 	CREATE_SERVICE 0x0002
@@ -376,7 +366,6 @@ const_bitflag! { SE_PRIV_ATTR: u32;
 	///
 	/// Originally has `SE_PRIVILEGE` prefix.
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	ENABLED_BY_DEFAULT 0x0000_0001
@@ -390,7 +379,6 @@ const_bitflag! { SECURITY_IMPERSONATION: u32;
 	/// [`SECURITY_IMPERSONATION_LEVEL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-security_impersonation_level)
 	/// enumeration (`u32`).
 	=>
-	=>
 	Anonymous 0
 	Identification 1
 	Impersonation 2
@@ -399,7 +387,6 @@ const_bitflag! { SECURITY_IMPERSONATION: u32;
 
 const_bitflag! { SERVICE_ACCEPT: u32;
 	/// [`SERVICE_STATUS`](crate::SERVICE_STATUS) `dwControlsAccepted` (`u32`).
-	=>
 	=>
 	NETBINDCHANGE 0x0000_0010
 	PARAMCHANGE 0x0000_0008
@@ -420,7 +407,6 @@ const_bitflag! { SERVICE_CONTROL: u32;
 	/// `dwControl` (`u32`).
 	///
 	/// Used within [`SvcCtl`](crate::SvcCtl) parsing.
-	=>
 	=>
 	CONTINUE 0x0000_0003
 	INTERROGATE 0x0000_0004
@@ -447,7 +433,6 @@ const_ordinary! { SERVICE_ERROR: u32;
 	/// [`HSC::CreateService`](crate::prelude::advapi_Hsc::CreateService)
 	/// `error_control` (`u32`).
 	=>
-	=>
 	CRITICAL 0x0000_0003
 	IGNORE 0x0000_0000
 	NORMAL 0x0000_0001
@@ -460,7 +445,6 @@ const_ordinary! { SERVICE_START: u32;
 	///
 	/// Originally has `SERVICE` prefix.
 	=>
-	=>
 	AUTO_START 0x0000_0002
 	BOOT_START 0x0000_0000
 	DEMAND_START 0x0000_0003
@@ -471,7 +455,6 @@ const_ordinary! { SERVICE_START: u32;
 const_ordinary! { SERVICE_STATE: u32;
 	/// [`HSERVICESTATUS::SetServiceStatus`](crate::prelude::advapi_Hservicestatus::SetServiceStatus)
 	/// `current_state` (u32)
-	=>
 	=>
 	CONTINUE_PENDING 0x0000_0005
 	PAUSE_PENDING 0x0000_0006
@@ -487,7 +470,6 @@ const_ordinary! { SERVICE_TYPE: u32;
 	/// `service_type` (`u32`).
 	///
 	/// Originally has `SERVICE` prefix.
-	=>
 	=>
 	ADAPTER 0x0000_0004
 	FILE_SYSTEM_DRIVER 0x0000_0002
@@ -506,7 +488,6 @@ const_ordinary! { SID_NAME_USE: u32;
 	///
 	/// Originally has `Sid` prefix.
 	=>
-	=>
 	User 1
 	Group 2
 	Domain 3
@@ -524,7 +505,6 @@ const_ordinary! { TOKEN_ELEVATION_TYPE: u32;
 	/// [`TOKEN_ELEVATION_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_elevation_type)
 	/// enumeration (`u32`).
 	=>
-	=>
 	Default 1
 	Full 2
 	Limited 3
@@ -533,7 +513,6 @@ const_ordinary! { TOKEN_ELEVATION_TYPE: u32;
 const_ordinary! { TOKEN_INFORMATION_CLASS: u32;
 	/// [`TOKEN_INFORMATION_CLASS`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_information_class)
 	/// enumeration (`u32`).
-	=>
 	=>
 	User 1
 	Groups 2
@@ -589,7 +568,6 @@ const_ordinary! { TOKEN_TYPE: u32;
 	/// [`TOKEN_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-token_type)
 	/// enumeration (`u32`).
 	=>
-	=>
 	Primary 1
 	Impersonation 2
 }
@@ -597,7 +575,6 @@ const_ordinary! { TOKEN_TYPE: u32;
 const_bitflag! { TRANSACTION: u32;
 	/// [`Transaction access masks`](https://learn.microsoft.com/en-us/windows/win32/ktm/transaction-access-masks)
 	/// (`u32`).
-	=>
 	=>
 	QUERY_INFORMATION 0x0001
 	SET_INFORMATION 0x0002
@@ -619,7 +596,6 @@ const_bitflag! { TRANSACTION_OPT: u32;
 	///
 	/// Originally has `TRANSACTION` prefix.
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	DO_NOT_PROMOTE 0x0000_0001
@@ -628,7 +604,6 @@ const_bitflag! { TRANSACTION_OPT: u32;
 const_ordinary! { WELL_KNOWN_SID_TYPE: u32;
 	/// [`WELL_KNOWN_SID_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-well_known_sid_type)
 	/// enumeration (`u32`).
-	=>
 	=>
 	Null 0
 	World 1

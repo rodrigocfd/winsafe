@@ -4,7 +4,6 @@ const_bitflag! { ADVF: u32;
 	/// [`ADVF`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-advf)
 	/// enumeration (`u32`).
 	=>
-	=>
 	NODATA 1
 	PRIMEFIRST 2
 	ONLYONCE 4
@@ -14,7 +13,6 @@ const_bitflag! { ADVF: u32;
 const_ordinary! { CLSCTX: u32;
 	/// [`CLSCTX`](https://learn.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
 	/// enumeration (`u32`).
-	=>
 	=>
 	/// Same process.
 	///
@@ -76,7 +74,6 @@ const_bitflag! { COINIT: u32;
 	/// [`COINIT`](https://learn.microsoft.com/en-us/windows/win32/api/objbase/ne-objbase-coinit)
 	/// enumeration (`u32`).
 	=>
-	=>
 	/// Initializes the thread for apartment-threaded object concurrency.
 	///
 	/// Use this when in a thread that creates a window.
@@ -98,7 +95,6 @@ const_bitflag! { DROPEFFECT: u32;
 	/// [`DROPEFFECT`](https://learn.microsoft.com/en-us/windows/win32/com/dropeffect-constants)
 	/// constants (`u32`).
 	=>
-	=>
 	NONE 0
 	COPY 1
 	MOVE 2
@@ -110,7 +106,6 @@ const_ordinary! { DVASPECT: u32;
 	/// [`DVASPECT`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-dvaspect)
 	/// enumeration (`u32`).
 	=>
-	=>
 	CONTENT 1
 	THUMBNAIL 2
 	ICON 4
@@ -119,7 +114,6 @@ const_ordinary! { DVASPECT: u32;
 
 const_ordinary! { FACILITY: u32;
 	/// [`HRESULT`](crate::co::HRESULT) facility (`u32`).
-	=>
 	=>
 	NULL 0
 	RPC 1
@@ -270,7 +264,6 @@ const_bitflag! { LOCKTYPE: u32;
 	/// [`LOCKTYPE`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-locktype)
 	/// enumeration (`u32`).
 	=>
-	=>
 	WRITE 1
 	EXCLUSIVE 2
 	ONLYONCE 4
@@ -279,7 +272,6 @@ const_bitflag! { LOCKTYPE: u32;
 const_ordinary! { MKRREDUCE: u32;
 	/// [How far](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-mkrreduce)
 	/// a moniker should be reduced (`u32`).
-	=>
 	=>
 	ONE (3 << 16)
 	TOUSER (2 << 16)
@@ -291,7 +283,6 @@ const_ordinary! { MKSYS: u32;
 	/// Moniker
 	/// [classes](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-mksys)
 	/// (`u32`).
-	=>
 	=>
 	NONE 0
 	GENERICCOMPOSITE 1
@@ -309,7 +300,6 @@ const_ordinary! { PICTYPE: i16;
 	/// [`PICTYPE`](https://learn.microsoft.com/en-us/windows/win32/com/pictype-constants)
 	/// constants (`i16`).
 	=>
-	=>
 	UNINITIALIZED -1
 	NONE 0
 	BITMAP 1
@@ -322,7 +312,6 @@ const_ordinary! { RPC_C_AUTHN: u32;
 	/// Authentication service
 	/// [constants](https://learn.microsoft.com/en-us/windows/win32/com/com-authentication-service-constants)
 	/// (`u32`).
-	=>
 	=>
 	NONE 0
 	DCE_PRIVATE 1
@@ -351,7 +340,6 @@ const_ordinary! { RPC_C_AUTHZ: u32;
 	/// [constants](https://learn.microsoft.com/en-us/windows/win32/com/com-authorization-constants)
 	/// (`u32`).
 	=>
-	=>
 	NONE 0
 	NAME 1
 	DCE 2
@@ -363,7 +351,6 @@ const_ordinary! { RPC_C_IMP_LEVEL: u32;
 	/// [constants](https://learn.microsoft.com/en-us/windows/win32/com/com-impersonation-level-constants)
 	/// (`u32`).
 	=>
-	=>
 	DEFAULT 0
 	ANONYMOUS 1
 	IDENTIFY 2
@@ -374,7 +361,6 @@ const_ordinary! { RPC_C_IMP_LEVEL: u32;
 const_ordinary! { RPC_C_QOS_CAPABILITIES: u32;
 	/// [Quality of service](https://learn.microsoft.com/en-us/windows/win32/rpc/quality-of-service)
 	/// capabilities (`u32`).
-	=>
 	=>
 	DEFAULT 0x0
 	MUTUAL_AUTH 0x1
@@ -388,14 +374,12 @@ const_ordinary! { RPC_C_QOS_CAPABILITIES: u32;
 const_ordinary! { SEC_WINNT_AUTH_IDENTITY: u32;
 	/// [`COAUTHIDENTITY`](crate::COAUTHIDENTITY) `Flags` (`u32`).
 	=>
-	=>
 	ANSI 0x1
 	UNICODE 0x2
 }
 
 const_ordinary! { SEVERITY: u8;
 	/// [`HRESULT`](crate::co::HRESULT) severity (`u8`).
-	=>
 	=>
 	SUCCESS 0
 	FAILURE 1
@@ -404,7 +388,6 @@ const_ordinary! { SEVERITY: u8;
 const_bitflag! { STGC: u32;
 	/// [`STGC`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-stgc)
 	/// enumeration (`u32`).
-	=>
 	=>
 	DEFAULT 0
 	OVERWRITE 1
@@ -416,7 +399,6 @@ const_bitflag! { STGC: u32;
 const_bitflag! { STGM: u32;
 	/// [`STGM`](https://learn.microsoft.com/en-us/windows/win32/stg/stgm-constants)
 	/// enumeration (`u32`).
-	=>
 	=>
 	READ 0x0000_0000
 	WRITE 0x0000_0001
@@ -442,7 +424,6 @@ const_ordinary! { STGMOVE: u32;
 	/// [`STGMOVE`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-stgmove)
 	/// enumeration (`u32`).
 	=>
-	=>
 	MOVE 0
 	COPY 1
 	SHALLOWCOPY 2
@@ -452,7 +433,6 @@ const_ordinary! { STREAM_SEEK: u32;
 	/// [`STREAM_SEEK`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-stream_seek)
 	/// enumeration (`u32`).
 	=>
-	=>
 	SET 0
 	CUR 1
 	END 2
@@ -461,7 +441,6 @@ const_ordinary! { STREAM_SEEK: u32;
 const_ordinary! { TYMED: u32;
 	/// [`TYMED`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-tymed)
 	/// enumeration (`u32`).
-	=>
 	=>
 	HGLOBAL 1
 	FILE 2

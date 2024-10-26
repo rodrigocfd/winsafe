@@ -4,7 +4,6 @@ const_bitflag! { DXGI_ADAPTER_FLAG: u32;
 	/// [`DXGI_ADAPTER_FLAG`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_adapter_flag)
 	/// enumeration (`u32`).
 	=>
-	=>
 	NONE 0
 	REMOTE 1
 	SOFTWARE 2
@@ -13,7 +12,6 @@ const_bitflag! { DXGI_ADAPTER_FLAG: u32;
 const_ordinary! { DXGI_COMPUTE_PREEMPTION: u32;
 	/// [`DXGI_COMPUTE_PREEMPTION_GRANULARITY`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi1_2/ne-dxgi1_2-dxgi_compute_preemption_granularity)
 	/// enumeration.
-	=>
 	=>
 	DMA_BUFFER_BOUNDARY 0
 	DISPATCH_BOUNDARY 1
@@ -26,7 +24,6 @@ const_bitflag! { DXGI_ENUM_MODES: u32;
 	/// [`DXGI_ENUM_MODES`](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-enum-modes)
 	/// enumeration (`u32`).
 	=>
-	=>
 	INTERLACED 1
 	SCALING 2
 	STEREO 4
@@ -36,7 +33,6 @@ const_bitflag! { DXGI_ENUM_MODES: u32;
 const_ordinary! { DXGI_FORMAT: u32;
 	/// [`DXGI_FORMAT`](https://learn.microsoft.com/en-us/windows/win32/api/dxgiformat/ne-dxgiformat-dxgi_format)
 	/// enumeration (`u32`).
-	=>
 	=>
 	UNKNOWN 0
 	R32G32B32A32_TYPELESS 1
@@ -163,7 +159,6 @@ const_ordinary! { DXGI_GRAPHICS_PREEMPTION: u32;
 	/// [`DXGI_GRAPHICS_PREEMPTION_GRANULARITY`]()
 	/// enumeration (`u32`).
 	=>
-	=>
 	DMA_BUFFER_BOUNDARY 0
 	PRIMITIVE_BOUNDARY 1
 	TRIANGLE_BOUNDARY 2
@@ -175,7 +170,6 @@ const_bitflag! { DXGI_MAP: u32;
 	/// [`IDXGISurface::Map`](crate::prelude::dxgi_IDXGISurface::Map)
 	/// `map_flags` (`u32`).
 	=>
-	=>
 	READ 1
 	WRITE 2
 	DISCARD 4
@@ -185,7 +179,6 @@ const_bitflag! { DXGI_MWA: u32;
 	/// [`IDXGIFactory::GetWindowAssociation`](crate::prelude::dxgi_IDXGIFactory::GetWindowAssociation)
 	/// `flags` (`u32`).
 	=>
-	=>
 	NO_WINDOW_CHANGES (1 << 0)
 	NO_ALT_ENTER (1 << 1)
 	NO_PRINT_SCREEN (1 << 2)
@@ -194,7 +187,6 @@ const_bitflag! { DXGI_MWA: u32;
 const_ordinary! { DXGI_MODE_ROTATION: u32;
 	/// [`DXGI_MODE_ROTATION`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173065(v=vs.85))
 	/// enumeration (`u32`).
-	=>
 	=>
 	UNSPECIFIED 0
 	IDENTITY 1
@@ -207,7 +199,6 @@ const_ordinary! { DXGI_MODE_SCALING: u32;
 	/// [`DXGI_MODE_SCALING`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173066(v=vs.85))
 	/// enumeration (`u32`).
 	=>
-	=>
 	UNSPECIFIED 0
 	CENTERED 1
 	STRETCHED 2
@@ -216,7 +207,6 @@ const_ordinary! { DXGI_MODE_SCALING: u32;
 const_ordinary! { DXGI_MODE_SCANLINE_ORDER: u32;
 	/// [`DXGI_MODE_SCANLINE_ORDER`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb173067(v=vs.85))
 	/// enumeration (`u32`).
-	=>
 	=>
 	UNSPECIFIED 0
 	PROGRESSIVE 1
@@ -227,7 +217,6 @@ const_ordinary! { DXGI_MODE_SCANLINE_ORDER: u32;
 const_bitflag! { DXGI_PRESENT: u32;
 	/// [`DXGI_PRESENT`](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-present)
 	/// enumeration (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -246,7 +235,6 @@ const_ordinary! { DXGI_RESIDENCY: u32;
 	/// [`DXGI_RESIDENCY`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_residency)
 	/// enumeration (`u32`).
 	=>
-	=>
 	FULLY_RESIDENT 1
 	RESIDENT_IN_SHARED_MEMORY 2
 	EVICTED_TO_DISK 3
@@ -258,7 +246,6 @@ const_ordinary! { DXGI_RESOURCE_PRIORITY: u32;
 	/// [`IDXGIResource::SetEvictionPriority`](crate::prelude::dxgi_IDXGIResource::SetEvictionPriority)
 	/// `eviction_priority` (`u32`).
 	=>
-	=>
 	MINIMUM 0x2800_0000
 	LOW 0x5000_0000
 	NORMAL 0x7800_0000
@@ -269,7 +256,6 @@ const_ordinary! { DXGI_RESOURCE_PRIORITY: u32;
 const_bitflag! { DXGI_SWAP_CHAIN_FLAG: u32;
 	/// [`DXGI_SWAP_CHAIN_FLAG`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_swap_chain_flag)
 	/// enumeration (`u32`).
-	=>
 	=>
 	NONPREROTATED 1
 	ALLOW_MODE_SWITCH 2
@@ -290,7 +276,6 @@ const_ordinary! { DXGI_SWAP_EFFECT: u32;
 	/// [`DXGI_SWAP_EFFECT`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/ne-dxgi-dxgi_swap_effect)
 	/// enumeration (`u32`).
 	=>
-	=>
 	DISCARD 0
 	SEQUENTIAL 1
 	FLIP_SEQUENTIAL 3
@@ -300,7 +285,6 @@ const_ordinary! { DXGI_SWAP_EFFECT: u32;
 const_bitflag! { DXGI_USAGE: u32;
 	/// [`DXGI_USAGE`](https://learn.microsoft.com/en-us/windows/win32/direct3ddxgi/dxgi-usage)
 	/// flags (`u32`).
-	=>
 	=>
 	SHADER_INPUT 0x0000_0010
 	RENDER_TARGET_OUTPUT 0x0000_0020

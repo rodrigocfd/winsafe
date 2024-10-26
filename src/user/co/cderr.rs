@@ -36,7 +36,6 @@ impl std::fmt::Debug for CDERR {
 }
 
 const_values! { CDERR;
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	DIALOGFAILURE 0xffff

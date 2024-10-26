@@ -3,7 +3,6 @@
 const_ordinary! { VFT: u32;
 	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileType` (`u32`).
 	=>
-	=>
 	UNKNOWN 0x0000_0000
 	APP 0x0000_0001
 	DLL 0x0000_0002
@@ -15,7 +14,6 @@ const_ordinary! { VFT: u32;
 
 const_ordinary! { VFT2: u32;
 	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileSubType` (`u32`).
-	=>
 	=>
 	UNKNOWN 0x0000_0000
 	DRV_PRINTER 0x0000_0001
@@ -39,7 +37,6 @@ const_ordinary! { VFT2: u32;
 const_ordinary! { VOS: u32;
 	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileOS` (`u32`).
 	=>
-	=>
 	UNKNOWN 0x0000_0000
 	DOS 0x0001_0000
 	OS216 0x0002_0000
@@ -62,7 +59,6 @@ const_ordinary! { VOS: u32;
 
 const_bitflag! { VS_FF: u32;
 	/// [`VS_FIXEDFILEINFO`](crate::VS_FIXEDFILEINFO) `dwFileFlags` (`u32`).
-	=>
 	=>
 	DEBUG 0x0000_0001
 	PRERELEASE 0x0000_0002

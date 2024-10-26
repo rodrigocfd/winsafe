@@ -2,7 +2,6 @@ const_bitflag! { VT: u16;
 	/// [`VARENUM`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-varenum)
 	/// enumeration (`u16`).
 	=>
-	=>
 	/// Nothing.
 	EMPTY 0
 	/// SQL style NULL.

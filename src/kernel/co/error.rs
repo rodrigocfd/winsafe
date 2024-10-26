@@ -61,7 +61,6 @@ impl std::fmt::Debug for ERROR {
 impl FormattedError for ERROR {}
 
 const_values! { ERROR;
-	=>
 	/// The operation completed successfully.
 	SUCCESS 0
 	INVALID_FUNCTION 1

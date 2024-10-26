@@ -2,7 +2,6 @@ const_ordinary! { PROPERTYORIGIN: u32;
 	/// [`PROPERTYORIGIN`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/ne-uxtheme-propertyorigin)
 	/// enumeration (`u32`).
 	=>
-	=>
 	STATE 0
 	PART 1
 	CLASS 2
@@ -14,7 +13,6 @@ const_ordinary! { STAP: u32;
 	/// [`HTHEME::GetThemeAppProperties`](crate::prelude::uxtheme_Htheme::GetThemeAppProperties)
 	/// return value (`u32`).
 	=>
-	=>
 	ALLOW_NONCLIENT 1 << 0
 	ALLOW_CONTROLS 1 << 1
 	ALLOW_WEBCONTENT 1 << 2
@@ -25,7 +23,6 @@ const_ordinary! { THEMESIZE: u32;
 	/// [`THEMESIZE`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/ne-uxtheme-themesize)
 	/// enumeration (`u32`).
 	=>
-	=>
 	MIN 0
 	TRUE 1
 	DRAW 2
@@ -35,7 +32,6 @@ const_ordinary! { TMT: i32;
 	/// Theme property
 	/// [identifiers](https://learn.microsoft.com/en-us/windows/win32/controls/property-typedefs)
 	/// (`i32`).
-	=>
 	=>
 	DIBDATA 2
 	GLYPHDIBDATA 8

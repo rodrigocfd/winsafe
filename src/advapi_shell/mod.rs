@@ -4,6 +4,7 @@ mod ffi;
 mod funcs;
 mod structs;
 
+pub(crate) mod privs;
 pub mod co;
 
 pub mod decl {

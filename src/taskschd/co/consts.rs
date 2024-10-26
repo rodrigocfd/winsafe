@@ -4,7 +4,6 @@ const_ordinary! { TASK_ACTION_TYPE: u32;
 	/// [`TASK_ACTION_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/ne-taskschd-task_action_type)
 	/// enumeration (`u32`);
 	=>
-	=>
 	EXEC 0
 	COM_HANDLER 5
 	SEND_EMAIL 6
@@ -16,7 +15,6 @@ const_bitflag! { TASK_CREATION: u32;
 	/// enumeration (`u32`).
 	///
 	/// Originally has `TASK` prefix.
-	=>
 	=>
 	VALIDATE_ONLY 0x1
 	CREATE 0x2
@@ -31,7 +29,6 @@ const_bitflag! { TASK_LOGON: u32;
 	/// [`TASK_LOGON_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/ne-taskschd-task_logon_type)
 	/// enumeration (`u32`).
 	=>
-	=>
 	NONE 0
 	PASSWORD 1
 	S4U 2
@@ -45,7 +42,6 @@ const_ordinary! { TASK_STATE: u32;
 	/// [`TASK_STATE`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/ne-taskschd-task_state)
 	/// enumeration (`u32`).
 	=>
-	=>
 	UNKNOWN 0
 	DISABLED 1
 	QUEUED 2
@@ -56,7 +52,6 @@ const_ordinary! { TASK_STATE: u32;
 const_ordinary! { TASK_TRIGGER_TYPE2: u32;
 	/// [`TASK_TRIGGER_TYPE2`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/ne-taskschd-task_trigger_type2)
 	/// enumeration (`u32`).
-	=>
 	=>
 	EVENT 0
 	TIME 1

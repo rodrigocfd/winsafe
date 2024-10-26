@@ -6,7 +6,6 @@ const_ordinary! { FDEOR: u32;
 	/// [`FDE_OVERWRITE_RESPONSE`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-fde_overwrite_response)
 	/// enumeration (`u32`).
 	=>
-	=>
 	DEFAULT 0
 	ACCEPT 1
 	REFUSE 2
@@ -16,7 +15,6 @@ const_ordinary! { FDESVR: u32;
 	/// [`FDE_SHAREVIOLATION_RESPONSE`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-fde_shareviolation_response)
 	/// enumeration (`u32`).
 	=>
-	=>
 	DEFAULT 0
 	ACCEPT 1
 	REFUSE 2
@@ -24,7 +22,6 @@ const_ordinary! { FDESVR: u32;
 
 const_ordinary! { FO: u32;
 	/// [`SHFILEOPSTRUCT`](crate::SHFILEOPSTRUCT) `wFunc` (`u32`).
-	=>
 	=>
 	MOVE 0x0001
 	COPY 0x0002
@@ -34,7 +31,6 @@ const_ordinary! { FO: u32;
 
 const_bitflag! { FOF: u16;
 	/// [`SHFILEOPSTRUCT`](crate::SHFILEOPSTRUCT) `fFlags` (`u16`).
-	=>
 	=>
 	MULTIDESTFILES 0x0001
 	CONFIRMMOUSE 0x0002
@@ -58,7 +54,6 @@ const_bitflag! { FOF: u16;
 const_bitflag! { FOS: u32;
 	/// [`_FILEOPENDIALOGOPTIONS`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_fileopendialogoptions)
 	/// enumeration (`u32`).
-	=>
 	=>
 	/// When saving a file prompt before overwriting an existing file of the
 	/// same name. This is a default value for the Save dialog.
@@ -161,7 +156,6 @@ const_ordinary! { FDAP: u32;
 	/// [`FDAP`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-fdap)
 	/// enumeration (`u32`).
 	=>
-	=>
 	BOTTOM 0
 	TOP 1
 }
@@ -169,7 +163,6 @@ const_ordinary! { FDAP: u32;
 const_bitflag! { GPS: u32;
 	/// [`GETPROPERTYSTOREFLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/ne-propsys-getpropertystoreflags)
 	/// enumeration (`u32`).
-	=>
 	=>
 	DEFAULT 0
 	HANDLERPROPERTIESONLY 0x1
@@ -193,7 +186,6 @@ const_bitflag! { HOTKEYF: u16;
 	/// [`wm::SetHotKey`](crate::msg::wm::SetHotKey) modifiers;
 	/// [`SHELLEXECUTEINFO`](crate::SHELLEXECUTEINFO) `dwHotKey` (`u16`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	ALT 0x04
@@ -205,7 +197,6 @@ const_bitflag! { HOTKEYF: u16;
 const_bitflag! { KF: u32;
 	/// [`KNOWN_FOLDER_FLAG`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/ne-shlobj_core-known_folder_flag)
 	/// enumeration (`u32`).
-	=>
 	=>
 	DEFAULT 0x0000_0000
    FORCE_APP_DATA_REDIRECTION 0x0008_0000
@@ -228,7 +219,6 @@ const_bitflag! { KF: u32;
 const_bitflag! { NIF: u32;
 	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `uFlags` (`u32`).
 	=>
-	=>
 	MESSAGE 0x0000_0001
 	ICON 0x0000_0002
 	TIP 0x0000_0004
@@ -241,7 +231,6 @@ const_bitflag! { NIF: u32;
 
 const_bitflag! { NIIF: u32;
 	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `dwInfoFlags` (`u32`).
-	=>
 	=>
 	NONE 0x0000_0000
 	INFO 0x0000_0001
@@ -256,7 +245,6 @@ const_bitflag! { NIIF: u32;
 const_ordinary! { NIM: u32;
 	/// [`Shell_NotifyIcon`](crate::Shell_NotifyIcon) `message` (`u32`).
 	=>
-	=>
 	ADD 0x0000_0000
 	MODIFY 0x0000_0001
 	DELETE 0x0000_0002
@@ -268,7 +256,6 @@ const_bitflag! { NIS: u32;
 	/// [`NOTIFYICONDATA`](crate::NOTIFYICONDATA) `dwState` and `dwStateFlags`
 	/// (`u32`).
 	=>
-	=>
 	HIDDEN 0x0000_0001
 	SHAREDICON 0x0000_0002
 }
@@ -276,7 +263,6 @@ const_bitflag! { NIS: u32;
 const_bitflag! { SFGAO: u32;
 	/// [`SFGAO`](https://learn.microsoft.com/en-us/windows/win32/shell/sfgao)
 	/// constants (`u32`).
-	=>
 	=>
 	CANCOPY DROPEFFECT::COPY.raw()
 	CANMOVE DROPEFFECT::MOVE.raw()
@@ -318,7 +304,6 @@ const_ordinary! { SHARD: u32;
 	/// [`SHARD`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/ne-shlobj_core-shard)
 	/// enumeration (`u32`).
 	=>
-	=>
 	PIDL 0x0000_0001
 	PATHA 0x0000_0002
 	PATHW 0x0000_0003
@@ -331,7 +316,6 @@ const_ordinary! { SHARD: u32;
 
 const_bitflag! { SHGFI: u32;
 	/// [`SHGetFileInfo`](crate::SHGetFileInfo) `flags` (`u32`).
-	=>
 	=>
 	ICON 0x0000_0100
 	DISPLAYNAME 0x0000_0200
@@ -356,7 +340,6 @@ const_bitflag! { SHGFI: u32;
 const_bitflag! { SHGSI: u32;
 	/// [`SHGetStockIconInfo`](crate::SHGetStockIconInfo) `flags` (`u32`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	ICONLOCATION 0
@@ -373,7 +356,6 @@ const_ordinary! { SICHINTF: u32;
 	/// [`SICHINTF`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_sichintf)
 	/// enumeration (`u32`).
 	=>
-	=>
 	DISPLAY 0
 	ALLFIELDS 0x8000_0000
 	CANONICAL 0x1000_0000
@@ -383,7 +365,6 @@ const_ordinary! { SICHINTF: u32;
 const_ordinary! { SIGDN: u32;
 	/// [`SIGDN`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-sigdn)
 	/// enumeration (`u32`).
-	=>
 	=>
 	/// Returns the display name relative to the parent folder. In UI this name
 	/// is generally ideal for display to the user.
@@ -428,7 +409,6 @@ const_ordinary! { SIID: u32;
 	/// [`SHSTOCKICONID`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ne-shellapi-shstockiconid)
 	/// enumeration, [`SHGetStockIconInfo`](crate::SHGetStockIconInfo) `siid`
 	/// (`u32`).
-	=>
 	=>
 	DOCNOASSOC 0
 	DOCASSOC 1
@@ -530,7 +510,6 @@ const_bitflag! { SLGP: u32;
 	/// [`IShellLink::GetPath`](crate::prelude::shell_IShellLink::GetPath)
 	/// `flags` (`u32`).
 	=>
-	=>
 	SHORTPATH 0x1
 	UNCPRIORITY 0x2
 	RAWPATH 0x4
@@ -540,7 +519,6 @@ const_bitflag! { SLGP: u32;
 const_bitflag! { SLR: u32;
 	/// [`IShellLink::Resolve`](crate::prelude::shell_IShellLink::GetPath)
 	/// `flags` (`u32`).
-	=>
 	=>
 	NONE 0
 	NO_UI 0x1
@@ -563,7 +541,6 @@ const_ordinary! { STPFLAG: u32;
 	/// [`STPFLAG`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-stpflag)
 	/// enumeration (`u32`).
 	=>
-	=>
 	NONE 0
 	USEAPPTHUMBNAILALWAYS 0x1
 	USEAPPTHUMBNAILWHENACTIVE 0x2
@@ -574,7 +551,6 @@ const_ordinary! { STPFLAG: u32;
 const_ordinary! { TBPF: u32;
 	/// [`ITaskbarList3::SetProgressState`](crate::prelude::shell_ITaskbarList3::SetProgressState)
 	/// `tbpFlags` (`u32`).
-	=>
 	=>
 	/// Stops displaying progress and returns the button to its normal state.
 	/// Call this method with this flag to dismiss the progress bar when the

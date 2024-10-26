@@ -7,7 +7,6 @@ const_bitflag! { ACCESS_RIGHTS: u32;
 	///
 	/// Originally has no prefix.
 	=>
-	=>
 	DELETE 0x0001_0000
 	READ_CONTROL 0x0002_0000
 	WRITE_DAC 0x0004_0000
@@ -18,7 +17,6 @@ const_bitflag! { ACCESS_RIGHTS: u32;
 const_bitflag! { CLAIM_SECURITY_ATTRIBUTE: u16;
 	/// [`CLAIM_SECURITY_ATTRIBUTE_V1`](crate::CLAIM_SECURITY_ATTRIBUTE_V1)
 	/// `Flags` (`u16`);
-	=>
 	=>
 	NON_INHERITABLE 0x0001
 	VALUE_CASE_SENSITIVE 0x0002
@@ -31,7 +29,6 @@ const_bitflag! { CLAIM_SECURITY_ATTRIBUTE: u16;
 const_ordinary! { CLAIM_SECURITY_ATTRIBUTE_TYPE: u16;
 	/// [`CLAIM_SECURITY_ATTRIBUTE_V1`](crate::CLAIM_SECURITY_ATTRIBUTE_V1)
 	/// `ValueType` (`u16`);
-	=>
 	=>
 	INT64 0x0001
 	UINT64 0x0002
@@ -47,7 +44,6 @@ const_bitflag! { CONSOLE: u32;
 	/// `mode` (`u32`).
 	///
 	/// Originally has no prefix.
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -77,7 +73,6 @@ const_ordinary! { CP: u16;
 	///
 	/// Originally these functions receive an `u32` parameter, but these are in
 	/// fact `u16` constants.
-	=>
 	=>
 	/// The system default Windows ANSI code page.
 	ACP 0
@@ -137,7 +132,6 @@ const_bitflag! { CREATE: u32;
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/procthread/process-creation-flags)
 	/// (`u32`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	BREAKAWAY_FROM_JOB 0x0100_0000
@@ -168,14 +162,12 @@ const_bitflag! { CREATE_EVENT: u32;
 	/// [`HEVENT::CreateEventEx`](crate::prelude::kernel_Hevent::CreateEventEx)
 	/// `flags` (`u32`).
 	=>
-	=>
 	INITIAL_SET 0x0000_0002
 	MANUAL_RESET 0x0000_0001
 }
 
 const_ordinary! { DBT: u16;
 	/// [`wm::DeviceChange`](crate::msg::wm::DeviceChange) event (`u16`).
-	=>
 	=>
 	DEVNODES_CHANGED 0x0007
 	QUERYCHANGECONFIG 0x0017
@@ -195,7 +187,6 @@ const_ordinary! { DBT_DEVTYP: u32;
 	/// [`DEV_BROADCAST_HDR`](crate::DEV_BROADCAST_HDR) `dbch_devicetype`
 	/// (`u32`).
 	=>
-	=>
 	DEVICEINTERFACE 0x0000_0005
 	HANDLE 0x0000_0006
 	OEM 0x0000_0000
@@ -207,7 +198,6 @@ const_bitflag! { DBTF: u16;
 	/// [`DEV_BROADCAST_VOLUME`](crate::DEV_BROADCAST_VOLUME) `dbcv_flags`
 	/// (`u16`).
 	=>
-	=>
 	MEDIA 0x0001
 	NET 0x0002
 }
@@ -217,7 +207,6 @@ const_ordinary! { DISPOSITION: u32;
 	/// `creation_disposition` (`u32`).
 	///
 	/// Originally has no prefix.
-	=>
 	=>
 	/// Creates a new file only if it does not already exist.
 	///
@@ -269,7 +258,6 @@ const_ordinary! { DISPOSITION: u32;
 const_ordinary! { DRIVE: u32;
 	/// [`GetDriveType`](crate::GetDriveType) return type (`u32`).
 	=>
-	=>
 	UNKNOWN 0
 	NO_ROOT_DIR 1
 	REMOVABLE 2
@@ -283,7 +271,6 @@ const_bitflag! { EVENT_RIGHTS: u32;
 	/// Event
 	/// [access rights](https://learn.microsoft.com/en-us/windows/win32/sync/synchronization-object-security-and-access-rights)
 	/// (`u32`).
-	=>
 	=>
 	DELETE ACCESS_RIGHTS::DELETE.0
 	READ_CONTROL ACCESS_RIGHTS::READ_CONTROL.0
@@ -299,7 +286,6 @@ const_bitflag! { FILE_ATTRIBUTE: u32;
 	/// File
 	/// [attributes](https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants)
 	/// (`u32`).
-	=>
 	=>
 	READONLY 0x0000_0001
 	HIDDEN 0x0000_0002
@@ -329,7 +315,6 @@ const_bitflag! { FILE_CACHE: u32;
 	/// [`GetSystemFileCacheSize`](crate::GetSystemFileCacheSize) returned flags
 	/// (`u32`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	MAX_HARD_ENABLE 0x1
@@ -339,7 +324,6 @@ const_bitflag! { FILE_CACHE: u32;
 const_bitflag! { FILE_FLAG: u32;
 	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile) `flags`
 	/// (`u32`).
-	=>
 	=>
 	BACKUP_SEMANTICS 0x0200_0000
 	DELETE_ON_CLOSE 0x0400_0000
@@ -358,7 +342,6 @@ const_bitflag! { FILE_MAP: u32;
 	/// [`HFILEMAP::MapViewOfFile`](crate::prelude::kernel_Hfilemap::MapViewOfFile)
 	/// `desired_access` (`u32`).
 	=>
-	=>
 	ALL_ACCESS SECTION::ALL_ACCESS.0
 	READ SECTION::MAP_READ.0
 	WRITE SECTION::MAP_WRITE.0
@@ -373,7 +356,6 @@ const_bitflag! { FILE_SHARE: u32;
 	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
 	/// `share_mode` (`u32`).
 	=>
-	=>
 	READ 0x0000_0001
 	WRITE 0x0000_0002
 	DELETE 0x0000_0004
@@ -384,7 +366,6 @@ const_bitflag! { FILE_SECURITY: u32;
 	/// `security` (`u32`).
 	///
 	/// Originally has `SECURITY` prefix.
-	=>
 	=>
 	ANONYMOUS 0 << 16
 	IDENTIFICATION 1 << 16
@@ -400,7 +381,6 @@ const_ordinary! { FILE_STARTING_POINT: u32;
 	///
 	/// Originally has `FILE` prefix.
 	=>
-	=>
 	/// The starting point is zero or the beginning of the file. If this flag is
 	/// specified then the `liDistanceToMove` parameter is interpreted as an
 	/// unsigned value.
@@ -414,7 +394,6 @@ const_ordinary! { FILE_STARTING_POINT: u32;
 const_ordinary! { FILE_TYPE: u32;
 	/// [`HFILE::GetFileType`](crate::prelude::kernel_Hfile::GetFileType) return
 	/// value (`u32`).
-	=>
 	=>
 	/// The specified file is a character file typically an LPT device or a
 	/// console.
@@ -434,7 +413,6 @@ const_bitflag! { FILE_VOL: u32;
 	/// [`GetVolumeInformation`](crate::GetVolumeInformation) `flags` (`u32`).
 	///
 	/// Originally has `FILE` prefix.
-	=>
 	=>
 	CASE_PRESERVED_NAMES 0x0000_0002
 	CASE_SENSITIVE_SEARCH 0x0000_0001
@@ -463,7 +441,6 @@ const_ordinary! { FIRMWARE_TYPE: u32;
 	/// [`FIRMWARE_TYPE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-firmware_type)
 	/// enumeration (`u32`).
 	=>
-	=>
 	Unknown 0
 	Bios 1
 	Uefi 2
@@ -472,7 +449,6 @@ const_ordinary! { FIRMWARE_TYPE: u32;
 const_bitflag! { FORMAT_MESSAGE: u32;
 	/// [`FormatMessage`](crate::prelude::FormattedError::FormatMessage)
 	/// `dwFlags` (`u32`).
-	=>
 	=>
 	ALLOCATE_BUFFER 0x0000_0100
 	ARGUMENT_ARRAY 0x0000_2000
@@ -487,7 +463,6 @@ const_bitflag! { GENERIC: u32;
 	/// Generic access rights
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/secauthz/generic-access-rights)
 	/// (`u32`).
-	=>
 	=>
 	/// Read access.
 	READ 0x8000_0000
@@ -504,7 +479,6 @@ const_bitflag! { GMEM: u32;
 	/// and
 	/// [`HGLOBAL::GlobalReAlloc`](crate::prelude::kernel_Hglobal::GlobalReAlloc)
 	/// `flags` (`u32`).
-	=>
 	=>
 	/// Allocates fixed memory. The return value is a pointer to the memory
 	/// object.
@@ -528,7 +502,6 @@ const_bitflag! { GR: u32;
 	/// [`HPROCESS::GetGuiResources`](crate::prelude::kernel_Hprocess::GetGuiResources)
 	/// `flags` (`u32`).
 	=>
-	=>
 	GDIOBJECTS 0
 	GDIOBJECTS_PEAK 2
 	USEROBJECTS 1
@@ -541,7 +514,6 @@ const_bitflag! { HEAP_ALLOC: u32;
 	///
 	/// Originally has `HEAP` prefix.
 	=>
-	=>
 	GENERATE_EXCEPTIONS 0x0000_0004
 	NO_SERIALIZE 0x0000_0001
 	ZERO_MEMORY 0x0000_0008
@@ -553,7 +525,6 @@ const_bitflag! { HEAP_CREATE: u32;
 	///
 	/// Originally has `HEAP` prefix.
 	=>
-	=>
 	ENABLE_EXECUTE 0x0004_0000
 	GENERATE_EXCEPTIONS 0x0000_0004
 	NO_SERIALIZE 0x0000_0001
@@ -562,7 +533,6 @@ const_bitflag! { HEAP_CREATE: u32;
 const_ordinary! { HEAP_INFORMATION: u32;
 	/// [`HHEAP::HeapSetInformation`](crate::prelude::kernel_Hheap::HeapSetInformation)
 	/// information class (`u32`).
-	=>
 	=>
 	CompatibilityInformation 0
 	EnableTerminationOnCorruption 1
@@ -574,7 +544,6 @@ const_bitflag! { HEAP_REALLOC: u32;
 	/// `options` (`u32`).
 	///
 	/// Originally has `HEAP` prefix.
-	=>
 	=>
 	GENERATE_EXCEPTIONS 0x0000_0004
 	NO_SERIALIZE 0x0000_0001
@@ -589,13 +558,11 @@ const_bitflag! { HEAP_SIZE: u32;
 	///
 	/// Originally has `HEAP` prefix.
 	=>
-	=>
 	NO_SERIALIZE 0x0000_0001
 }
 
 const_ordinary! { HF32: u32;
 	/// [`HEAPLIST32`](crate::HEAPLIST32) `dwFlags` (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -607,7 +574,6 @@ const_ordinary! { LANG: u16;
 	/// Language
 	/// [identifier](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
 	/// (`u16`).
-	=>
 	=>
 	NEUTRAL 0x00
 	INVARIANT 0x7f
@@ -756,7 +722,6 @@ const_bitflag! { LMEM: u32;
 	/// [`HLOCAL::LocalReAlloc`](crate::prelude::kernel_Hlocal::LocalReAlloc)
 	/// `flags` (`u32`).
 	=>
-	=>
 	/// Allocates fixed memory. The return value is a pointer to the memory
 	/// object.
 	FIXED 0x0000
@@ -780,7 +745,6 @@ const_bitflag! { MBC: u32;
 	///
 	/// Originally has `MB` prefix.
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	COMPOSITE 0x0000_0002
@@ -793,7 +757,6 @@ const_ordinary! { MONITOR_DISPLAY_STATE: u32;
 	/// [`MONITOR_DISPLAY_STATE`](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ne-wdm-_monitor_display_state)
 	/// enumeration (`u32`).
 	=>
-	=>
 	Off 0
 	On 1
 	Dim 2
@@ -802,7 +765,6 @@ const_ordinary! { MONITOR_DISPLAY_STATE: u32;
 const_ordinary! { PAGE: u32;
 	/// [`HFILE::CreateFileMapping`](crate::prelude::kernel_Hfile::CreateFileMapping)
 	/// `protect` (`u32`).
-	=>
 	=>
 	/// Allows views to be mapped for read-only copy-on-write or execute
 	/// access.
@@ -859,7 +821,6 @@ const_ordinary! { PBT: u32;
 	/// [`wm::PowerBroadcast`](crate::msg::wm::PowerBroadcast) power-management
 	/// event (`u32`).
 	=>
-	=>
 	APMPOWERSTATUSCHANGE 0xa
 	APMRESUMEAUTOMATIC 0x12
 	APMRESUMESUSPEND 0x7
@@ -875,7 +836,6 @@ const_bitflag! { PRIORITY_CLASS: u32;
 	///
 	/// Originally has `PRIORITY_CLASS` suffix.
 	=>
-	=>
 	ABOVE_NORMAL 0x0000_8000
 	BELOW_NORMAL 0x0000_4000
 	HIGH 0x0000_0080
@@ -888,7 +848,6 @@ const_bitflag! { PROCESS: u32;
 	/// Process
 	/// [security and access rights](https://learn.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights)
 	/// (`u32`).
-	=>
 	=>
 	DELETE ACCESS_RIGHTS::DELETE.0
 	READ_CONTROL ACCESS_RIGHTS::READ_CONTROL.0
@@ -917,7 +876,6 @@ const_bitflag! { PROCESS_AFFINITY: u32;
 	/// [`SetProcessAffinityUpdateMode`](crate::prelude::kernel_Hprocess::SetProcessAffinityUpdateMode)
 	/// `flags` (`u32`).
 	=>
-	=>
 	/// None of the actual values (zero).
 	NoValue 0
 	ENABLE_AUTO_UPDATE 0x0000_0001
@@ -925,7 +883,6 @@ const_bitflag! { PROCESS_AFFINITY: u32;
 
 const_bitflag! { PROCESS_HEAP: u16;
 	/// [`PROCESS_HEAP_ENTRY`](crate::PROCESS_HEAP_ENTRY) `wFlags` (`u16`).
-	=>
 	=>
 	ENTRY_BUSY 0x0004
 	ENTRY_DDESHARE 0x0020
@@ -938,7 +895,6 @@ const_ordinary! { PROCESS_NAME: u32;
 	/// [`QueryFullProcessImageName`](crate::prelude::kernel_Hprocess::QueryFullProcessImageName)
 	/// flags (`u32`).
 	=>
-	=>
 	/// The name should use the Win32 path format.
 	WIN32 0
 	/// The name should use the native system path format.
@@ -947,7 +903,6 @@ const_ordinary! { PROCESS_NAME: u32;
 
 const_ordinary! { PROCESSOR: u32;
 	/// [`SYSTEM_INFO`](crate::SYSTEM_INFO) `dwProcessorType` (`u32`).
-	=>
 	=>
 	INTEL_386 386
 	INTEL_486 486
@@ -977,7 +932,6 @@ const_ordinary! { PROCESSOR: u32;
 const_ordinary! { PROCESSOR_ARCHITECTURE: u16;
 	/// [`SYSTEM_INFO`](crate::SYSTEM_INFO) `wProcessorArchitecture` (`u16`).
 	=>
-	=>
 	INTEL 0
 	MIPS 1
 	ALPHA 2
@@ -999,7 +953,6 @@ const_ordinary! { PROCESSOR_ARCHITECTURE: u16;
 const_bitflag! { REPLACEFILE: u32;
 	/// [`ReplaceFile`](crate::ReplaceFile) `flags` (`u32`).
 	=>
-	=>
 	WRITE_THROUGH 0x0000_0001
 	IGNORE_MERGE_ERRORS 0x0000_0002
 	IGNORE_ACL_ERRORS 0x0000_0004
@@ -1009,7 +962,6 @@ const_ordinary! { RT: u16;
 	/// Predefined resource
 	/// [types](https://learn.microsoft.com/en-us/windows/win32/menurc/resource-types)
 	/// (`u16`).
-	=>
 	=>
 	ACCELERATOR 9
 	ANICURSOR 21
@@ -1037,7 +989,6 @@ const_ordinary! { RT: u16;
 const_ordinary! { SCS: u32;
 	/// [`GetBinaryType`](crate::GetBinaryType) return value (`u32`).
 	=>
-	=>
 	W_32BIT_BINARY 0
 	DOS_BINARY 1
 	WOW_BINARY 2
@@ -1050,7 +1001,6 @@ const_ordinary! { SCS: u32;
 const_bitflag! { SE: u16;
 	/// [`SECURITY_DESCRIPTOR_CONTROL`](https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptor-control)
 	/// bit flags (`u16`).
-	=>
 	=>
 	OWNER_DEFAULTED 0x0001
 	GROUP_DEFAULTED 0x0002
@@ -1071,7 +1021,6 @@ const_bitflag! { SE: u16;
 const_bitflag! { SECTION: u32;
 	/// Composes [`FILE_MAP`](crate::co::FILE_MAP) (`u32`).
 	=>
-	=>
 	QUERY 0x0001
 	MAP_WRITE 0x0002
 	MAP_READ 0x0004
@@ -1086,7 +1035,6 @@ const_bitflag! { SECURITY_INFORMATION: u32;
 	/// flags (`u32`).
 	///
 	/// Originally has `SECURITY_INFORMATION` suffix.
-	=>
 	=>
 	OWNER 0x0000_0001
 	GROUP 0x0000_0002
@@ -1108,7 +1056,6 @@ const_bitflag! { SERVICE: u32;
 	/// Service access rights
 	/// [`flags`](https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights)
 	/// (`u32`).
-	=>
 	=>
 	ALL_ACCESS 0xf01ff
 	CHANGE_CONFIG 0x0002
@@ -1136,7 +1083,6 @@ const_bitflag! { SHTDN_REASON: u32; // used by InitiateSystemShutdownEx (advapi)
 	/// Shutdown reason
 	/// [`codes`](https://learn.microsoft.com/en-us/windows/win32/shutdown/system-shutdown-reason-codes)
 	/// (`u32`).
-	=>
 	=>
 	MAJOR_APPLICATION 0x0004_0000
 	MAJOR_HARDWARE 0x0001_0000
@@ -1184,7 +1130,6 @@ const_ordinary! { SORT: u16;
 	/// [identifiers](https://learn.microsoft.com/en-us/windows/win32/intl/sort-order-identifiers)
 	/// (`u16`).
 	=>
-	=>
 	DEFAULT 0x0
 	INVARIANT_MATH 0x1
 	JAPANESE_XJIS 0x0
@@ -1210,7 +1155,6 @@ const_bitflag! { STANDARD_RIGHTS: u32;
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/secauthz/standard-access-rights)
 	/// (`u32`).
 	=>
-	=>
 	REQUIRED 0x000_f0000
 	READ ACCESS_RIGHTS::READ_CONTROL.0
 	WRITE ACCESS_RIGHTS::READ_CONTROL.0
@@ -1221,7 +1165,6 @@ const_bitflag! { STANDARD_RIGHTS: u32;
 const_bitflag! { STARTF: u32;
 	/// [`HPROCESS::CreateProcess`](crate::prelude::kernel_Hprocess::CreateProcess)
 	/// `dwFlags` (`u32`).
-	=>
 	=>
 	FORCEONFEEDBACK 0x0000_0040
 	FORCEOFFFEEDBACK 0x0000_0080
@@ -1245,7 +1188,6 @@ const_ordinary! { STD_HANDLE: u32;
 	///
 	/// Originally has `STD` prefix and `HANDLE` suffix.
 	=>
-	=>
 	INPUT -10i32 as u32
 	OUTPUT -11i32 as u32
 	ERROR -12i32 as u32
@@ -1255,7 +1197,6 @@ const_ordinary! { SUBLANG: u16;
 	/// Sublanguage
 	/// [identifier](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifier-constants-and-strings)
 	/// (`u16`).
-	=>
 	=>
 	NEUTRAL 0x00
 	DEFAULT 0x01
@@ -1507,7 +1448,6 @@ const_ordinary! { SW: i32;
 	/// [`HWND::ShowWindow`](crate::prelude::user_Hwnd::ShowWindow) `show_cmd`
 	/// (`i32`).
 	=>
-	=>
 	/// Hides the window and activates another window.
 	HIDE 0
 	/// Activates and displays a window. If the window is minimized or
@@ -1552,7 +1492,6 @@ const_ordinary! { SYSTEM_POWER_CONDITION: u32;
 	/// [`SYSTEM_POWER_CONDITION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-system_power_condition)
 	/// enumeration (`u32`).
 	=>
-	=>
 	Ac 0
 	Dc 1
 	Hot 2
@@ -1562,7 +1501,6 @@ const_ordinary! { SYSTEM_POWER_CONDITION: u32;
 const_bitflag! { TH32CS: u32;
 	/// [`HPROCESSLIST::CreateToolhelp32Snapshot`](crate::HPROCESSLIST) `flags`
 	/// (`u32`).
-	=>
 	=>
 	/// Includes all heaps of the process.
 	SNAPHEAPLIST 0x0000_0001
@@ -1588,7 +1526,6 @@ const_bitflag! { THREAD_CREATE: u32;
 	///
 	/// Originally has no prefix.
 	=>
-	=>
 	/// Originally just a zero.
 	RUN_IMMEDIATELY 0
 	CREATE_SUSPENDED 0x0000_0004
@@ -1597,7 +1534,6 @@ const_bitflag! { THREAD_CREATE: u32;
 
 const_bitflag! { TOKEN: u32;
 	/// [Token access rights](https://learn.microsoft.com/en-us/windows/win32/secauthz/access-rights-for-access-token-objects).
-	=>
 	=>
 	DELETE ACCESS_RIGHTS::DELETE.0
 	READ_CONTROL ACCESS_RIGHTS::READ_CONTROL.0
@@ -1626,7 +1562,6 @@ const_ordinary! { TOKEN_MANDATORY_POLICY: u32;
 	/// [`TOKEN_MANDATORY_POLICY`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_mandatory_policy)
 	/// `Policy` (`u32`).
 	=>
-	=>
 	OFF 0x0
 	NO_WRITE_UP 0x1
 	NEW_PROCESS_MIN 0x2
@@ -1637,7 +1572,6 @@ const_ordinary! { USER_ACTIVITY_PRESENCE: u32;
 	/// [`PowerSetting::GlobalUserPresence`](crate::PowerSetting::GlobalUserPresence)
 	/// enumeration (`u32`).
 	=>
-	=>
 	Present 0
     NotPresent 1
     Inactive 2
@@ -1647,7 +1581,6 @@ const_ordinary! { USER_ACTIVITY_PRESENCE: u32;
 
 const_ordinary! { VER_COND: u8;
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `condition` (`u8`).
-	=>
 	=>
 	EQUAL 1
 	GREATER 2
@@ -1663,7 +1596,6 @@ const_bitflag! { VER_MASK: u32;
 	/// [`VerifyVersionInfo`](crate::VerifyVersionInfo) and
 	/// [`VerSetConditionMask`](crate::VerSetConditionMask) `type_mask` (`u32`).
 	=>
-	=>
 	MINORVERSION 0x000_0001
 	MAJORVERSION 0x000_0002
 	BUILDNUMBER 0x000_0004
@@ -1677,7 +1609,6 @@ const_bitflag! { VER_MASK: u32;
 const_ordinary! { VER_NT: u8;
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wProductType` (`u8`).
 	=>
-	=>
 	WORKSTATION 0x000_0001
 	DOMAIN_CONTROLLER 0x000_0002
 	SERVER 0x000_0003
@@ -1685,7 +1616,6 @@ const_ordinary! { VER_NT: u8;
 
 const_bitflag! { VER_SUITE: u16;
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `wSuiteMask` (`u16`).
-	=>
 	=>
 	SMALLBUSINESS 0x0001
 	ENTERPRISE 0x0002
@@ -1709,7 +1639,6 @@ const_bitflag! { VER_SUITE: u16;
 const_ordinary! { VER_PLATFORM: u32;
 	/// [`OSVERSIONINFOEX`](crate::OSVERSIONINFOEX) `dwPlatformId` (`u32`).
 	=>
-	=>
 	WIN32s 0
 	WIN32_WINDOWS 1
 	WIN32_NT 2
@@ -1719,7 +1648,6 @@ const_ordinary! { WAIT: u32;
 	/// [`HPROCESS::WaitForSingleObject`](crate::prelude::kernel_Hprocess::WaitForSingleObject)
 	/// return value (`u32`).
 	=>
-	=>
 	ABANDONED 0x0000_0080
 	OBJECT_0 0x0000_0000
 	TIMEOUT 0x0000_0102
@@ -1728,7 +1656,6 @@ const_ordinary! { WAIT: u32;
 
 const_bitflag! { WC: u32;
 	/// [`WideCharToMultiByte`](crate::WideCharToMultiByte) `flags` (`u32`).
-	=>
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -1743,7 +1670,6 @@ const_bitflag! { WC: u32;
 const_ordinary! { WIN32: u16;
 	/// [`_WIN32`](https://learn.microsoft.com/en-us/windows/win32/winprog/using-the-windows-headers)
 	/// version definitions (`u16`).
-	=>
 	=>
 	WINNT_NT4 0x0400
 	WINNT_WIN2K 0x0500
@@ -1808,7 +1734,6 @@ const_ordinary! { WIN32: u16;
 const_ordinary! { WTS: u8;
 	/// [`wm::WtsSessionChange`](crate::msg::wm::WtsSessionChange) `state`
 	/// (`u32`).
-	=>
 	=>
 	CONSOLE_CONNECT 0x1
 	CONSOLE_DISCONNECT 0x2
