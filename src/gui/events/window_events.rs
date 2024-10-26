@@ -136,7 +136,7 @@ impl WindowEvents {
 	/// ```
 	pub fn wm_notify<F>(&self,
 		id_from: impl Into<u16>,
-		code: impl Into<co::NM>,
+		code: impl Into<NmhdrCode>,
 		func: F,
 	)
 		where F: Fn(wm::Notify) -> AnyResult<WmRet> + 'static,

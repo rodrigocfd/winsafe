@@ -543,7 +543,7 @@ impl_default_with_size!(MCHITTESTINFO, cbSize);
 /// [`MONTHDAYSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/monthdaystate)
 /// struct.
 #[repr(transparent)]
-#[derive(Default, Clone, Copy)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct MONTHDAYSTATE(u32);
 
 impl MONTHDAYSTATE {
@@ -768,7 +768,7 @@ pub struct NMHDR {
 	idFrom: usize,
 	/// Notification code sent in
 	/// [`WM_NOTIFY`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-notify).
-	pub code: co::NM,
+	pub code: NmhdrCode,
 }
 
 impl_default!(NMHDR);
@@ -783,6 +783,60 @@ impl NMHDR {
 	/// Sets the `idFrom` field, the ID of the control sending the message.
 	pub fn set_idFrom(&mut self, val: u16) {
 		self.idFrom = val as _
+	}
+}
+
+/// Notification code returned in [`NMHDR`](crate::NMHDR) struct. This code is
+/// convertible to/from the specific common control notification codes –
+/// [`LVN`](crate::co::LVN), [`TVN`](crate::co::TVN), etc.
+///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*, co};
+///
+/// // Convert LVN to NmhrCode:
+/// let code = w::NmhdrCode::from(co::LVN::ITEMCHANGED);
+///
+/// // Convert NmhrCode to LVN – fails it code is not a valid LVN:
+/// let lvn = co::LVN::try_from(code)?;
+/// # w::SysResult::Ok(())
+/// ```
+#[repr(transparent)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
+pub struct NmhdrCode(i32);
+
+impl From<i32> for NmhdrCode {
+	fn from(v: i32) -> Self {
+		Self(v)
+	}
+}
+
+impl PartialOrd for NmhdrCode {
+	fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+		self.0.partial_cmp(&other.0)
+	}
+}
+impl Ord for NmhdrCode {
+	fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+		self.0.cmp(&other.0)
+	}
+}
+
+impl NmhdrCode {
+	#[must_use]
+	pub(crate) const fn new(v: i32) -> Self {
+		Self(v)
+	}
+
+	/// Returns the primitive integer underlying value.
+	///
+	/// This method is similar to [`Into`](std::convert::Into), but it is
+	/// `const`, therefore it can be used in
+	/// [const contexts](https://doc.rust-lang.org/reference/const_eval.html).
+	#[must_use]
+	pub const fn raw(&self) -> i32 {
+		self.0
 	}
 }
 

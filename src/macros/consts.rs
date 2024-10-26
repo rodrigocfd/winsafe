@@ -36,8 +36,7 @@ macro_rules! const_values_pubcrate {
 	};
 }
 
-/// Declares the type of a constant, along with `pub` values. Won't include
-/// `Debug` and `Display` impls.
+/// Declares the type of a constant. Won't include `Debug` and `Display` impls.
 macro_rules! const_no_debug_display {
 	(
 		$name:ident : $ntype:ty;
@@ -263,7 +262,7 @@ macro_rules! const_cmd {
 }
 
 /// Declares the type of a constant for a WM_NOTIFY notification code,
-/// convertible to [`NM`](crate::co::NM) constant type, along with `pub` values.
+/// convertible to NmhdrCode, along with `pub` values.
 macro_rules! const_nm {
 	(
 		$name:ident;
@@ -279,7 +278,7 @@ macro_rules! const_nm {
 			$( #[$doc] )*
 			///
 			/// This is a [`wm::Notify`](crate::msg::wm::Notify) notification
-			/// code, convertible to [`NM`](crate::co::NM).
+			/// code, convertible to/from [`NmhdrCode`](crate::NmhdrCode).
 			=>
 			$(
 				$( #[$valdoc] )*
@@ -287,9 +286,22 @@ macro_rules! const_nm {
 			)*
 		}
 
-		impl From<$name> for crate::co::NM {
+		impl From<$name> for crate::NmhdrCode {
 			fn from(v: $name) -> Self {
-				Self(v.0)
+				Self::new(v.raw())
+			}
+		}
+
+		impl TryFrom<crate::NmhdrCode> for $name {
+			type Error = crate::co::ERROR;
+
+			fn try_from(value: crate::NmhdrCode) -> Result<Self, Self::Error> {
+				// Can't use match because some values are defined as a sum, then:
+				// "arbitrary expressions aren't allowed in patterns"
+				$(
+					if value.raw() == $val { return Ok(Self::$valname); }
+				)*
+				Err(crate::co::ERROR::INVALID_DATA)
 			}
 		}
 	};

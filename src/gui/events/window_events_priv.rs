@@ -23,7 +23,7 @@ pub(in crate::gui) struct WindowEventsPriv {
 	>,
 	nfys: UnsafeCell<
 		FuncStore< // WM_NOTIFY notifications
-			(u16, co::NM), // idFrom, code
+			(u16, NmhdrCode), // idFrom, code
 			Box<dyn Fn(wm::Notify) -> AnyResult<WmRet>>,
 		>,
 	>,
@@ -197,14 +197,13 @@ impl WindowEventsPriv {
 
 	pub(in crate::gui) fn wm_notify<F>(&self,
 		id_from: impl Into<u16>,
-		code: impl Into<co::NM>,
+		code: impl Into<NmhdrCode>,
 		func: F,
 	)
 		where F: Fn(wm::Notify) -> AnyResult<WmRet> + 'static,
 	{
-		let code: co::NM = code.into();
 		unsafe { &mut *self.nfys.get() }.push(
-			(id_from.into(), code),
+			(id_from.into(), code.into()),
 			Box::new(func),
 		);
 	}

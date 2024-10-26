@@ -1428,11 +1428,8 @@ const_ordinary! { MCSC: u8;
 	TRAILINGTEXT 5
 }
 
-const_ordinary! { NM: i32;
-	/// [`wm::Notify`](crate::msg::wm::Notify) notification codes (`i32`).
-	///
-	/// **Note:** Control-specific notification codes have their own types,
-	/// which are convertible to `NM`.
+const_nm! { NM;
+	/// Ordinary notification codes (`i32`).
 	=>
 	OUTOFMEMORY NM_FIRST - 1
 	CLICK NM_FIRST - 2

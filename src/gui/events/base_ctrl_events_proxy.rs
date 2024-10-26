@@ -31,7 +31,10 @@ impl BaseCtrlEventsProxy {
 	}
 
 	/// Adds a `WM_NOTIFY` event to the parent window.
-	pub(in crate::gui) fn wm_notify<F>(&self, code: impl Into<co::NM>, func: F)
+	pub(in crate::gui) fn wm_notify<F>(&self,
+		code: impl Into<NmhdrCode>,
+		func: F,
+	)
 		where F: Fn(wm::Notify) -> AnyResult<WmRet> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
