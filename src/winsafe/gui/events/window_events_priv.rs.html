@@ -294,7 +294,7 @@
 
 		<span class="kw">if </span>wm_any.msg_id == co::WM::COMMAND {
 			<span class="kw">let </span>wm_cmd = <span class="kw">unsafe </span>{ wm::Command::from_generic_wm(wm_any) };
-			<span class="kw">let </span>key_cmd = wm_cmd.event.id_code();
+			<span class="kw">let </span>key_cmd = (wm_cmd.event.ctrl_id(), wm_cmd.event.code());
 			<span class="kw">let </span>cmds = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span><span class="self">self</span>.cmds.get() };
 			<span class="kw">for </span>func <span class="kw">in </span>cmds.filter(key_cmd) {
 				<span class="kw">match </span>func()<span class="question-mark">? </span>{
@@ -343,7 +343,7 @@
 	{
 		<span class="kw">if </span>wm_any.msg_id == co::WM::COMMAND {
 			<span class="kw">let </span>wm_cmd = <span class="kw">unsafe </span>{ wm::Command::from_generic_wm(wm_any) };
-			<span class="kw">let </span>key_cmd = wm_cmd.event.id_code();
+			<span class="kw">let </span>key_cmd = (wm_cmd.event.ctrl_id(), wm_cmd.event.code());
 			<span class="kw">let </span>cmds = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span><span class="self">self</span>.cmds.get() };
 			<span class="kw">for </span>func <span class="kw">in </span>cmds.filter_rev(key_cmd) {
 				<span class="kw">match </span>func()<span class="question-mark">? </span>{

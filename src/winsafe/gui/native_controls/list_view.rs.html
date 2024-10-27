@@ -709,9 +709,9 @@
 		}
 
 		<span class="kw">let </span>style: co::LVS = <span class="self">self</span>.hwnd().style().into();
-		<span class="self">self</span>.hwnd().set_style(style | co::LVS::SHAREIMAGELISTS);
+		<span class="self">self</span>.hwnd().set_style(style | co::LVS::SHAREIMAGELISTS); <span class="comment">// force style
 
-		<span class="self">self</span>.<span class="number">0</span>.base.parent()
+		</span><span class="self">self</span>.<span class="number">0</span>.base.parent()
 			.add_to_layout_arranger(<span class="self">self</span>.hwnd(), opts_resz.resize_behavior())
 	}
 

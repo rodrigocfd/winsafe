@@ -459,7 +459,17 @@
 <a href="#458" id="458">458</a>
 <a href="#459" id="459">459</a>
 <a href="#460" id="460">460</a>
-<a href="#461" id="461">461</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
+<a href="#461" id="461">461</a>
+<a href="#462" id="462">462</a>
+<a href="#463" id="463">463</a>
+<a href="#464" id="464">464</a>
+<a href="#465" id="465">465</a>
+<a href="#466" id="466">466</a>
+<a href="#467" id="467">467</a>
+<a href="#468" id="468">468</a>
+<a href="#469" id="469">469</a>
+<a href="#470" id="470">470</a>
+<a href="#471" id="471">471</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -480,13 +490,23 @@
 }
 
 <span class="kw">impl </span>AccelMenuCtrl {
-	<span class="doccomment">/// Returns the control ID and the notification code pair.
+	<span class="doccomment">/// Returns the control ID.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub const fn </span>id_code(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (u16, co::CMD) {
+	</span><span class="kw">pub const fn </span>ctrl_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u16 {
 		<span class="kw">match </span><span class="self">self </span>{
-			AccelMenuCtrl::Accel(id) =&gt; (<span class="kw-2">*</span>id, co::CMD::Accelerator),
-			AccelMenuCtrl::Menu(id) =&gt; (<span class="kw-2">*</span>id, co::CMD::Menu),
-			AccelMenuCtrl::Ctrl(data) =&gt; (data.ctrl_id, data.notif_code),
+			AccelMenuCtrl::Accel(id) =&gt; <span class="kw-2">*</span>id,
+			AccelMenuCtrl::Menu(id) =&gt; <span class="kw-2">*</span>id,
+			AccelMenuCtrl::Ctrl(data) =&gt; data.ctrl_id,
+		}
+	}
+
+	<span class="doccomment">/// Returns the notification code.
+	</span><span class="attr">#[must_use]
+	</span><span class="kw">pub const fn </span>code(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::CMD {
+		<span class="kw">match </span><span class="self">self </span>{
+			AccelMenuCtrl::Accel(<span class="kw">_</span>) =&gt; co::CMD::Accelerator,
+			AccelMenuCtrl::Menu(<span class="kw">_</span>) =&gt; co::CMD::Menu,
+			AccelMenuCtrl::Ctrl(data) =&gt; data.notif_code,
 		}
 	}
 }
