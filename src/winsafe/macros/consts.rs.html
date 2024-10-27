@@ -438,7 +438,16 @@
 <a href="#437" id="437">437</a>
 <a href="#438" id="438">438</a>
 <a href="#439" id="439">439</a>
-<a href="#440" id="440">440</a></pre></div><pre class="rust"><code><span class="attr">#![allow(unused_macros)]
+<a href="#440" id="440">440</a>
+<a href="#441" id="441">441</a>
+<a href="#442" id="442">442</a>
+<a href="#443" id="443">443</a>
+<a href="#444" id="444">444</a>
+<a href="#445" id="445">445</a>
+<a href="#446" id="446">446</a>
+<a href="#447" id="447">447</a>
+<a href="#448" id="448">448</a>
+<a href="#449" id="449">449</a></pre></div><pre class="rust"><code><span class="attr">#![allow(unused_macros)]
 
 </span><span class="doccomment">/// Writes `pub` values of the given constant type.
 </span><span class="macro">macro_rules!</span> const_values {
@@ -473,6 +482,15 @@
 				<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span><span class="macro-nonterminal">$valname</span>: <span class="self">Self </span>= <span class="kw">unsafe </span>{ <span class="self">Self</span>::from_raw(<span class="macro-nonterminal">$val</span>) };
 			)*
 		}
+	};
+}
+
+<span class="doccomment">/// Writes `pub(crate)` values of numeric types; to be used in privs.rs files.
+</span><span class="macro">macro_rules!</span> const_values_num_privs {
+	(
+		$( <span class="macro-nonterminal">$name</span>:ident <span class="macro-nonterminal">$ty</span>:ty = <span class="macro-nonterminal">$val</span>:expr )*
+	) =&gt; {
+		$( <span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span><span class="macro-nonterminal">$name</span>: <span class="macro-nonterminal">$ty </span>= <span class="macro-nonterminal">$val</span>; )*
 	};
 }
 

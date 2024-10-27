@@ -1049,9 +1049,9 @@
 	///
 	/// wnd.on().wm_notify(
 	///     CTRL_ID,
-	///     co::NM::DBLCLK,
+	///     co::SBN::NM_DBLCLK,
 	///     move |_| -&gt; w::AnyResult&lt;gui::WmRet&gt; {
-	///         println!("Button clicked!");
+	///         println!("Status bar double clicked!");
 	///         Ok(gui::WmRet::HandledOk)
 	///     },
 	/// );

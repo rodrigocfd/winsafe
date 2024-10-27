@@ -207,7 +207,7 @@
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_click, co::NM::CLICK;
+	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_click, co::TVN::NM_CLICK;
 		<span class="doccomment">/// [`NM_CLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-click-tree-view)
 		/// notification.
 	</span>}
@@ -217,43 +217,43 @@
 	</span><span class="kw">pub fn </span>nm_custom_draw&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
 		<span class="kw">where </span>F: Fn(<span class="kw-2">&amp;mut </span>NMTVCUSTOMDRAW) -&gt; AnyResult&lt;co::CDRF&gt; + <span class="lifetime">'static</span>,
 	{
-		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::NM::CUSTOMDRAW, <span class="kw">move </span>|p| {
+		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::TVN::NM_CUSTOMDRAW, <span class="kw">move </span>|p| {
 			<span class="kw">let </span>ret_val = func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMTVCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as </span>isize;
 			<span class="prelude-val">Ok</span>(WmRet::HandledWithRet(ret_val))
 		});
 	}
 
-	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_dbl_clk, co::NM::DBLCLK;
+	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_dbl_clk, co::TVN::NM_DBLCLK;
 		<span class="doccomment">/// [`NM_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-dblclk-tree-view)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_kill_focus, co::NM::KILLFOCUS;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_kill_focus, co::TVN::NM_KILLFOCUS;
 		<span class="doccomment">/// [`NM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-killfocus-tree-view)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_r_click, co::NM::RCLICK;
+	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_r_click, co::TVN::NM_RCLICK;
 		<span class="doccomment">/// [`NM_RCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rclick-tree-view)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_r_dbl_clk, co::NM::RDBLCLK;
+	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_r_dbl_clk, co::TVN::NM_RDBLCLK;
 		<span class="doccomment">/// [`NM_RDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rdblclk-tree-view)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_return, co::NM::RETURN;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_return, co::TVN::NM_RETURN;
 		<span class="doccomment">/// [`NM_RETURN`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-return-tree-view-)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_i32ret!</span> { nm_set_cursor, co::NM::SETCURSOR, NMMOUSE;
+	<span class="macro">pub_fn_nfy_withparm_i32ret!</span> { nm_set_cursor, co::TVN::NM_SETCURSOR, NMMOUSE;
 		<span class="doccomment">/// [`NM_MOUSE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setcursor-tree-view-)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_set_focus, co::NM::SETFOCUS;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_set_focus, co::TVN::NM_SETFOCUS;
 		<span class="doccomment">/// [`NM_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setfocus-tree-view-)
 		/// notification.
 	</span>}

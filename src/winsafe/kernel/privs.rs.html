@@ -155,21 +155,25 @@
 <a href="#154" id="154">154</a>
 <a href="#155" id="155">155</a>
 <a href="#156" id="156">156</a>
-<a href="#157" id="157">157</a></pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code, non_snake_case)]
+<a href="#157" id="157">157</a>
+<a href="#158" id="158">158</a>
+<a href="#159" id="159">159</a></pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>GMEM_INVALID_HANDLE: u32 = <span class="number">0x8000</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>INFINITE: u32 = <span class="number">0xffff_ffff</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>INVALID_FILE_ATTRIBUTES: i32 = -<span class="number">1</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>LMEM_INVALID_HANDLE: u32 = <span class="number">0x8000</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>MAX_COMPUTERNAME_LENGTH: usize = <span class="number">15</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>MAX_MODULE_NAME32: usize = <span class="number">255</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>MAX_PATH: usize = <span class="number">260</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>SECURITY_SQOS_PRESENT: u32 = <span class="number">0x0010_0000</span>;
+<span class="macro">const_values_num_privs!</span> {
+	GMEM_INVALID_HANDLE u32 = <span class="number">0x8000
+	</span>INFINITE u32 = <span class="number">0xffff_ffff
+	</span>INVALID_FILE_ATTRIBUTES i32 = -<span class="number">1
+	</span>LMEM_INVALID_HANDLE u32 = <span class="number">0x8000
+	</span>MAX_COMPUTERNAME_LENGTH usize = <span class="number">15
+	</span>MAX_MODULE_NAME32 usize = <span class="number">255
+	</span>MAX_PATH usize = <span class="number">260
+	</span>SECURITY_SQOS_PRESENT u32 = <span class="number">0x0010_0000
+</span>}
 
 <span class="doccomment">/// [`IS_INTRESOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-is_intresource)
 /// macro.

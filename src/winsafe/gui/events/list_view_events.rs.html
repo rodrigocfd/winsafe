@@ -544,7 +544,7 @@
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret!</span> { nm_click, co::NM::CLICK, NMITEMACTIVATE;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { nm_click, co::LVN::NM_CLICK, NMITEMACTIVATE;
 		<span class="doccomment">/// [`NM_CLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-click-list-view)
 		/// notification.
 	</span>}
@@ -554,48 +554,48 @@
 	</span><span class="kw">pub fn </span>nm_custom_draw&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
 		<span class="kw">where </span>F: Fn(<span class="kw-2">&amp;mut </span>NMLVCUSTOMDRAW) -&gt; AnyResult&lt;co::CDRF&gt; + <span class="lifetime">'static</span>,
 	{
-		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::NM::CUSTOMDRAW, <span class="kw">move </span>|p| {
+		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::LVN::NM_CUSTOMDRAW, <span class="kw">move </span>|p| {
 			<span class="kw">let </span>ret_val = func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMLVCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as </span>isize;
 			<span class="prelude-val">Ok</span>(WmRet::HandledWithRet(ret_val))
 		});
 	}
 
-	<span class="macro">pub_fn_nfy_withparm_noret!</span> { nm_dbl_clk, co::NM::DBLCLK, NMITEMACTIVATE;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { nm_dbl_clk, co::LVN::NM_DBLCLK, NMITEMACTIVATE;
 		<span class="doccomment">/// [`NM_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-dblclk-list-view)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_hover, co::NM::HOVER;
+	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_hover, co::LVN::NM_HOVER;
 		<span class="doccomment">/// [`NM_HOVER`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-hover-list-view)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_kill_focus, co::NM::KILLFOCUS;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_kill_focus, co::LVN::NM_KILLFOCUS;
 		<span class="doccomment">/// [`NM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-killfocus-list-view)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_i32ret!</span> { nm_r_click, co::NM::RCLICK, NMITEMACTIVATE;
+	<span class="macro">pub_fn_nfy_withparm_i32ret!</span> { nm_r_click, co::LVN::NM_RCLICK, NMITEMACTIVATE;
 		<span class="doccomment">/// [`NM_RCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rclick-list-view)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_withparm_noret!</span> { nm_r_dbl_clk, co::NM::RDBLCLK, NMITEMACTIVATE;
+	<span class="macro">pub_fn_nfy_withparm_noret!</span> { nm_r_dbl_clk, co::LVN::NM_RDBLCLK, NMITEMACTIVATE;
 		<span class="doccomment">/// [`NM_RDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rdblclk-list-view)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_released_capture, co::NM::RELEASEDCAPTURE;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_released_capture, co::LVN::NM_RELEASEDCAPTURE;
 		<span class="doccomment">/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-list-view-)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_return, co::NM::RETURN;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_return, co::LVN::NM_RETURN;
 		<span class="doccomment">/// [`NM_RETURN`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-return-list-view-)
 		/// notification.
 	</span>}
 
-	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_set_focus, co::NM::SETFOCUS;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_set_focus, co::LVN::NM_SETFOCUS;
 		<span class="doccomment">/// [`NM_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setfocus-list-view-)
 		/// notification.
 	</span>}

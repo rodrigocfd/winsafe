@@ -51,23 +51,27 @@
 <a href="#50" id="50">50</a>
 <a href="#51" id="51">51</a>
 <a href="#52" id="52">52</a>
-<a href="#53" id="53">53</a></pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code)]
+<a href="#53" id="53">53</a>
+<a href="#54" id="54">54</a>
+<a href="#55" id="55">55</a></pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>ASFW_ANY: u32 = -<span class="number">1i32 </span><span class="kw">as _</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>CB_ERR: i32 = -<span class="number">1</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>CB_ERRSPACE: i32 = -<span class="number">2</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>CCHDEVICENAME: usize = <span class="number">32</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>CCHFORMNAME: usize = <span class="number">32</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>CCHILDREN_TITLEBAR: usize = <span class="number">5</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>DM_SPECVERSION: u16 = <span class="number">0x0401</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>FAPPCOMMAND_MASK: u16 = <span class="number">0xf000</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>HWND_MESSAGE: isize = -<span class="number">3</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>LB_ERR: i32 = -<span class="number">1</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>LB_ERRSPACE: i32 = -<span class="number">2</span>;
-<span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const </span>WC_DIALOG: u16 = <span class="number">0x8002</span>;
+<span class="macro">const_values_num_privs!</span> {
+	ASFW_ANY u32 = -<span class="number">1i32 </span><span class="kw">as _
+	</span>CB_ERR i32 = -<span class="number">1
+	</span>CB_ERRSPACE i32 = -<span class="number">2
+	</span>CCHDEVICENAME usize = <span class="number">32
+	</span>CCHFORMNAME usize = <span class="number">32
+	</span>CCHILDREN_TITLEBAR usize = <span class="number">5
+	</span>DM_SPECVERSION u16 = <span class="number">0x0401
+	</span>FAPPCOMMAND_MASK u16 = <span class="number">0xf000
+	</span>HWND_MESSAGE isize = -<span class="number">3
+	</span>LB_ERR i32 = -<span class="number">1
+	</span>LB_ERRSPACE i32 = -<span class="number">2
+	</span>WC_DIALOG u16 = <span class="number">0x8002
+</span>}
 
 <span class="doccomment">/// Takes an `isize` and returns `Err` if `-1`.
 </span><span class="attr">#[must_use]

@@ -75,9 +75,9 @@ window notification.</p>
 
 wnd.on().wm_notify(
     CTRL_ID,
-    co::NM::DBLCLK,
+    co::SBN::NM_DBLCLK,
     <span class="kw">move </span>|<span class="kw">_</span>| -&gt; w::AnyResult&lt;gui::WmRet&gt; {
-        <span class="macro">println!</span>(<span class="string">"Button clicked!"</span>);
+        <span class="macro">println!</span>(<span class="string">"Status bar double clicked!"</span>);
         <span class="prelude-val">Ok</span>(gui::WmRet::HandledOk)
     },
 );</code></pre></div>

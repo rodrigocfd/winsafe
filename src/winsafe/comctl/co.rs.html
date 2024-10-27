@@ -2494,7 +2494,31 @@
 <a href="#2493" id="2493">2493</a>
 <a href="#2494" id="2494">2494</a>
 <a href="#2495" id="2495">2495</a>
-<a href="#2496" id="2496">2496</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
+<a href="#2496" id="2496">2496</a>
+<a href="#2497" id="2497">2497</a>
+<a href="#2498" id="2498">2498</a>
+<a href="#2499" id="2499">2499</a>
+<a href="#2500" id="2500">2500</a>
+<a href="#2501" id="2501">2501</a>
+<a href="#2502" id="2502">2502</a>
+<a href="#2503" id="2503">2503</a>
+<a href="#2504" id="2504">2504</a>
+<a href="#2505" id="2505">2505</a>
+<a href="#2506" id="2506">2506</a>
+<a href="#2507" id="2507">2507</a>
+<a href="#2508" id="2508">2508</a>
+<a href="#2509" id="2509">2509</a>
+<a href="#2510" id="2510">2510</a>
+<a href="#2511" id="2511">2511</a>
+<a href="#2512" id="2512">2512</a>
+<a href="#2513" id="2513">2513</a>
+<a href="#2514" id="2514">2514</a>
+<a href="#2515" id="2515">2515</a>
+<a href="#2516" id="2516">2516</a>
+<a href="#2517" id="2517">2517</a>
+<a href="#2518" id="2518">2518</a>
+<a href="#2519" id="2519">2519</a>
+<a href="#2520" id="2520">2520</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::comctl::privs::<span class="kw-2">*</span>;
@@ -2536,7 +2560,9 @@
 	</span>=&gt;
 	HOTITEMCHANGE BCN_FIRST + <span class="number">0x0001
 	</span>DROPDOWN BCN_FIRST + <span class="number">0x0002
-</span>}
+
+	</span>NM_CUSTOMDRAW NM_CUSTOMDRAW
+}
 
 <span class="macro">const_bitflag!</span> { BCSIF: u32;
 	<span class="doccomment">/// [`BUTTON_SPLITINFO`](crate::BUTTON_SPLITINFO) `mask` (`u32`).
@@ -2763,7 +2789,10 @@
 	</span>FORMATQUERY DTN_FIRST - <span class="number">2
 	</span>USERSTRING DTN_FIRST - <span class="number">5
 	</span>WMKEYDOWN DTN_FIRST - <span class="number">4
-</span>}
+
+	</span>NM_KILLFOCUS NM_KILLFOCUS
+	NM_SETFOCUS NM_SETFOCUS
+}
 
 <span class="macro">const_ws!</span> { DTS: u32;
 	<span class="doccomment">/// Date and time picker control
@@ -2968,7 +2997,11 @@
 	</span>FILTERCHANGE HDN_FIRST - <span class="number">12
 	</span>ENDDRAG HDN_FIRST - <span class="number">11
 	</span>BEGINDRAG HDN_FIRST - <span class="number">10
-</span>}
+
+	</span>NM_CUSTOMDRAW NM_CUSTOMDRAW
+	NM_RCLICK NM_RCLICK
+	NM_RELEASEDCAPTURE NM_RELEASEDCAPTURE
+}
 
 <span class="macro">const_ws!</span> { HDS: u32;
 	<span class="doccomment">/// Header control
@@ -3651,7 +3684,18 @@
 	</span>ENDSCROLL LVN_FIRST - <span class="number">81
 	</span>LINKCLICK LVN_FIRST - <span class="number">84
 	</span>GETEMPTYMARKUP LVN_FIRST - <span class="number">87
-</span>}
+
+	</span>NM_CLICK NM_CLICK
+	NM_CUSTOMDRAW NM_CUSTOMDRAW
+	NM_DBLCLK NM_DBLCLK
+	NM_HOVER NM_HOVER
+	NM_KILLFOCUS NM_KILLFOCUS
+	NM_RCLICK NM_RCLICK
+	NM_RDBLCLK NM_RDBLCLK
+	NM_RELEASEDCAPTURE NM_RELEASEDCAPTURE
+	NM_RETURN NM_RETURN
+	NM_SETFOCUS NM_SETFOCUS
+}
 
 <span class="macro">const_bitflag!</span> { LVNI: u32;
 	<span class="doccomment">/// [`lvm::GetNextItem`](crate::msg::lvm::GetNextItem) relationship (`u32`).
@@ -3894,7 +3938,9 @@
 	GETDAYSTATE MCN_FIRST - <span class="number">1
 	</span>SELCHANGE MCN_FIRST - <span class="number">3
 	</span>VIEWCHANGE MCN_FIRST - <span class="number">4
-</span>}
+
+	</span>NM_RELEASEDCAPTURE NM_RELEASEDCAPTURE
+}
 
 <span class="macro">const_ws!</span> { MCS: u32;
 	<span class="doccomment">/// Month calendar control
@@ -3922,30 +3968,6 @@
 	</span>TITLETEXT <span class="number">3
 	</span>MONTHBK <span class="number">4
 	</span>TRAILINGTEXT <span class="number">5
-</span>}
-
-<span class="macro">const_nm!</span> { NM;
-	<span class="doccomment">/// Ordinary notification codes (`i32`).
-	</span>=&gt;
-	OUTOFMEMORY NM_FIRST - <span class="number">1
-	</span>CLICK NM_FIRST - <span class="number">2
-	</span>DBLCLK NM_FIRST - <span class="number">3
-	</span>RETURN NM_FIRST - <span class="number">4
-	</span>RCLICK NM_FIRST - <span class="number">5
-	</span>RDBLCLK NM_FIRST - <span class="number">6
-	</span>SETFOCUS NM_FIRST - <span class="number">7
-	</span>KILLFOCUS NM_FIRST - <span class="number">8
-	</span>CUSTOMDRAW NM_FIRST - <span class="number">12
-	</span>HOVER NM_FIRST - <span class="number">13
-	</span>NCHITTEST NM_FIRST - <span class="number">14
-	</span>KEYDOWN NM_FIRST - <span class="number">15
-	</span>RELEASEDCAPTURE NM_FIRST - <span class="number">16
-	</span>SETCURSOR NM_FIRST - <span class="number">17
-	</span>CHAR NM_FIRST - <span class="number">18
-	</span>TOOLTIPSCREATED NM_FIRST - <span class="number">19
-	</span>LDOWN NM_FIRST - <span class="number">20
-	</span>RDOWN NM_FIRST - <span class="number">21
-	</span>THEMECHANGED NM_FIRST - <span class="number">22
 </span>}
 
 <span class="macro">const_ws!</span> { PBS: u32;
@@ -4122,6 +4144,11 @@
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications)
 	/// (`i32`).
 	</span>=&gt;
+	NM_CLICK NM_CLICK
+	NM_DBLCLK NM_DBLCLK
+	NM_RCLICK NM_RCLICK
+	NM_RDBLCLK NM_RDBLCLK
+
 	SIMPLEMODECHANGE SBN_FIRST - <span class="number">0
 </span>}
 
@@ -4474,6 +4501,12 @@
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-notifications)
 	/// (`i32`).
 	</span>=&gt;
+	NM_CLICK NM_CLICK
+	NM_DBLCLK NM_DBLCLK
+	NM_RCLICK NM_RCLICK
+	NM_RDBLCLK NM_RDBLCLK
+	NM_RELEASEDCAPTURE NM_RELEASEDCAPTURE
+
 	FOCUSCHANGE TCN_FIRST - <span class="number">4
 	</span>GETOBJECT TCN_FIRST - <span class="number">3
 	</span>KEYDOWN TCN_FIRST - <span class="number">0
@@ -4641,6 +4674,9 @@
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications)
 	/// (`i32`).
 	</span>=&gt;
+	NM_CUSTOMDRAW NM_CUSTOMDRAW
+	NM_RELEASEDCAPTURE NM_RELEASEDCAPTURE
+
 	THUMBPOSCHANGING TRBN_FIRST - <span class="number">1
 </span>}
 
@@ -4834,6 +4870,16 @@
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-notifications)
 	/// (`i32`).
 	</span>=&gt;
+	NM_CLICK NM_CLICK
+	NM_CUSTOMDRAW NM_CUSTOMDRAW
+	NM_DBLCLK NM_DBLCLK
+	NM_KILLFOCUS NM_KILLFOCUS
+	NM_RCLICK NM_RCLICK
+	NM_RDBLCLK NM_RDBLCLK
+	NM_RETURN NM_RETURN
+	NM_SETCURSOR NM_SETCURSOR
+	NM_SETFOCUS NM_SETFOCUS
+
 	SELCHANGING TVN_FIRST - <span class="number">50
 	</span>SELCHANGED TVN_FIRST - <span class="number">51
 	</span>GETDISPINFO TVN_FIRST - <span class="number">52
@@ -4934,6 +4980,8 @@
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-notifications)
 	/// (`i32`).
 	</span>=&gt;
+	NM_RELEASEDCAPTURE NM_RELEASEDCAPTURE
+
 	DELTAPOS UDN_FIRST - <span class="number">1
 </span>}
 
