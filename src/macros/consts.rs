@@ -36,6 +36,15 @@ macro_rules! const_values_pubcrate {
 	};
 }
 
+/// Writes `pub(crate)` values of numeric types; to be used in privs.rs files.
+macro_rules! const_values_num_privs {
+	(
+		$( $name:ident $ty:ty = $val:expr )*
+	) => {
+		$( pub(crate) const $name: $ty = $val; )*
+	};
+}
+
 /// Declares the type of a constant. Won't include `Debug` and `Display` impls.
 macro_rules! const_no_debug_display {
 	(

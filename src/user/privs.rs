@@ -3,18 +3,20 @@
 use crate::co;
 use crate::decl::*;
 
-pub(crate) const ASFW_ANY: u32 = -1i32 as _;
-pub(crate) const CB_ERR: i32 = -1;
-pub(crate) const CB_ERRSPACE: i32 = -2;
-pub(crate) const CCHDEVICENAME: usize = 32;
-pub(crate) const CCHFORMNAME: usize = 32;
-pub(crate) const CCHILDREN_TITLEBAR: usize = 5;
-pub(crate) const DM_SPECVERSION: u16 = 0x0401;
-pub(crate) const FAPPCOMMAND_MASK: u16 = 0xf000;
-pub(crate) const HWND_MESSAGE: isize = -3;
-pub(crate) const LB_ERR: i32 = -1;
-pub(crate) const LB_ERRSPACE: i32 = -2;
-pub(crate) const WC_DIALOG: u16 = 0x8002;
+const_values_num_privs! {
+	ASFW_ANY u32 = -1i32 as _
+	CB_ERR i32 = -1
+	CB_ERRSPACE i32 = -2
+	CCHDEVICENAME usize = 32
+	CCHFORMNAME usize = 32
+	CCHILDREN_TITLEBAR usize = 5
+	DM_SPECVERSION u16 = 0x0401
+	FAPPCOMMAND_MASK u16 = 0xf000
+	HWND_MESSAGE isize = -3
+	LB_ERR i32 = -1
+	LB_ERRSPACE i32 = -2
+	WC_DIALOG u16 = 0x8002
+}
 
 /// Takes an `isize` and returns `Err` if `-1`.
 #[must_use]

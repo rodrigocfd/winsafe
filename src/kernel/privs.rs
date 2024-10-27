@@ -5,14 +5,16 @@ use crate::decl::*;
 use crate::kernel::ffi_types::*;
 use crate::prelude::*;
 
-pub(crate) const GMEM_INVALID_HANDLE: u32 = 0x8000;
-pub(crate) const INFINITE: u32 = 0xffff_ffff;
-pub(crate) const INVALID_FILE_ATTRIBUTES: i32 = -1;
-pub(crate) const LMEM_INVALID_HANDLE: u32 = 0x8000;
-pub(crate) const MAX_COMPUTERNAME_LENGTH: usize = 15;
-pub(crate) const MAX_MODULE_NAME32: usize = 255;
-pub(crate) const MAX_PATH: usize = 260;
-pub(crate) const SECURITY_SQOS_PRESENT: u32 = 0x0010_0000;
+const_values_num_privs! {
+	GMEM_INVALID_HANDLE u32 = 0x8000
+	INFINITE u32 = 0xffff_ffff
+	INVALID_FILE_ATTRIBUTES i32 = -1
+	LMEM_INVALID_HANDLE u32 = 0x8000
+	MAX_COMPUTERNAME_LENGTH usize = 15
+	MAX_MODULE_NAME32 usize = 255
+	MAX_PATH usize = 260
+	SECURITY_SQOS_PRESENT u32 = 0x0010_0000
+}
 
 /// [`IS_INTRESOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-is_intresource)
 /// macro.

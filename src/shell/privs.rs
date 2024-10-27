@@ -1,1 +1,3 @@
-pub(crate) const INFOTIPSIZE: usize = 1024;
+const_values_num_privs! {
+	INFOTIPSIZE usize = 1024
+}
