@@ -188,7 +188,7 @@ impl<T> ListView<T> {
 		}
 
 		let style: co::LVS = self.hwnd().style().into();
-		self.hwnd().set_style(style | co::LVS::SHAREIMAGELISTS);
+		self.hwnd().set_style(style | co::LVS::SHAREIMAGELISTS); // force style
 
 		self.0.base.parent()
 			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())

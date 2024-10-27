@@ -78,7 +78,7 @@ impl WindowEventsPriv {
 
 		if wm_any.msg_id == co::WM::COMMAND {
 			let wm_cmd = unsafe { wm::Command::from_generic_wm(wm_any) };
-			let key_cmd = wm_cmd.event.id_code();
+			let key_cmd = (wm_cmd.event.ctrl_id(), wm_cmd.event.code());
 			let cmds = unsafe { &*self.cmds.get() };
 			for func in cmds.filter(key_cmd) {
 				match func()? {
@@ -127,7 +127,7 @@ impl WindowEventsPriv {
 	{
 		if wm_any.msg_id == co::WM::COMMAND {
 			let wm_cmd = unsafe { wm::Command::from_generic_wm(wm_any) };
-			let key_cmd = wm_cmd.event.id_code();
+			let key_cmd = (wm_cmd.event.ctrl_id(), wm_cmd.event.code());
 			let cmds = unsafe { &*self.cmds.get() };
 			for func in cmds.filter_rev(key_cmd) {
 				match func()? {
