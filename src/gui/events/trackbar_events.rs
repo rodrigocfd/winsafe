@@ -29,13 +29,13 @@ impl TrackbarEvents {
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: Fn(&NMCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
-		self.0.wm_notify(co::NM::CUSTOMDRAW, move |p| {
+		self.0.wm_notify(co::TRBN::NM_CUSTOMDRAW, move |p| {
 			let ret_val = func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })?.raw() as isize;
 			Ok(WmRet::HandledWithRet(ret_val))
 		});
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_released_capture, co::NM::RELEASEDCAPTURE;
+	pub_fn_nfy_noparm_noret! { nm_released_capture, co::TRBN::NM_RELEASEDCAPTURE;
 		/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-trackbar-)
 		/// notification.
 	}

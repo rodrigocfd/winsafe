@@ -243,7 +243,7 @@ impl ListViewEvents {
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_noret! { nm_click, co::NM::CLICK, NMITEMACTIVATE;
+	pub_fn_nfy_withparm_noret! { nm_click, co::LVN::NM_CLICK, NMITEMACTIVATE;
 		/// [`NM_CLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-click-list-view)
 		/// notification.
 	}
@@ -253,48 +253,48 @@ impl ListViewEvents {
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: Fn(&mut NMLVCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
-		self.0.wm_notify(co::NM::CUSTOMDRAW, move |p| {
+		self.0.wm_notify(co::LVN::NM_CUSTOMDRAW, move |p| {
 			let ret_val = func(unsafe { p.cast_nmhdr_mut::<NMLVCUSTOMDRAW>() })?.raw() as isize;
 			Ok(WmRet::HandledWithRet(ret_val))
 		});
 	}
 
-	pub_fn_nfy_withparm_noret! { nm_dbl_clk, co::NM::DBLCLK, NMITEMACTIVATE;
+	pub_fn_nfy_withparm_noret! { nm_dbl_clk, co::LVN::NM_DBLCLK, NMITEMACTIVATE;
 		/// [`NM_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-dblclk-list-view)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_i32ret! { nm_hover, co::NM::HOVER;
+	pub_fn_nfy_noparm_i32ret! { nm_hover, co::LVN::NM_HOVER;
 		/// [`NM_HOVER`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-hover-list-view)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_kill_focus, co::NM::KILLFOCUS;
+	pub_fn_nfy_noparm_noret! { nm_kill_focus, co::LVN::NM_KILLFOCUS;
 		/// [`NM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-killfocus-list-view)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_i32ret! { nm_r_click, co::NM::RCLICK, NMITEMACTIVATE;
+	pub_fn_nfy_withparm_i32ret! { nm_r_click, co::LVN::NM_RCLICK, NMITEMACTIVATE;
 		/// [`NM_RCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rclick-list-view)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_noret! { nm_r_dbl_clk, co::NM::RDBLCLK, NMITEMACTIVATE;
+	pub_fn_nfy_withparm_noret! { nm_r_dbl_clk, co::LVN::NM_RDBLCLK, NMITEMACTIVATE;
 		/// [`NM_RDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rdblclk-list-view)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_released_capture, co::NM::RELEASEDCAPTURE;
+	pub_fn_nfy_noparm_noret! { nm_released_capture, co::LVN::NM_RELEASEDCAPTURE;
 		/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-list-view-)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_return, co::NM::RETURN;
+	pub_fn_nfy_noparm_noret! { nm_return, co::LVN::NM_RETURN;
 		/// [`NM_RETURN`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-return-list-view-)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_set_focus, co::NM::SETFOCUS;
+	pub_fn_nfy_noparm_noret! { nm_set_focus, co::LVN::NM_SETFOCUS;
 		/// [`NM_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setfocus-list-view-)
 		/// notification.
 	}

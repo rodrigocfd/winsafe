@@ -127,9 +127,9 @@ impl WindowEvents {
 	///
 	/// wnd.on().wm_notify(
 	///     CTRL_ID,
-	///     co::NM::DBLCLK,
+	///     co::SBN::NM_DBLCLK,
 	///     move |_| -> w::AnyResult<gui::WmRet> {
-	///         println!("Button clicked!");
+	///         println!("Status bar double clicked!");
 	///         Ok(gui::WmRet::HandledOk)
 	///     },
 	/// );

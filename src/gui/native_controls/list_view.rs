@@ -241,7 +241,7 @@ impl<T> ListView<T> {
 		});
 
 		let self2 = self.clone();
-		parent.before_user_on().wm_notify(ctrl_id, co::NM::RCLICK, move |p| {
+		parent.before_user_on().wm_notify(ctrl_id, co::LVN::NM_RCLICK, move |p| {
 			let nmia = unsafe { p.cast_nmhdr::<NMITEMACTIVATE>() };
 			let has_ctrl = nmia.uKeyFlags.has(co::LVKF::CONTROL);
 			let has_shift = nmia.uKeyFlags.has(co::LVKF::SHIFT);

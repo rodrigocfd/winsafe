@@ -19,22 +19,22 @@ impl StatusBarEvents {
 		Self(BaseCtrlEventsProxy::new(parent, ctrl_id))
 	}
 
-	pub_fn_nfy_withparm_boolret! { nm_click, co::NM::CLICK, NMMOUSE;
+	pub_fn_nfy_withparm_boolret! { nm_click, co::SBN::NM_CLICK, NMMOUSE;
 		/// [`NM_CLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-click-status-bar)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_boolret! { nm_dbl_clk, co::NM::DBLCLK, NMMOUSE;
+	pub_fn_nfy_withparm_boolret! { nm_dbl_clk, co::SBN::NM_DBLCLK, NMMOUSE;
 		/// [`NM_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-dblclk-status-bar)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_boolret! { nm_rclick, co::NM::RCLICK, NMMOUSE;
+	pub_fn_nfy_withparm_boolret! { nm_rclick, co::SBN::NM_RCLICK, NMMOUSE;
 		/// [`NM_RCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rclick-status-bar)
 		/// notification.
 	}
 
-	pub_fn_nfy_withparm_boolret! { nm_r_dbl_clk, co::NM::RDBLCLK, NMMOUSE;
+	pub_fn_nfy_withparm_boolret! { nm_r_dbl_clk, co::SBN::NM_RDBLCLK, NMMOUSE;
 		/// [`NM_RDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rdblclk-status-bar)
 		/// notification.
 	}

@@ -19,8 +19,8 @@ impl UpDownEvents {
 		Self(BaseCtrlEventsProxy::new(parent, ctrl_id))
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_released_capture, co::NM::RELEASEDCAPTURE;
-		/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-list-view-)
+	pub_fn_nfy_noparm_noret! { nm_released_capture, co::UDN::NM_RELEASEDCAPTURE;
+		/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-up-down-)
 		/// notification.
 	}
 

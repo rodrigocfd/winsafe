@@ -40,6 +40,8 @@ const_nm! { BCN;
 	=>
 	HOTITEMCHANGE BCN_FIRST + 0x0001
 	DROPDOWN BCN_FIRST + 0x0002
+
+	NM_CUSTOMDRAW NM_CUSTOMDRAW
 }
 
 const_bitflag! { BCSIF: u32;
@@ -267,6 +269,9 @@ const_nm! { DTN;
 	FORMATQUERY DTN_FIRST - 2
 	USERSTRING DTN_FIRST - 5
 	WMKEYDOWN DTN_FIRST - 4
+
+	NM_KILLFOCUS NM_KILLFOCUS
+	NM_SETFOCUS NM_SETFOCUS
 }
 
 const_ws! { DTS: u32;
@@ -472,6 +477,10 @@ const_nm! { HDN;
 	FILTERCHANGE HDN_FIRST - 12
 	ENDDRAG HDN_FIRST - 11
 	BEGINDRAG HDN_FIRST - 10
+
+	NM_CUSTOMDRAW NM_CUSTOMDRAW
+	NM_RCLICK NM_RCLICK
+	NM_RELEASEDCAPTURE NM_RELEASEDCAPTURE
 }
 
 const_ws! { HDS: u32;
@@ -1155,6 +1164,17 @@ const_nm! { LVN;
 	ENDSCROLL LVN_FIRST - 81
 	LINKCLICK LVN_FIRST - 84
 	GETEMPTYMARKUP LVN_FIRST - 87
+
+	NM_CLICK NM_CLICK
+	NM_CUSTOMDRAW NM_CUSTOMDRAW
+	NM_DBLCLK NM_DBLCLK
+	NM_HOVER NM_HOVER
+	NM_KILLFOCUS NM_KILLFOCUS
+	NM_RCLICK NM_RCLICK
+	NM_RDBLCLK NM_RDBLCLK
+	NM_RELEASEDCAPTURE NM_RELEASEDCAPTURE
+	NM_RETURN NM_RETURN
+	NM_SETFOCUS NM_SETFOCUS
 }
 
 const_bitflag! { LVNI: u32;
@@ -1398,6 +1418,8 @@ const_nm! { MCN;
 	GETDAYSTATE MCN_FIRST - 1
 	SELCHANGE MCN_FIRST - 3
 	VIEWCHANGE MCN_FIRST - 4
+
+	NM_RELEASEDCAPTURE NM_RELEASEDCAPTURE
 }
 
 const_ws! { MCS: u32;
@@ -1426,30 +1448,6 @@ const_ordinary! { MCSC: u8;
 	TITLETEXT 3
 	MONTHBK 4
 	TRAILINGTEXT 5
-}
-
-const_nm! { NM;
-	/// Ordinary notification codes (`i32`).
-	=>
-	OUTOFMEMORY NM_FIRST - 1
-	CLICK NM_FIRST - 2
-	DBLCLK NM_FIRST - 3
-	RETURN NM_FIRST - 4
-	RCLICK NM_FIRST - 5
-	RDBLCLK NM_FIRST - 6
-	SETFOCUS NM_FIRST - 7
-	KILLFOCUS NM_FIRST - 8
-	CUSTOMDRAW NM_FIRST - 12
-	HOVER NM_FIRST - 13
-	NCHITTEST NM_FIRST - 14
-	KEYDOWN NM_FIRST - 15
-	RELEASEDCAPTURE NM_FIRST - 16
-	SETCURSOR NM_FIRST - 17
-	CHAR NM_FIRST - 18
-	TOOLTIPSCREATED NM_FIRST - 19
-	LDOWN NM_FIRST - 20
-	RDOWN NM_FIRST - 21
-	THEMECHANGED NM_FIRST - 22
 }
 
 const_ws! { PBS: u32;
@@ -1626,6 +1624,11 @@ const_nm! { SBN;
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-status-bars-reference-notifications)
 	/// (`i32`).
 	=>
+	NM_CLICK NM_CLICK
+	NM_DBLCLK NM_DBLCLK
+	NM_RCLICK NM_RCLICK
+	NM_RDBLCLK NM_RDBLCLK
+
 	SIMPLEMODECHANGE SBN_FIRST - 0
 }
 
@@ -1978,6 +1981,12 @@ const_nm! { TCN;
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tab-control-reference-notifications)
 	/// (`i32`).
 	=>
+	NM_CLICK NM_CLICK
+	NM_DBLCLK NM_DBLCLK
+	NM_RCLICK NM_RCLICK
+	NM_RDBLCLK NM_RDBLCLK
+	NM_RELEASEDCAPTURE NM_RELEASEDCAPTURE
+
 	FOCUSCHANGE TCN_FIRST - 4
 	GETOBJECT TCN_FIRST - 3
 	KEYDOWN TCN_FIRST - 0
@@ -2145,6 +2154,9 @@ const_nm! { TRBN;
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications)
 	/// (`i32`).
 	=>
+	NM_CUSTOMDRAW NM_CUSTOMDRAW
+	NM_RELEASEDCAPTURE NM_RELEASEDCAPTURE
+
 	THUMBPOSCHANGING TRBN_FIRST - 1
 }
 
@@ -2338,6 +2350,16 @@ const_nm! { TVN;
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-notifications)
 	/// (`i32`).
 	=>
+	NM_CLICK NM_CLICK
+	NM_CUSTOMDRAW NM_CUSTOMDRAW
+	NM_DBLCLK NM_DBLCLK
+	NM_KILLFOCUS NM_KILLFOCUS
+	NM_RCLICK NM_RCLICK
+	NM_RDBLCLK NM_RDBLCLK
+	NM_RETURN NM_RETURN
+	NM_SETCURSOR NM_SETCURSOR
+	NM_SETFOCUS NM_SETFOCUS
+
 	SELCHANGING TVN_FIRST - 50
 	SELCHANGED TVN_FIRST - 51
 	GETDISPINFO TVN_FIRST - 52
@@ -2438,6 +2460,8 @@ const_nm! { UDN;
 	/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-up-down-control-reference-notifications)
 	/// (`i32`).
 	=>
+	NM_RELEASEDCAPTURE NM_RELEASEDCAPTURE
+
 	DELTAPOS UDN_FIRST - 1
 }
 
