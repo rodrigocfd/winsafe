@@ -125,18 +125,18 @@ impl HeaderEvents {
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: Fn(&mut NMCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
-		self.0.wm_notify(co::HDN::NM_CUSTOMDRAW, move |p| {
+		self.0.wm_notify(co::NM::CUSTOMDRAW, move |p| {
 			let ret_val = func(unsafe { p.cast_nmhdr_mut::<NMCUSTOMDRAW>() })?.raw() as isize;
 			Ok(WmRet::HandledWithRet(ret_val))
 		});
 	}
 
-	pub_fn_nfy_noparm_i32ret! { nm_r_click, co::HDN::NM_RCLICK;
+	pub_fn_nfy_noparm_i32ret! { nm_r_click, co::NM::RCLICK;
 		/// [`NM_RCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rclick-header)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_released_capture, co::HDN::NM_RELEASEDCAPTURE;
+	pub_fn_nfy_noparm_noret! { nm_released_capture, co::NM::RELEASEDCAPTURE;
 		/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-header-)
 		/// notification.
 	}

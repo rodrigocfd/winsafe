@@ -19,27 +19,27 @@ impl TabEvents {
 		Self(BaseCtrlEventsProxy::new(parent, ctrl_id))
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_click, co::TCN::NM_CLICK;
+	pub_fn_nfy_noparm_noret! { nm_click, co::NM::CLICK;
 		/// [`NM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-click-tab)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_i32ret! { nm_dbl_clk, co::TCN::NM_DBLCLK;
+	pub_fn_nfy_noparm_i32ret! { nm_dbl_clk, co::NM::DBLCLK;
 		/// [`NM_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-dblclk-tab)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_i32ret! { nm_r_click, co::TCN::NM_RCLICK;
+	pub_fn_nfy_noparm_i32ret! { nm_r_click, co::NM::RCLICK;
 		/// [`NM_RCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rclick-tab)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_i32ret! { nm_r_dbl_clk, co::TCN::NM_RDBLCLK;
+	pub_fn_nfy_noparm_i32ret! { nm_r_dbl_clk, co::NM::RDBLCLK;
 		/// [`NM_RDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rdblclk-tab)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_released_capture, co::TCN::NM_RELEASEDCAPTURE;
+	pub_fn_nfy_noparm_noret! { nm_released_capture, co::NM::RELEASEDCAPTURE;
 		/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-tab-)
 		/// notification.
 	}

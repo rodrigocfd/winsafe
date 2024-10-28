@@ -823,6 +823,12 @@ impl Ord for NmhdrCode {
 	}
 }
 
+impl std::fmt::Display for NmhdrCode {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "{}", self.0)
+	}
+}
+
 impl NmhdrCode {
 	#[must_use]
 	pub(crate) const fn new(v: i32) -> Self {

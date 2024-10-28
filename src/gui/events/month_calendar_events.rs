@@ -58,7 +58,7 @@ impl MonthCalendarEvents {
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_released_capture, co::MCN::NM_RELEASEDCAPTURE;
+	pub_fn_nfy_noparm_noret! { nm_released_capture, co::NM::RELEASEDCAPTURE;
 		/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-monthcal-)
 		/// notification.
 	}

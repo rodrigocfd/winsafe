@@ -72,7 +72,7 @@ impl ButtonEvents {
 	pub fn nm_custom_draw<F>(&self, func: F)
 		where F: Fn(&NMCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
-		self.0.wm_notify(co::BCN::NM_CUSTOMDRAW, move |p| {
+		self.0.wm_notify(co::NM::CUSTOMDRAW, move |p| {
 			let ret_val = func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })?.raw() as isize;
 			Ok(WmRet::HandledWithRet(ret_val))
 		});

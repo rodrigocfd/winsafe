@@ -246,7 +246,7 @@ impl<T> ListView<T> {
 		});
 
 		let self2 = self.clone();
-		parent.before_user_on().wm_notify(ctrl_id, co::LVN::NM_RCLICK, move |p| {
+		parent.before_user_on().wm_notify(ctrl_id, co::NM::RCLICK, move |p| {
 			let nmia = unsafe { p.cast_nmhdr::<NMITEMACTIVATE>() };
 			let has_ctrl = nmia.uKeyFlags.has(co::LVKF::CONTROL);
 			let has_shift = nmia.uKeyFlags.has(co::LVKF::SHIFT);
@@ -403,7 +403,7 @@ impl<T> ListView<T> {
 			self.hwnd().SetFocus(); // because a right-click won't set the focus by itself
 			menu_pos
 
-		} else { // usually fired by the context meny key
+		} else { // usually fired by the context menu key
 			let focused_opt = self.items().focused();
 
 			if focused_opt.is_some() && focused_opt.unwrap().is_visible() {

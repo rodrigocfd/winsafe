@@ -72,12 +72,12 @@ impl DateTimePickerEvents {
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_kill_focus, co::DTN::NM_KILLFOCUS;
+	pub_fn_nfy_noparm_noret! { nm_kill_focus, co::NM::KILLFOCUS;
 		/// [`NM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-killfocus-date-time)
 		/// notification.
 	}
 
-	pub_fn_nfy_noparm_noret! { nm_set_focus, co::DTN::NM_SETFOCUS;
+	pub_fn_nfy_noparm_noret! { nm_set_focus, co::NM::SETFOCUS;
 		/// [`NM_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setfocus-date-time-)
 		/// notification.
 	}
