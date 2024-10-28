@@ -71,13 +71,13 @@
 	</span><span class="kw">pub fn </span>nm_custom_draw&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
 		<span class="kw">where </span>F: Fn(<span class="kw-2">&amp;</span>NMCUSTOMDRAW) -&gt; AnyResult&lt;co::CDRF&gt; + <span class="lifetime">'static</span>,
 	{
-		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::TRBN::NM_CUSTOMDRAW, <span class="kw">move </span>|p| {
+		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::NM::CUSTOMDRAW, <span class="kw">move </span>|p| {
 			<span class="kw">let </span>ret_val = func(<span class="kw">unsafe </span>{ p.cast_nmhdr::&lt;NMCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as </span>isize;
 			<span class="prelude-val">Ok</span>(WmRet::HandledWithRet(ret_val))
 		});
 	}
 
-	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_released_capture, co::TRBN::NM_RELEASEDCAPTURE;
+	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_released_capture, co::NM::RELEASEDCAPTURE;
 		<span class="doccomment">/// [`NM_RELEASEDCAPTURE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-releasedcapture-trackbar-)
 		/// notification.
 	</span>}

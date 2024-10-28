@@ -1485,7 +1485,13 @@
 <a href="#1484" id="1484">1484</a>
 <a href="#1485" id="1485">1485</a>
 <a href="#1486" id="1486">1486</a>
-<a href="#1487" id="1487">1487</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<a href="#1487" id="1487">1487</a>
+<a href="#1488" id="1488">1488</a>
+<a href="#1489" id="1489">1489</a>
+<a href="#1490" id="1490">1490</a>
+<a href="#1491" id="1491">1491</a>
+<a href="#1492" id="1492">1492</a>
+<a href="#1493" id="1493">1493</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
 
@@ -2307,6 +2313,12 @@
 <span class="kw">impl </span>Ord <span class="kw">for </span>NmhdrCode {
 	<span class="kw">fn </span>cmp(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="self">Self</span>) -&gt; std::cmp::Ordering {
 		<span class="self">self</span>.<span class="number">0</span>.cmp(<span class="kw-2">&amp;</span>other.<span class="number">0</span>)
+	}
+}
+
+<span class="kw">impl </span>std::fmt::Display <span class="kw">for </span>NmhdrCode {
+	<span class="kw">fn </span>fmt(<span class="kw-2">&amp;</span><span class="self">self</span>, f: <span class="kw-2">&amp;mut </span>std::fmt::Formatter&lt;<span class="lifetime">'_</span>&gt;) -&gt; std::fmt::Result {
+		<span class="macro">write!</span>(f, <span class="string">"{}"</span>, <span class="self">self</span>.<span class="number">0</span>)
 	}
 }
 

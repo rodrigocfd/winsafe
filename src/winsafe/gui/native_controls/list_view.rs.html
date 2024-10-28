@@ -775,7 +775,7 @@
 		});
 
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-		parent.before_user_on().wm_notify(ctrl_id, co::LVN::NM_RCLICK, <span class="kw">move </span>|p| {
+		parent.before_user_on().wm_notify(ctrl_id, co::NM::RCLICK, <span class="kw">move </span>|p| {
 			<span class="kw">let </span>nmia = <span class="kw">unsafe </span>{ p.cast_nmhdr::&lt;NMITEMACTIVATE&gt;() };
 			<span class="kw">let </span>has_ctrl = nmia.uKeyFlags.has(co::LVKF::CONTROL);
 			<span class="kw">let </span>has_shift = nmia.uKeyFlags.has(co::LVKF::SHIFT);
@@ -932,7 +932,7 @@
 			<span class="self">self</span>.hwnd().SetFocus(); <span class="comment">// because a right-click won't set the focus by itself
 			</span>menu_pos
 
-		} <span class="kw">else </span>{ <span class="comment">// usually fired by the context meny key
+		} <span class="kw">else </span>{ <span class="comment">// usually fired by the context menu key
 			</span><span class="kw">let </span>focused_opt = <span class="self">self</span>.items().focused();
 
 			<span class="kw">if </span>focused_opt.is_some() &amp;&amp; focused_opt.unwrap().is_visible() {
