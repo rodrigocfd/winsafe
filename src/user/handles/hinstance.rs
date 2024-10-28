@@ -190,10 +190,12 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// [`LoadMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenuw)
 	/// function.
 	#[must_use]
-	fn LoadMenu(&self, resource_id: IdStr) -> SysResult<HMENU> {
-		ptr_to_sysresult_handle(
-			unsafe { ffi::LoadMenuW(self.ptr(), resource_id.as_ptr()) },
-		)
+	fn LoadMenu(&self, resource_id: IdStr) -> SysResult<DestroyMenuGuard> {
+		unsafe {
+			ptr_to_sysresult_handle(
+				ffi::LoadMenuW(self.ptr(), resource_id.as_ptr()),
+			).map(|h| DestroyMenuGuard::new(h))
+		}
 	}
 
 	/// [`LoadString`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringw)

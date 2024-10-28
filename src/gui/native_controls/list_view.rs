@@ -14,7 +14,7 @@ use crate::prelude::*;
 struct Obj<T> { // atual fields of ListView
 	base: BaseNativeControl,
 	events: ListViewEvents,
-	context_menu: Option<HMENU>,
+	context_menu: Option<DestroyMenuGuard>, // the context menu itself is the 1st submenu
 	_pin: PhantomPinned,
 	_data: PhantomData<T>,
 }
@@ -91,9 +91,9 @@ impl<T> ListView<T> {
 	/// dynamically create a `ListView` in an event closure.
 	#[must_use]
 	pub fn new(parent: &impl GuiParent, opts: ListViewOpts) -> Self {
-		let opts = auto_ctrl_id_if_zero(opts);
+		let mut opts = auto_ctrl_id_if_zero(opts);
 		let ctrl_id = opts.ctrl_id;
-		let context_menu = opts.context_menu.as_ref().map(|h| unsafe { h.raw_copy() });
+		let context_menu = opts.context_menu.take();
 
 		let new_self = Self(
 			Arc::pin(
@@ -121,6 +121,9 @@ impl<T> ListView<T> {
 	/// resource with
 	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
 	///
+	/// The `context_menu_id` must point to the root menu whose first submenu
+	/// will be effectively displayed as the context menu.
+	///
 	/// Since the image list is always managed by the control itself,
 	/// [`LVS::SHAREIMAGELISTS`](crate::co::LVS::SHAREIMAGELISTS) style will
 	/// always be added.
@@ -144,9 +147,11 @@ impl<T> ListView<T> {
 				Obj {
 					base: BaseNativeControl::new(parent, ctrl_id),
 					events: ListViewEvents::new(parent, ctrl_id),
-					context_menu: context_menu_id.map(
-						|id| HINSTANCE::NULL.LoadMenu(IdStr::Id(id)).unwrap()
-							.GetSubMenu(0).unwrap(), // usually this is how it's set in the resources
+					context_menu: context_menu_id
+						.map(|id| parent.hwnd()
+							.hinstance()
+							.LoadMenu(IdStr::Id(id))
+							.unwrap(),
 					),
 					_pin: PhantomPinned,
 					_data: PhantomData,
@@ -281,14 +286,15 @@ impl<T> ListView<T> {
 		ListViewColumns::new(self)
 	}
 
-	/// Returns the context menu attached to this list view, if any.
+	/// Returns a handle to the first submenu of the context menu owned by the
+	/// list view, if any.
 	///
-	/// The context menu is attached when the list view is created, either by
-	/// calling [`ListView::new`](crate::gui::ListView::new) or
-	/// [`ListView::new_dlg`](crate::gui::ListView::new_dlg).
+	/// The first submenu is the one to be effectively displayed by the control.
 	#[must_use]
-	pub fn context_menu(&self) -> Option<&HMENU> {
-		self.0.context_menu.as_ref()
+	pub fn context_menu(&self) -> Option<HMENU> {
+		self.0.context_menu
+			.as_ref()
+			.map(|hmenu| hmenu.GetSubMenu(0).unwrap())
 	}
 
 	/// Retrieves a reference to one of the associated image lists by sending an
@@ -374,7 +380,7 @@ impl<T> ListView<T> {
 		has_ctrl: bool,
 		has_shift: bool,
 	) {
-		let hmenu = match self.0.context_menu.as_ref() {
+		let hmenu = match self.context_menu() {
 			Some(h) => h,
 			None => return, // no menu, nothing to do
 		};
@@ -478,12 +484,14 @@ pub struct ListViewOpts {
 
 	/// Context popup menu.
 	///
-	/// This menu is shared: it must be destroyed manually after the control is
-	/// destroyed. But note that menus loaded from resources don't need to be
-	/// destroyed.
+	/// This menu will be owned by the control, which will automatically destroy
+	/// it.
+	///
+	/// The first submenu is the one which will be effectively displayed as the
+	/// context menu.
 	///
 	/// Defaults to `None`.
-	pub context_menu: Option<HMENU>,
+	pub context_menu: Option<DestroyMenuGuard>,
 	/// Text and width of columns to be added right away. The columns only show
 	/// in report mode.
 	///

@@ -180,7 +180,7 @@ impl<'a, T> ListViewItem<'a, T> {
 		}.unwrap()
 	}
 
-	/// Retrieves the bound rectangle of item by sending an
+	/// Retrieves the bounding rectangle of the item by sending an
 	/// [`lvm::GetItemRect`](crate::msg::lvm::GetItemRect) message.
 	#[must_use]
 	pub fn rect(&self, portion: co::LVIR) -> RECT {

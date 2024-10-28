@@ -66,6 +66,14 @@ handle_guard! { DestroyIconGuard: HICON;
 	/// when the object goes out of scope.
 }
 
+handle_guard! { DestroyMenuGuard: HMENU;
+	ffi::DestroyMenu;
+	/// RAII implementation for [`HMENU`](crate::HMENU) which automatically
+	/// calls
+	/// [`DestroyMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroymenu)
+	/// when the object goes out of scope.
+}
+
 handle_guard! { EndDeferWindowPosGuard: HDWP;
 	ffi::EndDeferWindowPos;
 	/// RAII implementation for [`HDWP`](crate::HDWP) which automatically calls
