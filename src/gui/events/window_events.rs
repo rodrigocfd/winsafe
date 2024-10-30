@@ -11,20 +11,24 @@ use crate::prelude::*;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// window.
-pub struct WindowEvents(WindowEventsPriv);
+pub struct WindowEvents {
+	ev_priv: WindowEventsPriv,
+}
 
 impl WindowEvents {
 	#[must_use]
 	pub(in crate::gui) const fn new(is_dialog: bool) -> Self {
-		Self(WindowEventsPriv::new(is_dialog))
+		Self {
+			ev_priv: WindowEventsPriv::new(is_dialog),
+		}
 	}
 
 	pub(in crate::gui) fn is_empty(&self) -> bool {
-		self.0.is_empty()
+		self.ev_priv.is_empty()
 	}
 
 	pub(in crate::gui) fn clear_events(&self) {
-		self.0.clear_events()
+		self.ev_priv.clear_events()
 	}
 
 	/// Searches for the last added user function for the given message, and
@@ -34,7 +38,7 @@ impl WindowEvents {
 		wm_any: WndMsg,
 	) -> AnyResult<WmRet>
 	{
-		self.0.process_last_message(hwnd, wm_any)
+		self.ev_priv.process_last_message(hwnd, wm_any)
 	}
 
 	/// Event to any [window message](crate::co::WM).
@@ -67,7 +71,7 @@ impl WindowEvents {
 	pub fn wm<F>(&self, ident: co::WM, func: F)
 		where F: Fn(WndMsg) -> AnyResult<WmRet> + 'static,
 	{
-		self.0.wm(ident, move |_, p| func(p));
+		self.ev_priv.wm(ident, move |_, p| func(p));
 	}
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
@@ -106,7 +110,7 @@ impl WindowEvents {
 	)
 		where F: Fn() -> AnyResult<WmRet> + 'static,
 	{
-		self.0.wm_command(ctrl_id, code, func);
+		self.ev_priv.wm_command(ctrl_id, code, func);
 	}
 
 	/// [`WM_NOTIFY`](crate::msg::wm::Notify) message, for specific ID and
@@ -141,7 +145,7 @@ impl WindowEvents {
 	)
 		where F: Fn(wm::Notify) -> AnyResult<WmRet> + 'static,
 	{
-		self.0.wm_notify(id_from, code, func);
+		self.ev_priv.wm_notify(id_from, code, func);
 	}
 
 	/// [`WM_TIMER`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
@@ -149,7 +153,7 @@ impl WindowEvents {
 	pub fn wm_timer<F>(&self, timer_id: usize, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
-		self.0.wm_timer(timer_id, func);
+		self.ev_priv.wm_timer(timer_id, func);
 	}
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
