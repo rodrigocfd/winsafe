@@ -234,8 +234,6 @@ pub trait kernel_Hinstance: Handle {
 	///
 	/// # Examples
 	///
-	/// Retrieving current module instance:
-	///
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*, co};
 	///
