@@ -474,6 +474,23 @@ const_bitflag! { GENERIC: u32;
 	ALL 0x1000_0000
 }
 
+const_ordinary! { GET_MODULE_HANDLE_EX_FLAG: u32;
+	/// [`HINSTANCE::GetModuleHandleEx`](crate::prelude::user_Hinstance::GetModuleHandleEx)
+	/// `flags` (`u32`).
+	///
+	/// Note that the following flags are automatically managed by the function,
+	/// therefore not available here:
+	///
+	/// * `GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS`
+	/// * `GET_MODULE_HANDLE_EX_FLAG_PIN`
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	/// The module stays loaded until the process is terminated, no matter how
+	/// many times `FreeLibrary` is called.
+	PIN 0x0000_0001
+}
+
 const_bitflag! { GMEM: u32;
 	/// [`HGLOBAL::GlobalAlloc`](crate::prelude::kernel_Hglobal::GlobalAlloc)
 	/// and

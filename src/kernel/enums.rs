@@ -4,6 +4,26 @@ use crate::kernel::privs::*;
 
 /// Variable parameter for:
 ///
+/// * [`HINSTANCE::GetModuleHandleEx`](crate::prelude::user_Hinstance::GetModuleHandleEx).
+pub enum AddrStr {
+	/// No value, will pass `NULL` to the call.
+	None,
+	/// An address in the module.
+	Addr(*mut std::ffi::c_void),
+	/// Name of the loaded module.
+	Str(WString),
+}
+
+impl AddrStr {
+	/// Constructs the enum directly from a string.
+	#[must_use]
+	pub fn from_str(v: &str) -> Self {
+		Self::Str(WString::from_str(v))
+	}
+}
+
+/// Variable parameter for:
+///
 /// * [`CLAIM_SECURITY_ATTRIBUTE_V1`](crate::CLAIM_SECURITY_ATTRIBUTE_V1).
 pub enum ClaimSecurityAttr<'a> {
 	Int64(&'a [i64]),

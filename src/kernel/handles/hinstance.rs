@@ -223,6 +223,52 @@ pub trait kernel_Hinstance: Handle {
 		)
 	}
 
+	/// [`GetModuleHandleEx`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandleexw)
+	/// function.
+	///
+	/// The `GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS` is automatically managed by
+	/// the function.
+	///
+	/// The `GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT` flag is never used,
+	/// for safety reasons.
+	///
+	/// # Examples
+	///
+	/// Retrieving current module instance:
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let hinstance = w::HINSTANCE::GetModuleHandleEx(
+	///     w::AddrStr::from_str("foo.dll"),
+	///     co::GET_MODULE_HANDLE_EX_FLAG::NoValue,
+	/// )?;
+	///
+	/// // FreeLibrary() called automatically
+	/// # w::SysResult::Ok(())
+	/// ```
+	#[must_use]
+	fn GetModuleHandleEx(
+		addr_or_name: AddrStr,
+		flags: co::GET_MODULE_HANDLE_EX_FLAG,
+	) -> SysResult<FreeLibraryGuard>
+	{
+		let mut addr_or_name = addr_or_name;
+		let (module_name, mut f) = match &mut addr_or_name {
+			AddrStr::None => (std::ptr::null_mut(), 0),
+			AddrStr::Addr(a) => (*a as _, GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS),
+			AddrStr::Str(ws) => (unsafe { ws.as_mut_ptr() }, 0),
+		};
+		f |= flags.raw();
+
+		let mut h = unsafe { HINSTANCE::from_ptr(std::ptr::null_mut()) };
+
+		unsafe {
+			bool_to_sysresult(ffi::GetModuleHandleExW(f, module_name, h.as_mut()))
+				.map(|_| FreeLibraryGuard::new(h))
+		}
+	}
+
 	/// [`GetProcAddress`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress)
 	/// function.
 	#[must_use]

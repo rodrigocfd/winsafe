@@ -63,6 +63,7 @@ extern_sys! { "kernel32";
 	GetLogicalDrives() -> u32
 	GetLogicalDriveStringsW(u32, PSTR) -> u32
 	GetModuleFileNameW(HANDLE, PSTR, u32) -> u32
+	GetModuleHandleExW(u32, PCSTR, *mut HANDLE) -> BOOL
 	GetModuleHandleW(PCSTR) -> HANDLE
 	GetNativeSystemInfo(PVOID)
 	GetPriorityClass(HANDLE) -> u32
