@@ -503,12 +503,12 @@
 		</span><span class="attr">#[must_use]
 		</span><span class="kw">pub fn </span><span class="macro-nonterminal">$field</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
 			<span class="kw">unsafe </span>{ <span class="self">self</span>.<span class="macro-nonterminal">$field</span>.as_mut() }.map(|psz| {
-				<span class="kw">unsafe </span>{ WString::from_wchars_nullt(psz) }.to_string()
+				<span class="kw">unsafe </span>{ <span class="kw">crate</span>::WString::from_wchars_nullt(psz) }.to_string()
 			})
 		}
 
 		<span class="doccomment">/// Sets the string field.
-		</span><span class="kw">pub fn </span><span class="macro-nonterminal">$setter</span>(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="macro-nonterminal">$life </span><span class="kw-2">mut </span>WString&gt;) {
+		</span><span class="kw">pub fn </span><span class="macro-nonterminal">$setter</span>(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="macro-nonterminal">$life </span><span class="kw-2">mut </span><span class="kw">crate</span>::WString&gt;) {
 			<span class="self">self</span>.<span class="macro-nonterminal">$field </span>= buf.map_or(
 				std::ptr::null_mut(),
 				|buf| <span class="kw">unsafe </span>{ buf.as_mut_ptr() },
