@@ -125,12 +125,12 @@ macro_rules! pub_fn_string_ptr_get_set {
 		#[must_use]
 		pub fn $field(&self) -> Option<String> {
 			unsafe { self.$field.as_mut() }.map(|psz| {
-				unsafe { WString::from_wchars_nullt(psz) }.to_string()
+				unsafe { crate::WString::from_wchars_nullt(psz) }.to_string()
 			})
 		}
 
 		/// Sets the string field.
-		pub fn $setter(&mut self, buf: Option<&$life mut WString>) {
+		pub fn $setter(&mut self, buf: Option<&$life mut crate::WString>) {
 			self.$field = buf.map_or(
 				std::ptr::null_mut(),
 				|buf| unsafe { buf.as_mut_ptr() },

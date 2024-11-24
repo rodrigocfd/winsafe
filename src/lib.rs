@@ -88,6 +88,7 @@ pub mod co {
 	#[cfg(feature = "user")] pub use super::user::co::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::co::*;
 	#[cfg(feature = "version")] pub use super::version::co::*;
+	#[cfg(feature = "winspool")] pub use super::winspool::co::*;
 	#[cfg(all(feature = "advapi", feature = "shell"))] pub use super::advapi_shell::co::*;
 }
 
