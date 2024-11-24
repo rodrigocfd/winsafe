@@ -198,10 +198,57 @@ pub struct DISK_SPACE_INFORMATION {
 /// Can be converted to [`SYSTEMTIME`](crate::SYSTEMTIME) with
 /// [`FileTimeToSystemTime`](crate::FileTimeToSystemTime) function.
 #[repr(C)]
-#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct FILETIME {
 	pub dwLowDateTime: u32,
 	pub dwHighDateTime: u32,
+}
+
+impl From<u64> for FILETIME {
+	fn from(v: u64) -> Self {
+		Self {
+			dwLowDateTime: LODWORD(v),
+			dwHighDateTime: HIDWORD(v),
+		}
+	}
+}
+
+impl From<FILETIME> for u64 {
+	fn from(v: FILETIME) -> Self {
+		MAKEQWORD(v.dwLowDateTime, v.dwHighDateTime)
+	}
+}
+
+impl FILETIME {
+	/// Returns a new `FILETIME` with the milliseconds difference.
+	#[must_use]
+	pub fn add_ms(self, ms: i64) -> Self {
+		Self::from((u64::from(self) as i64 + (ms * 10_000)) as u64)
+	}
+
+	/// Returns a new `FILETIME` with the seconds difference.
+	#[must_use]
+	pub fn add_secs(self, secs: i64) -> Self {
+		self.add_ms(secs * 1000)
+	}
+
+	/// Returns a new `FILETIME` with the minutes difference.
+	#[must_use]
+	pub fn add_mins(self, mins: i64) -> Self {
+		self.add_secs(mins * 60)
+	}
+
+	/// Returns a new `FILETIME` with the hours difference.
+	#[must_use]
+	pub fn add_hours(self, hours: i64) -> Self {
+		self.add_mins(hours * 60)
+	}
+
+	/// Returns a new `FILETIME` with the days difference.
+	#[must_use]
+	pub fn add_days(self, days: i64) -> Self {
+		self.add_hours(days * 24)
+	}
 }
 
 /// [`HEAPLIST32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-heaplist32)
@@ -723,7 +770,7 @@ impl_default!(SYSTEM_INFO);
 /// Can be converted to [`FILETIME`](crate::FILETIME) with
 /// [`SystemTimeToFileTime`](crate::SystemTimeToFileTime) function.
 #[repr(C)]
-#[derive(Default, Clone, PartialEq, Eq)]
+#[derive(Default, Debug, Clone, PartialEq, Eq)]
 pub struct SYSTEMTIME {
 	pub wYear: u16,
 	pub wMonth: u16,
@@ -733,6 +780,57 @@ pub struct SYSTEMTIME {
 	pub wMinute: u16,
 	pub wSecond: u16,
 	pub wMilliseconds: u16,
+}
+
+impl std::fmt::Display for SYSTEMTIME {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}",
+			self.wYear, self.wMonth, self.wDay, self.wHour,
+			self.wMinute, self.wSecond, self.wMilliseconds)
+	}
+}
+
+impl SYSTEMTIME {
+	/// Returns a new `SYSTEMTIME` with the milliseconds difference.
+	///
+	/// Performs intermediate [`FILETIME`](crate::FILETIME) conversions.
+	#[must_use]
+	pub fn add_ms(self, ms: i64) -> SysResult<Self> {
+		let ft = SystemTimeToFileTime(&self)?;
+		FileTimeToSystemTime(&ft.add_ms(ms))
+	}
+
+	/// Returns a new `SYSTEMTIME` with the seconds difference.
+	///
+	/// Performs intermediate [`FILETIME`](crate::FILETIME) conversions.
+	#[must_use]
+	pub fn add_secs(self, secs: i64) -> SysResult<Self> {
+		self.add_ms(secs * 1000)
+	}
+
+	/// Returns a new `SYSTEMTIME` with the minutes difference.
+	///
+	/// Performs intermediate [`FILETIME`](crate::FILETIME) conversions.
+	#[must_use]
+	pub fn add_mins(self, mins: i64) -> SysResult<Self> {
+		self.add_secs(mins * 60)
+	}
+
+	/// Returns a new `SYSTEMTIME` with the hours difference.
+	///
+	/// Performs intermediate [`FILETIME`](crate::FILETIME) conversions.
+	#[must_use]
+	pub fn add_hours(self, hours: i64) -> SysResult<Self> {
+		self.add_mins(hours * 60)
+	}
+
+	/// Returns a new `SYSTEMTIME` with the days difference.
+	///
+	/// Performs intermediate [`FILETIME`](crate::FILETIME) conversions.
+	#[must_use]
+	pub fn add_days(self, days: i64) -> SysResult<Self> {
+		self.add_hours(days * 24)
+	}
 }
 
 /// [`THREADENTRY32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-threadentry32)
