@@ -21,7 +21,9 @@
 <a href="#20" id="20">20</a>
 <a href="#21" id="21">21</a>
 <a href="#22" id="22">22</a>
-<a href="#23" id="23">23</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
+<a href="#23" id="23">23</a>
+<a href="#24" id="24">24</a>
+<a href="#25" id="25">25</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -30,6 +32,8 @@
 
 <span class="doccomment">/// [`GetDefaultPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/getdefaultprinter)
 /// function.
+///
+/// **Note:** This function doesn't seem to work with `raw-dylib` Cargo feature.
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetDefaultPrinter() -&gt; SysResult&lt;String&gt; {
 	<span class="kw">let </span><span class="kw-2">mut </span>sz = u32::default();
