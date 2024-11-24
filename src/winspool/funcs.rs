@@ -7,6 +7,8 @@ use crate::winspool::ffi;
 
 /// [`GetDefaultPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/getdefaultprinter)
 /// function.
+///
+/// **Note:** This function doesn't seem to work with `raw-dylib` Cargo feature.
 #[must_use]
 pub fn GetDefaultPrinter() -> SysResult<String> {
 	let mut sz = u32::default();
