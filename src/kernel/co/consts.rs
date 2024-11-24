@@ -475,7 +475,7 @@ const_bitflag! { GENERIC: u32;
 }
 
 const_ordinary! { GET_MODULE_HANDLE_EX_FLAG: u32;
-	/// [`HINSTANCE::GetModuleHandleEx`](crate::prelude::user_Hinstance::GetModuleHandleEx)
+	/// [`HINSTANCE::GetModuleHandleEx`](crate::prelude::kernel_Hinstance::GetModuleHandleEx)
 	/// `flags` (`u32`).
 	///
 	/// Note that the following flags are automatically managed by the function,

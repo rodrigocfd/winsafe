@@ -466,7 +466,6 @@ pub fn GetSidLengthRequired(sub_authority_count: u8) -> u32 {
 #[must_use]
 pub fn GetUserName() -> SysResult<String> {
 	let mut name_sz = u32::default();
-
 	unsafe { ffi::GetUserNameW(std::ptr::null_mut(), &mut name_sz); }
 	let get_size_err = GetLastError();
 	if get_size_err != co::ERROR::INSUFFICIENT_BUFFER {
@@ -474,7 +473,6 @@ pub fn GetUserName() -> SysResult<String> {
 	}
 
 	let mut name_buf = WString::new_alloc_buf(name_sz as _);
-
 	bool_to_sysresult(
 		unsafe { ffi::GetUserNameW(name_buf.as_mut_ptr(), &mut name_sz) },
 	).map(|_| name_buf.to_string())

@@ -44,6 +44,7 @@ The following Cargo features are available so far:
 | `user` | User32.dll and ComDlg32.dll, the basic Windows GUI support |
 | `uxtheme` | UxTheme.dll, extended window theming |
 | `version` | Version.dll, to manipulate *.exe version info |
+| `winspool` | [Print Spooler API](https://learn.microsoft.com/en-us/windows/win32/printdocs/print-spooler-api) |
 
 If you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but have everything.
 

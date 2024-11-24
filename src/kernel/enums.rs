@@ -4,7 +4,7 @@ use crate::kernel::privs::*;
 
 /// Variable parameter for:
 ///
-/// * [`HINSTANCE::GetModuleHandleEx`](crate::prelude::user_Hinstance::GetModuleHandleEx).
+/// * [`HINSTANCE::GetModuleHandleEx`](crate::prelude::kernel_Hinstance::GetModuleHandleEx).
 pub enum AddrStr {
 	/// No value, will pass `NULL` to the call.
 	None,

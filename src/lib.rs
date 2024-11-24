@@ -24,6 +24,7 @@
 #[cfg(feature = "user")] mod user;
 #[cfg(feature = "uxtheme")] mod uxtheme;
 #[cfg(feature = "version")] mod version;
+#[cfg(feature = "winspool")] mod winspool;
 #[cfg(all(feature = "advapi", feature = "comctl"))] mod advapi_comctl;
 #[cfg(all(feature = "advapi", feature = "shell"))] mod advapi_shell;
 #[cfg(all(feature = "comctl", feature = "gdi"))] mod comctl_gdi;
@@ -53,6 +54,7 @@ mod decl {
 	#[cfg(feature = "user")] pub use super::user::decl::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::decl::*;
 	#[cfg(feature = "version")] pub use super::version::decl::*;
+	#[cfg(feature = "winspool")] pub use super::winspool::decl::*;
 	#[cfg(all(feature = "advapi", feature = "comctl"))] pub use super::advapi_comctl::decl::*;
 	#[cfg(all(feature = "advapi", feature = "shell"))] pub use super::advapi_shell::decl::*;
 	#[cfg(all(feature = "comctl", feature = "gdi"))] pub use super::comctl_gdi::decl::*;
