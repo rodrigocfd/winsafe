@@ -872,9 +872,7 @@
 <a href="#871" id="871">871</a>
 <a href="#872" id="872">872</a>
 <a href="#873" id="873">873</a>
-<a href="#874" id="874">874</a>
-<a href="#875" id="875">875</a>
-<a href="#876" id="876">876</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
+<a href="#874" id="874">874</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::advapi::{ffi, privs::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -1342,7 +1340,6 @@
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetUserName() -&gt; SysResult&lt;String&gt; {
 	<span class="kw">let </span><span class="kw-2">mut </span>name_sz = u32::default();
-
 	<span class="kw">unsafe </span>{ ffi::GetUserNameW(std::ptr::null_mut(), <span class="kw-2">&amp;mut </span>name_sz); }
 	<span class="kw">let </span>get_size_err = GetLastError();
 	<span class="kw">if </span>get_size_err != co::ERROR::INSUFFICIENT_BUFFER {
@@ -1350,7 +1347,6 @@
 	}
 
 	<span class="kw">let </span><span class="kw-2">mut </span>name_buf = WString::new_alloc_buf(name_sz <span class="kw">as _</span>);
-
 	bool_to_sysresult(
 		<span class="kw">unsafe </span>{ ffi::GetUserNameW(name_buf.as_mut_ptr(), <span class="kw-2">&amp;mut </span>name_sz) },
 	).map(|<span class="kw">_</span>| name_buf.to_string())

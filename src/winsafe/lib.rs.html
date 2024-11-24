@@ -313,7 +313,9 @@
 <a href="#312" id="312">312</a>
 <a href="#313" id="313">313</a>
 <a href="#314" id="314">314</a>
-<a href="#315" id="315">315</a></pre></div><pre class="rust"><code><span class="attr">#![doc = <span class="macro">include_str!</span>(<span class="string">"lib.md"</span>)]
+<a href="#315" id="315">315</a>
+<a href="#316" id="316">316</a>
+<a href="#317" id="317">317</a></pre></div><pre class="rust"><code><span class="attr">#![doc = <span class="macro">include_str!</span>(<span class="string">"lib.md"</span>)]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 
 </span><span class="comment">// Declarations of macros used throughout the library.
@@ -339,6 +341,7 @@
 <span class="attr">#[cfg(feature = <span class="string">"user"</span>)] </span><span class="kw">mod </span>user;
 <span class="attr">#[cfg(feature = <span class="string">"uxtheme"</span>)] </span><span class="kw">mod </span>uxtheme;
 <span class="attr">#[cfg(feature = <span class="string">"version"</span>)] </span><span class="kw">mod </span>version;
+<span class="attr">#[cfg(feature = <span class="string">"winspool"</span>)] </span><span class="kw">mod </span>winspool;
 <span class="attr">#[cfg(all(feature = <span class="string">"advapi"</span>, feature = <span class="string">"comctl"</span>))] </span><span class="kw">mod </span>advapi_comctl;
 <span class="attr">#[cfg(all(feature = <span class="string">"advapi"</span>, feature = <span class="string">"shell"</span>))] </span><span class="kw">mod </span>advapi_shell;
 <span class="attr">#[cfg(all(feature = <span class="string">"comctl"</span>, feature = <span class="string">"gdi"</span>))] </span><span class="kw">mod </span>comctl_gdi;
@@ -368,6 +371,7 @@
 	<span class="attr">#[cfg(feature = <span class="string">"user"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::user::decl::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(feature = <span class="string">"uxtheme"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::uxtheme::decl::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(feature = <span class="string">"version"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::version::decl::<span class="kw-2">*</span>;
+	<span class="attr">#[cfg(feature = <span class="string">"winspool"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::winspool::decl::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(all(feature = <span class="string">"advapi"</span>, feature = <span class="string">"comctl"</span>))] </span><span class="kw">pub use </span><span class="kw">super</span>::advapi_comctl::decl::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(all(feature = <span class="string">"advapi"</span>, feature = <span class="string">"shell"</span>))] </span><span class="kw">pub use </span><span class="kw">super</span>::advapi_shell::decl::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(all(feature = <span class="string">"comctl"</span>, feature = <span class="string">"gdi"</span>))] </span><span class="kw">pub use </span><span class="kw">super</span>::comctl_gdi::decl::<span class="kw-2">*</span>;
