@@ -65,15 +65,6 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm>
 	pub_fn_string_ptr_get_set!('k, pDataType, set_pDataType);
 	pub_fn_string_ptr_get_set!('l, pParameters, set_pParameters);
 	pub_fn_ptr_get_set!('m, pSecurityDescriptor, set_pSecurityDescriptor, SECURITY_DESCRIPTOR);
-
-	/// Returns the `StartTime` field converted to
-	/// [`SYSTEMTIME`](crate::SYSTEMTIME).
-	#[must_use]
-	pub fn StartTime(&self) -> SysResult<SYSTEMTIME> {
-		let st = GetLocalTime();
-		let st2 = st.add_mins(-(self.StartTime as i64))?;
-		Ok(st2)
-	}
 }
 
 /// [`PRINTER_INFO_4`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-info-4)

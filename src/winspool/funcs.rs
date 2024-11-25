@@ -26,7 +26,8 @@ use crate::winspool::ffi;
 ///
 /// # Related functions
 ///
-/// [`EnumPrinters4`](crate::EnumPrinters4)
+/// * [`EnumPrinters4`](crate::EnumPrinters4)
+/// * [`GetDefaultPrinter`](crate::GetDefaultPrinter)
 #[must_use]
 pub fn EnumPrinters2<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm>(
 	flags: co::PRINTER_ENUM,
@@ -56,7 +57,8 @@ pub fn EnumPrinters2<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm>(
 ///
 /// # Related functions
 ///
-/// [`EnumPrinters2`](crate::EnumPrinters2)
+/// * [`EnumPrinters2`](crate::EnumPrinters2)
+/// * [`GetDefaultPrinter`](crate::GetDefaultPrinter)
 #[must_use]
 pub fn EnumPrinters4<'a, 'b>(
 	flags: co::PRINTER_ENUM,
@@ -109,6 +111,9 @@ fn enum_printers<T: Default + Clone>(
 /// function.
 ///
 /// **Note:** This function doesn't seem to work with `raw-dylib` Cargo feature.
+///
+/// * [`EnumPrinters2`](crate::EnumPrinters2)
+/// * [`EnumPrinters4`](crate::EnumPrinters4)
 #[must_use]
 pub fn GetDefaultPrinter() -> SysResult<String> {
 	let mut sz = u32::default();
