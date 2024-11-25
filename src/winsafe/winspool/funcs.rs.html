@@ -123,7 +123,12 @@
 <a href="#122" id="122">122</a>
 <a href="#123" id="123">123</a>
 <a href="#124" id="124">124</a>
-<a href="#125" id="125">125</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
+<a href="#125" id="125">125</a>
+<a href="#126" id="126">126</a>
+<a href="#127" id="127">127</a>
+<a href="#128" id="128">128</a>
+<a href="#129" id="129">129</a>
+<a href="#130" id="130">130</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -151,7 +156,8 @@
 ///
 /// # Related functions
 ///
-/// [`EnumPrinters4`](crate::EnumPrinters4)
+/// * [`EnumPrinters4`](crate::EnumPrinters4)
+/// * [`GetDefaultPrinter`](crate::GetDefaultPrinter)
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>EnumPrinters2&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>, <span class="lifetime">'h</span>, <span class="lifetime">'i</span>, <span class="lifetime">'j</span>, <span class="lifetime">'k</span>, <span class="lifetime">'l</span>, <span class="lifetime">'m</span>&gt;(
 	flags: co::PRINTER_ENUM,
@@ -181,7 +187,8 @@
 ///
 /// # Related functions
 ///
-/// [`EnumPrinters2`](crate::EnumPrinters2)
+/// * [`EnumPrinters2`](crate::EnumPrinters2)
+/// * [`GetDefaultPrinter`](crate::GetDefaultPrinter)
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>EnumPrinters4&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt;(
 	flags: co::PRINTER_ENUM,
@@ -234,6 +241,9 @@
 /// function.
 ///
 /// **Note:** This function doesn't seem to work with `raw-dylib` Cargo feature.
+///
+/// * [`EnumPrinters2`](crate::EnumPrinters2)
+/// * [`EnumPrinters4`](crate::EnumPrinters4)
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetDefaultPrinter() -&gt; SysResult&lt;String&gt; {
 	<span class="kw">let </span><span class="kw-2">mut </span>sz = u32::default();
