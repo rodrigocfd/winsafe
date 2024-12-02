@@ -258,12 +258,10 @@ impl<T> ListView<T> {
 		let self2 = self.clone();
 		parent.after_user_on().wm_notify(ctrl_id, co::LVN::DELETEITEM, move |p| {
 			let nmlv = unsafe { p.cast_nmhdr::<NMLISTVIEW>() };
-			self2.items()
-				.get(nmlv.iItem as _)
-				.data_lparam()
-				.map(|pdata| {
-					let _ = unsafe { Rc::from_raw(pdata) }; // free allocated LPARAM, if any
-				});
+			let rc_ptr = self2.items().get(nmlv.iItem as _).data_lparam();
+			if !rc_ptr.is_null() {
+				let _ = unsafe { Rc::from_raw(rc_ptr) }; // free allocated LPARAM
+			}
 			Ok(WmRet::HandledOk)
 		});
 

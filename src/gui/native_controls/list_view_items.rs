@@ -77,7 +77,7 @@ impl<'a, T> ListViewItems<'a, T> {
 			lvi.iImage = icon_index as _;
 		}
 
-		if TypeId::of::<T>() != TypeId::of::<()>() { // user defined an actual type?
+		if TypeId::of::<T>() != TypeId::of::<()>() { // user defined the generic type
 			lvi.mask |= co::LVIF::PARAM;
 			let rc_data = Rc::new(RefCell::new(data));
 			lvi.lParam = Rc::into_raw(rc_data) as _;

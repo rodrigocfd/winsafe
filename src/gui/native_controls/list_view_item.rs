@@ -1,3 +1,4 @@
+use std::any::TypeId;
 use std::cell::RefCell;
 use std::mem::ManuallyDrop;
 use std::rc::Rc;
@@ -41,19 +42,29 @@ impl<'a, T> ListViewItem<'a, T> {
 	/// stored data by sending an [`lvm::GetItem`](crate::msg::lvm::GetItem)
 	/// message.
 	///
-	/// Returns `None` if the `ListView` holds a `()`, or if the item holds an
-	/// invalid index.
+	/// # Panics
+	///
+	/// Panics if the `ListView` doesn't have an actual type, that is, if it was
+	/// declared as `ListView<()>`.
+	///
+	/// Panics if the item index is invalid.
 	#[must_use]
-	pub fn data(&self) -> Option<Rc<RefCell<T>>> {
-		self.data_lparam()
-			.map(|pdata| {
-				let rc_data = ManuallyDrop::new(unsafe { Rc::from_raw(pdata) });
-				Rc::clone(&rc_data)
-			})
+	pub fn data(&self) -> Rc<RefCell<T>> {
+		if TypeId::of::<T>() == TypeId::of::<()>() { // user didn't define the generic type
+			panic!("ListView<()> will hold no data.");
+		}
+
+		let rc_ptr = self.data_lparam();
+		if rc_ptr.is_null() {
+			panic!("ListViewItem with invalid index, no data.");
+		}
+
+		let rc_obj = ManuallyDrop::new(unsafe { Rc::from_raw(rc_ptr) });
+		Rc::clone(&rc_obj)
 	}
 
 	#[must_use]
-	pub(in crate::gui) fn data_lparam(&self) -> Option<*mut RefCell<T>> {
+	pub(in crate::gui) fn data_lparam(&self) -> *mut RefCell<T> {
 		let mut lvi = LVITEM::default();
 		lvi.iItem = self.index as _;
 		lvi.mask = co::LVIF::PARAM;
@@ -64,8 +75,8 @@ impl<'a, T> ListViewItem<'a, T> {
 		}.unwrap();
 
 		match lvi.lParam {
-			0 => None,
-			lp => Some(lp as _),
+			0 => std::ptr::null_mut(),
+			lp => lp as _,
 		}
 	}
 
