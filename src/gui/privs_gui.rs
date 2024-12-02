@@ -1,4 +1,5 @@
 use std::error::Error;
+use std::sync::Mutex;
 
 use crate::co;
 use crate::decl::*;
@@ -9,14 +10,17 @@ use crate::prelude::*;
 
 /// Global return error originated from an event handling closure; will be taken
 /// in main loop.
-pub(in crate::gui) static mut QUIT_ERROR: Option<MsgError> = None;
+pub(in crate::gui) static QUIT_ERROR: Mutex<Option<MsgError>> = Mutex::new(None);
 
 /// Terminates the program with the given error.
 pub(in crate::gui) fn post_quit_error(
 	src_msg: WndMsg,
 	err: Box<dyn Error + Send + Sync>,
 ) {
-	unsafe { QUIT_ERROR = Some(MsgError::new(src_msg, err)); } // store the error, so Base::run_main_loop() can grab it
+	{
+		let mut msg_error = QUIT_ERROR.lock().unwrap();
+		*msg_error = Some(MsgError::new(src_msg, err)); // store the error, so Base::run_main_loop() can grab it
+	};
 	PostQuitMessage(-1); // this -1 will be discarded in the main loop, anyway
 }
 

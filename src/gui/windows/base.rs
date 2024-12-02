@@ -239,7 +239,10 @@ impl Base {
 				// wParam has the program exit code.
 				// https://learn.microsoft.com/en-us/windows/win32/winmsg/using-messages-and-message-queues
 				// PostQuitMessage() may have been called internally, so check QUIT_ERROR.
-				return match unsafe { QUIT_ERROR.take() } {
+				return match {
+					let mut msg_error = QUIT_ERROR.lock().unwrap();
+					msg_error.take()
+				} {
 					Some(msg_err) => Err(msg_err.into()), // MsgError wrapped into AnyResult
 					None => Ok(msg.wParam as _), // successfull exit with ret code
 				};

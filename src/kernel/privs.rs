@@ -20,7 +20,7 @@ const_values_num_privs! {
 /// [`IS_INTRESOURCE`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-is_intresource)
 /// macro.
 #[must_use]
-pub(crate) const fn IS_INTRESOURCE(val: *const u16) -> bool {
+pub(crate) fn IS_INTRESOURCE(val: *const u16) -> bool {
 	(unsafe { std::mem::transmute::<_, usize>(val) } >> 16) == 0
 }
 
