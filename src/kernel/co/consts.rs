@@ -779,6 +779,39 @@ const_ordinary! { MONITOR_DISPLAY_STATE: u32;
 	Dim 2
 }
 
+const_ordinary! { MOVE_FILE_FLAGS: u32;
+	/// [`MoveFileEx`](crate::kernel::funcs::MoveFileEx) `flags` (`u32`).
+	=>
+	/// If the file is being moved to a different filesystem, the function
+	/// will be allowed to simulate the move by copying the file and deleting it.
+	///
+	/// The function succeeds even if the source file cannot be deleted after it
+	/// has been moved.
+	///
+	/// Cannot be combined with `MOVEFILE_DELAY_UNTIL_REBOOT`.
+	MOVEFILE_COPY_ALLOWED 2
+	/// Delays moving the file until the next reboot, just after checking the
+	/// consistency of the root volumes, before user programs are run.
+	///
+	/// This flag can only be used if the process is running with elevated
+	/// privileges.
+	///
+	/// Cannot be combined with `MOVEFILE_COPY_ALLOWED`.
+	MOVEFILE_DELAY_UNTIL_REBOOT 4
+	/// Makes the function fail if the source file is a link source and the file
+	/// cannot be tracked after the move. This can occur if the destination is
+	/// a FAT volume.
+	MOVEFILE_FAIL_IF_NOT_TRACKABLE 32
+	/// If the new file name exists, the function replaces its contents with the
+	/// contents of the source file. Cannot be used when the source file is an
+	/// existing directory.
+	MOVEFILE_REPLACE_EXISTING 1
+	/// Waits until the file is actually moved on the disk before returning.
+	///
+	/// Has no effect if `MOVEFILE_DELAY_UNTIL_REBOOT` is set.
+	MOVEFILE_WRITE_THROUGH 8
+}
+
 const_ordinary! { PAGE: u32;
 	/// [`HFILE::CreateFileMapping`](crate::prelude::kernel_Hfile::CreateFileMapping)
 	/// `protect` (`u32`).
