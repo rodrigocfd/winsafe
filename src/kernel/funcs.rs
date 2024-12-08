@@ -13,6 +13,7 @@ use crate::prelude::*;
 ///
 /// * [`DeleteFile`](crate::DeleteFile)
 /// * [`MoveFile`](crate::MoveFile)
+/// * [`MoveFileEx`](crate::MoveFileEx)
 /// * [`ReplaceFile`](crate::ReplaceFile)
 pub fn CopyFile(
 	existing_file: &str,
@@ -55,6 +56,7 @@ pub fn CreateDirectory(
 ///
 /// * [`CopyFile`](crate::CopyFile)
 /// * [`MoveFile`](crate::MoveFile)
+/// * [`MoveFileEx`](crate::MoveFileEx)
 /// * [`ReplaceFile`](crate::ReplaceFile)
 pub fn DeleteFile(file_name: &str) -> SysResult<()> {
 	bool_to_sysresult(
@@ -1161,6 +1163,7 @@ pub const fn MAKEWORD(lo: u8, hi: u8) -> u16 {
 ///
 /// # Related functions
 ///
+/// * [`MoveFileEx`](crate::MoveFileEx)
 /// * [`CopyFile`](crate::CopyFile)
 /// * [`DeleteFile`](crate::DeleteFile)
 /// * [`ReplaceFile`](crate::ReplaceFile)
@@ -1170,6 +1173,27 @@ pub fn MoveFile(existing_file: &str, new_file: &str) -> SysResult<()> {
 			ffi::MoveFileW(
 				WString::from_str(existing_file).as_ptr(),
 				WString::from_str(new_file).as_ptr(),
+			)
+		},
+	)
+}
+
+/// [`MoveFileEx`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefileexw)
+/// function.
+///
+/// # Related functions
+///
+/// * [`MoveFile`](crate::MoveFile)
+/// * [`CopyFile`](crate::CopyFile)
+/// * [`DeleteFile`](crate::DeleteFile)
+/// * [`ReplaceFile`](crate::ReplaceFile)
+pub fn MoveFileEx(existing_file: &str, new_file: Option<&str>, flags: co::MOVE_FILE_FLAGS) -> SysResult<()> {
+	bool_to_sysresult(
+		unsafe {
+			ffi::MoveFileExW(
+				WString::from_str(existing_file).as_ptr(),
+				WString::from_opt_str(new_file).as_ptr(),
+				flags.raw(),
 			)
 		},
 	)
