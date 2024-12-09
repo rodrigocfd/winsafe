@@ -135,8 +135,8 @@ extern_sys! { "kernel32";
 	MapViewOfFileFromApp(HANDLE, u32, u64, usize) -> PVOID
 	Module32FirstW(HANDLE, PVOID) -> BOOL
 	Module32NextW(HANDLE, PVOID) -> BOOL
-	MoveFileW(PCSTR, PCSTR) -> BOOL
 	MoveFileExW(PCSTR, PCSTR, u32) -> BOOL
+	MoveFileW(PCSTR, PCSTR) -> BOOL
 	MulDiv(i32, i32, i32) -> i32
 	MultiByteToWideChar(u32, u32, *const u8, i32, PSTR, i32) -> i32
 	OpenEventW(u32, BOOL, PCSTR) -> HANDLE

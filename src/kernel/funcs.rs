@@ -1163,9 +1163,9 @@ pub const fn MAKEWORD(lo: u8, hi: u8) -> u16 {
 ///
 /// # Related functions
 ///
-/// * [`MoveFileEx`](crate::MoveFileEx)
 /// * [`CopyFile`](crate::CopyFile)
 /// * [`DeleteFile`](crate::DeleteFile)
+/// * [`MoveFileEx`](crate::MoveFileEx)
 /// * [`ReplaceFile`](crate::ReplaceFile)
 pub fn MoveFile(existing_file: &str, new_file: &str) -> SysResult<()> {
 	bool_to_sysresult(
@@ -1183,11 +1183,16 @@ pub fn MoveFile(existing_file: &str, new_file: &str) -> SysResult<()> {
 ///
 /// # Related functions
 ///
-/// * [`MoveFile`](crate::MoveFile)
 /// * [`CopyFile`](crate::CopyFile)
 /// * [`DeleteFile`](crate::DeleteFile)
+/// * [`MoveFile`](crate::MoveFile)
 /// * [`ReplaceFile`](crate::ReplaceFile)
-pub fn MoveFileEx(existing_file: &str, new_file: Option<&str>, flags: co::MOVE_FILE_FLAGS) -> SysResult<()> {
+pub fn MoveFileEx(
+	existing_file: &str,
+	new_file: Option<&str>,
+	flags: co::MOVEFILE,
+) -> SysResult<()>
+{
 	bool_to_sysresult(
 		unsafe {
 			ffi::MoveFileExW(
