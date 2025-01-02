@@ -1630,7 +1630,27 @@
 <a href="#1629" id="1629">1629</a>
 <a href="#1630" id="1630">1630</a>
 <a href="#1631" id="1631">1631</a>
-<a href="#1632" id="1632">1632</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
+<a href="#1632" id="1632">1632</a>
+<a href="#1633" id="1633">1633</a>
+<a href="#1634" id="1634">1634</a>
+<a href="#1635" id="1635">1635</a>
+<a href="#1636" id="1636">1636</a>
+<a href="#1637" id="1637">1637</a>
+<a href="#1638" id="1638">1638</a>
+<a href="#1639" id="1639">1639</a>
+<a href="#1640" id="1640">1640</a>
+<a href="#1641" id="1641">1641</a>
+<a href="#1642" id="1642">1642</a>
+<a href="#1643" id="1643">1643</a>
+<a href="#1644" id="1644">1644</a>
+<a href="#1645" id="1645">1645</a>
+<a href="#1646" id="1646">1646</a>
+<a href="#1647" id="1647">1647</a>
+<a href="#1648" id="1648">1648</a>
+<a href="#1649" id="1649">1649</a>
+<a href="#1650" id="1650">1650</a>
+<a href="#1651" id="1651">1651</a>
+<a href="#1652" id="1652">1652</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -1848,15 +1868,25 @@
 /// function.
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetCurrentDirectory() -&gt; SysResult&lt;String&gt; {
-	<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(MAX_PATH + <span class="number">1</span>);
-	bool_to_sysresult(
-		<span class="kw">unsafe </span>{
+	<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = WString::SSO_LEN; <span class="comment">// start with no string heap allocation
+	</span><span class="kw">loop </span>{
+		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
+		<span class="kw">let </span>copied = <span class="kw">match unsafe </span>{
 			ffi::GetCurrentDirectoryW(
 				buf.buf_len() <span class="kw">as _</span>,
 				buf.as_mut_ptr(),
 			)
-		} <span class="kw">as _</span>,
-	).map(|<span class="kw">_</span>| buf.to_string())
+		} {
+			<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
+			len =&gt; len,
+		} + <span class="number">1</span>; <span class="comment">// plus terminating null count
+
+		</span><span class="kw">if </span>(copied <span class="kw">as </span>usize) &lt; buf_sz { <span class="comment">// to break, must have at least 1 char gap
+			</span><span class="kw">return </span><span class="prelude-val">Ok</span>(buf.to_string());
+		}
+
+		buf_sz += MAX_PATH; <span class="comment">// increase buffer size to try again
+	</span>}
 }
 
 <span class="doccomment">/// [`GetCurrentProcessId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
@@ -2314,12 +2344,22 @@
 /// function.
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetSystemDirectory() -&gt; SysResult&lt;String&gt; {
-	<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(MAX_PATH + <span class="number">1</span>);
-	bool_to_sysresult(
-		<span class="kw">unsafe </span>{
+	<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = WString::SSO_LEN; <span class="comment">// start with no string heap allocation
+	</span><span class="kw">loop </span>{
+		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
+		<span class="kw">let </span>copied = <span class="kw">match unsafe </span>{
 			ffi::GetSystemDirectoryW(buf.as_mut_ptr(), buf.buf_len() <span class="kw">as _</span>)
-		} <span class="kw">as _</span>,
-	).map(|<span class="kw">_</span>| buf.to_string())
+		} {
+			<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
+			len =&gt; len,
+		} + <span class="number">1</span>; <span class="comment">// plus terminating null count
+
+		</span><span class="kw">if </span>(copied <span class="kw">as </span>usize) &lt; buf_sz { <span class="comment">// to break, must have at least 1 char gap
+			</span><span class="kw">return </span><span class="prelude-val">Ok</span>(buf.to_string());
+		}
+
+		buf_sz += MAX_PATH; <span class="comment">// increase buffer size to try again
+	</span>}
 }
 
 <span class="doccomment">/// [`GetSystemFileCacheSize`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-getsystemfilecachesize)
