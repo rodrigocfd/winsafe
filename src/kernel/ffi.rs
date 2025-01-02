@@ -50,6 +50,7 @@ extern_sys! { "kernel32";
 	GetEnvironmentStringsW() -> *mut u16
 	GetExitCodeProcess(HANDLE, *mut u32) -> BOOL
 	GetExitCodeThread(HANDLE, *mut u32) -> BOOL
+	GetFileAttributesExW(PCSTR, u32, PVOID) -> BOOL
 	GetFileAttributesW(PCSTR) -> u32
 	GetFileInformationByHandle(HANDLE, PVOID) -> BOOL
 	GetFileSizeEx(HANDLE, *mut i64) -> BOOL

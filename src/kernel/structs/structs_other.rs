@@ -29,11 +29,25 @@ pub struct BY_HANDLE_FILE_INFORMATION {
 	pub ftLastAccessTime: FILETIME,
 	pub ftLastWriteTime: FILETIME,
 	pub dwVolumeSerialNumber: u32,
-	pub nFileSizeHigh: u32,
-	pub nFileSizeLow: u32,
+	nFileSizeHigh: u32,
+	nFileSizeLow: u32,
 	pub nNumberOfLinks: u32,
-	pub nFileIndexHigh: u32,
-	pub nFileIndexLow: u32,
+	nFileIndexHigh: u32,
+	nFileIndexLow: u32,
+}
+
+impl BY_HANDLE_FILE_INFORMATION {
+	/// Returns the nFileSizeHigh and nFileSizeLow fields.
+	#[must_use]
+	pub const fn nFileSize(&self) -> u64 {
+		MAKEQWORD(self.nFileSizeLow, self.nFileSizeHigh)
+	}
+
+	/// Returns the nFileIndexHigh and nFileIndexLow fields.
+	#[must_use]
+	pub const fn nFileIndex(&self) -> u64 {
+		MAKEQWORD(self.nFileIndexLow, self.nFileIndexHigh)
+	}
 }
 
 /// [`CLAIM_SECURITY_ATTRIBUTE_FQBN_VALUE`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-claim_security_attribute_fqbn_value)
@@ -867,6 +881,27 @@ impl TIME_ZONE_INFORMATION {
 	pub_fn_string_arr_get_set!(daylightName, set_daylightName);
 }
 
+/// [`WIN32_FILE_ATTRIBUTE_DATA`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/ns-fileapi-win32_file_attribute_data)
+/// struct.
+#[repr(C)]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
+pub struct WIN32_FILE_ATTRIBUTE_DATA {
+	pub dwFileAttributes: co::FILE_ATTRIBUTE,
+	pub ftCreationTime: FILETIME,
+	pub ftLastAccessTime: FILETIME,
+	pub ftLastWriteTime: FILETIME,
+	nFileSizeHigh: u32,
+	nFileSizeLow: u32,
+}
+
+impl WIN32_FILE_ATTRIBUTE_DATA {
+	/// Returns the nFileSizeHigh and nFileSizeLow fields.
+	#[must_use]
+	pub const fn nFileSize(&self) -> u64 {
+		MAKEQWORD(self.nFileSizeLow, self.nFileSizeHigh)
+	}
+}
+
 /// [`WIN32_FIND_DATA`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-win32_find_dataw)
 /// struct.
 #[repr(C)]
@@ -886,12 +921,12 @@ pub struct WIN32_FIND_DATA {
 impl_default!(WIN32_FIND_DATA);
 
 impl WIN32_FIND_DATA {
-	pub_fn_string_arr_get_set!(cFileName, set_cFileName);
-	pub_fn_string_arr_get_set!(cAlternateFileName, set_cAlternateFileName);
-
 	/// Returns the nFileSizeHigh and nFileSizeLow fields.
 	#[must_use]
 	pub const fn nFileSize(&self) -> u64 {
 		MAKEQWORD(self.nFileSizeLow, self.nFileSizeHigh)
 	}
+
+	pub_fn_string_arr_get_set!(cFileName, set_cFileName);
+	pub_fn_string_arr_get_set!(cAlternateFileName, set_cAlternateFileName);
 }

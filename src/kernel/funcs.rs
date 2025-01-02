@@ -332,6 +332,62 @@ pub fn GetEnvironmentStrings() -> SysResult<Vec<(String, String)>> {
 		})
 }
 
+/// [`GetFileAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesw)
+/// function.
+///
+/// # Examples
+///
+/// Checking whether a file or folder exists:
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let file_exists = w::GetFileAttributes("C:\\Temp\\test.txt").is_ok();
+/// ```
+///
+/// Retrieving various information about a file or folder path:
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*, co};
+///
+/// let flags = w::GetFileAttributes("C:\\Temp\\test.txt")?;
+///
+/// let is_compressed = flags.has(co::FILE_ATTRIBUTE::COMPRESSED);
+/// let is_directory  = flags.has(co::FILE_ATTRIBUTE::DIRECTORY);
+/// let is_encrypted  = flags.has(co::FILE_ATTRIBUTE::ENCRYPTED);
+/// let is_hidden     = flags.has(co::FILE_ATTRIBUTE::HIDDEN);
+/// let is_temporary  = flags.has(co::FILE_ATTRIBUTE::TEMPORARY);
+/// # w::SysResult::Ok(())
+/// ```
+#[must_use]
+pub fn GetFileAttributes(file_name: &str) -> SysResult<co::FILE_ATTRIBUTE> {
+	const INVALID: u32 = INVALID_FILE_ATTRIBUTES as u32;
+	match unsafe {
+		ffi::GetFileAttributesW(WString::from_str(file_name).as_ptr())
+	} {
+		INVALID => Err(GetLastError()),
+		flags => Ok(unsafe { co::FILE_ATTRIBUTE::from_raw(flags) }),
+	}
+}
+
+/// [`GetFileAttributesEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesexw)
+/// function.
+///
+/// This function uses `GET_FILEEX_INFO_LEVELS::GetFileExInfoStandard` flag,
+/// which is the only available flag.
+pub fn GetFileAttributesEx(file: &str) -> SysResult<WIN32_FILE_ATTRIBUTE_DATA> {
+	let mut wfad = WIN32_FILE_ATTRIBUTE_DATA::default();
+	bool_to_sysresult(
+		unsafe {
+			ffi::GetFileAttributesExW(
+				WString::from_str(file).as_ptr(),
+				0,
+				&mut wfad as *mut _ as _,
+			)
+		},
+	).map(|_| wfad)
+}
+
 /// [`GetFirmwareType`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getfirmwaretype)
 /// function.
 #[must_use]
@@ -385,6 +441,24 @@ pub fn GetLogicalDrives() -> u32 {
 	unsafe { ffi::GetLogicalDrives() }
 }
 
+/// [`GetLogicalDriveStrings`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlogicaldrivestringsw)
+/// function.
+#[must_use]
+pub fn GetLogicalDriveStrings() -> SysResult<Vec<String>> {
+	let len = match unsafe {
+		ffi::GetLogicalDriveStringsW(0, std::ptr::null_mut())
+	} {
+		0 => Err(GetLastError()),
+		len => Ok(len),
+	}?;
+
+	let mut buf = WString::new_alloc_buf(len as usize + 1); // room for terminating null
+
+	bool_to_sysresult(
+		unsafe { ffi::GetLogicalDriveStringsW(len, buf.as_mut_ptr()) } as _,
+	).map(|_| parse_multi_z_str(buf.as_ptr()))
+}
+
 /// [`GetLongPathName`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlongpathnamew)
 /// function.
 #[must_use]
@@ -407,62 +481,6 @@ pub fn GetLongPathName(short_path: &str) -> SysResult<String> {
 	} {
 		0 => Err(GetLastError()),
 		_ => Ok(path_buf.to_string())
-	}
-}
-
-/// [`GetLogicalDriveStrings`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlogicaldrivestringsw)
-/// function.
-#[must_use]
-pub fn GetLogicalDriveStrings() -> SysResult<Vec<String>> {
-	let len = match unsafe {
-		ffi::GetLogicalDriveStringsW(0, std::ptr::null_mut())
-	} {
-		0 => Err(GetLastError()),
-		len => Ok(len),
-	}?;
-
-	let mut buf = WString::new_alloc_buf(len as usize + 1); // room for terminating null
-
-	bool_to_sysresult(
-		unsafe { ffi::GetLogicalDriveStringsW(len, buf.as_mut_ptr()) } as _,
-	).map(|_| parse_multi_z_str(buf.as_ptr()))
-}
-
-/// [`GetFileAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesw)
-/// function.
-///
-/// # Examples
-///
-/// Checking whether a file or folder exists:
-///
-/// ```no_run
-/// use winsafe::{self as w, prelude::*};
-///
-/// let file_exists = w::GetFileAttributes("C:\\Temp\\test.txt").is_ok();
-/// ```
-///
-/// Retrieving various information about a file or folder path:
-///
-/// ```no_run
-/// use winsafe::{self as w, prelude::*, co};
-///
-/// let flags = w::GetFileAttributes("C:\\Temp\\test.txt")?;
-///
-/// let is_compressed = flags.has(co::FILE_ATTRIBUTE::COMPRESSED);
-/// let is_directory  = flags.has(co::FILE_ATTRIBUTE::DIRECTORY);
-/// let is_encrypted  = flags.has(co::FILE_ATTRIBUTE::ENCRYPTED);
-/// let is_hidden     = flags.has(co::FILE_ATTRIBUTE::HIDDEN);
-/// let is_temporary  = flags.has(co::FILE_ATTRIBUTE::TEMPORARY);
-/// # w::SysResult::Ok(())
-/// ```
-#[must_use]
-pub fn GetFileAttributes(file_name: &str) -> SysResult<co::FILE_ATTRIBUTE> {
-	const INVALID: u32 = INVALID_FILE_ATTRIBUTES as u32;
-	match unsafe {
-		ffi::GetFileAttributesW(WString::from_str(file_name).as_ptr())
-	} {
-		INVALID => Err(GetLastError()),
-		flags => Ok(unsafe { co::FILE_ATTRIBUTE::from_raw(flags) }),
 	}
 }
 
