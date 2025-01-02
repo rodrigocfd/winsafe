@@ -187,16 +187,26 @@ pub trait kernel_Hinstance: Handle {
 	/// ```
 	#[must_use]
 	fn GetModuleFileName(&self) -> SysResult<String> {
-		let mut buf = [0; MAX_PATH];
-		bool_to_sysresult(
-			unsafe {
+		let mut buf_sz = WString::SSO_LEN; // start with no string heap allocation
+		loop {
+			let mut buf = WString::new_alloc_buf(buf_sz);
+			let copied = match unsafe {
 				ffi::GetModuleFileNameW(
 					self.ptr(),
 					buf.as_mut_ptr(),
-					buf.len() as _,
+					buf.buf_len() as _,
 				)
-			} as _,
-		).map(|_| WString::from_wchars_slice(&buf).to_string())
+			} {
+				0 => return Err(GetLastError()),
+				len => len,
+			} + 1; // plus terminating null count
+
+			if (copied as usize) < buf_sz { // to break, must have at least 1 char gap
+				return Ok(buf.to_string());
+			}
+
+			buf_sz += MAX_PATH; // increase buffer size to try again
+		}
 	}
 
 	/// [`GetModuleHandle`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew)

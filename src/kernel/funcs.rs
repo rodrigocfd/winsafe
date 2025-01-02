@@ -216,15 +216,25 @@ pub fn GetComputerName() -> SysResult<String> {
 /// function.
 #[must_use]
 pub fn GetCurrentDirectory() -> SysResult<String> {
-	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
-	bool_to_sysresult(
-		unsafe {
+	let mut buf_sz = WString::SSO_LEN; // start with no string heap allocation
+	loop {
+		let mut buf = WString::new_alloc_buf(buf_sz);
+		let copied = match unsafe {
 			ffi::GetCurrentDirectoryW(
 				buf.buf_len() as _,
 				buf.as_mut_ptr(),
 			)
-		} as _,
-	).map(|_| buf.to_string())
+		} {
+			0 => return Err(GetLastError()),
+			len => len,
+		} + 1; // plus terminating null count
+
+		if (copied as usize) < buf_sz { // to break, must have at least 1 char gap
+			return Ok(buf.to_string());
+		}
+
+		buf_sz += MAX_PATH; // increase buffer size to try again
+	}
 }
 
 /// [`GetCurrentProcessId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
@@ -682,12 +692,22 @@ pub fn GetStartupInfo<'a, 'b>() -> STARTUPINFO<'a, 'b> {
 /// function.
 #[must_use]
 pub fn GetSystemDirectory() -> SysResult<String> {
-	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
-	bool_to_sysresult(
-		unsafe {
+	let mut buf_sz = WString::SSO_LEN; // start with no string heap allocation
+	loop {
+		let mut buf = WString::new_alloc_buf(buf_sz);
+		let copied = match unsafe {
 			ffi::GetSystemDirectoryW(buf.as_mut_ptr(), buf.buf_len() as _)
-		} as _,
-	).map(|_| buf.to_string())
+		} {
+			0 => return Err(GetLastError()),
+			len => len,
+		} + 1; // plus terminating null count
+
+		if (copied as usize) < buf_sz { // to break, must have at least 1 char gap
+			return Ok(buf.to_string());
+		}
+
+		buf_sz += MAX_PATH; // increase buffer size to try again
+	}
 }
 
 /// [`GetSystemFileCacheSize`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-getsystemfilecachesize)
