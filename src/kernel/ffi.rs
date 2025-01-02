@@ -62,6 +62,7 @@ extern_sys! { "kernel32";
 	GetLocalTime(PVOID)
 	GetLogicalDrives() -> u32
 	GetLogicalDriveStringsW(u32, PSTR) -> u32
+	GetLongPathNameW(PCSTR, PSTR, u32) -> u32
 	GetModuleFileNameW(HANDLE, PSTR, u32) -> u32
 	GetModuleHandleExW(u32, PCSTR, *mut HANDLE) -> BOOL
 	GetModuleHandleW(PCSTR) -> HANDLE

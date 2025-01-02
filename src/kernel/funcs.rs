@@ -385,6 +385,31 @@ pub fn GetLogicalDrives() -> u32 {
 	unsafe { ffi::GetLogicalDrives() }
 }
 
+/// [`GetLongPathName`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlongpathnamew)
+/// function.
+#[must_use]
+pub fn GetLongPathName(short_path: &str) -> SysResult<String> {
+	let short_path_w = WString::from_str(short_path);
+	let path_sz = match unsafe {
+		ffi::GetLongPathNameW(short_path_w.as_ptr(), std::ptr::null_mut(), 0)
+	} {
+		0 => return Err(GetLastError()),
+		len => len,
+	};
+
+	let mut path_buf = WString::new_alloc_buf(path_sz as _);
+	match unsafe {
+		ffi::GetLongPathNameW(
+			short_path_w.as_ptr(),
+			path_buf.as_mut_ptr(),
+			path_sz,
+		)
+	} {
+		0 => Err(GetLastError()),
+		_ => Ok(path_buf.to_string())
+	}
+}
+
 /// [`GetLogicalDriveStrings`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlogicaldrivestringsw)
 /// function.
 #[must_use]
