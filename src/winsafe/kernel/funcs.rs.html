@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\funcs.rs`."><title>funcs.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-dbdb5eec.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.85.0-nightly (c44b3d50f 2024-12-03)" data-channel="nightly" data-search-js="search-92e6798f.js" data-settings-js="settings-0f613d39.js" ><script src="../../../static.files/storage-59e33391.js"></script><script defer src="../../../static.files/src-script-56102188.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\kernel/</div>funcs.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\funcs.rs`."><title>funcs.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-46132b98.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.85.0-nightly (45d11e51b 2025-01-01)" data-channel="nightly" data-search-js="search-036cda7a.js" data-settings-js="settings-0f613d39.js" ><script src="../../../static.files/storage-59e33391.js"></script><script defer src="../../../static.files/src-script-56102188.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\kernel/</div>funcs.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
 <a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
@@ -1587,7 +1587,50 @@
 <a href="#1586" id="1586">1586</a>
 <a href="#1587" id="1587">1587</a>
 <a href="#1588" id="1588">1588</a>
-<a href="#1589" id="1589">1589</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
+<a href="#1589" id="1589">1589</a>
+<a href="#1590" id="1590">1590</a>
+<a href="#1591" id="1591">1591</a>
+<a href="#1592" id="1592">1592</a>
+<a href="#1593" id="1593">1593</a>
+<a href="#1594" id="1594">1594</a>
+<a href="#1595" id="1595">1595</a>
+<a href="#1596" id="1596">1596</a>
+<a href="#1597" id="1597">1597</a>
+<a href="#1598" id="1598">1598</a>
+<a href="#1599" id="1599">1599</a>
+<a href="#1600" id="1600">1600</a>
+<a href="#1601" id="1601">1601</a>
+<a href="#1602" id="1602">1602</a>
+<a href="#1603" id="1603">1603</a>
+<a href="#1604" id="1604">1604</a>
+<a href="#1605" id="1605">1605</a>
+<a href="#1606" id="1606">1606</a>
+<a href="#1607" id="1607">1607</a>
+<a href="#1608" id="1608">1608</a>
+<a href="#1609" id="1609">1609</a>
+<a href="#1610" id="1610">1610</a>
+<a href="#1611" id="1611">1611</a>
+<a href="#1612" id="1612">1612</a>
+<a href="#1613" id="1613">1613</a>
+<a href="#1614" id="1614">1614</a>
+<a href="#1615" id="1615">1615</a>
+<a href="#1616" id="1616">1616</a>
+<a href="#1617" id="1617">1617</a>
+<a href="#1618" id="1618">1618</a>
+<a href="#1619" id="1619">1619</a>
+<a href="#1620" id="1620">1620</a>
+<a href="#1621" id="1621">1621</a>
+<a href="#1622" id="1622">1622</a>
+<a href="#1623" id="1623">1623</a>
+<a href="#1624" id="1624">1624</a>
+<a href="#1625" id="1625">1625</a>
+<a href="#1626" id="1626">1626</a>
+<a href="#1627" id="1627">1627</a>
+<a href="#1628" id="1628">1628</a>
+<a href="#1629" id="1629">1629</a>
+<a href="#1630" id="1630">1630</a>
+<a href="#1631" id="1631">1631</a>
+<a href="#1632" id="1632">1632</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -1921,6 +1964,62 @@
 		})
 }
 
+<span class="doccomment">/// [`GetFileAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesw)
+/// function.
+///
+/// # Examples
+///
+/// Checking whether a file or folder exists:
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*};
+///
+/// let file_exists = w::GetFileAttributes("C:\\Temp\\test.txt").is_ok();
+/// ```
+///
+/// Retrieving various information about a file or folder path:
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*, co};
+///
+/// let flags = w::GetFileAttributes("C:\\Temp\\test.txt")?;
+///
+/// let is_compressed = flags.has(co::FILE_ATTRIBUTE::COMPRESSED);
+/// let is_directory  = flags.has(co::FILE_ATTRIBUTE::DIRECTORY);
+/// let is_encrypted  = flags.has(co::FILE_ATTRIBUTE::ENCRYPTED);
+/// let is_hidden     = flags.has(co::FILE_ATTRIBUTE::HIDDEN);
+/// let is_temporary  = flags.has(co::FILE_ATTRIBUTE::TEMPORARY);
+/// # w::SysResult::Ok(())
+/// ```
+</span><span class="attr">#[must_use]
+</span><span class="kw">pub fn </span>GetFileAttributes(file_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;co::FILE_ATTRIBUTE&gt; {
+	<span class="kw">const </span>INVALID: u32 = INVALID_FILE_ATTRIBUTES <span class="kw">as </span>u32;
+	<span class="kw">match unsafe </span>{
+		ffi::GetFileAttributesW(WString::from_str(file_name).as_ptr())
+	} {
+		INVALID =&gt; <span class="prelude-val">Err</span>(GetLastError()),
+		flags =&gt; <span class="prelude-val">Ok</span>(<span class="kw">unsafe </span>{ co::FILE_ATTRIBUTE::from_raw(flags) }),
+	}
+}
+
+<span class="doccomment">/// [`GetFileAttributesEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesexw)
+/// function.
+///
+/// This function uses `GET_FILEEX_INFO_LEVELS::GetFileExInfoStandard` flag,
+/// which is the only available flag.
+</span><span class="kw">pub fn </span>GetFileAttributesEx(file: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;WIN32_FILE_ATTRIBUTE_DATA&gt; {
+	<span class="kw">let </span><span class="kw-2">mut </span>wfad = WIN32_FILE_ATTRIBUTE_DATA::default();
+	bool_to_sysresult(
+		<span class="kw">unsafe </span>{
+			ffi::GetFileAttributesExW(
+				WString::from_str(file).as_ptr(),
+				<span class="number">0</span>,
+				<span class="kw-2">&amp;mut </span>wfad <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+			)
+		},
+	).map(|<span class="kw">_</span>| wfad)
+}
+
 <span class="doccomment">/// [`GetFirmwareType`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getfirmwaretype)
 /// function.
 </span><span class="attr">#[must_use]
@@ -1992,41 +2091,28 @@
 	).map(|<span class="kw">_</span>| parse_multi_z_str(buf.as_ptr()))
 }
 
-<span class="doccomment">/// [`GetFileAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesw)
+<span class="doccomment">/// [`GetLongPathName`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlongpathnamew)
 /// function.
-///
-/// # Examples
-///
-/// Checking whether a file or folder exists:
-///
-/// ```no_run
-/// use winsafe::{self as w, prelude::*};
-///
-/// let file_exists = w::GetFileAttributes("C:\\Temp\\test.txt").is_ok();
-/// ```
-///
-/// Retrieving various information about a file or folder path:
-///
-/// ```no_run
-/// use winsafe::{self as w, prelude::*, co};
-///
-/// let flags = w::GetFileAttributes("C:\\Temp\\test.txt")?;
-///
-/// let is_compressed = flags.has(co::FILE_ATTRIBUTE::COMPRESSED);
-/// let is_directory  = flags.has(co::FILE_ATTRIBUTE::DIRECTORY);
-/// let is_encrypted  = flags.has(co::FILE_ATTRIBUTE::ENCRYPTED);
-/// let is_hidden     = flags.has(co::FILE_ATTRIBUTE::HIDDEN);
-/// let is_temporary  = flags.has(co::FILE_ATTRIBUTE::TEMPORARY);
-/// # w::SysResult::Ok(())
-/// ```
 </span><span class="attr">#[must_use]
-</span><span class="kw">pub fn </span>GetFileAttributes(file_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;co::FILE_ATTRIBUTE&gt; {
-	<span class="kw">const </span>INVALID: u32 = INVALID_FILE_ATTRIBUTES <span class="kw">as </span>u32;
-	<span class="kw">match unsafe </span>{
-		ffi::GetFileAttributesW(WString::from_str(file_name).as_ptr())
+</span><span class="kw">pub fn </span>GetLongPathName(short_path: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;String&gt; {
+	<span class="kw">let </span>short_path_w = WString::from_str(short_path);
+	<span class="kw">let </span>path_sz = <span class="kw">match unsafe </span>{
+		ffi::GetLongPathNameW(short_path_w.as_ptr(), std::ptr::null_mut(), <span class="number">0</span>)
 	} {
-		INVALID =&gt; <span class="prelude-val">Err</span>(GetLastError()),
-		flags =&gt; <span class="prelude-val">Ok</span>(<span class="kw">unsafe </span>{ co::FILE_ATTRIBUTE::from_raw(flags) }),
+		<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
+		len =&gt; len,
+	};
+
+	<span class="kw">let </span><span class="kw-2">mut </span>path_buf = WString::new_alloc_buf(path_sz <span class="kw">as _</span>);
+	<span class="kw">match unsafe </span>{
+		ffi::GetLongPathNameW(
+			short_path_w.as_ptr(),
+			path_buf.as_mut_ptr(),
+			path_sz,
+		)
+	} {
+		<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
+		<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(path_buf.to_string())
 	}
 }
 
