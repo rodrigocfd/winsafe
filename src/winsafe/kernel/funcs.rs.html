@@ -1651,7 +1651,9 @@
 <a href="#1650" id="1650">1650</a>
 <a href="#1651" id="1651">1651</a>
 <a href="#1652" id="1652">1652</a>
-<a href="#1653" id="1653">1653</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
+<a href="#1653" id="1653">1653</a>
+<a href="#1654" id="1654">1654</a>
+<a href="#1655" id="1655">1655</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -1747,24 +1749,28 @@
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>ExpandEnvironmentStrings(src: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;String&gt; {
 	<span class="kw">let </span>wsrc = WString::from_str(src);
-	<span class="kw">let </span>len = <span class="kw">unsafe </span>{
-		ffi::ExpandEnvironmentStringsW(
-			wsrc.as_ptr(),
-			std::ptr::null_mut(),
-			<span class="number">0</span>,
-		)
-	};
+	<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = <span class="kw">match unsafe </span>{
+		ffi::ExpandEnvironmentStringsW(wsrc.as_ptr(), std::ptr::null_mut(), <span class="number">0</span>)
+	} {
+		<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
+		n =&gt; n,
+	} + <span class="number">2</span>; <span class="comment">// plus terminating null count, plus 1-char gap
 
-	<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(len <span class="kw">as _</span>);
-	bool_to_sysresult(
-		<span class="kw">unsafe </span>{
-			ffi::ExpandEnvironmentStringsW(
-				wsrc.as_ptr(),
-				buf.as_mut_ptr(),
-				len,
-			)
-		} <span class="kw">as _</span>,
-	).map(|<span class="kw">_</span>| buf.to_string())
+	</span><span class="kw">loop </span>{
+		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz <span class="kw">as _</span>);
+		<span class="kw">let </span>returned_chars = <span class="kw">match unsafe </span>{
+			ffi::ExpandEnvironmentStringsW(wsrc.as_ptr(), buf.as_mut_ptr(), buf_sz)
+		} {
+			<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
+			n =&gt; n,
+		} + <span class="number">1</span>; <span class="comment">// plus terminating null count
+
+		</span><span class="kw">if </span>returned_chars &lt; buf_sz {
+			<span class="kw">return </span><span class="prelude-val">Ok</span>(buf.to_string());
+		}
+
+		buf_sz = returned_chars + <span class="number">1</span>; <span class="comment">// set the new buffer size to try again
+	</span>}
 }
 
 <span class="doccomment">/// [`FileTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime)
@@ -1869,24 +1875,22 @@
 /// function.
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetCurrentDirectory() -&gt; SysResult&lt;String&gt; {
-	<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(MAX_PATH + <span class="number">1</span>);
-	<span class="kw">let </span>nchars = <span class="kw">match unsafe </span>{
-		ffi::GetCurrentDirectoryW(buf.buf_len() <span class="kw">as _</span>, buf.as_mut_ptr())
-	} {
-		<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
-		n =&gt; n,
-	} <span class="kw">as </span>usize;
-
-	<span class="kw">if </span>nchars &gt; buf.buf_len() {
-		buf = WString::new_alloc_buf(nchars);
-		<span class="kw">if unsafe </span>{
+	<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = MAX_PATH + <span class="number">1</span>;
+	<span class="kw">loop </span>{
+		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
+		<span class="kw">let </span>returned_chars = <span class="kw">match unsafe </span>{
 			ffi::GetCurrentDirectoryW(buf.buf_len() <span class="kw">as _</span>, buf.as_mut_ptr())
-		} == <span class="number">0 </span>{
-			<span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError());
-		}
-	}
+		} {
+			<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
+			n =&gt; n,
+		} + <span class="number">1</span>; <span class="comment">// plus terminating null count
 
-	<span class="prelude-val">Ok</span>(buf.to_string())
+		</span><span class="kw">if </span>(returned_chars <span class="kw">as </span>usize) &lt; buf_sz {
+			<span class="kw">return </span><span class="prelude-val">Ok</span>(buf.to_string());
+		}
+
+		buf_sz += MAX_PATH; <span class="comment">// increase buffer size to try again
+	</span>}
 }
 
 <span class="doccomment">/// [`GetCurrentProcessId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
