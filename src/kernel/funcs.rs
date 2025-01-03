@@ -94,24 +94,28 @@ pub fn ExitThread(exit_code: u32) {
 #[must_use]
 pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 	let wsrc = WString::from_str(src);
-	let len = unsafe {
-		ffi::ExpandEnvironmentStringsW(
-			wsrc.as_ptr(),
-			std::ptr::null_mut(),
-			0,
-		)
-	};
+	let mut buf_sz = match unsafe {
+		ffi::ExpandEnvironmentStringsW(wsrc.as_ptr(), std::ptr::null_mut(), 0)
+	} {
+		0 => return Err(GetLastError()),
+		n => n,
+	} + 2; // plus terminating null count, plus 1-char gap
 
-	let mut buf = WString::new_alloc_buf(len as _);
-	bool_to_sysresult(
-		unsafe {
-			ffi::ExpandEnvironmentStringsW(
-				wsrc.as_ptr(),
-				buf.as_mut_ptr(),
-				len,
-			)
-		} as _,
-	).map(|_| buf.to_string())
+	loop {
+		let mut buf = WString::new_alloc_buf(buf_sz as _);
+		let returned_chars = match unsafe {
+			ffi::ExpandEnvironmentStringsW(wsrc.as_ptr(), buf.as_mut_ptr(), buf_sz)
+		} {
+			0 => return Err(GetLastError()),
+			n => n,
+		} + 1; // plus terminating null count
+
+		if returned_chars < buf_sz {
+			return Ok(buf.to_string());
+		}
+
+		buf_sz = returned_chars + 1; // set the new buffer size to try again
+	}
 }
 
 /// [`FileTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime)
@@ -216,24 +220,22 @@ pub fn GetComputerName() -> SysResult<String> {
 /// function.
 #[must_use]
 pub fn GetCurrentDirectory() -> SysResult<String> {
-	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
-	let nchars = match unsafe {
-		ffi::GetCurrentDirectoryW(buf.buf_len() as _, buf.as_mut_ptr())
-	} {
-		0 => return Err(GetLastError()),
-		n => n,
-	} as usize;
-
-	if nchars > buf.buf_len() {
-		buf = WString::new_alloc_buf(nchars);
-		if unsafe {
+	let mut buf_sz = MAX_PATH + 1;
+	loop {
+		let mut buf = WString::new_alloc_buf(buf_sz);
+		let returned_chars = match unsafe {
 			ffi::GetCurrentDirectoryW(buf.buf_len() as _, buf.as_mut_ptr())
-		} == 0 {
-			return Err(GetLastError());
-		}
-	}
+		} {
+			0 => return Err(GetLastError()),
+			n => n,
+		} + 1; // plus terminating null count
 
-	Ok(buf.to_string())
+		if (returned_chars as usize) < buf_sz {
+			return Ok(buf.to_string());
+		}
+
+		buf_sz += MAX_PATH; // increase buffer size to try again
+	}
 }
 
 /// [`GetCurrentProcessId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocessid)
