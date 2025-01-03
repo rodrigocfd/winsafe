@@ -1760,22 +1760,22 @@
 	} {
 		<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
 		n =&gt; n,
-	} + <span class="number">1</span>; <span class="comment">// includes terminating null count; plus 1-char gap
+	}; <span class="comment">// includes terminating null count
 
 	</span><span class="kw">loop </span>{
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz <span class="kw">as _</span>);
-		<span class="kw">let </span>returned_chars = <span class="kw">match unsafe </span>{
+		<span class="kw">let </span>required_sz = <span class="kw">match unsafe </span>{
 			ffi::ExpandEnvironmentStringsW(wsrc.as_ptr(), buf.as_mut_ptr(), buf_sz)
 		} {
 			<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
 			n =&gt; n,
 		}; <span class="comment">// plus terminating null count
 
-		</span><span class="kw">if </span>returned_chars &lt; buf_sz {
+		</span><span class="kw">if </span>required_sz == buf_sz {
 			<span class="kw">return </span><span class="prelude-val">Ok</span>(buf.to_string());
 		}
 
-		buf_sz = returned_chars + <span class="number">1</span>; <span class="comment">// includes terminating null count; plus 1-char gap; set the new buffer size to try again
+		buf_sz = required_sz; <span class="comment">// includes terminating null count; set the new buffer size to try again
 	</span>}
 }
 
