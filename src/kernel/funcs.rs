@@ -110,7 +110,7 @@ pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 			n => n,
 		}; // plus terminating null count
 
-		if required_sz == buf_sz {
+		if required_sz <= buf_sz {
 			return Ok(buf.to_string());
 		}
 
