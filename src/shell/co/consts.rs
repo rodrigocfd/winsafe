@@ -181,19 +181,6 @@ const_bitflag! { GPS: u32;
 	MASK_VALID 0x1fff
 }
 
-const_bitflag! { HOTKEYF: u16;
-	/// [`wm::GetHotkey`](crate::msg::wm::GetHotKey) and
-	/// [`wm::SetHotKey`](crate::msg::wm::SetHotKey) modifiers;
-	/// [`SHELLEXECUTEINFO`](crate::SHELLEXECUTEINFO) `dwHotKey` (`u16`).
-	=>
-	/// None of the actual values (zero).
-	NoValue 0
-	ALT 0x04
-	CONTROL 0x02
-	EXT 0x08
-	SHIFT 0x01
-}
-
 const_bitflag! { KF: u32;
 	/// [`KNOWN_FOLDER_FLAG`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/ne-shlobj_core-known_folder_flag)
 	/// enumeration (`u32`).

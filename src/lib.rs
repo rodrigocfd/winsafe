@@ -280,7 +280,6 @@ pub mod msg {
 		#[cfg(feature = "comctl")] pub use super::super::comctl::messages::wm::*;
 		#[cfg(feature = "gdi")] pub use super::super::gdi::messages::wm::*;
 		#[cfg(feature = "shell")] pub use super::super::shell::messages::wm::*;
-		#[cfg(all(feature = "comctl", feature = "shell"))] pub use super::super::comctl_shell::messages::wm::*;
 	}
 }
 

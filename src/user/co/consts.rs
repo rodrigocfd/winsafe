@@ -1460,6 +1460,18 @@ const_ordinary! { HELPW: u32;
 	TCARD_OTHER_CALLER 0x0011
 }
 
+const_bitflag! { HOTKEYF: u16;
+	/// [`wm::GetHotkey`](crate::msg::wm::GetHotKey) and
+	/// [`wm::SetHotKey`](crate::msg::wm::SetHotKey) modifiers.
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	ALT 0x04
+	CONTROL 0x02
+	EXT 0x08
+	SHIFT 0x01
+}
+
 const_ordinary! { HT: u16;
 	/// [`wm::NcHitTest`](crate::msg::wm::NcHitTest),
 	/// [`wm::SetCursor`](crate::msg::wm::SetCursor) `hit_test` (`u16`).

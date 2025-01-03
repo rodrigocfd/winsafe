@@ -2,8 +2,6 @@
 
 mod handles;
 
-pub mod messages;
-
 pub mod traits {
 	pub use super::handles::traits::*;
 }
