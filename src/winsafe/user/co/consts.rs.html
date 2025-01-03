@@ -3754,7 +3754,19 @@
 <a href="#3753" id="3753">3753</a>
 <a href="#3754" id="3754">3754</a>
 <a href="#3755" id="3755">3755</a>
-<a href="#3756" id="3756">3756</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
+<a href="#3756" id="3756">3756</a>
+<a href="#3757" id="3757">3757</a>
+<a href="#3758" id="3758">3758</a>
+<a href="#3759" id="3759">3759</a>
+<a href="#3760" id="3760">3760</a>
+<a href="#3761" id="3761">3761</a>
+<a href="#3762" id="3762">3762</a>
+<a href="#3763" id="3763">3763</a>
+<a href="#3764" id="3764">3764</a>
+<a href="#3765" id="3765">3765</a>
+<a href="#3766" id="3766">3766</a>
+<a href="#3767" id="3767">3767</a>
+<a href="#3768" id="3768">3768</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_upper_case_globals)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co::<span class="kw-2">*</span>;
 
@@ -5214,6 +5226,18 @@
 	</span>TCARD <span class="number">0x8000
 	</span>TCARD_DATA <span class="number">0x0010
 	</span>TCARD_OTHER_CALLER <span class="number">0x0011
+</span>}
+
+<span class="macro">const_bitflag!</span> { HOTKEYF: u16;
+	<span class="doccomment">/// [`wm::GetHotkey`](crate::msg::wm::GetHotKey) and
+	/// [`wm::SetHotKey`](crate::msg::wm::SetHotKey) modifiers.
+	</span>=&gt;
+	<span class="doccomment">/// None of the actual values (zero).
+	</span>NoValue <span class="number">0
+	</span>ALT <span class="number">0x04
+	</span>CONTROL <span class="number">0x02
+	</span>EXT <span class="number">0x08
+	</span>SHIFT <span class="number">0x01
 </span>}
 
 <span class="macro">const_ordinary!</span> { HT: u16;
