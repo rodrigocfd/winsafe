@@ -220,21 +220,27 @@ pub fn GetComputerName() -> SysResult<String> {
 /// function.
 #[must_use]
 pub fn GetCurrentDirectory() -> SysResult<String> {
-	let mut buf_sz = MAX_PATH + 1;
+	let mut buf_sz = match unsafe {
+		ffi::GetCurrentDirectoryW(0, std::ptr::null_mut())
+	} {
+		0 => return Err(GetLastError()),
+		n => n,
+	}; // includes terminating null count
+
 	loop {
-		let mut buf = WString::new_alloc_buf(buf_sz);
+		let mut buf = WString::new_alloc_buf(buf_sz as _);
 		let returned_chars = match unsafe {
-			ffi::GetCurrentDirectoryW(buf.buf_len() as _, buf.as_mut_ptr())
+			ffi::GetCurrentDirectoryW(buf_sz, buf.as_mut_ptr())
 		} {
 			0 => return Err(GetLastError()),
 			n => n,
-		} + 1; // plus terminating null count
+		};
 
-		if (returned_chars as usize) < buf_sz {
+		if returned_chars < buf_sz {
 			return Ok(buf.to_string());
 		}
 
-		buf_sz += MAX_PATH; // increase buffer size to try again
+		buf_sz = returned_chars; // includes terminating null count; set the new buffer size to try again
 	}
 }
 
