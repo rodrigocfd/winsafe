@@ -4,10 +4,14 @@
 <a href="#3" id="3">3</a>
 <a href="#4" id="4">4</a>
 <a href="#5" id="5">5</a>
-<a href="#6" id="6">6</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<a href="#6" id="6">6</a>
+<a href="#7" id="7">7</a>
+<a href="#8" id="8">8</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 
 <span class="macro">extern_sys!</span> { <span class="string">"winspool"</span>;
+	ClosePrinter(HANDLE) -&gt; BOOL
 	EnumPrintersW(u32, PSTR, u32, <span class="kw-2">*mut </span>u8, u32, <span class="kw-2">*mut </span>u32, <span class="kw-2">*mut </span>u32) -&gt; BOOL
 	GetDefaultPrinterW(PSTR, <span class="kw-2">*mut </span>u32) -&gt; BOOL
+	OpenPrinterW(PSTR, <span class="kw-2">*mut </span>HANDLE, PVOID) -&gt; BOOL
 }
 </code></pre></div></section></main></body></html>

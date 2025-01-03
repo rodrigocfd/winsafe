@@ -86,12 +86,48 @@
 <a href="#85" id="85">85</a>
 <a href="#86" id="86">86</a>
 <a href="#87" id="87">87</a>
-<a href="#88" id="88">88</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<a href="#88" id="88">88</a>
+<a href="#89" id="89">89</a>
+<a href="#90" id="90">90</a>
+<a href="#91" id="91">91</a>
+<a href="#92" id="92">92</a>
+<a href="#93" id="93">93</a>
+<a href="#94" id="94">94</a>
+<a href="#95" id="95">95</a>
+<a href="#96" id="96">96</a>
+<a href="#97" id="97">97</a>
+<a href="#98" id="98">98</a>
+<a href="#99" id="99">99</a>
+<a href="#100" id="100">100</a>
+<a href="#101" id="101">101</a>
+<a href="#102" id="102">102</a>
+<a href="#103" id="103">103</a>
+<a href="#104" id="104">104</a>
+<a href="#105" id="105">105</a>
+<a href="#106" id="106">106</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span>std::marker::PhantomData;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
+
+<span class="doccomment">/// [`PRINTER_DEFAULTS`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-defaults)
+/// struct.
+</span><span class="kw">pub struct </span>PRINTER_DEFAULTS&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	pDataType: <span class="kw-2">*mut </span>u16,
+	pDevMode: <span class="kw-2">*mut </span>DEVMODE,
+	<span class="kw">pub </span>DesiredAccess: co::PRINTER_ACCESS,
+
+	_pDataType: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
+	_pDevMode: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>DEVMODE&gt;,
+}
+
+<span class="macro">impl_default!</span>(PRINTER_DEFAULTS, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>);
+
+<span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; PRINTER_DEFAULTS&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pDataType, set_pDataType);
+	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">'b</span>, pDevMode, set_pDevMode, DEVMODE);
+}
 
 <span class="doccomment">/// [`PRINTER_INFO_2`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-info-2)
 /// struct.

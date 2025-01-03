@@ -316,7 +316,9 @@
 <a href="#315" id="315">315</a>
 <a href="#316" id="316">316</a>
 <a href="#317" id="317">317</a>
-<a href="#318" id="318">318</a></pre></div><pre class="rust"><code><span class="attr">#![doc = <span class="macro">include_str!</span>(<span class="string">"lib.md"</span>)]
+<a href="#318" id="318">318</a>
+<a href="#319" id="319">319</a>
+<a href="#320" id="320">320</a></pre></div><pre class="rust"><code><span class="attr">#![doc = <span class="macro">include_str!</span>(<span class="string">"lib.md"</span>)]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 
 </span><span class="comment">// Declarations of macros used throughout the library.
@@ -427,6 +429,7 @@
 	<span class="attr">#[cfg(feature = <span class="string">"user"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::user::guard::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(feature = <span class="string">"uxtheme"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::uxtheme::guard::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(feature = <span class="string">"version"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::version::guard::<span class="kw-2">*</span>;
+	<span class="attr">#[cfg(feature = <span class="string">"winspool"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::winspool::guard::<span class="kw-2">*</span>;
 }
 
 <span class="attr">#[cfg(feature = <span class="string">"user"</span>)]
@@ -630,6 +633,7 @@
 	<span class="attr">#[cfg(feature = <span class="string">"user"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::user::traits::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(feature = <span class="string">"uxtheme"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::uxtheme::traits::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(feature = <span class="string">"version"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::version::traits::<span class="kw-2">*</span>;
+	<span class="attr">#[cfg(feature = <span class="string">"winspool"</span>)] </span><span class="kw">pub use </span><span class="kw">super</span>::winspool::traits::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(all(feature = <span class="string">"comctl"</span>, feature = <span class="string">"gdi"</span>))] </span><span class="kw">pub use </span><span class="kw">super</span>::comctl_gdi::traits::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(all(feature = <span class="string">"comctl"</span>, feature = <span class="string">"shell"</span>))] </span><span class="kw">pub use </span><span class="kw">super</span>::comctl_shell::traits::<span class="kw-2">*</span>;
 	<span class="attr">#[cfg(all(feature = <span class="string">"gdi"</span>, feature = <span class="string">"mf"</span>))] </span><span class="kw">pub use </span><span class="kw">super</span>::gdi_mf::traits::<span class="kw-2">*</span>;
