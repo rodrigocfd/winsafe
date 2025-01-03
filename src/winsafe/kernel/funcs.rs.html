@@ -1771,7 +1771,7 @@
 			n =&gt; n,
 		}; <span class="comment">// plus terminating null count
 
-		</span><span class="kw">if </span>required_sz == buf_sz {
+		</span><span class="kw">if </span>required_sz &lt;= buf_sz {
 			<span class="kw">return </span><span class="prelude-val">Ok</span>(buf.to_string());
 		}
 
