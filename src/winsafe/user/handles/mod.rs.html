@@ -54,7 +54,12 @@
 <a href="#53" id="53">53</a>
 <a href="#54" id="54">54</a>
 <a href="#55" id="55">55</a>
-<a href="#56" id="56">56</a></pre></div><pre class="rust"><code><span class="kw">mod </span>haccel;
+<a href="#56" id="56">56</a>
+<a href="#57" id="57">57</a>
+<a href="#58" id="58">58</a>
+<a href="#59" id="59">59</a>
+<a href="#60" id="60">60</a>
+<a href="#61" id="61">61</a></pre></div><pre class="rust"><code><span class="kw">mod </span>haccel;
 <span class="kw">mod </span>hcursor;
 <span class="kw">mod </span>hdc;
 <span class="kw">mod </span>hdesk;
@@ -87,6 +92,11 @@
 	<span class="macro">impl_handle!</span> { HBRUSH;
 		<span class="doccomment">/// Handle to a
 		/// [brush](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbrush).
+	</span>}
+
+	<span class="macro">impl_handle!</span> { HPALETTE;
+		<span class="doccomment">/// Handle to a
+		/// [palette](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hpalette).
 	</span>}
 
 	<span class="macro">impl_handle!</span> { HRGN;
