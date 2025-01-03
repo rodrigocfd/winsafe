@@ -99,7 +99,7 @@ pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 	} {
 		0 => return Err(GetLastError()),
 		n => n,
-	} + 2; // plus terminating null count, plus 1-char gap
+	} + 1; // includes terminating null count; plus 1-char gap
 
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz as _);
@@ -108,13 +108,13 @@ pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 		} {
 			0 => return Err(GetLastError()),
 			n => n,
-		} + 1; // plus terminating null count
+		}; // plus terminating null count
 
 		if returned_chars < buf_sz {
 			return Ok(buf.to_string());
 		}
 
-		buf_sz = returned_chars + 1; // set the new buffer size to try again
+		buf_sz = returned_chars + 1; // includes terminating null count; plus 1-char gap; set the new buffer size to try again
 	}
 }
 
