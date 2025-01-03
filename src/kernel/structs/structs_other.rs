@@ -43,10 +43,22 @@ impl BY_HANDLE_FILE_INFORMATION {
 		MAKEQWORD(self.nFileSizeLow, self.nFileSizeHigh)
 	}
 
+	/// Sets the nFileSizeHigh and nFileSizeLow fields.
+	pub const fn set_nFileSize(&mut self, val: u64) {
+		self.nFileSizeHigh = HIDWORD(val);
+		self.nFileSizeLow = LODWORD(val);
+	}
+
 	/// Returns the nFileIndexHigh and nFileIndexLow fields.
 	#[must_use]
 	pub const fn nFileIndex(&self) -> u64 {
 		MAKEQWORD(self.nFileIndexLow, self.nFileIndexHigh)
+	}
+
+	/// Sets the nFileIndexHigh and nFileIndexLow fields.
+	pub const fn set_nFileIndex(&mut self, val: u64) {
+		self.nFileIndexHigh = HIDWORD(val);
+		self.nFileIndexLow = LODWORD(val);
 	}
 }
 
@@ -900,6 +912,12 @@ impl WIN32_FILE_ATTRIBUTE_DATA {
 	pub const fn nFileSize(&self) -> u64 {
 		MAKEQWORD(self.nFileSizeLow, self.nFileSizeHigh)
 	}
+
+	/// Sets the nFileSizeHigh and nFileSizeLow fields.
+	pub const fn set_nFileSize(&mut self, val: u64) {
+		self.nFileSizeHigh = HIDWORD(val);
+		self.nFileSizeLow = LODWORD(val);
+	}
 }
 
 /// [`WIN32_FIND_DATA`](https://learn.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-win32_find_dataw)
@@ -925,6 +943,12 @@ impl WIN32_FIND_DATA {
 	#[must_use]
 	pub const fn nFileSize(&self) -> u64 {
 		MAKEQWORD(self.nFileSizeLow, self.nFileSizeHigh)
+	}
+
+	/// Sets the nFileSizeHigh and nFileSizeLow fields.
+	pub const fn set_nFileSize(&mut self, val: u64) {
+		self.nFileSizeHigh = HIDWORD(val);
+		self.nFileSizeLow = LODWORD(val);
 	}
 
 	pub_fn_string_arr_get_set!(cFileName, set_cFileName);
