@@ -6,11 +6,6 @@ use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
 
-impl_handle! { HPALETTE;
-	/// Handle to a
-	/// [palette](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hpalette).
-}
-
 impl gdi_Hpalette for HPALETTE {}
 
 /// This trait is enabled with the `gdi` feature, and provides methods for

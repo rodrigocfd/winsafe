@@ -10,7 +10,6 @@ mod hrgn;
 
 pub mod decl {
 	pub use super::hfont::HFONT;
-	pub use super::hpalette::HPALETTE;
 	pub use super::hpen::HPEN;
 }
 

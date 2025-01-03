@@ -33,6 +33,11 @@ pub mod decl {
 		/// [brush](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbrush).
 	}
 
+	impl_handle! { HPALETTE;
+		/// Handle to a
+		/// [palette](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hpalette).
+	}
+
 	impl_handle! { HRGN;
 		/// Handle to a
 		/// [region](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hrgn)
