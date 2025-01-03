@@ -5,6 +5,24 @@ use std::marker::PhantomData;
 use crate::co;
 use crate::decl::*;
 
+/// [`PRINTER_DEFAULTS`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-defaults)
+/// struct.
+pub struct PRINTER_DEFAULTS<'a, 'b> {
+	pDataType: *mut u16,
+	pDevMode: *mut DEVMODE,
+	pub DesiredAccess: co::PRINTER_ACCESS,
+
+	_pDataType: PhantomData<&'a mut u16>,
+	_pDevMode: PhantomData<&'b mut DEVMODE>,
+}
+
+impl_default!(PRINTER_DEFAULTS, 'a, 'b);
+
+impl<'a, 'b> PRINTER_DEFAULTS<'a, 'b> {
+	pub_fn_string_ptr_get_set!('a, pDataType, set_pDataType);
+	pub_fn_ptr_get_set!('b, pDevMode, set_pDevMode, DEVMODE);
+}
+
 /// [`PRINTER_INFO_2`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-info-2)
 /// struct.
 #[repr(C)]

@@ -1,5 +1,19 @@
 #![allow(non_camel_case_types)]
 
+use crate::co::*;
+
+const_bitflag! { PRINTER_ACCESS: u32;
+	/// [`PRINTER_DEFAULTS`](crate::PRINTER_DEFAULTS) `DesiredAccess` (`u32`).
+	=>
+	ADMINISTER 0x0000_0004
+	USE 0x0000_0008
+	MANAGE_LIMITED 0x0000_0040
+	ALL_ACCESS (STANDARD_RIGHTS::REQUIRED.raw() | Self::ADMINISTER.0 | Self::USE.0)
+	READ (STANDARD_RIGHTS::READ.raw() | Self::USE.0)
+	WRITE (STANDARD_RIGHTS::WRITE.raw() | Self::USE.0)
+	EXECUTE (STANDARD_RIGHTS::EXECUTE.raw() | Self::USE.0)
+}
+
 const_bitflag! { PRINTER_ATTRIBUTE_2: u32;
 	/// [`PRINTER_INFO_2`](crate::PRINTER_INFO_2) `Attributes` (`u32`).
 	=>

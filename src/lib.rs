@@ -109,6 +109,7 @@ pub mod guard {
 	#[cfg(feature = "user")] pub use super::user::guard::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::guard::*;
 	#[cfg(feature = "version")] pub use super::version::guard::*;
+	#[cfg(feature = "winspool")] pub use super::winspool::guard::*;
 }
 
 #[cfg(feature = "user")]
@@ -312,6 +313,7 @@ pub mod prelude {
 	#[cfg(feature = "user")] pub use super::user::traits::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::traits::*;
 	#[cfg(feature = "version")] pub use super::version::traits::*;
+	#[cfg(feature = "winspool")] pub use super::winspool::traits::*;
 	#[cfg(all(feature = "comctl", feature = "gdi"))] pub use super::comctl_gdi::traits::*;
 	#[cfg(all(feature = "comctl", feature = "shell"))] pub use super::comctl_shell::traits::*;
 	#[cfg(all(feature = "gdi", feature = "mf"))] pub use super::gdi_mf::traits::*;
