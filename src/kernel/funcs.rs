@@ -99,22 +99,22 @@ pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 	} {
 		0 => return Err(GetLastError()),
 		n => n,
-	} + 1; // includes terminating null count; plus 1-char gap
+	}; // includes terminating null count
 
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz as _);
-		let returned_chars = match unsafe {
+		let required_sz = match unsafe {
 			ffi::ExpandEnvironmentStringsW(wsrc.as_ptr(), buf.as_mut_ptr(), buf_sz)
 		} {
 			0 => return Err(GetLastError()),
 			n => n,
 		}; // plus terminating null count
 
-		if returned_chars < buf_sz {
+		if required_sz == buf_sz {
 			return Ok(buf.to_string());
 		}
 
-		buf_sz = returned_chars + 1; // includes terminating null count; plus 1-char gap; set the new buffer size to try again
+		buf_sz = required_sz; // includes terminating null count; set the new buffer size to try again
 	}
 }
 
