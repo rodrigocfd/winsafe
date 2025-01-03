@@ -5,6 +5,34 @@ use crate::decl::*;
 use crate::kernel::privs::*;
 use crate::winspool::ffi;
 
+/// [`AddPrinterConnection`](https://learn.microsoft.com/en-us/windows/win32/printdocs/addprinterconnection)
+/// function.
+///
+/// # Related functions
+///
+/// * [`DeletePrinterConnection`](crate::DeletePrinterConnection)
+pub fn AddPrinterConnection(name: &str) -> SysResult<()> {
+	bool_to_sysresult(
+		unsafe {
+			ffi::AddPrinterConnection(WString::from_str(name).as_mut_ptr())
+		},
+	)
+}
+
+/// [`DeletePrinterConnection`](https://learn.microsoft.com/en-us/windows/win32/printdocs/deleteprinterconnection)
+/// function.
+///
+/// # Related functions
+///
+/// * [`AddPrinterConnection`](crate::AddPrinterConnection)
+pub fn DeletePrinterConnection(name: &str) -> SysResult<()> {
+	bool_to_sysresult(
+		unsafe {
+			ffi::DeletePrinterConnection(WString::from_str(name).as_mut_ptr())
+		},
+	)
+}
+
 /// [`EnumPrinters`](https://learn.microsoft.com/en-us/windows/win32/printdocs/enumprinters)
 /// function for Level 2.
 ///
@@ -127,4 +155,12 @@ pub fn GetDefaultPrinter() -> SysResult<String> {
 	bool_to_sysresult(
 		unsafe { ffi::GetDefaultPrinterW(name_buf.as_mut_ptr(), &mut sz) },
 	).map(|_| name_buf.to_string())
+}
+
+/// [`SetDefaultPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/setdefaultprinter)
+/// function.
+pub fn SetDefaultPrinter(printer: Option<&str>) -> SysResult<()> {
+	bool_to_sysresult(
+		unsafe { ffi::SetDefaultPrinter(WString::from_opt_str(printer).as_ptr()) },
+	)
 }
