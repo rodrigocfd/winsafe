@@ -1653,7 +1653,13 @@
 <a href="#1652" id="1652">1652</a>
 <a href="#1653" id="1653">1653</a>
 <a href="#1654" id="1654">1654</a>
-<a href="#1655" id="1655">1655</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
+<a href="#1655" id="1655">1655</a>
+<a href="#1656" id="1656">1656</a>
+<a href="#1657" id="1657">1657</a>
+<a href="#1658" id="1658">1658</a>
+<a href="#1659" id="1659">1659</a>
+<a href="#1660" id="1660">1660</a>
+<a href="#1661" id="1661">1661</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -1754,7 +1760,7 @@
 	} {
 		<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
 		n =&gt; n,
-	} + <span class="number">2</span>; <span class="comment">// plus terminating null count, plus 1-char gap
+	} + <span class="number">1</span>; <span class="comment">// includes terminating null count; plus 1-char gap
 
 	</span><span class="kw">loop </span>{
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz <span class="kw">as _</span>);
@@ -1763,13 +1769,13 @@
 		} {
 			<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
 			n =&gt; n,
-		} + <span class="number">1</span>; <span class="comment">// plus terminating null count
+		}; <span class="comment">// plus terminating null count
 
 		</span><span class="kw">if </span>returned_chars &lt; buf_sz {
 			<span class="kw">return </span><span class="prelude-val">Ok</span>(buf.to_string());
 		}
 
-		buf_sz = returned_chars + <span class="number">1</span>; <span class="comment">// set the new buffer size to try again
+		buf_sz = returned_chars + <span class="number">1</span>; <span class="comment">// includes terminating null count; plus 1-char gap; set the new buffer size to try again
 	</span>}
 }
 
@@ -1875,21 +1881,27 @@
 /// function.
 </span><span class="attr">#[must_use]
 </span><span class="kw">pub fn </span>GetCurrentDirectory() -&gt; SysResult&lt;String&gt; {
-	<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = MAX_PATH + <span class="number">1</span>;
-	<span class="kw">loop </span>{
-		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
+	<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = <span class="kw">match unsafe </span>{
+		ffi::GetCurrentDirectoryW(<span class="number">0</span>, std::ptr::null_mut())
+	} {
+		<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
+		n =&gt; n,
+	}; <span class="comment">// includes terminating null count
+
+	</span><span class="kw">loop </span>{
+		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz <span class="kw">as _</span>);
 		<span class="kw">let </span>returned_chars = <span class="kw">match unsafe </span>{
-			ffi::GetCurrentDirectoryW(buf.buf_len() <span class="kw">as _</span>, buf.as_mut_ptr())
+			ffi::GetCurrentDirectoryW(buf_sz, buf.as_mut_ptr())
 		} {
 			<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
 			n =&gt; n,
-		} + <span class="number">1</span>; <span class="comment">// plus terminating null count
+		};
 
-		</span><span class="kw">if </span>(returned_chars <span class="kw">as </span>usize) &lt; buf_sz {
+		<span class="kw">if </span>returned_chars &lt; buf_sz {
 			<span class="kw">return </span><span class="prelude-val">Ok</span>(buf.to_string());
 		}
 
-		buf_sz += MAX_PATH; <span class="comment">// increase buffer size to try again
+		buf_sz = returned_chars; <span class="comment">// includes terminating null count; set the new buffer size to try again
 	</span>}
 }
 
