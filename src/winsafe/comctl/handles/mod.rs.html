@@ -14,11 +14,16 @@
 <a href="#13" id="13">13</a>
 <a href="#14" id="14">14</a>
 <a href="#15" id="15">15</a>
-<a href="#16" id="16">16</a></pre></div><pre class="rust"><code><span class="kw">mod </span>himagelist;
+<a href="#16" id="16">16</a>
+<a href="#17" id="17">17</a>
+<a href="#18" id="18">18</a>
+<a href="#19" id="19">19</a></pre></div><pre class="rust"><code><span class="kw">mod </span>himagelist;
+<span class="kw">mod </span>hpropsheetpage;
 <span class="kw">mod </span>hwnd;
 
 <span class="kw">pub mod </span>decl {
 	<span class="kw">pub use </span><span class="kw">super</span>::himagelist::HIMAGELIST;
+	<span class="kw">pub use </span><span class="kw">super</span>::hpropsheetpage::HPROPSHEETPAGE;
 
 	<span class="macro">impl_handle!</span> { HTREEITEM;
 		<span class="doccomment">/// Handle to a
@@ -28,6 +33,7 @@
 
 <span class="kw">pub mod </span>traits {
 	<span class="kw">pub use </span><span class="kw">super</span>::himagelist::comctl_Himagelist;
+	<span class="kw">pub use </span><span class="kw">super</span>::hpropsheetpage::comctl_Hpropsheetpage;
 	<span class="kw">pub use </span><span class="kw">super</span>::hwnd::comctl_Hwnd;
 }
 </code></pre></div></section></main></body></html>

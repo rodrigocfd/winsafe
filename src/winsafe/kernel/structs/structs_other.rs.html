@@ -1085,7 +1085,7 @@
 	}
 
 	<span class="doccomment">/// Sets the low-word part of `Flags`.
-	</span><span class="kw">pub fn </span>set_FlagsLo(<span class="kw-2">&amp;mut </span><span class="self">self</span>, claim: co::CLAIM_SECURITY_ATTRIBUTE) {
+	</span><span class="kw">pub const fn </span>set_FlagsLo(<span class="kw-2">&amp;mut </span><span class="self">self</span>, claim: co::CLAIM_SECURITY_ATTRIBUTE) {
 		<span class="self">self</span>.Flags = MAKEDWORD(claim.raw(), <span class="self">self</span>.FlagsHi());
 	}
 
@@ -1096,7 +1096,7 @@
 	}
 
 	<span class="doccomment">/// Sets the high-word part of `Flags`.
-	</span><span class="kw">pub fn </span>set_FlagsHi(<span class="kw-2">&amp;mut </span><span class="self">self</span>, flags: u16) {
+	</span><span class="kw">pub const fn </span>set_FlagsHi(<span class="kw-2">&amp;mut </span><span class="self">self</span>, flags: u16) {
 		<span class="self">self</span>.Flags = MAKEDWORD(<span class="self">self</span>.FlagsLo().raw(), flags);
 	}
 
@@ -1722,7 +1722,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `wShowWindow` field.
-	</span><span class="kw">pub fn </span>set_wShowWindow(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: co::SW) {
+	</span><span class="kw">pub const fn </span>set_wShowWindow(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: co::SW) {
 		<span class="self">self</span>.wShowWindow = val.raw() <span class="kw">as _</span>;
 	}
 }

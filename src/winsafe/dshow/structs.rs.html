@@ -146,7 +146,7 @@
 	///
 	/// Varies according to the `formattype`. If you set it wrong, you're likely
 	/// to cause a buffer overrun.
-	</span><span class="kw">pub unsafe fn </span>set_pbFormat&lt;T&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>T) {
+	</span><span class="kw">pub const unsafe fn </span>set_pbFormat&lt;T&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: <span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>T) {
 		<span class="self">self</span>.pbFormat = val <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>;
 		<span class="self">self</span>.cbFormat = std::mem::size_of::&lt;T&gt;() <span class="kw">as _</span>;
 	}

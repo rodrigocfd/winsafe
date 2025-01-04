@@ -781,12 +781,12 @@
 	}
 
 	<span class="doccomment">/// Sets the `liNewTime` field.
-	</span><span class="kw">pub fn </span>set_liNewTime(<span class="kw-2">&amp;mut </span><span class="self">self</span>, ft: FILETIME) {
+	</span><span class="kw">pub const fn </span>set_liNewTime(<span class="kw-2">&amp;mut </span><span class="self">self</span>, ft: FILETIME) {
 		<span class="self">self</span>.liNewTime = MAKEQWORD(ft.dwLowDateTime, ft.dwHighDateTime) <span class="kw">as _</span>;
 	}
 
 	<span class="doccomment">/// Sets the `liOldTime` field.
-	</span><span class="kw">pub fn </span>set_liOldTime(<span class="kw-2">&amp;mut </span><span class="self">self</span>, ft: FILETIME) {
+	</span><span class="kw">pub const fn </span>set_liOldTime(<span class="kw-2">&amp;mut </span><span class="self">self</span>, ft: FILETIME) {
 		<span class="self">self</span>.liOldTime = MAKEQWORD(ft.dwLowDateTime, ft.dwHighDateTime) <span class="kw">as _</span>;
 	}
 }

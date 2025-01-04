@@ -1501,7 +1501,7 @@
 	<span class="macro">pub_fn_string_arr_get_set!</span>(dmFormName, set_dmFormName);
 
 	<span class="doccomment">/// Sets the `dmDisplayFlags` or the `dmNup` field.
-	</span><span class="kw">pub fn </span>set_dmDisplayFlags_dmNup(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: DispfNup) {
+	</span><span class="kw">pub const fn </span>set_dmDisplayFlags_dmNup(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: DispfNup) {
 		<span class="kw">match </span>val {
 			DispfNup::Dispf(val) =&gt; <span class="self">self</span>.union1.dmDisplayFlags = val,
 			DispfNup::Nup(val) =&gt; <span class="self">self</span>.union1.dnNup = val,
@@ -1515,7 +1515,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `dmOrientation` printer field, which is part of an union.
-	</span><span class="kw">pub fn </span>set_dmOrientation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: co::DMORIENT) {
+	</span><span class="kw">pub const fn </span>set_dmOrientation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: co::DMORIENT) {
 		<span class="self">self</span>.union0.printer.dmOrientation = val;
 	}
 
@@ -1526,7 +1526,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `dmPaperSize` printer field, which is part of an union.
-	</span><span class="kw">pub fn </span>set_dmPaperSize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: co::DMPAPER) {
+	</span><span class="kw">pub const fn </span>set_dmPaperSize(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: co::DMPAPER) {
 		<span class="self">self</span>.union0.printer.dmPaperSize = val;
 	}
 
@@ -1537,7 +1537,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `dmPaperLength` printer field, which is part of an union.
-	</span><span class="kw">pub fn </span>set_dmPaperLength(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: i16) {
+	</span><span class="kw">pub const fn </span>set_dmPaperLength(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: i16) {
 		<span class="self">self</span>.union0.printer.dmPaperLength = val;
 	}
 
@@ -1548,7 +1548,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `dmPaperWidth` printer field, which is part of an union.
-	</span><span class="kw">pub fn </span>set_dmPaperWidth(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: i16) {
+	</span><span class="kw">pub const fn </span>set_dmPaperWidth(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: i16) {
 		<span class="self">self</span>.union0.printer.dmPaperWidth = val;
 	}
 
@@ -1559,7 +1559,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `dmScale` printer field, which is part of an union.
-	</span><span class="kw">pub fn </span>set_dmScale(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: i16) {
+	</span><span class="kw">pub const fn </span>set_dmScale(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: i16) {
 		<span class="self">self</span>.union0.printer.dmScale = val;
 	}
 
@@ -1570,7 +1570,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `dmCopies` printer field, which is part of an union.
-	</span><span class="kw">pub fn </span>set_dmCopies(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: i16) {
+	</span><span class="kw">pub const fn </span>set_dmCopies(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: i16) {
 		<span class="self">self</span>.union0.printer.dmCopies = val;
 	}
 
@@ -1581,7 +1581,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `dmDefaultSource` printer field, which is part of an union.
-	</span><span class="kw">pub fn </span>set_dmDefaultSource(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: co::DMBIN) {
+	</span><span class="kw">pub const fn </span>set_dmDefaultSource(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: co::DMBIN) {
 		<span class="self">self</span>.union0.printer.dmDefaultSource = val;
 	}
 
@@ -1592,7 +1592,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `dmPrintQuality` printer field, which is part of an union.
-	</span><span class="kw">pub fn </span>set_dmPrintQuality(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: co::DMRES) {
+	</span><span class="kw">pub const fn </span>set_dmPrintQuality(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: co::DMRES) {
 		<span class="self">self</span>.union0.printer.dmPrintQuality = val;
 	}
 
@@ -1603,7 +1603,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `dmPosition` display field, which is part of an union.
-	</span><span class="kw">pub fn </span>set_dmPosition(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: POINT) {
+	</span><span class="kw">pub const fn </span>set_dmPosition(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: POINT) {
 		<span class="self">self</span>.union0.display.dmPosition = val;
 	}
 
@@ -1615,7 +1615,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `dmDisplayOrientation` display field, which is part of an union.
-	</span><span class="kw">pub fn </span>set_dmDisplayOrientation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: co::DMDO) {
+	</span><span class="kw">pub const fn </span>set_dmDisplayOrientation(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: co::DMDO) {
 		<span class="self">self</span>.union0.display.dmDisplayOrientation = val;
 	}
 
@@ -1627,7 +1627,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `dmDisplayFixedOutput` display field, which is part of an union.
-	</span><span class="kw">pub fn </span>set_dmDisplayFixedOutput(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: co::DMDFO) {
+	</span><span class="kw">pub const fn </span>set_dmDisplayFixedOutput(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: co::DMDFO) {
 		<span class="self">self</span>.union0.display.dmDisplayFixedOutput = val;
 	}
 }
@@ -1859,7 +1859,7 @@
 	}
 
 	<span class="doccomment">/// Sets the event tagged union field.
-	</span><span class="kw">pub fn </span>set_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: HwKbMouse) {
+	</span><span class="kw">pub const fn </span>set_event(<span class="kw-2">&amp;mut </span><span class="self">self</span>, event: HwKbMouse) {
 		<span class="kw">match </span>event {
 			HwKbMouse::Hw(hi) =&gt; {
 				<span class="self">self</span>.dwType = co::INPUT::HARDWARE;

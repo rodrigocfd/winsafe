@@ -473,7 +473,7 @@
 		</span>}
 
 		<span class="doccomment">/// Sets the bool field.
-		</span><span class="kw">pub fn </span><span class="macro-nonterminal">$setter</span>(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: bool) {
+		</span><span class="kw">pub const fn </span><span class="macro-nonterminal">$setter</span>(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: bool) {
 			<span class="self">self</span>.<span class="macro-nonterminal">$field </span>= val <span class="kw">as _
 		</span>}
 	};
@@ -490,7 +490,7 @@
 		</span>}
 
 		<span class="doccomment">/// Sets the resource ID field.
-		</span><span class="kw">pub fn </span><span class="macro-nonterminal">$setter</span>(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: u16) {
+		</span><span class="kw">pub const fn </span><span class="macro-nonterminal">$setter</span>(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: u16) {
 			<span class="self">self</span>.<span class="macro-nonterminal">$field </span>= val <span class="kw">as _</span>;
 		}
 	};
@@ -703,7 +703,7 @@
 		<span class="doccomment">/// Returns a mutable pointer to the allocated memory block, or null if
 		/// not allocated.
 		</span><span class="attr">#[must_use]
-		</span><span class="kw">pub fn </span>as_mut_ptr(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">*mut </span>std::ffi::c_void {
+		</span><span class="kw">pub const fn </span>as_mut_ptr(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">*mut </span>std::ffi::c_void {
 			<span class="self">self</span>.pmem
 		}
 
@@ -715,7 +715,7 @@
 
 		<span class="doccomment">/// Returns a mutable slice over the allocated memory block.
 		</span><span class="attr">#[must_use]
-		</span><span class="kw">pub fn </span>as_mut_slice(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[u8] {
+		</span><span class="kw">pub const fn </span>as_mut_slice(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[u8] {
 			<span class="kw">unsafe </span>{ std::slice::from_raw_parts_mut(<span class="self">self</span>.pmem <span class="kw">as _</span>, <span class="self">self</span>.sz) }
 		}
 
@@ -740,7 +740,7 @@
 		///
 		/// Make sure the alignment is correct.
 		</span><span class="attr">#[must_use]
-		</span><span class="kw">pub unsafe fn </span>as_mut_slice_aligned&lt;T&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+		</span><span class="kw">pub const unsafe fn </span>as_mut_slice_aligned&lt;T&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
 			std::slice::from_raw_parts_mut(
 				<span class="self">self</span>.pmem <span class="kw">as _</span>,
 				<span class="self">self</span>.sz / std::mem::size_of::&lt;T&gt;(),

@@ -110,7 +110,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `dwFileVersionMS` and `dwFileVersionLS` fields.
-	</span><span class="kw">pub fn </span>set_dwFileVersion(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: [u16; <span class="number">4</span>]) {
+	</span><span class="kw">pub const fn </span>set_dwFileVersion(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: [u16; <span class="number">4</span>]) {
 		<span class="self">self</span>.dwFileVersionMS = MAKEDWORD(val[<span class="number">1</span>], val[<span class="number">0</span>]);
 		<span class="self">self</span>.dwFileVersionLS = MAKEDWORD(val[<span class="number">3</span>], val[<span class="number">2</span>]);
 	}
@@ -123,7 +123,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `dwProductVersionMS` and `dwProductVersionLS` fields.
-	</span><span class="kw">pub fn </span>set_dwProductVersion(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: [u16; <span class="number">4</span>]) {
+	</span><span class="kw">pub const fn </span>set_dwProductVersion(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: [u16; <span class="number">4</span>]) {
 		<span class="self">self</span>.dwProductVersionMS = MAKEDWORD(val[<span class="number">1</span>], val[<span class="number">0</span>]);
 		<span class="self">self</span>.dwProductVersionLS = MAKEDWORD(val[<span class="number">3</span>], val[<span class="number">2</span>]);
 	}
@@ -135,7 +135,7 @@
 	}
 
 	<span class="doccomment">/// Sets the `dwFileDateMS` and `dwFileDateLS` fields.
-	</span><span class="kw">pub fn </span>set_dwFileDate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: u64) {
+	</span><span class="kw">pub const fn </span>set_dwFileDate(<span class="kw-2">&amp;mut </span><span class="self">self</span>, val: u64) {
 		<span class="self">self</span>.dwFileDateLS = LODWORD(val);
 		<span class="self">self</span>.dwFileDateMS = HIDWORD(val);
 	}

@@ -108,7 +108,13 @@
 <a href="#107" id="107">107</a>
 <a href="#108" id="108">108</a>
 <a href="#109" id="109">109</a>
-<a href="#110" id="110">110</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
+<a href="#110" id="110">110</a>
+<a href="#111" id="111">111</a>
+<a href="#112" id="112">112</a>
+<a href="#113" id="113">113</a>
+<a href="#114" id="114">114</a>
+<a href="#115" id="115">115</a>
+<a href="#116" id="116">116</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::comctl::ffi;
@@ -126,7 +132,7 @@
 /// function.
 </span><span class="kw">pub fn </span>InitCommonControlsEx(icce: <span class="kw-2">&amp;</span>INITCOMMONCONTROLSEX) -&gt; SysResult&lt;()&gt; {
 	bool_to_sysresult(
-		<span class="kw">unsafe </span>{ ffi::InitCommonControlsEx(icce <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as  _</span>) }
+		<span class="kw">unsafe </span>{ ffi::InitCommonControlsEx(icce <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as  _</span>) },
 	)
 }
 
@@ -134,6 +140,12 @@
 /// function.
 </span><span class="kw">pub fn </span>InitMUILanguage(ui_lang: LANGID) {
 	<span class="kw">unsafe </span>{ ffi::InitMUILanguage(ui_lang.into()) }
+}
+
+<span class="doccomment">/// [`PropertySheet`](https://learn.microsoft.com/en-us/windows/win32/api/prsht/nf-prsht-propertysheetw)
+/// function.
+</span><span class="kw">pub fn </span>PropertySheet(header: <span class="kw-2">&amp;</span>PROPSHEETHEADER) -&gt; SysResult&lt;i32&gt; {
+	<span class="macro">todo!</span>()
 }
 
 <span class="doccomment">/// [`TaskDialogIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)
