@@ -95,7 +95,7 @@ macro_rules! pub_fn_bool_get_set {
 		}
 
 		/// Sets the bool field.
-		pub fn $setter(&mut self, val: bool) {
+		pub const fn $setter(&mut self, val: bool) {
 			self.$field = val as _
 		}
 	};
@@ -112,7 +112,7 @@ macro_rules! pub_fn_resource_id_get_set {
 		}
 
 		/// Sets the resource ID field.
-		pub fn $setter(&mut self, val: u16) {
+		pub const fn $setter(&mut self, val: u16) {
 			self.$field = val as _;
 		}
 	};
@@ -325,7 +325,7 @@ macro_rules! pub_fn_mem_block {
 		/// Returns a mutable pointer to the allocated memory block, or null if
 		/// not allocated.
 		#[must_use]
-		pub fn as_mut_ptr(&mut self) -> *mut std::ffi::c_void {
+		pub const fn as_mut_ptr(&mut self) -> *mut std::ffi::c_void {
 			self.pmem
 		}
 
@@ -337,7 +337,7 @@ macro_rules! pub_fn_mem_block {
 
 		/// Returns a mutable slice over the allocated memory block.
 		#[must_use]
-		pub fn as_mut_slice(&mut self) -> &mut [u8] {
+		pub const fn as_mut_slice(&mut self) -> &mut [u8] {
 			unsafe { std::slice::from_raw_parts_mut(self.pmem as _, self.sz) }
 		}
 
@@ -362,7 +362,7 @@ macro_rules! pub_fn_mem_block {
 		///
 		/// Make sure the alignment is correct.
 		#[must_use]
-		pub unsafe fn as_mut_slice_aligned<T>(&mut self) -> &mut [T] {
+		pub const unsafe fn as_mut_slice_aligned<T>(&mut self) -> &mut [T] {
 			std::slice::from_raw_parts_mut(
 				self.pmem as _,
 				self.sz / std::mem::size_of::<T>(),

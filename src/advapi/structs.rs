@@ -158,12 +158,12 @@ impl SERVICE_TIMECHANGE_INFO {
 	}
 
 	/// Sets the `liNewTime` field.
-	pub fn set_liNewTime(&mut self, ft: FILETIME) {
+	pub const fn set_liNewTime(&mut self, ft: FILETIME) {
 		self.liNewTime = MAKEQWORD(ft.dwLowDateTime, ft.dwHighDateTime) as _;
 	}
 
 	/// Sets the `liOldTime` field.
-	pub fn set_liOldTime(&mut self, ft: FILETIME) {
+	pub const fn set_liOldTime(&mut self, ft: FILETIME) {
 		self.liOldTime = MAKEQWORD(ft.dwLowDateTime, ft.dwHighDateTime) as _;
 	}
 }

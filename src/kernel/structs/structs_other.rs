@@ -129,7 +129,7 @@ impl<'a, 'b> CLAIM_SECURITY_ATTRIBUTE_V1<'a, 'b> {
 	}
 
 	/// Sets the low-word part of `Flags`.
-	pub fn set_FlagsLo(&mut self, claim: co::CLAIM_SECURITY_ATTRIBUTE) {
+	pub const fn set_FlagsLo(&mut self, claim: co::CLAIM_SECURITY_ATTRIBUTE) {
 		self.Flags = MAKEDWORD(claim.raw(), self.FlagsHi());
 	}
 
@@ -140,7 +140,7 @@ impl<'a, 'b> CLAIM_SECURITY_ATTRIBUTE_V1<'a, 'b> {
 	}
 
 	/// Sets the high-word part of `Flags`.
-	pub fn set_FlagsHi(&mut self, flags: u16) {
+	pub const fn set_FlagsHi(&mut self, flags: u16) {
 		self.Flags = MAKEDWORD(self.FlagsLo().raw(), flags);
 	}
 
@@ -766,7 +766,7 @@ impl<'a, 'b> STARTUPINFO<'a, 'b> {
 	}
 
 	/// Sets the `wShowWindow` field.
-	pub fn set_wShowWindow(&mut self, val: co::SW) {
+	pub const fn set_wShowWindow(&mut self, val: co::SW) {
 		self.wShowWindow = val.raw() as _;
 	}
 }

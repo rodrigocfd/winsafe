@@ -340,7 +340,7 @@ impl DEVMODE {
 	pub_fn_string_arr_get_set!(dmFormName, set_dmFormName);
 
 	/// Sets the `dmDisplayFlags` or the `dmNup` field.
-	pub fn set_dmDisplayFlags_dmNup(&mut self, val: DispfNup) {
+	pub const fn set_dmDisplayFlags_dmNup(&mut self, val: DispfNup) {
 		match val {
 			DispfNup::Dispf(val) => self.union1.dmDisplayFlags = val,
 			DispfNup::Nup(val) => self.union1.dnNup = val,
@@ -354,7 +354,7 @@ impl DEVMODE {
 	}
 
 	/// Sets the `dmOrientation` printer field, which is part of an union.
-	pub fn set_dmOrientation(&mut self, val: co::DMORIENT) {
+	pub const fn set_dmOrientation(&mut self, val: co::DMORIENT) {
 		self.union0.printer.dmOrientation = val;
 	}
 
@@ -365,7 +365,7 @@ impl DEVMODE {
 	}
 
 	/// Sets the `dmPaperSize` printer field, which is part of an union.
-	pub fn set_dmPaperSize(&mut self, val: co::DMPAPER) {
+	pub const fn set_dmPaperSize(&mut self, val: co::DMPAPER) {
 		self.union0.printer.dmPaperSize = val;
 	}
 
@@ -376,7 +376,7 @@ impl DEVMODE {
 	}
 
 	/// Sets the `dmPaperLength` printer field, which is part of an union.
-	pub fn set_dmPaperLength(&mut self, val: i16) {
+	pub const fn set_dmPaperLength(&mut self, val: i16) {
 		self.union0.printer.dmPaperLength = val;
 	}
 
@@ -387,7 +387,7 @@ impl DEVMODE {
 	}
 
 	/// Sets the `dmPaperWidth` printer field, which is part of an union.
-	pub fn set_dmPaperWidth(&mut self, val: i16) {
+	pub const fn set_dmPaperWidth(&mut self, val: i16) {
 		self.union0.printer.dmPaperWidth = val;
 	}
 
@@ -398,7 +398,7 @@ impl DEVMODE {
 	}
 
 	/// Sets the `dmScale` printer field, which is part of an union.
-	pub fn set_dmScale(&mut self, val: i16) {
+	pub const fn set_dmScale(&mut self, val: i16) {
 		self.union0.printer.dmScale = val;
 	}
 
@@ -409,7 +409,7 @@ impl DEVMODE {
 	}
 
 	/// Sets the `dmCopies` printer field, which is part of an union.
-	pub fn set_dmCopies(&mut self, val: i16) {
+	pub const fn set_dmCopies(&mut self, val: i16) {
 		self.union0.printer.dmCopies = val;
 	}
 
@@ -420,7 +420,7 @@ impl DEVMODE {
 	}
 
 	/// Sets the `dmDefaultSource` printer field, which is part of an union.
-	pub fn set_dmDefaultSource(&mut self, val: co::DMBIN) {
+	pub const fn set_dmDefaultSource(&mut self, val: co::DMBIN) {
 		self.union0.printer.dmDefaultSource = val;
 	}
 
@@ -431,7 +431,7 @@ impl DEVMODE {
 	}
 
 	/// Sets the `dmPrintQuality` printer field, which is part of an union.
-	pub fn set_dmPrintQuality(&mut self, val: co::DMRES) {
+	pub const fn set_dmPrintQuality(&mut self, val: co::DMRES) {
 		self.union0.printer.dmPrintQuality = val;
 	}
 
@@ -442,7 +442,7 @@ impl DEVMODE {
 	}
 
 	/// Sets the `dmPosition` display field, which is part of an union.
-	pub fn set_dmPosition(&mut self, val: POINT) {
+	pub const fn set_dmPosition(&mut self, val: POINT) {
 		self.union0.display.dmPosition = val;
 	}
 
@@ -454,7 +454,7 @@ impl DEVMODE {
 	}
 
 	/// Sets the `dmDisplayOrientation` display field, which is part of an union.
-	pub fn set_dmDisplayOrientation(&mut self, val: co::DMDO) {
+	pub const fn set_dmDisplayOrientation(&mut self, val: co::DMDO) {
 		self.union0.display.dmDisplayOrientation = val;
 	}
 
@@ -466,7 +466,7 @@ impl DEVMODE {
 	}
 
 	/// Sets the `dmDisplayFixedOutput` display field, which is part of an union.
-	pub fn set_dmDisplayFixedOutput(&mut self, val: co::DMDFO) {
+	pub const fn set_dmDisplayFixedOutput(&mut self, val: co::DMDFO) {
 		self.union0.display.dmDisplayFixedOutput = val;
 	}
 }
@@ -698,7 +698,7 @@ impl INPUT {
 	}
 
 	/// Sets the event tagged union field.
-	pub fn set_event(&mut self, event: HwKbMouse) {
+	pub const fn set_event(&mut self, event: HwKbMouse) {
 		match event {
 			HwKbMouse::Hw(hi) => {
 				self.dwType = co::INPUT::HARDWARE;

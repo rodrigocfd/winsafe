@@ -47,7 +47,7 @@ impl<'a> AM_MEDIA_TYPE<'a> {
 	///
 	/// Varies according to the `formattype`. If you set it wrong, you're likely
 	/// to cause a buffer overrun.
-	pub unsafe fn set_pbFormat<T>(&mut self, val: &'a mut T) {
+	pub const unsafe fn set_pbFormat<T>(&mut self, val: &'a mut T) {
 		self.pbFormat = val as *mut _ as _;
 		self.cbFormat = std::mem::size_of::<T>() as _;
 	}

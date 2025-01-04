@@ -39,7 +39,7 @@ impl VS_FIXEDFILEINFO {
 	}
 
 	/// Sets the `dwFileVersionMS` and `dwFileVersionLS` fields.
-	pub fn set_dwFileVersion(&mut self, val: [u16; 4]) {
+	pub const fn set_dwFileVersion(&mut self, val: [u16; 4]) {
 		self.dwFileVersionMS = MAKEDWORD(val[1], val[0]);
 		self.dwFileVersionLS = MAKEDWORD(val[3], val[2]);
 	}
@@ -52,7 +52,7 @@ impl VS_FIXEDFILEINFO {
 	}
 
 	/// Sets the `dwProductVersionMS` and `dwProductVersionLS` fields.
-	pub fn set_dwProductVersion(&mut self, val: [u16; 4]) {
+	pub const fn set_dwProductVersion(&mut self, val: [u16; 4]) {
 		self.dwProductVersionMS = MAKEDWORD(val[1], val[0]);
 		self.dwProductVersionLS = MAKEDWORD(val[3], val[2]);
 	}
@@ -64,7 +64,7 @@ impl VS_FIXEDFILEINFO {
 	}
 
 	/// Sets the `dwFileDateMS` and `dwFileDateLS` fields.
-	pub fn set_dwFileDate(&mut self, val: u64) {
+	pub const fn set_dwFileDate(&mut self, val: u64) {
 		self.dwFileDateLS = LODWORD(val);
 		self.dwFileDateMS = HIDWORD(val);
 	}
