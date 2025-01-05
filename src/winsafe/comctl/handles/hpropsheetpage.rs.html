@@ -37,9 +37,7 @@
 <a href="#36" id="36">36</a>
 <a href="#37" id="37">37</a>
 <a href="#38" id="38">38</a>
-<a href="#39" id="39">39</a>
-<a href="#40" id="40">40</a>
-<a href="#41" id="41">41</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<a href="#39" id="39">39</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::comctl::ffi;
@@ -66,17 +64,15 @@
 	<span class="doccomment">/// [`CreatePropertySheetPage`](https://learn.microsoft.com/en-us/windows/win32/api/prsht/nf-prsht-createpropertysheetpagew)
 	/// function.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">fn </span>CreatePropertySheetPage(
+	</span><span class="kw">unsafe fn </span>CreatePropertySheetPage(
 		page: <span class="kw-2">&amp;</span>PROPSHEETPAGE,
 	) -&gt; HrResult&lt;DestroyPropertySheetPageGuard&gt;
 	{
-		<span class="kw">unsafe </span>{
-			<span class="kw">match </span>ptr_to_option_handle(
-				ffi::CreatePropertySheetPageW(page <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>),
-			) {
-				<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
-				<span class="prelude-val">Some</span>(h) =&gt; <span class="prelude-val">Ok</span>(DestroyPropertySheetPageGuard::new(h)),
-			}
+		<span class="kw">match </span>ptr_to_option_handle(
+			ffi::CreatePropertySheetPageW(page <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>),
+		) {
+			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+			<span class="prelude-val">Some</span>(h) =&gt; <span class="prelude-val">Ok</span>(DestroyPropertySheetPageGuard::new(h)),
 		}
 	}
 }
