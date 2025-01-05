@@ -25,4 +25,5 @@ extern_sys! { "uxtheme";
 	IsThemeBackgroundPartiallyTransparent(HANDLE, i32, i32) -> BOOL
 	IsThemePartDefined(HANDLE, i32, i32) -> BOOL
 	OpenThemeData(HANDLE, PCSTR) -> HANDLE
+	SetWindowTheme(HANDLE, PCSTR, PCSTR) -> HRES
 }
