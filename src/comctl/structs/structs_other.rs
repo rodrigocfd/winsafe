@@ -781,7 +781,7 @@ impl NMHDR {
 	}
 
 	/// Sets the `idFrom` field, the ID of the control sending the message.
-	pub fn set_idFrom(&mut self, val: u16) {
+	pub const fn set_idFrom(&mut self, val: u16) {
 		self.idFrom = val as _
 	}
 }
@@ -1151,6 +1151,184 @@ pub struct NMVIEWCHANGE {
 pub struct PBRANGE {
 	pub iLow: i32,
 	pub iHigh: i32,
+}
+
+/// [`PROPSHEETHEADER`](https://learn.microsoft.com/en-us/windows/win32/controls/pss-propsheetheader)
+/// struct.
+#[repr(C)]
+pub struct PROPSHEETHEADER<'a, 'b, 'c, 'd, 'e, 'f> {
+	dwSize: u32,
+	pub dwFlags: co::PSH,
+	pub hwndParent: HWND,
+	pub hInstance: HINSTANCE,
+	hIcon_pszIcon: *mut std::ffi::c_void, // union
+	pszCaption: *mut u16,
+	pub nPages: u32,
+	union0: PROPSHEETHEADER_union0,
+	ppsp_phpage: *mut std::ffi::c_void, // union,
+	pub pfnCallback: Option<PFNPROPSHEETCALLBACK>,
+	hbmWatermark_pszbmWatermark: *mut std::ffi::c_void, // union
+	pub hplWatermark: HPALETTE,
+	hbmHeader_pszbmHeader: *mut std::ffi::c_void, // union
+
+	_pszIcon: PhantomData<&'a u16>,
+	_pszTitle: PhantomData<&'b mut u16>,
+	_pStartPage: PhantomData<&'c mut u16>,
+	_ppsp_phpage: PhantomData<&'d [PROPSHEETPAGE<'d, 'd, 'd, 'd, 'd, 'd, 'd>]>,
+	_pszbmWatermark: PhantomData<&'e mut u16>,
+	_pszbmHeader: PhantomData<&'f mut u16>,
+}
+
+#[repr(C)]
+union PROPSHEETHEADER_union0 {
+	nStartPage: u32,
+	pStartPage: *const u16,
+}
+
+impl_default_with_size!(PROPSHEETHEADER, dwSize, 'a, 'b, 'c, 'd, 'e, 'f);
+
+impl<'a, 'b, 'c, 'd, 'e, 'f> PROPSHEETHEADER<'a, 'b, 'c, 'd, 'e, 'f> {
+	/// Sets the `hIcon` field, which is part of an union.
+	pub fn set_hIcon(&mut self, hicon: HICON) {
+		self.hIcon_pszIcon = hicon.ptr();
+	}
+
+	/// Sets the `pszIcon` field, which is part of an union.
+	pub fn set_pszIcon(&mut self, buf: &'a mut IdStr) {
+		self.hIcon_pszIcon = match buf {
+			IdStr::Id(id) => *id as _,
+			IdStr::Str(wstr) => unsafe { wstr.as_mut_ptr() as _ },
+		};
+	}
+
+	pub_fn_string_ptr_get_set!('b, pszCaption, set_pszCaption);
+
+	/// Sets the `nStartPage` field, which is part of an union.
+	pub const fn set_nStartPage(&mut self, n: u32) {
+		self.union0.nStartPage = n;
+	}
+
+	/// Sets the `pStartPage` field, which is part of an union.
+	pub fn set_pStartPage(&mut self, buf: &'c mut WString) {
+		self.union0.pStartPage = unsafe { buf.as_mut_ptr() } as _;
+	}
+
+	/// Sets the `ppsp` field, which is part of an union.
+	pub const fn set_ppsp(&mut self, pages: &'d [PROPSHEETPAGE]) {
+		self.ppsp_phpage = pages as *const _ as _;
+	}
+
+	/// Sets the `phpage` field, which is part of an union.
+	pub const fn set_phpage(&mut self, pages: &'d [HPROPSHEETPAGE]) {
+		self.ppsp_phpage = pages as *const _ as _;
+	}
+
+	/// Sets the `hbmWatermark` field, which is part of an union.
+	pub fn set_hbmWatermark(&mut self, hbm: HBITMAP) {
+		self.hbmWatermark_pszbmWatermark = hbm.ptr();
+	}
+
+	/// Sets the `pszbmWatermark` field, which is part of an union.
+	pub fn set_pszbmWatermark(&mut self, buf: &'e mut IdStr) {
+		self.hbmWatermark_pszbmWatermark = match buf {
+			IdStr::Id(id) => *id as _,
+			IdStr::Str(wstr) => unsafe { wstr.as_mut_ptr() as _ },
+		};
+	}
+
+	/// Sets the `hbmHeader` field, which is part of an union.
+	pub fn set_hbmHeader(&mut self, hbm: HBITMAP) {
+		self.hbmHeader_pszbmHeader= hbm.ptr();
+	}
+
+	/// Sets the `pszbmHeader` field, which is part of an union.
+	pub fn set_pszbmHeader(&mut self, buf: &'f mut IdStr) {
+		self.hbmHeader_pszbmHeader = match buf {
+			IdStr::Id(id) => *id as _,
+			IdStr::Str(wstr) => unsafe { wstr.as_mut_ptr() as _ },
+		};
+	}
+}
+
+/// [`PROPSHEETPAGE`](https://learn.microsoft.com/en-us/windows/win32/controls/pss-propsheetpage)
+/// struct.
+#[repr(C)]
+pub struct PROPSHEETPAGE<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
+	dwSize: u32,
+	pub dwFlags: co::PSP,
+	pub hInstance: HINSTANCE,
+	pszTemplate_pResource: *mut std::ffi::c_void, // union
+	hIcon_pszIcon: *mut std::ffi::c_void, // union
+	pszTitle: *mut u16,
+	pub pfnDlgProc: Option<DLGPROC>,
+	pub lParam: isize,
+	pub pfnCallback: Option<LPFNPSPCALLBACK>,
+	pcRefParent: *mut u32,
+	pszHeaderTitle: *mut u16,
+	pszHeaderSubTitle: *mut u16,
+	pub hActCtx: *mut std::ffi::c_void,
+	hbmHeader_pszbmHeader: *mut std::ffi::c_void, // union
+
+	_pszTemplate: PhantomData<&'a mut u16>,
+	_pszIcon: PhantomData<&'b mut u16>,
+	_pszTitle: PhantomData<&'c mut u16>,
+	_pcRefParent: PhantomData<&'d mut u32>,
+	_pszHeaderTitle: PhantomData<&'e mut u16>,
+	_pszHeaderSubTitle: PhantomData<&'f mut u16>,
+	_pszbmHeader: PhantomData<&'g u16>,
+}
+
+impl_default_with_size!(PROPSHEETPAGE, dwSize, 'a, 'b, 'c, 'd, 'e, 'f, 'g);
+
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> PROPSHEETPAGE<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
+	/// Sets the `pszTemplate` field, which is part of an union.
+	pub fn set_pszTemplate(&mut self, buf: &'a mut IdStr) {
+		self.pszTemplate_pResource = match buf {
+			IdStr::Id(id) => *id as _,
+			IdStr::Str(wstr) => unsafe { wstr.as_mut_ptr() as _ },
+		};
+	}
+
+	/// Sets the `pResource` field, which is part of an union.
+	pub const fn set_pResource(&mut self, r: &DLGTEMPLATE) {
+		self.pszTemplate_pResource = r as *const _ as _;
+	}
+
+	/// Sets the `hIcon` field, which is part of an union.
+	pub fn set_hIcon(&mut self, hicon: HICON) {
+		self.hIcon_pszIcon = hicon.ptr();
+	}
+
+	/// Sets the `pszIcon` field, which is part of an union.
+	pub fn set_pszIcon(&mut self, buf: &'b mut IdStr) {
+		self.hIcon_pszIcon = match buf {
+			IdStr::Id(id) => *id as _,
+			IdStr::Str(wstr) => unsafe { wstr.as_mut_ptr() as _ },
+		};
+	}
+
+	pub_fn_string_ptr_get_set!('c, pszTitle, set_pszTitle);
+
+	/// Sets the `pcRefParent` field.
+	pub const fn set_pcRefParent(&mut self, ref_count: &'d mut u32) {
+		self.pcRefParent = ref_count;
+	}
+
+	pub_fn_string_ptr_get_set!('e, pszHeaderTitle, set_pszHeaderTitle);
+	pub_fn_string_ptr_get_set!('f, pszHeaderSubTitle, set_pszHeaderSubTitle);
+
+	/// Sets the `hbmHeader` field, which is part of an union.
+	pub fn set_hbmHeader(&mut self, hbm: HBITMAP) {
+		self.hbmHeader_pszbmHeader = hbm.ptr();
+	}
+
+	/// Sets the `pszbmHeader` field, which is part of an union.
+	pub fn set_pszbmHeader(&mut self, buf: &'g mut IdStr) {
+		self.hbmHeader_pszbmHeader = match buf {
+			IdStr::Id(id) => *id as _,
+			IdStr::Str(wstr) => unsafe { wstr.as_mut_ptr() as _ },
+		};
+	}
 }
 
 /// [`TBADDBITMAP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbaddbitmap)

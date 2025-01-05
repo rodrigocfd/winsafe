@@ -16,7 +16,7 @@ pub fn InitCommonControls() {
 /// function.
 pub fn InitCommonControlsEx(icce: &INITCOMMONCONTROLSEX) -> SysResult<()> {
 	bool_to_sysresult(
-		unsafe { ffi::InitCommonControlsEx(icce as *const _ as  _) }
+		unsafe { ffi::InitCommonControlsEx(icce as *const _ as  _) },
 	)
 }
 
@@ -24,6 +24,16 @@ pub fn InitCommonControlsEx(icce: &INITCOMMONCONTROLSEX) -> SysResult<()> {
 /// function.
 pub fn InitMUILanguage(ui_lang: LANGID) {
 	unsafe { ffi::InitMUILanguage(ui_lang.into()) }
+}
+
+/// [`PropertySheet`](https://learn.microsoft.com/en-us/windows/win32/api/prsht/nf-prsht-propertysheetw)
+/// function.
+pub unsafe fn PropertySheet(header: &PROPSHEETHEADER) -> SysResult<isize> {
+	let ret = ffi::PropertySheetW(header as *const _ as _);
+	match GetLastError() {
+		co::ERROR::SUCCESS => Ok(ret),
+		err => Err(err),
+	}
 }
 
 /// [`TaskDialogIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialogindirect)

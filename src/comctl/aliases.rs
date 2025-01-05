@@ -2,6 +2,15 @@ use crate::co;
 use crate::decl::*;
 
 /// Type alias to
+/// [`LPFNPSPCALLBACK`](https://learn.microsoft.com/en-us/windows/win32/api/prsht/nc-prsht-lpfnpspcallbackw)
+/// callback function.
+pub type LPFNPSPCALLBACK =
+	extern "system" fn(
+		hwnd: HWND,
+		uMsg: u32,
+	) -> u32;
+
+/// Type alias to
 /// [`PFNLVCOMPARE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-sortitems)
 /// callback function.
 pub type PFNLVCOMPARE =
@@ -19,6 +28,16 @@ pub type PFNLVGROUPCOMPARE =
 		groupId1: i32,
 		groupId2: i32,
 		lpRefData: isize,
+	) -> i32;
+
+/// Type alias to
+/// [`PFNPROPSHEETCALLBACK`](https://learn.microsoft.com/en-us/windows/win32/api/prsht/nc-prsht-pfnpropsheetcallback)
+/// callback function.
+pub type PFNPROPSHEETCALLBACK =
+	extern "system" fn(
+		hwnd: HWND,
+		uMsg: u32,
+		lParam: isize,
 	) -> i32;
 
 /// Type alias to

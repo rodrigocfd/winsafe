@@ -1,7 +1,9 @@
 use crate::kernel::ffi_types::*;
 
 extern_sys! { "comctl32";
+	CreatePropertySheetPageW(PCVOID) -> HANDLE
 	DefSubclassProc(HANDLE, u32, usize, isize) -> isize
+	DestroyPropertySheetPage(HANDLE) -> BOOL
 	ImageList_Add(HANDLE, HANDLE, HANDLE) -> i32
 	ImageList_AddMasked(HANDLE, HANDLE, u32) -> i32
 	ImageList_BeginDrag(HANDLE, i32, i32, i32) -> BOOL
@@ -26,6 +28,7 @@ extern_sys! { "comctl32";
 	InitCommonControlsEx(PVOID) -> BOOL
 	InitializeFlatSB(HANDLE) -> HRES
 	InitMUILanguage(u16)
+	PropertySheetW(PCVOID) -> isize
 	RemoveWindowSubclass(HANDLE, PFUNC, usize) -> BOOL
 	SetWindowSubclass(HANDLE, PFUNC, usize, usize) -> BOOL
 	TaskDialog(HANDLE, HANDLE, PCSTR, PCSTR, PCSTR, i32, PCSTR, *mut i32) -> HRES

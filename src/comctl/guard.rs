@@ -4,6 +4,14 @@ use crate::comctl::ffi;
 use crate::decl::*;
 use crate::prelude::*;
 
+handle_guard! { DestroyPropertySheetPageGuard: HPROPSHEETPAGE;
+	ffi::DestroyPropertySheetPage;
+	/// RAII implementation for [`HPROPSHEETPAGE`](crate::HPROPSHEETPAGE) which
+	/// automatically calls
+	/// [`HPROPSHEETPAGE`](https://learn.microsoft.com/en-us/windows/win32/api/prsht/nf-prsht-destroypropertysheetpage)
+	/// when the object goes out of scope.
+}
+
 handle_guard! { ImageListDestroyGuard: HIMAGELIST;
 	ffi::ImageList_Destroy;
 	/// RAII implementation for [`HIMAGELIST`](crate::HIMAGELIST) which

@@ -1,8 +1,10 @@
 mod himagelist;
+mod hpropsheetpage;
 mod hwnd;
 
 pub mod decl {
 	pub use super::himagelist::HIMAGELIST;
+	pub use super::hpropsheetpage::HPROPSHEETPAGE;
 
 	impl_handle! { HTREEITEM;
 		/// Handle to a
@@ -12,5 +14,6 @@ pub mod decl {
 
 pub mod traits {
 	pub use super::himagelist::comctl_Himagelist;
+	pub use super::hpropsheetpage::comctl_Hpropsheetpage;
 	pub use super::hwnd::comctl_Hwnd;
 }
