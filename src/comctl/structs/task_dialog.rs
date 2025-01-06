@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
+use crate::comctl::proc;
 use crate::decl::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
@@ -47,8 +48,7 @@ pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 
 	pub more_info_btn_collapsed: Option<&'n str>,
 	pub footer_icon: IconId<'o>,
 	pub footer_text: Option<&'p str>,
-	pub callback: Option<PFTASKDIALOGCALLBACK>,
-	pub callback_data: usize,
+	pub callback: Option<Box<dyn Fn(&HWND, co::TDN, usize, isize) -> co::HRESULT>>,
 	pub width: u32,
 }
 
@@ -155,8 +155,8 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p>
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.pszFooter = w_footer.as_ptr();
 
-		raw.pfCallback = self.callback;
-		raw.lpCallbackData = self.callback_data;
+		raw.pfCallback = Some(proc::func_task_dialog_callback);
+		raw.lpCallbackData = self as *const _ as _; // object will exist until TaskDialogIndirect() returns
 		raw.cxWidth = self.width;
 
 		TASKDIALOGCONFIG_buf { raw, w_title, w_instruc, w_content,

@@ -92,11 +92,33 @@ pub unsafe fn PropertySheet(header: &PROPSHEETHEADER) -> SysResult<isize> {
 /// }
 /// # w::HrResult::Ok(())
 /// ```
+///
+/// Callback handling:
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*, co};
+///
+/// w::TaskDialogIndirect(&w::TASKDIALOGCONFIG {
+///     common_buttons: co::TDCBF::OK,
+///     window_title: Some("Title"),
+///     content: Some("Content"),
+///     callback: Some(Box::new(|hwnd, tdn, wp, lp| {
+///         match tdn {
+///             co::TDN::CREATED => println!("created"),
+///             _ => {},
+///         }
+///         co::HRESULT::S_OK
+///     })),
+///     ..Default::default()
+/// })?;
+/// # w::HrResult::Ok(())
+///
+/// ```
 pub fn TaskDialogIndirect(
 	config: &TASKDIALOGCONFIG,
 ) -> HrResult<(co::DLGID, u16, bool)>
 {
-	let buf = config.to_raw();
+	let tdc_buf = config.to_raw();
 	let mut pn_button = i32::default();
 	let mut pn_radio_button = i32::default();
 	let mut pf_bool: BOOL = 0;
@@ -104,7 +126,7 @@ pub fn TaskDialogIndirect(
 	ok_to_hrresult(
 		unsafe {
 			ffi::TaskDialogIndirect(
-				&buf.raw as *const _ as _,
+				&tdc_buf.raw as *const _ as _,
 				&mut pn_button,
 				&mut pn_radio_button,
 				&mut pf_bool,

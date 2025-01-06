@@ -4,6 +4,7 @@ mod aliases;
 mod enums;
 mod funcs;
 mod handles;
+mod proc;
 mod structs;
 
 pub(in crate::comctl) mod ffi;

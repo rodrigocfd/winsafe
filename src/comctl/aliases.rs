@@ -59,7 +59,7 @@ pub type PFTASKDIALOGCALLBACK =
 		msg: co::TDN,
 		wParam: usize,
 		lParam: isize,
-		lpRefData: usize,
+		lpRefData: isize,
 	) -> co::HRESULT;
 
 /// Type alias to
