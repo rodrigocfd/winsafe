@@ -156,7 +156,7 @@
 	</span><span class="kw">fn </span>DeleteForm(<span class="kw-2">&amp;</span><span class="self">self</span>, form_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;()&gt; {
 		bool_to_sysresult(
 			<span class="kw">unsafe </span>{
-				ffi::DeleteForm(
+				ffi::DeleteFormW(
 					<span class="self">self</span>.ptr(),
 					WString::from_str(form_name).as_mut_ptr(),
 				)
@@ -175,7 +175,7 @@
 	</span><span class="kw">fn </span>DeletePrinterData(<span class="kw-2">&amp;</span><span class="self">self</span>, value_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;()&gt; {
 		bool_to_sysresult(
 			<span class="kw">unsafe </span>{
-				ffi::DeletePrinterData(
+				ffi::DeletePrinterDataW(
 					<span class="self">self</span>.ptr(),
 					WString::from_str(value_name).as_mut_ptr(),
 				)
@@ -192,7 +192,7 @@
 	{
 		bool_to_sysresult(
 			<span class="kw">unsafe </span>{
-				ffi::DeletePrinterDataEx(
+				ffi::DeletePrinterDataExW(
 					<span class="self">self</span>.ptr(),
 					WString::from_str(key_name).as_ptr(),
 					WString::from_str(value_name).as_ptr(),
@@ -206,7 +206,7 @@
 	</span><span class="kw">fn </span>DeletePrinterKey(<span class="kw-2">&amp;</span><span class="self">self</span>, key_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;()&gt; {
 		bool_to_sysresult(
 			<span class="kw">unsafe </span>{
-				ffi::DeletePrinterKey(
+				ffi::DeletePrinterKeyW(
 					<span class="self">self</span>.ptr(),
 					WString::from_str(key_name).as_ptr(),
 				)
@@ -238,7 +238,7 @@
 	/// function.
 	</span><span class="kw">fn </span>ResetPrinter(<span class="kw-2">&amp;</span><span class="self">self</span>, default: <span class="kw-2">&amp;</span>PRINTER_DEFAULTS) -&gt; SysResult&lt;()&gt; {
 		bool_to_sysresult(
-			<span class="kw">unsafe </span>{ ffi::ResetPrinter(<span class="self">self</span>.ptr(), default <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>) },
+			<span class="kw">unsafe </span>{ ffi::ResetPrinterW(<span class="self">self</span>.ptr(), default <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>) },
 		)
 	}
 }
