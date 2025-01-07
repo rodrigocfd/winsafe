@@ -93,7 +93,6 @@
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
-<span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">struct </span>Obj { <span class="comment">// actual fields of DlgControl
@@ -168,9 +167,10 @@
 			<span class="prelude-val">Ok</span>(WmRet::NotHandled)
 		});
 
-		<span class="self">self</span>.base().before_user_on().wm(co::WM::NCPAINT, <span class="kw">move </span>|hwnd, p| {
-			paint_control_borders(hwnd, <span class="kw">unsafe </span>{ wm::NcPaint::from_generic_wm(p) })<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(WmRet::HandledOk)
+		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
+		<span class="self">self</span>.base().before_user_on().wm_nc_paint(<span class="kw">move </span>|p| {
+			paint_control_borders(self2.base().hwnd(), p)<span class="question-mark">?</span>;
+			<span class="prelude-val">Ok</span>(())
 		});
 	}
 }

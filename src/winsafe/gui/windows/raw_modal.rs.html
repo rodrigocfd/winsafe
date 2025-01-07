@@ -377,9 +377,9 @@
 
 	<span class="kw">fn </span>default_message_handlers(<span class="kw-2">&amp;</span><span class="self">self</span>) {
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-		<span class="self">self</span>.base().before_user_on().wm(co::WM::SETFOCUS, <span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
+		<span class="self">self</span>.base().before_user_on().wm_set_focus(<span class="kw">move </span>|<span class="kw">_</span>| {
 			self2.<span class="number">0</span>.raw_base.delegate_focus_to_first_child();
-			<span class="prelude-val">Ok</span>(WmRet::HandledOk)
+			<span class="prelude-val">Ok</span>(())
 		});
 
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();

@@ -192,16 +192,13 @@
 <a href="#191" id="191">191</a>
 <a href="#192" id="192">192</a>
 <a href="#193" id="193">193</a>
-<a href="#194" id="194">194</a>
-<a href="#195" id="195">195</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomPinned;
+<a href="#194" id="194">194</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
 <span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
-<span class="kw">use </span><span class="kw">crate</span>::msg::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">struct </span>Obj { <span class="comment">// actual fields of RawControl
 	</span>raw_base: RawBase,
@@ -283,9 +280,10 @@
 			<span class="prelude-val">Ok</span>(WmRet::HandledOk)
 		});
 
-		<span class="self">self</span>.base().before_user_on().wm(co::WM::NCPAINT, <span class="kw">move </span>|hwnd, p| {
-			paint_control_borders(hwnd, <span class="kw">unsafe </span>{ wm::NcPaint::from_generic_wm(p) })<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(WmRet::HandledOk)
+		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
+		<span class="self">self</span>.base().before_user_on().wm_nc_paint(<span class="kw">move </span>|p| {
+			paint_control_borders(self2.base().hwnd(), p)<span class="question-mark">?</span>;
+			<span class="prelude-val">Ok</span>(())
 		});
 	}
 }

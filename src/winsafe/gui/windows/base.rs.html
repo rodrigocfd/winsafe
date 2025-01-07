@@ -270,7 +270,9 @@
 <a href="#269" id="269">269</a>
 <a href="#270" id="270">270</a>
 <a href="#271" id="271">271</a>
-<a href="#272" id="272">272</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::ptr::NonNull;
+<a href="#272" id="272">272</a>
+<a href="#273" id="273">273</a>
+<a href="#274" id="274">274</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::ptr::NonNull;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -290,9 +292,9 @@
 	hwnd: HWND,
 	is_dialog: bool,
 	parent_ptr: <span class="prelude-ty">Option</span>&lt;NonNull&lt;<span class="self">Self</span>&gt;&gt;, <span class="comment">// used only during creation stuff
-	</span>before_user_events: WindowEventsPriv, <span class="comment">// inserted internally to automate tasks: all will be executed before user events
+	</span>before_user_events: WindowEvents, <span class="comment">// inserted internally to automate tasks: all will be executed before user events
 	</span>user_events: WindowEvents, <span class="comment">// ordinary window events, inserted by user: only last added is executed (overwrite previous)
-	</span>after_user_events: WindowEventsPriv, <span class="comment">// all will be executed after user events
+	</span>after_user_events: WindowEvents, <span class="comment">// all will be executed after user events
 	</span>layout_arranger: LayoutArranger,
 }
 
@@ -315,9 +317,9 @@
 			hwnd: HWND::NULL,
 			is_dialog,
 			parent_ptr: parent.map(|parent| NonNull::from(parent.as_ref())),
-			before_user_events: WindowEventsPriv::new(is_dialog),
+			before_user_events: WindowEvents::new(is_dialog),
 			user_events: WindowEvents::new(is_dialog),
-			after_user_events: WindowEventsPriv::new(is_dialog),
+			after_user_events: WindowEvents::new(is_dialog),
 			layout_arranger: LayoutArranger::new(),
 		};
 		new_self.default_message_handlers();
@@ -356,7 +358,7 @@
 
 	<span class="doccomment">/// Internal before-user events are always executed.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>before_user_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsPriv {
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>before_user_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEvents {
 		<span class="kw">if </span><span class="self">self</span>.hwnd != HWND::NULL {
 			<span class="macro">panic!</span>(<span class="string">"Cannot add before-user event after window creation."</span>);
 		}
@@ -374,14 +376,15 @@
 
 	<span class="doccomment">/// Internal after-user events are always executed.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>after_user_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEventsPriv {
+	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>after_user_on(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>WindowEvents {
 		<span class="kw">if </span><span class="self">self</span>.hwnd != HWND::NULL {
 			<span class="macro">panic!</span>(<span class="string">"Cannot add after-user event after window creation."</span>);
 		}
 		<span class="kw-2">&amp;</span><span class="self">self</span>.after_user_events
 	}
 
-	<span class="doccomment">/// Processes all before-user messages added internally by the library.
+	<span class="doccomment">/// Processes all before-user messages added internally by the library. The
+	/// return values are discarded.
 	///
 	/// Returns `true` if at least one message was processed.
 	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>process_before_user_messages(<span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -399,7 +402,8 @@
 		<span class="self">self</span>.user_events.process_last_message(<span class="self">self</span>.hwnd(), wm_any)
 	}
 
-	<span class="doccomment">/// Processes all after-user messages added internally by the library.
+	<span class="doccomment">/// Processes all after-user messages added internally by the library. The
+	/// return values are discarded.
 	///
 	/// Returns `true` if at least one message was processed.
 	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>process_after_user_messages(<span class="kw-2">&amp;</span><span class="self">self</span>,
@@ -482,12 +486,12 @@
 		});
 
 		<span class="kw">let </span>layout_arranger = <span class="self">self</span>.layout_arranger.clone();
-		<span class="self">self</span>.before_user_events.wm(co::WM::SIZE, <span class="kw">move </span>|<span class="kw">_</span>, p| {
-			layout_arranger.rearrange(<span class="kw">unsafe </span>{ wm::Size::from_generic_wm(p) })<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(WmRet::HandledOk)
+		<span class="self">self</span>.before_user_events.wm_size(<span class="kw">move </span>|p| {
+			layout_arranger.rearrange(p)<span class="question-mark">?</span>;
+			<span class="prelude-val">Ok</span>(())
 		});
 
-		<span class="self">self</span>.before_user_events.wm(<span class="self">Self</span>::WM_UI_THREAD, |<span class="kw">_</span>, p| {
+		<span class="self">self</span>.before_user_events.wm(<span class="self">Self</span>::WM_UI_THREAD, |p| {
 			<span class="kw">if unsafe </span>{ co::WM::from_raw(p.wparam <span class="kw">as _</span>) } == <span class="self">Self</span>::WM_UI_THREAD { <span class="comment">// additional safety check
 				</span><span class="kw">let </span>ptr_pack = p.lparam <span class="kw">as </span><span class="kw-2">*mut </span>ThreadPack; <span class="comment">// retrieve pointer
 				</span><span class="kw">let </span>pack = <span class="kw">unsafe </span>{ Box::from_raw(ptr_pack) };

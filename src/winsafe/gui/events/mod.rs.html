@@ -41,9 +41,7 @@
 <a href="#40" id="40">40</a>
 <a href="#41" id="41">41</a>
 <a href="#42" id="42">42</a>
-<a href="#43" id="43">43</a>
-<a href="#44" id="44">44</a>
-<a href="#45" id="45">45</a></pre></div><pre class="rust"><code><span class="doccomment">//! Events exposed by windows and controls, which allow the handling of native
+<a href="#43" id="43">43</a></pre></div><pre class="rust"><code><span class="doccomment">//! Events exposed by windows and controls, which allow the handling of native
 //! window messages.
 
 </span><span class="kw">mod </span>base_ctrl_events_proxy;
@@ -63,13 +61,11 @@
 <span class="kw">mod </span>trackbar_events;
 <span class="kw">mod </span>tree_view_events;
 <span class="kw">mod </span>up_down_events;
-<span class="kw">mod </span>window_events_priv;
 <span class="kw">mod </span>window_events;
 
 <span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">mod </span>privs {
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">use </span><span class="kw">super</span>::base_ctrl_events_proxy::BaseCtrlEventsProxy;
 	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">use </span><span class="kw">super</span>::func_store::FuncStore;
-	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">use </span><span class="kw">super</span>::window_events_priv::WindowEventsPriv;
 }
 
 <span class="kw">pub use </span>button_events::ButtonEvents;

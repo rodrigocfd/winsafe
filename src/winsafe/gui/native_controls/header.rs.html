@@ -476,10 +476,10 @@
 		);
 
 		<span class="kw">let </span>self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm(co::WM::INITDIALOG, <span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
+		parent.as_ref().before_user_on().wm_init_dialog(<span class="kw">move </span>|<span class="kw">_</span>| {
 			self2.create(OptsReszLv::Dlg(resize_behavior))<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(WmRet::NotHandled)
-		});
+			<span class="prelude-val">Ok</span>(<span class="bool-val">false</span>) <span class="comment">// return value is discarded
+		</span>});
 
 		new_self.default_message_handlers(parent.as_ref());
 		new_self
@@ -552,7 +552,7 @@
 
 	<span class="kw">fn </span>default_message_handlers(<span class="kw-2">&amp;</span><span class="self">self</span>, parent: <span class="kw-2">&amp;</span>Base) {
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
-		parent.after_user_on().wm(co::WM::DESTROY, <span class="kw">move </span>|<span class="kw">_</span>, <span class="kw">_</span>| {
+		parent.after_user_on().wm_destroy(<span class="kw">move </span>|| {
 			[co::HDSIL::NORMAL, co::HDSIL::STATE]
 				.iter()
 				.for_each(|hdsil| {
@@ -560,7 +560,7 @@
 						</span><span class="kw">let _ </span>= <span class="kw">unsafe </span>{ ImageListDestroyGuard::new(hil.raw_copy()) };
 					});
 				});
-			<span class="prelude-val">Ok</span>(WmRet::NotHandled)
+			<span class="prelude-val">Ok</span>(())
 		});
 	}
 

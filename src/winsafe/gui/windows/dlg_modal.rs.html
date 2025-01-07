@@ -70,13 +70,15 @@
 <a href="#69" id="69">69</a>
 <a href="#70" id="70">70</a>
 <a href="#71" id="71">71</a>
-<a href="#72" id="72">72</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomPinned;
+<a href="#72" id="72">72</a>
+<a href="#73" id="73">73</a>
+<a href="#74" id="74">74</a></pre></div><pre class="rust"><code><span class="kw">use </span>std::marker::PhantomPinned;
 <span class="kw">use </span>std::pin::Pin;
 <span class="kw">use </span>std::sync::Arc;
 
 <span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
+<span class="kw">use </span><span class="kw">crate</span>::gui::privs::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 
 <span class="kw">struct </span>Obj { <span class="comment">// actual fields of DlgModal
@@ -120,7 +122,9 @@
 	}
 
 	<span class="kw">fn </span>default_message_handlers(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-		<span class="self">self</span>.base().before_user_on().wm(co::WM::INITDIALOG, <span class="kw">move </span>|hwnd, <span class="kw">_</span>| {
+		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
+		<span class="self">self</span>.base().before_user_on().wm_init_dialog(<span class="kw">move </span>|<span class="kw">_</span>| {
+			<span class="kw">let </span>hwnd = self2.base().hwnd();
 			<span class="kw">let </span>rc = hwnd.GetWindowRect()<span class="question-mark">?</span>;
 			<span class="kw">let </span>rc_parent = hwnd.GetParent()<span class="question-mark">?</span>.GetWindowRect()<span class="question-mark">?</span>;
 			hwnd.SetWindowPos( <span class="comment">// center modal on parent
@@ -132,8 +136,8 @@
 				SIZE::default(),
 				co::SWP::NOSIZE | co::SWP::NOZORDER,
 			)<span class="question-mark">?</span>;
-			<span class="prelude-val">Ok</span>(WmRet::NotHandled)
-		});
+			<span class="prelude-val">Ok</span>(<span class="bool-val">false</span>) <span class="comment">// return value is discarded
+		</span>});
 
 		<span class="kw">let </span>self2 = <span class="self">self</span>.clone();
 		<span class="self">self</span>.base().on().wm_close(<span class="kw">move </span>|| { <span class="comment">// user clicked the X button
