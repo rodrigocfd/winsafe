@@ -18,9 +18,9 @@ pub(in crate::gui) struct Base {
 	hwnd: HWND,
 	is_dialog: bool,
 	parent_ptr: Option<NonNull<Self>>, // used only during creation stuff
-	before_user_events: WindowEventsPriv, // inserted internally to automate tasks: all will be executed before user events
+	before_user_events: WindowEvents, // inserted internally to automate tasks: all will be executed before user events
 	user_events: WindowEvents, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
-	after_user_events: WindowEventsPriv, // all will be executed after user events
+	after_user_events: WindowEvents, // all will be executed after user events
 	layout_arranger: LayoutArranger,
 }
 
@@ -43,9 +43,9 @@ impl Base {
 			hwnd: HWND::NULL,
 			is_dialog,
 			parent_ptr: parent.map(|parent| NonNull::from(parent.as_ref())),
-			before_user_events: WindowEventsPriv::new(is_dialog),
+			before_user_events: WindowEvents::new(is_dialog),
 			user_events: WindowEvents::new(is_dialog),
-			after_user_events: WindowEventsPriv::new(is_dialog),
+			after_user_events: WindowEvents::new(is_dialog),
 			layout_arranger: LayoutArranger::new(),
 		};
 		new_self.default_message_handlers();
@@ -84,7 +84,7 @@ impl Base {
 
 	/// Internal before-user events are always executed.
 	#[must_use]
-	pub(in crate::gui) fn before_user_on(&self) -> &WindowEventsPriv {
+	pub(in crate::gui) fn before_user_on(&self) -> &WindowEvents {
 		if self.hwnd != HWND::NULL {
 			panic!("Cannot add before-user event after window creation.");
 		}
@@ -102,14 +102,15 @@ impl Base {
 
 	/// Internal after-user events are always executed.
 	#[must_use]
-	pub(in crate::gui) fn after_user_on(&self) -> &WindowEventsPriv {
+	pub(in crate::gui) fn after_user_on(&self) -> &WindowEvents {
 		if self.hwnd != HWND::NULL {
 			panic!("Cannot add after-user event after window creation.");
 		}
 		&self.after_user_events
 	}
 
-	/// Processes all before-user messages added internally by the library.
+	/// Processes all before-user messages added internally by the library. The
+	/// return values are discarded.
 	///
 	/// Returns `true` if at least one message was processed.
 	pub(in crate::gui) fn process_before_user_messages(&self,
@@ -127,7 +128,8 @@ impl Base {
 		self.user_events.process_last_message(self.hwnd(), wm_any)
 	}
 
-	/// Processes all after-user messages added internally by the library.
+	/// Processes all after-user messages added internally by the library. The
+	/// return values are discarded.
 	///
 	/// Returns `true` if at least one message was processed.
 	pub(in crate::gui) fn process_after_user_messages(&self,
@@ -210,12 +212,12 @@ impl Base {
 		});
 
 		let layout_arranger = self.layout_arranger.clone();
-		self.before_user_events.wm(co::WM::SIZE, move |_, p| {
-			layout_arranger.rearrange(unsafe { wm::Size::from_generic_wm(p) })?;
-			Ok(WmRet::HandledOk)
+		self.before_user_events.wm_size(move |p| {
+			layout_arranger.rearrange(p)?;
+			Ok(())
 		});
 
-		self.before_user_events.wm(Self::WM_UI_THREAD, |_, p| {
+		self.before_user_events.wm(Self::WM_UI_THREAD, |p| {
 			if unsafe { co::WM::from_raw(p.wparam as _) } == Self::WM_UI_THREAD { // additional safety check
 				let ptr_pack = p.lparam as *mut ThreadPack; // retrieve pointer
 				let pack = unsafe { Box::from_raw(ptr_pack) };

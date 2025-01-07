@@ -134,9 +134,9 @@ impl Header {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm(co::WM::INITDIALOG, move |_, _| {
+		parent.as_ref().before_user_on().wm_init_dialog(move |_| {
 			self2.create(OptsReszLv::Dlg(resize_behavior))?;
-			Ok(WmRet::NotHandled)
+			Ok(false) // return value is discarded
 		});
 
 		new_self.default_message_handlers(parent.as_ref());
@@ -210,7 +210,7 @@ impl Header {
 
 	fn default_message_handlers(&self, parent: &Base) {
 		let self2 = self.clone();
-		parent.after_user_on().wm(co::WM::DESTROY, move |_, _| {
+		parent.after_user_on().wm_destroy(move || {
 			[co::HDSIL::NORMAL, co::HDSIL::STATE]
 				.iter()
 				.for_each(|hdsil| {
@@ -218,7 +218,7 @@ impl Header {
 						let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) };
 					});
 				});
-			Ok(WmRet::NotHandled)
+			Ok(())
 		});
 	}
 

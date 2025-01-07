@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, privs::*};
+use crate::gui::privs::*;
 use crate::prelude::*;
 
 struct Obj { // actual fields of DlgModal
@@ -48,7 +48,9 @@ impl DlgModal {
 	}
 
 	fn default_message_handlers(&self) {
-		self.base().before_user_on().wm(co::WM::INITDIALOG, move |hwnd, _| {
+		let self2 = self.clone();
+		self.base().before_user_on().wm_init_dialog(move |_| {
+			let hwnd = self2.base().hwnd();
 			let rc = hwnd.GetWindowRect()?;
 			let rc_parent = hwnd.GetParent()?.GetWindowRect()?;
 			hwnd.SetWindowPos( // center modal on parent
@@ -60,7 +62,7 @@ impl DlgModal {
 				SIZE::default(),
 				co::SWP::NOSIZE | co::SWP::NOZORDER,
 			)?;
-			Ok(WmRet::NotHandled)
+			Ok(false) // return value is discarded
 		});
 
 		let self2 = self.clone();

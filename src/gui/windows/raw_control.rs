@@ -5,8 +5,6 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::gui::{*, privs::*};
-use crate::msg::*;
-use crate::prelude::*;
 
 struct Obj { // actual fields of RawControl
 	raw_base: RawBase,
@@ -88,9 +86,10 @@ impl RawControl {
 			Ok(WmRet::HandledOk)
 		});
 
-		self.base().before_user_on().wm(co::WM::NCPAINT, move |hwnd, p| {
-			paint_control_borders(hwnd, unsafe { wm::NcPaint::from_generic_wm(p) })?;
-			Ok(WmRet::HandledOk)
+		let self2 = self.clone();
+		self.base().before_user_on().wm_nc_paint(move |p| {
+			paint_control_borders(self2.base().hwnd(), p)?;
+			Ok(())
 		});
 	}
 }

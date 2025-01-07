@@ -1,3 +1,4 @@
+use std::cell::UnsafeCell;
 use std::rc::Rc;
 
 use crate::co;
@@ -12,23 +13,132 @@ use crate::prelude::*;
 /// You cannot directly instantiate this object, it is created internally by the
 /// window.
 pub struct WindowEvents {
-	ev_priv: WindowEventsPriv,
+	is_dialog: bool,
+	msgs: UnsafeCell<
+		FuncStore< // ordinary WM messages
+			co::WM,
+			Box<dyn Fn(WndMsg) -> AnyResult<WmRet>>,
+		>,
+	>,
+	inis: UnsafeCell<
+		FuncStore< // WM_CREATE and WM_INITDIALOG messages
+			co::WM,
+			Box<dyn Fn(&HWND, WndMsg) -> AnyResult<WmRet>>,
+		>,
+	>,
+	cmds: UnsafeCell<
+		FuncStore< // WM_COMMAND notifications
+			(u16, co::CMD), // control ID, notif code
+			Box<dyn Fn() -> AnyResult<WmRet>>,
+		>,
+	>,
+	nfys: UnsafeCell<
+		FuncStore< // WM_NOTIFY notifications
+			(u16, NmhdrCode), // idFrom, code
+			Box<dyn Fn(wm::Notify) -> AnyResult<WmRet>>,
+		>,
+	>,
+	tmrs: UnsafeCell<
+		FuncStore< // WM_TIMER messages
+			usize, // timer ID
+			Box<dyn Fn() -> AnyResult<()>>, // return value is never meaningful
+		>,
+	>,
 }
 
 impl WindowEvents {
 	#[must_use]
 	pub(in crate::gui) const fn new(is_dialog: bool) -> Self {
 		Self {
-			ev_priv: WindowEventsPriv::new(is_dialog),
+			is_dialog,
+			msgs: UnsafeCell::new(FuncStore::new()),
+			inis: UnsafeCell::new(FuncStore::new()),
+			cmds: UnsafeCell::new(FuncStore::new()),
+			nfys: UnsafeCell::new(FuncStore::new()),
+			tmrs: UnsafeCell::new(FuncStore::new()),
 		}
 	}
 
 	pub(in crate::gui) fn is_empty(&self) -> bool {
-		self.ev_priv.is_empty()
+		unsafe {
+			{ &*self.msgs.get() }.is_empty()
+				&& { &*self.inis.get() }.is_empty()
+				&& { &*self.cmds.get() }.is_empty()
+				&& { &*self.nfys.get() }.is_empty()
+				&& { &*self.tmrs.get() }.is_empty()
+		}
 	}
 
 	pub(in crate::gui) fn clear_events(&self) {
-		self.ev_priv.clear_events()
+		unsafe {
+			{ &mut *self.tmrs.get() }.clear();
+			{ &mut *self.nfys.get() }.clear();
+			{ &mut *self.cmds.get() }.clear();
+			{ &mut *self.inis.get() }.clear();
+			{ &mut *self.msgs.get() }.clear();
+		}
+	}
+
+	/// Searches for all functions for the given message, and runs all of them,
+	/// discarding the results.
+	///
+	/// Returns `true` if at least one message was processed.
+	pub(in crate::gui) fn process_all_messages(&self,
+		hwnd: &HWND,
+		wm_any: WndMsg,
+	) -> AnyResult<bool>
+	{
+		let mut at_least_one = false;
+
+		if wm_any.msg_id == co::WM::CREATE || wm_any.msg_id == co::WM::INITDIALOG {
+			let inis = unsafe { &*self.inis.get() };
+			for func in inis.filter(wm_any.msg_id) {
+				match func(hwnd, wm_any)? {
+					WmRet::HandledWithRet(_)
+						| WmRet::HandledOk => { at_least_one = true; }
+					_ => {},
+				}
+			}
+		} else if wm_any.msg_id == co::WM::COMMAND {
+			let wm_cmd = unsafe { wm::Command::from_generic_wm(wm_any) };
+			let key_cmd = (wm_cmd.event.ctrl_id(), wm_cmd.event.code());
+			let cmds = unsafe { &*self.cmds.get() };
+			for func in cmds.filter(key_cmd) {
+				match func()? {
+					WmRet::HandledWithRet(_)
+						| WmRet::HandledOk => { at_least_one = true; }
+					_ => {},
+				}
+			}
+		} else if wm_any.msg_id == co::WM::NOTIFY {
+			let wm_nfy = unsafe { wm::Notify::from_generic_wm(wm_any) };
+			let key_nfy = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
+			let nfys = unsafe { &*self.nfys.get() };
+			for func in nfys.filter(key_nfy) {
+				match func(unsafe { wm::Notify::from_generic_wm(wm_any) })? { // wm::Notify cannot be Copy
+					WmRet::HandledWithRet(_)
+						| WmRet::HandledOk => { at_least_one = true; }
+					_ => {},
+				}
+			}
+		} else if wm_any.msg_id == co::WM::TIMER {
+			let wm_tmr = unsafe { wm::Timer::from_generic_wm(wm_any) };
+			let tmrs = unsafe { &*self.tmrs.get() };
+			for func in tmrs.filter(wm_tmr.timer_id) {
+				func()?;
+				at_least_one = true;
+			}
+		}
+
+		let msgs = unsafe { &*self.msgs.get() };
+		for func in msgs.filter(wm_any.msg_id) {
+			match func(wm_any)? {
+				WmRet::HandledWithRet(_)
+					| WmRet::HandledOk => { at_least_one = true; }
+				_ => {},
+			}
+		}
+		Ok(at_least_one)
 	}
 
 	/// Searches for the last added user function for the given message, and
@@ -38,8 +148,54 @@ impl WindowEvents {
 		wm_any: WndMsg,
 	) -> AnyResult<WmRet>
 	{
-		self.ev_priv.process_last_message(hwnd, wm_any)
+		if wm_any.msg_id == co::WM::CREATE || wm_any.msg_id == co::WM::INITDIALOG {
+			let inis = unsafe { &*self.inis.get() };
+			for func in inis.filter_rev(wm_any.msg_id) {
+				match func(hwnd, wm_any)? {
+					WmRet::NotHandled => {},
+					r => return Ok(r), // handled: stop here
+				}
+			}
+		} else if wm_any.msg_id == co::WM::COMMAND {
+			let wm_cmd = unsafe { wm::Command::from_generic_wm(wm_any) };
+			let key_cmd = (wm_cmd.event.ctrl_id(), wm_cmd.event.code());
+			let cmds = unsafe { &*self.cmds.get() };
+			for func in cmds.filter_rev(key_cmd) {
+				match func()? {
+					WmRet::NotHandled => {},
+					r => return Ok(r), // handled: stop here
+				}
+			}
+		} else if wm_any.msg_id == co::WM::NOTIFY {
+			let wm_nfy = unsafe { wm::Notify::from_generic_wm(wm_any) };
+			let key_nfy = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
+			let nfys = unsafe { &*self.nfys.get() };
+			for func in nfys.filter_rev(key_nfy) {
+				match unsafe { func(wm::Notify::from_generic_wm(wm_any))? } { // wm::Notify cannot be Copy
+					WmRet::NotHandled => {},
+					r => return Ok(r), // handled: stop here
+				}
+			}
+		} else if wm_any.msg_id == co::WM::TIMER {
+			let wm_tmr = unsafe { wm::Timer::from_generic_wm(wm_any) };
+			let tmrs = unsafe { &*self.tmrs.get() };
+			if let Some(func) = tmrs.filter_rev(wm_tmr.timer_id).next() { // just execute the last, if any
+				func()?;
+				return Ok(WmRet::HandledOk); // handled: stop here
+			}
+		}
+
+		let msgs = unsafe { &*self.msgs.get() };
+		for func in msgs.filter_rev(wm_any.msg_id) {
+			match func(wm_any)? {
+				WmRet::NotHandled => {},
+				r => return Ok(r), // handled: stop here
+			}
+		}
+		Ok(WmRet::NotHandled)
 	}
+
+//------------------------------------------------------------------------------
 
 	/// Event to any [window message](crate::co::WM).
 	///
@@ -71,7 +227,18 @@ impl WindowEvents {
 	pub fn wm<F>(&self, ident: co::WM, func: F)
 		where F: Fn(WndMsg) -> AnyResult<WmRet> + 'static,
 	{
-		self.ev_priv.wm(ident, move |_, p| func(p));
+		unsafe { &mut *self.msgs.get() }.push(ident, Box::new(func));
+	}
+
+	/// If a dialog window, will handle `co::WM::INITDIALOG`, otherwise will
+	/// handle `co::WM::CREATE`.
+	pub(in crate::gui) fn wm_create_or_initdialog<F>(&self, func: F)
+		where F: Fn(&HWND, WndMsg) -> AnyResult<WmRet> + 'static,
+	{
+		unsafe { &mut *self.inis.get() }.push(
+			if self.is_dialog { co::WM::INITDIALOG } else { co::WM::CREATE },
+			Box::new(func),
+		);
 	}
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
@@ -110,7 +277,11 @@ impl WindowEvents {
 	)
 		where F: Fn() -> AnyResult<WmRet> + 'static,
 	{
-		self.ev_priv.wm_command(ctrl_id, code, func);
+		let code: co::CMD = code.into();
+		unsafe { &mut *self.cmds.get() }.push(
+			(ctrl_id.into(), code),
+			Box::new(func),
+		);
 	}
 
 	/// [`WM_NOTIFY`](crate::msg::wm::Notify) message, for specific ID and
@@ -145,7 +316,10 @@ impl WindowEvents {
 	)
 		where F: Fn(wm::Notify) -> AnyResult<WmRet> + 'static,
 	{
-		self.ev_priv.wm_notify(id_from, code, func);
+		unsafe { &mut *self.nfys.get() }.push(
+			(id_from.into(), code.into()),
+			Box::new(func),
+		);
 	}
 
 	/// [`WM_TIMER`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
@@ -153,7 +327,77 @@ impl WindowEvents {
 	pub fn wm_timer<F>(&self, timer_id: usize, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
-		self.ev_priv.wm_timer(timer_id, func);
+		unsafe { &mut *self.tmrs.get() }.push(timer_id, Box::new(func));
+	}
+
+//------------------------------------------------------------------------------
+
+	/// [`WM_CREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create)
+	/// message, sent only to non-dialog windows. Dialog windows must handle
+	/// [`wm_init_dialog`](crate::gui::events::WindowEvents::wm_init_dialog)
+	/// instead.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, gui, msg};
+	///
+	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	///
+	/// wnd.on().wm_create(
+	///     move |p: msg::wm::Create| -> w::AnyResult<i32> {
+	///         println!("Client area: {}x{}",
+	///             p.createstruct.cx,
+	///             p.createstruct.cy,
+	///         );
+	///         Ok(0)
+	///     },
+	/// );
+	/// ```
+	pub fn wm_create<F>(&self, func: F)
+		where F: Fn(wm::Create) -> AnyResult<i32> + 'static,
+	{
+		unsafe { &mut *self.inis.get() }.push(
+			co::WM::CREATE,
+			Box::new(move |_, p| {
+				let ret_val = func(unsafe { wm::Create::from_generic_wm(p) })? as isize;
+				Ok(WmRet::HandledWithRet(ret_val))
+			}),
+		);
+	}
+
+	/// [`WM_INITDIALOG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
+	/// message, sent only to dialog windows. Non-dialog windows must handle
+	/// [`wm_create`](crate::gui::events::WindowEvents::wm_create) instead.
+	///
+	/// Return `true` to set the focus to the first control in the dialog.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, gui, msg};
+	///
+	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	///
+	/// wnd.on().wm_init_dialog(
+	///     move |p: msg::wm::InitDialog| -> w::AnyResult<bool> {
+	///         println!("Focused HWND: {}", p.hwnd_focus);
+	///         Ok(true)
+	///     },
+	/// );
+	/// ```
+	pub fn wm_init_dialog<F>(&self, func: F)
+		where F: Fn(wm::InitDialog) -> AnyResult<bool> + 'static,
+	{
+		unsafe { &mut *self.inis.get() }.push(
+			co::WM::INITDIALOG,
+			Box::new(move |_, p| {
+				let ret_val = func(unsafe { wm::InitDialog::from_generic_wm(p) })? as isize;
+				Ok(WmRet::HandledWithRet(ret_val))
+			}),
+		);
 	}
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
@@ -162,6 +406,25 @@ impl WindowEvents {
 	///
 	/// Ideal to be used with menu commands whose IDs are shared with
 	/// accelerators, like menu items.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co, gui};
+	///
+	/// let wnd: gui::WindowMain; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	///
+	/// const CTRL_ID: u16 = 1010;
+	///
+	/// wnd.on().wm_command_accel_menu(
+	///     CTRL_ID,
+	///     move || -> w::AnyResult<()> {
+	///         println!("Hello!");
+	///         Ok(())
+	///     },
+	/// );
+	/// ```
 	pub fn wm_command_accel_menu<F>(&self, ctrl_id: impl Into<u16> + Copy, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
@@ -183,6 +446,8 @@ impl WindowEvents {
 			}
 		});
 	}
+
+//------------------------------------------------------------------------------
 
 	pub_fn_wm_withparm_noret! { wm_activate, co::WM::ACTIVATE, wm::Activate;
 		/// [`WM_ACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-activate)
@@ -271,38 +536,6 @@ impl WindowEvents {
 	pub_fn_wm_ctlcolor! { wm_ctl_color_static, co::WM::CTLCOLORSTATIC, wm::CtlColorStatic;
 		/// [`WM_CTLCOLORSTATIC`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-ctlcolorstatic)
 		/// message.
-	}
-
-	/// [`WM_CREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create)
-	/// message, sent only to non-dialog windows. Dialog windows must handle
-	/// [`wm_init_dialog`](crate::gui::events::WindowEvents::wm_init_dialog)
-	/// instead.
-	///
-	/// # Examples
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*, gui, msg};
-	///
-	/// let wnd: gui::WindowMain; // initialized somewhere
-	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-	///
-	/// wnd.on().wm_create(
-	///     move |p: msg::wm::Create| -> w::AnyResult<i32> {
-	///         println!("Client area: {}x{}",
-	///             p.createstruct.cx,
-	///             p.createstruct.cy,
-	///         );
-	///         Ok(0)
-	///     },
-	/// );
-	/// ```
-	pub fn wm_create<F>(&self, func: F)
-		where F: Fn(wm::Create) -> AnyResult<i32> + 'static,
-	{
-		self.wm(co::WM::CREATE, move |p| {
-			let ret_val = func(unsafe { wm::Create::from_generic_wm(p) })? as isize;
-			Ok(WmRet::HandledWithRet(ret_val))
-		});
 	}
 
 	pub_fn_wm_withparm_noret! { wm_dead_char, co::WM::DEADCHAR, wm::DeadChar;
@@ -486,30 +719,6 @@ impl WindowEvents {
 	pub_fn_wm_withparm_noret! { wm_help, co::WM::HELP, wm::Help;
 		/// [`WM_HELP`](https://learn.microsoft.com/en-us/windows/win32/shell/wm-help)
 		/// message.
-	}
-
-	pub_fn_wm_withparm_boolret! { wm_init_dialog, co::WM::INITDIALOG, wm::InitDialog;
-		/// [`WM_INITDIALOG`](https://learn.microsoft.com/en-us/windows/win32/dlgbox/wm-initdialog)
-		/// message, sent only to dialog windows. Non-dialog windows must handle
-		/// [`wm_create`](crate::gui::events::WindowEvents::wm_create) instead.
-		///
-		/// Return `true` to set the focus to the first control in the dialog.
-		///
-		/// # Examples
-		///
-		/// ```no_run
-		/// use winsafe::{self as w, prelude::*, gui, msg};
-		///
-		/// let wnd: gui::WindowMain; // initialized somewhere
-		/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-		///
-		/// wnd.on().wm_init_dialog(
-		///     move |p: msg::wm::InitDialog| -> w::AnyResult<bool> {
-		///         println!("Focused HWND: {}", p.hwnd_focus);
-		///         Ok(true)
-		///     },
-		/// );
-		/// ```
 	}
 
 	pub_fn_wm_withparm_noret! { wm_init_menu_popup, co::WM::INITMENUPOPUP, wm::InitMenuPopup;

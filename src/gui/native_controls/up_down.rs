@@ -151,9 +151,9 @@ impl UpDown {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm(co::WM::INITDIALOG, move |_, _| {
+		parent.as_ref().before_user_on().wm_init_dialog(move |_| {
 			self2.create(None)?;
-			Ok(WmRet::NotHandled)
+			Ok(false) // this return value is discarded
 		});
 
 		new_self

@@ -18,13 +18,11 @@ mod tab_events;
 mod trackbar_events;
 mod tree_view_events;
 mod up_down_events;
-mod window_events_priv;
 mod window_events;
 
 pub(in crate::gui) mod privs {
 	pub(in crate::gui) use super::base_ctrl_events_proxy::BaseCtrlEventsProxy;
 	pub(in crate::gui) use super::func_store::FuncStore;
-	pub(in crate::gui) use super::window_events_priv::WindowEventsPriv;
 }
 
 pub use button_events::ButtonEvents;

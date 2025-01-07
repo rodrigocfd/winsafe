@@ -6,7 +6,6 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::gui::{*, privs::*};
-use crate::msg::*;
 use crate::prelude::*;
 use crate::user::guard::*;
 
@@ -107,13 +106,12 @@ impl RawMain {
 
 	fn default_message_handlers(&self) {
 		let self2 = self.clone();
-		self.base().before_user_on().wm(co::WM::ACTIVATE, move |hwnd, p| {
-			let p = unsafe { wm::Activate::from_generic_wm(p) };
+		self.base().before_user_on().wm_activate(move |p| {
 			if !p.is_minimized {
 				let hchild_prev_focus = unsafe { &mut *self2.0.hchild_prev_focus.get() };
 				if p.event == co::WA::INACTIVE {
 					if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-						if hwnd.IsChild(&hwnd_cur_focus) {
+						if self2.base().hwnd().IsChild(&hwnd_cur_focus) {
 							*hchild_prev_focus = hwnd_cur_focus; // save previously focused control
 						}
 					}
@@ -121,13 +119,13 @@ impl RawMain {
 					hchild_prev_focus.SetFocus(); // put focus back
 				}
 			}
-			Ok(WmRet::HandledOk)
+			Ok(())
 		});
 
 		let self2 = self.clone();
-		self.base().before_user_on().wm(co::WM::SETFOCUS, move |_, _| {
+		self.base().before_user_on().wm_set_focus(move |_| {
 			self2.0.raw_base.delegate_focus_to_first_child();
-			Ok(WmRet::HandledOk)
+			Ok(())
 		});
 
 		self.base().on().wm_nc_destroy(move || {
