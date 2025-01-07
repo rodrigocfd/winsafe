@@ -34,7 +34,7 @@ pub trait winspool_Hprinter: Handle {
 	fn DeleteForm(&self, form_name: &str) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
-				ffi::DeleteForm(
+				ffi::DeleteFormW(
 					self.ptr(),
 					WString::from_str(form_name).as_mut_ptr(),
 				)
@@ -53,7 +53,7 @@ pub trait winspool_Hprinter: Handle {
 	fn DeletePrinterData(&self, value_name: &str) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
-				ffi::DeletePrinterData(
+				ffi::DeletePrinterDataW(
 					self.ptr(),
 					WString::from_str(value_name).as_mut_ptr(),
 				)
@@ -70,7 +70,7 @@ pub trait winspool_Hprinter: Handle {
 	{
 		bool_to_sysresult(
 			unsafe {
-				ffi::DeletePrinterDataEx(
+				ffi::DeletePrinterDataExW(
 					self.ptr(),
 					WString::from_str(key_name).as_ptr(),
 					WString::from_str(value_name).as_ptr(),
@@ -84,7 +84,7 @@ pub trait winspool_Hprinter: Handle {
 	fn DeletePrinterKey(&self, key_name: &str) -> SysResult<()> {
 		bool_to_sysresult(
 			unsafe {
-				ffi::DeletePrinterKey(
+				ffi::DeletePrinterKeyW(
 					self.ptr(),
 					WString::from_str(key_name).as_ptr(),
 				)
@@ -116,7 +116,7 @@ pub trait winspool_Hprinter: Handle {
 	/// function.
 	fn ResetPrinter(&self, default: &PRINTER_DEFAULTS) -> SysResult<()> {
 		bool_to_sysresult(
-			unsafe { ffi::ResetPrinter(self.ptr(), default as *const _ as _) },
+			unsafe { ffi::ResetPrinterW(self.ptr(), default as *const _ as _) },
 		)
 	}
 }

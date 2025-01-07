@@ -3,7 +3,27 @@
 use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
+use crate::prelude::*;
 use crate::winspool::ffi;
+
+/// [`AddPort`](https://learn.microsoft.com/en-us/windows/win32/printdocs/addport)
+/// function.
+pub fn AddPort(
+	name: Option<&str>,
+	hwnd: &HWND,
+	monitor_name: &str,
+) -> SysResult<()>
+{
+	bool_to_sysresult(
+		unsafe {
+			ffi::AddPortW(
+				WString::from_opt_str(name).as_mut_ptr(),
+				hwnd.ptr(),
+				WString::from_str(monitor_name).as_mut_ptr(),
+			)
+		},
+	)
+}
 
 /// [`AddPrinterConnection`](https://learn.microsoft.com/en-us/windows/win32/printdocs/addprinterconnection)
 /// function.
@@ -14,7 +34,45 @@ use crate::winspool::ffi;
 pub fn AddPrinterConnection(name: &str) -> SysResult<()> {
 	bool_to_sysresult(
 		unsafe {
-			ffi::AddPrinterConnection(WString::from_str(name).as_mut_ptr())
+			ffi::AddPrinterConnectionW(WString::from_str(name).as_mut_ptr())
+		},
+	)
+}
+
+/// [`ConfigurePort`](https://learn.microsoft.com/en-us/windows/win32/printdocs/configureport)
+/// function.
+pub fn ConfigurePort(
+	name: Option<&str>,
+	hwnd: &HWND,
+	port_name: &str,
+) -> SysResult<()>
+{
+	bool_to_sysresult(
+		unsafe {
+			ffi::ConfigurePortW(
+				WString::from_opt_str(name).as_mut_ptr(),
+				hwnd.ptr(),
+				WString::from_str(port_name).as_mut_ptr(),
+			)
+		},
+	)
+}
+
+/// [`DeleteMonitor`](https://learn.microsoft.com/en-us/windows/win32/printdocs/deletemonitor)
+/// function.
+pub fn DeleteMonitor(
+	name: Option<&str>,
+	environment: Option<&str>,
+	monitor_name: &str,
+) -> SysResult<()>
+{
+	bool_to_sysresult(
+		unsafe {
+			ffi::DeleteMonitorW(
+				WString::from_opt_str(name).as_mut_ptr(),
+				WString::from_opt_str(environment).as_mut_ptr(),
+				WString::from_str(monitor_name).as_mut_ptr(),
+			)
 		},
 	)
 }
@@ -28,7 +86,7 @@ pub fn AddPrinterConnection(name: &str) -> SysResult<()> {
 pub fn DeletePrinterConnection(name: &str) -> SysResult<()> {
 	bool_to_sysresult(
 		unsafe {
-			ffi::DeletePrinterConnection(WString::from_str(name).as_mut_ptr())
+			ffi::DeletePrinterConnectionW(WString::from_str(name).as_mut_ptr())
 		},
 	)
 }
@@ -161,6 +219,6 @@ pub fn GetDefaultPrinter() -> SysResult<String> {
 /// function.
 pub fn SetDefaultPrinter(printer: Option<&str>) -> SysResult<()> {
 	bool_to_sysresult(
-		unsafe { ffi::SetDefaultPrinter(WString::from_opt_str(printer).as_ptr()) },
+		unsafe { ffi::SetDefaultPrinterW(WString::from_opt_str(printer).as_ptr()) },
 	)
 }
