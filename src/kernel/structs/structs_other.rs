@@ -796,7 +796,7 @@ impl_default!(SYSTEM_INFO);
 /// Can be converted to [`FILETIME`](crate::FILETIME) with
 /// [`SystemTimeToFileTime`](crate::SystemTimeToFileTime) function.
 #[repr(C)]
-#[derive(Default, Debug, Clone, PartialEq, Eq)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SYSTEMTIME {
 	pub wYear: u16,
 	pub wMonth: u16,

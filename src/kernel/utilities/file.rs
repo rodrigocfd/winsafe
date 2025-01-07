@@ -107,6 +107,12 @@ impl File {
 		Ok(Self { hfile })
 	}
 
+	/// Truncates the file size to zero, then writes the bytes.
+	pub fn erase_and_write(&self, data: &[u8]) -> SysResult<()> {
+		self.set_size(0)?;
+		self.write(data)
+	}
+
 	/// Returns the underlying file handle.
 	#[must_use]
 	pub fn hfile(&self) -> &HFILE {
@@ -121,16 +127,6 @@ impl File {
 			.map(|off| off as _)
 	}
 
-	/// Calls [`HFILE::ReadFile`](crate::prelude::kernel_Hfile::ReadFile) to
-	/// read at most `buffer.len()` bytes from the file, starting at the current
-	/// file pointer offset. Returns how many bytes were actually read. The file
-	/// pointer is then incremented by the number of bytes read.
-	///
-	/// Note that the API limits the reading up to 4 GB.
-	pub fn read(&self, buffer: &mut [u8]) -> SysResult<u32> {
-		self.hfile.ReadFile(buffer)
-	}
-
 	/// Returns the size of the file by calling
 	/// [`HFILE::GetFileSizeEx`](crate::prelude::kernel_Hfile::GetFileSizeEx),
 	/// allocates the `Vec` buffer, then reads all the file bytes by calling
@@ -141,8 +137,18 @@ impl File {
 	pub fn read_all(&self) -> SysResult<Vec<u8>> {
 		self.set_pointer_offset(0)?;
 		let mut buf = vec![0x00; self.size()? as _];
-		self.read(&mut buf)?;
+		self.read_buffer(&mut buf)?;
 		Ok(buf)
+	}
+
+	/// Calls [`HFILE::ReadFile`](crate::prelude::kernel_Hfile::ReadFile) to
+	/// read at most `buffer.len()` bytes from the file, starting at the current
+	/// file pointer offset. Returns how many bytes were actually read. The file
+	/// pointer is then incremented by the number of bytes read.
+	///
+	/// Note that the API limits the reading up to 4 GB.
+	pub fn read_buffer(&self, buffer: &mut [u8]) -> SysResult<u32> {
+		self.hfile.ReadFile(buffer)
 	}
 
 	/// Sets the position of the file pointer by calling
@@ -159,12 +165,14 @@ impl File {
 	/// then sets the file pointer to the beginning of the file.
 	///
 	/// If the size is increased, the contents in the new area are undefined.
+	///
+	/// Note that sometimes the system will make the file larger than you
+	/// specified, so don't bindly trust this method.
 	pub fn set_size(&self, num_bytes: u64) -> SysResult<()> {
 		self.set_pointer_offset(num_bytes)?;
 		self.hfile.SetEndOfFile()?;
 		self.set_pointer_offset(0)
 	}
-
 
 	/// Returns the size of the file by calling
 	/// [`HFILE::GetFileSizeEx`](crate::prelude::kernel_Hfile::GetFileSizeEx).
@@ -173,19 +181,23 @@ impl File {
 		self.hfile.GetFileSizeEx()
 	}
 
-	/// Returns the creation and last write times of the file, in the current
-	/// time zone.
+	/// Returns, in current time zone, 3 times of the file, respectively:
+	/// 1. creation time;
+	/// 2. last access time;
+	/// 3. last write time.
 	#[must_use]
-	pub fn times(&self) -> SysResult<(SYSTEMTIME, SYSTEMTIME)> {
-		let (ft_creation, _, ft_last_write) = self.hfile.GetFileTime()?;
+	pub fn times(&self) -> SysResult<(SYSTEMTIME, SYSTEMTIME, SYSTEMTIME)> {
+		let (ft_creation, ft_last_access, ft_last_write) = self.hfile.GetFileTime()?;
 
 		let st_creation_utc = FileTimeToSystemTime(&ft_creation)?;
+		let st_last_access_utc = FileTimeToSystemTime(&ft_last_access)?;
 		let st_last_write_utc = FileTimeToSystemTime(&ft_last_write)?;
 
 		let st_creation_local = SystemTimeToTzSpecificLocalTime(None, &st_creation_utc)?;
+		let st_last_access_local = SystemTimeToTzSpecificLocalTime(None, &st_last_access_utc)?;
 		let st_last_write_local = SystemTimeToTzSpecificLocalTime(None, &st_last_write_utc)?;
 
-		Ok((st_creation_local, st_last_write_local))
+		Ok((st_creation_local, st_last_access_local, st_last_write_local))
 	}
 
 	/// Writes the bytes at the current file pointer by calling

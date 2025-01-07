@@ -86,10 +86,12 @@ impl FileMapped {
 		self.size
 	}
 
-	/// Returns the creation and last write times of the file, in the current
-	/// time zone.
+	/// Returns, in current time zone, 3 times of the file, respectively:
+	/// 1. creation time;
+	/// 2. last access time;
+	/// 3. last write time.
 	#[must_use]
-	pub fn times(&self) -> SysResult<(SYSTEMTIME, SYSTEMTIME)> {
+	pub fn times(&self) -> SysResult<(SYSTEMTIME, SYSTEMTIME, SYSTEMTIME)> {
 		self.file.times()
 	}
 }

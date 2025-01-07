@@ -121,6 +121,10 @@ pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 /// [`FileTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-filetimetosystemtime)
 /// function.
 ///
+/// Note that the system time is UTC. In order to convert to local time, you
+/// must also pass the returned `SYSTEMTIME` to
+/// [`SystemTimeToTzSpecificLocalTime`](crate::SystemTimeToTzSpecificLocalTime).
+///
 /// # Related functions
 ///
 /// * [`GetLocalTime`](crate::GetLocalTime)
