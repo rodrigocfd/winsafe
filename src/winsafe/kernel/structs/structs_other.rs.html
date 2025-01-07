@@ -1752,7 +1752,7 @@
 /// Can be converted to [`FILETIME`](crate::FILETIME) with
 /// [`SystemTimeToFileTime`](crate::SystemTimeToFileTime) function.
 </span><span class="attr">#[repr(C)]
-#[derive(Default, Debug, Clone, PartialEq, Eq)]
+#[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
 </span><span class="kw">pub struct </span>SYSTEMTIME {
 	<span class="kw">pub </span>wYear: u16,
 	<span class="kw">pub </span>wMonth: u16,

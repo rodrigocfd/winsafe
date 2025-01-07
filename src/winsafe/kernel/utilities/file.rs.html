@@ -198,7 +198,19 @@
 <a href="#197" id="197">197</a>
 <a href="#198" id="198">198</a>
 <a href="#199" id="199">199</a>
-<a href="#200" id="200">200</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
+<a href="#200" id="200">200</a>
+<a href="#201" id="201">201</a>
+<a href="#202" id="202">202</a>
+<a href="#203" id="203">203</a>
+<a href="#204" id="204">204</a>
+<a href="#205" id="205">205</a>
+<a href="#206" id="206">206</a>
+<a href="#207" id="207">207</a>
+<a href="#208" id="208">208</a>
+<a href="#209" id="209">209</a>
+<a href="#210" id="210">210</a>
+<a href="#211" id="211">211</a>
+<a href="#212" id="212">212</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
 <span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
@@ -307,6 +319,12 @@
 		<span class="prelude-val">Ok</span>(<span class="self">Self </span>{ hfile })
 	}
 
+	<span class="doccomment">/// Truncates the file size to zero, then writes the bytes.
+	</span><span class="kw">pub fn </span>erase_and_write(<span class="kw-2">&amp;</span><span class="self">self</span>, data: <span class="kw-2">&amp;</span>[u8]) -&gt; SysResult&lt;()&gt; {
+		<span class="self">self</span>.set_size(<span class="number">0</span>)<span class="question-mark">?</span>;
+		<span class="self">self</span>.write(data)
+	}
+
 	<span class="doccomment">/// Returns the underlying file handle.
 	</span><span class="attr">#[must_use]
 	</span><span class="kw">pub fn </span>hfile(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HFILE {
@@ -321,16 +339,6 @@
 			</span>.map(|off| off <span class="kw">as _</span>)
 	}
 
-	<span class="doccomment">/// Calls [`HFILE::ReadFile`](crate::prelude::kernel_Hfile::ReadFile) to
-	/// read at most `buffer.len()` bytes from the file, starting at the current
-	/// file pointer offset. Returns how many bytes were actually read. The file
-	/// pointer is then incremented by the number of bytes read.
-	///
-	/// Note that the API limits the reading up to 4 GB.
-	</span><span class="kw">pub fn </span>read(<span class="kw-2">&amp;</span><span class="self">self</span>, buffer: <span class="kw-2">&amp;mut </span>[u8]) -&gt; SysResult&lt;u32&gt; {
-		<span class="self">self</span>.hfile.ReadFile(buffer)
-	}
-
 	<span class="doccomment">/// Returns the size of the file by calling
 	/// [`HFILE::GetFileSizeEx`](crate::prelude::kernel_Hfile::GetFileSizeEx),
 	/// allocates the `Vec` buffer, then reads all the file bytes by calling
@@ -341,8 +349,18 @@
 	</span><span class="kw">pub fn </span>read_all(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;Vec&lt;u8&gt;&gt; {
 		<span class="self">self</span>.set_pointer_offset(<span class="number">0</span>)<span class="question-mark">?</span>;
 		<span class="kw">let </span><span class="kw-2">mut </span>buf = <span class="macro">vec!</span>[<span class="number">0x00</span>; <span class="self">self</span>.size()<span class="question-mark">? </span><span class="kw">as _</span>];
-		<span class="self">self</span>.read(<span class="kw-2">&amp;mut </span>buf)<span class="question-mark">?</span>;
+		<span class="self">self</span>.read_buffer(<span class="kw-2">&amp;mut </span>buf)<span class="question-mark">?</span>;
 		<span class="prelude-val">Ok</span>(buf)
+	}
+
+	<span class="doccomment">/// Calls [`HFILE::ReadFile`](crate::prelude::kernel_Hfile::ReadFile) to
+	/// read at most `buffer.len()` bytes from the file, starting at the current
+	/// file pointer offset. Returns how many bytes were actually read. The file
+	/// pointer is then incremented by the number of bytes read.
+	///
+	/// Note that the API limits the reading up to 4 GB.
+	</span><span class="kw">pub fn </span>read_buffer(<span class="kw-2">&amp;</span><span class="self">self</span>, buffer: <span class="kw-2">&amp;mut </span>[u8]) -&gt; SysResult&lt;u32&gt; {
+		<span class="self">self</span>.hfile.ReadFile(buffer)
 	}
 
 	<span class="doccomment">/// Sets the position of the file pointer by calling
@@ -359,12 +377,14 @@
 	/// then sets the file pointer to the beginning of the file.
 	///
 	/// If the size is increased, the contents in the new area are undefined.
+	///
+	/// Note that sometimes the system will make the file larger than you
+	/// specified, so don't bindly trust this method.
 	</span><span class="kw">pub fn </span>set_size(<span class="kw-2">&amp;</span><span class="self">self</span>, num_bytes: u64) -&gt; SysResult&lt;()&gt; {
 		<span class="self">self</span>.set_pointer_offset(num_bytes)<span class="question-mark">?</span>;
 		<span class="self">self</span>.hfile.SetEndOfFile()<span class="question-mark">?</span>;
 		<span class="self">self</span>.set_pointer_offset(<span class="number">0</span>)
 	}
-
 
 	<span class="doccomment">/// Returns the size of the file by calling
 	/// [`HFILE::GetFileSizeEx`](crate::prelude::kernel_Hfile::GetFileSizeEx).
@@ -373,19 +393,23 @@
 		<span class="self">self</span>.hfile.GetFileSizeEx()
 	}
 
-	<span class="doccomment">/// Returns the creation and last write times of the file, in the current
-	/// time zone.
+	<span class="doccomment">/// Returns, in current time zone, 3 times of the file, respectively:
+	/// 1. creation time;
+	/// 2. last access time;
+	/// 3. last write time.
 	</span><span class="attr">#[must_use]
-	</span><span class="kw">pub fn </span>times(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;(SYSTEMTIME, SYSTEMTIME)&gt; {
-		<span class="kw">let </span>(ft_creation, <span class="kw">_</span>, ft_last_write) = <span class="self">self</span>.hfile.GetFileTime()<span class="question-mark">?</span>;
+	</span><span class="kw">pub fn </span>times(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;(SYSTEMTIME, SYSTEMTIME, SYSTEMTIME)&gt; {
+		<span class="kw">let </span>(ft_creation, ft_last_access, ft_last_write) = <span class="self">self</span>.hfile.GetFileTime()<span class="question-mark">?</span>;
 
 		<span class="kw">let </span>st_creation_utc = FileTimeToSystemTime(<span class="kw-2">&amp;</span>ft_creation)<span class="question-mark">?</span>;
+		<span class="kw">let </span>st_last_access_utc = FileTimeToSystemTime(<span class="kw-2">&amp;</span>ft_last_access)<span class="question-mark">?</span>;
 		<span class="kw">let </span>st_last_write_utc = FileTimeToSystemTime(<span class="kw-2">&amp;</span>ft_last_write)<span class="question-mark">?</span>;
 
 		<span class="kw">let </span>st_creation_local = SystemTimeToTzSpecificLocalTime(<span class="prelude-val">None</span>, <span class="kw-2">&amp;</span>st_creation_utc)<span class="question-mark">?</span>;
+		<span class="kw">let </span>st_last_access_local = SystemTimeToTzSpecificLocalTime(<span class="prelude-val">None</span>, <span class="kw-2">&amp;</span>st_last_access_utc)<span class="question-mark">?</span>;
 		<span class="kw">let </span>st_last_write_local = SystemTimeToTzSpecificLocalTime(<span class="prelude-val">None</span>, <span class="kw-2">&amp;</span>st_last_write_utc)<span class="question-mark">?</span>;
 
-		<span class="prelude-val">Ok</span>((st_creation_local, st_last_write_local))
+		<span class="prelude-val">Ok</span>((st_creation_local, st_last_access_local, st_last_write_local))
 	}
 
 	<span class="doccomment">/// Writes the bytes at the current file pointer by calling
