@@ -37,6 +37,7 @@ winsafe = { version = &quot;0.0.22&quot;, features = [] }</code></pre></div>
 <tr><td><code>winspool</code></td><td><a href="https://learn.microsoft.com/en-us/windows/win32/printdocs/print-spooler-api">Print Spooler API</a></td></tr>
 </tbody></table>
 </div>
+<p>You can visualize the complete dependency graph <a href="https://github.com/rodrigocfd/winsafe/blob/master/features-chart.md">here</a>.</p>
 <p>If you’re looking for a comprehensive Win32 coverage, take a look at <a href="https://crates.io/crates/winapi">winapi</a> or <a href="https://crates.io/crates/windows">windows</a> crates, which are <em>unsafe</em>, but have everything.</p>
 <h2 id="the-gui-api"><a class="doc-anchor" href="#the-gui-api">§</a>The GUI API</h2>
 <p>WinSafe features idiomatic bindings for the Win32 API, but on top of that, it features a set of high-level GUI structs, which scaffolds the boilerplate needed to build native Win32 GUI applications, event-oriented. Unless you’re doing something really specific, these high-level wrappers are highly recommended – you’ll usually start with the <a href="gui/struct.WindowMain.html" title="struct winsafe::gui::WindowMain"><code>WindowMain</code></a>.</p>
