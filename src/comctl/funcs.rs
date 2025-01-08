@@ -102,9 +102,9 @@ pub unsafe fn PropertySheet(header: &PROPSHEETHEADER) -> SysResult<isize> {
 ///     common_buttons: co::TDCBF::OK,
 ///     window_title: Some("Title"),
 ///     content: Some("Content"),
-///     callback: Some(Box::new(|hwnd, tdn, wp, lp| {
+///     callback: Some(Box::new(|hwnd: &w::HWND, tdn: w::Tdn| -> co::HRESULT {
 ///         match tdn {
-///             co::TDN::CREATED => println!("created"),
+///             w::Tdn::Created => println!("created"),
 ///             _ => {},
 ///         }
 ///         co::HRESULT::S_OK

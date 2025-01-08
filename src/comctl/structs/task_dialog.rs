@@ -48,7 +48,7 @@ pub struct TASKDIALOGCONFIG<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 
 	pub more_info_btn_collapsed: Option<&'n str>,
 	pub footer_icon: IconId<'o>,
 	pub footer_text: Option<&'p str>,
-	pub callback: Option<Box<dyn Fn(&HWND, co::TDN, usize, isize) -> co::HRESULT>>,
+	pub callback: Option<Box<dyn Fn(&HWND, Tdn) -> co::HRESULT>>,
 	pub width: u32,
 }
 

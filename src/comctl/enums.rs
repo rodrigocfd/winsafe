@@ -213,8 +213,50 @@ pub enum ResStrs {
 impl ResStrs {
 	/// Constructs the enum from a list of strings.
 	#[must_use]
-	pub fn from_strs(texts: &[impl AsRef<str>]) -> ResStrs {
+	pub fn from_strs(texts: &[impl AsRef<str>]) -> Self {
 		Self::Strs(WString::from_str_vec(texts))
+	}
+}
+
+/// Variant parameter for:
+///
+/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG).
+pub enum Tdn {
+	ButtonClicked(u16),
+	Created,
+	Destroyed,
+	DialogConstructed,
+	ExpandoButtonClicked(bool),
+	Help,
+	HyperlinkClicked(String),
+	Navigated,
+	RadioButtonClicked(u16),
+	Timer(u32),
+	VerificationClicked(bool),
+}
+
+impl Tdn {
+	/// Constructs the enum from its message data.
+	///
+	/// # Panics
+	///
+	/// Panics if `tdn` value is invalid.
+	#[must_use]
+	pub unsafe fn from_msg(tdn: co::TDN, wp: usize, lp: isize) -> Self {
+		match tdn {
+			co::TDN::BUTTON_CLICKED => Self::ButtonClicked(wp as _),
+			co::TDN::CREATED => Self::Created,
+			co::TDN::DESTROYED => Self::Destroyed,
+			co::TDN::DIALOG_CONSTRUCTED => Self::DialogConstructed,
+			co::TDN::EXPANDO_BUTTON_CLICKED => Self::ExpandoButtonClicked(wp != 0),
+			co::TDN::HELP => Self::Help,
+			co::TDN::HYPERLINK_CLICKED => Self::HyperlinkClicked(WString::from_wchars_nullt(lp as _).to_string()),
+			co::TDN::NAVIGATED => Self::Navigated,
+			co::TDN::RADIO_BUTTON_CLICKED => Self::RadioButtonClicked(wp as _),
+			co::TDN::TIMER => Self::Timer(wp as _),
+			co::TDN::VERIFICATION_CLICKED => Self::VerificationClicked(wp != 0),
+			_ => panic!("Invalid TDN value."),
+		}
 	}
 }
 
@@ -240,7 +282,7 @@ impl From<TreeitemTvi> for isize {
 impl TreeitemTvi {
 	/// Constructs the enum from an `isize`.
 	#[must_use]
-	pub fn from_isize(val: isize) -> TreeitemTvi {
+	pub fn from_isize(val: isize) -> Self {
 		match unsafe { co::TVI::from_raw(val) } {
 			co::TVI::FIRST => Self::Tvi(co::TVI::FIRST),
 			co::TVI::LAST => Self::Tvi(co::TVI::LAST),
