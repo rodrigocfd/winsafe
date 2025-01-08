@@ -88,6 +88,8 @@ The following Cargo features are available so far:
 
 Don't worry about including dependency features. Once you use a feature, Cargo will add and resolve all dependencies automatically.
 
+You can visualize the complete dependency graph [here](https://github.com/rodrigocfd/winsafe/blob/master/features-chart.md).
+
 ## Example
 
 **Note:** You can find several examples in the dedicated repo: [github.com/rodrigocfd/winsafe-examples](https://github.com/rodrigocfd/winsafe-examples)

@@ -46,6 +46,8 @@ The following Cargo features are available so far:
 | `version` | Version.dll, to manipulate *.exe version info |
 | `winspool` | [Print Spooler API](https://learn.microsoft.com/en-us/windows/win32/printdocs/print-spooler-api) |
 
+You can visualize the complete dependency graph [here](https://github.com/rodrigocfd/winsafe/blob/master/features-chart.md).
+
 If you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but have everything.
 
 # The GUI API
