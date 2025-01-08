@@ -12,7 +12,10 @@
 <a href="#11" id="11">11</a>
 <a href="#12" id="12">12</a>
 <a href="#13" id="13">13</a>
-<a href="#14" id="14">14</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
+<a href="#14" id="14">14</a>
+<a href="#15" id="15">15</a>
+<a href="#16" id="16">16</a>
+<a href="#17" id="17">17</a></pre></div><pre class="rust"><code><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 
 <span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::comctl) <span class="kw">extern </span><span class="string">"system" </span><span class="kw">fn </span>func_task_dialog_callback(
@@ -24,6 +27,9 @@
 ) -&gt; co::HRESULT
 {
 	<span class="kw">let </span>tdc = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>(lp_ref_data <span class="kw">as </span><span class="kw-2">*const </span>TASKDIALOGCONFIG) };
-	tdc.callback.as_ref().map_or(co::HRESULT::S_OK, |tdc| tdc(<span class="kw-2">&amp;</span>hwnd, msg, wparam, lparam))
+	tdc.callback.as_ref().map_or(
+		co::HRESULT::S_OK,
+		|tdc| tdc(<span class="kw-2">&amp;</span>hwnd, <span class="kw">unsafe </span>{ Tdn::from_msg(msg, wparam, lparam) }),
+	)
 }
 </code></pre></div></section></main></body></html>

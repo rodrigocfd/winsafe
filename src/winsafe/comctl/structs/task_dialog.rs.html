@@ -267,7 +267,7 @@
 	</span><span class="kw">pub </span>more_info_btn_collapsed: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'n </span>str&gt;,
 	<span class="kw">pub </span>footer_icon: IconId&lt;<span class="lifetime">'o</span>&gt;,
 	<span class="kw">pub </span>footer_text: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'p </span>str&gt;,
-	<span class="kw">pub </span>callback: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>HWND, co::TDN, usize, isize) -&gt; co::HRESULT&gt;&gt;,
+	<span class="kw">pub </span>callback: <span class="prelude-ty">Option</span>&lt;Box&lt;<span class="kw">dyn </span>Fn(<span class="kw-2">&amp;</span>HWND, Tdn) -&gt; co::HRESULT&gt;&gt;,
 	<span class="kw">pub </span>width: u32,
 }
 

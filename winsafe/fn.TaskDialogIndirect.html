@@ -54,9 +54,9 @@ w::TaskDialogIndirect(<span class="kw-2">&amp;</span>w::TASKDIALOGCONFIG {
     common_buttons: co::TDCBF::OK,
     window_title: <span class="prelude-val">Some</span>(<span class="string">"Title"</span>),
     content: <span class="prelude-val">Some</span>(<span class="string">"Content"</span>),
-    callback: <span class="prelude-val">Some</span>(Box::new(|hwnd, tdn, wp, lp| {
+    callback: <span class="prelude-val">Some</span>(Box::new(|hwnd: <span class="kw-2">&amp;</span>w::HWND, tdn: w::Tdn| -&gt; co::HRESULT {
         <span class="kw">match </span>tdn {
-            co::TDN::CREATED =&gt; <span class="macro">println!</span>(<span class="string">"created"</span>),
+            w::Tdn::Created =&gt; <span class="macro">println!</span>(<span class="string">"created"</span>),
             <span class="kw">_ </span>=&gt; {},
         }
         co::HRESULT::S_OK

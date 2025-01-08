@@ -244,9 +244,9 @@
 ///     common_buttons: co::TDCBF::OK,
 ///     window_title: Some("Title"),
 ///     content: Some("Content"),
-///     callback: Some(Box::new(|hwnd, tdn, wp, lp| {
+///     callback: Some(Box::new(|hwnd: &amp;w::HWND, tdn: w::Tdn| -&gt; co::HRESULT {
 ///         match tdn {
-///             co::TDN::CREATED =&gt; println!("created"),
+///             w::Tdn::Created =&gt; println!("created"),
 ///             _ =&gt; {},
 ///         }
 ///         co::HRESULT::S_OK
