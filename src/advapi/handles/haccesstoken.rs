@@ -123,14 +123,20 @@ pub trait advapi_Haccesstoken: Handle {
 	/// function.
 	#[must_use]
 	fn GetCurrentProcessToken() -> HACCESSTOKEN {
-		HACCESSTOKEN(unsafe { ffi::GetCurrentProcessToken() })
+		// We don't do a FFI call because there's no actual library function to call: this is an
+		// inlined function defined in the processthreadsapi.h header that always returns a constant.
+		// See: https://github.com/microsoft/win32metadata/issues/436
+		HACCESSTOKEN(-4 as _)
 	}
 
 	/// [`GetCurrentThreadEffectiveToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadeffectivetoken)
 	/// function.
 	#[must_use]
 	fn GetCurrentThreadEffectiveToken() -> HACCESSTOKEN {
-		HACCESSTOKEN(unsafe { ffi::GetCurrentThreadEffectiveToken() })
+		// We don't do a FFI call because there's no actual library function to call: this is an
+		// inlined function defined in the processthreadsapi.h header that always returns a constant.
+		// See: https://github.com/microsoft/win32metadata/issues/436
+		HACCESSTOKEN(-6 as _)
 	}
 
 	/// [`GetTokenInformation`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-gettokeninformation)

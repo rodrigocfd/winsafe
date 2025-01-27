@@ -21,8 +21,6 @@ extern_sys! { "advapi32";
 	EqualPrefixSid(PVOID, PVOID) -> BOOL
 	EqualSid(PVOID, PVOID) -> BOOL
 	FreeSid(PVOID)
-	GetCurrentProcessToken() -> HANDLE
-	GetCurrentThreadEffectiveToken() -> HANDLE
 	GetLengthSid(PVOID) -> u32
 	GetSidLengthRequired(u8) -> u32
 	GetTokenInformation(HANDLE, u32, PCVOID, u32, *mut u32) -> BOOL
