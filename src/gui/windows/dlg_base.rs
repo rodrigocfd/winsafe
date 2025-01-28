@@ -108,7 +108,7 @@ impl DlgBase {
 		// If no pointer stored, then no processing is done.
 		// Prevents processing before WM_INITDIALOG and after WM_NCDESTROY.
 		if ptr_self.is_null() {
-			return Ok(unsafe { hwnd.DefWindowProc(wm_any) });
+			return Ok(0); // FALSE
 		}
 
 		// Execute before-user closures, keep track if at least one was executed.

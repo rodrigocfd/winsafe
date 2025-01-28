@@ -6,6 +6,10 @@ use crate::kernel::ffi_types::*;
 use crate::prelude::*;
 
 /// Returns a reference to the virtual table of the COM object.
+///
+/// # Safety
+///
+/// Make sure the inheritance is correct.
 #[must_use]
 pub(crate) unsafe fn vt<T>(obj: &impl ole_IUnknown) -> &T {
 	let ppvt = obj.ptr() as *mut *mut T;

@@ -25,7 +25,7 @@ impl EditEvents {
 	}
 
 	pub_fn_cmd_noparm_noret! { en_align_rtl_ec, co::EN::ALIGN_RTL_EC;
-		/// [`EN_ALIGN_LTR_EC`](https://learn.microsoft.com/en-us/windows/win32/controls/en-align-rtl-ec)
+		/// [`EN_ALIGN_RTL_EC`](https://learn.microsoft.com/en-us/windows/win32/controls/en-align-rtl-ec)
 		/// command notification.
 	}
 
