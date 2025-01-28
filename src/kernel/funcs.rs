@@ -340,7 +340,7 @@ pub fn GetDiskSpaceInformation(
 pub fn GetEnvironmentStrings() -> SysResult<Vec<(String, String)>> {
 	ptr_to_sysresult(unsafe { ffi::GetEnvironmentStringsW() } as _)
 		.map(|ptr| {
-			let vec_entries = parse_multi_z_str(ptr as *mut _ as _);
+			let vec_entries = unsafe { parse_multi_z_str(ptr as *mut _ as _) };
 			unsafe { ffi::FreeEnvironmentStringsW(ptr); }
 			vec_entries.iter()
 				.map(|env_str| {
@@ -475,9 +475,11 @@ pub fn GetLogicalDriveStrings() -> SysResult<Vec<String>> {
 
 	let mut buf = WString::new_alloc_buf(len as usize + 1); // room for terminating null
 
-	bool_to_sysresult(
-		unsafe { ffi::GetLogicalDriveStringsW(len, buf.as_mut_ptr()) } as _,
-	).map(|_| parse_multi_z_str(buf.as_ptr()))
+	unsafe {
+		bool_to_sysresult(
+			ffi::GetLogicalDriveStringsW(len, buf.as_mut_ptr()) as _,
+		).map(|_| parse_multi_z_str(buf.as_ptr()))
+	}
 }
 
 /// [`GetLongPathName`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getlongpathnamew)
@@ -562,7 +564,7 @@ pub fn GetPrivateProfileSection(
 			return Err(co::ERROR::FILE_NOT_FOUND);
 		} else if (returned_chars as usize) < buf_sz { // to break, must have at least 1 char gap
 			return Ok(
-				parse_multi_z_str(buf.as_ptr())
+				unsafe { parse_multi_z_str(buf.as_ptr()) }
 					.iter()
 					.map(|line| match line.split_once('=') {
 						Some((key, val)) => (key.to_owned(), val.to_owned()),
@@ -620,7 +622,7 @@ pub fn GetPrivateProfileSectionNames(
 		if GetLastError() == co::ERROR::FILE_NOT_FOUND {
 			return Err(co::ERROR::FILE_NOT_FOUND);
 		} else if (returned_chars as usize) < buf_sz { // to break, must have at least 1 char gap
-			return Ok(parse_multi_z_str(buf.as_ptr()));
+			return Ok(unsafe { parse_multi_z_str(buf.as_ptr()) });
 		}
 
 		buf_sz *= 2; // double the buffer size to try again

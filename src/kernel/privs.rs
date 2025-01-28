@@ -98,9 +98,13 @@ pub(crate) fn str_to_iso88591(s: &str) -> Vec<u8> {
 		.collect()
 }
 
-/// Parses a null-delimited multi-string, which must terminate with two nulls.
+/// Parses a null-delimited multi-string, which ends with two terminating nulls.
+///
+/// # Safety
+///
+/// Make sure the string has two terminating nulls.
 #[must_use]
-pub(crate) fn parse_multi_z_str(src: *const u16) -> Vec<String> {
+pub(crate) unsafe fn parse_multi_z_str(src: *const u16) -> Vec<String> {
 	let mut src = src;
 	let mut strings = Vec::<String>::new();
 	let mut i = 0;
