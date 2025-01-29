@@ -98,29 +98,40 @@ pub(crate) fn str_to_iso88591(s: &str) -> Vec<u8> {
 		.collect()
 }
 
-/// Parses a null-delimited multi-string, which ends with two terminating nulls.
+/// Parses a null-delimited multi-string, ending with two terminating nulls.
 ///
 /// # Safety
 ///
-/// Make sure the string has two terminating nulls.
+/// If `len` is not informed, make sure the string has two terminating nulls.
 #[must_use]
-pub(crate) unsafe fn parse_multi_z_str(src: *const u16) -> Vec<String> {
+pub(crate) unsafe fn parse_multi_z_str(
+	src: *const u16,
+	len: Option<usize>,
+) -> Vec<String>
+{
+	let given_len = len.unwrap_or(usize::MAX);
 	let mut src = src;
 	let mut strings = Vec::<String>::new();
-	let mut i = 0;
+	let mut ch = 0; // relative index of char in current string
+	let mut tot_ch = 0; // absolute index of char in original src
 
 	loop {
-		if unsafe { *src.add(i) } == 0 {
-			let slice = unsafe { std::slice::from_raw_parts(src, i) };
+		if *src.add(ch) == 0 || tot_ch == given_len {
+			let slice = std::slice::from_raw_parts(src, ch);
 			if slice.is_empty() {
-				break;
+				break; // empty string means two consecutive nulls
 			}
 			strings.push(WString::from_wchars_slice(slice).to_string());
-			src = unsafe { src.add(i + 1) };
-			i = 0;
+			src = src.add(ch + 1);
+			ch = 0;
 		} else {
-			i += 1;
+			ch += 1;
 		}
+
+		if len.is_some() && tot_ch == given_len {
+			break;
+		}
+		tot_ch += 1;
 	}
 	strings
 }

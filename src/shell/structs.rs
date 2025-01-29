@@ -99,7 +99,7 @@ impl<'a, 'b, 'c> SHFILEOPSTRUCT<'a, 'b, 'c> {
 	pub fn pFrom(&self) -> Option<Vec<String>> {
  		unsafe {
 			self.pFrom.as_mut()
-				.map(|p| parse_multi_z_str(p))
+				.map(|p| parse_multi_z_str(p, None))
 		}
 	}
 
@@ -116,7 +116,7 @@ impl<'a, 'b, 'c> SHFILEOPSTRUCT<'a, 'b, 'c> {
 	pub fn pTo(&self) -> Option<Vec<String>> {
 		unsafe {
 			self.pTo.as_mut()
-				.map(|p| parse_multi_z_str(p))
+				.map(|p| parse_multi_z_str(p, None))
 		}
 	}
 
