@@ -353,11 +353,12 @@ pub trait advapi_Hkey: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::{self as w, prelude::*};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
 	/// let val = w::HKEY::CURRENT_USER.RegGetValue(
 	///     Some("Control Panel\\Mouse"),
 	///     Some("Beep"),
+	///     co::RRF::RT_REG_SZ,
 	/// )?;
 	///
 	/// match val {
@@ -389,6 +390,7 @@ pub trait advapi_Hkey: Handle {
 	fn RegGetValue(&self,
 		sub_key: Option<&str>,
 		value_name: Option<&str>,
+		flags: co::RRF,
 	) -> SysResult<RegistryValue>
 	{
 		let sub_key_w = WString::from_opt_str(sub_key);
@@ -403,7 +405,7 @@ pub trait advapi_Hkey: Handle {
 					self.ptr(),
 					sub_key_w.as_ptr(),
 					value_name_w.as_ptr(),
-					(co::RRF::RT_ANY | co::RRF::NOEXPAND).raw(),
+					flags.raw(),
 					&mut raw_data_type1,
 					std::ptr::null_mut(),
 					&mut data_len1,
@@ -424,7 +426,7 @@ pub trait advapi_Hkey: Handle {
 					self.ptr(),
 					sub_key_w.as_ptr(),
 					value_name_w.as_ptr(),
-					(co::RRF::RT_ANY | co::RRF::NOEXPAND).raw(),
+					flags.raw(),
 					&mut raw_data_type2,
 					buf.as_mut_ptr() as _,
 					&mut data_len2,
