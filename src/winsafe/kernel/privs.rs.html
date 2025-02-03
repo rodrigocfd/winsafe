@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\privs.rs`."><title>privs.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-46132b98.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.86.0-nightly (b3b368a18 2025-01-05)" data-channel="nightly" data-search-js="search-75f5ac3e.js" data-settings-js="settings-0f613d39.js" ><script src="../../../static.files/storage-59e33391.js"></script><script defer src="../../../static.files/src-script-56102188.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-5f194d8c.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\kernel/</div>privs.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\privs.rs`."><title>privs.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-cf3c48c1.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.86.0-nightly (4a4309466 2025-02-02)" data-channel="nightly" data-search-js="search-2d513d54.js" data-settings-js="settings-6dad6058.js" ><script src="../../../static.files/storage-302de22f.js"></script><script defer src="../../../static.files/src-script-8fee9dc5.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-9b5d7e41.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\kernel/</div>privs.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap"><div data-nosnippet><pre class="src-line-numbers">
 <a href="#1" id="1">1</a>
 <a href="#2" id="2">2</a>
 <a href="#3" id="3">3</a>
@@ -158,7 +158,22 @@
 <a href="#157" id="157">157</a>
 <a href="#158" id="158">158</a>
 <a href="#159" id="159">159</a>
-<a href="#160" id="160">160</a></pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code, non_snake_case)]
+<a href="#160" id="160">160</a>
+<a href="#161" id="161">161</a>
+<a href="#162" id="162">162</a>
+<a href="#163" id="163">163</a>
+<a href="#164" id="164">164</a>
+<a href="#165" id="165">165</a>
+<a href="#166" id="166">166</a>
+<a href="#167" id="167">167</a>
+<a href="#168" id="168">168</a>
+<a href="#169" id="169">169</a>
+<a href="#170" id="170">170</a>
+<a href="#171" id="171">171</a>
+<a href="#172" id="172">172</a>
+<a href="#173" id="173">173</a>
+<a href="#174" id="174">174</a>
+<a href="#175" id="175">175</a></pre></div><pre class="rust"><code><span class="attr">#![allow(dead_code, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::co;
 <span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -258,25 +273,40 @@
 		</span>.collect()
 }
 
-<span class="doccomment">/// Parses a null-delimited multi-string, which must terminate with two nulls.
+<span class="doccomment">/// Parses a null-delimited multi-string, ending with two terminating nulls.
+///
+/// # Safety
+///
+/// If `len` is not informed, make sure the string has two terminating nulls.
 </span><span class="attr">#[must_use]
-</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>parse_multi_z_str(src: <span class="kw-2">*const </span>u16) -&gt; Vec&lt;String&gt; {
+</span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">unsafe fn </span>parse_multi_z_str(
+	src: <span class="kw-2">*const </span>u16,
+	len: <span class="prelude-ty">Option</span>&lt;usize&gt;,
+) -&gt; Vec&lt;String&gt;
+{
+	<span class="kw">let </span>given_len = len.unwrap_or(usize::MAX);
 	<span class="kw">let </span><span class="kw-2">mut </span>src = src;
 	<span class="kw">let </span><span class="kw-2">mut </span>strings = Vec::&lt;String&gt;::new();
-	<span class="kw">let </span><span class="kw-2">mut </span>i = <span class="number">0</span>;
+	<span class="kw">let </span><span class="kw-2">mut </span>ch = <span class="number">0</span>; <span class="comment">// relative index of char in current string
+	</span><span class="kw">let </span><span class="kw-2">mut </span>tot_ch = <span class="number">0</span>; <span class="comment">// absolute index of char in original src
 
-	<span class="kw">loop </span>{
-		<span class="kw">if unsafe </span>{ <span class="kw-2">*</span>src.add(i) } == <span class="number">0 </span>{
-			<span class="kw">let </span>slice = <span class="kw">unsafe </span>{ std::slice::from_raw_parts(src, i) };
+	</span><span class="kw">loop </span>{
+		<span class="kw">if </span><span class="kw-2">*</span>src.add(ch) == <span class="number">0 </span>|| tot_ch == given_len {
+			<span class="kw">let </span>slice = std::slice::from_raw_parts(src, ch);
 			<span class="kw">if </span>slice.is_empty() {
-				<span class="kw">break</span>;
-			}
+				<span class="kw">break</span>; <span class="comment">// empty string means two consecutive nulls
+			</span>}
 			strings.push(WString::from_wchars_slice(slice).to_string());
-			src = <span class="kw">unsafe </span>{ src.add(i + <span class="number">1</span>) };
-			i = <span class="number">0</span>;
+			src = src.add(ch + <span class="number">1</span>);
+			ch = <span class="number">0</span>;
 		} <span class="kw">else </span>{
-			i += <span class="number">1</span>;
+			ch += <span class="number">1</span>;
 		}
+
+		<span class="kw">if </span>len.is_some() &amp;&amp; tot_ch == given_len {
+			<span class="kw">break</span>;
+		}
+		tot_ch += <span class="number">1</span>;
 	}
 	strings
 }
