@@ -1080,9 +1080,7 @@
 <a href="#1079" id="1079">1079</a>
 <a href="#1080" id="1080">1080</a>
 <a href="#1081" id="1081">1081</a>
-<a href="#1082" id="1082">1082</a>
-<a href="#1083" id="1083">1083</a>
-<a href="#1084" id="1084">1084</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<a href="#1082" id="1082">1082</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::advapi::{ffi, iterators::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -1495,8 +1493,6 @@
 				co::ERROR::SUCCESS =&gt; {},
 				e =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e),
 			}
-
-			<span class="macro">println!</span>(<span class="string">"{data_type1} {data_len1}"</span>);
 
 			<span class="kw">let </span><span class="kw-2">mut </span>buf = <span class="macro">vec!</span>[<span class="number">0u8</span>; data_len1 <span class="kw">as _</span>];
 			<span class="kw">let </span><span class="kw-2">mut </span>data_type2 = u32::default();
