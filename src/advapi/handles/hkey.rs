@@ -346,10 +346,6 @@ pub trait advapi_Hkey: Handle {
 	/// [`RegGetValue`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-reggetvaluew)
 	/// function.
 	///
-	/// Note that this method validates some race conditions, returning
-	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID)
-	/// and [`co::ERROR::INVALID_DATA`](crate::co::ERROR::INVALID_DATA).
-	///
 	/// # Examples
 	///
 	/// ```no_run
@@ -358,7 +354,7 @@ pub trait advapi_Hkey: Handle {
 	/// let val = w::HKEY::CURRENT_USER.RegGetValue(
 	///     Some("Control Panel\\Mouse"),
 	///     Some("Beep"),
-	///     co::RRF::RT_REG_SZ,
+	///     co::RRF::RT_ANY,
 	/// )?;
 	///
 	/// match val {
@@ -393,56 +389,61 @@ pub trait advapi_Hkey: Handle {
 		flags: co::RRF,
 	) -> SysResult<RegistryValue>
 	{
-		let sub_key_w = WString::from_opt_str(sub_key);
-		let value_name_w = WString::from_opt_str(value_name);
-		let mut raw_data_type1 = u32::default();
-		let mut data_len1 = u32::default();
+		loop {
+			let sub_key_w = WString::from_opt_str(sub_key);
+			let value_name_w = WString::from_opt_str(value_name);
+			let mut data_type1 = u32::default();
+			let mut data_len1 = u32::default(); // in bytes
 
-		// Query data type and length.
-		error_to_sysresult(
-			unsafe {
-				ffi::RegGetValueW(
-					self.ptr(),
-					sub_key_w.as_ptr(),
-					value_name_w.as_ptr(),
-					flags.raw(),
-					&mut raw_data_type1,
-					std::ptr::null_mut(),
-					&mut data_len1,
+			match unsafe {
+				co::ERROR::from_raw(
+					ffi::RegGetValueW(
+						self.ptr(),
+						sub_key_w.as_ptr(),
+						value_name_w.as_ptr(),
+						flags.raw(),
+						&mut data_type1,
+						std::ptr::null_mut(),
+						&mut data_len1,
+					) as _,
 				)
-			},
-		)?;
+			} {
+				co::ERROR::SUCCESS => {},
+				e => return Err(e),
+			}
 
-		// Alloc the receiving block.
-		let mut buf: Vec<u8> = vec![0x00; data_len1 as _];
+			let mut buf = vec![0u8; data_len1 as _];
+			let mut data_type2 = u32::default();
+			let mut data_len2 = data_len1; // in bytes
 
-		let mut raw_data_type2 = u32::default();
-		let mut data_len2 = data_len1;
-
-		// Retrieve the value content.
-		error_to_sysresult(
-			unsafe {
-				ffi::RegGetValueW(
-					self.ptr(),
-					sub_key_w.as_ptr(),
-					value_name_w.as_ptr(),
-					flags.raw(),
-					&mut raw_data_type2,
-					buf.as_mut_ptr() as _,
-					&mut data_len2,
+			match unsafe {
+				co::ERROR::from_raw(
+					ffi::RegGetValueW(
+						self.ptr(),
+						sub_key_w.as_ptr(),
+						value_name_w.as_ptr(),
+						flags.raw(),
+						&mut data_type2,
+						buf.as_mut_ptr() as _,
+						&mut data_len2,
+					) as _,
 				)
-			},
-		)?;
+			} {
+				co::ERROR::SUCCESS => {},
+				co::ERROR::MORE_DATA => continue, // value changed in a concurrent operation; retry
+				e => return Err(e),
+			}
 
-		if data_len1 == data_len2 + 2 { // https://stackoverflow.com/q/29223180
-			data_len1 -=2;
+			if data_type1 != data_type2 { // type overwritten in a concurrent operation; retry
+				continue;
+			}
+
+			return Ok(
+				unsafe {
+					RegistryValue::from_raw(buf, co::REG::from_raw(data_type1))
+				},
+			);
 		}
-
-		validate_retrieved_reg_val(
-			unsafe { co::REG::from_raw(raw_data_type1) }, data_len1,
-			unsafe { co::REG::from_raw(raw_data_type2) }, data_len2,
-			buf,
-		)
 	}
 
 	/// [`RegLoadKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regloadkeyw)
