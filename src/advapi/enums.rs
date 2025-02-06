@@ -90,11 +90,7 @@ impl RegistryValue {
 					*std::mem::transmute::<_, *const [u8; 8]>(buf.as_ptr()),
 				)
 			),
-			co::REG::SZ => {
-				let (_, vec16, _) = buf.align_to::<u16>();
-				RegistryValue::Sz(WString::from_wchars_slice(&vec16).to_string())
-			},
-			co::REG::EXPAND_SZ => {
+			co::REG::SZ | co::REG::EXPAND_SZ => {
 				let (_, vec16, _) = buf.align_to::<u16>();
 				RegistryValue::Sz(WString::from_wchars_slice(&vec16).to_string())
 			},
