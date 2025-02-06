@@ -389,11 +389,12 @@ pub trait advapi_Hkey: Handle {
 		flags: co::RRF,
 	) -> SysResult<RegistryValue>
 	{
+		let sub_key_w = WString::from_opt_str(sub_key);
+		let value_name_w = WString::from_opt_str(value_name);
+		let mut buf = Vec::<u8>::default();
+
 		loop {
-			let sub_key_w = WString::from_opt_str(sub_key);
-			let value_name_w = WString::from_opt_str(value_name);
-			let mut data_type1 = u32::default();
-			let mut data_len1 = u32::default(); // in bytes
+			let mut data_len = u32::default(); // in bytes
 
 			match unsafe {
 				co::ERROR::from_raw(
@@ -402,9 +403,9 @@ pub trait advapi_Hkey: Handle {
 						sub_key_w.as_ptr(),
 						value_name_w.as_ptr(),
 						flags.raw(),
-						&mut data_type1,
 						std::ptr::null_mut(),
-						&mut data_len1,
+						std::ptr::null_mut(),
+						&mut data_len, // first call to retrieve the size only
 					) as _,
 				)
 			} {
@@ -412,9 +413,8 @@ pub trait advapi_Hkey: Handle {
 				e => return Err(e),
 			}
 
-			let mut buf = vec![0u8; data_len1 as _];
-			let mut data_type2 = u32::default();
-			let mut data_len2 = data_len1; // in bytes
+			buf.resize(data_len as _, 0x00);
+			let mut data_type = u32::default();
 
 			match unsafe {
 				co::ERROR::from_raw(
@@ -423,26 +423,20 @@ pub trait advapi_Hkey: Handle {
 						sub_key_w.as_ptr(),
 						value_name_w.as_ptr(),
 						flags.raw(),
-						&mut data_type2,
-						buf.as_mut_ptr() as _,
-						&mut data_len2,
+						&mut data_type,
+						buf.as_mut_ptr() as _, // second call to retrieve the data
+						&mut data_len,
 					) as _,
 				)
 			} {
-				co::ERROR::SUCCESS => {},
+				co::ERROR::SUCCESS => return Ok(
+					unsafe {
+						RegistryValue::from_raw(buf, co::REG::from_raw(data_type))
+					},
+				),
 				co::ERROR::MORE_DATA => continue, // value changed in a concurrent operation; retry
 				e => return Err(e),
 			}
-
-			if data_type1 != data_type2 { // type overwritten in a concurrent operation; retry
-				continue;
-			}
-
-			return Ok(
-				unsafe {
-					RegistryValue::from_raw(buf, co::REG::from_raw(data_type1))
-				},
-			);
 		}
 	}
 
