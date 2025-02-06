@@ -1074,13 +1074,7 @@
 <a href="#1073" id="1073">1073</a>
 <a href="#1074" id="1074">1074</a>
 <a href="#1075" id="1075">1075</a>
-<a href="#1076" id="1076">1076</a>
-<a href="#1077" id="1077">1077</a>
-<a href="#1078" id="1078">1078</a>
-<a href="#1079" id="1079">1079</a>
-<a href="#1080" id="1080">1080</a>
-<a href="#1081" id="1081">1081</a>
-<a href="#1082" id="1082">1082</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<a href="#1076" id="1076">1076</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::advapi::{ffi, iterators::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -1471,11 +1465,12 @@
 		flags: co::RRF,
 	) -&gt; SysResult&lt;RegistryValue&gt;
 	{
+		<span class="kw">let </span>sub_key_w = WString::from_opt_str(sub_key);
+		<span class="kw">let </span>value_name_w = WString::from_opt_str(value_name);
+		<span class="kw">let </span><span class="kw-2">mut </span>buf = Vec::&lt;u8&gt;::default();
+
 		<span class="kw">loop </span>{
-			<span class="kw">let </span>sub_key_w = WString::from_opt_str(sub_key);
-			<span class="kw">let </span>value_name_w = WString::from_opt_str(value_name);
-			<span class="kw">let </span><span class="kw-2">mut </span>data_type1 = u32::default();
-			<span class="kw">let </span><span class="kw-2">mut </span>data_len1 = u32::default(); <span class="comment">// in bytes
+			<span class="kw">let </span><span class="kw-2">mut </span>data_len = u32::default(); <span class="comment">// in bytes
 
 			</span><span class="kw">match unsafe </span>{
 				co::ERROR::from_raw(
@@ -1484,47 +1479,40 @@
 						sub_key_w.as_ptr(),
 						value_name_w.as_ptr(),
 						flags.raw(),
-						<span class="kw-2">&amp;mut </span>data_type1,
 						std::ptr::null_mut(),
-						<span class="kw-2">&amp;mut </span>data_len1,
-					) <span class="kw">as _</span>,
+						std::ptr::null_mut(),
+						<span class="kw-2">&amp;mut </span>data_len, <span class="comment">// first call to retrieve the size only
+					</span>) <span class="kw">as _</span>,
 				)
 			} {
 				co::ERROR::SUCCESS =&gt; {},
 				e =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e),
 			}
 
-			<span class="kw">let </span><span class="kw-2">mut </span>buf = <span class="macro">vec!</span>[<span class="number">0u8</span>; data_len1 <span class="kw">as _</span>];
-			<span class="kw">let </span><span class="kw-2">mut </span>data_type2 = u32::default();
-			<span class="kw">let </span><span class="kw-2">mut </span>data_len2 = data_len1; <span class="comment">// in bytes
+			buf.resize(data_len <span class="kw">as _</span>, <span class="number">0x00</span>);
+			<span class="kw">let </span><span class="kw-2">mut </span>data_type = u32::default();
 
-			</span><span class="kw">match unsafe </span>{
+			<span class="kw">match unsafe </span>{
 				co::ERROR::from_raw(
 					ffi::RegGetValueW(
 						<span class="self">self</span>.ptr(),
 						sub_key_w.as_ptr(),
 						value_name_w.as_ptr(),
 						flags.raw(),
-						<span class="kw-2">&amp;mut </span>data_type2,
-						buf.as_mut_ptr() <span class="kw">as _</span>,
-						<span class="kw-2">&amp;mut </span>data_len2,
+						<span class="kw-2">&amp;mut </span>data_type,
+						buf.as_mut_ptr() <span class="kw">as _</span>, <span class="comment">// second call to retrieve the data
+						</span><span class="kw-2">&amp;mut </span>data_len,
 					) <span class="kw">as _</span>,
 				)
 			} {
-				co::ERROR::SUCCESS =&gt; {},
+				co::ERROR::SUCCESS =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(
+					<span class="kw">unsafe </span>{
+						RegistryValue::from_raw(buf, co::REG::from_raw(data_type))
+					},
+				),
 				co::ERROR::MORE_DATA =&gt; <span class="kw">continue</span>, <span class="comment">// value changed in a concurrent operation; retry
 				</span>e =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e),
 			}
-
-			<span class="kw">if </span>data_type1 != data_type2 { <span class="comment">// type overwritten in a concurrent operation; retry
-				</span><span class="kw">continue</span>;
-			}
-
-			<span class="kw">return </span><span class="prelude-val">Ok</span>(
-				<span class="kw">unsafe </span>{
-					RegistryValue::from_raw(buf, co::REG::from_raw(data_type1))
-				},
-			);
 		}
 	}
 
