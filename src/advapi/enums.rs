@@ -79,7 +79,7 @@ impl RegistryValue {
 	#[must_use]
 	pub unsafe fn from_raw(buf: Vec<u8>, reg_type: co::REG) -> RegistryValue {
 		match reg_type {
-			co::REG::NONE => RegistryValue::None,
+			co::REG::BINARY => RegistryValue::Binary(buf),
 			co::REG::DWORD => RegistryValue::Dword(
 				u32::from_ne_bytes(
 					*std::mem::transmute::<_, *const [u8; 4]>(buf.as_ptr()),
@@ -90,9 +90,13 @@ impl RegistryValue {
 					*std::mem::transmute::<_, *const [u8; 8]>(buf.as_ptr()),
 				)
 			),
-			co::REG::SZ | co::REG::EXPAND_SZ => {
+			co::REG::SZ => {
 				let (_, vec16, _) = buf.align_to::<u16>();
 				RegistryValue::Sz(WString::from_wchars_slice(&vec16).to_string())
+			},
+			co::REG::EXPAND_SZ => {
+				let (_, vec16, _) = buf.align_to::<u16>();
+				RegistryValue::ExpandSz(WString::from_wchars_slice(&vec16).to_string())
 			},
 			co::REG::MULTI_SZ => {
 				let (_, vec16, _) = buf.align_to::<u16>();
@@ -100,7 +104,7 @@ impl RegistryValue {
 					parse_multi_z_str(vec16.as_ptr(), Some(vec16.len())),
 				)
 			},
-			co::REG::BINARY => RegistryValue::Binary(buf),
+			co::REG::NONE => RegistryValue::None,
 			_ => RegistryValue::None, // other types not implemented yet
 		}
 	}
