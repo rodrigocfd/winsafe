@@ -429,11 +429,12 @@ pub trait advapi_Hkey: Handle {
 					) as _,
 				)
 			} {
-				co::ERROR::SUCCESS => return Ok(
-					unsafe {
+				co::ERROR::SUCCESS => {
+					buf.resize(data_len as _, 0x00); // data length may have shrunk
+					return Ok(unsafe {
 						RegistryValue::from_raw(buf, co::REG::from_raw(data_type))
-					},
-				),
+					})
+				},
 				co::ERROR::MORE_DATA => continue, // value changed in a concurrent operation; retry
 				e => return Err(e),
 			}
