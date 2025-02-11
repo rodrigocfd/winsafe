@@ -431,9 +431,9 @@ pub trait advapi_Hkey: Handle {
 			} {
 				co::ERROR::SUCCESS => {
 					buf.resize(data_len as _, 0x00); // data length may have shrunk
-					return Ok(unsafe {
+					return unsafe {
 						RegistryValue::from_raw(buf, co::REG::from_raw(data_type))
-					})
+					}
 				},
 				co::ERROR::MORE_DATA => continue, // value changed in a concurrent operation; retry
 				e => return Err(e),
@@ -712,16 +712,14 @@ pub trait advapi_Hkey: Handle {
 			return Err(co::ERROR::TRANSACTION_REQUEST_NOT_VALID);
 		}
 
-		Ok(
-			valents2.iter() // first VALENT array is not filled with len/type values
-				.map(|v2| unsafe {
-					RegistryValue::from_raw(
-						v2.buf_projection(&buf).to_vec(),
-						v2.ve_type,
-					)
-				})
-				.collect::<Vec<_>>()
-		)
+		valents2.iter() // first VALENT array is not filled with len/type values
+			.map(|v2| unsafe {
+				RegistryValue::from_raw(
+					v2.buf_projection(&buf).to_vec(),
+					v2.ve_type,
+				)
+			})
+			.collect::<SysResult<Vec<_>>>()
 	}
 
 	/// [`RegQueryReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryreflectionkey)
@@ -1073,5 +1071,5 @@ fn validate_retrieved_reg_val(
 		}
 	}
 
-	Ok(unsafe { RegistryValue::from_raw(buf, data_type1) })
+	unsafe { RegistryValue::from_raw(buf, data_type1) }
 }
