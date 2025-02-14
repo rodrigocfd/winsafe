@@ -605,12 +605,6 @@ pub trait advapi_Hkey: Handle {
 	/// [`RegQueryMultipleValues`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regquerymultiplevaluesw)
 	/// function.
 	///
-	/// This method is a multi-value version of
-	/// [`HKEY::RegQueryValueEx`](crate::prelude::advapi_Hkey::RegQueryValueEx).
-	///
-	/// Note that this method validates some race conditions, returning
-	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID).
-	///
 	/// # Examples
 	///
 	/// ```no_run
@@ -655,71 +649,61 @@ pub trait advapi_Hkey: Handle {
 		value_names: &[impl AsRef<str>],
 	) -> SysResult<Vec<RegistryValue>>
 	{
-		let mut valents1 = vec![VALENT::default(); value_names.len()];
+		let mut valents = vec![VALENT::default(); value_names.len()];
 		let value_names_w = value_names.iter()
-			.zip(valents1.iter_mut())
-			.map(|(value_name, valent)| {
-				let value_name_w = WString::from_str(value_name.as_ref());
-				valent.ve_valuename = value_name_w.as_ptr() as _;
-				value_name_w
-			})
+			.map(|value_name| WString::from_str(value_name.as_ref()))
 			.collect::<Vec<_>>();
-		let mut data_len1 = u32::default();
+		valents.iter_mut()
+			.zip(value_names_w.iter())
+			.for_each(|(valent, value_name_w)| valent.ve_valuename = value_name_w.as_ptr() as _);
+		let mut buf = Vec::<u8>::default();
 
-		// Query data types and lenghts.
-		match unsafe {
-			co::ERROR::from_raw(
-				ffi::RegQueryMultipleValuesW(
-					self.ptr(),
-					valents1.as_mut_ptr() as _,
-					value_names.len() as _,
-					std::ptr::null_mut(),
-					&mut data_len1,
-				) as _,
-			 )
-		} {
-			co::ERROR::MORE_DATA => {},
-			err => return Err(err),
-		}
+		loop {
+			let mut data_len = u32::default();
 
-		// Alloc the receiving block.
-		let mut buf: Vec<u8> = vec![0x00; data_len1 as _];
+			match unsafe {
+				co::ERROR::from_raw(
+					ffi::RegQueryMultipleValuesW(
+						self.ptr(),
+						valents.as_mut_ptr() as _,
+						value_names.len() as _,
+						std::ptr::null_mut(),
+						&mut data_len, // first call to retrieve size only
+					) as _,
+				 )
+			} {
+				co::ERROR::MORE_DATA => {},
+				e => return Err(e),
+			}
 
-		let mut valents2 = value_names_w.iter()
-			.map(|value_name_w| {
-				let mut valent = VALENT::default();
-				valent.ve_valuename = value_name_w.as_ptr() as _;
-				valent
-			})
-			.collect::<Vec<_>>();
-		let mut data_len2 = data_len1;
+			buf.resize(data_len as _, 0x00);
 
-		// Retrieve the values content.
-		error_to_sysresult(
-			unsafe {
-				ffi::RegQueryMultipleValuesW(
-					self.ptr(),
-					valents2.as_mut_ptr() as _,
-					value_names.len() as _,
-					buf.as_mut_ptr() as _,
-					&mut data_len2,
+			match unsafe {
+				co::ERROR::from_raw(
+					ffi::RegQueryMultipleValuesW(
+						self.ptr(),
+						valents.as_mut_ptr() as _,
+						value_names.len() as _,
+						buf.as_mut_ptr() as _,
+						&mut data_len,
+					) as _,
 				)
-			},
-		)?;
-
-		if data_len1 != data_len2 {
-			// Race condition: someone modified the data content in between our calls.
-			return Err(co::ERROR::TRANSACTION_REQUEST_NOT_VALID);
+			} {
+				co::ERROR::SUCCESS => {
+					buf.resize(data_len as _, 0x00); // data length may have shrunk
+					return valents.iter()
+						.map(|valent| unsafe {
+							RegistryValue::from_raw(
+								valent.buf_projection(&buf).to_vec(),
+								valent.ve_type,
+							)
+						})
+						.collect::<SysResult<Vec<_>>>()
+				},
+				co::ERROR::MORE_DATA => continue, // value changed in a concurrent operation; retry
+				e => return Err(e),
+			}
 		}
-
-		valents2.iter() // first VALENT array is not filled with len/type values
-			.map(|v2| unsafe {
-				RegistryValue::from_raw(
-					v2.buf_projection(&buf).to_vec(),
-					v2.ve_type,
-				)
-			})
-			.collect::<SysResult<Vec<_>>>()
 	}
 
 	/// [`RegQueryReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryreflectionkey)
