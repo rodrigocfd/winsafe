@@ -1029,52 +1029,7 @@
 <a href="#1028" id="1028">1028</a>
 <a href="#1029" id="1029">1029</a>
 <a href="#1030" id="1030">1030</a>
-<a href="#1031" id="1031">1031</a>
-<a href="#1032" id="1032">1032</a>
-<a href="#1033" id="1033">1033</a>
-<a href="#1034" id="1034">1034</a>
-<a href="#1035" id="1035">1035</a>
-<a href="#1036" id="1036">1036</a>
-<a href="#1037" id="1037">1037</a>
-<a href="#1038" id="1038">1038</a>
-<a href="#1039" id="1039">1039</a>
-<a href="#1040" id="1040">1040</a>
-<a href="#1041" id="1041">1041</a>
-<a href="#1042" id="1042">1042</a>
-<a href="#1043" id="1043">1043</a>
-<a href="#1044" id="1044">1044</a>
-<a href="#1045" id="1045">1045</a>
-<a href="#1046" id="1046">1046</a>
-<a href="#1047" id="1047">1047</a>
-<a href="#1048" id="1048">1048</a>
-<a href="#1049" id="1049">1049</a>
-<a href="#1050" id="1050">1050</a>
-<a href="#1051" id="1051">1051</a>
-<a href="#1052" id="1052">1052</a>
-<a href="#1053" id="1053">1053</a>
-<a href="#1054" id="1054">1054</a>
-<a href="#1055" id="1055">1055</a>
-<a href="#1056" id="1056">1056</a>
-<a href="#1057" id="1057">1057</a>
-<a href="#1058" id="1058">1058</a>
-<a href="#1059" id="1059">1059</a>
-<a href="#1060" id="1060">1060</a>
-<a href="#1061" id="1061">1061</a>
-<a href="#1062" id="1062">1062</a>
-<a href="#1063" id="1063">1063</a>
-<a href="#1064" id="1064">1064</a>
-<a href="#1065" id="1065">1065</a>
-<a href="#1066" id="1066">1066</a>
-<a href="#1067" id="1067">1067</a>
-<a href="#1068" id="1068">1068</a>
-<a href="#1069" id="1069">1069</a>
-<a href="#1070" id="1070">1070</a>
-<a href="#1071" id="1071">1071</a>
-<a href="#1072" id="1072">1072</a>
-<a href="#1073" id="1073">1073</a>
-<a href="#1074" id="1074">1074</a>
-<a href="#1075" id="1075">1075</a>
-<a href="#1076" id="1076">1076</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<a href="#1031" id="1031">1031</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::advapi::{ffi, iterators::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -1505,11 +1460,12 @@
 					) <span class="kw">as _</span>,
 				)
 			} {
-				co::ERROR::SUCCESS =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(
-					<span class="kw">unsafe </span>{
+				co::ERROR::SUCCESS =&gt; {
+					buf.resize(data_len <span class="kw">as _</span>, <span class="number">0x00</span>); <span class="comment">// data length may have shrunk
+					</span><span class="kw">return unsafe </span>{
 						RegistryValue::from_raw(buf, co::REG::from_raw(data_type))
-					},
-				),
+					}
+				},
 				co::ERROR::MORE_DATA =&gt; <span class="kw">continue</span>, <span class="comment">// value changed in a concurrent operation; retry
 				</span>e =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e),
 			}
@@ -1787,16 +1743,14 @@
 			</span><span class="kw">return </span><span class="prelude-val">Err</span>(co::ERROR::TRANSACTION_REQUEST_NOT_VALID);
 		}
 
-		<span class="prelude-val">Ok</span>(
-			valents2.iter() <span class="comment">// first VALENT array is not filled with len/type values
-				</span>.map(|v2| <span class="kw">unsafe </span>{
-					RegistryValue::from_raw(
-						v2.buf_projection(<span class="kw-2">&amp;</span>buf).to_vec(),
-						v2.ve_type,
-					)
-				})
-				.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;()
-		)
+		valents2.iter() <span class="comment">// first VALENT array is not filled with len/type values
+			</span>.map(|v2| <span class="kw">unsafe </span>{
+				RegistryValue::from_raw(
+					v2.buf_projection(<span class="kw-2">&amp;</span>buf).to_vec(),
+					v2.ve_type,
+				)
+			})
+			.collect::&lt;SysResult&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;&gt;()
 	}
 
 	<span class="doccomment">/// [`RegQueryReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryreflectionkey)
@@ -1811,13 +1765,6 @@
 
 	<span class="doccomment">/// [`RegQueryValueEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryvalueexw)
 	/// function.
-	///
-	/// This method is a single-value version of
-	/// [`HKEY::RegQueryMultipleValues`](crate::prelude::advapi_Hkey::RegQueryMultipleValues).
-	///
-	/// Note that this method validates some race conditions, returning
-	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID)
-	/// and [`co::ERROR::INVALID_DATA`](crate::co::ERROR::INVALID_DATA).
 	///
 	/// # Examples
 	///
@@ -1863,48 +1810,52 @@
 	) -&gt; SysResult&lt;RegistryValue&gt;
 	{
 		<span class="kw">let </span>value_name_w = WString::from_opt_str(value_name);
-		<span class="kw">let </span><span class="kw-2">mut </span>raw_data_type1 = u32::default();
-		<span class="kw">let </span><span class="kw-2">mut </span>data_len1 = u32::default();
+		<span class="kw">let </span><span class="kw-2">mut </span>buf = Vec::&lt;u8&gt;::default();
 
-		<span class="comment">// Query data type and length.
-		</span>error_to_sysresult(
-			<span class="kw">unsafe </span>{
-				ffi::RegQueryValueExW(
-					<span class="self">self</span>.ptr(),
-					value_name_w.as_ptr(),
-					std::ptr::null_mut(),
-					<span class="kw-2">&amp;mut </span>raw_data_type1,
-					std::ptr::null_mut(),
-					<span class="kw-2">&amp;mut </span>data_len1,
+		<span class="kw">loop </span>{
+			<span class="kw">let </span><span class="kw-2">mut </span>data_len = u32::default(); <span class="comment">// in bytes
+
+			</span><span class="kw">match unsafe </span>{
+				co::ERROR::from_raw(
+					ffi::RegQueryValueExW(
+						<span class="self">self</span>.ptr(),
+						value_name_w.as_ptr(),
+						std::ptr::null_mut(),
+						std::ptr::null_mut(),
+						std::ptr::null_mut(),
+						<span class="kw-2">&amp;mut </span>data_len, <span class="comment">// first call to retrieve size only
+					</span>) <span class="kw">as _</span>,
 				)
-			},
-		)<span class="question-mark">?</span>;
+			} {
+				co::ERROR::SUCCESS =&gt; {},
+				e =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e),
+			}
 
-		<span class="comment">// Alloc the receiving block.
-		</span><span class="kw">let </span><span class="kw-2">mut </span>buf: Vec&lt;u8&gt; = <span class="macro">vec!</span>[<span class="number">0x00</span>; data_len1 <span class="kw">as _</span>];
+			buf.resize(data_len <span class="kw">as _</span>, <span class="number">0x00</span>);
+			<span class="kw">let </span><span class="kw-2">mut </span>data_type = u32::default();
 
-		<span class="kw">let </span><span class="kw-2">mut </span>raw_data_type2 = u32::default();
-		<span class="kw">let </span><span class="kw-2">mut </span>data_len2 = data_len1;
-
-		<span class="comment">// Retrieve the value content.
-		</span>error_to_sysresult(
-			<span class="kw">unsafe </span>{
-				ffi::RegQueryValueExW(
-					<span class="self">self</span>.ptr(),
-					value_name_w.as_ptr(),
-					std::ptr::null_mut(),
-					<span class="kw-2">&amp;mut </span>raw_data_type2,
-					buf.as_mut_ptr() <span class="kw">as _</span>,
-					<span class="kw-2">&amp;mut </span>data_len2,
+			<span class="kw">match unsafe </span>{
+				co::ERROR::from_raw(
+					ffi::RegQueryValueExW(
+						<span class="self">self</span>.ptr(),
+						value_name_w.as_ptr(),
+						std::ptr::null_mut(),
+						<span class="kw-2">&amp;mut </span>data_type,
+						buf.as_mut_ptr() <span class="kw">as _</span>,
+						<span class="kw-2">&amp;mut </span>data_len,
+					) <span class="kw">as _</span>,
 				)
-			},
-		)<span class="question-mark">?</span>;
-
-		validate_retrieved_reg_val(
-			<span class="kw">unsafe </span>{ co::REG::from_raw(raw_data_type1) }, data_len1,
-			<span class="kw">unsafe </span>{ co::REG::from_raw(raw_data_type2) }, data_len2,
-			buf,
-		)
+			} {
+				co::ERROR::SUCCESS =&gt; {
+					buf.resize(data_len <span class="kw">as _</span>, <span class="number">0x00</span>); <span class="comment">// data length may have shrunk
+					</span><span class="kw">return unsafe </span>{
+						RegistryValue::from_raw(buf, co::REG::from_raw(data_type))
+					}
+				},
+				co::ERROR::MORE_DATA =&gt; <span class="kw">continue</span>, <span class="comment">// value changed in a concurrent operation; retry
+				</span>e =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e),
+			}
+		}
 	}
 
 	<span class="doccomment">/// [`RegRenameKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regrenamekey)
@@ -2108,46 +2059,5 @@
 		</span>(<span class="self">self</span>.<span class="number">0 </span><span class="kw">as </span>usize) &gt;= (<span class="self">Self</span>::CLASSES_ROOT.<span class="number">0 </span><span class="kw">as </span>usize)
 			&amp;&amp; (<span class="self">self</span>.<span class="number">0 </span><span class="kw">as </span>usize) &lt;= (<span class="self">Self</span>::PERFORMANCE_NLSTEXT.<span class="number">0 </span><span class="kw">as </span>usize)
 	}
-}
-
-<span class="comment">//------------------------------------------------------------------------------
-
-</span><span class="kw">fn </span>validate_retrieved_reg_val(
-	data_type1: co::REG,
-	data_len1: u32,
-	data_type2: co::REG,
-	data_len2: u32,
-	buf: Vec&lt;u8&gt;,
-) -&gt; SysResult&lt;RegistryValue&gt;
-{
-	<span class="kw">if </span>data_type1 != data_type2 {
-		<span class="comment">// Race condition: someone modified the data type in between our calls.
-		</span><span class="kw">return </span><span class="prelude-val">Err</span>(co::ERROR::TRANSACTION_REQUEST_NOT_VALID);
-	}
-
-	<span class="kw">if </span>data_len1 != data_len2 {
-		<span class="comment">// Race condition: someone modified the data content in between our calls.
-		</span><span class="kw">return </span><span class="prelude-val">Err</span>(co::ERROR::TRANSACTION_REQUEST_NOT_VALID);
-	}
-
-	<span class="kw">if </span>data_type1 == co::REG::DWORD &amp;&amp; data_len1 != <span class="number">4
-		</span>|| data_type1 == co::REG::QWORD &amp;&amp; data_len1 != <span class="number">8
-	</span>{
-		<span class="comment">// Data length makes no sense, possibly corrupted.
-		</span><span class="kw">return </span><span class="prelude-val">Err</span>(co::ERROR::INVALID_DATA);
-	}
-
-	<span class="kw">if </span>data_type1 == co::REG::SZ {
-		<span class="kw">if </span>data_len1 == <span class="number">0 </span><span class="comment">// empty data
-			</span>|| data_len1 % <span class="number">2 </span>!= <span class="number">0 </span><span class="comment">// odd number of bytes
-			</span>|| buf[data_len1 <span class="kw">as </span>usize - <span class="number">2</span>] != <span class="number">0 </span><span class="comment">// terminating null
-			</span>|| buf[data_len1 <span class="kw">as </span>usize - <span class="number">1</span>] != <span class="number">0
-		</span>{
-			<span class="comment">// Bad string.
-			</span><span class="kw">return </span><span class="prelude-val">Err</span>(co::ERROR::INVALID_DATA);
-		}
-	}
-
-	<span class="prelude-val">Ok</span>(<span class="kw">unsafe </span>{ RegistryValue::from_raw(buf, data_type1) })
 }
 </code></pre></div></section></main></body></html>
