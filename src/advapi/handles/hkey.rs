@@ -735,13 +735,6 @@ pub trait advapi_Hkey: Handle {
 	/// [`RegQueryValueEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryvalueexw)
 	/// function.
 	///
-	/// This method is a single-value version of
-	/// [`HKEY::RegQueryMultipleValues`](crate::prelude::advapi_Hkey::RegQueryMultipleValues).
-	///
-	/// Note that this method validates some race conditions, returning
-	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID)
-	/// and [`co::ERROR::INVALID_DATA`](crate::co::ERROR::INVALID_DATA).
-	///
 	/// # Examples
 	///
 	/// ```no_run
@@ -786,48 +779,52 @@ pub trait advapi_Hkey: Handle {
 	) -> SysResult<RegistryValue>
 	{
 		let value_name_w = WString::from_opt_str(value_name);
-		let mut raw_data_type1 = u32::default();
-		let mut data_len1 = u32::default();
+		let mut buf = Vec::<u8>::default();
 
-		// Query data type and length.
-		error_to_sysresult(
-			unsafe {
-				ffi::RegQueryValueExW(
-					self.ptr(),
-					value_name_w.as_ptr(),
-					std::ptr::null_mut(),
-					&mut raw_data_type1,
-					std::ptr::null_mut(),
-					&mut data_len1,
+		loop {
+			let mut data_len = u32::default(); // in bytes
+
+			match unsafe {
+				co::ERROR::from_raw(
+					ffi::RegQueryValueExW(
+						self.ptr(),
+						value_name_w.as_ptr(),
+						std::ptr::null_mut(),
+						std::ptr::null_mut(),
+						std::ptr::null_mut(),
+						&mut data_len, // first call to retrieve size only
+					) as _,
 				)
-			},
-		)?;
+			} {
+				co::ERROR::SUCCESS => {},
+				e => return Err(e),
+			}
 
-		// Alloc the receiving block.
-		let mut buf: Vec<u8> = vec![0x00; data_len1 as _];
+			buf.resize(data_len as _, 0x00);
+			let mut data_type = u32::default();
 
-		let mut raw_data_type2 = u32::default();
-		let mut data_len2 = data_len1;
-
-		// Retrieve the value content.
-		error_to_sysresult(
-			unsafe {
-				ffi::RegQueryValueExW(
-					self.ptr(),
-					value_name_w.as_ptr(),
-					std::ptr::null_mut(),
-					&mut raw_data_type2,
-					buf.as_mut_ptr() as _,
-					&mut data_len2,
+			match unsafe {
+				co::ERROR::from_raw(
+					ffi::RegQueryValueExW(
+						self.ptr(),
+						value_name_w.as_ptr(),
+						std::ptr::null_mut(),
+						&mut data_type,
+						buf.as_mut_ptr() as _,
+						&mut data_len,
+					) as _,
 				)
-			},
-		)?;
-
-		validate_retrieved_reg_val(
-			unsafe { co::REG::from_raw(raw_data_type1) }, data_len1,
-			unsafe { co::REG::from_raw(raw_data_type2) }, data_len2,
-			buf,
-		)
+			} {
+				co::ERROR::SUCCESS => {
+					buf.resize(data_len as _, 0x00); // data length may have shrunk
+					return unsafe {
+						RegistryValue::from_raw(buf, co::REG::from_raw(data_type))
+					}
+				},
+				co::ERROR::MORE_DATA => continue, // value changed in a concurrent operation; retry
+				e => return Err(e),
+			}
+		}
 	}
 
 	/// [`RegRenameKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regrenamekey)
@@ -1031,45 +1028,4 @@ impl HKEY {
 		(self.0 as usize) >= (Self::CLASSES_ROOT.0 as usize)
 			&& (self.0 as usize) <= (Self::PERFORMANCE_NLSTEXT.0 as usize)
 	}
-}
-
-//------------------------------------------------------------------------------
-
-fn validate_retrieved_reg_val(
-	data_type1: co::REG,
-	data_len1: u32,
-	data_type2: co::REG,
-	data_len2: u32,
-	buf: Vec<u8>,
-) -> SysResult<RegistryValue>
-{
-	if data_type1 != data_type2 {
-		// Race condition: someone modified the data type in between our calls.
-		return Err(co::ERROR::TRANSACTION_REQUEST_NOT_VALID);
-	}
-
-	if data_len1 != data_len2 {
-		// Race condition: someone modified the data content in between our calls.
-		return Err(co::ERROR::TRANSACTION_REQUEST_NOT_VALID);
-	}
-
-	if data_type1 == co::REG::DWORD && data_len1 != 4
-		|| data_type1 == co::REG::QWORD && data_len1 != 8
-	{
-		// Data length makes no sense, possibly corrupted.
-		return Err(co::ERROR::INVALID_DATA);
-	}
-
-	if data_type1 == co::REG::SZ {
-		if data_len1 == 0 // empty data
-			|| data_len1 % 2 != 0 // odd number of bytes
-			|| buf[data_len1 as usize - 2] != 0 // terminating null
-			|| buf[data_len1 as usize - 1] != 0
-		{
-			// Bad string.
-			return Err(co::ERROR::INVALID_DATA);
-		}
-	}
-
-	unsafe { RegistryValue::from_raw(buf, data_type1) }
 }
