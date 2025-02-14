@@ -357,29 +357,7 @@ pub trait advapi_Hkey: Handle {
 	///     co::RRF::RT_ANY,
 	/// )?;
 	///
-	/// match val {
-	///     w::RegistryValue::Dword(n) => println!("Number u32: {}", n),
-	///     w::RegistryValue::Qword(n) => println!("Number u64: {}", n),
-	///     w::RegistryValue::Sz(s) => println!("String: {}", s),
-	///     w::RegistryValue::ExpandSz(s) => {
-	///         println!("Env string: {}", w::ExpandEnvironmentStrings(&s)?);
-	///     },
-	///     w::RegistryValue::MultiSz(strs) => {
-	///        println!("Multi string:");
-	///        for s in strs.iter() {
-	///            print!("[{}] ", s);
-	///        }
-	///        println!("");
-	///     },
-	///     w::RegistryValue::Binary(bin) => {
-	///         println!("Binary:");
-	///         for b in bin.iter() {
-	///             print!("{:02x} ", b);
-	///         }
-	///         println!("");
-	///     },
-	///     w::RegistryValue::None => println!("No value"),
-	/// }
+	/// println!("{val}");
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
@@ -617,29 +595,7 @@ pub trait advapi_Hkey: Handle {
 	/// )?;
 	///
 	/// for val in hkey.RegQueryMultipleValues(&["DpiScalingVer", "WallPaper"])? {
-	///     match val {
-	///         w::RegistryValue::Dword(n) => println!("Number u32: {}", n),
-	///         w::RegistryValue::Qword(n) => println!("Number u64: {}", n),
-	///         w::RegistryValue::Sz(s) => println!("String: {}", s),
-	///         w::RegistryValue::ExpandSz(s) => {
-	///             println!("Env string: {}", w::ExpandEnvironmentStrings(&s)?);
-	///         },
-	///         w::RegistryValue::MultiSz(strs) => {
-	///            println!("Multi string:");
-	///            for s in strs.iter() {
-	///                print!("[{}] ", s);
-	///            }
-	///            println!("");
-	///         },
-	///         w::RegistryValue::Binary(bin) => {
-	///             println!("Binary:");
-	///             for b in bin.iter() {
-	///                 print!("{:02x} ", b);
-	///             }
-	///             println!("");
-	///         },
-	///         w::RegistryValue::None => println!("No value"),
-	///     }
+	///     println!("{val}");
 	/// }
 	///
 	/// # w::SysResult::Ok(())
@@ -731,30 +687,7 @@ pub trait advapi_Hkey: Handle {
 	/// )?;
 	///
 	/// let val = hkey.RegQueryValueEx(Some("Beep"))?;
-	///
-	/// match val {
-	///     w::RegistryValue::Dword(n) => println!("Number u32: {}", n),
-	///     w::RegistryValue::Qword(n) => println!("Number u64: {}", n),
-	///     w::RegistryValue::Sz(s) => println!("String: {}", s),
-	///     w::RegistryValue::ExpandSz(s) => {
-	///         println!("Env string: {}", w::ExpandEnvironmentStrings(&s)?);
-	///     },
-	///     w::RegistryValue::MultiSz(strs) => {
-	///        println!("Multi string:");
-	///        for s in strs.iter() {
-	///            print!("[{}] ", s);
-	///        }
-	///        println!("");
-	///     },
-	///     w::RegistryValue::Binary(bin) => {
-	///         println!("Binary:");
-	///         for b in bin.iter() {
-	///             print!("{:02x} ", b);
-	///         }
-	///         println!("");
-	///     },
-	///     w::RegistryValue::None => println!("No value"),
-	/// }
+	/// println!("{val}");
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
