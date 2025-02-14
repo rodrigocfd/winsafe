@@ -946,90 +946,7 @@
 <a href="#945" id="945">945</a>
 <a href="#946" id="946">946</a>
 <a href="#947" id="947">947</a>
-<a href="#948" id="948">948</a>
-<a href="#949" id="949">949</a>
-<a href="#950" id="950">950</a>
-<a href="#951" id="951">951</a>
-<a href="#952" id="952">952</a>
-<a href="#953" id="953">953</a>
-<a href="#954" id="954">954</a>
-<a href="#955" id="955">955</a>
-<a href="#956" id="956">956</a>
-<a href="#957" id="957">957</a>
-<a href="#958" id="958">958</a>
-<a href="#959" id="959">959</a>
-<a href="#960" id="960">960</a>
-<a href="#961" id="961">961</a>
-<a href="#962" id="962">962</a>
-<a href="#963" id="963">963</a>
-<a href="#964" id="964">964</a>
-<a href="#965" id="965">965</a>
-<a href="#966" id="966">966</a>
-<a href="#967" id="967">967</a>
-<a href="#968" id="968">968</a>
-<a href="#969" id="969">969</a>
-<a href="#970" id="970">970</a>
-<a href="#971" id="971">971</a>
-<a href="#972" id="972">972</a>
-<a href="#973" id="973">973</a>
-<a href="#974" id="974">974</a>
-<a href="#975" id="975">975</a>
-<a href="#976" id="976">976</a>
-<a href="#977" id="977">977</a>
-<a href="#978" id="978">978</a>
-<a href="#979" id="979">979</a>
-<a href="#980" id="980">980</a>
-<a href="#981" id="981">981</a>
-<a href="#982" id="982">982</a>
-<a href="#983" id="983">983</a>
-<a href="#984" id="984">984</a>
-<a href="#985" id="985">985</a>
-<a href="#986" id="986">986</a>
-<a href="#987" id="987">987</a>
-<a href="#988" id="988">988</a>
-<a href="#989" id="989">989</a>
-<a href="#990" id="990">990</a>
-<a href="#991" id="991">991</a>
-<a href="#992" id="992">992</a>
-<a href="#993" id="993">993</a>
-<a href="#994" id="994">994</a>
-<a href="#995" id="995">995</a>
-<a href="#996" id="996">996</a>
-<a href="#997" id="997">997</a>
-<a href="#998" id="998">998</a>
-<a href="#999" id="999">999</a>
-<a href="#1000" id="1000">1000</a>
-<a href="#1001" id="1001">1001</a>
-<a href="#1002" id="1002">1002</a>
-<a href="#1003" id="1003">1003</a>
-<a href="#1004" id="1004">1004</a>
-<a href="#1005" id="1005">1005</a>
-<a href="#1006" id="1006">1006</a>
-<a href="#1007" id="1007">1007</a>
-<a href="#1008" id="1008">1008</a>
-<a href="#1009" id="1009">1009</a>
-<a href="#1010" id="1010">1010</a>
-<a href="#1011" id="1011">1011</a>
-<a href="#1012" id="1012">1012</a>
-<a href="#1013" id="1013">1013</a>
-<a href="#1014" id="1014">1014</a>
-<a href="#1015" id="1015">1015</a>
-<a href="#1016" id="1016">1016</a>
-<a href="#1017" id="1017">1017</a>
-<a href="#1018" id="1018">1018</a>
-<a href="#1019" id="1019">1019</a>
-<a href="#1020" id="1020">1020</a>
-<a href="#1021" id="1021">1021</a>
-<a href="#1022" id="1022">1022</a>
-<a href="#1023" id="1023">1023</a>
-<a href="#1024" id="1024">1024</a>
-<a href="#1025" id="1025">1025</a>
-<a href="#1026" id="1026">1026</a>
-<a href="#1027" id="1027">1027</a>
-<a href="#1028" id="1028">1028</a>
-<a href="#1029" id="1029">1029</a>
-<a href="#1030" id="1030">1030</a>
-<a href="#1031" id="1031">1031</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<a href="#948" id="948">948</a></pre></div><pre class="rust"><code><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 
 </span><span class="kw">use </span><span class="kw">crate</span>::advapi::{ffi, iterators::<span class="kw-2">*</span>};
 <span class="kw">use </span><span class="kw">crate</span>::co;
@@ -1388,29 +1305,7 @@
 	///     co::RRF::RT_ANY,
 	/// )?;
 	///
-	/// match val {
-	///     w::RegistryValue::Dword(n) =&gt; println!("Number u32: {}", n),
-	///     w::RegistryValue::Qword(n) =&gt; println!("Number u64: {}", n),
-	///     w::RegistryValue::Sz(s) =&gt; println!("String: {}", s),
-	///     w::RegistryValue::ExpandSz(s) =&gt; {
-	///         println!("Env string: {}", w::ExpandEnvironmentStrings(&amp;s)?);
-	///     },
-	///     w::RegistryValue::MultiSz(strs) =&gt; {
-	///        println!("Multi string:");
-	///        for s in strs.iter() {
-	///            print!("[{}] ", s);
-	///        }
-	///        println!("");
-	///     },
-	///     w::RegistryValue::Binary(bin) =&gt; {
-	///         println!("Binary:");
-	///         for b in bin.iter() {
-	///             print!("{:02x} ", b);
-	///         }
-	///         println!("");
-	///     },
-	///     w::RegistryValue::None =&gt; println!("No value"),
-	/// }
+	/// println!("{val}");
 	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
@@ -1636,12 +1531,6 @@
 	<span class="doccomment">/// [`RegQueryMultipleValues`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regquerymultiplevaluesw)
 	/// function.
 	///
-	/// This method is a multi-value version of
-	/// [`HKEY::RegQueryValueEx`](crate::prelude::advapi_Hkey::RegQueryValueEx).
-	///
-	/// Note that this method validates some race conditions, returning
-	/// [`co::ERROR::TRANSACTION_REQUEST_NOT_VALID`](crate::co::ERROR::TRANSACTION_REQUEST_NOT_VALID).
-	///
 	/// # Examples
 	///
 	/// ```no_run
@@ -1654,29 +1543,7 @@
 	/// )?;
 	///
 	/// for val in hkey.RegQueryMultipleValues(&amp;["DpiScalingVer", "WallPaper"])? {
-	///     match val {
-	///         w::RegistryValue::Dword(n) =&gt; println!("Number u32: {}", n),
-	///         w::RegistryValue::Qword(n) =&gt; println!("Number u64: {}", n),
-	///         w::RegistryValue::Sz(s) =&gt; println!("String: {}", s),
-	///         w::RegistryValue::ExpandSz(s) =&gt; {
-	///             println!("Env string: {}", w::ExpandEnvironmentStrings(&amp;s)?);
-	///         },
-	///         w::RegistryValue::MultiSz(strs) =&gt; {
-	///            println!("Multi string:");
-	///            for s in strs.iter() {
-	///                print!("[{}] ", s);
-	///            }
-	///            println!("");
-	///         },
-	///         w::RegistryValue::Binary(bin) =&gt; {
-	///             println!("Binary:");
-	///             for b in bin.iter() {
-	///                 print!("{:02x} ", b);
-	///             }
-	///             println!("");
-	///         },
-	///         w::RegistryValue::None =&gt; println!("No value"),
-	///     }
+	///     println!("{val}");
 	/// }
 	///
 	/// # w::SysResult::Ok(())
@@ -1686,71 +1553,61 @@
 		value_names: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;],
 	) -&gt; SysResult&lt;Vec&lt;RegistryValue&gt;&gt;
 	{
-		<span class="kw">let </span><span class="kw-2">mut </span>valents1 = <span class="macro">vec!</span>[VALENT::default(); value_names.len()];
+		<span class="kw">let </span><span class="kw-2">mut </span>valents = <span class="macro">vec!</span>[VALENT::default(); value_names.len()];
 		<span class="kw">let </span>value_names_w = value_names.iter()
-			.zip(valents1.iter_mut())
-			.map(|(value_name, valent)| {
-				<span class="kw">let </span>value_name_w = WString::from_str(value_name.as_ref());
-				valent.ve_valuename = value_name_w.as_ptr() <span class="kw">as _</span>;
-				value_name_w
-			})
+			.map(|value_name| WString::from_str(value_name.as_ref()))
 			.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-		<span class="kw">let </span><span class="kw-2">mut </span>data_len1 = u32::default();
+		valents.iter_mut()
+			.zip(value_names_w.iter())
+			.for_each(|(valent, value_name_w)| valent.ve_valuename = value_name_w.as_ptr() <span class="kw">as _</span>);
+		<span class="kw">let </span><span class="kw-2">mut </span>buf = Vec::&lt;u8&gt;::default();
 
-		<span class="comment">// Query data types and lenghts.
-		</span><span class="kw">match unsafe </span>{
-			co::ERROR::from_raw(
-				ffi::RegQueryMultipleValuesW(
-					<span class="self">self</span>.ptr(),
-					valents1.as_mut_ptr() <span class="kw">as _</span>,
-					value_names.len() <span class="kw">as _</span>,
-					std::ptr::null_mut(),
-					<span class="kw-2">&amp;mut </span>data_len1,
-				) <span class="kw">as _</span>,
-			 )
-		} {
-			co::ERROR::MORE_DATA =&gt; {},
-			err =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(err),
-		}
+		<span class="kw">loop </span>{
+			<span class="kw">let </span><span class="kw-2">mut </span>data_len = u32::default();
 
-		<span class="comment">// Alloc the receiving block.
-		</span><span class="kw">let </span><span class="kw-2">mut </span>buf: Vec&lt;u8&gt; = <span class="macro">vec!</span>[<span class="number">0x00</span>; data_len1 <span class="kw">as _</span>];
+			<span class="kw">match unsafe </span>{
+				co::ERROR::from_raw(
+					ffi::RegQueryMultipleValuesW(
+						<span class="self">self</span>.ptr(),
+						valents.as_mut_ptr() <span class="kw">as _</span>,
+						value_names.len() <span class="kw">as _</span>,
+						std::ptr::null_mut(),
+						<span class="kw-2">&amp;mut </span>data_len, <span class="comment">// first call to retrieve size only
+					</span>) <span class="kw">as _</span>,
+				 )
+			} {
+				co::ERROR::MORE_DATA =&gt; {},
+				e =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e),
+			}
 
-		<span class="kw">let </span><span class="kw-2">mut </span>valents2 = value_names_w.iter()
-			.map(|value_name_w| {
-				<span class="kw">let </span><span class="kw-2">mut </span>valent = VALENT::default();
-				valent.ve_valuename = value_name_w.as_ptr() <span class="kw">as _</span>;
-				valent
-			})
-			.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-		<span class="kw">let </span><span class="kw-2">mut </span>data_len2 = data_len1;
+			buf.resize(data_len <span class="kw">as _</span>, <span class="number">0x00</span>);
 
-		<span class="comment">// Retrieve the values content.
-		</span>error_to_sysresult(
-			<span class="kw">unsafe </span>{
-				ffi::RegQueryMultipleValuesW(
-					<span class="self">self</span>.ptr(),
-					valents2.as_mut_ptr() <span class="kw">as _</span>,
-					value_names.len() <span class="kw">as _</span>,
-					buf.as_mut_ptr() <span class="kw">as _</span>,
-					<span class="kw-2">&amp;mut </span>data_len2,
+			<span class="kw">match unsafe </span>{
+				co::ERROR::from_raw(
+					ffi::RegQueryMultipleValuesW(
+						<span class="self">self</span>.ptr(),
+						valents.as_mut_ptr() <span class="kw">as _</span>,
+						value_names.len() <span class="kw">as _</span>,
+						buf.as_mut_ptr() <span class="kw">as _</span>,
+						<span class="kw-2">&amp;mut </span>data_len,
+					) <span class="kw">as _</span>,
 				)
-			},
-		)<span class="question-mark">?</span>;
-
-		<span class="kw">if </span>data_len1 != data_len2 {
-			<span class="comment">// Race condition: someone modified the data content in between our calls.
-			</span><span class="kw">return </span><span class="prelude-val">Err</span>(co::ERROR::TRANSACTION_REQUEST_NOT_VALID);
+			} {
+				co::ERROR::SUCCESS =&gt; {
+					buf.resize(data_len <span class="kw">as _</span>, <span class="number">0x00</span>); <span class="comment">// data length may have shrunk
+					</span><span class="kw">return </span>valents.iter()
+						.map(|valent| <span class="kw">unsafe </span>{
+							RegistryValue::from_raw(
+								valent.buf_projection(<span class="kw-2">&amp;</span>buf).to_vec(),
+								valent.ve_type,
+							)
+						})
+						.collect::&lt;SysResult&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;&gt;()
+				},
+				co::ERROR::MORE_DATA =&gt; <span class="kw">continue</span>, <span class="comment">// value changed in a concurrent operation; retry
+				</span>e =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(e),
+			}
 		}
-
-		valents2.iter() <span class="comment">// first VALENT array is not filled with len/type values
-			</span>.map(|v2| <span class="kw">unsafe </span>{
-				RegistryValue::from_raw(
-					v2.buf_projection(<span class="kw-2">&amp;</span>buf).to_vec(),
-					v2.ve_type,
-				)
-			})
-			.collect::&lt;SysResult&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;&gt;()
 	}
 
 	<span class="doccomment">/// [`RegQueryReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regqueryreflectionkey)
@@ -1778,30 +1635,7 @@
 	/// )?;
 	///
 	/// let val = hkey.RegQueryValueEx(Some("Beep"))?;
-	///
-	/// match val {
-	///     w::RegistryValue::Dword(n) =&gt; println!("Number u32: {}", n),
-	///     w::RegistryValue::Qword(n) =&gt; println!("Number u64: {}", n),
-	///     w::RegistryValue::Sz(s) =&gt; println!("String: {}", s),
-	///     w::RegistryValue::ExpandSz(s) =&gt; {
-	///         println!("Env string: {}", w::ExpandEnvironmentStrings(&amp;s)?);
-	///     },
-	///     w::RegistryValue::MultiSz(strs) =&gt; {
-	///        println!("Multi string:");
-	///        for s in strs.iter() {
-	///            print!("[{}] ", s);
-	///        }
-	///        println!("");
-	///     },
-	///     w::RegistryValue::Binary(bin) =&gt; {
-	///         println!("Binary:");
-	///         for b in bin.iter() {
-	///             print!("{:02x} ", b);
-	///         }
-	///         println!("");
-	///     },
-	///     w::RegistryValue::None =&gt; println!("No value"),
-	/// }
+	/// println!("{val}");
 	/// # w::SysResult::Ok(())
 	/// ```
 	</span><span class="attr">#[must_use]
