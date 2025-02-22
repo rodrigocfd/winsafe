@@ -10,8 +10,6 @@ use crate::prelude::*;
 #[derive(Clone)]
 enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 
-//------------------------------------------------------------------------------
-
 /// An user main window, which can handle events. Usually, this is the first
 /// window of your application, launched directly from the `main` function. Can
 /// be programmatically created or load a dialog resource from a `.res` file.

@@ -12,8 +12,6 @@ struct Obj { // actual fields of RawControl
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// An ordinary custom control window.
 #[derive(Clone)]
 pub(in crate::gui) struct RawControl(Pin<Arc<Obj>>);
@@ -93,8 +91,6 @@ impl RawControl {
 		});
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`WindowControl`](crate::gui::WindowControl)
 /// programmatically with [`WindowControl::new`](crate::gui::WindowControl::new).

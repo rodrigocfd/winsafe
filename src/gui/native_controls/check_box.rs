@@ -15,8 +15,6 @@ struct Obj { // actual fields of CheckBox
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [check box](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
 /// control, actually a variation of the ordinary
@@ -240,8 +238,6 @@ impl CheckBox {
 			co::SWP::NOZORDER | co::SWP::NOMOVE).unwrap();
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`CheckBox`](crate::gui::CheckBox) programmatically with
 /// [`CheckBox::new`](crate::gui::CheckBox::new).

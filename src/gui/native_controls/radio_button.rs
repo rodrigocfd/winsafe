@@ -15,8 +15,6 @@ struct Obj { // actual fields of RadioButton
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [radio button](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#radio-buttons)
 /// control.
@@ -202,8 +200,6 @@ impl RadioButton {
 			bound_box, co::SWP::NOZORDER | co::SWP::NOMOVE).unwrap();
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`RadioButton`](crate::gui::RadioButton)
 /// programmatically with [`RadioGroup::new`](crate::gui::RadioGroup::new).

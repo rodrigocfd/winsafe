@@ -18,8 +18,6 @@ struct Obj { // actual fields of StatusBar
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [status bar](https://learn.microsoft.com/en-us/windows/win32/controls/status-bars)
 /// control, which has one or more parts.

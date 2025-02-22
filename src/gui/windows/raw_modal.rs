@@ -15,8 +15,6 @@ struct Obj { // actual fields of RawModal
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// An ordinary modal window.
 #[derive(Clone)]
 pub(in crate::gui) struct RawModal(Pin<Arc<Obj>>);
@@ -159,8 +157,6 @@ impl RawModal {
 		});
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`WindowModal`](crate::gui::WindowModal)
 /// programmatically with [`WindowModal::new`](crate::gui::WindowModal::new).

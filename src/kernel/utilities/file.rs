@@ -29,8 +29,6 @@ impl std::fmt::Display for FileAccess {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// Manages an [`HFILE`](crate::HFILE) handle, which provides file read/write
 /// and other operations. It is closed automatically when the object goes out of
 /// scope.

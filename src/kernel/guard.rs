@@ -69,8 +69,6 @@ impl<T> CloseHandleGuard<T>
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// RAII implementation for [`PROCESS_INFORMATION`](crate::PROCESS_INFORMATION)
 /// which automatically calls
 /// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
@@ -130,8 +128,6 @@ impl CloseHandlePiGuard {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// RAII implementation [`HUPDATERSRC`](crate::HUPDATERSRC) which automatically
 /// calls
 /// [`EndUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-endupdateresourcew)
@@ -187,8 +183,6 @@ impl EndUpdateResourceGuard {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 handle_guard! { FindCloseGuard: HFINDFILE;
 	ffi::FindClose;
 	/// RAII implementation for [`HFINDFILE`](crate::HFINDFILE) which
@@ -205,8 +199,6 @@ handle_guard! { FreeLibraryGuard: HINSTANCE;
 	/// when the object goes out of scope.
 }
 
-//------------------------------------------------------------------------------
-
 handle_guard! { GlobalFreeGuard: HGLOBAL;
 	ffi::GlobalFree;
 	/// RAII implementation for [`HGLOBAL`](crate::HGLOBAL) which automatically
@@ -214,8 +206,6 @@ handle_guard! { GlobalFreeGuard: HGLOBAL;
 	/// [`GlobalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalfree)
 	/// when the object goes out of scope.
 }
-
-//------------------------------------------------------------------------------
 
 /// RAII implementation for [`HGLOBAL`](crate::HGLOBAL) lock which automatically
 /// calls
@@ -262,8 +252,6 @@ impl<'a, H> GlobalUnlockGuard<'a, H>
 	pub_fn_mem_block!();
 }
 
-//------------------------------------------------------------------------------
-
 handle_guard! { HeapDestroyGuard: HHEAP;
 	ffi::HeapDestroy;
 	/// RAII implementation for [`HHEAP`](crate::HHEAP) which automatically
@@ -271,8 +259,6 @@ handle_guard! { HeapDestroyGuard: HHEAP;
 	/// [`HeapDestroy`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapdestroy)
 	/// when the object goes out of scope.
 }
-
-//------------------------------------------------------------------------------
 
 /// RAII implementation for the memory allocated by
 /// [`HHEAP::HeapAlloc`](crate::prelude::kernel_Hheap::HeapAlloc) which
@@ -336,8 +322,6 @@ impl<'a, H> HeapFreeGuard<'a, H>
 	pub_fn_mem_block!();
 }
 
-//------------------------------------------------------------------------------
-
 /// RAII implementation for [`HHEAP`](crate::HHEAP) which automatically calls
 /// [`HeapUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock)
 /// when the object goes out of scope.
@@ -373,8 +357,6 @@ impl<'a, H> HeapUnlockGuard<'a, H>
 	}
 }
 
-//------------------------------------------------------------------------------
-
 handle_guard! { LocalFreeGuard: HLOCAL;
 	ffi::LocalFree;
 	/// RAII implementation for [`HLOCAL`](crate::HLOCAL) which automatically
@@ -382,8 +364,6 @@ handle_guard! { LocalFreeGuard: HLOCAL;
 	/// [`LocalFree`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localfree)
 	/// when the object goes out of scope.
 }
-
-//------------------------------------------------------------------------------
 
 /// RAII implementation for [`HLOCAL`](crate::HLOCAL) lock which automatically
 /// calls
@@ -429,8 +409,6 @@ impl<'a, H> LocalUnlockGuard<'a, H>
 
 	pub_fn_mem_block!();
 }
-
-//------------------------------------------------------------------------------
 
 /// RAII implementation for the [`HFILE`](crate::HFILE) lock which automatically
 /// calls
@@ -494,8 +472,6 @@ impl<'a, H> UnlockFileGuard<'a, H>
 		self.num_bytes_to_lock
 	}
 }
-
-//------------------------------------------------------------------------------
 
 handle_guard! { UnmapViewOfFileGuard: HFILEMAPVIEW;
 	ffi::UnmapViewOfFile;

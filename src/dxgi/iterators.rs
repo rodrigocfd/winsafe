@@ -55,8 +55,6 @@ impl<'a, I> IdxgiadapterEnumoutputsIter<'a, I>
 	}
 }
 
-//------------------------------------------------------------------------------
-
 pub(in crate::dxgi) struct IdxgifactoryEnumadaptersIter<'a, I>
 	where I: dxgi_IDXGIFactory,
 {
@@ -107,8 +105,6 @@ impl<'a, I> IdxgifactoryEnumadaptersIter<'a, I>
 		Self { fact, cur_index: 0 }
 	}
 }
-
-//------------------------------------------------------------------------------
 
 pub(in crate::dxgi) struct IdxgifactoryEnumadapters1Iter<'a, I>
 	where I: dxgi_IDXGIFactory1,

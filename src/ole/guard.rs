@@ -39,8 +39,6 @@ impl<'a, T> CoLockObjectExternalGuard<'a, T>
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// RAII implementation which automatically calls
 /// [`CoTaskMemFree`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
 /// when the object goes out of scope.
@@ -87,8 +85,6 @@ impl CoTaskMemFreeGuard {
 	pub_fn_mem_block!();
 }
 
-//------------------------------------------------------------------------------
-
 /// RAII implementation which automatically calls
 /// [`CoUninitialize`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-couninitialize)
 /// when the object goes out of scope.
@@ -123,8 +119,6 @@ impl CoUninitializeGuard {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// RAII implementation which automatically calls
 /// [`OleUninitialize`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-oleuninitialize)
 /// when the object goes out of scope.
@@ -151,8 +145,6 @@ impl OleUninitializeGuard {
 		Self {}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// RAII implementation which automatically calls
 /// [`ReleaseStgMedium`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-releasestgmedium)

@@ -13,8 +13,6 @@ struct Obj { // actual fields of RawModeless
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// An ordinary modeless window.
 #[derive(Clone)]
 pub(in crate::gui) struct RawModeless(Pin<Arc<Obj>>);
@@ -79,8 +77,6 @@ impl RawModeless {
 		});
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`WindowModeless`](crate::gui::WindowModeless)
 /// programmatically with

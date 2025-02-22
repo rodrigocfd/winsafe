@@ -69,8 +69,6 @@ impl<'a, H> HkeyKeyIter<'a, H>
 	}
 }
 
-//------------------------------------------------------------------------------
-
 pub(in crate::advapi) struct HkeyValueIter<'a, H>
 	where H: advapi_Hkey,
 {

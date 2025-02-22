@@ -15,8 +15,6 @@ struct Obj { // actual fields of Label
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [label](https://learn.microsoft.com/en-us/windows/win32/controls/about-static-controls)
 /// control.
@@ -186,8 +184,6 @@ impl Label {
 			co::SWP::NOZORDER | co::SWP::NOMOVE).unwrap();
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`Label`](crate::gui::Label) programmatically with
 /// [`label::new`](crate::gui::Label::new).

@@ -15,8 +15,6 @@ struct Obj { // actual fields of ComboBox
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [combo box](https://learn.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
 /// control.
@@ -196,8 +194,6 @@ impl ComboBox {
 		ComboBoxItems::new(self)
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`ComboBox`](crate::gui::ComboBox) programmatically with
 /// [`ComboBox::new`](crate::gui::ComboBox::new).

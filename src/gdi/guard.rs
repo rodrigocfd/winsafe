@@ -13,8 +13,6 @@ handle_guard! { DeleteDCGuard: HDC;
 	/// when the object goes out of scope.
 }
 
-//------------------------------------------------------------------------------
-
 /// RAII implementation for a [`GdiObject`](crate::prelude::GdiObject) which
 /// automatically calls
 /// [`DeleteObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
@@ -80,8 +78,6 @@ impl<T> DeleteObjectGuard<T>
 	}
 }
 
-//------------------------------------------------------------------------------
-
 handle_guard! { DeleteObjectPaletteGuard: HPALETTE;
 	ffi::DeleteObject;
 	/// RAII implementation for [`HPALETTE`](crate::HPALETTE) which
@@ -89,8 +85,6 @@ handle_guard! { DeleteObjectPaletteGuard: HPALETTE;
 	/// [`DeleteObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
 	/// when the object goes out of scope.
 }
-
-//------------------------------------------------------------------------------
 
 /// RAII implementation for [`LOGPALETTE`](crate::LOGPALETTE) which manages the
 /// allocated memory.
@@ -136,8 +130,6 @@ impl LogpaletteGuard {
 		Ok(new_self)
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// RAII implementation for
 /// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject) calls, which

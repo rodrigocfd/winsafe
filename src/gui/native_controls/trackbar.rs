@@ -15,8 +15,6 @@ struct Obj { // actual fields of Trackbar
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [trackbar](https://learn.microsoft.com/en-us/windows/win32/controls/trackbar-controls)
 /// control.
@@ -193,8 +191,6 @@ impl Trackbar {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`Trackbar`](crate::gui::Trackbar) programmatically with
 /// [`Trackbar::new`](crate::gui::Trackbar::new).

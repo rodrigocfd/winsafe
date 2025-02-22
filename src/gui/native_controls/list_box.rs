@@ -15,8 +15,6 @@ struct Obj { // actual fields of ListBox
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [list box](https://learn.microsoft.com/en-us/windows/win32/controls/about-list-boxes)
 /// control. Not to be confused with the more complex
@@ -174,8 +172,6 @@ impl ListBox {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`ListBox`](crate::gui::ListBox) programmatically with
 /// [`ListBox::new`](crate::gui::ListBox::new).

@@ -29,8 +29,6 @@ impl<'a, I> IenumfiltersIter<'a, I>
 	}
 }
 
-//------------------------------------------------------------------------------
-
 pub(in crate::dshow) struct IenummediatypesIter<'a, I>
 	where I: dshow_IEnumMediaTypes,
 {
@@ -66,8 +64,6 @@ impl<'a, I> IenummediatypesIter<'a, I>
 		Self { enum_mt, amt: AM_MEDIA_TYPE::default() }
 	}
 }
-
-//------------------------------------------------------------------------------
 
 pub(in crate::dshow) struct IenumpinsIter<'a, I>
 	where I: dshow_IEnumPins,

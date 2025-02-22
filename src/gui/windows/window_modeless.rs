@@ -8,8 +8,6 @@ use crate::prelude::*;
 #[derive(Clone)]
 enum RawDlg { Raw(RawModeless), Dlg(DlgModeless) }
 
-//------------------------------------------------------------------------------
-
 /// An user modeless window, which can handle events. Can be programmatically
 /// created or load a dialog resource from a `.res` file.
 #[derive(Clone)]

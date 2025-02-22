@@ -15,8 +15,6 @@ struct Obj { // actual fields of DateTimePicker
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [date and time picker](https://learn.microsoft.com/en-us/windows/win32/controls/date-and-time-picker-controls)
 /// control.
@@ -196,8 +194,6 @@ impl DateTimePicker {
 		}.unwrap()
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`DateTimePicker`](crate::gui::DateTimePicker)
 /// programmatically with

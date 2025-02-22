@@ -12,8 +12,6 @@ struct Obj { // actual fields of DlgModal
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// A dialog-base modal window.
 #[derive(Clone)]
 pub(in crate::gui) struct DlgModal(Pin<Arc<Obj>>);

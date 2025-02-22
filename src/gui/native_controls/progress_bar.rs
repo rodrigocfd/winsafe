@@ -14,8 +14,6 @@ struct Obj { // actual fields of ProgressBar
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [progress bar](https://learn.microsoft.com/en-us/windows/win32/controls/progress-bar-control)
 /// control.
@@ -228,8 +226,6 @@ impl ProgressBar {
 		unsafe { self.hwnd().SendMessage(pbm::GetState {}) }
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`ProgressBar`](crate::gui::ProgressBar)
 /// programmatically with [`ProgressBar::new`](crate::gui::ProgressBar::new).

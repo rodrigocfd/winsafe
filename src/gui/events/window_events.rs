@@ -195,8 +195,6 @@ impl WindowEvents {
 		Ok(WmRet::NotHandled)
 	}
 
-//------------------------------------------------------------------------------
-
 	/// Event to any [window message](crate::co::WM).
 	///
 	/// Instead of using this event, you should always prefer the specific
@@ -330,8 +328,6 @@ impl WindowEvents {
 		unsafe { &mut *self.tmrs.get() }.push(timer_id, Box::new(func));
 	}
 
-//------------------------------------------------------------------------------
-
 	/// [`WM_CREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create)
 	/// message, sent only to non-dialog windows. Dialog windows must handle
 	/// [`wm_init_dialog`](crate::gui::events::WindowEvents::wm_init_dialog)
@@ -446,8 +442,6 @@ impl WindowEvents {
 			}
 		});
 	}
-
-//------------------------------------------------------------------------------
 
 	pub_fn_wm_withparm_noret! { wm_activate, co::WM::ACTIVATE, wm::Activate;
 		/// [`WM_ACTIVATE`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-activate)

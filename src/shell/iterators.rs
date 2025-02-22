@@ -65,8 +65,6 @@ impl<'a, H> HdropIter<'a, H>
 	}
 }
 
-//------------------------------------------------------------------------------
-
 pub(in crate::shell) struct IenumshellitemsIter<'a, I>
 	where I: shell_IEnumShellItems,
 {
@@ -94,8 +92,6 @@ impl<'a, I> IenumshellitemsIter<'a, I>
 		Self { enum_shi }
 	}
 }
-
-//------------------------------------------------------------------------------
 
 pub(in crate::shell) struct IshellitemarrayIter<'a, I>
 	where I: shell_IShellItemArray,

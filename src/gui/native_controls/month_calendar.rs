@@ -15,8 +15,6 @@ struct Obj { // actual fields of MonthCalendar
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [month calendar](https://learn.microsoft.com/en-us/windows/win32/controls/month-calendar-controls)
 /// control.
@@ -184,8 +182,6 @@ impl MonthCalendar {
 		}.unwrap();
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`MonthCalendar`](crate::gui::MonthCalendar)
 /// programmatically with

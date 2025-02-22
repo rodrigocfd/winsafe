@@ -30,8 +30,6 @@ handle_guard! { DeregisterEventSourceGuard: HEVENTLOG;
 	/// when the object goes out of scope.
 }
 
-//------------------------------------------------------------------------------
-
 /// RAII implementation for [`SID`](crate::SID), returned by
 /// [`AllocateAndInitializeSid`](crate::AllocateAndInitializeSid), which
 /// automatically calls
@@ -85,8 +83,6 @@ impl FreeSidGuard {
 		std::mem::replace(&mut self.psid, std::ptr::null_mut())
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// RAII implementation for [`HKEY`](crate::HKEY) which automatically calls
 /// [`RegCloseKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regclosekey)
@@ -144,8 +140,6 @@ impl RegCloseKeyGuard {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// RAII implementation for [`SID`](crate::SID), returned by
 /// [`ConvertStringSidToSid`](crate::ConvertStringSidToSid), which automatically
 /// calls
@@ -182,8 +176,6 @@ impl LocalFreeSidGuard {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// RAII implementation for [`SID`](crate::SID), returned by
 /// [`CopySid`](crate::CopySid),
 /// [`CreateWellKnownSid`](crate::CreateWellKnownSid),
@@ -219,8 +211,6 @@ impl SidGuard {
 		Self { ptr }
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// RAII implementation for [`TOKEN_GROUPS`](crate::TOKEN_GROUPS) which manages
 /// the allocated memory.
@@ -266,8 +256,6 @@ impl<'a> TokenGroupsGuard<'a> {
 		Ok(new_self)
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// RAII implementation for [`TOKEN_PRIVILEGES`](crate::TOKEN_PRIVILEGES) which
 /// manages the allocated memory.

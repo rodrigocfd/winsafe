@@ -79,8 +79,6 @@ impl<'a> DirListIter<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 pub(in crate::kernel) struct DirWalkIter<'a> {
 	runner: DirListIter<'a>,
 	subdir_runner: Option<Box<DirWalkIter<'a>>>,
@@ -145,8 +143,6 @@ impl<'a> DirWalkIter<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 pub(in crate::kernel) struct HheapHeapwalkIter<'a, H>
 	where H: kernel_Hheap,
 {
@@ -197,8 +193,6 @@ impl<'a, H> HheapHeapwalkIter<'a, H>
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 pub(in crate::kernel) struct HprocesslistHeapIter<'a, H>
 	where H: kernel_Hprocesslist,
@@ -260,8 +254,6 @@ impl<'a, H> HprocesslistHeapIter<'a, H>
 	}
 }
 
-//------------------------------------------------------------------------------
-
 pub(in crate::kernel) struct HprocesslistModuleIter<'a, H>
 	where H: kernel_Hprocesslist,
 {
@@ -322,8 +314,6 @@ impl<'a, H> HprocesslistModuleIter<'a, H>
 	}
 }
 
-//------------------------------------------------------------------------------
-
 pub(in crate::kernel) struct HprocesslistProcessIter<'a, H>
 	where H: kernel_Hprocesslist,
 {
@@ -383,8 +373,6 @@ impl<'a, H> HprocesslistProcessIter<'a, H>
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 pub(in crate::kernel) struct HprocesslistThreadIter<'a, H>
 	where H: kernel_Hprocesslist,

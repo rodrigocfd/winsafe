@@ -15,8 +15,6 @@ struct Obj { // actual fields of UpDown
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [up-down](https://learn.microsoft.com/en-us/windows/win32/controls/up-down-controls)
 /// control.
@@ -229,8 +227,6 @@ impl UpDown {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create an [`UpDown`](crate::gui::UpDown) programmatically with
 /// [`UpDown::new`](crate::gui::UpDown::new).

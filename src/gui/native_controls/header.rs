@@ -27,8 +27,6 @@ enum OptsReszLv<'a> {
 	Lv(NonNull<BaseNativeControl>),
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [header](https://learn.microsoft.com/en-us/windows/win32/controls/header-controls)
 /// control.
@@ -263,8 +261,6 @@ impl Header {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`Header`](crate::gui::Header) programmatically with
 /// [`Header::new`](crate::gui::Header::new).

@@ -60,8 +60,6 @@ impl DestroyIconShfiGuard {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// RAII implementation for [`SHSTOCKICONINFO`](crate::SHSTOCKICONINFO) which
 /// automatically calls
 /// [`DestroyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroyicon)
@@ -117,8 +115,6 @@ impl DestroyIconSiiGuard {
 		std::mem::take(&mut self.sii)
 	}
 }
-
-//------------------------------------------------------------------------------
 
 handle_guard! { DragFinishGuard: HDROP;
 	ffi::DragFinish;

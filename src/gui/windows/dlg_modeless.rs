@@ -13,8 +13,6 @@ struct Obj { // actual fields of DlgModeless
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// A dialog-based modeless window.
 #[derive(Clone)]
 pub(in crate::gui) struct DlgModeless(Pin<Arc<Obj>>);

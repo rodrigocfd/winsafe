@@ -32,8 +32,6 @@ impl<'a> CloseClipboardGuard<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 handle_guard! { CloseDesktopGuard: HDESK;
 	ffi::CloseDesktop;
 	/// RAII implementation for [`HDESK`](crate::HDESK) which automatically
@@ -80,8 +78,6 @@ handle_guard! { EndDeferWindowPosGuard: HDWP;
 	/// [`EndDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-enddeferwindowpos)
 	/// when the object goes out of scope.
 }
-
-//------------------------------------------------------------------------------
 
 /// RAII implementation for [`HDC`](crate::HDC) which automatically calls
 /// [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint)
@@ -147,8 +143,6 @@ impl<'a, H> EndPaintGuard<'a, H>
 	}
 }
 
-//------------------------------------------------------------------------------
-
 /// RAII implementation for [`HWND`](crate::HWND) which automatically calls
 /// [`ReleaseCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasecapture)
 /// when the object goes out of scope.
@@ -189,8 +183,6 @@ impl<'a, H> ReleaseCaptureGuard<'a, H>
 		self.hwnd_prev.as_ref()
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// RAII implementation for [`HDC`](crate::HDC) which automatically calls
 /// [`ReleaseDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)

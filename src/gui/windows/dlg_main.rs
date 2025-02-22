@@ -15,8 +15,6 @@ struct Obj { // actual fields of DlgMain
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// A dialog-based main window.
 #[derive(Clone)]
 pub(in crate::gui) struct DlgMain(Pin<Arc<Obj>>);

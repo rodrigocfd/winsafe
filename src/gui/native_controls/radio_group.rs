@@ -16,8 +16,6 @@ struct Obj { // actual fields of RadioGroup
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// A group of native [`RadioButton`](crate::gui::RadioButton) controls.
 #[derive(Clone)]
 pub struct RadioGroup(Pin<Arc<Obj>>);

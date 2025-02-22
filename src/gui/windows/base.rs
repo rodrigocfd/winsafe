@@ -11,8 +11,6 @@ struct ThreadPack {
 	func: Box<dyn FnOnce() -> AnyResult<()>>,
 }
 
-//------------------------------------------------------------------------------
-
 /// Base to `RawBase` and `DlgBase`, which means all container windows.
 pub(in crate::gui) struct Base {
 	hwnd: HWND,

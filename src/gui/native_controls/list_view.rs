@@ -19,8 +19,6 @@ struct Obj<T> { // atual fields of ListView
 	_data: PhantomData<T>,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [list view](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
 /// control. Not to be confused with the simpler [list box](crate::gui::ListBox)
@@ -420,8 +418,6 @@ impl<T> ListView<T> {
 			.unwrap();
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`ListView`](crate::gui::ListView) programmatically with
 /// [`ListView::new`](crate::gui::ListView::new).

@@ -15,8 +15,6 @@ struct Obj { // actual fields of Button
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [button](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#push-buttons)
 /// control.
@@ -182,8 +180,6 @@ impl Button {
 		unsafe { self.hwnd().SendMessage(bm::Click {}); }
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`Button`](crate::gui::Button) programmatically with
 /// [`Button::new`](crate::gui::Button::new).

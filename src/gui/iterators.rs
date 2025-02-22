@@ -51,8 +51,6 @@ impl<'a> ComboBoxItemIter<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 pub(in crate::gui) struct EditLineIter<'a> {
 	owner: &'a Edit,
 	count: u32,
@@ -98,8 +96,6 @@ impl<'a> EditLineIter<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 pub(in crate::gui) struct HeaderItemIter<'a> {
 	owner: &'a Header,
 	count: u32,
@@ -130,8 +126,6 @@ impl<'a> HeaderItemIter<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 pub(in crate::gui) struct ListBoxItemIter<'a> {
 	owner: &'a ListBox,
@@ -179,8 +173,6 @@ impl<'a> ListBoxItemIter<'a> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 pub(in crate::gui) struct ListBoxSelItemIter<'a> {
 	owner: &'a ListBox,
@@ -252,8 +244,6 @@ impl<'a> ListBoxSelItemIter<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 pub(in crate::gui) struct ListViewColumnIter<'a, T: 'static> {
 	owner: &'a ListView<T>,
 	count: u32,
@@ -284,8 +274,6 @@ impl<'a, T> ListViewColumnIter<'a, T> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 pub(in crate::gui) struct ListViewItemIter<'a, T: 'static> {
 	owner: &'a ListView<T>,
@@ -324,8 +312,6 @@ impl<'a, T> ListViewItemIter<'a, T> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 pub(in crate::gui) struct TreeViewItemIter<'a, T: 'static> {
 	owner: &'a TreeView<T>,
 	current: Option<TreeViewItem<'a, T>>,
@@ -363,8 +349,6 @@ impl<'a, T> TreeViewItemIter<'a, T> {
 		Self { owner, current, relationship }
 	}
 }
-
-//------------------------------------------------------------------------------
 
 pub(in crate::gui) struct TreeViewChildItemIter<'a, T: 'static> {
 	owner: &'a TreeView<T>,

@@ -24,8 +24,6 @@ pub(in crate::gui) fn post_quit_error(
 	PostQuitMessage(-1); // this -1 will be discarded in the main loop, anyway
 }
 
-//------------------------------------------------------------------------------
-
 /// Global UI font object.
 static mut UI_HFONT: Option<DeleteObjectGuard<HFONT>> = None;
 
@@ -60,8 +58,6 @@ pub(in crate::gui) fn ui_font() -> HFONT {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 static mut BASE_CTRL_ID: u16 = 0xdfff; // https://stackoverflow.com/a/18192766/6923555
 
 /// Returns the next sequential control ID.
@@ -88,8 +84,6 @@ pub(in crate::gui) fn auto_ctrl_id_if_zero<T: AutoCtrlId>(mut obj: T) -> T {
 	}
 	obj
 }
-
-//------------------------------------------------------------------------------
 
 static mut DPI: POINT = POINT::new(0, 0);
 
@@ -155,8 +149,6 @@ pub(in crate::gui) fn multiply_dpi_or_dtu(
 	Ok(())
 }
 
-//------------------------------------------------------------------------------
-
 /// Calculates the bound rectangle to fit the text with current system font.
 #[must_use]
 pub(in crate::gui) fn calc_text_bound_box(text: &str) -> SysResult<SIZE> {
@@ -211,8 +203,6 @@ fn remove_accelerator_ampersands(text: &str) -> String {
 
 	txt_no_ampersands
 }
-
-//------------------------------------------------------------------------------
 
 /// Adjusts the position of a modeless window on parent.
 #[must_use]

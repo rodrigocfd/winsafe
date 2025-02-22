@@ -16,8 +16,6 @@ struct Obj { // actual fields of RawMain
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// An ordinary main window.
 #[derive(Clone)]
 pub(in crate::gui) struct RawMain(Pin<Arc<Obj>>);
@@ -134,8 +132,6 @@ impl RawMain {
 		});
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`WindowMain`](crate::gui::WindowMain) programmatically
 /// with [`WindowMain::new`](crate::gui::WindowMain::new).

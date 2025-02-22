@@ -14,8 +14,6 @@ struct Obj { // actual fields of DlgControl
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// A dialog-based custom control window.
 #[derive(Clone)]
 pub(in crate::gui) struct DlgControl(Pin<Arc<Obj>>);

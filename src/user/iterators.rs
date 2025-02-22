@@ -57,8 +57,6 @@ impl<'a> EnumdisplaydevicesIter<'a> {
 	}
 }
 
-//------------------------------------------------------------------------------
-
 pub(in crate::user) struct HmenuIteritems<'a, H>
 	where H: user_Hmenu,
 {

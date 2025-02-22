@@ -108,8 +108,6 @@ macro_rules! pub_fn_wm_ctlcolor {
 	};
 }
 
-//------------------------------------------------------------------------------
-
 /// WM_COMMAND message, no parameters, no meaningful return.
 macro_rules! pub_fn_cmd_noparm_noret {
 	(

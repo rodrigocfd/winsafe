@@ -17,8 +17,6 @@ struct Obj { // actual fields of Tab
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [tab](https://learn.microsoft.com/en-us/windows/win32/controls/tab-controls)
 /// control.
@@ -267,8 +265,6 @@ impl Tab {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`Tab`](crate::gui::Tab) programmatically with
 /// [`Tab::new`](crate::gui::Tab::new).

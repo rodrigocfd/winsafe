@@ -22,8 +22,6 @@ struct Obj { // actual fields of LayoutArranger
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// Rearranges the stored controls according to their predefined rules.
 #[derive(Clone)]
 pub(in crate::gui) struct LayoutArranger(Pin<Arc<Obj>>);

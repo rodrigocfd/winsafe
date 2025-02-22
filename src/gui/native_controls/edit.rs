@@ -15,8 +15,6 @@ struct Obj { // actual fields of Edit
 	_pin: PhantomPinned,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [edit](https://learn.microsoft.com/en-us/windows/win32/controls/about-edit-controls)
 /// control.
@@ -278,8 +276,6 @@ impl Edit {
 		}.unwrap();
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create an [`Edit`](crate::gui::Edit) programmatically with
 /// [`Edit::new`](crate::gui::Edit::new).

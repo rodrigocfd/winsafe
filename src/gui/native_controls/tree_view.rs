@@ -19,8 +19,6 @@ struct Obj<T> { // actual fields of TreeView
 	_data: PhantomData<T>,
 }
 
-//------------------------------------------------------------------------------
-
 /// Native
 /// [tree view](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-controls)
 /// control.
@@ -291,8 +289,6 @@ impl<T> TreeView<T> {
 		}
 	}
 }
-
-//------------------------------------------------------------------------------
 
 /// Options to create a [`TreeView`](crate::gui::TreeView) programmatically with
 /// [`TreeView::new`](crate::gui::TreeView::new).
