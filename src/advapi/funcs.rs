@@ -872,3 +872,15 @@ pub fn LookupPrivilegeValue(
 		},
 	).map(|_| luid)
 }
+
+/// [`RegDisablePredefinedCache`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcache)
+/// function.
+pub fn RegDisablePredefinedCache() -> SysResult<()> {
+	error_to_sysresult(unsafe { ffi::RegDisablePredefinedCache() })
+}
+
+/// [`RegDisablePredefinedCacheEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcacheex)
+/// function.
+pub fn RegDisablePredefinedCacheEx() -> SysResult<()> {
+	error_to_sysresult(unsafe { ffi::RegDisablePredefinedCacheEx() })
+}

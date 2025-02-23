@@ -252,18 +252,6 @@ pub trait advapi_Hkey: Handle {
 		)
 	}
 
-	/// [`RegDisablePredefinedCache`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcache)
-	/// function.
-	fn RegDisablePredefinedCache() -> SysResult<()> {
-		error_to_sysresult(unsafe { ffi::RegDisablePredefinedCache() })
-	}
-
-	/// [`RegDisablePredefinedCacheEx`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablepredefinedcacheex)
-	/// function.
-	fn RegDisablePredefinedCacheEx() -> SysResult<()> {
-		error_to_sysresult(unsafe { ffi::RegDisablePredefinedCacheEx() })
-	}
-
 	/// [`RegDisableReflectionKey`](https://learn.microsoft.com/en-us/windows/win32/api/winreg/nf-winreg-regdisablereflectionkey)
 	/// function.
 	fn RegDisableReflectionKey(&self) -> SysResult<()> {
