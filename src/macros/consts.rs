@@ -1,52 +1,7 @@
 #![allow(unused_macros)]
 
-/// Writes `pub` values of the given constant type.
-macro_rules! const_values {
-	(
-		$name:ident;
-		$(
-			$( #[$valdoc:meta] )*
-			$valname:ident $val:expr
-		)*
-	) => {
-		impl $name {
-			$(
-				$( #[$valdoc] )*
-				pub const $valname: Self = unsafe { Self::from_raw($val) };
-			)*
-		}
-	};
-}
-
-/// Writes `pub(crate)` values of the given constant type.
-macro_rules! const_values_pubcrate {
-	(
-		$name:ident;
-		$(
-			$( #[$valdoc:meta] )*
-			$valname:ident $val:expr
-		)*
-	) => {
-		impl $name {
-			$(
-				$( #[$valdoc] )*
-				pub(crate) const $valname: Self = unsafe { Self::from_raw($val) };
-			)*
-		}
-	};
-}
-
-/// Writes `pub(crate)` values of numeric types; to be used in privs.rs files.
-macro_rules! const_values_num_privs {
-	(
-		$( $name:ident $ty:ty = $val:expr )*
-	) => {
-		$( pub(crate) const $name: $ty = $val; )*
-	};
-}
-
-/// Declares the type of a constant. Won't include `Debug` and `Display` impls.
-macro_rules! const_no_debug_display {
+/// Basic declaration of a numeric newtype constant.
+macro_rules! const_basic_decl {
 	(
 		$name:ident : $ntype:ty;
 		$( #[$doc:meta] )*
@@ -57,8 +12,6 @@ macro_rules! const_no_debug_display {
 		pub struct $name($ntype);
 
 		impl_intunderlying!($name, $ntype);
-
-		impl crate::prelude::NativeConst for $name {}
 
 		impl std::fmt::LowerHex for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -83,85 +36,15 @@ macro_rules! const_no_debug_display {
 	};
 }
 
-/// Declares the type of an ordinary constant, along with private and public
-/// values.
-macro_rules! const_ordinary {
-	(
-		$name:ident : $ntype:ty;
-		$( #[$doc:meta] )*
-		=>
-		$(
-			$( #[$valdoc:meta] )*
-			$valname:ident $val:expr
-		)*
-	) => {
-		const_no_debug_display! {
-			$name: $ntype;
-			$( #[$doc] )*
-		}
-
-		impl std::fmt::Display for $name {
-			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-				if self.0 as usize > 0xffff {
-					write!(f, "{}({:#010x})", stringify!($name), self.0)
-				} else {
-					write!(f, "{}({:#06x})", stringify!($name), self.0)
-				}
-			}
-		}
-		impl std::fmt::Debug for $name {
-			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-				if self.0 as usize > 0xffff {
-					write!(f, "{}({:#010x} {})",
-						stringify!($name), self.0, self.0)
-				} else {
-					write!(f, "{}({:#06x} {})",
-						stringify!($name), self.0, self.0)
-				}
-			}
-		}
-
-		const_values! {
-			$name;
-			$(
-				$( #[$valdoc] )*
-				$valname $val
-			)*
-		}
-	};
-}
-
-/// Declares the type of an ordinary bitflag constant, along with `pub` values.
-macro_rules! const_bitflag {
-	(
-		$name:ident : $ntype:ty;
-		$( #[$doc:meta] )*
-		=>
-		$(
-			$( #[$valdoc:meta] )*
-			$valname:ident $val:expr
-		)*
-	) => {
-		const_ordinary! {
-			$name: $ntype;
-			$( #[$doc] )*
-			///
-			/// This is a bitflag constant, which implements the
-			/// [`NativeBitflag`](crate::prelude::NativeBitflag) trait.
-			=>
-			$(
-				$( #[$valdoc] )*
-				$valname $val
-			)*
-		}
-
+/// Implements bitflag operations for numeric newtype constants.
+macro_rules! const_impl_bitflag {
+	( $name:ident ) => {
 		impl crate::prelude::NativeBitflag for $name {
 			fn has(&self, other: Self) -> bool {
 				(self.0 & other.0) != 0
 			}
 		}
 
-		// Bitflag operations.
 		impl std::ops::BitAnd for $name {
 			type Output = $name;
 			fn bitand(self, rhs: Self) -> Self::Output {
@@ -204,8 +87,135 @@ macro_rules! const_bitflag {
 	};
 }
 
-/// Declares the type of a constant for a window message, convertible to
-/// [`WM`](crate::co::WM) constant type, along with `pub` values.
+/// Implements Debug and Display for numeric newtype constants.
+macro_rules! const_impl_debug_display {
+	( $name:ident ) => {
+		impl std::fmt::Display for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+				if self.0 as usize > 0xffff {
+					write!(f, "{}({:#010x})", stringify!($name), self.0)
+				} else {
+					write!(f, "{}({:#06x})", stringify!($name), self.0)
+				}
+			}
+		}
+		impl std::fmt::Debug for $name {
+			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+				if self.0 as usize > 0xffff {
+					write!(f, "{}({:#010x} {})",
+						stringify!($name), self.0, self.0)
+				} else {
+					write!(f, "{}({:#06x} {})",
+						stringify!($name), self.0, self.0)
+				}
+			}
+		}
+	};
+}
+
+/// Writes multiple pub values of a numeric newtype constant.
+macro_rules! const_values_pub {
+	(
+		$name:ident;
+		$(
+			$( #[$valdoc:meta] )*
+			$valname:ident $val:expr
+		)*
+	) => {
+		impl $name {
+			$(
+				$( #[$valdoc] )*
+				pub const $valname: Self = unsafe { Self::from_raw($val) };
+			)*
+		}
+	};
+}
+
+/// Writes multiple pub(crate) values of a numeric newtype constant.
+macro_rules! const_values_pubcrate {
+	(
+		$name:ident;
+		$(
+			$( #[$valdoc:meta] )*
+			$valname:ident $val:expr
+		)*
+	) => {
+		impl $name {
+			$(
+				$( #[$valdoc] )*
+				pub(crate) const $valname: Self = unsafe { Self::from_raw($val) };
+			)*
+		}
+	};
+}
+
+/// Writes multiple pub(crate) values of an arbitrary numeric type; used in
+/// internal privs.rs files.
+macro_rules! const_values_num_privs {
+	(
+		$( $name:ident $ty:ty = $val:expr )*
+	) => {
+		$( pub(crate) const $name: $ty = $val; )*
+	};
+}
+
+/// Complete declaration of ordinary, non-bitflag numeric newtype constants.
+macro_rules! const_ordinary {
+	(
+		$name:ident : $ntype:ty;
+		$( #[$doc:meta] )*
+		=>
+		$(
+			$( #[$valdoc:meta] )*
+			$valname:ident $val:expr
+		)*
+	) => {
+		const_basic_decl! {
+			$name: $ntype;
+			$( #[$doc] )*
+		}
+		const_impl_debug_display!($name);
+		const_values_pub! {
+			$name;
+			$(
+				$( #[$valdoc] )*
+				$valname $val
+			)*
+		}
+	};
+}
+
+/// Complete declaration of bitflag numeric newtype constants.
+macro_rules! const_bitflag {
+	(
+		$name:ident : $ntype:ty;
+		$( #[$doc:meta] )*
+		=>
+		$(
+			$( #[$valdoc:meta] )*
+			$valname:ident $val:expr
+		)*
+	) => {
+		const_basic_decl! {
+			$name: $ntype;
+			$( #[$doc] )*
+			///
+			/// This is a bitflag constant.
+		}
+		const_impl_bitflag!($name);
+		const_impl_debug_display!($name);
+		const_values_pub! {
+			$name;
+			$(
+				$( #[$valdoc] )*
+				$valname $val
+			)*
+		}
+	};
+}
+
+/// Complete declaration of a constant for a window message, convertible to the
+/// co::WM.
 macro_rules! const_wm {
 	(
 		$name:ident;
@@ -216,18 +226,21 @@ macro_rules! const_wm {
 			$valname:ident $val:expr
 		)*
 	) => {
-		const_ordinary! {
+		const_basic_decl! {
 			$name: u32;
 			$( #[$doc] )*
 			///
 			/// This is a window message, convertible to [`WM`](crate::co::WM).
-			=>
+		}
+		const_impl_bitflag!($name);
+		const_impl_debug_display!($name);
+		const_values_pub! {
+			$name;
 			$(
 				$( #[$valdoc] )*
 				$valname $val
 			)*
 		}
-
 		impl From<$name> for crate::co::WM {
 			fn from(v: $name) -> Self {
 				unsafe { Self::from_raw(v.0) }
@@ -236,9 +249,8 @@ macro_rules! const_wm {
 	};
 }
 
-/// Declares the type of a constant for a WM_COMMAND notification code,
-/// convertible to [`CMD`](crate::co::CMD) constant type, along with `pub`
-/// values.
+/// Complete declaration of a constant for a WM_COMMAND notification code,
+/// convertible to co::CMD.
 macro_rules! const_cmd {
 	(
 		$name:ident;
@@ -249,19 +261,22 @@ macro_rules! const_cmd {
 			$valname:ident $val:expr
 		)*
 	) => {
-		const_ordinary! {
+		const_basic_decl! {
 			$name: u16;
 			$( #[$doc] )*
 			///
 			/// This is a [`wm::Command`](crate::msg::wm::Command) notification
 			/// code, convertible to [`CMD`](crate::co::CMD).
-			=>
+		}
+		const_impl_bitflag!($name);
+		const_impl_debug_display!($name);
+		const_values_pub! {
+			$name;
 			$(
 				$( #[$valdoc] )*
 				$valname $val
 			)*
 		}
-
 		impl From<$name> for crate::co::CMD {
 			fn from(v: $name) -> Self {
 				Self(v.0)
@@ -270,8 +285,8 @@ macro_rules! const_cmd {
 	};
 }
 
-/// Declares the type of a constant for a WM_NOTIFY notification code,
-/// convertible to NmhdrCode, along with `pub` values.
+/// Complete declaration of a constant for a WM_NOTIFY notification code,
+/// convertible to NmhdrCode.
 macro_rules! const_nm {
 	(
 		$name:ident;
@@ -282,25 +297,27 @@ macro_rules! const_nm {
 			$valname:ident $val:expr
 		)*
 	) => {
-		const_ordinary! {
+		const_basic_decl! {
 			$name: i32;
 			$( #[$doc] )*
 			///
 			/// This is a [`wm::Notify`](crate::msg::wm::Notify) notification
 			/// code, convertible to/from [`NmhdrCode`](crate::NmhdrCode).
-			=>
+		}
+		const_impl_bitflag!($name);
+		const_impl_debug_display!($name);
+		const_values_pub! {
+			$name;
 			$(
 				$( #[$valdoc] )*
 				$valname $val
 			)*
 		}
-
 		impl From<$name> for crate::NmhdrCode {
 			fn from(v: $name) -> Self {
 				Self::new(v.raw())
 			}
 		}
-
 		impl TryFrom<crate::NmhdrCode> for $name {
 			type Error = crate::co::ERROR;
 
@@ -316,8 +333,8 @@ macro_rules! const_nm {
 	};
 }
 
-/// Declares the type of a constant for a window style, convertible to
-/// [`WS`](crate::co::WS) constant type, along with `pub` values.
+/// Complete declaration of a constant for a window style, convertible to
+/// co::WS.
 macro_rules! const_ws {
 	(
 		$name:ident : $ntype:ty;
@@ -328,24 +345,26 @@ macro_rules! const_ws {
 			$valname:ident $val:expr
 		)*
 	) => {
-		const_bitflag! {
+		const_basic_decl! {
 			$name: $ntype;
 			$( #[$doc] )*
 			///
 			/// This is a window style, convertible to [`WS`](crate::co::WS).
-			=>
+		}
+		const_impl_bitflag!($name);
+		const_impl_debug_display!($name);
+		const_values_pub! {
+			$name;
 			$(
 				$( #[$valdoc] )*
 				$valname $val
 			)*
 		}
-
 		impl From<$name> for crate::co::WS {
 			fn from(v: $name) -> Self {
 				unsafe { Self::from_raw(v.0 as _) }
 			}
 		}
-
 		impl From<crate::co::WS> for $name {
 			fn from(v: crate::co::WS) -> Self {
 				unsafe { Self::from_raw(v.raw() as _) }
@@ -354,8 +373,8 @@ macro_rules! const_ws {
 	};
 }
 
-/// Declares the type of a constant for an extended window style, convertible to
-/// [`WS_EX`](crate::co::WS_EX) constant type, along with `pub` values.
+/// Complete declaration of a constant for an extended window style, convertible
+/// to WS_EX.
 macro_rules! const_wsex {
 	(
 		$name:ident;
@@ -366,25 +385,27 @@ macro_rules! const_wsex {
 			$valname:ident $val:expr
 		)*
 	) => {
-		const_bitflag! {
+		const_basic_decl! {
 			$name: u32;
 			$( #[$doc] )*
 			///
 			/// This is an extended windoow style, convertible to
 			/// [`WS_EX`](crate::co::WS_EX).
-			=>
+		}
+		const_impl_bitflag!($name);
+		const_impl_debug_display!($name);
+		const_values_pub! {
+			$name;
 			$(
 				$( #[$valdoc] )*
 				$valname $val
 			)*
 		}
-
 		impl From<$name> for crate::co::WS_EX {
 			fn from(v: $name) -> Self {
 				unsafe { Self::from_raw(v.0) }
 			}
 		}
-
 		impl From<crate::co::WS_EX> for $name {
 			fn from(v: crate::co::WS_EX) -> Self {
 				unsafe { Self::from_raw(v.raw() as _) }
@@ -393,8 +414,8 @@ macro_rules! const_wsex {
 	};
 }
 
-/// Declares the type of a constant with a literal string as its underlying
-/// type.
+/// Complete declaration of a constant with a literal string as its underlying
+/// type. Pretty rare.
 macro_rules! const_str {
 	(
 		$name:ident;

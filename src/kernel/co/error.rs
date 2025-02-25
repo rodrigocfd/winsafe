@@ -2,7 +2,7 @@
 
 use crate::prelude::FormattedError;
 
-const_no_debug_display! { ERROR: u32;
+const_basic_decl! { ERROR: u32;
 	/// A native
 	/// [system error code](https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes)
 	/// (`u32`), commonly retrieved by
@@ -60,7 +60,7 @@ impl std::fmt::Debug for ERROR {
 
 impl FormattedError for ERROR {}
 
-const_values! { ERROR;
+const_values_pub! { ERROR;
 	/// The operation completed successfully.
 	SUCCESS 0
 	INVALID_FUNCTION 1

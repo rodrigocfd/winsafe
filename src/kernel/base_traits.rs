@@ -31,22 +31,6 @@ pub trait IntUnderlying: Sized
 	unsafe fn as_mut(&mut self) -> &mut Self::Raw;
 }
 
-/// A native typed constant.
-///
-/// If the values of this constant type can be combined as bitflags, it will
-/// also implement the [`NativeBitflag`](crate::prelude::NativeBitflag) trait.
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait NativeConst: IntUnderlying
-	+ Default + fmt::Debug + fmt::Display
-	+ fmt::LowerHex + fmt::UpperHex
-	+ fmt::Binary + fmt::Octal
-{}
-
 /// A native typed bitflag constant.
 ///
 /// Prefer importing this trait through the prelude:
@@ -54,7 +38,7 @@ pub trait NativeConst: IntUnderlying
 /// ```no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait NativeBitflag: NativeConst
+pub trait NativeBitflag: IntUnderlying
 	+ ops::BitAnd + ops::BitAndAssign
 	+ ops::BitOr + ops::BitOrAssign
 	+ ops::BitXor + ops::BitXorAssign

@@ -1,6 +1,6 @@
 use crate::co::*;
 
-const_values! { HRESULT;
+const_values_pub! { HRESULT;
 	MF_E_PLATFORM_NOT_INITIALIZED 0xc00d_36b0
 	MF_E_BUFFERTOOSMALL 0xc00d_36b1
 	MF_E_INVALIDREQUEST 0xc00d_36b2

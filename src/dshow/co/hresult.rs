@@ -1,6 +1,6 @@
 use crate::co::*;
 
-const_values! { HRESULT;
+const_values_pub! { HRESULT;
 	VFW_E_INVALIDMEDIATYPE 0x8004_0200
 	VFW_E_INVALIDSUBTYPE 0x8004_0201
 	VFW_E_NEED_OWNER 0x8004_0202

@@ -2,7 +2,7 @@
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
 
 // Declarations of macros used throughout the library.
-// No macros are public.
+// No macros are public, except seq_ids.
 
 #[macro_use] mod macros;
 
@@ -65,9 +65,8 @@ pub use decl::*;
 pub mod co {
 	//! Native constants.
 	//!
-	//! All types can be converted from/to their underlying integer type. They
-	//! all implement the [`NativeConst`](crate::prelude::NativeConst) trait;
-	//! those who can be combined as bitflags also implement
+	//! All types can be converted from/to their underlying integer type. Those
+	//! who can be combined as bitflags also implement
 	//! [`NativeBitflag`](crate::prelude::NativeBitflag).
 	//!
 	//! Among these constant types, three are error types:

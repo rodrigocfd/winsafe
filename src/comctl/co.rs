@@ -125,7 +125,7 @@ const_ordinary! { CAL: u32;
 	UMALQURA 23
 }
 
-const_values! { CB;
+const_values_pub! { CB;
 	SETMINVISIBLE CB_FIRST + 1
 	GETMINVISIBLE CB_FIRST + 2
 	SETCUEBANNER CB_FIRST + 3
@@ -286,7 +286,7 @@ const_ws! { DTS: u32;
 	RIGHTALIGN 0x0020
 }
 
-const_values! { EM;
+const_values_pub! { EM;
 	SETCUEBANNER EM_FIRST + 1
 	GETCUEBANNER EM_FIRST + 2
 	SHOWBALLOONTIP EM_FIRST + 3

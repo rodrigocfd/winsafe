@@ -1,7 +1,7 @@
 use crate::co;
 use crate::prelude::*;
 
-const_no_debug_display! { HRESULT: u32;
+const_basic_decl! { HRESULT: u32;
 	/// A native
 	/// [COM error code](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-erref/0642cb2f-2075-4469-918c-4441e69c548a)
 	/// (`u32`), which can be considered a superset of
@@ -114,7 +114,7 @@ impl HRESULT {
 	}
 }
 
-const_values! { HRESULT;
+const_values_pub! { HRESULT;
 	/// Operation successful.
 	S_OK 0
 	S_FALSE 1

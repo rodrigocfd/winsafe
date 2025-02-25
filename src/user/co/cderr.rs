@@ -1,6 +1,6 @@
 #![allow(non_upper_case_globals)]
 
-const_no_debug_display! { CDERR: u32;
+const_basic_decl! { CDERR: u32;
 	/// Common dialog box
 	/// [error codes](https://learn.microsoft.com/en-us/windows/win32/api/commdlg/nf-commdlg-commdlgextendederror).
 	///
@@ -35,7 +35,7 @@ impl std::fmt::Debug for CDERR {
 	}
 }
 
-const_values! { CDERR;
+const_values_pub! { CDERR;
 	/// None of the actual values (zero).
 	NoValue 0
 	DIALOGFAILURE 0xffff
