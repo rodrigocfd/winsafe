@@ -430,8 +430,6 @@ macro_rules! const_str {
 		#[derive(Clone, Copy, PartialEq, Eq)]
 		pub struct $name(&'static str);
 
-		impl crate::prelude::NativeStrConst for $name {}
-
 		impl TryFrom<&str> for $name {
 			type Error = crate::co::ERROR;
 

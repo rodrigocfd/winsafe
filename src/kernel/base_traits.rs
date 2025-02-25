@@ -1,6 +1,6 @@
 #![allow(non_snake_case)]
 
-use std::{fmt, hash, ops};
+use std::{hash, ops};
 
 use crate::co;
 use crate::decl::*;
@@ -50,13 +50,6 @@ pub trait NativeBitflag: IntUnderlying
 	#[must_use]
 	fn has(&self, other: Self) -> bool;
 }
-
-/// A native typed constant mapped to a string.
-pub trait NativeStrConst: PartialEq + Eq
-	+ for<'a> TryFrom<&'a str, Error = co::ERROR>
-	+ Into<WString>
-	+ fmt::Debug + fmt::Display
-{}
 
 /// A system error which can be formatted with
 /// [`FormatMessage`](crate::FormatMessage).
