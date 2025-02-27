@@ -42,8 +42,8 @@ is resized.</p>
 <p>Defaults to <code>(gui::Horz::None, gui::Vert::None)</code>.</p>
 </div><span id="structfield.items" class="structfield section-header"><a href="#structfield.items" class="anchor field">§</a><code>items: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/vec/struct.Vec.html" title="struct alloc::vec::Vec">Vec</a>&lt;(<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html" title="struct alloc::boxed::Box">Box</a>&lt;dyn <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="struct" href="struct.WindowControl.html" title="struct winsafe::gui::WindowControl">WindowControl</a>&gt;&gt;)&gt;</code></span><div class="docblock"><p>Items to be added as soon as the control is created. The tuple contains
 the title of the tab and the window to be rendered inside of it.</p>
-<p>Note that, in o order to make the focus rotation work properly, the
-child windows must be created with the
+<p>Note that, in order to make the focus rotation work properly, the child
+windows must be created with the
 <a href="../co/struct.WS_EX.html#associatedconstant.CONTROLPARENT" title="associated constant winsafe::co::WS_EX::CONTROLPARENT"><code>co::WS_EX::CONTROLPARENT</code></a> extended
 style.</p>
 <p>Defaults to none.</p>
