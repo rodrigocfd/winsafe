@@ -46,7 +46,7 @@ Add the dependency in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-winsafe = { version = "0.0.22", features = [] }
+winsafe = { version = "0.0.23", features = [] }
 ```
 
 You can, alternatively, use the Nightly (master) branch [directly](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies-from-git-repositories), to get the latest features right away:
@@ -105,7 +105,7 @@ The [example below](https://github.com/rodrigocfd/winsafe-examples/tree/master/0
 
 ```toml
 [dependencies]
-winsafe = { version = "0.0.22", features = ["gui"] }
+winsafe = { version = "0.0.23", features = ["gui"] }
 ```
 
 ```rust
