@@ -1,6 +1,6 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\events\tree_view_events.rs`."><title>tree_view_events.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0-nightly (617aad8c2 2025-02-24)" data-channel="nightly" data-search-js="search-f7327375.js" data-settings-js="settings-d72f25bb.js" ><script src="../../..\../static.files/storage-d8ac8691.js"></script><script defer src="../../..\../static.files/src-script-b8d3f215.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-a7bf3405.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gui\events/</div>tree_view_events.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span><span class="kw">crate</span>::co;
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\events\tree_view_events.rs`."><title>tree_view_events.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.87.0-nightly (3ea711f17 2025-03-09)" data-channel="nightly" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../..\../static.files/storage-d8ac8691.js"></script><script defer src="../../..\../static.files/src-script-b8d3f215.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-a7bf3405.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gui\events/</div>tree_view_events.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span><span class="kw">crate</span>::co;
 <a href=#2 id=2 data-nosnippet>2</a><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
-<a href=#3 id=3 data-nosnippet>3</a><span class="kw">use </span><span class="kw">crate</span>::gui::{<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
+<a href=#3 id=3 data-nosnippet>3</a><span class="kw">use </span><span class="kw">crate</span>::gui::{events::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
 <a href=#4 id=4 data-nosnippet>4</a>
 <a href=#5 id=5 data-nosnippet>5</a><span class="doccomment">/// Exposes tree view control
 <a href=#6 id=6 data-nosnippet>6</a>/// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-tree-view-control-reference-notifications).
@@ -11,12 +11,12 @@
 <a href=#11 id=11 data-nosnippet>11</a>///
 <a href=#12 id=12 data-nosnippet>12</a>/// You cannot directly instantiate this object, it is created internally by the
 <a href=#13 id=13 data-nosnippet>13</a>/// control.
-<a href=#14 id=14 data-nosnippet>14</a></span><span class="kw">pub struct </span>TreeViewEvents(BaseCtrlEventsProxy);
+<a href=#14 id=14 data-nosnippet>14</a></span><span class="kw">pub struct </span>TreeViewEvents(BaseCtrlEvents);
 <a href=#15 id=15 data-nosnippet>15</a>
 <a href=#16 id=16 data-nosnippet>16</a><span class="kw">impl </span>TreeViewEvents {
 <a href=#17 id=17 data-nosnippet>17</a>	<span class="attr">#[must_use]
-<a href=#18 id=18 data-nosnippet>18</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;Base&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
-<a href=#19 id=19 data-nosnippet>19</a>		<span class="self">Self</span>(BaseCtrlEventsProxy::new(parent, ctrl_id))
+<a href=#18 id=18 data-nosnippet>18</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;BaseWnd&gt;, ctrl_id: u16) -&gt; <span class="self">Self </span>{
+<a href=#19 id=19 data-nosnippet>19</a>		<span class="self">Self</span>(BaseCtrlEvents::new(parent, ctrl_id))
 <a href=#20 id=20 data-nosnippet>20</a>	}
 <a href=#21 id=21 data-nosnippet>21</a>
 <a href=#22 id=22 data-nosnippet>22</a>	<span class="macro">pub_fn_nfy_withparm_noret!</span> { tvn_delete_item, co::TVN::DELETEITEM, NMTREEVIEW;
@@ -88,43 +88,42 @@
 <a href=#88 id=88 data-nosnippet>88</a>		<span class="kw">where </span>F: Fn(<span class="kw-2">&amp;mut </span>NMTVCUSTOMDRAW) -&gt; AnyResult&lt;co::CDRF&gt; + <span class="lifetime">'static</span>,
 <a href=#89 id=89 data-nosnippet>89</a>	{
 <a href=#90 id=90 data-nosnippet>90</a>		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::NM::CUSTOMDRAW, <span class="kw">move </span>|p| {
-<a href=#91 id=91 data-nosnippet>91</a>			<span class="kw">let </span>ret_val = func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMTVCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as </span>isize;
-<a href=#92 id=92 data-nosnippet>92</a>			<span class="prelude-val">Ok</span>(WmRet::HandledWithRet(ret_val))
-<a href=#93 id=93 data-nosnippet>93</a>		});
-<a href=#94 id=94 data-nosnippet>94</a>	}
-<a href=#95 id=95 data-nosnippet>95</a>
-<a href=#96 id=96 data-nosnippet>96</a>	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_dbl_clk, co::NM::DBLCLK;
-<a href=#97 id=97 data-nosnippet>97</a>		<span class="doccomment">/// [`NM_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-dblclk-tree-view)
-<a href=#98 id=98 data-nosnippet>98</a>		/// notification.
-<a href=#99 id=99 data-nosnippet>99</a>	</span>}
-<a href=#100 id=100 data-nosnippet>100</a>
-<a href=#101 id=101 data-nosnippet>101</a>	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_kill_focus, co::NM::KILLFOCUS;
-<a href=#102 id=102 data-nosnippet>102</a>		<span class="doccomment">/// [`NM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-killfocus-tree-view)
-<a href=#103 id=103 data-nosnippet>103</a>		/// notification.
-<a href=#104 id=104 data-nosnippet>104</a>	</span>}
-<a href=#105 id=105 data-nosnippet>105</a>
-<a href=#106 id=106 data-nosnippet>106</a>	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_r_click, co::NM::RCLICK;
-<a href=#107 id=107 data-nosnippet>107</a>		<span class="doccomment">/// [`NM_RCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rclick-tree-view)
-<a href=#108 id=108 data-nosnippet>108</a>		/// notification.
-<a href=#109 id=109 data-nosnippet>109</a>	</span>}
-<a href=#110 id=110 data-nosnippet>110</a>
-<a href=#111 id=111 data-nosnippet>111</a>	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_r_dbl_clk, co::NM::RDBLCLK;
-<a href=#112 id=112 data-nosnippet>112</a>		<span class="doccomment">/// [`NM_RDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rdblclk-tree-view)
-<a href=#113 id=113 data-nosnippet>113</a>		/// notification.
-<a href=#114 id=114 data-nosnippet>114</a>	</span>}
-<a href=#115 id=115 data-nosnippet>115</a>
-<a href=#116 id=116 data-nosnippet>116</a>	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_return, co::NM::RETURN;
-<a href=#117 id=117 data-nosnippet>117</a>		<span class="doccomment">/// [`NM_RETURN`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-return-tree-view-)
-<a href=#118 id=118 data-nosnippet>118</a>		/// notification.
-<a href=#119 id=119 data-nosnippet>119</a>	</span>}
-<a href=#120 id=120 data-nosnippet>120</a>
-<a href=#121 id=121 data-nosnippet>121</a>	<span class="macro">pub_fn_nfy_withparm_i32ret!</span> { nm_set_cursor, co::NM::SETCURSOR, NMMOUSE;
-<a href=#122 id=122 data-nosnippet>122</a>		<span class="doccomment">/// [`NM_MOUSE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setcursor-tree-view-)
-<a href=#123 id=123 data-nosnippet>123</a>		/// notification.
-<a href=#124 id=124 data-nosnippet>124</a>	</span>}
-<a href=#125 id=125 data-nosnippet>125</a>
-<a href=#126 id=126 data-nosnippet>126</a>	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_set_focus, co::NM::SETFOCUS;
-<a href=#127 id=127 data-nosnippet>127</a>		<span class="doccomment">/// [`NM_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setfocus-tree-view-)
-<a href=#128 id=128 data-nosnippet>128</a>		/// notification.
-<a href=#129 id=129 data-nosnippet>129</a>	</span>}
-<a href=#130 id=130 data-nosnippet>130</a>}</code></pre></div></section></main></body></html>
+<a href=#91 id=91 data-nosnippet>91</a>			<span class="prelude-val">Ok</span>(func(<span class="kw">unsafe </span>{ p.cast_nmhdr_mut::&lt;NMTVCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as _</span>)
+<a href=#92 id=92 data-nosnippet>92</a>		});
+<a href=#93 id=93 data-nosnippet>93</a>	}
+<a href=#94 id=94 data-nosnippet>94</a>
+<a href=#95 id=95 data-nosnippet>95</a>	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_dbl_clk, co::NM::DBLCLK;
+<a href=#96 id=96 data-nosnippet>96</a>		<span class="doccomment">/// [`NM_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-dblclk-tree-view)
+<a href=#97 id=97 data-nosnippet>97</a>		/// notification.
+<a href=#98 id=98 data-nosnippet>98</a>	</span>}
+<a href=#99 id=99 data-nosnippet>99</a>
+<a href=#100 id=100 data-nosnippet>100</a>	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_kill_focus, co::NM::KILLFOCUS;
+<a href=#101 id=101 data-nosnippet>101</a>		<span class="doccomment">/// [`NM_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-killfocus-tree-view)
+<a href=#102 id=102 data-nosnippet>102</a>		/// notification.
+<a href=#103 id=103 data-nosnippet>103</a>	</span>}
+<a href=#104 id=104 data-nosnippet>104</a>
+<a href=#105 id=105 data-nosnippet>105</a>	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_r_click, co::NM::RCLICK;
+<a href=#106 id=106 data-nosnippet>106</a>		<span class="doccomment">/// [`NM_RCLICK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rclick-tree-view)
+<a href=#107 id=107 data-nosnippet>107</a>		/// notification.
+<a href=#108 id=108 data-nosnippet>108</a>	</span>}
+<a href=#109 id=109 data-nosnippet>109</a>
+<a href=#110 id=110 data-nosnippet>110</a>	<span class="macro">pub_fn_nfy_noparm_i32ret!</span> { nm_r_dbl_clk, co::NM::RDBLCLK;
+<a href=#111 id=111 data-nosnippet>111</a>		<span class="doccomment">/// [`NM_RDBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-rdblclk-tree-view)
+<a href=#112 id=112 data-nosnippet>112</a>		/// notification.
+<a href=#113 id=113 data-nosnippet>113</a>	</span>}
+<a href=#114 id=114 data-nosnippet>114</a>
+<a href=#115 id=115 data-nosnippet>115</a>	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_return, co::NM::RETURN;
+<a href=#116 id=116 data-nosnippet>116</a>		<span class="doccomment">/// [`NM_RETURN`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-return-tree-view-)
+<a href=#117 id=117 data-nosnippet>117</a>		/// notification.
+<a href=#118 id=118 data-nosnippet>118</a>	</span>}
+<a href=#119 id=119 data-nosnippet>119</a>
+<a href=#120 id=120 data-nosnippet>120</a>	<span class="macro">pub_fn_nfy_withparm_i32ret!</span> { nm_set_cursor, co::NM::SETCURSOR, NMMOUSE;
+<a href=#121 id=121 data-nosnippet>121</a>		<span class="doccomment">/// [`NM_MOUSE`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setcursor-tree-view-)
+<a href=#122 id=122 data-nosnippet>122</a>		/// notification.
+<a href=#123 id=123 data-nosnippet>123</a>	</span>}
+<a href=#124 id=124 data-nosnippet>124</a>
+<a href=#125 id=125 data-nosnippet>125</a>	<span class="macro">pub_fn_nfy_noparm_noret!</span> { nm_set_focus, co::NM::SETFOCUS;
+<a href=#126 id=126 data-nosnippet>126</a>		<span class="doccomment">/// [`NM_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-setfocus-tree-view-)
+<a href=#127 id=127 data-nosnippet>127</a>		/// notification.
+<a href=#128 id=128 data-nosnippet>128</a>	</span>}
+<a href=#129 id=129 data-nosnippet>129</a>}</code></pre></div></section></main></body></html>
