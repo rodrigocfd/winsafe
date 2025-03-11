@@ -15,7 +15,7 @@ use crate::co;
 /// let err_result: w::AnyResult<()> = hr_result.map_err(|err| err.into());
 /// ```
 ///
-/// Converting from an [`SysResult`](crate::SysResult):
+/// Converting from a [`SysResult`](crate::SysResult):
 ///
 /// ```no_run
 /// use winsafe::{self as w, prelude::*, co};

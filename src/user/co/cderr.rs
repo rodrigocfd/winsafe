@@ -8,10 +8,10 @@ const_basic_decl! { CDERR: u32;
 	///
 	/// Implements the standard [`Error`](std::error::Error) trait.
 	///
-	/// Does not implement [`FormattedError`](crate::prelude::FormattedError)
-	/// because [`FormatMessage`](crate::FormatMessage) function does not offer
-	/// support for it, so there is no way to obtain a textual description of
-	/// the error codes.
+	/// Does not implement [`SystemError`](crate::prelude::SystemError) because
+	/// [`FormatMessage`](crate::FormatMessage) function does not offer support
+	/// for it, so there is no way to obtain a textual description of the error
+	/// codes.
 }
 
 impl std::error::Error for CDERR {

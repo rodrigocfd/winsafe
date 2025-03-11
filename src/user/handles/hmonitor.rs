@@ -6,7 +6,7 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::user::ffi;
 
-impl_handle! { HMONITOR;
+handle! { HMONITOR;
 	/// Handle to a
 	/// [display monitor](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hmonitor).
 }

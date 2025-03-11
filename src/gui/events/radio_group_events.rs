@@ -3,7 +3,7 @@ use std::rc::Rc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::privs::*;
 
 /// Exposes button control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-button-control-reference-notifications)
@@ -16,26 +16,17 @@ use crate::gui::{*, events::*, privs::*};
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
 pub struct RadioGroupEvents {
-	parent_ptr: NonNull<Base>,
+	parent_ptr: NonNull<BaseWnd>, // used only to add the events to parent, before the first message is processed
 	ctrl_ids: Vec<u16>,
 }
 
 impl RadioGroupEvents {
 	#[must_use]
-	pub(in crate::gui) fn new(
-		parent: &impl AsRef<Base>,
-		ctrl_ids: Vec<u16>,
-	) -> Self
-	{
+	pub(in crate::gui) fn new(parent: &impl AsRef<BaseWnd>, ctrl_ids: Vec<u16>) -> Self {
 		Self {
 			parent_ptr: NonNull::from(parent.as_ref()),
 			ctrl_ids,
 		}
-	}
-
-	#[must_use]
-	fn parent_user_events(&self) -> &WindowEvents {
-		unsafe { self.parent_ptr.as_ref().on() }
 	}
 
 	/// [`BN_CLICKED`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-clicked)
@@ -57,24 +48,25 @@ impl RadioGroupEvents {
 	///     let radios = radios.clone();
 	///     move || -> w::AnyResult<()> {
 	///         println!("Selected {}",
-	///             radios.checked().unwrap()
+	///             radios.selected().unwrap()
 	///                 .hwnd().GetWindowText()?,
 	///         );
 	///         Ok(())
 	///     }
 	/// });
+	/// # w::SysResult::Ok(())
 	/// ```
 	pub fn bn_clicked<F>(&self, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
+		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(*ctrl_id, co::BN::CLICKED, {
+			parent_base_ref.on().wm_command(*ctrl_id, co::BN::CLICKED, {
 				let shared_func = shared_func.clone();
 				move || {
-					shared_func()?;
-					Ok(WmRet::HandledOk)
+					shared_func()
 				}
 			});
 		}
@@ -91,14 +83,14 @@ impl RadioGroupEvents {
 	pub fn bn_dbl_clk<F>(&self, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
+		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(*ctrl_id, co::BN::DBLCLK, {
+			parent_base_ref.on().wm_command(*ctrl_id, co::BN::DBLCLK, {
 				let shared_func = shared_func.clone();
 				move || {
-					shared_func()?;
-					Ok(WmRet::HandledOk)
+					shared_func()
 				}
 			});
 		}
@@ -113,14 +105,14 @@ impl RadioGroupEvents {
 	pub fn bn_kill_focus<F>(&self, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
+		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(*ctrl_id, co::BN::KILLFOCUS, {
+			parent_base_ref.on().wm_command(*ctrl_id, co::BN::KILLFOCUS, {
 				let shared_func = shared_func.clone();
 				move || {
-					shared_func()?;
-					Ok(WmRet::HandledOk)
+					shared_func()
 				}
 			});
 		}
@@ -135,14 +127,14 @@ impl RadioGroupEvents {
 	pub fn bn_set_focus<F>(&self, func: F)
 		where F: Fn() -> AnyResult<()> + 'static,
 	{
+		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			self.parent_user_events().wm_command(*ctrl_id, co::BN::SETFOCUS, {
+			parent_base_ref.on().wm_command(*ctrl_id, co::BN::SETFOCUS, {
 				let shared_func = shared_func.clone();
 				move || {
-					shared_func()?;
-					Ok(WmRet::HandledOk)
+					shared_func()
 				}
 			});
 		}

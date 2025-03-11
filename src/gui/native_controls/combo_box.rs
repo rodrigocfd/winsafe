@@ -5,61 +5,19 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*, spec::*};
-use crate::msg::*;
+use crate::gui::{*, collections::*, events::*, privs::*};
 use crate::prelude::*;
 
-struct Obj { // actual fields of ComboBox
-	base: BaseNativeControl,
+struct ComboBoxObj {
+	base: BaseCtrl,
 	events: ComboBoxEvents,
 	_pin: PhantomPinned,
 }
 
-/// Native
-/// [combo box](https://learn.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
-/// control.
-#[derive(Clone)]
-pub struct ComboBox(Pin<Arc<Obj>>);
-
-unsafe impl Send for ComboBox {}
-
-impl AsRef<BaseNativeControl> for ComboBox {
-	fn as_ref(&self) -> &BaseNativeControl {
-		&self.0.base
-	}
-}
-
-impl GuiWindow for ComboBox {
-	fn hwnd(&self) -> &HWND {
-		self.0.base.hwnd()
-	}
-
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
-
-impl GuiWindowText for ComboBox {}
-
-impl GuiChild for ComboBox {
-	fn ctrl_id(&self) -> u16 {
-		self.0.base.ctrl_id()
-	}
-}
-
-impl GuiChildFocus for ComboBox {}
-
-impl GuiNativeControl for ComboBox {}
-
-impl GuiNativeControlEvents<ComboBoxEvents> for ComboBox {
-	fn on(&self) -> &ComboBoxEvents {
-		if *self.hwnd() != HWND::NULL {
-			panic!("Cannot add events after the control creation.");
-		} else if *self.0.base.parent().hwnd() != HWND::NULL {
-			panic!("Cannot add events after the parent window creation.");
-		}
-		&self.0.events
-	}
+native_ctrl! { ComboBox: ComboBoxObj => ComboBoxEvents;
+	/// Native
+	/// [combo box](https://learn.microsoft.com/en-us/windows/win32/controls/about-combo-boxes)
+	/// control.
 }
 
 impl ComboBox {
@@ -71,6 +29,9 @@ impl ComboBox {
 	///
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `ComboBox` in an event closure.
+	///
+	/// Panics if vertical resizing behavior is
+	/// [`Vert::Resize`](crate::gui::Vert::Resize).
 	///
 	/// # Examples
 	///
@@ -97,14 +58,16 @@ impl ComboBox {
 	/// );
 	/// ```
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: ComboBoxOpts) -> Self {
-		let opts = auto_ctrl_id_if_zero(opts);
-		let ctrl_id = opts.ctrl_id;
+	pub fn new(parent: &(impl GuiParent + 'static), opts: ComboBoxOpts) -> Self {
+		if opts.resize_behavior.1 == Vert::Resize {
+			panic!("ComboBox cannot be resized with Vert::Resize.");
+		}
 
+		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				ComboBoxObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: ComboBoxEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -112,9 +75,16 @@ impl ComboBox {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
-			self2.create(OptsResz::Wnd(&opts))?;
-			Ok(WmRet::NotHandled)
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			self2.0.base.create_window(opts.window_ex_style, "COMBOBOX", None,
+				opts.window_style | opts.control_style.into(), opts.position.into(),
+				SIZE::new(opts.width, 0), &parent2)?;
+			ui_font::set(self2.hwnd())?;
+			self2.items().add(&opts.items)?;
+			self2.items().select(opts.selected_item);
+			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+			Ok(0) // ignored
 		});
 
 		new_self
@@ -128,17 +98,24 @@ impl ComboBox {
 	///
 	/// Panics if the parent dialog was already created – that is, you cannot
 	/// dynamically create a `ComboBox` in an event closure.
+	///
+	/// Panics if vertical resizing behavior is
+	/// [`Vert::Resize`](crate::gui::Vert::Resize).
 	#[must_use]
 	pub fn new_dlg(
-		parent: &impl GuiParent,
+		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
 	) -> Self
 	{
+		if resize_behavior.1 == Vert::Resize {
+			panic!("ComboBox cannot be resized with Vert::Resize.");
+		}
+
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				ComboBoxObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: ComboBoxEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -146,46 +123,14 @@ impl ComboBox {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_init_dialog(move |_| {
-			self2.create(OptsResz::Dlg(resize_behavior))?;
-			Ok(false) // return value is discarded
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm_init_dialog(move |_| {
+			self2.0.base.assign_dlg(&parent2)?;
+			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			Ok(true) // ignored
 		});
 
 		new_self
-	}
-
-	fn create(&self, opts_resz: OptsResz<&ComboBoxOpts>) -> SysResult<()> {
-		if opts_resz.resize_behavior().1 == Vert::Resize {
-			panic!("ComboBox cannot be resized with Vert::Resize.");
-		}
-
-		match opts_resz {
-			OptsResz::Wnd(opts) => {
-				let mut pos = POINT::new(opts.position.0, opts.position.1);
-				let mut sz = SIZE::new(opts.width as _, 0);
-				multiply_dpi_or_dtu(
-					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
-
-				self.0.base.create_window(
-					"COMBOBOX", None, pos, sz,
-					opts.window_ex_style,
-					opts.window_style | opts.combo_box_style.into(),
-				)?;
-
-				unsafe {
-					self.hwnd().SendMessage(wm::SetFont {
-						hfont: ui_font(),
-						redraw: true,
-					});
-				}
-				self.items().add(&opts.items);
-				self.items().select(opts.selected_item);
-			},
-			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
-		}
-
-		self.0.base.parent()
-			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
 	}
 
 	/// Item methods.
@@ -202,21 +147,13 @@ pub struct ComboBoxOpts {
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
-	/// Defaults to `(0, 0)`.
+	/// Defaults to `gui::dpi(0, 0)`.
 	pub position: (i32, i32),
 	/// Control width to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the value is in Dialog Template Units;
-	/// otherwise in pixels, which will be multiplied to match current system
-	/// DPI.
-	///
-	/// Defaults to `120`.
-	pub width: u32,
+	/// Defaults to `gui::dpi_x(120)`.
+	pub width: i32,
 	/// Combo box styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -225,11 +162,11 @@ pub struct ComboBoxOpts {
 	/// Suggestions:
 	/// * replace with `CBS::DROPDOWN` to allow the user to type a text;
 	/// * add `CBS::SORT` to automatically sort the items.
-	pub combo_box_style: co::CBS,
+	pub control_style: co::CBS,
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
+	/// Defaults to `WS::CHILD | WS::GROUP | WS::TABSTOP | WS::VISIBLE`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -250,7 +187,7 @@ pub struct ComboBoxOpts {
 	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
 	pub resize_behavior: (Horz, Vert),
 
-	/// Items to be added right away to the control.
+	/// Items to be added.
 	///
 	/// Defaults to none.
 	pub items: Vec<String>,
@@ -263,27 +200,15 @@ pub struct ComboBoxOpts {
 impl Default for ComboBoxOpts {
 	fn default() -> Self {
 		Self {
-			position: (0, 0),
-			width: 120,
-			combo_box_style: co::CBS::DROPDOWNLIST,
-			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
+			position: dpi(0, 0),
+			width: dpi_x(120),
+			control_style: co::CBS::DROPDOWNLIST,
+			window_style: co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
-			items: Vec::<String>::new(),
+			items: Vec::default(),
 			selected_item: None,
 		}
-	}
-}
-
-impl ResizeBehavior for &ComboBoxOpts {
-	fn resize_behavior(&self) -> (Horz, Vert) {
-		self.resize_behavior
-	}
-}
-
-impl AutoCtrlId for ComboBoxOpts {
-	fn ctrl_id_mut(&mut self) -> &mut u16 {
-		&mut self.ctrl_id
 	}
 }

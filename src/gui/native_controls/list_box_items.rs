@@ -29,36 +29,39 @@ impl<'a> ListBoxItems<'a> {
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	/// # let my_list = gui::ListBox::new(&wnd, gui::ListBoxOpts::default());
 	///
-	/// my_list.items().add(&["John", "Mary"]);
+	/// my_list.items().add(&["John", "Mary"])?;
+	/// # w::SysResult::Ok(())
 	/// ```
-	pub fn add(&self, items: &[impl AsRef<str>]) {
+	pub fn add(&self, items: &[impl AsRef<str>]) -> SysResult<()> {
 		for text in items.iter() {
 			unsafe {
 				self.owner.hwnd()
 					.SendMessage(lb::AddString {
 						text: WString::from_str(text.as_ref()),
-					})
-			}.unwrap();
+					})?;
+			}
 		}
+		Ok(())
 	}
 
 	/// Retrieves the number of items by sending an
 	/// [`lb::GetCount`](crate::msg::lb::GetCount) message.
 	#[must_use]
-	pub fn count(&self) -> u32 {
+	pub fn count(&self) -> SysResult<u32> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(lb::GetCount {})
-		}.unwrap()
+		}
 	}
 
 	/// Deletes the item at the given index by sending an
 	/// [`lb::DeleteString`](crate::msg::lb::DeleteString) message.
-	pub fn delete(&self, index: u32) {
+	pub fn delete(&self, index: u32) -> SysResult<()> {
 		unsafe {
 			self.owner.hwnd()
-				.SendMessage(lb::DeleteString { index })
-		}.unwrap();
+				.SendMessage(lb::DeleteString { index })?;
+		}
+		Ok(())
 	}
 
 	/// Deletes all items by sending an
@@ -69,11 +72,11 @@ impl<'a> ListBoxItems<'a> {
 
 	/// Ensures that the specified item in a list box is visible by sending an
 	/// [`lb::SetTopIndex`](crate::msg::lb::SetTopIndex) message.
-	pub fn ensure_visible(&self, index: u32) {
+	pub fn ensure_visible(&self, index: u32) -> SysResult<()> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(lb::SetTopIndex { index })
-		}.unwrap();
+		}
 	}
 
 	/// Returns an iterator over the texts.
@@ -87,12 +90,13 @@ impl<'a> ListBoxItems<'a> {
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	/// # let my_list = gui::ListBox::new(&wnd, gui::ListBoxOpts::default());
 	///
-	/// for text in my_list.items().iter() {
-	///     println!("Text {}", text);
+	/// for text in my_list.items().iter()? {
+	///     println!("Text {}", text?);
 	/// }
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	pub fn iter(&self) -> impl Iterator<Item = String> + 'a {
+	pub fn iter(&self) -> SysResult<impl Iterator<Item = SysResult<String>> + 'a> {
 		ListBoxItemIter::new(self.owner)
 	}
 
@@ -109,41 +113,42 @@ impl<'a> ListBoxItems<'a> {
 	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
 	/// # let my_list = gui::ListBox::new(&wnd, gui::ListBoxOpts::default());
 	///
-	/// for (sel_idx, text) in my_list.items().iter_selected() {
-	///     println!("Text {}: {}", sel_idx, text);
+	/// for idx_text in my_list.items().iter_selected()? {
+	///     let (idx, text) = idx_text?;
+	///     println!("Text {idx}: {text}");
 	/// }
+	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	pub fn iter_selected(&self) -> impl Iterator<Item = (u32, String)> + 'a {
+	pub fn iter_selected(&self) -> SysResult<impl Iterator<Item = SysResult<(u32, String)>> + 'a> {
 		ListBoxSelItemIter::new(self.owner)
 	}
 
 	/// Retrieves the number of selected items by sending an
 	/// [`lb::GetSelCount`](crate::msg::lb::GetSelCount) message.
 	#[must_use]
-	pub fn selected_count(&self) -> u32 {
+	pub fn selected_count(&self) -> SysResult<u32> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(lb::GetSelCount {})
-		}.unwrap()
+		}
 	}
 
 	/// Retrieves the text at the given position, if any, by sending a
 	/// [`lb::GetText`](crate::msg::lb::GetText) message.
 	#[must_use]
-	pub fn text(&self, index: u32) -> String {
+	pub fn text(&self, index: u32) -> SysResult<String> {
 		let num_chars = unsafe {
 			self.owner.hwnd()
 				.SendMessage(lb::GetTextLen { index })
-		}.unwrap();
+		}?;
 
 		let mut buf = WString::new_alloc_buf(num_chars as usize + 1);
-
 		unsafe {
 			self.owner.hwnd()
-				.SendMessage(lb::GetText { index, text: &mut buf })
-		}.unwrap();
+				.SendMessage(lb::GetText { index, text: &mut buf })?;
+		}
 
-		buf.to_string()
+		Ok(buf.to_string())
 	}
 }

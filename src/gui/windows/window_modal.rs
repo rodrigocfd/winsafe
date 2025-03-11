@@ -4,7 +4,6 @@ use crate::decl::*;
 use crate::gui::{*, privs::*};
 use crate::prelude::*;
 
-/// Keeps a raw or dialog window.
 #[derive(Clone)]
 enum RawDlg { Raw(RawModal), Dlg(DlgModal) }
 
@@ -15,11 +14,11 @@ pub struct WindowModal(RawDlg);
 
 unsafe impl Send for WindowModal {}
 
-impl AsRef<Base> for WindowModal {
-	fn as_ref(&self) -> &Base {
+impl AsRef<BaseWnd> for WindowModal {
+	fn as_ref(&self) -> &BaseWnd {
 		match &self.0 {
-			RawDlg::Raw(r) => r.base(),
-			RawDlg::Dlg(d) => d.base(),
+			RawDlg::Raw(r) => r.raw_base().base(),
+			RawDlg::Dlg(d) => d.dlg_base().base(),
 		}
 	}
 }
@@ -34,20 +33,16 @@ impl GuiWindow for WindowModal {
 	}
 }
 
-impl GuiWindowText for WindowModal {}
-
 impl GuiParent for WindowModal {}
-
-impl GuiParentPopup for WindowModal {}
 
 impl WindowModal {
 	/// Instantiates a new `WindowModal` object, to be created internally with
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: WindowModalOpts) -> Self {
+	pub fn new(opts: WindowModalOpts) -> Self {
 		Self(
 			RawDlg::Raw(
-				RawModal::new(parent, opts),
+				RawModal::new(opts),
 			),
 		)
 	}
@@ -56,10 +51,10 @@ impl WindowModal {
 	/// resource with
 	/// [`HINSTANCE::DialogBoxParam`](crate::prelude::user_Hinstance::DialogBoxParam).
 	#[must_use]
-	pub fn new_dlg(parent: &impl GuiParent, dialog_id: u16) -> Self {
+	pub fn new_dlg(dlg_id: u16) -> Self {
 		Self(
 			RawDlg::Dlg(
-				DlgModal::new(parent, dialog_id),
+				DlgModal::new(dlg_id),
 			),
 		)
 	}
@@ -83,10 +78,10 @@ impl WindowModal {
 	/// # Panics
 	///
 	/// Panics if the window is already created.
-	pub fn show_modal(&self) -> AnyResult<i32> {
+	pub fn show_modal(&self, parent: &impl GuiParent) -> AnyResult<()> {
 		match &self.0 {
-			RawDlg::Raw(r) => r.show_modal(),
-			RawDlg::Dlg(d) => d.show_modal(),
+			RawDlg::Raw(r) => r.show_modal(parent),
+			RawDlg::Dlg(d) => d.show_modal(parent),
 		}
 	}
 }

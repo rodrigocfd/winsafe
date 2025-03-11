@@ -7,7 +7,7 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::user::ffi;
 
-impl_handle! { HDWP;
+handle! { HDWP;
 	/// Handle to a
 	/// [deferred window position](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdwp).
 }

@@ -6,7 +6,7 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::user::ffi;
 
-impl_handle! { HACCEL;
+handle! { HACCEL;
 	/// Handle to an
 	/// [accelerator table](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#haccel).
 }

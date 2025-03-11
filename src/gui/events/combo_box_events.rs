@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::privs::*;
+use crate::gui::{events::*, privs::*};
 
 /// Exposes combo box control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-combobox-control-reference-notifications).
@@ -11,12 +11,12 @@ use crate::gui::privs::*;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-pub struct ComboBoxEvents(BaseCtrlEventsProxy);
+pub struct ComboBoxEvents(BaseCtrlEvents);
 
 impl ComboBoxEvents {
 	#[must_use]
-	pub(in crate::gui) fn new(parent: &impl AsRef<Base>, ctrl_id: u16) -> Self {
-		Self(BaseCtrlEventsProxy::new(parent, ctrl_id))
+	pub(in crate::gui) fn new(parent: &impl AsRef<BaseWnd>, ctrl_id: u16) -> Self {
+		Self(BaseCtrlEvents::new(parent, ctrl_id))
 	}
 
 	pub_fn_cmd_noparm_noret! { cbn_close_up, co::CBN::CLOSEUP;
@@ -72,12 +72,13 @@ impl ComboBoxEvents {
 		///
 		/// cmb.on().cbn_sel_change(
 		///     move || -> w::AnyResult<()> {
-		///         if let Some(sel_text) = cmb2.items().selected_text() {
+		///         if let Some(sel_text) = cmb2.items().selected_text()? {
 		///             println!("New selected text: {}", sel_text);
 		///         }
 		///         Ok(())
 		///     },
 		/// );
+		/// # w::SysResult::Ok(())
 		/// ```
 	}
 

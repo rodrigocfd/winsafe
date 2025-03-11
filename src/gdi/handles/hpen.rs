@@ -7,7 +7,7 @@ use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
 
-impl_handle! { HPEN;
+handle! { HPEN;
 	/// Handle to a
 	/// [pen](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hpen)
 	/// GDI object.

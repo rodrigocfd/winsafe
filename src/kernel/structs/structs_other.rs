@@ -5,7 +5,6 @@ use std::marker::PhantomData;
 use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
-use crate::prelude::*;
 
 /// [`ACL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-acl)
 /// struct.
@@ -289,14 +288,18 @@ pub struct HEAPLIST32 {
 
 impl_default_with_size!(HEAPLIST32, dwSize);
 
-/// [`LANGID`](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifiers)
-/// language identifier.
-#[repr(transparent)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct LANGID(u16);
+newtype_num! { LANGID: u16;
+	/// [`LANGID`](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifiers)
+	/// language identifier.
+}
 
-impl_intunderlying!(LANGID, u16);
-
+impl std::fmt::Debug for LANGID {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(f, "Primary [{:#04x} {}], Sublang [{:#04x} {}]",
+			self.primary_lang_id(), self.primary_lang_id(),
+			self.sub_lang_id(), self.sub_lang_id())
+	}
+}
 impl std::fmt::Display for LANGID {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		std::fmt::Debug::fmt(self, f)
@@ -339,13 +342,10 @@ impl LANGID {
 	}
 }
 
-/// [`LCID`](https://learn.microsoft.com/en-us/windows/win32/intl/locale-identifiers)
-/// locale identifier.
-#[repr(transparent)]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct LCID(u32);
-
-impl_intunderlying!(LCID, u32);
+newtype_num! { LCID: u32;
+	/// [`LCID`](https://learn.microsoft.com/en-us/windows/win32/intl/locale-identifiers)
+	/// locale identifier.
+}
 
 impl LCID {
 	/// [`LCID`](crate::LCID) composed of
@@ -502,6 +502,8 @@ impl_default!(OVERLAPPED);
 
 /// [`POWERBROADCAST_SETTING`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-powerbroadcast_setting)
 /// struct.
+///
+/// The `Data` field is dynamically allocated.
 #[allow(dead_code)] // used by wm::PowerBroadcast in user
 #[repr(C)]
 pub struct POWERBROADCAST_SETTING {
@@ -509,8 +511,6 @@ pub struct POWERBROADCAST_SETTING {
 	pub DataLength: u32,
 	Data: [u8; 1],
 }
-
-impl VariableSized for POWERBROADCAST_SETTING {}
 
 impl POWERBROADCAST_SETTING {
 	/// Returns the `Data` field according to `PowerSetting` identifier.
@@ -798,13 +798,21 @@ impl_default!(SYSTEM_INFO);
 #[repr(C)]
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
 pub struct SYSTEMTIME {
+	/// The year. The valid values for this member are 1,601 through 30,827.
 	pub wYear: u16,
+	/// The month. January = 1.
 	pub wMonth: u16,
+	/// The day of the week. Sunday = 0.
 	pub wDayOfWeek: u16,
+	/// The day of the month. The valid values for this member are 1 through 31.
 	pub wDay: u16,
+	/// The hour. The valid values for this member are 0 through 23.
 	pub wHour: u16,
+	/// The minute. The valid values for this member are 0 through 59.
 	pub wMinute: u16,
+	/// The second. The valid values for this member are 0 through 59.
 	pub wSecond: u16,
+	/// The millisecond. The valid values for this member are 0 through 999.
 	pub wMilliseconds: u16,
 }
 

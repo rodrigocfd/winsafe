@@ -7,7 +7,7 @@ use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
 
-impl_handle! { HEVENTLOG;
+handle! { HEVENTLOG;
 	/// Handle to an
 	/// [event log](https://learn.microsoft.com/en-us/windows/win32/eventlog/event-logging).
 	/// Originally just a `HANDLE`.

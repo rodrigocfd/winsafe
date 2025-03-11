@@ -9,58 +9,17 @@ use crate::gui::{*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-struct Obj { // actual fields of CheckBox
-	base: BaseNativeControl,
+struct CheckBoxObj {
+	base: BaseCtrl,
 	events: ButtonEvents,
 	_pin: PhantomPinned,
 }
 
-/// Native
-/// [check box](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
-/// control, actually a variation of the ordinary
-/// [`Button`](crate::gui::Button): just a button with a specific style.
-#[derive(Clone)]
-pub struct CheckBox(Pin<Arc<Obj>>);
-
-unsafe impl Send for CheckBox {}
-
-impl AsRef<BaseNativeControl> for CheckBox {
-	fn as_ref(&self) -> &BaseNativeControl {
-		&self.0.base
-	}
-}
-
-impl GuiWindow for CheckBox {
-	fn hwnd(&self) -> &HWND {
-		self.0.base.hwnd()
-	}
-
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
-
-impl GuiWindowText for CheckBox {}
-
-impl GuiChild for CheckBox {
-	fn ctrl_id(&self) -> u16 {
-		self.0.base.ctrl_id()
-	}
-}
-
-impl GuiChildFocus for CheckBox {}
-
-impl GuiNativeControl for CheckBox {}
-
-impl GuiNativeControlEvents<ButtonEvents> for CheckBox {
-	fn on(&self) -> &ButtonEvents {
-		if *self.hwnd() != HWND::NULL {
-			panic!("Cannot add events after the control creation.");
-		} else if *self.0.base.parent().hwnd() != HWND::NULL {
-			panic!("Cannot add events after the parent window creation.");
-		}
-		&self.0.events
-	}
+native_ctrl! { CheckBox: CheckBoxObj => ButtonEvents;
+	/// Native
+	/// [check box](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#check-boxes)
+	/// control, actually a variation of the ordinary
+	/// [`Button`](crate::gui::Button): just a button with a specific style.
 }
 
 impl CheckBox {
@@ -73,14 +32,12 @@ impl CheckBox {
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `CheckBox` in an event closure.
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: CheckBoxOpts) -> Self {
-		let opts = auto_ctrl_id_if_zero(opts);
-		let ctrl_id = opts.ctrl_id;
-
+	pub fn new(parent: &(impl GuiParent + 'static), opts: CheckBoxOpts) -> Self {
+		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				CheckBoxObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: ButtonEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -88,9 +45,20 @@ impl CheckBox {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
-			self2.create(OptsResz::Wnd(&opts))?;
-			Ok(WmRet::NotHandled)
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			self2.0.base.create_window(opts.window_ex_style, "BUTTON", Some(&opts.text),
+				opts.window_style | opts.control_style.into(), opts.position.into(),
+				if opts.size == (0, 0) {
+					text_calc::bound_box_with_check(
+						&text_calc::remove_accel_ampersands(&opts.text))?
+				} else {
+					opts.size.into()
+				},
+				&parent2)?;
+			ui_font::set(self2.hwnd())?;
+			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+			Ok(0) // ignored
 		});
 
 		new_self
@@ -106,15 +74,15 @@ impl CheckBox {
 	/// dynamically create a `CheckBox` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
-		parent: &impl GuiParent,
+		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
 	) -> Self
 	{
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				CheckBoxObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: ButtonEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -122,99 +90,51 @@ impl CheckBox {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_init_dialog(move |_| {
-			self2.create(OptsResz::Dlg(resize_behavior))?;
-			Ok(false) // return value is discarded
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm_init_dialog(move |_| {
+			self2.0.base.assign_dlg(&parent2)?;
+			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			Ok(true) // ignored
 		});
 
 		new_self
 	}
 
-	fn create(&self, opts_resz: OptsResz<&CheckBoxOpts>) -> SysResult<()> {
-		match opts_resz {
-			OptsResz::Wnd(opts) => {
-				let mut pos = POINT::new(opts.position.0, opts.position.1);
-				multiply_dpi_or_dtu(
-					self.0.base.parent(), Some(&mut pos), None)?;
-
-				let mut sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
-				if sz.cx == -1 && sz.cy == -1 {
-					sz = calc_text_bound_box_check(&opts.text)?; // resize to fit text
-				} else {
-					multiply_dpi_or_dtu(
-						self.0.base.parent(), None, Some(&mut sz))?; // user-defined size
-				}
-
-				self.0.base.create_window(
-					"BUTTON", Some(&opts.text), pos, sz,
-					opts.window_ex_style,
-					opts.window_style | opts.button_style.into(),
-				)?;
-
-				unsafe {
-					self.hwnd().SendMessage(wm::SetFont {
-						hfont: ui_font(),
-						redraw: true,
-					});
-				}
-				if opts.check_state != CheckState::Unchecked {
-					self.set_check_state(opts.check_state);
-				}
-			},
-			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
-		}
-
-		self.0.base.parent()
-			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
-	}
-
-	/// Retrieves the current check state by sending a
-	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) message.
-	#[must_use]
-	pub fn check_state(&self) -> CheckState {
-		match unsafe { self.hwnd().SendMessage(bm::GetCheck {}) } {
-			co::BST::CHECKED => CheckState::Checked,
-			co::BST::INDETERMINATE => CheckState::Indeterminate,
-			_ => CheckState::Unchecked,
-		}
-	}
-
-	/// Emulates the click event for the check box by sending a
-	/// [`bm::Click`](crate::msg::bm::Click) message.
-	pub fn emulate_click(&self) {
-		unsafe { self.hwnd().SendMessage(bm::Click {}); }
-	}
-
-	/// Calls [`check_state`](crate::gui::CheckBox::check_state) and compares
-	/// the result with
-	/// [`CheckState::Checked`](crate::gui::CheckState::Checked).
+	/// Sends a [`bm::GetCheck`](crate::msg::bm::GetCheck) message and returns
+	/// `true` if current state is `co::BST::CHECKED`.
 	#[must_use]
 	pub fn is_checked(&self) -> bool {
-		self.check_state() == CheckState::Checked
+		self.state() == co::BST::CHECKED
 	}
 
-	/// Sets the current check state by sending a
+	/// Sets or unsets the check mark by sending a
 	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message.
-	pub fn set_check_state(&self, state: CheckState) {
-		unsafe {
-			self.hwnd().SendMessage(bm::SetCheck {
-				state: match state {
-					CheckState::Checked => co::BST::CHECKED,
-					CheckState::Indeterminate => co::BST::INDETERMINATE,
-					CheckState::Unchecked => co::BST::UNCHECKED,
-				},
-			});
-		}
+	pub fn set_check(&self, check: bool) {
+		self.set_state(if check { co::BST::CHECKED } else { co::BST::UNCHECKED });
 	}
 
 	/// Sets the current check state by sending a
 	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message, then sends a
 	/// [`wm::Command`](crate::msg::wm::Command) message to the parent, so it
 	/// can handle the event.
-	pub fn set_check_state_and_trigger(&self, state: CheckState) {
-		self.set_check_state(state);
+	pub fn set_check_and_trigger(&self, check: bool) -> SysResult<()> {
+		self.set_state_and_trigger(if check { co::BST::CHECKED } else { co::BST::UNCHECKED })
+	}
+
+	/// Sets the current check state by sending a
+	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message.
+	pub fn set_state(&self, state: co::BST) {
+		unsafe { self.hwnd().SendMessage(bm::SetCheck { state }); }
+	}
+
+	/// Sets the current check state by sending a
+	/// [`bm::SetCheck`](crate::msg::bm::SetCheck) message, then sends a
+	/// [`wm::Command`](crate::msg::wm::Command) message to the parent, so it
+	/// can handle the event.
+	pub fn set_state_and_trigger(&self, state: co::BST) -> SysResult<()> {
+		self.set_state(state);
 		unsafe {
-			self.hwnd().GetParent().unwrap().SendMessage(
+			self.hwnd().GetParent()?.SendMessage(
 				wm::Command {
 					event: AccelMenuCtrl::Ctrl(
 						AccelMenuCtrlData {
@@ -226,16 +146,32 @@ impl CheckBox {
 				},
 			);
 		}
+		Ok(())
 	}
 
-	/// Calls [`set_text`](crate::prelude::GuiWindowText::set_text) and resizes
-	/// the control to exactly fit the new text.
-	pub fn set_text_and_resize(&self, text: &str) {
-		self.set_text(text);
-		let bound_box = calc_text_bound_box_check(text).unwrap();
+	/// Calls [`HWND::SetWindowText`](crate::prelude::user_Hwnd::SetWindowText)
+	/// to set the text and resizes the control to exactly fit it.
+	pub fn set_text_and_resize(&self, text: &str) -> SysResult<()> {
+		self.hwnd().SetWindowText(text)?;
+		let bound_box = text_calc::bound_box_with_check(
+			&text_calc::remove_accel_ampersands(text))?;
 		self.hwnd().SetWindowPos(
 			HwndPlace::None, POINT::default(), bound_box,
-			co::SWP::NOZORDER | co::SWP::NOMOVE).unwrap();
+			co::SWP::NOZORDER | co::SWP::NOMOVE)?;
+		Ok(())
+	}
+
+	/// Retrieves the current check state by sending a
+	/// [`bm::GetCheck`](crate::msg::bm::GetCheck) message.
+	#[must_use]
+	pub fn state(&self) -> co::BST {
+		unsafe { self.hwnd().SendMessage(bm::GetCheck {}) }
+	}
+
+	/// Fires the click event for the check box by sending a
+	/// [`bm::Click`](crate::msg::bm::Click) message.
+	pub fn trigger_click(&self) {
+		unsafe { self.hwnd().SendMessage(bm::Click {}); }
 	}
 }
 
@@ -251,21 +187,13 @@ pub struct CheckBoxOpts {
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
-	/// Defaults to `(0, 0)`.
+	/// Defaults to `gui::dpi(0, 0)`.
 	pub position: (i32, i32),
 	/// Width and height of control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
 	/// Defaults to the size needed to fit the text.
-	pub size: (u32, u32),
+	pub size: (i32, i32),
 	/// Check box styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -273,11 +201,11 @@ pub struct CheckBoxOpts {
 	///
 	/// Suggestions:
 	/// * replace with `BS::AUTO3STATE` for a 3-state check box.
-	pub button_style: co::BS,
+	pub control_style: co::BS,
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
+	/// Defaults to `WS::CHILD | WS::GROUP | WS::TABSTOP | WS::VISIBLE`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -297,34 +225,22 @@ pub struct CheckBoxOpts {
 
 	/// Initial check state.
 	///
-	/// Defaults to `gui::CheckState::Unchecked`.
-	pub check_state: CheckState,
+	/// Defaults to `co::BST::UNCHECKED`.
+	pub check_state: co::BST,
 }
 
 impl Default for CheckBoxOpts {
 	fn default() -> Self {
 		Self {
 			text: "".to_owned(),
-			position: (0, 0),
-			size: (-1i32 as _, -1i32 as _), // will resize to fit the text
-			button_style: co::BS::AUTOCHECKBOX,
-			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
+			position: dpi(0, 0),
+			size: (0, 0), // will resize to fit the text
+			control_style: co::BS::AUTOCHECKBOX,
+			window_style: co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
-			check_state: CheckState::Unchecked,
+			check_state: co::BST::UNCHECKED,
 		}
-	}
-}
-
-impl ResizeBehavior for &CheckBoxOpts {
-	fn resize_behavior(&self) -> (Horz, Vert) {
-		self.resize_behavior
-	}
-}
-
-impl AutoCtrlId for CheckBoxOpts {
-	fn ctrl_id_mut(&mut self) -> &mut u16 {
-		&mut self.ctrl_id
 	}
 }

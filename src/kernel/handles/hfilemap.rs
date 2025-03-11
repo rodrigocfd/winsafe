@@ -6,7 +6,7 @@ use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
 use crate::prelude::*;
 
-impl_handle! { HFILEMAP;
+handle! { HFILEMAP;
 	/// Handle to a
 	/// [file mapping](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-createfilemappingw).
 	/// Originally just a `HANDLE`.

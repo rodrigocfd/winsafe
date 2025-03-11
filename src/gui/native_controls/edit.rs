@@ -5,61 +5,20 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, iterators::*, privs::*};
+use crate::gui::{*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-struct Obj { // actual fields of Edit
-	base: BaseNativeControl,
+struct EditObj {
+	base: BaseCtrl,
 	events: EditEvents,
 	_pin: PhantomPinned,
 }
 
-/// Native
-/// [edit](https://learn.microsoft.com/en-us/windows/win32/controls/about-edit-controls)
-/// control.
-#[derive(Clone)]
-pub struct Edit(Pin<Arc<Obj>>);
-
-unsafe impl Send for Edit {}
-
-impl AsRef<BaseNativeControl> for Edit {
-	fn as_ref(&self) -> &BaseNativeControl {
-		&self.0.base
-	}
-}
-
-impl GuiWindow for Edit {
-	fn hwnd(&self) -> &HWND {
-		self.0.base.hwnd()
-	}
-
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
-
-impl GuiWindowText for Edit {}
-
-impl GuiChild for Edit {
-	fn ctrl_id(&self) -> u16 {
-		self.0.base.ctrl_id()
-	}
-}
-
-impl GuiChildFocus for Edit {}
-
-impl GuiNativeControl for Edit {}
-
-impl GuiNativeControlEvents<EditEvents> for Edit {
-	fn on(&self) -> &EditEvents {
-		if *self.hwnd() != HWND::NULL {
-			panic!("Cannot add events after the control creation.");
-		} else if *self.0.base.parent().hwnd() != HWND::NULL {
-			panic!("Cannot add events after the parent window creation.");
-		}
-		&self.0.events
-	}
+native_ctrl! { Edit: EditObj => EditEvents;
+	/// Native
+	/// [edit](https://learn.microsoft.com/en-us/windows/win32/controls/about-edit-controls)
+	/// (text box) control.
 }
 
 impl Edit {
@@ -83,21 +42,19 @@ impl Edit {
 	/// let txt = gui::Edit::new(
 	///     &wnd,
 	///     gui::EditOpts {
-	///         position: (10, 10),
-	///         width: 120,
+	///         position: gui::dpi(10, 10),
+	///         width: gui::dpi_x(120),
 	///         ..Default::default()
 	///     },
 	/// );
 	/// ```
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: EditOpts) -> Self {
-		let opts = auto_ctrl_id_if_zero(opts);
-		let ctrl_id = opts.ctrl_id;
-
+	pub fn new(parent: &(impl GuiParent + 'static), opts: EditOpts) -> Self {
+		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				EditObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: EditEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -105,9 +62,14 @@ impl Edit {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
-			self2.create(OptsResz::Wnd(&opts))?;
-			Ok(WmRet::NotHandled)
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			self2.0.base.create_window(opts.window_ex_style, "EDIT", Some(&opts.text),
+				opts.window_style | opts.control_style.into(), opts.position.into(),
+				SIZE::new(opts.width, opts.height), &parent2)?;
+			ui_font::set(self2.hwnd())?;
+			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+			Ok(0) // ignored
 		});
 
 		new_self
@@ -122,15 +84,15 @@ impl Edit {
 	/// dynamically create an `Edit` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
-		parent: &impl GuiParent,
+		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
 	) -> Self
 	{
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				EditObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: EditEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -138,67 +100,20 @@ impl Edit {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_init_dialog(move |_| {
-			self2.create(OptsResz::Dlg(resize_behavior))?;
-			Ok(false) // return value is discarded
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm_init_dialog(move |_| {
+			self2.0.base.assign_dlg(&parent2)?;
+			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			Ok(true) // ignored
 		});
 
 		new_self
 	}
 
-	fn create(&self, opts_resz: OptsResz<&EditOpts>) -> SysResult<()> {
-		match opts_resz {
-			OptsResz::Wnd(opts) => {
-				let mut pos = POINT::new(opts.position.0, opts.position.1);
-				let mut sz = SIZE::new(opts.width as _, opts.height as _);
-				multiply_dpi_or_dtu(
-					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
-
-				self.0.base.create_window(
-					"EDIT", Some(&opts.text), pos, sz,
-					opts.window_ex_style,
-					opts.window_style | opts.edit_style.into(),
-				)?;
-
-				unsafe {
-					self.hwnd().SendMessage(wm::SetFont {
-						hfont: ui_font(),
-						redraw: true,
-					});
-				}
-			},
-			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
-		}
-
-		self.0.base.parent()
-			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
-	}
-
 	/// Hides any balloon tip by sending an
 	/// [`em::HideBalloonTip`](crate::msg::em::HideBalloonTip) message.
-	pub fn hide_balloon_tip(&self) {
-		unsafe { self.hwnd().SendMessage(em::HideBalloonTip {}) }.unwrap();
-	}
-
-	/// Returns an iterator over the lines in the Edit.
-	///
-	/// # Examples
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*, gui};
-	///
-	/// let my_edit: gui::Edit; // initialized somewhere
-	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-	/// # let my_edit = gui::Edit::new(&wnd, gui::EditOpts::default());
-	///
-	/// for line in my_edit.iter_lines() {
-	///     println!("{}", line);
-	/// }
-	/// # w::SysResult::Ok(())
-	/// ```
-	#[must_use]
-	pub fn iter_lines<'a>(&'a self) -> impl Iterator<Item = String> + 'a {
-		EditLineIter::new(self)
+	pub fn hide_balloon_tip(&self) -> SysResult<()> {
+		unsafe { self.hwnd().SendMessage(em::HideBalloonTip {}) }
 	}
 
 	/// Limits the number of characters that can be type by sending an
@@ -207,61 +122,16 @@ impl Edit {
 		unsafe { self.hwnd().SendMessage(em::SetLimitText { max_chars }); }
 	}
 
-	/// Returns the number of lines by sending an
-	/// [`em::GetLineCount`](crate::msg::em::GetLineCount) message.
-	#[must_use]
-	pub fn line_count(&self) -> u32 {
-		unsafe { self.hwnd().SendMessage(em::GetLineCount {}) }
-	}
-
-	/// Sets the font to the `Edit` by sending an
-	/// [`wm::SetFont`](crate::msg::wm::SetFont) message.
-	///
-	/// Note that the font must remain alive while being used in the control.
-	pub fn set_font(&self, font: &HFONT) {
-		unsafe {
-			self.hwnd().SendMessage(wm::SetFont {
-				hfont: font.raw_copy(),
-				redraw: true,
-			});
-		}
-	}
-
-	/// Sets the selection range of the text by sending an
-	/// [`em::SetSel`](crate::msg::em::SetSel) message.
-	///
-	/// # Examples
-	///
-	/// Selecting all text in the control:
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*, gui};
-	///
-	/// let my_edit: gui::Edit; // initialized somewhere
-	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-	/// # let my_edit = gui::Edit::new(&wnd, gui::EditOpts::default());
-	///
-	/// my_edit.set_selection(0, -1);
-	/// ```
-	///
-	/// Clearing the selection:
-	///
-	/// ```no_run
-	/// use winsafe::gui;
-	///
-	/// let my_edit: gui::Edit; // initialized somewhere
-	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-	/// # let my_edit = gui::Edit::new(&wnd, gui::EditOpts::default());
-	///
-	/// my_edit.set_selection(-1, -1);
-	/// ```
-	pub fn set_selection(&self, start: i32, end: i32) {
-		unsafe { self.hwnd().SendMessage(em::SetSel { start, end }); }
+	/// Sets the text by calling
+	/// [`HWND::SetWindowText`](crate::prelude::user_Hwnd::SetWindowText).
+	pub fn set_text(&self, text: &str) -> SysResult<()> {
+		self.hwnd().SetWindowText(text)?;
+		Ok(())
 	}
 
 	/// Displays a balloon tip by sending an
 	/// [`em::ShowBalloonTip`](crate::msg::em::ShowBalloonTip) message.
-	pub fn show_ballon_tip(&self, title: &str, text: &str, icon: co::TTI) {
+	pub fn show_ballon_tip(&self, title: &str, text: &str, icon: co::TTI) -> SysResult<()> {
 		let mut title16 = WString::from_str(title);
 		let mut text16 = WString::from_str(text);
 
@@ -273,7 +143,14 @@ impl Edit {
 		unsafe {
 			self.hwnd()
 				.SendMessage(em::ShowBalloonTip { info: &info })
-		}.unwrap();
+		}
+	}
+
+	/// Retrieves the text by calling
+	/// [`HWND::GetWindowText`](crate::prelude::user_Hwnd::GetWindowText).
+	#[must_use]
+	pub fn text(&self) -> SysResult<String> {
+		self.hwnd().GetWindowText()
 	}
 }
 
@@ -289,33 +166,21 @@ pub struct EditOpts {
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
-	/// Defaults to `(0, 0)`.
+	/// Defaults to `gui::dpi(0, 0)`.
 	pub position: (i32, i32),
 	/// Control width to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the value is in Dialog Template Units;
-	/// otherwise in pixels, which will be multiplied to match current system
-	/// DPI.
-	///
-	/// Defaults to `100`.
-	pub width: u32,
+	/// Defaults to `gui::dpi_x(100)`.
+	pub width: i32,
 	/// Control height to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the value is in Dialog Template Units;
-	/// otherwise in pixels, which will be multiplied to match current system
-	/// DPI.
-	///
-	/// Defaults to `23`.
+	/// Defaults to `gui::dpi_y(23)`.
 	///
 	/// **Note:** You should change the default height only in a multi-line
 	/// edit, otherwise it will look off.
-	pub height: u32,
+	pub height: i32,
 	/// Edit styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -325,11 +190,11 @@ pub struct EditOpts {
 	/// * add `ES::PASSWORD` for a password input;
 	/// * add `ES::NUMBER` to accept only numbers;
 	/// * replace with `ES::MULTILINE | ES::WANTRETURN | ES::AUTOVSCROLL | ES::NOHIDESEL` for a multi-line edit.
-	pub edit_style: co::ES,
+	pub control_style: co::ES,
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
+	/// Defaults to `WS::CHILD | WS::GROUP | WS::TABSTOP | WS::VISIBLE`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -354,26 +219,14 @@ impl Default for EditOpts {
 	fn default() -> Self {
 		Self {
 			text: "".to_owned(),
-			position: (0, 0),
-			width: 100,
-			height: 23,
-			edit_style: co::ES::AUTOHSCROLL | co::ES::NOHIDESEL,
-			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
+			position: dpi(0, 0),
+			width: dpi_x(100),
+			height: dpi_y(23),
+			control_style: co::ES::AUTOHSCROLL | co::ES::NOHIDESEL,
+			window_style: co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
 		}
-	}
-}
-
-impl ResizeBehavior for &EditOpts {
-	fn resize_behavior(&self) -> (Horz, Vert) {
-		self.resize_behavior
-	}
-}
-
-impl AutoCtrlId for EditOpts {
-	fn ctrl_id_mut(&mut self) -> &mut u16 {
-		&mut self.ctrl_id
 	}
 }

@@ -6,7 +6,7 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::winspool::ffi;
 
-impl_handle! { HPRINTER;
+handle! { HPRINTER;
 	/// Handle to a
 	/// [printer](https://learn.microsoft.com/en-us/windows/win32/printdocs/openprinter).
 	/// Originally just a `HANDLE`.

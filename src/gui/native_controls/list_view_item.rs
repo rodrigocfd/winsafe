@@ -49,62 +49,68 @@ impl<'a, T> ListViewItem<'a, T> {
 	///
 	/// Panics if the item index is invalid.
 	#[must_use]
-	pub fn data(&self) -> Rc<RefCell<T>> {
+	pub fn data(&self) -> SysResult<Rc<RefCell<T>>> {
 		if TypeId::of::<T>() == TypeId::of::<()>() { // user didn't define the generic type
 			panic!("ListView<()> will hold no data.");
 		}
 
-		let rc_ptr = self.data_lparam();
+		let rc_ptr = self.data_lparam()?;
 		if rc_ptr.is_null() {
 			panic!("ListViewItem with invalid index, no data.");
 		}
 
 		let rc_obj = ManuallyDrop::new(unsafe { Rc::from_raw(rc_ptr) });
-		Rc::clone(&rc_obj)
+		Ok(Rc::clone(&rc_obj))
 	}
 
 	#[must_use]
-	pub(in crate::gui) fn data_lparam(&self) -> *mut RefCell<T> {
+	pub(in crate::gui) fn data_lparam(&self) -> SysResult<*mut RefCell<T>> {
 		let mut lvi = LVITEM::default();
 		lvi.iItem = self.index as _;
 		lvi.mask = co::LVIF::PARAM;
 
 		unsafe {
 			self.owner.hwnd()
-				.SendMessage(lvm::GetItem { lvitem: &mut lvi })
-		}.unwrap();
+				.SendMessage(lvm::GetItem { lvitem: &mut lvi })?;
+		}
 
-		match lvi.lParam {
+		Ok(match lvi.lParam {
 			0 => std::ptr::null_mut(),
 			lp => lp as _,
-		}
+		})
 	}
 
 	/// Deletes the item by sending an
 	/// [`lvm::DeleteItem`](crate::msg::lvm::DeleteItem) message.
-	pub fn delete(&self) {
+	pub fn delete(&self) -> SysResult<()> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(lvm::DeleteItem { index: self.index, })
-		}.unwrap();
+		}
 	}
 
 	/// Scrolls the list by sending an
 	/// [`lvm::EnsureVisible`](crate::msg::lvm::EnsureVisible) message so that
 	/// the item is visible in the list.
-	pub fn ensure_visible(&self) {
+	///
+	/// Returns the same column, so further operations can be chained.
+	pub fn ensure_visible(&self) -> SysResult<ListViewItem<'a, T>> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(lvm::EnsureVisible {
 					index: self.index,
 					entirely_visible: true,
-				})
-		}.unwrap();
+				})?;
+		}
+
+		Ok(*self)
 	}
 
 	/// Sets the item as the focused one sending an
 	/// [`lvm:SetItemState`](crate::msg::lvm::SetItemState) message.
-	pub fn focus(&self) {
+	///
+	/// Returns the same column, so further operations can be chained.
+	pub fn focus(&self) -> SysResult<ListViewItem<'a, T>> {
 		let mut lvi = LVITEM::default();
 		lvi.stateMask = co::LVIS::FOCUSED;
 		lvi.state = co::LVIS::FOCUSED;
@@ -114,27 +120,29 @@ impl<'a, T> ListViewItem<'a, T> {
 				.SendMessage(lvm::SetItemState {
 					index: Some(self.index),
 					lvitem: &lvi,
-				})
-		}.unwrap();
+				})?;
+		}
+
+		Ok(*self)
 	}
 
 	/// Retrieves the icon index of the item by sending an
 	/// [`lvm::GetItem`](crate::msg::lvm::GetItem) message.
 	#[must_use]
-	pub fn icon_index(&self) -> Option<u32> {
+	pub fn icon_index(&self) -> SysResult<Option<u32>> {
 		let mut lvi = LVITEM::default();
 		lvi.iItem = self.index as _;
 		lvi.mask = co::LVIF::IMAGE;
 
 		unsafe {
 			self.owner.hwnd()
-				.SendMessage(lvm::SetItem { lvitem: &mut lvi })
-		}.unwrap();
+				.SendMessage(lvm::SetItem { lvitem: &mut lvi })?;
+		}
 
-		match lvi.iImage {
+		Ok(match lvi.iImage {
 			-1 => None,
 			idx => Some(idx as _),
-		}
+		})
 	}
 
 	/// Returns the zero-based index of the item.
@@ -179,22 +187,10 @@ impl<'a, T> ListViewItem<'a, T> {
 		}
 	}
 
-	/// Retrieves the unique ID for the item index by sending an
-	/// [`lvm::MapIndexToId`](crate::msg::lvm::MapIndexToId) message.
-	///
-	/// If the item index has became invalid, returns `None`.
-	#[must_use]
-	pub fn map_index_to_id(&self) -> u32 {
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::MapIndexToId { index: self.index })
-		}.unwrap()
-	}
-
 	/// Retrieves the bounding rectangle of the item by sending an
 	/// [`lvm::GetItemRect`](crate::msg::lvm::GetItemRect) message.
 	#[must_use]
-	pub fn rect(&self, portion: co::LVIR) -> RECT {
+	pub fn rect(&self, portion: co::LVIR) -> SysResult<RECT> {
 		let mut rc = RECT::default();
 		unsafe {
 			self.owner.hwnd()
@@ -202,14 +198,16 @@ impl<'a, T> ListViewItem<'a, T> {
 					index: self.index,
 					rect: &mut rc,
 					portion,
-				})
-		}.unwrap();
-		rc
+				})?;
+		}
+		Ok(rc)
 	}
 
 	/// Sets or removes the selection from the item by sending an
 	/// [`lvm::SetItemState`](crate::msg::lvm::SetItemState) message.
-	pub fn select(&self, set: bool) {
+	///
+	/// Returns the same column, so further operations can be chained.
+	pub fn select(&self, set: bool) -> SysResult<ListViewItem<'a, T>> {
 		let mut lvi = LVITEM::default();
 		lvi.stateMask = co::LVIS::SELECTED;
 		if set { lvi.state = co::LVIS::SELECTED; }
@@ -219,13 +217,17 @@ impl<'a, T> ListViewItem<'a, T> {
 				.SendMessage(lvm::SetItemState {
 					index: Some(self.index),
 					lvitem: &lvi,
-				})
-		}.unwrap();
+				})?;
+		}
+
+		Ok(*self)
 	}
 
 	/// Sets the icon index of the item by sending an
 	/// [`lvm::SetItem`](crate::msg::lvm::SetItem) message.
-	pub fn set_icon_index(&self, icon_index: Option<u32>) {
+	///
+	/// Returns the same column, so further operations can be chained.
+	pub fn set_icon_index(&self, icon_index: Option<u32>) -> SysResult<ListViewItem<'a, T>> {
 		let mut lvi = LVITEM::default();
 		lvi.iItem = self.index as _;
 		lvi.mask = co::LVIF::IMAGE;
@@ -233,13 +235,17 @@ impl<'a, T> ListViewItem<'a, T> {
 
 		unsafe {
 			self.owner.hwnd()
-				.SendMessage(lvm::SetItem { lvitem: &mut lvi })
-		}.unwrap();
+				.SendMessage(lvm::SetItem { lvitem: &mut lvi })?;
+		}
+
+		Ok(*self)
 	}
 
 	/// Sets the text of the item under a column by sending an
 	/// [`lvm::SetItemText`](crate::msg::lvm::SetItemText) message.
-	pub fn set_text(&self, column_index: u32, text: &str) {
+	///
+	/// Returns the same column, so further operations can be chained.
+	pub fn set_text(&self, column_index: u32, text: &str) -> SysResult<ListViewItem<'a, T>> {
 		let mut lvi = LVITEM::default();
 		lvi.iSubItem = column_index as _;
 
@@ -251,8 +257,10 @@ impl<'a, T> ListViewItem<'a, T> {
 				.SendMessage(lvm::SetItemText {
 					index: self.index,
 					lvitem: &lvi,
-				})
-		}.unwrap();
+				})?;
+		}
+
+		Ok(*self)
 	}
 
 	/// Retrieves the text of an item under a column by sending an
@@ -281,6 +289,18 @@ impl<'a, T> ListViewItem<'a, T> {
 			}
 
 			buf_sz *= 2; // double the buffer size to try again
+		}
+	}
+
+	/// Retrieves the unique ID for the item index by sending an
+	/// [`lvm::MapIndexToId`](crate::msg::lvm::MapIndexToId) message.
+	///
+	/// If the item index has became invalid, returns `None`.
+	#[must_use]
+	pub fn uid(&self) -> Option<u32> {
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::MapIndexToId { index: self.index })
 		}
 	}
 }

@@ -6,59 +6,41 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*, spec::*};
+use crate::gui::{collections::*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-struct Obj { // actual fields of StatusBar
-	base: BaseNativeControl,
+/// Used when adding the parts in
+/// [`StatusBar::new`](crate::gui::StatusBar::new).
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub enum SbPart {
+	/// A part that has a fixed size, in pixels.
+	Fixed(i32),
+	/// A part that will resize when the parent window resizes, filling the
+	/// space left by the fixed-size parts. Has the resizing proportion.
+	///
+	/// How proportion works:
+	///
+	/// 1. Suppose you have 3 parts, respectively with proportions of 1, 1 and 2.
+	/// 2. If available client area width is 400px, respective part widths will be 100, 100 and 200px.
+	/// 3. If parent is resized to have a client area of 600px, parts will then have 200, 200 and 400px.
+	///
+	/// If you're uncertain, just give all resizable parts the proportion 1.
+	Proportional(u8),
+}
+
+struct StatusBarObj {
+	base: BaseCtrl,
 	events: StatusBarEvents,
 	parts_info: UnsafeCell<Vec<SbPart>>,
 	right_edges: UnsafeCell<Vec<i32>>, // buffer to speed up resize calls
 	_pin: PhantomPinned,
 }
 
-/// Native
-/// [status bar](https://learn.microsoft.com/en-us/windows/win32/controls/status-bars)
-/// control, which has one or more parts.
-#[derive(Clone)]
-pub struct StatusBar(Pin<Arc<Obj>>);
-
-unsafe impl Send for StatusBar {}
-
-impl AsRef<BaseNativeControl> for StatusBar {
-	fn as_ref(&self) -> &BaseNativeControl {
-		&self.0.base
-	}
-}
-
-impl GuiWindow for StatusBar {
-	fn hwnd(&self) -> &HWND {
-		self.0.base.hwnd()
-	}
-
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
-
-impl GuiChild for StatusBar {
-	fn ctrl_id(&self) -> u16 {
-		self.0.base.ctrl_id()
-	}
-}
-
-impl GuiNativeControl for StatusBar {}
-
-impl GuiNativeControlEvents<StatusBarEvents> for StatusBar {
-	fn on(&self) -> &StatusBarEvents {
-		if *self.hwnd() != HWND::NULL {
-			panic!("Cannot add events after the control creation.");
-		} else if *self.0.base.parent().hwnd() != HWND::NULL {
-			panic!("Cannot add events after the parent window creation.");
-		}
-		&self.0.events
-	}
+native_ctrl! { StatusBar: StatusBarObj => StatusBarEvents;
+	/// Native
+	/// [status bar](https://learn.microsoft.com/en-us/windows/win32/controls/status-bars)
+	/// control, which has one or more parts.
 }
 
 impl StatusBar {
@@ -89,13 +71,12 @@ impl StatusBar {
 	/// );
 	/// ```
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, parts: &[SbPart]) -> Self {
-		let ctrl_id = next_auto_ctrl_id();
-
+	pub fn new(parent: &(impl GuiParent + 'static), parts: &[SbPart]) -> Self {
+		let ctrl_id = auto_id::next();
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				StatusBarObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: StatusBarEvents::new(parent, ctrl_id),
 					parts_info: UnsafeCell::new(parts.to_vec()),
 					right_edges: UnsafeCell::new(vec![0; parts.len()]),
@@ -105,66 +86,50 @@ impl StatusBar {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
-			self2.create()?;
-			Ok(WmRet::NotHandled)
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			let parent_style = parent2.hwnd().style();
+			let is_parent_resizable = parent_style.has(co::WS::MAXIMIZEBOX)
+				|| parent_style.has(co::WS::SIZEBOX);
+
+			self2.0.base.create_window( // may panic
+				co::WS_EX::LEFT, "msctls_statusbar32", None,
+				co::WS::CHILD | co::WS::VISIBLE | co::SBARS::TOOLTIPS.into() |
+					if is_parent_resizable {
+						co::SBARS::SIZEGRIP
+					} else {
+						co::SBARS::NoValue
+					}.into(),
+				POINT::default(), SIZE::default(), &parent2)?;
+
+			// Force first resizing, so the panels are created.
+			let parent_rc = parent2.hwnd().GetClientRect()?;
+			self2.resize(&mut wm::Size {
+				client_area: SIZE::new(parent_rc.right, parent_rc.bottom),
+				request: co::SIZE_R::RESTORED,
+			})?;
+
+			Ok(0) // ignored
 		});
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_size(move |mut p| {
-			self2.resize(&mut p);
+		parent.as_ref().before_on().wm_size(move |mut p| {
+			self2.resize(&mut p)?;
 			Ok(())
 		});
 
 		new_self
 	}
 
-	fn create(&self) -> SysResult<()> {
-		let parts_info = unsafe { &mut *self.0.parts_info.get() };
-		for part in parts_info.iter_mut() {
-			if let SbPart::Fixed(width) = part { // adjust fixed-width parts to DPI
-				let mut col_cx = SIZE::new(*width as _, 0);
-				multiply_dpi_or_dtu(self.0.base.parent(), None, Some(&mut col_cx))?;
-				*width = col_cx.cx as _;
-			}
-		}
-
-		let hparent = self.0.base.parent().hwnd();
-		let parent_style = hparent.style();
-		let is_parent_resizable = parent_style.has(co::WS::MAXIMIZEBOX)
-			|| parent_style.has(co::WS::SIZEBOX);
-
-		self.0.base.create_window( // may panic
-			"msctls_statusbar32", None,
-			POINT::default(), SIZE::default(),
-			co::WS_EX::LEFT,
-			co::WS::CHILD | co::WS::VISIBLE | co::SBARS::TOOLTIPS.into() |
-				if is_parent_resizable {
-					co::SBARS::SIZEGRIP
-				} else {
-					co::SBARS::NoValue
-				}.into(),
-		)?;
-
-		// Force first resizing, so the panels are created.
-		let parent_rc = hparent.GetClientRect()?;
-		self.resize(&mut wm::Size {
-			client_area: SIZE::new(parent_rc.right, parent_rc.bottom),
-			request: co::SIZE_R::RESTORED,
-		});
-
-		Ok(())
-	}
-
-	fn resize(&self, p: &mut wm::Size) {
+	fn resize(&self, p: &mut wm::Size) -> SysResult<()> {
 		if p.request == co::SIZE_R::MINIMIZED || *self.hwnd() == HWND::NULL {
-			return; // nothing to do
+			return Ok(()); // nothing to do
 		}
 
 		unsafe { self.hwnd().SendMessage(p.as_generic_wm()); } // send WM_SIZE to status bar, so it resizes itself to fit parent
 
-		let mut total_proportions: u8 = 0;
-		let mut cx_available = p.client_area.cx as u32;
+		let mut total_proportions = 0u8;
+		let mut cx_available = p.client_area.cx as i32;
 
 		let parts_info = unsafe { &mut *self.0.parts_info.get() };
 		for part_info in parts_info.iter() {
@@ -177,14 +142,14 @@ impl StatusBar {
 		}
 
 		let right_edges = unsafe { &mut *self.0.right_edges.get() };
-		let mut total_cx = p.client_area.cx as u32;
+		let mut total_cx = p.client_area.cx;
 
 		for (idx, part_info) in parts_info.iter().rev().enumerate() {
 			right_edges[parts_info.len() - idx - 1] = total_cx as _;
 			let minus = match part_info {
 				SbPart::Fixed(pixels) => *pixels,
 				SbPart::Proportional(pp) =>
-					(cx_available / total_proportions as u32) * (*pp as u32),
+					(cx_available / total_proportions as i32) * (*pp as i32),
 			};
 			total_cx -= if minus > total_cx { 0 } else { minus }; // prevent subtract overflow
 		}
@@ -193,10 +158,10 @@ impl StatusBar {
 		unsafe {
 			self.hwnd()
 				.SendMessage(sb::SetParts { right_edges: &right_edges })
-		}.unwrap();
+		}
 	}
 
-	/// Exposes the part methods.
+	/// Part methods.
 	#[must_use]
 	pub const fn parts(&self) -> StatusBarParts<'_> {
 		StatusBarParts::new(self)

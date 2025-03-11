@@ -1,75 +1,25 @@
 use std::any::Any;
 use std::marker::PhantomPinned;
 use std::pin::Pin;
-use std::ptr::NonNull;
 use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::gui::{*, events::*, privs::*, spec::*};
+use crate::gui::{*, collections::*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-struct Obj { // actual fields of Header
-	base: BaseNativeControl,
-	_pin: PhantomPinned,
+struct HeaderObj {
+	base: BaseCtrl,
 	events: HeaderEvents,
+	_pin: PhantomPinned,
 }
 
-/// Variant field for creating a `Header` control.
-enum OptsReszLv<'a> {
-	/// Options for a raw control creation.
-	Wnd(&'a HeaderOpts),
-	/// Resize behavior for a dialog control creation.
-	Dlg((Horz, Vert)),
-	/// `BaseNativeControl` of the owner `ListView`.
-	Lv(NonNull<BaseNativeControl>),
-}
-
-/// Native
-/// [header](https://learn.microsoft.com/en-us/windows/win32/controls/header-controls)
-/// control.
-#[derive(Clone)]
-pub struct Header(Pin<Arc<Obj>>);
-
-unsafe impl Send for Header {}
-
-impl AsRef<BaseNativeControl> for Header {
-	fn as_ref(&self) -> &BaseNativeControl {
-		&self.0.base
-	}
-}
-
-impl GuiWindow for Header {
-	fn hwnd(&self) -> &HWND {
-		self.0.base.hwnd()
-	}
-
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
-
-impl GuiChild for Header {
-	fn ctrl_id(&self) -> u16 {
-		self.0.base.ctrl_id()
-	}
-}
-
-impl GuiChildFocus for Header {}
-
-impl GuiNativeControl for Header {}
-
-impl GuiNativeControlEvents<HeaderEvents> for Header {
-	fn on(&self) -> &HeaderEvents {
-		if *self.hwnd() != HWND::NULL {
-			panic!("Cannot add events after the control creation.");
-		} else if *self.0.base.parent().hwnd() != HWND::NULL {
-			panic!("Cannot add events after the parent window creation.");
-		}
-		&self.0.events
-	}
+native_ctrl! { Header: HeaderObj => HeaderEvents;
+	/// Native
+	/// [header](https://learn.microsoft.com/en-us/windows/win32/controls/header-controls)
+	/// control.
 }
 
 impl Header {
@@ -82,14 +32,12 @@ impl Header {
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `Header` in an event closure.
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: HeaderOpts) -> Self {
-		let opts = auto_ctrl_id_if_zero(opts);
-		let ctrl_id = opts.ctrl_id;
-
+	pub fn new(parent: &(impl GuiParent + 'static), opts: HeaderOpts) -> Self {
+		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				HeaderObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: HeaderEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -97,12 +45,19 @@ impl Header {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
-			self2.create(OptsReszLv::Wnd(&opts))?;
-			Ok(WmRet::NotHandled)
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			self2.0.base.create_window(opts.window_ex_style, "SysHeader32", None,
+				opts.window_style | opts.control_style.into(), opts.position.into(),
+				SIZE::new(opts.width, opts.height), &parent2)?;
+			ui_font::set(self2.hwnd())?;
+			for (text, width) in opts.items.iter() {
+				self2.items().add(text, *width)?;
+			}
+			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+			Ok(0) // ignored
 		});
 
-		new_self.default_message_handlers(parent.as_ref());
 		new_self
 	}
 
@@ -116,15 +71,15 @@ impl Header {
 	/// dynamically create a `Header` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
-		parent: &impl GuiParent,
+		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
 	) -> Self
 	{
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				HeaderObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: HeaderEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -132,92 +87,41 @@ impl Header {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_init_dialog(move |_| {
-			self2.create(OptsReszLv::Dlg(resize_behavior))?;
-			Ok(false) // return value is discarded
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm_init_dialog(move |_| {
+			self2.0.base.assign_dlg(&parent2)?;
+			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			Ok(true) // ignored
 		});
 
-		new_self.default_message_handlers(parent.as_ref());
 		new_self
 	}
 
-	/// Instantiates a new `Header` object to be loaded from a
-	/// [`ListView`](crate::gui::ListView) control. This will give you access to
-	/// the inner `Header` control of that `ListView`.
+	/// For the nested Header inside ListView.
 	#[must_use]
-	pub fn from_list_view<T: 'static>(list_view: &ListView<T>) -> Self {
-		let lv_base_ref: &BaseNativeControl = list_view.as_ref();
-		let parent_base_ref = lv_base_ref.parent();
-		let ctrl_id = next_auto_ctrl_id();
-
-		let new_self = Self(
+	pub(in crate::gui) fn from_list_view(parent: &(impl GuiParent + 'static)) -> Self {
+		let ctrl_id = auto_id::next();
+		Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent_base_ref, ctrl_id),
-					events: HeaderEvents::new(parent_base_ref, ctrl_id),
+				HeaderObj {
+					base: BaseCtrl::new(ctrl_id),
+					events: HeaderEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
 			),
-		);
-
-		let lv_base_ptr = NonNull::from(lv_base_ref);
-		let self2 = new_self.clone();
-		parent_base_ref.before_user_on().wm_create_or_initdialog(move |_, _| {
-			self2.create(OptsReszLv::Lv(lv_base_ptr))?;
-			Ok(WmRet::NotHandled)
-		});
-
-		new_self.default_message_handlers(parent_base_ref);
-		new_self
+		)
 	}
 
-	fn create(&self, opts_resz_lv: OptsReszLv) -> SysResult<()> {
-		match &opts_resz_lv {
-			OptsReszLv::Wnd(opts) => {
-				let mut pos = POINT::new(opts.position.0, opts.position.1);
-				let mut sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
-				multiply_dpi_or_dtu(
-					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
-
-				self.0.base.create_window( // may panic
-					"SysHeader32", None, pos, sz,
-					opts.window_ex_style,
-					opts.window_style | opts.header_style.into(),
-				)?;
-
-				self.0.base.parent()
-					.add_to_layout_arranger(self.hwnd(), opts.resize_behavior)
-			},
-			OptsReszLv::Dlg(resize_behavior) => {
-				self.0.base.create_dlg()?;
-				self.0.base.parent()
-					.add_to_layout_arranger(self.hwnd(), *resize_behavior)
-			},
-			OptsReszLv::Lv(lv_base_ptr) => {
-				let hheader = unsafe {
-					let lv_base_ref = lv_base_ptr.as_ref();
-					let hheader = lv_base_ref.hwnd().SendMessage(lvm::GetHeader {})?;
-					hheader.SetWindowLongPtr(co::GWLP::ID, self.ctrl_id() as _); // give the header its new ID
-					hheader
-				};
-				self.0.base.assign_hctrl(hheader);
-				Ok(())
-			},
+	/// For the nested Header inside ListView.
+	#[must_use]
+	pub(in crate::gui) fn init_nested(&self, hlist: &HWND) -> bool {
+		if let Ok(hheader) = unsafe { hlist.SendMessage(lvm::GetHeader {}) } { // only if the list has a header
+			unsafe { hheader.SetWindowLongPtr(co::GWLP::ID, self.ctrl_id() as _); } // give the header an ID; initially zero
+			self.0.base.set_hwnd(hheader);
+			true // initialized
+		} else {
+			false // not inialized
 		}
-	}
-
-	fn default_message_handlers(&self, parent: &Base) {
-		let self2 = self.clone();
-		parent.after_user_on().wm_destroy(move || {
-			[co::HDSIL::NORMAL, co::HDSIL::STATE]
-				.iter()
-				.for_each(|hdsil| {
-					self2.image_list(*hdsil).map(|hil| { // destroy each image list, if any
-						let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) };
-					});
-				});
-			Ok(())
-		});
 	}
 
 	/// Retrieves a reference to one of the associated image lists by sending an
@@ -235,7 +139,7 @@ impl Header {
 		})
 	}
 
-	/// Exposes the item methods.
+	/// Item methods.
 	#[must_use]
 	pub const fn items(&self) -> HeaderItems<'_> {
 		HeaderItems::new(self)
@@ -269,35 +173,32 @@ pub struct HeaderOpts {
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
-	/// Defaults to `(0, 0)`.
+	/// Defaults to `gui::dpi(0, 0)`.
 	pub position: (i32, i32),
-	/// Width and height of control to be
+	/// Control width to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
+	/// Defaults to `gui::dpi_x(100)`.
+	pub width: i32,
+	/// Control height to be
+	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `(0, 0)`.
-	pub size: (u32, u32),
+	/// Defaults to `gui::dpi_y(23)`.
+	pub height: i32,
 	/// Header styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `HDS::BUTTONS | HDS::HORZ`.
-	pub header_style: co::HDS,
+	pub control_style: co::HDS,
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS::CHILD | WS::BORDER`.
+	/// Defaults to `WS::BORDER | WS::CHILD | WS::GROUP | WS::TABSTOP | WS::VISIBLE`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS_EX::NoValue`.
+	/// Defaults to `WS_EX::LEFT`.
 	pub window_ex_style: co::WS_EX,
 
 	/// The control ID.
@@ -309,30 +210,26 @@ pub struct HeaderOpts {
 	///
 	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
 	pub resize_behavior: (Horz, Vert),
+
+	/// Items to be added to the control. Each item is composed by the text and
+	/// the width.
+	///
+	/// Defaults to none.
+	pub items: Vec<(String, i32)>,
 }
 
 impl Default for HeaderOpts {
 	fn default() -> Self {
 		Self {
-			position: (0, 0),
-			size: (0, 0),
-			header_style: co::HDS::BUTTONS | co::HDS::HORZ,
-			window_style: co::WS::CHILD | co::WS::BORDER,
-			window_ex_style: co::WS_EX::NoValue,
+			position: dpi(0, 0),
+			width: dpi_x(100),
+			height: dpi_y(23),
+			control_style: co::HDS::BUTTONS | co::HDS::HORZ,
+			window_style: co::WS::BORDER | co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
+			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
+			items: Vec::default(),
 		}
-	}
-}
-
-impl ResizeBehavior for &HeaderOpts {
-	fn resize_behavior(&self) -> (Horz, Vert) {
-		self.resize_behavior
-	}
-}
-
-impl AutoCtrlId for HeaderOpts {
-	fn ctrl_id_mut(&mut self) -> &mut u16 {
-		&mut self.ctrl_id
 	}
 }

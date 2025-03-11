@@ -25,10 +25,16 @@ macro_rules! impl_default_with_size {
 	};
 }
 
-/// Implements `IntUnderlying`, and other needed traits.
-macro_rules! impl_intunderlying {
-	($name:ident, $ntype:ty) => {
-		unsafe impl Send for $name {}
+/// Declares a newtype with an underlying numeric type.
+macro_rules! newtype_num {
+	(
+		$name:ident : $ntype:ty;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		#[repr(transparent)]
+		#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
+		pub struct $name($ntype);
 
 		impl From<$name> for $ntype {
 			fn from(v: $name) -> Self {
@@ -53,15 +59,16 @@ macro_rules! impl_intunderlying {
 			}
 		}
 
-		impl crate::prelude::IntUnderlying for $name {
-			type Raw = $ntype;
-
-			unsafe fn as_mut(&mut self) -> &mut Self::Raw {
+		impl $name {
+			/// Returns a mutable reference to the underlying raw value.
+			///
+			/// # Safety
+			///
+			/// Be sure the integer being set is meaningful for the actual type.
+			pub const unsafe fn as_mut(&mut self) -> &mut $ntype {
 				&mut self.0
 			}
-		}
 
-		impl $name {
 			/// Constructs a new object by wrapping the given integer value.
 			///
 			/// # Safety

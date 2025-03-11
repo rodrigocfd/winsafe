@@ -4,7 +4,6 @@ use crate::decl::*;
 use crate::gui::{*, privs::*};
 use crate::prelude::*;
 
-/// Keeps a raw or dialog window.
 #[derive(Clone)]
 enum RawDlg { Raw(RawControl), Dlg(DlgControl) }
 
@@ -15,11 +14,11 @@ pub struct WindowControl(RawDlg);
 
 unsafe impl Send for WindowControl {}
 
-impl AsRef<Base> for WindowControl {
-	fn as_ref(&self) -> &Base {
+impl AsRef<BaseWnd> for WindowControl {
+	fn as_ref(&self) -> &BaseWnd {
 		match &self.0 {
-			RawDlg::Raw(r) => r.base(),
-			RawDlg::Dlg(d) => d.base(),
+			RawDlg::Raw(r) => r.raw_base().base(),
+			RawDlg::Dlg(d) => d.dlg_base().base(),
 		}
 	}
 }
@@ -36,7 +35,7 @@ impl GuiWindow for WindowControl {
 
 impl GuiParent for WindowControl {}
 
-impl GuiChild for WindowControl {
+impl GuiControl for WindowControl {
 	fn ctrl_id(&self) -> u16 {
 		match &self.0 {
 			RawDlg::Raw(r) => r.ctrl_id(),
@@ -54,7 +53,7 @@ impl WindowControl {
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `WindowControl` in an event closure.
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: WindowControlOpts) -> Self {
+	pub fn new(parent: &(impl GuiParent + 'static), opts: WindowControlOpts) -> Self {
 		if *parent.hwnd() != HWND::NULL {
 			panic!("Cannot create a custom child control after the parent window is created.");
 		}
@@ -80,9 +79,9 @@ impl WindowControl {
 	/// dynamically create a `WindowControl` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
-		parent: &impl GuiParent,
-		dialog_id: u16,
-		position: POINT,
+		parent: &(impl GuiParent + 'static),
+		dlg_id: u16,
+		position: (i32, i32),
 		resize_behavior: (Horz, Vert),
 		ctrl_id: Option<u16>,
 	) -> Self
@@ -93,13 +92,7 @@ impl WindowControl {
 
 		Self(
 			RawDlg::Dlg(
-				DlgControl::new(
-					parent,
-					dialog_id,
-					position,
-					resize_behavior,
-					ctrl_id,
-				),
+				DlgControl::new(parent, dlg_id, position, resize_behavior, ctrl_id),
 			),
 		)
 	}

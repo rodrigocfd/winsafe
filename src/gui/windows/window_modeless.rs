@@ -4,7 +4,6 @@ use crate::decl::*;
 use crate::gui::{*, privs::*};
 use crate::prelude::*;
 
-/// Keeps a raw or dialog window.
 #[derive(Clone)]
 enum RawDlg { Raw(RawModeless), Dlg(DlgModeless) }
 
@@ -15,11 +14,11 @@ pub struct WindowModeless(RawDlg);
 
 unsafe impl Send for WindowModeless {}
 
-impl AsRef<Base> for WindowModeless {
-	fn as_ref(&self) -> &Base {
+impl AsRef<BaseWnd> for WindowModeless {
+	fn as_ref(&self) -> &BaseWnd {
 		match &self.0 {
-			RawDlg::Raw(r) => r.base(),
-			RawDlg::Dlg(d) => d.base(),
+			RawDlg::Raw(r) => r.raw_base().base(),
+			RawDlg::Dlg(d) => d.dlg_base().base(),
 		}
 	}
 }
@@ -34,11 +33,7 @@ impl GuiWindow for WindowModeless {
 	}
 }
 
-impl GuiWindowText for WindowModeless {}
-
 impl GuiParent for WindowModeless {}
-
-impl GuiParentPopup for WindowModeless {}
 
 impl WindowModeless {
 	/// Instantiates a new `WindowModeless` object, to be created internally
@@ -50,7 +45,7 @@ impl WindowModeless {
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `WindowModeless` in an event closure.
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: WindowModelessOpts) -> Self {
+	pub fn new(parent: &(impl GuiParent + 'static), opts: WindowModelessOpts) -> Self {
 		if *parent.hwnd() != HWND::NULL {
 			panic!("Cannot create a modeless window after the parent window is created.");
 		}
@@ -66,19 +61,15 @@ impl WindowModeless {
 	/// resource with
 	/// [`HINSTANCE::CreateDialogParam`](crate::prelude::user_Hinstance::CreateDialogParam).
 	///
-	/// If the parent window is a dialog, position is in Dialog Template Units;
-	/// otherwise in pixels, which will be multiplied to match current system
-	/// DPI.
-	///
 	/// # Panics
 	///
 	/// Panics if the parent dialog was already created – that is, you cannot
 	/// dynamically create a `WindowModeless` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
-		parent: &impl GuiParent,
-		dialog_id: u16,
-		position: POINT,
+		parent: &(impl GuiParent + 'static),
+		dlg_id: u16,
+		position: (i32, i32),
 	) -> Self
 	{
 		if *parent.hwnd() != HWND::NULL {
@@ -87,11 +78,7 @@ impl WindowModeless {
 
 		Self(
 			RawDlg::Dlg(
-				DlgModeless::new(
-					parent,
-					dialog_id,
-					position,
-				),
+				DlgModeless::new(parent, dlg_id, position),
 			),
 		)
 	}

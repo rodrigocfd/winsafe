@@ -6,7 +6,7 @@ use crate::guard::*;
 use crate::kernel::{ffi, iterators::*, privs::*};
 use crate::prelude::*;
 
-impl_handle! { HHEAP;
+handle! { HHEAP;
 	/// Handle to a
 	/// [heap object](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcreate).
 	/// Originally just a `HANDLE`.

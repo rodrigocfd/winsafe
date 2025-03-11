@@ -7,7 +7,7 @@ use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
 
-impl_handle! { HIMAGELIST;
+handle! { HIMAGELIST;
 	/// Handle to an
 	/// [image list](https://learn.microsoft.com/en-us/windows/win32/controls/image-lists).
 }

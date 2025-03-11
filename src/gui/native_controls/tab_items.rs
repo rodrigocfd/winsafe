@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, spec::*};
+use crate::gui::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -47,11 +47,11 @@ impl<'a> TabItems<'a> {
 	/// Retrieves the total number of items by sending an
 	/// [`tcm::GetItemCount`](crate::msg::tcm::GetItemCount) message.
 	#[must_use]
-	pub fn count(&self) -> u32 {
+	pub fn count(&self) -> SysResult<u32> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(tcm::GetItemCount {})
-		}.unwrap()
+		}
 	}
 
 	/// Deletes all items by sending a
@@ -61,10 +61,9 @@ impl<'a> TabItems<'a> {
 	///
 	/// If you delete a tab automatically created, which has a container window
 	/// attached to it, the rendering will be out-of-order.
-	pub unsafe fn delete_all(&self) {
+	pub unsafe fn delete_all(&self) -> SysResult<()> {
 		self.owner.hwnd()
 			.SendMessage(tcm::DeleteAllItems {})
-			.unwrap();
 	}
 
 	/// Retrieves the item at the given zero-based position.

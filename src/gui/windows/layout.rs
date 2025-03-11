@@ -5,9 +5,40 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::*;
 use crate::msg::*;
 use crate::prelude::*;
+
+/// Specifies the horizontal behavior of the control when the parent window is
+/// resized.
+///
+/// The values are analog to [`gui::Vert`](crate::gui::Vert).
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Horz {
+	/// Nothing will be done when parent window is resized.
+	None,
+	/// When parent window resizes, the control will move anchored at right.
+	/// Size of the control will remain fixed.
+	Repos,
+	/// When parent window resizes, the control width will stretch/shrink
+	/// accordingly. Position will remain fixed.
+	Resize,
+}
+
+/// Specifies the vertical behavior of the control when the parent window is
+/// resized.
+///
+/// The values are analog to [`gui::Horz`](crate::gui::Horz).
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Vert {
+	/// Nothing will be done when parent window is resized.
+	None,
+	/// When parent window resizes, the control will move anchored at bottom.
+	/// Size of the control will remain fixed.
+	Repos,
+	/// When parent window resizes, the control height will stretch/shrink
+	/// accordingly. Position will remain fixed.
+	Resize,
+}
 
 struct ChildInfo {
 	hchild: HWND,
@@ -16,7 +47,7 @@ struct ChildInfo {
 	rc_orig: Option<RECT>, // original coordinates relative to parent, filled at 1st WM_SIZE
 }
 
-struct Obj { // actual fields of LayoutArranger
+struct LayoutObj {
 	ctrls: UnsafeCell<Vec<ChildInfo>>,
 	sz_parent_orig: UnsafeCell<Option<SIZE>>, // original parent client area, filled at WM_CREATE/INITDIALOG
 	_pin: PhantomPinned,
@@ -24,14 +55,14 @@ struct Obj { // actual fields of LayoutArranger
 
 /// Rearranges the stored controls according to their predefined rules.
 #[derive(Clone)]
-pub(in crate::gui) struct LayoutArranger(Pin<Arc<Obj>>);
+pub(in crate::gui) struct Layout(Pin<Arc<LayoutObj>>);
 
-impl LayoutArranger {
+impl Layout {
 	#[must_use]
 	pub(in crate::gui) fn new() -> Self {
 		Self(
 			Arc::pin(
-				Obj {
+				LayoutObj {
 					ctrls: UnsafeCell::new(Vec::new()),
 					sz_parent_orig: UnsafeCell::new(None),
 					_pin: PhantomPinned,
@@ -54,7 +85,16 @@ impl LayoutArranger {
 
 		let (horz, vert) = resize_behavior;
 		if horz != Horz::None || vert != Vert::None { // if nothing to do, don't even add it
-			unsafe { &mut *self.0.ctrls.get() }.push(
+			let ctrls = unsafe { &mut *self.0.ctrls.get() };
+
+			if ctrls.is_empty() { // first control being added
+				let rc_parent = hparent.GetClientRect()?;
+				*unsafe { &mut *self.0.sz_parent_orig.get() } = Some(
+					SIZE::new(rc_parent.right, rc_parent.bottom), // save parent client area
+				);
+			}
+
+			ctrls.push(
 				ChildInfo {
 					hchild: unsafe { hchild.raw_copy() },
 					horz,
@@ -64,18 +104,6 @@ impl LayoutArranger {
 			);
 		}
 
-		Ok(())
-	}
-
-	/// Saves the original client area of the parent window.
-	pub(in crate::gui) fn save_original_client_area(&self,
-		hparent: &HWND,
-	) -> SysResult<()>
-	{
-		let rc_parent = hparent.GetClientRect()?;
-		*unsafe { &mut *self.0.sz_parent_orig.get() } = Some(
-			SIZE::new(rc_parent.right, rc_parent.bottom),
-		);
 		Ok(())
 	}
 

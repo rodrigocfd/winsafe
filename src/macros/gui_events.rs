@@ -10,9 +10,10 @@ macro_rules! pub_fn_wm_noparm_noret {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn() -> AnyResult<()> + 'static,
 		{
+			let def_proc_val = self.is_dlg.def_proc_val();
 			self.wm($wmconst, move |_| {
 				func()?;
-				Ok(crate::gui::WmRet::HandledOk)
+				Ok(def_proc_val)
 			});
 		}
 	};
@@ -29,8 +30,7 @@ macro_rules! pub_fn_wm_noparm_boolret {
 			where F: Fn() -> AnyResult<bool> + 'static,
 		{
 			self.wm($wmconst, move |_| {
-				let ret_val = func()? as isize;
-				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+				Ok(func()? as _)
 			});
 		}
 	};
@@ -46,9 +46,10 @@ macro_rules! pub_fn_wm_withparm_noret {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn($parm) -> AnyResult<()> + 'static,
 		{
+			let def_proc_val = self.is_dlg.def_proc_val();
 			self.wm($wmconst, move |p| {
 				func(unsafe { <$parm>::from_generic_wm(p) })?;
-				Ok(crate::gui::WmRet::HandledOk)
+				Ok(def_proc_val)
 			});
 		}
 	};
@@ -65,8 +66,7 @@ macro_rules! pub_fn_wm_withparm_boolret {
 			where F: Fn($parm) -> AnyResult<bool> + 'static,
 		{
 			self.wm($wmconst, move |p| {
-				let ret_val = func(unsafe { <$parm>::from_generic_wm(p) })? as isize;
-				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+				Ok(func(unsafe { <$parm>::from_generic_wm(p) })? as _)
 			});
 		}
 	};
@@ -83,8 +83,7 @@ macro_rules! pub_fn_wm_withparm_coret {
 			where F: Fn($parm) -> AnyResult<$coret> + 'static,
 		{
 			self.wm($wmconst, move |p| {
-				let ret_val = func(unsafe { <$parm>::from_generic_wm(p) })?.raw() as isize;
-				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+				Ok(func(unsafe { <$parm>::from_generic_wm(p) })?.raw() as _)
 			});
 		}
 	};
@@ -101,8 +100,7 @@ macro_rules! pub_fn_wm_ctlcolor {
 			where F: Fn($parm) -> AnyResult<crate::user::decl::HBRUSH> + 'static,
 		{
 			self.wm($wmconst, move |p| {
-				let ret_val = func(unsafe { <$parm>::from_generic_wm(p) })?.ptr() as isize;
-				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+				Ok(func(unsafe { <$parm>::from_generic_wm(p) })?.ptr() as _)
 			});
 		}
 	};
@@ -119,8 +117,7 @@ macro_rules! pub_fn_cmd_noparm_noret {
 			where F: Fn() -> AnyResult<()> + 'static,
 		{
 			self.0.wm_command($cmd, move || {
-				func()?;
-				Ok(crate::gui::WmRet::HandledOk)
+				func()
 			});
 		}
 	};
@@ -136,9 +133,10 @@ macro_rules! pub_fn_nfy_noparm_noret {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn() -> AnyResult<()> + 'static,
 		{
+			let def_proc_val = self.0.is_dlg().def_proc_val();
 			self.0.wm_notify($nfy, move |_| {
 				func()?;
-				Ok(crate::gui::WmRet::HandledOk)
+				Ok(def_proc_val)
 			});
 		}
 	};
@@ -154,9 +152,10 @@ macro_rules! pub_fn_nfy_withparm_noret {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn(&$param) -> AnyResult<()> + 'static,
 		{
+			let def_proc_val = self.0.is_dlg().def_proc_val();
 			self.0.wm_notify($nfy, move |p| {
 				func(unsafe { p.cast_nmhdr::<$param>() })?;
-				Ok(crate::gui::WmRet::HandledOk)
+				Ok(def_proc_val)
 			});
 		}
 	};
@@ -172,9 +171,10 @@ macro_rules! pub_fn_nfy_withmutparm_noret {
 		pub fn $name<F>(&self, func: F)
 			where F: Fn(&mut $param) -> AnyResult<()> + 'static,
 		{
+			let def_proc_val = self.0.is_dlg().def_proc_val();
 			self.0.wm_notify($nfy, move |p| {
 				func(unsafe { p.cast_nmhdr_mut::<$param>() })?;
-				Ok(crate::gui::WmRet::HandledOk)
+				Ok(def_proc_val)
 			});
 		}
 	};
@@ -191,8 +191,7 @@ macro_rules! pub_fn_nfy_noparm_boolret {
 			where F: Fn() -> AnyResult<bool> + 'static,
 		{
 			self.0.wm_notify($nfy, move |_| {
-				let ret_val = func()? as isize;
-				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+				Ok(func()? as _)
 			});
 		}
 	};
@@ -209,8 +208,7 @@ macro_rules! pub_fn_nfy_withparm_boolret {
 			where F: Fn(&$param) -> AnyResult<bool> + 'static,
 		{
 			self.0.wm_notify($nfy, move |p| {
-				let ret_val = func(unsafe { p.cast_nmhdr::<$param>() })? as isize;
-				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+				Ok(func(unsafe { p.cast_nmhdr::<$param>() })? as _)
 			});
 		}
 	};
@@ -227,8 +225,7 @@ macro_rules! pub_fn_nfy_noparm_i32ret {
 			where F: Fn() -> AnyResult<i32> + 'static,
 		{
 			self.0.wm_notify($nfy, move |_| {
-				let ret_val = func()? as isize;
-				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+				Ok(func()? as _)
 			});
 		}
 	};
@@ -245,8 +242,7 @@ macro_rules! pub_fn_nfy_withparm_i32ret {
 			where F: Fn(&$param) -> AnyResult<i32> + 'static,
 		{
 			self.0.wm_notify($nfy, move |p| {
-				let ret_val = func(unsafe { p.cast_nmhdr::<$param>() })? as isize;
-				Ok(crate::gui::WmRet::HandledWithRet(ret_val))
+				Ok(func(unsafe { p.cast_nmhdr::<$param>() })? as _)
 			});
 		}
 	};

@@ -35,22 +35,19 @@ pub struct ALTTABINFO {
 
 impl_default_with_size!(ALTTABINFO, cbSize);
 
-/// [`ATOM`](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#atom)
-/// returned by [`RegisterClassEx`](crate::RegisterClassEx).
-#[repr(transparent)]
-#[derive(Clone, Copy, PartialEq, Eq, Hash)]
-pub struct ATOM(u16);
-
-impl_intunderlying!(ATOM, u16);
-
-impl std::fmt::Display for ATOM {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		std::fmt::Display::fmt(&self.0, f)
-	}
+newtype_num! { ATOM: u16;
+	/// [`ATOM`](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#atom)
+	/// returned by [`RegisterClassEx`](crate::RegisterClassEx).
 }
+
 impl std::fmt::Debug for ATOM {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		write!(f, "ATOM [{:#06x} {}]", self.0, self.0)
+	}
+}
+impl std::fmt::Display for ATOM {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		std::fmt::Display::fmt(&self.0, f)
 	}
 }
 
@@ -118,13 +115,10 @@ impl<'a> CHOOSECOLOR<'a> {
 	pub_fn_resource_id_get_set!(lpTemplateName, set_lpTemplateName);
 }
 
-/// [`COLORREF`](https://learn.microsoft.com/en-us/windows/win32/gdi/colorref)
-/// struct.
-#[repr(transparent)]
-#[derive(Default, Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct COLORREF(u32);
-
-impl_intunderlying!(COLORREF, u32);
+newtype_num! { COLORREF: u32;
+	/// [`COLORREF`](https://learn.microsoft.com/en-us/windows/win32/gdi/colorref)
+	/// struct.
+}
 
 impl From<co::CLR> for COLORREF {
 	fn from(v: co::CLR) -> Self {
@@ -927,6 +921,12 @@ impl From<u32> for POINT {
 	}
 }
 
+impl From<(i32, i32)> for POINT {
+	fn from(v: (i32, i32)) -> Self {
+		Self::new(v.0, v.1)
+	}
+}
+
 impl POINT {
 	/// Creates a new `POINT`.
 	#[must_use]
@@ -993,6 +993,12 @@ impl From<SIZE> for u32 {
 impl From<u32> for SIZE {
 	fn from(v: u32) -> Self {
 		Self::new(LOWORD(v) as _, HIWORD(v) as _)
+	}
+}
+
+impl From<(i32, i32)> for SIZE {
+	fn from(v: (i32, i32)) -> Self {
+		Self::new(v.0 as _, v.1 as _)
 	}
 }
 

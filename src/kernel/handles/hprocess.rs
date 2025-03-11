@@ -6,7 +6,7 @@ use crate::guard::*;
 use crate::kernel::{ffi, ffi_types::*, privs::*};
 use crate::prelude::*;
 
-impl_handle! { HPROCESS;
+handle! { HPROCESS;
 	/// Handle to a
 	/// [process](https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads).
 	/// Originally just a `HANDLE`.

@@ -5,7 +5,7 @@ use crate::decl::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
 
-impl_handle! { HSERVICESTATUS;
+handle! { HSERVICESTATUS;
 	/// Handle to a
 	/// [service status](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-registerservicectrlhandlerexw).
 	/// Originally `SERVICE_STATUS_HANDLE`.

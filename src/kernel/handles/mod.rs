@@ -32,7 +32,7 @@ pub mod decl {
 	pub use super::hthread::HTHREAD;
 	pub use super::hupdatesrc::HUPDATERSRC;
 
-	impl_handle! { HRSRC;
+	handle! { HRSRC;
 		/// Handle to a
 		/// [resource](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-findresourcew).
 		/// Originally just a `HANDLE`.
@@ -41,7 +41,7 @@ pub mod decl {
 		/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
 	}
 
-	impl_handle! { HRSRCMEM;
+	handle! { HRSRCMEM;
 		/// Handle to a resource
 		/// [memory block](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadresource).
 		/// Originally just an `HGLOBAL`.

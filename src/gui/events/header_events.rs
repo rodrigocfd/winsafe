@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{* ,privs::*};
+use crate::gui::{events::*, privs::*};
 
 /// Exposes header control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-header-control-reference-notifications).
@@ -11,12 +11,12 @@ use crate::gui::{* ,privs::*};
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-pub struct HeaderEvents(BaseCtrlEventsProxy);
+pub struct HeaderEvents(BaseCtrlEvents);
 
 impl HeaderEvents {
 	#[must_use]
-	pub(in crate::gui) fn new(parent: &impl AsRef<Base>, ctrl_id: u16) -> Self {
-		Self(BaseCtrlEventsProxy::new(parent, ctrl_id))
+	pub(in crate::gui) fn new(parent: &impl AsRef<BaseWnd>, ctrl_id: u16) -> Self {
+		Self(BaseCtrlEvents::new(parent, ctrl_id))
 	}
 
 	pub_fn_nfy_withparm_boolret! { hdn_begin_drag, co::HDN::BEGINDRAG, NMHEADER;
@@ -75,8 +75,7 @@ impl HeaderEvents {
 		where F: Fn(&mut NMHDDISPINFO) -> AnyResult<isize> + 'static,
 	{
 		self.0.wm_notify(co::HDN::GETDISPINFO, move |p| {
-			let ret_val = func(unsafe { p.cast_nmhdr_mut::<NMHDDISPINFO>() })?;
-			Ok(WmRet::HandledWithRet(ret_val))
+			Ok(func(unsafe { p.cast_nmhdr_mut::<NMHDDISPINFO>() })?)
 		});
 	}
 
@@ -126,8 +125,7 @@ impl HeaderEvents {
 		where F: Fn(&mut NMCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
 		self.0.wm_notify(co::NM::CUSTOMDRAW, move |p| {
-			let ret_val = func(unsafe { p.cast_nmhdr_mut::<NMCUSTOMDRAW>() })?.raw() as isize;
-			Ok(WmRet::HandledWithRet(ret_val))
+			Ok(func(unsafe { p.cast_nmhdr_mut::<NMCUSTOMDRAW>() })?.raw() as _)
 		});
 	}
 

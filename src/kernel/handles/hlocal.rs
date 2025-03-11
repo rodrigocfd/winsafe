@@ -6,7 +6,7 @@ use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
 use crate::prelude::*;
 
-impl_handle! { HLOCAL;
+handle! { HLOCAL;
 	/// Handle to a
 	/// [local memory block](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hlocal).
 	///

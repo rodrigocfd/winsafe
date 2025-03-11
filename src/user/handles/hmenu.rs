@@ -7,7 +7,7 @@ use crate::msg::*;
 use crate::prelude::*;
 use crate::user::{iterators::*, ffi};
 
-impl_handle! { HMENU;
+handle! { HMENU;
 	/// Handle to a
 	/// [menu](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hmenu).
 }

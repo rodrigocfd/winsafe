@@ -5,7 +5,7 @@ use crate::decl::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
 
-impl_handle! { HSERVICE;
+handle! { HSERVICE;
 	/// Handle to a
 	/// [service](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openservicew).
 	/// Originally `SC_HANDLE`.

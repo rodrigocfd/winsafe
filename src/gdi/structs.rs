@@ -4,7 +4,6 @@ use crate::co;
 use crate::decl::*;
 use crate::gdi::privs::*;
 use crate::guard::*;
-use crate::prelude::*;
 
 /// [`BITMAP`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmap)
 /// struct.
@@ -55,13 +54,13 @@ impl BITMAPFILEHEADER {
 
 /// [`BITMAPINFO`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-bitmapinfo)
 /// struct.
+///
+/// The `bmiColors` field is dynamically allocated.
 #[repr(C)]
 pub struct BITMAPINFO {
 	pub bmiHeader: BITMAPINFOHEADER,
 	pub bmiColors: [RGBQUAD; 1],
 }
-
-impl VariableSized for BITMAPINFO {}
 
 impl Default for BITMAPINFO {
 	fn default() -> Self {
@@ -152,6 +151,8 @@ impl LOGFONT {
 /// [`LOGPALETTE`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-logpalette)
 /// struct.
 ///
+/// The `palPalEntry` field is dynamically allocated.
+///
 /// # Examples
 ///
 /// ```no_run
@@ -177,8 +178,6 @@ pub struct LOGPALETTE {
 	pub(in crate::gdi) palNumEntries: u16,
 	palPalEntry: [PALETTEENTRY; 1],
 }
-
-impl VariableSized for LOGPALETTE {}
 
 impl LOGPALETTE {
 	/// Returns a dynamically allocated

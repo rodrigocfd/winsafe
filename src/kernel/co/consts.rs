@@ -447,8 +447,8 @@ const_ordinary! { FIRMWARE_TYPE: u32;
 }
 
 const_bitflag! { FORMAT_MESSAGE: u32;
-	/// [`FormatMessage`](crate::prelude::FormattedError::FormatMessage)
-	/// `dwFlags` (`u32`).
+	/// [`FormatMessage`](crate::prelude::SystemError::FormatMessage) `dwFlags`
+	/// (`u32`).
 	=>
 	ALLOCATE_BUFFER 0x0000_0100
 	ARGUMENT_ARRAY 0x0000_2000

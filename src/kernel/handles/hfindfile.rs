@@ -6,7 +6,7 @@ use crate::guard::*;
 use crate::kernel::ffi;
 use crate::prelude::*;
 
-impl_handle! { HFINDFILE;
+handle! { HFINDFILE;
 	/// Handle to a
 	/// [file search](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew).
 	/// Originally just a `HANDLE`.

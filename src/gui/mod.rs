@@ -1,40 +1,25 @@
-//! High-level GUI abstractions for user windows and native controls. They can
-//! be created programmatically or by loading resources from a `.res` file.
-//! These files can be created with a WYSIWYG
-//! [resource editor](https://en.wikipedia.org/wiki/Resource_(Windows)#Resource_software).
-//!
-//! You'll probably want to start your GUI application using the
-//! [`WindowMain`].
-
+#![doc = include_str!("gui.md")]
 #![cfg(feature = "gui")]
 
-mod enums;
+mod dpi;
+mod globals;
 mod iterators;
+mod msg_error;
 mod native_controls;
-mod privs_gui;
-mod proc;
-mod traits_gui;
 mod windows;
 
+pub(crate) mod traits;
 pub mod events;
 
 pub(in crate::gui) mod privs {
-	pub(in crate::gui) use super::events::privs::*;
+	pub(in crate::gui) use super::globals::*;
+	pub(in crate::gui) use super::iterators::*;
 	pub(in crate::gui) use super::native_controls::privs::*;
-	pub(in crate::gui) use super::privs_gui::*;
 	pub(in crate::gui) use super::windows::privs::*;
 }
 
-pub use enums::*;
+pub use dpi::*;
+pub use msg_error::MsgError;
+pub use native_controls::collections;
 pub use native_controls::decl::*;
 pub use windows::decl::*;
-
-pub(crate) mod traits {
-	pub use super::traits_gui::*;
-}
-
-pub mod spec {
-	//! Structs which expose specialized methods of controls.
-
-	pub use super::native_controls::spec::*;
-}

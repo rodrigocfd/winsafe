@@ -6,7 +6,7 @@ use crate::guard::*;
 use crate::kernel::{ffi, privs::*, proc};
 use crate::prelude::*;
 
-impl_handle! { HINSTANCE;
+handle! { HINSTANCE;
 	/// Handle to an
 	/// [instance](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hinstance),
 	/// same as `HMODULE`.

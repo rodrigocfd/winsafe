@@ -6,7 +6,7 @@ use crate::guard::*;
 use crate::kernel::{ffi, iterators::*, privs::*};
 use crate::prelude::*;
 
-impl_handle! { HPROCESSLIST;
+handle! { HPROCESSLIST;
 	/// Handle to a process list
 	/// [snapshot](https://learn.microsoft.com/en-us/windows/win32/toolhelp/taking-a-snapshot-and-viewing-processes).
 	/// Originally just a `HANDLE`.

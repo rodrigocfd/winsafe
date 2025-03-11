@@ -9,7 +9,7 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::user::{ffi, privs::*, proc};
 
-impl_handle! { HWND;
+handle! { HWND;
 	/// Handle to a
 	/// [window](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hwnd).
 }

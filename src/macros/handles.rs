@@ -1,7 +1,7 @@
 #![allow(unused_macros)]
 
 /// Declares a handle.
-macro_rules! impl_handle {
+macro_rules! handle {
 	(
 		$name:ident;
 		$( #[$doc:meta] )*

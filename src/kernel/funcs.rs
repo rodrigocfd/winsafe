@@ -151,8 +151,8 @@ pub fn FlushProcessWriteBuffers() {
 /// function.
 ///
 /// You don't need to call this function: all error types implement the
-/// [`FormattedError`](crate::prelude::FormattedError) trait which will
-/// automatically call `FormatMessage`.
+/// [`SystemError`](crate::prelude::SystemError) trait which will automatically
+/// call `FormatMessage`.
 #[must_use]
 pub unsafe fn FormatMessage(
 	flags: co::FORMAT_MESSAGE,

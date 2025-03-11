@@ -15,8 +15,8 @@ const_basic_decl! { HRESULT: u32;
 	/// Implements the [`Debug`](std::fmt::Debug) and
 	/// [`Display`](std::fmt::Display) traits to show the error code along with
 	/// the error description, taken from
-	/// [`FormattedError`](crate::prelude::FormattedError) trait. For example,
-	/// the code below:
+	/// [`SystemError`](crate::prelude::SystemError) trait. For example, the
+	/// code below:
 	///
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*, co};
@@ -74,7 +74,7 @@ impl std::fmt::Debug for HRESULT {
 	}
 }
 
-impl FormattedError for HRESULT {}
+impl SystemError for HRESULT {}
 
 impl co::ERROR {
 	/// [`HRESULT_FROM_WIN32`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)

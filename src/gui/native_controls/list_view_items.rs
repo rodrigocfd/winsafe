@@ -5,7 +5,7 @@ use std::rc::Rc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, iterators::*, proc, spec::*};
+use crate::gui::{*, iterators::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -24,8 +24,7 @@ impl<'a, T> ListViewItems<'a, T> {
 	}
 
 	/// Appends a new item by sending an
-	/// [`lvm::InsertItem`](crate::msg::lvm::InsertItem) message, and returns
-	/// the newly added item.
+	/// [`lvm::InsertItem`](crate::msg::lvm::InsertItem) message, returning it.
 	///
 	/// The texts are relative to each column.
 	///
@@ -56,13 +55,13 @@ impl<'a, T> ListViewItems<'a, T> {
 		texts: &[impl AsRef<str>],
 		icon_index: Option<u32>,
 		data: T,
-	) -> ListViewItem<'a, T>
+	) -> SysResult<ListViewItem<'a, T>>
 	{
 		if texts.is_empty() {
 			panic!("No texts passed when adding a ListView item.");
-		} else if texts.len() > self.owner.columns().count() as usize {
+		} else if texts.len() > self.owner.cols().count()? as _ {
 			panic!("Cannot set {} text(s) to {} column(s).",
-				texts.len(), self.owner.columns().count());
+				texts.len(), self.owner.cols().count()?);
 		}
 
 		let mut lvi = LVITEM::default();
@@ -87,17 +86,18 @@ impl<'a, T> ListViewItems<'a, T> {
 			unsafe {
 				self.owner.hwnd()
 					.SendMessage(lvm::InsertItem { item: &lvi })
-			}.unwrap(),
+			}?,
 		);
 
 		texts.iter()
 			.enumerate()
 			.skip(1) // iterate over subsequent columns
-			.for_each(|(idx, text)|
-				new_item.set_text(idx as _, text.as_ref()), // set the text ordinarily
-			);
+			.try_for_each(|(idx, text)| {
+				new_item.set_text(idx as _, text.as_ref())?; // set the text ordinarily
+				SysResult::Ok(())
+			})?;
 
-		new_item
+		Ok(new_item)
 	}
 
 	/// Retrieves the total number of items by sending an
@@ -112,16 +112,16 @@ impl<'a, T> ListViewItems<'a, T> {
 
 	/// Deletes all items by sending an
 	/// [`lvm::DeleteAllItems`](crate::msg::lvm::DeleteAllItems) message.
-	pub fn delete_all(&self) {
+	pub fn delete_all(&self) -> SysResult<()> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(lvm::DeleteAllItems {})
-		}.unwrap();
+		}
 	}
 
 	/// Deletes all selected items by sending
 	/// [`lvm::DeleteItem`](crate::msg::lvm::DeleteItem) messages.
-	pub fn delete_selected(&self) {
+	pub fn delete_selected(&self) -> SysResult<()> {
 		loop {
 			let next_idx = unsafe {
 				self.owner.hwnd()
@@ -131,10 +131,11 @@ impl<'a, T> ListViewItems<'a, T> {
 					})
 			};
 			match next_idx {
-				Some(next_idx) => self.get(next_idx).delete(),
+				Some(next_idx) => self.get(next_idx).delete()?,
 				None => break,
 			}
 		}
+		Ok(())
 	}
 
 	/// Searches for an item with the given text, case-insensitive, by sending
@@ -209,6 +210,10 @@ impl<'a, T> ListViewItems<'a, T> {
 	///     println!("Item {}, text of the first column: {}",
 	///         item.index(), item.text(0));
 	/// }
+	///
+	/// let vec_items = my_list.items()
+	///     .iter()
+	///     .collect::<Vec<_>>();
 	/// ```
 	#[must_use]
 	pub fn iter(&self) -> impl Iterator<Item = ListViewItem<'a, T>> + 'a {
@@ -230,6 +235,10 @@ impl<'a, T> ListViewItems<'a, T> {
 	///     println!("Selected item {}, text of the first column: {}",
 	///         item.index(), item.text(0));
 	/// }
+	///
+	/// let vec_items = my_list.items()
+	///     .iter_selected()
+	///     .collect::<Vec<_>>();
 	/// ```
 	#[must_use]
 	pub fn iter_selected(&self) -> impl Iterator<Item = ListViewItem<'a, T>> + 'a {
@@ -241,26 +250,20 @@ impl<'a, T> ListViewItems<'a, T> {
 	///
 	/// If the item of the given unique ID doesn't exist anymore, returns
 	/// `None`.
-	///
-	/// # Panics
-	///
-	/// Panics if the given ID doesn't exist among the items.
 	#[must_use]
-	pub fn map_id_to_index(&self, item_id: u32) -> ListViewItem<'a, T> {
-		self.get(
-			unsafe {
-				self.owner.hwnd()
-					.SendMessage(lvm::MapIdToIndex { id: item_id })
-			}.unwrap(),
-		)
+	pub fn get_by_uid(&self, uid: u32) -> Option<ListViewItem<'a, T>> {
+		unsafe {
+			self.owner.hwnd()
+				.SendMessage(lvm::MapIdToIndex { id: uid })
+		}.map(|idx| self.get(idx))
 	}
 
 	/// Sets or remove the selection for all items by sending an
 	/// [`lvm::SetItemState`](crate::msg::lvm::SetItemState) message.
-	pub fn select_all(&self, set: bool) {
+	pub fn select_all(&self, set: bool) -> SysResult<()> {
 		let styles: co::LVS = self.owner.hwnd().style().into();
 		if styles.has(co::LVS::SINGLESEL) {
-			return; // LVM_SETITEMSTATE fails for all items in single-sel list views
+			return Ok(()); // LVM_SETITEMSTATE fails for all items in single-sel list views
 		}
 
 		let mut lvi = LVITEM::default();
@@ -273,7 +276,7 @@ impl<'a, T> ListViewItems<'a, T> {
 					index: None,
 					lvitem: &lvi,
 				})
-		}.unwrap();
+		}
 	}
 
 	/// Retrieves the number of selected items by sending an
@@ -289,11 +292,11 @@ impl<'a, T> ListViewItems<'a, T> {
 	/// Sets the number of items in a virtual list view – that is, a list view
 	/// created with [`LVS::OWNERDATA`](crate::co::LVS::OWNERDATA) style – by
 	/// sending an [`lvm::SetItemCount`](crate::msg::lvm::SetItemCount) message.
-	pub fn set_count(&self, count: u32, behavior: Option<co::LVSICF>) {
+	pub fn set_count(&self, count: u32, behavior: Option<co::LVSICF>) -> SysResult<()> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(lvm::SetItemCount { count, behavior })
-		}.unwrap();
+		}
 	}
 
 	/// Sorts the items according to a callback by sending an
@@ -316,7 +319,7 @@ impl<'a, T> ListViewItems<'a, T> {
 	///     itemA.text(0).cmp( &itemB.text(0) )
 	/// });
 	/// ```
-	pub fn sort<F>(&self, func: F)
+	pub fn sort<F>(&self, func: F) -> SysResult<()>
 		where F: FnMut(ListViewItem, ListViewItem) -> Ordering,
 	{
 		let mut func = func;
@@ -326,8 +329,21 @@ impl<'a, T> ListViewItems<'a, T> {
 			self.owner.hwnd()
 				.SendMessage(lvm::SortItemsEx {
 					param: &data as *const _ as _,
-					callback: proc::list_view_item_sort::<F>,
+					callback: Self::list_view_item_sort::<F>,
 				})
-		}.unwrap();
+		}
+	}
+
+	pub(in crate::gui) extern "system" fn list_view_item_sort<F>(
+		lparam1: isize,
+		lparam2: isize,
+		lparam_sort: isize,
+	) -> i32
+		where F: FnMut(ListViewItem, ListViewItem) -> Ordering,
+	{
+		let data = unsafe { &mut *(lparam_sort as *mut (&ListView, &mut F)) };
+		let item1 = data.0.items().get(lparam1 as _);
+		let item2 = data.0.items().get(lparam2 as _);
+		data.1(item1, item2) as _
 	}
 }

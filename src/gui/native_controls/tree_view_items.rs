@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, iterators::*, spec::*};
+use crate::gui::{*, iterators::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -25,18 +25,18 @@ impl<'a, T> TreeViewItems<'a, T> {
 		text: &str,
 		icon_index: Option<u32>,
 		data: T,
-	) -> TreeViewItem<'a, T>
+	) -> SysResult<TreeViewItem<'a, T>>
 	{
 		self.owner.raw_insert_item(None, text, icon_index, data)
 	}
 
 	/// Deletes all items by sending a
 	/// [`tvm::DeleteItem`](crate::msg::tvm::DeleteItem) message.
-	pub fn delete_all(&self) {
+	pub fn delete_all(&self) -> SysResult<()> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(tvm::DeleteItem { hitem: &HTREEITEM::NULL })
-		}.unwrap();
+		}
 	}
 
 	/// Retrieves the total number of items by sending a
@@ -61,11 +61,11 @@ impl<'a, T> TreeViewItems<'a, T> {
 
 	/// Ends the editing of the item's text by sending a
 	/// [`tvm::EndEditLabelNow`](crate::msg::tvm::EndEditLabelNow) message.
-	pub fn end_edit_label_now(&self, save: bool) {
+	pub fn end_edit_label_now(&self, save: bool) -> SysResult<()> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(tvm::EndEditLabelNow { save })
-		}.unwrap();
+		}
 	}
 
 	/// Retrieves the item of the given handle.
@@ -80,9 +80,7 @@ impl<'a, T> TreeViewItems<'a, T> {
 
 	/// Returns an iterator over the selected items.
 	#[must_use]
-	pub fn iter_selected(&self,
-	) -> impl Iterator<Item = TreeViewItem<'a, T>> + 'a
-	{
+	pub fn iter_selected(&self) -> impl Iterator<Item = TreeViewItem<'a, T>> + 'a {
 		TreeViewItemIter::new(self.owner, None, co::TVGN::CARET)
 	}
 

@@ -6,12 +6,10 @@ macro_rules! const_basic_decl {
 		$name:ident : $ntype:ty;
 		$( #[$doc:meta] )*
 	) => {
-		$( #[$doc] )*
-		#[repr(transparent)]
-		#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
-		pub struct $name($ntype);
-
-		impl_intunderlying!($name, $ntype);
+		newtype_num! {
+			$name: $ntype;
+			$( #[$doc] )*
+		}
 
 		impl std::fmt::LowerHex for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -39,12 +37,6 @@ macro_rules! const_basic_decl {
 /// Implements bitflag operations for numeric newtype constants.
 macro_rules! const_impl_bitflag {
 	( $name:ident ) => {
-		impl crate::prelude::NativeBitflag for $name {
-			fn has(&self, other: Self) -> bool {
-				(self.0 & other.0) != 0
-			}
-		}
-
 		impl std::ops::BitAnd for $name {
 			type Output = $name;
 			fn bitand(self, rhs: Self) -> Self::Output {
@@ -82,6 +74,15 @@ macro_rules! const_impl_bitflag {
 			type Output = $name;
 			fn not(self) -> Self::Output {
 				Self(!self.0)
+			}
+		}
+
+		impl $name {
+			/// Returns `true` if the other bitflag value is present.
+			///
+			/// Equivalent to `(val & other) != 0`.
+			pub const fn has(&self, other: Self) -> bool {
+				(self.0 & other.0) != 0
 			}
 		}
 	};

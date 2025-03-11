@@ -8,7 +8,7 @@ use crate::prelude::*;
 ///
 /// Owns the window procedure for all ordinary windows.
 pub(in crate::gui) struct RawBase {
-	base: Base,
+	base: BaseWnd,
 }
 
 impl Drop for RawBase {
@@ -21,50 +21,37 @@ impl Drop for RawBase {
 
 impl RawBase {
 	#[must_use]
-	pub(in crate::gui) fn new(parent: Option<&impl AsRef<Base>>) -> Self {
-		Self { base: Base::new(false, parent) }
-	}
-
-	#[must_use]
-	pub(in crate::gui) const fn base(&self) -> &Base {
-		&self.base
-	}
-
-	pub(in crate::gui) fn delegate_focus_to_first_child(&self) {
-		if let Some(hwnd_cur_focus) = HWND::GetFocus() {
-			if *self.base.hwnd() == hwnd_cur_focus {
-				// https://stackoverflow.com/a/2835220/6923555
-				if let Ok(hchild_first) = self.base.hwnd().GetWindow(co::GW::CHILD) {
-					hchild_first.SetFocus(); // if window receives focus, delegate to first child
-				}
-			}
+	pub(in crate::gui) fn new() -> Self {
+		Self {
+			base: BaseWnd::new(IsDlg::No),
 		}
 	}
 
-	/// Fills `WNDCLASSEX` with the given values, and generates a class name as
-	/// a hash of all fields.
-	pub(in crate::gui) fn fill_wndclassex<'a>(
-		hinst: &'a HINSTANCE,
-		class_name: &'a str,
+	#[must_use]
+	pub(in crate::gui) const fn base(&self) -> &BaseWnd {
+		&self.base
+	}
+
+	pub(in crate::gui) fn register_class(&self,
+		hinst: &HINSTANCE,
+		class_name: &str,
 		class_style: co::CS,
-		class_icon: &'a Icon,
-		class_icon_sm: &'a Icon,
-		class_bg_brush: &'a Brush,
-		class_cursor: &'a Cursor,
-		wcx: &mut WNDCLASSEX<'a>,
-		class_name_buf: &'a mut WString,
-	) -> SysResult<()>
+		class_icon: &Icon,
+		class_bg_brush: &Brush,
+		class_cursor: &Cursor,
+	) -> SysResult<ATOM>
 	{
-		wcx.lpfnWndProc = Some(Self::window_proc);
+		let mut wcx = WNDCLASSEX::default();
+		wcx.lpfnWndProc = Some(Self::wnd_proc);
 		wcx.hInstance = unsafe { hinst.raw_copy() };
 		wcx.style = class_style;
 		wcx.hIcon = class_icon.as_hicon(hinst)?;
-		wcx.hIconSm = class_icon_sm.as_hicon(hinst)?;
+		wcx.hIconSm = class_icon.as_hicon(hinst)?;
 		wcx.hbrBackground = class_bg_brush.as_hbrush();
 		wcx.hCursor = class_cursor.as_hcursor(hinst)?;
 
-		if class_name.trim().is_empty() { // an actual class name was not provided?
-			*class_name_buf = WString::from_str(
+		let mut wclass_name = if class_name.trim().is_empty() {
+			WString::from_str(
 				&format!(
 					"WNDCLASS.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}",
 					wcx.style,
@@ -74,19 +61,12 @@ impl RawBase {
 					wcx.lpszMenuName(),
 					wcx.hIconSm,
 				),
-			);
+			)
 		} else {
-			*class_name_buf = WString::from_str(class_name);
-		}
-		wcx.set_lpszClassName(Some(class_name_buf));
+			WString::from_str(class_name)
+		};
+		wcx.set_lpszClassName(Some(&mut wclass_name));
 
-		Ok(())
-	}
-
-	pub(in crate::gui) fn register_class(&self,
-		wcx: &mut WNDCLASSEX,
-	) -> SysResult<ATOM>
-	{
 		SetLastError(co::ERROR::SUCCESS);
 		match unsafe { RegisterClassEx(&wcx) } {
 			Ok(atom) => Ok(atom),
@@ -104,43 +84,49 @@ impl RawBase {
 		}
 	}
 
-	pub(in crate::gui) fn create_window(
-		&self,
-		hparent: Option<&HWND>, // passed because message-only window is a special case
+	pub(in crate::gui) fn create_window(&self,
+		ex_style: co::WS_EX,
 		class_name: ATOM,
 		title: Option<&str>,
-		hmenu: IdMenu,
+		style: co::WS,
 		pos: POINT,
-		sz: SIZE,
-		ex_styles: co::WS_EX,
-		styles: co::WS,
+		size: SIZE,
+		hparent: Option<&HWND>,
+		hmenu: IdMenu,
+		hinst: &HINSTANCE,
 	) -> SysResult<()>
 	{
 		if *self.base.hwnd() != HWND::NULL {
 			panic!("Cannot create window twice.");
 		}
-
-		// Our hwnd member is set during WM_NCCREATE processing; already set when
-		// CreateWindowEx returns.
 		unsafe {
 			HWND::CreateWindowEx(
-				ex_styles,
+				ex_style,
 				AtomStr::Atom(class_name),
-				title, styles,
-				pos, sz,
+				title,
+				style,
+				pos, size,
 				hparent,
 				hmenu,
-				&self.base.parent_hinstance()?,
-				// Pass pointer to Self.
-				// At this moment, the parent struct is already created and pinned.
-				Some(self as *const _ as _),
+				hinst,
+				Some(self as *const _ as _), // pass pointer to object itself
 			)?;
 		}
-
 		Ok(())
 	}
 
-	extern "system" fn window_proc(
+	pub(in crate::gui) fn delegate_focus_to_first_child(&self) {
+		if let Some(hwnd_cur_focus) = HWND::GetFocus() {
+			if *self.base.hwnd() == hwnd_cur_focus {
+				// https://stackoverflow.com/a/2835220/6923555
+				if let Ok(hchild_first) = self.base.hwnd().GetWindow(co::GW::CHILD) {
+					hchild_first.SetFocus(); // if window receives focus, delegate to first child
+				}
+			}
+		}
+	}
+
+	extern "system" fn wnd_proc(
 		hwnd: HWND,
 		msg: co::WM,
 		wparam: usize,
@@ -148,15 +134,15 @@ impl RawBase {
 	) -> isize
 	{
 		let wm_any = WndMsg::new(msg, wparam, lparam);
-		Self::window_proc_proc(hwnd, wm_any)
-			.unwrap_or_else(|err| { post_quit_error(wm_any, err); 0 })
+		Self::wnd_proc_proc(hwnd, wm_any)
+			.unwrap_or_else(|err| { quit_error::post_quit_error(wm_any, err); 0 })
 	}
 
-	fn window_proc_proc(hwnd: HWND, wm_any: WndMsg) -> AnyResult<isize> {
-		let ptr_self = match wm_any.msg_id {
+	fn wnd_proc_proc(hwnd: HWND, p: WndMsg) -> AnyResult<isize> {
+		let ptr_self = match p.msg_id {
 			co::WM::NCCREATE => { // first message being handled
-				let wm_ncc = unsafe { wm::NcCreate::from_generic_wm(wm_any) };
-				let ptr_self = wm_ncc.createstruct.lpCreateParams as *mut Self;
+				let msg = unsafe { wm::NcCreate::from_generic_wm(p) };
+				let ptr_self = msg.createstruct.lpCreateParams as *mut Self;
 				unsafe { hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as _); } // store
 				let ref_self = unsafe { &mut *ptr_self };
 				ref_self.base.set_hwnd(unsafe { hwnd.raw_copy() }); // store HWND in struct field
@@ -168,33 +154,31 @@ impl RawBase {
 		// If no pointer stored, then no processing is done.
 		// Prevents processing before WM_NCCREATE and after WM_NCDESTROY.
 		if ptr_self.is_null() {
-			return Ok(unsafe { hwnd.DefWindowProc(wm_any) });
+			return Ok(unsafe { hwnd.DefWindowProc(p) });
 		}
+		let ref_self = unsafe { &mut *ptr_self };
 
 		// Execute before-user closures, keep track if at least one was executed.
-		let ref_self = unsafe { &mut *ptr_self };
-		let at_least_one_before_user = ref_self.base.process_before_user_messages(wm_any)?;
+		let at_least_one_before = ref_self.base.process_before_messages(p)?;
 
 		// Execute user closure, if any.
-		let process_result = ref_self.base.process_user_message(wm_any)?;
+		let user_ret = ref_self.base.process_user_message(p).transpose()?;
 
 		// Execute post-user closures, keep track if at least one was executed.
-		let at_least_one_after_user = ref_self.base.process_after_user_messages(wm_any)?;
+		let at_least_one_after = ref_self.base.process_after_messages(p)?;
 
-		if wm_any.msg_id == co::WM::NCDESTROY { // always check
+		if p.msg_id == co::WM::NCDESTROY { // always check
 			unsafe { hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); } // clear passed pointer
 			ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
-			ref_self.base.clear_events(); // prevents circular references
+			ref_self.base.clear_messages(); // prevents circular references
 		}
 
-		Ok(match process_result {
-			WmRet::HandledWithRet(res) => res,
-			WmRet::HandledOk => 0,
-			WmRet::NotHandled => if at_least_one_before_user || at_least_one_after_user {
-				0
-			} else {
-				unsafe { hwnd.DefWindowProc(wm_any) }.into()
-			},
-		})
+		if let Some(user_ret) = user_ret {
+			Ok(user_ret)
+		} else if at_least_one_before || at_least_one_after {
+			Ok(0)
+		} else {
+			Ok(unsafe { hwnd.DefWindowProc(p) })
+		}
 	}
 }

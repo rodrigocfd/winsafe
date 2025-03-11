@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, privs::*};
+use crate::gui::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -8,8 +8,8 @@ use crate::prelude::*;
 ///
 /// Owns the window procedure for all dialog windows.
 pub(in crate::gui) struct DlgBase {
-	base: Base,
-	dialog_id: u16,
+	base: BaseWnd,
+	dlg_id: u16,
 }
 
 impl Drop for DlgBase {
@@ -22,65 +22,67 @@ impl Drop for DlgBase {
 
 impl DlgBase {
 	#[must_use]
-	pub(in crate::gui) fn new(
-		parent: Option<&impl AsRef<Base>>,
-		dialog_id: u16,
-	) -> Self
-	{
+	pub(in crate::gui) fn new(dlg_id: u16) -> Self {
 		Self {
-			base: Base::new(true, parent),
-			dialog_id,
+			base: BaseWnd::new(IsDlg::Yes),
+			dlg_id,
 		}
 	}
 
 	#[must_use]
-	pub(in crate::gui) const fn base(&self) -> &Base {
+	pub(in crate::gui) const fn base(&self) -> &BaseWnd {
 		&self.base
 	}
 
-	pub(in crate::gui) fn create_dialog_param(&self) -> SysResult<()> {
+	pub(in crate::gui) fn create_dialog_param(&self, hinst: &HINSTANCE) -> SysResult<()> {
 		if *self.base.hwnd() != HWND::NULL {
 			panic!("Cannot create dialog twice.");
 		}
-
-		// Our hwnd member is set during WM_INITDIALOG processing; already set
-		// when CreateDialogParam returns.
-		unsafe {
-			self.base.parent_hinstance()?.CreateDialogParam(
-				IdStr::Id(self.dialog_id),
-				self.base.parent().map(|parent| parent.hwnd()),
-				Self::dialog_proc,
-				// Pass pointer to Self.
-				// At this moment, the parent struct is already created and pinned.
-				Some(self as *const _ as _),
+		unsafe { // the hwnd member is saved in WM_INITDIALOG processing in dlg_proc
+			hinst.CreateDialogParam(
+				IdStr::Id(self.dlg_id),
+				None,
+				Self::dlg_proc,
+				Some(self as *const _ as _), // pointer to object itself
 			)?;
 		}
-
+		Ok(())
+	}
+	pub(in crate::gui) fn dialog_box_param(&self, hinst: &HINSTANCE, hparent: &HWND) -> SysResult<()> {
+		if *self.base.hwnd() != HWND::NULL {
+			panic!("Cannot create dialog twice.");
+		}
+		unsafe {
+			hinst.DialogBoxParam(
+				IdStr::Id(self.dlg_id),
+				Some(hparent),
+				Self::dlg_proc,
+				Some(self as *const _ as _), // pointer to object itself
+			)?;
+		}
 		Ok(())
 	}
 
-	pub(in crate::gui) fn dialog_box_param(&self) -> SysResult<i32> {
-		if *self.base.hwnd() != HWND::NULL {
-			panic!("Cannot create dialog twice.");
+	pub(in crate::gui) fn set_icon(&self, hinst: &HINSTANCE, icon_id: u16) -> SysResult<()> {
+		// If an icon ID was specified, load it from the resources.
+		// Resource icons are automatically released by the system.
+		unsafe {
+			self.base.hwnd().SendMessage(wm::SetIcon {
+				hicon: hinst.LoadImageIcon(
+					IdOicStr::Id(icon_id), SIZE::new(16, 16), co::LR::DEFAULTCOLOR)?.leak(),
+				size: co::ICON_SZ::SMALL,
+			});
+
+			self.base.hwnd().SendMessage(wm::SetIcon {
+				hicon: hinst.LoadImageIcon(
+					IdOicStr::Id(icon_id), SIZE::new(32, 32), co::LR::DEFAULTCOLOR)?.leak(),
+				size: co::ICON_SZ::BIG,
+			});
 		}
-
-		// Our hwnd member is set during WM_INITDIALOG processing; already set
-		// when DialogBoxParam returns.
-		let ret = unsafe {
-			self.base.parent_hinstance()?.DialogBoxParam(
-				IdStr::Id(self.dialog_id),
-				self.base.parent().map(|parent| parent.hwnd()),
-				Self::dialog_proc,
-				// Pass pointer to Self.
-				// At this moment, the parent struct is already created and pinned.
-				Some(self as *const _ as _),
-			)?
-		};
-
-		Ok(ret as _)
+		Ok(())
 	}
 
-	extern "system" fn dialog_proc(
+	extern "system" fn dlg_proc(
 		hwnd: HWND,
 		msg: co::WM,
 		wparam: usize,
@@ -88,15 +90,15 @@ impl DlgBase {
 	) -> isize
 	{
 		let wm_any = WndMsg::new(msg, wparam, lparam);
-		Self::dialog_proc_proc(hwnd, wm_any)
-			.unwrap_or_else(|err| { post_quit_error(wm_any, err); true as _ })
+		Self::dlg_proc_proc(hwnd, wm_any)
+			.unwrap_or_else(|err| { quit_error::post_quit_error(wm_any, err); true as _ })
 	}
 
-	fn dialog_proc_proc(hwnd: HWND, wm_any: WndMsg) -> AnyResult<isize> {
-		let ptr_self = match wm_any.msg_id {
+	fn dlg_proc_proc(hwnd: HWND, p: WndMsg) -> AnyResult<isize> {
+		let ptr_self = match p.msg_id {
 			co::WM::INITDIALOG => { // first message being handled
-				let wm_idlg = unsafe { wm::InitDialog::from_generic_wm(wm_any) };
-				let ptr_self = wm_idlg.additional_data as *mut Self;
+				let msg = unsafe { wm::InitDialog::from_generic_wm(p) };
+				let ptr_self = msg.additional_data as *mut Self;
 				unsafe { hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as _); } // store
 				let ref_self = unsafe { &mut *ptr_self };
 				ref_self.base.set_hwnd(unsafe { hwnd.raw_copy() }); // store HWND in struct field
@@ -110,51 +112,29 @@ impl DlgBase {
 		if ptr_self.is_null() {
 			return Ok(0); // FALSE
 		}
+		let ref_self = unsafe { &mut *ptr_self };
 
 		// Execute before-user closures, keep track if at least one was executed.
-		let ref_self = unsafe { &mut *ptr_self };
-		let at_least_one_before_user = ref_self.base.process_before_user_messages(wm_any)?;
-
-		if wm_any.msg_id == co::WM::INITDIALOG {
-			// Child controls are created in before-user closures, so we set the
-			// system font only after all them.
-			unsafe {
-				ref_self.base.hwnd().SendMessage(wm::SetFont { // on the window itself
-					hfont: ui_font(),
-					redraw: false,
-				});
-			}
-			ref_self.base.hwnd().EnumChildWindows(|hchild| {
-				unsafe {
-					hchild.SendMessage(wm::SetFont { // on each child control
-						hfont: ui_font(),
-						redraw: false,
-					});
-				}
-				true
-			});
-		}
+		let at_least_one_before = ref_self.base.process_before_messages(p)?;
 
 		// Execute user closure, if any.
-		let process_result = ref_self.base.process_user_message(wm_any)?;
+		let user_ret = ref_self.base.process_user_message(p).transpose()?;
 
 		// Execute post-user closures, keep track if at least one was executed.
-		let at_least_one_after_user = ref_self.base.process_after_user_messages(wm_any)?;
+		let at_least_one_after = ref_self.base.process_after_messages(p)?;
 
-		if wm_any.msg_id == co::WM::NCDESTROY { // always check
+		if p.msg_id == co::WM::NCDESTROY { // always check
 			unsafe { hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); } // clear passed pointer
 			ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
-			ref_self.base.clear_events(); // prevents circular references
+			ref_self.base.clear_messages(); // prevents circular references
 		}
 
-		Ok(match process_result {
-			WmRet::HandledWithRet(res) => res,
-			WmRet::HandledOk => 1, // TRUE
-			WmRet::NotHandled => if at_least_one_before_user || at_least_one_after_user {
-				1 // TRUE
-			} else {
-				0 // FALSE
-			},
-		})
+		if let Some(user_ret) = user_ret {
+			Ok(user_ret)
+		} else if at_least_one_before || at_least_one_after {
+			Ok(1) // TRUE
+		} else {
+			Ok(0) // FALSE
+		}
 	}
 }

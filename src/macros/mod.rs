@@ -6,6 +6,7 @@
 #[macro_use] mod consts;
 #[macro_use] mod ffis;
 #[macro_use] mod gui_events;
+#[macro_use] mod gui_objs;
 #[macro_use] mod handles;
 #[macro_use] mod messages;
 #[macro_use] mod seq_ids;

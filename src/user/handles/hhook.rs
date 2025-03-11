@@ -6,7 +6,7 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::user::ffi;
 
-impl_handle! { HHOOK;
+handle! { HHOOK;
 	/// Handle to a
 	/// [hook](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hhook).
 }

@@ -23,22 +23,22 @@ pub mod decl {
 	pub use super::hmonitor::HMONITOR;
 	pub use super::hwnd::HWND;
 
-	impl_handle! { HBITMAP;
+	handle! { HBITMAP;
 		/// Handle to a
 		/// [bitmap](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbitmap).
 	}
 
-	impl_handle! { HBRUSH;
+	handle! { HBRUSH;
 		/// Handle to a
 		/// [brush](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hbrush).
 	}
 
-	impl_handle! { HPALETTE;
+	handle! { HPALETTE;
 		/// Handle to a
 		/// [palette](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hpalette).
 	}
 
-	impl_handle! { HRGN;
+	handle! { HRGN;
 		/// Handle to a
 		/// [region](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hrgn)
 		/// GDI object.

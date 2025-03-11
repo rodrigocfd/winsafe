@@ -1,6 +1,6 @@
 #![allow(non_snake_case, non_upper_case_globals)]
 
-use crate::prelude::FormattedError;
+use crate::prelude::SystemError;
 
 const_basic_decl! { ERROR: u32;
 	/// A native
@@ -16,8 +16,8 @@ const_basic_decl! { ERROR: u32;
 	/// Implements the [`Debug`](std::fmt::Debug) and
 	/// [`Display`](std::fmt::Display) traits to show the error code along with
 	/// the error description, taken from
-	/// [`FormattedError`](crate::prelude::FormattedError) trait. For example,
-	/// the code below:
+	/// [`SystemError`](crate::prelude::SystemError) trait. For example, the
+	/// code below:
 	///
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*, co};
@@ -58,7 +58,7 @@ impl std::fmt::Debug for ERROR {
 	}
 }
 
-impl FormattedError for ERROR {}
+impl SystemError for ERROR {}
 
 const_values_pub! { ERROR;
 	/// The operation completed successfully.

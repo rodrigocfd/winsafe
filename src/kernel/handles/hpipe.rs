@@ -5,7 +5,7 @@ use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
 use crate::prelude::*;
 
-impl_handle! { HPIPE;
+handle! { HPIPE;
 	/// Handle to an
 	/// [anonymous pipe](https://learn.microsoft.com/en-us/windows/win32/ipc/anonymous-pipes).
 	/// Originally just a `HANDLE`.

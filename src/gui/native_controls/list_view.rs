@@ -1,4 +1,5 @@
 use std::any::Any;
+use std::cell::UnsafeCell;
 use std::marker::{PhantomData, PhantomPinned};
 use std::pin::Pin;
 use std::rc::Rc;
@@ -7,75 +8,32 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::gui::{*, events::*, privs::*, spec::*};
+use crate::gui::{*, collections::*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-struct Obj<T> { // atual fields of ListView
-	base: BaseNativeControl,
+struct ListViewObj<T> {
+	base: BaseCtrl,
 	events: ListViewEvents,
 	context_menu: Option<DestroyMenuGuard>, // the context menu itself is the 1st submenu
+	header: UnsafeCell<Option<Header>>, // if doesn't exist, will be set to None on WM_CREATE and WM_INITDIALOG
 	_pin: PhantomPinned,
 	_data: PhantomData<T>,
 }
 
-/// Native
-/// [list view](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
-/// control. Not to be confused with the simpler [list box](crate::gui::ListBox)
-/// control.
-///
-/// The generic parameter specifies the type of the object that will be embedded
-/// on each item – if you don't want to store anything, just use `()` as the
-/// type. Internally, this storage is implemented with pointers in the item's
-/// `LPARAM` fields.
-///
-/// You can have access to the internal header of the list view by creating a
-/// [`Header`](crate::gui::Header) object.
-pub struct ListView<T: 'static = ()>(Pin<Arc<Obj<T>>>);
-
-impl<T> Clone for ListView<T> { // https://stackoverflow.com/q/39415052/6923555
-	fn clone(&self) -> Self {
-		Self(self.0.clone())
-	}
-}
-
-unsafe impl<T> Send for ListView<T> {}
-
-impl<T> AsRef<BaseNativeControl> for ListView<T> {
-	fn as_ref(&self) -> &BaseNativeControl {
-		&self.0.base
-	}
-}
-
-impl<T> GuiWindow for ListView<T> {
-	fn hwnd(&self) -> &HWND {
-		self.0.base.hwnd()
-	}
-
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
-
-impl<T> GuiChild for ListView<T> {
-	fn ctrl_id(&self) -> u16 {
-		self.0.base.ctrl_id()
-	}
-}
-
-impl<T> GuiChildFocus for ListView<T> {}
-
-impl<T> GuiNativeControl for ListView<T> {}
-
-impl<T> GuiNativeControlEvents<ListViewEvents> for ListView<T> {
-	fn on(&self) -> &ListViewEvents {
-		if *self.hwnd() != HWND::NULL {
-			panic!("Cannot add events after the control creation.");
-		} else if *self.0.base.parent().hwnd() != HWND::NULL {
-			panic!("Cannot add events after the parent window creation.");
-		}
-		&self.0.events
-	}
+native_ctrl! { ListView: ListViewObj<T>, T => ListViewEvents;
+	/// Native
+	/// [list view](https://learn.microsoft.com/en-us/windows/win32/controls/list-view-controls-overview)
+	/// control. Not to be confused with the simpler
+	/// [list box](crate::gui::ListBox) control.
+	///
+	/// The generic parameter specifies the type of the object that will be
+	/// embedded on each item – if you don't want to store anything, just use
+	/// `()` as the type. Internally, this storage is implemented with pointers
+	/// in the item's `LPARAM` fields.
+	///
+	/// You can have access to the internal header of the list view by creating
+	/// a [`Header`](crate::gui::Header) object.
 }
 
 impl<T> ListView<T> {
@@ -88,17 +46,18 @@ impl<T> ListView<T> {
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `ListView` in an event closure.
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: ListViewOpts) -> Self {
-		let mut opts = auto_ctrl_id_if_zero(opts);
-		let ctrl_id = opts.ctrl_id;
+	pub fn new(parent: &(impl GuiParent + 'static), opts: ListViewOpts) -> Self {
+		let mut opts = opts;
+		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let context_menu = opts.context_menu.take();
 
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				ListViewObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: ListViewEvents::new(parent, ctrl_id),
 					context_menu,
+					header: UnsafeCell::new(Some(Header::from_list_view(parent))), // initially does exist
 					_pin: PhantomPinned,
 					_data: PhantomData,
 				},
@@ -106,12 +65,25 @@ impl<T> ListView<T> {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
-			self2.create(OptsResz::Wnd(&opts))?;
-			Ok(WmRet::NotHandled)
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			self2.0.base.create_window(opts.window_ex_style, "SysListView32", None,
+				opts.window_style | opts.control_style.into() | co::LVS::SHAREIMAGELISTS.into(),
+				opts.position.into(), opts.size.into(), &parent2)?;
+			if opts.control_ex_style != co::LVS_EX::NoValue {
+				self2.set_extended_style(opts.control_ex_style, true);
+			}
+			if !unsafe { &*self2.0.header.get() }.as_ref().unwrap().init_nested(self2.hwnd()) {
+				*unsafe { &mut *self2.0.header.get() } = None; // no header, delete it
+			}
+			for (text, cx) in opts.columns.iter() {
+				self2.cols().add(text, *cx)?;
+			}
+			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+			Ok(0) // ignored
 		});
 
-		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
+		new_self.default_message_handlers(parent);
 		new_self
 	}
 
@@ -134,7 +106,7 @@ impl<T> ListView<T> {
 	/// Panics if the context menu, when specified, does not exist.
 	#[must_use]
 	pub fn new_dlg(
-		parent: &impl GuiParent,
+		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
 		context_menu_id: Option<u16>,
@@ -142,15 +114,16 @@ impl<T> ListView<T> {
 	{
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				ListViewObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: ListViewEvents::new(parent, ctrl_id),
-					context_menu: context_menu_id
-						.map(|id| parent.hwnd()
+					context_menu: context_menu_id.map(|id|
+						parent.hwnd()
 							.hinstance()
 							.LoadMenu(IdStr::Id(id))
-							.unwrap(),
+							.expect("Invalid ListView context menu ID"),
 					),
+					header: UnsafeCell::new(Some(Header::from_list_view(parent))), // initially does exist
 					_pin: PhantomPinned,
 					_data: PhantomData,
 				},
@@ -158,46 +131,22 @@ impl<T> ListView<T> {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_init_dialog(move |_| {
-			self2.create(OptsResz::Dlg(resize_behavior))?;
-			Ok(false) // return value is discarded
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm_init_dialog(move |_| {
+			self2.0.base.assign_dlg(&parent2)?;
+			self2.hwnd().set_style(co::LVS::from(self2.hwnd().style()) | co::LVS::SHAREIMAGELISTS);
+			if !unsafe { &*self2.0.header.get() }.as_ref().unwrap().init_nested(self2.hwnd()) {
+				*unsafe { &mut *self2.0.header.get() } = None; // no header, delete it
+			}
+			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			Ok(true) // ignored
 		});
 
-		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
+		new_self.default_message_handlers(parent);
 		new_self
 	}
 
-	fn create(&self, opts_resz: OptsResz<&ListViewOpts>) -> SysResult<()> {
-		match opts_resz {
-			OptsResz::Wnd(opts) => {
-				let mut pos = POINT::new(opts.position.0, opts.position.1);
-				let mut sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
-				multiply_dpi_or_dtu(
-					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
-
-				self.0.base.create_window(
-					"SysListView32", None, pos, sz,
-					opts.window_ex_style,
-					opts.window_style | opts.list_view_style.into(),
-				)?;
-
-				if opts.list_view_ex_style != co::LVS_EX::NoValue {
-					self.set_extended_style(true, opts.list_view_ex_style);
-				}
-
-				self.columns().add(&opts.columns);
-			},
-			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
-		}
-
-		let style: co::LVS = self.hwnd().style().into();
-		self.hwnd().set_style(style | co::LVS::SHAREIMAGELISTS); // force style
-
-		self.0.base.parent()
-			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
-	}
-
-	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {
+	fn default_message_handlers(&self, parent: &impl AsRef<BaseWnd>) {
 		let self2 = self.clone();
 		self.on_subclass().wm_get_dlg_code(move |p| {
 			if !p.is_query && p.vkey_code == co::VK::RETURN { // Enter key
@@ -208,63 +157,48 @@ impl<T> ListView<T> {
 				nmlvkd.wVKey = co::VK::RETURN;
 
 				let hparent = self2.hwnd().GetAncestor(co::GA::PARENT).unwrap();
-				unsafe {
-					hparent.SendMessage(wm::Notify { nmhdr: &mut nmlvkd.hdr }); // send Enter key to parent
-				}
+				unsafe { hparent.SendMessage(wm::Notify { nmhdr: &mut nmlvkd.hdr }); } // send Enter key to parent
 			}
-			let dlgc_system = unsafe {
-				self2.hwnd().DefSubclassProc::<wm::GetDlgCode>(p.into())
-			};
+			let dlgc_system = unsafe { self2.hwnd().DefSubclassProc::<wm::GetDlgCode>(p.into()) };
 			Ok(dlgc_system)
 		});
 
 		let self2 = self.clone();
-		self.on_subclass().wm(co::WM::NOTIFY, move |p| {
-			let wm_nfy = unsafe { wm::Notify::from_generic_wm(p) };
-			if wm_nfy.nmhdr.code >= co::HDN::GETDISPINFO.into()
-					&& wm_nfy.nmhdr.code <= co::HDN::BEGINDRAG.into() { // all HDN messages
-				let hparent = self2.hwnd().GetAncestor(co::GA::PARENT).unwrap();
-				unsafe { hparent.SendMessage(wm_nfy); } // simply forward to parent
-			}
-			Ok(WmRet::NotHandled) // HDN notifications still need to be processed by parent list view
-		});
-
-		let self2 = self.clone();
-		parent.before_user_on().wm_notify(ctrl_id, co::LVN::KEYDOWN, move |p| {
+		parent.as_ref().before_on().wm_notify(self.ctrl_id(), co::LVN::KEYDOWN, move |p| {
 			let lvnk = unsafe { p.cast_nmhdr::<NMLVKEYDOWN>() };
 			let has_ctrl = GetAsyncKeyState(co::VK::CONTROL);
 			let has_shift = GetAsyncKeyState(co::VK::SHIFT);
 
 			if has_ctrl && lvnk.wVKey == co::VK::CHAR_A { // Ctrl+A
-				self2.items().select_all(true);
+				self2.items().select_all(true)?;
 			} else if lvnk.wVKey == co::VK::APPS { // context menu key
-				self2.show_context_menu(false, has_ctrl, has_shift);
+				self2.show_context_menu(false, has_ctrl, has_shift)?;
 			}
-			Ok(WmRet::HandledOk)
+			Ok(0) // ignored
 		});
 
 		let self2 = self.clone();
-		parent.before_user_on().wm_notify(ctrl_id, co::NM::RCLICK, move |p| {
+		parent.as_ref().before_on().wm_notify(self.ctrl_id(), co::NM::RCLICK, move |p| {
 			let nmia = unsafe { p.cast_nmhdr::<NMITEMACTIVATE>() };
 			let has_ctrl = nmia.uKeyFlags.has(co::LVKF::CONTROL);
 			let has_shift = nmia.uKeyFlags.has(co::LVKF::SHIFT);
 
-			self2.show_context_menu(true, has_ctrl, has_shift);
-			Ok(WmRet::HandledOk)
+			self2.show_context_menu(true, has_ctrl, has_shift)?;
+			Ok(0) // ignored
 		});
 
 		let self2 = self.clone();
-		parent.after_user_on().wm_notify(ctrl_id, co::LVN::DELETEITEM, move |p| {
+		parent.as_ref().after_on().wm_notify(self.ctrl_id(), co::LVN::DELETEITEM, move |p| {
 			let nmlv = unsafe { p.cast_nmhdr::<NMLISTVIEW>() };
-			let rc_ptr = self2.items().get(nmlv.iItem as _).data_lparam();
+			let rc_ptr = self2.items().get(nmlv.iItem as _).data_lparam()?;
 			if !rc_ptr.is_null() {
 				let _ = unsafe { Rc::from_raw(rc_ptr) }; // free allocated LPARAM
 			}
-			Ok(WmRet::HandledOk)
+			Ok(0) // ignored
 		});
 
 		let self2 = self.clone();
-		parent.after_user_on().wm_destroy(move || {
+		parent.as_ref().after_on().wm_destroy(move || {
 			[co::LVSIL::NORMAL, co::LVSIL::SMALL, co::LVSIL::STATE, co::LVSIL::GROUPHEADER]
 				.iter()
 				.for_each(|lvsil| {
@@ -276,10 +210,57 @@ impl<T> ListView<T> {
 		});
 	}
 
-	/// Exposes the column methods.
+	fn show_context_menu(&self,
+		follow_cursor: bool,
+		has_ctrl: bool,
+		has_shift: bool,
+	) -> SysResult<()>
+	{
+		let hmenu = match self.context_menu() {
+			Some(h) => h,
+			None => return Ok(()), // no menu, nothing to do
+		};
+
+		let menu_pos = if follow_cursor { // usually when fired by a right-click
+			let menu_pos = self.hwnd().ScreenToClient(
+				GetCursorPos()?, // relative to screen
+			)?; // now relative to list view
+
+			match self.items().hit_test(menu_pos) {
+				Some(item_over) => {
+					if !has_ctrl && !has_shift {
+						item_over.select(true)?; // if not yet
+						item_over.focus()?;
+					}
+				},
+				None => self.items().select_all(false)?, // no item was right-clicked
+			}
+
+			self.focus()?; // because a right-click won't set the focus by itself
+			menu_pos
+
+		} else { // usually fired by the context menu key
+			let focused_opt = self.items().focused();
+
+			if focused_opt.is_some() && focused_opt.unwrap().is_visible() {
+				let focused = focused_opt.unwrap();
+				let rc_item = focused.rect(co::LVIR::BOUNDS)?;
+				POINT::new(rc_item.left + 16,
+					rc_item.top + (rc_item.bottom - rc_item.top) / 2)
+
+			} else { // no item is focused and visible
+				POINT::new(6, 10) // arbitrary coordinates
+			}
+		};
+
+		hmenu.track_popup_menu_at_point(
+			menu_pos, &self.hwnd().GetParent()?, self.hwnd())
+	}
+
+	/// Column methods.
 	#[must_use]
-	pub const fn columns(&self) -> ListViewColumns<'_, T> {
-		ListViewColumns::new(self)
+	pub const fn cols(&self) -> ListViewCols<'_, T> {
+		ListViewCols::new(self)
 	}
 
 	/// Returns a handle to the first submenu of the context menu owned by the
@@ -291,6 +272,48 @@ impl<T> ListView<T> {
 		self.0.context_menu
 			.as_ref()
 			.map(|hmenu| hmenu.GetSubMenu(0).unwrap())
+	}
+
+	/// Retrieves the current view by sending an
+	/// [`lvm::GetView`](crate::msg::lvm::GetView) message.
+	#[must_use]
+	pub fn current_view(&self) -> co::LV_VIEW {
+		unsafe { self.hwnd().SendMessage(lvm::GetView {}) }
+	}
+
+	/// Returns the embedded [`Header`](crate::gui::Header) of the list view, if
+	/// any.
+	///
+	/// The `Header` is tried to be initialized during the internal
+	/// [`wm::Create`](crate::msg::wm::Create) and
+	/// [`wm::InitDialog`](crate::msg::wm::InitDialog) processing. If the list
+	/// view doesn't happen to have a header – only report view lists have
+	/// headers –, the internal `Header` is removed, and this method will
+	/// forever return `None`.
+	///
+	/// This means you may call `header()` to add events to the internal
+	/// `Header`, but if the list view has no header, these events will simply be
+	/// discarded.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, gui};
+	///
+	/// let my_list: gui::ListView; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_list = gui::ListView::<()>::new(&wnd, gui::ListViewOpts::default());
+	///
+	/// let my_list2 = my_list.clone();
+	/// my_list.header().unwrap().on().hdn_item_click(move |p| {
+	///     let h = my_list2.header().unwrap().items().get(p.iItem as _);
+	///     println!("Col: {}", h.text());
+	///     Ok(())
+	/// });
+	/// ```
+	#[must_use]
+	pub fn header(&self) -> Option<&Header> {
+		unsafe { &*self.0.header.get() }.as_ref()
 	}
 
 	/// Retrieves a reference to one of the associated image lists by sending an
@@ -308,32 +331,25 @@ impl<T> ListView<T> {
 		})
 	}
 
-	/// Exposes the item methods.
+	/// Item methods.
 	#[must_use]
 	pub const fn items(&self) -> ListViewItems<'_, T> {
 		ListViewItems::new(self)
 	}
 
-	/// Retrieves the current view by sending an
-	/// [`lvm::GetView`](crate::msg::lvm::GetView) message.
-	#[must_use]
-	pub fn current_view(&self) -> co::LV_VIEW {
-		unsafe { self.hwnd().SendMessage(lvm::GetView {}) }
-	}
-
 	/// Sets the current view by sending an
 	/// [`lvm::SetView`](crate::msg::lvm::SetView) message.
-	pub fn set_current_view(&self, view: co::LV_VIEW) {
+	pub fn set_current_view(&self, view: co::LV_VIEW) -> SysResult<()> {
 		unsafe {
 			self.hwnd()
 				.SendMessage(lvm::SetView { view })
-		}.unwrap();
+		}
 	}
 
 	/// Sets or unsets the given extended list view styles by sending an
 	/// [`lvm::SetExtendedListViewStyle`](crate::msg::lvm::SetExtendedListViewStyle)
 	/// message.
-	pub fn set_extended_style(&self, set: bool, ex_style: co::LVS_EX) {
+	pub fn set_extended_style(&self, ex_style: co::LVS_EX, set: bool) {
 		unsafe {
 			self.hwnd().SendMessage(lvm::SetExtendedListViewStyle {
 				mask: ex_style,
@@ -370,53 +386,6 @@ impl<T> ListView<T> {
 				.SendMessage(wm::SetRedraw { can_redraw });
 		}
 	}
-
-	fn show_context_menu(&self,
-		follow_cursor: bool,
-		has_ctrl: bool,
-		has_shift: bool,
-	) {
-		let hmenu = match self.context_menu() {
-			Some(h) => h,
-			None => return, // no menu, nothing to do
-		};
-
-		let menu_pos = if follow_cursor { // usually when fired by a right-click
-			let menu_pos = self.hwnd().ScreenToClient(
-				GetCursorPos().unwrap(), // relative to screen
-			).unwrap(); // now relative to list view
-
-			match self.items().hit_test(menu_pos) {
-				Some(item_over) => {
-					if !has_ctrl && !has_shift {
-						item_over.select(true); // if not yet
-						item_over.focus();
-					}
-				},
-				None => self.items().select_all(false), // no item was right-clicked
-			}
-
-			self.hwnd().SetFocus(); // because a right-click won't set the focus by itself
-			menu_pos
-
-		} else { // usually fired by the context menu key
-			let focused_opt = self.items().focused();
-
-			if focused_opt.is_some() && focused_opt.unwrap().is_visible() {
-				let focused = focused_opt.unwrap();
-				let rc_item = focused.rect(co::LVIR::BOUNDS);
-				POINT::new(rc_item.left + 16,
-					rc_item.top + (rc_item.bottom - rc_item.top) / 2)
-
-			} else { // no item is focused and visible
-				POINT::new(6, 10) // arbitrary coordinates
-			}
-		};
-
-		hmenu.track_popup_menu_at_point(
-			menu_pos, &self.hwnd().GetParent().unwrap(), self.hwnd())
-			.unwrap();
-	}
 }
 
 /// Options to create a [`ListView`](crate::gui::ListView) programmatically with
@@ -426,21 +395,13 @@ pub struct ListViewOpts {
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
-	/// Defaults to `(0, 0)`.
+	/// Defaults to `gui::dpi(0, 0)`.
 	pub position: (i32, i32),
 	/// Width and height of control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
-	/// Defaults to `(50, 50)`.
-	pub size: (u32, u32),
+	/// Defaults to `gui::dpi(120, 120)`.
+	pub size: (i32, i32),
 	/// List view styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -448,17 +409,17 @@ pub struct ListViewOpts {
 	/// [`LVS::SHAREIMAGELISTS`](crate::co::LVS::SHAREIMAGELISTS) style will
 	/// always be added.
 	///
-	/// Defaults to `LVS::REPORT | LVS::NOSORTHEADER | LVS::SHOWSELALWAYS`.
-	pub list_view_style: co::LVS,
+	/// Defaults to `LVS::REPORT | LVS::NOSORTHEADER | LVS::SHOWSELALWAYS | LVS::SHAREIMAGELISTS`.
+	pub control_style: co::LVS,
 	/// Extended list view styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `LVS_EX::NoValue`.
-	pub list_view_ex_style: co::LVS_EX,
+	/// Defaults to `LVS_EX::FULLROWSELECT`.
+	pub control_ex_style: co::LVS_EX,
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
+	/// Defaults to `WS::CHILD | WS::GROUP | WS::TABSTOP | WS::VISIBLE`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -486,38 +447,26 @@ pub struct ListViewOpts {
 	///
 	/// Defaults to `None`.
 	pub context_menu: Option<DestroyMenuGuard>,
-	/// Text and width of columns to be added right away. The columns only show
-	/// in report mode.
+	/// Text and width of columns to be added. The columns only show in report
+	/// mode.
 	///
 	/// Defaults to none.
-	pub columns: Vec<(String, u32)>,
+	pub columns: Vec<(String, i32)>,
 }
 
 impl Default for ListViewOpts {
 	fn default() -> Self {
 		Self {
-			position: (0, 0),
-			size: (50, 50),
-			list_view_style: co::LVS::REPORT | co::LVS::NOSORTHEADER | co::LVS::SHOWSELALWAYS,
-			list_view_ex_style: co::LVS_EX::NoValue,
-			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
+			position: dpi(0, 0),
+			size: dpi(120, 120),
+			control_style: co::LVS::REPORT | co::LVS::NOSORTHEADER | co::LVS::SHOWSELALWAYS | co::LVS::SHAREIMAGELISTS,
+			control_ex_style: co::LVS_EX::FULLROWSELECT,
+			window_style: co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
 			context_menu: None,
-			columns: Vec::<(String, u32)>::new(),
+			columns: Vec::new(),
 		}
-	}
-}
-
-impl ResizeBehavior for &ListViewOpts {
-	fn resize_behavior(&self) -> (Horz, Vert) {
-		self.resize_behavior
-	}
-}
-
-impl AutoCtrlId for ListViewOpts {
-	fn ctrl_id_mut(&mut self) -> &mut u16 {
-		&mut self.ctrl_id
 	}
 }

@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, spec::*};
+use crate::gui::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -12,87 +12,50 @@ pub(in crate::gui) struct ComboBoxItemIter<'a> {
 }
 
 impl<'a> Iterator for ComboBoxItemIter<'a> {
-	type Item = String;
+	type Item = SysResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		if self.current == self.count {
 			return None;
 		}
 
-		let num_chars = unsafe {
+		let num_chars = match unsafe {
 			self.owner.hwnd()
 				.SendMessage(cb::GetLbTextLen { index: self.current })
-		}.unwrap();
+		} {
+			Err(e) => {
+				self.current = self.count; // halt
+				return Some(Err(e))
+			},
+			Ok(n) => n,
+		};
 
 		self.buffer = WString::new_alloc_buf(num_chars as usize + 1);
-
-		unsafe {
+		if let Err(e) = unsafe {
 			self.owner.hwnd()
 				.SendMessage(cb::GetLbText {
 					index: self.current,
 					text: &mut self.buffer,
 				})
-		}.unwrap();
+		} {
+			self.current = self.count; // halt
+			return Some(Err(e));
+		}
 
 		self.current += 1;
-		Some(self.buffer.to_string())
+		Some(Ok(self.buffer.to_string()))
 	}
 }
 
 impl<'a> ComboBoxItemIter<'a> {
 	#[must_use]
-	pub(in crate::gui) fn new(owner: &'a ComboBox) -> Self {
-		Self {
+	pub(in crate::gui) fn new(owner: &'a ComboBox) -> SysResult<Self> {
+		Ok(Self {
 			owner,
-			count: owner.items().count(),
+			count: owner.items().count()?,
 			current: 0,
 			buffer: WString::new(),
-		}
-	}
-}
-
-pub(in crate::gui) struct EditLineIter<'a> {
-	owner: &'a Edit,
-	count: u32,
-	current: u32,
-	buffer: WString,
-}
-
-impl<'a> Iterator for EditLineIter<'a> {
-	type Item = String;
-
-	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		let ret_str = match unsafe {
-			self.owner.hwnd()
-				.SendMessage(em::GetLine {
-					index: self.current as _,
-					buffer: &mut self.buffer,
-				})
-		} {
-			Some(_) => self.buffer.to_string(),
-			None => String::new(), // no chars returned, or an error (no way to know)
-		};
-
-		self.current += 1;
-		Some(ret_str)
-	}
-}
-
-impl<'a> EditLineIter<'a> {
-	#[must_use]
-	pub(in crate::gui) fn new(owner: &'a Edit) -> Self {
-		Self {
-			owner,
-			count: unsafe { owner.hwnd().SendMessage(em::GetLineCount {}) },
-			current: 0,
-			buffer: WString::new_alloc_buf(
-				owner.hwnd().GetWindowTextLength().unwrap() as usize + 1,
-			),
-		}
+		})
 	}
 }
 
@@ -118,12 +81,12 @@ impl<'a> Iterator for HeaderItemIter<'a> {
 
 impl<'a> HeaderItemIter<'a> {
 	#[must_use]
-	pub(in crate::gui) fn new(owner: &'a Header) -> Self {
-		Self {
+	pub(in crate::gui) fn new(owner: &'a Header) -> SysResult<Self> {
+		Ok(Self {
 			owner,
-			count: owner.items().count(),
+			count: owner.items().count()?,
 			current: 0,
-		}
+		})
 	}
 }
 
@@ -135,42 +98,50 @@ pub(in crate::gui) struct ListBoxItemIter<'a> {
 }
 
 impl<'a> Iterator for ListBoxItemIter<'a> {
-	type Item = String;
+	type Item = SysResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		if self.current == self.count {
 			return None;
 		}
 
-		let num_chars = unsafe {
+		let num_chars = match unsafe {
 			self.owner.hwnd()
 				.SendMessage(lb::GetTextLen { index: self.current })
-		}.unwrap();
+		} {
+			Err(e) => {
+				self.current = self.count; // halt
+				return Some(Err(e))
+			},
+			Ok(n) => n,
+		};
 
 		self.buffer = WString::new_alloc_buf(num_chars as usize + 1);
-
-		unsafe {
+		if let Err(e) = unsafe {
 			self.owner.hwnd()
 				.SendMessage(lb::GetText {
 					index: self.current,
 					text: &mut self.buffer,
 				})
-		}.unwrap();
+		} {
+			self.current = self.count; // halt
+			return Some(Err(e));
+		}
 
 		self.current += 1;
-		Some(self.buffer.to_string())
+		Some(Ok(self.buffer.to_string()))
 	}
 }
 
 impl<'a> ListBoxItemIter<'a> {
 	#[must_use]
-	pub(in crate::gui) fn new(owner: &'a ListBox) -> Self {
-		Self {
+	pub(in crate::gui) fn new(owner: &'a ListBox) -> SysResult<Self> {
+		Ok(Self {
 			owner,
-			count: owner.items().count(),
+			count: owner.items().count()?,
 			current: 0,
 			buffer: WString::new(),
-		}
+		})
 	}
 }
 
@@ -182,52 +153,60 @@ pub(in crate::gui) struct ListBoxSelItemIter<'a> {
 }
 
 impl<'a> Iterator for ListBoxSelItemIter<'a> {
-	type Item = (u32, String);
+	type Item = SysResult<(u32, String)>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.indexes.len() as u32 {
+		if self.current == self.indexes.len() as _ {
 			return None;
 		}
 
 		let cur_sel_index = self.indexes[self.current as usize];
 
-		let num_chars = unsafe {
+		let num_chars = match unsafe {
 			self.owner.hwnd()
 				.SendMessage(lb::GetTextLen { index: cur_sel_index })
-		}.unwrap();
+		} {
+			Err(e) => {
+				self.current = self.indexes.len() as _; // halt
+				return Some(Err(e))
+			},
+			Ok(n) => n,
+		};
 
 		self.buffer = WString::new_alloc_buf(num_chars as usize + 1);
-
-		unsafe {
+		if let Err(e) = unsafe {
 			self.owner.hwnd()
 				.SendMessage(lb::GetText {
 					index: cur_sel_index,
 					text: &mut self.buffer,
 				})
-		}.unwrap();
+		} {
+			self.current = self.indexes.len() as _; // halt
+			return Some(Err(e));
+		}
 
 		self.current += 1;
-		Some((cur_sel_index, self.buffer.to_string()))
+		Some(Ok((cur_sel_index, self.buffer.to_string())))
 	}
 }
 
 impl<'a> ListBoxSelItemIter<'a> {
 	#[must_use]
-	pub(in crate::gui) fn new(owner: &'a ListBox) -> Self {
+	pub(in crate::gui) fn new(owner: &'a ListBox) -> SysResult<Self> {
 		let style: co::LBS = owner.hwnd().style().into();
-		let indexes = if style.has(co::LBS::EXTENDEDSEL) { // multiple selection?
+		let allow_multiple = style.has(co::LBS::EXTENDEDSEL) || style.has(co::LBS::MULTIPLESEL);
+		let indexes = if allow_multiple {
 			let num_indexes = unsafe {
 				owner.hwnd()
 					.SendMessage(lb::GetSelCount {})
-			}.unwrap();
+			}?;
 
 			let mut indexes = vec![0; num_indexes as _];
 			unsafe {
 				owner.hwnd()
 					.SendMessage(lb::GetSelItems { buffer: &mut indexes })
-			}.unwrap();
+			}?;
 			indexes
-
 		} else {
 			match unsafe { owner.hwnd().SendMessage(lb::GetCurSel {}) } {
 				Some(index) => vec![index], // single selection: at max 1
@@ -235,43 +214,43 @@ impl<'a> ListBoxSelItemIter<'a> {
 			}
 		};
 
-		Self {
+		Ok(Self {
 			owner,
 			indexes,
 			current: 0,
 			buffer: WString::new(),
-		}
+		})
 	}
 }
 
-pub(in crate::gui) struct ListViewColumnIter<'a, T: 'static> {
+pub(in crate::gui) struct ListViewColIter<'a, T: 'static> {
 	owner: &'a ListView<T>,
 	count: u32,
 	current: u32,
 }
 
-impl<'a, T> Iterator for ListViewColumnIter<'a, T> {
-	type Item = ListViewColumn<'a, T>;
+impl<'a, T> Iterator for ListViewColIter<'a, T> {
+	type Item = ListViewCol<'a, T>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		if self.current == self.count {
 			return None;
 		}
 
-		let item = self.owner.columns().get(self.current);
+		let item = self.owner.cols().get(self.current);
 		self.current += 1;
 		Some(item)
 	}
 }
 
-impl<'a, T> ListViewColumnIter<'a, T> {
+impl<'a, T> ListViewColIter<'a, T> {
 	#[must_use]
-	pub(in crate::gui) fn new(owner: &'a ListView<T>) -> Self {
-		Self {
+	pub(in crate::gui) fn new(owner: &'a ListView<T>) -> SysResult<Self> {
+		Ok(Self {
 			owner,
-			count: owner.items().count(),
+			count: owner.cols().count()?,
 			current: 0,
-		}
+		})
 	}
 }
 
@@ -308,6 +287,37 @@ impl<'a, T> ListViewItemIter<'a, T> {
 			owner,
 			current: None,
 			relationship,
+		}
+	}
+}
+
+pub(in crate::gui) struct StatusBarPartIter<'a> {
+	owner: &'a StatusBar,
+	count: u32,
+	current: u32,
+}
+
+impl<'a> Iterator for StatusBarPartIter<'a> {
+	type Item = StatusBarPart<'a>;
+
+	fn next(&mut self) -> Option<Self::Item> {
+		if self.current == self.count {
+			return None;
+		}
+
+		let item = self.owner.parts().get(self.current);
+		self.current += 1;
+		Some(item)
+	}
+}
+
+impl<'a> StatusBarPartIter<'a> {
+	#[must_use]
+	pub(in crate::gui) fn new(owner: &'a StatusBar) -> Self {
+		Self {
+			owner,
+			count: owner.parts().count(),
+			current: 0,
 		}
 	}
 }

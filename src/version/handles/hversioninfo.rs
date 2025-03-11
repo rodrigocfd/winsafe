@@ -7,7 +7,7 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::version::ffi;
 
-impl_handle! { HVERSIONINFO;
+handle! { HVERSIONINFO;
 	/// Handle to a
 	/// [version info](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfow)
 	/// block.

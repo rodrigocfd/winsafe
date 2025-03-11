@@ -1,5 +1,3 @@
-use std::ptr::NonNull;
-
 use crate::co;
 use crate::decl::*;
 use crate::gui::{*, events::*, privs::*};
@@ -12,147 +10,85 @@ struct ThreadPack {
 }
 
 /// Base to `RawBase` and `DlgBase`, which means all container windows.
-pub(in crate::gui) struct Base {
+pub(in crate::gui) struct BaseWnd {
 	hwnd: HWND,
-	is_dialog: bool,
-	parent_ptr: Option<NonNull<Self>>, // used only during creation stuff
-	before_user_events: WindowEvents, // inserted internally to automate tasks: all will be executed before user events
-	user_events: WindowEvents, // ordinary window events, inserted by user: only last added is executed (overwrite previous)
-	after_user_events: WindowEvents, // all will be executed after user events
-	layout_arranger: LayoutArranger,
+	is_dlg: IsDlg,
+	layout: Layout,
+	before_events: WindowEvents,
+	user_events: WindowEvents,
+	after_events: WindowEvents,
 }
 
-impl AsRef<Base> for Base {
-	fn as_ref(&self) -> &Base {
-		self
-	}
-}
-
-impl Base {
+impl BaseWnd {
 	const WM_UI_THREAD: co::WM = unsafe { co::WM::from_raw(co::WM::APP.raw() + 0x3fff) };
 
 	#[must_use]
-	pub(in crate::gui) fn new(
-		is_dialog: bool,
-		parent: Option<&impl AsRef<Base>>,
-	) -> Self
-	{
+	pub(in crate::gui) fn new(is_dlg: IsDlg) -> Self {
 		let new_self = Self {
 			hwnd: HWND::NULL,
-			is_dialog,
-			parent_ptr: parent.map(|parent| NonNull::from(parent.as_ref())),
-			before_user_events: WindowEvents::new(is_dialog),
-			user_events: WindowEvents::new(is_dialog),
-			after_user_events: WindowEvents::new(is_dialog),
-			layout_arranger: LayoutArranger::new(),
+			is_dlg,
+			layout: Layout::new(),
+			before_events: WindowEvents::new(is_dlg),
+			user_events: WindowEvents::new(is_dlg),
+			after_events: WindowEvents::new(is_dlg),
 		};
 		new_self.default_message_handlers();
 		new_self
 	}
 
 	#[must_use]
+	pub(in crate::gui) const fn is_dlg(&self) -> IsDlg {
+		self.is_dlg
+	}
+	#[must_use]
 	pub(in crate::gui) const fn hwnd(&self) -> &HWND {
 		&self.hwnd
 	}
-
 	pub(in crate::gui) fn set_hwnd(&mut self, hwnd: HWND) {
 		self.hwnd = hwnd
 	}
 
 	#[must_use]
-	pub(in crate::gui) const fn is_dialog(&self) -> bool {
-		self.is_dialog
+	pub(in crate::gui) fn before_on(&self) -> &WindowEvents {
+		&self.before_events
 	}
-
-	#[must_use]
-	pub(in crate::gui) const fn parent(&self) -> Option<&Base> {
-		match self.parent_ptr {
-			Some(parent_ptr) => Some(unsafe { parent_ptr.as_ref() }),
-			None => None,
-		}
-	}
-
-	#[must_use]
-	pub(in crate::gui) fn parent_hinstance(&self) -> SysResult<HINSTANCE> {
-		match self.parent() {
-			Some(parent) => Ok(parent.hwnd().hinstance()),
-			None => HINSTANCE::GetModuleHandle(None),
-		}
-	}
-
-	/// Internal before-user events are always executed.
-	#[must_use]
-	pub(in crate::gui) fn before_user_on(&self) -> &WindowEvents {
-		if self.hwnd != HWND::NULL {
-			panic!("Cannot add before-user event after window creation.");
-		}
-		&self.before_user_events
-	}
-
-	/// User events can be overriden; only the last one is executed.
 	#[must_use]
 	pub(in crate::gui) fn on(&self) -> &WindowEvents {
 		if self.hwnd != HWND::NULL {
 			panic!("Cannot add event after window creation.");
 		}
-		&self.user_events
+		&self.user_events // user events can be overriden; only the last one is executed
 	}
-
-	/// Internal after-user events are always executed.
 	#[must_use]
-	pub(in crate::gui) fn after_user_on(&self) -> &WindowEvents {
-		if self.hwnd != HWND::NULL {
-			panic!("Cannot add after-user event after window creation.");
-		}
-		&self.after_user_events
+	pub(in crate::gui) fn after_on(&self) -> &WindowEvents {
+		&self.after_events
 	}
 
-	/// Processes all before-user messages added internally by the library. The
-	/// return values are discarded.
-	///
-	/// Returns `true` if at least one message was processed.
-	pub(in crate::gui) fn process_before_user_messages(&self,
-		wm_any: WndMsg,
-	) -> AnyResult<bool>
-	{
-		self.before_user_events.process_all_messages(self.hwnd(), wm_any)
+	pub(in crate::gui) fn process_before_messages(&self, p: WndMsg) -> AnyResult<bool>{
+		self.before_events.process_all_messages(p)
+	}
+	pub(in crate::gui) fn process_user_message(&self, p: WndMsg) -> Option<AnyResult<isize>> {
+		self.user_events.process_last_message(p)
+	}
+	pub(in crate::gui) fn process_after_messages(&self, p: WndMsg) -> AnyResult<bool>{
+		self.after_events.process_all_messages(p)
 	}
 
-	/// If the user added a closure to the given message, run it.
-	pub(in crate::gui) fn process_user_message(&self,
-		wm_any: WndMsg,
-	) -> AnyResult<WmRet>
-	{
-		self.user_events.process_last_message(self.hwnd(), wm_any)
+	pub(in crate::gui) fn clear_messages(&self) {
+		self.before_events.clear();
+		self.user_events.clear();
+		self.after_events.clear();
 	}
 
-	/// Processes all after-user messages added internally by the library. The
-	/// return values are discarded.
-	///
-	/// Returns `true` if at least one message was processed.
-	pub(in crate::gui) fn process_after_user_messages(&self,
-		wm_any: WndMsg,
-	) -> AnyResult<bool>
-	{
-		self.after_user_events.process_all_messages(self.hwnd(), wm_any)
-	}
-
-	/// Removes all user and before/after events.
-	pub(in crate::gui) fn clear_events(&self) {
-		self.before_user_events.clear_events();
-		self.user_events.clear_events();
-		self.after_user_events.clear_events();
-	}
-
-	pub(in crate::gui) fn add_to_layout_arranger(&self,
+	pub(in crate::gui) fn add_to_layout(&self,
 		hchild: &HWND,
 		resize_behavior: (Horz, Vert),
 	) -> SysResult<()>
 	{
-		self.layout_arranger.add_child(&self.hwnd, hchild, resize_behavior)
+		self.layout.add_child(&self.hwnd, hchild, resize_behavior)
 	}
 
-	pub(in crate::gui) fn spawn_new_thread<F>(&self, func: F)
+	pub(in crate::gui) fn spawn_thread<F>(&self, func: F)
 		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		let hwnd = unsafe { self.hwnd.raw_copy() };
@@ -199,30 +135,21 @@ impl Base {
 			});
 	}
 
-	fn default_message_handlers(&self) {
-		// We cant pass a pointer to Self because at this moment the parent
-		// struct isn't created and pinned yet, so we make LayoutArranger
-		// clonable.
-		let layout_arranger = self.layout_arranger.clone();
-		self.before_user_events.wm_create_or_initdialog(move |hwnd, _| {
-			layout_arranger.save_original_client_area(hwnd)?; // must be done before the first WM_SIZE
-			Ok(WmRet::HandledOk)
-		});
-
-		let layout_arranger = self.layout_arranger.clone();
-		self.before_user_events.wm_size(move |p| {
-			layout_arranger.rearrange(p)?;
+	pub(in crate::gui) fn default_message_handlers(&self) {
+		let layout = self.layout.clone();
+		self.before_events.wm_size(move |p| {
+			layout.rearrange(p)?;
 			Ok(())
 		});
 
-		self.before_user_events.wm(Self::WM_UI_THREAD, |p| {
+		self.before_events.wm(Self::WM_UI_THREAD, |p| {
 			if unsafe { co::WM::from_raw(p.wparam as _) } == Self::WM_UI_THREAD { // additional safety check
 				let ptr_pack = p.lparam as *mut ThreadPack; // retrieve pointer
 				let pack = unsafe { Box::from_raw(ptr_pack) };
 				let func = pack.func;
-				func().unwrap_or_else(|err| post_quit_error(p, err));
+				func().unwrap_or_else(|err| quit_error::post_quit_error(p, err));
 			}
-			Ok(WmRet::HandledOk)
+			Ok(0) // ignored
 		});
 	}
 
@@ -240,7 +167,7 @@ impl Base {
 				// https://learn.microsoft.com/en-us/windows/win32/winmsg/using-messages-and-message-queues
 				// PostQuitMessage() may have been called internally, so check QUIT_ERROR.
 				return match {
-					let mut msg_error = QUIT_ERROR.lock().unwrap();
+					let mut msg_error = quit_error::QUIT_ERROR.lock().unwrap();
 					msg_error.take()
 				} {
 					Some(msg_err) => Err(msg_err.into()), // MsgError wrapped into AnyResult
@@ -267,6 +194,47 @@ impl Base {
 
 			TranslateMessage(&msg);
 			unsafe { DispatchMessage(&msg); }
+		}
+	}
+
+	pub(in crate::gui) fn run_modal_loop(&self, process_dlg_msgs: bool) -> AnyResult<i32> {
+		loop {
+			let mut msg = MSG::default();
+
+			if !GetMessage(&mut msg, None, 0, 0)? {
+				// WM_QUIT was sent, exit modal loop now and signal parent.
+				// wParam has the program exit code.
+				// https://devblogs.microsoft.com/oldnewthing/20050222-00/?p=36393
+				// https://stackoverflow.com/a/29359913/6923555
+				PostQuitMessage(msg.wParam as _);
+				return Ok(0); // raw modals will always return 0
+			}
+
+			if self.hwnd == HWND::NULL || !self.hwnd.IsWindow() {
+				return Ok(0); // our modal was destroyed, terminate loop
+			}
+
+			// If a child window, will retrieve its top-level parent.
+			// If a top-level, use itself.
+			let hwnd_top_level = msg.hwnd.GetAncestor(co::GA::ROOT)
+				.unwrap_or(unsafe { msg.hwnd.raw_copy() });
+
+			// Try to process keyboard actions for child controls.
+			if process_dlg_msgs && hwnd_top_level.IsDialogMessage(&mut msg) {
+				// Processed all keyboard actions for child controls.
+				if self.hwnd == HWND::NULL {
+					return Ok(0); // our modal was destroyed, terminate loop
+				} else {
+					continue;
+				}
+			}
+
+			TranslateMessage(&msg);
+			unsafe { DispatchMessage(&msg); }
+
+			if self.hwnd == HWND::NULL || !self.hwnd.IsWindow() {
+				return Ok(0); // our modal was destroyed, terminate loop
+			}
 		}
 	}
 }

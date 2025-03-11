@@ -7,7 +7,7 @@ use crate::guard::*;
 use crate::kernel::{ffi_types::*, privs::*};
 use crate::prelude::*;
 
-impl_handle! { HACCESSTOKEN;
+handle! { HACCESSTOKEN;
 	/// Handle to an
 	/// [access token](https://learn.microsoft.com/en-us/windows/win32/secgloss/a-gly).
 	/// Originally just a `HANDLE`.

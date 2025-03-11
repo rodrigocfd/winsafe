@@ -6,60 +6,21 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::gui::{*, events::*, privs::*, spec::*};
+use crate::gui::{*, collections::*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-struct Obj { // actual fields of Tab
-	base: BaseNativeControl,
+struct TabObj {
+	base: BaseCtrl,
 	events: TabEvents,
-	children: Vec<(String, Box<dyn AsRef<WindowControl>>)>,
+	children: Vec<(String, Box<dyn AsRef<WindowControl>>)>, // title + content
 	_pin: PhantomPinned,
 }
 
-/// Native
-/// [tab](https://learn.microsoft.com/en-us/windows/win32/controls/tab-controls)
-/// control.
-#[derive(Clone)]
-pub struct Tab(Pin<Arc<Obj>>);
-
-unsafe impl Send for Tab {}
-
-impl AsRef<BaseNativeControl> for Tab {
-	fn as_ref(&self) -> &BaseNativeControl {
-		&self.0.base
-	}
-}
-
-impl GuiWindow for Tab {
-	fn hwnd(&self) -> &HWND {
-		self.0.base.hwnd()
-	}
-
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
-
-impl GuiChild for Tab {
-	fn ctrl_id(&self) -> u16 {
-		self.0.base.ctrl_id()
-	}
-}
-
-impl GuiChildFocus for Tab {}
-
-impl GuiNativeControl for Tab {}
-
-impl GuiNativeControlEvents<TabEvents> for Tab {
-	fn on(&self) -> &TabEvents {
-		if *self.hwnd() != HWND::NULL {
-			panic!("Cannot add events after the control creation.");
-		} else if *self.0.base.parent().hwnd() != HWND::NULL {
-			panic!("Cannot add events after the parent window creation.");
-		}
-		&self.0.events
-	}
+native_ctrl! { Tab: TabObj => TabEvents;
+	/// Native
+	/// [tab](https://learn.microsoft.com/en-us/windows/win32/controls/tab-controls)
+	/// control.
 }
 
 impl Tab {
@@ -69,17 +30,17 @@ impl Tab {
 	/// # Panics
 	///
 	/// Panics if the parent window was already created – that is, you cannot
-	/// dynamically create a `TreeView` in an event closure.
+	/// dynamically create a `Tab` in an event closure.
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: TabOpts) -> Self {
-		let mut opts = auto_ctrl_id_if_zero(opts);
-		let ctrl_id = opts.ctrl_id;
+	pub fn new(parent: &(impl GuiParent + 'static), opts: TabOpts) -> Self {
+		let mut opts = opts;
+		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let children = opts.items.drain(..).collect::<Vec<_>>();
 
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				TabObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: TabEvents::new(parent, ctrl_id),
 					children,
 					_pin: PhantomPinned,
@@ -88,12 +49,22 @@ impl Tab {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
-			self2.create(OptsResz::Wnd(&opts))?;
-			Ok(WmRet::NotHandled)
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			self2.0.base.create_window(opts.window_ex_style, "SysTabControl32", None,
+				opts.window_style | opts.control_style.into(),
+				opts.position.into(), opts.size.into(), &parent2)?;
+			if opts.control_ex_style != co::TCS_EX::NoValue {
+				self2.set_extended_style(opts.control_ex_style, true);
+			}
+			self2.0.children.iter()
+				.for_each(|(text, _)| unsafe { self2.items().add(text); }); // add the tabs
+			self2.display_tab(0)?; // 1st tab selected by default
+			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+			Ok(0) // ignored
 		});
 
-		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
+		new_self.default_message_handlers(parent);
 		new_self
 	}
 
@@ -103,10 +74,10 @@ impl Tab {
 	/// # Panics
 	///
 	/// Panics if the parent dialog was already created – that is, you cannot
-	/// dynamically create a `TreeView` in an event closure.
+	/// dynamically create a `Tab` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
-		parent: &impl GuiParent,
+		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
 		items: Vec<(String, Box<dyn AsRef<WindowControl>>)>,
@@ -114,8 +85,8 @@ impl Tab {
 	{
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				TabObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: TabEvents::new(parent, ctrl_id),
 					children: items,
 					_pin: PhantomPinned,
@@ -124,63 +95,32 @@ impl Tab {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_init_dialog(move |_| {
-			self2.create(OptsResz::Dlg(resize_behavior))?;
-			Ok(false) // this return value is discarded
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm_init_dialog(move |_| {
+			self2.0.base.assign_dlg(&parent2)?;
+			self2.0.children.iter()
+				.for_each(|(text, _)| unsafe { self2.items().add(text); }); // add the tabs
+			self2.display_tab(0)?; // 1st tab selected by default
+			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			Ok(true) // ignored
 		});
 
-		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
+		new_self.default_message_handlers(parent);
 		new_self
 	}
 
-	fn create(&self, opts_resz: OptsResz<&TabOpts>) -> SysResult<()> {
-		match opts_resz {
-			OptsResz::Wnd(opts) => {
-				let mut pos = POINT::new(opts.position.0, opts.position.1);
-				let mut sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
-				multiply_dpi_or_dtu(
-					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
-
-				self.0.base.create_window( // may panic
-					"SysTabControl32", None, pos, sz,
-					opts.window_ex_style,
-					opts.window_style | opts.tab_style.into(),
-				)?;
-
-				unsafe {
-					self.hwnd().SendMessage(wm::SetFont {
-						hfont: ui_font(),
-						redraw: true,
-					});
-				}
-
-				if opts.tab_ex_style != co::TCS_EX::NoValue {
-					self.set_extended_style(true, opts.tab_ex_style);
-				}
-			},
-			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
-		}
-
-		self.0.children.iter()
-			.for_each(|(text, _)| unsafe { self.items().add(text); }); // add the tabs
-		self.display_tab(0)?; // 1st tab selected by default
-
-		self.0.base.parent()
-			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
-	}
-
-	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {
+	fn default_message_handlers(&self, parent: &impl AsRef<BaseWnd>) {
 		let self2 = self.clone();
-		parent.before_user_on().wm_notify(ctrl_id, co::TCN::SELCHANGE, move |_| {
+		parent.as_ref().before_on().wm_notify(self.ctrl_id(), co::TCN::SELCHANGE, move |_| {
 			if let Some(sel_item) = self2.items().selected() {
 				self2.display_tab(sel_item.index())?;
 			}
-			Ok(WmRet::HandledOk)
+			Ok(0) // ignored
 		});
 
 		let self2 = self.clone();
-		parent.after_user_on().wm_destroy(move || {
-			self2.image_list().map(|hil| {
+		parent.as_ref().after_on().wm_destroy(move || {
+			self2.image_list().map(|hil| { // destroy the image list, if any
 				let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) };
 			});
 			Ok(())
@@ -200,7 +140,7 @@ impl Tab {
 				.GetParent()?
 				.ScreenToClientRc(self.hwnd().GetWindowRect()?)?;
 			unsafe {
-				self.hwnd().SendMessage(tcm::AdjustRect {
+				self.hwnd().SendMessage(tcm::AdjustRect { // ideal size of the child
 					display_rect: false,
 					rect: &mut rc,
 				});
@@ -229,7 +169,7 @@ impl Tab {
 			})
 	}
 
-	/// Exposes the item methods.
+	/// Item methods.
 	#[must_use]
 	pub const fn items(&self) -> TabItems {
 		TabItems::new(self)
@@ -237,7 +177,7 @@ impl Tab {
 
 	/// Sets or unsets the given extended list view styles by sending a
 	/// [`tcm::SetExtendedStyle`](crate::msg::tcm::SetExtendedStyle) message.
-	pub fn set_extended_style(&self, set: bool, ex_style: co::TCS_EX) {
+	pub fn set_extended_style(&self, ex_style: co::TCS_EX, set: bool) {
 		unsafe {
 			self.hwnd().SendMessage(tcm::SetExtendedStyle {
 				mask: ex_style,
@@ -251,10 +191,7 @@ impl Tab {
 	///
 	/// The image list will be owned by the control. Returns the previous one,
 	/// if any.
-	pub fn set_image_list(&self,
-		himagelist: ImageListDestroyGuard,
-	) -> Option<ImageListDestroyGuard>
-	{
+	pub fn set_image_list(&self, himagelist: ImageListDestroyGuard) -> Option<ImageListDestroyGuard> {
 		let mut himagelist = himagelist;
 		let hil = himagelist.leak();
 
@@ -273,40 +210,32 @@ pub struct TabOpts {
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
-	/// Defaults to `(0, 0)`.
+	/// Defaults to `gui::dpi(0, 0)`.
 	pub position: (i32, i32),
 	/// Width and height of control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
-	/// Defaults to `(80, 50)`.
-	pub size: (u32, u32),
+	/// Defaults to `gui::dpi(80, 50)`.
+	pub size: (i32, i32),
 	/// Tab styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `TCS::NoValue`.
-	pub tab_style: co::TCS,
+	pub control_style: co::TCS,
 	/// Extended tab styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `TCS_EX::NoValue`.
-	pub tab_ex_style: co::TCS_EX,
+	pub control_ex_style: co::TCS_EX,
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
+	/// Defaults to `WS::CHILD | WS::GROUP | WS::TABSTOP | WS::VISIBLE`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS_EX::NoValue`.
+	/// Defaults to `WS_EX::LEFT`.
 	pub window_ex_style: co::WS_EX,
 
 	/// The control ID.
@@ -334,27 +263,15 @@ pub struct TabOpts {
 impl Default for TabOpts {
 	fn default() -> Self {
 		Self {
-			position: (0, 0),
-			size: (80, 50),
-			tab_style: co::TCS::NoValue,
-			tab_ex_style: co::TCS_EX::NoValue,
-			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
-			window_ex_style: co::WS_EX::NoValue,
+			position: dpi(0, 0),
+			size: dpi(80, 50),
+			control_style: co::TCS::NoValue,
+			control_ex_style: co::TCS_EX::NoValue,
+			window_style: co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
+			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
 			items: Vec::default(),
 		}
-	}
-}
-
-impl ResizeBehavior for &TabOpts {
-	fn resize_behavior(&self) -> (Horz, Vert) {
-		self.resize_behavior
-	}
-}
-
-impl AutoCtrlId for TabOpts {
-	fn ctrl_id_mut(&mut self) -> &mut u16 {
-		&mut self.ctrl_id
 	}
 }

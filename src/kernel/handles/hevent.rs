@@ -6,7 +6,7 @@ use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
 use crate::prelude::*;
 
-impl_handle! { HEVENT;
+handle! { HEVENT;
 	/// Handle to a named or unnamed
 	/// [event](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventw)
 	/// object. Originally just a `HANDLE`.

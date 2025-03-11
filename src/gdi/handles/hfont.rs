@@ -7,7 +7,7 @@ use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
 
-impl_handle! { HFONT;
+handle! { HFONT;
 	/// Handle to a
 	/// [font](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfont).
 }

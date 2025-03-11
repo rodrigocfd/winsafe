@@ -1,12 +1,10 @@
-//! Events exposed by windows and controls, which allow the handling of native
-//! window messages.
+//! Exposes native control messages that can be handled.
 
-mod base_ctrl_events_proxy;
+mod base_ctrl_events;
 mod button_events;
 mod combo_box_events;
 mod date_time_picker_events;
 mod edit_events;
-mod func_store;
 mod header_events;
 mod label_events;
 mod list_box_events;
@@ -20,10 +18,7 @@ mod tree_view_events;
 mod up_down_events;
 mod window_events;
 
-pub(in crate::gui) mod privs {
-	pub(in crate::gui) use super::base_ctrl_events_proxy::BaseCtrlEventsProxy;
-	pub(in crate::gui) use super::func_store::FuncStore;
-}
+pub(in crate::gui) use base_ctrl_events::BaseCtrlEvents;
 
 pub use button_events::ButtonEvents;
 pub use combo_box_events::ComboBoxEvents;

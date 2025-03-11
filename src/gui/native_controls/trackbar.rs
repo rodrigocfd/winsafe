@@ -9,55 +9,16 @@ use crate::gui::{*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-struct Obj { // actual fields of Trackbar
-	base: BaseNativeControl,
+struct TrackbarObj {
+	base: BaseCtrl,
 	events: TrackbarEvents,
 	_pin: PhantomPinned,
 }
 
-/// Native
-/// [trackbar](https://learn.microsoft.com/en-us/windows/win32/controls/trackbar-controls)
-/// control.
-#[derive(Clone)]
-pub struct Trackbar(Pin<Arc<Obj>>);
-
-unsafe impl Send for Trackbar {}
-
-impl AsRef<BaseNativeControl> for Trackbar {
-	fn as_ref(&self) -> &BaseNativeControl {
-		&self.0.base
-	}
-}
-
-impl GuiWindow for Trackbar {
-	fn hwnd(&self) -> &HWND {
-		self.0.base.hwnd()
-	}
-
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
-
-impl GuiChild for Trackbar {
-	fn ctrl_id(&self) -> u16 {
-		self.0.base.ctrl_id()
-	}
-}
-
-impl GuiChildFocus for Trackbar {}
-
-impl GuiNativeControl for Trackbar {}
-
-impl GuiNativeControlEvents<TrackbarEvents> for Trackbar {
-	fn on(&self) -> &TrackbarEvents {
-		if *self.hwnd() != HWND::NULL {
-			panic!("Cannot add events after the control creation.");
-		} else if *self.0.base.parent().hwnd() != HWND::NULL {
-			panic!("Cannot add events after the parent window creation.");
-		}
-		&self.0.events
-	}
+native_ctrl! { Trackbar: TrackbarObj => TrackbarEvents;
+	/// Native
+	/// [trackbar](https://learn.microsoft.com/en-us/windows/win32/controls/trackbar-controls)
+	/// control.
 }
 
 impl Trackbar {
@@ -70,14 +31,12 @@ impl Trackbar {
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `Trackbar` in an event closure.
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: TrackbarOpts) -> Self {
-		let opts = auto_ctrl_id_if_zero(opts);
-		let ctrl_id = opts.ctrl_id;
-
+	pub fn new(parent: &(impl GuiParent + 'static), opts: TrackbarOpts) -> Self {
+		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				TrackbarObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: TrackbarEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -85,9 +44,19 @@ impl Trackbar {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
-			self2.create(OptsResz::Wnd(&opts))?;
-			Ok(WmRet::NotHandled)
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			self2.0.base.create_window(opts.window_ex_style, "msctls_trackbar32", None,
+				opts.window_style | opts.control_style.into(), opts.position.into(),
+				opts.size.into(), &parent2)?;
+			if opts.range != (0, 100) {
+				self2.set_range(opts.range.0, opts.range.1);
+			}
+			if opts.value != 0 {
+				self2.set_pos(opts.value);
+			}
+			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+			Ok(0) // ignored
 		});
 
 		new_self
@@ -103,15 +72,15 @@ impl Trackbar {
 	/// dynamically create a `Trackbar` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
-		parent: &impl GuiParent,
+		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
 	) -> Self
 	{
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				TrackbarObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: TrackbarEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -119,37 +88,14 @@ impl Trackbar {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_init_dialog(move |_| {
-			self2.create(OptsResz::Dlg(resize_behavior))?;
-			Ok(false) // this return value is discarded
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm_init_dialog(move |_| {
+			self2.0.base.assign_dlg(&parent2)?;
+			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			Ok(true) // ignored
 		});
 
 		new_self
-	}
-
-	fn create(&self, opts_resz: OptsResz<&TrackbarOpts>) -> SysResult<()> {
-		match opts_resz {
-			OptsResz::Wnd(opts) => {
-				let mut pos = POINT::new(opts.position.0, opts.position.1);
-				let mut sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
-				multiply_dpi_or_dtu(
-					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
-
-				self.0.base.create_window( // may panic
-					"msctls_trackbar32", None, pos, sz,
-					opts.window_ex_style,
-					opts.window_style | opts.trackbar_style.into(),
-				)?;
-
-				if opts.range != (0, 100) {
-					self.set_range(opts.range.0, opts.range.1);
-				}
-			},
-			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
-		}
-
-		self.0.base.parent()
-			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
 	}
 
 	/// Retrieves the current position by sending a
@@ -199,30 +145,22 @@ pub struct TrackbarOpts {
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
-	/// Defaults to `(0, 0)`.
+	/// Defaults to `gui::dpi(0, 0)`.
 	pub position: (i32, i32),
 	/// Width and height of control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
-	/// Defaults to `(120, 23)`.
-	pub size: (u32, u32),
+	/// Defaults to `gui::dpi(120, 23)`.
+	pub size: (i32, i32),
 	/// Trackbar styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `TBS::HORZ | TBS::AUTOTICKS`.
-	pub trackbar_style: co::TBS,
+	pub control_style: co::TBS,
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
+	/// Defaults to `WS::CHILD | WS::GROUP | WS::TABSTOP | WS::VISIBLE`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -244,31 +182,24 @@ pub struct TrackbarOpts {
 	///
 	/// Defaults to `(0, 100)`.
 	pub range: (u32, u32),
+	/// Initial position value.
+	///
+	/// Defaults to `0`.
+	pub value: u32,
 }
 
 impl Default for TrackbarOpts {
 	fn default() -> Self {
 		Self {
-			position: (0, 0),
-			size: (120, 23),
-			trackbar_style: co::TBS::HORZ | co::TBS::AUTOTICKS,
-			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
+			position: dpi(0, 0),
+			size: dpi(120, 23),
+			control_style: co::TBS::HORZ | co::TBS::AUTOTICKS,
+			window_style: co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
 			range: (0, 100),
+			value: 0,
 		}
-	}
-}
-
-impl ResizeBehavior for &TrackbarOpts {
-	fn resize_behavior(&self) -> (Horz, Vert) {
-		self.resize_behavior
-	}
-}
-
-impl AutoCtrlId for TrackbarOpts {
-	fn ctrl_id_mut(&mut self) -> &mut u16 {
-		&mut self.ctrl_id
 	}
 }

@@ -7,7 +7,7 @@ use crate::guard::*;
 use crate::kernel::{ffi_types::*, privs::*};
 use crate::prelude::*;
 
-impl_handle! { HKEY;
+handle! { HKEY;
 	/// Handle to a
 	/// [registry key](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hkey).
 	///

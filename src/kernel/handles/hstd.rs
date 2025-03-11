@@ -6,7 +6,7 @@ use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
 use crate::prelude::*;
 
-impl_handle! { HSTD;
+handle! { HSTD;
 	/// Handle to a
 	/// [standard device](https://learn.microsoft.com/en-us/windows/console/getstdhandle).
 	/// Originally just a `HANDLE`.

@@ -6,7 +6,6 @@ use crate::advapi::privs::*;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::prelude::*;
 
 /// [`CLAIM_SECURITY_ATTRIBUTES_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-claim_security_attributes_information)
 /// struct.
@@ -171,8 +170,7 @@ impl SERVICE_TIMECHANGE_INFO {
 /// [`SID`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-sid)
 /// struct.
 ///
-/// Note that you cannot directly instantiate this
-/// [`VariableSized`](crate::prelude::VariableSized) struct, because the
+/// Note that you cannot directly instantiate this struct, because the
 /// `SubAuthority` field is dynamically allocated.
 ///
 /// Possible ways:
@@ -190,8 +188,6 @@ pub struct SID {
 	pub IdentifierAuthority: SID_IDENTIFIER_AUTHORITY,
 	SubAuthority: [co::RID; 1],
 }
-
-impl VariableSized for SID {}
 
 impl std::fmt::Display for SID {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -374,13 +370,13 @@ impl TOKEN_ELEVATION {
 
 /// [`TOKEN_GROUPS`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_groups)
 /// struct.
+///
+/// The `Group` field is dynamically allocated.
 #[repr(C)]
 pub struct TOKEN_GROUPS<'a> {
 	pub(in crate::advapi) GroupCount: u32,
 	Groups: [SID_AND_ATTRIBUTES<'a>; 1],
 }
-
-impl<'a> VariableSized for TOKEN_GROUPS<'a> {}
 
 impl<'a> TOKEN_GROUPS<'a> {
 	/// Returns a dynamically allocated
@@ -510,13 +506,13 @@ impl<'a> TOKEN_PRIMARY_GROUP<'a> {
 
 /// [`TOKEN_PRIVILEGES`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-token_privileges)
 /// struct.
+///
+/// The `Privileges` field is dynamically allocated.
 #[repr(C)]
 pub struct TOKEN_PRIVILEGES {
 	pub(in crate::advapi) PrivilegeCount: u32,
 	Privileges: [LUID_AND_ATTRIBUTES; 1],
 }
-
-impl VariableSized for TOKEN_PRIVILEGES {}
 
 impl TOKEN_PRIVILEGES {
 	/// Returns a dynamically allocated

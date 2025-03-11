@@ -6,7 +6,6 @@ use crate::gui::{*, privs::*};
 use crate::kernel::ffi_types::*;
 use crate::prelude::*;
 
-/// Keeps a raw or dialog window.
 #[derive(Clone)]
 enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
 
@@ -18,11 +17,11 @@ pub struct WindowMain(RawDlg);
 
 unsafe impl Send for WindowMain {}
 
-impl AsRef<Base> for WindowMain {
-	fn as_ref(&self) -> &Base {
+impl AsRef<BaseWnd> for WindowMain {
+	fn as_ref(&self) -> &BaseWnd {
 		match &self.0 {
-			RawDlg::Raw(r) => r.base(),
-			RawDlg::Dlg(d) => d.base(),
+			RawDlg::Raw(r) => r.raw_base().base(),
+			RawDlg::Dlg(d) => d.dlg_base().base(),
 		}
 	}
 }
@@ -37,11 +36,7 @@ impl GuiWindow for WindowMain {
 	}
 }
 
-impl GuiWindowText for WindowMain {}
-
 impl GuiParent for WindowMain {}
-
-impl GuiParentPopup for WindowMain {}
 
 impl WindowMain {
 	/// Instantiates a new `WindowMain` object, to be created internally with
@@ -60,14 +55,14 @@ impl WindowMain {
 	/// [`HINSTANCE::CreateDialogParam`](crate::prelude::user_Hinstance::CreateDialogParam).
 	#[must_use]
 	pub fn new_dlg(
-		dialog_id: u16,
+		dlg_id: u16,
 		icon_id: Option<u16>,
-		accel_table_id: Option<u16>,
+		accel_tbl_id: Option<u16>,
 	) -> Self
 	{
 		Self(
 			RawDlg::Dlg(
-				DlgMain::new(dialog_id, icon_id, accel_table_id),
+				DlgMain::new(dlg_id, icon_id, accel_tbl_id),
 			),
 		)
 	}
@@ -89,7 +84,7 @@ impl WindowMain {
 		InitCommonControls();
 
 		if IsWindows8OrGreater()? { // https://github.com/rodrigocfd/winsafe-examples/issues/6
-			let mut b_val: BOOL = 0; // false
+			let mut b_val: BOOL = 0; // FALSE
 			match unsafe {
 				HPROCESS::GetCurrentProcess().SetUserObjectInformation( // SetTimer() safety
 					co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION,
@@ -100,19 +95,18 @@ impl WindowMain {
 					// Do nothing: Wine doesn't support SetUserObjectInformation for now.
 					// https://bugs.winehq.org/show_bug.cgi?id=54951
 				},
-				Err(e) => panic!("TIMERPROC_EXCEPTION_SUPPRESSION failed: {e:?}"),
+				Err(e) => panic!("TIMERPROC_EXCEPTION_SUPPRESSION failed: {e:?}"), // should never happen
 				_ => {},
 			}
 		}
 
-		create_ui_font()?;
-
+		let hinst = HINSTANCE::GetModuleHandle(None)?;
 		let res = match &self.0 {
-			RawDlg::Raw(r) => r.run_main(cmd_show),
-			RawDlg::Dlg(d) => d.run_main(cmd_show),
+			RawDlg::Raw(r) => r.run_main(&hinst, cmd_show),
+			RawDlg::Dlg(d) => d.run_main(&hinst, cmd_show),
 		};
 
-		delete_ui_font(); // cleanup
+		ui_font::delete(); // cleanup
 		res
 	}
 }

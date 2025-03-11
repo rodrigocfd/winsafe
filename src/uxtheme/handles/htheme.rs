@@ -7,7 +7,7 @@ use crate::ole::privs::*;
 use crate::prelude::*;
 use crate::uxtheme::ffi;
 
-impl_handle! { HTHEME;
+handle! { HTHEME;
 	/// Handle to a
 	/// [theme](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/).
 }

@@ -6,7 +6,7 @@ use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
 use crate::prelude::*;
 
-impl_handle! { HFILE;
+handle! { HFILE;
 	/// Handle to a
 	/// [file](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hfile).
 	/// Originally just a `HANDLE`.

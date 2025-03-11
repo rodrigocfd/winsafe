@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, privs::*};
+use crate::gui::{events::*, privs::*};
 
 /// Exposes list view control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-list-view-control-reference-notifications).
@@ -11,12 +11,12 @@ use crate::gui::{*, privs::*};
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-pub struct ListViewEvents(BaseCtrlEventsProxy);
+pub struct ListViewEvents(BaseCtrlEvents);
 
 impl ListViewEvents {
 	#[must_use]
-	pub(in crate::gui) fn new(parent: &impl AsRef<Base>, ctrl_id: u16) -> Self {
-		Self(BaseCtrlEventsProxy::new(parent, ctrl_id))
+	pub(in crate::gui) fn new(parent: &impl AsRef<BaseWnd>, ctrl_id: u16) -> Self {
+		Self(BaseCtrlEvents::new(parent, ctrl_id))
 	}
 
 	pub_fn_nfy_withparm_noret! { lvn_begin_drag, co::LVN::BEGINDRAG, NMLISTVIEW;
@@ -121,8 +121,7 @@ impl ListViewEvents {
 		where F: Fn(&mut NMLVEMPTYMARKUP) -> AnyResult<bool> + 'static,
 	{
 		self.0.wm_notify(co::LVN::GETEMPTYMARKUP, move |p| {
-			let ret_val = func(unsafe { p.cast_nmhdr_mut::<NMLVEMPTYMARKUP>() })? as isize;
-			Ok(WmRet::HandledWithRet(ret_val))
+			Ok(func(unsafe { p.cast_nmhdr_mut::<NMLVEMPTYMARKUP>() })? as _)
 		});
 	}
 
@@ -225,11 +224,10 @@ impl ListViewEvents {
 		where F: Fn(&mut NMLVFINDITEM) -> AnyResult<Option<u32>> + 'static,
 	{
 		self.0.wm_notify(co::LVN::ODFINDITEM, move |p| {
-			let ret_val = match func(unsafe { p.cast_nmhdr_mut::<NMLVFINDITEM>() })? {
+			Ok(match func(unsafe { p.cast_nmhdr_mut::<NMLVFINDITEM>() })? {
 				Some(idx) => idx as isize,
 				None => -1,
-			};
-			Ok(WmRet::HandledWithRet(ret_val))
+			})
 		});
 	}
 
@@ -254,8 +252,7 @@ impl ListViewEvents {
 		where F: Fn(&mut NMLVCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
 		self.0.wm_notify(co::NM::CUSTOMDRAW, move |p| {
-			let ret_val = func(unsafe { p.cast_nmhdr_mut::<NMLVCUSTOMDRAW>() })?.raw() as isize;
-			Ok(WmRet::HandledWithRet(ret_val))
+			Ok(func(unsafe { p.cast_nmhdr_mut::<NMLVCUSTOMDRAW>() })?.raw() as _)
 		});
 	}
 

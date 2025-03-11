@@ -46,7 +46,7 @@ impl<'a> TabItem<'a> {
 	/// Retrieves the user-defined value by sending an
 	/// [`tcm::GetItem`](crate::msg::tcm::GetItem) message.
 	#[must_use]
-	pub fn lparam(&self) -> isize {
+	pub fn lparam(&self) -> SysResult<isize> {
 		let mut tci = TCITEM::default();
 		tci.mask = co::TCIF::PARAM;
 
@@ -55,15 +55,15 @@ impl<'a> TabItem<'a> {
 				.SendMessage(tcm::GetItem {
 					index: self.index,
 					item: &mut tci,
-				})
-		}.unwrap();
+				})?;
+		}
 
-		tci.lParam
+		Ok(tci.lParam)
 	}
 
 	/// Sets the user-defined value by sending an
 	/// [`lvm::SetItem`](crate::msg::lvm::SetItem) message.
-	pub fn set_lparam(&self, lparam: isize) {
+	pub fn set_lparam(&self, lparam: isize) -> SysResult<()> {
 		let mut tci = TCITEM::default();
 		tci.mask = co::TCIF::PARAM;
 		tci.lParam = lparam;
@@ -74,12 +74,12 @@ impl<'a> TabItem<'a> {
 					index: self.index,
 					item: &mut tci,
 				})
-		}.unwrap();
+		}
 	}
 
 	/// Sets the text by sending a
 	/// [`tcm:SetItem`](crate::msg::tcm::SetItem) message.
-	pub fn set_text(&self, text: &str) {
+	pub fn set_text(&self, text: &str) -> SysResult<()> {
 		let mut wtext = WString::from_str(text);
 		let mut tci = TCITEM::default();
 		tci.mask = co::TCIF::TEXT;
@@ -91,13 +91,13 @@ impl<'a> TabItem<'a> {
 					index: self.index,
 					item: &mut tci,
 				})
-		}.unwrap();
+		}
 	}
 
 	/// Retrieves the text by sending a
 	/// [`tcm:GetItem`](crate::msg::tcm::GetItem) message.
 	#[must_use]
-	pub fn text(&self) -> String {
+	pub fn text(&self) -> SysResult<String> {
 		let mut buf = WString::new_alloc_buf(64); // arbitrary
 		let mut tci = TCITEM::default();
 		tci.mask = co::TCIF::TEXT;
@@ -108,9 +108,9 @@ impl<'a> TabItem<'a> {
 				.SendMessage(tcm::GetItem {
 					index: self.index,
 					item: &mut tci,
-				})
-		}.unwrap();
+				})?;
+		}
 
-		buf.to_string()
+		Ok(buf.to_string())
 	}
 }

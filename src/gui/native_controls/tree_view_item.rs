@@ -45,7 +45,7 @@ impl<'a, T> TreeViewItem<'a, T> {
 		text: &str,
 		icon_index: Option<u32>,
 		data: T,
-	) -> Self
+	) -> SysResult<Self>
 	{
 		self.owner.raw_insert_item(Some(&self.hitem), text, icon_index, data)
 	}
@@ -57,49 +57,51 @@ impl<'a, T> TreeViewItem<'a, T> {
 	/// Returns `None` if the `ListView` holds a `()`, or if the item holds an
 	/// invalid index.
 	#[must_use]
-	pub fn data(&self) -> Option<Rc<RefCell<T>>> {
-		self.data_lparam()
-			.map(|pdata| {
-				let rc_data = ManuallyDrop::new(unsafe { Rc::from_raw(pdata) });
-				Rc::clone(&rc_data)
-			})
+	pub fn data(&self) -> SysResult<Option<Rc<RefCell<T>>>> {
+		Ok(
+			self.data_lparam()?
+				.map(|pdata| {
+					let rc_data = ManuallyDrop::new(unsafe { Rc::from_raw(pdata) });
+					Rc::clone(&rc_data)
+				}),
+		)
 	}
 
 	#[must_use]
-	pub(in crate::gui) fn data_lparam(&self) -> Option<*mut RefCell<T>> {
+	pub(in crate::gui) fn data_lparam(&self) -> SysResult<Option<*mut RefCell<T>>> {
 		let mut tvix = TVITEMEX::default();
 		tvix.hItem = unsafe { self.hitem.raw_copy() };
 		tvix.mask = co::TVIF::PARAM;
 
 		unsafe {
 			self.owner.hwnd()
-				.SendMessage(tvm::GetItem { tvitem: &mut tvix })
-		}.unwrap();
+				.SendMessage(tvm::GetItem { tvitem: &mut tvix })?;
+		}
 
-		match tvix.lParam {
+		Ok(match tvix.lParam {
 			0 => None,
 			lp => Some(lp as _),
-		}
+		})
 	}
 
 	/// Deletes the item by sending a
 	/// [`tvm::DeleteItem`](crate::msg::tvm::DeleteItem) message.
-	pub fn delete(&self) {
+	pub fn delete(&self) -> SysResult<()> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(tvm::DeleteItem { hitem: &self.hitem })
-		}.unwrap();
+		}
 	}
 
 	/// Begins in-place editing of the item's text by sending a
 	/// [`tvm::EditLabel`](crate::msg::tvm::EditLabel) message.
 	///
 	/// Returns a handle to the edit control.
-	pub fn edit_label(&self) -> HWND {
+	pub fn edit_label(&self) -> SysResult<HWND> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(tvm::EditLabel { hitem: &self.hitem })
-		}.unwrap()
+		}
 	}
 
 	/// Ensures that a tree-view item is visible, expanding the parent item or
@@ -116,14 +118,14 @@ impl<'a, T> TreeViewItem<'a, T> {
 
 	/// Expands or collapse the item by sending a
 	/// [`tvm::Expand`](crate::msg::tvm::Expand) message.
-	pub fn expand(&self, expand: bool) {
+	pub fn expand(&self, expand: bool) -> SysResult<()> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(tvm::Expand {
 					hitem: &self.hitem,
 					action: if expand { co::TVE::EXPAND } else { co::TVE::COLLAPSE },
 				})
-		}.unwrap();
+		}
 	}
 
 	/// Returns the underlying handle of the item.
@@ -191,7 +193,7 @@ impl<'a, T> TreeViewItem<'a, T> {
 
 	/// Sets the text of the item by sending a
 	/// [`tvm::SetItem`](crate::msg::tvm::SetItem) message.
-	pub fn set_text(&self, text: &str) {
+	pub fn set_text(&self, text: &str) -> SysResult<()> {
 		let mut buf = WString::from_str(text);
 
 		let mut tvix = TVITEMEX::default();
@@ -202,13 +204,13 @@ impl<'a, T> TreeViewItem<'a, T> {
 		unsafe {
 			self.owner.hwnd()
 				.SendMessage(tvm::SetItem { tvitem: &tvix })
-		}.unwrap();
+		}
 	}
 
 	/// Retrieves the text of the item by sending a
 	/// [`tvm::GetItem`](crate::msg::tvm::GetItem) message.
 	#[must_use]
-	pub fn text(&self) -> String {
+	pub fn text(&self) -> SysResult<String> {
 		let mut tvix = TVITEMEX::default();
 		tvix.hItem = unsafe { self.hitem.raw_copy() };
 		tvix.mask = co::TVIF::TEXT;
@@ -218,9 +220,9 @@ impl<'a, T> TreeViewItem<'a, T> {
 
 		unsafe {
 			self.owner.hwnd()
-				.SendMessage(tvm::GetItem { tvitem: &mut tvix })
-		}.unwrap();
+				.SendMessage(tvm::GetItem { tvitem: &mut tvix })?;
+		}
 
-		buf.to_string()
+		Ok(buf.to_string())
 	}
 }

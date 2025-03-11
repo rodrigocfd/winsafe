@@ -6,7 +6,7 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::user::{ffi, proc};
 
-impl_handle! { HDC;
+handle! { HDC;
 	/// Handle to a
 	/// [device context](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdc).
 }

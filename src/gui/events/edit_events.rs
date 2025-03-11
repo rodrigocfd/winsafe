@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::privs::*;
+use crate::gui::{events::*, privs::*};
 
 /// Exposes edit control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-edit-control-reference-notifications).
@@ -11,12 +11,12 @@ use crate::gui::privs::*;
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-pub struct EditEvents(BaseCtrlEventsProxy);
+pub struct EditEvents(BaseCtrlEvents);
 
 impl EditEvents {
 	#[must_use]
-	pub(in crate::gui) fn new(parent: &impl AsRef<Base>, ctrl_id: u16) -> Self {
-		Self(BaseCtrlEventsProxy::new(parent, ctrl_id))
+	pub(in crate::gui) fn new(parent: &impl AsRef<BaseWnd>, ctrl_id: u16) -> Self {
+		Self(BaseCtrlEvents::new(parent, ctrl_id))
 	}
 
 	pub_fn_cmd_noparm_noret! { en_align_ltr_ec, co::EN::ALIGN_LTR_EC;
@@ -47,10 +47,11 @@ impl EditEvents {
 		///
 		/// txt.on().en_change(
 		///     move || -> w::AnyResult<()> {
-		///         println!("Text: {}", txt2.text());
+		///         println!("Text: {}", txt2.text()?);
 		///         Ok(())
 		///     },
 		/// );
+		/// # w::SysResult::Ok(())
 		/// ```
 	}
 

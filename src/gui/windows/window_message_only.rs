@@ -16,8 +16,8 @@ pub struct WindowMessageOnly(Pin<Arc<RawBase>>);
 
 unsafe impl Send for WindowMessageOnly {}
 
-impl AsRef<Base> for WindowMessageOnly {
-	fn as_ref(&self) -> &Base {
+impl AsRef<BaseWnd> for WindowMessageOnly {
+	fn as_ref(&self) -> &BaseWnd {
 		self.0.base()
 	}
 }
@@ -41,35 +41,26 @@ impl WindowMessageOnly {
 	#[must_use]
 	pub fn new(parent: Option<&WindowMessageOnly>) -> AnyResult<Self> {
 		let new_self = Self(
-			Arc::pin(RawBase::new(parent)),
+			Arc::pin(RawBase::new()),
 		);
-		new_self.create()?;
+		new_self.create(parent)?;
 		Ok(new_self)
 	}
 
-	fn create(&self) -> AnyResult<()> {
+	fn create(&self, parent: Option<&WindowMessageOnly>) -> AnyResult<()> {
 		let hinst = HINSTANCE::GetModuleHandle(None)?;
-		let mut wcx = WNDCLASSEX::default();
-		let mut class_name_buf = WString::new();
-		RawBase::fill_wndclassex(
-			&hinst,
-			"", co::CS::default(),
-			&Icon::None, &Icon::None,
-			&Brush::None, &Cursor::None, &mut wcx,
-			&mut class_name_buf)?;
-		let atom = self.0.register_class(&mut wcx)?;
+		let atom = self.0.register_class(&hinst, "",
+			co::CS::default(), &Icon::None, &Brush::None, &Cursor::None)?;
 
 		let hparent_msg = unsafe { HWND::from_ptr(HWND_MESSAGE as _) };
 
-		self.0.create_window(
-			Some(match self.0.base().parent() {
+		self.0.create_window(co::WS_EX::NoValue, atom, None, co::WS::NoValue,
+			POINT::default(), SIZE::default(),
+			Some(match parent {
 				Some(parent) => parent.hwnd(),
 				None => &hparent_msg, // special case: message-only window with no parent
 			}),
-			atom, None, IdMenu::None,
-			POINT::default(), SIZE::default(),
-			co::WS_EX::NoValue, co::WS::NoValue,
-		)?;
+			IdMenu::None, &hinst)?;
 
 		Ok(())
 	}

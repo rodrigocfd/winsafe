@@ -9,59 +9,22 @@ use crate::gui::{*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-struct Obj { // actual fields of UpDown
-	base: BaseNativeControl,
+struct UpDownObj {
+	base: BaseCtrl,
 	events: UpDownEvents,
 	_pin: PhantomPinned,
 }
 
-/// Native
-/// [up-down](https://learn.microsoft.com/en-us/windows/win32/controls/up-down-controls)
-/// control.
-///
-/// Note that if the `UpDown` is created with
-/// [`UDS::AUTOBUDDY`](crate::co::UDS::AUTOBUDDY) style, it takes the control
-/// created immediately before the `UpDown` as the buddy one, attaching the
-/// `UpDown` to it. This control should be an [`Edit`](crate::gui::Edit) with
-/// [`ES::NUMBER`](crate::co::ES::NUMBER) style.
-#[derive(Clone)]
-pub struct UpDown(Pin<Arc<Obj>>);
-
-unsafe impl Send for UpDown {}
-
-impl AsRef<BaseNativeControl> for UpDown {
-	fn as_ref(&self) -> &BaseNativeControl {
-		&self.0.base
-	}
-}
-
-impl GuiWindow for UpDown {
-	fn hwnd(&self) -> &HWND {
-		self.0.base.hwnd()
-	}
-
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
-
-impl GuiChild for UpDown {
-	fn ctrl_id(&self) -> u16 {
-		self.0.base.ctrl_id()
-	}
-}
-
-impl GuiNativeControl for UpDown {}
-
-impl GuiNativeControlEvents<UpDownEvents> for UpDown {
-	fn on(&self) -> &UpDownEvents {
-		if *self.hwnd() != HWND::NULL {
-			panic!("Cannot add events after the control creation.");
-		} else if *self.0.base.parent().hwnd() != HWND::NULL {
-			panic!("Cannot add events after the parent window creation.");
-		}
-		&self.0.events
-	}
+native_ctrl! { UpDown: UpDownObj => UpDownEvents;
+	/// Native
+	/// [up-down](https://learn.microsoft.com/en-us/windows/win32/controls/up-down-controls)
+	/// control.
+	///
+	/// Note that if the `UpDown` is created with
+	/// [`UDS::AUTOBUDDY`](crate::co::UDS::AUTOBUDDY) style, it takes the control
+	/// created immediately before the `UpDown` as the buddy one, attaching the
+	/// `UpDown` to it. This control should be an [`Edit`](crate::gui::Edit) with
+	/// [`ES::NUMBER`](crate::co::ES::NUMBER) style.
 }
 
 impl UpDown {
@@ -91,7 +54,7 @@ impl UpDown {
 	/// let txt = gui::Edit::new(
 	///     &wnd,
 	///     gui::EditOpts {
-	///         edit_style: co::ES::AUTOHSCROLL | co::ES::NOHIDESEL | co::ES::NUMBER,
+	///         control_style: co::ES::AUTOHSCROLL | co::ES::NOHIDESEL | co::ES::NUMBER,
 	///         ..Default::default()
 	///     },
 	/// );
@@ -105,14 +68,12 @@ impl UpDown {
 	/// );
 	/// ```
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: UpDownOpts) -> Self {
-		let opts = auto_ctrl_id_if_zero(opts);
-		let ctrl_id = opts.ctrl_id;
-
+	pub fn new(parent: &(impl GuiParent + 'static), opts: UpDownOpts) -> Self {
+		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				UpDownObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: UpDownEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -120,9 +81,22 @@ impl UpDown {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
-			self2.create(Some(&opts))?;
-			Ok(WmRet::NotHandled)
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			self2.0.base.create_window(opts.window_ex_style, "msctls_updown32", None,
+				opts.window_style | opts.control_style.into(), opts.position.into(),
+				SIZE::new(0, opts.height), &parent2)?;
+			if opts.range != (0, 100) {
+				self2.set_range(opts.range.0, opts.range.1);
+				if opts.control_style.has(co::UDS::AUTOBUDDY) {
+					let prev_ctrl = self2.hwnd().GetWindow(co::GW::HWNDPREV)?;
+					prev_ctrl.SetWindowText(&opts.range.0.to_string())?;
+				}
+			}
+			if opts.value != 0 {
+				self2.set_pos(opts.value);
+			}
+			Ok(0) // ignored
 		});
 
 		new_self
@@ -137,11 +111,16 @@ impl UpDown {
 	/// Panics if the parent dialog was already created – that is, you cannot
 	/// dynamically create an `UpDown` in an event closure.
 	#[must_use]
-	pub fn new_dlg(parent: &impl GuiParent, ctrl_id: u16) -> Self {
+	pub fn new_dlg(
+		parent: &(impl GuiParent + 'static),
+		ctrl_id: u16,
+		resize_behavior: (Horz, Vert),
+	) -> Self
+	{
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				UpDownObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: UpDownEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -149,40 +128,14 @@ impl UpDown {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_init_dialog(move |_| {
-			self2.create(None)?;
-			Ok(false) // this return value is discarded
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm_init_dialog(move |_| {
+			self2.0.base.assign_dlg(&parent2)?;
+			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			Ok(true) // ignored
 		});
 
 		new_self
-	}
-
-	fn create(&self, opts: Option<&UpDownOpts>) -> SysResult<()> {
-		match opts {
-			Some(opts) => {
-				let mut pos = POINT::new(opts.position.0, opts.position.1);
-				let mut sz = SIZE::new(0, opts.height as _);
-				multiply_dpi_or_dtu(
-					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
-
-				self.0.base.create_window( // may panic
-					"msctls_updown32", None, pos, SIZE::new(0, opts.height as _),
-					opts.window_ex_style,
-					opts.window_style | opts.up_down_style.into(),
-				)?;
-
-				if opts.range != (0, 100) {
-					self.set_range(opts.range.0, opts.range.1);
-					if opts.up_down_style.has(co::UDS::AUTOBUDDY) {
-						let prev_ctrl = self.hwnd().GetWindow(co::GW::HWNDPREV)?;
-						prev_ctrl.SetWindowText(&opts.range.0.to_string())?;
-					}
-				}
-			},
-			None => self.0.base.create_dlg()?,
-		}
-
-		Ok(())
 	}
 
 	/// Retrieves the current position by sending an
@@ -242,7 +195,7 @@ pub struct UpDownOpts {
 	/// Note that the `UDS::AUTOBUDDY` style automatically positions the
 	/// `UpDown`; thus, with this style, `position` is meaningless.
 	///
-	/// Defaults to `(0, 0)`.
+	/// Defaults to `gui::dpi(0, 0)`.
 	pub position: (i32, i32),
 	/// Control height to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -254,8 +207,8 @@ pub struct UpDownOpts {
 	/// Note that the `UDS::AUTOBUDDY` style automatically resizes the `UpDown`;
 	/// thus, with this style, `height` is meaningless.
 	///
-	/// Defaults to `40`.
-	pub height: u32,
+	/// Defaults to `gui::dpi(40)`.
+	pub height: i32,
 	/// Up-down styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -265,7 +218,7 @@ pub struct UpDownOpts {
 	/// [`ES::NUMBER`](crate::co::ES::NUMBER) style.
 	///
 	/// Defaults to `UDS::AUTOBUDDY | UDS::SETBUDDYINT | UDS::ALIGNRIGHT | UDS::ARROWKEYS | UDS::HOTTRACK`.
-	pub up_down_style: co::UDS,
+	pub control_style: co::UDS,
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -286,6 +239,10 @@ pub struct UpDownOpts {
 	///
 	/// Defaults to `(0, 100)`.
 	pub range: (i32, i32),
+	/// Initial position value.
+	///
+	/// Defaults to `0`.
+	pub value: i32,
 }
 
 impl Default for UpDownOpts {
@@ -293,18 +250,13 @@ impl Default for UpDownOpts {
 		Self {
 			position: (0, 0),
 			height: 40,
-			up_down_style: co::UDS::AUTOBUDDY | co::UDS::SETBUDDYINT |
+			control_style: co::UDS::AUTOBUDDY | co::UDS::SETBUDDYINT |
 				co::UDS::ALIGNRIGHT | co::UDS::ARROWKEYS | co::UDS::HOTTRACK,
 			window_style: co::WS::CHILDWINDOW | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			range: (0, 100),
+			value: 0,
 		}
-	}
-}
-
-impl AutoCtrlId for UpDownOpts {
-	fn ctrl_id_mut(&mut self) -> &mut u16 {
-		&mut self.ctrl_id
 	}
 }

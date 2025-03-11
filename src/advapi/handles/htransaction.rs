@@ -7,7 +7,7 @@ use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
 
-impl_handle! { HTRANSACTION;
+handle! { HTRANSACTION;
 	/// Handle to a
 	/// [transaction](https://learn.microsoft.com/en-us/windows/win32/ktm/ktm-security-and-access-rights).
 	/// Originally just a `HANDLE`.

@@ -1,6 +1,8 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, privs::*};
+use crate::gui::{events::*, privs::*};
+use crate::msg::*;
+use crate::prelude::*;
 
 /// Exposes trackbar control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-trackbar-control-reference-notifications).
@@ -11,17 +13,41 @@ use crate::gui::{*, privs::*};
 ///
 /// You cannot directly instantiate this object, it is created internally by the
 /// control.
-pub struct TrackbarEvents(BaseCtrlEventsProxy);
+pub struct TrackbarEvents(BaseCtrlEvents);
 
 impl TrackbarEvents {
 	#[must_use]
-	pub(in crate::gui) fn new(parent: &impl AsRef<Base>, ctrl_id: u16) -> Self {
-		Self(BaseCtrlEventsProxy::new(parent, ctrl_id))
+	pub(in crate::gui) fn new(parent: &impl AsRef<BaseWnd>, ctrl_id: u16) -> Self {
+		Self(BaseCtrlEvents::new(parent, ctrl_id))
 	}
 
 	pub_fn_nfy_withparm_noret! { trbn_thumb_pos_changing, co::TRBN::THUMBPOSCHANGING, NMTRBTHUMBPOSCHANGING;
 		/// [`TRBN_THUMBPOSCHANGING`](https://learn.microsoft.com/en-us/windows/win32/controls/trbn-thumbposchanging)
 		/// notification.
+	}
+
+	/// [`WM_HSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-hscroll--trackbar-)
+	/// notification.
+	pub fn wm_h_scroll<F>(&self, func: F)
+		where F: Fn(wm::HScroll) -> AnyResult<()> + 'static,
+	{
+		let def_proc_val = self.0.is_dlg().def_proc_val();
+		self.0.wm(co::WM::HSCROLL, move |p| {
+			func(unsafe { wm::HScroll::from_generic_wm(p) })?;
+			Ok(def_proc_val)
+		});
+	}
+
+	/// [`WM_VSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-vscroll--trackbar-)
+	/// notification.
+	pub fn wm_v_scroll<F>(&self, func: F)
+		where F: Fn(wm::VScroll) -> AnyResult<()> + 'static,
+	{
+		let def_proc_val = self.0.is_dlg().def_proc_val();
+		self.0.wm(co::WM::VSCROLL, move |p| {
+			func(unsafe { wm::VScroll::from_generic_wm(p) })?;
+			Ok(def_proc_val)
+		});
 	}
 
 	/// [`NM_CUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-customdraw-trackbar)
@@ -30,8 +56,7 @@ impl TrackbarEvents {
 		where F: Fn(&NMCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
 		self.0.wm_notify(co::NM::CUSTOMDRAW, move |p| {
-			let ret_val = func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })?.raw() as isize;
-			Ok(WmRet::HandledWithRet(ret_val))
+			Ok(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })?.raw() as _)
 		});
 	}
 

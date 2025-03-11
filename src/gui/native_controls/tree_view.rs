@@ -8,70 +8,26 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::gui::{*, events::*, privs::*, spec::*};
+use crate::gui::{*, collections::*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-struct Obj<T> { // actual fields of TreeView
-	base: BaseNativeControl,
+struct TreeViewObj<T> {
+	base: BaseCtrl,
 	events: TreeViewEvents,
 	_pin: PhantomPinned,
 	_data: PhantomData<T>,
 }
 
-/// Native
-/// [tree view](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-controls)
-/// control.
-///
-/// The generic parameter specifies the type of the object that will be embedded
-/// on each item – if you don't want to store anything, just use `()` as the
-/// type. Internally, this storage is implemented with pointers in the item's
-/// `LPARAM` fields.
-pub struct TreeView<T: 'static = ()>(Pin<Arc<Obj<T>>>);
-
-impl<T> Clone for TreeView<T> { // https://stackoverflow.com/q/39415052/6923555
-	fn clone(&self) -> Self {
-		Self(self.0.clone())
-	}
-}
-
-unsafe impl<T> Send for TreeView<T> {}
-
-impl<T> AsRef<BaseNativeControl> for TreeView<T> {
-	fn as_ref(&self) -> &BaseNativeControl {
-		&self.0.base
-	}
-}
-
-impl<T> GuiWindow for TreeView<T> {
-	fn hwnd(&self) -> &HWND {
-		self.0.base.hwnd()
-	}
-
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
-
-impl<T> GuiChild for TreeView<T> {
-	fn ctrl_id(&self) -> u16 {
-		self.0.base.ctrl_id()
-	}
-}
-
-impl<T> GuiChildFocus for TreeView<T> {}
-
-impl<T> GuiNativeControl for TreeView<T> {}
-
-impl<T> GuiNativeControlEvents<TreeViewEvents> for TreeView<T> {
-	fn on(&self) -> &TreeViewEvents {
-		if *self.hwnd() != HWND::NULL {
-			panic!("Cannot add events after the control creation.");
-		} else if *self.0.base.parent().hwnd() != HWND::NULL {
-			panic!("Cannot add events after the parent window creation.");
-		}
-		&self.0.events
-	}
+native_ctrl! { TreeView: TreeViewObj<T>, T => TreeViewEvents;
+	/// Native
+	/// [tree view](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-controls)
+	/// control.
+	///
+	/// The generic parameter specifies the type of the object that will be
+	/// embedded on each item – if you don't want to store anything, just use
+	/// `()` as the type. Internally, this storage is implemented with pointers
+	/// in the item's `LPARAM` fields.
 }
 
 impl<T> TreeView<T> {
@@ -84,14 +40,12 @@ impl<T> TreeView<T> {
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `TreeView` in an event closure.
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: TreeViewOpts) -> Self {
-		let opts = auto_ctrl_id_if_zero(opts);
-		let ctrl_id = opts.ctrl_id;
-
+	pub fn new(parent: &(impl GuiParent + 'static), opts: TreeViewOpts) -> Self {
+		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				TreeViewObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: TreeViewEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 					_data: PhantomData,
@@ -100,12 +54,16 @@ impl<T> TreeView<T> {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
-			self2.create(OptsResz::Wnd(&opts))?;
-			Ok(WmRet::NotHandled)
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			self2.0.base.create_window(opts.window_ex_style, "SysTreeView32", None,
+				opts.window_style | opts.control_style.into(), opts.position.into(),
+				opts.size.into(), &parent2)?;
+			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+			Ok(0) // ignored
 		});
 
-		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
+		new_self.default_message_handlers(parent);
 		new_self
 	}
 
@@ -119,15 +77,15 @@ impl<T> TreeView<T> {
 	/// dynamically create a `TreeView` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
-		parent: &impl GuiParent,
+		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
 	) -> Self
 	{
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				TreeViewObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: TreeViewEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 					_data: PhantomData,
@@ -136,55 +94,32 @@ impl<T> TreeView<T> {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_init_dialog(move |_| {
-			self2.create(OptsResz::Dlg(resize_behavior))?;
-			Ok(false) // this return value is discarded
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm_init_dialog(move |_| {
+			self2.0.base.assign_dlg(&parent2)?;
+			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			Ok(true) // ignored
 		});
 
-		new_self.default_message_handlers(parent.as_ref(), ctrl_id);
+		new_self.default_message_handlers(parent);
 		new_self
 	}
 
-	fn create(&self, opts_resz: OptsResz<&TreeViewOpts>) -> SysResult<()> {
-		match opts_resz {
-			OptsResz::Wnd(opts) => {
-				let mut pos = POINT::new(opts.position.0, opts.position.1);
-				let mut sz = SIZE::new(opts.size.0 as _, opts.size.1 as _);
-				multiply_dpi_or_dtu(
-					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
-
-				self.0.base.create_window( // may panic
-					"SysTreeView32", None, pos, sz,
-					opts.window_ex_style,
-					opts.window_style | opts.tree_view_style.into(),
-				)?;
-
-				if opts.tree_view_ex_style != co::TVS_EX::NoValue {
-					self.set_extended_style(true, opts.tree_view_ex_style);
-				}
-			},
-			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
-		}
-
-		self.0.base.parent()
-			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
-	}
-
-	fn default_message_handlers(&self, parent: &Base, ctrl_id: u16) {
+	fn default_message_handlers(&self, parent: &impl AsRef<BaseWnd>) {
 		let self2 = self.clone();
-		parent.after_user_on().wm_notify(ctrl_id, co::TVN::DELETEITEM, move |p| {
+		parent.as_ref().after_on().wm_notify(self.ctrl_id(), co::TVN::DELETEITEM, move |p| {
 			let nmtv = unsafe { p.cast_nmhdr::<NMTREEVIEW>() };
 			self2.items()
 				.get(&nmtv.itemOld.hItem)
-				.data_lparam()
+				.data_lparam()?
 				.map(|pdata| {
 					let _ = unsafe { Rc::from_raw(pdata) }; // free allocated LPARAM, if any
 				});
-			Ok(WmRet::HandledOk)
+			Ok(0) // ignored
 		});
 
 		let self2 = self.clone();
-		parent.after_user_on().wm_destroy(move || {
+		parent.as_ref().after_on().wm_destroy(move || {
 			[co::TVSIL::NORMAL, co::TVSIL::STATE]
 				.iter()
 				.for_each(|tvsil| {
@@ -201,7 +136,7 @@ impl<T> TreeView<T> {
 		text: &str,
 		icon_index: Option<u32>,
 		data: T,
-	) -> TreeViewItem<'_, T>
+	) -> SysResult<TreeViewItem<'_, T>>
 	{
 		let mut tvix = TVITEMEX::default();
 		tvix.mask = co::TVIF::TEXT;
@@ -230,10 +165,10 @@ impl<T> TreeView<T> {
 
 		let new_hitem = unsafe {
 			self.hwnd()
-				.SendMessage(tvm::InsertItem { item: &mut tvis })
-		}.unwrap();
+				.SendMessage(tvm::InsertItem { item: &mut tvis })?
+		};
 
-		TreeViewItem::new(self, new_hitem)
+		Ok(TreeViewItem::new(self, new_hitem))
 	}
 
 	/// Retrieves a reference to one of the associated image lists by sending a
@@ -259,14 +194,14 @@ impl<T> TreeView<T> {
 
 	/// Sets or unsets the given extended list view styles by sending a
 	/// [`tvm::SetExtendedStyle`](crate::msg::tvm::SetExtendedStyle) message.
-	pub fn set_extended_style(&self, set: bool, ex_style: co::TVS_EX) {
+	pub fn set_extended_style(&self, set: bool, ex_style: co::TVS_EX) -> HrResult<()> {
 		unsafe {
 			self.hwnd()
 				.SendMessage(tvm::SetExtendedStyle {
 					mask: ex_style,
 					style: if set { ex_style } else { co::TVS_EX::NoValue },
 				})
-		}.unwrap();
+		}
 	}
 
 	/// Sets the one of the associated image lists by sending a
@@ -297,35 +232,27 @@ pub struct TreeViewOpts {
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
-	/// Defaults to `(0, 0)`.
+	/// Defaults to `gui::dpi(0, 0)`.
 	pub position: (i32, i32),
 	/// Width and height of control to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
-	/// Defaults to `(50, 50)`.
-	pub size: (u32, u32),
+	/// Defaults to `gui::dpi(120, 120)`.
+	pub size: (i32, i32),
 	/// Tree view styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `TVS::HASLINES | TVS::LINESATROOT | TVS::SHOWSELALWAYS | TVS::HASBUTTONS`.
-	pub tree_view_style: co::TVS,
+	pub control_style: co::TVS,
 	/// Extended tree view styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `TVS_EX::NoValue`.
-	pub tree_view_ex_style: co::TVS_EX,
+	pub contorl_ex_style: co::TVS_EX,
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
+	/// Defaults to `WS::CHILD | WS::GROUP | WS::TABSTOP | WS::VISIBLE`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -347,26 +274,14 @@ pub struct TreeViewOpts {
 impl Default for TreeViewOpts {
 	fn default() -> Self {
 		Self {
-			position: (0, 0),
-			size: (50, 50),
-			tree_view_style: co::TVS::HASLINES | co::TVS::LINESATROOT | co::TVS::SHOWSELALWAYS | co::TVS::HASBUTTONS,
-			tree_view_ex_style: co::TVS_EX::NoValue,
-			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
+			position: dpi(0, 0),
+			size: dpi(120, 120),
+			control_style: co::TVS::HASLINES | co::TVS::LINESATROOT | co::TVS::SHOWSELALWAYS | co::TVS::HASBUTTONS,
+			contorl_ex_style: co::TVS_EX::NoValue,
+			window_style: co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
 		}
-	}
-}
-
-impl ResizeBehavior for &TreeViewOpts {
-	fn resize_behavior(&self) -> (Horz, Vert) {
-		self.resize_behavior
-	}
-}
-
-impl AutoCtrlId for TreeViewOpts {
-	fn ctrl_id_mut(&mut self) -> &mut u16 {
-		&mut self.ctrl_id
 	}
 }

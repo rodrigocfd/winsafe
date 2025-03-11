@@ -7,26 +7,22 @@ use crate::decl::*;
 use crate::gui::privs::*;
 use crate::prelude::*;
 
-struct Obj { // actual fields of DlgModal
+struct DlgModalObj {
 	dlg_base: DlgBase,
 	_pin: PhantomPinned,
 }
 
-/// A dialog-base modal window.
+/// A dialog-based modal window.
 #[derive(Clone)]
-pub(in crate::gui) struct DlgModal(Pin<Arc<Obj>>);
+pub(in crate::gui) struct DlgModal(Pin<Arc<DlgModalObj>>);
 
 impl DlgModal {
 	#[must_use]
-	pub(in crate::gui) fn new(
-		parent: &impl AsRef<Base>,
-		dialog_id: u16,
-	) -> Self
-	{
+	pub(in crate::gui) fn new(dlg_id: u16) -> Self {
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					dlg_base: DlgBase::new(Some(parent), dialog_id),
+				DlgModalObj {
+					dlg_base: DlgBase::new(dlg_id),
 					_pin: PhantomPinned,
 				},
 			),
@@ -35,20 +31,10 @@ impl DlgModal {
 		new_self
 	}
 
-	#[must_use]
-	pub(in crate::gui) fn base(&self) -> &Base {
-		self.0.dlg_base.base()
-	}
-
-	pub(in crate::gui) fn show_modal(&self) -> AnyResult<i32> {
-		self.0.dlg_base.dialog_box_param()
-			.map_err(|err| err.into())
-	}
-
 	fn default_message_handlers(&self) {
 		let self2 = self.clone();
-		self.base().before_user_on().wm_init_dialog(move |_| {
-			let hwnd = self2.base().hwnd();
+		self.0.dlg_base.base().before_on().wm_init_dialog(move |_| {
+			let hwnd = self2.0.dlg_base.base().hwnd();
 			let rc = hwnd.GetWindowRect()?;
 			let rc_parent = hwnd.GetParent()?.GetWindowRect()?;
 			hwnd.SetWindowPos( // center modal on parent
@@ -64,9 +50,20 @@ impl DlgModal {
 		});
 
 		let self2 = self.clone();
-		self.base().on().wm_close(move || { // user clicked the X button
-			self2.base().hwnd().EndDialog(0)?;
+		self.0.dlg_base.base().on().wm_close(move || { // user clicked the X button
+			self2.0.dlg_base.base().hwnd().EndDialog(0)?;
 			Ok(())
 		});
+	}
+
+	#[must_use]
+	pub(in crate::gui) fn dlg_base(&self) -> &DlgBase {
+		&self.0.dlg_base
+	}
+
+	pub(in crate::gui) fn show_modal(&self, parent: &impl GuiParent) -> AnyResult<()> {
+		let hinst = parent.hwnd().hinstance();
+		self.0.dlg_base.dialog_box_param(&hinst, parent.hwnd())?;
+		Ok(())
 	}
 }

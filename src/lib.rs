@@ -65,10 +65,6 @@ pub use decl::*;
 pub mod co {
 	//! Native constants.
 	//!
-	//! All types can be converted from/to their underlying integer type. Those
-	//! who can be combined as bitflags also implement
-	//! [`NativeBitflag`](crate::prelude::NativeBitflag).
-	//!
 	//! Among these constant types, three are error types:
 	//! [`CDERR`], [`ERROR`] and [`HRESULT`].
 

@@ -7,7 +7,7 @@ use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
 
-impl_handle! { HPROPSHEETPAGE;
+handle! { HPROPSHEETPAGE;
 	/// Handle to a
 	/// [property sheet](https://learn.microsoft.com/en-us/windows/win32/controls/property-sheets)
 	/// page.

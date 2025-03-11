@@ -9,7 +9,7 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::user::ffi;
 
-impl_handle! { HDESK;
+handle! { HDESK;
 	/// Handle to a
 	/// [desktop](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdesk).
 }

@@ -9,55 +9,16 @@ use crate::gui::{*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-struct Obj { // actual fields of MonthCalendar
-	base: BaseNativeControl,
+struct MonthCalendarObj {
+	base: BaseCtrl,
 	events: MonthCalendarEvents,
 	_pin: PhantomPinned,
 }
 
-/// Native
-/// [month calendar](https://learn.microsoft.com/en-us/windows/win32/controls/month-calendar-controls)
-/// control.
-#[derive(Clone)]
-pub struct MonthCalendar(Pin<Arc<Obj>>);
-
-unsafe impl Send for MonthCalendar {}
-
-impl AsRef<BaseNativeControl> for MonthCalendar {
-	fn as_ref(&self) -> &BaseNativeControl {
-		&self.0.base
-	}
-}
-
-impl GuiWindow for MonthCalendar {
-	fn hwnd(&self) -> &HWND {
-		self.0.base.hwnd()
-	}
-
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
-
-impl GuiChild for MonthCalendar {
-	fn ctrl_id(&self) -> u16 {
-		self.0.base.ctrl_id()
-	}
-}
-
-impl GuiChildFocus for MonthCalendar {}
-
-impl GuiNativeControl for MonthCalendar {}
-
-impl GuiNativeControlEvents<MonthCalendarEvents> for MonthCalendar {
-	fn on(&self) -> &MonthCalendarEvents {
-		if *self.hwnd() != HWND::NULL {
-			panic!("Cannot add events after the control creation.");
-		} else if *self.0.base.parent().hwnd() != HWND::NULL {
-			panic!("Cannot add events after the parent window creation.");
-		}
-		&self.0.events
-	}
+native_ctrl! { MonthCalendar: MonthCalendarObj => MonthCalendarEvents;
+	/// Native
+	/// [month calendar](https://learn.microsoft.com/en-us/windows/win32/controls/month-calendar-controls)
+	/// control.
 }
 
 impl MonthCalendar {
@@ -70,14 +31,12 @@ impl MonthCalendar {
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `MonthCalendar` in an event closure.
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: MonthCalendarOpts) -> Self {
-		let opts = auto_ctrl_id_if_zero(opts);
-		let ctrl_id = opts.ctrl_id;
-
+	pub fn new(parent: &(impl GuiParent + 'static), opts: MonthCalendarOpts) -> Self {
+		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				MonthCalendarObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: MonthCalendarEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -85,9 +44,28 @@ impl MonthCalendar {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
-			self2.create(OptsResz::Wnd(&opts))?;
-			Ok(WmRet::NotHandled)
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			self2.0.base.create_window(opts.window_ex_style, "SysMonthCal32", None,
+				opts.window_style | opts.control_style.into(), opts.position.into(),
+				SIZE::default(), &parent2)?;
+			ui_font::set(self2.hwnd())?;
+
+			let mut bounds_rect = RECT::default();
+			unsafe {
+				self2.hwnd().SendMessage(mcm::GetMinReqRect {
+					bounds_rect: &mut bounds_rect,
+				})?;
+			}
+			self2.hwnd().SetWindowPos(HwndPlace::None, POINT::default(),
+				SIZE::new(bounds_rect.right, bounds_rect.bottom),
+				co::SWP::NOZORDER | co::SWP::NOMOVE)?;
+
+			if opts.date.wDay != 0 {
+				self2.set_date(&opts.date)?;
+			}
+			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+			Ok(0) // ignored
 		});
 
 		new_self
@@ -103,15 +81,15 @@ impl MonthCalendar {
 	/// dynamically create a `MonthCalendar` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
-		parent: &impl GuiParent,
+		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
 	) -> Self
 	{
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				MonthCalendarObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: MonthCalendarEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -119,67 +97,35 @@ impl MonthCalendar {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_init_dialog(move |_| {
-			self2.create(OptsResz::Dlg(resize_behavior))?;
-			Ok(false) // this return value is discarded
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm_init_dialog(move |_| {
+			self2.0.base.assign_dlg(&parent2)?;
+			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			Ok(true) // ignored
 		});
 
 		new_self
 	}
 
-	fn create(&self, opts_resz: OptsResz<&MonthCalendarOpts>) -> SysResult<()> {
-		if opts_resz.resize_behavior().0 == Horz::Resize {
-			panic!("MonthCalendar cannot be resized with Horz::Resize.");
-		} else if opts_resz.resize_behavior().1 == Vert::Resize {
-			panic!("MonthCalendar cannot be resized with Vert::Resize.");
-		}
-
-		match opts_resz {
-			OptsResz::Wnd(opts) => {
-				let mut pos = POINT::new(opts.position.0, opts.position.1);
-				multiply_dpi_or_dtu(self.0.base.parent(), Some(&mut pos), None)?;
-
-				self.0.base.create_window(
-					"SysMonthCal32", None, pos, SIZE::new(0, 0),
-					opts.window_ex_style,
-					opts.window_style | opts.month_calendar_style.into(),
-				)?;
-
-				let mut bounds_rect = RECT::default();
-				unsafe {
-					self.hwnd().SendMessage(mcm::GetMinReqRect {
-						bounds_rect: &mut bounds_rect,
-					})?;
-				}
-				self.hwnd().SetWindowPos(HwndPlace::None, POINT::default(),
-					SIZE::new(bounds_rect.right, bounds_rect.bottom),
-					co::SWP::NOZORDER | co::SWP::NOMOVE)?;
-			},
-			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
-		}
-
-		self.0.base.parent()
-			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
-	}
-
 	/// Retrieves the currently selected date by sending a
 	/// [`mcm::GetCurSel`](crate::msg::mcm::GetCurSel) message.
-	pub fn date(&self) -> SYSTEMTIME {
+	#[must_use]
+	pub fn date(&self) -> SysResult<SYSTEMTIME> {
 		let mut st = SYSTEMTIME::default();
 		unsafe {
 			self.hwnd()
-				.SendMessage(mcm::GetCurSel { info: &mut st })
-		}.unwrap();
-		st
+				.SendMessage(mcm::GetCurSel { info: &mut st })?;
+		}
+		Ok(st)
 	}
 
 	/// Sets the currently selected date by sending a
 	/// [`mcm::SetCurSel`](crate::msg::mcm::SetCurSel) message.
-	pub fn set_date(&self, st: &SYSTEMTIME) {
+	pub fn set_date(&self, st: &SYSTEMTIME) -> SysResult<()> {
 		unsafe {
 			self.hwnd()
 				.SendMessage(mcm::SetCurSel { info: st })
-		}.unwrap();
+		}
 	}
 }
 
@@ -191,21 +137,17 @@ pub struct MonthCalendarOpts {
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
-	/// Defaults to `(0, 0)`.
+	/// Defaults to `gui::dpi(0, 0)`.
 	pub position: (i32, i32),
 	/// Month calendar styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
 	/// Defaults to `MCS::NoValue`.
-	pub month_calendar_style: co::MCS,
+	pub control_style: co::MCS,
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
+	/// Defaults to `WS::CHILD | WS::GROUP | WS::TABSTOP | WS::VISIBLE`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -226,29 +168,23 @@ pub struct MonthCalendarOpts {
 	///
 	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
 	pub resize_behavior: (Horz, Vert),
+
+	/// Initial date.
+	///
+	/// Defaults to now.
+	pub date: SYSTEMTIME,
 }
 
 impl Default for MonthCalendarOpts {
 	fn default() -> Self {
 		Self {
-			position: (0, 0),
-			month_calendar_style: co::MCS::NoValue,
-			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
+			position: dpi(0, 0),
+			control_style: co::MCS::NoValue,
+			window_style: co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
+			date: SYSTEMTIME::default(),
 		}
-	}
-}
-
-impl ResizeBehavior for &MonthCalendarOpts {
-	fn resize_behavior(&self) -> (Horz, Vert) {
-		self.resize_behavior
-	}
-}
-
-impl AutoCtrlId for MonthCalendarOpts {
-	fn ctrl_id_mut(&mut self) -> &mut u16 {
-		&mut self.ctrl_id
 	}
 }

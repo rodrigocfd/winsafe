@@ -4,7 +4,7 @@ use crate::decl::*;
 use crate::kernel::{ffi, privs::*};
 use crate::prelude::*;
 
-impl_handle! { HFILEMAPVIEW;
+handle! { HFILEMAPVIEW;
 	/// Address of a
 	/// [mapped view](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile).
 	/// Originally just an `LPVOID`.

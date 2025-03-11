@@ -4,7 +4,7 @@ use crate::decl::*;
 use crate::prelude::*;
 use crate::shell::{ffi, iterators::*};
 
-impl_handle! { HDROP;
+handle! { HDROP;
 	/// Handle to an
 	/// [internal drop structure](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdrop).
 }

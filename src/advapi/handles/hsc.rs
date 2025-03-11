@@ -7,7 +7,7 @@ use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
 
-impl_handle! { HSC;
+handle! { HSC;
 	/// Handle to a
 	/// [Service Control Manager](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw).
 	/// Originally `SC_HANDLE`.

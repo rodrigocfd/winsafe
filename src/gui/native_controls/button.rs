@@ -9,57 +9,16 @@ use crate::gui::{*, events::*, privs::*};
 use crate::msg::*;
 use crate::prelude::*;
 
-struct Obj { // actual fields of Button
-	base: BaseNativeControl,
+struct ButtonObj {
+	base: BaseCtrl,
 	events: ButtonEvents,
 	_pin: PhantomPinned,
 }
 
-/// Native
-/// [button](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#push-buttons)
-/// control.
-#[derive(Clone)]
-pub struct Button(Pin<Arc<Obj>>);
-
-unsafe impl Send for Button {}
-
-impl AsRef<BaseNativeControl> for Button {
-	fn as_ref(&self) -> &BaseNativeControl {
-		&self.0.base
-	}
-}
-
-impl GuiWindow for Button {
-	fn hwnd(&self) -> &HWND {
-		self.0.base.hwnd()
-	}
-
-	fn as_any(&self) -> &dyn Any {
-		self
-	}
-}
-
-impl GuiWindowText for Button {}
-
-impl GuiChild for Button {
-	fn ctrl_id(&self) -> u16 {
-		self.0.base.ctrl_id()
-	}
-}
-
-impl GuiChildFocus for Button {}
-
-impl GuiNativeControl for Button {}
-
-impl GuiNativeControlEvents<ButtonEvents> for Button {
-	fn on(&self) -> &ButtonEvents {
-		if *self.hwnd() != HWND::NULL {
-			panic!("Cannot add events after the control creation.");
-		} else if *self.0.base.parent().hwnd() != HWND::NULL {
-			panic!("Cannot add events after the parent window creation.");
-		}
-		&self.0.events
-	}
+native_ctrl! { Button: ButtonObj => ButtonEvents;
+	/// Native
+	/// [button](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#push-buttons)
+	/// control.
 }
 
 impl Button {
@@ -83,21 +42,19 @@ impl Button {
 	/// let btn = gui::Button::new(
 	///     &wnd,
 	///     gui::ButtonOpts {
-	///         position: (10, 10),
+	///         position: gui::dpi(10, 10),
 	///         text: "&Click me".to_owned(),
 	///         ..Default::default()
 	///     },
 	/// );
 	/// ```
 	#[must_use]
-	pub fn new(parent: &impl GuiParent, opts: ButtonOpts) -> Self {
-		let opts = auto_ctrl_id_if_zero(opts);
-		let ctrl_id = opts.ctrl_id;
-
+	pub fn new(parent: &(impl GuiParent + 'static), opts: ButtonOpts) -> Self {
+		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				ButtonObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: ButtonEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -105,9 +62,14 @@ impl Button {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_create_or_initdialog(move |_, _| {
- 			self2.create(OptsResz::Wnd(&opts))?;
-			Ok(WmRet::NotHandled)
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			self2.0.base.create_window(opts.window_ex_style, "BUTTON", Some(&opts.text),
+				opts.window_style | opts.control_style.into(), opts.position.into(),
+				SIZE::new(opts.width, opts.height), &parent2)?;
+			ui_font::set(self2.hwnd())?;
+			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+			Ok(0) // ignored
 		});
 
 		new_self
@@ -122,15 +84,15 @@ impl Button {
 	/// dynamically create a `Button` in an event closure.
 	#[must_use]
 	pub fn new_dlg(
-		parent: &impl GuiParent,
+		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
 	) -> Self
 	{
 		let new_self = Self(
 			Arc::pin(
-				Obj {
-					base: BaseNativeControl::new(parent, ctrl_id),
+				ButtonObj {
+					base: BaseCtrl::new(ctrl_id),
 					events: ButtonEvents::new(parent, ctrl_id),
 					_pin: PhantomPinned,
 				},
@@ -138,40 +100,14 @@ impl Button {
 		);
 
 		let self2 = new_self.clone();
-		parent.as_ref().before_user_on().wm_init_dialog(move |_| {
-			self2.create(OptsResz::Dlg(resize_behavior))?;
-			Ok(false) // return value is discarded
+		let parent2 = parent.clone();
+		parent.as_ref().before_on().wm_init_dialog(move |_| {
+			self2.0.base.assign_dlg(&parent2)?;
+			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			Ok(true) // ignored
 		});
 
 		new_self
-	}
-
-	fn create(&self, opts_resz: OptsResz<&ButtonOpts>) -> SysResult<()> {
-		match &opts_resz {
-			OptsResz::Wnd(opts) => {
-				let mut pos = POINT::new(opts.position.0, opts.position.1);
-				let mut sz = SIZE::new(opts.width as _, opts.height as _);
-				multiply_dpi_or_dtu(
-					self.0.base.parent(), Some(&mut pos), Some(&mut sz))?;
-
-				self.0.base.create_window(
-					"BUTTON", Some(&opts.text), pos, sz,
-					opts.window_ex_style,
-					opts.window_style | opts.button_style.into(),
-				)?;
-
-				unsafe {
-					self.hwnd().SendMessage(wm::SetFont {
-						hfont: ui_font(),
-						redraw: true,
-					});
-				}
-			},
-			OptsResz::Dlg(_) => self.0.base.create_dlg()?,
-		}
-
-		self.0.base.parent()
-			.add_to_layout_arranger(self.hwnd(), opts_resz.resize_behavior())
 	}
 
 	/// Fires the click event for the button by sending a
@@ -193,30 +129,18 @@ pub struct ButtonOpts {
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
-	/// Defaults to `(0, 0)`.
+	/// Defaults to `gui::dpi(0, 0)`.
 	pub position: (i32, i32),
 	/// Control width to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the value is in Dialog Template Units;
-	/// otherwise in pixels, which will be multiplied to match current system
-	/// DPI.
-	///
-	/// Defaults to `88`.
-	pub width: u32,
+	/// Defaults to `gui::dpi_x(88)`.
+	pub width: i32,
 	/// Control height to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the value is in Dialog Template Units;
-	/// otherwise in pixels, which will be multiplied to match current system
-	/// DPI.
-	///
-	/// Defaults to `26`.
-	pub height: u32,
+	/// Defaults to `gui::dpi_y(26)`.
+	pub height: i32,
 	/// Button styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
@@ -225,11 +149,11 @@ pub struct ButtonOpts {
 	/// Suggestions:
 	/// * replace with `BS::DEFPUSHBUTTON` for the default button of the window;
 	/// * add `BS::NOTIFY` to receive notifications other than the simple click.
-	pub button_style: co::BS,
+	pub control_style: co::BS,
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS::CHILD | WS::VISIBLE | WS::TABSTOP | WS::GROUP`.
+	/// Defaults to `WS::CHILD | WS::GROUP | WS::TABSTOP | WS::VISIBLE`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -252,26 +176,14 @@ impl Default for ButtonOpts {
 	fn default() -> Self {
 		Self {
 			text: "".to_owned(),
-			position: (0, 0),
-			width: 88,
-			height: 26,
-			button_style: co::BS::PUSHBUTTON,
-			window_style: co::WS::CHILD | co::WS::VISIBLE | co::WS::TABSTOP | co::WS::GROUP,
+			position: dpi(0, 0),
+			width: dpi_x(88),
+			height: dpi_y(26),
+			control_style: co::BS::PUSHBUTTON,
+			window_style: co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
 		}
-	}
-}
-
-impl ResizeBehavior for &ButtonOpts {
-	fn resize_behavior(&self) -> (Horz, Vert) {
-		self.resize_behavior
-	}
-}
-
-impl AutoCtrlId for ButtonOpts {
-	fn ctrl_id_mut(&mut self) -> &mut u16 {
-		&mut self.ctrl_id
 	}
 }

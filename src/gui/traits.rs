@@ -13,10 +13,10 @@ use crate::prelude::*;
 /// use winsafe::prelude::*;
 /// ```
 pub trait GuiWindow: Send {
-	/// Returns the underlying handle for this control.
+	/// Returns the underlying handle for this window.
 	///
 	/// Note that the handle is initially null, receiving an actual value only
-	/// after the control is physically created, what usually happens right
+	/// after the window is physically created, what usually happens right
 	/// before
 	/// [`WM_CREATE`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-create)
 	/// or
@@ -37,7 +37,7 @@ pub trait GuiWindow: Send {
 	/// let parent: gui::WindowMain; // initialized somewhere
 	/// # let parent = gui::WindowMain::new(gui::WindowMainOpts::default());
 	///
-	/// let ctrls: Vec<Arc<dyn GuiNativeControl>> = vec![
+	/// let ctrls: Vec<Arc<dyn GuiControl>> = vec![
 	///     Arc::new( gui::Edit::new(&parent, gui::EditOpts::default()) ),
 	///     Arc::new( gui::Button::new(&parent, gui::ButtonOpts::default()) ),
 	/// ];
@@ -52,28 +52,6 @@ pub trait GuiWindow: Send {
 	fn as_any(&self) -> &dyn Any;
 }
 
-/// Any window which can get/set text.
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait GuiWindowText: GuiWindow {
-	/// Sets the text by calling
-	/// [`HWND::SetWindowText`](crate::prelude::user_Hwnd::SetWindowText).
-	fn set_text(&self, text: &str) {
-		self.hwnd().SetWindowText(text).unwrap();
-	}
-
-	/// Retrieves the text by calling
-	/// [`HWND::GetWindowText`](crate::prelude::user_Hwnd::GetWindowText).
-	#[must_use]
-	fn text(&self) -> String {
-		self.hwnd().GetWindowText().unwrap()
-	}
-}
-
 /// Any window which can host child controls.
 ///
 /// Prefer importing this trait through the prelude:
@@ -82,7 +60,7 @@ pub trait GuiWindowText: GuiWindow {
 /// use winsafe::prelude::*;
 /// ```
 #[allow(private_bounds)]
-pub trait GuiParent: GuiWindow + AsRef<Base> {
+pub trait GuiParent: GuiWindow + Clone + AsRef<BaseWnd> {
 	/// Exposes methods to handle the basic window messages, plus timer and
 	/// native control notifications.
 	///
@@ -122,7 +100,7 @@ pub trait GuiParent: GuiWindow + AsRef<Base> {
 	///     move || -> w::AnyResult<()> {
 	///         println!("Click event at {:#x}", w::GetCurrentThreadId());
 	///
-	///         wnd.spawn_new_thread({
+	///         wnd.spawn_thread({
 	///             let wnd = wnd.clone();
 	///             move || {
 	///                 println!("This is another thread: {:#x}", w::GetCurrentThreadId());
@@ -138,10 +116,10 @@ pub trait GuiParent: GuiWindow + AsRef<Base> {
 	///     }
 	/// });
 	/// ```
-	fn spawn_new_thread<F>(&self, func: F)
+	fn spawn_thread<F>(&self, func: F)
 		where F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
-		self.as_ref().spawn_new_thread(func)
+		self.as_ref().spawn_thread(func)
 	}
 
 	/// Runs a closure synchronously in the window's original UI thread,
@@ -227,56 +205,29 @@ pub trait GuiParent: GuiWindow + AsRef<Base> {
 	}
 }
 
-/// A closeable popup parent window.
+/// Any child control.
 ///
 /// Prefer importing this trait through the prelude:
 ///
 /// ```no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait GuiParentPopup: GuiParent {
-	/// Closes the window by posting a [`WM_CLOSE`](crate::msg::wm::Close)
-	/// message. This is the safest way to close any popup window, because
-	/// you're able to process the
-	/// [`wm_close`](crate::gui::events::WindowEvents::wm_close) event, just
-	/// like if the user clicked the window "X" button.
-	fn close(&self) {
-		unsafe { self.hwnd().PostMessage(wm::Close {}).unwrap(); }
-	}
-}
-
-/// Any child window.
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait GuiChild: GuiWindow {
+pub trait GuiControl: GuiWindow {
 	/// Returns the control ID, which is defined at control creation.
 	///
 	/// The control ID should be unique within a parent.
 	#[must_use]
 	fn ctrl_id(&self) -> u16;
-}
 
-/// Any child window which can be focused.
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait GuiChildFocus: GuiChild {
-	/// In a raw, ordinary window, simply calls
+	/// In an ordinary window, simply calls
 	/// [`HWND:SetFocus`](crate::prelude::user_Hwnd::SetFocus).
 	///
 	/// In a dialog window, sends a
 	/// [`wm::NextDlgCtl`] message. This is preferable to the `HWND::SetFocus`
 	/// because it takes care of border highlighting, like the native
 	/// [`Button`](crate::gui::Button) control needs.
-	fn focus(&self) {
-		let hparent = self.hwnd().GetParent().unwrap();
+	fn focus(&self) -> SysResult<()> {
+		let hparent = self.hwnd().GetParent()?;
 		if hparent.is_dialog() {
 			unsafe {
 				hparent.SendMessage(wm::NextDlgCtl {
@@ -286,48 +237,6 @@ pub trait GuiChildFocus: GuiChild {
 		} else {
 			self.hwnd().SetFocus();
 		}
+		Ok(())
 	}
-}
-
-/// Any native control, which can be subclassed.
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-#[allow(private_bounds)]
-pub trait GuiNativeControl: GuiChild + AsRef<BaseNativeControl> {
-	/// Exposes the subclass events. If at least one event exists, the control
-	/// will be
-	/// [subclassed](https://learn.microsoft.com/en-us/windows/win32/controls/subclassing-overview).
-	///
-	/// **Note:** Subclassing may impact performance, use with care.
-	///
-	/// # Panics
-	///
-	/// Panics if the control or the parent window are already created. Events
-	/// must be set before control and parent window creation.
-	#[must_use]
-	fn on_subclass(&self) -> &WindowEvents {
-		self.as_ref().on_subclass()
-	}
-}
-
-/// Events of a native control.
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait GuiNativeControlEvents<E> {
-	/// Exposes the specific control events.
-	///
-	/// # Panics
-	///
-	/// Panics if the control is already created. Events must be set before
-	/// control creation.
-	#[must_use]
-	fn on(&self) -> &E;
 }

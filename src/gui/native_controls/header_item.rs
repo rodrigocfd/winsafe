@@ -1,9 +1,50 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, privs::*};
+use crate::gui::*;
 use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
+
+/// Possible states of the arrow in a [`HeaderItem`](crate::gui::HeaderItem).
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+pub enum HeaderArrow {
+	/// No arrow.
+	None,
+	/// An arrow pointing up, indicating sorting in ascending order.
+	Asc,
+	/// An arrow pointing down, indicating sorting in descending order.
+	Desc,
+}
+
+impl From<HeaderArrow> for co::HDF {
+	fn from(v: HeaderArrow) -> Self {
+		use HeaderArrow as H;
+		match v {
+			H::Asc => co::HDF::SORTUP,
+			H::Desc => co::HDF::SORTDOWN,
+			H::None => co::HDF::NoValue,
+		}
+	}
+}
+
+/// Text justification for a [`HeaderItem`](crate::gui::HeaderItem).
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+pub enum HeaderJustify {
+	Left,
+	Center,
+	Right
+}
+
+impl From<HeaderJustify> for co::HDF {
+	fn from(v: HeaderJustify) -> Self {
+		use HeaderJustify as H;
+		match v {
+			H::Left => co::HDF::LEFT,
+			H::Center => co::HDF::CENTER,
+			H::Right => co::HDF::RIGHT,
+		}
+	}
+}
 
 /// A single item of a [`Header`](crate::gui::Header) control.
 ///
@@ -27,20 +68,23 @@ impl<'a> HeaderItem<'a> {
 
 	/// Deletes the item by sending a
 	/// [`hdm::DeleteItem`](crate::msg::hdm::DeleteItem) message.
-	pub fn delete(&self) {
+	pub fn delete(&self) -> SysResult<()> {
 		unsafe {
 			self.owner.hwnd()
-				.SendMessage(hdm::DeleteItem { index: self.index, })
-		}.unwrap();
+				.SendMessage(hdm::DeleteItem { index: self.index })
+		}
 	}
 
 	/// Sets the item as the focused one sending an
 	/// [`hdm:SetFocusedItem`](crate::msg::hdm::SetFocusedItem) message.
-	pub fn focus(&self) {
+	///
+	/// Returns the same item, so further operations can be chained.
+	pub fn focus(&self) -> SysResult<HeaderItem<'a>> {
 		unsafe {
 			self.owner.hwnd()
-				.SendMessage(hdm::SetFocusedItem { index: self.index })
-		}.unwrap();
+				.SendMessage(hdm::SetFocusedItem { index: self.index })?;
+		}
+		Ok(*self)
 	}
 
 	/// Return the format flags of the item by sending a
@@ -105,7 +149,9 @@ impl<'a> HeaderItem<'a> {
 
 	/// Sets the arrow state of the item by sending a
 	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
-	pub fn set_arrow(&self, arrow_state: HeaderArrow) {
+	///
+	/// Returns the same item, so further operations can be chained.
+	pub fn set_arrow(&self, arrow_state: HeaderArrow) -> HeaderItem<'a> {
 		let mut hdi = HDITEM::default();
 		hdi.mask = co::HDI::FORMAT;
 
@@ -120,11 +166,15 @@ impl<'a> HeaderItem<'a> {
 					hditem: &mut hdi,
 				});
 		}
+
+		*self
 	}
 
 	/// Sets the text justification of the column by sending a
 	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
-	pub fn set_justify(&self, text_justification: HeaderJustify) {
+	///
+	/// Returns the same item, so further operations can be chained.
+	pub fn set_justify(&self, text_justification: HeaderJustify) -> HeaderItem<'a> {
 		let mut hdi = HDITEM::default();
 		hdi.mask = co::HDI::FORMAT;
 
@@ -139,11 +189,15 @@ impl<'a> HeaderItem<'a> {
 					hditem: &mut hdi,
 				});
 		}
+
+		*self
 	}
 
 	/// Sets the user-defined value of the item by sending a
 	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
-	pub fn set_lparam(&self, lparam: isize) {
+	///
+	/// Returns the same item, so further operations can be chained.
+	pub fn set_lparam(&self, lparam: isize) -> HeaderItem<'a> {
 		let mut hdi = HDITEM::default();
 		hdi.mask = co::HDI::LPARAM;
 		hdi.lParam = lparam;
@@ -155,11 +209,15 @@ impl<'a> HeaderItem<'a> {
 					hditem: &hdi,
 				});
 		}
+
+		*self
 	}
 
 	/// Sets the order of the item by sending a
 	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
-	pub fn set_order(&self, order: u32) {
+	///
+	/// Returns the same item, so further operations can be chained.
+	pub fn set_order(&self, order: u32) -> HeaderItem<'a> {
 		let mut hdi = HDITEM::default();
 		hdi.mask = co::HDI::ORDER;
 		hdi.iOrder = order as _;
@@ -171,11 +229,15 @@ impl<'a> HeaderItem<'a> {
 					hditem: &hdi,
 				});
 		}
+
+		*self
 	}
 
 	/// Sets the text of the item by sending a
 	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
-	pub fn set_text(&self, text: &str) {
+	///
+	/// Returns the same item, so further operations can be chained.
+	pub fn set_text(&self, text: &str) -> HeaderItem<'a> {
 		let mut hdi = HDITEM::default();
 		hdi.mask = co::HDI::TEXT;
 
@@ -189,19 +251,18 @@ impl<'a> HeaderItem<'a> {
 					hditem: &hdi,
 				});
 		}
+
+		*self
 	}
 
 	/// Sets the width of the item by sending a
 	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
 	///
-	/// Width will be adjusted to match current system DPI.
-	pub fn set_width(&self, width: u32) {
-		let mut col_cx = SIZE::new(width as _, 0);
-		multiply_dpi(None, Some(&mut col_cx)).unwrap();
-
+	/// Returns the same item, so further operations can be chained.
+	pub fn set_width(&self, width: i32) -> HeaderItem<'a> {
 		let mut hdi = HDITEM::default();
 		hdi.mask = co::HDI::WIDTH;
-		hdi.cxy = col_cx.cx;
+		hdi.cxy = width;
 
 		unsafe {
 			self.owner.hwnd()
@@ -210,6 +271,8 @@ impl<'a> HeaderItem<'a> {
 					hditem: &hdi,
 				});
 		}
+
+		*self
 	}
 
 	/// Retrieves the text of the item by sending a

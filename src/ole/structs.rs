@@ -110,6 +110,8 @@ impl<'a> FORMATETC<'a> {
 
 /// [`DVTARGETDEVICE`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-dvtargetdevice)
 /// struct.
+///
+/// The `tdData` field is dynamically allocated.
 #[repr(C)]
 #[derive(Default)]
 pub struct DVTARGETDEVICE {
@@ -120,8 +122,6 @@ pub struct DVTARGETDEVICE {
 	pub tdExtDevmodeOffset: u16,
 	pub tdData: [u8; 1],
 }
-
-impl VariableSized for DVTARGETDEVICE {}
 
 /// [`MULTI_QI`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-multi_qi)
 /// struct.

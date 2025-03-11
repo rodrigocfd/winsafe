@@ -1,4 +1,4 @@
-use crate::gui::{*, spec::*};
+use crate::gui::{*, iterators::*};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -19,10 +19,10 @@ impl<'a> StatusBarParts<'a> {
 	/// Retrieves the number of parts by sending an
 	/// [`sb::GetParts`](crate::msg::sb::GetParts) message.
 	#[must_use]
-	pub fn count(&self) -> u8 {
+	pub fn count(&self) -> u32 {
 		unsafe {
 			self.owner.hwnd()
-				.SendMessage(sb::GetParts { right_edges: None })
+				.SendMessage(sb::GetParts { right_edges: None }) as _
 		}
 	}
 
@@ -32,8 +32,14 @@ impl<'a> StatusBarParts<'a> {
 	/// existing parts, an object will still be returned. However, operations
 	/// upon this object will produce no effect.
 	#[must_use]
-	pub const fn get(&self, index: u8) -> StatusBarPart<'a> {
+	pub const fn get(&self, index: u32) -> StatusBarPart<'a> {
 		StatusBarPart::new(self.owner, index)
+	}
+
+	/// Returns an iterator over all parts.
+	#[must_use]
+	pub fn iter(&self) -> impl Iterator<Item = StatusBarPart<'a>> + 'a {
+		StatusBarPartIter::new(self.owner)
 	}
 
 	/// Sets the texts of multiple parts at once.
