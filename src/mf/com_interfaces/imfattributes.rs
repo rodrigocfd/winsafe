@@ -52,18 +52,14 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// [`IMFAttributes::CompareItem`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-compareitem)
 	/// method.
 	#[must_use]
-	fn CompareItem(&self,
-		guid_key: &GUID,
-		value: &PROPVARIANT,
-	) -> HrResult<bool>
-	{
+	fn CompareItem(&self, guid_key: &GUID, value: &PropVariant) -> HrResult<bool> {
 		let mut res: BOOL = 0;
 		ok_to_hrresult(
 			unsafe {
 				(vt::<IMFAttributesVT>(self).CompareItem)(
 					self.ptr(),
 					guid_key as *const _ as _,
-					value as *const _ as _,
+					&value.to_raw()? as *const _ as _,
 					&mut res,
 				)
 			},
@@ -238,7 +234,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// [`IMFAttributes::GetItem`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getitem)
 	/// method.
 	#[must_use]
-	fn GetItem(&self, guid_key: &GUID) -> HrResult<PROPVARIANT> {
+	fn GetItem(&self, guid_key: &GUID) -> HrResult<PropVariant> {
 		let mut value = PROPVARIANT::default();
 		ok_to_hrresult(
 			unsafe {
@@ -248,13 +244,14 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 					&mut value as *mut _ as _,
 				)
 			},
-		).map(|_| value)
+		)?;
+		PropVariant::from_raw(&value)
 	}
 
 	/// [`IMFAttributes::GetItemByIndex`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getitembyindex)
 	/// method.
 	#[must_use]
-	fn GetItemByIndex(&self, index: u32) -> HrResult<(GUID, PROPVARIANT)> {
+	fn GetItemByIndex(&self, index: u32) -> HrResult<(GUID, PropVariant)> {
 		let mut guid = GUID::default();
 		let mut value = PROPVARIANT::default();
 
@@ -267,7 +264,8 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 					&mut value as *mut _ as _,
 				)
 			},
-		).map(|_| (guid, value))
+		)?;
+		Ok((guid, PropVariant::from_raw(&value)?))
 	}
 
 	/// [`IMFAttributes::GetItemType`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getitemtype)
@@ -425,13 +423,13 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 
 	/// [`IMFAttributes::SetItem`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-setitem)
 	/// method.
-	fn SetItem(&self, guid_key: &GUID, value: &PROPVARIANT) -> HrResult<()> {
+	fn SetItem(&self, guid_key: &GUID, value: &PropVariant) -> HrResult<()> {
 		ok_to_hrresult(
 			unsafe {
 				(vt::<IMFAttributesVT>(self).SetItem)(
 					self.ptr(),
 					guid_key as *const _ as _,
-					value as *const _ as _,
+					&value.to_raw()? as *const _ as _,
 				)
 			},
 		)

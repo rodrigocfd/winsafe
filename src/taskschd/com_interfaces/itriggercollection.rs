@@ -89,7 +89,7 @@ pub trait taskschd_ITriggerCollection: oleaut_IDispatch {
 			unsafe {
 				(vt::<ITriggerCollectionVT>(self).Remove)(
 					self.ptr(),
-					VARIANT::new_i32(index),
+					Variant::I4(index).to_raw()?,
 				)
 			},
 		)

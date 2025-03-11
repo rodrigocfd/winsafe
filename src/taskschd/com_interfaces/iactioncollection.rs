@@ -105,7 +105,7 @@ pub trait taskschd_IActionCollection: oleaut_IDispatch {
 			unsafe {
 				(vt::<IActionCollectionVT>(self).Remove)(
 					self.ptr(),
-					VARIANT::new_i32(index),
+					Variant::I4(index).to_raw()?,
 				)
 			},
 		)

@@ -52,22 +52,10 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 			unsafe {
 				(vt::<ITaskServiceVT>(self).Connect)(
 					self.ptr(),
-					match server_name {
-						Some(server_name) => VARIANT::new_bstr(server_name)?,
-						None => VARIANT::default(),
-					},
-					match user {
-						Some(user) => VARIANT::new_bstr(user)?,
-						None => VARIANT::default(),
-					},
-					match domain {
-						Some(domain) => VARIANT::new_bstr(domain)?,
-						None => VARIANT::default(),
-					},
-					match password {
-						Some(password) => VARIANT::new_bstr(password)?,
-						None => VARIANT::default(),
-					},
+					Variant::from_opt_str(server_name).to_raw()?,
+					Variant::from_opt_str(user).to_raw()?,
+					Variant::from_opt_str(domain).to_raw()?,
+					Variant::from_opt_str(password).to_raw()?,
 				)
 			},
 		)

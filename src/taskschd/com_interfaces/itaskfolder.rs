@@ -71,14 +71,8 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 					BSTR::SysAllocString(path.unwrap_or_default())?.as_ptr(),
 					definition.ptr(),
 					flags.raw() as _,
-					match user_id {
-						Some(user_id) => VARIANT::new_bstr(user_id)?,
-						None => VARIANT::default(),
-					},
-					match password {
-						Some(password) => VARIANT::new_bstr(password)?,
-						None => VARIANT::default(),
-					},
+					Variant::from_opt_str(user_id).to_raw()?,
+					Variant::from_opt_str(password).to_raw()?,
 					logon_type.raw(),
 					sddl.unwrap_or_default(),
 					queried.as_mut(),

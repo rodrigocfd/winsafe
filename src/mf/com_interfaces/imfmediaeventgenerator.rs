@@ -88,7 +88,7 @@ pub trait mf_IMFMediaEventGenerator: ole_IUnknown {
 		met: co::ME,
 		extended_type: &GUID,
 		status: co::HRESULT,
-		value: Option<&PROPVARIANT>,
+		value: Option<&PropVariant>,
 	) -> HrResult<()>
 	{
 		ok_to_hrresult(
@@ -98,7 +98,10 @@ pub trait mf_IMFMediaEventGenerator: ole_IUnknown {
 					met.raw(),
 					extended_type as *const _ as _,
 					status.raw(),
-					value.map_or(std::ptr::null(), |v| v as *const _ as _),
+					match value {
+						None => std::ptr::null(),
+						Some(v) => &v.to_raw()? as *const _ as _,
+					},
 				)
 			},
 		)

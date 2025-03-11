@@ -128,13 +128,13 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 	///
 	/// session.Start(
 	///     co::MF_TIME_FORMAT::NULL,
-	///     &w::PROPVARIANT::default(),
+	///     &w::PropVariant::Empty,
 	/// )?;
 	/// # w::HrResult::Ok(())
 	/// ```
 	fn Start(&self,
 		time_format: co::MF_TIME_FORMAT,
-		start_position: &PROPVARIANT,
+		start_position: &PropVariant,
 	) -> HrResult<()>
 	{
 		ok_to_hrresult(
@@ -142,7 +142,7 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 				(vt::<IMFMediaSessionVT>(self).Start)(
 					self.ptr(),
 					&time_format as *const _ as _,
-					start_position as *const _ as _,
+					&start_position.to_raw()? as *const _ as _,
 				)
 			},
 		)

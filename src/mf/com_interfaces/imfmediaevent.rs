@@ -69,7 +69,7 @@ pub trait mf_IMFMediaEvent: mf_IMFAttributes {
 	/// [`IMFMediaEvent::GetValue`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfmediaevent-getvalue)
 	/// method.
 	#[must_use]
-	fn GetValue(&self) -> HrResult<PROPVARIANT> {
+	fn GetValue(&self) -> HrResult<PropVariant> {
 		let mut value = PROPVARIANT::default();
 		ok_to_hrresult(
 			unsafe {
@@ -78,6 +78,7 @@ pub trait mf_IMFMediaEvent: mf_IMFAttributes {
 					&mut value as *mut _ as _,
 				)
 			},
-		).map(|_| value)
+		)?;
+		PropVariant::from_raw(&value)
 	}
 }

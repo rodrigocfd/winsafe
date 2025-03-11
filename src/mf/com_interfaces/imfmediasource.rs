@@ -62,7 +62,7 @@ pub trait mf_IMFMediaSource: mf_IMFMediaEventGenerator {
 	fn Start(&self,
 		presentation_descriptor: IMFPresentationDescriptor,
 		time_format: Option<&GUID>,
-		start_position: Option<&PROPVARIANT>,
+		start_position: &PropVariant,
 	) -> HrResult<()>
 	{
 		ok_to_hrresult(
@@ -71,7 +71,7 @@ pub trait mf_IMFMediaSource: mf_IMFMediaEventGenerator {
 					self.ptr(),
 					presentation_descriptor.ptr(),
 					time_format.unwrap_or(&GUID::default()) as *const _ as _,
-					start_position.unwrap_or(&PROPVARIANT::default()) as *const _ as _,
+					&start_position.to_raw()? as *const _ as _,
 				)
 			},
 		)
