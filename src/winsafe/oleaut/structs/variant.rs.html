@@ -68,8 +68,8 @@
 <a href=#68 id=68 data-nosnippet>68</a>	/// will be called –, so `val` will remain valid to be used thereafter.
 <a href=#69 id=69 data-nosnippet>69</a>	</span><span class="attr">#[must_use]
 <a href=#70 id=70 data-nosnippet>70</a>	</span><span class="kw">pub fn </span>new_idispatch(val: <span class="kw-2">&amp;</span><span class="kw">impl </span>oleaut_IDispatch) -&gt; <span class="self">Self </span>{
-<a href=#71 id=71 data-nosnippet>71</a>		<span class="kw">let </span><span class="kw-2">mut </span>cloned = val.clone();
-<a href=#72 id=72 data-nosnippet>72</a>		<span class="kw">let </span>ptr = cloned.leak() <span class="kw">as </span>usize;
+<a href=#71 id=71 data-nosnippet>71</a>		<span class="kw">let </span><span class="kw-2">mut </span>cloned = val.clone(); <span class="comment">// call AddRef
+<a href=#72 id=72 data-nosnippet>72</a>		</span><span class="kw">let </span>ptr = cloned.leak() <span class="kw">as </span>usize;
 <a href=#73 id=73 data-nosnippet>73</a>		<span class="kw">unsafe </span>{ <span class="self">Self</span>::from_raw(co::VT::DISPATCH, <span class="kw-2">&amp;</span>ptr.to_ne_bytes()) }
 <a href=#74 id=74 data-nosnippet>74</a>	}
 <a href=#75 id=75 data-nosnippet>75</a>

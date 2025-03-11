@@ -71,19 +71,13 @@
 <a href=#71 id=71 data-nosnippet>71</a>					BSTR::SysAllocString(path.unwrap_or_default())<span class="question-mark">?</span>.as_ptr(),
 <a href=#72 id=72 data-nosnippet>72</a>					definition.ptr(),
 <a href=#73 id=73 data-nosnippet>73</a>					flags.raw() <span class="kw">as _</span>,
-<a href=#74 id=74 data-nosnippet>74</a>					<span class="kw">match </span>user_id {
-<a href=#75 id=75 data-nosnippet>75</a>						<span class="prelude-val">Some</span>(user_id) =&gt; VARIANT::new_bstr(user_id)<span class="question-mark">?</span>,
-<a href=#76 id=76 data-nosnippet>76</a>						<span class="prelude-val">None </span>=&gt; VARIANT::default(),
-<a href=#77 id=77 data-nosnippet>77</a>					},
-<a href=#78 id=78 data-nosnippet>78</a>					<span class="kw">match </span>password {
-<a href=#79 id=79 data-nosnippet>79</a>						<span class="prelude-val">Some</span>(password) =&gt; VARIANT::new_bstr(password)<span class="question-mark">?</span>,
-<a href=#80 id=80 data-nosnippet>80</a>						<span class="prelude-val">None </span>=&gt; VARIANT::default(),
-<a href=#81 id=81 data-nosnippet>81</a>					},
-<a href=#82 id=82 data-nosnippet>82</a>					logon_type.raw(),
-<a href=#83 id=83 data-nosnippet>83</a>					sddl.unwrap_or_default(),
-<a href=#84 id=84 data-nosnippet>84</a>					queried.as_mut(),
-<a href=#85 id=85 data-nosnippet>85</a>				)
-<a href=#86 id=86 data-nosnippet>86</a>			},
-<a href=#87 id=87 data-nosnippet>87</a>		).map(|<span class="kw">_</span>| queried)
-<a href=#88 id=88 data-nosnippet>88</a>	}
-<a href=#89 id=89 data-nosnippet>89</a>}</code></pre></div></section></main></body></html>
+<a href=#74 id=74 data-nosnippet>74</a>					Variant::from_opt_str(user_id).to_raw()<span class="question-mark">?</span>,
+<a href=#75 id=75 data-nosnippet>75</a>					Variant::from_opt_str(password).to_raw()<span class="question-mark">?</span>,
+<a href=#76 id=76 data-nosnippet>76</a>					logon_type.raw(),
+<a href=#77 id=77 data-nosnippet>77</a>					sddl.unwrap_or_default(),
+<a href=#78 id=78 data-nosnippet>78</a>					queried.as_mut(),
+<a href=#79 id=79 data-nosnippet>79</a>				)
+<a href=#80 id=80 data-nosnippet>80</a>			},
+<a href=#81 id=81 data-nosnippet>81</a>		).map(|<span class="kw">_</span>| queried)
+<a href=#82 id=82 data-nosnippet>82</a>	}
+<a href=#83 id=83 data-nosnippet>83</a>}</code></pre></div></section></main></body></html>

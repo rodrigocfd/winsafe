@@ -19,7 +19,7 @@
 <span class="item-spacer"></span>    fn <a href="#method.Start" class="fn">Start</a>(
         &amp;self,
         time_format: <a class="struct" href="../co/struct.MF_TIME_FORMAT.html" title="struct winsafe::co::MF_TIME_FORMAT">MF_TIME_FORMAT</a>,
-        start_position: &amp;<a class="struct" href="../struct.PROPVARIANT.html" title="struct winsafe::PROPVARIANT">PROPVARIANT</a>,
+        start_position: &amp;<a class="enum" href="../enum.PropVariant.html" title="enum winsafe::PropVariant">PropVariant</a>,
     ) -&gt; <a class="type" href="../type.HrResult.html" title="type winsafe::HrResult">HrResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; { ... }
 <span class="item-spacer"></span>    fn <a href="#method.Stop" class="fn">Stop</a>(&amp;self) -&gt; <a class="type" href="../type.HrResult.html" title="type winsafe::HrResult">HrResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt; { ... }
 }</code></pre><span class="item-info"><div class="stab portability">Available on <strong>crate features <code>kernel</code> and <code>mf</code></strong> only.</div></span><details class="toggle top-doc" open><summary class="hideme"><span>Expand description</span></summary><div class="docblock"><p>This trait is enabled with the <code>mf</code> feature, and provides methods for
@@ -54,7 +54,7 @@ method.</p>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.Start" class="method"><a class="src rightside" href="../../src/winsafe/mf\com_interfaces/imfmediasession.rs.html#135-149">Source</a><h4 class="code-header">fn <a href="#method.Start" class="fn">Start</a>(
     &amp;self,
     time_format: <a class="struct" href="../co/struct.MF_TIME_FORMAT.html" title="struct winsafe::co::MF_TIME_FORMAT">MF_TIME_FORMAT</a>,
-    start_position: &amp;<a class="struct" href="../struct.PROPVARIANT.html" title="struct winsafe::PROPVARIANT">PROPVARIANT</a>,
+    start_position: &amp;<a class="enum" href="../enum.PropVariant.html" title="enum winsafe::PropVariant">PropVariant</a>,
 ) -&gt; <a class="type" href="../type.HrResult.html" title="type winsafe::HrResult">HrResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfmediasession-start"><code>IMFMediaSession::Start</code></a>
 method.</p>
 <h5 id="examples"><a class="doc-anchor" href="#examples">§</a>Examples</h5>
@@ -64,7 +64,7 @@ method.</p>
 
 </span>session.Start(
     co::MF_TIME_FORMAT::NULL,
-    <span class="kw-2">&amp;</span>w::PROPVARIANT::default(),
+    <span class="kw-2">&amp;</span>w::PropVariant::Empty,
 )<span class="question-mark">?</span>;</code></pre></div>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.Stop" class="method"><a class="src rightside" href="../../src/winsafe/mf\com_interfaces/imfmediasession.rs.html#151-154">Source</a><h4 class="code-header">fn <a href="#method.Stop" class="fn">Stop</a>(&amp;self) -&gt; <a class="type" href="../type.HrResult.html" title="type winsafe::HrResult">HrResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfmediasession-stop"><code>IMFMediaSession::Stop</code></a>
 method.</p>

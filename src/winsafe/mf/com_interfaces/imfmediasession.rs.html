@@ -128,13 +128,13 @@
 <a href=#128 id=128 data-nosnippet>128</a>	///
 <a href=#129 id=129 data-nosnippet>129</a>	/// session.Start(
 <a href=#130 id=130 data-nosnippet>130</a>	///     co::MF_TIME_FORMAT::NULL,
-<a href=#131 id=131 data-nosnippet>131</a>	///     &amp;w::PROPVARIANT::default(),
+<a href=#131 id=131 data-nosnippet>131</a>	///     &amp;w::PropVariant::Empty,
 <a href=#132 id=132 data-nosnippet>132</a>	/// )?;
 <a href=#133 id=133 data-nosnippet>133</a>	/// # w::HrResult::Ok(())
 <a href=#134 id=134 data-nosnippet>134</a>	/// ```
 <a href=#135 id=135 data-nosnippet>135</a>	</span><span class="kw">fn </span>Start(<span class="kw-2">&amp;</span><span class="self">self</span>,
 <a href=#136 id=136 data-nosnippet>136</a>		time_format: co::MF_TIME_FORMAT,
-<a href=#137 id=137 data-nosnippet>137</a>		start_position: <span class="kw-2">&amp;</span>PROPVARIANT,
+<a href=#137 id=137 data-nosnippet>137</a>		start_position: <span class="kw-2">&amp;</span>PropVariant,
 <a href=#138 id=138 data-nosnippet>138</a>	) -&gt; HrResult&lt;()&gt;
 <a href=#139 id=139 data-nosnippet>139</a>	{
 <a href=#140 id=140 data-nosnippet>140</a>		ok_to_hrresult(
@@ -142,7 +142,7 @@
 <a href=#142 id=142 data-nosnippet>142</a>				(vt::&lt;IMFMediaSessionVT&gt;(<span class="self">self</span>).Start)(
 <a href=#143 id=143 data-nosnippet>143</a>					<span class="self">self</span>.ptr(),
 <a href=#144 id=144 data-nosnippet>144</a>					<span class="kw-2">&amp;</span>time_format <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-<a href=#145 id=145 data-nosnippet>145</a>					start_position <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+<a href=#145 id=145 data-nosnippet>145</a>					<span class="kw-2">&amp;</span>start_position.to_raw()<span class="question-mark">? </span><span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
 <a href=#146 id=146 data-nosnippet>146</a>				)
 <a href=#147 id=147 data-nosnippet>147</a>			},
 <a href=#148 id=148 data-nosnippet>148</a>		)

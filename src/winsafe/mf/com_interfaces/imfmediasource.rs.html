@@ -62,7 +62,7 @@
 <a href=#62 id=62 data-nosnippet>62</a>	</span><span class="kw">fn </span>Start(<span class="kw-2">&amp;</span><span class="self">self</span>,
 <a href=#63 id=63 data-nosnippet>63</a>		presentation_descriptor: IMFPresentationDescriptor,
 <a href=#64 id=64 data-nosnippet>64</a>		time_format: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>GUID&gt;,
-<a href=#65 id=65 data-nosnippet>65</a>		start_position: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PROPVARIANT&gt;,
+<a href=#65 id=65 data-nosnippet>65</a>		start_position: <span class="kw-2">&amp;</span>PropVariant,
 <a href=#66 id=66 data-nosnippet>66</a>	) -&gt; HrResult&lt;()&gt;
 <a href=#67 id=67 data-nosnippet>67</a>	{
 <a href=#68 id=68 data-nosnippet>68</a>		ok_to_hrresult(
@@ -71,7 +71,7 @@
 <a href=#71 id=71 data-nosnippet>71</a>					<span class="self">self</span>.ptr(),
 <a href=#72 id=72 data-nosnippet>72</a>					presentation_descriptor.ptr(),
 <a href=#73 id=73 data-nosnippet>73</a>					time_format.unwrap_or(<span class="kw-2">&amp;</span>GUID::default()) <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-<a href=#74 id=74 data-nosnippet>74</a>					start_position.unwrap_or(<span class="kw-2">&amp;</span>PROPVARIANT::default()) <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+<a href=#74 id=74 data-nosnippet>74</a>					<span class="kw-2">&amp;</span>start_position.to_raw()<span class="question-mark">? </span><span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
 <a href=#75 id=75 data-nosnippet>75</a>				)
 <a href=#76 id=76 data-nosnippet>76</a>			},
 <a href=#77 id=77 data-nosnippet>77</a>		)
