@@ -1,13 +1,13 @@
 mod bstr;
-mod others;
 mod propvariant;
-mod variant;
+mod structs_other;
 mod variant_traits;
+mod variant;
 
 pub mod decl {
 	pub use super::bstr::BSTR;
-	pub use super::others::*;
 	pub use super::propvariant::PROPVARIANT;
+	pub use super::structs_other::*;
 	pub use super::variant::VARIANT;
 }
 
