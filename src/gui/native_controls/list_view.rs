@@ -71,7 +71,7 @@ impl<T> ListView<T> {
 				opts.window_style | opts.control_style.into() | co::LVS::SHAREIMAGELISTS.into(),
 				opts.position.into(), opts.size.into(), &parent2)?;
 			if opts.control_ex_style != co::LVS_EX::NoValue {
-				self2.set_extended_style(opts.control_ex_style, true);
+				self2.set_extended_style(true, opts.control_ex_style);
 			}
 			if !unsafe { &*self2.0.header.get() }.as_ref().unwrap().init_nested(self2.hwnd()) {
 				*unsafe { &mut *self2.0.header.get() } = None; // no header, delete it
@@ -349,7 +349,7 @@ impl<T> ListView<T> {
 	/// Sets or unsets the given extended list view styles by sending an
 	/// [`lvm::SetExtendedListViewStyle`](crate::msg::lvm::SetExtendedListViewStyle)
 	/// message.
-	pub fn set_extended_style(&self, ex_style: co::LVS_EX, set: bool) {
+	pub fn set_extended_style(&self, set: bool, ex_style: co::LVS_EX) {
 		unsafe {
 			self.hwnd().SendMessage(lvm::SetExtendedListViewStyle {
 				mask: ex_style,

@@ -55,7 +55,7 @@ impl Tab {
 				opts.window_style | opts.control_style.into(),
 				opts.position.into(), opts.size.into(), &parent2)?;
 			if opts.control_ex_style != co::TCS_EX::NoValue {
-				self2.set_extended_style(opts.control_ex_style, true);
+				self2.set_extended_style(true, opts.control_ex_style);
 			}
 			self2.0.children.iter()
 				.for_each(|(text, _)| unsafe { self2.items().add(text); }); // add the tabs
@@ -177,7 +177,7 @@ impl Tab {
 
 	/// Sets or unsets the given extended list view styles by sending a
 	/// [`tcm::SetExtendedStyle`](crate::msg::tcm::SetExtendedStyle) message.
-	pub fn set_extended_style(&self, ex_style: co::TCS_EX, set: bool) {
+	pub fn set_extended_style(&self, set: bool, ex_style: co::TCS_EX) {
 		unsafe {
 			self.hwnd().SendMessage(tcm::SetExtendedStyle {
 				mask: ex_style,
