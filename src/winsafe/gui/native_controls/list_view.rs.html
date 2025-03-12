@@ -71,7 +71,7 @@
 <a href=#71 id=71 data-nosnippet>71</a>				opts.window_style | opts.control_style.into() | co::LVS::SHAREIMAGELISTS.into(),
 <a href=#72 id=72 data-nosnippet>72</a>				opts.position.into(), opts.size.into(), <span class="kw-2">&amp;</span>parent2)<span class="question-mark">?</span>;
 <a href=#73 id=73 data-nosnippet>73</a>			<span class="kw">if </span>opts.control_ex_style != co::LVS_EX::NoValue {
-<a href=#74 id=74 data-nosnippet>74</a>				self2.set_extended_style(opts.control_ex_style, <span class="bool-val">true</span>);
+<a href=#74 id=74 data-nosnippet>74</a>				self2.set_extended_style(<span class="bool-val">true</span>, opts.control_ex_style);
 <a href=#75 id=75 data-nosnippet>75</a>			}
 <a href=#76 id=76 data-nosnippet>76</a>			<span class="kw">if </span>!<span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>self2.<span class="number">0</span>.header.get() }.as_ref().unwrap().init_nested(self2.hwnd()) {
 <a href=#77 id=77 data-nosnippet>77</a>				<span class="kw-2">*</span><span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>self2.<span class="number">0</span>.header.get() } = <span class="prelude-val">None</span>; <span class="comment">// no header, delete it
@@ -349,7 +349,7 @@
 <a href=#349 id=349 data-nosnippet>349</a>	<span class="doccomment">/// Sets or unsets the given extended list view styles by sending an
 <a href=#350 id=350 data-nosnippet>350</a>	/// [`lvm::SetExtendedListViewStyle`](crate::msg::lvm::SetExtendedListViewStyle)
 <a href=#351 id=351 data-nosnippet>351</a>	/// message.
-<a href=#352 id=352 data-nosnippet>352</a>	</span><span class="kw">pub fn </span>set_extended_style(<span class="kw-2">&amp;</span><span class="self">self</span>, ex_style: co::LVS_EX, set: bool) {
+<a href=#352 id=352 data-nosnippet>352</a>	</span><span class="kw">pub fn </span>set_extended_style(<span class="kw-2">&amp;</span><span class="self">self</span>, set: bool, ex_style: co::LVS_EX) {
 <a href=#353 id=353 data-nosnippet>353</a>		<span class="kw">unsafe </span>{
 <a href=#354 id=354 data-nosnippet>354</a>			<span class="self">self</span>.hwnd().SendMessage(lvm::SetExtendedListViewStyle {
 <a href=#355 id=355 data-nosnippet>355</a>				mask: ex_style,

@@ -55,7 +55,7 @@
 <a href=#55 id=55 data-nosnippet>55</a>				opts.window_style | opts.control_style.into(),
 <a href=#56 id=56 data-nosnippet>56</a>				opts.position.into(), opts.size.into(), <span class="kw-2">&amp;</span>parent2)<span class="question-mark">?</span>;
 <a href=#57 id=57 data-nosnippet>57</a>			<span class="kw">if </span>opts.control_ex_style != co::TCS_EX::NoValue {
-<a href=#58 id=58 data-nosnippet>58</a>				self2.set_extended_style(opts.control_ex_style, <span class="bool-val">true</span>);
+<a href=#58 id=58 data-nosnippet>58</a>				self2.set_extended_style(<span class="bool-val">true</span>, opts.control_ex_style);
 <a href=#59 id=59 data-nosnippet>59</a>			}
 <a href=#60 id=60 data-nosnippet>60</a>			self2.<span class="number">0</span>.children.iter()
 <a href=#61 id=61 data-nosnippet>61</a>				.for_each(|(text, <span class="kw">_</span>)| <span class="kw">unsafe </span>{ self2.items().add(text); }); <span class="comment">// add the tabs
@@ -177,7 +177,7 @@
 <a href=#177 id=177 data-nosnippet>177</a>
 <a href=#178 id=178 data-nosnippet>178</a>	<span class="doccomment">/// Sets or unsets the given extended list view styles by sending a
 <a href=#179 id=179 data-nosnippet>179</a>	/// [`tcm::SetExtendedStyle`](crate::msg::tcm::SetExtendedStyle) message.
-<a href=#180 id=180 data-nosnippet>180</a>	</span><span class="kw">pub fn </span>set_extended_style(<span class="kw-2">&amp;</span><span class="self">self</span>, ex_style: co::TCS_EX, set: bool) {
+<a href=#180 id=180 data-nosnippet>180</a>	</span><span class="kw">pub fn </span>set_extended_style(<span class="kw-2">&amp;</span><span class="self">self</span>, set: bool, ex_style: co::TCS_EX) {
 <a href=#181 id=181 data-nosnippet>181</a>		<span class="kw">unsafe </span>{
 <a href=#182 id=182 data-nosnippet>182</a>			<span class="self">self</span>.hwnd().SendMessage(tcm::SetExtendedStyle {
 <a href=#183 id=183 data-nosnippet>183</a>				mask: ex_style,
