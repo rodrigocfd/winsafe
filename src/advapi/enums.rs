@@ -9,7 +9,7 @@ pub enum DisabPriv<'a> {
 	/// Disables all privileges.
 	Disab,
 	/// An array of privileges and its attributes.
-	Privs(&'a TOKEN_PRIVILEGES)
+	Privs(&'a TOKEN_PRIVILEGES),
 }
 
 /// Registry value types.
