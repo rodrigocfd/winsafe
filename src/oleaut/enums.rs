@@ -8,6 +8,8 @@ use crate::prelude::*;
 /// which is automatically converted into its low-level representation when
 /// needed.
 ///
+/// Not to be confused with the similar [`Variant`].
+///
 /// The fields are named according to the
 /// [`VARENUM`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-varenum)
 /// enumeration.
@@ -141,9 +143,10 @@ impl PropVariant {
 	}
 }
 
-
 /// High-level representation of the [`VARIANT`](crate::VARIANT) struct, which
 /// is automatically converted into its low-level representation when needed.
+///
+/// Not to be confused with the similar [`PropVariant`].
 ///
 /// The fields are named according to the
 /// [`VARENUM`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-varenum)
