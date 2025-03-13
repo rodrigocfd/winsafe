@@ -35,7 +35,7 @@
 <a href=#35 id=35 data-nosnippet>35</a>	</span><span class="kw">fn </span>GetFileVersionInfo(file_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;VersionInfoGuard&gt; {
 <a href=#36 id=36 data-nosnippet>36</a>		<span class="kw">let </span>block_sz = <span class="self">Self</span>::GetFileVersionInfoSize(file_name)<span class="question-mark">?</span>;
 <a href=#37 id=37 data-nosnippet>37</a>		<span class="kw">let </span><span class="kw-2">mut </span>hglobal =
-<a href=#38 id=38 data-nosnippet>38</a>			HGLOBAL::GlobalAlloc(<span class="prelude-val">Some</span>(co::GMEM::FIXED | co::GMEM::ZEROINIT), block_sz <span class="kw">as _</span>)<span class="question-mark">?</span>;
+<a href=#38 id=38 data-nosnippet>38</a>			HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, block_sz <span class="kw">as _</span>)<span class="question-mark">?</span>;
 <a href=#39 id=39 data-nosnippet>39</a>		<span class="kw">let </span>hglobal_ptr = hglobal.leak();
 <a href=#40 id=40 data-nosnippet>40</a>
 <a href=#41 id=41 data-nosnippet>41</a>		bool_to_sysresult(<span class="kw">unsafe </span>{

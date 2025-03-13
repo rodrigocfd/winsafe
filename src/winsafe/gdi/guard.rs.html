@@ -120,7 +120,7 @@
 <a href=#120 id=120 data-nosnippet>120</a>			</span>- std::mem::size_of::&lt;PALETTEENTRY&gt;()
 <a href=#121 id=121 data-nosnippet>121</a>			+ (entries.len() * std::mem::size_of::&lt;PALETTEENTRY&gt;());
 <a href=#122 id=122 data-nosnippet>122</a>		<span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self </span>{
-<a href=#123 id=123 data-nosnippet>123</a>			ptr: HGLOBAL::GlobalAlloc(<span class="prelude-val">Some</span>(co::GMEM::FIXED | co::GMEM::ZEROINIT), sz)<span class="question-mark">?</span>,
+<a href=#123 id=123 data-nosnippet>123</a>			ptr: HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, sz)<span class="question-mark">?</span>,
 <a href=#124 id=124 data-nosnippet>124</a>		};
 <a href=#125 id=125 data-nosnippet>125</a>		new_self.palVersion = pal_version;
 <a href=#126 id=126 data-nosnippet>126</a>		new_self.palNumEntries = entries.len() <span class="kw">as _</span>;

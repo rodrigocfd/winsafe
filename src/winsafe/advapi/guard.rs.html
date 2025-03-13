@@ -245,7 +245,7 @@
 <a href=#245 id=245 data-nosnippet>245</a>			</span>- std::mem::size_of::&lt;SID_AND_ATTRIBUTES&gt;()
 <a href=#246 id=246 data-nosnippet>246</a>			+ (groups.len() * std::mem::size_of::&lt;SID_AND_ATTRIBUTES&gt;());
 <a href=#247 id=247 data-nosnippet>247</a>		<span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self </span>{
-<a href=#248 id=248 data-nosnippet>248</a>			ptr: HGLOBAL::GlobalAlloc(<span class="prelude-val">Some</span>(co::GMEM::FIXED | co::GMEM::ZEROINIT), sz)<span class="question-mark">?</span>,
+<a href=#248 id=248 data-nosnippet>248</a>			ptr: HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, sz)<span class="question-mark">?</span>,
 <a href=#249 id=249 data-nosnippet>249</a>			_groups: PhantomData,
 <a href=#250 id=250 data-nosnippet>250</a>		};
 <a href=#251 id=251 data-nosnippet>251</a>		new_self.GroupCount = groups.len() <span class="kw">as _</span>;
@@ -284,7 +284,7 @@
 <a href=#284 id=284 data-nosnippet>284</a>			</span>- std::mem::size_of::&lt;LUID_AND_ATTRIBUTES&gt;()
 <a href=#285 id=285 data-nosnippet>285</a>			+ (privileges.len() * std::mem::size_of::&lt;LUID_AND_ATTRIBUTES&gt;());
 <a href=#286 id=286 data-nosnippet>286</a>		<span class="kw">let </span><span class="kw-2">mut </span>new_self = <span class="self">Self </span>{
-<a href=#287 id=287 data-nosnippet>287</a>			ptr: HGLOBAL::GlobalAlloc(<span class="prelude-val">Some</span>(co::GMEM::FIXED | co::GMEM::ZEROINIT), sz)<span class="question-mark">?</span>,
+<a href=#287 id=287 data-nosnippet>287</a>			ptr: HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, sz)<span class="question-mark">?</span>,
 <a href=#288 id=288 data-nosnippet>288</a>		};
 <a href=#289 id=289 data-nosnippet>289</a>		new_self.PrivilegeCount = privileges.len() <span class="kw">as _</span>;
 <a href=#290 id=290 data-nosnippet>290</a>		privileges

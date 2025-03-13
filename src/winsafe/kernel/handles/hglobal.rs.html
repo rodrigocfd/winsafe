@@ -29,9 +29,9 @@
 <a href=#29 id=29 data-nosnippet>29</a>	<span class="doccomment">/// [`GlobalAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc)
 <a href=#30 id=30 data-nosnippet>30</a>	/// function.
 <a href=#31 id=31 data-nosnippet>31</a>	</span><span class="attr">#[must_use]
-<a href=#32 id=32 data-nosnippet>32</a>	</span><span class="kw">fn </span>GlobalAlloc(flags: <span class="prelude-ty">Option</span>&lt;co::GMEM&gt;, num_bytes: usize) -&gt; SysResult&lt;GlobalFreeGuard&gt; {
+<a href=#32 id=32 data-nosnippet>32</a>	</span><span class="kw">fn </span>GlobalAlloc(flags: co::GMEM, num_bytes: usize) -&gt; SysResult&lt;GlobalFreeGuard&gt; {
 <a href=#33 id=33 data-nosnippet>33</a>		<span class="kw">unsafe </span>{
-<a href=#34 id=34 data-nosnippet>34</a>			ptr_to_sysresult_handle(ffi::GlobalAlloc(flags.unwrap_or_default().raw(), num_bytes))
+<a href=#34 id=34 data-nosnippet>34</a>			ptr_to_sysresult_handle(ffi::GlobalAlloc(flags.raw(), num_bytes))
 <a href=#35 id=35 data-nosnippet>35</a>				.map(|h| GlobalFreeGuard::new(h))
 <a href=#36 id=36 data-nosnippet>36</a>		}
 <a href=#37 id=37 data-nosnippet>37</a>	}
@@ -58,7 +58,7 @@
 <a href=#58 id=58 data-nosnippet>58</a>	/// use winsafe::{self as w, prelude::*, co};
 <a href=#59 id=59 data-nosnippet>59</a>	///
 <a href=#60 id=60 data-nosnippet>60</a>	/// let hglobal = w::HGLOBAL::GlobalAlloc(
-<a href=#61 id=61 data-nosnippet>61</a>	///     Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+<a href=#61 id=61 data-nosnippet>61</a>	///     co::GMEM::FIXED | co::GMEM::ZEROINIT,
 <a href=#62 id=62 data-nosnippet>62</a>	///     120,
 <a href=#63 id=63 data-nosnippet>63</a>	/// )?;
 <a href=#64 id=64 data-nosnippet>64</a>	///
@@ -85,22 +85,20 @@
 <a href=#85 id=85 data-nosnippet>85</a>	///
 <a href=#86 id=86 data-nosnippet>86</a>	/// Originally this method returns the handle to the reallocated memory
 <a href=#87 id=87 data-nosnippet>87</a>	/// object; here the original handle is automatically updated.
-<a href=#88 id=88 data-nosnippet>88</a>	</span><span class="kw">fn </span>GlobalReAlloc(<span class="kw-2">&amp;mut </span><span class="self">self</span>, num_bytes: usize, flags: <span class="prelude-ty">Option</span>&lt;co::GMEM&gt;) -&gt; SysResult&lt;()&gt; {
-<a href=#89 id=89 data-nosnippet>89</a>		ptr_to_sysresult_handle(<span class="kw">unsafe </span>{
-<a href=#90 id=90 data-nosnippet>90</a>			ffi::GlobalReAlloc(<span class="self">self</span>.ptr(), num_bytes, flags.unwrap_or_default().raw())
-<a href=#91 id=91 data-nosnippet>91</a>		})
-<a href=#92 id=92 data-nosnippet>92</a>		.map(|h| {
-<a href=#93 id=93 data-nosnippet>93</a>			<span class="kw-2">*</span><span class="self">self </span>= h;
-<a href=#94 id=94 data-nosnippet>94</a>		})
-<a href=#95 id=95 data-nosnippet>95</a>	}
-<a href=#96 id=96 data-nosnippet>96</a>
-<a href=#97 id=97 data-nosnippet>97</a>	<span class="doccomment">/// [`GlobalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize)
-<a href=#98 id=98 data-nosnippet>98</a>	/// function.
-<a href=#99 id=99 data-nosnippet>99</a>	</span><span class="attr">#[must_use]
-<a href=#100 id=100 data-nosnippet>100</a>	</span><span class="kw">fn </span>GlobalSize(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;usize&gt; {
-<a href=#101 id=101 data-nosnippet>101</a>		<span class="kw">match unsafe </span>{ ffi::GlobalSize(<span class="self">self</span>.ptr()) } {
-<a href=#102 id=102 data-nosnippet>102</a>			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
-<a href=#103 id=103 data-nosnippet>103</a>			sz =&gt; <span class="prelude-val">Ok</span>(sz),
-<a href=#104 id=104 data-nosnippet>104</a>		}
-<a href=#105 id=105 data-nosnippet>105</a>	}
-<a href=#106 id=106 data-nosnippet>106</a>}</code></pre></div></section></main></body></html>
+<a href=#88 id=88 data-nosnippet>88</a>	</span><span class="kw">fn </span>GlobalReAlloc(<span class="kw-2">&amp;mut </span><span class="self">self</span>, num_bytes: usize, flags: co::GMEM) -&gt; SysResult&lt;()&gt; {
+<a href=#89 id=89 data-nosnippet>89</a>		ptr_to_sysresult_handle(<span class="kw">unsafe </span>{ ffi::GlobalReAlloc(<span class="self">self</span>.ptr(), num_bytes, flags.raw()) })
+<a href=#90 id=90 data-nosnippet>90</a>			.map(|h| {
+<a href=#91 id=91 data-nosnippet>91</a>				<span class="kw-2">*</span><span class="self">self </span>= h;
+<a href=#92 id=92 data-nosnippet>92</a>			})
+<a href=#93 id=93 data-nosnippet>93</a>	}
+<a href=#94 id=94 data-nosnippet>94</a>
+<a href=#95 id=95 data-nosnippet>95</a>	<span class="doccomment">/// [`GlobalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize)
+<a href=#96 id=96 data-nosnippet>96</a>	/// function.
+<a href=#97 id=97 data-nosnippet>97</a>	</span><span class="attr">#[must_use]
+<a href=#98 id=98 data-nosnippet>98</a>	</span><span class="kw">fn </span>GlobalSize(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;usize&gt; {
+<a href=#99 id=99 data-nosnippet>99</a>		<span class="kw">match unsafe </span>{ ffi::GlobalSize(<span class="self">self</span>.ptr()) } {
+<a href=#100 id=100 data-nosnippet>100</a>			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
+<a href=#101 id=101 data-nosnippet>101</a>			sz =&gt; <span class="prelude-val">Ok</span>(sz),
+<a href=#102 id=102 data-nosnippet>102</a>		}
+<a href=#103 id=103 data-nosnippet>103</a>	}
+<a href=#104 id=104 data-nosnippet>104</a>}</code></pre></div></section></main></body></html>
