@@ -24,18 +24,13 @@ impl DlgMain {
 		dlg_id: u16,
 		icon_id: Option<u16>,
 		accel_tbl_id: Option<u16>,
-	) -> Self
-	{
-		let new_self = Self(
-			Arc::pin(
-				DlgMainObj {
-					dlg_base: DlgBase::new(dlg_id),
-					icon_id,
-					accel_tbl_id,
-					_pin: PhantomPinned,
-				},
-			),
-		);
+	) -> Self {
+		let new_self = Self(Arc::pin(DlgMainObj {
+			dlg_base: DlgBase::new(dlg_id),
+			icon_id,
+			accel_tbl_id,
+			_pin: PhantomPinned,
+		}));
 		new_self.default_message_handlers();
 		new_self
 	}
@@ -58,21 +53,27 @@ impl DlgMain {
 		&self.0.dlg_base
 	}
 
-	pub(in crate::gui) fn run_main(&self,
+	pub(in crate::gui) fn run_main(
+		&self,
 		hinst: &HINSTANCE,
 		cmd_show: Option<co::SW>,
-	) -> AnyResult<i32>
-	{
+	) -> AnyResult<i32> {
 		self.0.dlg_base.create_dialog_param(hinst)?;
 		if let Some(id) = self.0.icon_id {
 			self.0.dlg_base.set_icon(hinst, id)?;
 		}
 
-		let haccel = self.0.accel_tbl_id
+		let haccel = self
+			.0
+			.accel_tbl_id
 			.map(|id| hinst.LoadAccelerators(IdStr::Id(id))) // resources are automatically freed
 			.transpose()?;
 
-		self.0.dlg_base.base().hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
+		self.0
+			.dlg_base
+			.base()
+			.hwnd()
+			.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 		BaseWnd::run_main_loop(haccel.as_deref(), true) // blocks until window is closed
 	}
 }

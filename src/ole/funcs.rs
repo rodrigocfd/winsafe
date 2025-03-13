@@ -12,14 +12,10 @@ use crate::prelude::*;
 #[must_use]
 pub fn CLSIDFromProgID(prog_id: &str) -> HrResult<co::CLSID> {
 	let mut clsid = co::CLSID::default();
-	ok_to_hrresult(
-		unsafe {
-			ffi::CLSIDFromProgID(
-				WString::from_str(prog_id).as_ptr(),
-				&mut clsid as *mut _ as _,
-			)
-		},
-	).map(|_| clsid)
+	ok_to_hrresult(unsafe {
+		ffi::CLSIDFromProgID(WString::from_str(prog_id).as_ptr(), &mut clsid as *mut _ as _)
+	})
+	.map(|_| clsid)
 }
 
 /// [`CLSIDFromProgIDEx`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromprogidex)
@@ -27,14 +23,10 @@ pub fn CLSIDFromProgID(prog_id: &str) -> HrResult<co::CLSID> {
 #[must_use]
 pub fn CLSIDFromProgIDEx(prog_id: &str) -> HrResult<co::CLSID> {
 	let mut clsid = co::CLSID::default();
-	ok_to_hrresult(
-		unsafe {
-			ffi::CLSIDFromProgIDEx(
-				WString::from_str(prog_id).as_ptr(),
-				&mut clsid as *mut _ as _,
-			)
-		},
-	).map(|_| clsid)
+	ok_to_hrresult(unsafe {
+		ffi::CLSIDFromProgIDEx(WString::from_str(prog_id).as_ptr(), &mut clsid as *mut _ as _)
+	})
+	.map(|_| clsid)
 }
 
 /// [`CLSIDFromString`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromstring)
@@ -42,14 +34,10 @@ pub fn CLSIDFromProgIDEx(prog_id: &str) -> HrResult<co::CLSID> {
 #[must_use]
 pub fn CLSIDFromString(prog_id: &str) -> HrResult<co::CLSID> {
 	let mut clsid = co::CLSID::default();
-	ok_to_hrresult(
-		unsafe {
-			ffi::CLSIDFromString(
-				WString::from_str(prog_id).as_ptr(),
-				&mut clsid as *mut _ as _,
-			)
-		},
-	).map(|_| clsid)
+	ok_to_hrresult(unsafe {
+		ffi::CLSIDFromString(WString::from_str(prog_id).as_ptr(), &mut clsid as *mut _ as _)
+	})
+	.map(|_| clsid)
 }
 
 /// [`CoCreateGuid`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateguid)
@@ -59,8 +47,7 @@ pub fn CLSIDFromString(prog_id: &str) -> HrResult<co::CLSID> {
 #[must_use]
 pub fn CoCreateGuid() -> HrResult<GUID> {
 	let mut guid = GUID::default();
-	ok_to_hrresult(unsafe { ffi::CoCreateGuid(&mut guid as *mut _ as _) })
-		.map(|_| guid)
+	ok_to_hrresult(unsafe { ffi::CoCreateGuid(&mut guid as *mut _ as _) }).map(|_| guid)
 }
 
 /// [`CoCreateInstance`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
@@ -88,25 +75,23 @@ pub fn CoCreateInstance<T>(
 	iunk_outer: Option<&mut IUnknown>,
 	cls_context: co::CLSCTX,
 ) -> HrResult<T>
-	where T: ole_IUnknown,
+where
+	T: ole_IUnknown,
 {
-	let (mut queried, mut queried_outer) = unsafe {(
-		T::null(),
-		IUnknown::null(),
-	)};
+	let (mut queried, mut queried_outer) = unsafe { (T::null(), IUnknown::null()) };
 
-	ok_to_hrresult(
-		unsafe {
-			ffi::CoCreateInstance(
-				clsid as *const _ as _,
-				iunk_outer.as_ref()
-					.map_or(std::ptr::null_mut(), |_| queried_outer.as_mut()),
-				cls_context.raw(),
-				&T::IID as *const _ as _,
-				queried.as_mut(),
-			)
-		},
-	).map(|_| {
+	ok_to_hrresult(unsafe {
+		ffi::CoCreateInstance(
+			clsid as *const _ as _,
+			iunk_outer
+				.as_ref()
+				.map_or(std::ptr::null_mut(), |_| queried_outer.as_mut()),
+			cls_context.raw(),
+			&T::IID as *const _ as _,
+			queried.as_mut(),
+		)
+	})
+	.map(|_| {
 		if let Some(iunk_outer) = iunk_outer {
 			*iunk_outer = queried_outer; // create outer IUnknown if due
 		}
@@ -122,22 +107,21 @@ pub fn CoCreateInstanceEx(
 	cls_context: co::CLSCTX,
 	server_info: Option<&COSERVERINFO>,
 	results: &mut [MULTI_QI],
-) -> HrResult<()>
-{
+) -> HrResult<()> {
 	let mut queried_outer = unsafe { IUnknown::null() };
-	ok_to_hrresult(
-		unsafe {
-			ffi::CoCreateInstanceEx(
-				clsid as *const _ as _,
-				iunk_outer.as_ref()
-					.map_or(std::ptr::null_mut(), |_| queried_outer.as_mut()),
-				cls_context.raw(),
-				server_info.map_or(std::ptr::null(), |si| si as *const _ as _),
-				results.len() as _,
-				results.as_mut_ptr() as _,
-			)
-		},
-	).map(|_| {
+	ok_to_hrresult(unsafe {
+		ffi::CoCreateInstanceEx(
+			clsid as *const _ as _,
+			iunk_outer
+				.as_ref()
+				.map_or(std::ptr::null_mut(), |_| queried_outer.as_mut()),
+			cls_context.raw(),
+			server_info.map_or(std::ptr::null(), |si| si as *const _ as _),
+			results.len() as _,
+			results.as_mut_ptr() as _,
+		)
+	})
+	.map(|_| {
 		if let Some(iunk_outer) = iunk_outer {
 			*iunk_outer = queried_outer; // create outer IUnknown if due
 		}
@@ -177,13 +161,11 @@ pub fn CoCreateInstanceEx(
 #[must_use]
 pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<CoUninitializeGuard> {
 	unsafe {
-		let hr = co::HRESULT::from_raw(
-			ffi::CoInitializeEx(std::ptr::null_mut(), coinit.raw()),
-		);
+		let hr = co::HRESULT::from_raw(ffi::CoInitializeEx(std::ptr::null_mut(), coinit.raw()));
 		match hr {
-			co::HRESULT::S_OK
-				| co::HRESULT::S_FALSE
-				| co::HRESULT::RPC_E_CHANGED_MODE => Ok(CoUninitializeGuard::new(hr)),
+			co::HRESULT::S_OK | co::HRESULT::S_FALSE | co::HRESULT::RPC_E_CHANGED_MODE => {
+				Ok(CoUninitializeGuard::new(hr))
+			},
 			hr => Err(hr),
 		}
 	}
@@ -195,10 +177,9 @@ pub fn CoInitializeEx(coinit: co::COINIT) -> HrResult<CoUninitializeGuard> {
 /// Note that this function will lock the COM object, returning a
 /// [`CoLockObjectExternalGuard`](crate::guard::CoLockObjectExternalGuard). The
 /// unlocking is automatically performed by the guard when it goes out of scope.
-pub fn CoLockObjectExternal<T>(
-	obj: &T
-) -> HrResult<CoLockObjectExternalGuard<T>>
-	where T: ole_IUnknown,
+pub fn CoLockObjectExternal<T>(obj: &T) -> HrResult<CoLockObjectExternalGuard<T>>
+where
+	T: ole_IUnknown,
 {
 	unsafe {
 		ok_to_hrresult(ffi::CoLockObjectExternal(obj.ptr(), 1, 0))
@@ -259,11 +240,7 @@ pub fn CoTaskMemAlloc(cb: usize) -> HrResult<CoTaskMemFreeGuard> {
 ///
 /// * [`CoTaskMemAlloc`](crate::CoTaskMemAlloc)
 #[must_use]
-pub fn CoTaskMemRealloc(
-	pv: &mut CoTaskMemFreeGuard,
-	cb: usize,
-) -> HrResult<()>
-{
+pub fn CoTaskMemRealloc(pv: &mut CoTaskMemFreeGuard, cb: usize) -> HrResult<()> {
 	let (old_pmem, _) = pv.leak();
 	let p = unsafe { ffi::CoTaskMemRealloc(old_pmem, cb) };
 	if p.is_null() {
@@ -279,11 +256,8 @@ pub fn CoTaskMemRealloc(
 #[must_use]
 pub fn CreateClassMoniker(clsid: &co::CLSID) -> HrResult<IMoniker> {
 	let mut queried = unsafe { IMoniker::null() };
-	ok_to_hrresult(
-		unsafe {
-			ffi::CreateClassMoniker(clsid as *const _ as _, queried.as_mut())
-		},
-	).map(|_| queried)
+	ok_to_hrresult(unsafe { ffi::CreateClassMoniker(clsid as *const _ as _, queried.as_mut()) })
+		.map(|_| queried)
 }
 
 /// [`CreateFileMoniker`](https://learn.microsoft.com/en-us/windows/win32/api/objbase/nf-objbase-createfilemoniker)
@@ -291,14 +265,10 @@ pub fn CreateClassMoniker(clsid: &co::CLSID) -> HrResult<IMoniker> {
 #[must_use]
 pub fn CreateFileMoniker(path_name: &str) -> HrResult<IMoniker> {
 	let mut queried = unsafe { IMoniker::null() };
-	ok_to_hrresult(
-		unsafe {
-			ffi::CreateFileMoniker(
-				WString::from_str(path_name).as_ptr(),
-				queried.as_mut(),
-			)
-		},
-	).map(|_| queried)
+	ok_to_hrresult(unsafe {
+		ffi::CreateFileMoniker(WString::from_str(path_name).as_ptr(), queried.as_mut())
+	})
+	.map(|_| queried)
 }
 
 /// [`CreateItemMoniker`](https://learn.microsoft.com/en-us/windows/win32/api/objbase/nf-objbase-createitemmoniker)
@@ -306,15 +276,14 @@ pub fn CreateFileMoniker(path_name: &str) -> HrResult<IMoniker> {
 #[must_use]
 pub fn CreateItemMoniker(delim: &str, item: &str) -> HrResult<IMoniker> {
 	let mut queried = unsafe { IMoniker::null() };
-	ok_to_hrresult(
-		unsafe {
-			ffi::CreateItemMoniker(
-				WString::from_str(delim).as_ptr(),
-				WString::from_str(item).as_ptr(),
-				queried.as_mut(),
-			)
-		},
-	).map(|_| queried)
+	ok_to_hrresult(unsafe {
+		ffi::CreateItemMoniker(
+			WString::from_str(delim).as_ptr(),
+			WString::from_str(item).as_ptr(),
+			queried.as_mut(),
+		)
+	})
+	.map(|_| queried)
 }
 
 /// [`CreateObjrefMoniker`](https://learn.microsoft.com/en-us/windows/win32/api/objbase/nf-objbase-createobjrefmoniker)
@@ -322,9 +291,8 @@ pub fn CreateItemMoniker(delim: &str, item: &str) -> HrResult<IMoniker> {
 #[must_use]
 pub fn CreateObjrefMoniker(unk: &impl ole_IUnknown) -> HrResult<IMoniker> {
 	let mut queried = unsafe { IMoniker::null() };
-	ok_to_hrresult(
-		unsafe { ffi::CreateObjrefMoniker(unk.ptr(), queried.as_mut()) },
-	).map(|_| queried)
+	ok_to_hrresult(unsafe { ffi::CreateObjrefMoniker(unk.ptr(), queried.as_mut()) })
+		.map(|_| queried)
 }
 
 /// [`CreatePointerMoniker`](https://learn.microsoft.com/en-us/windows/win32/api/objbase/nf-objbase-createpointermoniker)
@@ -332,9 +300,8 @@ pub fn CreateObjrefMoniker(unk: &impl ole_IUnknown) -> HrResult<IMoniker> {
 #[must_use]
 pub fn CreatePointerMoniker(unk: &impl ole_IUnknown) -> HrResult<IMoniker> {
 	let mut queried = unsafe { IMoniker::null() };
-	ok_to_hrresult(
-		unsafe { ffi::CreatePointerMoniker(unk.ptr(), queried.as_mut()) },
-	).map(|_| queried)
+	ok_to_hrresult(unsafe { ffi::CreatePointerMoniker(unk.ptr(), queried.as_mut()) })
+		.map(|_| queried)
 }
 
 /// [`OleInitialize`](https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-oleinitialize)
@@ -376,9 +343,7 @@ pub fn OleInitialize() -> HrResult<OleUninitializeGuard> {
 #[must_use]
 pub fn StringFromCLSID(clsid: &co::CLSID) -> HrResult<String> {
 	let mut pstr = std::ptr::null_mut::<u16>();
-	ok_to_hrresult(
-		unsafe { ffi::StringFromCLSID(clsid as *const _ as _, &mut pstr) },
-	).map(|_| {
+	ok_to_hrresult(unsafe { ffi::StringFromCLSID(clsid as *const _ as _, &mut pstr) }).map(|_| {
 		let name = unsafe { WString::from_wchars_nullt(pstr) };
 		let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 		name.to_string()

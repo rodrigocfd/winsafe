@@ -47,9 +47,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn iter_heaps(&mut self,
-	) -> impl Iterator<Item = SysResult<&HEAPLIST32>> + '_
-	{
+	fn iter_heaps(&mut self) -> impl Iterator<Item = SysResult<&HEAPLIST32>> + '_ {
 		HprocesslistHeapIter::new(self)
 	}
 
@@ -76,9 +74,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn iter_modules(&mut self,
-	) -> impl Iterator<Item = SysResult<&MODULEENTRY32>> + '_
-	{
+	fn iter_modules(&mut self) -> impl Iterator<Item = SysResult<&MODULEENTRY32>> + '_ {
 		HprocesslistModuleIter::new(self)
 	}
 
@@ -105,9 +101,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn iter_processes(&mut self,
-	) -> impl Iterator<Item = SysResult<&PROCESSENTRY32>> + '_
-	{
+	fn iter_processes(&mut self) -> impl Iterator<Item = SysResult<&PROCESSENTRY32>> + '_ {
 		HprocesslistProcessIter::new(self)
 	}
 
@@ -136,9 +130,7 @@ pub trait kernel_Hprocesslist: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn iter_threads(&mut self,
-	) -> impl Iterator<Item = SysResult<&THREADENTRY32>> + '_
-	{
+	fn iter_threads(&mut self) -> impl Iterator<Item = SysResult<&THREADENTRY32>> + '_ {
 		HprocesslistThreadIter::new(self)
 	}
 
@@ -148,15 +140,13 @@ pub trait kernel_Hprocesslist: Handle {
 	fn CreateToolhelp32Snapshot(
 		flags: co::TH32CS,
 		th32_process_id: Option<u32>,
-	) -> SysResult<CloseHandleGuard<HPROCESSLIST>>
-	{
+	) -> SysResult<CloseHandleGuard<HPROCESSLIST>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::CreateToolhelp32Snapshot(
-					flags.raw(),
-					th32_process_id.unwrap_or_default(),
-				),
-			).map(|h| CloseHandleGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateToolhelp32Snapshot(
+				flags.raw(),
+				th32_process_id.unwrap_or_default(),
+			))
+			.map(|h| CloseHandleGuard::new(h))
 		}
 	}
 

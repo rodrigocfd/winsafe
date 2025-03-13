@@ -33,19 +33,17 @@ pub trait user_Hdesk: Handle {
 		flags: Option<co::DF>,
 		desired_access: co::DESKTOP_RIGHTS,
 		security_attributes: Option<&SECURITY_ATTRIBUTES>,
-	) -> SysResult<CloseDesktopGuard>
-	{
+	) -> SysResult<CloseDesktopGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::CreateDesktopW(
-					WString::from_str(name).as_ptr(),
-					std::ptr::null(),
-					std::ptr::null(),
-					flags.unwrap_or_default().raw(),
-					desired_access.raw(),
-					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
-				),
-			).map(|h| CloseDesktopGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateDesktopW(
+				WString::from_str(name).as_ptr(),
+				std::ptr::null(),
+				std::ptr::null(),
+				flags.unwrap_or_default().raw(),
+				desired_access.raw(),
+				security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+			))
+			.map(|h| CloseDesktopGuard::new(h))
 		}
 	}
 
@@ -58,21 +56,19 @@ pub trait user_Hdesk: Handle {
 		desired_access: co::DESKTOP_RIGHTS,
 		security_attributes: Option<&SECURITY_ATTRIBUTES>,
 		heap_size_kb: u32,
-	) -> SysResult<CloseDesktopGuard>
-	{
+	) -> SysResult<CloseDesktopGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::CreateDesktopExW(
-					WString::from_str(name).as_ptr(),
-					std::ptr::null(),
-					std::ptr::null(),
-					flags.unwrap_or_default().raw(),
-					desired_access.raw(),
-					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
-					heap_size_kb,
-					std::ptr::null_mut(),
-				),
-			).map(|h| CloseDesktopGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateDesktopExW(
+				WString::from_str(name).as_ptr(),
+				std::ptr::null(),
+				std::ptr::null(),
+				flags.unwrap_or_default().raw(),
+				desired_access.raw(),
+				security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+				heap_size_kb,
+				std::ptr::null_mut(),
+			))
+			.map(|h| CloseDesktopGuard::new(h))
 		}
 	}
 
@@ -87,10 +83,7 @@ pub trait user_Hdesk: Handle {
 	/// let hdesk = w::HDESK::GetThreadDesktop(w::GetCurrentThreadId())?;
 	/// # w::SysResult::Ok(())
 	#[must_use]
-	fn GetThreadDesktop(
-		thread_id: u32,
-	) -> SysResult<ManuallyDrop<CloseDesktopGuard>>
-	{
+	fn GetThreadDesktop(thread_id: u32) -> SysResult<ManuallyDrop<CloseDesktopGuard>> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::GetThreadDesktop(thread_id))
 				.map(|h| ManuallyDrop::new(CloseDesktopGuard::new(h)))
@@ -105,17 +98,15 @@ pub trait user_Hdesk: Handle {
 		flags: Option<co::DF>,
 		inherit: bool,
 		desired_access: co::DESKTOP_RIGHTS,
-	) -> SysResult<CloseDesktopGuard>
-	{
+	) -> SysResult<CloseDesktopGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::OpenDesktopW(
-					WString::from_str(name).as_ptr(),
-					flags.unwrap_or_default().raw(),
-					inherit as _,
-					desired_access.raw(),
-				),
-			).map(|h| CloseDesktopGuard::new(h))
+			ptr_to_sysresult_handle(ffi::OpenDesktopW(
+				WString::from_str(name).as_ptr(),
+				flags.unwrap_or_default().raw(),
+				inherit as _,
+				desired_access.raw(),
+			))
+			.map(|h| CloseDesktopGuard::new(h))
 		}
 	}
 
@@ -126,16 +117,14 @@ pub trait user_Hdesk: Handle {
 		flags: Option<co::DF>,
 		inherit: bool,
 		desired_access: co::DESKTOP_RIGHTS,
-	) -> SysResult<CloseDesktopGuard>
-	{
+	) -> SysResult<CloseDesktopGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::OpenInputDesktop(
-					flags.unwrap_or_default().raw(),
-					inherit as _,
-					desired_access.raw(),
-				),
-			).map(|h| CloseDesktopGuard::new(h))
+			ptr_to_sysresult_handle(ffi::OpenInputDesktop(
+				flags.unwrap_or_default().raw(),
+				inherit as _,
+				desired_access.raw(),
+			))
+			.map(|h| CloseDesktopGuard::new(h))
 		}
 	}
 

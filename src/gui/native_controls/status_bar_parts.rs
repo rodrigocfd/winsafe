@@ -1,4 +1,4 @@
-use crate::gui::{*, iterators::*};
+use crate::gui::{iterators::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -21,7 +21,8 @@ impl<'a> StatusBarParts<'a> {
 	#[must_use]
 	pub fn count(&self) -> u32 {
 		unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(sb::GetParts { right_edges: None }) as _
 		}
 	}
@@ -72,11 +73,10 @@ impl<'a> StatusBarParts<'a> {
 			panic!("Cannot set {} text(s) to {} part(s).", texts.len(), self.count());
 		}
 
-		texts.iter()
-			.enumerate()
-			.for_each(|(idx, maybe_text)| {
-				maybe_text.as_ref()
-					.map(|text| self.get(idx as _).set_text(text.as_ref()));
-			});
+		texts.iter().enumerate().for_each(|(idx, maybe_text)| {
+			maybe_text
+				.as_ref()
+				.map(|text| self.get(idx as _).set_text(text.as_ref()));
+		});
 	}
 }

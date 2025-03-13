@@ -8,8 +8,8 @@ mod msg_error;
 mod native_controls;
 mod windows;
 
-pub(crate) mod traits;
 pub mod events;
+pub(crate) mod traits;
 
 pub(in crate::gui) mod privs {
 	pub(in crate::gui) use super::globals::*;

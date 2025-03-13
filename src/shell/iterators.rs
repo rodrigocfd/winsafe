@@ -4,7 +4,8 @@ use crate::prelude::*;
 use crate::shell::ffi;
 
 pub(in crate::shell) struct HdropIter<'a, H>
-	where H: shell_Hdrop,
+where
+	H: shell_Hdrop,
 {
 	hdrop: &'a H,
 	buffer: WString,
@@ -13,7 +14,8 @@ pub(in crate::shell) struct HdropIter<'a, H>
 }
 
 impl<'a, H> Iterator for HdropIter<'a, H>
-	where H: shell_Hdrop,
+where
+	H: shell_Hdrop,
 {
 	type Item = SysResult<String>;
 
@@ -43,17 +45,13 @@ impl<'a, H> Iterator for HdropIter<'a, H>
 }
 
 impl<'a, H> HdropIter<'a, H>
-	where H: shell_Hdrop,
+where
+	H: shell_Hdrop,
 {
 	#[must_use]
 	pub(in crate::shell) fn new(hdrop: &'a H) -> SysResult<Self> {
 		let count = unsafe {
-			ffi::DragQueryFileW( // preliminar call to retrieve the file count
-				hdrop.ptr(),
-				0xffff_ffff,
-				std::ptr::null_mut(),
-				0,
-			)
+			ffi::DragQueryFileW(hdrop.ptr(), 0xffff_ffff, std::ptr::null_mut(), 0) // preliminar call to retrieve the file count
 		};
 
 		Ok(Self {
@@ -66,13 +64,15 @@ impl<'a, H> HdropIter<'a, H>
 }
 
 pub(in crate::shell) struct IenumshellitemsIter<'a, I>
-	where I: shell_IEnumShellItems,
+where
+	I: shell_IEnumShellItems,
 {
 	enum_shi: &'a I,
 }
 
 impl<'a, I> Iterator for IenumshellitemsIter<'a, I>
-	where I: shell_IEnumShellItems,
+where
+	I: shell_IEnumShellItems,
 {
 	type Item = HrResult<IShellItem>;
 
@@ -85,7 +85,8 @@ impl<'a, I> Iterator for IenumshellitemsIter<'a, I>
 }
 
 impl<'a, I> IenumshellitemsIter<'a, I>
-	where I: shell_IEnumShellItems,
+where
+	I: shell_IEnumShellItems,
 {
 	#[must_use]
 	pub(in crate::shell) fn new(enum_shi: &'a I) -> Self {
@@ -94,7 +95,8 @@ impl<'a, I> IenumshellitemsIter<'a, I>
 }
 
 pub(in crate::shell) struct IshellitemarrayIter<'a, I>
-	where I: shell_IShellItemArray,
+where
+	I: shell_IShellItemArray,
 {
 	shi_arr: &'a I,
 	count: u32,
@@ -102,7 +104,8 @@ pub(in crate::shell) struct IshellitemarrayIter<'a, I>
 }
 
 impl<'a, I> Iterator for IshellitemarrayIter<'a, I>
-	where I: shell_IShellItemArray,
+where
+	I: shell_IShellItemArray,
 {
 	type Item = HrResult<IShellItem>;
 
@@ -125,7 +128,8 @@ impl<'a, I> Iterator for IshellitemarrayIter<'a, I>
 }
 
 impl<'a, I> IshellitemarrayIter<'a, I>
-	where I: shell_IShellItemArray,
+where
+	I: shell_IShellItemArray,
 {
 	#[must_use]
 	pub(in crate::shell) fn new(shi_arr: &'a I) -> HrResult<Self> {

@@ -192,9 +192,7 @@ impl MsgSend for SetRedraw {
 
 impl MsgSendRecv for SetRedraw {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			can_redraw: p.wparam != 0,
-		}
+		Self { can_redraw: p.wparam != 0 }
 	}
 }
 

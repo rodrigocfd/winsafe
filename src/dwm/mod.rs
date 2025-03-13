@@ -3,8 +3,8 @@
 mod funcs;
 mod handles;
 
-pub(in crate::dwm) mod ffi;
 pub mod co;
+pub(in crate::dwm) mod ffi;
 
 pub mod decl {
 	pub use super::funcs::*;

@@ -8,7 +8,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::gui::{*, collections::*, events::*, privs::*};
+use crate::gui::{collections::*, events::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -42,26 +42,33 @@ impl<T> TreeView<T> {
 	#[must_use]
 	pub fn new(parent: &(impl GuiParent + 'static), opts: TreeViewOpts) -> Self {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
-		let new_self = Self(
-			Arc::pin(
-				TreeViewObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: TreeViewEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-					_data: PhantomData,
-				},
-			),
-		);
+		let new_self = Self(Arc::pin(TreeViewObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: TreeViewEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+			_data: PhantomData,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
-		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
-			self2.0.base.create_window(opts.window_ex_style, "SysTreeView32", None,
-				opts.window_style | opts.control_style.into(), opts.position.into(),
-				opts.size.into(), &parent2)?;
-			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
-			Ok(0) // ignored
-		});
+		parent
+			.as_ref()
+			.before_on()
+			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+				self2.0.base.create_window(
+					opts.window_ex_style,
+					"SysTreeView32",
+					None,
+					opts.window_style | opts.control_style.into(),
+					opts.position.into(),
+					opts.size.into(),
+					&parent2,
+				)?;
+				parent2
+					.as_ref()
+					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+				Ok(0) // ignored
+			});
 
 		new_self.default_message_handlers(parent);
 		new_self
@@ -80,24 +87,21 @@ impl<T> TreeView<T> {
 		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
-	) -> Self
-	{
-		let new_self = Self(
-			Arc::pin(
-				TreeViewObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: TreeViewEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-					_data: PhantomData,
-				},
-			),
-		);
+	) -> Self {
+		let new_self = Self(Arc::pin(TreeViewObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: TreeViewEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+			_data: PhantomData,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
 			self2.0.base.assign_dlg(&parent2)?;
-			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			parent2
+				.as_ref()
+				.add_to_layout(self2.hwnd(), resize_behavior)?;
 			Ok(true) // ignored
 		});
 
@@ -107,37 +111,41 @@ impl<T> TreeView<T> {
 
 	fn default_message_handlers(&self, parent: &impl AsRef<BaseWnd>) {
 		let self2 = self.clone();
-		parent.as_ref().after_on().wm_notify(self.ctrl_id(), co::TVN::DELETEITEM, move |p| {
-			let nmtv = unsafe { p.cast_nmhdr::<NMTREEVIEW>() };
-			self2.items()
-				.get(&nmtv.itemOld.hItem)
-				.data_lparam()?
-				.map(|pdata| {
-					let _ = unsafe { Rc::from_raw(pdata) }; // free allocated LPARAM, if any
-				});
-			Ok(0) // ignored
-		});
+		parent
+			.as_ref()
+			.after_on()
+			.wm_notify(self.ctrl_id(), co::TVN::DELETEITEM, move |p| {
+				let nmtv = unsafe { p.cast_nmhdr::<NMTREEVIEW>() };
+				self2
+					.items()
+					.get(&nmtv.itemOld.hItem)
+					.data_lparam()?
+					.map(|pdata| {
+						let _ = unsafe { Rc::from_raw(pdata) }; // free allocated LPARAM, if any
+					});
+				Ok(0) // ignored
+			});
 
 		let self2 = self.clone();
 		parent.as_ref().after_on().wm_destroy(move || {
 			[co::TVSIL::NORMAL, co::TVSIL::STATE]
 				.iter()
 				.for_each(|tvsil| {
-					self2.image_list(*tvsil).map(|hil| { // destroy each image list, if any
-						let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) };
+					self2.image_list(*tvsil).map(|hil| {
+						let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) }; // destroy each image list, if any
 					});
 				});
 			Ok(())
 		});
 	}
 
-	pub(in crate::gui) fn raw_insert_item(&self,
+	pub(in crate::gui) fn raw_insert_item(
+		&self,
 		hparent: Option<&HTREEITEM>,
 		text: &str,
 		icon_index: Option<u32>,
 		data: T,
-	) -> SysResult<TreeViewItem<'_, T>>
-	{
+	) -> SysResult<TreeViewItem<'_, T>> {
 		let mut tvix = TVITEMEX::default();
 		tvix.mask = co::TVIF::TEXT;
 
@@ -149,7 +157,8 @@ impl<T> TreeView<T> {
 			tvix.iImage = icon_index as _;
 		}
 
-		if TypeId::of::<T>() != TypeId::of::<()>() { // user defined an actual type?
+		// User defined an actual type?
+		if TypeId::of::<T>() != TypeId::of::<()>() {
 			tvix.mask |= co::TVIF::PARAM;
 			let rc_data = Rc::new(RefCell::new(data));
 			tvix.lParam = Rc::into_raw(rc_data) as _;
@@ -177,10 +186,7 @@ impl<T> TreeView<T> {
 	/// The image list is owned by the control.
 	#[must_use]
 	pub fn image_list(&self, kind: co::TVSIL) -> Option<&HIMAGELIST> {
-		unsafe {
-			self.hwnd()
-				.SendMessage(tvm::GetImageList { kind })
-		}.map(|hil| {
+		unsafe { self.hwnd().SendMessage(tvm::GetImageList { kind }) }.map(|hil| {
 			let hil_ptr = &hil as *const HIMAGELIST;
 			unsafe { &*hil_ptr }
 		})
@@ -196,11 +202,10 @@ impl<T> TreeView<T> {
 	/// [`tvm::SetExtendedStyle`](crate::msg::tvm::SetExtendedStyle) message.
 	pub fn set_extended_style(&self, set: bool, ex_style: co::TVS_EX) -> HrResult<()> {
 		unsafe {
-			self.hwnd()
-				.SendMessage(tvm::SetExtendedStyle {
-					mask: ex_style,
-					style: if set { ex_style } else { co::TVS_EX::NoValue },
-				})
+			self.hwnd().SendMessage(tvm::SetExtendedStyle {
+				mask: ex_style,
+				style: if set { ex_style } else { co::TVS_EX::NoValue },
+			})
 		}
 	}
 
@@ -209,11 +214,11 @@ impl<T> TreeView<T> {
 	///
 	/// The image list will be owned by the control. Returns the previous one,
 	/// if any.
-	pub fn set_image_list(&self,
+	pub fn set_image_list(
+		&self,
 		kind: co::TVSIL,
 		himagelist: ImageListDestroyGuard,
-	) -> Option<ImageListDestroyGuard>
-	{
+	) -> Option<ImageListDestroyGuard> {
 		let mut himagelist = himagelist;
 		let hil = himagelist.leak();
 
@@ -276,7 +281,10 @@ impl Default for TreeViewOpts {
 		Self {
 			position: dpi(0, 0),
 			size: dpi(120, 120),
-			control_style: co::TVS::HASLINES | co::TVS::LINESATROOT | co::TVS::SHOWSELALWAYS | co::TVS::HASBUTTONS,
+			control_style: co::TVS::HASLINES
+				| co::TVS::LINESATROOT
+				| co::TVS::SHOWSELALWAYS
+				| co::TVS::HASBUTTONS,
 			contorl_ex_style: co::TVS_EX::NoValue,
 			window_style: co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,

@@ -107,14 +107,25 @@ impl PropVariant {
 		let mut v = PROPVARIANT::default();
 		match self {
 			Self::Empty => {},
-			Self::I2(n) => { v.vt = co::VT::I2; v.data.iVal = *n; },
-			Self::I4(n) => { v.vt = co::VT::I4; v.data.lVal = *n; },
-			Self::R4(n) => { v.vt = co::VT::R4; v.data.fltVal = *n; },
-			Self::R8(n) => { v.vt = co::VT::R8; v.data.dblVal = *n; },
+			Self::I2(n) => {
+				v.vt = co::VT::I2;
+				v.data.iVal = *n;
+			},
+			Self::I4(n) => {
+				v.vt = co::VT::I4;
+				v.data.lVal = *n;
+			},
+			Self::R4(n) => {
+				v.vt = co::VT::R4;
+				v.data.fltVal = *n;
+			},
+			Self::R8(n) => {
+				v.vt = co::VT::R8;
+				v.data.dblVal = *n;
+			},
 			Self::Date(st) => {
 				v.vt = co::VT::DATE;
-				v.data.dblVal = SystemTimeToVariantTime(st)
-					.map_err(|err| err.to_hresult())?;
+				v.data.dblVal = SystemTimeToVariantTime(st).map_err(|err| err.to_hresult())?;
 			},
 			Self::Bstr(s) => {
 				v.vt = co::VT::BSTR;
@@ -126,18 +137,39 @@ impl PropVariant {
 				let mut cloned = p.clone(); // call AddRef
 				v.data.ptr = cloned.leak(); // the VARIANT will own the pointer
 			},
-			Self::Bool(b) => { v.vt = co::VT::BOOL; v.data.iVal = if *b { -1 } else { 0 }; },
+			Self::Bool(b) => {
+				v.vt = co::VT::BOOL;
+				v.data.iVal = if *b { -1 } else { 0 };
+			},
 			Self::Unknown(p) => {
 				v.vt = co::VT::UNKNOWN;
 				let mut cloned = p.clone(); // call AddRef
 				v.data.ptr = cloned.leak(); // the VARIANT will own the pointer
 			},
-			Self::I1(n) => { v.vt = co::VT::I1; v.data.cVal = *n; },
-			Self::UI1(n) => { v.vt = co::VT::UI1; v.data.bVal = *n; },
-			Self::UI2(n) => { v.vt = co::VT::UI2; v.data.uiVal = *n; },
-			Self::UI4(n) => { v.vt = co::VT::UI4; v.data.ulVal = *n; },
-			Self::I8(n) => { v.vt = co::VT::I8; v.data.hVal = *n; },
-			Self::UI8(n) => { v.vt = co::VT::UI8; v.data.uhVal = *n; },
+			Self::I1(n) => {
+				v.vt = co::VT::I1;
+				v.data.cVal = *n;
+			},
+			Self::UI1(n) => {
+				v.vt = co::VT::UI1;
+				v.data.bVal = *n;
+			},
+			Self::UI2(n) => {
+				v.vt = co::VT::UI2;
+				v.data.uiVal = *n;
+			},
+			Self::UI4(n) => {
+				v.vt = co::VT::UI4;
+				v.data.ulVal = *n;
+			},
+			Self::I8(n) => {
+				v.vt = co::VT::I8;
+				v.data.hVal = *n;
+			},
+			Self::UI8(n) => {
+				v.vt = co::VT::UI8;
+				v.data.uhVal = *n;
+			},
 		}
 		Ok(v)
 	}
@@ -246,14 +278,25 @@ impl Variant {
 		let mut v = VARIANT::default();
 		match self {
 			Self::Empty => {},
-			Self::I2(n) => { v.vt = co::VT::I2; v.data.iVal = *n; },
-			Self::I4(n) => { v.vt = co::VT::I4; v.data.lVal = *n; },
-			Self::R4(n) => { v.vt = co::VT::R4; v.data.fltVal = *n; },
-			Self::R8(n) => { v.vt = co::VT::R8; v.data.dblVal = *n; },
+			Self::I2(n) => {
+				v.vt = co::VT::I2;
+				v.data.iVal = *n;
+			},
+			Self::I4(n) => {
+				v.vt = co::VT::I4;
+				v.data.lVal = *n;
+			},
+			Self::R4(n) => {
+				v.vt = co::VT::R4;
+				v.data.fltVal = *n;
+			},
+			Self::R8(n) => {
+				v.vt = co::VT::R8;
+				v.data.dblVal = *n;
+			},
 			Self::Date(st) => {
 				v.vt = co::VT::DATE;
-				v.data.dblVal = SystemTimeToVariantTime(st)
-					.map_err(|err| err.to_hresult())?;
+				v.data.dblVal = SystemTimeToVariantTime(st).map_err(|err| err.to_hresult())?;
 			},
 			Self::Bstr(s) => {
 				v.vt = co::VT::BSTR;
@@ -265,18 +308,39 @@ impl Variant {
 				let mut cloned = p.clone(); // call AddRef
 				v.data.ptr = cloned.leak(); // the VARIANT will own the pointer
 			},
-			Self::Bool(b) => { v.vt = co::VT::BOOL; v.data.iVal = if *b { -1 } else { 0 }; },
+			Self::Bool(b) => {
+				v.vt = co::VT::BOOL;
+				v.data.iVal = if *b { -1 } else { 0 };
+			},
 			Self::Unknown(p) => {
 				v.vt = co::VT::UNKNOWN;
 				let mut cloned = p.clone(); // call AddRef
 				v.data.ptr = cloned.leak(); // the VARIANT will own the pointer
 			},
-			Self::I1(n) => { v.vt = co::VT::I1; v.data.cVal = *n; },
-			Self::UI1(n) => { v.vt = co::VT::UI1; v.data.bVal = *n; },
-			Self::UI2(n) => { v.vt = co::VT::UI2; v.data.uiVal = *n; },
-			Self::UI4(n) => { v.vt = co::VT::UI4; v.data.ulVal = *n; },
-			Self::I8(n) => { v.vt = co::VT::I8; v.data.llVal = *n; },
-			Self::UI8(n) => { v.vt = co::VT::UI8; v.data.ullVal = *n; },
+			Self::I1(n) => {
+				v.vt = co::VT::I1;
+				v.data.cVal = *n;
+			},
+			Self::UI1(n) => {
+				v.vt = co::VT::UI1;
+				v.data.bVal = *n;
+			},
+			Self::UI2(n) => {
+				v.vt = co::VT::UI2;
+				v.data.uiVal = *n;
+			},
+			Self::UI4(n) => {
+				v.vt = co::VT::UI4;
+				v.data.ulVal = *n;
+			},
+			Self::I8(n) => {
+				v.vt = co::VT::I8;
+				v.data.llVal = *n;
+			},
+			Self::UI8(n) => {
+				v.vt = co::VT::UI8;
+				v.data.ullVal = *n;
+			},
 		}
 		Ok(v)
 	}

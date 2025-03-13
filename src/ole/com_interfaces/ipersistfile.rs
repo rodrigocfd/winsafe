@@ -32,64 +32,53 @@ pub trait ole_IPersistFile: ole_IUnknown {
 	#[must_use]
 	fn GetCurFile(&self) -> HrResult<String> {
 		let mut pstr = std::ptr::null_mut::<u16>();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IPersistFileVT>(self).GetCurFile)(self.ptr(), &mut pstr)
-			},
-		).map(|_| {
-			let name = unsafe { WString::from_wchars_nullt(pstr) };
-			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) }; // https://stackoverflow.com/q/3079508/6923555
-			name.to_string()
-		})
+		ok_to_hrresult(unsafe { (vt::<IPersistFileVT>(self).GetCurFile)(self.ptr(), &mut pstr) })
+			.map(|_| {
+				let name = unsafe { WString::from_wchars_nullt(pstr) };
+				let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) }; // https://stackoverflow.com/q/3079508/6923555
+				name.to_string()
+			})
 	}
 
 	/// [`IPersistFile::IsDirty`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersistfile-isdirty)
 	/// method.
 	#[must_use]
 	fn IsDirty(&self) -> HrResult<bool> {
-		okfalse_to_hrresult(
-			unsafe { (vt::<IPersistFileVT>(self).IsDirty)(self.ptr()) },
-		)
+		okfalse_to_hrresult(unsafe { (vt::<IPersistFileVT>(self).IsDirty)(self.ptr()) })
 	}
 
 	/// [`IPersistFile::Load`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersistfile-load)
 	/// method.
 	fn Load(&self, file_name: &str, dw_mode: co::STGM) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IPersistFileVT>(self).Load)(
-					self.ptr(),
-					WString::from_str(file_name).as_ptr(),
-					dw_mode.raw(),
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IPersistFileVT>(self).Load)(
+				self.ptr(),
+				WString::from_str(file_name).as_ptr(),
+				dw_mode.raw(),
+			)
+		})
 	}
 
 	/// [`IPersistFile::Save`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersistfile-save)
 	/// method.
 	fn Save(&self, file_name: Option<&str>, remember: bool) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IPersistFileVT>(self).Save)(
-					self.ptr(),
-					WString::from_opt_str(file_name).as_ptr(),
-					remember as _,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IPersistFileVT>(self).Save)(
+				self.ptr(),
+				WString::from_opt_str(file_name).as_ptr(),
+				remember as _,
+			)
+		})
 	}
 
 	/// [`IPersistFile::SaveCompleted`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ipersistfile-savecompleted)
 	/// method.
 	fn SaveCompleted(&self, file_name: &str) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IPersistFileVT>(self).SaveCompleted)(
-					self.ptr(),
-					WString::from_str(file_name).as_ptr(),
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IPersistFileVT>(self).SaveCompleted)(
+				self.ptr(),
+				WString::from_str(file_name).as_ptr(),
+			)
+		})
 	}
 }

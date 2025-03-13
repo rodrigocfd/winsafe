@@ -15,8 +15,12 @@ pub struct GUID {
 
 impl std::fmt::Display for GUID {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		write!(f, "{:08x}-{:04x}-{:04x}-{:04x}-{:012x}",
-			self.data1, self.data2, self.data3,
+		write!(
+			f,
+			"{:08x}-{:04x}-{:04x}-{:04x}-{:012x}",
+			self.data1,
+			self.data2,
+			self.data3,
 			self.data4.swap_bytes() >> 48,
 			self.data4.swap_bytes() & 0x0000_ffff_ffff_ffff,
 		)
@@ -50,13 +54,15 @@ impl GUID {
 		}
 
 		let chs = guid_str.as_bytes();
-		let p1 = Self::parse_block([chs[0], chs[1], chs[2], chs[3], chs[4],
-			chs[5], chs[6], chs[7]]);
+		let p1 =
+			Self::parse_block([chs[0], chs[1], chs[2], chs[3], chs[4], chs[5], chs[6], chs[7]]);
 		let p2 = Self::parse_block([chs[9], chs[10], chs[11], chs[12]]);
 		let p3 = Self::parse_block([chs[14], chs[15], chs[16], chs[17]]);
 		let p4 = Self::parse_block([chs[19], chs[20], chs[21], chs[22]]);
-		let p5 = Self::parse_block([chs[24], chs[25], chs[26], chs[27], chs[28],
-			chs[29], chs[30], chs[31], chs[32], chs[33], chs[34], chs[35]]);
+		let p5 = Self::parse_block([
+			chs[24], chs[25], chs[26], chs[27], chs[28], chs[29], chs[30], chs[31], chs[32],
+			chs[33], chs[34], chs[35],
+		]);
 
 		Self {
 			data1: p1 as _,

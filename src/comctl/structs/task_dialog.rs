@@ -62,7 +62,8 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p>
 		raw.dwFlags = self.flags;
 		raw.dwCommonButtons = self.common_buttons;
 
-		let w_title = self.window_title // must force heap because variable will be moved
+		let w_title = self
+			.window_title // must force heap because variable will be moved
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.pszWindowTitle = w_title.as_ptr();
 
@@ -84,15 +85,19 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p>
 			},
 		}
 
-		let w_instruc = self.main_instruction
+		let w_instruc = self
+			.main_instruction
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.pszMainInstruction = w_instruc.as_ptr();
 
-		let w_content = self.content
+		let w_content = self
+			.content
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.pszContent = w_content.as_ptr();
 
-		let btns_buf: (Vec<_>, Vec<_>) = self.buttons.iter()
+		let btns_buf: (Vec<_>, Vec<_>) = self
+			.buttons
+			.iter()
 			.map(|(id, txt)| {
 				let txt_buf = WString::from_str_force_heap(*txt);
 				let btn_buf = TASKDIALOG_BUTTON {
@@ -106,7 +111,9 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p>
 		raw.pButtons = btns_buf.1.as_ptr() as _;
 		raw.nDefaultButton = self.default_button_id as _;
 
-		let radios_buf: (Vec<_>, Vec<_>) = self.radio_buttons.iter()
+		let radios_buf: (Vec<_>, Vec<_>) = self
+			.radio_buttons
+			.iter()
 			.map(|(id, txt)| {
 				let txt_buf = WString::from_str_force_heap(*txt);
 				let btn_buf = TASKDIALOG_BUTTON {
@@ -120,19 +127,23 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p>
 		raw.pRadioButtons = radios_buf.1.as_ptr() as _;
 		raw.nDefaultRadioButton = self.default_radio_button_id as _;
 
-		let w_verif = self.verification_text
+		let w_verif = self
+			.verification_text
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
-		raw.pszVerificationText = w_verif. as_ptr();
+		raw.pszVerificationText = w_verif.as_ptr();
 
-		let w_more_info = self.more_info
+		let w_more_info = self
+			.more_info
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.pszExpandedInformation = w_more_info.as_ptr();
 
-		let w_expanded_info = self.more_info_btn_expanded
+		let w_expanded_info = self
+			.more_info_btn_expanded
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.pszExpandedControlText = w_expanded_info.as_ptr();
 
-		let w_collapsed_info = self.more_info_btn_collapsed
+		let w_collapsed_info = self
+			.more_info_btn_collapsed
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.pszCollapsedControlText = w_collapsed_info.as_ptr();
 
@@ -151,7 +162,8 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p>
 			},
 		}
 
-		let w_footer = self.footer_text
+		let w_footer = self
+			.footer_text
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.pszFooter = w_footer.as_ptr();
 
@@ -159,9 +171,19 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p>
 		raw.lpCallbackData = self as *const _ as _; // object will exist until TaskDialogIndirect() returns
 		raw.cxWidth = self.width;
 
-		TASKDIALOGCONFIG_buf { raw, w_title, w_instruc, w_content,
-			btns_buf, radios_buf, w_verif,
-			w_more_info, w_expanded_info, w_collapsed_info, w_footer }
+		TASKDIALOGCONFIG_buf {
+			raw,
+			w_title,
+			w_instruc,
+			w_content,
+			btns_buf,
+			radios_buf,
+			w_verif,
+			w_more_info,
+			w_expanded_info,
+			w_collapsed_info,
+			w_footer,
+		}
 	}
 }
 

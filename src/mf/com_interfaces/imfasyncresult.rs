@@ -32,45 +32,38 @@ pub trait mf_IMFAsyncResult: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetObject<T>(&self) -> HrResult<T>
-		where T: ole_IUnknown,
+	where
+		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAsyncResultVT>(self).GetObject)(
-					self.ptr(),
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAsyncResultVT>(self).GetObject)(self.ptr(), queried.as_mut())
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IMFAsyncResult::GetState`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasyncresult-getstate)
 	/// method.
 	#[must_use]
 	fn GetState<T>(&self) -> HrResult<T>
-		where T: ole_IUnknown,
+	where
+		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAsyncResultVT>(self).GetState)(
-					self.ptr(),
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAsyncResultVT>(self).GetState)(self.ptr(), queried.as_mut())
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IMFAsyncResult::GetStateNoAddRef`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasyncresult-getstatenoaddref)
 	/// method.
 	#[must_use]
 	fn GetStateNoAddRef<T>(&self) -> Option<ManuallyDrop<T>>
-		where T: ole_IUnknown,
+	where
+		T: ole_IUnknown,
 	{
-		let ptr = unsafe {
-			(vt::<IMFAsyncResultVT>(self).GetStateNoAddRef)(self.ptr())
-		};
+		let ptr = unsafe { (vt::<IMFAsyncResultVT>(self).GetStateNoAddRef)(self.ptr()) };
 
 		if ptr.is_null() {
 			None
@@ -83,20 +76,14 @@ pub trait mf_IMFAsyncResult: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetStatus(&self) -> co::HRESULT {
-		unsafe {
-			co::HRESULT::from_raw(
-				(vt::<IMFAsyncResultVT>(self).GetStatus)(self.ptr()),
-			)
-		}
+		unsafe { co::HRESULT::from_raw((vt::<IMFAsyncResultVT>(self).GetStatus)(self.ptr())) }
 	}
 
 	/// [`IMFAsyncResult::SetStatus`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasyncresult-setstatus)
 	/// method.
 	fn SetStatus(&self, status: co::HRESULT) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAsyncResultVT>(self).SetStatus)(self.ptr(), status.raw())
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAsyncResultVT>(self).SetStatus)(self.ptr(), status.raw())
+		})
 	}
 }

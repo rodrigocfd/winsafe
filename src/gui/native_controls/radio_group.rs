@@ -4,7 +4,7 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::decl::*;
-use crate::gui::{*, events::*};
+use crate::gui::{events::*, *};
 use crate::prelude::*;
 
 struct RadioGroupObj {
@@ -44,7 +44,8 @@ impl RadioGroup {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
 
-		let (ctrl_ids, radios): (Vec<_>, Vec<_>) = opts.iter()
+		let (ctrl_ids, radios): (Vec<_>, Vec<_>) = opts
+			.iter()
 			.enumerate()
 			.map(|(idx, opt)| {
 				let radio = RadioButton::new(parent, opt.clone(), idx == 0);
@@ -52,15 +53,11 @@ impl RadioGroup {
 			})
 			.unzip();
 
-		Self(
-			Arc::pin(
-				RadioGroupObj {
-					radios,
-					events: RadioGroupEvents::new(parent, ctrl_ids),
-					_pin: PhantomPinned,
-				},
-			),
-		)
+		Self(Arc::pin(RadioGroupObj {
+			radios,
+			events: RadioGroupEvents::new(parent, ctrl_ids),
+			_pin: PhantomPinned,
+		}))
 	}
 
 	/// Instantiates a new `RadioGroup` object, to be loaded from a dialog
@@ -74,31 +71,24 @@ impl RadioGroup {
 	/// Panics if the parent dialog was already created – that is, you cannot
 	/// dynamically create a `RadioGroup` in an event closure.
 	#[must_use]
-	pub fn new_dlg(
-		parent: &(impl GuiParent + 'static),
-		ctrls: &[(u16, Horz, Vert)],
-	) -> Self
-	{
+	pub fn new_dlg(parent: &(impl GuiParent + 'static), ctrls: &[(u16, Horz, Vert)]) -> Self {
 		if ctrls.is_empty() {
 			panic!("RadioGroup needs at least one RadioButton.");
 		}
 
-		let (ctrl_ids, radios): (Vec<_>, Vec<_>) = ctrls.iter()
+		let (ctrl_ids, radios): (Vec<_>, Vec<_>) = ctrls
+			.iter()
 			.enumerate()
 			.map(|(idx, (ctrl_id, horz, vert))| {
 				(*ctrl_id, RadioButton::new_dlg(parent, *ctrl_id, idx == 0, (*horz, *vert)))
 			})
 			.unzip();
 
-		Self(
-			Arc::pin(
-				RadioGroupObj {
-					radios,
-					events: RadioGroupEvents::new(parent, ctrl_ids),
-					_pin: PhantomPinned,
-				},
-			),
-		)
+		Self(Arc::pin(RadioGroupObj {
+			radios,
+			events: RadioGroupEvents::new(parent, ctrl_ids),
+			_pin: PhantomPinned,
+		}))
 	}
 
 	/// Exposes the specific control events.
@@ -157,7 +147,6 @@ impl RadioGroup {
 	/// [`RadioButton`](crate::gui::RadioButton) of this group, if any.
 	#[must_use]
 	pub fn selected_index(&self) -> Option<usize> {
-		self.0.radios.iter()
-			.position(|radio| radio.is_selected())
+		self.0.radios.iter().position(|radio| radio.is_selected())
 	}
 }

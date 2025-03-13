@@ -53,16 +53,17 @@ pub(crate) fn ptr_to_sysresult(ptr: HANDLE) -> SysResult<HANDLE> {
 /// If pointer is null, yields `Err(GetLastError)`, otherwise `Ok(Handle)`.
 #[must_use]
 pub(crate) fn ptr_to_sysresult_handle<H>(ptr: HANDLE) -> SysResult<H>
-	where H: Handle,
+where
+	H: Handle,
 {
-	ptr_to_sysresult(ptr)
-		.map(|ptr| unsafe { Handle::from_ptr(ptr) })
+	ptr_to_sysresult(ptr).map(|ptr| unsafe { Handle::from_ptr(ptr) })
 }
 
 /// If the pointer is null, yields `None`, otherwise `Some(Handle)`.
 #[must_use]
 pub(crate) fn ptr_to_option_handle<H>(ptr: HANDLE) -> Option<H>
-	where H: Handle,
+where
+	H: Handle,
 {
 	if ptr.is_null() {
 		None
@@ -93,7 +94,8 @@ pub(crate) fn minus1_as_error(dword: u32) -> SysResult<u32> {
 /// Converts a string to an ISO-8859-1 null-terminated byte array.
 #[must_use]
 pub(crate) fn str_to_iso88591(s: &str) -> Vec<u8> {
-	s.chars().map(|ch| ch as u8)
+	s.chars()
+		.map(|ch| ch as u8)
 		.chain(std::iter::once(0)) // append a terminating null
 		.collect()
 }
@@ -104,11 +106,7 @@ pub(crate) fn str_to_iso88591(s: &str) -> Vec<u8> {
 ///
 /// If `len` is not informed, make sure the string has two terminating nulls.
 #[must_use]
-pub(crate) unsafe fn parse_multi_z_str(
-	src: *const u16,
-	len: Option<usize>,
-) -> Vec<String>
-{
+pub(crate) unsafe fn parse_multi_z_str(src: *const u16, len: Option<usize>) -> Vec<String> {
 	let given_len = len.unwrap_or(usize::MAX);
 	let mut src = src;
 	let mut strings = Vec::<String>::new();
@@ -156,18 +154,11 @@ pub(crate) fn vec_ptr<T>(v: &[T]) -> *const T {
 #[must_use]
 pub(crate) fn create_wstr_ptr_vecs(
 	strings: Option<&[impl AsRef<str>]>,
-) -> (Vec<WString>, Vec<*const u16>)
-{
+) -> (Vec<WString>, Vec<*const u16>) {
 	match strings {
 		Some(ss) => {
-			let wstrs = ss.iter()
-				.map(|s| WString::from_str(s))
-				.collect::<Vec<_>>();
-
-			let pwstrs = wstrs.iter()
-				.map(|w| w.as_ptr())
-				.collect::<Vec<_>>();
-
+			let wstrs = ss.iter().map(|s| WString::from_str(s)).collect::<Vec<_>>();
+			let pwstrs = wstrs.iter().map(|w| w.as_ptr()).collect::<Vec<_>>();
 			(wstrs, pwstrs)
 		},
 		None => (Vec::default(), Vec::default()),

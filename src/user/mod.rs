@@ -8,12 +8,12 @@ mod msg_traits;
 mod proc;
 mod structs;
 
-pub(in crate::user) mod ffi;
-pub(in crate::user) mod iterators;
-pub(crate) mod privs;
 pub mod co;
+pub(in crate::user) mod ffi;
 pub mod guard;
+pub(in crate::user) mod iterators;
 pub mod messages;
+pub(crate) mod privs;
 
 pub mod decl {
 	pub use super::aliases::*;

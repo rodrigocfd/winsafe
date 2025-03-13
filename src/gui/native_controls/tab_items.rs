@@ -34,24 +34,22 @@ impl<'a> TabItems<'a> {
 		tci.mask = co::TCIF::TEXT;
 		tci.set_pszText(Some(&mut wtitle));
 
-		self.get( // retrieve the item newly added
-			self.owner.hwnd()
-				.SendMessage(tcm::InsertItem {
-					index: 0x0fff_ffff, // insert as the last item
-					item: &tci,
-				})
-				.unwrap(),
-		)
+		let idx = self
+			.owner
+			.hwnd()
+			.SendMessage(tcm::InsertItem {
+				index: 0x0fff_ffff, // insert as the last item
+				item: &tci,
+			})
+			.unwrap();
+		self.get(idx)
 	}
 
 	/// Retrieves the total number of items by sending an
 	/// [`tcm::GetItemCount`](crate::msg::tcm::GetItemCount) message.
 	#[must_use]
 	pub fn count(&self) -> SysResult<u32> {
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(tcm::GetItemCount {})
-		}
+		unsafe { self.owner.hwnd().SendMessage(tcm::GetItemCount {}) }
 	}
 
 	/// Deletes all items by sending a
@@ -62,8 +60,7 @@ impl<'a> TabItems<'a> {
 	/// If you delete a tab automatically created, which has a container window
 	/// attached to it, the rendering will be out-of-order.
 	pub unsafe fn delete_all(&self) -> SysResult<()> {
-		self.owner.hwnd()
-			.SendMessage(tcm::DeleteAllItems {})
+		self.owner.hwnd().SendMessage(tcm::DeleteAllItems {})
 	}
 
 	/// Retrieves the item at the given zero-based position.
@@ -80,19 +77,13 @@ impl<'a> TabItems<'a> {
 	/// [`tcm::GetCurSel`](crate::msg::tcm::GetCurSel) message.
 	#[must_use]
 	pub fn focused(&self) -> Option<TabItem<'a>> {
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(tcm::GetCurFocus {})
-		}.map(|i| self.get(i))
+		unsafe { self.owner.hwnd().SendMessage(tcm::GetCurFocus {}) }.map(|i| self.get(i))
 	}
 
 	/// Returns the selected item by sending a
 	/// [`tcm::GetCurSel`](crate::msg::tcm::GetCurSel) message.
 	#[must_use]
 	pub fn selected(&self) -> Option<TabItem<'a>> {
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(tcm::GetCurSel {})
-		}.map(|i| self.get(i))
+		unsafe { self.owner.hwnd().SendMessage(tcm::GetCurSel {}) }.map(|i| self.get(i))
 	}
 }

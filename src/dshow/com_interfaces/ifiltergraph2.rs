@@ -29,19 +29,13 @@ impl dshow_IFilterGraph2 for IFilterGraph2 {}
 pub trait dshow_IFilterGraph2: dshow_IGraphBuilder {
 	/// [`IFilterGraph2::ReconnectEx`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph2-reconnectex)
 	/// method.
-	fn ReconnectEx(&self,
-		pin: &impl dshow_IPin,
-		mt: Option<&AM_MEDIA_TYPE>,
-	) -> HrResult<()>
-	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IFilterGraph2VT>(self).ReconnectEx)(
-					self.ptr(),
-					pin.ptr(),
-					mt.map_or(std::ptr::null_mut(), |mt| mt as *const _ as _),
-				)
-			},
-		)
+	fn ReconnectEx(&self, pin: &impl dshow_IPin, mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IFilterGraph2VT>(self).ReconnectEx)(
+				self.ptr(),
+				pin.ptr(),
+				mt.map_or(std::ptr::null_mut(), |mt| mt as *const _ as _),
+			)
+		})
 	}
 }

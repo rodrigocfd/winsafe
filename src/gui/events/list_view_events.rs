@@ -118,7 +118,8 @@ impl ListViewEvents {
 	/// [`LVN_GETEMPTYMARKUP`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-getemptymarkup)
 	/// notification.
 	pub fn lvn_get_empty_markup<F>(&self, func: F)
-		where F: Fn(&mut NMLVEMPTYMARKUP) -> AnyResult<bool> + 'static,
+	where
+		F: Fn(&mut NMLVEMPTYMARKUP) -> AnyResult<bool> + 'static,
 	{
 		self.0.wm_notify(co::LVN::GETEMPTYMARKUP, move |p| {
 			Ok(func(unsafe { p.cast_nmhdr_mut::<NMLVEMPTYMARKUP>() })? as _)
@@ -221,7 +222,8 @@ impl ListViewEvents {
 	/// [`LVN_ODFINDITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-odfinditem)
 	/// notification.
 	pub fn lvn_od_find_item<F>(&self, func: F)
-		where F: Fn(&mut NMLVFINDITEM) -> AnyResult<Option<u32>> + 'static,
+	where
+		F: Fn(&mut NMLVFINDITEM) -> AnyResult<Option<u32>> + 'static,
 	{
 		self.0.wm_notify(co::LVN::ODFINDITEM, move |p| {
 			Ok(match func(unsafe { p.cast_nmhdr_mut::<NMLVFINDITEM>() })? {
@@ -249,7 +251,8 @@ impl ListViewEvents {
 	/// [`NM_CUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-customdraw-list-view)
 	/// notification.
 	pub fn nm_custom_draw<F>(&self, func: F)
-		where F: Fn(&mut NMLVCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
+	where
+		F: Fn(&mut NMLVCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
 		self.0.wm_notify(co::NM::CUSTOMDRAW, move |p| {
 			Ok(func(unsafe { p.cast_nmhdr_mut::<NMLVCUSTOMDRAW>() })?.raw() as _)

@@ -30,26 +30,21 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	/// [`IDispatch::GetIDsOfNames`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-getidsofnames)
 	/// method.
 	#[must_use]
-	fn GetIDsOfNames(&self,
-		names: &[impl AsRef<str>],
-		lcid: LCID,
-	) -> HrResult<Vec<i32>>
-	{
+	fn GetIDsOfNames(&self, names: &[impl AsRef<str>], lcid: LCID) -> HrResult<Vec<i32>> {
 		let (_wstrs, pwstrs) = create_wstr_ptr_vecs(Some(names));
 		let mut ids = vec![i32::default(); names.len()];
 
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDispatchVT>(self).GetIDsOfNames)(
-					self.ptr(),
-					&co::IID::default() as *const _ as _,
-					vec_ptr(&pwstrs),
-					names.len() as _,
-					lcid.into(),
-					ids.as_mut_ptr() as _,
-				)
-			},
-		).map(|_| ids)
+		ok_to_hrresult(unsafe {
+			(vt::<IDispatchVT>(self).GetIDsOfNames)(
+				self.ptr(),
+				&co::IID::default() as *const _ as _,
+				vec_ptr(&pwstrs),
+				names.len() as _,
+				lcid.into(),
+				ids.as_mut_ptr() as _,
+			)
+		})
+		.map(|_| ids)
 	}
 
 	/// [`IDispatch::GetTypeInfoCount`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfocount)
@@ -57,11 +52,10 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	#[must_use]
 	fn GetTypeInfoCount(&self) -> HrResult<u32> {
 		let mut count = u32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDispatchVT>(self).GetTypeInfoCount)(self.ptr(), &mut count)
-			},
-		).map(|_| count)
+		ok_to_hrresult(unsafe {
+			(vt::<IDispatchVT>(self).GetTypeInfoCount)(self.ptr(), &mut count)
+		})
+		.map(|_| count)
 	}
 
 	/// [`IDispatch::GetTypeInfo`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-gettypeinfo)
@@ -69,15 +63,14 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	#[must_use]
 	fn GetTypeInfo(&self, info_type: u32, lcid: LCID) -> HrResult<ITypeInfo> {
 		let mut queried = unsafe { ITypeInfo::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDispatchVT>(self).GetTypeInfo)(
-					self.ptr(),
-					info_type,
-					lcid.into(),
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IDispatchVT>(self).GetTypeInfo)(
+				self.ptr(),
+				info_type,
+				lcid.into(),
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 }

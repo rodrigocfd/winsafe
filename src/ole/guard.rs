@@ -9,13 +9,15 @@ use crate::prelude::*;
 /// [`CoLockObjectExternal`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-colockobjectexternal)
 /// to unlock the COM pointer.
 pub struct CoLockObjectExternalGuard<'a, T>
-	where T: ole_IUnknown,
+where
+	T: ole_IUnknown,
 {
 	com_obj: &'a T,
 }
 
 impl<'a, T> Drop for CoLockObjectExternalGuard<'a, T>
-	where T: ole_IUnknown,
+where
+	T: ole_IUnknown,
 {
 	fn drop(&mut self) {
 		unsafe {
@@ -25,7 +27,8 @@ impl<'a, T> Drop for CoLockObjectExternalGuard<'a, T>
 }
 
 impl<'a, T> CoLockObjectExternalGuard<'a, T>
-	where T: ole_IUnknown,
+where
+	T: ole_IUnknown,
 {
 	/// Constructs the guard by keeping the reference to the COM pointer.
 	///
@@ -50,7 +53,9 @@ pub struct CoTaskMemFreeGuard {
 impl Drop for CoTaskMemFreeGuard {
 	fn drop(&mut self) {
 		if !self.pmem.is_null() {
-			unsafe { ffi::CoTaskMemFree(self.pmem); }
+			unsafe {
+				ffi::CoTaskMemFree(self.pmem);
+			}
 		}
 	}
 }
@@ -94,7 +99,9 @@ pub struct CoUninitializeGuard {
 
 impl Drop for CoUninitializeGuard {
 	fn drop(&mut self) {
-		unsafe { ffi::CoUninitialize(); }
+		unsafe {
+			ffi::CoUninitialize();
+		}
 	}
 }
 
@@ -128,7 +135,9 @@ pub struct OleUninitializeGuard {}
 
 impl Drop for OleUninitializeGuard {
 	fn drop(&mut self) {
-		unsafe { ffi::OleUninitialize(); }
+		unsafe {
+			ffi::OleUninitialize();
+		}
 	}
 }
 
@@ -155,7 +164,9 @@ pub struct ReleaseStgMediumGuard {
 
 impl Drop for ReleaseStgMediumGuard {
 	fn drop(&mut self) {
-		unsafe { ffi::ReleaseStgMedium(&mut self.stgm as *mut _ as _); }
+		unsafe {
+			ffi::ReleaseStgMedium(&mut self.stgm as *mut _ as _);
+		}
 	}
 }
 

@@ -6,11 +6,11 @@ mod funcs;
 mod handles;
 mod structs;
 
+pub mod co;
 pub(in crate::ole) mod ffi;
+pub mod guard;
 pub(crate) mod privs;
 pub(crate) mod vts;
-pub mod co;
-pub mod guard;
 
 pub mod decl {
 	pub use super::aliases::*;

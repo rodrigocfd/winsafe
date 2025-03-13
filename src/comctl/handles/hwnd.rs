@@ -30,15 +30,17 @@ pub trait comctl_Hwnd: user_Hwnd {
 	/// Messages manipulate pointers, copies and window states. Improper use may
 	/// lead to undefined behavior.
 	unsafe fn DefSubclassProc<M>(&self, msg: M) -> M::RetType
-		where M: MsgSend,
+	where
+		M: MsgSend,
 	{
 		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
-		msg.isize_to_ret(
-			ffi::DefSubclassProc(
-				self.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam,
-			),
-		)
+		msg.isize_to_ret(ffi::DefSubclassProc(
+			self.ptr(),
+			wm_any.msg_id.raw(),
+			wm_any.wparam,
+			wm_any.lparam,
+		))
 	}
 
 	/// [`InitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initializeflatsb)
@@ -49,20 +51,14 @@ pub trait comctl_Hwnd: user_Hwnd {
 
 	/// [`RemoveWindowSubclass`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-removewindowsubclass)
 	/// function.
-	fn RemoveWindowSubclass(&self,
+	fn RemoveWindowSubclass(
+		&self,
 		subclass_func: SUBCLASSPROC,
 		subclass_id: usize,
-	) -> SysResult<()>
-	{
-		bool_to_sysresult(
-			unsafe {
-				ffi::RemoveWindowSubclass(
-					self.ptr(),
-					subclass_func as _,
-					subclass_id,
-				)
-			},
-		)
+	) -> SysResult<()> {
+		bool_to_sysresult(unsafe {
+			ffi::RemoveWindowSubclass(self.ptr(), subclass_func as _, subclass_id)
+		})
 	}
 
 	/// [`SetWindowSubclass`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-setwindowsubclass)
@@ -71,22 +67,15 @@ pub trait comctl_Hwnd: user_Hwnd {
 	/// # Safety
 	///
 	/// You must provide a subclass procedure.
-	unsafe fn SetWindowSubclass(&self,
+	unsafe fn SetWindowSubclass(
+		&self,
 		subclass_proc: SUBCLASSPROC,
 		subclass_id: usize,
 		ref_data: usize,
-	) -> SysResult<()>
-	{
-		bool_to_sysresult(
-			unsafe {
-				ffi::SetWindowSubclass(
-					self.ptr(),
-					subclass_proc as _,
-					subclass_id,
-					ref_data,
-				)
-			},
-		)
+	) -> SysResult<()> {
+		bool_to_sysresult(unsafe {
+			ffi::SetWindowSubclass(self.ptr(), subclass_proc as _, subclass_id, ref_data)
+		})
 	}
 
 	/// [`TaskDialog`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-taskdialog)
@@ -136,32 +125,31 @@ pub trait comctl_Hwnd: user_Hwnd {
 	/// }
 	/// # w::HrResult::Ok(())
 	/// ```
-	fn TaskDialog(&self,
+	fn TaskDialog(
+		&self,
 		window_title: Option<&str>,
 		main_instruction: Option<&str>,
 		content: Option<&str>,
 		common_buttons: co::TDCBF,
 		icon: IconRes,
-	) -> HrResult<co::DLGID>
-	{
+	) -> HrResult<co::DLGID> {
 		// https://weblogs.asp.net/kennykerr/Windows-Vista-for-Developers-_1320_-Part-2-_1320_-Task-Dialogs-in-Depth
 		let mut pn_button = i32::default();
 		let (hinst, raw_ico) = icon.as_ptr();
 
-		ok_to_hrresult(
-			unsafe {
-				ffi::TaskDialog(
-					self.ptr(),
-					hinst.ptr(),
-					WString::from_opt_str(window_title).as_ptr(),
-					WString::from_opt_str(main_instruction).as_ptr(),
-					WString::from_opt_str(content).as_ptr(),
-					common_buttons.raw(),
-					raw_ico,
-					&mut pn_button,
-				)
-			},
-		).map(|_| unsafe { co::DLGID::from_raw(pn_button as _) })
+		ok_to_hrresult(unsafe {
+			ffi::TaskDialog(
+				self.ptr(),
+				hinst.ptr(),
+				WString::from_opt_str(window_title).as_ptr(),
+				WString::from_opt_str(main_instruction).as_ptr(),
+				WString::from_opt_str(content).as_ptr(),
+				common_buttons.raw(),
+				raw_ico,
+				&mut pn_button,
+			)
+		})
+		.map(|_| unsafe { co::DLGID::from_raw(pn_button as _) })
 	}
 
 	/// [`UninitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-uninitializeflatsb)

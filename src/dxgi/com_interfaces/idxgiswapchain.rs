@@ -33,19 +33,19 @@ pub trait dxgi_IDXGISwapChain: dxgi_IDXGIDeviceSubObject {
 	/// method.
 	#[must_use]
 	fn GetBuffer<T>(&self, buffer_index: u32) -> HrResult<T>
-		where T: ole_IUnknown,
+	where
+		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGISwapChainVT>(self).GetBuffer)(
-					self.ptr(),
-					buffer_index,
-					&T::IID as *const _ as _,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGISwapChainVT>(self).GetBuffer)(
+				self.ptr(),
+				buffer_index,
+				&T::IID as *const _ as _,
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 
 	fn_com_interface_get! { GetContainingOutput: IDXGISwapChainVT, IDXGIOutput;
@@ -58,28 +58,20 @@ pub trait dxgi_IDXGISwapChain: dxgi_IDXGIDeviceSubObject {
 	#[must_use]
 	fn GetDesc(&self) -> HrResult<DXGI_SWAP_CHAIN_DESC> {
 		let mut desc = DXGI_SWAP_CHAIN_DESC::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGISwapChainVT>(self).GetDesc)(
-					self.ptr(),
-					&mut desc as *mut _ as _,
-				)
-			},
-		).map(|_| desc)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGISwapChainVT>(self).GetDesc)(self.ptr(), &mut desc as *mut _ as _)
+		})
+		.map(|_| desc)
 	}
 
 	/// [`IDXGISwapChain::GetFrameStatistics`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-getframestatistics)
 	/// method.
 	fn GetFrameStatistics(&self) -> HrResult<DXGI_FRAME_STATISTICS> {
 		let mut stats = DXGI_FRAME_STATISTICS::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGISwapChainVT>(self).GetDesc)(
-					self.ptr(),
-					&mut stats as *mut _ as _,
-				)
-			},
-		).map(|_| stats)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGISwapChainVT>(self).GetDesc)(self.ptr(), &mut stats as *mut _ as _)
+		})
+		.map(|_| stats)
 	}
 
 	/// [`IDXGISwapChain::GetFullscreenState`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-getfullscreenstate)
@@ -89,18 +81,14 @@ pub trait dxgi_IDXGISwapChain: dxgi_IDXGIDeviceSubObject {
 		let mut fullscreen: BOOL = 0;
 		let mut queried = unsafe { IDXGIOutput::null() };
 
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGISwapChainVT>(self).GetFullscreenState)(
-					self.ptr(),
-					&mut fullscreen,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| (
-			fullscreen != 0,
-			if queried.ptr().is_null() { None } else { Some(queried) },
-		))
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGISwapChainVT>(self).GetFullscreenState)(
+				self.ptr(),
+				&mut fullscreen,
+				queried.as_mut(),
+			)
+		})
+		.map(|_| (fullscreen != 0, if queried.ptr().is_null() { None } else { Some(queried) }))
 	}
 
 	/// [`IDXGISwapChain::GetLastPresentCount`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-getlastpresentcount)
@@ -108,88 +96,66 @@ pub trait dxgi_IDXGISwapChain: dxgi_IDXGIDeviceSubObject {
 	#[must_use]
 	fn GetLastPresentCount(&self) -> HrResult<u32> {
 		let mut count = u32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGISwapChainVT>(self).GetLastPresentCount)(
-					self.ptr(),
-					&mut count,
-				)
-			},
-		).map(|_| count)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGISwapChainVT>(self).GetLastPresentCount)(self.ptr(), &mut count)
+		})
+		.map(|_| count)
 	}
 
 	/// [`IDXGISwapChain::Present`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-present)
 	/// method.
-	fn Present(&self,
-		sync_interval: u32,
-		flags: co::DXGI_PRESENT,
-	) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGISwapChainVT>(self).Present)(
-					self.ptr(),
-					sync_interval,
-					flags.raw(),
-				)
-			},
-		)
+	fn Present(&self, sync_interval: u32, flags: co::DXGI_PRESENT) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGISwapChainVT>(self).Present)(self.ptr(), sync_interval, flags.raw())
+		})
 	}
 
 	/// [`IDXGISwapChain::ResizeBuffers`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-resizebuffers)
 	/// method.
-	fn ResizeBuffers(&self,
+	fn ResizeBuffers(
+		&self,
 		buffer_count: u32,
 		width: u32,
 		height: u32,
 		new_format: co::DXGI_FORMAT,
 		swap_chain_flags: co::DXGI_SWAP_CHAIN_FLAG,
-	) -> HrResult<()>
-	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGISwapChainVT>(self).ResizeBuffers)(
-					self.ptr(),
-					buffer_count,
-					width,
-					height,
-					new_format.raw(),
-					swap_chain_flags.raw(),
-				)
-			},
-		)
+	) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGISwapChainVT>(self).ResizeBuffers)(
+				self.ptr(),
+				buffer_count,
+				width,
+				height,
+				new_format.raw(),
+				swap_chain_flags.raw(),
+			)
+		})
 	}
 
 	/// [`IDXGISwapChain::ResizeTarget`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-resizetarget)
 	/// method.
-	fn ResizeTarget(&self,
-		new_target_parameters: &DXGI_MODE_DESC,
-	) -> HrResult<()>
-	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGISwapChainVT>(self).ResizeTarget)(
-					self.ptr(),
-					new_target_parameters as *const _ as _,
-				)
-			},
-		)
+	fn ResizeTarget(&self, new_target_parameters: &DXGI_MODE_DESC) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGISwapChainVT>(self).ResizeTarget)(
+				self.ptr(),
+				new_target_parameters as *const _ as _,
+			)
+		})
 	}
 
 	/// [`IDXGISwapChain::SetFullscreenState`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-setfullscreenstate)
 	/// method.
-	fn SetFullscreenState(&self,
+	fn SetFullscreenState(
+		&self,
 		fullscreen: bool,
 		target: Option<&impl dxgi_IDXGIOutput>,
-	) -> HrResult<()>
-	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGISwapChainVT>(self).SetFullscreenState)(
-					self.ptr(),
-					fullscreen as _,
-					target.map_or(std::ptr::null_mut(), |t| t.ptr()),
-				)
-			},
-		)
+	) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGISwapChainVT>(self).SetFullscreenState)(
+				self.ptr(),
+				fullscreen as _,
+				target.map_or(std::ptr::null_mut(), |t| t.ptr()),
+			)
+		})
 	}
 }

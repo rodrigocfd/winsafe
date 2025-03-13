@@ -42,24 +42,23 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	/// [`IMediaSeeking::ConvertTimeFormat`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-converttimeformat)
 	/// method.
 	#[must_use]
-	fn ConvertTimeFormat(&self,
+	fn ConvertTimeFormat(
+		&self,
 		target_format: &co::TIME_FORMAT,
 		source: i64,
 		source_format: &co::TIME_FORMAT,
-	) -> HrResult<i64>
-	{
+	) -> HrResult<i64> {
 		let mut target = i64::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMediaSeekingVT>(self).ConvertTimeFormat)(
-					self.ptr(),
-					&mut target,
-					target_format as *const _ as _,
-					source,
-					source_format as *const _ as _,
-				)
-			},
-		).map(|_| target)
+		ok_to_hrresult(unsafe {
+			(vt::<IMediaSeekingVT>(self).ConvertTimeFormat)(
+				self.ptr(),
+				&mut target,
+				target_format as *const _ as _,
+				source,
+				source_format as *const _ as _,
+			)
+		})
+		.map(|_| target)
 	}
 
 	/// [`IMediaSeeking::GetAvailable`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getavailable)
@@ -69,15 +68,10 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	#[must_use]
 	fn GetAvailable(&self) -> HrResult<(i64, i64)> {
 		let (mut early, mut late) = (i64::default(), i64::default());
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMediaSeekingVT>(self).GetPositions)(
-					self.ptr(),
-					&mut early,
-					&mut late,
-				)
-			},
-		).map(|_| (early, late))
+		ok_to_hrresult(unsafe {
+			(vt::<IMediaSeekingVT>(self).GetPositions)(self.ptr(), &mut early, &mut late)
+		})
+		.map(|_| (early, late))
 	}
 
 	/// [`IMediaSeeking::GetCurrentPosition method`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getcurrentposition)
@@ -85,14 +79,10 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	#[must_use]
 	fn GetCurrentPosition(&self) -> HrResult<i64> {
 		let mut pos = i64::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMediaSeekingVT>(self).GetCurrentPosition)(
-					self.ptr(),
-					&mut pos,
-				)
-			},
-		).map(|_| pos)
+		ok_to_hrresult(unsafe {
+			(vt::<IMediaSeekingVT>(self).GetCurrentPosition)(self.ptr(), &mut pos)
+		})
+		.map(|_| pos)
 	}
 
 	/// [`IMediaSeeking::GetDuration`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getduration)
@@ -100,11 +90,10 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	#[must_use]
 	fn GetDuration(&self) -> HrResult<i64> {
 		let mut duration = i64::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMediaSeekingVT>(self).GetDuration)(self.ptr(), &mut duration)
-			},
-		).map(|_| duration)
+		ok_to_hrresult(unsafe {
+			(vt::<IMediaSeekingVT>(self).GetDuration)(self.ptr(), &mut duration)
+		})
+		.map(|_| duration)
 	}
 
 	/// [`IMediaSeeking::GetPositions`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getpositions)
@@ -114,15 +103,10 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	#[must_use]
 	fn GetPositions(&self) -> HrResult<(i64, i64)> {
 		let (mut current, mut stop) = (i64::default(), i64::default());
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMediaSeekingVT>(self).GetPositions)(
-					self.ptr(),
-					&mut current,
-					&mut stop,
-				)
-			},
-		).map(|_| (current, stop))
+		ok_to_hrresult(unsafe {
+			(vt::<IMediaSeekingVT>(self).GetPositions)(self.ptr(), &mut current, &mut stop)
+		})
+		.map(|_| (current, stop))
 	}
 
 	/// [`IMediaSeeking::GetPreroll`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getpreroll)
@@ -130,11 +114,10 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	#[must_use]
 	fn GetPreroll(&self) -> HrResult<i64> {
 		let mut preroll = i64::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMediaSeekingVT>(self).GetPreroll)(self.ptr(), &mut preroll)
-			},
-		).map(|_| preroll)
+		ok_to_hrresult(unsafe {
+			(vt::<IMediaSeekingVT>(self).GetPreroll)(self.ptr(), &mut preroll)
+		})
+		.map(|_| preroll)
 	}
 
 	/// [`IMediaSeeking::GetRate`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getrate)
@@ -142,11 +125,8 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	#[must_use]
 	fn GetRate(&self) -> HrResult<f64> {
 		let mut rate = f64::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMediaSeekingVT>(self).GetRate)(self.ptr(), &mut rate)
-			},
-		).map(|_| rate)
+		ok_to_hrresult(unsafe { (vt::<IMediaSeekingVT>(self).GetRate)(self.ptr(), &mut rate) })
+			.map(|_| rate)
 	}
 
 	/// [`IMediaSeeking::GetStopPosition`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-getstopposition)
@@ -154,11 +134,10 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	#[must_use]
 	fn GetStopPosition(&self) -> HrResult<i64> {
 		let mut pos = i64::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMediaSeekingVT>(self).GetStopPosition)(self.ptr(), &mut pos)
-			},
-		).map(|_| pos)
+		ok_to_hrresult(unsafe {
+			(vt::<IMediaSeekingVT>(self).GetStopPosition)(self.ptr(), &mut pos)
+		})
+		.map(|_| pos)
 	}
 
 	/// [`IMediaSeeking::GetTimeFormat`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-gettimeformat)
@@ -166,39 +145,32 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	#[must_use]
 	fn GetTimeFormat(&self) -> HrResult<co::TIME_FORMAT> {
 		let mut time_guid = co::TIME_FORMAT::NONE;
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMediaSeekingVT>(self).GetStopPosition)(
-					self.ptr(),
-					&mut time_guid as *mut _ as _,
-				)
-			},
-		).map(|_| time_guid)
+		ok_to_hrresult(unsafe {
+			(vt::<IMediaSeekingVT>(self).GetStopPosition)(self.ptr(), &mut time_guid as *mut _ as _)
+		})
+		.map(|_| time_guid)
 	}
 
 	/// [`IMediaSeeking::SetPositions`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setpositions)
 	/// method.
-	fn SetPositions(&self,
+	fn SetPositions(
+		&self,
 		current: i64,
 		current_flags: co::SEEKING_FLAGS,
 		stop: i64,
 		stop_flags: co::SEEKING_FLAGS,
-	) -> HrResult<()>
-	{
+	) -> HrResult<()> {
 		let (mut current, mut stop) = (current, stop);
 		match unsafe {
-			co::HRESULT::from_raw(
-				(vt::<IMediaSeekingVT>(self).SetPositions)(
-					self.ptr(),
-					&mut current,
-					current_flags.raw(),
-					&mut stop,
-					stop_flags.raw(),
-				) as _,
-			)
+			co::HRESULT::from_raw((vt::<IMediaSeekingVT>(self).SetPositions)(
+				self.ptr(),
+				&mut current,
+				current_flags.raw(),
+				&mut stop,
+				stop_flags.raw(),
+			) as _)
 		} {
-			co::HRESULT::S_OK
-			| co::HRESULT::S_FALSE => Ok(()),
+			co::HRESULT::S_OK | co::HRESULT::S_FALSE => Ok(()),
 			hr => Err(hr),
 		}
 	}
@@ -206,21 +178,14 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	/// [`IMediaSeeking::SetRate`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-setrate)
 	/// method.
 	fn SetRate(&self, rate: f64) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe { (vt::<IMediaSeekingVT>(self).SetRate)(self.ptr(), rate) },
-		)
+		ok_to_hrresult(unsafe { (vt::<IMediaSeekingVT>(self).SetRate)(self.ptr(), rate) })
 	}
 
 	/// [`IMediaSeeking::SetTimeFormat`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-imediaseeking-settimeformat)
 	/// method.
 	fn SetTimeFormat(&self, format: &co::TIME_FORMAT) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMediaSeekingVT>(self).SetTimeFormat)(
-					self.ptr(),
-					format as *const _ as _,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IMediaSeekingVT>(self).SetTimeFormat)(self.ptr(), format as *const _ as _)
+		})
 	}
 }

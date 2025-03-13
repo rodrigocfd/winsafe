@@ -57,18 +57,18 @@ pub trait mf_IMFGetService: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn GetService<T>(&self, service_id: &co::MF_SERVICE) -> HrResult<T>
-		where T: ole_IUnknown,
+	where
+		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFGetServiceVT>(self).GetService)(
-					self.ptr(),
-					service_id as *const _ as _,
-					&T::IID as *const _ as _,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFGetServiceVT>(self).GetService)(
+				self.ptr(),
+				service_id as *const _ as _,
+				&T::IID as *const _ as _,
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 }

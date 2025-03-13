@@ -65,7 +65,9 @@ pub(crate) struct CAC {
 impl Drop for PROPVARIANT {
 	fn drop(&mut self) {
 		if self.vt() != co::VT::EMPTY {
-			unsafe { ffi::PropVariantClear(self as *mut _ as _); } // ignore errors
+			unsafe {
+				ffi::PropVariantClear(self as *mut _ as _);
+			} // ignore errors
 		}
 	}
 }
@@ -122,7 +124,9 @@ pub(crate) struct BRECORD {
 impl Drop for VARIANT {
 	fn drop(&mut self) {
 		if self.vt != co::VT::EMPTY {
-			unsafe { ffi::VariantClear(self as *mut _ as _); } // ignore errors
+			unsafe {
+				ffi::VariantClear(self as *mut _ as _); // ignore errors
+			}
 		}
 	}
 }
@@ -130,7 +134,9 @@ impl Drop for VARIANT {
 impl Default for VARIANT {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
-		unsafe { ffi::VariantInit(&mut obj as *mut _ as _); }
+		unsafe {
+			ffi::VariantInit(&mut obj as *mut _ as _);
+		}
 		obj
 	}
 }

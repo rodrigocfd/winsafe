@@ -2,8 +2,8 @@
 
 mod com_interfaces;
 
-pub(in crate::taskschd) mod vts;
 pub mod co;
+pub(in crate::taskschd) mod vts;
 
 pub mod decl {
 	pub use super::com_interfaces::decl::*;

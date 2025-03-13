@@ -439,7 +439,7 @@ impl MsgSend for GetLineColor {
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			c => Some(COLORREF::from_raw(c))
+			c => Some(COLORREF::from_raw(c)),
 		}
 	}
 

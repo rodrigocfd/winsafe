@@ -449,7 +449,8 @@ impl<'a> LVTILEINFO<'a> {
 	#[must_use]
 	pub fn puColumns(&self) -> Option<&'a mut [u32]> {
 		unsafe {
-			self.puColumns.as_mut()
+			self.puColumns
+				.as_mut()
 				.map(|_| std::slice::from_raw_parts_mut(self.puColumns, self.cColumns as _))
 		}
 	}
@@ -458,16 +459,15 @@ impl<'a> LVTILEINFO<'a> {
 	#[must_use]
 	pub fn piColFmt(&self) -> Option<&'a mut [co::LVCFMT_C]> {
 		unsafe {
-			self.puColumns.as_mut()
+			self.puColumns
+				.as_mut()
 				.map(|_| std::slice::from_raw_parts_mut(self.piColFmt, self.cColumns as _))
 		}
 	}
 
 	/// Sets the `puColumns` and `piColFmt` fields. The slices must have the
 	/// same length.
-	pub fn set_puColumns_piColFmt(&mut self,
-		val: Option<(&'a mut [u32], &'a mut [co::LVCFMT_C])>,
-	) {
+	pub fn set_puColumns_piColFmt(&mut self, val: Option<(&'a mut [u32], &'a mut [co::LVCFMT_C])>) {
 		if let Some(val) = val {
 			if val.0.len() != val.1.len() {
 				panic!("Different slice lengths: {} and {}.", val.0.len(), val.1.len());
@@ -1238,7 +1238,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f> PROPSHEETHEADER<'a, 'b, 'c, 'd, 'e, 'f> {
 
 	/// Sets the `hbmHeader` field, which is part of an union.
 	pub fn set_hbmHeader(&mut self, hbm: HBITMAP) {
-		self.hbmHeader_pszbmHeader= hbm.ptr();
+		self.hbmHeader_pszbmHeader = hbm.ptr();
 	}
 
 	/// Sets the `pszbmHeader` field, which is part of an union.
@@ -1258,7 +1258,7 @@ pub struct PROPSHEETPAGE<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 	pub dwFlags: co::PSP,
 	pub hInstance: HINSTANCE,
 	pszTemplate_pResource: *mut std::ffi::c_void, // union
-	hIcon_pszIcon: *mut std::ffi::c_void, // union
+	hIcon_pszIcon: *mut std::ffi::c_void,         // union
 	pszTitle: *mut u16,
 	pub pfnDlgProc: Option<DLGPROC>,
 	pub lParam: isize,
@@ -1350,12 +1350,7 @@ impl TBADDBITMAP {
 		} else if self.hInst == HINSTANCE::NULL {
 			BmpIdbRes::Bmp(unsafe { HBITMAP::from_ptr(self.nID as _) })
 		} else {
-			unsafe {
-				BmpIdbRes::Res(
-					IdStr::from_ptr(self.nID as _),
-					self.hInst.raw_copy(),
-				)
-			}
+			unsafe { BmpIdbRes::Res(IdStr::from_ptr(self.nID as _), self.hInst.raw_copy()) }
 		}
 	}
 
@@ -1368,7 +1363,7 @@ impl TBADDBITMAP {
 			},
 			BmpIdbRes::Bmp(bmp) => Self {
 				hInst: HINSTANCE::NULL,
-				nID: bmp.ptr() as _
+				nID: bmp.ptr() as _,
 			},
 			BmpIdbRes::Res(res, hInst) => Self {
 				hInst: unsafe { hInst.raw_copy() },
@@ -1484,10 +1479,7 @@ impl TBREPLACEBITMAP {
 		if self.hInstOld == HINSTANCE::NULL {
 			BmpInstId::Bmp(unsafe { HBITMAP::from_ptr(self.nIDOld as _) })
 		} else {
-			BmpInstId::InstId(
-				unsafe { self.hInstOld.raw_copy() },
-				self.nIDOld as _,
-			)
+			BmpInstId::InstId(unsafe { self.hInstOld.raw_copy() }, self.nIDOld as _)
 		}
 	}
 
@@ -1511,10 +1503,7 @@ impl TBREPLACEBITMAP {
 		if self.hInstNew == HINSTANCE::NULL {
 			BmpInstId::Bmp(unsafe { HBITMAP::from_ptr(self.nIDNew as _) })
 		} else {
-			BmpInstId::InstId(
-				unsafe { self.hInstNew.raw_copy() },
-				self.nIDNew as _,
-			)
+			BmpInstId::InstId(unsafe { self.hInstNew.raw_copy() }, self.nIDNew as _)
 		}
 	}
 

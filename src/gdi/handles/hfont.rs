@@ -41,27 +41,25 @@ pub trait gdi_Hfont: Handle {
 		quality: co::QUALITY,
 		pitch_and_family: co::PITCH,
 		face_name: &str,
-	) -> SysResult<DeleteObjectGuard<HFONT>>
-	{
+	) -> SysResult<DeleteObjectGuard<HFONT>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::CreateFontW(
-					sz.cy,
-					sz.cx,
-					escapement,
-					orientation,
-					weight.raw() as _,
-					italic as _,
-					underline as _,
-					strike_out as _,
-					char_set.raw() as _,
-					out_precision.raw() as _,
-					clip_precision.raw() as _,
-					quality.raw() as _,
-					pitch_and_family.raw() as _,
-					WString::from_str(face_name).as_ptr(),
-				),
-			).map(|h| DeleteObjectGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateFontW(
+				sz.cy,
+				sz.cx,
+				escapement,
+				orientation,
+				weight.raw() as _,
+				italic as _,
+				underline as _,
+				strike_out as _,
+				char_set.raw() as _,
+				out_precision.raw() as _,
+				clip_precision.raw() as _,
+				quality.raw() as _,
+				pitch_and_family.raw() as _,
+				WString::from_str(face_name).as_ptr(),
+			))
+			.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -90,15 +88,9 @@ pub trait gdi_Hfont: Handle {
 	/// hfont.GetObject(&mut log_font)?;
 	/// # w::SysResult::Ok(())
 	fn GetObject(&self, lf: &mut LOGFONT) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe {
-				ffi::GetObjectW(
-					self.ptr(),
-					std::mem::size_of::<LOGFONT>() as _,
-					lf as *mut _ as _,
-				)
-			},
-		)
+		bool_to_sysresult(unsafe {
+			ffi::GetObjectW(self.ptr(), std::mem::size_of::<LOGFONT>() as _, lf as *mut _ as _)
+		})
 	}
 
 	/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)

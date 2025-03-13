@@ -32,11 +32,8 @@ pub trait taskschd_ITrigger: oleaut_IDispatch {
 	#[must_use]
 	fn get_Enabled(&self) -> HrResult<bool> {
 		let mut enabled = i16::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<ITriggerVT>(self).get_Enabled)(self.ptr(), &mut enabled)
-			},
-		).map(|_| enabled != 0)
+		ok_to_hrresult(unsafe { (vt::<ITriggerVT>(self).get_Enabled)(self.ptr(), &mut enabled) })
+			.map(|_| enabled != 0)
 	}
 
 	fn_com_bstr_get! { get_EndBoundary: ITriggerVT;
@@ -64,19 +61,14 @@ pub trait taskschd_ITrigger: oleaut_IDispatch {
 	#[must_use]
 	fn get_Type(&self) -> HrResult<co::TASK_TRIGGER_TYPE2> {
 		let mut ty = co::TASK_TRIGGER_TYPE2::default();
-		ok_to_hrresult(
-			unsafe { (vt::<ITriggerVT>(self).get_Type)(self.ptr(), ty.as_mut()) },
-		).map(|_| ty)
+		ok_to_hrresult(unsafe { (vt::<ITriggerVT>(self).get_Type)(self.ptr(), ty.as_mut()) })
+			.map(|_| ty)
 	}
 
 	/// [`ITrigger::put_Enabled`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itrigger-put_enabled)
 	/// method.
 	fn put_Enabled(&self, enabled: bool) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<ITriggerVT>(self).put_Enabled)(self.ptr(), enabled as _)
-			},
-		)
+		ok_to_hrresult(unsafe { (vt::<ITriggerVT>(self).put_Enabled)(self.ptr(), enabled as _) })
 	}
 
 	fn_com_bstr_set! { put_EndBoundary: ITriggerVT, end;

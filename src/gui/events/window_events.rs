@@ -7,10 +7,22 @@ use crate::gui::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 
-struct StorageMsg { id: co::WM,           fun: Box<dyn Fn(WndMsg) -> AnyResult<isize>> }
-struct StorageCmd { id: (u16, co::CMD),   fun: Box<dyn Fn() -> AnyResult<()>> }
-struct StorageNfy { id: (u16, NmhdrCode), fun: Box<dyn Fn(wm::Notify) -> AnyResult<isize>> }
-struct StorageTmr { id: usize,            fun: Box<dyn Fn() -> AnyResult<()>> }
+struct StorageMsg {
+	id: co::WM,
+	fun: Box<dyn Fn(WndMsg) -> AnyResult<isize>>,
+}
+struct StorageCmd {
+	id: (u16, co::CMD),
+	fun: Box<dyn Fn() -> AnyResult<()>>,
+}
+struct StorageNfy {
+	id: (u16, NmhdrCode),
+	fun: Box<dyn Fn(wm::Notify) -> AnyResult<isize>>,
+}
+struct StorageTmr {
+	id: usize,
+	fun: Box<dyn Fn() -> AnyResult<()>>,
+}
 
 pub struct WindowEvents {
 	is_dlg: IsDlg,
@@ -44,10 +56,10 @@ impl WindowEvents {
 	#[must_use]
 	pub(in crate::gui) fn has_message(&self) -> bool {
 		unsafe {
-			!{ &*self.msgs.get() }.is_empty() ||
-				!{ &*self.cmds.get() }.is_empty() ||
-				!{ &*self.nfys.get() }.is_empty() ||
-				!{ &*self.tmrs.get() }.is_empty()
+			!{ &*self.msgs.get() }.is_empty()
+				|| !{ &*self.cmds.get() }.is_empty()
+				|| !{ &*self.nfys.get() }.is_empty()
+				|| !{ &*self.tmrs.get() }.is_empty()
 		}
 	}
 
@@ -75,7 +87,8 @@ impl WindowEvents {
 			let key_nfy = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
 			let nfys = unsafe { &*self.nfys.get() };
 			for obj in nfys.iter().filter(|obj| obj.id == key_nfy) {
-				if let Err(e) = (obj.fun)(unsafe { wm::Notify::from_generic_wm(p) }) { // wm::Notify cannot be Copy
+				if let Err(e) = (obj.fun)(unsafe { wm::Notify::from_generic_wm(p) }) {
+					// wm::Notify cannot be Copy
 					return Err(e); // stop on error
 				}
 				at_least_one = true;
@@ -167,9 +180,10 @@ impl WindowEvents {
 	/// );
 	/// ```
 	pub fn wm<F>(&self, ident: co::WM, func: F)
-		where F: Fn(WndMsg) -> AnyResult<isize> + 'static,
+	where
+		F: Fn(WndMsg) -> AnyResult<isize> + 'static,
 	{
-		unsafe { &mut *self.msgs.get() }.push(StorageMsg{ id: ident, fun: Box::new(func) });
+		unsafe { &mut *self.msgs.get() }.push(StorageMsg { id: ident, fun: Box::new(func) });
 	}
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
@@ -201,20 +215,15 @@ impl WindowEvents {
 	///     },
 	/// );
 	/// ```
-	pub fn wm_command<F>(&self,
-		ctrl_id: impl Into<u16>,
-		code: impl Into<co::CMD>,
-		func: F,
-	)
-		where F: Fn() -> AnyResult<()> + 'static,
+	pub fn wm_command<F>(&self, ctrl_id: impl Into<u16>, code: impl Into<co::CMD>, func: F)
+	where
+		F: Fn() -> AnyResult<()> + 'static,
 	{
 		let code: co::CMD = code.into();
-		unsafe { &mut *self.cmds.get() }.push(
-			StorageCmd {
-				id: (ctrl_id.into(), code),
-				fun: Box::new(func),
-			},
-		);
+		unsafe { &mut *self.cmds.get() }.push(StorageCmd {
+			id: (ctrl_id.into(), code),
+			fun: Box::new(func),
+		});
 	}
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
@@ -243,7 +252,8 @@ impl WindowEvents {
 	/// );
 	/// ```
 	pub fn wm_command_accel_menu<F>(&self, ctrl_id: impl Into<u16> + Copy, func: F)
-		where F: Fn() -> AnyResult<()> + 'static,
+	where
+		F: Fn() -> AnyResult<()> + 'static,
 	{
 		let shared_func = Rc::new(func);
 
@@ -289,25 +299,21 @@ impl WindowEvents {
 	///     },
 	/// );
 	/// ```
-	pub fn wm_notify<F>(&self,
-		id_from: impl Into<u16>,
-		code: impl Into<NmhdrCode>,
-		func: F,
-	)
-		where F: Fn(wm::Notify) -> AnyResult<isize> + 'static,
+	pub fn wm_notify<F>(&self, id_from: impl Into<u16>, code: impl Into<NmhdrCode>, func: F)
+	where
+		F: Fn(wm::Notify) -> AnyResult<isize> + 'static,
 	{
-		unsafe { &mut *self.nfys.get() }.push(
-			StorageNfy {
-				id: (id_from.into(), code.into()),
-				fun: Box::new(func),
-			},
-		);
+		unsafe { &mut *self.nfys.get() }.push(StorageNfy {
+			id: (id_from.into(), code.into()),
+			fun: Box::new(func),
+		});
 	}
 
 	/// [`WM_TIMER`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
 	/// message, narrowed to a specific timer ID.
 	pub fn wm_timer<F>(&self, timer_id: usize, func: F)
-		where F: Fn() -> AnyResult<()> + 'static,
+	where
+		F: Fn() -> AnyResult<()> + 'static,
 	{
 		unsafe { &mut *self.tmrs.get() }.push(StorageTmr { id: timer_id, fun: Box::new(func) });
 	}
@@ -325,7 +331,8 @@ impl WindowEvents {
 	/// [`WM_APPCOMMAND`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
 	/// message.
 	pub fn wm_app_command<F>(&self, func: F)
-		where F: Fn(wm::AppCommand) -> AnyResult<()> + 'static,
+	where
+		F: Fn(wm::AppCommand) -> AnyResult<()> + 'static,
 	{
 		self.wm(co::WM::APPCOMMAND, move |p| {
 			func(unsafe { wm::AppCommand::from_generic_wm(p) })?;
@@ -395,11 +402,10 @@ impl WindowEvents {
 	/// );
 	/// ```
 	pub fn wm_create<F>(&self, func: F)
-		where F: Fn(wm::Create) -> AnyResult<i32> + 'static,
+	where
+		F: Fn(wm::Create) -> AnyResult<i32> + 'static,
 	{
-		self.wm(co::WM::CREATE, move |p| {
-			Ok(func(unsafe { wm::Create::from_generic_wm(p) })? as _)
-		});
+		self.wm(co::WM::CREATE, move |p| Ok(func(unsafe { wm::Create::from_generic_wm(p) })? as _));
 	}
 
 	pub_fn_wm_ctlcolor! { wm_ctl_color_btn, co::WM::CTLCOLORBTN, wm::CtlColorBtn;
@@ -528,7 +534,8 @@ impl WindowEvents {
 	/// [`WM_ERASEBKGND`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd)
 	/// message.
 	pub fn wm_erase_bkgnd<F>(&self, func: F)
-		where F: Fn(wm::EraseBkgnd) -> AnyResult<i32> + 'static,
+	where
+		F: Fn(wm::EraseBkgnd) -> AnyResult<i32> + 'static,
 	{
 		self.wm(co::WM::ERASEBKGND, move |p| {
 			Ok(func(unsafe { wm::EraseBkgnd::from_generic_wm(p) })? as _)
@@ -553,21 +560,19 @@ impl WindowEvents {
 	/// [`WM_GETFONT`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-getfont)
 	/// message.
 	pub fn wm_get_font<F>(&self, func: F)
-		where F: Fn() -> AnyResult<Option<HFONT>> + 'static,
+	where
+		F: Fn() -> AnyResult<Option<HFONT>> + 'static,
 	{
-		self.wm(co::WM::GETFONT, move |_| {
-			Ok(func()?.map_or(0, |h| h.ptr() as _))
-		});
+		self.wm(co::WM::GETFONT, move |_| Ok(func()?.map_or(0, |h| h.ptr() as _)));
 	}
 
 	/// [`WM_GETHMENU`](https://learn.microsoft.com/en-us/windows/win32/winmsg/mn-gethmenu)
 	/// message. Originally has `MN` prefix.
 	pub fn wm_get_hmenu<F>(&self, func: F)
-		where F: Fn() -> AnyResult<Option<HMENU>> + 'static
+	where
+		F: Fn() -> AnyResult<Option<HMENU>> + 'static,
 	{
-		self.wm(co::WM::MN_GETHMENU, move |_| {
-			Ok(func()?.map_or(0, |h| h.ptr() as _))
-		});
+		self.wm(co::WM::MN_GETHMENU, move |_| Ok(func()?.map_or(0, |h| h.ptr() as _)));
 	}
 
 	pub_fn_wm_withparm_noret! { wm_get_min_max_info, co::WM::GETMINMAXINFO, wm::GetMinMaxInfo;
@@ -578,7 +583,8 @@ impl WindowEvents {
 	/// [`WM_GETTEXT`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-gettext)
 	/// message.
 	pub fn wm_get_text<F>(&self, func: F)
-		where F: Fn(wm::GetText) -> AnyResult<u32> + 'static,
+	where
+		F: Fn(wm::GetText) -> AnyResult<u32> + 'static,
 	{
 		self.wm(co::WM::GETTEXT, move |p| {
 			Ok(func(unsafe { wm::GetText::from_generic_wm(p) })? as _)
@@ -588,11 +594,10 @@ impl WindowEvents {
 	/// [`WM_GETTEXTLENGTH`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-gettextlength)
 	/// message.
 	pub fn wm_get_text_length<F>(&self, func: F)
-		where F: Fn() -> AnyResult<u32> + 'static,
+	where
+		F: Fn() -> AnyResult<u32> + 'static,
 	{
-		self.wm(co::WM::GETTEXTLENGTH, move |_| {
-			Ok(func()? as _)
-		});
+		self.wm(co::WM::GETTEXTLENGTH, move |_| Ok(func()? as _));
 	}
 
 	pub_fn_wm_withparm_noret! { wm_get_title_bar_info_ex, co::WM::GETTITLEBARINFOEX, wm::GetTitleBarInfoEx;
@@ -903,13 +908,11 @@ impl WindowEvents {
 	/// [`WM_SETICON`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-seticon)
 	/// message.
 	pub fn wm_set_icon<F>(&self, func: F)
-		where F: Fn(wm::SetIcon) -> AnyResult<Option<HICON>> + 'static,
+	where
+		F: Fn(wm::SetIcon) -> AnyResult<Option<HICON>> + 'static,
 	{
 		self.wm(co::WM::SETICON, move |p| {
-			Ok(
-				func(unsafe { wm::SetIcon::from_generic_wm(p) })?
-					.map_or(0, |h| h.ptr() as _),
-			)
+			Ok(func(unsafe { wm::SetIcon::from_generic_wm(p) })?.map_or(0, |h| h.ptr() as _))
 		});
 	}
 

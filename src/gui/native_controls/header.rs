@@ -6,7 +6,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::gui::{*, collections::*, events::*, privs::*};
+use crate::gui::{collections::*, events::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -34,29 +34,36 @@ impl Header {
 	#[must_use]
 	pub fn new(parent: &(impl GuiParent + 'static), opts: HeaderOpts) -> Self {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
-		let new_self = Self(
-			Arc::pin(
-				HeaderObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: HeaderEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+		let new_self = Self(Arc::pin(HeaderObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: HeaderEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
-		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
-			self2.0.base.create_window(opts.window_ex_style, "SysHeader32", None,
-				opts.window_style | opts.control_style.into(), opts.position.into(),
-				SIZE::new(opts.width, opts.height), &parent2)?;
-			ui_font::set(self2.hwnd())?;
-			for (text, width) in opts.items.iter() {
-				self2.items().add(text, *width)?;
-			}
-			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
-			Ok(0) // ignored
-		});
+		parent
+			.as_ref()
+			.before_on()
+			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+				self2.0.base.create_window(
+					opts.window_ex_style,
+					"SysHeader32",
+					None,
+					opts.window_style | opts.control_style.into(),
+					opts.position.into(),
+					SIZE::new(opts.width, opts.height),
+					&parent2,
+				)?;
+				ui_font::set(self2.hwnd())?;
+				for (text, width) in opts.items.iter() {
+					self2.items().add(text, *width)?;
+				}
+				parent2
+					.as_ref()
+					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+				Ok(0) // ignored
+			});
 
 		new_self
 	}
@@ -74,23 +81,20 @@ impl Header {
 		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
-	) -> Self
-	{
-		let new_self = Self(
-			Arc::pin(
-				HeaderObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: HeaderEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+	) -> Self {
+		let new_self = Self(Arc::pin(HeaderObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: HeaderEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
 			self2.0.base.assign_dlg(&parent2)?;
-			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			parent2
+				.as_ref()
+				.add_to_layout(self2.hwnd(), resize_behavior)?;
 			Ok(true) // ignored
 		});
 
@@ -101,24 +105,22 @@ impl Header {
 	#[must_use]
 	pub(in crate::gui) fn from_list_view(parent: &(impl GuiParent + 'static)) -> Self {
 		let ctrl_id = auto_id::next();
-		Self(
-			Arc::pin(
-				HeaderObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: HeaderEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-				},
-			),
-		)
+		Self(Arc::pin(HeaderObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: HeaderEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+		}))
 	}
 
 	/// For the nested Header inside ListView.
 	#[must_use]
 	pub(in crate::gui) fn init_nested(&self, hlist: &HWND) -> bool {
-		if let Ok(hheader) = unsafe { hlist.SendMessage(lvm::GetHeader {}) } { // only if the list has a header
-			unsafe { hheader.SetWindowLongPtr(co::GWLP::ID, self.ctrl_id() as _); } // give the header an ID; initially zero
+		if let Ok(hheader) = unsafe { hlist.SendMessage(lvm::GetHeader {}) } {
+			unsafe {
+				hheader.SetWindowLongPtr(co::GWLP::ID, self.ctrl_id() as _); // give the header an ID; initially zero
+			}
 			self.0.base.set_hwnd(hheader);
-			true // initialized
+			true // header object initialized
 		} else {
 			false // not inialized
 		}
@@ -130,10 +132,7 @@ impl Header {
 	/// The image list is owned by the control.
 	#[must_use]
 	pub fn image_list(&self, kind: co::HDSIL) -> Option<&HIMAGELIST> {
-		unsafe {
-			self.hwnd()
-				.SendMessage(hdm::GetImageList { kind })
-		}.map(|hil| {
+		unsafe { self.hwnd().SendMessage(hdm::GetImageList { kind }) }.map(|hil| {
 			let hil_ptr = &hil as *const HIMAGELIST;
 			unsafe { &*hil_ptr }
 		})
@@ -150,11 +149,11 @@ impl Header {
 	///
 	/// The image list will be owned by the control. Returns the previous one,
 	/// if any.
-	pub fn set_image_list(&self,
+	pub fn set_image_list(
+		&self,
 		kind: co::HDSIL,
 		himagelist: ImageListDestroyGuard,
-	) -> Option<ImageListDestroyGuard>
-	{
+	) -> Option<ImageListDestroyGuard> {
 		let mut himagelist = himagelist;
 		let hil = himagelist.leak();
 
@@ -225,7 +224,11 @@ impl Default for HeaderOpts {
 			width: dpi_x(100),
 			height: dpi_y(23),
 			control_style: co::HDS::BUTTONS | co::HDS::HORZ,
-			window_style: co::WS::BORDER | co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
+			window_style: co::WS::BORDER
+				| co::WS::CHILD
+				| co::WS::GROUP
+				| co::WS::TABSTOP
+				| co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),

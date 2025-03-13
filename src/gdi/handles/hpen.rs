@@ -28,16 +28,10 @@ pub trait gdi_Hpen: Handle {
 	/// [`CreatePen`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpen)
 	/// function.
 	#[must_use]
-	fn CreatePen(
-		style: co::PS,
-		width: i32,
-		color: COLORREF,
-	) -> SysResult<DeleteObjectGuard<HPEN>>
-	{
+	fn CreatePen(style: co::PS, width: i32, color: COLORREF) -> SysResult<DeleteObjectGuard<HPEN>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::CreatePen(style.raw(), width, color.into()),
-			).map(|h| DeleteObjectGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreatePen(style.raw(), width, color.into()))
+				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 

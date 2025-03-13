@@ -11,10 +11,10 @@ mod proc;
 mod structs;
 mod utilities;
 
-pub(crate) mod ffi_types;
-pub(crate) mod privs;
 pub mod co;
+pub(crate) mod ffi_types;
 pub mod guard;
+pub(crate) mod privs;
 
 pub mod decl {
 	pub use super::aliases::*;

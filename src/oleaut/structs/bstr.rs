@@ -17,7 +17,9 @@ pub struct BSTR(*mut u16);
 impl Drop for BSTR {
 	fn drop(&mut self) {
 		if !self.0.is_null() {
-			unsafe { ffi::SysFreeString(self.0); }
+			unsafe {
+				ffi::SysFreeString(self.0);
+			}
 		}
 	}
 }
@@ -36,8 +38,7 @@ impl From<BSTR> for WString {
 
 impl std::fmt::Display for BSTR {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		std::fmt::Display::fmt(
-			unsafe { &WString::from_wchars_nullt(self.as_ptr()) }, f)
+		std::fmt::Display::fmt(unsafe { &WString::from_wchars_nullt(self.as_ptr()) }, f)
 	}
 }
 impl std::fmt::Debug for BSTR {
@@ -106,9 +107,7 @@ impl BSTR {
 	/// memory block as a null-terminated `u16` slice.
 	#[must_use]
 	pub fn as_slice(&self) -> &[u16] {
-		unsafe {
-			std::slice::from_raw_parts(self.0, self.SysStringLen() as usize + 1)
-		}
+		unsafe { std::slice::from_raw_parts(self.0, self.SysStringLen() as usize + 1) }
 	}
 
 	/// Ejects the underlying

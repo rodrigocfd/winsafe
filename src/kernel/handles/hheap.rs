@@ -42,13 +42,9 @@ pub trait kernel_Hheap: Handle {
 			num => num,
 		};
 
-		let mut buf = [0..num].iter()
-			.map(|_| HHEAP::NULL)
-			.collect::<Vec<_>>();
-
-		bool_to_sysresult(
-			unsafe { ffi::GetProcessHeaps(num, buf.as_mut_ptr() as _) } as _,
-		).map(|_| buf)
+		let mut buf = [0..num].iter().map(|_| HHEAP::NULL).collect::<Vec<_>>();
+		bool_to_sysresult(unsafe { ffi::GetProcessHeaps(num, buf.as_mut_ptr() as _) } as _)
+			.map(|_| buf)
 	}
 
 	/// [`HeapCreate`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcreate)
@@ -58,16 +54,14 @@ pub trait kernel_Hheap: Handle {
 		options: Option<co::HEAP_CREATE>,
 		initial_size: usize,
 		maximum_size: usize,
-	) -> SysResult<HeapDestroyGuard>
-	{
+	) -> SysResult<HeapDestroyGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::HeapCreate(
-					options.unwrap_or_default().raw(),
-					initial_size,
-					maximum_size,
-				),
-			).map(|h| HeapDestroyGuard::new(h))
+			ptr_to_sysresult_handle(ffi::HeapCreate(
+				options.unwrap_or_default().raw(),
+				initial_size,
+				maximum_size,
+			))
+			.map(|h| HeapDestroyGuard::new(h))
 		}
 	}
 
@@ -93,29 +87,22 @@ pub trait kernel_Hheap: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn HeapAlloc(&self,
+	fn HeapAlloc(
+		&self,
 		flags: Option<co::HEAP_ALLOC>,
 		num_bytes: usize,
-	) -> SysResult<HeapFreeGuard<'_, Self>>
-	{
+	) -> SysResult<HeapFreeGuard<'_, Self>> {
 		SetLastError(co::ERROR::SUCCESS);
 		unsafe {
-			ptr_to_sysresult(
-				ffi::HeapAlloc(
-					self.ptr(),
-					flags.unwrap_or_default().raw(),
-					num_bytes,
-				),
-			).map(|p| HeapFreeGuard::new(self, p, num_bytes))
+			ptr_to_sysresult(ffi::HeapAlloc(self.ptr(), flags.unwrap_or_default().raw(), num_bytes))
+				.map(|p| HeapFreeGuard::new(self, p, num_bytes))
 		}
 	}
 
 	/// [`HeapCompact`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcompact)
 	/// function.
 	fn HeapCompact(&self, flags: Option<co::HEAP_SIZE>) -> SysResult<usize> {
-		match unsafe {
-			ffi::HeapCompact(self.ptr(), flags.unwrap_or_default().raw())
-		} {
+		match unsafe { ffi::HeapCompact(self.ptr(), flags.unwrap_or_default().raw()) } {
 			0 => Err(GetLastError()),
 			n => Ok(n),
 		}
@@ -158,10 +145,7 @@ pub trait kernel_Hheap: Handle {
 	/// ```
 	#[must_use]
 	fn HeapLock(&self) -> SysResult<HeapUnlockGuard<'_, Self>> {
-		unsafe {
-			bool_to_sysresult(ffi::HeapLock(self.ptr()))
-				.map(|_| HeapUnlockGuard::new(self))
-		}
+		unsafe { bool_to_sysresult(ffi::HeapLock(self.ptr())).map(|_| HeapUnlockGuard::new(self)) }
 	}
 
 	/// [`HeapReAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heaprealloc)
@@ -185,23 +169,22 @@ pub trait kernel_Hheap: Handle {
 	/// // HeapFree() automatically called
 	/// # w::SysResult::Ok(())
 	/// ```
-	fn HeapReAlloc<'a>(&'a self,
+	fn HeapReAlloc<'a>(
+		&'a self,
 		flags: Option<co::HEAP_REALLOC>,
 		mem: &mut HeapFreeGuard<'a, Self>,
 		num_bytes: usize,
-	) -> SysResult<()>
-	{
+	) -> SysResult<()> {
 		SetLastError(co::ERROR::SUCCESS);
-		ptr_to_sysresult(
-			unsafe {
-				ffi::HeapReAlloc(
-					self.ptr(),
-					flags.unwrap_or_default().raw(),
-					mem.as_ptr() as _,
-					num_bytes,
-				)
-			},
-		).map(|p| {
+		ptr_to_sysresult(unsafe {
+			ffi::HeapReAlloc(
+				self.ptr(),
+				flags.unwrap_or_default().raw(),
+				mem.as_ptr() as _,
+				num_bytes,
+			)
+		})
+		.map(|p| {
 			let _ = mem.leak();
 			*mem = unsafe { HeapFreeGuard::new(self, p, num_bytes) };
 		})
@@ -209,40 +192,34 @@ pub trait kernel_Hheap: Handle {
 
 	/// [`HeapSetInformation`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsetinformation)
 	/// function.
-	fn HeapSetInformation(&self,
+	fn HeapSetInformation(
+		&self,
 		information_class: co::HEAP_INFORMATION,
 		information: Option<&[u8]>,
-	) -> SysResult<()>
-	{
-		bool_to_sysresult(
-			unsafe {
-				ffi::HeapSetInformation(
-					self.ptr(),
-					information_class.raw(),
-					information.map_or(std::ptr::null(), |i| vec_ptr(i) as _),
-					information.map_or(0, |i| i.len()),
-				)
-			},
-		)
+	) -> SysResult<()> {
+		bool_to_sysresult(unsafe {
+			ffi::HeapSetInformation(
+				self.ptr(),
+				information_class.raw(),
+				information.map_or(std::ptr::null(), |i| vec_ptr(i) as _),
+				information.map_or(0, |i| i.len()),
+			)
+		})
 	}
 
 	/// [`HeapSize`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsize)
 	/// function.
 	#[must_use]
-	fn HeapSize(&self,
+	fn HeapSize(
+		&self,
 		flags: Option<co::HEAP_SIZE>,
 		mem: &HeapFreeGuard<'_, Self>,
-	) -> SysResult<usize>
-	{
+	) -> SysResult<usize> {
 		SetLastError(co::ERROR::SUCCESS);
 		const FAILED: usize = -1isize as usize;
 
 		match unsafe {
-			ffi::HeapSize(
-				self.ptr(),
-				flags.unwrap_or_default().raw(),
-				mem.as_ptr() as _,
-			)
+			ffi::HeapSize(self.ptr(), flags.unwrap_or_default().raw(), mem.as_ptr() as _)
 		} {
 			FAILED => Err(GetLastError()),
 			n => Ok(n),
@@ -266,11 +243,11 @@ pub trait kernel_Hheap: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn HeapValidate(&self,
+	fn HeapValidate(
+		&self,
 		flags: Option<co::HEAP_SIZE>,
 		mem: Option<&HeapFreeGuard<'_, Self>>,
-	) -> bool
-	{
+	) -> bool {
 		SetLastError(co::ERROR::SUCCESS);
 		unsafe {
 			ffi::HeapValidate(
@@ -302,9 +279,7 @@ pub trait kernel_Hheap: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn HeapWalk(&self,
-	) -> impl Iterator<Item = SysResult<&PROCESS_HEAP_ENTRY>> + '_
-	{
+	fn HeapWalk(&self) -> impl Iterator<Item = SysResult<&PROCESS_HEAP_ENTRY>> + '_ {
 		HheapHeapwalkIter::new(self)
 	}
 }

@@ -21,51 +21,61 @@ pub trait gdi_Hinstance: user_Hinstance {
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HBITMAP`](crate::HBITMAP).
 	#[must_use]
-	fn LoadImageBitmap(&self,
+	fn LoadImageBitmap(
+		&self,
 		name: IdObmStr,
 		sz: SIZE,
 		load: co::LR,
-	) -> SysResult<DeleteObjectGuard<HBITMAP>>
-	{
+	) -> SysResult<DeleteObjectGuard<HBITMAP>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::LoadImageW(
-					self.ptr(), name.as_ptr(), 0, sz.cx, sz.cy, load.raw()),
-			).map(|h| DeleteObjectGuard::new(h))
+			ptr_to_sysresult_handle(ffi::LoadImageW(
+				self.ptr(),
+				name.as_ptr(),
+				0,
+				sz.cx,
+				sz.cy,
+				load.raw(),
+			))
+			.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HCURSOR`](crate::HCURSOR).
 	#[must_use]
-	fn LoadImageCursor(&self,
+	fn LoadImageCursor(
+		&self,
 		name: IdOcrStr,
 		sz: SIZE,
 		load: co::LR,
-	) -> SysResult<DestroyCursorGuard>
-	{
+	) -> SysResult<DestroyCursorGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::LoadImageW(
-					self.ptr(), name.as_ptr(), 2, sz.cx, sz.cy, load.raw()),
-			).map(|h| DestroyCursorGuard::new(h))
+			ptr_to_sysresult_handle(ffi::LoadImageW(
+				self.ptr(),
+				name.as_ptr(),
+				2,
+				sz.cx,
+				sz.cy,
+				load.raw(),
+			))
+			.map(|h| DestroyCursorGuard::new(h))
 		}
 	}
 
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)
 	/// method for [`HICON`](crate::HICON).
 	#[must_use]
-	fn LoadImageIcon(&self,
-		name: IdOicStr,
-		sz: SIZE,
-		load: co::LR,
-	) -> SysResult<DestroyIconGuard>
-	{
+	fn LoadImageIcon(&self, name: IdOicStr, sz: SIZE, load: co::LR) -> SysResult<DestroyIconGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::LoadImageW(
-					self.ptr(), name.as_ptr(), 1, sz.cx, sz.cy, load.raw()),
-			).map(|h| DestroyIconGuard::new(h))
+			ptr_to_sysresult_handle(ffi::LoadImageW(
+				self.ptr(),
+				name.as_ptr(),
+				1,
+				sz.cx,
+				sz.cy,
+				load.raw(),
+			))
+			.map(|h| DestroyIconGuard::new(h))
 		}
 	}
 }

@@ -10,14 +10,10 @@ use crate::prelude::*;
 #[must_use]
 pub fn CreateDXGIFactory() -> HrResult<IDXGIFactory> {
 	let mut queried = unsafe { IDXGIFactory::null() };
-	ok_to_hrresult(
-		unsafe {
-			ffi::CreateDXGIFactory(
-				&IDXGIFactory::IID as *const _ as _,
-				queried.as_mut(),
-			)
-		},
-	).map(|_| queried)
+	ok_to_hrresult(unsafe {
+		ffi::CreateDXGIFactory(&IDXGIFactory::IID as *const _ as _, queried.as_mut())
+	})
+	.map(|_| queried)
 }
 
 /// [`CreateDXGIFactory1`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-createdxgifactory1)
@@ -25,12 +21,8 @@ pub fn CreateDXGIFactory() -> HrResult<IDXGIFactory> {
 #[must_use]
 pub fn CreateDXGIFactory1() -> HrResult<IDXGIFactory1> {
 	let mut queried = unsafe { IDXGIFactory1::null() };
-	ok_to_hrresult(
-		unsafe {
-			ffi::CreateDXGIFactory1(
-				&IDXGIFactory1::IID as *const _ as _,
-				queried.as_mut(),
-			)
-		},
-	).map(|_| queried)
+	ok_to_hrresult(unsafe {
+		ffi::CreateDXGIFactory1(&IDXGIFactory1::IID as *const _ as _, queried.as_mut())
+	})
+	.map(|_| queried)
 }

@@ -63,45 +63,32 @@ pub trait shell_IShellItem: ole_IUnknown {
 	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
-	fn BindToHandler<T>(&self,
-		bind_ctx: Option<&impl ole_IBindCtx>,
-		bhid: &co::BHID,
-	) -> HrResult<T>
-		where T: ole_IUnknown,
+	fn BindToHandler<T>(&self, bind_ctx: Option<&impl ole_IBindCtx>, bhid: &co::BHID) -> HrResult<T>
+	where
+		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IShellItemVT>(self).BindToHandler)(
-					self.ptr(),
-					bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr() as _),
-					bhid as *const _ as _,
-					&T::IID as *const _ as _,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IShellItemVT>(self).BindToHandler)(
+				self.ptr(),
+				bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr() as _),
+				bhid as *const _ as _,
+				&T::IID as *const _ as _,
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IShellItem::Compare`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-compare)
 	/// method.
 	#[must_use]
-	fn Compare(&self,
-		other: &impl shell_IShellItem,
-		hint: co::SICHINTF,
-	) -> HrResult<i32>
-	{
+	fn Compare(&self, other: &impl shell_IShellItem, hint: co::SICHINTF) -> HrResult<i32> {
 		let mut order = i32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IShellItemVT>(self).Compare)(
-					self.ptr(),
-					other.ptr(),
-					hint.raw(),
-					&mut order,
-				)
-			},
-		).map(|_| order)
+		ok_to_hrresult(unsafe {
+			(vt::<IShellItemVT>(self).Compare)(self.ptr(), other.ptr(), hint.raw(), &mut order)
+		})
+		.map(|_| order)
 	}
 
 	/// [`IShellItem::GetAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getattributes)
@@ -110,16 +97,13 @@ pub trait shell_IShellItem: ole_IUnknown {
 	fn GetAttributes(&self, sfgao_mask: co::SFGAO) -> HrResult<co::SFGAO> {
 		let mut attrs = u32::default();
 		match unsafe {
-			co::HRESULT::from_raw(
-				(vt::<IShellItemVT>(self).GetAttributes)(
-					self.ptr(),
-					sfgao_mask.raw(),
-					&mut attrs,
-				),
-			)
+			co::HRESULT::from_raw((vt::<IShellItemVT>(self).GetAttributes)(
+				self.ptr(),
+				sfgao_mask.raw(),
+				&mut attrs,
+			))
 		} {
-			co::HRESULT::S_OK
-			| co::HRESULT::S_FALSE => Ok(unsafe { co::SFGAO::from_raw(attrs) }),
+			co::HRESULT::S_OK | co::HRESULT::S_FALSE => Ok(unsafe { co::SFGAO::from_raw(attrs) }),
 			hr => Err(hr),
 		}
 	}
@@ -145,15 +129,10 @@ pub trait shell_IShellItem: ole_IUnknown {
 	#[must_use]
 	fn GetDisplayName(&self, sigdn_name: co::SIGDN) -> HrResult<String> {
 		let mut pstr = std::ptr::null_mut::<u16>();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IShellItemVT>(self).GetDisplayName)(
-					self.ptr(),
-					sigdn_name.raw(),
-					&mut pstr,
-				)
-			},
-		).map(|_| {
+		ok_to_hrresult(unsafe {
+			(vt::<IShellItemVT>(self).GetDisplayName)(self.ptr(), sigdn_name.raw(), &mut pstr)
+		})
+		.map(|_| {
 			let name = unsafe { WString::from_wchars_nullt(pstr) };
 			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 			name.to_string()

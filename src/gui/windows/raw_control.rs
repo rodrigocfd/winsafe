@@ -3,7 +3,7 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::decl::*;
-use crate::gui::{*, privs::*};
+use crate::gui::{privs::*, *};
 use crate::prelude::*;
 
 struct RawControlObj {
@@ -21,32 +21,46 @@ impl RawControl {
 	pub(in crate::gui) fn new(
 		parent: &(impl GuiParent + 'static),
 		opts: WindowControlOpts,
-	) -> Self
-	{
+	) -> Self {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
-		let new_self = Self(
-			Arc::pin(
-				RawControlObj {
-					raw_base: RawBase::new(),
-					ctrl_id,
-					_pin: PhantomPinned,
-				},
-			),
-		);
+		let new_self = Self(Arc::pin(RawControlObj {
+			raw_base: RawBase::new(),
+			ctrl_id,
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
-		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
-			let hinst = parent2.hwnd().hinstance();
-			let atom = self2.0.raw_base.register_class(&hinst, &opts.class_name,
-				opts.class_style, &opts.class_icon, &opts.class_bg_brush, &opts.class_cursor)?;
-			self2.0.raw_base.create_window(opts.ex_style, atom, None, opts.style,
-				opts.position.into(), opts.size.into(), Some(parent2.hwnd()),
-				IdMenu::Id(ctrl_id), &hinst)?;
+		parent
+			.as_ref()
+			.before_on()
+			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+				let hinst = parent2.hwnd().hinstance();
+				let atom = self2.0.raw_base.register_class(
+					&hinst,
+					&opts.class_name,
+					opts.class_style,
+					&opts.class_icon,
+					&opts.class_bg_brush,
+					&opts.class_cursor,
+				)?;
+				self2.0.raw_base.create_window(
+					opts.ex_style,
+					atom,
+					None,
+					opts.style,
+					opts.position.into(),
+					opts.size.into(),
+					Some(parent2.hwnd()),
+					IdMenu::Id(ctrl_id),
+					&hinst,
+				)?;
 
-			parent2.as_ref().add_to_layout(self2.0.raw_base.base().hwnd(), opts.resize_behavior)?;
-			Ok(0) // ignored
-		});
+				parent2
+					.as_ref()
+					.add_to_layout(self2.0.raw_base.base().hwnd(), opts.resize_behavior)?;
+				Ok(0) // ignored
+			});
 
 		new_self.default_message_handlers();
 		new_self

@@ -34,11 +34,9 @@ impl<'a> StatusBarPart<'a> {
 	/// [`sb::SetIcon`](crate::msg::sb::SetIcon) message.
 	pub fn set_icon(&self, hicon: Option<&HICON>) -> SysResult<()> {
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(sb::SetIcon {
-					part_index: self.index as _,
-					hicon,
-				})
+			self.owner
+				.hwnd()
+				.SendMessage(sb::SetIcon { part_index: self.index as _, hicon })
 		}
 	}
 
@@ -46,12 +44,11 @@ impl<'a> StatusBarPart<'a> {
 	/// [`sb::SetText`](crate::msg::sb::SetText) message.
 	pub fn set_text(&self, text: &str) -> SysResult<()> {
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(sb::SetText {
-					part_index: self.index as _,
-					draw_operation: co::SBT::BORDER,
-					text: WString::from_str(text),
-				})
+			self.owner.hwnd().SendMessage(sb::SetText {
+				part_index: self.index as _,
+				draw_operation: co::SBT::BORDER,
+				text: WString::from_str(text),
+			})
 		}
 	}
 
@@ -72,17 +69,17 @@ impl<'a> StatusBarPart<'a> {
 	#[must_use]
 	pub fn text(&self) -> String {
 		let (num_chars, _) = unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(sb::GetTextLength { part_index: self.index as _ })
 		};
 
 		let mut buf = WString::new_alloc_buf(num_chars as usize + 1);
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(sb::GetText {
-					part_index: self.index as _,
-					text: &mut buf,
-				});
+			self.owner.hwnd().SendMessage(sb::GetText {
+				part_index: self.index as _,
+				text: &mut buf,
+			});
 		}
 		buf.to_string()
 	}

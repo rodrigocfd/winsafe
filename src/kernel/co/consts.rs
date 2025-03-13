@@ -1623,10 +1623,10 @@ const_ordinary! { USER_ACTIVITY_PRESENCE: u32;
 	/// enumeration (`u32`).
 	=>
 	Present 0
-    NotPresent 1
-    Inactive 2
-    Maximum 3
-    Invalid Self::Maximum.0
+	NotPresent 1
+	Inactive 2
+	Maximum 3
+	Invalid Self::Maximum.0
 }
 
 const_ordinary! { VER_COND: u8;

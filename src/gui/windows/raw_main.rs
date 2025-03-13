@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, privs::*};
+use crate::gui::{privs::*, *};
 use crate::prelude::*;
 
 struct RawMainObj {
@@ -22,16 +22,12 @@ pub(in crate::gui) struct RawMain(Pin<Arc<RawMainObj>>);
 impl RawMain {
 	#[must_use]
 	pub(in crate::gui) fn new(opts: WindowMainOpts) -> Self {
-		let new_self = Self(
-			Arc::pin(
-				RawMainObj {
-					raw_base: RawBase::new(),
-					opts,
-					hchild_prev_focus: UnsafeCell::new(HWND::NULL),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+		let new_self = Self(Arc::pin(RawMainObj {
+			raw_base: RawBase::new(),
+			opts,
+			hchild_prev_focus: UnsafeCell::new(HWND::NULL),
+			_pin: PhantomPinned,
+		}));
 		new_self.default_message_handlers();
 		new_self
 	}
@@ -71,47 +67,54 @@ impl RawMain {
 		&self.0.raw_base
 	}
 
-	pub(in crate::gui) fn run_main(&self,
+	pub(in crate::gui) fn run_main(
+		&self,
 		hinst: &HINSTANCE,
 		cmd_show: Option<co::SW>,
-	) -> AnyResult<i32>
-	{
+	) -> AnyResult<i32> {
 		let opts = &self.0.opts;
-		let atom = self.0.raw_base.register_class(hinst, &opts.class_name,
-			opts.class_style, &opts.class_icon, &opts.class_bg_brush, &opts.class_cursor)?;
+		let atom = self.0.raw_base.register_class(
+			hinst,
+			&opts.class_name,
+			opts.class_style,
+			&opts.class_icon,
+			&opts.class_bg_brush,
+			&opts.class_cursor,
+		)?;
 
-		let sz_screen = SIZE::new(
-			GetSystemMetrics(co::SM::CXSCREEN),
-			GetSystemMetrics(co::SM::CYSCREEN),
-		);
+		let sz_screen =
+			SIZE::new(GetSystemMetrics(co::SM::CXSCREEN), GetSystemMetrics(co::SM::CYSCREEN));
 
 		let pt_wnd = POINT::new(
 			sz_screen.cx / 2 - opts.size.0 / 2, // center on screen
 			sz_screen.cy / 2 - opts.size.1 / 2,
 		);
 
-		let mut rc_wnd = RECT { // client area, will be adjusted to size with title bar and borders
-			left:   pt_wnd.x,
-			top:    pt_wnd.y,
-			right:  pt_wnd.x + opts.size.0 as i32,
+		let mut rc_wnd = RECT {
+			left: pt_wnd.x, // client area, will be adjusted to size with title bar and borders
+			top: pt_wnd.y,
+			right: pt_wnd.x + opts.size.0 as i32,
 			bottom: pt_wnd.y + opts.size.1 as i32,
 		};
-		rc_wnd = AdjustWindowRectEx(rc_wnd, opts.style,
-			opts.menu != HMENU::NULL, opts.ex_style)?;
+		rc_wnd = AdjustWindowRectEx(rc_wnd, opts.style, opts.menu != HMENU::NULL, opts.ex_style)?;
 
-		self.0.raw_base.create_window(opts.ex_style, atom, Some(&opts.title), opts.style,
+		self.0.raw_base.create_window(
+			opts.ex_style,
+			atom,
+			Some(&opts.title),
+			opts.style,
 			POINT::new(rc_wnd.left, rc_wnd.top),
 			SIZE::new(rc_wnd.right - rc_wnd.left, rc_wnd.bottom - rc_wnd.top),
 			None,
-			if opts.menu == HMENU::NULL {
-				IdMenu::None
-			} else {
-				IdMenu::Menu(&opts.menu)
-			},
+			if opts.menu == HMENU::NULL { IdMenu::None } else { IdMenu::Menu(&opts.menu) },
 			hinst,
 		)?;
 
-		self.0.raw_base.base().hwnd().ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
+		self.0
+			.raw_base
+			.base()
+			.hwnd()
+			.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
 		self.0.raw_base.base().hwnd().UpdateWindow()?;
 		BaseWnd::run_main_loop(opts.accel_table.as_deref(), opts.process_dlg_msgs) // blocks until window is closed
 	}

@@ -6,7 +6,7 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::gui::{*, collections::*, events::*, privs::*};
+use crate::gui::{collections::*, events::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -37,32 +37,40 @@ impl Tab {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
 		let children = opts.items.drain(..).collect::<Vec<_>>();
 
-		let new_self = Self(
-			Arc::pin(
-				TabObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: TabEvents::new(parent, ctrl_id),
-					children,
-					_pin: PhantomPinned,
-				},
-			),
-		);
+		let new_self = Self(Arc::pin(TabObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: TabEvents::new(parent, ctrl_id),
+			children,
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
-		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
-			self2.0.base.create_window(opts.window_ex_style, "SysTabControl32", None,
-				opts.window_style | opts.control_style.into(),
-				opts.position.into(), opts.size.into(), &parent2)?;
-			if opts.control_ex_style != co::TCS_EX::NoValue {
-				self2.set_extended_style(true, opts.control_ex_style);
-			}
-			self2.0.children.iter()
-				.for_each(|(text, _)| unsafe { self2.items().add(text); }); // add the tabs
-			self2.display_tab(0)?; // 1st tab selected by default
-			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
-			Ok(0) // ignored
-		});
+		parent
+			.as_ref()
+			.before_on()
+			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+				self2.0.base.create_window(
+					opts.window_ex_style,
+					"SysTabControl32",
+					None,
+					opts.window_style | opts.control_style.into(),
+					opts.position.into(),
+					opts.size.into(),
+					&parent2,
+				)?;
+				if opts.control_ex_style != co::TCS_EX::NoValue {
+					self2.set_extended_style(true, opts.control_ex_style);
+				}
+				self2.0.children.iter().for_each(|(text, _)| unsafe {
+					self2.items().add(text); // add the tabs
+				});
+				self2.display_tab(0)?; // 1st tab selected by default
+				parent2
+					.as_ref()
+					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+				Ok(0) // ignored
+			});
 
 		new_self.default_message_handlers(parent);
 		new_self
@@ -81,27 +89,25 @@ impl Tab {
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
 		items: Vec<(String, Box<dyn AsRef<WindowControl>>)>,
-	) -> Self
-	{
-		let new_self = Self(
-			Arc::pin(
-				TabObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: TabEvents::new(parent, ctrl_id),
-					children: items,
-					_pin: PhantomPinned,
-				},
-			),
-		);
+	) -> Self {
+		let new_self = Self(Arc::pin(TabObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: TabEvents::new(parent, ctrl_id),
+			children: items,
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
 			self2.0.base.assign_dlg(&parent2)?;
-			self2.0.children.iter()
-				.for_each(|(text, _)| unsafe { self2.items().add(text); }); // add the tabs
+			self2.0.children.iter().for_each(|(text, _)| unsafe {
+				self2.items().add(text); // add the tabs
+			});
 			self2.display_tab(0)?; // 1st tab selected by default
-			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			parent2
+				.as_ref()
+				.add_to_layout(self2.hwnd(), resize_behavior)?;
 			Ok(true) // ignored
 		});
 
@@ -111,24 +117,29 @@ impl Tab {
 
 	fn default_message_handlers(&self, parent: &impl AsRef<BaseWnd>) {
 		let self2 = self.clone();
-		parent.as_ref().before_on().wm_notify(self.ctrl_id(), co::TCN::SELCHANGE, move |_| {
-			if let Some(sel_item) = self2.items().selected() {
-				self2.display_tab(sel_item.index())?;
-			}
-			Ok(0) // ignored
-		});
+		parent
+			.as_ref()
+			.before_on()
+			.wm_notify(self.ctrl_id(), co::TCN::SELCHANGE, move |_| {
+				if let Some(sel_item) = self2.items().selected() {
+					self2.display_tab(sel_item.index())?;
+				}
+				Ok(0) // ignored
+			});
 
 		let self2 = self.clone();
 		parent.as_ref().after_on().wm_destroy(move || {
-			self2.image_list().map(|hil| { // destroy the image list, if any
-				let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) };
+			self2.image_list().map(|hil| {
+				let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) }; // destroy the image list, if any
 			});
 			Ok(())
 		});
 	}
 
 	fn display_tab(&self, index: u32) -> SysResult<()> {
-		self.0.children.iter()
+		self.0
+			.children
+			.iter()
 			.enumerate()
 			.filter(|(i, _)| *i != index as usize)
 			.for_each(|(_, (_, item))| {
@@ -136,13 +147,14 @@ impl Tab {
 			});
 
 		if let Some((_, item)) = self.0.children.get(index as usize) {
-			let mut rc = self.hwnd()
+			let mut rc = self
+				.hwnd()
 				.GetParent()?
 				.ScreenToClientRc(self.hwnd().GetWindowRect()?)?;
 			unsafe {
-				self.hwnd().SendMessage(tcm::AdjustRect { // ideal size of the child
+				self.hwnd().SendMessage(tcm::AdjustRect {
 					display_rect: false,
-					rect: &mut rc,
+					rect: &mut rc, // ideal size of the child
 				});
 			}
 			item.as_ref().as_ref().hwnd().SetWindowPos(
@@ -162,11 +174,10 @@ impl Tab {
 	/// The image list is owned by the control.
 	#[must_use]
 	pub fn image_list(&self) -> Option<&HIMAGELIST> {
-		unsafe { self.hwnd().SendMessage(tcm::GetImageList {}) }
-			.map(|hil| {
-				let hil_ptr = &hil as *const HIMAGELIST;
-				unsafe { &*hil_ptr }
-			})
+		unsafe { self.hwnd().SendMessage(tcm::GetImageList {}) }.map(|hil| {
+			let hil_ptr = &hil as *const HIMAGELIST;
+			unsafe { &*hil_ptr }
+		})
 	}
 
 	/// Item methods.
@@ -191,7 +202,10 @@ impl Tab {
 	///
 	/// The image list will be owned by the control. Returns the previous one,
 	/// if any.
-	pub fn set_image_list(&self, himagelist: ImageListDestroyGuard) -> Option<ImageListDestroyGuard> {
+	pub fn set_image_list(
+		&self,
+		himagelist: ImageListDestroyGuard,
+	) -> Option<ImageListDestroyGuard> {
 		let mut himagelist = himagelist;
 		let hil = himagelist.leak();
 

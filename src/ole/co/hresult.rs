@@ -65,11 +65,9 @@ impl std::fmt::Display for HRESULT {
 impl std::fmt::Debug for HRESULT {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 		if self.0 > 0xffff {
-			write!(f, "HRESULT({:#010x} {}) {}",
-				self.0, self.0, self.FormatMessage().trim_end())
+			write!(f, "HRESULT({:#010x} {}) {}", self.0, self.0, self.FormatMessage().trim_end())
 		} else {
-			write!(f, "HRESULT({:#06x} {}) {}",
-				self.0, self.0, self.FormatMessage().trim_end())
+			write!(f, "HRESULT({:#06x} {}) {}", self.0, self.0, self.FormatMessage().trim_end())
 		}
 	}
 }
@@ -85,9 +83,7 @@ impl co::ERROR {
 				co::HRESULT::from_raw(self.raw())
 			} else {
 				co::HRESULT::from_raw(
-					(self.raw() & 0x0000_ffff) |
-					co::FACILITY::WIN32.raw() << 16 |
-					0x8000_0000,
+					(self.raw() & 0x0000_ffff) | co::FACILITY::WIN32.raw() << 16 | 0x8000_0000,
 				)
 			}
 		}

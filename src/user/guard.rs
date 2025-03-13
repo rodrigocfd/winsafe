@@ -14,7 +14,9 @@ pub struct CloseClipboardGuard<'a> {
 
 impl<'a> Drop for CloseClipboardGuard<'a> {
 	fn drop(&mut self) {
-		unsafe { ffi::CloseClipboard(); } // ignore errors
+		unsafe {
+			ffi::CloseClipboard(); // ignore errors
+		}
 	}
 }
 
@@ -87,7 +89,8 @@ handle_guard! { EndDeferWindowPosGuard: HDWP;
 /// be accessed through the
 /// [`paintstruct`](crate::guard::EndPaintGuard::paintstruct) method.
 pub struct EndPaintGuard<'a, H>
-	where H: user_Hwnd,
+where
+	H: user_Hwnd,
 {
 	hwnd: &'a H,
 	hdc: HDC,
@@ -95,15 +98,19 @@ pub struct EndPaintGuard<'a, H>
 }
 
 impl<'a, H> Drop for EndPaintGuard<'a, H>
-	where H: user_Hwnd,
+where
+	H: user_Hwnd,
 {
 	fn drop(&mut self) {
-		unsafe { ffi::EndPaint(self.hwnd.ptr(), &self.ps as *const _ as _); }
+		unsafe {
+			ffi::EndPaint(self.hwnd.ptr(), &self.ps as *const _ as _);
+		}
 	}
 }
 
 impl<'a, H> Deref for EndPaintGuard<'a, H>
-	where H: user_Hwnd,
+where
+	H: user_Hwnd,
 {
 	type Target = HDC;
 
@@ -113,7 +120,8 @@ impl<'a, H> Deref for EndPaintGuard<'a, H>
 }
 
 impl<'a, H> DerefMut for EndPaintGuard<'a, H>
-	where H: user_Hwnd,
+where
+	H: user_Hwnd,
 {
 	fn deref_mut(&mut self) -> &mut Self::Target {
 		&mut self.hdc
@@ -121,7 +129,8 @@ impl<'a, H> DerefMut for EndPaintGuard<'a, H>
 }
 
 impl<'a, H> EndPaintGuard<'a, H>
-	where H: user_Hwnd,
+where
+	H: user_Hwnd,
 {
 	/// Constructs the guard by taking ownership of the objects.
 	///
@@ -147,22 +156,27 @@ impl<'a, H> EndPaintGuard<'a, H>
 /// [`ReleaseCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasecapture)
 /// when the object goes out of scope.
 pub struct ReleaseCaptureGuard<'a, H>
-	where H: user_Hwnd,
+where
+	H: user_Hwnd,
 {
 	_hwnd: &'a H,
 	hwnd_prev: Option<HWND>,
 }
 
 impl<'a, H> Drop for ReleaseCaptureGuard<'a, H>
-	where H: user_Hwnd,
+where
+	H: user_Hwnd,
 {
 	fn drop(&mut self) {
-		unsafe { ffi::ReleaseCapture(); } // ignore errors
+		unsafe {
+			ffi::ReleaseCapture(); // ignore errors
+		}
 	}
 }
 
 impl<'a, H> ReleaseCaptureGuard<'a, H>
-	where H: user_Hwnd,
+where
+	H: user_Hwnd,
 {
 	/// Constructs the guard by taking ownership of the handles.
 	///
@@ -188,26 +202,31 @@ impl<'a, H> ReleaseCaptureGuard<'a, H>
 /// [`ReleaseDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
 /// when the object goes out of scope.
 pub struct ReleaseDCGuard<'a, H>
-	where H: user_Hwnd,
+where
+	H: user_Hwnd,
 {
 	hwnd: &'a H,
 	hdc: HDC,
 }
 
 impl<'a, H> Drop for ReleaseDCGuard<'a, H>
-	where H: user_Hwnd,
+where
+	H: user_Hwnd,
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.hwnd.as_opt() {
 			if let Some(dc) = self.hdc.as_opt() {
-				unsafe { ffi::ReleaseDC(h.ptr(), dc.ptr()); } // ignore errors
+				unsafe {
+					ffi::ReleaseDC(h.ptr(), dc.ptr()); // ignore errors
+				}
 			}
 		}
 	}
 }
 
 impl<'a, H> Deref for ReleaseDCGuard<'a, H>
-	where H: user_Hwnd,
+where
+	H: user_Hwnd,
 {
 	type Target = HDC;
 
@@ -217,7 +236,8 @@ impl<'a, H> Deref for ReleaseDCGuard<'a, H>
 }
 
 impl<'a, H> DerefMut for ReleaseDCGuard<'a, H>
-	where H: user_Hwnd,
+where
+	H: user_Hwnd,
 {
 	fn deref_mut(&mut self) -> &mut Self::Target {
 		&mut self.hdc
@@ -225,7 +245,8 @@ impl<'a, H> DerefMut for ReleaseDCGuard<'a, H>
 }
 
 impl<'a, H> ReleaseDCGuard<'a, H>
-	where H: user_Hwnd,
+where
+	H: user_Hwnd,
 {
 	/// Constructs the guard by taking ownership of the handles.
 	///

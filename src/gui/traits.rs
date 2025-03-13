@@ -117,7 +117,8 @@ pub trait GuiParent: GuiWindow + Clone + AsRef<BaseWnd> {
 	/// });
 	/// ```
 	fn spawn_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static,
+	where
+		F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		self.as_ref().spawn_thread(func)
 	}
@@ -199,7 +200,8 @@ pub trait GuiParent: GuiWindow + Clone + AsRef<BaseWnd> {
 	/// });
 	/// ```
 	fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static,
+	where
+		F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		self.as_ref().run_ui_thread(func)
 	}

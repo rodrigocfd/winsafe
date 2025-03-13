@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::{events::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -51,26 +51,33 @@ impl Button {
 	#[must_use]
 	pub fn new(parent: &(impl GuiParent + 'static), opts: ButtonOpts) -> Self {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
-		let new_self = Self(
-			Arc::pin(
-				ButtonObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: ButtonEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+		let new_self = Self(Arc::pin(ButtonObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: ButtonEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
-		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
-			self2.0.base.create_window(opts.window_ex_style, "BUTTON", Some(&opts.text),
-				opts.window_style | opts.control_style.into(), opts.position.into(),
-				SIZE::new(opts.width, opts.height), &parent2)?;
-			ui_font::set(self2.hwnd())?;
-			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
-			Ok(0) // ignored
-		});
+		parent
+			.as_ref()
+			.before_on()
+			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+				self2.0.base.create_window(
+					opts.window_ex_style,
+					"BUTTON",
+					Some(&opts.text),
+					opts.window_style | opts.control_style.into(),
+					opts.position.into(),
+					SIZE::new(opts.width, opts.height),
+					&parent2,
+				)?;
+				ui_font::set(self2.hwnd())?;
+				parent2
+					.as_ref()
+					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+				Ok(0) // ignored
+			});
 
 		new_self
 	}
@@ -87,23 +94,20 @@ impl Button {
 		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
-	) -> Self
-	{
-		let new_self = Self(
-			Arc::pin(
-				ButtonObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: ButtonEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+	) -> Self {
+		let new_self = Self(Arc::pin(ButtonObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: ButtonEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
 			self2.0.base.assign_dlg(&parent2)?;
-			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			parent2
+				.as_ref()
+				.add_to_layout(self2.hwnd(), resize_behavior)?;
 			Ok(true) // ignored
 		});
 
@@ -113,7 +117,9 @@ impl Button {
 	/// Fires the click event for the button by sending a
 	/// [`bm::Click`](crate::msg::bm::Click) message.
 	pub fn trigger_click(&self) {
-		unsafe { self.hwnd().SendMessage(bm::Click {}); }
+		unsafe {
+			self.hwnd().SendMessage(bm::Click {});
+		}
 	}
 }
 

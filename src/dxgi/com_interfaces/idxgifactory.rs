@@ -42,41 +42,36 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	/// [`IDXGIFactory::CreateSoftwareAdapter`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-createsoftwareadapter)
 	/// method.
 	#[must_use]
-	fn CreateSoftwareAdapter(&self,
-		hmodule: &HINSTANCE,
-	) -> HrResult<IDXGIAdapter>
-	{
+	fn CreateSoftwareAdapter(&self, hmodule: &HINSTANCE) -> HrResult<IDXGIAdapter> {
 		let mut queried = unsafe { IDXGIAdapter::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIFactoryVT>(self).CreateSoftwareAdapter)(
-					self.ptr(),
-					hmodule.ptr(),
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGIFactoryVT>(self).CreateSoftwareAdapter)(
+				self.ptr(),
+				hmodule.ptr(),
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IDXGIFactory::CreateSwapChain`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-createswapchain)
 	/// method.
 	#[must_use]
-	fn CreateSwapChain(&self,
+	fn CreateSwapChain(
+		&self,
 		device: &impl ole_IUnknown,
 		desc: &DXGI_SWAP_CHAIN_DESC,
-	) -> HrResult<IDXGISwapChain>
-	{
+	) -> HrResult<IDXGISwapChain> {
 		let mut queried = unsafe { IDXGISwapChain::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIFactoryVT>(self).CreateSwapChain)(
-					self.ptr(),
-					device.ptr(),
-					desc as *const _ as _,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGIFactoryVT>(self).CreateSwapChain)(
+				self.ptr(),
+				device.ptr(),
+				desc as *const _ as _,
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IDXGIFactory::EnumAdapters`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-enumadapters)
@@ -104,9 +99,7 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
-	fn EnumAdapters(&self,
-	) -> impl Iterator<Item = HrResult<IDXGIAdapter>> + '_
-	{
+	fn EnumAdapters(&self) -> impl Iterator<Item = HrResult<IDXGIAdapter>> + '_ {
 		IdxgifactoryEnumadaptersIter::new(self)
 	}
 
@@ -115,31 +108,17 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 	#[must_use]
 	fn GetWindowAssociation(&self) -> HrResult<HWND> {
 		let mut hwnd = HWND::NULL;
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIFactoryVT>(self).GetWindowAssociation)(
-					self.ptr(),
-					hwnd.as_mut(),
-				)
-			},
-		).map(|_| hwnd)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGIFactoryVT>(self).GetWindowAssociation)(self.ptr(), hwnd.as_mut())
+		})
+		.map(|_| hwnd)
 	}
 
 	/// [`IDXGIFactory::MakeWindowAssociation`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgifactory-makewindowassociation)
 	/// method.
-	fn MakeWindowAssociation(&self,
-		hwnd: &HWND,
-		flags: co::DXGI_MWA,
-	) -> HrResult<()>
-	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIFactoryVT>(self).MakeWindowAssociation)(
-					self.ptr(),
-					hwnd.ptr(),
-					flags.raw(),
-				)
-			},
-		)
+	fn MakeWindowAssociation(&self, hwnd: &HWND, flags: co::DXGI_MWA) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGIFactoryVT>(self).MakeWindowAssociation)(self.ptr(), hwnd.ptr(), flags.raw())
+		})
 	}
 }

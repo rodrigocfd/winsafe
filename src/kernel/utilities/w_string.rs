@@ -110,7 +110,9 @@ impl WString {
 	/// The `src` buffer doesn't need to be null-terminated.
 	#[must_use]
 	pub fn from_wchars_count(src: *const u16, num_chars: usize) -> Self {
-		Self { buf: Buffer::from_wchars_count(src, num_chars) }
+		Self {
+			buf: Buffer::from_wchars_count(src, num_chars),
+		}
 	}
 
 	/// Stores an UTF-16 null-terminated string by copying from a
@@ -144,7 +146,9 @@ impl WString {
 	/// set to zero.
 	#[must_use]
 	pub fn new_alloc_buf(sz: usize) -> Self {
-		Self { buf: Buffer::new_alloc_buf(sz, ForceHeap::No) }
+		Self {
+			buf: Buffer::new_alloc_buf(sz, ForceHeap::No),
+		}
 	}
 
 	/// Returns a mutable
@@ -209,16 +213,15 @@ impl WString {
 				.iter()
 				.zip(dest[..usable_len].iter_mut())
 				.for_each(|(src, dest)| *dest = *src);
-			dest[usable_len..].iter_mut()
+			dest[usable_len..]
+				.iter_mut()
 				.for_each(|dest| *dest = 0x0000); // fill the rest with zero
 		}
 	}
 
 	/// Fills the entire buffer with zeros.
 	pub fn fill_with_zero(&mut self) {
-		self.as_mut_slice()
-			.iter_mut()
-			.for_each(|ch| *ch = 0x0000);
+		self.as_mut_slice().iter_mut().for_each(|ch| *ch = 0x0000);
 	}
 
 	/// Returns `true` if the internal buffer has been allocated.
@@ -235,9 +238,7 @@ impl WString {
 	/// invalid characters. If you're dealing with a string known to be valid,
 	/// [`to_string`](std::string::ToString::to_string) is more practical.
 	#[must_use]
-	pub fn to_string_checked(&self
-	) -> Result<String, std::string::FromUtf16Error>
-	{
+	pub fn to_string_checked(&self) -> Result<String, std::string::FromUtf16Error> {
 		self.buf.to_string_checked()
 	}
 
@@ -254,13 +255,17 @@ impl WString {
 	/// Converts the string to lower case, in-place. Wrapper to
 	/// [`CharLower`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-charlowerw).
 	pub fn make_lowercase(&mut self) {
-		unsafe { ffi::CharLowerW(self.as_mut_ptr()); }
+		unsafe {
+			ffi::CharLowerW(self.as_mut_ptr());
+		}
 	}
 
 	/// Converts the string to upper case, in-place. Wrapper to
 	/// [`CharUpper`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-charupperw).
 	pub fn make_uppercase(&mut self) {
-		unsafe { ffi::CharUpperW(self.as_mut_ptr()); }
+		unsafe {
+			ffi::CharUpperW(self.as_mut_ptr());
+		}
 	}
 
 	/// Guesses the encoding with [`Encoding::guess`](crate::Encoding::guess)
@@ -291,27 +296,25 @@ impl WString {
 	#[must_use]
 	pub fn parse(data: &[u8]) -> SysResult<Self> {
 		let mut data = data;
-		if data.is_empty() { // nothing to parse
-			return Ok(Self::new());
+		if data.is_empty() {
+			return Ok(Self::new()); // nothing to parse
 		}
 
 		let (encoding, sz_bom) = Encoding::guess(data);
 		data = &data[sz_bom..]; // skip BOM, if any
 
-		Ok(Self::from_wchars_slice(
-			&match encoding {
-				Encoding::Ansi => Self::parse_ansi(data),
-				Encoding::Win1252 => MultiByteToWideChar(co::CP::WINDOWS_1252, co::MBC::NoValue, data)?,
-				Encoding::Utf8 => MultiByteToWideChar(co::CP::UTF8, co::MBC::NoValue, data)?,
-				Encoding::Utf16be => Self::parse_utf16(data, true),
-				Encoding::Utf16le => Self::parse_utf16(data, false),
-				Encoding::Utf32be
-				| Encoding::Utf32le
-				| Encoding::Scsu
-				| Encoding::Bocu1
-				| Encoding::Unknown => panic!("Encoding {} not implemented.", encoding),
-			}
-		))
+		Ok(Self::from_wchars_slice(&match encoding {
+			Encoding::Ansi => Self::parse_ansi(data),
+			Encoding::Win1252 => MultiByteToWideChar(co::CP::WINDOWS_1252, co::MBC::NoValue, data)?,
+			Encoding::Utf8 => MultiByteToWideChar(co::CP::UTF8, co::MBC::NoValue, data)?,
+			Encoding::Utf16be => Self::parse_utf16(data, true),
+			Encoding::Utf16le => Self::parse_utf16(data, false),
+			Encoding::Utf32be
+			| Encoding::Utf32le
+			| Encoding::Scsu
+			| Encoding::Bocu1
+			| Encoding::Unknown => panic!("Encoding {} not implemented.", encoding),
+		}))
 	}
 
 	fn parse_ansi(data: &[u8]) -> Vec<u16> {
@@ -342,7 +345,10 @@ impl WString {
 }
 
 #[derive(PartialEq, Eq)]
-enum ForceHeap { Yes, No }
+enum ForceHeap {
+	Yes,
+	No,
+}
 
 enum Buffer {
 	Stack([u16; Self::SSO_LEN]),
@@ -378,11 +384,15 @@ impl std::fmt::Debug for Buffer {
 			Ok(t) => t,
 			Err(e) => format!("PARSING ERROR: {}", e.to_string()),
 		};
-		write!(f, "{}", match self {
-			Self::Stack(_) => format!("STACK({}) \"{}\"", self.buf_len(), txt),
-			Self::Heap(_, _) => format!("HEAP({}) \"{}\"", self.buf_len(), txt),
-			Self::Unallocated => "UNALLOCATED \"\"".to_owned(),
-		})
+		write!(
+			f,
+			"{}",
+			match self {
+				Self::Stack(_) => format!("STACK({}) \"{}\"", self.buf_len(), txt),
+				Self::Heap(_, _) => format!("HEAP({}) \"{}\"", self.buf_len(), txt),
+				Self::Unallocated => "UNALLOCATED \"\"".to_owned(),
+			}
+		)
 	}
 }
 
@@ -421,9 +431,7 @@ impl Buffer {
 		let mut new_self = Self::new_alloc_buf(tot_chars, ForceHeap::No);
 		v.iter()
 			.map(|s| {
-				s.as_ref()
-					.encode_utf16()
-					.chain(std::iter::once(0x0000)) // append terminating null on each string
+				s.as_ref().encode_utf16().chain(std::iter::once(0x0000)) // append terminating null on each string
 			})
 			.flatten()
 			.zip(new_self.as_mut_slice())
@@ -436,9 +444,7 @@ impl Buffer {
 		if src.is_null() || num_chars == 0 {
 			Self::Unallocated
 		} else {
-			Self::from_wchars_slice(
-				unsafe { std::slice::from_raw_parts(src, num_chars) },
-			)
+			Self::from_wchars_slice(unsafe { std::slice::from_raw_parts(src, num_chars) })
 		}
 	}
 
@@ -452,10 +458,10 @@ impl Buffer {
 		if src.is_empty() {
 			Self::Unallocated
 		} else {
-			let num_chars = src.iter()
+			let num_chars = src
+				.iter()
 				.take_while(|ch| **ch != 0x0000) // skip terminating null, if any
-				.count()
-				+ 1; // room for terminating null
+				.count() + 1; // room for terminating null
 			let mut new_self = Self::new_alloc_buf(num_chars, ForceHeap::No);
 			src.iter()
 				.take_while(|ch| **ch != 0x0000) // skip terminating null, if any
@@ -480,7 +486,8 @@ impl Buffer {
 				HGLOBAL::GlobalAlloc(
 					Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
 					num_chars * std::mem::size_of::<u16>(),
-				).unwrap(), // assume no allocation errors
+				)
+				.unwrap(), // assume no allocation errors
 			)
 		} else {
 			Self::Stack([0x0000; Self::SSO_LEN])
@@ -549,7 +556,8 @@ impl Buffer {
 		match self {
 			Self::Unallocated => Ok(String::new()),
 			_ => String::from_utf16(
-				&self.as_slice()
+				&self
+					.as_slice()
 					.into_iter()
 					.take_while(|ch| **ch != 0x0000) // remove all trailing zeros
 					.map(|ch| *ch)

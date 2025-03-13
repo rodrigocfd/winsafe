@@ -61,28 +61,24 @@ impl IMFAsyncCallbackImpl {
 
 	fn GetParameters(p: COMPTR, pdwFlags: *mut u32, pdwQueue: *mut u32) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
-		hrresult_to_hres(
-			match &box_impl.GetParameters {
-				Some(func) => {
-					let pflags = unsafe { &mut *(pdwFlags as *mut co::MFASYNC) };
-					let pqueue = unsafe { &mut *(pdwQueue) };
-					func(pflags, pqueue)
-				},
-				None => Ok(()),
+		hrresult_to_hres(match &box_impl.GetParameters {
+			Some(func) => {
+				let pflags = unsafe { &mut *(pdwFlags as *mut co::MFASYNC) };
+				let pqueue = unsafe { &mut *(pdwQueue) };
+				func(pflags, pqueue)
 			},
-		)
+			None => Ok(()),
+		})
 	}
 
 	fn Invoke(p: COMPTR, pAsyncResult: COMPTR) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
-		hrresult_to_hres(
-			match &box_impl.Invoke {
-				Some(func) => {
-					let ar = ManuallyDrop::new(unsafe { IMFAsyncResult::from_ptr(pAsyncResult) });
-					func(&ar)
-				},
-				None => Ok(()),
+		hrresult_to_hres(match &box_impl.Invoke {
+			Some(func) => {
+				let ar = ManuallyDrop::new(unsafe { IMFAsyncResult::from_ptr(pAsyncResult) });
+				func(&ar)
 			},
-		)
+			None => Ok(()),
+		})
 	}
 }

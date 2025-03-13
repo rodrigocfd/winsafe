@@ -4,8 +4,8 @@ mod ffi;
 mod funcs;
 mod structs;
 
-pub(crate) mod privs;
 pub mod co;
+pub(crate) mod privs;
 
 pub mod decl {
 	pub use super::funcs::*;

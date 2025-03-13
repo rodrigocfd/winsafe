@@ -58,7 +58,7 @@ pub struct IMFAttributesVT {
 #[repr(C)]
 pub struct IMFByteStreamVT {
 	pub IUnknownVT: IUnknownVT,
-	pub GetCapabilities: fn (COMPTR, *mut u32) -> HRES,
+	pub GetCapabilities: fn(COMPTR, *mut u32) -> HRES,
 	pub GetLength: fn(COMPTR, *mut u64) -> HRES,
 	pub SetLength: fn(COMPTR, u64) -> HRES,
 	pub GetCurrentPosition: fn(COMPTR, *mut u64) -> HRES,
@@ -171,10 +171,13 @@ pub struct IMFPresentationDescriptorVT {
 pub struct IMFSourceResolverVT {
 	pub IUnknownVT: IUnknownVT,
 	pub CreateObjectFromURL: fn(COMPTR, PCSTR, u32, COMPTR, *mut u32, *mut COMPTR) -> HRES,
-	pub CreateObjectFromByteStream: fn(COMPTR, COMPTR, PCSTR, u32, COMPTR, *mut u32, *mut COMPTR) -> HRES,
-	pub BeginCreateObjectFromURL: fn(COMPTR, PCSTR, u32, COMPTR, *mut COMPTR, COMPTR, COMPTR) -> HRES,
+	pub CreateObjectFromByteStream:
+		fn(COMPTR, COMPTR, PCSTR, u32, COMPTR, *mut u32, *mut COMPTR) -> HRES,
+	pub BeginCreateObjectFromURL:
+		fn(COMPTR, PCSTR, u32, COMPTR, *mut COMPTR, COMPTR, COMPTR) -> HRES,
 	pub EndCreateObjectFromURL: fn(COMPTR, COMPTR, *mut u32, *mut COMPTR) -> HRES,
-	pub BeginCreateObjectFromByteStream: fn(COMPTR, COMPTR, PCSTR, u32, COMPTR, *mut COMPTR, COMPTR, COMPTR) -> HRES,
+	pub BeginCreateObjectFromByteStream:
+		fn(COMPTR, COMPTR, PCSTR, u32, COMPTR, *mut COMPTR, COMPTR, COMPTR) -> HRES,
 	pub EndCreateObjectFromByteStream: fn(COMPTR, COMPTR, *mut u32, *mut COMPTR) -> HRES,
 	pub CancelObjectCreation: fn(COMPTR, COMPTR) -> HRES,
 }
@@ -207,7 +210,7 @@ pub struct IMFTopologyNodeVT {
 	pub SetObject: fn(COMPTR, COMPTR) -> HRES,
 	pub GetObject: fn(COMPTR, *mut COMPTR) -> HRES,
 	pub GetNodeType: fn(COMPTR, *mut u32) -> HRES,
-	pub GetTopoNodeID: fn(COMPTR,*mut u64) -> HRES,
+	pub GetTopoNodeID: fn(COMPTR, *mut u64) -> HRES,
 	pub SetTopoNodeID: fn(COMPTR, u64) -> HRES,
 	pub GetInputCount: fn(COMPTR, *mut u32) -> HRES,
 	pub GetOutputCount: fn(COMPTR, *mut u32) -> HRES,

@@ -85,22 +85,20 @@ pub trait kernel_Hfile: Handle {
 		flags: Option<co::FILE_FLAG>,
 		security: Option<co::FILE_SECURITY>,
 		hfile_template: Option<&HFILE>,
-	) -> SysResult<(CloseHandleGuard<HFILE>, co::ERROR)>
-	{
+	) -> SysResult<(CloseHandleGuard<HFILE>, co::ERROR)> {
 		unsafe {
-			match HFILE(
-				ffi::CreateFileW(
-					WString::from_str(file_name).as_ptr(),
-					desired_access.raw(),
-					share_mode.unwrap_or_default().raw(),
-					security_attributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-					creation_disposition.raw(),
-					attributes.raw()
-						| flags.unwrap_or_default().raw()
-						| security.map_or(0, |s| SECURITY_SQOS_PRESENT | s.raw()),
-					hfile_template.map_or(std::ptr::null_mut(), |h| h.ptr()),
-				) as _,
-			) {
+			match HFILE(ffi::CreateFileW(
+				WString::from_str(file_name).as_ptr(),
+				desired_access.raw(),
+				share_mode.unwrap_or_default().raw(),
+				security_attributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+				creation_disposition.raw(),
+				attributes.raw()
+					| flags.unwrap_or_default().raw()
+					| security.map_or(0, |s| SECURITY_SQOS_PRESENT | s.raw()),
+				hfile_template.map_or(std::ptr::null_mut(), |h| h.ptr()),
+			) as _)
+			{
 				HFILE::NULL | HFILE::INVALID => Err(GetLastError()),
 				handle => Ok((CloseHandleGuard::new(handle), GetLastError())),
 			}
@@ -113,37 +111,33 @@ pub trait kernel_Hfile: Handle {
 	/// Unless you need something specific, consider using the
 	/// [`FileMapped`](crate::FileMapped) high-level abstraction.
 	#[must_use]
-	fn CreateFileMapping(&self,
+	fn CreateFileMapping(
+		&self,
 		mapping_attrs: Option<&mut SECURITY_ATTRIBUTES>,
 		protect: co::PAGE,
 		max_size: Option<u64>,
 		mapping_name: Option<&str>,
-	) -> SysResult<CloseHandleGuard<HFILEMAP>>
-	{
+	) -> SysResult<CloseHandleGuard<HFILEMAP>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::CreateFileMappingFromApp(
-					self.ptr(),
-					mapping_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-					protect.raw(),
-					max_size.unwrap_or_default(),
-					WString::from_opt_str(mapping_name).as_ptr(),
-				),
-			).map(|h| CloseHandleGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateFileMappingFromApp(
+				self.ptr(),
+				mapping_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+				protect.raw(),
+				max_size.unwrap_or_default(),
+				WString::from_opt_str(mapping_name).as_ptr(),
+			))
+			.map(|h| CloseHandleGuard::new(h))
 		}
 	}
 
 	/// [`GetFileInformationByHandle`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)
 	/// function.
-	fn GetFileInformationByHandle(&self,
-	) -> SysResult<BY_HANDLE_FILE_INFORMATION>
-	{
+	fn GetFileInformationByHandle(&self) -> SysResult<BY_HANDLE_FILE_INFORMATION> {
 		let mut fi = BY_HANDLE_FILE_INFORMATION::default();
-		bool_to_sysresult(
-			unsafe {
-				ffi::GetFileInformationByHandle(self.ptr(), &mut fi as *mut _ as _)
-			},
-		).map(|_| fi)
+		bool_to_sysresult(unsafe {
+			ffi::GetFileInformationByHandle(self.ptr(), &mut fi as *mut _ as _)
+		})
+		.map(|_| fi)
 	}
 
 	/// [`GetFileSizeEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesizeex)
@@ -178,16 +172,15 @@ pub trait kernel_Hfile: Handle {
 		let (mut creation, mut last_access, mut last_write) =
 			(FILETIME::default(), FILETIME::default(), FILETIME::default());
 
-		bool_to_sysresult(
-			unsafe {
-				ffi::GetFileTime(
-					self.ptr(),
-					&mut creation as *mut _ as _,
-					&mut last_access as *mut _ as _,
-					&mut last_write as *mut _ as _,
-				)
-			},
-		).map(|_| (creation, last_access, last_write))
+		bool_to_sysresult(unsafe {
+			ffi::GetFileTime(
+				self.ptr(),
+				&mut creation as *mut _ as _,
+				&mut last_access as *mut _ as _,
+				&mut last_write as *mut _ as _,
+			)
+		})
+		.map(|_| (creation, last_access, last_write))
 	}
 
 	/// [`GetFileType`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype)
@@ -234,21 +227,20 @@ pub trait kernel_Hfile: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn LockFile(&self,
+	fn LockFile(
+		&self,
 		offset: u64,
 		num_bytes_to_lock: u64,
-	) -> SysResult<UnlockFileGuard<'_, Self>>
-	{
+	) -> SysResult<UnlockFileGuard<'_, Self>> {
 		unsafe {
-			bool_to_sysresult(
-				ffi::LockFile(
-					self.ptr(),
-					LODWORD(offset),
-					HIDWORD(offset),
-					LODWORD(num_bytes_to_lock),
-					HIDWORD(num_bytes_to_lock),
-				),
-			).map(|_| UnlockFileGuard::new(self, offset, num_bytes_to_lock))
+			bool_to_sysresult(ffi::LockFile(
+				self.ptr(),
+				LODWORD(offset),
+				HIDWORD(offset),
+				LODWORD(num_bytes_to_lock),
+				HIDWORD(num_bytes_to_lock),
+			))
+			.map(|_| UnlockFileGuard::new(self, offset, num_bytes_to_lock))
 		}
 	}
 
@@ -265,17 +257,16 @@ pub trait kernel_Hfile: Handle {
 	/// operation is complete, thus making the method unsound.
 	fn ReadFile(&self, buffer: &mut [u8]) -> SysResult<u32> {
 		let mut bytes_read = u32::default();
-		bool_to_sysresult(
-			unsafe {
-				ffi::ReadFile(
-					self.ptr(),
-					buffer.as_mut_ptr() as _,
-					buffer.len() as _,
-					&mut bytes_read,
-					std::ptr::null_mut(),
-				)
-			},
-		).map(|_| bytes_read)
+		bool_to_sysresult(unsafe {
+			ffi::ReadFile(
+				self.ptr(),
+				buffer.as_mut_ptr() as _,
+				buffer.len() as _,
+				&mut bytes_read,
+				std::ptr::null_mut(),
+			)
+		})
+		.map(|_| bytes_read)
 	}
 
 	/// [`SetEndOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setendoffile)
@@ -286,43 +277,35 @@ pub trait kernel_Hfile: Handle {
 
 	/// [`SetFilePointerEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfilepointerex)
 	/// function.
-	fn SetFilePointerEx(&self,
+	fn SetFilePointerEx(
+		&self,
 		distance_to_move: i64,
 		move_method: co::FILE_STARTING_POINT,
-	) -> SysResult<i64>
-	{
+	) -> SysResult<i64> {
 		let mut new_offset = i64::default();
 
-		bool_to_sysresult(
-			unsafe {
-				ffi::SetFilePointerEx(
-					self.ptr(),
-					distance_to_move,
-					&mut new_offset,
-					move_method.raw(),
-				)
-			},
-		).map(|_| new_offset)
+		bool_to_sysresult(unsafe {
+			ffi::SetFilePointerEx(self.ptr(), distance_to_move, &mut new_offset, move_method.raw())
+		})
+		.map(|_| new_offset)
 	}
 
 	/// [`SetFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfiletime)
 	/// function.
-	fn SetFileTime(&self,
+	fn SetFileTime(
+		&self,
 		creation_time: Option<&FILETIME>,
 		last_access_time: Option<&FILETIME>,
 		last_write_time: Option<&FILETIME>,
-	) -> SysResult<()>
-	{
-		bool_to_sysresult(
-			unsafe {
-				ffi::SetFileTime(
-					self.ptr(),
-					creation_time.map_or(std::ptr::null(), |p| p as *const _ as _),
-					last_access_time.map_or(std::ptr::null(), |p| p as *const _ as _),
-					last_write_time.map_or(std::ptr::null(), |p| p as *const _ as _),
-				)
-			},
-		)
+	) -> SysResult<()> {
+		bool_to_sysresult(unsafe {
+			ffi::SetFileTime(
+				self.ptr(),
+				creation_time.map_or(std::ptr::null(), |p| p as *const _ as _),
+				last_access_time.map_or(std::ptr::null(), |p| p as *const _ as _),
+				last_write_time.map_or(std::ptr::null(), |p| p as *const _ as _),
+			)
+		})
 	}
 
 	/// [`WriteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
@@ -337,16 +320,15 @@ pub trait kernel_Hfile: Handle {
 	fn WriteFile(&self, data: &[u8]) -> SysResult<u32> {
 		let mut bytes_written = u32::default();
 
-		bool_to_sysresult(
-			unsafe {
-				ffi::WriteFile(
-					self.ptr(),
-					vec_ptr(data) as _,
-					data.len() as _,
-					&mut bytes_written,
-					std::ptr::null_mut(),
-				)
-			},
-		).map(|_| bytes_written)
+		bool_to_sysresult(unsafe {
+			ffi::WriteFile(
+				self.ptr(),
+				vec_ptr(data) as _,
+				data.len() as _,
+				&mut bytes_written,
+				std::ptr::null_mut(),
+			)
+		})
+		.map(|_| bytes_written)
 	}
 }

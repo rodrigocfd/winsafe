@@ -5,7 +5,7 @@ use std::rc::Rc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, iterators::*};
+use crate::gui::{iterators::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -51,17 +51,20 @@ impl<'a, T> ListViewItems<'a, T> {
 	///     (),   // no object data; requires specifying the generic `ListView` type
 	/// );
 	/// ```
-	pub fn add(&self,
+	pub fn add(
+		&self,
 		texts: &[impl AsRef<str>],
 		icon_index: Option<u32>,
 		data: T,
-	) -> SysResult<ListViewItem<'a, T>>
-	{
+	) -> SysResult<ListViewItem<'a, T>> {
 		if texts.is_empty() {
 			panic!("No texts passed when adding a ListView item.");
 		} else if texts.len() > self.owner.cols().count()? as _ {
-			panic!("Cannot set {} text(s) to {} column(s).",
-				texts.len(), self.owner.cols().count()?);
+			panic!(
+				"Cannot set {} text(s) to {} column(s).",
+				texts.len(),
+				self.owner.cols().count()?
+			);
 		}
 
 		let mut lvi = LVITEM::default();
@@ -71,25 +74,28 @@ impl<'a, T> ListViewItems<'a, T> {
 		let mut wtext = WString::from_str(texts[0].as_ref()); // text of 1st column
 		lvi.set_pszText(Some(&mut wtext));
 
-		if let Some(icon_index) = icon_index { // will it have an icon?
+		if let Some(icon_index) = icon_index {
+			// will it have an icon?
 			lvi.mask |= co::LVIF::IMAGE;
 			lvi.iImage = icon_index as _;
 		}
 
-		if TypeId::of::<T>() != TypeId::of::<()>() { // user defined the generic type
+		if TypeId::of::<T>() != TypeId::of::<()>() {
+			// user defined the generic type
 			lvi.mask |= co::LVIF::PARAM;
 			let rc_data = Rc::new(RefCell::new(data));
 			lvi.lParam = Rc::into_raw(rc_data) as _;
 		}
 
-		let new_item = self.get( // insert new item; retrieve newly added
-			unsafe {
-				self.owner.hwnd()
-					.SendMessage(lvm::InsertItem { item: &lvi })
-			}?,
-		);
+		let new_idx = unsafe {
+			self.owner
+				.hwnd()
+				.SendMessage(lvm::InsertItem { item: &lvi })
+		}?;
+		let new_item = self.get(new_idx);
 
-		texts.iter()
+		texts
+			.iter()
 			.enumerate()
 			.skip(1) // iterate over subsequent columns
 			.try_for_each(|(idx, text)| {
@@ -104,19 +110,13 @@ impl<'a, T> ListViewItems<'a, T> {
 	/// [`lvm::GetItemCount`](crate::msg::lvm::GetItemCount) message.
 	#[must_use]
 	pub fn count(&self) -> u32 {
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::GetItemCount {})
-		}
+		unsafe { self.owner.hwnd().SendMessage(lvm::GetItemCount {}) }
 	}
 
 	/// Deletes all items by sending an
 	/// [`lvm::DeleteAllItems`](crate::msg::lvm::DeleteAllItems) message.
 	pub fn delete_all(&self) -> SysResult<()> {
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::DeleteAllItems {})
-		}
+		unsafe { self.owner.hwnd().SendMessage(lvm::DeleteAllItems {}) }
 	}
 
 	/// Deletes all selected items by sending
@@ -124,11 +124,10 @@ impl<'a, T> ListViewItems<'a, T> {
 	pub fn delete_selected(&self) -> SysResult<()> {
 		loop {
 			let next_idx = unsafe {
-				self.owner.hwnd()
-					.SendMessage(lvm::GetNextItem {
-						initial_index: None,
-						relationship: co::LVNI::SELECTED,
-					})
+				self.owner.hwnd().SendMessage(lvm::GetNextItem {
+					initial_index: None,
+					relationship: co::LVNI::SELECTED,
+				})
 			};
 			match next_idx {
 				Some(next_idx) => self.get(next_idx).delete()?,
@@ -149,12 +148,11 @@ impl<'a, T> ListViewItems<'a, T> {
 		lvfi.set_psz(Some(&mut buf));
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::FindItem {
-					start_index: None,
-					lvfindinfo: &mut lvfi,
-				})
-		}.map(|idx| self.get(idx))
+			self.owner
+				.hwnd()
+				.SendMessage(lvm::FindItem { start_index: None, lvfindinfo: &mut lvfi })
+		}
+		.map(|idx| self.get(idx))
 	}
 
 	/// Retrieves the focused item by sending an
@@ -162,12 +160,12 @@ impl<'a, T> ListViewItems<'a, T> {
 	#[must_use]
 	pub fn focused(&self) -> Option<ListViewItem<'a, T>> {
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::GetNextItem {
-					initial_index: None,
-					relationship: co::LVNI::FOCUSED,
-				})
-		}.map(|idx| self.get(idx))
+			self.owner.hwnd().SendMessage(lvm::GetNextItem {
+				initial_index: None,
+				relationship: co::LVNI::FOCUSED,
+			})
+		}
+		.map(|idx| self.get(idx))
 	}
 
 	/// Retrieves the item at the given zero-based position.
@@ -190,9 +188,11 @@ impl<'a, T> ListViewItems<'a, T> {
 		lvhti.pt = coords;
 
 		unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(lvm::HitTest { info: &mut lvhti })
-		}.map(|index| self.get(index))
+		}
+		.map(|index| self.get(index))
 	}
 
 	/// Returns an iterator over all items.
@@ -252,10 +252,8 @@ impl<'a, T> ListViewItems<'a, T> {
 	/// `None`.
 	#[must_use]
 	pub fn get_by_uid(&self, uid: u32) -> Option<ListViewItem<'a, T>> {
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::MapIdToIndex { id: uid })
-		}.map(|idx| self.get(idx))
+		unsafe { self.owner.hwnd().SendMessage(lvm::MapIdToIndex { id: uid }) }
+			.map(|idx| self.get(idx))
 	}
 
 	/// Sets or remove the selection for all items by sending an
@@ -268,14 +266,14 @@ impl<'a, T> ListViewItems<'a, T> {
 
 		let mut lvi = LVITEM::default();
 		lvi.stateMask = co::LVIS::SELECTED;
-		if set { lvi.state = co::LVIS::SELECTED; }
+		if set {
+			lvi.state = co::LVIS::SELECTED;
+		}
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::SetItemState {
-					index: None,
-					lvitem: &lvi,
-				})
+			self.owner
+				.hwnd()
+				.SendMessage(lvm::SetItemState { index: None, lvitem: &lvi })
 		}
 	}
 
@@ -283,10 +281,7 @@ impl<'a, T> ListViewItems<'a, T> {
 	/// [`lvm::GetSelectedCount`](crate::msg::lvm::GetSelectedCount) message.
 	#[must_use]
 	pub fn selected_count(&self) -> u32 {
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::GetSelectedCount {})
-		}
+		unsafe { self.owner.hwnd().SendMessage(lvm::GetSelectedCount {}) }
 	}
 
 	/// Sets the number of items in a virtual list view – that is, a list view
@@ -294,7 +289,8 @@ impl<'a, T> ListViewItems<'a, T> {
 	/// sending an [`lvm::SetItemCount`](crate::msg::lvm::SetItemCount) message.
 	pub fn set_count(&self, count: u32, behavior: Option<co::LVSICF>) -> SysResult<()> {
 		unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(lvm::SetItemCount { count, behavior })
 		}
 	}
@@ -320,17 +316,17 @@ impl<'a, T> ListViewItems<'a, T> {
 	/// });
 	/// ```
 	pub fn sort<F>(&self, func: F) -> SysResult<()>
-		where F: FnMut(ListViewItem, ListViewItem) -> Ordering,
+	where
+		F: FnMut(ListViewItem, ListViewItem) -> Ordering,
 	{
 		let mut func = func;
 		let data = (self.owner, &mut func);
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::SortItemsEx {
-					param: &data as *const _ as _,
-					callback: Self::list_view_item_sort::<F>,
-				})
+			self.owner.hwnd().SendMessage(lvm::SortItemsEx {
+				param: &data as *const _ as _,
+				callback: Self::list_view_item_sort::<F>,
+			})
 		}
 	}
 
@@ -339,7 +335,8 @@ impl<'a, T> ListViewItems<'a, T> {
 		lparam2: isize,
 		lparam_sort: isize,
 	) -> i32
-		where F: FnMut(ListViewItem, ListViewItem) -> Ordering,
+	where
+		F: FnMut(ListViewItem, ListViewItem) -> Ordering,
 	{
 		let data = unsafe { &mut *(lparam_sort as *mut (&ListView, &mut F)) };
 		let item1 = data.0.items().get(lparam1 as _);

@@ -28,26 +28,27 @@ pub struct SHELLEXECUTEINFO<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> {
 	pub hicon_hmonitor: IcoMon<'i>,
 }
 
-impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i>
-	SHELLEXECUTEINFO<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i>
-{
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> SHELLEXECUTEINFO<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> {
 	pub(in crate::advapi_shell) fn to_raw(&self) -> SHELLEXECUTEINFO_buf {
 		let mut raw = SHELLEXECUTEINFO_raw::default();
 		raw.fMask = self.mask;
 		raw.hwnd = unsafe { self.hwnd.unwrap_or(&HWND::NULL).raw_copy() };
 
-		let w_verb = self.verb
+		let w_verb = self
+			.verb
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.lpVerb = w_verb.as_ptr();
 
 		let w_file = WString::from_str_force_heap(self.file);
 		raw.lpFile = w_file.as_ptr();
 
-		let w_parms = self.parameters
+		let w_parms = self
+			.parameters
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.lpParameters = w_parms.as_ptr();
 
-		let w_dir = self.directory
+		let w_dir = self
+			.directory
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.lpDirectory = w_dir.as_ptr();
 
@@ -90,7 +91,14 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i>
 			},
 		}
 
-		SHELLEXECUTEINFO_buf { raw, w_verb, w_file, w_parms, w_dir, w_class }
+		SHELLEXECUTEINFO_buf {
+			raw,
+			w_verb,
+			w_file,
+			w_parms,
+			w_dir,
+			w_class,
+		}
 	}
 }
 

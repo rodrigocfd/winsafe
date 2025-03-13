@@ -51,11 +51,7 @@ pub trait comctl_Himagelist: Handle {
 	///
 	/// A copy of the bitmap is made and stored in the image list, so you're
 	/// free to release the original bitmap.
-	fn Add(&self,
-		hbmp_image: &HBITMAP,
-		hbmp_mask: Option<&HBITMAP>,
-	) -> HrResult<u32>
-	{
+	fn Add(&self, hbmp_image: &HBITMAP, hbmp_mask: Option<&HBITMAP>) -> HrResult<u32> {
 		match unsafe {
 			ffi::ImageList_Add(
 				self.ptr(),
@@ -85,16 +81,8 @@ pub trait comctl_Himagelist: Handle {
 	///
 	/// A copy of the bitmap is made and stored in the image list, so you're
 	/// free to release the original bitmap.
-	fn AddMasked(&self,
-		hbmp_image: &HBITMAP,
-		color_mask: COLORREF,
-	) -> HrResult<u32>
-	{
-		match unsafe {
-			ffi::ImageList_AddMasked(
-				self.ptr(), hbmp_image.ptr(), color_mask.into(),
-			)
-		} {
+	fn AddMasked(&self, hbmp_image: &HBITMAP, color_mask: COLORREF) -> HrResult<u32> {
+		match unsafe { ffi::ImageList_AddMasked(self.ptr(), hbmp_image.ptr(), color_mask.into()) } {
 			-1 => Err(co::HRESULT::E_FAIL),
 			idx => Ok(idx as _),
 		}
@@ -125,17 +113,9 @@ pub trait comctl_Himagelist: Handle {
 	/// let _drag = himgl.BeginDrag(0, w::POINT::new(0, 0))?; // keep guard alive
 	/// # w::HrResult::Ok(())
 	/// ```
-	fn BeginDrag(&self,
-		itrack: u32,
-		hotspot: POINT,
-	) -> HrResult<ImageListEndDragGuard<'_>>
-	{
+	fn BeginDrag(&self, itrack: u32, hotspot: POINT) -> HrResult<ImageListEndDragGuard<'_>> {
 		unsafe {
-			match ffi::ImageList_BeginDrag(
-				self.ptr(),
-				itrack as _,
-				hotspot.x, hotspot.y,
-			) {
+			match ffi::ImageList_BeginDrag(self.ptr(), itrack as _, hotspot.x, hotspot.y) {
 				0 => Err(co::HRESULT::E_FAIL),
 				_ => Ok(ImageListEndDragGuard::new()),
 			}
@@ -166,17 +146,15 @@ pub trait comctl_Himagelist: Handle {
 		flags: co::ILC,
 		initial_size: i32,
 		grow_size: i32,
-	) -> HrResult<ImageListDestroyGuard>
-	{
+	) -> HrResult<ImageListDestroyGuard> {
 		unsafe {
-			match ptr_to_option_handle(
-				ffi::ImageList_Create(
-					image_sz.cx, image_sz.cy,
-					flags.raw(),
-					initial_size,
-					grow_size,
-				),
-			 ) {
+			match ptr_to_option_handle(ffi::ImageList_Create(
+				image_sz.cx,
+				image_sz.cy,
+				flags.raw(),
+				initial_size,
+				grow_size,
+			)) {
 				None => Err(co::HRESULT::E_FAIL),
 				Some(h) => Ok(ImageListDestroyGuard::new(h)),
 			}
@@ -203,21 +181,9 @@ pub trait comctl_Himagelist: Handle {
 
 	/// [`ImageList_Draw`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_draw)
 	/// function.
-	fn Draw(&self,
-		index: u32,
-		hdc_dest: &HDC,
-		dest: POINT,
-		style: co::ILD,
-	) -> HrResult<()>
-	{
+	fn Draw(&self, index: u32, hdc_dest: &HDC, dest: POINT, style: co::ILD) -> HrResult<()> {
 		match unsafe {
-			ffi::ImageList_Draw(
-				self.ptr(),
-				index as _,
-				hdc_dest.ptr(),
-				dest.x, dest.y,
-				style.raw(),
-			)
+			ffi::ImageList_Draw(self.ptr(), index as _, hdc_dest.ptr(), dest.x, dest.y, style.raw())
 		} {
 			0 => Err(co::HRESULT::E_FAIL),
 			_ => Ok(()),
@@ -226,7 +192,8 @@ pub trait comctl_Himagelist: Handle {
 
 	/// [`ImageList_DrawEx`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_drawex)
 	/// function.
-	fn DrawEx(&self,
+	fn DrawEx(
+		&self,
 		index: u32,
 		hdc_dest: &HDC,
 		dest: POINT,
@@ -234,14 +201,14 @@ pub trait comctl_Himagelist: Handle {
 		background_color: ClrDefNone,
 		foreground_color: ClrDefNone,
 		style: co::ILD,
-	) -> HrResult<()>
-	{
+	) -> HrResult<()> {
 		match unsafe {
 			ffi::ImageList_DrawEx(
 				self.ptr(),
 				index as _,
 				hdc_dest.ptr(),
-				dest.x, dest.y,
+				dest.x,
+				dest.y,
 				img_portion.unwrap_or_default().cx,
 				img_portion.unwrap_or_default().cy,
 				background_color.as_u32(),
@@ -286,19 +253,10 @@ pub trait comctl_Himagelist: Handle {
 	///
 	/// A copy of the stored icon is returned.
 	#[must_use]
-	fn GetIcon(&self,
-		index: u32,
-		flags: co::ILD,
-	) -> HrResult<DestroyIconGuard>
-	{
+	fn GetIcon(&self, index: u32, flags: co::ILD) -> HrResult<DestroyIconGuard> {
 		unsafe {
-			match ptr_to_option_handle(
-				ffi::ImageList_GetIcon(
-					self.ptr(),
-					index as _,
-					flags.raw(),
-				),
-			 ) {
+			match ptr_to_option_handle(ffi::ImageList_GetIcon(self.ptr(), index as _, flags.raw()))
+			{
 				None => Err(co::HRESULT::E_FAIL),
 				Some(h) => Ok(DestroyIconGuard::new(h)),
 			}
@@ -310,9 +268,7 @@ pub trait comctl_Himagelist: Handle {
 	#[must_use]
 	fn GetIconSize(&self) -> HrResult<SIZE> {
 		let mut sz = SIZE::default();
-		match unsafe {
-			ffi::ImageList_GetIconSize(self.ptr(), &mut sz.cx, &mut sz.cy)
-		} {
+		match unsafe { ffi::ImageList_GetIconSize(self.ptr(), &mut sz.cx, &mut sz.cy) } {
 			0 => Err(co::HRESULT::E_FAIL),
 			_ => Ok(sz),
 		}
@@ -328,9 +284,7 @@ pub trait comctl_Himagelist: Handle {
 	/// [`ImageList_Remove`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_remove)
 	/// function.
 	fn Remove(&self, index: Option<u32>) -> HrResult<()> {
-		match unsafe {
-			ffi::ImageList_Remove(self.ptr(), index.map_or(-1, |i| i as _))
-		} {
+		match unsafe { ffi::ImageList_Remove(self.ptr(), index.map_or(-1, |i| i as _)) } {
 			0 => Err(co::HRESULT::E_FAIL),
 			_ => Ok(()),
 		}
@@ -341,14 +295,8 @@ pub trait comctl_Himagelist: Handle {
 	///
 	/// A copy of the icon is made and stored in the image list, so you're free
 	/// to release the original icon.
-	fn ReplaceIcon(&self,
-		index: u32,
-		hicon_new: &HICON,
-	) -> HrResult<u32>
-	{
-		match unsafe {
-			ffi::ImageList_ReplaceIcon(self.ptr(), index as _, hicon_new.ptr())
-		} {
+	fn ReplaceIcon(&self, index: u32, hicon_new: &HICON) -> HrResult<u32> {
+		match unsafe { ffi::ImageList_ReplaceIcon(self.ptr(), index as _, hicon_new.ptr()) } {
 			-1 => Err(co::HRESULT::E_FAIL),
 			idx => Ok(idx as _),
 		}
@@ -357,12 +305,7 @@ pub trait comctl_Himagelist: Handle {
 	/// [`ImageList_SetBkColor`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_setbkcolor)
 	/// function.
 	fn SetBkColor(&self, bk_color: Option<COLORREF>) -> Option<COLORREF> {
-		match unsafe {
-			ffi::ImageList_SetBkColor(
-				self.ptr(),
-				bk_color.unwrap_or_default().raw(),
-			)
-		} {
+		match unsafe { ffi::ImageList_SetBkColor(self.ptr(), bk_color.unwrap_or_default().raw()) } {
 			CLR_NONE => None,
 			c => Some(unsafe { COLORREF::from_raw(c) }),
 		}
@@ -389,7 +332,7 @@ pub trait comctl_Himagelist: Handle {
 	fn Write(&self, stream: &impl ole_IStream) -> HrResult<()> {
 		match unsafe { ffi::ImageList_Write(self.ptr(), stream.ptr()) } {
 			0 => Err(co::HRESULT::E_FAIL),
-			_ => Ok(())
+			_ => Ok(()),
 		}
 	}
 }

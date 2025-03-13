@@ -4,7 +4,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, privs::*};
+use crate::gui::{privs::*, *};
 use crate::prelude::*;
 use crate::user::privs::*;
 
@@ -40,27 +40,38 @@ impl WindowMessageOnly {
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: Option<&WindowMessageOnly>) -> AnyResult<Self> {
-		let new_self = Self(
-			Arc::pin(RawBase::new()),
-		);
+		let new_self = Self(Arc::pin(RawBase::new()));
 		new_self.create(parent)?;
 		Ok(new_self)
 	}
 
 	fn create(&self, parent: Option<&WindowMessageOnly>) -> AnyResult<()> {
 		let hinst = HINSTANCE::GetModuleHandle(None)?;
-		let atom = self.0.register_class(&hinst, "",
-			co::CS::default(), &Icon::None, &Brush::None, &Cursor::None)?;
+		let atom = self.0.register_class(
+			&hinst,
+			"",
+			co::CS::default(),
+			&Icon::None,
+			&Brush::None,
+			&Cursor::None,
+		)?;
 
 		let hparent_msg = unsafe { HWND::from_ptr(HWND_MESSAGE as _) };
 
-		self.0.create_window(co::WS_EX::NoValue, atom, None, co::WS::NoValue,
-			POINT::default(), SIZE::default(),
+		self.0.create_window(
+			co::WS_EX::NoValue,
+			atom,
+			None,
+			co::WS::NoValue,
+			POINT::default(),
+			SIZE::default(),
 			Some(match parent {
 				Some(parent) => parent.hwnd(),
 				None => &hparent_msg, // special case: message-only window with no parent
 			}),
-			IdMenu::None, &hinst)?;
+			IdMenu::None,
+			&hinst,
+		)?;
 
 		Ok(())
 	}

@@ -31,17 +31,15 @@ pub trait kernel_Hevent: Handle {
 		manual_reset: bool,
 		initial_state: bool,
 		name: Option<&str>,
-	) -> SysResult<CloseHandleGuard<HEVENT>>
-	{
+	) -> SysResult<CloseHandleGuard<HEVENT>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::CreateEventW(
-					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
-					manual_reset as _,
-					initial_state as _,
-					WString::from_opt_str(name).as_ptr(),
-				)
-			).map(|h| CloseHandleGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateEventW(
+				security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+				manual_reset as _,
+				initial_state as _,
+				WString::from_opt_str(name).as_ptr(),
+			))
+			.map(|h| CloseHandleGuard::new(h))
 		}
 	}
 
@@ -53,37 +51,34 @@ pub trait kernel_Hevent: Handle {
 		name: Option<&str>,
 		flags: co::CREATE_EVENT,
 		desired_access: co::EVENT_RIGHTS,
-	) -> SysResult<CloseHandleGuard<HEVENT>>
-	{
+	) -> SysResult<CloseHandleGuard<HEVENT>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::CreateEventExW(
-					security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
-					WString::from_opt_str(name).as_ptr(),
-					flags.raw(),
-					desired_access.raw(),
-				)
-			).map(|h| CloseHandleGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateEventExW(
+				security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+				WString::from_opt_str(name).as_ptr(),
+				flags.raw(),
+				desired_access.raw(),
+			))
+			.map(|h| CloseHandleGuard::new(h))
 		}
 	}
 
 	/// [`OpenEvent`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-openeventw)
 	/// function.
 	#[must_use]
-	fn OpenEvent(&self,
+	fn OpenEvent(
+		&self,
 		desired_access: co::EVENT_RIGHTS,
 		inherit_handle: bool,
 		name: &str,
-	) -> SysResult<CloseHandleGuard<HEVENT>>
-	{
+	) -> SysResult<CloseHandleGuard<HEVENT>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::OpenEventW(
-					desired_access.raw(),
-					inherit_handle as _,
-					WString::from_str(name).as_ptr(),
-				)
-			).map(|h| CloseHandleGuard::new(h))
+			ptr_to_sysresult_handle(ffi::OpenEventW(
+				desired_access.raw(),
+				inherit_handle as _,
+				WString::from_str(name).as_ptr(),
+			))
+			.map(|h| CloseHandleGuard::new(h))
 		}
 	}
 
@@ -107,17 +102,12 @@ pub trait kernel_Hevent: Handle {
 
 	/// [`WaitForSingleObject`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)
 	/// function.
-	fn WaitForSingleObject(&self,
-		milliseconds: Option<u32>,
-	) -> SysResult<co::WAIT>
-	{
+	fn WaitForSingleObject(&self, milliseconds: Option<u32>) -> SysResult<co::WAIT> {
 		match unsafe {
-			co::WAIT::from_raw(
-				ffi::WaitForSingleObject(
-					self.ptr(),
-					milliseconds.unwrap_or(INFINITE),
-				),
-			)
+			co::WAIT::from_raw(ffi::WaitForSingleObject(
+				self.ptr(),
+				milliseconds.unwrap_or(INFINITE),
+			))
 		} {
 			co::WAIT::FAILED => Err(GetLastError()),
 			wait => Ok(wait),

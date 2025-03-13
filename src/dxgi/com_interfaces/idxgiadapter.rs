@@ -31,15 +31,14 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	#[must_use]
 	fn CheckInterfaceSupport(&self, interface_name: &GUID) -> HrResult<i64> {
 		let mut umd_ver = i64::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIAdapterVT>(self).CheckInterfaceSupport)(
-					self.ptr(),
-					interface_name as *const _ as _,
-					&mut umd_ver,
-				)
-			},
-		).map(|_| umd_ver)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGIAdapterVT>(self).CheckInterfaceSupport)(
+				self.ptr(),
+				interface_name as *const _ as _,
+				&mut umd_ver,
+			)
+		})
+		.map(|_| umd_ver)
 	}
 
 	/// [`IDXGIAdapter::EnumOutputs`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiadapter-enumoutputs)
@@ -76,13 +75,9 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	#[must_use]
 	fn GetDesc(&self) -> HrResult<DXGI_ADAPTER_DESC> {
 		let mut desc = DXGI_ADAPTER_DESC::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIAdapterVT>(self).GetDesc)(
-					self.ptr(),
-					&mut desc as *mut _ as _,
-				)
-			},
-		).map(|_| desc)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGIAdapterVT>(self).GetDesc)(self.ptr(), &mut desc as *mut _ as _)
+		})
+		.map(|_| desc)
 	}
 }

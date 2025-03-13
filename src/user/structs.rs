@@ -128,8 +128,7 @@ impl From<co::CLR> for COLORREF {
 
 impl std::fmt::Display for COLORREF {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		write!(f, "R {}, G {}, B {}",
-			self.GetRValue(), self.GetGValue(), self.GetBValue())
+		write!(f, "R {}, G {}, B {}", self.GetRValue(), self.GetGValue(), self.GetBValue())
 	}
 }
 
@@ -603,12 +602,10 @@ impl HELPINFO {
 	#[must_use]
 	pub fn hItemHandle(&self) -> HwndHmenu {
 		match self.iContextType {
-			co::HELPINFO::WINDOW => HwndHmenu::Hwnd(
-				unsafe { HWND::from_ptr(self.hItemHandle as _) },
-			),
-			_ => HwndHmenu::Hmenu(
-				unsafe { HMENU::from_ptr(self.hItemHandle as _) },
-			),
+			co::HELPINFO::WINDOW => {
+				HwndHmenu::Hwnd(unsafe { HWND::from_ptr(self.hItemHandle as _) })
+			},
+			_ => HwndHmenu::Hmenu(unsafe { HMENU::from_ptr(self.hItemHandle as _) }),
 		}
 	}
 }
@@ -948,8 +945,11 @@ pub struct RECT {
 
 impl std::fmt::Display for RECT {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		write!(f, "left {}, top {}, right {}, bottom {}",
-			self.left, self.top, self.right, self.bottom)
+		write!(
+			f,
+			"left {}, top {}, right {}, bottom {}",
+			self.left, self.top, self.right, self.bottom
+		)
 	}
 }
 
@@ -1124,7 +1124,9 @@ impl WINDOWPOS {
 	#[must_use]
 	pub fn hwndInsertAfter(&self) -> HwndPlace {
 		match self.hwndInsertAfter {
-			0 | 1 | -1 | -2 => HwndPlace::Place(unsafe { co::HWND_PLACE::from_raw(self.hwndInsertAfter) }),
+			0 | 1 | -1 | -2 => {
+				HwndPlace::Place(unsafe { co::HWND_PLACE::from_raw(self.hwndInsertAfter) })
+			},
 			_ => HwndPlace::Hwnd(unsafe { HWND::from_ptr(self.hwndInsertAfter as _) }),
 		}
 	}

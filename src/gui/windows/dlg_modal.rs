@@ -19,14 +19,10 @@ pub(in crate::gui) struct DlgModal(Pin<Arc<DlgModalObj>>);
 impl DlgModal {
 	#[must_use]
 	pub(in crate::gui) fn new(dlg_id: u16) -> Self {
-		let new_self = Self(
-			Arc::pin(
-				DlgModalObj {
-					dlg_base: DlgBase::new(dlg_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+		let new_self = Self(Arc::pin(DlgModalObj {
+			dlg_base: DlgBase::new(dlg_id),
+			_pin: PhantomPinned,
+		}));
 		new_self.default_message_handlers();
 		new_self
 	}
@@ -37,11 +33,13 @@ impl DlgModal {
 			let hwnd = self2.0.dlg_base.base().hwnd();
 			let rc = hwnd.GetWindowRect()?;
 			let rc_parent = hwnd.GetParent()?.GetWindowRect()?;
-			hwnd.SetWindowPos( // center modal on parent
+			hwnd.SetWindowPos(
 				HwndPlace::None,
 				POINT::new(
-					rc_parent.left + ((rc_parent.right - rc_parent.left) / 2) - (rc.right - rc.left) / 2,
-					rc_parent.top + ((rc_parent.bottom - rc_parent.top) / 2) - (rc.bottom - rc.top) / 2,
+					rc_parent.left + ((rc_parent.right - rc_parent.left) / 2) // center modal on parent
+						- (rc.right - rc.left) / 2,
+					rc_parent.top + ((rc_parent.bottom - rc_parent.top) / 2)
+						- (rc.bottom - rc.top) / 2,
 				),
 				SIZE::default(),
 				co::SWP::NOSIZE | co::SWP::NOZORDER,
@@ -50,8 +48,8 @@ impl DlgModal {
 		});
 
 		let self2 = self.clone();
-		self.0.dlg_base.base().on().wm_close(move || { // user clicked the X button
-			self2.0.dlg_base.base().hwnd().EndDialog(0)?;
+		self.0.dlg_base.base().on().wm_close(move || {
+			self2.0.dlg_base.base().hwnd().EndDialog(0)?; // user clicked the X button
 			Ok(())
 		});
 	}

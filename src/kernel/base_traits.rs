@@ -24,8 +24,8 @@ pub trait SystemError: Into<u32> {
 				None,
 			)
 		} {
-			Err(err_fmt) => format!( // never fails, returns a message instead
-				"FormatMessage failed to format error {:#06x}: error {:#06x}.",
+			Err(err_fmt) => format!(
+				"FormatMessage failed to format error {:#06x}: error {:#06x}.", // never fails, returns a message instead
 				err_code, err_fmt,
 			),
 			Ok(s) => s,

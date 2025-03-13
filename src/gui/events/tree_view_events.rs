@@ -85,7 +85,8 @@ impl TreeViewEvents {
 	/// [`NM_CUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-customdraw-tree-view)
 	/// notification.
 	pub fn nm_custom_draw<F>(&self, func: F)
-		where F: Fn(&mut NMTVCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
+	where
+		F: Fn(&mut NMTVCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
 		self.0.wm_notify(co::NM::CUSTOMDRAW, move |p| {
 			Ok(func(unsafe { p.cast_nmhdr_mut::<NMTVCUSTOMDRAW>() })?.raw() as _)

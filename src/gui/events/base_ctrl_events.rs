@@ -31,7 +31,8 @@ impl BaseCtrlEvents {
 
 	/// Adds a `WM` event to the parent window.
 	pub(in crate::gui) fn wm<F>(&self, msg: co::WM, func: F)
-		where F: Fn(WndMsg) -> AnyResult<isize> + 'static,
+	where
+		F: Fn(WndMsg) -> AnyResult<isize> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		parent_base_ref.on().wm(msg, func);
@@ -39,18 +40,17 @@ impl BaseCtrlEvents {
 
 	/// Adds a `WM_COMMAND` event to the parent window.
 	pub(in crate::gui) fn wm_command<F>(&self, code: impl Into<co::CMD>, func: F)
-		where F: Fn() -> AnyResult<()> + 'static,
+	where
+		F: Fn() -> AnyResult<()> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		parent_base_ref.on().wm_command(self.ctrl_id, code, func);
 	}
 
 	/// Adds a `WM_NOTIFY` event to the parent window.
-	pub(in crate::gui) fn wm_notify<F>(&self,
-		code: impl Into<NmhdrCode>,
-		func: F,
-	)
-		where F: Fn(wm::Notify) -> AnyResult<isize> + 'static,
+	pub(in crate::gui) fn wm_notify<F>(&self, code: impl Into<NmhdrCode>, func: F)
+	where
+		F: Fn(wm::Notify) -> AnyResult<isize> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		parent_base_ref.on().wm_notify(self.ctrl_id, code, func);

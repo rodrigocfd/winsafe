@@ -46,9 +46,7 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
-	fn iter(&self,
-	) -> impl Iterator<Item = HrResult<&'_ AM_MEDIA_TYPE<'_>>> + '_
-	{
+	fn iter(&self) -> impl Iterator<Item = HrResult<&'_ AM_MEDIA_TYPE<'_>>> + '_ {
 		IenummediatypesIter::new(self)
 	}
 
@@ -60,16 +58,14 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	/// which is simpler.
 	#[must_use]
 	fn Next(&self, mt: &mut AM_MEDIA_TYPE) -> HrResult<bool> {
-		okfalse_to_hrresult(
-			unsafe {
-				(vt::<IEnumMediaTypesVT>(self).Next)(
-					self.ptr(),
-					1, // retrieve only 1
-					mt as *mut _ as _,
-					std::ptr::null_mut(),
-				)
-			},
-		)
+		okfalse_to_hrresult(unsafe {
+			(vt::<IEnumMediaTypesVT>(self).Next)(
+				self.ptr(),
+				1, // retrieve only 1
+				mt as *mut _ as _,
+				std::ptr::null_mut(),
+			)
+		})
 	}
 
 	fn_com_noparm! { Reset: IEnumMediaTypesVT;
@@ -80,8 +76,6 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 	/// [`IEnumMediaTypes::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienummediatypes-skip)
 	/// method.
 	fn Skip(&self, count: u32) -> HrResult<bool> {
-		okfalse_to_hrresult(
-			unsafe { (vt::<IEnumMediaTypesVT>(self).Skip)(self.ptr(), count) },
-		)
+		okfalse_to_hrresult(unsafe { (vt::<IEnumMediaTypesVT>(self).Skip)(self.ptr(), count) })
 	}
 }

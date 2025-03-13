@@ -98,7 +98,9 @@ pub trait ole_IUnknown: Clone {
 	#[must_use]
 	fn leak(&mut self) -> *mut std::ffi::c_void {
 		let p = self.ptr();
-		unsafe { *self.as_mut() = std::ptr::null_mut(); }
+		unsafe {
+			*self.as_mut() = std::ptr::null_mut();
+		}
 		p
 	}
 
@@ -106,17 +108,17 @@ pub trait ole_IUnknown: Clone {
 	/// method.
 	#[must_use]
 	fn QueryInterface<T>(&self) -> HrResult<T>
-		where T: ole_IUnknown,
+	where
+		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IUnknownVT>(self).QueryInterface)(
-					self.ptr(),
-					&T::IID as *const _ as _,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IUnknownVT>(self).QueryInterface)(
+				self.ptr(),
+				&T::IID as *const _ as _,
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 }

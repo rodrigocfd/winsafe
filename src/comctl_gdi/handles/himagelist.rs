@@ -19,11 +19,9 @@ pub trait comctl_gdi_Himagelist: Handle {
 	/// [`ImageList_DrawIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_drawindirect)
 	/// function.
 	fn DrawIndirect(&self, imldp: &IMAGELISTDRAWPARAMS) -> HrResult<()> {
-		match unsafe {
-			ffi::ImageList_DrawIndirect(self.ptr(), imldp as *const _ as _)
-		} {
+		match unsafe { ffi::ImageList_DrawIndirect(self.ptr(), imldp as *const _ as _) } {
 			0 => Err(co::HRESULT::E_FAIL),
-			_ => Ok(())
+			_ => Ok(()),
 		}
 	}
 }

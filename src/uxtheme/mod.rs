@@ -4,8 +4,8 @@ mod funcs;
 mod handles;
 mod structs;
 
-pub(in crate::uxtheme) mod ffi;
 pub mod co;
+pub(in crate::uxtheme) mod ffi;
 pub mod guard;
 
 pub mod decl {

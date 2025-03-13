@@ -18,8 +18,7 @@ impl std::error::Error for MsgError {
 
 impl std::fmt::Display for MsgError {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		write!(f, "WM {} - {}",
-			self.src_msg.msg_id, self.source.to_string())
+		write!(f, "WM {} - {}", self.src_msg.msg_id, self.source.to_string())
 	}
 }
 impl std::fmt::Debug for MsgError {
@@ -34,8 +33,7 @@ impl MsgError {
 	pub const fn new(
 		src_msg: WndMsg,
 		source: Box<dyn std::error::Error + Send + Sync>,
-	) -> MsgError
-	{
+	) -> MsgError {
 		Self { src_msg, source }
 	}
 

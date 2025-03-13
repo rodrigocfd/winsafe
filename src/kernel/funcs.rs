@@ -15,21 +15,14 @@ use crate::prelude::*;
 /// * [`MoveFile`](crate::MoveFile)
 /// * [`MoveFileEx`](crate::MoveFileEx)
 /// * [`ReplaceFile`](crate::ReplaceFile)
-pub fn CopyFile(
-	existing_file: &str,
-	new_file: &str,
-	fail_if_exists: bool,
-) -> SysResult<()>
-{
-	bool_to_sysresult(
-		unsafe {
-			ffi::CopyFileW(
-				WString::from_str(existing_file).as_ptr(),
-				WString::from_str(new_file).as_ptr(),
-				fail_if_exists as _,
-			)
-		},
-	)
+pub fn CopyFile(existing_file: &str, new_file: &str, fail_if_exists: bool) -> SysResult<()> {
+	bool_to_sysresult(unsafe {
+		ffi::CopyFileW(
+			WString::from_str(existing_file).as_ptr(),
+			WString::from_str(new_file).as_ptr(),
+			fail_if_exists as _,
+		)
+	})
 }
 
 /// [`CreateDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createdirectoryw)
@@ -37,16 +30,13 @@ pub fn CopyFile(
 pub fn CreateDirectory(
 	path_name: &str,
 	security_attributes: Option<&SECURITY_ATTRIBUTES>,
-) -> SysResult<()>
-{
-	bool_to_sysresult(
-		unsafe {
-			ffi::CreateDirectoryW(
-				WString::from_str(path_name).as_ptr(),
-				security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
-			)
-		},
-	)
+) -> SysResult<()> {
+	bool_to_sysresult(unsafe {
+		ffi::CreateDirectoryW(
+			WString::from_str(path_name).as_ptr(),
+			security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+		)
+	})
 }
 
 /// [`DeleteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-deletefilew)
@@ -59,9 +49,7 @@ pub fn CreateDirectory(
 /// * [`MoveFileEx`](crate::MoveFileEx)
 /// * [`ReplaceFile`](crate::ReplaceFile)
 pub fn DeleteFile(file_name: &str) -> SysResult<()> {
-	bool_to_sysresult(
-		unsafe { ffi::DeleteFileW(WString::from_str(file_name).as_ptr()) },
-	)
+	bool_to_sysresult(unsafe { ffi::DeleteFileW(WString::from_str(file_name).as_ptr()) })
 }
 
 /// [`ExitProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-exitprocess)
@@ -94,12 +82,11 @@ pub fn ExitThread(exit_code: u32) {
 #[must_use]
 pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 	let wsrc = WString::from_str(src);
-	let mut buf_sz = match unsafe {
-		ffi::ExpandEnvironmentStringsW(wsrc.as_ptr(), std::ptr::null_mut(), 0)
-	} {
-		0 => return Err(GetLastError()),
-		n => n,
-	}; // includes terminating null count
+	let mut buf_sz =
+		match unsafe { ffi::ExpandEnvironmentStringsW(wsrc.as_ptr(), std::ptr::null_mut(), 0) } {
+			0 => return Err(GetLastError()),
+			n => n,
+		}; // includes terminating null count
 
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz as _);
@@ -134,11 +121,10 @@ pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 #[must_use]
 pub fn FileTimeToSystemTime(ft: &FILETIME) -> SysResult<SYSTEMTIME> {
 	let mut st = SYSTEMTIME::default();
-	bool_to_sysresult(
-		unsafe {
-			ffi::FileTimeToSystemTime(ft as *const _ as _, &mut st as *mut _ as _)
-		},
-	).map(|_| st)
+	bool_to_sysresult(unsafe {
+		ffi::FileTimeToSystemTime(ft as *const _ as _, &mut st as *mut _ as _)
+	})
+	.map(|_| st)
 }
 
 /// [`FlushProcessWriteBuffers`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushprocesswritebuffers)
@@ -160,8 +146,7 @@ pub unsafe fn FormatMessage(
 	message_id: u32,
 	lang_id: LANGID,
 	args: Option<&[*mut std::ffi::c_void]>,
-) -> SysResult<String>
-{
+) -> SysResult<String> {
 	let mut ptr_buf = std::ptr::null_mut() as *mut u16;
 
 	let nchars = match ffi::FormatMessageW(
@@ -172,7 +157,8 @@ pub unsafe fn FormatMessage(
 		&mut ptr_buf as *mut *mut _ as _, // pass pointer to pointer
 		0,
 		args.map_or(std::ptr::null_mut(), |arr| arr.as_ptr() as _),
-	) as _ {
+	) as _
+	{
 		0 => Err(GetLastError()),
 		nchars => Ok(nchars),
 	}?;
@@ -188,14 +174,10 @@ pub unsafe fn FormatMessage(
 #[must_use]
 pub fn GetBinaryType(application_name: &str) -> SysResult<co::SCS> {
 	let mut binary_type = co::SCS::default();
-	bool_to_sysresult(
-		unsafe {
-			ffi::GetBinaryTypeW(
-				WString::from_str(application_name).as_ptr(),
-				binary_type.as_mut(),
-			)
-		},
-	).map(|_| binary_type)
+	bool_to_sysresult(unsafe {
+		ffi::GetBinaryTypeW(WString::from_str(application_name).as_ptr(), binary_type.as_mut())
+	})
+	.map(|_| binary_type)
 }
 
 /// [`GetCommandLine`](https://learn.microsoft.com/en-us/windows/win32/api/processenv/nf-processenv-getcommandlinew)
@@ -204,8 +186,7 @@ pub fn GetBinaryType(application_name: &str) -> SysResult<co::SCS> {
 /// For an example, see [`CommandLineToArgv`](crate::CommandLineToArgv).
 #[must_use]
 pub fn GetCommandLine() -> String {
-	unsafe { WString::from_wchars_nullt(ffi::GetCommandLineW()) }
-		.to_string()
+	unsafe { WString::from_wchars_nullt(ffi::GetCommandLineW()) }.to_string()
 }
 
 /// [`GetComputerName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcomputernamew)
@@ -215,27 +196,22 @@ pub fn GetComputerName() -> SysResult<String> {
 	let mut buf = WString::new_alloc_buf(MAX_COMPUTERNAME_LENGTH + 1);
 	let mut sz = buf.buf_len() as u32;
 
-	bool_to_sysresult(
-		unsafe { ffi::GetComputerNameW(buf.as_mut_ptr(), &mut sz) },
-	).map(|_| buf.to_string())
+	bool_to_sysresult(unsafe { ffi::GetComputerNameW(buf.as_mut_ptr(), &mut sz) })
+		.map(|_| buf.to_string())
 }
 
 /// [`GetCurrentDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getcurrentdirectory)
 /// function.
 #[must_use]
 pub fn GetCurrentDirectory() -> SysResult<String> {
-	let mut buf_sz = match unsafe {
-		ffi::GetCurrentDirectoryW(0, std::ptr::null_mut())
-	} {
+	let mut buf_sz = match unsafe { ffi::GetCurrentDirectoryW(0, std::ptr::null_mut()) } {
 		0 => return Err(GetLastError()),
 		n => n,
 	}; // includes terminating null count
 
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz as _);
-		let returned_chars = match unsafe {
-			ffi::GetCurrentDirectoryW(buf_sz, buf.as_mut_ptr())
-		} {
+		let returned_chars = match unsafe { ffi::GetCurrentDirectoryW(buf_sz, buf.as_mut_ptr()) } {
 			0 => return Err(GetLastError()),
 			n => n,
 		};
@@ -267,9 +243,7 @@ pub fn GetCurrentThreadId() -> u32 {
 #[must_use]
 pub fn GetDriveType(root_path_name: Option<&str>) -> co::DRIVE {
 	unsafe {
-		co::DRIVE::from_raw(
-			ffi::GetDriveTypeW(WString::from_opt_str(root_path_name).as_ptr()),
-		)
+		co::DRIVE::from_raw(ffi::GetDriveTypeW(WString::from_opt_str(root_path_name).as_ptr()))
 	}
 }
 
@@ -280,38 +254,29 @@ pub fn GetDiskFreeSpaceEx(
 	free_bytes_available_to_caller: Option<&mut u64>,
 	total_number_of_bytes: Option<&mut u64>,
 	total_number_of_free_bytes: Option<&mut u64>,
-) -> SysResult<()>
-{
-	bool_to_sysresult(
-		unsafe {
-			ffi::GetDiskFreeSpaceExW(
-				WString::from_opt_str(directory_name).as_ptr(),
-				free_bytes_available_to_caller.map_or(std::ptr::null_mut(), |n| n),
-				total_number_of_bytes.map_or(std::ptr::null_mut(), |n| n),
-				total_number_of_free_bytes.map_or(std::ptr::null_mut(), |n| n),
-			)
-		},
-	)
+) -> SysResult<()> {
+	bool_to_sysresult(unsafe {
+		ffi::GetDiskFreeSpaceExW(
+			WString::from_opt_str(directory_name).as_ptr(),
+			free_bytes_available_to_caller.map_or(std::ptr::null_mut(), |n| n),
+			total_number_of_bytes.map_or(std::ptr::null_mut(), |n| n),
+			total_number_of_free_bytes.map_or(std::ptr::null_mut(), |n| n),
+		)
+	})
 }
 
 /// [`GetDiskSpaceInformation`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getdiskspaceinformationw)
 /// function.
 #[must_use]
-pub fn GetDiskSpaceInformation(
-	root_path: &str,
-) -> SysResult<DISK_SPACE_INFORMATION>
-{
+pub fn GetDiskSpaceInformation(root_path: &str) -> SysResult<DISK_SPACE_INFORMATION> {
 	let mut disk_space_info = DISK_SPACE_INFORMATION::default();
 	match unsafe {
-		co::ERROR::from_raw(
-			ffi::GetDiskSpaceInformationW(
-				WString::from_str(root_path).as_ptr(),
-				&mut disk_space_info as *mut _ as _,
-			),
-		)
+		co::ERROR::from_raw(ffi::GetDiskSpaceInformationW(
+			WString::from_str(root_path).as_ptr(),
+			&mut disk_space_info as *mut _ as _,
+		))
 	} {
-		co::ERROR::SUCCESS
-			| co::ERROR::MORE_DATA => Ok(disk_space_info),
+		co::ERROR::SUCCESS | co::ERROR::MORE_DATA => Ok(disk_space_info),
 		err => Err(err),
 	}
 }
@@ -338,21 +303,21 @@ pub fn GetDiskSpaceInformation(
 /// ```
 #[must_use]
 pub fn GetEnvironmentStrings() -> SysResult<Vec<(String, String)>> {
-	ptr_to_sysresult(unsafe { ffi::GetEnvironmentStringsW() } as _)
-		.map(|ptr| {
-			let vec_entries = unsafe {
-				parse_multi_z_str(ptr as *mut _ as _, None)
-			};
-			unsafe { ffi::FreeEnvironmentStringsW(ptr); }
-			vec_entries.iter()
-				.map(|env_str| {
-					let mut pair = env_str.split("="); // assumes correctly formatted pairs
-					let key = pair.next().unwrap();
-					let val = pair.next().unwrap();
-					(key.to_owned(), val.to_owned())
-				})
-				.collect()
-		})
+	ptr_to_sysresult(unsafe { ffi::GetEnvironmentStringsW() } as _).map(|ptr| {
+		let vec_entries = unsafe { parse_multi_z_str(ptr as *mut _ as _, None) };
+		unsafe {
+			ffi::FreeEnvironmentStringsW(ptr);
+		}
+		vec_entries
+			.iter()
+			.map(|env_str| {
+				let mut pair = env_str.split("="); // assumes correctly formatted pairs
+				let key = pair.next().unwrap();
+				let val = pair.next().unwrap();
+				(key.to_owned(), val.to_owned())
+			})
+			.collect()
+	})
 }
 
 /// [`GetFileAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileattributesw)
@@ -385,9 +350,7 @@ pub fn GetEnvironmentStrings() -> SysResult<Vec<(String, String)>> {
 #[must_use]
 pub fn GetFileAttributes(file_name: &str) -> SysResult<co::FILE_ATTRIBUTE> {
 	const INVALID: u32 = INVALID_FILE_ATTRIBUTES as u32;
-	match unsafe {
-		ffi::GetFileAttributesW(WString::from_str(file_name).as_ptr())
-	} {
+	match unsafe { ffi::GetFileAttributesW(WString::from_str(file_name).as_ptr()) } {
 		INVALID => Err(GetLastError()),
 		flags => Ok(unsafe { co::FILE_ATTRIBUTE::from_raw(flags) }),
 	}
@@ -400,15 +363,10 @@ pub fn GetFileAttributes(file_name: &str) -> SysResult<co::FILE_ATTRIBUTE> {
 /// which is the only available flag.
 pub fn GetFileAttributesEx(file: &str) -> SysResult<WIN32_FILE_ATTRIBUTE_DATA> {
 	let mut wfad = WIN32_FILE_ATTRIBUTE_DATA::default();
-	bool_to_sysresult(
-		unsafe {
-			ffi::GetFileAttributesExW(
-				WString::from_str(file).as_ptr(),
-				0,
-				&mut wfad as *mut _ as _,
-			)
-		},
-	).map(|_| wfad)
+	bool_to_sysresult(unsafe {
+		ffi::GetFileAttributesExW(WString::from_str(file).as_ptr(), 0, &mut wfad as *mut _ as _)
+	})
+	.map(|_| wfad)
 }
 
 /// [`GetFirmwareType`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getfirmwaretype)
@@ -453,7 +411,9 @@ pub fn GetLastError() -> co::ERROR {
 #[must_use]
 pub fn GetLocalTime() -> SYSTEMTIME {
 	let mut st = SYSTEMTIME::default();
-	unsafe { ffi::GetLocalTime(&mut st as *mut _ as _); }
+	unsafe {
+		ffi::GetLocalTime(&mut st as *mut _ as _);
+	}
 	st
 }
 
@@ -468,9 +428,7 @@ pub fn GetLogicalDrives() -> u32 {
 /// function.
 #[must_use]
 pub fn GetLogicalDriveStrings() -> SysResult<Vec<String>> {
-	let len = match unsafe {
-		ffi::GetLogicalDriveStringsW(0, std::ptr::null_mut())
-	} {
+	let len = match unsafe { ffi::GetLogicalDriveStringsW(0, std::ptr::null_mut()) } {
 		0 => Err(GetLastError()),
 		len => Ok(len),
 	}?;
@@ -478,9 +436,8 @@ pub fn GetLogicalDriveStrings() -> SysResult<Vec<String>> {
 	let mut buf = WString::new_alloc_buf(len as usize + 1); // room for terminating null
 
 	unsafe {
-		bool_to_sysresult(
-			ffi::GetLogicalDriveStringsW(len, buf.as_mut_ptr()) as _,
-		).map(|_| parse_multi_z_str(buf.as_ptr(), Some(buf.buf_len())))
+		bool_to_sysresult(ffi::GetLogicalDriveStringsW(len, buf.as_mut_ptr()) as _)
+			.map(|_| parse_multi_z_str(buf.as_ptr(), Some(buf.buf_len())))
 	}
 }
 
@@ -489,23 +446,16 @@ pub fn GetLogicalDriveStrings() -> SysResult<Vec<String>> {
 #[must_use]
 pub fn GetLongPathName(short_path: &str) -> SysResult<String> {
 	let short_path_w = WString::from_str(short_path);
-	let path_sz = match unsafe {
-		ffi::GetLongPathNameW(short_path_w.as_ptr(), std::ptr::null_mut(), 0)
-	} {
-		0 => return Err(GetLastError()),
-		len => len,
-	};
+	let path_sz =
+		match unsafe { ffi::GetLongPathNameW(short_path_w.as_ptr(), std::ptr::null_mut(), 0) } {
+			0 => return Err(GetLastError()),
+			len => len,
+		};
 
 	let mut path_buf = WString::new_alloc_buf(path_sz as _);
-	match unsafe {
-		ffi::GetLongPathNameW(
-			short_path_w.as_ptr(),
-			path_buf.as_mut_ptr(),
-			path_sz,
-		)
-	} {
+	match unsafe { ffi::GetLongPathNameW(short_path_w.as_ptr(), path_buf.as_mut_ptr(), path_sz) } {
 		0 => Err(GetLastError()),
-		_ => Ok(path_buf.to_string())
+		_ => Ok(path_buf.to_string()),
 	}
 }
 
@@ -514,7 +464,9 @@ pub fn GetLongPathName(short_path: &str) -> SysResult<String> {
 #[must_use]
 pub fn GetNativeSystemInfo() -> SYSTEM_INFO {
 	let mut si = SYSTEM_INFO::default();
-	unsafe { ffi::GetNativeSystemInfo(&mut si as *mut _ as _); }
+	unsafe {
+		ffi::GetNativeSystemInfo(&mut si as *mut _ as _);
+	}
 	si
 }
 
@@ -548,12 +500,12 @@ pub fn GetNativeSystemInfo() -> SYSTEM_INFO {
 pub fn GetPrivateProfileSection(
 	section_name: &str,
 	file_name: &str,
-) -> SysResult<Vec<(String, String)>>
-{
+) -> SysResult<Vec<(String, String)>> {
 	let mut buf_sz = WString::SSO_LEN; // start with no string heap allocation
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz);
-		let returned_chars = unsafe { // char count without terminating null
+		let returned_chars = unsafe {
+			// char count without terminating null
 			ffi::GetPrivateProfileSectionW(
 				WString::from_str(section_name).as_ptr(),
 				buf.as_mut_ptr(),
@@ -564,16 +516,15 @@ pub fn GetPrivateProfileSection(
 
 		if GetLastError() == co::ERROR::FILE_NOT_FOUND {
 			return Err(co::ERROR::FILE_NOT_FOUND);
-		} else if (returned_chars as usize) < buf_sz { // to break, must have at least 1 char gap
-			return Ok(
-				unsafe { parse_multi_z_str(buf.as_ptr(), Some(buf.buf_len())) }
-					.iter()
-					.map(|line| match line.split_once('=') {
-						Some((key, val)) => (key.to_owned(), val.to_owned()),
-						None => (String::new(), String::new()),
-					})
-					.collect(),
-			);
+		} else if (returned_chars as usize) < buf_sz {
+			// to break, must have at least 1 char gap
+			return Ok(unsafe { parse_multi_z_str(buf.as_ptr(), Some(buf.buf_len())) }
+				.iter()
+				.map(|line| match line.split_once('=') {
+					Some((key, val)) => (key.to_owned(), val.to_owned()),
+					None => (String::new(), String::new()),
+				})
+				.collect());
 		}
 
 		buf_sz *= 2; // double the buffer size to try again
@@ -606,14 +557,13 @@ pub fn GetPrivateProfileSection(
 /// * [`GetPrivateProfileString`](crate::GetPrivateProfileString)
 /// * [`WritePrivateProfileString`](crate::WritePrivateProfileString)
 #[must_use]
-pub fn GetPrivateProfileSectionNames(
-	file_name: Option<&str>,
-) -> SysResult<Vec<String>>
-{
+pub fn GetPrivateProfileSectionNames(file_name: Option<&str>) -> SysResult<Vec<String>> {
 	let mut buf_sz = WString::SSO_LEN; // start with no string heap allocation
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz);
-		let returned_chars = unsafe { // char count without terminating null
+
+		// Char count without terminating null.
+		let returned_chars = unsafe {
 			ffi::GetPrivateProfileSectionNamesW(
 				buf.as_mut_ptr(),
 				buf.buf_len() as _,
@@ -623,10 +573,9 @@ pub fn GetPrivateProfileSectionNames(
 
 		if GetLastError() == co::ERROR::FILE_NOT_FOUND {
 			return Err(co::ERROR::FILE_NOT_FOUND);
-		} else if (returned_chars as usize) < buf_sz { // to break, must have at least 1 char gap
-			return Ok(
-				unsafe { parse_multi_z_str(buf.as_ptr(), Some(buf.buf_len())) },
-			);
+		} else if (returned_chars as usize) < buf_sz {
+			// To break, must have at least 1 char gap.
+			return Ok(unsafe { parse_multi_z_str(buf.as_ptr(), Some(buf.buf_len())) });
 		}
 
 		buf_sz *= 2; // double the buffer size to try again
@@ -663,12 +612,12 @@ pub fn GetPrivateProfileString(
 	section_name: &str,
 	key_name: &str,
 	file_name: &str,
-) -> SysResult<Option<String>>
-{
+) -> SysResult<Option<String>> {
 	let mut buf_sz = WString::SSO_LEN; // start with no string heap allocation
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz);
-		unsafe { // char count without terminating null
+		unsafe {
+			// char count without terminating null
 			ffi::GetPrivateProfileStringW(
 				WString::from_str(section_name).as_ptr(),
 				WString::from_str(key_name).as_ptr(),
@@ -701,7 +650,9 @@ pub fn GetPrivateProfileString(
 #[must_use]
 pub fn GetStartupInfo<'a, 'b>() -> STARTUPINFO<'a, 'b> {
 	let mut si = STARTUPINFO::default();
-	unsafe { ffi::GetStartupInfoW(&mut si as *mut _ as _); }
+	unsafe {
+		ffi::GetStartupInfoW(&mut si as *mut _ as _);
+	}
 	si
 }
 
@@ -710,18 +661,14 @@ pub fn GetStartupInfo<'a, 'b>() -> STARTUPINFO<'a, 'b> {
 #[must_use]
 pub fn GetSystemDirectory() -> SysResult<String> {
 	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
-	let nchars = match unsafe {
-		ffi::GetSystemDirectoryW(buf.as_mut_ptr(), buf.buf_len() as _)
-	} {
+	let nchars = match unsafe { ffi::GetSystemDirectoryW(buf.as_mut_ptr(), buf.buf_len() as _) } {
 		0 => return Err(GetLastError()),
 		n => n,
 	} as usize;
 
 	if nchars > buf.buf_len() {
 		buf = WString::new_alloc_buf(nchars);
-		if unsafe {
-			ffi::GetSystemDirectoryW(buf.as_mut_ptr(), buf.buf_len() as _)
-		} == 0 {
+		if unsafe { ffi::GetSystemDirectoryW(buf.as_mut_ptr(), buf.buf_len() as _) } == 0 {
 			return Err(GetLastError());
 		}
 	}
@@ -738,11 +685,8 @@ pub fn GetSystemDirectory() -> SysResult<String> {
 pub fn GetSystemFileCacheSize() -> SysResult<(usize, usize, co::FILE_CACHE)> {
 	let (mut min, mut max) = (usize::default(), usize::default());
 	let mut flags = co::FILE_CACHE::default();
-	bool_to_sysresult(
-		unsafe {
-			ffi::GetSystemFileCacheSize(&mut min, &mut max, flags.as_mut())
-		},
-	).map(|_| (min, max, flags))
+	bool_to_sysresult(unsafe { ffi::GetSystemFileCacheSize(&mut min, &mut max, flags.as_mut()) })
+		.map(|_| (min, max, flags))
 }
 
 /// [`GetSystemInfo`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-getsysteminfo)
@@ -750,7 +694,9 @@ pub fn GetSystemFileCacheSize() -> SysResult<(usize, usize, co::FILE_CACHE)> {
 #[must_use]
 pub fn GetSystemInfo() -> SYSTEM_INFO {
 	let mut si = SYSTEM_INFO::default();
-	unsafe { ffi::GetSystemInfo(&mut si as *mut _ as _); }
+	unsafe {
+		ffi::GetSystemInfo(&mut si as *mut _ as _);
+	}
 	si
 }
 
@@ -769,7 +715,9 @@ pub fn GetSystemInfo() -> SYSTEM_INFO {
 #[must_use]
 pub fn GetSystemTime() -> SYSTEMTIME {
 	let mut st = SYSTEMTIME::default();
-	unsafe { ffi::GetSystemTime(&mut st as *mut _ as _); }
+	unsafe {
+		ffi::GetSystemTime(&mut st as *mut _ as _);
+	}
 	st
 }
 
@@ -778,7 +726,9 @@ pub fn GetSystemTime() -> SYSTEMTIME {
 #[must_use]
 pub fn GetSystemTimeAsFileTime() -> FILETIME {
 	let mut ft = FILETIME::default();
-	unsafe { ffi::GetSystemTimeAsFileTime(&mut ft as *mut _ as _); }
+	unsafe {
+		ffi::GetSystemTimeAsFileTime(&mut ft as *mut _ as _);
+	}
 	ft
 }
 
@@ -787,7 +737,9 @@ pub fn GetSystemTimeAsFileTime() -> FILETIME {
 #[must_use]
 pub fn GetSystemTimePreciseAsFileTime() -> FILETIME {
 	let mut ft = FILETIME::default();
-	unsafe { ffi::GetSystemTimePreciseAsFileTime(&mut ft as *mut _ as _); }
+	unsafe {
+		ffi::GetSystemTimePreciseAsFileTime(&mut ft as *mut _ as _);
+	}
 	ft
 }
 
@@ -812,37 +764,30 @@ pub fn GetSystemTimes() -> SysResult<(FILETIME, FILETIME, FILETIME)> {
 	let mut kernel_time = FILETIME::default();
 	let mut user_time = FILETIME::default();
 
-	bool_to_sysresult(
-		unsafe {
-			ffi::GetSystemTimes(
-				&mut idle_time as *mut _ as _,
-				&mut kernel_time as *mut _ as _,
-				&mut user_time as *mut _ as _,
-			)
-		},
-	).map(|_| (idle_time, kernel_time, user_time))
+	bool_to_sysresult(unsafe {
+		ffi::GetSystemTimes(
+			&mut idle_time as *mut _ as _,
+			&mut kernel_time as *mut _ as _,
+			&mut user_time as *mut _ as _,
+		)
+	})
+	.map(|_| (idle_time, kernel_time, user_time))
 }
 
 /// [`GetTempFileName`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-gettempfilenamew)
 /// function.
 #[must_use]
-pub fn GetTempFileName(
-	path_name: &str,
-	prefix: &str,
-	unique: u32,
-) -> SysResult<String>
-{
+pub fn GetTempFileName(path_name: &str, prefix: &str, unique: u32) -> SysResult<String> {
 	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
-	bool_to_sysresult(
-		unsafe {
-			ffi::GetTempFileNameW(
-				WString::from_str(path_name).as_ptr(),
-				WString::from_str(prefix).as_ptr(),
-				unique,
-				buf.as_mut_ptr(),
-			)
-		} as _,
-	).map(|_| buf.to_string())
+	bool_to_sysresult(unsafe {
+		ffi::GetTempFileNameW(
+			WString::from_str(path_name).as_ptr(),
+			WString::from_str(prefix).as_ptr(),
+			unique,
+			buf.as_mut_ptr(),
+		)
+	} as _)
+	.map(|_| buf.to_string())
 }
 
 /// [`GetTempPath`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-gettemppathw)
@@ -850,9 +795,8 @@ pub fn GetTempFileName(
 #[must_use]
 pub fn GetTempPath() -> SysResult<String> {
 	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
-	bool_to_sysresult(
-		unsafe { ffi::GetTempPathW(buf.buf_len() as _, buf.as_mut_ptr()) } as _,
-	).map(|_| buf.to_string())
+	bool_to_sysresult(unsafe { ffi::GetTempPathW(buf.buf_len() as _, buf.as_mut_ptr()) } as _)
+		.map(|_| buf.to_string())
 }
 
 /// [`GetTickCount64`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-gettickcount64)
@@ -899,8 +843,7 @@ pub fn GetVolumeInformation(
 	max_component_len: Option<&mut u32>,
 	file_system_flags: Option<&mut co::FILE_VOL>,
 	file_system_name: Option<&mut String>,
-) -> SysResult<()>
-{
+) -> SysResult<()> {
 	let mut name_buf = match name {
 		None => (WString::new(), 0),
 		Some(_) => (WString::new_alloc_buf(MAX_PATH + 1), MAX_PATH + 1),
@@ -910,26 +853,25 @@ pub fn GetVolumeInformation(
 		Some(_) => (WString::new_alloc_buf(MAX_PATH + 1), MAX_PATH + 1),
 	};
 
-	bool_to_sysresult(
-		unsafe {
-			ffi::GetVolumeInformationW(
-				WString::from_opt_str(root_path_name).as_ptr(),
-				match name {
-					Some(_) => name_buf.0.as_mut_ptr(),
-					None => std::ptr::null_mut(),
-				},
-				name_buf.1 as u32,
-				serial_number.map_or(std::ptr::null_mut(), |n| n),
-				max_component_len.map_or(std::ptr::null_mut(), |m| m),
-				file_system_flags.map_or(std::ptr::null_mut(), |f| f.as_mut()),
-				match file_system_name {
-					Some(_) => sys_name_buf.0.as_mut_ptr(),
-					None => std::ptr::null_mut(),
-				},
-				sys_name_buf.1 as u32,
-			)
-		},
-	).map(|_| {
+	bool_to_sysresult(unsafe {
+		ffi::GetVolumeInformationW(
+			WString::from_opt_str(root_path_name).as_ptr(),
+			match name {
+				Some(_) => name_buf.0.as_mut_ptr(),
+				None => std::ptr::null_mut(),
+			},
+			name_buf.1 as u32,
+			serial_number.map_or(std::ptr::null_mut(), |n| n),
+			max_component_len.map_or(std::ptr::null_mut(), |m| m),
+			file_system_flags.map_or(std::ptr::null_mut(), |f| f.as_mut()),
+			match file_system_name {
+				Some(_) => sys_name_buf.0.as_mut_ptr(),
+				None => std::ptr::null_mut(),
+			},
+			sys_name_buf.1 as u32,
+		)
+	})
+	.map(|_| {
 		if let Some(name) = name {
 			*name = name_buf.0.to_string();
 		}
@@ -944,15 +886,14 @@ pub fn GetVolumeInformation(
 #[must_use]
 pub fn GetVolumePathName(file_name: &str) -> SysResult<String> {
 	let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
-	bool_to_sysresult(
-		unsafe {
-			ffi::GetVolumePathNameW(
-				WString::from_str(file_name).as_ptr(),
-				buf.as_mut_ptr(),
-				buf.buf_len() as _,
-			)
-		} as _,
-	).map(|_| buf.to_string())
+	bool_to_sysresult(unsafe {
+		ffi::GetVolumePathNameW(
+			WString::from_str(file_name).as_ptr(),
+			buf.as_mut_ptr(),
+			buf.buf_len() as _,
+		)
+	} as _)
+	.map(|_| buf.to_string())
 }
 
 /// [`GlobalMemoryStatusEx`](https://learn.microsoft.com/en-us/windows/win32/api/sysinfoapi/nf-sysinfoapi-globalmemorystatusex)
@@ -960,9 +901,7 @@ pub fn GetVolumePathName(file_name: &str) -> SysResult<String> {
 #[must_use]
 pub fn GlobalMemoryStatusEx() -> SysResult<MEMORYSTATUSEX> {
 	let mut msx = MEMORYSTATUSEX::default();
-	bool_to_sysresult(
-		unsafe { ffi::GlobalMemoryStatusEx(&mut msx as *mut _ as _) },
-	).map(|_| msx)
+	bool_to_sysresult(unsafe { ffi::GlobalMemoryStatusEx(&mut msx as *mut _ as _) }).map(|_| msx)
 }
 
 /// [`HIBYTE`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632656(v=vs.85))
@@ -1030,8 +969,7 @@ pub fn IsDebuggerPresent() -> bool {
 #[must_use]
 pub fn IsNativeVhdBoot() -> SysResult<bool> {
 	let mut is_native: BOOL = 0;
-	bool_to_sysresult(unsafe { ffi::IsNativeVhdBoot(&mut is_native) })
-		.map(|_| is_native != 0)
+	bool_to_sysresult(unsafe { ffi::IsNativeVhdBoot(&mut is_native) }).map(|_| is_native != 0)
 }
 
 /// [`IsWindows10OrGreater`](https://learn.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindows10orgreater)
@@ -1084,10 +1022,9 @@ pub fn IsWindows8Point1OrGreater() -> SysResult<bool> {
 pub fn IsWindowsServer() -> SysResult<bool> {
 	let mut osvi = OSVERSIONINFOEX::default();
 	osvi.wProductType = co::VER_NT::WORKSTATION;
-	let cond_mask = VerSetConditionMask(
-		0, co::VER_MASK::PRODUCT_TYPE, co::VER_COND::EQUAL);
-	VerifyVersionInfo(&mut osvi, co::VER_MASK::PRODUCT_TYPE, cond_mask)
-		.map(|b| !b) // not workstation
+	let cond_mask = VerSetConditionMask(0, co::VER_MASK::PRODUCT_TYPE, co::VER_COND::EQUAL);
+	VerifyVersionInfo(&mut osvi, co::VER_MASK::PRODUCT_TYPE, cond_mask).map(|b| !b)
+	// not workstation
 }
 
 /// [`IsWindowsVersionOrGreater`](https://learn.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsversionorgreater)
@@ -1097,15 +1034,16 @@ pub fn IsWindowsVersionOrGreater(
 	major_version: u16,
 	minor_version: u16,
 	service_pack_major: u16,
-) -> SysResult<bool>
-{
+) -> SysResult<bool> {
 	let mut osvi = OSVERSIONINFOEX::default();
 	let cond_mask = VerSetConditionMask(
 		VerSetConditionMask(
 			VerSetConditionMask(0, co::VER_MASK::MAJORVERSION, co::VER_COND::GREATER_EQUAL),
-			co::VER_MASK::MINORVERSION, co::VER_COND::GREATER_EQUAL,
+			co::VER_MASK::MINORVERSION,
+			co::VER_COND::GREATER_EQUAL,
 		),
-		co::VER_MASK::SERVICEPACKMAJOR, co::VER_COND::GREATER_EQUAL
+		co::VER_MASK::SERVICEPACKMAJOR,
+		co::VER_COND::GREATER_EQUAL,
 	);
 
 	osvi.dwMajorVersion = major_version as _;
@@ -1250,14 +1188,12 @@ pub const fn MAKEWORD(lo: u8, hi: u8) -> u16 {
 /// * [`MoveFileEx`](crate::MoveFileEx)
 /// * [`ReplaceFile`](crate::ReplaceFile)
 pub fn MoveFile(existing_file: &str, new_file: &str) -> SysResult<()> {
-	bool_to_sysresult(
-		unsafe {
-			ffi::MoveFileW(
-				WString::from_str(existing_file).as_ptr(),
-				WString::from_str(new_file).as_ptr(),
-			)
-		},
-	)
+	bool_to_sysresult(unsafe {
+		ffi::MoveFileW(
+			WString::from_str(existing_file).as_ptr(),
+			WString::from_str(new_file).as_ptr(),
+		)
+	})
 }
 
 /// [`MoveFileEx`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-movefileexw)
@@ -1273,17 +1209,14 @@ pub fn MoveFileEx(
 	existing_file: &str,
 	new_file: Option<&str>,
 	flags: co::MOVEFILE,
-) -> SysResult<()>
-{
-	bool_to_sysresult(
-		unsafe {
-			ffi::MoveFileExW(
-				WString::from_str(existing_file).as_ptr(),
-				WString::from_opt_str(new_file).as_ptr(),
-				flags.raw(),
-			)
-		},
-	)
+) -> SysResult<()> {
+	bool_to_sysresult(unsafe {
+		ffi::MoveFileExW(
+			WString::from_str(existing_file).as_ptr(),
+			WString::from_opt_str(new_file).as_ptr(),
+			flags.raw(),
+		)
+	})
 }
 
 /// [`MulDiv`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-muldiv)
@@ -1307,8 +1240,7 @@ pub fn MultiByteToWideChar(
 	code_page: co::CP,
 	flags: co::MBC,
 	multi_byte_str: &[u8],
-) -> SysResult<Vec<u16>>
-{
+) -> SysResult<Vec<u16>> {
 	let num_bytes = match unsafe {
 		ffi::MultiByteToWideChar(
 			code_page.raw() as _,
@@ -1325,26 +1257,23 @@ pub fn MultiByteToWideChar(
 
 	let mut buf = vec![0u16; num_bytes as _];
 
-	bool_to_sysresult(
-		unsafe {
-			ffi::MultiByteToWideChar(
-				code_page.raw() as _,
-				flags.raw(),
-				vec_ptr(multi_byte_str),
-				multi_byte_str.len() as _,
-				buf.as_mut_ptr(),
-				num_bytes as _,
-			)
-		},
-	).map(|_| buf)
+	bool_to_sysresult(unsafe {
+		ffi::MultiByteToWideChar(
+			code_page.raw() as _,
+			flags.raw(),
+			vec_ptr(multi_byte_str),
+			multi_byte_str.len() as _,
+			buf.as_mut_ptr(),
+			num_bytes as _,
+		)
+	})
+	.map(|_| buf)
 }
 
 /// [`OutputDebugString`](https://learn.microsoft.com/en-us/windows/win32/api/debugapi/nf-debugapi-outputdebugstringw)
 /// function.
 pub fn OutputDebugString(output_string: &str) {
-	unsafe {
-		ffi::OutputDebugStringW(WString::from_str(output_string).as_ptr())
-	}
+	unsafe { ffi::OutputDebugStringW(WString::from_str(output_string).as_ptr()) }
 }
 
 /// [`QueryPerformanceCounter`](https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
@@ -1373,8 +1302,7 @@ pub fn OutputDebugString(output_string: &str) {
 #[must_use]
 pub fn QueryPerformanceCounter() -> SysResult<i64> {
 	let mut perf_count = i64::default();
-	bool_to_sysresult(unsafe { ffi::QueryPerformanceCounter(&mut perf_count) })
-		.map(|_| perf_count)
+	bool_to_sysresult(unsafe { ffi::QueryPerformanceCounter(&mut perf_count) }).map(|_| perf_count)
 }
 
 /// [`QueryPerformanceFrequency`](https://learn.microsoft.com/en-us/windows/win32/api/profileapi/nf-profileapi-queryperformancecounter)
@@ -1386,8 +1314,7 @@ pub fn QueryPerformanceCounter() -> SysResult<i64> {
 #[must_use]
 pub fn QueryPerformanceFrequency() -> SysResult<i64> {
 	let mut freq = i64::default();
-	bool_to_sysresult(unsafe { ffi::QueryPerformanceFrequency(&mut freq) })
-		.map(|_| freq)
+	bool_to_sysresult(unsafe { ffi::QueryPerformanceFrequency(&mut freq) }).map(|_| freq)
 }
 
 /// [`QueryUnbiasedInterruptTime`](https://learn.microsoft.com/en-us/windows/win32/api/realtimeapiset/nf-realtimeapiset-queryunbiasedinterrupttime)
@@ -1395,8 +1322,7 @@ pub fn QueryPerformanceFrequency() -> SysResult<i64> {
 #[must_use]
 pub fn QueryUnbiasedInterruptTime() -> SysResult<u64> {
 	let mut t = u64::default();
-	bool_to_sysresult(unsafe { ffi::QueryUnbiasedInterruptTime(&mut t) })
-		.map(|_| t)
+	bool_to_sysresult(unsafe { ffi::QueryUnbiasedInterruptTime(&mut t) }).map(|_| t)
 }
 
 /// [`ReplaceFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-replacefilew)
@@ -1412,47 +1338,31 @@ pub fn ReplaceFile(
 	replacement: &str,
 	backup: Option<&str>,
 	flags: co::REPLACEFILE,
-) -> SysResult<()>
-{
-	bool_to_sysresult(
-		unsafe {
-			ffi::ReplaceFileW(
-				WString::from_str(replaced).as_ptr(),
-				WString::from_str(replacement).as_ptr(),
-				WString::from_opt_str(backup).as_ptr(),
-				flags.raw(),
-				std::ptr::null_mut(),
-				std::ptr::null_mut(),
-			)
-		},
-	)
+) -> SysResult<()> {
+	bool_to_sysresult(unsafe {
+		ffi::ReplaceFileW(
+			WString::from_str(replaced).as_ptr(),
+			WString::from_str(replacement).as_ptr(),
+			WString::from_opt_str(backup).as_ptr(),
+			flags.raw(),
+			std::ptr::null_mut(),
+			std::ptr::null_mut(),
+		)
+	})
 }
 
 /// [`SetCurrentDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-setcurrentdirectory)
 /// function.
 pub fn SetCurrentDirectory(path_name: &str) -> SysResult<()> {
-	bool_to_sysresult(
-		unsafe {
-			ffi::SetCurrentDirectoryW(WString::from_str(path_name).as_ptr())
-		},
-	)
+	bool_to_sysresult(unsafe { ffi::SetCurrentDirectoryW(WString::from_str(path_name).as_ptr()) })
 }
 
 /// [`SetFileAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfileattributesw)
 /// function.
-pub fn SetFileAttributes(
-	file_name: &str,
-	attributes: co::FILE_ATTRIBUTE,
-) -> SysResult<()>
-{
-	bool_to_sysresult(
-		unsafe {
-			ffi::SetFileAttributesW(
-				WString::from_str(file_name).as_ptr(),
-				attributes.raw(),
-			)
-		},
-	)
+pub fn SetFileAttributes(file_name: &str, attributes: co::FILE_ATTRIBUTE) -> SysResult<()> {
+	bool_to_sysresult(unsafe {
+		ffi::SetFileAttributesW(WString::from_str(file_name).as_ptr(), attributes.raw())
+	})
 }
 
 /// [`SetLastError`](https://learn.microsoft.com/en-us/windows/win32/api/errhandlingapi/nf-errhandlingapi-setlasterror)
@@ -1467,8 +1377,7 @@ pub fn SetLastError(err_code: co::ERROR) {
 /// Returns the size of the previous stack.
 pub fn SetThreadStackGuarantee(stack_size_in_bytes: u32) -> SysResult<u32> {
 	let mut sz = stack_size_in_bytes;
-	bool_to_sysresult(unsafe { ffi::SetThreadStackGuarantee(&mut sz) })
-		.map(|_| sz)
+	bool_to_sysresult(unsafe { ffi::SetThreadStackGuarantee(&mut sz) }).map(|_| sz)
 }
 
 /// [`Sleep`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-sleep)
@@ -1495,11 +1404,10 @@ pub fn SwitchToThread() -> SysResult<()> {
 #[must_use]
 pub fn SystemTimeToFileTime(st: &SYSTEMTIME) -> SysResult<FILETIME> {
 	let mut ft = FILETIME::default();
-	bool_to_sysresult(
-		unsafe {
-			ffi::SystemTimeToFileTime(st as *const _ as _, &mut ft as *mut _ as _)
-		},
-	).map(|_| ft)
+	bool_to_sysresult(unsafe {
+		ffi::SystemTimeToFileTime(st as *const _ as _, &mut ft as *mut _ as _)
+	})
+	.map(|_| ft)
 }
 
 /// [`SystemTimeToTzSpecificLocalTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetotzspecificlocaltime)
@@ -1515,18 +1423,16 @@ pub fn SystemTimeToFileTime(st: &SYSTEMTIME) -> SysResult<FILETIME> {
 pub fn SystemTimeToTzSpecificLocalTime(
 	time_zone: Option<&TIME_ZONE_INFORMATION>,
 	universal_time: &SYSTEMTIME,
-) -> SysResult<SYSTEMTIME>
-{
+) -> SysResult<SYSTEMTIME> {
 	let mut local_time = SYSTEMTIME::default();
-	bool_to_sysresult(
-		unsafe {
-			ffi::SystemTimeToTzSpecificLocalTime(
-				time_zone.map_or(std::ptr::null(), |lp| lp as *const _ as _),
-				universal_time as *const _ as _,
-				&mut local_time as *mut _ as _,
-			)
-		},
-	).map(|_| local_time)
+	bool_to_sysresult(unsafe {
+		ffi::SystemTimeToTzSpecificLocalTime(
+			time_zone.map_or(std::ptr::null(), |lp| lp as *const _ as _),
+			universal_time as *const _ as _,
+			&mut local_time as *mut _ as _,
+		)
+	})
+	.map(|_| local_time)
 }
 
 /// [`VerifyVersionInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-verifyversioninfow)
@@ -1536,15 +1442,9 @@ pub fn VerifyVersionInfo(
 	osvix: &mut OSVERSIONINFOEX,
 	type_mask: co::VER_MASK,
 	condition_mask: u64,
-) -> SysResult<bool>
-{
-	match unsafe {
-		ffi::VerifyVersionInfoW(
-			osvix as *mut _ as _,
-			type_mask.raw(),
-			condition_mask,
-		)
-	} {
+) -> SysResult<bool> {
+	match unsafe { ffi::VerifyVersionInfoW(osvix as *mut _ as _, type_mask.raw(), condition_mask) }
+	{
 		0 => match GetLastError() {
 			co::ERROR::OLD_WIN_VERSION => Ok(false),
 			err => Err(err),
@@ -1560,11 +1460,8 @@ pub fn VerSetConditionMask(
 	condition_mask: u64,
 	type_mask: co::VER_MASK,
 	condition: co::VER_COND,
-) -> u64
-{
-	unsafe {
-		ffi::VerSetConditionMask(condition_mask, type_mask.raw(), condition.raw())
-	}
+) -> u64 {
+	unsafe { ffi::VerSetConditionMask(condition_mask, type_mask.raw(), condition.raw()) }
 }
 
 /// [`WideCharToMultiByte`](https://learn.microsoft.com/en-us/windows/win32/api/stringapiset/nf-stringapiset-widechartomultibyte)
@@ -1583,8 +1480,7 @@ pub fn WideCharToMultiByte(
 	wide_char_str: &[u16],
 	default_char: Option<u8>,
 	used_default_char: Option<&mut bool>,
-) -> SysResult<Vec<u8>>
-{
+) -> SysResult<Vec<u8>> {
 	let mut default_char_buf = default_char.unwrap_or_default();
 
 	let num_bytes = match unsafe {
@@ -1606,20 +1502,19 @@ pub fn WideCharToMultiByte(
 	let mut u8_buf = vec![0u8; num_bytes as _];
 	let mut bool_buf: BOOL = 0;
 
-	bool_to_sysresult(
-		unsafe {
-			ffi::WideCharToMultiByte(
-				code_page.raw() as _,
-				flags.raw(),
-				vec_ptr(wide_char_str),
-				wide_char_str.len() as _,
-				u8_buf.as_mut_ptr() as _,
-				num_bytes as _,
-				&mut default_char_buf,
-				&mut bool_buf,
-			)
-		},
-	).map(|_| {
+	bool_to_sysresult(unsafe {
+		ffi::WideCharToMultiByte(
+			code_page.raw() as _,
+			flags.raw(),
+			vec_ptr(wide_char_str),
+			wide_char_str.len() as _,
+			u8_buf.as_mut_ptr() as _,
+			num_bytes as _,
+			&mut default_char_buf,
+			&mut bool_buf,
+		)
+	})
+	.map(|_| {
 		if let Some(used_default_char) = used_default_char {
 			*used_default_char = bool_buf != 0;
 		}
@@ -1656,16 +1551,13 @@ pub fn WritePrivateProfileString(
 	key_name: Option<&str>,
 	new_val: Option<&str>,
 	file_name: &str,
-) -> SysResult<()>
-{
-	bool_to_sysresult(
-		unsafe {
-			ffi::WritePrivateProfileStringW(
-				WString::from_str(section_name).as_ptr(),
-				WString::from_opt_str(key_name).as_ptr(),
-				WString::from_opt_str(new_val).as_ptr(),
-				WString::from_str(file_name).as_ptr(),
-			)
-		},
-	)
+) -> SysResult<()> {
+	bool_to_sysresult(unsafe {
+		ffi::WritePrivateProfileStringW(
+			WString::from_str(section_name).as_ptr(),
+			WString::from_opt_str(key_name).as_ptr(),
+			WString::from_opt_str(new_val).as_ptr(),
+			WString::from_str(file_name).as_ptr(),
+		)
+	})
 }

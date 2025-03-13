@@ -26,9 +26,9 @@ impl<'a> Iterator for EnumdisplaydevicesIter<'a> {
 			// returned to signal the end of the loop, so we consider both.
 			// https://github.com/rodrigocfd/winsafe/issues/36
 			0 => match GetLastError() {
-				co::ERROR::SUCCESS
-					| co::ERROR::PROC_NOT_FOUND
-					| co::ERROR::ENVVAR_NOT_FOUND => None,
+				co::ERROR::SUCCESS | co::ERROR::PROC_NOT_FOUND | co::ERROR::ENVVAR_NOT_FOUND => {
+					None
+				},
 				err => Some(Err(err)), // actual error
 			},
 			_ => {
@@ -44,10 +44,7 @@ impl<'a> Iterator for EnumdisplaydevicesIter<'a> {
 
 impl<'a> EnumdisplaydevicesIter<'a> {
 	#[must_use]
-	pub(in crate::user) fn new(
-		device_name: Option<&'a str>,
-		flags: Option<co::EDD>,
-	) -> Self {
+	pub(in crate::user) fn new(device_name: Option<&'a str>, flags: Option<co::EDD>) -> Self {
 		Self {
 			device_name,
 			display_device: DISPLAY_DEVICE::default(),
@@ -58,7 +55,8 @@ impl<'a> EnumdisplaydevicesIter<'a> {
 }
 
 pub(in crate::user) struct HmenuIteritems<'a, H>
-	where H: user_Hmenu,
+where
+	H: user_Hmenu,
 {
 	hmenu: &'a H,
 	num_items: u32,
@@ -66,7 +64,8 @@ pub(in crate::user) struct HmenuIteritems<'a, H>
 }
 
 impl<'a, H> Iterator for HmenuIteritems<'a, H>
-	where H: user_Hmenu,
+where
+	H: user_Hmenu,
 {
 	type Item = SysResult<MenuItemInfo>;
 
@@ -82,7 +81,8 @@ impl<'a, H> Iterator for HmenuIteritems<'a, H>
 }
 
 impl<'a, H> HmenuIteritems<'a, H>
-	where H: user_Hmenu,
+where
+	H: user_Hmenu,
 {
 	#[must_use]
 	pub(in crate::user) fn new(hmenu: &'a H) -> Self {

@@ -2,7 +2,8 @@ use crate::decl::*;
 use crate::prelude::*;
 
 pub(in crate::mf) struct ImfcollectionIter<'a, I>
-	where I: mf_IMFCollection,
+where
+	I: mf_IMFCollection,
 {
 	collection: &'a I,
 	count: u32,
@@ -10,7 +11,8 @@ pub(in crate::mf) struct ImfcollectionIter<'a, I>
 }
 
 impl<'a, I> Iterator for ImfcollectionIter<'a, I>
-	where I: mf_IMFCollection,
+where
+	I: mf_IMFCollection,
 {
 	type Item = HrResult<IUnknown>;
 
@@ -29,7 +31,8 @@ impl<'a, I> Iterator for ImfcollectionIter<'a, I>
 					self.current += 1;
 					Some(Ok(element))
 				},
-				None => { // if a null pointer is returned, interpret as the end
+				None => {
+					// if a null pointer is returned, interpret as the end
 					self.current = self.count; // no further iterations will be made
 					None
 				},
@@ -39,7 +42,8 @@ impl<'a, I> Iterator for ImfcollectionIter<'a, I>
 }
 
 impl<'a, I> ImfcollectionIter<'a, I>
-	where I: mf_IMFCollection,
+where
+	I: mf_IMFCollection,
 {
 	#[must_use]
 	pub(in crate::mf) fn new(collection: &'a I) -> HrResult<Self> {

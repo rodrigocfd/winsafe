@@ -37,10 +37,7 @@ pub trait user_Hdwp: Handle {
 	/// automatically calls `EndDeferWindowPos` when the guard goes out of
 	/// scope.
 	#[must_use]
-	fn BeginDeferWindowPos(
-		num_windows: u32,
-	) -> SysResult<EndDeferWindowPosGuard>
-	{
+	fn BeginDeferWindowPos(num_windows: u32) -> SysResult<EndDeferWindowPosGuard> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::BeginDeferWindowPos(num_windows as _))
 				.map(|h| EndDeferWindowPosGuard::new(h))
@@ -52,22 +49,26 @@ pub trait user_Hdwp: Handle {
 	///
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
-	fn DeferWindowPos(&mut self,
+	fn DeferWindowPos(
+		&mut self,
 		hwnd: &HWND,
 		hwnd_insert_after: HwndPlace,
 		top_left: POINT,
 		sz: SIZE,
 		flags: co::SWP,
-	) -> SysResult<()>
-	{
+	) -> SysResult<()> {
 		match unsafe {
 			ffi::DeferWindowPos(
 				self.ptr(),
 				hwnd.ptr(),
 				hwnd_insert_after.as_ptr(),
-				top_left.x, top_left.y, sz.cx, sz.cy,
+				top_left.x,
+				top_left.y,
+				sz.cx,
+				sz.cy,
 				flags.raw(),
-			).as_mut()
+			)
+			.as_mut()
 		} {
 			Some(ptr) => {
 				*self = unsafe { Self::from_ptr(ptr) };

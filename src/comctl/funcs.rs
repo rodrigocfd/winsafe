@@ -15,9 +15,7 @@ pub fn InitCommonControls() {
 /// [`InitCommonControlsEx`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrolsex)
 /// function.
 pub fn InitCommonControlsEx(icce: &INITCOMMONCONTROLSEX) -> SysResult<()> {
-	bool_to_sysresult(
-		unsafe { ffi::InitCommonControlsEx(icce as *const _ as  _) },
-	)
+	bool_to_sysresult(unsafe { ffi::InitCommonControlsEx(icce as *const _ as _) })
 }
 
 /// [`InitMUILanguage`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initmuilanguage)
@@ -114,29 +112,20 @@ pub unsafe fn PropertySheet(header: &PROPSHEETHEADER) -> SysResult<isize> {
 /// # w::HrResult::Ok(())
 ///
 /// ```
-pub fn TaskDialogIndirect(
-	config: &TASKDIALOGCONFIG,
-) -> HrResult<(co::DLGID, u16, bool)>
-{
+pub fn TaskDialogIndirect(config: &TASKDIALOGCONFIG) -> HrResult<(co::DLGID, u16, bool)> {
 	let tdc_buf = config.to_raw();
 	let mut pn_button = i32::default();
 	let mut pn_radio_button = i32::default();
 	let mut pf_bool: BOOL = 0;
 
-	ok_to_hrresult(
-		unsafe {
-			ffi::TaskDialogIndirect(
-				&tdc_buf.raw as *const _ as _,
-				&mut pn_button,
-				&mut pn_radio_button,
-				&mut pf_bool,
-			)
-		},
-	)?;
+	ok_to_hrresult(unsafe {
+		ffi::TaskDialogIndirect(
+			&tdc_buf.raw as *const _ as _,
+			&mut pn_button,
+			&mut pn_radio_button,
+			&mut pf_bool,
+		)
+	})?;
 
-	Ok((
-		unsafe { co::DLGID::from_raw(pn_button as _) },
-		pn_radio_button as _,
-		pf_bool != 0,
-	))
+	Ok((unsafe { co::DLGID::from_raw(pn_button as _) }, pn_radio_button as _, pf_bool != 0))
 }

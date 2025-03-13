@@ -68,9 +68,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
-	fn iter(&self,
-	) -> HrResult<impl Iterator<Item = HrResult<IShellItem>> + '_>
-	{
+	fn iter(&self) -> HrResult<impl Iterator<Item = HrResult<IShellItem>> + '_> {
 		Ok(IshellitemarrayIter::new(self)?)
 	}
 
@@ -79,11 +77,8 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	#[must_use]
 	fn GetCount(&self) -> HrResult<u32> {
 		let mut count = u32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IShellItemArrayVT>(self).GetCount)(self.ptr(), &mut count)
-			},
-		).map(|_| count)
+		ok_to_hrresult(unsafe { (vt::<IShellItemArrayVT>(self).GetCount)(self.ptr(), &mut count) })
+			.map(|_| count)
 	}
 
 	/// [`IShellItemArray::GetItemAt`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitemarray-getitemat)
@@ -94,14 +89,9 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	#[must_use]
 	fn GetItemAt(&self, index: u32) -> HrResult<IShellItem> {
 		let mut queried = unsafe { IShellItem::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IShellItemArrayVT>(self).GetItemAt)(
-					self.ptr(),
-					index,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IShellItemArrayVT>(self).GetItemAt)(self.ptr(), index, queried.as_mut())
+		})
+		.map(|_| queried)
 	}
 }

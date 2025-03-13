@@ -34,18 +34,13 @@ pub trait kernel_Hstd: Handle {
 	#[must_use]
 	fn GetConsoleMode(&self) -> SysResult<co::CONSOLE> {
 		let mut mode = co::CONSOLE::default();
-		bool_to_sysresult(
-			unsafe { ffi::GetConsoleMode(self.ptr(), mode.as_mut()) },
-		).map(|_| mode)
+		bool_to_sysresult(unsafe { ffi::GetConsoleMode(self.ptr(), mode.as_mut()) }).map(|_| mode)
 	}
 
 	/// [`GetStdHandle`](https://learn.microsoft.com/en-us/windows/console/getstdhandle)
 	/// function.
 	#[must_use]
-	fn GetStdHandle(
-		std_handle: co::STD_HANDLE,
-	) -> SysResult<CloseHandleGuard<HSTD>>
-	{
+	fn GetStdHandle(std_handle: co::STD_HANDLE) -> SysResult<CloseHandleGuard<HSTD>> {
 		unsafe {
 			match HSTD::from_ptr(ffi::GetStdHandle(std_handle.raw())) {
 				HSTD::INVALID => Err(GetLastError()),
@@ -73,23 +68,22 @@ pub trait kernel_Hstd: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn ReadConsole(&self,
+	fn ReadConsole(
+		&self,
 		buffer: &mut WString,
 		input_control: Option<&CONSOLE_READCONSOLE_CONTROL>,
-	) -> SysResult<u32>
-	{
+	) -> SysResult<u32> {
 		let mut num_read = u32::default();
-		bool_to_sysresult(
-			unsafe {
-				ffi::ReadConsoleW(
-					self.ptr(),
-					buffer.as_mut_ptr() as _,
-					buffer.buf_len() as _,
-					&mut num_read,
-					input_control.map_or(std::ptr::null_mut(), |p| p as *const _ as _),
-				)
-			},
-		).map(|_| num_read)
+		bool_to_sysresult(unsafe {
+			ffi::ReadConsoleW(
+				self.ptr(),
+				buffer.as_mut_ptr() as _,
+				buffer.buf_len() as _,
+				&mut num_read,
+				input_control.map_or(std::ptr::null_mut(), |p| p as *const _ as _),
+			)
+		})
+		.map(|_| num_read)
 	}
 
 	/// [`SetConsoleMode`](https://learn.microsoft.com/en-us/windows/console/setconsolemode)
@@ -107,15 +101,14 @@ pub trait kernel_Hstd: Handle {
 		let mut num_written = u32::default();
 
 		unsafe {
-			bool_to_sysresult(
-				ffi::WriteConsoleW(
-					self.ptr(),
-					buf.as_ptr() as _,
-					buf.str_len() as _,
-					&mut num_written,
-					std::ptr::null_mut(),
-				),
-			)
-		}.map(|_| num_written)
+			bool_to_sysresult(ffi::WriteConsoleW(
+				self.ptr(),
+				buf.as_ptr() as _,
+				buf.str_len() as _,
+				&mut num_written,
+				std::ptr::null_mut(),
+			))
+		}
+		.map(|_| num_written)
 	}
 }

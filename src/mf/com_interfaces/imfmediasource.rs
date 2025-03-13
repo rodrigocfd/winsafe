@@ -30,16 +30,12 @@ pub trait mf_IMFMediaSource: mf_IMFMediaEventGenerator {
 	/// [`IMFMediaSource::GetCharacteristics`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfmediasource-getcharacteristics)
 	/// method.
 	#[must_use]
-	fn GetCharacteristics(&self)-> HrResult<co::MFMEDIASOURCE> {
+	fn GetCharacteristics(&self) -> HrResult<co::MFMEDIASOURCE> {
 		let mut characteristics = co::MFMEDIASOURCE::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFMediaSourceVT>(self).GetCharacteristics)(
-					self.ptr(),
-					characteristics.as_mut(),
-				)
-			},
-		).map(|_| characteristics)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFMediaSourceVT>(self).GetCharacteristics)(self.ptr(), characteristics.as_mut())
+		})
+		.map(|_| characteristics)
 	}
 
 	fn_com_interface_get! { CreatePresentationDescriptor: IMFMediaSourceVT, IMFPresentationDescriptor;
@@ -59,22 +55,20 @@ pub trait mf_IMFMediaSource: mf_IMFMediaEventGenerator {
 
 	/// [`IMFMediaSource::Start`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfmediasource-start)
 	/// method.
-	fn Start(&self,
+	fn Start(
+		&self,
 		presentation_descriptor: IMFPresentationDescriptor,
 		time_format: Option<&GUID>,
 		start_position: &PropVariant,
-	) -> HrResult<()>
-	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFMediaSourceVT>(self).Start)(
-					self.ptr(),
-					presentation_descriptor.ptr(),
-					time_format.unwrap_or(&GUID::default()) as *const _ as _,
-					&start_position.to_raw()? as *const _ as _,
-				)
-			},
-		)
+	) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IMFMediaSourceVT>(self).Start)(
+				self.ptr(),
+				presentation_descriptor.ptr(),
+				time_format.unwrap_or(&GUID::default()) as *const _ as _,
+				&start_position.to_raw()? as *const _ as _,
+			)
+		})
 	}
 
 	fn_com_noparm! { Stop: IMFMediaSourceVT;

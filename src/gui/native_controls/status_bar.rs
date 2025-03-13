@@ -73,44 +73,50 @@ impl StatusBar {
 	#[must_use]
 	pub fn new(parent: &(impl GuiParent + 'static), parts: &[SbPart]) -> Self {
 		let ctrl_id = auto_id::next();
-		let new_self = Self(
-			Arc::pin(
-				StatusBarObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: StatusBarEvents::new(parent, ctrl_id),
-					parts_info: UnsafeCell::new(parts.to_vec()),
-					right_edges: UnsafeCell::new(vec![0; parts.len()]),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+		let new_self = Self(Arc::pin(StatusBarObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: StatusBarEvents::new(parent, ctrl_id),
+			parts_info: UnsafeCell::new(parts.to_vec()),
+			right_edges: UnsafeCell::new(vec![0; parts.len()]),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
-		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
-			let parent_style = parent2.hwnd().style();
-			let is_parent_resizable = parent_style.has(co::WS::MAXIMIZEBOX)
-				|| parent_style.has(co::WS::SIZEBOX);
+		parent
+			.as_ref()
+			.before_on()
+			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+				let parent_style = parent2.hwnd().style();
+				let is_parent_resizable =
+					parent_style.has(co::WS::MAXIMIZEBOX) || parent_style.has(co::WS::SIZEBOX);
 
-			self2.0.base.create_window( // may panic
-				co::WS_EX::LEFT, "msctls_statusbar32", None,
-				co::WS::CHILD | co::WS::VISIBLE | co::SBARS::TOOLTIPS.into() |
-					if is_parent_resizable {
-						co::SBARS::SIZEGRIP
-					} else {
-						co::SBARS::NoValue
-					}.into(),
-				POINT::default(), SIZE::default(), &parent2)?;
+				self2.0.base.create_window(
+					co::WS_EX::LEFT,
+					"msctls_statusbar32",
+					None,
+					co::WS::CHILD
+						| co::WS::VISIBLE | co::SBARS::TOOLTIPS.into()
+						| if is_parent_resizable {
+							co::SBARS::SIZEGRIP
+						} else {
+							co::SBARS::NoValue
+						}
+						.into(),
+					POINT::default(),
+					SIZE::default(),
+					&parent2,
+				)?;
 
-			// Force first resizing, so the panels are created.
-			let parent_rc = parent2.hwnd().GetClientRect()?;
-			self2.resize(&mut wm::Size {
-				client_area: SIZE::new(parent_rc.right, parent_rc.bottom),
-				request: co::SIZE_R::RESTORED,
-			})?;
+				// Force first resizing, so the panels are created.
+				let parent_rc = parent2.hwnd().GetClientRect()?;
+				self2.resize(&mut wm::Size {
+					client_area: SIZE::new(parent_rc.right, parent_rc.bottom),
+					request: co::SIZE_R::RESTORED,
+				})?;
 
-			Ok(0) // ignored
-		});
+				Ok(0) // ignored
+			});
 
 		let self2 = new_self.clone();
 		parent.as_ref().before_on().wm_size(move |mut p| {
@@ -126,7 +132,9 @@ impl StatusBar {
 			return Ok(()); // nothing to do
 		}
 
-		unsafe { self.hwnd().SendMessage(p.as_generic_wm()); } // send WM_SIZE to status bar, so it resizes itself to fit parent
+		unsafe {
+			self.hwnd().SendMessage(p.as_generic_wm()); // send WM_SIZE to status bar, so it resizes itself to fit parent
+		}
 
 		let mut total_proportions = 0u8;
 		let mut cx_available = p.client_area.cx as i32;
@@ -148,8 +156,9 @@ impl StatusBar {
 			right_edges[parts_info.len() - idx - 1] = total_cx as _;
 			let minus = match part_info {
 				SbPart::Fixed(pixels) => *pixels,
-				SbPart::Proportional(pp) =>
-					(cx_available / total_proportions as i32) * (*pp as i32),
+				SbPart::Proportional(pp) => {
+					(cx_available / total_proportions as i32) * (*pp as i32)
+				},
 			};
 			total_cx -= if minus > total_cx { 0 } else { minus }; // prevent subtract overflow
 		}

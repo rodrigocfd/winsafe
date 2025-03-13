@@ -27,50 +27,38 @@ impl dshow_IFilterGraph for IFilterGraph {}
 pub trait dshow_IFilterGraph: ole_IUnknown {
 	/// [`IFilterGraph::AddFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-addfilter)
 	/// method.
-	fn AddFilter(&self,
-		filter: &impl dshow_IBaseFilter,
-		name: &str,
-	) -> HrResult<()>
-	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IFilterGraphVT>(self).AddFilter)(
-					self.ptr(),
-					filter.ptr(),
-					WString::from_str(name).as_ptr(),
-				)
-			},
-		)
+	fn AddFilter(&self, filter: &impl dshow_IBaseFilter, name: &str) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IFilterGraphVT>(self).AddFilter)(
+				self.ptr(),
+				filter.ptr(),
+				WString::from_str(name).as_ptr(),
+			)
+		})
 	}
 
 	/// [`IFilterGraph::ConnectDirect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-connectdirect)
 	/// method.
-	fn ConnectDirect(&self,
+	fn ConnectDirect(
+		&self,
 		pin_out: &impl dshow_IPin,
 		pin_in: &impl dshow_IPin,
 		mt: Option<&AM_MEDIA_TYPE>,
-	) -> HrResult<()>
-	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IFilterGraphVT>(self).ConnectDirect)(
-					self.ptr(),
-					pin_out.ptr(),
-					pin_in.ptr(),
-					mt.map_or(std::ptr::null_mut(), |amt| amt as *const _ as _),
-				)
-			},
-		)
+	) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IFilterGraphVT>(self).ConnectDirect)(
+				self.ptr(),
+				pin_out.ptr(),
+				pin_in.ptr(),
+				mt.map_or(std::ptr::null_mut(), |amt| amt as *const _ as _),
+			)
+		})
 	}
 
 	/// [`IFilterGraph::Disconnect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-disconnect)
 	/// method.
 	fn Disconnect(&self, pin: &impl dshow_IPin) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IFilterGraphVT>(self).Disconnect)(self.ptr(), pin.ptr())
-			},
-		)
+		ok_to_hrresult(unsafe { (vt::<IFilterGraphVT>(self).Disconnect)(self.ptr(), pin.ptr()) })
 	}
 
 	fn_com_interface_get! { EnumFilters: IFilterGraphVT, IEnumFilters;
@@ -83,38 +71,28 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 	#[must_use]
 	fn FindFilterByName(&self, name: &str) -> HrResult<IBaseFilter> {
 		let mut queried = unsafe { IBaseFilter::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IFilterGraphVT>(self).FindFilterByName)(
-					self.ptr(),
-					WString::from_str(name).as_ptr(),
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IFilterGraphVT>(self).FindFilterByName)(
+				self.ptr(),
+				WString::from_str(name).as_ptr(),
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IFilterGraph::Reconnect`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-reconnect)
 	/// method.
 	fn Reconnect(&self, pin: &impl dshow_IPin) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IFilterGraphVT>(self).Reconnect)(self.ptr(), pin.ptr())
-			},
-		)
+		ok_to_hrresult(unsafe { (vt::<IFilterGraphVT>(self).Reconnect)(self.ptr(), pin.ptr()) })
 	}
 
 	/// [`IFilterGraph::RemoveFilter`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-removefilter)
 	/// method.
 	fn RemoveFilter(&self, filter: &impl dshow_IBaseFilter) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IFilterGraphVT>(self).RemoveFilter)(
-					self.ptr(),
-					filter.ptr(),
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IFilterGraphVT>(self).RemoveFilter)(self.ptr(), filter.ptr())
+		})
 	}
 
 	fn_com_noparm! { SetDefaultSyncSource: IFilterGraphVT;

@@ -9,23 +9,28 @@ use crate::prelude::*;
 /// [`CloseHandle`](https://learn.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle)
 /// when the object goes out of scope.
 pub struct CloseHandleGuard<T>
-	where T: Handle,
+where
+	T: Handle,
 {
 	handle: T,
 }
 
 impl<T> Drop for CloseHandleGuard<T>
-	where T: Handle,
+where
+	T: Handle,
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.handle.as_opt() {
-			unsafe { ffi::CloseHandle(h.ptr()); } // ignore errors
+			unsafe {
+				ffi::CloseHandle(h.ptr());
+			} // ignore errors
 		}
 	}
 }
 
 impl<T> Deref for CloseHandleGuard<T>
-	where T: Handle,
+where
+	T: Handle,
 {
 	type Target = T;
 
@@ -35,7 +40,8 @@ impl<T> Deref for CloseHandleGuard<T>
 }
 
 impl<T> DerefMut for CloseHandleGuard<T>
-	where T: Handle,
+where
+	T: Handle,
 {
 	fn deref_mut(&mut self) -> &mut Self::Target {
 		&mut self.handle
@@ -43,7 +49,8 @@ impl<T> DerefMut for CloseHandleGuard<T>
 }
 
 impl<T> CloseHandleGuard<T>
-	where T: Handle,
+where
+	T: Handle,
 {
 	/// Constructs the guard by taking ownership of the handle.
 	///
@@ -139,7 +146,9 @@ pub struct EndUpdateResourceGuard {
 impl Drop for EndUpdateResourceGuard {
 	fn drop(&mut self) {
 		if let Some(h) = self.hupsrc.as_opt() {
-			unsafe { ffi::EndUpdateResourceW(h.ptr(), false as _); } // ignore errors
+			unsafe {
+				ffi::EndUpdateResourceW(h.ptr(), false as _);
+			} // ignore errors
 		}
 	}
 }
@@ -212,7 +221,8 @@ handle_guard! { GlobalFreeGuard: HGLOBAL;
 /// [`GlobalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
 /// when the object goes out of scope.
 pub struct GlobalUnlockGuard<'a, H>
-	where H: kernel_Hglobal,
+where
+	H: kernel_Hglobal,
 {
 	hglobal: &'a H,
 	pmem: *mut std::ffi::c_void,
@@ -220,17 +230,21 @@ pub struct GlobalUnlockGuard<'a, H>
 }
 
 impl<'a, H> Drop for GlobalUnlockGuard<'a, H>
-	where H: kernel_Hglobal,
+where
+	H: kernel_Hglobal,
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.hglobal.as_opt() {
-			unsafe { ffi::GlobalUnlock(h.ptr()); } // ignore errors
+			unsafe {
+				ffi::GlobalUnlock(h.ptr());
+			} // ignore errors
 		}
 	}
 }
 
 impl<'a, H> GlobalUnlockGuard<'a, H>
-	where H: kernel_Hglobal,
+where
+	H: kernel_Hglobal,
 {
 	/// Constructs the guard.
 	///
@@ -240,12 +254,7 @@ impl<'a, H> GlobalUnlockGuard<'a, H>
 	/// [`GlobalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
 	/// at the end of scope, the pointer is valid, and the size is correct.
 	#[must_use]
-	pub const unsafe fn new(
-		hglobal: &'a H,
-		pmem: *mut std::ffi::c_void,
-		sz: usize,
-	) -> Self
-	{
+	pub const unsafe fn new(hglobal: &'a H, pmem: *mut std::ffi::c_void, sz: usize) -> Self {
 		Self { hglobal, pmem, sz }
 	}
 
@@ -266,7 +275,8 @@ handle_guard! { HeapDestroyGuard: HHEAP;
 /// [`HeapFree`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapfree)
 /// when the object goes out of scope.
 pub struct HeapFreeGuard<'a, H>
-	where H: kernel_Hheap,
+where
+	H: kernel_Hheap,
 {
 	hheap: &'a H,
 	pmem: *mut std::ffi::c_void,
@@ -274,19 +284,23 @@ pub struct HeapFreeGuard<'a, H>
 }
 
 impl<'a, H> Drop for HeapFreeGuard<'a, H>
-	where H: kernel_Hheap,
+where
+	H: kernel_Hheap,
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.hheap.as_opt() {
 			if !self.pmem.is_null() {
-				unsafe { ffi::HeapFree(h.ptr(), 0, self.pmem); } // ignore errors
+				unsafe {
+					ffi::HeapFree(h.ptr(), 0, self.pmem);
+				} // ignore errors
 			}
 		}
 	}
 }
 
 impl<'a, H> HeapFreeGuard<'a, H>
-	where H: kernel_Hheap,
+where
+	H: kernel_Hheap,
 {
 	/// Constructs the guard by taking ownership of the handle.
 	///
@@ -296,12 +310,7 @@ impl<'a, H> HeapFreeGuard<'a, H>
 	/// [`HeapFree`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapfree)
 	/// at the end of scope, the pointer is valid, and the size is correct.
 	#[must_use]
-	pub const unsafe fn new(
-		hheap: &'a H,
-		pmem: *mut std::ffi::c_void,
-		sz: usize,
-	) -> Self
-	{
+	pub const unsafe fn new(hheap: &'a H, pmem: *mut std::ffi::c_void, sz: usize) -> Self {
 		Self { hheap, pmem, sz }
 	}
 
@@ -326,23 +335,28 @@ impl<'a, H> HeapFreeGuard<'a, H>
 /// [`HeapUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock)
 /// when the object goes out of scope.
 pub struct HeapUnlockGuard<'a, H>
-	where H: kernel_Hheap,
+where
+	H: kernel_Hheap,
 {
 	hheap: &'a H,
 }
 
 impl<'a, H> Drop for HeapUnlockGuard<'a, H>
-	where H: kernel_Hheap,
+where
+	H: kernel_Hheap,
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.hheap.as_opt() {
-			unsafe { ffi::HeapUnlock(h.ptr()); } // ignore errors
+			unsafe {
+				ffi::HeapUnlock(h.ptr());
+			} // ignore errors
 		}
 	}
 }
 
 impl<'a, H> HeapUnlockGuard<'a, H>
-	where H: kernel_Hheap,
+where
+	H: kernel_Hheap,
 {
 	/// Constructs the guard.
 	///
@@ -370,7 +384,8 @@ handle_guard! { LocalFreeGuard: HLOCAL;
 /// [`LocalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localunlock)
 /// when the object goes out of scope.
 pub struct LocalUnlockGuard<'a, H>
-	where H: kernel_Hlocal,
+where
+	H: kernel_Hlocal,
 {
 	hlocal: &'a H,
 	pmem: *mut std::ffi::c_void,
@@ -378,17 +393,21 @@ pub struct LocalUnlockGuard<'a, H>
 }
 
 impl<'a, H> Drop for LocalUnlockGuard<'a, H>
-	where H: kernel_Hlocal,
+where
+	H: kernel_Hlocal,
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.hlocal.as_opt() {
-			unsafe { ffi::LocalUnlock(h.ptr()); } // ignore errors
+			unsafe {
+				ffi::LocalUnlock(h.ptr()); // ignore errors
+			}
 		}
 	}
 }
 
 impl<'a, H> LocalUnlockGuard<'a, H>
-	where H: kernel_Hlocal,
+where
+	H: kernel_Hlocal,
 {
 	/// Constructs the guard.
 	///
@@ -398,12 +417,7 @@ impl<'a, H> LocalUnlockGuard<'a, H>
 	/// [`LocalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localunlock)
 	/// at the end of scope, the pointer is valid, and the size is correct.
 	#[must_use]
-	pub const unsafe fn new(
-		hlocal: &'a H,
-		pmem: *mut std::ffi::c_void,
-		sz: usize,
-	) -> Self
-	{
+	pub const unsafe fn new(hlocal: &'a H, pmem: *mut std::ffi::c_void, sz: usize) -> Self {
 		Self { hlocal, pmem, sz }
 	}
 
@@ -415,7 +429,8 @@ impl<'a, H> LocalUnlockGuard<'a, H>
 /// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
 /// when the object goes out of scope.
 pub struct UnlockFileGuard<'a, H>
-	where H: kernel_Hfile,
+where
+	H: kernel_Hfile,
 {
 	hfile: &'a H,
 	offset: u64,
@@ -423,25 +438,27 @@ pub struct UnlockFileGuard<'a, H>
 }
 
 impl<'a, H> Drop for UnlockFileGuard<'a, H>
-	where H: kernel_Hfile,
+where
+	H: kernel_Hfile,
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.hfile.as_opt() {
 			unsafe {
-				ffi::UnlockFile( // ignore errors
+				ffi::UnlockFile(
 					h.ptr(),
 					LODWORD(self.offset),
 					HIDWORD(self.offset),
 					LODWORD(self.num_bytes_to_lock),
 					HIDWORD(self.num_bytes_to_lock),
-				);
+				); // ignore errors
 			}
 		}
 	}
 }
 
 impl<'a, H> UnlockFileGuard<'a, H>
-	where H: kernel_Hfile,
+where
+	H: kernel_Hfile,
 {
 	/// Constructs the guard by taking ownership of the objects.
 	///
@@ -451,12 +468,7 @@ impl<'a, H> UnlockFileGuard<'a, H>
 	/// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
 	/// at the end of scope.
 	#[must_use]
-	pub const unsafe fn new(
-		hfile: &'a H,
-		offset: u64,
-		num_bytes_to_lock: u64,
-	) -> Self
-	{
+	pub const unsafe fn new(hfile: &'a H, offset: u64, num_bytes_to_lock: u64) -> Self {
 		Self { hfile, offset, num_bytes_to_lock }
 	}
 

@@ -100,7 +100,7 @@ pub struct IMediaFilterVT {
 	pub IPersistVT: IPersistVT,
 	pub Stop: fn(COMPTR) -> HRES,
 	pub Pause: fn(COMPTR) -> HRES,
-   pub Run: fn(COMPTR, i64) -> HRES,
+	pub Run: fn(COMPTR, i64) -> HRES,
 	pub GetState: fn(COMPTR, u32, *mut u32) -> HRES,
 	pub SetSyncSource: fn(COMPTR, COMPTR) -> HRES,
 	pub GetSyncSource: fn(COMPTR, *mut COMPTR) -> HRES,

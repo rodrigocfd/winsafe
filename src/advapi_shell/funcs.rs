@@ -29,9 +29,7 @@ use crate::prelude::*;
 /// ```
 pub fn ShellExecuteEx(exec_info: &SHELLEXECUTEINFO) -> SysResult<()> {
 	let mut buf = exec_info.to_raw();
-	bool_to_sysresult(
-		unsafe { ffi::ShellExecuteExW(&mut buf.raw as *mut _ as _) },
-	)
+	bool_to_sysresult(unsafe { ffi::ShellExecuteExW(&mut buf.raw as *mut _ as _) })
 }
 
 /// [`SHGetKnownFolderPath`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath)
@@ -58,19 +56,17 @@ pub fn SHGetKnownFolderPath(
 	folder_id: &co::KNOWNFOLDERID,
 	flags: co::KF,
 	token: Option<&HACCESSTOKEN>,
-) -> HrResult<String>
-{
+) -> HrResult<String> {
 	let mut pstr = std::ptr::null_mut::<u16>();
-	ok_to_hrresult(
-		unsafe {
-			ffi::SHGetKnownFolderPath(
-				folder_id as *const _ as _,
-				flags.raw(),
-				token.map_or(std::ptr::null_mut(), |t| t.ptr()),
-				&mut pstr,
-			)
-		},
-	).map(|_| {
+	ok_to_hrresult(unsafe {
+		ffi::SHGetKnownFolderPath(
+			folder_id as *const _ as _,
+			flags.raw(),
+			token.map_or(std::ptr::null_mut(), |t| t.ptr()),
+			&mut pstr,
+		)
+	})
+	.map(|_| {
 		let path = unsafe { WString::from_wchars_nullt(pstr) };
 		let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 		path.to_string()

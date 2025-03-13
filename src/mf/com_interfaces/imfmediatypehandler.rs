@@ -28,14 +28,10 @@ pub trait mf_IMFMediaTypeHandler: ole_IUnknown {
 	#[must_use]
 	fn GetMajorType(&self) -> HrResult<GUID> {
 		let mut mt = GUID::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFMediaTypeHandlerVT>(self).GetMajorType)(
-					self.ptr(),
-					&mut mt as *mut _ as _,
-				)
-			},
-		).map(|_| mt)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFMediaTypeHandlerVT>(self).GetMajorType)(self.ptr(), &mut mt as *mut _ as _)
+		})
+		.map(|_| mt)
 	}
 
 	/// [`IMFMediaTypeHandler::GetMediaTypeCount`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfmediatypehandler-getmediatypecount)
@@ -43,13 +39,9 @@ pub trait mf_IMFMediaTypeHandler: ole_IUnknown {
 	#[must_use]
 	fn GetMediaTypeCount(&self) -> HrResult<u32> {
 		let mut count = u32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFMediaTypeHandlerVT>(self).GetMediaTypeCount)(
-					self.ptr(),
-					&mut count,
-				)
-			},
-		).map(|_| count)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFMediaTypeHandlerVT>(self).GetMediaTypeCount)(self.ptr(), &mut count)
+		})
+		.map(|_| count)
 	}
 }

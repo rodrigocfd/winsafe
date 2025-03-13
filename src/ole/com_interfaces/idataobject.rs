@@ -28,34 +28,29 @@ impl ole_IDataObject for IDataObject {}
 pub trait ole_IDataObject: ole_IUnknown {
 	/// [`IDataObject::DAdvise`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-dadvise)
 	/// method.
-	fn DAdvise(&self,
+	fn DAdvise(
+		&self,
 		formatetc: &FORMATETC,
 		advf: co::ADVF,
 		adv_sink: &impl ole_IAdviseSink,
-	) -> HrResult<u32>
-	{
+	) -> HrResult<u32> {
 		let mut connection = u32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDataObjectVT>(self).DAdvise)(
-					self.ptr(),
-					formatetc as *const _ as _,
-					advf.raw(),
-					adv_sink.ptr(),
-					&mut connection,
-				)
-			},
-		).map(|_| connection)
+		ok_to_hrresult(unsafe {
+			(vt::<IDataObjectVT>(self).DAdvise)(
+				self.ptr(),
+				formatetc as *const _ as _,
+				advf.raw(),
+				adv_sink.ptr(),
+				&mut connection,
+			)
+		})
+		.map(|_| connection)
 	}
 
 	/// [`IDataObject::DUnadvise`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-dunadvise)
 	/// method.
 	fn DUnadvise(&self, connection: u32) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDataObjectVT>(self).DUnadvise)(self.ptr(), connection)
-			},
-		)
+		ok_to_hrresult(unsafe { (vt::<IDataObjectVT>(self).DUnadvise)(self.ptr(), connection) })
 	}
 
 	/// [`IDataObject::GetData`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-getdata)
@@ -64,30 +59,21 @@ pub trait ole_IDataObject: ole_IUnknown {
 	/// # Safety
 	///
 	/// The returned struct may contain pointers that need to be deallocated.
-	unsafe fn GetData(&self,
-		formatetc: &FORMATETC,
-	) -> HrResult<ReleaseStgMediumGuard>
-	{
+	unsafe fn GetData(&self, formatetc: &FORMATETC) -> HrResult<ReleaseStgMediumGuard> {
 		let mut sm = STGMEDIUM::default();
-		ok_to_hrresult(
-			(vt::<IDataObjectVT>(self).GetData)(
-				self.ptr(),
-				formatetc as *const _ as _,
-				&mut sm as *mut _ as _,
-			),
-		).map(|_| ReleaseStgMediumGuard::new(sm))
+		ok_to_hrresult((vt::<IDataObjectVT>(self).GetData)(
+			self.ptr(),
+			formatetc as *const _ as _,
+			&mut sm as *mut _ as _,
+		))
+		.map(|_| ReleaseStgMediumGuard::new(sm))
 	}
 
 	/// [`IDataObject::QueryGetData`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-querygetdata)
 	/// method.
 	fn QueryGetData(&self, formatetc: &FORMATETC) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDataObjectVT>(self).QueryGetData)(
-					self.ptr(),
-					formatetc as *const _ as _,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IDataObjectVT>(self).QueryGetData)(self.ptr(), formatetc as *const _ as _)
+		})
 	}
 }

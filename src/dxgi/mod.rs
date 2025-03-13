@@ -4,10 +4,10 @@ mod com_interfaces;
 mod funcs;
 mod structs;
 
+pub mod co;
 pub(in crate::dxgi) mod ffi;
 pub(in crate::dxgi) mod iterators;
 pub(in crate::dxgi) mod vts;
-pub mod co;
 
 pub mod decl {
 	pub use super::com_interfaces::decl::*;

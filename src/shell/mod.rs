@@ -6,13 +6,13 @@ mod funcs;
 mod handles;
 mod structs;
 
-pub(in crate::shell) mod ffi;
-pub(in crate::shell) mod iterators;
-pub(in crate::shell) mod vts;
-pub(crate) mod privs;
 pub mod co;
+pub(in crate::shell) mod ffi;
 pub mod guard;
+pub(in crate::shell) mod iterators;
 pub mod messages;
+pub(crate) mod privs;
+pub(in crate::shell) mod vts;
 
 pub mod decl {
 	pub use super::com_interfaces::decl::*;

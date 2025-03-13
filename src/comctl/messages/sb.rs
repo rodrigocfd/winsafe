@@ -73,7 +73,10 @@ impl<'a> MsgSend for GetParts<'a> {
 		WndMsg {
 			msg_id: co::SB::GETPARTS.into(),
 			wparam: self.right_edges.as_ref().map_or(0, |re| re.len()),
-			lparam: self.right_edges.as_mut().map_or(0, |re| re.as_mut_ptr() as _),
+			lparam: self
+				.right_edges
+				.as_mut()
+				.map_or(0, |re| re.as_mut_ptr() as _),
 		}
 	}
 }

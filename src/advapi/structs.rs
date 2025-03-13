@@ -23,9 +23,7 @@ impl<'a, 'b> CLAIM_SECURITY_ATTRIBUTES_INFORMATION<'a, 'b> {
 	/// Returns the `pAttributeV1` field.
 	#[must_use]
 	pub fn pAttributeV1(&self) -> &[CLAIM_SECURITY_ATTRIBUTE_V1<'a, 'b>] {
-		unsafe {
-			std::slice::from_raw_parts(self.pAttributeV1, self.AttributeCount as _)
-		}
+		unsafe { std::slice::from_raw_parts(self.pAttributeV1, self.AttributeCount as _) }
 	}
 }
 
@@ -43,8 +41,7 @@ impl DEV_BROADCAST_DEVICEINTERFACE {
 	/// Returns the `dbcc_name` field.
 	#[must_use]
 	pub fn dbcc_name(&self) -> String {
-		unsafe { WString::from_wchars_nullt(self.dbcc_name.as_ptr()) }
-			.to_string()
+		unsafe { WString::from_wchars_nullt(self.dbcc_name.as_ptr()) }.to_string()
 	}
 }
 
@@ -83,8 +80,7 @@ impl DEV_BROADCAST_PORT {
 	/// Returns the `dbcp_name` field.
 	#[must_use]
 	pub fn dbcp_name(&self) -> String {
-		unsafe { WString::from_wchars_nullt(self.dbcp_name.as_ptr()) }
-			.to_string()
+		unsafe { WString::from_wchars_nullt(self.dbcp_name.as_ptr()) }.to_string()
 	}
 }
 
@@ -217,8 +213,7 @@ impl SID {
 	#[must_use]
 	pub fn SubAuthority(&self) -> &[co::RID] {
 		unsafe {
-			std::slice::from_raw_parts(
-				self.SubAuthority.as_ptr(), self.SubAuthorityCount as _)
+			std::slice::from_raw_parts(self.SubAuthority.as_ptr(), self.SubAuthorityCount as _)
 		}
 	}
 }
@@ -382,33 +377,20 @@ impl<'a> TOKEN_GROUPS<'a> {
 	/// Returns a dynamically allocated
 	/// [`TokenGroupsGuard`](crate::guard::TokenGroupsGuard).
 	#[must_use]
-	pub fn new(
-		groups: &'a [SID_AND_ATTRIBUTES<'a>],
-	) -> SysResult<TokenGroupsGuard<'a>>
-	{
+	pub fn new(groups: &'a [SID_AND_ATTRIBUTES<'a>]) -> SysResult<TokenGroupsGuard<'a>> {
 		TokenGroupsGuard::new(groups)
 	}
 
 	/// Returns a constant slice over the `Groups` entries.
 	#[must_use]
 	pub const fn Groups(&self) -> &[SID_AND_ATTRIBUTES<'a>] {
-		unsafe {
-			std::slice::from_raw_parts(
-				self.Groups.as_ptr(),
-				self.GroupCount as _,
-			)
-		}
+		unsafe { std::slice::from_raw_parts(self.Groups.as_ptr(), self.GroupCount as _) }
 	}
 
 	/// Returns a mutable slice over the `Groups` entries.
 	#[must_use]
 	pub fn Groups_mut(&mut self) -> &mut [SID_AND_ATTRIBUTES<'a>] {
-		unsafe {
-			std::slice::from_raw_parts_mut(
-				self.Groups.as_mut_ptr(),
-				self.GroupCount as _,
-			)
-		}
+		unsafe { std::slice::from_raw_parts_mut(self.Groups.as_mut_ptr(), self.GroupCount as _) }
 	}
 }
 
@@ -518,32 +500,21 @@ impl TOKEN_PRIVILEGES {
 	/// Returns a dynamically allocated
 	/// [`TokenPrivilegesGuard`](crate::guard::TokenPrivilegesGuard).
 	#[must_use]
-	pub fn new(
-		privileges: &[LUID_AND_ATTRIBUTES],
-	) -> SysResult<TokenPrivilegesGuard>
-	{
+	pub fn new(privileges: &[LUID_AND_ATTRIBUTES]) -> SysResult<TokenPrivilegesGuard> {
 		TokenPrivilegesGuard::new(privileges)
 	}
 
 	/// Returns a constant slice over the `Privileges` entries.
 	#[must_use]
 	pub const fn Privileges(&self) -> &[LUID_AND_ATTRIBUTES] {
-		unsafe {
-			std::slice::from_raw_parts(
-				self.Privileges.as_ptr(),
-				self.PrivilegeCount as _,
-			)
-		}
+		unsafe { std::slice::from_raw_parts(self.Privileges.as_ptr(), self.PrivilegeCount as _) }
 	}
 
 	/// Returns a mutable slice over the `Privileges` entries.
 	#[must_use]
 	pub fn Privileges_mut(&mut self) -> &mut [LUID_AND_ATTRIBUTES] {
 		unsafe {
-			std::slice::from_raw_parts_mut(
-				self.Privileges.as_mut_ptr(),
-				self.PrivilegeCount as _,
-			)
+			std::slice::from_raw_parts_mut(self.Privileges.as_mut_ptr(), self.PrivilegeCount as _)
 		}
 	}
 }

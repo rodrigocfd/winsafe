@@ -15,7 +15,9 @@ pub(in crate::gui) struct DlgBase {
 impl Drop for DlgBase {
 	fn drop(&mut self) {
 		if *self.base.hwnd() != HWND::NULL {
-			unsafe { self.base.hwnd().SetWindowLongPtr(co::GWLP::DWLP_USER, 0); } // clear passed pointer
+			unsafe {
+				self.base.hwnd().SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
+			}
 		}
 	}
 }
@@ -23,10 +25,7 @@ impl Drop for DlgBase {
 impl DlgBase {
 	#[must_use]
 	pub(in crate::gui) fn new(dlg_id: u16) -> Self {
-		Self {
-			base: BaseWnd::new(IsDlg::Yes),
-			dlg_id,
-		}
+		Self { base: BaseWnd::new(IsDlg::Yes), dlg_id }
 	}
 
 	#[must_use]
@@ -38,7 +37,8 @@ impl DlgBase {
 		if *self.base.hwnd() != HWND::NULL {
 			panic!("Cannot create dialog twice.");
 		}
-		unsafe { // the hwnd member is saved in WM_INITDIALOG processing in dlg_proc
+		unsafe {
+			// The hwnd member is saved in WM_INITDIALOG processing in dlg_proc.
 			hinst.CreateDialogParam(
 				IdStr::Id(self.dlg_id),
 				None,
@@ -48,7 +48,11 @@ impl DlgBase {
 		}
 		Ok(())
 	}
-	pub(in crate::gui) fn dialog_box_param(&self, hinst: &HINSTANCE, hparent: &HWND) -> SysResult<()> {
+	pub(in crate::gui) fn dialog_box_param(
+		&self,
+		hinst: &HINSTANCE,
+		hparent: &HWND,
+	) -> SysResult<()> {
 		if *self.base.hwnd() != HWND::NULL {
 			panic!("Cannot create dialog twice.");
 		}
@@ -68,38 +72,39 @@ impl DlgBase {
 		// Resource icons are automatically released by the system.
 		unsafe {
 			self.base.hwnd().SendMessage(wm::SetIcon {
-				hicon: hinst.LoadImageIcon(
-					IdOicStr::Id(icon_id), SIZE::new(16, 16), co::LR::DEFAULTCOLOR)?.leak(),
+				hicon: hinst
+					.LoadImageIcon(IdOicStr::Id(icon_id), SIZE::new(16, 16), co::LR::DEFAULTCOLOR)?
+					.leak(),
 				size: co::ICON_SZ::SMALL,
 			});
 
 			self.base.hwnd().SendMessage(wm::SetIcon {
-				hicon: hinst.LoadImageIcon(
-					IdOicStr::Id(icon_id), SIZE::new(32, 32), co::LR::DEFAULTCOLOR)?.leak(),
+				hicon: hinst
+					.LoadImageIcon(IdOicStr::Id(icon_id), SIZE::new(32, 32), co::LR::DEFAULTCOLOR)?
+					.leak(),
 				size: co::ICON_SZ::BIG,
 			});
 		}
 		Ok(())
 	}
 
-	extern "system" fn dlg_proc(
-		hwnd: HWND,
-		msg: co::WM,
-		wparam: usize,
-		lparam: isize,
-	) -> isize
-	{
+	extern "system" fn dlg_proc(hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize {
 		let wm_any = WndMsg::new(msg, wparam, lparam);
-		Self::dlg_proc_proc(hwnd, wm_any)
-			.unwrap_or_else(|err| { quit_error::post_quit_error(wm_any, err); true as _ })
+		Self::dlg_proc_proc(hwnd, wm_any).unwrap_or_else(|err| {
+			quit_error::post_quit_error(wm_any, err);
+			true as _
+		})
 	}
 
 	fn dlg_proc_proc(hwnd: HWND, p: WndMsg) -> AnyResult<isize> {
 		let ptr_self = match p.msg_id {
-			co::WM::INITDIALOG => { // first message being handled
+			co::WM::INITDIALOG => {
+				// first message being handled
 				let msg = unsafe { wm::InitDialog::from_generic_wm(p) };
 				let ptr_self = msg.additional_data as *mut Self;
-				unsafe { hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as _); } // store
+				unsafe {
+					hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, ptr_self as _); // store
+				}
 				let ref_self = unsafe { &mut *ptr_self };
 				ref_self.base.set_hwnd(unsafe { hwnd.raw_copy() }); // store HWND in struct field
 				ptr_self
@@ -123,8 +128,11 @@ impl DlgBase {
 		// Execute post-user closures, keep track if at least one was executed.
 		let at_least_one_after = ref_self.base.process_after_messages(p)?;
 
-		if p.msg_id == co::WM::NCDESTROY { // always check
-			unsafe { hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); } // clear passed pointer
+		// Always check.
+		if p.msg_id == co::WM::NCDESTROY {
+			unsafe {
+				hwnd.SetWindowLongPtr(co::GWLP::DWLP_USER, 0); // clear passed pointer
+			}
 			ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
 			ref_self.base.clear_messages(); // prevents circular references
 		}

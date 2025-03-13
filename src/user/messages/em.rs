@@ -195,7 +195,8 @@ impl<'a> MsgSend for GetLine<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		self.buffer.fill_with_zero();
 		let buf_len = self.buffer.buf_len() - 1; // leave room for terminating null
-		self.buffer.as_mut_slice()
+		self.buffer
+			.as_mut_slice()
 			.iter_mut()
 			.next()
 			.map(|wchar| *wchar = buf_len as _); // leave room for terminating null
@@ -340,7 +341,10 @@ impl<'a, 'b> MsgSend for GetSel<'a, 'b> {
 		WndMsg {
 			msg_id: co::EM::GETSEL.into(),
 			wparam: self.first_index.as_mut().map_or(0, |r| r as *mut _ as _),
-			lparam: self.past_last_index.as_mut().map_or(0, |r| r as *mut _ as _),
+			lparam: self
+				.past_last_index
+				.as_mut()
+				.map_or(0, |r| r as *mut _ as _),
 		}
 	}
 }

@@ -45,43 +45,37 @@ pub trait advapi_Haccesstoken: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	fn AdjustTokenPrivileges(&self, new_state: DisabPriv) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe {
-				ffi::AdjustTokenPrivileges(
-					self.ptr(),
-					match new_state {
-						DisabPriv::Disab => 1,
-						_ => 0,
-					},
-					match new_state {
-						DisabPriv::Privs(privs) => privs as *const _ as _,
-						_ => std::ptr::null(),
-					},
-					0,
-					std::ptr::null_mut(),
-					std::ptr::null_mut(),
-				)
-			},
-		)
+		bool_to_sysresult(unsafe {
+			ffi::AdjustTokenPrivileges(
+				self.ptr(),
+				match new_state {
+					DisabPriv::Disab => 1,
+					_ => 0,
+				},
+				match new_state {
+					DisabPriv::Privs(privs) => privs as *const _ as _,
+					_ => std::ptr::null(),
+				},
+				0,
+				std::ptr::null_mut(),
+				std::ptr::null_mut(),
+			)
+		})
 	}
 
 	/// [`CheckTokenCapability`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokencapability)
 	/// function.
 	#[must_use]
-	fn CheckTokenCapability(&self,
-		capability_sid_to_check: &SID,
-	) -> SysResult<bool>
-	{
+	fn CheckTokenCapability(&self, capability_sid_to_check: &SID) -> SysResult<bool> {
 		let mut has_capability: BOOL = 0;
-		bool_to_sysresult(
-			unsafe {
-				ffi::CheckTokenCapability(
-					self.ptr(),
-					capability_sid_to_check as *const _ as _,
-					&mut has_capability,
-				)
-			},
-		).map(|_| has_capability != 0)
+		bool_to_sysresult(unsafe {
+			ffi::CheckTokenCapability(
+				self.ptr(),
+				capability_sid_to_check as *const _ as _,
+				&mut has_capability,
+			)
+		})
+		.map(|_| has_capability != 0)
 	}
 
 	/// [`CheckTokenMembership`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokenmembership)
@@ -89,33 +83,23 @@ pub trait advapi_Haccesstoken: Handle {
 	#[must_use]
 	fn CheckTokenMembership(&self, sid_to_check: &SID) -> SysResult<bool> {
 		let mut is_member: BOOL = 0;
-		bool_to_sysresult(
-			unsafe {
-				ffi::CheckTokenMembership(
-					self.ptr(),
-					sid_to_check as *const _ as _,
-					&mut is_member,
-				)
-			},
-		).map(|_| is_member != 0)
+		bool_to_sysresult(unsafe {
+			ffi::CheckTokenMembership(self.ptr(), sid_to_check as *const _ as _, &mut is_member)
+		})
+		.map(|_| is_member != 0)
 	}
 
 	/// [`DuplicateToken`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-duplicatetoken)
 	/// function.
 	#[must_use]
-	fn DuplicateToken(&self,
+	fn DuplicateToken(
+		&self,
 		level: co::SECURITY_IMPERSONATION,
-	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
-	{
+	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>> {
 		let mut handle = HACCESSTOKEN::NULL;
 		unsafe {
-			bool_to_sysresult(
-				ffi::DuplicateToken(
-					self.ptr(),
-					level.raw(),
-					handle.as_mut(),
-				),
-			).map(|_| CloseHandleGuard::new(handle))
+			bool_to_sysresult(ffi::DuplicateToken(self.ptr(), level.raw(), handle.as_mut()))
+				.map(|_| CloseHandleGuard::new(handle))
 		}
 	}
 
@@ -164,22 +148,20 @@ pub trait advapi_Haccesstoken: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn GetTokenInformation(&self,
+	fn GetTokenInformation(
+		&self,
 		information_class: co::TOKEN_INFORMATION_CLASS,
-	) -> SysResult<TokenInfo>
-	{
+	) -> SysResult<TokenInfo> {
 		let mut num_bytes = u32::default();
-		match bool_to_sysresult(
-			unsafe {
-				ffi::GetTokenInformation(
-					self.ptr(),
-					information_class.raw(),
-					std::ptr::null_mut(),
-					0,
-					&mut num_bytes,
-				)
-			},
-		) {
+		match bool_to_sysresult(unsafe {
+			ffi::GetTokenInformation(
+				self.ptr(),
+				information_class.raw(),
+				std::ptr::null_mut(),
+				0,
+				&mut num_bytes,
+			)
+		}) {
 			Err(err) => match err {
 				co::ERROR::INSUFFICIENT_BUFFER => {}, // all good
 				err => return Err(err),
@@ -190,114 +172,117 @@ pub trait advapi_Haccesstoken: Handle {
 		let mut buf = vec![0u8; num_bytes as usize].into_boxed_slice();
 
 		unsafe {
-			bool_to_sysresult(
-				ffi::GetTokenInformation(
-					self.ptr(),
-					information_class.raw(),
-					buf.as_mut_ptr() as _,
-					num_bytes,
-					&mut num_bytes,
+			bool_to_sysresult(ffi::GetTokenInformation(
+				self.ptr(),
+				information_class.raw(),
+				buf.as_mut_ptr() as _,
+				num_bytes,
+				&mut num_bytes,
+			))
+			.map(|_| match information_class {
+				co::TOKEN_INFORMATION_CLASS::User => {
+					TokenInfo::User(Box::from_raw(Box::into_raw(buf) as *mut TOKEN_USER))
+				},
+				co::TOKEN_INFORMATION_CLASS::Groups => {
+					TokenInfo::Groups(Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS))
+				},
+				co::TOKEN_INFORMATION_CLASS::Privileges => TokenInfo::Privileges(Box::from_raw(
+					Box::into_raw(buf) as *mut TOKEN_PRIVILEGES,
+				)),
+				co::TOKEN_INFORMATION_CLASS::Owner => {
+					TokenInfo::Owner(Box::from_raw(Box::into_raw(buf) as *mut TOKEN_OWNER))
+				},
+				co::TOKEN_INFORMATION_CLASS::PrimaryGroup => TokenInfo::PrimaryGroup(
+					Box::from_raw(Box::into_raw(buf) as *mut TOKEN_PRIMARY_GROUP),
 				),
-			).map(|_| {
-				match information_class {
-					co::TOKEN_INFORMATION_CLASS::User => TokenInfo::User(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_USER),
-					),
-					co::TOKEN_INFORMATION_CLASS::Groups => TokenInfo::Groups(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS),
-					),
-					co::TOKEN_INFORMATION_CLASS::Privileges => TokenInfo::Privileges(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_PRIVILEGES),
-					),
-					co::TOKEN_INFORMATION_CLASS::Owner => TokenInfo::Owner(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_OWNER),
-					),
-					co::TOKEN_INFORMATION_CLASS::PrimaryGroup => TokenInfo::PrimaryGroup(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_PRIMARY_GROUP),
-					),
-					co::TOKEN_INFORMATION_CLASS::DefaultDacl => TokenInfo::DefaultDacl(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_DEFAULT_DACL),
-					),
-					co::TOKEN_INFORMATION_CLASS::Source => TokenInfo::Source(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_SOURCE),
-					),
-					co::TOKEN_INFORMATION_CLASS::Type => TokenInfo::Type(
-						Box::from_raw(Box::into_raw(buf) as *mut co::TOKEN_TYPE),
-					),
-					co::TOKEN_INFORMATION_CLASS::ImpersonationLevel => TokenInfo::ImpersonationLevel(
-						Box::from_raw(Box::into_raw(buf) as *mut co::SECURITY_IMPERSONATION),
-					),
-					co::TOKEN_INFORMATION_CLASS::Statistics => TokenInfo::Statistics(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_STATISTICS),
-					),
-					co::TOKEN_INFORMATION_CLASS::RestrictedSids => TokenInfo::RestrictedSids(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS),
-					),
-					co::TOKEN_INFORMATION_CLASS::SessionId => TokenInfo::SessionId(
-						Box::from_raw(Box::into_raw(buf) as *mut u32),
-					),
-					co::TOKEN_INFORMATION_CLASS::GroupsAndPrivileges => TokenInfo::GroupsAndPrivileges(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS_AND_PRIVILEGES),
-					),
-					co::TOKEN_INFORMATION_CLASS::SandBoxInert => TokenInfo::SandBoxInert(
-						Box::from_raw(Box::into_raw(buf) as *mut u32),
-					),
-					co::TOKEN_INFORMATION_CLASS::Origin => TokenInfo::Origin(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_ORIGIN),
-					),
-					co::TOKEN_INFORMATION_CLASS::ElevationType => TokenInfo::ElevationType(
-						Box::from_raw(Box::into_raw(buf) as *mut co::TOKEN_ELEVATION_TYPE),
-					),
-					co::TOKEN_INFORMATION_CLASS::LinkedToken => TokenInfo::LinkedToken(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_LINKED_TOKEN),
-					),
-					co::TOKEN_INFORMATION_CLASS::Elevation => TokenInfo::Elevation(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_ELEVATION),
-					),
-					co::TOKEN_INFORMATION_CLASS::HasRestrictions => TokenInfo::HasRestrictions(
-						Box::from_raw(Box::into_raw(buf) as *mut u32),
-					),
-					co::TOKEN_INFORMATION_CLASS::AccessInformation => TokenInfo::AccessInformation(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_ACCESS_INFORMATION),
-					),
-					co::TOKEN_INFORMATION_CLASS::VirtualizationAllowed => TokenInfo::VirtualizationAllowed(
-						Box::from_raw(Box::into_raw(buf) as *mut u32),
-					),
-					co::TOKEN_INFORMATION_CLASS::VirtualizationEnabled => TokenInfo::VirtualizationEnabled(
-						Box::from_raw(Box::into_raw(buf) as *mut u32),
-					),
-					co::TOKEN_INFORMATION_CLASS::IntegrityLevel => TokenInfo::IntegrityLevel(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_MANDATORY_LABEL),
-					),
-					co::TOKEN_INFORMATION_CLASS::UIAccess => TokenInfo::UIAccess(
-						Box::from_raw(Box::into_raw(buf) as *mut u32),
-					),
-					co::TOKEN_INFORMATION_CLASS::MandatoryPolicy => TokenInfo::MandatoryPolicy(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_MANDATORY_POLICY),
-					),
-					co::TOKEN_INFORMATION_CLASS::LogonSid => TokenInfo::LogonSid(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS),
-					),
-					co::TOKEN_INFORMATION_CLASS::IsAppContainer => TokenInfo::IsAppContainer(
-						Box::from_raw(Box::into_raw(buf) as *mut u32),
-					),
-					co::TOKEN_INFORMATION_CLASS::Capabilities => TokenInfo::Capabilities(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS),
-					),
-					co::TOKEN_INFORMATION_CLASS::AppContainerNumber => TokenInfo::AppContainerNumber(
-						Box::from_raw(Box::into_raw(buf) as *mut u32),
-					),
-					co::TOKEN_INFORMATION_CLASS::DeviceClaimAttributes => TokenInfo::DeviceClaimAttributes(
-						Box::from_raw(Box::into_raw(buf) as *mut CLAIM_SECURITY_ATTRIBUTES_INFORMATION),
-					),
-					co::TOKEN_INFORMATION_CLASS::DeviceGroups => TokenInfo::DeviceGroups(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS),
-					),
-					co::TOKEN_INFORMATION_CLASS::RestrictedDeviceGroups => TokenInfo::RestrictedDeviceGroups(
-						Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS),
-					),
-					_ => panic!("co::TOKEN_INFORMATION_CLASS not implemented yet: {}", information_class),
-				}
+				co::TOKEN_INFORMATION_CLASS::DefaultDacl => TokenInfo::DefaultDacl(Box::from_raw(
+					Box::into_raw(buf) as *mut TOKEN_DEFAULT_DACL,
+				)),
+				co::TOKEN_INFORMATION_CLASS::Source => {
+					TokenInfo::Source(Box::from_raw(Box::into_raw(buf) as *mut TOKEN_SOURCE))
+				},
+				co::TOKEN_INFORMATION_CLASS::Type => {
+					TokenInfo::Type(Box::from_raw(Box::into_raw(buf) as *mut co::TOKEN_TYPE))
+				},
+				co::TOKEN_INFORMATION_CLASS::ImpersonationLevel => TokenInfo::ImpersonationLevel(
+					Box::from_raw(Box::into_raw(buf) as *mut co::SECURITY_IMPERSONATION),
+				),
+				co::TOKEN_INFORMATION_CLASS::Statistics => TokenInfo::Statistics(Box::from_raw(
+					Box::into_raw(buf) as *mut TOKEN_STATISTICS,
+				)),
+				co::TOKEN_INFORMATION_CLASS::RestrictedSids => TokenInfo::RestrictedSids(
+					Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS),
+				),
+				co::TOKEN_INFORMATION_CLASS::SessionId => {
+					TokenInfo::SessionId(Box::from_raw(Box::into_raw(buf) as *mut u32))
+				},
+				co::TOKEN_INFORMATION_CLASS::GroupsAndPrivileges => TokenInfo::GroupsAndPrivileges(
+					Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS_AND_PRIVILEGES),
+				),
+				co::TOKEN_INFORMATION_CLASS::SandBoxInert => {
+					TokenInfo::SandBoxInert(Box::from_raw(Box::into_raw(buf) as *mut u32))
+				},
+				co::TOKEN_INFORMATION_CLASS::Origin => {
+					TokenInfo::Origin(Box::from_raw(Box::into_raw(buf) as *mut TOKEN_ORIGIN))
+				},
+				co::TOKEN_INFORMATION_CLASS::ElevationType => TokenInfo::ElevationType(
+					Box::from_raw(Box::into_raw(buf) as *mut co::TOKEN_ELEVATION_TYPE),
+				),
+				co::TOKEN_INFORMATION_CLASS::LinkedToken => TokenInfo::LinkedToken(Box::from_raw(
+					Box::into_raw(buf) as *mut TOKEN_LINKED_TOKEN,
+				)),
+				co::TOKEN_INFORMATION_CLASS::Elevation => {
+					TokenInfo::Elevation(Box::from_raw(Box::into_raw(buf) as *mut TOKEN_ELEVATION))
+				},
+				co::TOKEN_INFORMATION_CLASS::HasRestrictions => {
+					TokenInfo::HasRestrictions(Box::from_raw(Box::into_raw(buf) as *mut u32))
+				},
+				co::TOKEN_INFORMATION_CLASS::AccessInformation => TokenInfo::AccessInformation(
+					Box::from_raw(Box::into_raw(buf) as *mut TOKEN_ACCESS_INFORMATION),
+				),
+				co::TOKEN_INFORMATION_CLASS::VirtualizationAllowed => {
+					TokenInfo::VirtualizationAllowed(Box::from_raw(Box::into_raw(buf) as *mut u32))
+				},
+				co::TOKEN_INFORMATION_CLASS::VirtualizationEnabled => {
+					TokenInfo::VirtualizationEnabled(Box::from_raw(Box::into_raw(buf) as *mut u32))
+				},
+				co::TOKEN_INFORMATION_CLASS::IntegrityLevel => TokenInfo::IntegrityLevel(
+					Box::from_raw(Box::into_raw(buf) as *mut TOKEN_MANDATORY_LABEL),
+				),
+				co::TOKEN_INFORMATION_CLASS::UIAccess => {
+					TokenInfo::UIAccess(Box::from_raw(Box::into_raw(buf) as *mut u32))
+				},
+				co::TOKEN_INFORMATION_CLASS::MandatoryPolicy => TokenInfo::MandatoryPolicy(
+					Box::from_raw(Box::into_raw(buf) as *mut TOKEN_MANDATORY_POLICY),
+				),
+				co::TOKEN_INFORMATION_CLASS::LogonSid => {
+					TokenInfo::LogonSid(Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS))
+				},
+				co::TOKEN_INFORMATION_CLASS::IsAppContainer => {
+					TokenInfo::IsAppContainer(Box::from_raw(Box::into_raw(buf) as *mut u32))
+				},
+				co::TOKEN_INFORMATION_CLASS::Capabilities => {
+					TokenInfo::Capabilities(Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS))
+				},
+				co::TOKEN_INFORMATION_CLASS::AppContainerNumber => {
+					TokenInfo::AppContainerNumber(Box::from_raw(Box::into_raw(buf) as *mut u32))
+				},
+				co::TOKEN_INFORMATION_CLASS::DeviceClaimAttributes => {
+					TokenInfo::DeviceClaimAttributes(Box::from_raw(
+						Box::into_raw(buf) as *mut CLAIM_SECURITY_ATTRIBUTES_INFORMATION
+					))
+				},
+				co::TOKEN_INFORMATION_CLASS::DeviceGroups => {
+					TokenInfo::DeviceGroups(Box::from_raw(Box::into_raw(buf) as *mut TOKEN_GROUPS))
+				},
+				co::TOKEN_INFORMATION_CLASS::RestrictedDeviceGroups => {
+					TokenInfo::RestrictedDeviceGroups(Box::from_raw(
+						Box::into_raw(buf) as *mut TOKEN_GROUPS
+					))
+				},
+				_ => {
+					panic!("co::TOKEN_INFORMATION_CLASS not implemented yet: {}", information_class)
+				},
 			})
 		}
 	}

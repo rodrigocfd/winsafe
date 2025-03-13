@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::{events::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -30,42 +30,48 @@ impl RadioButton {
 		parent: &(impl GuiParent + 'static),
 		opts: RadioButtonOpts,
 		is_first: bool,
-	) -> Self
-	{
+	) -> Self {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
-		let new_self = Self(
-			Arc::pin(
-				RadioButtonObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: ButtonEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+		let new_self = Self(Arc::pin(RadioButtonObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: ButtonEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
-		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
-			self2.0.base.create_window(opts.window_ex_style, "BUTTON", Some(&opts.text),
-				if is_first {
-					opts.window_style | co::WS::GROUP | co::WS::TABSTOP
-				} else {
-					opts.window_style & !(co::WS::GROUP | co::WS::TABSTOP)
-				} | opts.control_style.into(), opts.position.into(),
-				if opts.size == (0, 0) {
-					text_calc::bound_box_with_check(
-						&text_calc::remove_accel_ampersands(&opts.text))?
-				} else {
-					opts.size.into()
-				},
-				&parent2)?;
-			ui_font::set(self2.hwnd())?;
-			if opts.selected {
-				self2.select(true);
-			}
-			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
-			Ok(0) // ignored
-		});
+		parent
+			.as_ref()
+			.before_on()
+			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+				self2.0.base.create_window(
+					opts.window_ex_style,
+					"BUTTON",
+					Some(&opts.text),
+					if is_first {
+						opts.window_style | co::WS::GROUP | co::WS::TABSTOP
+					} else {
+						opts.window_style & !(co::WS::GROUP | co::WS::TABSTOP)
+					} | opts.control_style.into(),
+					opts.position.into(),
+					if opts.size == (0, 0) {
+						text_calc::bound_box_with_check(&text_calc::remove_accel_ampersands(
+							&opts.text,
+						))?
+					} else {
+						opts.size.into()
+					},
+					&parent2,
+				)?;
+				ui_font::set(self2.hwnd())?;
+				if opts.selected {
+					self2.select(true);
+				}
+				parent2
+					.as_ref()
+					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+				Ok(0) // ignored
+			});
 
 		new_self
 	}
@@ -76,17 +82,12 @@ impl RadioButton {
 		ctrl_id: u16,
 		is_first: bool,
 		resize_behavior: (Horz, Vert),
-	) -> Self
-	{
-		let new_self = Self(
-			Arc::pin(
-				RadioButtonObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: ButtonEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+	) -> Self {
+		let new_self = Self(Arc::pin(RadioButtonObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: ButtonEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
@@ -97,7 +98,9 @@ impl RadioButton {
 			} else {
 				self2.hwnd().style() & !(co::WS::GROUP | co::WS::TABSTOP)
 			});
-			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			parent2
+				.as_ref()
+				.add_to_layout(self2.hwnd(), resize_behavior)?;
 			Ok(true) // ignored
 		});
 
@@ -129,13 +132,11 @@ impl RadioButton {
 		self.select(selected);
 		unsafe {
 			self.hwnd().GetParent()?.SendMessage(wm::Command {
-				event: AccelMenuCtrl::Ctrl(
-					AccelMenuCtrlData {
-						notif_code: co::BN::CLICKED.into(),
-						ctrl_id: self.ctrl_id(),
-						ctrl_hwnd: self.hwnd().raw_copy(),
-					},
-				),
+				event: AccelMenuCtrl::Ctrl(AccelMenuCtrlData {
+					notif_code: co::BN::CLICKED.into(),
+					ctrl_id: self.ctrl_id(),
+					ctrl_hwnd: self.hwnd().raw_copy(),
+				}),
 			});
 		}
 		Ok(())
@@ -145,11 +146,13 @@ impl RadioButton {
 	/// to set the text and resizes the control to exactly fit it.
 	pub fn set_text_and_resize(&self, text: &str) -> SysResult<()> {
 		self.hwnd().SetWindowText(text)?;
-		let bound_box = text_calc::bound_box_with_check(
-			&text_calc::remove_accel_ampersands(text))?;
+		let bound_box = text_calc::bound_box_with_check(&text_calc::remove_accel_ampersands(text))?;
 		self.hwnd().SetWindowPos(
-			HwndPlace::None, POINT::default(), bound_box,
-			co::SWP::NOZORDER | co::SWP::NOMOVE)?;
+			HwndPlace::None,
+			POINT::default(),
+			bound_box,
+			co::SWP::NOZORDER | co::SWP::NOMOVE,
+		)?;
 		Ok(())
 	}
 }

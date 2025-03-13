@@ -5,11 +5,11 @@ mod enums;
 mod funcs;
 mod structs;
 
+pub mod co;
 pub(in crate::oleaut) mod ffi;
 pub(in crate::oleaut) mod iterators;
 pub(crate) mod privs;
 pub(crate) mod vts;
-pub mod co;
 
 pub mod decl {
 	pub use super::com_interfaces::decl::*;

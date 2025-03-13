@@ -64,9 +64,7 @@ pub trait dxgi_IDXGIFactory1: dxgi_IDXGIFactory {
 	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
-	fn EnumAdapters1(&self,
-	) -> impl Iterator<Item = HrResult<IDXGIAdapter1>> + '_
-	{
+	fn EnumAdapters1(&self) -> impl Iterator<Item = HrResult<IDXGIAdapter1>> + '_ {
 		IdxgifactoryEnumadapters1Iter::new(self)
 	}
 

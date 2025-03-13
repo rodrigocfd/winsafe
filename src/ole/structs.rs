@@ -167,7 +167,8 @@ impl SNB {
 		let tot_bytes_ptrs = (strs.len() + 1) * std::mem::size_of::<*mut u16>(); // plus null
 
 		let wstrs = WString::from_str_vec(strs);
-		let num_valid_chars = wstrs.as_slice() // count just the chars; important because stack alloc has zero fills
+		let num_valid_chars = wstrs
+			.as_slice() // count just the chars; important because stack alloc has zero fills
 			.iter()
 			.filter(|ch| **ch != 0x0000)
 			.count();
@@ -180,26 +181,28 @@ impl SNB {
 
 		let mut idx_cur_wstr = 0; // current string to be copied to block
 		*unsafe { block.as_mut_slice_aligned::<*mut u16>() }
-			.get_mut(idx_cur_wstr).unwrap() = ptr_block_wstrs; // copy pointer to 1st string
+			.get_mut(idx_cur_wstr)
+			.unwrap() = ptr_block_wstrs; // copy pointer to 1st string
 		idx_cur_wstr += 1;
 
-		wstrs.as_slice()
-			.iter()
-			.enumerate()
-			.for_each(|(idx, ch)| {
-				if *ch == 0x0000 && idx_cur_wstr < strs.len() {
-					unsafe {
-						*block.as_mut_slice_aligned::<*mut u16>() // copy pointer to subsequent strings in the block
-							.get_mut(idx_cur_wstr).unwrap() = ptr_block_wstrs.add(idx + 1);
-					}
-					idx_cur_wstr += 1;
+		wstrs.as_slice().iter().enumerate().for_each(|(idx, ch)| {
+			if *ch == 0x0000 && idx_cur_wstr < strs.len() {
+				unsafe {
+					*block
+						.as_mut_slice_aligned::<*mut u16>() // copy pointer to subsequent strings in the block
+						.get_mut(idx_cur_wstr)
+						.unwrap() = ptr_block_wstrs.add(idx + 1);
 				}
-			});
+				idx_cur_wstr += 1;
+			}
+		});
 
 		*unsafe { block.as_mut_slice_aligned::<*mut u16>() }
-			.get_mut(idx_cur_wstr).unwrap() = std::ptr::null_mut(); // null pointer after string pointers
+			.get_mut(idx_cur_wstr)
+			.unwrap() = std::ptr::null_mut(); // null pointer after string pointers
 
-		wstrs.copy_to_slice( // beyond pointers, copy each null-terminated string sequentially
+		wstrs.copy_to_slice(
+			// Beyond pointers, copy each null-terminated string sequentially.
 			unsafe {
 				std::slice::from_raw_parts_mut(
 					ptr_block_wstrs,
@@ -229,7 +232,8 @@ impl SNB {
 					let sli_ptrs = std::slice::from_raw_parts(self.0, idx_ptr + 1);
 					*sli_ptrs.get_unchecked(idx_ptr) // get nth pointer to string
 				};
-				if ptr_ws.is_null() { // a null pointer means the end of pointers block
+				if ptr_ws.is_null() {
+					// a null pointer means the end of pointers block
 					break;
 				}
 				let ws = unsafe { WString::from_wchars_nullt(ptr_ws) };

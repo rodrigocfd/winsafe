@@ -34,10 +34,7 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 	/// himgl.add_icons_from_shell(&["mp3", "wav"])?;
 	/// # w::HrResult::Ok(())
 	/// ```
-	fn add_icons_from_shell(&self,
-		file_extensions: &[impl AsRef<str>],
-	) -> HrResult<()>
-	{
+	fn add_icons_from_shell(&self, file_extensions: &[impl AsRef<str>]) -> HrResult<()> {
 		let sz = self.GetIconSize()?;
 		if sz != SIZE::new(16, 16) && sz != SIZE::new(32, 32) {
 			return Err(co::HRESULT::E_NOTIMPL); // only 16x16 or 32x32 icons can be loaded
@@ -47,8 +44,13 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 			let (_, shfi) = SHGetFileInfo(
 				&format!("*.{}", file_extension.as_ref()),
 				co::FILE_ATTRIBUTE::NORMAL,
-				co::SHGFI::USEFILEATTRIBUTES | co::SHGFI::ICON |
-				if sz == SIZE::new(16, 16) { co::SHGFI::SMALLICON } else { co::SHGFI::LARGEICON },
+				co::SHGFI::USEFILEATTRIBUTES
+					| co::SHGFI::ICON
+					| if sz == SIZE::new(16, 16) {
+						co::SHGFI::SMALLICON
+					} else {
+						co::SHGFI::LARGEICON
+					},
 			)?;
 			self.AddIcon(&shfi.hIcon)?;
 		}

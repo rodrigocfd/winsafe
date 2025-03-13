@@ -21,27 +21,32 @@ impl<'a> Iterator for DirListIter<'a> {
 		}
 
 		let found = match &self.hfind {
-			None => { // first pass
+			None => {
+				// first pass
 				let dir_final = match self.filter {
 					None => format!("{}\\*", self.dir_path),
 					Some(filter) => format!("{}\\{}", self.dir_path, filter),
 				};
 
 				let found = match HFINDFILE::FindFirstFile(&dir_final, &mut self.wfd) {
-					Err(e) => { // an actual error happened
+					Err(e) => {
+						// An actual error happened.
 						self.no_more = true; // prevent further iterations
 						return Some(Err(e)); // and return the error
 					},
-					Ok((hfind, found)) => { // call succeeded, bool returned
+					Ok((hfind, found)) => {
+						// Call succeeded, bool returned.
 						self.hfind = Some(hfind); // store our find handle
 						found
 					},
 				};
 				found
 			},
-			Some(hfind) => { // subsequent passes
+			Some(hfind) => {
+				// subsequent passes
 				match hfind.FindNextFile(&mut self.wfd) {
-					Err(e) => { // an actual error happened
+					Err(e) => {
+						// An actual error happened.
 						self.no_more = true; // prevent further iterations
 						return Some(Err(e)); // and return the error
 					},
@@ -50,25 +55,25 @@ impl<'a> Iterator for DirListIter<'a> {
 			},
 		};
 
-		if found { // a file was found
+		if found {
+			// A file was found.
 			let file_name = self.wfd.cFileName();
-			if file_name == "." || file_name == ".." { // skip these
+			if file_name == "." || file_name == ".." {
+				// Skip the dot ones.
 				self.next()
-			} else { // assembly the full path and return it
+			} else {
+				// Assembly the full path and return it.
 				Some(Ok(format!("{}\\{}", self.dir_path, self.wfd.cFileName())))
 			}
-		} else { // no file found, halt
-			None
+		} else {
+			None // no file found, halt
 		}
 	}
 }
 
 impl<'a> DirListIter<'a> {
 	#[must_use]
-	pub(in crate::kernel) fn new(
-		dir_path: String,
-		filter: Option<&'a str>,
-	) -> Self {
+	pub(in crate::kernel) fn new(dir_path: String, filter: Option<&'a str>) -> Self {
 		Self {
 			dir_path: path::rtrim_backslash(&dir_path).to_owned(),
 			filter,
@@ -97,9 +102,11 @@ impl<'a> Iterator for DirWalkIter<'a> {
 			None => {
 				let cur_file = self.runner.next();
 				match cur_file {
-					Some(cur_file) => { // a file was found
+					Some(cur_file) => {
+						// A file was found.
 						match cur_file {
-							Err(e) => { // actually an error
+							Err(e) => {
+								// Actually an error.
 								self.no_more = true; // prevent further iterations
 								Some(Err(e)) // return the error
 							},
@@ -119,13 +126,12 @@ impl<'a> Iterator for DirWalkIter<'a> {
 			Some(subdir_runner) => {
 				let inner_file = subdir_runner.next();
 				match inner_file {
-					None => { // subdir_runner finished his work
+					None => {
+						// Subdir_runner finished his work.
 						self.subdir_runner = None;
 						self.next()
 					},
-					Some(inner_file) => {
-						Some(inner_file)
-					},
+					Some(inner_file) => Some(inner_file),
 				}
 			},
 		}
@@ -144,7 +150,8 @@ impl<'a> DirWalkIter<'a> {
 }
 
 pub(in crate::kernel) struct HheapHeapwalkIter<'a, H>
-	where H: kernel_Hheap,
+where
+	H: kernel_Hheap,
 {
 	hheap: &'a H,
 	entry: PROCESS_HEAP_ENTRY,
@@ -152,7 +159,8 @@ pub(in crate::kernel) struct HheapHeapwalkIter<'a, H>
 }
 
 impl<'a, H> Iterator for HheapHeapwalkIter<'a, H>
-	where H: kernel_Hheap,
+where
+	H: kernel_Hheap,
 {
 	type Item = SysResult<&'a PROCESS_HEAP_ENTRY>;
 
@@ -161,14 +169,12 @@ impl<'a, H> Iterator for HheapHeapwalkIter<'a, H>
 			return None;
 		}
 
-		match unsafe {
-			ffi::HeapWalk(self.hheap.ptr(), &mut self.entry as *mut _ as _)
-		} {
+		match unsafe { ffi::HeapWalk(self.hheap.ptr(), &mut self.entry as *mut _ as _) } {
 			0 => {
 				self.has_more = false; // no further iterations
 				match GetLastError() {
 					co::ERROR::NO_MORE_ITEMS => None, // search completed successfully
-					err => Some(Err(err)), // actual error
+					err => Some(Err(err)),            // actual error
 				}
 			},
 			_ => {
@@ -182,7 +188,8 @@ impl<'a, H> Iterator for HheapHeapwalkIter<'a, H>
 }
 
 impl<'a, H> HheapHeapwalkIter<'a, H>
-	where H: kernel_Hheap,
+where
+	H: kernel_Hheap,
 {
 	#[must_use]
 	pub(in crate::kernel) fn new(hheap: &'a H) -> Self {
@@ -195,7 +202,8 @@ impl<'a, H> HheapHeapwalkIter<'a, H>
 }
 
 pub(in crate::kernel) struct HprocesslistHeapIter<'a, H>
-	where H: kernel_Hprocesslist,
+where
+	H: kernel_Hprocesslist,
 {
 	hpl: &'a mut H,
 	hl32: HEAPLIST32,
@@ -204,7 +212,8 @@ pub(in crate::kernel) struct HprocesslistHeapIter<'a, H>
 }
 
 impl<'a, H> Iterator for HprocesslistHeapIter<'a, H>
-	where H: kernel_Hprocesslist,
+where
+	H: kernel_Hprocesslist,
 {
 	type Item = SysResult<&'a HEAPLIST32>;
 
@@ -241,7 +250,8 @@ impl<'a, H> Iterator for HprocesslistHeapIter<'a, H>
 }
 
 impl<'a, H> HprocesslistHeapIter<'a, H>
-	where H: kernel_Hprocesslist,
+where
+	H: kernel_Hprocesslist,
 {
 	#[must_use]
 	pub(in crate::kernel) fn new(hpl: &'a mut H) -> Self {
@@ -255,7 +265,8 @@ impl<'a, H> HprocesslistHeapIter<'a, H>
 }
 
 pub(in crate::kernel) struct HprocesslistModuleIter<'a, H>
-	where H: kernel_Hprocesslist,
+where
+	H: kernel_Hprocesslist,
 {
 	hpl: &'a mut H,
 	me32: MODULEENTRY32,
@@ -264,7 +275,8 @@ pub(in crate::kernel) struct HprocesslistModuleIter<'a, H>
 }
 
 impl<'a, H> Iterator for HprocesslistModuleIter<'a, H>
-	where H: kernel_Hprocesslist,
+where
+	H: kernel_Hprocesslist,
 {
 	type Item = SysResult<&'a MODULEENTRY32>;
 
@@ -301,7 +313,8 @@ impl<'a, H> Iterator for HprocesslistModuleIter<'a, H>
 }
 
 impl<'a, H> HprocesslistModuleIter<'a, H>
-	where H: kernel_Hprocesslist,
+where
+	H: kernel_Hprocesslist,
 {
 	#[must_use]
 	pub(in crate::kernel) fn new(hpl: &'a mut H) -> Self {
@@ -315,7 +328,8 @@ impl<'a, H> HprocesslistModuleIter<'a, H>
 }
 
 pub(in crate::kernel) struct HprocesslistProcessIter<'a, H>
-	where H: kernel_Hprocesslist,
+where
+	H: kernel_Hprocesslist,
 {
 	hpl: &'a mut H,
 	pe32: PROCESSENTRY32,
@@ -324,7 +338,8 @@ pub(in crate::kernel) struct HprocesslistProcessIter<'a, H>
 }
 
 impl<'a, H> Iterator for HprocesslistProcessIter<'a, H>
-	where H: kernel_Hprocesslist,
+where
+	H: kernel_Hprocesslist,
 {
 	type Item = SysResult<&'a PROCESSENTRY32>;
 
@@ -361,7 +376,8 @@ impl<'a, H> Iterator for HprocesslistProcessIter<'a, H>
 }
 
 impl<'a, H> HprocesslistProcessIter<'a, H>
-	where H: kernel_Hprocesslist,
+where
+	H: kernel_Hprocesslist,
 {
 	#[must_use]
 	pub(in crate::kernel) fn new(hpl: &'a mut H) -> Self {
@@ -375,7 +391,8 @@ impl<'a, H> HprocesslistProcessIter<'a, H>
 }
 
 pub(in crate::kernel) struct HprocesslistThreadIter<'a, H>
-	where H: kernel_Hprocesslist,
+where
+	H: kernel_Hprocesslist,
 {
 	hpl: &'a mut H,
 	te32: THREADENTRY32,
@@ -384,7 +401,8 @@ pub(in crate::kernel) struct HprocesslistThreadIter<'a, H>
 }
 
 impl<'a, H> Iterator for HprocesslistThreadIter<'a, H>
-	where H: kernel_Hprocesslist,
+where
+	H: kernel_Hprocesslist,
 {
 	type Item = SysResult<&'a THREADENTRY32>;
 
@@ -421,7 +439,8 @@ impl<'a, H> Iterator for HprocesslistThreadIter<'a, H>
 }
 
 impl<'a, H> HprocesslistThreadIter<'a, H>
-	where H: kernel_Hprocesslist,
+where
+	H: kernel_Hprocesslist,
 {
 	#[must_use]
 	pub(in crate::kernel) fn new(hpl: &'a mut H) -> Self {

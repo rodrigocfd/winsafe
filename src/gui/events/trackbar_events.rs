@@ -29,7 +29,8 @@ impl TrackbarEvents {
 	/// [`WM_HSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-hscroll--trackbar-)
 	/// notification.
 	pub fn wm_h_scroll<F>(&self, func: F)
-		where F: Fn(wm::HScroll) -> AnyResult<()> + 'static,
+	where
+		F: Fn(wm::HScroll) -> AnyResult<()> + 'static,
 	{
 		let def_proc_val = self.0.is_dlg().def_proc_val();
 		self.0.wm(co::WM::HSCROLL, move |p| {
@@ -41,7 +42,8 @@ impl TrackbarEvents {
 	/// [`WM_VSCROLL`](https://learn.microsoft.com/en-us/windows/win32/controls/wm-vscroll--trackbar-)
 	/// notification.
 	pub fn wm_v_scroll<F>(&self, func: F)
-		where F: Fn(wm::VScroll) -> AnyResult<()> + 'static,
+	where
+		F: Fn(wm::VScroll) -> AnyResult<()> + 'static,
 	{
 		let def_proc_val = self.0.is_dlg().def_proc_val();
 		self.0.wm(co::WM::VSCROLL, move |p| {
@@ -53,7 +55,8 @@ impl TrackbarEvents {
 	/// [`NM_CUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-customdraw-trackbar)
 	/// notification.
 	pub fn nm_custom_draw<F>(&self, func: F)
-		where F: Fn(&NMCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
+	where
+		F: Fn(&NMCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
 		self.0.wm_notify(co::NM::CUSTOMDRAW, move |p| {
 			Ok(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })?.raw() as _)

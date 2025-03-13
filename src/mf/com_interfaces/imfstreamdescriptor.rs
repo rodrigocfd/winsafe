@@ -36,13 +36,9 @@ pub trait mf_IMFStreamDescriptor: mf_IMFAttributes {
 	#[must_use]
 	fn GetStreamIdentifier(&self) -> HrResult<u32> {
 		let mut id = u32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFStreamDescriptorVT>(self).GetStreamIdentifier)(
-					self.ptr(),
-					&mut id,
-				)
-			},
-		).map(|_| id)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFStreamDescriptorVT>(self).GetStreamIdentifier)(self.ptr(), &mut id)
+		})
+		.map(|_| id)
 	}
 }

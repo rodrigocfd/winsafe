@@ -30,15 +30,13 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 	/// [`ITaskFolder::DeleteTask`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskfolder-deletetask)
 	/// method.
 	fn DeleteTask(&self, name: &str) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<ITaskFolderVT>(self).DeleteTask)(
-					self.ptr(),
-					BSTR::SysAllocString(name)?.as_ptr(),
-					0,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<ITaskFolderVT>(self).DeleteTask)(
+				self.ptr(),
+				BSTR::SysAllocString(name)?.as_ptr(),
+				0,
+			)
+		})
 	}
 
 	fn_com_bstr_get! { get_Name: ITaskFolderVT;
@@ -53,7 +51,8 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 
 	/// [`ITaskFolder::RegisterTaskDefinition`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskfolder-registertaskdefinition)
 	/// method.
-	fn RegisterTaskDefinition(&self,
+	fn RegisterTaskDefinition(
+		&self,
 		path: Option<&str>,
 		definition: &impl taskschd_ITaskDefinition,
 		flags: co::TASK_CREATION,
@@ -61,23 +60,21 @@ pub trait taskschd_ITaskFolder: oleaut_IDispatch {
 		password: Option<&str>,
 		logon_type: co::TASK_LOGON,
 		sddl: Option<VARIANT>,
-	) -> HrResult<IRegisteredTask>
-	{
+	) -> HrResult<IRegisteredTask> {
 		let mut queried = unsafe { IRegisteredTask::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<ITaskFolderVT>(self).RegisterTaskDefinition)(
-					self.ptr(),
-					BSTR::SysAllocString(path.unwrap_or_default())?.as_ptr(),
-					definition.ptr(),
-					flags.raw() as _,
-					Variant::from_opt_str(user_id).to_raw()?,
-					Variant::from_opt_str(password).to_raw()?,
-					logon_type.raw(),
-					sddl.unwrap_or_default(),
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<ITaskFolderVT>(self).RegisterTaskDefinition)(
+				self.ptr(),
+				BSTR::SysAllocString(path.unwrap_or_default())?.as_ptr(),
+				definition.ptr(),
+				flags.raw() as _,
+				Variant::from_opt_str(user_id).to_raw()?,
+				Variant::from_opt_str(password).to_raw()?,
+				logon_type.raw(),
+				sddl.unwrap_or_default(),
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 }

@@ -147,7 +147,7 @@ pub struct IStreamVT {
 	pub Seek: fn(COMPTR, i64, u32, *mut u64) -> HRES,
 	pub SetSize: fn(COMPTR, u64) -> HRES,
 	pub CopyTo: fn(COMPTR, COMPTR, u64, *mut u64, *mut u64) -> HRES,
-	pub Commit: fn(COMPTR, u32)-> HRES,
+	pub Commit: fn(COMPTR, u32) -> HRES,
 	pub Revert: fn(COMPTR) -> HRES,
 	pub LockRegion: fn(COMPTR, u64, u64, u32) -> HRES,
 	pub UnlockRegion: fn(COMPTR, u64, u64, u32) -> HRES,

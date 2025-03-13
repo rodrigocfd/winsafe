@@ -24,10 +24,13 @@ pub trait gdi_Hrgn: Handle {
 	#[must_use]
 	fn CreateRectRgn(bounds: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::CreateRectRgn(
-					bounds.left, bounds.top, bounds.right, bounds.bottom),
-			).map(|h| DeleteObjectGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateRectRgn(
+				bounds.left,
+				bounds.top,
+				bounds.right,
+				bounds.bottom,
+			))
+			.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -36,27 +39,25 @@ pub trait gdi_Hrgn: Handle {
 	#[must_use]
 	fn CreateRectRgnIndirect(rc: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::CreateRectRgnIndirect(&rc as *const _ as _),
-			).map(|h| DeleteObjectGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateRectRgnIndirect(&rc as *const _ as _))
+				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
 	/// [`CreateRoundRectRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createroundrectrgn)
 	/// function.
 	#[must_use]
-	fn CreateRoundRectRgn(
-		bounds: RECT,
-		size: SIZE,
-	) -> SysResult<DeleteObjectGuard<HRGN>>
-	{
+	fn CreateRoundRectRgn(bounds: RECT, size: SIZE) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::CreateRoundRectRgn(
-					bounds.left, bounds.top, bounds.right, bounds.top,
-					size.cx, size.cy,
-				),
-			).map(|h| DeleteObjectGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateRoundRectRgn(
+				bounds.left,
+				bounds.top,
+				bounds.right,
+				bounds.top,
+				size.cx,
+				size.cy,
+			))
+			.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 

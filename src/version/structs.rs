@@ -34,8 +34,12 @@ impl VS_FIXEDFILEINFO {
 	/// Returns the `dwFileVersionMS` and `dwFileVersionLS` fields.
 	#[must_use]
 	pub const fn dwFileVersion(&self) -> [u16; 4] {
-		[HIWORD(self.dwFileVersionMS), LOWORD(self.dwFileVersionMS),
-			HIWORD(self.dwFileVersionLS), LOWORD(self.dwFileVersionLS)]
+		[
+			HIWORD(self.dwFileVersionMS),
+			LOWORD(self.dwFileVersionMS),
+			HIWORD(self.dwFileVersionLS),
+			LOWORD(self.dwFileVersionLS),
+		]
 	}
 
 	/// Sets the `dwFileVersionMS` and `dwFileVersionLS` fields.
@@ -47,8 +51,12 @@ impl VS_FIXEDFILEINFO {
 	/// Returns the `dwProductVersionMS` and `dwProductVersionLS` fields.
 	#[must_use]
 	pub const fn dwProductVersion(&self) -> [u16; 4] {
-		[HIWORD(self.dwProductVersionMS), LOWORD(self.dwProductVersionMS),
-			HIWORD(self.dwProductVersionLS), LOWORD(self.dwProductVersionLS)]
+		[
+			HIWORD(self.dwProductVersionMS),
+			LOWORD(self.dwProductVersionMS),
+			HIWORD(self.dwProductVersionLS),
+			LOWORD(self.dwProductVersionLS),
+		]
 	}
 
 	/// Sets the `dwProductVersionMS` and `dwProductVersionLS` fields.

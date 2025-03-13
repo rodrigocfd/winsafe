@@ -1,12 +1,15 @@
 use std::any::Any;
 
 use crate::decl::*;
-use crate::gui::{*, privs::*};
+use crate::gui::{privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
 #[derive(Clone)]
-enum RawDlg { Raw(RawModal), Dlg(DlgModal) }
+enum RawDlg {
+	Raw(RawModal),
+	Dlg(DlgModal),
+}
 
 /// An user modal window, which can handle events. Can be programmatically
 /// created or load a dialog resource from a `.res` file.
@@ -41,11 +44,7 @@ impl WindowModal {
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(opts: WindowModalOpts) -> Self {
-		Self(
-			RawDlg::Raw(
-				RawModal::new(opts),
-			),
-		)
+		Self(RawDlg::Raw(RawModal::new(opts)))
 	}
 
 	/// Instantiates a new `WindowModal` object, to be loaded from a dialog
@@ -53,11 +52,7 @@ impl WindowModal {
 	/// [`HINSTANCE::DialogBoxParam`](crate::prelude::user_Hinstance::DialogBoxParam).
 	#[must_use]
 	pub fn new_dlg(dlg_id: u16) -> Self {
-		Self(
-			RawDlg::Dlg(
-				DlgModal::new(dlg_id),
-			),
-		)
+		Self(RawDlg::Dlg(DlgModal::new(dlg_id)))
 	}
 
 	/// Physically creates the window, then runs the modal loop. This method
@@ -92,6 +87,8 @@ impl WindowModal {
 	/// [`wm_close`](crate::gui::events::WindowEvents::wm_close) event, just
 	/// like if the user clicked the window "X" button.
 	pub fn close(&self) {
-		unsafe { self.hwnd().PostMessage(wm::Close {}).unwrap(); }
+		unsafe {
+			self.hwnd().PostMessage(wm::Close {}).unwrap();
+		}
 	}
 }

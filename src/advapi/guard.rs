@@ -42,7 +42,9 @@ pub struct FreeSidGuard {
 impl Drop for FreeSidGuard {
 	fn drop(&mut self) {
 		if !self.psid.is_null() {
-			unsafe { ffi::FreeSid(self.psid as *mut _ as _); } // ignore errors
+			unsafe {
+				ffi::FreeSid(self.psid as *mut _ as _); // ignore errors
+			}
 		}
 	}
 }
@@ -94,8 +96,11 @@ pub struct RegCloseKeyGuard {
 impl Drop for RegCloseKeyGuard {
 	fn drop(&mut self) {
 		if let Some(h) = self.hkey.as_opt() {
-			if !self.is_predef_key() { // guard predefined keys
-				unsafe { ffi::RegCloseKey(h.ptr()); } // ignore errors
+			// Don't call on predefined keys, these belong to the system.
+			if !self.is_predef_key() {
+				unsafe {
+					ffi::RegCloseKey(h.ptr()); // ignore errors
+				}
 			}
 		}
 	}
@@ -235,22 +240,17 @@ impl<'a> DerefMut for TokenGroupsGuard<'a> {
 
 impl<'a> TokenGroupsGuard<'a> {
 	#[must_use]
-	pub(in crate::advapi) fn new(
-		groups: &'a [SID_AND_ATTRIBUTES<'a>],
-	) -> SysResult<Self>
-	{
+	pub(in crate::advapi) fn new(groups: &'a [SID_AND_ATTRIBUTES<'a>]) -> SysResult<Self> {
 		let sz = std::mem::size_of::<TOKEN_GROUPS>() // size in bytes of the allocated struct
 			- std::mem::size_of::<SID_AND_ATTRIBUTES>()
 			+ (groups.len() * std::mem::size_of::<SID_AND_ATTRIBUTES>());
 		let mut new_self = Self {
-			ptr: HGLOBAL::GlobalAlloc(
-				Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
-				sz,
-			)?,
+			ptr: HGLOBAL::GlobalAlloc(Some(co::GMEM::FIXED | co::GMEM::ZEROINIT), sz)?,
 			_groups: PhantomData,
 		};
 		new_self.GroupCount = groups.len() as _;
-		groups.iter()
+		groups
+			.iter()
 			.zip(new_self.Groups_mut())
 			.for_each(|(src, dest)| *dest = src.clone()); // copy all SID_AND_ATTRIBUTES into struct room
 		Ok(new_self)
@@ -279,21 +279,16 @@ impl DerefMut for TokenPrivilegesGuard {
 
 impl TokenPrivilegesGuard {
 	#[must_use]
-	pub(in crate::advapi) fn new(
-		privileges: &[LUID_AND_ATTRIBUTES],
-	) -> SysResult<Self>
-	{
+	pub(in crate::advapi) fn new(privileges: &[LUID_AND_ATTRIBUTES]) -> SysResult<Self> {
 		let sz = std::mem::size_of::<TOKEN_PRIVILEGES>() // size in bytes of the allocated struct
 			- std::mem::size_of::<LUID_AND_ATTRIBUTES>()
 			+ (privileges.len() * std::mem::size_of::<LUID_AND_ATTRIBUTES>());
 		let mut new_self = Self {
-			ptr: HGLOBAL::GlobalAlloc(
-				Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
-				sz,
-			)?,
+			ptr: HGLOBAL::GlobalAlloc(Some(co::GMEM::FIXED | co::GMEM::ZEROINIT), sz)?,
 		};
 		new_self.PrivilegeCount = privileges.len() as _;
-		privileges.iter()
+		privileges
+			.iter()
 			.zip(new_self.Privileges_mut())
 			.for_each(|(src, dest)| *dest = *src); // copy all LUID_AND_ATTRIBUTES into struct room
 		Ok(new_self)

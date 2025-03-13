@@ -34,22 +34,19 @@ pub trait version_Hversioninfo: Handle {
 	#[must_use]
 	fn GetFileVersionInfo(file_name: &str) -> SysResult<VersionInfoGuard> {
 		let block_sz = Self::GetFileVersionInfoSize(file_name)?;
-		let mut hglobal = HGLOBAL::GlobalAlloc(
-			Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
-			block_sz as _,
-		)?;
+		let mut hglobal =
+			HGLOBAL::GlobalAlloc(Some(co::GMEM::FIXED | co::GMEM::ZEROINIT), block_sz as _)?;
 		let hglobal_ptr = hglobal.leak();
 
-		bool_to_sysresult(
-			unsafe {
-				ffi::GetFileVersionInfoW(
-					WString::from_str(file_name).as_ptr(),
-					0,
-					block_sz,
-					hglobal_ptr.ptr(),
-				)
-			},
-		).map(|_| unsafe {
+		bool_to_sysresult(unsafe {
+			ffi::GetFileVersionInfoW(
+				WString::from_str(file_name).as_ptr(),
+				0,
+				block_sz,
+				hglobal_ptr.ptr(),
+			)
+		})
+		.map(|_| unsafe {
 			VersionInfoGuard::new(
 				HVERSIONINFO::from_ptr(hglobal_ptr.ptr()), // simply use the HGLOBAL pointer
 			)
@@ -66,13 +63,10 @@ pub trait version_Hversioninfo: Handle {
 	fn GetFileVersionInfoSize(file_name: &str) -> SysResult<u32> {
 		let mut dw_handle = u32::default();
 		match unsafe {
-			ffi::GetFileVersionInfoSizeW(
-				WString::from_str(file_name).as_ptr(),
-				&mut dw_handle,
-			)
+			ffi::GetFileVersionInfoSizeW(WString::from_str(file_name).as_ptr(), &mut dw_handle)
 		} {
 			0 => Err(GetLastError()),
-			sz => Ok(sz)
+			sz => Ok(sz),
 		}
 	}
 
@@ -99,12 +93,12 @@ pub trait version_Hversioninfo: Handle {
 	fn langs_and_cps(&self) -> SysResult<&[(LANGID, co::CP)]> {
 		unsafe {
 			self.VerQueryValue::<(LANGID, co::CP)>("\\VarFileInfo\\Translation")
-				.map(|(pblocks, sz)|
+				.map(|(pblocks, sz)| {
 					std::slice::from_raw_parts(
 						pblocks,
 						sz as usize / std::mem::size_of::<(LANGID, co::CP)>(),
 					)
-				)
+				})
 		}
 	}
 
@@ -141,21 +135,17 @@ pub trait version_Hversioninfo: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	unsafe fn VerQueryValue<T>(&self,
-		sub_block: &str,
-	) -> SysResult<(*const T, u32)>
-	{
+	unsafe fn VerQueryValue<T>(&self, sub_block: &str) -> SysResult<(*const T, u32)> {
 		let mut lp_lp_buffer = std::ptr::null();
 		let mut pu_len = 0;
 
-		bool_to_sysresult(
-			ffi::VerQueryValueW(
-				self.ptr(),
-				WString::from_str(sub_block).as_ptr(),
-				&mut lp_lp_buffer as *mut _ as _,
-				&mut pu_len,
-			),
-		).map(|_| (lp_lp_buffer as *const T, pu_len))
+		bool_to_sysresult(ffi::VerQueryValueW(
+			self.ptr(),
+			WString::from_str(sub_block).as_ptr(),
+			&mut lp_lp_buffer as *mut _ as _,
+			&mut pu_len,
+		))
+		.map(|_| (lp_lp_buffer as *const T, pu_len))
 	}
 
 	/// Calls
@@ -196,20 +186,17 @@ pub trait version_Hversioninfo: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn str_val(&self,
-		lang_id: LANGID,
-		code_page: co::CP,
-		name: &str,
-	) -> SysResult<String> {
+	fn str_val(&self, lang_id: LANGID, code_page: co::CP, name: &str) -> SysResult<String> {
 		unsafe {
-			self.VerQueryValue::<u16>(
-				&format!("\\StringFileInfo\\{:04x}{:04x}\\{}",
-					u16::from(lang_id), u16::from(code_page), name),
-			).map(|(pstr, len)|
-				WString::from_wchars_slice(
-					std::slice::from_raw_parts(pstr, len as _),
-				).to_string()
-			)
+			self.VerQueryValue::<u16>(&format!(
+				"\\StringFileInfo\\{:04x}{:04x}\\{}",
+				u16::from(lang_id),
+				u16::from(code_page),
+				name
+			))
+			.map(|(pstr, len)| {
+				WString::from_wchars_slice(std::slice::from_raw_parts(pstr, len as _)).to_string()
+			})
 		}
 	}
 

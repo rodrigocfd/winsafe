@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::{events::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -33,41 +33,52 @@ impl DateTimePicker {
 	#[must_use]
 	pub fn new(parent: &(impl GuiParent + 'static), opts: DateTimePickerOpts) -> Self {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
-		let new_self = Self(
-			Arc::pin(
-				DateTimePickerObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: DateTimePickerEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+		let new_self = Self(Arc::pin(DateTimePickerObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: DateTimePickerEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
-		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
-			self2.0.base.create_window(opts.window_ex_style, "SysDateTimePick32", None,
-				opts.window_style | opts.control_style.into(), opts.position.into(),
-				SIZE::new(opts.width, dpi_y(21)), &parent2)?;
-			if opts.width == 0 { // use ideal width
-				let mut sz = SIZE::default();
-				unsafe {
-					self2.hwnd().SendMessage(dtm::GetIdealSize {
-						size: &mut sz,
-					});
+		parent
+			.as_ref()
+			.before_on()
+			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+				self2.0.base.create_window(
+					opts.window_ex_style,
+					"SysDateTimePick32",
+					None,
+					opts.window_style | opts.control_style.into(),
+					opts.position.into(),
+					SIZE::new(opts.width, dpi_y(21)),
+					&parent2,
+				)?;
+				if opts.width == 0 {
+					let mut sz = SIZE::default();
+					unsafe {
+						self2.hwnd().SendMessage(dtm::GetIdealSize {
+							size: &mut sz, // ask OS the ideal width
+						});
+					}
+					sz.cy = dpi_y(21);
+					self2.hwnd().SetWindowPos(
+						HwndPlace::None,
+						POINT::default(),
+						sz,
+						co::SWP::NOZORDER | co::SWP::NOMOVE,
+					)?;
 				}
-				sz.cy = dpi_y(21);
-				self2.hwnd().SetWindowPos(
-					HwndPlace::None, POINT::default(), sz,
-					co::SWP::NOZORDER | co::SWP::NOMOVE)?;
-			}
-			ui_font::set(self2.hwnd())?;
-			if opts.date.wDay != 0 { // user defined a date
-				self2.set_date(&opts.date)?;
-			}
-			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
-			Ok(0) // ignored
-		});
+				ui_font::set(self2.hwnd())?;
+				if opts.date.wDay != 0 {
+					// user defined a date
+					self2.set_date(&opts.date)?;
+				}
+				parent2
+					.as_ref()
+					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+				Ok(0) // ignored
+			});
 
 		new_self
 	}
@@ -85,23 +96,20 @@ impl DateTimePicker {
 		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
-	) -> Self
-	{
-		let new_self = Self(
-			Arc::pin(
-				DateTimePickerObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: DateTimePickerEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+	) -> Self {
+		let new_self = Self(Arc::pin(DateTimePickerObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: DateTimePickerEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
 			self2.0.base.assign_dlg(&parent2)?;
-			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			parent2
+				.as_ref()
+				.add_to_layout(self2.hwnd(), resize_behavior)?;
 			Ok(true) // ignored
 		});
 

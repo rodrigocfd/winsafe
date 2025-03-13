@@ -113,21 +113,31 @@ macro_rules! com_interface_userdef {
 macro_rules! com_interface_userdef_iunknown_methods {
 	($impl:ident) => {
 		fn QueryInterface(_p: COMPTR, _riid: PCVOID, ppv: *mut COMPTR) -> HRES {
-			unsafe { *ppv = std::ptr::null_mut(); }
+			unsafe {
+				*ppv = std::ptr::null_mut();
+			}
 			co::HRESULT::E_NOTIMPL.raw()
 		}
 
 		fn AddRef(p: COMPTR) -> u32 {
 			let box_impl = box_impl_of::<Self>(p);
-			let cc = box_impl.counter.fetch_add(1, std::sync::atomic::Ordering::Relaxed) + 1;
+			let cc = box_impl
+				.counter
+				.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+				+ 1;
 			cc
 		}
 
 		fn Release(p: COMPTR) -> u32 {
 			let mut box_impl = box_impl_of::<Self>(p);
-			let count = box_impl.counter.fetch_sub(1, std::sync::atomic::Ordering::Relaxed) - 1;
+			let count = box_impl
+				.counter
+				.fetch_sub(1, std::sync::atomic::Ordering::Relaxed)
+				- 1;
 			if count == 0 {
-				unsafe { std::mem::ManuallyDrop::drop(&mut box_impl); } // free the memory block
+				unsafe {
+					std::mem::ManuallyDrop::drop(&mut box_impl); // free the memory block
+				}
 			}
 			count
 		}

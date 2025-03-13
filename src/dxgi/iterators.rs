@@ -5,14 +5,16 @@ use crate::ole::privs::*;
 use crate::prelude::*;
 
 pub(in crate::dxgi) struct IdxgiadapterEnumoutputsIter<'a, I>
-	where I: dxgi_IDXGIAdapter,
+where
+	I: dxgi_IDXGIAdapter,
 {
 	adapter: &'a I,
 	cur_index: u32,
 }
 
 impl<'a, I> Iterator for IdxgiadapterEnumoutputsIter<'a, I>
-	where I: dxgi_IDXGIAdapter,
+where
+	I: dxgi_IDXGIAdapter,
 {
 	type Item = HrResult<IDXGIOutput>;
 
@@ -21,20 +23,18 @@ impl<'a, I> Iterator for IdxgiadapterEnumoutputsIter<'a, I>
 			None
 		} else {
 			let mut queried = unsafe { IDXGIOutput::null() };
-			match ok_to_hrresult(
-				unsafe {
-					(vt::<IDXGIAdapterVT>(self.adapter).EnumOutputs)(
-						self.adapter.ptr(),
-						self.cur_index,
-						queried.as_mut(),
-					)
-				},
-			) {
+			match ok_to_hrresult(unsafe {
+				(vt::<IDXGIAdapterVT>(self.adapter).EnumOutputs)(
+					self.adapter.ptr(),
+					self.cur_index,
+					queried.as_mut(),
+				)
+			}) {
 				Err(err) => {
 					self.cur_index = 0xffff_ffff; // no further iterations will be made
 					match err {
 						co::HRESULT::DXGI_ERROR_NOT_FOUND => None, // no more entries
-						_ => Some(Err(err)), // actual error
+						_ => Some(Err(err)),                       // actual error
 					}
 				},
 				Ok(_) => {
@@ -47,7 +47,8 @@ impl<'a, I> Iterator for IdxgiadapterEnumoutputsIter<'a, I>
 }
 
 impl<'a, I> IdxgiadapterEnumoutputsIter<'a, I>
-	where I: dxgi_IDXGIAdapter,
+where
+	I: dxgi_IDXGIAdapter,
 {
 	#[must_use]
 	pub(in crate::dxgi) const fn new(adapter: &'a I) -> Self {
@@ -56,14 +57,16 @@ impl<'a, I> IdxgiadapterEnumoutputsIter<'a, I>
 }
 
 pub(in crate::dxgi) struct IdxgifactoryEnumadaptersIter<'a, I>
-	where I: dxgi_IDXGIFactory,
+where
+	I: dxgi_IDXGIFactory,
 {
 	fact: &'a I,
 	cur_index: u32,
 }
 
 impl<'a, I> Iterator for IdxgifactoryEnumadaptersIter<'a, I>
-	where I: dxgi_IDXGIFactory,
+where
+	I: dxgi_IDXGIFactory,
 {
 	type Item = HrResult<IDXGIAdapter>;
 
@@ -72,20 +75,18 @@ impl<'a, I> Iterator for IdxgifactoryEnumadaptersIter<'a, I>
 			None
 		} else {
 			let mut queried = unsafe { IDXGIAdapter::null() };
-			match ok_to_hrresult(
-				unsafe {
-					(vt::<IDXGIFactoryVT>(self.fact).EnumAdapters)(
-						self.fact.ptr(),
-						self.cur_index,
-						queried.as_mut(),
-					)
-				},
-			) {
+			match ok_to_hrresult(unsafe {
+				(vt::<IDXGIFactoryVT>(self.fact).EnumAdapters)(
+					self.fact.ptr(),
+					self.cur_index,
+					queried.as_mut(),
+				)
+			}) {
 				Err(err) => {
 					self.cur_index = 0xffff_ffff; // no further iterations will be made
 					match err {
 						co::HRESULT::DXGI_ERROR_NOT_FOUND => None, // no more entries
-						_ => Some(Err(err)), // actual error
+						_ => Some(Err(err)),                       // actual error
 					}
 				},
 				Ok(_) => {
@@ -98,7 +99,8 @@ impl<'a, I> Iterator for IdxgifactoryEnumadaptersIter<'a, I>
 }
 
 impl<'a, I> IdxgifactoryEnumadaptersIter<'a, I>
-	where I: dxgi_IDXGIFactory,
+where
+	I: dxgi_IDXGIFactory,
 {
 	#[must_use]
 	pub(in crate::dxgi) const fn new(fact: &'a I) -> Self {
@@ -107,14 +109,16 @@ impl<'a, I> IdxgifactoryEnumadaptersIter<'a, I>
 }
 
 pub(in crate::dxgi) struct IdxgifactoryEnumadapters1Iter<'a, I>
-	where I: dxgi_IDXGIFactory1,
+where
+	I: dxgi_IDXGIFactory1,
 {
 	fact: &'a I,
 	cur_index: u32,
 }
 
 impl<'a, I> Iterator for IdxgifactoryEnumadapters1Iter<'a, I>
-	where I: dxgi_IDXGIFactory1,
+where
+	I: dxgi_IDXGIFactory1,
 {
 	type Item = HrResult<IDXGIAdapter1>;
 
@@ -123,20 +127,18 @@ impl<'a, I> Iterator for IdxgifactoryEnumadapters1Iter<'a, I>
 			None
 		} else {
 			let mut queried = unsafe { IDXGIAdapter1::null() };
-			match ok_to_hrresult(
-				unsafe {
-					(vt::<IDXGIFactory1VT>(self.fact).EnumAdapters1)(
-						self.fact.ptr(),
-						self.cur_index,
-						queried.as_mut(),
-					)
-				},
-			) {
+			match ok_to_hrresult(unsafe {
+				(vt::<IDXGIFactory1VT>(self.fact).EnumAdapters1)(
+					self.fact.ptr(),
+					self.cur_index,
+					queried.as_mut(),
+				)
+			}) {
 				Err(err) => {
 					self.cur_index = 0xffff_ffff; // no further iterations will be made
 					match err {
 						co::HRESULT::DXGI_ERROR_NOT_FOUND => None, // no more entries
-						_ => Some(Err(err)), // actual error
+						_ => Some(Err(err)),                       // actual error
 					}
 				},
 				Ok(_) => {
@@ -149,7 +151,8 @@ impl<'a, I> Iterator for IdxgifactoryEnumadapters1Iter<'a, I>
 }
 
 impl<'a, I> IdxgifactoryEnumadapters1Iter<'a, I>
-	where I: dxgi_IDXGIFactory1,
+where
+	I: dxgi_IDXGIFactory1,
 {
 	#[must_use]
 	pub(in crate::dxgi) const fn new(fact: &'a I) -> Self {

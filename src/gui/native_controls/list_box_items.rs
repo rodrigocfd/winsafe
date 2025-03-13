@@ -1,5 +1,5 @@
 use crate::decl::*;
-use crate::gui::{*, iterators::*};
+use crate::gui::{iterators::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -35,10 +35,9 @@ impl<'a> ListBoxItems<'a> {
 	pub fn add(&self, items: &[impl AsRef<str>]) -> SysResult<()> {
 		for text in items.iter() {
 			unsafe {
-				self.owner.hwnd()
-					.SendMessage(lb::AddString {
-						text: WString::from_str(text.as_ref()),
-					})?;
+				self.owner
+					.hwnd()
+					.SendMessage(lb::AddString { text: WString::from_str(text.as_ref()) })?;
 			}
 		}
 		Ok(())
@@ -48,18 +47,14 @@ impl<'a> ListBoxItems<'a> {
 	/// [`lb::GetCount`](crate::msg::lb::GetCount) message.
 	#[must_use]
 	pub fn count(&self) -> SysResult<u32> {
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lb::GetCount {})
-		}
+		unsafe { self.owner.hwnd().SendMessage(lb::GetCount {}) }
 	}
 
 	/// Deletes the item at the given index by sending an
 	/// [`lb::DeleteString`](crate::msg::lb::DeleteString) message.
 	pub fn delete(&self, index: u32) -> SysResult<()> {
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lb::DeleteString { index })?;
+			self.owner.hwnd().SendMessage(lb::DeleteString { index })?;
 		}
 		Ok(())
 	}
@@ -67,16 +62,15 @@ impl<'a> ListBoxItems<'a> {
 	/// Deletes all items by sending an
 	/// [`lb::ResetContent`](crate::msg::lb::ResetContent) message.
 	pub fn delete_all(&self) {
-		unsafe { self.owner.hwnd().SendMessage(lb::ResetContent {}); }
+		unsafe {
+			self.owner.hwnd().SendMessage(lb::ResetContent {});
+		}
 	}
 
 	/// Ensures that the specified item in a list box is visible by sending an
 	/// [`lb::SetTopIndex`](crate::msg::lb::SetTopIndex) message.
 	pub fn ensure_visible(&self, index: u32) -> SysResult<()> {
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lb::SetTopIndex { index })
-		}
+		unsafe { self.owner.hwnd().SendMessage(lb::SetTopIndex { index }) }
 	}
 
 	/// Returns an iterator over the texts.
@@ -128,24 +122,19 @@ impl<'a> ListBoxItems<'a> {
 	/// [`lb::GetSelCount`](crate::msg::lb::GetSelCount) message.
 	#[must_use]
 	pub fn selected_count(&self) -> SysResult<u32> {
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lb::GetSelCount {})
-		}
+		unsafe { self.owner.hwnd().SendMessage(lb::GetSelCount {}) }
 	}
 
 	/// Retrieves the text at the given position, if any, by sending a
 	/// [`lb::GetText`](crate::msg::lb::GetText) message.
 	#[must_use]
 	pub fn text(&self, index: u32) -> SysResult<String> {
-		let num_chars = unsafe {
-			self.owner.hwnd()
-				.SendMessage(lb::GetTextLen { index })
-		}?;
+		let num_chars = unsafe { self.owner.hwnd().SendMessage(lb::GetTextLen { index }) }?;
 
 		let mut buf = WString::new_alloc_buf(num_chars as usize + 1);
 		unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(lb::GetText { index, text: &mut buf })?;
 		}
 

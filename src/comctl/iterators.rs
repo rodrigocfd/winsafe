@@ -3,7 +3,8 @@ use crate::guard::*;
 use crate::prelude::*;
 
 pub(in crate::comctl) struct HimagelistIter<'a, H>
-	where H: comctl_Himagelist,
+where
+	H: comctl_Himagelist,
 {
 	himagelist: &'a H,
 	num_items: u32,
@@ -11,7 +12,8 @@ pub(in crate::comctl) struct HimagelistIter<'a, H>
 }
 
 impl<'a, H> Iterator for HimagelistIter<'a, H>
-	where H: comctl_Himagelist,
+where
+	H: comctl_Himagelist,
 {
 	type Item = HrResult<DestroyIconGuard>;
 
@@ -25,7 +27,8 @@ impl<'a, H> Iterator for HimagelistIter<'a, H>
 }
 
 impl<'a, H> HimagelistIter<'a, H>
-	where H: comctl_Himagelist,
+where
+	H: comctl_Himagelist,
 {
 	#[must_use]
 	pub(in crate::comctl) fn new(himagelist: &'a H) -> Self {

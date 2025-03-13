@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::{events::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -33,40 +33,50 @@ impl MonthCalendar {
 	#[must_use]
 	pub fn new(parent: &(impl GuiParent + 'static), opts: MonthCalendarOpts) -> Self {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
-		let new_self = Self(
-			Arc::pin(
-				MonthCalendarObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: MonthCalendarEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+		let new_self = Self(Arc::pin(MonthCalendarObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: MonthCalendarEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
-		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
-			self2.0.base.create_window(opts.window_ex_style, "SysMonthCal32", None,
-				opts.window_style | opts.control_style.into(), opts.position.into(),
-				SIZE::default(), &parent2)?;
-			ui_font::set(self2.hwnd())?;
+		parent
+			.as_ref()
+			.before_on()
+			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+				self2.0.base.create_window(
+					opts.window_ex_style,
+					"SysMonthCal32",
+					None,
+					opts.window_style | opts.control_style.into(),
+					opts.position.into(),
+					SIZE::default(),
+					&parent2,
+				)?;
+				ui_font::set(self2.hwnd())?;
 
-			let mut bounds_rect = RECT::default();
-			unsafe {
-				self2.hwnd().SendMessage(mcm::GetMinReqRect {
-					bounds_rect: &mut bounds_rect,
-				})?;
-			}
-			self2.hwnd().SetWindowPos(HwndPlace::None, POINT::default(),
-				SIZE::new(bounds_rect.right, bounds_rect.bottom),
-				co::SWP::NOZORDER | co::SWP::NOMOVE)?;
+				let mut bounds_rect = RECT::default();
+				unsafe {
+					self2
+						.hwnd()
+						.SendMessage(mcm::GetMinReqRect { bounds_rect: &mut bounds_rect })?;
+				}
+				self2.hwnd().SetWindowPos(
+					HwndPlace::None,
+					POINT::default(),
+					SIZE::new(bounds_rect.right, bounds_rect.bottom),
+					co::SWP::NOZORDER | co::SWP::NOMOVE,
+				)?;
 
-			if opts.date.wDay != 0 {
-				self2.set_date(&opts.date)?;
-			}
-			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
-			Ok(0) // ignored
-		});
+				if opts.date.wDay != 0 {
+					self2.set_date(&opts.date)?;
+				}
+				parent2
+					.as_ref()
+					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+				Ok(0) // ignored
+			});
 
 		new_self
 	}
@@ -84,23 +94,20 @@ impl MonthCalendar {
 		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
-	) -> Self
-	{
-		let new_self = Self(
-			Arc::pin(
-				MonthCalendarObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: MonthCalendarEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+	) -> Self {
+		let new_self = Self(Arc::pin(MonthCalendarObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: MonthCalendarEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
 			self2.0.base.assign_dlg(&parent2)?;
-			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			parent2
+				.as_ref()
+				.add_to_layout(self2.hwnd(), resize_behavior)?;
 			Ok(true) // ignored
 		});
 
@@ -113,8 +120,7 @@ impl MonthCalendar {
 	pub fn date(&self) -> SysResult<SYSTEMTIME> {
 		let mut st = SYSTEMTIME::default();
 		unsafe {
-			self.hwnd()
-				.SendMessage(mcm::GetCurSel { info: &mut st })?;
+			self.hwnd().SendMessage(mcm::GetCurSel { info: &mut st })?;
 		}
 		Ok(st)
 	}
@@ -122,10 +128,7 @@ impl MonthCalendar {
 	/// Sets the currently selected date by sending a
 	/// [`mcm::SetCurSel`](crate::msg::mcm::SetCurSel) message.
 	pub fn set_date(&self, st: &SYSTEMTIME) -> SysResult<()> {
-		unsafe {
-			self.hwnd()
-				.SendMessage(mcm::SetCurSel { info: st })
-		}
+		unsafe { self.hwnd().SendMessage(mcm::SetCurSel { info: st }) }
 	}
 }
 

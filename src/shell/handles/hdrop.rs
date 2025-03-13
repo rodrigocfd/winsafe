@@ -55,9 +55,7 @@ pub trait shell_Hdrop: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn DragQueryFile(&self,
-	) -> SysResult<impl Iterator<Item = SysResult<String>> + '_>
-	{
+	fn DragQueryFile(&self) -> SysResult<impl Iterator<Item = SysResult<String>> + '_> {
 		Ok(HdropIter::new(self)?)
 	}
 
@@ -73,9 +71,7 @@ pub trait shell_Hdrop: Handle {
 	#[must_use]
 	fn DragQueryPoint(&self) -> (POINT, bool) {
 		let mut pt = POINT::default();
-		let client_area = unsafe {
-			ffi::DragQueryPoint(self.ptr(), &mut pt as *mut _ as _)
-		};
+		let client_area = unsafe { ffi::DragQueryPoint(self.ptr(), &mut pt as *mut _ as _) };
 		(pt, client_area != 0)
 	}
 }

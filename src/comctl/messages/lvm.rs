@@ -35,7 +35,6 @@ impl MsgSend for ApproximateViewRect {
 	}
 }
 
-
 /// [`LVM_ARRANGE`](https://learn.microsoft.com/en-us/windows/win32/controls/lvm-arrange)
 /// message parameters.
 ///
@@ -664,7 +663,9 @@ pub struct GetGroupInfoByIndex<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub info: &'h mut LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
 }
 
-impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for GetGroupInfoByIndex<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend
+	for GetGroupInfoByIndex<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h>
+{
 	type RetType = SysResult<()>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
@@ -958,7 +959,10 @@ impl<'a> MsgSend for GetISearchString<'a> {
 		WndMsg {
 			msg_id: co::LVM::GETISEARCHSTRING.into(),
 			wparam: 0,
-			lparam: self.buffer.as_mut().map_or(0, |buf| unsafe { buf.as_mut_ptr() } as _),
+			lparam: self
+				.buffer
+				.as_mut()
+				.map_or(0, |buf| unsafe { buf.as_mut_ptr() } as _),
 		}
 	}
 }
@@ -2159,7 +2163,7 @@ impl MsgSend for SetExtendedListViewStyle {
 /// Return type: `SysResult<u32>`.
 pub struct SetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {
 	pub id: u32,
-	pub info: &'h LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>
+	pub info: &'h LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g>,
 }
 
 impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> MsgSend for SetGroupInfo<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h> {

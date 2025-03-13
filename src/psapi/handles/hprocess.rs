@@ -20,14 +20,13 @@ pub trait psapi_Hprocess: kernel_Hprocess {
 	/// function.
 	fn GetProcessMemoryInfo(&self) -> SysResult<PROCESS_MEMORY_COUNTERS_EX> {
 		let mut pmc = PROCESS_MEMORY_COUNTERS_EX::default();
-		bool_to_sysresult(
-			unsafe {
-				ffi::GetProcessMemoryInfo(
-					self.ptr(),
-					&mut pmc as *mut _ as _,
-					std::mem::size_of::<PROCESS_MEMORY_COUNTERS_EX>() as _,
-				)
-			},
-		).map(|_| pmc)
+		bool_to_sysresult(unsafe {
+			ffi::GetProcessMemoryInfo(
+				self.ptr(),
+				&mut pmc as *mut _ as _,
+				std::mem::size_of::<PROCESS_MEMORY_COUNTERS_EX>() as _,
+			)
+		})
+		.map(|_| pmc)
 	}
 }

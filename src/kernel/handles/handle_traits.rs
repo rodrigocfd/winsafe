@@ -11,10 +11,16 @@ use std::{fmt, hash};
 /// ```no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait Handle: Sized
-	+ PartialEq + Eq + Send + hash::Hash
-	+ fmt::Debug + fmt::Display
-	+ fmt::LowerHex + fmt::UpperHex
+pub trait Handle:
+	Sized
+	+ PartialEq
+	+ Eq
+	+ Send
+	+ hash::Hash
+	+ fmt::Debug
+	+ fmt::Display
+	+ fmt::LowerHex
+	+ fmt::UpperHex
 {
 	/// The null, uninitialized handle; equals to `0`.
 	const NULL: Self;

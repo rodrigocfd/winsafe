@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::{events::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -70,34 +70,39 @@ impl UpDown {
 	#[must_use]
 	pub fn new(parent: &(impl GuiParent + 'static), opts: UpDownOpts) -> Self {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
-		let new_self = Self(
-			Arc::pin(
-				UpDownObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: UpDownEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+		let new_self = Self(Arc::pin(UpDownObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: UpDownEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
-		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
-			self2.0.base.create_window(opts.window_ex_style, "msctls_updown32", None,
-				opts.window_style | opts.control_style.into(), opts.position.into(),
-				SIZE::new(0, opts.height), &parent2)?;
-			if opts.range != (0, 100) {
-				self2.set_range(opts.range.0, opts.range.1);
-				if opts.control_style.has(co::UDS::AUTOBUDDY) {
-					let prev_ctrl = self2.hwnd().GetWindow(co::GW::HWNDPREV)?;
-					prev_ctrl.SetWindowText(&opts.range.0.to_string())?;
+		parent
+			.as_ref()
+			.before_on()
+			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+				self2.0.base.create_window(
+					opts.window_ex_style,
+					"msctls_updown32",
+					None,
+					opts.window_style | opts.control_style.into(),
+					opts.position.into(),
+					SIZE::new(0, opts.height),
+					&parent2,
+				)?;
+				if opts.range != (0, 100) {
+					self2.set_range(opts.range.0, opts.range.1);
+					if opts.control_style.has(co::UDS::AUTOBUDDY) {
+						let prev_ctrl = self2.hwnd().GetWindow(co::GW::HWNDPREV)?;
+						prev_ctrl.SetWindowText(&opts.range.0.to_string())?;
+					}
 				}
-			}
-			if opts.value != 0 {
-				self2.set_pos(opts.value);
-			}
-			Ok(0) // ignored
-		});
+				if opts.value != 0 {
+					self2.set_pos(opts.value);
+				}
+				Ok(0) // ignored
+			});
 
 		new_self
 	}
@@ -115,23 +120,20 @@ impl UpDown {
 		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
-	) -> Self
-	{
-		let new_self = Self(
-			Arc::pin(
-				UpDownObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: UpDownEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+	) -> Self {
+		let new_self = Self(Arc::pin(UpDownObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: UpDownEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
 			self2.0.base.assign_dlg(&parent2)?;
-			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			parent2
+				.as_ref()
+				.add_to_layout(self2.hwnd(), resize_behavior)?;
 			Ok(true) // ignored
 		});
 
@@ -154,10 +156,8 @@ impl UpDown {
 	pub fn range(&self) -> (i32, i32) {
 		let (mut min, mut max) = (i32::default(), i32::default());
 		unsafe {
-			self.hwnd().SendMessage(udm::GetRange32 {
-				min: &mut min,
-				max: &mut max,
-			});
+			self.hwnd()
+				.SendMessage(udm::GetRange32 { min: &mut min, max: &mut max });
 		}
 		(min, max)
 	}
@@ -166,8 +166,7 @@ impl UpDown {
 	/// [`udm::SetPos32`](crate::msg::udm::SetPos32) message.
 	pub fn set_pos(&self, pos: i32) {
 		unsafe {
-			self.hwnd()
-				.SendMessage(udm::SetPos32 { pos });
+			self.hwnd().SendMessage(udm::SetPos32 { pos });
 		}
 	}
 
@@ -175,8 +174,7 @@ impl UpDown {
 	/// [`udm::SetRange32`](crate::msg::udm::SetRange32) message.
 	pub fn set_range(&self, min: i32, max: i32) {
 		unsafe {
-			self.hwnd()
-				.SendMessage(udm::SetRange32 { min, max });
+			self.hwnd().SendMessage(udm::SetRange32 { min, max });
 		}
 	}
 }
@@ -250,8 +248,11 @@ impl Default for UpDownOpts {
 		Self {
 			position: (0, 0),
 			height: 40,
-			control_style: co::UDS::AUTOBUDDY | co::UDS::SETBUDDYINT |
-				co::UDS::ALIGNRIGHT | co::UDS::ARROWKEYS | co::UDS::HOTTRACK,
+			control_style: co::UDS::AUTOBUDDY
+				| co::UDS::SETBUDDYINT
+				| co::UDS::ALIGNRIGHT
+				| co::UDS::ARROWKEYS
+				| co::UDS::HOTTRACK,
 			window_style: co::WS::CHILDWINDOW | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,

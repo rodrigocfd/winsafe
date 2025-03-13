@@ -31,19 +31,18 @@ pub trait advapi_Hprocess: kernel_Hprocess {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn OpenProcessToken(&self,
+	fn OpenProcessToken(
+		&self,
 		desired_access: co::TOKEN,
-	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
-	{
+	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>> {
 		let mut handle = HACCESSTOKEN::NULL;
 		unsafe {
-			bool_to_sysresult(
-				ffi::OpenProcessToken(
-					self.ptr(),
-					desired_access.raw(),
-					handle.as_mut(),
-				),
-			).map(|_| CloseHandleGuard::new(handle))
+			bool_to_sysresult(ffi::OpenProcessToken(
+				self.ptr(),
+				desired_access.raw(),
+				handle.as_mut(),
+			))
+			.map(|_| CloseHandleGuard::new(handle))
 		}
 	}
 }

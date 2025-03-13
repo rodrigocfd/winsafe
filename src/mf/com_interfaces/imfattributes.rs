@@ -31,22 +31,21 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// [`IMFAttributes::Compare`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-compare)
 	/// method.
 	#[must_use]
-	fn Compare(&self,
+	fn Compare(
+		&self,
 		theirs: &impl mf_IMFAttributes,
 		match_type: co::MF_ATTRIBUTES_MATCH,
-	) -> HrResult<bool>
-	{
+	) -> HrResult<bool> {
 		let mut res: BOOL = 0;
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).Compare)(
-					self.ptr(),
-					theirs.ptr(),
-					match_type.raw(),
-					&mut res,
-				)
-			},
-		).map(|_| res != 0)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).Compare)(
+				self.ptr(),
+				theirs.ptr(),
+				match_type.raw(),
+				&mut res,
+			)
+		})
+		.map(|_| res != 0)
 	}
 
 	/// [`IMFAttributes::CompareItem`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-compareitem)
@@ -54,26 +53,23 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	#[must_use]
 	fn CompareItem(&self, guid_key: &GUID, value: &PropVariant) -> HrResult<bool> {
 		let mut res: BOOL = 0;
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).CompareItem)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					&value.to_raw()? as *const _ as _,
-					&mut res,
-				)
-			},
-		).map(|_| res != 0)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).CompareItem)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				&value.to_raw()? as *const _ as _,
+				&mut res,
+			)
+		})
+		.map(|_| res != 0)
 	}
 
 	/// [`IMFAttributes::CopyAllItems`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-copyallitems)
 	/// method.
 	fn CopyAllItems(&self, dest: &impl mf_IMFAttributes) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).CopyAllItems)(self.ptr(), dest.ptr())
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).CopyAllItems)(self.ptr(), dest.ptr())
+		})
 	}
 
 	fn_com_noparm! { DeleteAllItems: IMFAttributesVT;
@@ -84,14 +80,9 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// [`IMFAttributes::DeleteItem`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-deleteitem)
 	/// method.
 	fn DeleteItem(&self, guid_key: &GUID) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).DeleteItem)(
-					self.ptr(),
-					guid_key as *const _ as _,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).DeleteItem)(self.ptr(), guid_key as *const _ as _)
+		})
 	}
 
 	/// [`IMFAttributes::GetAllocatedBlob`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getallocatedblob)
@@ -105,16 +96,15 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 		let mut pbuf = std::ptr::null_mut::<u8>();
 		let mut sz = u32::default();
 
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).GetAllocatedBlob)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					&mut pbuf,
-					&mut sz,
-				)
-			},
-		).map(|_| {
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).GetAllocatedBlob)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				&mut pbuf,
+				&mut sz,
+			)
+		})
+		.map(|_| {
 			let raw = unsafe { CoTaskMemFreeGuard::new(pbuf as *mut _, sz as _) };
 			raw.as_slice().to_vec()
 		})
@@ -131,16 +121,15 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 		let mut pbuf = std::ptr::null_mut::<u16>();
 		let mut nchars = u32::default();
 
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).GetAllocatedString)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					&mut pbuf,
-					&mut nchars,
-				)
-			},
-		).map(|_| {
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).GetAllocatedString)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				&mut pbuf,
+				&mut nchars,
+			)
+		})
+		.map(|_| {
 			let str = unsafe { WString::from_wchars_nullt(pbuf) };
 			let _ = unsafe { CoTaskMemFreeGuard::new(pbuf as _, 0) };
 			str.to_string()
@@ -158,17 +147,16 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 		let sz = self.GetBlobSize(guid_key)?;
 		let mut buf = vec![0u8; sz as _];
 
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).GetBlob)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					buf.as_mut_ptr(),
-					sz,
-					std::ptr::null_mut(),
-				)
-			},
-		).map(|_| buf)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).GetBlob)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				buf.as_mut_ptr(),
+				sz,
+				std::ptr::null_mut(),
+			)
+		})
+		.map(|_| buf)
 	}
 
 	/// [`IMFAttributes::GetBlobSize`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getblobsize)
@@ -176,15 +164,14 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	#[must_use]
 	fn GetBlobSize(&self, guid_key: &GUID) -> HrResult<u32> {
 		let mut sz = u32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).GetBlobSize)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					&mut sz,
-				)
-			},
-		).map(|_| sz)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).GetBlobSize)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				&mut sz,
+			)
+		})
+		.map(|_| sz)
 	}
 
 	/// [`IMFAttributes::GetCount`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getcount)
@@ -192,11 +179,8 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	#[must_use]
 	fn GetCount(&self) -> HrResult<u32> {
 		let mut count = u32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).GetCount)(self.ptr(), &mut count)
-			},
-		).map(|_| count)
+		ok_to_hrresult(unsafe { (vt::<IMFAttributesVT>(self).GetCount)(self.ptr(), &mut count) })
+			.map(|_| count)
 	}
 
 	/// [`IMFAttributes::GetDouble`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getdouble)
@@ -204,15 +188,14 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	#[must_use]
 	fn GetDouble(&self, guid_key: &GUID) -> HrResult<f64> {
 		let mut value = f64::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).GetDouble)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					&mut value,
-				)
-			},
-		).map(|_| value)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).GetDouble)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				&mut value,
+			)
+		})
+		.map(|_| value)
 	}
 
 	/// [`IMFAttributes::GetGUID`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getguid)
@@ -220,15 +203,14 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	#[must_use]
 	fn GetGUID(&self, guid_key: &GUID) -> HrResult<GUID> {
 		let mut value = GUID::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).GetGUID)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					&mut value as *mut _ as _,
-				)
-			},
-		).map(|_| value)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).GetGUID)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				&mut value as *mut _ as _,
+			)
+		})
+		.map(|_| value)
 	}
 
 	/// [`IMFAttributes::GetItem`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getitem)
@@ -236,15 +218,13 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	#[must_use]
 	fn GetItem(&self, guid_key: &GUID) -> HrResult<PropVariant> {
 		let mut value = PROPVARIANT::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).GetItem)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					&mut value as *mut _ as _,
-				)
-			},
-		)?;
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).GetItem)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				&mut value as *mut _ as _,
+			)
+		})?;
 		PropVariant::from_raw(&value)
 	}
 
@@ -255,16 +235,14 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 		let mut guid = GUID::default();
 		let mut value = PROPVARIANT::default();
 
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).GetItemByIndex)(
-					self.ptr(),
-					index,
-					&mut guid as *mut _ as _,
-					&mut value as *mut _ as _,
-				)
-			},
-		)?;
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).GetItemByIndex)(
+				self.ptr(),
+				index,
+				&mut guid as *mut _ as _,
+				&mut value as *mut _ as _,
+			)
+		})?;
 		Ok((guid, PropVariant::from_raw(&value)?))
 	}
 
@@ -273,15 +251,14 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	#[must_use]
 	fn GetItemType(&self, guid_key: &GUID) -> HrResult<co::MF_ATTRIBUTE> {
 		let mut ty = co::MF_ATTRIBUTE::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).GetItemType)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					ty.as_mut(),
-				)
-			},
-		).map(|_| ty)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).GetItemType)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				ty.as_mut(),
+			)
+		})
+		.map(|_| ty)
 	}
 
 	/// [`IMFAttributes::GetString`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getstring)
@@ -295,17 +272,16 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 		let len = self.GetStringLength(guid_key)? + 1;
 		let mut buf = WString::new_alloc_buf(len as _);
 
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).GetString)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					buf.as_mut_ptr(),
-					len,
-					std::ptr::null_mut(),
-				)
-			},
-		).map(|_| buf.to_string())
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).GetString)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				buf.as_mut_ptr(),
+				len,
+				std::ptr::null_mut(),
+			)
+		})
+		.map(|_| buf.to_string())
 	}
 
 	/// [`IMFAttributes::GetStringLength`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getstringlength)
@@ -313,64 +289,61 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	#[must_use]
 	fn GetStringLength(&self, guid_key: &GUID) -> HrResult<u32> {
 		let mut len = u32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).GetStringLength)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					&mut len,
-				)
-			},
-		).map(|_| len)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).GetStringLength)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				&mut len,
+			)
+		})
+		.map(|_| len)
 	}
 
 	/// [`IMFAttributes::GetUINT32`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getuint32)
 	/// method.
 	fn GetUINT32(&self, guid_key: &GUID) -> HrResult<u32> {
 		let mut value = u32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).GetUINT32)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					&mut value,
-				)
-			},
-		).map(|_| value)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).GetUINT32)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				&mut value,
+			)
+		})
+		.map(|_| value)
 	}
 
 	/// [`IMFAttributes::GetUINT64`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getuint64)
 	/// method.
 	fn GetUINT64(&self, guid_key: &GUID) -> HrResult<u64> {
 		let mut value = u64::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).GetUINT64)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					&mut value,
-				)
-			},
-		).map(|_| value)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).GetUINT64)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				&mut value,
+			)
+		})
+		.map(|_| value)
 	}
 
 	/// [`IMFAttributes::GetUnknown`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getunknown)
 	/// method.
 	#[must_use]
 	fn GetUnknown<T>(&self, guid_key: &GUID) -> HrResult<T>
-		where T: ole_IUnknown,
+	where
+		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).GetUnknown)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					&T::IID as *const _ as _,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).GetUnknown)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				&T::IID as *const _ as _,
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 
 	fn_com_noparm! { LockStore: IMFAttributesVT;
@@ -381,118 +354,86 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// [`IMFAttributes::SetBlob`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-setblob)
 	/// method.
 	fn SetBlob(&self, guid_key: &GUID, buf: &[u8]) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).SetBlob)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					buf.as_ptr(),
-					buf.len() as _,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).SetBlob)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				buf.as_ptr(),
+				buf.len() as _,
+			)
+		})
 	}
 
 	/// [`IMFAttributes::SetDouble`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-setdouble)
 	/// method.
 	fn SetDouble(&self, guid_key: &GUID, value: f64) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).SetDouble)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					value,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).SetDouble)(self.ptr(), guid_key as *const _ as _, value)
+		})
 	}
 
 	/// [`IMFAttributes::SetGUID`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-setguid)
 	/// method.
 	fn SetGUID(&self, guid_key: &GUID, value: &GUID) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).SetGUID)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					value as *const _ as _,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).SetGUID)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				value as *const _ as _,
+			)
+		})
 	}
 
 	/// [`IMFAttributes::SetItem`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-setitem)
 	/// method.
 	fn SetItem(&self, guid_key: &GUID, value: &PropVariant) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).SetItem)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					&value.to_raw()? as *const _ as _,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).SetItem)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				&value.to_raw()? as *const _ as _,
+			)
+		})
 	}
 
 	/// [`IMFAttributes::SetString`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-setstring)
 	/// method.
 	fn SetString(&self, guid_key: &GUID, value: &str) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).SetString)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					WString::from_str(value).as_ptr(),
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).SetString)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				WString::from_str(value).as_ptr(),
+			)
+		})
 	}
 
 	/// [`IMFAttributes::SetUINT32`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-setuint32)
 	/// method.
 	fn SetUINT32(&self, guid_key: &GUID, value: u32) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).SetUINT32)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					value,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).SetUINT32)(self.ptr(), guid_key as *const _ as _, value)
+		})
 	}
 
 	/// [`IMFAttributes::SetUINT64`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-setuint64)
 	/// method.
 	fn SetUINT64(&self, guid_key: &GUID, value: u64) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).SetUINT64)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					value,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).SetUINT64)(self.ptr(), guid_key as *const _ as _, value)
+		})
 	}
 
 	/// [`IMFAttributes::SetUnknown`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-setunknown)
 	/// method.
-	fn SetUnknown(&self,
-		guid_key: &GUID,
-		value: &impl ole_IUnknown,
-	) -> HrResult<()>
-	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFAttributesVT>(self).SetUnknown)(
-					self.ptr(),
-					guid_key as *const _ as _,
-					value.ptr(),
-				)
-			},
-		)
+	fn SetUnknown(&self, guid_key: &GUID, value: &impl ole_IUnknown) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IMFAttributesVT>(self).SetUnknown)(
+				self.ptr(),
+				guid_key as *const _ as _,
+				value.ptr(),
+			)
+		})
 	}
 
 	fn_com_noparm! { UnlockStore: IMFAttributesVT;

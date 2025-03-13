@@ -57,7 +57,8 @@ impl RadioGroupEvents {
 	/// # w::SysResult::Ok(())
 	/// ```
 	pub fn bn_clicked<F>(&self, func: F)
-		where F: Fn() -> AnyResult<()> + 'static,
+	where
+		F: Fn() -> AnyResult<()> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		let shared_func = Rc::new(func);
@@ -65,9 +66,7 @@ impl RadioGroupEvents {
 		for ctrl_id in self.ctrl_ids.iter() {
 			parent_base_ref.on().wm_command(*ctrl_id, co::BN::CLICKED, {
 				let shared_func = shared_func.clone();
-				move || {
-					shared_func()
-				}
+				move || shared_func()
 			});
 		}
 	}
@@ -81,7 +80,8 @@ impl RadioGroupEvents {
 	/// [`BS::OWNERDRAW`](crate::co::BS::OWNERDRAW) buttons. Other button types
 	/// send only if they have the [`BS::NOTIFY`](crate::co::BS::NOTIFY) style.
 	pub fn bn_dbl_clk<F>(&self, func: F)
-		where F: Fn() -> AnyResult<()> + 'static,
+	where
+		F: Fn() -> AnyResult<()> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		let shared_func = Rc::new(func);
@@ -89,9 +89,7 @@ impl RadioGroupEvents {
 		for ctrl_id in self.ctrl_ids.iter() {
 			parent_base_ref.on().wm_command(*ctrl_id, co::BN::DBLCLK, {
 				let shared_func = shared_func.clone();
-				move || {
-					shared_func()
-				}
+				move || shared_func()
 			});
 		}
 	}
@@ -103,18 +101,19 @@ impl RadioGroupEvents {
 	/// [`BS::NOTIFY`](crate::co::BS::NOTIFY) style to send this notification
 	/// code.
 	pub fn bn_kill_focus<F>(&self, func: F)
-		where F: Fn() -> AnyResult<()> + 'static,
+	where
+		F: Fn() -> AnyResult<()> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			parent_base_ref.on().wm_command(*ctrl_id, co::BN::KILLFOCUS, {
-				let shared_func = shared_func.clone();
-				move || {
-					shared_func()
-				}
-			});
+			parent_base_ref
+				.on()
+				.wm_command(*ctrl_id, co::BN::KILLFOCUS, {
+					let shared_func = shared_func.clone();
+					move || shared_func()
+				});
 		}
 	}
 
@@ -125,18 +124,19 @@ impl RadioGroupEvents {
 	/// [`BS::NOTIFY`](crate::co::BS::NOTIFY) style to send this notification
 	/// code.
 	pub fn bn_set_focus<F>(&self, func: F)
-		where F: Fn() -> AnyResult<()> + 'static,
+	where
+		F: Fn() -> AnyResult<()> + 'static,
 	{
 		let parent_base_ref = unsafe { self.parent_ptr.as_ref() };
 		let shared_func = Rc::new(func);
 
 		for ctrl_id in self.ctrl_ids.iter() {
-			parent_base_ref.on().wm_command(*ctrl_id, co::BN::SETFOCUS, {
-				let shared_func = shared_func.clone();
-				move || {
-					shared_func()
-				}
-			});
+			parent_base_ref
+				.on()
+				.wm_command(*ctrl_id, co::BN::SETFOCUS, {
+					let shared_func = shared_func.clone();
+					move || shared_func()
+				});
 		}
 	}
 }

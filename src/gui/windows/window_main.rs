@@ -2,13 +2,16 @@ use std::any::Any;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, privs::*};
+use crate::gui::{privs::*, *};
 use crate::kernel::ffi_types::*;
 use crate::msg::*;
 use crate::prelude::*;
 
 #[derive(Clone)]
-enum RawDlg { Raw(RawMain), Dlg(DlgMain) }
+enum RawDlg {
+	Raw(RawMain),
+	Dlg(DlgMain),
+}
 
 /// An user main window, which can handle events. Usually, this is the first
 /// window of your application, launched directly from the `main` function. Can
@@ -44,28 +47,15 @@ impl WindowMain {
 	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
 	#[must_use]
 	pub fn new(opts: WindowMainOpts) -> Self {
-		Self(
-			RawDlg::Raw(
-				RawMain::new(opts),
-			),
-		)
+		Self(RawDlg::Raw(RawMain::new(opts)))
 	}
 
 	/// Instantiates a new `WindowMain` object, to be loaded from a dialog
 	/// resource with
 	/// [`HINSTANCE::CreateDialogParam`](crate::prelude::user_Hinstance::CreateDialogParam).
 	#[must_use]
-	pub fn new_dlg(
-		dlg_id: u16,
-		icon_id: Option<u16>,
-		accel_tbl_id: Option<u16>,
-	) -> Self
-	{
-		Self(
-			RawDlg::Dlg(
-				DlgMain::new(dlg_id, icon_id, accel_tbl_id),
-			),
-		)
+	pub fn new_dlg(dlg_id: u16, icon_id: Option<u16>, accel_tbl_id: Option<u16>) -> Self {
+		Self(RawDlg::Dlg(DlgMain::new(dlg_id, icon_id, accel_tbl_id)))
 	}
 
 	/// Physically creates the window, then runs the main application loop. This
@@ -84,11 +74,12 @@ impl WindowMain {
 
 		InitCommonControls();
 
-		if IsWindows8OrGreater()? { // https://github.com/rodrigocfd/winsafe-examples/issues/6
+		if IsWindows8OrGreater()? {
+			// https://github.com/rodrigocfd/winsafe-examples/issues/6
 			let mut b_val: BOOL = 0; // FALSE
 			match unsafe {
-				HPROCESS::GetCurrentProcess().SetUserObjectInformation( // SetTimer() safety
-					co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION,
+				HPROCESS::GetCurrentProcess().SetUserObjectInformation(
+					co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION, // SetTimer() safety
 					&mut b_val,
 				)
 			} {
@@ -117,6 +108,8 @@ impl WindowMain {
 	/// [`wm_close`](crate::gui::events::WindowEvents::wm_close) event, just
 	/// like if the user clicked the window "X" button.
 	pub fn close(&self) {
-		unsafe { self.hwnd().PostMessage(wm::Close {}).unwrap(); }
+		unsafe {
+			self.hwnd().PostMessage(wm::Close {}).unwrap();
+		}
 	}
 }

@@ -25,17 +25,13 @@ pub trait user_Haccel: Handle {
 	/// [`CreateAcceleratorTable`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createacceleratortablew)
 	/// function.
 	#[must_use]
-	fn CreateAcceleratorTable(
-		accel: &[ACCEL],
-	) -> SysResult<DestroyAcceleratorTableGuard>
-	{
+	fn CreateAcceleratorTable(accel: &[ACCEL]) -> SysResult<DestroyAcceleratorTableGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::CreateAcceleratorTableW(
-					accel.as_ptr() as _,
-					accel.len() as _,
-				),
-			).map(|h| DestroyAcceleratorTableGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateAcceleratorTableW(
+				accel.as_ptr() as _,
+				accel.len() as _,
+			))
+			.map(|h| DestroyAcceleratorTableGuard::new(h))
 		}
 	}
 }

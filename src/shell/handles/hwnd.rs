@@ -20,45 +20,44 @@ pub trait shell_Hwnd: ole_Hwnd {
 	/// [`DragAcceptFiles`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragacceptfiles)
 	/// function.
 	fn DragAcceptFiles(&self, accept: bool) {
-		unsafe { ffi::DragAcceptFiles(self.ptr(), accept as _); }
+		unsafe {
+			ffi::DragAcceptFiles(self.ptr(), accept as _);
+		}
 	}
 
 	/// [`ShellAbout`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellaboutw)
 	/// function.
-	fn ShellAbout(&self,
+	fn ShellAbout(
+		&self,
 		title_bar: &str,
 		first_line: Option<&str>,
 		other_stuff: Option<&str>,
 		hicon: Option<&HICON>,
-	) -> SysResult<()>
-	{
-		bool_to_sysresult(
-			unsafe {
-				ffi::ShellAboutW(
-					self.ptr(),
-					WString::from_str(
-						&match first_line {
-							Some(line) => format!("{}#{}", title_bar, line),
-							None => title_bar.to_owned(),
-						},
-					).as_ptr(),
-					WString::from_opt_str(other_stuff).as_ptr(),
-					hicon.map_or(std::ptr::null_mut(), |h| h.ptr()),
-				)
-			},
-		)
+	) -> SysResult<()> {
+		bool_to_sysresult(unsafe {
+			ffi::ShellAboutW(
+				self.ptr(),
+				WString::from_str(&match first_line {
+					Some(line) => format!("{}#{}", title_bar, line),
+					None => title_bar.to_owned(),
+				})
+				.as_ptr(),
+				WString::from_opt_str(other_stuff).as_ptr(),
+				hicon.map_or(std::ptr::null_mut(), |h| h.ptr()),
+			)
+		})
 	}
 
 	/// [`ShellExecute`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutew)
 	/// function.
-	fn ShellExecute(&self,
+	fn ShellExecute(
+		&self,
 		operation: &str,
 		file: &str,
 		parameters: Option<&str>,
 		directory: Option<&str>,
 		show_cmd: co::SW,
-	) -> SysResult<()>
-	{
+	) -> SysResult<()> {
 		let ret = unsafe {
 			ffi::ShellExecuteW(
 				self.ptr(),

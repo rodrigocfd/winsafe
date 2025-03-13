@@ -78,7 +78,7 @@ pub struct SHFILEOPSTRUCT<'a, 'b, 'c> {
 	pub hwnd: HWND,
 	pub wFunc: co::FO,
 	pFrom: *mut u16, // double-null terminated
-	pTo: *mut u16, // double-null terminated
+	pTo: *mut u16,   // double-null terminated
 	pub fFlags: co::FOF,
 	fAnyOperationsAborted: BOOL,
 	hNameMappings: *mut std::ffi::c_void, // lots of stuff going here...
@@ -97,10 +97,7 @@ impl<'a, 'b, 'c> SHFILEOPSTRUCT<'a, 'b, 'c> {
 	/// Retrieves the `pFrom` field.
 	#[must_use]
 	pub fn pFrom(&self) -> Option<Vec<String>> {
- 		unsafe {
-			self.pFrom.as_mut()
-				.map(|p| parse_multi_z_str(p, None))
-		}
+		unsafe { self.pFrom.as_mut().map(|p| parse_multi_z_str(p, None)) }
 	}
 
 	/// Sets the `pFrom` field.
@@ -114,10 +111,7 @@ impl<'a, 'b, 'c> SHFILEOPSTRUCT<'a, 'b, 'c> {
 	/// Retrieves the `pTo` field.
 	#[must_use]
 	pub fn pTo(&self) -> Option<Vec<String>> {
-		unsafe {
-			self.pTo.as_mut()
-				.map(|p| parse_multi_z_str(p, None))
-		}
+		unsafe { self.pTo.as_mut().map(|p| parse_multi_z_str(p, None)) }
 	}
 
 	/// Sets the `pTo` field.

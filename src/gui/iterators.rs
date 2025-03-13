@@ -20,23 +20,23 @@ impl<'a> Iterator for ComboBoxItemIter<'a> {
 		}
 
 		let num_chars = match unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(cb::GetLbTextLen { index: self.current })
 		} {
 			Err(e) => {
 				self.current = self.count; // halt
-				return Some(Err(e))
+				return Some(Err(e));
 			},
 			Ok(n) => n,
 		};
 
 		self.buffer = WString::new_alloc_buf(num_chars as usize + 1);
 		if let Err(e) = unsafe {
-			self.owner.hwnd()
-				.SendMessage(cb::GetLbText {
-					index: self.current,
-					text: &mut self.buffer,
-				})
+			self.owner.hwnd().SendMessage(cb::GetLbText {
+				index: self.current,
+				text: &mut self.buffer,
+			})
 		} {
 			self.current = self.count; // halt
 			return Some(Err(e));
@@ -106,23 +106,23 @@ impl<'a> Iterator for ListBoxItemIter<'a> {
 		}
 
 		let num_chars = match unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(lb::GetTextLen { index: self.current })
 		} {
 			Err(e) => {
 				self.current = self.count; // halt
-				return Some(Err(e))
+				return Some(Err(e));
 			},
 			Ok(n) => n,
 		};
 
 		self.buffer = WString::new_alloc_buf(num_chars as usize + 1);
 		if let Err(e) = unsafe {
-			self.owner.hwnd()
-				.SendMessage(lb::GetText {
-					index: self.current,
-					text: &mut self.buffer,
-				})
+			self.owner.hwnd().SendMessage(lb::GetText {
+				index: self.current,
+				text: &mut self.buffer,
+			})
 		} {
 			self.current = self.count; // halt
 			return Some(Err(e));
@@ -163,23 +163,23 @@ impl<'a> Iterator for ListBoxSelItemIter<'a> {
 		let cur_sel_index = self.indexes[self.current as usize];
 
 		let num_chars = match unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(lb::GetTextLen { index: cur_sel_index })
 		} {
 			Err(e) => {
 				self.current = self.indexes.len() as _; // halt
-				return Some(Err(e))
+				return Some(Err(e));
 			},
 			Ok(n) => n,
 		};
 
 		self.buffer = WString::new_alloc_buf(num_chars as usize + 1);
 		if let Err(e) = unsafe {
-			self.owner.hwnd()
-				.SendMessage(lb::GetText {
-					index: cur_sel_index,
-					text: &mut self.buffer,
-				})
+			self.owner.hwnd().SendMessage(lb::GetText {
+				index: cur_sel_index,
+				text: &mut self.buffer,
+			})
 		} {
 			self.current = self.indexes.len() as _; // halt
 			return Some(Err(e));
@@ -196,14 +196,12 @@ impl<'a> ListBoxSelItemIter<'a> {
 		let style: co::LBS = owner.hwnd().style().into();
 		let allow_multiple = style.has(co::LBS::EXTENDEDSEL) || style.has(co::LBS::MULTIPLESEL);
 		let indexes = if allow_multiple {
-			let num_indexes = unsafe {
-				owner.hwnd()
-					.SendMessage(lb::GetSelCount {})
-			}?;
+			let num_indexes = unsafe { owner.hwnd().SendMessage(lb::GetSelCount {}) }?;
 
 			let mut indexes = vec![0; num_indexes as _];
 			unsafe {
-				owner.hwnd()
+				owner
+					.hwnd()
 					.SendMessage(lb::GetSelItems { buffer: &mut indexes })
 			}?;
 			indexes
@@ -265,12 +263,12 @@ impl<'a, T> Iterator for ListViewItemIter<'a, T> {
 
 	fn next(&mut self) -> Option<Self::Item> {
 		self.current = unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::GetNextItem {
-					initial_index: self.current.map(|item| item.index()),
-					relationship: self.relationship,
-				})
-		}.map(|index| self.owner.items().get(index));
+			self.owner.hwnd().SendMessage(lvm::GetNextItem {
+				initial_index: self.current.map(|item| item.index()),
+				relationship: self.relationship,
+			})
+		}
+		.map(|index| self.owner.items().get(index));
 
 		self.current
 	}
@@ -278,16 +276,8 @@ impl<'a, T> Iterator for ListViewItemIter<'a, T> {
 
 impl<'a, T> ListViewItemIter<'a, T> {
 	#[must_use]
-	pub(in crate::gui) const fn new(
-		owner: &'a ListView<T>,
-		relationship: co::LVNI,
-	) -> Self
-	{
-		Self {
-			owner,
-			current: None,
-			relationship,
-		}
+	pub(in crate::gui) const fn new(owner: &'a ListView<T>, relationship: co::LVNI) -> Self {
+		Self { owner, current: None, relationship }
 	}
 }
 
@@ -333,18 +323,16 @@ impl<'a, T> Iterator for TreeViewItemIter<'a, T> {
 
 	fn next(&mut self) -> Option<Self::Item> {
 		self.current = unsafe {
-			self.owner.hwnd()
-				.SendMessage(tvm::GetNextItem {
-					relationship: self.relationship,
-					hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
-				})
-		}.map(|hitem| self.owner.items().get(&hitem));
+			self.owner.hwnd().SendMessage(tvm::GetNextItem {
+				relationship: self.relationship,
+				hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
+			})
+		}
+		.map(|hitem| self.owner.items().get(&hitem));
 
-		self.current.as_ref()
-			.map(|tvi| TreeViewItem::new(
-				self.owner,
-				unsafe { tvi.htreeitem().raw_copy() },
-			))
+		self.current
+			.as_ref()
+			.map(|tvi| TreeViewItem::new(self.owner, unsafe { tvi.htreeitem().raw_copy() }))
 	}
 }
 
@@ -354,8 +342,7 @@ impl<'a, T> TreeViewItemIter<'a, T> {
 		owner: &'a TreeView<T>,
 		current: Option<TreeViewItem<'a, T>>,
 		relationship: co::TVGN,
-	) -> Self
-	{
+	) -> Self {
 		Self { owner, current, relationship }
 	}
 }
@@ -370,32 +357,31 @@ impl<'a, T> Iterator for TreeViewChildItemIter<'a, T> {
 	type Item = TreeViewItem<'a, T>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.first_call { // search for the first child
+		if self.first_call {
+			// Search for the first child.
 			self.current = unsafe {
-				self.owner.hwnd()
-					.SendMessage(tvm::GetNextItem {
-						relationship: co::TVGN::CHILD,
-						hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
-					})
-			}.map(|hitem| self.owner.items().get(&hitem));
+				self.owner.hwnd().SendMessage(tvm::GetNextItem {
+					relationship: co::TVGN::CHILD,
+					hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
+				})
+			}
+			.map(|hitem| self.owner.items().get(&hitem));
 
 			self.first_call = false;
-
-		} else { // search for next siblings
+		} else {
+			// Search for next siblings.
 			self.current = unsafe {
-				self.owner.hwnd()
-					.SendMessage(tvm::GetNextItem {
-						relationship: co::TVGN::NEXT,
-						hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
-					})
-			}.map(|hitem| self.owner.items().get(&hitem));
+				self.owner.hwnd().SendMessage(tvm::GetNextItem {
+					relationship: co::TVGN::NEXT,
+					hitem: self.current.as_ref().map(|tvi| tvi.htreeitem()),
+				})
+			}
+			.map(|hitem| self.owner.items().get(&hitem));
 		}
 
-		self.current.as_ref()
-			.map(|tvi| TreeViewItem::new(
-				self.owner,
-				unsafe { tvi.htreeitem().raw_copy() },
-			))
+		self.current
+			.as_ref()
+			.map(|tvi| TreeViewItem::new(self.owner, unsafe { tvi.htreeitem().raw_copy() }))
 	}
 }
 
@@ -404,12 +390,7 @@ impl<'a, T> TreeViewChildItemIter<'a, T> {
 	pub(in crate::gui) fn new(
 		owner: &'a TreeView<T>,
 		current: Option<TreeViewItem<'a, T>>,
-	) -> Self
-	{
-		Self {
-			owner,
-			current,
-			first_call: true,
-		}
+	) -> Self {
+		Self { owner, current, first_call: true }
 	}
 }

@@ -51,9 +51,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
-	fn iter(&self,
-	) -> HrResult<impl Iterator<Item = HrResult<PROPERTYKEY>> + '_>
-	{
+	fn iter(&self) -> HrResult<impl Iterator<Item = HrResult<PROPERTYKEY>> + '_> {
 		Ok(IpropertystoreIter::new(self)?)
 	}
 
@@ -67,15 +65,10 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	#[must_use]
 	fn GetAt(&self, index: u32) -> HrResult<PROPERTYKEY> {
 		let mut ppk = PROPERTYKEY::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IPropertyStoreVT>(self).GetAt)(
-					self.ptr(),
-					index,
-					&mut ppk as *const _ as _,
-				)
-			},
-		).map(|_| ppk)
+		ok_to_hrresult(unsafe {
+			(vt::<IPropertyStoreVT>(self).GetAt)(self.ptr(), index, &mut ppk as *const _ as _)
+		})
+		.map(|_| ppk)
 	}
 
 	/// [`IPropertyStore::GetCount`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getcount)
@@ -83,11 +76,8 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	#[must_use]
 	fn GetCount(&self) -> HrResult<u32> {
 		let mut count = u32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IPropertyStoreVT>(self).GetCount)(self.ptr(), &mut count)
-			},
-		).map(|_| count)
+		ok_to_hrresult(unsafe { (vt::<IPropertyStoreVT>(self).GetCount)(self.ptr(), &mut count) })
+			.map(|_| count)
 	}
 
 	/// [`IPropertyStore::GetValue`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getvalue)
@@ -96,16 +86,15 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	fn GetValue(&self, key: &PROPERTYKEY) -> HrResult<PropVariant> {
 		let mut var = PROPVARIANT::default();
 		match unsafe {
-			co::HRESULT::from_raw(
-				(vt::<IPropertyStoreVT>(self).GetValue)(
-					self.ptr(),
-					key as *const _ as _,
-					&mut var as *mut _ as _,
-				),
-			)
-		 } {
-			co::HRESULT::S_OK
-				| co::HRESULT::INPLACE_S_TRUNCATED => Ok(PropVariant::from_raw(&var)?),
+			co::HRESULT::from_raw((vt::<IPropertyStoreVT>(self).GetValue)(
+				self.ptr(),
+				key as *const _ as _,
+				&mut var as *mut _ as _,
+			))
+		} {
+			co::HRESULT::S_OK | co::HRESULT::INPLACE_S_TRUNCATED => {
+				Ok(PropVariant::from_raw(&var)?)
+			},
 			hr => Err(hr),
 		}
 	}
@@ -113,14 +102,12 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	/// [`IPropertyStore::SetValue`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-setvalue)
 	/// method.
 	fn SetValue(&self, key: &PROPERTYKEY, value: &PropVariant) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IPropertyStoreVT>(self).SetValue)(
-					self.ptr(),
-					key as *const _ as _,
-					&value.to_raw()? as *const _ as _,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IPropertyStoreVT>(self).SetValue)(
+				self.ptr(),
+				key as *const _ as _,
+				&value.to_raw()? as *const _ as _,
+			)
+		})
 	}
 }

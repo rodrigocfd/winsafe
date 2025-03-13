@@ -31,8 +31,7 @@ use crate::prelude::*;
 pub fn dir_list<'a>(
 	dir_path: &'a str,
 	filter: Option<&'a str>,
-) -> impl Iterator<Item = SysResult<String>> + 'a
-{
+) -> impl Iterator<Item = SysResult<String>> + 'a {
 	DirListIter::new(dir_path.to_owned(), filter)
 }
 
@@ -75,10 +74,7 @@ pub fn dir_list<'a>(
 /// # w::SysResult::Ok(())
 /// ```
 #[must_use]
-pub fn dir_walk<'a>(
-	dir_path: &'a str,
-) -> impl Iterator<Item = SysResult<String>> + 'a
-{
+pub fn dir_walk<'a>(dir_path: &'a str) -> impl Iterator<Item = SysResult<String>> + 'a {
 	DirWalkIter::new(dir_path.to_owned())
 }
 
@@ -90,14 +86,14 @@ pub fn dir_walk<'a>(
 #[must_use]
 pub fn exe_path() -> SysResult<String> {
 	let dbg = HINSTANCE::NULL.GetModuleFileName()?;
-	Ok(
-		get_path( // target
-			get_path( // debug
-				get_path(&dbg).unwrap(), // exe name
-			).unwrap(),
-		).unwrap()
-			.to_owned(),
+	Ok(get_path(
+		get_path(
+			get_path(&dbg).unwrap(), // exe name; go up target and debug folders
+		)
+		.unwrap(),
 	)
+	.unwrap()
+	.to_owned())
 }
 
 /// Returns a new string with the path of the current EXE file, without the EXE
@@ -107,10 +103,9 @@ pub fn exe_path() -> SysResult<String> {
 #[cfg(not(debug_assertions))]
 #[must_use]
 pub fn exe_path() -> SysResult<String> {
-	Ok(
-		get_path(&HINSTANCE::NULL.GetModuleFileName()?)
-			.unwrap().to_owned(),
-	)
+	Ok(get_path(&HINSTANCE::NULL.GetModuleFileName()?)
+		.unwrap()
+		.to_owned())
 }
 
 /// Returns true if the path exists.
@@ -132,10 +127,12 @@ pub fn exists(full_path: &str) -> bool {
 pub fn get_file_name(full_path: &str) -> Option<&str> {
 	match full_path.rfind('\\') {
 		None => Some(full_path), // if no backslash, the whole string is the file name
-		Some(idx) => if idx == full_path.chars().count() - 1 {
-			None // last char is '\\', no file name
-		} else {
-			Some(&full_path[idx + 1..])
+		Some(idx) => {
+			if idx == full_path.chars().count() - 1 {
+				None // last char is '\\', no file name
+			} else {
+				Some(&full_path[idx + 1..])
+			}
 		},
 	}
 }
@@ -153,7 +150,8 @@ pub fn get_file_name(full_path: &str) -> Option<&str> {
 /// ```
 #[must_use]
 pub fn get_path(full_path: &str) -> Option<&str> {
-	full_path.rfind('\\') // if no backslash, the whole string is the file name, so no path
+	full_path
+		.rfind('\\') // if no backslash, the whole string is the file name, so no path
 		.map(|idx| &full_path[0..idx])
 }
 
@@ -171,7 +169,8 @@ pub fn get_path(full_path: &str) -> Option<&str> {
 #[must_use]
 pub fn has_extension(full_path: &str, extensions: &[impl AsRef<str>]) -> bool {
 	let full_path_u = full_path.to_uppercase();
-	extensions.iter()
+	extensions
+		.iter()
 		.find(|ext| {
 			let ext_u = ext.as_ref().to_uppercase();
 			full_path_u.ends_with(&ext_u)
@@ -216,23 +215,22 @@ pub fn is_hidden(full_path: &str) -> bool {
 #[must_use]
 pub fn replace_extension(full_path: &str, new_extension: &str) -> String {
 	if let Some(last) = full_path.chars().last() {
-		if last == '\\' { // full_path is a directory, do nothing
-			return rtrim_backslash(full_path).to_owned();
+		if last == '\\' {
+			return rtrim_backslash(full_path).to_owned(); // full_path is a directory, do nothing
 		}
 	}
 
 	let new_has_dot = new_extension.chars().next() == Some('.');
 	match full_path.rfind('.') {
-		None => format!("{}{}{}", // file name without extension, just append it
+		None => format!(
+			"{}{}{}", // file name without extension, just append it
 			full_path,
 			if new_has_dot { "" } else { "." },
 			new_extension,
 		),
-		Some(idx) => format!("{}{}{}",
-			&full_path[0..idx],
-			if new_has_dot { "" } else { "." },
-			new_extension,
-		),
+		Some(idx) => {
+			format!("{}{}{}", &full_path[0..idx], if new_has_dot { "" } else { "." }, new_extension,)
+		},
 	}
 }
 
@@ -261,10 +259,12 @@ pub fn replace_file_name(full_path: &str, new_file: &str) -> String {
 #[must_use]
 pub fn replace_path(full_path: &str, new_path: &str) -> String {
 	let file_name = get_file_name(full_path);
-	format!("{}{}{}",
+	format!(
+		"{}{}{}",
 		rtrim_backslash(new_path),
 		if file_name.is_some() { "\\" } else { "" },
-		file_name.unwrap_or(""))
+		file_name.unwrap_or("")
+	)
 }
 
 /// Removes a trailing backslash, if any.
@@ -280,12 +280,14 @@ pub fn replace_path(full_path: &str, new_path: &str) -> String {
 pub fn rtrim_backslash(full_path: &str) -> &str {
 	match full_path.chars().last() {
 		None => full_path, // empty string
-		Some(last_ch) => if last_ch == '\\' {
-			let mut chars = full_path.chars();
-			chars.next_back(); // remove last char
-			chars.as_str()
-		} else {
-			full_path // no trailing backslash
+		Some(last_ch) => {
+			if last_ch == '\\' {
+				let mut chars = full_path.chars();
+				chars.next_back(); // remove last char
+				chars.as_str()
+			} else {
+				full_path // no trailing backslash
+			}
 		},
 	}
 }

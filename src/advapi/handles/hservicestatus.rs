@@ -28,26 +28,21 @@ pub trait advapi_Hservicestatus: Handle {
 		service_name: &str,
 		handler_proc: F,
 	) -> SysResult<HSERVICESTATUS>
-		where F: FnMut(SvcCtl) -> u32,
+	where
+		F: FnMut(SvcCtl) -> u32,
 	{
-		ptr_to_sysresult_handle(
-			unsafe {
-				ffi::RegisterServiceCtrlHandlerExW(
-					WString::from_str(service_name).as_ptr(),
-					proc::hservicestatus_register_service_ctrl_handler_ex::<F> as _,
-					&handler_proc as *const _ as _,
-				)
-			},
-		)
+		ptr_to_sysresult_handle(unsafe {
+			ffi::RegisterServiceCtrlHandlerExW(
+				WString::from_str(service_name).as_ptr(),
+				proc::hservicestatus_register_service_ctrl_handler_ex::<F> as _,
+				&handler_proc as *const _ as _,
+			)
+		})
 	}
 
-  /// [`SetServiceStatus`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-setservicestatus)
-  /// function.
-  fn SetServiceStatus(&self, status: &mut SERVICE_STATUS) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe {
-				ffi::SetServiceStatus(self.ptr(), status as *mut _ as _)
-			},
-		)
+	/// [`SetServiceStatus`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-setservicestatus)
+	/// function.
+	fn SetServiceStatus(&self, status: &mut SERVICE_STATUS) -> SysResult<()> {
+		bool_to_sysresult(unsafe { ffi::SetServiceStatus(self.ptr(), status as *mut _ as _) })
 	}
 }

@@ -21,21 +21,20 @@ pub trait advapi_Hthread: kernel_Hthread {
 	/// [`OpenThreadToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openthreadtoken)
 	/// function.
 	#[must_use]
-	fn OpenThreadToken(&self,
+	fn OpenThreadToken(
+		&self,
 		desired_access: co::TOKEN,
 		open_as_self: bool,
-	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>>
-	{
+	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>> {
 		let mut handle = HACCESSTOKEN::NULL;
 		unsafe {
-			bool_to_sysresult(
-				ffi::OpenThreadToken(
-					self.ptr(),
-					desired_access.raw(),
-					open_as_self as _,
-					handle.as_mut(),
-				),
-			).map(|_| CloseHandleGuard::new(handle))
+			bool_to_sysresult(ffi::OpenThreadToken(
+				self.ptr(),
+				desired_access.raw(),
+				open_as_self as _,
+				handle.as_mut(),
+			))
+			.map(|_| CloseHandleGuard::new(handle))
 		}
 	}
 }

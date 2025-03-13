@@ -32,7 +32,9 @@ pub trait ole_IAdviseSink: ole_IUnknown {
 	/// [`IAdviseSink::OnRename`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-iadvisesink-onrename)
 	/// method.
 	fn OnRename(&self, mk: &impl ole_IMoniker) {
-		unsafe { (vt::<IAdviseSinkVT>(self).OnRename)(self.ptr(), mk.ptr()); }
+		unsafe {
+			(vt::<IAdviseSinkVT>(self).OnRename)(self.ptr(), mk.ptr());
+		}
 	}
 
 	fn_com_noparm_noret! { OnSave: IAdviseSinkVT;
@@ -44,11 +46,7 @@ pub trait ole_IAdviseSink: ole_IUnknown {
 	/// method.
 	fn OnViewChange(&self, aspect: co::DVASPECT, index: i32) {
 		unsafe {
-			(vt::<IAdviseSinkVT>(self).OnViewChange)(
-				self.ptr(),
-				aspect.raw(),
-				index,
-			);
+			(vt::<IAdviseSinkVT>(self).OnViewChange)(self.ptr(), aspect.raw(), index);
 		}
 	}
 }

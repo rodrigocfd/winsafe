@@ -26,16 +26,13 @@ pub trait gdi_Hbrush: Handle {
 	/// will yield an invalid handle.
 	#[must_use]
 	fn from_sys_color(color: co::COLOR) -> HBRUSH {
-		unsafe { HBRUSH::from_ptr((color.raw() + 1) as _ ) }
+		unsafe { HBRUSH::from_ptr((color.raw() + 1) as _) }
 	}
 
 	/// [`CreateBrushIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbrushindirect)
 	/// function.
 	#[must_use]
-	fn CreateBrushIndirect(
-		lb: &LOGBRUSH,
-	) -> SysResult<DeleteObjectGuard<HBRUSH>>
-	{
+	fn CreateBrushIndirect(lb: &LOGBRUSH) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::CreateBrushIndirect(lb as *const _ as _))
 				.map(|h| DeleteObjectGuard::new(h))
@@ -45,25 +42,17 @@ pub trait gdi_Hbrush: Handle {
 	/// [`CreateHatchBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createhatchbrush)
 	/// function.
 	#[must_use]
-	fn CreateHatchBrush(
-		hatch: co::HS,
-		color: COLORREF,
-	) -> SysResult<DeleteObjectGuard<HBRUSH>>
-	{
+	fn CreateHatchBrush(hatch: co::HS, color: COLORREF) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::CreateHatchBrush(hatch.raw(), color.into()),
-			).map(|h| DeleteObjectGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateHatchBrush(hatch.raw(), color.into()))
+				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
 	/// [`CreatePatternBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpatternbrush)
 	/// function.
 	#[must_use]
-	fn CreatePatternBrush(
-		hbmp: &HBITMAP,
-	) -> SysResult<DeleteObjectGuard<HBRUSH>>
-	{
+	fn CreatePatternBrush(hbmp: &HBITMAP) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::CreatePatternBrush(hbmp.ptr()))
 				.map(|h| DeleteObjectGuard::new(h))
@@ -73,10 +62,7 @@ pub trait gdi_Hbrush: Handle {
 	/// [`CreateSolidBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush)
 	/// function.
 	#[must_use]
-	fn CreateSolidBrush(
-		color: COLORREF,
-	) -> SysResult<DeleteObjectGuard<HBRUSH>>
-	{
+	fn CreateSolidBrush(color: COLORREF) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::CreateSolidBrush(color.into()))
 				.map(|h| DeleteObjectGuard::new(h))
@@ -100,11 +86,7 @@ pub trait gdi_Hbrush: Handle {
 	/// ```
 	fn GetObject(&self, pv: &mut LOGBRUSH) -> SysResult<()> {
 		match unsafe {
-			ffi::GetObjectW(
-				self.ptr(),
-				std::mem::size_of::<LOGBRUSH>() as _,
-				pv as *mut _ as _,
-			)
+			ffi::GetObjectW(self.ptr(), std::mem::size_of::<LOGBRUSH>() as _, pv as *mut _ as _)
 		} {
 			0 => Err(GetLastError()),
 			_ => Ok(()),

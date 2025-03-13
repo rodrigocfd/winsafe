@@ -155,7 +155,8 @@ impl MsgSend for SetImage {
 			wparam: match self.image {
 				BmpIcon::Bmp(_) => co::IMAGE_TYPE::BITMAP,
 				BmpIcon::Icon(_) => co::IMAGE_TYPE::ICON,
-			}.raw() as _,
+			}
+			.raw() as _,
 			lparam: self.image.as_isize(),
 		}
 	}

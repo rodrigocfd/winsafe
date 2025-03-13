@@ -33,12 +33,7 @@ pub trait shell_IModalWindow: ole_IUnknown {
 	fn Show(&self, hwnd_owner: &HWND) -> HrResult<bool> {
 		const CANCELLED: co::HRESULT = co::ERROR::CANCELLED.to_hresult();
 		match unsafe {
-			co::HRESULT::from_raw(
-				(vt::<IModalWindowVT>(self).Show)(
-					self.ptr(),
-					hwnd_owner.ptr(),
-				),
-			)
+			co::HRESULT::from_raw((vt::<IModalWindowVT>(self).Show)(self.ptr(), hwnd_owner.ptr()))
 		} {
 			co::HRESULT::S_OK => Ok(true),
 			CANCELLED => Ok(false),

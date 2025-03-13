@@ -46,42 +46,35 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 	#[must_use]
 	fn AddSourceFilter(&self, file_name: &str) -> HrResult<IDispatch> {
 		let mut queried = unsafe { IDispatch::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMediaControlVT>(self).AddSourceFilter)(
-					self.ptr(),
-					WString::from_str(file_name).as_mut_ptr(), // BSTR
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IMediaControlVT>(self).AddSourceFilter)(
+				self.ptr(),
+				WString::from_str(file_name).as_mut_ptr(), // BSTR
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IMediaControl::GetState`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-getstate)
 	/// method.
 	#[must_use]
-	fn GetState(&self,
-		ms_timeout: Option<i32>,
-	) -> HrResult<co::FILTER_STATE>
-	{
+	fn GetState(&self, ms_timeout: Option<i32>) -> HrResult<co::FILTER_STATE> {
 		let mut state = co::FILTER_STATE::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMediaControlVT>(self).GetState)(
-					self.ptr(),
-					ms_timeout.unwrap_or(INFINITE as _),
-					state.as_mut(),
-				)
-			},
-		).map(|_| state)
+		ok_to_hrresult(unsafe {
+			(vt::<IMediaControlVT>(self).GetState)(
+				self.ptr(),
+				ms_timeout.unwrap_or(INFINITE as _),
+				state.as_mut(),
+			)
+		})
+		.map(|_| state)
 	}
 
 	/// [`IMediaControl::Pause`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-pause)
 	/// method.
 	fn Pause(&self) -> HrResult<bool> {
-		okfalse_to_hrresult(
-			unsafe { (vt::<IMediaControlVT>(self).Pause)(self.ptr()) },
-		)
+		okfalse_to_hrresult(unsafe { (vt::<IMediaControlVT>(self).Pause)(self.ptr()) })
 	}
 
 	fn_com_bstr_set! { RenderFile: IMediaControlVT, file_name;
@@ -92,9 +85,7 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 	/// [`IMediaControl::Run`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-run)
 	/// method.
 	fn Run(&self) -> HrResult<bool> {
-		okfalse_to_hrresult(
-			unsafe { (vt::<IMediaControlVT>(self).Run)(self.ptr()) },
-		)
+		okfalse_to_hrresult(unsafe { (vt::<IMediaControlVT>(self).Run)(self.ptr()) })
 	}
 
 	fn_com_noparm! { Stop: IMediaControlVT;
@@ -105,8 +96,6 @@ pub trait dshow_IMediaControl: oleaut_IDispatch {
 	/// [`IMediaControl::StopWhenReady`](https://learn.microsoft.com/en-us/windows/win32/api/control/nf-control-imediacontrol-stopwhenready)
 	/// method.
 	fn StopWhenReady(&self) -> HrResult<bool> {
-		okfalse_to_hrresult(
-			unsafe { (vt::<IMediaControlVT>(self).StopWhenReady)(self.ptr()) },
-		)
+		okfalse_to_hrresult(unsafe { (vt::<IMediaControlVT>(self).StopWhenReady)(self.ptr()) })
 	}
 }

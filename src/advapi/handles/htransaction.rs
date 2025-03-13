@@ -38,20 +38,17 @@ pub trait advapi_Htransaction: Handle {
 		options: Option<co::TRANSACTION_OPT>,
 		timeout: Option<u32>,
 		description: &str,
-	) -> SysResult<CloseHandleGuard<HTRANSACTION>>
-	{
+	) -> SysResult<CloseHandleGuard<HTRANSACTION>> {
 		unsafe {
-			match HTRANSACTION(
-				ffi::CreateTransaction(
-					transaction_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
-					std::ptr::null_mut(),
-					options.unwrap_or_default().raw(),
-					0,
-					0,
-					timeout.unwrap_or_default(),
-					WString::from_str(description).as_ptr() as _,
-				),
-			) {
+			match HTRANSACTION(ffi::CreateTransaction(
+				transaction_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+				std::ptr::null_mut(),
+				options.unwrap_or_default().raw(),
+				0,
+				0,
+				timeout.unwrap_or_default(),
+				WString::from_str(description).as_ptr() as _,
+			)) {
 				HTRANSACTION::INVALID => Err(GetLastError()),
 				handle => Ok(CloseHandleGuard::new(handle)),
 			}
@@ -63,9 +60,8 @@ pub trait advapi_Htransaction: Handle {
 	#[must_use]
 	fn GetTransactionId(&self) -> SysResult<GUID> {
 		let mut guid = GUID::default();
-		bool_to_sysresult(
-			unsafe { ffi::GetTransactionId(self.ptr(), &mut guid as *mut _ as _) },
-		).map(|_| guid)
+		bool_to_sysresult(unsafe { ffi::GetTransactionId(self.ptr(), &mut guid as *mut _ as _) })
+			.map(|_| guid)
 	}
 
 	/// [`OpenTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-opentransaction)
@@ -74,15 +70,12 @@ pub trait advapi_Htransaction: Handle {
 	fn OpenTransaction(
 		desired_access: co::TRANSACTION,
 		transaction_id: &GUID,
-	) -> SysResult<CloseHandleGuard<HTRANSACTION>>
-	{
+	) -> SysResult<CloseHandleGuard<HTRANSACTION>> {
 		unsafe {
-			match HTRANSACTION(
-				ffi::OpenTransaction(
-					desired_access.raw(),
-					transaction_id as *const _ as _,
-				),
-			) {
+			match HTRANSACTION(ffi::OpenTransaction(
+				desired_access.raw(),
+				transaction_id as *const _ as _,
+			)) {
 				HTRANSACTION::INVALID => Err(GetLastError()),
 				handle => Ok(CloseHandleGuard::new(handle)),
 			}
@@ -92,8 +85,6 @@ pub trait advapi_Htransaction: Handle {
 	/// [`RollbackTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-rollbacktransaction)
 	/// function.
 	fn RollbackTransaction(&self) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe { ffi::RollbackTransaction(self.ptr()) },
-		)
+		bool_to_sysresult(unsafe { ffi::RollbackTransaction(self.ptr()) })
 	}
 }

@@ -1,11 +1,14 @@
 use std::any::Any;
 
 use crate::decl::*;
-use crate::gui::{*, privs::*};
+use crate::gui::{privs::*, *};
 use crate::prelude::*;
 
 #[derive(Clone)]
-enum RawDlg { Raw(RawControl), Dlg(DlgControl) }
+enum RawDlg {
+	Raw(RawControl),
+	Dlg(DlgControl),
+}
 
 /// An user child window, which can handle events. Can be programmatically
 /// created or load a dialog resource from a `.res` file.
@@ -57,12 +60,7 @@ impl WindowControl {
 		if *parent.hwnd() != HWND::NULL {
 			panic!("Cannot create a custom child control after the parent window is created.");
 		}
-
-		Self(
-			RawDlg::Raw(
-				RawControl::new(parent, opts),
-			),
-		)
+		Self(RawDlg::Raw(RawControl::new(parent, opts)))
 	}
 
 	/// Instantiates a new `WindowControl` object, to be loaded from a dialog
@@ -84,16 +82,10 @@ impl WindowControl {
 		position: (i32, i32),
 		resize_behavior: (Horz, Vert),
 		ctrl_id: Option<u16>,
-	) -> Self
-	{
+	) -> Self {
 		if *parent.hwnd() != HWND::NULL {
 			panic!("Cannot create a custom child control after the parent window is created.");
 		}
-
-		Self(
-			RawDlg::Dlg(
-				DlgControl::new(parent, dlg_id, position, resize_behavior, ctrl_id),
-			),
-		)
+		Self(RawDlg::Dlg(DlgControl::new(parent, dlg_id, position, resize_behavior, ctrl_id)))
 	}
 }

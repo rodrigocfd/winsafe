@@ -20,12 +20,17 @@ pub enum FileAccess {
 
 impl std::fmt::Display for FileAccess {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		write!(f, "{}", match self {
-			FileAccess::ExistingReadOnly => "Existing file, read-only",
-			FileAccess::ExistingRW => "Existing file, read and write",
-			FileAccess::OpenOrCreateRW => "Open existing file or create new file, read and write",
-			FileAccess::CreateRW => "Create new file, read and write",
-		})
+		write!(
+			f,
+			"{}",
+			match self {
+				FileAccess::ExistingReadOnly => "Existing file, read-only",
+				FileAccess::ExistingRW => "Existing file, read and write",
+				FileAccess::OpenOrCreateRW =>
+					"Open existing file or create new file, read and write",
+				FileAccess::CreateRW => "Create new file, read and write",
+			}
+		)
 	}
 }
 
@@ -77,31 +82,31 @@ impl File {
 	#[must_use]
 	pub fn open(file_path: &str, access: FileAccess) -> SysResult<Self> {
 		let (acc, share, disp) = match access {
-			FileAccess::ExistingReadOnly => (
-				co::GENERIC::READ,
-				Some(co::FILE_SHARE::READ),
-				co::DISPOSITION::OPEN_EXISTING,
-			),
-			FileAccess::ExistingRW => (
-				co::GENERIC::READ | co::GENERIC::WRITE,
-				None,
-				co::DISPOSITION::OPEN_EXISTING,
-			),
-			FileAccess::OpenOrCreateRW => (
-				co::GENERIC::READ | co::GENERIC::WRITE,
-				None,
-				co::DISPOSITION::OPEN_ALWAYS,
-			),
-			FileAccess::CreateRW => (
-				co::GENERIC::READ | co::GENERIC::WRITE,
-				None,
-				co::DISPOSITION::CREATE_NEW,
-			),
+			FileAccess::ExistingReadOnly => {
+				(co::GENERIC::READ, Some(co::FILE_SHARE::READ), co::DISPOSITION::OPEN_EXISTING)
+			},
+			FileAccess::ExistingRW => {
+				(co::GENERIC::READ | co::GENERIC::WRITE, None, co::DISPOSITION::OPEN_EXISTING)
+			},
+			FileAccess::OpenOrCreateRW => {
+				(co::GENERIC::READ | co::GENERIC::WRITE, None, co::DISPOSITION::OPEN_ALWAYS)
+			},
+			FileAccess::CreateRW => {
+				(co::GENERIC::READ | co::GENERIC::WRITE, None, co::DISPOSITION::CREATE_NEW)
+			},
 		};
 
 		let (hfile, _) = HFILE::CreateFile(
-			file_path, acc, share, None, disp,
-			co::FILE_ATTRIBUTE::NORMAL, None, None, None)?;
+			file_path,
+			acc,
+			share,
+			None,
+			disp,
+			co::FILE_ATTRIBUTE::NORMAL,
+			None,
+			None,
+			None,
+		)?;
 		Ok(Self { hfile })
 	}
 
@@ -121,7 +126,8 @@ impl File {
 	/// [`HFILE::SetFilePointerEx`](crate::prelude::kernel_Hfile::SetFilePointerEx).
 	#[must_use]
 	pub fn pointer_offset(&self) -> SysResult<u64> {
-		self.hfile.SetFilePointerEx(0, co::FILE_STARTING_POINT::CURRENT) // https://stackoverflow.com/a/17707021/6923555
+		self.hfile
+			.SetFilePointerEx(0, co::FILE_STARTING_POINT::CURRENT) // https://stackoverflow.com/a/17707021/6923555
 			.map(|off| off as _)
 	}
 
@@ -152,7 +158,8 @@ impl File {
 	/// Sets the position of the file pointer by calling
 	/// [`HFILE::SetFilePointerEx`](crate::prelude::kernel_Hfile::SetFilePointerEx).
 	pub fn set_pointer_offset(&self, offset: u64) -> SysResult<()> {
-		self.hfile.SetFilePointerEx(offset as _, co::FILE_STARTING_POINT::BEGIN)
+		self.hfile
+			.SetFilePointerEx(offset as _, co::FILE_STARTING_POINT::BEGIN)
 			.map(|_| ())
 	}
 
@@ -204,7 +211,6 @@ impl File {
 	/// This method will fail if the file was opened with
 	/// [`FileAccess::ExistingReadOnly`](crate::FileAccess::ExistingReadOnly).
 	pub fn write(&self, data: &[u8]) -> SysResult<()> {
-		self.hfile.WriteFile(data)
-			.map(|_| ())
+		self.hfile.WriteFile(data).map(|_| ())
 	}
 }

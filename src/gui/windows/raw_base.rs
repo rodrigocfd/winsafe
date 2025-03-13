@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, privs::*};
+use crate::gui::{privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -14,7 +14,9 @@ pub(in crate::gui) struct RawBase {
 impl Drop for RawBase {
 	fn drop(&mut self) {
 		if *self.base.hwnd() != HWND::NULL {
-			unsafe { self.base.hwnd().SetWindowLongPtr(co::GWLP::USERDATA, 0); } // clear passed pointer
+			unsafe {
+				self.base.hwnd().SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
+			}
 		}
 	}
 }
@@ -22,9 +24,7 @@ impl Drop for RawBase {
 impl RawBase {
 	#[must_use]
 	pub(in crate::gui) fn new() -> Self {
-		Self {
-			base: BaseWnd::new(IsDlg::No),
-		}
+		Self { base: BaseWnd::new(IsDlg::No) }
 	}
 
 	#[must_use]
@@ -32,15 +32,15 @@ impl RawBase {
 		&self.base
 	}
 
-	pub(in crate::gui) fn register_class(&self,
+	pub(in crate::gui) fn register_class(
+		&self,
 		hinst: &HINSTANCE,
 		class_name: &str,
 		class_style: co::CS,
 		class_icon: &Icon,
 		class_bg_brush: &Brush,
 		class_cursor: &Cursor,
-	) -> SysResult<ATOM>
-	{
+	) -> SysResult<ATOM> {
 		let mut wcx = WNDCLASSEX::default();
 		wcx.lpfnWndProc = Some(Self::wnd_proc);
 		wcx.hInstance = unsafe { hinst.raw_copy() };
@@ -51,17 +51,19 @@ impl RawBase {
 		wcx.hCursor = class_cursor.as_hcursor(hinst)?;
 
 		let mut wclass_name = if class_name.trim().is_empty() {
-			WString::from_str(
-				&format!(
-					"WNDCLASS.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}",
-					wcx.style,
-					wcx.lpfnWndProc.map_or(0, |p| p as usize),
-					wcx.cbClsExtra, wcx.cbWndExtra,
-					wcx.hInstance, wcx.hIcon, wcx.hCursor, wcx.hbrBackground,
-					wcx.lpszMenuName(),
-					wcx.hIconSm,
-				),
-			)
+			WString::from_str(&format!(
+				"WNDCLASS.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}.{:#x}",
+				wcx.style,
+				wcx.lpfnWndProc.map_or(0, |p| p as usize),
+				wcx.cbClsExtra,
+				wcx.cbWndExtra,
+				wcx.hInstance,
+				wcx.hIcon,
+				wcx.hCursor,
+				wcx.hbrBackground,
+				wcx.lpszMenuName(),
+				wcx.hIconSm,
+			))
 		} else {
 			WString::from_str(class_name)
 		};
@@ -84,7 +86,8 @@ impl RawBase {
 		}
 	}
 
-	pub(in crate::gui) fn create_window(&self,
+	pub(in crate::gui) fn create_window(
+		&self,
 		ex_style: co::WS_EX,
 		class_name: ATOM,
 		title: Option<&str>,
@@ -94,8 +97,7 @@ impl RawBase {
 		hparent: Option<&HWND>,
 		hmenu: IdMenu,
 		hinst: &HINSTANCE,
-	) -> SysResult<()>
-	{
+	) -> SysResult<()> {
 		if *self.base.hwnd() != HWND::NULL {
 			panic!("Cannot create window twice.");
 		}
@@ -105,7 +107,8 @@ impl RawBase {
 				AtomStr::Atom(class_name),
 				title,
 				style,
-				pos, size,
+				pos,
+				size,
 				hparent,
 				hmenu,
 				hinst,
@@ -126,24 +129,23 @@ impl RawBase {
 		}
 	}
 
-	extern "system" fn wnd_proc(
-		hwnd: HWND,
-		msg: co::WM,
-		wparam: usize,
-		lparam: isize,
-	) -> isize
-	{
+	extern "system" fn wnd_proc(hwnd: HWND, msg: co::WM, wparam: usize, lparam: isize) -> isize {
 		let wm_any = WndMsg::new(msg, wparam, lparam);
-		Self::wnd_proc_proc(hwnd, wm_any)
-			.unwrap_or_else(|err| { quit_error::post_quit_error(wm_any, err); 0 })
+		Self::wnd_proc_proc(hwnd, wm_any).unwrap_or_else(|err| {
+			quit_error::post_quit_error(wm_any, err);
+			0
+		})
 	}
 
 	fn wnd_proc_proc(hwnd: HWND, p: WndMsg) -> AnyResult<isize> {
 		let ptr_self = match p.msg_id {
-			co::WM::NCCREATE => { // first message being handled
+			co::WM::NCCREATE => {
+				// first message being handled
 				let msg = unsafe { wm::NcCreate::from_generic_wm(p) };
 				let ptr_self = msg.createstruct.lpCreateParams as *mut Self;
-				unsafe { hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as _); } // store
+				unsafe {
+					hwnd.SetWindowLongPtr(co::GWLP::USERDATA, ptr_self as _); // store
+				}
 				let ref_self = unsafe { &mut *ptr_self };
 				ref_self.base.set_hwnd(unsafe { hwnd.raw_copy() }); // store HWND in struct field
 				ptr_self
@@ -167,8 +169,11 @@ impl RawBase {
 		// Execute post-user closures, keep track if at least one was executed.
 		let at_least_one_after = ref_self.base.process_after_messages(p)?;
 
-		if p.msg_id == co::WM::NCDESTROY { // always check
-			unsafe { hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); } // clear passed pointer
+		// Always check.
+		if p.msg_id == co::WM::NCDESTROY {
+			unsafe {
+				hwnd.SetWindowLongPtr(co::GWLP::USERDATA, 0); // clear passed pointer
+			}
 			ref_self.base.set_hwnd(HWND::NULL); // clear stored HWND
 			ref_self.base.clear_messages(); // prevents circular references
 		}

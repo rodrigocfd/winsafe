@@ -26,12 +26,12 @@ pub trait gdi_Hbitmap: Handle {
 		num_planes: u32,
 		bit_count: u32,
 		bits: *mut u8,
-	) -> SysResult<DeleteObjectGuard<HBITMAP>>
-	{
+	) -> SysResult<DeleteObjectGuard<HBITMAP>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::CreateBitmap(sz.cx, sz.cy, num_planes, bit_count, bits as _),
-			).map(|h| DeleteObjectGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateBitmap(
+				sz.cx, sz.cy, num_planes, bit_count, bits as _,
+			))
+			.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
 
@@ -51,14 +51,8 @@ pub trait gdi_Hbitmap: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	fn GetObject(&self, pv: &mut BITMAP) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe {
-				ffi::GetObjectW(
-					self.ptr(),
-					std::mem::size_of::<BITMAP>() as _,
-					pv as *mut _ as _,
-				)
-			},
-		)
+		bool_to_sysresult(unsafe {
+			ffi::GetObjectW(self.ptr(), std::mem::size_of::<BITMAP>() as _, pv as *mut _ as _)
+		})
 	}
 }

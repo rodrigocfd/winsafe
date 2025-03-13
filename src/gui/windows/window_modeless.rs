@@ -1,12 +1,15 @@
 use std::any::Any;
 
 use crate::decl::*;
-use crate::gui::{*, privs::*};
+use crate::gui::{privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
 #[derive(Clone)]
-enum RawDlg { Raw(RawModeless), Dlg(DlgModeless) }
+enum RawDlg {
+	Raw(RawModeless),
+	Dlg(DlgModeless),
+}
 
 /// An user modeless window, which can handle events. Can be programmatically
 /// created or load a dialog resource from a `.res` file.
@@ -50,12 +53,7 @@ impl WindowModeless {
 		if *parent.hwnd() != HWND::NULL {
 			panic!("Cannot create a modeless window after the parent window is created.");
 		}
-
-		Self(
-			RawDlg::Raw(
-				RawModeless::new(parent, opts),
-			),
-		)
+		Self(RawDlg::Raw(RawModeless::new(parent, opts)))
 	}
 
 	/// Instantiates a new `WindowModeless` object, to be loaded from a dialog
@@ -67,21 +65,11 @@ impl WindowModeless {
 	/// Panics if the parent dialog was already created – that is, you cannot
 	/// dynamically create a `WindowModeless` in an event closure.
 	#[must_use]
-	pub fn new_dlg(
-		parent: &(impl GuiParent + 'static),
-		dlg_id: u16,
-		position: (i32, i32),
-	) -> Self
-	{
+	pub fn new_dlg(parent: &(impl GuiParent + 'static), dlg_id: u16, position: (i32, i32)) -> Self {
 		if *parent.hwnd() != HWND::NULL {
 			panic!("Cannot create a modeless window after the parent window is created.");
 		}
-
-		Self(
-			RawDlg::Dlg(
-				DlgModeless::new(parent, dlg_id, position),
-			),
-		)
+		Self(RawDlg::Dlg(DlgModeless::new(parent, dlg_id, position)))
 	}
 
 	/// Closes the window by posting a [`WM_CLOSE`](crate::msg::wm::Close)
@@ -90,6 +78,8 @@ impl WindowModeless {
 	/// [`wm_close`](crate::gui::events::WindowEvents::wm_close) event, just
 	/// like if the user clicked the window "X" button.
 	pub fn close(&self) {
-		unsafe { self.hwnd().PostMessage(wm::Close {}).unwrap(); }
+		unsafe {
+			self.hwnd().PostMessage(wm::Close {}).ok(); // ignore errors
+		}
 	}
 }

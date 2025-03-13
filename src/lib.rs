@@ -1,5 +1,6 @@
 #![doc = include_str!("lib.md")]
 #![cfg_attr(docsrs, feature(doc_auto_cfg))]
+#![cfg_attr(any(), rustfmt::skip)]
 
 // Declarations of macros used throughout the library.
 // No macros are public, except seq_ids.

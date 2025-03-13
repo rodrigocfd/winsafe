@@ -103,11 +103,9 @@ macro_rules! const_impl_debug_display {
 		impl std::fmt::Debug for $name {
 			fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
 				if self.0 as usize > 0xffff {
-					write!(f, "{}({:#010x} {})",
-						stringify!($name), self.0, self.0)
+					write!(f, "{}({:#010x} {})", stringify!($name), self.0, self.0)
 				} else {
-					write!(f, "{}({:#06x} {})",
-						stringify!($name), self.0, self.0)
+					write!(f, "{}({:#06x} {})", stringify!($name), self.0, self.0)
 				}
 			}
 		}

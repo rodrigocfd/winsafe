@@ -3,7 +3,7 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::decl::*;
-use crate::gui::{*, privs::*};
+use crate::gui::{privs::*, *};
 use crate::prelude::*;
 
 struct RawModelessObj {
@@ -20,32 +20,45 @@ impl RawModeless {
 	pub(in crate::gui) fn new(
 		parent: &(impl GuiParent + 'static),
 		opts: WindowModelessOpts,
-	) -> Self
-	{
-		let new_self = Self(
-			Arc::pin(
-				RawModelessObj {
-					raw_base: RawBase::new(),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+	) -> Self {
+		let new_self = Self(Arc::pin(RawModelessObj {
+			raw_base: RawBase::new(),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
-		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
-			let hinst = parent2.hwnd().hinstance();
-			let atom = self2.0.raw_base.register_class(&hinst, &opts.class_name,
-				opts.class_style, &opts.class_icon, &opts.class_bg_brush, &opts.class_cursor)?;
+		parent
+			.as_ref()
+			.before_on()
+			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+				let hinst = parent2.hwnd().hinstance();
+				let atom = self2.0.raw_base.register_class(
+					&hinst,
+					&opts.class_name,
+					opts.class_style,
+					&opts.class_icon,
+					&opts.class_bg_brush,
+					&opts.class_cursor,
+				)?;
 
-			let rc_parent = parent2.hwnd().ClientToScreenRc(parent2.hwnd().GetClientRect()?)?;
-			self2.0.raw_base.create_window(opts.ex_style, atom, None, opts.style,
-				POINT::new(opts.position.0 + rc_parent.left, opts.position.1 + rc_parent.top),
-				opts.size.into(), Some(parent2.hwnd()),
-				IdMenu::None, &hinst)?;
+				let rc_parent = parent2
+					.hwnd()
+					.ClientToScreenRc(parent2.hwnd().GetClientRect()?)?;
+				self2.0.raw_base.create_window(
+					opts.ex_style,
+					atom,
+					None,
+					opts.style,
+					POINT::new(opts.position.0 + rc_parent.left, opts.position.1 + rc_parent.top),
+					opts.size.into(),
+					Some(parent2.hwnd()),
+					IdMenu::None,
+					&hinst,
+				)?;
 
-			Ok(0) // ignored
-		});
+				Ok(0) // ignored
+			});
 
 		new_self
 	}

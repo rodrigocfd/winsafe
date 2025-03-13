@@ -17,12 +17,10 @@ pub struct ListViewCol<'a, T: 'static = ()> {
 	index: u32,
 }
 
-impl<'a, T> Clone for ListViewCol<'a, T> { // https://stackoverflow.com/q/39415052/6923555
+impl<'a, T> Clone for ListViewCol<'a, T> {
+	// https://stackoverflow.com/q/39415052/6923555
 	fn clone(&self) -> Self {
-		Self {
-			owner: self.owner,
-			index: self.index,
-		}
+		Self { owner: self.owner, index: self.index }
 	}
 }
 impl<'a, T> Copy for ListViewCol<'a, T> {}
@@ -52,11 +50,9 @@ impl<'a, T> ListViewCol<'a, T> {
 		lvc.set_pszText(Some(&mut buf));
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::SetColumn {
-					index: self.index,
-					lvcolumn: &mut lvc,
-				})?;
+			self.owner
+				.hwnd()
+				.SendMessage(lvm::SetColumn { index: self.index, lvcolumn: &mut lvc })?;
 		}
 
 		Ok(*self)
@@ -68,11 +64,9 @@ impl<'a, T> ListViewCol<'a, T> {
 	/// Returns the same column, so further operations can be chained.
 	pub fn set_width(&self, width: i32) -> SysResult<ListViewCol<'a, T>> {
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::SetColumnWidth {
-					index: self.index,
-					width: width as _,
-				})?;
+			self.owner
+				.hwnd()
+				.SendMessage(lvm::SetColumnWidth { index: self.index, width: width as _ })?;
 		}
 
 		Ok(*self)
@@ -97,11 +91,10 @@ impl<'a, T> ListViewCol<'a, T> {
 			let rc = self.owner.hwnd().GetClientRect()?; // list view client area
 
 			unsafe {
-				self.owner.hwnd()
-					.SendMessage(lvm::SetColumnWidth {
-						index: self.index,
-						width: rc.right as u32 - cx_used,
-					})?;
+				self.owner.hwnd().SendMessage(lvm::SetColumnWidth {
+					index: self.index,
+					width: rc.right as u32 - cx_used,
+				})?;
 			}
 		}
 		Ok(*self)
@@ -119,11 +112,9 @@ impl<'a, T> ListViewCol<'a, T> {
 		lvc.set_pszText(Some(&mut buf));
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::GetColumn {
-					index: self.index,
-					lvcolumn: &mut lvc,
-				})?;
+			self.owner
+				.hwnd()
+				.SendMessage(lvm::GetColumn { index: self.index, lvcolumn: &mut lvc })?;
 		}
 
 		Ok(buf.to_string())
@@ -134,7 +125,8 @@ impl<'a, T> ListViewCol<'a, T> {
 	#[must_use]
 	pub fn width(&self) -> SysResult<u32> {
 		unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(lvm::GetColumnWidth { index: self.index })
 		}
 	}

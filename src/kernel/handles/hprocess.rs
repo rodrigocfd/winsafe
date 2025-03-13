@@ -28,9 +28,8 @@ pub trait kernel_Hprocess: Handle {
 	#[must_use]
 	fn CheckRemoteDebuggerPresent(&self) -> SysResult<bool> {
 		let mut present: BOOL = 0;
-		bool_to_sysresult(
-			unsafe { ffi::CheckRemoteDebuggerPresent(self.ptr(), &mut present) },
-		).map(|_| present != 0)
+		bool_to_sysresult(unsafe { ffi::CheckRemoteDebuggerPresent(self.ptr(), &mut present) })
+			.map(|_| present != 0)
 	}
 
 	/// [`CreateProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessw)
@@ -46,45 +45,43 @@ pub trait kernel_Hprocess: Handle {
 		environment: Option<Vec<(&str, &str)>>,
 		current_dir: Option<&str>,
 		si: &mut STARTUPINFO,
-	) -> SysResult<CloseHandlePiGuard>
-	{
+	) -> SysResult<CloseHandlePiGuard> {
 		let mut buf_cmd_line = WString::from_opt_str(command_line);
 		let mut pi = PROCESS_INFORMATION::default();
 
 		unsafe {
-			bool_to_sysresult(
-				ffi::CreateProcessW(
-					WString::from_opt_str(application_name).as_ptr(),
-					buf_cmd_line.as_mut_ptr(),
-					process_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-					thread_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-					inherit_handles as _,
-					creation_flags.raw(),
-					environment.map_or(std::ptr::null_mut(), |environment| {
-						WString::from_str_vec(
-							&environment.iter()
-								.map(|(name, val)| format!("{}={}", name, val))
-								.collect::<Vec<_>>()
-						).as_ptr() as _
-					}),
-					WString::from_opt_str(current_dir).as_ptr(),
-					si as *mut _ as _,
-					&mut pi as *mut _ as _,
-				),
-			).map(|_| CloseHandlePiGuard::new(pi))
+			bool_to_sysresult(ffi::CreateProcessW(
+				WString::from_opt_str(application_name).as_ptr(),
+				buf_cmd_line.as_mut_ptr(),
+				process_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+				thread_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+				inherit_handles as _,
+				creation_flags.raw(),
+				environment.map_or(std::ptr::null_mut(), |environment| {
+					WString::from_str_vec(
+						&environment
+							.iter()
+							.map(|(name, val)| format!("{}={}", name, val))
+							.collect::<Vec<_>>(),
+					)
+					.as_ptr() as _
+				}),
+				WString::from_opt_str(current_dir).as_ptr(),
+				si as *mut _ as _,
+				&mut pi as *mut _ as _,
+			))
+			.map(|_| CloseHandlePiGuard::new(pi))
 		}
 	}
 
 	/// [`FlushInstructionCache`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushinstructioncache)
 	/// function.
-	fn FlushInstructionCache(&self,
+	fn FlushInstructionCache(
+		&self,
 		base_address: *mut std::ffi::c_void,
 		size: usize,
-	) -> SysResult<()>
-	{
-		bool_to_sysresult(
-			unsafe { ffi::FlushInstructionCache(self.ptr(), base_address, size) },
-		)
+	) -> SysResult<()> {
+		bool_to_sysresult(unsafe { ffi::FlushInstructionCache(self.ptr(), base_address, size) })
 	}
 
 	/// [`GetCurrentProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocess)
@@ -99,9 +96,8 @@ pub trait kernel_Hprocess: Handle {
 	#[must_use]
 	fn GetExitCodeProcess(&self) -> SysResult<u32> {
 		let mut exit_code = u32::default();
-		bool_to_sysresult(
-			unsafe { ffi::GetExitCodeProcess(self.ptr(), &mut exit_code) },
-		).map(|_| exit_code)
+		bool_to_sysresult(unsafe { ffi::GetExitCodeProcess(self.ptr(), &mut exit_code) })
+			.map(|_| exit_code)
 	}
 
 	/// [`GetGuiResources`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getguiresources)
@@ -129,9 +125,8 @@ pub trait kernel_Hprocess: Handle {
 	#[must_use]
 	fn GetProcessHandleCount(&self) -> SysResult<u32> {
 		let mut count = u32::default();
-		bool_to_sysresult(
-			unsafe { ffi::GetProcessHandleCount(self.ptr(), &mut count) },
-		).map(|_| count)
+		bool_to_sysresult(unsafe { ffi::GetProcessHandleCount(self.ptr(), &mut count) })
+			.map(|_| count)
 	}
 
 	/// [`GetProcessId`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getprocessid)
@@ -165,24 +160,20 @@ pub trait kernel_Hprocess: Handle {
 	/// let (creation, exit, kernel, user) = hprocess.GetProcessTimes()?;
 	/// # w::SysResult::Ok(())
 	/// ```
-	fn GetProcessTimes(&self,
-	) -> SysResult<(FILETIME, FILETIME, FILETIME, FILETIME)>
-	{
+	fn GetProcessTimes(&self) -> SysResult<(FILETIME, FILETIME, FILETIME, FILETIME)> {
 		let (mut creation, mut exit, mut kernel, mut user) =
-			(FILETIME::default(), FILETIME::default(),
-			FILETIME::default(), FILETIME::default());
+			(FILETIME::default(), FILETIME::default(), FILETIME::default(), FILETIME::default());
 
-		bool_to_sysresult(
-			unsafe {
-				ffi::GetProcessTimes(
-					self.ptr(),
-					&mut creation as *mut _ as _,
-					&mut exit as *mut _ as _,
-					&mut kernel as *mut _ as _,
-					&mut user as *mut _ as _,
-				)
-			},
-		).map(|_| (creation, exit, kernel, user))
+		bool_to_sysresult(unsafe {
+			ffi::GetProcessTimes(
+				self.ptr(),
+				&mut creation as *mut _ as _,
+				&mut exit as *mut _ as _,
+				&mut kernel as *mut _ as _,
+				&mut user as *mut _ as _,
+			)
+		})
+		.map(|_| (creation, exit, kernel, user))
 	}
 
 	/// [`IsProcessCritical`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-isprocesscritical)
@@ -190,9 +181,8 @@ pub trait kernel_Hprocess: Handle {
 	#[must_use]
 	fn IsProcessCritical(&self) -> SysResult<bool> {
 		let mut critical: BOOL = 0;
-		bool_to_sysresult(
-			unsafe { ffi::IsProcessCritical(self.ptr(), &mut critical) },
-		).map(|_| critical != 0)
+		bool_to_sysresult(unsafe { ffi::IsProcessCritical(self.ptr(), &mut critical) })
+			.map(|_| critical != 0)
 	}
 
 	/// [`IsWow64Process`](https://learn.microsoft.com/en-us/windows/win32/api/wow64apiset/nf-wow64apiset-iswow64process)
@@ -217,39 +207,28 @@ pub trait kernel_Hprocess: Handle {
 		desired_access: co::PROCESS,
 		inherit_handle: bool,
 		process_id: u32,
-	) -> SysResult<CloseHandleGuard<HPROCESS>>
-	{
+	) -> SysResult<CloseHandleGuard<HPROCESS>> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::OpenProcess(
-					desired_access.raw(),
-					inherit_handle as _,
-					process_id,
-				),
-			).map(|h| CloseHandleGuard::new(h))
+			ptr_to_sysresult_handle(ffi::OpenProcess(
+				desired_access.raw(),
+				inherit_handle as _,
+				process_id,
+			))
+			.map(|h| CloseHandleGuard::new(h))
 		}
 	}
 
 	/// [`QueryFullProcessImageName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew)
 	/// function.
 	#[must_use]
-	fn QueryFullProcessImageName(&self,
-		flags: co::PROCESS_NAME,
-	) -> SysResult<String>
-	{
+	fn QueryFullProcessImageName(&self, flags: co::PROCESS_NAME) -> SysResult<String> {
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1);
 		let mut sz = buf.buf_len() as u32;
 
-		bool_to_sysresult(
-			unsafe {
-				ffi::QueryFullProcessImageNameW(
-					self.ptr(),
-					flags.raw(),
-					buf.as_mut_ptr(),
-					&mut sz,
-				)
-			},
-		).map(|_| buf.to_string())
+		bool_to_sysresult(unsafe {
+			ffi::QueryFullProcessImageNameW(self.ptr(), flags.raw(), buf.as_mut_ptr(), &mut sz)
+		})
+		.map(|_| buf.to_string())
 	}
 
 	/// [`QueryProcessAffinityUpdateMode`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-queryprocessaffinityupdatemode)
@@ -257,14 +236,10 @@ pub trait kernel_Hprocess: Handle {
 	#[must_use]
 	fn QueryProcessAffinityUpdateMode(&self) -> SysResult<co::PROCESS_AFFINITY> {
 		let mut affinity = co::PROCESS_AFFINITY::default();
-		bool_to_sysresult(
-			unsafe {
-				ffi::QueryProcessAffinityUpdateMode(
-					self.ptr(),
-					affinity.as_mut(),
-				)
-			},
-		).map(|_| affinity)
+		bool_to_sysresult(unsafe {
+			ffi::QueryProcessAffinityUpdateMode(self.ptr(), affinity.as_mut())
+		})
+		.map(|_| affinity)
 	}
 
 	/// [`QueryProcessCycleTime`](https://learn.microsoft.com/en-us/windows/win32/api/realtimeapiset/nf-realtimeapiset-queryprocesscycletime)
@@ -272,47 +247,27 @@ pub trait kernel_Hprocess: Handle {
 	#[must_use]
 	fn QueryProcessCycleTime(&self) -> SysResult<u64> {
 		let mut t = u64::default();
-		bool_to_sysresult(
-			unsafe { ffi::QueryProcessCycleTime(self.ptr(), &mut t) }
-		).map(|_| t)
+		bool_to_sysresult(unsafe { ffi::QueryProcessCycleTime(self.ptr(), &mut t) }).map(|_| t)
 	}
 
 	/// [`SetPriorityClass`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setpriorityclass)
 	/// function.
-	fn SetPriorityClass(&self,
-		prority_class: co::PRIORITY_CLASS,
-	) -> SysResult<()>
-	{
-		bool_to_sysresult(
-			unsafe { ffi::SetPriorityClass(self.ptr(), prority_class.raw()) },
-		)
+	fn SetPriorityClass(&self, prority_class: co::PRIORITY_CLASS) -> SysResult<()> {
+		bool_to_sysresult(unsafe { ffi::SetPriorityClass(self.ptr(), prority_class.raw()) })
 	}
 
 	/// [`SetProcessAffinityUpdateMode`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setprocessaffinityupdatemode)
 	/// function.
-	fn SetProcessAffinityUpdateMode(&self,
-		flags: co::PROCESS_AFFINITY,
-	) -> SysResult<()>
-	{
-		bool_to_sysresult(
-			unsafe { ffi::SetProcessAffinityUpdateMode(self.ptr(), flags.raw()) },
-		)
+	fn SetProcessAffinityUpdateMode(&self, flags: co::PROCESS_AFFINITY) -> SysResult<()> {
+		bool_to_sysresult(unsafe { ffi::SetProcessAffinityUpdateMode(self.ptr(), flags.raw()) })
 	}
 
 	/// [`SetProcessPriorityBoost`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setprocesspriorityboost)
 	/// function.
-	fn SetProcessPriorityBoost(&self,
-		disable_priority_boost: bool,
-	) -> SysResult<()>
-	{
-		bool_to_sysresult(
-			unsafe {
-				ffi::SetProcessPriorityBoost(
-					self.ptr(),
-					disable_priority_boost as _,
-				)
-			},
-		)
+	fn SetProcessPriorityBoost(&self, disable_priority_boost: bool) -> SysResult<()> {
+		bool_to_sysresult(unsafe {
+			ffi::SetProcessPriorityBoost(self.ptr(), disable_priority_boost as _)
+		})
 	}
 
 	/// [`TerminateProcess`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-terminateprocess)
@@ -323,11 +278,7 @@ pub trait kernel_Hprocess: Handle {
 
 	/// [`WaitForSingleObject`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)
 	/// function.
-	fn WaitForSingleObject(&self,
-		milliseconds: Option<u32>,
-	) -> SysResult<co::WAIT>
-	{
-		unsafe { HEVENT::from_ptr(self.ptr()) }
-			.WaitForSingleObject(milliseconds)
+	fn WaitForSingleObject(&self, milliseconds: Option<u32>) -> SysResult<co::WAIT> {
+		unsafe { HEVENT::from_ptr(self.ptr()) }.WaitForSingleObject(milliseconds)
 	}
 }

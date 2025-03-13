@@ -31,47 +31,49 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	/// [`IMoniker::BindToObject`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-bindtoobject)
 	/// method.
 	#[must_use]
-	fn BindToObject<T>(&self,
+	fn BindToObject<T>(
+		&self,
 		bind_ctx: &impl ole_IBindCtx,
 		moniker_to_left: Option<&impl ole_IMoniker>,
 	) -> HrResult<T>
-		where T: ole_IUnknown,
+	where
+		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMonikerVT>(self).BindToObject)(
-					self.ptr(),
-					bind_ctx.ptr(),
-					moniker_to_left.map_or(std::ptr::null_mut(), |m| m.ptr()),
-					&T::IID as *const _ as _,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IMonikerVT>(self).BindToObject)(
+				self.ptr(),
+				bind_ctx.ptr(),
+				moniker_to_left.map_or(std::ptr::null_mut(), |m| m.ptr()),
+				&T::IID as *const _ as _,
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IMoniker::BindToStorage`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-bindtostorage)
 	/// method.
 	#[must_use]
-	fn BindToStorage<T>(&self,
+	fn BindToStorage<T>(
+		&self,
 		bind_ctx: &impl ole_IBindCtx,
 		moniker_to_left: Option<&impl ole_IMoniker>,
 	) -> HrResult<T>
-		where T: ole_IUnknown,
+	where
+		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMonikerVT>(self).BindToStorage)(
-					self.ptr(),
-					bind_ctx.ptr(),
-					moniker_to_left.map_or(std::ptr::null_mut(), |m| m.ptr()),
-					&T::IID as *const _ as _,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IMonikerVT>(self).BindToStorage)(
+				self.ptr(),
+				bind_ctx.ptr(),
+				moniker_to_left.map_or(std::ptr::null_mut(), |m| m.ptr()),
+				&T::IID as *const _ as _,
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IMoniker::CommonPrefixWith`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-commonprefixwith)
@@ -79,36 +81,30 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	#[must_use]
 	fn CommonPrefixWith(&self, other: &impl ole_IMoniker) -> HrResult<IMoniker> {
 		let mut queried = unsafe { IMoniker::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMonikerVT>(self).CommonPrefixWith)(
-					self.ptr(),
-					other.ptr(),
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IMonikerVT>(self).CommonPrefixWith)(self.ptr(), other.ptr(), queried.as_mut())
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IMoniker::ComposeWith`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-composewith)
 	/// method.
 	#[must_use]
-	fn ComposeWith(&self,
+	fn ComposeWith(
+		&self,
 		moniker_to_right: &impl ole_IMoniker,
 		only_if_not_generic: bool,
-	) -> HrResult<IMoniker>
-	{
+	) -> HrResult<IMoniker> {
 		let mut queried = unsafe { IMoniker::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMonikerVT>(self).ComposeWith)(
-					self.ptr(),
-					moniker_to_right.ptr(),
-					only_if_not_generic as _,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IMonikerVT>(self).ComposeWith)(
+				self.ptr(),
+				moniker_to_right.ptr(),
+				only_if_not_generic as _,
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IMoniker::Enum`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-enum)
@@ -116,36 +112,30 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	#[must_use]
 	fn Enum(&self, forward: bool) -> HrResult<IMoniker> {
 		let mut queried = unsafe { IMoniker::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMonikerVT>(self).Enum)(
-					self.ptr(),
-					forward as _,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IMonikerVT>(self).Enum)(self.ptr(), forward as _, queried.as_mut())
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IMoniker::GetDisplayName`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-getdisplayname)
 	/// method.
 	#[must_use]
-	fn GetDisplayName(&self,
+	fn GetDisplayName(
+		&self,
 		bind_ctx: &impl ole_IBindCtx,
 		moniker_to_left: Option<&impl ole_IMoniker>,
-	) -> HrResult<String>
-	{
+	) -> HrResult<String> {
 		let mut pstr = std::ptr::null_mut::<u16>();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMonikerVT>(self).GetDisplayName)(
-					self.ptr(),
-					bind_ctx.ptr(),
-					moniker_to_left.map_or(std::ptr::null_mut(), |m| m.ptr()),
-					&mut pstr,
-				)
-			},
-		).map(|_| {
+		ok_to_hrresult(unsafe {
+			(vt::<IMonikerVT>(self).GetDisplayName)(
+				self.ptr(),
+				bind_ctx.ptr(),
+				moniker_to_left.map_or(std::ptr::null_mut(), |m| m.ptr()),
+				&mut pstr,
+			)
+		})
+		.map(|_| {
 			let name = unsafe { WString::from_wchars_nullt(pstr) };
 			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) }; // https://stackoverflow.com/q/3079508/6923555
 			name.to_string()
@@ -155,22 +145,21 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	/// [`IMoniker::GetTimeOfLastChange`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-gettimeoflastchange)
 	/// method.
 	#[must_use]
-	fn GetTimeOfLastChange(&self,
+	fn GetTimeOfLastChange(
+		&self,
 		bind_ctx: &impl ole_IBindCtx,
 		moniker_to_left: Option<&impl ole_IMoniker>,
-	) -> HrResult<FILETIME>
-	{
+	) -> HrResult<FILETIME> {
 		let mut ft = FILETIME::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMonikerVT>(self).GetTimeOfLastChange)(
-					self.ptr(),
-					bind_ctx.ptr(),
-					moniker_to_left.map_or(std::ptr::null_mut(), |m| m.ptr()),
-					&mut ft as *mut _ as _,
-				)
-			},
-		).map(|_| ft)
+		ok_to_hrresult(unsafe {
+			(vt::<IMonikerVT>(self).GetTimeOfLastChange)(
+				self.ptr(),
+				bind_ctx.ptr(),
+				moniker_to_left.map_or(std::ptr::null_mut(), |m| m.ptr()),
+				&mut ft as *mut _ as _,
+			)
+		})
+		.map(|_| ft)
 	}
 
 	/// [`IMoniker::Hash`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-hash)
@@ -178,9 +167,8 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	#[must_use]
 	fn Hash(&self) -> HrResult<u32> {
 		let mut hash = u32::default();
-		ok_to_hrresult(
-			unsafe { (vt::<IMonikerVT>(self).Hash)(self.ptr(), &mut hash) },
-		).map(|_| hash)
+		ok_to_hrresult(unsafe { (vt::<IMonikerVT>(self).Hash)(self.ptr(), &mut hash) })
+			.map(|_| hash)
 	}
 
 	fn_com_interface_get! { Inverse: IMonikerVT, IMoniker;
@@ -192,32 +180,28 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	/// method.
 	#[must_use]
 	fn IsEqual(&self, other_moniker: &impl ole_IMoniker) -> HrResult<bool> {
-		okfalse_to_hrresult(
-			unsafe {
-				(vt::<IMonikerVT>(self).IsEqual)(self.ptr(), other_moniker.ptr())
-			},
-		)
+		okfalse_to_hrresult(unsafe {
+			(vt::<IMonikerVT>(self).IsEqual)(self.ptr(), other_moniker.ptr())
+		})
 	}
 
 	/// [`IMoniker::IsRunning`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-isrunning)
 	/// method.
 	#[must_use]
-	fn IsRunning(&self,
+	fn IsRunning(
+		&self,
 		bind_ctx: &impl ole_IBindCtx,
 		moniker_to_left: Option<&impl ole_IMoniker>,
 		moniker_newly_running: Option<&impl ole_IMoniker>,
-	) -> HrResult<bool>
-	{
-		okfalse_to_hrresult(
-			unsafe {
-				(vt::<IMonikerVT>(self).IsRunning)(
-					self.ptr(),
-					bind_ctx.ptr(),
-					moniker_to_left.map_or(std::ptr::null_mut(), |m| m.ptr()),
-					moniker_newly_running.map_or(std::ptr::null_mut(), |m| m.ptr()),
-				)
-			},
-		)
+	) -> HrResult<bool> {
+		okfalse_to_hrresult(unsafe {
+			(vt::<IMonikerVT>(self).IsRunning)(
+				self.ptr(),
+				bind_ctx.ptr(),
+				moniker_to_left.map_or(std::ptr::null_mut(), |m| m.ptr()),
+				moniker_newly_running.map_or(std::ptr::null_mut(), |m| m.ptr()),
+			)
+		})
 	}
 
 	/// [`IMoniker::IsSystemMoniker](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-issystemmoniker)
@@ -225,40 +209,35 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	#[must_use]
 	fn IsSystemMoniker(&self) -> HrResult<(bool, co::MKSYS)> {
 		let mut mksys = co::MKSYS::default();
-		okfalse_to_hrresult(
-			unsafe {
-				(vt::<IMonikerVT>(self).IsSystemMoniker)(
-					self.ptr(),
-					mksys.as_mut(),
-				)
-			},
-		).map(|b| (b, mksys))
+		okfalse_to_hrresult(unsafe {
+			(vt::<IMonikerVT>(self).IsSystemMoniker)(self.ptr(), mksys.as_mut())
+		})
+		.map(|b| (b, mksys))
 	}
 
 	/// [`IMoniker::ParseDisplayName`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-parsedisplayname)
 	/// method.
 	#[must_use]
-	fn ParseDisplayName(&self,
+	fn ParseDisplayName(
+		&self,
 		bind_ctx: &impl ole_IBindCtx,
 		moniker_to_left: &impl ole_IMoniker,
 		display_name: &str,
-	) -> HrResult<(u32, IMoniker)>
-	{
+	) -> HrResult<(u32, IMoniker)> {
 		let mut ch_eaten = u32::default();
 		let mut queried = unsafe { IMoniker::null() };
 
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMonikerVT>(self).ParseDisplayName)(
-					self.ptr(),
-					bind_ctx.ptr(),
-					moniker_to_left.ptr(),
-					WString::from_str(display_name).as_ptr(),
-					&mut ch_eaten,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| (ch_eaten, queried))
+		ok_to_hrresult(unsafe {
+			(vt::<IMonikerVT>(self).ParseDisplayName)(
+				self.ptr(),
+				bind_ctx.ptr(),
+				moniker_to_left.ptr(),
+				WString::from_str(display_name).as_ptr(),
+				&mut ch_eaten,
+				queried.as_mut(),
+			)
+		})
+		.map(|_| (ch_eaten, queried))
 	}
 
 	/// [`IMoniker::Reduce`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-reduce)
@@ -266,45 +245,37 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	///
 	/// Returns the moniker to the left, and the reduced moniker, respectively.
 	#[must_use]
-	fn Reduce(&self,
+	fn Reduce(
+		&self,
 		bind_ctx: &impl ole_IBindCtx,
 		reduce_how_far: co::MKRREDUCE,
-	) -> HrResult<(IMoniker, IMoniker)>
-	{
-		let (mut queried, mut queried2) = unsafe {(
-			IMoniker::null(),
-			IMoniker::null(),
-		)};
+	) -> HrResult<(IMoniker, IMoniker)> {
+		let (mut queried, mut queried2) = unsafe { (IMoniker::null(), IMoniker::null()) };
 
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMonikerVT>(self).Reduce)(
-					self.ptr(),
-					bind_ctx.ptr(),
-					reduce_how_far.raw(),
-					queried.as_mut(),
-					queried2.as_mut(),
-				)
-			},
-		).map(|_| (queried, queried2))
+		ok_to_hrresult(unsafe {
+			(vt::<IMonikerVT>(self).Reduce)(
+				self.ptr(),
+				bind_ctx.ptr(),
+				reduce_how_far.raw(),
+				queried.as_mut(),
+				queried2.as_mut(),
+			)
+		})
+		.map(|_| (queried, queried2))
 	}
 
 	/// [`IMoniker::RelativePathTo`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-imoniker-relativepathto)
 	/// method.
 	#[must_use]
-	fn RelativePathTo(&self,
-		other_moniker: &impl ole_IMoniker,
-	) -> HrResult<IMoniker>
-	{
+	fn RelativePathTo(&self, other_moniker: &impl ole_IMoniker) -> HrResult<IMoniker> {
 		let mut queried = unsafe { IMoniker::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMonikerVT>(self).RelativePathTo)(
-					self.ptr(),
-					other_moniker.ptr(),
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IMonikerVT>(self).RelativePathTo)(
+				self.ptr(),
+				other_moniker.ptr(),
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 }

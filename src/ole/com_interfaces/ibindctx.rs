@@ -32,13 +32,8 @@ pub trait ole_IBindCtx: ole_IUnknown {
 	/// [`IBindCtx::RevokeObjectParam`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-revokeobjectparam)
 	/// method.
 	fn RevokeObjectParam(&self, key: &str) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IBindCtxVT>(self).RevokeObjectParam)(
-					self.ptr(),
-					WString::from_str(key).as_ptr(),
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IBindCtxVT>(self).RevokeObjectParam)(self.ptr(), WString::from_str(key).as_ptr())
+		})
 	}
 }

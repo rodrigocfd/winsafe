@@ -112,7 +112,8 @@ impl MsgSend for SetImage {
 				BmpIconCurMeta::Icon(_) => co::IMAGE_TYPE::ICON,
 				BmpIconCurMeta::Cur(_) => co::IMAGE_TYPE::CURSOR,
 				BmpIconCurMeta::Meta(_) => co::IMAGE_TYPE::ENHMETAFILE,
-			}.raw() as _,
+			}
+			.raw() as _,
 			lparam: self.image.as_isize(),
 		}
 	}

@@ -79,7 +79,12 @@ impl Default for WindowControlOpts {
 			class_bg_brush: Brush::Color(co::COLOR::WINDOW),
 			position: dpi(0, 0),
 			size: dpi(100, 80),
-			style: co::WS::CHILD | co::WS::TABSTOP | co::WS::GROUP | co::WS::VISIBLE | co::WS::CLIPCHILDREN | co::WS::CLIPSIBLINGS,
+			style: co::WS::CHILD
+				| co::WS::TABSTOP
+				| co::WS::GROUP
+				| co::WS::VISIBLE
+				| co::WS::CLIPCHILDREN
+				| co::WS::CLIPSIBLINGS,
 			ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
@@ -184,7 +189,11 @@ impl Default for WindowMainOpts {
 			class_bg_brush: Brush::Color(co::COLOR::BTNFACE),
 			title: "".to_owned(),
 			size: dpi(600, 400),
-			style: co::WS::CAPTION | co::WS::SYSMENU | co::WS::CLIPCHILDREN | co::WS::BORDER | co::WS::VISIBLE,
+			style: co::WS::CAPTION
+				| co::WS::SYSMENU
+				| co::WS::CLIPCHILDREN
+				| co::WS::BORDER
+				| co::WS::VISIBLE,
 			ex_style: co::WS_EX::LEFT,
 			menu: HMENU::NULL,
 			accel_table: None,
@@ -273,7 +282,11 @@ impl Default for WindowModalOpts {
 			class_bg_brush: Brush::Color(co::COLOR::BTNFACE),
 			title: "".to_owned(),
 			size: dpi(500, 400),
-			style: co::WS::CAPTION | co::WS::SYSMENU | co::WS::CLIPCHILDREN | co::WS::BORDER | co::WS::VISIBLE,
+			style: co::WS::CAPTION
+				| co::WS::SYSMENU
+				| co::WS::CLIPCHILDREN
+				| co::WS::BORDER
+				| co::WS::VISIBLE,
 			ex_style: co::WS_EX::LEFT | co::WS_EX::DLGMODALFRAME,
 			process_dlg_msgs: true,
 		}
@@ -353,7 +366,11 @@ impl Default for WindowModelessOpts {
 			title: "".to_owned(),
 			position: dpi(0, 0),
 			size: dpi(220, 150),
-			style: co::WS::CAPTION | co::WS::SYSMENU | co::WS::CLIPCHILDREN | co::WS::BORDER | co::WS::VISIBLE,
+			style: co::WS::CAPTION
+				| co::WS::SYSMENU
+				| co::WS::CLIPCHILDREN
+				| co::WS::BORDER
+				| co::WS::VISIBLE,
 			ex_style: co::WS_EX::LEFT | co::WS_EX::TOOLWINDOW,
 		}
 	}

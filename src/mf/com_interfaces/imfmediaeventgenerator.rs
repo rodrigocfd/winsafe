@@ -28,82 +28,70 @@ impl mf_IMFMediaEventGenerator for IMFMediaEventGenerator {}
 pub trait mf_IMFMediaEventGenerator: ole_IUnknown {
 	/// [`IMFMediaEventGenerator::BeginGetEvent`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfmediaeventgenerator-begingetevent)
 	/// method.
-	fn BeginGetEvent(&self,
+	fn BeginGetEvent(
+		&self,
 		callback: &IMFAsyncCallback,
 		state: Option<&impl ole_IUnknown>,
-	) -> HrResult<()>
-	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFMediaEventGeneratorVT>(self).BeginGetEvent)(
-					self.ptr(),
-					callback.ptr(),
-					state.map_or(std::ptr::null_mut(), |s| s.ptr()),
-				)
-			},
-		)
+	) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IMFMediaEventGeneratorVT>(self).BeginGetEvent)(
+				self.ptr(),
+				callback.ptr(),
+				state.map_or(std::ptr::null_mut(), |s| s.ptr()),
+			)
+		})
 	}
 
 	/// [`IMFMediaEventGenerator::EndGetEvent`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfmediaeventgenerator-endgetevent)
 	/// method.
 	#[must_use]
-	fn EndGetEvent(&self,
-		result: &IMFAsyncResult,
-	) -> HrResult<IMFMediaEvent>
-	{
+	fn EndGetEvent(&self, result: &IMFAsyncResult) -> HrResult<IMFMediaEvent> {
 		let mut queried = unsafe { IMFMediaEvent::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFMediaEventGeneratorVT>(self).EndGetEvent)(
-					self.ptr(),
-					result.ptr(),
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFMediaEventGeneratorVT>(self).EndGetEvent)(
+				self.ptr(),
+				result.ptr(),
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IMFMediaEventGenerator::GetEvent`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfmediaeventgenerator-getevent)
 	/// method.
 	#[must_use]
-	fn GetEvent(&self,
-		flags: Option<co::MF_EVENT_FLAG>,
-	) -> HrResult<IMFMediaEvent>
-	{
+	fn GetEvent(&self, flags: Option<co::MF_EVENT_FLAG>) -> HrResult<IMFMediaEvent> {
 		let mut queried = unsafe { IMFMediaEvent::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFMediaEventGeneratorVT>(self).GetEvent)(
-					self.ptr(),
-					flags.unwrap_or_default().raw(),
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFMediaEventGeneratorVT>(self).GetEvent)(
+				self.ptr(),
+				flags.unwrap_or_default().raw(),
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IMFMediaEventGenerator::QueueEvent`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfmediaeventgenerator-queueevent)
 	/// method.
-	fn QueueEvent(&self,
+	fn QueueEvent(
+		&self,
 		met: co::ME,
 		extended_type: &GUID,
 		status: co::HRESULT,
 		value: Option<&PropVariant>,
-	) -> HrResult<()>
-	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFMediaEventGeneratorVT>(self).QueueEvent)(
-					self.ptr(),
-					met.raw(),
-					extended_type as *const _ as _,
-					status.raw(),
-					match value {
-						None => std::ptr::null(),
-						Some(v) => &v.to_raw()? as *const _ as _,
-					},
-				)
-			},
-		)
+	) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IMFMediaEventGeneratorVT>(self).QueueEvent)(
+				self.ptr(),
+				met.raw(),
+				extended_type as *const _ as _,
+				status.raw(),
+				match value {
+					None => std::ptr::null(),
+					Some(v) => &v.to_raw()? as *const _ as _,
+				},
+			)
+		})
 	}
 }

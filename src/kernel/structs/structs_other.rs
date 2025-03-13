@@ -170,7 +170,7 @@ impl<'a, 'b> CLAIM_SECURITY_ATTRIBUTE_V1<'a, 'b> {
 				co::CLAIM_SECURITY_ATTRIBUTE_TYPE::OCTET_STRING => ClaimSecurityAttr::OctetString(
 					std::slice::from_raw_parts(self.Values.pOctetString, self.ValueCount as _),
 				),
-				_ => panic!("Invalid ValueType.")
+				_ => panic!("Invalid ValueType."),
 			}
 		}
 	}
@@ -191,8 +191,8 @@ pub struct CONSOLE_READCONSOLE_CONTROL {
 /// struct.
 #[repr(C)]
 #[derive(Default, Debug, Clone, Copy, PartialEq, Eq)]
-pub struct DEV_BROADCAST_HDR { // used by SvcCtlDeviceEvent (advapi) and wm::DeviceChange (user)
-	pub dbch_size: u32,
+pub struct DEV_BROADCAST_HDR {
+	pub dbch_size: u32, // used by SvcCtlDeviceEvent (advapi) and wm::DeviceChange (user)
 	pub dbch_devicetype: co::DBT_DEVTYP,
 	dbch_reserved: u32,
 }
@@ -295,9 +295,14 @@ newtype_num! { LANGID: u16;
 
 impl std::fmt::Debug for LANGID {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		write!(f, "Primary [{:#04x} {}], Sublang [{:#04x} {}]",
-			self.primary_lang_id(), self.primary_lang_id(),
-			self.sub_lang_id(), self.sub_lang_id())
+		write!(
+			f,
+			"Primary [{:#04x} {}], Sublang [{:#04x} {}]",
+			self.primary_lang_id(),
+			self.primary_lang_id(),
+			self.sub_lang_id(),
+			self.sub_lang_id()
+		)
 	}
 }
 impl std::fmt::Display for LANGID {
@@ -526,24 +531,26 @@ impl POWERBROADCAST_SETTING {
 	#[must_use]
 	pub unsafe fn data(&self) -> PowerSetting {
 		match self.PowerSetting {
-			co::POWER_SETTING::ACDC_POWER_SOURCE => PowerSetting::AcDcPowerSource(
-				co::SYSTEM_POWER_CONDITION::from_raw(
+			co::POWER_SETTING::ACDC_POWER_SOURCE => {
+				PowerSetting::AcDcPowerSource(co::SYSTEM_POWER_CONDITION::from_raw(
 					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
-				),
-			),
-			co::POWER_SETTING::BATTERY_PERCENTAGE_REMAINING => PowerSetting::BatteryPercentageRemaining(
-				std::slice::from_raw_parts(self.Data.as_ptr() as *const u32, 1)[0] as _
-			),
-			co::POWER_SETTING::CONSOLE_DISPLAY_STATE => PowerSetting::ConsoleDisplayState(
-				co::MONITOR_DISPLAY_STATE::from_raw(
+				))
+			},
+			co::POWER_SETTING::BATTERY_PERCENTAGE_REMAINING => {
+				PowerSetting::BatteryPercentageRemaining(
+					std::slice::from_raw_parts(self.Data.as_ptr() as *const u32, 1)[0] as _,
+				)
+			},
+			co::POWER_SETTING::CONSOLE_DISPLAY_STATE => {
+				PowerSetting::ConsoleDisplayState(co::MONITOR_DISPLAY_STATE::from_raw(
 					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
-				),
-			),
-			co::POWER_SETTING::GLOBAL_USER_PRESENCE => PowerSetting::GlobalUserPresence(
-				co::USER_ACTIVITY_PRESENCE::from_raw(
+				))
+			},
+			co::POWER_SETTING::GLOBAL_USER_PRESENCE => {
+				PowerSetting::GlobalUserPresence(co::USER_ACTIVITY_PRESENCE::from_raw(
 					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
-				),
-			),
+				))
+			},
 			co::POWER_SETTING::IDLE_BACKGROUND_TASK => PowerSetting::IdleBackgroundTask,
 			co::POWER_SETTING::MONITOR_POWER_ON => PowerSetting::MonitorPowerOn(
 				match std::slice::from_raw_parts(self.Data.as_ptr() as *const u32, 1)[0] {
@@ -560,16 +567,16 @@ impl POWERBROADCAST_SETTING {
 			co::POWER_SETTING::POWERSCHEME_PERSONALITY => PowerSetting::PowerSchemePersonality(
 				std::slice::from_raw_parts(self.Data.as_ptr() as *const co::POWER_SAVINGS, 1)[0],
 			),
-			co::POWER_SETTING::SESSION_DISPLAY_STATUS => PowerSetting::SessionDisplayStatus(
-				co::MONITOR_DISPLAY_STATE::from_raw(
+			co::POWER_SETTING::SESSION_DISPLAY_STATUS => {
+				PowerSetting::SessionDisplayStatus(co::MONITOR_DISPLAY_STATE::from_raw(
 					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
-				),
-			),
-			co::POWER_SETTING::SESSION_USER_PRESENCE => PowerSetting::SessionUserPresence(
-				co::USER_ACTIVITY_PRESENCE::from_raw(
+				))
+			},
+			co::POWER_SETTING::SESSION_USER_PRESENCE => {
+				PowerSetting::SessionUserPresence(co::USER_ACTIVITY_PRESENCE::from_raw(
 					std::slice::from_raw_parts(self.Data.as_ptr() as *const _, 1)[0],
-				),
-			),
+				))
+			},
 			co::POWER_SETTING::LIDSWITCH_STATE_CHANGE => PowerSetting::LidSwitchStateChange(
 				match std::slice::from_raw_parts(self.Data.as_ptr() as *const u8, 1)[0] {
 					0 => PowerSettingLid::Closed,
@@ -818,9 +825,17 @@ pub struct SYSTEMTIME {
 
 impl std::fmt::Display for SYSTEMTIME {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		write!(f, "{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}",
-			self.wYear, self.wMonth, self.wDay, self.wHour,
-			self.wMinute, self.wSecond, self.wMilliseconds)
+		write!(
+			f,
+			"{:04}-{:02}-{:02} {:02}:{:02}:{:02}.{:03}",
+			self.wYear,
+			self.wMonth,
+			self.wDay,
+			self.wHour,
+			self.wMinute,
+			self.wSecond,
+			self.wMilliseconds
+		)
 	}
 }
 

@@ -22,12 +22,10 @@ pub struct ListViewItem<'a, T: 'static = ()> {
 	index: u32,
 }
 
-impl<'a, T> Clone for ListViewItem<'a, T> { // https://stackoverflow.com/q/39415052/6923555
+impl<'a, T> Clone for ListViewItem<'a, T> {
+	// https://stackoverflow.com/q/39415052/6923555
 	fn clone(&self) -> Self {
-		Self {
-			owner: self.owner,
-			index: self.index,
-		}
+		Self { owner: self.owner, index: self.index }
 	}
 }
 impl<'a, T> Copy for ListViewItem<'a, T> {}
@@ -50,8 +48,8 @@ impl<'a, T> ListViewItem<'a, T> {
 	/// Panics if the item index is invalid.
 	#[must_use]
 	pub fn data(&self) -> SysResult<Rc<RefCell<T>>> {
-		if TypeId::of::<T>() == TypeId::of::<()>() { // user didn't define the generic type
-			panic!("ListView<()> will hold no data.");
+		if TypeId::of::<T>() == TypeId::of::<()>() {
+			panic!("ListView<()> will hold no data."); // user didn't define the generic type
 		}
 
 		let rc_ptr = self.data_lparam()?;
@@ -70,7 +68,8 @@ impl<'a, T> ListViewItem<'a, T> {
 		lvi.mask = co::LVIF::PARAM;
 
 		unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(lvm::GetItem { lvitem: &mut lvi })?;
 		}
 
@@ -84,8 +83,9 @@ impl<'a, T> ListViewItem<'a, T> {
 	/// [`lvm::DeleteItem`](crate::msg::lvm::DeleteItem) message.
 	pub fn delete(&self) -> SysResult<()> {
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::DeleteItem { index: self.index, })
+			self.owner
+				.hwnd()
+				.SendMessage(lvm::DeleteItem { index: self.index })
 		}
 	}
 
@@ -96,11 +96,10 @@ impl<'a, T> ListViewItem<'a, T> {
 	/// Returns the same column, so further operations can be chained.
 	pub fn ensure_visible(&self) -> SysResult<ListViewItem<'a, T>> {
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::EnsureVisible {
-					index: self.index,
-					entirely_visible: true,
-				})?;
+			self.owner.hwnd().SendMessage(lvm::EnsureVisible {
+				index: self.index,
+				entirely_visible: true,
+			})?;
 		}
 
 		Ok(*self)
@@ -116,11 +115,9 @@ impl<'a, T> ListViewItem<'a, T> {
 		lvi.state = co::LVIS::FOCUSED;
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::SetItemState {
-					index: Some(self.index),
-					lvitem: &lvi,
-				})?;
+			self.owner
+				.hwnd()
+				.SendMessage(lvm::SetItemState { index: Some(self.index), lvitem: &lvi })?;
 		}
 
 		Ok(*self)
@@ -135,7 +132,8 @@ impl<'a, T> ListViewItem<'a, T> {
 		lvi.mask = co::LVIF::IMAGE;
 
 		unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(lvm::SetItem { lvitem: &mut lvi })?;
 		}
 
@@ -156,12 +154,12 @@ impl<'a, T> ListViewItem<'a, T> {
 	#[must_use]
 	pub fn is_focused(&self) -> bool {
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::GetItemState {
-					index: self.index,
-					mask: co::LVIS::FOCUSED,
-				})
-		}.has(co::LVIS::FOCUSED)
+			self.owner.hwnd().SendMessage(lvm::GetItemState {
+				index: self.index,
+				mask: co::LVIS::FOCUSED,
+			})
+		}
+		.has(co::LVIS::FOCUSED)
 	}
 
 	/// Tells if the item is selected by sending an
@@ -169,12 +167,12 @@ impl<'a, T> ListViewItem<'a, T> {
 	#[must_use]
 	pub fn is_selected(&self) -> bool {
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::GetItemState {
-					index: self.index,
-					mask: co::LVIS::SELECTED,
-				})
-		}.has(co::LVIS::SELECTED)
+			self.owner.hwnd().SendMessage(lvm::GetItemState {
+				index: self.index,
+				mask: co::LVIS::SELECTED,
+			})
+		}
+		.has(co::LVIS::SELECTED)
 	}
 
 	/// Tells if the item is currently visible by sending an
@@ -182,7 +180,8 @@ impl<'a, T> ListViewItem<'a, T> {
 	#[must_use]
 	pub fn is_visible(&self) -> bool {
 		unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(lvm::IsItemVisible { index: self.index })
 		}
 	}
@@ -193,12 +192,11 @@ impl<'a, T> ListViewItem<'a, T> {
 	pub fn rect(&self, portion: co::LVIR) -> SysResult<RECT> {
 		let mut rc = RECT::default();
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::GetItemRect {
-					index: self.index,
-					rect: &mut rc,
-					portion,
-				})?;
+			self.owner.hwnd().SendMessage(lvm::GetItemRect {
+				index: self.index,
+				rect: &mut rc,
+				portion,
+			})?;
 		}
 		Ok(rc)
 	}
@@ -210,14 +208,14 @@ impl<'a, T> ListViewItem<'a, T> {
 	pub fn select(&self, set: bool) -> SysResult<ListViewItem<'a, T>> {
 		let mut lvi = LVITEM::default();
 		lvi.stateMask = co::LVIS::SELECTED;
-		if set { lvi.state = co::LVIS::SELECTED; }
+		if set {
+			lvi.state = co::LVIS::SELECTED;
+		}
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::SetItemState {
-					index: Some(self.index),
-					lvitem: &lvi,
-				})?;
+			self.owner
+				.hwnd()
+				.SendMessage(lvm::SetItemState { index: Some(self.index), lvitem: &lvi })?;
 		}
 
 		Ok(*self)
@@ -234,7 +232,8 @@ impl<'a, T> ListViewItem<'a, T> {
 		lvi.iImage = icon_index.map_or(-1, |idx| idx as _);
 
 		unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(lvm::SetItem { lvitem: &mut lvi })?;
 		}
 
@@ -253,11 +252,9 @@ impl<'a, T> ListViewItem<'a, T> {
 		lvi.set_pszText(Some(&mut wtext));
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::SetItemText {
-					index: self.index,
-					lvitem: &lvi,
-				})?;
+			self.owner
+				.hwnd()
+				.SendMessage(lvm::SetItemText { index: self.index, lvitem: &lvi })?;
 		}
 
 		Ok(*self)
@@ -277,15 +274,13 @@ impl<'a, T> ListViewItem<'a, T> {
 			lvi.set_pszText(Some(&mut buf));
 
 			let returned_chars = unsafe {
-				self.owner.hwnd() // char count without terminating null
-					.SendMessage(lvm::GetItemText {
-						index: self.index,
-						lvitem: &mut lvi,
-					})
+				self.owner
+					.hwnd() // char count without terminating null
+					.SendMessage(lvm::GetItemText { index: self.index, lvitem: &mut lvi })
 			} + 1; // plus terminating null count
 
-			if (returned_chars as usize) < buf_sz { // to break, must have at least 1 char gap
-				return buf.to_string();
+			if (returned_chars as usize) < buf_sz {
+				return buf.to_string(); // to break, must have at least 1 char gap
 			}
 
 			buf_sz *= 2; // double the buffer size to try again
@@ -299,7 +294,8 @@ impl<'a, T> ListViewItem<'a, T> {
 	#[must_use]
 	pub fn uid(&self) -> Option<u32> {
 		unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(lvm::MapIndexToId { index: self.index })
 		}
 	}

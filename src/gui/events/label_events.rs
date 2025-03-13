@@ -2,7 +2,6 @@ use crate::co;
 use crate::decl::*;
 use crate::gui::{events::*, privs::*};
 
-
 /// Exposes label control
 /// [notifications](https://learn.microsoft.com/en-us/windows/win32/controls/bumper-static-control-reference-notifications).
 ///

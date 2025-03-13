@@ -61,20 +61,18 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 		let mut queried = unsafe { IBaseFilter::null() };
 		let mut fetched = u32::default();
 
-		match ok_to_hrresult(
-			unsafe {
-				(vt::<IEnumFiltersVT>(self).Next)(
-					self.ptr(),
-					1, // retrieve only 1
-					queried.as_mut(),
-					&mut fetched,
-				)
-			},
-		) {
+		match ok_to_hrresult(unsafe {
+			(vt::<IEnumFiltersVT>(self).Next)(
+				self.ptr(),
+				1, // retrieve only 1
+				queried.as_mut(),
+				&mut fetched,
+			)
+		}) {
 			Ok(_) => Ok(Some(queried)),
 			Err(hr) => match hr {
 				co::HRESULT::S_FALSE => Ok(None), // no filter found
-				hr => Err(hr), // actual error
+				hr => Err(hr),                    // actual error
 			},
 		}
 	}
@@ -87,8 +85,6 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 	/// [`IEnumFilters::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ienumfilters-skip)
 	/// method.
 	fn Skip(&self, count: u32) -> HrResult<bool> {
-		okfalse_to_hrresult(
-			unsafe { (vt::<IEnumFiltersVT>(self).Skip)(self.ptr(), count) },
-		)
+		okfalse_to_hrresult(unsafe { (vt::<IEnumFiltersVT>(self).Skip)(self.ptr(), count) })
 	}
 }

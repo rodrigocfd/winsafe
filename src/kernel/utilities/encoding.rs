@@ -73,8 +73,8 @@ impl Encoding {
 				&& data[..bom_bytes.len()].cmp(bom_bytes) == Ordering::Equal
 		};
 
-		const UTF8: [u8; 3] = [0xef, 0xbb, 0xbf];
-		if has_bom(&UTF8) { // UTF-8 BOM
+		const UTF8: [u8; 3] = [0xef, 0xbb, 0xbf]; // UTF-8 BOM
+		if has_bom(&UTF8) {
 			return Some((Self::Utf8, UTF8.len()));
 		}
 
@@ -117,8 +117,8 @@ impl Encoding {
 		while i < data.len() {
 			let ch0 = unsafe { *data.get_unchecked(i) };
 
-			if ch0 == 0x00 { // end of string
-				break;
+			if ch0 == 0x00 {
+				break; // end of string
 			}
 
 			if ch0 == 0x09 || // ASCII
@@ -145,21 +145,14 @@ impl Encoding {
 
 					if (ch0 == 0xe0 && // excluding overlongs
 							(0xa0 <= ch1 && ch1 <= 0xbf) &&
-							(0x80 <= ch2 && ch2 <= 0xbf)
-						) ||
-						(
-							(
-								(0xe1 <= ch0 && ch0 <= 0xec) || // straight 3-byte
+							(0x80 <= ch2 && ch2 <= 0xbf))
+						|| (((0xe1 <= ch0 && ch0 <= 0xec) || // straight 3-byte
 								ch0 == 0xee ||
-								ch0 == 0xef
-							) &&
-							(0x80 <= ch1 && ch1 <= 0xbf) &&
-							(0x80 <= ch2 && ch2 <= 0xbf)
-						) ||
-						(ch0 == 0xed && // excluding surrogates
+								ch0 == 0xef) && (0x80 <= ch1 && ch1 <= 0xbf)
+							&& (0x80 <= ch2 && ch2 <= 0xbf))
+						|| (ch0 == 0xed && // excluding surrogates
 							(0x80 <= ch1 && ch1 <= 0x9f) &&
-							(0x80 <= ch2 && ch2 <= 0xbf)
-						)
+							(0x80 <= ch2 && ch2 <= 0xbf))
 					{
 						i += 3;
 						continue;
@@ -171,20 +164,15 @@ impl Encoding {
 						if (ch0 == 0xf0 && // planes 1-3
 								(0x90 <= ch1 && ch1 <= 0xbf) &&
 								(0x80 <= ch2 && ch2 <= 0xbf) &&
-								(0x80 <= ch3 && ch3 <= 0xbf)
-							) ||
-							(
-								(0xf1 <= ch0 && ch0 <= 0xf3) && // planes 4-15
+								(0x80 <= ch3 && ch3 <= 0xbf))
+							|| ((0xf1 <= ch0 && ch0 <= 0xf3) && // planes 4-15
 								(0x80 <= ch1 && ch1 <= 0xbf) &&
 								(0x80 <= ch2 && ch2 <= 0xbf) &&
-								(0x80 <= ch3 && ch3 <= 0xbf)
-							) ||
-							(
-								ch0 == 0xf4 && // plane 16
+								(0x80 <= ch3 && ch3 <= 0xbf))
+							|| (ch0 == 0xf4 && // plane 16
 								(0x80 <= ch1 && ch1 <= 0x8f) &&
 								(0x80 <= ch2 && ch2 <= 0xbf) &&
-								(0x80 <= ch3 && ch3 <= 0xbf)
-							)
+								(0x80 <= ch3 && ch3 <= 0xbf))
 						{
 							i += 4;
 							continue;
@@ -193,7 +181,7 @@ impl Encoding {
 				}
 			}
 
-	 		return false; // none of the conditions were accepted, not UTF-8
+			return false; // none of the conditions were accepted, not UTF-8
 		}
 		true // all the conditions accepted through the whole string
 	}

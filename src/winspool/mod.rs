@@ -1,11 +1,11 @@
 #![cfg(feature = "winspool")]
 
-mod handles;
 mod funcs;
+mod handles;
 mod structs;
 
-pub(in crate::winspool) mod ffi;
 pub mod co;
+pub(in crate::winspool) mod ffi;
 pub mod guard;
 
 pub mod decl {

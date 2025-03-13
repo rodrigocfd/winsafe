@@ -2,7 +2,8 @@ use crate::decl::*;
 use crate::prelude::*;
 
 pub(in crate::oleaut) struct IpropertystoreIter<'a, I>
-	where I: oleaut_IPropertyStore,
+where
+	I: oleaut_IPropertyStore,
 {
 	prop_st: &'a I,
 	count: u32,
@@ -10,7 +11,8 @@ pub(in crate::oleaut) struct IpropertystoreIter<'a, I>
 }
 
 impl<'a, I> Iterator for IpropertystoreIter<'a, I>
-	where I: oleaut_IPropertyStore,
+where
+	I: oleaut_IPropertyStore,
 {
 	type Item = HrResult<PROPERTYKEY>;
 
@@ -33,7 +35,8 @@ impl<'a, I> Iterator for IpropertystoreIter<'a, I>
 }
 
 impl<'a, I> IpropertystoreIter<'a, I>
-	where I: oleaut_IPropertyStore,
+where
+	I: oleaut_IPropertyStore,
 {
 	#[must_use]
 	pub(in crate::oleaut) fn new(prop_st: &'a I) -> HrResult<Self> {

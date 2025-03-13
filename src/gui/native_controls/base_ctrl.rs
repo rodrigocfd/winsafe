@@ -49,7 +49,8 @@ impl BaseCtrl {
 		*unsafe { &mut *self.hwnd.get() } = hctrl;
 	}
 
-	pub(in crate::gui) fn create_window(&self,
+	pub(in crate::gui) fn create_window(
+		&self,
 		ex_style: co::WS_EX,
 		class_name: &str,
 		title: Option<&str>,
@@ -57,8 +58,7 @@ impl BaseCtrl {
 		pos: POINT,
 		size: SIZE,
 		parent: &impl GuiParent,
-	) -> SysResult<()>
-	{
+	) -> SysResult<()> {
 		let hparent = parent.as_ref().hwnd();
 
 		if *self.hwnd() != HWND::NULL {
@@ -73,7 +73,8 @@ impl BaseCtrl {
 				AtomStr::from_str(class_name),
 				title,
 				style,
-				pos, size,
+				pos,
+				size,
 				Some(hparent),
 				IdMenu::Id(self.ctrl_id),
 				&hparent.hinstance(),
@@ -125,11 +126,12 @@ impl BaseCtrl {
 		lparam: isize,
 		subclass_id: usize,
 		ref_data: usize,
-	) -> isize
-	{
+	) -> isize {
 		let wm_any = WndMsg::new(msg, wparam, lparam);
-		Self::subclass_proc_proc(hwnd, wm_any, subclass_id, ref_data)
-			.unwrap_or_else(|err| { quit_error::post_quit_error(wm_any, err); 0 })
+		Self::subclass_proc_proc(hwnd, wm_any, subclass_id, ref_data).unwrap_or_else(|err| {
+			quit_error::post_quit_error(wm_any, err);
+			0
+		})
 	}
 
 	fn subclass_proc_proc(
@@ -137,19 +139,22 @@ impl BaseCtrl {
 		p: WndMsg,
 		subclass_id: usize,
 		ref_data: usize,
-	) -> AnyResult<isize>
-	{
+	) -> AnyResult<isize> {
 		let ptr_self = ref_data as *const Self; // retrieve
 		let mut user_ret = Option::<isize>::None;
 
 		if !ptr_self.is_null() {
 			let ref_self = unsafe { &*ptr_self };
 			if *ref_self.hwnd() != HWND::NULL {
-				user_ret = ref_self.subclass_events.process_last_message(p).transpose()?;
+				user_ret = ref_self
+					.subclass_events
+					.process_last_message(p)
+					.transpose()?;
 			}
 		}
 
-		if p.msg_id == co::WM::NCDESTROY { // always check
+		if p.msg_id == co::WM::NCDESTROY {
+			// always check
 			hwnd.RemoveWindowSubclass(Self::subclass_proc, subclass_id)?; // https://devblogs.microsoft.com/oldnewthing/20031111-00/?p=41883
 			if !ptr_self.is_null() {
 				let ref_self = unsafe { &*ptr_self };

@@ -38,7 +38,8 @@ impl<'a> TabItem<'a> {
 	/// If you delete a tab automatically created, which has a container window
 	/// attached to it, the rendering will be out-of-order.
 	pub unsafe fn delete(&self) {
-		self.owner.hwnd()
+		self.owner
+			.hwnd()
 			.SendMessage(tcm::DeleteItem { index: self.index })
 			.unwrap();
 	}
@@ -51,11 +52,9 @@ impl<'a> TabItem<'a> {
 		tci.mask = co::TCIF::PARAM;
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(tcm::GetItem {
-					index: self.index,
-					item: &mut tci,
-				})?;
+			self.owner
+				.hwnd()
+				.SendMessage(tcm::GetItem { index: self.index, item: &mut tci })?;
 		}
 
 		Ok(tci.lParam)
@@ -69,11 +68,9 @@ impl<'a> TabItem<'a> {
 		tci.lParam = lparam;
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(tcm::SetItem {
-					index: self.index,
-					item: &mut tci,
-				})
+			self.owner
+				.hwnd()
+				.SendMessage(tcm::SetItem { index: self.index, item: &mut tci })
 		}
 	}
 
@@ -86,11 +83,9 @@ impl<'a> TabItem<'a> {
 		tci.set_pszText(Some(&mut wtext));
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(tcm::SetItem {
-					index: self.index,
-					item: &mut tci,
-				})
+			self.owner
+				.hwnd()
+				.SendMessage(tcm::SetItem { index: self.index, item: &mut tci })
 		}
 	}
 
@@ -104,13 +99,10 @@ impl<'a> TabItem<'a> {
 		tci.set_pszText(Some(&mut buf));
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(tcm::GetItem {
-					index: self.index,
-					item: &mut tci,
-				})?;
+			self.owner
+				.hwnd()
+				.SendMessage(tcm::GetItem { index: self.index, item: &mut tci })?;
 		}
-
 		Ok(buf.to_string())
 	}
 }

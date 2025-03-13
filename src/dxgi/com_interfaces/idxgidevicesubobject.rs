@@ -30,17 +30,17 @@ pub trait dxgi_IDXGIDeviceSubObject: dxgi_IDXGIObject {
 	/// method.
 	#[must_use]
 	fn GetDevice<T>(&self) -> HrResult<T>
-		where T: ole_IUnknown,
+	where
+		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIDeviceSubObjectVT>(self).GetDevice)(
-					self.ptr(),
-					&T::IID as *const _ as _,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGIDeviceSubObjectVT>(self).GetDevice)(
+				self.ptr(),
+				&T::IID as *const _ as _,
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 }

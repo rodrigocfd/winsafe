@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::{events::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -64,13 +64,13 @@ impl BaseWnd {
 		&self.after_events
 	}
 
-	pub(in crate::gui) fn process_before_messages(&self, p: WndMsg) -> AnyResult<bool>{
+	pub(in crate::gui) fn process_before_messages(&self, p: WndMsg) -> AnyResult<bool> {
 		self.before_events.process_all_messages(p)
 	}
 	pub(in crate::gui) fn process_user_message(&self, p: WndMsg) -> Option<AnyResult<isize>> {
 		self.user_events.process_last_message(p)
 	}
-	pub(in crate::gui) fn process_after_messages(&self, p: WndMsg) -> AnyResult<bool>{
+	pub(in crate::gui) fn process_after_messages(&self, p: WndMsg) -> AnyResult<bool> {
 		self.after_events.process_all_messages(p)
 	}
 
@@ -80,16 +80,17 @@ impl BaseWnd {
 		self.after_events.clear();
 	}
 
-	pub(in crate::gui) fn add_to_layout(&self,
+	pub(in crate::gui) fn add_to_layout(
+		&self,
 		hchild: &HWND,
 		resize_behavior: (Horz, Vert),
-	) -> SysResult<()>
-	{
+	) -> SysResult<()> {
 		self.layout.add_child(&self.hwnd, hchild, resize_behavior)
 	}
 
 	pub(in crate::gui) fn spawn_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static,
+	where
+		F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		let hwnd = unsafe { self.hwnd.raw_copy() };
 		std::thread::spawn(move || {
@@ -98,20 +99,20 @@ impl BaseWnd {
 				// which just returns it, then forward it to WM_UI_THREAD.
 				let pack = Box::new(ThreadPack { func: Box::new(|| Err(err)) });
 				let ptr_pack = Box::into_raw(pack);
-				hwnd.GetAncestor(co::GA::ROOTOWNER)
-					.map(|hwnd| unsafe {
-						hwnd.SendMessage(WndMsg {
-							msg_id: Self::WM_UI_THREAD,
-							wparam: Self::WM_UI_THREAD.raw() as _,
-							lparam: ptr_pack as _, // send pointer
-						});
+				hwnd.GetAncestor(co::GA::ROOTOWNER).map(|hwnd| unsafe {
+					hwnd.SendMessage(WndMsg {
+						msg_id: Self::WM_UI_THREAD,
+						wparam: Self::WM_UI_THREAD.raw() as _,
+						lparam: ptr_pack as _, // send pointer
 					});
+				});
 			});
 		});
 	}
 
 	pub(in crate::gui) fn run_ui_thread<F>(&self, func: F)
-		where F: FnOnce() -> AnyResult<()> + Send + 'static,
+	where
+		F: FnOnce() -> AnyResult<()> + Send + 'static,
 	{
 		// This method is analog to SendMessage (synchronous), but intended to
 		// be called from another thread, so a callback function can, tunelled
@@ -125,14 +126,13 @@ impl BaseWnd {
 
 		// Bypass any modals and send straight to main window. This avoids any
 		// blind spots of unhandled messages by a modal being created/destroyed.
-		self.hwnd.GetAncestor(co::GA::ROOTOWNER)
-			.map(|hwnd| unsafe {
-				hwnd.SendMessage(WndMsg {
-					msg_id: Self::WM_UI_THREAD,
-					wparam: Self::WM_UI_THREAD.raw() as _,
-					lparam: ptr_pack as _, // send pointer
-				});
+		self.hwnd.GetAncestor(co::GA::ROOTOWNER).map(|hwnd| unsafe {
+			hwnd.SendMessage(WndMsg {
+				msg_id: Self::WM_UI_THREAD,
+				wparam: Self::WM_UI_THREAD.raw() as _,
+				lparam: ptr_pack as _, // send pointer
 			});
+		});
 	}
 
 	pub(in crate::gui) fn default_message_handlers(&self) {
@@ -143,7 +143,8 @@ impl BaseWnd {
 		});
 
 		self.before_events.wm(Self::WM_UI_THREAD, |p| {
-			if unsafe { co::WM::from_raw(p.wparam as _) } == Self::WM_UI_THREAD { // additional safety check
+			// WPARAM is just an additional safety check.
+			if unsafe { co::WM::from_raw(p.wparam as _) } == Self::WM_UI_THREAD {
 				let ptr_pack = p.lparam as *mut ThreadPack; // retrieve pointer
 				let pack = unsafe { Box::from_raw(ptr_pack) };
 				let func = pack.func;
@@ -156,8 +157,7 @@ impl BaseWnd {
 	pub(in crate::gui) fn run_main_loop(
 		haccel: Option<&HACCEL>,
 		process_dlg_msgs: bool,
-	) -> AnyResult<i32>
-	{
+	) -> AnyResult<i32> {
 		let mut msg = MSG::default();
 
 		loop {
@@ -171,18 +171,23 @@ impl BaseWnd {
 					msg_error.take()
 				} {
 					Some(msg_err) => Err(msg_err.into()), // MsgError wrapped into AnyResult
-					None => Ok(msg.wParam as _), // successfull exit with ret code
+					None => Ok(msg.wParam as _),          // successfull exit with ret code
 				};
 			}
 
 			// If a child window, will retrieve its top-level parent.
 			// If a top-level, use itself.
-			let hwnd_top_level = msg.hwnd.GetAncestor(co::GA::ROOT)
+			let hwnd_top_level = msg
+				.hwnd
+				.GetAncestor(co::GA::ROOT)
 				.unwrap_or(unsafe { msg.hwnd.raw_copy() });
 
 			// If we have an accelerator table, try to translate the message.
 			if let Some(haccel) = haccel {
-				if hwnd_top_level.TranslateAccelerator(haccel, &mut msg).is_ok() {
+				if hwnd_top_level
+					.TranslateAccelerator(haccel, &mut msg)
+					.is_ok()
+				{
 					continue; // message translated
 				}
 			}
@@ -193,7 +198,9 @@ impl BaseWnd {
 			}
 
 			TranslateMessage(&msg);
-			unsafe { DispatchMessage(&msg); }
+			unsafe {
+				DispatchMessage(&msg);
+			}
 		}
 	}
 
@@ -216,7 +223,9 @@ impl BaseWnd {
 
 			// If a child window, will retrieve its top-level parent.
 			// If a top-level, use itself.
-			let hwnd_top_level = msg.hwnd.GetAncestor(co::GA::ROOT)
+			let hwnd_top_level = msg
+				.hwnd
+				.GetAncestor(co::GA::ROOT)
 				.unwrap_or(unsafe { msg.hwnd.raw_copy() });
 
 			// Try to process keyboard actions for child controls.
@@ -230,7 +239,9 @@ impl BaseWnd {
 			}
 
 			TranslateMessage(&msg);
-			unsafe { DispatchMessage(&msg); }
+			unsafe {
+				DispatchMessage(&msg);
+			}
 
 			if self.hwnd == HWND::NULL || !self.hwnd.IsWindow() {
 				return Ok(0); // our modal was destroyed, terminate loop

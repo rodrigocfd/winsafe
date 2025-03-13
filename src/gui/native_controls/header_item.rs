@@ -32,7 +32,7 @@ impl From<HeaderArrow> for co::HDF {
 pub enum HeaderJustify {
 	Left,
 	Center,
-	Right
+	Right,
 }
 
 impl From<HeaderJustify> for co::HDF {
@@ -70,7 +70,8 @@ impl<'a> HeaderItem<'a> {
 	/// [`hdm::DeleteItem`](crate::msg::hdm::DeleteItem) message.
 	pub fn delete(&self) -> SysResult<()> {
 		unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(hdm::DeleteItem { index: self.index })
 		}
 	}
@@ -81,7 +82,8 @@ impl<'a> HeaderItem<'a> {
 	/// Returns the same item, so further operations can be chained.
 	pub fn focus(&self) -> SysResult<HeaderItem<'a>> {
 		unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(hdm::SetFocusedItem { index: self.index })?;
 		}
 		Ok(*self)
@@ -95,13 +97,10 @@ impl<'a> HeaderItem<'a> {
 		hdi.mask = co::HDI::FORMAT;
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(hdm::GetItem {
-					index: self.index,
-					hditem: &mut hdi,
-				});
+			self.owner
+				.hwnd()
+				.SendMessage(hdm::GetItem { index: self.index, hditem: &mut hdi });
 		}
-
 		hdi.fmt
 	}
 
@@ -119,13 +118,10 @@ impl<'a> HeaderItem<'a> {
 		hdi.mask = co::HDI::LPARAM;
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(hdm::GetItem {
-					index: self.index,
-					hditem: &mut hdi,
-				});
+			self.owner
+				.hwnd()
+				.SendMessage(hdm::GetItem { index: self.index, hditem: &mut hdi });
 		}
-
 		hdi.lParam
 	}
 
@@ -137,13 +133,10 @@ impl<'a> HeaderItem<'a> {
 		hdi.mask = co::HDI::ORDER;
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(hdm::GetItem {
-					index: self.index,
-					hditem: &mut hdi,
-				});
+			self.owner
+				.hwnd()
+				.SendMessage(hdm::GetItem { index: self.index, hditem: &mut hdi });
 		}
-
 		hdi.iOrder as _
 	}
 
@@ -160,13 +153,10 @@ impl<'a> HeaderItem<'a> {
 		hdi.fmt |= arrow_state.into();
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(hdm::SetItem {
-					index: self.index,
-					hditem: &mut hdi,
-				});
+			self.owner
+				.hwnd()
+				.SendMessage(hdm::SetItem { index: self.index, hditem: &mut hdi });
 		}
-
 		*self
 	}
 
@@ -183,13 +173,10 @@ impl<'a> HeaderItem<'a> {
 		hdi.fmt |= text_justification.into();
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(hdm::SetItem {
-					index: self.index,
-					hditem: &mut hdi,
-				});
+			self.owner
+				.hwnd()
+				.SendMessage(hdm::SetItem { index: self.index, hditem: &mut hdi });
 		}
-
 		*self
 	}
 
@@ -203,13 +190,10 @@ impl<'a> HeaderItem<'a> {
 		hdi.lParam = lparam;
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(hdm::SetItem {
-					index: self.index,
-					hditem: &hdi,
-				});
+			self.owner
+				.hwnd()
+				.SendMessage(hdm::SetItem { index: self.index, hditem: &hdi });
 		}
-
 		*self
 	}
 
@@ -223,13 +207,10 @@ impl<'a> HeaderItem<'a> {
 		hdi.iOrder = order as _;
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(hdm::SetItem {
-					index: self.index,
-					hditem: &hdi,
-				});
+			self.owner
+				.hwnd()
+				.SendMessage(hdm::SetItem { index: self.index, hditem: &hdi });
 		}
-
 		*self
 	}
 
@@ -245,13 +226,10 @@ impl<'a> HeaderItem<'a> {
 		hdi.set_pszText(Some(&mut wtext));
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(hdm::SetItem {
-					index: self.index,
-					hditem: &hdi,
-				});
+			self.owner
+				.hwnd()
+				.SendMessage(hdm::SetItem { index: self.index, hditem: &hdi });
 		}
-
 		*self
 	}
 
@@ -265,13 +243,10 @@ impl<'a> HeaderItem<'a> {
 		hdi.cxy = width;
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(hdm::SetItem {
-					index: self.index,
-					hditem: &hdi,
-				});
+			self.owner
+				.hwnd()
+				.SendMessage(hdm::SetItem { index: self.index, hditem: &hdi });
 		}
-
 		*self
 	}
 
@@ -286,11 +261,9 @@ impl<'a> HeaderItem<'a> {
 		hdi.set_pszText(Some(&mut buf));
 
 		unsafe {
-			self.owner.hwnd()
-				.SendMessage(hdm::GetItem {
-					index: self.index,
-					hditem: &mut hdi,
-				});
+			self.owner
+				.hwnd()
+				.SendMessage(hdm::GetItem { index: self.index, hditem: &mut hdi });
 		}
 
 		let (psz, _) = hdi.raw_pszText();

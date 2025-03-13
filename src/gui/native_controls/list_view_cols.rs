@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, iterators::*};
+use crate::gui::{iterators::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -29,11 +29,10 @@ impl<'a, T> ListViewCols<'a, T> {
 		lvc.set_pszText(Some(&mut wtext));
 
 		let idx = unsafe {
-			self.owner.hwnd()
-				.SendMessage(lvm::InsertColumn {
-					index: 0xffff, // insert as the last columns
-					column: &lvc,
-				})?
+			self.owner.hwnd().SendMessage(lvm::InsertColumn {
+				index: 0xffff, // insert as the last column
+				column: &lvc,
+			})?
 		};
 		Ok(self.owner.cols().get(idx))
 	}

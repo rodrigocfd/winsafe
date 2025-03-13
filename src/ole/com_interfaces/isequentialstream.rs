@@ -32,16 +32,15 @@ pub trait ole_ISequentialStream: ole_IUnknown {
 	/// requested size, it means the end of stream was reached.
 	fn Read(&self, buffer: &mut [u8]) -> HrResult<u32> {
 		let mut num_read = u32::default();
-		okfalse_to_hrresult(
-			unsafe {
-				(vt::<ISequentialStreamVT>(self).Read)(
-					self.ptr(),
-					buffer.as_mut_ptr() as _,
-					buffer.len() as _,
-					&mut num_read,
-				)
-			},
-		).map(|_| num_read)
+		okfalse_to_hrresult(unsafe {
+			(vt::<ISequentialStreamVT>(self).Read)(
+				self.ptr(),
+				buffer.as_mut_ptr() as _,
+				buffer.len() as _,
+				&mut num_read,
+			)
+		})
+		.map(|_| num_read)
 	}
 
 	/// [`ISequentialStream::Write`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-isequentialstream-write)
@@ -50,15 +49,14 @@ pub trait ole_ISequentialStream: ole_IUnknown {
 	/// Returns the number of bytes written.
 	fn Write(&self, data: &[u8]) -> HrResult<u32> {
 		let mut num_written = u32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<ISequentialStreamVT>(self).Read)(
-					self.ptr(),
-					vec_ptr(data) as _,
-					data.len() as _,
-					&mut num_written,
-				)
-			},
-		).map(|_| num_written)
+		ok_to_hrresult(unsafe {
+			(vt::<ISequentialStreamVT>(self).Read)(
+				self.ptr(),
+				vec_ptr(data) as _,
+				data.len() as _,
+				&mut num_written,
+			)
+		})
+		.map(|_| num_written)
 	}
 }

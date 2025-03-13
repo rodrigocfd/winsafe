@@ -294,7 +294,9 @@ impl<'a> MsgSend for SetSystemTime<'a> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::DTM::SETSYSTEMTIME.into(),
-			wparam: self.system_time.map_or(co::GDT::NONE.raw(), |_| co::GDT::VALID.raw()) as _,
+			wparam: self
+				.system_time
+				.map_or(co::GDT::NONE.raw(), |_| co::GDT::VALID.raw()) as _,
 			lparam: self.system_time.map_or(0, |st| st as *const _ as _),
 		}
 	}

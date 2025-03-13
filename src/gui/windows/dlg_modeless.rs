@@ -22,32 +22,34 @@ impl DlgModeless {
 		parent: &(impl GuiParent + 'static),
 		dlg_id: u16,
 		position: (i32, i32),
-	) -> Self
-	{
-		let new_self = Self(
-			Arc::pin(
-				DlgModelessObj {
-					dlg_base: DlgBase::new(dlg_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+	) -> Self {
+		let new_self = Self(Arc::pin(DlgModelessObj {
+			dlg_base: DlgBase::new(dlg_id),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
-		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
-			let hinst = parent2.hwnd().hinstance();
-			self2.0.dlg_base.create_dialog_param(&hinst)?;
-			self2.0.dlg_base.base().hwnd().ShowWindow(co::SW::SHOW);
+		parent
+			.as_ref()
+			.before_on()
+			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+				let hinst = parent2.hwnd().hinstance();
+				self2.0.dlg_base.create_dialog_param(&hinst)?;
+				self2.0.dlg_base.base().hwnd().ShowWindow(co::SW::SHOW);
 
-			let rc_parent = parent2.hwnd().ClientToScreenRc(parent2.hwnd().GetClientRect()?)?;
-			self2.0.dlg_base.base().hwnd().SetWindowPos(HwndPlace::None,
-				POINT::new(position.0 + rc_parent.left, position.1 + rc_parent.top),
-				SIZE::default(), co::SWP::NOZORDER | co::SWP::NOSIZE,
-			)?;
+				let rc_parent = parent2
+					.hwnd()
+					.ClientToScreenRc(parent2.hwnd().GetClientRect()?)?;
+				self2.0.dlg_base.base().hwnd().SetWindowPos(
+					HwndPlace::None,
+					POINT::new(position.0 + rc_parent.left, position.1 + rc_parent.top),
+					SIZE::default(),
+					co::SWP::NOZORDER | co::SWP::NOSIZE,
+				)?;
 
-			Ok(0) // ignored
-		});
+				Ok(0) // ignored
+			});
 
 		new_self
 	}

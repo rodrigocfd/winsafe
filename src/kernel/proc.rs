@@ -8,7 +8,8 @@ pub(in crate::kernel) extern "system" fn hinstance_enum_resource_languages<F>(
 	language_id: u16,
 	lparam: isize,
 ) -> BOOL
-	where F: FnMut(LANGID) -> bool,
+where
+	F: FnMut(LANGID) -> bool,
 {
 	let func = unsafe { &mut *(lparam as *mut F) };
 	func(unsafe { LANGID::from_raw(language_id) }) as _
@@ -20,7 +21,8 @@ pub(in crate::kernel) extern "system" fn hinstance_enum_resource_names<F>(
 	resource_id: *mut u16,
 	lparam: isize,
 ) -> BOOL
-	where F: FnMut(IdStr) -> bool,
+where
+	F: FnMut(IdStr) -> bool,
 {
 	let func = unsafe { &mut *(lparam as *mut F) };
 	func(unsafe { IdStr::from_ptr(resource_id) }) as _
@@ -31,7 +33,8 @@ pub(in crate::kernel) extern "system" fn hinstance_enum_resource_types<F>(
 	resource_type: *const u16,
 	lparam: isize,
 ) -> BOOL
-	where F: FnMut(RtStr) -> bool,
+where
+	F: FnMut(RtStr) -> bool,
 {
 	let func = unsafe { &mut *(lparam as *mut F) };
 	func(unsafe { RtStr::from_ptr(resource_type) }) as _

@@ -30,13 +30,9 @@ pub trait ole_IPersist: ole_IUnknown {
 	#[must_use]
 	fn GetClassID(&self) -> HrResult<co::CLSID> {
 		let mut clsid = co::CLSID::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IPersistVT>(self).GetClassID)(
-					self.ptr(),
-					&mut clsid as *mut _ as _,
-				)
-			},
-		).map(|_| clsid)
+		ok_to_hrresult(unsafe {
+			(vt::<IPersistVT>(self).GetClassID)(self.ptr(), &mut clsid as *mut _ as _)
+		})
+		.map(|_| clsid)
 	}
 }

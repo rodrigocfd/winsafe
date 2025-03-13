@@ -29,18 +29,12 @@ pub trait mf_IMFClock: ole_IUnknown {
 	/// [`IMFClock::GetClockCharacteristics`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfclock-getclockcharacteristics)
 	/// method.
 	#[must_use]
-	fn GetClockCharacteristics(&self,
-	) -> HrResult<co::MFCLOCK_CHARACTERISTICS_FLAG>
-	{
+	fn GetClockCharacteristics(&self) -> HrResult<co::MFCLOCK_CHARACTERISTICS_FLAG> {
 		let mut characteristics = co::MFCLOCK_CHARACTERISTICS_FLAG::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFClockVT>(self).GetClockCharacteristics)(
-					self.ptr(),
-					characteristics.as_mut(),
-				)
-			},
-		).map(|_| characteristics)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFClockVT>(self).GetClockCharacteristics)(self.ptr(), characteristics.as_mut())
+		})
+		.map(|_| characteristics)
 	}
 
 	/// [`IMFClock::GetContinuityKey`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfclock-getcontinuitykey)
@@ -48,11 +42,8 @@ pub trait mf_IMFClock: ole_IUnknown {
 	#[must_use]
 	fn GetContinuityKey(&self) -> HrResult<u32> {
 		let mut ck = u32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFClockVT>(self).GetContinuityKey)(self.ptr(), &mut ck)
-			},
-		).map(|_| ck)
+		ok_to_hrresult(unsafe { (vt::<IMFClockVT>(self).GetContinuityKey)(self.ptr(), &mut ck) })
+			.map(|_| ck)
 	}
 
 	/// [`IMFClock::GetCorrelatedTime`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfclock-getcorrelatedtime)
@@ -64,16 +55,10 @@ pub trait mf_IMFClock: ole_IUnknown {
 	#[must_use]
 	fn GetCorrelatedTime(&self) -> HrResult<(i64, i64)> {
 		let (mut clock, mut system) = (i64::default(), i64::default());
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFClockVT>(self).GetCorrelatedTime)(
-					self.ptr(),
-					0,
-					&mut clock,
-					&mut system,
-				)
-			},
-		).map(|_| (clock, system))
+		ok_to_hrresult(unsafe {
+			(vt::<IMFClockVT>(self).GetCorrelatedTime)(self.ptr(), 0, &mut clock, &mut system)
+		})
+		.map(|_| (clock, system))
 	}
 
 	/// [`IMFClock::GetProperties`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfclock-getproperties)
@@ -81,14 +66,10 @@ pub trait mf_IMFClock: ole_IUnknown {
 	#[must_use]
 	fn GetProperties(&self) -> HrResult<MFCLOCK_PROPERTIES> {
 		let mut cp = MFCLOCK_PROPERTIES::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFClockVT>(self).GetProperties)(
-					self.ptr(),
-					&mut cp as *mut _ as _,
-				)
-			},
-		).map(|_| cp)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFClockVT>(self).GetProperties)(self.ptr(), &mut cp as *mut _ as _)
+		})
+		.map(|_| cp)
 	}
 
 	/// [`IMFClock::GetState`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfclock-getstate)
@@ -96,10 +77,7 @@ pub trait mf_IMFClock: ole_IUnknown {
 	#[must_use]
 	fn GetState(&self) -> HrResult<co::MFCLOCK_STATE> {
 		let mut state = co::MFCLOCK_STATE::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFClockVT>(self).GetState)(self.ptr(), 0, state.as_mut())
-			},
-		).map(|_| state)
+		ok_to_hrresult(unsafe { (vt::<IMFClockVT>(self).GetState)(self.ptr(), 0, state.as_mut()) })
+			.map(|_| state)
 	}
 }

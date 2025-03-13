@@ -51,46 +51,34 @@ pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 	#[must_use]
 	fn FindPin(&self, id: &str) -> HrResult<IPin> {
 		let mut queried = unsafe { IPin::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IBaseFilterVT>(self).FindPin)(
-					self.ptr(),
-					WString::from_str(id).as_ptr(),
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IBaseFilterVT>(self).FindPin)(
+				self.ptr(),
+				WString::from_str(id).as_ptr(),
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IBaseFilter::JoinFilterGraph`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-joinfiltergraph)
 	/// method.
-	fn JoinFilterGraph(&self,
-		graph: Option<&impl dshow_IFilterGraph>,
-		name: &str,
-	) -> HrResult<()>
-	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IBaseFilterVT>(self).JoinFilterGraph)(
-					self.ptr(),
-					graph.map_or(std::ptr::null_mut(), |g| g.ptr()),
-					WString::from_str(name).as_ptr(),
-				)
-			},
-		)
+	fn JoinFilterGraph(&self, graph: Option<&impl dshow_IFilterGraph>, name: &str) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IBaseFilterVT>(self).JoinFilterGraph)(
+				self.ptr(),
+				graph.map_or(std::ptr::null_mut(), |g| g.ptr()),
+				WString::from_str(name).as_ptr(),
+			)
+		})
 	}
 
 	/// [`IBaseFilter::QueryFilterInfo`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-queryfilterinfo)
 	/// method.
 	fn QueryFilterInfo(&self, info: &mut FILTER_INFO) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IBaseFilterVT>(self).QueryFilterInfo)(
-					self.ptr(),
-					info as *mut _ as _,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IBaseFilterVT>(self).QueryFilterInfo)(self.ptr(), info as *mut _ as _)
+		})
 	}
 
 	/// [`IBaseFilter::QueryVendorInfo`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-queryvendorinfo)
@@ -98,14 +86,10 @@ pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 	#[must_use]
 	fn QueryVendorInfo(&self) -> HrResult<String> {
 		let mut pstr = std::ptr::null_mut::<u16>();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IBaseFilterVT>(self).QueryVendorInfo)(
-					self.ptr(),
-					&mut pstr,
-				)
-			},
-		).map(|_| {
+		ok_to_hrresult(unsafe {
+			(vt::<IBaseFilterVT>(self).QueryVendorInfo)(self.ptr(), &mut pstr)
+		})
+		.map(|_| {
 			let name = unsafe { WString::from_wchars_nullt(pstr) };
 			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 			name.to_string()

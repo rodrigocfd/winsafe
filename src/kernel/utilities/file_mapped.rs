@@ -39,9 +39,9 @@ impl FileMapped {
 			None,
 			match access {
 				FileAccess::ExistingReadOnly => co::PAGE::READONLY,
-				FileAccess::ExistingRW
-					| FileAccess::OpenOrCreateRW
-					| FileAccess::CreateRW => co::PAGE::READWRITE,
+				FileAccess::ExistingRW | FileAccess::OpenOrCreateRW | FileAccess::CreateRW => {
+					co::PAGE::READWRITE
+				},
 			},
 			None,
 			None,
@@ -49,9 +49,9 @@ impl FileMapped {
 		let hview = hmap.MapViewOfFile(
 			match access {
 				FileAccess::ExistingReadOnly => co::FILE_MAP::READ,
-				FileAccess::ExistingRW
-					| FileAccess::OpenOrCreateRW
-					| FileAccess::CreateRW => co::FILE_MAP::READ | co::FILE_MAP::WRITE,
+				FileAccess::ExistingRW | FileAccess::OpenOrCreateRW | FileAccess::CreateRW => {
+					co::FILE_MAP::READ | co::FILE_MAP::WRITE
+				},
 			},
 			0,
 			None,

@@ -5,11 +5,11 @@ mod funcs;
 mod handles;
 mod structs;
 
-pub(in crate::gdi) mod ffi;
-pub(crate) mod privs;
 pub mod co;
+pub(in crate::gdi) mod ffi;
 pub mod guard;
 pub mod messages;
+pub(crate) mod privs;
 
 pub mod decl {
 	pub use super::enums::*;

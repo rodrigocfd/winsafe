@@ -61,13 +61,8 @@ pub trait shell_IFileSaveDialog: shell_IFileDialog {
 	/// [`IFileSaveDialog::SetSaveAsItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setsaveasitem)
 	/// method.
 	fn SetSaveAsItem(&self, psi: &impl shell_IShellItem) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IFileSaveDialogVT>(self).SetSaveAsItem)(
-					self.ptr(),
-					psi.ptr(),
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IFileSaveDialogVT>(self).SetSaveAsItem)(self.ptr(), psi.ptr())
+		})
 	}
 }

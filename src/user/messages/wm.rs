@@ -198,13 +198,11 @@ impl MsgSendRecv for Command {
 			event: match HIWORD(p.wparam as _) {
 				1 => AccelMenuCtrl::Accel(LOWORD(p.wparam as _)),
 				0 => AccelMenuCtrl::Menu(LOWORD(p.wparam as _)),
-				code => AccelMenuCtrl::Ctrl(
-					AccelMenuCtrlData {
-						notif_code: co::CMD::from_raw(code),
-						ctrl_id: LOWORD(p.wparam as _),
-						ctrl_hwnd: HWND::from_ptr(p.lparam as _),
-					},
-				),
+				code => AccelMenuCtrl::Ctrl(AccelMenuCtrlData {
+					notif_code: co::CMD::from_raw(code),
+					ctrl_id: LOWORD(p.wparam as _),
+					ctrl_hwnd: HWND::from_ptr(p.lparam as _),
+				}),
 			},
 		}
 	}
@@ -270,9 +268,7 @@ impl<'a, 'b, 'c> MsgSend for Create<'a, 'b, 'c> {
 
 impl<'a, 'b, 'c> MsgSendRecv for Create<'a, 'b, 'c> {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			createstruct: &*(p.lparam as *const _),
-		}
+		Self { createstruct: &*(p.lparam as *const _) }
 	}
 }
 
@@ -343,11 +339,7 @@ impl<'a> MsgSendRecv for DeviceChange<'a> {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			event: co::DBT::from_raw(p.wparam as _),
-			data: if p.lparam == 0 {
-				None
-			} else {
-				Some(&*(p.lparam as *const _))
-			}
+			data: if p.lparam == 0 { None } else { Some(&*(p.lparam as *const _)) },
 		}
 	}
 }
@@ -378,9 +370,7 @@ impl MsgSend for Enable {
 
 impl MsgSendRecv for Enable {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			has_been_enabled: p.wparam != 0,
-		}
+		Self { has_been_enabled: p.wparam != 0 }
 	}
 }
 
@@ -482,9 +472,7 @@ impl MsgSend for EnterMenuLoop {
 
 impl MsgSendRecv for EnterMenuLoop {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			with_trackpopupmenu: p.wparam != 0,
-		}
+		Self { with_trackpopupmenu: p.wparam != 0 }
 	}
 }
 
@@ -518,9 +506,7 @@ impl MsgSend for EraseBkgnd {
 
 impl MsgSendRecv for EraseBkgnd {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			hdc: HDC::from_ptr(p.wparam as _),
-		}
+		Self { hdc: HDC::from_ptr(p.wparam as _) }
 	}
 }
 
@@ -550,9 +536,7 @@ impl MsgSend for ExitMenuLoop {
 
 impl MsgSendRecv for ExitMenuLoop {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			is_shortcut: p.wparam != 0,
-		}
+		Self { is_shortcut: p.wparam != 0 }
 	}
 }
 
@@ -592,7 +576,7 @@ impl<'a> MsgSendRecv for GetDlgCode<'a> {
 			vkey_code: co::VK::from_raw(p.wparam as _),
 			msg: match p.lparam {
 				0 => None,
-				ptr => Some(&mut *(ptr as *mut _))
+				ptr => Some(&mut *(ptr as *mut _)),
 			},
 			is_query: p.lparam == 0,
 		}
@@ -637,10 +621,7 @@ impl MsgSend for GetHotKey {
 	type RetType = (co::VK, co::HOTKEYF);
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		(
-			co::VK::from_raw(LOBYTE(v as _) as _),
-			co::HOTKEYF::from_raw(HIBYTE(v as _) as _),
-		)
+		(co::VK::from_raw(LOBYTE(v as _) as _), co::HOTKEYF::from_raw(HIBYTE(v as _) as _))
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -684,9 +665,7 @@ impl<'a> MsgSend for GetMinMaxInfo<'a> {
 
 impl<'a> MsgSendRecv for GetMinMaxInfo<'a> {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			info: &mut *(p.lparam as *mut _),
-		}
+		Self { info: &mut *(p.lparam as *mut _) }
 	}
 }
 
@@ -798,9 +777,7 @@ impl<'a> MsgSend for GetTitleBarInfoEx<'a> {
 
 impl<'a> MsgSendRecv for GetTitleBarInfoEx<'a> {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			info: &mut *(p.lparam as *mut _),
-		}
+		Self { info: &mut *(p.lparam as *mut _) }
 	}
 }
 
@@ -830,9 +807,7 @@ impl<'a> MsgSend for Help<'a> {
 
 impl<'a> MsgSendRecv for Help<'a> {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			helpinfo: &mut *(p.lparam as *mut _),
-		}
+		Self { helpinfo: &mut *(p.lparam as *mut _) }
 	}
 }
 
@@ -1224,9 +1199,7 @@ impl MsgSend for Move {
 
 impl MsgSendRecv for Move {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			coords: POINT::from(p.lparam as u32),
-		}
+		Self { coords: POINT::from(p.lparam as u32) }
 	}
 }
 
@@ -1256,9 +1229,7 @@ impl<'a> MsgSend for Moving<'a> {
 
 impl<'a> MsgSendRecv for Moving<'a> {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			window_pos: &mut *(p.lparam as *mut _),
-		}
+		Self { window_pos: &mut *(p.lparam as *mut _) }
 	}
 }
 
@@ -1329,9 +1300,7 @@ impl<'a, 'b, 'c> MsgSend for NcCreate<'a, 'b, 'c> {
 
 impl<'a, 'b, 'c> MsgSendRecv for NcCreate<'a, 'b, 'c> {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			createstruct: &*(p.lparam as *const _),
-		}
+		Self { createstruct: &*(p.lparam as *const _) }
 	}
 }
 
@@ -1343,7 +1312,7 @@ pub_struct_msg_empty_handleable! { NcDestroy: co::WM::NCDESTROY;
 /// message parameters.
 ///
 /// Return type: `co::HT`.
-pub struct NcHitTest{
+pub struct NcHitTest {
 	pub cursor_pos: POINT,
 }
 
@@ -1365,9 +1334,7 @@ impl MsgSend for NcHitTest {
 
 impl MsgSendRecv for NcHitTest {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			cursor_pos: POINT::from(p.lparam as u32),
-		}
+		Self { cursor_pos: POINT::from(p.lparam as u32) }
 	}
 }
 
@@ -1391,12 +1358,21 @@ impl MsgSend for NextDlgCtl {
 			msg_id: co::WM::NEXTDLGCTL,
 			wparam: match &self.hwnd_focus {
 				HwndFocus::Hwnd(hctl) => hctl.ptr() as _,
-				HwndFocus::FocusNext(next) => if *next { 0 } else { 1 },
+				HwndFocus::FocusNext(next) => {
+					if *next {
+						0
+					} else {
+						1
+					}
+				},
 			},
-			lparam: MAKEDWORD(match &self.hwnd_focus {
-				HwndFocus::Hwnd(_) => 1,
-				HwndFocus::FocusNext(_) => 0,
-			}, 0) as _,
+			lparam: MAKEDWORD(
+				match &self.hwnd_focus {
+					HwndFocus::Hwnd(_) => 1,
+					HwndFocus::FocusNext(_) => 0,
+				},
+				0,
+			) as _,
 		}
 	}
 }
@@ -1449,8 +1425,9 @@ impl MsgSendRecv for ParentNotify {
 			event,
 			child_id: HIWORD(p.wparam as _),
 			data: match event {
-				co::WMPN::CREATE
-				| co::WMPN::DESTROY => HwndPointId::Hwnd(HWND::from_ptr(p.lparam as _)),
+				co::WMPN::CREATE | co::WMPN::DESTROY => {
+					HwndPointId::Hwnd(HWND::from_ptr(p.lparam as _))
+				},
 				co::WMPN::POINTERDOWN => HwndPointId::Id(p.lparam as _),
 				_ => HwndPointId::Point(POINT::from(p.lparam as u32)),
 			},
@@ -1487,11 +1464,7 @@ impl<'a> MsgSendRecv for PowerBroadcast<'a> {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			event: co::PBT::from_raw(p.wparam as _),
-			data: if p.lparam == 0 {
-				None
-			} else {
-				Some(&*(p.lparam as *const _))
-			},
+			data: if p.lparam == 0 { None } else { Some(&*(p.lparam as *const _)) },
 		}
 	}
 }
@@ -1720,9 +1693,7 @@ impl MsgSend for SetText {
 
 impl MsgSendRecv for SetText {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			text: p.lparam as _,
-		}
+		Self { text: p.lparam as _ }
 	}
 }
 
@@ -1789,10 +1760,7 @@ impl MsgSendRecv for Size {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			request: co::SIZE_R::from_raw(p.wparam as _),
-			client_area: SIZE::new(
-				LOWORD(p.lparam as _) as _,
-				HIWORD(p.lparam as _) as _,
-			),
+			client_area: SIZE::new(LOWORD(p.lparam as _) as _, HIWORD(p.lparam as _) as _),
 		}
 	}
 }
@@ -2117,9 +2085,7 @@ impl<'a> MsgSend for WindowPosChanged<'a> {
 
 impl<'a> MsgSendRecv for WindowPosChanged<'a> {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			windowpos: &*(p.lparam as *const _),
-		}
+		Self { windowpos: &*(p.lparam as *const _) }
 	}
 }
 
@@ -2149,9 +2115,7 @@ impl<'a> MsgSend for WindowPosChanging<'a> {
 
 impl<'a> MsgSendRecv for WindowPosChanging<'a> {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			windowpos: &*(p.lparam as *const _),
-		}
+		Self { windowpos: &*(p.lparam as *const _) }
 	}
 }
 

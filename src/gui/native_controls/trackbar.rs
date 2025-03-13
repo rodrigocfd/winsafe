@@ -5,7 +5,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, events::*, privs::*};
+use crate::gui::{events::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -33,31 +33,38 @@ impl Trackbar {
 	#[must_use]
 	pub fn new(parent: &(impl GuiParent + 'static), opts: TrackbarOpts) -> Self {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
-		let new_self = Self(
-			Arc::pin(
-				TrackbarObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: TrackbarEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+		let new_self = Self(Arc::pin(TrackbarObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: TrackbarEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
-		parent.as_ref().before_on().wm(parent.as_ref().is_dlg().create_msg(), move |_| {
-			self2.0.base.create_window(opts.window_ex_style, "msctls_trackbar32", None,
-				opts.window_style | opts.control_style.into(), opts.position.into(),
-				opts.size.into(), &parent2)?;
-			if opts.range != (0, 100) {
-				self2.set_range(opts.range.0, opts.range.1);
-			}
-			if opts.value != 0 {
-				self2.set_pos(opts.value);
-			}
-			parent2.as_ref().add_to_layout(self2.hwnd(), opts.resize_behavior)?;
-			Ok(0) // ignored
-		});
+		parent
+			.as_ref()
+			.before_on()
+			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+				self2.0.base.create_window(
+					opts.window_ex_style,
+					"msctls_trackbar32",
+					None,
+					opts.window_style | opts.control_style.into(),
+					opts.position.into(),
+					opts.size.into(),
+					&parent2,
+				)?;
+				if opts.range != (0, 100) {
+					self2.set_range(opts.range.0, opts.range.1);
+				}
+				if opts.value != 0 {
+					self2.set_pos(opts.value);
+				}
+				parent2
+					.as_ref()
+					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+				Ok(0) // ignored
+			});
 
 		new_self
 	}
@@ -75,23 +82,20 @@ impl Trackbar {
 		parent: &(impl GuiParent + 'static),
 		ctrl_id: u16,
 		resize_behavior: (Horz, Vert),
-	) -> Self
-	{
-		let new_self = Self(
-			Arc::pin(
-				TrackbarObj {
-					base: BaseCtrl::new(ctrl_id),
-					events: TrackbarEvents::new(parent, ctrl_id),
-					_pin: PhantomPinned,
-				},
-			),
-		);
+	) -> Self {
+		let new_self = Self(Arc::pin(TrackbarObj {
+			base: BaseCtrl::new(ctrl_id),
+			events: TrackbarEvents::new(parent, ctrl_id),
+			_pin: PhantomPinned,
+		}));
 
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
 			self2.0.base.assign_dlg(&parent2)?;
-			parent2.as_ref().add_to_layout(self2.hwnd(), resize_behavior)?;
+			parent2
+				.as_ref()
+				.add_to_layout(self2.hwnd(), resize_behavior)?;
 			Ok(true) // ignored
 		});
 
@@ -110,18 +114,19 @@ impl Trackbar {
 	/// [`trbm::GetRangeMax`](crate::msg::trbm::GetRangeMax) messages.
 	#[must_use]
 	pub fn range(&self) -> (u32, u32) {
-		unsafe { (
-			self.hwnd().SendMessage(trbm::GetRangeMin {}),
-			self.hwnd().SendMessage(trbm::GetRangeMax {}),
-		) }
+		unsafe {
+			(
+				self.hwnd().SendMessage(trbm::GetRangeMin {}),
+				self.hwnd().SendMessage(trbm::GetRangeMax {}),
+			)
+		}
 	}
 
 	/// Sets the current position by sending a
 	/// [`trbm::SetPos`](crate::msg::trbm::SetPos) message.
 	pub fn set_pos(&self, pos: u32) {
 		unsafe {
-			self.hwnd()
-				.SendMessage(trbm::SetPos { redraw: true, pos });
+			self.hwnd().SendMessage(trbm::SetPos { redraw: true, pos });
 		}
 	}
 

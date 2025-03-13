@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, iterators::*};
+use crate::gui::{iterators::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -30,11 +30,9 @@ impl<'a> HeaderItems<'a> {
 		hdi.set_pszText(Some(&mut wtext));
 
 		let idx = unsafe {
-			self.owner.hwnd()
-				.SendMessage(hdm::InsertItem {
-					index_after: 0xffff,
-					item: &hdi,
-				})?
+			self.owner
+				.hwnd()
+				.SendMessage(hdm::InsertItem { index_after: 0xffff, item: &hdi })?
 		};
 		Ok(self.get(idx))
 	}
@@ -43,10 +41,7 @@ impl<'a> HeaderItems<'a> {
 	/// [`hdm::GetItemCount`](crate::msg::hdm::GetItemCount) message.
 	#[must_use]
 	pub fn count(&self) -> SysResult<u32> {
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(hdm::GetItemCount {})
-		}
+		unsafe { self.owner.hwnd().SendMessage(hdm::GetItemCount {}) }
 	}
 
 	/// Retrieves the item at the given zero-based position.

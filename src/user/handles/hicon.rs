@@ -27,8 +27,7 @@ pub trait user_Hicon: Handle {
 	#[must_use]
 	fn CopyIcon(&self) -> SysResult<DestroyIconGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CopyIcon(self.ptr()))
-				.map(|h| DestroyIconGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CopyIcon(self.ptr())).map(|h| DestroyIconGuard::new(h))
 		}
 	}
 
@@ -37,16 +36,13 @@ pub trait user_Hicon: Handle {
 	#[must_use]
 	fn GetIconInfo(&self) -> SysResult<ICONINFO> {
 		let mut ii = ICONINFO::default();
-		bool_to_sysresult(
-			unsafe { ffi::GetIconInfo(self.ptr(), &mut ii as *mut _ as _) },
-		).map(|_| ii)
+		bool_to_sysresult(unsafe { ffi::GetIconInfo(self.ptr(), &mut ii as *mut _ as _) })
+			.map(|_| ii)
 	}
 
 	/// [`GetIconInfoEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-geticoninfoexw)
 	/// function.
 	fn GetIconInfoEx(&self, icon_info: &mut ICONINFOEX) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe { ffi::GetIconInfoExW(self.ptr(), icon_info as *mut _ as _) },
-		)
+		bool_to_sysresult(unsafe { ffi::GetIconInfoExW(self.ptr(), icon_info as *mut _ as _) })
 	}
 }

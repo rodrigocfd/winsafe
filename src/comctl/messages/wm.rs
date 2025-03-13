@@ -29,9 +29,7 @@ impl<'a> MsgSend for Notify<'a> {
 
 impl<'a> MsgSendRecv for Notify<'a> {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			nmhdr: &mut *(p.lparam as *mut _),
-		}
+		Self { nmhdr: &mut *(p.lparam as *mut _) }
 	}
 }
 

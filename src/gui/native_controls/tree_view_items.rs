@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::gui::{*, iterators::*};
+use crate::gui::{iterators::*, *};
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -21,12 +21,12 @@ impl<'a, T> TreeViewItems<'a, T> {
 	/// Adds a new root item by sending a
 	/// [`tvm::InsertItem`](crate::msg::tvm::InsertItem) message, and returns
 	/// the newly added item.
-	pub fn add_root(&self,
+	pub fn add_root(
+		&self,
 		text: &str,
 		icon_index: Option<u32>,
 		data: T,
-	) -> SysResult<TreeViewItem<'a, T>>
-	{
+	) -> SysResult<TreeViewItem<'a, T>> {
 		self.owner.raw_insert_item(None, text, icon_index, data)
 	}
 
@@ -34,7 +34,8 @@ impl<'a, T> TreeViewItems<'a, T> {
 	/// [`tvm::DeleteItem`](crate::msg::tvm::DeleteItem) message.
 	pub fn delete_all(&self) -> SysResult<()> {
 		unsafe {
-			self.owner.hwnd()
+			self.owner
+				.hwnd()
 				.SendMessage(tvm::DeleteItem { hitem: &HTREEITEM::NULL })
 		}
 	}
@@ -43,29 +44,20 @@ impl<'a, T> TreeViewItems<'a, T> {
 	/// [`tvm::GetCount`](crate::msg::tvm::GetCount) message.
 	#[must_use]
 	pub fn count(&self) -> u32 {
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(tvm::GetCount {})
-		}
+		unsafe { self.owner.hwnd().SendMessage(tvm::GetCount {}) }
 	}
 
 	/// Retrieves the number of visible items by sending a
 	/// [`tvm::GetVisibleCount`](crate::msg::tvm::GetVisibleCount) message.
 	#[must_use]
 	pub fn count_visible(&self) -> u32 {
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(tvm::GetVisibleCount {})
-		}
+		unsafe { self.owner.hwnd().SendMessage(tvm::GetVisibleCount {}) }
 	}
 
 	/// Ends the editing of the item's text by sending a
 	/// [`tvm::EndEditLabelNow`](crate::msg::tvm::EndEditLabelNow) message.
 	pub fn end_edit_label_now(&self, save: bool) -> SysResult<()> {
-		unsafe {
-			self.owner.hwnd()
-				.SendMessage(tvm::EndEditLabelNow { save })
-		}
+		unsafe { self.owner.hwnd().SendMessage(tvm::EndEditLabelNow { save }) }
 	}
 
 	/// Retrieves the item of the given handle.

@@ -23,24 +23,22 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// # Safety
 	///
 	/// To create a dialog, you must provide a dialog procedure.
-	unsafe fn CreateDialogParam(&self,
+	unsafe fn CreateDialogParam(
+		&self,
 		resource_id: IdStr,
 		hwnd_parent: Option<&HWND>,
 		dialog_proc: DLGPROC,
 		init_param: Option<isize>,
-	) -> SysResult<HWND>
-	{
-		ptr_to_sysresult_handle(
-			unsafe {
-				ffi::CreateDialogParamW(
-					self.ptr(),
-					resource_id.as_ptr(),
-					hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr()),
-					dialog_proc as _,
-					init_param.unwrap_or_default(),
-				)
-			},
-		)
+	) -> SysResult<HWND> {
+		ptr_to_sysresult_handle(unsafe {
+			ffi::CreateDialogParamW(
+				self.ptr(),
+				resource_id.as_ptr(),
+				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr()),
+				dialog_proc as _,
+				init_param.unwrap_or_default(),
+			)
+		})
 	}
 
 	/// [`DialogBoxIndirectParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dialogboxindirectparamw)
@@ -49,13 +47,13 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// # Safety
 	///
 	/// To create a dialog, you must provide a dialog procedure.
-	unsafe fn DialogBoxIndirectParam(&self,
+	unsafe fn DialogBoxIndirectParam(
+		&self,
 		dialog_template: &DLGTEMPLATE,
 		hwnd_parent: Option<&HWND>,
 		dialog_proc: DLGPROC,
 		init_param: Option<isize>,
-	) -> SysResult<isize>
-	{
+	) -> SysResult<isize> {
 		match unsafe {
 			ffi::DialogBoxIndirectParamW(
 				self.ptr(),
@@ -70,20 +68,19 @@ pub trait user_Hinstance: kernel_Hinstance {
 		}
 	}
 
-
 	/// [`DialogBoxParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dialogboxparamw)
 	/// function.
 	///
 	/// # Safety
 	///
 	/// To create a dialog, you must provide a dialog procedure.
-	unsafe fn DialogBoxParam(&self,
+	unsafe fn DialogBoxParam(
+		&self,
 		resource_id: IdStr,
 		hwnd_parent: Option<&HWND>,
 		dialog_proc: DLGPROC,
 		init_param: Option<isize>,
-	) -> SysResult<isize>
-	{
+	) -> SysResult<isize> {
 		match unsafe {
 			ffi::DialogBoxParamW(
 				self.ptr(),
@@ -94,7 +91,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 			)
 		} {
 			-1 => Err(GetLastError()),
-			res => Ok(res), // assumes hWndParent as valid, so no check for zero
+			res => Ok(res), // assumes hwnd_parent as valid, so no check for zero
 		}
 	}
 
@@ -129,13 +126,10 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// [`LoadAccelerators`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
 	/// function.
 	#[must_use]
-	fn LoadAccelerators(&self,
-		table_name: IdStr,
-	) -> SysResult<DestroyAcceleratorTableGuard> {
+	fn LoadAccelerators(&self, table_name: IdStr) -> SysResult<DestroyAcceleratorTableGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::LoadAcceleratorsW(self.ptr(), table_name.as_ptr()),
-			).map(|h| DestroyAcceleratorTableGuard::new(h))
+			ptr_to_sysresult_handle(ffi::LoadAcceleratorsW(self.ptr(), table_name.as_ptr()))
+				.map(|h| DestroyAcceleratorTableGuard::new(h))
 		}
 	}
 
@@ -154,14 +148,10 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn LoadCursor(&self,
-		resource_id: IdIdcStr,
-	) -> SysResult<DestroyCursorGuard>
-	{
+	fn LoadCursor(&self, resource_id: IdIdcStr) -> SysResult<DestroyCursorGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::LoadCursorW(self.ptr(), resource_id.as_ptr()),
-			).map(|h| DestroyCursorGuard::new(h))
+			ptr_to_sysresult_handle(ffi::LoadCursorW(self.ptr(), resource_id.as_ptr()))
+				.map(|h| DestroyCursorGuard::new(h))
 		}
 	}
 
@@ -192,9 +182,8 @@ pub trait user_Hinstance: kernel_Hinstance {
 	#[must_use]
 	fn LoadMenu(&self, resource_id: IdStr) -> SysResult<DestroyMenuGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(
-				ffi::LoadMenuW(self.ptr(), resource_id.as_ptr()),
-			).map(|h| DestroyMenuGuard::new(h))
+			ptr_to_sysresult_handle(ffi::LoadMenuW(self.ptr(), resource_id.as_ptr()))
+				.map(|h| DestroyMenuGuard::new(h))
 		}
 	}
 
@@ -203,15 +192,9 @@ pub trait user_Hinstance: kernel_Hinstance {
 	#[must_use]
 	fn LoadString(&self, id: u16) -> SysResult<String> {
 		let mut pdata: *const u16 = std::ptr::null_mut();
-		match unsafe {
-			ffi::LoadStringW(
-				self.ptr(),
-				id as _,
-				&mut pdata as *mut _ as  _, 0,
-			)
-		} {
+		match unsafe { ffi::LoadStringW(self.ptr(), id as _, &mut pdata as *mut _ as _, 0) } {
 			0 => Err(GetLastError()),
-			len => Ok(WString::from_wchars_count(pdata, len as _).to_string())
+			len => Ok(WString::from_wchars_count(pdata, len as _).to_string()),
 		}
 	}
 }

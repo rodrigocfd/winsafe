@@ -162,7 +162,6 @@ impl_default!(DXGI_OUTPUT_DESC);
 impl DXGI_OUTPUT_DESC {
 	pub_fn_string_arr_get_set!(DeviceName, set_DeviceName);
 	pub_fn_bool_get_set!(AttachedToDesktop, set_AttachedToDesktop);
-
 }
 
 /// [`DXGI_RATIONAL`](https://learn.microsoft.com/en-us/windows/win32/api/dxgicommon/ns-dxgicommon-dxgi_rational?redirectedfrom=MSDN)

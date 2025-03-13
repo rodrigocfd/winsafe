@@ -35,36 +35,27 @@ pub trait mf_IMFPresentationDescriptor: mf_IMFAttributes {
 	/// [`IMFPresentationDescriptor::DeselectStream`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfpresentationdescriptor-deselectstream)
 	/// method.
 	fn DeselectStream(&self, descriptor_index: u32) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFPresentationDescriptorVT>(self).DeselectStream)(
-					self.ptr(),
-					descriptor_index,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFPresentationDescriptorVT>(self).DeselectStream)(self.ptr(), descriptor_index)
+		})
 	}
 
 	/// [`IMFPresentationDescriptor::GetStreamDescriptorByIndex`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfpresentationdescriptor-getstreamdescriptorbyindex)
 	/// method.
 	#[must_use]
-	fn GetStreamDescriptorByIndex(&self,
-		index: u32,
-	) -> HrResult<(bool, IMFStreamDescriptor)>
-	{
+	fn GetStreamDescriptorByIndex(&self, index: u32) -> HrResult<(bool, IMFStreamDescriptor)> {
 		let mut selected: BOOL = 0;
 		let mut queried = unsafe { IMFStreamDescriptor::null() };
 
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFPresentationDescriptorVT>(self).GetStreamDescriptorByIndex)(
-					self.ptr(),
-					index,
-					&mut selected,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| (selected != 0, queried))
+		ok_to_hrresult(unsafe {
+			(vt::<IMFPresentationDescriptorVT>(self).GetStreamDescriptorByIndex)(
+				self.ptr(),
+				index,
+				&mut selected,
+				queried.as_mut(),
+			)
+		})
+		.map(|_| (selected != 0, queried))
 	}
 
 	/// [`IMFPresentationDescriptor::GetStreamDescriptorCount`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfpresentationdescriptor-getstreamdescriptorcount)
@@ -72,26 +63,20 @@ pub trait mf_IMFPresentationDescriptor: mf_IMFAttributes {
 	#[must_use]
 	fn GetStreamDescriptorCount(&self) -> HrResult<u32> {
 		let mut descriptor_count = u32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFPresentationDescriptorVT>(self).GetStreamDescriptorCount)(
-					self.ptr(),
-					&mut descriptor_count,
-				)
-			},
-		).map(|_| descriptor_count)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFPresentationDescriptorVT>(self).GetStreamDescriptorCount)(
+				self.ptr(),
+				&mut descriptor_count,
+			)
+		})
+		.map(|_| descriptor_count)
 	}
 
 	/// [`IMFPresentationDescriptor::SelectStream`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfpresentationdescriptor-selectstream)
 	/// method.
 	fn SelectStream(&self, descriptor_index: u32) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFPresentationDescriptorVT>(self).SelectStream)(
-					self.ptr(),
-					descriptor_index,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFPresentationDescriptorVT>(self).SelectStream)(self.ptr(), descriptor_index)
+		})
 	}
 }

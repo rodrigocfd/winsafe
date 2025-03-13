@@ -163,8 +163,8 @@ impl<'a, 'b> MsgSend for GetRange32<'a, 'b> {
 	fn as_generic_wm(&mut self) -> WndMsg {
 		WndMsg {
 			msg_id: co::UDM::GETRANGE32.into(),
-			wparam: self.min as *mut _ as  _,
-			lparam: self.max as *mut _ as  _,
+			wparam: self.min as *mut _ as _,
+			lparam: self.max as *mut _ as _,
 		}
 	}
 }

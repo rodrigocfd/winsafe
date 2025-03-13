@@ -273,12 +273,14 @@ macro_rules! pub_fn_comptr_get_set {
 		/// Returns the COM object field, by cloning the underlying COM pointer.
 		#[must_use]
 		pub fn $field<T>(&self) -> Option<T>
-			where T: $trait,
+		where
+			T: $trait,
 		{
 			if self.$field.is_null() {
 				None
 			} else {
-				let obj = std::mem::ManuallyDrop::new( // won't release the stored pointer
+				let obj = std::mem::ManuallyDrop::new(
+					// Won't release the stored pointer.
 					unsafe { T::from_ptr(self.$field) },
 				);
 				let cloned = T::clone(&obj); // the cloned will release the stored pointer
@@ -288,7 +290,8 @@ macro_rules! pub_fn_comptr_get_set {
 
 		/// Sets the COM object field, by cloning the underlying COM pointer.
 		pub fn $setter<T>(&mut self, obj: Option<&T>)
-			where T: $trait,
+		where
+			T: $trait,
 		{
 			let _ = unsafe { T::from_ptr(self.$field) }; // if already set, call Release() immediately
 			self.$field = match obj {
@@ -356,10 +359,7 @@ macro_rules! pub_fn_mem_block {
 		/// Make sure the alignment is correct.
 		#[must_use]
 		pub const unsafe fn as_slice_aligned<T>(&self) -> &[T] {
-			std::slice::from_raw_parts(
-				self.pmem as _,
-				self.sz / std::mem::size_of::<T>(),
-			)
+			std::slice::from_raw_parts(self.pmem as _, self.sz / std::mem::size_of::<T>())
 		}
 
 		/// Returns a mutable slice over the allocated memory block, aligned to the
@@ -370,10 +370,7 @@ macro_rules! pub_fn_mem_block {
 		/// Make sure the alignment is correct.
 		#[must_use]
 		pub const unsafe fn as_mut_slice_aligned<T>(&mut self) -> &mut [T] {
-			std::slice::from_raw_parts_mut(
-				self.pmem as _,
-				self.sz / std::mem::size_of::<T>(),
-			)
+			std::slice::from_raw_parts_mut(self.pmem as _, self.sz / std::mem::size_of::<T>())
 		}
 
 		/// Returns the size of the allocated memory block.

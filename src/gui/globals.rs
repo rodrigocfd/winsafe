@@ -5,7 +5,10 @@ use crate::prelude::*;
 
 /// Identifies whether a window is dialog-based.
 #[derive(Clone, Copy)]
-pub(in crate::gui) enum IsDlg { Yes, No }
+pub(in crate::gui) enum IsDlg {
+	Yes,
+	No,
+}
 
 impl IsDlg {
 	/// `WM_CREATE` for ordinary windows, `WM_INITDIALOG` for dialogs.
@@ -40,10 +43,7 @@ pub(in crate::gui) mod quit_error {
 	pub(in crate::gui) static QUIT_ERROR: Mutex<Option<MsgError>> = Mutex::new(None);
 
 	/// Calls `PostQuitMessage` to terminate the program with the given error.
-	pub(in crate::gui) fn post_quit_error(
-		src_msg: WndMsg,
-		err: Box<dyn Error + Send + Sync>,
-	) {
+	pub(in crate::gui) fn post_quit_error(src_msg: WndMsg, err: Box<dyn Error + Send + Sync>) {
 		{
 			let mut msg_error = QUIT_ERROR.lock().unwrap();
 			*msg_error = Some(MsgError::new(src_msg, err)); // store the error, so Base::run_main_loop() can grab it
@@ -65,8 +65,9 @@ pub(in crate::gui) mod ui_font {
 	// Returns the global UI font, creating it of not yet.
 	pub(in crate::gui) fn get() -> SysResult<HFONT> {
 		Ok(unsafe {
-			match &* &raw const UI_HFONT {
-				None => { // not created yet
+			match &*&raw const UI_HFONT {
+				None => {
+					// not created yet
 					let mut ncm = NONCLIENTMETRICS::default();
 					SystemParametersInfo(
 						co::SPI::GETNONCLIENTMETRICS,
@@ -86,13 +87,17 @@ pub(in crate::gui) mod ui_font {
 
 	/// Sets the global UI font on the given window.
 	pub(in crate::gui) fn set(hwnd: &HWND) -> SysResult<()> {
-		unsafe { hwnd.SendMessage(wm::SetFont { hfont: get()?, redraw: true }); }
+		unsafe {
+			hwnd.SendMessage(wm::SetFont { hfont: get()?, redraw: true });
+		}
 		Ok(())
 	}
 
 	/// Frees the global UI font object.
 	pub(in crate::gui) fn delete() {
-		unsafe { UI_HFONT = None; } // https://users.rust-lang.org/t/why-drop-trait-not-called-when-use-global-static
+		unsafe {
+			UI_HFONT = None; // https://users.rust-lang.org/t/why-drop-trait-not-called-when-use-global-static
+		}
 	}
 }
 
@@ -134,7 +139,8 @@ pub(in crate::gui) mod text_calc {
 		let mut last_ch = 'a'; // initial value will be skipped
 
 		for (idx, ch) in text.char_indices() {
-			if idx == 0 { // first char
+			if idx == 0 {
+				// first char
 				if ch != '&' {
 					txt_no_ampersands.push(ch);
 				}
@@ -155,10 +161,11 @@ pub(in crate::gui) mod text_calc {
 		let clone_dc = desktop_hdc.CreateCompatibleDC()?;
 		let _prev_font = clone_dc.SelectObject(&ui_font::get()?)?;
 
-		let mut bounds = clone_dc.GetTextExtentPoint32(
-			if text.trim().is_empty() { "Pj" } // just a placeholder to get the text height
-			else { text }
-		)?;
+		let mut bounds =
+			clone_dc.GetTextExtentPoint32(
+				if text.trim().is_empty() { "Pj" } // just a placeholder to get the text height
+			else { text },
+			)?;
 
 		if text.is_empty() {
 			bounds.cx = 0; // if no text was given, return just the height
@@ -184,12 +191,10 @@ pub(in crate::gui) mod text_calc {
 }
 
 /// Paints the themed border of an user control, if it has the proper styles.
-pub(in crate::gui) fn paint_control_borders(
-	hwnd: &HWND,
-	wm_ncp: wm::NcPaint,
-) -> AnyResult<()>
-{
-	unsafe { hwnd.DefWindowProc(wm_ncp); } // let the system draw the scrollbar for us
+pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: wm::NcPaint) -> AnyResult<()> {
+	unsafe {
+		hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us
+	}
 
 	if !hwnd.style_ex().has(co::WS_EX::CLIENTEDGE) // no border
 		|| !IsThemeActive()
@@ -199,24 +204,59 @@ pub(in crate::gui) fn paint_control_borders(
 	}
 
 	let mut rc = hwnd.ScreenToClientRc(hwnd.GetWindowRect()?)?; // window outmost coordinates, including margins
-	rc.left += 2; rc.top += 2; rc.right += 2; rc.bottom += 2; // because it comes up anchored at -2,-2
+	rc.left += 2;
+	rc.top += 2;
+	rc.right += 2;
+	rc.bottom += 2; // because it comes up anchored at -2,-2
 
 	let hdc = hwnd.GetWindowDC()?;
 
 	if let Some(htheme) = hwnd.OpenThemeData("LISTVIEW") {
 		// Draw only the borders to avoid flickering.
-		htheme.DrawThemeBackground(&hdc,
-			co::VS::LISTVIEW_LISTGROUP, rc,
-			Some(RECT { left: rc.left, top: rc.top, right: rc.left + 2, bottom: rc.bottom }))?;
-		htheme.DrawThemeBackground(&hdc,
-			co::VS::LISTVIEW_LISTGROUP, rc,
-			Some(RECT { left: rc.left, top: rc.top, right: rc.right, bottom: rc.top + 2 }))?;
-		htheme.DrawThemeBackground(&hdc,
-			co::VS::LISTVIEW_LISTGROUP, rc,
-			Some(RECT { left: rc.right - 2, top: rc.top, right: rc.right, bottom: rc.bottom }))?;
-		htheme.DrawThemeBackground(&hdc,
-			co::VS::LISTVIEW_LISTGROUP, rc,
-			Some(RECT { left: rc.left, top: rc.bottom - 2, right: rc.right, bottom: rc.bottom }))?;
+		htheme.DrawThemeBackground(
+			&hdc,
+			co::VS::LISTVIEW_LISTGROUP,
+			rc,
+			Some(RECT {
+				left: rc.left,
+				top: rc.top,
+				right: rc.left + 2,
+				bottom: rc.bottom,
+			}),
+		)?;
+		htheme.DrawThemeBackground(
+			&hdc,
+			co::VS::LISTVIEW_LISTGROUP,
+			rc,
+			Some(RECT {
+				left: rc.left,
+				top: rc.top,
+				right: rc.right,
+				bottom: rc.top + 2,
+			}),
+		)?;
+		htheme.DrawThemeBackground(
+			&hdc,
+			co::VS::LISTVIEW_LISTGROUP,
+			rc,
+			Some(RECT {
+				left: rc.right - 2,
+				top: rc.top,
+				right: rc.right,
+				bottom: rc.bottom,
+			}),
+		)?;
+		htheme.DrawThemeBackground(
+			&hdc,
+			co::VS::LISTVIEW_LISTGROUP,
+			rc,
+			Some(RECT {
+				left: rc.left,
+				top: rc.bottom - 2,
+				right: rc.right,
+				bottom: rc.bottom,
+			}),
+		)?;
 	}
 
 	Ok(())

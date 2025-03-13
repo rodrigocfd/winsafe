@@ -69,11 +69,9 @@ pub trait mf_IMFCollection: ole_IUnknown {
 	/// [`IMFCollection::AddElement`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfcollection-addelement)
 	/// method.
 	fn AddElement(&self, element: &impl ole_IUnknown) -> HrResult<()> {
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFCollectionVT>(self).AddElement)(self.ptr(), element.ptr())
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFCollectionVT>(self).AddElement)(self.ptr(), element.ptr())
+		})
 	}
 
 	/// [`IMFCollection::GetElement`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfcollection-getelement)
@@ -81,19 +79,10 @@ pub trait mf_IMFCollection: ole_IUnknown {
 	#[must_use]
 	fn GetElement(&self, index: u32) -> HrResult<Option<IUnknown>> {
 		let mut queried = unsafe { IUnknown::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFCollectionVT>(self).GetElement)(
-					self.ptr(),
-					index,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| if queried.ptr().is_null() {
-			None
-		} else {
-			Some(queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFCollectionVT>(self).GetElement)(self.ptr(), index, queried.as_mut())
 		})
+		.map(|_| if queried.ptr().is_null() { None } else { Some(queried) })
 	}
 
 	/// [`IMFCollection::GetElementCount`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfcollection-getelementcount)
@@ -101,32 +90,18 @@ pub trait mf_IMFCollection: ole_IUnknown {
 	#[must_use]
 	fn GetElementCount(&self) -> HrResult<u32> {
 		let mut count = u32::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFCollectionVT>(self).GetElementCount)(
-					self.ptr(),
-					&mut count,
-				)
-			},
-		).map(|_| count)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFCollectionVT>(self).GetElementCount)(self.ptr(), &mut count)
+		})
+		.map(|_| count)
 	}
 
 	/// [`IMFCollection::InsertElementAt`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfcollection-insertelementat)
 	/// method.
-	fn InsertElementAt(&self,
-		index: u32,
-		element: &impl ole_IUnknown
-	) -> HrResult<()>
-	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFCollectionVT>(self).InsertElementAt)(
-					self.ptr(),
-					index,
-					element.ptr(),
-				)
-			},
-		)
+	fn InsertElementAt(&self, index: u32, element: &impl ole_IUnknown) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IMFCollectionVT>(self).InsertElementAt)(self.ptr(), index, element.ptr())
+		})
 	}
 
 	fn_com_noparm! { RemoveAllElements: IMFCollectionVT;
@@ -138,18 +113,9 @@ pub trait mf_IMFCollection: ole_IUnknown {
 	/// method.
 	fn RemoveElement(&self, index: u32) -> HrResult<Option<IUnknown>> {
 		let mut queried = unsafe { IUnknown::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IMFCollectionVT>(self).RemoveElement)(
-					self.ptr(),
-					index,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| if queried.ptr().is_null() {
-			None
-		} else {
-			Some(queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IMFCollectionVT>(self).RemoveElement)(self.ptr(), index, queried.as_mut())
 		})
+		.map(|_| if queried.ptr().is_null() { None } else { Some(queried) })
 	}
 }

@@ -82,18 +82,9 @@ pub trait kernel_Hfilemapview: Handle {
 
 	/// [`FlushViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-flushviewoffile)
 	/// function.
-	fn FlushViewOfFile(&self,
-		start_at_byte: usize,
-		num_bytes: usize,
-	) -> SysResult<()>
-	{
-		bool_to_sysresult(
-			unsafe {
-				ffi::FlushViewOfFile(
-					self.ptr().offset(start_at_byte as _),
-					num_bytes,
-				)
-			},
-		)
+	fn FlushViewOfFile(&self, start_at_byte: usize, num_bytes: usize) -> SysResult<()> {
+		bool_to_sysresult(unsafe {
+			ffi::FlushViewOfFile(self.ptr().offset(start_at_byte as _), num_bytes)
+		})
 	}
 }

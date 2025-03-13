@@ -185,8 +185,10 @@ pub struct ITaskFolderVT {
 	pub GetTask: fn(COMPTR, PCSTR, *mut COMPTR) -> HRES,
 	pub GetTasks: fn(COMPTR, i32, *mut COMPTR) -> HRES,
 	pub DeleteTask: fn(COMPTR, PCSTR, i32) -> HRES,
-	pub RegisterTask: fn(COMPTR, PCSTR, PCSTR, i32, VARIANT, VARIANT, u32, VARIANT, *mut COMPTR) -> HRES,
-	pub RegisterTaskDefinition: fn(COMPTR, PCSTR, COMPTR, i32, VARIANT, VARIANT, u32, VARIANT, *mut COMPTR) -> HRES,
+	pub RegisterTask:
+		fn(COMPTR, PCSTR, PCSTR, i32, VARIANT, VARIANT, u32, VARIANT, *mut COMPTR) -> HRES,
+	pub RegisterTaskDefinition:
+		fn(COMPTR, PCSTR, COMPTR, i32, VARIANT, VARIANT, u32, VARIANT, *mut COMPTR) -> HRES,
 	pub GetSecurityDescriptor: fn(COMPTR, i32, *mut PSTR) -> HRES,
 	pub SetSecurityDescriptor: fn(COMPTR, PCSTR, i32) -> HRES,
 }

@@ -18,23 +18,28 @@ handle_guard! { DeleteDCGuard: HDC;
 /// [`DeleteObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-deleteobject)
 /// when the object goes out of scope.
 pub struct DeleteObjectGuard<T>
-	where T: GdiObject,
+where
+	T: GdiObject,
 {
 	handle: T,
 }
 
 impl<T> Drop for DeleteObjectGuard<T>
-	where T: GdiObject,
+where
+	T: GdiObject,
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.handle.as_opt() {
-			unsafe { ffi::DeleteObject(h.ptr()); } // ignore errors
+			unsafe {
+				ffi::DeleteObject(h.ptr());
+			} // ignore errors
 		}
 	}
 }
 
 impl<T> Deref for DeleteObjectGuard<T>
-	where T: GdiObject,
+where
+	T: GdiObject,
 {
 	type Target = T;
 
@@ -44,7 +49,8 @@ impl<T> Deref for DeleteObjectGuard<T>
 }
 
 impl<T> DerefMut for DeleteObjectGuard<T>
-	where T: GdiObject,
+where
+	T: GdiObject,
 {
 	fn deref_mut(&mut self) -> &mut Self::Target {
 		&mut self.handle
@@ -52,7 +58,8 @@ impl<T> DerefMut for DeleteObjectGuard<T>
 }
 
 impl<T> DeleteObjectGuard<T>
-	where T: GdiObject,
+where
+	T: GdiObject,
 {
 	/// Constructs the guard by taking ownership of the handle.
 	///
@@ -108,23 +115,17 @@ impl DerefMut for LogpaletteGuard {
 
 impl LogpaletteGuard {
 	#[must_use]
-	pub(in crate::gdi) fn new(
-		pal_version: u16,
-		entries: &[PALETTEENTRY],
-	) -> SysResult<Self>
-	{
+	pub(in crate::gdi) fn new(pal_version: u16, entries: &[PALETTEENTRY]) -> SysResult<Self> {
 		let sz = std::mem::size_of::<LOGPALETTE>() // size in bytes of the allocated struct
 			- std::mem::size_of::<PALETTEENTRY>()
 			+ (entries.len() * std::mem::size_of::<PALETTEENTRY>());
 		let mut new_self = Self {
-			ptr: HGLOBAL::GlobalAlloc(
-				Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
-				sz,
-			)?,
+			ptr: HGLOBAL::GlobalAlloc(Some(co::GMEM::FIXED | co::GMEM::ZEROINIT), sz)?,
 		};
 		new_self.palVersion = pal_version;
 		new_self.palNumEntries = entries.len() as _;
-		entries.iter()
+		entries
+			.iter()
 			.zip(new_self.palPalEntry_mut())
 			.for_each(|(src, dest)| *dest = *src); // copy all PALETTEENTRY into struct room
 		Ok(new_self)
@@ -135,8 +136,9 @@ impl LogpaletteGuard {
 /// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject) calls, which
 /// automatically selects the previous GDI object at the end of the scope.
 pub struct SelectObjectGuard<'a, H, G>
-	where H: gdi_Hdc,
-		G: GdiObject,
+where
+	H: gdi_Hdc,
+	G: GdiObject,
 {
 	hdc: &'a H,
 	prev_hgdi: G,
@@ -144,21 +146,25 @@ pub struct SelectObjectGuard<'a, H, G>
 }
 
 impl<'a, H, G> Drop for SelectObjectGuard<'a, H, G>
-	where H: gdi_Hdc,
-		G: GdiObject,
+where
+	H: gdi_Hdc,
+	G: GdiObject,
 {
 	fn drop(&mut self) {
 		if let Some(h) = self.hdc.as_opt() {
 			if let Some(g) = self.prev_hgdi.as_opt() {
-				unsafe { ffi::SelectObject(h.ptr(), g.ptr()); } // ignore errors
+				unsafe {
+					ffi::SelectObject(h.ptr(), g.ptr());
+				} // ignore errors
 			}
 		}
 	}
 }
 
 impl<'a, H, G> SelectObjectGuard<'a, H, G>
-	where H: gdi_Hdc,
-		G: GdiObject,
+where
+	H: gdi_Hdc,
+	G: GdiObject,
 {
 	/// Constructs the guard by taking ownership of the handle.
 	///
@@ -168,12 +174,7 @@ impl<'a, H, G> SelectObjectGuard<'a, H, G>
 	/// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject)
 	/// at the end of scope.
 	#[must_use]
-	pub const unsafe fn new(
-		hdc: &'a H,
-		prev_hgdi: G,
-		region: Option<co::REGION>,
-	) -> Self
-	{
+	pub const unsafe fn new(hdc: &'a H, prev_hgdi: G, region: Option<co::REGION>) -> Self {
 		Self { hdc, prev_hgdi, region }
 	}
 

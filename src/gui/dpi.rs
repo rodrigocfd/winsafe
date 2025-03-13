@@ -10,7 +10,9 @@ fn cache_dpi() {
 		let hdc_screen = HWND::NULL.GetDC().unwrap(); // should really never fail
 		let x = hdc_screen.GetDeviceCaps(co::GDC::LOGPIXELSX);
 		let y = hdc_screen.GetDeviceCaps(co::GDC::LOGPIXELSY);
-		unsafe { DPI = (x, y); }
+		unsafe {
+			DPI = (x, y);
+		}
 	}
 }
 

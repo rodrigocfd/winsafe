@@ -33,14 +33,13 @@ pub trait dxgi_IDXGIResource: dxgi_IDXGIDeviceSubObject {
 	#[must_use]
 	fn GetEvictionPriority(&self) -> HrResult<co::DXGI_RESOURCE_PRIORITY> {
 		let mut eviction_priority = co::DXGI_RESOURCE_PRIORITY::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIResourceVT>(self).GetEvictionPriority)(
-					self.ptr(),
-					eviction_priority.as_mut()
-				)
-			},
-		).map(|_| eviction_priority)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGIResourceVT>(self).GetEvictionPriority)(
+				self.ptr(),
+				eviction_priority.as_mut(),
+			)
+		})
+		.map(|_| eviction_priority)
 	}
 
 	/// [`IDXGIResource::GetSharedHandle`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiresource-getsharedhandle)
@@ -48,14 +47,10 @@ pub trait dxgi_IDXGIResource: dxgi_IDXGIDeviceSubObject {
 	#[must_use]
 	fn GetSharedHandle(&self) -> HrResult<*mut std::ffi::c_void> {
 		let mut handle: *mut std::ffi::c_void = std::ptr::null_mut();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIResourceVT>(self).GetSharedHandle)(
-					self.ptr(),
-					&mut handle,
-				)
-			},
-		).map(|_| handle)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGIResourceVT>(self).GetSharedHandle)(self.ptr(), &mut handle)
+		})
+		.map(|_| handle)
 	}
 
 	/// [`IDXGIResource::GetUsage`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiresource-getusage)
@@ -63,29 +58,17 @@ pub trait dxgi_IDXGIResource: dxgi_IDXGIDeviceSubObject {
 	#[must_use]
 	fn GetUsage(&self) -> HrResult<co::DXGI_USAGE> {
 		let mut usage = co::DXGI_USAGE::default();
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIResourceVT>(self).GetUsage)(
-					self.ptr(),
-					usage.as_mut(),
-				)
-			},
-		).map(|_| usage)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGIResourceVT>(self).GetUsage)(self.ptr(), usage.as_mut())
+		})
+		.map(|_| usage)
 	}
 
 	/// [`IDXGIResource::SetEvictionPriority`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiresource-setevictionpriority)
 	/// method.
-	fn SetEvictionPriority(&self,
-		eviction_priority: co::DXGI_RESOURCE_PRIORITY,
-	) -> HrResult<()>
-	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIResourceVT>(self).SetEvictionPriority)(
-					self.ptr(),
-					eviction_priority.raw(),
-				)
-			},
-		)
+	fn SetEvictionPriority(&self, eviction_priority: co::DXGI_RESOURCE_PRIORITY) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGIResourceVT>(self).SetEvictionPriority)(self.ptr(), eviction_priority.raw())
+		})
 	}
 }

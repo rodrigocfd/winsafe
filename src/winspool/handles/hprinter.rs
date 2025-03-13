@@ -32,14 +32,9 @@ pub trait winspool_Hprinter: Handle {
 	/// [`DeleteForm`](https://learn.microsoft.com/en-us/windows/win32/printdocs/deleteform)
 	/// function.
 	fn DeleteForm(&self, form_name: &str) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe {
-				ffi::DeleteFormW(
-					self.ptr(),
-					WString::from_str(form_name).as_mut_ptr(),
-				)
-			},
-		)
+		bool_to_sysresult(unsafe {
+			ffi::DeleteFormW(self.ptr(), WString::from_str(form_name).as_mut_ptr())
+		})
 	}
 
 	/// [`DeletePrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/deleteprinter)
@@ -51,45 +46,29 @@ pub trait winspool_Hprinter: Handle {
 	/// [`DeletePrinterData`](https://learn.microsoft.com/en-us/windows/win32/printdocs/deleteprinterdata)
 	/// function.
 	fn DeletePrinterData(&self, value_name: &str) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe {
-				ffi::DeletePrinterDataW(
-					self.ptr(),
-					WString::from_str(value_name).as_mut_ptr(),
-				)
-			},
-		)
+		bool_to_sysresult(unsafe {
+			ffi::DeletePrinterDataW(self.ptr(), WString::from_str(value_name).as_mut_ptr())
+		})
 	}
 
 	/// [`DeletePrinterDataEx`](https://learn.microsoft.com/en-us/windows/win32/printdocs/deleteprinterdataex)
 	/// function.
-	fn DeletePrinterDataEx(&self,
-		key_name: &str,
-		value_name: &str,
-	) -> SysResult<()>
-	{
-		bool_to_sysresult(
-			unsafe {
-				ffi::DeletePrinterDataExW(
-					self.ptr(),
-					WString::from_str(key_name).as_ptr(),
-					WString::from_str(value_name).as_ptr(),
-				)
-			},
-		)
+	fn DeletePrinterDataEx(&self, key_name: &str, value_name: &str) -> SysResult<()> {
+		bool_to_sysresult(unsafe {
+			ffi::DeletePrinterDataExW(
+				self.ptr(),
+				WString::from_str(key_name).as_ptr(),
+				WString::from_str(value_name).as_ptr(),
+			)
+		})
 	}
 
 	/// [`DeletePrinterKey`](https://learn.microsoft.com/en-us/windows/win32/printdocs/deleteprinterkey)
 	/// function.
 	fn DeletePrinterKey(&self, key_name: &str) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe {
-				ffi::DeletePrinterKeyW(
-					self.ptr(),
-					WString::from_str(key_name).as_ptr(),
-				)
-			},
-		)
+		bool_to_sysresult(unsafe {
+			ffi::DeletePrinterKeyW(self.ptr(), WString::from_str(key_name).as_ptr())
+		})
 	}
 
 	/// [`OpenPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/openprinter)
@@ -98,25 +77,21 @@ pub trait winspool_Hprinter: Handle {
 	fn OpenPrinter(
 		printer_name: Option<&str>,
 		default: Option<&PRINTER_DEFAULTS>,
-	) -> SysResult<ClosePrinterGuard>
-	{
+	) -> SysResult<ClosePrinterGuard> {
 		let mut hprinter = HPRINTER::NULL;
 		unsafe {
-			bool_to_sysresult(
-				ffi::OpenPrinterW(
-					WString::from_opt_str(printer_name).as_mut_ptr(),
-					hprinter.as_mut(),
-					default.map_or(std::ptr::null_mut(), |d| d as *const _ as _),
-				),
-			).map(|_| ClosePrinterGuard::new(hprinter))
+			bool_to_sysresult(ffi::OpenPrinterW(
+				WString::from_opt_str(printer_name).as_mut_ptr(),
+				hprinter.as_mut(),
+				default.map_or(std::ptr::null_mut(), |d| d as *const _ as _),
+			))
+			.map(|_| ClosePrinterGuard::new(hprinter))
 		}
 	}
 
 	/// [`ResetPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/resetprinter)
 	/// function.
 	fn ResetPrinter(&self, default: &PRINTER_DEFAULTS) -> SysResult<()> {
-		bool_to_sysresult(
-			unsafe { ffi::ResetPrinterW(self.ptr(), default as *const _ as _) },
-		)
+		bool_to_sysresult(unsafe { ffi::ResetPrinterW(self.ptr(), default as *const _ as _) })
 	}
 }

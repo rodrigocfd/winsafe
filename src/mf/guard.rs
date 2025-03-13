@@ -9,7 +9,9 @@ pub struct MFShutdownGuard {}
 
 impl Drop for MFShutdownGuard {
 	fn drop(&mut self) {
-		unsafe { ffi::MFShutdown(); } // ignore errors
+		unsafe {
+			ffi::MFShutdown(); // ignore errors
+		}
 	}
 }
 

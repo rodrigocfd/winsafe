@@ -29,23 +29,20 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn CreateInstance<T>(&self, iunk_outer: Option<&mut IUnknown>) -> HrResult<T>
-		where T: ole_IUnknown,
+	where
+		T: ole_IUnknown,
 	{
-		let (mut queried, mut queried_outer) = unsafe {(
-			T::null(),
-			IUnknown::null(),
-		)};
-
-		ok_to_hrresult(
-			unsafe {
-				(vt::<ITypeInfoVT>(self).CreateInstance)(
-					self.ptr(),
-					iunk_outer.as_ref()
-						.map_or(std::ptr::null_mut(), |_| queried_outer.as_mut()),
-					&T::IID as *const _ as _,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		let (mut queried, mut queried_outer) = unsafe { (T::null(), IUnknown::null()) };
+		ok_to_hrresult(unsafe {
+			(vt::<ITypeInfoVT>(self).CreateInstance)(
+				self.ptr(),
+				iunk_outer
+					.as_ref()
+					.map_or(std::ptr::null_mut(), |_| queried_outer.as_mut()),
+				&T::IID as *const _ as _,
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 }

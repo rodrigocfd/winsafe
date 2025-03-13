@@ -1937,7 +1937,7 @@ impl MsgSend for SetPadding {
 ///
 /// Return type: `Option<HWND>`.
 pub struct SetParent<'a> {
-	pub hparent: &'a HWND
+	pub hparent: &'a HWND,
 }
 
 impl<'a> MsgSend for SetParent<'a> {

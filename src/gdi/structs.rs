@@ -43,12 +43,7 @@ impl BITMAPFILEHEADER {
 	/// Serializes the struct into `&[u8]`.
 	#[must_use]
 	pub const fn serialize(&self) -> &[u8] {
-		unsafe {
-			std::slice::from_raw_parts(
-				self as *const _ as _,
-				std::mem::size_of::<Self>(),
-			)
-		}
+		unsafe { std::slice::from_raw_parts(self as *const _ as _, std::mem::size_of::<Self>()) }
 	}
 }
 
@@ -94,12 +89,7 @@ impl BITMAPINFOHEADER {
 	/// Serializes the struct into `&[u8]`.
 	#[must_use]
 	pub const fn serialize(&self) -> &[u8] {
-		unsafe {
-			std::slice::from_raw_parts(
-				self as *const _ as _,
-				std::mem::size_of::<Self>(),
-			)
-		}
+		unsafe { std::slice::from_raw_parts(self as *const _ as _, std::mem::size_of::<Self>()) }
 	}
 }
 
@@ -183,33 +173,21 @@ impl LOGPALETTE {
 	/// Returns a dynamically allocated
 	/// [`LogpaletteGuard`](crate::guard::LogpaletteGuard).
 	#[must_use]
-	pub fn new(
-		palVersion: u16,
-		entries: &[PALETTEENTRY],
-	) -> SysResult<LogpaletteGuard>
-	{
+	pub fn new(palVersion: u16, entries: &[PALETTEENTRY]) -> SysResult<LogpaletteGuard> {
 		LogpaletteGuard::new(palVersion, entries)
 	}
 
 	/// Returns a constant slice over the `palPalEntry` entries.
 	#[must_use]
 	pub const fn palPalEntry(&self) -> &[PALETTEENTRY] {
-		unsafe {
-			std::slice::from_raw_parts(
-				self.palPalEntry.as_ptr(),
-				self.palNumEntries as _,
-			)
-		}
+		unsafe { std::slice::from_raw_parts(self.palPalEntry.as_ptr(), self.palNumEntries as _) }
 	}
 
 	/// Returns a mutable slice over the `palPalEntry` entries.
 	#[must_use]
 	pub fn palPalEntry_mut(&mut self) -> &mut [PALETTEENTRY] {
 		unsafe {
-			std::slice::from_raw_parts_mut(
-				self.palPalEntry.as_mut_ptr(),
-				self.palNumEntries as _,
-			)
+			std::slice::from_raw_parts_mut(self.palPalEntry.as_mut_ptr(), self.palNumEntries as _)
 		}
 	}
 }
@@ -252,8 +230,7 @@ impl Default for NONCLIENTMETRICS {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
 		obj.cbSize = std::mem::size_of::<Self>() as _;
 
-		let is_vista = IsWindowsVistaOrGreater()
-			.unwrap_or_else(|err| panic!("{}", err)); // should never happen
+		let is_vista = IsWindowsVistaOrGreater().unwrap_or_else(|err| panic!("{}", err)); // should never happen
 
 		if !is_vista {
 			obj.cbSize -= std::mem::size_of::<i32>() as u32

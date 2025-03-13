@@ -29,18 +29,18 @@ pub trait dxgi_IDXGIObject: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetParent<T>(&self) -> HrResult<T>
-		where T: ole_IUnknown,
+	where
+		T: ole_IUnknown,
 	{
 		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIObjectVT>(self).GetParent)(
-					self.ptr(),
-					&T::IID as *const _ as _,
-					queried.as_mut(),
-				)
-			},
-		).map(|_| queried)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGIObjectVT>(self).GetParent)(
+				self.ptr(),
+				&T::IID as *const _ as _,
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 
 	/// [`IDXGIObject::SetPrivateData`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiobject-setprivatedata)
@@ -48,33 +48,31 @@ pub trait dxgi_IDXGIObject: ole_IUnknown {
 	///
 	/// Note: a copy of the data is made.
 	fn SetPrivateData<T>(&self, name: &GUID, data: &T) -> HrResult<()>
-		where T: Sized,
+	where
+		T: Sized,
 	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIObjectVT>(self).SetPrivateData)(
-					self.ptr(),
-					name as *const _ as _,
-					std::mem::size_of::<T>() as _,
-					data as *const _ as _,
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGIObjectVT>(self).SetPrivateData)(
+				self.ptr(),
+				name as *const _ as _,
+				std::mem::size_of::<T>() as _,
+				data as *const _ as _,
+			)
+		})
 	}
 
 	/// [`IDXGIObject::SetPrivateDataInterface`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiobject-setprivatedatainterface)
 	/// method.
 	fn SetPrivateDataInterface<T>(&self, obj: &T) -> HrResult<()>
-		where T: ole_IUnknown,
+	where
+		T: ole_IUnknown,
 	{
-		ok_to_hrresult(
-			unsafe {
-				(vt::<IDXGIObjectVT>(self).SetPrivateDataInterface)(
-					self.ptr(),
-					&T::IID as *const _ as _,
-					obj.ptr(),
-				)
-			},
-		)
+		ok_to_hrresult(unsafe {
+			(vt::<IDXGIObjectVT>(self).SetPrivateDataInterface)(
+				self.ptr(),
+				&T::IID as *const _ as _,
+				obj.ptr(),
+			)
+		})
 	}
 }

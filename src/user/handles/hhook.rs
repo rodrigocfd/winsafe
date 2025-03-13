@@ -24,12 +24,7 @@ impl user_Hhook for HHOOK {}
 pub trait user_Hhook: Handle {
 	/// [`CallNextHookEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-callnexthookex)
 	/// function.
-	fn CallNextHookEx(&self,
-		code: co::WH,
-		wparam: usize,
-		lparam: isize,
-	) -> isize
-	{
+	fn CallNextHookEx(&self, code: co::WH, wparam: usize, lparam: isize) -> isize {
 		unsafe { ffi::CallNextHookEx(self.ptr(), code.raw(), wparam, lparam) }
 	}
 
@@ -40,18 +35,15 @@ pub trait user_Hhook: Handle {
 		proc: HOOKPROC,
 		module: Option<&HINSTANCE>,
 		thread_id: Option<u32>,
-	) -> SysResult<HHOOK>
-	{
-		ptr_to_sysresult_handle(
-			unsafe {
-				ffi::SetWindowsHookExW(
-					hook_id.raw(),
-					proc as _,
-					module.map_or(std::ptr::null_mut(), |h| h.ptr()),
-					thread_id.unwrap_or_default(),
-				)
-			},
-		)
+	) -> SysResult<HHOOK> {
+		ptr_to_sysresult_handle(unsafe {
+			ffi::SetWindowsHookExW(
+				hook_id.raw(),
+				proc as _,
+				module.map_or(std::ptr::null_mut(), |h| h.ptr()),
+				thread_id.unwrap_or_default(),
+			)
+		})
 	}
 
 	/// [`UnhookWindowsHookEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unhookwindowshookex)
@@ -61,9 +53,7 @@ pub trait user_Hhook: Handle {
 	/// operations will fail with
 	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
 	fn UnhookWindowsHookEx(&mut self) -> SysResult<()> {
-		let ret = bool_to_sysresult(
-			unsafe { ffi::UnhookWindowsHookEx(self.ptr()) },
-		);
+		let ret = bool_to_sysresult(unsafe { ffi::UnhookWindowsHookEx(self.ptr()) });
 		*self = Self::INVALID;
 		ret
 	}

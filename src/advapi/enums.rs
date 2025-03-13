@@ -77,33 +77,27 @@ impl RegistryValue {
 	/// Whilst a few validations are made, assumes the binary data block has the
 	/// correct content, according to the informed [`co::REG`](crate::co::REG).
 	#[must_use]
-	pub unsafe fn from_raw(
-		buf: Vec<u8>,
-		reg_type: co::REG,
-	) -> SysResult<RegistryValue>
-	{
+	pub unsafe fn from_raw(buf: Vec<u8>, reg_type: co::REG) -> SysResult<RegistryValue> {
 		match reg_type {
 			co::REG::BINARY => Ok(RegistryValue::Binary(buf)),
 			co::REG::DWORD => {
-				if buf.len() != std::mem::size_of::<u32>() { // validate size
-					Err(co::ERROR::INVALID_DATA)
+				if buf.len() != std::mem::size_of::<u32>() {
+					Err(co::ERROR::INVALID_DATA) // validate buf size
 				} else {
-					Ok(RegistryValue::Dword(
-						u32::from_ne_bytes(
-							*std::mem::transmute::<_, *const [u8; 4]>(buf.as_ptr()),
-						)
-					))
+					Ok(RegistryValue::Dword(u32::from_ne_bytes(*std::mem::transmute::<
+						_,
+						*const [u8; 4],
+					>(buf.as_ptr()))))
 				}
 			},
 			co::REG::QWORD => {
-				if buf.len() != std::mem::size_of::<u64>() { // validate size
-					Err(co::ERROR::INVALID_DATA)
+				if buf.len() != std::mem::size_of::<u64>() {
+					Err(co::ERROR::INVALID_DATA) // validate buf size
 				} else {
-					Ok(RegistryValue::Qword(
-						u64::from_ne_bytes(
-							*std::mem::transmute::<_, *const [u8; 8]>(buf.as_ptr()),
-						)
-					))
+					Ok(RegistryValue::Qword(u64::from_ne_bytes(*std::mem::transmute::<
+						_,
+						*const [u8; 8],
+					>(buf.as_ptr()))))
 				}
 			},
 			co::REG::SZ => {
@@ -116,9 +110,7 @@ impl RegistryValue {
 			},
 			co::REG::MULTI_SZ => {
 				let (_, vec16, _) = buf.align_to::<u16>();
-				Ok(RegistryValue::MultiSz(
-					parse_multi_z_str(vec16.as_ptr(), Some(vec16.len())),
-				))
+				Ok(RegistryValue::MultiSz(parse_multi_z_str(vec16.as_ptr(), Some(vec16.len()))))
 			},
 			co::REG::NONE => Ok(RegistryValue::None),
 			_ => Err(co::ERROR::CALL_NOT_IMPLEMENTED), // other types not implemented yet
@@ -127,10 +119,7 @@ impl RegistryValue {
 
 	/// Returns a pointer to the raw data, along with the raw data length.
 	#[must_use]
-	pub fn as_ptr_with_len(&self,
-		str_buf: &mut WString,
-	) -> (*const std::ffi::c_void, u32)
-	{
+	pub fn as_ptr_with_len(&self, str_buf: &mut WString) -> (*const std::ffi::c_void, u32) {
 		match self {
 			Self::Binary(b) => (b.as_ptr() as _, b.len() as _),
 			Self::Dword(n) => (n as *const _ as _, std::mem::size_of::<u32>() as _),
@@ -213,8 +202,7 @@ impl<'a> SvcCtl<'a> {
 		control: u32,
 		event_type: u32,
 		event_data: *mut std::ffi::c_void,
-	) -> Self
-	{
+	) -> Self {
 		match co::SERVICE_CONTROL::from_raw(control) {
 			co::SERVICE_CONTROL::CONTINUE => Self::Continue,
 			co::SERVICE_CONTROL::INTERROGATE => Self::Interrogate,
@@ -232,19 +220,17 @@ impl<'a> SvcCtl<'a> {
 				co::DBT::from_raw(event_type as _),
 				SvcCtlDeviceEvent::from_raw(&*(event_data as *const _)),
 			),
-			co::SERVICE_CONTROL::HARDWAREPROFILECHANGE => Self::HardwareProfileChange(
-				co::DBT::from_raw(event_type as _),
-			),
-			co::SERVICE_CONTROL::POWEREVENT => Self::PowerEvent(
-				SvcCtlPowerEvent::from_raw(co::PBT::from_raw(event_type), event_data),
-			),
-			co::SERVICE_CONTROL::SESSIONCHANGE => Self::SessionChange(
-				co::WTS::from_raw(event_type as _),
-				&*(event_data as *const _),
-			),
-			co::SERVICE_CONTROL::TIMECHANGE => Self::TimeChange(
-				&*(event_data as *const _),
-			),
+			co::SERVICE_CONTROL::HARDWAREPROFILECHANGE => {
+				Self::HardwareProfileChange(co::DBT::from_raw(event_type as _))
+			},
+			co::SERVICE_CONTROL::POWEREVENT => Self::PowerEvent(SvcCtlPowerEvent::from_raw(
+				co::PBT::from_raw(event_type),
+				event_data,
+			)),
+			co::SERVICE_CONTROL::SESSIONCHANGE => {
+				Self::SessionChange(co::WTS::from_raw(event_type as _), &*(event_data as *const _))
+			},
+			co::SERVICE_CONTROL::TIMECHANGE => Self::TimeChange(&*(event_data as *const _)),
 			co::SERVICE_CONTROL::TRIGGEREVENT => Self::TriggerEvent,
 			co::SERVICE_CONTROL::USERMODEREBOOT => Self::UserModeReboot,
 
@@ -310,10 +296,7 @@ impl<'a> SvcCtlPowerEvent<'a> {
 	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::advapi_Hservicestatus::RegisterServiceCtrlHandlerEx)
 	/// callback, make sure all parameters are correct.
 	#[must_use]
-	pub unsafe fn from_raw(
-		event: co::PBT,
-		event_data: *mut std::ffi::c_void,
-	) -> Self {
+	pub unsafe fn from_raw(event: co::PBT, event_data: *mut std::ffi::c_void) -> Self {
 		match event {
 			co::PBT::APMPOWERSTATUSCHANGE => Self::StatusChange,
 			co::PBT::APMRESUMEAUTOMATIC => Self::ResumeAutomatic,
