@@ -222,18 +222,6 @@ pub unsafe fn DispatchMessage(msg: &MSG) -> isize {
 	ffi::DispatchMessageW(msg as *const _ as _)
 }
 
-/// [`EmptyClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-emptyclipboard)
-/// function.
-///
-/// # Related functions
-///
-/// * [`GetClipboardData`](crate::GetClipboardData)
-/// * [`GetClipboardSequenceNumber`](crate::GetClipboardSequenceNumber)
-/// * [`SetClipboardData`](crate::SetClipboardData)
-pub fn EmptyClipboard() -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::EmptyClipboard() })
-}
-
 /// [`EndMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endmenu)
 /// function.
 pub fn EndMenu() -> SysResult<()> {
@@ -475,37 +463,6 @@ pub fn GetCaretBlinkTime() -> SysResult<u32> {
 pub fn GetCaretPos() -> SysResult<POINT> {
 	let mut pt = POINT::default();
 	bool_to_sysresult(unsafe { ffi::GetCaretPos(&mut pt as *mut _ as _) }).map(|_| pt)
-}
-
-/// [`GetClipboardData`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboarddata)
-/// function.
-///
-/// # Safety
-///
-/// The returned pointer must be correctly cast to the memory block specified by
-/// `format`.
-///
-/// # Related functions
-///
-/// * [`EmptyClipboard`](crate::EmptyClipboard)
-/// * [`GetClipboardSequenceNumber`](crate::GetClipboardSequenceNumber)
-/// * [`SetClipboardData`](crate::SetClipboardData)
-#[must_use]
-pub unsafe fn GetClipboardData(format: co::CF) -> SysResult<*mut u8> {
-	ptr_to_sysresult(ffi::GetClipboardData(format.raw() as _)).map(|hmem| hmem as *mut _ as _)
-}
-
-/// [`GetClipboardSequenceNumber`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipboardsequencenumber)
-/// function.
-///
-/// # Related functions
-///
-/// * [`EmptyClipboard`](crate::EmptyClipboard)
-/// * [`GetClipboardData`](crate::GetClipboardData)
-/// * [`SetClipboardData`](crate::SetClipboardData)
-#[must_use]
-pub fn GetClipboardSequenceNumber() -> u32 {
-	unsafe { ffi::GetClipboardSequenceNumber() }
 }
 
 /// [`GetClipCursor`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getclipcursor)
@@ -911,24 +868,6 @@ pub fn SetCaretBlinkTime(milliseconds: u32) -> SysResult<()> {
 /// function.
 pub fn SetCaretPos(x: i32, y: i32) -> SysResult<()> {
 	bool_to_sysresult(unsafe { ffi::SetCaretPos(x, y) })
-}
-
-/// [`SetClipboardData`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setclipboarddata)
-/// function.
-///
-/// # Safety
-///
-/// The `hmem` memory block must be correctly allocated and contain the type
-/// specified by `format`.
-///
-/// # Related functions
-///
-/// * [`EmptyClipboard`](crate::EmptyClipboard)
-/// * [`GetClipboardData`](crate::GetClipboardData)
-/// * [`GetClipboardSequenceNumber`](crate::GetClipboardSequenceNumber)
-pub unsafe fn SetClipboardData(format: co::CF, hmem: *mut u8) -> SysResult<*mut u8> {
-	ptr_to_sysresult(ffi::SetClipboardData(format.raw() as _, hmem as _))
-		.map(|hmem| hmem as *mut _ as _)
 }
 
 /// [`SetCursorPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setcursorpos)

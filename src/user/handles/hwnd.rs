@@ -1,7 +1,5 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use std::marker::PhantomData;
-
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
@@ -1162,28 +1160,30 @@ pub trait user_Hwnd: Handle {
 	/// # Examples
 	///
 	/// ```no_run
-	/// use winsafe::{self as w, prelude::*};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
 	/// let hwnd: w::HWND; // initialized somewhere
 	/// # let hwnd = w::HWND::NULL;
 	///
-	/// let _hclip_guard = hwnd.OpenClipboard()?; // keep guard alive
+	/// let hclip = hwnd.OpenClipboard()?;
+	/// let data = hclip.GetClipboardData(co::CF::TEXT)?;
 	/// # w::SysResult::Ok(())
 	/// ```
 	///
 	/// You can also open the clipboard without an `HWND` owner:
 	///
 	/// ```no_run
-	/// use winsafe::{self as w, prelude::*};
+	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let _hclip_guard = w::HWND::NULL.OpenClipboard()?; // keep guard alive
+	/// let hclip = w::HWND::NULL.OpenClipboard()?;
+	/// let data = hclip.GetClipboardData(co::CF::TEXT)?;
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn OpenClipboard(&self) -> SysResult<CloseClipboardGuard<'_>> {
+	fn OpenClipboard(&self) -> SysResult<CloseClipboardGuard<'_, Self>> {
 		unsafe {
 			bool_to_sysresult(ffi::OpenClipboard(self.ptr()))
-				.map(|_| CloseClipboardGuard::new(PhantomData))
+				.map(|_| CloseClipboardGuard::new(self, HCLIPBOARD::INVALID))
 		}
 	}
 

@@ -1,4 +1,3 @@
-use std::marker::PhantomData;
 use std::ops::{Deref, DerefMut};
 
 use crate::decl::*;
@@ -8,11 +7,18 @@ use crate::user::ffi;
 /// RAII implementation for clipboard which automatically calls
 /// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
 /// when the object goes out of scope.
-pub struct CloseClipboardGuard<'a> {
-	_hwnd: PhantomData<&'a ()>,
+pub struct CloseClipboardGuard<'a, H>
+where
+	H: user_Hwnd,
+{
+	_hwnd: &'a H,
+	hclip: HCLIPBOARD,
 }
 
-impl<'a> Drop for CloseClipboardGuard<'a> {
+impl<'a, H> Drop for CloseClipboardGuard<'a, H>
+where
+	H: user_Hwnd,
+{
 	fn drop(&mut self) {
 		unsafe {
 			ffi::CloseClipboard(); // ignore errors
@@ -20,7 +26,29 @@ impl<'a> Drop for CloseClipboardGuard<'a> {
 	}
 }
 
-impl<'a> CloseClipboardGuard<'a> {
+impl<'a, H> Deref for CloseClipboardGuard<'a, H>
+where
+	H: user_Hwnd,
+{
+	type Target = HCLIPBOARD;
+
+	fn deref(&self) -> &Self::Target {
+		&self.hclip
+	}
+}
+impl<'a, H> DerefMut for CloseClipboardGuard<'a, H>
+where
+	H: user_Hwnd,
+{
+	fn deref_mut(&mut self) -> &mut Self::Target {
+		&mut self.hclip
+	}
+}
+
+impl<'a, H> CloseClipboardGuard<'a, H>
+where
+	H: user_Hwnd,
+{
 	/// Constructs the guard by taking ownership of the handle.
 	///
 	/// # Safety
@@ -29,8 +57,8 @@ impl<'a> CloseClipboardGuard<'a> {
 	/// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
 	/// at the end of scope.
 	#[must_use]
-	pub const unsafe fn new(hwnd: PhantomData<&'a ()>) -> Self {
-		Self { _hwnd: hwnd }
+	pub const unsafe fn new(hwnd: &'a H, hclip: HCLIPBOARD) -> Self {
+		Self { _hwnd: hwnd, hclip }
 	}
 }
 

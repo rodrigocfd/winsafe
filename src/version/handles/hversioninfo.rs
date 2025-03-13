@@ -35,7 +35,7 @@ pub trait version_Hversioninfo: Handle {
 	fn GetFileVersionInfo(file_name: &str) -> SysResult<VersionInfoGuard> {
 		let block_sz = Self::GetFileVersionInfoSize(file_name)?;
 		let mut hglobal =
-			HGLOBAL::GlobalAlloc(Some(co::GMEM::FIXED | co::GMEM::ZEROINIT), block_sz as _)?;
+			HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, block_sz as _)?;
 		let hglobal_ptr = hglobal.leak();
 
 		bool_to_sysresult(unsafe {

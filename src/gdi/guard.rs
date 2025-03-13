@@ -120,7 +120,7 @@ impl LogpaletteGuard {
 			- std::mem::size_of::<PALETTEENTRY>()
 			+ (entries.len() * std::mem::size_of::<PALETTEENTRY>());
 		let mut new_self = Self {
-			ptr: HGLOBAL::GlobalAlloc(Some(co::GMEM::FIXED | co::GMEM::ZEROINIT), sz)?,
+			ptr: HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, sz)?,
 		};
 		new_self.palVersion = pal_version;
 		new_self.palNumEntries = entries.len() as _;

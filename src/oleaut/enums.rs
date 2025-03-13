@@ -273,6 +273,7 @@ impl Variant {
 		})
 	}
 
+	#[allow(unused)]
 	#[must_use]
 	pub(crate) fn to_raw(&self) -> HrResult<VARIANT> {
 		let mut v = VARIANT::default();

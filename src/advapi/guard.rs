@@ -245,7 +245,7 @@ impl<'a> TokenGroupsGuard<'a> {
 			- std::mem::size_of::<SID_AND_ATTRIBUTES>()
 			+ (groups.len() * std::mem::size_of::<SID_AND_ATTRIBUTES>());
 		let mut new_self = Self {
-			ptr: HGLOBAL::GlobalAlloc(Some(co::GMEM::FIXED | co::GMEM::ZEROINIT), sz)?,
+			ptr: HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, sz)?,
 			_groups: PhantomData,
 		};
 		new_self.GroupCount = groups.len() as _;
@@ -284,7 +284,7 @@ impl TokenPrivilegesGuard {
 			- std::mem::size_of::<LUID_AND_ATTRIBUTES>()
 			+ (privileges.len() * std::mem::size_of::<LUID_AND_ATTRIBUTES>());
 		let mut new_self = Self {
-			ptr: HGLOBAL::GlobalAlloc(Some(co::GMEM::FIXED | co::GMEM::ZEROINIT), sz)?,
+			ptr: HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, sz)?,
 		};
 		new_self.PrivilegeCount = privileges.len() as _;
 		privileges

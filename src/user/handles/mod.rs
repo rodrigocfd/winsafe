@@ -1,4 +1,5 @@
 mod haccel;
+mod hclipboard;
 mod hcursor;
 mod hdc;
 mod hdesk;
@@ -13,6 +14,7 @@ mod hwnd;
 
 pub mod decl {
 	pub use super::haccel::HACCEL;
+	pub use super::hclipboard::HCLIPBOARD;
 	pub use super::hcursor::HCURSOR;
 	pub use super::hdc::HDC;
 	pub use super::hdesk::HDESK;
@@ -47,6 +49,7 @@ pub mod decl {
 
 pub mod traits {
 	pub use super::haccel::user_Haccel;
+	pub use super::hclipboard::user_Hclipboard;
 	pub use super::hcursor::user_Hcursor;
 	pub use super::hdc::user_Hdc;
 	pub use super::hdesk::user_Hdesk;

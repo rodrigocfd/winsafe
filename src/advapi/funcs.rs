@@ -178,7 +178,7 @@ pub fn ConvertStringSidToSid(str_sid: &str) -> SysResult<LocalFreeSidGuard> {
 #[must_use]
 pub fn CopySid(src: &SID) -> SysResult<SidGuard> {
 	let sid_sz = GetLengthSid(&src);
-	let sid_buf = HGLOBAL::GlobalAlloc(Some(co::GMEM::FIXED | co::GMEM::ZEROINIT), sid_sz as _)?;
+	let sid_buf = HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, sid_sz as _)?;
 
 	unsafe {
 		bool_to_sysresult(ffi::CopySid(sid_sz, sid_buf.ptr(), src as *const _ as _))
@@ -237,8 +237,7 @@ pub fn CreateWellKnownSid(
 		return Err(get_size_err);
 	}
 
-	let sid_buf = HGLOBAL::GlobalAlloc(Some(co::GMEM::FIXED | co::GMEM::ZEROINIT), sid_sz as _)?;
-
+	let sid_buf = HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, sid_sz as _)?;
 	unsafe {
 		bool_to_sysresult(ffi::CreateWellKnownSid(
 			well_known_sid.raw(),
@@ -474,9 +473,7 @@ pub fn GetWindowsAccountDomainSid(sid: &SID) -> SysResult<SidGuard> {
 		return Err(get_size_err);
 	}
 
-	let ad_sid_buf =
-		HGLOBAL::GlobalAlloc(Some(co::GMEM::FIXED | co::GMEM::ZEROINIT), ad_sid_sz as _)?;
-
+	let ad_sid_buf = HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, ad_sid_sz as _)?;
 	unsafe {
 		bool_to_sysresult(ffi::GetWindowsAccountDomainSid(
 			sid as *const _ as _,
@@ -661,7 +658,7 @@ pub fn LookupAccountName(
 		return Err(get_size_err);
 	}
 
-	let sid_buf = HGLOBAL::GlobalAlloc(Some(co::GMEM::FIXED | co::GMEM::ZEROINIT), sid_sz as _)?;
+	let sid_buf = HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, sid_sz as _)?;
 	let mut domain_buf = WString::new_alloc_buf(domain_sz as _);
 
 	unsafe {

@@ -484,7 +484,7 @@ impl Buffer {
 			Self::Heap(
 				num_chars * std::mem::size_of::<u16>(),
 				HGLOBAL::GlobalAlloc(
-					Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+					co::GMEM::FIXED | co::GMEM::ZEROINIT,
 					num_chars * std::mem::size_of::<u16>(),
 				)
 				.unwrap(), // assume no allocation errors

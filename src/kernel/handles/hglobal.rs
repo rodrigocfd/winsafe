@@ -29,9 +29,9 @@ pub trait kernel_Hglobal: Handle {
 	/// [`GlobalAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc)
 	/// function.
 	#[must_use]
-	fn GlobalAlloc(flags: Option<co::GMEM>, num_bytes: usize) -> SysResult<GlobalFreeGuard> {
+	fn GlobalAlloc(flags: co::GMEM, num_bytes: usize) -> SysResult<GlobalFreeGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::GlobalAlloc(flags.unwrap_or_default().raw(), num_bytes))
+			ptr_to_sysresult_handle(ffi::GlobalAlloc(flags.raw(), num_bytes))
 				.map(|h| GlobalFreeGuard::new(h))
 		}
 	}
@@ -58,7 +58,7 @@ pub trait kernel_Hglobal: Handle {
 	/// use winsafe::{self as w, prelude::*, co};
 	///
 	/// let hglobal = w::HGLOBAL::GlobalAlloc(
-	///     Some(co::GMEM::FIXED | co::GMEM::ZEROINIT),
+	///     co::GMEM::FIXED | co::GMEM::ZEROINIT,
 	///     120,
 	/// )?;
 	///
@@ -85,13 +85,11 @@ pub trait kernel_Hglobal: Handle {
 	///
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
-	fn GlobalReAlloc(&mut self, num_bytes: usize, flags: Option<co::GMEM>) -> SysResult<()> {
-		ptr_to_sysresult_handle(unsafe {
-			ffi::GlobalReAlloc(self.ptr(), num_bytes, flags.unwrap_or_default().raw())
-		})
-		.map(|h| {
-			*self = h;
-		})
+	fn GlobalReAlloc(&mut self, num_bytes: usize, flags: co::GMEM) -> SysResult<()> {
+		ptr_to_sysresult_handle(unsafe { ffi::GlobalReAlloc(self.ptr(), num_bytes, flags.raw()) })
+			.map(|h| {
+				*self = h;
+			})
 	}
 
 	/// [`GlobalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize)
