@@ -63,122 +63,101 @@
 <a href=#63 id=63 data-nosnippet>63</a>	/// # w::HrResult::Ok(())
 <a href=#64 id=64 data-nosnippet>64</a>	/// ```
 <a href=#65 id=65 data-nosnippet>65</a>	</span><span class="attr">#[must_use]
-<a href=#66 id=66 data-nosnippet>66</a>	</span><span class="kw">fn </span>BindToHandler&lt;T&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
-<a href=#67 id=67 data-nosnippet>67</a>		bind_ctx: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IBindCtx&gt;,
-<a href=#68 id=68 data-nosnippet>68</a>		bhid: <span class="kw-2">&amp;</span>co::BHID,
-<a href=#69 id=69 data-nosnippet>69</a>	) -&gt; HrResult&lt;T&gt;
-<a href=#70 id=70 data-nosnippet>70</a>		<span class="kw">where </span>T: ole_IUnknown,
-<a href=#71 id=71 data-nosnippet>71</a>	{
-<a href=#72 id=72 data-nosnippet>72</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ T::null() };
-<a href=#73 id=73 data-nosnippet>73</a>		ok_to_hrresult(
-<a href=#74 id=74 data-nosnippet>74</a>			<span class="kw">unsafe </span>{
-<a href=#75 id=75 data-nosnippet>75</a>				(vt::&lt;IShellItemVT&gt;(<span class="self">self</span>).BindToHandler)(
-<a href=#76 id=76 data-nosnippet>76</a>					<span class="self">self</span>.ptr(),
-<a href=#77 id=77 data-nosnippet>77</a>					bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr() <span class="kw">as _</span>),
-<a href=#78 id=78 data-nosnippet>78</a>					bhid <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-<a href=#79 id=79 data-nosnippet>79</a>					<span class="kw-2">&amp;</span>T::IID <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-<a href=#80 id=80 data-nosnippet>80</a>					queried.as_mut(),
-<a href=#81 id=81 data-nosnippet>81</a>				)
-<a href=#82 id=82 data-nosnippet>82</a>			},
-<a href=#83 id=83 data-nosnippet>83</a>		).map(|<span class="kw">_</span>| queried)
-<a href=#84 id=84 data-nosnippet>84</a>	}
-<a href=#85 id=85 data-nosnippet>85</a>
-<a href=#86 id=86 data-nosnippet>86</a>	<span class="doccomment">/// [`IShellItem::Compare`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-compare)
-<a href=#87 id=87 data-nosnippet>87</a>	/// method.
-<a href=#88 id=88 data-nosnippet>88</a>	</span><span class="attr">#[must_use]
-<a href=#89 id=89 data-nosnippet>89</a>	</span><span class="kw">fn </span>Compare(<span class="kw-2">&amp;</span><span class="self">self</span>,
-<a href=#90 id=90 data-nosnippet>90</a>		other: <span class="kw-2">&amp;</span><span class="kw">impl </span>shell_IShellItem,
-<a href=#91 id=91 data-nosnippet>91</a>		hint: co::SICHINTF,
-<a href=#92 id=92 data-nosnippet>92</a>	) -&gt; HrResult&lt;i32&gt;
-<a href=#93 id=93 data-nosnippet>93</a>	{
-<a href=#94 id=94 data-nosnippet>94</a>		<span class="kw">let </span><span class="kw-2">mut </span>order = i32::default();
-<a href=#95 id=95 data-nosnippet>95</a>		ok_to_hrresult(
-<a href=#96 id=96 data-nosnippet>96</a>			<span class="kw">unsafe </span>{
-<a href=#97 id=97 data-nosnippet>97</a>				(vt::&lt;IShellItemVT&gt;(<span class="self">self</span>).Compare)(
-<a href=#98 id=98 data-nosnippet>98</a>					<span class="self">self</span>.ptr(),
-<a href=#99 id=99 data-nosnippet>99</a>					other.ptr(),
-<a href=#100 id=100 data-nosnippet>100</a>					hint.raw(),
-<a href=#101 id=101 data-nosnippet>101</a>					<span class="kw-2">&amp;mut </span>order,
-<a href=#102 id=102 data-nosnippet>102</a>				)
-<a href=#103 id=103 data-nosnippet>103</a>			},
-<a href=#104 id=104 data-nosnippet>104</a>		).map(|<span class="kw">_</span>| order)
-<a href=#105 id=105 data-nosnippet>105</a>	}
-<a href=#106 id=106 data-nosnippet>106</a>
-<a href=#107 id=107 data-nosnippet>107</a>	<span class="doccomment">/// [`IShellItem::GetAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getattributes)
-<a href=#108 id=108 data-nosnippet>108</a>	/// method.
-<a href=#109 id=109 data-nosnippet>109</a>	</span><span class="attr">#[must_use]
-<a href=#110 id=110 data-nosnippet>110</a>	</span><span class="kw">fn </span>GetAttributes(<span class="kw-2">&amp;</span><span class="self">self</span>, sfgao_mask: co::SFGAO) -&gt; HrResult&lt;co::SFGAO&gt; {
-<a href=#111 id=111 data-nosnippet>111</a>		<span class="kw">let </span><span class="kw-2">mut </span>attrs = u32::default();
-<a href=#112 id=112 data-nosnippet>112</a>		<span class="kw">match unsafe </span>{
-<a href=#113 id=113 data-nosnippet>113</a>			co::HRESULT::from_raw(
-<a href=#114 id=114 data-nosnippet>114</a>				(vt::&lt;IShellItemVT&gt;(<span class="self">self</span>).GetAttributes)(
-<a href=#115 id=115 data-nosnippet>115</a>					<span class="self">self</span>.ptr(),
-<a href=#116 id=116 data-nosnippet>116</a>					sfgao_mask.raw(),
-<a href=#117 id=117 data-nosnippet>117</a>					<span class="kw-2">&amp;mut </span>attrs,
-<a href=#118 id=118 data-nosnippet>118</a>				),
-<a href=#119 id=119 data-nosnippet>119</a>			)
-<a href=#120 id=120 data-nosnippet>120</a>		} {
-<a href=#121 id=121 data-nosnippet>121</a>			co::HRESULT::S_OK
-<a href=#122 id=122 data-nosnippet>122</a>			| co::HRESULT::S_FALSE =&gt; <span class="prelude-val">Ok</span>(<span class="kw">unsafe </span>{ co::SFGAO::from_raw(attrs) }),
-<a href=#123 id=123 data-nosnippet>123</a>			hr =&gt; <span class="prelude-val">Err</span>(hr),
-<a href=#124 id=124 data-nosnippet>124</a>		}
-<a href=#125 id=125 data-nosnippet>125</a>	}
-<a href=#126 id=126 data-nosnippet>126</a>
-<a href=#127 id=127 data-nosnippet>127</a>	<span class="doccomment">/// [`IShellItem::GetDisplayName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getdisplayname)
-<a href=#128 id=128 data-nosnippet>128</a>	/// method.
-<a href=#129 id=129 data-nosnippet>129</a>	///
-<a href=#130 id=130 data-nosnippet>130</a>	/// # Examples
-<a href=#131 id=131 data-nosnippet>131</a>	///
-<a href=#132 id=132 data-nosnippet>132</a>	/// ```no_run
-<a href=#133 id=133 data-nosnippet>133</a>	/// use winsafe::{self as w, prelude::*, co};
-<a href=#134 id=134 data-nosnippet>134</a>	///
-<a href=#135 id=135 data-nosnippet>135</a>	/// let shi = w::SHCreateItemFromParsingName::&lt;w::IShellItem&gt;(
-<a href=#136 id=136 data-nosnippet>136</a>	///     "C:\\Temp\\foo.txt",
-<a href=#137 id=137 data-nosnippet>137</a>	///     None::&lt;&amp;w::IBindCtx&gt;,
-<a href=#138 id=138 data-nosnippet>138</a>	/// )?;
-<a href=#139 id=139 data-nosnippet>139</a>	///
-<a href=#140 id=140 data-nosnippet>140</a>	/// let full_path = shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;
-<a href=#141 id=141 data-nosnippet>141</a>	///
-<a href=#142 id=142 data-nosnippet>142</a>	/// println!("{}", full_path);
-<a href=#143 id=143 data-nosnippet>143</a>	/// # w::HrResult::Ok(())
-<a href=#144 id=144 data-nosnippet>144</a>	/// ```
-<a href=#145 id=145 data-nosnippet>145</a>	</span><span class="attr">#[must_use]
-<a href=#146 id=146 data-nosnippet>146</a>	</span><span class="kw">fn </span>GetDisplayName(<span class="kw-2">&amp;</span><span class="self">self</span>, sigdn_name: co::SIGDN) -&gt; HrResult&lt;String&gt; {
-<a href=#147 id=147 data-nosnippet>147</a>		<span class="kw">let </span><span class="kw-2">mut </span>pstr = std::ptr::null_mut::&lt;u16&gt;();
-<a href=#148 id=148 data-nosnippet>148</a>		ok_to_hrresult(
-<a href=#149 id=149 data-nosnippet>149</a>			<span class="kw">unsafe </span>{
-<a href=#150 id=150 data-nosnippet>150</a>				(vt::&lt;IShellItemVT&gt;(<span class="self">self</span>).GetDisplayName)(
-<a href=#151 id=151 data-nosnippet>151</a>					<span class="self">self</span>.ptr(),
-<a href=#152 id=152 data-nosnippet>152</a>					sigdn_name.raw(),
-<a href=#153 id=153 data-nosnippet>153</a>					<span class="kw-2">&amp;mut </span>pstr,
-<a href=#154 id=154 data-nosnippet>154</a>				)
-<a href=#155 id=155 data-nosnippet>155</a>			},
-<a href=#156 id=156 data-nosnippet>156</a>		).map(|<span class="kw">_</span>| {
-<a href=#157 id=157 data-nosnippet>157</a>			<span class="kw">let </span>name = <span class="kw">unsafe </span>{ WString::from_wchars_nullt(pstr) };
-<a href=#158 id=158 data-nosnippet>158</a>			<span class="kw">let _ </span>= <span class="kw">unsafe </span>{ CoTaskMemFreeGuard::new(pstr <span class="kw">as _</span>, <span class="number">0</span>) };
-<a href=#159 id=159 data-nosnippet>159</a>			name.to_string()
-<a href=#160 id=160 data-nosnippet>160</a>		})
-<a href=#161 id=161 data-nosnippet>161</a>	}
-<a href=#162 id=162 data-nosnippet>162</a>
-<a href=#163 id=163 data-nosnippet>163</a>	<span class="macro">fn_com_interface_get!</span> { GetParent: IShellItemVT, IShellItem;
-<a href=#164 id=164 data-nosnippet>164</a>		<span class="doccomment">/// [`IShellItem::GetParent`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getparent)
-<a href=#165 id=165 data-nosnippet>165</a>		/// method.
-<a href=#166 id=166 data-nosnippet>166</a>		///
-<a href=#167 id=167 data-nosnippet>167</a>		/// # Examples
-<a href=#168 id=168 data-nosnippet>168</a>		///
-<a href=#169 id=169 data-nosnippet>169</a>		/// ```no_run
-<a href=#170 id=170 data-nosnippet>170</a>		/// use winsafe::{self as w, prelude::*, co};
-<a href=#171 id=171 data-nosnippet>171</a>		///
-<a href=#172 id=172 data-nosnippet>172</a>		/// let shi = w::SHCreateItemFromParsingName::&lt;w::IShellItem&gt;(
-<a href=#173 id=173 data-nosnippet>173</a>		///     "C:\\Temp\\foo.txt",
-<a href=#174 id=174 data-nosnippet>174</a>		///     None::&lt;&amp;w::IBindCtx&gt;,
-<a href=#175 id=175 data-nosnippet>175</a>		/// )?;
-<a href=#176 id=176 data-nosnippet>176</a>		///
-<a href=#177 id=177 data-nosnippet>177</a>		/// let parent_shi = shi.GetParent()?;
-<a href=#178 id=178 data-nosnippet>178</a>		/// let full_path = parent_shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;
-<a href=#179 id=179 data-nosnippet>179</a>		///
-<a href=#180 id=180 data-nosnippet>180</a>		/// println!("{}", full_path);
-<a href=#181 id=181 data-nosnippet>181</a>		/// # w::HrResult::Ok(())
-<a href=#182 id=182 data-nosnippet>182</a>		/// ```
-<a href=#183 id=183 data-nosnippet>183</a>	</span>}
-<a href=#184 id=184 data-nosnippet>184</a>}</code></pre></div></section></main></body></html>
+<a href=#66 id=66 data-nosnippet>66</a>	</span><span class="kw">fn </span>BindToHandler&lt;T&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, bind_ctx: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IBindCtx&gt;, bhid: <span class="kw-2">&amp;</span>co::BHID) -&gt; HrResult&lt;T&gt;
+<a href=#67 id=67 data-nosnippet>67</a>	<span class="kw">where
+<a href=#68 id=68 data-nosnippet>68</a>		</span>T: ole_IUnknown,
+<a href=#69 id=69 data-nosnippet>69</a>	{
+<a href=#70 id=70 data-nosnippet>70</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ T::null() };
+<a href=#71 id=71 data-nosnippet>71</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#72 id=72 data-nosnippet>72</a>			(vt::&lt;IShellItemVT&gt;(<span class="self">self</span>).BindToHandler)(
+<a href=#73 id=73 data-nosnippet>73</a>				<span class="self">self</span>.ptr(),
+<a href=#74 id=74 data-nosnippet>74</a>				bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr() <span class="kw">as _</span>),
+<a href=#75 id=75 data-nosnippet>75</a>				bhid <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+<a href=#76 id=76 data-nosnippet>76</a>				<span class="kw-2">&amp;</span>T::IID <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+<a href=#77 id=77 data-nosnippet>77</a>				queried.as_mut(),
+<a href=#78 id=78 data-nosnippet>78</a>			)
+<a href=#79 id=79 data-nosnippet>79</a>		})
+<a href=#80 id=80 data-nosnippet>80</a>		.map(|<span class="kw">_</span>| queried)
+<a href=#81 id=81 data-nosnippet>81</a>	}
+<a href=#82 id=82 data-nosnippet>82</a>
+<a href=#83 id=83 data-nosnippet>83</a>	<span class="doccomment">/// [`IShellItem::Compare`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-compare)
+<a href=#84 id=84 data-nosnippet>84</a>	/// method.
+<a href=#85 id=85 data-nosnippet>85</a>	</span><span class="attr">#[must_use]
+<a href=#86 id=86 data-nosnippet>86</a>	</span><span class="kw">fn </span>Compare(<span class="kw-2">&amp;</span><span class="self">self</span>, other: <span class="kw-2">&amp;</span><span class="kw">impl </span>shell_IShellItem, hint: co::SICHINTF) -&gt; HrResult&lt;i32&gt; {
+<a href=#87 id=87 data-nosnippet>87</a>		<span class="kw">let </span><span class="kw-2">mut </span>order = i32::default();
+<a href=#88 id=88 data-nosnippet>88</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#89 id=89 data-nosnippet>89</a>			(vt::&lt;IShellItemVT&gt;(<span class="self">self</span>).Compare)(<span class="self">self</span>.ptr(), other.ptr(), hint.raw(), <span class="kw-2">&amp;mut </span>order)
+<a href=#90 id=90 data-nosnippet>90</a>		})
+<a href=#91 id=91 data-nosnippet>91</a>		.map(|<span class="kw">_</span>| order)
+<a href=#92 id=92 data-nosnippet>92</a>	}
+<a href=#93 id=93 data-nosnippet>93</a>
+<a href=#94 id=94 data-nosnippet>94</a>	<span class="doccomment">/// [`IShellItem::GetAttributes`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getattributes)
+<a href=#95 id=95 data-nosnippet>95</a>	/// method.
+<a href=#96 id=96 data-nosnippet>96</a>	</span><span class="attr">#[must_use]
+<a href=#97 id=97 data-nosnippet>97</a>	</span><span class="kw">fn </span>GetAttributes(<span class="kw-2">&amp;</span><span class="self">self</span>, sfgao_mask: co::SFGAO) -&gt; HrResult&lt;co::SFGAO&gt; {
+<a href=#98 id=98 data-nosnippet>98</a>		<span class="kw">let </span><span class="kw-2">mut </span>attrs = u32::default();
+<a href=#99 id=99 data-nosnippet>99</a>		<span class="kw">match unsafe </span>{
+<a href=#100 id=100 data-nosnippet>100</a>			co::HRESULT::from_raw((vt::&lt;IShellItemVT&gt;(<span class="self">self</span>).GetAttributes)(
+<a href=#101 id=101 data-nosnippet>101</a>				<span class="self">self</span>.ptr(),
+<a href=#102 id=102 data-nosnippet>102</a>				sfgao_mask.raw(),
+<a href=#103 id=103 data-nosnippet>103</a>				<span class="kw-2">&amp;mut </span>attrs,
+<a href=#104 id=104 data-nosnippet>104</a>			))
+<a href=#105 id=105 data-nosnippet>105</a>		} {
+<a href=#106 id=106 data-nosnippet>106</a>			co::HRESULT::S_OK | co::HRESULT::S_FALSE =&gt; <span class="prelude-val">Ok</span>(<span class="kw">unsafe </span>{ co::SFGAO::from_raw(attrs) }),
+<a href=#107 id=107 data-nosnippet>107</a>			hr =&gt; <span class="prelude-val">Err</span>(hr),
+<a href=#108 id=108 data-nosnippet>108</a>		}
+<a href=#109 id=109 data-nosnippet>109</a>	}
+<a href=#110 id=110 data-nosnippet>110</a>
+<a href=#111 id=111 data-nosnippet>111</a>	<span class="doccomment">/// [`IShellItem::GetDisplayName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getdisplayname)
+<a href=#112 id=112 data-nosnippet>112</a>	/// method.
+<a href=#113 id=113 data-nosnippet>113</a>	///
+<a href=#114 id=114 data-nosnippet>114</a>	/// # Examples
+<a href=#115 id=115 data-nosnippet>115</a>	///
+<a href=#116 id=116 data-nosnippet>116</a>	/// ```no_run
+<a href=#117 id=117 data-nosnippet>117</a>	/// use winsafe::{self as w, prelude::*, co};
+<a href=#118 id=118 data-nosnippet>118</a>	///
+<a href=#119 id=119 data-nosnippet>119</a>	/// let shi = w::SHCreateItemFromParsingName::&lt;w::IShellItem&gt;(
+<a href=#120 id=120 data-nosnippet>120</a>	///     "C:\\Temp\\foo.txt",
+<a href=#121 id=121 data-nosnippet>121</a>	///     None::&lt;&amp;w::IBindCtx&gt;,
+<a href=#122 id=122 data-nosnippet>122</a>	/// )?;
+<a href=#123 id=123 data-nosnippet>123</a>	///
+<a href=#124 id=124 data-nosnippet>124</a>	/// let full_path = shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;
+<a href=#125 id=125 data-nosnippet>125</a>	///
+<a href=#126 id=126 data-nosnippet>126</a>	/// println!("{}", full_path);
+<a href=#127 id=127 data-nosnippet>127</a>	/// # w::HrResult::Ok(())
+<a href=#128 id=128 data-nosnippet>128</a>	/// ```
+<a href=#129 id=129 data-nosnippet>129</a>	</span><span class="attr">#[must_use]
+<a href=#130 id=130 data-nosnippet>130</a>	</span><span class="kw">fn </span>GetDisplayName(<span class="kw-2">&amp;</span><span class="self">self</span>, sigdn_name: co::SIGDN) -&gt; HrResult&lt;String&gt; {
+<a href=#131 id=131 data-nosnippet>131</a>		<span class="kw">let </span><span class="kw-2">mut </span>pstr = std::ptr::null_mut::&lt;u16&gt;();
+<a href=#132 id=132 data-nosnippet>132</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#133 id=133 data-nosnippet>133</a>			(vt::&lt;IShellItemVT&gt;(<span class="self">self</span>).GetDisplayName)(<span class="self">self</span>.ptr(), sigdn_name.raw(), <span class="kw-2">&amp;mut </span>pstr)
+<a href=#134 id=134 data-nosnippet>134</a>		})
+<a href=#135 id=135 data-nosnippet>135</a>		.map(|<span class="kw">_</span>| {
+<a href=#136 id=136 data-nosnippet>136</a>			<span class="kw">let </span>name = <span class="kw">unsafe </span>{ WString::from_wchars_nullt(pstr) };
+<a href=#137 id=137 data-nosnippet>137</a>			<span class="kw">let _ </span>= <span class="kw">unsafe </span>{ CoTaskMemFreeGuard::new(pstr <span class="kw">as _</span>, <span class="number">0</span>) };
+<a href=#138 id=138 data-nosnippet>138</a>			name.to_string()
+<a href=#139 id=139 data-nosnippet>139</a>		})
+<a href=#140 id=140 data-nosnippet>140</a>	}
+<a href=#141 id=141 data-nosnippet>141</a>
+<a href=#142 id=142 data-nosnippet>142</a>	<span class="macro">fn_com_interface_get!</span> { GetParent: IShellItemVT, IShellItem;
+<a href=#143 id=143 data-nosnippet>143</a>		<span class="doccomment">/// [`IShellItem::GetParent`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem-getparent)
+<a href=#144 id=144 data-nosnippet>144</a>		/// method.
+<a href=#145 id=145 data-nosnippet>145</a>		///
+<a href=#146 id=146 data-nosnippet>146</a>		/// # Examples
+<a href=#147 id=147 data-nosnippet>147</a>		///
+<a href=#148 id=148 data-nosnippet>148</a>		/// ```no_run
+<a href=#149 id=149 data-nosnippet>149</a>		/// use winsafe::{self as w, prelude::*, co};
+<a href=#150 id=150 data-nosnippet>150</a>		///
+<a href=#151 id=151 data-nosnippet>151</a>		/// let shi = w::SHCreateItemFromParsingName::&lt;w::IShellItem&gt;(
+<a href=#152 id=152 data-nosnippet>152</a>		///     "C:\\Temp\\foo.txt",
+<a href=#153 id=153 data-nosnippet>153</a>		///     None::&lt;&amp;w::IBindCtx&gt;,
+<a href=#154 id=154 data-nosnippet>154</a>		/// )?;
+<a href=#155 id=155 data-nosnippet>155</a>		///
+<a href=#156 id=156 data-nosnippet>156</a>		/// let parent_shi = shi.GetParent()?;
+<a href=#157 id=157 data-nosnippet>157</a>		/// let full_path = parent_shi.GetDisplayName(co::SIGDN::FILESYSPATH)?;
+<a href=#158 id=158 data-nosnippet>158</a>		///
+<a href=#159 id=159 data-nosnippet>159</a>		/// println!("{}", full_path);
+<a href=#160 id=160 data-nosnippet>160</a>		/// # w::HrResult::Ok(())
+<a href=#161 id=161 data-nosnippet>161</a>		/// ```
+<a href=#162 id=162 data-nosnippet>162</a>	</span>}
+<a href=#163 id=163 data-nosnippet>163</a>}</code></pre></div></section></main></body></html>

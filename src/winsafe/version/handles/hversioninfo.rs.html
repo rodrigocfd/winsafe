@@ -34,193 +34,180 @@
 <a href=#34 id=34 data-nosnippet>34</a>	</span><span class="attr">#[must_use]
 <a href=#35 id=35 data-nosnippet>35</a>	</span><span class="kw">fn </span>GetFileVersionInfo(file_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;VersionInfoGuard&gt; {
 <a href=#36 id=36 data-nosnippet>36</a>		<span class="kw">let </span>block_sz = <span class="self">Self</span>::GetFileVersionInfoSize(file_name)<span class="question-mark">?</span>;
-<a href=#37 id=37 data-nosnippet>37</a>		<span class="kw">let </span><span class="kw-2">mut </span>hglobal = HGLOBAL::GlobalAlloc(
-<a href=#38 id=38 data-nosnippet>38</a>			<span class="prelude-val">Some</span>(co::GMEM::FIXED | co::GMEM::ZEROINIT),
-<a href=#39 id=39 data-nosnippet>39</a>			block_sz <span class="kw">as _</span>,
-<a href=#40 id=40 data-nosnippet>40</a>		)<span class="question-mark">?</span>;
-<a href=#41 id=41 data-nosnippet>41</a>		<span class="kw">let </span>hglobal_ptr = hglobal.leak();
-<a href=#42 id=42 data-nosnippet>42</a>
-<a href=#43 id=43 data-nosnippet>43</a>		bool_to_sysresult(
-<a href=#44 id=44 data-nosnippet>44</a>			<span class="kw">unsafe </span>{
-<a href=#45 id=45 data-nosnippet>45</a>				ffi::GetFileVersionInfoW(
-<a href=#46 id=46 data-nosnippet>46</a>					WString::from_str(file_name).as_ptr(),
-<a href=#47 id=47 data-nosnippet>47</a>					<span class="number">0</span>,
-<a href=#48 id=48 data-nosnippet>48</a>					block_sz,
-<a href=#49 id=49 data-nosnippet>49</a>					hglobal_ptr.ptr(),
-<a href=#50 id=50 data-nosnippet>50</a>				)
-<a href=#51 id=51 data-nosnippet>51</a>			},
-<a href=#52 id=52 data-nosnippet>52</a>		).map(|<span class="kw">_</span>| <span class="kw">unsafe </span>{
-<a href=#53 id=53 data-nosnippet>53</a>			VersionInfoGuard::new(
-<a href=#54 id=54 data-nosnippet>54</a>				HVERSIONINFO::from_ptr(hglobal_ptr.ptr()), <span class="comment">// simply use the HGLOBAL pointer
-<a href=#55 id=55 data-nosnippet>55</a>			</span>)
-<a href=#56 id=56 data-nosnippet>56</a>		})
-<a href=#57 id=57 data-nosnippet>57</a>	}
-<a href=#58 id=58 data-nosnippet>58</a>
-<a href=#59 id=59 data-nosnippet>59</a>	<span class="doccomment">/// [`GetFileVersionInfoSize`](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew)
-<a href=#60 id=60 data-nosnippet>60</a>	/// function.
-<a href=#61 id=61 data-nosnippet>61</a>	///
-<a href=#62 id=62 data-nosnippet>62</a>	/// You don't need to call this function directly, because
-<a href=#63 id=63 data-nosnippet>63</a>	/// [`HVERSIONINFO::GetFileVersionInfo`](crate::prelude::version_Hversioninfo::GetFileVersionInfo)
-<a href=#64 id=64 data-nosnippet>64</a>	/// already calls it.
-<a href=#65 id=65 data-nosnippet>65</a>	</span><span class="attr">#[must_use]
-<a href=#66 id=66 data-nosnippet>66</a>	</span><span class="kw">fn </span>GetFileVersionInfoSize(file_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;u32&gt; {
-<a href=#67 id=67 data-nosnippet>67</a>		<span class="kw">let </span><span class="kw-2">mut </span>dw_handle = u32::default();
-<a href=#68 id=68 data-nosnippet>68</a>		<span class="kw">match unsafe </span>{
-<a href=#69 id=69 data-nosnippet>69</a>			ffi::GetFileVersionInfoSizeW(
-<a href=#70 id=70 data-nosnippet>70</a>				WString::from_str(file_name).as_ptr(),
-<a href=#71 id=71 data-nosnippet>71</a>				<span class="kw-2">&amp;mut </span>dw_handle,
-<a href=#72 id=72 data-nosnippet>72</a>			)
-<a href=#73 id=73 data-nosnippet>73</a>		} {
-<a href=#74 id=74 data-nosnippet>74</a>			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
-<a href=#75 id=75 data-nosnippet>75</a>			sz =&gt; <span class="prelude-val">Ok</span>(sz)
-<a href=#76 id=76 data-nosnippet>76</a>		}
-<a href=#77 id=77 data-nosnippet>77</a>	}
-<a href=#78 id=78 data-nosnippet>78</a>
-<a href=#79 id=79 data-nosnippet>79</a>	<span class="doccomment">/// Calls
-<a href=#80 id=80 data-nosnippet>80</a>	/// [`HVERSIONINFO::VerQueryValue`](crate::prelude::version_Hversioninfo::VerQueryValue)
-<a href=#81 id=81 data-nosnippet>81</a>	/// to retrieve a reference to a slice with all languages and code pages.
-<a href=#82 id=82 data-nosnippet>82</a>	///
-<a href=#83 id=83 data-nosnippet>83</a>	/// # Examples
-<a href=#84 id=84 data-nosnippet>84</a>	///
-<a href=#85 id=85 data-nosnippet>85</a>	/// Listing all pairs of language and code page:
+<a href=#37 id=37 data-nosnippet>37</a>		<span class="kw">let </span><span class="kw-2">mut </span>hglobal =
+<a href=#38 id=38 data-nosnippet>38</a>			HGLOBAL::GlobalAlloc(<span class="prelude-val">Some</span>(co::GMEM::FIXED | co::GMEM::ZEROINIT), block_sz <span class="kw">as _</span>)<span class="question-mark">?</span>;
+<a href=#39 id=39 data-nosnippet>39</a>		<span class="kw">let </span>hglobal_ptr = hglobal.leak();
+<a href=#40 id=40 data-nosnippet>40</a>
+<a href=#41 id=41 data-nosnippet>41</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
+<a href=#42 id=42 data-nosnippet>42</a>			ffi::GetFileVersionInfoW(
+<a href=#43 id=43 data-nosnippet>43</a>				WString::from_str(file_name).as_ptr(),
+<a href=#44 id=44 data-nosnippet>44</a>				<span class="number">0</span>,
+<a href=#45 id=45 data-nosnippet>45</a>				block_sz,
+<a href=#46 id=46 data-nosnippet>46</a>				hglobal_ptr.ptr(),
+<a href=#47 id=47 data-nosnippet>47</a>			)
+<a href=#48 id=48 data-nosnippet>48</a>		})
+<a href=#49 id=49 data-nosnippet>49</a>		.map(|<span class="kw">_</span>| <span class="kw">unsafe </span>{
+<a href=#50 id=50 data-nosnippet>50</a>			VersionInfoGuard::new(
+<a href=#51 id=51 data-nosnippet>51</a>				HVERSIONINFO::from_ptr(hglobal_ptr.ptr()), <span class="comment">// simply use the HGLOBAL pointer
+<a href=#52 id=52 data-nosnippet>52</a>			</span>)
+<a href=#53 id=53 data-nosnippet>53</a>		})
+<a href=#54 id=54 data-nosnippet>54</a>	}
+<a href=#55 id=55 data-nosnippet>55</a>
+<a href=#56 id=56 data-nosnippet>56</a>	<span class="doccomment">/// [`GetFileVersionInfoSize`](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfosizew)
+<a href=#57 id=57 data-nosnippet>57</a>	/// function.
+<a href=#58 id=58 data-nosnippet>58</a>	///
+<a href=#59 id=59 data-nosnippet>59</a>	/// You don't need to call this function directly, because
+<a href=#60 id=60 data-nosnippet>60</a>	/// [`HVERSIONINFO::GetFileVersionInfo`](crate::prelude::version_Hversioninfo::GetFileVersionInfo)
+<a href=#61 id=61 data-nosnippet>61</a>	/// already calls it.
+<a href=#62 id=62 data-nosnippet>62</a>	</span><span class="attr">#[must_use]
+<a href=#63 id=63 data-nosnippet>63</a>	</span><span class="kw">fn </span>GetFileVersionInfoSize(file_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;u32&gt; {
+<a href=#64 id=64 data-nosnippet>64</a>		<span class="kw">let </span><span class="kw-2">mut </span>dw_handle = u32::default();
+<a href=#65 id=65 data-nosnippet>65</a>		<span class="kw">match unsafe </span>{
+<a href=#66 id=66 data-nosnippet>66</a>			ffi::GetFileVersionInfoSizeW(WString::from_str(file_name).as_ptr(), <span class="kw-2">&amp;mut </span>dw_handle)
+<a href=#67 id=67 data-nosnippet>67</a>		} {
+<a href=#68 id=68 data-nosnippet>68</a>			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
+<a href=#69 id=69 data-nosnippet>69</a>			sz =&gt; <span class="prelude-val">Ok</span>(sz),
+<a href=#70 id=70 data-nosnippet>70</a>		}
+<a href=#71 id=71 data-nosnippet>71</a>	}
+<a href=#72 id=72 data-nosnippet>72</a>
+<a href=#73 id=73 data-nosnippet>73</a>	<span class="doccomment">/// Calls
+<a href=#74 id=74 data-nosnippet>74</a>	/// [`HVERSIONINFO::VerQueryValue`](crate::prelude::version_Hversioninfo::VerQueryValue)
+<a href=#75 id=75 data-nosnippet>75</a>	/// to retrieve a reference to a slice with all languages and code pages.
+<a href=#76 id=76 data-nosnippet>76</a>	///
+<a href=#77 id=77 data-nosnippet>77</a>	/// # Examples
+<a href=#78 id=78 data-nosnippet>78</a>	///
+<a href=#79 id=79 data-nosnippet>79</a>	/// Listing all pairs of language and code page:
+<a href=#80 id=80 data-nosnippet>80</a>	///
+<a href=#81 id=81 data-nosnippet>81</a>	/// ```no_run
+<a href=#82 id=82 data-nosnippet>82</a>	/// use winsafe::{self as w, prelude::*};
+<a href=#83 id=83 data-nosnippet>83</a>	///
+<a href=#84 id=84 data-nosnippet>84</a>	/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
+<a href=#85 id=85 data-nosnippet>85</a>	/// let hversion = w::HVERSIONINFO::GetFileVersionInfo(&amp;exe_name)?;
 <a href=#86 id=86 data-nosnippet>86</a>	///
-<a href=#87 id=87 data-nosnippet>87</a>	/// ```no_run
-<a href=#88 id=88 data-nosnippet>88</a>	/// use winsafe::{self as w, prelude::*};
-<a href=#89 id=89 data-nosnippet>89</a>	///
-<a href=#90 id=90 data-nosnippet>90</a>	/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
-<a href=#91 id=91 data-nosnippet>91</a>	/// let hversion = w::HVERSIONINFO::GetFileVersionInfo(&amp;exe_name)?;
-<a href=#92 id=92 data-nosnippet>92</a>	///
-<a href=#93 id=93 data-nosnippet>93</a>	/// for (lang, cp) in hversion.langs_and_cps()?.iter() {
-<a href=#94 id=94 data-nosnippet>94</a>	///     println!("{} {}", lang, cp);
-<a href=#95 id=95 data-nosnippet>95</a>	/// }
-<a href=#96 id=96 data-nosnippet>96</a>	/// # w::SysResult::Ok(())
-<a href=#97 id=97 data-nosnippet>97</a>	/// ```
-<a href=#98 id=98 data-nosnippet>98</a>	</span><span class="attr">#[must_use]
-<a href=#99 id=99 data-nosnippet>99</a>	</span><span class="kw">fn </span>langs_and_cps(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;<span class="kw-2">&amp;</span>[(LANGID, co::CP)]&gt; {
-<a href=#100 id=100 data-nosnippet>100</a>		<span class="kw">unsafe </span>{
-<a href=#101 id=101 data-nosnippet>101</a>			<span class="self">self</span>.VerQueryValue::&lt;(LANGID, co::CP)&gt;(<span class="string">"\\VarFileInfo\\Translation"</span>)
-<a href=#102 id=102 data-nosnippet>102</a>				.map(|(pblocks, sz)|
-<a href=#103 id=103 data-nosnippet>103</a>					std::slice::from_raw_parts(
-<a href=#104 id=104 data-nosnippet>104</a>						pblocks,
-<a href=#105 id=105 data-nosnippet>105</a>						sz <span class="kw">as </span>usize / std::mem::size_of::&lt;(LANGID, co::CP)&gt;(),
-<a href=#106 id=106 data-nosnippet>106</a>					)
-<a href=#107 id=107 data-nosnippet>107</a>				)
-<a href=#108 id=108 data-nosnippet>108</a>		}
-<a href=#109 id=109 data-nosnippet>109</a>	}
-<a href=#110 id=110 data-nosnippet>110</a>
-<a href=#111 id=111 data-nosnippet>111</a>	<span class="doccomment">/// [`VerQueryValue`](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-verqueryvaluew)
-<a href=#112 id=112 data-nosnippet>112</a>	/// function.
-<a href=#113 id=113 data-nosnippet>113</a>	///
-<a href=#114 id=114 data-nosnippet>114</a>	/// # Safety
-<a href=#115 id=115 data-nosnippet>115</a>	///
-<a href=#116 id=116 data-nosnippet>116</a>	/// The returned pointer and size vary according to `lpSubBlock`. If you set
-<a href=#117 id=117 data-nosnippet>117</a>	/// it wrong, you're likely to cause a buffer overrun.
-<a href=#118 id=118 data-nosnippet>118</a>	///
-<a href=#119 id=119 data-nosnippet>119</a>	/// This function is rather tricky, consider using the high-level methods:
-<a href=#120 id=120 data-nosnippet>120</a>	/// * [`langs_and_cps`](crate::prelude::version_Hversioninfo::langs_and_cps);
-<a href=#121 id=121 data-nosnippet>121</a>	/// * [`str_val`](crate::prelude::version_Hversioninfo::str_val);
-<a href=#122 id=122 data-nosnippet>122</a>	/// * [`version_info`](crate::prelude::version_Hversioninfo::version_info).
-<a href=#123 id=123 data-nosnippet>123</a>	///
-<a href=#124 id=124 data-nosnippet>124</a>	/// # Examples
-<a href=#125 id=125 data-nosnippet>125</a>	///
-<a href=#126 id=126 data-nosnippet>126</a>	/// Reading version information from resource:
+<a href=#87 id=87 data-nosnippet>87</a>	/// for (lang, cp) in hversion.langs_and_cps()?.iter() {
+<a href=#88 id=88 data-nosnippet>88</a>	///     println!("{} {}", lang, cp);
+<a href=#89 id=89 data-nosnippet>89</a>	/// }
+<a href=#90 id=90 data-nosnippet>90</a>	/// # w::SysResult::Ok(())
+<a href=#91 id=91 data-nosnippet>91</a>	/// ```
+<a href=#92 id=92 data-nosnippet>92</a>	</span><span class="attr">#[must_use]
+<a href=#93 id=93 data-nosnippet>93</a>	</span><span class="kw">fn </span>langs_and_cps(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;<span class="kw-2">&amp;</span>[(LANGID, co::CP)]&gt; {
+<a href=#94 id=94 data-nosnippet>94</a>		<span class="kw">unsafe </span>{
+<a href=#95 id=95 data-nosnippet>95</a>			<span class="self">self</span>.VerQueryValue::&lt;(LANGID, co::CP)&gt;(<span class="string">"\\VarFileInfo\\Translation"</span>)
+<a href=#96 id=96 data-nosnippet>96</a>				.map(|(pblocks, sz)| {
+<a href=#97 id=97 data-nosnippet>97</a>					std::slice::from_raw_parts(
+<a href=#98 id=98 data-nosnippet>98</a>						pblocks,
+<a href=#99 id=99 data-nosnippet>99</a>						sz <span class="kw">as </span>usize / std::mem::size_of::&lt;(LANGID, co::CP)&gt;(),
+<a href=#100 id=100 data-nosnippet>100</a>					)
+<a href=#101 id=101 data-nosnippet>101</a>				})
+<a href=#102 id=102 data-nosnippet>102</a>		}
+<a href=#103 id=103 data-nosnippet>103</a>	}
+<a href=#104 id=104 data-nosnippet>104</a>
+<a href=#105 id=105 data-nosnippet>105</a>	<span class="doccomment">/// [`VerQueryValue`](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-verqueryvaluew)
+<a href=#106 id=106 data-nosnippet>106</a>	/// function.
+<a href=#107 id=107 data-nosnippet>107</a>	///
+<a href=#108 id=108 data-nosnippet>108</a>	/// # Safety
+<a href=#109 id=109 data-nosnippet>109</a>	///
+<a href=#110 id=110 data-nosnippet>110</a>	/// The returned pointer and size vary according to `lpSubBlock`. If you set
+<a href=#111 id=111 data-nosnippet>111</a>	/// it wrong, you're likely to cause a buffer overrun.
+<a href=#112 id=112 data-nosnippet>112</a>	///
+<a href=#113 id=113 data-nosnippet>113</a>	/// This function is rather tricky, consider using the high-level methods:
+<a href=#114 id=114 data-nosnippet>114</a>	/// * [`langs_and_cps`](crate::prelude::version_Hversioninfo::langs_and_cps);
+<a href=#115 id=115 data-nosnippet>115</a>	/// * [`str_val`](crate::prelude::version_Hversioninfo::str_val);
+<a href=#116 id=116 data-nosnippet>116</a>	/// * [`version_info`](crate::prelude::version_Hversioninfo::version_info).
+<a href=#117 id=117 data-nosnippet>117</a>	///
+<a href=#118 id=118 data-nosnippet>118</a>	/// # Examples
+<a href=#119 id=119 data-nosnippet>119</a>	///
+<a href=#120 id=120 data-nosnippet>120</a>	/// Reading version information from resource:
+<a href=#121 id=121 data-nosnippet>121</a>	///
+<a href=#122 id=122 data-nosnippet>122</a>	/// ```no_run
+<a href=#123 id=123 data-nosnippet>123</a>	/// use winsafe::{self as w, prelude::*};
+<a href=#124 id=124 data-nosnippet>124</a>	///
+<a href=#125 id=125 data-nosnippet>125</a>	/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
+<a href=#126 id=126 data-nosnippet>126</a>	/// let hversion = w::HVERSIONINFO::GetFileVersionInfo(&amp;exe_name)?;
 <a href=#127 id=127 data-nosnippet>127</a>	///
-<a href=#128 id=128 data-nosnippet>128</a>	/// ```no_run
-<a href=#129 id=129 data-nosnippet>129</a>	/// use winsafe::{self as w, prelude::*};
-<a href=#130 id=130 data-nosnippet>130</a>	///
-<a href=#131 id=131 data-nosnippet>131</a>	/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
-<a href=#132 id=132 data-nosnippet>132</a>	/// let hversion = w::HVERSIONINFO::GetFileVersionInfo(&amp;exe_name)?;
-<a href=#133 id=133 data-nosnippet>133</a>	///
-<a href=#134 id=134 data-nosnippet>134</a>	/// let (pvsf, sz_data) = unsafe {
-<a href=#135 id=135 data-nosnippet>135</a>	///     hversion.VerQueryValue::&lt;w::VS_FIXEDFILEINFO&gt;("\\")?
-<a href=#136 id=136 data-nosnippet>136</a>	/// };
-<a href=#137 id=137 data-nosnippet>137</a>	///
-<a href=#138 id=138 data-nosnippet>138</a>	/// let ver = unsafe { &amp;*pvsf }.dwFileVersion();
-<a href=#139 id=139 data-nosnippet>139</a>	/// println!("Version {}.{}.{}.{}",
-<a href=#140 id=140 data-nosnippet>140</a>	///     ver[0], ver[1], ver[2], ver[3]);
-<a href=#141 id=141 data-nosnippet>141</a>	/// # w::SysResult::Ok(())
-<a href=#142 id=142 data-nosnippet>142</a>	/// ```
-<a href=#143 id=143 data-nosnippet>143</a>	</span><span class="attr">#[must_use]
-<a href=#144 id=144 data-nosnippet>144</a>	</span><span class="kw">unsafe fn </span>VerQueryValue&lt;T&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>,
-<a href=#145 id=145 data-nosnippet>145</a>		sub_block: <span class="kw-2">&amp;</span>str,
-<a href=#146 id=146 data-nosnippet>146</a>	) -&gt; SysResult&lt;(<span class="kw-2">*const </span>T, u32)&gt;
-<a href=#147 id=147 data-nosnippet>147</a>	{
-<a href=#148 id=148 data-nosnippet>148</a>		<span class="kw">let </span><span class="kw-2">mut </span>lp_lp_buffer = std::ptr::null();
-<a href=#149 id=149 data-nosnippet>149</a>		<span class="kw">let </span><span class="kw-2">mut </span>pu_len = <span class="number">0</span>;
+<a href=#128 id=128 data-nosnippet>128</a>	/// let (pvsf, sz_data) = unsafe {
+<a href=#129 id=129 data-nosnippet>129</a>	///     hversion.VerQueryValue::&lt;w::VS_FIXEDFILEINFO&gt;("\\")?
+<a href=#130 id=130 data-nosnippet>130</a>	/// };
+<a href=#131 id=131 data-nosnippet>131</a>	///
+<a href=#132 id=132 data-nosnippet>132</a>	/// let ver = unsafe { &amp;*pvsf }.dwFileVersion();
+<a href=#133 id=133 data-nosnippet>133</a>	/// println!("Version {}.{}.{}.{}",
+<a href=#134 id=134 data-nosnippet>134</a>	///     ver[0], ver[1], ver[2], ver[3]);
+<a href=#135 id=135 data-nosnippet>135</a>	/// # w::SysResult::Ok(())
+<a href=#136 id=136 data-nosnippet>136</a>	/// ```
+<a href=#137 id=137 data-nosnippet>137</a>	</span><span class="attr">#[must_use]
+<a href=#138 id=138 data-nosnippet>138</a>	</span><span class="kw">unsafe fn </span>VerQueryValue&lt;T&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, sub_block: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;(<span class="kw-2">*const </span>T, u32)&gt; {
+<a href=#139 id=139 data-nosnippet>139</a>		<span class="kw">let </span><span class="kw-2">mut </span>lp_lp_buffer = std::ptr::null();
+<a href=#140 id=140 data-nosnippet>140</a>		<span class="kw">let </span><span class="kw-2">mut </span>pu_len = <span class="number">0</span>;
+<a href=#141 id=141 data-nosnippet>141</a>
+<a href=#142 id=142 data-nosnippet>142</a>		bool_to_sysresult(ffi::VerQueryValueW(
+<a href=#143 id=143 data-nosnippet>143</a>			<span class="self">self</span>.ptr(),
+<a href=#144 id=144 data-nosnippet>144</a>			WString::from_str(sub_block).as_ptr(),
+<a href=#145 id=145 data-nosnippet>145</a>			<span class="kw-2">&amp;mut </span>lp_lp_buffer <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+<a href=#146 id=146 data-nosnippet>146</a>			<span class="kw-2">&amp;mut </span>pu_len,
+<a href=#147 id=147 data-nosnippet>147</a>		))
+<a href=#148 id=148 data-nosnippet>148</a>		.map(|<span class="kw">_</span>| (lp_lp_buffer <span class="kw">as </span><span class="kw-2">*const </span>T, pu_len))
+<a href=#149 id=149 data-nosnippet>149</a>	}
 <a href=#150 id=150 data-nosnippet>150</a>
-<a href=#151 id=151 data-nosnippet>151</a>		bool_to_sysresult(
-<a href=#152 id=152 data-nosnippet>152</a>			ffi::VerQueryValueW(
-<a href=#153 id=153 data-nosnippet>153</a>				<span class="self">self</span>.ptr(),
-<a href=#154 id=154 data-nosnippet>154</a>				WString::from_str(sub_block).as_ptr(),
-<a href=#155 id=155 data-nosnippet>155</a>				<span class="kw-2">&amp;mut </span>lp_lp_buffer <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
-<a href=#156 id=156 data-nosnippet>156</a>				<span class="kw-2">&amp;mut </span>pu_len,
-<a href=#157 id=157 data-nosnippet>157</a>			),
-<a href=#158 id=158 data-nosnippet>158</a>		).map(|<span class="kw">_</span>| (lp_lp_buffer <span class="kw">as </span><span class="kw-2">*const </span>T, pu_len))
-<a href=#159 id=159 data-nosnippet>159</a>	}
-<a href=#160 id=160 data-nosnippet>160</a>
-<a href=#161 id=161 data-nosnippet>161</a>	<span class="doccomment">/// Calls
-<a href=#162 id=162 data-nosnippet>162</a>	/// [`HVERSIONINFO::VerQueryValue`](crate::prelude::version_Hversioninfo::VerQueryValue)
-<a href=#163 id=163 data-nosnippet>163</a>	/// to retrieve a string value.
-<a href=#164 id=164 data-nosnippet>164</a>	///
-<a href=#165 id=165 data-nosnippet>165</a>	/// Common value names are:
-<a href=#166 id=166 data-nosnippet>166</a>	/// * Comments
-<a href=#167 id=167 data-nosnippet>167</a>	/// * CompanyName
-<a href=#168 id=168 data-nosnippet>168</a>	/// * FileDescription
-<a href=#169 id=169 data-nosnippet>169</a>	/// * FileVersion
-<a href=#170 id=170 data-nosnippet>170</a>	/// * InternalName
-<a href=#171 id=171 data-nosnippet>171</a>	/// * LegalCopyright
-<a href=#172 id=172 data-nosnippet>172</a>	/// * LegalTrademarks
-<a href=#173 id=173 data-nosnippet>173</a>	/// * OriginalFilename
-<a href=#174 id=174 data-nosnippet>174</a>	/// * ProductName
-<a href=#175 id=175 data-nosnippet>175</a>	/// * ProductVersion
-<a href=#176 id=176 data-nosnippet>176</a>	/// * PrivateBuild
-<a href=#177 id=177 data-nosnippet>177</a>	/// * SpecialBuild
+<a href=#151 id=151 data-nosnippet>151</a>	<span class="doccomment">/// Calls
+<a href=#152 id=152 data-nosnippet>152</a>	/// [`HVERSIONINFO::VerQueryValue`](crate::prelude::version_Hversioninfo::VerQueryValue)
+<a href=#153 id=153 data-nosnippet>153</a>	/// to retrieve a string value.
+<a href=#154 id=154 data-nosnippet>154</a>	///
+<a href=#155 id=155 data-nosnippet>155</a>	/// Common value names are:
+<a href=#156 id=156 data-nosnippet>156</a>	/// * Comments
+<a href=#157 id=157 data-nosnippet>157</a>	/// * CompanyName
+<a href=#158 id=158 data-nosnippet>158</a>	/// * FileDescription
+<a href=#159 id=159 data-nosnippet>159</a>	/// * FileVersion
+<a href=#160 id=160 data-nosnippet>160</a>	/// * InternalName
+<a href=#161 id=161 data-nosnippet>161</a>	/// * LegalCopyright
+<a href=#162 id=162 data-nosnippet>162</a>	/// * LegalTrademarks
+<a href=#163 id=163 data-nosnippet>163</a>	/// * OriginalFilename
+<a href=#164 id=164 data-nosnippet>164</a>	/// * ProductName
+<a href=#165 id=165 data-nosnippet>165</a>	/// * ProductVersion
+<a href=#166 id=166 data-nosnippet>166</a>	/// * PrivateBuild
+<a href=#167 id=167 data-nosnippet>167</a>	/// * SpecialBuild
+<a href=#168 id=168 data-nosnippet>168</a>	///
+<a href=#169 id=169 data-nosnippet>169</a>	/// # Examples
+<a href=#170 id=170 data-nosnippet>170</a>	///
+<a href=#171 id=171 data-nosnippet>171</a>	/// Reading product name and legal copyright from resource:
+<a href=#172 id=172 data-nosnippet>172</a>	///
+<a href=#173 id=173 data-nosnippet>173</a>	/// ```no_run
+<a href=#174 id=174 data-nosnippet>174</a>	/// use winsafe::{self as w, prelude::*};
+<a href=#175 id=175 data-nosnippet>175</a>	///
+<a href=#176 id=176 data-nosnippet>176</a>	/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
+<a href=#177 id=177 data-nosnippet>177</a>	/// let hversion = w::HVERSIONINFO::GetFileVersionInfo(&amp;exe_name)?;
 <a href=#178 id=178 data-nosnippet>178</a>	///
-<a href=#179 id=179 data-nosnippet>179</a>	/// # Examples
+<a href=#179 id=179 data-nosnippet>179</a>	/// let (lang0, cp0) = hversion.langs_and_cps()?[0]; // first language and code page
 <a href=#180 id=180 data-nosnippet>180</a>	///
-<a href=#181 id=181 data-nosnippet>181</a>	/// Reading product name and legal copyright from resource:
-<a href=#182 id=182 data-nosnippet>182</a>	///
-<a href=#183 id=183 data-nosnippet>183</a>	/// ```no_run
-<a href=#184 id=184 data-nosnippet>184</a>	/// use winsafe::{self as w, prelude::*};
-<a href=#185 id=185 data-nosnippet>185</a>	///
-<a href=#186 id=186 data-nosnippet>186</a>	/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
-<a href=#187 id=187 data-nosnippet>187</a>	/// let hversion = w::HVERSIONINFO::GetFileVersionInfo(&amp;exe_name)?;
-<a href=#188 id=188 data-nosnippet>188</a>	///
-<a href=#189 id=189 data-nosnippet>189</a>	/// let (lang0, cp0) = hversion.langs_and_cps()?[0]; // first language and code page
-<a href=#190 id=190 data-nosnippet>190</a>	///
-<a href=#191 id=191 data-nosnippet>191</a>	/// println!(
-<a href=#192 id=192 data-nosnippet>192</a>	///     "{}\n{}",
-<a href=#193 id=193 data-nosnippet>193</a>	///     hversion.str_val(lang0, cp0, "ProductName")?,
-<a href=#194 id=194 data-nosnippet>194</a>	///     hversion.str_val(lang0, cp0, "LegalCopyright")?,
-<a href=#195 id=195 data-nosnippet>195</a>	/// );
-<a href=#196 id=196 data-nosnippet>196</a>	/// # w::SysResult::Ok(())
-<a href=#197 id=197 data-nosnippet>197</a>	/// ```
-<a href=#198 id=198 data-nosnippet>198</a>	</span><span class="attr">#[must_use]
-<a href=#199 id=199 data-nosnippet>199</a>	</span><span class="kw">fn </span>str_val(<span class="kw-2">&amp;</span><span class="self">self</span>,
-<a href=#200 id=200 data-nosnippet>200</a>		lang_id: LANGID,
-<a href=#201 id=201 data-nosnippet>201</a>		code_page: co::CP,
-<a href=#202 id=202 data-nosnippet>202</a>		name: <span class="kw-2">&amp;</span>str,
-<a href=#203 id=203 data-nosnippet>203</a>	) -&gt; SysResult&lt;String&gt; {
-<a href=#204 id=204 data-nosnippet>204</a>		<span class="kw">unsafe </span>{
-<a href=#205 id=205 data-nosnippet>205</a>			<span class="self">self</span>.VerQueryValue::&lt;u16&gt;(
-<a href=#206 id=206 data-nosnippet>206</a>				<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"\\StringFileInfo\\{:04x}{:04x}\\{}"</span>,
-<a href=#207 id=207 data-nosnippet>207</a>					u16::from(lang_id), u16::from(code_page), name),
-<a href=#208 id=208 data-nosnippet>208</a>			).map(|(pstr, len)|
-<a href=#209 id=209 data-nosnippet>209</a>				WString::from_wchars_slice(
-<a href=#210 id=210 data-nosnippet>210</a>					std::slice::from_raw_parts(pstr, len <span class="kw">as _</span>),
-<a href=#211 id=211 data-nosnippet>211</a>				).to_string()
-<a href=#212 id=212 data-nosnippet>212</a>			)
-<a href=#213 id=213 data-nosnippet>213</a>		}
-<a href=#214 id=214 data-nosnippet>214</a>	}
-<a href=#215 id=215 data-nosnippet>215</a>
-<a href=#216 id=216 data-nosnippet>216</a>	<span class="doccomment">/// Calls
-<a href=#217 id=217 data-nosnippet>217</a>	/// [`HVERSIONINFO::VerQueryValue`](crate::prelude::version_Hversioninfo::VerQueryValue)
-<a href=#218 id=218 data-nosnippet>218</a>	/// to retrieve a reference to the fixed version block, if any.
-<a href=#219 id=219 data-nosnippet>219</a>	</span><span class="attr">#[must_use]
-<a href=#220 id=220 data-nosnippet>220</a>	</span><span class="kw">fn </span>version_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;<span class="kw-2">&amp;</span>VS_FIXEDFILEINFO&gt; {
-<a href=#221 id=221 data-nosnippet>221</a>		<span class="kw">unsafe </span>{
-<a href=#222 id=222 data-nosnippet>222</a>			<span class="self">self</span>.VerQueryValue::&lt;VS_FIXEDFILEINFO&gt;(<span class="string">"\\"</span>)
-<a href=#223 id=223 data-nosnippet>223</a>				.map(|(p, <span class="kw">_</span>)| <span class="kw-2">&amp;*</span>p)
-<a href=#224 id=224 data-nosnippet>224</a>		}
-<a href=#225 id=225 data-nosnippet>225</a>	}
-<a href=#226 id=226 data-nosnippet>226</a>}</code></pre></div></section></main></body></html>
+<a href=#181 id=181 data-nosnippet>181</a>	/// println!(
+<a href=#182 id=182 data-nosnippet>182</a>	///     "{}\n{}",
+<a href=#183 id=183 data-nosnippet>183</a>	///     hversion.str_val(lang0, cp0, "ProductName")?,
+<a href=#184 id=184 data-nosnippet>184</a>	///     hversion.str_val(lang0, cp0, "LegalCopyright")?,
+<a href=#185 id=185 data-nosnippet>185</a>	/// );
+<a href=#186 id=186 data-nosnippet>186</a>	/// # w::SysResult::Ok(())
+<a href=#187 id=187 data-nosnippet>187</a>	/// ```
+<a href=#188 id=188 data-nosnippet>188</a>	</span><span class="attr">#[must_use]
+<a href=#189 id=189 data-nosnippet>189</a>	</span><span class="kw">fn </span>str_val(<span class="kw-2">&amp;</span><span class="self">self</span>, lang_id: LANGID, code_page: co::CP, name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;String&gt; {
+<a href=#190 id=190 data-nosnippet>190</a>		<span class="kw">unsafe </span>{
+<a href=#191 id=191 data-nosnippet>191</a>			<span class="self">self</span>.VerQueryValue::&lt;u16&gt;(<span class="kw-2">&amp;</span><span class="macro">format!</span>(
+<a href=#192 id=192 data-nosnippet>192</a>				<span class="string">"\\StringFileInfo\\{:04x}{:04x}\\{}"</span>,
+<a href=#193 id=193 data-nosnippet>193</a>				u16::from(lang_id),
+<a href=#194 id=194 data-nosnippet>194</a>				u16::from(code_page),
+<a href=#195 id=195 data-nosnippet>195</a>				name
+<a href=#196 id=196 data-nosnippet>196</a>			))
+<a href=#197 id=197 data-nosnippet>197</a>			.map(|(pstr, len)| {
+<a href=#198 id=198 data-nosnippet>198</a>				WString::from_wchars_slice(std::slice::from_raw_parts(pstr, len <span class="kw">as _</span>)).to_string()
+<a href=#199 id=199 data-nosnippet>199</a>			})
+<a href=#200 id=200 data-nosnippet>200</a>		}
+<a href=#201 id=201 data-nosnippet>201</a>	}
+<a href=#202 id=202 data-nosnippet>202</a>
+<a href=#203 id=203 data-nosnippet>203</a>	<span class="doccomment">/// Calls
+<a href=#204 id=204 data-nosnippet>204</a>	/// [`HVERSIONINFO::VerQueryValue`](crate::prelude::version_Hversioninfo::VerQueryValue)
+<a href=#205 id=205 data-nosnippet>205</a>	/// to retrieve a reference to the fixed version block, if any.
+<a href=#206 id=206 data-nosnippet>206</a>	</span><span class="attr">#[must_use]
+<a href=#207 id=207 data-nosnippet>207</a>	</span><span class="kw">fn </span>version_info(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;<span class="kw-2">&amp;</span>VS_FIXEDFILEINFO&gt; {
+<a href=#208 id=208 data-nosnippet>208</a>		<span class="kw">unsafe </span>{
+<a href=#209 id=209 data-nosnippet>209</a>			<span class="self">self</span>.VerQueryValue::&lt;VS_FIXEDFILEINFO&gt;(<span class="string">"\\"</span>)
+<a href=#210 id=210 data-nosnippet>210</a>				.map(|(p, <span class="kw">_</span>)| <span class="kw-2">&amp;*</span>p)
+<a href=#211 id=211 data-nosnippet>211</a>		}
+<a href=#212 id=212 data-nosnippet>212</a>	}
+<a href=#213 id=213 data-nosnippet>213</a>}</code></pre></div></section></main></body></html>

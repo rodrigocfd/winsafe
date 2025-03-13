@@ -29,7 +29,7 @@
 <p>Prefer importing this trait through the prelude:</p>
 
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::prelude::<span class="kw-2">*</span>;</code></pre></div>
-</div></details><h2 id="provided-methods" class="section-header">Provided Methods<a href="#provided-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="method.CreateService" class="method"><a class="src rightside" href="../../src/winsafe/advapi\handles/hsc.rs.html#30-69">Source</a><h4 class="code-header">fn <a href="#method.CreateService" class="fn">CreateService</a>(
+</div></details><h2 id="provided-methods" class="section-header">Provided Methods<a href="#provided-methods" class="anchor">§</a></h2><div class="methods"><details class="toggle method-toggle" open><summary><section id="method.CreateService" class="method"><a class="src rightside" href="../../src/winsafe/advapi\handles/hsc.rs.html#30-72">Source</a><h4 class="code-header">fn <a href="#method.CreateService" class="fn">CreateService</a>(
     &amp;self,
     service_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>,
     display_name: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;,
@@ -45,12 +45,12 @@
     password: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;,
 ) -&gt; <a class="type" href="../type.SysResult.html" title="type winsafe::SysResult">SysResult</a>&lt;<a class="struct" href="../guard/struct.CloseServiceHandleSvcGuard.html" title="struct winsafe::guard::CloseServiceHandleSvcGuard">CloseServiceHandleSvcGuard</a>&gt;</h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-createservicew"><code>CreateService</code></a>
 function.</p>
-</div></details><details class="toggle method-toggle" open><summary><section id="method.OpenSCManager" class="method"><a class="src rightside" href="../../src/winsafe/advapi\handles/hsc.rs.html#74-88">Source</a><h4 class="code-header">fn <a href="#method.OpenSCManager" class="fn">OpenSCManager</a>(
+</div></details><details class="toggle method-toggle" open><summary><section id="method.OpenSCManager" class="method"><a class="src rightside" href="../../src/winsafe/advapi\handles/hsc.rs.html#77-89">Source</a><h4 class="code-header">fn <a href="#method.OpenSCManager" class="fn">OpenSCManager</a>(
     machine_name: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;,
     desired_access: <a class="struct" href="../co/struct.SC_MANAGER.html" title="struct winsafe::co::SC_MANAGER">SC_MANAGER</a>,
 ) -&gt; <a class="type" href="../type.SysResult.html" title="type winsafe::SysResult">SysResult</a>&lt;<a class="struct" href="../guard/struct.CloseServiceHandleGuard.html" title="struct winsafe::guard::CloseServiceHandleGuard">CloseServiceHandleGuard</a>&gt;</h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw"><code>OpenSCManager</code></a>
 function.</p>
-</div></details><details class="toggle method-toggle" open><summary><section id="method.OpenService" class="method"><a class="src rightside" href="../../src/winsafe/advapi\handles/hsc.rs.html#93-107">Source</a><h4 class="code-header">fn <a href="#method.OpenService" class="fn">OpenService</a>(
+</div></details><details class="toggle method-toggle" open><summary><section id="method.OpenService" class="method"><a class="src rightside" href="../../src/winsafe/advapi\handles/hsc.rs.html#94-107">Source</a><h4 class="code-header">fn <a href="#method.OpenService" class="fn">OpenService</a>(
     &amp;self,
     service_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>,
     desired_access: <a class="struct" href="../co/struct.SERVICE.html" title="struct winsafe::co::SERVICE">SERVICE</a>,

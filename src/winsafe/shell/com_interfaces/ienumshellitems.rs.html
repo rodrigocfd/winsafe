@@ -71,34 +71,30 @@
 <a href=#71 id=71 data-nosnippet>71</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ IShellItem::null() };
 <a href=#72 id=72 data-nosnippet>72</a>		<span class="kw">let </span><span class="kw-2">mut </span>fetched = u32::default();
 <a href=#73 id=73 data-nosnippet>73</a>
-<a href=#74 id=74 data-nosnippet>74</a>		<span class="kw">match </span>ok_to_hrresult(
-<a href=#75 id=75 data-nosnippet>75</a>			<span class="kw">unsafe </span>{
-<a href=#76 id=76 data-nosnippet>76</a>				(vt::&lt;IEnumShellItemsVT&gt;(<span class="self">self</span>).Next)(
-<a href=#77 id=77 data-nosnippet>77</a>					<span class="self">self</span>.ptr(),
-<a href=#78 id=78 data-nosnippet>78</a>					<span class="number">1</span>, <span class="comment">// retrieve only 1
-<a href=#79 id=79 data-nosnippet>79</a>					</span>queried.as_mut(),
-<a href=#80 id=80 data-nosnippet>80</a>					<span class="kw-2">&amp;mut </span>fetched,
-<a href=#81 id=81 data-nosnippet>81</a>				)
-<a href=#82 id=82 data-nosnippet>82</a>			},
-<a href=#83 id=83 data-nosnippet>83</a>		) {
-<a href=#84 id=84 data-nosnippet>84</a>			<span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(queried)),
-<a href=#85 id=85 data-nosnippet>85</a>			<span class="prelude-val">Err</span>(hr) =&gt; <span class="kw">match </span>hr {
-<a href=#86 id=86 data-nosnippet>86</a>				co::HRESULT::S_FALSE =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>), <span class="comment">// no item found
-<a href=#87 id=87 data-nosnippet>87</a>				</span>hr =&gt; <span class="prelude-val">Err</span>(hr), <span class="comment">// actual error
-<a href=#88 id=88 data-nosnippet>88</a>			</span>},
-<a href=#89 id=89 data-nosnippet>89</a>		}
-<a href=#90 id=90 data-nosnippet>90</a>	}
-<a href=#91 id=91 data-nosnippet>91</a>
-<a href=#92 id=92 data-nosnippet>92</a>	<span class="macro">fn_com_noparm!</span> { Reset: IEnumShellItemsVT;
-<a href=#93 id=93 data-nosnippet>93</a>		<span class="doccomment">/// [`IEnumShellItems::Reset`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-reset)
-<a href=#94 id=94 data-nosnippet>94</a>		/// method.
-<a href=#95 id=95 data-nosnippet>95</a>	</span>}
-<a href=#96 id=96 data-nosnippet>96</a>
-<a href=#97 id=97 data-nosnippet>97</a>	<span class="doccomment">/// [`IEnumShellItems::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-skip)
-<a href=#98 id=98 data-nosnippet>98</a>	/// method.
-<a href=#99 id=99 data-nosnippet>99</a>	</span><span class="kw">fn </span>Skip(<span class="kw-2">&amp;</span><span class="self">self</span>, count: u32) -&gt; HrResult&lt;bool&gt; {
-<a href=#100 id=100 data-nosnippet>100</a>		okfalse_to_hrresult(
-<a href=#101 id=101 data-nosnippet>101</a>			<span class="kw">unsafe </span>{ (vt::&lt;IEnumShellItemsVT&gt;(<span class="self">self</span>).Skip)(<span class="self">self</span>.ptr(), count) },
-<a href=#102 id=102 data-nosnippet>102</a>		)
-<a href=#103 id=103 data-nosnippet>103</a>	}
-<a href=#104 id=104 data-nosnippet>104</a>}</code></pre></div></section></main></body></html>
+<a href=#74 id=74 data-nosnippet>74</a>		<span class="kw">match </span>ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#75 id=75 data-nosnippet>75</a>			(vt::&lt;IEnumShellItemsVT&gt;(<span class="self">self</span>).Next)(
+<a href=#76 id=76 data-nosnippet>76</a>				<span class="self">self</span>.ptr(),
+<a href=#77 id=77 data-nosnippet>77</a>				<span class="number">1</span>, <span class="comment">// retrieve only 1
+<a href=#78 id=78 data-nosnippet>78</a>				</span>queried.as_mut(),
+<a href=#79 id=79 data-nosnippet>79</a>				<span class="kw-2">&amp;mut </span>fetched,
+<a href=#80 id=80 data-nosnippet>80</a>			)
+<a href=#81 id=81 data-nosnippet>81</a>		}) {
+<a href=#82 id=82 data-nosnippet>82</a>			<span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">Some</span>(queried)),
+<a href=#83 id=83 data-nosnippet>83</a>			<span class="prelude-val">Err</span>(hr) =&gt; <span class="kw">match </span>hr {
+<a href=#84 id=84 data-nosnippet>84</a>				co::HRESULT::S_FALSE =&gt; <span class="prelude-val">Ok</span>(<span class="prelude-val">None</span>), <span class="comment">// no item found
+<a href=#85 id=85 data-nosnippet>85</a>				</span>hr =&gt; <span class="prelude-val">Err</span>(hr),                    <span class="comment">// actual error
+<a href=#86 id=86 data-nosnippet>86</a>			</span>},
+<a href=#87 id=87 data-nosnippet>87</a>		}
+<a href=#88 id=88 data-nosnippet>88</a>	}
+<a href=#89 id=89 data-nosnippet>89</a>
+<a href=#90 id=90 data-nosnippet>90</a>	<span class="macro">fn_com_noparm!</span> { Reset: IEnumShellItemsVT;
+<a href=#91 id=91 data-nosnippet>91</a>		<span class="doccomment">/// [`IEnumShellItems::Reset`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-reset)
+<a href=#92 id=92 data-nosnippet>92</a>		/// method.
+<a href=#93 id=93 data-nosnippet>93</a>	</span>}
+<a href=#94 id=94 data-nosnippet>94</a>
+<a href=#95 id=95 data-nosnippet>95</a>	<span class="doccomment">/// [`IEnumShellItems::Skip`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ienumshellitems-skip)
+<a href=#96 id=96 data-nosnippet>96</a>	/// method.
+<a href=#97 id=97 data-nosnippet>97</a>	</span><span class="kw">fn </span>Skip(<span class="kw-2">&amp;</span><span class="self">self</span>, count: u32) -&gt; HrResult&lt;bool&gt; {
+<a href=#98 id=98 data-nosnippet>98</a>		okfalse_to_hrresult(<span class="kw">unsafe </span>{ (vt::&lt;IEnumShellItemsVT&gt;(<span class="self">self</span>).Skip)(<span class="self">self</span>.ptr(), count) })
+<a href=#99 id=99 data-nosnippet>99</a>	}
+<a href=#100 id=100 data-nosnippet>100</a>}</code></pre></div></section></main></body></html>

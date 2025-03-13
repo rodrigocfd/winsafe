@@ -167,103 +167,107 @@
 <a href=#167 id=167 data-nosnippet>167</a>		<span class="kw">let </span>tot_bytes_ptrs = (strs.len() + <span class="number">1</span>) * std::mem::size_of::&lt;<span class="kw-2">*mut </span>u16&gt;(); <span class="comment">// plus null
 <a href=#168 id=168 data-nosnippet>168</a>
 <a href=#169 id=169 data-nosnippet>169</a>		</span><span class="kw">let </span>wstrs = WString::from_str_vec(strs);
-<a href=#170 id=170 data-nosnippet>170</a>		<span class="kw">let </span>num_valid_chars = wstrs.as_slice() <span class="comment">// count just the chars; important because stack alloc has zero fills
-<a href=#171 id=171 data-nosnippet>171</a>			</span>.iter()
-<a href=#172 id=172 data-nosnippet>172</a>			.filter(|ch| <span class="kw-2">**</span>ch != <span class="number">0x0000</span>)
-<a href=#173 id=173 data-nosnippet>173</a>			.count();
-<a href=#174 id=174 data-nosnippet>174</a>		<span class="kw">let </span>tot_bytes_wstrs = ( num_valid_chars + strs.len() ) <span class="comment">// plus one null for each string
-<a href=#175 id=175 data-nosnippet>175</a>			</span>* std::mem::size_of::&lt;u16&gt;();
-<a href=#176 id=176 data-nosnippet>176</a>
-<a href=#177 id=177 data-nosnippet>177</a>		<span class="kw">let </span><span class="kw-2">mut </span>block = CoTaskMemAlloc(tot_bytes_ptrs + tot_bytes_wstrs)<span class="question-mark">?</span>; <span class="comment">// alloc block for pointers and strings
-<a href=#178 id=178 data-nosnippet>178</a>		</span><span class="kw">let </span>ptr_block = block.as_mut_ptr() <span class="kw">as </span><span class="kw-2">*mut </span>u8;
-<a href=#179 id=179 data-nosnippet>179</a>		<span class="kw">let </span>ptr_block_wstrs = <span class="kw">unsafe </span>{ ptr_block.add(tot_bytes_ptrs) } <span class="kw">as </span><span class="kw-2">*mut </span>u16; <span class="comment">// start of strings block
-<a href=#180 id=180 data-nosnippet>180</a>
-<a href=#181 id=181 data-nosnippet>181</a>		</span><span class="kw">let </span><span class="kw-2">mut </span>idx_cur_wstr = <span class="number">0</span>; <span class="comment">// current string to be copied to block
-<a href=#182 id=182 data-nosnippet>182</a>		</span><span class="kw-2">*</span><span class="kw">unsafe </span>{ block.as_mut_slice_aligned::&lt;<span class="kw-2">*mut </span>u16&gt;() }
-<a href=#183 id=183 data-nosnippet>183</a>			.get_mut(idx_cur_wstr).unwrap() = ptr_block_wstrs; <span class="comment">// copy pointer to 1st string
-<a href=#184 id=184 data-nosnippet>184</a>		</span>idx_cur_wstr += <span class="number">1</span>;
-<a href=#185 id=185 data-nosnippet>185</a>
-<a href=#186 id=186 data-nosnippet>186</a>		wstrs.as_slice()
-<a href=#187 id=187 data-nosnippet>187</a>			.iter()
-<a href=#188 id=188 data-nosnippet>188</a>			.enumerate()
-<a href=#189 id=189 data-nosnippet>189</a>			.for_each(|(idx, ch)| {
-<a href=#190 id=190 data-nosnippet>190</a>				<span class="kw">if </span><span class="kw-2">*</span>ch == <span class="number">0x0000 </span>&amp;&amp; idx_cur_wstr &lt; strs.len() {
-<a href=#191 id=191 data-nosnippet>191</a>					<span class="kw">unsafe </span>{
-<a href=#192 id=192 data-nosnippet>192</a>						<span class="kw-2">*</span>block.as_mut_slice_aligned::&lt;<span class="kw-2">*mut </span>u16&gt;() <span class="comment">// copy pointer to subsequent strings in the block
-<a href=#193 id=193 data-nosnippet>193</a>							</span>.get_mut(idx_cur_wstr).unwrap() = ptr_block_wstrs.add(idx + <span class="number">1</span>);
-<a href=#194 id=194 data-nosnippet>194</a>					}
-<a href=#195 id=195 data-nosnippet>195</a>					idx_cur_wstr += <span class="number">1</span>;
-<a href=#196 id=196 data-nosnippet>196</a>				}
-<a href=#197 id=197 data-nosnippet>197</a>			});
-<a href=#198 id=198 data-nosnippet>198</a>
-<a href=#199 id=199 data-nosnippet>199</a>		<span class="kw-2">*</span><span class="kw">unsafe </span>{ block.as_mut_slice_aligned::&lt;<span class="kw-2">*mut </span>u16&gt;() }
-<a href=#200 id=200 data-nosnippet>200</a>			.get_mut(idx_cur_wstr).unwrap() = std::ptr::null_mut(); <span class="comment">// null pointer after string pointers
-<a href=#201 id=201 data-nosnippet>201</a>
-<a href=#202 id=202 data-nosnippet>202</a>		</span>wstrs.copy_to_slice( <span class="comment">// beyond pointers, copy each null-terminated string sequentially
-<a href=#203 id=203 data-nosnippet>203</a>			</span><span class="kw">unsafe </span>{
-<a href=#204 id=204 data-nosnippet>204</a>				std::slice::from_raw_parts_mut(
-<a href=#205 id=205 data-nosnippet>205</a>					ptr_block_wstrs,
-<a href=#206 id=206 data-nosnippet>206</a>					tot_bytes_wstrs / std::mem::size_of::&lt;u16&gt;(),
-<a href=#207 id=207 data-nosnippet>207</a>				)
-<a href=#208 id=208 data-nosnippet>208</a>			},
-<a href=#209 id=209 data-nosnippet>209</a>		);
-<a href=#210 id=210 data-nosnippet>210</a>
-<a href=#211 id=211 data-nosnippet>211</a>		<span class="kw">let </span>(ptr, <span class="kw">_</span>) = block.leak();
-<a href=#212 id=212 data-nosnippet>212</a>		<span class="prelude-val">Ok</span>(<span class="self">Self</span>(ptr <span class="kw">as _</span>))
-<a href=#213 id=213 data-nosnippet>213</a>	}
-<a href=#214 id=214 data-nosnippet>214</a>
-<a href=#215 id=215 data-nosnippet>215</a>	<span class="doccomment">/// Returns the underlying pointer.
-<a href=#216 id=216 data-nosnippet>216</a>	</span><span class="attr">#[must_use]
-<a href=#217 id=217 data-nosnippet>217</a>	</span><span class="kw">pub const fn </span>as_ptr(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut *mut </span>u16 {
-<a href=#218 id=218 data-nosnippet>218</a>		<span class="self">self</span>.<span class="number">0
-<a href=#219 id=219 data-nosnippet>219</a>	</span>}
-<a href=#220 id=220 data-nosnippet>220</a>
-<a href=#221 id=221 data-nosnippet>221</a>	<span class="doccomment">/// Converts the internal UTF-16 blocks into strings.
-<a href=#222 id=222 data-nosnippet>222</a>	</span><span class="attr">#[must_use]
-<a href=#223 id=223 data-nosnippet>223</a>	</span><span class="kw">pub fn </span>to_strings(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;String&gt; {
-<a href=#224 id=224 data-nosnippet>224</a>		<span class="kw">let </span><span class="kw-2">mut </span>vec = Vec::&lt;String&gt;::new();
-<a href=#225 id=225 data-nosnippet>225</a>		<span class="kw">if </span>!<span class="self">self</span>.<span class="number">0</span>.is_null() {
-<a href=#226 id=226 data-nosnippet>226</a>			<span class="kw">let </span><span class="kw-2">mut </span>idx_ptr = <span class="number">0</span>;
-<a href=#227 id=227 data-nosnippet>227</a>			<span class="kw">loop </span>{
-<a href=#228 id=228 data-nosnippet>228</a>				<span class="kw">let </span>ptr_ws = <span class="kw">unsafe </span>{
-<a href=#229 id=229 data-nosnippet>229</a>					<span class="kw">let </span>sli_ptrs = std::slice::from_raw_parts(<span class="self">self</span>.<span class="number">0</span>, idx_ptr + <span class="number">1</span>);
-<a href=#230 id=230 data-nosnippet>230</a>					<span class="kw-2">*</span>sli_ptrs.get_unchecked(idx_ptr) <span class="comment">// get nth pointer to string
-<a href=#231 id=231 data-nosnippet>231</a>				</span>};
-<a href=#232 id=232 data-nosnippet>232</a>				<span class="kw">if </span>ptr_ws.is_null() { <span class="comment">// a null pointer means the end of pointers block
-<a href=#233 id=233 data-nosnippet>233</a>					</span><span class="kw">break</span>;
-<a href=#234 id=234 data-nosnippet>234</a>				}
-<a href=#235 id=235 data-nosnippet>235</a>				<span class="kw">let </span>ws = <span class="kw">unsafe </span>{ WString::from_wchars_nullt(ptr_ws) };
-<a href=#236 id=236 data-nosnippet>236</a>				vec.push(ws.to_string());
-<a href=#237 id=237 data-nosnippet>237</a>				idx_ptr += <span class="number">1</span>;
-<a href=#238 id=238 data-nosnippet>238</a>			}
-<a href=#239 id=239 data-nosnippet>239</a>		}
-<a href=#240 id=240 data-nosnippet>240</a>		vec
-<a href=#241 id=241 data-nosnippet>241</a>	}
-<a href=#242 id=242 data-nosnippet>242</a>}
-<a href=#243 id=243 data-nosnippet>243</a>
-<a href=#244 id=244 data-nosnippet>244</a><span class="doccomment">/// [`STGMEDIUM`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-ustgmedium-r1)
-<a href=#245 id=245 data-nosnippet>245</a>/// struct.
-<a href=#246 id=246 data-nosnippet>246</a></span><span class="attr">#[repr(C)]
-<a href=#247 id=247 data-nosnippet>247</a></span><span class="kw">pub struct </span>STGMEDIUM {
-<a href=#248 id=248 data-nosnippet>248</a>	<span class="kw">pub </span>tymed: co::TYMED,
-<a href=#249 id=249 data-nosnippet>249</a>	<span class="kw">pub </span>ptr: usize,
-<a href=#250 id=250 data-nosnippet>250</a>	<span class="kw">pub </span>pUnkForRelease: COMPTR,
-<a href=#251 id=251 data-nosnippet>251</a>}
-<a href=#252 id=252 data-nosnippet>252</a>
-<a href=#253 id=253 data-nosnippet>253</a><span class="macro">impl_default!</span>(STGMEDIUM);
-<a href=#254 id=254 data-nosnippet>254</a>
-<a href=#255 id=255 data-nosnippet>255</a><span class="kw">impl </span>STGMEDIUM {
-<a href=#256 id=256 data-nosnippet>256</a>	<span class="doccomment">/// Returns `ptr` as [`HGLOBAL`](crate::HGLOBAL) if `tymed` is
-<a href=#257 id=257 data-nosnippet>257</a>	/// [`TYMED::GDI`](crate::co::TYMED::HGLOBAL).
-<a href=#258 id=258 data-nosnippet>258</a>	///
-<a href=#259 id=259 data-nosnippet>259</a>	/// # Safety
-<a href=#260 id=260 data-nosnippet>260</a>	///
-<a href=#261 id=261 data-nosnippet>261</a>	/// Make sure the struct has been properly initialized.
-<a href=#262 id=262 data-nosnippet>262</a>	</span><span class="attr">#[must_use]
-<a href=#263 id=263 data-nosnippet>263</a>	</span><span class="kw">pub unsafe fn </span>ptr_hglobal(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;HGLOBAL&gt; {
-<a href=#264 id=264 data-nosnippet>264</a>		<span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.tymed {
-<a href=#265 id=265 data-nosnippet>265</a>			<span class="kw-2">&amp;</span>co::TYMED::HGLOBAL =&gt; <span class="prelude-val">Some</span>(<span class="kw">unsafe </span>{ HGLOBAL::from_ptr(<span class="self">self</span>.ptr <span class="kw">as _</span>) }),
-<a href=#266 id=266 data-nosnippet>266</a>			<span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
-<a href=#267 id=267 data-nosnippet>267</a>		}
-<a href=#268 id=268 data-nosnippet>268</a>	}
-<a href=#269 id=269 data-nosnippet>269</a>}</code></pre></div></section></main></body></html>
+<a href=#170 id=170 data-nosnippet>170</a>		<span class="kw">let </span>num_valid_chars = wstrs
+<a href=#171 id=171 data-nosnippet>171</a>			.as_slice() <span class="comment">// count just the chars; important because stack alloc has zero fills
+<a href=#172 id=172 data-nosnippet>172</a>			</span>.iter()
+<a href=#173 id=173 data-nosnippet>173</a>			.filter(|ch| <span class="kw-2">**</span>ch != <span class="number">0x0000</span>)
+<a href=#174 id=174 data-nosnippet>174</a>			.count();
+<a href=#175 id=175 data-nosnippet>175</a>		<span class="kw">let </span>tot_bytes_wstrs = ( num_valid_chars + strs.len() ) <span class="comment">// plus one null for each string
+<a href=#176 id=176 data-nosnippet>176</a>			</span>* std::mem::size_of::&lt;u16&gt;();
+<a href=#177 id=177 data-nosnippet>177</a>
+<a href=#178 id=178 data-nosnippet>178</a>		<span class="kw">let </span><span class="kw-2">mut </span>block = CoTaskMemAlloc(tot_bytes_ptrs + tot_bytes_wstrs)<span class="question-mark">?</span>; <span class="comment">// alloc block for pointers and strings
+<a href=#179 id=179 data-nosnippet>179</a>		</span><span class="kw">let </span>ptr_block = block.as_mut_ptr() <span class="kw">as </span><span class="kw-2">*mut </span>u8;
+<a href=#180 id=180 data-nosnippet>180</a>		<span class="kw">let </span>ptr_block_wstrs = <span class="kw">unsafe </span>{ ptr_block.add(tot_bytes_ptrs) } <span class="kw">as </span><span class="kw-2">*mut </span>u16; <span class="comment">// start of strings block
+<a href=#181 id=181 data-nosnippet>181</a>
+<a href=#182 id=182 data-nosnippet>182</a>		</span><span class="kw">let </span><span class="kw-2">mut </span>idx_cur_wstr = <span class="number">0</span>; <span class="comment">// current string to be copied to block
+<a href=#183 id=183 data-nosnippet>183</a>		</span><span class="kw-2">*</span><span class="kw">unsafe </span>{ block.as_mut_slice_aligned::&lt;<span class="kw-2">*mut </span>u16&gt;() }
+<a href=#184 id=184 data-nosnippet>184</a>			.get_mut(idx_cur_wstr)
+<a href=#185 id=185 data-nosnippet>185</a>			.unwrap() = ptr_block_wstrs; <span class="comment">// copy pointer to 1st string
+<a href=#186 id=186 data-nosnippet>186</a>		</span>idx_cur_wstr += <span class="number">1</span>;
+<a href=#187 id=187 data-nosnippet>187</a>
+<a href=#188 id=188 data-nosnippet>188</a>		wstrs.as_slice().iter().enumerate().for_each(|(idx, ch)| {
+<a href=#189 id=189 data-nosnippet>189</a>			<span class="kw">if </span><span class="kw-2">*</span>ch == <span class="number">0x0000 </span>&amp;&amp; idx_cur_wstr &lt; strs.len() {
+<a href=#190 id=190 data-nosnippet>190</a>				<span class="kw">unsafe </span>{
+<a href=#191 id=191 data-nosnippet>191</a>					<span class="kw-2">*</span>block
+<a href=#192 id=192 data-nosnippet>192</a>						.as_mut_slice_aligned::&lt;<span class="kw-2">*mut </span>u16&gt;() <span class="comment">// copy pointer to subsequent strings in the block
+<a href=#193 id=193 data-nosnippet>193</a>						</span>.get_mut(idx_cur_wstr)
+<a href=#194 id=194 data-nosnippet>194</a>						.unwrap() = ptr_block_wstrs.add(idx + <span class="number">1</span>);
+<a href=#195 id=195 data-nosnippet>195</a>				}
+<a href=#196 id=196 data-nosnippet>196</a>				idx_cur_wstr += <span class="number">1</span>;
+<a href=#197 id=197 data-nosnippet>197</a>			}
+<a href=#198 id=198 data-nosnippet>198</a>		});
+<a href=#199 id=199 data-nosnippet>199</a>
+<a href=#200 id=200 data-nosnippet>200</a>		<span class="kw-2">*</span><span class="kw">unsafe </span>{ block.as_mut_slice_aligned::&lt;<span class="kw-2">*mut </span>u16&gt;() }
+<a href=#201 id=201 data-nosnippet>201</a>			.get_mut(idx_cur_wstr)
+<a href=#202 id=202 data-nosnippet>202</a>			.unwrap() = std::ptr::null_mut(); <span class="comment">// null pointer after string pointers
+<a href=#203 id=203 data-nosnippet>203</a>
+<a href=#204 id=204 data-nosnippet>204</a>		</span>wstrs.copy_to_slice(
+<a href=#205 id=205 data-nosnippet>205</a>			<span class="comment">// Beyond pointers, copy each null-terminated string sequentially.
+<a href=#206 id=206 data-nosnippet>206</a>			</span><span class="kw">unsafe </span>{
+<a href=#207 id=207 data-nosnippet>207</a>				std::slice::from_raw_parts_mut(
+<a href=#208 id=208 data-nosnippet>208</a>					ptr_block_wstrs,
+<a href=#209 id=209 data-nosnippet>209</a>					tot_bytes_wstrs / std::mem::size_of::&lt;u16&gt;(),
+<a href=#210 id=210 data-nosnippet>210</a>				)
+<a href=#211 id=211 data-nosnippet>211</a>			},
+<a href=#212 id=212 data-nosnippet>212</a>		);
+<a href=#213 id=213 data-nosnippet>213</a>
+<a href=#214 id=214 data-nosnippet>214</a>		<span class="kw">let </span>(ptr, <span class="kw">_</span>) = block.leak();
+<a href=#215 id=215 data-nosnippet>215</a>		<span class="prelude-val">Ok</span>(<span class="self">Self</span>(ptr <span class="kw">as _</span>))
+<a href=#216 id=216 data-nosnippet>216</a>	}
+<a href=#217 id=217 data-nosnippet>217</a>
+<a href=#218 id=218 data-nosnippet>218</a>	<span class="doccomment">/// Returns the underlying pointer.
+<a href=#219 id=219 data-nosnippet>219</a>	</span><span class="attr">#[must_use]
+<a href=#220 id=220 data-nosnippet>220</a>	</span><span class="kw">pub const fn </span>as_ptr(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">*mut *mut </span>u16 {
+<a href=#221 id=221 data-nosnippet>221</a>		<span class="self">self</span>.<span class="number">0
+<a href=#222 id=222 data-nosnippet>222</a>	</span>}
+<a href=#223 id=223 data-nosnippet>223</a>
+<a href=#224 id=224 data-nosnippet>224</a>	<span class="doccomment">/// Converts the internal UTF-16 blocks into strings.
+<a href=#225 id=225 data-nosnippet>225</a>	</span><span class="attr">#[must_use]
+<a href=#226 id=226 data-nosnippet>226</a>	</span><span class="kw">pub fn </span>to_strings(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; Vec&lt;String&gt; {
+<a href=#227 id=227 data-nosnippet>227</a>		<span class="kw">let </span><span class="kw-2">mut </span>vec = Vec::&lt;String&gt;::new();
+<a href=#228 id=228 data-nosnippet>228</a>		<span class="kw">if </span>!<span class="self">self</span>.<span class="number">0</span>.is_null() {
+<a href=#229 id=229 data-nosnippet>229</a>			<span class="kw">let </span><span class="kw-2">mut </span>idx_ptr = <span class="number">0</span>;
+<a href=#230 id=230 data-nosnippet>230</a>			<span class="kw">loop </span>{
+<a href=#231 id=231 data-nosnippet>231</a>				<span class="kw">let </span>ptr_ws = <span class="kw">unsafe </span>{
+<a href=#232 id=232 data-nosnippet>232</a>					<span class="kw">let </span>sli_ptrs = std::slice::from_raw_parts(<span class="self">self</span>.<span class="number">0</span>, idx_ptr + <span class="number">1</span>);
+<a href=#233 id=233 data-nosnippet>233</a>					<span class="kw-2">*</span>sli_ptrs.get_unchecked(idx_ptr) <span class="comment">// get nth pointer to string
+<a href=#234 id=234 data-nosnippet>234</a>				</span>};
+<a href=#235 id=235 data-nosnippet>235</a>				<span class="kw">if </span>ptr_ws.is_null() {
+<a href=#236 id=236 data-nosnippet>236</a>					<span class="comment">// a null pointer means the end of pointers block
+<a href=#237 id=237 data-nosnippet>237</a>					</span><span class="kw">break</span>;
+<a href=#238 id=238 data-nosnippet>238</a>				}
+<a href=#239 id=239 data-nosnippet>239</a>				<span class="kw">let </span>ws = <span class="kw">unsafe </span>{ WString::from_wchars_nullt(ptr_ws) };
+<a href=#240 id=240 data-nosnippet>240</a>				vec.push(ws.to_string());
+<a href=#241 id=241 data-nosnippet>241</a>				idx_ptr += <span class="number">1</span>;
+<a href=#242 id=242 data-nosnippet>242</a>			}
+<a href=#243 id=243 data-nosnippet>243</a>		}
+<a href=#244 id=244 data-nosnippet>244</a>		vec
+<a href=#245 id=245 data-nosnippet>245</a>	}
+<a href=#246 id=246 data-nosnippet>246</a>}
+<a href=#247 id=247 data-nosnippet>247</a>
+<a href=#248 id=248 data-nosnippet>248</a><span class="doccomment">/// [`STGMEDIUM`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-ustgmedium-r1)
+<a href=#249 id=249 data-nosnippet>249</a>/// struct.
+<a href=#250 id=250 data-nosnippet>250</a></span><span class="attr">#[repr(C)]
+<a href=#251 id=251 data-nosnippet>251</a></span><span class="kw">pub struct </span>STGMEDIUM {
+<a href=#252 id=252 data-nosnippet>252</a>	<span class="kw">pub </span>tymed: co::TYMED,
+<a href=#253 id=253 data-nosnippet>253</a>	<span class="kw">pub </span>ptr: usize,
+<a href=#254 id=254 data-nosnippet>254</a>	<span class="kw">pub </span>pUnkForRelease: COMPTR,
+<a href=#255 id=255 data-nosnippet>255</a>}
+<a href=#256 id=256 data-nosnippet>256</a>
+<a href=#257 id=257 data-nosnippet>257</a><span class="macro">impl_default!</span>(STGMEDIUM);
+<a href=#258 id=258 data-nosnippet>258</a>
+<a href=#259 id=259 data-nosnippet>259</a><span class="kw">impl </span>STGMEDIUM {
+<a href=#260 id=260 data-nosnippet>260</a>	<span class="doccomment">/// Returns `ptr` as [`HGLOBAL`](crate::HGLOBAL) if `tymed` is
+<a href=#261 id=261 data-nosnippet>261</a>	/// [`TYMED::GDI`](crate::co::TYMED::HGLOBAL).
+<a href=#262 id=262 data-nosnippet>262</a>	///
+<a href=#263 id=263 data-nosnippet>263</a>	/// # Safety
+<a href=#264 id=264 data-nosnippet>264</a>	///
+<a href=#265 id=265 data-nosnippet>265</a>	/// Make sure the struct has been properly initialized.
+<a href=#266 id=266 data-nosnippet>266</a>	</span><span class="attr">#[must_use]
+<a href=#267 id=267 data-nosnippet>267</a>	</span><span class="kw">pub unsafe fn </span>ptr_hglobal(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;HGLOBAL&gt; {
+<a href=#268 id=268 data-nosnippet>268</a>		<span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.tymed {
+<a href=#269 id=269 data-nosnippet>269</a>			<span class="kw-2">&amp;</span>co::TYMED::HGLOBAL =&gt; <span class="prelude-val">Some</span>(<span class="kw">unsafe </span>{ HGLOBAL::from_ptr(<span class="self">self</span>.ptr <span class="kw">as _</span>) }),
+<a href=#270 id=270 data-nosnippet>270</a>			<span class="kw">_ </span>=&gt; <span class="prelude-val">None</span>,
+<a href=#271 id=271 data-nosnippet>271</a>		}
+<a href=#272 id=272 data-nosnippet>272</a>	}
+<a href=#273 id=273 data-nosnippet>273</a>}</code></pre></div></section></main></body></html>

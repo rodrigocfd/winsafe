@@ -61,13 +61,8 @@
 <a href=#61 id=61 data-nosnippet>61</a>	<span class="doccomment">/// [`IFileSaveDialog::SetSaveAsItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setsaveasitem)
 <a href=#62 id=62 data-nosnippet>62</a>	/// method.
 <a href=#63 id=63 data-nosnippet>63</a>	</span><span class="kw">fn </span>SetSaveAsItem(<span class="kw-2">&amp;</span><span class="self">self</span>, psi: <span class="kw-2">&amp;</span><span class="kw">impl </span>shell_IShellItem) -&gt; HrResult&lt;()&gt; {
-<a href=#64 id=64 data-nosnippet>64</a>		ok_to_hrresult(
-<a href=#65 id=65 data-nosnippet>65</a>			<span class="kw">unsafe </span>{
-<a href=#66 id=66 data-nosnippet>66</a>				(vt::&lt;IFileSaveDialogVT&gt;(<span class="self">self</span>).SetSaveAsItem)(
-<a href=#67 id=67 data-nosnippet>67</a>					<span class="self">self</span>.ptr(),
-<a href=#68 id=68 data-nosnippet>68</a>					psi.ptr(),
-<a href=#69 id=69 data-nosnippet>69</a>				)
-<a href=#70 id=70 data-nosnippet>70</a>			},
-<a href=#71 id=71 data-nosnippet>71</a>		)
-<a href=#72 id=72 data-nosnippet>72</a>	}
-<a href=#73 id=73 data-nosnippet>73</a>}</code></pre></div></section></main></body></html>
+<a href=#64 id=64 data-nosnippet>64</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#65 id=65 data-nosnippet>65</a>			(vt::&lt;IFileSaveDialogVT&gt;(<span class="self">self</span>).SetSaveAsItem)(<span class="self">self</span>.ptr(), psi.ptr())
+<a href=#66 id=66 data-nosnippet>66</a>		})
+<a href=#67 id=67 data-nosnippet>67</a>	}
+<a href=#68 id=68 data-nosnippet>68</a>}</code></pre></div></section></main></body></html>

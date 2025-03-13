@@ -117,126 +117,128 @@
 <a href=#117 id=117 data-nosnippet>117</a>	/// });
 <a href=#118 id=118 data-nosnippet>118</a>	/// ```
 <a href=#119 id=119 data-nosnippet>119</a>	</span><span class="kw">fn </span>spawn_thread&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-<a href=#120 id=120 data-nosnippet>120</a>		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static</span>,
-<a href=#121 id=121 data-nosnippet>121</a>	{
-<a href=#122 id=122 data-nosnippet>122</a>		<span class="self">self</span>.as_ref().spawn_thread(func)
-<a href=#123 id=123 data-nosnippet>123</a>	}
-<a href=#124 id=124 data-nosnippet>124</a>
-<a href=#125 id=125 data-nosnippet>125</a>	<span class="doccomment">/// Runs a closure synchronously in the window's original UI thread,
-<a href=#126 id=126 data-nosnippet>126</a>	/// allowing UI updates without the risk of a deadlock.
-<a href=#127 id=127 data-nosnippet>127</a>	///
-<a href=#128 id=128 data-nosnippet>128</a>	/// # Rationale
-<a href=#129 id=129 data-nosnippet>129</a>	///
-<a href=#130 id=130 data-nosnippet>130</a>	/// If you perform a very long task in the UI thread, the UI freezes until
-<a href=#131 id=131 data-nosnippet>131</a>	/// the task is complete – this may cause the impression that your
-<a href=#132 id=132 data-nosnippet>132</a>	/// application crashed. That's why long tasks should be performed in
-<a href=#133 id=133 data-nosnippet>133</a>	/// parallel threads. However, at some point you'll want to update the UI to
-<a href=#134 id=134 data-nosnippet>134</a>	/// reflect the task progress, but if you update the UI from another thread
-<a href=#135 id=135 data-nosnippet>135</a>	/// (different from the original UI thread), the UI may deadlock, and you
-<a href=#136 id=136 data-nosnippet>136</a>	/// application crashes.
-<a href=#137 id=137 data-nosnippet>137</a>	///
-<a href=#138 id=138 data-nosnippet>138</a>	/// This is what this `run_ui_thread` does, step-by-step:
-<a href=#139 id=139 data-nosnippet>139</a>	///
-<a href=#140 id=140 data-nosnippet>140</a>	/// 1. blocks current thread;
-<a href=#141 id=141 data-nosnippet>141</a>	/// 2. switches to the window's original UI thread;
-<a href=#142 id=142 data-nosnippet>142</a>	/// 3. runs the given `FnOnce`;
-<a href=#143 id=143 data-nosnippet>143</a>	/// 4. switches back to the first thread, which is then unblocked.
-<a href=#144 id=144 data-nosnippet>144</a>	///
-<a href=#145 id=145 data-nosnippet>145</a>	/// When working in a parallel thread, you **must** call `run_ui_thread` to
-<a href=#146 id=146 data-nosnippet>146</a>	/// update the UI.
-<a href=#147 id=147 data-nosnippet>147</a>	///
-<a href=#148 id=148 data-nosnippet>148</a>	/// # Examples
-<a href=#149 id=149 data-nosnippet>149</a>	///
-<a href=#150 id=150 data-nosnippet>150</a>	/// The example below shows the event of a
-<a href=#151 id=151 data-nosnippet>151</a>	/// [button click](crate::gui::events::ButtonEvents::bn_clicked) which
-<a href=#152 id=152 data-nosnippet>152</a>	/// starts a long task in a parallel thread. As it progresses, the status is
-<a href=#153 id=153 data-nosnippet>153</a>	/// printed at the windows's titlebar.
-<a href=#154 id=154 data-nosnippet>154</a>	///
-<a href=#155 id=155 data-nosnippet>155</a>	/// ```no_run
-<a href=#156 id=156 data-nosnippet>156</a>	/// use winsafe::{self as w, prelude::*, gui};
-<a href=#157 id=157 data-nosnippet>157</a>	///
-<a href=#158 id=158 data-nosnippet>158</a>	/// let wnd: gui::WindowMain; // initialized somewhere
-<a href=#159 id=159 data-nosnippet>159</a>	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-<a href=#160 id=160 data-nosnippet>160</a>	/// let btn: gui::Button;
-<a href=#161 id=161 data-nosnippet>161</a>	/// # let btn = gui::Button::new(&amp;wnd, gui::ButtonOpts::default());
-<a href=#162 id=162 data-nosnippet>162</a>	///
-<a href=#163 id=163 data-nosnippet>163</a>	/// btn.on().bn_clicked({
-<a href=#164 id=164 data-nosnippet>164</a>	///     let wnd = wnd.clone();
-<a href=#165 id=165 data-nosnippet>165</a>	///     move || -&gt; w::AnyResult&lt;()&gt; {
-<a href=#166 id=166 data-nosnippet>166</a>	///         println!("Click event at {:#x}", w::GetCurrentThreadId());
-<a href=#167 id=167 data-nosnippet>167</a>	///
-<a href=#168 id=168 data-nosnippet>168</a>	///         std::thread::spawn({
-<a href=#169 id=169 data-nosnippet>169</a>	///             let wnd = wnd.clone();
-<a href=#170 id=170 data-nosnippet>170</a>	///             move || {
-<a href=#171 id=171 data-nosnippet>171</a>	///                 println!("Parallel task starts at {:#x}", w::GetCurrentThreadId());
-<a href=#172 id=172 data-nosnippet>172</a>	///                 w::Sleep(2000);
-<a href=#173 id=173 data-nosnippet>173</a>	///
-<a href=#174 id=174 data-nosnippet>174</a>	///                 wnd.run_ui_thread({
-<a href=#175 id=175 data-nosnippet>175</a>	///                     let wnd = wnd.clone();
-<a href=#176 id=176 data-nosnippet>176</a>	///                     move || -&gt; w::AnyResult&lt;()&gt; {
-<a href=#177 id=177 data-nosnippet>177</a>	///                         println!("Updating UI at {:#x}", w::GetCurrentThreadId());
-<a href=#178 id=178 data-nosnippet>178</a>	///                         wnd.hwnd().SetWindowText("Status... 50%")?;
-<a href=#179 id=179 data-nosnippet>179</a>	///                         Ok(())
-<a href=#180 id=180 data-nosnippet>180</a>	///                     }
-<a href=#181 id=181 data-nosnippet>181</a>	///                 });
-<a href=#182 id=182 data-nosnippet>182</a>	///
-<a href=#183 id=183 data-nosnippet>183</a>	///                 println!("Parallel task keeps going at {:#x}", w::GetCurrentThreadId());
-<a href=#184 id=184 data-nosnippet>184</a>	///                 w::Sleep(2000);
-<a href=#185 id=185 data-nosnippet>185</a>	///
-<a href=#186 id=186 data-nosnippet>186</a>	///                 wnd.run_ui_thread({
-<a href=#187 id=187 data-nosnippet>187</a>	///                     let wnd = wnd.clone();
-<a href=#188 id=188 data-nosnippet>188</a>	///                     move || -&gt; w::AnyResult&lt;()&gt; {
-<a href=#189 id=189 data-nosnippet>189</a>	///                         println!("Updating UI at {:#x}", w::GetCurrentThreadId());
-<a href=#190 id=190 data-nosnippet>190</a>	///                         wnd.hwnd().SetWindowText("Status... 100%")?;
-<a href=#191 id=191 data-nosnippet>191</a>	///                         Ok(())
-<a href=#192 id=192 data-nosnippet>192</a>	///                     }
-<a href=#193 id=193 data-nosnippet>193</a>	///                 });
-<a href=#194 id=194 data-nosnippet>194</a>	///             }
-<a href=#195 id=195 data-nosnippet>195</a>	///         });
-<a href=#196 id=196 data-nosnippet>196</a>	///
-<a href=#197 id=197 data-nosnippet>197</a>	///         Ok(())
-<a href=#198 id=198 data-nosnippet>198</a>	///     }
-<a href=#199 id=199 data-nosnippet>199</a>	/// });
-<a href=#200 id=200 data-nosnippet>200</a>	/// ```
-<a href=#201 id=201 data-nosnippet>201</a>	</span><span class="kw">fn </span>run_ui_thread&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-<a href=#202 id=202 data-nosnippet>202</a>		<span class="kw">where </span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static</span>,
-<a href=#203 id=203 data-nosnippet>203</a>	{
-<a href=#204 id=204 data-nosnippet>204</a>		<span class="self">self</span>.as_ref().run_ui_thread(func)
-<a href=#205 id=205 data-nosnippet>205</a>	}
-<a href=#206 id=206 data-nosnippet>206</a>}
-<a href=#207 id=207 data-nosnippet>207</a>
-<a href=#208 id=208 data-nosnippet>208</a><span class="doccomment">/// Any child control.
-<a href=#209 id=209 data-nosnippet>209</a>///
-<a href=#210 id=210 data-nosnippet>210</a>/// Prefer importing this trait through the prelude:
+<a href=#120 id=120 data-nosnippet>120</a>	<span class="kw">where
+<a href=#121 id=121 data-nosnippet>121</a>		</span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static</span>,
+<a href=#122 id=122 data-nosnippet>122</a>	{
+<a href=#123 id=123 data-nosnippet>123</a>		<span class="self">self</span>.as_ref().spawn_thread(func)
+<a href=#124 id=124 data-nosnippet>124</a>	}
+<a href=#125 id=125 data-nosnippet>125</a>
+<a href=#126 id=126 data-nosnippet>126</a>	<span class="doccomment">/// Runs a closure synchronously in the window's original UI thread,
+<a href=#127 id=127 data-nosnippet>127</a>	/// allowing UI updates without the risk of a deadlock.
+<a href=#128 id=128 data-nosnippet>128</a>	///
+<a href=#129 id=129 data-nosnippet>129</a>	/// # Rationale
+<a href=#130 id=130 data-nosnippet>130</a>	///
+<a href=#131 id=131 data-nosnippet>131</a>	/// If you perform a very long task in the UI thread, the UI freezes until
+<a href=#132 id=132 data-nosnippet>132</a>	/// the task is complete – this may cause the impression that your
+<a href=#133 id=133 data-nosnippet>133</a>	/// application crashed. That's why long tasks should be performed in
+<a href=#134 id=134 data-nosnippet>134</a>	/// parallel threads. However, at some point you'll want to update the UI to
+<a href=#135 id=135 data-nosnippet>135</a>	/// reflect the task progress, but if you update the UI from another thread
+<a href=#136 id=136 data-nosnippet>136</a>	/// (different from the original UI thread), the UI may deadlock, and you
+<a href=#137 id=137 data-nosnippet>137</a>	/// application crashes.
+<a href=#138 id=138 data-nosnippet>138</a>	///
+<a href=#139 id=139 data-nosnippet>139</a>	/// This is what this `run_ui_thread` does, step-by-step:
+<a href=#140 id=140 data-nosnippet>140</a>	///
+<a href=#141 id=141 data-nosnippet>141</a>	/// 1. blocks current thread;
+<a href=#142 id=142 data-nosnippet>142</a>	/// 2. switches to the window's original UI thread;
+<a href=#143 id=143 data-nosnippet>143</a>	/// 3. runs the given `FnOnce`;
+<a href=#144 id=144 data-nosnippet>144</a>	/// 4. switches back to the first thread, which is then unblocked.
+<a href=#145 id=145 data-nosnippet>145</a>	///
+<a href=#146 id=146 data-nosnippet>146</a>	/// When working in a parallel thread, you **must** call `run_ui_thread` to
+<a href=#147 id=147 data-nosnippet>147</a>	/// update the UI.
+<a href=#148 id=148 data-nosnippet>148</a>	///
+<a href=#149 id=149 data-nosnippet>149</a>	/// # Examples
+<a href=#150 id=150 data-nosnippet>150</a>	///
+<a href=#151 id=151 data-nosnippet>151</a>	/// The example below shows the event of a
+<a href=#152 id=152 data-nosnippet>152</a>	/// [button click](crate::gui::events::ButtonEvents::bn_clicked) which
+<a href=#153 id=153 data-nosnippet>153</a>	/// starts a long task in a parallel thread. As it progresses, the status is
+<a href=#154 id=154 data-nosnippet>154</a>	/// printed at the windows's titlebar.
+<a href=#155 id=155 data-nosnippet>155</a>	///
+<a href=#156 id=156 data-nosnippet>156</a>	/// ```no_run
+<a href=#157 id=157 data-nosnippet>157</a>	/// use winsafe::{self as w, prelude::*, gui};
+<a href=#158 id=158 data-nosnippet>158</a>	///
+<a href=#159 id=159 data-nosnippet>159</a>	/// let wnd: gui::WindowMain; // initialized somewhere
+<a href=#160 id=160 data-nosnippet>160</a>	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+<a href=#161 id=161 data-nosnippet>161</a>	/// let btn: gui::Button;
+<a href=#162 id=162 data-nosnippet>162</a>	/// # let btn = gui::Button::new(&amp;wnd, gui::ButtonOpts::default());
+<a href=#163 id=163 data-nosnippet>163</a>	///
+<a href=#164 id=164 data-nosnippet>164</a>	/// btn.on().bn_clicked({
+<a href=#165 id=165 data-nosnippet>165</a>	///     let wnd = wnd.clone();
+<a href=#166 id=166 data-nosnippet>166</a>	///     move || -&gt; w::AnyResult&lt;()&gt; {
+<a href=#167 id=167 data-nosnippet>167</a>	///         println!("Click event at {:#x}", w::GetCurrentThreadId());
+<a href=#168 id=168 data-nosnippet>168</a>	///
+<a href=#169 id=169 data-nosnippet>169</a>	///         std::thread::spawn({
+<a href=#170 id=170 data-nosnippet>170</a>	///             let wnd = wnd.clone();
+<a href=#171 id=171 data-nosnippet>171</a>	///             move || {
+<a href=#172 id=172 data-nosnippet>172</a>	///                 println!("Parallel task starts at {:#x}", w::GetCurrentThreadId());
+<a href=#173 id=173 data-nosnippet>173</a>	///                 w::Sleep(2000);
+<a href=#174 id=174 data-nosnippet>174</a>	///
+<a href=#175 id=175 data-nosnippet>175</a>	///                 wnd.run_ui_thread({
+<a href=#176 id=176 data-nosnippet>176</a>	///                     let wnd = wnd.clone();
+<a href=#177 id=177 data-nosnippet>177</a>	///                     move || -&gt; w::AnyResult&lt;()&gt; {
+<a href=#178 id=178 data-nosnippet>178</a>	///                         println!("Updating UI at {:#x}", w::GetCurrentThreadId());
+<a href=#179 id=179 data-nosnippet>179</a>	///                         wnd.hwnd().SetWindowText("Status... 50%")?;
+<a href=#180 id=180 data-nosnippet>180</a>	///                         Ok(())
+<a href=#181 id=181 data-nosnippet>181</a>	///                     }
+<a href=#182 id=182 data-nosnippet>182</a>	///                 });
+<a href=#183 id=183 data-nosnippet>183</a>	///
+<a href=#184 id=184 data-nosnippet>184</a>	///                 println!("Parallel task keeps going at {:#x}", w::GetCurrentThreadId());
+<a href=#185 id=185 data-nosnippet>185</a>	///                 w::Sleep(2000);
+<a href=#186 id=186 data-nosnippet>186</a>	///
+<a href=#187 id=187 data-nosnippet>187</a>	///                 wnd.run_ui_thread({
+<a href=#188 id=188 data-nosnippet>188</a>	///                     let wnd = wnd.clone();
+<a href=#189 id=189 data-nosnippet>189</a>	///                     move || -&gt; w::AnyResult&lt;()&gt; {
+<a href=#190 id=190 data-nosnippet>190</a>	///                         println!("Updating UI at {:#x}", w::GetCurrentThreadId());
+<a href=#191 id=191 data-nosnippet>191</a>	///                         wnd.hwnd().SetWindowText("Status... 100%")?;
+<a href=#192 id=192 data-nosnippet>192</a>	///                         Ok(())
+<a href=#193 id=193 data-nosnippet>193</a>	///                     }
+<a href=#194 id=194 data-nosnippet>194</a>	///                 });
+<a href=#195 id=195 data-nosnippet>195</a>	///             }
+<a href=#196 id=196 data-nosnippet>196</a>	///         });
+<a href=#197 id=197 data-nosnippet>197</a>	///
+<a href=#198 id=198 data-nosnippet>198</a>	///         Ok(())
+<a href=#199 id=199 data-nosnippet>199</a>	///     }
+<a href=#200 id=200 data-nosnippet>200</a>	/// });
+<a href=#201 id=201 data-nosnippet>201</a>	/// ```
+<a href=#202 id=202 data-nosnippet>202</a>	</span><span class="kw">fn </span>run_ui_thread&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
+<a href=#203 id=203 data-nosnippet>203</a>	<span class="kw">where
+<a href=#204 id=204 data-nosnippet>204</a>		</span>F: FnOnce() -&gt; AnyResult&lt;()&gt; + Send + <span class="lifetime">'static</span>,
+<a href=#205 id=205 data-nosnippet>205</a>	{
+<a href=#206 id=206 data-nosnippet>206</a>		<span class="self">self</span>.as_ref().run_ui_thread(func)
+<a href=#207 id=207 data-nosnippet>207</a>	}
+<a href=#208 id=208 data-nosnippet>208</a>}
+<a href=#209 id=209 data-nosnippet>209</a>
+<a href=#210 id=210 data-nosnippet>210</a><span class="doccomment">/// Any child control.
 <a href=#211 id=211 data-nosnippet>211</a>///
-<a href=#212 id=212 data-nosnippet>212</a>/// ```no_run
-<a href=#213 id=213 data-nosnippet>213</a>/// use winsafe::prelude::*;
-<a href=#214 id=214 data-nosnippet>214</a>/// ```
-<a href=#215 id=215 data-nosnippet>215</a></span><span class="kw">pub trait </span>GuiControl: GuiWindow {
-<a href=#216 id=216 data-nosnippet>216</a>	<span class="doccomment">/// Returns the control ID, which is defined at control creation.
-<a href=#217 id=217 data-nosnippet>217</a>	///
-<a href=#218 id=218 data-nosnippet>218</a>	/// The control ID should be unique within a parent.
-<a href=#219 id=219 data-nosnippet>219</a>	</span><span class="attr">#[must_use]
-<a href=#220 id=220 data-nosnippet>220</a>	</span><span class="kw">fn </span>ctrl_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u16;
-<a href=#221 id=221 data-nosnippet>221</a>
-<a href=#222 id=222 data-nosnippet>222</a>	<span class="doccomment">/// In an ordinary window, simply calls
-<a href=#223 id=223 data-nosnippet>223</a>	/// [`HWND:SetFocus`](crate::prelude::user_Hwnd::SetFocus).
-<a href=#224 id=224 data-nosnippet>224</a>	///
-<a href=#225 id=225 data-nosnippet>225</a>	/// In a dialog window, sends a
-<a href=#226 id=226 data-nosnippet>226</a>	/// [`wm::NextDlgCtl`] message. This is preferable to the `HWND::SetFocus`
-<a href=#227 id=227 data-nosnippet>227</a>	/// because it takes care of border highlighting, like the native
-<a href=#228 id=228 data-nosnippet>228</a>	/// [`Button`](crate::gui::Button) control needs.
-<a href=#229 id=229 data-nosnippet>229</a>	</span><span class="kw">fn </span>focus(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;()&gt; {
-<a href=#230 id=230 data-nosnippet>230</a>		<span class="kw">let </span>hparent = <span class="self">self</span>.hwnd().GetParent()<span class="question-mark">?</span>;
-<a href=#231 id=231 data-nosnippet>231</a>		<span class="kw">if </span>hparent.is_dialog() {
-<a href=#232 id=232 data-nosnippet>232</a>			<span class="kw">unsafe </span>{
-<a href=#233 id=233 data-nosnippet>233</a>				hparent.SendMessage(wm::NextDlgCtl {
-<a href=#234 id=234 data-nosnippet>234</a>					hwnd_focus: HwndFocus::Hwnd(<span class="self">self</span>.hwnd().raw_copy()),
-<a href=#235 id=235 data-nosnippet>235</a>				});
-<a href=#236 id=236 data-nosnippet>236</a>			}
-<a href=#237 id=237 data-nosnippet>237</a>		} <span class="kw">else </span>{
-<a href=#238 id=238 data-nosnippet>238</a>			<span class="self">self</span>.hwnd().SetFocus();
-<a href=#239 id=239 data-nosnippet>239</a>		}
-<a href=#240 id=240 data-nosnippet>240</a>		<span class="prelude-val">Ok</span>(())
-<a href=#241 id=241 data-nosnippet>241</a>	}
-<a href=#242 id=242 data-nosnippet>242</a>}</code></pre></div></section></main></body></html>
+<a href=#212 id=212 data-nosnippet>212</a>/// Prefer importing this trait through the prelude:
+<a href=#213 id=213 data-nosnippet>213</a>///
+<a href=#214 id=214 data-nosnippet>214</a>/// ```no_run
+<a href=#215 id=215 data-nosnippet>215</a>/// use winsafe::prelude::*;
+<a href=#216 id=216 data-nosnippet>216</a>/// ```
+<a href=#217 id=217 data-nosnippet>217</a></span><span class="kw">pub trait </span>GuiControl: GuiWindow {
+<a href=#218 id=218 data-nosnippet>218</a>	<span class="doccomment">/// Returns the control ID, which is defined at control creation.
+<a href=#219 id=219 data-nosnippet>219</a>	///
+<a href=#220 id=220 data-nosnippet>220</a>	/// The control ID should be unique within a parent.
+<a href=#221 id=221 data-nosnippet>221</a>	</span><span class="attr">#[must_use]
+<a href=#222 id=222 data-nosnippet>222</a>	</span><span class="kw">fn </span>ctrl_id(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u16;
+<a href=#223 id=223 data-nosnippet>223</a>
+<a href=#224 id=224 data-nosnippet>224</a>	<span class="doccomment">/// In an ordinary window, simply calls
+<a href=#225 id=225 data-nosnippet>225</a>	/// [`HWND:SetFocus`](crate::prelude::user_Hwnd::SetFocus).
+<a href=#226 id=226 data-nosnippet>226</a>	///
+<a href=#227 id=227 data-nosnippet>227</a>	/// In a dialog window, sends a
+<a href=#228 id=228 data-nosnippet>228</a>	/// [`wm::NextDlgCtl`] message. This is preferable to the `HWND::SetFocus`
+<a href=#229 id=229 data-nosnippet>229</a>	/// because it takes care of border highlighting, like the native
+<a href=#230 id=230 data-nosnippet>230</a>	/// [`Button`](crate::gui::Button) control needs.
+<a href=#231 id=231 data-nosnippet>231</a>	</span><span class="kw">fn </span>focus(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;()&gt; {
+<a href=#232 id=232 data-nosnippet>232</a>		<span class="kw">let </span>hparent = <span class="self">self</span>.hwnd().GetParent()<span class="question-mark">?</span>;
+<a href=#233 id=233 data-nosnippet>233</a>		<span class="kw">if </span>hparent.is_dialog() {
+<a href=#234 id=234 data-nosnippet>234</a>			<span class="kw">unsafe </span>{
+<a href=#235 id=235 data-nosnippet>235</a>				hparent.SendMessage(wm::NextDlgCtl {
+<a href=#236 id=236 data-nosnippet>236</a>					hwnd_focus: HwndFocus::Hwnd(<span class="self">self</span>.hwnd().raw_copy()),
+<a href=#237 id=237 data-nosnippet>237</a>				});
+<a href=#238 id=238 data-nosnippet>238</a>			}
+<a href=#239 id=239 data-nosnippet>239</a>		} <span class="kw">else </span>{
+<a href=#240 id=240 data-nosnippet>240</a>			<span class="self">self</span>.hwnd().SetFocus();
+<a href=#241 id=241 data-nosnippet>241</a>		}
+<a href=#242 id=242 data-nosnippet>242</a>		<span class="prelude-val">Ok</span>(())
+<a href=#243 id=243 data-nosnippet>243</a>	}
+<a href=#244 id=244 data-nosnippet>244</a>}</code></pre></div></section></main></body></html>

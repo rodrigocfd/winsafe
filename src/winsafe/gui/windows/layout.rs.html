@@ -60,114 +60,116 @@
 <a href=#60 id=60 data-nosnippet>60</a><span class="kw">impl </span>Layout {
 <a href=#61 id=61 data-nosnippet>61</a>	<span class="attr">#[must_use]
 <a href=#62 id=62 data-nosnippet>62</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new() -&gt; <span class="self">Self </span>{
-<a href=#63 id=63 data-nosnippet>63</a>		<span class="self">Self</span>(
-<a href=#64 id=64 data-nosnippet>64</a>			Arc::pin(
-<a href=#65 id=65 data-nosnippet>65</a>				LayoutObj {
-<a href=#66 id=66 data-nosnippet>66</a>					ctrls: UnsafeCell::new(Vec::new()),
-<a href=#67 id=67 data-nosnippet>67</a>					sz_parent_orig: UnsafeCell::new(<span class="prelude-val">None</span>),
-<a href=#68 id=68 data-nosnippet>68</a>					_pin: PhantomPinned,
-<a href=#69 id=69 data-nosnippet>69</a>				},
-<a href=#70 id=70 data-nosnippet>70</a>			),
-<a href=#71 id=71 data-nosnippet>71</a>		)
-<a href=#72 id=72 data-nosnippet>72</a>	}
-<a href=#73 id=73 data-nosnippet>73</a>
-<a href=#74 id=74 data-nosnippet>74</a>	<span class="doccomment">/// Adds a new child control to the internal list, so this control will have
-<a href=#75 id=75 data-nosnippet>75</a>	/// its position and size rearranged when requested.
-<a href=#76 id=76 data-nosnippet>76</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>add_child(<span class="kw-2">&amp;</span><span class="self">self</span>,
-<a href=#77 id=77 data-nosnippet>77</a>		hparent: <span class="kw-2">&amp;</span>HWND,
-<a href=#78 id=78 data-nosnippet>78</a>		hchild: <span class="kw-2">&amp;</span>HWND,
-<a href=#79 id=79 data-nosnippet>79</a>		resize_behavior: (Horz, Vert),
-<a href=#80 id=80 data-nosnippet>80</a>	) -&gt; SysResult&lt;()&gt;
-<a href=#81 id=81 data-nosnippet>81</a>	{
-<a href=#82 id=82 data-nosnippet>82</a>		<span class="kw">if </span><span class="kw-2">*</span>hparent == HWND::NULL || <span class="kw-2">*</span>hchild == HWND::NULL {
-<a href=#83 id=83 data-nosnippet>83</a>			<span class="macro">panic!</span>(<span class="string">"Cannot add resizer entries before window/control creation."</span>);
-<a href=#84 id=84 data-nosnippet>84</a>		}
-<a href=#85 id=85 data-nosnippet>85</a>
-<a href=#86 id=86 data-nosnippet>86</a>		<span class="kw">let </span>(horz, vert) = resize_behavior;
-<a href=#87 id=87 data-nosnippet>87</a>		<span class="kw">if </span>horz != Horz::None || vert != Vert::None { <span class="comment">// if nothing to do, don't even add it
-<a href=#88 id=88 data-nosnippet>88</a>			</span><span class="kw">let </span>ctrls = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.<span class="number">0</span>.ctrls.get() };
-<a href=#89 id=89 data-nosnippet>89</a>
-<a href=#90 id=90 data-nosnippet>90</a>			<span class="kw">if </span>ctrls.is_empty() { <span class="comment">// first control being added
-<a href=#91 id=91 data-nosnippet>91</a>				</span><span class="kw">let </span>rc_parent = hparent.GetClientRect()<span class="question-mark">?</span>;
-<a href=#92 id=92 data-nosnippet>92</a>				<span class="kw-2">*</span><span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.<span class="number">0</span>.sz_parent_orig.get() } = <span class="prelude-val">Some</span>(
-<a href=#93 id=93 data-nosnippet>93</a>					SIZE::new(rc_parent.right, rc_parent.bottom), <span class="comment">// save parent client area
-<a href=#94 id=94 data-nosnippet>94</a>				</span>);
-<a href=#95 id=95 data-nosnippet>95</a>			}
-<a href=#96 id=96 data-nosnippet>96</a>
-<a href=#97 id=97 data-nosnippet>97</a>			ctrls.push(
-<a href=#98 id=98 data-nosnippet>98</a>				ChildInfo {
-<a href=#99 id=99 data-nosnippet>99</a>					hchild: <span class="kw">unsafe </span>{ hchild.raw_copy() },
-<a href=#100 id=100 data-nosnippet>100</a>					horz,
-<a href=#101 id=101 data-nosnippet>101</a>					vert,
-<a href=#102 id=102 data-nosnippet>102</a>					rc_orig: <span class="prelude-val">None</span>,
-<a href=#103 id=103 data-nosnippet>103</a>				},
-<a href=#104 id=104 data-nosnippet>104</a>			);
-<a href=#105 id=105 data-nosnippet>105</a>		}
-<a href=#106 id=106 data-nosnippet>106</a>
-<a href=#107 id=107 data-nosnippet>107</a>		<span class="prelude-val">Ok</span>(())
-<a href=#108 id=108 data-nosnippet>108</a>	}
-<a href=#109 id=109 data-nosnippet>109</a>
-<a href=#110 id=110 data-nosnippet>110</a>	<span class="doccomment">/// Rearranges all child controls to fit the new width/height of parent
-<a href=#111 id=111 data-nosnippet>111</a>	/// window.
-<a href=#112 id=112 data-nosnippet>112</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>rearrange(<span class="kw-2">&amp;</span><span class="self">self</span>, p: wm::Size) -&gt; SysResult&lt;()&gt; {
-<a href=#113 id=113 data-nosnippet>113</a>		<span class="kw">let </span>ctrls = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.<span class="number">0</span>.ctrls.get() };
-<a href=#114 id=114 data-nosnippet>114</a>		<span class="kw">if </span>ctrls.is_empty() <span class="comment">// no controls
-<a href=#115 id=115 data-nosnippet>115</a>			</span>|| p.request == co::SIZE_R::MINIMIZED { <span class="comment">// we're minimized
-<a href=#116 id=116 data-nosnippet>116</a>			</span><span class="kw">return </span><span class="prelude-val">Ok</span>(());
-<a href=#117 id=117 data-nosnippet>117</a>		}
-<a href=#118 id=118 data-nosnippet>118</a>
-<a href=#119 id=119 data-nosnippet>119</a>		<span class="kw">let </span>sz_parent_orig = <span class="kw">match unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.<span class="number">0</span>.sz_parent_orig.get() } {
-<a href=#120 id=120 data-nosnippet>120</a>			<span class="prelude-val">Some</span>(sz) =&gt; <span class="kw-2">*</span>sz,
-<a href=#121 id=121 data-nosnippet>121</a>			<span class="prelude-val">None </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Original parent client area was not saved."</span>),
-<a href=#122 id=122 data-nosnippet>122</a>		};
-<a href=#123 id=123 data-nosnippet>123</a>
-<a href=#124 id=124 data-nosnippet>124</a>		<span class="kw">let </span><span class="kw-2">mut </span>hdwp = HDWP::BeginDeferWindowPos(ctrls.len() <span class="kw">as _</span>)<span class="question-mark">?</span>;
-<a href=#125 id=125 data-nosnippet>125</a>
-<a href=#126 id=126 data-nosnippet>126</a>		<span class="kw">for </span>ctrl <span class="kw">in </span>ctrls.iter_mut() {
-<a href=#127 id=127 data-nosnippet>127</a>			<span class="kw">let </span><span class="kw-2">mut </span>uflags = co::SWP::NOZORDER;
-<a href=#128 id=128 data-nosnippet>128</a>			<span class="kw">if </span>ctrl.horz == Horz::Repos &amp;&amp; ctrl.vert == Vert::Repos { <span class="comment">// reposition both vert &amp; horz
-<a href=#129 id=129 data-nosnippet>129</a>				</span>uflags |= co::SWP::NOSIZE;
-<a href=#130 id=130 data-nosnippet>130</a>			} <span class="kw">else if </span>ctrl.horz == Horz::Resize &amp;&amp; ctrl.vert == Vert::Resize { <span class="comment">// resize both vert &amp; horz
-<a href=#131 id=131 data-nosnippet>131</a>				</span>uflags |= co::SWP::NOMOVE;
-<a href=#132 id=132 data-nosnippet>132</a>			}
-<a href=#133 id=133 data-nosnippet>133</a>
-<a href=#134 id=134 data-nosnippet>134</a>			<span class="kw">let </span>rc_orig = <span class="kw">match </span><span class="kw-2">&amp;</span>ctrl.rc_orig {
-<a href=#135 id=135 data-nosnippet>135</a>				<span class="prelude-val">Some</span>(rc) =&gt; <span class="kw-2">*</span>rc,
-<a href=#136 id=136 data-nosnippet>136</a>				<span class="prelude-val">None </span>=&gt; {
-<a href=#137 id=137 data-nosnippet>137</a>					<span class="kw">let </span>rc = ctrl.hchild.GetParent()<span class="question-mark">?
-<a href=#138 id=138 data-nosnippet>138</a>						</span>.ScreenToClientRc(ctrl.hchild.GetWindowRect()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
-<a href=#139 id=139 data-nosnippet>139</a>					ctrl.rc_orig = <span class="prelude-val">Some</span>(rc); <span class="comment">// save control client coordinates relative to parent
-<a href=#140 id=140 data-nosnippet>140</a>					</span>rc
-<a href=#141 id=141 data-nosnippet>141</a>				},
-<a href=#142 id=142 data-nosnippet>142</a>			};
-<a href=#143 id=143 data-nosnippet>143</a>
-<a href=#144 id=144 data-nosnippet>144</a>			hdwp.DeferWindowPos(
-<a href=#145 id=145 data-nosnippet>145</a>				<span class="kw-2">&amp;</span>ctrl.hchild,
-<a href=#146 id=146 data-nosnippet>146</a>				HwndPlace::None,
-<a href=#147 id=147 data-nosnippet>147</a>				POINT::new(
-<a href=#148 id=148 data-nosnippet>148</a>					<span class="kw">match </span>ctrl.horz {
-<a href=#149 id=149 data-nosnippet>149</a>						Horz::Repos =&gt; p.client_area.cx - sz_parent_orig.cx + rc_orig.left,
-<a href=#150 id=150 data-nosnippet>150</a>						<span class="kw">_ </span>=&gt; rc_orig.left <span class="comment">// keep original x pos
-<a href=#151 id=151 data-nosnippet>151</a>					</span>},
-<a href=#152 id=152 data-nosnippet>152</a>					<span class="kw">match </span>ctrl.vert {
-<a href=#153 id=153 data-nosnippet>153</a>						Vert::Repos =&gt; p.client_area.cy - sz_parent_orig.cy + rc_orig.top,
-<a href=#154 id=154 data-nosnippet>154</a>						<span class="kw">_ </span>=&gt; rc_orig.top <span class="comment">// keep original y pos
-<a href=#155 id=155 data-nosnippet>155</a>					</span>},
-<a href=#156 id=156 data-nosnippet>156</a>				),
-<a href=#157 id=157 data-nosnippet>157</a>				SIZE::new(
-<a href=#158 id=158 data-nosnippet>158</a>					<span class="kw">match </span>ctrl.horz {
-<a href=#159 id=159 data-nosnippet>159</a>						Horz::Resize =&gt; p.client_area.cx - sz_parent_orig.cx + rc_orig.right - rc_orig.left,
-<a href=#160 id=160 data-nosnippet>160</a>						<span class="kw">_ </span>=&gt; rc_orig.right - rc_orig.left <span class="comment">// keep original width
+<a href=#63 id=63 data-nosnippet>63</a>		<span class="self">Self</span>(Arc::pin(LayoutObj {
+<a href=#64 id=64 data-nosnippet>64</a>			ctrls: UnsafeCell::new(Vec::new()),
+<a href=#65 id=65 data-nosnippet>65</a>			sz_parent_orig: UnsafeCell::new(<span class="prelude-val">None</span>),
+<a href=#66 id=66 data-nosnippet>66</a>			_pin: PhantomPinned,
+<a href=#67 id=67 data-nosnippet>67</a>		}))
+<a href=#68 id=68 data-nosnippet>68</a>	}
+<a href=#69 id=69 data-nosnippet>69</a>
+<a href=#70 id=70 data-nosnippet>70</a>	<span class="doccomment">/// Adds a new child control to the internal list, so this control will have
+<a href=#71 id=71 data-nosnippet>71</a>	/// its position and size rearranged when requested.
+<a href=#72 id=72 data-nosnippet>72</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>add_child(
+<a href=#73 id=73 data-nosnippet>73</a>		<span class="kw-2">&amp;</span><span class="self">self</span>,
+<a href=#74 id=74 data-nosnippet>74</a>		hparent: <span class="kw-2">&amp;</span>HWND,
+<a href=#75 id=75 data-nosnippet>75</a>		hchild: <span class="kw-2">&amp;</span>HWND,
+<a href=#76 id=76 data-nosnippet>76</a>		resize_behavior: (Horz, Vert),
+<a href=#77 id=77 data-nosnippet>77</a>	) -&gt; SysResult&lt;()&gt; {
+<a href=#78 id=78 data-nosnippet>78</a>		<span class="kw">if </span><span class="kw-2">*</span>hparent == HWND::NULL || <span class="kw-2">*</span>hchild == HWND::NULL {
+<a href=#79 id=79 data-nosnippet>79</a>			<span class="macro">panic!</span>(<span class="string">"Cannot add resizer entries before window/control creation."</span>);
+<a href=#80 id=80 data-nosnippet>80</a>		}
+<a href=#81 id=81 data-nosnippet>81</a>
+<a href=#82 id=82 data-nosnippet>82</a>		<span class="kw">let </span>(horz, vert) = resize_behavior;
+<a href=#83 id=83 data-nosnippet>83</a>		<span class="kw">if </span>horz != Horz::None || vert != Vert::None {
+<a href=#84 id=84 data-nosnippet>84</a>			<span class="comment">// if nothing to do, don't even add it
+<a href=#85 id=85 data-nosnippet>85</a>			</span><span class="kw">let </span>ctrls = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.<span class="number">0</span>.ctrls.get() };
+<a href=#86 id=86 data-nosnippet>86</a>
+<a href=#87 id=87 data-nosnippet>87</a>			<span class="kw">if </span>ctrls.is_empty() {
+<a href=#88 id=88 data-nosnippet>88</a>				<span class="kw">let </span>rc_parent = hparent.GetClientRect()<span class="question-mark">?</span>;
+<a href=#89 id=89 data-nosnippet>89</a>				<span class="kw-2">*</span><span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.<span class="number">0</span>.sz_parent_orig.get() } = <span class="prelude-val">Some</span>(
+<a href=#90 id=90 data-nosnippet>90</a>					SIZE::new(rc_parent.right, rc_parent.bottom), <span class="comment">// save parent client area
+<a href=#91 id=91 data-nosnippet>91</a>				</span>);
+<a href=#92 id=92 data-nosnippet>92</a>			}
+<a href=#93 id=93 data-nosnippet>93</a>
+<a href=#94 id=94 data-nosnippet>94</a>			ctrls.push(ChildInfo {
+<a href=#95 id=95 data-nosnippet>95</a>				hchild: <span class="kw">unsafe </span>{ hchild.raw_copy() },
+<a href=#96 id=96 data-nosnippet>96</a>				horz,
+<a href=#97 id=97 data-nosnippet>97</a>				vert,
+<a href=#98 id=98 data-nosnippet>98</a>				rc_orig: <span class="prelude-val">None</span>,
+<a href=#99 id=99 data-nosnippet>99</a>			});
+<a href=#100 id=100 data-nosnippet>100</a>		}
+<a href=#101 id=101 data-nosnippet>101</a>
+<a href=#102 id=102 data-nosnippet>102</a>		<span class="prelude-val">Ok</span>(())
+<a href=#103 id=103 data-nosnippet>103</a>	}
+<a href=#104 id=104 data-nosnippet>104</a>
+<a href=#105 id=105 data-nosnippet>105</a>	<span class="doccomment">/// Rearranges all child controls to fit the new width/height of parent
+<a href=#106 id=106 data-nosnippet>106</a>	/// window.
+<a href=#107 id=107 data-nosnippet>107</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>rearrange(<span class="kw-2">&amp;</span><span class="self">self</span>, p: wm::Size) -&gt; SysResult&lt;()&gt; {
+<a href=#108 id=108 data-nosnippet>108</a>		<span class="kw">let </span>ctrls = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.<span class="number">0</span>.ctrls.get() };
+<a href=#109 id=109 data-nosnippet>109</a>		<span class="kw">if </span>ctrls.is_empty() <span class="comment">// no controls
+<a href=#110 id=110 data-nosnippet>110</a>			</span>|| p.request == co::SIZE_R::MINIMIZED
+<a href=#111 id=111 data-nosnippet>111</a>		{
+<a href=#112 id=112 data-nosnippet>112</a>			<span class="kw">return </span><span class="prelude-val">Ok</span>(()); <span class="comment">// we're minimized
+<a href=#113 id=113 data-nosnippet>113</a>		</span>}
+<a href=#114 id=114 data-nosnippet>114</a>
+<a href=#115 id=115 data-nosnippet>115</a>		<span class="kw">let </span>sz_parent_orig = <span class="kw">match unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.<span class="number">0</span>.sz_parent_orig.get() } {
+<a href=#116 id=116 data-nosnippet>116</a>			<span class="prelude-val">Some</span>(sz) =&gt; <span class="kw-2">*</span>sz,
+<a href=#117 id=117 data-nosnippet>117</a>			<span class="prelude-val">None </span>=&gt; <span class="macro">panic!</span>(<span class="string">"Original parent client area was not saved."</span>),
+<a href=#118 id=118 data-nosnippet>118</a>		};
+<a href=#119 id=119 data-nosnippet>119</a>
+<a href=#120 id=120 data-nosnippet>120</a>		<span class="kw">let </span><span class="kw-2">mut </span>hdwp = HDWP::BeginDeferWindowPos(ctrls.len() <span class="kw">as _</span>)<span class="question-mark">?</span>;
+<a href=#121 id=121 data-nosnippet>121</a>
+<a href=#122 id=122 data-nosnippet>122</a>		<span class="kw">for </span>ctrl <span class="kw">in </span>ctrls.iter_mut() {
+<a href=#123 id=123 data-nosnippet>123</a>			<span class="kw">let </span><span class="kw-2">mut </span>uflags = co::SWP::NOZORDER;
+<a href=#124 id=124 data-nosnippet>124</a>			<span class="kw">if </span>ctrl.horz == Horz::Repos &amp;&amp; ctrl.vert == Vert::Repos {
+<a href=#125 id=125 data-nosnippet>125</a>				uflags |= co::SWP::NOSIZE; <span class="comment">// reposition both vert &amp; horz
+<a href=#126 id=126 data-nosnippet>126</a>			</span>} <span class="kw">else if </span>ctrl.horz == Horz::Resize &amp;&amp; ctrl.vert == Vert::Resize {
+<a href=#127 id=127 data-nosnippet>127</a>				uflags |= co::SWP::NOMOVE; <span class="comment">// resize both vert &amp; horz
+<a href=#128 id=128 data-nosnippet>128</a>			</span>}
+<a href=#129 id=129 data-nosnippet>129</a>
+<a href=#130 id=130 data-nosnippet>130</a>			<span class="kw">let </span>rc_orig = <span class="kw">match </span><span class="kw-2">&amp;</span>ctrl.rc_orig {
+<a href=#131 id=131 data-nosnippet>131</a>				<span class="prelude-val">Some</span>(rc) =&gt; <span class="kw-2">*</span>rc,
+<a href=#132 id=132 data-nosnippet>132</a>				<span class="prelude-val">None </span>=&gt; {
+<a href=#133 id=133 data-nosnippet>133</a>					<span class="kw">let </span>rc = ctrl
+<a href=#134 id=134 data-nosnippet>134</a>						.hchild
+<a href=#135 id=135 data-nosnippet>135</a>						.GetParent()<span class="question-mark">?
+<a href=#136 id=136 data-nosnippet>136</a>						</span>.ScreenToClientRc(ctrl.hchild.GetWindowRect()<span class="question-mark">?</span>)<span class="question-mark">?</span>;
+<a href=#137 id=137 data-nosnippet>137</a>					ctrl.rc_orig = <span class="prelude-val">Some</span>(rc); <span class="comment">// save control client coordinates relative to parent
+<a href=#138 id=138 data-nosnippet>138</a>					</span>rc
+<a href=#139 id=139 data-nosnippet>139</a>				},
+<a href=#140 id=140 data-nosnippet>140</a>			};
+<a href=#141 id=141 data-nosnippet>141</a>
+<a href=#142 id=142 data-nosnippet>142</a>			hdwp.DeferWindowPos(
+<a href=#143 id=143 data-nosnippet>143</a>				<span class="kw-2">&amp;</span>ctrl.hchild,
+<a href=#144 id=144 data-nosnippet>144</a>				HwndPlace::None,
+<a href=#145 id=145 data-nosnippet>145</a>				POINT::new(
+<a href=#146 id=146 data-nosnippet>146</a>					<span class="kw">match </span>ctrl.horz {
+<a href=#147 id=147 data-nosnippet>147</a>						Horz::Repos =&gt; p.client_area.cx - sz_parent_orig.cx + rc_orig.left,
+<a href=#148 id=148 data-nosnippet>148</a>						<span class="kw">_ </span>=&gt; rc_orig.left, <span class="comment">// keep original x pos
+<a href=#149 id=149 data-nosnippet>149</a>					</span>},
+<a href=#150 id=150 data-nosnippet>150</a>					<span class="kw">match </span>ctrl.vert {
+<a href=#151 id=151 data-nosnippet>151</a>						Vert::Repos =&gt; p.client_area.cy - sz_parent_orig.cy + rc_orig.top,
+<a href=#152 id=152 data-nosnippet>152</a>						<span class="kw">_ </span>=&gt; rc_orig.top, <span class="comment">// keep original y pos
+<a href=#153 id=153 data-nosnippet>153</a>					</span>},
+<a href=#154 id=154 data-nosnippet>154</a>				),
+<a href=#155 id=155 data-nosnippet>155</a>				SIZE::new(
+<a href=#156 id=156 data-nosnippet>156</a>					<span class="kw">match </span>ctrl.horz {
+<a href=#157 id=157 data-nosnippet>157</a>						Horz::Resize =&gt; {
+<a href=#158 id=158 data-nosnippet>158</a>							p.client_area.cx - sz_parent_orig.cx + rc_orig.right - rc_orig.left
+<a href=#159 id=159 data-nosnippet>159</a>						},
+<a href=#160 id=160 data-nosnippet>160</a>						<span class="kw">_ </span>=&gt; rc_orig.right - rc_orig.left, <span class="comment">// keep original width
 <a href=#161 id=161 data-nosnippet>161</a>					</span>},
 <a href=#162 id=162 data-nosnippet>162</a>					<span class="kw">match </span>ctrl.vert {
-<a href=#163 id=163 data-nosnippet>163</a>						Vert::Resize =&gt; p.client_area.cy - sz_parent_orig.cy + rc_orig.bottom - rc_orig.top,
-<a href=#164 id=164 data-nosnippet>164</a>						<span class="kw">_ </span>=&gt; rc_orig.bottom - rc_orig.top <span class="comment">// keep original height
-<a href=#165 id=165 data-nosnippet>165</a>					</span>},
-<a href=#166 id=166 data-nosnippet>166</a>				),
-<a href=#167 id=167 data-nosnippet>167</a>				uflags,
-<a href=#168 id=168 data-nosnippet>168</a>			)<span class="question-mark">?</span>;
-<a href=#169 id=169 data-nosnippet>169</a>		}
-<a href=#170 id=170 data-nosnippet>170</a>
-<a href=#171 id=171 data-nosnippet>171</a>		<span class="prelude-val">Ok</span>(())
-<a href=#172 id=172 data-nosnippet>172</a>	}
-<a href=#173 id=173 data-nosnippet>173</a>}</code></pre></div></section></main></body></html>
+<a href=#163 id=163 data-nosnippet>163</a>						Vert::Resize =&gt; {
+<a href=#164 id=164 data-nosnippet>164</a>							p.client_area.cy - sz_parent_orig.cy + rc_orig.bottom - rc_orig.top
+<a href=#165 id=165 data-nosnippet>165</a>						},
+<a href=#166 id=166 data-nosnippet>166</a>						<span class="kw">_ </span>=&gt; rc_orig.bottom - rc_orig.top, <span class="comment">// keep original height
+<a href=#167 id=167 data-nosnippet>167</a>					</span>},
+<a href=#168 id=168 data-nosnippet>168</a>				),
+<a href=#169 id=169 data-nosnippet>169</a>				uflags,
+<a href=#170 id=170 data-nosnippet>170</a>			)<span class="question-mark">?</span>;
+<a href=#171 id=171 data-nosnippet>171</a>		}
+<a href=#172 id=172 data-nosnippet>172</a>
+<a href=#173 id=173 data-nosnippet>173</a>		<span class="prelude-val">Ok</span>(())
+<a href=#174 id=174 data-nosnippet>174</a>	}
+<a href=#175 id=175 data-nosnippet>175</a>}</code></pre></div></section></main></body></html>

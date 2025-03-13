@@ -98,25 +98,27 @@
 <a href=#98 id=98 data-nosnippet>98</a>	</span><span class="attr">#[must_use]
 <a href=#99 id=99 data-nosnippet>99</a>	</span><span class="kw">fn </span>leak(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">*mut </span>std::ffi::c_void {
 <a href=#100 id=100 data-nosnippet>100</a>		<span class="kw">let </span>p = <span class="self">self</span>.ptr();
-<a href=#101 id=101 data-nosnippet>101</a>		<span class="kw">unsafe </span>{ <span class="kw-2">*</span><span class="self">self</span>.as_mut() = std::ptr::null_mut(); }
-<a href=#102 id=102 data-nosnippet>102</a>		p
-<a href=#103 id=103 data-nosnippet>103</a>	}
-<a href=#104 id=104 data-nosnippet>104</a>
-<a href=#105 id=105 data-nosnippet>105</a>	<span class="doccomment">/// [`IUnknown::QueryInterface`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void))
-<a href=#106 id=106 data-nosnippet>106</a>	/// method.
-<a href=#107 id=107 data-nosnippet>107</a>	</span><span class="attr">#[must_use]
-<a href=#108 id=108 data-nosnippet>108</a>	</span><span class="kw">fn </span>QueryInterface&lt;T&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;T&gt;
-<a href=#109 id=109 data-nosnippet>109</a>		<span class="kw">where </span>T: ole_IUnknown,
-<a href=#110 id=110 data-nosnippet>110</a>	{
-<a href=#111 id=111 data-nosnippet>111</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ T::null() };
-<a href=#112 id=112 data-nosnippet>112</a>		ok_to_hrresult(
-<a href=#113 id=113 data-nosnippet>113</a>			<span class="kw">unsafe </span>{
-<a href=#114 id=114 data-nosnippet>114</a>				(vt::&lt;IUnknownVT&gt;(<span class="self">self</span>).QueryInterface)(
-<a href=#115 id=115 data-nosnippet>115</a>					<span class="self">self</span>.ptr(),
-<a href=#116 id=116 data-nosnippet>116</a>					<span class="kw-2">&amp;</span>T::IID <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-<a href=#117 id=117 data-nosnippet>117</a>					queried.as_mut(),
-<a href=#118 id=118 data-nosnippet>118</a>				)
-<a href=#119 id=119 data-nosnippet>119</a>			},
-<a href=#120 id=120 data-nosnippet>120</a>		).map(|<span class="kw">_</span>| queried)
-<a href=#121 id=121 data-nosnippet>121</a>	}
-<a href=#122 id=122 data-nosnippet>122</a>}</code></pre></div></section></main></body></html>
+<a href=#101 id=101 data-nosnippet>101</a>		<span class="kw">unsafe </span>{
+<a href=#102 id=102 data-nosnippet>102</a>			<span class="kw-2">*</span><span class="self">self</span>.as_mut() = std::ptr::null_mut();
+<a href=#103 id=103 data-nosnippet>103</a>		}
+<a href=#104 id=104 data-nosnippet>104</a>		p
+<a href=#105 id=105 data-nosnippet>105</a>	}
+<a href=#106 id=106 data-nosnippet>106</a>
+<a href=#107 id=107 data-nosnippet>107</a>	<span class="doccomment">/// [`IUnknown::QueryInterface`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-queryinterface(refiid_void))
+<a href=#108 id=108 data-nosnippet>108</a>	/// method.
+<a href=#109 id=109 data-nosnippet>109</a>	</span><span class="attr">#[must_use]
+<a href=#110 id=110 data-nosnippet>110</a>	</span><span class="kw">fn </span>QueryInterface&lt;T&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;T&gt;
+<a href=#111 id=111 data-nosnippet>111</a>	<span class="kw">where
+<a href=#112 id=112 data-nosnippet>112</a>		</span>T: ole_IUnknown,
+<a href=#113 id=113 data-nosnippet>113</a>	{
+<a href=#114 id=114 data-nosnippet>114</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ T::null() };
+<a href=#115 id=115 data-nosnippet>115</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#116 id=116 data-nosnippet>116</a>			(vt::&lt;IUnknownVT&gt;(<span class="self">self</span>).QueryInterface)(
+<a href=#117 id=117 data-nosnippet>117</a>				<span class="self">self</span>.ptr(),
+<a href=#118 id=118 data-nosnippet>118</a>				<span class="kw-2">&amp;</span>T::IID <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+<a href=#119 id=119 data-nosnippet>119</a>				queried.as_mut(),
+<a href=#120 id=120 data-nosnippet>120</a>			)
+<a href=#121 id=121 data-nosnippet>121</a>		})
+<a href=#122 id=122 data-nosnippet>122</a>		.map(|<span class="kw">_</span>| queried)
+<a href=#123 id=123 data-nosnippet>123</a>	}
+<a href=#124 id=124 data-nosnippet>124</a>}</code></pre></div></section></main></body></html>

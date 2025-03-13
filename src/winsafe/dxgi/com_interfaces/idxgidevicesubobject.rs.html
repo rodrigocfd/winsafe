@@ -30,17 +30,17 @@
 <a href=#30 id=30 data-nosnippet>30</a>	/// method.
 <a href=#31 id=31 data-nosnippet>31</a>	</span><span class="attr">#[must_use]
 <a href=#32 id=32 data-nosnippet>32</a>	</span><span class="kw">fn </span>GetDevice&lt;T&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;T&gt;
-<a href=#33 id=33 data-nosnippet>33</a>		<span class="kw">where </span>T: ole_IUnknown,
-<a href=#34 id=34 data-nosnippet>34</a>	{
-<a href=#35 id=35 data-nosnippet>35</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ T::null() };
-<a href=#36 id=36 data-nosnippet>36</a>		ok_to_hrresult(
-<a href=#37 id=37 data-nosnippet>37</a>			<span class="kw">unsafe </span>{
-<a href=#38 id=38 data-nosnippet>38</a>				(vt::&lt;IDXGIDeviceSubObjectVT&gt;(<span class="self">self</span>).GetDevice)(
-<a href=#39 id=39 data-nosnippet>39</a>					<span class="self">self</span>.ptr(),
-<a href=#40 id=40 data-nosnippet>40</a>					<span class="kw-2">&amp;</span>T::IID <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
-<a href=#41 id=41 data-nosnippet>41</a>					queried.as_mut(),
-<a href=#42 id=42 data-nosnippet>42</a>				)
-<a href=#43 id=43 data-nosnippet>43</a>			},
-<a href=#44 id=44 data-nosnippet>44</a>		).map(|<span class="kw">_</span>| queried)
+<a href=#33 id=33 data-nosnippet>33</a>	<span class="kw">where
+<a href=#34 id=34 data-nosnippet>34</a>		</span>T: ole_IUnknown,
+<a href=#35 id=35 data-nosnippet>35</a>	{
+<a href=#36 id=36 data-nosnippet>36</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ T::null() };
+<a href=#37 id=37 data-nosnippet>37</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#38 id=38 data-nosnippet>38</a>			(vt::&lt;IDXGIDeviceSubObjectVT&gt;(<span class="self">self</span>).GetDevice)(
+<a href=#39 id=39 data-nosnippet>39</a>				<span class="self">self</span>.ptr(),
+<a href=#40 id=40 data-nosnippet>40</a>				<span class="kw-2">&amp;</span>T::IID <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+<a href=#41 id=41 data-nosnippet>41</a>				queried.as_mut(),
+<a href=#42 id=42 data-nosnippet>42</a>			)
+<a href=#43 id=43 data-nosnippet>43</a>		})
+<a href=#44 id=44 data-nosnippet>44</a>		.map(|<span class="kw">_</span>| queried)
 <a href=#45 id=45 data-nosnippet>45</a>	}
 <a href=#46 id=46 data-nosnippet>46</a>}</code></pre></div></section></main></body></html>

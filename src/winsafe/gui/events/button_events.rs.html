@@ -70,10 +70,11 @@
 <a href=#70 id=70 data-nosnippet>70</a>	<span class="doccomment">/// [`NM_CUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-customdraw-button)
 <a href=#71 id=71 data-nosnippet>71</a>	/// notification.
 <a href=#72 id=72 data-nosnippet>72</a>	</span><span class="kw">pub fn </span>nm_custom_draw&lt;F&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, func: F)
-<a href=#73 id=73 data-nosnippet>73</a>		<span class="kw">where </span>F: Fn(<span class="kw-2">&amp;</span>NMCUSTOMDRAW) -&gt; AnyResult&lt;co::CDRF&gt; + <span class="lifetime">'static</span>,
-<a href=#74 id=74 data-nosnippet>74</a>	{
-<a href=#75 id=75 data-nosnippet>75</a>		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::NM::CUSTOMDRAW, <span class="kw">move </span>|p| {
-<a href=#76 id=76 data-nosnippet>76</a>			<span class="prelude-val">Ok</span>(func(<span class="kw">unsafe </span>{ p.cast_nmhdr::&lt;NMCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as _</span>)
-<a href=#77 id=77 data-nosnippet>77</a>		});
-<a href=#78 id=78 data-nosnippet>78</a>	}
-<a href=#79 id=79 data-nosnippet>79</a>}</code></pre></div></section></main></body></html>
+<a href=#73 id=73 data-nosnippet>73</a>	<span class="kw">where
+<a href=#74 id=74 data-nosnippet>74</a>		</span>F: Fn(<span class="kw-2">&amp;</span>NMCUSTOMDRAW) -&gt; AnyResult&lt;co::CDRF&gt; + <span class="lifetime">'static</span>,
+<a href=#75 id=75 data-nosnippet>75</a>	{
+<a href=#76 id=76 data-nosnippet>76</a>		<span class="self">self</span>.<span class="number">0</span>.wm_notify(co::NM::CUSTOMDRAW, <span class="kw">move </span>|p| {
+<a href=#77 id=77 data-nosnippet>77</a>			<span class="prelude-val">Ok</span>(func(<span class="kw">unsafe </span>{ p.cast_nmhdr::&lt;NMCUSTOMDRAW&gt;() })<span class="question-mark">?</span>.raw() <span class="kw">as _</span>)
+<a href=#78 id=78 data-nosnippet>78</a>		});
+<a href=#79 id=79 data-nosnippet>79</a>	}
+<a href=#80 id=80 data-nosnippet>80</a>}</code></pre></div></section></main></body></html>

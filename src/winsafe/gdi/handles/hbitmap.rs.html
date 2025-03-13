@@ -26,12 +26,12 @@
 <a href=#26 id=26 data-nosnippet>26</a>		num_planes: u32,
 <a href=#27 id=27 data-nosnippet>27</a>		bit_count: u32,
 <a href=#28 id=28 data-nosnippet>28</a>		bits: <span class="kw-2">*mut </span>u8,
-<a href=#29 id=29 data-nosnippet>29</a>	) -&gt; SysResult&lt;DeleteObjectGuard&lt;HBITMAP&gt;&gt;
-<a href=#30 id=30 data-nosnippet>30</a>	{
-<a href=#31 id=31 data-nosnippet>31</a>		<span class="kw">unsafe </span>{
-<a href=#32 id=32 data-nosnippet>32</a>			ptr_to_sysresult_handle(
-<a href=#33 id=33 data-nosnippet>33</a>				ffi::CreateBitmap(sz.cx, sz.cy, num_planes, bit_count, bits <span class="kw">as _</span>),
-<a href=#34 id=34 data-nosnippet>34</a>			).map(|h| DeleteObjectGuard::new(h))
+<a href=#29 id=29 data-nosnippet>29</a>	) -&gt; SysResult&lt;DeleteObjectGuard&lt;HBITMAP&gt;&gt; {
+<a href=#30 id=30 data-nosnippet>30</a>		<span class="kw">unsafe </span>{
+<a href=#31 id=31 data-nosnippet>31</a>			ptr_to_sysresult_handle(ffi::CreateBitmap(
+<a href=#32 id=32 data-nosnippet>32</a>				sz.cx, sz.cy, num_planes, bit_count, bits <span class="kw">as _</span>,
+<a href=#33 id=33 data-nosnippet>33</a>			))
+<a href=#34 id=34 data-nosnippet>34</a>			.map(|h| DeleteObjectGuard::new(h))
 <a href=#35 id=35 data-nosnippet>35</a>		}
 <a href=#36 id=36 data-nosnippet>36</a>	}
 <a href=#37 id=37 data-nosnippet>37</a>
@@ -51,14 +51,8 @@
 <a href=#51 id=51 data-nosnippet>51</a>	/// # w::SysResult::Ok(())
 <a href=#52 id=52 data-nosnippet>52</a>	/// ```
 <a href=#53 id=53 data-nosnippet>53</a>	</span><span class="kw">fn </span>GetObject(<span class="kw-2">&amp;</span><span class="self">self</span>, pv: <span class="kw-2">&amp;mut </span>BITMAP) -&gt; SysResult&lt;()&gt; {
-<a href=#54 id=54 data-nosnippet>54</a>		bool_to_sysresult(
-<a href=#55 id=55 data-nosnippet>55</a>			<span class="kw">unsafe </span>{
-<a href=#56 id=56 data-nosnippet>56</a>				ffi::GetObjectW(
-<a href=#57 id=57 data-nosnippet>57</a>					<span class="self">self</span>.ptr(),
-<a href=#58 id=58 data-nosnippet>58</a>					std::mem::size_of::&lt;BITMAP&gt;() <span class="kw">as _</span>,
-<a href=#59 id=59 data-nosnippet>59</a>					pv <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
-<a href=#60 id=60 data-nosnippet>60</a>				)
-<a href=#61 id=61 data-nosnippet>61</a>			},
-<a href=#62 id=62 data-nosnippet>62</a>		)
-<a href=#63 id=63 data-nosnippet>63</a>	}
-<a href=#64 id=64 data-nosnippet>64</a>}</code></pre></div></section></main></body></html>
+<a href=#54 id=54 data-nosnippet>54</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
+<a href=#55 id=55 data-nosnippet>55</a>			ffi::GetObjectW(<span class="self">self</span>.ptr(), std::mem::size_of::&lt;BITMAP&gt;() <span class="kw">as _</span>, pv <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
+<a href=#56 id=56 data-nosnippet>56</a>		})
+<a href=#57 id=57 data-nosnippet>57</a>	}
+<a href=#58 id=58 data-nosnippet>58</a>}</code></pre></div></section></main></body></html>

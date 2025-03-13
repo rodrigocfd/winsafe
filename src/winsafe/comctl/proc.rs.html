@@ -7,11 +7,9 @@
 <a href=#7 id=7 data-nosnippet>7</a>	wparam: usize,
 <a href=#8 id=8 data-nosnippet>8</a>	lparam: isize,
 <a href=#9 id=9 data-nosnippet>9</a>	lp_ref_data: isize,
-<a href=#10 id=10 data-nosnippet>10</a>) -&gt; co::HRESULT
-<a href=#11 id=11 data-nosnippet>11</a>{
-<a href=#12 id=12 data-nosnippet>12</a>	<span class="kw">let </span>tdc = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>(lp_ref_data <span class="kw">as </span><span class="kw-2">*const </span>TASKDIALOGCONFIG) };
-<a href=#13 id=13 data-nosnippet>13</a>	tdc.callback.as_ref().map_or(
-<a href=#14 id=14 data-nosnippet>14</a>		co::HRESULT::S_OK,
-<a href=#15 id=15 data-nosnippet>15</a>		|tdc| tdc(<span class="kw-2">&amp;</span>hwnd, <span class="kw">unsafe </span>{ Tdn::from_msg(msg, wparam, lparam) }),
-<a href=#16 id=16 data-nosnippet>16</a>	)
-<a href=#17 id=17 data-nosnippet>17</a>}</code></pre></div></section></main></body></html>
+<a href=#10 id=10 data-nosnippet>10</a>) -&gt; co::HRESULT {
+<a href=#11 id=11 data-nosnippet>11</a>	<span class="kw">let </span>tdc = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span>(lp_ref_data <span class="kw">as </span><span class="kw-2">*const </span>TASKDIALOGCONFIG) };
+<a href=#12 id=12 data-nosnippet>12</a>	tdc.callback
+<a href=#13 id=13 data-nosnippet>13</a>		.as_ref()
+<a href=#14 id=14 data-nosnippet>14</a>		.map_or(co::HRESULT::S_OK, |tdc| tdc(<span class="kw-2">&amp;</span>hwnd, <span class="kw">unsafe </span>{ Tdn::from_msg(msg, wparam, lparam) }))
+<a href=#15 id=15 data-nosnippet>15</a>}</code></pre></div></section></main></body></html>

@@ -55,27 +55,23 @@
 <a href=#55 id=55 data-nosnippet>55</a>	/// # w::SysResult::Ok(())
 <a href=#56 id=56 data-nosnippet>56</a>	/// ```
 <a href=#57 id=57 data-nosnippet>57</a>	</span><span class="attr">#[must_use]
-<a href=#58 id=58 data-nosnippet>58</a>	</span><span class="kw">fn </span>DragQueryFile(<span class="kw-2">&amp;</span><span class="self">self</span>,
-<a href=#59 id=59 data-nosnippet>59</a>	) -&gt; SysResult&lt;<span class="kw">impl </span>Iterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">'_</span>&gt;
-<a href=#60 id=60 data-nosnippet>60</a>	{
-<a href=#61 id=61 data-nosnippet>61</a>		<span class="prelude-val">Ok</span>(HdropIter::new(<span class="self">self</span>)<span class="question-mark">?</span>)
-<a href=#62 id=62 data-nosnippet>62</a>	}
-<a href=#63 id=63 data-nosnippet>63</a>
-<a href=#64 id=64 data-nosnippet>64</a>	<span class="doccomment">/// [`DragQueryPoint`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragquerypoint)
-<a href=#65 id=65 data-nosnippet>65</a>	/// function.
-<a href=#66 id=66 data-nosnippet>66</a>	///
-<a href=#67 id=67 data-nosnippet>67</a>	/// Returns the coordinates and whether the drop occurred in the client area
-<a href=#68 id=68 data-nosnippet>68</a>	/// of the window.
-<a href=#69 id=69 data-nosnippet>69</a>	///
-<a href=#70 id=70 data-nosnippet>70</a>	/// Note that you must call this method before
-<a href=#71 id=71 data-nosnippet>71</a>	/// [`DragQueryFile`](crate::prelude::shell_Hdrop::DragQueryFile), because
-<a href=#72 id=72 data-nosnippet>72</a>	/// it invalidates the `HDROP` handle after the iterator is consumed.
-<a href=#73 id=73 data-nosnippet>73</a>	</span><span class="attr">#[must_use]
-<a href=#74 id=74 data-nosnippet>74</a>	</span><span class="kw">fn </span>DragQueryPoint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (POINT, bool) {
-<a href=#75 id=75 data-nosnippet>75</a>		<span class="kw">let </span><span class="kw-2">mut </span>pt = POINT::default();
-<a href=#76 id=76 data-nosnippet>76</a>		<span class="kw">let </span>client_area = <span class="kw">unsafe </span>{
-<a href=#77 id=77 data-nosnippet>77</a>			ffi::DragQueryPoint(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>pt <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>)
-<a href=#78 id=78 data-nosnippet>78</a>		};
-<a href=#79 id=79 data-nosnippet>79</a>		(pt, client_area != <span class="number">0</span>)
-<a href=#80 id=80 data-nosnippet>80</a>	}
-<a href=#81 id=81 data-nosnippet>81</a>}</code></pre></div></section></main></body></html>
+<a href=#58 id=58 data-nosnippet>58</a>	</span><span class="kw">fn </span>DragQueryFile(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;<span class="kw">impl </span>Iterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">'_</span>&gt; {
+<a href=#59 id=59 data-nosnippet>59</a>		<span class="prelude-val">Ok</span>(HdropIter::new(<span class="self">self</span>)<span class="question-mark">?</span>)
+<a href=#60 id=60 data-nosnippet>60</a>	}
+<a href=#61 id=61 data-nosnippet>61</a>
+<a href=#62 id=62 data-nosnippet>62</a>	<span class="doccomment">/// [`DragQueryPoint`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragquerypoint)
+<a href=#63 id=63 data-nosnippet>63</a>	/// function.
+<a href=#64 id=64 data-nosnippet>64</a>	///
+<a href=#65 id=65 data-nosnippet>65</a>	/// Returns the coordinates and whether the drop occurred in the client area
+<a href=#66 id=66 data-nosnippet>66</a>	/// of the window.
+<a href=#67 id=67 data-nosnippet>67</a>	///
+<a href=#68 id=68 data-nosnippet>68</a>	/// Note that you must call this method before
+<a href=#69 id=69 data-nosnippet>69</a>	/// [`DragQueryFile`](crate::prelude::shell_Hdrop::DragQueryFile), because
+<a href=#70 id=70 data-nosnippet>70</a>	/// it invalidates the `HDROP` handle after the iterator is consumed.
+<a href=#71 id=71 data-nosnippet>71</a>	</span><span class="attr">#[must_use]
+<a href=#72 id=72 data-nosnippet>72</a>	</span><span class="kw">fn </span>DragQueryPoint(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; (POINT, bool) {
+<a href=#73 id=73 data-nosnippet>73</a>		<span class="kw">let </span><span class="kw-2">mut </span>pt = POINT::default();
+<a href=#74 id=74 data-nosnippet>74</a>		<span class="kw">let </span>client_area = <span class="kw">unsafe </span>{ ffi::DragQueryPoint(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>pt <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) };
+<a href=#75 id=75 data-nosnippet>75</a>		(pt, client_area != <span class="number">0</span>)
+<a href=#76 id=76 data-nosnippet>76</a>	}
+<a href=#77 id=77 data-nosnippet>77</a>}</code></pre></div></section></main></body></html>

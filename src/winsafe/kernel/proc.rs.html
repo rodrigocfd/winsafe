@@ -8,31 +8,34 @@
 <a href=#8 id=8 data-nosnippet>8</a>	language_id: u16,
 <a href=#9 id=9 data-nosnippet>9</a>	lparam: isize,
 <a href=#10 id=10 data-nosnippet>10</a>) -&gt; BOOL
-<a href=#11 id=11 data-nosnippet>11</a>	<span class="kw">where </span>F: FnMut(LANGID) -&gt; bool,
-<a href=#12 id=12 data-nosnippet>12</a>{
-<a href=#13 id=13 data-nosnippet>13</a>	<span class="kw">let </span>func = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(lparam <span class="kw">as </span><span class="kw-2">*mut </span>F) };
-<a href=#14 id=14 data-nosnippet>14</a>	func(<span class="kw">unsafe </span>{ LANGID::from_raw(language_id) }) <span class="kw">as _
-<a href=#15 id=15 data-nosnippet>15</a></span>}
-<a href=#16 id=16 data-nosnippet>16</a>
-<a href=#17 id=17 data-nosnippet>17</a><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">extern </span><span class="string">"system" </span><span class="kw">fn </span>hinstance_enum_resource_names&lt;F&gt;(
-<a href=#18 id=18 data-nosnippet>18</a>	<span class="kw">_</span>: HINSTANCE,
-<a href=#19 id=19 data-nosnippet>19</a>	<span class="kw">_</span>: <span class="kw-2">*const </span>u16,
-<a href=#20 id=20 data-nosnippet>20</a>	resource_id: <span class="kw-2">*mut </span>u16,
-<a href=#21 id=21 data-nosnippet>21</a>	lparam: isize,
-<a href=#22 id=22 data-nosnippet>22</a>) -&gt; BOOL
-<a href=#23 id=23 data-nosnippet>23</a>	<span class="kw">where </span>F: FnMut(IdStr) -&gt; bool,
-<a href=#24 id=24 data-nosnippet>24</a>{
-<a href=#25 id=25 data-nosnippet>25</a>	<span class="kw">let </span>func = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(lparam <span class="kw">as </span><span class="kw-2">*mut </span>F) };
-<a href=#26 id=26 data-nosnippet>26</a>	func(<span class="kw">unsafe </span>{ IdStr::from_ptr(resource_id) }) <span class="kw">as _
-<a href=#27 id=27 data-nosnippet>27</a></span>}
-<a href=#28 id=28 data-nosnippet>28</a>
-<a href=#29 id=29 data-nosnippet>29</a><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">extern </span><span class="string">"system" </span><span class="kw">fn </span>hinstance_enum_resource_types&lt;F&gt;(
-<a href=#30 id=30 data-nosnippet>30</a>	<span class="kw">_</span>: HINSTANCE,
-<a href=#31 id=31 data-nosnippet>31</a>	resource_type: <span class="kw-2">*const </span>u16,
-<a href=#32 id=32 data-nosnippet>32</a>	lparam: isize,
-<a href=#33 id=33 data-nosnippet>33</a>) -&gt; BOOL
-<a href=#34 id=34 data-nosnippet>34</a>	<span class="kw">where </span>F: FnMut(RtStr) -&gt; bool,
-<a href=#35 id=35 data-nosnippet>35</a>{
-<a href=#36 id=36 data-nosnippet>36</a>	<span class="kw">let </span>func = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(lparam <span class="kw">as </span><span class="kw-2">*mut </span>F) };
-<a href=#37 id=37 data-nosnippet>37</a>	func(<span class="kw">unsafe </span>{ RtStr::from_ptr(resource_type) }) <span class="kw">as _
-<a href=#38 id=38 data-nosnippet>38</a></span>}</code></pre></div></section></main></body></html>
+<a href=#11 id=11 data-nosnippet>11</a><span class="kw">where
+<a href=#12 id=12 data-nosnippet>12</a>	</span>F: FnMut(LANGID) -&gt; bool,
+<a href=#13 id=13 data-nosnippet>13</a>{
+<a href=#14 id=14 data-nosnippet>14</a>	<span class="kw">let </span>func = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(lparam <span class="kw">as </span><span class="kw-2">*mut </span>F) };
+<a href=#15 id=15 data-nosnippet>15</a>	func(<span class="kw">unsafe </span>{ LANGID::from_raw(language_id) }) <span class="kw">as _
+<a href=#16 id=16 data-nosnippet>16</a></span>}
+<a href=#17 id=17 data-nosnippet>17</a>
+<a href=#18 id=18 data-nosnippet>18</a><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">extern </span><span class="string">"system" </span><span class="kw">fn </span>hinstance_enum_resource_names&lt;F&gt;(
+<a href=#19 id=19 data-nosnippet>19</a>	<span class="kw">_</span>: HINSTANCE,
+<a href=#20 id=20 data-nosnippet>20</a>	<span class="kw">_</span>: <span class="kw-2">*const </span>u16,
+<a href=#21 id=21 data-nosnippet>21</a>	resource_id: <span class="kw-2">*mut </span>u16,
+<a href=#22 id=22 data-nosnippet>22</a>	lparam: isize,
+<a href=#23 id=23 data-nosnippet>23</a>) -&gt; BOOL
+<a href=#24 id=24 data-nosnippet>24</a><span class="kw">where
+<a href=#25 id=25 data-nosnippet>25</a>	</span>F: FnMut(IdStr) -&gt; bool,
+<a href=#26 id=26 data-nosnippet>26</a>{
+<a href=#27 id=27 data-nosnippet>27</a>	<span class="kw">let </span>func = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(lparam <span class="kw">as </span><span class="kw-2">*mut </span>F) };
+<a href=#28 id=28 data-nosnippet>28</a>	func(<span class="kw">unsafe </span>{ IdStr::from_ptr(resource_id) }) <span class="kw">as _
+<a href=#29 id=29 data-nosnippet>29</a></span>}
+<a href=#30 id=30 data-nosnippet>30</a>
+<a href=#31 id=31 data-nosnippet>31</a><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::kernel) <span class="kw">extern </span><span class="string">"system" </span><span class="kw">fn </span>hinstance_enum_resource_types&lt;F&gt;(
+<a href=#32 id=32 data-nosnippet>32</a>	<span class="kw">_</span>: HINSTANCE,
+<a href=#33 id=33 data-nosnippet>33</a>	resource_type: <span class="kw-2">*const </span>u16,
+<a href=#34 id=34 data-nosnippet>34</a>	lparam: isize,
+<a href=#35 id=35 data-nosnippet>35</a>) -&gt; BOOL
+<a href=#36 id=36 data-nosnippet>36</a><span class="kw">where
+<a href=#37 id=37 data-nosnippet>37</a>	</span>F: FnMut(RtStr) -&gt; bool,
+<a href=#38 id=38 data-nosnippet>38</a>{
+<a href=#39 id=39 data-nosnippet>39</a>	<span class="kw">let </span>func = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(lparam <span class="kw">as </span><span class="kw-2">*mut </span>F) };
+<a href=#40 id=40 data-nosnippet>40</a>	func(<span class="kw">unsafe </span>{ RtStr::from_ptr(resource_type) }) <span class="kw">as _
+<a href=#41 id=41 data-nosnippet>41</a></span>}</code></pre></div></section></main></body></html>

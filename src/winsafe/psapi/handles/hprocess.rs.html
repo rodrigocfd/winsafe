@@ -20,14 +20,13 @@
 <a href=#20 id=20 data-nosnippet>20</a>	/// function.
 <a href=#21 id=21 data-nosnippet>21</a>	</span><span class="kw">fn </span>GetProcessMemoryInfo(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;PROCESS_MEMORY_COUNTERS_EX&gt; {
 <a href=#22 id=22 data-nosnippet>22</a>		<span class="kw">let </span><span class="kw-2">mut </span>pmc = PROCESS_MEMORY_COUNTERS_EX::default();
-<a href=#23 id=23 data-nosnippet>23</a>		bool_to_sysresult(
-<a href=#24 id=24 data-nosnippet>24</a>			<span class="kw">unsafe </span>{
-<a href=#25 id=25 data-nosnippet>25</a>				ffi::GetProcessMemoryInfo(
-<a href=#26 id=26 data-nosnippet>26</a>					<span class="self">self</span>.ptr(),
-<a href=#27 id=27 data-nosnippet>27</a>					<span class="kw-2">&amp;mut </span>pmc <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
-<a href=#28 id=28 data-nosnippet>28</a>					std::mem::size_of::&lt;PROCESS_MEMORY_COUNTERS_EX&gt;() <span class="kw">as _</span>,
-<a href=#29 id=29 data-nosnippet>29</a>				)
-<a href=#30 id=30 data-nosnippet>30</a>			},
-<a href=#31 id=31 data-nosnippet>31</a>		).map(|<span class="kw">_</span>| pmc)
-<a href=#32 id=32 data-nosnippet>32</a>	}
-<a href=#33 id=33 data-nosnippet>33</a>}</code></pre></div></section></main></body></html>
+<a href=#23 id=23 data-nosnippet>23</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
+<a href=#24 id=24 data-nosnippet>24</a>			ffi::GetProcessMemoryInfo(
+<a href=#25 id=25 data-nosnippet>25</a>				<span class="self">self</span>.ptr(),
+<a href=#26 id=26 data-nosnippet>26</a>				<span class="kw-2">&amp;mut </span>pmc <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+<a href=#27 id=27 data-nosnippet>27</a>				std::mem::size_of::&lt;PROCESS_MEMORY_COUNTERS_EX&gt;() <span class="kw">as _</span>,
+<a href=#28 id=28 data-nosnippet>28</a>			)
+<a href=#29 id=29 data-nosnippet>29</a>		})
+<a href=#30 id=30 data-nosnippet>30</a>		.map(|<span class="kw">_</span>| pmc)
+<a href=#31 id=31 data-nosnippet>31</a>	}
+<a href=#32 id=32 data-nosnippet>32</a>}</code></pre></div></section></main></body></html>

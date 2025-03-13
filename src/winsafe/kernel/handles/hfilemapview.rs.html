@@ -82,18 +82,9 @@
 <a href=#82 id=82 data-nosnippet>82</a>
 <a href=#83 id=83 data-nosnippet>83</a>	<span class="doccomment">/// [`FlushViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-flushviewoffile)
 <a href=#84 id=84 data-nosnippet>84</a>	/// function.
-<a href=#85 id=85 data-nosnippet>85</a>	</span><span class="kw">fn </span>FlushViewOfFile(<span class="kw-2">&amp;</span><span class="self">self</span>,
-<a href=#86 id=86 data-nosnippet>86</a>		start_at_byte: usize,
-<a href=#87 id=87 data-nosnippet>87</a>		num_bytes: usize,
-<a href=#88 id=88 data-nosnippet>88</a>	) -&gt; SysResult&lt;()&gt;
-<a href=#89 id=89 data-nosnippet>89</a>	{
-<a href=#90 id=90 data-nosnippet>90</a>		bool_to_sysresult(
-<a href=#91 id=91 data-nosnippet>91</a>			<span class="kw">unsafe </span>{
-<a href=#92 id=92 data-nosnippet>92</a>				ffi::FlushViewOfFile(
-<a href=#93 id=93 data-nosnippet>93</a>					<span class="self">self</span>.ptr().offset(start_at_byte <span class="kw">as _</span>),
-<a href=#94 id=94 data-nosnippet>94</a>					num_bytes,
-<a href=#95 id=95 data-nosnippet>95</a>				)
-<a href=#96 id=96 data-nosnippet>96</a>			},
-<a href=#97 id=97 data-nosnippet>97</a>		)
-<a href=#98 id=98 data-nosnippet>98</a>	}
-<a href=#99 id=99 data-nosnippet>99</a>}</code></pre></div></section></main></body></html>
+<a href=#85 id=85 data-nosnippet>85</a>	</span><span class="kw">fn </span>FlushViewOfFile(<span class="kw-2">&amp;</span><span class="self">self</span>, start_at_byte: usize, num_bytes: usize) -&gt; SysResult&lt;()&gt; {
+<a href=#86 id=86 data-nosnippet>86</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
+<a href=#87 id=87 data-nosnippet>87</a>			ffi::FlushViewOfFile(<span class="self">self</span>.ptr().offset(start_at_byte <span class="kw">as _</span>), num_bytes)
+<a href=#88 id=88 data-nosnippet>88</a>		})
+<a href=#89 id=89 data-nosnippet>89</a>	}
+<a href=#90 id=90 data-nosnippet>90</a>}</code></pre></div></section></main></body></html>
