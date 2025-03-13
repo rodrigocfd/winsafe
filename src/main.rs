@@ -1,12 +1,13 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod dlg_main;
 mod ids;
 mod stats;
-mod wnd_main;
-use wnd_main::WndMain;
+
+use dlg_main::DlgMain;
 
 fn main() {
-	if let Err(e) = (|| WndMain::new()?.run())() {
+	if let Err(e) = (|| DlgMain::new()?.run())() {
 		eprintln!("{}", e);
 	}
 }

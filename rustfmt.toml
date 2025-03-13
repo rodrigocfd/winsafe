@@ -1,0 +1,7 @@
+chain_width = 60
+edition = "2021"
+hard_tabs = true
+match_block_trailing_comma = true
+struct_lit_width = 40
+use_field_init_shorthand = true
+use_small_heuristics = "Max"

@@ -22,7 +22,9 @@ fn fmt_thousand(n: usize) -> String {
 
 impl std::fmt::Display for Stats {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		write!(f, "{}\r\n{}\r\n{}\r\n{}\r\n{}\r\n{}\r\n{}",
+		write!(
+			f,
+			"{}\r\n{}\r\n{}\r\n{}\r\n{}\r\n{}\r\n{}",
 			format!("| Functions | {} |", fmt_thousand(self.ffis)),
 			format!("| Structs | {} |", fmt_thousand(self.structs)),
 			format!("| Constants | {} |", fmt_thousand(self.consts)),
@@ -40,7 +42,8 @@ impl Stats {
 	/// The callback is called after processing each file, to give a progressive
 	/// feedback of the whole operation.
 	pub fn gather<F>(target: &str, callback: F) -> w::SysResult<Self>
-		where F: Fn(usize),
+	where
+		F: Fn(usize),
 	{
 		let mut new_self = Self::default();
 
@@ -69,8 +72,8 @@ impl Stats {
 
 	fn count_ffis(&mut self, contents: &str, path: &str) {
 		if let Some(file_name) = w::path::get_file_name(path) {
-			if file_name != "ffi.rs" { // only in these files
-				return;
+			if file_name != "ffi.rs" {
+				return; // only in these files
 			}
 		}
 
@@ -92,8 +95,8 @@ impl Stats {
 
 	fn count_structs(&mut self, contents: &str) {
 		for line in contents.lines() {
-			if line == "/// struct." { // simplest approach
-				self.structs += 1;
+			if line == "/// struct." {
+				self.structs += 1; // simplest approach
 			}
 		}
 	}
@@ -105,21 +108,24 @@ impl Stats {
 				if line.starts_with("}") {
 					inside_block = false;
 				} else {
-					if !line.starts_with("\t//") // skip comments
-							&& !line.starts_with("\t=>") {  // skip separators
+					if !line.starts_with("\t//") // skip comments and separators
+							&& !line.starts_with("\t=>")
+					{
 						self.consts += 1;
 					}
 				}
 			} else {
-				if line.starts_with("const_values!")
-						|| line.starts_with("const_bitflag!")
-						|| line.starts_with("const_ordinary!")
-						|| line.starts_with("const_wm!")
-						|| line.starts_with("const_nm!")
-						|| line.starts_with("const_cmd!")
-						|| line.starts_with("const_ws!")
-						|| line.starts_with("const_wsex!")
-						|| line.starts_with("const_str!") {
+				if line.starts_with("const_basic_decl!")
+					|| line.starts_with("const_ordinary!")
+					|| line.starts_with("const_bitflag!")
+					|| line.starts_with("const_wm!")
+					|| line.starts_with("const_cmd!")
+					|| line.starts_with("const_nm!")
+					|| line.starts_with("const_ws!")
+					|| line.starts_with("const_wsex!")
+					|| line.starts_with("const_str!")
+					|| line.starts_with("const_values_pub!")
+				{
 					inside_block = true;
 				}
 			}
@@ -128,26 +134,26 @@ impl Stats {
 
 	fn count_wmsgs(&mut self, contents: &str) {
 		for line in contents.lines() {
-			if line.contains("/// Return type: ") { // simplest approach
-				self.wmsgs += 1;
+			if line.contains("/// Return type: ") {
+				self.wmsgs += 1; // simplest approach
 			}
 		}
 	}
 
 	fn count_handles(&mut self, contents: &str) {
 		for line in contents.lines() {
-			if line.contains("impl_handle! { ") { // simplest approach
-				self.handles += 1;
+			if line.contains("handle! { ") {
+				self.handles += 1; // simplest approach
 			}
 		}
 	}
 
 	fn count_com(&mut self, contents: &str, path: &str) {
-		if !path.contains("\\com_interfaces\\") { // this folder must be present
-			return;
+		if !path.contains("\\com_interfaces\\") {
+			return; // this folder must be present
 		} else if let Some(file_name) = w::path::get_file_name(path) {
-			if !file_name.starts_with('i') { // file must start with "i"
-				return;
+			if !file_name.starts_with('i') {
+				return; // file must start with "i"
 			}
 		}
 
@@ -156,7 +162,8 @@ impl Stats {
 
 		for line in contents.lines() {
 			if line.starts_with("com_interface! { ")
-					|| line.starts_with("com_interface_userdef! { ") {
+				|| line.starts_with("com_interface_userdef! { ")
+			{
 				self.com_interfaces += 1;
 			}
 
@@ -164,8 +171,7 @@ impl Stats {
 				self.com_methods += 1;
 			}
 
-			if !is_com_interface_impl_file
-					&& line.starts_with("/// This trait is enabled with `") {
+			if !is_com_interface_impl_file && line.starts_with("/// This trait is enabled with `") {
 				is_com_interface_impl_file = true;
 			} else {
 				if !inside_block && line.starts_with("pub trait ") {
@@ -174,11 +180,12 @@ impl Stats {
 					if line.starts_with("}") {
 						inside_block = false;
 					} else if line.starts_with("\tfn ")
-							|| line.starts_with("\tfn_com_noparm! { ")
-							|| line.starts_with("\tfn_com_noparm_noret! { ")
-							|| line.starts_with("\tfn_com_interface_get! { ")
-							|| line.starts_with("\tfn_com_bstr_get! { ")
-							|| line.starts_with("\tfn_com_bstr_set! { ") {
+						|| line.starts_with("\tfn_com_noparm! { ")
+						|| line.starts_with("\tfn_com_noparm_noret! { ")
+						|| line.starts_with("\tfn_com_interface_get! { ")
+						|| line.starts_with("\tfn_com_bstr_get! { ")
+						|| line.starts_with("\tfn_com_bstr_set! { ")
+					{
 						self.com_methods += 1;
 					}
 				}
