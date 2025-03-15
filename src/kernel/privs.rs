@@ -140,7 +140,7 @@ pub(crate) unsafe fn parse_multi_z_str(src: *const u16, len: Option<usize>) -> V
 /// pointer, see:
 /// * https://github.com/rust-lang/rust/issues/39625
 #[must_use]
-pub(crate) fn vec_ptr<T>(v: &[T]) -> *const T {
+pub(crate) const fn vec_ptr<T>(v: &[T]) -> *const T {
 	if v.is_empty() {
 		std::ptr::null()
 	} else {

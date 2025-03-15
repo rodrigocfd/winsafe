@@ -1,6 +1,8 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::oleaut::vts::*;
 use crate::prelude::*;
@@ -25,6 +27,26 @@ impl oleaut_ITypeInfo for ITypeInfo {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait oleaut_ITypeInfo: ole_IUnknown {
+	/// [`ITypeInfo::AddressOfMember`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-addressofmember)
+	/// method.
+	#[must_use]
+	fn AddressOfMember(
+		&self,
+		member_id: i32,
+		inv_kind: co::INVOKEKIND,
+	) -> HrResult<*mut std::ffi::c_void> {
+		let mut addr: *mut std::ffi::c_void = std::ptr::null_mut();
+		ok_to_hrresult(unsafe {
+			(vt::<ITypeInfoVT>(self).AddressOfMember)(
+				self.ptr(),
+				member_id,
+				inv_kind.raw(),
+				&mut addr,
+			)
+		})
+		.map(|_| addr)
+	}
+
 	/// [`ITypeInfo::CreateInstance`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-createinstance)
 	/// method.
 	#[must_use]
@@ -44,5 +66,85 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 			)
 		})
 		.map(|_| queried)
+	}
+
+	/// [`ITypeInfo::GetDllEntry`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-getdllentry)
+	/// method.
+	///
+	/// Returns:
+	/// * DLL name;
+	/// * entry point name;
+	/// * ordinal.
+	#[must_use]
+	fn GetDllEntry(
+		&self,
+		member_id: i32,
+		inv_kind: co::INVOKEKIND,
+	) -> HrResult<(String, String, u16)> {
+		let (mut dll_name, mut name) = (BSTR::default(), BSTR::default());
+		let mut ordinal = u16::default();
+
+		ok_to_hrresult(unsafe {
+			(vt::<ITypeInfoVT>(self).GetDllEntry)(
+				self.ptr(),
+				member_id,
+				inv_kind.raw(),
+				&mut dll_name as *mut _ as _,
+				&mut name as *mut _ as _,
+				&mut ordinal,
+			)
+		})
+		.map(|_| {
+			let dll_name_str = dll_name.to_string();
+			let name_str =
+				if name.as_ptr().is_null() { String::default() } else { name.to_string() };
+			(dll_name_str, name_str, ordinal)
+		})
+	}
+
+	/// [`ITypeInfo::GetDocumentation`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-getdocumentation)
+	/// method.
+	///
+	/// Returns:
+	/// * item name;
+	/// * documentation;
+	/// * help localization context;
+	/// * fully qualified name of the file containing the DLL used for help file.
+	#[must_use]
+	fn GetDocumentation(&self, member_id: i32) -> HrResult<(String, String, u32, String)> {
+		let mut name = BSTR::default();
+		let mut doc = BSTR::default();
+		let mut context = u32::default();
+		let mut help_file = BSTR::default();
+
+		ok_to_hrresult(unsafe {
+			(vt::<ITypeInfoVT>(self).GetDocumentation)(
+				self.ptr(),
+				member_id,
+				&mut name as *mut _ as _,
+				&mut doc as *mut _ as _,
+				&mut context,
+				&mut help_file as *mut _ as _,
+			)
+		})
+		.map(|_| (name.to_string(), doc.to_string(), context, help_file.to_string()))
+	}
+
+	/// [`ITypeInfo::GetIDsOfNames`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-getidsofnames)
+	/// method.
+	#[must_use]
+	fn GetIDsOfNames(&self, names: &[impl AsRef<str>]) -> HrResult<Vec<i32>> {
+		let (_wstrs, pwstrs) = create_wstr_ptr_vecs(Some(names));
+		let mut ids = vec![i32::default(); names.len()];
+
+		ok_to_hrresult(unsafe {
+			(vt::<ITypeInfoVT>(self).GetIDsOfNames)(
+				self.ptr(),
+				vec_ptr(&pwstrs),
+				names.len() as _,
+				ids.as_mut_ptr() as _,
+			)
+		})
+		.map(|_| ids)
 	}
 }

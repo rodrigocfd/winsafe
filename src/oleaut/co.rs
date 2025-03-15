@@ -103,3 +103,13 @@ const_bitflag! { VT: u16;
 	ILLEGALMASKED 0xfff
 	TYPEMASK 0xfff
 }
+
+const_ordinary! { INVOKEKIND: u32;
+	/// [`INVOKEKIND`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/ne-oaidl-invokekind)
+	/// enumeration (`u32`).
+	=>
+	FUNC 1
+	PROPERTYGET 2
+	PROPERTYPUT 4
+	PROPERTYPUTREF 8
+}
