@@ -465,8 +465,11 @@ impl<'a> LVTILEINFO<'a> {
 		}
 	}
 
-	/// Sets the `puColumns` and `piColFmt` fields. The slices must have the
-	/// same length.
+	/// Sets the `puColumns` and `piColFmt` fields.
+	///
+	/// # Panics
+	///
+	/// Panics if `puColumns` and `piColFmt` slices have different lengths.
 	pub fn set_puColumns_piColFmt(&mut self, val: Option<(&'a mut [u32], &'a mut [co::LVCFMT_C])>) {
 		if let Some(val) = val {
 			if val.0.len() != val.1.len() {

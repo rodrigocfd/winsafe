@@ -54,7 +54,6 @@ impl<'a, T> ListViewCol<'a, T> {
 				.hwnd()
 				.SendMessage(lvm::SetColumn { index: self.index, lvcolumn: &mut lvc })?;
 		}
-
 		Ok(*self)
 	}
 
@@ -68,7 +67,6 @@ impl<'a, T> ListViewCol<'a, T> {
 				.hwnd()
 				.SendMessage(lvm::SetColumnWidth { index: self.index, width: width as _ })?;
 		}
-
 		Ok(*self)
 	}
 
@@ -116,7 +114,6 @@ impl<'a, T> ListViewCol<'a, T> {
 				.hwnd()
 				.SendMessage(lvm::GetColumn { index: self.index, lvcolumn: &mut lvc })?;
 		}
-
 		Ok(buf.to_string())
 	}
 

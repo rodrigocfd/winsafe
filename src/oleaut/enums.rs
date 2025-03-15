@@ -98,7 +98,7 @@ impl PropVariant {
 			co::VT::UI4 => Self::UI4(unsafe { v.data.ulVal }),
 			co::VT::I8 => Self::I8(unsafe { v.data.hVal }),
 			co::VT::UI8 => Self::UI8(unsafe { v.data.uhVal }),
-			_ => panic!("VARIANT type not implemented."),
+			_ => panic!("PROPVARIANT type not implemented."),
 		})
 	}
 

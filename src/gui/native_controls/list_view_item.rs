@@ -101,7 +101,6 @@ impl<'a, T> ListViewItem<'a, T> {
 				entirely_visible: true,
 			})?;
 		}
-
 		Ok(*self)
 	}
 
@@ -119,7 +118,6 @@ impl<'a, T> ListViewItem<'a, T> {
 				.hwnd()
 				.SendMessage(lvm::SetItemState { index: Some(self.index), lvitem: &lvi })?;
 		}
-
 		Ok(*self)
 	}
 
@@ -217,7 +215,6 @@ impl<'a, T> ListViewItem<'a, T> {
 				.hwnd()
 				.SendMessage(lvm::SetItemState { index: Some(self.index), lvitem: &lvi })?;
 		}
-
 		Ok(*self)
 	}
 
@@ -236,7 +233,6 @@ impl<'a, T> ListViewItem<'a, T> {
 				.hwnd()
 				.SendMessage(lvm::SetItem { lvitem: &mut lvi })?;
 		}
-
 		Ok(*self)
 	}
 
@@ -256,7 +252,6 @@ impl<'a, T> ListViewItem<'a, T> {
 				.hwnd()
 				.SendMessage(lvm::SetItemText { index: self.index, lvitem: &lvi })?;
 		}
-
 		Ok(*self)
 	}
 

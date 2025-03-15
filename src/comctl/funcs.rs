@@ -62,10 +62,10 @@ pub unsafe fn PropertySheet(header: &PROPSHEETHEADER) -> SysResult<isize> {
 ///
 /// w::TaskDialogIndirect(&w::TASKDIALOGCONFIG {
 ///     common_buttons: co::TDCBF::OK,
-///     main_icon: w::IconIdTd::Td(co::TD_ICON::INFORMATION),
-///     flags: co::TDF::ALLOW_DIALOG_CANCELLATION,
-///     window_title: Some("Title"),
-///     content: Some("Content"),
+///     main_icon:      w::IconIdTd::Td(co::TD_ICON::INFORMATION),
+///     flags:          co::TDF::ALLOW_DIALOG_CANCELLATION,
+///     window_title:   Some("Title"),
+///     content:        Some("Content"),
 ///     ..Default::default()
 /// })?;
 /// # w::HrResult::Ok(())
@@ -78,10 +78,10 @@ pub unsafe fn PropertySheet(header: &PROPSHEETHEADER) -> SysResult<isize> {
 ///
 /// let (ret, _, _) = w::TaskDialogIndirect(&w::TASKDIALOGCONFIG {
 ///     common_buttons: co::TDCBF::OK | co::TDCBF::CANCEL,
-///     main_icon: w::IconIdTd::Td(co::TD_ICON::WARNING),
-///     flags: co::TDF::ALLOW_DIALOG_CANCELLATION,
-///     window_title: Some("Title"),
-///     content: Some("Do you want?"),
+///     main_icon:      w::IconIdTd::Td(co::TD_ICON::WARNING),
+///     flags:          co::TDF::ALLOW_DIALOG_CANCELLATION,
+///     window_title:   Some("Title"),
+///     content:        Some("Do you want?"),
 ///     ..Default::default()
 /// })?;
 ///
@@ -98,15 +98,17 @@ pub unsafe fn PropertySheet(header: &PROPSHEETHEADER) -> SysResult<isize> {
 ///
 /// w::TaskDialogIndirect(&w::TASKDIALOGCONFIG {
 ///     common_buttons: co::TDCBF::OK,
-///     window_title: Some("Title"),
-///     content: Some("Content"),
-///     callback: Some(Box::new(|hwnd: &w::HWND, tdn: w::Tdn| -> co::HRESULT {
-///         match tdn {
-///             w::Tdn::Created => println!("created"),
-///             _ => {},
-///         }
-///         co::HRESULT::S_OK
-///     })),
+///     window_title:   Some("Title"),
+///     content:        Some("Content"),
+///     callback:       Some(Box::new(
+///         |hwnd: &w::HWND, tdn: w::Tdn| -> co::HRESULT {
+///             match tdn {
+///                 w::Tdn::Created => println!("created"),
+///                 _ => {},
+///             }
+///             co::HRESULT::S_OK
+///         },
+///     )),
 ///     ..Default::default()
 /// })?;
 /// # w::HrResult::Ok(())

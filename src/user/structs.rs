@@ -678,6 +678,11 @@ impl INPUT {
 	}
 
 	/// Returns the event tagged union field.
+	///
+	/// # Panics
+	///
+	/// Panics if `dwType` is not one of the [`co::INPUT`](crate::co::INPUT)
+	/// defined values.
 	#[must_use]
 	pub const fn event(&self) -> HwKbMouse {
 		match self.dwType {
