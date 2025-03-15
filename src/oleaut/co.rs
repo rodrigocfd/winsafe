@@ -1,3 +1,37 @@
+const_ordinary! { DISPATCH: u16;
+	/// [`IDispatch::Invoke`](crate::prelude::oleaut_IDispatch::Invoke) `flags`
+	/// (`u16`).
+	=>
+	METHOD 0x1
+	PROPERTYGET 0x2
+	PROPERTYPUT 0x4
+	PROPERTYPUTREF 0x8
+}
+
+const_ordinary! { DISPID: i32;
+	/// [`DISPID`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/automat/dispid-constants)
+	/// constants (`i32`) for [`DISPPARAMS`](crate::DISPPARAMS).
+	=>
+	UNKNOWN -1
+	VALUE 0
+	PROPERTYPUT -3
+	NEWENUM -4
+	EVALUATE -5
+	CONSTRUCTOR -5
+	DESTRUCTOR -7
+	COLLECT -8
+}
+
+const_ordinary! { INVOKEKIND: u32;
+	/// [`INVOKEKIND`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/ne-oaidl-invokekind)
+	/// enumeration (`u32`).
+	=>
+	FUNC 1
+	PROPERTYGET 2
+	PROPERTYPUT 4
+	PROPERTYPUTREF 8
+}
+
 const_bitflag! { VT: u16;
 	/// [`VARENUM`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-varenum)
 	/// enumeration (`u16`).
@@ -102,14 +136,4 @@ const_bitflag! { VT: u16;
 	ILLEGAL 0xffff
 	ILLEGALMASKED 0xfff
 	TYPEMASK 0xfff
-}
-
-const_ordinary! { INVOKEKIND: u32;
-	/// [`INVOKEKIND`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/ne-oaidl-invokekind)
-	/// enumeration (`u32`).
-	=>
-	FUNC 1
-	PROPERTYGET 2
-	PROPERTYPUT 4
-	PROPERTYPUTREF 8
 }

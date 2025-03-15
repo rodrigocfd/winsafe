@@ -221,6 +221,23 @@ macro_rules! pub_fn_string_buf_get_set {
 	};
 }
 
+/// Implements getter method for the given `BSTR` field.
+macro_rules! pub_fn_bstr_get {
+	($field:ident) => {
+		/// Returns the string field.
+		#[must_use]
+		pub fn $field(&self) -> Option<String> {
+			if self.$field.is_null() {
+				None
+			} else {
+				// Don't call SysFreeString() here.
+				let bstr = ManuallyDrop::new(unsafe { crate::BSTR::from_ptr(self.$field) });
+				Some(bstr.to_string())
+			}
+		}
+	};
+}
+
 /// Implements getter and setter methods for the given pointer field.
 macro_rules! pub_fn_ptr_get_set {
 	($life:lifetime, $field:ident, $setter:ident, $ty:ty) => {

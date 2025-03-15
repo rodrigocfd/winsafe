@@ -140,7 +140,7 @@ pub trait advapi_Haccesstoken: Handle {
 	///     .OpenProcessToken(co::TOKEN::QUERY)?;
 	///
 	/// let nfo = htoken.GetTokenInformation(co::TOKEN_INFORMATION_CLASS::Groups)?;
-	/// let w::TokenInfo::Groups(groups) = nfo else { panic!("never") };
+	/// let w::TokenInfo::Groups(groups) = nfo else { unreachable!() };
 	///
 	/// for (idx, g) in groups.Groups().iter().enumerate() {
 	///     println!("{}: {}", idx, g.Sid().unwrap());

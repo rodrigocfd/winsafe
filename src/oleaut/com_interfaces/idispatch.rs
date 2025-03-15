@@ -73,4 +73,162 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 		})
 		.map(|_| queried)
 	}
+
+	/// [`IDispatch::Invoke`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-invoke)
+	/// method.
+	///
+	/// This is a low-level method, prefer using:
+	/// * [`IDispatch::invoke_get`](crate::prelude::oleaut_IDispatch::invoke_get);
+	/// * [`IDispatch::invoke_method`](crate::prelude::oleaut_IDispatch::invoke_method); or
+	/// * [`IDispatch::invoke_put`](crate::prelude::oleaut_IDispatch::invoke_put).
+	fn Invoke(
+		&self,
+		disp_id_member: i32,
+		lcid: LCID,
+		flags: co::DISPATCH,
+		disp_params: &mut DISPPARAMS,
+	) -> AnyResult<VARIANT> {
+		let mut remote_res = VARIANT::default();
+		let mut remote_err = EXCEPINFO::default();
+		let mut arg_err = u32::default();
+
+		match ok_to_hrresult(unsafe {
+			(vt::<IDispatchVT>(self).Invoke)(
+				self.ptr(),
+				disp_id_member,
+				&GUID::NULL as *const _ as _,
+				lcid.raw(),
+				flags.raw(),
+				disp_params as *mut _ as _,
+				&mut remote_res as *mut _ as _,
+				&mut remote_err as *mut _ as _,
+				&mut arg_err,
+			)
+		}) {
+			Ok(_) => Ok(remote_res),
+			Err(hr) => match hr {
+				co::HRESULT::DISP_E_EXCEPTION => Err(Box::new(remote_err)),
+				_ => Err(hr.into()),
+			},
+		}
+	}
+
+	/// Calls
+	/// [`IDispatch::GetIDsOfNames`](crate::prelude::oleaut_IDispatch::GetIDsOfNames)
+	/// and [`IDispatch::Invoke`](crate::prelude::oleaut_IDispatch::Invoke) with
+	/// [`co::DISPATCH::PROPERTYGET`](co::DISPATCH::PROPERTYGET).
+	///
+	/// If the remote call raises an exception, the returned error will be an
+	/// [`EXCEPINFO`](crate::EXCEPINFO).
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let _com_guard = w::CoInitializeEx(
+	///     co::COINIT::APARTMENTTHREADED | co::COINIT::DISABLE_OLE1DDE)?;
+	///
+	/// let excel = w::CoCreateInstance::<w::IDispatch>(
+	///     &w::CLSIDFromProgID("Excel.Application")?,
+	///     None,
+	///     co::CLSCTX::LOCAL_SERVER,
+	/// )?;
+	///
+	/// let res_books = excel.invoke_get("Workbooks")?;
+	/// let books = match res_books {
+	///     w::Variant::Dispatch(idisp) => idisp,
+	///     _ => unreachable!(),
+	/// };
+	/// # w::AnyResult::Ok(())
+	/// ```
+	fn invoke_get(&self, property_name: &str) -> AnyResult<Variant> {
+		let member_ids = self.GetIDsOfNames(&[property_name], LCID::USER_DEFAULT)?;
+		let mut dp = DISPPARAMS::default();
+
+		let vari =
+			self.Invoke(member_ids[0], LCID::USER_DEFAULT, co::DISPATCH::PROPERTYGET, &mut dp)?;
+		Variant::from_raw(&vari).map_err(|err| err.into())
+	}
+
+	/// Calls
+	/// [`IDispatch::GetIDsOfNames`](crate::prelude::oleaut_IDispatch::GetIDsOfNames)
+	/// and [`IDispatch::Invoke`](crate::prelude::oleaut_IDispatch::Invoke) with
+	/// [`co::DISPATCH::METHOD`](co::DISPATCH::METHOD).
+	///
+	/// If the remote call raises an exception, the returned error will be an
+	/// [`EXCEPINFO`](crate::EXCEPINFO).
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let _com_guard = w::CoInitializeEx(
+	///     co::COINIT::APARTMENTTHREADED | co::COINIT::DISABLE_OLE1DDE)?;
+	///
+	/// let excel = w::CoCreateInstance::<w::IDispatch>(
+	///     &w::CLSIDFromProgID("Excel.Application")?,
+	///     None,
+	///     co::CLSCTX::LOCAL_SERVER,
+	/// )?;
+	///
+	/// let books = match excel.invoke_get("Workbooks")? {
+	///     w::Variant::Dispatch(disp) => disp,
+	///     _ => unreachable!(),
+	/// };
+	///
+	/// let file = match books.invoke_method(
+	///     "Open",
+	///     &[&w::Variant::Bstr("C:\\Temp\\foo.xlsx".to_owned())],
+	/// )? {
+	///     w::Variant::Dispatch(disp) => disp,
+	///     _ => unreachable!(),
+	/// };
+	///
+	/// file.invoke_method(
+	///     "SaveAs",
+	///     &[&w::Variant::Bstr("C:\\Temp\\bar.xlsx".to_owned())],
+	/// )?;
+	///
+	/// file.invoke_method("Close", &[])?;
+	/// # w::AnyResult::Ok(())
+	/// ```
+	fn invoke_method(&self, method_name: &str, params: &[&Variant]) -> AnyResult<Variant> {
+		let member_ids = self.GetIDsOfNames(&[method_name], LCID::USER_DEFAULT)?;
+
+		let mut vars = params
+			.iter()
+			.rev() // in reverse order
+			.map(|param| param.to_raw())
+			.collect::<HrResult<Vec<_>>>()?;
+
+		let mut dp = DISPPARAMS::default();
+		dp.set_rvarg(Some(&mut vars));
+
+		let vari = self.Invoke(member_ids[0], LCID::USER_DEFAULT, co::DISPATCH::METHOD, &mut dp)?;
+		Variant::from_raw(&vari).map_err(|err| err.into())
+	}
+
+	/// Calls
+	/// [`IDispatch::GetIDsOfNames`](crate::prelude::oleaut_IDispatch::GetIDsOfNames)
+	/// and [`IDispatch::Invoke`](crate::prelude::oleaut_IDispatch::Invoke) with
+	/// [`co::DISPATCH::PROPERTYPUT`](co::DISPATCH::PROPERTYPUT).
+	///
+	/// If the remote call raises an exception, the returned error will be an
+	/// [`EXCEPINFO`](crate::EXCEPINFO).
+	fn invoke_put(&self, property_name: &str, param: &Variant) -> AnyResult<Variant> {
+		let member_ids = self.GetIDsOfNames(&[property_name], LCID::USER_DEFAULT)?;
+
+		let mut vars = vec![param.to_raw()?]; // single parameter
+		let mut named_args = vec![co::DISPID::PROPERTYPUT];
+
+		let mut dp = DISPPARAMS::default();
+		dp.set_rvarg(Some(&mut vars));
+		dp.set_rgdispidNamedArgs(Some(&mut named_args));
+
+		let vari =
+			self.Invoke(member_ids[0], LCID::USER_DEFAULT, co::DISPATCH::PROPERTYPUT, &mut dp)?;
+		Variant::from_raw(&vari).map_err(|err| err.into())
+	}
 }

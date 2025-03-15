@@ -9,6 +9,24 @@ use crate::prelude::*;
 
 /// [`CLSIDFromProgID`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-clsidfromprogid)
 /// function.
+///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*, co};
+///
+/// let _com_guard = w::CoInitializeEx(
+///     co::COINIT::APARTMENTTHREADED | co::COINIT::DISABLE_OLE1DDE)?;
+///
+/// let cls_id = w::CLSIDFromProgID("Excel.Application")?;
+///
+/// let excel = w::CoCreateInstance::<w::IDispatch>(
+///     &cls_id, None, co::CLSCTX::LOCAL_SERVER)?;
+///
+/// let ids = excel.GetIDsOfNames(&["Workbooks"], w::LCID::USER_DEFAULT)?;
+/// println!("{}", ids[0]);
+/// # w::HrResult::Ok(())
+/// ```
 #[must_use]
 pub fn CLSIDFromProgID(prog_id: &str) -> HrResult<co::CLSID> {
 	let mut clsid = co::CLSID::default();

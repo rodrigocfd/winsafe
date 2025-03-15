@@ -279,7 +279,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// # let hdc = w::HDC::NULL;
 	///
 	/// let obj = hdc.GetCurrentObject(co::CUR_OBJ::BRUSH)?;
-	/// let w::CurObj::Brush(hbrush) = obj else { panic!("never") };
+	/// let w::CurObj::Brush(hbrush) = obj else { unreachable!() };
 	///
 	/// println!("HBRUSH: {}", hbrush);
 	/// w::SysResult::Ok(())

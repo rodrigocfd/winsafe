@@ -1,11 +1,81 @@
 #![allow(non_snake_case)]
 
+use std::marker::PhantomData;
 use std::mem::ManuallyDrop;
 
 use crate::co;
 use crate::decl::*;
 use crate::kernel::ffi_types::*;
 use crate::oleaut::{ffi, privs::*};
+
+/// [`DISPPARAMS`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/ns-oaidl-dispparams)
+/// struct.
+#[repr(C)]
+pub struct DISPPARAMS<'a, 'b> {
+	rvarg: *mut VARIANT, // in reverse order
+	rgdispidNamedArgs: *mut co::DISPID,
+	cArgs: u32,
+	cNamedArgs: u32,
+
+	_rvar: PhantomData<&'a mut VARIANT>,
+	_rgdispidNamedArgs: PhantomData<&'b mut co::DISPID>,
+}
+
+impl_default!(DISPPARAMS, 'a, 'b);
+
+impl<'a, 'b> DISPPARAMS<'a, 'b> {
+	pub_fn_array_buf_get_set!('a, rvarg, set_rvarg, cArgs, VARIANT);
+	pub_fn_array_buf_get_set!('b, rgdispidNamedArgs, set_rgdispidNamedArgs, cNamedArgs, co::DISPID);
+}
+
+/// [`EXCEPINFO`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/ns-oaidl-excepinfo)
+/// struct.
+#[repr(C)]
+pub struct EXCEPINFO {
+	pub wCode: u16,
+	wReserved: u16,
+	bstrSource: *mut u16,
+	bstrDescription: *mut u16,
+	bstrHelpFile: *mut u16,
+	pub dwHelpContext: u32,
+	pvReserved: *mut std::ffi::c_void,
+	pfnDeferredFillIn: *mut std::ffi::c_void,
+	pub scode: i32,
+}
+
+unsafe impl Send for EXCEPINFO {}
+unsafe impl Sync for EXCEPINFO {}
+
+impl std::error::Error for EXCEPINFO {
+	fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+		None
+	}
+}
+
+impl std::fmt::Display for EXCEPINFO {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		write!(
+			f,
+			"{} - {}",
+			self.bstrSource().unwrap_or("(no source)".to_owned()),
+			self.bstrDescription()
+				.unwrap_or("(no description)".to_owned()),
+		)
+	}
+}
+impl std::fmt::Debug for EXCEPINFO {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		std::fmt::Display::fmt(self, f)
+	}
+}
+
+impl_default!(EXCEPINFO);
+
+impl EXCEPINFO {
+	pub_fn_bstr_get!(bstrSource);
+	pub_fn_bstr_get!(bstrDescription);
+	pub_fn_bstr_get!(bstrHelpFile);
+}
 
 /// [`PROPERTYKEY`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ns-wtypes-propertykey)
 /// struct.
@@ -72,11 +142,7 @@ impl Drop for PROPVARIANT {
 	}
 }
 
-impl Default for PROPVARIANT {
-	fn default() -> Self {
-		unsafe { std::mem::zeroed::<Self>() } // PropVariantInit() is just a macro
-	}
-}
+impl_default!(PROPVARIANT); // PropVariantInit() is just a macro
 
 impl PROPVARIANT {
 	/// Returns the [`co::VT`](crate::co::VT) variant type currently being held.

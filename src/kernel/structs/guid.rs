@@ -33,6 +33,9 @@ impl std::fmt::Debug for GUID {
 }
 
 impl GUID {
+	/// The null `GUID`, with all zeros.
+	pub const NULL: Self = Self::new("00000000-0000-0000-0000-000000000000");
+
 	/// Creates a new `GUID` from a representative hex string, which can be
 	/// copied straight from standard `GUID` declarations.
 	///
