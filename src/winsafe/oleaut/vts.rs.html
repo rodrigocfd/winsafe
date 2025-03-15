@@ -32,7 +32,7 @@
 <a href=#32 id=32 data-nosnippet>32</a>	<span class="kw">pub </span>GetNames: <span class="kw">fn</span>(COMPTR, i32, <span class="kw-2">*mut </span>PSTR, u32, <span class="kw-2">*mut </span>u32) -&gt; HRES,
 <a href=#33 id=33 data-nosnippet>33</a>	<span class="kw">pub </span>GetRefTypeOfImplType: <span class="kw">fn</span>(COMPTR, u32, <span class="kw-2">*mut </span>u32) -&gt; HRES,
 <a href=#34 id=34 data-nosnippet>34</a>	<span class="kw">pub </span>GetImplTypeFlags: <span class="kw">fn</span>(COMPTR, u32, <span class="kw-2">*mut </span>i32) -&gt; HRES,
-<a href=#35 id=35 data-nosnippet>35</a>	<span class="kw">pub </span>GetIDsOfNames: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*mut </span>PSTR, u32, <span class="kw-2">*mut </span>i32) -&gt; HRES,
+<a href=#35 id=35 data-nosnippet>35</a>	<span class="kw">pub </span>GetIDsOfNames: <span class="kw">fn</span>(COMPTR, <span class="kw-2">*const </span>PCSTR, u32, <span class="kw-2">*mut </span>i32) -&gt; HRES,
 <a href=#36 id=36 data-nosnippet>36</a>	<span class="kw">pub </span>Invoke: <span class="kw">fn</span>(COMPTR, PVOID, i32, u16, PVOID, PVOID, PVOID, <span class="kw-2">*mut </span>u32) -&gt; HRES,
 <a href=#37 id=37 data-nosnippet>37</a>	<span class="kw">pub </span>GetDocumentation: <span class="kw">fn</span>(COMPTR, i32, <span class="kw-2">*mut </span>PSTR, <span class="kw-2">*mut </span>PSTR, <span class="kw-2">*mut </span>u32, PSTR) -&gt; HRES,
 <a href=#38 id=38 data-nosnippet>38</a>	<span class="kw">pub </span>GetDllEntry: <span class="kw">fn</span>(COMPTR, i32, u32, <span class="kw-2">*mut </span>PSTR, <span class="kw-2">*mut </span>PSTR, <span class="kw-2">*mut </span>u16) -&gt; HRES,

@@ -140,7 +140,7 @@
 <a href=#140 id=140 data-nosnippet>140</a>/// pointer, see:
 <a href=#141 id=141 data-nosnippet>141</a>/// * https://github.com/rust-lang/rust/issues/39625
 <a href=#142 id=142 data-nosnippet>142</a></span><span class="attr">#[must_use]
-<a href=#143 id=143 data-nosnippet>143</a></span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>vec_ptr&lt;T&gt;(v: <span class="kw-2">&amp;</span>[T]) -&gt; <span class="kw-2">*const </span>T {
+<a href=#143 id=143 data-nosnippet>143</a></span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">const fn </span>vec_ptr&lt;T&gt;(v: <span class="kw-2">&amp;</span>[T]) -&gt; <span class="kw-2">*const </span>T {
 <a href=#144 id=144 data-nosnippet>144</a>	<span class="kw">if </span>v.is_empty() {
 <a href=#145 id=145 data-nosnippet>145</a>		std::ptr::null()
 <a href=#146 id=146 data-nosnippet>146</a>	} <span class="kw">else </span>{
