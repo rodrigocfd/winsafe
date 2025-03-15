@@ -67,7 +67,7 @@ function.</p>
     .OpenProcessToken(co::TOKEN::QUERY)<span class="question-mark">?</span>;
 
 <span class="kw">let </span>nfo = htoken.GetTokenInformation(co::TOKEN_INFORMATION_CLASS::Groups)<span class="question-mark">?</span>;
-<span class="kw">let </span>w::TokenInfo::Groups(groups) = nfo <span class="kw">else </span>{ <span class="macro">panic!</span>(<span class="string">"never"</span>) };
+<span class="kw">let </span>w::TokenInfo::Groups(groups) = nfo <span class="kw">else </span>{ <span class="macro">unreachable!</span>() };
 
 <span class="kw">for </span>(idx, g) <span class="kw">in </span>groups.Groups().iter().enumerate() {
     <span class="macro">println!</span>(<span class="string">"{}: {}"</span>, idx, g.Sid().unwrap());

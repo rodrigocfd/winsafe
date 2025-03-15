@@ -266,7 +266,7 @@ function.</p>
 <span class="kw">let </span>hdc: w::HDC; <span class="comment">// initialized somewhere
 
 </span><span class="kw">let </span>obj = hdc.GetCurrentObject(co::CUR_OBJ::BRUSH)<span class="question-mark">?</span>;
-<span class="kw">let </span>w::CurObj::Brush(hbrush) = obj <span class="kw">else </span>{ <span class="macro">panic!</span>(<span class="string">"never"</span>) };
+<span class="kw">let </span>w::CurObj::Brush(hbrush) = obj <span class="kw">else </span>{ <span class="macro">unreachable!</span>() };
 
 <span class="macro">println!</span>(<span class="string">"HBRUSH: {}"</span>, hbrush);
 w::SysResult::Ok(())</code></pre></div>

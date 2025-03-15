@@ -140,7 +140,7 @@
 <a href=#140 id=140 data-nosnippet>140</a>	///     .OpenProcessToken(co::TOKEN::QUERY)?;
 <a href=#141 id=141 data-nosnippet>141</a>	///
 <a href=#142 id=142 data-nosnippet>142</a>	/// let nfo = htoken.GetTokenInformation(co::TOKEN_INFORMATION_CLASS::Groups)?;
-<a href=#143 id=143 data-nosnippet>143</a>	/// let w::TokenInfo::Groups(groups) = nfo else { panic!("never") };
+<a href=#143 id=143 data-nosnippet>143</a>	/// let w::TokenInfo::Groups(groups) = nfo else { unreachable!() };
 <a href=#144 id=144 data-nosnippet>144</a>	///
 <a href=#145 id=145 data-nosnippet>145</a>	/// for (idx, g) in groups.Groups().iter().enumerate() {
 <a href=#146 id=146 data-nosnippet>146</a>	///     println!("{}: {}", idx, g.Sid().unwrap());
