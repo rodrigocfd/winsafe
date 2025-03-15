@@ -30,6 +30,11 @@ impl<'a, 'b> DISPPARAMS<'a, 'b> {
 
 /// [`EXCEPINFO`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/ns-oaidl-excepinfo)
 /// struct.
+///
+/// This struct is returned in case of remote exception by
+/// [`IDispatch::Invoke`](crate::prelude::oleaut_IDispatch::Invoke); in order to
+/// provide full security, it implements the standard [`Drop`](std::ops::Drop)
+/// trait to free the [`BSTR`](crate::BSTR) pointers.
 #[repr(C)]
 pub struct EXCEPINFO {
 	pub wCode: u16,
@@ -45,6 +50,20 @@ pub struct EXCEPINFO {
 
 unsafe impl Send for EXCEPINFO {}
 unsafe impl Sync for EXCEPINFO {}
+
+impl Drop for EXCEPINFO {
+	fn drop(&mut self) {
+		if !self.bstrSource.is_null() {
+			let _ = unsafe { BSTR::from_ptr(self.bstrSource) };
+		}
+		if !self.bstrDescription.is_null() {
+			let _ = unsafe { BSTR::from_ptr(self.bstrDescription) };
+		}
+		if !self.bstrHelpFile.is_null() {
+			let _ = unsafe { BSTR::from_ptr(self.bstrHelpFile) };
+		}
+	}
+}
 
 impl std::error::Error for EXCEPINFO {
 	fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
