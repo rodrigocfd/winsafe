@@ -26,12 +26,24 @@ pub trait user_Haccel: Handle {
 	/// function.
 	#[must_use]
 	fn CreateAcceleratorTable(accel: &[ACCEL]) -> SysResult<DestroyAcceleratorTableGuard> {
+		// For some reason, debug builds were randomly crashing with error 998:
+		// Invalid access to memory location.
+		// So, allocate an HGLOBAL buffer and copy the ACCEL array onto it.
+		let hg_buf = HGLOBAL::GlobalAlloc(
+			crate::co::GMEM::ZEROINIT,
+			std::mem::size_of::<ACCEL>() * accel.len(),
+		)?;
+		{
+			let sli =
+				unsafe { std::slice::from_raw_parts_mut(hg_buf.ptr() as *mut ACCEL, accel.len()) };
+			sli.iter_mut()
+				.zip(accel.iter())
+				.for_each(|(buf2, src)| *buf2 = *src);
+		}
+
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreateAcceleratorTableW(
-				accel.as_ptr() as _,
-				accel.len() as _,
-			))
-			.map(|h| DestroyAcceleratorTableGuard::new(h))
+			ptr_to_sysresult_handle(ffi::CreateAcceleratorTableW(hg_buf.ptr(), accel.len() as _))
+				.map(|h| DestroyAcceleratorTableGuard::new(h))
 		}
 	}
 }
