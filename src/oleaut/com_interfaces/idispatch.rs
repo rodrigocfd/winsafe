@@ -77,6 +77,9 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	/// [`IDispatch::Invoke`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-idispatch-invoke)
 	/// method.
 	///
+	/// If the remote call raises an exception, the returned error will be an
+	/// [`EXCEPINFO`](crate::EXCEPINFO).
+	///
 	/// This is a low-level method, prefer using:
 	/// * [`IDispatch::invoke_get`](crate::prelude::oleaut_IDispatch::invoke_get);
 	/// * [`IDispatch::invoke_method`](crate::prelude::oleaut_IDispatch::invoke_method); or
@@ -173,18 +176,14 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	///     co::CLSCTX::LOCAL_SERVER,
 	/// )?;
 	///
-	/// let books = match excel.invoke_get("Workbooks")? {
-	///     w::Variant::Dispatch(disp) => disp,
-	///     _ => unreachable!(),
-	/// };
+	/// let books = excel.invoke_get("Workbooks")?
+	///     .unwrap_dispatch();
 	///
-	/// let file = match books.invoke_method(
+	/// let file = books.invoke_method(
 	///     "Open",
 	///     &[&w::Variant::Bstr("C:\\Temp\\foo.xlsx".to_owned())],
-	/// )? {
-	///     w::Variant::Dispatch(disp) => disp,
-	///     _ => unreachable!(),
-	/// };
+	/// )?
+	/// .unwrap_dispatch();
 	///
 	/// file.invoke_method(
 	///     "SaveAs",

@@ -13,6 +13,7 @@ use crate::prelude::*;
 /// The fields are named according to the
 /// [`VARENUM`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-varenum)
 /// enumeration.
+#[derive(Clone)]
 pub enum PropVariant {
 	/// Nothing.
 	Empty,
@@ -183,6 +184,7 @@ impl PropVariant {
 /// The fields are named according to the
 /// [`VARENUM`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ne-wtypes-varenum)
 /// enumeration.
+#[derive(Clone)]
 pub enum Variant {
 	/// Nothing.
 	Empty,
@@ -344,5 +346,44 @@ impl Variant {
 			},
 		}
 		Ok(v)
+	}
+
+	/// If the value is [`Variant::Bool`](crate::Variant::Bool), returns a copy
+	/// of it; otherwise panics.
+	///
+	/// This is a syntactic sugar method to be used when you are sure of the
+	/// `Variant` content, its general use is discouraged.
+	#[must_use]
+	pub const fn unwrap_bool(&self) -> bool {
+		match self {
+			Self::Bool(b) => *b,
+			_ => panic!("Variant does not contain Bool."),
+		}
+	}
+
+	/// If the value is [`Variant::Bstr`](crate::Variant::Bstr), returns a clone
+	/// of it; otherwise panics.
+	///
+	/// This is a syntactic sugar method to be used when you are sure of the
+	/// `Variant` content, its general use is discouraged.
+	#[must_use]
+	pub fn unwrap_bstr(&self) -> String {
+		match self {
+			Self::Bstr(s) => s.clone(),
+			_ => panic!("Variant does not contain Bstr."),
+		}
+	}
+
+	/// If the value is [`Variant::Dispatch`](crate::Variant::Dispatch), returns
+	/// a clone of it; otherwise panics.
+	///
+	/// This is a syntactic sugar method to be used when you are sure of the
+	/// `Variant` content, its general use is discouraged.
+	#[must_use]
+	pub fn unwrap_dispatch(&self) -> IDispatch {
+		match self {
+			Self::Dispatch(disp) => disp.clone(),
+			_ => panic!("Variant does not contain Dispatch."),
+		}
 	}
 }
