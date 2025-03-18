@@ -43,9 +43,9 @@ pub enum PropVariant {
 	UI2(u16),
 	/// Unsigned long (`u32`).
 	UI4(u32),
-	/// Signed 64-bit int.
+	/// Signed 64-bit int (`i64`).
 	I8(i64),
-	/// Unsigned 64-bit int.
+	/// Unsigned 64-bit int (`u64`).
 	UI8(u64),
 }
 
@@ -56,7 +56,9 @@ impl Default for PropVariant {
 }
 
 impl PropVariant {
-	/// Returns a `Bstr` if a string is present, otherwise `Empty`.
+	/// Creates a [`PropVariant::Bstr`](crate::PropVariant::Bstr) if a string is
+	/// present, otherwise creates a
+	/// [`PropVariant::Empty`](crate::PropVariant::Empty).
 	#[must_use]
 	pub fn from_opt_str(s: Option<impl AsRef<str>>) -> Self {
 		match s {
@@ -214,9 +216,9 @@ pub enum Variant {
 	UI2(u16),
 	/// Unsigned long (`u32`).
 	UI4(u32),
-	/// Signed 64-bit int.
+	/// Signed 64-bit int (`i64`).
 	I8(i64),
-	/// Unsigned 64-bit int.
+	/// Unsigned 64-bit int (`u64`).
 	UI8(u64),
 }
 
@@ -227,7 +229,8 @@ impl Default for Variant {
 }
 
 impl Variant {
-	/// Returns a `Bstr` if a string is present, otherwise `Empty`.
+	/// Creates a [`Variant::Bstr`](crate::Variant::Bstr) if a string is
+	/// present, otherwise creates a [`Variant::Empty`](crate::Variant::Empty).
 	#[must_use]
 	pub fn from_opt_str(s: Option<impl AsRef<str>>) -> Self {
 		match s {
