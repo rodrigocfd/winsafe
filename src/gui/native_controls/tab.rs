@@ -59,6 +59,7 @@ impl Tab {
 					opts.size.into(),
 					&parent2,
 				)?;
+				ui_font::set(self2.hwnd())?;
 				if opts.control_ex_style != co::TCS_EX::NoValue {
 					self2.set_extended_style(true, opts.control_ex_style);
 				}
