@@ -110,7 +110,7 @@ pub trait version_Hversioninfo: Handle {
 	/// The returned pointer and size vary according to `lpSubBlock`. If you set
 	/// it wrong, you're likely to cause a buffer overrun.
 	///
-	/// This function is rather tricky, consider using the high-level methods:
+	/// This is a low-level method, prefer using:
 	/// * [`langs_and_cps`](crate::prelude::version_Hversioninfo::langs_and_cps);
 	/// * [`str_val`](crate::prelude::version_Hversioninfo::str_val);
 	/// * [`version_info`](crate::prelude::version_Hversioninfo::version_info).
@@ -176,22 +176,22 @@ pub trait version_Hversioninfo: Handle {
 	/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
 	/// let hversion = w::HVERSIONINFO::GetFileVersionInfo(&exe_name)?;
 	///
-	/// let (lang0, cp0) = hversion.langs_and_cps()?[0]; // first language and code page
+	/// let lang_cp = hversion.langs_and_cps()?[0]; // first language and code page
 	///
 	/// println!(
 	///     "{}\n{}",
-	///     hversion.str_val(lang0, cp0, "ProductName")?,
-	///     hversion.str_val(lang0, cp0, "LegalCopyright")?,
+	///     hversion.str_val(lang_cp, "ProductName")?,
+	///     hversion.str_val(lang_cp, "LegalCopyright")?,
 	/// );
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn str_val(&self, lang_id: LANGID, code_page: co::CP, name: &str) -> SysResult<String> {
+	fn str_val(&self, lang_and_cp: (LANGID, co::CP), name: &str) -> SysResult<String> {
 		unsafe {
 			self.VerQueryValue::<u16>(&format!(
 				"\\StringFileInfo\\{:04x}{:04x}\\{}",
-				u16::from(lang_id),
-				u16::from(code_page),
+				u16::from(lang_and_cp.0),
+				u16::from(lang_and_cp.1),
 				name
 			))
 			.map(|(pstr, len)| {
