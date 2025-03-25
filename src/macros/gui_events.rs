@@ -7,7 +7,7 @@ macro_rules! pub_fn_wm_noparm_noret {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn() -> AnyResult<()> + 'static,
 		{
 			let def_proc_val = self.is_dlg.def_proc_val();
@@ -15,6 +15,7 @@ macro_rules! pub_fn_wm_noparm_noret {
 				func()?;
 				Ok(def_proc_val)
 			});
+			self
 		}
 	};
 }
@@ -26,12 +27,13 @@ macro_rules! pub_fn_wm_noparm_boolret {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn() -> AnyResult<bool> + 'static,
 		{
 			self.wm($wmconst, move |_| {
 				Ok(func()? as _)
 			});
+			self
 		}
 	};
 }
@@ -43,7 +45,7 @@ macro_rules! pub_fn_wm_withparm_noret {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn($parm) -> AnyResult<()> + 'static,
 		{
 			let def_proc_val = self.is_dlg.def_proc_val();
@@ -51,6 +53,7 @@ macro_rules! pub_fn_wm_withparm_noret {
 				func(unsafe { <$parm>::from_generic_wm(p) })?;
 				Ok(def_proc_val)
 			});
+			self
 		}
 	};
 }
@@ -62,12 +65,13 @@ macro_rules! pub_fn_wm_withparm_boolret {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn($parm) -> AnyResult<bool> + 'static,
 		{
 			self.wm($wmconst, move |p| {
 				Ok(func(unsafe { <$parm>::from_generic_wm(p) })? as _)
 			});
+			self
 		}
 	};
 }
@@ -79,12 +83,13 @@ macro_rules! pub_fn_wm_withparm_coret {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn($parm) -> AnyResult<$coret> + 'static,
 		{
 			self.wm($wmconst, move |p| {
 				Ok(func(unsafe { <$parm>::from_generic_wm(p) })?.raw() as _)
 			});
+			self
 		}
 	};
 }
@@ -96,12 +101,13 @@ macro_rules! pub_fn_wm_ctlcolor {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn($parm) -> AnyResult<crate::user::decl::HBRUSH> + 'static,
 		{
 			self.wm($wmconst, move |p| {
 				Ok(func(unsafe { <$parm>::from_generic_wm(p) })?.ptr() as _)
 			});
+			self
 		}
 	};
 }
@@ -113,12 +119,13 @@ macro_rules! pub_fn_cmd_noparm_noret {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn() -> AnyResult<()> + 'static,
 		{
 			self.0.wm_command($cmd, move || {
 				func()
 			});
+			self
 		}
 	};
 }
@@ -130,7 +137,7 @@ macro_rules! pub_fn_nfy_noparm_noret {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn() -> AnyResult<()> + 'static,
 		{
 			let def_proc_val = self.0.is_dlg().def_proc_val();
@@ -138,6 +145,7 @@ macro_rules! pub_fn_nfy_noparm_noret {
 				func()?;
 				Ok(def_proc_val)
 			});
+			self
 		}
 	};
 }
@@ -149,7 +157,7 @@ macro_rules! pub_fn_nfy_withparm_noret {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn(&$param) -> AnyResult<()> + 'static,
 		{
 			let def_proc_val = self.0.is_dlg().def_proc_val();
@@ -157,6 +165,7 @@ macro_rules! pub_fn_nfy_withparm_noret {
 				func(unsafe { p.cast_nmhdr::<$param>() })?;
 				Ok(def_proc_val)
 			});
+			self
 		}
 	};
 }
@@ -168,7 +177,7 @@ macro_rules! pub_fn_nfy_withmutparm_noret {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn(&mut $param) -> AnyResult<()> + 'static,
 		{
 			let def_proc_val = self.0.is_dlg().def_proc_val();
@@ -176,6 +185,7 @@ macro_rules! pub_fn_nfy_withmutparm_noret {
 				func(unsafe { p.cast_nmhdr_mut::<$param>() })?;
 				Ok(def_proc_val)
 			});
+			self
 		}
 	};
 }
@@ -187,12 +197,13 @@ macro_rules! pub_fn_nfy_noparm_boolret {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn() -> AnyResult<bool> + 'static,
 		{
 			self.0.wm_notify($nfy, move |_| {
 				Ok(func()? as _)
 			});
+			self
 		}
 	};
 }
@@ -204,12 +215,13 @@ macro_rules! pub_fn_nfy_withparm_boolret {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn(&$param) -> AnyResult<bool> + 'static,
 		{
 			self.0.wm_notify($nfy, move |p| {
 				Ok(func(unsafe { p.cast_nmhdr::<$param>() })? as _)
 			});
+			self
 		}
 	};
 }
@@ -221,12 +233,13 @@ macro_rules! pub_fn_nfy_noparm_i32ret {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn() -> AnyResult<i32> + 'static,
 		{
 			self.0.wm_notify($nfy, move |_| {
 				Ok(func()? as _)
 			});
+			self
 		}
 	};
 }
@@ -238,12 +251,13 @@ macro_rules! pub_fn_nfy_withparm_i32ret {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		pub fn $name<F>(&self, func: F)
+		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn(&$param) -> AnyResult<i32> + 'static,
 		{
 			self.0.wm_notify($nfy, move |p| {
 				Ok(func(unsafe { p.cast_nmhdr::<$param>() })? as _)
 			});
+			self
 		}
 	};
 }

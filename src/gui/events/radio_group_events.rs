@@ -56,7 +56,7 @@ impl RadioGroupEvents {
 	/// });
 	/// # w::SysResult::Ok(())
 	/// ```
-	pub fn bn_clicked<F>(&self, func: F)
+	pub fn bn_clicked<F>(&self, func: F) -> &Self
 	where
 		F: Fn() -> AnyResult<()> + 'static,
 	{
@@ -69,6 +69,8 @@ impl RadioGroupEvents {
 				move || shared_func()
 			});
 		}
+
+		self
 	}
 
 	/// [`BN_DBLCLK`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-dblclk)
@@ -79,7 +81,7 @@ impl RadioGroupEvents {
 	/// [`BS::RADIOBUTTON`](crate::co::BS::RADIOBUTTON), and
 	/// [`BS::OWNERDRAW`](crate::co::BS::OWNERDRAW) buttons. Other button types
 	/// send only if they have the [`BS::NOTIFY`](crate::co::BS::NOTIFY) style.
-	pub fn bn_dbl_clk<F>(&self, func: F)
+	pub fn bn_dbl_clk<F>(&self, func: F) -> &Self
 	where
 		F: Fn() -> AnyResult<()> + 'static,
 	{
@@ -92,6 +94,8 @@ impl RadioGroupEvents {
 				move || shared_func()
 			});
 		}
+
+		self
 	}
 
 	/// [`BN_KILLFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-killfocus)
@@ -100,7 +104,7 @@ impl RadioGroupEvents {
 	/// Sent when a button loses the keyboard focus. The button must have the
 	/// [`BS::NOTIFY`](crate::co::BS::NOTIFY) style to send this notification
 	/// code.
-	pub fn bn_kill_focus<F>(&self, func: F)
+	pub fn bn_kill_focus<F>(&self, func: F) -> &Self
 	where
 		F: Fn() -> AnyResult<()> + 'static,
 	{
@@ -115,6 +119,8 @@ impl RadioGroupEvents {
 					move || shared_func()
 				});
 		}
+
+		self
 	}
 
 	/// [`BN_SETFOCUS`](https://learn.microsoft.com/en-us/windows/win32/controls/bn-setfocus)
@@ -123,7 +129,7 @@ impl RadioGroupEvents {
 	/// Sent when a button receives the keyboard focus. The button must have the
 	/// [`BS::NOTIFY`](crate::co::BS::NOTIFY) style to send this notification
 	/// code.
-	pub fn bn_set_focus<F>(&self, func: F)
+	pub fn bn_set_focus<F>(&self, func: F) -> &Self
 	where
 		F: Fn() -> AnyResult<()> + 'static,
 	{
@@ -138,5 +144,7 @@ impl RadioGroupEvents {
 					move || shared_func()
 				});
 		}
+
+		self
 	}
 }

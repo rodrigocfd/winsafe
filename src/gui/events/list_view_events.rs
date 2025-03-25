@@ -117,13 +117,14 @@ impl ListViewEvents {
 
 	/// [`LVN_GETEMPTYMARKUP`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-getemptymarkup)
 	/// notification.
-	pub fn lvn_get_empty_markup<F>(&self, func: F)
+	pub fn lvn_get_empty_markup<F>(&self, func: F) -> &Self
 	where
 		F: Fn(&mut NMLVEMPTYMARKUP) -> AnyResult<bool> + 'static,
 	{
 		self.0.wm_notify(co::LVN::GETEMPTYMARKUP, move |p| {
 			Ok(func(unsafe { p.cast_nmhdr_mut::<NMLVEMPTYMARKUP>() })? as _)
 		});
+		self
 	}
 
 	pub_fn_nfy_withparm_noret! { lvn_get_info_tip, co::LVN::GETINFOTIP, NMLVGETINFOTIP;
@@ -221,7 +222,7 @@ impl ListViewEvents {
 
 	/// [`LVN_ODFINDITEM`](https://learn.microsoft.com/en-us/windows/win32/controls/lvn-odfinditem)
 	/// notification.
-	pub fn lvn_od_find_item<F>(&self, func: F)
+	pub fn lvn_od_find_item<F>(&self, func: F) -> &Self
 	where
 		F: Fn(&mut NMLVFINDITEM) -> AnyResult<Option<u32>> + 'static,
 	{
@@ -231,6 +232,7 @@ impl ListViewEvents {
 				None => -1,
 			})
 		});
+		self
 	}
 
 	pub_fn_nfy_withparm_noret! { lvn_od_state_changed, co::LVN::ODSTATECHANGED, NMLVODSTATECHANGE;
@@ -250,13 +252,14 @@ impl ListViewEvents {
 
 	/// [`NM_CUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-customdraw-list-view)
 	/// notification.
-	pub fn nm_custom_draw<F>(&self, func: F)
+	pub fn nm_custom_draw<F>(&self, func: F) -> &Self
 	where
 		F: Fn(&mut NMLVCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
 		self.0.wm_notify(co::NM::CUSTOMDRAW, move |p| {
 			Ok(func(unsafe { p.cast_nmhdr_mut::<NMLVCUSTOMDRAW>() })?.raw() as _)
 		});
+		self
 	}
 
 	pub_fn_nfy_withparm_noret! { nm_dbl_clk, co::NM::DBLCLK, NMITEMACTIVATE;

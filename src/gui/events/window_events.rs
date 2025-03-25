@@ -179,11 +179,12 @@ impl WindowEvents {
 	///     },
 	/// );
 	/// ```
-	pub fn wm<F>(&self, ident: co::WM, func: F)
+	pub fn wm<F>(&self, ident: co::WM, func: F) -> &Self
 	where
 		F: Fn(WndMsg) -> AnyResult<isize> + 'static,
 	{
 		unsafe { &mut *self.msgs.get() }.push(StorageMsg { id: ident, fun: Box::new(func) });
+		self
 	}
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
@@ -215,7 +216,7 @@ impl WindowEvents {
 	///     },
 	/// );
 	/// ```
-	pub fn wm_command<F>(&self, ctrl_id: impl Into<u16>, code: impl Into<co::CMD>, func: F)
+	pub fn wm_command<F>(&self, ctrl_id: impl Into<u16>, code: impl Into<co::CMD>, func: F) -> &Self
 	where
 		F: Fn() -> AnyResult<()> + 'static,
 	{
@@ -224,6 +225,7 @@ impl WindowEvents {
 			id: (ctrl_id.into(), code),
 			fun: Box::new(func),
 		});
+		self
 	}
 
 	/// [`WM_COMMAND`](https://learn.microsoft.com/en-us/windows/win32/menurc/wm-command)
@@ -251,7 +253,7 @@ impl WindowEvents {
 	///     },
 	/// );
 	/// ```
-	pub fn wm_command_accel_menu<F>(&self, ctrl_id: impl Into<u16> + Copy, func: F)
+	pub fn wm_command_accel_menu<F>(&self, ctrl_id: impl Into<u16> + Copy, func: F) -> &Self
 	where
 		F: Fn() -> AnyResult<()> + 'static,
 	{
@@ -272,6 +274,8 @@ impl WindowEvents {
 				Ok(())
 			}
 		});
+
+		self
 	}
 
 	/// [`WM_NOTIFY`](crate::msg::wm::Notify) message, for specific ID and
@@ -299,7 +303,12 @@ impl WindowEvents {
 	///     },
 	/// );
 	/// ```
-	pub fn wm_notify<F>(&self, id_from: impl Into<u16>, code: impl Into<NmhdrCode>, func: F)
+	pub fn wm_notify<F>(
+		&self,
+		id_from: impl Into<u16>,
+		code: impl Into<NmhdrCode>,
+		func: F,
+	) -> &Self
 	where
 		F: Fn(wm::Notify) -> AnyResult<isize> + 'static,
 	{
@@ -307,15 +316,17 @@ impl WindowEvents {
 			id: (id_from.into(), code.into()),
 			fun: Box::new(func),
 		});
+		self
 	}
 
 	/// [`WM_TIMER`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-timer)
 	/// message, narrowed to a specific timer ID.
-	pub fn wm_timer<F>(&self, timer_id: usize, func: F)
+	pub fn wm_timer<F>(&self, timer_id: usize, func: F) -> &Self
 	where
 		F: Fn() -> AnyResult<()> + 'static,
 	{
 		unsafe { &mut *self.tmrs.get() }.push(StorageTmr { id: timer_id, fun: Box::new(func) });
+		self
 	}
 
 	pub_fn_wm_withparm_noret! { wm_activate, co::WM::ACTIVATE, wm::Activate;
@@ -330,7 +341,7 @@ impl WindowEvents {
 
 	/// [`WM_APPCOMMAND`](https://learn.microsoft.com/en-us/windows/win32/inputdev/wm-appcommand)
 	/// message.
-	pub fn wm_app_command<F>(&self, func: F)
+	pub fn wm_app_command<F>(&self, func: F) -> &Self
 	where
 		F: Fn(wm::AppCommand) -> AnyResult<()> + 'static,
 	{
@@ -338,6 +349,7 @@ impl WindowEvents {
 			func(unsafe { wm::AppCommand::from_generic_wm(p) })?;
 			Ok(1) // TRUE
 		});
+		self
 	}
 
 	pub_fn_wm_noparm_noret! { wm_cancel_mode, co::WM::CANCELMODE;
@@ -401,11 +413,12 @@ impl WindowEvents {
 	///     },
 	/// );
 	/// ```
-	pub fn wm_create<F>(&self, func: F)
+	pub fn wm_create<F>(&self, func: F) -> &Self
 	where
 		F: Fn(wm::Create) -> AnyResult<i32> + 'static,
 	{
 		self.wm(co::WM::CREATE, move |p| Ok(func(unsafe { wm::Create::from_generic_wm(p) })? as _));
+		self
 	}
 
 	pub_fn_wm_ctlcolor! { wm_ctl_color_btn, co::WM::CTLCOLORBTN, wm::CtlColorBtn;
@@ -533,13 +546,14 @@ impl WindowEvents {
 
 	/// [`WM_ERASEBKGND`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-erasebkgnd)
 	/// message.
-	pub fn wm_erase_bkgnd<F>(&self, func: F)
+	pub fn wm_erase_bkgnd<F>(&self, func: F) -> &Self
 	where
 		F: Fn(wm::EraseBkgnd) -> AnyResult<i32> + 'static,
 	{
 		self.wm(co::WM::ERASEBKGND, move |p| {
 			Ok(func(unsafe { wm::EraseBkgnd::from_generic_wm(p) })? as _)
 		});
+		self
 	}
 
 	pub_fn_wm_withparm_noret! { wm_exit_menu_loop, co::WM::EXITMENULOOP, wm::ExitMenuLoop;
@@ -559,20 +573,22 @@ impl WindowEvents {
 
 	/// [`WM_GETFONT`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-getfont)
 	/// message.
-	pub fn wm_get_font<F>(&self, func: F)
+	pub fn wm_get_font<F>(&self, func: F) -> &Self
 	where
 		F: Fn() -> AnyResult<Option<HFONT>> + 'static,
 	{
 		self.wm(co::WM::GETFONT, move |_| Ok(func()?.map_or(0, |h| h.ptr() as _)));
+		self
 	}
 
 	/// [`WM_GETHMENU`](https://learn.microsoft.com/en-us/windows/win32/winmsg/mn-gethmenu)
 	/// message. Originally has `MN` prefix.
-	pub fn wm_get_hmenu<F>(&self, func: F)
+	pub fn wm_get_hmenu<F>(&self, func: F) -> &Self
 	where
 		F: Fn() -> AnyResult<Option<HMENU>> + 'static,
 	{
 		self.wm(co::WM::MN_GETHMENU, move |_| Ok(func()?.map_or(0, |h| h.ptr() as _)));
+		self
 	}
 
 	pub_fn_wm_withparm_noret! { wm_get_min_max_info, co::WM::GETMINMAXINFO, wm::GetMinMaxInfo;
@@ -582,22 +598,24 @@ impl WindowEvents {
 
 	/// [`WM_GETTEXT`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-gettext)
 	/// message.
-	pub fn wm_get_text<F>(&self, func: F)
+	pub fn wm_get_text<F>(&self, func: F) -> &Self
 	where
 		F: Fn(wm::GetText) -> AnyResult<u32> + 'static,
 	{
 		self.wm(co::WM::GETTEXT, move |p| {
 			Ok(func(unsafe { wm::GetText::from_generic_wm(p) })? as _)
 		});
+		self
 	}
 
 	/// [`WM_GETTEXTLENGTH`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-gettextlength)
 	/// message.
-	pub fn wm_get_text_length<F>(&self, func: F)
+	pub fn wm_get_text_length<F>(&self, func: F) -> &Self
 	where
 		F: Fn() -> AnyResult<u32> + 'static,
 	{
 		self.wm(co::WM::GETTEXTLENGTH, move |_| Ok(func()? as _));
+		self
 	}
 
 	pub_fn_wm_withparm_noret! { wm_get_title_bar_info_ex, co::WM::GETTITLEBARINFOEX, wm::GetTitleBarInfoEx;
@@ -907,13 +925,14 @@ impl WindowEvents {
 
 	/// [`WM_SETICON`](https://learn.microsoft.com/en-us/windows/win32/winmsg/wm-seticon)
 	/// message.
-	pub fn wm_set_icon<F>(&self, func: F)
+	pub fn wm_set_icon<F>(&self, func: F) -> &Self
 	where
 		F: Fn(wm::SetIcon) -> AnyResult<Option<HICON>> + 'static,
 	{
 		self.wm(co::WM::SETICON, move |p| {
 			Ok(func(unsafe { wm::SetIcon::from_generic_wm(p) })?.map_or(0, |h| h.ptr() as _))
 		});
+		self
 	}
 
 	pub_fn_wm_withparm_noret! { wm_set_redraw, co::WM::SETREDRAW, wm::SetRedraw;

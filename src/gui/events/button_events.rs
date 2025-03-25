@@ -69,12 +69,13 @@ impl ButtonEvents {
 
 	/// [`NM_CUSTOMDRAW`](https://learn.microsoft.com/en-us/windows/win32/controls/nm-customdraw-button)
 	/// notification.
-	pub fn nm_custom_draw<F>(&self, func: F)
+	pub fn nm_custom_draw<F>(&self, func: F) -> &Self
 	where
 		F: Fn(&NMCUSTOMDRAW) -> AnyResult<co::CDRF> + 'static,
 	{
 		self.0.wm_notify(co::NM::CUSTOMDRAW, move |p| {
 			Ok(func(unsafe { p.cast_nmhdr::<NMCUSTOMDRAW>() })?.raw() as _)
 		});
+		self
 	}
 }
