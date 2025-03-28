@@ -47,10 +47,7 @@ pub trait mf_IMFVideoDisplayControl: ole_IUnknown {
 	fn GetAspectRatioMode(&self) -> HrResult<co::MFVideoARMode> {
 		let mut mode = co::MFVideoARMode::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IMFVideoDisplayControlVT>(self).GetAspectRatioMode)(
-				self.ptr(),
-				&mut mode as *mut _ as _,
-			)
+			(vt::<IMFVideoDisplayControlVT>(self).GetAspectRatioMode)(self.ptr(), mode.as_mut())
 		})
 		.map(|_| mode)
 	}

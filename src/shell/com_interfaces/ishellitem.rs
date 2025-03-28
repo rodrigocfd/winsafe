@@ -95,15 +95,15 @@ pub trait shell_IShellItem: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetAttributes(&self, sfgao_mask: co::SFGAO) -> HrResult<co::SFGAO> {
-		let mut attrs = u32::default();
+		let mut attrs = co::SFGAO::default();
 		match unsafe {
 			co::HRESULT::from_raw((vt::<IShellItemVT>(self).GetAttributes)(
 				self.ptr(),
 				sfgao_mask.raw(),
-				&mut attrs,
+				attrs.as_mut(),
 			))
 		} {
-			co::HRESULT::S_OK | co::HRESULT::S_FALSE => Ok(unsafe { co::SFGAO::from_raw(attrs) }),
+			co::HRESULT::S_OK | co::HRESULT::S_FALSE => Ok(attrs),
 			hr => Err(hr),
 		}
 	}

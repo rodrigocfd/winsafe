@@ -589,11 +589,8 @@ pub fn GetMessagePos() -> POINT {
 /// * [`SetProcessDefaultLayout`](crate::SetProcessDefaultLayout)
 #[must_use]
 pub fn GetProcessDefaultLayout() -> SysResult<co::LAYOUT> {
-	let mut dl = u32::default();
-	unsafe {
-		bool_to_sysresult(ffi::GetProcessDefaultLayout(&mut dl as _))
-			.map(|_| co::LAYOUT::from_raw(dl))
-	}
+	let mut dl = co::LAYOUT::default();
+	unsafe { bool_to_sysresult(ffi::GetProcessDefaultLayout(dl.as_mut())).map(|_| dl) }
 }
 
 /// [`GetQueueStatus`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getqueuestatus)

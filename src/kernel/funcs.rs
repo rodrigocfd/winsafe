@@ -373,9 +373,8 @@ pub fn GetFileAttributesEx(file: &str) -> SysResult<WIN32_FILE_ATTRIBUTE_DATA> {
 /// function.
 #[must_use]
 pub fn GetFirmwareType() -> SysResult<co::FIRMWARE_TYPE> {
-	let mut ft = u32::default();
-	bool_to_sysresult(unsafe { ffi::GetFirmwareType(&mut ft) })
-		.map(|_| unsafe { co::FIRMWARE_TYPE::from_raw(ft) })
+	let mut ft = co::FIRMWARE_TYPE::default();
+	bool_to_sysresult(unsafe { ffi::GetFirmwareType(ft.as_mut()) }).map(|_| ft)
 }
 
 /// [`GetLargePageMinimum`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-getlargepageminimum)

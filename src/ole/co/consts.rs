@@ -296,6 +296,14 @@ const_ordinary! { MKSYS: u32;
 	LUAMONIKER 10
 }
 
+const_bitflag! { PICTURE: u32;
+	/// [`PICTUREATTRIBUTES`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/ne-ocidl-pictureattributes)
+	/// enumeration (`u32`).
+	=>
+	SCALABLE 0x1
+	TRANSPARENT 0x2
+}
+
 const_ordinary! { PICTYPE: i16;
 	/// [`PICTYPE`](https://learn.microsoft.com/en-us/windows/win32/com/pictype-constants)
 	/// constants (`i16`).

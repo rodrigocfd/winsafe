@@ -40,6 +40,17 @@ impl ole_IPicture for IPicture {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait ole_IPicture: ole_IUnknown {
+	/// [`IPicture::get_Attributes`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_attributes)
+	/// method.
+	#[must_use]
+	fn get_Attributes(&self) -> HrResult<co::PICTURE> {
+		let mut attr = co::PICTURE::default();
+		ok_to_hrresult(unsafe {
+			(vt::<IPictureVT>(self).get_Attributes)(self.ptr(), attr.as_mut())
+		})
+		.map(|_| attr)
+	}
+
 	/// [`IPicture::get_CurDC`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_curdc)
 	/// method.
 	#[must_use]
@@ -66,9 +77,9 @@ pub trait ole_IPicture: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn get_Type(&self) -> HrResult<co::PICTYPE> {
-		let mut ty = i16::default();
-		ok_to_hrresult(unsafe { (vt::<IPictureVT>(self).get_Type)(self.ptr(), &mut ty) })
-			.map(|_| unsafe { co::PICTYPE::from_raw(ty) })
+		let mut ty = co::PICTYPE::default();
+		ok_to_hrresult(unsafe { (vt::<IPictureVT>(self).get_Type)(self.ptr(), ty.as_mut()) })
+			.map(|_| ty)
 	}
 
 	/// [`IPicture::get_Width`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_width)

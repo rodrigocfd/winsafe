@@ -95,9 +95,9 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	#[must_use]
 	fn GetOptions(&self) -> HrResult<co::FOS> {
-		let mut opts = u32::default();
-		ok_to_hrresult(unsafe { (vt::<IFileDialogVT>(self).GetOptions)(self.ptr(), &mut opts) })
-			.map(|_| unsafe { co::FOS::from_raw(opts) })
+		let mut opts = co::FOS::default();
+		ok_to_hrresult(unsafe { (vt::<IFileDialogVT>(self).GetOptions)(self.ptr(), opts.as_mut()) })
+			.map(|_| opts)
 	}
 
 	fn_com_interface_get! { GetResult: IFileDialogVT, IShellItem;
