@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::kernel::ffi_types::*;
 use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 
@@ -71,6 +72,26 @@ pub trait ole_IPicture: ole_IUnknown {
 		let mut h = i32::default();
 		ok_to_hrresult(unsafe { (vt::<IPictureVT>(self).get_Height)(self.ptr(), &mut h) })
 			.map(|_| h)
+	}
+
+	/// [`IPicture::get_hPal`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_hpal)
+	/// method.
+	#[must_use]
+	fn get_hPal(&self) -> HrResult<HPALETTE> {
+		let mut hpal = HPALETTE::NULL;
+		ok_to_hrresult(unsafe { (vt::<IPictureVT>(self).get_hPal)(self.ptr(), hpal.as_mut()) })
+			.map(|_| hpal)
+	}
+
+	/// [`IPicture::get_KeepOriginalFormat`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_keeporiginalformat)
+	/// method.
+	#[must_use]
+	fn get_KeepOriginalFormat(&self) -> HrResult<bool> {
+		let mut res: BOOL = 0;
+		ok_to_hrresult(unsafe {
+			(vt::<IPictureVT>(self).get_KeepOriginalFormat)(self.ptr(), &mut res)
+		})
+		.map(|_| res != 0)
 	}
 
 	/// [`IPicture::get_Type`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_type)
@@ -162,6 +183,23 @@ pub trait ole_IPicture: ole_IUnknown {
 		.map_err(|e| e.into())
 	}
 
+	/// [`IPicture::SaveAsFile`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-saveasfile)
+	/// method.
+	///
+	/// Returns the number of bytes written into the stream.
+	fn SaveAsFile(&self, stream: &IStream, save_mem_copy: bool) -> HrResult<u32> {
+		let mut cb = i32::default();
+		ok_to_hrresult(unsafe {
+			(vt::<IPictureVT>(self).SaveAsFile)(
+				self.ptr(),
+				stream.ptr(),
+				save_mem_copy as _,
+				&mut cb,
+			)
+		})
+		.map(|_| cb as _)
+	}
+
 	/// [`IPicture::SelectPicture`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-selectpicture)
 	/// method.
 	fn SelectPicture(&self, hdc: &HDC) -> HrResult<(HDC, HBITMAP)> {
@@ -177,6 +215,12 @@ pub trait ole_IPicture: ole_IUnknown {
 			)
 		})
 		.map(|_| (hdc_out, hbmp))
+	}
+
+	/// [`IPicture::set_hPal`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-set_hpal)
+	/// method.
+	fn set_hPal(&self, hpal: &HPALETTE) -> HrResult<()> {
+		ok_to_hrresult(unsafe { (vt::<IPictureVT>(self).set_hPal)(self.ptr(), hpal.ptr()) })
 	}
 
 	/// Retrieves the image size in pixels by calling
