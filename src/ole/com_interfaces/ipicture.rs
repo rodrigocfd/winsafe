@@ -52,25 +52,9 @@ pub trait ole_IPicture: ole_IUnknown {
 	/// [`IPicture::get_Height`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_height)
 	/// method.
 	///
-	/// Returns a value in HIMETRIC units. To convert it to pixels, use
-	/// [`HDC::HiMetricToPixel`](crate::prelude::gdi_Hdc::HiMetricToPixel).
-	///
-	/// # Examples
-	///
-	/// Converting height from HIMETRIC to pixels:
-	///
-	/// ```rust,ignore
-	/// use winsafe::{self as w, prelude::*};
-	///
-	/// let pic: w::IPicture; // initialized somewhere
-	/// # let pic = unsafe { w::IPicture::null() };
-	///
-	/// let hdc = w::HWND::NULL.GetDC()?;
-	///
-	/// let (_, height) = hdc.HiMetricToPixel(0, pic.get_Height()?);
-	/// println!("Height: {} px", height);
-	/// # w::AnyResult::Ok(())
-	/// ```
+	/// Returns the value in HIMETRIC units. If you need pixels, prefer using
+	/// [`size_px`](crate::prelude::ole_IPicture::size_px), which performs the
+	/// conversion automatically.
 	#[must_use]
 	fn get_Height(&self) -> HrResult<i32> {
 		let mut h = i32::default();
@@ -90,25 +74,9 @@ pub trait ole_IPicture: ole_IUnknown {
 	/// [`IPicture::get_Width`](https://learn.microsoft.com/en-us/windows/win32/api/ocidl/nf-ocidl-ipicture-get_width)
 	/// method.
 	///
-	/// Returns a value in HIMETRIC units. To convert it to pixels, use
-	/// [`HDC::HiMetricToPixel`](crate::prelude::gdi_Hdc::HiMetricToPixel).
-	///
-	/// # Examples
-	///
-	/// Converting width from HIMETRIC to pixels:
-	///
-	/// ```rust,ignore
-	/// use winsafe::{self as w, prelude::*};
-	///
-	/// let pic: w::IPicture; // initialized somewhere
-	/// # let pic = unsafe { w::IPicture::null() };
-	///
-	/// let hdc = w::HWND::NULL.GetDC()?;
-	///
-	/// let (width, _) = hdc.HiMetricToPixel(pic.get_Width()?, 0);
-	/// println!("Width: {} px", width);
-	/// # w::AnyResult::Ok(())
-	/// ```
+	/// Returns the value in HIMETRIC units. If you need pixels, prefer using
+	/// [`size_px`](crate::prelude::ole_IPicture::size_px), which performs the
+	/// conversion automatically.
 	#[must_use]
 	fn get_Width(&self) -> HrResult<i32> {
 		let mut w = i32::default();
@@ -198,5 +166,19 @@ pub trait ole_IPicture: ole_IUnknown {
 			)
 		})
 		.map(|_| (hdc_out, hbmp))
+	}
+
+	/// Retrieves the image size in pixels by calling
+	/// [`get_Width`](crate::prelude::ole_IPicture::get_Width) and
+	/// [`get_Height`](crate::prelude::ole_IPicture::get_Height), passing the
+	/// values to
+	/// [`HDC::HiMetricToPixel`](crate::prelude::gdi_Hdc::HiMetricToPixel), using
+	/// the `HDC` for the entire screen retrieved with
+	/// [`HWND::GetDC`](crate::prelude::user_Hwnd::GetDC).
+	fn size_px(&self) -> AnyResult<(i32, i32)> {
+		let width = self.get_Width()?;
+		let height = self.get_Height()?;
+		let hdc_screen = HWND::NULL.GetDC()?;
+		Ok(hdc_screen.HiMetricToPixel(width, height))
 	}
 }
