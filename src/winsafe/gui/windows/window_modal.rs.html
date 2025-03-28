@@ -58,37 +58,29 @@
 <a href=#58 id=58 data-nosnippet>58</a>	<span class="doccomment">/// Physically creates the window, then runs the modal loop. This method
 <a href=#59 id=59 data-nosnippet>59</a>	/// will block until the window is closed.
 <a href=#60 id=60 data-nosnippet>60</a>	///
-<a href=#61 id=61 data-nosnippet>61</a>	/// For a modal created with
-<a href=#62 id=62 data-nosnippet>62</a>	/// [`WindowModal::new`](crate::gui::WindowModal::new), the returned `i32`
-<a href=#63 id=63 data-nosnippet>63</a>	/// is always zero.
-<a href=#64 id=64 data-nosnippet>64</a>	///
-<a href=#65 id=65 data-nosnippet>65</a>	/// For a modal created with
-<a href=#66 id=66 data-nosnippet>66</a>	/// [`WindowModal::new_dlg`](crate::gui::WindowModal::new_dlg), the returned
-<a href=#67 id=67 data-nosnippet>67</a>	/// `i32` is the value passed to
-<a href=#68 id=68 data-nosnippet>68</a>	/// [`HWND::EndDialog`](crate::prelude::user_Hwnd::EndDialog). Note that, if
-<a href=#69 id=69 data-nosnippet>69</a>	/// the user clicks the "X" to close the modal, the default behavior is to
-<a href=#70 id=70 data-nosnippet>70</a>	/// call `EndDialog(0)`. To override this behavior, handle the
-<a href=#71 id=71 data-nosnippet>71</a>	/// modal's [`wm_close`](crate::gui::events::WindowEvents::wm_close)
-<a href=#72 id=72 data-nosnippet>72</a>	/// yourself.
-<a href=#73 id=73 data-nosnippet>73</a>	///
-<a href=#74 id=74 data-nosnippet>74</a>	/// # Panics
-<a href=#75 id=75 data-nosnippet>75</a>	///
-<a href=#76 id=76 data-nosnippet>76</a>	/// Panics if the window is already created.
-<a href=#77 id=77 data-nosnippet>77</a>	</span><span class="kw">pub fn </span>show_modal(<span class="kw-2">&amp;</span><span class="self">self</span>, parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>GuiParent) -&gt; AnyResult&lt;()&gt; {
-<a href=#78 id=78 data-nosnippet>78</a>		<span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span>{
-<a href=#79 id=79 data-nosnippet>79</a>			RawDlg::Raw(r) =&gt; r.show_modal(parent),
-<a href=#80 id=80 data-nosnippet>80</a>			RawDlg::Dlg(d) =&gt; d.show_modal(parent),
-<a href=#81 id=81 data-nosnippet>81</a>		}
-<a href=#82 id=82 data-nosnippet>82</a>	}
-<a href=#83 id=83 data-nosnippet>83</a>
-<a href=#84 id=84 data-nosnippet>84</a>	<span class="doccomment">/// Closes the window by posting a [`WM_CLOSE`](crate::msg::wm::Close)
-<a href=#85 id=85 data-nosnippet>85</a>	/// message. This is the safest way to close any popup window, because
-<a href=#86 id=86 data-nosnippet>86</a>	/// you'll able to process the
-<a href=#87 id=87 data-nosnippet>87</a>	/// [`wm_close`](crate::gui::events::WindowEvents::wm_close) event, just
-<a href=#88 id=88 data-nosnippet>88</a>	/// like if the user clicked the window "X" button.
-<a href=#89 id=89 data-nosnippet>89</a>	</span><span class="kw">pub fn </span>close(<span class="kw-2">&amp;</span><span class="self">self</span>) {
-<a href=#90 id=90 data-nosnippet>90</a>		<span class="kw">unsafe </span>{
-<a href=#91 id=91 data-nosnippet>91</a>			<span class="self">self</span>.hwnd().PostMessage(wm::Close {}).unwrap();
-<a href=#92 id=92 data-nosnippet>92</a>		}
-<a href=#93 id=93 data-nosnippet>93</a>	}
-<a href=#94 id=94 data-nosnippet>94</a>}</code></pre></div></section></main></body></html>
+<a href=#61 id=61 data-nosnippet>61</a>	/// Note that, if the user clicks the "X" to close the modal, the default
+<a href=#62 id=62 data-nosnippet>62</a>	/// behavior is to call `EndDialog(0)`. To override this behavior, handle
+<a href=#63 id=63 data-nosnippet>63</a>	/// the modal's [`wm_close`](crate::gui::events::WindowEvents::wm_close)
+<a href=#64 id=64 data-nosnippet>64</a>	/// yourself.
+<a href=#65 id=65 data-nosnippet>65</a>	///
+<a href=#66 id=66 data-nosnippet>66</a>	/// # Panics
+<a href=#67 id=67 data-nosnippet>67</a>	///
+<a href=#68 id=68 data-nosnippet>68</a>	/// Panics if the window is already created.
+<a href=#69 id=69 data-nosnippet>69</a>	</span><span class="kw">pub fn </span>show_modal(<span class="kw-2">&amp;</span><span class="self">self</span>, parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>GuiParent) -&gt; AnyResult&lt;()&gt; {
+<a href=#70 id=70 data-nosnippet>70</a>		<span class="kw">match </span><span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0 </span>{
+<a href=#71 id=71 data-nosnippet>71</a>			RawDlg::Raw(r) =&gt; r.show_modal(parent),
+<a href=#72 id=72 data-nosnippet>72</a>			RawDlg::Dlg(d) =&gt; d.show_modal(parent),
+<a href=#73 id=73 data-nosnippet>73</a>		}
+<a href=#74 id=74 data-nosnippet>74</a>	}
+<a href=#75 id=75 data-nosnippet>75</a>
+<a href=#76 id=76 data-nosnippet>76</a>	<span class="doccomment">/// Closes the window by posting a [`WM_CLOSE`](crate::msg::wm::Close)
+<a href=#77 id=77 data-nosnippet>77</a>	/// message. This is the safest way to close any popup window, because
+<a href=#78 id=78 data-nosnippet>78</a>	/// you'll able to process the
+<a href=#79 id=79 data-nosnippet>79</a>	/// [`wm_close`](crate::gui::events::WindowEvents::wm_close) event, just
+<a href=#80 id=80 data-nosnippet>80</a>	/// like if the user clicked the window "X" button.
+<a href=#81 id=81 data-nosnippet>81</a>	</span><span class="kw">pub fn </span>close(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+<a href=#82 id=82 data-nosnippet>82</a>		<span class="kw">unsafe </span>{
+<a href=#83 id=83 data-nosnippet>83</a>			<span class="self">self</span>.hwnd().PostMessage(wm::Close {}).unwrap();
+<a href=#84 id=84 data-nosnippet>84</a>		}
+<a href=#85 id=85 data-nosnippet>85</a>	}
+<a href=#86 id=86 data-nosnippet>86</a>}</code></pre></div></section></main></body></html>
