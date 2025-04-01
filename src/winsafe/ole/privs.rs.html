@@ -61,15 +61,17 @@
 <a href=#61 id=61 data-nosnippet>61</a>	res.map_err(|err| {
 <a href=#62 id=62 data-nosnippet>62</a>		<span class="kw">if let </span><span class="prelude-val">Some</span>(hr) = err.downcast_ref::&lt;co::HRESULT&gt;() {
 <a href=#63 id=63 data-nosnippet>63</a>			<span class="kw-2">*</span>hr
-<a href=#64 id=64 data-nosnippet>64</a>		} <span class="kw">else </span>{
-<a href=#65 id=65 data-nosnippet>65</a>			HWND::NULL
-<a href=#66 id=66 data-nosnippet>66</a>				.MessageBox(
-<a href=#67 id=67 data-nosnippet>67</a>					<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"Unhandled error: {}"</span>, err.to_string()),
-<a href=#68 id=68 data-nosnippet>68</a>					<span class="string">"Unhandled error in COM impl"</span>,
-<a href=#69 id=69 data-nosnippet>69</a>					co::MB::ICONERROR,
-<a href=#70 id=70 data-nosnippet>70</a>				)
-<a href=#71 id=71 data-nosnippet>71</a>				.unwrap();
-<a href=#72 id=72 data-nosnippet>72</a>			co::HRESULT::E_UNEXPECTED
-<a href=#73 id=73 data-nosnippet>73</a>		}
-<a href=#74 id=74 data-nosnippet>74</a>	})
-<a href=#75 id=75 data-nosnippet>75</a>}</code></pre></div></section></main></body></html>
+<a href=#64 id=64 data-nosnippet>64</a>		} <span class="kw">else if let </span><span class="prelude-val">Some</span>(err) = err.downcast_ref::&lt;co::ERROR&gt;() {
+<a href=#65 id=65 data-nosnippet>65</a>			err.to_hresult()
+<a href=#66 id=66 data-nosnippet>66</a>		} <span class="kw">else </span>{
+<a href=#67 id=67 data-nosnippet>67</a>			HWND::NULL
+<a href=#68 id=68 data-nosnippet>68</a>				.MessageBox(
+<a href=#69 id=69 data-nosnippet>69</a>					<span class="kw-2">&amp;</span><span class="macro">format!</span>(<span class="string">"Unhandled error: {}"</span>, err.to_string()),
+<a href=#70 id=70 data-nosnippet>70</a>					<span class="string">"Unhandled error in COM impl"</span>,
+<a href=#71 id=71 data-nosnippet>71</a>					co::MB::ICONERROR,
+<a href=#72 id=72 data-nosnippet>72</a>				)
+<a href=#73 id=73 data-nosnippet>73</a>				.unwrap();
+<a href=#74 id=74 data-nosnippet>74</a>			co::HRESULT::E_UNEXPECTED
+<a href=#75 id=75 data-nosnippet>75</a>		}
+<a href=#76 id=76 data-nosnippet>76</a>	})
+<a href=#77 id=77 data-nosnippet>77</a>}</code></pre></div></section></main></body></html>
