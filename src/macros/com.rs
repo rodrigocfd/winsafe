@@ -314,11 +314,12 @@ macro_rules! fn_com_userdef_closure {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		pub fn $method<F>(&self, func: F)
+		pub fn $method<F>(&self, func: F) -> &Self
 			where F: $fun + 'static,
 		{
 			let mut box_impl = std::mem::ManuallyDrop::new(unsafe { Box::from_raw(self.0) });
 			box_impl.$method = Some(Box::new(func));
+			self
 		}
 	};
 }
