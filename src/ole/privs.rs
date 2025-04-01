@@ -53,3 +53,23 @@ pub(crate) fn hrresult_to_hres<T>(hrr: HrResult<T>) -> HRES {
 		Err(e) => e.raw(),
 	}
 }
+
+/// If the error is `HrResult`, returns it, otherwise displays a message box
+/// with the error and returns `ERROR::E_UNEXPECTED`.
+#[must_use]
+pub(crate) fn anyresult_to_hresult<T>(res: AnyResult<T>) -> HrResult<T> {
+	res.map_err(|err| {
+		if let Some(hr) = err.downcast_ref::<co::HRESULT>() {
+			*hr
+		} else {
+			HWND::NULL
+				.MessageBox(
+					&format!("Unhandled error: {}", err.to_string()),
+					"Unhandled error in COM impl",
+					co::MB::ICONERROR,
+				)
+				.unwrap();
+			co::HRESULT::E_UNEXPECTED
+		}
+	})
+}

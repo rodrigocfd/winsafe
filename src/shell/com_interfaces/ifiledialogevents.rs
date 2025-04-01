@@ -35,7 +35,7 @@ com_interface_userdef! { IFileDialogEvents, IFileDialogEventsImpl: "973510db-7d7
 	/// let file_dialog_events = w::IFileDialogEvents::new_impl();
 	///
 	/// file_dialog_events.OnFolderChanging(
-	///     move |fd: &w::IFileDialog, si: &w::IShellItem| -> w::HrResult<()> {
+	///     move |fd: &w::IFileDialog, si: &w::IShellItem| -> w::AnyResult<()> {
 	///         println!("New folder: {}",
 	///             si.GetDisplayName(co::SIGDN::FILESYSPATH)?);
 	///         Ok(())
@@ -48,37 +48,37 @@ com_interface_userdef! { IFileDialogEvents, IFileDialogEventsImpl: "973510db-7d7
 }
 
 impl IFileDialogEvents {
-	fn_com_userdef_closure! { OnFileOk: Fn(&IFileDialog) -> HrResult<()>;
+	fn_com_userdef_closure! { OnFileOk: Fn(&IFileDialog) -> AnyResult<()>;
 		/// [`IFileDialogEvents::OnFileOk`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfileok)
 		/// method.
 	}
 
-	fn_com_userdef_closure! { OnFolderChange: Fn(&IFileDialog) -> HrResult<()>;
+	fn_com_userdef_closure! { OnFolderChange: Fn(&IFileDialog) -> AnyResult<()>;
 		/// [`IFileDialogEvents::OnFolderChange`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfolderchange)
 		/// method.
 	}
 
-	fn_com_userdef_closure! { OnFolderChanging: Fn(&IFileDialog, &IShellItem) -> HrResult<()>;
+	fn_com_userdef_closure! { OnFolderChanging: Fn(&IFileDialog, &IShellItem) -> AnyResult<()>;
 		/// [`IFileDialogEvents::OnFolderChanging`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onfolderchanging)
 		/// method.
 	}
 
-	fn_com_userdef_closure! { OnOverwrite: Fn(&IFileDialog, &IShellItem, &mut co::FDEOR) -> HrResult<()>;
+	fn_com_userdef_closure! { OnOverwrite: Fn(&IFileDialog, &IShellItem, &mut co::FDEOR) -> AnyResult<()>;
 		/// [`IFileDialogEvents::OnOverwrite`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onoverwrite)
 		/// method.
 	}
 
-	fn_com_userdef_closure! { OnSelectionChange: Fn(&IFileDialog) -> HrResult<()>;
+	fn_com_userdef_closure! { OnSelectionChange: Fn(&IFileDialog) -> AnyResult<()>;
 		/// [`IFileDialogEvents::OnSelectionChange`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onselectionchange)
 		/// method.
 	}
 
-	fn_com_userdef_closure! { OnShareViolation: Fn(&IFileDialog, &IShellItem, &mut co::FDESVR) -> HrResult<()>;
+	fn_com_userdef_closure! { OnShareViolation: Fn(&IFileDialog, &IShellItem, &mut co::FDESVR) -> AnyResult<()>;
 		/// [`IFileDialogEvents::OnShareViolation`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-onshareviolation)
 		/// method.
 	}
 
-	fn_com_userdef_closure! { OnTypeChange: Fn(&IFileDialog) -> HrResult<()>;
+	fn_com_userdef_closure! { OnTypeChange: Fn(&IFileDialog) -> AnyResult<()>;
 		/// [`IFileDialogEvents::OnTypeChange`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialogevents-ontypechange)
 		/// method.
 	}
@@ -88,14 +88,14 @@ impl IFileDialogEvents {
 struct IFileDialogEventsImpl {
 	vt: IFileDialogEventsVT,
 	counter: AtomicU32,
-	OnFileOk: Option<Box<dyn Fn(&IFileDialog) -> HrResult<()>>>,
-	OnFolderChanging: Option<Box<dyn Fn(&IFileDialog, &IShellItem) -> HrResult<()>>>,
-	OnFolderChange: Option<Box<dyn Fn(&IFileDialog) -> HrResult<()>>>,
-	OnSelectionChange: Option<Box<dyn Fn(&IFileDialog) -> HrResult<()>>>,
+	OnFileOk: Option<Box<dyn Fn(&IFileDialog) -> AnyResult<()>>>,
+	OnFolderChanging: Option<Box<dyn Fn(&IFileDialog, &IShellItem) -> AnyResult<()>>>,
+	OnFolderChange: Option<Box<dyn Fn(&IFileDialog) -> AnyResult<()>>>,
+	OnSelectionChange: Option<Box<dyn Fn(&IFileDialog) -> AnyResult<()>>>,
 	OnShareViolation:
-		Option<Box<dyn Fn(&IFileDialog, &IShellItem, &mut co::FDESVR) -> HrResult<()>>>,
-	OnTypeChange: Option<Box<dyn Fn(&IFileDialog) -> HrResult<()>>>,
-	OnOverwrite: Option<Box<dyn Fn(&IFileDialog, &IShellItem, &mut co::FDEOR) -> HrResult<()>>>,
+		Option<Box<dyn Fn(&IFileDialog, &IShellItem, &mut co::FDESVR) -> AnyResult<()>>>,
+	OnTypeChange: Option<Box<dyn Fn(&IFileDialog) -> AnyResult<()>>>,
+	OnOverwrite: Option<Box<dyn Fn(&IFileDialog, &IShellItem, &mut co::FDEOR) -> AnyResult<()>>>,
 }
 
 impl IFileDialogEventsImpl {
@@ -133,7 +133,7 @@ impl IFileDialogEventsImpl {
 		hrresult_to_hres(match &box_impl.OnFileOk {
 			Some(func) => {
 				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
-				func(&fd)
+				anyresult_to_hresult(func(&fd))
 			},
 			None => Ok(()),
 		})
@@ -145,7 +145,7 @@ impl IFileDialogEventsImpl {
 			Some(func) => {
 				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
 				let si = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiFolder) });
-				func(&fd, &si)
+				anyresult_to_hresult(func(&fd, &si))
 			},
 			None => Ok(()),
 		})
@@ -156,7 +156,7 @@ impl IFileDialogEventsImpl {
 		hrresult_to_hres(match &box_impl.OnFolderChange {
 			Some(func) => {
 				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
-				func(&fd)
+				anyresult_to_hresult(func(&fd))
 			},
 			None => Ok(()),
 		})
@@ -167,7 +167,7 @@ impl IFileDialogEventsImpl {
 		hrresult_to_hres(match &box_impl.OnSelectionChange {
 			Some(func) => {
 				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
-				func(&fd)
+				anyresult_to_hresult(func(&fd))
 			},
 			None => Ok(()),
 		})
@@ -180,7 +180,7 @@ impl IFileDialogEventsImpl {
 				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
 				let si = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psi) });
 				let presp = unsafe { &mut *(pResponse as *mut co::FDESVR) };
-				func(&fd, &si, presp)
+				anyresult_to_hresult(func(&fd, &si, presp))
 			},
 			None => Ok(()),
 		})
@@ -191,7 +191,7 @@ impl IFileDialogEventsImpl {
 		hrresult_to_hres(match &box_impl.OnTypeChange {
 			Some(func) => {
 				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
-				func(&fd)
+				anyresult_to_hresult(func(&fd))
 			},
 			None => Ok(()),
 		})
@@ -204,7 +204,7 @@ impl IFileDialogEventsImpl {
 				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
 				let si = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psi) });
 				let presp = unsafe { &mut *(pResponse as *mut co::FDEOR) };
-				func(&fd, &si, presp)
+				anyresult_to_hresult(func(&fd, &si, presp))
 			},
 			None => Ok(()),
 		})

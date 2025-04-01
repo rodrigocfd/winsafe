@@ -28,7 +28,7 @@ com_interface_userdef! { IDropTarget, IDropTargetImpl: "00000122-0000-0000-c000-
 	///
 	/// drop_target.Drop(
 	///     |d: &w::IDataObject, key_st: co::MK, pt: w::POINT, fx: &mut co::DROPEFFECT|
-	///         -> w::HrResult<()>
+	///         -> w::AnyResult<()>
 	///     {
 	///         let mut fmt = w::FORMATETC::default();
 	///         fmt.cfFormat = co::CF::HDROP;
@@ -37,12 +37,10 @@ com_interface_userdef! { IDropTarget, IDropTargetImpl: "00000122-0000-0000-c000-
 	///
 	///         let medium = unsafe { d.GetData(&fmt)? };
 	///         let hglobal = unsafe { medium.ptr_hglobal().unwrap() };
-	///         let ptr_lock = hglobal.GlobalLock().map_err(|err| err.to_hresult())?;
+	///         let ptr_lock = hglobal.GlobalLock()?;
 	///         let hdrop = unsafe { w::HDROP::from_ptr(ptr_lock.as_ptr() as _) };
-	///         let dropped_paths = hdrop.DragQueryFile()
-	///             .map_err(|err| err.to_hresult())?
-	///             .collect::<w::SysResult<Vec<_>>>()
-	///             .map_err(|err| err.to_hresult())?;
+	///         let dropped_paths = hdrop.DragQueryFile()?
+	///             .collect::<w::SysResult<Vec<_>>>()?;
 	///
 	///         for f in dropped_paths {
 	///             println!("> {f}");
@@ -56,22 +54,56 @@ com_interface_userdef! { IDropTarget, IDropTargetImpl: "00000122-0000-0000-c000-
 }
 
 impl IDropTarget {
-	fn_com_userdef_closure! { DragEnter: Fn(&IDataObject, co::MK, POINT, &mut co::DROPEFFECT) -> HrResult<()>;
+	fn_com_userdef_closure! { DragEnter: Fn(&IDataObject, co::MK, POINT, &mut co::DROPEFFECT) -> AnyResult<()>;
 		/// [`IDropTarget::DragEnter`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragenter)
 		/// method.
+		///
+		/// # Examples
+		///
+		/// ```no_run
+		/// use winsafe::{self as w, prelude::*, co};
+		///
+		/// let drop_target = w::IDropTarget::new_impl();
+		///
+		/// drop_target.DragEnter(
+		///     |d: &w::IDataObject, key_st: co::MK, pt: w::POINT, fx: &mut co::DROPEFFECT|
+		///         -> w::AnyResult<()>
+		///     {
+		///         *fx &= co::DROPEFFECT::COPY;
+		///         Ok(())
+		///     },
+		/// );
+		/// ```
 	}
 
-	fn_com_userdef_closure! { DragLeave: Fn() -> HrResult<()>;
+	fn_com_userdef_closure! { DragLeave: Fn() -> AnyResult<()>;
 		/// [`IDropTarget::DragLeave`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragleave)
 		/// method.
 	}
 
-	fn_com_userdef_closure! { DragOver: Fn(co::MK, POINT, &mut co::DROPEFFECT) -> HrResult<()>;
+	fn_com_userdef_closure! { DragOver: Fn(co::MK, POINT, &mut co::DROPEFFECT) -> AnyResult<()>;
 		/// [`IDropTarget::DragOver`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragover)
 		/// method.
+		///
+		/// # Examples
+		///
+		/// ```no_run
+		/// use winsafe::{self as w, prelude::*, co};
+		///
+		/// let drop_target = w::IDropTarget::new_impl();
+		///
+		/// drop_target.DragOver(
+		///     |key_st: co::MK, pt: w::POINT, fx: &mut co::DROPEFFECT|
+		///         -> w::AnyResult<()>
+		///     {
+		///         *fx &= co::DROPEFFECT::COPY;
+		///         Ok(())
+		///     },
+		/// );
+		/// ```
 	}
 
-	fn_com_userdef_closure! { Drop: Fn(&IDataObject, co::MK, POINT, &mut co::DROPEFFECT) -> HrResult<()>;
+	fn_com_userdef_closure! { Drop: Fn(&IDataObject, co::MK, POINT, &mut co::DROPEFFECT) -> AnyResult<()>;
 		/// [`IDropTarget::Drop`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-drop)
 		/// method.
 	}
@@ -82,10 +114,10 @@ pub struct IDropTargetImpl {
 	vt: IDropTargetVT,
 	counter: AtomicU32,
 	DragEnter:
-		Option<Box<dyn Fn(&IDataObject, co::MK, POINT, &mut co::DROPEFFECT) -> HrResult<()>>>,
-	DragOver: Option<Box<dyn Fn(co::MK, POINT, &mut co::DROPEFFECT) -> HrResult<()>>>,
-	DragLeave: Option<Box<dyn Fn() -> HrResult<()>>>,
-	Drop: Option<Box<dyn Fn(&IDataObject, co::MK, POINT, &mut co::DROPEFFECT) -> HrResult<()>>>,
+		Option<Box<dyn Fn(&IDataObject, co::MK, POINT, &mut co::DROPEFFECT) -> AnyResult<()>>>,
+	DragOver: Option<Box<dyn Fn(co::MK, POINT, &mut co::DROPEFFECT) -> AnyResult<()>>>,
+	DragLeave: Option<Box<dyn Fn() -> AnyResult<()>>>,
+	Drop: Option<Box<dyn Fn(&IDataObject, co::MK, POINT, &mut co::DROPEFFECT) -> AnyResult<()>>>,
 }
 
 impl IDropTargetImpl {
@@ -126,7 +158,7 @@ impl IDropTargetImpl {
 				let mk = unsafe { co::MK::from_raw(grfKeyState as _) };
 				let pt = POINT::new(LODWORD(pt) as _, HIDWORD(pt) as _);
 				let pfx = unsafe { &mut *(pdwEffect as *mut co::DROPEFFECT) };
-				func(&dob, mk, pt, pfx)
+				anyresult_to_hresult(func(&dob, mk, pt, pfx))
 			},
 			None => Ok(()),
 		})
@@ -139,7 +171,7 @@ impl IDropTargetImpl {
 				let mk = unsafe { co::MK::from_raw(grfKeyState as _) };
 				let pt = POINT::new(LODWORD(pt) as _, HIDWORD(pt) as _);
 				let pfx = unsafe { &mut *(pdwEffect as *mut co::DROPEFFECT) };
-				func(mk, pt, pfx)
+				anyresult_to_hresult(func(mk, pt, pfx))
 			},
 			None => Ok(()),
 		})
@@ -148,7 +180,7 @@ impl IDropTargetImpl {
 	fn DragLeave(p: COMPTR) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.DragLeave {
-			Some(func) => func(),
+			Some(func) => anyresult_to_hresult(func()),
 			None => Ok(()),
 		})
 	}
@@ -161,7 +193,7 @@ impl IDropTargetImpl {
 				let mk = unsafe { co::MK::from_raw(grfKeyState as _) };
 				let pt = POINT::new(LODWORD(pt) as _, HIDWORD(pt) as _);
 				let pfx = unsafe { &mut *(pdwEffect as *mut co::DROPEFFECT) };
-				func(&dob, mk, pt, pfx)
+				anyresult_to_hresult(func(&dob, mk, pt, pfx))
 			},
 			None => Ok(()),
 		})

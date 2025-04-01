@@ -20,12 +20,12 @@ com_interface_userdef! { IMFAsyncCallback, IMFAsyncCallbackImpl: "a27003cf-2354-
 }
 
 impl IMFAsyncCallback {
-	fn_com_userdef_closure! { GetParameters: Fn(&mut co::MFASYNC, &mut u32) -> HrResult<()>;
+	fn_com_userdef_closure! { GetParameters: Fn(&mut co::MFASYNC, &mut u32) -> AnyResult<()>;
 		/// [`IMFAsyncCallback::GetParameters`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasynccallback-getparameters)
 		/// method.
 	}
 
-	fn_com_userdef_closure! { Invoke: Fn(&IMFAsyncResult) -> HrResult<()>;
+	fn_com_userdef_closure! { Invoke: Fn(&IMFAsyncResult) -> AnyResult<()>;
 		/// [`IMFAsyncCallback::Invoke`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasynccallback-invoke)
 		/// method.
 	}
@@ -35,8 +35,8 @@ impl IMFAsyncCallback {
 pub struct IMFAsyncCallbackImpl {
 	vt: IMFAsyncCallbackVT,
 	counter: AtomicU32,
-	GetParameters: Option<Box<dyn Fn(&mut co::MFASYNC, &mut u32) -> HrResult<()>>>,
-	Invoke: Option<Box<dyn Fn(&IMFAsyncResult) -> HrResult<()>>>,
+	GetParameters: Option<Box<dyn Fn(&mut co::MFASYNC, &mut u32) -> AnyResult<()>>>,
+	Invoke: Option<Box<dyn Fn(&IMFAsyncResult) -> AnyResult<()>>>,
 }
 
 impl IMFAsyncCallbackImpl {
@@ -65,7 +65,7 @@ impl IMFAsyncCallbackImpl {
 			Some(func) => {
 				let pflags = unsafe { &mut *(pdwFlags as *mut co::MFASYNC) };
 				let pqueue = unsafe { &mut *(pdwQueue) };
-				func(pflags, pqueue)
+				anyresult_to_hresult(func(pflags, pqueue))
 			},
 			None => Ok(()),
 		})
@@ -76,7 +76,7 @@ impl IMFAsyncCallbackImpl {
 		hrresult_to_hres(match &box_impl.Invoke {
 			Some(func) => {
 				let ar = ManuallyDrop::new(unsafe { IMFAsyncResult::from_ptr(pAsyncResult) });
-				func(&ar)
+				anyresult_to_hresult(func(&ar))
 			},
 			None => Ok(()),
 		})

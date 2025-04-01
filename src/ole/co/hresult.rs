@@ -110,6 +110,8 @@ impl HRESULT {
 	}
 }
 
+// https://learn.microsoft.com/en-us/windows/win32/com/com-error-codes-1
+
 const_values_pub! { HRESULT;
 	/// Operation successful.
 	S_OK 0
