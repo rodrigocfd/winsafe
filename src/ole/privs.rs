@@ -61,6 +61,8 @@ pub(crate) fn anyresult_to_hresult<T>(res: AnyResult<T>) -> HrResult<T> {
 	res.map_err(|err| {
 		if let Some(hr) = err.downcast_ref::<co::HRESULT>() {
 			*hr
+		} else if let Some(err) = err.downcast_ref::<co::ERROR>() {
+			err.to_hresult()
 		} else {
 			HWND::NULL
 				.MessageBox(
