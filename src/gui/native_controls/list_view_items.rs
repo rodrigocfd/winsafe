@@ -256,6 +256,26 @@ impl<'a, T> ListViewItems<'a, T> {
 			.map(|idx| self.get(idx))
 	}
 
+	/// Returns the last item, if any.
+	pub fn last(&self) -> Option<ListViewItem<'a, T>> {
+		let count = self.count();
+		if count > 0 {
+			Some(self.get(count - 1))
+		} else {
+			None
+		}
+	}
+
+	/// Returns the last selected item, if any.
+	pub fn last_selected(&self) -> Option<ListViewItem<'a, T>> {
+		let count = self.selected_count();
+		if count > 0 {
+			Some(self.get(count - 1))
+		} else {
+			None
+		}
+	}
+
 	/// Sets or remove the selection for all items by sending an
 	/// [`lvm::SetItemState`](crate::msg::lvm::SetItemState) message.
 	pub fn select_all(&self, set: bool) -> SysResult<()> {

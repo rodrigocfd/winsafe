@@ -59,4 +59,10 @@ impl<'a> HeaderItems<'a> {
 	pub fn iter(&self) -> SysResult<impl Iterator<Item = HeaderItem<'a>> + 'a> {
 		HeaderItemIter::new(self.owner)
 	}
+
+	/// Returns the last item, if any.
+	pub fn last(&self) -> SysResult<Option<HeaderItem<'a>>> {
+		let count = self.count()?;
+		Ok(if count > 0 { Some(self.get(count - 1)) } else { None })
+	}
 }

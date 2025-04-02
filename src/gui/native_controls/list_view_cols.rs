@@ -63,4 +63,10 @@ impl<'a, T> ListViewCols<'a, T> {
 	pub fn iter(&self) -> SysResult<impl Iterator<Item = ListViewCol<'a, T>> + 'a> {
 		ListViewColIter::new(self.owner)
 	}
+
+	/// Returns the last column, if any.
+	pub fn last(&self) -> SysResult<Option<ListViewCol<'a, T>>> {
+		let count = self.count()?;
+		Ok(if count > 0 { Some(self.get(count - 1)) } else { None })
+	}
 }

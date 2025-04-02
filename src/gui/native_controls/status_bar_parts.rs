@@ -43,6 +43,16 @@ impl<'a> StatusBarParts<'a> {
 		StatusBarPartIter::new(self.owner)
 	}
 
+	/// Returns the last part, if any.
+	pub fn last(&self) -> Option<StatusBarPart<'a>> {
+		let count = self.count();
+		if count > 0 {
+			Some(self.get(count - 1))
+		} else {
+			None
+		}
+	}
+
 	/// Sets the texts of multiple parts at once.
 	///
 	/// # Panics
