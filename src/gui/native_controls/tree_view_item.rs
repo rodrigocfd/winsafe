@@ -20,18 +20,19 @@ pub struct TreeViewItem<'a, T: 'static = ()> {
 	hitem: HTREEITEM,
 }
 
-impl<'a, T> TreeViewItem<'a, T> {
-	#[must_use]
-	pub(in crate::gui) const fn new(owner: &'a TreeView<T>, hitem: HTREEITEM) -> Self {
-		Self { owner, hitem }
-	}
-
-	#[must_use]
-	fn raw_clone(&self) -> Self {
+impl<'a, T> Clone for TreeViewItem<'a, T> {
+	fn clone(&self) -> Self {
 		Self {
 			owner: self.owner,
 			hitem: unsafe { self.hitem.raw_copy() },
 		}
+	}
+}
+
+impl<'a, T> TreeViewItem<'a, T> {
+	#[must_use]
+	pub(in crate::gui) const fn new(owner: &'a TreeView<T>, hitem: HTREEITEM) -> Self {
+		Self { owner, hitem }
 	}
 
 	/// Adds a new child item by sending a
@@ -150,19 +151,19 @@ impl<'a, T> TreeViewItem<'a, T> {
 	/// Returns an iterator over the child items.
 	#[must_use]
 	pub fn iter_children(&self) -> impl Iterator<Item = TreeViewItem<'a, T>> + 'a {
-		TreeViewChildItemIter::new(self.owner, Some(self.raw_clone()))
+		TreeViewChildItemIter::new(self.owner, Some(self.clone()))
 	}
 
 	/// Returns an iterator over the next sibling items.
 	#[must_use]
 	pub fn iter_next_siblings(&self) -> impl Iterator<Item = TreeViewItem<'a, T>> + 'a {
-		TreeViewItemIter::new(self.owner, Some(self.raw_clone()), co::TVGN::NEXT)
+		TreeViewItemIter::new(self.owner, Some(self.clone()), co::TVGN::NEXT)
 	}
 
 	/// Returns an iterator over the previous sibling items.
 	#[must_use]
 	pub fn iter_prev_siblings(&self) -> impl Iterator<Item = TreeViewItem<'a, T>> + 'a {
-		TreeViewItemIter::new(self.owner, Some(self.raw_clone()), co::TVGN::PREVIOUS)
+		TreeViewItemIter::new(self.owner, Some(self.clone()), co::TVGN::PREVIOUS)
 	}
 
 	/// Retrieves the parent of the item by sending a
