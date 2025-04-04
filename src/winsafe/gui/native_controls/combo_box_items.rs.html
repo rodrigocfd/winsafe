@@ -84,7 +84,7 @@
 <a href=#84 id=84 data-nosnippet>84</a>	/// # w::SysResult::Ok(())
 <a href=#85 id=85 data-nosnippet>85</a>	/// ```
 <a href=#86 id=86 data-nosnippet>86</a>	</span><span class="attr">#[must_use]
-<a href=#87 id=87 data-nosnippet>87</a>	</span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;<span class="kw">impl </span>Iterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">'a</span>&gt; {
+<a href=#87 id=87 data-nosnippet>87</a>	</span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;<span class="kw">impl </span>DoubleEndedIterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">'a</span>&gt; {
 <a href=#88 id=88 data-nosnippet>88</a>		ComboBoxItemIter::new(<span class="self">self</span>.owner)
 <a href=#89 id=89 data-nosnippet>89</a>	}
 <a href=#90 id=90 data-nosnippet>90</a>

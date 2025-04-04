@@ -90,7 +90,7 @@
 <a href=#90 id=90 data-nosnippet>90</a>	/// # w::SysResult::Ok(())
 <a href=#91 id=91 data-nosnippet>91</a>	/// ```
 <a href=#92 id=92 data-nosnippet>92</a>	</span><span class="attr">#[must_use]
-<a href=#93 id=93 data-nosnippet>93</a>	</span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;<span class="kw">impl </span>Iterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">'a</span>&gt; {
+<a href=#93 id=93 data-nosnippet>93</a>	</span><span class="kw">pub fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;<span class="kw">impl </span>DoubleEndedIterator&lt;Item = SysResult&lt;String&gt;&gt; + <span class="lifetime">'a</span>&gt; {
 <a href=#94 id=94 data-nosnippet>94</a>		ListBoxItemIter::new(<span class="self">self</span>.owner)
 <a href=#95 id=95 data-nosnippet>95</a>	}
 <a href=#96 id=96 data-nosnippet>96</a>
@@ -114,30 +114,32 @@
 <a href=#114 id=114 data-nosnippet>114</a>	/// # w::SysResult::Ok(())
 <a href=#115 id=115 data-nosnippet>115</a>	/// ```
 <a href=#116 id=116 data-nosnippet>116</a>	</span><span class="attr">#[must_use]
-<a href=#117 id=117 data-nosnippet>117</a>	</span><span class="kw">pub fn </span>iter_selected(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;<span class="kw">impl </span>Iterator&lt;Item = SysResult&lt;(u32, String)&gt;&gt; + <span class="lifetime">'a</span>&gt; {
-<a href=#118 id=118 data-nosnippet>118</a>		ListBoxSelItemIter::new(<span class="self">self</span>.owner)
-<a href=#119 id=119 data-nosnippet>119</a>	}
-<a href=#120 id=120 data-nosnippet>120</a>
-<a href=#121 id=121 data-nosnippet>121</a>	<span class="doccomment">/// Retrieves the number of selected items by sending an
-<a href=#122 id=122 data-nosnippet>122</a>	/// [`lb::GetSelCount`](crate::msg::lb::GetSelCount) message.
-<a href=#123 id=123 data-nosnippet>123</a>	</span><span class="attr">#[must_use]
-<a href=#124 id=124 data-nosnippet>124</a>	</span><span class="kw">pub fn </span>selected_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;u32&gt; {
-<a href=#125 id=125 data-nosnippet>125</a>		<span class="kw">unsafe </span>{ <span class="self">self</span>.owner.hwnd().SendMessage(lb::GetSelCount {}) }
-<a href=#126 id=126 data-nosnippet>126</a>	}
-<a href=#127 id=127 data-nosnippet>127</a>
-<a href=#128 id=128 data-nosnippet>128</a>	<span class="doccomment">/// Retrieves the text at the given position, if any, by sending a
-<a href=#129 id=129 data-nosnippet>129</a>	/// [`lb::GetText`](crate::msg::lb::GetText) message.
-<a href=#130 id=130 data-nosnippet>130</a>	</span><span class="attr">#[must_use]
-<a href=#131 id=131 data-nosnippet>131</a>	</span><span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>, index: u32) -&gt; SysResult&lt;String&gt; {
-<a href=#132 id=132 data-nosnippet>132</a>		<span class="kw">let </span>num_chars = <span class="kw">unsafe </span>{ <span class="self">self</span>.owner.hwnd().SendMessage(lb::GetTextLen { index }) }<span class="question-mark">?</span>;
-<a href=#133 id=133 data-nosnippet>133</a>
-<a href=#134 id=134 data-nosnippet>134</a>		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(num_chars <span class="kw">as </span>usize + <span class="number">1</span>);
-<a href=#135 id=135 data-nosnippet>135</a>		<span class="kw">unsafe </span>{
-<a href=#136 id=136 data-nosnippet>136</a>			<span class="self">self</span>.owner
-<a href=#137 id=137 data-nosnippet>137</a>				.hwnd()
-<a href=#138 id=138 data-nosnippet>138</a>				.SendMessage(lb::GetText { index, text: <span class="kw-2">&amp;mut </span>buf })<span class="question-mark">?</span>;
-<a href=#139 id=139 data-nosnippet>139</a>		}
-<a href=#140 id=140 data-nosnippet>140</a>
-<a href=#141 id=141 data-nosnippet>141</a>		<span class="prelude-val">Ok</span>(buf.to_string())
-<a href=#142 id=142 data-nosnippet>142</a>	}
-<a href=#143 id=143 data-nosnippet>143</a>}</code></pre></div></section></main></body></html>
+<a href=#117 id=117 data-nosnippet>117</a>	</span><span class="kw">pub fn </span>iter_selected(
+<a href=#118 id=118 data-nosnippet>118</a>		<span class="kw-2">&amp;</span><span class="self">self</span>,
+<a href=#119 id=119 data-nosnippet>119</a>	) -&gt; SysResult&lt;<span class="kw">impl </span>DoubleEndedIterator&lt;Item = SysResult&lt;(u32, String)&gt;&gt; + <span class="lifetime">'a</span>&gt; {
+<a href=#120 id=120 data-nosnippet>120</a>		ListBoxSelItemIter::new(<span class="self">self</span>.owner)
+<a href=#121 id=121 data-nosnippet>121</a>	}
+<a href=#122 id=122 data-nosnippet>122</a>
+<a href=#123 id=123 data-nosnippet>123</a>	<span class="doccomment">/// Retrieves the number of selected items by sending an
+<a href=#124 id=124 data-nosnippet>124</a>	/// [`lb::GetSelCount`](crate::msg::lb::GetSelCount) message.
+<a href=#125 id=125 data-nosnippet>125</a>	</span><span class="attr">#[must_use]
+<a href=#126 id=126 data-nosnippet>126</a>	</span><span class="kw">pub fn </span>selected_count(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;u32&gt; {
+<a href=#127 id=127 data-nosnippet>127</a>		<span class="kw">unsafe </span>{ <span class="self">self</span>.owner.hwnd().SendMessage(lb::GetSelCount {}) }
+<a href=#128 id=128 data-nosnippet>128</a>	}
+<a href=#129 id=129 data-nosnippet>129</a>
+<a href=#130 id=130 data-nosnippet>130</a>	<span class="doccomment">/// Retrieves the text at the given position, if any, by sending a
+<a href=#131 id=131 data-nosnippet>131</a>	/// [`lb::GetText`](crate::msg::lb::GetText) message.
+<a href=#132 id=132 data-nosnippet>132</a>	</span><span class="attr">#[must_use]
+<a href=#133 id=133 data-nosnippet>133</a>	</span><span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>, index: u32) -&gt; SysResult&lt;String&gt; {
+<a href=#134 id=134 data-nosnippet>134</a>		<span class="kw">let </span>num_chars = <span class="kw">unsafe </span>{ <span class="self">self</span>.owner.hwnd().SendMessage(lb::GetTextLen { index }) }<span class="question-mark">?</span>;
+<a href=#135 id=135 data-nosnippet>135</a>
+<a href=#136 id=136 data-nosnippet>136</a>		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(num_chars <span class="kw">as </span>usize + <span class="number">1</span>);
+<a href=#137 id=137 data-nosnippet>137</a>		<span class="kw">unsafe </span>{
+<a href=#138 id=138 data-nosnippet>138</a>			<span class="self">self</span>.owner
+<a href=#139 id=139 data-nosnippet>139</a>				.hwnd()
+<a href=#140 id=140 data-nosnippet>140</a>				.SendMessage(lb::GetText { index, text: <span class="kw-2">&amp;mut </span>buf })<span class="question-mark">?</span>;
+<a href=#141 id=141 data-nosnippet>141</a>		}
+<a href=#142 id=142 data-nosnippet>142</a>
+<a href=#143 id=143 data-nosnippet>143</a>		<span class="prelude-val">Ok</span>(buf.to_string())
+<a href=#144 id=144 data-nosnippet>144</a>	}
+<a href=#145 id=145 data-nosnippet>145</a>}</code></pre></div></section></main></body></html>

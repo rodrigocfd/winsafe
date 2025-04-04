@@ -286,7 +286,7 @@
 <a href=#286 id=286 data-nosnippet>286</a>	<span class="kw">pub </span>dwFlags: co::HF32,
 <a href=#287 id=287 data-nosnippet>287</a>}
 <a href=#288 id=288 data-nosnippet>288</a>
-<a href=#289 id=289 data-nosnippet>289</a><span class="macro">impl_default_with_size!</span>(HEAPLIST32, dwSize);
+<a href=#289 id=289 data-nosnippet>289</a><span class="macro">impl_default!</span>(HEAPLIST32, dwSize);
 <a href=#290 id=290 data-nosnippet>290</a>
 <a href=#291 id=291 data-nosnippet>291</a><span class="macro">newtype_num!</span> { LANGID: u16;
 <a href=#292 id=292 data-nosnippet>292</a>	<span class="doccomment">/// [`LANGID`](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifiers)
@@ -446,7 +446,7 @@
 <a href=#446 id=446 data-nosnippet>446</a>	szExePath: [u16; MAX_PATH],
 <a href=#447 id=447 data-nosnippet>447</a>}
 <a href=#448 id=448 data-nosnippet>448</a>
-<a href=#449 id=449 data-nosnippet>449</a><span class="macro">impl_default_with_size!</span>(MODULEENTRY32, dwSize);
+<a href=#449 id=449 data-nosnippet>449</a><span class="macro">impl_default!</span>(MODULEENTRY32, dwSize);
 <a href=#450 id=450 data-nosnippet>450</a>
 <a href=#451 id=451 data-nosnippet>451</a><span class="kw">impl </span>MODULEENTRY32 {
 <a href=#452 id=452 data-nosnippet>452</a>	<span class="macro">pub_fn_string_arr_get_set!</span>(szModule, set_szModule);
@@ -468,7 +468,7 @@
 <a href=#468 id=468 data-nosnippet>468</a>	<span class="kw">pub </span>ullAvailExtendedVirtual: u64,
 <a href=#469 id=469 data-nosnippet>469</a>}
 <a href=#470 id=470 data-nosnippet>470</a>
-<a href=#471 id=471 data-nosnippet>471</a><span class="macro">impl_default_with_size!</span>(MEMORYSTATUSEX, dwLength);
+<a href=#471 id=471 data-nosnippet>471</a><span class="macro">impl_default!</span>(MEMORYSTATUSEX, dwLength);
 <a href=#472 id=472 data-nosnippet>472</a>
 <a href=#473 id=473 data-nosnippet>473</a><span class="doccomment">/// [`OSVERSIONINFOEX`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-osversioninfoexw)
 <a href=#474 id=474 data-nosnippet>474</a>/// struct.
@@ -487,7 +487,7 @@
 <a href=#487 id=487 data-nosnippet>487</a>	wReserved: u8,
 <a href=#488 id=488 data-nosnippet>488</a>}
 <a href=#489 id=489 data-nosnippet>489</a>
-<a href=#490 id=490 data-nosnippet>490</a><span class="macro">impl_default_with_size!</span>(OSVERSIONINFOEX, dwOSVersionInfoSize);
+<a href=#490 id=490 data-nosnippet>490</a><span class="macro">impl_default!</span>(OSVERSIONINFOEX, dwOSVersionInfoSize);
 <a href=#491 id=491 data-nosnippet>491</a>
 <a href=#492 id=492 data-nosnippet>492</a><span class="kw">impl </span>OSVERSIONINFOEX {
 <a href=#493 id=493 data-nosnippet>493</a>	<span class="macro">pub_fn_string_arr_get_set!</span>(szCSDVersion, set_szCSDVersion);
@@ -682,7 +682,7 @@
 <a href=#682 id=682 data-nosnippet>682</a>	szExeFile: [u16; MAX_PATH],
 <a href=#683 id=683 data-nosnippet>683</a>}
 <a href=#684 id=684 data-nosnippet>684</a>
-<a href=#685 id=685 data-nosnippet>685</a><span class="macro">impl_default_with_size!</span>(PROCESSENTRY32, dwSize);
+<a href=#685 id=685 data-nosnippet>685</a><span class="macro">impl_default!</span>(PROCESSENTRY32, dwSize);
 <a href=#686 id=686 data-nosnippet>686</a>
 <a href=#687 id=687 data-nosnippet>687</a><span class="kw">impl </span>PROCESSENTRY32 {
 <a href=#688 id=688 data-nosnippet>688</a>	<span class="macro">pub_fn_string_arr_get_set!</span>(szExeFile, set_szExeFile);
@@ -709,7 +709,7 @@
 <a href=#709 id=709 data-nosnippet>709</a>	_lpSecurityDescriptor: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>SECURITY_DESCRIPTOR&gt;,
 <a href=#710 id=710 data-nosnippet>710</a>}
 <a href=#711 id=711 data-nosnippet>711</a>
-<a href=#712 id=712 data-nosnippet>712</a><span class="macro">impl_default_with_size!</span>(SECURITY_ATTRIBUTES, nLength, <span class="lifetime">'a</span>);
+<a href=#712 id=712 data-nosnippet>712</a><span class="macro">impl_default!</span>(SECURITY_ATTRIBUTES, nLength, <span class="lifetime">'a</span>);
 <a href=#713 id=713 data-nosnippet>713</a>
 <a href=#714 id=714 data-nosnippet>714</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; SECURITY_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#715 id=715 data-nosnippet>715</a>	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">'a</span>, lpSecurityDescriptor, set_lpSecurityDescriptor, SECURITY_DESCRIPTOR);
@@ -760,7 +760,7 @@
 <a href=#760 id=760 data-nosnippet>760</a>	_lpTitle: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>u16&gt;,
 <a href=#761 id=761 data-nosnippet>761</a>}
 <a href=#762 id=762 data-nosnippet>762</a>
-<a href=#763 id=763 data-nosnippet>763</a><span class="macro">impl_default_with_size!</span>(STARTUPINFO, cb, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>);
+<a href=#763 id=763 data-nosnippet>763</a><span class="macro">impl_default!</span>(STARTUPINFO, cb, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>);
 <a href=#764 id=764 data-nosnippet>764</a>
 <a href=#765 id=765 data-nosnippet>765</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; STARTUPINFO&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 <a href=#766 id=766 data-nosnippet>766</a>	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, lpDesktop, set_lpDesktop);
@@ -895,7 +895,7 @@
 <a href=#895 id=895 data-nosnippet>895</a>	dwFlags: u32,
 <a href=#896 id=896 data-nosnippet>896</a>}
 <a href=#897 id=897 data-nosnippet>897</a>
-<a href=#898 id=898 data-nosnippet>898</a><span class="macro">impl_default_with_size!</span>(THREADENTRY32, dwSize);
+<a href=#898 id=898 data-nosnippet>898</a><span class="macro">impl_default!</span>(THREADENTRY32, dwSize);
 <a href=#899 id=899 data-nosnippet>899</a>
 <a href=#900 id=900 data-nosnippet>900</a><span class="doccomment">/// [`TIME_ZONE_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/ns-timezoneapi-time_zone_information)
 <a href=#901 id=901 data-nosnippet>901</a>/// struct.

@@ -36,7 +36,7 @@
 <a href=#36 id=36 data-nosnippet>36</a>	<span class="kw">pub </span>clrBtnShadow: COLORREF,
 <a href=#37 id=37 data-nosnippet>37</a>}
 <a href=#38 id=38 data-nosnippet>38</a>
-<a href=#39 id=39 data-nosnippet>39</a><span class="macro">impl_default_with_size!</span>(COLORSCHEME, dwSize);
+<a href=#39 id=39 data-nosnippet>39</a><span class="macro">impl_default!</span>(COLORSCHEME, dwSize);
 <a href=#40 id=40 data-nosnippet>40</a>
 <a href=#41 id=41 data-nosnippet>41</a><span class="doccomment">/// [`DATETIMEPICKERINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-datetimepickerinfo)
 <a href=#42 id=42 data-nosnippet>42</a>/// struct.
@@ -52,7 +52,7 @@
 <a href=#52 id=52 data-nosnippet>52</a>	<span class="kw">pub </span>hwndDropDown: HWND,
 <a href=#53 id=53 data-nosnippet>53</a>}
 <a href=#54 id=54 data-nosnippet>54</a>
-<a href=#55 id=55 data-nosnippet>55</a><span class="macro">impl_default_with_size!</span>(DATETIMEPICKERINFO, cbSize);
+<a href=#55 id=55 data-nosnippet>55</a><span class="macro">impl_default!</span>(DATETIMEPICKERINFO, cbSize);
 <a href=#56 id=56 data-nosnippet>56</a>
 <a href=#57 id=57 data-nosnippet>57</a><span class="doccomment">/// [`EDITBALLOONTIP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-editballoontip)
 <a href=#58 id=58 data-nosnippet>58</a>/// struct.
@@ -67,7 +67,7 @@
 <a href=#67 id=67 data-nosnippet>67</a>	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>u16&gt;,
 <a href=#68 id=68 data-nosnippet>68</a>}
 <a href=#69 id=69 data-nosnippet>69</a>
-<a href=#70 id=70 data-nosnippet>70</a><span class="macro">impl_default_with_size!</span>(EDITBALLOONTIP, cbStruct, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>);
+<a href=#70 id=70 data-nosnippet>70</a><span class="macro">impl_default!</span>(EDITBALLOONTIP, cbStruct, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>);
 <a href=#71 id=71 data-nosnippet>71</a>
 <a href=#72 id=72 data-nosnippet>72</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; EDITBALLOONTIP&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 <a href=#73 id=73 data-nosnippet>73</a>	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pszTitle, set_pszTitle);
@@ -136,7 +136,7 @@
 <a href=#136 id=136 data-nosnippet>136</a>	<span class="kw">pub </span>icc: co::ICC,
 <a href=#137 id=137 data-nosnippet>137</a>}
 <a href=#138 id=138 data-nosnippet>138</a>
-<a href=#139 id=139 data-nosnippet>139</a><span class="macro">impl_default_with_size!</span>(INITCOMMONCONTROLSEX, dwSize);
+<a href=#139 id=139 data-nosnippet>139</a><span class="macro">impl_default!</span>(INITCOMMONCONTROLSEX, dwSize);
 <a href=#140 id=140 data-nosnippet>140</a>
 <a href=#141 id=141 data-nosnippet>141</a><span class="doccomment">/// [`LITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-litem)
 <a href=#142 id=142 data-nosnippet>142</a>/// struct.
@@ -297,7 +297,7 @@
 <a href=#297 id=297 data-nosnippet>297</a>	_pszSubsetTitle: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'g </span><span class="kw-2">mut </span>u16&gt;,
 <a href=#298 id=298 data-nosnippet>298</a>}
 <a href=#299 id=299 data-nosnippet>299</a>
-<a href=#300 id=300 data-nosnippet>300</a><span class="macro">impl_default_with_size!</span>(LVGROUP, cbSize, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>);
+<a href=#300 id=300 data-nosnippet>300</a><span class="macro">impl_default!</span>(LVGROUP, cbSize, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>);
 <a href=#301 id=301 data-nosnippet>301</a>
 <a href=#302 id=302 data-nosnippet>302</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt; LVGROUP&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt; {
 <a href=#303 id=303 data-nosnippet>303</a>	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'a</span>, pszHeader, set_pszHeader, raw_pszHeader, cchHeader);
@@ -327,7 +327,7 @@
 <a href=#327 id=327 data-nosnippet>327</a>	<span class="kw">pub </span>crFooter: COLORREF,
 <a href=#328 id=328 data-nosnippet>328</a>}
 <a href=#329 id=329 data-nosnippet>329</a>
-<a href=#330 id=330 data-nosnippet>330</a><span class="macro">impl_default_with_size!</span>(LVGROUPMETRICS, cbSize);
+<a href=#330 id=330 data-nosnippet>330</a><span class="macro">impl_default!</span>(LVGROUPMETRICS, cbSize);
 <a href=#331 id=331 data-nosnippet>331</a>
 <a href=#332 id=332 data-nosnippet>332</a><span class="doccomment">/// [`LVHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvhittestinfo)
 <a href=#333 id=333 data-nosnippet>333</a>/// struct.
@@ -423,7 +423,7 @@
 <a href=#423 id=423 data-nosnippet>423</a>	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 <a href=#424 id=424 data-nosnippet>424</a>}
 <a href=#425 id=425 data-nosnippet>425</a>
-<a href=#426 id=426 data-nosnippet>426</a><span class="macro">impl_default_with_size!</span>(LVSETINFOTIP, cbSize, <span class="lifetime">'a</span>);
+<a href=#426 id=426 data-nosnippet>426</a><span class="macro">impl_default!</span>(LVSETINFOTIP, cbSize, <span class="lifetime">'a</span>);
 <a href=#427 id=427 data-nosnippet>427</a>
 <a href=#428 id=428 data-nosnippet>428</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; LVSETINFOTIP&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#429 id=429 data-nosnippet>429</a>	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pszText, set_pszText);
@@ -442,7 +442,7 @@
 <a href=#442 id=442 data-nosnippet>442</a>	_puColumns: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u32&gt;,
 <a href=#443 id=443 data-nosnippet>443</a>}
 <a href=#444 id=444 data-nosnippet>444</a>
-<a href=#445 id=445 data-nosnippet>445</a><span class="macro">impl_default_with_size!</span>(LVTILEINFO, cbSize, <span class="lifetime">'a</span>);
+<a href=#445 id=445 data-nosnippet>445</a><span class="macro">impl_default!</span>(LVTILEINFO, cbSize, <span class="lifetime">'a</span>);
 <a href=#446 id=446 data-nosnippet>446</a>
 <a href=#447 id=447 data-nosnippet>447</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; LVTILEINFO&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#448 id=448 data-nosnippet>448</a>	<span class="doccomment">/// Returns the `puColumns` field.
@@ -498,7 +498,7 @@
 <a href=#498 id=498 data-nosnippet>498</a>	<span class="kw">pub </span>rcLabelMargin: RECT,
 <a href=#499 id=499 data-nosnippet>499</a>}
 <a href=#500 id=500 data-nosnippet>500</a>
-<a href=#501 id=501 data-nosnippet>501</a><span class="macro">impl_default_with_size!</span>(LVTILEVIEWINFO, cbSize);
+<a href=#501 id=501 data-nosnippet>501</a><span class="macro">impl_default!</span>(LVTILEVIEWINFO, cbSize);
 <a href=#502 id=502 data-nosnippet>502</a>
 <a href=#503 id=503 data-nosnippet>503</a><span class="doccomment">/// [`MCGRIDINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mcgridinfo)
 <a href=#504 id=504 data-nosnippet>504</a>/// struct.
@@ -520,7 +520,7 @@
 <a href=#520 id=520 data-nosnippet>520</a>	_pszName: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 <a href=#521 id=521 data-nosnippet>521</a>}
 <a href=#522 id=522 data-nosnippet>522</a>
-<a href=#523 id=523 data-nosnippet>523</a><span class="macro">impl_default_with_size!</span>(MCGRIDINFO, cbSize, <span class="lifetime">'a</span>);
+<a href=#523 id=523 data-nosnippet>523</a><span class="macro">impl_default!</span>(MCGRIDINFO, cbSize, <span class="lifetime">'a</span>);
 <a href=#524 id=524 data-nosnippet>524</a>
 <a href=#525 id=525 data-nosnippet>525</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MCGRIDINFO&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#526 id=526 data-nosnippet>526</a>	<span class="macro">pub_fn_bool_get_set!</span>(bSelected, set_bSelected);
@@ -541,7 +541,7 @@
 <a href=#541 id=541 data-nosnippet>541</a>	<span class="kw">pub </span>iCol: i32,
 <a href=#542 id=542 data-nosnippet>542</a>}
 <a href=#543 id=543 data-nosnippet>543</a>
-<a href=#544 id=544 data-nosnippet>544</a><span class="macro">impl_default_with_size!</span>(MCHITTESTINFO, cbSize);
+<a href=#544 id=544 data-nosnippet>544</a><span class="macro">impl_default!</span>(MCHITTESTINFO, cbSize);
 <a href=#545 id=545 data-nosnippet>545</a>
 <a href=#546 id=546 data-nosnippet>546</a><span class="doccomment">/// [`MONTHDAYSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/monthdaystate)
 <a href=#547 id=547 data-nosnippet>547</a>/// struct.
@@ -1188,7 +1188,7 @@
 <a href=#1188 id=1188 data-nosnippet>1188</a>	pStartPage: <span class="kw-2">*const </span>u16,
 <a href=#1189 id=1189 data-nosnippet>1189</a>}
 <a href=#1190 id=1190 data-nosnippet>1190</a>
-<a href=#1191 id=1191 data-nosnippet>1191</a><span class="macro">impl_default_with_size!</span>(PROPSHEETHEADER, dwSize, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>);
+<a href=#1191 id=1191 data-nosnippet>1191</a><span class="macro">impl_default!</span>(PROPSHEETHEADER, dwSize, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>);
 <a href=#1192 id=1192 data-nosnippet>1192</a>
 <a href=#1193 id=1193 data-nosnippet>1193</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>&gt; PROPSHEETHEADER&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>&gt; {
 <a href=#1194 id=1194 data-nosnippet>1194</a>	<span class="doccomment">/// Sets the `hIcon` field, which is part of an union.
@@ -1281,7 +1281,7 @@
 <a href=#1281 id=1281 data-nosnippet>1281</a>	_pszbmHeader: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'g </span>u16&gt;,
 <a href=#1282 id=1282 data-nosnippet>1282</a>}
 <a href=#1283 id=1283 data-nosnippet>1283</a>
-<a href=#1284 id=1284 data-nosnippet>1284</a><span class="macro">impl_default_with_size!</span>(PROPSHEETPAGE, dwSize, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>);
+<a href=#1284 id=1284 data-nosnippet>1284</a><span class="macro">impl_default!</span>(PROPSHEETPAGE, dwSize, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>);
 <a href=#1285 id=1285 data-nosnippet>1285</a>
 <a href=#1286 id=1286 data-nosnippet>1286</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt; PROPSHEETPAGE&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>, <span class="lifetime">'g</span>&gt; {
 <a href=#1287 id=1287 data-nosnippet>1287</a>	<span class="doccomment">/// Sets the `pszTemplate` field, which is part of an union.
@@ -1431,7 +1431,7 @@
 <a href=#1431 id=1431 data-nosnippet>1431</a>	_pszText: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
 <a href=#1432 id=1432 data-nosnippet>1432</a>}
 <a href=#1433 id=1433 data-nosnippet>1433</a>
-<a href=#1434 id=1434 data-nosnippet>1434</a><span class="macro">impl_default_with_size!</span>(TBBUTTONINFO, cbSize, <span class="lifetime">'a</span>);
+<a href=#1434 id=1434 data-nosnippet>1434</a><span class="macro">impl_default!</span>(TBBUTTONINFO, cbSize, <span class="lifetime">'a</span>);
 <a href=#1435 id=1435 data-nosnippet>1435</a>
 <a href=#1436 id=1436 data-nosnippet>1436</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; TBBUTTONINFO&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#1437 id=1437 data-nosnippet>1437</a>	<span class="macro">pub_fn_string_buf_get_set!</span>(<span class="lifetime">'a</span>, pszText, set_pszText, raw_pszText, cchText);
@@ -1460,7 +1460,7 @@
 <a href=#1460 id=1460 data-nosnippet>1460</a>	<span class="kw">pub </span>cyButtonSpacing: i32,
 <a href=#1461 id=1461 data-nosnippet>1461</a>}
 <a href=#1462 id=1462 data-nosnippet>1462</a>
-<a href=#1463 id=1463 data-nosnippet>1463</a><span class="macro">impl_default_with_size!</span>(TBMETRICS, cbSize);
+<a href=#1463 id=1463 data-nosnippet>1463</a><span class="macro">impl_default!</span>(TBMETRICS, cbSize);
 <a href=#1464 id=1464 data-nosnippet>1464</a>
 <a href=#1465 id=1465 data-nosnippet>1465</a><span class="doccomment">/// [`TBREPLACEBITMAP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbreplacebitmap)
 <a href=#1466 id=1466 data-nosnippet>1466</a>/// struct.
