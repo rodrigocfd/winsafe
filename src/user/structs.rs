@@ -33,7 +33,7 @@ pub struct ALTTABINFO {
 	pub ptStart: POINT,
 }
 
-impl_default_with_size!(ALTTABINFO, cbSize);
+impl_default!(ALTTABINFO, cbSize);
 
 newtype_num! { ATOM: u16;
 	/// [`ATOM`](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#atom)
@@ -98,7 +98,7 @@ pub struct CHOOSECOLOR<'a> {
 	_lpCustColors: PhantomData<&'a mut COLORREF>,
 }
 
-impl_default_with_size!(CHOOSECOLOR, lStructSize, 'a);
+impl_default!(CHOOSECOLOR, lStructSize, 'a);
 
 impl<'a> CHOOSECOLOR<'a> {
 	/// Returns the `lpCustColors` field.
@@ -182,7 +182,7 @@ pub struct COMBOBOXINFO {
 	pub hwndList: HWND,
 }
 
-impl_default_with_size!(COMBOBOXINFO, cbSize);
+impl_default!(COMBOBOXINFO, cbSize);
 
 /// [`COMPAREITEMSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-compareitemstruct)
 /// struct.
@@ -238,7 +238,7 @@ pub struct CURSORINFO {
 	pub ptScreenPost: POINT,
 }
 
-impl_default_with_size!(CURSORINFO, cbSize);
+impl_default!(CURSORINFO, cbSize);
 
 /// [`DELETEITEMSTRUCT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-deleteitemstruct)
 /// struct.
@@ -476,7 +476,7 @@ pub struct DISPLAY_DEVICE {
 	DeviceKey: [u16; 128],
 }
 
-impl_default_with_size!(DISPLAY_DEVICE, cb);
+impl_default!(DISPLAY_DEVICE, cb);
 
 impl DISPLAY_DEVICE {
 	pub_fn_string_arr_get_set!(DeviceName, set_DeviceName);
@@ -541,7 +541,7 @@ pub struct DRAWTEXTPARAMS {
 	pub uiLengthDrawn: u32,
 }
 
-impl_default_with_size!(DRAWTEXTPARAMS, cbSize);
+impl_default!(DRAWTEXTPARAMS, cbSize);
 
 /// [`FLASHWINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-flashwinfo)
 /// struct.
@@ -554,7 +554,7 @@ pub struct FLASHWINFO {
 	pub dwTimeout: u32,
 }
 
-impl_default_with_size!(FLASHWINFO, cbSize);
+impl_default!(FLASHWINFO, cbSize);
 
 /// [`GUITHREADINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-guithreadinfo)
 /// struct.
@@ -571,7 +571,7 @@ pub struct GUITHREADINFO {
 	pub rcCaret: RECT,
 }
 
-impl_default_with_size!(GUITHREADINFO, cbSize);
+impl_default!(GUITHREADINFO, cbSize);
 
 /// [`HARDWAREINPUT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-hardwareinput)
 /// struct.
@@ -642,7 +642,7 @@ pub struct ICONINFOEX {
 	szResName: [u16; MAX_PATH],
 }
 
-impl_default_with_size!(ICONINFOEX, cbSize);
+impl_default!(ICONINFOEX, cbSize);
 
 impl ICONINFOEX {
 	pub_fn_bool_get_set!(fIcon, set_fIcon);
@@ -733,7 +733,7 @@ pub struct LASTINPUTINFO {
 	pub dwTime: u32,
 }
 
-impl_default_with_size!(LASTINPUTINFO, cbSize);
+impl_default!(LASTINPUTINFO, cbSize);
 
 /// [`MENUBARINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menubarinfo)
 /// struct.
@@ -747,7 +747,7 @@ pub struct MENUBARINFO {
 	fFocused: BOOL,
 }
 
-impl_default_with_size!(MENUBARINFO, cbSize);
+impl_default!(MENUBARINFO, cbSize);
 
 impl MENUBARINFO {
 	pub_fn_bool_get_set!(fBarFocused, set_fBarFocused);
@@ -767,7 +767,7 @@ pub struct MENUINFO {
 	pub dwMenuData: usize,
 }
 
-impl_default_with_size!(MENUINFO, cbSize);
+impl_default!(MENUINFO, cbSize);
 
 /// [`MENUITEMINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-menuiteminfow)
 /// struct.
@@ -787,7 +787,7 @@ pub struct MENUITEMINFO {
 	pub hbmpItem: HBITMAP,
 }
 
-impl_default_with_size!(MENUITEMINFO, cbSize);
+impl_default!(MENUITEMINFO, cbSize);
 
 /// [`MINMAXINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-minmaxinfo)
 /// struct.
@@ -829,7 +829,7 @@ pub struct MONITORINFOEX {
 	szDevice: [u16; CCHDEVICENAME],
 }
 
-impl_default_with_size!(MONITORINFOEX, cbSize);
+impl_default!(MONITORINFOEX, cbSize);
 
 impl MONITORINFOEX {
 	pub_fn_string_arr_get_set!(szDevice, set_szDevice);
@@ -972,7 +972,7 @@ pub struct SCROLLINFO {
 	pub nTrackPos: i32,
 }
 
-impl_default_with_size!(SCROLLINFO, cbSize);
+impl_default!(SCROLLINFO, cbSize);
 
 /// [`SIZE`](https://learn.microsoft.com/en-us/windows/win32/api/windef/ns-windef-size)
 /// struct.
@@ -1062,7 +1062,7 @@ pub struct TITLEBARINFOEX {
 	pub rgrect: [RECT; CCHILDREN_TITLEBAR + 1],
 }
 
-impl_default_with_size!(TITLEBARINFOEX, cbSize);
+impl_default!(TITLEBARINFOEX, cbSize);
 
 /// [`TRACKMOUSEEVENT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-trackmouseevent)
 /// struct.
@@ -1074,7 +1074,7 @@ pub struct TRACKMOUSEEVENT {
 	pub dwHoverTime: u32,
 }
 
-impl_default_with_size!(TRACKMOUSEEVENT, cbSize);
+impl_default!(TRACKMOUSEEVENT, cbSize);
 
 /// [`WINDOWINFO`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowinfo)
 /// struct.
@@ -1092,7 +1092,7 @@ pub struct WINDOWINFO {
 	pub wCreatorVersion: u16,
 }
 
-impl_default_with_size!(WINDOWINFO, cbSize);
+impl_default!(WINDOWINFO, cbSize);
 
 /// [`WINDOWPLACEMENT`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowplacement)
 /// struct.
@@ -1107,7 +1107,7 @@ pub struct WINDOWPLACEMENT {
 	pub rcDevice: RECT,
 }
 
-impl_default_with_size!(WINDOWPLACEMENT, length);
+impl_default!(WINDOWPLACEMENT, length);
 
 /// [`WINDOWPOS`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-windowpos)
 /// struct.
@@ -1166,7 +1166,7 @@ pub struct WNDCLASSEX<'a> {
 	_lpszClassName: PhantomData<&'a mut u16>,
 }
 
-impl_default_with_size!(WNDCLASSEX, cbSize, 'a);
+impl_default!(WNDCLASSEX, cbSize, 'a);
 
 impl<'a> WNDCLASSEX<'a> {
 	pub_fn_resource_id_get_set!(lpszMenuName, set_lpszMenuName);

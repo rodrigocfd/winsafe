@@ -286,7 +286,7 @@ pub struct HEAPLIST32 {
 	pub dwFlags: co::HF32,
 }
 
-impl_default_with_size!(HEAPLIST32, dwSize);
+impl_default!(HEAPLIST32, dwSize);
 
 newtype_num! { LANGID: u16;
 	/// [`LANGID`](https://learn.microsoft.com/en-us/windows/win32/intl/language-identifiers)
@@ -446,7 +446,7 @@ pub struct MODULEENTRY32 {
 	szExePath: [u16; MAX_PATH],
 }
 
-impl_default_with_size!(MODULEENTRY32, dwSize);
+impl_default!(MODULEENTRY32, dwSize);
 
 impl MODULEENTRY32 {
 	pub_fn_string_arr_get_set!(szModule, set_szModule);
@@ -468,7 +468,7 @@ pub struct MEMORYSTATUSEX {
 	pub ullAvailExtendedVirtual: u64,
 }
 
-impl_default_with_size!(MEMORYSTATUSEX, dwLength);
+impl_default!(MEMORYSTATUSEX, dwLength);
 
 /// [`OSVERSIONINFOEX`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-osversioninfoexw)
 /// struct.
@@ -487,7 +487,7 @@ pub struct OSVERSIONINFOEX {
 	wReserved: u8,
 }
 
-impl_default_with_size!(OSVERSIONINFOEX, dwOSVersionInfoSize);
+impl_default!(OSVERSIONINFOEX, dwOSVersionInfoSize);
 
 impl OSVERSIONINFOEX {
 	pub_fn_string_arr_get_set!(szCSDVersion, set_szCSDVersion);
@@ -682,7 +682,7 @@ pub struct PROCESSENTRY32 {
 	szExeFile: [u16; MAX_PATH],
 }
 
-impl_default_with_size!(PROCESSENTRY32, dwSize);
+impl_default!(PROCESSENTRY32, dwSize);
 
 impl PROCESSENTRY32 {
 	pub_fn_string_arr_get_set!(szExeFile, set_szExeFile);
@@ -709,7 +709,7 @@ pub struct SECURITY_ATTRIBUTES<'a> {
 	_lpSecurityDescriptor: PhantomData<&'a mut SECURITY_DESCRIPTOR>,
 }
 
-impl_default_with_size!(SECURITY_ATTRIBUTES, nLength, 'a);
+impl_default!(SECURITY_ATTRIBUTES, nLength, 'a);
 
 impl<'a> SECURITY_ATTRIBUTES<'a> {
 	pub_fn_ptr_get_set!('a, lpSecurityDescriptor, set_lpSecurityDescriptor, SECURITY_DESCRIPTOR);
@@ -760,7 +760,7 @@ pub struct STARTUPINFO<'a, 'b> {
 	_lpTitle: PhantomData<&'b mut u16>,
 }
 
-impl_default_with_size!(STARTUPINFO, cb, 'a, 'b);
+impl_default!(STARTUPINFO, cb, 'a, 'b);
 
 impl<'a, 'b> STARTUPINFO<'a, 'b> {
 	pub_fn_string_ptr_get_set!('a, lpDesktop, set_lpDesktop);
@@ -895,7 +895,7 @@ pub struct THREADENTRY32 {
 	dwFlags: u32,
 }
 
-impl_default_with_size!(THREADENTRY32, dwSize);
+impl_default!(THREADENTRY32, dwSize);
 
 /// [`TIME_ZONE_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/ns-timezoneapi-time_zone_information)
 /// struct.

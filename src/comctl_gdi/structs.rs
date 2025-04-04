@@ -28,7 +28,7 @@ pub struct IMAGELISTDRAWPARAMS {
 	pub crEffect: COLORREF,
 }
 
-impl_default_with_size!(IMAGELISTDRAWPARAMS, cbSize);
+impl_default!(IMAGELISTDRAWPARAMS, cbSize);
 
 /// [`NMTVASYNCDRAW`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-nmtvasyncdraw)
 /// struct.

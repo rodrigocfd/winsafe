@@ -36,7 +36,7 @@ pub struct COLORSCHEME {
 	pub clrBtnShadow: COLORREF,
 }
 
-impl_default_with_size!(COLORSCHEME, dwSize);
+impl_default!(COLORSCHEME, dwSize);
 
 /// [`DATETIMEPICKERINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-datetimepickerinfo)
 /// struct.
@@ -52,7 +52,7 @@ pub struct DATETIMEPICKERINFO {
 	pub hwndDropDown: HWND,
 }
 
-impl_default_with_size!(DATETIMEPICKERINFO, cbSize);
+impl_default!(DATETIMEPICKERINFO, cbSize);
 
 /// [`EDITBALLOONTIP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-editballoontip)
 /// struct.
@@ -67,7 +67,7 @@ pub struct EDITBALLOONTIP<'a, 'b> {
 	_pszText: PhantomData<&'b mut u16>,
 }
 
-impl_default_with_size!(EDITBALLOONTIP, cbStruct, 'a, 'b);
+impl_default!(EDITBALLOONTIP, cbStruct, 'a, 'b);
 
 impl<'a, 'b> EDITBALLOONTIP<'a, 'b> {
 	pub_fn_string_ptr_get_set!('a, pszTitle, set_pszTitle);
@@ -136,7 +136,7 @@ pub struct INITCOMMONCONTROLSEX {
 	pub icc: co::ICC,
 }
 
-impl_default_with_size!(INITCOMMONCONTROLSEX, dwSize);
+impl_default!(INITCOMMONCONTROLSEX, dwSize);
 
 /// [`LITEM`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-litem)
 /// struct.
@@ -297,7 +297,7 @@ pub struct LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 	_pszSubsetTitle: PhantomData<&'g mut u16>,
 }
 
-impl_default_with_size!(LVGROUP, cbSize, 'a, 'b, 'c, 'd, 'e, 'f, 'g);
+impl_default!(LVGROUP, cbSize, 'a, 'b, 'c, 'd, 'e, 'f, 'g);
 
 impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> LVGROUP<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 	pub_fn_string_buf_get_set!('a, pszHeader, set_pszHeader, raw_pszHeader, cchHeader);
@@ -327,7 +327,7 @@ pub struct LVGROUPMETRICS {
 	pub crFooter: COLORREF,
 }
 
-impl_default_with_size!(LVGROUPMETRICS, cbSize);
+impl_default!(LVGROUPMETRICS, cbSize);
 
 /// [`LVHITTESTINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-lvhittestinfo)
 /// struct.
@@ -423,7 +423,7 @@ pub struct LVSETINFOTIP<'a> {
 	_pszText: PhantomData<&'a mut u16>,
 }
 
-impl_default_with_size!(LVSETINFOTIP, cbSize, 'a);
+impl_default!(LVSETINFOTIP, cbSize, 'a);
 
 impl<'a> LVSETINFOTIP<'a> {
 	pub_fn_string_ptr_get_set!('a, pszText, set_pszText);
@@ -442,7 +442,7 @@ pub struct LVTILEINFO<'a> {
 	_puColumns: PhantomData<&'a mut u32>,
 }
 
-impl_default_with_size!(LVTILEINFO, cbSize, 'a);
+impl_default!(LVTILEINFO, cbSize, 'a);
 
 impl<'a> LVTILEINFO<'a> {
 	/// Returns the `puColumns` field.
@@ -498,7 +498,7 @@ pub struct LVTILEVIEWINFO {
 	pub rcLabelMargin: RECT,
 }
 
-impl_default_with_size!(LVTILEVIEWINFO, cbSize);
+impl_default!(LVTILEVIEWINFO, cbSize);
 
 /// [`MCGRIDINFO`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-mcgridinfo)
 /// struct.
@@ -520,7 +520,7 @@ pub struct MCGRIDINFO<'a> {
 	_pszName: PhantomData<&'a mut u16>,
 }
 
-impl_default_with_size!(MCGRIDINFO, cbSize, 'a);
+impl_default!(MCGRIDINFO, cbSize, 'a);
 
 impl<'a> MCGRIDINFO<'a> {
 	pub_fn_bool_get_set!(bSelected, set_bSelected);
@@ -541,7 +541,7 @@ pub struct MCHITTESTINFO {
 	pub iCol: i32,
 }
 
-impl_default_with_size!(MCHITTESTINFO, cbSize);
+impl_default!(MCHITTESTINFO, cbSize);
 
 /// [`MONTHDAYSTATE`](https://learn.microsoft.com/en-us/windows/win32/controls/monthdaystate)
 /// struct.
@@ -1188,7 +1188,7 @@ union PROPSHEETHEADER_union0 {
 	pStartPage: *const u16,
 }
 
-impl_default_with_size!(PROPSHEETHEADER, dwSize, 'a, 'b, 'c, 'd, 'e, 'f);
+impl_default!(PROPSHEETHEADER, dwSize, 'a, 'b, 'c, 'd, 'e, 'f);
 
 impl<'a, 'b, 'c, 'd, 'e, 'f> PROPSHEETHEADER<'a, 'b, 'c, 'd, 'e, 'f> {
 	/// Sets the `hIcon` field, which is part of an union.
@@ -1281,7 +1281,7 @@ pub struct PROPSHEETPAGE<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 	_pszbmHeader: PhantomData<&'g u16>,
 }
 
-impl_default_with_size!(PROPSHEETPAGE, dwSize, 'a, 'b, 'c, 'd, 'e, 'f, 'g);
+impl_default!(PROPSHEETPAGE, dwSize, 'a, 'b, 'c, 'd, 'e, 'f, 'g);
 
 impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> PROPSHEETPAGE<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 	/// Sets the `pszTemplate` field, which is part of an union.
@@ -1431,7 +1431,7 @@ pub struct TBBUTTONINFO<'a> {
 	_pszText: PhantomData<&'a mut u16>,
 }
 
-impl_default_with_size!(TBBUTTONINFO, cbSize, 'a);
+impl_default!(TBBUTTONINFO, cbSize, 'a);
 
 impl<'a> TBBUTTONINFO<'a> {
 	pub_fn_string_buf_get_set!('a, pszText, set_pszText, raw_pszText, cchText);
@@ -1460,7 +1460,7 @@ pub struct TBMETRICS {
 	pub cyButtonSpacing: i32,
 }
 
-impl_default_with_size!(TBMETRICS, cbSize);
+impl_default!(TBMETRICS, cbSize);
 
 /// [`TBREPLACEBITMAP`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/ns-commctrl-tbreplacebitmap)
 /// struct.

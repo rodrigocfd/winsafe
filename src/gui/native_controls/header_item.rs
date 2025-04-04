@@ -265,8 +265,6 @@ impl<'a> HeaderItem<'a> {
 				.hwnd()
 				.SendMessage(hdm::GetItem { index: self.index, hditem: &mut hdi });
 		}
-
-		let (psz, _) = hdi.raw_pszText();
-		unsafe { WString::from_wchars_nullt(psz) }.to_string()
+		buf.to_string()
 	}
 }

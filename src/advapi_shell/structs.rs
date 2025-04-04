@@ -131,4 +131,4 @@ pub(in crate::advapi_shell) struct SHELLEXECUTEINFO_raw {
 	pub hProcess: HPROCESS,
 }
 
-impl_default_with_size!(SHELLEXECUTEINFO_raw, cbSize);
+impl_default!(SHELLEXECUTEINFO_raw, cbSize);

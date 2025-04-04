@@ -17,4 +17,4 @@ pub struct PROCESS_MEMORY_COUNTERS_EX {
 	pub PrivateUsage: usize,
 }
 
-impl_default_with_size!(PROCESS_MEMORY_COUNTERS_EX, cb);
+impl_default!(PROCESS_MEMORY_COUNTERS_EX, cb);

@@ -230,7 +230,7 @@ pub(in crate::comctl) struct TASKDIALOGCONFIG_raw {
 	pub cxWidth: u32,
 }
 
-impl_default_with_size!(TASKDIALOGCONFIG_raw, cbSize);
+impl_default!(TASKDIALOGCONFIG_raw, cbSize);
 
 #[repr(C, packed)]
 pub(in crate::comctl) struct TASKDIALOG_BUTTON {

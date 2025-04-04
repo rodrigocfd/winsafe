@@ -45,7 +45,7 @@ pub struct NOTIFYICONDATA {
 	pub hBalloonIcon: HICON,
 }
 
-impl_default_with_size!(NOTIFYICONDATA, cbSize);
+impl_default!(NOTIFYICONDATA, cbSize);
 
 impl NOTIFYICONDATA {
 	pub_fn_string_arr_get_set!(szTip, set_szTip);
@@ -136,7 +136,7 @@ pub struct SHSTOCKICONINFO {
 	szPath: [u16; MAX_PATH],
 }
 
-impl_default_with_size!(SHSTOCKICONINFO, cbSize);
+impl_default!(SHSTOCKICONINFO, cbSize);
 
 impl SHSTOCKICONINFO {
 	pub_fn_string_arr_get_set!(szPath, get_szPath);

@@ -1,6 +1,7 @@
 #![allow(unused_macros)]
 
-/// Implements `Default` trait by zeroing all fields.
+/// Implements `Default` trait by zeroing all fields. If the size field is
+/// informed, it will be set to the struct size.
 macro_rules! impl_default {
 	($name:ident $(, $life:lifetime)*) => {
 		impl<$($life),*> Default for $name<$($life),*> {
@@ -9,16 +10,12 @@ macro_rules! impl_default {
 			}
 		}
 	};
-}
 
-/// Implements `Default` trait by zeroing all fields. Also sets the size field
-/// to struct size.
-macro_rules! impl_default_with_size {
-	($name:ident, $field:ident $(, $life:lifetime)*) => {
+	($name:ident, $cbsize:ident $(, $life:lifetime)*) => {
 		impl<$($life),*> Default for $name<$($life),*> {
 			fn default() -> Self {
 				let mut obj = unsafe { std::mem::zeroed::<Self>() };
-				obj.$field = std::mem::size_of::<Self>() as _;
+				obj.$cbsize = std::mem::size_of::<Self>() as _;
 				obj
 			}
 		}

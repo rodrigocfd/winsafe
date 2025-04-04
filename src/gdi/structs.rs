@@ -83,7 +83,7 @@ pub struct BITMAPINFOHEADER {
 	pub biClrImportant: u32,
 }
 
-impl_default_with_size!(BITMAPINFOHEADER, biSize);
+impl_default!(BITMAPINFOHEADER, biSize);
 
 impl BITMAPINFOHEADER {
 	/// Serializes the struct into `&[u8]`.
