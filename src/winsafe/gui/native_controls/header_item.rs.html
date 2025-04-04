@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\header_item.rs`."><title>header_item.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.88.0-nightly (0b45675cf 2025-03-31)" data-channel="nightly" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../..\../static.files/storage-82c7156e.js"></script><script defer src="../../..\../static.files/src-script-63605ae7.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gui\native_controls/</div>header_item.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span><span class="kw">crate</span>::co;
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\header_item.rs`."><title>header_item.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.88.0-nightly (d5b4c2e4f 2025-04-02)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-d72f25bb.js" ><script src="../../..\../static.files/storage-4e99c027.js"></script><script defer src="../../..\../static.files/src-script-63605ae7.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gui\native_controls/</div>header_item.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span><span class="kw">crate</span>::co;
 <a href=#2 id=2 data-nosnippet>2</a><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <a href=#3 id=3 data-nosnippet>3</a><span class="kw">use </span><span class="kw">crate</span>::gui::<span class="kw-2">*</span>;
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">crate</span>::kernel::privs::<span class="kw-2">*</span>;
@@ -80,7 +80,7 @@
 <a href=#80 id=80 data-nosnippet>80</a>	/// [`hdm:SetFocusedItem`](crate::msg::hdm::SetFocusedItem) message.
 <a href=#81 id=81 data-nosnippet>81</a>	///
 <a href=#82 id=82 data-nosnippet>82</a>	/// Returns the same item, so further operations can be chained.
-<a href=#83 id=83 data-nosnippet>83</a>	</span><span class="kw">pub fn </span>focus(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;HeaderItem&lt;<span class="lifetime">'a</span>&gt;&gt; {
+<a href=#83 id=83 data-nosnippet>83</a>	</span><span class="kw">pub fn </span>focus(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;<span class="self">Self</span>&gt; {
 <a href=#84 id=84 data-nosnippet>84</a>		<span class="kw">unsafe </span>{
 <a href=#85 id=85 data-nosnippet>85</a>			<span class="self">self</span>.owner
 <a href=#86 id=86 data-nosnippet>86</a>				.hwnd()
@@ -144,7 +144,7 @@
 <a href=#144 id=144 data-nosnippet>144</a>	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
 <a href=#145 id=145 data-nosnippet>145</a>	///
 <a href=#146 id=146 data-nosnippet>146</a>	/// Returns the same item, so further operations can be chained.
-<a href=#147 id=147 data-nosnippet>147</a>	</span><span class="kw">pub fn </span>set_arrow(<span class="kw-2">&amp;</span><span class="self">self</span>, arrow_state: HeaderArrow) -&gt; HeaderItem&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#147 id=147 data-nosnippet>147</a>	</span><span class="kw">pub fn </span>set_arrow(<span class="kw-2">&amp;</span><span class="self">self</span>, arrow_state: HeaderArrow) -&gt; <span class="self">Self </span>{
 <a href=#148 id=148 data-nosnippet>148</a>		<span class="kw">let </span><span class="kw-2">mut </span>hdi = HDITEM::default();
 <a href=#149 id=149 data-nosnippet>149</a>		hdi.mask = co::HDI::FORMAT;
 <a href=#150 id=150 data-nosnippet>150</a>
@@ -164,7 +164,7 @@
 <a href=#164 id=164 data-nosnippet>164</a>	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
 <a href=#165 id=165 data-nosnippet>165</a>	///
 <a href=#166 id=166 data-nosnippet>166</a>	/// Returns the same item, so further operations can be chained.
-<a href=#167 id=167 data-nosnippet>167</a>	</span><span class="kw">pub fn </span>set_justify(<span class="kw-2">&amp;</span><span class="self">self</span>, text_justification: HeaderJustify) -&gt; HeaderItem&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#167 id=167 data-nosnippet>167</a>	</span><span class="kw">pub fn </span>set_justify(<span class="kw-2">&amp;</span><span class="self">self</span>, text_justification: HeaderJustify) -&gt; <span class="self">Self </span>{
 <a href=#168 id=168 data-nosnippet>168</a>		<span class="kw">let </span><span class="kw-2">mut </span>hdi = HDITEM::default();
 <a href=#169 id=169 data-nosnippet>169</a>		hdi.mask = co::HDI::FORMAT;
 <a href=#170 id=170 data-nosnippet>170</a>
@@ -184,7 +184,7 @@
 <a href=#184 id=184 data-nosnippet>184</a>	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
 <a href=#185 id=185 data-nosnippet>185</a>	///
 <a href=#186 id=186 data-nosnippet>186</a>	/// Returns the same item, so further operations can be chained.
-<a href=#187 id=187 data-nosnippet>187</a>	</span><span class="kw">pub fn </span>set_lparam(<span class="kw-2">&amp;</span><span class="self">self</span>, lparam: isize) -&gt; HeaderItem&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#187 id=187 data-nosnippet>187</a>	</span><span class="kw">pub fn </span>set_lparam(<span class="kw-2">&amp;</span><span class="self">self</span>, lparam: isize) -&gt; <span class="self">Self </span>{
 <a href=#188 id=188 data-nosnippet>188</a>		<span class="kw">let </span><span class="kw-2">mut </span>hdi = HDITEM::default();
 <a href=#189 id=189 data-nosnippet>189</a>		hdi.mask = co::HDI::LPARAM;
 <a href=#190 id=190 data-nosnippet>190</a>		hdi.lParam = lparam;
@@ -201,7 +201,7 @@
 <a href=#201 id=201 data-nosnippet>201</a>	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
 <a href=#202 id=202 data-nosnippet>202</a>	///
 <a href=#203 id=203 data-nosnippet>203</a>	/// Returns the same item, so further operations can be chained.
-<a href=#204 id=204 data-nosnippet>204</a>	</span><span class="kw">pub fn </span>set_order(<span class="kw-2">&amp;</span><span class="self">self</span>, order: u32) -&gt; HeaderItem&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#204 id=204 data-nosnippet>204</a>	</span><span class="kw">pub fn </span>set_order(<span class="kw-2">&amp;</span><span class="self">self</span>, order: u32) -&gt; <span class="self">Self </span>{
 <a href=#205 id=205 data-nosnippet>205</a>		<span class="kw">let </span><span class="kw-2">mut </span>hdi = HDITEM::default();
 <a href=#206 id=206 data-nosnippet>206</a>		hdi.mask = co::HDI::ORDER;
 <a href=#207 id=207 data-nosnippet>207</a>		hdi.iOrder = order <span class="kw">as _</span>;
@@ -218,7 +218,7 @@
 <a href=#218 id=218 data-nosnippet>218</a>	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
 <a href=#219 id=219 data-nosnippet>219</a>	///
 <a href=#220 id=220 data-nosnippet>220</a>	/// Returns the same item, so further operations can be chained.
-<a href=#221 id=221 data-nosnippet>221</a>	</span><span class="kw">pub fn </span>set_text(<span class="kw-2">&amp;</span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) -&gt; HeaderItem&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#221 id=221 data-nosnippet>221</a>	</span><span class="kw">pub fn </span>set_text(<span class="kw-2">&amp;</span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) -&gt; <span class="self">Self </span>{
 <a href=#222 id=222 data-nosnippet>222</a>		<span class="kw">let </span><span class="kw-2">mut </span>hdi = HDITEM::default();
 <a href=#223 id=223 data-nosnippet>223</a>		hdi.mask = co::HDI::TEXT;
 <a href=#224 id=224 data-nosnippet>224</a>
@@ -237,7 +237,7 @@
 <a href=#237 id=237 data-nosnippet>237</a>	/// [`hdm::SetItem`](crate::msg::hdm::SetItem) message.
 <a href=#238 id=238 data-nosnippet>238</a>	///
 <a href=#239 id=239 data-nosnippet>239</a>	/// Returns the same item, so further operations can be chained.
-<a href=#240 id=240 data-nosnippet>240</a>	</span><span class="kw">pub fn </span>set_width(<span class="kw-2">&amp;</span><span class="self">self</span>, width: i32) -&gt; HeaderItem&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#240 id=240 data-nosnippet>240</a>	</span><span class="kw">pub fn </span>set_width(<span class="kw-2">&amp;</span><span class="self">self</span>, width: i32) -&gt; <span class="self">Self </span>{
 <a href=#241 id=241 data-nosnippet>241</a>		<span class="kw">let </span><span class="kw-2">mut </span>hdi = HDITEM::default();
 <a href=#242 id=242 data-nosnippet>242</a>		hdi.mask = co::HDI::WIDTH;
 <a href=#243 id=243 data-nosnippet>243</a>		hdi.cxy = width;

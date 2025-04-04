@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\tree_view_item.rs`."><title>tree_view_item.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.88.0-nightly (0b45675cf 2025-03-31)" data-channel="nightly" data-search-js="search-e7298875.js" data-settings-js="settings-d72f25bb.js" ><script src="../../..\../static.files/storage-82c7156e.js"></script><script defer src="../../..\../static.files/src-script-63605ae7.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gui\native_controls/</div>tree_view_item.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span>std::cell::RefCell;
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gui\native_controls\tree_view_item.rs`."><title>tree_view_item.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.88.0-nightly (d5b4c2e4f 2025-04-02)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-d72f25bb.js" ><script src="../../..\../static.files/storage-4e99c027.js"></script><script defer src="../../..\../static.files/src-script-63605ae7.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gui\native_controls/</div>tree_view_item.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span>std::cell::RefCell;
 <a href=#2 id=2 data-nosnippet>2</a><span class="kw">use </span>std::mem::ManuallyDrop;
 <a href=#3 id=3 data-nosnippet>3</a><span class="kw">use </span>std::rc::Rc;
 <a href=#4 id=4 data-nosnippet>4</a>
@@ -20,18 +20,18 @@
 <a href=#20 id=20 data-nosnippet>20</a>	hitem: HTREEITEM,
 <a href=#21 id=21 data-nosnippet>21</a>}
 <a href=#22 id=22 data-nosnippet>22</a>
-<a href=#23 id=23 data-nosnippet>23</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; TreeViewItem&lt;<span class="lifetime">'a</span>, T&gt; {
-<a href=#24 id=24 data-nosnippet>24</a>	<span class="attr">#[must_use]
-<a href=#25 id=25 data-nosnippet>25</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TreeView&lt;T&gt;, hitem: HTREEITEM) -&gt; <span class="self">Self </span>{
-<a href=#26 id=26 data-nosnippet>26</a>		<span class="self">Self </span>{ owner, hitem }
+<a href=#23 id=23 data-nosnippet>23</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; Clone <span class="kw">for </span>TreeViewItem&lt;<span class="lifetime">'a</span>, T&gt; {
+<a href=#24 id=24 data-nosnippet>24</a>	<span class="comment">// https://stackoverflow.com/q/39415052/6923555
+<a href=#25 id=25 data-nosnippet>25</a>	</span><span class="kw">fn </span>clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
+<a href=#26 id=26 data-nosnippet>26</a>		<span class="self">Self </span>{ owner: <span class="self">self</span>.owner, hitem: <span class="self">self</span>.hitem }
 <a href=#27 id=27 data-nosnippet>27</a>	}
-<a href=#28 id=28 data-nosnippet>28</a>
-<a href=#29 id=29 data-nosnippet>29</a>	<span class="attr">#[must_use]
-<a href=#30 id=30 data-nosnippet>30</a>	</span><span class="kw">fn </span>raw_clone(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-<a href=#31 id=31 data-nosnippet>31</a>		<span class="self">Self </span>{
-<a href=#32 id=32 data-nosnippet>32</a>			owner: <span class="self">self</span>.owner,
-<a href=#33 id=33 data-nosnippet>33</a>			hitem: <span class="kw">unsafe </span>{ <span class="self">self</span>.hitem.raw_copy() },
-<a href=#34 id=34 data-nosnippet>34</a>		}
+<a href=#28 id=28 data-nosnippet>28</a>}
+<a href=#29 id=29 data-nosnippet>29</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; Copy <span class="kw">for </span>TreeViewItem&lt;<span class="lifetime">'a</span>, T&gt; {}
+<a href=#30 id=30 data-nosnippet>30</a>
+<a href=#31 id=31 data-nosnippet>31</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, T&gt; TreeViewItem&lt;<span class="lifetime">'a</span>, T&gt; {
+<a href=#32 id=32 data-nosnippet>32</a>	<span class="attr">#[must_use]
+<a href=#33 id=33 data-nosnippet>33</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(owner: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>TreeView&lt;T&gt;, hitem: HTREEITEM) -&gt; <span class="self">Self </span>{
+<a href=#34 id=34 data-nosnippet>34</a>		<span class="self">Self </span>{ owner, hitem }
 <a href=#35 id=35 data-nosnippet>35</a>	}
 <a href=#36 id=36 data-nosnippet>36</a>
 <a href=#37 id=37 data-nosnippet>37</a>	<span class="doccomment">/// Adds a new child item by sending a
@@ -39,7 +39,7 @@
 <a href=#39 id=39 data-nosnippet>39</a>	/// the newly added item.
 <a href=#40 id=40 data-nosnippet>40</a>	</span><span class="kw">pub fn </span>add_child(<span class="kw-2">&amp;</span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str, icon_index: <span class="prelude-ty">Option</span>&lt;u32&gt;, data: T) -&gt; SysResult&lt;<span class="self">Self</span>&gt; {
 <a href=#41 id=41 data-nosnippet>41</a>		<span class="self">self</span>.owner
-<a href=#42 id=42 data-nosnippet>42</a>			.raw_insert_item(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.hitem), text, icon_index, data)
+<a href=#42 id=42 data-nosnippet>42</a>			.raw_insert_item(<span class="prelude-val">Some</span>(<span class="self">self</span>.hitem), text, icon_index, data)
 <a href=#43 id=43 data-nosnippet>43</a>	}
 <a href=#44 id=44 data-nosnippet>44</a>
 <a href=#45 id=45 data-nosnippet>45</a>	<span class="doccomment">/// Returns a [`Rc`](std::rc::Rc)/[`RefCell`](std::cell::RefCell) with the
@@ -59,7 +59,7 @@
 <a href=#59 id=59 data-nosnippet>59</a>	<span class="attr">#[must_use]
 <a href=#60 id=60 data-nosnippet>60</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>data_lparam(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;<span class="prelude-ty">Option</span>&lt;<span class="kw-2">*mut </span>RefCell&lt;T&gt;&gt;&gt; {
 <a href=#61 id=61 data-nosnippet>61</a>		<span class="kw">let </span><span class="kw-2">mut </span>tvix = TVITEMEX::default();
-<a href=#62 id=62 data-nosnippet>62</a>		tvix.hItem = <span class="kw">unsafe </span>{ <span class="self">self</span>.hitem.raw_copy() };
+<a href=#62 id=62 data-nosnippet>62</a>		tvix.hItem = <span class="self">self</span>.hitem;
 <a href=#63 id=63 data-nosnippet>63</a>		tvix.mask = co::TVIF::PARAM;
 <a href=#64 id=64 data-nosnippet>64</a>
 <a href=#65 id=65 data-nosnippet>65</a>		<span class="kw">unsafe </span>{
@@ -80,7 +80,7 @@
 <a href=#80 id=80 data-nosnippet>80</a>		<span class="kw">unsafe </span>{
 <a href=#81 id=81 data-nosnippet>81</a>			<span class="self">self</span>.owner
 <a href=#82 id=82 data-nosnippet>82</a>				.hwnd()
-<a href=#83 id=83 data-nosnippet>83</a>				.SendMessage(tvm::DeleteItem { hitem: <span class="kw-2">&amp;</span><span class="self">self</span>.hitem })
+<a href=#83 id=83 data-nosnippet>83</a>				.SendMessage(tvm::DeleteItem { hitem: <span class="self">self</span>.hitem })
 <a href=#84 id=84 data-nosnippet>84</a>		}
 <a href=#85 id=85 data-nosnippet>85</a>	}
 <a href=#86 id=86 data-nosnippet>86</a>
@@ -92,7 +92,7 @@
 <a href=#92 id=92 data-nosnippet>92</a>		<span class="kw">unsafe </span>{
 <a href=#93 id=93 data-nosnippet>93</a>			<span class="self">self</span>.owner
 <a href=#94 id=94 data-nosnippet>94</a>				.hwnd()
-<a href=#95 id=95 data-nosnippet>95</a>				.SendMessage(tvm::EditLabel { hitem: <span class="kw-2">&amp;</span><span class="self">self</span>.hitem })
+<a href=#95 id=95 data-nosnippet>95</a>				.SendMessage(tvm::EditLabel { hitem: <span class="self">self</span>.hitem })
 <a href=#96 id=96 data-nosnippet>96</a>		}
 <a href=#97 id=97 data-nosnippet>97</a>	}
 <a href=#98 id=98 data-nosnippet>98</a>
@@ -105,7 +105,7 @@
 <a href=#105 id=105 data-nosnippet>105</a>		<span class="kw">unsafe </span>{
 <a href=#106 id=106 data-nosnippet>106</a>			<span class="self">self</span>.owner
 <a href=#107 id=107 data-nosnippet>107</a>				.hwnd()
-<a href=#108 id=108 data-nosnippet>108</a>				.SendMessage(tvm::EnsureVisible { hitem: <span class="kw-2">&amp;</span><span class="self">self</span>.hitem })
+<a href=#108 id=108 data-nosnippet>108</a>				.SendMessage(tvm::EnsureVisible { hitem: <span class="self">self</span>.hitem })
 <a href=#109 id=109 data-nosnippet>109</a>				!= <span class="number">0
 <a href=#110 id=110 data-nosnippet>110</a>		</span>}
 <a href=#111 id=111 data-nosnippet>111</a>	}
@@ -115,16 +115,16 @@
 <a href=#115 id=115 data-nosnippet>115</a>	</span><span class="kw">pub fn </span>expand(<span class="kw-2">&amp;</span><span class="self">self</span>, expand: bool) -&gt; SysResult&lt;()&gt; {
 <a href=#116 id=116 data-nosnippet>116</a>		<span class="kw">unsafe </span>{
 <a href=#117 id=117 data-nosnippet>117</a>			<span class="self">self</span>.owner.hwnd().SendMessage(tvm::Expand {
-<a href=#118 id=118 data-nosnippet>118</a>				hitem: <span class="kw-2">&amp;</span><span class="self">self</span>.hitem,
+<a href=#118 id=118 data-nosnippet>118</a>				hitem: <span class="self">self</span>.hitem,
 <a href=#119 id=119 data-nosnippet>119</a>				action: <span class="kw">if </span>expand { co::TVE::EXPAND } <span class="kw">else </span>{ co::TVE::COLLAPSE },
 <a href=#120 id=120 data-nosnippet>120</a>			})
 <a href=#121 id=121 data-nosnippet>121</a>		}
 <a href=#122 id=122 data-nosnippet>122</a>	}
 <a href=#123 id=123 data-nosnippet>123</a>
-<a href=#124 id=124 data-nosnippet>124</a>	<span class="doccomment">/// Returns the underlying handle of the item.
+<a href=#124 id=124 data-nosnippet>124</a>	<span class="doccomment">/// Returns the unique item identifier.
 <a href=#125 id=125 data-nosnippet>125</a>	</span><span class="attr">#[must_use]
-<a href=#126 id=126 data-nosnippet>126</a>	</span><span class="kw">pub const fn </span>htreeitem(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HTREEITEM {
-<a href=#127 id=127 data-nosnippet>127</a>		<span class="kw-2">&amp;</span><span class="self">self</span>.hitem
+<a href=#126 id=126 data-nosnippet>126</a>	</span><span class="kw">pub const fn </span>htreeitem(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HTREEITEM {
+<a href=#127 id=127 data-nosnippet>127</a>		<span class="self">self</span>.hitem
 <a href=#128 id=128 data-nosnippet>128</a>	}
 <a href=#129 id=129 data-nosnippet>129</a>
 <a href=#130 id=130 data-nosnippet>130</a>	<span class="doccomment">/// Tells if the item is expanded by sending a
@@ -133,7 +133,7 @@
 <a href=#133 id=133 data-nosnippet>133</a>	</span><span class="kw">pub fn </span>is_expanded(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; bool {
 <a href=#134 id=134 data-nosnippet>134</a>		<span class="kw">unsafe </span>{
 <a href=#135 id=135 data-nosnippet>135</a>			<span class="self">self</span>.owner.hwnd().SendMessage(tvm::GetItemState {
-<a href=#136 id=136 data-nosnippet>136</a>				hitem: <span class="kw-2">&amp;</span><span class="self">self</span>.hitem,
+<a href=#136 id=136 data-nosnippet>136</a>				hitem: <span class="self">self</span>.hitem,
 <a href=#137 id=137 data-nosnippet>137</a>				mask: co::TVIS::EXPANDED,
 <a href=#138 id=138 data-nosnippet>138</a>			})
 <a href=#139 id=139 data-nosnippet>139</a>		}
@@ -149,20 +149,20 @@
 <a href=#149 id=149 data-nosnippet>149</a>
 <a href=#150 id=150 data-nosnippet>150</a>	<span class="doccomment">/// Returns an iterator over the child items.
 <a href=#151 id=151 data-nosnippet>151</a>	</span><span class="attr">#[must_use]
-<a href=#152 id=152 data-nosnippet>152</a>	</span><span class="kw">pub fn </span>iter_children(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = TreeViewItem&lt;<span class="lifetime">'a</span>, T&gt;&gt; + <span class="lifetime">'a </span>{
-<a href=#153 id=153 data-nosnippet>153</a>		TreeViewChildItemIter::new(<span class="self">self</span>.owner, <span class="prelude-val">Some</span>(<span class="self">self</span>.raw_clone()))
+<a href=#152 id=152 data-nosnippet>152</a>	</span><span class="kw">pub fn </span>iter_children(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="self">Self</span>&gt; + <span class="lifetime">'a </span>{
+<a href=#153 id=153 data-nosnippet>153</a>		TreeViewChildItemIter::new(<span class="self">self</span>.owner, <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="self">self</span>))
 <a href=#154 id=154 data-nosnippet>154</a>	}
 <a href=#155 id=155 data-nosnippet>155</a>
 <a href=#156 id=156 data-nosnippet>156</a>	<span class="doccomment">/// Returns an iterator over the next sibling items.
 <a href=#157 id=157 data-nosnippet>157</a>	</span><span class="attr">#[must_use]
-<a href=#158 id=158 data-nosnippet>158</a>	</span><span class="kw">pub fn </span>iter_next_siblings(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = TreeViewItem&lt;<span class="lifetime">'a</span>, T&gt;&gt; + <span class="lifetime">'a </span>{
-<a href=#159 id=159 data-nosnippet>159</a>		TreeViewItemIter::new(<span class="self">self</span>.owner, <span class="prelude-val">Some</span>(<span class="self">self</span>.raw_clone()), co::TVGN::NEXT)
+<a href=#158 id=158 data-nosnippet>158</a>	</span><span class="kw">pub fn </span>iter_next_siblings(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="self">Self</span>&gt; + <span class="lifetime">'a </span>{
+<a href=#159 id=159 data-nosnippet>159</a>		TreeViewItemIter::new(<span class="self">self</span>.owner, <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="self">self</span>), co::TVGN::NEXT)
 <a href=#160 id=160 data-nosnippet>160</a>	}
 <a href=#161 id=161 data-nosnippet>161</a>
 <a href=#162 id=162 data-nosnippet>162</a>	<span class="doccomment">/// Returns an iterator over the previous sibling items.
 <a href=#163 id=163 data-nosnippet>163</a>	</span><span class="attr">#[must_use]
-<a href=#164 id=164 data-nosnippet>164</a>	</span><span class="kw">pub fn </span>iter_prev_siblings(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = TreeViewItem&lt;<span class="lifetime">'a</span>, T&gt;&gt; + <span class="lifetime">'a </span>{
-<a href=#165 id=165 data-nosnippet>165</a>		TreeViewItemIter::new(<span class="self">self</span>.owner, <span class="prelude-val">Some</span>(<span class="self">self</span>.raw_clone()), co::TVGN::PREVIOUS)
+<a href=#164 id=164 data-nosnippet>164</a>	</span><span class="kw">pub fn </span>iter_prev_siblings(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw">impl </span>Iterator&lt;Item = <span class="self">Self</span>&gt; + <span class="lifetime">'a </span>{
+<a href=#165 id=165 data-nosnippet>165</a>		TreeViewItemIter::new(<span class="self">self</span>.owner, <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="self">self</span>), co::TVGN::PREVIOUS)
 <a href=#166 id=166 data-nosnippet>166</a>	}
 <a href=#167 id=167 data-nosnippet>167</a>
 <a href=#168 id=168 data-nosnippet>168</a>	<span class="doccomment">/// Retrieves the parent of the item by sending a
@@ -172,7 +172,7 @@
 <a href=#172 id=172 data-nosnippet>172</a>		<span class="kw">unsafe </span>{
 <a href=#173 id=173 data-nosnippet>173</a>			<span class="self">self</span>.owner.hwnd().SendMessage(tvm::GetNextItem {
 <a href=#174 id=174 data-nosnippet>174</a>				relationship: co::TVGN::PARENT,
-<a href=#175 id=175 data-nosnippet>175</a>				hitem: <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span><span class="self">self</span>.hitem),
+<a href=#175 id=175 data-nosnippet>175</a>				hitem: <span class="prelude-val">Some</span>(<span class="self">self</span>.hitem),
 <a href=#176 id=176 data-nosnippet>176</a>			})
 <a href=#177 id=177 data-nosnippet>177</a>		}
 <a href=#178 id=178 data-nosnippet>178</a>		.map(|hitem| TreeViewItem::new(<span class="self">self</span>.owner, hitem))
@@ -184,7 +184,7 @@
 <a href=#184 id=184 data-nosnippet>184</a>		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::from_str(text);
 <a href=#185 id=185 data-nosnippet>185</a>
 <a href=#186 id=186 data-nosnippet>186</a>		<span class="kw">let </span><span class="kw-2">mut </span>tvix = TVITEMEX::default();
-<a href=#187 id=187 data-nosnippet>187</a>		tvix.hItem = <span class="kw">unsafe </span>{ <span class="self">self</span>.hitem.raw_copy() };
+<a href=#187 id=187 data-nosnippet>187</a>		tvix.hItem = <span class="self">self</span>.hitem;
 <a href=#188 id=188 data-nosnippet>188</a>		tvix.mask = co::TVIF::TEXT;
 <a href=#189 id=189 data-nosnippet>189</a>		tvix.set_pszText(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>buf));
 <a href=#190 id=190 data-nosnippet>190</a>
@@ -200,7 +200,7 @@
 <a href=#200 id=200 data-nosnippet>200</a>	</span><span class="attr">#[must_use]
 <a href=#201 id=201 data-nosnippet>201</a>	</span><span class="kw">pub fn </span>text(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;String&gt; {
 <a href=#202 id=202 data-nosnippet>202</a>		<span class="kw">let </span><span class="kw-2">mut </span>tvix = TVITEMEX::default();
-<a href=#203 id=203 data-nosnippet>203</a>		tvix.hItem = <span class="kw">unsafe </span>{ <span class="self">self</span>.hitem.raw_copy() };
+<a href=#203 id=203 data-nosnippet>203</a>		tvix.hItem = <span class="self">self</span>.hitem;
 <a href=#204 id=204 data-nosnippet>204</a>		tvix.mask = co::TVIF::TEXT;
 <a href=#205 id=205 data-nosnippet>205</a>
 <a href=#206 id=206 data-nosnippet>206</a>		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(MAX_PATH + <span class="number">1</span>); <span class="comment">// arbitrary
