@@ -62,7 +62,9 @@ impl<'a> TabItem<'a> {
 
 	/// Sets the user-defined value by sending an
 	/// [`lvm::SetItem`](crate::msg::lvm::SetItem) message.
-	pub fn set_lparam(&self, lparam: isize) -> SysResult<()> {
+	///
+	/// Returns the same item, so further operations can be chained.
+	pub fn set_lparam(&self, lparam: isize) -> SysResult<Self> {
 		let mut tci = TCITEM::default();
 		tci.mask = co::TCIF::PARAM;
 		tci.lParam = lparam;
@@ -70,13 +72,16 @@ impl<'a> TabItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(tcm::SetItem { index: self.index, item: &mut tci })
+				.SendMessage(tcm::SetItem { index: self.index, item: &mut tci })?;
 		}
+		Ok(*self)
 	}
 
 	/// Sets the text by sending a
 	/// [`tcm:SetItem`](crate::msg::tcm::SetItem) message.
-	pub fn set_text(&self, text: &str) -> SysResult<()> {
+	///
+	/// Returns the same item, so further operations can be chained.
+	pub fn set_text(&self, text: &str) -> SysResult<Self> {
 		let mut wtext = WString::from_str(text);
 		let mut tci = TCITEM::default();
 		tci.mask = co::TCIF::TEXT;
@@ -85,8 +90,9 @@ impl<'a> TabItem<'a> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(tcm::SetItem { index: self.index, item: &mut tci })
+				.SendMessage(tcm::SetItem { index: self.index, item: &mut tci })?;
 		}
+		Ok(*self)
 	}
 
 	/// Retrieves the text by sending a

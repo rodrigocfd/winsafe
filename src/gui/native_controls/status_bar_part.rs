@@ -32,24 +32,30 @@ impl<'a> StatusBarPart<'a> {
 
 	/// Sets the icon of a part by sending an
 	/// [`sb::SetIcon`](crate::msg::sb::SetIcon) message.
-	pub fn set_icon(&self, hicon: Option<&HICON>) -> SysResult<()> {
+	///
+	/// Returns the same part, so further operations can be chained.
+	pub fn set_icon(&self, hicon: Option<&HICON>) -> SysResult<Self> {
 		unsafe {
 			self.owner
 				.hwnd()
-				.SendMessage(sb::SetIcon { part_index: self.index as _, hicon })
+				.SendMessage(sb::SetIcon { part_index: self.index as _, hicon })?;
 		}
+		Ok(*self)
 	}
 
 	/// Sets the text of a part by sending an
 	/// [`sb::SetText`](crate::msg::sb::SetText) message.
-	pub fn set_text(&self, text: &str) -> SysResult<()> {
+	///
+	/// Returns the same part, so further operations can be chained.
+	pub fn set_text(&self, text: &str) -> SysResult<Self> {
 		unsafe {
 			self.owner.hwnd().SendMessage(sb::SetText {
 				part_index: self.index as _,
 				draw_operation: co::SBT::BORDER,
 				text: WString::from_str(text),
-			})
+			})?;
 		}
+		Ok(*self)
 	}
 
 	/// Retrieves the text of the item by sending a

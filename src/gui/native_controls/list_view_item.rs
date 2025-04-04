@@ -93,8 +93,8 @@ impl<'a, T> ListViewItem<'a, T> {
 	/// [`lvm::EnsureVisible`](crate::msg::lvm::EnsureVisible) message so that
 	/// the item is visible in the list.
 	///
-	/// Returns the same column, so further operations can be chained.
-	pub fn ensure_visible(&self) -> SysResult<ListViewItem<'a, T>> {
+	/// Returns the same item, so further operations can be chained.
+	pub fn ensure_visible(&self) -> SysResult<Self> {
 		unsafe {
 			self.owner.hwnd().SendMessage(lvm::EnsureVisible {
 				index: self.index,
@@ -107,8 +107,8 @@ impl<'a, T> ListViewItem<'a, T> {
 	/// Sets the item as the focused one sending an
 	/// [`lvm:SetItemState`](crate::msg::lvm::SetItemState) message.
 	///
-	/// Returns the same column, so further operations can be chained.
-	pub fn focus(&self) -> SysResult<ListViewItem<'a, T>> {
+	/// Returns the same item, so further operations can be chained.
+	pub fn focus(&self) -> SysResult<Self> {
 		let mut lvi = LVITEM::default();
 		lvi.stateMask = co::LVIS::FOCUSED;
 		lvi.state = co::LVIS::FOCUSED;
@@ -202,8 +202,8 @@ impl<'a, T> ListViewItem<'a, T> {
 	/// Sets or removes the selection from the item by sending an
 	/// [`lvm::SetItemState`](crate::msg::lvm::SetItemState) message.
 	///
-	/// Returns the same column, so further operations can be chained.
-	pub fn select(&self, set: bool) -> SysResult<ListViewItem<'a, T>> {
+	/// Returns the same item, so further operations can be chained.
+	pub fn select(&self, set: bool) -> SysResult<Self> {
 		let mut lvi = LVITEM::default();
 		lvi.stateMask = co::LVIS::SELECTED;
 		if set {
@@ -221,8 +221,8 @@ impl<'a, T> ListViewItem<'a, T> {
 	/// Sets the icon index of the item by sending an
 	/// [`lvm::SetItem`](crate::msg::lvm::SetItem) message.
 	///
-	/// Returns the same column, so further operations can be chained.
-	pub fn set_icon_index(&self, icon_index: Option<u32>) -> SysResult<ListViewItem<'a, T>> {
+	/// Returns the same item, so further operations can be chained.
+	pub fn set_icon_index(&self, icon_index: Option<u32>) -> SysResult<Self> {
 		let mut lvi = LVITEM::default();
 		lvi.iItem = self.index as _;
 		lvi.mask = co::LVIF::IMAGE;
@@ -239,8 +239,8 @@ impl<'a, T> ListViewItem<'a, T> {
 	/// Sets the text of the item under a column by sending an
 	/// [`lvm::SetItemText`](crate::msg::lvm::SetItemText) message.
 	///
-	/// Returns the same column, so further operations can be chained.
-	pub fn set_text(&self, column_index: u32, text: &str) -> SysResult<ListViewItem<'a, T>> {
+	/// Returns the same item, so further operations can be chained.
+	pub fn set_text(&self, column_index: u32, text: &str) -> SysResult<Self> {
 		let mut lvi = LVITEM::default();
 		lvi.iSubItem = column_index as _;
 

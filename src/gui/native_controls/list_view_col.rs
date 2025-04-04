@@ -41,7 +41,7 @@ impl<'a, T> ListViewCol<'a, T> {
 	/// [`lvm::SetColumn`](crate::msg::lvm::SetColumn) message.
 	///
 	/// Returns the same column, so further operations can be chained.
-	pub fn set_title(&self, text: &str) -> SysResult<ListViewCol<'a, T>> {
+	pub fn set_title(&self, text: &str) -> SysResult<Self> {
 		let mut lvc = LVCOLUMN::default();
 		lvc.iSubItem = self.index as _;
 		lvc.mask = co::LVCF::TEXT;
@@ -61,7 +61,7 @@ impl<'a, T> ListViewCol<'a, T> {
 	/// [`lvm::SetColumnWidth`](crate::msg::lvm::SetColumnWidth) message.
 	///
 	/// Returns the same column, so further operations can be chained.
-	pub fn set_width(&self, width: i32) -> SysResult<ListViewCol<'a, T>> {
+	pub fn set_width(&self, width: i32) -> SysResult<Self> {
 		unsafe {
 			self.owner
 				.hwnd()
@@ -75,7 +75,7 @@ impl<'a, T> ListViewCol<'a, T> {
 	/// width will be calculated to fill the remaining space.
 	///
 	/// Returns the same column, so further operations can be chained.
-	pub fn set_width_to_fill(&self) -> SysResult<ListViewCol<'a, T>> {
+	pub fn set_width_to_fill(&self) -> SysResult<Self> {
 		let num_cols = self.owner.cols().count()?;
 		if num_cols > 0 {
 			let mut cx_used = 0;
