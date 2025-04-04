@@ -90,7 +90,7 @@ impl<'a> ListBoxItems<'a> {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	pub fn iter(&self) -> SysResult<impl Iterator<Item = SysResult<String>> + 'a> {
+	pub fn iter(&self) -> SysResult<impl DoubleEndedIterator<Item = SysResult<String>> + 'a> {
 		ListBoxItemIter::new(self.owner)
 	}
 
@@ -114,7 +114,9 @@ impl<'a> ListBoxItems<'a> {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	pub fn iter_selected(&self) -> SysResult<impl Iterator<Item = SysResult<(u32, String)>> + 'a> {
+	pub fn iter_selected(
+		&self,
+	) -> SysResult<impl DoubleEndedIterator<Item = SysResult<(u32, String)>> + 'a> {
 		ListBoxSelItemIter::new(self.owner)
 	}
 

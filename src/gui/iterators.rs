@@ -6,8 +6,8 @@ use crate::prelude::*;
 
 pub(in crate::gui) struct ComboBoxItemIter<'a> {
 	owner: &'a ComboBox,
-	count: u32,
-	current: u32,
+	front_idx: u32,
+	past_back_idx: u32,
 	buffer: WString,
 }
 
@@ -15,35 +15,12 @@ impl<'a> Iterator for ComboBoxItemIter<'a> {
 	type Item = SysResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		let num_chars = match unsafe {
-			self.owner
-				.hwnd()
-				.SendMessage(cb::GetLbTextLen { index: self.current })
-		} {
-			Err(e) => {
-				self.current = self.count; // halt
-				return Some(Err(e));
-			},
-			Ok(n) => n,
-		};
-
-		self.buffer = WString::new_alloc_buf(num_chars as usize + 1);
-		if let Err(e) = unsafe {
-			self.owner.hwnd().SendMessage(cb::GetLbText {
-				index: self.current,
-				text: &mut self.buffer,
-			})
-		} {
-			self.current = self.count; // halt
-			return Some(Err(e));
-		}
-
-		self.current += 1;
-		Some(Ok(self.buffer.to_string()))
+		self.grab(true)
+	}
+}
+impl<'a> DoubleEndedIterator for ComboBoxItemIter<'a> {
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
 	}
 }
 
@@ -52,30 +29,68 @@ impl<'a> ComboBoxItemIter<'a> {
 	pub(in crate::gui) fn new(owner: &'a ComboBox) -> SysResult<Self> {
 		Ok(Self {
 			owner,
-			count: owner.items().count()?,
-			current: 0,
+			front_idx: 0,
+			past_back_idx: owner.items().count()?,
 			buffer: WString::new(),
 		})
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<SysResult<String>> {
+		if self.front_idx == self.past_back_idx {
+			return None;
+		}
+		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+
+		// First, get number of chars, without terminating null.
+		let num_chars = match unsafe {
+			self.owner
+				.hwnd()
+				.SendMessage(cb::GetLbTextLen { index: our_idx })
+		} {
+			Err(e) => {
+				(self.front_idx, self.past_back_idx) = (0, 0); // halt
+				return Some(Err(e));
+			},
+			Ok(n) => n as usize,
+		};
+
+		// Then allocate the buffer and get the chars.
+		self.buffer = WString::new_alloc_buf(num_chars + 1);
+		if let Err(e) = unsafe {
+			self.owner
+				.hwnd()
+				.SendMessage(cb::GetLbText { index: our_idx, text: &mut self.buffer })
+		} {
+			(self.front_idx, self.past_back_idx) = (0, 0); // halt
+			return Some(Err(e));
+		}
+
+		if is_front {
+			self.front_idx += 1;
+		} else {
+			self.past_back_idx -= 1;
+		}
+
+		Some(Ok(self.buffer.to_string()))
 	}
 }
 
 pub(in crate::gui) struct HeaderItemIter<'a> {
 	owner: &'a Header,
-	count: u32,
-	current: u32,
+	front_idx: u32,
+	past_back_idx: u32,
 }
 
 impl<'a> Iterator for HeaderItemIter<'a> {
 	type Item = HeaderItem<'a>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		let item = self.owner.items().get(self.current);
-		self.current += 1;
-		Some(item)
+		self.grab(true)
+	}
+}
+impl<'a> DoubleEndedIterator for HeaderItemIter<'a> {
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
 	}
 }
 
@@ -84,16 +99,31 @@ impl<'a> HeaderItemIter<'a> {
 	pub(in crate::gui) fn new(owner: &'a Header) -> SysResult<Self> {
 		Ok(Self {
 			owner,
-			count: owner.items().count()?,
-			current: 0,
+			front_idx: 0,
+			past_back_idx: owner.items().count()?,
 		})
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<HeaderItem<'a>> {
+		if self.front_idx == self.past_back_idx {
+			return None;
+		}
+		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+
+		let item = self.owner.items().get(our_idx);
+		if is_front {
+			self.front_idx += 1;
+		} else {
+			self.past_back_idx -= 1;
+		}
+		Some(item)
 	}
 }
 
 pub(in crate::gui) struct ListBoxItemIter<'a> {
 	owner: &'a ListBox,
-	count: u32,
-	current: u32,
+	front_idx: u32,
+	past_back_idx: u32,
 	buffer: WString,
 }
 
@@ -101,35 +131,12 @@ impl<'a> Iterator for ListBoxItemIter<'a> {
 	type Item = SysResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		let num_chars = match unsafe {
-			self.owner
-				.hwnd()
-				.SendMessage(lb::GetTextLen { index: self.current })
-		} {
-			Err(e) => {
-				self.current = self.count; // halt
-				return Some(Err(e));
-			},
-			Ok(n) => n,
-		};
-
-		self.buffer = WString::new_alloc_buf(num_chars as usize + 1);
-		if let Err(e) = unsafe {
-			self.owner.hwnd().SendMessage(lb::GetText {
-				index: self.current,
-				text: &mut self.buffer,
-			})
-		} {
-			self.current = self.count; // halt
-			return Some(Err(e));
-		}
-
-		self.current += 1;
-		Some(Ok(self.buffer.to_string()))
+		self.grab(true)
+	}
+}
+impl<'a> DoubleEndedIterator for ListBoxItemIter<'a> {
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
 	}
 }
 
@@ -138,17 +145,57 @@ impl<'a> ListBoxItemIter<'a> {
 	pub(in crate::gui) fn new(owner: &'a ListBox) -> SysResult<Self> {
 		Ok(Self {
 			owner,
-			count: owner.items().count()?,
-			current: 0,
+			front_idx: 0,
+			past_back_idx: owner.items().count()?,
 			buffer: WString::new(),
 		})
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<SysResult<String>> {
+		if self.front_idx == self.past_back_idx {
+			return None;
+		}
+		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+
+		// First, get number of chars, without terminating null.
+		let num_chars = match unsafe {
+			self.owner
+				.hwnd()
+				.SendMessage(lb::GetTextLen { index: our_idx })
+		} {
+			Err(e) => {
+				(self.front_idx, self.past_back_idx) = (0, 0); // halt
+				return Some(Err(e));
+			},
+			Ok(n) => n as usize,
+		};
+
+		// Then allocate the buffer and get the chars.
+		self.buffer = WString::new_alloc_buf(num_chars + 1);
+		if let Err(e) = unsafe {
+			self.owner
+				.hwnd()
+				.SendMessage(lb::GetText { index: our_idx, text: &mut self.buffer })
+		} {
+			(self.front_idx, self.past_back_idx) = (0, 0); // halt
+			return Some(Err(e));
+		}
+
+		if is_front {
+			self.front_idx += 1;
+		} else {
+			self.past_back_idx -= 1;
+		}
+
+		Some(Ok(self.buffer.to_string()))
 	}
 }
 
 pub(in crate::gui) struct ListBoxSelItemIter<'a> {
 	owner: &'a ListBox,
 	indexes: Vec<u32>,
-	current: u32,
+	front_idx: u32,
+	past_back_idx: u32,
 	buffer: WString,
 }
 
@@ -156,37 +203,12 @@ impl<'a> Iterator for ListBoxSelItemIter<'a> {
 	type Item = SysResult<(u32, String)>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.indexes.len() as _ {
-			return None;
-		}
-
-		let cur_sel_index = self.indexes[self.current as usize];
-
-		let num_chars = match unsafe {
-			self.owner
-				.hwnd()
-				.SendMessage(lb::GetTextLen { index: cur_sel_index })
-		} {
-			Err(e) => {
-				self.current = self.indexes.len() as _; // halt
-				return Some(Err(e));
-			},
-			Ok(n) => n,
-		};
-
-		self.buffer = WString::new_alloc_buf(num_chars as usize + 1);
-		if let Err(e) = unsafe {
-			self.owner.hwnd().SendMessage(lb::GetText {
-				index: cur_sel_index,
-				text: &mut self.buffer,
-			})
-		} {
-			self.current = self.indexes.len() as _; // halt
-			return Some(Err(e));
-		}
-
-		self.current += 1;
-		Some(Ok((cur_sel_index, self.buffer.to_string())))
+		self.grab(true)
+	}
+}
+impl<'a> DoubleEndedIterator for ListBoxSelItemIter<'a> {
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
 	}
 }
 
@@ -211,33 +233,75 @@ impl<'a> ListBoxSelItemIter<'a> {
 				None => Vec::<u32>::new(),
 			}
 		};
+		let count = indexes.len();
 
 		Ok(Self {
 			owner,
 			indexes,
-			current: 0,
+			front_idx: 0,
+			past_back_idx: count as _,
 			buffer: WString::new(),
 		})
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<SysResult<(u32, String)>> {
+		if self.front_idx == self.past_back_idx {
+			return None;
+		}
+		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+		let cur_sel_index = self.indexes[our_idx as usize];
+
+		// First, get number of chars, without terminating null.
+		let num_chars = match unsafe {
+			self.owner
+				.hwnd()
+				.SendMessage(lb::GetTextLen { index: cur_sel_index })
+		} {
+			Err(e) => {
+				(self.front_idx, self.past_back_idx) = (0, 0); // halt
+				return Some(Err(e));
+			},
+			Ok(n) => n as usize,
+		};
+
+		// Then allocate the buffer and get the chars.
+		self.buffer = WString::new_alloc_buf(num_chars + 1);
+		if let Err(e) = unsafe {
+			self.owner.hwnd().SendMessage(lb::GetText {
+				index: cur_sel_index,
+				text: &mut self.buffer,
+			})
+		} {
+			(self.front_idx, self.past_back_idx) = (0, 0); // halt
+			return Some(Err(e));
+		}
+
+		if is_front {
+			self.front_idx += 1;
+		} else {
+			self.past_back_idx -= 1;
+		}
+
+		Some(Ok((cur_sel_index, self.buffer.to_string())))
 	}
 }
 
 pub(in crate::gui) struct ListViewColIter<'a, T: 'static> {
 	owner: &'a ListView<T>,
-	count: u32,
-	current: u32,
+	front_idx: u32,
+	past_back_idx: u32,
 }
 
 impl<'a, T> Iterator for ListViewColIter<'a, T> {
 	type Item = ListViewCol<'a, T>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		let item = self.owner.cols().get(self.current);
-		self.current += 1;
-		Some(item)
+		self.grab(true)
+	}
+}
+impl<'a, T> DoubleEndedIterator for ListViewColIter<'a, T> {
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
 	}
 }
 
@@ -246,58 +310,105 @@ impl<'a, T> ListViewColIter<'a, T> {
 	pub(in crate::gui) fn new(owner: &'a ListView<T>) -> SysResult<Self> {
 		Ok(Self {
 			owner,
-			count: owner.cols().count()?,
-			current: 0,
+			front_idx: 0,
+			past_back_idx: owner.cols().count()?,
 		})
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<ListViewCol<'a, T>> {
+		if self.front_idx == self.past_back_idx {
+			return None;
+		}
+		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+
+		let item = self.owner.cols().get(our_idx);
+		if is_front {
+			self.front_idx += 1;
+		} else {
+			self.past_back_idx -= 1;
+		}
+		Some(item)
 	}
 }
 
 pub(in crate::gui) struct ListViewItemIter<'a, T: 'static> {
 	owner: &'a ListView<T>,
-	current: Option<ListViewItem<'a, T>>,
-	relationship: co::LVNI,
+	front_idx: u32,
+	past_back_idx: u32,
+	is_sel: bool,
 }
 
 impl<'a, T> Iterator for ListViewItemIter<'a, T> {
 	type Item = ListViewItem<'a, T>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		self.current = unsafe {
-			self.owner.hwnd().SendMessage(lvm::GetNextItem {
-				initial_index: self.current.map(|item| item.index()),
-				relationship: self.relationship,
-			})
-		}
-		.map(|index| self.owner.items().get(index));
-
-		self.current
+		self.grab(true)
+	}
+}
+impl<'a, T> DoubleEndedIterator for ListViewItemIter<'a, T> {
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
 	}
 }
 
 impl<'a, T> ListViewItemIter<'a, T> {
 	#[must_use]
-	pub(in crate::gui) const fn new(owner: &'a ListView<T>, relationship: co::LVNI) -> Self {
-		Self { owner, current: None, relationship }
+	pub(in crate::gui) fn new(owner: &'a ListView<T>, is_sel: bool) -> Self {
+		Self {
+			owner,
+			front_idx: 0,
+			past_back_idx: owner.items().count(),
+			is_sel,
+		}
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<ListViewItem<'a, T>> {
+		if self.front_idx == self.past_back_idx {
+			return None;
+		}
+
+		let mut our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+		let mut item = self.owner.items().get(our_idx);
+
+		// LVNI_SELECTED|LVNI_PREVIOUS flags don't seem to work together, so we check each item manually.
+		while self.is_sel && !item.is_selected() {
+			if is_front {
+				self.front_idx += 1;
+			} else {
+				self.past_back_idx -= 1;
+			}
+			if self.front_idx == self.past_back_idx {
+				return None;
+			}
+			our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+			item = self.owner.items().get(our_idx);
+		}
+
+		if is_front {
+			self.front_idx += 1;
+		} else {
+			self.past_back_idx -= 1;
+		}
+		Some(item)
 	}
 }
 
 pub(in crate::gui) struct StatusBarPartIter<'a> {
 	owner: &'a StatusBar,
-	count: u32,
-	current: u32,
+	front_idx: u32,
+	past_back_idx: u32,
 }
 
 impl<'a> Iterator for StatusBarPartIter<'a> {
 	type Item = StatusBarPart<'a>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		let item = self.owner.parts().get(self.current);
-		self.current += 1;
-		Some(item)
+		self.grab(true)
+	}
+}
+impl<'a> DoubleEndedIterator for StatusBarPartIter<'a> {
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
 	}
 }
 
@@ -306,9 +417,24 @@ impl<'a> StatusBarPartIter<'a> {
 	pub(in crate::gui) fn new(owner: &'a StatusBar) -> Self {
 		Self {
 			owner,
-			count: owner.parts().count(),
-			current: 0,
+			front_idx: 0,
+			past_back_idx: owner.parts().count(),
 		}
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<StatusBarPart<'a>> {
+		if self.front_idx == self.past_back_idx {
+			return None;
+		}
+		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+
+		let part = self.owner.parts().get(our_idx);
+		if is_front {
+			self.front_idx += 1;
+		} else {
+			self.past_back_idx -= 1;
+		}
+		Some(part)
 	}
 }
 

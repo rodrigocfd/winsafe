@@ -56,7 +56,7 @@ impl<'a> HeaderItems<'a> {
 
 	/// Returns an iterator over all items.
 	#[must_use]
-	pub fn iter(&self) -> SysResult<impl Iterator<Item = HeaderItem<'a>> + 'a> {
+	pub fn iter(&self) -> SysResult<impl DoubleEndedIterator<Item = HeaderItem<'a>> + 'a> {
 		HeaderItemIter::new(self.owner)
 	}
 

@@ -216,8 +216,8 @@ impl<'a, T> ListViewItems<'a, T> {
 	///     .collect::<Vec<_>>();
 	/// ```
 	#[must_use]
-	pub fn iter(&self) -> impl Iterator<Item = ListViewItem<'a, T>> + 'a {
-		ListViewItemIter::new(self.owner, co::LVNI::ALL)
+	pub fn iter(&self) -> impl DoubleEndedIterator<Item = ListViewItem<'a, T>> + 'a {
+		ListViewItemIter::new(self.owner, false)
 	}
 
 	/// Returns an iterator over the selected items.
@@ -241,8 +241,8 @@ impl<'a, T> ListViewItems<'a, T> {
 	///     .collect::<Vec<_>>();
 	/// ```
 	#[must_use]
-	pub fn iter_selected(&self) -> impl Iterator<Item = ListViewItem<'a, T>> + 'a {
-		ListViewItemIter::new(self.owner, co::LVNI::ALL | co::LVNI::SELECTED)
+	pub fn iter_selected(&self) -> impl DoubleEndedIterator<Item = ListViewItem<'a, T>> + 'a {
+		ListViewItemIter::new(self.owner, true)
 	}
 
 	/// Retrieves the item of the unique ID by sending an

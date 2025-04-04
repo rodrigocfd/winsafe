@@ -39,7 +39,7 @@ impl<'a> StatusBarParts<'a> {
 
 	/// Returns an iterator over all parts.
 	#[must_use]
-	pub fn iter(&self) -> impl Iterator<Item = StatusBarPart<'a>> + 'a {
+	pub fn iter(&self) -> impl DoubleEndedIterator<Item = StatusBarPart<'a>> + 'a {
 		StatusBarPartIter::new(self.owner)
 	}
 

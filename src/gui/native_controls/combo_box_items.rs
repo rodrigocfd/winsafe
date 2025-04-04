@@ -84,7 +84,7 @@ impl<'a> ComboBoxItems<'a> {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	pub fn iter(&self) -> SysResult<impl Iterator<Item = SysResult<String>> + 'a> {
+	pub fn iter(&self) -> SysResult<impl DoubleEndedIterator<Item = SysResult<String>> + 'a> {
 		ComboBoxItemIter::new(self.owner)
 	}
 

@@ -60,7 +60,7 @@ impl<'a, T> ListViewCols<'a, T> {
 
 	/// Returns an iterator over all columns.
 	#[must_use]
-	pub fn iter(&self) -> SysResult<impl Iterator<Item = ListViewCol<'a, T>> + 'a> {
+	pub fn iter(&self) -> SysResult<impl DoubleEndedIterator<Item = ListViewCol<'a, T>> + 'a> {
 		ListViewColIter::new(self.owner)
 	}
 
