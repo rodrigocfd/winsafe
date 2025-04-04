@@ -10,11 +10,11 @@
 <a href=#10 id=10 data-nosnippet>10</a>/// message parameters.
 <a href=#11 id=11 data-nosnippet>11</a>///
 <a href=#12 id=12 data-nosnippet>12</a>/// Return type: `SysResult&lt;HIMAGELIST&gt;`.
-<a href=#13 id=13 data-nosnippet>13</a></span><span class="kw">pub struct </span>CreateDragImage {
-<a href=#14 id=14 data-nosnippet>14</a>	<span class="kw">pub </span>hitem: HTREEITEM,
+<a href=#13 id=13 data-nosnippet>13</a></span><span class="kw">pub struct </span>CreateDragImage&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#14 id=14 data-nosnippet>14</a>	<span class="kw">pub </span>hitem: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HTREEITEM,
 <a href=#15 id=15 data-nosnippet>15</a>}
 <a href=#16 id=16 data-nosnippet>16</a>
-<a href=#17 id=17 data-nosnippet>17</a><span class="kw">impl </span>MsgSend <span class="kw">for </span>CreateDragImage {
+<a href=#17 id=17 data-nosnippet>17</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>CreateDragImage&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#18 id=18 data-nosnippet>18</a>	<span class="kw">type </span>RetType = SysResult&lt;HIMAGELIST&gt;;
 <a href=#19 id=19 data-nosnippet>19</a>
 <a href=#20 id=20 data-nosnippet>20</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -25,7 +25,7 @@
 <a href=#25 id=25 data-nosnippet>25</a>		WndMsg {
 <a href=#26 id=26 data-nosnippet>26</a>			msg_id: co::TVM::CREATEDRAGIMAGE.into(),
 <a href=#27 id=27 data-nosnippet>27</a>			wparam: <span class="number">0</span>,
-<a href=#28 id=28 data-nosnippet>28</a>			lparam: <span class="self">self</span>.hitem.raw(),
+<a href=#28 id=28 data-nosnippet>28</a>			lparam: <span class="self">self</span>.hitem.ptr() <span class="kw">as _</span>,
 <a href=#29 id=29 data-nosnippet>29</a>		}
 <a href=#30 id=30 data-nosnippet>30</a>	}
 <a href=#31 id=31 data-nosnippet>31</a>}
@@ -34,11 +34,11 @@
 <a href=#34 id=34 data-nosnippet>34</a>/// message parameters.
 <a href=#35 id=35 data-nosnippet>35</a>///
 <a href=#36 id=36 data-nosnippet>36</a>/// Return type: `SysResult&lt;()&gt;`.
-<a href=#37 id=37 data-nosnippet>37</a></span><span class="kw">pub struct </span>DeleteItem {
-<a href=#38 id=38 data-nosnippet>38</a>	<span class="kw">pub </span>hitem: HTREEITEM,
+<a href=#37 id=37 data-nosnippet>37</a></span><span class="kw">pub struct </span>DeleteItem&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#38 id=38 data-nosnippet>38</a>	<span class="kw">pub </span>hitem: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HTREEITEM,
 <a href=#39 id=39 data-nosnippet>39</a>}
 <a href=#40 id=40 data-nosnippet>40</a>
-<a href=#41 id=41 data-nosnippet>41</a><span class="kw">impl </span>MsgSend <span class="kw">for </span>DeleteItem {
+<a href=#41 id=41 data-nosnippet>41</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>DeleteItem&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#42 id=42 data-nosnippet>42</a>	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 <a href=#43 id=43 data-nosnippet>43</a>
 <a href=#44 id=44 data-nosnippet>44</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -49,7 +49,7 @@
 <a href=#49 id=49 data-nosnippet>49</a>		WndMsg {
 <a href=#50 id=50 data-nosnippet>50</a>			msg_id: co::TVM::DELETEITEM.into(),
 <a href=#51 id=51 data-nosnippet>51</a>			wparam: <span class="number">0</span>,
-<a href=#52 id=52 data-nosnippet>52</a>			lparam: <span class="self">self</span>.hitem.raw(),
+<a href=#52 id=52 data-nosnippet>52</a>			lparam: <span class="self">self</span>.hitem.ptr() <span class="kw">as _</span>,
 <a href=#53 id=53 data-nosnippet>53</a>		}
 <a href=#54 id=54 data-nosnippet>54</a>	}
 <a href=#55 id=55 data-nosnippet>55</a>}
@@ -58,11 +58,11 @@
 <a href=#58 id=58 data-nosnippet>58</a>/// message parameters.
 <a href=#59 id=59 data-nosnippet>59</a>///
 <a href=#60 id=60 data-nosnippet>60</a>/// Return type: `SysResult&lt;HWND&gt;`.
-<a href=#61 id=61 data-nosnippet>61</a></span><span class="kw">pub struct </span>EditLabel {
-<a href=#62 id=62 data-nosnippet>62</a>	<span class="kw">pub </span>hitem: HTREEITEM,
+<a href=#61 id=61 data-nosnippet>61</a></span><span class="kw">pub struct </span>EditLabel&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#62 id=62 data-nosnippet>62</a>	<span class="kw">pub </span>hitem: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HTREEITEM,
 <a href=#63 id=63 data-nosnippet>63</a>}
 <a href=#64 id=64 data-nosnippet>64</a>
-<a href=#65 id=65 data-nosnippet>65</a><span class="kw">impl </span>MsgSend <span class="kw">for </span>EditLabel {
+<a href=#65 id=65 data-nosnippet>65</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>EditLabel&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#66 id=66 data-nosnippet>66</a>	<span class="kw">type </span>RetType = SysResult&lt;HWND&gt;;
 <a href=#67 id=67 data-nosnippet>67</a>
 <a href=#68 id=68 data-nosnippet>68</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -73,7 +73,7 @@
 <a href=#73 id=73 data-nosnippet>73</a>		WndMsg {
 <a href=#74 id=74 data-nosnippet>74</a>			msg_id: co::TVM::EDITLABEL.into(),
 <a href=#75 id=75 data-nosnippet>75</a>			wparam: <span class="number">0</span>,
-<a href=#76 id=76 data-nosnippet>76</a>			lparam: <span class="self">self</span>.hitem.raw(),
+<a href=#76 id=76 data-nosnippet>76</a>			lparam: <span class="self">self</span>.hitem.ptr() <span class="kw">as _</span>,
 <a href=#77 id=77 data-nosnippet>77</a>		}
 <a href=#78 id=78 data-nosnippet>78</a>	}
 <a href=#79 id=79 data-nosnippet>79</a>}
@@ -106,11 +106,11 @@
 <a href=#106 id=106 data-nosnippet>106</a>/// message parameters.
 <a href=#107 id=107 data-nosnippet>107</a>///
 <a href=#108 id=108 data-nosnippet>108</a>/// Return type: `u32`.
-<a href=#109 id=109 data-nosnippet>109</a></span><span class="kw">pub struct </span>EnsureVisible {
-<a href=#110 id=110 data-nosnippet>110</a>	<span class="kw">pub </span>hitem: HTREEITEM,
+<a href=#109 id=109 data-nosnippet>109</a></span><span class="kw">pub struct </span>EnsureVisible&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#110 id=110 data-nosnippet>110</a>	<span class="kw">pub </span>hitem: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HTREEITEM,
 <a href=#111 id=111 data-nosnippet>111</a>}
 <a href=#112 id=112 data-nosnippet>112</a>
-<a href=#113 id=113 data-nosnippet>113</a><span class="kw">impl </span>MsgSend <span class="kw">for </span>EnsureVisible {
+<a href=#113 id=113 data-nosnippet>113</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>EnsureVisible&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#114 id=114 data-nosnippet>114</a>	<span class="kw">type </span>RetType = u32;
 <a href=#115 id=115 data-nosnippet>115</a>
 <a href=#116 id=116 data-nosnippet>116</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -121,7 +121,7 @@
 <a href=#121 id=121 data-nosnippet>121</a>		WndMsg {
 <a href=#122 id=122 data-nosnippet>122</a>			msg_id: co::TVM::ENSUREVISIBLE.into(),
 <a href=#123 id=123 data-nosnippet>123</a>			wparam: <span class="number">0</span>,
-<a href=#124 id=124 data-nosnippet>124</a>			lparam: <span class="self">self</span>.hitem.raw(),
+<a href=#124 id=124 data-nosnippet>124</a>			lparam: <span class="self">self</span>.hitem.ptr() <span class="kw">as _</span>,
 <a href=#125 id=125 data-nosnippet>125</a>		}
 <a href=#126 id=126 data-nosnippet>126</a>	}
 <a href=#127 id=127 data-nosnippet>127</a>}
@@ -130,12 +130,12 @@
 <a href=#130 id=130 data-nosnippet>130</a>/// message parameters.
 <a href=#131 id=131 data-nosnippet>131</a>///
 <a href=#132 id=132 data-nosnippet>132</a>/// Return type: `SysResult&lt;()&gt;`.
-<a href=#133 id=133 data-nosnippet>133</a></span><span class="kw">pub struct </span>Expand {
+<a href=#133 id=133 data-nosnippet>133</a></span><span class="kw">pub struct </span>Expand&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#134 id=134 data-nosnippet>134</a>	<span class="kw">pub </span>action: co::TVE,
-<a href=#135 id=135 data-nosnippet>135</a>	<span class="kw">pub </span>hitem: HTREEITEM,
+<a href=#135 id=135 data-nosnippet>135</a>	<span class="kw">pub </span>hitem: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HTREEITEM,
 <a href=#136 id=136 data-nosnippet>136</a>}
 <a href=#137 id=137 data-nosnippet>137</a>
-<a href=#138 id=138 data-nosnippet>138</a><span class="kw">impl </span>MsgSend <span class="kw">for </span>Expand {
+<a href=#138 id=138 data-nosnippet>138</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>Expand&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#139 id=139 data-nosnippet>139</a>	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 <a href=#140 id=140 data-nosnippet>140</a>
 <a href=#141 id=141 data-nosnippet>141</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -146,7 +146,7 @@
 <a href=#146 id=146 data-nosnippet>146</a>		WndMsg {
 <a href=#147 id=147 data-nosnippet>147</a>			msg_id: co::TVM::EXPAND.into(),
 <a href=#148 id=148 data-nosnippet>148</a>			wparam: <span class="self">self</span>.action.raw() <span class="kw">as _</span>,
-<a href=#149 id=149 data-nosnippet>149</a>			lparam: <span class="self">self</span>.hitem.raw(),
+<a href=#149 id=149 data-nosnippet>149</a>			lparam: <span class="self">self</span>.hitem.ptr() <span class="kw">as _</span>,
 <a href=#150 id=150 data-nosnippet>150</a>		}
 <a href=#151 id=151 data-nosnippet>151</a>	}
 <a href=#152 id=152 data-nosnippet>152</a>}
@@ -406,12 +406,12 @@
 <a href=#406 id=406 data-nosnippet>406</a>/// message parameters.
 <a href=#407 id=407 data-nosnippet>407</a>///
 <a href=#408 id=408 data-nosnippet>408</a>/// Return type: `co::TVIS`.
-<a href=#409 id=409 data-nosnippet>409</a></span><span class="kw">pub struct </span>GetItemState {
-<a href=#410 id=410 data-nosnippet>410</a>	<span class="kw">pub </span>hitem: HTREEITEM,
+<a href=#409 id=409 data-nosnippet>409</a></span><span class="kw">pub struct </span>GetItemState&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#410 id=410 data-nosnippet>410</a>	<span class="kw">pub </span>hitem: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HTREEITEM,
 <a href=#411 id=411 data-nosnippet>411</a>	<span class="kw">pub </span>mask: co::TVIS,
 <a href=#412 id=412 data-nosnippet>412</a>}
 <a href=#413 id=413 data-nosnippet>413</a>
-<a href=#414 id=414 data-nosnippet>414</a><span class="kw">impl </span>MsgSend <span class="kw">for </span>GetItemState {
+<a href=#414 id=414 data-nosnippet>414</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetItemState&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#415 id=415 data-nosnippet>415</a>	<span class="kw">type </span>RetType = co::TVIS;
 <a href=#416 id=416 data-nosnippet>416</a>
 <a href=#417 id=417 data-nosnippet>417</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -421,7 +421,7 @@
 <a href=#421 id=421 data-nosnippet>421</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
 <a href=#422 id=422 data-nosnippet>422</a>		WndMsg {
 <a href=#423 id=423 data-nosnippet>423</a>			msg_id: co::TVM::GETITEMSTATE.into(),
-<a href=#424 id=424 data-nosnippet>424</a>			wparam: <span class="self">self</span>.hitem.raw() <span class="kw">as _</span>,
+<a href=#424 id=424 data-nosnippet>424</a>			wparam: <span class="self">self</span>.hitem.ptr() <span class="kw">as _</span>,
 <a href=#425 id=425 data-nosnippet>425</a>			lparam: <span class="self">self</span>.mask.raw() <span class="kw">as _</span>,
 <a href=#426 id=426 data-nosnippet>426</a>		}
 <a href=#427 id=427 data-nosnippet>427</a>	}
@@ -456,23 +456,23 @@
 <a href=#456 id=456 data-nosnippet>456</a>/// message parameters.
 <a href=#457 id=457 data-nosnippet>457</a>///
 <a href=#458 id=458 data-nosnippet>458</a>/// Return type: `Option&lt;HTREEITEM&gt;`.
-<a href=#459 id=459 data-nosnippet>459</a></span><span class="kw">pub struct </span>GetNextItem {
+<a href=#459 id=459 data-nosnippet>459</a></span><span class="kw">pub struct </span>GetNextItem&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#460 id=460 data-nosnippet>460</a>	<span class="kw">pub </span>relationship: co::TVGN,
-<a href=#461 id=461 data-nosnippet>461</a>	<span class="kw">pub </span>hitem: <span class="prelude-ty">Option</span>&lt;HTREEITEM&gt;,
+<a href=#461 id=461 data-nosnippet>461</a>	<span class="kw">pub </span>hitem: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>HTREEITEM&gt;,
 <a href=#462 id=462 data-nosnippet>462</a>}
 <a href=#463 id=463 data-nosnippet>463</a>
-<a href=#464 id=464 data-nosnippet>464</a><span class="kw">impl </span>MsgSend <span class="kw">for </span>GetNextItem {
+<a href=#464 id=464 data-nosnippet>464</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>GetNextItem&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#465 id=465 data-nosnippet>465</a>	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HTREEITEM&gt;;
 <a href=#466 id=466 data-nosnippet>466</a>
 <a href=#467 id=467 data-nosnippet>467</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#468 id=468 data-nosnippet>468</a>		zero_as_none(v).map(|p| HTREEITEM::from_raw(p))
+<a href=#468 id=468 data-nosnippet>468</a>		zero_as_none(v).map(|p| HTREEITEM::from_ptr(p <span class="kw">as _</span>))
 <a href=#469 id=469 data-nosnippet>469</a>	}
 <a href=#470 id=470 data-nosnippet>470</a>
 <a href=#471 id=471 data-nosnippet>471</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
 <a href=#472 id=472 data-nosnippet>472</a>		WndMsg {
 <a href=#473 id=473 data-nosnippet>473</a>			msg_id: co::TVM::GETNEXTITEM.into(),
 <a href=#474 id=474 data-nosnippet>474</a>			wparam: <span class="self">self</span>.relationship.raw() <span class="kw">as _</span>,
-<a href=#475 id=475 data-nosnippet>475</a>			lparam: <span class="self">self</span>.hitem.map_or(<span class="number">0</span>, |h| h.raw()),
+<a href=#475 id=475 data-nosnippet>475</a>			lparam: <span class="self">self</span>.hitem.map_or(<span class="number">0</span>, |h| h.ptr() <span class="kw">as _</span>),
 <a href=#476 id=476 data-nosnippet>476</a>		}
 <a href=#477 id=477 data-nosnippet>477</a>	}
 <a href=#478 id=478 data-nosnippet>478</a>}
@@ -599,7 +599,7 @@
 <a href=#599 id=599 data-nosnippet>599</a>	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HTREEITEM&gt;;
 <a href=#600 id=600 data-nosnippet>600</a>
 <a href=#601 id=601 data-nosnippet>601</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#602 id=602 data-nosnippet>602</a>		zero_as_none(v).map(|p| HTREEITEM::from_raw(p))
+<a href=#602 id=602 data-nosnippet>602</a>		zero_as_none(v).map(|p| HTREEITEM::from_ptr(p <span class="kw">as _</span>))
 <a href=#603 id=603 data-nosnippet>603</a>	}
 <a href=#604 id=604 data-nosnippet>604</a>
 <a href=#605 id=605 data-nosnippet>605</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -623,7 +623,7 @@
 <a href=#623 id=623 data-nosnippet>623</a>	<span class="kw">type </span>RetType = SysResult&lt;HTREEITEM&gt;;
 <a href=#624 id=624 data-nosnippet>624</a>
 <a href=#625 id=625 data-nosnippet>625</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#626 id=626 data-nosnippet>626</a>		zero_as_badargs(v).map(|p| HTREEITEM::from_raw(p))
+<a href=#626 id=626 data-nosnippet>626</a>		zero_as_badargs(v).map(|p| HTREEITEM::from_ptr(p <span class="kw">as _</span>))
 <a href=#627 id=627 data-nosnippet>627</a>	}
 <a href=#628 id=628 data-nosnippet>628</a>
 <a href=#629 id=629 data-nosnippet>629</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -647,7 +647,7 @@
 <a href=#647 id=647 data-nosnippet>647</a>	<span class="kw">type </span>RetType = SysResult&lt;HTREEITEM&gt;;
 <a href=#648 id=648 data-nosnippet>648</a>
 <a href=#649 id=649 data-nosnippet>649</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#650 id=650 data-nosnippet>650</a>		zero_as_badargs(v).map(|p| HTREEITEM::from_raw(p))
+<a href=#650 id=650 data-nosnippet>650</a>		zero_as_badargs(v).map(|p| HTREEITEM::from_ptr(p <span class="kw">as _</span>))
 <a href=#651 id=651 data-nosnippet>651</a>	}
 <a href=#652 id=652 data-nosnippet>652</a>
 <a href=#653 id=653 data-nosnippet>653</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -663,11 +663,11 @@
 <a href=#663 id=663 data-nosnippet>663</a>/// message parameters.
 <a href=#664 id=664 data-nosnippet>664</a>///
 <a href=#665 id=665 data-nosnippet>665</a>/// Return type: `u32`.
-<a href=#666 id=666 data-nosnippet>666</a></span><span class="kw">pub struct </span>MapHtreeitemToAccId {
-<a href=#667 id=667 data-nosnippet>667</a>	<span class="kw">pub </span>hitem: HTREEITEM,
+<a href=#666 id=666 data-nosnippet>666</a></span><span class="kw">pub struct </span>MapHtreeitemToAccId&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#667 id=667 data-nosnippet>667</a>	<span class="kw">pub </span>hitem: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HTREEITEM,
 <a href=#668 id=668 data-nosnippet>668</a>}
 <a href=#669 id=669 data-nosnippet>669</a>
-<a href=#670 id=670 data-nosnippet>670</a><span class="kw">impl </span>MsgSend <span class="kw">for </span>MapHtreeitemToAccId {
+<a href=#670 id=670 data-nosnippet>670</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>MapHtreeitemToAccId&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#671 id=671 data-nosnippet>671</a>	<span class="kw">type </span>RetType = u32;
 <a href=#672 id=672 data-nosnippet>672</a>
 <a href=#673 id=673 data-nosnippet>673</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -677,7 +677,7 @@
 <a href=#677 id=677 data-nosnippet>677</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
 <a href=#678 id=678 data-nosnippet>678</a>		WndMsg {
 <a href=#679 id=679 data-nosnippet>679</a>			msg_id: co::TVM::MAPHTREEITEMTOACCID.into(),
-<a href=#680 id=680 data-nosnippet>680</a>			wparam: <span class="self">self</span>.hitem.raw() <span class="kw">as _</span>,
+<a href=#680 id=680 data-nosnippet>680</a>			wparam: <span class="self">self</span>.hitem.ptr() <span class="kw">as _</span>,
 <a href=#681 id=681 data-nosnippet>681</a>			lparam: <span class="number">0</span>,
 <a href=#682 id=682 data-nosnippet>682</a>		}
 <a href=#683 id=683 data-nosnippet>683</a>	}
@@ -687,12 +687,12 @@
 <a href=#687 id=687 data-nosnippet>687</a>/// message parameters.
 <a href=#688 id=688 data-nosnippet>688</a>///
 <a href=#689 id=689 data-nosnippet>689</a>/// Return type: `SysResult&lt;()&gt;`.
-<a href=#690 id=690 data-nosnippet>690</a></span><span class="kw">pub struct </span>SelectItem {
+<a href=#690 id=690 data-nosnippet>690</a></span><span class="kw">pub struct </span>SelectItem&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#691 id=691 data-nosnippet>691</a>	<span class="kw">pub </span>action: co::TVGN,
-<a href=#692 id=692 data-nosnippet>692</a>	<span class="kw">pub </span>hitem: HTREEITEM,
+<a href=#692 id=692 data-nosnippet>692</a>	<span class="kw">pub </span>hitem: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HTREEITEM,
 <a href=#693 id=693 data-nosnippet>693</a>}
 <a href=#694 id=694 data-nosnippet>694</a>
-<a href=#695 id=695 data-nosnippet>695</a><span class="kw">impl </span>MsgSend <span class="kw">for </span>SelectItem {
+<a href=#695 id=695 data-nosnippet>695</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SelectItem&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#696 id=696 data-nosnippet>696</a>	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 <a href=#697 id=697 data-nosnippet>697</a>
 <a href=#698 id=698 data-nosnippet>698</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -703,7 +703,7 @@
 <a href=#703 id=703 data-nosnippet>703</a>		WndMsg {
 <a href=#704 id=704 data-nosnippet>704</a>			msg_id: co::TVM::SELECTITEM.into(),
 <a href=#705 id=705 data-nosnippet>705</a>			wparam: <span class="self">self</span>.action.raw() <span class="kw">as _</span>,
-<a href=#706 id=706 data-nosnippet>706</a>			lparam: <span class="self">self</span>.hitem.raw(),
+<a href=#706 id=706 data-nosnippet>706</a>			lparam: <span class="self">self</span>.hitem.ptr() <span class="kw">as _</span>,
 <a href=#707 id=707 data-nosnippet>707</a>		}
 <a href=#708 id=708 data-nosnippet>708</a>	}
 <a href=#709 id=709 data-nosnippet>709</a>}
@@ -815,11 +815,11 @@
 <a href=#815 id=815 data-nosnippet>815</a>/// message parameters.
 <a href=#816 id=816 data-nosnippet>816</a>///
 <a href=#817 id=817 data-nosnippet>817</a>/// Return type: `SysResult&lt;()&gt;`.
-<a href=#818 id=818 data-nosnippet>818</a></span><span class="kw">pub struct </span>SetHot {
-<a href=#819 id=819 data-nosnippet>819</a>	<span class="kw">pub </span>hitem: <span class="prelude-ty">Option</span>&lt;HTREEITEM&gt;,
+<a href=#818 id=818 data-nosnippet>818</a></span><span class="kw">pub struct </span>SetHot&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#819 id=819 data-nosnippet>819</a>	<span class="kw">pub </span>hitem: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span>HTREEITEM&gt;,
 <a href=#820 id=820 data-nosnippet>820</a>}
 <a href=#821 id=821 data-nosnippet>821</a>
-<a href=#822 id=822 data-nosnippet>822</a><span class="kw">impl </span>MsgSend <span class="kw">for </span>SetHot {
+<a href=#822 id=822 data-nosnippet>822</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetHot&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#823 id=823 data-nosnippet>823</a>	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 <a href=#824 id=824 data-nosnippet>824</a>
 <a href=#825 id=825 data-nosnippet>825</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -830,7 +830,7 @@
 <a href=#830 id=830 data-nosnippet>830</a>		WndMsg {
 <a href=#831 id=831 data-nosnippet>831</a>			msg_id: co::TVM::SETHOT.into(),
 <a href=#832 id=832 data-nosnippet>832</a>			wparam: <span class="number">0</span>,
-<a href=#833 id=833 data-nosnippet>833</a>			lparam: <span class="self">self</span>.hitem.map_or(<span class="number">0</span>, |h| h.raw()),
+<a href=#833 id=833 data-nosnippet>833</a>			lparam: <span class="self">self</span>.hitem.map_or(<span class="number">0</span>, |h| h.ptr() <span class="kw">as _</span>),
 <a href=#834 id=834 data-nosnippet>834</a>		}
 <a href=#835 id=835 data-nosnippet>835</a>	}
 <a href=#836 id=836 data-nosnippet>836</a>}
@@ -888,12 +888,12 @@
 <a href=#888 id=888 data-nosnippet>888</a>/// message parameters.
 <a href=#889 id=889 data-nosnippet>889</a>///
 <a href=#890 id=890 data-nosnippet>890</a>/// Return type: `SysResult&lt;()&gt;`.
-<a href=#891 id=891 data-nosnippet>891</a></span><span class="kw">pub struct </span>SetInsertMark {
+<a href=#891 id=891 data-nosnippet>891</a></span><span class="kw">pub struct </span>SetInsertMark&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#892 id=892 data-nosnippet>892</a>	<span class="kw">pub </span>insert_after: bool,
-<a href=#893 id=893 data-nosnippet>893</a>	<span class="kw">pub </span>hitem: HTREEITEM,
+<a href=#893 id=893 data-nosnippet>893</a>	<span class="kw">pub </span>hitem: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HTREEITEM,
 <a href=#894 id=894 data-nosnippet>894</a>}
 <a href=#895 id=895 data-nosnippet>895</a>
-<a href=#896 id=896 data-nosnippet>896</a><span class="kw">impl </span>MsgSend <span class="kw">for </span>SetInsertMark {
+<a href=#896 id=896 data-nosnippet>896</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>SetInsertMark&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#897 id=897 data-nosnippet>897</a>	<span class="kw">type </span>RetType = SysResult&lt;()&gt;;
 <a href=#898 id=898 data-nosnippet>898</a>
 <a href=#899 id=899 data-nosnippet>899</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -904,7 +904,7 @@
 <a href=#904 id=904 data-nosnippet>904</a>		WndMsg {
 <a href=#905 id=905 data-nosnippet>905</a>			msg_id: co::TVM::SETINSERTMARK.into(),
 <a href=#906 id=906 data-nosnippet>906</a>			wparam: <span class="self">self</span>.insert_after <span class="kw">as _</span>,
-<a href=#907 id=907 data-nosnippet>907</a>			lparam: <span class="self">self</span>.hitem.raw(),
+<a href=#907 id=907 data-nosnippet>907</a>			lparam: <span class="self">self</span>.hitem.ptr() <span class="kw">as _</span>,
 <a href=#908 id=908 data-nosnippet>908</a>		}
 <a href=#909 id=909 data-nosnippet>909</a>	}
 <a href=#910 id=910 data-nosnippet>910</a>}
@@ -1108,11 +1108,11 @@
 <a href=#1108 id=1108 data-nosnippet>1108</a>/// message parameters.
 <a href=#1109 id=1109 data-nosnippet>1109</a>///
 <a href=#1110 id=1110 data-nosnippet>1110</a>/// Return type: `()`.
-<a href=#1111 id=1111 data-nosnippet>1111</a></span><span class="kw">pub struct </span>ShowInfoTip {
-<a href=#1112 id=1112 data-nosnippet>1112</a>	<span class="kw">pub </span>hitem: HTREEITEM,
+<a href=#1111 id=1111 data-nosnippet>1111</a></span><span class="kw">pub struct </span>ShowInfoTip&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#1112 id=1112 data-nosnippet>1112</a>	<span class="kw">pub </span>hitem: <span class="kw-2">&amp;</span><span class="lifetime">'a </span>HTREEITEM,
 <a href=#1113 id=1113 data-nosnippet>1113</a>}
 <a href=#1114 id=1114 data-nosnippet>1114</a>
-<a href=#1115 id=1115 data-nosnippet>1115</a><span class="kw">impl </span>MsgSend <span class="kw">for </span>ShowInfoTip {
+<a href=#1115 id=1115 data-nosnippet>1115</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; MsgSend <span class="kw">for </span>ShowInfoTip&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#1116 id=1116 data-nosnippet>1116</a>	<span class="kw">type </span>RetType = ();
 <a href=#1117 id=1117 data-nosnippet>1117</a>
 <a href=#1118 id=1118 data-nosnippet>1118</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="kw">_</span>: isize) -&gt; <span class="self">Self</span>::RetType {
@@ -1123,7 +1123,7 @@
 <a href=#1123 id=1123 data-nosnippet>1123</a>		WndMsg {
 <a href=#1124 id=1124 data-nosnippet>1124</a>			msg_id: co::TVM::SHOWINFOTIP.into(),
 <a href=#1125 id=1125 data-nosnippet>1125</a>			wparam: <span class="number">0</span>,
-<a href=#1126 id=1126 data-nosnippet>1126</a>			lparam: <span class="self">self</span>.hitem.raw(),
+<a href=#1126 id=1126 data-nosnippet>1126</a>			lparam: <span class="self">self</span>.hitem.ptr() <span class="kw">as _</span>,
 <a href=#1127 id=1127 data-nosnippet>1127</a>		}
 <a href=#1128 id=1128 data-nosnippet>1128</a>	}
 <a href=#1129 id=1129 data-nosnippet>1129</a>}

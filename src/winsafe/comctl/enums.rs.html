@@ -275,20 +275,22 @@
 <a href=#275 id=275 data-nosnippet>275</a><span class="kw">impl </span>From&lt;TreeitemTvi&gt; <span class="kw">for </span>isize {
 <a href=#276 id=276 data-nosnippet>276</a>	<span class="kw">fn </span>from(v: TreeitemTvi) -&gt; <span class="self">Self </span>{
 <a href=#277 id=277 data-nosnippet>277</a>		<span class="kw">match </span>v {
-<a href=#278 id=278 data-nosnippet>278</a>			TreeitemTvi::Treeitem(htreeitem) =&gt; htreeitem.raw(),
+<a href=#278 id=278 data-nosnippet>278</a>			TreeitemTvi::Treeitem(htreeitem) =&gt; htreeitem.ptr() <span class="kw">as _</span>,
 <a href=#279 id=279 data-nosnippet>279</a>			TreeitemTvi::Tvi(tvi) =&gt; tvi.raw(),
 <a href=#280 id=280 data-nosnippet>280</a>		}
 <a href=#281 id=281 data-nosnippet>281</a>	}
 <a href=#282 id=282 data-nosnippet>282</a>}
 <a href=#283 id=283 data-nosnippet>283</a>
-<a href=#284 id=284 data-nosnippet>284</a><span class="kw">impl </span>From&lt;isize&gt; <span class="kw">for </span>TreeitemTvi {
-<a href=#285 id=285 data-nosnippet>285</a>	<span class="kw">fn </span>from(v: isize) -&gt; <span class="self">Self </span>{
-<a href=#286 id=286 data-nosnippet>286</a>		<span class="kw">match unsafe </span>{ co::TVI::from_raw(v) } {
-<a href=#287 id=287 data-nosnippet>287</a>			co::TVI::FIRST =&gt; <span class="self">Self</span>::Tvi(co::TVI::FIRST),
-<a href=#288 id=288 data-nosnippet>288</a>			co::TVI::LAST =&gt; <span class="self">Self</span>::Tvi(co::TVI::LAST),
-<a href=#289 id=289 data-nosnippet>289</a>			co::TVI::ROOT =&gt; <span class="self">Self</span>::Tvi(co::TVI::ROOT),
-<a href=#290 id=290 data-nosnippet>290</a>			co::TVI::SORT =&gt; <span class="self">Self</span>::Tvi(co::TVI::SORT),
-<a href=#291 id=291 data-nosnippet>291</a>			val =&gt; <span class="self">Self</span>::Treeitem(<span class="kw">unsafe </span>{ HTREEITEM::from_raw(val.raw()) }),
-<a href=#292 id=292 data-nosnippet>292</a>		}
-<a href=#293 id=293 data-nosnippet>293</a>	}
-<a href=#294 id=294 data-nosnippet>294</a>}</code></pre></div></section></main></body></html>
+<a href=#284 id=284 data-nosnippet>284</a><span class="kw">impl </span>TreeitemTvi {
+<a href=#285 id=285 data-nosnippet>285</a>	<span class="doccomment">/// Constructs the enum from an `isize`.
+<a href=#286 id=286 data-nosnippet>286</a>	</span><span class="attr">#[must_use]
+<a href=#287 id=287 data-nosnippet>287</a>	</span><span class="kw">pub fn </span>from_isize(val: isize) -&gt; <span class="self">Self </span>{
+<a href=#288 id=288 data-nosnippet>288</a>		<span class="kw">match unsafe </span>{ co::TVI::from_raw(val) } {
+<a href=#289 id=289 data-nosnippet>289</a>			co::TVI::FIRST =&gt; <span class="self">Self</span>::Tvi(co::TVI::FIRST),
+<a href=#290 id=290 data-nosnippet>290</a>			co::TVI::LAST =&gt; <span class="self">Self</span>::Tvi(co::TVI::LAST),
+<a href=#291 id=291 data-nosnippet>291</a>			co::TVI::ROOT =&gt; <span class="self">Self</span>::Tvi(co::TVI::ROOT),
+<a href=#292 id=292 data-nosnippet>292</a>			co::TVI::SORT =&gt; <span class="self">Self</span>::Tvi(co::TVI::SORT),
+<a href=#293 id=293 data-nosnippet>293</a>			val =&gt; <span class="self">Self</span>::Treeitem(<span class="kw">unsafe </span>{ HTREEITEM::from_ptr(val.raw() <span class="kw">as _</span>) }),
+<a href=#294 id=294 data-nosnippet>294</a>		}
+<a href=#295 id=295 data-nosnippet>295</a>	}
+<a href=#296 id=296 data-nosnippet>296</a>}</code></pre></div></section></main></body></html>

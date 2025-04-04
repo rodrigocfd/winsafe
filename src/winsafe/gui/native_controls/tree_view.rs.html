@@ -118,7 +118,7 @@
 <a href=#118 id=118 data-nosnippet>118</a>				<span class="kw">let </span>nmtv = <span class="kw">unsafe </span>{ p.cast_nmhdr::&lt;NMTREEVIEW&gt;() };
 <a href=#119 id=119 data-nosnippet>119</a>				self2
 <a href=#120 id=120 data-nosnippet>120</a>					.items()
-<a href=#121 id=121 data-nosnippet>121</a>					.get(nmtv.itemOld.hItem)
+<a href=#121 id=121 data-nosnippet>121</a>					.get(<span class="kw-2">&amp;</span>nmtv.itemOld.hItem)
 <a href=#122 id=122 data-nosnippet>122</a>					.data_lparam()<span class="question-mark">?
 <a href=#123 id=123 data-nosnippet>123</a>					</span>.map(|pdata| {
 <a href=#124 id=124 data-nosnippet>124</a>						<span class="kw">let _ </span>= <span class="kw">unsafe </span>{ Rc::from_raw(pdata) }; <span class="comment">// free allocated LPARAM, if any
@@ -141,7 +141,7 @@
 <a href=#141 id=141 data-nosnippet>141</a>
 <a href=#142 id=142 data-nosnippet>142</a>	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>raw_insert_item(
 <a href=#143 id=143 data-nosnippet>143</a>		<span class="kw-2">&amp;</span><span class="self">self</span>,
-<a href=#144 id=144 data-nosnippet>144</a>		hparent: <span class="prelude-ty">Option</span>&lt;HTREEITEM&gt;,
+<a href=#144 id=144 data-nosnippet>144</a>		hparent: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>HTREEITEM&gt;,
 <a href=#145 id=145 data-nosnippet>145</a>		text: <span class="kw-2">&amp;</span>str,
 <a href=#146 id=146 data-nosnippet>146</a>		icon_index: <span class="prelude-ty">Option</span>&lt;u32&gt;,
 <a href=#147 id=147 data-nosnippet>147</a>		data: T,
@@ -166,7 +166,7 @@
 <a href=#166 id=166 data-nosnippet>166</a>
 <a href=#167 id=167 data-nosnippet>167</a>		<span class="kw">let </span><span class="kw-2">mut </span>tvis = TVINSERTSTRUCT::default();
 <a href=#168 id=168 data-nosnippet>168</a>		<span class="kw">if let </span><span class="prelude-val">Some</span>(hparent) = hparent {
-<a href=#169 id=169 data-nosnippet>169</a>			tvis.hParent = hparent;
+<a href=#169 id=169 data-nosnippet>169</a>			tvis.hParent = <span class="kw">unsafe </span>{ hparent.raw_copy() };
 <a href=#170 id=170 data-nosnippet>170</a>		}
 <a href=#171 id=171 data-nosnippet>171</a>
 <a href=#172 id=172 data-nosnippet>172</a>		tvis.set_hInsertAfter(TreeitemTvi::Tvi(co::TVI::LAST));
