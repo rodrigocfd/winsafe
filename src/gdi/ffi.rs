@@ -10,6 +10,7 @@ extern_sys! { "gdi32";
 	CancelDC(HANDLE) -> BOOL
 	Chord(HANDLE, i32, i32, i32, i32, i32, i32, i32, i32) -> BOOL
 	CloseFigure(HANDLE) -> BOOL
+	CombineRgn(HANDLE, HANDLE, HANDLE, i32) -> i32
 	CreateBitmap(i32, i32, u32, u32, PVOID) -> HANDLE
 	CreateBrushIndirect(PCVOID) -> HANDLE
 	CreateCompatibleBitmap(HANDLE, i32, i32) -> HANDLE

@@ -209,52 +209,14 @@ pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: wm::NcPaint) ->
 
 	let hdc = hwnd.GetWindowDC()?;
 
+	// The HRGN which comes in WM_NCPAINT seems to be invalid, so we carve our own.
+	let hrgn_hole = HRGN::CreateRectRgnIndirect(InflateRect(rc, -2, -2)?)?;
+	let hrgn_clip = HRGN::CreateRectRgnIndirect(rc)?;
+	hrgn_clip.CombineRgn(&hrgn_clip, &hrgn_hole, co::RGN::DIFF)?;
+	hdc.SelectClipRgn(&hrgn_clip)?;
+
 	if let Some(htheme) = hwnd.OpenThemeData("EDIT") {
-		// Draw only the borders to avoid flickering.
-		htheme.DrawThemeBackground(
-			&hdc,
-			co::VS::EDIT_EDITTEXT_NORMAL,
-			rc,
-			Some(RECT {
-				left: rc.left,
-				top: rc.top,
-				right: rc.left + 2,
-				bottom: rc.bottom,
-			}),
-		)?;
-		htheme.DrawThemeBackground(
-			&hdc,
-			co::VS::EDIT_EDITTEXT_NORMAL,
-			rc,
-			Some(RECT {
-				left: rc.left,
-				top: rc.top,
-				right: rc.right,
-				bottom: rc.top + 2,
-			}),
-		)?;
-		htheme.DrawThemeBackground(
-			&hdc,
-			co::VS::EDIT_EDITTEXT_NORMAL,
-			rc,
-			Some(RECT {
-				left: rc.right - 2,
-				top: rc.top,
-				right: rc.right,
-				bottom: rc.bottom,
-			}),
-		)?;
-		htheme.DrawThemeBackground(
-			&hdc,
-			co::VS::EDIT_EDITTEXT_NORMAL,
-			rc,
-			Some(RECT {
-				left: rc.left,
-				top: rc.bottom - 2,
-				right: rc.right,
-				bottom: rc.bottom,
-			}),
-		)?;
+		htheme.DrawThemeBackground(&hdc, co::VS::EDIT_EDITTEXT_NORMAL, rc, None)?;
 	}
 
 	Ok(())

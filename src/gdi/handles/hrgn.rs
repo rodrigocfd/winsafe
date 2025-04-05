@@ -61,6 +61,15 @@ pub trait gdi_Hrgn: Handle {
 		}
 	}
 
+	/// [`CombineRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-combinergn)
+	/// function.
+	fn CombineRgn(&self, src1: &HRGN, src2: &HRGN, mode: co::RGN) -> SysResult<co::REGION> {
+		match unsafe { ffi::CombineRgn(self.ptr(), src1.ptr(), src2.ptr(), mode.raw()) } {
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			ret => Ok(unsafe { co::REGION::from_raw(ret) }),
+		}
+	}
+
 	/// [`EqualRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-equalrgn)
 	/// function.
 	#[must_use]
@@ -72,7 +81,7 @@ pub trait gdi_Hrgn: Handle {
 	/// function.
 	fn OffsetClipRgn(&self, x: i32, y: i32) -> SysResult<co::REGION> {
 		match unsafe { ffi::OffsetClipRgn(self.ptr(), x, y) } {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			ret => Ok(unsafe { co::REGION::from_raw(ret) }),
 		}
 	}
@@ -81,7 +90,7 @@ pub trait gdi_Hrgn: Handle {
 	/// function.
 	fn OffsetRgn(&self, x: i32, y: i32) -> SysResult<co::REGION> {
 		match unsafe { ffi::OffsetRgn(self.ptr(), x, y) } {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::BAD_ARGUMENTS),
 			ret => Ok(unsafe { co::REGION::from_raw(ret) }),
 		}
 	}

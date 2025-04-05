@@ -672,7 +672,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn SelectClipRgn(&self, rgn: &HRGN) -> SysResult<co::REGION> {
 		match unsafe { ffi::SelectClipRgn(self.ptr(), rgn.ptr()) } {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::INVALID_PARAMETER),
 			v => Ok(unsafe { co::REGION::from_raw(v) }),
 		}
 	}
