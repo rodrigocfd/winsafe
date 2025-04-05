@@ -63,6 +63,28 @@ pub trait gdi_Hrgn: Handle {
 
 	/// [`CombineRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-combinergn)
 	/// function.
+	///
+	/// # Examples
+	///
+	/// Creating a clipping region with a square hole in it:
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, co};
+	///
+	/// let hdc: w::HDC; // initialized somewhere
+	/// # let hdc = w::HDC::NULL;
+	///
+	/// let rc_hole = w::RECT { left: 0, top: 0, right: 100, bottom: 100 };
+	/// let hrgn_hole = w::HRGN::CreateRectRgnIndirect(rc_hole)?;
+	///
+	/// let hrgn_clip = w::HRGN::CreateRectRgnIndirect(
+	///     w::InflateRect(rc_hole, 10, 10)?,
+	/// )?;
+	/// hrgn_clip.CombineRgn(&hrgn_clip, &hrgn_hole, co::RGN::DIFF)?;
+	///
+	/// hdc.SelectClipRgn(&hrgn_clip)?;
+	/// # w::SysResult::Ok(())
+	/// ```
 	fn CombineRgn(&self, src1: &HRGN, src2: &HRGN, mode: co::RGN) -> SysResult<co::REGION> {
 		match unsafe { ffi::CombineRgn(self.ptr(), src1.ptr(), src2.ptr(), mode.raw()) } {
 			0 => Err(co::ERROR::BAD_ARGUMENTS),
