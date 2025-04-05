@@ -24,10 +24,16 @@ pub trait SystemError: Into<u32> {
 				None,
 			)
 		} {
-			Err(err_fmt) => format!(
-				"FormatMessage failed to format error {:#06x}: error {:#06x}.", // never fails, returns a message instead
-				err_code, err_fmt,
-			),
+			// This function never fails, return an informational text about the formatting error.
+			Err(e) => match e {
+				co::ERROR::MR_MID_NOT_FOUND => {
+					"(The system cannot format this message error.)".to_owned()
+				},
+				e => format!(
+					"The system failed to format error {:#06x} with error {:#06x}.",
+					err_code, e
+				),
+			},
 			Ok(s) => s,
 		}
 	}
