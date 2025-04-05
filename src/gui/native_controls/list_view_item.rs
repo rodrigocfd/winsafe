@@ -46,6 +46,30 @@ impl<'a, T> ListViewItem<'a, T> {
 	/// declared as `ListView<()>`.
 	///
 	/// Panics if the item index is invalid.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, gui};
+	///
+	/// struct Person {
+	///     name: String,
+	///     age: u32,
+	/// }
+	///
+	/// let my_list: gui::ListView<Person>; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_list = gui::ListView::<Person>::new(&wnd, gui::ListViewOpts::default());
+	///
+	/// // Create item with data.
+	/// let person = Person { name: "".to_owned(), age: 50 };
+	/// my_list.items().add(&["foo"], None, person)?;
+	///
+	/// // Retrieve and modify item data.
+	/// let rc_person = my_list.items().get(0).data()?;
+	/// rc_person.try_borrow_mut()?.age = 60;
+	/// # w::AnyResult::Ok(())
+	/// ```
 	#[must_use]
 	pub fn data(&self) -> SysResult<Rc<RefCell<T>>> {
 		if TypeId::of::<T>() == TypeId::of::<()>() {
