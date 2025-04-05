@@ -61,6 +61,13 @@ pub trait gdi_Hrgn: Handle {
 		}
 	}
 
+	/// [`EqualRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-equalrgn)
+	/// function.
+	#[must_use]
+	fn EqualRgn(&self, other: &HRGN) -> bool {
+		unsafe { ffi::EqualRgn(self.ptr(), other.ptr()) != 0 }
+	}
+
 	/// [`OffsetClipRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-offsetcliprgn)
 	/// function.
 	fn OffsetClipRgn(&self, x: i32, y: i32) -> SysResult<co::REGION> {

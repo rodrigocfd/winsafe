@@ -207,6 +207,15 @@ pub trait gdi_Hdc: user_Hdc {
 		bool_to_sysresult(unsafe { ffi::EndPath(self.ptr()) })
 	}
 
+	/// [`ExcludeClipRect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-excludecliprect)
+	/// function.
+	fn ExcludeClipRect(&self, rc: RECT) -> SysResult<co::REGION> {
+		match unsafe { ffi::ExcludeClipRect(self.ptr(), rc.left, rc.top, rc.right, rc.bottom) } {
+			0 => Err(GetLastError()),
+			v => Ok(unsafe { co::REGION::from_raw(v) }),
+		}
+	}
+
 	/// [`FillPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-fillpath)
 	/// function.
 	fn FillPath(&self) -> SysResult<()> {

@@ -30,6 +30,8 @@ extern_sys! { "gdi32";
 	DeleteObject(HANDLE) -> BOOL
 	Ellipse(HANDLE, i32, i32, i32, i32) -> BOOL
 	EndPath(HANDLE) -> BOOL
+	EqualRgn(HANDLE, HANDLE) -> BOOL
+	ExcludeClipRect(HANDLE, i32, i32, i32, i32) -> i32
 	FillPath(HANDLE) -> BOOL
 	FillRect(HANDLE, PCVOID, HANDLE) -> i32
 	FillRgn(HANDLE, HANDLE, HANDLE) -> BOOL

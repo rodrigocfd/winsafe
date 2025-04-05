@@ -46,7 +46,6 @@ com_interface_userdef! { IDropTarget, IDropTargetImpl: "00000122-0000-0000-c000-
 	///             println!("> {f}");
 	///         }
 	///
-	///         *fx &= co::DROPEFFECT::COPY;
 	///         Ok(())
 	///     },
 	/// );
