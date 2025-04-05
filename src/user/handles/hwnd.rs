@@ -499,6 +499,16 @@ pub trait user_Hwnd: Handle {
 		}
 	}
 
+	/// [`GetDCEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdcex)
+	/// function.
+	#[must_use]
+	fn GetDCEx(&self, hrgn_clip: &HRGN, flags: co::DCX) -> SysResult<ReleaseDCGuard<'_, Self>> {
+		unsafe {
+			ptr_to_sysresult_handle(ffi::GetDCEx(self.ptr(), hrgn_clip.ptr(), flags.raw()))
+				.map(|h| ReleaseDCGuard::new(self, h))
+		}
+	}
+
 	/// [`GetDesktopWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getdesktopwindow)
 	/// function.
 	#[must_use]

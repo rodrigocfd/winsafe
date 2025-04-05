@@ -203,19 +203,17 @@ pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: wm::NcPaint) ->
 		return Ok(());
 	}
 
-	let mut rc = hwnd.ScreenToClientRc(hwnd.GetWindowRect()?)?; // window outmost coordinates, including margins
-	rc.left += 2;
-	rc.top += 2;
-	rc.right += 2;
-	rc.bottom += 2; // because it comes up anchored at -2,-2
+	let mut rc = hwnd.GetWindowRect()?; // window outmost coordinates, including margins
+	rc = hwnd.ScreenToClientRc(rc)?;
+	rc = OffsetRect(rc, 2, 2)?; // because it comes up anchored at -2,-2
 
 	let hdc = hwnd.GetWindowDC()?;
 
-	if let Some(htheme) = hwnd.OpenThemeData("LISTVIEW") {
+	if let Some(htheme) = hwnd.OpenThemeData("EDIT") {
 		// Draw only the borders to avoid flickering.
 		htheme.DrawThemeBackground(
 			&hdc,
-			co::VS::LISTVIEW_LISTGROUP,
+			co::VS::EDIT_EDITTEXT_NORMAL,
 			rc,
 			Some(RECT {
 				left: rc.left,
@@ -226,7 +224,7 @@ pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: wm::NcPaint) ->
 		)?;
 		htheme.DrawThemeBackground(
 			&hdc,
-			co::VS::LISTVIEW_LISTGROUP,
+			co::VS::EDIT_EDITTEXT_NORMAL,
 			rc,
 			Some(RECT {
 				left: rc.left,
@@ -237,7 +235,7 @@ pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: wm::NcPaint) ->
 		)?;
 		htheme.DrawThemeBackground(
 			&hdc,
-			co::VS::LISTVIEW_LISTGROUP,
+			co::VS::EDIT_EDITTEXT_NORMAL,
 			rc,
 			Some(RECT {
 				left: rc.right - 2,
@@ -248,7 +246,7 @@ pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: wm::NcPaint) ->
 		)?;
 		htheme.DrawThemeBackground(
 			&hdc,
-			co::VS::LISTVIEW_LISTGROUP,
+			co::VS::EDIT_EDITTEXT_NORMAL,
 			rc,
 			Some(RECT {
 				left: rc.left,

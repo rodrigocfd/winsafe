@@ -465,6 +465,21 @@ const_bitflag! { DC: u32;
 	BUTTONS 0x1000
 }
 
+const_bitflag! { DCX: u32;
+	/// [`GetDCEx`](crate::prelude::user_Hwnd::GetDCEx) `flags` (`u32`).
+	=>
+	WINDOW 0x0000_0001
+	CACHE 0x0000_0002
+	NORESETATTRS 0x0000_0004
+	CLIPCHILDREN 0x0000_0008
+	CLIPSIBLINGS 0x0000_0010
+	PARENTCLIP 0x0000_0020
+	EXCLUDERGN 0x0000_0040
+	INTERSECTRGN 0x0000_0080
+	EXCLUDEUPDATE 0x0000_0100
+	LOCKWINDOWUPDATE 0x0000_0400
+}
+
 const_ordinary! { DDC: u32;
 	/// [`DIALOG_DPI_CHANGE_BEHAVIORS`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ne-winuser-dialog_dpi_change_behaviors)
 	/// enumeration (`u32`).

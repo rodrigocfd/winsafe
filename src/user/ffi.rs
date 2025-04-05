@@ -105,6 +105,7 @@ extern_sys! { "user32";
 	GetCursorInfo(PVOID) -> BOOL
 	GetCursorPos(PVOID) -> BOOL
 	GetDC(HANDLE) -> HANDLE
+	GetDCEx(HANDLE, HANDLE, u32) -> HANDLE
 	GetDesktopWindow() -> HANDLE
 	GetDialogBaseUnits() -> i32
 	GetDialogDpiChangeBehavior(HANDLE) -> u32
