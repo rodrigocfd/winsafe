@@ -672,7 +672,7 @@
 <a href=#672 id=672 data-nosnippet>672</a>	/// function.
 <a href=#673 id=673 data-nosnippet>673</a>	</span><span class="kw">fn </span>SelectClipRgn(<span class="kw-2">&amp;</span><span class="self">self</span>, rgn: <span class="kw-2">&amp;</span>HRGN) -&gt; SysResult&lt;co::REGION&gt; {
 <a href=#674 id=674 data-nosnippet>674</a>		<span class="kw">match unsafe </span>{ ffi::SelectClipRgn(<span class="self">self</span>.ptr(), rgn.ptr()) } {
-<a href=#675 id=675 data-nosnippet>675</a>			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
+<a href=#675 id=675 data-nosnippet>675</a>			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::ERROR::INVALID_PARAMETER),
 <a href=#676 id=676 data-nosnippet>676</a>			v =&gt; <span class="prelude-val">Ok</span>(<span class="kw">unsafe </span>{ co::REGION::from_raw(v) }),
 <a href=#677 id=677 data-nosnippet>677</a>		}
 <a href=#678 id=678 data-nosnippet>678</a>	}
