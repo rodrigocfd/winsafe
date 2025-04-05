@@ -27,7 +27,7 @@ WinSafe documentation:
 | - | -: |
 | Functions | 818 |
 | Structs | 247 |
-| Constants | 13,526 |
+| Constants | 13,529 |
 | Window messages | 655 |
 | Handles | 50 |
 | COM interfaces | 90 |
