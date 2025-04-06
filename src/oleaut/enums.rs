@@ -56,6 +56,12 @@ impl Default for PropVariant {
 }
 
 impl PropVariant {
+	/// Creates a [`PropVariant::Bstr`](crate::PropVariant::Bstr) from a string.
+	#[must_use]
+	pub fn from_str(s: impl AsRef<str>) -> Self {
+		Self::Bstr(s.as_ref().to_owned())
+	}
+
 	/// Creates a [`PropVariant::Bstr`](crate::PropVariant::Bstr) if a string is
 	/// present, otherwise creates a
 	/// [`PropVariant::Empty`](crate::PropVariant::Empty).
@@ -229,6 +235,12 @@ impl Default for Variant {
 }
 
 impl Variant {
+	/// Creates a [`Variant::Bstr`](crate::Variant::Bstr) from a string.
+	#[must_use]
+	pub fn from_str(s: impl AsRef<str>) -> Self {
+		Self::Bstr(s.as_ref().to_owned())
+	}
+
 	/// Creates a [`Variant::Bstr`](crate::Variant::Bstr) if a string is
 	/// present, otherwise creates a [`Variant::Empty`](crate::Variant::Empty).
 	#[must_use]

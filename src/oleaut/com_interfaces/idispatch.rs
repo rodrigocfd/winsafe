@@ -181,13 +181,13 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	///
 	/// let file = books.invoke_method(
 	///     "Open",
-	///     &[&w::Variant::Bstr("C:\\Temp\\foo.xlsx".to_owned())],
+	///     &[&w::Variant::from_str("C:\\Temp\\foo.xlsx")],
 	/// )?
 	/// .unwrap_dispatch();
 	///
 	/// file.invoke_method(
 	///     "SaveAs",
-	///     &[&w::Variant::Bstr("C:\\Temp\\bar.xlsx".to_owned())],
+	///     &[&w::Variant::from_str("C:\\Temp\\bar.xlsx")],
 	/// )?;
 	///
 	/// file.invoke_method("Close", &[])?;
