@@ -181,13 +181,13 @@
 <a href=#181 id=181 data-nosnippet>181</a>	///
 <a href=#182 id=182 data-nosnippet>182</a>	/// let file = books.invoke_method(
 <a href=#183 id=183 data-nosnippet>183</a>	///     "Open",
-<a href=#184 id=184 data-nosnippet>184</a>	///     &amp;[&amp;w::Variant::Bstr("C:\\Temp\\foo.xlsx".to_owned())],
+<a href=#184 id=184 data-nosnippet>184</a>	///     &amp;[&amp;w::Variant::from_str("C:\\Temp\\foo.xlsx")],
 <a href=#185 id=185 data-nosnippet>185</a>	/// )?
 <a href=#186 id=186 data-nosnippet>186</a>	/// .unwrap_dispatch();
 <a href=#187 id=187 data-nosnippet>187</a>	///
 <a href=#188 id=188 data-nosnippet>188</a>	/// file.invoke_method(
 <a href=#189 id=189 data-nosnippet>189</a>	///     "SaveAs",
-<a href=#190 id=190 data-nosnippet>190</a>	///     &amp;[&amp;w::Variant::Bstr("C:\\Temp\\bar.xlsx".to_owned())],
+<a href=#190 id=190 data-nosnippet>190</a>	///     &amp;[&amp;w::Variant::from_str("C:\\Temp\\bar.xlsx")],
 <a href=#191 id=191 data-nosnippet>191</a>	/// )?;
 <a href=#192 id=192 data-nosnippet>192</a>	///
 <a href=#193 id=193 data-nosnippet>193</a>	/// file.invoke_method("Close", &amp;[])?;
