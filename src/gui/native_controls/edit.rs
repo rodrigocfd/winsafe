@@ -79,6 +79,7 @@ impl Edit {
 				Ok(0) // ignored
 			});
 
+		new_self.default_message_handlers(parent);
 		new_self
 	}
 
@@ -111,7 +112,26 @@ impl Edit {
 			Ok(true) // ignored
 		});
 
+		new_self.default_message_handlers(parent);
 		new_self
+	}
+
+	fn default_message_handlers(&self, parent: &(impl GuiParent + 'static)) {
+		let self2 = self.clone();
+		let parent2 = parent.clone();
+		parent
+			.as_ref()
+			.before_on()
+			.wm_command(self.ctrl_id(), co::EN::CHANGE, move || {
+				// EN_CHANGE is first sent to the control before CreateWindowEx()
+				// returns, so if the user handles EN_CHANGE, the Edit HWND won't be
+				// set yet. So we set the HWND here.
+				if *self2.hwnd() == HWND::NULL {
+					let hctrl = parent2.as_ref().hwnd().GetDlgItem(self2.ctrl_id())?;
+					self2.0.base.set_hwnd(hctrl);
+				}
+				Ok(())
+			});
 	}
 
 	/// Hides any balloon tip by sending an

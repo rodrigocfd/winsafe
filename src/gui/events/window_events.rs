@@ -76,8 +76,8 @@ impl WindowEvents {
 			let wm_cmd = unsafe { wm::Command::from_generic_wm(p) };
 			let key_cmd = (wm_cmd.event.ctrl_id(), wm_cmd.event.code());
 			let cmds = unsafe { &*self.cmds.get() };
-			for obj in cmds.iter().filter(|obj| obj.id == key_cmd) {
-				if let Err(e) = (obj.fun)() {
+			for stored_cmd in cmds.iter().filter(|obj| obj.id == key_cmd) {
+				if let Err(e) = (stored_cmd.fun)() {
 					return Err(e); // stop on error
 				}
 				at_least_one = true;
@@ -86,8 +86,8 @@ impl WindowEvents {
 			let wm_nfy = unsafe { wm::Notify::from_generic_wm(p) };
 			let key_nfy = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
 			let nfys = unsafe { &*self.nfys.get() };
-			for obj in nfys.iter().filter(|obj| obj.id == key_nfy) {
-				if let Err(e) = (obj.fun)(unsafe { wm::Notify::from_generic_wm(p) }) {
+			for stored_nfy in nfys.iter().filter(|obj| obj.id == key_nfy) {
+				if let Err(e) = (stored_nfy.fun)(unsafe { wm::Notify::from_generic_wm(p) }) {
 					// wm::Notify cannot be Copy
 					return Err(e); // stop on error
 				}
@@ -96,8 +96,8 @@ impl WindowEvents {
 		} else if p.msg_id == co::WM::TIMER {
 			let wm_tmr = unsafe { wm::Timer::from_generic_wm(p) };
 			let tmrs = unsafe { &*self.tmrs.get() };
-			for obj in tmrs.iter().filter(|obj| obj.id == wm_tmr.timer_id) {
-				if let Err(e) = (obj.fun)() {
+			for stored_tmr in tmrs.iter().filter(|obj| obj.id == wm_tmr.timer_id) {
+				if let Err(e) = (stored_tmr.fun)() {
 					return Err(e); // stop on error
 				}
 				at_least_one = true;
@@ -105,11 +105,19 @@ impl WindowEvents {
 		}
 
 		let msgs = unsafe { &*self.msgs.get() };
-		for obj in msgs.iter().filter(|obj| obj.id == p.msg_id) {
-			if let Err(e) = (obj.fun)(p) {
+		for stored_msg in msgs.iter().filter(|stored_msg| stored_msg.id == p.msg_id) {
+			if p.msg_id == co::WM::CREATE {
+				println!("IN {}", stored_msg.id);
+			}
+
+			if let Err(e) = (stored_msg.fun)(p) {
 				return Err(e); // stop on error
 			}
 			at_least_one = true;
+
+			if p.msg_id == co::WM::CREATE {
+				println!("OUT");
+			}
 		}
 
 		Ok(at_least_one)
@@ -122,30 +130,34 @@ impl WindowEvents {
 			let wm_cmd = unsafe { wm::Command::from_generic_wm(p) };
 			let key_cmd = (wm_cmd.event.ctrl_id(), wm_cmd.event.code());
 			let cmds = unsafe { &*self.cmds.get() };
-			if let Some(obj) = cmds.iter().rev().find(|obj| obj.id == key_cmd) {
-				let ret = (obj.fun)().map(|_| self.is_dlg.def_proc_val());
+			if let Some(stored_cmd) = cmds.iter().rev().find(|obj| obj.id == key_cmd) {
+				let ret = (stored_cmd.fun)().map(|_| self.is_dlg.def_proc_val());
 				return Some(ret); // handled, stop here
 			}
 		} else if p.msg_id == co::WM::NOTIFY {
 			let wm_nfy = unsafe { wm::Notify::from_generic_wm(p) };
 			let key_nfy = (wm_nfy.nmhdr.idFrom(), wm_nfy.nmhdr.code);
 			let nfys = unsafe { &*self.nfys.get() };
-			if let Some(obj) = nfys.iter().rev().find(|obj| obj.id == key_nfy) {
-				let ret = (obj.fun)(unsafe { wm::Notify::from_generic_wm(p) }); // wm::Notify cannot be Copy
+			if let Some(stored_nfy) = nfys.iter().rev().find(|obj| obj.id == key_nfy) {
+				let ret = (stored_nfy.fun)(unsafe { wm::Notify::from_generic_wm(p) }); // wm::Notify cannot be Copy
 				return Some(ret); // handled, stop here
 			}
 		} else if p.msg_id == co::WM::TIMER {
 			let wm_tmr = unsafe { wm::Timer::from_generic_wm(p) };
 			let tmrs = unsafe { &*self.tmrs.get() };
-			if let Some(obj) = tmrs.iter().rev().find(|obj| obj.id == wm_tmr.timer_id) {
-				let ret = (obj.fun)().map(|_| self.is_dlg.def_proc_val());
+			if let Some(stored_tmr) = tmrs.iter().rev().find(|obj| obj.id == wm_tmr.timer_id) {
+				let ret = (stored_tmr.fun)().map(|_| self.is_dlg.def_proc_val());
 				return Some(ret); // handled, stop here
 			}
 		}
 
 		let msgs = unsafe { &*self.msgs.get() };
-		if let Some(obj) = msgs.iter().rev().find(|obj| obj.id == p.msg_id) {
-			let ret = (obj.fun)(p);
+		if let Some(stored_msg) = msgs
+			.iter()
+			.rev()
+			.find(|stored_msg| stored_msg.id == p.msg_id)
+		{
+			let ret = (stored_msg.fun)(p);
 			return Some(ret); // handled, stop here
 		}
 
