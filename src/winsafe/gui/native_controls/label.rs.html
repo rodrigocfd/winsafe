@@ -102,14 +102,14 @@
 <a href=#102 id=102 data-nosnippet>102</a>	<span class="doccomment">/// Calls [`HWND::SetWindowText`](crate::prelude::user_Hwnd::SetWindowText)
 <a href=#103 id=103 data-nosnippet>103</a>	/// to set the text and resizes the control to exactly fit it.
 <a href=#104 id=104 data-nosnippet>104</a>	</span><span class="kw">pub fn </span>set_text_and_resize(<span class="kw-2">&amp;</span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;()&gt; {
-<a href=#105 id=105 data-nosnippet>105</a>		<span class="self">self</span>.hwnd().SetWindowText(text)<span class="question-mark">?</span>;
-<a href=#106 id=106 data-nosnippet>106</a>		<span class="kw">let </span>bound_box = text_calc::bound_box(<span class="kw-2">&amp;</span>text_calc::remove_accel_ampersands(text))<span class="question-mark">?</span>;
-<a href=#107 id=107 data-nosnippet>107</a>		<span class="self">self</span>.hwnd().SetWindowPos(
-<a href=#108 id=108 data-nosnippet>108</a>			HwndPlace::None,
-<a href=#109 id=109 data-nosnippet>109</a>			POINT::default(),
-<a href=#110 id=110 data-nosnippet>110</a>			bound_box,
-<a href=#111 id=111 data-nosnippet>111</a>			co::SWP::NOZORDER | co::SWP::NOMOVE,
-<a href=#112 id=112 data-nosnippet>112</a>		)<span class="question-mark">?</span>;
+<a href=#105 id=105 data-nosnippet>105</a>		<span class="kw">let </span>bound_box = text_calc::bound_box(<span class="kw-2">&amp;</span>text_calc::remove_accel_ampersands(text))<span class="question-mark">?</span>;
+<a href=#106 id=106 data-nosnippet>106</a>		<span class="self">self</span>.hwnd().SetWindowPos(
+<a href=#107 id=107 data-nosnippet>107</a>			HwndPlace::None,
+<a href=#108 id=108 data-nosnippet>108</a>			POINT::default(),
+<a href=#109 id=109 data-nosnippet>109</a>			bound_box,
+<a href=#110 id=110 data-nosnippet>110</a>			co::SWP::NOZORDER | co::SWP::NOMOVE,
+<a href=#111 id=111 data-nosnippet>111</a>		)<span class="question-mark">?</span>;
+<a href=#112 id=112 data-nosnippet>112</a>		<span class="self">self</span>.hwnd().SetWindowText(text)<span class="question-mark">?</span>;
 <a href=#113 id=113 data-nosnippet>113</a>		<span class="prelude-val">Ok</span>(())
 <a href=#114 id=114 data-nosnippet>114</a>	}
 <a href=#115 id=115 data-nosnippet>115</a>}
