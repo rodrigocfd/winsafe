@@ -294,6 +294,15 @@ const_ordinary! { PS: i32;
 	INSIDEFRAME 6
 }
 
+const_bitflag! { PT: u8;
+	/// [`HDC::PolyDraw`](crate::prelude::gdi_Hdc::PolyDraw) `aj` (`u8`).
+	=>
+	CLOSEFIGURE 0x01
+	LINETO 0x02
+	BEZIERTO 0x04
+	MOVETO 0x06
+}
+
 const_ordinary! { QUALITY: u8;
 	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `quality`
 	/// and [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).

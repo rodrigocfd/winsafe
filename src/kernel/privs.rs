@@ -40,11 +40,32 @@ pub(crate) fn bool_to_sysresult(expr: BOOL) -> SysResult<()> {
 	}
 }
 
+/// If value is `FALSE`, yields `ERR(ERROR::INVALID_PARAMETER)`, otherwise
+/// `Ok()`.
+#[must_use]
+pub(crate) const fn bool_to_invalidparm(expr: BOOL) -> SysResult<()> {
+	match expr {
+		0 => Err(co::ERROR::INVALID_PARAMETER),
+		_ => Ok(()),
+	}
+}
+
 /// If pointer is null, yields `Err(GetLastError)`, otherwise `Ok(ptr)`.
 #[must_use]
 pub(crate) fn ptr_to_sysresult(ptr: HANDLE) -> SysResult<HANDLE> {
 	if ptr.is_null() {
 		Err(GetLastError())
+	} else {
+		Ok(ptr)
+	}
+}
+
+/// If pointer is null, yields `Err(ERROR::INVALID_PARAMETER)`, otherwise
+/// `Ok(ptr)`.
+#[must_use]
+pub(crate) const fn ptr_to_invalidparm(ptr: HANDLE) -> SysResult<HANDLE> {
+	if ptr.is_null() {
+		Err(co::ERROR::INVALID_PARAMETER)
 	} else {
 		Ok(ptr)
 	}
@@ -57,6 +78,16 @@ where
 	H: Handle,
 {
 	ptr_to_sysresult(ptr).map(|ptr| unsafe { Handle::from_ptr(ptr) })
+}
+
+/// If pointer is null, yields `Err(ERROR::INVALID_PARAMETER)`, otherwise
+/// `Ok(Handle)`.
+#[must_use]
+pub(crate) fn ptr_to_invalidparm_handle<H>(ptr: HANDLE) -> SysResult<H>
+where
+	H: Handle,
+{
+	ptr_to_invalidparm(ptr).map(|ptr| unsafe { Handle::from_ptr(ptr) })
 }
 
 /// If the pointer is null, yields `None`, otherwise `Some(Handle)`.

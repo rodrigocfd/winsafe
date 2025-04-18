@@ -22,7 +22,7 @@ pub trait gdi_Hpalette: Handle {
 	#[must_use]
 	fn CreatePalette(pal: &LOGPALETTE) -> SysResult<DeleteObjectPaletteGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreatePalette(pal as *const _ as _))
+			ptr_to_invalidparm_handle(ffi::CreatePalette(pal as *const _ as _))
 				.map(|h| DeleteObjectPaletteGuard::new(h))
 		}
 	}

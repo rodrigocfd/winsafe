@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use crate::co;
 use crate::decl::*;
 use crate::gdi::ffi;
 use crate::kernel::privs::*;
@@ -29,7 +30,7 @@ pub fn GdiGetBatchLimit() -> u32 {
 /// * [`GdiGetBatchLimit`](crate::GdiGetBatchLimit)
 pub fn GdiSetBatchLimit(limit: u32) -> SysResult<u32> {
 	match unsafe { ffi::GdiSetBatchLimit(limit) } {
-		0 => Err(GetLastError()),
+		0 => Err(co::ERROR::INVALID_PARAMETER),
 		n => Ok(n),
 	}
 }

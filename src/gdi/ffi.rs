@@ -1,6 +1,7 @@
 use crate::kernel::ffi_types::*;
 
 extern_sys! { "gdi32";
+	AbortDoc(HANDLE) -> BOOL
 	AbortPath(HANDLE) -> BOOL
 	AngleArc(HANDLE, i32, i32, u32, f32, f32) -> BOOL
 	Arc(HANDLE, i32, i32, i32, i32, i32, i32, i32, i32) -> BOOL
@@ -44,6 +45,7 @@ extern_sys! { "gdi32";
 	GetBkColor(HANDLE) -> u32
 	GetBkMode(HANDLE) -> i32
 	GetCurrentObject(HANDLE, u32) -> HANDLE
+	GetCurrentPositionEx(HANDLE, PVOID) -> BOOL
 	GetDCBrushColor(HANDLE) -> u32
 	GetDCPenColor(HANDLE) -> u32
 	GetDeviceCaps(HANDLE, i32) -> i32
@@ -60,15 +62,21 @@ extern_sys! { "gdi32";
 	GetViewportOrgEx(HANDLE, PVOID) -> BOOL
 	GetWindowExtEx(HANDLE, PVOID) -> BOOL
 	GetWindowOrgEx(HANDLE, PVOID) -> BOOL
+	IntersectClipRect(HANDLE, i32, i32, i32, i32) -> i32
+	InvertRgn(HANDLE, HANDLE) -> BOOL
 	LineTo(HANDLE, i32, i32) -> BOOL
+	MaskBlt(HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, HANDLE, i32, i32, u32) -> BOOL
 	MoveToEx(HANDLE, i32, i32, PVOID) -> BOOL
 	OffsetClipRgn(HANDLE, i32, i32) -> i32
 	OffsetRgn(HANDLE, i32, i32) -> i32
+	PaintRgn(HANDLE, HANDLE) -> BOOL
 	PatBlt(HANDLE, i32, i32, i32, i32, u32) -> BOOL
 	PathToRegion(HANDLE) -> HANDLE
 	Pie(HANDLE, i32, i32, i32, i32, i32, i32, i32, i32) -> BOOL
 	PolyBezier(HANDLE, PCVOID, u32) -> BOOL
 	PolyBezierTo(HANDLE, PCVOID, u32) -> BOOL
+	PolyDraw(HANDLE, PCVOID, PCVOID, i32) -> BOOL
+	Polygon(HANDLE, PCVOID, i32) -> BOOL
 	Polyline(HANDLE, PCVOID, u32) -> BOOL
 	PolylineTo(HANDLE, PCVOID, u32) -> BOOL
 	PtInRegion(HANDLE, i32, i32) -> BOOL

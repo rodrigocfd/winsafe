@@ -24,7 +24,7 @@ pub trait gdi_Hrgn: Handle {
 	#[must_use]
 	fn CreateRectRgn(bounds: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreateRectRgn(
+			ptr_to_invalidparm_handle(ffi::CreateRectRgn(
 				bounds.left,
 				bounds.top,
 				bounds.right,
@@ -39,7 +39,7 @@ pub trait gdi_Hrgn: Handle {
 	#[must_use]
 	fn CreateRectRgnIndirect(rc: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreateRectRgnIndirect(&rc as *const _ as _))
+			ptr_to_invalidparm_handle(ffi::CreateRectRgnIndirect(&rc as *const _ as _))
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -49,7 +49,7 @@ pub trait gdi_Hrgn: Handle {
 	#[must_use]
 	fn CreateRoundRectRgn(bounds: RECT, size: SIZE) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreateRoundRectRgn(
+			ptr_to_invalidparm_handle(ffi::CreateRoundRectRgn(
 				bounds.left,
 				bounds.top,
 				bounds.right,
@@ -87,7 +87,7 @@ pub trait gdi_Hrgn: Handle {
 	/// ```
 	fn CombineRgn(&self, src1: &HRGN, src2: &HRGN, mode: co::RGN) -> SysResult<co::REGION> {
 		match unsafe { ffi::CombineRgn(self.ptr(), src1.ptr(), src2.ptr(), mode.raw()) } {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			0 => Err(co::ERROR::INVALID_PARAMETER),
 			ret => Ok(unsafe { co::REGION::from_raw(ret) }),
 		}
 	}
@@ -103,7 +103,7 @@ pub trait gdi_Hrgn: Handle {
 	/// function.
 	fn OffsetClipRgn(&self, x: i32, y: i32) -> SysResult<co::REGION> {
 		match unsafe { ffi::OffsetClipRgn(self.ptr(), x, y) } {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			0 => Err(co::ERROR::INVALID_PARAMETER),
 			ret => Ok(unsafe { co::REGION::from_raw(ret) }),
 		}
 	}
@@ -112,7 +112,7 @@ pub trait gdi_Hrgn: Handle {
 	/// function.
 	fn OffsetRgn(&self, x: i32, y: i32) -> SysResult<co::REGION> {
 		match unsafe { ffi::OffsetRgn(self.ptr(), x, y) } {
-			0 => Err(co::ERROR::BAD_ARGUMENTS),
+			0 => Err(co::ERROR::INVALID_PARAMETER),
 			ret => Ok(unsafe { co::REGION::from_raw(ret) }),
 		}
 	}

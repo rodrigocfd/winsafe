@@ -20,10 +20,16 @@ impl gdi_Hdc for HDC {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait gdi_Hdc: user_Hdc {
+	/// [`AbortDoc`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-abortdoc)
+	/// function.
+	fn AbortDoc(&self) -> SysResult<()> {
+		bool_to_invalidparm(unsafe { ffi::AbortDoc(self.ptr()) })
+	}
+
 	/// [`AborthPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-abortpath)
 	/// function.
 	fn AbortPath(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::AbortPath(self.ptr()) })
+		bool_to_invalidparm(unsafe { ffi::AbortPath(self.ptr()) })
 	}
 
 	/// [`AlphaBlend`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-alphablend)
@@ -35,7 +41,7 @@ pub trait gdi_Hdc: user_Hdc {
 		origin_src: RECT,
 		ftn: &BLENDFUNCTION,
 	) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::AlphaBlend(
 				self.ptr(),
 				origin_dest.left,
@@ -61,7 +67,7 @@ pub trait gdi_Hdc: user_Hdc {
 		start_angle: f32,
 		sweep_angle: f32,
 	) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::AngleArc(self.ptr(), center.x, center.y, radius, start_angle, sweep_angle)
 		})
 	}
@@ -69,7 +75,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`Arc`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-arc)
 	/// function.
 	fn Arc(&self, bound: RECT, radial_start: POINT, radial_end: POINT) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::Arc(
 				self.ptr(),
 				bound.left,
@@ -87,7 +93,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`ArcTo`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-arcto)
 	/// function.
 	fn ArcTo(&self, bound: RECT, radial_start: POINT, radial_end: POINT) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::ArcTo(
 				self.ptr(),
 				bound.left,
@@ -105,7 +111,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`BeginPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-beginpath)
 	/// function.
 	fn BeginPath(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::BeginPath(self.ptr()) })
+		bool_to_invalidparm(unsafe { ffi::BeginPath(self.ptr()) })
 	}
 
 	/// [`BitBlt`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-bitblt)
@@ -136,13 +142,13 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`CancelDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-canceldc)
 	/// function.
 	fn CancelDC(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::CancelDC(self.ptr()) })
+		bool_to_invalidparm(unsafe { ffi::CancelDC(self.ptr()) })
 	}
 
 	/// [`Chord`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-chord)
 	/// function.
 	fn Chord(&self, bounds: RECT, start_radial: POINT, end_radial: POINT) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::Chord(
 				self.ptr(),
 				bounds.left,
@@ -160,7 +166,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`CloseFigure`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-closefigure)
 	/// function.
 	fn CloseFigure(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::CloseFigure(self.ptr()) })
+		bool_to_invalidparm(unsafe { ffi::CloseFigure(self.ptr()) })
 	}
 
 	/// [`CreateCompatibleBitmap`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createcompatiblebitmap)
@@ -168,7 +174,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn CreateCompatibleBitmap(&self, cx: i32, cy: i32) -> SysResult<DeleteObjectGuard<HBITMAP>> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreateCompatibleBitmap(self.ptr(), cx, cy))
+			ptr_to_invalidparm_handle(ffi::CreateCompatibleBitmap(self.ptr(), cx, cy))
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -178,7 +184,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn CreateCompatibleDC(&self) -> SysResult<DeleteDCGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreateCompatibleDC(self.ptr()))
+			ptr_to_invalidparm_handle(ffi::CreateCompatibleDC(self.ptr()))
 				.map(|h| DeleteDCGuard::new(h))
 		}
 	}
@@ -188,7 +194,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn CreateHalftonePalette(&self) -> SysResult<DeleteObjectPaletteGuard> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreateHalftonePalette(self.ptr()))
+			ptr_to_invalidparm_handle(ffi::CreateHalftonePalette(self.ptr()))
 				.map(|h| DeleteObjectPaletteGuard::new(h))
 		}
 	}
@@ -196,7 +202,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`Ellipse`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ellipse)
 	/// function.
 	fn Ellipse(&self, bound: RECT) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::Ellipse(self.ptr(), bound.left, bound.top, bound.right, bound.bottom)
 		})
 	}
@@ -204,14 +210,14 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`EndPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-endpath)
 	/// function.
 	fn EndPath(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::EndPath(self.ptr()) })
+		bool_to_invalidparm(unsafe { ffi::EndPath(self.ptr()) })
 	}
 
 	/// [`ExcludeClipRect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-excludecliprect)
 	/// function.
 	fn ExcludeClipRect(&self, rc: RECT) -> SysResult<co::REGION> {
 		match unsafe { ffi::ExcludeClipRect(self.ptr(), rc.left, rc.top, rc.right, rc.bottom) } {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::INVALID_PARAMETER),
 			v => Ok(unsafe { co::REGION::from_raw(v) }),
 		}
 	}
@@ -219,31 +225,31 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`FillPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-fillpath)
 	/// function.
 	fn FillPath(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::FillPath(self.ptr()) })
+		bool_to_invalidparm(unsafe { ffi::FillPath(self.ptr()) })
 	}
 
 	/// [`FillRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-fillrect)
 	/// function.
 	fn FillRect(&self, rc: RECT, hbr: &HBRUSH) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::FillRect(self.ptr(), &rc as *const _ as _, hbr.ptr()) })
+		bool_to_invalidparm(unsafe { ffi::FillRect(self.ptr(), &rc as *const _ as _, hbr.ptr()) })
 	}
 
 	/// [`FillRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-fillrgn)
 	/// function.
 	fn FillRgn(&self, rgn: &HRGN, brush: &HBRUSH) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::FillRgn(self.ptr(), rgn.ptr(), brush.ptr()) })
+		bool_to_invalidparm(unsafe { ffi::FillRgn(self.ptr(), rgn.ptr(), brush.ptr()) })
 	}
 
 	/// [`FlattenPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-flattenpath)
 	/// function.
 	fn FlattenPath(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::FlattenPath(self.ptr()) })
+		bool_to_invalidparm(unsafe { ffi::FlattenPath(self.ptr()) })
 	}
 
 	/// [`FrameRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-framergn)
 	/// function.
 	fn FrameRgn(&self, rgn: &HRGN, brush: &HBRUSH, w: i32, h: i32) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::FrameRgn(self.ptr(), rgn.ptr(), brush.ptr(), w, h) })
+		bool_to_invalidparm(unsafe { ffi::FrameRgn(self.ptr(), rgn.ptr(), brush.ptr(), w, h) })
 	}
 
 	/// [`GetBkColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getbkcolor)
@@ -251,7 +257,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn GetBkColor(&self) -> SysResult<COLORREF> {
 		match unsafe { ffi::GetBkColor(self.ptr()) } {
-			CLR_INVALID => Err(GetLastError()),
+			CLR_INVALID => Err(co::ERROR::INVALID_PARAMETER),
 			c => Ok(unsafe { COLORREF::from_raw(c) }),
 		}
 	}
@@ -261,18 +267,8 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn GetBkMode(&self) -> SysResult<co::BKMODE> {
 		match unsafe { ffi::GetBkMode(self.ptr()) } {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::INVALID_PARAMETER),
 			v => Ok(unsafe { co::BKMODE::from_raw(v) }),
-		}
-	}
-
-	/// [`GetDCBrushColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdcbrushcolor)
-	/// function.
-	#[must_use]
-	fn GetDCBrushColor(&self) -> SysResult<COLORREF> {
-		match unsafe { ffi::GetDCBrushColor(self.ptr()) } {
-			CLR_INVALID => Err(GetLastError()),
-			color => Ok(unsafe { COLORREF::from_raw(color) }),
 		}
 	}
 
@@ -296,7 +292,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn GetCurrentObject(&self, kind: co::CUR_OBJ) -> SysResult<CurObj> {
 		unsafe {
-			ptr_to_sysresult(ffi::GetCurrentObject(self.ptr(), kind.raw())).map(|h| match kind {
+			ptr_to_invalidparm(ffi::GetCurrentObject(self.ptr(), kind.raw())).map(|h| match kind {
 				co::CUR_OBJ::BITMAP => CurObj::Bitmap(HBITMAP::from_ptr(h)),
 				co::CUR_OBJ::BRUSH => CurObj::Brush(HBRUSH::from_ptr(h)),
 				co::CUR_OBJ::FONT => CurObj::Font(HFONT::from_ptr(h)),
@@ -307,14 +303,42 @@ pub trait gdi_Hdc: user_Hdc {
 		}
 	}
 
+	/// [`GetCurrentPositionEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getcurrentpositionex)
+	/// function.
+	#[must_use]
+	fn GetCurrentPositionEx(&self) -> SysResult<POINT> {
+		let mut pt = POINT::default();
+		bool_to_invalidparm(unsafe {
+			ffi::GetCurrentPositionEx(self.ptr(), &mut pt as *mut _ as _)
+		})
+		.map(|_| pt)
+	}
+
+	/// [`GetDCBrushColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdcbrushcolor)
+	/// function.
+	#[must_use]
+	fn GetDCBrushColor(&self) -> SysResult<COLORREF> {
+		match unsafe { ffi::GetDCBrushColor(self.ptr()) } {
+			CLR_INVALID => Err(co::ERROR::INVALID_PARAMETER),
+			color => Ok(unsafe { COLORREF::from_raw(color) }),
+		}
+	}
+
 	/// [`GetDCPenColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdcpencolor)
 	/// function.
 	#[must_use]
 	fn GetDCPenColor(&self) -> SysResult<COLORREF> {
 		match unsafe { ffi::GetDCPenColor(self.ptr()) } {
-			CLR_INVALID => Err(GetLastError()),
+			CLR_INVALID => Err(co::ERROR::INVALID_PARAMETER),
 			color => Ok(unsafe { COLORREF::from_raw(color) }),
 		}
+	}
+
+	/// [`GetDeviceCaps`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps)
+	/// function.
+	#[must_use]
+	fn GetDeviceCaps(&self, index: co::GDC) -> i32 {
+		unsafe { ffi::GetDeviceCaps(self.ptr(), index.raw()) }
 	}
 
 	/// [`GetDIBits`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdibits)
@@ -391,20 +415,11 @@ pub trait gdi_Hdc: user_Hdc {
 			usage.raw(),
 		);
 
-		if unsafe { co::ERROR::from_raw(ret as _) } == co::ERROR::INVALID_PARAMETER {
+		if ret == 0 {
 			Err(co::ERROR::INVALID_PARAMETER)
-		} else if ret == 0 {
-			Err(GetLastError())
 		} else {
 			Ok(ret)
 		}
-	}
-
-	/// [`GetDeviceCaps`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdevicecaps)
-	/// function.
-	#[must_use]
-	fn GetDeviceCaps(&self, index: co::GDC) -> i32 {
-		unsafe { ffi::GetDeviceCaps(self.ptr(), index.raw()) }
 	}
 
 	/// [`GetStretchBltMode`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstretchbltmode)
@@ -412,7 +427,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn GetStretchBltMode(&self) -> SysResult<co::STRETCH_MODE> {
 		match unsafe { ffi::GetStretchBltMode(self.ptr()) } {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::INVALID_PARAMETER),
 			sm => Ok(unsafe { co::STRETCH_MODE::from_raw(sm) }),
 		}
 	}
@@ -422,7 +437,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn GetTextColor(&self) -> SysResult<COLORREF> {
 		match unsafe { ffi::GetTextColor(self.ptr()) } {
-			CLR_INVALID => Err(GetLastError()),
+			CLR_INVALID => Err(co::ERROR::INVALID_PARAMETER),
 			color => Ok(unsafe { COLORREF::from_raw(color) }),
 		}
 	}
@@ -432,7 +447,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn GetTextExtentPoint32(&self, text: &str) -> SysResult<SIZE> {
 		let mut sz = SIZE::default();
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::GetTextExtentPoint32W(
 				self.ptr(),
 				WString::from_str(text).as_ptr(),
@@ -449,7 +464,7 @@ pub trait gdi_Hdc: user_Hdc {
 	fn GetTextFace(&self) -> SysResult<String> {
 		let mut buf = WString::new_alloc_buf(LF_FACESIZE + 1);
 		match unsafe { ffi::GetTextFaceW(self.ptr(), buf.buf_len() as _, buf.as_mut_ptr()) } {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::INVALID_PARAMETER),
 			v => Ok(v),
 		}
 		.map(|_| buf.to_string())
@@ -459,7 +474,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn GetTextMetrics(&self) -> SysResult<TEXTMETRIC> {
 		let mut tm = TEXTMETRIC::default();
-		bool_to_sysresult(unsafe { ffi::GetTextMetricsW(self.ptr(), &mut tm as *mut _ as _) })
+		bool_to_invalidparm(unsafe { ffi::GetTextMetricsW(self.ptr(), &mut tm as *mut _ as _) })
 			.map(|_| tm)
 	}
 
@@ -468,7 +483,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn GetViewportExtEx(&self) -> SysResult<SIZE> {
 		let mut sz = SIZE::default();
-		bool_to_sysresult(unsafe { ffi::GetViewportExtEx(self.ptr(), &mut sz as *mut _ as _) })
+		bool_to_invalidparm(unsafe { ffi::GetViewportExtEx(self.ptr(), &mut sz as *mut _ as _) })
 			.map(|_| sz)
 	}
 
@@ -477,7 +492,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn GetViewportOrgEx(&self) -> SysResult<POINT> {
 		let mut pt = POINT::default();
-		bool_to_sysresult(unsafe { ffi::GetViewportOrgEx(self.ptr(), &mut pt as *mut _ as _) })
+		bool_to_invalidparm(unsafe { ffi::GetViewportOrgEx(self.ptr(), &mut pt as *mut _ as _) })
 			.map(|_| pt)
 	}
 
@@ -486,7 +501,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn GetWindowExtEx(&self) -> SysResult<SIZE> {
 		let mut sz = SIZE::default();
-		bool_to_sysresult(unsafe { ffi::GetWindowExtEx(self.ptr(), &mut sz as *mut _ as _) })
+		bool_to_invalidparm(unsafe { ffi::GetWindowExtEx(self.ptr(), &mut sz as *mut _ as _) })
 			.map(|_| sz)
 	}
 
@@ -495,7 +510,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn GetWindowOrgEx(&self) -> SysResult<POINT> {
 		let mut pt = POINT::default();
-		bool_to_sysresult(unsafe { ffi::GetWindowOrgEx(self.ptr(), &mut pt as *mut _ as _) })
+		bool_to_invalidparm(unsafe { ffi::GetWindowOrgEx(self.ptr(), &mut pt as *mut _ as _) })
 			.map(|_| pt)
 	}
 
@@ -514,24 +529,74 @@ pub trait gdi_Hdc: user_Hdc {
 		)
 	}
 
+	/// [`IntersectClipRect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-intersectcliprect)
+	/// function.
+	fn IntersectClipRect(&self, rc: RECT) -> SysResult<()> {
+		bool_to_invalidparm(unsafe {
+			ffi::IntersectClipRect(self.ptr(), rc.left, rc.top, rc.right, rc.bottom)
+		})
+	}
+
+	/// [`InvertRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-invertrgn)
+	/// function.
+	fn InvertRgn(&self, hrgn: &HRGN) -> SysResult<()> {
+		bool_to_invalidparm(unsafe { ffi::InvertRgn(self.ptr(), hrgn.ptr()) })
+	}
+
 	/// [`LineTo`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-lineto)
 	/// function.
 	fn LineTo(&self, x: i32, y: i32) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::LineTo(self.ptr(), x, y) })
+		bool_to_invalidparm(unsafe { ffi::LineTo(self.ptr(), x, y) })
+	}
+
+	/// [`MaskBlt`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-maskblt)
+	/// function.
+	fn MaskBlt(
+		&self,
+		dest_top_left: POINT,
+		sz: SIZE,
+		hdc_src: &HDC,
+		src_top_left: POINT,
+		hbm_mask: &HBITMAP,
+		mask_offset: POINT,
+		rop: co::ROP,
+	) -> SysResult<()> {
+		bool_to_invalidparm(unsafe {
+			ffi::MaskBlt(
+				self.ptr(),
+				dest_top_left.x,
+				dest_top_left.y,
+				sz.cx,
+				sz.cy,
+				hdc_src.ptr(),
+				src_top_left.x,
+				src_top_left.y,
+				hbm_mask.ptr(),
+				mask_offset.x,
+				mask_offset.y,
+				rop.raw(),
+			)
+		})
 	}
 
 	/// [`MoveToEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-movetoex)
 	/// function.
 	fn MoveToEx(&self, x: i32, y: i32, pt: Option<&mut POINT>) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::MoveToEx(self.ptr(), x, y, pt.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _))
 		})
+	}
+
+	/// [`PaintRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-paintrgn)
+	/// function.
+	fn PaintRgn(&self, hrgn: &HRGN) -> SysResult<()> {
+		bool_to_invalidparm(unsafe { ffi::PaintRgn(self.ptr(), hrgn.ptr()) })
 	}
 
 	/// [`PatBlt`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-patblt)
 	/// function.
 	fn PatBlt(&self, top_left: POINT, sz: SIZE, rop: co::ROP) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::PatBlt(self.ptr(), top_left.x, top_left.y, sz.cx, sz.cy, rop.raw())
 		})
 	}
@@ -541,7 +606,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn PathToRegion(&self) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::PathToRegion(self.ptr()))
+			ptr_to_invalidparm_handle(ffi::PathToRegion(self.ptr()))
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -549,7 +614,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`Pie`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-pie)
 	/// function.
 	fn Pie(&self, bounds: RECT, radial_1: POINT, radial_2: POINT) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::Pie(
 				self.ptr(),
 				bounds.left,
@@ -580,27 +645,46 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`PolyBezier`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polybezier)
 	/// function.
 	fn PolyBezier(&self, pts: &[POINT]) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::PolyBezier(self.ptr(), vec_ptr(pts) as _, pts.len() as _) })
+		bool_to_invalidparm(unsafe {
+			ffi::PolyBezier(self.ptr(), vec_ptr(pts) as _, pts.len() as _)
+		})
 	}
 
 	/// [`PolyBezierTo`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polybezierto)
 	/// function.
 	fn PolyBezierTo(&self, pts: &[POINT]) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::PolyBezierTo(self.ptr(), vec_ptr(pts) as _, pts.len() as _)
 		})
+	}
+
+	/// [`PolyDraw`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polydraw)
+	/// function.
+	fn PolyDraw(&self, pts: &[(POINT, co::PT)]) -> SysResult<()> {
+		let (pts, ajs): (Vec<_>, Vec<_>) = pts.iter().cloned().unzip();
+		bool_to_invalidparm(unsafe {
+			ffi::PolyDraw(self.ptr(), pts.as_ptr() as _, ajs.as_ptr() as _, pts.len() as _)
+		})
+	}
+
+	/// [`Polygon`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polygon)
+	/// function.
+	fn Polygon(&self, pts: &[POINT]) -> SysResult<()> {
+		bool_to_invalidparm(unsafe { ffi::Polygon(self.ptr(), pts.as_ptr() as _, pts.len() as _) })
 	}
 
 	/// [`Polyline`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polyline)
 	/// function.
 	fn Polyline(&self, pts: &[POINT]) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::Polyline(self.ptr(), vec_ptr(pts) as _, pts.len() as _) })
+		bool_to_invalidparm(unsafe { ffi::Polyline(self.ptr(), vec_ptr(pts) as _, pts.len() as _) })
 	}
 
 	/// [`PolylineTo`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polylineto)
 	/// function.
 	fn PolylineTo(&self, pts: &[POINT]) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::PolylineTo(self.ptr(), vec_ptr(pts) as _, pts.len() as _) })
+		bool_to_invalidparm(unsafe {
+			ffi::PolylineTo(self.ptr(), vec_ptr(pts) as _, pts.len() as _)
+		})
 	}
 
 	/// [`PtVisible`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ptvisible)
@@ -608,7 +692,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn PtVisible(&self, x: i32, y: i32) -> SysResult<bool> {
 		match unsafe { ffi::PtVisible(self.ptr(), x, y) } {
-			-1 => Err(GetLastError()),
+			-1 => Err(co::ERROR::INVALID_PARAMETER),
 			0 => Ok(false),
 			_ => Ok(true),
 		}
@@ -618,7 +702,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn RealizePalette(&self) -> SysResult<u32> {
 		match unsafe { ffi::RealizePalette(self.ptr()) } {
-			GDI_ERROR => Err(GetLastError()),
+			GDI_ERROR => Err(co::ERROR::INVALID_PARAMETER),
 			num => Ok(num),
 		}
 	}
@@ -626,7 +710,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`Rectangle`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-rectangle)
 	/// function.
 	fn Rectangle(&self, bounds: RECT) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::Rectangle(self.ptr(), bounds.left, bounds.top, bounds.right, bounds.bottom)
 		})
 	}
@@ -634,13 +718,13 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`RestoreDC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-restoredc)
 	/// function.
 	fn RestoreDC(&self, saved_dc: i32) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::RestoreDC(self.ptr(), saved_dc) })
+		bool_to_invalidparm(unsafe { ffi::RestoreDC(self.ptr(), saved_dc) })
 	}
 
 	/// [`RoundRect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-roundrect)
 	/// function.
 	fn RoundRect(&self, bounds: RECT, sz: SIZE) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::RoundRect(
 				self.ptr(),
 				bounds.left,
@@ -657,7 +741,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn SaveDC(&self) -> SysResult<i32> {
 		match unsafe { ffi::SaveDC(self.ptr()) } {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::INVALID_PARAMETER),
 			v => Ok(v),
 		}
 	}
@@ -665,7 +749,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`SelectClipPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectclippath)
 	/// function.
 	fn SelectClipPath(&self, mode: co::RGN) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::SelectClipPath(self.ptr(), mode.raw()) })
+		bool_to_invalidparm(unsafe { ffi::SelectClipPath(self.ptr(), mode.raw()) })
 	}
 
 	/// [`SelectClipRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectcliprgn)
@@ -713,7 +797,7 @@ pub trait gdi_Hdc: user_Hdc {
 		G: GdiObject,
 	{
 		unsafe {
-			ptr_to_sysresult(ffi::SelectObject(self.ptr(), hgdiobj.ptr())).map(|ptr| {
+			ptr_to_invalidparm(ffi::SelectObject(self.ptr(), hgdiobj.ptr())).map(|ptr| {
 				if hgdiobj.type_id() == TypeId::of::<HRGN>() {
 					SelectObjectGuard::new(
 						self,
@@ -733,24 +817,17 @@ pub trait gdi_Hdc: user_Hdc {
 
 	/// [`SelectPalette`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-selectpalette)
 	/// function.
-	fn SelectPalette(&self, hpal: &HPALETTE, force_bkgd: bool) -> SysResult<Option<HPALETTE>> {
-		let ptr = unsafe { ffi::SelectPalette(self.ptr(), hpal.ptr(), force_bkgd as _) };
-
-		if ptr.is_null() {
-			match GetLastError() {
-				co::ERROR::SUCCESS => Ok(None),
-				err => Err(err),
-			}
-		} else {
-			Ok(Some(unsafe { HPALETTE::from_ptr(ptr) }))
-		}
+	fn SelectPalette(&self, hpal: &HPALETTE, force_bkgd: bool) -> SysResult<HPALETTE> {
+		ptr_to_invalidparm_handle(unsafe {
+			ffi::SelectPalette(self.ptr(), hpal.ptr(), force_bkgd as _)
+		})
 	}
 
 	/// [`SetArcDirection`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setarcdirection)
 	/// function.
 	fn SetArcDirection(&self, dir: co::AD) -> SysResult<co::AD> {
 		match unsafe { ffi::SetArcDirection(self.ptr(), dir.raw()) } {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::INVALID_PARAMETER),
 			v => Ok(unsafe { co::AD::from_raw(v) }),
 		}
 	}
@@ -759,7 +836,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn SetBkColor(&self, color: COLORREF) -> SysResult<COLORREF> {
 		match unsafe { ffi::SetBkColor(self.ptr(), color.into()) } {
-			CLR_INVALID => Err(GetLastError()),
+			CLR_INVALID => Err(co::ERROR::INVALID_PARAMETER),
 			old => Ok(unsafe { COLORREF::from_raw(old) }),
 		}
 	}
@@ -768,7 +845,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn SetBkMode(&self, mode: co::BKMODE) -> SysResult<co::BKMODE> {
 		match unsafe { ffi::SetBkMode(self.ptr(), mode.raw()) } {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::INVALID_PARAMETER),
 			v => Ok(unsafe { co::BKMODE::from_raw(v) }),
 		}
 	}
@@ -777,7 +854,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn SetBrushOrgEx(&self, new_origin: POINT) -> SysResult<POINT> {
 		let mut old_origin = POINT::default();
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::SetBrushOrgEx(
 				self.ptr(),
 				new_origin.x,
@@ -792,7 +869,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn SetDCBrushColor(&self, color: COLORREF) -> SysResult<COLORREF> {
 		match unsafe { ffi::SetDCBrushColor(self.ptr(), color.into()) } {
-			CLR_INVALID => Err(GetLastError()),
+			CLR_INVALID => Err(co::ERROR::INVALID_PARAMETER),
 			old => Ok(unsafe { COLORREF::from_raw(old) }),
 		}
 	}
@@ -801,7 +878,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn SetDCPenColor(&self, color: COLORREF) -> SysResult<COLORREF> {
 		match unsafe { ffi::SetDCPenColor(self.ptr(), color.into()) } {
-			CLR_INVALID => Err(GetLastError()),
+			CLR_INVALID => Err(co::ERROR::INVALID_PARAMETER),
 			old => Ok(unsafe { COLORREF::from_raw(old) }),
 		}
 	}
@@ -828,10 +905,7 @@ pub trait gdi_Hdc: user_Hdc {
 				color_use.raw(),
 			)
 		} {
-			0 => match GetLastError() {
-				co::ERROR::SUCCESS => Ok(0),
-				err => Err(err),
-			},
+			0 => Err(co::ERROR::INVALID_PARAMETER),
 			n => Ok(n),
 		}
 	}
@@ -840,7 +914,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn SetGraphicsMode(&self, mode: co::GM) -> SysResult<co::GM> {
 		match unsafe { ffi::SetGraphicsMode(self.ptr(), mode.raw()) } {
-			0 => Err(GetLastError()),
+			0 => Err(co::ERROR::INVALID_PARAMETER),
 			v => Ok(unsafe { co::GM::from_raw(v) }),
 		}
 	}
@@ -858,7 +932,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn SetTextAlign(&self, align: co::TA) -> SysResult<co::TA> {
 		match unsafe { ffi::SetTextAlign(self.ptr(), align.raw()) } {
-			GDI_ERROR => Err(GetLastError()),
+			GDI_ERROR => Err(co::ERROR::INVALID_PARAMETER),
 			ta => Ok(unsafe { co::TA::from_raw(ta) }),
 		}
 	}
@@ -867,7 +941,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn SetTextColor(&self, color: COLORREF) -> SysResult<COLORREF> {
 		match unsafe { ffi::SetTextColor(self.ptr(), color.into()) } {
-			CLR_INVALID => Err(GetLastError()),
+			CLR_INVALID => Err(co::ERROR::INVALID_PARAMETER),
 			old => Ok(unsafe { COLORREF::from_raw(old) }),
 		}
 	}
@@ -875,14 +949,14 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`SetTextJustification`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-settextjustification)
 	/// function.
 	fn SetTextJustification(&self, extra: i32, count: i32) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::SetTextJustification(self.ptr(), extra, count) })
+		bool_to_invalidparm(unsafe { ffi::SetTextJustification(self.ptr(), extra, count) })
 	}
 
 	/// [`SetViewportExtEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setviewportextex)
 	/// function.
 	fn SetViewportExtEx(&self, x: i32, y: i32) -> SysResult<SIZE> {
 		let mut sz = SIZE::default();
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::SetViewportExtEx(self.ptr(), x, y, &mut sz as *mut _ as _)
 		})
 		.map(|_| sz)
@@ -892,7 +966,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn SetViewportOrgEx(&self, x: i32, y: i32) -> SysResult<POINT> {
 		let mut pt = POINT::default();
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::SetViewportOrgEx(self.ptr(), x, y, &mut pt as *mut _ as _)
 		})
 		.map(|_| pt)
@@ -902,16 +976,20 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn SetWindowExtEx(&self, x: i32, y: i32) -> SysResult<SIZE> {
 		let mut sz = SIZE::default();
-		bool_to_sysresult(unsafe { ffi::SetWindowExtEx(self.ptr(), x, y, &mut sz as *mut _ as _) })
-			.map(|_| sz)
+		bool_to_invalidparm(unsafe {
+			ffi::SetWindowExtEx(self.ptr(), x, y, &mut sz as *mut _ as _)
+		})
+		.map(|_| sz)
 	}
 
 	/// [`SetWindowOrgEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setwindoworgex)
 	/// function.
 	fn SetWindowOrgEx(&self, x: i32, y: i32) -> SysResult<POINT> {
 		let mut pt = POINT::default();
-		bool_to_sysresult(unsafe { ffi::SetWindowOrgEx(self.ptr(), x, y, &mut pt as *mut _ as _) })
-			.map(|_| pt)
+		bool_to_invalidparm(unsafe {
+			ffi::SetWindowOrgEx(self.ptr(), x, y, &mut pt as *mut _ as _)
+		})
+		.map(|_| pt)
 	}
 
 	/// [`StretchBlt`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-stretchblt)
@@ -925,7 +1003,7 @@ pub trait gdi_Hdc: user_Hdc {
 		sz_src: SIZE,
 		rop: co::ROP,
 	) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::StretchBlt(
 				self.ptr(),
 				pos_dest.x,
@@ -945,20 +1023,20 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`StrokeAndFillPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-strokeandfillpath)
 	/// function.
 	fn StrokeAndFillPath(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::StrokeAndFillPath(self.ptr()) })
+		bool_to_invalidparm(unsafe { ffi::StrokeAndFillPath(self.ptr()) })
 	}
 
 	/// [`StrokePath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-strokepath)
 	/// function.
 	fn StrokePath(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::StrokePath(self.ptr()) })
+		bool_to_invalidparm(unsafe { ffi::StrokePath(self.ptr()) })
 	}
 
 	/// [`TextOut`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-textoutw)
 	/// function.
 	fn TextOut(&self, x: i32, y: i32, text: &str) -> SysResult<()> {
 		let output = WString::from_str(text);
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::TextOutW(self.ptr(), x, y, output.as_ptr(), output.str_len() as _)
 		})
 	}
@@ -974,7 +1052,7 @@ pub trait gdi_Hdc: user_Hdc {
 		src_sz: SIZE,
 		color_transparent: COLORREF,
 	) -> SysResult<()> {
-		bool_to_sysresult(unsafe {
+		bool_to_invalidparm(unsafe {
 			ffi::TransparentBlt(
 				self.ptr(),
 				dest_top_left.x,
@@ -994,12 +1072,12 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`UpdateColors`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-updatecolors)
 	/// function.
 	fn UpdateColors(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::UpdateColors(self.ptr()) })
+		bool_to_invalidparm(unsafe { ffi::UpdateColors(self.ptr()) })
 	}
 
 	/// [`WidenPath`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-widenpath)
 	/// function.
 	fn WidenPath(&self) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::WidenPath(self.ptr()) })
+		bool_to_invalidparm(unsafe { ffi::WidenPath(self.ptr()) })
 	}
 }

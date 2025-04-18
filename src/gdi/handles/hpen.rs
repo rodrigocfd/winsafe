@@ -30,7 +30,7 @@ pub trait gdi_Hpen: Handle {
 	#[must_use]
 	fn CreatePen(style: co::PS, width: i32, color: COLORREF) -> SysResult<DeleteObjectGuard<HPEN>> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreatePen(style.raw(), width, color.into()))
+			ptr_to_invalidparm_handle(ffi::CreatePen(style.raw(), width, color.into()))
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -40,7 +40,7 @@ pub trait gdi_Hpen: Handle {
 	#[must_use]
 	fn CreatePenIndirect(lp: &mut LOGPEN) -> SysResult<DeleteObjectGuard<HPEN>> {
 		unsafe {
-			ptr_to_sysresult_handle(ffi::CreatePenIndirect(lp as *const _ as _))
+			ptr_to_invalidparm_handle(ffi::CreatePenIndirect(lp as *const _ as _))
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -49,6 +49,6 @@ pub trait gdi_Hpen: Handle {
 	/// function.
 	#[must_use]
 	fn GetStockObject(sp: co::STOCK_PEN) -> SysResult<HPEN> {
-		ptr_to_sysresult_handle(unsafe { ffi::GetStockObject(sp.raw()) })
+		ptr_to_invalidparm_handle(unsafe { ffi::GetStockObject(sp.raw()) })
 	}
 }
