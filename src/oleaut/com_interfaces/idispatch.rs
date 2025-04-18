@@ -138,16 +138,30 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	///     co::CLSCTX::LOCAL_SERVER,
 	/// )?;
 	///
-	/// let res_books = excel.invoke_get("Workbooks")?;
-	/// let books = match res_books {
-	///     w::Variant::Dispatch(idisp) => idisp,
-	///     _ => unreachable!(),
-	/// };
+	/// let books = excel.invoke_get("Workbooks", &[])?.unwrap_dispatch();
+	///
+	/// let workbook = books
+	///     .invoke_method("Open", &[&w::Variant::from_str("C:\\Temp\\bar.xlsx")])?
+	///     .unwrap_dispatch();
+	///
+	/// let worksheets = workbook.invoke_get("Worksheets", &[])?.unwrap_dispatch();
+	///
+	/// let sheet1 = worksheets
+	///     .invoke_get("Item", &[&w::Variant::from_str("Sheet1")])?
+	///     .unwrap_dispatch();
 	/// # w::AnyResult::Ok(())
 	/// ```
-	fn invoke_get(&self, property_name: &str) -> AnyResult<Variant> {
+	fn invoke_get(&self, property_name: &str, params: &[&Variant]) -> AnyResult<Variant> {
 		let member_ids = self.GetIDsOfNames(&[property_name], LCID::USER_DEFAULT)?;
+
+		let mut vars = params
+			.iter()
+			.rev() // in reverse order
+			.map(|param| param.to_raw())
+			.collect::<HrResult<Vec<_>>>()?;
+
 		let mut dp = DISPPARAMS::default();
+		dp.set_rvarg(Some(&mut vars));
 
 		let vari =
 			self.Invoke(member_ids[0], LCID::USER_DEFAULT, co::DISPATCH::PROPERTYGET, &mut dp)?;
@@ -176,7 +190,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	///     co::CLSCTX::LOCAL_SERVER,
 	/// )?;
 	///
-	/// let books = excel.invoke_get("Workbooks")?
+	/// let books = excel.invoke_get("Workbooks", &[])?
 	///     .unwrap_dispatch();
 	///
 	/// let file = books.invoke_method(
