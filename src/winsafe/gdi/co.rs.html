@@ -294,176 +294,185 @@
 <a href=#294 id=294 data-nosnippet>294</a>	</span>INSIDEFRAME <span class="number">6
 <a href=#295 id=295 data-nosnippet>295</a></span>}
 <a href=#296 id=296 data-nosnippet>296</a>
-<a href=#297 id=297 data-nosnippet>297</a><span class="macro">const_ordinary!</span> { QUALITY: u8;
-<a href=#298 id=298 data-nosnippet>298</a>	<span class="doccomment">/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `quality`
-<a href=#299 id=299 data-nosnippet>299</a>	/// and [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).
-<a href=#300 id=300 data-nosnippet>300</a>	</span>=&gt;
-<a href=#301 id=301 data-nosnippet>301</a>	DEFAULT <span class="number">0
-<a href=#302 id=302 data-nosnippet>302</a>	</span>DRAFT <span class="number">1
-<a href=#303 id=303 data-nosnippet>303</a>	</span>PROOF <span class="number">2
-<a href=#304 id=304 data-nosnippet>304</a>	</span>NONANTIALIASED <span class="number">3
-<a href=#305 id=305 data-nosnippet>305</a>	</span>ANTIALIASED <span class="number">4
-<a href=#306 id=306 data-nosnippet>306</a>	</span>CLEARTYPE <span class="number">5
-<a href=#307 id=307 data-nosnippet>307</a>	</span>CLEARTYPE_NATURAL <span class="number">6
-<a href=#308 id=308 data-nosnippet>308</a></span>}
-<a href=#309 id=309 data-nosnippet>309</a>
-<a href=#310 id=310 data-nosnippet>310</a><span class="macro">const_ordinary!</span> { RGN: i32;
-<a href=#311 id=311 data-nosnippet>311</a>	<span class="doccomment">/// [`HDC::SelectClipPath`](crate::prelude::gdi_Hdc::SelectClipPath) `mode`
-<a href=#312 id=312 data-nosnippet>312</a>	/// (`i32`).
-<a href=#313 id=313 data-nosnippet>313</a>	</span>=&gt;
-<a href=#314 id=314 data-nosnippet>314</a>	AND <span class="number">1
-<a href=#315 id=315 data-nosnippet>315</a>	</span>OR <span class="number">2
-<a href=#316 id=316 data-nosnippet>316</a>	</span>XOR <span class="number">3
-<a href=#317 id=317 data-nosnippet>317</a>	</span>DIFF <span class="number">4
-<a href=#318 id=318 data-nosnippet>318</a>	</span>COPY <span class="number">5
-<a href=#319 id=319 data-nosnippet>319</a></span>}
-<a href=#320 id=320 data-nosnippet>320</a>
-<a href=#321 id=321 data-nosnippet>321</a><span class="macro">const_ordinary!</span> { ROP: u32;
-<a href=#322 id=322 data-nosnippet>322</a>	<span class="doccomment">/// Raster operation code (`u32`).
-<a href=#323 id=323 data-nosnippet>323</a>	/// [`HDC::BitBlt`](crate::prelude::gdi_Hdc::BitBlt) `rop`,
-<a href=#324 id=324 data-nosnippet>324</a>	/// [`HDC::PatBlt`](crate::prelude::gdi_Hdc::PatBlt) `rop` and
-<a href=#325 id=325 data-nosnippet>325</a>	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `dwRop`.
-<a href=#326 id=326 data-nosnippet>326</a>	///
-<a href=#327 id=327 data-nosnippet>327</a>	/// Originally has no prefix.
-<a href=#328 id=328 data-nosnippet>328</a>	</span>=&gt;
-<a href=#329 id=329 data-nosnippet>329</a>	<span class="doccomment">/// Copies the source rectangle directly to the destination rectangle.
-<a href=#330 id=330 data-nosnippet>330</a>	</span>SRCCOPY <span class="number">0x00cc_0020
-<a href=#331 id=331 data-nosnippet>331</a>	</span><span class="doccomment">/// Combines the colors of the source and destination rectangles by using
-<a href=#332 id=332 data-nosnippet>332</a>	/// the Boolean OR operator.
-<a href=#333 id=333 data-nosnippet>333</a>	</span>SRCPAINT <span class="number">0x00ee_0086
-<a href=#334 id=334 data-nosnippet>334</a>	</span><span class="doccomment">/// Combines the colors of the source and destination rectangles by using
-<a href=#335 id=335 data-nosnippet>335</a>	/// the Boolean AND operator.
-<a href=#336 id=336 data-nosnippet>336</a>	</span>SRCAND <span class="number">0x0088_00c6
-<a href=#337 id=337 data-nosnippet>337</a>	</span><span class="doccomment">/// Combines the colors of the source and destination rectangles by using
-<a href=#338 id=338 data-nosnippet>338</a>	/// the Boolean XOR operator.
-<a href=#339 id=339 data-nosnippet>339</a>	</span>SRCINVERT <span class="number">0x0066_0046
-<a href=#340 id=340 data-nosnippet>340</a>	</span><span class="doccomment">/// Combines the inverted colors of the destination rectangle with the
-<a href=#341 id=341 data-nosnippet>341</a>	/// colors of the source rectangle by using the Boolean AND operator.
-<a href=#342 id=342 data-nosnippet>342</a>	</span>SRCERASE <span class="number">0x0044_0328
-<a href=#343 id=343 data-nosnippet>343</a>	</span><span class="doccomment">/// Copies the inverted source rectangle to the destination.
-<a href=#344 id=344 data-nosnippet>344</a>	</span>NOTSRCCOPY <span class="number">0x0033_0008
-<a href=#345 id=345 data-nosnippet>345</a>	</span><span class="doccomment">/// Combines the colors of the source and destination rectangles by using
-<a href=#346 id=346 data-nosnippet>346</a>	/// the Boolean OR operator and then inverts the resultant color.
-<a href=#347 id=347 data-nosnippet>347</a>	</span>NOTSRCERASE <span class="number">0x0011_00a6
-<a href=#348 id=348 data-nosnippet>348</a>	</span><span class="doccomment">/// Merges the colors of the source rectangle with the brush currently
-<a href=#349 id=349 data-nosnippet>349</a>	/// selected in hdcDest, by using the Boolean AND operator.
-<a href=#350 id=350 data-nosnippet>350</a>	</span>MERGECOPY <span class="number">0x00c0_00ca
-<a href=#351 id=351 data-nosnippet>351</a>	</span><span class="doccomment">/// Merges the colors of the inverted source rectangle with the colors of
-<a href=#352 id=352 data-nosnippet>352</a>	/// the destination rectangle by using the Boolean OR operator.
-<a href=#353 id=353 data-nosnippet>353</a>	</span>MERGEPAINT <span class="number">0x00bb_0226
-<a href=#354 id=354 data-nosnippet>354</a>	</span><span class="doccomment">/// Copies the brush currently selected in hdcDest, into the destination
-<a href=#355 id=355 data-nosnippet>355</a>	/// bitmap.
-<a href=#356 id=356 data-nosnippet>356</a>	</span>PATCOPY <span class="number">0x00f0_0021
-<a href=#357 id=357 data-nosnippet>357</a>	</span><span class="doccomment">/// Combines the colors of the brush currently selected in hdcDest, with the
-<a href=#358 id=358 data-nosnippet>358</a>	/// colors of the inverted source rectangle by using the Boolean OR
-<a href=#359 id=359 data-nosnippet>359</a>	/// operator. The result of this operation is combined with the colors of
-<a href=#360 id=360 data-nosnippet>360</a>	/// the destination rectangle by using the Boolean OR operator.
-<a href=#361 id=361 data-nosnippet>361</a>	</span>PATPAINT <span class="number">0x00fb_0a09
-<a href=#362 id=362 data-nosnippet>362</a>	</span><span class="doccomment">/// Combines the colors of the brush currently selected in hdcDest, with the
-<a href=#363 id=363 data-nosnippet>363</a>	/// colors of the destination rectangle by using the Boolean XOR operator.
-<a href=#364 id=364 data-nosnippet>364</a>	</span>PATINVERT <span class="number">0x005a_0049
-<a href=#365 id=365 data-nosnippet>365</a>	</span><span class="doccomment">/// Inverts the destination rectangle.
-<a href=#366 id=366 data-nosnippet>366</a>	</span>DSTINVERT <span class="number">0x0055_0009
-<a href=#367 id=367 data-nosnippet>367</a>	</span><span class="doccomment">/// Fills the destination rectangle using the color associated with index 0
-<a href=#368 id=368 data-nosnippet>368</a>	/// in the physical palette. (This color is black for the default physical
-<a href=#369 id=369 data-nosnippet>369</a>	/// palette.)
-<a href=#370 id=370 data-nosnippet>370</a>	</span>BLACKNESS <span class="number">0x0000_0042
-<a href=#371 id=371 data-nosnippet>371</a>	</span><span class="doccomment">/// Fills the destination rectangle using the color associated with index 1
-<a href=#372 id=372 data-nosnippet>372</a>	/// in the physical palette. (This color is white for the default physical
-<a href=#373 id=373 data-nosnippet>373</a>	/// palette.)
-<a href=#374 id=374 data-nosnippet>374</a>	</span>WHITENESS <span class="number">0x00ff_0062
-<a href=#375 id=375 data-nosnippet>375</a>	</span><span class="doccomment">/// Prevents the bitmap from being mirrored.
-<a href=#376 id=376 data-nosnippet>376</a>	</span>NOMIRRORBITMAP <span class="number">0x8000_0000
-<a href=#377 id=377 data-nosnippet>377</a>	</span><span class="doccomment">/// Includes any windows that are layered on top of your window in the
-<a href=#378 id=378 data-nosnippet>378</a>	/// resulting image. By default, the image only contains your window. Note
-<a href=#379 id=379 data-nosnippet>379</a>	/// that this generally cannot be used for printing device contexts.
-<a href=#380 id=380 data-nosnippet>380</a>	</span>CAPTUREBLT <span class="number">0x4000_0000
-<a href=#381 id=381 data-nosnippet>381</a></span>}
-<a href=#382 id=382 data-nosnippet>382</a>
-<a href=#383 id=383 data-nosnippet>383</a><span class="macro">const_ordinary!</span> { STOCK_BRUSH: i32;
-<a href=#384 id=384 data-nosnippet>384</a>	<span class="doccomment">/// [`HBRUSH::GetStockObject`](crate::prelude::gdi_Hbrush::GetStockObject)
-<a href=#385 id=385 data-nosnippet>385</a>	/// `i` (`i32`).
-<a href=#386 id=386 data-nosnippet>386</a>	</span>=&gt;
-<a href=#387 id=387 data-nosnippet>387</a>	BLACK <span class="number">4
-<a href=#388 id=388 data-nosnippet>388</a>	</span>DKGRAY <span class="number">3
-<a href=#389 id=389 data-nosnippet>389</a>	</span>DC <span class="number">18
-<a href=#390 id=390 data-nosnippet>390</a>	</span>GRAY <span class="number">2
-<a href=#391 id=391 data-nosnippet>391</a>	</span>HOLLOW <span class="self">Self</span>::NULL.<span class="number">0
-<a href=#392 id=392 data-nosnippet>392</a>	</span>LTGRAY <span class="number">1
-<a href=#393 id=393 data-nosnippet>393</a>	</span>NULL <span class="number">5
-<a href=#394 id=394 data-nosnippet>394</a>	</span>WHITE <span class="number">0
-<a href=#395 id=395 data-nosnippet>395</a></span>}
-<a href=#396 id=396 data-nosnippet>396</a>
-<a href=#397 id=397 data-nosnippet>397</a><span class="macro">const_ordinary!</span> { STOCK_FONT: i32;
-<a href=#398 id=398 data-nosnippet>398</a>	<span class="doccomment">/// [`HFONT::GetStockObject`](crate::prelude::gdi_Hfont::GetStockObject) `i`
-<a href=#399 id=399 data-nosnippet>399</a>	/// (`i32`).
-<a href=#400 id=400 data-nosnippet>400</a>	</span>=&gt;
-<a href=#401 id=401 data-nosnippet>401</a>	ANSI_FIXED <span class="number">11
-<a href=#402 id=402 data-nosnippet>402</a>	</span>ANSI_VAR <span class="number">12
-<a href=#403 id=403 data-nosnippet>403</a>	</span>DEVICE_DEFAULT <span class="number">14
-<a href=#404 id=404 data-nosnippet>404</a>	</span>DEFAULT_GUI <span class="number">17
-<a href=#405 id=405 data-nosnippet>405</a>	</span>OEM_FIXED <span class="number">10
-<a href=#406 id=406 data-nosnippet>406</a>	</span>SYSTEM <span class="number">13
-<a href=#407 id=407 data-nosnippet>407</a>	</span>SYSTEM_FIXED <span class="number">16
-<a href=#408 id=408 data-nosnippet>408</a></span>}
-<a href=#409 id=409 data-nosnippet>409</a>
-<a href=#410 id=410 data-nosnippet>410</a><span class="macro">const_ordinary!</span> { STOCK_PEN: i32;
-<a href=#411 id=411 data-nosnippet>411</a>	<span class="doccomment">/// [`HPEN::GetStockObject`](crate::prelude::gdi_Hpen::GetStockObject) `i`
-<a href=#412 id=412 data-nosnippet>412</a>	/// (`i32`).
-<a href=#413 id=413 data-nosnippet>413</a>	</span>=&gt;
-<a href=#414 id=414 data-nosnippet>414</a>	BLACK <span class="number">7
-<a href=#415 id=415 data-nosnippet>415</a>	</span>DC <span class="number">19
-<a href=#416 id=416 data-nosnippet>416</a>	</span>NULL <span class="number">8
-<a href=#417 id=417 data-nosnippet>417</a>	</span>WHITE <span class="number">6
-<a href=#418 id=418 data-nosnippet>418</a></span>}
-<a href=#419 id=419 data-nosnippet>419</a>
-<a href=#420 id=420 data-nosnippet>420</a><span class="macro">const_ordinary!</span> { STRETCH_MODE: i32;
-<a href=#421 id=421 data-nosnippet>421</a>	<span class="doccomment">/// [`HDC::SetStretchBltMode`](crate::prelude::gdi_Hdc::SetStretchBltMode)
-<a href=#422 id=422 data-nosnippet>422</a>	/// `mode` (`i32`).
-<a href=#423 id=423 data-nosnippet>423</a>	</span>=&gt;
-<a href=#424 id=424 data-nosnippet>424</a>	<span class="doccomment">/// Performs a Boolean AND operation using the color values for the
-<a href=#425 id=425 data-nosnippet>425</a>	/// eliminated and existing pixels. If the bitmap is a monochrome bitmap,
-<a href=#426 id=426 data-nosnippet>426</a>	/// this mode preserves black pixels at the expense of white pixels.
-<a href=#427 id=427 data-nosnippet>427</a>	</span>BLACKONWHITE <span class="number">1
-<a href=#428 id=428 data-nosnippet>428</a>	</span><span class="doccomment">/// Deletes the pixels. This mode deletes all eliminated lines of pixels
-<a href=#429 id=429 data-nosnippet>429</a>	/// without trying to preserve their information.
-<a href=#430 id=430 data-nosnippet>430</a>	</span>COLORONCOLOR <span class="number">3
-<a href=#431 id=431 data-nosnippet>431</a>	</span><span class="doccomment">/// Maps pixels from the source rectangle into blocks of pixels in the
-<a href=#432 id=432 data-nosnippet>432</a>	/// destination rectangle. The average color over the destination block of
-<a href=#433 id=433 data-nosnippet>433</a>	/// pixels approximates the color of the source pixels.
-<a href=#434 id=434 data-nosnippet>434</a>	///
-<a href=#435 id=435 data-nosnippet>435</a>	/// After setting the `HALFTONE` stretching mode, an application must call
-<a href=#436 id=436 data-nosnippet>436</a>	/// the [`HDC::SetBrushOrgEx`](crate::prelude::gdi_Hdc::SetBrushOrgEx)
-<a href=#437 id=437 data-nosnippet>437</a>	/// function to set the brush origin. If it fails to do so, brush
-<a href=#438 id=438 data-nosnippet>438</a>	/// misalignment occurs.
-<a href=#439 id=439 data-nosnippet>439</a>	</span>HALFTONE <span class="number">4
-<a href=#440 id=440 data-nosnippet>440</a>	</span><span class="doccomment">/// Same as `BLACKONWHITE`.
-<a href=#441 id=441 data-nosnippet>441</a>	</span>STRETCH_ANDSCANS <span class="self">Self</span>::BLACKONWHITE.<span class="number">0
-<a href=#442 id=442 data-nosnippet>442</a>	</span><span class="doccomment">/// Same as `WHITEONBLACK`.
-<a href=#443 id=443 data-nosnippet>443</a>	</span>STRETCH_ORSCANS <span class="self">Self</span>::WHITEONBLACK.<span class="number">0
-<a href=#444 id=444 data-nosnippet>444</a>	</span><span class="doccomment">/// Same as `COLORONCOLOR`.
-<a href=#445 id=445 data-nosnippet>445</a>	</span>STRETCH_DELETESCANS <span class="self">Self</span>::COLORONCOLOR.<span class="number">0
-<a href=#446 id=446 data-nosnippet>446</a>	</span><span class="doccomment">/// Same as `HALFTONE`.
-<a href=#447 id=447 data-nosnippet>447</a>	</span>STRETCH_HALFTONE <span class="self">Self</span>::HALFTONE.<span class="number">0
-<a href=#448 id=448 data-nosnippet>448</a>	</span><span class="doccomment">/// Performs a Boolean OR operation using the color values for the
-<a href=#449 id=449 data-nosnippet>449</a>	/// eliminated and existing pixels. If the bitmap is a monochrome bitmap,
-<a href=#450 id=450 data-nosnippet>450</a>	/// this mode preserves white pixels at the expense of black pixels.
-<a href=#451 id=451 data-nosnippet>451</a>	</span>WHITEONBLACK <span class="number">2
-<a href=#452 id=452 data-nosnippet>452</a></span>}
-<a href=#453 id=453 data-nosnippet>453</a>
-<a href=#454 id=454 data-nosnippet>454</a><span class="macro">const_bitflag!</span> { TA: u32;
-<a href=#455 id=455 data-nosnippet>455</a>	<span class="doccomment">/// [`HDC::SetTextAlign`](crate::prelude::gdi_Hdc::SetTextAlign) `align`
-<a href=#456 id=456 data-nosnippet>456</a>	/// (`u32`).
-<a href=#457 id=457 data-nosnippet>457</a>	///
-<a href=#458 id=458 data-nosnippet>458</a>	/// Also includes constants with `VTA` prefix.
-<a href=#459 id=459 data-nosnippet>459</a>	</span>=&gt;
-<a href=#460 id=460 data-nosnippet>460</a>	NOUPDATECP <span class="number">0
-<a href=#461 id=461 data-nosnippet>461</a>	</span>UPDATECP <span class="number">1
-<a href=#462 id=462 data-nosnippet>462</a>	</span>LEFT <span class="number">0
-<a href=#463 id=463 data-nosnippet>463</a>	</span>RIGHT <span class="number">2
-<a href=#464 id=464 data-nosnippet>464</a>	</span>CENTER <span class="number">6
-<a href=#465 id=465 data-nosnippet>465</a>	</span>TOP <span class="number">0
-<a href=#466 id=466 data-nosnippet>466</a>	</span>BOTTOM <span class="number">8
-<a href=#467 id=467 data-nosnippet>467</a>	</span>BASELINE <span class="number">24
-<a href=#468 id=468 data-nosnippet>468</a>	</span>RTLREADING <span class="number">256
-<a href=#469 id=469 data-nosnippet>469</a></span>}</code></pre></div></section></main></body></html>
+<a href=#297 id=297 data-nosnippet>297</a><span class="macro">const_bitflag!</span> { PT: u8;
+<a href=#298 id=298 data-nosnippet>298</a>	<span class="doccomment">/// [`HDC::PolyDraw`](crate::prelude::gdi_Hdc::PolyDraw) `aj` (`u8`).
+<a href=#299 id=299 data-nosnippet>299</a>	</span>=&gt;
+<a href=#300 id=300 data-nosnippet>300</a>	CLOSEFIGURE <span class="number">0x01
+<a href=#301 id=301 data-nosnippet>301</a>	</span>LINETO <span class="number">0x02
+<a href=#302 id=302 data-nosnippet>302</a>	</span>BEZIERTO <span class="number">0x04
+<a href=#303 id=303 data-nosnippet>303</a>	</span>MOVETO <span class="number">0x06
+<a href=#304 id=304 data-nosnippet>304</a></span>}
+<a href=#305 id=305 data-nosnippet>305</a>
+<a href=#306 id=306 data-nosnippet>306</a><span class="macro">const_ordinary!</span> { QUALITY: u8;
+<a href=#307 id=307 data-nosnippet>307</a>	<span class="doccomment">/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `quality`
+<a href=#308 id=308 data-nosnippet>308</a>	/// and [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).
+<a href=#309 id=309 data-nosnippet>309</a>	</span>=&gt;
+<a href=#310 id=310 data-nosnippet>310</a>	DEFAULT <span class="number">0
+<a href=#311 id=311 data-nosnippet>311</a>	</span>DRAFT <span class="number">1
+<a href=#312 id=312 data-nosnippet>312</a>	</span>PROOF <span class="number">2
+<a href=#313 id=313 data-nosnippet>313</a>	</span>NONANTIALIASED <span class="number">3
+<a href=#314 id=314 data-nosnippet>314</a>	</span>ANTIALIASED <span class="number">4
+<a href=#315 id=315 data-nosnippet>315</a>	</span>CLEARTYPE <span class="number">5
+<a href=#316 id=316 data-nosnippet>316</a>	</span>CLEARTYPE_NATURAL <span class="number">6
+<a href=#317 id=317 data-nosnippet>317</a></span>}
+<a href=#318 id=318 data-nosnippet>318</a>
+<a href=#319 id=319 data-nosnippet>319</a><span class="macro">const_ordinary!</span> { RGN: i32;
+<a href=#320 id=320 data-nosnippet>320</a>	<span class="doccomment">/// [`HDC::SelectClipPath`](crate::prelude::gdi_Hdc::SelectClipPath) `mode`
+<a href=#321 id=321 data-nosnippet>321</a>	/// (`i32`).
+<a href=#322 id=322 data-nosnippet>322</a>	</span>=&gt;
+<a href=#323 id=323 data-nosnippet>323</a>	AND <span class="number">1
+<a href=#324 id=324 data-nosnippet>324</a>	</span>OR <span class="number">2
+<a href=#325 id=325 data-nosnippet>325</a>	</span>XOR <span class="number">3
+<a href=#326 id=326 data-nosnippet>326</a>	</span>DIFF <span class="number">4
+<a href=#327 id=327 data-nosnippet>327</a>	</span>COPY <span class="number">5
+<a href=#328 id=328 data-nosnippet>328</a></span>}
+<a href=#329 id=329 data-nosnippet>329</a>
+<a href=#330 id=330 data-nosnippet>330</a><span class="macro">const_ordinary!</span> { ROP: u32;
+<a href=#331 id=331 data-nosnippet>331</a>	<span class="doccomment">/// Raster operation code (`u32`).
+<a href=#332 id=332 data-nosnippet>332</a>	/// [`HDC::BitBlt`](crate::prelude::gdi_Hdc::BitBlt) `rop`,
+<a href=#333 id=333 data-nosnippet>333</a>	/// [`HDC::PatBlt`](crate::prelude::gdi_Hdc::PatBlt) `rop` and
+<a href=#334 id=334 data-nosnippet>334</a>	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `dwRop`.
+<a href=#335 id=335 data-nosnippet>335</a>	///
+<a href=#336 id=336 data-nosnippet>336</a>	/// Originally has no prefix.
+<a href=#337 id=337 data-nosnippet>337</a>	</span>=&gt;
+<a href=#338 id=338 data-nosnippet>338</a>	<span class="doccomment">/// Copies the source rectangle directly to the destination rectangle.
+<a href=#339 id=339 data-nosnippet>339</a>	</span>SRCCOPY <span class="number">0x00cc_0020
+<a href=#340 id=340 data-nosnippet>340</a>	</span><span class="doccomment">/// Combines the colors of the source and destination rectangles by using
+<a href=#341 id=341 data-nosnippet>341</a>	/// the Boolean OR operator.
+<a href=#342 id=342 data-nosnippet>342</a>	</span>SRCPAINT <span class="number">0x00ee_0086
+<a href=#343 id=343 data-nosnippet>343</a>	</span><span class="doccomment">/// Combines the colors of the source and destination rectangles by using
+<a href=#344 id=344 data-nosnippet>344</a>	/// the Boolean AND operator.
+<a href=#345 id=345 data-nosnippet>345</a>	</span>SRCAND <span class="number">0x0088_00c6
+<a href=#346 id=346 data-nosnippet>346</a>	</span><span class="doccomment">/// Combines the colors of the source and destination rectangles by using
+<a href=#347 id=347 data-nosnippet>347</a>	/// the Boolean XOR operator.
+<a href=#348 id=348 data-nosnippet>348</a>	</span>SRCINVERT <span class="number">0x0066_0046
+<a href=#349 id=349 data-nosnippet>349</a>	</span><span class="doccomment">/// Combines the inverted colors of the destination rectangle with the
+<a href=#350 id=350 data-nosnippet>350</a>	/// colors of the source rectangle by using the Boolean AND operator.
+<a href=#351 id=351 data-nosnippet>351</a>	</span>SRCERASE <span class="number">0x0044_0328
+<a href=#352 id=352 data-nosnippet>352</a>	</span><span class="doccomment">/// Copies the inverted source rectangle to the destination.
+<a href=#353 id=353 data-nosnippet>353</a>	</span>NOTSRCCOPY <span class="number">0x0033_0008
+<a href=#354 id=354 data-nosnippet>354</a>	</span><span class="doccomment">/// Combines the colors of the source and destination rectangles by using
+<a href=#355 id=355 data-nosnippet>355</a>	/// the Boolean OR operator and then inverts the resultant color.
+<a href=#356 id=356 data-nosnippet>356</a>	</span>NOTSRCERASE <span class="number">0x0011_00a6
+<a href=#357 id=357 data-nosnippet>357</a>	</span><span class="doccomment">/// Merges the colors of the source rectangle with the brush currently
+<a href=#358 id=358 data-nosnippet>358</a>	/// selected in hdcDest, by using the Boolean AND operator.
+<a href=#359 id=359 data-nosnippet>359</a>	</span>MERGECOPY <span class="number">0x00c0_00ca
+<a href=#360 id=360 data-nosnippet>360</a>	</span><span class="doccomment">/// Merges the colors of the inverted source rectangle with the colors of
+<a href=#361 id=361 data-nosnippet>361</a>	/// the destination rectangle by using the Boolean OR operator.
+<a href=#362 id=362 data-nosnippet>362</a>	</span>MERGEPAINT <span class="number">0x00bb_0226
+<a href=#363 id=363 data-nosnippet>363</a>	</span><span class="doccomment">/// Copies the brush currently selected in hdcDest, into the destination
+<a href=#364 id=364 data-nosnippet>364</a>	/// bitmap.
+<a href=#365 id=365 data-nosnippet>365</a>	</span>PATCOPY <span class="number">0x00f0_0021
+<a href=#366 id=366 data-nosnippet>366</a>	</span><span class="doccomment">/// Combines the colors of the brush currently selected in hdcDest, with the
+<a href=#367 id=367 data-nosnippet>367</a>	/// colors of the inverted source rectangle by using the Boolean OR
+<a href=#368 id=368 data-nosnippet>368</a>	/// operator. The result of this operation is combined with the colors of
+<a href=#369 id=369 data-nosnippet>369</a>	/// the destination rectangle by using the Boolean OR operator.
+<a href=#370 id=370 data-nosnippet>370</a>	</span>PATPAINT <span class="number">0x00fb_0a09
+<a href=#371 id=371 data-nosnippet>371</a>	</span><span class="doccomment">/// Combines the colors of the brush currently selected in hdcDest, with the
+<a href=#372 id=372 data-nosnippet>372</a>	/// colors of the destination rectangle by using the Boolean XOR operator.
+<a href=#373 id=373 data-nosnippet>373</a>	</span>PATINVERT <span class="number">0x005a_0049
+<a href=#374 id=374 data-nosnippet>374</a>	</span><span class="doccomment">/// Inverts the destination rectangle.
+<a href=#375 id=375 data-nosnippet>375</a>	</span>DSTINVERT <span class="number">0x0055_0009
+<a href=#376 id=376 data-nosnippet>376</a>	</span><span class="doccomment">/// Fills the destination rectangle using the color associated with index 0
+<a href=#377 id=377 data-nosnippet>377</a>	/// in the physical palette. (This color is black for the default physical
+<a href=#378 id=378 data-nosnippet>378</a>	/// palette.)
+<a href=#379 id=379 data-nosnippet>379</a>	</span>BLACKNESS <span class="number">0x0000_0042
+<a href=#380 id=380 data-nosnippet>380</a>	</span><span class="doccomment">/// Fills the destination rectangle using the color associated with index 1
+<a href=#381 id=381 data-nosnippet>381</a>	/// in the physical palette. (This color is white for the default physical
+<a href=#382 id=382 data-nosnippet>382</a>	/// palette.)
+<a href=#383 id=383 data-nosnippet>383</a>	</span>WHITENESS <span class="number">0x00ff_0062
+<a href=#384 id=384 data-nosnippet>384</a>	</span><span class="doccomment">/// Prevents the bitmap from being mirrored.
+<a href=#385 id=385 data-nosnippet>385</a>	</span>NOMIRRORBITMAP <span class="number">0x8000_0000
+<a href=#386 id=386 data-nosnippet>386</a>	</span><span class="doccomment">/// Includes any windows that are layered on top of your window in the
+<a href=#387 id=387 data-nosnippet>387</a>	/// resulting image. By default, the image only contains your window. Note
+<a href=#388 id=388 data-nosnippet>388</a>	/// that this generally cannot be used for printing device contexts.
+<a href=#389 id=389 data-nosnippet>389</a>	</span>CAPTUREBLT <span class="number">0x4000_0000
+<a href=#390 id=390 data-nosnippet>390</a></span>}
+<a href=#391 id=391 data-nosnippet>391</a>
+<a href=#392 id=392 data-nosnippet>392</a><span class="macro">const_ordinary!</span> { STOCK_BRUSH: i32;
+<a href=#393 id=393 data-nosnippet>393</a>	<span class="doccomment">/// [`HBRUSH::GetStockObject`](crate::prelude::gdi_Hbrush::GetStockObject)
+<a href=#394 id=394 data-nosnippet>394</a>	/// `i` (`i32`).
+<a href=#395 id=395 data-nosnippet>395</a>	</span>=&gt;
+<a href=#396 id=396 data-nosnippet>396</a>	BLACK <span class="number">4
+<a href=#397 id=397 data-nosnippet>397</a>	</span>DKGRAY <span class="number">3
+<a href=#398 id=398 data-nosnippet>398</a>	</span>DC <span class="number">18
+<a href=#399 id=399 data-nosnippet>399</a>	</span>GRAY <span class="number">2
+<a href=#400 id=400 data-nosnippet>400</a>	</span>HOLLOW <span class="self">Self</span>::NULL.<span class="number">0
+<a href=#401 id=401 data-nosnippet>401</a>	</span>LTGRAY <span class="number">1
+<a href=#402 id=402 data-nosnippet>402</a>	</span>NULL <span class="number">5
+<a href=#403 id=403 data-nosnippet>403</a>	</span>WHITE <span class="number">0
+<a href=#404 id=404 data-nosnippet>404</a></span>}
+<a href=#405 id=405 data-nosnippet>405</a>
+<a href=#406 id=406 data-nosnippet>406</a><span class="macro">const_ordinary!</span> { STOCK_FONT: i32;
+<a href=#407 id=407 data-nosnippet>407</a>	<span class="doccomment">/// [`HFONT::GetStockObject`](crate::prelude::gdi_Hfont::GetStockObject) `i`
+<a href=#408 id=408 data-nosnippet>408</a>	/// (`i32`).
+<a href=#409 id=409 data-nosnippet>409</a>	</span>=&gt;
+<a href=#410 id=410 data-nosnippet>410</a>	ANSI_FIXED <span class="number">11
+<a href=#411 id=411 data-nosnippet>411</a>	</span>ANSI_VAR <span class="number">12
+<a href=#412 id=412 data-nosnippet>412</a>	</span>DEVICE_DEFAULT <span class="number">14
+<a href=#413 id=413 data-nosnippet>413</a>	</span>DEFAULT_GUI <span class="number">17
+<a href=#414 id=414 data-nosnippet>414</a>	</span>OEM_FIXED <span class="number">10
+<a href=#415 id=415 data-nosnippet>415</a>	</span>SYSTEM <span class="number">13
+<a href=#416 id=416 data-nosnippet>416</a>	</span>SYSTEM_FIXED <span class="number">16
+<a href=#417 id=417 data-nosnippet>417</a></span>}
+<a href=#418 id=418 data-nosnippet>418</a>
+<a href=#419 id=419 data-nosnippet>419</a><span class="macro">const_ordinary!</span> { STOCK_PEN: i32;
+<a href=#420 id=420 data-nosnippet>420</a>	<span class="doccomment">/// [`HPEN::GetStockObject`](crate::prelude::gdi_Hpen::GetStockObject) `i`
+<a href=#421 id=421 data-nosnippet>421</a>	/// (`i32`).
+<a href=#422 id=422 data-nosnippet>422</a>	</span>=&gt;
+<a href=#423 id=423 data-nosnippet>423</a>	BLACK <span class="number">7
+<a href=#424 id=424 data-nosnippet>424</a>	</span>DC <span class="number">19
+<a href=#425 id=425 data-nosnippet>425</a>	</span>NULL <span class="number">8
+<a href=#426 id=426 data-nosnippet>426</a>	</span>WHITE <span class="number">6
+<a href=#427 id=427 data-nosnippet>427</a></span>}
+<a href=#428 id=428 data-nosnippet>428</a>
+<a href=#429 id=429 data-nosnippet>429</a><span class="macro">const_ordinary!</span> { STRETCH_MODE: i32;
+<a href=#430 id=430 data-nosnippet>430</a>	<span class="doccomment">/// [`HDC::SetStretchBltMode`](crate::prelude::gdi_Hdc::SetStretchBltMode)
+<a href=#431 id=431 data-nosnippet>431</a>	/// `mode` (`i32`).
+<a href=#432 id=432 data-nosnippet>432</a>	</span>=&gt;
+<a href=#433 id=433 data-nosnippet>433</a>	<span class="doccomment">/// Performs a Boolean AND operation using the color values for the
+<a href=#434 id=434 data-nosnippet>434</a>	/// eliminated and existing pixels. If the bitmap is a monochrome bitmap,
+<a href=#435 id=435 data-nosnippet>435</a>	/// this mode preserves black pixels at the expense of white pixels.
+<a href=#436 id=436 data-nosnippet>436</a>	</span>BLACKONWHITE <span class="number">1
+<a href=#437 id=437 data-nosnippet>437</a>	</span><span class="doccomment">/// Deletes the pixels. This mode deletes all eliminated lines of pixels
+<a href=#438 id=438 data-nosnippet>438</a>	/// without trying to preserve their information.
+<a href=#439 id=439 data-nosnippet>439</a>	</span>COLORONCOLOR <span class="number">3
+<a href=#440 id=440 data-nosnippet>440</a>	</span><span class="doccomment">/// Maps pixels from the source rectangle into blocks of pixels in the
+<a href=#441 id=441 data-nosnippet>441</a>	/// destination rectangle. The average color over the destination block of
+<a href=#442 id=442 data-nosnippet>442</a>	/// pixels approximates the color of the source pixels.
+<a href=#443 id=443 data-nosnippet>443</a>	///
+<a href=#444 id=444 data-nosnippet>444</a>	/// After setting the `HALFTONE` stretching mode, an application must call
+<a href=#445 id=445 data-nosnippet>445</a>	/// the [`HDC::SetBrushOrgEx`](crate::prelude::gdi_Hdc::SetBrushOrgEx)
+<a href=#446 id=446 data-nosnippet>446</a>	/// function to set the brush origin. If it fails to do so, brush
+<a href=#447 id=447 data-nosnippet>447</a>	/// misalignment occurs.
+<a href=#448 id=448 data-nosnippet>448</a>	</span>HALFTONE <span class="number">4
+<a href=#449 id=449 data-nosnippet>449</a>	</span><span class="doccomment">/// Same as `BLACKONWHITE`.
+<a href=#450 id=450 data-nosnippet>450</a>	</span>STRETCH_ANDSCANS <span class="self">Self</span>::BLACKONWHITE.<span class="number">0
+<a href=#451 id=451 data-nosnippet>451</a>	</span><span class="doccomment">/// Same as `WHITEONBLACK`.
+<a href=#452 id=452 data-nosnippet>452</a>	</span>STRETCH_ORSCANS <span class="self">Self</span>::WHITEONBLACK.<span class="number">0
+<a href=#453 id=453 data-nosnippet>453</a>	</span><span class="doccomment">/// Same as `COLORONCOLOR`.
+<a href=#454 id=454 data-nosnippet>454</a>	</span>STRETCH_DELETESCANS <span class="self">Self</span>::COLORONCOLOR.<span class="number">0
+<a href=#455 id=455 data-nosnippet>455</a>	</span><span class="doccomment">/// Same as `HALFTONE`.
+<a href=#456 id=456 data-nosnippet>456</a>	</span>STRETCH_HALFTONE <span class="self">Self</span>::HALFTONE.<span class="number">0
+<a href=#457 id=457 data-nosnippet>457</a>	</span><span class="doccomment">/// Performs a Boolean OR operation using the color values for the
+<a href=#458 id=458 data-nosnippet>458</a>	/// eliminated and existing pixels. If the bitmap is a monochrome bitmap,
+<a href=#459 id=459 data-nosnippet>459</a>	/// this mode preserves white pixels at the expense of black pixels.
+<a href=#460 id=460 data-nosnippet>460</a>	</span>WHITEONBLACK <span class="number">2
+<a href=#461 id=461 data-nosnippet>461</a></span>}
+<a href=#462 id=462 data-nosnippet>462</a>
+<a href=#463 id=463 data-nosnippet>463</a><span class="macro">const_bitflag!</span> { TA: u32;
+<a href=#464 id=464 data-nosnippet>464</a>	<span class="doccomment">/// [`HDC::SetTextAlign`](crate::prelude::gdi_Hdc::SetTextAlign) `align`
+<a href=#465 id=465 data-nosnippet>465</a>	/// (`u32`).
+<a href=#466 id=466 data-nosnippet>466</a>	///
+<a href=#467 id=467 data-nosnippet>467</a>	/// Also includes constants with `VTA` prefix.
+<a href=#468 id=468 data-nosnippet>468</a>	</span>=&gt;
+<a href=#469 id=469 data-nosnippet>469</a>	NOUPDATECP <span class="number">0
+<a href=#470 id=470 data-nosnippet>470</a>	</span>UPDATECP <span class="number">1
+<a href=#471 id=471 data-nosnippet>471</a>	</span>LEFT <span class="number">0
+<a href=#472 id=472 data-nosnippet>472</a>	</span>RIGHT <span class="number">2
+<a href=#473 id=473 data-nosnippet>473</a>	</span>CENTER <span class="number">6
+<a href=#474 id=474 data-nosnippet>474</a>	</span>TOP <span class="number">0
+<a href=#475 id=475 data-nosnippet>475</a>	</span>BOTTOM <span class="number">8
+<a href=#476 id=476 data-nosnippet>476</a>	</span>BASELINE <span class="number">24
+<a href=#477 id=477 data-nosnippet>477</a>	</span>RTLREADING <span class="number">256
+<a href=#478 id=478 data-nosnippet>478</a></span>}</code></pre></div></section></main></body></html>
