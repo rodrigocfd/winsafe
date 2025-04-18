@@ -154,7 +154,6 @@ impl CheckBox {
 	/// Calls [`HWND::SetWindowText`](crate::prelude::user_Hwnd::SetWindowText)
 	/// to set the text and resizes the control to exactly fit it.
 	pub fn set_text_and_resize(&self, text: &str) -> SysResult<()> {
-		self.hwnd().SetWindowText(text)?;
 		let bound_box = text_calc::bound_box_with_check(&text_calc::remove_accel_ampersands(text))?;
 		self.hwnd().SetWindowPos(
 			HwndPlace::None,
@@ -162,6 +161,7 @@ impl CheckBox {
 			bound_box,
 			co::SWP::NOZORDER | co::SWP::NOMOVE,
 		)?;
+		self.hwnd().SetWindowText(text)?;
 		Ok(())
 	}
 
