@@ -5,8 +5,10 @@ extern_sys! { "winspool";
 	AddFormW(HANDLE, u32, PVOID) -> BOOL
 	AddJobW(HANDLE, u32, PVOID, u32, *mut u32) -> BOOL
 	AddPortW(PSTR, HANDLE, PSTR) -> BOOL
+	AddPrinterConnection2W(HANDLE, PCSTR, u32, PVOID) -> BOOL
 	AddPrinterConnectionW(PSTR) -> BOOL
 	AddPrinterW(PCSTR, u32, PVOID) -> HANDLE
+	AdvancedDocumentPropertiesW(HANDLE, HANDLE, PCSTR, PVOID, PCVOID) -> i32
 	ClosePrinter(HANDLE) -> BOOL
 	ConfigurePortW(PSTR, HANDLE, PSTR) -> BOOL
 	DeleteFormW(HANDLE, PSTR) -> BOOL

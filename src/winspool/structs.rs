@@ -69,6 +69,22 @@ impl<'a, 'b, 'c, 'd> FORM_INFO_2<'a, 'b, 'c, 'd> {
 	pub_fn_string_ptr_get_set!('d, pDisplayName, set_pDisplayName);
 }
 
+/// [`PRINTER_CONNECTION_INFO_1`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-connection-info-1)
+/// struct.
+#[repr(C)]
+pub struct PRINTER_CONNECTION_INFO_1<'a> {
+	pub dwFlags: co::PRINTER_CONNECTION,
+	pszDriverName: *mut u16,
+
+	_pszDriverName: PhantomData<&'a mut u16>,
+}
+
+impl_default!(PRINTER_CONNECTION_INFO_1, 'a);
+
+impl<'a> PRINTER_CONNECTION_INFO_1<'a> {
+	pub_fn_string_ptr_get_set!('a, pszDriverName, set_pszDriverName);
+}
+
 /// [`PRINTER_DEFAULTS`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-defaults)
 /// struct.
 #[repr(C)]

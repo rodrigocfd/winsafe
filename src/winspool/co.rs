@@ -52,6 +52,14 @@ const_ordinary! { PRINTER_ATTRIBUTE_4: u32;
 	NETWORK PRINTER_ATTRIBUTE_2::NETWORK.0
 }
 
+const_bitflag! { PRINTER_CONNECTION: u32;
+	/// [`PRINTER_CONNECTION_INFO_1`](crate::PRINTER_CONNECTION_INFO_1)
+	/// `dwFlags` (`u32`).
+	=>
+	MISMATCH 0x0000_0020
+	NO_UI 0x0000_0040
+}
+
 const_bitflag! { PRINTER_ENUM: u32;
 	/// [`EnumPrinters2`](crate::EnumPrinters2) and
 	/// [`EnumPrinters4`](crate::EnumPrinters4) `flags` (`u32`).
