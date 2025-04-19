@@ -52,58 +52,66 @@
 <a href=#52 id=52 data-nosnippet>52</a>	</span>NETWORK PRINTER_ATTRIBUTE_2::NETWORK.<span class="number">0
 <a href=#53 id=53 data-nosnippet>53</a></span>}
 <a href=#54 id=54 data-nosnippet>54</a>
-<a href=#55 id=55 data-nosnippet>55</a><span class="macro">const_bitflag!</span> { PRINTER_ENUM: u32;
-<a href=#56 id=56 data-nosnippet>56</a>	<span class="doccomment">/// [`EnumPrinters2`](crate::EnumPrinters2) and
-<a href=#57 id=57 data-nosnippet>57</a>	/// [`EnumPrinters4`](crate::EnumPrinters4) `flags` (`u32`).
+<a href=#55 id=55 data-nosnippet>55</a><span class="macro">const_bitflag!</span> { PRINTER_CONNECTION: u32;
+<a href=#56 id=56 data-nosnippet>56</a>	<span class="doccomment">/// [`PRINTER_CONNECTION_INFO_1`](crate::PRINTER_CONNECTION_INFO_1)
+<a href=#57 id=57 data-nosnippet>57</a>	/// `dwFlags` (`u32`).
 <a href=#58 id=58 data-nosnippet>58</a>	</span>=&gt;
-<a href=#59 id=59 data-nosnippet>59</a>	LOCAL <span class="number">0x0000_0002
-<a href=#60 id=60 data-nosnippet>60</a>	</span>NAME <span class="number">0x0000_0008
-<a href=#61 id=61 data-nosnippet>61</a>	</span>SHARED <span class="number">0x0000_0020
-<a href=#62 id=62 data-nosnippet>62</a>	</span>CONNECTIONS <span class="number">0x0000_0004
-<a href=#63 id=63 data-nosnippet>63</a>	</span>NETWORK <span class="number">0x0000_0040
-<a href=#64 id=64 data-nosnippet>64</a>	</span>REMOTE <span class="number">0x0000_0010
-<a href=#65 id=65 data-nosnippet>65</a>	</span>CATEGORY_3D <span class="number">0x0400_0000
-<a href=#66 id=66 data-nosnippet>66</a>	</span>CATEGORY_ALL <span class="number">0x0200_0000
-<a href=#67 id=67 data-nosnippet>67</a></span>}
-<a href=#68 id=68 data-nosnippet>68</a>
-<a href=#69 id=69 data-nosnippet>69</a><span class="macro">const_bitflag!</span> { PRINTER_STATUS: u32;
-<a href=#70 id=70 data-nosnippet>70</a>	<span class="doccomment">/// [`PRINTER_INFO_2`](crate::PRINTER_INFO_2) `status` (`u32`).
-<a href=#71 id=71 data-nosnippet>71</a>	</span>=&gt;
-<a href=#72 id=72 data-nosnippet>72</a>	PAUSED <span class="number">0x0000_0001
-<a href=#73 id=73 data-nosnippet>73</a>	</span>ERROR <span class="number">0x0000_0002
-<a href=#74 id=74 data-nosnippet>74</a>	</span>PENDING_DELETION <span class="number">0x0000_0004
-<a href=#75 id=75 data-nosnippet>75</a>	</span>PAPER_JAM <span class="number">0x0000_0008
-<a href=#76 id=76 data-nosnippet>76</a>	</span>PAPER_OUT <span class="number">0x0000_0010
-<a href=#77 id=77 data-nosnippet>77</a>	</span>MANUAL_FEED <span class="number">0x0000_0020
-<a href=#78 id=78 data-nosnippet>78</a>	</span>PAPER_PROBLEM <span class="number">0x0000_0040
-<a href=#79 id=79 data-nosnippet>79</a>	</span>OFFLINE <span class="number">0x0000_0080
-<a href=#80 id=80 data-nosnippet>80</a>	</span>IO_ACTIVE <span class="number">0x0000_0100
-<a href=#81 id=81 data-nosnippet>81</a>	</span>BUSY <span class="number">0x0000_0200
-<a href=#82 id=82 data-nosnippet>82</a>	</span>PRINTING <span class="number">0x0000_0400
-<a href=#83 id=83 data-nosnippet>83</a>	</span>OUTPUT_BIN_FULL <span class="number">0x0000_0800
-<a href=#84 id=84 data-nosnippet>84</a>	</span>NOT_AVAILABLE <span class="number">0x0000_1000
-<a href=#85 id=85 data-nosnippet>85</a>	</span>WAITING <span class="number">0x0000_2000
-<a href=#86 id=86 data-nosnippet>86</a>	</span>PROCESSING <span class="number">0x0000_4000
-<a href=#87 id=87 data-nosnippet>87</a>	</span>INITIALIZING <span class="number">0x0000_8000
-<a href=#88 id=88 data-nosnippet>88</a>	</span>WARMING_UP <span class="number">0x0001_0000
-<a href=#89 id=89 data-nosnippet>89</a>	</span>TONER_LOW <span class="number">0x0002_0000
-<a href=#90 id=90 data-nosnippet>90</a>	</span>NO_TONER <span class="number">0x0004_0000
-<a href=#91 id=91 data-nosnippet>91</a>	</span>PAGE_PUNT <span class="number">0x0008_0000
-<a href=#92 id=92 data-nosnippet>92</a>	</span>USER_INTERVENTION <span class="number">0x0010_0000
-<a href=#93 id=93 data-nosnippet>93</a>	</span>OUT_OF_MEMORY <span class="number">0x0020_0000
-<a href=#94 id=94 data-nosnippet>94</a>	</span>DOOR_OPEN <span class="number">0x0040_0000
-<a href=#95 id=95 data-nosnippet>95</a>	</span>SERVER_UNKNOWN <span class="number">0x0080_0000
-<a href=#96 id=96 data-nosnippet>96</a>	</span>POWER_SAVE <span class="number">0x0100_0000
-<a href=#97 id=97 data-nosnippet>97</a>	</span>SERVER_OFFLINE <span class="number">0x0200_0000
-<a href=#98 id=98 data-nosnippet>98</a>	</span>DRIVER_UPDATE_NEEDED <span class="number">0x0400_0000
-<a href=#99 id=99 data-nosnippet>99</a></span>}
-<a href=#100 id=100 data-nosnippet>100</a>
-<a href=#101 id=101 data-nosnippet>101</a><span class="macro">const_bitflag!</span> { STRING_FORM: u32;
-<a href=#102 id=102 data-nosnippet>102</a>	<span class="doccomment">/// [`FORM_INFO_2`](crate::FORM_INFO_2) `StringType` (`u32`).
-<a href=#103 id=103 data-nosnippet>103</a>	///
-<a href=#104 id=104 data-nosnippet>104</a>	/// Originally has `STRING` prefix.
-<a href=#105 id=105 data-nosnippet>105</a>	</span>=&gt;
-<a href=#106 id=106 data-nosnippet>106</a>	NONE <span class="number">0x0000_0001
-<a href=#107 id=107 data-nosnippet>107</a>	</span>MUIDLL <span class="number">0x0000_0002
-<a href=#108 id=108 data-nosnippet>108</a>	</span>LANGPAIR <span class="number">0x0000_0004
-<a href=#109 id=109 data-nosnippet>109</a></span>}</code></pre></div></section></main></body></html>
+<a href=#59 id=59 data-nosnippet>59</a>	MISMATCH <span class="number">0x0000_0020
+<a href=#60 id=60 data-nosnippet>60</a>	</span>NO_UI <span class="number">0x0000_0040
+<a href=#61 id=61 data-nosnippet>61</a></span>}
+<a href=#62 id=62 data-nosnippet>62</a>
+<a href=#63 id=63 data-nosnippet>63</a><span class="macro">const_bitflag!</span> { PRINTER_ENUM: u32;
+<a href=#64 id=64 data-nosnippet>64</a>	<span class="doccomment">/// [`EnumPrinters2`](crate::EnumPrinters2) and
+<a href=#65 id=65 data-nosnippet>65</a>	/// [`EnumPrinters4`](crate::EnumPrinters4) `flags` (`u32`).
+<a href=#66 id=66 data-nosnippet>66</a>	</span>=&gt;
+<a href=#67 id=67 data-nosnippet>67</a>	LOCAL <span class="number">0x0000_0002
+<a href=#68 id=68 data-nosnippet>68</a>	</span>NAME <span class="number">0x0000_0008
+<a href=#69 id=69 data-nosnippet>69</a>	</span>SHARED <span class="number">0x0000_0020
+<a href=#70 id=70 data-nosnippet>70</a>	</span>CONNECTIONS <span class="number">0x0000_0004
+<a href=#71 id=71 data-nosnippet>71</a>	</span>NETWORK <span class="number">0x0000_0040
+<a href=#72 id=72 data-nosnippet>72</a>	</span>REMOTE <span class="number">0x0000_0010
+<a href=#73 id=73 data-nosnippet>73</a>	</span>CATEGORY_3D <span class="number">0x0400_0000
+<a href=#74 id=74 data-nosnippet>74</a>	</span>CATEGORY_ALL <span class="number">0x0200_0000
+<a href=#75 id=75 data-nosnippet>75</a></span>}
+<a href=#76 id=76 data-nosnippet>76</a>
+<a href=#77 id=77 data-nosnippet>77</a><span class="macro">const_bitflag!</span> { PRINTER_STATUS: u32;
+<a href=#78 id=78 data-nosnippet>78</a>	<span class="doccomment">/// [`PRINTER_INFO_2`](crate::PRINTER_INFO_2) `status` (`u32`).
+<a href=#79 id=79 data-nosnippet>79</a>	</span>=&gt;
+<a href=#80 id=80 data-nosnippet>80</a>	PAUSED <span class="number">0x0000_0001
+<a href=#81 id=81 data-nosnippet>81</a>	</span>ERROR <span class="number">0x0000_0002
+<a href=#82 id=82 data-nosnippet>82</a>	</span>PENDING_DELETION <span class="number">0x0000_0004
+<a href=#83 id=83 data-nosnippet>83</a>	</span>PAPER_JAM <span class="number">0x0000_0008
+<a href=#84 id=84 data-nosnippet>84</a>	</span>PAPER_OUT <span class="number">0x0000_0010
+<a href=#85 id=85 data-nosnippet>85</a>	</span>MANUAL_FEED <span class="number">0x0000_0020
+<a href=#86 id=86 data-nosnippet>86</a>	</span>PAPER_PROBLEM <span class="number">0x0000_0040
+<a href=#87 id=87 data-nosnippet>87</a>	</span>OFFLINE <span class="number">0x0000_0080
+<a href=#88 id=88 data-nosnippet>88</a>	</span>IO_ACTIVE <span class="number">0x0000_0100
+<a href=#89 id=89 data-nosnippet>89</a>	</span>BUSY <span class="number">0x0000_0200
+<a href=#90 id=90 data-nosnippet>90</a>	</span>PRINTING <span class="number">0x0000_0400
+<a href=#91 id=91 data-nosnippet>91</a>	</span>OUTPUT_BIN_FULL <span class="number">0x0000_0800
+<a href=#92 id=92 data-nosnippet>92</a>	</span>NOT_AVAILABLE <span class="number">0x0000_1000
+<a href=#93 id=93 data-nosnippet>93</a>	</span>WAITING <span class="number">0x0000_2000
+<a href=#94 id=94 data-nosnippet>94</a>	</span>PROCESSING <span class="number">0x0000_4000
+<a href=#95 id=95 data-nosnippet>95</a>	</span>INITIALIZING <span class="number">0x0000_8000
+<a href=#96 id=96 data-nosnippet>96</a>	</span>WARMING_UP <span class="number">0x0001_0000
+<a href=#97 id=97 data-nosnippet>97</a>	</span>TONER_LOW <span class="number">0x0002_0000
+<a href=#98 id=98 data-nosnippet>98</a>	</span>NO_TONER <span class="number">0x0004_0000
+<a href=#99 id=99 data-nosnippet>99</a>	</span>PAGE_PUNT <span class="number">0x0008_0000
+<a href=#100 id=100 data-nosnippet>100</a>	</span>USER_INTERVENTION <span class="number">0x0010_0000
+<a href=#101 id=101 data-nosnippet>101</a>	</span>OUT_OF_MEMORY <span class="number">0x0020_0000
+<a href=#102 id=102 data-nosnippet>102</a>	</span>DOOR_OPEN <span class="number">0x0040_0000
+<a href=#103 id=103 data-nosnippet>103</a>	</span>SERVER_UNKNOWN <span class="number">0x0080_0000
+<a href=#104 id=104 data-nosnippet>104</a>	</span>POWER_SAVE <span class="number">0x0100_0000
+<a href=#105 id=105 data-nosnippet>105</a>	</span>SERVER_OFFLINE <span class="number">0x0200_0000
+<a href=#106 id=106 data-nosnippet>106</a>	</span>DRIVER_UPDATE_NEEDED <span class="number">0x0400_0000
+<a href=#107 id=107 data-nosnippet>107</a></span>}
+<a href=#108 id=108 data-nosnippet>108</a>
+<a href=#109 id=109 data-nosnippet>109</a><span class="macro">const_bitflag!</span> { STRING_FORM: u32;
+<a href=#110 id=110 data-nosnippet>110</a>	<span class="doccomment">/// [`FORM_INFO_2`](crate::FORM_INFO_2) `StringType` (`u32`).
+<a href=#111 id=111 data-nosnippet>111</a>	///
+<a href=#112 id=112 data-nosnippet>112</a>	/// Originally has `STRING` prefix.
+<a href=#113 id=113 data-nosnippet>113</a>	</span>=&gt;
+<a href=#114 id=114 data-nosnippet>114</a>	NONE <span class="number">0x0000_0001
+<a href=#115 id=115 data-nosnippet>115</a>	</span>MUIDLL <span class="number">0x0000_0002
+<a href=#116 id=116 data-nosnippet>116</a>	</span>LANGPAIR <span class="number">0x0000_0004
+<a href=#117 id=117 data-nosnippet>117</a></span>}</code></pre></div></section></main></body></html>
