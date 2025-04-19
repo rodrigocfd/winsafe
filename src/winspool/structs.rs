@@ -5,8 +5,73 @@ use std::marker::PhantomData;
 use crate::co;
 use crate::decl::*;
 
+/// [`ADDJOB_INFO_1 `](https://learn.microsoft.com/en-us/windows/win32/printdocs/addjob-info-1)
+/// struct.
+#[repr(C)]
+pub struct ADDJOB_INFO_1<'a> {
+	pPath: *mut u16,
+	pub JobId: u32,
+
+	_pPath: PhantomData<&'a mut u16>,
+}
+
+impl_default!(ADDJOB_INFO_1, 'a);
+
+impl<'a> ADDJOB_INFO_1<'a> {
+	pub_fn_string_ptr_get_set!('a, pPath, set_pPath);
+}
+
+/// [`FORM_INFO_1`](https://learn.microsoft.com/en-us/windows/win32/printdocs/form-info-1)
+/// struct.
+#[repr(C)]
+pub struct FORM_INFO_1<'a> {
+	pub Flags: co::FORM,
+	pName: *mut u16,
+	pub Size: SIZE,
+	pub ImageableArea: RECT,
+
+	_pName: PhantomData<&'a mut u16>,
+}
+
+impl_default!(FORM_INFO_1, 'a);
+
+impl<'a> FORM_INFO_1<'a> {
+	pub_fn_string_ptr_get_set!('a, pName, set_pName);
+}
+
+/// [`FORM_INFO_2`](https://learn.microsoft.com/en-us/windows/win32/printdocs/form-info-2)
+/// struct.
+#[repr(C)]
+pub struct FORM_INFO_2<'a, 'b, 'c, 'd> {
+	pub Flags: co::FORM,
+	pName: *mut u16,
+	pub Size: SIZE,
+	pub ImageableArea: RECT,
+	pKeyword: *mut u16,
+	pub StringType: co::STRING_FORM,
+	pMuiDll: *mut u16,
+	pub dwResourceId: u32,
+	pDisplayName: *mut u16,
+	pub wLangId: LANGID,
+
+	_pName: PhantomData<&'a mut u16>,
+	_pKeyword: PhantomData<&'b mut u16>,
+	_pMuiDll: PhantomData<&'c mut u16>,
+	_pDisplayName: PhantomData<&'d mut u16>,
+}
+
+impl_default!(FORM_INFO_2, 'a, 'b, 'c, 'd);
+
+impl<'a, 'b, 'c, 'd> FORM_INFO_2<'a, 'b, 'c, 'd> {
+	pub_fn_string_ptr_get_set!('a, pName, set_pName);
+	pub_fn_string_ptr_get_set!('b, pKeyword, set_pKeyword);
+	pub_fn_string_ptr_get_set!('c, pMuiDll, set_pMuiDll);
+	pub_fn_string_ptr_get_set!('d, pDisplayName, set_pDisplayName);
+}
+
 /// [`PRINTER_DEFAULTS`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-defaults)
 /// struct.
+#[repr(C)]
 pub struct PRINTER_DEFAULTS<'a, 'b> {
 	pDataType: *mut u16,
 	pDevMode: *mut DEVMODE,

@@ -2,6 +2,15 @@
 
 use crate::co::*;
 
+const_bitflag! { FORM: u32;
+	/// [`FORM_INFO_1`](crate::FORM_INFO_1) and
+	/// [`FORM_INFO_2`](crate::FORM_INFO_2) `Flags` (`u32`).
+	=>
+	USER 0x0000_0000
+	BUILTIN 0x0000_0001
+	PRINTER 0x0000_0002
+}
+
 const_bitflag! { PRINTER_ACCESS: u32;
 	/// [`PRINTER_DEFAULTS`](crate::PRINTER_DEFAULTS) `DesiredAccess` (`u32`).
 	=>
@@ -87,4 +96,14 @@ const_bitflag! { PRINTER_STATUS: u32;
 	POWER_SAVE 0x0100_0000
 	SERVER_OFFLINE 0x0200_0000
 	DRIVER_UPDATE_NEEDED 0x0400_0000
+}
+
+const_bitflag! { STRING_FORM: u32;
+	/// [`FORM_INFO_2`](crate::FORM_INFO_2) `StringType` (`u32`).
+	///
+	/// Originally has `STRING` prefix.
+	=>
+	NONE 0x0000_0001
+	MUIDLL 0x0000_0002
+	LANGPAIR 0x0000_0004
 }

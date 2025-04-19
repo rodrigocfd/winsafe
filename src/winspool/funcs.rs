@@ -9,7 +9,7 @@ use crate::winspool::ffi;
 /// [`AddPort`](https://learn.microsoft.com/en-us/windows/win32/printdocs/addport)
 /// function.
 pub fn AddPort(name: Option<&str>, hwnd: &HWND, monitor_name: &str) -> SysResult<()> {
-	bool_to_sysresult(unsafe {
+	bool_to_invalidparm(unsafe {
 		ffi::AddPortW(
 			WString::from_opt_str(name).as_mut_ptr(),
 			hwnd.ptr(),
@@ -25,13 +25,13 @@ pub fn AddPort(name: Option<&str>, hwnd: &HWND, monitor_name: &str) -> SysResult
 ///
 /// * [`DeletePrinterConnection`](crate::DeletePrinterConnection)
 pub fn AddPrinterConnection(name: &str) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::AddPrinterConnectionW(WString::from_str(name).as_mut_ptr()) })
+	bool_to_invalidparm(unsafe { ffi::AddPrinterConnectionW(WString::from_str(name).as_mut_ptr()) })
 }
 
 /// [`ConfigurePort`](https://learn.microsoft.com/en-us/windows/win32/printdocs/configureport)
 /// function.
 pub fn ConfigurePort(name: Option<&str>, hwnd: &HWND, port_name: &str) -> SysResult<()> {
-	bool_to_sysresult(unsafe {
+	bool_to_invalidparm(unsafe {
 		ffi::ConfigurePortW(
 			WString::from_opt_str(name).as_mut_ptr(),
 			hwnd.ptr(),
@@ -47,7 +47,7 @@ pub fn DeleteMonitor(
 	environment: Option<&str>,
 	monitor_name: &str,
 ) -> SysResult<()> {
-	bool_to_sysresult(unsafe {
+	bool_to_invalidparm(unsafe {
 		ffi::DeleteMonitorW(
 			WString::from_opt_str(name).as_mut_ptr(),
 			WString::from_opt_str(environment).as_mut_ptr(),
@@ -63,7 +63,7 @@ pub fn DeleteMonitor(
 ///
 /// * [`AddPrinterConnection`](crate::AddPrinterConnection)
 pub fn DeletePrinterConnection(name: &str) -> SysResult<()> {
-	bool_to_sysresult(unsafe {
+	bool_to_invalidparm(unsafe {
 		ffi::DeletePrinterConnectionW(WString::from_str(name).as_mut_ptr())
 	})
 }
@@ -145,7 +145,7 @@ fn enum_printers<T: Default + Clone>(flags: co::PRINTER_ENUM, lvl: u32) -> SysRe
 	let num_elems = ((sz_buf + sz_unit) - ((sz_buf + sz_unit) % sz_unit)) / sz_unit;
 	let mut buf = vec![T::default(); num_elems as _];
 
-	bool_to_sysresult(unsafe {
+	bool_to_invalidparm(unsafe {
 		ffi::EnumPrintersW(
 			flags.raw(),
 			std::ptr::null_mut(),
@@ -181,12 +181,12 @@ pub fn GetDefaultPrinter() -> SysResult<String> {
 	}
 
 	let mut name_buf = WString::new_alloc_buf(sz as _);
-	bool_to_sysresult(unsafe { ffi::GetDefaultPrinterW(name_buf.as_mut_ptr(), &mut sz) })
+	bool_to_invalidparm(unsafe { ffi::GetDefaultPrinterW(name_buf.as_mut_ptr(), &mut sz) })
 		.map(|_| name_buf.to_string())
 }
 
 /// [`SetDefaultPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/setdefaultprinter)
 /// function.
 pub fn SetDefaultPrinter(printer: Option<&str>) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::SetDefaultPrinterW(WString::from_opt_str(printer).as_ptr()) })
+	bool_to_invalidparm(unsafe { ffi::SetDefaultPrinterW(WString::from_opt_str(printer).as_ptr()) })
 }

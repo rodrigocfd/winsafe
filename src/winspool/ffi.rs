@@ -2,8 +2,11 @@ use crate::kernel::ffi_types::*;
 
 extern_sys! { "winspool";
 	AbortPrinter(HANDLE) -> BOOL
+	AddFormW(HANDLE, u32, PVOID) -> BOOL
+	AddJobW(HANDLE, u32, PVOID, u32, *mut u32) -> BOOL
 	AddPortW(PSTR, HANDLE, PSTR) -> BOOL
 	AddPrinterConnectionW(PSTR) -> BOOL
+	AddPrinterW(PCSTR, u32, PVOID) -> HANDLE
 	ClosePrinter(HANDLE) -> BOOL
 	ConfigurePortW(PSTR, HANDLE, PSTR) -> BOOL
 	DeleteFormW(HANDLE, PSTR) -> BOOL
