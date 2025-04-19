@@ -68,7 +68,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
-	fn iter(&self) -> HrResult<impl Iterator<Item = HrResult<IShellItem>> + '_> {
+	fn iter(&self) -> HrResult<impl DoubleEndedIterator<Item = HrResult<IShellItem>> + '_> {
 		Ok(IshellitemarrayIter::new(self)?)
 	}
 

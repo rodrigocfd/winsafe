@@ -99,8 +99,8 @@ where
 	I: shell_IShellItemArray,
 {
 	shi_arr: &'a I,
-	count: u32,
-	current: u32,
+	front_idx: u32,
+	past_back_idx: u32,
 }
 
 impl<'a, I> Iterator for IshellitemarrayIter<'a, I>
@@ -110,20 +110,15 @@ where
 	type Item = HrResult<IShellItem>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.count {
-			return None;
-		}
-
-		match self.shi_arr.GetItemAt(self.current) {
-			Err(e) => {
-				self.current = self.count; // no further iterations will be made
-				Some(Err(e))
-			},
-			Ok(shell_item) => {
-				self.current += 1;
-				Some(Ok(shell_item))
-			},
-		}
+		self.grab(true)
+	}
+}
+impl<'a, I> DoubleEndedIterator for IshellitemarrayIter<'a, I>
+where
+	I: shell_IShellItemArray,
+{
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
 	}
 }
 
@@ -134,6 +129,32 @@ where
 	#[must_use]
 	pub(in crate::shell) fn new(shi_arr: &'a I) -> HrResult<Self> {
 		let count = shi_arr.GetCount()?;
-		Ok(Self { shi_arr, count, current: 0 })
+		Ok(Self {
+			shi_arr,
+			front_idx: 0,
+			past_back_idx: count,
+		})
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<HrResult<IShellItem>> {
+		if self.front_idx == self.past_back_idx {
+			return None;
+		}
+		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+
+		match self.shi_arr.GetItemAt(our_idx) {
+			Err(e) => {
+				(self.front_idx, self.past_back_idx) = (0, 0); // halt
+				Some(Err(e))
+			},
+			Ok(shell_item) => {
+				if is_front {
+					self.front_idx += 1;
+				} else {
+					self.past_back_idx -= 1;
+				}
+				Some(Ok(shell_item))
+			},
+		}
 	}
 }
