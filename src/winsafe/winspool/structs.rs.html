@@ -166,22 +166,37 @@
 <a href=#166 id=166 data-nosnippet>166</a>	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">'m</span>, pSecurityDescriptor, set_pSecurityDescriptor, SECURITY_DESCRIPTOR);
 <a href=#167 id=167 data-nosnippet>167</a>}
 <a href=#168 id=168 data-nosnippet>168</a>
-<a href=#169 id=169 data-nosnippet>169</a><span class="doccomment">/// [`PRINTER_INFO_4`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-info-4)
+<a href=#169 id=169 data-nosnippet>169</a><span class="doccomment">/// [`PRINTER_INFO_3`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-info-3)
 <a href=#170 id=170 data-nosnippet>170</a>/// struct.
 <a href=#171 id=171 data-nosnippet>171</a></span><span class="attr">#[repr(C)]
-<a href=#172 id=172 data-nosnippet>172</a>#[derive(Clone)]
-<a href=#173 id=173 data-nosnippet>173</a></span><span class="kw">pub struct </span>PRINTER_INFO_4&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
-<a href=#174 id=174 data-nosnippet>174</a>	pPrinterName: <span class="kw-2">*mut </span>u16,
-<a href=#175 id=175 data-nosnippet>175</a>	pServerName: <span class="kw-2">*mut </span>u16,
-<a href=#176 id=176 data-nosnippet>176</a>	<span class="kw">pub </span>Attributes: co::PRINTER_ATTRIBUTE_4,
+<a href=#172 id=172 data-nosnippet>172</a></span><span class="kw">pub struct </span>PRINTER_INFO_3&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#173 id=173 data-nosnippet>173</a>	pSecurityDescriptor: <span class="kw-2">*mut </span>SECURITY_DESCRIPTOR,
+<a href=#174 id=174 data-nosnippet>174</a>
+<a href=#175 id=175 data-nosnippet>175</a>	_pSecurityDescriptor: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>SECURITY_DESCRIPTOR&gt;,
+<a href=#176 id=176 data-nosnippet>176</a>}
 <a href=#177 id=177 data-nosnippet>177</a>
-<a href=#178 id=178 data-nosnippet>178</a>	_pPrinterName: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
-<a href=#179 id=179 data-nosnippet>179</a>	_pServerName: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>u16&gt;,
-<a href=#180 id=180 data-nosnippet>180</a>}
-<a href=#181 id=181 data-nosnippet>181</a>
-<a href=#182 id=182 data-nosnippet>182</a><span class="macro">impl_default!</span>(PRINTER_INFO_4, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>);
+<a href=#178 id=178 data-nosnippet>178</a><span class="macro">impl_default!</span>(PRINTER_INFO_3, <span class="lifetime">'a</span>);
+<a href=#179 id=179 data-nosnippet>179</a>
+<a href=#180 id=180 data-nosnippet>180</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; PRINTER_INFO_3&lt;<span class="lifetime">'a</span>&gt; {
+<a href=#181 id=181 data-nosnippet>181</a>	<span class="macro">pub_fn_ptr_get_set!</span>(<span class="lifetime">'a</span>, pSecurityDescriptor, set_pSecurityDescriptor, SECURITY_DESCRIPTOR);
+<a href=#182 id=182 data-nosnippet>182</a>}
 <a href=#183 id=183 data-nosnippet>183</a>
-<a href=#184 id=184 data-nosnippet>184</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; PRINTER_INFO_4&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
-<a href=#185 id=185 data-nosnippet>185</a>	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pPrinterName, set_pPrinterName);
-<a href=#186 id=186 data-nosnippet>186</a>	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'b</span>, pServerName, set_pServerName);
-<a href=#187 id=187 data-nosnippet>187</a>}</code></pre></div></section></main></body></html>
+<a href=#184 id=184 data-nosnippet>184</a><span class="doccomment">/// [`PRINTER_INFO_4`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-info-4)
+<a href=#185 id=185 data-nosnippet>185</a>/// struct.
+<a href=#186 id=186 data-nosnippet>186</a></span><span class="attr">#[repr(C)]
+<a href=#187 id=187 data-nosnippet>187</a>#[derive(Clone)]
+<a href=#188 id=188 data-nosnippet>188</a></span><span class="kw">pub struct </span>PRINTER_INFO_4&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+<a href=#189 id=189 data-nosnippet>189</a>	pPrinterName: <span class="kw-2">*mut </span>u16,
+<a href=#190 id=190 data-nosnippet>190</a>	pServerName: <span class="kw-2">*mut </span>u16,
+<a href=#191 id=191 data-nosnippet>191</a>	<span class="kw">pub </span>Attributes: co::PRINTER_ATTRIBUTE_4,
+<a href=#192 id=192 data-nosnippet>192</a>
+<a href=#193 id=193 data-nosnippet>193</a>	_pPrinterName: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>u16&gt;,
+<a href=#194 id=194 data-nosnippet>194</a>	_pServerName: PhantomData&lt;<span class="kw-2">&amp;</span><span class="lifetime">'b </span><span class="kw-2">mut </span>u16&gt;,
+<a href=#195 id=195 data-nosnippet>195</a>}
+<a href=#196 id=196 data-nosnippet>196</a>
+<a href=#197 id=197 data-nosnippet>197</a><span class="macro">impl_default!</span>(PRINTER_INFO_4, <span class="lifetime">'a</span>, <span class="lifetime">'b</span>);
+<a href=#198 id=198 data-nosnippet>198</a>
+<a href=#199 id=199 data-nosnippet>199</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; PRINTER_INFO_4&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
+<a href=#200 id=200 data-nosnippet>200</a>	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pPrinterName, set_pPrinterName);
+<a href=#201 id=201 data-nosnippet>201</a>	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'b</span>, pServerName, set_pServerName);
+<a href=#202 id=202 data-nosnippet>202</a>}</code></pre></div></section></main></body></html>
