@@ -13,8 +13,7 @@ pub enum AccelMenuCtrl {
 	Accel(u16),
 	/// Menu item click event. Contains the menu item command ID.
 	Menu(u16),
-	/// Some child control event. Contains
-	/// [`AccelMenuCtrlData`](crate::AccelMenuCtrlData) data.
+	/// Some child control event.
 	Ctrl { notif_code: co::CMD, ctrl_id: u16, ctrl_hwnd: HWND },
 }
 
