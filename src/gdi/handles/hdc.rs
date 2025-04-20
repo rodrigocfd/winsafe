@@ -687,6 +687,52 @@ pub trait gdi_Hdc: user_Hdc {
 		})
 	}
 
+	/// [`PolyPolygon`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polypolygon)
+	/// function.
+	fn PolyPolygon(&self, polygons: &[&[POINT]]) -> SysResult<()> {
+		let all_pts_flat = polygons
+			.iter()
+			.flat_map(|pts| pts.iter())
+			.map(|pt| *pt)
+			.collect::<Vec<_>>();
+		let pts_per_polygon = polygons
+			.iter()
+			.map(|pts| pts.len() as i32)
+			.collect::<Vec<_>>();
+
+		bool_to_invalidparm(unsafe {
+			ffi::PolyPolygon(
+				self.ptr(),
+				all_pts_flat.as_ptr() as *const _ as _,
+				pts_per_polygon.as_ptr() as *const _ as _,
+				polygons.len() as _,
+			)
+		})
+	}
+
+	/// [`PolyPolyline`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-polypolyline)
+	/// function.
+	fn PolyPolyline(&self, polylines: &[&[POINT]]) -> SysResult<()> {
+		let all_pts_flat = polylines
+			.iter()
+			.flat_map(|pts| pts.iter())
+			.map(|pt| *pt)
+			.collect::<Vec<_>>();
+		let pts_per_polyline = polylines
+			.iter()
+			.map(|pts| pts.len() as u32)
+			.collect::<Vec<_>>();
+
+		bool_to_invalidparm(unsafe {
+			ffi::PolyPolyline(
+				self.ptr(),
+				all_pts_flat.as_ptr() as *const _ as _,
+				pts_per_polyline.as_ptr() as *const _ as _,
+				polylines.len() as _,
+			)
+		})
+	}
+
 	/// [`PtVisible`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ptvisible)
 	/// function.
 	#[must_use]

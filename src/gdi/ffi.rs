@@ -79,6 +79,8 @@ extern_sys! { "gdi32";
 	Polygon(HANDLE, PCVOID, i32) -> BOOL
 	Polyline(HANDLE, PCVOID, u32) -> BOOL
 	PolylineTo(HANDLE, PCVOID, u32) -> BOOL
+	PolyPolygon(HANDLE, PCVOID, *const i32, i32) -> BOOL
+	PolyPolyline(HANDLE, PCVOID, *const u32, u32) -> BOOL
 	PtInRegion(HANDLE, i32, i32) -> BOOL
 	PtVisible(HANDLE, i32, i32) -> BOOL
 	RealizePalette(HANDLE) -> u32
