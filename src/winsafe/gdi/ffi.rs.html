@@ -79,48 +79,50 @@
 <a href=#79 id=79 data-nosnippet>79</a>	Polygon(HANDLE, PCVOID, i32) -&gt; BOOL
 <a href=#80 id=80 data-nosnippet>80</a>	Polyline(HANDLE, PCVOID, u32) -&gt; BOOL
 <a href=#81 id=81 data-nosnippet>81</a>	PolylineTo(HANDLE, PCVOID, u32) -&gt; BOOL
-<a href=#82 id=82 data-nosnippet>82</a>	PtInRegion(HANDLE, i32, i32) -&gt; BOOL
-<a href=#83 id=83 data-nosnippet>83</a>	PtVisible(HANDLE, i32, i32) -&gt; BOOL
-<a href=#84 id=84 data-nosnippet>84</a>	RealizePalette(HANDLE) -&gt; u32
-<a href=#85 id=85 data-nosnippet>85</a>	Rectangle(HANDLE, i32, i32, i32, i32) -&gt; BOOL
-<a href=#86 id=86 data-nosnippet>86</a>	RectInRegion(HANDLE, PCVOID) -&gt; BOOL
-<a href=#87 id=87 data-nosnippet>87</a>	RestoreDC(HANDLE, i32) -&gt; BOOL
-<a href=#88 id=88 data-nosnippet>88</a>	RoundRect(HANDLE, i32, i32, i32, i32, i32, i32) -&gt; BOOL
-<a href=#89 id=89 data-nosnippet>89</a>	SaveDC(HANDLE) -&gt; i32
-<a href=#90 id=90 data-nosnippet>90</a>	SelectClipPath(HANDLE, i32) -&gt; BOOL
-<a href=#91 id=91 data-nosnippet>91</a>	SelectClipRgn(HANDLE, HANDLE) -&gt; i32
-<a href=#92 id=92 data-nosnippet>92</a>	SelectObject(HANDLE, HANDLE) -&gt; HANDLE
-<a href=#93 id=93 data-nosnippet>93</a>	SelectPalette(HANDLE, HANDLE, BOOL) -&gt; HANDLE
-<a href=#94 id=94 data-nosnippet>94</a>	SetArcDirection(HANDLE, i32) -&gt; i32
-<a href=#95 id=95 data-nosnippet>95</a>	SetBkColor(HANDLE, u32) -&gt; u32
-<a href=#96 id=96 data-nosnippet>96</a>	SetBkMode(HANDLE, i32) -&gt; i32
-<a href=#97 id=97 data-nosnippet>97</a>	SetBrushOrgEx(HANDLE, i32, i32, PVOID) -&gt; BOOL
-<a href=#98 id=98 data-nosnippet>98</a>	SetDCBrushColor(HANDLE, u32) -&gt; u32
-<a href=#99 id=99 data-nosnippet>99</a>	SetDCPenColor(HANDLE, u32) -&gt; u32
-<a href=#100 id=100 data-nosnippet>100</a>	SetDIBits(HANDLE, HANDLE, u32, u32, PCVOID, PCVOID, u32) -&gt; i32
-<a href=#101 id=101 data-nosnippet>101</a>	SetGraphicsMode(HANDLE, i32) -&gt; i32
-<a href=#102 id=102 data-nosnippet>102</a>	SetStretchBltMode(HANDLE, i32) -&gt; i32
-<a href=#103 id=103 data-nosnippet>103</a>	SetTextAlign(HANDLE, u32) -&gt; u32
-<a href=#104 id=104 data-nosnippet>104</a>	SetTextColor(HANDLE, u32) -&gt; u32
-<a href=#105 id=105 data-nosnippet>105</a>	SetTextJustification(HANDLE, i32, i32) -&gt; BOOL
-<a href=#106 id=106 data-nosnippet>106</a>	SetViewportExtEx(HANDLE, i32, i32, PVOID) -&gt; BOOL
-<a href=#107 id=107 data-nosnippet>107</a>	SetViewportOrgEx(HANDLE, i32, i32, PVOID) -&gt; BOOL
-<a href=#108 id=108 data-nosnippet>108</a>	SetWindowExtEx(HANDLE, i32, i32, PVOID) -&gt; BOOL
-<a href=#109 id=109 data-nosnippet>109</a>	SetWindowOrgEx(HANDLE, i32, i32, PVOID) -&gt; BOOL
-<a href=#110 id=110 data-nosnippet>110</a>	StretchBlt(HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, i32, i32, u32) -&gt; BOOL
-<a href=#111 id=111 data-nosnippet>111</a>	StrokeAndFillPath(HANDLE) -&gt; BOOL
-<a href=#112 id=112 data-nosnippet>112</a>	StrokePath(HANDLE) -&gt; BOOL
-<a href=#113 id=113 data-nosnippet>113</a>	TextOutW(HANDLE, i32, i32, PCSTR, i32) -&gt; BOOL
-<a href=#114 id=114 data-nosnippet>114</a>	UnrealizeObject(HANDLE) -&gt; BOOL
-<a href=#115 id=115 data-nosnippet>115</a>	UpdateColors(HANDLE) -&gt; BOOL
-<a href=#116 id=116 data-nosnippet>116</a>	WidenPath(HANDLE) -&gt; BOOL
-<a href=#117 id=117 data-nosnippet>117</a>}
-<a href=#118 id=118 data-nosnippet>118</a>
-<a href=#119 id=119 data-nosnippet>119</a><span class="macro">extern_sys!</span> { <span class="string">"msimg32"</span>;
-<a href=#120 id=120 data-nosnippet>120</a>	AlphaBlend(HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, i32, i32, PCVOID) -&gt; BOOL
-<a href=#121 id=121 data-nosnippet>121</a>	TransparentBlt(HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, i32, i32, u32) -&gt; BOOL
-<a href=#122 id=122 data-nosnippet>122</a>}
-<a href=#123 id=123 data-nosnippet>123</a>
-<a href=#124 id=124 data-nosnippet>124</a><span class="macro">extern_sys!</span> { <span class="string">"user32"</span>;
-<a href=#125 id=125 data-nosnippet>125</a>	LoadImageW(HANDLE, PCSTR, u32, i32, i32, u32) -&gt; HANDLE <span class="comment">// returns GdiObjectGuard, so needs gdi feature
-<a href=#126 id=126 data-nosnippet>126</a></span>}</code></pre></div></section></main></body></html>
+<a href=#82 id=82 data-nosnippet>82</a>	PolyPolygon(HANDLE, PCVOID, <span class="kw-2">*const </span>i32, i32) -&gt; BOOL
+<a href=#83 id=83 data-nosnippet>83</a>	PolyPolyline(HANDLE, PCVOID, <span class="kw-2">*const </span>u32, u32) -&gt; BOOL
+<a href=#84 id=84 data-nosnippet>84</a>	PtInRegion(HANDLE, i32, i32) -&gt; BOOL
+<a href=#85 id=85 data-nosnippet>85</a>	PtVisible(HANDLE, i32, i32) -&gt; BOOL
+<a href=#86 id=86 data-nosnippet>86</a>	RealizePalette(HANDLE) -&gt; u32
+<a href=#87 id=87 data-nosnippet>87</a>	Rectangle(HANDLE, i32, i32, i32, i32) -&gt; BOOL
+<a href=#88 id=88 data-nosnippet>88</a>	RectInRegion(HANDLE, PCVOID) -&gt; BOOL
+<a href=#89 id=89 data-nosnippet>89</a>	RestoreDC(HANDLE, i32) -&gt; BOOL
+<a href=#90 id=90 data-nosnippet>90</a>	RoundRect(HANDLE, i32, i32, i32, i32, i32, i32) -&gt; BOOL
+<a href=#91 id=91 data-nosnippet>91</a>	SaveDC(HANDLE) -&gt; i32
+<a href=#92 id=92 data-nosnippet>92</a>	SelectClipPath(HANDLE, i32) -&gt; BOOL
+<a href=#93 id=93 data-nosnippet>93</a>	SelectClipRgn(HANDLE, HANDLE) -&gt; i32
+<a href=#94 id=94 data-nosnippet>94</a>	SelectObject(HANDLE, HANDLE) -&gt; HANDLE
+<a href=#95 id=95 data-nosnippet>95</a>	SelectPalette(HANDLE, HANDLE, BOOL) -&gt; HANDLE
+<a href=#96 id=96 data-nosnippet>96</a>	SetArcDirection(HANDLE, i32) -&gt; i32
+<a href=#97 id=97 data-nosnippet>97</a>	SetBkColor(HANDLE, u32) -&gt; u32
+<a href=#98 id=98 data-nosnippet>98</a>	SetBkMode(HANDLE, i32) -&gt; i32
+<a href=#99 id=99 data-nosnippet>99</a>	SetBrushOrgEx(HANDLE, i32, i32, PVOID) -&gt; BOOL
+<a href=#100 id=100 data-nosnippet>100</a>	SetDCBrushColor(HANDLE, u32) -&gt; u32
+<a href=#101 id=101 data-nosnippet>101</a>	SetDCPenColor(HANDLE, u32) -&gt; u32
+<a href=#102 id=102 data-nosnippet>102</a>	SetDIBits(HANDLE, HANDLE, u32, u32, PCVOID, PCVOID, u32) -&gt; i32
+<a href=#103 id=103 data-nosnippet>103</a>	SetGraphicsMode(HANDLE, i32) -&gt; i32
+<a href=#104 id=104 data-nosnippet>104</a>	SetStretchBltMode(HANDLE, i32) -&gt; i32
+<a href=#105 id=105 data-nosnippet>105</a>	SetTextAlign(HANDLE, u32) -&gt; u32
+<a href=#106 id=106 data-nosnippet>106</a>	SetTextColor(HANDLE, u32) -&gt; u32
+<a href=#107 id=107 data-nosnippet>107</a>	SetTextJustification(HANDLE, i32, i32) -&gt; BOOL
+<a href=#108 id=108 data-nosnippet>108</a>	SetViewportExtEx(HANDLE, i32, i32, PVOID) -&gt; BOOL
+<a href=#109 id=109 data-nosnippet>109</a>	SetViewportOrgEx(HANDLE, i32, i32, PVOID) -&gt; BOOL
+<a href=#110 id=110 data-nosnippet>110</a>	SetWindowExtEx(HANDLE, i32, i32, PVOID) -&gt; BOOL
+<a href=#111 id=111 data-nosnippet>111</a>	SetWindowOrgEx(HANDLE, i32, i32, PVOID) -&gt; BOOL
+<a href=#112 id=112 data-nosnippet>112</a>	StretchBlt(HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, i32, i32, u32) -&gt; BOOL
+<a href=#113 id=113 data-nosnippet>113</a>	StrokeAndFillPath(HANDLE) -&gt; BOOL
+<a href=#114 id=114 data-nosnippet>114</a>	StrokePath(HANDLE) -&gt; BOOL
+<a href=#115 id=115 data-nosnippet>115</a>	TextOutW(HANDLE, i32, i32, PCSTR, i32) -&gt; BOOL
+<a href=#116 id=116 data-nosnippet>116</a>	UnrealizeObject(HANDLE) -&gt; BOOL
+<a href=#117 id=117 data-nosnippet>117</a>	UpdateColors(HANDLE) -&gt; BOOL
+<a href=#118 id=118 data-nosnippet>118</a>	WidenPath(HANDLE) -&gt; BOOL
+<a href=#119 id=119 data-nosnippet>119</a>}
+<a href=#120 id=120 data-nosnippet>120</a>
+<a href=#121 id=121 data-nosnippet>121</a><span class="macro">extern_sys!</span> { <span class="string">"msimg32"</span>;
+<a href=#122 id=122 data-nosnippet>122</a>	AlphaBlend(HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, i32, i32, PCVOID) -&gt; BOOL
+<a href=#123 id=123 data-nosnippet>123</a>	TransparentBlt(HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, i32, i32, u32) -&gt; BOOL
+<a href=#124 id=124 data-nosnippet>124</a>}
+<a href=#125 id=125 data-nosnippet>125</a>
+<a href=#126 id=126 data-nosnippet>126</a><span class="macro">extern_sys!</span> { <span class="string">"user32"</span>;
+<a href=#127 id=127 data-nosnippet>127</a>	LoadImageW(HANDLE, PCSTR, u32, i32, i32, u32) -&gt; HANDLE <span class="comment">// returns GdiObjectGuard, so needs gdi feature
+<a href=#128 id=128 data-nosnippet>128</a></span>}</code></pre></div></section></main></body></html>
