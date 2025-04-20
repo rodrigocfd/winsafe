@@ -16,7 +16,7 @@ impl uxtheme_Hwnd for HWND {}
 /// ```no_run
 /// use winsafe::prelude::*;
 /// ```
-pub trait uxtheme_Hwnd: user_Hwnd {
+pub trait uxtheme_Hwnd: ole_Hwnd {
 	/// [`OpenThemeData`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-openthemedata)
 	/// function.
 	#[must_use]
