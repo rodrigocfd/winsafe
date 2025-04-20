@@ -20,6 +20,7 @@ extern_sys! { "winspool";
 	DeletePrinterKeyW(HANDLE, PCSTR) -> BOOL
 	EnumPrintersW(u32, PSTR, u32, *mut u8, u32, *mut u32, *mut u32) -> BOOL
 	GetDefaultPrinterW(PSTR, *mut u32) -> BOOL
+	GetPrinterW(HANDLE, u32, PVOID, u32, *mut u32) -> BOOL
 	OpenPrinterW(PSTR, *mut HANDLE, PVOID) -> BOOL
 	ResetPrinterW(HANDLE, PVOID) -> BOOL
 	SetDefaultPrinterW(PCSTR) -> BOOL

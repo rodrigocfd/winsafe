@@ -166,6 +166,21 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm>
 	pub_fn_ptr_get_set!('m, pSecurityDescriptor, set_pSecurityDescriptor, SECURITY_DESCRIPTOR);
 }
 
+/// [`PRINTER_INFO_3`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-info-3)
+/// struct.
+#[repr(C)]
+pub struct PRINTER_INFO_3<'a> {
+	pSecurityDescriptor: *mut SECURITY_DESCRIPTOR,
+
+	_pSecurityDescriptor: PhantomData<&'a mut SECURITY_DESCRIPTOR>,
+}
+
+impl_default!(PRINTER_INFO_3, 'a);
+
+impl<'a> PRINTER_INFO_3<'a> {
+	pub_fn_ptr_get_set!('a, pSecurityDescriptor, set_pSecurityDescriptor, SECURITY_DESCRIPTOR);
+}
+
 /// [`PRINTER_INFO_4`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-info-4)
 /// struct.
 #[repr(C)]

@@ -122,6 +122,63 @@ pub trait winspool_Hprinter: Handle {
 		})
 	}
 
+	/// [`GetPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/getprinter)
+	/// function for [`PRINTER_INFO_2`](crate::PRINTER_INFO_2).
+	#[must_use]
+	fn GetPrinter2(&self) -> SysResult<PRINTER_INFO_2> {
+		let mut nfo = PRINTER_INFO_2::default();
+		let mut needed = u32::default();
+
+		bool_to_invalidparm(unsafe {
+			ffi::GetPrinterW(
+				self.ptr(),
+				2,
+				&mut nfo as *mut _ as _,
+				std::mem::size_of::<PRINTER_INFO_2>() as _,
+				&mut needed,
+			)
+		})
+		.map(|_| nfo)
+	}
+
+	/// [`GetPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/getprinter)
+	/// function for [`PRINTER_INFO_3`](crate::PRINTER_INFO_3).
+	#[must_use]
+	fn GetPrinter3(&self) -> SysResult<PRINTER_INFO_3> {
+		let mut nfo = PRINTER_INFO_3::default();
+		let mut needed = u32::default();
+
+		bool_to_invalidparm(unsafe {
+			ffi::GetPrinterW(
+				self.ptr(),
+				3,
+				&mut nfo as *mut _ as _,
+				std::mem::size_of::<PRINTER_INFO_3>() as _,
+				&mut needed,
+			)
+		})
+		.map(|_| nfo)
+	}
+
+	/// [`GetPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/getprinter)
+	/// function for [`PRINTER_INFO_4`](crate::PRINTER_INFO_4).
+	#[must_use]
+	fn GetPrinter4(&self) -> SysResult<PRINTER_INFO_4> {
+		let mut nfo = PRINTER_INFO_4::default();
+		let mut needed = u32::default();
+
+		bool_to_invalidparm(unsafe {
+			ffi::GetPrinterW(
+				self.ptr(),
+				4,
+				&mut nfo as *mut _ as _,
+				std::mem::size_of::<PRINTER_INFO_4>() as _,
+				&mut needed,
+			)
+		})
+		.map(|_| nfo)
+	}
+
 	/// [`OpenPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/openprinter)
 	/// function.
 	#[must_use]
