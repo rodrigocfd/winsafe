@@ -141,11 +141,11 @@ impl CheckBox {
 		self.set_state(state);
 		unsafe {
 			self.hwnd().GetParent()?.SendMessage(wm::Command {
-				event: AccelMenuCtrl::Ctrl(AccelMenuCtrlData {
+				event: AccelMenuCtrl::Ctrl {
 					notif_code: co::BN::CLICKED.into(),
 					ctrl_id: self.ctrl_id(),
 					ctrl_hwnd: self.hwnd().raw_copy(),
-				}),
+				},
 			});
 		}
 		Ok(())

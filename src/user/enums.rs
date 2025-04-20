@@ -15,7 +15,7 @@ pub enum AccelMenuCtrl {
 	Menu(u16),
 	/// Some child control event. Contains
 	/// [`AccelMenuCtrlData`](crate::AccelMenuCtrlData) data.
-	Ctrl(AccelMenuCtrlData),
+	Ctrl { notif_code: co::CMD, ctrl_id: u16, ctrl_hwnd: HWND },
 }
 
 impl AccelMenuCtrl {
@@ -25,7 +25,7 @@ impl AccelMenuCtrl {
 		match self {
 			AccelMenuCtrl::Accel(id) => *id,
 			AccelMenuCtrl::Menu(id) => *id,
-			AccelMenuCtrl::Ctrl(data) => data.ctrl_id,
+			AccelMenuCtrl::Ctrl { notif_code: _, ctrl_id, ctrl_hwnd: _ } => *ctrl_id,
 		}
 	}
 
@@ -35,18 +35,9 @@ impl AccelMenuCtrl {
 		match self {
 			AccelMenuCtrl::Accel(_) => co::CMD::Accelerator,
 			AccelMenuCtrl::Menu(_) => co::CMD::Menu,
-			AccelMenuCtrl::Ctrl(data) => data.notif_code,
+			AccelMenuCtrl::Ctrl { notif_code, ctrl_id: _, ctrl_hwnd: _ } => *notif_code,
 		}
 	}
-}
-
-/// Variant parameter for:
-///
-/// * [`AccelMenuCtrl`](crate::AccelMenuCtrl).
-pub struct AccelMenuCtrlData {
-	pub notif_code: co::CMD,
-	pub ctrl_id: u16,
-	pub ctrl_hwnd: HWND,
 }
 
 /// Variant parameter for:
@@ -420,11 +411,11 @@ impl IdPos {
 /// * [`HMENU::append_item`](crate::prelude::user_Hmenu::append_item).
 pub enum MenuItem<'a> {
 	/// A selectable entry item, with command ID and text.
-	Entry(u16, &'a str),
+	Entry { cmd_id: u16, text: &'a str },
 	/// A separator.
 	Separator,
 	/// A submenu, with its entry text.
-	Submenu(&'a HMENU, &'a str),
+	Submenu { submenu: &'a HMENU, text: &'a str },
 }
 
 /// Variant parameter for:
@@ -433,11 +424,11 @@ pub enum MenuItem<'a> {
 /// * [`HMENU::iter_items`](crate::prelude::user_Hmenu::iter_items).
 pub enum MenuItemInfo {
 	/// A selectable entry item, with command ID and text.
-	Entry(u16, String),
+	Entry { cmd_id: u16, text: String },
 	/// A separator.
 	Separator,
 	/// A submenu, with its entry text.
-	Submenu(HMENU, String),
+	Submenu { submenu: HMENU, text: String },
 }
 
 /// Variant parameter for:

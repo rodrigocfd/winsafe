@@ -181,12 +181,16 @@ impl MsgSend for Command {
 			wparam: match &self.event {
 				AccelMenuCtrl::Accel(id) => MAKEDWORD(*id, 1) as _,
 				AccelMenuCtrl::Menu(id) => MAKEDWORD(*id, 0) as _,
-				AccelMenuCtrl::Ctrl(data) => MAKEDWORD(data.ctrl_id, data.notif_code.raw()) as _,
+				AccelMenuCtrl::Ctrl { notif_code, ctrl_id, ctrl_hwnd: _ } => {
+					MAKEDWORD(*ctrl_id, notif_code.raw()) as _
+				},
 			},
 			lparam: match &self.event {
 				AccelMenuCtrl::Accel(_) => co::CMD::Accelerator.raw() as _,
 				AccelMenuCtrl::Menu(_) => co::CMD::Menu.raw() as _,
-				AccelMenuCtrl::Ctrl(data) => data.ctrl_hwnd.ptr() as _,
+				AccelMenuCtrl::Ctrl { notif_code: _, ctrl_id: _, ctrl_hwnd } => {
+					ctrl_hwnd.ptr() as _
+				},
 			},
 		}
 	}
@@ -198,11 +202,11 @@ impl MsgSendRecv for Command {
 			event: match HIWORD(p.wparam as _) {
 				1 => AccelMenuCtrl::Accel(LOWORD(p.wparam as _)),
 				0 => AccelMenuCtrl::Menu(LOWORD(p.wparam as _)),
-				code => AccelMenuCtrl::Ctrl(AccelMenuCtrlData {
+				code => AccelMenuCtrl::Ctrl {
 					notif_code: co::CMD::from_raw(code),
 					ctrl_id: LOWORD(p.wparam as _),
 					ctrl_hwnd: HWND::from_ptr(p.lparam as _),
-				}),
+				},
 			},
 		}
 	}

@@ -43,10 +43,10 @@ pub trait user_Hmenu: Handle {
 	/// # let hmenu = w::HMENU::NULL;
 	///
 	/// hmenu.append_item(&[
-	///     w::MenuItem::Entry(ID_FILE_OPEN, "&Open"),
-	///     w::MenuItem::Entry(ID_FILE_OPEN, "&Save"),
+	///     w::MenuItem::Entry { cmd_id: ID_FILE_OPEN, text: "&Open" },
+	///     w::MenuItem::Entry { cmd_id: ID_FILE_OPEN, text: "&Save" },
 	///     w::MenuItem::Separator,
-	///     w::MenuItem::Entry(ID_FILE_EXIT, "E&xit"),
+	///     w::MenuItem::Entry { cmd_id: ID_FILE_EXIT, text: "E&xit" },
 	/// ])?;
 	/// # w::SysResult::Ok(())
 	/// ```
@@ -54,15 +54,19 @@ pub trait user_Hmenu: Handle {
 		items
 			.iter()
 			.map(|item| match item {
-				MenuItem::Entry(cmd_id, text) => {
-					self.AppendMenu(co::MF::STRING, IdMenu::Id(*cmd_id), BmpPtrStr::from_str(*text))
-				},
+				MenuItem::Entry { cmd_id, text: entry_text } => self.AppendMenu(
+					co::MF::STRING,
+					IdMenu::Id(*cmd_id),
+					BmpPtrStr::from_str(*entry_text),
+				),
 				MenuItem::Separator => {
 					self.AppendMenu(co::MF::SEPARATOR, IdMenu::None, BmpPtrStr::None)
 				},
-				MenuItem::Submenu(hmenu, text) => {
-					self.AppendMenu(co::MF::POPUP, IdMenu::Menu(hmenu), BmpPtrStr::from_str(*text))
-				},
+				MenuItem::Submenu { submenu, text: entry_text } => self.AppendMenu(
+					co::MF::POPUP,
+					IdMenu::Menu(submenu),
+					BmpPtrStr::from_str(*entry_text),
+				),
 			})
 			.collect::<Result<Vec<_>, _>>()?;
 
@@ -84,9 +88,12 @@ pub trait user_Hmenu: Handle {
 	///
 	/// let item_info = hmenu.item_info(w::IdPos::Id(0))?;
 	/// match item_info {
-	///     w::MenuItemInfo::Entry(id, txt) => println!("item {} {}", id, txt),
-	///     w::MenuItemInfo::Separator => println!("separator"),
-	///     w::MenuItemInfo::Submenu(hsub, txt) => println!("submenu {} {}", hsub, txt),
+	///     w::MenuItemInfo::Entry { cmd_id, text } =>
+	///         println!("item {} {}", cmd_id, text),
+	///     w::MenuItemInfo::Separator =>
+	///         println!("separator"),
+	///     w::MenuItemInfo::Submenu { submenu, text } =>
+	///         println!("submenu {} {}", submenu, text),
 	/// }
 	/// # w::SysResult::Ok(())
 	/// ```
@@ -101,9 +108,9 @@ pub trait user_Hmenu: Handle {
 		} else {
 			let text = self.GetMenuString(id_or_pos)?;
 			if mii.hSubMenu != HMENU::NULL {
-				MenuItemInfo::Submenu(mii.hSubMenu, text)
+				MenuItemInfo::Submenu { submenu: mii.hSubMenu, text }
 			} else {
-				MenuItemInfo::Entry(mii.wID as _, text)
+				MenuItemInfo::Entry { cmd_id: mii.wID as _, text }
 			}
 		};
 
@@ -124,9 +131,12 @@ pub trait user_Hmenu: Handle {
 	/// for item_info in hmenu.iter_items() {
 	///     let item_info = item_info?;
 	///     match item_info {
-	///         w::MenuItemInfo::Entry(id, txt) => println!("item {} {}", id, txt),
-	///         w::MenuItemInfo::Separator => println!("separator"),
-	///         w::MenuItemInfo::Submenu(hsub, txt) => println!("submenu {} {}", hsub, txt),
+	///         w::MenuItemInfo::Entry { cmd_id, text } =>
+	///             println!("item {} {}", cmd_id, text),
+	///         w::MenuItemInfo::Separator =>
+	///             println!("separator"),
+	///         w::MenuItemInfo::Submenu { submenu, text } =>
+	///             println!("submenu {} {}", submenu, text),
 	///     }
 	/// }
 	/// # w::SysResult::Ok(())
