@@ -132,11 +132,11 @@
 <a href=#132 id=132 data-nosnippet>132</a>		<span class="self">self</span>.select(selected);
 <a href=#133 id=133 data-nosnippet>133</a>		<span class="kw">unsafe </span>{
 <a href=#134 id=134 data-nosnippet>134</a>			<span class="self">self</span>.hwnd().GetParent()<span class="question-mark">?</span>.SendMessage(wm::Command {
-<a href=#135 id=135 data-nosnippet>135</a>				event: AccelMenuCtrl::Ctrl(AccelMenuCtrlData {
+<a href=#135 id=135 data-nosnippet>135</a>				event: AccelMenuCtrl::Ctrl {
 <a href=#136 id=136 data-nosnippet>136</a>					notif_code: co::BN::CLICKED.into(),
 <a href=#137 id=137 data-nosnippet>137</a>					ctrl_id: <span class="self">self</span>.ctrl_id(),
 <a href=#138 id=138 data-nosnippet>138</a>					ctrl_hwnd: <span class="self">self</span>.hwnd().raw_copy(),
-<a href=#139 id=139 data-nosnippet>139</a>				}),
+<a href=#139 id=139 data-nosnippet>139</a>				},
 <a href=#140 id=140 data-nosnippet>140</a>			});
 <a href=#141 id=141 data-nosnippet>141</a>		}
 <a href=#142 id=142 data-nosnippet>142</a>		<span class="prelude-val">Ok</span>(())
