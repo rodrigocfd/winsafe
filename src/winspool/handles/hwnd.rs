@@ -56,4 +56,10 @@ pub trait winspool_Hwnd: user_Hwnd {
 			_ => Err(co::ERROR::INVALID_PARAMETER),
 		}
 	}
+
+	/// [`PrinterProperties`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printerproperties)
+	/// function.
+	fn PrinterProperties(&self, hprinter: &HPRINTER) -> SysResult<()> {
+		bool_to_invalidparm(unsafe { ffi::PrinterProperties(self.ptr(), hprinter.ptr()) })
+	}
 }

@@ -200,3 +200,14 @@ impl<'a, 'b> PRINTER_INFO_4<'a, 'b> {
 	pub_fn_string_ptr_get_set!('a, pPrinterName, set_pPrinterName);
 	pub_fn_string_ptr_get_set!('b, pServerName, set_pServerName);
 }
+
+/// [`PRINTER_OPTIONS`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-options)
+/// struct.
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct PRINTER_OPTIONS {
+	cbSize: u32,
+	pub dwFlags: co::PRINTER_OPTION,
+}
+
+impl_default!(PRINTER_OPTIONS, cbSize);

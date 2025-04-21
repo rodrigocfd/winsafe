@@ -74,6 +74,16 @@ const_bitflag! { PRINTER_ENUM: u32;
 	CATEGORY_ALL 0x0200_0000
 }
 
+const_bitflag! { PRINTER_OPTION: u32;
+	/// [`PRINTER_OPTION`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-option-flags)
+	/// enumeration (`u32`).
+	=>
+	NO_CACHE 1
+	CACHE 2
+	CLIENT_CHANGE 4
+	NO_CLIENT_DATA 8
+}
+
 const_bitflag! { PRINTER_STATUS: u32;
 	/// [`PRINTER_INFO_2`](crate::PRINTER_INFO_2) `status` (`u32`).
 	=>

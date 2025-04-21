@@ -197,9 +197,35 @@ pub trait winspool_Hprinter: Handle {
 		}
 	}
 
+	/// [`OpenPrinter2`](https://learn.microsoft.com/en-us/windows/win32/printdocs/openprinter2)
+	/// function.
+	#[must_use]
+	fn OpenPrinter2(
+		printer_name: Option<&str>,
+		default: Option<&PRINTER_DEFAULTS>,
+		options: Option<&PRINTER_OPTIONS>,
+	) -> SysResult<ClosePrinterGuard> {
+		let mut hprinter = HPRINTER::NULL;
+		unsafe {
+			bool_to_sysresult(ffi::OpenPrinter2W(
+				WString::from_opt_str(printer_name).as_mut_ptr(),
+				hprinter.as_mut(),
+				pcvoid_or_null(default),
+				pcvoid_or_null(options),
+			))
+			.map(|_| ClosePrinterGuard::new(hprinter))
+		}
+	}
+
 	/// [`ResetPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/resetprinter)
 	/// function.
 	fn ResetPrinter(&self, default: &PRINTER_DEFAULTS) -> SysResult<()> {
 		bool_to_invalidparm(unsafe { ffi::ResetPrinterW(self.ptr(), pcvoid(default)) })
+	}
+
+	/// [`ScheduleJob`](https://learn.microsoft.com/en-us/windows/win32/printdocs/schedulejob)
+	/// function.
+	fn ScheduleJob(&self, job_id: u32) -> SysResult<()> {
+		bool_to_invalidparm(unsafe { ffi::ScheduleJob(self.ptr(), job_id) })
 	}
 }

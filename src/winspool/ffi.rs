@@ -21,7 +21,10 @@ extern_sys! { "winspool";
 	EnumPrintersW(u32, PSTR, u32, *mut u8, u32, *mut u32, *mut u32) -> BOOL
 	GetDefaultPrinterW(PSTR, *mut u32) -> BOOL
 	GetPrinterW(HANDLE, u32, PVOID, u32, *mut u32) -> BOOL
+	OpenPrinter2W(PCSTR, *mut HANDLE, PCVOID, PCVOID) -> BOOL
 	OpenPrinterW(PSTR, *mut HANDLE, PCVOID) -> BOOL
+	PrinterProperties(HANDLE, HANDLE) -> BOOL
 	ResetPrinterW(HANDLE, PCVOID) -> BOOL
+	ScheduleJob(HANDLE, u32) -> BOOL
 	SetDefaultPrinterW(PCSTR) -> BOOL
 }
