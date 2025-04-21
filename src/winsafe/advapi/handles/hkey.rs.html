@@ -1,10 +1,10 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\advapi\handles\hkey.rs`."><title>hkey.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.88.0-nightly (d5b4c2e4f 2025-04-02)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-d72f25bb.js" ><script src="../../..\../static.files/storage-4e99c027.js"></script><script defer src="../../..\../static.files/src-script-63605ae7.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\advapi\handles/</div>hkey.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\advapi\handles\hkey.rs`."><title>hkey.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-7dda4a46.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.88.0-nightly (b8c54d635 2025-04-20)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../..\../static.files/storage-4e99c027.js"></script><script defer src="../../..\../static.files/src-script-63605ae7.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-7ef8a74a.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\advapi\handles/</div>hkey.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 <a href=#2 id=2 data-nosnippet>2</a>
 <a href=#3 id=3 data-nosnippet>3</a></span><span class="kw">use </span><span class="kw">crate</span>::advapi::{ffi, iterators::<span class="kw-2">*</span>};
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">crate</span>::co;
 <a href=#5 id=5 data-nosnippet>5</a><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <a href=#6 id=6 data-nosnippet>6</a><span class="kw">use </span><span class="kw">crate</span>::guard::<span class="kw-2">*</span>;
-<a href=#7 id=7 data-nosnippet>7</a><span class="kw">use </span><span class="kw">crate</span>::kernel::{ffi_types::<span class="kw-2">*</span>, privs::<span class="kw-2">*</span>};
+<a href=#7 id=7 data-nosnippet>7</a><span class="kw">use </span><span class="kw">crate</span>::kernel::privs::<span class="kw-2">*</span>;
 <a href=#8 id=8 data-nosnippet>8</a><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <a href=#9 id=9 data-nosnippet>9</a>
 <a href=#10 id=10 data-nosnippet>10</a><span class="macro">handle!</span> { HKEY;
@@ -109,7 +109,7 @@
 <a href=#109 id=109 data-nosnippet>109</a>				WString::from_opt_str(class).as_ptr(),
 <a href=#110 id=110 data-nosnippet>110</a>				options.raw(),
 <a href=#111 id=111 data-nosnippet>111</a>				access_rights.raw(),
-<a href=#112 id=112 data-nosnippet>112</a>				security_attributes.map_or(std::ptr::null_mut(), |sa| sa <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>),
+<a href=#112 id=112 data-nosnippet>112</a>				pcvoid_or_null(security_attributes),
 <a href=#113 id=113 data-nosnippet>113</a>				hkey.as_mut(),
 <a href=#114 id=114 data-nosnippet>114</a>				disposition.as_mut(),
 <a href=#115 id=115 data-nosnippet>115</a>			))
@@ -140,7 +140,7 @@
 <a href=#140 id=140 data-nosnippet>140</a>				WString::from_opt_str(class).as_ptr(),
 <a href=#141 id=141 data-nosnippet>141</a>				options.raw(),
 <a href=#142 id=142 data-nosnippet>142</a>				access_rights.raw(),
-<a href=#143 id=143 data-nosnippet>143</a>				security_attributes.map_or(std::ptr::null_mut(), |sa| sa <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>),
+<a href=#143 id=143 data-nosnippet>143</a>				pcvoid_or_null(security_attributes),
 <a href=#144 id=144 data-nosnippet>144</a>				hkey.as_mut(),
 <a href=#145 id=145 data-nosnippet>145</a>				disposition.as_mut(),
 <a href=#146 id=146 data-nosnippet>146</a>				htransaction.ptr(),
@@ -477,7 +477,7 @@
 <a href=#477 id=477 data-nosnippet>477</a>		<span class="kw">let </span>max_value_name_len = max_value_name_len.map_or(std::ptr::null_mut(), |re| re <span class="kw">as _</span>);
 <a href=#478 id=478 data-nosnippet>478</a>		<span class="kw">let </span>max_value_len = max_value_len.map_or(std::ptr::null_mut(), |re| re <span class="kw">as _</span>);
 <a href=#479 id=479 data-nosnippet>479</a>		<span class="kw">let </span>security_descr_len = security_descr_len.map_or(std::ptr::null_mut(), |re| re <span class="kw">as _</span>);
-<a href=#480 id=480 data-nosnippet>480</a>		<span class="kw">let </span>last_write_time = last_write_time.map_or(std::ptr::null_mut(), |re| re <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>);
+<a href=#480 id=480 data-nosnippet>480</a>		<span class="kw">let </span>last_write_time = last_write_time.map_or(std::ptr::null_mut(), |re| pvoid(re));
 <a href=#481 id=481 data-nosnippet>481</a>
 <a href=#482 id=482 data-nosnippet>482</a>		<span class="comment">// Loop until class is large enough.
 <a href=#483 id=483 data-nosnippet>483</a>		</span><span class="kw">loop </span>{
@@ -596,7 +596,7 @@
 <a href=#596 id=596 data-nosnippet>596</a>	/// function.
 <a href=#597 id=597 data-nosnippet>597</a>	</span><span class="attr">#[must_use]
 <a href=#598 id=598 data-nosnippet>598</a>	</span><span class="kw">fn </span>RegQueryReflectionKey(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;bool&gt; {
-<a href=#599 id=599 data-nosnippet>599</a>		<span class="kw">let </span><span class="kw-2">mut </span>is_disabled: BOOL = <span class="number">0</span>;
+<a href=#599 id=599 data-nosnippet>599</a>		<span class="kw">let </span><span class="kw-2">mut </span>is_disabled = <span class="number">0</span>;
 <a href=#600 id=600 data-nosnippet>600</a>		error_to_sysresult(<span class="kw">unsafe </span>{ ffi::RegQueryReflectionKey(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>is_disabled) })
 <a href=#601 id=601 data-nosnippet>601</a>			.map(|<span class="kw">_</span>| is_disabled != <span class="number">0</span>)
 <a href=#602 id=602 data-nosnippet>602</a>	}
@@ -713,7 +713,7 @@
 <a href=#713 id=713 data-nosnippet>713</a>			ffi::RegSaveKeyW(
 <a href=#714 id=714 data-nosnippet>714</a>				<span class="self">self</span>.ptr(),
 <a href=#715 id=715 data-nosnippet>715</a>				WString::from_str(dest_file_path).as_ptr(),
-<a href=#716 id=716 data-nosnippet>716</a>				security_attributes.map_or(std::ptr::null_mut(), |sa| sa <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>),
+<a href=#716 id=716 data-nosnippet>716</a>				pcvoid_or_null(security_attributes),
 <a href=#717 id=717 data-nosnippet>717</a>			)
 <a href=#718 id=718 data-nosnippet>718</a>		})
 <a href=#719 id=719 data-nosnippet>719</a>	}
@@ -730,7 +730,7 @@
 <a href=#730 id=730 data-nosnippet>730</a>			ffi::RegSaveKeyExW(
 <a href=#731 id=731 data-nosnippet>731</a>				<span class="self">self</span>.ptr(),
 <a href=#732 id=732 data-nosnippet>732</a>				WString::from_str(dest_file_path).as_ptr(),
-<a href=#733 id=733 data-nosnippet>733</a>				security_attributes.map_or(std::ptr::null_mut(), |sa| sa <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>),
+<a href=#733 id=733 data-nosnippet>733</a>				pcvoid_or_null(security_attributes),
 <a href=#734 id=734 data-nosnippet>734</a>				flags.raw(),
 <a href=#735 id=735 data-nosnippet>735</a>			)
 <a href=#736 id=736 data-nosnippet>736</a>		})

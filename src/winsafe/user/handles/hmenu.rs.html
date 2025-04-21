@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\user\handles\hmenu.rs`."><title>hmenu.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.88.0-nightly (d5b4c2e4f 2025-04-02)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-d72f25bb.js" ><script src="../../..\../static.files/storage-4e99c027.js"></script><script defer src="../../..\../static.files/src-script-63605ae7.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\user\handles/</div>hmenu.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\user\handles\hmenu.rs`."><title>hmenu.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-7dda4a46.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.88.0-nightly (b8c54d635 2025-04-20)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../..\../static.files/storage-4e99c027.js"></script><script defer src="../../..\../static.files/src-script-63605ae7.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-7ef8a74a.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\user\handles/</div>hmenu.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 <a href=#2 id=2 data-nosnippet>2</a>
 <a href=#3 id=3 data-nosnippet>3</a></span><span class="kw">use </span><span class="kw">crate</span>::co;
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -331,7 +331,7 @@
 <a href=#331 id=331 data-nosnippet>331</a>	<span class="doccomment">/// [`GetMenuInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuinfo)
 <a href=#332 id=332 data-nosnippet>332</a>	/// function.
 <a href=#333 id=333 data-nosnippet>333</a>	</span><span class="kw">fn </span>GetMenuInfo(<span class="kw-2">&amp;</span><span class="self">self</span>, mi: <span class="kw-2">&amp;mut </span>MENUINFO) -&gt; SysResult&lt;()&gt; {
-<a href=#334 id=334 data-nosnippet>334</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::GetMenuInfo(<span class="self">self</span>.ptr(), mi <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>) })
+<a href=#334 id=334 data-nosnippet>334</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::GetMenuInfo(<span class="self">self</span>.ptr(), pvoid(mi)) })
 <a href=#335 id=335 data-nosnippet>335</a>	}
 <a href=#336 id=336 data-nosnippet>336</a>
 <a href=#337 id=337 data-nosnippet>337</a>	<span class="doccomment">/// [`GetMenuItemCount`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemcount)
@@ -367,7 +367,7 @@
 <a href=#367 id=367 data-nosnippet>367</a>				<span class="self">self</span>.ptr(),
 <a href=#368 id=368 data-nosnippet>368</a>				id_or_pos.id_or_pos_u32(),
 <a href=#369 id=369 data-nosnippet>369</a>				id_or_pos.is_by_pos() <span class="kw">as _</span>,
-<a href=#370 id=370 data-nosnippet>370</a>				mii <span class="kw">as </span><span class="kw-2">*mut </span><span class="kw">_ as _</span>,
+<a href=#370 id=370 data-nosnippet>370</a>				pvoid(mii),
 <a href=#371 id=371 data-nosnippet>371</a>			)
 <a href=#372 id=372 data-nosnippet>372</a>		})
 <a href=#373 id=373 data-nosnippet>373</a>	}
@@ -430,7 +430,7 @@
 <a href=#430 id=430 data-nosnippet>430</a>				<span class="self">self</span>.ptr(),
 <a href=#431 id=431 data-nosnippet>431</a>				id_or_pos.id_or_pos_u32(),
 <a href=#432 id=432 data-nosnippet>432</a>				id_or_pos.is_by_pos() <span class="kw">as _</span>,
-<a href=#433 id=433 data-nosnippet>433</a>				mii <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+<a href=#433 id=433 data-nosnippet>433</a>				pcvoid(mii),
 <a href=#434 id=434 data-nosnippet>434</a>			)
 <a href=#435 id=435 data-nosnippet>435</a>		})
 <a href=#436 id=436 data-nosnippet>436</a>	}
@@ -465,7 +465,7 @@
 <a href=#465 id=465 data-nosnippet>465</a>	<span class="doccomment">/// [`SetMenuInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuinfo)
 <a href=#466 id=466 data-nosnippet>466</a>	/// function.
 <a href=#467 id=467 data-nosnippet>467</a>	</span><span class="kw">fn </span>SetMenuInfo(<span class="kw-2">&amp;</span><span class="self">self</span>, mi: <span class="kw-2">&amp;</span>MENUINFO) -&gt; SysResult&lt;()&gt; {
-<a href=#468 id=468 data-nosnippet>468</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::SetMenuInfo(<span class="self">self</span>.ptr(), mi <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>) })
+<a href=#468 id=468 data-nosnippet>468</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::SetMenuInfo(<span class="self">self</span>.ptr(), pcvoid(mi)) })
 <a href=#469 id=469 data-nosnippet>469</a>	}
 <a href=#470 id=470 data-nosnippet>470</a>
 <a href=#471 id=471 data-nosnippet>471</a>	<span class="doccomment">/// [`SetMenuItemBitmaps`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuitembitmaps)
@@ -495,7 +495,7 @@
 <a href=#495 id=495 data-nosnippet>495</a>				<span class="self">self</span>.ptr(),
 <a href=#496 id=496 data-nosnippet>496</a>				id_or_pos.id_or_pos_u32(),
 <a href=#497 id=497 data-nosnippet>497</a>				id_or_pos.is_by_pos() <span class="kw">as _</span>,
-<a href=#498 id=498 data-nosnippet>498</a>				mii <span class="kw">as </span><span class="kw-2">*const </span><span class="kw">_ as _</span>,
+<a href=#498 id=498 data-nosnippet>498</a>				pcvoid(mii),
 <a href=#499 id=499 data-nosnippet>499</a>			)
 <a href=#500 id=500 data-nosnippet>500</a>		})
 <a href=#501 id=501 data-nosnippet>501</a>	}

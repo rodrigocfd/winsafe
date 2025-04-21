@@ -1,8 +1,8 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\advapi\ffi.rs`."><title>ffi.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-916cea96.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.88.0-nightly (d5b4c2e4f 2025-04-02)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-d72f25bb.js" ><script src="../../../static.files/storage-4e99c027.js"></script><script defer src="../../../static.files/src-script-63605ae7.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-fb8c74a8.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\advapi/</div>ffi.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-2"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\advapi\ffi.rs`."><title>ffi.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-7dda4a46.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.88.0-nightly (b8c54d635 2025-04-20)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../../static.files/storage-4e99c027.js"></script><script defer src="../../../static.files/src-script-63605ae7.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-7ef8a74a.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-893ab5e7.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\advapi/</div>ffi.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-2"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="kw">use </span><span class="kw">crate</span>::kernel::ffi_types::<span class="kw-2">*</span>;
 <a href=#2 id=2 data-nosnippet>2</a>
 <a href=#3 id=3 data-nosnippet>3</a><span class="macro">extern_sys!</span> { <span class="string">"advapi32"</span>;
 <a href=#4 id=4 data-nosnippet>4</a>	AdjustTokenPrivileges(HANDLE, BOOL, PCVOID, u32, PVOID, <span class="kw-2">*mut </span>u32) -&gt; BOOL
-<a href=#5 id=5 data-nosnippet>5</a>	AllocateAndInitializeSid(PCVOID, u8, u32, u32, u32, u32, u32, u32, u32, u32, <span class="kw-2">*mut </span>u8) -&gt; BOOL
+<a href=#5 id=5 data-nosnippet>5</a>	AllocateAndInitializeSid(PCVOID, u8, u32, u32, u32, u32, u32, u32, u32, u32, PVOID) -&gt; BOOL
 <a href=#6 id=6 data-nosnippet>6</a>	CheckTokenCapability(HANDLE, PCVOID, <span class="kw-2">*mut </span>BOOL) -&gt; BOOL
 <a href=#7 id=7 data-nosnippet>7</a>	CheckTokenMembership(HANDLE, PCVOID, <span class="kw-2">*mut </span>BOOL) -&gt; BOOL
 <a href=#8 id=8 data-nosnippet>8</a>	CloseServiceHandle(HANDLE) -&gt; BOOL
@@ -17,11 +17,11 @@
 <a href=#17 id=17 data-nosnippet>17</a>	DuplicateToken(HANDLE, u32, <span class="kw-2">*mut </span>HANDLE) -&gt; BOOL
 <a href=#18 id=18 data-nosnippet>18</a>	EncryptFileW(PCSTR) -&gt; BOOL
 <a href=#19 id=19 data-nosnippet>19</a>	EncryptionDisable(PCSTR, BOOL) -&gt; BOOL
-<a href=#20 id=20 data-nosnippet>20</a>	EqualDomainSid(PVOID, PVOID, <span class="kw-2">*mut </span>BOOL) -&gt; BOOL
-<a href=#21 id=21 data-nosnippet>21</a>	EqualPrefixSid(PVOID, PVOID) -&gt; BOOL
-<a href=#22 id=22 data-nosnippet>22</a>	EqualSid(PVOID, PVOID) -&gt; BOOL
+<a href=#20 id=20 data-nosnippet>20</a>	EqualDomainSid(PCVOID, PCVOID, <span class="kw-2">*mut </span>BOOL) -&gt; BOOL
+<a href=#21 id=21 data-nosnippet>21</a>	EqualPrefixSid(PCVOID, PCVOID) -&gt; BOOL
+<a href=#22 id=22 data-nosnippet>22</a>	EqualSid(PCVOID, PCVOID) -&gt; BOOL
 <a href=#23 id=23 data-nosnippet>23</a>	FreeSid(PVOID)
-<a href=#24 id=24 data-nosnippet>24</a>	GetLengthSid(PVOID) -&gt; u32
+<a href=#24 id=24 data-nosnippet>24</a>	GetLengthSid(PCVOID) -&gt; u32
 <a href=#25 id=25 data-nosnippet>25</a>	GetSidLengthRequired(u8) -&gt; u32
 <a href=#26 id=26 data-nosnippet>26</a>	GetTokenInformation(HANDLE, u32, PCVOID, u32, <span class="kw-2">*mut </span>u32) -&gt; BOOL
 <a href=#27 id=27 data-nosnippet>27</a>	GetUserNameW(PSTR, <span class="kw-2">*mut </span>u32) -&gt; BOOL
@@ -32,8 +32,8 @@
 <a href=#32 id=32 data-nosnippet>32</a>	InitiateSystemShutdownW(PCSTR, PCSTR, u32, BOOL, BOOL) -&gt; BOOL
 <a href=#33 id=33 data-nosnippet>33</a>	IsTokenRestricted(HANDLE) -&gt; BOOL
 <a href=#34 id=34 data-nosnippet>34</a>	IsValidSecurityDescriptor(PCVOID) -&gt; BOOL
-<a href=#35 id=35 data-nosnippet>35</a>	IsValidSid(PVOID) -&gt; BOOL
-<a href=#36 id=36 data-nosnippet>36</a>	IsWellKnownSid(PVOID, u32) -&gt; BOOL
+<a href=#35 id=35 data-nosnippet>35</a>	IsValidSid(PCVOID) -&gt; BOOL
+<a href=#36 id=36 data-nosnippet>36</a>	IsWellKnownSid(PCVOID, u32) -&gt; BOOL
 <a href=#37 id=37 data-nosnippet>37</a>	LookupAccountNameW(PCSTR, PCSTR, PVOID, <span class="kw-2">*mut </span>u32, PSTR, <span class="kw-2">*mut </span>u32, <span class="kw-2">*mut </span>u32) -&gt; BOOL
 <a href=#38 id=38 data-nosnippet>38</a>	LookupAccountSidW(PCSTR, PCVOID, PSTR, <span class="kw-2">*mut </span>u32, PSTR, <span class="kw-2">*mut </span>u32, <span class="kw-2">*mut </span>u32) -&gt; BOOL
 <a href=#39 id=39 data-nosnippet>39</a>	LookupPrivilegeNameW(PCSTR, PCVOID, PSTR, <span class="kw-2">*mut </span>u32) -&gt; BOOL
@@ -61,7 +61,7 @@
 <a href=#61 id=61 data-nosnippet>61</a>	RegFlushKey(HANDLE) -&gt; i32
 <a href=#62 id=62 data-nosnippet>62</a>	RegGetValueW(HANDLE, PCSTR, PCSTR, u32, <span class="kw-2">*mut </span>u32, PVOID, <span class="kw-2">*mut </span>u32) -&gt; i32
 <a href=#63 id=63 data-nosnippet>63</a>	RegisterEventSourceW(PCSTR, PCSTR) -&gt; HANDLE
-<a href=#64 id=64 data-nosnippet>64</a>	RegisterServiceCtrlHandlerExW(PCSTR, PFUNC, PVOID) -&gt; HANDLE
+<a href=#64 id=64 data-nosnippet>64</a>	RegisterServiceCtrlHandlerExW(PCSTR, PFUNC, PCVOID) -&gt; HANDLE
 <a href=#65 id=65 data-nosnippet>65</a>	RegLoadKeyW(HANDLE, PCSTR, PCSTR) -&gt; i32
 <a href=#66 id=66 data-nosnippet>66</a>	RegOpenCurrentUser(u32, <span class="kw-2">*mut </span>HANDLE) -&gt; i32
 <a href=#67 id=67 data-nosnippet>67</a>	RegOpenKeyExW(HANDLE, PCSTR, u32, u32, <span class="kw-2">*mut </span>HANDLE) -&gt; i32
@@ -73,8 +73,8 @@
 <a href=#73 id=73 data-nosnippet>73</a>	RegRenameKey(HANDLE, PCSTR, PCSTR) -&gt; i32
 <a href=#74 id=74 data-nosnippet>74</a>	RegReplaceKeyW(HANDLE, PCSTR, PCSTR, PCSTR) -&gt; i32
 <a href=#75 id=75 data-nosnippet>75</a>	RegRestoreKeyW(HANDLE, PCSTR, u32) -&gt; i32
-<a href=#76 id=76 data-nosnippet>76</a>	RegSaveKeyExW(HANDLE, PCSTR, PVOID, u32) -&gt; i32
-<a href=#77 id=77 data-nosnippet>77</a>	RegSaveKeyW(HANDLE, PCSTR, PVOID) -&gt; i32
+<a href=#76 id=76 data-nosnippet>76</a>	RegSaveKeyExW(HANDLE, PCSTR, PCVOID, u32) -&gt; i32
+<a href=#77 id=77 data-nosnippet>77</a>	RegSaveKeyW(HANDLE, PCSTR, PCVOID) -&gt; i32
 <a href=#78 id=78 data-nosnippet>78</a>	RegSetKeyValueW(HANDLE, PCSTR, PCSTR, u32, PCVOID, u32) -&gt; i32
 <a href=#79 id=79 data-nosnippet>79</a>	RegSetValueExW(HANDLE, PCSTR, u32, u32, <span class="kw-2">*const </span>u8, u32) -&gt; i32
 <a href=#80 id=80 data-nosnippet>80</a>	RegUnLoadKeyW(HANDLE, PCSTR) -&gt; i32
@@ -84,8 +84,8 @@
 <a href=#84 id=84 data-nosnippet>84</a>
 <a href=#85 id=85 data-nosnippet>85</a><span class="macro">extern_sys!</span> { <span class="string">"ktmw32"</span>;
 <a href=#86 id=86 data-nosnippet>86</a>	CommitTransaction(HANDLE) -&gt; BOOL
-<a href=#87 id=87 data-nosnippet>87</a>	CreateTransaction(PVOID, PVOID, u32, u32, u32, u32, PSTR) -&gt; HANDLE
+<a href=#87 id=87 data-nosnippet>87</a>	CreateTransaction(PCVOID, PVOID, u32, u32, u32, u32, PSTR) -&gt; HANDLE
 <a href=#88 id=88 data-nosnippet>88</a>	GetTransactionId(HANDLE, PVOID) -&gt; BOOL
-<a href=#89 id=89 data-nosnippet>89</a>	OpenTransaction(u32, PVOID) -&gt; HANDLE
+<a href=#89 id=89 data-nosnippet>89</a>	OpenTransaction(u32, PCVOID) -&gt; HANDLE
 <a href=#90 id=90 data-nosnippet>90</a>	RollbackTransaction(HANDLE) -&gt; BOOL
 <a href=#91 id=91 data-nosnippet>91</a>}</code></pre></div></section></main></body></html>
