@@ -3,6 +3,7 @@
 use crate::decl::*;
 use crate::dshow::vts::*;
 use crate::guard::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -77,7 +78,7 @@ pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 	/// method.
 	fn QueryFilterInfo(&self, info: &mut FILTER_INFO) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
-			(vt::<IBaseFilterVT>(self).QueryFilterInfo)(self.ptr(), info as *mut _ as _)
+			(vt::<IBaseFilterVT>(self).QueryFilterInfo)(self.ptr(), pvoid(info))
 		})
 	}
 

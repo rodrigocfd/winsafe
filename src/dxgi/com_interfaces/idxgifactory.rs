@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::dxgi::{iterators::*, vts::*};
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -67,7 +68,7 @@ pub trait dxgi_IDXGIFactory: dxgi_IDXGIObject {
 			(vt::<IDXGIFactoryVT>(self).CreateSwapChain)(
 				self.ptr(),
 				device.ptr(),
-				desc as *const _ as _,
+				pcvoid(desc),
 				queried.as_mut(),
 			)
 		})

@@ -25,7 +25,7 @@ extern_sys! { "comctl32";
 	ImageList_SetImageCount(HANDLE, u32) -> BOOL
 	ImageList_Write(HANDLE, COMPTR) -> BOOL
 	InitCommonControls()
-	InitCommonControlsEx(PVOID) -> BOOL
+	InitCommonControlsEx(PCVOID) -> BOOL
 	InitializeFlatSB(HANDLE) -> HRES
 	InitMUILanguage(u16)
 	PropertySheetW(PCVOID) -> isize

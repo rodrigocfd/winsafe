@@ -30,13 +30,13 @@ pub struct IBindCtxVT {
 #[repr(C)]
 pub struct IDataObjectVT {
 	pub IUnknownVT: IUnknownVT,
-	pub GetData: fn(COMPTR, PVOID, PVOID) -> HRES,
+	pub GetData: fn(COMPTR, PCVOID, PVOID) -> HRES,
 	pub GetDataHere: fn(COMPTR, PVOID, PVOID) -> HRES,
-	pub QueryGetData: fn(COMPTR, PVOID) -> HRES,
+	pub QueryGetData: fn(COMPTR, PCVOID) -> HRES,
 	pub GetCanonicalFormatEtc: fn(COMPTR, PVOID, PVOID) -> HRES,
 	pub SetData: fn(COMPTR, PVOID, PVOID, BOOL) -> HRES,
 	pub EnumFormatEtc: fn(COMPTR, u32, *mut COMPTR) -> HRES,
-	pub DAdvise: fn(COMPTR, PVOID, u32, COMPTR, *mut u32) -> HRES,
+	pub DAdvise: fn(COMPTR, PCVOID, u32, COMPTR, *mut u32) -> HRES,
 	pub DUnadvise: fn(COMPTR, u32) -> HRES,
 	pub EnumDAdvise: fn(COMPTR, *mut COMPTR) -> HRES,
 }

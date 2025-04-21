@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -85,11 +86,11 @@ pub trait mf_IMFMediaEventGenerator: ole_IUnknown {
 			(vt::<IMFMediaEventGeneratorVT>(self).QueueEvent)(
 				self.ptr(),
 				met.raw(),
-				extended_type as *const _ as _,
+				pcvoid(extended_type),
 				status.raw(),
 				match value {
 					None => std::ptr::null(),
-					Some(v) => &v.to_raw()? as *const _ as _,
+					Some(v) => pcvoid(&v.to_raw()?),
 				},
 			)
 		})

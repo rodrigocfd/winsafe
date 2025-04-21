@@ -4,7 +4,7 @@ use crate::advapi::{ffi, iterators::*};
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::{ffi_types::*, privs::*};
+use crate::kernel::privs::*;
 use crate::prelude::*;
 
 handle! { HKEY;
@@ -109,7 +109,7 @@ pub trait advapi_Hkey: Handle {
 				WString::from_opt_str(class).as_ptr(),
 				options.raw(),
 				access_rights.raw(),
-				security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+				pcvoid_or_null(security_attributes),
 				hkey.as_mut(),
 				disposition.as_mut(),
 			))
@@ -140,7 +140,7 @@ pub trait advapi_Hkey: Handle {
 				WString::from_opt_str(class).as_ptr(),
 				options.raw(),
 				access_rights.raw(),
-				security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+				pcvoid_or_null(security_attributes),
 				hkey.as_mut(),
 				disposition.as_mut(),
 				htransaction.ptr(),
@@ -477,7 +477,7 @@ pub trait advapi_Hkey: Handle {
 		let max_value_name_len = max_value_name_len.map_or(std::ptr::null_mut(), |re| re as _);
 		let max_value_len = max_value_len.map_or(std::ptr::null_mut(), |re| re as _);
 		let security_descr_len = security_descr_len.map_or(std::ptr::null_mut(), |re| re as _);
-		let last_write_time = last_write_time.map_or(std::ptr::null_mut(), |re| re as *mut _ as _);
+		let last_write_time = last_write_time.map_or(std::ptr::null_mut(), |re| pvoid(re));
 
 		// Loop until class is large enough.
 		loop {
@@ -596,7 +596,7 @@ pub trait advapi_Hkey: Handle {
 	/// function.
 	#[must_use]
 	fn RegQueryReflectionKey(&self) -> SysResult<bool> {
-		let mut is_disabled: BOOL = 0;
+		let mut is_disabled = 0;
 		error_to_sysresult(unsafe { ffi::RegQueryReflectionKey(self.ptr(), &mut is_disabled) })
 			.map(|_| is_disabled != 0)
 	}
@@ -713,7 +713,7 @@ pub trait advapi_Hkey: Handle {
 			ffi::RegSaveKeyW(
 				self.ptr(),
 				WString::from_str(dest_file_path).as_ptr(),
-				security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+				pcvoid_or_null(security_attributes),
 			)
 		})
 	}
@@ -730,7 +730,7 @@ pub trait advapi_Hkey: Handle {
 			ffi::RegSaveKeyExW(
 				self.ptr(),
 				WString::from_str(dest_file_path).as_ptr(),
-				security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+				pcvoid_or_null(security_attributes),
 				flags.raw(),
 			)
 		})

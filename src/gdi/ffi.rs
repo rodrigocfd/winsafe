@@ -25,7 +25,7 @@ extern_sys! { "gdi32";
 	CreatePen(i32, i32, u32) -> HANDLE
 	CreatePenIndirect(PCVOID) -> HANDLE
 	CreateRectRgn(i32, i32, i32, i32) -> HANDLE
-	CreateRectRgnIndirect(PVOID) -> HANDLE
+	CreateRectRgnIndirect(PCVOID) -> HANDLE
 	CreateRoundRectRgn(i32, i32, i32, i32, i32, i32) -> HANDLE
 	CreateSolidBrush(u32) -> HANDLE
 	DeleteDC(HANDLE) -> BOOL

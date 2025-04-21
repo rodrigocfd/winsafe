@@ -2,7 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::kernel::privs::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -74,7 +74,7 @@ pub trait mf_IMFByteStream: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFByteStreamVT>(self).BeginWrite)(
 				self.ptr(),
-				buffer.as_ptr(),
+				vec_ptr(buffer),
 				buffer.len() as _,
 				callback.ptr(),
 				state.map_or(std::ptr::null_mut(), |s| s.ptr()),
@@ -147,7 +147,7 @@ pub trait mf_IMFByteStream: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn IsEndOfStream(&self) -> HrResult<bool> {
-		let mut is: BOOL = 0;
+		let mut is = 0;
 		ok_to_hrresult(unsafe { (vt::<IMFByteStreamVT>(self).IsEndOfStream)(self.ptr(), &mut is) })
 			.map(|_| is != 0)
 	}
@@ -209,7 +209,7 @@ pub trait mf_IMFByteStream: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFByteStreamVT>(self).Write)(
 				self.ptr(),
-				buffer.as_ptr(),
+				vec_ptr(buffer),
 				buffer.len() as _,
 				&mut written,
 			)

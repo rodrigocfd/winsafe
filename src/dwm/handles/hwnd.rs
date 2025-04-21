@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::dwm::ffi;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -21,7 +22,7 @@ pub trait dwm_Hwnd: uxtheme_Hwnd {
 	/// function.
 	fn DwmExtendFrameIntoClientArea(&self, margins_inset: &MARGINS) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
-			ffi::DwmExtendFrameIntoClientArea(self.ptr(), margins_inset as *const _ as _)
+			ffi::DwmExtendFrameIntoClientArea(self.ptr(), pcvoid(margins_inset))
 		})
 	}
 
@@ -43,7 +44,7 @@ pub trait dwm_Hwnd: uxtheme_Hwnd {
 			ffi::DwmSetIconicLivePreviewBitmap(
 				self.ptr(),
 				hbmp.ptr(),
-				pt_client.map_or(std::ptr::null(), |pt| &pt as *const _ as _),
+				pcvoid_or_null(pt_client.as_ref()),
 				sit_flags.unwrap_or_default().raw(),
 			)
 		})

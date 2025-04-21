@@ -168,7 +168,7 @@ pub struct ITaskbarList3VT {
 	pub ThumbBarSetImageList: fn(COMPTR, HANDLE, HANDLE) -> HRES,
 	pub SetOverlayIcon: fn(COMPTR, HANDLE, HANDLE, PCSTR) -> HRES,
 	pub SetThumbnailTooltip: fn(COMPTR, HANDLE, PCSTR) -> HRES,
-	pub SetThumbnailClip: fn(COMPTR, HANDLE, PVOID) -> HRES,
+	pub SetThumbnailClip: fn(COMPTR, HANDLE, PCVOID) -> HRES,
 }
 
 #[repr(C)]

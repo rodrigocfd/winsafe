@@ -29,7 +29,7 @@ use crate::prelude::*;
 /// ```
 pub fn ShellExecuteEx(exec_info: &SHELLEXECUTEINFO) -> SysResult<()> {
 	let mut buf = exec_info.to_raw();
-	bool_to_sysresult(unsafe { ffi::ShellExecuteExW(&mut buf.raw as *mut _ as _) })
+	bool_to_sysresult(unsafe { ffi::ShellExecuteExW(pvoid(&mut buf.raw)) })
 }
 
 /// [`SHGetKnownFolderPath`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath)
@@ -60,7 +60,7 @@ pub fn SHGetKnownFolderPath(
 	let mut pstr = std::ptr::null_mut::<u16>();
 	ok_to_hrresult(unsafe {
 		ffi::SHGetKnownFolderPath(
-			folder_id as *const _ as _,
+			pcvoid(folder_id),
 			flags.raw(),
 			token.map_or(std::ptr::null_mut(), |t| t.ptr()),
 			&mut pstr,

@@ -30,7 +30,7 @@ pub struct IMFAttributesVT {
 	pub GetUINT32: fn(COMPTR, PCVOID, *mut u32) -> HRES,
 	pub GetUINT64: fn(COMPTR, PCVOID, *mut u64) -> HRES,
 	pub GetDouble: fn(COMPTR, PCVOID, *mut f64) -> HRES,
-	pub GetGUID: fn(COMPTR, COMPTR, PVOID) -> HRES,
+	pub GetGUID: fn(COMPTR, PCVOID, PVOID) -> HRES,
 	pub GetStringLength: fn(COMPTR, PCVOID, *mut u32) -> HRES,
 	pub GetString: fn(COMPTR, PCVOID, PSTR, u32, *mut u32) -> HRES,
 	pub GetAllocatedString: fn(COMPTR, PCVOID, *mut PSTR, *mut u32) -> HRES,

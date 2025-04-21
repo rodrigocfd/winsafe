@@ -40,7 +40,7 @@ pub trait kernel_Hinstance: Handle {
 				resource_type.as_ptr(),
 				resource_id.as_ptr(),
 				proc::hinstance_enum_resource_languages::<F> as _,
-				&func as *const _ as _,
+				pcvoid(&func),
 			)
 		})
 	}
@@ -81,7 +81,7 @@ pub trait kernel_Hinstance: Handle {
 				self.ptr(),
 				resource_type.as_ptr(),
 				proc::hinstance_enum_resource_names::<F> as _,
-				&func as *const _ as _,
+				pcvoid(&func),
 			)
 		})
 	}
@@ -114,7 +114,7 @@ pub trait kernel_Hinstance: Handle {
 			ffi::EnumResourceTypesW(
 				self.ptr(),
 				proc::hinstance_enum_resource_types::<F> as _,
-				&func as *const _ as _,
+				pcvoid(&func),
 			)
 		})
 	}

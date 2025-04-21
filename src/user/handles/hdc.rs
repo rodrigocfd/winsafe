@@ -25,19 +25,21 @@ pub trait user_Hdc: Handle {
 	/// [`DrawFocusRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawfocusrect)
 	/// function.
 	fn DrawFocusRect(&self, rect: RECT) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::DrawFocusRect(self.ptr(), &rect as *const _ as _) })
+		bool_to_sysresult(unsafe { ffi::DrawFocusRect(self.ptr(), pcvoid(&rect)) })
 	}
 
 	/// [`DrawText`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtextw)
 	/// function.
 	fn DrawText(&self, text: &str, bounds: RECT, format: co::DT) -> SysResult<i32> {
+		let mut bounds = bounds;
 		let wtext = WString::from_str(text);
+
 		match unsafe {
 			ffi::DrawTextW(
 				self.ptr(),
 				wtext.as_ptr(),
 				wtext.str_len() as _,
-				&bounds as *const _ as _,
+				pvoid(&mut bounds),
 				format.raw(),
 			)
 		} {
@@ -55,15 +57,17 @@ pub trait user_Hdc: Handle {
 		format: co::DT,
 		dtp: Option<&DRAWTEXTPARAMS>,
 	) -> SysResult<i32> {
+		let mut bounds = bounds;
 		let wtext = WString::from_str(text);
+
 		match unsafe {
 			ffi::DrawTextExW(
 				self.ptr(),
 				wtext.as_ptr(),
 				wtext.str_len() as _,
-				&bounds as *const _ as _,
+				pvoid(&mut bounds),
 				format.raw(),
-				dtp.map_or(std::ptr::null(), |p| p as *const _ as _),
+				pcvoid_or_null(dtp),
 			)
 		} {
 			0 => Err(GetLastError()),
@@ -98,9 +102,9 @@ pub trait user_Hdc: Handle {
 		bool_to_sysresult(unsafe {
 			ffi::EnumDisplayMonitors(
 				self.ptr(),
-				rc_clip.map_or(std::ptr::null_mut(), |rc| &rc as *const _ as _),
+				pcvoid_or_null(rc_clip.as_ref()),
 				proc::hdc_enum_display_monitors::<F> as _,
-				&func as *const _ as _,
+				pcvoid(&func),
 			)
 		})
 	}
@@ -108,13 +112,13 @@ pub trait user_Hdc: Handle {
 	/// [`FrameRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-framerect)
 	/// function.
 	fn FrameRect(&self, rc: RECT, hbr: &HBRUSH) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::FrameRect(self.ptr(), &rc as *const _ as _, hbr.ptr()) })
+		bool_to_sysresult(unsafe { ffi::FrameRect(self.ptr(), pcvoid(&rc), hbr.ptr()) })
 	}
 
 	/// [`InvertRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invertrect)
 	/// function.
 	fn InvertRect(&self, rc: RECT) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::InvertRect(self.ptr(), &rc as *const _ as _) })
+		bool_to_sysresult(unsafe { ffi::InvertRect(self.ptr(), pcvoid(&rc)) })
 	}
 
 	/// [`PaintDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-paintdesktop)

@@ -28,7 +28,7 @@ pub trait kernel_Hpipe: Handle {
 	/// Returns handles to the read and write pipes.
 	#[must_use]
 	fn CreatePipe(
-		attrs: Option<&mut SECURITY_ATTRIBUTES>,
+		attrs: Option<&SECURITY_ATTRIBUTES>,
 		size: u32,
 	) -> SysResult<(CloseHandleGuard<HPIPE>, CloseHandleGuard<HPIPE>)> {
 		let (mut hread, mut hwrite) = (HPIPE::NULL, HPIPE::NULL);
@@ -36,7 +36,7 @@ pub trait kernel_Hpipe: Handle {
 			bool_to_sysresult(ffi::CreatePipe(
 				hread.as_mut(),
 				hwrite.as_mut(),
-				attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+				pcvoid_or_null(attrs),
 				size,
 			))
 			.map(|_| (CloseHandleGuard::new(hread), CloseHandleGuard::new(hwrite)))

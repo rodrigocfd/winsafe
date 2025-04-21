@@ -44,8 +44,8 @@ extern_sys! { "user32";
 	CloseWindow(HANDLE) -> BOOL
 	CopyIcon(HANDLE) -> HANDLE
 	CreateAcceleratorTableW(PCVOID, i32) -> HANDLE
-	CreateDesktopExW(PCSTR, PCSTR, PCVOID, u32, u32, PVOID, u32, PVOID) -> HANDLE
-	CreateDesktopW(PCSTR, PCSTR, PCVOID, u32, u32, PVOID) -> HANDLE
+	CreateDesktopExW(PCSTR, PCSTR, PCVOID, u32, u32, PCVOID, u32, PVOID) -> HANDLE
+	CreateDesktopW(PCSTR, PCSTR, PCVOID, u32, u32, PCVOID) -> HANDLE
 	CreateDialogParamW(HANDLE, PCSTR, HANDLE, PFUNC, isize) -> HANDLE
 	CreateMenu() -> HANDLE
 	CreatePopupMenu() -> HANDLE
@@ -75,17 +75,17 @@ extern_sys! { "user32";
 	EndDialog(HANDLE, isize) -> BOOL
 	EndMenu() -> BOOL
 	EndPaint(HANDLE, PCVOID) -> BOOL
-	EnumChildWindows(HANDLE, PFUNC, isize) -> BOOL
+	EnumChildWindows(HANDLE, PFUNC, PCVOID) -> BOOL
 	EnumDisplayDevicesW(PCSTR, u32, PVOID, u32) -> BOOL
-	EnumDisplayMonitors(HANDLE, PCVOID, PFUNC, isize) -> BOOL
+	EnumDisplayMonitors(HANDLE, PCVOID, PFUNC, PCVOID) -> BOOL
 	EnumDisplaySettingsExW(PCSTR, u32, PVOID, u32) -> BOOL
 	EnumDisplaySettingsW(PCSTR, u32, PVOID) -> BOOL
-	EnumThreadWindows(u32, PFUNC, isize) -> BOOL
+	EnumThreadWindows(u32, PFUNC, PCVOID) -> BOOL
 	EnumWindows(PFUNC, isize) -> BOOL
 	ExitWindowsEx(u32, u32) -> BOOL
 	FindWindowExW(HANDLE, HANDLE, PCSTR, PCSTR) -> HANDLE
 	FindWindowW(PCSTR, PCSTR) -> HANDLE
-	FlashWindowEx(PVOID) -> BOOL
+	FlashWindowEx(PCVOID) -> BOOL
 	FrameRect(HANDLE, PCVOID, HANDLE) -> i32
 	GetActiveWindow() -> HANDLE
 	GetAltTabInfoW(HANDLE, i32, PVOID, PSTR, u32) -> BOOL
@@ -181,7 +181,7 @@ extern_sys! { "user32";
 	IsGUIThread(BOOL) -> BOOL
 	IsIconic(HANDLE) -> BOOL
 	IsMenu(HANDLE) -> BOOL
-	IsRectEmpty(PVOID) -> BOOL
+	IsRectEmpty(PCVOID) -> BOOL
 	IsWindow(HANDLE) -> BOOL
 	IsWindowEnabled(HANDLE) -> BOOL
 	IsWindowUnicode(HANDLE) -> BOOL

@@ -2,6 +2,7 @@
 
 use crate::decl::*;
 use crate::dshow::vts::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -31,11 +32,7 @@ pub trait dshow_IFilterGraph2: dshow_IGraphBuilder {
 	/// method.
 	fn ReconnectEx(&self, pin: &impl dshow_IPin, mt: Option<&AM_MEDIA_TYPE>) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
-			(vt::<IFilterGraph2VT>(self).ReconnectEx)(
-				self.ptr(),
-				pin.ptr(),
-				mt.map_or(std::ptr::null_mut(), |mt| mt as *const _ as _),
-			)
+			(vt::<IFilterGraph2VT>(self).ReconnectEx)(self.ptr(), pin.ptr(), pcvoid_or_null(mt))
 		})
 	}
 }

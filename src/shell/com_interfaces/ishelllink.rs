@@ -100,7 +100,7 @@ pub trait shell_IShellLink: ole_IUnknown {
 				self.ptr(),
 				buf.as_mut_ptr(),
 				buf.buf_len() as _,
-				fd.map_or(std::ptr::null_mut(), |fd| fd as *mut _ as _),
+				pvoid_or_null(fd),
 				flags.raw(),
 			)
 		})

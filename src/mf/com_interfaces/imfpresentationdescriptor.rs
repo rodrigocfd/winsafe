@@ -1,7 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -44,7 +43,7 @@ pub trait mf_IMFPresentationDescriptor: mf_IMFAttributes {
 	/// method.
 	#[must_use]
 	fn GetStreamDescriptorByIndex(&self, index: u32) -> HrResult<(bool, IMFStreamDescriptor)> {
-		let mut selected: BOOL = 0;
+		let mut selected = 0;
 		let mut queried = unsafe { IMFStreamDescriptor::null() };
 
 		ok_to_hrresult(unsafe {

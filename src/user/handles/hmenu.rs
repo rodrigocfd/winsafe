@@ -331,7 +331,7 @@ pub trait user_Hmenu: Handle {
 	/// [`GetMenuInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuinfo)
 	/// function.
 	fn GetMenuInfo(&self, mi: &mut MENUINFO) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::GetMenuInfo(self.ptr(), mi as *mut _ as _) })
+		bool_to_sysresult(unsafe { ffi::GetMenuInfo(self.ptr(), pvoid(mi)) })
 	}
 
 	/// [`GetMenuItemCount`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getmenuitemcount)
@@ -367,7 +367,7 @@ pub trait user_Hmenu: Handle {
 				self.ptr(),
 				id_or_pos.id_or_pos_u32(),
 				id_or_pos.is_by_pos() as _,
-				mii as *mut _ as _,
+				pvoid(mii),
 			)
 		})
 	}
@@ -430,7 +430,7 @@ pub trait user_Hmenu: Handle {
 				self.ptr(),
 				id_or_pos.id_or_pos_u32(),
 				id_or_pos.is_by_pos() as _,
-				mii as *const _ as _,
+				pcvoid(mii),
 			)
 		})
 	}
@@ -465,7 +465,7 @@ pub trait user_Hmenu: Handle {
 	/// [`SetMenuInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuinfo)
 	/// function.
 	fn SetMenuInfo(&self, mi: &MENUINFO) -> SysResult<()> {
-		bool_to_sysresult(unsafe { ffi::SetMenuInfo(self.ptr(), mi as *const _ as _) })
+		bool_to_sysresult(unsafe { ffi::SetMenuInfo(self.ptr(), pcvoid(mi)) })
 	}
 
 	/// [`SetMenuItemBitmaps`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setmenuitembitmaps)
@@ -495,7 +495,7 @@ pub trait user_Hmenu: Handle {
 				self.ptr(),
 				id_or_pos.id_or_pos_u32(),
 				id_or_pos.is_by_pos() as _,
-				mii as *const _ as _,
+				pcvoid(mii),
 			)
 		})
 	}

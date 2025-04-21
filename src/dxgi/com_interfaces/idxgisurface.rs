@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::dxgi::vts::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -34,7 +35,7 @@ pub trait dxgi_IDXGISurface: dxgi_IDXGIDeviceSubObject {
 	fn GetDesc(&self) -> HrResult<DXGI_SURFACE_DESC> {
 		let mut desc = DXGI_SURFACE_DESC::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IDXGISurfaceVT>(self).GetDesc)(self.ptr(), &mut desc as *mut _ as _)
+			(vt::<IDXGISurfaceVT>(self).GetDesc)(self.ptr(), pvoid(&mut desc))
 		})
 		.map(|_| desc)
 	}
@@ -45,14 +46,13 @@ pub trait dxgi_IDXGISurface: dxgi_IDXGIDeviceSubObject {
 	fn Map(&self, map_flags: co::DXGI_MAP) -> HrResult<DXGI_MAPPED_RECT> {
 		let mut mr = DXGI_MAPPED_RECT::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IDXGISurfaceVT>(self).Map)(self.ptr(), &mut mr as *mut _ as _, map_flags.raw())
+			(vt::<IDXGISurfaceVT>(self).Map)(self.ptr(), pvoid(&mut mr), map_flags.raw())
 		})
 		.map(|_| mr)
 	}
 
-	/// [`IDXGISurface::Unmap`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgisurface-unmap)
-	/// method.
-	fn Unmap(&self) -> HrResult<()> {
-		ok_to_hrresult(unsafe { (vt::<IDXGISurfaceVT>(self).Unmap)(self.ptr()) })
+	fn_com_noparm! { Unmap: IDXGISurfaceVT;
+		/// [`IDXGISurface::Unmap`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgisurface-unmap)
+		/// method.
 	}
 }

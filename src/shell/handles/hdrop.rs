@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::shell::{ffi, iterators::*};
 
@@ -71,7 +72,7 @@ pub trait shell_Hdrop: Handle {
 	#[must_use]
 	fn DragQueryPoint(&self) -> (POINT, bool) {
 		let mut pt = POINT::default();
-		let client_area = unsafe { ffi::DragQueryPoint(self.ptr(), &mut pt as *mut _ as _) };
+		let client_area = unsafe { ffi::DragQueryPoint(self.ptr(), pvoid(&mut pt)) };
 		(pt, client_area != 0)
 	}
 }

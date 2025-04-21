@@ -38,7 +38,7 @@ pub trait kernel_Hthread: Handle {
 		let mut thread_id = u32::default();
 		unsafe {
 			ptr_to_sysresult_handle(ffi::CreateThread(
-				thread_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+				pvoid_or_null(thread_attrs),
 				stack_size,
 				start_addr,
 				parameter,
@@ -113,10 +113,10 @@ pub trait kernel_Hthread: Handle {
 		bool_to_sysresult(unsafe {
 			ffi::GetThreadTimes(
 				self.ptr(),
-				&mut creation as *mut _ as _,
-				&mut exit as *mut _ as _,
-				&mut kernel as *mut _ as _,
-				&mut user as *mut _ as _,
+				pvoid(&mut creation),
+				pvoid(&mut exit),
+				pvoid(&mut kernel),
+				pvoid(&mut user),
 			)
 		})
 		.map(|_| (creation, exit, kernel, user))
@@ -154,11 +154,7 @@ pub trait kernel_Hthread: Handle {
 	) -> SysResult<PROCESSOR_NUMBER> {
 		let mut prev = PROCESSOR_NUMBER::default();
 		bool_to_sysresult(unsafe {
-			ffi::SetThreadIdealProcessorEx(
-				self.ptr(),
-				&ideal_processor as *const _ as _,
-				&mut prev as *mut _ as _,
-			)
+			ffi::SetThreadIdealProcessorEx(self.ptr(), pcvoid(&ideal_processor), pvoid(&mut prev))
 		})
 		.map(|_| prev)
 	}

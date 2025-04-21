@@ -79,7 +79,7 @@ pub trait kernel_Hfile: Handle {
 		file_name: &str,
 		desired_access: co::GENERIC,
 		share_mode: Option<co::FILE_SHARE>,
-		security_attributes: Option<&mut SECURITY_ATTRIBUTES>,
+		security_attributes: Option<&SECURITY_ATTRIBUTES>,
 		creation_disposition: co::DISPOSITION,
 		attributes: co::FILE_ATTRIBUTE,
 		flags: Option<co::FILE_FLAG>,
@@ -91,7 +91,7 @@ pub trait kernel_Hfile: Handle {
 				WString::from_str(file_name).as_ptr(),
 				desired_access.raw(),
 				share_mode.unwrap_or_default().raw(),
-				security_attributes.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+				pcvoid_or_null(security_attributes),
 				creation_disposition.raw(),
 				attributes.raw()
 					| flags.unwrap_or_default().raw()
@@ -113,7 +113,7 @@ pub trait kernel_Hfile: Handle {
 	#[must_use]
 	fn CreateFileMapping(
 		&self,
-		mapping_attrs: Option<&mut SECURITY_ATTRIBUTES>,
+		mapping_attrs: Option<&SECURITY_ATTRIBUTES>,
 		protect: co::PAGE,
 		max_size: Option<u64>,
 		mapping_name: Option<&str>,
@@ -121,7 +121,7 @@ pub trait kernel_Hfile: Handle {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::CreateFileMappingFromApp(
 				self.ptr(),
-				mapping_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+				pcvoid_or_null(mapping_attrs),
 				protect.raw(),
 				max_size.unwrap_or_default(),
 				WString::from_opt_str(mapping_name).as_ptr(),
@@ -134,10 +134,8 @@ pub trait kernel_Hfile: Handle {
 	/// function.
 	fn GetFileInformationByHandle(&self) -> SysResult<BY_HANDLE_FILE_INFORMATION> {
 		let mut fi = BY_HANDLE_FILE_INFORMATION::default();
-		bool_to_sysresult(unsafe {
-			ffi::GetFileInformationByHandle(self.ptr(), &mut fi as *mut _ as _)
-		})
-		.map(|_| fi)
+		bool_to_sysresult(unsafe { ffi::GetFileInformationByHandle(self.ptr(), pvoid(&mut fi)) })
+			.map(|_| fi)
 	}
 
 	/// [`GetFileSizeEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesizeex)
@@ -175,9 +173,9 @@ pub trait kernel_Hfile: Handle {
 		bool_to_sysresult(unsafe {
 			ffi::GetFileTime(
 				self.ptr(),
-				&mut creation as *mut _ as _,
-				&mut last_access as *mut _ as _,
-				&mut last_write as *mut _ as _,
+				pvoid(&mut creation),
+				pvoid(&mut last_access),
+				pvoid(&mut last_write),
 			)
 		})
 		.map(|_| (creation, last_access, last_write))
@@ -301,9 +299,9 @@ pub trait kernel_Hfile: Handle {
 		bool_to_sysresult(unsafe {
 			ffi::SetFileTime(
 				self.ptr(),
-				creation_time.map_or(std::ptr::null(), |p| p as *const _ as _),
-				last_access_time.map_or(std::ptr::null(), |p| p as *const _ as _),
-				last_write_time.map_or(std::ptr::null(), |p| p as *const _ as _),
+				pcvoid_or_null(creation_time),
+				pcvoid_or_null(last_access_time),
+				pcvoid_or_null(last_write_time),
 			)
 		})
 	}

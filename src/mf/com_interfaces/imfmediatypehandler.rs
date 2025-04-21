@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -29,7 +30,7 @@ pub trait mf_IMFMediaTypeHandler: ole_IUnknown {
 	fn GetMajorType(&self) -> HrResult<GUID> {
 		let mut mt = GUID::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IMFMediaTypeHandlerVT>(self).GetMajorType)(self.ptr(), &mut mt as *mut _ as _)
+			(vt::<IMFMediaTypeHandlerVT>(self).GetMajorType)(self.ptr(), pvoid(&mut mt))
 		})
 		.map(|_| mt)
 	}

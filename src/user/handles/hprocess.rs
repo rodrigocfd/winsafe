@@ -28,7 +28,7 @@ pub trait user_Hprocess: kernel_Hprocess {
 		bool_to_sysresult(ffi::SetUserObjectInformationW(
 			self.ptr(),
 			index.raw(),
-			pv_info as *mut _ as _,
+			pvoid(pv_info),
 			std::mem::size_of::<T>() as _,
 		))
 	}

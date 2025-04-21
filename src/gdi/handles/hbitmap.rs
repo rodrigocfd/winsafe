@@ -52,7 +52,7 @@ pub trait gdi_Hbitmap: Handle {
 	/// ```
 	fn GetObject(&self, pv: &mut BITMAP) -> SysResult<()> {
 		bool_to_invalidparm(unsafe {
-			ffi::GetObjectW(self.ptr(), std::mem::size_of::<BITMAP>() as _, pv as *mut _ as _)
+			ffi::GetObjectW(self.ptr(), std::mem::size_of::<BITMAP>() as _, pvoid(pv))
 		})
 	}
 }

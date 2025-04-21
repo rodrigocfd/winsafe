@@ -142,7 +142,7 @@ pub trait version_Hversioninfo: Handle {
 		bool_to_sysresult(ffi::VerQueryValueW(
 			self.ptr(),
 			WString::from_str(sub_block).as_ptr(),
-			&mut lp_lp_buffer as *mut _ as _,
+			pvoid(&mut lp_lp_buffer),
 			&mut pu_len,
 		))
 		.map(|_| (lp_lp_buffer as *const T, pu_len))

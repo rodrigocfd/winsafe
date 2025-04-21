@@ -1,8 +1,8 @@
 #![allow(non_snake_case)]
 
-use crate::co;
 use crate::decl::*;
 use crate::guard::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::oleaut::ffi;
 use crate::prelude::*;
@@ -39,7 +39,7 @@ pub fn OleLoadPicture(
 			stream.ptr() as _,
 			size.unwrap_or_default() as _,
 			!keep_original_format as _, // note: reversed
-			&IPicture::IID as *const _ as _,
+			pcvoid(&IPicture::IID),
 			queried.as_mut(),
 		)
 	})
@@ -64,7 +64,7 @@ pub fn OleLoadPicturePath(path: &str, transparent_color: Option<COLORREF>) -> Hr
 			std::ptr::null_mut(),
 			0,
 			transparent_color.map_or(0, |c| c.into()),
-			&IPicture::IID as *const _ as _,
+			pcvoid(&IPicture::IID),
 			queried.as_mut(),
 		)
 	})
@@ -76,12 +76,13 @@ pub fn OleLoadPicturePath(path: &str, transparent_color: Option<COLORREF>) -> Hr
 #[must_use]
 pub fn PSGetNameFromPropertyKey(prop_key: &PROPERTYKEY) -> HrResult<String> {
 	let mut pstr = std::ptr::null_mut::<u16>();
-	ok_to_hrresult(unsafe { ffi::PSGetNameFromPropertyKey(prop_key as *const _ as _, &mut pstr) })
-		.map(|_| {
+	ok_to_hrresult(unsafe { ffi::PSGetNameFromPropertyKey(pcvoid(prop_key), &mut pstr) }).map(
+		|_| {
 			let name = unsafe { WString::from_wchars_nullt(pstr) };
 			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 			name.to_string()
-		})
+		},
+	)
 }
 
 /// [`SystemTimeToVariantTime`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-systemtimetovarianttime)
@@ -96,10 +97,8 @@ pub fn PSGetNameFromPropertyKey(prop_key: &PROPERTYKEY) -> HrResult<String> {
 #[must_use]
 pub fn SystemTimeToVariantTime(st: &SYSTEMTIME) -> SysResult<f64> {
 	let mut double = f64::default();
-	match unsafe { ffi::SystemTimeToVariantTime(st as *const _ as _, &mut double) } {
-		0 => Err(co::ERROR::INVALID_PARAMETER),
-		_ => Ok(double),
-	}
+	bool_to_invalidparm(unsafe { ffi::SystemTimeToVariantTime(pcvoid(st), &mut double) })
+		.map(|_| double)
 }
 
 /// [`VariantTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-varianttimetosystemtime)
@@ -111,8 +110,6 @@ pub fn SystemTimeToVariantTime(st: &SYSTEMTIME) -> SysResult<f64> {
 #[must_use]
 pub fn VariantTimeToSystemTime(var_time: f64) -> SysResult<SYSTEMTIME> {
 	let mut st = SYSTEMTIME::default();
-	match unsafe { ffi::VariantTimeToSystemTime(var_time, &mut st as *mut _ as _) } {
-		0 => Err(co::ERROR::INVALID_PARAMETER),
-		_ => Ok(st),
-	}
+	bool_to_invalidparm(unsafe { ffi::VariantTimeToSystemTime(var_time, pvoid(&mut st)) })
+		.map(|_| st)
 }

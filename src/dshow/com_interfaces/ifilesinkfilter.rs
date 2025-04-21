@@ -3,6 +3,7 @@
 use crate::decl::*;
 use crate::dshow::vts::*;
 use crate::guard::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -60,7 +61,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 		ok_to_hrresult((vt::<IFileSinkFilterVT>(self).GetCurFile)(
 			self.ptr(),
 			&mut pstr,
-			mt.map_or(std::ptr::null_mut(), |amt| amt as *mut _ as _),
+			pvoid_or_null(mt),
 		))
 		.map(|_| {
 			let name = WString::from_wchars_nullt(pstr);
@@ -76,7 +77,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 			(vt::<IFileSinkFilterVT>(self).SetFileName)(
 				self.ptr(),
 				WString::from_str(file_name).as_ptr(),
-				mt.map_or(std::ptr::null(), |amt| amt as *const _ as _),
+				pcvoid_or_null(mt),
 			)
 		})
 	}

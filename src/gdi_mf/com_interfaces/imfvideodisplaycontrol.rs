@@ -2,6 +2,7 @@
 
 use crate::decl::*;
 use crate::guard::*;
+use crate::kernel::privs::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -31,7 +32,7 @@ pub trait gdi_mf_IMFVideoDisplayControl: mf_IMFVideoDisplayControl {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFVideoDisplayControlVT>(self).GetCurrentImage)(
 				self.ptr(),
-				&mut bih as *mut _ as _,
+				pvoid(&mut bih),
 				&mut dib_ptr,
 				&mut dib_sz,
 				&mut time_stamp,

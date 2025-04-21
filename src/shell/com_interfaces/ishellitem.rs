@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 use crate::shell::vts::*;
@@ -72,8 +73,8 @@ pub trait shell_IShellItem: ole_IUnknown {
 			(vt::<IShellItemVT>(self).BindToHandler)(
 				self.ptr(),
 				bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr() as _),
-				bhid as *const _ as _,
-				&T::IID as *const _ as _,
+				pcvoid(bhid),
+				pcvoid(&T::IID),
 				queried.as_mut(),
 			)
 		})

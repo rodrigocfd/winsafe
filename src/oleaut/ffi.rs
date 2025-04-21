@@ -13,7 +13,7 @@ extern_sys! { "oleaut32";
 	SysFreeString(PSTR)
 	SysReAllocString(PSTR, PCSTR) -> PSTR
 	SysStringLen(PSTR) -> u32
-	SystemTimeToVariantTime(PVOID, *mut f64) -> i32
+	SystemTimeToVariantTime(PCVOID, *mut f64) -> i32
 	VariantClear(PVOID) -> HRES
 	VariantInit(PVOID)
 	VariantTimeToSystemTime(f64, PVOID)  -> i32

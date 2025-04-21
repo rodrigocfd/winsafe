@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -125,8 +126,8 @@ pub trait mf_IMFMediaSession: mf_IMFMediaEventGenerator {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFMediaSessionVT>(self).Start)(
 				self.ptr(),
-				&time_format as *const _ as _,
-				&start_position.to_raw()? as *const _ as _,
+				pcvoid(&time_format),
+				pcvoid(&start_position.to_raw()?),
 			)
 		})
 	}

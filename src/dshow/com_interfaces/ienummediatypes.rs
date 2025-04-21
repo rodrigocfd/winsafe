@@ -2,6 +2,7 @@
 
 use crate::decl::*;
 use crate::dshow::{iterators::*, vts::*};
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -62,7 +63,7 @@ pub trait dshow_IEnumMediaTypes: ole_IUnknown {
 			(vt::<IEnumMediaTypesVT>(self).Next)(
 				self.ptr(),
 				1, // retrieve only 1
-				mt as *mut _ as _,
+				pvoid(mt),
 				std::ptr::null_mut(),
 			)
 		})

@@ -2,6 +2,7 @@
 
 use crate::decl::*;
 use crate::dxgi::vts::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -34,11 +35,7 @@ pub trait dxgi_IDXGIObject: ole_IUnknown {
 	{
 		let mut queried = unsafe { T::null() };
 		ok_to_hrresult(unsafe {
-			(vt::<IDXGIObjectVT>(self).GetParent)(
-				self.ptr(),
-				&T::IID as *const _ as _,
-				queried.as_mut(),
-			)
+			(vt::<IDXGIObjectVT>(self).GetParent)(self.ptr(), pcvoid(&T::IID), queried.as_mut())
 		})
 		.map(|_| queried)
 	}
@@ -54,9 +51,9 @@ pub trait dxgi_IDXGIObject: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IDXGIObjectVT>(self).SetPrivateData)(
 				self.ptr(),
-				name as *const _ as _,
+				pcvoid(name),
 				std::mem::size_of::<T>() as _,
-				data as *const _ as _,
+				pcvoid(data),
 			)
 		})
 	}
@@ -70,7 +67,7 @@ pub trait dxgi_IDXGIObject: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IDXGIObjectVT>(self).SetPrivateDataInterface)(
 				self.ptr(),
-				&T::IID as *const _ as _,
+				pcvoid(&T::IID),
 				obj.ptr(),
 			)
 		})

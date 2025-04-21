@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
+use crate::kernel::privs::*;
 use crate::ole::ffi;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -31,7 +32,7 @@ use crate::prelude::*;
 pub fn CLSIDFromProgID(prog_id: &str) -> HrResult<co::CLSID> {
 	let mut clsid = co::CLSID::default();
 	ok_to_hrresult(unsafe {
-		ffi::CLSIDFromProgID(WString::from_str(prog_id).as_ptr(), &mut clsid as *mut _ as _)
+		ffi::CLSIDFromProgID(WString::from_str(prog_id).as_ptr(), pvoid(&mut clsid))
 	})
 	.map(|_| clsid)
 }
@@ -42,7 +43,7 @@ pub fn CLSIDFromProgID(prog_id: &str) -> HrResult<co::CLSID> {
 pub fn CLSIDFromProgIDEx(prog_id: &str) -> HrResult<co::CLSID> {
 	let mut clsid = co::CLSID::default();
 	ok_to_hrresult(unsafe {
-		ffi::CLSIDFromProgIDEx(WString::from_str(prog_id).as_ptr(), &mut clsid as *mut _ as _)
+		ffi::CLSIDFromProgIDEx(WString::from_str(prog_id).as_ptr(), pvoid(&mut clsid))
 	})
 	.map(|_| clsid)
 }
@@ -53,7 +54,7 @@ pub fn CLSIDFromProgIDEx(prog_id: &str) -> HrResult<co::CLSID> {
 pub fn CLSIDFromString(prog_id: &str) -> HrResult<co::CLSID> {
 	let mut clsid = co::CLSID::default();
 	ok_to_hrresult(unsafe {
-		ffi::CLSIDFromString(WString::from_str(prog_id).as_ptr(), &mut clsid as *mut _ as _)
+		ffi::CLSIDFromString(WString::from_str(prog_id).as_ptr(), pvoid(&mut clsid))
 	})
 	.map(|_| clsid)
 }
@@ -65,7 +66,7 @@ pub fn CLSIDFromString(prog_id: &str) -> HrResult<co::CLSID> {
 #[must_use]
 pub fn CoCreateGuid() -> HrResult<GUID> {
 	let mut guid = GUID::default();
-	ok_to_hrresult(unsafe { ffi::CoCreateGuid(&mut guid as *mut _ as _) }).map(|_| guid)
+	ok_to_hrresult(unsafe { ffi::CoCreateGuid(pvoid(&mut guid)) }).map(|_| guid)
 }
 
 /// [`CoCreateInstance`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstance)
@@ -100,12 +101,12 @@ where
 
 	ok_to_hrresult(unsafe {
 		ffi::CoCreateInstance(
-			clsid as *const _ as _,
+			pcvoid(clsid),
 			iunk_outer
 				.as_ref()
 				.map_or(std::ptr::null_mut(), |_| queried_outer.as_mut()),
 			cls_context.raw(),
-			&T::IID as *const _ as _,
+			pcvoid(&T::IID),
 			queried.as_mut(),
 		)
 	})
@@ -114,35 +115,6 @@ where
 			*iunk_outer = queried_outer; // create outer IUnknown if due
 		}
 		queried // return new IUnknown-derived object
-	})
-}
-
-/// [`CoCreateInstanceEx`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cocreateinstanceex)
-/// function.
-pub fn CoCreateInstanceEx(
-	clsid: &co::CLSID,
-	iunk_outer: Option<&mut IUnknown>,
-	cls_context: co::CLSCTX,
-	server_info: Option<&COSERVERINFO>,
-	results: &mut [MULTI_QI],
-) -> HrResult<()> {
-	let mut queried_outer = unsafe { IUnknown::null() };
-	ok_to_hrresult(unsafe {
-		ffi::CoCreateInstanceEx(
-			clsid as *const _ as _,
-			iunk_outer
-				.as_ref()
-				.map_or(std::ptr::null_mut(), |_| queried_outer.as_mut()),
-			cls_context.raw(),
-			server_info.map_or(std::ptr::null(), |si| si as *const _ as _),
-			results.len() as _,
-			results.as_mut_ptr() as _,
-		)
-	})
-	.map(|_| {
-		if let Some(iunk_outer) = iunk_outer {
-			*iunk_outer = queried_outer; // create outer IUnknown if due
-		}
 	})
 }
 
@@ -274,7 +246,7 @@ pub fn CoTaskMemRealloc(pv: &mut CoTaskMemFreeGuard, cb: usize) -> HrResult<()> 
 #[must_use]
 pub fn CreateClassMoniker(clsid: &co::CLSID) -> HrResult<IMoniker> {
 	let mut queried = unsafe { IMoniker::null() };
-	ok_to_hrresult(unsafe { ffi::CreateClassMoniker(clsid as *const _ as _, queried.as_mut()) })
+	ok_to_hrresult(unsafe { ffi::CreateClassMoniker(pcvoid(clsid), queried.as_mut()) })
 		.map(|_| queried)
 }
 
@@ -361,7 +333,7 @@ pub fn OleInitialize() -> HrResult<OleUninitializeGuard> {
 #[must_use]
 pub fn StringFromCLSID(clsid: &co::CLSID) -> HrResult<String> {
 	let mut pstr = std::ptr::null_mut::<u16>();
-	ok_to_hrresult(unsafe { ffi::StringFromCLSID(clsid as *const _ as _, &mut pstr) }).map(|_| {
+	ok_to_hrresult(unsafe { ffi::StringFromCLSID(pcvoid(clsid), &mut pstr) }).map(|_| {
 		let name = unsafe { WString::from_wchars_nullt(pstr) };
 		let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 		name.to_string()

@@ -2,6 +2,7 @@ use std::ops::Deref;
 
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::ole::ffi;
 use crate::prelude::*;
 
@@ -165,7 +166,7 @@ pub struct ReleaseStgMediumGuard {
 impl Drop for ReleaseStgMediumGuard {
 	fn drop(&mut self) {
 		unsafe {
-			ffi::ReleaseStgMedium(&mut self.stgm as *mut _ as _);
+			ffi::ReleaseStgMedium(pvoid(&mut self.stgm));
 		}
 	}
 }

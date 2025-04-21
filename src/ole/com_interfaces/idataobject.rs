@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
+use crate::kernel::privs::*;
 use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 
@@ -38,7 +39,7 @@ pub trait ole_IDataObject: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IDataObjectVT>(self).DAdvise)(
 				self.ptr(),
-				formatetc as *const _ as _,
+				pcvoid(formatetc),
 				advf.raw(),
 				adv_sink.ptr(),
 				&mut connection,
@@ -63,8 +64,8 @@ pub trait ole_IDataObject: ole_IUnknown {
 		let mut sm = STGMEDIUM::default();
 		ok_to_hrresult((vt::<IDataObjectVT>(self).GetData)(
 			self.ptr(),
-			formatetc as *const _ as _,
-			&mut sm as *mut _ as _,
+			pcvoid(formatetc),
+			pvoid(&mut sm),
 		))
 		.map(|_| ReleaseStgMediumGuard::new(sm))
 	}
@@ -73,7 +74,7 @@ pub trait ole_IDataObject: ole_IUnknown {
 	/// method.
 	fn QueryGetData(&self, formatetc: &FORMATETC) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
-			(vt::<IDataObjectVT>(self).QueryGetData)(self.ptr(), formatetc as *const _ as _)
+			(vt::<IDataObjectVT>(self).QueryGetData)(self.ptr(), pcvoid(formatetc))
 		})
 	}
 }

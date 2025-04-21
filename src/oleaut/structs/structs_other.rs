@@ -5,7 +5,7 @@ use std::mem::ManuallyDrop;
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::kernel::{ffi_types::*, privs::*};
 use crate::oleaut::{ffi, privs::*};
 
 /// [`DISPPARAMS`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/ns-oaidl-dispparams)
@@ -155,8 +155,8 @@ impl Drop for PROPVARIANT {
 	fn drop(&mut self) {
 		if self.vt() != co::VT::EMPTY {
 			unsafe {
-				ffi::PropVariantClear(self as *mut _ as _);
-			} // ignore errors
+				ffi::PropVariantClear(self as *mut _ as _); // ignore errors
+			}
 		}
 	}
 }
@@ -220,7 +220,7 @@ impl Default for VARIANT {
 	fn default() -> Self {
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
 		unsafe {
-			ffi::VariantInit(&mut obj as *mut _ as _);
+			ffi::VariantInit(pvoid(&mut obj));
 		}
 		obj
 	}

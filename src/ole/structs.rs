@@ -123,25 +123,6 @@ pub struct DVTARGETDEVICE {
 	pub tdData: [u8; 1],
 }
 
-/// [`MULTI_QI`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-multi_qi)
-/// struct.
-#[repr(C)]
-pub struct MULTI_QI<'a> {
-	pIID: *mut co::IID,
-	pItf: COMPTR,
-	pub hr: co::HRESULT,
-
-	_pIID: PhantomData<&'a mut co::IID>,
-}
-
-impl_default!(MULTI_QI, 'a);
-impl_drop_comptr!(pItf, MULTI_QI, 'a);
-
-impl<'a> MULTI_QI<'a> {
-	pub_fn_ptr_get_set!('a, pIID, set_pIID, co::IID);
-	pub_fn_comptr_get_set!(pItf, set_pItf, ole_IUnknown);
-}
-
 /// [`SNB`](https://learn.microsoft.com/en-us/windows/win32/stg/snb)
 /// struct.
 #[repr(transparent)]

@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::dxgi::vts::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -41,10 +42,10 @@ pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {
 		ok_to_hrresult(unsafe {
 			(vt::<IDXGIDeviceVT>(self).CreateSurface)(
 				self.ptr(),
-				desc as *const _ as _,
+				pcvoid(desc),
 				num_surfaces,
 				usage.raw(),
-				shared_resource.map_or(std::ptr::null(), |s| s as *const _ as _),
+				pcvoid_or_null(shared_resource),
 				queried.as_mut(),
 			)
 		})

@@ -68,7 +68,7 @@ pub trait gdi_Hfont: Handle {
 	#[must_use]
 	fn CreateFontIndirect(lf: &LOGFONT) -> SysResult<DeleteObjectGuard<HFONT>> {
 		unsafe {
-			ptr_to_invalidparm_handle(ffi::CreateFontIndirectW(lf as *const _ as _))
+			ptr_to_invalidparm_handle(ffi::CreateFontIndirectW(pcvoid(lf)))
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -89,7 +89,7 @@ pub trait gdi_Hfont: Handle {
 	/// # w::SysResult::Ok(())
 	fn GetObject(&self, lf: &mut LOGFONT) -> SysResult<()> {
 		bool_to_invalidparm(unsafe {
-			ffi::GetObjectW(self.ptr(), std::mem::size_of::<LOGFONT>() as _, lf as *mut _ as _)
+			ffi::GetObjectW(self.ptr(), std::mem::size_of::<LOGFONT>() as _, pvoid(lf))
 		})
 	}
 

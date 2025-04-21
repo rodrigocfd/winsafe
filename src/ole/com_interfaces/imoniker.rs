@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
+use crate::kernel::privs::*;
 use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 
@@ -45,7 +46,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 				self.ptr(),
 				bind_ctx.ptr(),
 				moniker_to_left.map_or(std::ptr::null_mut(), |m| m.ptr()),
-				&T::IID as *const _ as _,
+				pcvoid(&T::IID),
 				queried.as_mut(),
 			)
 		})
@@ -69,7 +70,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 				self.ptr(),
 				bind_ctx.ptr(),
 				moniker_to_left.map_or(std::ptr::null_mut(), |m| m.ptr()),
-				&T::IID as *const _ as _,
+				pcvoid(&T::IID),
 				queried.as_mut(),
 			)
 		})
@@ -156,7 +157,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 				self.ptr(),
 				bind_ctx.ptr(),
 				moniker_to_left.map_or(std::ptr::null_mut(), |m| m.ptr()),
-				&mut ft as *mut _ as _,
+				pvoid(&mut ft),
 			)
 		})
 		.map(|_| ft)

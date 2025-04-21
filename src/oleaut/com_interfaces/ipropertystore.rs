@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::oleaut::{iterators::*, vts::*};
 use crate::prelude::*;
@@ -66,7 +67,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	fn GetAt(&self, index: u32) -> HrResult<PROPERTYKEY> {
 		let mut ppk = PROPERTYKEY::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IPropertyStoreVT>(self).GetAt)(self.ptr(), index, &mut ppk as *const _ as _)
+			(vt::<IPropertyStoreVT>(self).GetAt)(self.ptr(), index, pvoid(&mut ppk))
 		})
 		.map(|_| ppk)
 	}
@@ -88,8 +89,8 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 		match unsafe {
 			co::HRESULT::from_raw((vt::<IPropertyStoreVT>(self).GetValue)(
 				self.ptr(),
-				key as *const _ as _,
-				&mut var as *mut _ as _,
+				pcvoid(key),
+				pvoid(&mut var),
 			))
 		} {
 			co::HRESULT::S_OK | co::HRESULT::INPLACE_S_TRUNCATED => {
@@ -105,8 +106,8 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IPropertyStoreVT>(self).SetValue)(
 				self.ptr(),
-				key as *const _ as _,
-				&value.to_raw()? as *const _ as _,
+				pcvoid(key),
+				pcvoid(&value.to_raw()?),
 			)
 		})
 	}

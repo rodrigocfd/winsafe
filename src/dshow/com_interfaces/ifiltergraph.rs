@@ -2,6 +2,7 @@
 
 use crate::decl::*;
 use crate::dshow::vts::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -50,7 +51,7 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 				self.ptr(),
 				pin_out.ptr(),
 				pin_in.ptr(),
-				mt.map_or(std::ptr::null_mut(), |amt| amt as *const _ as _),
+				pcvoid_or_null(mt),
 			)
 		})
 	}

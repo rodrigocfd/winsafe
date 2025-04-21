@@ -80,7 +80,7 @@ pub trait kernel_Hstd: Handle {
 				buffer.as_mut_ptr() as _,
 				buffer.buf_len() as _,
 				&mut num_read,
-				input_control.map_or(std::ptr::null_mut(), |p| p as *const _ as _),
+				pcvoid_or_null(input_control),
 			)
 		})
 		.map(|_| num_read)

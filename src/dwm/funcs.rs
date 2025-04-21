@@ -2,7 +2,6 @@
 
 use crate::decl::*;
 use crate::dwm::ffi;
-use crate::kernel::ffi_types::*;
 use crate::ole::privs::*;
 
 /// [`DwmEnableMMCSS`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmenablemmcss)
@@ -25,7 +24,7 @@ pub fn DwmFlush() -> HrResult<()> {
 #[must_use]
 pub fn DwmGetColorizationColor() -> HrResult<(u32, bool)> {
 	let mut colorization = u32::default();
-	let mut opaque_blend: BOOL = 0;
+	let mut opaque_blend = 0;
 
 	ok_to_hrresult(unsafe { ffi::DwmGetColorizationColor(&mut colorization, &mut opaque_blend) })
 		.map(|_| (colorization, opaque_blend != 0))
@@ -35,7 +34,7 @@ pub fn DwmGetColorizationColor() -> HrResult<(u32, bool)> {
 /// function.
 #[must_use]
 pub fn DwmIsCompositionEnabled() -> HrResult<bool> {
-	let mut pf_enabled: BOOL = 0;
+	let mut pf_enabled = 0;
 	ok_to_hrresult(unsafe { ffi::DwmIsCompositionEnabled(&mut pf_enabled) })
 		.map(|_| pf_enabled != 0)
 }

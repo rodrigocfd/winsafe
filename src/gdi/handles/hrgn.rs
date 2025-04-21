@@ -39,7 +39,7 @@ pub trait gdi_Hrgn: Handle {
 	#[must_use]
 	fn CreateRectRgnIndirect(rc: RECT) -> SysResult<DeleteObjectGuard<HRGN>> {
 		unsafe {
-			ptr_to_invalidparm_handle(ffi::CreateRectRgnIndirect(&rc as *const _ as _))
+			ptr_to_invalidparm_handle(ffi::CreateRectRgnIndirect(pcvoid(&rc)))
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -128,6 +128,6 @@ pub trait gdi_Hrgn: Handle {
 	/// function.
 	#[must_use]
 	fn RectInRegion(&self, rc: RECT) -> bool {
-		unsafe { ffi::RectInRegion(self.ptr(), &rc as *const _ as _) != 0 }
+		unsafe { ffi::RectInRegion(self.ptr(), pcvoid(&rc)) != 0 }
 	}
 }

@@ -26,8 +26,7 @@ pub trait user_Hmonitor: Handle {
 	/// function.
 	fn GetMonitorInfo(&self) -> SysResult<MONITORINFOEX> {
 		let mut mi = MONITORINFOEX::default();
-		bool_to_sysresult(unsafe { ffi::GetMonitorInfoW(self.ptr(), &mut mi as *mut _ as _) })
-			.map(|_| mi)
+		bool_to_sysresult(unsafe { ffi::GetMonitorInfoW(self.ptr(), pvoid(&mut mi)) }).map(|_| mi)
 	}
 
 	/// [`MonitorFromPoint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-monitorfrompoint)
@@ -41,6 +40,6 @@ pub trait user_Hmonitor: Handle {
 	/// function.
 	#[must_use]
 	fn MonitorFromRect(rc: RECT, flags: co::MONITOR) -> HMONITOR {
-		unsafe { HMONITOR::from_ptr(ffi::MonitorFromRect(&rc as *const _ as _, flags.raw())) }
+		unsafe { HMONITOR::from_ptr(ffi::MonitorFromRect(pcvoid(&rc), flags.raw())) }
 	}
 }

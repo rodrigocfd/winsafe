@@ -1,5 +1,6 @@
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::user::ffi;
 
@@ -18,7 +19,7 @@ impl<'a> Iterator for EnumdisplaydevicesIter<'a> {
 			ffi::EnumDisplayDevicesW(
 				WString::from_opt_str(self.device_name).as_ptr(),
 				self.idev_num,
-				&mut self.display_device as *mut _ as _,
+				pvoid(&mut self.display_device),
 				self.flags.unwrap_or_default().raw(),
 			)
 		} {

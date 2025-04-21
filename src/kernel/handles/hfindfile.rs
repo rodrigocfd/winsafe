@@ -3,7 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::ffi;
+use crate::kernel::{ffi, privs::*};
 use crate::prelude::*;
 
 handle! { HFINDFILE;
@@ -34,9 +34,7 @@ pub trait kernel_Hfindfile: Handle {
 		wfd: &mut WIN32_FIND_DATA,
 	) -> SysResult<(FindCloseGuard, bool)> {
 		unsafe {
-			match ffi::FindFirstFileW(WString::from_str(file_name).as_ptr(), wfd as *mut _ as _)
-				.as_mut()
-			{
+			match ffi::FindFirstFileW(WString::from_str(file_name).as_ptr(), pvoid(wfd)).as_mut() {
 				Some(ptr) => {
 					let h = HFINDFILE::from_ptr(ptr);
 					// When using a filter, if no files are found, the function
@@ -62,7 +60,7 @@ pub trait kernel_Hfindfile: Handle {
 	/// [`path::dir_list`](crate::path::dir_list).
 	#[must_use]
 	fn FindNextFile(&self, wfd: &mut WIN32_FIND_DATA) -> SysResult<bool> {
-		match unsafe { ffi::FindNextFileW(self.ptr(), wfd as *mut _ as _) } {
+		match unsafe { ffi::FindNextFileW(self.ptr(), pvoid(wfd)) } {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => Ok(false), // not an error, no further files found
 				err => Err(err),

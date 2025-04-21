@@ -217,7 +217,7 @@ pub fn PathUnquoteSpaces(str_path: &str) -> String {
 /// The `pv` type varies according to `uFlags`. If you set it wrong, you're
 /// likely to cause a buffer overrun.
 pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
-	ffi::SHAddToRecentDocs(flags.raw(), pv as *const _ as _);
+	ffi::SHAddToRecentDocs(flags.raw(), pcvoid(pv));
 }
 
 /// [`SHCreateItemFromParsingName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromparsingname)
@@ -247,7 +247,7 @@ where
 		ffi::SHCreateItemFromParsingName(
 			WString::from_str(file_or_folder_path).as_ptr(),
 			bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr() as _),
-			&T::IID as *const _ as _,
+			pcvoid(&T::IID),
 			queried.as_mut(),
 		)
 	})
@@ -283,7 +283,7 @@ pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
 /// [`Shell_NotifyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)
 /// function.
 pub fn Shell_NotifyIcon(message: co::NIM, data: &NOTIFYICONDATA) -> HrResult<()> {
-	match unsafe { ffi::Shell_NotifyIconW(message.raw(), data as *const _ as _) } {
+	match unsafe { ffi::Shell_NotifyIconW(message.raw(), pcvoid(data)) } {
 		0 => Err(co::HRESULT::E_FAIL),
 		_ => Ok(()),
 	}
@@ -293,7 +293,7 @@ pub fn Shell_NotifyIcon(message: co::NIM, data: &NOTIFYICONDATA) -> HrResult<()>
 /// function.
 pub fn SHFileOperation(file_op: &mut SHFILEOPSTRUCT) -> HrResult<()> {
 	unsafe {
-		match { ffi::SHFileOperationW(file_op as *mut _ as _) } {
+		match { ffi::SHFileOperationW(pvoid(file_op)) } {
 			0 => Ok(()),
 			de => Err(co::HRESULT::from_raw(de as _)),
 		}
@@ -312,7 +312,7 @@ pub fn SHGetFileInfo(
 		match ffi::SHGetFileInfoW(
 			WString::from_str(path).as_ptr(),
 			file_attrs.raw(),
-			&mut shfi as *mut _ as _,
+			pvoid(&mut shfi),
 			std::mem::size_of::<SHFILEINFO>() as _,
 			flags.raw(),
 		) {
@@ -343,7 +343,7 @@ pub fn SHGetFileInfo(
 pub fn SHGetStockIconInfo(siid: co::SIID, flags: co::SHGSI) -> HrResult<DestroyIconSiiGuard> {
 	let mut sii = SHSTOCKICONINFO::default();
 	unsafe {
-		ok_to_hrresult(ffi::SHGetStockIconInfo(siid.raw(), flags.raw(), &mut sii as *mut _ as _))
+		ok_to_hrresult(ffi::SHGetStockIconInfo(siid.raw(), flags.raw(), pvoid(&mut sii)))
 			.map(|_| DestroyIconSiiGuard::new(sii))
 	}
 }

@@ -41,7 +41,7 @@ pub trait user_Hdesk: Handle {
 				std::ptr::null(),
 				flags.unwrap_or_default().raw(),
 				desired_access.raw(),
-				security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+				pcvoid_or_null(security_attributes),
 			))
 			.map(|h| CloseDesktopGuard::new(h))
 		}
@@ -64,7 +64,7 @@ pub trait user_Hdesk: Handle {
 				std::ptr::null(),
 				flags.unwrap_or_default().raw(),
 				desired_access.raw(),
-				security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+				pcvoid_or_null(security_attributes),
 				heap_size_kb,
 				std::ptr::null_mut(),
 			))

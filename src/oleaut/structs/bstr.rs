@@ -102,6 +102,14 @@ impl BSTR {
 		self.0
 	}
 
+	/// Returns a pointer to the underlying
+	/// [`LPWSTR`](https://learn.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
+	/// pointer to the null-terminated wide string.
+	#[must_use]
+	pub const fn as_mut_ptr(&mut self) -> *mut *mut u16 {
+		&mut self.0
+	}
+
 	/// Returns the underlying
 	/// [`LPWSTR`](https://learn.microsoft.com/en-us/windows/win32/learnwin32/working-with-strings)
 	/// memory block as a null-terminated `u16` slice.

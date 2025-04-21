@@ -2,7 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::kernel::privs::*;
 use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 
@@ -101,7 +101,7 @@ pub trait ole_IPicture: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn get_KeepOriginalFormat(&self) -> HrResult<bool> {
-		let mut res: BOOL = 0;
+		let mut res = 0;
 		ok_to_hrresult(unsafe {
 			(vt::<IPictureVT>(self).get_KeepOriginalFormat)(self.ptr(), &mut res)
 		})
@@ -205,7 +205,7 @@ pub trait ole_IPicture: ole_IUnknown {
 				src_offset_himetric.map_or(0, |off| off.y) - src_extent_compensated.cy,
 				src_extent_compensated.cx,
 				src_extent_compensated.cy,
-				metafile_bounds.map_or(std::ptr::null_mut(), |rc| rc as *const _ as _),
+				pcvoid_or_null(metafile_bounds),
 			)
 		})
 		.map_err(|e| e.into())

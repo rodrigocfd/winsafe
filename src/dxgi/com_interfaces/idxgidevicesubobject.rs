@@ -2,6 +2,7 @@
 
 use crate::decl::*;
 use crate::dxgi::vts::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -37,7 +38,7 @@ pub trait dxgi_IDXGIDeviceSubObject: dxgi_IDXGIObject {
 		ok_to_hrresult(unsafe {
 			(vt::<IDXGIDeviceSubObjectVT>(self).GetDevice)(
 				self.ptr(),
-				&T::IID as *const _ as _,
+				pcvoid(&T::IID),
 				queried.as_mut(),
 			)
 		})

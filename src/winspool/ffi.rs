@@ -2,12 +2,12 @@ use crate::kernel::ffi_types::*;
 
 extern_sys! { "winspool";
 	AbortPrinter(HANDLE) -> BOOL
-	AddFormW(HANDLE, u32, PVOID) -> BOOL
+	AddFormW(HANDLE, u32, PCVOID) -> BOOL
 	AddJobW(HANDLE, u32, PVOID, u32, *mut u32) -> BOOL
 	AddPortW(PSTR, HANDLE, PSTR) -> BOOL
-	AddPrinterConnection2W(HANDLE, PCSTR, u32, PVOID) -> BOOL
+	AddPrinterConnection2W(HANDLE, PCSTR, u32, PCVOID) -> BOOL
 	AddPrinterConnectionW(PSTR) -> BOOL
-	AddPrinterW(PCSTR, u32, PVOID) -> HANDLE
+	AddPrinterW(PCSTR, u32, PCVOID) -> HANDLE
 	AdvancedDocumentPropertiesW(HANDLE, HANDLE, PCSTR, PVOID, PCVOID) -> i32
 	ClosePrinter(HANDLE) -> BOOL
 	ConfigurePortW(PSTR, HANDLE, PSTR) -> BOOL
@@ -21,7 +21,7 @@ extern_sys! { "winspool";
 	EnumPrintersW(u32, PSTR, u32, *mut u8, u32, *mut u32, *mut u32) -> BOOL
 	GetDefaultPrinterW(PSTR, *mut u32) -> BOOL
 	GetPrinterW(HANDLE, u32, PVOID, u32, *mut u32) -> BOOL
-	OpenPrinterW(PSTR, *mut HANDLE, PVOID) -> BOOL
-	ResetPrinterW(HANDLE, PVOID) -> BOOL
+	OpenPrinterW(PSTR, *mut HANDLE, PCVOID) -> BOOL
+	ResetPrinterW(HANDLE, PCVOID) -> BOOL
 	SetDefaultPrinterW(PCSTR) -> BOOL
 }

@@ -41,7 +41,7 @@ pub trait advapi_Htransaction: Handle {
 	) -> SysResult<CloseHandleGuard<HTRANSACTION>> {
 		unsafe {
 			match HTRANSACTION(ffi::CreateTransaction(
-				transaction_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+				pcvoid_or_null(transaction_attributes),
 				std::ptr::null_mut(),
 				options.unwrap_or_default().raw(),
 				0,
@@ -60,7 +60,7 @@ pub trait advapi_Htransaction: Handle {
 	#[must_use]
 	fn GetTransactionId(&self) -> SysResult<GUID> {
 		let mut guid = GUID::default();
-		bool_to_sysresult(unsafe { ffi::GetTransactionId(self.ptr(), &mut guid as *mut _ as _) })
+		bool_to_sysresult(unsafe { ffi::GetTransactionId(self.ptr(), pvoid(&mut guid)) })
 			.map(|_| guid)
 	}
 
@@ -72,10 +72,7 @@ pub trait advapi_Htransaction: Handle {
 		transaction_id: &GUID,
 	) -> SysResult<CloseHandleGuard<HTRANSACTION>> {
 		unsafe {
-			match HTRANSACTION(ffi::OpenTransaction(
-				desired_access.raw(),
-				transaction_id as *const _ as _,
-			)) {
+			match HTRANSACTION(ffi::OpenTransaction(desired_access.raw(), pcvoid(transaction_id))) {
 				HTRANSACTION::INVALID => Err(GetLastError()),
 				handle => Ok(CloseHandleGuard::new(handle)),
 			}

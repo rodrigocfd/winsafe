@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 use crate::shell::vts::*;
@@ -131,7 +132,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 			(vt::<ITaskbarList3VT>(self).SetThumbnailClip)(
 				self.ptr(),
 				hwnd.ptr(),
-				&clip as *const _ as _,
+				pcvoid_or_null(clip.as_ref()),
 			)
 		})
 	}
@@ -143,7 +144,7 @@ pub trait shell_ITaskbarList3: shell_ITaskbarList2 {
 			(vt::<ITaskbarList3VT>(self).SetThumbnailTooltip)(
 				self.ptr(),
 				hwnd.ptr(),
-				tip.map_or(std::ptr::null_mut(), |s| WString::from_str(s).as_ptr()),
+				WString::from_opt_str(tip).as_ptr(),
 			)
 		})
 	}

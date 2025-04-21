@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -67,7 +68,7 @@ pub trait mf_IMFClock: ole_IUnknown {
 	fn GetProperties(&self) -> HrResult<MFCLOCK_PROPERTIES> {
 		let mut cp = MFCLOCK_PROPERTIES::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IMFClockVT>(self).GetProperties)(self.ptr(), &mut cp as *mut _ as _)
+			(vt::<IMFClockVT>(self).GetProperties)(self.ptr(), pvoid(&mut cp))
 		})
 		.map(|_| cp)
 	}

@@ -1,7 +1,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::ffi;
+use crate::kernel::{ffi, privs::*};
 use crate::prelude::*;
 
 pub(in crate::kernel) struct DirListIter<'a> {
@@ -169,7 +169,7 @@ where
 			return None;
 		}
 
-		match unsafe { ffi::HeapWalk(self.hheap.ptr(), &mut self.entry as *mut _ as _) } {
+		match unsafe { ffi::HeapWalk(self.hheap.ptr(), pvoid(&mut self.entry)) } {
 			0 => {
 				self.has_more = false; // no further iterations
 				match GetLastError() {

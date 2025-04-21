@@ -3,7 +3,7 @@
 use crate::co;
 use crate::comctl::ffi;
 use crate::decl::*;
-use crate::kernel::{ffi_types::*, privs::*};
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 
 /// [`InitCommonControls`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrols)
@@ -15,7 +15,7 @@ pub fn InitCommonControls() {
 /// [`InitCommonControlsEx`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initcommoncontrolsex)
 /// function.
 pub fn InitCommonControlsEx(icce: &INITCOMMONCONTROLSEX) -> SysResult<()> {
-	bool_to_sysresult(unsafe { ffi::InitCommonControlsEx(icce as *const _ as _) })
+	bool_to_sysresult(unsafe { ffi::InitCommonControlsEx(pcvoid(icce)) })
 }
 
 /// [`InitMUILanguage`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initmuilanguage)
@@ -27,7 +27,7 @@ pub fn InitMUILanguage(ui_lang: LANGID) {
 /// [`PropertySheet`](https://learn.microsoft.com/en-us/windows/win32/api/prsht/nf-prsht-propertysheetw)
 /// function.
 pub unsafe fn PropertySheet(header: &PROPSHEETHEADER) -> SysResult<isize> {
-	let ret = ffi::PropertySheetW(header as *const _ as _);
+	let ret = ffi::PropertySheetW(pcvoid(header));
 	match GetLastError() {
 		co::ERROR::SUCCESS => Ok(ret),
 		err => Err(err),
@@ -118,11 +118,11 @@ pub fn TaskDialogIndirect(config: &TASKDIALOGCONFIG) -> HrResult<(co::DLGID, u16
 	let tdc_buf = config.to_raw();
 	let mut pn_button = i32::default();
 	let mut pn_radio_button = i32::default();
-	let mut pf_bool: BOOL = 0;
+	let mut pf_bool = 0;
 
 	ok_to_hrresult(unsafe {
 		ffi::TaskDialogIndirect(
-			&tdc_buf.raw as *const _ as _,
+			pcvoid(&tdc_buf.raw),
 			&mut pn_button,
 			&mut pn_radio_button,
 			&mut pf_bool,

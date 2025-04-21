@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -33,7 +34,7 @@ pub trait mf_IMFMediaEvent: mf_IMFAttributes {
 	fn GetExtendedType(&self) -> HrResult<GUID> {
 		let mut ex_ty = GUID::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IMFMediaEventVT>(self).GetExtendedType)(self.ptr(), &mut ex_ty as *mut _ as _)
+			(vt::<IMFMediaEventVT>(self).GetExtendedType)(self.ptr(), pvoid(&mut ex_ty))
 		})
 		.map(|_| ex_ty)
 	}
@@ -64,7 +65,7 @@ pub trait mf_IMFMediaEvent: mf_IMFAttributes {
 	fn GetValue(&self) -> HrResult<PropVariant> {
 		let mut value = PROPVARIANT::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IMFMediaEventVT>(self).GetValue)(self.ptr(), &mut value as *mut _ as _)
+			(vt::<IMFMediaEventVT>(self).GetValue)(self.ptr(), pvoid(&mut value))
 		})?;
 		PropVariant::from_raw(&value)
 	}

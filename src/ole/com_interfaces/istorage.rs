@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 
@@ -172,9 +173,7 @@ pub trait ole_IStorage: ole_IUnknown {
 	/// [`IStorage::SetClass`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istorage-setclass)
 	/// method.
 	fn SetClass(&self, clsid: &co::CLSID) -> HrResult<()> {
-		ok_to_hrresult(unsafe {
-			(vt::<IStorageVT>(self).SetClass)(self.ptr(), clsid as *const _ as _)
-		})
+		ok_to_hrresult(unsafe { (vt::<IStorageVT>(self).SetClass)(self.ptr(), pcvoid(clsid)) })
 	}
 
 	/// [`IStorage::SetElementTimes`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-istorage-setelementtimes)
@@ -190,9 +189,9 @@ pub trait ole_IStorage: ole_IUnknown {
 			(vt::<IStorageVT>(self).SetElementTimes)(
 				self.ptr(),
 				WString::from_opt_str(name).as_ptr(),
-				creation.map_or(std::ptr::null(), |ft| ft as *const _ as _),
-				access.map_or(std::ptr::null(), |ft| ft as *const _ as _),
-				modification.map_or(std::ptr::null(), |ft| ft as *const _ as _),
+				pcvoid_or_null(creation),
+				pcvoid_or_null(access),
+				pcvoid_or_null(modification),
 			)
 		})
 	}

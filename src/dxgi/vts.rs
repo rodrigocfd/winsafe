@@ -27,7 +27,7 @@ pub(crate) struct IDXGIAdapter2VT {
 pub(crate) struct IDXGIDeviceVT {
 	pub IDXGIObjectVT: IDXGIObjectVT,
 	pub GetAdapter: fn(COMPTR, *mut COMPTR) -> HRES,
-	pub CreateSurface: fn(COMPTR, *const u32, u32, u32, PCVOID, *mut COMPTR) -> HRES,
+	pub CreateSurface: fn(COMPTR, PCVOID, u32, u32, PCVOID, *mut COMPTR) -> HRES,
 	pub QueryResourceResidency: fn(COMPTR, COMPTR, *mut u32, u32) -> HRES,
 	pub SetGPUThreadPriority: fn(COMPTR, i32) -> HRES,
 	pub GetGPUThreadPriority: fn(COMPTR, *mut i32) -> HRES,

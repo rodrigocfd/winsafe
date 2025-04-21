@@ -57,7 +57,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 		match unsafe {
 			ffi::DialogBoxIndirectParamW(
 				self.ptr(),
-				dialog_template as *const _ as _,
+				pcvoid(dialog_template),
 				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr()),
 				dialog_proc as _,
 				init_param.unwrap_or_default(),
@@ -115,7 +115,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 			ffi::GetClassInfoExW(
 				self.ptr(),
 				WString::from_str(class_name).as_ptr(),
-				&mut wcx as *mut _ as _,
+				pvoid(&mut wcx),
 			)
 		} {
 			0 => Err(GetLastError()),

@@ -23,7 +23,7 @@ pub trait psapi_Hprocess: kernel_Hprocess {
 		bool_to_sysresult(unsafe {
 			ffi::GetProcessMemoryInfo(
 				self.ptr(),
-				&mut pmc as *mut _ as _,
+				pvoid(&mut pmc),
 				std::mem::size_of::<PROCESS_MEMORY_COUNTERS_EX>() as _,
 			)
 		})

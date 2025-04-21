@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -65,8 +66,8 @@ pub trait mf_IMFMediaSource: mf_IMFMediaEventGenerator {
 			(vt::<IMFMediaSourceVT>(self).Start)(
 				self.ptr(),
 				presentation_descriptor.ptr(),
-				time_format.unwrap_or(&GUID::default()) as *const _ as _,
-				&start_position.to_raw()? as *const _ as _,
+				pcvoid(time_format.unwrap_or(&GUID::default())),
+				pcvoid(&start_position.to_raw()?),
 			)
 		})
 	}

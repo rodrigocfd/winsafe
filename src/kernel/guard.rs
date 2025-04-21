@@ -236,8 +236,8 @@ where
 	fn drop(&mut self) {
 		if let Some(h) = self.hglobal.as_opt() {
 			unsafe {
-				ffi::GlobalUnlock(h.ptr());
-			} // ignore errors
+				ffi::GlobalUnlock(h.ptr()); // ignore errors
+			}
 		}
 	}
 }
@@ -291,8 +291,8 @@ where
 		if let Some(h) = self.hheap.as_opt() {
 			if !self.pmem.is_null() {
 				unsafe {
-					ffi::HeapFree(h.ptr(), 0, self.pmem);
-				} // ignore errors
+					ffi::HeapFree(h.ptr(), 0, self.pmem); // ignore errors
+				}
 			}
 		}
 	}
@@ -348,8 +348,8 @@ where
 	fn drop(&mut self) {
 		if let Some(h) = self.hheap.as_opt() {
 			unsafe {
-				ffi::HeapUnlock(h.ptr());
-			} // ignore errors
+				ffi::HeapUnlock(h.ptr()); // ignore errors
+			}
 		}
 	}
 }

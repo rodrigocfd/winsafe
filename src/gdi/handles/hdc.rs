@@ -53,7 +53,7 @@ pub trait gdi_Hdc: user_Hdc {
 				origin_src.top,
 				origin_src.right,
 				origin_src.bottom,
-				ftn as *const _ as _,
+				pcvoid(ftn),
 			)
 		})
 	}
@@ -231,7 +231,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`FillRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-fillrect)
 	/// function.
 	fn FillRect(&self, rc: RECT, hbr: &HBRUSH) -> SysResult<()> {
-		bool_to_invalidparm(unsafe { ffi::FillRect(self.ptr(), &rc as *const _ as _, hbr.ptr()) })
+		bool_to_invalidparm(unsafe { ffi::FillRect(self.ptr(), pcvoid(&rc), hbr.ptr()) })
 	}
 
 	/// [`FillRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-fillrgn)
@@ -308,10 +308,8 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn GetCurrentPositionEx(&self) -> SysResult<POINT> {
 		let mut pt = POINT::default();
-		bool_to_invalidparm(unsafe {
-			ffi::GetCurrentPositionEx(self.ptr(), &mut pt as *mut _ as _)
-		})
-		.map(|_| pt)
+		bool_to_invalidparm(unsafe { ffi::GetCurrentPositionEx(self.ptr(), pvoid(&mut pt)) })
+			.map(|_| pt)
 	}
 
 	/// [`GetDCBrushColor`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getdcbrushcolor)
@@ -411,7 +409,7 @@ pub trait gdi_Hdc: user_Hdc {
 			first_scan_line,
 			num_scan_lines,
 			bmp_data_buf.map_or(std::ptr::null_mut(), |buf| buf.as_mut_ptr() as _),
-			bmi as *const _ as _,
+			pvoid(bmi),
 			usage.raw(),
 		);
 
@@ -452,7 +450,7 @@ pub trait gdi_Hdc: user_Hdc {
 				self.ptr(),
 				WString::from_str(text).as_ptr(),
 				text.chars().count() as _,
-				&mut sz as *mut _ as _,
+				pvoid(&mut sz),
 			)
 		})
 		.map(|_| sz)
@@ -474,8 +472,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn GetTextMetrics(&self) -> SysResult<TEXTMETRIC> {
 		let mut tm = TEXTMETRIC::default();
-		bool_to_invalidparm(unsafe { ffi::GetTextMetricsW(self.ptr(), &mut tm as *mut _ as _) })
-			.map(|_| tm)
+		bool_to_invalidparm(unsafe { ffi::GetTextMetricsW(self.ptr(), pvoid(&mut tm)) }).map(|_| tm)
 	}
 
 	/// [`GetViewportExtEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getviewportextex)
@@ -483,7 +480,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn GetViewportExtEx(&self) -> SysResult<SIZE> {
 		let mut sz = SIZE::default();
-		bool_to_invalidparm(unsafe { ffi::GetViewportExtEx(self.ptr(), &mut sz as *mut _ as _) })
+		bool_to_invalidparm(unsafe { ffi::GetViewportExtEx(self.ptr(), pvoid(&mut sz)) })
 			.map(|_| sz)
 	}
 
@@ -492,7 +489,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn GetViewportOrgEx(&self) -> SysResult<POINT> {
 		let mut pt = POINT::default();
-		bool_to_invalidparm(unsafe { ffi::GetViewportOrgEx(self.ptr(), &mut pt as *mut _ as _) })
+		bool_to_invalidparm(unsafe { ffi::GetViewportOrgEx(self.ptr(), pvoid(&mut pt)) })
 			.map(|_| pt)
 	}
 
@@ -501,8 +498,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn GetWindowExtEx(&self) -> SysResult<SIZE> {
 		let mut sz = SIZE::default();
-		bool_to_invalidparm(unsafe { ffi::GetWindowExtEx(self.ptr(), &mut sz as *mut _ as _) })
-			.map(|_| sz)
+		bool_to_invalidparm(unsafe { ffi::GetWindowExtEx(self.ptr(), pvoid(&mut sz)) }).map(|_| sz)
 	}
 
 	/// [`GetWindowOrgEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getwindoworgex)
@@ -510,8 +506,7 @@ pub trait gdi_Hdc: user_Hdc {
 	#[must_use]
 	fn GetWindowOrgEx(&self) -> SysResult<POINT> {
 		let mut pt = POINT::default();
-		bool_to_invalidparm(unsafe { ffi::GetWindowOrgEx(self.ptr(), &mut pt as *mut _ as _) })
-			.map(|_| pt)
+		bool_to_invalidparm(unsafe { ffi::GetWindowOrgEx(self.ptr(), pvoid(&mut pt)) }).map(|_| pt)
 	}
 
 	/// [`AtlHiMetricToPixel`](https://learn.microsoft.com/en-us/cpp/atl/reference/pixel-himetric-conversion-global-functions?view=msvc-170#atlhimetrictopixel)
@@ -582,9 +577,7 @@ pub trait gdi_Hdc: user_Hdc {
 	/// [`MoveToEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-movetoex)
 	/// function.
 	fn MoveToEx(&self, x: i32, y: i32, pt: Option<&mut POINT>) -> SysResult<()> {
-		bool_to_invalidparm(unsafe {
-			ffi::MoveToEx(self.ptr(), x, y, pt.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _))
-		})
+		bool_to_invalidparm(unsafe { ffi::MoveToEx(self.ptr(), x, y, pvoid_or_null(pt)) })
 	}
 
 	/// [`PaintRgn`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-paintrgn)
@@ -703,8 +696,8 @@ pub trait gdi_Hdc: user_Hdc {
 		bool_to_invalidparm(unsafe {
 			ffi::PolyPolygon(
 				self.ptr(),
-				all_pts_flat.as_ptr() as *const _ as _,
-				pts_per_polygon.as_ptr() as *const _ as _,
+				vec_ptr(&all_pts_flat) as _,
+				vec_ptr(&pts_per_polygon) as _,
 				polygons.len() as _,
 			)
 		})
@@ -726,8 +719,8 @@ pub trait gdi_Hdc: user_Hdc {
 		bool_to_invalidparm(unsafe {
 			ffi::PolyPolyline(
 				self.ptr(),
-				all_pts_flat.as_ptr() as *const _ as _,
-				pts_per_polyline.as_ptr() as *const _ as _,
+				vec_ptr(&all_pts_flat) as _,
+				vec_ptr(&pts_per_polyline) as _,
 				polylines.len() as _,
 			)
 		})
@@ -848,7 +841,7 @@ pub trait gdi_Hdc: user_Hdc {
 					SelectObjectGuard::new(
 						self,
 						G::NULL, // regions don't need cleanup
-						Some(co::REGION::from_raw(ptr as *mut _ as _)),
+						Some(co::REGION::from_raw(ptr as _)),
 					)
 				} else {
 					SelectObjectGuard::new(
@@ -901,12 +894,7 @@ pub trait gdi_Hdc: user_Hdc {
 	fn SetBrushOrgEx(&self, new_origin: POINT) -> SysResult<POINT> {
 		let mut old_origin = POINT::default();
 		bool_to_invalidparm(unsafe {
-			ffi::SetBrushOrgEx(
-				self.ptr(),
-				new_origin.x,
-				new_origin.y,
-				&mut old_origin as *mut _ as _,
-			)
+			ffi::SetBrushOrgEx(self.ptr(), new_origin.x, new_origin.y, pvoid(&mut old_origin))
 		})
 		.map(|_| old_origin)
 	}
@@ -947,7 +935,7 @@ pub trait gdi_Hdc: user_Hdc {
 				first_scan_line,
 				num_scan_lines,
 				vec_ptr(dib_color_data) as _,
-				bmi as *const _ as _,
+				pcvoid(bmi),
 				color_use.raw(),
 			)
 		} {
@@ -1002,40 +990,32 @@ pub trait gdi_Hdc: user_Hdc {
 	/// function.
 	fn SetViewportExtEx(&self, x: i32, y: i32) -> SysResult<SIZE> {
 		let mut sz = SIZE::default();
-		bool_to_invalidparm(unsafe {
-			ffi::SetViewportExtEx(self.ptr(), x, y, &mut sz as *mut _ as _)
-		})
-		.map(|_| sz)
+		bool_to_invalidparm(unsafe { ffi::SetViewportExtEx(self.ptr(), x, y, pvoid(&mut sz)) })
+			.map(|_| sz)
 	}
 
 	/// [`SetViewportOrgEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setviewportorgex)
 	/// function.
 	fn SetViewportOrgEx(&self, x: i32, y: i32) -> SysResult<POINT> {
 		let mut pt = POINT::default();
-		bool_to_invalidparm(unsafe {
-			ffi::SetViewportOrgEx(self.ptr(), x, y, &mut pt as *mut _ as _)
-		})
-		.map(|_| pt)
+		bool_to_invalidparm(unsafe { ffi::SetViewportOrgEx(self.ptr(), x, y, pvoid(&mut pt)) })
+			.map(|_| pt)
 	}
 
 	/// [`SetWindowExtEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setwindowextex)
 	/// function.
 	fn SetWindowExtEx(&self, x: i32, y: i32) -> SysResult<SIZE> {
 		let mut sz = SIZE::default();
-		bool_to_invalidparm(unsafe {
-			ffi::SetWindowExtEx(self.ptr(), x, y, &mut sz as *mut _ as _)
-		})
-		.map(|_| sz)
+		bool_to_invalidparm(unsafe { ffi::SetWindowExtEx(self.ptr(), x, y, pvoid(&mut sz)) })
+			.map(|_| sz)
 	}
 
 	/// [`SetWindowOrgEx`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-setwindoworgex)
 	/// function.
 	fn SetWindowOrgEx(&self, x: i32, y: i32) -> SysResult<POINT> {
 		let mut pt = POINT::default();
-		bool_to_invalidparm(unsafe {
-			ffi::SetWindowOrgEx(self.ptr(), x, y, &mut pt as *mut _ as _)
-		})
-		.map(|_| pt)
+		bool_to_invalidparm(unsafe { ffi::SetWindowOrgEx(self.ptr(), x, y, pvoid(&mut pt)) })
+			.map(|_| pt)
 	}
 
 	/// [`StretchBlt`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-stretchblt)

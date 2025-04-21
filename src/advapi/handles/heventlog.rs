@@ -58,7 +58,7 @@ pub trait advapi_Heventlog: Handle {
 				event_type.raw(),
 				category,
 				event_id,
-				user_sid.map_or(std::ptr::null(), |s| s as *const _ as _),
+				pcvoid_or_null(user_sid),
 				strings.map_or(0, |ss| ss.len() as _),
 				raw_data.map_or(0, |d| d.len() as _),
 				vec_ptr(&pwstrs),

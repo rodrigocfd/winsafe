@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -67,14 +68,11 @@ pub trait mf_IMFVideoDisplayControl: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetFullscreen(&self) -> HrResult<bool> {
-		let mut fulls = false;
+		let mut fulls = 0;
 		ok_to_hrresult(unsafe {
-			(vt::<IMFVideoDisplayControlVT>(self).GetFullscreen)(
-				self.ptr(),
-				&mut fulls as *mut _ as _,
-			)
+			(vt::<IMFVideoDisplayControlVT>(self).GetFullscreen)(self.ptr(), &mut fulls)
 		})
-		.map(|_| fulls)
+		.map(|_| fulls != 0)
 	}
 
 	/// [`IMFVideoDisplayControl::GetIdealVideoSize`](https://learn.microsoft.com/en-us/windows/win32/api/evr/nf-evr-imfvideodisplaycontrol-getidealvideosize)
@@ -87,8 +85,8 @@ pub trait mf_IMFVideoDisplayControl: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFVideoDisplayControlVT>(self).GetIdealVideoSize)(
 				self.ptr(),
-				&mut min as *mut _ as _,
-				&mut max as *mut _ as _,
+				pvoid(&mut min),
+				pvoid(&mut max),
 			)
 		})
 		.map(|_| (min, max))
@@ -104,8 +102,8 @@ pub trait mf_IMFVideoDisplayControl: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFVideoDisplayControlVT>(self).GetNativeVideoSize)(
 				self.ptr(),
-				&mut native as *mut _ as _,
-				&mut aspec as *mut _ as _,
+				pvoid(&mut native),
+				pvoid(&mut aspec),
 			)
 		})
 		.map(|_| (native, aspec))
@@ -121,8 +119,8 @@ pub trait mf_IMFVideoDisplayControl: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFVideoDisplayControlVT>(self).GetVideoPosition)(
 				self.ptr(),
-				&mut norm_rc as *mut _ as _,
-				&mut rc as *mut _ as _,
+				pvoid(&mut norm_rc),
+				pvoid(&mut rc),
 			)
 		})
 		.map(|_| (norm_rc, rc))
@@ -194,10 +192,8 @@ pub trait mf_IMFVideoDisplayControl: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFVideoDisplayControlVT>(self).SetVideoPosition)(
 				self.ptr(),
-				src.as_ref()
-					.map_or(std::ptr::null(), |src| src as *const _ as _),
-				dest.as_ref()
-					.map_or(std::ptr::null(), |dest| dest as *const _ as _),
+				pcvoid_or_null(src.as_ref()),
+				pcvoid_or_null(dest.as_ref()),
 			)
 		})
 	}

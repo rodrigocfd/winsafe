@@ -26,7 +26,7 @@ pub struct IEnumFiltersVT {
 #[repr(C)]
 pub struct IEnumMediaTypesVT {
 	pub IUnknownVT: IUnknownVT,
-	pub Next: fn(COMPTR, u32, *mut PVOID, *mut u32) -> HRES,
+	pub Next: fn(COMPTR, u32, PVOID, *mut u32) -> HRES,
 	pub Skip: fn(COMPTR, u32) -> HRES,
 	pub Reset: fn(COMPTR) -> HRES,
 	pub Clone: fn(COMPTR, *mut COMPTR) -> HRES,

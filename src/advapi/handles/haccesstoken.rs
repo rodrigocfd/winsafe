@@ -4,7 +4,7 @@ use crate::advapi::ffi;
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::{ffi_types::*, privs::*};
+use crate::kernel::privs::*;
 use crate::prelude::*;
 
 handle! { HACCESSTOKEN;
@@ -53,7 +53,7 @@ pub trait advapi_Haccesstoken: Handle {
 					_ => 0,
 				},
 				match new_state {
-					DisabPriv::Privs(privs) => privs as *const _ as _,
+					DisabPriv::Privs(privs) => pcvoid(privs),
 					_ => std::ptr::null(),
 				},
 				0,
@@ -67,11 +67,11 @@ pub trait advapi_Haccesstoken: Handle {
 	/// function.
 	#[must_use]
 	fn CheckTokenCapability(&self, capability_sid_to_check: &SID) -> SysResult<bool> {
-		let mut has_capability: BOOL = 0;
+		let mut has_capability = 0;
 		bool_to_sysresult(unsafe {
 			ffi::CheckTokenCapability(
 				self.ptr(),
-				capability_sid_to_check as *const _ as _,
+				pcvoid(capability_sid_to_check),
 				&mut has_capability,
 			)
 		})
@@ -82,9 +82,9 @@ pub trait advapi_Haccesstoken: Handle {
 	/// function.
 	#[must_use]
 	fn CheckTokenMembership(&self, sid_to_check: &SID) -> SysResult<bool> {
-		let mut is_member: BOOL = 0;
+		let mut is_member = 0;
 		bool_to_sysresult(unsafe {
-			ffi::CheckTokenMembership(self.ptr(), sid_to_check as *const _ as _, &mut is_member)
+			ffi::CheckTokenMembership(self.ptr(), pcvoid(sid_to_check), &mut is_member)
 		})
 		.map(|_| is_member != 0)
 	}

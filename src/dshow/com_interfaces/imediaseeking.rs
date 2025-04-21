@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::dshow::vts::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -53,9 +54,9 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 			(vt::<IMediaSeekingVT>(self).ConvertTimeFormat)(
 				self.ptr(),
 				&mut target,
-				target_format as *const _ as _,
+				pcvoid(target_format),
 				source,
-				source_format as *const _ as _,
+				pcvoid(source_format),
 			)
 		})
 		.map(|_| target)
@@ -146,7 +147,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	fn GetTimeFormat(&self) -> HrResult<co::TIME_FORMAT> {
 		let mut time_guid = co::TIME_FORMAT::NONE;
 		ok_to_hrresult(unsafe {
-			(vt::<IMediaSeekingVT>(self).GetStopPosition)(self.ptr(), &mut time_guid as *mut _ as _)
+			(vt::<IMediaSeekingVT>(self).GetTimeFormat)(self.ptr(), pvoid(&mut time_guid))
 		})
 		.map(|_| time_guid)
 	}
@@ -185,7 +186,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	/// method.
 	fn SetTimeFormat(&self, format: &co::TIME_FORMAT) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
-			(vt::<IMediaSeekingVT>(self).SetTimeFormat)(self.ptr(), format as *const _ as _)
+			(vt::<IMediaSeekingVT>(self).SetTimeFormat)(self.ptr(), pcvoid(format))
 		})
 	}
 }

@@ -27,14 +27,14 @@ pub trait kernel_Hevent: Handle {
 	/// function.
 	#[must_use]
 	fn CreateEvent(
-		security_attributes: Option<&mut SECURITY_ATTRIBUTES>,
+		security_attributes: Option<&SECURITY_ATTRIBUTES>,
 		manual_reset: bool,
 		initial_state: bool,
 		name: Option<&str>,
 	) -> SysResult<CloseHandleGuard<HEVENT>> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::CreateEventW(
-				security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+				pcvoid_or_null(security_attributes),
 				manual_reset as _,
 				initial_state as _,
 				WString::from_opt_str(name).as_ptr(),
@@ -47,14 +47,14 @@ pub trait kernel_Hevent: Handle {
 	/// method.
 	#[must_use]
 	fn CreateEventEx(
-		security_attributes: Option<&mut SECURITY_ATTRIBUTES>,
+		security_attributes: Option<&SECURITY_ATTRIBUTES>,
 		name: Option<&str>,
 		flags: co::CREATE_EVENT,
 		desired_access: co::EVENT_RIGHTS,
 	) -> SysResult<CloseHandleGuard<HEVENT>> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::CreateEventExW(
-				security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+				pcvoid_or_null(security_attributes),
 				WString::from_opt_str(name).as_ptr(),
 				flags.raw(),
 				desired_access.raw(),

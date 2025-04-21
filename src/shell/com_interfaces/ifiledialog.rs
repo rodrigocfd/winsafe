@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 use crate::shell::vts::*;
@@ -111,7 +112,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// method.
 	fn SetClientGuid(&self, guid: &GUID) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
-			(vt::<IFileDialogVT>(self).SetClientGuid)(self.ptr(), guid as *const _ as _)
+			(vt::<IFileDialogVT>(self).SetClientGuid)(self.ptr(), pcvoid(guid))
 		})
 	}
 

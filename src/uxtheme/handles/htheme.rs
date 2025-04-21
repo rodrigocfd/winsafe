@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 use crate::uxtheme::ffi;
@@ -38,11 +39,8 @@ pub trait uxtheme_Htheme: Handle {
 				hdc.ptr(),
 				part_state.part,
 				part_state.state,
-				&rc as *const _ as _,
-				match rc_clip {
-					Some(rc_clip) => &rc_clip as *const _ as _,
-					None => std::ptr::null(),
-				},
+				pcvoid(&rc),
+				pcvoid_or_null(rc_clip.as_ref()),
 			)
 		})
 	}
@@ -64,15 +62,14 @@ pub trait uxtheme_Htheme: Handle {
 		bounds: RECT,
 	) -> HrResult<RECT> {
 		let mut rc_content = RECT::default();
-
 		ok_to_hrresult(unsafe {
 			ffi::GetThemeBackgroundContentRect(
 				self.ptr(),
 				hdc.ptr(),
 				part_state.part,
 				part_state.state,
-				&bounds as *const _ as _,
-				&mut rc_content as *mut _ as _,
+				pcvoid(&bounds),
+				pvoid(&mut rc_content),
 			)
 		})
 		.map(|_| rc_content)
@@ -95,8 +92,8 @@ pub trait uxtheme_Htheme: Handle {
 				hdc.ptr(),
 				part_state.part,
 				part_state.state,
-				&rc_content as *const _ as _,
-				&mut rc_extent as *mut _ as _,
+				pcvoid(&rc_content),
+				pvoid(&mut rc_extent),
 			)
 		})
 		.map(|_| rc_extent)
@@ -118,7 +115,7 @@ pub trait uxtheme_Htheme: Handle {
 				hdc.ptr(),
 				part_state.part,
 				part_state.state,
-				&rc as *const _ as _,
+				pcvoid(&rc),
 				hrgn.as_mut(),
 			))
 			.map(|_| DeleteObjectGuard::new(hrgn))
@@ -160,8 +157,8 @@ pub trait uxtheme_Htheme: Handle {
 				part_state.part(),
 				part_state.state(),
 				prop.raw(),
-				draw_dest.map_or(std::ptr::null(), |p| p as *const _ as _),
-				&mut margins as *mut _ as _,
+				pcvoid_or_null(draw_dest),
+				pvoid(&mut margins),
 			)
 		})
 		.map(|_| margins)
@@ -207,9 +204,9 @@ pub trait uxtheme_Htheme: Handle {
 				hdc_fonts.map_or(std::ptr::null_mut(), |h| h.ptr()),
 				part_state.part(),
 				part_state.state(),
-				draw_dest.map_or(std::ptr::null(), |p| p as *const _ as _),
+				pcvoid_or_null(draw_dest),
 				esize.raw(),
-				&mut sz as *mut _ as _,
+				pvoid(&mut sz),
 			)
 		})
 		.map(|_| sz)
@@ -226,7 +223,7 @@ pub trait uxtheme_Htheme: Handle {
 				part_state.part(),
 				part_state.state(),
 				prop.raw(),
-				&mut pt as *mut _ as _,
+				pvoid(&mut pt),
 			)
 		})
 		.map(|_| pt)
@@ -264,7 +261,7 @@ pub trait uxtheme_Htheme: Handle {
 				part_state.part(),
 				part_state.state(),
 				prop.raw(),
-				&mut rc as *mut _ as _,
+				pvoid(&mut rc),
 			)
 		})
 		.map(|_| rc)

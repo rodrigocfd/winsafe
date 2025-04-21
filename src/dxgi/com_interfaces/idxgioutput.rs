@@ -3,6 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::dxgi::vts::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -39,8 +40,8 @@ pub trait dxgi_IDXGIOutput: dxgi_IDXGIObject {
 		ok_to_hrresult(unsafe {
 			(vt::<IDXGIOutputVT>(self).FindClosestMatchingMode)(
 				self.ptr(),
-				mode_to_match as *const _ as _,
-				&mut closest_match as *mut _ as _,
+				pcvoid(mode_to_match),
+				pvoid(&mut closest_match),
 				device_interface.map_or(std::ptr::null_mut(), |p| p.ptr()),
 			)
 		})
@@ -52,10 +53,8 @@ pub trait dxgi_IDXGIOutput: dxgi_IDXGIObject {
 	#[must_use]
 	fn GetDesc(&self) -> HrResult<DXGI_OUTPUT_DESC> {
 		let mut desc = DXGI_OUTPUT_DESC::default();
-		ok_to_hrresult(unsafe {
-			(vt::<IDXGIOutputVT>(self).GetDesc)(self.ptr(), &mut desc as *mut _ as _)
-		})
-		.map(|_| desc)
+		ok_to_hrresult(unsafe { (vt::<IDXGIOutputVT>(self).GetDesc)(self.ptr(), pvoid(&mut desc)) })
+			.map(|_| desc)
 	}
 
 	/// [`IDXGIOutput::GetDisplayModeList`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgioutput-getdisplaymodelist)
@@ -104,7 +103,7 @@ pub trait dxgi_IDXGIOutput: dxgi_IDXGIObject {
 	fn GetFrameStatistics(&self) -> HrResult<DXGI_FRAME_STATISTICS> {
 		let mut stats = DXGI_FRAME_STATISTICS::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IDXGIOutputVT>(self).GetFrameStatistics)(self.ptr(), &mut stats as *mut _ as _)
+			(vt::<IDXGIOutputVT>(self).GetFrameStatistics)(self.ptr(), pvoid(&mut stats))
 		})
 		.map(|_| stats)
 	}
@@ -115,7 +114,7 @@ pub trait dxgi_IDXGIOutput: dxgi_IDXGIObject {
 	fn GetGammaControl(&self) -> HrResult<DXGI_GAMMA_CONTROL> {
 		let mut array = DXGI_GAMMA_CONTROL::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IDXGIOutputVT>(self).GetGammaControl)(self.ptr(), &mut array as *mut _ as _)
+			(vt::<IDXGIOutputVT>(self).GetGammaControl)(self.ptr(), pvoid(&mut array))
 		})
 		.map(|_| array)
 	}
@@ -126,10 +125,7 @@ pub trait dxgi_IDXGIOutput: dxgi_IDXGIObject {
 	fn GetGammaControlCapabilities(&self) -> HrResult<DXGI_GAMMA_CONTROL_CAPABILITIES> {
 		let mut capa = DXGI_GAMMA_CONTROL_CAPABILITIES::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IDXGIOutputVT>(self).GetGammaControlCapabilities)(
-				self.ptr(),
-				&mut capa as *mut _ as _,
-			)
+			(vt::<IDXGIOutputVT>(self).GetGammaControlCapabilities)(self.ptr(), pvoid(&mut capa))
 		})
 		.map(|_| capa)
 	}
@@ -152,7 +148,7 @@ pub trait dxgi_IDXGIOutput: dxgi_IDXGIObject {
 	/// method.
 	fn SetGammaControl(&self, array: &DXGI_GAMMA_CONTROL) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
-			(vt::<IDXGIOutputVT>(self).SetGammaControl)(self.ptr(), array as *const _ as _)
+			(vt::<IDXGIOutputVT>(self).SetGammaControl)(self.ptr(), pcvoid(array))
 		})
 	}
 

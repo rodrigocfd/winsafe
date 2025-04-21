@@ -3,7 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::{ffi, ffi_types::*, privs::*};
+use crate::kernel::{ffi, privs::*};
 use crate::prelude::*;
 
 /// [`CopyFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
@@ -34,7 +34,7 @@ pub fn CreateDirectory(
 	bool_to_sysresult(unsafe {
 		ffi::CreateDirectoryW(
 			WString::from_str(path_name).as_ptr(),
-			security_attributes.map_or(std::ptr::null_mut(), |sa| sa as *const _ as _),
+			security_attributes.map_or(std::ptr::null_mut(), |sa| pcvoid(sa)),
 		)
 	})
 }
@@ -121,10 +121,7 @@ pub fn ExpandEnvironmentStrings(src: &str) -> SysResult<String> {
 #[must_use]
 pub fn FileTimeToSystemTime(ft: &FILETIME) -> SysResult<SYSTEMTIME> {
 	let mut st = SYSTEMTIME::default();
-	bool_to_sysresult(unsafe {
-		ffi::FileTimeToSystemTime(ft as *const _ as _, &mut st as *mut _ as _)
-	})
-	.map(|_| st)
+	bool_to_sysresult(unsafe { ffi::FileTimeToSystemTime(pcvoid(ft), pvoid(&mut st)) }).map(|_| st)
 }
 
 /// [`FlushProcessWriteBuffers`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-flushprocesswritebuffers)
@@ -147,7 +144,7 @@ pub unsafe fn FormatMessage(
 	lang_id: LANGID,
 	args: Option<&[*mut std::ffi::c_void]>,
 ) -> SysResult<String> {
-	let mut ptr_buf = std::ptr::null_mut() as *mut u16;
+	let mut ptr_buf = std::ptr::null_mut::<u16>();
 
 	let nchars = match ffi::FormatMessageW(
 		flags.raw(),
@@ -273,7 +270,7 @@ pub fn GetDiskSpaceInformation(root_path: &str) -> SysResult<DISK_SPACE_INFORMAT
 	match unsafe {
 		co::ERROR::from_raw(ffi::GetDiskSpaceInformationW(
 			WString::from_str(root_path).as_ptr(),
-			&mut disk_space_info as *mut _ as _,
+			pvoid(&mut disk_space_info),
 		))
 	} {
 		co::ERROR::SUCCESS | co::ERROR::MORE_DATA => Ok(disk_space_info),
@@ -304,7 +301,7 @@ pub fn GetDiskSpaceInformation(root_path: &str) -> SysResult<DISK_SPACE_INFORMAT
 #[must_use]
 pub fn GetEnvironmentStrings() -> SysResult<Vec<(String, String)>> {
 	ptr_to_sysresult(unsafe { ffi::GetEnvironmentStringsW() } as _).map(|ptr| {
-		let vec_entries = unsafe { parse_multi_z_str(ptr as *mut _ as _, None) };
+		let vec_entries = unsafe { parse_multi_z_str(ptr as _, None) };
 		unsafe {
 			ffi::FreeEnvironmentStringsW(ptr);
 		}
@@ -364,7 +361,7 @@ pub fn GetFileAttributes(file_name: &str) -> SysResult<co::FILE_ATTRIBUTE> {
 pub fn GetFileAttributesEx(file: &str) -> SysResult<WIN32_FILE_ATTRIBUTE_DATA> {
 	let mut wfad = WIN32_FILE_ATTRIBUTE_DATA::default();
 	bool_to_sysresult(unsafe {
-		ffi::GetFileAttributesExW(WString::from_str(file).as_ptr(), 0, &mut wfad as *mut _ as _)
+		ffi::GetFileAttributesExW(WString::from_str(file).as_ptr(), 0, pvoid(&mut wfad))
 	})
 	.map(|_| wfad)
 }
@@ -411,7 +408,7 @@ pub fn GetLastError() -> co::ERROR {
 pub fn GetLocalTime() -> SYSTEMTIME {
 	let mut st = SYSTEMTIME::default();
 	unsafe {
-		ffi::GetLocalTime(&mut st as *mut _ as _);
+		ffi::GetLocalTime(pvoid(&mut st));
 	}
 	st
 }
@@ -464,7 +461,7 @@ pub fn GetLongPathName(short_path: &str) -> SysResult<String> {
 pub fn GetNativeSystemInfo() -> SYSTEM_INFO {
 	let mut si = SYSTEM_INFO::default();
 	unsafe {
-		ffi::GetNativeSystemInfo(&mut si as *mut _ as _);
+		ffi::GetNativeSystemInfo(pvoid(&mut si));
 	}
 	si
 }
@@ -650,7 +647,7 @@ pub fn GetPrivateProfileString(
 pub fn GetStartupInfo<'a, 'b>() -> STARTUPINFO<'a, 'b> {
 	let mut si = STARTUPINFO::default();
 	unsafe {
-		ffi::GetStartupInfoW(&mut si as *mut _ as _);
+		ffi::GetStartupInfoW(pvoid(&mut si));
 	}
 	si
 }
@@ -694,7 +691,7 @@ pub fn GetSystemFileCacheSize() -> SysResult<(usize, usize, co::FILE_CACHE)> {
 pub fn GetSystemInfo() -> SYSTEM_INFO {
 	let mut si = SYSTEM_INFO::default();
 	unsafe {
-		ffi::GetSystemInfo(&mut si as *mut _ as _);
+		ffi::GetSystemInfo(pvoid(&mut si));
 	}
 	si
 }
@@ -715,7 +712,7 @@ pub fn GetSystemInfo() -> SYSTEM_INFO {
 pub fn GetSystemTime() -> SYSTEMTIME {
 	let mut st = SYSTEMTIME::default();
 	unsafe {
-		ffi::GetSystemTime(&mut st as *mut _ as _);
+		ffi::GetSystemTime(pvoid(&mut st));
 	}
 	st
 }
@@ -726,7 +723,7 @@ pub fn GetSystemTime() -> SYSTEMTIME {
 pub fn GetSystemTimeAsFileTime() -> FILETIME {
 	let mut ft = FILETIME::default();
 	unsafe {
-		ffi::GetSystemTimeAsFileTime(&mut ft as *mut _ as _);
+		ffi::GetSystemTimeAsFileTime(pvoid(&mut ft));
 	}
 	ft
 }
@@ -737,7 +734,7 @@ pub fn GetSystemTimeAsFileTime() -> FILETIME {
 pub fn GetSystemTimePreciseAsFileTime() -> FILETIME {
 	let mut ft = FILETIME::default();
 	unsafe {
-		ffi::GetSystemTimePreciseAsFileTime(&mut ft as *mut _ as _);
+		ffi::GetSystemTimePreciseAsFileTime(pvoid(&mut ft));
 	}
 	ft
 }
@@ -764,11 +761,7 @@ pub fn GetSystemTimes() -> SysResult<(FILETIME, FILETIME, FILETIME)> {
 	let mut user_time = FILETIME::default();
 
 	bool_to_sysresult(unsafe {
-		ffi::GetSystemTimes(
-			&mut idle_time as *mut _ as _,
-			&mut kernel_time as *mut _ as _,
-			&mut user_time as *mut _ as _,
-		)
+		ffi::GetSystemTimes(pvoid(&mut idle_time), pvoid(&mut kernel_time), pvoid(&mut user_time))
 	})
 	.map(|_| (idle_time, kernel_time, user_time))
 }
@@ -900,7 +893,7 @@ pub fn GetVolumePathName(file_name: &str) -> SysResult<String> {
 #[must_use]
 pub fn GlobalMemoryStatusEx() -> SysResult<MEMORYSTATUSEX> {
 	let mut msx = MEMORYSTATUSEX::default();
-	bool_to_sysresult(unsafe { ffi::GlobalMemoryStatusEx(&mut msx as *mut _ as _) }).map(|_| msx)
+	bool_to_sysresult(unsafe { ffi::GlobalMemoryStatusEx(pvoid(&mut msx)) }).map(|_| msx)
 }
 
 /// [`HIBYTE`](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ms632656(v=vs.85))
@@ -967,7 +960,7 @@ pub fn IsDebuggerPresent() -> bool {
 /// function.
 #[must_use]
 pub fn IsNativeVhdBoot() -> SysResult<bool> {
-	let mut is_native: BOOL = 0;
+	let mut is_native = 0;
 	bool_to_sysresult(unsafe { ffi::IsNativeVhdBoot(&mut is_native) }).map(|_| is_native != 0)
 }
 
@@ -1023,7 +1016,6 @@ pub fn IsWindowsServer() -> SysResult<bool> {
 	osvi.wProductType = co::VER_NT::WORKSTATION;
 	let cond_mask = VerSetConditionMask(0, co::VER_MASK::PRODUCT_TYPE, co::VER_COND::EQUAL);
 	VerifyVersionInfo(&mut osvi, co::VER_MASK::PRODUCT_TYPE, cond_mask).map(|b| !b)
-	// not workstation
 }
 
 /// [`IsWindowsVersionOrGreater`](https://learn.microsoft.com/en-us/windows/win32/api/versionhelpers/nf-versionhelpers-iswindowsversionorgreater)
@@ -1403,10 +1395,7 @@ pub fn SwitchToThread() -> SysResult<()> {
 #[must_use]
 pub fn SystemTimeToFileTime(st: &SYSTEMTIME) -> SysResult<FILETIME> {
 	let mut ft = FILETIME::default();
-	bool_to_sysresult(unsafe {
-		ffi::SystemTimeToFileTime(st as *const _ as _, &mut ft as *mut _ as _)
-	})
-	.map(|_| ft)
+	bool_to_sysresult(unsafe { ffi::SystemTimeToFileTime(pcvoid(st), pvoid(&mut ft)) }).map(|_| ft)
 }
 
 /// [`SystemTimeToTzSpecificLocalTime`](https://learn.microsoft.com/en-us/windows/win32/api/timezoneapi/nf-timezoneapi-systemtimetotzspecificlocaltime)
@@ -1426,9 +1415,9 @@ pub fn SystemTimeToTzSpecificLocalTime(
 	let mut local_time = SYSTEMTIME::default();
 	bool_to_sysresult(unsafe {
 		ffi::SystemTimeToTzSpecificLocalTime(
-			time_zone.map_or(std::ptr::null(), |lp| lp as *const _ as _),
-			universal_time as *const _ as _,
-			&mut local_time as *mut _ as _,
+			time_zone.map_or(std::ptr::null(), |lp| pcvoid(lp)),
+			pcvoid(universal_time),
+			pvoid(&mut local_time),
 		)
 	})
 	.map(|_| local_time)
@@ -1442,8 +1431,7 @@ pub fn VerifyVersionInfo(
 	type_mask: co::VER_MASK,
 	condition_mask: u64,
 ) -> SysResult<bool> {
-	match unsafe { ffi::VerifyVersionInfoW(osvix as *mut _ as _, type_mask.raw(), condition_mask) }
-	{
+	match unsafe { ffi::VerifyVersionInfoW(pvoid(osvix), type_mask.raw(), condition_mask) } {
 		0 => match GetLastError() {
 			co::ERROR::OLD_WIN_VERSION => Ok(false),
 			err => Err(err),
@@ -1499,7 +1487,7 @@ pub fn WideCharToMultiByte(
 	}?;
 
 	let mut u8_buf = vec![0u8; num_bytes as _];
-	let mut bool_buf: BOOL = 0;
+	let mut bool_buf = 0;
 
 	bool_to_sysresult(unsafe {
 		ffi::WideCharToMultiByte(

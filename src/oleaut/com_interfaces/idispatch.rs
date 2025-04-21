@@ -37,7 +37,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IDispatchVT>(self).GetIDsOfNames)(
 				self.ptr(),
-				&co::IID::default() as *const _ as _,
+				pcvoid(&co::IID::default()),
 				vec_ptr(&pwstrs),
 				names.len() as _,
 				lcid.into(),
@@ -99,12 +99,12 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 			(vt::<IDispatchVT>(self).Invoke)(
 				self.ptr(),
 				disp_id_member,
-				&GUID::NULL as *const _ as _,
+				pcvoid(&GUID::NULL),
 				lcid.raw(),
 				flags.raw(),
-				disp_params as *mut _ as _,
-				&mut remote_res as *mut _ as _,
-				&mut remote_err as *mut _ as _,
+				pvoid(disp_params),
+				pvoid(&mut remote_res),
+				pvoid(&mut remote_err),
 				&mut arg_err,
 			)
 		}) {

@@ -2,6 +2,7 @@
 
 use crate::decl::*;
 use crate::dxgi::{iterators::*, vts::*};
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -34,7 +35,7 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 		ok_to_hrresult(unsafe {
 			(vt::<IDXGIAdapterVT>(self).CheckInterfaceSupport)(
 				self.ptr(),
-				interface_name as *const _ as _,
+				pcvoid(interface_name),
 				&mut umd_ver,
 			)
 		})
@@ -76,7 +77,7 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	fn GetDesc(&self) -> HrResult<DXGI_ADAPTER_DESC> {
 		let mut desc = DXGI_ADAPTER_DESC::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IDXGIAdapterVT>(self).GetDesc)(self.ptr(), &mut desc as *mut _ as _)
+			(vt::<IDXGIAdapterVT>(self).GetDesc)(self.ptr(), pvoid(&mut desc))
 		})
 		.map(|_| desc)
 	}

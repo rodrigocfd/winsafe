@@ -3,7 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::ffi_types::*;
+use crate::kernel::privs::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -36,7 +36,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 		theirs: &impl mf_IMFAttributes,
 		match_type: co::MF_ATTRIBUTES_MATCH,
 	) -> HrResult<bool> {
-		let mut res: BOOL = 0;
+		let mut res = 0;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).Compare)(
 				self.ptr(),
@@ -52,12 +52,12 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn CompareItem(&self, guid_key: &GUID, value: &PropVariant) -> HrResult<bool> {
-		let mut res: BOOL = 0;
+		let mut res = 0;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).CompareItem)(
 				self.ptr(),
-				guid_key as *const _ as _,
-				&value.to_raw()? as *const _ as _,
+				pcvoid(guid_key),
+				pcvoid(&value.to_raw()?),
 				&mut res,
 			)
 		})
@@ -81,7 +81,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// method.
 	fn DeleteItem(&self, guid_key: &GUID) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
-			(vt::<IMFAttributesVT>(self).DeleteItem)(self.ptr(), guid_key as *const _ as _)
+			(vt::<IMFAttributesVT>(self).DeleteItem)(self.ptr(), pcvoid(guid_key))
 		})
 	}
 
@@ -99,7 +99,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).GetAllocatedBlob)(
 				self.ptr(),
-				guid_key as *const _ as _,
+				pcvoid(guid_key),
 				&mut pbuf,
 				&mut sz,
 			)
@@ -124,7 +124,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).GetAllocatedString)(
 				self.ptr(),
-				guid_key as *const _ as _,
+				pcvoid(guid_key),
 				&mut pbuf,
 				&mut nchars,
 			)
@@ -150,7 +150,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).GetBlob)(
 				self.ptr(),
-				guid_key as *const _ as _,
+				pcvoid(guid_key),
 				buf.as_mut_ptr(),
 				sz,
 				std::ptr::null_mut(),
@@ -165,11 +165,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	fn GetBlobSize(&self, guid_key: &GUID) -> HrResult<u32> {
 		let mut sz = u32::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IMFAttributesVT>(self).GetBlobSize)(
-				self.ptr(),
-				guid_key as *const _ as _,
-				&mut sz,
-			)
+			(vt::<IMFAttributesVT>(self).GetBlobSize)(self.ptr(), pcvoid(guid_key), &mut sz)
 		})
 		.map(|_| sz)
 	}
@@ -189,11 +185,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	fn GetDouble(&self, guid_key: &GUID) -> HrResult<f64> {
 		let mut value = f64::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IMFAttributesVT>(self).GetDouble)(
-				self.ptr(),
-				guid_key as *const _ as _,
-				&mut value,
-			)
+			(vt::<IMFAttributesVT>(self).GetDouble)(self.ptr(), pcvoid(guid_key), &mut value)
 		})
 		.map(|_| value)
 	}
@@ -204,11 +196,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	fn GetGUID(&self, guid_key: &GUID) -> HrResult<GUID> {
 		let mut value = GUID::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IMFAttributesVT>(self).GetGUID)(
-				self.ptr(),
-				guid_key as *const _ as _,
-				&mut value as *mut _ as _,
-			)
+			(vt::<IMFAttributesVT>(self).GetGUID)(self.ptr(), pcvoid(guid_key), pvoid(&mut value))
 		})
 		.map(|_| value)
 	}
@@ -219,11 +207,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	fn GetItem(&self, guid_key: &GUID) -> HrResult<PropVariant> {
 		let mut value = PROPVARIANT::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IMFAttributesVT>(self).GetItem)(
-				self.ptr(),
-				guid_key as *const _ as _,
-				&mut value as *mut _ as _,
-			)
+			(vt::<IMFAttributesVT>(self).GetItem)(self.ptr(), pcvoid(guid_key), pvoid(&mut value))
 		})?;
 		PropVariant::from_raw(&value)
 	}
@@ -239,8 +223,8 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 			(vt::<IMFAttributesVT>(self).GetItemByIndex)(
 				self.ptr(),
 				index,
-				&mut guid as *mut _ as _,
-				&mut value as *mut _ as _,
+				pvoid(&mut guid),
+				pvoid(&mut value),
 			)
 		})?;
 		Ok((guid, PropVariant::from_raw(&value)?))
@@ -252,11 +236,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	fn GetItemType(&self, guid_key: &GUID) -> HrResult<co::MF_ATTRIBUTE> {
 		let mut ty = co::MF_ATTRIBUTE::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IMFAttributesVT>(self).GetItemType)(
-				self.ptr(),
-				guid_key as *const _ as _,
-				ty.as_mut(),
-			)
+			(vt::<IMFAttributesVT>(self).GetItemType)(self.ptr(), pcvoid(guid_key), ty.as_mut())
 		})
 		.map(|_| ty)
 	}
@@ -275,7 +255,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).GetString)(
 				self.ptr(),
-				guid_key as *const _ as _,
+				pcvoid(guid_key),
 				buf.as_mut_ptr(),
 				len,
 				std::ptr::null_mut(),
@@ -290,11 +270,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	fn GetStringLength(&self, guid_key: &GUID) -> HrResult<u32> {
 		let mut len = u32::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IMFAttributesVT>(self).GetStringLength)(
-				self.ptr(),
-				guid_key as *const _ as _,
-				&mut len,
-			)
+			(vt::<IMFAttributesVT>(self).GetStringLength)(self.ptr(), pcvoid(guid_key), &mut len)
 		})
 		.map(|_| len)
 	}
@@ -304,11 +280,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	fn GetUINT32(&self, guid_key: &GUID) -> HrResult<u32> {
 		let mut value = u32::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IMFAttributesVT>(self).GetUINT32)(
-				self.ptr(),
-				guid_key as *const _ as _,
-				&mut value,
-			)
+			(vt::<IMFAttributesVT>(self).GetUINT32)(self.ptr(), pcvoid(guid_key), &mut value)
 		})
 		.map(|_| value)
 	}
@@ -318,11 +290,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	fn GetUINT64(&self, guid_key: &GUID) -> HrResult<u64> {
 		let mut value = u64::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IMFAttributesVT>(self).GetUINT64)(
-				self.ptr(),
-				guid_key as *const _ as _,
-				&mut value,
-			)
+			(vt::<IMFAttributesVT>(self).GetUINT64)(self.ptr(), pcvoid(guid_key), &mut value)
 		})
 		.map(|_| value)
 	}
@@ -338,8 +306,8 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).GetUnknown)(
 				self.ptr(),
-				guid_key as *const _ as _,
-				&T::IID as *const _ as _,
+				pcvoid(guid_key),
+				pcvoid(&T::IID),
 				queried.as_mut(),
 			)
 		})
@@ -357,8 +325,8 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).SetBlob)(
 				self.ptr(),
-				guid_key as *const _ as _,
-				buf.as_ptr(),
+				pcvoid(guid_key),
+				vec_ptr(buf),
 				buf.len() as _,
 			)
 		})
@@ -368,7 +336,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// method.
 	fn SetDouble(&self, guid_key: &GUID, value: f64) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
-			(vt::<IMFAttributesVT>(self).SetDouble)(self.ptr(), guid_key as *const _ as _, value)
+			(vt::<IMFAttributesVT>(self).SetDouble)(self.ptr(), pcvoid(guid_key), value)
 		})
 	}
 
@@ -376,11 +344,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// method.
 	fn SetGUID(&self, guid_key: &GUID, value: &GUID) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
-			(vt::<IMFAttributesVT>(self).SetGUID)(
-				self.ptr(),
-				guid_key as *const _ as _,
-				value as *const _ as _,
-			)
+			(vt::<IMFAttributesVT>(self).SetGUID)(self.ptr(), pcvoid(guid_key), pcvoid(value))
 		})
 	}
 
@@ -390,8 +354,8 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).SetItem)(
 				self.ptr(),
-				guid_key as *const _ as _,
-				&value.to_raw()? as *const _ as _,
+				pcvoid(guid_key),
+				pcvoid(&value.to_raw()?),
 			)
 		})
 	}
@@ -402,7 +366,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).SetString)(
 				self.ptr(),
-				guid_key as *const _ as _,
+				pcvoid(guid_key),
 				WString::from_str(value).as_ptr(),
 			)
 		})
@@ -412,7 +376,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// method.
 	fn SetUINT32(&self, guid_key: &GUID, value: u32) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
-			(vt::<IMFAttributesVT>(self).SetUINT32)(self.ptr(), guid_key as *const _ as _, value)
+			(vt::<IMFAttributesVT>(self).SetUINT32)(self.ptr(), pcvoid(guid_key), value)
 		})
 	}
 
@@ -420,7 +384,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// method.
 	fn SetUINT64(&self, guid_key: &GUID, value: u64) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
-			(vt::<IMFAttributesVT>(self).SetUINT64)(self.ptr(), guid_key as *const _ as _, value)
+			(vt::<IMFAttributesVT>(self).SetUINT64)(self.ptr(), pcvoid(guid_key), value)
 		})
 	}
 
@@ -428,11 +392,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// method.
 	fn SetUnknown(&self, guid_key: &GUID, value: &impl ole_IUnknown) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
-			(vt::<IMFAttributesVT>(self).SetUnknown)(
-				self.ptr(),
-				guid_key as *const _ as _,
-				value.ptr(),
-			)
+			(vt::<IMFAttributesVT>(self).SetUnknown)(self.ptr(), pcvoid(guid_key), value.ptr())
 		})
 	}
 

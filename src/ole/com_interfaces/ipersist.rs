@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 
@@ -31,7 +32,7 @@ pub trait ole_IPersist: ole_IUnknown {
 	fn GetClassID(&self) -> HrResult<co::CLSID> {
 		let mut clsid = co::CLSID::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IPersistVT>(self).GetClassID)(self.ptr(), &mut clsid as *mut _ as _)
+			(vt::<IPersistVT>(self).GetClassID)(self.ptr(), pvoid(&mut clsid))
 		})
 		.map(|_| clsid)
 	}

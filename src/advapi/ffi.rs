@@ -2,7 +2,7 @@ use crate::kernel::ffi_types::*;
 
 extern_sys! { "advapi32";
 	AdjustTokenPrivileges(HANDLE, BOOL, PCVOID, u32, PVOID, *mut u32) -> BOOL
-	AllocateAndInitializeSid(PCVOID, u8, u32, u32, u32, u32, u32, u32, u32, u32, *mut u8) -> BOOL
+	AllocateAndInitializeSid(PCVOID, u8, u32, u32, u32, u32, u32, u32, u32, u32, PVOID) -> BOOL
 	CheckTokenCapability(HANDLE, PCVOID, *mut BOOL) -> BOOL
 	CheckTokenMembership(HANDLE, PCVOID, *mut BOOL) -> BOOL
 	CloseServiceHandle(HANDLE) -> BOOL
@@ -17,11 +17,11 @@ extern_sys! { "advapi32";
 	DuplicateToken(HANDLE, u32, *mut HANDLE) -> BOOL
 	EncryptFileW(PCSTR) -> BOOL
 	EncryptionDisable(PCSTR, BOOL) -> BOOL
-	EqualDomainSid(PVOID, PVOID, *mut BOOL) -> BOOL
-	EqualPrefixSid(PVOID, PVOID) -> BOOL
-	EqualSid(PVOID, PVOID) -> BOOL
+	EqualDomainSid(PCVOID, PCVOID, *mut BOOL) -> BOOL
+	EqualPrefixSid(PCVOID, PCVOID) -> BOOL
+	EqualSid(PCVOID, PCVOID) -> BOOL
 	FreeSid(PVOID)
-	GetLengthSid(PVOID) -> u32
+	GetLengthSid(PCVOID) -> u32
 	GetSidLengthRequired(u8) -> u32
 	GetTokenInformation(HANDLE, u32, PCVOID, u32, *mut u32) -> BOOL
 	GetUserNameW(PSTR, *mut u32) -> BOOL
@@ -32,8 +32,8 @@ extern_sys! { "advapi32";
 	InitiateSystemShutdownW(PCSTR, PCSTR, u32, BOOL, BOOL) -> BOOL
 	IsTokenRestricted(HANDLE) -> BOOL
 	IsValidSecurityDescriptor(PCVOID) -> BOOL
-	IsValidSid(PVOID) -> BOOL
-	IsWellKnownSid(PVOID, u32) -> BOOL
+	IsValidSid(PCVOID) -> BOOL
+	IsWellKnownSid(PCVOID, u32) -> BOOL
 	LookupAccountNameW(PCSTR, PCSTR, PVOID, *mut u32, PSTR, *mut u32, *mut u32) -> BOOL
 	LookupAccountSidW(PCSTR, PCVOID, PSTR, *mut u32, PSTR, *mut u32, *mut u32) -> BOOL
 	LookupPrivilegeNameW(PCSTR, PCVOID, PSTR, *mut u32) -> BOOL
@@ -61,7 +61,7 @@ extern_sys! { "advapi32";
 	RegFlushKey(HANDLE) -> i32
 	RegGetValueW(HANDLE, PCSTR, PCSTR, u32, *mut u32, PVOID, *mut u32) -> i32
 	RegisterEventSourceW(PCSTR, PCSTR) -> HANDLE
-	RegisterServiceCtrlHandlerExW(PCSTR, PFUNC, PVOID) -> HANDLE
+	RegisterServiceCtrlHandlerExW(PCSTR, PFUNC, PCVOID) -> HANDLE
 	RegLoadKeyW(HANDLE, PCSTR, PCSTR) -> i32
 	RegOpenCurrentUser(u32, *mut HANDLE) -> i32
 	RegOpenKeyExW(HANDLE, PCSTR, u32, u32, *mut HANDLE) -> i32
@@ -73,8 +73,8 @@ extern_sys! { "advapi32";
 	RegRenameKey(HANDLE, PCSTR, PCSTR) -> i32
 	RegReplaceKeyW(HANDLE, PCSTR, PCSTR, PCSTR) -> i32
 	RegRestoreKeyW(HANDLE, PCSTR, u32) -> i32
-	RegSaveKeyExW(HANDLE, PCSTR, PVOID, u32) -> i32
-	RegSaveKeyW(HANDLE, PCSTR, PVOID) -> i32
+	RegSaveKeyExW(HANDLE, PCSTR, PCVOID, u32) -> i32
+	RegSaveKeyW(HANDLE, PCSTR, PCVOID) -> i32
 	RegSetKeyValueW(HANDLE, PCSTR, PCSTR, u32, PCVOID, u32) -> i32
 	RegSetValueExW(HANDLE, PCSTR, u32, u32, *const u8, u32) -> i32
 	RegUnLoadKeyW(HANDLE, PCSTR) -> i32
@@ -84,8 +84,8 @@ extern_sys! { "advapi32";
 
 extern_sys! { "ktmw32";
 	CommitTransaction(HANDLE) -> BOOL
-	CreateTransaction(PVOID, PVOID, u32, u32, u32, u32, PSTR) -> HANDLE
+	CreateTransaction(PCVOID, PVOID, u32, u32, u32, u32, PSTR) -> HANDLE
 	GetTransactionId(HANDLE, PVOID) -> BOOL
-	OpenTransaction(u32, PVOID) -> HANDLE
+	OpenTransaction(u32, PCVOID) -> HANDLE
 	RollbackTransaction(HANDLE) -> BOOL
 }

@@ -2,7 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::ffi_types::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 use crate::shell::vts::*;
@@ -48,9 +48,9 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	/// method.
 	#[must_use]
 	fn GetBool(&self, key: &PROPERTYKEY) -> HrResult<bool> {
-		let mut f: BOOL = 0;
+		let mut f = 0;
 		ok_to_hrresult(unsafe {
-			(vt::<IShellItem2VT>(self).GetBool)(self.ptr(), key as *const _ as _, &mut f)
+			(vt::<IShellItem2VT>(self).GetBool)(self.ptr(), pcvoid(key), &mut f)
 		})
 		.map(|_| f != 0)
 	}
@@ -61,11 +61,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	fn GetFileTime(&self, key: &PROPERTYKEY) -> HrResult<FILETIME> {
 		let mut ft = FILETIME::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IShellItem2VT>(self).GetFileTime)(
-				self.ptr(),
-				key as *const _ as _,
-				&mut ft as *mut _ as _,
-			)
+			(vt::<IShellItem2VT>(self).GetFileTime)(self.ptr(), pcvoid(key), pvoid(&mut ft))
 		})
 		.map(|_| ft)
 	}
@@ -76,7 +72,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	fn GetInt32(&self, key: &PROPERTYKEY) -> HrResult<i32> {
 		let mut i = i32::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IShellItem2VT>(self).GetInt32)(self.ptr(), key as *const _ as _, &mut i)
+			(vt::<IShellItem2VT>(self).GetInt32)(self.ptr(), pcvoid(key), &mut i)
 		})
 		.map(|_| i)
 	}
@@ -90,7 +86,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 			(vt::<IShellItem2VT>(self).GetPropertyStore)(
 				self.ptr(),
 				flags.raw(),
-				&IPropertyStore::IID as *const _ as _,
+				pcvoid(&IPropertyStore::IID),
 				queried.as_mut(),
 			)
 		})
@@ -103,7 +99,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	fn GetUInt32(&self, key: &PROPERTYKEY) -> HrResult<u32> {
 		let mut ui = u32::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IShellItem2VT>(self).GetUInt32)(self.ptr(), key as *const _ as _, &mut ui)
+			(vt::<IShellItem2VT>(self).GetUInt32)(self.ptr(), pcvoid(key), &mut ui)
 		})
 		.map(|_| ui)
 	}
@@ -114,7 +110,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	fn GetUInt64(&self, key: &PROPERTYKEY) -> HrResult<u64> {
 		let mut ull = u64::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IShellItem2VT>(self).GetUInt64)(self.ptr(), key as *const _ as _, &mut ull)
+			(vt::<IShellItem2VT>(self).GetUInt64)(self.ptr(), pcvoid(key), &mut ull)
 		})
 		.map(|_| ull)
 	}

@@ -3,7 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::dxgi::vts::*;
-use crate::kernel::ffi_types::*;
+use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
@@ -41,7 +41,7 @@ pub trait dxgi_IDXGISwapChain: dxgi_IDXGIDeviceSubObject {
 			(vt::<IDXGISwapChainVT>(self).GetBuffer)(
 				self.ptr(),
 				buffer_index,
-				&T::IID as *const _ as _,
+				pcvoid(&T::IID),
 				queried.as_mut(),
 			)
 		})
@@ -59,7 +59,7 @@ pub trait dxgi_IDXGISwapChain: dxgi_IDXGIDeviceSubObject {
 	fn GetDesc(&self) -> HrResult<DXGI_SWAP_CHAIN_DESC> {
 		let mut desc = DXGI_SWAP_CHAIN_DESC::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IDXGISwapChainVT>(self).GetDesc)(self.ptr(), &mut desc as *mut _ as _)
+			(vt::<IDXGISwapChainVT>(self).GetDesc)(self.ptr(), pvoid(&mut desc))
 		})
 		.map(|_| desc)
 	}
@@ -69,7 +69,7 @@ pub trait dxgi_IDXGISwapChain: dxgi_IDXGIDeviceSubObject {
 	fn GetFrameStatistics(&self) -> HrResult<DXGI_FRAME_STATISTICS> {
 		let mut stats = DXGI_FRAME_STATISTICS::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IDXGISwapChainVT>(self).GetDesc)(self.ptr(), &mut stats as *mut _ as _)
+			(vt::<IDXGISwapChainVT>(self).GetDesc)(self.ptr(), pvoid(&mut stats))
 		})
 		.map(|_| stats)
 	}
@@ -78,7 +78,7 @@ pub trait dxgi_IDXGISwapChain: dxgi_IDXGIDeviceSubObject {
 	/// method.
 	#[must_use]
 	fn GetFullscreenState(&self) -> HrResult<(bool, Option<IDXGIOutput>)> {
-		let mut fullscreen: BOOL = 0;
+		let mut fullscreen = 0;
 		let mut queried = unsafe { IDXGIOutput::null() };
 
 		ok_to_hrresult(unsafe {
@@ -136,10 +136,7 @@ pub trait dxgi_IDXGISwapChain: dxgi_IDXGIDeviceSubObject {
 	/// method.
 	fn ResizeTarget(&self, new_target_parameters: &DXGI_MODE_DESC) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
-			(vt::<IDXGISwapChainVT>(self).ResizeTarget)(
-				self.ptr(),
-				new_target_parameters as *const _ as _,
-			)
+			(vt::<IDXGISwapChainVT>(self).ResizeTarget)(self.ptr(), pcvoid(new_target_parameters))
 		})
 	}
 

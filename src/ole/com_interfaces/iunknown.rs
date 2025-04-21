@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::ole::{privs::*, vts::*};
 
 com_interface! { IUnknown: "00000000-0000-0000-c000-000000000046";
@@ -113,11 +114,7 @@ pub trait ole_IUnknown: Clone {
 	{
 		let mut queried = unsafe { T::null() };
 		ok_to_hrresult(unsafe {
-			(vt::<IUnknownVT>(self).QueryInterface)(
-				self.ptr(),
-				&T::IID as *const _ as _,
-				queried.as_mut(),
-			)
+			(vt::<IUnknownVT>(self).QueryInterface)(self.ptr(), pcvoid(&T::IID), queried.as_mut())
 		})
 		.map(|_| queried)
 	}

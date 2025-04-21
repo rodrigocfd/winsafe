@@ -34,7 +34,7 @@ pub trait gdi_Hbrush: Handle {
 	#[must_use]
 	fn CreateBrushIndirect(lb: &LOGBRUSH) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		unsafe {
-			ptr_to_invalidparm_handle(ffi::CreateBrushIndirect(lb as *const _ as _))
+			ptr_to_invalidparm_handle(ffi::CreateBrushIndirect(pcvoid(lb)))
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}
@@ -86,7 +86,7 @@ pub trait gdi_Hbrush: Handle {
 	/// ```
 	fn GetObject(&self, pv: &mut LOGBRUSH) -> SysResult<()> {
 		match unsafe {
-			ffi::GetObjectW(self.ptr(), std::mem::size_of::<LOGBRUSH>() as _, pv as *mut _ as _)
+			ffi::GetObjectW(self.ptr(), std::mem::size_of::<LOGBRUSH>() as _, pvoid(pv))
 		} {
 			0 => Err(co::ERROR::INVALID_PARAMETER),
 			_ => Ok(()),

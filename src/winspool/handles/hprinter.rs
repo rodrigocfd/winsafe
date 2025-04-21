@@ -32,13 +32,13 @@ pub trait winspool_Hprinter: Handle {
 	/// [`AddForm`](https://learn.microsoft.com/en-us/windows/win32/printdocs/addform)
 	/// function for [`FORM_INFO_1`](crate::FORM_INFO_1).
 	fn AddForm1(&self, form: &FORM_INFO_1) -> SysResult<()> {
-		bool_to_invalidparm(unsafe { ffi::AddFormW(self.ptr(), 1, form as *const _ as _) })
+		bool_to_invalidparm(unsafe { ffi::AddFormW(self.ptr(), 1, pcvoid(form)) })
 	}
 
 	/// [`AddForm`](https://learn.microsoft.com/en-us/windows/win32/printdocs/addform)
 	/// function for [`FORM_INFO_2`](crate::FORM_INFO_2).
 	fn AddForm2(&self, form: &FORM_INFO_2) -> SysResult<()> {
-		bool_to_invalidparm(unsafe { ffi::AddFormW(self.ptr(), 2, form as *const _ as _) })
+		bool_to_invalidparm(unsafe { ffi::AddFormW(self.ptr(), 2, pcvoid(form)) })
 	}
 
 	/// [`AddJob`](https://learn.microsoft.com/en-us/windows/win32/printdocs/addjob)
@@ -74,7 +74,7 @@ pub trait winspool_Hprinter: Handle {
 			ptr_to_sysresult_handle(ffi::AddPrinterW(
 				WString::from_opt_str(name).as_ptr(),
 				2,
-				printer as *const _ as _,
+				pcvoid(printer),
 			))
 			.map(|h| ClosePrinterGuard::new(h))
 		}
@@ -133,7 +133,7 @@ pub trait winspool_Hprinter: Handle {
 			ffi::GetPrinterW(
 				self.ptr(),
 				2,
-				&mut nfo as *mut _ as _,
+				pvoid(&mut nfo),
 				std::mem::size_of::<PRINTER_INFO_2>() as _,
 				&mut needed,
 			)
@@ -152,7 +152,7 @@ pub trait winspool_Hprinter: Handle {
 			ffi::GetPrinterW(
 				self.ptr(),
 				3,
-				&mut nfo as *mut _ as _,
+				pvoid(&mut nfo),
 				std::mem::size_of::<PRINTER_INFO_3>() as _,
 				&mut needed,
 			)
@@ -171,7 +171,7 @@ pub trait winspool_Hprinter: Handle {
 			ffi::GetPrinterW(
 				self.ptr(),
 				4,
-				&mut nfo as *mut _ as _,
+				pvoid(&mut nfo),
 				std::mem::size_of::<PRINTER_INFO_4>() as _,
 				&mut needed,
 			)
@@ -191,7 +191,7 @@ pub trait winspool_Hprinter: Handle {
 			bool_to_invalidparm(ffi::OpenPrinterW(
 				WString::from_opt_str(printer_name).as_mut_ptr(),
 				hprinter.as_mut(),
-				default.map_or(std::ptr::null_mut(), |d| d as *const _ as _),
+				pcvoid_or_null(default),
 			))
 			.map(|_| ClosePrinterGuard::new(hprinter))
 		}
@@ -200,6 +200,6 @@ pub trait winspool_Hprinter: Handle {
 	/// [`ResetPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/resetprinter)
 	/// function.
 	fn ResetPrinter(&self, default: &PRINTER_DEFAULTS) -> SysResult<()> {
-		bool_to_invalidparm(unsafe { ffi::ResetPrinterW(self.ptr(), default as *const _ as _) })
+		bool_to_invalidparm(unsafe { ffi::ResetPrinterW(self.ptr(), pcvoid(default)) })
 	}
 }

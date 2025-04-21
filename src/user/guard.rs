@@ -1,6 +1,7 @@
 use std::ops::{Deref, DerefMut};
 
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::user::ffi;
 
@@ -131,7 +132,7 @@ where
 {
 	fn drop(&mut self) {
 		unsafe {
-			ffi::EndPaint(self.hwnd.ptr(), &self.ps as *const _ as _);
+			ffi::EndPaint(self.hwnd.ptr(), pcvoid(&self.ps));
 		}
 	}
 }

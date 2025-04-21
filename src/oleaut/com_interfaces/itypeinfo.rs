@@ -61,7 +61,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 				iunk_outer
 					.as_ref()
 					.map_or(std::ptr::null_mut(), |_| queried_outer.as_mut()),
-				&T::IID as *const _ as _,
+				pcvoid(&T::IID),
 				queried.as_mut(),
 			)
 		})
@@ -89,8 +89,8 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 				self.ptr(),
 				member_id,
 				inv_kind.raw(),
-				&mut dll_name as *mut _ as _,
-				&mut name as *mut _ as _,
+				dll_name.as_mut_ptr(),
+				name.as_mut_ptr(),
 				&mut ordinal,
 			)
 		})
@@ -121,10 +121,10 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 			(vt::<ITypeInfoVT>(self).GetDocumentation)(
 				self.ptr(),
 				member_id,
-				&mut name as *mut _ as _,
-				&mut doc as *mut _ as _,
+				name.as_mut_ptr(),
+				doc.as_mut_ptr(),
 				&mut context,
-				&mut help_file as *mut _ as _,
+				help_file.as_mut_ptr(),
 			)
 		})
 		.map(|_| (name.to_string(), doc.to_string(), context, help_file.to_string()))

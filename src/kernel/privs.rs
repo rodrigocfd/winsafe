@@ -122,6 +122,50 @@ pub(crate) fn minus1_as_error(dword: u32) -> SysResult<u32> {
 	}
 }
 
+/// Converts a constant reference to FFI's `PCVOID`.
+#[must_use]
+pub(crate) const fn pcvoid<T>(reference: &T) -> PCVOID {
+	reference as *const _ as _
+}
+
+/// Converts an optional constant reference to FFI's `PCVOID`.
+#[must_use]
+pub(crate) const fn pcvoid_or_null<T>(reference: Option<&T>) -> PCVOID {
+	match reference {
+		Some(p) => pcvoid(p),
+		None => std::ptr::null(),
+	}
+}
+
+/// Converts a mutable reference to FFI's `PVOID`.
+#[must_use]
+pub(crate) const fn pvoid<T>(reference: &mut T) -> PVOID {
+	reference as *mut _ as _
+}
+
+/// Converts an optional mutable reference to FFI's `PCVOID`.
+#[must_use]
+pub(crate) const fn pvoid_or_null<T>(reference: Option<&mut T>) -> PVOID {
+	match reference {
+		Some(p) => pvoid(p),
+		None => std::ptr::null_mut(),
+	}
+}
+
+/// If the vector is empty, returns null, otherwise calls `as_ptr`.
+///
+/// This is necessary because an empty vector returns garbage as its underlying
+/// pointer, see:
+/// * https://github.com/rust-lang/rust/issues/39625
+#[must_use]
+pub(crate) const fn vec_ptr<T>(v: &[T]) -> *const T {
+	if v.is_empty() {
+		std::ptr::null()
+	} else {
+		v.as_ptr()
+	}
+}
+
 /// Converts a string to an ISO-8859-1 null-terminated byte array.
 #[must_use]
 pub(crate) fn str_to_iso88591(s: &str) -> Vec<u8> {
@@ -163,20 +207,6 @@ pub(crate) unsafe fn parse_multi_z_str(src: *const u16, len: Option<usize>) -> V
 		tot_ch += 1;
 	}
 	strings
-}
-
-/// If the vector is empty, returns null, otherwise calls `as_ptr`.
-///
-/// This is necessary because an empty vector returns garbage as its underlying
-/// pointer, see:
-/// * https://github.com/rust-lang/rust/issues/39625
-#[must_use]
-pub(crate) const fn vec_ptr<T>(v: &[T]) -> *const T {
-	if v.is_empty() {
-		std::ptr::null()
-	} else {
-		v.as_ptr()
-	}
 }
 
 /// Creates two vectors:

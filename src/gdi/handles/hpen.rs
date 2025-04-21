@@ -40,7 +40,7 @@ pub trait gdi_Hpen: Handle {
 	#[must_use]
 	fn CreatePenIndirect(lp: &mut LOGPEN) -> SysResult<DeleteObjectGuard<HPEN>> {
 		unsafe {
-			ptr_to_invalidparm_handle(ffi::CreatePenIndirect(lp as *const _ as _))
+			ptr_to_invalidparm_handle(ffi::CreatePenIndirect(pcvoid(lp)))
 				.map(|h| DeleteObjectGuard::new(h))
 		}
 	}

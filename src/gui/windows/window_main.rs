@@ -3,7 +3,6 @@ use std::any::Any;
 use crate::co;
 use crate::decl::*;
 use crate::gui::{privs::*, *};
-use crate::kernel::ffi_types::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -76,7 +75,7 @@ impl WindowMain {
 
 		if IsWindows8OrGreater()? {
 			// https://github.com/rodrigocfd/winsafe-examples/issues/6
-			let mut b_val: BOOL = 0; // FALSE
+			let mut b_val = 0; // FALSE
 			match unsafe {
 				HPROCESS::GetCurrentProcess().SetUserObjectInformation(
 					co::UOI::TIMERPROC_EXCEPTION_SUPPRESSION, // SetTimer() safety

@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::mf::vts::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -64,8 +65,8 @@ pub trait mf_IMFGetService: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IMFGetServiceVT>(self).GetService)(
 				self.ptr(),
-				service_id as *const _ as _,
-				&T::IID as *const _ as _,
+				pcvoid(service_id),
+				pcvoid(&T::IID),
 				queried.as_mut(),
 			)
 		})

@@ -5,20 +5,20 @@ extern_sys! { "kernel32";
 	CheckRemoteDebuggerPresent(HANDLE, *mut BOOL) -> BOOL
 	CloseHandle(HANDLE) -> BOOL
 	CopyFileW(PCSTR, PCSTR, BOOL) -> BOOL
-	CreateDirectoryW(PCSTR, PVOID) -> BOOL
+	CreateDirectoryW(PCSTR, PCVOID) -> BOOL
 	CreateEventExW(PCVOID, PCSTR, u32, u32) -> HANDLE
 	CreateEventW(PCVOID, BOOL, BOOL, PCSTR) -> HANDLE
-	CreateFileMappingFromApp(HANDLE, PVOID, u32, u64, PCSTR) -> HANDLE
-	CreateFileW(PCSTR, u32, u32, PVOID, u32, u32, HANDLE) -> HANDLE
-	CreatePipe(*mut HANDLE, *mut HANDLE, PVOID, u32) -> BOOL
-	CreateProcessW(PCSTR, PSTR, PVOID, PVOID, BOOL, u32, PVOID, PCSTR, PVOID, PVOID) -> BOOL
+	CreateFileMappingFromApp(HANDLE, PCVOID, u32, u64, PCSTR) -> HANDLE
+	CreateFileW(PCSTR, u32, u32, PCVOID, u32, u32, HANDLE) -> HANDLE
+	CreatePipe(*mut HANDLE, *mut HANDLE, PCVOID, u32) -> BOOL
+	CreateProcessW(PCSTR, PSTR, PCVOID, PCVOID, BOOL, u32, PVOID, PCSTR, PVOID, PVOID) -> BOOL
 	CreateThread(PVOID, usize, PVOID, PVOID, u32, *mut u32) -> HANDLE
 	CreateToolhelp32Snapshot(u32, u32) -> HANDLE
 	DeleteFileW(PCSTR) -> BOOL
 	EndUpdateResourceW(HANDLE, BOOL) -> BOOL
-	EnumResourceLanguagesW(HANDLE, PCSTR, PCSTR, PFUNC, isize) -> BOOL
-	EnumResourceNamesW(HANDLE, PCSTR, PFUNC, isize) -> BOOL
-	EnumResourceTypesW(HANDLE, PFUNC, isize) -> BOOL
+	EnumResourceLanguagesW(HANDLE, PCSTR, PCSTR, PFUNC, PCVOID) -> BOOL
+	EnumResourceNamesW(HANDLE, PCSTR, PFUNC, PCVOID) -> BOOL
+	EnumResourceTypesW(HANDLE, PFUNC, PCVOID) -> BOOL
 	ExitProcess(u32)
 	ExitThread(u32)
 	ExpandEnvironmentStringsW(PCSTR, PSTR, u32) -> u32
@@ -154,7 +154,7 @@ extern_sys! { "kernel32";
 	QueryProcessCycleTime(HANDLE, &mut u64) -> BOOL
 	QueryThreadCycleTime(HANDLE, &mut u64) -> BOOL
 	QueryUnbiasedInterruptTime(&mut u64) -> BOOL
-	ReadConsoleW(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
+	ReadConsoleW(HANDLE, PVOID, u32, *mut u32, PCVOID) -> BOOL
 	ReadFile(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
 	ReplaceFileW(PCSTR, PCSTR, PCSTR, u32, PVOID, PVOID) -> BOOL
 	ResetEvent(HANDLE) -> BOOL

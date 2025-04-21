@@ -3,7 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::{ffi, ffi_types::*, privs::*};
+use crate::kernel::{ffi, privs::*};
 use crate::prelude::*;
 
 handle! { HPROCESS;
@@ -27,7 +27,7 @@ pub trait kernel_Hprocess: Handle {
 	/// function.
 	#[must_use]
 	fn CheckRemoteDebuggerPresent(&self) -> SysResult<bool> {
-		let mut present: BOOL = 0;
+		let mut present = 0;
 		bool_to_sysresult(unsafe { ffi::CheckRemoteDebuggerPresent(self.ptr(), &mut present) })
 			.map(|_| present != 0)
 	}
@@ -38,8 +38,8 @@ pub trait kernel_Hprocess: Handle {
 	fn CreateProcess(
 		application_name: Option<&str>,
 		command_line: Option<&str>,
-		process_attrs: Option<&mut SECURITY_ATTRIBUTES>,
-		thread_attrs: Option<&mut SECURITY_ATTRIBUTES>,
+		process_attrs: Option<&SECURITY_ATTRIBUTES>,
+		thread_attrs: Option<&SECURITY_ATTRIBUTES>,
 		inherit_handles: bool,
 		creation_flags: co::CREATE,
 		environment: Option<Vec<(&str, &str)>>,
@@ -53,8 +53,8 @@ pub trait kernel_Hprocess: Handle {
 			bool_to_sysresult(ffi::CreateProcessW(
 				WString::from_opt_str(application_name).as_ptr(),
 				buf_cmd_line.as_mut_ptr(),
-				process_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
-				thread_attrs.map_or(std::ptr::null_mut(), |lp| lp as *mut _ as _),
+				pcvoid_or_null(process_attrs),
+				pcvoid_or_null(thread_attrs),
 				inherit_handles as _,
 				creation_flags.raw(),
 				environment.map_or(std::ptr::null_mut(), |environment| {
@@ -67,8 +67,8 @@ pub trait kernel_Hprocess: Handle {
 					.as_ptr() as _
 				}),
 				WString::from_opt_str(current_dir).as_ptr(),
-				si as *mut _ as _,
-				&mut pi as *mut _ as _,
+				pvoid(si),
+				pvoid(&mut pi),
 			))
 			.map(|_| CloseHandlePiGuard::new(pi))
 		}
@@ -167,10 +167,10 @@ pub trait kernel_Hprocess: Handle {
 		bool_to_sysresult(unsafe {
 			ffi::GetProcessTimes(
 				self.ptr(),
-				&mut creation as *mut _ as _,
-				&mut exit as *mut _ as _,
-				&mut kernel as *mut _ as _,
-				&mut user as *mut _ as _,
+				pvoid(&mut creation),
+				pvoid(&mut exit),
+				pvoid(&mut kernel),
+				pvoid(&mut user),
 			)
 		})
 		.map(|_| (creation, exit, kernel, user))
@@ -180,7 +180,7 @@ pub trait kernel_Hprocess: Handle {
 	/// function.
 	#[must_use]
 	fn IsProcessCritical(&self) -> SysResult<bool> {
-		let mut critical: BOOL = 0;
+		let mut critical = 0;
 		bool_to_sysresult(unsafe { ffi::IsProcessCritical(self.ptr(), &mut critical) })
 			.map(|_| critical != 0)
 	}
@@ -189,7 +189,7 @@ pub trait kernel_Hprocess: Handle {
 	/// function.
 	#[must_use]
 	fn IsWow64Process(&self) -> SysResult<bool> {
-		let mut wow64: BOOL = 0;
+		let mut wow64 = 0;
 		match unsafe { ffi::IsWow64Process(self.ptr(), &mut wow64) } {
 			0 => Err(GetLastError()),
 			_ => Ok(wow64 != 0),

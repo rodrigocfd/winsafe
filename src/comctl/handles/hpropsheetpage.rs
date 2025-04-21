@@ -28,7 +28,7 @@ pub trait comctl_Hpropsheetpage: Handle {
 	unsafe fn CreatePropertySheetPage(
 		page: &PROPSHEETPAGE,
 	) -> HrResult<DestroyPropertySheetPageGuard> {
-		match ptr_to_option_handle(ffi::CreatePropertySheetPageW(page as *const _ as _)) {
+		match ptr_to_option_handle(ffi::CreatePropertySheetPageW(pcvoid(page))) {
 			None => Err(co::HRESULT::E_FAIL),
 			Some(h) => Ok(DestroyPropertySheetPageGuard::new(h)),
 		}

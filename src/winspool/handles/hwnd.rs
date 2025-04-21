@@ -17,7 +17,7 @@ impl winspool_Hwnd for HWND {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait winspool_Hwnd: user_Hwnd {
-	/// [`AddPrinterConnection2`]()
+	/// [`AddPrinterConnection2`](https://learn.microsoft.com/en-us/windows/win32/printdocs/addprinterconnection2)
 	/// function.
 	fn AddPrinterConnection2(
 		&self,
@@ -29,7 +29,7 @@ pub trait winspool_Hwnd: user_Hwnd {
 				self.ptr(),
 				WString::from_str(name).as_ptr(),
 				1,
-				connection_info as *const _ as _,
+				pcvoid(connection_info),
 			)
 		})
 	}
@@ -48,8 +48,8 @@ pub trait winspool_Hwnd: user_Hwnd {
 				self.ptr(),
 				hprinter.ptr(),
 				WString::from_str(device_name).as_ptr(),
-				&mut mode_output as *mut _ as _,
-				mode_input as *const _ as _,
+				pvoid(&mut mode_output),
+				pcvoid(mode_input),
 			)
 		} {
 			1 => Ok(mode_output),
