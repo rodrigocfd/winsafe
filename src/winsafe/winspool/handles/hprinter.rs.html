@@ -197,9 +197,35 @@
 <a href=#197 id=197 data-nosnippet>197</a>		}
 <a href=#198 id=198 data-nosnippet>198</a>	}
 <a href=#199 id=199 data-nosnippet>199</a>
-<a href=#200 id=200 data-nosnippet>200</a>	<span class="doccomment">/// [`ResetPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/resetprinter)
+<a href=#200 id=200 data-nosnippet>200</a>	<span class="doccomment">/// [`OpenPrinter2`](https://learn.microsoft.com/en-us/windows/win32/printdocs/openprinter2)
 <a href=#201 id=201 data-nosnippet>201</a>	/// function.
-<a href=#202 id=202 data-nosnippet>202</a>	</span><span class="kw">fn </span>ResetPrinter(<span class="kw-2">&amp;</span><span class="self">self</span>, default: <span class="kw-2">&amp;</span>PRINTER_DEFAULTS) -&gt; SysResult&lt;()&gt; {
-<a href=#203 id=203 data-nosnippet>203</a>		bool_to_invalidparm(<span class="kw">unsafe </span>{ ffi::ResetPrinterW(<span class="self">self</span>.ptr(), pcvoid(default)) })
-<a href=#204 id=204 data-nosnippet>204</a>	}
-<a href=#205 id=205 data-nosnippet>205</a>}</code></pre></div></section></main></body></html>
+<a href=#202 id=202 data-nosnippet>202</a>	</span><span class="attr">#[must_use]
+<a href=#203 id=203 data-nosnippet>203</a>	</span><span class="kw">fn </span>OpenPrinter2(
+<a href=#204 id=204 data-nosnippet>204</a>		printer_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
+<a href=#205 id=205 data-nosnippet>205</a>		default: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PRINTER_DEFAULTS&gt;,
+<a href=#206 id=206 data-nosnippet>206</a>		options: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>PRINTER_OPTIONS&gt;,
+<a href=#207 id=207 data-nosnippet>207</a>	) -&gt; SysResult&lt;ClosePrinterGuard&gt; {
+<a href=#208 id=208 data-nosnippet>208</a>		<span class="kw">let </span><span class="kw-2">mut </span>hprinter = HPRINTER::NULL;
+<a href=#209 id=209 data-nosnippet>209</a>		<span class="kw">unsafe </span>{
+<a href=#210 id=210 data-nosnippet>210</a>			bool_to_sysresult(ffi::OpenPrinter2W(
+<a href=#211 id=211 data-nosnippet>211</a>				WString::from_opt_str(printer_name).as_mut_ptr(),
+<a href=#212 id=212 data-nosnippet>212</a>				hprinter.as_mut(),
+<a href=#213 id=213 data-nosnippet>213</a>				pcvoid_or_null(default),
+<a href=#214 id=214 data-nosnippet>214</a>				pcvoid_or_null(options),
+<a href=#215 id=215 data-nosnippet>215</a>			))
+<a href=#216 id=216 data-nosnippet>216</a>			.map(|<span class="kw">_</span>| ClosePrinterGuard::new(hprinter))
+<a href=#217 id=217 data-nosnippet>217</a>		}
+<a href=#218 id=218 data-nosnippet>218</a>	}
+<a href=#219 id=219 data-nosnippet>219</a>
+<a href=#220 id=220 data-nosnippet>220</a>	<span class="doccomment">/// [`ResetPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/resetprinter)
+<a href=#221 id=221 data-nosnippet>221</a>	/// function.
+<a href=#222 id=222 data-nosnippet>222</a>	</span><span class="kw">fn </span>ResetPrinter(<span class="kw-2">&amp;</span><span class="self">self</span>, default: <span class="kw-2">&amp;</span>PRINTER_DEFAULTS) -&gt; SysResult&lt;()&gt; {
+<a href=#223 id=223 data-nosnippet>223</a>		bool_to_invalidparm(<span class="kw">unsafe </span>{ ffi::ResetPrinterW(<span class="self">self</span>.ptr(), pcvoid(default)) })
+<a href=#224 id=224 data-nosnippet>224</a>	}
+<a href=#225 id=225 data-nosnippet>225</a>
+<a href=#226 id=226 data-nosnippet>226</a>	<span class="doccomment">/// [`ScheduleJob`](https://learn.microsoft.com/en-us/windows/win32/printdocs/schedulejob)
+<a href=#227 id=227 data-nosnippet>227</a>	/// function.
+<a href=#228 id=228 data-nosnippet>228</a>	</span><span class="kw">fn </span>ScheduleJob(<span class="kw-2">&amp;</span><span class="self">self</span>, job_id: u32) -&gt; SysResult&lt;()&gt; {
+<a href=#229 id=229 data-nosnippet>229</a>		bool_to_invalidparm(<span class="kw">unsafe </span>{ ffi::ScheduleJob(<span class="self">self</span>.ptr(), job_id) })
+<a href=#230 id=230 data-nosnippet>230</a>	}
+<a href=#231 id=231 data-nosnippet>231</a>}</code></pre></div></section></main></body></html>

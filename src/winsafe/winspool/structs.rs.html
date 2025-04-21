@@ -199,4 +199,15 @@
 <a href=#199 id=199 data-nosnippet>199</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; PRINTER_INFO_4&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 <a href=#200 id=200 data-nosnippet>200</a>	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'a</span>, pPrinterName, set_pPrinterName);
 <a href=#201 id=201 data-nosnippet>201</a>	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'b</span>, pServerName, set_pServerName);
-<a href=#202 id=202 data-nosnippet>202</a>}</code></pre></div></section></main></body></html>
+<a href=#202 id=202 data-nosnippet>202</a>}
+<a href=#203 id=203 data-nosnippet>203</a>
+<a href=#204 id=204 data-nosnippet>204</a><span class="doccomment">/// [`PRINTER_OPTIONS`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printer-options)
+<a href=#205 id=205 data-nosnippet>205</a>/// struct.
+<a href=#206 id=206 data-nosnippet>206</a></span><span class="attr">#[repr(C)]
+<a href=#207 id=207 data-nosnippet>207</a>#[derive(Clone, Copy)]
+<a href=#208 id=208 data-nosnippet>208</a></span><span class="kw">pub struct </span>PRINTER_OPTIONS {
+<a href=#209 id=209 data-nosnippet>209</a>	cbSize: u32,
+<a href=#210 id=210 data-nosnippet>210</a>	<span class="kw">pub </span>dwFlags: co::PRINTER_OPTION,
+<a href=#211 id=211 data-nosnippet>211</a>}
+<a href=#212 id=212 data-nosnippet>212</a>
+<a href=#213 id=213 data-nosnippet>213</a><span class="macro">impl_default!</span>(PRINTER_OPTIONS, cbSize);</code></pre></div></section></main></body></html>

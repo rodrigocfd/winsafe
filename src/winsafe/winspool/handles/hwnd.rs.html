@@ -56,4 +56,10 @@
 <a href=#56 id=56 data-nosnippet>56</a>			<span class="kw">_ </span>=&gt; <span class="prelude-val">Err</span>(co::ERROR::INVALID_PARAMETER),
 <a href=#57 id=57 data-nosnippet>57</a>		}
 <a href=#58 id=58 data-nosnippet>58</a>	}
-<a href=#59 id=59 data-nosnippet>59</a>}</code></pre></div></section></main></body></html>
+<a href=#59 id=59 data-nosnippet>59</a>
+<a href=#60 id=60 data-nosnippet>60</a>	<span class="doccomment">/// [`PrinterProperties`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printerproperties)
+<a href=#61 id=61 data-nosnippet>61</a>	/// function.
+<a href=#62 id=62 data-nosnippet>62</a>	</span><span class="kw">fn </span>PrinterProperties(<span class="kw-2">&amp;</span><span class="self">self</span>, hprinter: <span class="kw-2">&amp;</span>HPRINTER) -&gt; SysResult&lt;()&gt; {
+<a href=#63 id=63 data-nosnippet>63</a>		bool_to_invalidparm(<span class="kw">unsafe </span>{ ffi::PrinterProperties(<span class="self">self</span>.ptr(), hprinter.ptr()) })
+<a href=#64 id=64 data-nosnippet>64</a>	}
+<a href=#65 id=65 data-nosnippet>65</a>}</code></pre></div></section></main></body></html>
