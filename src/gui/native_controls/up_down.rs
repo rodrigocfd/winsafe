@@ -186,10 +186,6 @@ pub struct UpDownOpts {
 	/// area, to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// If the parent window is a dialog, the values are in Dialog Template
-	/// Units; otherwise in pixels, which will be multiplied to match current
-	/// system DPI.
-	///
 	/// Note that the `UDS::AUTOBUDDY` style automatically positions the
 	/// `UpDown`; thus, with this style, `position` is meaningless.
 	///
@@ -197,10 +193,6 @@ pub struct UpDownOpts {
 	pub position: (i32, i32),
 	/// Control height to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-	///
-	/// If the parent window is a dialog, the value is in Dialog Template Units;
-	/// otherwise in pixels, which will be multiplied to match current system
-	/// DPI.
 	///
 	/// Note that the `UDS::AUTOBUDDY` style automatically resizes the `UpDown`;
 	/// thus, with this style, `height` is meaningless.
@@ -220,7 +212,7 @@ pub struct UpDownOpts {
 	/// Window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	///
-	/// Defaults to `WS::CHILDWINDOW | WS::VISIBLE`.
+	/// Defaults to `WS::CHILD | WS::VISIBLE`.
 	pub window_style: co::WS,
 	/// Extended window styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -253,7 +245,7 @@ impl Default for UpDownOpts {
 				| co::UDS::ALIGNRIGHT
 				| co::UDS::ARROWKEYS
 				| co::UDS::HOTTRACK,
-			window_style: co::WS::CHILDWINDOW | co::WS::VISIBLE,
+			window_style: co::WS::CHILD | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			range: (0, 100),

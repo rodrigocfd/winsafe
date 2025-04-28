@@ -74,7 +74,7 @@ impl<'a> TabItems<'a> {
 	}
 
 	/// Returns the focused item by sending a
-	/// [`tcm::GetCurSel`](crate::msg::tcm::GetCurSel) message.
+	/// [`tcm::GetCurFocus`](crate::msg::tcm::GetCurFocus) message.
 	#[must_use]
 	pub fn focused(&self) -> Option<TabItem<'a>> {
 		unsafe { self.owner.hwnd().SendMessage(tcm::GetCurFocus {}) }.map(|i| self.get(i))

@@ -181,25 +181,22 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	/// # w::HrResult::Ok(())
 	/// ```
 	fn SetFileTypes<S: AsRef<str>>(&self, filter_spec: &[(S, S)]) -> HrResult<()> {
-		let mut names_buf = Vec::with_capacity(filter_spec.len());
-		let mut specs_buf = Vec::with_capacity(filter_spec.len());
-		let mut com_dlgs = Vec::with_capacity(filter_spec.len());
+		let (mut strs_buf, mut com_dlgs): (Vec<_>, Vec<_>) = filter_spec
+			.iter()
+			.map(|(name, spec)| {
+				let wname = WString::from_str(name.as_ref());
+				let wspec = WString::from_str(spec.as_ref());
+				((wname, wspec), COMDLG_FILTERSPEC::default())
+			})
+			.unzip();
 
-		for (name, spec) in filter_spec.iter() {
-			names_buf.push(WString::from_str(name.as_ref()));
-			specs_buf.push(WString::from_str(spec.as_ref()));
-			com_dlgs.push(COMDLG_FILTERSPEC::default());
-		}
-
-		names_buf
+		strs_buf
 			.iter_mut()
-			.enumerate()
-			.for_each(|(i, el)| com_dlgs[i].set_pszName(Some(el)));
-
-		specs_buf
-			.iter_mut()
-			.enumerate()
-			.for_each(|(i, el)| com_dlgs[i].set_pszSpec(Some(el)));
+			.zip(com_dlgs.iter_mut())
+			.for_each(|((name, spec), com_dlg)| {
+				com_dlg.set_pszName(Some(name));
+				com_dlg.set_pszSpec(Some(spec));
+			});
 
 		ok_to_hrresult(unsafe {
 			(vt::<IFileDialogVT>(self).SetFileTypes)(

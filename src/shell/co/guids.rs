@@ -29,5 +29,6 @@ const_guid! { BHID;
 	AssociationArray "bea9ef17-82f1-4f60-9284-4f8db75c3be9"
 	Filter "38d08778-f557-4690-9ebf-ba54706ad8f7"
 	EnumAssocHandlers "b8ab0b9c-c2ec-4f7a-918d-314900e6280a"
+	StorageItem "404e2109-77d2-4699-a5a0-4fdf10db9837"
 	FilePlaceholder "8677dceb-aae0-4005-8d3d-547fa852f825"
 }
