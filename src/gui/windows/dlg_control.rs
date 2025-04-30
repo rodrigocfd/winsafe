@@ -41,12 +41,6 @@ impl DlgControl {
 			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
 				let hinst = parent2.hwnd().hinstance();
 				self2.0.dlg_base.create_dialog_param(&hinst)?;
-				self2.0.dlg_base.base().hwnd().SetWindowPos(
-					HwndPlace::None,
-					position.into(),
-					SIZE::default(),
-					co::SWP::NOZORDER | co::SWP::NOSIZE,
-				)?;
 				unsafe {
 					self2
 						.0
@@ -55,6 +49,12 @@ impl DlgControl {
 						.hwnd()
 						.SetWindowLongPtr(co::GWLP::ID, self2.0.ctrl_id as _); // give ID to the control
 				}
+				self2.0.dlg_base.base().hwnd().SetWindowPos(
+					HwndPlace::None,
+					position.into(),
+					SIZE::default(),
+					co::SWP::NOZORDER | co::SWP::NOSIZE,
+				)?;
 
 				parent2
 					.as_ref()

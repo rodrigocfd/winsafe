@@ -2,6 +2,7 @@ mod ienumshellitems;
 mod ifiledialog;
 mod ifiledialogevents;
 mod ifileopendialog;
+mod ifileoperation;
 mod ifilesavedialog;
 mod imodalwindow;
 mod ishellitem;
@@ -18,6 +19,7 @@ pub mod decl {
 	pub use super::ifiledialog::IFileDialog;
 	pub use super::ifiledialogevents::IFileDialogEvents;
 	pub use super::ifileopendialog::IFileOpenDialog;
+	pub use super::ifileoperation::IFileOperation;
 	pub use super::ifilesavedialog::IFileSaveDialog;
 	pub use super::imodalwindow::IModalWindow;
 	pub use super::ishellitem::IShellItem;
@@ -34,6 +36,7 @@ pub mod traits {
 	pub use super::ienumshellitems::shell_IEnumShellItems;
 	pub use super::ifiledialog::shell_IFileDialog;
 	pub use super::ifileopendialog::shell_IFileOpenDialog;
+	pub use super::ifileoperation::shell_IFileOperation;
 	pub use super::ifilesavedialog::shell_IFileSaveDialog;
 	pub use super::imodalwindow::shell_IModalWindow;
 	pub use super::ishellitem::shell_IShellItem;
