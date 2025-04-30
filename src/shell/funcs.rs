@@ -254,6 +254,44 @@ where
 	.map(|_| queried)
 }
 
+/// [`SHCreateItemFromRelativeName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromrelativename)
+/// function.
+#[must_use]
+pub fn SHCreateItemFromRelativeName<T>(
+	parent: &impl shell_IShellItem,
+	name: &str,
+	bind_ctx: Option<&impl ole_IBindCtx>,
+) -> HrResult<T>
+where
+	T: shell_IShellItem,
+{
+	let mut queried = unsafe { T::null() };
+	ok_to_hrresult(unsafe {
+		ffi::SHCreateItemFromRelativeName(
+			parent.ptr(),
+			WString::from_str(name).as_ptr(),
+			bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr() as _),
+			pcvoid(&T::IID),
+			queried.as_mut(),
+		)
+	})
+	.map(|_| queried)
+}
+
+/// [`SHCreateShellItemArrayFromShellItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateshellitemarrayfromshellitem)
+/// function.
+#[must_use]
+pub fn SHCreateShellItemArrayFromShellItem<T>(item: &impl shell_IShellItem) -> HrResult<T>
+where
+	T: shell_IShellItemArray,
+{
+	let mut queried = unsafe { T::null() };
+	ok_to_hrresult(unsafe {
+		ffi::SHCreateShellItemArrayFromShellItem(item.ptr(), pcvoid(&T::IID), queried.as_mut())
+	})
+	.map(|_| queried)
+}
+
 /// [`SHCreateMemStream`](https://learn.microsoft.com/en-us/windows/win32/api/shlwapi/nf-shlwapi-shcreatememstream)
 /// function.
 ///
