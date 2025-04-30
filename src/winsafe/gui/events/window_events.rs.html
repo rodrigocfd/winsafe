@@ -25,7 +25,7 @@
 <a href=#25 id=25 data-nosnippet>25</a>}
 <a href=#26 id=26 data-nosnippet>26</a>
 <a href=#27 id=27 data-nosnippet>27</a><span class="kw">pub struct </span>WindowEvents {
-<a href=#28 id=28 data-nosnippet>28</a>	is_dlg: IsDlg,
+<a href=#28 id=28 data-nosnippet>28</a>	wnd_ty: WndTy,
 <a href=#29 id=29 data-nosnippet>29</a>	msgs: UnsafeCell&lt;Vec&lt;StorageMsg&gt;&gt;, <span class="comment">// ordinary WM messages
 <a href=#30 id=30 data-nosnippet>30</a>	</span>cmds: UnsafeCell&lt;Vec&lt;StorageCmd&gt;&gt;, <span class="comment">// WM_COMMAND
 <a href=#31 id=31 data-nosnippet>31</a>	</span>nfys: UnsafeCell&lt;Vec&lt;StorageNfy&gt;&gt;, <span class="comment">// WM_NOTIFY
@@ -34,9 +34,9 @@
 <a href=#34 id=34 data-nosnippet>34</a>
 <a href=#35 id=35 data-nosnippet>35</a><span class="kw">impl </span>WindowEvents {
 <a href=#36 id=36 data-nosnippet>36</a>	<span class="attr">#[must_use]
-<a href=#37 id=37 data-nosnippet>37</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(is_dlg: IsDlg) -&gt; <span class="self">Self </span>{
+<a href=#37 id=37 data-nosnippet>37</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>new(wnd_ty: WndTy) -&gt; <span class="self">Self </span>{
 <a href=#38 id=38 data-nosnippet>38</a>		<span class="self">Self </span>{
-<a href=#39 id=39 data-nosnippet>39</a>			is_dlg,
+<a href=#39 id=39 data-nosnippet>39</a>			wnd_ty,
 <a href=#40 id=40 data-nosnippet>40</a>			msgs: UnsafeCell::new(Vec::new()),
 <a href=#41 id=41 data-nosnippet>41</a>			cmds: UnsafeCell::new(Vec::new()),
 <a href=#42 id=42 data-nosnippet>42</a>			nfys: UnsafeCell::new(Vec::new()),
@@ -131,7 +131,7 @@
 <a href=#131 id=131 data-nosnippet>131</a>			<span class="kw">let </span>key_cmd = (wm_cmd.event.ctrl_id(), wm_cmd.event.code());
 <a href=#132 id=132 data-nosnippet>132</a>			<span class="kw">let </span>cmds = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span><span class="self">self</span>.cmds.get() };
 <a href=#133 id=133 data-nosnippet>133</a>			<span class="kw">if let </span><span class="prelude-val">Some</span>(stored_cmd) = cmds.iter().rev().find(|obj| obj.id == key_cmd) {
-<a href=#134 id=134 data-nosnippet>134</a>				<span class="kw">let </span>ret = (stored_cmd.fun)().map(|<span class="kw">_</span>| <span class="self">self</span>.is_dlg.def_proc_val());
+<a href=#134 id=134 data-nosnippet>134</a>				<span class="kw">let </span>ret = (stored_cmd.fun)().map(|<span class="kw">_</span>| <span class="self">self</span>.wnd_ty.def_proc_val());
 <a href=#135 id=135 data-nosnippet>135</a>				<span class="kw">return </span><span class="prelude-val">Some</span>(ret); <span class="comment">// handled, stop here
 <a href=#136 id=136 data-nosnippet>136</a>			</span>}
 <a href=#137 id=137 data-nosnippet>137</a>		} <span class="kw">else if </span>p.msg_id == co::WM::NOTIFY {
@@ -146,7 +146,7 @@
 <a href=#146 id=146 data-nosnippet>146</a>			<span class="kw">let </span>wm_tmr = <span class="kw">unsafe </span>{ wm::Timer::from_generic_wm(p) };
 <a href=#147 id=147 data-nosnippet>147</a>			<span class="kw">let </span>tmrs = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;*</span><span class="self">self</span>.tmrs.get() };
 <a href=#148 id=148 data-nosnippet>148</a>			<span class="kw">if let </span><span class="prelude-val">Some</span>(stored_tmr) = tmrs.iter().rev().find(|obj| obj.id == wm_tmr.timer_id) {
-<a href=#149 id=149 data-nosnippet>149</a>				<span class="kw">let </span>ret = (stored_tmr.fun)().map(|<span class="kw">_</span>| <span class="self">self</span>.is_dlg.def_proc_val());
+<a href=#149 id=149 data-nosnippet>149</a>				<span class="kw">let </span>ret = (stored_tmr.fun)().map(|<span class="kw">_</span>| <span class="self">self</span>.wnd_ty.def_proc_val());
 <a href=#150 id=150 data-nosnippet>150</a>				<span class="kw">return </span><span class="prelude-val">Some</span>(ret); <span class="comment">// handled, stop here
 <a href=#151 id=151 data-nosnippet>151</a>			</span>}
 <a href=#152 id=152 data-nosnippet>152</a>		}

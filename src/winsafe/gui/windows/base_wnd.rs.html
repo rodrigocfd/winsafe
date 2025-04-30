@@ -12,7 +12,7 @@
 <a href=#12 id=12 data-nosnippet>12</a><span class="doccomment">/// Base to `RawBase` and `DlgBase`, which means all container windows.
 <a href=#13 id=13 data-nosnippet>13</a></span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>BaseWnd {
 <a href=#14 id=14 data-nosnippet>14</a>	hwnd: HWND,
-<a href=#15 id=15 data-nosnippet>15</a>	is_dlg: IsDlg,
+<a href=#15 id=15 data-nosnippet>15</a>	wnd_ty: WndTy,
 <a href=#16 id=16 data-nosnippet>16</a>	layout: Layout,
 <a href=#17 id=17 data-nosnippet>17</a>	before_events: WindowEvents,
 <a href=#18 id=18 data-nosnippet>18</a>	user_events: WindowEvents,
@@ -23,22 +23,22 @@
 <a href=#23 id=23 data-nosnippet>23</a>	<span class="kw">const </span>WM_UI_THREAD: co::WM = <span class="kw">unsafe </span>{ co::WM::from_raw(co::WM::APP.raw() + <span class="number">0x3fff</span>) };
 <a href=#24 id=24 data-nosnippet>24</a>
 <a href=#25 id=25 data-nosnippet>25</a>	<span class="attr">#[must_use]
-<a href=#26 id=26 data-nosnippet>26</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(is_dlg: IsDlg) -&gt; <span class="self">Self </span>{
+<a href=#26 id=26 data-nosnippet>26</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>new(wnd_ty: WndTy) -&gt; <span class="self">Self </span>{
 <a href=#27 id=27 data-nosnippet>27</a>		<span class="kw">let </span>new_self = <span class="self">Self </span>{
 <a href=#28 id=28 data-nosnippet>28</a>			hwnd: HWND::NULL,
-<a href=#29 id=29 data-nosnippet>29</a>			is_dlg,
+<a href=#29 id=29 data-nosnippet>29</a>			wnd_ty,
 <a href=#30 id=30 data-nosnippet>30</a>			layout: Layout::new(),
-<a href=#31 id=31 data-nosnippet>31</a>			before_events: WindowEvents::new(is_dlg),
-<a href=#32 id=32 data-nosnippet>32</a>			user_events: WindowEvents::new(is_dlg),
-<a href=#33 id=33 data-nosnippet>33</a>			after_events: WindowEvents::new(is_dlg),
+<a href=#31 id=31 data-nosnippet>31</a>			before_events: WindowEvents::new(wnd_ty),
+<a href=#32 id=32 data-nosnippet>32</a>			user_events: WindowEvents::new(wnd_ty),
+<a href=#33 id=33 data-nosnippet>33</a>			after_events: WindowEvents::new(wnd_ty),
 <a href=#34 id=34 data-nosnippet>34</a>		};
 <a href=#35 id=35 data-nosnippet>35</a>		new_self.default_message_handlers();
 <a href=#36 id=36 data-nosnippet>36</a>		new_self
 <a href=#37 id=37 data-nosnippet>37</a>	}
 <a href=#38 id=38 data-nosnippet>38</a>
 <a href=#39 id=39 data-nosnippet>39</a>	<span class="attr">#[must_use]
-<a href=#40 id=40 data-nosnippet>40</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>is_dlg(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; IsDlg {
-<a href=#41 id=41 data-nosnippet>41</a>		<span class="self">self</span>.is_dlg
+<a href=#40 id=40 data-nosnippet>40</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>wnd_ty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WndTy {
+<a href=#41 id=41 data-nosnippet>41</a>		<span class="self">self</span>.wnd_ty
 <a href=#42 id=42 data-nosnippet>42</a>	}
 <a href=#43 id=43 data-nosnippet>43</a>	<span class="attr">#[must_use]
 <a href=#44 id=44 data-nosnippet>44</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>hwnd(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>HWND {

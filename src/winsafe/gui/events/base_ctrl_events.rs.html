@@ -10,7 +10,7 @@
 <a href=#10 id=10 data-nosnippet>10</a>/// `WM_COMMAND` or `WM_NOTIFY` messages under the parent window.
 <a href=#11 id=11 data-nosnippet>11</a></span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">struct </span>BaseCtrlEvents {
 <a href=#12 id=12 data-nosnippet>12</a>	parent_ptr: NonNull&lt;BaseWnd&gt;, <span class="comment">// used only to add the events to parent, before the first message is processed
-<a href=#13 id=13 data-nosnippet>13</a>	</span>is_dlg: IsDlg,
+<a href=#13 id=13 data-nosnippet>13</a>	</span>wnd_ty: WndTy,
 <a href=#14 id=14 data-nosnippet>14</a>	ctrl_id: u16,
 <a href=#15 id=15 data-nosnippet>15</a>}
 <a href=#16 id=16 data-nosnippet>16</a>
@@ -20,13 +20,13 @@
 <a href=#20 id=20 data-nosnippet>20</a>		<span class="self">Self </span>{
 <a href=#21 id=21 data-nosnippet>21</a>			parent_ptr: NonNull::from(parent.as_ref()),
 <a href=#22 id=22 data-nosnippet>22</a>			ctrl_id,
-<a href=#23 id=23 data-nosnippet>23</a>			is_dlg: parent.as_ref().is_dlg(),
+<a href=#23 id=23 data-nosnippet>23</a>			wnd_ty: parent.as_ref().wnd_ty(),
 <a href=#24 id=24 data-nosnippet>24</a>		}
 <a href=#25 id=25 data-nosnippet>25</a>	}
 <a href=#26 id=26 data-nosnippet>26</a>
 <a href=#27 id=27 data-nosnippet>27</a>	<span class="attr">#[must_use]
-<a href=#28 id=28 data-nosnippet>28</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>is_dlg(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; IsDlg {
-<a href=#29 id=29 data-nosnippet>29</a>		<span class="self">self</span>.is_dlg
+<a href=#28 id=28 data-nosnippet>28</a>	</span><span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">const fn </span>wnd_ty(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; WndTy {
+<a href=#29 id=29 data-nosnippet>29</a>		<span class="self">self</span>.wnd_ty
 <a href=#30 id=30 data-nosnippet>30</a>	}
 <a href=#31 id=31 data-nosnippet>31</a>
 <a href=#32 id=32 data-nosnippet>32</a>	<span class="doccomment">/// Adds a `WM` event to the parent window.
