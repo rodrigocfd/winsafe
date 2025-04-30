@@ -70,7 +70,7 @@ impl<T> ListView<T> {
 					opts.window_ex_style,
 					"SysListView32",
 					None,
-					opts.window_style | opts.control_style.into() | co::LVS::SHAREIMAGELISTS.into(),
+					opts.window_style | (opts.control_style & !co::LVS::SHAREIMAGELISTS).into(),
 					opts.position.into(),
 					opts.size.into(),
 					&parent2,
@@ -143,7 +143,7 @@ impl<T> ListView<T> {
 			self2.0.base.assign_dlg(&parent2)?;
 			self2
 				.hwnd()
-				.set_style(co::LVS::from(self2.hwnd().style()) | co::LVS::SHAREIMAGELISTS);
+				.set_style(co::LVS::from(self2.hwnd().style()) & !co::LVS::SHAREIMAGELISTS);
 			if !unsafe { &*self2.0.header.get() }
 				.as_ref()
 				.unwrap()
@@ -222,19 +222,6 @@ impl<T> ListView<T> {
 				}
 				Ok(0) // ignored
 			});
-
-		let self2 = self.clone();
-		parent.as_ref().after_on().wm_destroy(move || {
-			[co::LVSIL::NORMAL, co::LVSIL::SMALL, co::LVSIL::STATE, co::LVSIL::GROUPHEADER]
-				.iter()
-				.for_each(|lvsil| {
-					self2.image_list(*lvsil).map(|hil| {
-						// destroy each image list, if any
-						let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) };
-					});
-				});
-			Ok(())
-		});
 	}
 
 	fn show_context_menu(
@@ -343,16 +330,32 @@ impl<T> ListView<T> {
 		unsafe { &*self.0.header.get() }.as_ref()
 	}
 
-	/// Retrieves a reference to one of the associated image lists by sending an
+	/// Retrieves one of the associated image lists by sending an
 	/// [`lvm::GetImageList`](crate::msg::lvm::GetImageList) message.
+	///
+	/// Image lists are lazy-initialized: the first time you call this method
+	/// for a given image list, it will be created and assigned with
+	/// [`lvm::SetImageList`](crate::msg::lvm::SetImageList).
 	///
 	/// The image list is owned by the control.
 	#[must_use]
-	pub fn image_list(&self, kind: co::LVSIL) -> Option<&HIMAGELIST> {
-		unsafe { self.hwnd().SendMessage(lvm::GetImageList { kind }) }.map(|hil| {
-			let hil_ptr = &hil as *const HIMAGELIST;
-			unsafe { &*hil_ptr }
-		})
+	pub fn image_list(&self, kind: co::LVSIL) -> HrResult<HIMAGELIST> {
+		match unsafe { self.hwnd().SendMessage(lvm::GetImageList { kind }) } {
+			Some(h) => Ok(h), // already created
+			None => {
+				// Not created yet. Create a new image list and assign it to the list view.
+				let sz = match kind {
+					co::LVSIL::NORMAL => SIZE::new(32, 32),
+					_ => SIZE::new(16, 16),
+				};
+				let h = HIMAGELIST::Create(sz, co::ILC::COLOR32, 1, 1)?.leak();
+				unsafe {
+					self.hwnd()
+						.SendMessage(lvm::SetImageList { himagelist: Some(h.raw_copy()), kind });
+				}
+				Ok(h)
+			},
+		}
 	}
 
 	/// Item methods.
@@ -376,26 +379,6 @@ impl<T> ListView<T> {
 				mask: ex_style,
 				style: if set { ex_style } else { co::LVS_EX::NoValue },
 			});
-		}
-	}
-
-	/// Sets the one of the associated image lists by sending an
-	/// [`lvm::SetImageList`](crate::msg::lvm::SetImageList) message.
-	///
-	/// The image list will be owned by the control. Returns the previous one,
-	/// if any.
-	pub fn set_image_list(
-		&self,
-		kind: co::LVSIL,
-		himagelist: ImageListDestroyGuard,
-	) -> Option<ImageListDestroyGuard> {
-		let mut himagelist = himagelist;
-		let hil = himagelist.leak();
-
-		unsafe {
-			self.hwnd()
-				.SendMessage(lvm::SetImageList { kind, himagelist: Some(hil) })
-				.map(|prev_hil| ImageListDestroyGuard::new(prev_hil))
 		}
 	}
 
@@ -427,9 +410,9 @@ pub struct ListViewOpts {
 	///
 	/// Since the image list is always managed by the control itself,
 	/// [`LVS::SHAREIMAGELISTS`](crate::co::LVS::SHAREIMAGELISTS) style will
-	/// always be added.
+	/// always be unset.
 	///
-	/// Defaults to `LVS::REPORT | LVS::NOSORTHEADER | LVS::SHOWSELALWAYS | LVS::SHAREIMAGELISTS`.
+	/// Defaults to `LVS::REPORT | LVS::NOSORTHEADER | LVS::SHOWSELALWAYS`.
 	pub control_style: co::LVS,
 	/// Extended list view styles to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
@@ -479,10 +462,7 @@ impl Default for ListViewOpts {
 		Self {
 			position: dpi(0, 0),
 			size: dpi(120, 120),
-			control_style: co::LVS::REPORT
-				| co::LVS::NOSORTHEADER
-				| co::LVS::SHOWSELALWAYS
-				| co::LVS::SHAREIMAGELISTS,
+			control_style: co::LVS::REPORT | co::LVS::NOSORTHEADER | co::LVS::SHOWSELALWAYS,
 			control_ex_style: co::LVS_EX::FULLROWSELECT,
 			window_style: co::WS::CHILD | co::WS::GROUP | co::WS::TABSTOP | co::WS::VISIBLE,
 			window_ex_style: co::WS_EX::LEFT | co::WS_EX::CLIENTEDGE,

@@ -129,11 +129,17 @@ impl<T> TreeView<T> {
 		let self2 = self.clone();
 		parent.as_ref().after_on().wm_destroy(move || {
 			[co::TVSIL::NORMAL, co::TVSIL::STATE]
-				.iter()
-				.for_each(|tvsil| {
-					self2.image_list(*tvsil).map(|hil| {
-						let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) }; // destroy each image list, if any
-					});
+				.into_iter()
+				.for_each(|kind| unsafe {
+					self2
+						.hwnd()
+						.SendMessage(tvm::GetImageList { kind })
+						.map(|h| {
+							self2
+								.hwnd()
+								.SendMessage(tvm::SetImageList { himagelist: None, kind }); // remove from control
+							let _ = ImageListDestroyGuard::new(h); // destroy
+						});
 				});
 			Ok(())
 		});
@@ -180,16 +186,28 @@ impl<T> TreeView<T> {
 		Ok(TreeViewItem::new(self, new_hitem))
 	}
 
-	/// Retrieves a reference to one of the associated image lists by sending a
+	/// Retrieves one of the associated image lists by sending a
 	/// [`tvm::GetImageList`](crate::msg::tvm::GetImageList) message.
+	///
+	/// Image lists are lazy-initialized: the first time you call this method
+	/// for a given image list, it will be created and assigned with
+	/// [`tvm::SetImageList`](crate::msg::tvm::SetImageList).
 	///
 	/// The image list is owned by the control.
 	#[must_use]
-	pub fn image_list(&self, kind: co::TVSIL) -> Option<&HIMAGELIST> {
-		unsafe { self.hwnd().SendMessage(tvm::GetImageList { kind }) }.map(|hil| {
-			let hil_ptr = &hil as *const HIMAGELIST;
-			unsafe { &*hil_ptr }
-		})
+	pub fn image_list(&self, kind: co::TVSIL) -> HrResult<HIMAGELIST> {
+		match unsafe { self.hwnd().SendMessage(tvm::GetImageList { kind }) } {
+			Some(h) => Ok(h), // already created
+			None => {
+				// Not created yet. Create a new image list and assign it to the list view.
+				let h = HIMAGELIST::Create(SIZE::new(16, 16), co::ILC::COLOR32, 1, 1)?.leak();
+				unsafe {
+					self.hwnd()
+						.SendMessage(tvm::SetImageList { himagelist: Some(h.raw_copy()), kind });
+				}
+				Ok(h)
+			},
+		}
 	}
 
 	/// Exposes the item methods.
@@ -206,26 +224,6 @@ impl<T> TreeView<T> {
 				mask: ex_style,
 				style: if set { ex_style } else { co::TVS_EX::NoValue },
 			})
-		}
-	}
-
-	/// Sets the one of the associated image lists by sending a
-	/// [`tvm::SetImageList`](crate::msg::tvm::SetImageList) message.
-	///
-	/// The image list will be owned by the control. Returns the previous one,
-	/// if any.
-	pub fn set_image_list(
-		&self,
-		kind: co::TVSIL,
-		himagelist: ImageListDestroyGuard,
-	) -> Option<ImageListDestroyGuard> {
-		let mut himagelist = himagelist;
-		let hil = himagelist.leak();
-
-		unsafe {
-			self.hwnd()
-				.SendMessage(tvm::SetImageList { kind, himagelist: Some(hil) })
-				.map(|prev_hil| ImageListDestroyGuard::new(prev_hil))
 		}
 	}
 }

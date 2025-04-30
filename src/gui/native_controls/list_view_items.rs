@@ -47,7 +47,7 @@ impl<'a, T> ListViewItems<'a, T> {
 	///         "First column text",
 	///         "Second column text",
 	///     ],
-	///     None, // no icon; requires a previous set_image_list()
+	///     None, // no icon; requires icons to be added to the image list
 	///     (),   // no object data; requires specifying the generic `ListView` type
 	/// );
 	/// ```
