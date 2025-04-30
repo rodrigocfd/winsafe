@@ -24,7 +24,7 @@ impl Drop for RawBase {
 impl RawBase {
 	#[must_use]
 	pub(in crate::gui) fn new() -> Self {
-		Self { base: BaseWnd::new(IsDlg::No) }
+		Self { base: BaseWnd::new(WndTy::Raw) }
 	}
 
 	#[must_use]

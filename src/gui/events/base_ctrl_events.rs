@@ -10,7 +10,7 @@ use crate::msg::*;
 /// `WM_COMMAND` or `WM_NOTIFY` messages under the parent window.
 pub(in crate::gui) struct BaseCtrlEvents {
 	parent_ptr: NonNull<BaseWnd>, // used only to add the events to parent, before the first message is processed
-	is_dlg: IsDlg,
+	wnd_ty: WndTy,
 	ctrl_id: u16,
 }
 
@@ -20,13 +20,13 @@ impl BaseCtrlEvents {
 		Self {
 			parent_ptr: NonNull::from(parent.as_ref()),
 			ctrl_id,
-			is_dlg: parent.as_ref().is_dlg(),
+			wnd_ty: parent.as_ref().wnd_ty(),
 		}
 	}
 
 	#[must_use]
-	pub(in crate::gui) const fn is_dlg(&self) -> IsDlg {
-		self.is_dlg
+	pub(in crate::gui) const fn wnd_ty(&self) -> WndTy {
+		self.wnd_ty
 	}
 
 	/// Adds a `WM` event to the parent window.

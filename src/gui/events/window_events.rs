@@ -25,7 +25,7 @@ struct StorageTmr {
 }
 
 pub struct WindowEvents {
-	is_dlg: IsDlg,
+	wnd_ty: WndTy,
 	msgs: UnsafeCell<Vec<StorageMsg>>, // ordinary WM messages
 	cmds: UnsafeCell<Vec<StorageCmd>>, // WM_COMMAND
 	nfys: UnsafeCell<Vec<StorageNfy>>, // WM_NOTIFY
@@ -34,9 +34,9 @@ pub struct WindowEvents {
 
 impl WindowEvents {
 	#[must_use]
-	pub(in crate::gui) const fn new(is_dlg: IsDlg) -> Self {
+	pub(in crate::gui) const fn new(wnd_ty: WndTy) -> Self {
 		Self {
-			is_dlg,
+			wnd_ty,
 			msgs: UnsafeCell::new(Vec::new()),
 			cmds: UnsafeCell::new(Vec::new()),
 			nfys: UnsafeCell::new(Vec::new()),
@@ -131,7 +131,7 @@ impl WindowEvents {
 			let key_cmd = (wm_cmd.event.ctrl_id(), wm_cmd.event.code());
 			let cmds = unsafe { &*self.cmds.get() };
 			if let Some(stored_cmd) = cmds.iter().rev().find(|obj| obj.id == key_cmd) {
-				let ret = (stored_cmd.fun)().map(|_| self.is_dlg.def_proc_val());
+				let ret = (stored_cmd.fun)().map(|_| self.wnd_ty.def_proc_val());
 				return Some(ret); // handled, stop here
 			}
 		} else if p.msg_id == co::WM::NOTIFY {
@@ -146,7 +146,7 @@ impl WindowEvents {
 			let wm_tmr = unsafe { wm::Timer::from_generic_wm(p) };
 			let tmrs = unsafe { &*self.tmrs.get() };
 			if let Some(stored_tmr) = tmrs.iter().rev().find(|obj| obj.id == wm_tmr.timer_id) {
-				let ret = (stored_tmr.fun)().map(|_| self.is_dlg.def_proc_val());
+				let ret = (stored_tmr.fun)().map(|_| self.wnd_ty.def_proc_val());
 				return Some(ret); // handled, stop here
 			}
 		}

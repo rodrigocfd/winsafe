@@ -23,7 +23,7 @@ impl BaseCtrl {
 		Self {
 			ctrl_id,
 			hwnd: UnsafeCell::new(HWND::NULL),
-			subclass_events: WindowEvents::new(IsDlg::No),
+			subclass_events: WindowEvents::new(WndTy::Raw),
 		}
 	}
 

@@ -25,7 +25,7 @@ impl Drop for DlgBase {
 impl DlgBase {
 	#[must_use]
 	pub(in crate::gui) fn new(dlg_id: u16) -> Self {
-		Self { base: BaseWnd::new(IsDlg::Yes), dlg_id }
+		Self { base: BaseWnd::new(WndTy::Dlg), dlg_id }
 	}
 
 	#[must_use]

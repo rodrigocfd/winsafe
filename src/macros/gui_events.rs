@@ -10,7 +10,7 @@ macro_rules! pub_fn_wm_noparm_noret {
 		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn() -> AnyResult<()> + 'static,
 		{
-			let def_proc_val = self.is_dlg.def_proc_val();
+			let def_proc_val = self.wnd_ty.def_proc_val();
 			self.wm($wmconst, move |_| {
 				func()?;
 				Ok(def_proc_val)
@@ -48,7 +48,7 @@ macro_rules! pub_fn_wm_withparm_noret {
 		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn($parm) -> AnyResult<()> + 'static,
 		{
-			let def_proc_val = self.is_dlg.def_proc_val();
+			let def_proc_val = self.wnd_ty.def_proc_val();
 			self.wm($wmconst, move |p| {
 				func(unsafe { <$parm>::from_generic_wm(p) })?;
 				Ok(def_proc_val)
@@ -140,7 +140,7 @@ macro_rules! pub_fn_nfy_noparm_noret {
 		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn() -> AnyResult<()> + 'static,
 		{
-			let def_proc_val = self.0.is_dlg().def_proc_val();
+			let def_proc_val = self.0.wnd_ty().def_proc_val();
 			self.0.wm_notify($nfy, move |_| {
 				func()?;
 				Ok(def_proc_val)
@@ -160,7 +160,7 @@ macro_rules! pub_fn_nfy_withparm_noret {
 		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn(&$param) -> AnyResult<()> + 'static,
 		{
-			let def_proc_val = self.0.is_dlg().def_proc_val();
+			let def_proc_val = self.0.wnd_ty().def_proc_val();
 			self.0.wm_notify($nfy, move |p| {
 				func(unsafe { p.cast_nmhdr::<$param>() })?;
 				Ok(def_proc_val)
@@ -180,7 +180,7 @@ macro_rules! pub_fn_nfy_withmutparm_noret {
 		pub fn $name<F>(&self, func: F) -> &Self
 			where F: Fn(&mut $param) -> AnyResult<()> + 'static,
 		{
-			let def_proc_val = self.0.is_dlg().def_proc_val();
+			let def_proc_val = self.0.wnd_ty().def_proc_val();
 			self.0.wm_notify($nfy, move |p| {
 				func(unsafe { p.cast_nmhdr_mut::<$param>() })?;
 				Ok(def_proc_val)

@@ -33,7 +33,7 @@ impl DlgModeless {
 		parent
 			.as_ref()
 			.before_on()
-			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			.wm(parent.as_ref().wnd_ty().creation_msg(), move |_| {
 				let hinst = parent2.hwnd().hinstance();
 				self2.0.dlg_base.create_dialog_param(&hinst)?;
 				self2.0.dlg_base.base().hwnd().ShowWindow(co::SW::SHOW);

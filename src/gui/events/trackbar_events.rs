@@ -32,7 +32,7 @@ impl TrackbarEvents {
 	where
 		F: Fn(wm::HScroll) -> AnyResult<()> + 'static,
 	{
-		let def_proc_val = self.0.is_dlg().def_proc_val();
+		let def_proc_val = self.0.wnd_ty().def_proc_val();
 		self.0.wm(co::WM::HSCROLL, move |p| {
 			func(unsafe { wm::HScroll::from_generic_wm(p) })?;
 			Ok(def_proc_val)
@@ -46,7 +46,7 @@ impl TrackbarEvents {
 	where
 		F: Fn(wm::VScroll) -> AnyResult<()> + 'static,
 	{
-		let def_proc_val = self.0.is_dlg().def_proc_val();
+		let def_proc_val = self.0.wnd_ty().def_proc_val();
 		self.0.wm(co::WM::VSCROLL, move |p| {
 			func(unsafe { wm::VScroll::from_generic_wm(p) })?;
 			Ok(def_proc_val)

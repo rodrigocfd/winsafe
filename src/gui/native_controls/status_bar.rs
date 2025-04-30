@@ -86,7 +86,7 @@ impl StatusBar {
 		parent
 			.as_ref()
 			.before_on()
-			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			.wm(parent.as_ref().wnd_ty().creation_msg(), move |_| {
 				let parent_style = parent2.hwnd().style();
 				let is_parent_resizable =
 					parent_style.has(co::WS::MAXIMIZEBOX) || parent_style.has(co::WS::SIZEBOX);

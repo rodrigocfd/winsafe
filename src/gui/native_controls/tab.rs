@@ -49,7 +49,7 @@ impl Tab {
 		parent
 			.as_ref()
 			.before_on()
-			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			.wm(parent.as_ref().wnd_ty().creation_msg(), move |_| {
 				self2.0.base.create_window(
 					opts.window_ex_style,
 					"SysTabControl32",

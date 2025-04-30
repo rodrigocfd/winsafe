@@ -34,7 +34,7 @@ impl RawControl {
 		parent
 			.as_ref()
 			.before_on()
-			.wm(parent.as_ref().is_dlg().create_msg(), move |_| {
+			.wm(parent.as_ref().wnd_ty().creation_msg(), move |_| {
 				let hinst = parent2.hwnd().hinstance();
 				let atom = self2.0.raw_base.register_class(
 					&hinst,

@@ -4,19 +4,19 @@ use crate::msg::*;
 use crate::prelude::*;
 
 /// Identifies whether a window is dialog-based.
-#[derive(Clone, Copy)]
-pub(in crate::gui) enum IsDlg {
-	Yes,
-	No,
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub(in crate::gui) enum WndTy {
+	Raw,
+	Dlg,
 }
 
-impl IsDlg {
+impl WndTy {
 	/// `WM_CREATE` for ordinary windows, `WM_INITDIALOG` for dialogs.
 	#[must_use]
-	pub(in crate::gui) const fn create_msg(&self) -> co::WM {
+	pub(in crate::gui) const fn creation_msg(&self) -> co::WM {
 		match self {
-			Self::Yes => co::WM::INITDIALOG,
-			Self::No => co::WM::CREATE,
+			Self::Raw => co::WM::CREATE,
+			Self::Dlg => co::WM::INITDIALOG,
 		}
 	}
 
@@ -24,8 +24,8 @@ impl IsDlg {
 	#[must_use]
 	pub(in crate::gui) const fn def_proc_val(&self) -> isize {
 		match self {
-			Self::Yes => 1, // TRUE
-			Self::No => 0,
+			Self::Raw => 0,
+			Self::Dlg => 1, // TRUE
 		}
 	}
 }

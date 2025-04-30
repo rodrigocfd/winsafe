@@ -12,7 +12,7 @@ struct ThreadPack {
 /// Base to `RawBase` and `DlgBase`, which means all container windows.
 pub(in crate::gui) struct BaseWnd {
 	hwnd: HWND,
-	is_dlg: IsDlg,
+	wnd_ty: WndTy,
 	layout: Layout,
 	before_events: WindowEvents,
 	user_events: WindowEvents,
@@ -23,22 +23,22 @@ impl BaseWnd {
 	const WM_UI_THREAD: co::WM = unsafe { co::WM::from_raw(co::WM::APP.raw() + 0x3fff) };
 
 	#[must_use]
-	pub(in crate::gui) fn new(is_dlg: IsDlg) -> Self {
+	pub(in crate::gui) fn new(wnd_ty: WndTy) -> Self {
 		let new_self = Self {
 			hwnd: HWND::NULL,
-			is_dlg,
+			wnd_ty,
 			layout: Layout::new(),
-			before_events: WindowEvents::new(is_dlg),
-			user_events: WindowEvents::new(is_dlg),
-			after_events: WindowEvents::new(is_dlg),
+			before_events: WindowEvents::new(wnd_ty),
+			user_events: WindowEvents::new(wnd_ty),
+			after_events: WindowEvents::new(wnd_ty),
 		};
 		new_self.default_message_handlers();
 		new_self
 	}
 
 	#[must_use]
-	pub(in crate::gui) const fn is_dlg(&self) -> IsDlg {
-		self.is_dlg
+	pub(in crate::gui) const fn wnd_ty(&self) -> WndTy {
+		self.wnd_ty
 	}
 	#[must_use]
 	pub(in crate::gui) const fn hwnd(&self) -> &HWND {
