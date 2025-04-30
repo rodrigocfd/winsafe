@@ -106,18 +106,10 @@ impl WindowEvents {
 
 		let msgs = unsafe { &*self.msgs.get() };
 		for stored_msg in msgs.iter().filter(|stored_msg| stored_msg.id == p.msg_id) {
-			if p.msg_id == co::WM::CREATE {
-				println!("IN {}", stored_msg.id);
-			}
-
 			if let Err(e) = (stored_msg.fun)(p) {
 				return Err(e); // stop on error
 			}
 			at_least_one = true;
-
-			if p.msg_id == co::WM::CREATE {
-				println!("OUT");
-			}
 		}
 
 		Ok(at_least_one)

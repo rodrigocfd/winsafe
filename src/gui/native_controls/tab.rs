@@ -130,9 +130,14 @@ impl Tab {
 
 		let self2 = self.clone();
 		parent.as_ref().after_on().wm_destroy(move || {
-			self2.image_list().map(|hil| {
-				let _ = unsafe { ImageListDestroyGuard::new(hil.raw_copy()) }; // destroy the image list, if any
-			});
+			unsafe {
+				self2.hwnd().SendMessage(tcm::GetImageList {}).map(|h| {
+					self2
+						.hwnd()
+						.SendMessage(tcm::SetImageList { himagelist: None }); // remove from control
+					let _ = ImageListDestroyGuard::new(h); // destroy
+				});
+			}
 			Ok(())
 		});
 	}
@@ -169,16 +174,28 @@ impl Tab {
 		Ok(())
 	}
 
-	/// Retrieves a reference to the associated image list by sending a
+	/// Retrieves one of the associated image lists by sending a
 	/// [`tcm::GetImageList`](crate::msg::tcm::GetImageList) message.
+	///
+	/// Image lists are lazy-initialized: the first time you call this method
+	/// for a given image list, it will be created and assigned with
+	/// [`tcm::SetImageList`](crate::msg::tcm::SetImageList).
 	///
 	/// The image list is owned by the control.
 	#[must_use]
-	pub fn image_list(&self) -> Option<&HIMAGELIST> {
-		unsafe { self.hwnd().SendMessage(tcm::GetImageList {}) }.map(|hil| {
-			let hil_ptr = &hil as *const HIMAGELIST;
-			unsafe { &*hil_ptr }
-		})
+	pub fn image_list(&self) -> HrResult<HIMAGELIST> {
+		match unsafe { self.hwnd().SendMessage(tcm::GetImageList {}) } {
+			Some(h) => Ok(h), // already created
+			None => {
+				// Not created yet. Create a new image list and assign it to the list view.
+				let h = HIMAGELIST::Create(SIZE::new(16, 16), co::ILC::COLOR32, 1, 1)?.leak();
+				unsafe {
+					self.hwnd()
+						.SendMessage(tcm::SetImageList { himagelist: Some(h.raw_copy()) });
+				}
+				Ok(h)
+			},
+		}
 	}
 
 	/// Item methods.
@@ -195,25 +212,6 @@ impl Tab {
 				mask: ex_style,
 				style: if set { ex_style } else { co::TCS_EX::NoValue },
 			});
-		}
-	}
-
-	/// Sets the associated image list by sending a
-	/// [`tcm::SetImageList`](crate::msg::tcm::SetImageList) message.
-	///
-	/// The image list will be owned by the control. Returns the previous one,
-	/// if any.
-	pub fn set_image_list(
-		&self,
-		himagelist: ImageListDestroyGuard,
-	) -> Option<ImageListDestroyGuard> {
-		let mut himagelist = himagelist;
-		let hil = himagelist.leak();
-
-		unsafe {
-			self.hwnd()
-				.SendMessage(tcm::SetImageList { himagelist: Some(hil) })
-				.map(|prev_hil| ImageListDestroyGuard::new(prev_hil))
 		}
 	}
 }

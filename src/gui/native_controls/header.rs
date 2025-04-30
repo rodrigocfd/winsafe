@@ -65,6 +65,7 @@ impl Header {
 				Ok(0) // ignored
 			});
 
+		new_self.default_message_handlers(parent);
 		new_self
 	}
 
@@ -98,6 +99,7 @@ impl Header {
 			Ok(true) // ignored
 		});
 
+		new_self.default_message_handlers(parent);
 		new_self
 	}
 
@@ -105,11 +107,14 @@ impl Header {
 	#[must_use]
 	pub(in crate::gui) fn from_list_view(parent: &(impl GuiParent + 'static)) -> Self {
 		let ctrl_id = auto_id::next();
-		Self(Arc::pin(HeaderObj {
+		let new_self = Self(Arc::pin(HeaderObj {
 			base: BaseCtrl::new(ctrl_id),
 			events: HeaderEvents::new(parent, ctrl_id),
 			_pin: PhantomPinned,
-		}))
+		}));
+
+		new_self.default_message_handlers(parent);
+		new_self
 	}
 
 	/// For the nested Header inside ListView.
@@ -126,42 +131,54 @@ impl Header {
 		}
 	}
 
-	/// Retrieves a reference to one of the associated image lists by sending an
+	fn default_message_handlers(&self, parent: &impl AsRef<BaseWnd>) {
+		let self2 = self.clone();
+		parent.as_ref().after_on().wm_destroy(move || {
+			[co::HDSIL::NORMAL, co::HDSIL::STATE]
+				.into_iter()
+				.for_each(|kind| unsafe {
+					self2
+						.hwnd()
+						.SendMessage(hdm::GetImageList { kind })
+						.map(|h| {
+							self2
+								.hwnd()
+								.SendMessage(hdm::SetImageList { himagelist: None, kind }); // remove from control
+							let _ = ImageListDestroyGuard::new(h); // destroy
+						});
+				});
+			Ok(())
+		});
+	}
+
+	/// Retrieves one of the associated image lists by sending an
 	/// [`hdm::GetImageList`](crate::msg::hdm::GetImageList) message.
+	///
+	/// Image lists are lazy-initialized: the first time you call this method
+	/// for a given image list, it will be created and assigned with
+	/// [`hdm::SetImageList`](crate::msg::hdm::SetImageList).
 	///
 	/// The image list is owned by the control.
 	#[must_use]
-	pub fn image_list(&self, kind: co::HDSIL) -> Option<&HIMAGELIST> {
-		unsafe { self.hwnd().SendMessage(hdm::GetImageList { kind }) }.map(|hil| {
-			let hil_ptr = &hil as *const HIMAGELIST;
-			unsafe { &*hil_ptr }
-		})
+	pub fn image_list(&self, kind: co::HDSIL) -> HrResult<HIMAGELIST> {
+		match unsafe { self.hwnd().SendMessage(hdm::GetImageList { kind }) } {
+			Some(h) => Ok(h), // already created
+			None => {
+				// Not created yet. Create a new image list and assign it to the list view.
+				let h = HIMAGELIST::Create(SIZE::new(16, 16), co::ILC::COLOR32, 1, 1)?.leak();
+				unsafe {
+					self.hwnd()
+						.SendMessage(hdm::SetImageList { himagelist: Some(h.raw_copy()), kind });
+				}
+				Ok(h)
+			},
+		}
 	}
 
 	/// Item methods.
 	#[must_use]
 	pub const fn items(&self) -> HeaderItems<'_> {
 		HeaderItems::new(self)
-	}
-
-	/// Sets the one of the associated image lists by sending an
-	/// [`hdm::SetImageList`](crate::msg::hdm::SetImageList) message.
-	///
-	/// The image list will be owned by the control. Returns the previous one,
-	/// if any.
-	pub fn set_image_list(
-		&self,
-		kind: co::HDSIL,
-		himagelist: ImageListDestroyGuard,
-	) -> Option<ImageListDestroyGuard> {
-		let mut himagelist = himagelist;
-		let hil = himagelist.leak();
-
-		unsafe {
-			self.hwnd()
-				.SendMessage(hdm::SetImageList { kind, himagelist: Some(hil) })
-				.map(|prev_hil| ImageListDestroyGuard::new(prev_hil))
-		}
 	}
 }
 
