@@ -1,5 +1,5 @@
 chain_width = 60
-edition = "2021"
+edition = "2024"
 hard_tabs = true
 match_block_trailing_comma = true
 struct_lit_width = 40

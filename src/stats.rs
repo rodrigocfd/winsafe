@@ -36,40 +36,40 @@ impl std::fmt::Display for Stats {
 	}
 }
 
+/// Reads all files in the target directory and processes all the stats.
+///
+/// The callback is called after processing each file, to give a progressive
+/// feedback of the whole operation.
+pub fn gather<F>(target: &str, callback: F) -> w::SysResult<Stats>
+where
+	F: Fn(usize),
+{
+	let mut stats = Stats::default();
+
+	w::path::dir_walk(target)
+		.enumerate()
+		.try_for_each(|(idx, path)| {
+			let path = path?;
+			if w::path::has_extension(&path, &[".rs"]) && !path.ends_with("lib.rs") {
+				let contents = {
+					let f = w::FileMapped::open(&path, w::FileAccess::ExistingReadOnly)?;
+					w::WString::parse(f.as_slice())?.to_string()
+				};
+				stats.count_ffis(&contents, &path);
+				stats.count_structs(&contents);
+				stats.count_consts(&contents);
+				stats.count_wmsgs(&contents);
+				stats.count_handles(&contents);
+				stats.count_com(&contents, &path);
+				callback(idx); // pass the zero-based index of the file that has been processed
+			}
+			Ok(())
+		})?;
+
+	Ok(stats)
+}
+
 impl Stats {
-	/// Reads all files in the target directory and processes all the stats.
-	///
-	/// The callback is called after processing each file, to give a progressive
-	/// feedback of the whole operation.
-	pub fn gather<F>(target: &str, callback: F) -> w::SysResult<Self>
-	where
-		F: Fn(usize),
-	{
-		let mut new_self = Self::default();
-
-		w::path::dir_walk(target)
-			.enumerate()
-			.try_for_each(|(idx, path)| {
-				let path = path?;
-				if w::path::has_extension(&path, &[".rs"]) && !path.ends_with("lib.rs") {
-					let contents = {
-						let f = w::FileMapped::open(&path, w::FileAccess::ExistingReadOnly)?;
-						w::WString::parse(f.as_slice())?.to_string()
-					};
-					new_self.count_ffis(&contents, &path);
-					new_self.count_structs(&contents);
-					new_self.count_consts(&contents);
-					new_self.count_wmsgs(&contents);
-					new_self.count_handles(&contents);
-					new_self.count_com(&contents, &path);
-					callback(idx); // pass the zero-based index of the file that has been processed
-				}
-				Ok(())
-			})?;
-
-		Ok(new_self)
-	}
-
 	fn count_ffis(&mut self, contents: &str, path: &str) {
 		if let Some(file_name) = w::path::get_file_name(path) {
 			if file_name != "ffi.rs" {

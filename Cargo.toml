@@ -3,7 +3,7 @@ name = "winsafe-stats"
 description = "Computes WinSafe library stats."
 version = "1.0.0"
 authors = ["Rodrigo Cesar de Freitas Dias <rcesar@gmail.com>"]
-edition = "2021"
+edition = "2024"
 
 [profile.release]
 lto = true

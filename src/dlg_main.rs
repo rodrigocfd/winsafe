@@ -1,7 +1,7 @@
 use std::rc::Rc;
 use winsafe::{self as w, co, gui, msg, prelude::*};
 
-use crate::{ids, stats::Stats};
+use crate::{ids, stats};
 
 #[derive(Clone)]
 pub struct DlgMain {
@@ -65,7 +65,7 @@ impl DlgMain {
 		self.wnd
 			.on()
 			.wm_command_accel_menu(co::DLGID::CANCEL, move || {
-				self2.wnd.close();
+				self2.wnd.close(); // close window on Esc
 				Ok(())
 			});
 
@@ -98,23 +98,16 @@ impl DlgMain {
 			self2.pro_load.set_range(0, total_files_count as _); // setup progress bar
 			self2.pro_load.set_position(0);
 
+			let titlebar_text = self2.wnd.hwnd().GetWindowText()?;
 			self2.wnd.hwnd().SetWindowText(&format!(
 				"{} - {} files",
-				self2
-					.wnd
-					.hwnd()
-					.GetWindowText()?
-					.split('-')
-					.next()
-					.unwrap()
-					.trim_end(), // get app name from titlebar
-				self2.pro_load.range().1
+				titlebar_text.split('-').next().unwrap().trim_end(),
+				self2.pro_load.range().1,
 			))?;
 
 			let self3 = self2.clone();
-			let stats = Stats::gather(&target_dir, move |pass_idx| {
-				// process the files
-				self3.pro_load.set_position(pass_idx as _);
+			let stats = stats::gather(&target_dir, move |pass_idx| {
+				self3.pro_load.set_position(pass_idx as _); // process the files
 			})?;
 
 			self2.txt_out.set_text(&stats.to_string())?;
