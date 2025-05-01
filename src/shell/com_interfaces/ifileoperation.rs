@@ -16,14 +16,31 @@ com_interface! { IFileOperation: "947aab5f-0a5c-4c13-b4d6-4bf7836fc9f8";
 	///
 	/// # Examples
 	///
+	/// Copying a file:
+	///
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*, co};
 	///
-	/// let fo = w::CoCreateInstance::<w::IFileOperation>(
+	/// let _com_guard =
+	///     w::CoInitializeEx(co::COINIT::APARTMENTTHREADED | co::COINIT::DISABLE_OLE1DDE)?;
+	///
+	/// let op = w::CoCreateInstance::<w::IFileOperation>(
 	///     &co::CLSID::FileOperation,
 	///     None,
-	///     co::CLSCTX::INPROC_SERVER,
+	///     co::CLSCTX::ALL,
 	/// )?;
+	///
+	/// let file = w::SHCreateItemFromParsingName::<w::IShellItem>(
+	///     "C:\\Temp\\foo.txt",
+	///     None::<&w::IBindCtx>,
+	/// )?;
+	/// let dest = w::SHCreateItemFromParsingName::<w::IShellItem>(
+	///     "C:\\Temp",
+	///     None::<&w::IBindCtx>,
+	/// )?;
+	///
+	/// op.CopyItem(&file, &dest, Some("new file.txt"), None)?;
+	/// op.PerformOperations()?;
 	/// # w::HrResult::Ok(())
 	/// ```
 }

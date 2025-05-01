@@ -68,6 +68,9 @@ const_ordinary! { CLSCTX: u32;
 	ACTIVATE_AAA_AS_IU 0x80_0000
 	/// (No official docs for this entry.)
 	ACTIVATE_ARM32_SERVER 0x200_0000
+
+	ALL Self::INPROC_SERVER.0 | Self::INPROC_HANDLER.0 | Self::LOCAL_SERVER.0 | Self::REMOTE_SERVER.0
+	SERVER Self::INPROC_SERVER.0 | Self::INPROC_HANDLER.0 | Self::LOCAL_SERVER.0
 }
 
 const_bitflag! { COINIT: u32;
