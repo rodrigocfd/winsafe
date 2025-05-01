@@ -278,6 +278,30 @@ where
 	.map(|_| queried)
 }
 
+/// [`SHCreateItemInKnownFolder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateiteminknownfolder)
+/// function.
+#[must_use]
+pub fn SHCreateItemInKnownFolder<T>(
+	folder_id: &co::KNOWNFOLDERID,
+	flags: co::KF,
+	item: &str,
+) -> HrResult<T>
+where
+	T: shell_IShellItem,
+{
+	let mut queried = unsafe { T::null() };
+	ok_to_hrresult(unsafe {
+		ffi::SHCreateItemInKnownFolder(
+			pcvoid(folder_id),
+			flags.raw(),
+			WString::from_str(item).as_ptr(),
+			pcvoid(&T::IID),
+			queried.as_mut(),
+		)
+	})
+	.map(|_| queried)
+}
+
 /// [`SHCreateShellItemArrayFromShellItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateshellitemarrayfromshellitem)
 /// function.
 #[must_use]
