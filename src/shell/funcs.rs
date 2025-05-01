@@ -246,7 +246,7 @@ where
 	ok_to_hrresult(unsafe {
 		ffi::SHCreateItemFromParsingName(
 			WString::from_str(file_or_folder_path).as_ptr(),
-			bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr() as _),
+			bind_ctx.map_or(std::ptr::null_mut(), |p| p.ptr()),
 			pcvoid(&T::IID),
 			queried.as_mut(),
 		)
@@ -270,7 +270,7 @@ where
 		ffi::SHCreateItemFromRelativeName(
 			parent.ptr(),
 			WString::from_str(name).as_ptr(),
-			bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr() as _),
+			bind_ctx.map_or(std::ptr::null_mut(), |p| p.ptr()),
 			pcvoid(&T::IID),
 			queried.as_mut(),
 		)

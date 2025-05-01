@@ -72,7 +72,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItemVT>(self).BindToHandler)(
 				self.ptr(),
-				bind_ctx.map_or(std::ptr::null_mut(), |i| i.ptr() as _),
+				bind_ctx.map_or(std::ptr::null_mut(), |p| p.ptr()),
 				pcvoid(bhid),
 				pcvoid(&T::IID),
 				queried.as_mut(),

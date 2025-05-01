@@ -20,12 +20,12 @@ com_interface_userdef! { IMFAsyncCallback, IMFAsyncCallbackImpl: "a27003cf-2354-
 }
 
 impl IMFAsyncCallback {
-	fn_com_userdef_closure! { GetParameters: Fn(&mut co::MFASYNC, &mut u32) -> AnyResult<()>;
+	fn_com_interface_userdef_event! { GetParameters: Fn(&mut co::MFASYNC, &mut u32) -> AnyResult<()>;
 		/// [`IMFAsyncCallback::GetParameters`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasynccallback-getparameters)
 		/// method.
 	}
 
-	fn_com_userdef_closure! { Invoke: Fn(&IMFAsyncResult) -> AnyResult<()>;
+	fn_com_interface_userdef_event! { Invoke: Fn(&IMFAsyncResult) -> AnyResult<()>;
 		/// [`IMFAsyncCallback::Invoke`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasynccallback-invoke)
 		/// method.
 	}
@@ -40,7 +40,8 @@ pub struct IMFAsyncCallbackImpl {
 }
 
 impl IMFAsyncCallbackImpl {
-	fn new() -> Self {
+	#[must_use]
+	const fn new() -> Self {
 		Self {
 			vt: IMFAsyncCallbackVT {
 				IUnknownVT: IUnknownVT {
@@ -57,7 +58,7 @@ impl IMFAsyncCallbackImpl {
 		}
 	}
 
-	com_interface_userdef_iunknown_methods!(Self);
+	fn_com_interface_userdef_iunknown_impls!(Self);
 
 	fn GetParameters(p: COMPTR, pdwFlags: *mut u32, pdwQueue: *mut u32) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);

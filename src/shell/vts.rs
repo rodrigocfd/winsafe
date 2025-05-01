@@ -60,6 +60,52 @@ pub struct IFileOpenDialogVT {
 }
 
 #[repr(C)]
+pub struct IFileOperationProgressSinkVT {
+	pub IUnknownVT: IUnknownVT,
+	pub StartOperations: fn(COMPTR) -> HRES,
+	pub FinishOperations: fn(COMPTR, HRES) -> HRES,
+	pub PreRenameItem: fn(COMPTR, u32, COMPTR, PCSTR) -> HRES,
+	pub PostRenameItem: fn(COMPTR, u32, COMPTR, PCSTR, HRES, COMPTR) -> HRES,
+	pub PreMoveItem: fn(COMPTR, u32, COMPTR, COMPTR, PCSTR) -> HRES,
+	pub PostMoveItem: fn(COMPTR, u32, COMPTR, COMPTR, PCSTR, HRES, COMPTR) -> HRES,
+	pub PreCopyItem: fn(COMPTR, u32, COMPTR, COMPTR, PCSTR) -> HRES,
+	pub PostCopyItem: fn(COMPTR, u32, COMPTR, COMPTR, PCSTR, HRES, COMPTR) -> HRES,
+	pub PreDeleteItem: fn(COMPTR, u32, COMPTR) -> HRES,
+	pub PostDeleteItem: fn(COMPTR, u32, COMPTR, HRES, COMPTR) -> HRES,
+	pub PreNewItem: fn(COMPTR, u32, COMPTR, PCSTR) -> HRES,
+	pub PostNewItem: fn(COMPTR, u32, COMPTR, PCSTR, PCSTR, u32, HRES, COMPTR) -> HRES,
+	pub UpdateProgress: fn(COMPTR, u32, u32) -> HRES,
+	pub ResetTimer: fn(COMPTR) -> HRES,
+	pub PauseTimer: fn(COMPTR) -> HRES,
+	pub ResumeTimer: fn(COMPTR) -> HRES,
+}
+
+#[repr(C)]
+pub struct IFileOperationVT {
+	pub IUnknownVT: IUnknownVT,
+	pub Advise: fn(COMPTR, COMPTR, *mut u32) -> HRES,
+	pub Unadvise: fn(COMPTR, u32) -> HRES,
+	pub SetOperationFlags: fn(COMPTR, u32) -> HRES,
+	pub SetProgressMessage: fn(COMPTR, PCSTR) -> HRES,
+	pub SetProgressDialog: fn(COMPTR, COMPTR) -> HRES,
+	pub SetProperties: fn(COMPTR, COMPTR) -> HRES,
+	pub SetOwnerWindow: fn(COMPTR, HANDLE) -> HRES,
+	pub ApplyPropertiesToItem: fn(COMPTR, COMPTR) -> HRES,
+	pub ApplyPropertiesToItems: fn(COMPTR, COMPTR) -> HRES,
+	pub RenameItem: fn(COMPTR, COMPTR, PCSTR, COMPTR) -> HRES,
+	pub RenameItems: fn(COMPTR, COMPTR, PCSTR) -> HRES,
+	pub MoveItem: fn(COMPTR, COMPTR, COMPTR, PCSTR, COMPTR) -> HRES,
+	pub MoveItems: fn(COMPTR, COMPTR, COMPTR) -> HRES,
+	pub CopyItem: fn(COMPTR, COMPTR, COMPTR, PCSTR, COMPTR) -> HRES,
+	pub CopyItems: fn(COMPTR, COMPTR, COMPTR) -> HRES,
+	pub DeleteItem: fn(COMPTR, COMPTR, COMPTR) -> HRES,
+	pub DeleteItems: fn(COMPTR, COMPTR) -> HRES,
+	pub NewItem: fn(COMPTR, COMPTR, u32, PCSTR, PCSTR, COMPTR) -> HRES,
+	pub PerformOperations: fn(COMPTR) -> HRES,
+	pub GetAnyOperationsAborted: fn(COMPTR, *mut BOOL) -> HRES,
+}
+
+#[repr(C)]
 pub struct IFileSaveDialogVT {
 	pub IFileDialogVT: IFileDialogVT,
 	pub SetSaveAsItem: fn(COMPTR, COMPTR) -> HRES,

@@ -568,3 +568,23 @@ const_ordinary! { TBPF: u32;
 	/// generic percentage not indicative of actual progress.
 	PAUSED 0x8
 }
+
+const_bitflag! { TSF: u32;
+	/// [`_TRANSFER_SOURCE_FLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_transfer_source_flags)
+	/// enumeration (`u32`).
+	=>
+	NORMAL 0
+	FAIL_EXIST 0
+	RENAME_EXIST 0x1
+	OVERWRITE_EXIST 0x2
+	ALLOW_DECRYPTION 0x4
+	NO_SECURITY 0x8
+	COPY_CREATION_TIME 0x10
+	COPY_WRITE_TIME 0x20
+	USE_FULL_ACCESS 0x40
+	DELETE_RECYCLE_IF_POSSIBLE 0x80
+	COPY_HARD_LINK 0x100
+	COPY_LOCALIZED_NAME 0x200
+	MOVE_AS_COPY_DELETE 0x400
+	SUSPEND_SHELLEVENTS 0x800
+}

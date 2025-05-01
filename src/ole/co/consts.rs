@@ -46,7 +46,7 @@ const_ordinary! { CLSCTX: u32;
 	/// `CLSCTX::NO_CODE_DOWNLOAD`.
 	ENABLE_CODE_DOWNLOAD 0x2000
 	/// The `CLSCTX::NO_FAILURE_LOG` can be used to override the logging of
-	/// failures in [`CoCreateInstanceEx`](crate::CoCreateInstanceEx).
+	/// failures in `CoCreateInstanceEx`.
 	NO_FAILURE_LOG 0x4000
 	/// Disables activate-as-activator (AAA) activations for this activation only.
 	DISABLE_AAA 0x8000

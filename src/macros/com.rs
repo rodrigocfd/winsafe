@@ -108,18 +108,40 @@ macro_rules! com_interface_userdef {
 	};
 }
 
+/// Implements a function which stores a callback to an user-defined COM
+/// implementation.
+macro_rules! fn_com_interface_userdef_event {
+	(
+		$method:ident: $fun: path;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		pub fn $method<F>(&self, func: F) -> &Self
+			where F: $fun + 'static,
+		{
+			let mut box_impl = std::mem::ManuallyDrop::new(unsafe { Box::from_raw(self.0) });
+			box_impl.$method = Some(Box::new(func));
+			self
+		}
+	};
+}
+
 /// Declares the static `QueryInterface`, `AddRef` and `Release` methods for an
 /// user-defined COM interface implementation.
-macro_rules! com_interface_userdef_iunknown_methods {
+macro_rules! fn_com_interface_userdef_iunknown_impls {
 	($impl:ident) => {
-		fn QueryInterface(_p: COMPTR, _riid: PCVOID, ppv: *mut COMPTR) -> HRES {
+		fn QueryInterface(
+			_p: crate::kernel::ffi_types::COMPTR,
+			_riid: crate::kernel::ffi_types::PCVOID,
+			ppv: *mut crate::kernel::ffi_types::COMPTR,
+		) -> crate::kernel::ffi_types::HRES {
 			unsafe {
 				*ppv = std::ptr::null_mut();
 			}
-			co::HRESULT::E_NOTIMPL.raw()
+			crate::co::HRESULT::E_NOTIMPL.raw()
 		}
 
-		fn AddRef(p: COMPTR) -> u32 {
+		fn AddRef(p: crate::kernel::ffi_types::COMPTR) -> u32 {
 			let box_impl = box_impl_of::<Self>(p);
 			let cc = box_impl
 				.counter
@@ -128,7 +150,7 @@ macro_rules! com_interface_userdef_iunknown_methods {
 			cc
 		}
 
-		fn Release(p: COMPTR) -> u32 {
+		fn Release(p: crate::kernel::ffi_types::COMPTR) -> u32 {
 			let mut box_impl = box_impl_of::<Self>(p);
 			let count = box_impl
 				.counter
@@ -140,6 +162,20 @@ macro_rules! com_interface_userdef_iunknown_methods {
 				}
 			}
 			count
+		}
+	};
+}
+
+/// Declares a zero-parameter static method for an user-defined COM interface
+/// implementation.
+macro_rules! fn_com_interface_userdef_impl_noparm {
+	($name:ident) => {
+		fn $name(p: crate::kernel::ffi_types::COMPTR) -> crate::kernel::ffi_types::HRES {
+			let box_impl = crate::ole::privs::box_impl_of::<Self>(p);
+			crate::ole::privs::hrresult_to_hres(match &box_impl.$name {
+				Some(func) => crate::ole::privs::anyresult_to_hresult(func()),
+				None => Ok(()),
+			})
 		}
 	};
 }
@@ -302,24 +338,6 @@ macro_rules! fn_com_bstr_set {
 					)
 				},
 			)
-		}
-	};
-}
-
-/// Implements a function which stores a callback to an user-defined COM
-/// implementation.
-macro_rules! fn_com_userdef_closure {
-	(
-		$method:ident: $fun: path;
-		$( #[$doc:meta] )*
-	) => {
-		$( #[$doc] )*
-		pub fn $method<F>(&self, func: F) -> &Self
-			where F: $fun + 'static,
-		{
-			let mut box_impl = std::mem::ManuallyDrop::new(unsafe { Box::from_raw(self.0) });
-			box_impl.$method = Some(Box::new(func));
-			self
 		}
 	};
 }
