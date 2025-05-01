@@ -49,6 +49,98 @@ macro_rules! com_interface {
 	};
 }
 
+/// Implements a trait function with no parameters.
+macro_rules! fn_com_noparm {
+	(
+		$method:ident : $vt:ty;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		fn $method(&self) -> HrResult<()> {
+			crate::ole::privs::ok_to_hrresult(
+				unsafe {
+					(crate::ole::privs::vt::<$vt>(self).$method)(self.ptr())
+				},
+			)
+		}
+	};
+}
+
+/// Implements a trait function with no parameters and no return.
+macro_rules! fn_com_noparm_noret {
+	(
+		$method:ident : $vt:ty;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		fn $method(&self) {
+			unsafe { (crate::ole::privs::vt::<$vt>(self).$method)(self.ptr()); }
+		}
+	};
+}
+
+/// Implements a trait function for a COM interface getter, no parameters.
+macro_rules! fn_com_interface_get {
+	(
+		$method:ident : $vt:ty, $iface:ty;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		#[must_use]
+		fn $method(&self) -> HrResult<$iface> {
+			use crate::prelude::ole_IUnknown;
+			let mut queried = unsafe { <$iface>::null() };
+			crate::ole::privs::ok_to_hrresult(
+				unsafe {
+					(crate::ole::privs::vt::<$vt>(self).$method)(self.ptr(), queried.as_mut())
+				},
+			).map(|_| queried)
+		}
+	};
+}
+
+/// Implements a trait function for a BSTR getter, no parameters.
+macro_rules! fn_com_bstr_get {
+	(
+		$method:ident : $vt:ty;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		#[must_use]
+		fn $method(&self) -> HrResult<String> {
+			let mut pstr = std::ptr::null_mut::<u16>();
+			crate::ole::privs::ok_to_hrresult(
+				unsafe {
+					(crate::ole::privs::vt::<$vt>(self).$method)(self.ptr(), &mut pstr)
+				},
+			).map(|_| {
+				let bstr = unsafe { crate::oleaut::decl::BSTR::from_ptr(pstr) };
+				bstr.to_string()
+			})
+		}
+	};
+}
+
+/// Implements a trait function for a BSTR setter, single parameter.
+macro_rules! fn_com_bstr_set {
+	(
+		$method:ident : $vt:ty, $arg:ident;
+		$( #[$doc:meta] )*
+	) => {
+		$( #[$doc] )*
+		fn $method(&self, $arg: &str) -> HrResult<()> {
+			crate::ole::privs::ok_to_hrresult(
+				unsafe {
+					(crate::ole::privs::vt::<$vt>(self).$method)(
+						self.ptr(),
+						crate::oleaut::decl::BSTR::SysAllocString($arg)?.as_ptr(),
+					)
+				},
+			)
+		}
+	};
+}
+
 /// Declares an user-defined COM interface implementation, and implements
 /// ole_IUnknown trait.
 macro_rules! com_interface_userdef {
@@ -180,20 +272,6 @@ macro_rules! fn_com_interface_userdef_impl_noparm {
 	};
 }
 
-/// Creates multiple `GUID`-derived pub const values.
-macro_rules! const_guid_values {
-	(
-		$name:ident;
-		$( $pubname:ident $guid:expr )*
-	) => {
-		impl $name {
-			$(
-				pub const $pubname: $name = unsafe { $name::from_raw($guid) };
-			)*
-		}
-	};
-}
-
 /// Declares the type of a `GUID`-derived constant, along with public values.
 macro_rules! const_guid {
 	(
@@ -250,94 +328,16 @@ macro_rules! const_guid {
 	};
 }
 
-/// Implements a trait function with no parameters.
-macro_rules! fn_com_noparm {
+/// Creates multiple `GUID`-derived pub const values.
+macro_rules! const_guid_values {
 	(
-		$method:ident : $vt:ty;
-		$( #[$doc:meta] )*
+		$name:ident;
+		$( $pubname:ident $guid:expr )*
 	) => {
-		$( #[$doc] )*
-		fn $method(&self) -> HrResult<()> {
-			crate::ole::privs::ok_to_hrresult(
-				unsafe {
-					(crate::ole::privs::vt::<$vt>(self).$method)(self.ptr())
-				},
-			)
-		}
-	};
-}
-
-/// Implements a trait function with no parameters and no return.
-macro_rules! fn_com_noparm_noret {
-	(
-		$method:ident : $vt:ty;
-		$( #[$doc:meta] )*
-	) => {
-		$( #[$doc] )*
-		fn $method(&self) {
-			unsafe { (crate::ole::privs::vt::<$vt>(self).$method)(self.ptr()); }
-		}
-	};
-}
-
-/// Implements a trait function for a COM interface getter, no parameters.
-macro_rules! fn_com_interface_get {
-	(
-		$method:ident : $vt:ty, $iface:ty;
-		$( #[$doc:meta] )*
-	) => {
-		$( #[$doc] )*
-		#[must_use]
-		fn $method(&self) -> HrResult<$iface> {
-			use crate::prelude::ole_IUnknown;
-			let mut queried = unsafe { <$iface>::null() };
-			crate::ole::privs::ok_to_hrresult(
-				unsafe {
-					(crate::ole::privs::vt::<$vt>(self).$method)(self.ptr(), queried.as_mut())
-				},
-			).map(|_| queried)
-		}
-	};
-}
-
-/// Implements a trait function for a BSTR getter, no parameters.
-macro_rules! fn_com_bstr_get {
-	(
-		$method:ident : $vt:ty;
-		$( #[$doc:meta] )*
-	) => {
-		$( #[$doc] )*
-		#[must_use]
-		fn $method(&self) -> HrResult<String> {
-			let mut pstr = std::ptr::null_mut::<u16>();
-			crate::ole::privs::ok_to_hrresult(
-				unsafe {
-					(crate::ole::privs::vt::<$vt>(self).$method)(self.ptr(), &mut pstr)
-				},
-			).map(|_| {
-				let bstr = unsafe { crate::oleaut::decl::BSTR::from_ptr(pstr) };
-				bstr.to_string()
-			})
-		}
-	};
-}
-
-/// Implements a trait function for a BSTR setter, single parameter.
-macro_rules! fn_com_bstr_set {
-	(
-		$method:ident : $vt:ty, $arg:ident;
-		$( #[$doc:meta] )*
-	) => {
-		$( #[$doc] )*
-		fn $method(&self, $arg: &str) -> HrResult<()> {
-			crate::ole::privs::ok_to_hrresult(
-				unsafe {
-					(crate::ole::privs::vt::<$vt>(self).$method)(
-						self.ptr(),
-						crate::oleaut::decl::BSTR::SysAllocString($arg)?.as_ptr(),
-					)
-				},
-			)
+		impl $name {
+			$(
+				pub const $pubname: $name = unsafe { $name::from_raw($guid) };
+			)*
 		}
 	};
 }
