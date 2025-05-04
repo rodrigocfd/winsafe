@@ -7,30 +7,32 @@
 <a href=#7 id=7 data-nosnippet>7</a>	DragQueryFileW(HANDLE, u32, PSTR, u32) -&gt; u32
 <a href=#8 id=8 data-nosnippet>8</a>	DragQueryPoint(HANDLE, PVOID) -&gt; BOOL
 <a href=#9 id=9 data-nosnippet>9</a>	SHAddToRecentDocs(u32, PCVOID)
-<a href=#10 id=10 data-nosnippet>10</a>	SHCreateItemFromParsingName(PCSTR, PVOID, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES
-<a href=#11 id=11 data-nosnippet>11</a>	SHCreateItemFromRelativeName(COMPTR, PCSTR, COMPTR, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES
-<a href=#12 id=12 data-nosnippet>12</a>	SHCreateItemInKnownFolder(PCVOID, u32, PCSTR, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES
-<a href=#13 id=13 data-nosnippet>13</a>	SHCreateShellItemArrayFromShellItem(COMPTR, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES
-<a href=#14 id=14 data-nosnippet>14</a>	Shell_NotifyIconW(u32, PCVOID) -&gt; BOOL
-<a href=#15 id=15 data-nosnippet>15</a>	ShellAboutW(HANDLE, PCSTR, PCSTR, HANDLE) -&gt; i32
-<a href=#16 id=16 data-nosnippet>16</a>	ShellExecuteW(HANDLE, PCSTR, PCSTR, PCSTR, PCSTR, i32) -&gt; HANDLE
-<a href=#17 id=17 data-nosnippet>17</a>	SHFileOperationW(PVOID) -&gt; i32
-<a href=#18 id=18 data-nosnippet>18</a>	SHGetFileInfoW(PCSTR, u32, PVOID, u32, u32) -&gt; usize
-<a href=#19 id=19 data-nosnippet>19</a>	SHGetStockIconInfo(u32, u32, PVOID) -&gt; HRES
-<a href=#20 id=20 data-nosnippet>20</a>}
-<a href=#21 id=21 data-nosnippet>21</a>
-<a href=#22 id=22 data-nosnippet>22</a><span class="macro">extern_sys!</span> { <span class="string">"shlwapi"</span>;
-<a href=#23 id=23 data-nosnippet>23</a>	PathCombineW(PSTR, PCSTR, PCSTR) -&gt; PSTR
-<a href=#24 id=24 data-nosnippet>24</a>	PathCommonPrefixW(PCSTR, PCSTR, PSTR) -&gt; i32
-<a href=#25 id=25 data-nosnippet>25</a>	PathSkipRootW(PCSTR) -&gt; PCSTR
-<a href=#26 id=26 data-nosnippet>26</a>	PathStripPathW(PSTR)
-<a href=#27 id=27 data-nosnippet>27</a>	PathUndecorateW(PSTR)
-<a href=#28 id=28 data-nosnippet>28</a>	PathUnquoteSpacesW(PSTR) -&gt; BOOL
-<a href=#29 id=29 data-nosnippet>29</a>	SHCreateMemStream(<span class="kw-2">*const </span>u8, u32) -&gt; COMPTR
-<a href=#30 id=30 data-nosnippet>30</a>}
-<a href=#31 id=31 data-nosnippet>31</a>
-<a href=#32 id=32 data-nosnippet>32</a><span class="macro">extern_sys!</span> { <span class="string">"userenv"</span>;
-<a href=#33 id=33 data-nosnippet>33</a>	GetAllUsersProfileDirectoryW(PSTR, <span class="kw-2">*mut </span>u32) -&gt; BOOL
-<a href=#34 id=34 data-nosnippet>34</a>	GetDefaultUserProfileDirectoryW(PSTR, <span class="kw-2">*mut </span>u32) -&gt; BOOL
-<a href=#35 id=35 data-nosnippet>35</a>	GetProfilesDirectoryW(PSTR, <span class="kw-2">*mut </span>u32) -&gt; BOOL
-<a href=#36 id=36 data-nosnippet>36</a>}</code></pre></div></section></main></body></html>
+<a href=#10 id=10 data-nosnippet>10</a>	SHCreateItemFromIDList(PCVOID, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES
+<a href=#11 id=11 data-nosnippet>11</a>	SHCreateItemFromParsingName(PCSTR, PVOID, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES
+<a href=#12 id=12 data-nosnippet>12</a>	SHCreateItemFromRelativeName(COMPTR, PCSTR, COMPTR, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES
+<a href=#13 id=13 data-nosnippet>13</a>	SHCreateItemInKnownFolder(PCVOID, u32, PCSTR, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES
+<a href=#14 id=14 data-nosnippet>14</a>	SHCreateShellItemArrayFromShellItem(COMPTR, PCVOID, <span class="kw-2">*mut </span>COMPTR) -&gt; HRES
+<a href=#15 id=15 data-nosnippet>15</a>	Shell_NotifyIconW(u32, PCVOID) -&gt; BOOL
+<a href=#16 id=16 data-nosnippet>16</a>	ShellAboutW(HANDLE, PCSTR, PCSTR, HANDLE) -&gt; i32
+<a href=#17 id=17 data-nosnippet>17</a>	ShellExecuteW(HANDLE, PCSTR, PCSTR, PCSTR, PCSTR, i32) -&gt; HANDLE
+<a href=#18 id=18 data-nosnippet>18</a>	SHFileOperationW(PVOID) -&gt; i32
+<a href=#19 id=19 data-nosnippet>19</a>	SHGetFileInfoW(PCSTR, u32, PVOID, u32, u32) -&gt; usize
+<a href=#20 id=20 data-nosnippet>20</a>	SHGetIDListFromObject(COMPTR, PVOID) -&gt; HRES
+<a href=#21 id=21 data-nosnippet>21</a>	SHGetStockIconInfo(u32, u32, PVOID) -&gt; HRES
+<a href=#22 id=22 data-nosnippet>22</a>}
+<a href=#23 id=23 data-nosnippet>23</a>
+<a href=#24 id=24 data-nosnippet>24</a><span class="macro">extern_sys!</span> { <span class="string">"shlwapi"</span>;
+<a href=#25 id=25 data-nosnippet>25</a>	PathCombineW(PSTR, PCSTR, PCSTR) -&gt; PSTR
+<a href=#26 id=26 data-nosnippet>26</a>	PathCommonPrefixW(PCSTR, PCSTR, PSTR) -&gt; i32
+<a href=#27 id=27 data-nosnippet>27</a>	PathSkipRootW(PCSTR) -&gt; PCSTR
+<a href=#28 id=28 data-nosnippet>28</a>	PathStripPathW(PSTR)
+<a href=#29 id=29 data-nosnippet>29</a>	PathUndecorateW(PSTR)
+<a href=#30 id=30 data-nosnippet>30</a>	PathUnquoteSpacesW(PSTR) -&gt; BOOL
+<a href=#31 id=31 data-nosnippet>31</a>	SHCreateMemStream(<span class="kw-2">*const </span>u8, u32) -&gt; COMPTR
+<a href=#32 id=32 data-nosnippet>32</a>}
+<a href=#33 id=33 data-nosnippet>33</a>
+<a href=#34 id=34 data-nosnippet>34</a><span class="macro">extern_sys!</span> { <span class="string">"userenv"</span>;
+<a href=#35 id=35 data-nosnippet>35</a>	GetAllUsersProfileDirectoryW(PSTR, <span class="kw-2">*mut </span>u32) -&gt; BOOL
+<a href=#36 id=36 data-nosnippet>36</a>	GetDefaultUserProfileDirectoryW(PSTR, <span class="kw-2">*mut </span>u32) -&gt; BOOL
+<a href=#37 id=37 data-nosnippet>37</a>	GetProfilesDirectoryW(PSTR, <span class="kw-2">*mut </span>u32) -&gt; BOOL
+<a href=#38 id=38 data-nosnippet>38</a>}</code></pre></div></section></main></body></html>
