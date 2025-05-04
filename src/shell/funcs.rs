@@ -220,6 +220,24 @@ pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
 	ffi::SHAddToRecentDocs(flags.raw(), pcvoid(pv));
 }
 
+/// [`SHCreateItemFromIDList`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromidlist)
+/// function.
+///
+/// # Related functions
+///
+/// * [`SHGetIDListFromObject`](crate::SHGetIDListFromObject)
+#[must_use]
+pub fn SHCreateItemFromIDList<T>(pidl: &PIDLIST_ABSOLUTE) -> HrResult<T>
+where
+	T: shell_IShellItem,
+{
+	let mut queried = unsafe { T::null() };
+	ok_to_hrresult(unsafe {
+		ffi::SHCreateItemFromIDList(pidl.0 as _, pcvoid(&T::IID), queried.as_mut())
+	})
+	.map(|_| queried)
+}
+
 /// [`SHCreateItemFromParsingName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromparsingname)
 /// function.
 ///
@@ -340,6 +358,18 @@ pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
 	} else {
 		Ok(unsafe { IStream::from_ptr(p) })
 	}
+}
+
+/// [`SHGetIDListFromObject`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shgetidlistfromobject)
+/// function.
+///
+/// # Related functions
+///
+/// * [`SHCreateItemFromIDList`](crate::SHCreateItemFromIDList)
+#[must_use]
+pub fn SHGetIDListFromObject(obj: &impl ole_IUnknown) -> HrResult<PIDLIST_ABSOLUTE> {
+	let mut pidl = PIDLIST_ABSOLUTE(std::ptr::null_mut());
+	ok_to_hrresult(unsafe { ffi::SHGetIDListFromObject(obj.ptr(), pvoid(&mut pidl)) }).map(|_| pidl)
 }
 
 /// [`Shell_NotifyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)

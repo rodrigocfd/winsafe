@@ -7,6 +7,7 @@ extern_sys! { "shell32";
 	DragQueryFileW(HANDLE, u32, PSTR, u32) -> u32
 	DragQueryPoint(HANDLE, PVOID) -> BOOL
 	SHAddToRecentDocs(u32, PCVOID)
+	SHCreateItemFromIDList(PCVOID, PCVOID, *mut COMPTR) -> HRES
 	SHCreateItemFromParsingName(PCSTR, PVOID, PCVOID, *mut COMPTR) -> HRES
 	SHCreateItemFromRelativeName(COMPTR, PCSTR, COMPTR, PCVOID, *mut COMPTR) -> HRES
 	SHCreateItemInKnownFolder(PCVOID, u32, PCSTR, PCVOID, *mut COMPTR) -> HRES
@@ -16,6 +17,7 @@ extern_sys! { "shell32";
 	ShellExecuteW(HANDLE, PCSTR, PCSTR, PCSTR, PCSTR, i32) -> HANDLE
 	SHFileOperationW(PVOID) -> i32
 	SHGetFileInfoW(PCSTR, u32, PVOID, u32, u32) -> usize
+	SHGetIDListFromObject(COMPTR, PVOID) -> HRES
 	SHGetStockIconInfo(u32, u32, PVOID) -> HRES
 }
 

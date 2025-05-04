@@ -24,6 +24,13 @@ impl<'a, 'b> COMDLG_FILTERSPEC<'a, 'b> {
 	pub_fn_string_ptr_get_set!('b, pszSpec, set_pszSpec);
 }
 
+/// [`ITEMIDLIST`](https://learn.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-itemidlist)
+/// struct.
+#[repr(C)]
+pub struct ITEMIDLIST {
+	pub mkid: SHITEMID,
+}
+
 /// [`NOTIFYICONDATA`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-notifyicondataw)
 /// struct.
 #[repr(C)]
@@ -52,6 +59,11 @@ impl NOTIFYICONDATA {
 	pub_fn_string_arr_get_set!(szInfo, set_szInfo);
 	pub_fn_string_arr_get_set!(szInfoTitle, set_szInfoTitle);
 }
+
+/// [`PIDLIST_ABSOLUTE`](https://learn.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-itemidlist)
+/// struct.
+#[repr(transparent)]
+pub struct PIDLIST_ABSOLUTE(pub(crate) *mut ITEMIDLIST);
 
 /// [`SHFILEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shfileinfow)
 /// struct.
@@ -123,6 +135,14 @@ impl<'a, 'b, 'c> SHFILEOPSTRUCT<'a, 'b, 'c> {
 	}
 
 	pub_fn_string_ptr_get_set!('c, lpszProgressTitle, set_lpszProgressTitle);
+}
+
+/// [`SHITEMID`](https://learn.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-shitemid)
+/// struct.
+#[repr(C, packed)]
+pub struct SHITEMID {
+	cb: u16,
+	abID: [u8; 1],
 }
 
 /// [`SHSTOCKICONINFO`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shstockiconinfo)

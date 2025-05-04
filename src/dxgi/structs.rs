@@ -164,7 +164,7 @@ impl DXGI_OUTPUT_DESC {
 	pub_fn_bool_get_set!(AttachedToDesktop, set_AttachedToDesktop);
 }
 
-/// [`DXGI_RATIONAL`](https://learn.microsoft.com/en-us/windows/win32/api/dxgicommon/ns-dxgicommon-dxgi_rational?redirectedfrom=MSDN)
+/// [`DXGI_RATIONAL`](https://learn.microsoft.com/en-us/windows/win32/api/dxgicommon/ns-dxgicommon-dxgi_rational)
 /// struct.
 #[repr(C)]
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
