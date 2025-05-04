@@ -1213,8 +1213,7 @@ const_bitflag! { STANDARD_RIGHTS: u32;
 }
 
 const_bitflag! { STARTF: u32;
-	/// [`HPROCESS::CreateProcess`](crate::prelude::kernel_Hprocess::CreateProcess)
-	/// `dwFlags` (`u32`).
+	/// [`CreateProcess`](crate::CreateProcess) `dwFlags` (`u32`).
 	=>
 	FORCEONFEEDBACK 0x0000_0040
 	FORCEOFFFEEDBACK 0x0000_0080
@@ -1529,8 +1528,8 @@ const_ordinary! { SW: i32;
 	RESTORE 9
 	/// Sets the show state based on the SW value specified in the
 	/// [`STARTUPINFO`](crate::STARTUPINFO) structure passed to the
-	/// [`HPROCESS::CreateProcess`](crate::prelude::kernel_Hprocess::CreateProcess)
-	/// function by the program that started the application.
+	/// [`CreateProcess`](crate::CreateProcess) function by the program that
+	/// started the application.
 	SHOWDEFAULT 10
 	/// Minimizes a window even if the thread that owns the window is not
 	/// responding. This flag should only be used when minimizing windows from a
