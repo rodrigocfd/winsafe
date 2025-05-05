@@ -249,7 +249,7 @@ impl WindowEvents {
 	///
 	/// const CTRL_ID: u16 = 1010;
 	///
-	/// wnd.on().wm_command_accel_menu(
+	/// wnd.on().wm_command_acc_menu(
 	///     CTRL_ID,
 	///     move || -> w::AnyResult<()> {
 	///         println!("Hello!");
@@ -257,7 +257,7 @@ impl WindowEvents {
 	///     },
 	/// );
 	/// ```
-	pub fn wm_command_accel_menu<F>(&self, ctrl_id: impl Into<u16> + Copy, func: F) -> &Self
+	pub fn wm_command_acc_menu<F>(&self, ctrl_id: impl Into<u16> + Copy, func: F) -> &Self
 	where
 		F: Fn() -> AnyResult<()> + 'static,
 	{
