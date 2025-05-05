@@ -155,76 +155,84 @@
 <a href=#155 id=155 data-nosnippet>155</a>		<span class="self">self</span>.hwnd().SetWindowText(text)<span class="question-mark">?</span>;
 <a href=#156 id=156 data-nosnippet>156</a>		<span class="prelude-val">Ok</span>(())
 <a href=#157 id=157 data-nosnippet>157</a>	}
-<a href=#158 id=158 data-nosnippet>158</a>}
-<a href=#159 id=159 data-nosnippet>159</a>
-<a href=#160 id=160 data-nosnippet>160</a><span class="doccomment">/// Options to create a [`RadioButton`](crate::gui::RadioButton)
-<a href=#161 id=161 data-nosnippet>161</a>/// programmatically with [`RadioGroup::new`](crate::gui::RadioGroup::new).
-<a href=#162 id=162 data-nosnippet>162</a></span><span class="attr">#[derive(Clone)]
-<a href=#163 id=163 data-nosnippet>163</a></span><span class="kw">pub struct </span>RadioButtonOpts {
-<a href=#164 id=164 data-nosnippet>164</a>	<span class="doccomment">/// Text of the control to be
-<a href=#165 id=165 data-nosnippet>165</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-<a href=#166 id=166 data-nosnippet>166</a>	///
-<a href=#167 id=167 data-nosnippet>167</a>	/// Defaults to empty string.
-<a href=#168 id=168 data-nosnippet>168</a>	</span><span class="kw">pub </span>text: String,
-<a href=#169 id=169 data-nosnippet>169</a>	<span class="doccomment">/// Left and top position coordinates of control within parent's client
-<a href=#170 id=170 data-nosnippet>170</a>	/// area, to be
-<a href=#171 id=171 data-nosnippet>171</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-<a href=#172 id=172 data-nosnippet>172</a>	///
-<a href=#173 id=173 data-nosnippet>173</a>	/// Defaults to `gui::dpi(0, 0)`.
-<a href=#174 id=174 data-nosnippet>174</a>	</span><span class="kw">pub </span>position: (i32, i32),
-<a href=#175 id=175 data-nosnippet>175</a>	<span class="doccomment">/// Width and height of control to be
-<a href=#176 id=176 data-nosnippet>176</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-<a href=#177 id=177 data-nosnippet>177</a>	///
-<a href=#178 id=178 data-nosnippet>178</a>	/// Defaults to the size needed to fit the text.
-<a href=#179 id=179 data-nosnippet>179</a>	</span><span class="kw">pub </span>size: (i32, i32),
-<a href=#180 id=180 data-nosnippet>180</a>	<span class="doccomment">/// Radio button styles to be
-<a href=#181 id=181 data-nosnippet>181</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-<a href=#182 id=182 data-nosnippet>182</a>	///
-<a href=#183 id=183 data-nosnippet>183</a>	/// Defaults to `BS::AUTORADIOBUTTON`.
-<a href=#184 id=184 data-nosnippet>184</a>	</span><span class="kw">pub </span>control_style: co::BS,
-<a href=#185 id=185 data-nosnippet>185</a>	<span class="doccomment">/// Window styles to be
-<a href=#186 id=186 data-nosnippet>186</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-<a href=#187 id=187 data-nosnippet>187</a>	///
-<a href=#188 id=188 data-nosnippet>188</a>	/// Defaults to `WS::CHILD | WS::VISIBLE`.
-<a href=#189 id=189 data-nosnippet>189</a>	///
-<a href=#190 id=190 data-nosnippet>190</a>	/// The first RadioButton of a group will also have `WS::TABSTOP |
-<a href=#191 id=191 data-nosnippet>191</a>	/// WS::GROUP`. This will be automatically set by the owning
-<a href=#192 id=192 data-nosnippet>192</a>	/// [`RadioGroup`](crate::gui::RadioGroup).
-<a href=#193 id=193 data-nosnippet>193</a>	</span><span class="kw">pub </span>window_style: co::WS,
-<a href=#194 id=194 data-nosnippet>194</a>	<span class="doccomment">/// Extended window styles to be
-<a href=#195 id=195 data-nosnippet>195</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
-<a href=#196 id=196 data-nosnippet>196</a>	///
-<a href=#197 id=197 data-nosnippet>197</a>	/// Defaults to `WS_EX::LEFT`.
-<a href=#198 id=198 data-nosnippet>198</a>	</span><span class="kw">pub </span>window_ex_style: co::WS_EX,
-<a href=#199 id=199 data-nosnippet>199</a>
-<a href=#200 id=200 data-nosnippet>200</a>	<span class="doccomment">/// The control ID.
-<a href=#201 id=201 data-nosnippet>201</a>	///
-<a href=#202 id=202 data-nosnippet>202</a>	/// Defaults to an auto-generated ID.
-<a href=#203 id=203 data-nosnippet>203</a>	</span><span class="kw">pub </span>ctrl_id: u16,
-<a href=#204 id=204 data-nosnippet>204</a>	<span class="doccomment">/// Horizontal and vertical behavior of the control when the parent window
-<a href=#205 id=205 data-nosnippet>205</a>	/// is resized.
-<a href=#206 id=206 data-nosnippet>206</a>	///
-<a href=#207 id=207 data-nosnippet>207</a>	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
-<a href=#208 id=208 data-nosnippet>208</a>	</span><span class="kw">pub </span>resize_behavior: (Horz, Vert),
-<a href=#209 id=209 data-nosnippet>209</a>
-<a href=#210 id=210 data-nosnippet>210</a>	<span class="doccomment">/// Initial selection state.
-<a href=#211 id=211 data-nosnippet>211</a>	///
-<a href=#212 id=212 data-nosnippet>212</a>	/// Defaults to `false`.
-<a href=#213 id=213 data-nosnippet>213</a>	</span><span class="kw">pub </span>selected: bool,
-<a href=#214 id=214 data-nosnippet>214</a>}
-<a href=#215 id=215 data-nosnippet>215</a>
-<a href=#216 id=216 data-nosnippet>216</a><span class="kw">impl </span>Default <span class="kw">for </span>RadioButtonOpts {
-<a href=#217 id=217 data-nosnippet>217</a>	<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
-<a href=#218 id=218 data-nosnippet>218</a>		<span class="self">Self </span>{
-<a href=#219 id=219 data-nosnippet>219</a>			text: <span class="string">""</span>.to_owned(),
-<a href=#220 id=220 data-nosnippet>220</a>			position: (<span class="number">0</span>, <span class="number">0</span>),
-<a href=#221 id=221 data-nosnippet>221</a>			size: (<span class="number">0</span>, <span class="number">0</span>), <span class="comment">// will resize to fit the text
-<a href=#222 id=222 data-nosnippet>222</a>			</span>control_style: co::BS::AUTORADIOBUTTON,
-<a href=#223 id=223 data-nosnippet>223</a>			window_style: co::WS::CHILD | co::WS::VISIBLE,
-<a href=#224 id=224 data-nosnippet>224</a>			window_ex_style: co::WS_EX::LEFT,
-<a href=#225 id=225 data-nosnippet>225</a>			ctrl_id: <span class="number">0</span>,
-<a href=#226 id=226 data-nosnippet>226</a>			resize_behavior: (Horz::None, Vert::None),
-<a href=#227 id=227 data-nosnippet>227</a>			selected: <span class="bool-val">false</span>,
-<a href=#228 id=228 data-nosnippet>228</a>		}
-<a href=#229 id=229 data-nosnippet>229</a>	}
-<a href=#230 id=230 data-nosnippet>230</a>}</code></pre></div></section></main></body></html>
+<a href=#158 id=158 data-nosnippet>158</a>
+<a href=#159 id=159 data-nosnippet>159</a>	<span class="doccomment">/// Fires the click event for the button by sending a
+<a href=#160 id=160 data-nosnippet>160</a>	/// [`bm::Click`](crate::msg::bm::Click) message.
+<a href=#161 id=161 data-nosnippet>161</a>	</span><span class="kw">pub fn </span>trigger_click(<span class="kw-2">&amp;</span><span class="self">self</span>) {
+<a href=#162 id=162 data-nosnippet>162</a>		<span class="kw">unsafe </span>{
+<a href=#163 id=163 data-nosnippet>163</a>			<span class="self">self</span>.hwnd().SendMessage(bm::Click {});
+<a href=#164 id=164 data-nosnippet>164</a>		}
+<a href=#165 id=165 data-nosnippet>165</a>	}
+<a href=#166 id=166 data-nosnippet>166</a>}
+<a href=#167 id=167 data-nosnippet>167</a>
+<a href=#168 id=168 data-nosnippet>168</a><span class="doccomment">/// Options to create a [`RadioButton`](crate::gui::RadioButton)
+<a href=#169 id=169 data-nosnippet>169</a>/// programmatically with [`RadioGroup::new`](crate::gui::RadioGroup::new).
+<a href=#170 id=170 data-nosnippet>170</a></span><span class="attr">#[derive(Clone)]
+<a href=#171 id=171 data-nosnippet>171</a></span><span class="kw">pub struct </span>RadioButtonOpts {
+<a href=#172 id=172 data-nosnippet>172</a>	<span class="doccomment">/// Text of the control to be
+<a href=#173 id=173 data-nosnippet>173</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+<a href=#174 id=174 data-nosnippet>174</a>	///
+<a href=#175 id=175 data-nosnippet>175</a>	/// Defaults to empty string.
+<a href=#176 id=176 data-nosnippet>176</a>	</span><span class="kw">pub </span>text: String,
+<a href=#177 id=177 data-nosnippet>177</a>	<span class="doccomment">/// Left and top position coordinates of control within parent's client
+<a href=#178 id=178 data-nosnippet>178</a>	/// area, to be
+<a href=#179 id=179 data-nosnippet>179</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+<a href=#180 id=180 data-nosnippet>180</a>	///
+<a href=#181 id=181 data-nosnippet>181</a>	/// Defaults to `gui::dpi(0, 0)`.
+<a href=#182 id=182 data-nosnippet>182</a>	</span><span class="kw">pub </span>position: (i32, i32),
+<a href=#183 id=183 data-nosnippet>183</a>	<span class="doccomment">/// Width and height of control to be
+<a href=#184 id=184 data-nosnippet>184</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+<a href=#185 id=185 data-nosnippet>185</a>	///
+<a href=#186 id=186 data-nosnippet>186</a>	/// Defaults to the size needed to fit the text.
+<a href=#187 id=187 data-nosnippet>187</a>	</span><span class="kw">pub </span>size: (i32, i32),
+<a href=#188 id=188 data-nosnippet>188</a>	<span class="doccomment">/// Radio button styles to be
+<a href=#189 id=189 data-nosnippet>189</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+<a href=#190 id=190 data-nosnippet>190</a>	///
+<a href=#191 id=191 data-nosnippet>191</a>	/// Defaults to `BS::AUTORADIOBUTTON`.
+<a href=#192 id=192 data-nosnippet>192</a>	</span><span class="kw">pub </span>control_style: co::BS,
+<a href=#193 id=193 data-nosnippet>193</a>	<span class="doccomment">/// Window styles to be
+<a href=#194 id=194 data-nosnippet>194</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+<a href=#195 id=195 data-nosnippet>195</a>	///
+<a href=#196 id=196 data-nosnippet>196</a>	/// Defaults to `WS::CHILD | WS::VISIBLE`.
+<a href=#197 id=197 data-nosnippet>197</a>	///
+<a href=#198 id=198 data-nosnippet>198</a>	/// The first RadioButton of a group will also have `WS::TABSTOP |
+<a href=#199 id=199 data-nosnippet>199</a>	/// WS::GROUP`. This will be automatically set by the owning
+<a href=#200 id=200 data-nosnippet>200</a>	/// [`RadioGroup`](crate::gui::RadioGroup).
+<a href=#201 id=201 data-nosnippet>201</a>	</span><span class="kw">pub </span>window_style: co::WS,
+<a href=#202 id=202 data-nosnippet>202</a>	<span class="doccomment">/// Extended window styles to be
+<a href=#203 id=203 data-nosnippet>203</a>	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
+<a href=#204 id=204 data-nosnippet>204</a>	///
+<a href=#205 id=205 data-nosnippet>205</a>	/// Defaults to `WS_EX::LEFT`.
+<a href=#206 id=206 data-nosnippet>206</a>	</span><span class="kw">pub </span>window_ex_style: co::WS_EX,
+<a href=#207 id=207 data-nosnippet>207</a>
+<a href=#208 id=208 data-nosnippet>208</a>	<span class="doccomment">/// The control ID.
+<a href=#209 id=209 data-nosnippet>209</a>	///
+<a href=#210 id=210 data-nosnippet>210</a>	/// Defaults to an auto-generated ID.
+<a href=#211 id=211 data-nosnippet>211</a>	</span><span class="kw">pub </span>ctrl_id: u16,
+<a href=#212 id=212 data-nosnippet>212</a>	<span class="doccomment">/// Horizontal and vertical behavior of the control when the parent window
+<a href=#213 id=213 data-nosnippet>213</a>	/// is resized.
+<a href=#214 id=214 data-nosnippet>214</a>	///
+<a href=#215 id=215 data-nosnippet>215</a>	/// Defaults to `(gui::Horz::None, gui::Vert::None)`.
+<a href=#216 id=216 data-nosnippet>216</a>	</span><span class="kw">pub </span>resize_behavior: (Horz, Vert),
+<a href=#217 id=217 data-nosnippet>217</a>
+<a href=#218 id=218 data-nosnippet>218</a>	<span class="doccomment">/// Initial selection state.
+<a href=#219 id=219 data-nosnippet>219</a>	///
+<a href=#220 id=220 data-nosnippet>220</a>	/// Defaults to `false`.
+<a href=#221 id=221 data-nosnippet>221</a>	</span><span class="kw">pub </span>selected: bool,
+<a href=#222 id=222 data-nosnippet>222</a>}
+<a href=#223 id=223 data-nosnippet>223</a>
+<a href=#224 id=224 data-nosnippet>224</a><span class="kw">impl </span>Default <span class="kw">for </span>RadioButtonOpts {
+<a href=#225 id=225 data-nosnippet>225</a>	<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+<a href=#226 id=226 data-nosnippet>226</a>		<span class="self">Self </span>{
+<a href=#227 id=227 data-nosnippet>227</a>			text: <span class="string">""</span>.to_owned(),
+<a href=#228 id=228 data-nosnippet>228</a>			position: (<span class="number">0</span>, <span class="number">0</span>),
+<a href=#229 id=229 data-nosnippet>229</a>			size: (<span class="number">0</span>, <span class="number">0</span>), <span class="comment">// will resize to fit the text
+<a href=#230 id=230 data-nosnippet>230</a>			</span>control_style: co::BS::AUTORADIOBUTTON,
+<a href=#231 id=231 data-nosnippet>231</a>			window_style: co::WS::CHILD | co::WS::VISIBLE,
+<a href=#232 id=232 data-nosnippet>232</a>			window_ex_style: co::WS_EX::LEFT,
+<a href=#233 id=233 data-nosnippet>233</a>			ctrl_id: <span class="number">0</span>,
+<a href=#234 id=234 data-nosnippet>234</a>			resize_behavior: (Horz::None, Vert::None),
+<a href=#235 id=235 data-nosnippet>235</a>			selected: <span class="bool-val">false</span>,
+<a href=#236 id=236 data-nosnippet>236</a>		}
+<a href=#237 id=237 data-nosnippet>237</a>	}
+<a href=#238 id=238 data-nosnippet>238</a>}</code></pre></div></section></main></body></html>
