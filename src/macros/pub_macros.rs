@@ -99,6 +99,11 @@ macro_rules! seq_ids {
 ///     }
 /// }
 /// ```
+///
+/// # Related macros
+///
+/// * [`bind_ig`](crate::bind_ig)
+/// * [`bind_p`](crate::bind_p)
 #[cfg(feature = "gui")]
 #[macro_export]
 macro_rules! bind {
@@ -139,6 +144,11 @@ macro_rules! bind {
 ///     }
 /// }
 /// ```
+///
+/// # Related macros
+///
+/// * [`bind`](crate::bind)
+/// * [`bind_ig`](crate::bind_ig)
 #[cfg(feature = "gui")]
 #[macro_export]
 macro_rules! bind_p {
@@ -179,6 +189,11 @@ macro_rules! bind_p {
 ///     }
 /// }
 /// ```
+///
+/// # Related macros
+///
+/// * [`bind`](crate::bind)
+/// * [`bind_p`](crate::bind_p)
 #[cfg(feature = "gui")]
 #[macro_export]
 macro_rules! bind_ig {

@@ -155,6 +155,14 @@ impl RadioButton {
 		self.hwnd().SetWindowText(text)?;
 		Ok(())
 	}
+
+	/// Fires the click event for the button by sending a
+	/// [`bm::Click`](crate::msg::bm::Click) message.
+	pub fn trigger_click(&self) {
+		unsafe {
+			self.hwnd().SendMessage(bm::Click {});
+		}
+	}
 }
 
 /// Options to create a [`RadioButton`](crate::gui::RadioButton)
