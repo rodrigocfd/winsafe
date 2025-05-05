@@ -24,7 +24,7 @@ mod handles;
 mod messages;
 
 #[macro_use]
-mod seq_ids;
+mod pub_macros;
 
 #[macro_use]
 mod structs;

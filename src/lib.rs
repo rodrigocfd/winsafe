@@ -3,7 +3,7 @@
 #![cfg_attr(any(), rustfmt::skip)]
 
 // Declarations of macros used throughout the library.
-// No macros are public, except seq_ids.
+// No macros are public, except those in pub_macros.
 
 #[macro_use] mod macros;
 
