@@ -1661,6 +1661,36 @@ pub trait user_Hwnd: Handle {
 		bool_to_sysresult(unsafe { ffi::ShowWindowAsync(self.ptr(), show_cmd.raw()) })
 	}
 
+	/// [`ShutdownBlockReasonCreate`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-shutdownblockreasoncreate)
+	/// function.
+	fn ShutdownBlockReasonCreate(&self, reason: &str) -> SysResult<()> {
+		bool_to_sysresult(unsafe {
+			ffi::ShutdownBlockReasonCreate(self.ptr(), WString::from_str(reason).as_ptr())
+		})
+	}
+
+	/// [`ShutdownBlockReasonDestroy`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-shutdownblockreasondestroy)
+	/// function.
+	fn ShutdownBlockReasonDestroy(&self) -> SysResult<()> {
+		bool_to_sysresult(unsafe { ffi::ShutdownBlockReasonDestroy(self.ptr()) })
+	}
+
+	/// [`ShutdownBlockReasonQuery`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-shutdownblockreasonquery)
+	/// function.
+	#[must_use]
+	fn ShutdownBlockReasonQuery(&self) -> SysResult<String> {
+		let mut sz = u32::default();
+		bool_to_sysresult(unsafe {
+			ffi::ShutdownBlockReasonQuery(self.ptr(), std::ptr::null_mut(), &mut sz)
+		})?;
+
+		let mut buf = WString::new_alloc_buf(sz as _);
+		bool_to_sysresult(unsafe {
+			ffi::ShutdownBlockReasonQuery(self.ptr(), buf.as_mut_ptr(), &mut sz)
+		})
+		.map(|_| buf.to_string())
+	}
+
 	/// [`TileWindows`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-tilewindows)
 	/// function.
 	fn TileWindows(

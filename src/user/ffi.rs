@@ -196,6 +196,7 @@ extern_sys! { "user32";
 	LoadStringW(HANDLE, u32, PSTR, i32) -> i32
 	LockSetForegroundWindow(u32) -> BOOL
 	LockWindowUpdate(HANDLE) -> BOOL
+	LockWorkStation() -> BOOL
 	LogicalToPhysicalPoint(HANDLE, PVOID) -> BOOL
 	MapDialogRect(HANDLE, PVOID) -> BOOL
 	MapWindowPoints(HANDLE, HANDLE, PVOID, u32) -> i32
@@ -269,6 +270,9 @@ extern_sys! { "user32";
 	ShowOwnedPopups(HANDLE, BOOL) -> BOOL
 	ShowWindow(HANDLE, i32) -> BOOL
 	ShowWindowAsync(HANDLE, i32) -> BOOL
+	ShutdownBlockReasonCreate(HANDLE, PCSTR) -> BOOL
+	ShutdownBlockReasonDestroy(HANDLE) -> BOOL
+	ShutdownBlockReasonQuery(HANDLE, PSTR, *mut u32) -> BOOL
 	SoundSentry() -> BOOL
 	SubtractRect(PVOID, PCVOID, PCVOID) -> BOOL
 	SwapMouseButton(BOOL) -> BOOL
