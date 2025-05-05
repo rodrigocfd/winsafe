@@ -91,7 +91,7 @@ impl<'a, T> ListViewCol<'a, T> {
 			unsafe {
 				self.owner.hwnd().SendMessage(lvm::SetColumnWidth {
 					index: self.index,
-					width: rc.right as u32 - cx_used,
+					width: std::cmp::max(0, rc.right - cx_used as i32) as _, // avoid negative values
 				})?;
 			}
 		}
