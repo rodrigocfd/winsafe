@@ -1663,153 +1663,138 @@
 <a href=#1663 id=1663 data-nosnippet>1663</a>
 <a href=#1664 id=1664 data-nosnippet>1664</a>	<span class="doccomment">/// [`ShutdownBlockReasonCreate`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-shutdownblockreasoncreate)
 <a href=#1665 id=1665 data-nosnippet>1665</a>	/// function.
-<a href=#1666 id=1666 data-nosnippet>1666</a>	///
-<a href=#1667 id=1667 data-nosnippet>1667</a>	/// # Related functions
-<a href=#1668 id=1668 data-nosnippet>1668</a>	///
-<a href=#1669 id=1669 data-nosnippet>1669</a>	/// * [`ShutdownBlockReasonDestroy`](crate::prelude::user_Hwnd::ShutdownBlockReasonDestroy)
-<a href=#1670 id=1670 data-nosnippet>1670</a>	/// * [`ShutdownBlockReasonQuery`](crate::prelude::user_Hwnd::ShutdownBlockReasonQuery)
-<a href=#1671 id=1671 data-nosnippet>1671</a>	</span><span class="kw">fn </span>ShutdownBlockReasonCreate(<span class="kw-2">&amp;</span><span class="self">self</span>, reason: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;()&gt; {
-<a href=#1672 id=1672 data-nosnippet>1672</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
-<a href=#1673 id=1673 data-nosnippet>1673</a>			ffi::ShutdownBlockReasonCreate(<span class="self">self</span>.ptr(), WString::from_str(reason).as_ptr())
-<a href=#1674 id=1674 data-nosnippet>1674</a>		})
-<a href=#1675 id=1675 data-nosnippet>1675</a>	}
-<a href=#1676 id=1676 data-nosnippet>1676</a>
-<a href=#1677 id=1677 data-nosnippet>1677</a>	<span class="doccomment">/// [`ShutdownBlockReasonDestroy`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-shutdownblockreasondestroy)
-<a href=#1678 id=1678 data-nosnippet>1678</a>	/// function.
-<a href=#1679 id=1679 data-nosnippet>1679</a>	///
-<a href=#1680 id=1680 data-nosnippet>1680</a>	/// # Related functions
-<a href=#1681 id=1681 data-nosnippet>1681</a>	///
-<a href=#1682 id=1682 data-nosnippet>1682</a>	/// * [`ShutdownBlockReasonCreate`](crate::prelude::user_Hwnd::ShutdownBlockReasonCreate)
-<a href=#1683 id=1683 data-nosnippet>1683</a>	/// * [`ShutdownBlockReasonQuery`](crate::prelude::user_Hwnd::ShutdownBlockReasonQuery)
-<a href=#1684 id=1684 data-nosnippet>1684</a>	</span><span class="kw">fn </span>ShutdownBlockReasonDestroy(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;()&gt; {
-<a href=#1685 id=1685 data-nosnippet>1685</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::ShutdownBlockReasonDestroy(<span class="self">self</span>.ptr()) })
-<a href=#1686 id=1686 data-nosnippet>1686</a>	}
-<a href=#1687 id=1687 data-nosnippet>1687</a>
-<a href=#1688 id=1688 data-nosnippet>1688</a>	<span class="doccomment">/// [`ShutdownBlockReasonQuery`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-shutdownblockreasonquery)
-<a href=#1689 id=1689 data-nosnippet>1689</a>	/// function.
-<a href=#1690 id=1690 data-nosnippet>1690</a>	///
-<a href=#1691 id=1691 data-nosnippet>1691</a>	/// # Related functions
-<a href=#1692 id=1692 data-nosnippet>1692</a>	///
-<a href=#1693 id=1693 data-nosnippet>1693</a>	/// * [`ShutdownBlockReasonCreate`](crate::prelude::user_Hwnd::ShutdownBlockReasonCreate)
-<a href=#1694 id=1694 data-nosnippet>1694</a>	/// * [`ShutdownBlockReasonDestroy`](crate::prelude::user_Hwnd::ShutdownBlockReasonDestroy)
-<a href=#1695 id=1695 data-nosnippet>1695</a>	</span><span class="attr">#[must_use]
-<a href=#1696 id=1696 data-nosnippet>1696</a>	</span><span class="kw">fn </span>ShutdownBlockReasonQuery(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;String&gt; {
-<a href=#1697 id=1697 data-nosnippet>1697</a>		<span class="kw">let </span><span class="kw-2">mut </span>sz = u32::default();
-<a href=#1698 id=1698 data-nosnippet>1698</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
-<a href=#1699 id=1699 data-nosnippet>1699</a>			ffi::ShutdownBlockReasonQuery(<span class="self">self</span>.ptr(), std::ptr::null_mut(), <span class="kw-2">&amp;mut </span>sz)
-<a href=#1700 id=1700 data-nosnippet>1700</a>		})<span class="question-mark">?</span>;
-<a href=#1701 id=1701 data-nosnippet>1701</a>
-<a href=#1702 id=1702 data-nosnippet>1702</a>		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(sz <span class="kw">as _</span>);
-<a href=#1703 id=1703 data-nosnippet>1703</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
-<a href=#1704 id=1704 data-nosnippet>1704</a>			ffi::ShutdownBlockReasonQuery(<span class="self">self</span>.ptr(), buf.as_mut_ptr(), <span class="kw-2">&amp;mut </span>sz)
-<a href=#1705 id=1705 data-nosnippet>1705</a>		})
-<a href=#1706 id=1706 data-nosnippet>1706</a>		.map(|<span class="kw">_</span>| buf.to_string())
-<a href=#1707 id=1707 data-nosnippet>1707</a>	}
-<a href=#1708 id=1708 data-nosnippet>1708</a>
-<a href=#1709 id=1709 data-nosnippet>1709</a>	<span class="doccomment">/// [`TileWindows`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-tilewindows)
-<a href=#1710 id=1710 data-nosnippet>1710</a>	/// function.
-<a href=#1711 id=1711 data-nosnippet>1711</a>	</span><span class="kw">fn </span>TileWindows(
-<a href=#1712 id=1712 data-nosnippet>1712</a>		<span class="kw-2">&amp;</span><span class="self">self</span>,
-<a href=#1713 id=1713 data-nosnippet>1713</a>		how: co::MDITILE,
-<a href=#1714 id=1714 data-nosnippet>1714</a>		rect: <span class="prelude-ty">Option</span>&lt;RECT&gt;,
-<a href=#1715 id=1715 data-nosnippet>1715</a>		kids: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>HWND]&gt;,
-<a href=#1716 id=1716 data-nosnippet>1716</a>	) -&gt; SysResult&lt;u16&gt; {
-<a href=#1717 id=1717 data-nosnippet>1717</a>		<span class="kw">match unsafe </span>{
-<a href=#1718 id=1718 data-nosnippet>1718</a>			ffi::TileWindows(
-<a href=#1719 id=1719 data-nosnippet>1719</a>				<span class="self">self</span>.ptr(),
-<a href=#1720 id=1720 data-nosnippet>1720</a>				how.raw(),
-<a href=#1721 id=1721 data-nosnippet>1721</a>				pcvoid_or_null(rect.as_ref()),
-<a href=#1722 id=1722 data-nosnippet>1722</a>				kids.map_or(<span class="number">0</span>, |s| s.len() <span class="kw">as _</span>),
-<a href=#1723 id=1723 data-nosnippet>1723</a>				kids.map_or(std::ptr::null(), |hs| vec_ptr(hs) <span class="kw">as _</span>),
-<a href=#1724 id=1724 data-nosnippet>1724</a>			)
-<a href=#1725 id=1725 data-nosnippet>1725</a>		} {
-<a href=#1726 id=1726 data-nosnippet>1726</a>			<span class="number">0 </span>=&gt; <span class="kw">match </span>GetLastError() {
-<a href=#1727 id=1727 data-nosnippet>1727</a>				co::ERROR::SUCCESS =&gt; <span class="prelude-val">Ok</span>(<span class="number">0</span>),
-<a href=#1728 id=1728 data-nosnippet>1728</a>				err =&gt; <span class="prelude-val">Err</span>(err),
-<a href=#1729 id=1729 data-nosnippet>1729</a>			},
-<a href=#1730 id=1730 data-nosnippet>1730</a>			c =&gt; <span class="prelude-val">Ok</span>(c),
-<a href=#1731 id=1731 data-nosnippet>1731</a>		}
-<a href=#1732 id=1732 data-nosnippet>1732</a>	}
-<a href=#1733 id=1733 data-nosnippet>1733</a>
-<a href=#1734 id=1734 data-nosnippet>1734</a>	<span class="doccomment">/// [`TranslateAccelerator`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translateacceleratorw)
-<a href=#1735 id=1735 data-nosnippet>1735</a>	/// function.
-<a href=#1736 id=1736 data-nosnippet>1736</a>	</span><span class="kw">fn </span>TranslateAccelerator(<span class="kw-2">&amp;</span><span class="self">self</span>, haccel_table: <span class="kw-2">&amp;</span>HACCEL, msg: <span class="kw-2">&amp;mut </span>MSG) -&gt; SysResult&lt;()&gt; {
-<a href=#1737 id=1737 data-nosnippet>1737</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
-<a href=#1738 id=1738 data-nosnippet>1738</a>			ffi::TranslateAcceleratorW(<span class="self">self</span>.ptr(), haccel_table.ptr(), pvoid(msg))
-<a href=#1739 id=1739 data-nosnippet>1739</a>		})
-<a href=#1740 id=1740 data-nosnippet>1740</a>	}
-<a href=#1741 id=1741 data-nosnippet>1741</a>
-<a href=#1742 id=1742 data-nosnippet>1742</a>	<span class="doccomment">/// [`UnregisterHotKey`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterhotkey)
-<a href=#1743 id=1743 data-nosnippet>1743</a>	/// function.
-<a href=#1744 id=1744 data-nosnippet>1744</a>	</span><span class="kw">fn </span>UnregisterHotKey(<span class="kw-2">&amp;</span><span class="self">self</span>, id: i32) -&gt; SysResult&lt;()&gt; {
-<a href=#1745 id=1745 data-nosnippet>1745</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::UnregisterHotKey(<span class="self">self</span>.ptr(), id) })
-<a href=#1746 id=1746 data-nosnippet>1746</a>	}
-<a href=#1747 id=1747 data-nosnippet>1747</a>
-<a href=#1748 id=1748 data-nosnippet>1748</a>	<span class="doccomment">/// [`UpdateLayeredWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-updatelayeredwindow)
-<a href=#1749 id=1749 data-nosnippet>1749</a>	/// function.
-<a href=#1750 id=1750 data-nosnippet>1750</a>	</span><span class="kw">fn </span>UpdateLayeredWindow(
-<a href=#1751 id=1751 data-nosnippet>1751</a>		<span class="kw-2">&amp;</span><span class="self">self</span>,
-<a href=#1752 id=1752 data-nosnippet>1752</a>		hdc_dest: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>HDC&gt;,
-<a href=#1753 id=1753 data-nosnippet>1753</a>		pt_dest: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>POINT&gt;,
-<a href=#1754 id=1754 data-nosnippet>1754</a>		size: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>SIZE&gt;,
-<a href=#1755 id=1755 data-nosnippet>1755</a>		hdc_src: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>HDC&gt;,
-<a href=#1756 id=1756 data-nosnippet>1756</a>		pt_src: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>POINT&gt;,
-<a href=#1757 id=1757 data-nosnippet>1757</a>		key: COLORREF,
-<a href=#1758 id=1758 data-nosnippet>1758</a>		blend: <span class="kw-2">&amp;</span>BLENDFUNCTION,
-<a href=#1759 id=1759 data-nosnippet>1759</a>		flags: co::ULW,
-<a href=#1760 id=1760 data-nosnippet>1760</a>	) -&gt; SysResult&lt;()&gt; {
-<a href=#1761 id=1761 data-nosnippet>1761</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
-<a href=#1762 id=1762 data-nosnippet>1762</a>			ffi::UpdateLayeredWindow(
-<a href=#1763 id=1763 data-nosnippet>1763</a>				<span class="self">self</span>.ptr(),
-<a href=#1764 id=1764 data-nosnippet>1764</a>				hdc_dest.map_or(std::ptr::null_mut(), |hdc| hdc.ptr()),
-<a href=#1765 id=1765 data-nosnippet>1765</a>				pcvoid_or_null(pt_dest),
-<a href=#1766 id=1766 data-nosnippet>1766</a>				pcvoid_or_null(size),
-<a href=#1767 id=1767 data-nosnippet>1767</a>				hdc_src.map_or(std::ptr::null_mut(), |hdc| hdc.ptr()),
-<a href=#1768 id=1768 data-nosnippet>1768</a>				pcvoid_or_null(pt_src),
-<a href=#1769 id=1769 data-nosnippet>1769</a>				key.raw(),
-<a href=#1770 id=1770 data-nosnippet>1770</a>				pcvoid(blend),
-<a href=#1771 id=1771 data-nosnippet>1771</a>				flags.raw(),
-<a href=#1772 id=1772 data-nosnippet>1772</a>			)
-<a href=#1773 id=1773 data-nosnippet>1773</a>		})
-<a href=#1774 id=1774 data-nosnippet>1774</a>	}
-<a href=#1775 id=1775 data-nosnippet>1775</a>
-<a href=#1776 id=1776 data-nosnippet>1776</a>	<span class="doccomment">/// [`UpdateWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-updatewindow)
-<a href=#1777 id=1777 data-nosnippet>1777</a>	/// function.
-<a href=#1778 id=1778 data-nosnippet>1778</a>	</span><span class="kw">fn </span>UpdateWindow(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;()&gt; {
-<a href=#1779 id=1779 data-nosnippet>1779</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::UpdateWindow(<span class="self">self</span>.ptr()) })
-<a href=#1780 id=1780 data-nosnippet>1780</a>	}
-<a href=#1781 id=1781 data-nosnippet>1781</a>
-<a href=#1782 id=1782 data-nosnippet>1782</a>	<span class="doccomment">/// [`ValidateRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-validaterect)
-<a href=#1783 id=1783 data-nosnippet>1783</a>	/// function.
-<a href=#1784 id=1784 data-nosnippet>1784</a>	</span><span class="kw">fn </span>ValidateRect(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: <span class="prelude-ty">Option</span>&lt;RECT&gt;) -&gt; SysResult&lt;()&gt; {
-<a href=#1785 id=1785 data-nosnippet>1785</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::ValidateRect(<span class="self">self</span>.ptr(), pcvoid_or_null(rc.as_ref())) })
-<a href=#1786 id=1786 data-nosnippet>1786</a>	}
-<a href=#1787 id=1787 data-nosnippet>1787</a>
-<a href=#1788 id=1788 data-nosnippet>1788</a>	<span class="doccomment">/// [`ValidateRgn`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-validatergn)
-<a href=#1789 id=1789 data-nosnippet>1789</a>	/// function.
-<a href=#1790 id=1790 data-nosnippet>1790</a>	</span><span class="kw">fn </span>ValidateRgn(<span class="kw-2">&amp;</span><span class="self">self</span>, hrgn: <span class="kw-2">&amp;</span>HRGN) -&gt; SysResult&lt;()&gt; {
-<a href=#1791 id=1791 data-nosnippet>1791</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::ValidateRgn(<span class="self">self</span>.ptr(), hrgn.ptr()) })
-<a href=#1792 id=1792 data-nosnippet>1792</a>	}
-<a href=#1793 id=1793 data-nosnippet>1793</a>
-<a href=#1794 id=1794 data-nosnippet>1794</a>	<span class="doccomment">/// [`WindowFromPhysicalPoint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfromphysicalpoint)
-<a href=#1795 id=1795 data-nosnippet>1795</a>	/// function.
-<a href=#1796 id=1796 data-nosnippet>1796</a>	</span><span class="attr">#[must_use]
-<a href=#1797 id=1797 data-nosnippet>1797</a>	</span><span class="kw">fn </span>WindowFromPhysicalPoint(pt: POINT) -&gt; <span class="prelude-ty">Option</span>&lt;HWND&gt; {
-<a href=#1798 id=1798 data-nosnippet>1798</a>		ptr_to_option_handle(<span class="kw">unsafe </span>{ ffi::WindowFromPhysicalPoint(pt.x, pt.y) })
+<a href=#1666 id=1666 data-nosnippet>1666</a>	</span><span class="kw">fn </span>ShutdownBlockReasonCreate(<span class="kw-2">&amp;</span><span class="self">self</span>, reason: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;()&gt; {
+<a href=#1667 id=1667 data-nosnippet>1667</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
+<a href=#1668 id=1668 data-nosnippet>1668</a>			ffi::ShutdownBlockReasonCreate(<span class="self">self</span>.ptr(), WString::from_str(reason).as_ptr())
+<a href=#1669 id=1669 data-nosnippet>1669</a>		})
+<a href=#1670 id=1670 data-nosnippet>1670</a>	}
+<a href=#1671 id=1671 data-nosnippet>1671</a>
+<a href=#1672 id=1672 data-nosnippet>1672</a>	<span class="doccomment">/// [`ShutdownBlockReasonDestroy`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-shutdownblockreasondestroy)
+<a href=#1673 id=1673 data-nosnippet>1673</a>	/// function.
+<a href=#1674 id=1674 data-nosnippet>1674</a>	</span><span class="kw">fn </span>ShutdownBlockReasonDestroy(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;()&gt; {
+<a href=#1675 id=1675 data-nosnippet>1675</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::ShutdownBlockReasonDestroy(<span class="self">self</span>.ptr()) })
+<a href=#1676 id=1676 data-nosnippet>1676</a>	}
+<a href=#1677 id=1677 data-nosnippet>1677</a>
+<a href=#1678 id=1678 data-nosnippet>1678</a>	<span class="doccomment">/// [`ShutdownBlockReasonQuery`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-shutdownblockreasonquery)
+<a href=#1679 id=1679 data-nosnippet>1679</a>	/// function.
+<a href=#1680 id=1680 data-nosnippet>1680</a>	</span><span class="attr">#[must_use]
+<a href=#1681 id=1681 data-nosnippet>1681</a>	</span><span class="kw">fn </span>ShutdownBlockReasonQuery(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;String&gt; {
+<a href=#1682 id=1682 data-nosnippet>1682</a>		<span class="kw">let </span><span class="kw-2">mut </span>sz = u32::default();
+<a href=#1683 id=1683 data-nosnippet>1683</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
+<a href=#1684 id=1684 data-nosnippet>1684</a>			ffi::ShutdownBlockReasonQuery(<span class="self">self</span>.ptr(), std::ptr::null_mut(), <span class="kw-2">&amp;mut </span>sz)
+<a href=#1685 id=1685 data-nosnippet>1685</a>		})<span class="question-mark">?</span>;
+<a href=#1686 id=1686 data-nosnippet>1686</a>
+<a href=#1687 id=1687 data-nosnippet>1687</a>		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(sz <span class="kw">as _</span>);
+<a href=#1688 id=1688 data-nosnippet>1688</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
+<a href=#1689 id=1689 data-nosnippet>1689</a>			ffi::ShutdownBlockReasonQuery(<span class="self">self</span>.ptr(), buf.as_mut_ptr(), <span class="kw-2">&amp;mut </span>sz)
+<a href=#1690 id=1690 data-nosnippet>1690</a>		})
+<a href=#1691 id=1691 data-nosnippet>1691</a>		.map(|<span class="kw">_</span>| buf.to_string())
+<a href=#1692 id=1692 data-nosnippet>1692</a>	}
+<a href=#1693 id=1693 data-nosnippet>1693</a>
+<a href=#1694 id=1694 data-nosnippet>1694</a>	<span class="doccomment">/// [`TileWindows`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-tilewindows)
+<a href=#1695 id=1695 data-nosnippet>1695</a>	/// function.
+<a href=#1696 id=1696 data-nosnippet>1696</a>	</span><span class="kw">fn </span>TileWindows(
+<a href=#1697 id=1697 data-nosnippet>1697</a>		<span class="kw-2">&amp;</span><span class="self">self</span>,
+<a href=#1698 id=1698 data-nosnippet>1698</a>		how: co::MDITILE,
+<a href=#1699 id=1699 data-nosnippet>1699</a>		rect: <span class="prelude-ty">Option</span>&lt;RECT&gt;,
+<a href=#1700 id=1700 data-nosnippet>1700</a>		kids: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>HWND]&gt;,
+<a href=#1701 id=1701 data-nosnippet>1701</a>	) -&gt; SysResult&lt;u16&gt; {
+<a href=#1702 id=1702 data-nosnippet>1702</a>		<span class="kw">match unsafe </span>{
+<a href=#1703 id=1703 data-nosnippet>1703</a>			ffi::TileWindows(
+<a href=#1704 id=1704 data-nosnippet>1704</a>				<span class="self">self</span>.ptr(),
+<a href=#1705 id=1705 data-nosnippet>1705</a>				how.raw(),
+<a href=#1706 id=1706 data-nosnippet>1706</a>				pcvoid_or_null(rect.as_ref()),
+<a href=#1707 id=1707 data-nosnippet>1707</a>				kids.map_or(<span class="number">0</span>, |s| s.len() <span class="kw">as _</span>),
+<a href=#1708 id=1708 data-nosnippet>1708</a>				kids.map_or(std::ptr::null(), |hs| vec_ptr(hs) <span class="kw">as _</span>),
+<a href=#1709 id=1709 data-nosnippet>1709</a>			)
+<a href=#1710 id=1710 data-nosnippet>1710</a>		} {
+<a href=#1711 id=1711 data-nosnippet>1711</a>			<span class="number">0 </span>=&gt; <span class="kw">match </span>GetLastError() {
+<a href=#1712 id=1712 data-nosnippet>1712</a>				co::ERROR::SUCCESS =&gt; <span class="prelude-val">Ok</span>(<span class="number">0</span>),
+<a href=#1713 id=1713 data-nosnippet>1713</a>				err =&gt; <span class="prelude-val">Err</span>(err),
+<a href=#1714 id=1714 data-nosnippet>1714</a>			},
+<a href=#1715 id=1715 data-nosnippet>1715</a>			c =&gt; <span class="prelude-val">Ok</span>(c),
+<a href=#1716 id=1716 data-nosnippet>1716</a>		}
+<a href=#1717 id=1717 data-nosnippet>1717</a>	}
+<a href=#1718 id=1718 data-nosnippet>1718</a>
+<a href=#1719 id=1719 data-nosnippet>1719</a>	<span class="doccomment">/// [`TranslateAccelerator`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-translateacceleratorw)
+<a href=#1720 id=1720 data-nosnippet>1720</a>	/// function.
+<a href=#1721 id=1721 data-nosnippet>1721</a>	</span><span class="kw">fn </span>TranslateAccelerator(<span class="kw-2">&amp;</span><span class="self">self</span>, haccel_table: <span class="kw-2">&amp;</span>HACCEL, msg: <span class="kw-2">&amp;mut </span>MSG) -&gt; SysResult&lt;()&gt; {
+<a href=#1722 id=1722 data-nosnippet>1722</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
+<a href=#1723 id=1723 data-nosnippet>1723</a>			ffi::TranslateAcceleratorW(<span class="self">self</span>.ptr(), haccel_table.ptr(), pvoid(msg))
+<a href=#1724 id=1724 data-nosnippet>1724</a>		})
+<a href=#1725 id=1725 data-nosnippet>1725</a>	}
+<a href=#1726 id=1726 data-nosnippet>1726</a>
+<a href=#1727 id=1727 data-nosnippet>1727</a>	<span class="doccomment">/// [`UnregisterHotKey`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-unregisterhotkey)
+<a href=#1728 id=1728 data-nosnippet>1728</a>	/// function.
+<a href=#1729 id=1729 data-nosnippet>1729</a>	</span><span class="kw">fn </span>UnregisterHotKey(<span class="kw-2">&amp;</span><span class="self">self</span>, id: i32) -&gt; SysResult&lt;()&gt; {
+<a href=#1730 id=1730 data-nosnippet>1730</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::UnregisterHotKey(<span class="self">self</span>.ptr(), id) })
+<a href=#1731 id=1731 data-nosnippet>1731</a>	}
+<a href=#1732 id=1732 data-nosnippet>1732</a>
+<a href=#1733 id=1733 data-nosnippet>1733</a>	<span class="doccomment">/// [`UpdateLayeredWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-updatelayeredwindow)
+<a href=#1734 id=1734 data-nosnippet>1734</a>	/// function.
+<a href=#1735 id=1735 data-nosnippet>1735</a>	</span><span class="kw">fn </span>UpdateLayeredWindow(
+<a href=#1736 id=1736 data-nosnippet>1736</a>		<span class="kw-2">&amp;</span><span class="self">self</span>,
+<a href=#1737 id=1737 data-nosnippet>1737</a>		hdc_dest: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>HDC&gt;,
+<a href=#1738 id=1738 data-nosnippet>1738</a>		pt_dest: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>POINT&gt;,
+<a href=#1739 id=1739 data-nosnippet>1739</a>		size: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>SIZE&gt;,
+<a href=#1740 id=1740 data-nosnippet>1740</a>		hdc_src: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>HDC&gt;,
+<a href=#1741 id=1741 data-nosnippet>1741</a>		pt_src: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>POINT&gt;,
+<a href=#1742 id=1742 data-nosnippet>1742</a>		key: COLORREF,
+<a href=#1743 id=1743 data-nosnippet>1743</a>		blend: <span class="kw-2">&amp;</span>BLENDFUNCTION,
+<a href=#1744 id=1744 data-nosnippet>1744</a>		flags: co::ULW,
+<a href=#1745 id=1745 data-nosnippet>1745</a>	) -&gt; SysResult&lt;()&gt; {
+<a href=#1746 id=1746 data-nosnippet>1746</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
+<a href=#1747 id=1747 data-nosnippet>1747</a>			ffi::UpdateLayeredWindow(
+<a href=#1748 id=1748 data-nosnippet>1748</a>				<span class="self">self</span>.ptr(),
+<a href=#1749 id=1749 data-nosnippet>1749</a>				hdc_dest.map_or(std::ptr::null_mut(), |hdc| hdc.ptr()),
+<a href=#1750 id=1750 data-nosnippet>1750</a>				pcvoid_or_null(pt_dest),
+<a href=#1751 id=1751 data-nosnippet>1751</a>				pcvoid_or_null(size),
+<a href=#1752 id=1752 data-nosnippet>1752</a>				hdc_src.map_or(std::ptr::null_mut(), |hdc| hdc.ptr()),
+<a href=#1753 id=1753 data-nosnippet>1753</a>				pcvoid_or_null(pt_src),
+<a href=#1754 id=1754 data-nosnippet>1754</a>				key.raw(),
+<a href=#1755 id=1755 data-nosnippet>1755</a>				pcvoid(blend),
+<a href=#1756 id=1756 data-nosnippet>1756</a>				flags.raw(),
+<a href=#1757 id=1757 data-nosnippet>1757</a>			)
+<a href=#1758 id=1758 data-nosnippet>1758</a>		})
+<a href=#1759 id=1759 data-nosnippet>1759</a>	}
+<a href=#1760 id=1760 data-nosnippet>1760</a>
+<a href=#1761 id=1761 data-nosnippet>1761</a>	<span class="doccomment">/// [`UpdateWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-updatewindow)
+<a href=#1762 id=1762 data-nosnippet>1762</a>	/// function.
+<a href=#1763 id=1763 data-nosnippet>1763</a>	</span><span class="kw">fn </span>UpdateWindow(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;()&gt; {
+<a href=#1764 id=1764 data-nosnippet>1764</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::UpdateWindow(<span class="self">self</span>.ptr()) })
+<a href=#1765 id=1765 data-nosnippet>1765</a>	}
+<a href=#1766 id=1766 data-nosnippet>1766</a>
+<a href=#1767 id=1767 data-nosnippet>1767</a>	<span class="doccomment">/// [`ValidateRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-validaterect)
+<a href=#1768 id=1768 data-nosnippet>1768</a>	/// function.
+<a href=#1769 id=1769 data-nosnippet>1769</a>	</span><span class="kw">fn </span>ValidateRect(<span class="kw-2">&amp;</span><span class="self">self</span>, rc: <span class="prelude-ty">Option</span>&lt;RECT&gt;) -&gt; SysResult&lt;()&gt; {
+<a href=#1770 id=1770 data-nosnippet>1770</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::ValidateRect(<span class="self">self</span>.ptr(), pcvoid_or_null(rc.as_ref())) })
+<a href=#1771 id=1771 data-nosnippet>1771</a>	}
+<a href=#1772 id=1772 data-nosnippet>1772</a>
+<a href=#1773 id=1773 data-nosnippet>1773</a>	<span class="doccomment">/// [`ValidateRgn`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-validatergn)
+<a href=#1774 id=1774 data-nosnippet>1774</a>	/// function.
+<a href=#1775 id=1775 data-nosnippet>1775</a>	</span><span class="kw">fn </span>ValidateRgn(<span class="kw-2">&amp;</span><span class="self">self</span>, hrgn: <span class="kw-2">&amp;</span>HRGN) -&gt; SysResult&lt;()&gt; {
+<a href=#1776 id=1776 data-nosnippet>1776</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::ValidateRgn(<span class="self">self</span>.ptr(), hrgn.ptr()) })
+<a href=#1777 id=1777 data-nosnippet>1777</a>	}
+<a href=#1778 id=1778 data-nosnippet>1778</a>
+<a href=#1779 id=1779 data-nosnippet>1779</a>	<span class="doccomment">/// [`WindowFromPhysicalPoint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfromphysicalpoint)
+<a href=#1780 id=1780 data-nosnippet>1780</a>	/// function.
+<a href=#1781 id=1781 data-nosnippet>1781</a>	</span><span class="attr">#[must_use]
+<a href=#1782 id=1782 data-nosnippet>1782</a>	</span><span class="kw">fn </span>WindowFromPhysicalPoint(pt: POINT) -&gt; <span class="prelude-ty">Option</span>&lt;HWND&gt; {
+<a href=#1783 id=1783 data-nosnippet>1783</a>		ptr_to_option_handle(<span class="kw">unsafe </span>{ ffi::WindowFromPhysicalPoint(pt.x, pt.y) })
+<a href=#1784 id=1784 data-nosnippet>1784</a>	}
+<a href=#1785 id=1785 data-nosnippet>1785</a>
+<a href=#1786 id=1786 data-nosnippet>1786</a>	<span class="doccomment">/// [`WindowFromPoint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfrompoint)
+<a href=#1787 id=1787 data-nosnippet>1787</a>	/// function.
+<a href=#1788 id=1788 data-nosnippet>1788</a>	</span><span class="attr">#[must_use]
+<a href=#1789 id=1789 data-nosnippet>1789</a>	</span><span class="kw">fn </span>WindowFromPoint(pt: POINT) -&gt; <span class="prelude-ty">Option</span>&lt;HWND&gt; {
+<a href=#1790 id=1790 data-nosnippet>1790</a>		ptr_to_option_handle(<span class="kw">unsafe </span>{ ffi::WindowFromPoint(pt.x, pt.y) })
+<a href=#1791 id=1791 data-nosnippet>1791</a>	}
+<a href=#1792 id=1792 data-nosnippet>1792</a>
+<a href=#1793 id=1793 data-nosnippet>1793</a>	<span class="doccomment">/// [`WinHelp`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-winhelpw)
+<a href=#1794 id=1794 data-nosnippet>1794</a>	/// function.
+<a href=#1795 id=1795 data-nosnippet>1795</a>	</span><span class="kw">fn </span>WinHelp(<span class="kw-2">&amp;</span><span class="self">self</span>, help_file: <span class="kw-2">&amp;</span>str, cmd: co::HELPW, data: usize) -&gt; SysResult&lt;()&gt; {
+<a href=#1796 id=1796 data-nosnippet>1796</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
+<a href=#1797 id=1797 data-nosnippet>1797</a>			ffi::WinHelpW(<span class="self">self</span>.ptr(), WString::from_str(help_file).as_ptr(), cmd.raw(), data)
+<a href=#1798 id=1798 data-nosnippet>1798</a>		})
 <a href=#1799 id=1799 data-nosnippet>1799</a>	}
-<a href=#1800 id=1800 data-nosnippet>1800</a>
-<a href=#1801 id=1801 data-nosnippet>1801</a>	<span class="doccomment">/// [`WindowFromPoint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfrompoint)
-<a href=#1802 id=1802 data-nosnippet>1802</a>	/// function.
-<a href=#1803 id=1803 data-nosnippet>1803</a>	</span><span class="attr">#[must_use]
-<a href=#1804 id=1804 data-nosnippet>1804</a>	</span><span class="kw">fn </span>WindowFromPoint(pt: POINT) -&gt; <span class="prelude-ty">Option</span>&lt;HWND&gt; {
-<a href=#1805 id=1805 data-nosnippet>1805</a>		ptr_to_option_handle(<span class="kw">unsafe </span>{ ffi::WindowFromPoint(pt.x, pt.y) })
-<a href=#1806 id=1806 data-nosnippet>1806</a>	}
-<a href=#1807 id=1807 data-nosnippet>1807</a>
-<a href=#1808 id=1808 data-nosnippet>1808</a>	<span class="doccomment">/// [`WinHelp`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-winhelpw)
-<a href=#1809 id=1809 data-nosnippet>1809</a>	/// function.
-<a href=#1810 id=1810 data-nosnippet>1810</a>	</span><span class="kw">fn </span>WinHelp(<span class="kw-2">&amp;</span><span class="self">self</span>, help_file: <span class="kw-2">&amp;</span>str, cmd: co::HELPW, data: usize) -&gt; SysResult&lt;()&gt; {
-<a href=#1811 id=1811 data-nosnippet>1811</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
-<a href=#1812 id=1812 data-nosnippet>1812</a>			ffi::WinHelpW(<span class="self">self</span>.ptr(), WString::from_str(help_file).as_ptr(), cmd.raw(), data)
-<a href=#1813 id=1813 data-nosnippet>1813</a>		})
-<a href=#1814 id=1814 data-nosnippet>1814</a>	}
-<a href=#1815 id=1815 data-nosnippet>1815</a>}</code></pre></div></section></main></body></html>
+<a href=#1800 id=1800 data-nosnippet>1800</a>}</code></pre></div></section></main></body></html>
