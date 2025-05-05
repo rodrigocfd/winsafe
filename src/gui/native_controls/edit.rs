@@ -148,6 +148,40 @@ impl Edit {
 		}
 	}
 
+	/// Sets the selection range of the text by sending an
+	/// [`em::SetSel`](crate::msg::em::SetSel) message.
+	///
+	/// # Examples
+	///
+	/// Selecting all text in the control:
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, gui};
+	///
+	/// let my_edit: gui::Edit; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_edit = gui::Edit::new(&wnd, gui::EditOpts::default());
+	///
+	/// my_edit.set_selection(0, -1);
+	/// ```
+	///
+	/// Clearing the selection:
+	///
+	/// ```no_run
+	/// use winsafe::gui;
+	///
+	/// let my_edit: gui::Edit; // initialized somewhere
+	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
+	/// # let my_edit = gui::Edit::new(&wnd, gui::EditOpts::default());
+	///
+	/// my_edit.set_selection(-1, -1);
+	/// ```
+	pub fn set_selection(&self, start: i32, end: i32) {
+		unsafe {
+			self.hwnd().SendMessage(em::SetSel { start, end });
+		}
+	}
+
 	/// Sets the text by calling
 	/// [`HWND::SetWindowText`](crate::prelude::user_Hwnd::SetWindowText).
 	pub fn set_text(&self, text: &str) -> SysResult<()> {
