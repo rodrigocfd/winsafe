@@ -633,6 +633,13 @@ const_ordinary! { DMBIN: i16;
 	USER 256
 }
 
+const_ordinary! { DMCOLLATE: i16;
+	/// [`DEVMODE`](crate::DEVMODE) `dmCollate` (`i16`).
+	=>
+	FALSE 0
+	TRUE 1
+}
+
 const_ordinary! { DMCOLOR: i16;
 	/// [`DEVMODE`](crate::DEVMODE) `dmColor` (`i16`).
 	=>
@@ -892,7 +899,7 @@ const_ordinary! { DMPAPER: i16;
 	/// SuperB/SuperB/A3 305 x 487 mm.
 	B_PLUS 58
 	/// Letter Plus 8.5 x 12.69 in.
-	ETTER_PLUS 59
+	LETTER_PLUS 59
 	/// A4 Plus 210 x 330 mm.
 	A4_PLUS 60
 	/// A5 Transverse 148 x 210 mm.

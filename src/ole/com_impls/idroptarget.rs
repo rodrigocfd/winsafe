@@ -109,7 +109,7 @@ impl IDropTarget {
 }
 
 #[repr(C)]
-pub struct IDropTargetImpl {
+struct IDropTargetImpl {
 	vt: IDropTargetVT,
 	counter: AtomicU32,
 	DragEnter:

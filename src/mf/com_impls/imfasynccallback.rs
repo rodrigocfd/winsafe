@@ -32,7 +32,7 @@ impl IMFAsyncCallback {
 }
 
 #[repr(C)]
-pub struct IMFAsyncCallbackImpl {
+struct IMFAsyncCallbackImpl {
 	vt: IMFAsyncCallbackVT,
 	counter: AtomicU32,
 	GetParameters: Option<Box<dyn Fn(&mut co::MFASYNC, &mut u32) -> AnyResult<()>>>,

@@ -1,9 +1,7 @@
 mod ienumshellitems;
 mod ifiledialog;
-mod ifiledialogevents;
 mod ifileopendialog;
 mod ifileoperation;
-mod ifileoperationprogresssink;
 mod ifilesavedialog;
 mod imodalwindow;
 mod ishellitem;
@@ -18,10 +16,8 @@ mod itaskbarlist4;
 pub mod decl {
 	pub use super::ienumshellitems::IEnumShellItems;
 	pub use super::ifiledialog::IFileDialog;
-	pub use super::ifiledialogevents::IFileDialogEvents;
 	pub use super::ifileopendialog::IFileOpenDialog;
 	pub use super::ifileoperation::IFileOperation;
-	pub use super::ifileoperationprogresssink::IFileOperationProgressSink;
 	pub use super::ifilesavedialog::IFileSaveDialog;
 	pub use super::imodalwindow::IModalWindow;
 	pub use super::ishellitem::IShellItem;

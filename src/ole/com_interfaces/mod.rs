@@ -1,7 +1,6 @@
 mod iadvisesink;
 mod ibindctx;
 mod idataobject;
-mod idroptarget;
 mod imoniker;
 mod ipersist;
 mod ipersistfile;
@@ -16,7 +15,6 @@ pub mod decl {
 	pub use super::iadvisesink::IAdviseSink;
 	pub use super::ibindctx::IBindCtx;
 	pub use super::idataobject::IDataObject;
-	pub use super::idroptarget::IDropTarget;
 	pub use super::imoniker::IMoniker;
 	pub use super::ipersist::IPersist;
 	pub use super::ipersistfile::IPersistFile;

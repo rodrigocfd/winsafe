@@ -268,7 +268,7 @@ pub struct DEVMODE {
 	pub dmDuplex: co::DMDUP,
 	pub dmYResolution: u16,
 	pub dmTTOption: co::DMTT,
-	dmCollate: i16,
+	pub dmCollate: co::DMCOLLATE,
 	dmFormName: [u16; CCHFORMNAME],
 	pub dmLogPixels: u16,
 	pub dmBitsPerPel: u32,
@@ -329,7 +329,6 @@ impl Default for DEVMODE {
 
 impl DEVMODE {
 	pub_fn_string_arr_get_set!(dmDeviceName, set_dmDeviceName);
-	pub_fn_bool_get_set!(dmCollate, set_dmCollate);
 	pub_fn_string_arr_get_set!(dmFormName, set_dmFormName);
 
 	/// Sets the `dmDisplayFlags` or the `dmNup` field.

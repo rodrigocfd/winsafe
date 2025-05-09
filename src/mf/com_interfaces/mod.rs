@@ -1,4 +1,3 @@
-mod imfasynccallback;
 mod imfasyncresult;
 mod imfattributes;
 mod imfbytestream;
@@ -18,7 +17,6 @@ mod imftopologynode;
 mod imfvideodisplaycontrol;
 
 pub mod decl {
-	pub use super::imfasynccallback::IMFAsyncCallback;
 	pub use super::imfasyncresult::IMFAsyncResult;
 	pub use super::imfattributes::IMFAttributes;
 	pub use super::imfbytestream::IMFByteStream;

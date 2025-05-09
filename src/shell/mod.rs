@@ -1,5 +1,6 @@
 #![cfg(feature = "shell")]
 
+mod com_impls;
 mod com_interfaces;
 mod enums;
 mod funcs;
@@ -15,6 +16,7 @@ pub(crate) mod privs;
 pub(in crate::shell) mod vts;
 
 pub mod decl {
+	pub use super::com_impls::decl::*;
 	pub use super::com_interfaces::decl::*;
 	pub use super::enums::*;
 	pub use super::funcs::*;
