@@ -227,7 +227,7 @@
 <a href=#227 id=227 data-nosnippet>227</a>///
 <a href=#228 id=228 data-nosnippet>228</a>/// * [`SHGetIDListFromObject`](crate::SHGetIDListFromObject)
 <a href=#229 id=229 data-nosnippet>229</a></span><span class="attr">#[must_use]
-<a href=#230 id=230 data-nosnippet>230</a></span><span class="kw">pub fn </span>SHCreateItemFromIDList&lt;T&gt;(pidl: <span class="kw-2">&amp;</span>PIDLIST_ABSOLUTE) -&gt; HrResult&lt;T&gt;
+<a href=#230 id=230 data-nosnippet>230</a></span><span class="kw">pub fn </span>SHCreateItemFromIDList&lt;T&gt;(pidl: <span class="kw-2">&amp;</span>PIDL) -&gt; HrResult&lt;T&gt;
 <a href=#231 id=231 data-nosnippet>231</a><span class="kw">where
 <a href=#232 id=232 data-nosnippet>232</a>	</span>T: shell_IShellItem,
 <a href=#233 id=233 data-nosnippet>233</a>{
@@ -367,75 +367,78 @@
 <a href=#367 id=367 data-nosnippet>367</a>///
 <a href=#368 id=368 data-nosnippet>368</a>/// * [`SHCreateItemFromIDList`](crate::SHCreateItemFromIDList)
 <a href=#369 id=369 data-nosnippet>369</a></span><span class="attr">#[must_use]
-<a href=#370 id=370 data-nosnippet>370</a></span><span class="kw">pub fn </span>SHGetIDListFromObject(obj: <span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IUnknown) -&gt; HrResult&lt;PIDLIST_ABSOLUTE&gt; {
-<a href=#371 id=371 data-nosnippet>371</a>	<span class="kw">let </span><span class="kw-2">mut </span>pidl = PIDLIST_ABSOLUTE(std::ptr::null_mut());
-<a href=#372 id=372 data-nosnippet>372</a>	ok_to_hrresult(<span class="kw">unsafe </span>{ ffi::SHGetIDListFromObject(obj.ptr(), pvoid(<span class="kw-2">&amp;mut </span>pidl)) }).map(|<span class="kw">_</span>| pidl)
-<a href=#373 id=373 data-nosnippet>373</a>}
-<a href=#374 id=374 data-nosnippet>374</a>
-<a href=#375 id=375 data-nosnippet>375</a><span class="doccomment">/// [`Shell_NotifyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)
-<a href=#376 id=376 data-nosnippet>376</a>/// function.
-<a href=#377 id=377 data-nosnippet>377</a></span><span class="kw">pub fn </span>Shell_NotifyIcon(message: co::NIM, data: <span class="kw-2">&amp;</span>NOTIFYICONDATA) -&gt; HrResult&lt;()&gt; {
-<a href=#378 id=378 data-nosnippet>378</a>	<span class="kw">match unsafe </span>{ ffi::Shell_NotifyIconW(message.raw(), pcvoid(data)) } {
-<a href=#379 id=379 data-nosnippet>379</a>		<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
-<a href=#380 id=380 data-nosnippet>380</a>		<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
-<a href=#381 id=381 data-nosnippet>381</a>	}
-<a href=#382 id=382 data-nosnippet>382</a>}
-<a href=#383 id=383 data-nosnippet>383</a>
-<a href=#384 id=384 data-nosnippet>384</a><span class="doccomment">/// [`SHFileOperation`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)
-<a href=#385 id=385 data-nosnippet>385</a>/// function.
-<a href=#386 id=386 data-nosnippet>386</a></span><span class="kw">pub fn </span>SHFileOperation(file_op: <span class="kw-2">&amp;mut </span>SHFILEOPSTRUCT) -&gt; HrResult&lt;()&gt; {
-<a href=#387 id=387 data-nosnippet>387</a>	<span class="kw">unsafe </span>{
-<a href=#388 id=388 data-nosnippet>388</a>		<span class="kw">match </span>{ ffi::SHFileOperationW(pvoid(file_op)) } {
-<a href=#389 id=389 data-nosnippet>389</a>			<span class="number">0 </span>=&gt; <span class="prelude-val">Ok</span>(()),
-<a href=#390 id=390 data-nosnippet>390</a>			de =&gt; <span class="prelude-val">Err</span>(co::HRESULT::from_raw(de <span class="kw">as _</span>)),
-<a href=#391 id=391 data-nosnippet>391</a>		}
-<a href=#392 id=392 data-nosnippet>392</a>	}
-<a href=#393 id=393 data-nosnippet>393</a>}
-<a href=#394 id=394 data-nosnippet>394</a>
-<a href=#395 id=395 data-nosnippet>395</a><span class="doccomment">/// [`SHGetFileInfo`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow)
-<a href=#396 id=396 data-nosnippet>396</a>/// function.
-<a href=#397 id=397 data-nosnippet>397</a></span><span class="kw">pub fn </span>SHGetFileInfo(
-<a href=#398 id=398 data-nosnippet>398</a>	path: <span class="kw-2">&amp;</span>str,
-<a href=#399 id=399 data-nosnippet>399</a>	file_attrs: co::FILE_ATTRIBUTE,
-<a href=#400 id=400 data-nosnippet>400</a>	flags: co::SHGFI,
-<a href=#401 id=401 data-nosnippet>401</a>) -&gt; HrResult&lt;(u32, DestroyIconShfiGuard)&gt; {
-<a href=#402 id=402 data-nosnippet>402</a>	<span class="kw">let </span><span class="kw-2">mut </span>shfi = SHFILEINFO::default();
-<a href=#403 id=403 data-nosnippet>403</a>	<span class="kw">unsafe </span>{
-<a href=#404 id=404 data-nosnippet>404</a>		<span class="kw">match </span>ffi::SHGetFileInfoW(
-<a href=#405 id=405 data-nosnippet>405</a>			WString::from_str(path).as_ptr(),
-<a href=#406 id=406 data-nosnippet>406</a>			file_attrs.raw(),
-<a href=#407 id=407 data-nosnippet>407</a>			pvoid(<span class="kw-2">&amp;mut </span>shfi),
-<a href=#408 id=408 data-nosnippet>408</a>			std::mem::size_of::&lt;SHFILEINFO&gt;() <span class="kw">as _</span>,
-<a href=#409 id=409 data-nosnippet>409</a>			flags.raw(),
-<a href=#410 id=410 data-nosnippet>410</a>		) {
-<a href=#411 id=411 data-nosnippet>411</a>			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
-<a href=#412 id=412 data-nosnippet>412</a>			n =&gt; <span class="prelude-val">Ok</span>((n <span class="kw">as _</span>, DestroyIconShfiGuard::new(shfi))),
-<a href=#413 id=413 data-nosnippet>413</a>		}
-<a href=#414 id=414 data-nosnippet>414</a>	}
-<a href=#415 id=415 data-nosnippet>415</a>}
-<a href=#416 id=416 data-nosnippet>416</a>
-<a href=#417 id=417 data-nosnippet>417</a><span class="doccomment">/// [`SHGetStockIconInfo`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetstockiconinfo)
-<a href=#418 id=418 data-nosnippet>418</a>/// function.
-<a href=#419 id=419 data-nosnippet>419</a>///
-<a href=#420 id=420 data-nosnippet>420</a>/// # Examples
-<a href=#421 id=421 data-nosnippet>421</a>///
-<a href=#422 id=422 data-nosnippet>422</a>/// Loading the small (16x16 pixels) camera icon from the system:
-<a href=#423 id=423 data-nosnippet>423</a>///
-<a href=#424 id=424 data-nosnippet>424</a>/// ```no_run
-<a href=#425 id=425 data-nosnippet>425</a>/// use winsafe::{self as w, prelude::*, co};
+<a href=#370 id=370 data-nosnippet>370</a></span><span class="kw">pub fn </span>SHGetIDListFromObject(obj: <span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IUnknown) -&gt; HrResult&lt;CoTaskMemFreePidlGuard&gt; {
+<a href=#371 id=371 data-nosnippet>371</a>	<span class="kw">let </span><span class="kw-2">mut </span>pidl = PIDL(std::ptr::null_mut());
+<a href=#372 id=372 data-nosnippet>372</a>	<span class="kw">unsafe </span>{
+<a href=#373 id=373 data-nosnippet>373</a>		ok_to_hrresult(ffi::SHGetIDListFromObject(obj.ptr(), pvoid(<span class="kw-2">&amp;mut </span>pidl)))
+<a href=#374 id=374 data-nosnippet>374</a>			.map(|<span class="kw">_</span>| CoTaskMemFreePidlGuard::new(pidl))
+<a href=#375 id=375 data-nosnippet>375</a>	}
+<a href=#376 id=376 data-nosnippet>376</a>}
+<a href=#377 id=377 data-nosnippet>377</a>
+<a href=#378 id=378 data-nosnippet>378</a><span class="doccomment">/// [`Shell_NotifyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)
+<a href=#379 id=379 data-nosnippet>379</a>/// function.
+<a href=#380 id=380 data-nosnippet>380</a></span><span class="kw">pub fn </span>Shell_NotifyIcon(message: co::NIM, data: <span class="kw-2">&amp;</span>NOTIFYICONDATA) -&gt; HrResult&lt;()&gt; {
+<a href=#381 id=381 data-nosnippet>381</a>	<span class="kw">match unsafe </span>{ ffi::Shell_NotifyIconW(message.raw(), pcvoid(data)) } {
+<a href=#382 id=382 data-nosnippet>382</a>		<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+<a href=#383 id=383 data-nosnippet>383</a>		<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
+<a href=#384 id=384 data-nosnippet>384</a>	}
+<a href=#385 id=385 data-nosnippet>385</a>}
+<a href=#386 id=386 data-nosnippet>386</a>
+<a href=#387 id=387 data-nosnippet>387</a><span class="doccomment">/// [`SHFileOperation`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shfileoperationw)
+<a href=#388 id=388 data-nosnippet>388</a>/// function.
+<a href=#389 id=389 data-nosnippet>389</a></span><span class="kw">pub fn </span>SHFileOperation(file_op: <span class="kw-2">&amp;mut </span>SHFILEOPSTRUCT) -&gt; HrResult&lt;()&gt; {
+<a href=#390 id=390 data-nosnippet>390</a>	<span class="kw">unsafe </span>{
+<a href=#391 id=391 data-nosnippet>391</a>		<span class="kw">match </span>{ ffi::SHFileOperationW(pvoid(file_op)) } {
+<a href=#392 id=392 data-nosnippet>392</a>			<span class="number">0 </span>=&gt; <span class="prelude-val">Ok</span>(()),
+<a href=#393 id=393 data-nosnippet>393</a>			de =&gt; <span class="prelude-val">Err</span>(co::HRESULT::from_raw(de <span class="kw">as _</span>)),
+<a href=#394 id=394 data-nosnippet>394</a>		}
+<a href=#395 id=395 data-nosnippet>395</a>	}
+<a href=#396 id=396 data-nosnippet>396</a>}
+<a href=#397 id=397 data-nosnippet>397</a>
+<a href=#398 id=398 data-nosnippet>398</a><span class="doccomment">/// [`SHGetFileInfo`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetfileinfow)
+<a href=#399 id=399 data-nosnippet>399</a>/// function.
+<a href=#400 id=400 data-nosnippet>400</a></span><span class="kw">pub fn </span>SHGetFileInfo(
+<a href=#401 id=401 data-nosnippet>401</a>	path: <span class="kw-2">&amp;</span>str,
+<a href=#402 id=402 data-nosnippet>402</a>	file_attrs: co::FILE_ATTRIBUTE,
+<a href=#403 id=403 data-nosnippet>403</a>	flags: co::SHGFI,
+<a href=#404 id=404 data-nosnippet>404</a>) -&gt; HrResult&lt;(u32, DestroyIconShfiGuard)&gt; {
+<a href=#405 id=405 data-nosnippet>405</a>	<span class="kw">let </span><span class="kw-2">mut </span>shfi = SHFILEINFO::default();
+<a href=#406 id=406 data-nosnippet>406</a>	<span class="kw">unsafe </span>{
+<a href=#407 id=407 data-nosnippet>407</a>		<span class="kw">match </span>ffi::SHGetFileInfoW(
+<a href=#408 id=408 data-nosnippet>408</a>			WString::from_str(path).as_ptr(),
+<a href=#409 id=409 data-nosnippet>409</a>			file_attrs.raw(),
+<a href=#410 id=410 data-nosnippet>410</a>			pvoid(<span class="kw-2">&amp;mut </span>shfi),
+<a href=#411 id=411 data-nosnippet>411</a>			std::mem::size_of::&lt;SHFILEINFO&gt;() <span class="kw">as _</span>,
+<a href=#412 id=412 data-nosnippet>412</a>			flags.raw(),
+<a href=#413 id=413 data-nosnippet>413</a>		) {
+<a href=#414 id=414 data-nosnippet>414</a>			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+<a href=#415 id=415 data-nosnippet>415</a>			n =&gt; <span class="prelude-val">Ok</span>((n <span class="kw">as _</span>, DestroyIconShfiGuard::new(shfi))),
+<a href=#416 id=416 data-nosnippet>416</a>		}
+<a href=#417 id=417 data-nosnippet>417</a>	}
+<a href=#418 id=418 data-nosnippet>418</a>}
+<a href=#419 id=419 data-nosnippet>419</a>
+<a href=#420 id=420 data-nosnippet>420</a><span class="doccomment">/// [`SHGetStockIconInfo`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shgetstockiconinfo)
+<a href=#421 id=421 data-nosnippet>421</a>/// function.
+<a href=#422 id=422 data-nosnippet>422</a>///
+<a href=#423 id=423 data-nosnippet>423</a>/// # Examples
+<a href=#424 id=424 data-nosnippet>424</a>///
+<a href=#425 id=425 data-nosnippet>425</a>/// Loading the small (16x16 pixels) camera icon from the system:
 <a href=#426 id=426 data-nosnippet>426</a>///
-<a href=#427 id=427 data-nosnippet>427</a>/// let sii = w::SHGetStockIconInfo(
-<a href=#428 id=428 data-nosnippet>428</a>///     co::SIID::DEVICECAMERA,
-<a href=#429 id=429 data-nosnippet>429</a>///     co::SHGSI::ICON | co::SHGSI::SMALLICON,
-<a href=#430 id=430 data-nosnippet>430</a>/// )?;
-<a href=#431 id=431 data-nosnippet>431</a>///
-<a href=#432 id=432 data-nosnippet>432</a>/// println!("HICON handle: {}", sii.hIcon);
-<a href=#433 id=433 data-nosnippet>433</a>/// # w::AnyResult::Ok(())
-<a href=#434 id=434 data-nosnippet>434</a>/// ```
-<a href=#435 id=435 data-nosnippet>435</a></span><span class="kw">pub fn </span>SHGetStockIconInfo(siid: co::SIID, flags: co::SHGSI) -&gt; HrResult&lt;DestroyIconSiiGuard&gt; {
-<a href=#436 id=436 data-nosnippet>436</a>	<span class="kw">let </span><span class="kw-2">mut </span>sii = SHSTOCKICONINFO::default();
-<a href=#437 id=437 data-nosnippet>437</a>	<span class="kw">unsafe </span>{
-<a href=#438 id=438 data-nosnippet>438</a>		ok_to_hrresult(ffi::SHGetStockIconInfo(siid.raw(), flags.raw(), pvoid(<span class="kw-2">&amp;mut </span>sii)))
-<a href=#439 id=439 data-nosnippet>439</a>			.map(|<span class="kw">_</span>| DestroyIconSiiGuard::new(sii))
-<a href=#440 id=440 data-nosnippet>440</a>	}
-<a href=#441 id=441 data-nosnippet>441</a>}</code></pre></div></section></main></body></html>
+<a href=#427 id=427 data-nosnippet>427</a>/// ```no_run
+<a href=#428 id=428 data-nosnippet>428</a>/// use winsafe::{self as w, prelude::*, co};
+<a href=#429 id=429 data-nosnippet>429</a>///
+<a href=#430 id=430 data-nosnippet>430</a>/// let sii = w::SHGetStockIconInfo(
+<a href=#431 id=431 data-nosnippet>431</a>///     co::SIID::DEVICECAMERA,
+<a href=#432 id=432 data-nosnippet>432</a>///     co::SHGSI::ICON | co::SHGSI::SMALLICON,
+<a href=#433 id=433 data-nosnippet>433</a>/// )?;
+<a href=#434 id=434 data-nosnippet>434</a>///
+<a href=#435 id=435 data-nosnippet>435</a>/// println!("HICON handle: {}", sii.hIcon);
+<a href=#436 id=436 data-nosnippet>436</a>/// # w::AnyResult::Ok(())
+<a href=#437 id=437 data-nosnippet>437</a>/// ```
+<a href=#438 id=438 data-nosnippet>438</a></span><span class="kw">pub fn </span>SHGetStockIconInfo(siid: co::SIID, flags: co::SHGSI) -&gt; HrResult&lt;DestroyIconSiiGuard&gt; {
+<a href=#439 id=439 data-nosnippet>439</a>	<span class="kw">let </span><span class="kw-2">mut </span>sii = SHSTOCKICONINFO::default();
+<a href=#440 id=440 data-nosnippet>440</a>	<span class="kw">unsafe </span>{
+<a href=#441 id=441 data-nosnippet>441</a>		ok_to_hrresult(ffi::SHGetStockIconInfo(siid.raw(), flags.raw(), pvoid(<span class="kw-2">&amp;mut </span>sii)))
+<a href=#442 id=442 data-nosnippet>442</a>			.map(|<span class="kw">_</span>| DestroyIconSiiGuard::new(sii))
+<a href=#443 id=443 data-nosnippet>443</a>	}
+<a href=#444 id=444 data-nosnippet>444</a>}</code></pre></div></section></main></body></html>
