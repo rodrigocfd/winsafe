@@ -60,10 +60,10 @@ impl NOTIFYICONDATA {
 	pub_fn_string_arr_get_set!(szInfoTitle, set_szInfoTitle);
 }
 
-/// [`PIDLIST_ABSOLUTE`](https://learn.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-itemidlist)
+/// [`PIDL`](https://learn.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-itemidlist)
 /// struct.
 #[repr(transparent)]
-pub struct PIDLIST_ABSOLUTE(pub(crate) *mut ITEMIDLIST);
+pub struct PIDL(pub(crate) *mut ITEMIDLIST);
 
 /// [`SHFILEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shfileinfow)
 /// struct.

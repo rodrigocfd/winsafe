@@ -227,7 +227,7 @@ pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
 ///
 /// * [`SHGetIDListFromObject`](crate::SHGetIDListFromObject)
 #[must_use]
-pub fn SHCreateItemFromIDList<T>(pidl: &PIDLIST_ABSOLUTE) -> HrResult<T>
+pub fn SHCreateItemFromIDList<T>(pidl: &PIDL) -> HrResult<T>
 where
 	T: shell_IShellItem,
 {
@@ -367,9 +367,12 @@ pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
 ///
 /// * [`SHCreateItemFromIDList`](crate::SHCreateItemFromIDList)
 #[must_use]
-pub fn SHGetIDListFromObject(obj: &impl ole_IUnknown) -> HrResult<PIDLIST_ABSOLUTE> {
-	let mut pidl = PIDLIST_ABSOLUTE(std::ptr::null_mut());
-	ok_to_hrresult(unsafe { ffi::SHGetIDListFromObject(obj.ptr(), pvoid(&mut pidl)) }).map(|_| pidl)
+pub fn SHGetIDListFromObject(obj: &impl ole_IUnknown) -> HrResult<CoTaskMemFreePidlGuard> {
+	let mut pidl = PIDL(std::ptr::null_mut());
+	unsafe {
+		ok_to_hrresult(ffi::SHGetIDListFromObject(obj.ptr(), pvoid(&mut pidl)))
+			.map(|_| CoTaskMemFreePidlGuard::new(pidl))
+	}
 }
 
 /// [`Shell_NotifyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)

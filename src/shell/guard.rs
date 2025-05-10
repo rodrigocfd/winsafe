@@ -123,3 +123,41 @@ handle_guard! { DragFinishGuard: HDROP;
 	/// [`DragFinish`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragfinish)
 	/// when the object goes out of scope.
 }
+
+/// RAII implementation for [`PIDL`](crate::PIDL) which automatically calls
+/// [`CoTaskMemFree`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
+/// when the object goes out of scope.
+pub struct CoTaskMemFreePidlGuard {
+	pidl: PIDL,
+}
+
+impl Drop for CoTaskMemFreePidlGuard {
+	fn drop(&mut self) {
+		let ptr = self.pidl.0;
+		if !ptr.is_null() {
+			let _ = unsafe { CoTaskMemFreeGuard::new(ptr as _, 0) };
+		}
+	}
+}
+
+impl Deref for CoTaskMemFreePidlGuard {
+	type Target = PIDL;
+
+	fn deref(&self) -> &Self::Target {
+		&self.pidl
+	}
+}
+
+impl CoTaskMemFreePidlGuard {
+	/// Constructs the guard.
+	///
+	/// # Safety
+	///
+	/// Be sure the `PIDL` must be freed with
+	/// [`CoTaskMemFree`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-cotaskmemfree)
+	/// at the end of the scope.
+	#[must_use]
+	pub const unsafe fn new(pidl: PIDL) -> Self {
+		Self { pidl }
+	}
+}
