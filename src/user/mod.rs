@@ -10,7 +10,7 @@ mod structs;
 
 pub mod co;
 pub(in crate::user) mod ffi;
-pub mod guard;
+pub mod guards;
 pub(in crate::user) mod iterators;
 pub mod messages;
 pub(crate) mod privs;

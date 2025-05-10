@@ -95,17 +95,17 @@ pub mod guard {
 	//!
 	//! The guards are named after the functions they call.
 
-	#[cfg(feature = "advapi")] pub use super::advapi::guard::*;
-	#[cfg(feature = "comctl")] pub use super::comctl::guard::*;
-	#[cfg(feature = "gdi")] pub use super::gdi::guard::*;
-	#[cfg(feature = "kernel")] pub use super::kernel::guard::*;
-	#[cfg(feature = "mf")] pub use super::mf::guard::*;
-	#[cfg(feature = "ole")] pub use super::ole::guard::*;
-	#[cfg(feature = "shell")] pub use super::shell::guard::*;
-	#[cfg(feature = "user")] pub use super::user::guard::*;
-	#[cfg(feature = "uxtheme")] pub use super::uxtheme::guard::*;
-	#[cfg(feature = "version")] pub use super::version::guard::*;
-	#[cfg(feature = "winspool")] pub use super::winspool::guard::*;
+	#[cfg(feature = "advapi")] pub use super::advapi::guards::*;
+	#[cfg(feature = "comctl")] pub use super::comctl::guards::*;
+	#[cfg(feature = "gdi")] pub use super::gdi::guards::*;
+	#[cfg(feature = "kernel")] pub use super::kernel::guards::*;
+	#[cfg(feature = "mf")] pub use super::mf::guards::*;
+	#[cfg(feature = "ole")] pub use super::ole::guards::*;
+	#[cfg(feature = "shell")] pub use super::shell::guards::*;
+	#[cfg(feature = "user")] pub use super::user::guards::*;
+	#[cfg(feature = "uxtheme")] pub use super::uxtheme::guards::*;
+	#[cfg(feature = "version")] pub use super::version::guards::*;
+	#[cfg(feature = "winspool")] pub use super::winspool::guards::*;
 }
 
 #[cfg(feature = "user")]

@@ -7,7 +7,7 @@ mod structs;
 
 pub mod co;
 pub(in crate::mf) mod ffi;
-pub mod guard;
+pub mod guards;
 pub(in crate::mf) mod iterators;
 pub(crate) mod privs;
 pub(crate) mod vts;

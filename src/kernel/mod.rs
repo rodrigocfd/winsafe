@@ -13,7 +13,7 @@ mod utilities;
 
 pub mod co;
 pub(crate) mod ffi_types;
-pub mod guard;
+pub mod guards;
 pub(crate) mod privs;
 
 pub mod decl {

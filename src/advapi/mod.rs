@@ -10,7 +10,7 @@ mod proc;
 mod structs;
 
 pub mod co;
-pub mod guard;
+pub mod guards;
 
 pub mod decl {
 	pub use super::enums::*;

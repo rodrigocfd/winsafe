@@ -9,7 +9,7 @@ mod structs;
 
 pub mod co;
 pub(in crate::shell) mod ffi;
-pub mod guard;
+pub mod guards;
 pub(in crate::shell) mod iterators;
 pub mod messages;
 pub(crate) mod privs;

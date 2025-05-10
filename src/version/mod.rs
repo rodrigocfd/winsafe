@@ -5,7 +5,7 @@ mod structs;
 
 pub mod co;
 pub(in crate::version) mod ffi;
-pub mod guard;
+pub mod guards;
 
 pub mod decl {
 	pub use super::handles::decl::*;

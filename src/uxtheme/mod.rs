@@ -6,7 +6,7 @@ mod structs;
 
 pub mod co;
 pub(in crate::uxtheme) mod ffi;
-pub mod guard;
+pub mod guards;
 
 pub mod decl {
 	pub use super::funcs::*;
