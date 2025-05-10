@@ -98,7 +98,7 @@ impl EXCEPINFO {
 
 /// [`PROPERTYKEY`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ns-wtypes-propertykey)
 /// struct.
-#[repr(C)]
+#[repr(C, packed(2))]
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub struct PROPERTYKEY {
 	pub fmtid: GUID,
