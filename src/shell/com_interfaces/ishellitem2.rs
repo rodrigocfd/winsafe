@@ -15,19 +15,32 @@ com_interface! { IShellItem2: "7e9fb0d3-919f-4307-ab2e-9b1860310c93";
 	/// [`IUnknown::Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
 	///
-	/// Usually created with
-	/// [`SHCreateItemFromParsingName`](crate::SHCreateItemFromParsingName)
-	/// function.
-	///
 	/// # Examples
+	///
+	/// Direct creation with
+	/// [`SHCreateItemFromParsingName`](crate::SHCreateItemFromParsingName):
 	///
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let shi = w::SHCreateItemFromParsingName::<w::IShellItem2>(
+	/// let item2 = w::SHCreateItemFromParsingName::<w::IShellItem2>(
 	///     "C:\\Temp\\foo.txt",
 	///     None::<&w::IBindCtx>,
 	/// )?;
+	/// # w::HrResult::Ok(())
+	/// ```
+	///
+	/// Queried from [`IShellItem`](crate::IShellItem):
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*};
+	///
+	/// let item = w::SHCreateItemFromParsingName::<w::IShellItem>(
+	///     "C:\\Temp\\foo.txt",
+	///     None::<&w::IBindCtx>,
+	/// )?;
+	///
+	/// let item2 = item.QueryInterface::<w::IShellItem2>()?;
 	/// # w::HrResult::Ok(())
 	/// ```
 }
