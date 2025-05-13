@@ -10,7 +10,7 @@ NC='\033[0m'
 
 T0=$(date +%s%N)
 
-GHP=../winsafe-gh-pages # target gh-pages repo folder
+GHP=../_winsafe-gh-pages # target gh-pages repo folder
 
 echo -e "${BLUE}Generating docs locally...${NC}"
 RUSTDOCFLAGS="--cfg docsrs" cargo +nightly doc --all-features
