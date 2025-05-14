@@ -107,6 +107,12 @@ pub struct PROPERTYKEY {
 
 impl_default!(PROPERTYKEY);
 
+impl AsRef<PROPERTYKEY> for PROPERTYKEY {
+	fn as_ref(&self) -> &PROPERTYKEY {
+		self
+	}
+}
+
 impl PROPERTYKEY {
 	/// Creates a new `PROPERTYKEY` by setting `pid` to `PID_FIRST_USABLE`
 	/// (`0x02`).

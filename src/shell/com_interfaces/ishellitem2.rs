@@ -59,8 +59,10 @@ impl shell_IShellItem2 for IShellItem2 {}
 pub trait shell_IShellItem2: shell_IShellItem {
 	/// [`IShellItem2::GetBool`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getbool)
 	/// method.
+	///
+	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 	#[must_use]
-	fn GetBool(&self, key: &PROPERTYKEY) -> HrResult<bool> {
+	fn GetBool(&self, key: &impl AsRef<PROPERTYKEY>) -> HrResult<bool> {
 		let mut f = 0;
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItem2VT>(self).GetBool)(self.ptr(), pcvoid(key), &mut f)
@@ -70,8 +72,10 @@ pub trait shell_IShellItem2: shell_IShellItem {
 
 	/// [`IShellItem2::GetFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getfiletime)
 	/// method.
+	///
+	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 	#[must_use]
-	fn GetFileTime(&self, key: &PROPERTYKEY) -> HrResult<FILETIME> {
+	fn GetFileTime(&self, key: &impl AsRef<PROPERTYKEY>) -> HrResult<FILETIME> {
 		let mut ft = FILETIME::default();
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItem2VT>(self).GetFileTime)(self.ptr(), pcvoid(key), pvoid(&mut ft))
@@ -81,8 +85,10 @@ pub trait shell_IShellItem2: shell_IShellItem {
 
 	/// [`IShellItem2::GetInt32`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getint32)
 	/// method.
+	///
+	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 	#[must_use]
-	fn GetInt32(&self, key: &PROPERTYKEY) -> HrResult<i32> {
+	fn GetInt32(&self, key: &impl AsRef<PROPERTYKEY>) -> HrResult<i32> {
 		let mut i = i32::default();
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItem2VT>(self).GetInt32)(self.ptr(), pcvoid(key), &mut i)
@@ -108,8 +114,10 @@ pub trait shell_IShellItem2: shell_IShellItem {
 
 	/// [`IShellItem2::GetUInt32`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getuint32)
 	/// method.
+	///
+	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 	#[must_use]
-	fn GetUInt32(&self, key: &PROPERTYKEY) -> HrResult<u32> {
+	fn GetUInt32(&self, key: &impl AsRef<PROPERTYKEY>) -> HrResult<u32> {
 		let mut ui = u32::default();
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItem2VT>(self).GetUInt32)(self.ptr(), pcvoid(key), &mut ui)
@@ -119,8 +127,10 @@ pub trait shell_IShellItem2: shell_IShellItem {
 
 	/// [`IShellItem2::GetUInt64`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getuint64)
 	/// method.
+	///
+	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 	#[must_use]
-	fn GetUInt64(&self, key: &PROPERTYKEY) -> HrResult<u64> {
+	fn GetUInt64(&self, key: &impl AsRef<PROPERTYKEY>) -> HrResult<u64> {
 		let mut ull = u64::default();
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItem2VT>(self).GetUInt64)(self.ptr(), pcvoid(key), &mut ull)
