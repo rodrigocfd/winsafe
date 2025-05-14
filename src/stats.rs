@@ -13,11 +13,7 @@ pub struct Stats {
 
 fn fmt_thousand(n: usize) -> String {
 	let thou = (n - (n % 1000)) / 1000;
-	if thou > 0 {
-		format!("{},{:03}", thou, n % 1000)
-	} else {
-		n.to_string()
-	}
+	if thou > 0 { format!("{},{:03}", thou, n % 1000) } else { n.to_string() }
 }
 
 impl std::fmt::Display for Stats {
@@ -108,8 +104,8 @@ impl Stats {
 				if line.starts_with("}") {
 					inside_block = false;
 				} else {
-					if !line.starts_with("\t//") // skip comments and separators
-							&& !line.starts_with("\t=>")
+					if !line.trim().starts_with("//") // skip comments and separators
+						&& !line.trim().starts_with("=>")
 					{
 						self.consts += 1;
 					}
@@ -125,6 +121,8 @@ impl Stats {
 					|| line.starts_with("const_wsex!")
 					|| line.starts_with("const_str!")
 					|| line.starts_with("const_values_pub!")
+					|| line.starts_with("const_guid_values!")
+					|| line.starts_with("const_pkey_values!")
 				{
 					inside_block = true;
 				}
