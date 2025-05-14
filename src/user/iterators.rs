@@ -60,8 +60,8 @@ where
 	H: user_Hmenu,
 {
 	hmenu: &'a H,
-	num_items: u32,
-	current: u32,
+	front_idx: u32,
+	past_back_idx: u32,
 }
 
 impl<'a, H> Iterator for HmenuIteritems<'a, H>
@@ -71,13 +71,15 @@ where
 	type Item = SysResult<MenuItemInfo>;
 
 	fn next(&mut self) -> Option<Self::Item> {
-		if self.current == self.num_items {
-			None
-		} else {
-			let nfo = self.hmenu.item_info(IdPos::Pos(self.current));
-			self.current += 1;
-			Some(nfo)
-		}
+		self.grab(true)
+	}
+}
+impl<'a, H> DoubleEndedIterator for HmenuIteritems<'a, H>
+where
+	H: user_Hmenu,
+{
+	fn next_back(&mut self) -> Option<Self::Item> {
+		self.grab(false)
 	}
 }
 
@@ -86,11 +88,26 @@ where
 	H: user_Hmenu,
 {
 	#[must_use]
-	pub(in crate::user) fn new(hmenu: &'a H) -> Self {
-		Self {
+	pub(in crate::user) fn new(hmenu: &'a H) -> SysResult<Self> {
+		Ok(Self {
 			hmenu,
-			num_items: hmenu.GetMenuItemCount().unwrap_or_default(), // zero if any error
-			current: 0,
+			front_idx: 0,
+			past_back_idx: hmenu.GetMenuItemCount()?,
+		})
+	}
+
+	fn grab(&mut self, is_front: bool) -> Option<SysResult<MenuItemInfo>> {
+		if self.front_idx == self.past_back_idx {
+			return None;
 		}
+		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
+
+		let nfo = self.hmenu.item_info(IdPos::Pos(our_idx));
+		if is_front {
+			self.front_idx += 1;
+		} else {
+			self.past_back_idx -= 1;
+		}
+		Some(nfo)
 	}
 }

@@ -128,7 +128,7 @@ pub trait user_Hmenu: Handle {
 	/// let hmenu: w::HMENU; // initialized somewhere
 	/// # let hmenu = w::HMENU::NULL;
 	///
-	/// for item_info in hmenu.iter_items() {
+	/// for item_info in hmenu.iter_items()? {
 	///     let item_info = item_info?;
 	///     match item_info {
 	///         w::MenuItemInfo::Entry { cmd_id, text } =>
@@ -142,7 +142,9 @@ pub trait user_Hmenu: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn iter_items(&self) -> impl Iterator<Item = SysResult<MenuItemInfo>> + '_ {
+	fn iter_items(
+		&self,
+	) -> SysResult<impl DoubleEndedIterator<Item = SysResult<MenuItemInfo>> + '_> {
 		HmenuIteritems::new(self)
 	}
 
