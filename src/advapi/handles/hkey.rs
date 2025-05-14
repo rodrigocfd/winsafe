@@ -248,10 +248,15 @@ pub trait advapi_Hkey: Handle {
 	///     let key_name = key_name?;
 	///     println!("{}", key_name);
 	/// }
+	///
+	/// // Collecting into a Vec
+	/// let names: Vec<String> =
+	///     hkey.RegEnumKeyEx()?
+	///         .collect::<w::SysResult<Vec<_>>>()?;
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn RegEnumKeyEx(&self) -> SysResult<impl Iterator<Item = SysResult<String>> + '_> {
+	fn RegEnumKeyEx(&self) -> SysResult<impl DoubleEndedIterator<Item = SysResult<String>> + '_> {
 		Ok(HkeyKeyIter::new(self)?)
 	}
 
@@ -282,7 +287,9 @@ pub trait advapi_Hkey: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn RegEnumValue(&self) -> SysResult<impl Iterator<Item = SysResult<(String, co::REG)>> + '_> {
+	fn RegEnumValue(
+		&self,
+	) -> SysResult<impl DoubleEndedIterator<Item = SysResult<(String, co::REG)>> + '_> {
 		Ok(HkeyValueIter::new(self)?)
 	}
 
