@@ -20,7 +20,7 @@ com_interface! { IGraphBuilder: "56a868a9-0ad4-11ce-b03a-0020af0ba770";
 	///
 	/// let obj = w::CoCreateInstance::<w::IGraphBuilder>(
 	///     &co::CLSID::FilterGraph,
-	///     None,
+	///     None::<&w::IUnknown>,
 	///     co::CLSCTX::INPROC_SERVER,
 	/// )?;
 	/// # w::HrResult::Ok(())

@@ -22,7 +22,7 @@ use crate::prelude::*;
 /// let cls_id = w::CLSIDFromProgID("Excel.Application")?;
 ///
 /// let excel = w::CoCreateInstance::<w::IDispatch>(
-///     &cls_id, None, co::CLSCTX::LOCAL_SERVER)?;
+///     &cls_id, None::<&w::IUnknown>, co::CLSCTX::LOCAL_SERVER)?;
 ///
 /// let ids = excel.GetIDsOfNames(&["Workbooks"], w::LCID::USER_DEFAULT)?;
 /// println!("{}", ids[0]);
@@ -91,31 +91,23 @@ pub fn CoCreateGuid() -> HrResult<GUID> {
 #[must_use]
 pub fn CoCreateInstance<T>(
 	clsid: &co::CLSID,
-	iunk_outer: Option<&mut IUnknown>,
+	iunk_outer: Option<&impl ole_IUnknown>,
 	cls_context: co::CLSCTX,
 ) -> HrResult<T>
 where
 	T: ole_IUnknown,
 {
-	let (mut queried, mut queried_outer) = unsafe { (T::null(), IUnknown::null()) };
-
+	let mut queried = unsafe { T::null() };
 	ok_to_hrresult(unsafe {
 		ffi::CoCreateInstance(
 			pcvoid(clsid),
-			iunk_outer
-				.as_ref()
-				.map_or(std::ptr::null_mut(), |_| queried_outer.as_mut()),
+			iunk_outer.map_or(std::ptr::null_mut(), |uo| uo.ptr()),
 			cls_context.raw(),
 			pcvoid(&T::IID),
 			queried.as_mut(),
 		)
 	})
-	.map(|_| {
-		if let Some(iunk_outer) = iunk_outer {
-			*iunk_outer = queried_outer; // create outer IUnknown if due
-		}
-		queried // return new IUnknown-derived object
-	})
+	.map(|_| queried)
 }
 
 /// [`CoInitializeEx`](https://learn.microsoft.com/en-us/windows/win32/api/combaseapi/nf-combaseapi-coinitializeex)

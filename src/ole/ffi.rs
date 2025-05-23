@@ -5,7 +5,7 @@ extern_sys! { "ole32";
 	CLSIDFromProgIDEx(PCSTR, PVOID) -> HRES
 	CLSIDFromString(PCSTR, PVOID) -> HRES
 	CoCreateGuid(PVOID) -> HRES
-	CoCreateInstance(PCVOID, *mut COMPTR, u32, PCVOID, *mut COMPTR) -> HRES
+	CoCreateInstance(PCVOID, COMPTR, u32, PCVOID, *mut COMPTR) -> HRES
 	CoInitializeEx(PVOID, u32) -> HRES
 	CoLockObjectExternal(COMPTR, BOOL, BOOL) -> HRES
 	CoTaskMemAlloc(usize) -> PVOID

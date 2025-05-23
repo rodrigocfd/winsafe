@@ -134,7 +134,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	///
 	/// let excel = w::CoCreateInstance::<w::IDispatch>(
 	///     &w::CLSIDFromProgID("Excel.Application")?,
-	///     None,
+	///     None::<&w::IUnknown>,
 	///     co::CLSCTX::LOCAL_SERVER,
 	/// )?;
 	///
@@ -186,7 +186,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	///
 	/// let excel = w::CoCreateInstance::<w::IDispatch>(
 	///     &w::CLSIDFromProgID("Excel.Application")?,
-	///     None,
+	///     None::<&w::IUnknown>,
 	///     co::CLSCTX::LOCAL_SERVER,
 	/// )?;
 	///

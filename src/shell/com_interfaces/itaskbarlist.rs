@@ -20,7 +20,7 @@ com_interface! { ITaskbarList: "56fdf342-fd6d-11d0-958a-006097c9a090";
 	///
 	/// let obj = w::CoCreateInstance::<w::ITaskbarList>(
 	///     &co::CLSID::TaskbarList,
-	///     None,
+	///     None::<&w::IUnknown>,
 	///     co::CLSCTX::INPROC_SERVER,
 	/// )?;
 	/// # w::HrResult::Ok(())

@@ -28,7 +28,7 @@ com_interface_userdef! { IFileDialogEvents, IFileDialogEventsImpl: "973510db-7d7
 	///
 	/// let file_open = w::CoCreateInstance::<w::IFileOpenDialog>(
 	///     &co::CLSID::FileOpenDialog,
-	///     None,
+	///     None::<&w::IUnknown>,
 	///     co::CLSCTX::INPROC_SERVER,
 	/// )?;
 	///
