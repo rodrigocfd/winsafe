@@ -35,9 +35,11 @@ pub trait psapi_Hprocess: kernel_Hprocess {
 	#[must_use]
 	fn EnumProcessModules(
 		&self,
-		hmodule_buffer: &mut [HMODULE],
-	) -> SysResult<u32> {
-		let mut cb_needed = 0_u32;
+		buf_size: usize,
+	) -> SysResult<Vec<HMODULE>> {
+		let mut hmodule_buffer: Vec<HMODULE> = (0..buf_size).map(|_| HMODULE::NULL).collect();
+		let mut cb_needed = 0;
+
 		bool_to_sysresult(unsafe {
 			ffi::EnumProcessModules(
 				self.ptr(),
@@ -46,7 +48,11 @@ pub trait psapi_Hprocess: kernel_Hprocess {
 				&mut cb_needed
 			)
 		})
-		.map(|_| cb_needed)
+		.map(|_| {
+			let actual_len = (cb_needed as usize) / std::mem::size_of::<HMODULE>();
+			hmodule_buffer.truncate(actual_len.min(buf_size));
+			hmodule_buffer
+		})
 	}
 
 	/// [`GetModuleBaseNameA`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmodulebasenamea)
