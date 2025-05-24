@@ -36,8 +36,8 @@ pub trait psapi_Hprocess: kernel_Hprocess {
 	fn EnumProcessModules(
 		&self,
 		buf_size: usize,
-	) -> SysResult<Vec<HMODULE>> {
-		let mut hmodule_buffer: Vec<HMODULE> = (0..buf_size).map(|_| HMODULE::NULL).collect();
+	) -> SysResult<Vec<HINSTANCE>> {
+		let mut hmodule_buffer: Vec<HINSTANCE> = (0..buf_size).map(|_| HINSTANCE::NULL).collect();
 		let mut cb_needed = 0;
 
 		bool_to_sysresult(unsafe {
@@ -49,7 +49,7 @@ pub trait psapi_Hprocess: kernel_Hprocess {
 			)
 		})
 		.map(|_| {
-			let actual_len = (cb_needed as usize) / std::mem::size_of::<HMODULE>();
+			let actual_len = (cb_needed as usize) / std::mem::size_of::<HINSTANCE>();
 			hmodule_buffer.truncate(actual_len.min(buf_size));
 			hmodule_buffer
 		})
@@ -60,7 +60,7 @@ pub trait psapi_Hprocess: kernel_Hprocess {
 	#[must_use]
 	fn GetModuleBaseNameA(
 		&self,
-		hmodule: Option<HMODULE>,
+		hmodule: Option<HINSTANCE>,
 		sz: usize,
 	) -> SysResult<WString> {
 		let mut buf = WString::new_alloc_buf(sz);
@@ -82,7 +82,7 @@ pub trait psapi_Hprocess: kernel_Hprocess {
     #[must_use]
     fn GetModuleInformation(
 		&self,
-		hmodule: HMODULE,
+		hmodule: HINSTANCE,
 	) -> SysResult<MODULEINFO> {
 		let mut mod_info = MODULEINFO::default();
 		bool_to_sysresult(unsafe {

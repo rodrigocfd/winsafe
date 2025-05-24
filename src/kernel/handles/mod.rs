@@ -8,7 +8,6 @@ mod hglobal;
 mod hheap;
 mod hinstance;
 mod hlocal;
-mod hmodule;
 mod hpipe;
 mod hprocess;
 mod hprocesslist;
@@ -26,7 +25,6 @@ pub mod decl {
 	pub use super::hheap::HHEAP;
 	pub use super::hinstance::HINSTANCE;
 	pub use super::hlocal::HLOCAL;
-	pub use super::hmodule::HMODULE;
 	pub use super::hpipe::HPIPE;
 	pub use super::hprocess::HPROCESS;
 	pub use super::hprocesslist::HPROCESSLIST;
@@ -64,7 +62,6 @@ pub mod traits {
 	pub use super::hheap::kernel_Hheap;
 	pub use super::hinstance::kernel_Hinstance;
 	pub use super::hlocal::kernel_Hlocal;
-	pub use super::hmodule::kernel_Hmodule;
 	pub use super::hpipe::kernel_Hpipe;
 	pub use super::hprocess::kernel_Hprocess;
 	pub use super::hprocesslist::kernel_Hprocesslist;
