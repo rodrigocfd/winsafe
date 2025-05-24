@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::privs::*;
+use crate::kernel::{ffi_types::*, privs::*};
 
 /// [`ACL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-acl)
 /// struct.
@@ -429,6 +429,22 @@ impl LUID {
 		self.HighPart
 	}
 }
+
+/// [`MEMORY_BASIC_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-memory_basic_information)
+/// struct.
+#[repr(C)]
+pub struct MEMORY_BASIC_INFORMATION {
+	pub BaseAddress: PVOID,
+	pub AllocationBase: PVOID,
+	pub AllocationProtect: MemoryBasicInformationAllocationProtect,
+	pub PartitionId: u16,
+	pub RegionSize: usize,
+	pub State: MemoryBasicInformationState,
+	pub Protect: MemoryBasicInformationAllocationProtect,
+	pub Type: MemoryBasicInformationType,
+}
+
+impl_default!(MEMORY_BASIC_INFORMATION);
 
 /// [`MODULEENTRY32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-moduleentry32w)
 /// struct.

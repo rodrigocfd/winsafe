@@ -176,6 +176,27 @@ pub trait kernel_Hprocess: Handle {
 		}
 	}
 
+	/// [`ReadProcessMemory`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory)
+	/// function.
+	#[must_use]
+	fn ReadProcessMemory(
+		&self,
+		base_address: crate::kernel::ffi_types::PCVOID,
+		buffer: &mut [u8],
+	) -> SysResult<usize> {
+		let mut bytes_read = 0;
+		bool_to_sysresult(unsafe {
+			ffi::ReadProcessMemory(
+				self.ptr(),
+				base_address,
+				buffer.as_ptr() as _,
+				buffer.len() as _,
+				&mut bytes_read,
+			)
+		})
+		.map(|_| bytes_read)
+	}
+
 	/// [`QueryFullProcessImageName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew)
 	/// function.
 	#[must_use]
@@ -232,6 +253,29 @@ pub trait kernel_Hprocess: Handle {
 	/// function.
 	fn TerminateProcess(&self, exit_code: u32) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::TerminateProcess(self.ptr(), exit_code) })
+	}
+
+	/// [`VirtualQueryEx`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualqueryex)
+	/// function.
+	#[must_use]
+	fn VirtualQueryEx(
+		&self,
+		address: Option<usize>,
+	) -> SysResult<MEMORY_BASIC_INFORMATION> {
+		let mut mbi = MEMORY_BASIC_INFORMATION::default();
+		let ret = unsafe {
+			ffi::VirtualQueryEx(
+				self.ptr(),
+				address.unwrap_or_default() as _,
+				&mut mbi,
+				std::mem::size_of::<MEMORY_BASIC_INFORMATION>(),
+			)
+		};
+		if ret == 0 {
+			Err(GetLastError())
+		} else {
+			Ok(mbi)
+		}
 	}
 
 	/// [`WaitForSingleObject`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)
