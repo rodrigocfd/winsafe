@@ -436,12 +436,12 @@ impl LUID {
 pub struct MEMORY_BASIC_INFORMATION {
 	pub BaseAddress: PVOID,
 	pub AllocationBase: PVOID,
-	pub AllocationProtect: MemoryBasicInformationAllocationProtect,
+	pub AllocationProtect: co::MBI_PAGE,
 	pub PartitionId: u16,
 	pub RegionSize: usize,
-	pub State: MemoryBasicInformationState,
-	pub Protect: MemoryBasicInformationAllocationProtect,
-	pub Type: MemoryBasicInformationType,
+	pub State: co::MBI_STATE,
+	pub Protect: co::MBI_PAGE,
+	pub Type: co::MBI_TYPE,
 }
 
 impl_default!(MEMORY_BASIC_INFORMATION);

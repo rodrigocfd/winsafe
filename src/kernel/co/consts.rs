@@ -770,6 +770,45 @@ const_bitflag! { MBC: u32;
 	USEGLYPHCHARS 0x0000_0004
 }
 
+const_bitflag! { MBI_PAGE: u32;
+	/// [`Memory Protection Constants`](https://learn.microsoft.com/en-us/windows/win32/memory/memory-protection-constants)
+	/// enumeration (`u32`).
+	=>
+	None 0
+
+	Execute 0x10
+	ExecuteRead 0x20
+	ExecuteReadWrite 0x40
+	ExecuteWriteCopy 0x80
+	NoAccess 0x01
+	Read 0x02
+	ReadWrite 0x04
+	WriteCopy 0x08
+	TargetsInvalidOrNoUpdate 0x40000000
+
+	Guard 0x100
+	NoCache 0x200
+	WriteCombine 0x400
+}
+
+const_ordinary! { MBI_STATE: u32;
+	/// [`State Parameter`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-memory_basic_information)
+	/// enumeration (`u32`).
+	=>
+	None 0
+	COMMIT 0x1000
+	RESERVE 0x2000
+}
+
+const_ordinary! { MBI_TYPE: u32;
+	/// [`Type Parameter`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-memory_basic_information)
+	/// enumeration (`u32`).
+	=>
+	Image 0x1_000_000
+	Mapped 0x40_000
+	Private 0x20_000
+}
+
 const_ordinary! { MONITOR_DISPLAY_STATE: u32;
 	/// [`MONITOR_DISPLAY_STATE`](https://learn.microsoft.com/en-us/windows-hardware/drivers/ddi/wdm/ne-wdm-_monitor_display_state)
 	/// enumeration (`u32`).
