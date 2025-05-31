@@ -210,6 +210,9 @@ pub trait kernel_Hprocess: Handle {
 
 	/// [`ReadProcessMemory`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory)
 	/// function.
+	///
+	/// Reads at most `buffer.len()` bytes. Returns how many bytes were actually
+	/// read.
 	#[must_use]
 	fn ReadProcessMemory(
 		&self,
