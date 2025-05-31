@@ -216,7 +216,7 @@ pub trait kernel_Hprocess: Handle {
 	#[must_use]
 	fn ReadProcessMemory(
 		&self,
-		base_address: crate::kernel::ffi_types::PCVOID,
+		base_address: *mut std::ffi::c_void,
 		buffer: &mut [u8],
 	) -> SysResult<usize> {
 		let mut bytes_read = 0;
