@@ -19,7 +19,6 @@ all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
 [features]
-default = ["psapi"]
 advapi = ["kernel"]
 comctl = ["ole"]
 dshow = ["oleaut"]
