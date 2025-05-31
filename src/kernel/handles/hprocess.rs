@@ -266,18 +266,16 @@ pub trait kernel_Hprocess: Handle {
 		address: Option<*const std::ffi::c_void>,
 	) -> SysResult<MEMORY_BASIC_INFORMATION> {
 		let mut mbi = MEMORY_BASIC_INFORMATION::default();
-		let ret = unsafe {
+		match unsafe {
 			ffi::VirtualQueryEx(
 				self.ptr(),
 				address.unwrap_or(std::ptr::null()),
 				pvoid(&mut mbi),
 				std::mem::size_of::<MEMORY_BASIC_INFORMATION>(),
 			)
-		};
-		if ret == 0 {
-			Err(GetLastError())
-		} else {
-			Ok(mbi)
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(mbi),
 		}
 	}
 
