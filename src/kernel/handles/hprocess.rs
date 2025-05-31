@@ -176,27 +176,6 @@ pub trait kernel_Hprocess: Handle {
 		}
 	}
 
-	/// [`ReadProcessMemory`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory)
-	/// function.
-	#[must_use]
-	fn ReadProcessMemory(
-		&self,
-		base_address: crate::kernel::ffi_types::PCVOID,
-		buffer: &mut [u8],
-	) -> SysResult<usize> {
-		let mut bytes_read = 0;
-		bool_to_sysresult(unsafe {
-			ffi::ReadProcessMemory(
-				self.ptr(),
-				base_address,
-				buffer.as_ptr() as _,
-				buffer.len() as _,
-				&mut bytes_read,
-			)
-		})
-		.map(|_| bytes_read)
-	}
-
 	/// [`QueryFullProcessImageName`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-queryfullprocessimagenamew)
 	/// function.
 	#[must_use]
@@ -227,6 +206,27 @@ pub trait kernel_Hprocess: Handle {
 	fn QueryProcessCycleTime(&self) -> SysResult<u64> {
 		let mut t = u64::default();
 		bool_to_sysresult(unsafe { ffi::QueryProcessCycleTime(self.ptr(), &mut t) }).map(|_| t)
+	}
+
+	/// [`ReadProcessMemory`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory)
+	/// function.
+	#[must_use]
+	fn ReadProcessMemory(
+		&self,
+		base_address: crate::kernel::ffi_types::PCVOID,
+		buffer: &mut [u8],
+	) -> SysResult<usize> {
+		let mut bytes_read = 0;
+		bool_to_sysresult(unsafe {
+			ffi::ReadProcessMemory(
+				self.ptr(),
+				base_address,
+				buffer.as_ptr() as _,
+				buffer.len() as _,
+				&mut bytes_read,
+			)
+		})
+		.map(|_| bytes_read)
 	}
 
 	/// [`SetPriorityClass`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setpriorityclass)
