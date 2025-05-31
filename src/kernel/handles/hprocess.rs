@@ -258,16 +258,13 @@ pub trait kernel_Hprocess: Handle {
 	/// [`VirtualQueryEx`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualqueryex)
 	/// function.
 	#[must_use]
-	fn VirtualQueryEx(
-		&self,
-		address: Option<usize>,
-	) -> SysResult<MEMORY_BASIC_INFORMATION> {
+	fn VirtualQueryEx(&self, address: Option<usize>) -> SysResult<MEMORY_BASIC_INFORMATION> {
 		let mut mbi = MEMORY_BASIC_INFORMATION::default();
 		let ret = unsafe {
 			ffi::VirtualQueryEx(
 				self.ptr(),
 				address.unwrap_or_default() as _,
-				&mut mbi,
+				pvoid(&mut mbi),
 				std::mem::size_of::<MEMORY_BASIC_INFORMATION>(),
 			)
 		};
