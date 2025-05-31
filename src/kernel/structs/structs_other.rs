@@ -314,6 +314,11 @@ impl std::fmt::Display for LANGID {
 impl LANGID {
 	/// [`LANGID`](crate::LANGID) composed of
 	/// [`LANG::NEUTRAL`](crate::co::LANG::NEUTRAL) and
+	/// [`SUBLANG::NEUTRAL`](crate::co::SUBLANG::NEUTRAL).
+	pub const NEUTRAL: Self = Self::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL);
+
+	/// [`LANGID`](crate::LANGID) composed of
+	/// [`LANG::NEUTRAL`](crate::co::LANG::NEUTRAL) and
 	/// [`SUBLANG::SYS_DEFAULT`](crate::co::SUBLANG::SYS_DEFAULT).
 	pub const SYSTEM_DEFAULT: Self = Self::new(co::LANG::NEUTRAL, co::SUBLANG::SYS_DEFAULT);
 
