@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::{ffi_types::*, privs::*};
+use crate::kernel::privs::*;
 
 /// [`ACL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-acl)
 /// struct.
@@ -434,8 +434,8 @@ impl LUID {
 /// struct.
 #[repr(C)]
 pub struct MEMORY_BASIC_INFORMATION {
-	pub BaseAddress: PVOID,
-	pub AllocationBase: PVOID,
+	pub BaseAddress: *mut std::ffi::c_void,
+	pub AllocationBase: *mut std::ffi::c_void,
 	pub AllocationProtect: co::MBI_PAGE,
 	pub PartitionId: u16,
 	pub RegionSize: usize,
