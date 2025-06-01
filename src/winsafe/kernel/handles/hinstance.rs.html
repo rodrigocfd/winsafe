@@ -148,202 +148,200 @@
 <a href=#148 id=148 data-nosnippet>148</a>				<span class="self">self</span>.ptr(),
 <a href=#149 id=149 data-nosnippet>149</a>				resource_id.as_ptr(),
 <a href=#150 id=150 data-nosnippet>150</a>				resource_type.as_ptr(),
-<a href=#151 id=151 data-nosnippet>151</a>				language
-<a href=#152 id=152 data-nosnippet>152</a>					.unwrap_or(LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL))
-<a href=#153 id=153 data-nosnippet>153</a>					.into(),
-<a href=#154 id=154 data-nosnippet>154</a>			)
-<a href=#155 id=155 data-nosnippet>155</a>		})
-<a href=#156 id=156 data-nosnippet>156</a>	}
-<a href=#157 id=157 data-nosnippet>157</a>
-<a href=#158 id=158 data-nosnippet>158</a>	<span class="doccomment">/// [`GetModuleFileName`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew)
-<a href=#159 id=159 data-nosnippet>159</a>	/// function.
+<a href=#151 id=151 data-nosnippet>151</a>				language.unwrap_or(LANGID::NEUTRAL).into(),
+<a href=#152 id=152 data-nosnippet>152</a>			)
+<a href=#153 id=153 data-nosnippet>153</a>		})
+<a href=#154 id=154 data-nosnippet>154</a>	}
+<a href=#155 id=155 data-nosnippet>155</a>
+<a href=#156 id=156 data-nosnippet>156</a>	<span class="doccomment">/// [`GetModuleFileName`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulefilenamew)
+<a href=#157 id=157 data-nosnippet>157</a>	/// function.
+<a href=#158 id=158 data-nosnippet>158</a>	///
+<a href=#159 id=159 data-nosnippet>159</a>	/// # Examples
 <a href=#160 id=160 data-nosnippet>160</a>	///
-<a href=#161 id=161 data-nosnippet>161</a>	/// # Examples
+<a href=#161 id=161 data-nosnippet>161</a>	/// Retrieving the full path of currently running .exe file:
 <a href=#162 id=162 data-nosnippet>162</a>	///
-<a href=#163 id=163 data-nosnippet>163</a>	/// Retrieving the full path of currently running .exe file:
-<a href=#164 id=164 data-nosnippet>164</a>	///
-<a href=#165 id=165 data-nosnippet>165</a>	/// ```no_run
-<a href=#166 id=166 data-nosnippet>166</a>	/// use winsafe::{self as w, prelude::*};
+<a href=#163 id=163 data-nosnippet>163</a>	/// ```no_run
+<a href=#164 id=164 data-nosnippet>164</a>	/// use winsafe::{self as w, prelude::*};
+<a href=#165 id=165 data-nosnippet>165</a>	///
+<a href=#166 id=166 data-nosnippet>166</a>	/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
 <a href=#167 id=167 data-nosnippet>167</a>	///
-<a href=#168 id=168 data-nosnippet>168</a>	/// let exe_name = w::HINSTANCE::NULL.GetModuleFileName()?;
-<a href=#169 id=169 data-nosnippet>169</a>	///
-<a href=#170 id=170 data-nosnippet>170</a>	/// println!("EXE: {}", exe_name);
-<a href=#171 id=171 data-nosnippet>171</a>	/// # w::SysResult::Ok(())
-<a href=#172 id=172 data-nosnippet>172</a>	/// ```
-<a href=#173 id=173 data-nosnippet>173</a>	</span><span class="attr">#[must_use]
-<a href=#174 id=174 data-nosnippet>174</a>	</span><span class="kw">fn </span>GetModuleFileName(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;String&gt; {
-<a href=#175 id=175 data-nosnippet>175</a>		<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = WString::SSO_LEN; <span class="comment">// start with no string heap allocation
-<a href=#176 id=176 data-nosnippet>176</a>		</span><span class="kw">loop </span>{
-<a href=#177 id=177 data-nosnippet>177</a>			<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
-<a href=#178 id=178 data-nosnippet>178</a>			<span class="kw">let </span>copied = <span class="kw">match unsafe </span>{
-<a href=#179 id=179 data-nosnippet>179</a>				ffi::GetModuleFileNameW(<span class="self">self</span>.ptr(), buf.as_mut_ptr(), buf.buf_len() <span class="kw">as _</span>)
-<a href=#180 id=180 data-nosnippet>180</a>			} {
-<a href=#181 id=181 data-nosnippet>181</a>				<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
-<a href=#182 id=182 data-nosnippet>182</a>				len =&gt; len,
-<a href=#183 id=183 data-nosnippet>183</a>			} + <span class="number">1</span>; <span class="comment">// plus terminating null count
-<a href=#184 id=184 data-nosnippet>184</a>
-<a href=#185 id=185 data-nosnippet>185</a>			</span><span class="kw">if </span>(copied <span class="kw">as </span>usize) &lt; buf_sz {
-<a href=#186 id=186 data-nosnippet>186</a>				<span class="kw">return </span><span class="prelude-val">Ok</span>(buf.to_string()); <span class="comment">// to break, must have at least 1 char gap
-<a href=#187 id=187 data-nosnippet>187</a>			</span>}
-<a href=#188 id=188 data-nosnippet>188</a>
-<a href=#189 id=189 data-nosnippet>189</a>			buf_sz += MAX_PATH; <span class="comment">// increase buffer size to try again
-<a href=#190 id=190 data-nosnippet>190</a>		</span>}
-<a href=#191 id=191 data-nosnippet>191</a>	}
-<a href=#192 id=192 data-nosnippet>192</a>
-<a href=#193 id=193 data-nosnippet>193</a>	<span class="doccomment">/// [`GetModuleHandle`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew)
-<a href=#194 id=194 data-nosnippet>194</a>	/// function.
+<a href=#168 id=168 data-nosnippet>168</a>	/// println!("EXE: {}", exe_name);
+<a href=#169 id=169 data-nosnippet>169</a>	/// # w::SysResult::Ok(())
+<a href=#170 id=170 data-nosnippet>170</a>	/// ```
+<a href=#171 id=171 data-nosnippet>171</a>	</span><span class="attr">#[must_use]
+<a href=#172 id=172 data-nosnippet>172</a>	</span><span class="kw">fn </span>GetModuleFileName(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;String&gt; {
+<a href=#173 id=173 data-nosnippet>173</a>		<span class="kw">let </span><span class="kw-2">mut </span>buf_sz = WString::SSO_LEN; <span class="comment">// start with no string heap allocation
+<a href=#174 id=174 data-nosnippet>174</a>		</span><span class="kw">loop </span>{
+<a href=#175 id=175 data-nosnippet>175</a>			<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
+<a href=#176 id=176 data-nosnippet>176</a>			<span class="kw">let </span>copied = <span class="kw">match unsafe </span>{
+<a href=#177 id=177 data-nosnippet>177</a>				ffi::GetModuleFileNameW(<span class="self">self</span>.ptr(), buf.as_mut_ptr(), buf.buf_len() <span class="kw">as _</span>)
+<a href=#178 id=178 data-nosnippet>178</a>			} {
+<a href=#179 id=179 data-nosnippet>179</a>				<span class="number">0 </span>=&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(GetLastError()),
+<a href=#180 id=180 data-nosnippet>180</a>				len =&gt; len,
+<a href=#181 id=181 data-nosnippet>181</a>			} + <span class="number">1</span>; <span class="comment">// plus terminating null count
+<a href=#182 id=182 data-nosnippet>182</a>
+<a href=#183 id=183 data-nosnippet>183</a>			</span><span class="kw">if </span>(copied <span class="kw">as </span>usize) &lt; buf_sz {
+<a href=#184 id=184 data-nosnippet>184</a>				<span class="kw">return </span><span class="prelude-val">Ok</span>(buf.to_string()); <span class="comment">// to break, must have at least 1 char gap
+<a href=#185 id=185 data-nosnippet>185</a>			</span>}
+<a href=#186 id=186 data-nosnippet>186</a>
+<a href=#187 id=187 data-nosnippet>187</a>			buf_sz += MAX_PATH; <span class="comment">// increase buffer size to try again
+<a href=#188 id=188 data-nosnippet>188</a>		</span>}
+<a href=#189 id=189 data-nosnippet>189</a>	}
+<a href=#190 id=190 data-nosnippet>190</a>
+<a href=#191 id=191 data-nosnippet>191</a>	<span class="doccomment">/// [`GetModuleHandle`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandlew)
+<a href=#192 id=192 data-nosnippet>192</a>	/// function.
+<a href=#193 id=193 data-nosnippet>193</a>	///
+<a href=#194 id=194 data-nosnippet>194</a>	/// # Examples
 <a href=#195 id=195 data-nosnippet>195</a>	///
-<a href=#196 id=196 data-nosnippet>196</a>	/// # Examples
+<a href=#196 id=196 data-nosnippet>196</a>	/// Retrieving current module instance:
 <a href=#197 id=197 data-nosnippet>197</a>	///
-<a href=#198 id=198 data-nosnippet>198</a>	/// Retrieving current module instance:
-<a href=#199 id=199 data-nosnippet>199</a>	///
-<a href=#200 id=200 data-nosnippet>200</a>	/// ```no_run
-<a href=#201 id=201 data-nosnippet>201</a>	/// use winsafe::{self as w, prelude::*};
-<a href=#202 id=202 data-nosnippet>202</a>	///
-<a href=#203 id=203 data-nosnippet>203</a>	/// let hinstance = w::HINSTANCE::GetModuleHandle(None)?;
-<a href=#204 id=204 data-nosnippet>204</a>	/// # w::SysResult::Ok(())
-<a href=#205 id=205 data-nosnippet>205</a>	/// ```
-<a href=#206 id=206 data-nosnippet>206</a>	</span><span class="attr">#[must_use]
-<a href=#207 id=207 data-nosnippet>207</a>	</span><span class="kw">fn </span>GetModuleHandle(module_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; SysResult&lt;HINSTANCE&gt; {
-<a href=#208 id=208 data-nosnippet>208</a>		ptr_to_sysresult_handle(<span class="kw">unsafe </span>{
-<a href=#209 id=209 data-nosnippet>209</a>			ffi::GetModuleHandleW(WString::from_opt_str(module_name).as_ptr())
-<a href=#210 id=210 data-nosnippet>210</a>		})
-<a href=#211 id=211 data-nosnippet>211</a>	}
-<a href=#212 id=212 data-nosnippet>212</a>
-<a href=#213 id=213 data-nosnippet>213</a>	<span class="doccomment">/// [`GetModuleHandleEx`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandleexw)
-<a href=#214 id=214 data-nosnippet>214</a>	/// function.
-<a href=#215 id=215 data-nosnippet>215</a>	///
-<a href=#216 id=216 data-nosnippet>216</a>	/// The `GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS` is automatically managed by
-<a href=#217 id=217 data-nosnippet>217</a>	/// the function.
-<a href=#218 id=218 data-nosnippet>218</a>	///
-<a href=#219 id=219 data-nosnippet>219</a>	/// The `GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT` flag is never used,
-<a href=#220 id=220 data-nosnippet>220</a>	/// for safety reasons.
+<a href=#198 id=198 data-nosnippet>198</a>	/// ```no_run
+<a href=#199 id=199 data-nosnippet>199</a>	/// use winsafe::{self as w, prelude::*};
+<a href=#200 id=200 data-nosnippet>200</a>	///
+<a href=#201 id=201 data-nosnippet>201</a>	/// let hinstance = w::HINSTANCE::GetModuleHandle(None)?;
+<a href=#202 id=202 data-nosnippet>202</a>	/// # w::SysResult::Ok(())
+<a href=#203 id=203 data-nosnippet>203</a>	/// ```
+<a href=#204 id=204 data-nosnippet>204</a>	</span><span class="attr">#[must_use]
+<a href=#205 id=205 data-nosnippet>205</a>	</span><span class="kw">fn </span>GetModuleHandle(module_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;) -&gt; SysResult&lt;HINSTANCE&gt; {
+<a href=#206 id=206 data-nosnippet>206</a>		ptr_to_sysresult_handle(<span class="kw">unsafe </span>{
+<a href=#207 id=207 data-nosnippet>207</a>			ffi::GetModuleHandleW(WString::from_opt_str(module_name).as_ptr())
+<a href=#208 id=208 data-nosnippet>208</a>		})
+<a href=#209 id=209 data-nosnippet>209</a>	}
+<a href=#210 id=210 data-nosnippet>210</a>
+<a href=#211 id=211 data-nosnippet>211</a>	<span class="doccomment">/// [`GetModuleHandleEx`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getmodulehandleexw)
+<a href=#212 id=212 data-nosnippet>212</a>	/// function.
+<a href=#213 id=213 data-nosnippet>213</a>	///
+<a href=#214 id=214 data-nosnippet>214</a>	/// The `GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS` is automatically managed by
+<a href=#215 id=215 data-nosnippet>215</a>	/// the function.
+<a href=#216 id=216 data-nosnippet>216</a>	///
+<a href=#217 id=217 data-nosnippet>217</a>	/// The `GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT` flag is never used,
+<a href=#218 id=218 data-nosnippet>218</a>	/// for safety reasons.
+<a href=#219 id=219 data-nosnippet>219</a>	///
+<a href=#220 id=220 data-nosnippet>220</a>	/// # Examples
 <a href=#221 id=221 data-nosnippet>221</a>	///
-<a href=#222 id=222 data-nosnippet>222</a>	/// # Examples
-<a href=#223 id=223 data-nosnippet>223</a>	///
-<a href=#224 id=224 data-nosnippet>224</a>	/// ```no_run
-<a href=#225 id=225 data-nosnippet>225</a>	/// use winsafe::{self as w, prelude::*, co};
-<a href=#226 id=226 data-nosnippet>226</a>	///
-<a href=#227 id=227 data-nosnippet>227</a>	/// let hinstance = w::HINSTANCE::GetModuleHandleEx(
-<a href=#228 id=228 data-nosnippet>228</a>	///     w::AddrStr::from_str("foo.dll"),
-<a href=#229 id=229 data-nosnippet>229</a>	///     co::GET_MODULE_HANDLE_EX_FLAG::NoValue,
-<a href=#230 id=230 data-nosnippet>230</a>	/// )?;
-<a href=#231 id=231 data-nosnippet>231</a>	///
-<a href=#232 id=232 data-nosnippet>232</a>	/// // FreeLibrary() called automatically
-<a href=#233 id=233 data-nosnippet>233</a>	/// # w::SysResult::Ok(())
-<a href=#234 id=234 data-nosnippet>234</a>	/// ```
-<a href=#235 id=235 data-nosnippet>235</a>	</span><span class="attr">#[must_use]
-<a href=#236 id=236 data-nosnippet>236</a>	</span><span class="kw">fn </span>GetModuleHandleEx(
-<a href=#237 id=237 data-nosnippet>237</a>		addr_or_name: AddrStr,
-<a href=#238 id=238 data-nosnippet>238</a>		flags: co::GET_MODULE_HANDLE_EX_FLAG,
-<a href=#239 id=239 data-nosnippet>239</a>	) -&gt; SysResult&lt;FreeLibraryGuard&gt; {
-<a href=#240 id=240 data-nosnippet>240</a>		<span class="kw">let </span><span class="kw-2">mut </span>addr_or_name = addr_or_name;
-<a href=#241 id=241 data-nosnippet>241</a>		<span class="kw">let </span>(module_name, <span class="kw-2">mut </span>f) = <span class="kw">match </span><span class="kw-2">&amp;mut </span>addr_or_name {
-<a href=#242 id=242 data-nosnippet>242</a>			AddrStr::None =&gt; (std::ptr::null_mut(), <span class="number">0</span>),
-<a href=#243 id=243 data-nosnippet>243</a>			AddrStr::Addr(a) =&gt; (<span class="kw-2">*</span>a <span class="kw">as _</span>, GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS),
-<a href=#244 id=244 data-nosnippet>244</a>			AddrStr::Str(ws) =&gt; (<span class="kw">unsafe </span>{ ws.as_mut_ptr() }, <span class="number">0</span>),
-<a href=#245 id=245 data-nosnippet>245</a>		};
-<a href=#246 id=246 data-nosnippet>246</a>		f |= flags.raw();
-<a href=#247 id=247 data-nosnippet>247</a>
-<a href=#248 id=248 data-nosnippet>248</a>		<span class="kw">let </span><span class="kw-2">mut </span>h = <span class="kw">unsafe </span>{ HINSTANCE::from_ptr(std::ptr::null_mut()) };
-<a href=#249 id=249 data-nosnippet>249</a>		<span class="kw">unsafe </span>{
-<a href=#250 id=250 data-nosnippet>250</a>			bool_to_sysresult(ffi::GetModuleHandleExW(f, module_name, h.as_mut()))
-<a href=#251 id=251 data-nosnippet>251</a>				.map(|<span class="kw">_</span>| FreeLibraryGuard::new(h))
-<a href=#252 id=252 data-nosnippet>252</a>		}
-<a href=#253 id=253 data-nosnippet>253</a>	}
-<a href=#254 id=254 data-nosnippet>254</a>
-<a href=#255 id=255 data-nosnippet>255</a>	<span class="doccomment">/// [`GetProcAddress`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress)
-<a href=#256 id=256 data-nosnippet>256</a>	/// function.
-<a href=#257 id=257 data-nosnippet>257</a>	</span><span class="attr">#[must_use]
-<a href=#258 id=258 data-nosnippet>258</a>	</span><span class="kw">fn </span>GetProcAddress(<span class="kw-2">&amp;</span><span class="self">self</span>, proc_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;<span class="kw-2">*const </span>std::ffi::c_void&gt; {
-<a href=#259 id=259 data-nosnippet>259</a>		ptr_to_sysresult(<span class="kw">unsafe </span>{
-<a href=#260 id=260 data-nosnippet>260</a>			ffi::GetProcAddress(<span class="self">self</span>.ptr(), vec_ptr(<span class="kw-2">&amp;</span>str_to_iso88591(proc_name))) <span class="kw">as _
-<a href=#261 id=261 data-nosnippet>261</a>		</span>})
-<a href=#262 id=262 data-nosnippet>262</a>		.map(|ptr| ptr <span class="kw">as _</span>)
-<a href=#263 id=263 data-nosnippet>263</a>	}
-<a href=#264 id=264 data-nosnippet>264</a>
-<a href=#265 id=265 data-nosnippet>265</a>	<span class="doccomment">/// [`LoadLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryw)
-<a href=#266 id=266 data-nosnippet>266</a>	/// function.
-<a href=#267 id=267 data-nosnippet>267</a>	</span><span class="attr">#[must_use]
-<a href=#268 id=268 data-nosnippet>268</a>	</span><span class="kw">fn </span>LoadLibrary(lib_file_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;FreeLibraryGuard&gt; {
-<a href=#269 id=269 data-nosnippet>269</a>		<span class="kw">unsafe </span>{
-<a href=#270 id=270 data-nosnippet>270</a>			ptr_to_sysresult_handle(ffi::LoadLibraryW(WString::from_str(lib_file_name).as_ptr()))
-<a href=#271 id=271 data-nosnippet>271</a>				.map(|h| FreeLibraryGuard::new(h))
-<a href=#272 id=272 data-nosnippet>272</a>		}
-<a href=#273 id=273 data-nosnippet>273</a>	}
-<a href=#274 id=274 data-nosnippet>274</a>
-<a href=#275 id=275 data-nosnippet>275</a>	<span class="doccomment">/// [`LoadResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadresource)
-<a href=#276 id=276 data-nosnippet>276</a>	/// function.
-<a href=#277 id=277 data-nosnippet>277</a>	///
-<a href=#278 id=278 data-nosnippet>278</a>	/// For an example, see
-<a href=#279 id=279 data-nosnippet>279</a>	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
-<a href=#280 id=280 data-nosnippet>280</a>	</span><span class="attr">#[must_use]
-<a href=#281 id=281 data-nosnippet>281</a>	</span><span class="kw">fn </span>LoadResource(<span class="kw-2">&amp;</span><span class="self">self</span>, res_info: <span class="kw-2">&amp;</span>HRSRC) -&gt; SysResult&lt;HRSRCMEM&gt; {
-<a href=#282 id=282 data-nosnippet>282</a>		ptr_to_sysresult_handle(<span class="kw">unsafe </span>{ ffi::LoadResource(<span class="self">self</span>.ptr(), res_info.ptr()) })
-<a href=#283 id=283 data-nosnippet>283</a>	}
-<a href=#284 id=284 data-nosnippet>284</a>
-<a href=#285 id=285 data-nosnippet>285</a>	<span class="doccomment">/// [`LockResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-lockresource)
-<a href=#286 id=286 data-nosnippet>286</a>	/// function.
-<a href=#287 id=287 data-nosnippet>287</a>	///
-<a href=#288 id=288 data-nosnippet>288</a>	/// This method should belong to [`HRSRCMEM`](crate::HRSRCMEM), but in order
-<a href=#289 id=289 data-nosnippet>289</a>	/// to make it safe, we automatically call
-<a href=#290 id=290 data-nosnippet>290</a>	/// [`HINSTANCE::SizeofResource`](crate::prelude::kernel_Hinstance::SizeofResource),
-<a href=#291 id=291 data-nosnippet>291</a>	/// so it's implemented here.
+<a href=#222 id=222 data-nosnippet>222</a>	/// ```no_run
+<a href=#223 id=223 data-nosnippet>223</a>	/// use winsafe::{self as w, prelude::*, co};
+<a href=#224 id=224 data-nosnippet>224</a>	///
+<a href=#225 id=225 data-nosnippet>225</a>	/// let hinstance = w::HINSTANCE::GetModuleHandleEx(
+<a href=#226 id=226 data-nosnippet>226</a>	///     w::AddrStr::from_str("foo.dll"),
+<a href=#227 id=227 data-nosnippet>227</a>	///     co::GET_MODULE_HANDLE_EX_FLAG::NoValue,
+<a href=#228 id=228 data-nosnippet>228</a>	/// )?;
+<a href=#229 id=229 data-nosnippet>229</a>	///
+<a href=#230 id=230 data-nosnippet>230</a>	/// // FreeLibrary() called automatically
+<a href=#231 id=231 data-nosnippet>231</a>	/// # w::SysResult::Ok(())
+<a href=#232 id=232 data-nosnippet>232</a>	/// ```
+<a href=#233 id=233 data-nosnippet>233</a>	</span><span class="attr">#[must_use]
+<a href=#234 id=234 data-nosnippet>234</a>	</span><span class="kw">fn </span>GetModuleHandleEx(
+<a href=#235 id=235 data-nosnippet>235</a>		addr_or_name: AddrStr,
+<a href=#236 id=236 data-nosnippet>236</a>		flags: co::GET_MODULE_HANDLE_EX_FLAG,
+<a href=#237 id=237 data-nosnippet>237</a>	) -&gt; SysResult&lt;FreeLibraryGuard&gt; {
+<a href=#238 id=238 data-nosnippet>238</a>		<span class="kw">let </span><span class="kw-2">mut </span>addr_or_name = addr_or_name;
+<a href=#239 id=239 data-nosnippet>239</a>		<span class="kw">let </span>(module_name, <span class="kw-2">mut </span>f) = <span class="kw">match </span><span class="kw-2">&amp;mut </span>addr_or_name {
+<a href=#240 id=240 data-nosnippet>240</a>			AddrStr::None =&gt; (std::ptr::null_mut(), <span class="number">0</span>),
+<a href=#241 id=241 data-nosnippet>241</a>			AddrStr::Addr(a) =&gt; (<span class="kw-2">*</span>a <span class="kw">as _</span>, GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS),
+<a href=#242 id=242 data-nosnippet>242</a>			AddrStr::Str(ws) =&gt; (<span class="kw">unsafe </span>{ ws.as_mut_ptr() }, <span class="number">0</span>),
+<a href=#243 id=243 data-nosnippet>243</a>		};
+<a href=#244 id=244 data-nosnippet>244</a>		f |= flags.raw();
+<a href=#245 id=245 data-nosnippet>245</a>
+<a href=#246 id=246 data-nosnippet>246</a>		<span class="kw">let </span><span class="kw-2">mut </span>h = <span class="kw">unsafe </span>{ HINSTANCE::from_ptr(std::ptr::null_mut()) };
+<a href=#247 id=247 data-nosnippet>247</a>		<span class="kw">unsafe </span>{
+<a href=#248 id=248 data-nosnippet>248</a>			bool_to_sysresult(ffi::GetModuleHandleExW(f, module_name, h.as_mut()))
+<a href=#249 id=249 data-nosnippet>249</a>				.map(|<span class="kw">_</span>| FreeLibraryGuard::new(h))
+<a href=#250 id=250 data-nosnippet>250</a>		}
+<a href=#251 id=251 data-nosnippet>251</a>	}
+<a href=#252 id=252 data-nosnippet>252</a>
+<a href=#253 id=253 data-nosnippet>253</a>	<span class="doccomment">/// [`GetProcAddress`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-getprocaddress)
+<a href=#254 id=254 data-nosnippet>254</a>	/// function.
+<a href=#255 id=255 data-nosnippet>255</a>	</span><span class="attr">#[must_use]
+<a href=#256 id=256 data-nosnippet>256</a>	</span><span class="kw">fn </span>GetProcAddress(<span class="kw-2">&amp;</span><span class="self">self</span>, proc_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;<span class="kw-2">*const </span>std::ffi::c_void&gt; {
+<a href=#257 id=257 data-nosnippet>257</a>		ptr_to_sysresult(<span class="kw">unsafe </span>{
+<a href=#258 id=258 data-nosnippet>258</a>			ffi::GetProcAddress(<span class="self">self</span>.ptr(), vec_ptr(<span class="kw-2">&amp;</span>str_to_iso88591(proc_name))) <span class="kw">as _
+<a href=#259 id=259 data-nosnippet>259</a>		</span>})
+<a href=#260 id=260 data-nosnippet>260</a>		.map(|ptr| ptr <span class="kw">as _</span>)
+<a href=#261 id=261 data-nosnippet>261</a>	}
+<a href=#262 id=262 data-nosnippet>262</a>
+<a href=#263 id=263 data-nosnippet>263</a>	<span class="doccomment">/// [`LoadLibrary`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryw)
+<a href=#264 id=264 data-nosnippet>264</a>	/// function.
+<a href=#265 id=265 data-nosnippet>265</a>	</span><span class="attr">#[must_use]
+<a href=#266 id=266 data-nosnippet>266</a>	</span><span class="kw">fn </span>LoadLibrary(lib_file_name: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;FreeLibraryGuard&gt; {
+<a href=#267 id=267 data-nosnippet>267</a>		<span class="kw">unsafe </span>{
+<a href=#268 id=268 data-nosnippet>268</a>			ptr_to_sysresult_handle(ffi::LoadLibraryW(WString::from_str(lib_file_name).as_ptr()))
+<a href=#269 id=269 data-nosnippet>269</a>				.map(|h| FreeLibraryGuard::new(h))
+<a href=#270 id=270 data-nosnippet>270</a>		}
+<a href=#271 id=271 data-nosnippet>271</a>	}
+<a href=#272 id=272 data-nosnippet>272</a>
+<a href=#273 id=273 data-nosnippet>273</a>	<span class="doccomment">/// [`LoadResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadresource)
+<a href=#274 id=274 data-nosnippet>274</a>	/// function.
+<a href=#275 id=275 data-nosnippet>275</a>	///
+<a href=#276 id=276 data-nosnippet>276</a>	/// For an example, see
+<a href=#277 id=277 data-nosnippet>277</a>	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
+<a href=#278 id=278 data-nosnippet>278</a>	</span><span class="attr">#[must_use]
+<a href=#279 id=279 data-nosnippet>279</a>	</span><span class="kw">fn </span>LoadResource(<span class="kw-2">&amp;</span><span class="self">self</span>, res_info: <span class="kw-2">&amp;</span>HRSRC) -&gt; SysResult&lt;HRSRCMEM&gt; {
+<a href=#280 id=280 data-nosnippet>280</a>		ptr_to_sysresult_handle(<span class="kw">unsafe </span>{ ffi::LoadResource(<span class="self">self</span>.ptr(), res_info.ptr()) })
+<a href=#281 id=281 data-nosnippet>281</a>	}
+<a href=#282 id=282 data-nosnippet>282</a>
+<a href=#283 id=283 data-nosnippet>283</a>	<span class="doccomment">/// [`LockResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-lockresource)
+<a href=#284 id=284 data-nosnippet>284</a>	/// function.
+<a href=#285 id=285 data-nosnippet>285</a>	///
+<a href=#286 id=286 data-nosnippet>286</a>	/// This method should belong to [`HRSRCMEM`](crate::HRSRCMEM), but in order
+<a href=#287 id=287 data-nosnippet>287</a>	/// to make it safe, we automatically call
+<a href=#288 id=288 data-nosnippet>288</a>	/// [`HINSTANCE::SizeofResource`](crate::prelude::kernel_Hinstance::SizeofResource),
+<a href=#289 id=289 data-nosnippet>289</a>	/// so it's implemented here.
+<a href=#290 id=290 data-nosnippet>290</a>	///
+<a href=#291 id=291 data-nosnippet>291</a>	/// # Examples
 <a href=#292 id=292 data-nosnippet>292</a>	///
-<a href=#293 id=293 data-nosnippet>293</a>	/// # Examples
-<a href=#294 id=294 data-nosnippet>294</a>	///
-<a href=#295 id=295 data-nosnippet>295</a>	/// The
-<a href=#296 id=296 data-nosnippet>296</a>	/// [Updating Resources](https://learn.microsoft.com/en-us/windows/win32/menurc/using-resources#updating-resources)
-<a href=#297 id=297 data-nosnippet>297</a>	/// example:
-<a href=#298 id=298 data-nosnippet>298</a>	///
-<a href=#299 id=299 data-nosnippet>299</a>	/// ```no_run
-<a href=#300 id=300 data-nosnippet>300</a>	/// use winsafe::{self as w, prelude::*, co};
-<a href=#301 id=301 data-nosnippet>301</a>	///
-<a href=#302 id=302 data-nosnippet>302</a>	/// const IDD_HAND_ABOUTBOX: u16 = 103;
-<a href=#303 id=303 data-nosnippet>303</a>	/// const IDD_FOOT_ABOUTBOX: u16 = 110;
+<a href=#293 id=293 data-nosnippet>293</a>	/// The
+<a href=#294 id=294 data-nosnippet>294</a>	/// [Updating Resources](https://learn.microsoft.com/en-us/windows/win32/menurc/using-resources#updating-resources)
+<a href=#295 id=295 data-nosnippet>295</a>	/// example:
+<a href=#296 id=296 data-nosnippet>296</a>	///
+<a href=#297 id=297 data-nosnippet>297</a>	/// ```no_run
+<a href=#298 id=298 data-nosnippet>298</a>	/// use winsafe::{self as w, prelude::*, co};
+<a href=#299 id=299 data-nosnippet>299</a>	///
+<a href=#300 id=300 data-nosnippet>300</a>	/// const IDD_HAND_ABOUTBOX: u16 = 103;
+<a href=#301 id=301 data-nosnippet>301</a>	/// const IDD_FOOT_ABOUTBOX: u16 = 110;
+<a href=#302 id=302 data-nosnippet>302</a>	///
+<a href=#303 id=303 data-nosnippet>303</a>	/// let hexe = w::HINSTANCE::LoadLibrary("hand.exe")?;
 <a href=#304 id=304 data-nosnippet>304</a>	///
-<a href=#305 id=305 data-nosnippet>305</a>	/// let hexe = w::HINSTANCE::LoadLibrary("hand.exe")?;
-<a href=#306 id=306 data-nosnippet>306</a>	///
-<a href=#307 id=307 data-nosnippet>307</a>	/// let hres = hexe.FindResource(
-<a href=#308 id=308 data-nosnippet>308</a>	///     w::IdStr::Id(IDD_HAND_ABOUTBOX),
-<a href=#309 id=309 data-nosnippet>309</a>	///     w::RtStr::Rt(co::RT::DIALOG),
-<a href=#310 id=310 data-nosnippet>310</a>	/// )?;
-<a href=#311 id=311 data-nosnippet>311</a>	///
-<a href=#312 id=312 data-nosnippet>312</a>	/// let hres_load = hexe.LoadResource(&amp;hres)?;
-<a href=#313 id=313 data-nosnippet>313</a>	/// let hres_slice_lock = hexe.LockResource(&amp;hres, &amp;hres_load)?;
-<a href=#314 id=314 data-nosnippet>314</a>	/// let hres_update = w::HUPDATERSRC::BeginUpdateResource("foot.exe", false)?;
-<a href=#315 id=315 data-nosnippet>315</a>	///
-<a href=#316 id=316 data-nosnippet>316</a>	/// hres_update.UpdateResource(
-<a href=#317 id=317 data-nosnippet>317</a>	///     w::RtStr::Rt(co::RT::DIALOG),
-<a href=#318 id=318 data-nosnippet>318</a>	///     w::IdStr::Id(IDD_FOOT_ABOUTBOX),
-<a href=#319 id=319 data-nosnippet>319</a>	///     w::LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL),
-<a href=#320 id=320 data-nosnippet>320</a>	///     hres_slice_lock,
-<a href=#321 id=321 data-nosnippet>321</a>	/// )?;
+<a href=#305 id=305 data-nosnippet>305</a>	/// let hres = hexe.FindResource(
+<a href=#306 id=306 data-nosnippet>306</a>	///     w::IdStr::Id(IDD_HAND_ABOUTBOX),
+<a href=#307 id=307 data-nosnippet>307</a>	///     w::RtStr::Rt(co::RT::DIALOG),
+<a href=#308 id=308 data-nosnippet>308</a>	/// )?;
+<a href=#309 id=309 data-nosnippet>309</a>	///
+<a href=#310 id=310 data-nosnippet>310</a>	/// let hres_load = hexe.LoadResource(&amp;hres)?;
+<a href=#311 id=311 data-nosnippet>311</a>	/// let hres_slice_lock = hexe.LockResource(&amp;hres, &amp;hres_load)?;
+<a href=#312 id=312 data-nosnippet>312</a>	/// let hres_update = w::HUPDATERSRC::BeginUpdateResource("foot.exe", false)?;
+<a href=#313 id=313 data-nosnippet>313</a>	///
+<a href=#314 id=314 data-nosnippet>314</a>	/// hres_update.UpdateResource(
+<a href=#315 id=315 data-nosnippet>315</a>	///     w::RtStr::Rt(co::RT::DIALOG),
+<a href=#316 id=316 data-nosnippet>316</a>	///     w::IdStr::Id(IDD_FOOT_ABOUTBOX),
+<a href=#317 id=317 data-nosnippet>317</a>	///     w::LANGID::NEUTRAL,
+<a href=#318 id=318 data-nosnippet>318</a>	///     hres_slice_lock,
+<a href=#319 id=319 data-nosnippet>319</a>	/// )?;
+<a href=#320 id=320 data-nosnippet>320</a>	///
+<a href=#321 id=321 data-nosnippet>321</a>	/// // EndUpdateResource() called automatically
 <a href=#322 id=322 data-nosnippet>322</a>	///
-<a href=#323 id=323 data-nosnippet>323</a>	/// // EndUpdateResource() called automatically
-<a href=#324 id=324 data-nosnippet>324</a>	///
-<a href=#325 id=325 data-nosnippet>325</a>	/// // FreeLibrary() called automatically
-<a href=#326 id=326 data-nosnippet>326</a>	/// # w::SysResult::Ok(())
-<a href=#327 id=327 data-nosnippet>327</a>	/// ```
-<a href=#328 id=328 data-nosnippet>328</a>	</span><span class="attr">#[must_use]
-<a href=#329 id=329 data-nosnippet>329</a>	</span><span class="kw">fn </span>LockResource(<span class="kw-2">&amp;</span><span class="self">self</span>, res_info: <span class="kw-2">&amp;</span>HRSRC, hres_loaded: <span class="kw-2">&amp;</span>HRSRCMEM) -&gt; SysResult&lt;<span class="kw-2">&amp;</span>[u8]&gt; {
-<a href=#330 id=330 data-nosnippet>330</a>		<span class="kw">let </span>sz = <span class="self">self</span>.SizeofResource(res_info)<span class="question-mark">?</span>;
-<a href=#331 id=331 data-nosnippet>331</a>		<span class="kw">unsafe </span>{
-<a href=#332 id=332 data-nosnippet>332</a>			ptr_to_sysresult(ffi::LockResource(hres_loaded.ptr()))
-<a href=#333 id=333 data-nosnippet>333</a>				.map(|ptr| std::slice::from_raw_parts(ptr <span class="kw">as _</span>, sz <span class="kw">as _</span>))
-<a href=#334 id=334 data-nosnippet>334</a>		}
-<a href=#335 id=335 data-nosnippet>335</a>	}
-<a href=#336 id=336 data-nosnippet>336</a>
-<a href=#337 id=337 data-nosnippet>337</a>	<span class="doccomment">/// [`SizeofResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-sizeofresource)
-<a href=#338 id=338 data-nosnippet>338</a>	/// function.
-<a href=#339 id=339 data-nosnippet>339</a>	///
-<a href=#340 id=340 data-nosnippet>340</a>	/// For an example, see
-<a href=#341 id=341 data-nosnippet>341</a>	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
-<a href=#342 id=342 data-nosnippet>342</a>	</span><span class="attr">#[must_use]
-<a href=#343 id=343 data-nosnippet>343</a>	</span><span class="kw">fn </span>SizeofResource(<span class="kw-2">&amp;</span><span class="self">self</span>, res_info: <span class="kw-2">&amp;</span>HRSRC) -&gt; SysResult&lt;u32&gt; {
-<a href=#344 id=344 data-nosnippet>344</a>		<span class="kw">match unsafe </span>{ ffi::SizeofResource(<span class="self">self</span>.ptr(), res_info.ptr()) } {
-<a href=#345 id=345 data-nosnippet>345</a>			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
-<a href=#346 id=346 data-nosnippet>346</a>			sz =&gt; <span class="prelude-val">Ok</span>(sz),
-<a href=#347 id=347 data-nosnippet>347</a>		}
-<a href=#348 id=348 data-nosnippet>348</a>	}
-<a href=#349 id=349 data-nosnippet>349</a>}</code></pre></div></section></main></body></html>
+<a href=#323 id=323 data-nosnippet>323</a>	/// // FreeLibrary() called automatically
+<a href=#324 id=324 data-nosnippet>324</a>	/// # w::SysResult::Ok(())
+<a href=#325 id=325 data-nosnippet>325</a>	/// ```
+<a href=#326 id=326 data-nosnippet>326</a>	</span><span class="attr">#[must_use]
+<a href=#327 id=327 data-nosnippet>327</a>	</span><span class="kw">fn </span>LockResource(<span class="kw-2">&amp;</span><span class="self">self</span>, res_info: <span class="kw-2">&amp;</span>HRSRC, hres_loaded: <span class="kw-2">&amp;</span>HRSRCMEM) -&gt; SysResult&lt;<span class="kw-2">&amp;</span>[u8]&gt; {
+<a href=#328 id=328 data-nosnippet>328</a>		<span class="kw">let </span>sz = <span class="self">self</span>.SizeofResource(res_info)<span class="question-mark">?</span>;
+<a href=#329 id=329 data-nosnippet>329</a>		<span class="kw">unsafe </span>{
+<a href=#330 id=330 data-nosnippet>330</a>			ptr_to_sysresult(ffi::LockResource(hres_loaded.ptr()))
+<a href=#331 id=331 data-nosnippet>331</a>				.map(|ptr| std::slice::from_raw_parts(ptr <span class="kw">as _</span>, sz <span class="kw">as _</span>))
+<a href=#332 id=332 data-nosnippet>332</a>		}
+<a href=#333 id=333 data-nosnippet>333</a>	}
+<a href=#334 id=334 data-nosnippet>334</a>
+<a href=#335 id=335 data-nosnippet>335</a>	<span class="doccomment">/// [`SizeofResource`](https://learn.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-sizeofresource)
+<a href=#336 id=336 data-nosnippet>336</a>	/// function.
+<a href=#337 id=337 data-nosnippet>337</a>	///
+<a href=#338 id=338 data-nosnippet>338</a>	/// For an example, see
+<a href=#339 id=339 data-nosnippet>339</a>	/// [`HINSTANCE::LockResource`](crate::prelude::kernel_Hinstance::LockResource).
+<a href=#340 id=340 data-nosnippet>340</a>	</span><span class="attr">#[must_use]
+<a href=#341 id=341 data-nosnippet>341</a>	</span><span class="kw">fn </span>SizeofResource(<span class="kw-2">&amp;</span><span class="self">self</span>, res_info: <span class="kw-2">&amp;</span>HRSRC) -&gt; SysResult&lt;u32&gt; {
+<a href=#342 id=342 data-nosnippet>342</a>		<span class="kw">match unsafe </span>{ ffi::SizeofResource(<span class="self">self</span>.ptr(), res_info.ptr()) } {
+<a href=#343 id=343 data-nosnippet>343</a>			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(GetLastError()),
+<a href=#344 id=344 data-nosnippet>344</a>			sz =&gt; <span class="prelude-val">Ok</span>(sz),
+<a href=#345 id=345 data-nosnippet>345</a>		}
+<a href=#346 id=346 data-nosnippet>346</a>	}
+<a href=#347 id=347 data-nosnippet>347</a>}</code></pre></div></section></main></body></html>
