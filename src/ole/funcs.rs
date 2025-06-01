@@ -22,7 +22,10 @@ use crate::prelude::*;
 /// let cls_id = w::CLSIDFromProgID("Excel.Application")?;
 ///
 /// let excel = w::CoCreateInstance::<w::IDispatch>(
-///     &cls_id, None::<&w::IUnknown>, co::CLSCTX::LOCAL_SERVER)?;
+///     &cls_id,
+///     None::<&w::IUnknown>,
+///     co::CLSCTX::LOCAL_SERVER,
+/// )?;
 ///
 /// let ids = excel.GetIDsOfNames(&["Workbooks"], w::LCID::USER_DEFAULT)?;
 /// println!("{}", ids[0]);
@@ -83,7 +86,7 @@ pub fn CoCreateGuid() -> HrResult<GUID> {
 ///
 /// let obj = w::CoCreateInstance::<w::ITaskbarList>(
 ///     &co::CLSID::TaskbarList,
-///     None,
+///     None::<&w::IUnknown>,
 ///     co::CLSCTX::INPROC_SERVER,
 /// )?;
 /// # w::HrResult::Ok(())
