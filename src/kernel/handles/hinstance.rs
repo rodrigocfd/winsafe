@@ -148,9 +148,7 @@ pub trait kernel_Hinstance: Handle {
 				self.ptr(),
 				resource_id.as_ptr(),
 				resource_type.as_ptr(),
-				language
-					.unwrap_or(LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL))
-					.into(),
+				language.unwrap_or(LANGID::NEUTRAL).into(),
 			)
 		})
 	}
@@ -316,7 +314,7 @@ pub trait kernel_Hinstance: Handle {
 	/// hres_update.UpdateResource(
 	///     w::RtStr::Rt(co::RT::DIALOG),
 	///     w::IdStr::Id(IDD_FOOT_ABOUTBOX),
-	///     w::LANGID::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL),
+	///     w::LANGID::NEUTRAL,
 	///     hres_slice_lock,
 	/// )?;
 	///
