@@ -22,7 +22,7 @@ com_interface! { IBaseFilter: "56a86895-0ad4-11ce-b03a-0020af0ba770";
 	///
 	/// let vmr = w::CoCreateInstance::<w::IBaseFilter>(
 	///     &co::CLSID::EnhancedVideoRenderer,
-	///     None,
+	///     None::<&w::IUnknown>,
 	///     co::CLSCTX::INPROC_SERVER,
 	/// )?;
 	/// # w::HrResult::Ok(())

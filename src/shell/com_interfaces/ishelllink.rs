@@ -22,7 +22,7 @@ com_interface! { IShellLink: "000214f9-0000-0000-c000-000000000046";
 	///
 	/// let obj = w::CoCreateInstance::<w::IShellLink>(
 	///     &co::CLSID::ShellLink,
-	///     None,
+	///     None::<&w::IUnknown>,
 	///     co::CLSCTX::INPROC_SERVER,
 	/// )?;
 	/// # w::HrResult::Ok(())

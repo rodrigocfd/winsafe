@@ -16,8 +16,116 @@ impl psapi_Hprocess for HPROCESS {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait psapi_Hprocess: kernel_Hprocess {
+	/// [`EmptyWorkingSet`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-emptyworkingset)
+	/// function.
+	fn EmptyWorkingSet(&self) -> SysResult<()> {
+		bool_to_sysresult(unsafe { ffi::EmptyWorkingSet(self.ptr()) })
+	}
+
+	/// [`EnumProcessModules`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocessmodules)
+	/// function.
+	#[must_use]
+	fn EnumProcessModules(&self) -> SysResult<Vec<HINSTANCE>> {
+		loop {
+			let mut bytes_needed = u32::default();
+			bool_to_sysresult(unsafe {
+				ffi::EnumProcessModules(self.ptr(), std::ptr::null_mut(), 0, &mut bytes_needed)
+			})?;
+
+			let elems_needed = bytes_needed / (std::mem::size_of::<HINSTANCE>() as u32);
+			let mut buf = (0..elems_needed)
+				.map(|_| HINSTANCE::NULL)
+				.collect::<Vec<_>>();
+
+			let mut bytes_got = u32::default();
+			bool_to_sysresult(unsafe {
+				ffi::EnumProcessModules(
+					self.ptr(),
+					buf.as_mut_ptr() as _,
+					bytes_needed,
+					&mut bytes_got,
+				)
+			})?;
+
+			if bytes_needed == bytes_got {
+				return Ok(buf);
+			}
+		}
+	}
+
+	/// [`GetMappedFileName`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmappedfilenamew)
+	/// function.
+	#[must_use]
+	fn GetMappedFileName(&self, address: *mut std::ffi::c_void) -> SysResult<String> {
+		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
+		bool_to_sysresult(unsafe {
+			ffi::GetMappedFileNameW(self.ptr(), address, buf.as_mut_ptr(), buf.buf_len() as _)
+		})
+		.map(|_| buf.to_string())
+	}
+
+	/// [`GetModuleBaseName`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmodulebasenamew)
+	/// function.
+	#[must_use]
+	fn GetModuleBaseName(&self, hmodule: Option<&HINSTANCE>) -> SysResult<String> {
+		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
+		bool_to_sysresult(unsafe {
+			ffi::GetModuleBaseNameW(
+				self.ptr(),
+				hmodule.map_or(std::ptr::null_mut(), |h| h.ptr()),
+				buf.as_mut_ptr(),
+				buf.buf_len() as _,
+			)
+		})
+		.map(|_| buf.to_string())
+	}
+
+	/// [`GetModuleFileNameEx`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmodulefilenameexw)
+	/// function.
+	#[must_use]
+	fn GetModuleFileNameEx(&self, hmodule: Option<&HINSTANCE>) -> SysResult<String> {
+		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
+		bool_to_sysresult(unsafe {
+			ffi::GetModuleFileNameExW(
+				self.ptr(),
+				hmodule.map_or(std::ptr::null_mut(), |h| h.ptr()),
+				buf.as_mut_ptr(),
+				buf.buf_len() as _,
+			)
+		})
+		.map(|_| buf.to_string())
+	}
+
+	/// [`GetModuleInformation`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmoduleinformation)
+	/// function.
+	#[must_use]
+	fn GetModuleInformation(&self, hmodule: Option<&HINSTANCE>) -> SysResult<MODULEINFO> {
+		let mut mi = MODULEINFO::default();
+		bool_to_sysresult(unsafe {
+			ffi::GetModuleInformation(
+				self.ptr(),
+				hmodule.map_or(std::ptr::null_mut(), |h| h.ptr()),
+				pvoid(&mut mi),
+				std::mem::size_of::<MODULEINFO>() as _,
+			)
+		})
+		.map(|_| mi)
+	}
+
+	/// [`GetProcessImageFileName`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getprocessimagefilenamew)
+	/// function.
+	#[must_use]
+	fn GetProcessImageFileName(&self) -> SysResult<String> {
+		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
+		bool_to_sysresult(unsafe {
+			ffi::GetProcessImageFileNameW(self.ptr(), buf.as_mut_ptr(), buf.buf_len() as _)
+		})
+		.map(|_| buf.to_string())
+	}
+
 	/// [`GetProcessMemoryInfo`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getprocessmemoryinfo)
 	/// function.
+	#[must_use]
 	fn GetProcessMemoryInfo(&self) -> SysResult<PROCESS_MEMORY_COUNTERS_EX> {
 		let mut pmc = PROCESS_MEMORY_COUNTERS_EX::default();
 		bool_to_sysresult(unsafe {
@@ -29,70 +137,4 @@ pub trait psapi_Hprocess: kernel_Hprocess {
 		})
 		.map(|_| pmc)
 	}
-
-	/// [`EnumProcessModules`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocessmodules)
-	/// function.
-	#[must_use]
-	fn EnumProcessModules(
-		&self,
-		buf_size: usize,
-	) -> SysResult<Vec<HINSTANCE>> {
-		let mut hmodule_buffer: Vec<HINSTANCE> = (0..buf_size).map(|_| HINSTANCE::NULL).collect();
-		let mut cb_needed = 0;
-
-		bool_to_sysresult(unsafe {
-			ffi::EnumProcessModules(
-				self.ptr(),
-				hmodule_buffer.as_mut_ptr() as _,
-				hmodule_buffer.len() as _,
-				&mut cb_needed
-			)
-		})
-		.map(|_| {
-			let actual_len = (cb_needed as usize) / std::mem::size_of::<HINSTANCE>();
-			hmodule_buffer.truncate(actual_len.min(buf_size));
-			hmodule_buffer
-		})
-	}
-
-	/// [`GetModuleBaseNameA`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmodulebasenamea)
-	/// function.
-	#[must_use]
-	fn GetModuleBaseNameA(
-		&self,
-		hmodule: Option<HINSTANCE>,
-		sz: usize,
-	) -> SysResult<WString> {
-		let mut buf = WString::new_alloc_buf(sz);
-		unsafe {
-			ffi::GetModuleBaseNameA(
-				self.ptr(),
-				hmodule.map(|x| x.ptr()).unwrap_or_else(std::ptr::null_mut),
-				buf.as_mut_ptr(),
-				buf.buf_len() as u32,
-			)
-		}
-			.eq(&0)
-			.then(|| buf)
-			.ok_or_else(GetLastError)
-	}
-
-	/// [`GetModuleInformation`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmoduleinformation)
-    /// function.
-    #[must_use]
-    fn GetModuleInformation(
-		&self,
-		hmodule: HINSTANCE,
-	) -> SysResult<MODULEINFO> {
-		let mut mod_info = MODULEINFO::default();
-		bool_to_sysresult(unsafe {
-			ffi::GetModuleInformation(
-				self.ptr(),
-				hmodule.ptr(),
-				&mut mod_info,
-				std::mem::size_of::<MODULEINFO>() as u32,
-			)
-		})
-		.map(|_| mod_info)
-    }
 }

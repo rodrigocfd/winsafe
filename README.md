@@ -25,9 +25,9 @@ WinSafe documentation:
 
 | Native FFI item | Count |
 | - | -: |
-| Functions | 849 |
-| Structs | 255 |
-| Constants | 14,621 |
+| Functions | 862 |
+| Structs | 258 |
+| Constants | 14,656 |
 | Window messages | 655 |
 | Handles | 50 |
 | COM interfaces | 88 |
@@ -46,7 +46,7 @@ Add the dependency in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-winsafe = { version = "0.0.23", features = [] }
+winsafe = { version = "0.0.24", features = [] }
 ```
 
 Then you must enable the [Cargo features](https://doc.rust-lang.org/cargo/reference/features.html#the-features-section) you want to be included – these modules are named after native Windows DLL and library names, mostly.
@@ -98,7 +98,7 @@ The [example below](https://github.com/rodrigocfd/winsafe-examples/tree/master/0
 
 ```toml
 [dependencies]
-winsafe = { version = "0.0.23", features = ["gui"] }
+winsafe = { version = "0.0.24", features = ["gui"] }
 ```
 
 ```rust

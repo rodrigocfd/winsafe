@@ -216,10 +216,10 @@ pub trait kernel_Hprocess: Handle {
 	#[must_use]
 	fn ReadProcessMemory(
 		&self,
-		base_address: crate::kernel::ffi_types::PCVOID,
+		base_address: *mut std::ffi::c_void,
 		buffer: &mut [u8],
 	) -> SysResult<usize> {
-		let mut bytes_read = 0;
+		let mut bytes_read = usize::default();
 		bool_to_sysresult(unsafe {
 			ffi::ReadProcessMemory(
 				self.ptr(),
@@ -261,20 +261,21 @@ pub trait kernel_Hprocess: Handle {
 	/// [`VirtualQueryEx`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualqueryex)
 	/// function.
 	#[must_use]
-	fn VirtualQueryEx(&self, address: Option<usize>) -> SysResult<MEMORY_BASIC_INFORMATION> {
+	fn VirtualQueryEx(
+		&self,
+		address: Option<*mut std::ffi::c_void>,
+	) -> SysResult<MEMORY_BASIC_INFORMATION> {
 		let mut mbi = MEMORY_BASIC_INFORMATION::default();
-		let ret = unsafe {
+		match unsafe {
 			ffi::VirtualQueryEx(
 				self.ptr(),
-				address.unwrap_or_default() as _,
+				address.unwrap_or(std::ptr::null_mut()),
 				pvoid(&mut mbi),
 				std::mem::size_of::<MEMORY_BASIC_INFORMATION>(),
 			)
-		};
-		if ret == 0 {
-			Err(GetLastError())
-		} else {
-			Ok(mbi)
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(mbi),
 		}
 	}
 

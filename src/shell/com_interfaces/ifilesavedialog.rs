@@ -25,7 +25,7 @@ com_interface! { IFileSaveDialog: "84bccd23-5fde-4cdb-aea4-af64b83d78ab";
 	///
 	/// let file_save = w::CoCreateInstance::<w::IFileSaveDialog>(
 	///     &co::CLSID::FileSaveDialog,
-	///     None,
+	///     None::<&w::IUnknown>,
 	///     co::CLSCTX::INPROC_SERVER,
 	/// )?;
 	///

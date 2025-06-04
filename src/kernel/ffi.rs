@@ -91,6 +91,9 @@ extern_sys! { "kernel32";
 	GetTempFileNameW(PCSTR, PCSTR, u32, PSTR) -> u32
 	GetTempPathW(u32, PSTR) -> u32
 	GetThreadId(HANDLE) -> u32
+	GetThreadIdealProcessorEx(HANDLE, PVOID) -> BOOL
+	GetThreadIOPendingFlag(HANDLE, *mut BOOL) -> BOOL
+	GetThreadPriorityBoost(HANDLE, *mut BOOL) -> BOOL
 	GetThreadTimes(HANDLE, PVOID, PVOID, PVOID, PVOID) -> BOOL
 	GetTickCount64() -> u64
 	GetVolumeInformationW(PCSTR, PSTR, u32, *mut u32, *mut u32, *mut u32, PSTR, u32) -> BOOL

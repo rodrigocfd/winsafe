@@ -26,7 +26,7 @@ com_interface! { IFileOperation: "947aab5f-0a5c-4c13-b4d6-4bf7836fc9f8";
 	///
 	/// let op = w::CoCreateInstance::<w::IFileOperation>(
 	///     &co::CLSID::FileOperation,
-	///     None,
+	///     None::<&w::IUnknown>,
 	///     co::CLSCTX::ALL,
 	/// )?;
 	///

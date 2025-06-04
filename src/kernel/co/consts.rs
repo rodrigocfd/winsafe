@@ -770,43 +770,26 @@ const_bitflag! { MBC: u32;
 	USEGLYPHCHARS 0x0000_0004
 }
 
-const_bitflag! { MBI_PAGE: u32;
-	/// [`Memory Protection Constants`](https://learn.microsoft.com/en-us/windows/win32/memory/memory-protection-constants)
-	/// enumeration (`u32`).
+const_ordinary! { MEM_STATE: u32;
+	/// [`MEMORY_BASIC_INFORMATION`](crate::MEMORY_BASIC_INFORMATION) `State`
+	/// (`u32`).
 	=>
-	NONE 0
-
-	EXECUTE 0x10
-	EXECUTE_READ 0x20
-	EXECUTE_READWRITE 0x40
-	EXECUTE_WRITECOPY 0x80
-	NOACCESS 0x01
-	READ 0x02
-	READWRITE 0x04
-	WRITECOPY 0x08
-	TARGETS_INVALID_OR_NOUPDATE 0x40000000
-
-	GUARD 0x100
-	NOCACHE 0x200
-	WRITECOMBINE 0x400
-}
-
-const_ordinary! { MBI_STATE: u32;
-	/// [`State Parameter`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-memory_basic_information)
-	/// enumeration (`u32`).
-	=>
-	NONE 0
+	/// None of the actual values (zero).
+	NoValue 0
 	COMMIT 0x1000
+	FREE 0x1_0000
 	RESERVE 0x2000
 }
 
-const_ordinary! { MBI_TYPE: u32;
-	/// [`Type Parameter`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-memory_basic_information)
-	/// enumeration (`u32`).
+const_ordinary! { MEM_TYPE: u32;
+	/// [`MEMORY_BASIC_INFORMATION`](crate::MEMORY_BASIC_INFORMATION) `Type`
+	/// (`u32`).
 	=>
-	IMAGE 0x1_000_000
-	MAPPED 0x40_000
-	PRIVATE 0x20_000
+	/// None of the actual values (zero).
+	NoValue 0
+	IMAGE 0x100_0000
+	MAPPED 0x4_0000
+	PRIVATE 0x2_0000
 }
 
 const_ordinary! { MONITOR_DISPLAY_STATE: u32;
@@ -852,58 +835,38 @@ const_ordinary! { MOVEFILE: u32;
 }
 
 const_ordinary! { PAGE: u32;
-	/// [`HFILE::CreateFileMapping`](crate::prelude::kernel_Hfile::CreateFileMapping)
-	/// `protect` (`u32`).
+	/// Memory protection
+	/// [constants](https://learn.microsoft.com/en-us/windows/win32/memory/memory-protection-constants)
+	/// (`u32`).
 	=>
-	/// Allows views to be mapped for read-only copy-on-write or execute
-	/// access.
-	///
-	/// The file handle must be created with the
-	/// [`GENERIC::READ`](crate::co::GENERIC::READ) and
-	/// [`GENERIC::EXECUTE`](crate::co::GENERIC::EXECUTE) access rights.
-	EXECUTE_READ 0x20
-	/// Allows views to be mapped for read-only copy-on-write read/write or
-	/// execute access.
-	///
-	/// The file handle must be created with the
-	/// [`GENERIC::READ`](crate::co::GENERIC::READ),
-	/// [`GENERIC::WRITE`](crate::co::GENERIC::WRITE) and
-	/// [`GENERIC::EXECUTE`](crate::co::GENERIC::EXECUTE) access rights.
-	EXECUTE_READWRITE 0x40
-	/// Allows views to be mapped for read-only copy-on-write or execute
-	/// access. This value is equivalent to PAGE_EXECUTE_READ.
-	///
-	/// The file handle must be created with the
-	/// [`GENERIC::READ`](crate::co::GENERIC::READ) and
-	/// [`GENERIC::EXECUTE`](crate::co::GENERIC::EXECUTE) access rights.
-	EXECUTE_WRITECOPY 0x80
-	/// Allows views to be mapped for read-only or copy-on-write access. An
-	/// attempt to write to a specific region results in an access violation.
-	///
-	/// The file handle must be created with the
-	/// [`GENERIC::READ`](crate::co::GENERIC::READ) access right.
+	NOACCESS 0x01
 	READONLY 0x02
-	/// Allows views to be mapped for read-only copy-on-write or read/write
-	/// access.
-	///
-	/// The file handle must be created with the
-	/// [`GENERIC::READ`](crate::co::GENERIC::READ) and
-	/// [`GENERIC::WRITE`](crate::co::GENERIC::WRITE) access rights.
 	READWRITE 0x04
-	/// Allows views to be mapped for read-only or copy-on-write access. This
-	/// value is equivalent to `PAGE::READONLY`.
-	///
-	/// The file handle must be created with the
-	/// [`GENERIC::READ`](crate::co::GENERIC::READ) access right.
 	WRITECOPY 0x08
-
-	SEC_COMMIT 0x800_0000
-	SEC_IMAGE 0x100_0000
-	SEC_IMAGE_NO_EXECUTE 0x1100_0000
-	SEC_LARGE_PAGES 0x8000_0000
-	SEC_NOCACHE 0x1000_0000
-	SEC_RESERVE 0x400_0000
-	SEC_WRITECOMBINE 0x4000_0000
+	EXECUTE 0x10
+	EXECUTE_READ 0x20
+	EXECUTE_READWRITE 0x40
+	EXECUTE_WRITECOPY 0x80
+	GUARD 0x100
+	NOCACHE 0x200
+	WRITECOMBINE 0x400
+	GRAPHICS_NOACCESS 0x0800
+	GRAPHICS_READONLY 0x1000
+	GRAPHICS_READWRITE 0x2000
+	GRAPHICS_EXECUTE 0x4000
+	GRAPHICS_EXECUTE_READ 0x8000
+	GRAPHICS_EXECUTE_READWRITE 0x1_0000
+	GRAPHICS_COHERENT 0x2_0000
+	GRAPHICS_NOCACHE 0x4_0000
+	ENCLAVE_THREAD_CONTROL 0x8000_0000
+	REVERT_TO_FILE_MAP 0x8000_0000
+	TARGETS_NO_UPDATE 0x4000_0000
+	TARGETS_INVALID 0x4000_0000
+	ENCLAVE_UNVALIDATED 0x2000_0000
+	ENCLAVE_MASK 0x1000_0000
+	ENCLAVE_DECOMMIT PAGE::ENCLAVE_MASK.0 | 0
+	ENCLAVE_SS_FIRST PAGE::ENCLAVE_MASK.0 | 1
+	ENCLAVE_SS_REST PAGE::ENCLAVE_MASK.0 | 2
 }
 
 const_ordinary! { PBT: u32;
@@ -1105,6 +1068,23 @@ const_bitflag! { SE: u16;
 	SACL_PROTECTED 0x2000
 	RM_CONTROL_VALID 0x4000
 	SELF_RELATIVE 0x8000
+}
+
+const_bitflag! { SEC: u32;
+	/// [`HFILE::CreateFileMapping`](crate::prelude::kernel_Hfile::CreateFileMapping)
+	/// `sec` (`u32`).
+	=>
+	PARTITION_OWNER_HANDLE 0x0004_0000
+	PAGES_64K 0x0008_0000
+	FILE 0x0080_0000
+	IMAGE 0x0100_0000
+	PROTECTED_IMAGE 0x0200_0000
+	RESERVE 0x0400_0000
+	COMMIT 0x0800_0000
+	NOCACHE 0x1000_0000
+	WRITECOMBINE 0x4000_0000
+	LARGE_PAGES 0x8000_0000
+	IMAGE_NO_EXECUTE SEC::IMAGE.0 | SEC::NOCACHE.0
 }
 
 const_bitflag! { SECTION: u32;

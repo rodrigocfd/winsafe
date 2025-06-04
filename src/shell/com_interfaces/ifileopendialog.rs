@@ -24,7 +24,7 @@ com_interface! { IFileOpenDialog: "d57c7288-d4ad-4768-be02-9d969532d960";
 	///
 	/// let file_open = w::CoCreateInstance::<w::IFileOpenDialog>(
 	///     &co::CLSID::FileOpenDialog,
-	///     None,
+	///     None::<&w::IUnknown>,
 	///     co::CLSCTX::INPROC_SERVER,
 	/// )?;
 	///

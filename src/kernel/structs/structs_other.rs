@@ -4,7 +4,7 @@ use std::marker::PhantomData;
 
 use crate::co;
 use crate::decl::*;
-use crate::kernel::{ffi_types::*, privs::*};
+use crate::kernel::privs::*;
 
 /// [`ACL`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-acl)
 /// struct.
@@ -314,6 +314,11 @@ impl std::fmt::Display for LANGID {
 impl LANGID {
 	/// [`LANGID`](crate::LANGID) composed of
 	/// [`LANG::NEUTRAL`](crate::co::LANG::NEUTRAL) and
+	/// [`SUBLANG::NEUTRAL`](crate::co::SUBLANG::NEUTRAL).
+	pub const NEUTRAL: Self = Self::new(co::LANG::NEUTRAL, co::SUBLANG::NEUTRAL);
+
+	/// [`LANGID`](crate::LANGID) composed of
+	/// [`LANG::NEUTRAL`](crate::co::LANG::NEUTRAL) and
 	/// [`SUBLANG::SYS_DEFAULT`](crate::co::SUBLANG::SYS_DEFAULT).
 	pub const SYSTEM_DEFAULT: Self = Self::new(co::LANG::NEUTRAL, co::SUBLANG::SYS_DEFAULT);
 
@@ -434,14 +439,14 @@ impl LUID {
 /// struct.
 #[repr(C)]
 pub struct MEMORY_BASIC_INFORMATION {
-	pub BaseAddress: PVOID,
-	pub AllocationBase: PVOID,
-	pub AllocationProtect: co::MBI_PAGE,
+	pub BaseAddress: *mut std::ffi::c_void,
+	pub AllocationBase: *mut std::ffi::c_void,
+	pub AllocationProtect: co::PAGE,
 	pub PartitionId: u16,
 	pub RegionSize: usize,
-	pub State: co::MBI_STATE,
-	pub Protect: co::MBI_PAGE,
-	pub Type: co::MBI_TYPE,
+	pub State: co::MEM_STATE,
+	pub Protect: co::PAGE,
+	pub Type: co::MEM_TYPE,
 }
 
 impl_default!(MEMORY_BASIC_INFORMATION);

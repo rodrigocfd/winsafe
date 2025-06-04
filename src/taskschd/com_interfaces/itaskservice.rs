@@ -20,7 +20,7 @@ com_interface! { ITaskService: "2faba4c7-4da9-4013-9697-20cc3fd40f85";
 	///
 	/// let obj = w::CoCreateInstance::<w::ITaskService>(
 	///     &co::CLSID::TaskScheduler,
-	///     None,
+	///     None::<&w::IUnknown>,
 	///     co::CLSCTX::INPROC_SERVER,
 	/// )?;
 	/// # w::HrResult::Ok(())

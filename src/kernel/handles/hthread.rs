@@ -85,6 +85,33 @@ pub trait kernel_Hthread: Handle {
 		}
 	}
 
+	/// [`GetThreadIdealProcessorEx`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadidealprocessorex)
+	/// function.
+	#[must_use]
+	fn GetThreadIdealProcessorEx(&self) -> SysResult<PROCESSOR_NUMBER> {
+		let mut pi = PROCESSOR_NUMBER::default();
+		bool_to_sysresult(unsafe { ffi::GetThreadIdealProcessorEx(self.ptr(), pvoid(&mut pi)) })
+			.map(|_| pi)
+	}
+
+	/// [`GetThreadIOPendingFlag`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadiopendingflag)
+	/// function.
+	#[must_use]
+	fn GetThreadIOPendingFlag(&self) -> SysResult<bool> {
+		let mut io = 0;
+		bool_to_sysresult(unsafe { ffi::GetThreadIOPendingFlag(self.ptr(), &mut io) })
+			.map(|_| io != 0)
+	}
+
+	/// [`GetThreadPriorityBoost`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadpriorityboost)
+	/// function.
+	#[must_use]
+	fn GetThreadPriorityBoost(&self) -> SysResult<bool> {
+		let mut pb = 0;
+		bool_to_sysresult(unsafe { ffi::GetThreadPriorityBoost(self.ptr(), &mut pb) })
+			.map(|_| pb != 0)
+	}
+
 	/// [`GetThreadTimes`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getthreadtimes)
 	/// function.
 	///

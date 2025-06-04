@@ -38,7 +38,7 @@ pub struct ITypeInfoVT {
 	pub GetDllEntry: fn(COMPTR, i32, u32, *mut PSTR, *mut PSTR, *mut u16) -> HRES,
 	pub GetRefTypeInfo: fn(COMPTR, u32, *mut COMPTR) -> HRES,
 	pub AddressOfMember: fn(COMPTR, i32, u32, *mut PVOID) -> HRES,
-	pub CreateInstance: fn(COMPTR, *mut COMPTR, PCVOID, *mut COMPTR) -> HRES,
+	pub CreateInstance: fn(COMPTR, COMPTR, PCVOID, *mut COMPTR) -> HRES,
 	pub GetMops: fn(COMPTR, i32, *mut PSTR) -> HRES,
 	pub GetContainingTypeLib: fn(COMPTR, *mut COMPTR, *mut u32) -> HRES,
 	pub ReleaseTypeAttr: fn(COMPTR, PVOID) -> HRES,
