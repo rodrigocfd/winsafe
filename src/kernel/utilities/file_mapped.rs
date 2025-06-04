@@ -45,6 +45,7 @@ impl FileMapped {
 			},
 			None,
 			None,
+			None,
 		)?;
 		let hview = hmap.MapViewOfFile(
 			match access {

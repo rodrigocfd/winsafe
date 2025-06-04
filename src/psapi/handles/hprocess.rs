@@ -22,6 +22,37 @@ pub trait psapi_Hprocess: kernel_Hprocess {
 		bool_to_sysresult(unsafe { ffi::EmptyWorkingSet(self.ptr()) })
 	}
 
+	/// [`EnumProcessModules`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocessmodules)
+	/// function.
+	#[must_use]
+	fn EnumProcessModules(&self) -> SysResult<Vec<HINSTANCE>> {
+		loop {
+			let mut bytes_needed = u32::default();
+			bool_to_sysresult(unsafe {
+				ffi::EnumProcessModules(self.ptr(), std::ptr::null_mut(), 0, &mut bytes_needed)
+			})?;
+
+			let elems_needed = bytes_needed / (std::mem::size_of::<HINSTANCE>() as u32);
+			let mut buf = (0..elems_needed)
+				.map(|_| HINSTANCE::NULL)
+				.collect::<Vec<_>>();
+
+			let mut bytes_got = u32::default();
+			bool_to_sysresult(unsafe {
+				ffi::EnumProcessModules(
+					self.ptr(),
+					buf.as_mut_ptr() as _,
+					bytes_needed,
+					&mut bytes_got,
+				)
+			})?;
+
+			if bytes_needed == bytes_got {
+				return Ok(buf);
+			}
+		}
+	}
+
 	/// [`GetMappedFileName`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmappedfilenamew)
 	/// function.
 	#[must_use]

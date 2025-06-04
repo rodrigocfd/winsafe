@@ -115,6 +115,7 @@ pub trait kernel_Hfile: Handle {
 		&self,
 		mapping_attrs: Option<&SECURITY_ATTRIBUTES>,
 		protect: co::PAGE,
+		sec: Option<co::SEC>,
 		max_size: Option<u64>,
 		mapping_name: Option<&str>,
 	) -> SysResult<CloseHandleGuard<HFILEMAP>> {
@@ -122,7 +123,7 @@ pub trait kernel_Hfile: Handle {
 			ptr_to_sysresult_handle(ffi::CreateFileMappingFromApp(
 				self.ptr(),
 				pcvoid_or_null(mapping_attrs),
-				protect.raw(),
+				protect.raw() | sec.map_or(0, |f| f.raw()),
 				max_size.unwrap_or_default(),
 				WString::from_opt_str(mapping_name).as_ptr(),
 			))

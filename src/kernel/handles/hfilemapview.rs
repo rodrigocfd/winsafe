@@ -65,6 +65,7 @@ pub trait kernel_Hfilemapview: Handle {
 	///     co::PAGE::READONLY,
 	///     None,
 	///     None,
+	///     None,
 	/// )?;
 	///
 	/// let view = hmap.MapViewOfFile(co::FILE_MAP::READ, 0, None)?;

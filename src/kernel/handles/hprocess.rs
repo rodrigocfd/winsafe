@@ -208,6 +208,30 @@ pub trait kernel_Hprocess: Handle {
 		bool_to_sysresult(unsafe { ffi::QueryProcessCycleTime(self.ptr(), &mut t) }).map(|_| t)
 	}
 
+	/// [`ReadProcessMemory`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-readprocessmemory)
+	/// function.
+	///
+	/// Reads at most `buffer.len()` bytes. Returns how many bytes were actually
+	/// read.
+	#[must_use]
+	fn ReadProcessMemory(
+		&self,
+		base_address: *mut std::ffi::c_void,
+		buffer: &mut [u8],
+	) -> SysResult<usize> {
+		let mut bytes_read = usize::default();
+		bool_to_sysresult(unsafe {
+			ffi::ReadProcessMemory(
+				self.ptr(),
+				base_address,
+				buffer.as_ptr() as _,
+				buffer.len() as _,
+				&mut bytes_read,
+			)
+		})
+		.map(|_| bytes_read)
+	}
+
 	/// [`SetPriorityClass`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-setpriorityclass)
 	/// function.
 	fn SetPriorityClass(&self, prority_class: co::PRIORITY_CLASS) -> SysResult<()> {
@@ -232,6 +256,27 @@ pub trait kernel_Hprocess: Handle {
 	/// function.
 	fn TerminateProcess(&self, exit_code: u32) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::TerminateProcess(self.ptr(), exit_code) })
+	}
+
+	/// [`VirtualQueryEx`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-virtualqueryex)
+	/// function.
+	#[must_use]
+	fn VirtualQueryEx(
+		&self,
+		address: Option<*mut std::ffi::c_void>,
+	) -> SysResult<MEMORY_BASIC_INFORMATION> {
+		let mut mbi = MEMORY_BASIC_INFORMATION::default();
+		match unsafe {
+			ffi::VirtualQueryEx(
+				self.ptr(),
+				address.unwrap_or(std::ptr::null_mut()),
+				pvoid(&mut mbi),
+				std::mem::size_of::<MEMORY_BASIC_INFORMATION>(),
+			)
+		} {
+			0 => Err(GetLastError()),
+			_ => Ok(mbi),
+		}
 	}
 
 	/// [`WaitForSingleObject`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)

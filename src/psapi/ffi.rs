@@ -2,6 +2,7 @@ use crate::kernel::ffi_types::*;
 
 extern_sys! { "psapi";
 	EmptyWorkingSet(HANDLE) -> BOOL
+	EnumProcessModules(HANDLE, *mut HANDLE, u32, *const u32) -> BOOL
 	GetMappedFileNameW(HANDLE, PVOID, PSTR, u32) -> BOOL
 	GetModuleBaseNameW(HANDLE, HANDLE, PSTR, u32) -> BOOL
 	GetModuleFileNameExW(HANDLE, HANDLE, PSTR, u32) -> BOOL

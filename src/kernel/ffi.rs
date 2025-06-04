@@ -159,6 +159,7 @@ extern_sys! { "kernel32";
 	QueryUnbiasedInterruptTime(&mut u64) -> BOOL
 	ReadConsoleW(HANDLE, PVOID, u32, *mut u32, PCVOID) -> BOOL
 	ReadFile(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
+	ReadProcessMemory(HANDLE, PCVOID, PVOID, usize, *mut usize) -> BOOL
 	ReplaceFileW(PCSTR, PCSTR, PCSTR, u32, PVOID, PVOID) -> BOOL
 	ResetEvent(HANDLE) -> BOOL
 	ResumeThread(HANDLE) -> u32
@@ -192,6 +193,7 @@ extern_sys! { "kernel32";
 	UpdateResourceW(HANDLE, PCSTR, PCSTR, u16, PVOID, u32) -> BOOL
 	VerifyVersionInfoW(PVOID, u32, u64) -> BOOL
 	VerSetConditionMask(u64, u32, u8) -> u64
+	VirtualQueryEx(HANDLE, PCVOID, PVOID, usize) -> usize
 	WaitForSingleObject(HANDLE, u32) -> u32
 	WideCharToMultiByte(u32, u32, PCSTR, i32, PSTR, i32, *const u8, *mut BOOL) -> i32
 	WriteConsoleW(HANDLE, PCVOID, u32, *mut u32, PVOID) -> BOOL

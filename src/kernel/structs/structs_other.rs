@@ -435,6 +435,22 @@ impl LUID {
 	}
 }
 
+/// [`MEMORY_BASIC_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-memory_basic_information)
+/// struct.
+#[repr(C)]
+pub struct MEMORY_BASIC_INFORMATION {
+	pub BaseAddress: *mut std::ffi::c_void,
+	pub AllocationBase: *mut std::ffi::c_void,
+	pub AllocationProtect: co::PAGE,
+	pub PartitionId: u16,
+	pub RegionSize: usize,
+	pub State: co::MEM_STATE,
+	pub Protect: co::PAGE,
+	pub Type: co::MEM_TYPE,
+}
+
+impl_default!(MEMORY_BASIC_INFORMATION);
+
 /// [`MODULEENTRY32`](https://learn.microsoft.com/en-us/windows/win32/api/tlhelp32/ns-tlhelp32-moduleentry32w)
 /// struct.
 #[repr(C)]
