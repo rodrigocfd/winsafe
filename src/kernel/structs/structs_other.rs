@@ -247,31 +247,36 @@ impl From<FILETIME> for u64 {
 impl FILETIME {
 	/// Returns a new `FILETIME` with the milliseconds difference.
 	#[must_use]
-	pub fn add_ms(self, ms: i64) -> Self {
-		Self::from((u64::from(self) as i64 + (ms * 10_000)) as u64)
+	pub const fn add_ms(self, ms: i64) -> Self {
+		let self64 = MAKEQWORD(self.dwLowDateTime, self.dwHighDateTime) as i64;
+		let new_self64 = self64 + (ms * 10_000);
+		Self {
+			dwLowDateTime: LODWORD(new_self64 as _),
+			dwHighDateTime: HIDWORD(new_self64 as _),
+		}
 	}
 
 	/// Returns a new `FILETIME` with the seconds difference.
 	#[must_use]
-	pub fn add_secs(self, secs: i64) -> Self {
+	pub const fn add_secs(self, secs: i64) -> Self {
 		self.add_ms(secs * 1000)
 	}
 
 	/// Returns a new `FILETIME` with the minutes difference.
 	#[must_use]
-	pub fn add_mins(self, mins: i64) -> Self {
+	pub const fn add_mins(self, mins: i64) -> Self {
 		self.add_secs(mins * 60)
 	}
 
 	/// Returns a new `FILETIME` with the hours difference.
 	#[must_use]
-	pub fn add_hours(self, hours: i64) -> Self {
+	pub const fn add_hours(self, hours: i64) -> Self {
 		self.add_mins(hours * 60)
 	}
 
 	/// Returns a new `FILETIME` with the days difference.
 	#[must_use]
-	pub fn add_days(self, days: i64) -> Self {
+	pub const fn add_days(self, days: i64) -> Self {
 		self.add_hours(days * 24)
 	}
 }
@@ -550,7 +555,7 @@ impl POWERBROADCAST_SETTING {
 	/// Make sure the struct contains the correct size and data described by the
 	/// `PowerSetting` identifier.
 	#[must_use]
-	pub unsafe fn data(&self) -> PowerSetting {
+	pub const unsafe fn data(&self) -> PowerSetting {
 		match self.PowerSetting {
 			co::POWER_SETTING::ACDC_POWER_SOURCE => {
 				PowerSetting::AcDcPowerSource(co::SYSTEM_POWER_CONDITION::from_raw(
@@ -656,7 +661,7 @@ impl_default!(PROCESS_HEAP_ENTRY);
 impl PROCESS_HEAP_ENTRY {
 	/// Retrieves the `Block` union field.
 	#[must_use]
-	pub fn Block(&self) -> Option<&PROCESS_HEAP_ENTRY_Block> {
+	pub const fn Block(&self) -> Option<&PROCESS_HEAP_ENTRY_Block> {
 		if self.wFlags.has(co::PROCESS_HEAP::ENTRY_MOVEABLE) {
 			Some(unsafe { &self.union0.Block })
 		} else {
@@ -666,7 +671,7 @@ impl PROCESS_HEAP_ENTRY {
 
 	/// Retrieves the `Region` union field.
 	#[must_use]
-	pub fn Region(&self) -> Option<&PROCESS_HEAP_ENTRY_Region> {
+	pub const fn Region(&self) -> Option<&PROCESS_HEAP_ENTRY_Region> {
 		if self.wFlags.has(co::PROCESS_HEAP::REGION) {
 			Some(unsafe { &self.union0.Region })
 		} else {

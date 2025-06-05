@@ -127,7 +127,7 @@ impl BSTR {
 	/// Be sure to free the pointer, otherwise, as the name of this method
 	/// implies, you will cause a memory leak.
 	#[must_use]
-	pub fn leak(&mut self) -> *mut u16 {
+	pub const fn leak(&mut self) -> *mut u16 {
 		std::mem::replace(&mut self.0, std::ptr::null_mut())
 	}
 }

@@ -447,21 +447,23 @@ impl_default!(LVTILEINFO, cbSize, 'a);
 impl<'a> LVTILEINFO<'a> {
 	/// Returns the `puColumns` field.
 	#[must_use]
-	pub fn puColumns(&self) -> Option<&'a mut [u32]> {
+	pub const fn puColumns(&self) -> Option<&'a mut [u32]> {
 		unsafe {
-			self.puColumns
-				.as_mut()
-				.map(|_| std::slice::from_raw_parts_mut(self.puColumns, self.cColumns as _))
+			match self.puColumns.as_mut() {
+				Some(_) => Some(std::slice::from_raw_parts_mut(self.puColumns, self.cColumns as _)),
+				None => None,
+			}
 		}
 	}
 
 	/// Returns the `piColFmt` field.
 	#[must_use]
-	pub fn piColFmt(&self) -> Option<&'a mut [co::LVCFMT_C]> {
+	pub const fn piColFmt(&self) -> Option<&'a mut [co::LVCFMT_C]> {
 		unsafe {
-			self.puColumns
-				.as_mut()
-				.map(|_| std::slice::from_raw_parts_mut(self.piColFmt, self.cColumns as _))
+			match self.puColumns.as_mut() {
+				Some(_) => Some(std::slice::from_raw_parts_mut(self.piColFmt, self.cColumns as _)),
+				None => None,
+			}
 		}
 	}
 

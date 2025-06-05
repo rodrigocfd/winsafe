@@ -185,7 +185,7 @@ impl LOGPALETTE {
 
 	/// Returns a mutable slice over the `palPalEntry` entries.
 	#[must_use]
-	pub fn palPalEntry_mut(&mut self) -> &mut [PALETTEENTRY] {
+	pub const fn palPalEntry_mut(&mut self) -> &mut [PALETTEENTRY] {
 		unsafe {
 			std::slice::from_raw_parts_mut(self.palPalEntry.as_mut_ptr(), self.palNumEntries as _)
 		}

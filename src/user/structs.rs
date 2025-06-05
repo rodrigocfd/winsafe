@@ -103,7 +103,7 @@ impl_default!(CHOOSECOLOR, lStructSize, 'a);
 impl<'a> CHOOSECOLOR<'a> {
 	/// Returns the `lpCustColors` field.
 	#[must_use]
-	pub fn lpCustColors(&self) -> Option<&'a mut [COLORREF; 16]> {
+	pub const fn lpCustColors(&self) -> Option<&'a mut [COLORREF; 16]> {
 		unsafe { self.lpCustColors.as_mut() }
 	}
 
@@ -1034,7 +1034,7 @@ impl STYLESTRUCT {
 
 	/// Returns the [`WS_EX`](crate::co::WS_EX) of `styleOld` field.
 	#[must_use]
-	pub fn styleOld_WSEX(&self) -> co::WS_EX {
+	pub const fn styleOld_WSEX(&self) -> co::WS_EX {
 		unsafe { co::WS_EX::from_raw(self.styleOld) }
 	}
 

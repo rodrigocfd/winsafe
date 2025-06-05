@@ -37,7 +37,7 @@ impl<'a> AM_MEDIA_TYPE<'a> {
 	/// Varies according to the `formattype`. If you set it wrong, you're likely
 	/// to cause a buffer overrun.
 	#[must_use]
-	pub unsafe fn pbFormat<T>(&self) -> Option<&mut T> {
+	pub const unsafe fn pbFormat<T>(&self) -> Option<&mut T> {
 		(self.pbFormat as *mut T).as_mut()
 	}
 

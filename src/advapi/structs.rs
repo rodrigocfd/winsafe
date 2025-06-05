@@ -22,7 +22,7 @@ impl_default!(CLAIM_SECURITY_ATTRIBUTES_INFORMATION, 'a, 'b);
 impl<'a, 'b> CLAIM_SECURITY_ATTRIBUTES_INFORMATION<'a, 'b> {
 	/// Returns the `pAttributeV1` field.
 	#[must_use]
-	pub fn pAttributeV1(&self) -> &[CLAIM_SECURITY_ATTRIBUTE_V1<'a, 'b>] {
+	pub const fn pAttributeV1(&self) -> &[CLAIM_SECURITY_ATTRIBUTE_V1<'a, 'b>] {
 		unsafe { std::slice::from_raw_parts(self.pAttributeV1, self.AttributeCount as _) }
 	}
 }
@@ -205,13 +205,13 @@ impl Eq for SID {}
 impl SID {
 	/// Returns the `SubAuthorityCount` field.
 	#[must_use]
-	pub fn SubAuthorityCount(&self) -> u8 {
+	pub const fn SubAuthorityCount(&self) -> u8 {
 		self.SubAuthority().len() as _
 	}
 
 	/// Returns the `SubAuthority` field.
 	#[must_use]
-	pub fn SubAuthority(&self) -> &[co::RID] {
+	pub const fn SubAuthority(&self) -> &[co::RID] {
 		unsafe {
 			std::slice::from_raw_parts(self.SubAuthority.as_ptr(), self.SubAuthorityCount as _)
 		}
@@ -389,7 +389,7 @@ impl<'a> TOKEN_GROUPS<'a> {
 
 	/// Returns a mutable slice over the `Groups` entries.
 	#[must_use]
-	pub fn Groups_mut(&mut self) -> &mut [SID_AND_ATTRIBUTES<'a>] {
+	pub const fn Groups_mut(&mut self) -> &mut [SID_AND_ATTRIBUTES<'a>] {
 		unsafe { std::slice::from_raw_parts_mut(self.Groups.as_mut_ptr(), self.GroupCount as _) }
 	}
 }
@@ -512,7 +512,7 @@ impl TOKEN_PRIVILEGES {
 
 	/// Returns a mutable slice over the `Privileges` entries.
 	#[must_use]
-	pub fn Privileges_mut(&mut self) -> &mut [LUID_AND_ATTRIBUTES] {
+	pub const fn Privileges_mut(&mut self) -> &mut [LUID_AND_ATTRIBUTES] {
 		unsafe {
 			std::slice::from_raw_parts_mut(self.Privileges.as_mut_ptr(), self.PrivilegeCount as _)
 		}
