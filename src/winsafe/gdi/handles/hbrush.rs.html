@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gdi\handles\hbrush.rs`."><title>hbrush.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (99e7c15e8 2025-06-01)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../..\../static.files/storage-4e99c027.js"></script><script defer src="../../..\../static.files/src-script-63605ae7.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gdi\handles/</div>hbrush.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gdi\handles\hbrush.rs`."><title>hbrush.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (99e7c15e8 2025-06-01)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../..\../static.files/storage-4e99c027.js"></script><script defer src="../../..\../static.files/src-script-63605ae7.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gdi\handles/</div>hbrush.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-2"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 <a href=#2 id=2 data-nosnippet>2</a>
 <a href=#3 id=3 data-nosnippet>3</a></span><span class="kw">use </span><span class="kw">crate</span>::co;
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -65,45 +65,31 @@
 <a href=#65 id=65 data-nosnippet>65</a>
 <a href=#66 id=66 data-nosnippet>66</a>	<span class="doccomment">/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 <a href=#67 id=67 data-nosnippet>67</a>	/// function.
-<a href=#68 id=68 data-nosnippet>68</a>	///
-<a href=#69 id=69 data-nosnippet>69</a>	/// # Examples
-<a href=#70 id=70 data-nosnippet>70</a>	///
-<a href=#71 id=71 data-nosnippet>71</a>	/// ```no_run
-<a href=#72 id=72 data-nosnippet>72</a>	/// use winsafe::{self as w, prelude::*};
-<a href=#73 id=73 data-nosnippet>73</a>	///
-<a href=#74 id=74 data-nosnippet>74</a>	/// let hbr: w::HBRUSH; // initialized somewhere
-<a href=#75 id=75 data-nosnippet>75</a>	/// # let hbr = w::HBRUSH::NULL;
-<a href=#76 id=76 data-nosnippet>76</a>	///
-<a href=#77 id=77 data-nosnippet>77</a>	/// let mut brush = w::LOGBRUSH::default();
-<a href=#78 id=78 data-nosnippet>78</a>	/// hbr.GetObject(&amp;mut brush)?;
-<a href=#79 id=79 data-nosnippet>79</a>	/// # w::SysResult::Ok(())
-<a href=#80 id=80 data-nosnippet>80</a>	/// ```
-<a href=#81 id=81 data-nosnippet>81</a>	</span><span class="kw">pub fn </span>GetObject(<span class="kw-2">&amp;</span><span class="self">self</span>, pv: <span class="kw-2">&amp;mut </span>LOGBRUSH) -&gt; SysResult&lt;()&gt; {
-<a href=#82 id=82 data-nosnippet>82</a>		<span class="kw">match unsafe </span>{
-<a href=#83 id=83 data-nosnippet>83</a>			ffi::GetObjectW(<span class="self">self</span>.ptr(), std::mem::size_of::&lt;LOGBRUSH&gt;() <span class="kw">as _</span>, pvoid(pv))
-<a href=#84 id=84 data-nosnippet>84</a>		} {
-<a href=#85 id=85 data-nosnippet>85</a>			<span class="number">0 </span>=&gt; <span class="prelude-val">Err</span>(co::ERROR::INVALID_PARAMETER),
-<a href=#86 id=86 data-nosnippet>86</a>			<span class="kw">_ </span>=&gt; <span class="prelude-val">Ok</span>(()),
-<a href=#87 id=87 data-nosnippet>87</a>		}
+<a href=#68 id=68 data-nosnippet>68</a>	</span><span class="kw">pub fn </span>GetObject(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;LOGBRUSH&gt; {
+<a href=#69 id=69 data-nosnippet>69</a>		<span class="kw">let </span><span class="kw-2">mut </span>lb = LOGBRUSH::default();
+<a href=#70 id=70 data-nosnippet>70</a>		bool_to_invalidparm(<span class="kw">unsafe </span>{
+<a href=#71 id=71 data-nosnippet>71</a>			ffi::GetObjectW(<span class="self">self</span>.ptr(), std::mem::size_of::&lt;BITMAP&gt;() <span class="kw">as _</span>, pvoid(<span class="kw-2">&amp;mut </span>lb))
+<a href=#72 id=72 data-nosnippet>72</a>		})
+<a href=#73 id=73 data-nosnippet>73</a>		.map(|<span class="kw">_</span>| lb)
+<a href=#74 id=74 data-nosnippet>74</a>	}
+<a href=#75 id=75 data-nosnippet>75</a>
+<a href=#76 id=76 data-nosnippet>76</a>	<span class="doccomment">/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
+<a href=#77 id=77 data-nosnippet>77</a>	/// function.
+<a href=#78 id=78 data-nosnippet>78</a>	</span><span class="attr">#[must_use]
+<a href=#79 id=79 data-nosnippet>79</a>	</span><span class="kw">pub fn </span>GetStockObject(sb: co::STOCK_BRUSH) -&gt; SysResult&lt;HBRUSH&gt; {
+<a href=#80 id=80 data-nosnippet>80</a>		ptr_to_invalidparm_handle(<span class="kw">unsafe </span>{ ffi::GetStockObject(sb.raw()) })
+<a href=#81 id=81 data-nosnippet>81</a>	}
+<a href=#82 id=82 data-nosnippet>82</a>
+<a href=#83 id=83 data-nosnippet>83</a>	<span class="doccomment">/// [`GetSysColorBrush`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolorbrush)
+<a href=#84 id=84 data-nosnippet>84</a>	/// function.
+<a href=#85 id=85 data-nosnippet>85</a>	</span><span class="attr">#[must_use]
+<a href=#86 id=86 data-nosnippet>86</a>	</span><span class="kw">pub fn </span>GetSysColorBrush(index: co::COLOR) -&gt; SysResult&lt;HBRUSH&gt; {
+<a href=#87 id=87 data-nosnippet>87</a>		ptr_to_invalidparm_handle(<span class="kw">unsafe </span>{ ffi::GetSysColorBrush(index.raw()) })
 <a href=#88 id=88 data-nosnippet>88</a>	}
 <a href=#89 id=89 data-nosnippet>89</a>
-<a href=#90 id=90 data-nosnippet>90</a>	<span class="doccomment">/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
+<a href=#90 id=90 data-nosnippet>90</a>	<span class="doccomment">/// [`UnrealizeObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-unrealizeobject)
 <a href=#91 id=91 data-nosnippet>91</a>	/// function.
-<a href=#92 id=92 data-nosnippet>92</a>	</span><span class="attr">#[must_use]
-<a href=#93 id=93 data-nosnippet>93</a>	</span><span class="kw">pub fn </span>GetStockObject(sb: co::STOCK_BRUSH) -&gt; SysResult&lt;HBRUSH&gt; {
-<a href=#94 id=94 data-nosnippet>94</a>		ptr_to_invalidparm_handle(<span class="kw">unsafe </span>{ ffi::GetStockObject(sb.raw()) })
-<a href=#95 id=95 data-nosnippet>95</a>	}
-<a href=#96 id=96 data-nosnippet>96</a>
-<a href=#97 id=97 data-nosnippet>97</a>	<span class="doccomment">/// [`GetSysColorBrush`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolorbrush)
-<a href=#98 id=98 data-nosnippet>98</a>	/// function.
-<a href=#99 id=99 data-nosnippet>99</a>	</span><span class="attr">#[must_use]
-<a href=#100 id=100 data-nosnippet>100</a>	</span><span class="kw">pub fn </span>GetSysColorBrush(index: co::COLOR) -&gt; SysResult&lt;HBRUSH&gt; {
-<a href=#101 id=101 data-nosnippet>101</a>		ptr_to_invalidparm_handle(<span class="kw">unsafe </span>{ ffi::GetSysColorBrush(index.raw()) })
-<a href=#102 id=102 data-nosnippet>102</a>	}
-<a href=#103 id=103 data-nosnippet>103</a>
-<a href=#104 id=104 data-nosnippet>104</a>	<span class="doccomment">/// [`UnrealizeObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-unrealizeobject)
-<a href=#105 id=105 data-nosnippet>105</a>	/// function.
-<a href=#106 id=106 data-nosnippet>106</a>	</span><span class="kw">pub fn </span>UnrealizeObject(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;()&gt; {
-<a href=#107 id=107 data-nosnippet>107</a>		bool_to_invalidparm(<span class="kw">unsafe </span>{ ffi::UnrealizeObject(<span class="self">self</span>.ptr()) })
-<a href=#108 id=108 data-nosnippet>108</a>	}
-<a href=#109 id=109 data-nosnippet>109</a>}</code></pre></div></section></main></body></html>
+<a href=#92 id=92 data-nosnippet>92</a>	</span><span class="kw">pub fn </span>UnrealizeObject(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;()&gt; {
+<a href=#93 id=93 data-nosnippet>93</a>		bool_to_invalidparm(<span class="kw">unsafe </span>{ ffi::UnrealizeObject(<span class="self">self</span>.ptr()) })
+<a href=#94 id=94 data-nosnippet>94</a>	}
+<a href=#95 id=95 data-nosnippet>95</a>}</code></pre></div></section></main></body></html>
