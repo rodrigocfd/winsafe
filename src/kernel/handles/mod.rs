@@ -1,4 +1,3 @@
-mod handle_traits;
 mod hevent;
 mod hfile;
 mod hfilemap;
@@ -52,7 +51,6 @@ pub mod decl {
 }
 
 pub mod traits {
-	pub use super::handle_traits::*;
 	pub use super::hevent::kernel_Hevent;
 	pub use super::hfile::kernel_Hfile;
 	pub use super::hfilemap::kernel_Hfilemap;
