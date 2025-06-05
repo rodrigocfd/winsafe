@@ -4,7 +4,7 @@
 <a href=#4 id=4 data-nosnippet>4</a>
 <a href=#5 id=5 data-nosnippet>5</a><span class="doccomment">/// Variable parameter for:
 <a href=#6 id=6 data-nosnippet>6</a>///
-<a href=#7 id=7 data-nosnippet>7</a>/// * [`HACCESSTOKEN::AdjustTokenPrivileges`](crate::prelude::advapi_Haccesstoken::AdjustTokenPrivileges).
+<a href=#7 id=7 data-nosnippet>7</a>/// * [`HACCESSTOKEN::AdjustTokenPrivileges`](crate::HACCESSTOKEN::AdjustTokenPrivileges).
 <a href=#8 id=8 data-nosnippet>8</a></span><span class="kw">pub enum </span>DisabPriv&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#9 id=9 data-nosnippet>9</a>	<span class="doccomment">/// Disables all privileges.
 <a href=#10 id=10 data-nosnippet>10</a>	</span>Disab,
@@ -163,7 +163,7 @@
 <a href=#163 id=163 data-nosnippet>163</a>}
 <a href=#164 id=164 data-nosnippet>164</a>
 <a href=#165 id=165 data-nosnippet>165</a><span class="doccomment">/// Notification content for
-<a href=#166 id=166 data-nosnippet>166</a>/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::advapi_Hservicestatus::RegisterServiceCtrlHandlerEx)
+<a href=#166 id=166 data-nosnippet>166</a>/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::HSERVICESTATUS::RegisterServiceCtrlHandlerEx)
 <a href=#167 id=167 data-nosnippet>167</a>/// callback, describing [`co::SERVICE_CONTROL`](crate::co::SERVICE_CONTROL).
 <a href=#168 id=168 data-nosnippet>168</a></span><span class="kw">pub enum </span>SvcCtl&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#169 id=169 data-nosnippet>169</a>	Continue,
@@ -195,7 +195,7 @@
 <a href=#195 id=195 data-nosnippet>195</a>	/// # Safety
 <a href=#196 id=196 data-nosnippet>196</a>	///
 <a href=#197 id=197 data-nosnippet>197</a>	/// This enum is constructed when building the output of
-<a href=#198 id=198 data-nosnippet>198</a>	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::advapi_Hservicestatus::RegisterServiceCtrlHandlerEx)
+<a href=#198 id=198 data-nosnippet>198</a>	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::HSERVICESTATUS::RegisterServiceCtrlHandlerEx)
 <a href=#199 id=199 data-nosnippet>199</a>	/// callback, make sure all parameters are correct.
 <a href=#200 id=200 data-nosnippet>200</a>	</span><span class="attr">#[must_use]
 <a href=#201 id=201 data-nosnippet>201</a>	</span><span class="kw">pub unsafe fn </span>from_raw(
@@ -258,7 +258,7 @@
 <a href=#258 id=258 data-nosnippet>258</a>	/// # Safety
 <a href=#259 id=259 data-nosnippet>259</a>	///
 <a href=#260 id=260 data-nosnippet>260</a>	/// This enum is constructed when building the output of
-<a href=#261 id=261 data-nosnippet>261</a>	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::advapi_Hservicestatus::RegisterServiceCtrlHandlerEx)
+<a href=#261 id=261 data-nosnippet>261</a>	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::HSERVICESTATUS::RegisterServiceCtrlHandlerEx)
 <a href=#262 id=262 data-nosnippet>262</a>	/// callback, make sure all parameters are correct.
 <a href=#263 id=263 data-nosnippet>263</a>	</span><span class="attr">#[must_use]
 <a href=#264 id=264 data-nosnippet>264</a>	</span><span class="kw">pub unsafe fn </span>from_raw(event_data: <span class="kw-2">&amp;</span>DEV_BROADCAST_HDR) -&gt; <span class="self">Self </span>{
@@ -293,7 +293,7 @@
 <a href=#293 id=293 data-nosnippet>293</a>	/// # Safety
 <a href=#294 id=294 data-nosnippet>294</a>	///
 <a href=#295 id=295 data-nosnippet>295</a>	/// This enum is constructed when building the output of
-<a href=#296 id=296 data-nosnippet>296</a>	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::advapi_Hservicestatus::RegisterServiceCtrlHandlerEx)
+<a href=#296 id=296 data-nosnippet>296</a>	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::HSERVICESTATUS::RegisterServiceCtrlHandlerEx)
 <a href=#297 id=297 data-nosnippet>297</a>	/// callback, make sure all parameters are correct.
 <a href=#298 id=298 data-nosnippet>298</a>	</span><span class="attr">#[must_use]
 <a href=#299 id=299 data-nosnippet>299</a>	</span><span class="kw">pub unsafe fn </span>from_raw(event: co::PBT, event_data: <span class="kw-2">*mut </span>std::ffi::c_void) -&gt; <span class="self">Self </span>{
@@ -310,7 +310,7 @@
 <a href=#310 id=310 data-nosnippet>310</a>
 <a href=#311 id=311 data-nosnippet>311</a><span class="doccomment">/// Variant parameter for:
 <a href=#312 id=312 data-nosnippet>312</a>///
-<a href=#313 id=313 data-nosnippet>313</a>/// * [`HACCESSTOKEN::GetTokenInformation`](crate::prelude::advapi_Haccesstoken::GetTokenInformation).
+<a href=#313 id=313 data-nosnippet>313</a>/// * [`HACCESSTOKEN::GetTokenInformation`](crate::HACCESSTOKEN::GetTokenInformation).
 <a href=#314 id=314 data-nosnippet>314</a>///
 <a href=#315 id=315 data-nosnippet>315</a>/// The enum values match those in
 <a href=#316 id=316 data-nosnippet>316</a>/// [`co::TOKEN_INFORMATION_CLASS`](crate::co::TOKEN_INFORMATION_CLASS) constant

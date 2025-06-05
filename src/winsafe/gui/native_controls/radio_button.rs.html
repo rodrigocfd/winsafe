@@ -142,8 +142,8 @@
 <a href=#142 id=142 data-nosnippet>142</a>		<span class="prelude-val">Ok</span>(())
 <a href=#143 id=143 data-nosnippet>143</a>	}
 <a href=#144 id=144 data-nosnippet>144</a>
-<a href=#145 id=145 data-nosnippet>145</a>	<span class="doccomment">/// Calls [`HWND::SetWindowText`](crate::prelude::user_Hwnd::SetWindowText)
-<a href=#146 id=146 data-nosnippet>146</a>	/// to set the text and resizes the control to exactly fit it.
+<a href=#145 id=145 data-nosnippet>145</a>	<span class="doccomment">/// Calls [`HWND::SetWindowText`](crate::HWND::SetWindowText) to set the
+<a href=#146 id=146 data-nosnippet>146</a>	/// text and resizes the control to exactly fit it.
 <a href=#147 id=147 data-nosnippet>147</a>	</span><span class="kw">pub fn </span>set_text_and_resize(<span class="kw-2">&amp;</span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;()&gt; {
 <a href=#148 id=148 data-nosnippet>148</a>		<span class="kw">let </span>bound_box = text_calc::bound_box_with_check(<span class="kw-2">&amp;</span>text_calc::remove_accel_ampersands(text))<span class="question-mark">?</span>;
 <a href=#149 id=149 data-nosnippet>149</a>		<span class="self">self</span>.hwnd().SetWindowPos(

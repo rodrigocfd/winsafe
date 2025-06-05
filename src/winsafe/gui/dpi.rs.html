@@ -17,24 +17,22 @@
 <a href=#17 id=17 data-nosnippet>17</a>}
 <a href=#18 id=18 data-nosnippet>18</a>
 <a href=#19 id=19 data-nosnippet>19</a><span class="doccomment">/// Returns the value adjusted according to the current horizontal system DPI,
-<a href=#20 id=20 data-nosnippet>20</a>/// retrieved with
-<a href=#21 id=21 data-nosnippet>21</a>/// [`HDC::GetDeviceCaps`](crate::prelude::gdi_Hdc::GetDeviceCaps).
-<a href=#22 id=22 data-nosnippet>22</a></span><span class="kw">pub fn </span>dpi_x(x_val: i32) -&gt; i32 {
-<a href=#23 id=23 data-nosnippet>23</a>	cache_dpi();
-<a href=#24 id=24 data-nosnippet>24</a>	MulDiv(x_val.into(), <span class="kw">unsafe </span>{ DPI }.<span class="number">0</span>, <span class="number">96</span>)
-<a href=#25 id=25 data-nosnippet>25</a>}
-<a href=#26 id=26 data-nosnippet>26</a>
-<a href=#27 id=27 data-nosnippet>27</a><span class="doccomment">/// Returns the value adjusted according to the current vertical system DPI,
-<a href=#28 id=28 data-nosnippet>28</a>/// retrieved with
-<a href=#29 id=29 data-nosnippet>29</a>/// [`HDC::GetDeviceCaps`](crate::prelude::gdi_Hdc::GetDeviceCaps).
-<a href=#30 id=30 data-nosnippet>30</a></span><span class="kw">pub fn </span>dpi_y(x_val: i32) -&gt; i32 {
-<a href=#31 id=31 data-nosnippet>31</a>	cache_dpi();
-<a href=#32 id=32 data-nosnippet>32</a>	MulDiv(x_val.into(), <span class="kw">unsafe </span>{ DPI }.<span class="number">0</span>, <span class="number">96</span>)
-<a href=#33 id=33 data-nosnippet>33</a>}
-<a href=#34 id=34 data-nosnippet>34</a>
-<a href=#35 id=35 data-nosnippet>35</a><span class="doccomment">/// Returns the values adjusted according to the current horizontal and vertical
-<a href=#36 id=36 data-nosnippet>36</a>/// system DPI, retrieved with
-<a href=#37 id=37 data-nosnippet>37</a>/// [`HDC::GetDeviceCaps`](crate::prelude::gdi_Hdc::GetDeviceCaps).
-<a href=#38 id=38 data-nosnippet>38</a></span><span class="kw">pub fn </span>dpi(x_val: i32, y_val: i32) -&gt; (i32, i32) {
-<a href=#39 id=39 data-nosnippet>39</a>	(dpi_x(x_val), dpi_y(y_val))
-<a href=#40 id=40 data-nosnippet>40</a>}</code></pre></div></section></main></body></html>
+<a href=#20 id=20 data-nosnippet>20</a>/// retrieved with [`HDC::GetDeviceCaps`](crate::HDC::GetDeviceCaps).
+<a href=#21 id=21 data-nosnippet>21</a></span><span class="kw">pub fn </span>dpi_x(x_val: i32) -&gt; i32 {
+<a href=#22 id=22 data-nosnippet>22</a>	cache_dpi();
+<a href=#23 id=23 data-nosnippet>23</a>	MulDiv(x_val.into(), <span class="kw">unsafe </span>{ DPI }.<span class="number">0</span>, <span class="number">96</span>)
+<a href=#24 id=24 data-nosnippet>24</a>}
+<a href=#25 id=25 data-nosnippet>25</a>
+<a href=#26 id=26 data-nosnippet>26</a><span class="doccomment">/// Returns the value adjusted according to the current vertical system DPI,
+<a href=#27 id=27 data-nosnippet>27</a>/// retrieved with [`HDC::GetDeviceCaps`](crate::HDC::GetDeviceCaps).
+<a href=#28 id=28 data-nosnippet>28</a></span><span class="kw">pub fn </span>dpi_y(x_val: i32) -&gt; i32 {
+<a href=#29 id=29 data-nosnippet>29</a>	cache_dpi();
+<a href=#30 id=30 data-nosnippet>30</a>	MulDiv(x_val.into(), <span class="kw">unsafe </span>{ DPI }.<span class="number">0</span>, <span class="number">96</span>)
+<a href=#31 id=31 data-nosnippet>31</a>}
+<a href=#32 id=32 data-nosnippet>32</a>
+<a href=#33 id=33 data-nosnippet>33</a><span class="doccomment">/// Returns the values adjusted according to the current horizontal and vertical
+<a href=#34 id=34 data-nosnippet>34</a>/// system DPI, retrieved with
+<a href=#35 id=35 data-nosnippet>35</a>/// [`HDC::GetDeviceCaps`](crate::HDC::GetDeviceCaps).
+<a href=#36 id=36 data-nosnippet>36</a></span><span class="kw">pub fn </span>dpi(x_val: i32, y_val: i32) -&gt; (i32, i32) {
+<a href=#37 id=37 data-nosnippet>37</a>	(dpi_x(x_val), dpi_y(y_val))
+<a href=#38 id=38 data-nosnippet>38</a>}</code></pre></div></section></main></body></html>

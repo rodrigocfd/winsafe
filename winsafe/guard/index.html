@@ -92,8 +92,7 @@ when the object goes out of scope.</dd><dt><a class="struct" href="struct.HeapDe
 calls
 <a href="https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapdestroy"><code>HeapDestroy</code></a>
 when the object goes out of scope.</dd><dt><a class="struct" href="struct.HeapFreeGuard.html" title="struct winsafe::guard::HeapFreeGuard">Heap<wbr>Free<wbr>Guard</a></dt><dd>RAII implementation for the memory allocated by
-<a href="../prelude/trait.kernel_Hheap.html#method.HeapAlloc" title="method winsafe::prelude::kernel_Hheap::HeapAlloc"><code>HHEAP::HeapAlloc</code></a> which
-automatically calls
+<a href="../struct.HHEAP.html#method.HeapAlloc" title="method winsafe::HHEAP::HeapAlloc"><code>HHEAP::HeapAlloc</code></a> which automatically calls
 <a href="https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapfree"><code>HeapFree</code></a>
 when the object goes out of scope.</dd><dt><a class="struct" href="struct.HeapUnlockGuard.html" title="struct winsafe::guard::HeapUnlockGuard">Heap<wbr>Unlock<wbr>Guard</a></dt><dd>RAII implementation for <a href="../struct.HHEAP.html" title="struct winsafe::HHEAP"><code>HHEAP</code></a> which automatically calls
 <a href="https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock"><code>HeapUnlock</code></a>
@@ -125,9 +124,9 @@ when the object goes out of scope.</dd><dt><a class="struct" href="struct.Releas
 <a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc"><code>ReleaseDC</code></a>
 when the object goes out of scope.</dd><dt><a class="struct" href="struct.ReleaseStgMediumGuard.html" title="struct winsafe::guard::ReleaseStgMediumGuard">Release<wbr>StgMedium<wbr>Guard</a><wbr><span class="stab portability" title="Available on crate feature `ole` only"><code>ole</code></span></dt><dd>RAII implementation which automatically calls
 <a href="https://learn.microsoft.com/en-us/windows/win32/api/ole2/nf-ole2-releasestgmedium"><code>ReleaseStgMedium</code></a>
-when the object goes out of scope.</dd><dt><a class="struct" href="struct.SelectObjectGuard.html" title="struct winsafe::guard::SelectObjectGuard">Select<wbr>Object<wbr>Guard</a><wbr><span class="stab portability" title="Available on crate feature `gdi` only"><code>gdi</code></span></dt><dd>RAII implementation for
-<a href="../prelude/trait.gdi_Hdc.html#method.SelectObject" title="method winsafe::prelude::gdi_Hdc::SelectObject"><code>HDC::SelectObject</code></a> calls, which
-automatically selects the previous GDI object at the end of the scope.</dd><dt><a class="struct" href="struct.SidGuard.html" title="struct winsafe::guard::SidGuard">SidGuard</a><wbr><span class="stab portability" title="Available on crate feature `advapi` only"><code>advapi</code></span></dt><dd>RAII implementation for <a href="../struct.SID.html" title="struct winsafe::SID"><code>SID</code></a>, returned by
+when the object goes out of scope.</dd><dt><a class="struct" href="struct.SelectObjectGuard.html" title="struct winsafe::guard::SelectObjectGuard">Select<wbr>Object<wbr>Guard</a><wbr><span class="stab portability" title="Available on crate feature `gdi` only"><code>gdi</code></span></dt><dd>RAII implementation for <a href="../struct.HDC.html#method.SelectObject" title="method winsafe::HDC::SelectObject"><code>HDC::SelectObject</code></a>
+calls, which automatically selects the previous GDI object at the end of the
+scope.</dd><dt><a class="struct" href="struct.SidGuard.html" title="struct winsafe::guard::SidGuard">SidGuard</a><wbr><span class="stab portability" title="Available on crate feature `advapi` only"><code>advapi</code></span></dt><dd>RAII implementation for <a href="../struct.SID.html" title="struct winsafe::SID"><code>SID</code></a>, returned by
 <a href="../fn.CopySid.html" title="fn winsafe::CopySid"><code>CopySid</code></a>,
 <a href="../fn.CreateWellKnownSid.html" title="fn winsafe::CreateWellKnownSid"><code>CreateWellKnownSid</code></a>,
 <a href="../fn.GetWindowsAccountDomainSid.html" title="fn winsafe::GetWindowsAccountDomainSid"><code>GetWindowsAccountDomainSid</code></a> and
