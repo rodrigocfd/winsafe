@@ -65,26 +65,12 @@ impl HBRUSH {
 
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// function.
-	///
-	/// # Examples
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*};
-	///
-	/// let hbr: w::HBRUSH; // initialized somewhere
-	/// # let hbr = w::HBRUSH::NULL;
-	///
-	/// let mut brush = w::LOGBRUSH::default();
-	/// hbr.GetObject(&mut brush)?;
-	/// # w::SysResult::Ok(())
-	/// ```
-	pub fn GetObject(&self, pv: &mut LOGBRUSH) -> SysResult<()> {
-		match unsafe {
-			ffi::GetObjectW(self.ptr(), std::mem::size_of::<LOGBRUSH>() as _, pvoid(pv))
-		} {
-			0 => Err(co::ERROR::INVALID_PARAMETER),
-			_ => Ok(()),
-		}
+	pub fn GetObject(&self) -> SysResult<LOGBRUSH> {
+		let mut lb = LOGBRUSH::default();
+		bool_to_invalidparm(unsafe {
+			ffi::GetObjectW(self.ptr(), std::mem::size_of::<BITMAP>() as _, pvoid(&mut lb))
+		})
+		.map(|_| lb)
 	}
 
 	/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)

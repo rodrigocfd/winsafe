@@ -66,22 +66,12 @@ impl HFONT {
 
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// function.
-	///
-	/// # Examples
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*};
-	///
-	/// let hfont: w::HFONT; // initialized somewhere
-	/// # let hfont = w::HFONT::NULL;
-	///
-	/// let mut log_font = w::LOGFONT::default();
-	/// hfont.GetObject(&mut log_font)?;
-	/// # w::SysResult::Ok(())
-	pub fn GetObject(&self, lf: &mut LOGFONT) -> SysResult<()> {
+	pub fn GetObject(&self) -> SysResult<LOGFONT> {
+		let mut lf = LOGFONT::default();
 		bool_to_invalidparm(unsafe {
-			ffi::GetObjectW(self.ptr(), std::mem::size_of::<LOGFONT>() as _, pvoid(lf))
+			ffi::GetObjectW(self.ptr(), std::mem::size_of::<LOGFONT>() as _, pvoid(&mut lf))
 		})
+		.map(|_| lf)
 	}
 
 	/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)

@@ -28,22 +28,11 @@ impl HBITMAP {
 
 	/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
 	/// function.
-	///
-	/// # Examples
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*};
-	///
-	/// let hbmp: w::HBITMAP; // initialized somewhere
-	/// # let hbmp = w::HBITMAP::NULL;
-	///
-	/// let mut bitmap = w::BITMAP::default();
-	/// hbmp.GetObject(&mut bitmap)?;
-	/// # w::SysResult::Ok(())
-	/// ```
-	pub fn GetObject(&self, pv: &mut BITMAP) -> SysResult<()> {
+	pub fn GetObject(&self) -> SysResult<BITMAP> {
+		let mut bm = BITMAP::default();
 		bool_to_invalidparm(unsafe {
-			ffi::GetObjectW(self.ptr(), std::mem::size_of::<BITMAP>() as _, pvoid(pv))
+			ffi::GetObjectW(self.ptr(), std::mem::size_of::<BITMAP>() as _, pvoid(&mut bm))
 		})
+		.map(|_| bm)
 	}
 }

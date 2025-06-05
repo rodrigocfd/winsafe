@@ -358,8 +358,7 @@ impl HDC {
 	/// hdc_mem.BitBlt(w::POINT::new(0, 0), w::SIZE::new(cx_screen, cy_screen),
 	///     &hdc_screen, w::POINT::new(0, 0), co::ROP::SRCCOPY)?;
 	///
-	/// let mut bmp_obj = w::BITMAP::default();
-	/// hbmp.GetObject(&mut bmp_obj)?;
+	/// let bmp_obj = hbmp.GetObject()?;
 	///
 	/// let mut bi = w::BITMAPINFO::default();
 	/// bi.bmiHeader.biWidth = cx_screen;
