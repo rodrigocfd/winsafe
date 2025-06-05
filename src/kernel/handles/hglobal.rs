@@ -12,24 +12,14 @@ handle! { HGLOBAL;
 	/// Originally just a `HANDLE`.
 	///
 	/// The allocated memory block is accessible through the
-	/// [`GlobalLock`](crate::prelude::kernel_Hglobal::GlobalLock) method.
+	/// [`GlobalLock`](crate::HGLOBAL::GlobalLock) method.
 }
 
-impl kernel_Hglobal for HGLOBAL {}
-
-/// This trait is enabled with the `kernel` feature, and provides methods for
-/// [`HGLOBAL`](crate::HGLOBAL).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait kernel_Hglobal: Handle {
+impl HGLOBAL {
 	/// [`GlobalAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalalloc)
 	/// function.
 	#[must_use]
-	fn GlobalAlloc(flags: co::GMEM, num_bytes: usize) -> SysResult<GlobalFreeGuard> {
+	pub fn GlobalAlloc(flags: co::GMEM, num_bytes: usize) -> SysResult<GlobalFreeGuard> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::GlobalAlloc(flags.raw(), num_bytes))
 				.map(|h| GlobalFreeGuard::new(h))
@@ -39,7 +29,7 @@ pub trait kernel_Hglobal: Handle {
 	/// [`GlobalFlags`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalflags)
 	/// function.
 	#[must_use]
-	fn GlobalFlags(&self) -> SysResult<co::GMEM> {
+	pub fn GlobalFlags(&self) -> SysResult<co::GMEM> {
 		match unsafe { ffi::GlobalFlags(self.ptr()) } {
 			GMEM_INVALID_HANDLE => Err(GetLastError()),
 			flags => Ok(unsafe { co::GMEM::from_raw(flags) }),
@@ -49,8 +39,8 @@ pub trait kernel_Hglobal: Handle {
 	/// [`GlobalLock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globallock)
 	/// function.
 	///
-	/// Calls [`GlobalSize`](crate::prelude::kernel_Hglobal::GlobalSize) to
-	/// retrieve the size of the memory block.
+	/// Calls [`GlobalSize`](crate::HGLOBAL::GlobalSize) to retrieve the size of
+	/// the memory block.
 	///
 	/// # Examples
 	///
@@ -72,7 +62,7 @@ pub trait kernel_Hglobal: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn GlobalLock(&self) -> SysResult<GlobalUnlockGuard<'_, Self>> {
+	pub fn GlobalLock(&self) -> SysResult<GlobalUnlockGuard<'_>> {
 		let mem_sz = self.GlobalSize()?;
 		unsafe {
 			ptr_to_sysresult(ffi::GlobalLock(self.ptr()))
@@ -85,7 +75,7 @@ pub trait kernel_Hglobal: Handle {
 	///
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
-	fn GlobalReAlloc(&mut self, num_bytes: usize, flags: co::GMEM) -> SysResult<()> {
+	pub fn GlobalReAlloc(&mut self, num_bytes: usize, flags: co::GMEM) -> SysResult<()> {
 		ptr_to_sysresult_handle(unsafe { ffi::GlobalReAlloc(self.ptr(), num_bytes, flags.raw()) })
 			.map(|h| {
 				*self = h;
@@ -95,7 +85,7 @@ pub trait kernel_Hglobal: Handle {
 	/// [`GlobalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalsize)
 	/// function.
 	#[must_use]
-	fn GlobalSize(&self) -> SysResult<usize> {
+	pub fn GlobalSize(&self) -> SysResult<usize> {
 		match unsafe { ffi::GlobalSize(self.ptr()) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz),

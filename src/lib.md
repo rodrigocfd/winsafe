@@ -78,7 +78,7 @@ let hwnd = HWND::GetDesktopWindow();
 hwnd.SetFocus();
 ```
 
-Note how [`GetDesktopWindow`](crate::prelude::user_Hwnd::GetDesktopWindow) is a static method of [`HWND`], and [`SetFocus`](crate::prelude::user_Hwnd::SetFocus) is an instance method called directly upon `hwnd`. All native handles (`HWND`, [`HDC`], [`HINSTANCE`], etc.) are structs, thus:
+Note how [`GetDesktopWindow`](crate::HWND::GetDesktopWindow) is a static method of [`HWND`], and [`SetFocus`](crate::HWND::SetFocus) is an instance method called directly upon `hwnd`. All native handles (`HWND`, [`HDC`], [`HINSTANCE`], etc.) are structs, thus:
 
 * native Win32 functions that return a handle are *static methods* in WinSafe;
 * native Win32 functions whose *first parameter* is a handle are *instance methods*.
@@ -99,7 +99,7 @@ PostQuitMessage(0);
 
 Since [`PostQuitMessage`] is a free function, it's simply at the root of the crate.
 
-Also note that some functions which require a cleanup routine – like [`BeginPaint`](crate::prelude::user_Hwnd::BeginPaint), for example – will return the resource wrapped in a [guard], which will perform the cleanup automatically. You'll never have to manually call [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint).
+Also note that some functions which require a cleanup routine – like [`BeginPaint`](crate::HWND::BeginPaint), for example – will return the resource wrapped in a [guard], which will perform the cleanup automatically. You'll never have to manually call [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint).
 
 Sending messages are a special case, see the [`msg`] module.
 
@@ -109,7 +109,7 @@ All native Win32 constants can be found in the [`co`] module. They're all *typed
 
 Technically, each constant type is simply a [newtype](https://doc.rust-lang.org/rust-by-example/generics/new_types.html) with a couple implementations, including those allowing bitflag operations. Also, all constant values can be converted to its underlying [integer type](https://doc.rust-lang.org/book/ch03-02-data-types.html#integer-types).
 
-The name of the constant type is often its prefix. For example, constants of [`MessageBox`](crate::prelude::user_Hwnd::MessageBox) function, like `MB_OKCANCEL`, belong to a type called [`MB`](crate::co::MB).
+The name of the constant type is often its prefix. For example, constants of [`MessageBox`](crate::HWND::MessageBox) function, like `MB_OKCANCEL`, belong to a type called [`MB`](crate::co::MB).
 
 For example, take the following C code:
 
@@ -128,7 +128,7 @@ hwnd.MessageBox("Hello, world", "Title", MB::OKCANCEL | MB::ICONINFORMATION)?;
 # w::SysResult::Ok(())
 ```
 
-The method [`MessageBox`](crate::prelude::user_Hwnd::MessageBox), like most functions that can return errors, will return [`SysResult`], which can contain an [`ERROR`](crate::co::ERROR) constant.
+The method [`MessageBox`](crate::HWND::MessageBox), like most functions that can return errors, will return [`SysResult`], which can contain an [`ERROR`](crate::co::ERROR) constant.
 
 # Native structs
 

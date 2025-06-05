@@ -11,9 +11,3 @@ pub mod decl {
 		/// [tree view item](https://learn.microsoft.com/en-us/windows/win32/controls/tree-view-controls).
 	}
 }
-
-pub mod traits {
-	pub use super::himagelist::comctl_Himagelist;
-	pub use super::hpropsheetpage::comctl_Hpropsheetpage;
-	pub use super::hwnd::comctl_Hwnd;
-}

@@ -43,7 +43,7 @@ impl GuiParent for WindowMain {}
 
 impl WindowMain {
 	/// Instantiates a new `WindowMain` object, to be created internally with
-	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	/// [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	#[must_use]
 	pub fn new(opts: WindowMainOpts) -> Self {
 		Self(RawDlg::Raw(RawMain::new(opts)))
@@ -51,7 +51,7 @@ impl WindowMain {
 
 	/// Instantiates a new `WindowMain` object, to be loaded from a dialog
 	/// resource with
-	/// [`HINSTANCE::CreateDialogParam`](crate::prelude::user_Hinstance::CreateDialogParam).
+	/// [`HINSTANCE::CreateDialogParam`](crate::HINSTANCE::CreateDialogParam).
 	#[must_use]
 	pub fn new_dlg(dlg_id: u16, icon_id: Option<u16>, accel_tbl_id: Option<u16>) -> Self {
 		Self(RawDlg::Dlg(DlgMain::new(dlg_id, icon_id, accel_tbl_id)))

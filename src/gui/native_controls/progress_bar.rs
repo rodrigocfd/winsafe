@@ -21,8 +21,7 @@ native_ctrl! { ProgressBar: ProgressBarObj;
 
 impl ProgressBar {
 	/// Instantiates a new `ProgressBar` object, to be created on the parent
-	/// window with
-	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	/// window with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	///
 	/// # Panics
 	///
@@ -70,8 +69,7 @@ impl ProgressBar {
 	}
 
 	/// Instantiates a new `ProgressBar` object, to be loaded from a dialog
-	/// resource with
-	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
+	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	///
 	/// # Panics
 	///
@@ -128,8 +126,8 @@ impl ProgressBar {
 
 	/// Sets or unsets the marquee mode by sending a
 	/// [`pbm::SetMarquee`](crate::msg::pbm::SetMarquee) message combined with a
-	/// [`SetWindowLongPtr`](crate::prelude::user_Hwnd::SetWindowLongPtr) call
-	/// for a style change.
+	/// [`SetWindowLongPtr`](crate::HWND::SetWindowLongPtr) call for a style
+	/// change.
 	pub fn set_marquee(&self, marquee: bool) {
 		if marquee {
 			// We must also adjust the window style before/after sending

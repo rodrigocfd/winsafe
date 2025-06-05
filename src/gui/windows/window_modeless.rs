@@ -41,8 +41,7 @@ impl GuiParent for WindowModeless {}
 
 impl WindowModeless {
 	/// Instantiates a new `WindowModeless` object, to be created internally
-	/// with
-	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	///
 	/// # Panics
 	///
@@ -58,7 +57,7 @@ impl WindowModeless {
 
 	/// Instantiates a new `WindowModeless` object, to be loaded from a dialog
 	/// resource with
-	/// [`HINSTANCE::CreateDialogParam`](crate::prelude::user_Hinstance::CreateDialogParam).
+	/// [`HINSTANCE::CreateDialogParam`](crate::HINSTANCE::CreateDialogParam).
 	///
 	/// # Panics
 	///

@@ -12,24 +12,14 @@ handle! { HFINDFILE;
 	/// Originally just a `HANDLE`.
 }
 
-impl kernel_Hfindfile for HFINDFILE {}
-
-/// This trait is enabled with the `kernel` feature, and provides methods for
-/// [`HFINDFILE`](crate::HFINDFILE).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait kernel_Hfindfile: Handle {
+impl HFINDFILE {
 	/// [`FindFirstFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-findfirstfilew)
 	/// function.
 	///
 	/// This method is rather tricky, consider using
 	/// [`path::dir_list`](crate::path::dir_list).
 	#[must_use]
-	fn FindFirstFile(
+	pub fn FindFirstFile(
 		file_name: &str,
 		wfd: &mut WIN32_FIND_DATA,
 	) -> SysResult<(FindCloseGuard, bool)> {
@@ -59,7 +49,7 @@ pub trait kernel_Hfindfile: Handle {
 	/// This method is rather tricky, consider using
 	/// [`path::dir_list`](crate::path::dir_list).
 	#[must_use]
-	fn FindNextFile(&self, wfd: &mut WIN32_FIND_DATA) -> SysResult<bool> {
+	pub fn FindNextFile(&self, wfd: &mut WIN32_FIND_DATA) -> SysResult<bool> {
 		match unsafe { ffi::FindNextFileW(self.ptr(), pvoid(wfd)) } {
 			0 => match GetLastError() {
 				co::ERROR::NO_MORE_FILES => Ok(false), // not an error, no further files found

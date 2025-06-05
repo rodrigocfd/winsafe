@@ -142,8 +142,8 @@ impl RadioButton {
 		Ok(())
 	}
 
-	/// Calls [`HWND::SetWindowText`](crate::prelude::user_Hwnd::SetWindowText)
-	/// to set the text and resizes the control to exactly fit it.
+	/// Calls [`HWND::SetWindowText`](crate::HWND::SetWindowText) to set the
+	/// text and resizes the control to exactly fit it.
 	pub fn set_text_and_resize(&self, text: &str) -> SysResult<()> {
 		let bound_box = text_calc::bound_box_with_check(&text_calc::remove_accel_ampersands(text))?;
 		self.hwnd().SetWindowPos(

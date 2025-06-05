@@ -23,8 +23,7 @@ native_ctrl! { Trackbar: TrackbarObj => TrackbarEvents;
 
 impl Trackbar {
 	/// Instantiates a new `Trackbar` object, to be created on the parent window
-	/// with
-	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	///
 	/// # Panics
 	///
@@ -70,8 +69,7 @@ impl Trackbar {
 	}
 
 	/// Instantiates a new `Trackbar` object, to be loaded from a dialog
-	/// resource with
-	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
+	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	///
 	/// # Panics
 	///

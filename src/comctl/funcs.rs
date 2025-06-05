@@ -50,8 +50,8 @@ pub unsafe fn PropertySheet(header: &PROPSHEETHEADER) -> SysResult<isize> {
 /// 3. `true` if the custom check box is checked, if you used the
 /// `verification_text` field.
 ///
-/// [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog) is a simpler
-/// version of this function.
+/// [`HWND::TaskDialog`](crate::HWND::TaskDialog) is a simpler version of this
+/// function.
 ///
 /// # Examples
 ///

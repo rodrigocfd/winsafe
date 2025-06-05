@@ -23,8 +23,7 @@ native_ctrl! { Edit: EditObj => EditEvents;
 
 impl Edit {
 	/// Instantiates a new `Edit` object, to be created on the parent window
-	/// with
-	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	///
 	/// # Panics
 	///
@@ -84,7 +83,7 @@ impl Edit {
 	}
 
 	/// Instantiates a new `Edit` object, to be loaded from a dialog resource
-	/// with [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
+	/// with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	///
 	/// # Panics
 	///
@@ -183,7 +182,7 @@ impl Edit {
 	}
 
 	/// Sets the text by calling
-	/// [`HWND::SetWindowText`](crate::prelude::user_Hwnd::SetWindowText).
+	/// [`HWND::SetWindowText`](crate::HWND::SetWindowText).
 	pub fn set_text(&self, text: &str) -> SysResult<()> {
 		self.hwnd().SetWindowText(text)?;
 		Ok(())
@@ -204,7 +203,7 @@ impl Edit {
 	}
 
 	/// Retrieves the text by calling
-	/// [`HWND::GetWindowText`](crate::prelude::user_Hwnd::GetWindowText).
+	/// [`HWND::GetWindowText`](crate::HWND::GetWindowText).
 	#[must_use]
 	pub fn text(&self) -> SysResult<String> {
 		self.hwnd().GetWindowText()

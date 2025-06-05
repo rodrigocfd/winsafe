@@ -11,20 +11,10 @@ handle! { HSERVICESTATUS;
 	/// Originally `SERVICE_STATUS_HANDLE`.
 }
 
-impl advapi_Hservicestatus for HSERVICESTATUS {}
-
-/// This trait is enabled with the `advapi` feature, and provides methods for
-/// [`HSERVICESTATUS`](crate::HSERVICESTATUS).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait advapi_Hservicestatus: Handle {
+impl HSERVICESTATUS {
 	/// [`RegisterServiceCtrlHandlerEx`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-registerservicectrlhandlerexw)
 	/// function.
-	fn RegisterServiceCtrlHandlerEx<F>(
+	pub fn RegisterServiceCtrlHandlerEx<F>(
 		service_name: &str,
 		handler_proc: F,
 	) -> SysResult<HSERVICESTATUS>
@@ -42,7 +32,7 @@ pub trait advapi_Hservicestatus: Handle {
 
 	/// [`SetServiceStatus`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-setservicestatus)
 	/// function.
-	fn SetServiceStatus(&self, status: &mut SERVICE_STATUS) -> SysResult<()> {
+	pub fn SetServiceStatus(&self, status: &mut SERVICE_STATUS) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::SetServiceStatus(self.ptr(), pvoid(status)) })
 	}
 }

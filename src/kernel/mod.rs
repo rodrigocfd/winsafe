@@ -27,5 +27,4 @@ pub mod decl {
 
 pub mod traits {
 	pub use super::base_traits::*;
-	pub use super::handles::traits::*;
 }

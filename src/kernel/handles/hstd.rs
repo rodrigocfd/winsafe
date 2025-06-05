@@ -12,27 +12,17 @@ handle! { HSTD;
 	/// Originally just a `HANDLE`.
 }
 
-impl kernel_Hstd for HSTD {}
-
-/// This trait is enabled with the `kernel` feature, and provides methods for
-/// [`HSTD`](crate::HSTD).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait kernel_Hstd: Handle {
+impl HSTD {
 	/// [`FlushConsoleInputBuffer`](https://learn.microsoft.com/en-us/windows/console/flushconsoleinputbuffer)
 	/// function.
-	fn FlushConsoleInputBuffer(&self) -> SysResult<()> {
+	pub fn FlushConsoleInputBuffer(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::FlushConsoleInputBuffer(self.ptr()) })
 	}
 
 	/// [`GetConsoleMode`](https://learn.microsoft.com/en-us/windows/console/getconsolemode)
 	/// function.
 	#[must_use]
-	fn GetConsoleMode(&self) -> SysResult<co::CONSOLE> {
+	pub fn GetConsoleMode(&self) -> SysResult<co::CONSOLE> {
 		let mut mode = co::CONSOLE::default();
 		bool_to_sysresult(unsafe { ffi::GetConsoleMode(self.ptr(), mode.as_mut()) }).map(|_| mode)
 	}
@@ -40,7 +30,7 @@ pub trait kernel_Hstd: Handle {
 	/// [`GetStdHandle`](https://learn.microsoft.com/en-us/windows/console/getstdhandle)
 	/// function.
 	#[must_use]
-	fn GetStdHandle(std_handle: co::STD_HANDLE) -> SysResult<CloseHandleGuard<HSTD>> {
+	pub fn GetStdHandle(std_handle: co::STD_HANDLE) -> SysResult<CloseHandleGuard<HSTD>> {
 		unsafe {
 			match HSTD::from_ptr(ffi::GetStdHandle(std_handle.raw())) {
 				HSTD::INVALID => Err(GetLastError()),
@@ -68,7 +58,7 @@ pub trait kernel_Hstd: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn ReadConsole(
+	pub fn ReadConsole(
 		&self,
 		buffer: &mut WString,
 		input_control: Option<&CONSOLE_READCONSOLE_CONTROL>,
@@ -88,7 +78,7 @@ pub trait kernel_Hstd: Handle {
 
 	/// [`SetConsoleMode`](https://learn.microsoft.com/en-us/windows/console/setconsolemode)
 	/// function.
-	fn SetConsoleMode(&self, mode: co::CONSOLE) -> SysResult<()> {
+	pub fn SetConsoleMode(&self, mode: co::CONSOLE) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::SetConsoleMode(self.ptr(), mode.raw()) })
 	}
 
@@ -96,7 +86,7 @@ pub trait kernel_Hstd: Handle {
 	/// function.
 	///
 	/// Returns the number of chars actually written.
-	fn WriteConsole(&self, text: &str) -> SysResult<u32> {
+	pub fn WriteConsole(&self, text: &str) -> SysResult<u32> {
 		let buf = WString::from_str(text);
 		let mut num_written = u32::default();
 

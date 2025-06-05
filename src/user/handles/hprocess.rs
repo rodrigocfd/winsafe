@@ -6,17 +6,7 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::user::ffi;
 
-impl user_Hprocess for HPROCESS {}
-
-/// This trait is enabled with the `user` feature, and provides methods for
-/// [`HPROCESS`](crate::HPROCESS).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait user_Hprocess: kernel_Hprocess {
+impl HPROCESS {
 	/// [`SetUserObjectInformation`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setuserobjectinformationw)
 	/// function.
 	///
@@ -24,7 +14,11 @@ pub trait user_Hprocess: kernel_Hprocess {
 	///
 	/// The `pv_info` type varies according to `index`. If you set it wrong,
 	/// you're likely to cause a buffer overrun.
-	unsafe fn SetUserObjectInformation<T>(&self, index: co::UOI, pv_info: &mut T) -> SysResult<()> {
+	pub unsafe fn SetUserObjectInformation<T>(
+		&self,
+		index: co::UOI,
+		pv_info: &mut T,
+	) -> SysResult<()> {
 		bool_to_sysresult(ffi::SetUserObjectInformationW(
 			self.ptr(),
 			index.raw(),
@@ -35,7 +29,7 @@ pub trait user_Hprocess: kernel_Hprocess {
 
 	/// [`WaitForInputIdle`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-waitforinputidle)
 	/// function.
-	fn WaitForInputIdle(&self, milliseconds: u32) -> SysResult<SuccessTimeout> {
+	pub fn WaitForInputIdle(&self, milliseconds: u32) -> SysResult<SuccessTimeout> {
 		match unsafe { ffi::WaitForInputIdle(self.ptr(), milliseconds) } {
 			0 => Ok(SuccessTimeout::Success),
 			0x0000_0102 => Ok(SuccessTimeout::Timeout),

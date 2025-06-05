@@ -49,7 +49,7 @@ impl GuiControl for WindowControl {
 
 impl WindowControl {
 	/// Instantiates a new `WindowControl` object, to be created internally with
-	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	/// [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	///
 	/// # Panics
 	///
@@ -65,7 +65,7 @@ impl WindowControl {
 
 	/// Instantiates a new `WindowControl` object, to be loaded from a dialog
 	/// resource with
-	/// [`HINSTANCE::CreateDialogParam`](crate::prelude::user_Hinstance::CreateDialogParam).
+	/// [`HINSTANCE::CreateDialogParam`](crate::HINSTANCE::CreateDialogParam).
 	///
 	/// If the parent window is a dialog, position is in Dialog Template Units;
 	/// otherwise in pixels, which will be multiplied to match current system

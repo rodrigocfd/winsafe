@@ -132,22 +132,20 @@ impl LogpaletteGuard {
 	}
 }
 
-/// RAII implementation for
-/// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject) calls, which
-/// automatically selects the previous GDI object at the end of the scope.
-pub struct SelectObjectGuard<'a, H, G>
+/// RAII implementation for [`HDC::SelectObject`](crate::HDC::SelectObject)
+/// calls, which automatically selects the previous GDI object at the end of the
+/// scope.
+pub struct SelectObjectGuard<'a, G>
 where
-	H: gdi_Hdc,
 	G: GdiObject,
 {
-	hdc: &'a H,
+	hdc: &'a HDC,
 	prev_hgdi: G,
 	region: Option<co::REGION>,
 }
 
-impl<'a, H, G> Drop for SelectObjectGuard<'a, H, G>
+impl<'a, G> Drop for SelectObjectGuard<'a, G>
 where
-	H: gdi_Hdc,
 	G: GdiObject,
 {
 	fn drop(&mut self) {
@@ -161,9 +159,8 @@ where
 	}
 }
 
-impl<'a, H, G> SelectObjectGuard<'a, H, G>
+impl<'a, G> SelectObjectGuard<'a, G>
 where
-	H: gdi_Hdc,
 	G: GdiObject,
 {
 	/// Constructs the guard by taking ownership of the handle.
@@ -171,10 +168,9 @@ where
 	/// # Safety
 	///
 	/// Be sure the handle must be again passed to
-	/// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject)
-	/// at the end of scope.
+	/// [`HDC::SelectObject`](crate::HDC::SelectObject) at the end of scope.
 	#[must_use]
-	pub const unsafe fn new(hdc: &'a H, prev_hgdi: G, region: Option<co::REGION>) -> Self {
+	pub const unsafe fn new(hdc: &'a HDC, prev_hgdi: G, region: Option<co::REGION>) -> Self {
 		Self { hdc, prev_hgdi, region }
 	}
 
@@ -185,9 +181,9 @@ where
 	}
 
 	/// Returns the region information returned by the source
-	/// [`HDC::SelectObject`](crate::prelude::gdi_Hdc::SelectObject) call, if
-	/// the [`GdiObject`](crate::prelude::GdiObject) was an
-	/// [`HRGN`](crate::HRGN); otherwise returns `None`.
+	/// [`HDC::SelectObject`](crate::HDC::SelectObject) call, if the
+	/// [`GdiObject`](crate::prelude::GdiObject) was an [`HRGN`](crate::HRGN);
+	/// otherwise returns `None`.
 	#[must_use]
 	pub const fn region(&self) -> Option<co::REGION> {
 		self.region

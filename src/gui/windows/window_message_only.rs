@@ -36,8 +36,7 @@ impl GuiParent for WindowMessageOnly {}
 
 impl WindowMessageOnly {
 	/// Instantiates a new `WindowMessageOnly` object, to be created internally
-	/// with
-	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	#[must_use]
 	pub fn new(parent: Option<&WindowMessageOnly>) -> AnyResult<Self> {
 		let new_self = Self(Arc::pin(RawBase::new()));

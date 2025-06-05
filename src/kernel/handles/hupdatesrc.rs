@@ -11,21 +11,11 @@ handle! { HUPDATERSRC;
 	/// Originally just a `HANDLE`.
 }
 
-impl kernel_Hupdatersrc for HUPDATERSRC {}
-
-/// This trait is enabled with the `kernel` feature, and provides methods for
-/// [`HUPDATERSRC`](crate::HUPDATERSRC).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait kernel_Hupdatersrc: Handle {
+impl HUPDATERSRC {
 	/// [`BeginUpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-beginupdateresourcew)
 	/// function.
 	#[must_use]
-	fn BeginUpdateResource(
+	pub fn BeginUpdateResource(
 		file_name: &str,
 		delete_existing_resources: bool,
 	) -> SysResult<EndUpdateResourceGuard> {
@@ -40,7 +30,7 @@ pub trait kernel_Hupdatersrc: Handle {
 
 	/// [`UpdateResource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-updateresourcew)
 	/// function.
-	fn UpdateResource(
+	pub fn UpdateResource(
 		&self,
 		resource_type: RtStr,
 		resource_id: IdStr,

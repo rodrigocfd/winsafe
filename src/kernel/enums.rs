@@ -4,7 +4,7 @@ use crate::kernel::privs::*;
 
 /// Variable parameter for:
 ///
-/// * [`HINSTANCE::GetModuleHandleEx`](crate::prelude::kernel_Hinstance::GetModuleHandleEx).
+/// * [`HINSTANCE::GetModuleHandleEx`](crate::HINSTANCE::GetModuleHandleEx).
 pub enum AddrStr {
 	/// No value, will pass `NULL` to the call.
 	None,
@@ -37,14 +37,14 @@ pub enum ClaimSecurityAttr<'a> {
 ///
 /// Variable parameter for:
 ///
-/// * [`HINSTANCE::CreateDialogParam`](crate::prelude::user_Hinstance::CreateDialogParam);
-/// * [`HINSTANCE::EnumResourceLanguages`](crate::prelude::kernel_Hinstance::EnumResourceLanguages);
-/// * [`HINSTANCE::EnumResourceNames`](crate::prelude::kernel_Hinstance::EnumResourceNames);
-/// * [`HINSTANCE::FindResource`](crate::prelude::kernel_Hinstance::FindResource);
-/// * [`HINSTANCE::FindResourceEx`](crate::prelude::kernel_Hinstance::FindResourceEx);
-/// * [`HINSTANCE::LoadAccelerators`](crate::prelude::user_Hinstance::LoadAccelerators);
-/// * [`HINSTANCE::LoadMenu`](crate::prelude::user_Hinstance::LoadMenu);
-/// * [`HUPDATERSRC::UpdateResource`](crate::prelude::kernel_Hupdatersrc::UpdateResource);
+/// * [`HINSTANCE::CreateDialogParam`](crate::HINSTANCE::CreateDialogParam);
+/// * [`HINSTANCE::EnumResourceLanguages`](crate::HINSTANCE::EnumResourceLanguages);
+/// * [`HINSTANCE::EnumResourceNames`](crate::HINSTANCE::EnumResourceNames);
+/// * [`HINSTANCE::FindResource`](crate::HINSTANCE::FindResource);
+/// * [`HINSTANCE::FindResourceEx`](crate::HINSTANCE::FindResourceEx);
+/// * [`HINSTANCE::LoadAccelerators`](crate::HINSTANCE::LoadAccelerators);
+/// * [`HINSTANCE::LoadMenu`](crate::HINSTANCE::LoadMenu);
+/// * [`HUPDATERSRC::UpdateResource`](crate::HUPDATERSRC::UpdateResource);
 /// * [`BmpIdbRes`](crate::BmpIdbRes);
 /// * [`IconRes`](crate::IconRes);
 /// * [`ResStrs`](crate::ResStrs).
@@ -137,12 +137,12 @@ pub enum PowerSettingLid {
 ///
 /// Variant parameter for:
 ///
-/// * [`HINSTANCE::EnumResourceLanguages`](crate::prelude::kernel_Hinstance::EnumResourceLanguages);
-/// * [`HINSTANCE::EnumResourceNames`](crate::prelude::kernel_Hinstance::EnumResourceNames);
-/// * [`HINSTANCE::EnumResourceTypes`](crate::prelude::kernel_Hinstance::EnumResourceTypes);
-/// * [`HINSTANCE::FindResource`](crate::prelude::kernel_Hinstance::FindResource);
-/// * [`HINSTANCE::FindResourceEx`](crate::prelude::kernel_Hinstance::FindResourceEx);
-/// * [`HUPDATERSRC`](crate::prelude::kernel_Hupdatersrc::UpdateResource).
+/// * [`HINSTANCE::EnumResourceLanguages`](crate::HINSTANCE::EnumResourceLanguages);
+/// * [`HINSTANCE::EnumResourceNames`](crate::HINSTANCE::EnumResourceNames);
+/// * [`HINSTANCE::EnumResourceTypes`](crate::HINSTANCE::EnumResourceTypes);
+/// * [`HINSTANCE::FindResource`](crate::HINSTANCE::FindResource);
+/// * [`HINSTANCE::FindResourceEx`](crate::HINSTANCE::FindResourceEx);
+/// * [`HUPDATERSRC`](crate::HUPDATERSRC::UpdateResource).
 #[derive(Clone)]
 pub enum RtStr {
 	/// A predefined resource ID.

@@ -6,20 +6,10 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::shell::ffi;
 
-impl shell_Hwnd for HWND {}
-
-/// This trait is enabled with the `shell` feature, and provides methods for
-/// [`HWND`](crate::HWND).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait shell_Hwnd: ole_Hwnd {
+impl HWND {
 	/// [`DragAcceptFiles`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragacceptfiles)
 	/// function.
-	fn DragAcceptFiles(&self, accept: bool) {
+	pub fn DragAcceptFiles(&self, accept: bool) {
 		unsafe {
 			ffi::DragAcceptFiles(self.ptr(), accept as _);
 		}
@@ -27,7 +17,7 @@ pub trait shell_Hwnd: ole_Hwnd {
 
 	/// [`ShellAbout`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellaboutw)
 	/// function.
-	fn ShellAbout(
+	pub fn ShellAbout(
 		&self,
 		title_bar: &str,
 		first_line: Option<&str>,
@@ -50,7 +40,7 @@ pub trait shell_Hwnd: ole_Hwnd {
 
 	/// [`ShellExecute`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutew)
 	/// function.
-	fn ShellExecute(
+	pub fn ShellExecute(
 		&self,
 		operation: &str,
 		file: &str,

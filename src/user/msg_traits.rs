@@ -7,8 +7,8 @@ use crate::msg::*;
 /// parameters, and also defines the return type of the message.
 ///
 /// Used in functions like
-/// [`SendMessage`](crate::prelude::user_Hwnd::SendMessage) and
-/// [`DefWindowProc`](crate::prelude::user_Hwnd::DefWindowProc).
+/// [`SendMessage`](crate::HWND::SendMessage) and
+/// [`DefWindowProc`](crate::HWND::DefWindowProc).
 pub trait MsgSend {
 	/// The specific type of the value returned by the message.
 	type RetType;

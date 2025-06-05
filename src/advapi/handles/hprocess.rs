@@ -7,17 +7,7 @@ use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
 
-impl advapi_Hprocess for HPROCESS {}
-
-/// This trait is enabled with the `advapi` feature, and provides methods for
-/// [`HPROCESS`](crate::HPROCESS).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait advapi_Hprocess: kernel_Hprocess {
+impl HPROCESS {
 	/// [`OpenProcessToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openprocesstoken)
 	/// function.
 	///
@@ -31,7 +21,7 @@ pub trait advapi_Hprocess: kernel_Hprocess {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn OpenProcessToken(
+	pub fn OpenProcessToken(
 		&self,
 		desired_access: co::TOKEN,
 	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>> {

@@ -14,21 +14,16 @@ handle! { HPEN;
 }
 
 impl GdiObject for HPEN {}
-impl gdi_Hpen for HPEN {}
 
-/// This trait is enabled with the `gdi` feature, and provides methods for
-/// [`HPEN`](crate::HPEN).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait gdi_Hpen: Handle {
+impl HPEN {
 	/// [`CreatePen`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpen)
 	/// function.
 	#[must_use]
-	fn CreatePen(style: co::PS, width: i32, color: COLORREF) -> SysResult<DeleteObjectGuard<HPEN>> {
+	pub fn CreatePen(
+		style: co::PS,
+		width: i32,
+		color: COLORREF,
+	) -> SysResult<DeleteObjectGuard<HPEN>> {
 		unsafe {
 			ptr_to_invalidparm_handle(ffi::CreatePen(style.raw(), width, color.into()))
 				.map(|h| DeleteObjectGuard::new(h))
@@ -38,7 +33,7 @@ pub trait gdi_Hpen: Handle {
 	/// [`CreatePenIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpenindirect)
 	/// function.
 	#[must_use]
-	fn CreatePenIndirect(lp: &mut LOGPEN) -> SysResult<DeleteObjectGuard<HPEN>> {
+	pub fn CreatePenIndirect(lp: &mut LOGPEN) -> SysResult<DeleteObjectGuard<HPEN>> {
 		unsafe {
 			ptr_to_invalidparm_handle(ffi::CreatePenIndirect(pcvoid(lp)))
 				.map(|h| DeleteObjectGuard::new(h))
@@ -48,7 +43,7 @@ pub trait gdi_Hpen: Handle {
 	/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
 	/// function.
 	#[must_use]
-	fn GetStockObject(sp: co::STOCK_PEN) -> SysResult<HPEN> {
+	pub fn GetStockObject(sp: co::STOCK_PEN) -> SysResult<HPEN> {
 		ptr_to_invalidparm_handle(unsafe { ffi::GetStockObject(sp.raw()) })
 	}
 }

@@ -9,7 +9,3 @@ pub(in crate::dwm) mod ffi;
 pub mod decl {
 	pub use super::funcs::*;
 }
-
-pub mod traits {
-	pub use super::handles::traits::*;
-}

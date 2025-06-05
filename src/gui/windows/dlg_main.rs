@@ -5,7 +5,6 @@ use std::sync::Arc;
 use crate::co;
 use crate::decl::*;
 use crate::gui::privs::*;
-use crate::prelude::*;
 
 struct DlgMainObj {
 	dlg_base: DlgBase,

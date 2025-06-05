@@ -6,7 +6,7 @@ All messages can be sent, so they all implement the [`MsgSend`](crate::prelude::
 
 # Sending messages
 
-We want to delete the 3rd element of a [`ListView`](crate::gui::ListView) control. This can be done by sending it an [`LVM_DELETEITEM`](crate::msg::lvm::DeleteItem) message via [`HWND::SendMessage`](crate::prelude::user_Hwnd::SendMessage). The message itself is a struct, which is initialized with the specific message parameters.
+We want to delete the 3rd element of a [`ListView`](crate::gui::ListView) control. This can be done by sending it an [`LVM_DELETEITEM`](crate::msg::lvm::DeleteItem) message via [`HWND::SendMessage`](crate::HWND::SendMessage). The message itself is a struct, which is initialized with the specific message parameters.
 
 The message struct also defines the data type returned by `SendMessage`. In the example below, `LVM_DELETEITEM` returns `SysResult<()>`.
 

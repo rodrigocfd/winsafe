@@ -149,19 +149,13 @@ impl<'a> DirWalkIter<'a> {
 	}
 }
 
-pub(in crate::kernel) struct HheapHeapwalkIter<'a, H>
-where
-	H: kernel_Hheap,
-{
-	hheap: &'a H,
+pub(in crate::kernel) struct HheapHeapwalkIter<'a> {
+	hheap: &'a HHEAP,
 	entry: PROCESS_HEAP_ENTRY,
 	has_more: bool,
 }
 
-impl<'a, H> Iterator for HheapHeapwalkIter<'a, H>
-where
-	H: kernel_Hheap,
-{
+impl<'a> Iterator for HheapHeapwalkIter<'a> {
 	type Item = SysResult<&'a PROCESS_HEAP_ENTRY>;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -187,12 +181,9 @@ where
 	}
 }
 
-impl<'a, H> HheapHeapwalkIter<'a, H>
-where
-	H: kernel_Hheap,
-{
+impl<'a> HheapHeapwalkIter<'a> {
 	#[must_use]
-	pub(in crate::kernel) fn new(hheap: &'a H) -> Self {
+	pub(in crate::kernel) fn new(hheap: &'a HHEAP) -> Self {
 		Self {
 			hheap,
 			entry: PROCESS_HEAP_ENTRY::default(),
@@ -201,20 +192,14 @@ where
 	}
 }
 
-pub(in crate::kernel) struct HprocesslistHeapIter<'a, H>
-where
-	H: kernel_Hprocesslist,
-{
-	hpl: &'a mut H,
+pub(in crate::kernel) struct HprocesslistHeapIter<'a> {
+	hpl: &'a mut HPROCESSLIST,
 	hl32: HEAPLIST32,
 	first_pass: bool,
 	has_more: bool,
 }
 
-impl<'a, H> Iterator for HprocesslistHeapIter<'a, H>
-where
-	H: kernel_Hprocesslist,
-{
+impl<'a> Iterator for HprocesslistHeapIter<'a> {
 	type Item = SysResult<&'a HEAPLIST32>;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -249,12 +234,9 @@ where
 	}
 }
 
-impl<'a, H> HprocesslistHeapIter<'a, H>
-where
-	H: kernel_Hprocesslist,
-{
+impl<'a> HprocesslistHeapIter<'a> {
 	#[must_use]
-	pub(in crate::kernel) fn new(hpl: &'a mut H) -> Self {
+	pub(in crate::kernel) fn new(hpl: &'a mut HPROCESSLIST) -> Self {
 		Self {
 			hpl,
 			hl32: HEAPLIST32::default(),
@@ -264,20 +246,14 @@ where
 	}
 }
 
-pub(in crate::kernel) struct HprocesslistModuleIter<'a, H>
-where
-	H: kernel_Hprocesslist,
-{
-	hpl: &'a mut H,
+pub(in crate::kernel) struct HprocesslistModuleIter<'a> {
+	hpl: &'a mut HPROCESSLIST,
 	me32: MODULEENTRY32,
 	first_pass: bool,
 	has_more: bool,
 }
 
-impl<'a, H> Iterator for HprocesslistModuleIter<'a, H>
-where
-	H: kernel_Hprocesslist,
-{
+impl<'a> Iterator for HprocesslistModuleIter<'a> {
 	type Item = SysResult<&'a MODULEENTRY32>;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -312,12 +288,9 @@ where
 	}
 }
 
-impl<'a, H> HprocesslistModuleIter<'a, H>
-where
-	H: kernel_Hprocesslist,
-{
+impl<'a> HprocesslistModuleIter<'a> {
 	#[must_use]
-	pub(in crate::kernel) fn new(hpl: &'a mut H) -> Self {
+	pub(in crate::kernel) fn new(hpl: &'a mut HPROCESSLIST) -> Self {
 		Self {
 			hpl,
 			me32: MODULEENTRY32::default(),
@@ -327,20 +300,14 @@ where
 	}
 }
 
-pub(in crate::kernel) struct HprocesslistProcessIter<'a, H>
-where
-	H: kernel_Hprocesslist,
-{
-	hpl: &'a mut H,
+pub(in crate::kernel) struct HprocesslistProcessIter<'a> {
+	hpl: &'a mut HPROCESSLIST,
 	pe32: PROCESSENTRY32,
 	first_pass: bool,
 	has_more: bool,
 }
 
-impl<'a, H> Iterator for HprocesslistProcessIter<'a, H>
-where
-	H: kernel_Hprocesslist,
-{
+impl<'a> Iterator for HprocesslistProcessIter<'a> {
 	type Item = SysResult<&'a PROCESSENTRY32>;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -375,12 +342,9 @@ where
 	}
 }
 
-impl<'a, H> HprocesslistProcessIter<'a, H>
-where
-	H: kernel_Hprocesslist,
-{
+impl<'a> HprocesslistProcessIter<'a> {
 	#[must_use]
-	pub(in crate::kernel) fn new(hpl: &'a mut H) -> Self {
+	pub(in crate::kernel) fn new(hpl: &'a mut HPROCESSLIST) -> Self {
 		Self {
 			hpl,
 			pe32: PROCESSENTRY32::default(),
@@ -390,20 +354,14 @@ where
 	}
 }
 
-pub(in crate::kernel) struct HprocesslistThreadIter<'a, H>
-where
-	H: kernel_Hprocesslist,
-{
-	hpl: &'a mut H,
+pub(in crate::kernel) struct HprocesslistThreadIter<'a> {
+	hpl: &'a mut HPROCESSLIST,
 	te32: THREADENTRY32,
 	first_pass: bool,
 	has_more: bool,
 }
 
-impl<'a, H> Iterator for HprocesslistThreadIter<'a, H>
-where
-	H: kernel_Hprocesslist,
-{
+impl<'a> Iterator for HprocesslistThreadIter<'a> {
 	type Item = SysResult<&'a THREADENTRY32>;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -438,12 +396,9 @@ where
 	}
 }
 
-impl<'a, H> HprocesslistThreadIter<'a, H>
-where
-	H: kernel_Hprocesslist,
-{
+impl<'a> HprocesslistThreadIter<'a> {
 	#[must_use]
-	pub(in crate::kernel) fn new(hpl: &'a mut H) -> Self {
+	pub(in crate::kernel) fn new(hpl: &'a mut HPROCESSLIST) -> Self {
 		Self {
 			hpl,
 			te32: THREADENTRY32::default(),

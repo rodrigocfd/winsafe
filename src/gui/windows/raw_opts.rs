@@ -158,7 +158,7 @@ pub struct WindowMainOpts {
 	/// Main accelerator table of the window to be
 	/// [created](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createwindowexw).
 	/// Use
-	/// [`HACCEL::CreateAcceleratorTable`](crate::prelude::user_Haccel::CreateAcceleratorTable)
+	/// [`HACCEL::CreateAcceleratorTable`](crate::HACCEL::CreateAcceleratorTable)
 	/// to create one.
 	///
 	/// Defaults to `None`.

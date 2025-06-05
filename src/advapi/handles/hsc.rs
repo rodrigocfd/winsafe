@@ -13,21 +13,11 @@ handle! { HSC;
 	/// Originally `SC_HANDLE`.
 }
 
-impl advapi_Hsc for HSC {}
-
-/// This trait is enabled with the `advapi` feature, and provides methods for
-/// [`HSC`](crate::HSC).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait advapi_Hsc: Handle {
+impl HSC {
 	/// [`CreateService`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-createservicew)
 	/// function.
 	#[must_use]
-	fn CreateService(
+	pub fn CreateService(
 		&self,
 		service_name: &str,
 		display_name: Option<&str>,
@@ -74,7 +64,7 @@ pub trait advapi_Hsc: Handle {
 	/// [`OpenSCManager`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openscmanagerw)
 	/// function.
 	#[must_use]
-	fn OpenSCManager(
+	pub fn OpenSCManager(
 		machine_name: Option<&str>,
 		desired_access: co::SC_MANAGER,
 	) -> SysResult<CloseServiceHandleGuard> {
@@ -91,7 +81,7 @@ pub trait advapi_Hsc: Handle {
 	/// [`OpenService`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-openservicew)
 	/// function.
 	#[must_use]
-	fn OpenService(
+	pub fn OpenService(
 		&self,
 		service_name: &str,
 		desired_access: co::SERVICE,

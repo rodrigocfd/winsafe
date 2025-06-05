@@ -4,7 +4,7 @@ use crate::kernel::privs::*;
 
 /// Variable parameter for:
 ///
-/// * [`HACCESSTOKEN::AdjustTokenPrivileges`](crate::prelude::advapi_Haccesstoken::AdjustTokenPrivileges).
+/// * [`HACCESSTOKEN::AdjustTokenPrivileges`](crate::HACCESSTOKEN::AdjustTokenPrivileges).
 pub enum DisabPriv<'a> {
 	/// Disables all privileges.
 	Disab,
@@ -163,7 +163,7 @@ impl RegistryValue {
 }
 
 /// Notification content for
-/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::advapi_Hservicestatus::RegisterServiceCtrlHandlerEx)
+/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::HSERVICESTATUS::RegisterServiceCtrlHandlerEx)
 /// callback, describing [`co::SERVICE_CONTROL`](crate::co::SERVICE_CONTROL).
 pub enum SvcCtl<'a> {
 	Continue,
@@ -195,7 +195,7 @@ impl<'a> SvcCtl<'a> {
 	/// # Safety
 	///
 	/// This enum is constructed when building the output of
-	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::advapi_Hservicestatus::RegisterServiceCtrlHandlerEx)
+	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::HSERVICESTATUS::RegisterServiceCtrlHandlerEx)
 	/// callback, make sure all parameters are correct.
 	#[must_use]
 	pub unsafe fn from_raw(
@@ -258,7 +258,7 @@ impl<'a> SvcCtlDeviceEvent<'a> {
 	/// # Safety
 	///
 	/// This enum is constructed when building the output of
-	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::advapi_Hservicestatus::RegisterServiceCtrlHandlerEx)
+	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::HSERVICESTATUS::RegisterServiceCtrlHandlerEx)
 	/// callback, make sure all parameters are correct.
 	#[must_use]
 	pub unsafe fn from_raw(event_data: &DEV_BROADCAST_HDR) -> Self {
@@ -293,7 +293,7 @@ impl<'a> SvcCtlPowerEvent<'a> {
 	/// # Safety
 	///
 	/// This enum is constructed when building the output of
-	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::prelude::advapi_Hservicestatus::RegisterServiceCtrlHandlerEx)
+	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::HSERVICESTATUS::RegisterServiceCtrlHandlerEx)
 	/// callback, make sure all parameters are correct.
 	#[must_use]
 	pub unsafe fn from_raw(event: co::PBT, event_data: *mut std::ffi::c_void) -> Self {
@@ -310,7 +310,7 @@ impl<'a> SvcCtlPowerEvent<'a> {
 
 /// Variant parameter for:
 ///
-/// * [`HACCESSTOKEN::GetTokenInformation`](crate::prelude::advapi_Haccesstoken::GetTokenInformation).
+/// * [`HACCESSTOKEN::GetTokenInformation`](crate::HACCESSTOKEN::GetTokenInformation).
 ///
 /// The enum values match those in
 /// [`co::TOKEN_INFORMATION_CLASS`](crate::co::TOKEN_INFORMATION_CLASS) constant

@@ -8,18 +8,12 @@ use crate::user::ffi;
 /// RAII implementation for clipboard which automatically calls
 /// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
 /// when the object goes out of scope.
-pub struct CloseClipboardGuard<'a, H>
-where
-	H: user_Hwnd,
-{
-	_hwnd: &'a H,
+pub struct CloseClipboardGuard<'a> {
+	_hwnd: &'a HWND,
 	hclip: HCLIPBOARD,
 }
 
-impl<'a, H> Drop for CloseClipboardGuard<'a, H>
-where
-	H: user_Hwnd,
-{
+impl<'a> Drop for CloseClipboardGuard<'a> {
 	fn drop(&mut self) {
 		unsafe {
 			ffi::CloseClipboard(); // ignore errors
@@ -27,29 +21,20 @@ where
 	}
 }
 
-impl<'a, H> Deref for CloseClipboardGuard<'a, H>
-where
-	H: user_Hwnd,
-{
+impl<'a> Deref for CloseClipboardGuard<'a> {
 	type Target = HCLIPBOARD;
 
 	fn deref(&self) -> &Self::Target {
 		&self.hclip
 	}
 }
-impl<'a, H> DerefMut for CloseClipboardGuard<'a, H>
-where
-	H: user_Hwnd,
-{
+impl<'a> DerefMut for CloseClipboardGuard<'a> {
 	fn deref_mut(&mut self) -> &mut Self::Target {
 		&mut self.hclip
 	}
 }
 
-impl<'a, H> CloseClipboardGuard<'a, H>
-where
-	H: user_Hwnd,
-{
+impl<'a> CloseClipboardGuard<'a> {
 	/// Constructs the guard by taking ownership of the handle.
 	///
 	/// # Safety
@@ -58,7 +43,7 @@ where
 	/// [`CloseClipboard`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-closeclipboard)
 	/// at the end of scope.
 	#[must_use]
-	pub const unsafe fn new(hwnd: &'a H, hclip: HCLIPBOARD) -> Self {
+	pub const unsafe fn new(hwnd: &'a HWND, hclip: HCLIPBOARD) -> Self {
 		Self { _hwnd: hwnd, hclip }
 	}
 }
@@ -117,19 +102,13 @@ handle_guard! { EndDeferWindowPosGuard: HDWP;
 /// The [`PAINTSTRUCT`](crate::PAINTSTRUCT) object is stored internally, and can
 /// be accessed through the
 /// [`paintstruct`](crate::guard::EndPaintGuard::paintstruct) method.
-pub struct EndPaintGuard<'a, H>
-where
-	H: user_Hwnd,
-{
-	hwnd: &'a H,
+pub struct EndPaintGuard<'a> {
+	hwnd: &'a HWND,
 	hdc: HDC,
 	ps: PAINTSTRUCT,
 }
 
-impl<'a, H> Drop for EndPaintGuard<'a, H>
-where
-	H: user_Hwnd,
-{
+impl<'a> Drop for EndPaintGuard<'a> {
 	fn drop(&mut self) {
 		unsafe {
 			ffi::EndPaint(self.hwnd.ptr(), pcvoid(&self.ps));
@@ -137,10 +116,7 @@ where
 	}
 }
 
-impl<'a, H> Deref for EndPaintGuard<'a, H>
-where
-	H: user_Hwnd,
-{
+impl<'a> Deref for EndPaintGuard<'a> {
 	type Target = HDC;
 
 	fn deref(&self) -> &Self::Target {
@@ -148,19 +124,13 @@ where
 	}
 }
 
-impl<'a, H> DerefMut for EndPaintGuard<'a, H>
-where
-	H: user_Hwnd,
-{
+impl<'a> DerefMut for EndPaintGuard<'a> {
 	fn deref_mut(&mut self) -> &mut Self::Target {
 		&mut self.hdc
 	}
 }
 
-impl<'a, H> EndPaintGuard<'a, H>
-where
-	H: user_Hwnd,
-{
+impl<'a> EndPaintGuard<'a> {
 	/// Constructs the guard by taking ownership of the objects.
 	///
 	/// # Safety
@@ -169,7 +139,7 @@ where
 	/// [`EndPaint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endpaint)
 	/// at the end of scope.
 	#[must_use]
-	pub const unsafe fn new(hwnd: &'a H, hdc: HDC, ps: PAINTSTRUCT) -> Self {
+	pub const unsafe fn new(hwnd: &'a HWND, hdc: HDC, ps: PAINTSTRUCT) -> Self {
 		Self { hwnd, hdc, ps }
 	}
 
@@ -184,18 +154,12 @@ where
 /// RAII implementation for [`HWND`](crate::HWND) which automatically calls
 /// [`ReleaseCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasecapture)
 /// when the object goes out of scope.
-pub struct ReleaseCaptureGuard<'a, H>
-where
-	H: user_Hwnd,
-{
-	_hwnd: &'a H,
+pub struct ReleaseCaptureGuard<'a> {
+	_hwnd: &'a HWND,
 	hwnd_prev: Option<HWND>,
 }
 
-impl<'a, H> Drop for ReleaseCaptureGuard<'a, H>
-where
-	H: user_Hwnd,
-{
+impl<'a> Drop for ReleaseCaptureGuard<'a> {
 	fn drop(&mut self) {
 		unsafe {
 			ffi::ReleaseCapture(); // ignore errors
@@ -203,10 +167,7 @@ where
 	}
 }
 
-impl<'a, H> ReleaseCaptureGuard<'a, H>
-where
-	H: user_Hwnd,
-{
+impl<'a> ReleaseCaptureGuard<'a> {
 	/// Constructs the guard by taking ownership of the handles.
 	///
 	/// # Safety
@@ -215,7 +176,7 @@ where
 	/// [`ReleaseCapture`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasecapture)
 	/// at the end of scope.
 	#[must_use]
-	pub const unsafe fn new(hwnd: &'a H, hwnd_prev: Option<HWND>) -> Self {
+	pub const unsafe fn new(hwnd: &'a HWND, hwnd_prev: Option<HWND>) -> Self {
 		Self { _hwnd: hwnd, hwnd_prev }
 	}
 
@@ -230,18 +191,12 @@ where
 /// RAII implementation for [`HDC`](crate::HDC) which automatically calls
 /// [`ReleaseDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
 /// when the object goes out of scope.
-pub struct ReleaseDCGuard<'a, H>
-where
-	H: user_Hwnd,
-{
-	hwnd: &'a H,
+pub struct ReleaseDCGuard<'a> {
+	hwnd: &'a HWND,
 	hdc: HDC,
 }
 
-impl<'a, H> Drop for ReleaseDCGuard<'a, H>
-where
-	H: user_Hwnd,
-{
+impl<'a> Drop for ReleaseDCGuard<'a> {
 	fn drop(&mut self) {
 		if let Some(h) = self.hwnd.as_opt() {
 			if let Some(dc) = self.hdc.as_opt() {
@@ -253,10 +208,7 @@ where
 	}
 }
 
-impl<'a, H> Deref for ReleaseDCGuard<'a, H>
-where
-	H: user_Hwnd,
-{
+impl<'a> Deref for ReleaseDCGuard<'a> {
 	type Target = HDC;
 
 	fn deref(&self) -> &Self::Target {
@@ -264,19 +216,13 @@ where
 	}
 }
 
-impl<'a, H> DerefMut for ReleaseDCGuard<'a, H>
-where
-	H: user_Hwnd,
-{
+impl<'a> DerefMut for ReleaseDCGuard<'a> {
 	fn deref_mut(&mut self) -> &mut Self::Target {
 		&mut self.hdc
 	}
 }
 
-impl<'a, H> ReleaseDCGuard<'a, H>
-where
-	H: user_Hwnd,
-{
+impl<'a> ReleaseDCGuard<'a> {
 	/// Constructs the guard by taking ownership of the handles.
 	///
 	/// # Safety
@@ -285,7 +231,7 @@ where
 	/// [`ReleaseDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-releasedc)
 	/// at the end of scope.
 	#[must_use]
-	pub const unsafe fn new(hwnd: &'a H, hdc: HDC) -> Self {
+	pub const unsafe fn new(hwnd: &'a HWND, hdc: HDC) -> Self {
 		Self { hwnd, hdc }
 	}
 

@@ -7,17 +7,7 @@ use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
-impl comctl_Hwnd for HWND {}
-
-/// This trait is enabled with the `comctl` feature, and provides methods for
-/// [`HWND`](crate::HWND).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait comctl_Hwnd: user_Hwnd {
+impl HWND {
 	/// [`DefSubclassProc`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-defsubclassproc)
 	/// function.
 	///
@@ -29,7 +19,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 	///
 	/// Messages manipulate pointers, copies and window states. Improper use may
 	/// lead to undefined behavior.
-	unsafe fn DefSubclassProc<M>(&self, msg: M) -> M::RetType
+	pub unsafe fn DefSubclassProc<M>(&self, msg: M) -> M::RetType
 	where
 		M: MsgSend,
 	{
@@ -45,13 +35,13 @@ pub trait comctl_Hwnd: user_Hwnd {
 
 	/// [`InitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initializeflatsb)
 	/// function.
-	fn InitializeFlatSB(&self) -> HrResult<()> {
+	pub fn InitializeFlatSB(&self) -> HrResult<()> {
 		ok_to_hrresult(unsafe { ffi::InitializeFlatSB(self.ptr()) })
 	}
 
 	/// [`RemoveWindowSubclass`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-removewindowsubclass)
 	/// function.
-	fn RemoveWindowSubclass(
+	pub fn RemoveWindowSubclass(
 		&self,
 		subclass_func: SUBCLASSPROC,
 		subclass_id: usize,
@@ -67,7 +57,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 	/// # Safety
 	///
 	/// You must provide a subclass procedure.
-	unsafe fn SetWindowSubclass(
+	pub unsafe fn SetWindowSubclass(
 		&self,
 		subclass_proc: SUBCLASSPROC,
 		subclass_id: usize,
@@ -125,7 +115,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 	/// }
 	/// # w::HrResult::Ok(())
 	/// ```
-	fn TaskDialog(
+	pub fn TaskDialog(
 		&self,
 		window_title: Option<&str>,
 		main_instruction: Option<&str>,
@@ -154,7 +144,7 @@ pub trait comctl_Hwnd: user_Hwnd {
 
 	/// [`UninitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-uninitializeflatsb)
 	/// function.
-	fn UninitializeFlatSB(&self) -> HrResult<()> {
+	pub fn UninitializeFlatSB(&self) -> HrResult<()> {
 		ok_to_hrresult(unsafe { ffi::UninitializeFlatSB(self.ptr()) })
 	}
 }

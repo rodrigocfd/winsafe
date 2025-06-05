@@ -17,16 +17,14 @@ fn cache_dpi() {
 }
 
 /// Returns the value adjusted according to the current horizontal system DPI,
-/// retrieved with
-/// [`HDC::GetDeviceCaps`](crate::prelude::gdi_Hdc::GetDeviceCaps).
+/// retrieved with [`HDC::GetDeviceCaps`](crate::HDC::GetDeviceCaps).
 pub fn dpi_x(x_val: i32) -> i32 {
 	cache_dpi();
 	MulDiv(x_val.into(), unsafe { DPI }.0, 96)
 }
 
 /// Returns the value adjusted according to the current vertical system DPI,
-/// retrieved with
-/// [`HDC::GetDeviceCaps`](crate::prelude::gdi_Hdc::GetDeviceCaps).
+/// retrieved with [`HDC::GetDeviceCaps`](crate::HDC::GetDeviceCaps).
 pub fn dpi_y(x_val: i32) -> i32 {
 	cache_dpi();
 	MulDiv(x_val.into(), unsafe { DPI }.0, 96)
@@ -34,7 +32,7 @@ pub fn dpi_y(x_val: i32) -> i32 {
 
 /// Returns the values adjusted according to the current horizontal and vertical
 /// system DPI, retrieved with
-/// [`HDC::GetDeviceCaps`](crate::prelude::gdi_Hdc::GetDeviceCaps).
+/// [`HDC::GetDeviceCaps`](crate::HDC::GetDeviceCaps).
 pub fn dpi(x_val: i32, y_val: i32) -> (i32, i32) {
 	(dpi_x(x_val), dpi_y(y_val))
 }

@@ -7,21 +7,11 @@ use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
 
-impl advapi_Hthread for HTHREAD {}
-
-/// This trait is enabled with the `advapi` feature, and provides methods for
-/// [`HTHREAD`](crate::HTHREAD).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait advapi_Hthread: kernel_Hthread {
+impl HTHREAD {
 	/// [`OpenThreadToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-openthreadtoken)
 	/// function.
 	#[must_use]
-	fn OpenThreadToken(
+	pub fn OpenThreadToken(
 		&self,
 		desired_access: co::TOKEN,
 		open_as_self: bool,

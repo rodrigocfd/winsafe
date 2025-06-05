@@ -14,21 +14,11 @@ handle! { HDESK;
 	/// [desktop](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdesk).
 }
 
-impl user_Hdesk for HDESK {}
-
-/// This trait is enabled with the `user` feature, and provides methods for
-/// [`HDESK`](crate::HDESK).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait user_Hdesk: Handle {
+impl HDESK {
 	/// [`CreateDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdesktopw)
 	/// function.
 	#[must_use]
-	fn CreateDesktop(
+	pub fn CreateDesktop(
 		name: &str,
 		flags: Option<co::DF>,
 		desired_access: co::DESKTOP_RIGHTS,
@@ -50,7 +40,7 @@ pub trait user_Hdesk: Handle {
 	/// [`CreateDesktopEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdesktopexw)
 	/// function.
 	#[must_use]
-	fn CreateDesktopEx(
+	pub fn CreateDesktopEx(
 		name: &str,
 		flags: Option<co::DF>,
 		desired_access: co::DESKTOP_RIGHTS,
@@ -83,7 +73,7 @@ pub trait user_Hdesk: Handle {
 	/// let hdesk = w::HDESK::GetThreadDesktop(w::GetCurrentThreadId())?;
 	/// # w::SysResult::Ok(())
 	#[must_use]
-	fn GetThreadDesktop(thread_id: u32) -> SysResult<ManuallyDrop<CloseDesktopGuard>> {
+	pub fn GetThreadDesktop(thread_id: u32) -> SysResult<ManuallyDrop<CloseDesktopGuard>> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::GetThreadDesktop(thread_id))
 				.map(|h| ManuallyDrop::new(CloseDesktopGuard::new(h)))
@@ -93,7 +83,7 @@ pub trait user_Hdesk: Handle {
 	/// [`OpenDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-opendesktopw)
 	/// function.
 	#[must_use]
-	fn OpenDesktop(
+	pub fn OpenDesktop(
 		name: &str,
 		flags: Option<co::DF>,
 		inherit: bool,
@@ -113,7 +103,7 @@ pub trait user_Hdesk: Handle {
 	/// [`OpenInputDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-openinputdesktop)
 	/// function.
 	#[must_use]
-	fn OpenInputDesktop(
+	pub fn OpenInputDesktop(
 		flags: Option<co::DF>,
 		inherit: bool,
 		desired_access: co::DESKTOP_RIGHTS,
@@ -130,13 +120,13 @@ pub trait user_Hdesk: Handle {
 
 	/// [`SetThreadDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setthreaddesktop)
 	/// function.
-	fn SetThreadDesktop(&self) -> SysResult<()> {
+	pub fn SetThreadDesktop(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::SetThreadDesktop(self.ptr()) })
 	}
 
 	/// [`SwitchDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-switchdesktop)
 	/// function.
-	fn SwitchDesktop(&self) -> SysResult<()> {
+	pub fn SwitchDesktop(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::SwitchDesktop(self.ptr()) })
 	}
 }

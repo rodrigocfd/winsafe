@@ -10,7 +10,7 @@ const_ordinary! { PROPERTYORIGIN: u32;
 }
 
 const_ordinary! { STAP: u32;
-	/// [`HTHEME::GetThemeAppProperties`](crate::prelude::uxtheme_Htheme::GetThemeAppProperties)
+	/// [`HTHEME::GetThemeAppProperties`](crate::HTHEME::GetThemeAppProperties)
 	/// return value (`u32`).
 	=>
 	ALLOW_NONCLIENT 1 << 0

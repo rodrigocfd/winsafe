@@ -222,7 +222,7 @@ pub trait GuiControl: GuiWindow {
 	fn ctrl_id(&self) -> u16;
 
 	/// If the control belongs to an ordinary window, simply calls
-	/// [`HWND:SetFocus`](crate::prelude::user_Hwnd::SetFocus).
+	/// [`HWND:SetFocus`](crate::HWND::SetFocus).
 	///
 	/// If the control belongs to a dialog window, sends a
 	/// [`wm::NextDlgCtl`] message. This is preferable to the `HWND::SetFocus`

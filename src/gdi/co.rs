@@ -1,8 +1,7 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
 const_ordinary! { AD: i32;
-	/// [`HDC::SetArcDirection`](crate::prelude::gdi_Hdc::SetArcDirection) `dir`
-	/// (`i32`).
+	/// [`HDC::SetArcDirection`](crate::HDC::SetArcDirection) `dir` (`i32`).
 	=>
 	COUNTERCLOCKWISE 1
 	CLOCKWISE 2
@@ -20,7 +19,7 @@ const_ordinary! { BI: u32;
 }
 
 const_ordinary! { BKMODE: i32;
-	/// [`HDC::SetBkMode`](crate::prelude::gdi_Hdc::SetBkMode) `mode` (`i32`).
+	/// [`HDC::SetBkMode`](crate::HDC::SetBkMode) `mode` (`i32`).
 	=>
 	TRANSPARENT 1
 	OPAQUE 2
@@ -45,8 +44,8 @@ const_ordinary! { BSS: u32;
 }
 
 const_ordinary! { CHARSET: u8;
-	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `char_set`
-	/// and [`LOGFONT`](crate::LOGFONT) `lfCharset` (`u8`).
+	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `char_set` and
+	/// [`LOGFONT`](crate::LOGFONT) `lfCharset` (`u8`).
 	=>
 	ANSI 0
 	DEFAULT 1
@@ -71,8 +70,8 @@ const_ordinary! { CHARSET: u8;
 }
 
 const_ordinary! { CLIP: u8;
-	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont)
-	/// `clip_precision` and [`LOGFONT`](crate::LOGFONT) `lfClipPrecision`
+	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `clip_precision` and
+	/// [`LOGFONT`](crate::LOGFONT) `lfClipPrecision`
 	/// (`u8`).
 	=>
 	DEFAULT_PRECIS 0
@@ -86,8 +85,7 @@ const_ordinary! { CLIP: u8;
 }
 
 const_ordinary! { CUR_OBJ: u32;
-	/// [`HDC::GetCurrentObject`](crate::prelude::gdi_Hdc::GetCurrentObject)
-	/// `kind` (`u32`).
+	/// [`HDC::GetCurrentObject`](crate::HDC::GetCurrentObject) `kind` (`u32`).
 	///
 	/// Originally has `OBJ` prefix.
 	=>
@@ -121,8 +119,8 @@ const_ordinary! { FF: u8;
 }
 
 const_ordinary! { FW: u32;
-	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `weight`
-	/// and [`LOGFONT`](crate::LOGFONT) `lfWeight` (`u32`).
+	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `weight` and
+	/// [`LOGFONT`](crate::LOGFONT) `lfWeight` (`u32`).
 	=>
 	DONTCARE 0
 	THIN 100
@@ -142,8 +140,7 @@ const_ordinary! { FW: u32;
 }
 
 const_ordinary! { GDC: i32;
-	/// [`HDC::GetDeviceCaps`](crate::prelude::gdi_Hdc::GetDeviceCaps) `index`
-	/// (`i32`).
+	/// [`HDC::GetDeviceCaps`](crate::HDC::GetDeviceCaps) `index` (`i32`).
 	///
 	/// Originally has no prefix.
 	=>
@@ -190,16 +187,15 @@ const_ordinary! { GDC: i32;
 }
 
 const_ordinary! { GM: i32;
-	/// [`HDC::SetGraphicsMode`](crate::prelude::gdi_Hdc::SetGraphicsMode)
-	/// `mode` (`i32`).
+	/// [`HDC::SetGraphicsMode`](crate::HDC::SetGraphicsMode) `mode` (`i32`).
 	=>
 	COMPATIBLE 1
 	ADVANCED 2
 }
 
 const_ordinary! { HS: i32;
-	/// [`HBRUSH::CreateHatchBrush`](crate::prelude::gdi_Hbrush::CreateHatchBrush)
-	/// `hatch` (`i32`).
+	/// [`HBRUSH::CreateHatchBrush`](crate::HBRUSH::CreateHatchBrush) `hatch`
+	/// (`i32`).
 	=>
 	/// Horizontal hatch: `-----`.
 	HORIZONTAL 0
@@ -216,11 +212,10 @@ const_ordinary! { HS: i32;
 }
 
 const_bitflag! { LR: u32;
-	/// [`HINSTANCE::LoadImageBitmap`](crate::prelude::gdi_Hinstance::LoadImageBitmap),
-	/// [`HINSTANCE::LoadImageCursor`](crate::prelude::gdi_Hinstance::LoadImageCursor)
-	/// and
-	/// [`HINSTANCE::LoadImageIcon`](crate::prelude::gdi_Hinstance::LoadImageIcon)
-	/// `load` (`u32`).
+	/// [`HINSTANCE::LoadImageBitmap`](crate::HINSTANCE::LoadImageBitmap),
+	/// [`HINSTANCE::LoadImageCursor`](crate::HINSTANCE::LoadImageCursor) and
+	/// [`HINSTANCE::LoadImageIcon`](crate::HINSTANCE::LoadImageIcon) `load`
+	/// (`u32`).
 	=>
 	DEFAULTCOLOR 0x0000_0000
 	MONOCHROME 0x0000_0001
@@ -238,8 +233,8 @@ const_bitflag! { LR: u32;
 }
 
 const_ordinary! { OUT_PRECIS: u8;
-	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont)
-	/// `out_precision` and [`LOGFONT`](crate::LOGFONT) `lfOutPrecision` (`u8`).
+	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `out_precision` and
+	/// [`LOGFONT`](crate::LOGFONT) `lfOutPrecision` (`u8`).
 	=>
 	DEFAULT 0
 	STRING 1
@@ -265,9 +260,9 @@ const_ordinary! { PC: u8;
 }
 
 const_ordinary! { PITCH: u8;
-	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont)
-	/// `pitch_and_family` and [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily`
-	/// (`u8`) used with [`FF`](crate::co::FF).
+	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `pitch_and_family` and
+	/// [`LOGFONT`](crate::LOGFONT) `lfPitchAndFamily` (`u8`) used with
+	/// [`FF`](crate::co::FF).
 	=>
 	DEFAULT 0
 	FIXED 1
@@ -282,8 +277,7 @@ impl PITCH {
 }
 
 const_ordinary! { PS: i32;
-	/// [`HPEN::CreatePen`](crate::prelude::gdi_Hpen::CreatePen) `style`
-	/// (`i32`).
+	/// [`HPEN::CreatePen`](crate::HPEN::CreatePen) `style` (`i32`).
 	=>
 	SOLID 0
 	DASH 1
@@ -295,7 +289,7 @@ const_ordinary! { PS: i32;
 }
 
 const_bitflag! { PT: u8;
-	/// [`HDC::PolyDraw`](crate::prelude::gdi_Hdc::PolyDraw) `aj` (`u8`).
+	/// [`HDC::PolyDraw`](crate::HDC::PolyDraw) `aj` (`u8`).
 	=>
 	CLOSEFIGURE 0x01
 	LINETO 0x02
@@ -304,8 +298,8 @@ const_bitflag! { PT: u8;
 }
 
 const_ordinary! { QUALITY: u8;
-	/// [`HFONT::CreateFont`](crate::prelude::gdi_Hfont::CreateFont) `quality`
-	/// and [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).
+	/// [`HFONT::CreateFont`](crate::HFONT::CreateFont) `quality` and
+	/// [`LOGFONT`](crate::LOGFONT) `lfQuality` (`u8`).
 	=>
 	DEFAULT 0
 	DRAFT 1
@@ -317,8 +311,7 @@ const_ordinary! { QUALITY: u8;
 }
 
 const_ordinary! { RGN: i32;
-	/// [`HDC::SelectClipPath`](crate::prelude::gdi_Hdc::SelectClipPath) `mode`
-	/// (`i32`).
+	/// [`HDC::SelectClipPath`](crate::HDC::SelectClipPath) `mode` (`i32`).
 	=>
 	AND 1
 	OR 2
@@ -328,10 +321,9 @@ const_ordinary! { RGN: i32;
 }
 
 const_ordinary! { ROP: u32;
-	/// Raster operation code (`u32`).
-	/// [`HDC::BitBlt`](crate::prelude::gdi_Hdc::BitBlt) `rop`,
-	/// [`HDC::PatBlt`](crate::prelude::gdi_Hdc::PatBlt) `rop` and
-	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) `dwRop`.
+	/// Raster operation code for [`HDC::BitBlt`](crate::HDC::BitBlt),
+	/// [`HDC::PatBlt`](crate::HDC::PatBlt) and
+	/// [`IMAGELISTDRAWPARAMS`](crate::IMAGELISTDRAWPARAMS) (`u32`).
 	///
 	/// Originally has no prefix.
 	=>
@@ -390,8 +382,7 @@ const_ordinary! { ROP: u32;
 }
 
 const_ordinary! { STOCK_BRUSH: i32;
-	/// [`HBRUSH::GetStockObject`](crate::prelude::gdi_Hbrush::GetStockObject)
-	/// `i` (`i32`).
+	/// [`HBRUSH::GetStockObject`](crate::HBRUSH::GetStockObject) `i` (`i32`).
 	=>
 	BLACK 4
 	DKGRAY 3
@@ -404,8 +395,7 @@ const_ordinary! { STOCK_BRUSH: i32;
 }
 
 const_ordinary! { STOCK_FONT: i32;
-	/// [`HFONT::GetStockObject`](crate::prelude::gdi_Hfont::GetStockObject) `i`
-	/// (`i32`).
+	/// [`HFONT::GetStockObject`](crate::HFONT::GetStockObject) `i` (`i32`).
 	=>
 	ANSI_FIXED 11
 	ANSI_VAR 12
@@ -417,8 +407,7 @@ const_ordinary! { STOCK_FONT: i32;
 }
 
 const_ordinary! { STOCK_PEN: i32;
-	/// [`HPEN::GetStockObject`](crate::prelude::gdi_Hpen::GetStockObject) `i`
-	/// (`i32`).
+	/// [`HPEN::GetStockObject`](crate::HPEN::GetStockObject) `i` (`i32`).
 	=>
 	BLACK 7
 	DC 19
@@ -427,8 +416,8 @@ const_ordinary! { STOCK_PEN: i32;
 }
 
 const_ordinary! { STRETCH_MODE: i32;
-	/// [`HDC::SetStretchBltMode`](crate::prelude::gdi_Hdc::SetStretchBltMode)
-	/// `mode` (`i32`).
+	/// [`HDC::SetStretchBltMode`](crate::HDC::SetStretchBltMode) `mode`
+	/// (`i32`).
 	=>
 	/// Performs a Boolean AND operation using the color values for the
 	/// eliminated and existing pixels. If the bitmap is a monochrome bitmap,
@@ -442,9 +431,8 @@ const_ordinary! { STRETCH_MODE: i32;
 	/// pixels approximates the color of the source pixels.
 	///
 	/// After setting the `HALFTONE` stretching mode, an application must call
-	/// the [`HDC::SetBrushOrgEx`](crate::prelude::gdi_Hdc::SetBrushOrgEx)
-	/// function to set the brush origin. If it fails to do so, brush
-	/// misalignment occurs.
+	/// the [`HDC::SetBrushOrgEx`](crate::HDC::SetBrushOrgEx) function to set
+	/// the brush origin. If it fails to do so, brush misalignment occurs.
 	HALFTONE 4
 	/// Same as `BLACKONWHITE`.
 	STRETCH_ANDSCANS Self::BLACKONWHITE.0
@@ -461,8 +449,7 @@ const_ordinary! { STRETCH_MODE: i32;
 }
 
 const_bitflag! { TA: u32;
-	/// [`HDC::SetTextAlign`](crate::prelude::gdi_Hdc::SetTextAlign) `align`
-	/// (`u32`).
+	/// [`HDC::SetTextAlign`](crate::HDC::SetTextAlign) `align` (`u32`).
 	///
 	/// Also includes constants with `VTA` prefix.
 	=>

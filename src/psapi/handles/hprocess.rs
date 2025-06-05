@@ -5,27 +5,17 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::psapi::ffi;
 
-impl psapi_Hprocess for HPROCESS {}
-
-/// This trait is enabled with the `psapi` feature, and provides methods for
-/// [`HPROCESS`](crate::HPROCESS).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait psapi_Hprocess: kernel_Hprocess {
+impl HPROCESS {
 	/// [`EmptyWorkingSet`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-emptyworkingset)
 	/// function.
-	fn EmptyWorkingSet(&self) -> SysResult<()> {
+	pub fn EmptyWorkingSet(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::EmptyWorkingSet(self.ptr()) })
 	}
 
 	/// [`EnumProcessModules`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-enumprocessmodules)
 	/// function.
 	#[must_use]
-	fn EnumProcessModules(&self) -> SysResult<Vec<HINSTANCE>> {
+	pub fn EnumProcessModules(&self) -> SysResult<Vec<HINSTANCE>> {
 		loop {
 			let mut bytes_needed = u32::default();
 			bool_to_sysresult(unsafe {
@@ -56,7 +46,7 @@ pub trait psapi_Hprocess: kernel_Hprocess {
 	/// [`GetMappedFileName`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmappedfilenamew)
 	/// function.
 	#[must_use]
-	fn GetMappedFileName(&self, address: *mut std::ffi::c_void) -> SysResult<String> {
+	pub fn GetMappedFileName(&self, address: *mut std::ffi::c_void) -> SysResult<String> {
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
 		bool_to_sysresult(unsafe {
 			ffi::GetMappedFileNameW(self.ptr(), address, buf.as_mut_ptr(), buf.buf_len() as _)
@@ -67,7 +57,7 @@ pub trait psapi_Hprocess: kernel_Hprocess {
 	/// [`GetModuleBaseName`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmodulebasenamew)
 	/// function.
 	#[must_use]
-	fn GetModuleBaseName(&self, hmodule: Option<&HINSTANCE>) -> SysResult<String> {
+	pub fn GetModuleBaseName(&self, hmodule: Option<&HINSTANCE>) -> SysResult<String> {
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
 		bool_to_sysresult(unsafe {
 			ffi::GetModuleBaseNameW(
@@ -83,7 +73,7 @@ pub trait psapi_Hprocess: kernel_Hprocess {
 	/// [`GetModuleFileNameEx`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmodulefilenameexw)
 	/// function.
 	#[must_use]
-	fn GetModuleFileNameEx(&self, hmodule: Option<&HINSTANCE>) -> SysResult<String> {
+	pub fn GetModuleFileNameEx(&self, hmodule: Option<&HINSTANCE>) -> SysResult<String> {
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
 		bool_to_sysresult(unsafe {
 			ffi::GetModuleFileNameExW(
@@ -99,7 +89,7 @@ pub trait psapi_Hprocess: kernel_Hprocess {
 	/// [`GetModuleInformation`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getmoduleinformation)
 	/// function.
 	#[must_use]
-	fn GetModuleInformation(&self, hmodule: Option<&HINSTANCE>) -> SysResult<MODULEINFO> {
+	pub fn GetModuleInformation(&self, hmodule: Option<&HINSTANCE>) -> SysResult<MODULEINFO> {
 		let mut mi = MODULEINFO::default();
 		bool_to_sysresult(unsafe {
 			ffi::GetModuleInformation(
@@ -115,7 +105,7 @@ pub trait psapi_Hprocess: kernel_Hprocess {
 	/// [`GetProcessImageFileName`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getprocessimagefilenamew)
 	/// function.
 	#[must_use]
-	fn GetProcessImageFileName(&self) -> SysResult<String> {
+	pub fn GetProcessImageFileName(&self) -> SysResult<String> {
 		let mut buf = WString::new_alloc_buf(MAX_PATH + 1); // arbitrary
 		bool_to_sysresult(unsafe {
 			ffi::GetProcessImageFileNameW(self.ptr(), buf.as_mut_ptr(), buf.buf_len() as _)
@@ -126,7 +116,7 @@ pub trait psapi_Hprocess: kernel_Hprocess {
 	/// [`GetProcessMemoryInfo`](https://learn.microsoft.com/en-us/windows/win32/api/psapi/nf-psapi-getprocessmemoryinfo)
 	/// function.
 	#[must_use]
-	fn GetProcessMemoryInfo(&self) -> SysResult<PROCESS_MEMORY_COUNTERS_EX> {
+	pub fn GetProcessMemoryInfo(&self) -> SysResult<PROCESS_MEMORY_COUNTERS_EX> {
 		let mut pmc = PROCESS_MEMORY_COUNTERS_EX::default();
 		bool_to_sysresult(unsafe {
 			ffi::GetProcessMemoryInfo(

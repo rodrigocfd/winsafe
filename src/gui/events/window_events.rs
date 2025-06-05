@@ -384,9 +384,9 @@ impl WindowEvents {
 		///
 		/// If you handle this event, you'll overwrite the default handling in:
 		///
-		/// * dialog [`WindowMain`](crate::gui::WindowMain) – calls [`DestroyWindow`](crate::prelude::user_Hwnd::DestroyWindow);
-		/// * dialog [`WindowModal`](crate::gui::WindowModal) – calls [`EndDialog`](crate::prelude::user_Hwnd::EndDialog);
-		/// * non-dialog [`WindowModal`](crate::gui::WindowModal) – re-enables parent and calls [`DestroyWindow`](crate::prelude::user_Hwnd::DestroyWindow).
+		/// * dialog [`WindowMain`](crate::gui::WindowMain) – calls [`DestroyWindow`](crate::HWND::DestroyWindow);
+		/// * dialog [`WindowModal`](crate::gui::WindowModal) – calls [`EndDialog`](crate::HWND::EndDialog);
+		/// * non-dialog [`WindowModal`](crate::gui::WindowModal) – re-enables parent and calls [`DestroyWindow`](crate::HWND::DestroyWindow).
 	}
 
 	pub_fn_wm_noparm_noret! { wm_context_menu, co::WM::CONTEXTMENU;

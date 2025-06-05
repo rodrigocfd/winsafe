@@ -3,20 +3,14 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::shell::ffi;
 
-pub(in crate::shell) struct HdropIter<'a, H>
-where
-	H: shell_Hdrop,
-{
-	hdrop: &'a H,
+pub(in crate::shell) struct HdropIter<'a> {
+	hdrop: &'a HDROP,
 	buffer: WString,
 	count: u32,
 	current: u32,
 }
 
-impl<'a, H> Iterator for HdropIter<'a, H>
-where
-	H: shell_Hdrop,
-{
+impl<'a> Iterator for HdropIter<'a> {
 	type Item = SysResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
@@ -44,12 +38,9 @@ where
 	}
 }
 
-impl<'a, H> HdropIter<'a, H>
-where
-	H: shell_Hdrop,
-{
+impl<'a> HdropIter<'a> {
 	#[must_use]
-	pub(in crate::shell) fn new(hdrop: &'a H) -> SysResult<Self> {
+	pub(in crate::shell) fn new(hdrop: &'a HDROP) -> SysResult<Self> {
 		let count = unsafe {
 			ffi::DragQueryFileW(hdrop.ptr(), 0xffff_ffff, std::ptr::null_mut(), 0) // preliminar call to retrieve the file count
 		};

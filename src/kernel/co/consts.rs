@@ -40,8 +40,7 @@ const_ordinary! { CLAIM_SECURITY_ATTRIBUTE_TYPE: u16;
 }
 
 const_bitflag! { CONSOLE: u32;
-	/// [`HSTD::SetConsoleMode`](crate::prelude::kernel_Hstd::SetConsoleMode)
-	/// `mode` (`u32`).
+	/// [`HSTD::SetConsoleMode`](crate::HSTD::SetConsoleMode) `mode` (`u32`).
 	///
 	/// Originally has no prefix.
 	=>
@@ -159,8 +158,7 @@ const_bitflag! { CREATE: u32;
 }
 
 const_bitflag! { CREATE_EVENT: u32;
-	/// [`HEVENT::CreateEventEx`](crate::prelude::kernel_Hevent::CreateEventEx)
-	/// `flags` (`u32`).
+	/// [`HEVENT::CreateEventEx`](crate::HEVENT::CreateEventEx) `flags` (`u32`).
 	=>
 	INITIAL_SET 0x0000_0002
 	MANUAL_RESET 0x0000_0001
@@ -203,8 +201,8 @@ const_bitflag! { DBTF: u16;
 }
 
 const_ordinary! { DISPOSITION: u32;
-	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
-	/// `creation_disposition` (`u32`).
+	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `creation_disposition`
+	/// (`u32`).
 	///
 	/// Originally has no prefix.
 	=>
@@ -322,8 +320,7 @@ const_bitflag! { FILE_CACHE: u32;
 }
 
 const_bitflag! { FILE_FLAG: u32;
-	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile) `flags`
-	/// (`u32`).
+	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `flags` (`u32`).
 	=>
 	BACKUP_SEMANTICS 0x0200_0000
 	DELETE_ON_CLOSE 0x0400_0000
@@ -339,7 +336,7 @@ const_bitflag! { FILE_FLAG: u32;
 }
 
 const_bitflag! { FILE_MAP: u32;
-	/// [`HFILEMAP::MapViewOfFile`](crate::prelude::kernel_Hfilemap::MapViewOfFile)
+	/// [`HFILEMAP::MapViewOfFile`](crate::HFILEMAP::MapViewOfFile)
 	/// `desired_access` (`u32`).
 	=>
 	ALL_ACCESS SECTION::ALL_ACCESS.0
@@ -353,8 +350,7 @@ const_bitflag! { FILE_MAP: u32;
 }
 
 const_bitflag! { FILE_SHARE: u32;
-	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
-	/// `share_mode` (`u32`).
+	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `share_mode` (`u32`).
 	=>
 	READ 0x0000_0001
 	WRITE 0x0000_0002
@@ -362,8 +358,7 @@ const_bitflag! { FILE_SHARE: u32;
 }
 
 const_bitflag! { FILE_SECURITY: u32;
-	/// [`HFILE::CreateFile`](crate::prelude::kernel_Hfile::CreateFile)
-	/// `security` (`u32`).
+	/// [`HFILE::CreateFile`](crate::HFILE::CreateFile) `security` (`u32`).
 	///
 	/// Originally has `SECURITY` prefix.
 	=>
@@ -376,7 +371,7 @@ const_bitflag! { FILE_SECURITY: u32;
 }
 
 const_ordinary! { FILE_STARTING_POINT: u32;
-	/// [`HFILE::SetFilePointerEx`](crate::prelude::kernel_Hfile::SetFilePointerEx)
+	/// [`HFILE::SetFilePointerEx`](crate::HFILE::SetFilePointerEx)
 	/// `move_method` (`u32`).
 	///
 	/// Originally has `FILE` prefix.
@@ -392,8 +387,7 @@ const_ordinary! { FILE_STARTING_POINT: u32;
 }
 
 const_ordinary! { FILE_TYPE: u32;
-	/// [`HFILE::GetFileType`](crate::prelude::kernel_Hfile::GetFileType) return
-	/// value (`u32`).
+	/// [`HFILE::GetFileType`](crate::HFILE::GetFileType) return value (`u32`).
 	=>
 	/// The specified file is a character file typically an LPT device or a
 	/// console.
@@ -475,7 +469,7 @@ const_bitflag! { GENERIC: u32;
 }
 
 const_ordinary! { GET_MODULE_HANDLE_EX_FLAG: u32;
-	/// [`HINSTANCE::GetModuleHandleEx`](crate::prelude::kernel_Hinstance::GetModuleHandleEx)
+	/// [`HINSTANCE::GetModuleHandleEx`](crate::HINSTANCE::GetModuleHandleEx)
 	/// `flags` (`u32`).
 	///
 	/// Note that the following flags are automatically managed by the function,
@@ -492,10 +486,9 @@ const_ordinary! { GET_MODULE_HANDLE_EX_FLAG: u32;
 }
 
 const_bitflag! { GMEM: u32;
-	/// [`HGLOBAL::GlobalAlloc`](crate::prelude::kernel_Hglobal::GlobalAlloc)
-	/// and
-	/// [`HGLOBAL::GlobalReAlloc`](crate::prelude::kernel_Hglobal::GlobalReAlloc)
-	/// `flags` (`u32`).
+	/// [`HGLOBAL::GlobalAlloc`](crate::HGLOBAL::GlobalAlloc) and
+	/// [`HGLOBAL::GlobalReAlloc`](crate::HGLOBAL::GlobalReAlloc) `flags`
+	/// (`u32`).
 	=>
 	/// Allocates fixed memory. The return value is a pointer to the memory
 	/// object.
@@ -504,8 +497,8 @@ const_bitflag! { GMEM: u32;
 	/// memory, but they can be moved within the default heap.
 	///
 	/// The return value is a handle to the memory object. To translate the
-	/// handle to a pointer, use the
-	/// [`LocalLock`](crate::prelude::kernel_Hlocal::LocalLock) function.
+	/// handle to a pointer, use the [`LocalLock`](crate::HLOCAL::LocalLock)
+	/// function.
 	MOVEABLE 0x0002
 	/// Initializes memory contents to zero.
 	ZEROINIT 0x0040
@@ -516,8 +509,8 @@ const_bitflag! { GMEM: u32;
 }
 
 const_bitflag! { GR: u32;
-	/// [`HPROCESS::GetGuiResources`](crate::prelude::kernel_Hprocess::GetGuiResources)
-	/// `flags` (`u32`).
+	/// [`HPROCESS::GetGuiResources`](crate::HPROCESS::GetGuiResources) `flags`
+	/// (`u32`).
 	=>
 	GDIOBJECTS 0
 	GDIOBJECTS_PEAK 2
@@ -526,8 +519,7 @@ const_bitflag! { GR: u32;
 }
 
 const_bitflag! { HEAP_ALLOC: u32;
-	/// [`HHEAP::HeapAlloc`](crate::prelude::kernel_Hheap::HeapAlloc) `flags`
-	/// (`u32`).
+	/// [`HHEAP::HeapAlloc`](crate::HHEAP::HeapAlloc) `flags` (`u32`).
 	///
 	/// Originally has `HEAP` prefix.
 	=>
@@ -537,8 +529,7 @@ const_bitflag! { HEAP_ALLOC: u32;
 }
 
 const_bitflag! { HEAP_CREATE: u32;
-	/// [`HHEAP::HeapCreate`](crate::prelude::kernel_Hheap::HeapCreate)
-	/// `options` (`u32`).
+	/// [`HHEAP::HeapCreate`](crate::HHEAP::HeapCreate) `options` (`u32`).
 	///
 	/// Originally has `HEAP` prefix.
 	=>
@@ -548,7 +539,7 @@ const_bitflag! { HEAP_CREATE: u32;
 }
 
 const_ordinary! { HEAP_INFORMATION: u32;
-	/// [`HHEAP::HeapSetInformation`](crate::prelude::kernel_Hheap::HeapSetInformation)
+	/// [`HHEAP::HeapSetInformation`](crate::HHEAP::HeapSetInformation)
 	/// information class (`u32`).
 	=>
 	CompatibilityInformation 0
@@ -557,8 +548,7 @@ const_ordinary! { HEAP_INFORMATION: u32;
 }
 
 const_bitflag! { HEAP_REALLOC: u32;
-	/// [`HHEAP::HeapReAlloc`](crate::prelude::kernel_Hheap::HeapReAlloc)
-	/// `options` (`u32`).
+	/// [`HHEAP::HeapReAlloc`](crate::HHEAP::HeapReAlloc) `options` (`u32`).
 	///
 	/// Originally has `HEAP` prefix.
 	=>
@@ -569,9 +559,8 @@ const_bitflag! { HEAP_REALLOC: u32;
 }
 
 const_bitflag! { HEAP_SIZE: u32;
-	/// [`HHEAP::HeapSize`](crate::prelude::kernel_Hheap::HeapSize) and
-	/// [`HHEAP::HeapCompact`](crate::prelude::kernel_Hheap::HeapCompact)
-	/// `options` (`u32`).
+	/// [`HHEAP::HeapSize`](crate::HHEAP::HeapSize) and
+	/// [`HHEAP::HeapCompact`](crate::HHEAP::HeapCompact) `options` (`u32`).
 	///
 	/// Originally has `HEAP` prefix.
 	=>
@@ -735,9 +724,8 @@ const_ordinary! { LANG: u16;
 }
 
 const_bitflag! { LMEM: u32;
-	/// [`HLOCAL::LocalAlloc`](crate::prelude::kernel_Hlocal::LocalAlloc) and
-	/// [`HLOCAL::LocalReAlloc`](crate::prelude::kernel_Hlocal::LocalReAlloc)
-	/// `flags` (`u32`).
+	/// [`HLOCAL::LocalAlloc`](crate::HLOCAL::LocalAlloc) and
+	/// [`HLOCAL::LocalReAlloc`](crate::HLOCAL::LocalReAlloc) `flags` (`u32`).
 	=>
 	/// Allocates fixed memory. The return value is a pointer to the memory
 	/// object.
@@ -746,8 +734,8 @@ const_bitflag! { LMEM: u32;
 	/// memory, but they can be moved within the default heap.
 	///
 	/// The return value is a handle to the memory object. To translate the
-	/// handle to a pointer, use the
-	/// [`LocalLock`](crate::prelude::kernel_Hlocal::LocalLock) function.
+	/// handle to a pointer, use the [`LocalLock`](crate::HLOCAL::LocalLock)
+	/// function.
 	MOVEABLE 0x0002
 	/// Initializes memory contents to zero.
 	ZEROINIT 0x0040
@@ -881,10 +869,9 @@ const_ordinary! { PBT: u32;
 }
 
 const_bitflag! { PRIORITY_CLASS: u32;
-	/// [`GetPriorityClass`](crate::prelude::kernel_Hprocess::GetPriorityClass)
-	/// and
-	/// [`SetPriorityClass`](crate::prelude::kernel_Hprocess::SetPriorityClass)
-	/// `priority_class` (`u32`).
+	/// [`GetPriorityClass`](crate::HPROCESS::GetPriorityClass) and
+	/// [`SetPriorityClass`](crate::HPROCESS::SetPriorityClass) `priority_class`
+	/// (`u32`).
 	///
 	/// Originally has `PRIORITY_CLASS` suffix.
 	=>
@@ -923,9 +910,9 @@ const_bitflag! { PROCESS: u32;
 }
 
 const_bitflag! { PROCESS_AFFINITY: u32;
-	/// [`QueryProcessAffinityUpdateMode`](crate::prelude::kernel_Hprocess::QueryProcessAffinityUpdateMode)
+	/// [`QueryProcessAffinityUpdateMode`](crate::HPROCESS::QueryProcessAffinityUpdateMode)
 	/// and
-	/// [`SetProcessAffinityUpdateMode`](crate::prelude::kernel_Hprocess::SetProcessAffinityUpdateMode)
+	/// [`SetProcessAffinityUpdateMode`](crate::HPROCESS::SetProcessAffinityUpdateMode)
 	/// `flags` (`u32`).
 	=>
 	/// None of the actual values (zero).
@@ -944,7 +931,7 @@ const_bitflag! { PROCESS_HEAP: u16;
 }
 
 const_ordinary! { PROCESS_NAME: u32;
-	/// [`QueryFullProcessImageName`](crate::prelude::kernel_Hprocess::QueryFullProcessImageName)
+	/// [`QueryFullProcessImageName`](crate::HPROCESS::QueryFullProcessImageName)
 	/// flags (`u32`).
 	=>
 	/// The name should use the Win32 path format.
@@ -1071,8 +1058,8 @@ const_bitflag! { SE: u16;
 }
 
 const_bitflag! { SEC: u32;
-	/// [`HFILE::CreateFileMapping`](crate::prelude::kernel_Hfile::CreateFileMapping)
-	/// `sec` (`u32`).
+	/// [`HFILE::CreateFileMapping`](crate::HFILE::CreateFileMapping) `sec`
+	/// (`u32`).
 	=>
 	PARTITION_OWNER_HANDLE 0x0004_0000
 	PAGES_64K 0x0008_0000
@@ -1251,8 +1238,7 @@ const_bitflag! { STARTF: u32;
 }
 
 const_ordinary! { STD_HANDLE: u32;
-	/// [`GetStdHandle`](crate::prelude::kernel_Hstd::GetStdHandle) `std_handle`
-	/// (`u32`).
+	/// [`GetStdHandle`](crate::HSTD::GetStdHandle) `std_handle` (`u32`).
 	///
 	/// Originally has `STD` prefix and `HANDLE` suffix.
 	=>
@@ -1513,8 +1499,7 @@ const_ordinary! { SUBLANG: u16;
 }
 
 const_ordinary! { SW: i32;
-	/// [`HWND::ShowWindow`](crate::prelude::user_Hwnd::ShowWindow) `show_cmd`
-	/// (`i32`).
+	/// [`HWND::ShowWindow`](crate::HWND::ShowWindow) `show_cmd` (`i32`).
 	=>
 	/// Hides the window and activates another window.
 	HIDE 0
@@ -1589,8 +1574,7 @@ const_bitflag! { TH32CS: u32;
 }
 
 const_bitflag! { THREAD_CREATE: u32;
-	/// [`HTHREAD::CreateThread`](crate::prelude::kernel_Hthread::CreateThread)
-	/// `flags` (`u32`).
+	/// [`HTHREAD::CreateThread`](crate::HTHREAD::CreateThread) `flags` (`u32`).
 	///
 	/// Originally has no prefix.
 	=>
@@ -1713,7 +1697,7 @@ const_ordinary! { VER_PLATFORM: u32;
 }
 
 const_ordinary! { WAIT: u32;
-	/// [`HPROCESS::WaitForSingleObject`](crate::prelude::kernel_Hprocess::WaitForSingleObject)
+	/// [`HPROCESS::WaitForSingleObject`](crate::HPROCESS::WaitForSingleObject)
 	/// return value (`u32`).
 	=>
 	ABANDONED 0x0000_0080

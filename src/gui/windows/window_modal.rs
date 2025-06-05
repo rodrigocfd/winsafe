@@ -41,7 +41,7 @@ impl GuiParent for WindowModal {}
 
 impl WindowModal {
 	/// Instantiates a new `WindowModal` object, to be created internally with
-	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	/// [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	#[must_use]
 	pub fn new(opts: WindowModalOpts) -> Self {
 		Self(RawDlg::Raw(RawModal::new(opts)))
@@ -49,7 +49,7 @@ impl WindowModal {
 
 	/// Instantiates a new `WindowModal` object, to be loaded from a dialog
 	/// resource with
-	/// [`HINSTANCE::DialogBoxParam`](crate::prelude::user_Hinstance::DialogBoxParam).
+	/// [`HINSTANCE::DialogBoxParam`](crate::HINSTANCE::DialogBoxParam).
 	#[must_use]
 	pub fn new_dlg(dlg_id: u16) -> Self {
 		Self(RawDlg::Dlg(DlgModal::new(dlg_id)))

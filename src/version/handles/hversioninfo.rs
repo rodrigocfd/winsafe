@@ -15,24 +15,14 @@ handle! { HVERSIONINFO;
 	/// Originally just a pointer to a memory block.
 }
 
-impl version_Hversioninfo for HVERSIONINFO {}
-
-/// This trait is enabled with the `version` feature, and provides methods for
-/// [`HVERSIONINFO`](crate::HVERSIONINFO).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait version_Hversioninfo: Handle {
+impl HVERSIONINFO {
 	/// [`GetFileVersionInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winver/nf-winver-getfileversioninfow)
 	/// function.
 	///
 	/// The returned buffer will be automatically allocated with
-	/// [`HVERSIONINFO::GetFileVersionInfoSize`](crate::prelude::version_Hversioninfo::GetFileVersionInfoSize).
+	/// [`HVERSIONINFO::GetFileVersionInfoSize`](crate::HVERSIONINFO::GetFileVersionInfoSize).
 	#[must_use]
-	fn GetFileVersionInfo(file_name: &str) -> SysResult<VersionInfoGuard> {
+	pub fn GetFileVersionInfo(file_name: &str) -> SysResult<VersionInfoGuard> {
 		let block_sz = Self::GetFileVersionInfoSize(file_name)?;
 		let mut hglobal =
 			HGLOBAL::GlobalAlloc(co::GMEM::FIXED | co::GMEM::ZEROINIT, block_sz as _)?;
@@ -57,10 +47,10 @@ pub trait version_Hversioninfo: Handle {
 	/// function.
 	///
 	/// You don't need to call this function directly, because
-	/// [`HVERSIONINFO::GetFileVersionInfo`](crate::prelude::version_Hversioninfo::GetFileVersionInfo)
+	/// [`HVERSIONINFO::GetFileVersionInfo`](crate::HVERSIONINFO::GetFileVersionInfo)
 	/// already calls it.
 	#[must_use]
-	fn GetFileVersionInfoSize(file_name: &str) -> SysResult<u32> {
+	pub fn GetFileVersionInfoSize(file_name: &str) -> SysResult<u32> {
 		let mut dw_handle = u32::default();
 		match unsafe {
 			ffi::GetFileVersionInfoSizeW(WString::from_str(file_name).as_ptr(), &mut dw_handle)
@@ -71,8 +61,8 @@ pub trait version_Hversioninfo: Handle {
 	}
 
 	/// Calls
-	/// [`HVERSIONINFO::VerQueryValue`](crate::prelude::version_Hversioninfo::VerQueryValue)
-	/// to retrieve a reference to a slice with all languages and code pages.
+	/// [`HVERSIONINFO::VerQueryValue`](crate::HVERSIONINFO::VerQueryValue) to
+	/// retrieve a reference to a slice with all languages and code pages.
 	///
 	/// # Examples
 	///
@@ -90,7 +80,7 @@ pub trait version_Hversioninfo: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn langs_and_cps(&self) -> SysResult<&[(LANGID, co::CP)]> {
+	pub fn langs_and_cps(&self) -> SysResult<&[(LANGID, co::CP)]> {
 		unsafe {
 			self.VerQueryValue::<(LANGID, co::CP)>("\\VarFileInfo\\Translation")
 				.map(|(pblocks, sz)| {
@@ -111,9 +101,9 @@ pub trait version_Hversioninfo: Handle {
 	/// it wrong, you're likely to cause a buffer overrun.
 	///
 	/// This is a low-level method, prefer using:
-	/// * [`langs_and_cps`](crate::prelude::version_Hversioninfo::langs_and_cps);
-	/// * [`str_val`](crate::prelude::version_Hversioninfo::str_val);
-	/// * [`version_info`](crate::prelude::version_Hversioninfo::version_info).
+	/// * [`langs_and_cps`](crate::HVERSIONINFO::langs_and_cps);
+	/// * [`str_val`](crate::HVERSIONINFO::str_val);
+	/// * [`version_info`](crate::HVERSIONINFO::version_info).
 	///
 	/// # Examples
 	///
@@ -135,7 +125,7 @@ pub trait version_Hversioninfo: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	unsafe fn VerQueryValue<T>(&self, sub_block: &str) -> SysResult<(*const T, u32)> {
+	pub unsafe fn VerQueryValue<T>(&self, sub_block: &str) -> SysResult<(*const T, u32)> {
 		let mut lp_lp_buffer = std::ptr::null();
 		let mut pu_len = 0;
 
@@ -149,7 +139,7 @@ pub trait version_Hversioninfo: Handle {
 	}
 
 	/// Calls
-	/// [`HVERSIONINFO::VerQueryValue`](crate::prelude::version_Hversioninfo::VerQueryValue)
+	/// [`HVERSIONINFO::VerQueryValue`](crate::HVERSIONINFO::VerQueryValue)
 	/// to retrieve a string value.
 	///
 	/// Common value names are:
@@ -186,7 +176,7 @@ pub trait version_Hversioninfo: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn str_val(&self, lang_and_cp: (LANGID, co::CP), name: &str) -> SysResult<String> {
+	pub fn str_val(&self, lang_and_cp: (LANGID, co::CP), name: &str) -> SysResult<String> {
 		unsafe {
 			self.VerQueryValue::<u16>(&format!(
 				"\\StringFileInfo\\{:04x}{:04x}\\{}",
@@ -201,10 +191,10 @@ pub trait version_Hversioninfo: Handle {
 	}
 
 	/// Calls
-	/// [`HVERSIONINFO::VerQueryValue`](crate::prelude::version_Hversioninfo::VerQueryValue)
-	/// to retrieve a reference to the fixed version block, if any.
+	/// [`HVERSIONINFO::VerQueryValue`](crate::HVERSIONINFO::VerQueryValue) to
+	/// retrieve a reference to the fixed version block, if any.
 	#[must_use]
-	fn version_info(&self) -> SysResult<&VS_FIXEDFILEINFO> {
+	pub fn version_info(&self) -> SysResult<&VS_FIXEDFILEINFO> {
 		unsafe {
 			self.VerQueryValue::<VS_FIXEDFILEINFO>("\\")
 				.map(|(p, _)| &*p)

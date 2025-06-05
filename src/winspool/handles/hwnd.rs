@@ -6,20 +6,10 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::winspool::ffi;
 
-impl winspool_Hwnd for HWND {}
-
-/// This trait is enabled with the `winspool` feature, and provides methods for
-/// [`HWND`](crate::HWND).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait winspool_Hwnd: user_Hwnd {
+impl HWND {
 	/// [`AddPrinterConnection2`](https://learn.microsoft.com/en-us/windows/win32/printdocs/addprinterconnection2)
 	/// function.
-	fn AddPrinterConnection2(
+	pub fn AddPrinterConnection2(
 		&self,
 		name: &str,
 		connection_info: &PRINTER_CONNECTION_INFO_1,
@@ -36,7 +26,7 @@ pub trait winspool_Hwnd: user_Hwnd {
 
 	/// [`AdvancedDocumentProperties`](https://learn.microsoft.com/en-us/windows/win32/printdocs/advanceddocumentproperties)
 	/// function.
-	fn AdvancedDocumentProperties(
+	pub fn AdvancedDocumentProperties(
 		&self,
 		hprinter: &HPRINTER,
 		device_name: &str,
@@ -59,7 +49,7 @@ pub trait winspool_Hwnd: user_Hwnd {
 
 	/// [`PrinterProperties`](https://learn.microsoft.com/en-us/windows/win32/printdocs/printerproperties)
 	/// function.
-	fn PrinterProperties(&self, hprinter: &HPRINTER) -> SysResult<()> {
+	pub fn PrinterProperties(&self, hprinter: &HPRINTER) -> SysResult<()> {
 		bool_to_invalidparm(unsafe { ffi::PrinterProperties(self.ptr(), hprinter.ptr()) })
 	}
 }

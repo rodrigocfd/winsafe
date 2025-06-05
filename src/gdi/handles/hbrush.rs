@@ -8,31 +8,22 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 
 impl GdiObject for HBRUSH {}
-impl gdi_Hbrush for HBRUSH {}
 
-/// This trait is enabled with the `gdi` feature, and provides methods for
-/// [`HBRUSH`](crate::HBRUSH).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait gdi_Hbrush: Handle {
+impl HBRUSH {
 	/// Creates a brush with the given system color.
 	///
 	/// **Note:** This should be used only to initialize the
 	/// [`WNDCLASSEX`](crate::WNDCLASSEX)'s `hbrBackground` field. Any other use
 	/// will yield an invalid handle.
 	#[must_use]
-	fn from_sys_color(color: co::COLOR) -> HBRUSH {
+	pub fn from_sys_color(color: co::COLOR) -> HBRUSH {
 		unsafe { HBRUSH::from_ptr((color.raw() + 1) as _) }
 	}
 
 	/// [`CreateBrushIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createbrushindirect)
 	/// function.
 	#[must_use]
-	fn CreateBrushIndirect(lb: &LOGBRUSH) -> SysResult<DeleteObjectGuard<HBRUSH>> {
+	pub fn CreateBrushIndirect(lb: &LOGBRUSH) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		unsafe {
 			ptr_to_invalidparm_handle(ffi::CreateBrushIndirect(pcvoid(lb)))
 				.map(|h| DeleteObjectGuard::new(h))
@@ -42,7 +33,10 @@ pub trait gdi_Hbrush: Handle {
 	/// [`CreateHatchBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createhatchbrush)
 	/// function.
 	#[must_use]
-	fn CreateHatchBrush(hatch: co::HS, color: COLORREF) -> SysResult<DeleteObjectGuard<HBRUSH>> {
+	pub fn CreateHatchBrush(
+		hatch: co::HS,
+		color: COLORREF,
+	) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		unsafe {
 			ptr_to_invalidparm_handle(ffi::CreateHatchBrush(hatch.raw(), color.into()))
 				.map(|h| DeleteObjectGuard::new(h))
@@ -52,7 +46,7 @@ pub trait gdi_Hbrush: Handle {
 	/// [`CreatePatternBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createpatternbrush)
 	/// function.
 	#[must_use]
-	fn CreatePatternBrush(hbmp: &HBITMAP) -> SysResult<DeleteObjectGuard<HBRUSH>> {
+	pub fn CreatePatternBrush(hbmp: &HBITMAP) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		unsafe {
 			ptr_to_invalidparm_handle(ffi::CreatePatternBrush(hbmp.ptr()))
 				.map(|h| DeleteObjectGuard::new(h))
@@ -62,7 +56,7 @@ pub trait gdi_Hbrush: Handle {
 	/// [`CreateSolidBrush`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createsolidbrush)
 	/// function.
 	#[must_use]
-	fn CreateSolidBrush(color: COLORREF) -> SysResult<DeleteObjectGuard<HBRUSH>> {
+	pub fn CreateSolidBrush(color: COLORREF) -> SysResult<DeleteObjectGuard<HBRUSH>> {
 		unsafe {
 			ptr_to_invalidparm_handle(ffi::CreateSolidBrush(color.into()))
 				.map(|h| DeleteObjectGuard::new(h))
@@ -84,7 +78,7 @@ pub trait gdi_Hbrush: Handle {
 	/// hbr.GetObject(&mut brush)?;
 	/// # w::SysResult::Ok(())
 	/// ```
-	fn GetObject(&self, pv: &mut LOGBRUSH) -> SysResult<()> {
+	pub fn GetObject(&self, pv: &mut LOGBRUSH) -> SysResult<()> {
 		match unsafe {
 			ffi::GetObjectW(self.ptr(), std::mem::size_of::<LOGBRUSH>() as _, pvoid(pv))
 		} {
@@ -96,20 +90,20 @@ pub trait gdi_Hbrush: Handle {
 	/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
 	/// function.
 	#[must_use]
-	fn GetStockObject(sb: co::STOCK_BRUSH) -> SysResult<HBRUSH> {
+	pub fn GetStockObject(sb: co::STOCK_BRUSH) -> SysResult<HBRUSH> {
 		ptr_to_invalidparm_handle(unsafe { ffi::GetStockObject(sb.raw()) })
 	}
 
 	/// [`GetSysColorBrush`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getsyscolorbrush)
 	/// function.
 	#[must_use]
-	fn GetSysColorBrush(index: co::COLOR) -> SysResult<HBRUSH> {
+	pub fn GetSysColorBrush(index: co::COLOR) -> SysResult<HBRUSH> {
 		ptr_to_invalidparm_handle(unsafe { ffi::GetSysColorBrush(index.raw()) })
 	}
 
 	/// [`UnrealizeObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-unrealizeobject)
 	/// function.
-	fn UnrealizeObject(&self) -> SysResult<()> {
+	pub fn UnrealizeObject(&self) -> SysResult<()> {
 		bool_to_invalidparm(unsafe { ffi::UnrealizeObject(self.ptr()) })
 	}
 }

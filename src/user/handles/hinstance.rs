@@ -6,24 +6,14 @@ use crate::kernel::privs::*;
 use crate::prelude::*;
 use crate::user::ffi;
 
-impl user_Hinstance for HINSTANCE {}
-
-/// This trait is enabled with the `user` feature, and provides methods for
-/// [`HINSTANCE`](crate::HINSTANCE).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait user_Hinstance: kernel_Hinstance {
+impl HINSTANCE {
 	/// [`CreateDialogParam`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createdialogparamw)
 	/// function.
 	///
 	/// # Safety
 	///
 	/// To create a dialog, you must provide a dialog procedure.
-	unsafe fn CreateDialogParam(
+	pub unsafe fn CreateDialogParam(
 		&self,
 		resource_id: IdStr,
 		hwnd_parent: Option<&HWND>,
@@ -47,7 +37,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// # Safety
 	///
 	/// To create a dialog, you must provide a dialog procedure.
-	unsafe fn DialogBoxIndirectParam(
+	pub unsafe fn DialogBoxIndirectParam(
 		&self,
 		dialog_template: &DLGTEMPLATE,
 		hwnd_parent: Option<&HWND>,
@@ -74,7 +64,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// # Safety
 	///
 	/// To create a dialog, you must provide a dialog procedure.
-	unsafe fn DialogBoxParam(
+	pub unsafe fn DialogBoxParam(
 		&self,
 		resource_id: IdStr,
 		hwnd_parent: Option<&HWND>,
@@ -109,7 +99,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	///     .GetClassInfoEx("SOME_CLASS_NAME")?;
 	/// # w::SysResult::Ok(())
 	/// ```
-	fn GetClassInfoEx(&self, class_name: &str) -> SysResult<(ATOM, WNDCLASSEX)> {
+	pub fn GetClassInfoEx(&self, class_name: &str) -> SysResult<(ATOM, WNDCLASSEX)> {
 		let mut wcx = WNDCLASSEX::default();
 		match unsafe {
 			ffi::GetClassInfoExW(
@@ -126,7 +116,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// [`LoadAccelerators`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadacceleratorsw)
 	/// function.
 	#[must_use]
-	fn LoadAccelerators(&self, table_name: IdStr) -> SysResult<DestroyAcceleratorTableGuard> {
+	pub fn LoadAccelerators(&self, table_name: IdStr) -> SysResult<DestroyAcceleratorTableGuard> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::LoadAcceleratorsW(self.ptr(), table_name.as_ptr()))
 				.map(|h| DestroyAcceleratorTableGuard::new(h))
@@ -148,7 +138,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn LoadCursor(&self, resource_id: IdIdcStr) -> SysResult<DestroyCursorGuard> {
+	pub fn LoadCursor(&self, resource_id: IdIdcStr) -> SysResult<DestroyCursorGuard> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::LoadCursorW(self.ptr(), resource_id.as_ptr()))
 				.map(|h| DestroyCursorGuard::new(h))
@@ -170,7 +160,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn LoadIcon(&self, icon_id: IdIdiStr) -> SysResult<DestroyIconGuard> {
+	pub fn LoadIcon(&self, icon_id: IdIdiStr) -> SysResult<DestroyIconGuard> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::LoadIconW(self.ptr(), icon_id.as_ptr()))
 				.map(|h| DestroyIconGuard::new(h))
@@ -180,7 +170,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// [`LoadMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadmenuw)
 	/// function.
 	#[must_use]
-	fn LoadMenu(&self, resource_id: IdStr) -> SysResult<DestroyMenuGuard> {
+	pub fn LoadMenu(&self, resource_id: IdStr) -> SysResult<DestroyMenuGuard> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::LoadMenuW(self.ptr(), resource_id.as_ptr()))
 				.map(|h| DestroyMenuGuard::new(h))
@@ -190,7 +180,7 @@ pub trait user_Hinstance: kernel_Hinstance {
 	/// [`LoadString`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadstringw)
 	/// function.
 	#[must_use]
-	fn LoadString(&self, id: u16) -> SysResult<String> {
+	pub fn LoadString(&self, id: u16) -> SysResult<String> {
 		let mut pdata: *const u16 = std::ptr::null_mut();
 		match unsafe { ffi::LoadStringW(self.ptr(), id as _, &mut pdata as *mut _ as _, 0) } {
 			0 => Err(GetLastError()),

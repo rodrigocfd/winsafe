@@ -5,7 +5,6 @@ use crate::comctl::ffi;
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::privs::*;
-use crate::prelude::*;
 
 handle! { HPROPSHEETPAGE;
 	/// Handle to a
@@ -13,19 +12,11 @@ handle! { HPROPSHEETPAGE;
 	/// page.
 }
 
-/// This trait is enabled with the `comctl` feature, and provides methods for
-/// [`HPROPSHEETPAGE`](crate::HPROPSHEETPAGE).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait comctl_Hpropsheetpage: Handle {
+impl HPROPSHEETPAGE {
 	/// [`CreatePropertySheetPage`](https://learn.microsoft.com/en-us/windows/win32/api/prsht/nf-prsht-createpropertysheetpagew)
 	/// function.
 	#[must_use]
-	unsafe fn CreatePropertySheetPage(
+	pub unsafe fn CreatePropertySheetPage(
 		page: &PROPSHEETPAGE,
 	) -> HrResult<DestroyPropertySheetPageGuard> {
 		match ptr_to_option_handle(ffi::CreatePropertySheetPageW(pcvoid(page))) {

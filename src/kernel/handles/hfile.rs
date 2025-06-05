@@ -15,17 +15,7 @@ handle! { HFILE;
 	/// [`File`](crate::File) high-level abstraction.
 }
 
-impl kernel_Hfile for HFILE {}
-
-/// This trait is enabled with the `kernel` feature, and provides methods for
-/// [`HFILE`](crate::HFILE).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait kernel_Hfile: Handle {
+impl HFILE {
 	/// [`CreateFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-createfilew)
 	/// function.
 	///
@@ -75,7 +65,7 @@ pub trait kernel_Hfile: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn CreateFile(
+	pub fn CreateFile(
 		file_name: &str,
 		desired_access: co::GENERIC,
 		share_mode: Option<co::FILE_SHARE>,
@@ -111,7 +101,7 @@ pub trait kernel_Hfile: Handle {
 	/// Unless you need something specific, consider using the
 	/// [`FileMapped`](crate::FileMapped) high-level abstraction.
 	#[must_use]
-	fn CreateFileMapping(
+	pub fn CreateFileMapping(
 		&self,
 		mapping_attrs: Option<&SECURITY_ATTRIBUTES>,
 		protect: co::PAGE,
@@ -133,7 +123,7 @@ pub trait kernel_Hfile: Handle {
 
 	/// [`GetFileInformationByHandle`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfileinformationbyhandle)
 	/// function.
-	fn GetFileInformationByHandle(&self) -> SysResult<BY_HANDLE_FILE_INFORMATION> {
+	pub fn GetFileInformationByHandle(&self) -> SysResult<BY_HANDLE_FILE_INFORMATION> {
 		let mut fi = BY_HANDLE_FILE_INFORMATION::default();
 		bool_to_sysresult(unsafe { ffi::GetFileInformationByHandle(self.ptr(), pvoid(&mut fi)) })
 			.map(|_| fi)
@@ -142,7 +132,7 @@ pub trait kernel_Hfile: Handle {
 	/// [`GetFileSizeEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfilesizeex)
 	/// function.
 	#[must_use]
-	fn GetFileSizeEx(&self) -> SysResult<u64> {
+	pub fn GetFileSizeEx(&self) -> SysResult<u64> {
 		let mut sz_buf = i64::default();
 		bool_to_sysresult(unsafe { ffi::GetFileSizeEx(self.ptr(), &mut sz_buf) })
 			.map(|_| sz_buf as _)
@@ -167,7 +157,7 @@ pub trait kernel_Hfile: Handle {
 	/// let (creation, last_access, last_write) = hfile.GetFileTime()?;
 	/// # w::SysResult::Ok(())
 	/// ```
-	fn GetFileTime(&self) -> SysResult<(FILETIME, FILETIME, FILETIME)> {
+	pub fn GetFileTime(&self) -> SysResult<(FILETIME, FILETIME, FILETIME)> {
 		let (mut creation, mut last_access, mut last_write) =
 			(FILETIME::default(), FILETIME::default(), FILETIME::default());
 
@@ -185,7 +175,7 @@ pub trait kernel_Hfile: Handle {
 	/// [`GetFileType`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-getfiletype)
 	/// function.
 	#[must_use]
-	fn GetFileType(&self) -> SysResult<co::FILE_TYPE> {
+	pub fn GetFileType(&self) -> SysResult<co::FILE_TYPE> {
 		match unsafe { co::FILE_TYPE::from_raw(ffi::GetFileType(self.ptr())) } {
 			co::FILE_TYPE::UNKNOWN => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(co::FILE_TYPE::UNKNOWN), // actual unknown type
@@ -226,11 +216,7 @@ pub trait kernel_Hfile: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn LockFile(
-		&self,
-		offset: u64,
-		num_bytes_to_lock: u64,
-	) -> SysResult<UnlockFileGuard<'_, Self>> {
+	pub fn LockFile(&self, offset: u64, num_bytes_to_lock: u64) -> SysResult<UnlockFileGuard<'_>> {
 		unsafe {
 			bool_to_sysresult(ffi::LockFile(
 				self.ptr(),
@@ -254,7 +240,7 @@ pub trait kernel_Hfile: Handle {
 	/// [`OVERLAPPED`](crate::OVERLAPPED) struct – is not currently supported by
 	/// this method, because the buffer must remain untouched until the async
 	/// operation is complete, thus making the method unsound.
-	fn ReadFile(&self, buffer: &mut [u8]) -> SysResult<u32> {
+	pub fn ReadFile(&self, buffer: &mut [u8]) -> SysResult<u32> {
 		let mut bytes_read = u32::default();
 		bool_to_sysresult(unsafe {
 			ffi::ReadFile(
@@ -270,13 +256,13 @@ pub trait kernel_Hfile: Handle {
 
 	/// [`SetEndOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setendoffile)
 	/// function.
-	fn SetEndOfFile(&self) -> SysResult<()> {
+	pub fn SetEndOfFile(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::SetEndOfFile(self.ptr()) })
 	}
 
 	/// [`SetFilePointerEx`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfilepointerex)
 	/// function.
-	fn SetFilePointerEx(
+	pub fn SetFilePointerEx(
 		&self,
 		distance_to_move: i64,
 		move_method: co::FILE_STARTING_POINT,
@@ -291,7 +277,7 @@ pub trait kernel_Hfile: Handle {
 
 	/// [`SetFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-setfiletime)
 	/// function.
-	fn SetFileTime(
+	pub fn SetFileTime(
 		&self,
 		creation_time: Option<&FILETIME>,
 		last_access_time: Option<&FILETIME>,
@@ -316,7 +302,7 @@ pub trait kernel_Hfile: Handle {
 	/// [`OVERLAPPED`](crate::OVERLAPPED) struct – is not currently supported by
 	/// this method, because the buffer must remain untouched until the async
 	/// operation is complete, thus making the method unsound.
-	fn WriteFile(&self, data: &[u8]) -> SysResult<u32> {
+	pub fn WriteFile(&self, data: &[u8]) -> SysResult<u32> {
 		let mut bytes_written = u32::default();
 
 		bool_to_sysresult(unsafe {

@@ -291,10 +291,7 @@ pub mod prelude {
 	//! use winsafe::prelude::*;
 	//! ```
 
-	#[cfg(feature = "advapi")] pub use super::advapi::traits::*;
-	#[cfg(feature = "comctl")] pub use super::comctl::traits::*;
 	#[cfg(feature = "dshow")] pub use super::dshow::traits::*;
-	#[cfg(feature = "dwm")] pub use super::dwm::traits::*;
 	#[cfg(feature = "dxgi")] pub use super::dxgi::traits::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::traits::*;
 	#[cfg(feature = "gui")] pub use super::gui::traits::*;
@@ -302,14 +299,8 @@ pub mod prelude {
 	#[cfg(feature = "mf")] pub use super::mf::traits::*;
 	#[cfg(feature = "ole")] pub use super::ole::traits::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::traits::*;
-	#[cfg(feature = "psapi")] pub use super::psapi::traits::*;
 	#[cfg(feature = "shell")] pub use super::shell::traits::*;
 	#[cfg(feature = "taskschd")] pub use super::taskschd::traits::*;
 	#[cfg(feature = "user")] pub use super::user::traits::*;
-	#[cfg(feature = "uxtheme")] pub use super::uxtheme::traits::*;
-	#[cfg(feature = "version")] pub use super::version::traits::*;
-	#[cfg(feature = "winspool")] pub use super::winspool::traits::*;
-	#[cfg(all(feature = "comctl", feature = "gdi"))] pub use super::comctl_gdi::traits::*;
-	#[cfg(all(feature = "comctl", feature = "shell"))] pub use super::comctl_shell::traits::*;
 	#[cfg(all(feature = "gdi", feature = "mf"))] pub use super::gdi_mf::traits::*;
 }

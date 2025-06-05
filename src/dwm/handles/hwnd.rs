@@ -7,20 +7,10 @@ use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
 
-impl dwm_Hwnd for HWND {}
-
-/// This trait is enabled with the `dwm` feature, and provides methods for
-/// [`HWND`](crate::HWND).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait dwm_Hwnd: uxtheme_Hwnd {
+impl HWND {
 	/// [`DwmExtendFrameIntoClientArea`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmextendframeintoclientarea)
 	/// function.
-	fn DwmExtendFrameIntoClientArea(&self, margins_inset: &MARGINS) -> HrResult<()> {
+	pub fn DwmExtendFrameIntoClientArea(&self, margins_inset: &MARGINS) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
 			ffi::DwmExtendFrameIntoClientArea(self.ptr(), pcvoid(margins_inset))
 		})
@@ -28,13 +18,13 @@ pub trait dwm_Hwnd: uxtheme_Hwnd {
 
 	/// [`DwmInvalidateIconicBitmaps`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwminvalidateiconicbitmaps)
 	/// function.
-	fn DwmInvalidateIconicBitmaps(&self) -> HrResult<()> {
+	pub fn DwmInvalidateIconicBitmaps(&self) -> HrResult<()> {
 		ok_to_hrresult(unsafe { ffi::DwmInvalidateIconicBitmaps(self.ptr()) })
 	}
 
 	/// [`DwmSetIconicLivePreviewBitmap`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmseticoniclivepreviewbitmap)
 	/// function.
-	fn DwmSetIconicLivePreviewBitmap(
+	pub fn DwmSetIconicLivePreviewBitmap(
 		&self,
 		hbmp: HBITMAP,
 		pt_client: Option<POINT>,
@@ -52,7 +42,11 @@ pub trait dwm_Hwnd: uxtheme_Hwnd {
 
 	/// [`DwmSetIconicThumbnail`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmseticonicthumbnail)
 	/// function.
-	fn DwmSetIconicThumbnail(&self, hbmp: HBITMAP, sit_flags: Option<co::DWM_SIT>) -> HrResult<()> {
+	pub fn DwmSetIconicThumbnail(
+		&self,
+		hbmp: HBITMAP,
+		sit_flags: Option<co::DWM_SIT>,
+	) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
 			ffi::DwmSetIconicThumbnail(self.ptr(), hbmp.ptr(), sit_flags.unwrap_or_default().raw())
 		})

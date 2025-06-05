@@ -3,8 +3,8 @@
 use crate::co::*;
 
 const_ordinary! { EVENTLOG: u16;
-	/// [`HEVENTLOG::ReportEvent`](crate::prelude::advapi_Heventlog::ReportEvent)
-	/// `event_type` [`u16`].
+	/// [`HEVENTLOG::ReportEvent`](crate::HEVENTLOG::ReportEvent) `event_type`
+	/// [`u16`]. undefined
 	=>
 	SUCCESS 0x0000
 	AUDIT_FAILURE 0x0010
@@ -55,8 +55,8 @@ const_ordinary! { REG: u32;
 }
 
 const_ordinary! { REG_DISPOSITION: u32;
-	/// [`HKEY::RegCreateKeyEx`](crate::prelude::advapi_Hkey::RegCreateKeyEx)
-	/// creation disposition (`u32`).
+	/// [`HKEY::RegCreateKeyEx`](crate::HKEY::RegCreateKeyEx) creation
+	/// disposition (`u32`).
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -67,8 +67,7 @@ const_ordinary! { REG_DISPOSITION: u32;
 }
 
 const_bitflag! { REG_OPTION: u32;
-	/// [`HKEY::RegOpenKeyEx`](crate::prelude::advapi_Hkey::RegOpenKeyEx)
-	/// `options` (`u32`).
+	/// [`HKEY::RegOpenKeyEx`](crate::HKEY::RegOpenKeyEx) `options` (`u32`).
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
@@ -275,8 +274,7 @@ const_ordinary! { RID: u32;
 }
 
 const_bitflag! { RRF: u32;
-	/// [`HKEY::GetValue`](crate::prelude::advapi_Hkey::RegGetValue) `dwFlags`
-	/// (`u32`).
+	/// [`HKEY::GetValue`](crate::HKEY::RegGetValue) `dwFlags` (`u32`).
 	=>
 	RT_REG_NONE 0x0000_0001
 	RT_REG_SZ 0x0000_0002
@@ -430,8 +428,8 @@ const_bitflag! { SERVICE_CONTROL: u32;
 }
 
 const_ordinary! { SERVICE_ERROR: u32;
-	/// [`HSC::CreateService`](crate::prelude::advapi_Hsc::CreateService)
-	/// `error_control` (`u32`).
+	/// [`HSC::CreateService`](crate::HSC::CreateService) `error_control`
+	/// (`u32`).
 	=>
 	CRITICAL 0x0000_0003
 	IGNORE 0x0000_0000
@@ -440,8 +438,7 @@ const_ordinary! { SERVICE_ERROR: u32;
 }
 
 const_ordinary! { SERVICE_START: u32;
-	/// [`HSC::CreateService`](crate::prelude::advapi_Hsc::CreateService)
-	/// `start_type` (`u32`).
+	/// [`HSC::CreateService`](crate::HSC::CreateService) `start_type` (`u32`).
 	///
 	/// Originally has `SERVICE` prefix.
 	=>
@@ -453,7 +450,7 @@ const_ordinary! { SERVICE_START: u32;
 }
 
 const_ordinary! { SERVICE_STATE: u32;
-	/// [`HSERVICESTATUS::SetServiceStatus`](crate::prelude::advapi_Hservicestatus::SetServiceStatus)
+	/// [`HSERVICESTATUS::SetServiceStatus`](crate::HSERVICESTATUS::SetServiceStatus)
 	/// `current_state` (u32)
 	=>
 	CONTINUE_PENDING 0x0000_0005
@@ -466,8 +463,8 @@ const_ordinary! { SERVICE_STATE: u32;
 }
 
 const_ordinary! { SERVICE_TYPE: u32;
-	/// [`HSC::CreateService`](crate::prelude::advapi_Hsc::CreateService)
-	/// `service_type` (`u32`).
+	/// [`HSC::CreateService`](crate::HSC::CreateService) `service_type`
+	/// (`u32`).
 	///
 	/// Originally has `SERVICE` prefix.
 	=>
@@ -591,8 +588,8 @@ const_bitflag! { TRANSACTION: u32;
 }
 
 const_bitflag! { TRANSACTION_OPT: u32;
-	/// [`CrateTransaction`](crate::prelude::advapi_Htransaction::CreateTransaction)
-	/// `options` (`u32`).
+	/// [`CrateTransaction`](crate::HTRANSACTION::CreateTransaction) `options`
+	/// (`u32`).
 	///
 	/// Originally has `TRANSACTION` prefix.
 	=>

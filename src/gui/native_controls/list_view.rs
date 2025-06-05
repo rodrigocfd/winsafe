@@ -38,8 +38,7 @@ native_ctrl! { ListView: ListViewObj<T>, T => ListViewEvents;
 
 impl<T> ListView<T> {
 	/// Instantiates a new `ListView` object, to be created on the parent window
-	/// with
-	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	///
 	/// # Panics
 	///
@@ -99,8 +98,7 @@ impl<T> ListView<T> {
 	}
 
 	/// Instantiates a new `ListView` object, to be loaded from a dialog
-	/// resource with
-	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
+	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	///
 	/// The `context_menu_id` must point to the root menu whose first submenu
 	/// will be effectively displayed as the context menu.

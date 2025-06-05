@@ -220,19 +220,13 @@ handle_guard! { GlobalFreeGuard: HGLOBAL;
 /// calls
 /// [`GlobalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
 /// when the object goes out of scope.
-pub struct GlobalUnlockGuard<'a, H>
-where
-	H: kernel_Hglobal,
-{
-	hglobal: &'a H,
+pub struct GlobalUnlockGuard<'a> {
+	hglobal: &'a HGLOBAL,
 	pmem: *mut std::ffi::c_void,
 	sz: usize,
 }
 
-impl<'a, H> Drop for GlobalUnlockGuard<'a, H>
-where
-	H: kernel_Hglobal,
-{
+impl<'a> Drop for GlobalUnlockGuard<'a> {
 	fn drop(&mut self) {
 		if let Some(h) = self.hglobal.as_opt() {
 			unsafe {
@@ -242,10 +236,7 @@ where
 	}
 }
 
-impl<'a, H> GlobalUnlockGuard<'a, H>
-where
-	H: kernel_Hglobal,
-{
+impl<'a> GlobalUnlockGuard<'a> {
 	/// Constructs the guard.
 	///
 	/// # Safety
@@ -254,7 +245,7 @@ where
 	/// [`GlobalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-globalunlock)
 	/// at the end of scope, the pointer is valid, and the size is correct.
 	#[must_use]
-	pub const unsafe fn new(hglobal: &'a H, pmem: *mut std::ffi::c_void, sz: usize) -> Self {
+	pub const unsafe fn new(hglobal: &'a HGLOBAL, pmem: *mut std::ffi::c_void, sz: usize) -> Self {
 		Self { hglobal, pmem, sz }
 	}
 
@@ -270,23 +261,16 @@ handle_guard! { HeapDestroyGuard: HHEAP;
 }
 
 /// RAII implementation for the memory allocated by
-/// [`HHEAP::HeapAlloc`](crate::prelude::kernel_Hheap::HeapAlloc) which
-/// automatically calls
+/// [`HHEAP::HeapAlloc`](crate::HHEAP::HeapAlloc) which automatically calls
 /// [`HeapFree`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapfree)
 /// when the object goes out of scope.
-pub struct HeapFreeGuard<'a, H>
-where
-	H: kernel_Hheap,
-{
-	hheap: &'a H,
+pub struct HeapFreeGuard<'a> {
+	hheap: &'a HHEAP,
 	pmem: *mut std::ffi::c_void,
 	sz: usize,
 }
 
-impl<'a, H> Drop for HeapFreeGuard<'a, H>
-where
-	H: kernel_Hheap,
-{
+impl<'a> Drop for HeapFreeGuard<'a> {
 	fn drop(&mut self) {
 		if let Some(h) = self.hheap.as_opt() {
 			if !self.pmem.is_null() {
@@ -298,10 +282,7 @@ where
 	}
 }
 
-impl<'a, H> HeapFreeGuard<'a, H>
-where
-	H: kernel_Hheap,
-{
+impl<'a> HeapFreeGuard<'a> {
 	/// Constructs the guard by taking ownership of the handle.
 	///
 	/// # Safety
@@ -310,7 +291,7 @@ where
 	/// [`HeapFree`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapfree)
 	/// at the end of scope, the pointer is valid, and the size is correct.
 	#[must_use]
-	pub const unsafe fn new(hheap: &'a H, pmem: *mut std::ffi::c_void, sz: usize) -> Self {
+	pub const unsafe fn new(hheap: &'a HHEAP, pmem: *mut std::ffi::c_void, sz: usize) -> Self {
 		Self { hheap, pmem, sz }
 	}
 
@@ -334,17 +315,11 @@ where
 /// RAII implementation for [`HHEAP`](crate::HHEAP) which automatically calls
 /// [`HeapUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock)
 /// when the object goes out of scope.
-pub struct HeapUnlockGuard<'a, H>
-where
-	H: kernel_Hheap,
-{
-	hheap: &'a H,
+pub struct HeapUnlockGuard<'a> {
+	hheap: &'a HHEAP,
 }
 
-impl<'a, H> Drop for HeapUnlockGuard<'a, H>
-where
-	H: kernel_Hheap,
-{
+impl<'a> Drop for HeapUnlockGuard<'a> {
 	fn drop(&mut self) {
 		if let Some(h) = self.hheap.as_opt() {
 			unsafe {
@@ -354,10 +329,7 @@ where
 	}
 }
 
-impl<'a, H> HeapUnlockGuard<'a, H>
-where
-	H: kernel_Hheap,
-{
+impl<'a> HeapUnlockGuard<'a> {
 	/// Constructs the guard.
 	///
 	/// # Safety
@@ -366,7 +338,7 @@ where
 	/// [`HeapUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapunlock)
 	/// at the end of scope.
 	#[must_use]
-	pub const unsafe fn new(hheap: &'a H) -> Self {
+	pub const unsafe fn new(hheap: &'a HHEAP) -> Self {
 		Self { hheap }
 	}
 }
@@ -383,19 +355,13 @@ handle_guard! { LocalFreeGuard: HLOCAL;
 /// calls
 /// [`LocalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localunlock)
 /// when the object goes out of scope.
-pub struct LocalUnlockGuard<'a, H>
-where
-	H: kernel_Hlocal,
-{
-	hlocal: &'a H,
+pub struct LocalUnlockGuard<'a> {
+	hlocal: &'a HLOCAL,
 	pmem: *mut std::ffi::c_void,
 	sz: usize,
 }
 
-impl<'a, H> Drop for LocalUnlockGuard<'a, H>
-where
-	H: kernel_Hlocal,
-{
+impl<'a> Drop for LocalUnlockGuard<'a> {
 	fn drop(&mut self) {
 		if let Some(h) = self.hlocal.as_opt() {
 			unsafe {
@@ -405,10 +371,7 @@ where
 	}
 }
 
-impl<'a, H> LocalUnlockGuard<'a, H>
-where
-	H: kernel_Hlocal,
-{
+impl<'a> LocalUnlockGuard<'a> {
 	/// Constructs the guard.
 	///
 	/// # Safety
@@ -417,7 +380,7 @@ where
 	/// [`LocalUnlock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localunlock)
 	/// at the end of scope, the pointer is valid, and the size is correct.
 	#[must_use]
-	pub const unsafe fn new(hlocal: &'a H, pmem: *mut std::ffi::c_void, sz: usize) -> Self {
+	pub const unsafe fn new(hlocal: &'a HLOCAL, pmem: *mut std::ffi::c_void, sz: usize) -> Self {
 		Self { hlocal, pmem, sz }
 	}
 
@@ -428,19 +391,13 @@ where
 /// calls
 /// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
 /// when the object goes out of scope.
-pub struct UnlockFileGuard<'a, H>
-where
-	H: kernel_Hfile,
-{
-	hfile: &'a H,
+pub struct UnlockFileGuard<'a> {
+	hfile: &'a HFILE,
 	offset: u64,
 	num_bytes_to_lock: u64,
 }
 
-impl<'a, H> Drop for UnlockFileGuard<'a, H>
-where
-	H: kernel_Hfile,
-{
+impl<'a> Drop for UnlockFileGuard<'a> {
 	fn drop(&mut self) {
 		if let Some(h) = self.hfile.as_opt() {
 			unsafe {
@@ -456,10 +413,7 @@ where
 	}
 }
 
-impl<'a, H> UnlockFileGuard<'a, H>
-where
-	H: kernel_Hfile,
-{
+impl<'a> UnlockFileGuard<'a> {
 	/// Constructs the guard by taking ownership of the objects.
 	///
 	/// # Safety
@@ -468,7 +422,7 @@ where
 	/// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)
 	/// at the end of scope.
 	#[must_use]
-	pub const unsafe fn new(hfile: &'a H, offset: u64, num_bytes_to_lock: u64) -> Self {
+	pub const unsafe fn new(hfile: &'a HFILE, offset: u64, num_bytes_to_lock: u64) -> Self {
 		Self { hfile, offset, num_bytes_to_lock }
 	}
 

@@ -3,41 +3,29 @@ use crate::co;
 use crate::decl::*;
 use crate::prelude::*;
 
-pub(in crate::advapi) struct HkeyKeyIter<'a, H>
-where
-	H: advapi_Hkey,
-{
-	hkey: &'a H,
+pub(in crate::advapi) struct HkeyKeyIter<'a> {
+	hkey: &'a HKEY,
 	front_idx: u32,
 	past_back_idx: u32,
 	name_buffer: WString,
 }
 
-impl<'a, H> Iterator for HkeyKeyIter<'a, H>
-where
-	H: advapi_Hkey,
-{
+impl<'a> Iterator for HkeyKeyIter<'a> {
 	type Item = SysResult<String>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		self.grab(true)
 	}
 }
-impl<'a, H> DoubleEndedIterator for HkeyKeyIter<'a, H>
-where
-	H: advapi_Hkey,
-{
+impl<'a> DoubleEndedIterator for HkeyKeyIter<'a> {
 	fn next_back(&mut self) -> Option<Self::Item> {
 		self.grab(false)
 	}
 }
 
-impl<'a, H> HkeyKeyIter<'a, H>
-where
-	H: advapi_Hkey,
-{
+impl<'a> HkeyKeyIter<'a> {
 	#[must_use]
-	pub(in crate::advapi) fn new(hkey: &'a H) -> SysResult<Self> {
+	pub(in crate::advapi) fn new(hkey: &'a HKEY) -> SysResult<Self> {
 		let mut num_keys = u32::default();
 		let mut max_key_name_len = u32::default();
 		hkey.RegQueryInfoKey(
@@ -95,41 +83,29 @@ where
 	}
 }
 
-pub(in crate::advapi) struct HkeyValueIter<'a, H>
-where
-	H: advapi_Hkey,
-{
-	hkey: &'a H,
+pub(in crate::advapi) struct HkeyValueIter<'a> {
+	hkey: &'a HKEY,
 	front_idx: u32,
 	past_back_idx: u32,
 	name_buffer: WString,
 }
 
-impl<'a, H> Iterator for HkeyValueIter<'a, H>
-where
-	H: advapi_Hkey,
-{
+impl<'a> Iterator for HkeyValueIter<'a> {
 	type Item = SysResult<(String, co::REG)>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		self.grab(true)
 	}
 }
-impl<'a, H> DoubleEndedIterator for HkeyValueIter<'a, H>
-where
-	H: advapi_Hkey,
-{
+impl<'a> DoubleEndedIterator for HkeyValueIter<'a> {
 	fn next_back(&mut self) -> Option<Self::Item> {
 		self.grab(false)
 	}
 }
 
-impl<'a, H> HkeyValueIter<'a, H>
-where
-	H: advapi_Hkey,
-{
+impl<'a> HkeyValueIter<'a> {
 	#[must_use]
-	pub(in crate::advapi) fn new(hkey: &'a H) -> SysResult<Self> {
+	pub(in crate::advapi) fn new(hkey: &'a HKEY) -> SysResult<Self> {
 		let mut num_vals = u32::default();
 		let mut max_val_name_len = u32::default();
 		hkey.RegQueryInfoKey(

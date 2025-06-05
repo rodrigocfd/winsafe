@@ -13,17 +13,7 @@ handle! { HACCESSTOKEN;
 	/// Originally just a `HANDLE`.
 }
 
-impl advapi_Haccesstoken for HACCESSTOKEN {}
-
-/// This trait is enabled with the `advapi` feature, and provides methods for
-/// [`HACCESSTOKEN`](crate::HACCESSTOKEN).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait advapi_Haccesstoken: Handle {
+impl HACCESSTOKEN {
 	/// [`AdjustTokenPrivileges`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-adjusttokenprivileges)
 	/// function.
 	///
@@ -44,7 +34,7 @@ pub trait advapi_Haccesstoken: Handle {
 	/// htoken.AdjustTokenPrivileges(w::DisabPriv::Privs(&privs))?;
 	/// # w::SysResult::Ok(())
 	/// ```
-	fn AdjustTokenPrivileges(&self, new_state: DisabPriv) -> SysResult<()> {
+	pub fn AdjustTokenPrivileges(&self, new_state: DisabPriv) -> SysResult<()> {
 		bool_to_sysresult(unsafe {
 			ffi::AdjustTokenPrivileges(
 				self.ptr(),
@@ -66,7 +56,7 @@ pub trait advapi_Haccesstoken: Handle {
 	/// [`CheckTokenCapability`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokencapability)
 	/// function.
 	#[must_use]
-	fn CheckTokenCapability(&self, capability_sid_to_check: &SID) -> SysResult<bool> {
+	pub fn CheckTokenCapability(&self, capability_sid_to_check: &SID) -> SysResult<bool> {
 		let mut has_capability = 0;
 		bool_to_sysresult(unsafe {
 			ffi::CheckTokenCapability(
@@ -81,7 +71,7 @@ pub trait advapi_Haccesstoken: Handle {
 	/// [`CheckTokenMembership`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-checktokenmembership)
 	/// function.
 	#[must_use]
-	fn CheckTokenMembership(&self, sid_to_check: &SID) -> SysResult<bool> {
+	pub fn CheckTokenMembership(&self, sid_to_check: &SID) -> SysResult<bool> {
 		let mut is_member = 0;
 		bool_to_sysresult(unsafe {
 			ffi::CheckTokenMembership(self.ptr(), pcvoid(sid_to_check), &mut is_member)
@@ -92,7 +82,7 @@ pub trait advapi_Haccesstoken: Handle {
 	/// [`DuplicateToken`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-duplicatetoken)
 	/// function.
 	#[must_use]
-	fn DuplicateToken(
+	pub fn DuplicateToken(
 		&self,
 		level: co::SECURITY_IMPERSONATION,
 	) -> SysResult<CloseHandleGuard<HACCESSTOKEN>> {
@@ -106,7 +96,7 @@ pub trait advapi_Haccesstoken: Handle {
 	/// [`GetCurrentProcessToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentprocesstoken)
 	/// function.
 	#[must_use]
-	fn GetCurrentProcessToken() -> HACCESSTOKEN {
+	pub fn GetCurrentProcessToken() -> HACCESSTOKEN {
 		// We don't do a FFI call because there's no actual library function to call: this is an
 		// inlined function defined in the processthreadsapi.h header that always returns a constant.
 		// See: https://github.com/microsoft/win32metadata/issues/436
@@ -116,7 +106,7 @@ pub trait advapi_Haccesstoken: Handle {
 	/// [`GetCurrentThreadEffectiveToken`](https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-getcurrentthreadeffectivetoken)
 	/// function.
 	#[must_use]
-	fn GetCurrentThreadEffectiveToken() -> HACCESSTOKEN {
+	pub fn GetCurrentThreadEffectiveToken() -> HACCESSTOKEN {
 		// We don't do a FFI call because there's no actual library function to call: this is an
 		// inlined function defined in the processthreadsapi.h header that always returns a constant.
 		// See: https://github.com/microsoft/win32metadata/issues/436
@@ -148,7 +138,7 @@ pub trait advapi_Haccesstoken: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn GetTokenInformation(
+	pub fn GetTokenInformation(
 		&self,
 		information_class: co::TOKEN_INFORMATION_CLASS,
 	) -> SysResult<TokenInfo> {
@@ -289,14 +279,14 @@ pub trait advapi_Haccesstoken: Handle {
 
 	/// [`ImpersonateLoggedOnUser`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-impersonateloggedonuser)
 	/// function.
-	fn ImpersonateLoggedOnUser(&self) -> SysResult<()> {
+	pub fn ImpersonateLoggedOnUser(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::ImpersonateLoggedOnUser(self.ptr()) })
 	}
 
 	/// [`IsTokenRestricted`](https://learn.microsoft.com/en-us/windows/win32/api/securitybaseapi/nf-securitybaseapi-istokenrestricted)
 	/// function.
 	#[must_use]
-	fn IsTokenRestricted(&self) -> SysResult<bool> {
+	pub fn IsTokenRestricted(&self) -> SysResult<bool> {
 		match unsafe { ffi::IsTokenRestricted(self.ptr()) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => Ok(false), // actual false

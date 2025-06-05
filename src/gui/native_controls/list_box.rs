@@ -24,8 +24,7 @@ native_ctrl! { ListBox: ListBoxObj => ListBoxEvents;
 
 impl ListBox {
 	/// Instantiates a new `ListBox` object, to be created on the parent window
-	/// with
-	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	///
 	/// # Panics
 	///
@@ -67,7 +66,7 @@ impl ListBox {
 	}
 
 	/// Instantiates a new `ListBox` object, to be loaded from a dialog resource
-	/// with [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
+	/// with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	///
 	/// # Panics
 	///

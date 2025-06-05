@@ -12,28 +12,18 @@ handle! { HHEAP;
 	/// Originally just a `HANDLE`.
 }
 
-impl kernel_Hheap for HHEAP {}
-
-/// This trait is enabled with the `kernel` feature, and provides methods for
-/// [`HHEAP`](crate::HHEAP).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait kernel_Hheap: Handle {
+impl HHEAP {
 	/// [`GetProcessHeap`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-getprocessheap)
 	/// function.
 	#[must_use]
-	fn GetProcessHeap() -> SysResult<HHEAP> {
+	pub fn GetProcessHeap() -> SysResult<HHEAP> {
 		ptr_to_sysresult_handle(unsafe { ffi::GetProcessHeap() })
 	}
 
 	/// [`GetProcessHeaps`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-getprocessheaps)
 	/// function.
 	#[must_use]
-	fn GetProcessHeaps() -> SysResult<Vec<HHEAP>> {
+	pub fn GetProcessHeaps() -> SysResult<Vec<HHEAP>> {
 		let num = match unsafe { ffi::GetProcessHeaps(0, std::ptr::null_mut()) } {
 			0 => match GetLastError() {
 				co::ERROR::SUCCESS => return Ok(Vec::default()), // actual zero heaps
@@ -50,7 +40,7 @@ pub trait kernel_Hheap: Handle {
 	/// [`HeapCreate`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcreate)
 	/// function.
 	#[must_use]
-	fn HeapCreate(
+	pub fn HeapCreate(
 		options: Option<co::HEAP_CREATE>,
 		initial_size: usize,
 		maximum_size: usize,
@@ -87,11 +77,11 @@ pub trait kernel_Hheap: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn HeapAlloc(
+	pub fn HeapAlloc(
 		&self,
 		flags: Option<co::HEAP_ALLOC>,
 		num_bytes: usize,
-	) -> SysResult<HeapFreeGuard<'_, Self>> {
+	) -> SysResult<HeapFreeGuard<'_>> {
 		SetLastError(co::ERROR::SUCCESS);
 		unsafe {
 			ptr_to_sysresult(ffi::HeapAlloc(self.ptr(), flags.unwrap_or_default().raw(), num_bytes))
@@ -101,7 +91,7 @@ pub trait kernel_Hheap: Handle {
 
 	/// [`HeapCompact`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapcompact)
 	/// function.
-	fn HeapCompact(&self, flags: Option<co::HEAP_SIZE>) -> SysResult<usize> {
+	pub fn HeapCompact(&self, flags: Option<co::HEAP_SIZE>) -> SysResult<usize> {
 		match unsafe { ffi::HeapCompact(self.ptr(), flags.unwrap_or_default().raw()) } {
 			0 => Err(GetLastError()),
 			n => Ok(n),
@@ -144,7 +134,7 @@ pub trait kernel_Hheap: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn HeapLock(&self) -> SysResult<HeapUnlockGuard<'_, Self>> {
+	pub fn HeapLock(&self) -> SysResult<HeapUnlockGuard<'_>> {
 		unsafe { bool_to_sysresult(ffi::HeapLock(self.ptr())).map(|_| HeapUnlockGuard::new(self)) }
 	}
 
@@ -169,10 +159,10 @@ pub trait kernel_Hheap: Handle {
 	/// // HeapFree() automatically called
 	/// # w::SysResult::Ok(())
 	/// ```
-	fn HeapReAlloc<'a>(
+	pub fn HeapReAlloc<'a>(
 		&'a self,
 		flags: Option<co::HEAP_REALLOC>,
-		mem: &mut HeapFreeGuard<'a, Self>,
+		mem: &mut HeapFreeGuard<'a>,
 		num_bytes: usize,
 	) -> SysResult<()> {
 		SetLastError(co::ERROR::SUCCESS);
@@ -192,7 +182,7 @@ pub trait kernel_Hheap: Handle {
 
 	/// [`HeapSetInformation`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsetinformation)
 	/// function.
-	fn HeapSetInformation(
+	pub fn HeapSetInformation(
 		&self,
 		information_class: co::HEAP_INFORMATION,
 		information: Option<&[u8]>,
@@ -210,10 +200,10 @@ pub trait kernel_Hheap: Handle {
 	/// [`HeapSize`](https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsize)
 	/// function.
 	#[must_use]
-	fn HeapSize(
+	pub fn HeapSize(
 		&self,
 		flags: Option<co::HEAP_SIZE>,
-		mem: &HeapFreeGuard<'_, Self>,
+		mem: &HeapFreeGuard<'_>,
 	) -> SysResult<usize> {
 		SetLastError(co::ERROR::SUCCESS);
 		const FAILED: usize = -1isize as usize;
@@ -243,10 +233,10 @@ pub trait kernel_Hheap: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn HeapValidate(
+	pub fn HeapValidate(
 		&self,
 		flags: Option<co::HEAP_SIZE>,
-		mem: Option<&HeapFreeGuard<'_, Self>>,
+		mem: Option<&HeapFreeGuard<'_>>,
 	) -> bool {
 		SetLastError(co::ERROR::SUCCESS);
 		unsafe {
@@ -279,7 +269,7 @@ pub trait kernel_Hheap: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn HeapWalk(&self) -> impl Iterator<Item = SysResult<&PROCESS_HEAP_ENTRY>> + '_ {
+	pub fn HeapWalk(&self) -> impl Iterator<Item = SysResult<&PROCESS_HEAP_ENTRY>> + '_ {
 		HheapHeapwalkIter::new(self)
 	}
 }

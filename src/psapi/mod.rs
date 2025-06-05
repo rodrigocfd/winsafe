@@ -10,7 +10,3 @@ pub mod decl {
 	pub use super::funcs::*;
 	pub use super::structs::*;
 }
-
-pub mod traits {
-	pub use super::handles::traits::*;
-}

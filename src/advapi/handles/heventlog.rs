@@ -13,21 +13,11 @@ handle! { HEVENTLOG;
 	/// Originally just a `HANDLE`.
 }
 
-impl advapi_Heventlog for HEVENTLOG {}
-
-/// This trait is enabled with the `advapi` feature, and provides methods for
-/// [`HEVENTLOG`](crate::HEVENTLOG).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait advapi_Heventlog: Handle {
+impl HEVENTLOG {
 	/// [`RegisterEventSource`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-registereventsourcew)
 	/// function.
 	#[must_use]
-	fn RegisterEventSource(
+	pub fn RegisterEventSource(
 		unc_server_name: Option<&str>,
 		source_name: &str,
 	) -> SysResult<DeregisterEventSourceGuard> {
@@ -42,7 +32,7 @@ pub trait advapi_Heventlog: Handle {
 
 	/// [`ReportEvent`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reporteventw)
 	/// function.
-	fn ReportEvent(
+	pub fn ReportEvent(
 		&self,
 		event_type: co::EVENTLOG,
 		category: u16,

@@ -6,21 +6,11 @@ use crate::ole::privs::*;
 use crate::prelude::*;
 use crate::uxtheme::ffi;
 
-impl uxtheme_Hwnd for HWND {}
-
-/// This trait is enabled with the `uxtheme` feature, and provides methods for
-/// [`HWND`](crate::HWND).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait uxtheme_Hwnd: ole_Hwnd {
+impl HWND {
 	/// [`OpenThemeData`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-openthemedata)
 	/// function.
 	#[must_use]
-	fn OpenThemeData(&self, class_list: &str) -> Option<CloseThemeDataGuard> {
+	pub fn OpenThemeData(&self, class_list: &str) -> Option<CloseThemeDataGuard> {
 		unsafe {
 			ffi::OpenThemeData(self.ptr(), WString::from_str(class_list).as_ptr())
 				.as_mut()
@@ -30,7 +20,7 @@ pub trait uxtheme_Hwnd: ole_Hwnd {
 
 	/// [`SetWindowTheme`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-setwindowtheme)
 	/// function.
-	fn SetWindowTheme(&self, sub_app_name: &str, sub_id_list: Option<&str>) -> HrResult<()> {
+	pub fn SetWindowTheme(&self, sub_app_name: &str, sub_id_list: Option<&str>) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
 			ffi::SetWindowTheme(
 				self.ptr(),

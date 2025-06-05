@@ -29,8 +29,7 @@ native_ctrl! { UpDown: UpDownObj => UpDownEvents;
 
 impl UpDown {
 	/// Instantiates a new `UpDown` object, to be created on the parent window
-	/// with
-	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	/// with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	///
 	/// # Panics
 	///
@@ -107,9 +106,8 @@ impl UpDown {
 		new_self
 	}
 
-	/// Instantiates a new `UpDown` object, to be loaded from a dialog
-	/// resource with
-	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
+	/// Instantiates a new `UpDown` object, to be loaded from a dialog resource
+	/// with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	///
 	/// # Panics
 	///

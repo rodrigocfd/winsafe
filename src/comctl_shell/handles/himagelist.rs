@@ -2,22 +2,11 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::prelude::*;
 
-impl comctl_shell_Himagelist for HIMAGELIST {}
-
-/// This trait is enabled with `comctl` and `shell` features, and provides
-/// methods for [`HIMAGELIST`](crate::HIMAGELIST).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait comctl_shell_Himagelist: comctl_Himagelist {
+impl HIMAGELIST {
 	/// Calls [`SHGetFileInfo`](crate::SHGetFileInfo) to retrieve one or more
 	/// shell file icons, then passes them to
-	/// [`AddIcon`](crate::prelude::comctl_Himagelist::AddIcon).
+	/// [`AddIcon`](crate::HIMAGELIST::AddIcon).
 	///
 	/// # Examples
 	///
@@ -34,7 +23,7 @@ pub trait comctl_shell_Himagelist: comctl_Himagelist {
 	/// himgl.add_icons_from_shell(&["mp3", "wav"])?;
 	/// # w::HrResult::Ok(())
 	/// ```
-	fn add_icons_from_shell(&self, file_extensions: &[impl AsRef<str>]) -> HrResult<()> {
+	pub fn add_icons_from_shell(&self, file_extensions: &[impl AsRef<str>]) -> HrResult<()> {
 		let sz = self.GetIconSize()?;
 		if sz != SIZE::new(16, 16) && sz != SIZE::new(32, 32) {
 			return Err(co::HRESULT::E_NOTIMPL); // only 16x16 or 32x32 icons can be loaded

@@ -30,7 +30,7 @@ impl Index<usize> for RadioGroup {
 impl RadioGroup {
 	/// Instantiates a new `RadioGroup` object, each `RadioButton` to be created
 	/// on the parent window with
-	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	/// [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	///
 	/// # Panics
 	///
@@ -61,8 +61,7 @@ impl RadioGroup {
 	}
 
 	/// Instantiates a new `RadioGroup` object, to be loaded from a dialog
-	/// resource with
-	/// [`HWND::GetDlgItem`](crate::prelude::user_Hwnd::GetDlgItem).
+	/// resource with [`HWND::GetDlgItem`](crate::HWND::GetDlgItem).
 	///
 	/// # Panics
 	///

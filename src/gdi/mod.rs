@@ -2,6 +2,7 @@
 
 mod enums;
 mod funcs;
+mod gdi_traits;
 mod handles;
 mod structs;
 
@@ -19,5 +20,5 @@ pub mod decl {
 }
 
 pub mod traits {
-	pub use super::handles::traits::*;
+	pub use super::gdi_traits::*;
 }

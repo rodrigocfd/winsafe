@@ -10,17 +10,7 @@ handle! { HDROP;
 	/// [internal drop structure](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdrop).
 }
 
-impl shell_Hdrop for HDROP {}
-
-/// This trait is enabled with the `shell` feature, and provides methods for
-/// [`HDROP`](crate::HDROP).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait shell_Hdrop: Handle {
+impl HDROP {
 	/// [`DragQueryFile`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-dragqueryfilew)
 	/// function.
 	///
@@ -56,7 +46,7 @@ pub trait shell_Hdrop: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn DragQueryFile(&self) -> SysResult<impl Iterator<Item = SysResult<String>> + '_> {
+	pub fn DragQueryFile(&self) -> SysResult<impl Iterator<Item = SysResult<String>> + '_> {
 		Ok(HdropIter::new(self)?)
 	}
 
@@ -67,10 +57,10 @@ pub trait shell_Hdrop: Handle {
 	/// of the window.
 	///
 	/// Note that you must call this method before
-	/// [`DragQueryFile`](crate::prelude::shell_Hdrop::DragQueryFile), because
-	/// it invalidates the `HDROP` handle after the iterator is consumed.
+	/// [`DragQueryFile`](crate::HDROP::DragQueryFile), because it invalidates
+	/// the `HDROP` handle after the iterator is consumed.
 	#[must_use]
-	fn DragQueryPoint(&self) -> (POINT, bool) {
+	pub fn DragQueryPoint(&self) -> (POINT, bool) {
 		let mut pt = POINT::default();
 		let client_area = unsafe { ffi::DragQueryPoint(self.ptr(), pvoid(&mut pt)) };
 		(pt, client_area != 0)

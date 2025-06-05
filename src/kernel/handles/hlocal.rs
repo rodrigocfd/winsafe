@@ -11,24 +11,14 @@ handle! { HLOCAL;
 	/// [local memory block](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hlocal).
 	///
 	/// The allocated memory block is accessible through the
-	/// [`LocalLock`](crate::prelude::kernel_Hlocal::LocalLock) method.
+	/// [`LocalLock`](crate::HLOCAL::LocalLock) method.
 }
 
-impl kernel_Hlocal for HLOCAL {}
-
-/// This trait is enabled with the `kernel` feature, and provides methods for
-/// [`HLOCAL`](crate::HLOCAL).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait kernel_Hlocal: Handle {
+impl HLOCAL {
 	/// [`LocalAlloc`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localalloc)
 	/// function.
 	#[must_use]
-	fn LocalAlloc(flags: Option<co::LMEM>, num_bytes: usize) -> SysResult<LocalFreeGuard> {
+	pub fn LocalAlloc(flags: Option<co::LMEM>, num_bytes: usize) -> SysResult<LocalFreeGuard> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::LocalAlloc(flags.unwrap_or_default().raw(), num_bytes))
 				.map(|h| LocalFreeGuard::new(h))
@@ -38,7 +28,7 @@ pub trait kernel_Hlocal: Handle {
 	/// [`LocalFlags`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localflags)
 	/// function.
 	#[must_use]
-	fn LocalFlags(&self) -> SysResult<co::LMEM> {
+	pub fn LocalFlags(&self) -> SysResult<co::LMEM> {
 		match unsafe { ffi::LocalFlags(self.ptr()) } {
 			LMEM_INVALID_HANDLE => Err(GetLastError()),
 			flags => Ok(unsafe { co::LMEM::from_raw(flags) }),
@@ -48,8 +38,8 @@ pub trait kernel_Hlocal: Handle {
 	/// [`LocalLock`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-locallock)
 	/// function.
 	///
-	/// Calls [`LocalSize`](crate::prelude::kernel_Hlocal::LocalSize) to
-	/// retrieve the size of the memory block.
+	/// Calls [`LocalSize`](crate::HLOCAL::LocalSize) to retrieve the size of
+	/// the memory block.
 	///
 	/// # Examples
 	///
@@ -71,7 +61,7 @@ pub trait kernel_Hlocal: Handle {
 	/// # w::SysResult::Ok(())
 	/// ```
 	#[must_use]
-	fn LocalLock(&self) -> SysResult<LocalUnlockGuard<'_, Self>> {
+	pub fn LocalLock(&self) -> SysResult<LocalUnlockGuard<'_>> {
 		let mem_sz = self.LocalSize()?;
 		unsafe {
 			ptr_to_sysresult(ffi::LocalLock(self.ptr()))
@@ -84,7 +74,7 @@ pub trait kernel_Hlocal: Handle {
 	///
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
-	fn LocalReAlloc(&mut self, num_bytes: usize, flags: Option<co::LMEM>) -> SysResult<()> {
+	pub fn LocalReAlloc(&mut self, num_bytes: usize, flags: Option<co::LMEM>) -> SysResult<()> {
 		ptr_to_sysresult_handle(unsafe {
 			ffi::LocalReAlloc(self.ptr(), num_bytes, flags.unwrap_or_default().raw())
 		})
@@ -96,7 +86,7 @@ pub trait kernel_Hlocal: Handle {
 	/// [`LocalSize`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-localsize)
 	/// function.
 	#[must_use]
-	fn LocalSize(&self) -> SysResult<usize> {
+	pub fn LocalSize(&self) -> SysResult<usize> {
 		match unsafe { ffi::LocalSize(self.ptr()) } {
 			0 => Err(GetLastError()),
 			sz => Ok(sz),

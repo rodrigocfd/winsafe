@@ -13,20 +13,10 @@ handle! { HTHEME;
 	/// [theme](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/).
 }
 
-impl uxtheme_Htheme for HTHEME {}
-
-/// This trait is enabled with the `uxtheme` feature, and provides methods for
-/// [`HTHEME`](crate::HTHEME).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait uxtheme_Htheme: Handle {
+impl HTHEME {
 	/// [`DrawThemeBackground`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-drawthemebackground)
 	/// function.
-	fn DrawThemeBackground(
+	pub fn DrawThemeBackground(
 		&self,
 		hdc: &HDC,
 		part_state: co::VS,
@@ -48,14 +38,14 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`GetThemeAppProperties`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemeappproperties)
 	/// function.
 	#[must_use]
-	fn GetThemeAppProperties() -> co::STAP {
+	pub fn GetThemeAppProperties() -> co::STAP {
 		unsafe { co::STAP::from_raw(ffi::GetThemeAppProperties()) }
 	}
 
 	/// [`GetThemeBackgroundContentRect`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundcontentrect)
 	/// function.
 	#[must_use]
-	fn GetThemeBackgroundContentRect(
+	pub fn GetThemeBackgroundContentRect(
 		&self,
 		hdc: &HDC,
 		part_state: co::VS,
@@ -78,7 +68,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`GetThemeBackgroundExtent`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundextent)
 	/// function.
 	#[must_use]
-	fn GetThemeBackgroundExtent(
+	pub fn GetThemeBackgroundExtent(
 		&self,
 		hdc: &HDC,
 		part_state: co::VS,
@@ -102,7 +92,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`GetThemeBackgroundRegion`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemebackgroundregion)
 	/// function.
 	#[must_use]
-	fn GetThemeBackgroundRegion(
+	pub fn GetThemeBackgroundRegion(
 		&self,
 		hdc: &HDC,
 		part_state: co::VS,
@@ -125,7 +115,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`GetThemeColor`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemecolor)
 	/// function.
 	#[must_use]
-	fn GetThemeColor(&self, part_state: co::VS, prop: co::TMT) -> HrResult<COLORREF> {
+	pub fn GetThemeColor(&self, part_state: co::VS, prop: co::TMT) -> HrResult<COLORREF> {
 		let mut color = COLORREF::default();
 		ok_to_hrresult(unsafe {
 			ffi::GetThemeColor(
@@ -142,7 +132,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`GetThemeMargins`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthememargins)
 	/// function.
 	#[must_use]
-	fn GetThemeMargins(
+	pub fn GetThemeMargins(
 		&self,
 		hdc_fonts: Option<&HDC>,
 		part_state: co::VS,
@@ -167,7 +157,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`GetThemeMetric`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthememetric)
 	/// function.
 	#[must_use]
-	fn GetThemeMetric(
+	pub fn GetThemeMetric(
 		&self,
 		hdc_fonts: Option<&HDC>,
 		part_state: co::VS,
@@ -190,7 +180,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`GetThemePartSize`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemepartsize)
 	/// function.
 	#[must_use]
-	fn GetThemePartSize(
+	pub fn GetThemePartSize(
 		&self,
 		hdc_fonts: Option<&HDC>,
 		part_state: co::VS,
@@ -215,7 +205,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`GetThemePosition`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemeposition)
 	/// function.
 	#[must_use]
-	fn GetThemePosition(&self, part_state: co::VS, prop: co::TMT) -> HrResult<POINT> {
+	pub fn GetThemePosition(&self, part_state: co::VS, prop: co::TMT) -> HrResult<POINT> {
 		let mut pt = POINT::default();
 		ok_to_hrresult(unsafe {
 			ffi::GetThemePosition(
@@ -232,7 +222,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`GetThemePropertyOrigin`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemepropertyorigin)
 	/// function.
 	#[must_use]
-	fn GetThemePropertyOrigin(
+	pub fn GetThemePropertyOrigin(
 		&self,
 		part_state: co::VS,
 		prop: co::TMT,
@@ -253,7 +243,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`GetThemeRect`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-getthemerect)
 	/// function.
 	#[must_use]
-	fn GetThemeRect(&self, part_state: co::VS, prop: co::TMT) -> HrResult<RECT> {
+	pub fn GetThemeRect(&self, part_state: co::VS, prop: co::TMT) -> HrResult<RECT> {
 		let mut rc = RECT::default();
 		ok_to_hrresult(unsafe {
 			ffi::GetThemeRect(
@@ -270,7 +260,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`IsThemeBackgroundPartiallyTransparent`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemebackgroundpartiallytransparent)
 	/// function.
 	#[must_use]
-	fn IsThemeBackgroundPartiallyTransparent(&self, part_state: co::VS) -> bool {
+	pub fn IsThemeBackgroundPartiallyTransparent(&self, part_state: co::VS) -> bool {
 		unsafe {
 			ffi::IsThemeBackgroundPartiallyTransparent(
 				self.ptr(),
@@ -283,7 +273,7 @@ pub trait uxtheme_Htheme: Handle {
 	/// [`IsThemePartDefined`](https://learn.microsoft.com/en-us/windows/win32/api/uxtheme/nf-uxtheme-isthemepartdefined)
 	/// function.
 	#[must_use]
-	fn IsThemePartDefined(&self, part_state: co::VS) -> bool {
+	pub fn IsThemePartDefined(&self, part_state: co::VS) -> bool {
 		unsafe { ffi::IsThemePartDefined(self.ptr(), part_state.part, part_state.state) != 0 }
 	}
 }

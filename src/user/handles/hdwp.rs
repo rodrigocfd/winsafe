@@ -12,17 +12,7 @@ handle! { HDWP;
 	/// [deferred window position](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdwp).
 }
 
-impl user_Hdwp for HDWP {}
-
-/// This trait is enabled with the `user` feature, and provides methods for
-/// [`HDWP`](crate::HDWP).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait user_Hdwp: Handle {
+impl HDWP {
 	/// [`BeginDeferWindowPos`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-begindeferwindowpos)
 	/// function.
 	///
@@ -37,7 +27,7 @@ pub trait user_Hdwp: Handle {
 	/// automatically calls `EndDeferWindowPos` when the guard goes out of
 	/// scope.
 	#[must_use]
-	fn BeginDeferWindowPos(num_windows: u32) -> SysResult<EndDeferWindowPosGuard> {
+	pub fn BeginDeferWindowPos(num_windows: u32) -> SysResult<EndDeferWindowPosGuard> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::BeginDeferWindowPos(num_windows as _))
 				.map(|h| EndDeferWindowPosGuard::new(h))
@@ -49,7 +39,7 @@ pub trait user_Hdwp: Handle {
 	///
 	/// Originally this method returns the handle to the reallocated memory
 	/// object; here the original handle is automatically updated.
-	fn DeferWindowPos(
+	pub fn DeferWindowPos(
 		&mut self,
 		hwnd: &HWND,
 		hwnd_insert_after: HwndPlace,

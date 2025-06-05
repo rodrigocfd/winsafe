@@ -12,21 +12,11 @@ handle! { HEVENT;
 	/// object. Originally just a `HANDLE`.
 }
 
-impl kernel_Hevent for HEVENT {}
-
-/// This trait is enabled with the `kernel` feature, and provides methods for
-/// [`HEVENT`](crate::HEVENT).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait kernel_Hevent: Handle {
+impl HEVENT {
 	/// [`CreateEvent`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventw)
 	/// function.
 	#[must_use]
-	fn CreateEvent(
+	pub fn CreateEvent(
 		security_attributes: Option<&SECURITY_ATTRIBUTES>,
 		manual_reset: bool,
 		initial_state: bool,
@@ -46,7 +36,7 @@ pub trait kernel_Hevent: Handle {
 	/// [`CreateEventEx`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-createeventexw)
 	/// method.
 	#[must_use]
-	fn CreateEventEx(
+	pub fn CreateEventEx(
 		security_attributes: Option<&SECURITY_ATTRIBUTES>,
 		name: Option<&str>,
 		flags: co::CREATE_EVENT,
@@ -66,7 +56,7 @@ pub trait kernel_Hevent: Handle {
 	/// [`OpenEvent`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-openeventw)
 	/// function.
 	#[must_use]
-	fn OpenEvent(
+	pub fn OpenEvent(
 		&self,
 		desired_access: co::EVENT_RIGHTS,
 		inherit_handle: bool,
@@ -84,25 +74,25 @@ pub trait kernel_Hevent: Handle {
 
 	/// [`PulseEvent`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-pulseevent)
 	/// function.
-	fn PulseEvent(&self) -> SysResult<()> {
+	pub fn PulseEvent(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::PulseEvent(self.ptr()) })
 	}
 
 	/// [`ResetEvent`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-resetevent)
 	/// function.
-	fn ResetEvent(&self) -> SysResult<()> {
+	pub fn ResetEvent(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::ResetEvent(self.ptr()) })
 	}
 
 	/// [`SetEvent`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-setevent)
 	/// function.
-	fn SetEvent(&self) -> SysResult<()> {
+	pub fn SetEvent(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::SetEvent(self.ptr()) })
 	}
 
 	/// [`WaitForSingleObject`](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject)
 	/// function.
-	fn WaitForSingleObject(&self, milliseconds: Option<u32>) -> SysResult<co::WAIT> {
+	pub fn WaitForSingleObject(&self, milliseconds: Option<u32>) -> SysResult<co::WAIT> {
 		match unsafe {
 			co::WAIT::from_raw(ffi::WaitForSingleObject(
 				self.ptr(),

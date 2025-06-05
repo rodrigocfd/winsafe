@@ -11,21 +11,11 @@ handle! { HACCEL;
 	/// [accelerator table](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#haccel).
 }
 
-impl user_Haccel for HACCEL {}
-
-/// This trait is enabled with the `user` feature, and provides methods for
-/// [`HACCEL`](crate::HACCEL).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait user_Haccel: Handle {
+impl HACCEL {
 	/// [`CreateAcceleratorTable`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-createacceleratortablew)
 	/// function.
 	#[must_use]
-	fn CreateAcceleratorTable(accel: &[ACCEL]) -> SysResult<DestroyAcceleratorTableGuard> {
+	pub fn CreateAcceleratorTable(accel: &[ACCEL]) -> SysResult<DestroyAcceleratorTableGuard> {
 		// For some reason, debug builds were randomly crashing with error 998:
 		// Invalid access to memory location.
 		// So, allocate an HGLOBAL buffer and copy the ACCEL array onto it.

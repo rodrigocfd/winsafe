@@ -45,8 +45,7 @@ native_ctrl! { StatusBar: StatusBarObj => StatusBarEvents;
 
 impl StatusBar {
 	/// Instantiates a new `StatusBar` object, to be created on the parent
-	/// window with
-	/// [`HWND::CreateWindowEx`](crate::prelude::user_Hwnd::CreateWindowEx).
+	/// window with [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
 	///
 	/// # Panics
 	///

@@ -11,20 +11,10 @@ handle! { HSERVICE;
 	/// Originally `SC_HANDLE`.
 }
 
-impl advapi_Hservice for HSERVICE {}
-
-/// This trait is enabled with the `advapi` feature, and provides methods for
-/// [`HSERVICE`](crate::HSERVICE).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait advapi_Hservice: Handle {
+impl HSERVICE {
 	/// [`DeleteService`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-deleteservice)
 	/// function.
-	fn DeleteService(&self) -> SysResult<()> {
+	pub fn DeleteService(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::DeleteService(self.ptr()) })
 	}
 }

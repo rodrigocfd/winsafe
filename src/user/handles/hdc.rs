@@ -11,26 +11,16 @@ handle! { HDC;
 	/// [device context](https://learn.microsoft.com/en-us/windows/win32/winprog/windows-data-types#hdc).
 }
 
-impl user_Hdc for HDC {}
-
-/// This trait is enabled with the `user` feature, and provides methods for
-/// [`HDC`](crate::HDC).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait user_Hdc: Handle {
+impl HDC {
 	/// [`DrawFocusRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawfocusrect)
 	/// function.
-	fn DrawFocusRect(&self, rect: RECT) -> SysResult<()> {
+	pub fn DrawFocusRect(&self, rect: RECT) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::DrawFocusRect(self.ptr(), pcvoid(&rect)) })
 	}
 
 	/// [`DrawText`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtextw)
 	/// function.
-	fn DrawText(&self, text: &str, bounds: RECT, format: co::DT) -> SysResult<i32> {
+	pub fn DrawText(&self, text: &str, bounds: RECT, format: co::DT) -> SysResult<i32> {
 		let mut bounds = bounds;
 		let wtext = WString::from_str(text);
 
@@ -50,7 +40,7 @@ pub trait user_Hdc: Handle {
 
 	/// [`DrawTextExW`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-drawtextexw)
 	/// function.
-	fn DrawTextEx(
+	pub fn DrawTextEx(
 		&self,
 		text: &str,
 		bounds: RECT,
@@ -95,7 +85,7 @@ pub trait user_Hdc: Handle {
 	/// )?;
 	/// # w::SysResult::Ok(())
 	/// ```
-	fn EnumDisplayMonitors<F>(&self, rc_clip: Option<RECT>, func: F) -> SysResult<()>
+	pub fn EnumDisplayMonitors<F>(&self, rc_clip: Option<RECT>, func: F) -> SysResult<()>
 	where
 		F: FnMut(HMONITOR, HDC, &RECT) -> bool,
 	{
@@ -111,26 +101,26 @@ pub trait user_Hdc: Handle {
 
 	/// [`FrameRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-framerect)
 	/// function.
-	fn FrameRect(&self, rc: RECT, hbr: &HBRUSH) -> SysResult<()> {
+	pub fn FrameRect(&self, rc: RECT, hbr: &HBRUSH) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::FrameRect(self.ptr(), pcvoid(&rc), hbr.ptr()) })
 	}
 
 	/// [`InvertRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-invertrect)
 	/// function.
-	fn InvertRect(&self, rc: RECT) -> SysResult<()> {
+	pub fn InvertRect(&self, rc: RECT) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::InvertRect(self.ptr(), pcvoid(&rc)) })
 	}
 
 	/// [`PaintDesktop`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-paintdesktop)
 	/// function.
-	fn PaintDesktop(&self) -> SysResult<()> {
+	pub fn PaintDesktop(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::PaintDesktop(self.ptr()) })
 	}
 
 	/// [`WindowFromDC`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-windowfromdc)
 	/// function.
 	#[must_use]
-	fn WindowFromDC(&self) -> Option<HWND> {
+	pub fn WindowFromDC(&self) -> Option<HWND> {
 		ptr_to_option_handle(unsafe { ffi::WindowFromDC(self.ptr()) })
 	}
 }

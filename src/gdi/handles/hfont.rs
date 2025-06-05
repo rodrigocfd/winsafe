@@ -13,21 +13,12 @@ handle! { HFONT;
 }
 
 impl GdiObject for HFONT {}
-impl gdi_Hfont for HFONT {}
 
-/// This trait is enabled with the `gdi` feature, and provides methods for
-/// [`HFONT`](crate::HFONT).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait gdi_Hfont: Handle {
+impl HFONT {
 	/// [`CreateFont`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontw)
 	/// function.
 	#[must_use]
-	fn CreateFont(
+	pub fn CreateFont(
 		sz: SIZE,
 		escapement: i32,
 		orientation: i32,
@@ -66,7 +57,7 @@ pub trait gdi_Hfont: Handle {
 	/// [`CreateFontIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirectw)
 	/// function.
 	#[must_use]
-	fn CreateFontIndirect(lf: &LOGFONT) -> SysResult<DeleteObjectGuard<HFONT>> {
+	pub fn CreateFontIndirect(lf: &LOGFONT) -> SysResult<DeleteObjectGuard<HFONT>> {
 		unsafe {
 			ptr_to_invalidparm_handle(ffi::CreateFontIndirectW(pcvoid(lf)))
 				.map(|h| DeleteObjectGuard::new(h))
@@ -87,7 +78,7 @@ pub trait gdi_Hfont: Handle {
 	/// let mut log_font = w::LOGFONT::default();
 	/// hfont.GetObject(&mut log_font)?;
 	/// # w::SysResult::Ok(())
-	fn GetObject(&self, lf: &mut LOGFONT) -> SysResult<()> {
+	pub fn GetObject(&self, lf: &mut LOGFONT) -> SysResult<()> {
 		bool_to_invalidparm(unsafe {
 			ffi::GetObjectW(self.ptr(), std::mem::size_of::<LOGFONT>() as _, pvoid(lf))
 		})
@@ -96,7 +87,7 @@ pub trait gdi_Hfont: Handle {
 	/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
 	/// function.
 	#[must_use]
-	fn GetStockObject(sf: co::STOCK_FONT) -> SysResult<HFONT> {
+	pub fn GetStockObject(sf: co::STOCK_FONT) -> SysResult<HFONT> {
 		ptr_to_invalidparm_handle(unsafe { ffi::GetStockObject(sf.raw()) })
 	}
 }

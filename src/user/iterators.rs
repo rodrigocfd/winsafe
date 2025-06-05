@@ -1,7 +1,6 @@
 use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
-use crate::prelude::*;
 use crate::user::ffi;
 
 pub(in crate::user) struct EnumdisplaydevicesIter<'a> {
@@ -55,40 +54,28 @@ impl<'a> EnumdisplaydevicesIter<'a> {
 	}
 }
 
-pub(in crate::user) struct HmenuIteritems<'a, H>
-where
-	H: user_Hmenu,
-{
-	hmenu: &'a H,
+pub(in crate::user) struct HmenuIteritems<'a> {
+	hmenu: &'a HMENU,
 	front_idx: u32,
 	past_back_idx: u32,
 }
 
-impl<'a, H> Iterator for HmenuIteritems<'a, H>
-where
-	H: user_Hmenu,
-{
+impl<'a> Iterator for HmenuIteritems<'a> {
 	type Item = SysResult<MenuItemInfo>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		self.grab(true)
 	}
 }
-impl<'a, H> DoubleEndedIterator for HmenuIteritems<'a, H>
-where
-	H: user_Hmenu,
-{
+impl<'a> DoubleEndedIterator for HmenuIteritems<'a> {
 	fn next_back(&mut self) -> Option<Self::Item> {
 		self.grab(false)
 	}
 }
 
-impl<'a, H> HmenuIteritems<'a, H>
-where
-	H: user_Hmenu,
-{
+impl<'a> HmenuIteritems<'a> {
 	#[must_use]
-	pub(in crate::user) fn new(hmenu: &'a H) -> SysResult<Self> {
+	pub(in crate::user) fn new(hmenu: &'a HMENU) -> SysResult<Self> {
 		Ok(Self {
 			hmenu,
 			front_idx: 0,

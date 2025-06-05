@@ -1,7 +1,6 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::prelude::*;
 
 /// Access types for [`File::open`](crate::File::open) and
 /// [`FileMapped::open`](crate::FileMapped::open).
@@ -123,7 +122,7 @@ impl File {
 	}
 
 	/// Returns the position of the file pointer by calling
-	/// [`HFILE::SetFilePointerEx`](crate::prelude::kernel_Hfile::SetFilePointerEx).
+	/// [`HFILE::SetFilePointerEx`](crate::HFILE::SetFilePointerEx).
 	#[must_use]
 	pub fn pointer_offset(&self) -> SysResult<u64> {
 		self.hfile
@@ -132,9 +131,9 @@ impl File {
 	}
 
 	/// Returns the size of the file by calling
-	/// [`HFILE::GetFileSizeEx`](crate::prelude::kernel_Hfile::GetFileSizeEx),
-	/// allocates the `Vec` buffer, then reads all the file bytes by calling
-	/// [`HFILE::ReadFile`](crate::prelude::kernel_Hfile::ReadFile).
+	/// [`HFILE::GetFileSizeEx`](crate::HFILE::GetFileSizeEx), allocates the
+	/// `Vec` buffer, then reads all the file bytes by calling
+	/// [`HFILE::ReadFile`](crate::HFILE::ReadFile).
 	///
 	/// Note that the API limits the reading up to 4 GB.
 	#[must_use]
@@ -145,10 +144,10 @@ impl File {
 		Ok(buf)
 	}
 
-	/// Calls [`HFILE::ReadFile`](crate::prelude::kernel_Hfile::ReadFile) to
-	/// read at most `buffer.len()` bytes from the file, starting at the current
-	/// file pointer offset. Returns how many bytes were actually read. The file
-	/// pointer is then incremented by the number of bytes read.
+	/// Calls [`HFILE::ReadFile`](crate::HFILE::ReadFile) to read at most
+	/// `buffer.len()` bytes from the file, starting at the current file pointer
+	/// offset. Returns how many bytes were actually read. The file pointer is
+	/// then incremented by the number of bytes read.
 	///
 	/// Note that the API limits the reading up to 4 GB.
 	pub fn read_buffer(&self, buffer: &mut [u8]) -> SysResult<u32> {
@@ -156,7 +155,7 @@ impl File {
 	}
 
 	/// Sets the position of the file pointer by calling
-	/// [`HFILE::SetFilePointerEx`](crate::prelude::kernel_Hfile::SetFilePointerEx).
+	/// [`HFILE::SetFilePointerEx`](crate::HFILE::SetFilePointerEx).
 	pub fn set_pointer_offset(&self, offset: u64) -> SysResult<()> {
 		self.hfile
 			.SetFilePointerEx(offset as _, co::FILE_STARTING_POINT::BEGIN)
@@ -164,10 +163,9 @@ impl File {
 	}
 
 	/// Truncates or expands the file by calling
-	/// [`HFILE::SetFilePointerEx`](crate::prelude::kernel_Hfile::SetFilePointerEx)
-	/// and
-	/// [`HFILE::SetEndOfFile`](crate::prelude::kernel_Hfile::SetEndOfFile),
-	/// then sets the file pointer to the beginning of the file.
+	/// [`HFILE::SetFilePointerEx`](crate::HFILE::SetFilePointerEx) and
+	/// [`HFILE::SetEndOfFile`](crate::HFILE::SetEndOfFile), then sets the file
+	/// pointer to the beginning of the file.
 	///
 	/// If the size is increased, the contents in the new area are undefined.
 	///
@@ -180,7 +178,7 @@ impl File {
 	}
 
 	/// Returns the size of the file by calling
-	/// [`HFILE::GetFileSizeEx`](crate::prelude::kernel_Hfile::GetFileSizeEx).
+	/// [`HFILE::GetFileSizeEx`](crate::HFILE::GetFileSizeEx).
 	#[must_use]
 	pub fn size(&self) -> SysResult<u64> {
 		self.hfile.GetFileSizeEx()
@@ -206,7 +204,7 @@ impl File {
 	}
 
 	/// Writes the bytes at the current file pointer by calling
-	/// [`HFILE::WriteFile`](crate::prelude::kernel_Hfile::WriteFile).
+	/// [`HFILE::WriteFile`](crate::HFILE::WriteFile).
 	///
 	/// This method will fail if the file was opened with
 	/// [`FileAccess::ExistingReadOnly`](crate::FileAccess::ExistingReadOnly).

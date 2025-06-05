@@ -1,7 +1,6 @@
 use crate::co;
 use crate::decl::*;
 use crate::msg::*;
-use crate::prelude::*;
 
 /// Identifies whether a window is dialog-based.
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -130,7 +129,6 @@ pub(in crate::gui) mod text_calc {
 	use crate::co;
 	use crate::decl::*;
 	use crate::gui::privs::*;
-	use crate::prelude::*;
 
 	// "&He && she" becomes "He & she".
 	#[must_use]

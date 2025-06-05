@@ -15,21 +15,11 @@ handle! { HFILEMAP;
 	/// [`FileMapped`](crate::FileMapped) high-level abstraction.
 }
 
-impl kernel_Hfilemap for HFILEMAP {}
-
-/// This trait is enabled with the `kernel` feature, and provides methods for
-/// [`HFILEMAP`](crate::HFILEMAP).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait kernel_Hfilemap: Handle {
+impl HFILEMAP {
 	/// [`MapViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-mapviewoffile)
 	/// function.
 	#[must_use]
-	fn MapViewOfFile(
+	pub fn MapViewOfFile(
 		&self,
 		desired_access: co::FILE_MAP,
 		offset: u64,

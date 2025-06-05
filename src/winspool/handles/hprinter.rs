@@ -12,32 +12,22 @@ handle! { HPRINTER;
 	/// Originally just a `HANDLE`.
 }
 
-impl winspool_Hprinter for HPRINTER {}
-
-/// This trait is enabled with the `winspool` feature, and provides methods for
-/// [`HPRINTER`](crate::HPRINTER).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait winspool_Hprinter: Handle {
+impl HPRINTER {
 	/// [`AbortPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/abortprinter)
 	/// function.
-	fn AbortPrinter(&self) -> SysResult<()> {
+	pub fn AbortPrinter(&self) -> SysResult<()> {
 		bool_to_invalidparm(unsafe { ffi::AbortPrinter(self.ptr()) })
 	}
 
 	/// [`AddForm`](https://learn.microsoft.com/en-us/windows/win32/printdocs/addform)
 	/// function for [`FORM_INFO_1`](crate::FORM_INFO_1).
-	fn AddForm1(&self, form: &FORM_INFO_1) -> SysResult<()> {
+	pub fn AddForm1(&self, form: &FORM_INFO_1) -> SysResult<()> {
 		bool_to_invalidparm(unsafe { ffi::AddFormW(self.ptr(), 1, pcvoid(form)) })
 	}
 
 	/// [`AddForm`](https://learn.microsoft.com/en-us/windows/win32/printdocs/addform)
 	/// function for [`FORM_INFO_2`](crate::FORM_INFO_2).
-	fn AddForm2(&self, form: &FORM_INFO_2) -> SysResult<()> {
+	pub fn AddForm2(&self, form: &FORM_INFO_2) -> SysResult<()> {
 		bool_to_invalidparm(unsafe { ffi::AddFormW(self.ptr(), 2, pcvoid(form)) })
 	}
 
@@ -45,7 +35,7 @@ pub trait winspool_Hprinter: Handle {
 	/// function.
 	///
 	/// Returns the path and the job ID.
-	fn AddJob(&self) -> SysResult<(String, u32)> {
+	pub fn AddJob(&self) -> SysResult<(String, u32)> {
 		let mut sz = u32::default();
 		if let Err(e) = bool_to_invalidparm(unsafe {
 			ffi::AddJobW(self.ptr(), 1, std::ptr::null_mut(), 0, &mut sz)
@@ -69,7 +59,10 @@ pub trait winspool_Hprinter: Handle {
 	/// [`AddPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/addprinter)
 	/// function.
 	#[must_use]
-	fn AddPrinter(name: Option<&str>, printer: &PRINTER_INFO_2) -> SysResult<ClosePrinterGuard> {
+	pub fn AddPrinter(
+		name: Option<&str>,
+		printer: &PRINTER_INFO_2,
+	) -> SysResult<ClosePrinterGuard> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::AddPrinterW(
 				WString::from_opt_str(name).as_ptr(),
@@ -82,7 +75,7 @@ pub trait winspool_Hprinter: Handle {
 
 	/// [`DeleteForm`](https://learn.microsoft.com/en-us/windows/win32/printdocs/deleteform)
 	/// function.
-	fn DeleteForm(&self, form_name: &str) -> SysResult<()> {
+	pub fn DeleteForm(&self, form_name: &str) -> SysResult<()> {
 		bool_to_invalidparm(unsafe {
 			ffi::DeleteFormW(self.ptr(), WString::from_str(form_name).as_mut_ptr())
 		})
@@ -90,13 +83,13 @@ pub trait winspool_Hprinter: Handle {
 
 	/// [`DeletePrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/deleteprinter)
 	/// function.
-	fn DeletePrinter(&self) -> SysResult<()> {
+	pub fn DeletePrinter(&self) -> SysResult<()> {
 		bool_to_invalidparm(unsafe { ffi::DeletePrinter(self.ptr()) })
 	}
 
 	/// [`DeletePrinterData`](https://learn.microsoft.com/en-us/windows/win32/printdocs/deleteprinterdata)
 	/// function.
-	fn DeletePrinterData(&self, value_name: &str) -> SysResult<()> {
+	pub fn DeletePrinterData(&self, value_name: &str) -> SysResult<()> {
 		error_to_sysresult(unsafe {
 			ffi::DeletePrinterDataW(self.ptr(), WString::from_str(value_name).as_mut_ptr())
 		})
@@ -104,7 +97,7 @@ pub trait winspool_Hprinter: Handle {
 
 	/// [`DeletePrinterDataEx`](https://learn.microsoft.com/en-us/windows/win32/printdocs/deleteprinterdataex)
 	/// function.
-	fn DeletePrinterDataEx(&self, key_name: &str, value_name: &str) -> SysResult<()> {
+	pub fn DeletePrinterDataEx(&self, key_name: &str, value_name: &str) -> SysResult<()> {
 		error_to_sysresult(unsafe {
 			ffi::DeletePrinterDataExW(
 				self.ptr(),
@@ -116,7 +109,7 @@ pub trait winspool_Hprinter: Handle {
 
 	/// [`DeletePrinterKey`](https://learn.microsoft.com/en-us/windows/win32/printdocs/deleteprinterkey)
 	/// function.
-	fn DeletePrinterKey(&self, key_name: &str) -> SysResult<()> {
+	pub fn DeletePrinterKey(&self, key_name: &str) -> SysResult<()> {
 		error_to_sysresult(unsafe {
 			ffi::DeletePrinterKeyW(self.ptr(), WString::from_str(key_name).as_ptr())
 		})
@@ -125,7 +118,7 @@ pub trait winspool_Hprinter: Handle {
 	/// [`GetPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/getprinter)
 	/// function for [`PRINTER_INFO_2`](crate::PRINTER_INFO_2).
 	#[must_use]
-	fn GetPrinter2(&self) -> SysResult<PRINTER_INFO_2> {
+	pub fn GetPrinter2(&self) -> SysResult<PRINTER_INFO_2> {
 		let mut nfo = PRINTER_INFO_2::default();
 		let mut needed = u32::default();
 
@@ -144,7 +137,7 @@ pub trait winspool_Hprinter: Handle {
 	/// [`GetPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/getprinter)
 	/// function for [`PRINTER_INFO_3`](crate::PRINTER_INFO_3).
 	#[must_use]
-	fn GetPrinter3(&self) -> SysResult<PRINTER_INFO_3> {
+	pub fn GetPrinter3(&self) -> SysResult<PRINTER_INFO_3> {
 		let mut nfo = PRINTER_INFO_3::default();
 		let mut needed = u32::default();
 
@@ -163,7 +156,7 @@ pub trait winspool_Hprinter: Handle {
 	/// [`GetPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/getprinter)
 	/// function for [`PRINTER_INFO_4`](crate::PRINTER_INFO_4).
 	#[must_use]
-	fn GetPrinter4(&self) -> SysResult<PRINTER_INFO_4> {
+	pub fn GetPrinter4(&self) -> SysResult<PRINTER_INFO_4> {
 		let mut nfo = PRINTER_INFO_4::default();
 		let mut needed = u32::default();
 
@@ -182,7 +175,7 @@ pub trait winspool_Hprinter: Handle {
 	/// [`OpenPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/openprinter)
 	/// function.
 	#[must_use]
-	fn OpenPrinter(
+	pub fn OpenPrinter(
 		printer_name: Option<&str>,
 		default: Option<&PRINTER_DEFAULTS>,
 	) -> SysResult<ClosePrinterGuard> {
@@ -200,7 +193,7 @@ pub trait winspool_Hprinter: Handle {
 	/// [`OpenPrinter2`](https://learn.microsoft.com/en-us/windows/win32/printdocs/openprinter2)
 	/// function.
 	#[must_use]
-	fn OpenPrinter2(
+	pub fn OpenPrinter2(
 		printer_name: Option<&str>,
 		default: Option<&PRINTER_DEFAULTS>,
 		options: Option<&PRINTER_OPTIONS>,
@@ -219,13 +212,13 @@ pub trait winspool_Hprinter: Handle {
 
 	/// [`ResetPrinter`](https://learn.microsoft.com/en-us/windows/win32/printdocs/resetprinter)
 	/// function.
-	fn ResetPrinter(&self, default: &PRINTER_DEFAULTS) -> SysResult<()> {
+	pub fn ResetPrinter(&self, default: &PRINTER_DEFAULTS) -> SysResult<()> {
 		bool_to_invalidparm(unsafe { ffi::ResetPrinterW(self.ptr(), pcvoid(default)) })
 	}
 
 	/// [`ScheduleJob`](https://learn.microsoft.com/en-us/windows/win32/printdocs/schedulejob)
 	/// function.
-	fn ScheduleJob(&self, job_id: u32) -> SysResult<()> {
+	pub fn ScheduleJob(&self, job_id: u32) -> SysResult<()> {
 		bool_to_invalidparm(unsafe { ffi::ScheduleJob(self.ptr(), job_id) })
 	}
 }

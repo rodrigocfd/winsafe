@@ -13,17 +13,7 @@ handle! { HFILEMAPVIEW;
 	/// [`FileMapped`](crate::FileMapped) high-level abstraction.
 }
 
-impl kernel_Hfilemapview for HFILEMAPVIEW {}
-
-/// This trait is enabled with the `kernel` feature, and provides methods for
-/// [`HFILEMAPVIEW`](crate::HFILEMAPVIEW).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait kernel_Hfilemapview: Handle {
+impl HFILEMAPVIEW {
 	/// Returns a slice representing the mapped memory. You can modify the
 	/// contents. You should call this method only if the file has write access.
 	///
@@ -31,7 +21,7 @@ pub trait kernel_Hfilemapview: Handle {
 	/// map the bytes beyond the file. This may cause serious errors. So, if the
 	/// file is resized, re-generate the slice by calling `as_slice` again.
 	#[must_use]
-	fn as_mut_slice(&self, len: usize) -> &mut [u8] {
+	pub fn as_mut_slice(&self, len: usize) -> &mut [u8] {
 		unsafe { std::slice::from_raw_parts_mut(self.ptr() as _, len) }
 	}
 
@@ -77,13 +67,13 @@ pub trait kernel_Hfilemapview: Handle {
 	/// # w::AnyResult::Ok(())
 	/// ```
 	#[must_use]
-	fn as_slice(&self, len: usize) -> &[u8] {
+	pub fn as_slice(&self, len: usize) -> &[u8] {
 		unsafe { std::slice::from_raw_parts(self.ptr() as _, len) }
 	}
 
 	/// [`FlushViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-flushviewoffile)
 	/// function.
-	fn FlushViewOfFile(&self, start_at_byte: usize, num_bytes: usize) -> SysResult<()> {
+	pub fn FlushViewOfFile(&self, start_at_byte: usize, num_bytes: usize) -> SysResult<()> {
 		bool_to_sysresult(unsafe {
 			ffi::FlushViewOfFile(self.ptr().offset(start_at_byte as _), num_bytes)
 		})

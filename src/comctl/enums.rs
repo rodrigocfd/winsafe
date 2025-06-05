@@ -58,7 +58,7 @@ pub enum BmpInstId {
 
 /// Variant parameter for:
 ///
-/// * [`HIMAGELIST::DrawEx`](crate::prelude::comctl_Himagelist::DrawEx).
+/// * [`HIMAGELIST::DrawEx`](crate::HIMAGELIST::DrawEx).
 pub enum ClrDefNone {
 	/// A RGB color value.
 	Clr(COLORREF),
@@ -120,7 +120,7 @@ impl<'a> Default for IconIdTd<'a> {
 
 /// Variant parameter for:
 ///
-/// * [`HWND::TaskDialog`](crate::prelude::comctl_Hwnd::TaskDialog).
+/// * [`HWND::TaskDialog`](crate::HWND::TaskDialog).
 #[derive(Clone)]
 pub enum IconRes<'a> {
 	/// No icon.

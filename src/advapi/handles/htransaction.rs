@@ -13,27 +13,17 @@ handle! { HTRANSACTION;
 	/// Originally just a `HANDLE`.
 }
 
-impl advapi_Htransaction for HTRANSACTION {}
-
-/// This trait is enabled with the `advapi` feature, and provides methods for
-/// [`HTRANSACTION`](crate::HTRANSACTION).
-///
-/// Prefer importing this trait through the prelude:
-///
-/// ```no_run
-/// use winsafe::prelude::*;
-/// ```
-pub trait advapi_Htransaction: Handle {
+impl HTRANSACTION {
 	/// [`CommitTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-committransaction)
 	/// function.
-	fn CommitTransaction(&self) -> SysResult<()> {
+	pub fn CommitTransaction(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::CommitTransaction(self.ptr()) })
 	}
 
 	/// [`CreateTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-createtransaction)
 	/// function.
 	#[must_use]
-	fn CreateTransaction(
+	pub fn CreateTransaction(
 		transaction_attributes: Option<&SECURITY_ATTRIBUTES>,
 		options: Option<co::TRANSACTION_OPT>,
 		timeout: Option<u32>,
@@ -58,7 +48,7 @@ pub trait advapi_Htransaction: Handle {
 	/// [`GetTransactionId`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-gettransactionid)
 	/// function.
 	#[must_use]
-	fn GetTransactionId(&self) -> SysResult<GUID> {
+	pub fn GetTransactionId(&self) -> SysResult<GUID> {
 		let mut guid = GUID::default();
 		bool_to_sysresult(unsafe { ffi::GetTransactionId(self.ptr(), pvoid(&mut guid)) })
 			.map(|_| guid)
@@ -67,7 +57,7 @@ pub trait advapi_Htransaction: Handle {
 	/// [`OpenTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-opentransaction)
 	/// function.
 	#[must_use]
-	fn OpenTransaction(
+	pub fn OpenTransaction(
 		desired_access: co::TRANSACTION,
 		transaction_id: &GUID,
 	) -> SysResult<CloseHandleGuard<HTRANSACTION>> {
@@ -81,7 +71,7 @@ pub trait advapi_Htransaction: Handle {
 
 	/// [`RollbackTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-rollbacktransaction)
 	/// function.
-	fn RollbackTransaction(&self) -> SysResult<()> {
+	pub fn RollbackTransaction(&self) -> SysResult<()> {
 		bool_to_sysresult(unsafe { ffi::RollbackTransaction(self.ptr()) })
 	}
 }
