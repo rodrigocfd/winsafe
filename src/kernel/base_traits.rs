@@ -61,7 +61,7 @@ pub trait Handle:
 	/// `raw_copy` is an escape hatch to fill this gap.
 	#[must_use]
 	unsafe fn raw_copy(&self) -> Self {
-		Self::from_ptr(self.ptr())
+		unsafe { Self::from_ptr(self.ptr()) }
 	}
 
 	/// Returns a mutable reference to the underlying raw pointer.
@@ -105,11 +105,7 @@ pub trait Handle:
 	/// ```
 	#[must_use]
 	fn as_opt(&self) -> Option<&Self> {
-		if *self == Self::NULL || *self == Self::INVALID {
-			None
-		} else {
-			Some(self)
-		}
+		if *self == Self::NULL || *self == Self::INVALID { None } else { Some(self) }
 	}
 }
 

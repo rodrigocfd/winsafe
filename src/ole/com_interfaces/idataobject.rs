@@ -62,12 +62,10 @@ pub trait ole_IDataObject: ole_IUnknown {
 	/// The returned struct may contain pointers that need to be deallocated.
 	unsafe fn GetData(&self, formatetc: &FORMATETC) -> HrResult<ReleaseStgMediumGuard> {
 		let mut sm = STGMEDIUM::default();
-		ok_to_hrresult((vt::<IDataObjectVT>(self).GetData)(
-			self.ptr(),
-			pcvoid(formatetc),
-			pvoid(&mut sm),
-		))
-		.map(|_| ReleaseStgMediumGuard::new(sm))
+		ok_to_hrresult(unsafe {
+			(vt::<IDataObjectVT>(self).GetData)(self.ptr(), pcvoid(formatetc), pvoid(&mut sm))
+		})
+		.map(|_| unsafe { ReleaseStgMediumGuard::new(sm) })
 	}
 
 	/// [`IDataObject::QueryGetData`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-querygetdata)

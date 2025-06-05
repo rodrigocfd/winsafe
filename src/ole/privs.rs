@@ -13,7 +13,7 @@ use crate::prelude::*;
 #[must_use]
 pub(crate) unsafe fn vt<T>(obj: &impl ole_IUnknown) -> &T {
 	let ppvt = obj.ptr() as *mut *mut T;
-	&**ppvt
+	unsafe { &**ppvt }
 }
 
 /// Given the pointer to the memory block, converts it to the `Box` of the

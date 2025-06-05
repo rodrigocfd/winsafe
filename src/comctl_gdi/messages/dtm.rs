@@ -14,7 +14,7 @@ impl MsgSend for GetMcFont {
 	type RetType = SysResult<HFONT>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|p| HFONT::from_ptr(p as _))
+		zero_as_badargs(v).map(|p| unsafe { HFONT::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

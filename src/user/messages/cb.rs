@@ -471,7 +471,7 @@ impl MsgSend for GetLocale {
 	type RetType = LANGID;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		LANGID::from_raw(v as _)
+		unsafe { LANGID::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

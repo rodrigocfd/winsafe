@@ -25,12 +25,14 @@ impl HWND {
 	{
 		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
-		msg.isize_to_ret(ffi::DefSubclassProc(
-			self.ptr(),
-			wm_any.msg_id.raw(),
-			wm_any.wparam,
-			wm_any.lparam,
-		))
+		unsafe {
+			msg.isize_to_ret(ffi::DefSubclassProc(
+				self.ptr(),
+				wm_any.msg_id.raw(),
+				wm_any.wparam,
+				wm_any.lparam,
+			))
+		}
 	}
 
 	/// [`InitializeFlatSB`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-initializeflatsb)

@@ -30,8 +30,10 @@ impl MsgSend for DropFiles {
 
 impl MsgSendRecv for DropFiles {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self {
-			hdrop: DragFinishGuard::new(HDROP::from_ptr(p.wparam as _)),
+		unsafe {
+			Self {
+				hdrop: DragFinishGuard::new(HDROP::from_ptr(p.wparam as _)),
+			}
 		}
 	}
 }

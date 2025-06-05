@@ -162,7 +162,7 @@ macro_rules! pub_struct_msg_char_key {
 			unsafe fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
 				use crate::kernel::decl::{HIBYTE, HIWORD, LOBYTE, LOWORD};
 				Self {
-					vkey_code: co::VK::from_raw(p.wparam as _),
+					vkey_code: unsafe{co::VK::from_raw(p.wparam as _)},
 					repeat_count: LOWORD(p.lparam as _),
 					scan_code: LOBYTE(HIWORD(p.lparam as _)),
 					is_extended_key: (HIBYTE(HIWORD(p.lparam as _)) & 0b0000_0001) != 0,
@@ -194,7 +194,9 @@ macro_rules! pub_struct_msg_ctlcolor {
 			type RetType = crate::user::decl::HBRUSH;
 
 			unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-				<crate::user::decl::HBRUSH as crate::prelude::Handle>::from_ptr(v as _)
+				unsafe {
+					<crate::user::decl::HBRUSH as crate::prelude::Handle>::from_ptr(v as _)
+				}
 			}
 
 			fn as_generic_wm(&mut self) -> crate::msg::WndMsg {
@@ -208,9 +210,11 @@ macro_rules! pub_struct_msg_ctlcolor {
 
 		impl crate::prelude::MsgSendRecv for $name {
 			unsafe fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
-				Self {
-					hdc: <crate::user::decl::HDC as crate::prelude::Handle>::from_ptr(p.wparam as _),
-					hwnd: <crate::user::decl::HWND as crate::prelude::Handle>::from_ptr(p.lparam as _),
+				unsafe {
+					Self {
+						hdc: <crate::user::decl::HDC as crate::prelude::Handle>::from_ptr(p.wparam as _),
+						hwnd: <crate::user::decl::HWND as crate::prelude::Handle>::from_ptr(p.lparam as _),
+					}
 				}
 			}
 		}
@@ -251,7 +255,7 @@ macro_rules! pub_struct_msg_button {
 		impl MsgSendRecv for $name {
 			unsafe fn from_generic_wm(p: WndMsg) -> Self {
 				Self {
-					vkey_code: co::VK::from_raw(p.wparam as _),
+					vkey_code: unsafe { co::VK::from_raw(p.wparam as _) },
 					coords: POINT {
 						x: LOWORD(p.lparam as _) as _,
 						y: HIWORD(p.lparam as _) as _,

@@ -41,7 +41,7 @@ impl MsgSend for GetBarColor {
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			v => Some(COLORREF::from_raw(v)),
+			v => Some(unsafe { COLORREF::from_raw(v) }),
 		}
 	}
 
@@ -66,7 +66,7 @@ impl MsgSend for GetBkColor {
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			v => Some(COLORREF::from_raw(v)),
+			v => Some(unsafe { COLORREF::from_raw(v) }),
 		}
 	}
 
@@ -136,7 +136,7 @@ impl MsgSend for GetState {
 	type RetType = co::PBST;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::PBST::from_raw(v as _)
+		unsafe { co::PBST::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -184,7 +184,7 @@ impl MsgSend for SetBarColor {
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			v => Some(COLORREF::from_raw(v)),
+			v => Some(unsafe { COLORREF::from_raw(v) }),
 		}
 	}
 
@@ -211,7 +211,7 @@ impl MsgSend for SetBkColor {
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			v => Some(COLORREF::from_raw(v)),
+			v => Some(unsafe { COLORREF::from_raw(v) }),
 		}
 	}
 
@@ -335,7 +335,7 @@ impl MsgSend for SetState {
 	type RetType = co::PBST;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::PBST::from_raw(v as _)
+		unsafe { co::PBST::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

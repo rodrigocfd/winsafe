@@ -373,7 +373,9 @@ macro_rules! pub_fn_mem_block {
 		/// Make sure the alignment is correct.
 		#[must_use]
 		pub const unsafe fn as_slice_aligned<T>(&self) -> &[T] {
-			std::slice::from_raw_parts(self.pmem as _, self.sz / std::mem::size_of::<T>())
+			unsafe {
+				std::slice::from_raw_parts(self.pmem as _, self.sz / std::mem::size_of::<T>())
+			}
 		}
 
 		/// Returns a mutable slice over the allocated memory block, aligned to the
@@ -384,7 +386,9 @@ macro_rules! pub_fn_mem_block {
 		/// Make sure the alignment is correct.
 		#[must_use]
 		pub const unsafe fn as_mut_slice_aligned<T>(&mut self) -> &mut [T] {
-			std::slice::from_raw_parts_mut(self.pmem as _, self.sz / std::mem::size_of::<T>())
+			unsafe {
+				std::slice::from_raw_parts_mut(self.pmem as _, self.sz / std::mem::size_of::<T>())
+			}
 		}
 
 		/// Returns the size of the allocated memory block.

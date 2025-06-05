@@ -9,8 +9,8 @@ license = "MIT"
 repository = "https://github.com/rodrigocfd/winsafe"
 readme = "README.md"
 include = ["/src/**/*", "/Cargo.toml", "/LICENSE.md", "/README.md"]
-edition = "2021"
-rust-version = "1.84"
+edition = "2024"
+rust-version = "1.87"
 
 [package.metadata.docs.rs]
 default-target = "x86_64-pc-windows-msvc"

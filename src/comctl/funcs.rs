@@ -27,7 +27,7 @@ pub fn InitMUILanguage(ui_lang: LANGID) {
 /// [`PropertySheet`](https://learn.microsoft.com/en-us/windows/win32/api/prsht/nf-prsht-propertysheetw)
 /// function.
 pub unsafe fn PropertySheet(header: &PROPSHEETHEADER) -> SysResult<isize> {
-	let ret = ffi::PropertySheetW(pcvoid(header));
+	let ret = unsafe { ffi::PropertySheetW(pcvoid(header)) };
 	match GetLastError() {
 		co::ERROR::SUCCESS => Ok(ret),
 		err => Err(err),

@@ -203,20 +203,22 @@ impl HWND {
 		hinstance: &HINSTANCE,
 		lparam: Option<isize>,
 	) -> SysResult<HWND> {
-		ptr_to_sysresult_handle(ffi::CreateWindowExW(
-			ex_style.raw(),
-			class_name.as_ptr(),
-			WString::from_opt_str(title).as_ptr(),
-			style.raw(),
-			pos.x,
-			pos.y,
-			size.cx,
-			size.cy,
-			hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr()),
-			hmenu.as_ptr(),
-			hinstance.ptr(),
-			lparam.unwrap_or_default() as _,
-		))
+		ptr_to_sysresult_handle(unsafe {
+			ffi::CreateWindowExW(
+				ex_style.raw(),
+				class_name.as_ptr(),
+				WString::from_opt_str(title).as_ptr(),
+				style.raw(),
+				pos.x,
+				pos.y,
+				size.cx,
+				size.cy,
+				hwnd_parent.map_or(std::ptr::null_mut(), |h| h.ptr()),
+				hmenu.as_ptr(),
+				hinstance.ptr(),
+				lparam.unwrap_or_default() as _,
+			)
+		})
 	}
 
 	/// [`DefWindowProc`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-defwindowprocw)
@@ -236,12 +238,14 @@ impl HWND {
 	{
 		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
-		msg.isize_to_ret(ffi::DefWindowProcW(
-			self.ptr(),
-			wm_any.msg_id.raw(),
-			wm_any.wparam,
-			wm_any.lparam,
-		))
+		unsafe {
+			msg.isize_to_ret(ffi::DefWindowProcW(
+				self.ptr(),
+				wm_any.msg_id.raw(),
+				wm_any.wparam,
+				wm_any.lparam,
+			))
+		}
 	}
 
 	/// [`DestroyWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-destroywindow)
@@ -1180,12 +1184,9 @@ impl HWND {
 	{
 		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
-		bool_to_sysresult(ffi::PostMessageW(
-			self.ptr(),
-			wm_any.msg_id.raw(),
-			wm_any.wparam,
-			wm_any.lparam,
-		))
+		bool_to_sysresult(unsafe {
+			ffi::PostMessageW(self.ptr(), wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam)
+		})
 	}
 
 	/// [`RealChildWindowFromPoint`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-realchildwindowfrompoint)
@@ -1341,12 +1342,14 @@ impl HWND {
 	{
 		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
-		msg.isize_to_ret(ffi::SendMessageW(
-			self.ptr(),
-			wm_any.msg_id.raw(),
-			wm_any.wparam,
-			wm_any.lparam,
-		))
+		unsafe {
+			msg.isize_to_ret(ffi::SendMessageW(
+				self.ptr(),
+				wm_any.msg_id.raw(),
+				wm_any.wparam,
+				wm_any.lparam,
+			))
+		}
 	}
 
 	/// [`SendMessageTimeout`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagetimeoutw)
@@ -1369,16 +1372,18 @@ impl HWND {
 		let wm_any = msg.as_generic_wm();
 		let mut result = isize::default();
 
-		bool_to_sysresult(ffi::SendMessageTimeoutW(
-			self.ptr(),
-			wm_any.msg_id.raw(),
-			wm_any.wparam,
-			wm_any.lparam,
-			flags.raw(),
-			timeout_ms,
-			&mut result,
-		) as _)
-		.map(|_| msg.isize_to_ret(result))
+		unsafe {
+			bool_to_sysresult(ffi::SendMessageTimeoutW(
+				self.ptr(),
+				wm_any.msg_id.raw(),
+				wm_any.wparam,
+				wm_any.lparam,
+				flags.raw(),
+				timeout_ms,
+				&mut result,
+			) as _)
+			.map(|_| msg.isize_to_ret(result))
+		}
 	}
 
 	/// [`SetActiveWindow`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-setactivewindow)

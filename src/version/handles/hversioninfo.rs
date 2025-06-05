@@ -129,12 +129,14 @@ impl HVERSIONINFO {
 		let mut lp_lp_buffer = std::ptr::null();
 		let mut pu_len = 0;
 
-		bool_to_sysresult(ffi::VerQueryValueW(
-			self.ptr(),
-			WString::from_str(sub_block).as_ptr(),
-			pvoid(&mut lp_lp_buffer),
-			&mut pu_len,
-		))
+		bool_to_sysresult(unsafe {
+			ffi::VerQueryValueW(
+				self.ptr(),
+				WString::from_str(sub_block).as_ptr(),
+				pvoid(&mut lp_lp_buffer),
+				&mut pu_len,
+			)
+		})
 		.map(|_| (lp_lp_buffer as *const T, pu_len))
 	}
 

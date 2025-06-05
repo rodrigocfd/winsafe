@@ -191,22 +191,24 @@ pub unsafe fn FormatMessage(
 ) -> SysResult<String> {
 	let mut ptr_buf = std::ptr::null_mut::<u16>();
 
-	let nchars = match ffi::FormatMessageW(
-		flags.raw(),
-		source.unwrap_or(std::ptr::null_mut()),
-		message_id,
-		u16::from(lang_id) as _,
-		&mut ptr_buf as *mut *mut _ as _, // pass pointer to pointer
-		0,
-		args.map_or(std::ptr::null_mut(), |arr| arr.as_ptr() as _),
-	) as _
+	let nchars = match unsafe {
+		ffi::FormatMessageW(
+			flags.raw(),
+			source.unwrap_or(std::ptr::null_mut()),
+			message_id,
+			u16::from(lang_id) as _,
+			&mut ptr_buf as *mut *mut _ as _, // pass pointer to pointer
+			0,
+			args.map_or(std::ptr::null_mut(), |arr| arr.as_ptr() as _),
+		)
+	} as _
 	{
 		0 => Err(GetLastError()),
 		nchars => Ok(nchars),
 	}?;
 
 	let final_wstr = WString::from_wchars_count(ptr_buf, nchars as _);
-	let _ = LocalFreeGuard::new(HLOCAL::from_ptr(ptr_buf as _)); // free returned pointer
+	let _ = unsafe { LocalFreeGuard::new(HLOCAL::from_ptr(ptr_buf as _)) }; // free returned pointer
 	let final_str = final_wstr.to_string();
 	Ok(final_str)
 }

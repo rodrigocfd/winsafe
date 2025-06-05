@@ -38,7 +38,8 @@ impl From<BSTR> for WString {
 
 impl std::fmt::Display for BSTR {
 	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		std::fmt::Display::fmt(unsafe { &WString::from_wchars_nullt(self.as_ptr()) }, f)
+		let txt = unsafe { WString::from_wchars_nullt(self.as_ptr()) };
+		std::fmt::Display::fmt(&txt, f)
 	}
 }
 impl std::fmt::Debug for BSTR {
@@ -54,11 +55,7 @@ impl BSTR {
 	pub fn SysAllocString(s: &str) -> HrResult<Self> {
 		let str_obj = WString::from_str(s);
 		let ptr = unsafe { ffi::SysAllocString(str_obj.as_ptr()) };
-		if ptr.is_null() {
-			Err(co::HRESULT::E_OUTOFMEMORY)
-		} else {
-			Ok(Self(ptr))
-		}
+		if ptr.is_null() { Err(co::HRESULT::E_OUTOFMEMORY) } else { Ok(Self(ptr)) }
 	}
 
 	/// [`SysReAllocString`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-sysreallocstring)

@@ -318,7 +318,7 @@ impl MsgSend for GetBitmapFlags {
 	type RetType = co::TBBF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::TBBF::from_raw(v as _)
+		unsafe { co::TBBF::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -461,7 +461,7 @@ impl MsgSend for GetDisabledImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v as _))
+		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -483,7 +483,7 @@ impl MsgSend for GetExtendedStyle {
 	type RetType = co::TBSTYLE_EX;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::TBSTYLE_EX::from_raw(v as _)
+		unsafe { co::TBSTYLE_EX::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -505,7 +505,7 @@ impl MsgSend for GetHotImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v as _))
+		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -574,7 +574,7 @@ impl MsgSend for GetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v as _))
+		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -642,7 +642,7 @@ impl MsgSend for GetInsertMarkColor {
 	type RetType = COLORREF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		COLORREF::from_raw(v as _)
+		unsafe { COLORREF::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -808,7 +808,7 @@ impl MsgSend for GetPressedImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST::from_ptr(p as _))
+		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -879,7 +879,7 @@ impl MsgSend for GetState {
 	type RetType = SysResult<co::TBSTATE>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_badargs(v).map(|v| co::TBSTATE::from_raw(v as _))
+		minus1_as_badargs(v).map(|v| unsafe { co::TBSTATE::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -926,7 +926,7 @@ impl MsgSend for GetStyle {
 	type RetType = co::BTNS;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::BTNS::from_raw(v as _)
+		unsafe { co::BTNS::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -970,7 +970,7 @@ impl MsgSend for GetTooltips {
 	type RetType = Option<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HWND::from_ptr(v as _))
+		zero_as_none(v).map(|v| unsafe { HWND::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1605,7 +1605,7 @@ impl<'a> MsgSend for SetDisabledImageList<'a> {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v as _))
+		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1630,7 +1630,7 @@ impl MsgSend for SetDrawTextFlags {
 	type RetType = co::DT;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::DT::from_raw(v as _)
+		unsafe { co::DT::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1654,7 +1654,7 @@ impl MsgSend for SetExtendedStyle {
 	type RetType = co::TBSTYLE_EX;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::TBSTYLE_EX::from_raw(v as _)
+		unsafe { co::TBSTYLE_EX::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1678,7 +1678,7 @@ impl<'a> MsgSend for SetHotImageList<'a> {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v as _))
+		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1751,7 +1751,7 @@ impl MsgSend for SetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v as _))
+		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1823,7 +1823,7 @@ impl MsgSend for SetInsertMarkColor {
 	type RetType = COLORREF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		COLORREF::from_raw(v as _)
+		unsafe { COLORREF::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1944,7 +1944,7 @@ impl<'a> MsgSend for SetParent<'a> {
 	type RetType = Option<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HWND::from_ptr(v as _))
+		zero_as_none(v).map(|v| unsafe { HWND::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1969,7 +1969,7 @@ impl<'a> MsgSend for SetPressedImageList<'a> {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HIMAGELIST::from_ptr(v as _))
+		zero_as_none(v).map(|v| unsafe { HIMAGELIST::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

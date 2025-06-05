@@ -113,7 +113,7 @@ impl MsgSend for GetHandle {
 	type RetType = SysResult<HLOCAL>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|v| HLOCAL::from_ptr(v as _))
+		zero_as_badargs(v).map(|v| unsafe { HLOCAL::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -135,7 +135,7 @@ impl MsgSend for GetImeStatus {
 	type RetType = co::EIMES;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::EIMES::from_raw(v as _)
+		unsafe { co::EIMES::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -285,7 +285,7 @@ impl MsgSend for GetPasswordChar {
 	type RetType = Option<char>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|c| std::char::from_u32_unchecked(c as _))
+		zero_as_none(v).map(|c| unsafe { std::char::from_u32_unchecked(c as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -381,7 +381,7 @@ impl MsgSend for GetWordBreakProc {
 	type RetType = Option<EDITWORDBREAKPROC>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| std::mem::transmute(p))
+		zero_as_none(v).map(|p| unsafe { std::mem::transmute(p) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -629,7 +629,7 @@ impl MsgSend for SetImeStatus {
 	type RetType = co::EIMES;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::EIMES::from_raw(v as _)
+		unsafe { co::EIMES::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

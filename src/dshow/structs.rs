@@ -38,7 +38,7 @@ impl<'a> AM_MEDIA_TYPE<'a> {
 	/// to cause a buffer overrun.
 	#[must_use]
 	pub const unsafe fn pbFormat<T>(&self) -> Option<&mut T> {
-		(self.pbFormat as *mut T).as_mut()
+		unsafe { (self.pbFormat as *mut T).as_mut() }
 	}
 
 	/// Sets the `pbFormat` field.

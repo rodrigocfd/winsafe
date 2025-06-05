@@ -251,7 +251,7 @@ impl Tdn {
 			co::TDN::EXPANDO_BUTTON_CLICKED => Self::ExpandoButtonClicked(wp != 0),
 			co::TDN::HELP => Self::Help,
 			co::TDN::HYPERLINK_CLICKED => {
-				Self::HyperlinkClicked(WString::from_wchars_nullt(lp as _).to_string())
+				Self::HyperlinkClicked(unsafe { WString::from_wchars_nullt(lp as _) }.to_string())
 			},
 			co::TDN::NAVIGATED => Self::Navigated,
 			co::TDN::RADIO_BUTTON_CLICKED => Self::RadioButtonClicked(wp as _),

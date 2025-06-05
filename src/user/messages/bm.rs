@@ -17,7 +17,7 @@ impl MsgSend for GetCheck {
 	type RetType = co::BST;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::BST::from_raw(v as _)
+		unsafe { co::BST::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -42,8 +42,8 @@ impl MsgSend for GetImage {
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match self.img_type {
-			co::IMAGE_TYPE::BITMAP => Ok(BmpIcon::Bmp(HBITMAP::from_ptr(v as _))),
-			co::IMAGE_TYPE::ICON => Ok(BmpIcon::Icon(HICON::from_ptr(v as _))),
+			co::IMAGE_TYPE::BITMAP => Ok(BmpIcon::Bmp(unsafe { HBITMAP::from_ptr(v as _) })),
+			co::IMAGE_TYPE::ICON => Ok(BmpIcon::Icon(unsafe { HICON::from_ptr(v as _) })),
 			_ => Err(co::ERROR::BAD_ARGUMENTS),
 		}
 	}
@@ -67,7 +67,7 @@ impl MsgSend for GetState {
 	type RetType = co::BST;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::BST::from_raw(v as _)
+		unsafe { co::BST::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -143,8 +143,8 @@ impl MsgSend for SetImage {
 			Err(co::ERROR::BAD_ARGUMENTS)
 		} else {
 			match self.image {
-				BmpIcon::Bmp(_) => Ok(BmpIcon::Bmp(HBITMAP::from_ptr(v as _))),
-				BmpIcon::Icon(_) => Ok(BmpIcon::Icon(HICON::from_ptr(v as _))),
+				BmpIcon::Bmp(_) => Ok(BmpIcon::Bmp(unsafe { HBITMAP::from_ptr(v as _) })),
+				BmpIcon::Icon(_) => Ok(BmpIcon::Icon(unsafe { HICON::from_ptr(v as _) })),
 			}
 		}
 	}

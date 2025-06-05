@@ -18,7 +18,7 @@ impl<'a> MsgSend for CreateDragImage<'a> {
 	type RetType = SysResult<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|p| HIMAGELIST::from_ptr(p as _))
+		zero_as_badargs(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -66,7 +66,7 @@ impl<'a> MsgSend for EditLabel<'a> {
 	type RetType = SysResult<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|p| HWND::from_ptr(p as _))
+		zero_as_badargs(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -161,7 +161,7 @@ impl MsgSend for GetBkColor {
 	type RetType = Option<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_none(v).map(|v| COLORREF::from_raw(v as _))
+		minus1_as_none(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -205,7 +205,7 @@ impl MsgSend for GetEditControl {
 	type RetType = SysResult<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|p| HWND::from_ptr(p as _))
+		zero_as_badargs(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -227,7 +227,7 @@ impl MsgSend for GetExtendedStyle {
 	type RetType = co::TVS_EX;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::TVS_EX::from_raw(v as _)
+		unsafe { co::TVS_EX::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -251,7 +251,7 @@ impl MsgSend for GetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST::from_ptr(p as _))
+		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -295,7 +295,7 @@ impl MsgSend for GetInsertMarkColor {
 	type RetType = COLORREF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		COLORREF::from_raw(v as _)
+		unsafe { COLORREF::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -415,7 +415,7 @@ impl<'a> MsgSend for GetItemState<'a> {
 	type RetType = co::TVIS;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::TVIS::from_raw(v as _)
+		unsafe { co::TVIS::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -439,7 +439,7 @@ impl MsgSend for GetLineColor {
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			c => Some(COLORREF::from_raw(c)),
+			c => Some(unsafe { COLORREF::from_raw(c) }),
 		}
 	}
 
@@ -465,7 +465,7 @@ impl<'a> MsgSend for GetNextItem<'a> {
 	type RetType = Option<HTREEITEM>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HTREEITEM::from_ptr(p as _))
+		zero_as_none(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -509,7 +509,7 @@ impl MsgSend for GetTextColor {
 	type RetType = Option<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_none(v).map(|v| COLORREF::from_raw(v as _))
+		minus1_as_none(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -531,7 +531,7 @@ impl MsgSend for GetTooltips {
 	type RetType = Option<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HWND::from_ptr(p as _))
+		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -599,7 +599,7 @@ impl<'a> MsgSend for HitTest<'a> {
 	type RetType = Option<HTREEITEM>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HTREEITEM::from_ptr(p as _))
+		zero_as_none(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -623,7 +623,7 @@ impl<'a, 'b> MsgSend for InsertItem<'a, 'b> {
 	type RetType = SysResult<HTREEITEM>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|p| HTREEITEM::from_ptr(p as _))
+		zero_as_badargs(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -647,7 +647,7 @@ impl MsgSend for MapAccIdToHtreeitem {
 	type RetType = SysResult<HTREEITEM>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|p| HTREEITEM::from_ptr(p as _))
+		zero_as_badargs(v).map(|p| unsafe { HTREEITEM::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -747,7 +747,7 @@ impl MsgSend for SetBkColor {
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => None,
-			v => Some(COLORREF::from_raw(v as _)),
+			v => Some(unsafe { COLORREF::from_raw(v as _) }),
 		}
 	}
 
@@ -848,7 +848,7 @@ impl MsgSend for SetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST::from_ptr(p as _))
+		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -921,7 +921,7 @@ impl MsgSend for SetInsertMarkColor {
 	type RetType = COLORREF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		COLORREF::from_raw(v as _)
+		unsafe { COLORREF::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -993,7 +993,7 @@ impl MsgSend for SetLineColor {
 	type RetType = COLORREF;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		COLORREF::from_raw(v as _)
+		unsafe { COLORREF::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -1043,7 +1043,7 @@ impl MsgSend for SetTextColor {
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v {
 			-1 => None,
-			v => Some(COLORREF::from_raw(v as _)),
+			v => Some(unsafe { COLORREF::from_raw(v as _) }),
 		}
 	}
 
@@ -1068,7 +1068,7 @@ impl<'a> MsgSend for SetTooltips<'a> {
 	type RetType = Option<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HWND::from_ptr(p as _))
+		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

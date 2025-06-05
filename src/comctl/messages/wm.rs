@@ -29,7 +29,7 @@ impl<'a> MsgSend for Notify<'a> {
 
 impl<'a> MsgSendRecv for Notify<'a> {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
-		Self { nmhdr: &mut *(p.lparam as *mut _) }
+		unsafe { Self { nmhdr: &mut *(p.lparam as *mut _) } }
 	}
 }
 
@@ -43,7 +43,7 @@ impl<'a> Notify<'a> {
 	/// You should always prefer the specific notifications, which perform this
 	/// conversion for you.
 	pub const unsafe fn cast_nmhdr<T>(&self) -> &T {
-		&*(self.nmhdr as *const _ as *const _)
+		unsafe { &*(self.nmhdr as *const _ as *const _) }
 	}
 
 	/// Casts the `NMHDR` mutable reference into a derived struct.
@@ -55,7 +55,6 @@ impl<'a> Notify<'a> {
 	/// You should always prefer the specific notifications, which perform this
 	/// conversion for you.
 	pub unsafe fn cast_nmhdr_mut<T>(&self) -> &mut T {
-		#[allow(invalid_reference_casting)] // https://github.com/rust-lang/rust/issues/116410
-		&mut *(self.nmhdr as *const _ as *mut _)
+		unsafe { &mut *(self.nmhdr as *const _ as *mut _) }
 	}
 }

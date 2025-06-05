@@ -83,7 +83,7 @@ impl MsgSend for GetCalId {
 	type RetType = co::CAL;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::CAL::from_raw(v as _)
+		unsafe { co::CAL::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -107,7 +107,7 @@ impl MsgSend for GetColor {
 	type RetType = SysResult<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_badargs(v).map(|v| COLORREF::from_raw(v as _))
+		minus1_as_badargs(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -129,7 +129,7 @@ impl MsgSend for GetCurrentView {
 	type RetType = co::MCMV;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::MCMV::from_raw(v as _)
+		unsafe { co::MCMV::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -314,7 +314,7 @@ impl<'a> MsgSend for GetRange<'a> {
 	type RetType = co::GDTR;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::GDTR::from_raw(v as _)
+		unsafe { co::GDTR::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -482,7 +482,7 @@ impl MsgSend for SetColor {
 	type RetType = Option<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_none(v).map(|v| COLORREF::from_raw(v as _))
+		minus1_as_none(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

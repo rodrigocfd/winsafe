@@ -397,21 +397,19 @@ impl HDC {
 		bmi: &mut BITMAPINFO,
 		usage: co::DIB,
 	) -> SysResult<i32> {
-		let ret = ffi::GetDIBits(
-			self.ptr(),
-			hbm.ptr(),
-			first_scan_line,
-			num_scan_lines,
-			bmp_data_buf.map_or(std::ptr::null_mut(), |buf| buf.as_mut_ptr() as _),
-			pvoid(bmi),
-			usage.raw(),
-		);
+		let ret = unsafe {
+			ffi::GetDIBits(
+				self.ptr(),
+				hbm.ptr(),
+				first_scan_line,
+				num_scan_lines,
+				bmp_data_buf.map_or(std::ptr::null_mut(), |buf| buf.as_mut_ptr() as _),
+				pvoid(bmi),
+				usage.raw(),
+			)
+		};
 
-		if ret == 0 {
-			Err(co::ERROR::INVALID_PARAMETER)
-		} else {
-			Ok(ret)
-		}
+		if ret == 0 { Err(co::ERROR::INVALID_PARAMETER) } else { Ok(ret) }
 	}
 
 	/// [`GetStretchBltMode`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstretchbltmode)

@@ -83,7 +83,7 @@ impl IdStr {
 		if IS_INTRESOURCE(ptr) {
 			Self::Id(ptr as _)
 		} else {
-			Self::Str(WString::from_wchars_nullt(ptr))
+			Self::Str(unsafe { WString::from_wchars_nullt(ptr) })
 		}
 	}
 
@@ -178,7 +178,7 @@ impl RtStr {
 		if IS_INTRESOURCE(ptr) {
 			Self::Rt(unsafe { co::RT::from_raw(ptr as _) })
 		} else {
-			Self::Str(WString::from_wchars_nullt(ptr))
+			Self::Str(unsafe { WString::from_wchars_nullt(ptr) })
 		}
 	}
 

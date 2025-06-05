@@ -78,7 +78,7 @@ impl MsgSend for GetFont {
 	type RetType = Option<HFONT>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HFONT::from_ptr(p as _))
+		zero_as_none(v).map(|p| unsafe { HFONT::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -123,7 +123,7 @@ impl MsgSend for NcPaint {
 impl MsgSendRecv for NcPaint {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			updated_hrgn: HRGN::from_ptr(p.wparam as _),
+			updated_hrgn: unsafe { HRGN::from_ptr(p.wparam as _) },
 		}
 	}
 }
@@ -160,7 +160,7 @@ impl MsgSend for SetFont {
 impl MsgSendRecv for SetFont {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
-			hfont: HFONT::from_ptr(p.wparam as _),
+			hfont: unsafe { HFONT::from_ptr(p.wparam as _) },
 			redraw: LOWORD(p.lparam as _) != 0,
 		}
 	}

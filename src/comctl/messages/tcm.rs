@@ -153,7 +153,7 @@ impl MsgSend for GetExtendedStyle {
 	type RetType = co::TCS_EX;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::TCS_EX::from_raw(v as _)
+		unsafe { co::TCS_EX::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -175,7 +175,7 @@ impl MsgSend for GetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST::from_ptr(p as _))
+		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -291,7 +291,7 @@ impl MsgSend for GetTooltips {
 	type RetType = Option<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|v| HWND::from_ptr(v as _))
+		zero_as_none(v).map(|v| unsafe { HWND::from_ptr(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -484,7 +484,7 @@ impl MsgSend for SetExtendedStyle {
 	type RetType = co::TCS_EX;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::TCS_EX::from_raw(v as _)
+		unsafe { co::TCS_EX::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -508,7 +508,7 @@ impl MsgSend for SetImageList {
 	type RetType = Option<HIMAGELIST>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HIMAGELIST::from_ptr(p as _))
+		zero_as_none(v).map(|p| unsafe { HIMAGELIST::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

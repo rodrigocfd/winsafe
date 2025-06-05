@@ -53,22 +53,14 @@ pub(crate) const fn bool_to_invalidparm(expr: BOOL) -> SysResult<()> {
 /// If pointer is null, yields `Err(GetLastError)`, otherwise `Ok(ptr)`.
 #[must_use]
 pub(crate) fn ptr_to_sysresult(ptr: HANDLE) -> SysResult<HANDLE> {
-	if ptr.is_null() {
-		Err(GetLastError())
-	} else {
-		Ok(ptr)
-	}
+	if ptr.is_null() { Err(GetLastError()) } else { Ok(ptr) }
 }
 
 /// If pointer is null, yields `Err(ERROR::INVALID_PARAMETER)`, otherwise
 /// `Ok(ptr)`.
 #[must_use]
 pub(crate) const fn ptr_to_invalidparm(ptr: HANDLE) -> SysResult<HANDLE> {
-	if ptr.is_null() {
-		Err(co::ERROR::INVALID_PARAMETER)
-	} else {
-		Ok(ptr)
-	}
+	if ptr.is_null() { Err(co::ERROR::INVALID_PARAMETER) } else { Ok(ptr) }
 }
 
 /// If pointer is null, yields `Err(GetLastError)`, otherwise `Ok(Handle)`.
@@ -96,11 +88,7 @@ pub(crate) fn ptr_to_option_handle<H>(ptr: HANDLE) -> Option<H>
 where
 	H: Handle,
 {
-	if ptr.is_null() {
-		None
-	} else {
-		Some(unsafe { H::from_ptr(ptr) })
-	}
+	if ptr.is_null() { None } else { Some(unsafe { H::from_ptr(ptr) }) }
 }
 
 /// If value is `ERROR::SUCCESS`, yields `Ok(())`, otherwise `Err(err)`.
@@ -159,11 +147,7 @@ pub(crate) const fn pvoid_or_null<T>(reference: Option<&mut T>) -> PVOID {
 /// * https://github.com/rust-lang/rust/issues/39625
 #[must_use]
 pub(crate) const fn vec_ptr<T>(v: &[T]) -> *const T {
-	if v.is_empty() {
-		std::ptr::null()
-	} else {
-		v.as_ptr()
-	}
+	if v.is_empty() { std::ptr::null() } else { v.as_ptr() }
 }
 
 /// Converts a string to an ISO-8859-1 null-terminated byte array.
@@ -189,13 +173,13 @@ pub(crate) unsafe fn parse_multi_z_str(src: *const u16, len: Option<usize>) -> V
 	let mut tot_ch = 0; // absolute index of char in original src
 
 	loop {
-		if *src.add(ch) == 0 || tot_ch == given_len {
-			let slice = std::slice::from_raw_parts(src, ch);
+		if unsafe { *src.add(ch) } == 0 || tot_ch == given_len {
+			let slice = unsafe { std::slice::from_raw_parts(src, ch) };
 			if slice.is_empty() {
 				break; // empty string means two consecutive nulls
 			}
 			strings.push(WString::from_wchars_slice(slice).to_string());
-			src = src.add(ch + 1);
+			src = unsafe { src.add(ch + 1) };
 			ch = 0;
 		} else {
 			ch += 1;

@@ -38,10 +38,12 @@ impl<'a> TabItem<'a> {
 	/// If you delete a tab automatically created, which has a container window
 	/// attached to it, the rendering will be out-of-order.
 	pub unsafe fn delete(&self) {
-		self.owner
-			.hwnd()
-			.SendMessage(tcm::DeleteItem { index: self.index })
-			.unwrap();
+		unsafe {
+			self.owner
+				.hwnd()
+				.SendMessage(tcm::DeleteItem { index: self.index })
+		}
+		.unwrap();
 	}
 
 	/// Retrieves the user-defined value by sending an

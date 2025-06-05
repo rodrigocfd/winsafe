@@ -95,13 +95,15 @@ where
 	let mut info_ret = info;
 
 	if {
-		ffi::BroadcastSystemMessageW(
-			flags.raw(),
-			info_ret.as_mut(),
-			wm_any.msg_id.raw(),
-			wm_any.wparam,
-			wm_any.lparam,
-		)
+		unsafe {
+			ffi::BroadcastSystemMessageW(
+				flags.raw(),
+				info_ret.as_mut(),
+				wm_any.msg_id.raw(),
+				wm_any.wparam,
+				wm_any.lparam,
+			)
+		}
 	} > 0
 	{
 		Ok(info_ret)
@@ -211,7 +213,7 @@ pub fn CommDlgExtendedError() -> co::CDERR {
 /// This function is used internally in window loops. Avoid using it in other
 /// situations.
 pub unsafe fn DispatchMessage(msg: &MSG) -> isize {
-	ffi::DispatchMessageW(pcvoid(msg))
+	unsafe { ffi::DispatchMessageW(pcvoid(msg)) }
 }
 
 /// [`EndMenu`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-endmenu)
@@ -753,12 +755,9 @@ where
 {
 	let mut msg = msg;
 	let wm_any = msg.as_generic_wm();
-	bool_to_sysresult(ffi::PostThreadMessageW(
-		thread_id,
-		wm_any.msg_id.raw(),
-		wm_any.wparam,
-		wm_any.lparam,
-	))
+	bool_to_sysresult(unsafe {
+		ffi::PostThreadMessageW(thread_id, wm_any.msg_id.raw(), wm_any.wparam, wm_any.lparam)
+	})
 }
 
 /// [`PtInRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-ptinrect)
@@ -960,12 +959,9 @@ pub unsafe fn SystemParametersInfo<T>(
 	pv_param: &mut T,
 	win_ini: co::SPIF,
 ) -> SysResult<()> {
-	bool_to_sysresult(ffi::SystemParametersInfoW(
-		action.raw(),
-		ui_param,
-		pvoid(pv_param),
-		win_ini.raw(),
-	))
+	bool_to_sysresult(unsafe {
+		ffi::SystemParametersInfoW(action.raw(), ui_param, pvoid(pv_param), win_ini.raw())
+	})
 }
 
 /// [`TrackMouseEvent`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-trackmouseevent)

@@ -86,7 +86,7 @@ pub trait ole_IUnknown: Clone {
 	/// a null COM pointer.
 	#[must_use]
 	unsafe fn null() -> Self {
-		Self::from_ptr(std::ptr::null_mut())
+		unsafe { Self::from_ptr(std::ptr::null_mut()) }
 	}
 
 	/// Returns the pointer to the underlying COM virtual table and sets the

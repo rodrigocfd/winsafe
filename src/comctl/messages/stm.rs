@@ -14,7 +14,7 @@ impl MsgSend for GetIcon {
 	type RetType = SysResult<HICON>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|p| HICON::from_ptr(p as _))
+		zero_as_badargs(v).map(|p| unsafe { HICON::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -38,12 +38,14 @@ impl MsgSend for GetImage {
 	type RetType = SysResult<BmpIconCurMeta>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		match self.img_type {
-			co::IMAGE_TYPE::BITMAP => Ok(BmpIconCurMeta::Bmp(HBITMAP::from_ptr(v as _))),
-			co::IMAGE_TYPE::ICON => Ok(BmpIconCurMeta::Icon(HICON::from_ptr(v as _))),
-			co::IMAGE_TYPE::CURSOR => Ok(BmpIconCurMeta::Cur(HCURSOR::from_ptr(v as _))),
-			co::IMAGE_TYPE::ENHMETAFILE => Ok(BmpIconCurMeta::Meta(HDC::from_ptr(v as _))),
-			_ => Err(co::ERROR::BAD_ARGUMENTS),
+		unsafe {
+			match self.img_type {
+				co::IMAGE_TYPE::BITMAP => Ok(BmpIconCurMeta::Bmp(HBITMAP::from_ptr(v as _))),
+				co::IMAGE_TYPE::ICON => Ok(BmpIconCurMeta::Icon(HICON::from_ptr(v as _))),
+				co::IMAGE_TYPE::CURSOR => Ok(BmpIconCurMeta::Cur(HCURSOR::from_ptr(v as _))),
+				co::IMAGE_TYPE::ENHMETAFILE => Ok(BmpIconCurMeta::Meta(HDC::from_ptr(v as _))),
+				_ => Err(co::ERROR::BAD_ARGUMENTS),
+			}
 		}
 	}
 
@@ -68,7 +70,7 @@ impl<'a> MsgSend for SetIcon<'a> {
 	type RetType = SysResult<HICON>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|p| HICON::from_ptr(p as _))
+		zero_as_badargs(v).map(|p| unsafe { HICON::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -95,11 +97,13 @@ impl MsgSend for SetImage {
 		if v == 0 {
 			Err(co::ERROR::BAD_ARGUMENTS)
 		} else {
-			match self.image {
-				BmpIconCurMeta::Bmp(_) => Ok(BmpIconCurMeta::Bmp(HBITMAP::from_ptr(v as _))),
-				BmpIconCurMeta::Icon(_) => Ok(BmpIconCurMeta::Icon(HICON::from_ptr(v as _))),
-				BmpIconCurMeta::Cur(_) => Ok(BmpIconCurMeta::Cur(HCURSOR::from_ptr(v as _))),
-				BmpIconCurMeta::Meta(_) => Ok(BmpIconCurMeta::Meta(HDC::from_ptr(v as _))),
+			unsafe {
+				match self.image {
+					BmpIconCurMeta::Bmp(_) => Ok(BmpIconCurMeta::Bmp(HBITMAP::from_ptr(v as _))),
+					BmpIconCurMeta::Icon(_) => Ok(BmpIconCurMeta::Icon(HICON::from_ptr(v as _))),
+					BmpIconCurMeta::Cur(_) => Ok(BmpIconCurMeta::Cur(HCURSOR::from_ptr(v as _))),
+					BmpIconCurMeta::Meta(_) => Ok(BmpIconCurMeta::Meta(HDC::from_ptr(v as _))),
+				}
 			}
 		}
 	}

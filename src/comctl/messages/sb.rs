@@ -42,7 +42,7 @@ impl MsgSend for GetIcon {
 	type RetType = SysResult<HICON>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|p| HICON::from_ptr(p as _))
+		zero_as_badargs(v).map(|p| unsafe { HICON::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -119,7 +119,7 @@ impl<'a> MsgSend for GetText<'a> {
 	type RetType = (u16, co::SBT);
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		(LOWORD(v as _), co::SBT::from_raw(HIWORD(v as _)))
+		(LOWORD(v as _), unsafe { co::SBT::from_raw(HIWORD(v as _)) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -143,7 +143,7 @@ impl MsgSend for GetTextLength {
 	type RetType = (u16, co::SBT);
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		(LOWORD(v as _), co::SBT::from_raw(HIWORD(v as _)))
+		(LOWORD(v as _), unsafe { co::SBT::from_raw(HIWORD(v as _)) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -238,7 +238,7 @@ impl MsgSend for SetBkColor {
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as u32 {
 			CLR_DEFAULT => None,
-			v => Some(COLORREF::from_raw(v)),
+			v => Some(unsafe { COLORREF::from_raw(v) }),
 		}
 	}
 

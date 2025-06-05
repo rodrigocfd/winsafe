@@ -69,7 +69,7 @@ impl MsgSend for GetMcColor {
 	type RetType = SysResult<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_badargs(v).map(|v| COLORREF::from_raw(v as _))
+		minus1_as_badargs(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -91,7 +91,7 @@ impl MsgSend for GetMcStyle {
 	type RetType = SysResult<co::MCS>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|v| co::MCS::from_raw(v as _))
+		zero_as_badargs(v).map(|v| unsafe { co::MCS::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -113,7 +113,7 @@ impl MsgSend for GetMonthCal {
 	type RetType = SysResult<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|p| HWND::from_ptr(p as _))
+		zero_as_badargs(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -137,7 +137,7 @@ impl<'a> MsgSend for GetRange<'a> {
 	type RetType = co::GDTR;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		co::GDTR::from_raw(v as _)
+		unsafe { co::GDTR::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -215,7 +215,7 @@ impl MsgSend for SetMcColor {
 	type RetType = SysResult<COLORREF>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		minus1_as_badargs(v).map(|v| COLORREF::from_raw(v as _))
+		minus1_as_badargs(v).map(|v| unsafe { COLORREF::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -239,7 +239,7 @@ impl MsgSend for SetMcStyle {
 	type RetType = SysResult<co::MCS>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_badargs(v).map(|v| co::MCS::from_raw(v as _))
+		zero_as_badargs(v).map(|v| unsafe { co::MCS::from_raw(v as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

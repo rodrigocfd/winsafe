@@ -177,7 +177,9 @@ impl LocalFreeSidGuard {
 	/// [`SID`](crate::SID) memory block.
 	#[must_use]
 	pub const unsafe fn new(pmem: HLOCAL) -> Self {
-		Self { pmem: LocalFreeGuard::new(pmem) }
+		Self {
+			pmem: unsafe { LocalFreeGuard::new(pmem) },
+		}
 	}
 }
 

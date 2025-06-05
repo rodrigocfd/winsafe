@@ -217,7 +217,9 @@ pub fn PathUnquoteSpaces(str_path: &str) -> String {
 /// The `pv` type varies according to `uFlags`. If you set it wrong, you're
 /// likely to cause a buffer overrun.
 pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
-	ffi::SHAddToRecentDocs(flags.raw(), pcvoid(pv));
+	unsafe {
+		ffi::SHAddToRecentDocs(flags.raw(), pcvoid(pv));
+	}
 }
 
 /// [`SHCreateItemFromIDList`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromidlist)
@@ -353,11 +355,7 @@ where
 #[must_use]
 pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
 	let p = unsafe { ffi::SHCreateMemStream(vec_ptr(src), src.len() as _) };
-	if p.is_null() {
-		Err(co::HRESULT::E_OUTOFMEMORY)
-	} else {
-		Ok(unsafe { IStream::from_ptr(p) })
-	}
+	if p.is_null() { Err(co::HRESULT::E_OUTOFMEMORY) } else { Ok(unsafe { IStream::from_ptr(p) }) }
 }
 
 /// [`SHGetIDListFromObject`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shgetidlistfromobject)

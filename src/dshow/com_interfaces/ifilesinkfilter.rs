@@ -58,13 +58,11 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 	#[must_use]
 	unsafe fn GetCurFile(&self, mt: Option<&mut AM_MEDIA_TYPE>) -> HrResult<String> {
 		let mut pstr = std::ptr::null_mut::<u16>();
-		ok_to_hrresult((vt::<IFileSinkFilterVT>(self).GetCurFile)(
-			self.ptr(),
-			&mut pstr,
-			pvoid_or_null(mt),
-		))
+		ok_to_hrresult(unsafe {
+			(vt::<IFileSinkFilterVT>(self).GetCurFile)(self.ptr(), &mut pstr, pvoid_or_null(mt))
+		})
 		.map(|_| {
-			let name = WString::from_wchars_nullt(pstr);
+			let name = unsafe { WString::from_wchars_nullt(pstr) };
 			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
 			name.to_string()
 		})

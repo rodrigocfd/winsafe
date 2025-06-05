@@ -61,7 +61,7 @@ impl MsgSend for GetBuddy {
 	type RetType = Option<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HWND::from_ptr(p as _))
+		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -251,7 +251,7 @@ impl<'a> MsgSend for SetBuddy<'a> {
 	type RetType = Option<HWND>;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		zero_as_none(v).map(|p| HWND::from_ptr(p as _))
+		zero_as_none(v).map(|p| unsafe { HWND::from_ptr(p as _) })
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {

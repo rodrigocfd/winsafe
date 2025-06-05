@@ -84,33 +84,33 @@ impl RegistryValue {
 				if buf.len() != std::mem::size_of::<u32>() {
 					Err(co::ERROR::INVALID_DATA) // validate buf size
 				} else {
-					Ok(RegistryValue::Dword(u32::from_ne_bytes(*std::mem::transmute::<
-						_,
-						*const [u8; 4],
-					>(buf.as_ptr()))))
+					Ok(RegistryValue::Dword(u32::from_ne_bytes(unsafe {
+						*std::mem::transmute::<_, *const [u8; 4]>(buf.as_ptr())
+					})))
 				}
 			},
 			co::REG::QWORD => {
 				if buf.len() != std::mem::size_of::<u64>() {
 					Err(co::ERROR::INVALID_DATA) // validate buf size
 				} else {
-					Ok(RegistryValue::Qword(u64::from_ne_bytes(*std::mem::transmute::<
-						_,
-						*const [u8; 8],
-					>(buf.as_ptr()))))
+					Ok(RegistryValue::Qword(u64::from_ne_bytes(unsafe {
+						*std::mem::transmute::<_, *const [u8; 8]>(buf.as_ptr())
+					})))
 				}
 			},
 			co::REG::SZ => {
-				let (_, vec16, _) = buf.align_to::<u16>();
+				let (_, vec16, _) = unsafe { buf.align_to::<u16>() };
 				Ok(RegistryValue::Sz(WString::from_wchars_slice(&vec16).to_string()))
 			},
 			co::REG::EXPAND_SZ => {
-				let (_, vec16, _) = buf.align_to::<u16>();
+				let (_, vec16, _) = unsafe { buf.align_to::<u16>() };
 				Ok(RegistryValue::ExpandSz(WString::from_wchars_slice(&vec16).to_string()))
 			},
 			co::REG::MULTI_SZ => {
-				let (_, vec16, _) = buf.align_to::<u16>();
-				Ok(RegistryValue::MultiSz(parse_multi_z_str(vec16.as_ptr(), Some(vec16.len()))))
+				let (_, vec16, _) = unsafe { buf.align_to::<u16>() };
+				Ok(RegistryValue::MultiSz(unsafe {
+					parse_multi_z_str(vec16.as_ptr(), Some(vec16.len()))
+				}))
 			},
 			co::REG::NONE => Ok(RegistryValue::None),
 			_ => Err(co::ERROR::CALL_NOT_IMPLEMENTED), // other types not implemented yet
@@ -203,7 +203,7 @@ impl<'a> SvcCtl<'a> {
 		event_type: u32,
 		event_data: *mut std::ffi::c_void,
 	) -> Self {
-		match co::SERVICE_CONTROL::from_raw(control) {
+		match unsafe { co::SERVICE_CONTROL::from_raw(control) } {
 			co::SERVICE_CONTROL::CONTINUE => Self::Continue,
 			co::SERVICE_CONTROL::INTERROGATE => Self::Interrogate,
 			co::SERVICE_CONTROL::NETBINDADD => Self::NetBindAdd,
@@ -216,21 +216,24 @@ impl<'a> SvcCtl<'a> {
 			co::SERVICE_CONTROL::SHUTDOWN => Self::Shutdown,
 			co::SERVICE_CONTROL::STOP => Self::Stop,
 
-			co::SERVICE_CONTROL::DEVICEEVENT => Self::DeviceEvent(
-				co::DBT::from_raw(event_type as _),
-				SvcCtlDeviceEvent::from_raw(&*(event_data as *const _)),
-			),
-			co::SERVICE_CONTROL::HARDWAREPROFILECHANGE => {
-				Self::HardwareProfileChange(co::DBT::from_raw(event_type as _))
+			co::SERVICE_CONTROL::DEVICEEVENT => unsafe {
+				Self::DeviceEvent(
+					co::DBT::from_raw(event_type as _),
+					SvcCtlDeviceEvent::from_raw(&*(event_data as *const _)),
+				)
 			},
-			co::SERVICE_CONTROL::POWEREVENT => Self::PowerEvent(SvcCtlPowerEvent::from_raw(
-				co::PBT::from_raw(event_type),
-				event_data,
-			)),
-			co::SERVICE_CONTROL::SESSIONCHANGE => {
+			co::SERVICE_CONTROL::HARDWAREPROFILECHANGE => {
+				Self::HardwareProfileChange(unsafe { co::DBT::from_raw(event_type as _) })
+			},
+			co::SERVICE_CONTROL::POWEREVENT => Self::PowerEvent(unsafe {
+				SvcCtlPowerEvent::from_raw(co::PBT::from_raw(event_type), event_data)
+			}),
+			co::SERVICE_CONTROL::SESSIONCHANGE => unsafe {
 				Self::SessionChange(co::WTS::from_raw(event_type as _), &*(event_data as *const _))
 			},
-			co::SERVICE_CONTROL::TIMECHANGE => Self::TimeChange(&*(event_data as *const _)),
+			co::SERVICE_CONTROL::TIMECHANGE => {
+				Self::TimeChange(unsafe { &*(event_data as *const _) })
+			},
 			co::SERVICE_CONTROL::TRIGGEREVENT => Self::TriggerEvent,
 			co::SERVICE_CONTROL::USERMODEREBOOT => Self::UserModeReboot,
 
@@ -263,13 +266,15 @@ impl<'a> SvcCtlDeviceEvent<'a> {
 	#[must_use]
 	pub unsafe fn from_raw(event_data: &DEV_BROADCAST_HDR) -> Self {
 		let ptr = event_data as *const DEV_BROADCAST_HDR;
-		match event_data.dbch_devicetype {
-			co::DBT_DEVTYP::DEVICEINTERFACE => Self::Interface(&*(ptr as *const _)),
-			co::DBT_DEVTYP::HANDLE => Self::Handle(&*(ptr as *const _)),
-			co::DBT_DEVTYP::OEM => Self::Oem(&*(ptr as *const _)),
-			co::DBT_DEVTYP::PORT => Self::Port(&*(ptr as *const _)),
-			co::DBT_DEVTYP::VOLUME => Self::Volume(&*(ptr as *const _)),
-			_ => panic!("Invalid co::DBT_DEVTYP."),
+		unsafe {
+			match event_data.dbch_devicetype {
+				co::DBT_DEVTYP::DEVICEINTERFACE => Self::Interface(&*(ptr as *const _)),
+				co::DBT_DEVTYP::HANDLE => Self::Handle(&*(ptr as *const _)),
+				co::DBT_DEVTYP::OEM => Self::Oem(&*(ptr as *const _)),
+				co::DBT_DEVTYP::PORT => Self::Port(&*(ptr as *const _)),
+				co::DBT_DEVTYP::VOLUME => Self::Volume(&*(ptr as *const _)),
+				_ => panic!("Invalid co::DBT_DEVTYP."),
+			}
 		}
 	}
 }
@@ -302,7 +307,9 @@ impl<'a> SvcCtlPowerEvent<'a> {
 			co::PBT::APMRESUMEAUTOMATIC => Self::ResumeAutomatic,
 			co::PBT::APMRESUMESUSPEND => Self::ResumeSuspend,
 			co::PBT::APMSUSPEND => Self::Suspend,
-			co::PBT::POWERSETTINGCHANGE => Self::PowerSettingChange(&*(event_data as *const _)),
+			co::PBT::POWERSETTINGCHANGE => {
+				Self::PowerSettingChange(unsafe { &*(event_data as *const _) })
+			},
 			_ => panic!("Invalid co::PBT."),
 		}
 	}

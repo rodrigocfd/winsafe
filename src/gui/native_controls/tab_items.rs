@@ -34,14 +34,13 @@ impl<'a> TabItems<'a> {
 		tci.mask = co::TCIF::TEXT;
 		tci.set_pszText(Some(&mut wtitle));
 
-		let idx = self
-			.owner
-			.hwnd()
-			.SendMessage(tcm::InsertItem {
+		let idx = unsafe {
+			self.owner.hwnd().SendMessage(tcm::InsertItem {
 				index: 0x0fff_ffff, // insert as the last item
 				item: &tci,
 			})
-			.unwrap();
+		}
+		.unwrap();
 		self.get(idx)
 	}
 
@@ -60,7 +59,7 @@ impl<'a> TabItems<'a> {
 	/// If you delete a tab automatically created, which has a container window
 	/// attached to it, the rendering will be out-of-order.
 	pub unsafe fn delete_all(&self) -> SysResult<()> {
-		self.owner.hwnd().SendMessage(tcm::DeleteAllItems {})
+		unsafe { self.owner.hwnd().SendMessage(tcm::DeleteAllItems {}) }
 	}
 
 	/// Retrieves the item at the given zero-based position.

@@ -125,7 +125,9 @@ impl WString {
 	/// lost, possibly reading an invalid memory location.
 	#[must_use]
 	pub unsafe fn from_wchars_nullt(src: *const u16) -> Self {
-		Self { buf: Buffer::from_wchars_nullt(src) }
+		Self {
+			buf: unsafe { Buffer::from_wchars_nullt(src) },
+		}
 	}
 
 	/// Stores an UTF-16 null-terminated string by copying from a slice.
@@ -165,7 +167,7 @@ impl WString {
 	/// Be sure to alloc enough room, otherwise a buffer overrun may occur.
 	#[must_use]
 	pub unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
-		self.buf.as_mut_ptr()
+		unsafe { self.buf.as_mut_ptr() }
 	}
 
 	/// Returns a mutable slice to the internal UTF-16 string buffer.

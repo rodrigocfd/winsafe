@@ -404,7 +404,7 @@ impl MsgSend for GetLocale {
 	type RetType = LCID;
 
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
-		LCID::from_raw(v as _)
+		unsafe { LCID::from_raw(v as _) }
 	}
 
 	fn as_generic_wm(&mut self) -> WndMsg {
@@ -978,7 +978,7 @@ impl MsgSend for SetLocale {
 	unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 		match v as i32 {
 			LB_ERR => Err(co::ERROR::BAD_ARGUMENTS),
-			lcid => Ok(LCID::from_raw(lcid as _)),
+			lcid => Ok(unsafe { LCID::from_raw(lcid as _) }),
 		}
 	}
 
