@@ -251,7 +251,7 @@
 <a href=#251 id=251 data-nosnippet>251</a>			co::TDN::EXPANDO_BUTTON_CLICKED =&gt; <span class="self">Self</span>::ExpandoButtonClicked(wp != <span class="number">0</span>),
 <a href=#252 id=252 data-nosnippet>252</a>			co::TDN::HELP =&gt; <span class="self">Self</span>::Help,
 <a href=#253 id=253 data-nosnippet>253</a>			co::TDN::HYPERLINK_CLICKED =&gt; {
-<a href=#254 id=254 data-nosnippet>254</a>				<span class="self">Self</span>::HyperlinkClicked(WString::from_wchars_nullt(lp <span class="kw">as _</span>).to_string())
+<a href=#254 id=254 data-nosnippet>254</a>				<span class="self">Self</span>::HyperlinkClicked(<span class="kw">unsafe </span>{ WString::from_wchars_nullt(lp <span class="kw">as _</span>) }.to_string())
 <a href=#255 id=255 data-nosnippet>255</a>			},
 <a href=#256 id=256 data-nosnippet>256</a>			co::TDN::NAVIGATED =&gt; <span class="self">Self</span>::Navigated,
 <a href=#257 id=257 data-nosnippet>257</a>			co::TDN::RADIO_BUTTON_CLICKED =&gt; <span class="self">Self</span>::RadioButtonClicked(wp <span class="kw">as _</span>),

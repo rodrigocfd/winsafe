@@ -61,7 +61,7 @@
 <a href=#61 id=61 data-nosnippet>61</a>	/// `raw_copy` is an escape hatch to fill this gap.
 <a href=#62 id=62 data-nosnippet>62</a>	</span><span class="attr">#[must_use]
 <a href=#63 id=63 data-nosnippet>63</a>	</span><span class="kw">unsafe fn </span>raw_copy(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="self">Self </span>{
-<a href=#64 id=64 data-nosnippet>64</a>		<span class="self">Self</span>::from_ptr(<span class="self">self</span>.ptr())
+<a href=#64 id=64 data-nosnippet>64</a>		<span class="kw">unsafe </span>{ <span class="self">Self</span>::from_ptr(<span class="self">self</span>.ptr()) }
 <a href=#65 id=65 data-nosnippet>65</a>	}
 <a href=#66 id=66 data-nosnippet>66</a>
 <a href=#67 id=67 data-nosnippet>67</a>	<span class="doccomment">/// Returns a mutable reference to the underlying raw pointer.
@@ -105,46 +105,42 @@
 <a href=#105 id=105 data-nosnippet>105</a>	/// ```
 <a href=#106 id=106 data-nosnippet>106</a>	</span><span class="attr">#[must_use]
 <a href=#107 id=107 data-nosnippet>107</a>	</span><span class="kw">fn </span>as_opt(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="self">Self</span>&gt; {
-<a href=#108 id=108 data-nosnippet>108</a>		<span class="kw">if </span><span class="kw-2">*</span><span class="self">self </span>== <span class="self">Self</span>::NULL || <span class="kw-2">*</span><span class="self">self </span>== <span class="self">Self</span>::INVALID {
-<a href=#109 id=109 data-nosnippet>109</a>			<span class="prelude-val">None
-<a href=#110 id=110 data-nosnippet>110</a>		</span>} <span class="kw">else </span>{
-<a href=#111 id=111 data-nosnippet>111</a>			<span class="prelude-val">Some</span>(<span class="self">self</span>)
-<a href=#112 id=112 data-nosnippet>112</a>		}
-<a href=#113 id=113 data-nosnippet>113</a>	}
-<a href=#114 id=114 data-nosnippet>114</a>}
-<a href=#115 id=115 data-nosnippet>115</a>
-<a href=#116 id=116 data-nosnippet>116</a><span class="doccomment">/// A system error which can be formatted with
-<a href=#117 id=117 data-nosnippet>117</a>/// [`FormatMessage`](crate::FormatMessage), exhibiting a description string
-<a href=#118 id=118 data-nosnippet>118</a>/// provided by the OS.
-<a href=#119 id=119 data-nosnippet>119</a></span><span class="kw">pub trait </span>SystemError: Into&lt;u32&gt; {
-<a href=#120 id=120 data-nosnippet>120</a>	<span class="doccomment">/// Returns the textual description of the system error, by calling
-<a href=#121 id=121 data-nosnippet>121</a>	/// [`FormatMessage`](crate::FormatMessage).
-<a href=#122 id=122 data-nosnippet>122</a>	/// function.
-<a href=#123 id=123 data-nosnippet>123</a>	</span><span class="attr">#[must_use]
-<a href=#124 id=124 data-nosnippet>124</a>	</span><span class="kw">fn </span>FormatMessage(<span class="self">self</span>) -&gt; String {
-<a href=#125 id=125 data-nosnippet>125</a>		<span class="kw">let </span>err_code: u32 = <span class="self">self</span>.into();
-<a href=#126 id=126 data-nosnippet>126</a>		<span class="kw">match unsafe </span>{
-<a href=#127 id=127 data-nosnippet>127</a>			FormatMessage(
-<a href=#128 id=128 data-nosnippet>128</a>				co::FORMAT_MESSAGE::ALLOCATE_BUFFER
-<a href=#129 id=129 data-nosnippet>129</a>					| co::FORMAT_MESSAGE::FROM_SYSTEM
-<a href=#130 id=130 data-nosnippet>130</a>					| co::FORMAT_MESSAGE::IGNORE_INSERTS,
-<a href=#131 id=131 data-nosnippet>131</a>				<span class="prelude-val">None</span>,
-<a href=#132 id=132 data-nosnippet>132</a>				err_code,
-<a href=#133 id=133 data-nosnippet>133</a>				LANGID::USER_DEFAULT,
-<a href=#134 id=134 data-nosnippet>134</a>				<span class="prelude-val">None</span>,
-<a href=#135 id=135 data-nosnippet>135</a>			)
-<a href=#136 id=136 data-nosnippet>136</a>		} {
-<a href=#137 id=137 data-nosnippet>137</a>			<span class="comment">// This function never fails, return an informational text about the formatting error.
-<a href=#138 id=138 data-nosnippet>138</a>			</span><span class="prelude-val">Err</span>(e) =&gt; <span class="kw">match </span>e {
-<a href=#139 id=139 data-nosnippet>139</a>				co::ERROR::MR_MID_NOT_FOUND =&gt; {
-<a href=#140 id=140 data-nosnippet>140</a>					<span class="string">"(The system cannot format this message error.)"</span>.to_owned()
-<a href=#141 id=141 data-nosnippet>141</a>				},
-<a href=#142 id=142 data-nosnippet>142</a>				e =&gt; <span class="macro">format!</span>(
-<a href=#143 id=143 data-nosnippet>143</a>					<span class="string">"The system failed to format error {:#06x} with error {:#06x}."</span>,
-<a href=#144 id=144 data-nosnippet>144</a>					err_code, e
-<a href=#145 id=145 data-nosnippet>145</a>				),
-<a href=#146 id=146 data-nosnippet>146</a>			},
-<a href=#147 id=147 data-nosnippet>147</a>			<span class="prelude-val">Ok</span>(s) =&gt; s,
-<a href=#148 id=148 data-nosnippet>148</a>		}
-<a href=#149 id=149 data-nosnippet>149</a>	}
-<a href=#150 id=150 data-nosnippet>150</a>}</code></pre></div></section></main></body></html>
+<a href=#108 id=108 data-nosnippet>108</a>		<span class="kw">if </span><span class="kw-2">*</span><span class="self">self </span>== <span class="self">Self</span>::NULL || <span class="kw-2">*</span><span class="self">self </span>== <span class="self">Self</span>::INVALID { <span class="prelude-val">None </span>} <span class="kw">else </span>{ <span class="prelude-val">Some</span>(<span class="self">self</span>) }
+<a href=#109 id=109 data-nosnippet>109</a>	}
+<a href=#110 id=110 data-nosnippet>110</a>}
+<a href=#111 id=111 data-nosnippet>111</a>
+<a href=#112 id=112 data-nosnippet>112</a><span class="doccomment">/// A system error which can be formatted with
+<a href=#113 id=113 data-nosnippet>113</a>/// [`FormatMessage`](crate::FormatMessage), exhibiting a description string
+<a href=#114 id=114 data-nosnippet>114</a>/// provided by the OS.
+<a href=#115 id=115 data-nosnippet>115</a></span><span class="kw">pub trait </span>SystemError: Into&lt;u32&gt; {
+<a href=#116 id=116 data-nosnippet>116</a>	<span class="doccomment">/// Returns the textual description of the system error, by calling
+<a href=#117 id=117 data-nosnippet>117</a>	/// [`FormatMessage`](crate::FormatMessage).
+<a href=#118 id=118 data-nosnippet>118</a>	/// function.
+<a href=#119 id=119 data-nosnippet>119</a>	</span><span class="attr">#[must_use]
+<a href=#120 id=120 data-nosnippet>120</a>	</span><span class="kw">fn </span>FormatMessage(<span class="self">self</span>) -&gt; String {
+<a href=#121 id=121 data-nosnippet>121</a>		<span class="kw">let </span>err_code: u32 = <span class="self">self</span>.into();
+<a href=#122 id=122 data-nosnippet>122</a>		<span class="kw">match unsafe </span>{
+<a href=#123 id=123 data-nosnippet>123</a>			FormatMessage(
+<a href=#124 id=124 data-nosnippet>124</a>				co::FORMAT_MESSAGE::ALLOCATE_BUFFER
+<a href=#125 id=125 data-nosnippet>125</a>					| co::FORMAT_MESSAGE::FROM_SYSTEM
+<a href=#126 id=126 data-nosnippet>126</a>					| co::FORMAT_MESSAGE::IGNORE_INSERTS,
+<a href=#127 id=127 data-nosnippet>127</a>				<span class="prelude-val">None</span>,
+<a href=#128 id=128 data-nosnippet>128</a>				err_code,
+<a href=#129 id=129 data-nosnippet>129</a>				LANGID::USER_DEFAULT,
+<a href=#130 id=130 data-nosnippet>130</a>				<span class="prelude-val">None</span>,
+<a href=#131 id=131 data-nosnippet>131</a>			)
+<a href=#132 id=132 data-nosnippet>132</a>		} {
+<a href=#133 id=133 data-nosnippet>133</a>			<span class="comment">// This function never fails, return an informational text about the formatting error.
+<a href=#134 id=134 data-nosnippet>134</a>			</span><span class="prelude-val">Err</span>(e) =&gt; <span class="kw">match </span>e {
+<a href=#135 id=135 data-nosnippet>135</a>				co::ERROR::MR_MID_NOT_FOUND =&gt; {
+<a href=#136 id=136 data-nosnippet>136</a>					<span class="string">"(The system cannot format this message error.)"</span>.to_owned()
+<a href=#137 id=137 data-nosnippet>137</a>				},
+<a href=#138 id=138 data-nosnippet>138</a>				e =&gt; <span class="macro">format!</span>(
+<a href=#139 id=139 data-nosnippet>139</a>					<span class="string">"The system failed to format error {:#06x} with error {:#06x}."</span>,
+<a href=#140 id=140 data-nosnippet>140</a>					err_code, e
+<a href=#141 id=141 data-nosnippet>141</a>				),
+<a href=#142 id=142 data-nosnippet>142</a>			},
+<a href=#143 id=143 data-nosnippet>143</a>			<span class="prelude-val">Ok</span>(s) =&gt; s,
+<a href=#144 id=144 data-nosnippet>144</a>		}
+<a href=#145 id=145 data-nosnippet>145</a>	}
+<a href=#146 id=146 data-nosnippet>146</a>}</code></pre></div></section></main></body></html>

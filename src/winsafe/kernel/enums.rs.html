@@ -83,7 +83,7 @@
 <a href=#83 id=83 data-nosnippet>83</a>		<span class="kw">if </span>IS_INTRESOURCE(ptr) {
 <a href=#84 id=84 data-nosnippet>84</a>			<span class="self">Self</span>::Id(ptr <span class="kw">as _</span>)
 <a href=#85 id=85 data-nosnippet>85</a>		} <span class="kw">else </span>{
-<a href=#86 id=86 data-nosnippet>86</a>			<span class="self">Self</span>::Str(WString::from_wchars_nullt(ptr))
+<a href=#86 id=86 data-nosnippet>86</a>			<span class="self">Self</span>::Str(<span class="kw">unsafe </span>{ WString::from_wchars_nullt(ptr) })
 <a href=#87 id=87 data-nosnippet>87</a>		}
 <a href=#88 id=88 data-nosnippet>88</a>	}
 <a href=#89 id=89 data-nosnippet>89</a>
@@ -178,7 +178,7 @@
 <a href=#178 id=178 data-nosnippet>178</a>		<span class="kw">if </span>IS_INTRESOURCE(ptr) {
 <a href=#179 id=179 data-nosnippet>179</a>			<span class="self">Self</span>::Rt(<span class="kw">unsafe </span>{ co::RT::from_raw(ptr <span class="kw">as _</span>) })
 <a href=#180 id=180 data-nosnippet>180</a>		} <span class="kw">else </span>{
-<a href=#181 id=181 data-nosnippet>181</a>			<span class="self">Self</span>::Str(WString::from_wchars_nullt(ptr))
+<a href=#181 id=181 data-nosnippet>181</a>			<span class="self">Self</span>::Str(<span class="kw">unsafe </span>{ WString::from_wchars_nullt(ptr) })
 <a href=#182 id=182 data-nosnippet>182</a>		}
 <a href=#183 id=183 data-nosnippet>183</a>	}
 <a href=#184 id=184 data-nosnippet>184</a>

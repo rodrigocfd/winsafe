@@ -14,7 +14,7 @@
 <a href=#14 id=14 data-nosnippet>14</a>	<span class="kw">type </span>RetType = SysResult&lt;HFONT&gt;;
 <a href=#15 id=15 data-nosnippet>15</a>
 <a href=#16 id=16 data-nosnippet>16</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#17 id=17 data-nosnippet>17</a>		zero_as_badargs(v).map(|p| HFONT::from_ptr(p <span class="kw">as _</span>))
+<a href=#17 id=17 data-nosnippet>17</a>		zero_as_badargs(v).map(|p| <span class="kw">unsafe </span>{ HFONT::from_ptr(p <span class="kw">as _</span>) })
 <a href=#18 id=18 data-nosnippet>18</a>	}
 <a href=#19 id=19 data-nosnippet>19</a>
 <a href=#20 id=20 data-nosnippet>20</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {

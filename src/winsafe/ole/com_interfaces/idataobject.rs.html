@@ -62,19 +62,17 @@
 <a href=#62 id=62 data-nosnippet>62</a>	/// The returned struct may contain pointers that need to be deallocated.
 <a href=#63 id=63 data-nosnippet>63</a>	</span><span class="kw">unsafe fn </span>GetData(<span class="kw-2">&amp;</span><span class="self">self</span>, formatetc: <span class="kw-2">&amp;</span>FORMATETC) -&gt; HrResult&lt;ReleaseStgMediumGuard&gt; {
 <a href=#64 id=64 data-nosnippet>64</a>		<span class="kw">let </span><span class="kw-2">mut </span>sm = STGMEDIUM::default();
-<a href=#65 id=65 data-nosnippet>65</a>		ok_to_hrresult((vt::&lt;IDataObjectVT&gt;(<span class="self">self</span>).GetData)(
-<a href=#66 id=66 data-nosnippet>66</a>			<span class="self">self</span>.ptr(),
-<a href=#67 id=67 data-nosnippet>67</a>			pcvoid(formatetc),
-<a href=#68 id=68 data-nosnippet>68</a>			pvoid(<span class="kw-2">&amp;mut </span>sm),
-<a href=#69 id=69 data-nosnippet>69</a>		))
-<a href=#70 id=70 data-nosnippet>70</a>		.map(|<span class="kw">_</span>| ReleaseStgMediumGuard::new(sm))
-<a href=#71 id=71 data-nosnippet>71</a>	}
-<a href=#72 id=72 data-nosnippet>72</a>
-<a href=#73 id=73 data-nosnippet>73</a>	<span class="doccomment">/// [`IDataObject::QueryGetData`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-querygetdata)
-<a href=#74 id=74 data-nosnippet>74</a>	/// method.
-<a href=#75 id=75 data-nosnippet>75</a>	</span><span class="kw">fn </span>QueryGetData(<span class="kw-2">&amp;</span><span class="self">self</span>, formatetc: <span class="kw-2">&amp;</span>FORMATETC) -&gt; HrResult&lt;()&gt; {
-<a href=#76 id=76 data-nosnippet>76</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
-<a href=#77 id=77 data-nosnippet>77</a>			(vt::&lt;IDataObjectVT&gt;(<span class="self">self</span>).QueryGetData)(<span class="self">self</span>.ptr(), pcvoid(formatetc))
-<a href=#78 id=78 data-nosnippet>78</a>		})
-<a href=#79 id=79 data-nosnippet>79</a>	}
-<a href=#80 id=80 data-nosnippet>80</a>}</code></pre></div></section></main></body></html>
+<a href=#65 id=65 data-nosnippet>65</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#66 id=66 data-nosnippet>66</a>			(vt::&lt;IDataObjectVT&gt;(<span class="self">self</span>).GetData)(<span class="self">self</span>.ptr(), pcvoid(formatetc), pvoid(<span class="kw-2">&amp;mut </span>sm))
+<a href=#67 id=67 data-nosnippet>67</a>		})
+<a href=#68 id=68 data-nosnippet>68</a>		.map(|<span class="kw">_</span>| <span class="kw">unsafe </span>{ ReleaseStgMediumGuard::new(sm) })
+<a href=#69 id=69 data-nosnippet>69</a>	}
+<a href=#70 id=70 data-nosnippet>70</a>
+<a href=#71 id=71 data-nosnippet>71</a>	<span class="doccomment">/// [`IDataObject::QueryGetData`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-idataobject-querygetdata)
+<a href=#72 id=72 data-nosnippet>72</a>	/// method.
+<a href=#73 id=73 data-nosnippet>73</a>	</span><span class="kw">fn </span>QueryGetData(<span class="kw-2">&amp;</span><span class="self">self</span>, formatetc: <span class="kw-2">&amp;</span>FORMATETC) -&gt; HrResult&lt;()&gt; {
+<a href=#74 id=74 data-nosnippet>74</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#75 id=75 data-nosnippet>75</a>			(vt::&lt;IDataObjectVT&gt;(<span class="self">self</span>).QueryGetData)(<span class="self">self</span>.ptr(), pcvoid(formatetc))
+<a href=#76 id=76 data-nosnippet>76</a>		})
+<a href=#77 id=77 data-nosnippet>77</a>	}
+<a href=#78 id=78 data-nosnippet>78</a>}</code></pre></div></section></main></body></html>

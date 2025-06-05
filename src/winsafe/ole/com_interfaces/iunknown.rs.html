@@ -86,7 +86,7 @@
 <a href=#86 id=86 data-nosnippet>86</a>	/// a null COM pointer.
 <a href=#87 id=87 data-nosnippet>87</a>	</span><span class="attr">#[must_use]
 <a href=#88 id=88 data-nosnippet>88</a>	</span><span class="kw">unsafe fn </span>null() -&gt; <span class="self">Self </span>{
-<a href=#89 id=89 data-nosnippet>89</a>		<span class="self">Self</span>::from_ptr(std::ptr::null_mut())
+<a href=#89 id=89 data-nosnippet>89</a>		<span class="kw">unsafe </span>{ <span class="self">Self</span>::from_ptr(std::ptr::null_mut()) }
 <a href=#90 id=90 data-nosnippet>90</a>	}
 <a href=#91 id=91 data-nosnippet>91</a>
 <a href=#92 id=92 data-nosnippet>92</a>	<span class="doccomment">/// Returns the pointer to the underlying COM virtual table and sets the

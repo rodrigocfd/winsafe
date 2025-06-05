@@ -404,7 +404,7 @@
 <a href=#404 id=404 data-nosnippet>404</a>	<span class="kw">type </span>RetType = LCID;
 <a href=#405 id=405 data-nosnippet>405</a>
 <a href=#406 id=406 data-nosnippet>406</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#407 id=407 data-nosnippet>407</a>		LCID::from_raw(v <span class="kw">as _</span>)
+<a href=#407 id=407 data-nosnippet>407</a>		<span class="kw">unsafe </span>{ LCID::from_raw(v <span class="kw">as _</span>) }
 <a href=#408 id=408 data-nosnippet>408</a>	}
 <a href=#409 id=409 data-nosnippet>409</a>
 <a href=#410 id=410 data-nosnippet>410</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -978,7 +978,7 @@
 <a href=#978 id=978 data-nosnippet>978</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
 <a href=#979 id=979 data-nosnippet>979</a>		<span class="kw">match </span>v <span class="kw">as </span>i32 {
 <a href=#980 id=980 data-nosnippet>980</a>			LB_ERR =&gt; <span class="prelude-val">Err</span>(co::ERROR::BAD_ARGUMENTS),
-<a href=#981 id=981 data-nosnippet>981</a>			lcid =&gt; <span class="prelude-val">Ok</span>(LCID::from_raw(lcid <span class="kw">as _</span>)),
+<a href=#981 id=981 data-nosnippet>981</a>			lcid =&gt; <span class="prelude-val">Ok</span>(<span class="kw">unsafe </span>{ LCID::from_raw(lcid <span class="kw">as _</span>) }),
 <a href=#982 id=982 data-nosnippet>982</a>		}
 <a href=#983 id=983 data-nosnippet>983</a>	}
 <a href=#984 id=984 data-nosnippet>984</a>

@@ -373,24 +373,28 @@
 <a href=#373 id=373 data-nosnippet>373</a>		/// Make sure the alignment is correct.
 <a href=#374 id=374 data-nosnippet>374</a>		</span><span class="attr">#[must_use]
 <a href=#375 id=375 data-nosnippet>375</a>		</span><span class="kw">pub const unsafe fn </span>as_slice_aligned&lt;T&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[T] {
-<a href=#376 id=376 data-nosnippet>376</a>			std::slice::from_raw_parts(<span class="self">self</span>.pmem <span class="kw">as _</span>, <span class="self">self</span>.sz / std::mem::size_of::&lt;T&gt;())
-<a href=#377 id=377 data-nosnippet>377</a>		}
-<a href=#378 id=378 data-nosnippet>378</a>
-<a href=#379 id=379 data-nosnippet>379</a>		<span class="doccomment">/// Returns a mutable slice over the allocated memory block, aligned to the
-<a href=#380 id=380 data-nosnippet>380</a>		/// given type.
-<a href=#381 id=381 data-nosnippet>381</a>		///
-<a href=#382 id=382 data-nosnippet>382</a>		/// # Safety
+<a href=#376 id=376 data-nosnippet>376</a>			<span class="kw">unsafe </span>{
+<a href=#377 id=377 data-nosnippet>377</a>				std::slice::from_raw_parts(<span class="self">self</span>.pmem <span class="kw">as _</span>, <span class="self">self</span>.sz / std::mem::size_of::&lt;T&gt;())
+<a href=#378 id=378 data-nosnippet>378</a>			}
+<a href=#379 id=379 data-nosnippet>379</a>		}
+<a href=#380 id=380 data-nosnippet>380</a>
+<a href=#381 id=381 data-nosnippet>381</a>		<span class="doccomment">/// Returns a mutable slice over the allocated memory block, aligned to the
+<a href=#382 id=382 data-nosnippet>382</a>		/// given type.
 <a href=#383 id=383 data-nosnippet>383</a>		///
-<a href=#384 id=384 data-nosnippet>384</a>		/// Make sure the alignment is correct.
-<a href=#385 id=385 data-nosnippet>385</a>		</span><span class="attr">#[must_use]
-<a href=#386 id=386 data-nosnippet>386</a>		</span><span class="kw">pub const unsafe fn </span>as_mut_slice_aligned&lt;T&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
-<a href=#387 id=387 data-nosnippet>387</a>			std::slice::from_raw_parts_mut(<span class="self">self</span>.pmem <span class="kw">as _</span>, <span class="self">self</span>.sz / std::mem::size_of::&lt;T&gt;())
-<a href=#388 id=388 data-nosnippet>388</a>		}
-<a href=#389 id=389 data-nosnippet>389</a>
-<a href=#390 id=390 data-nosnippet>390</a>		<span class="doccomment">/// Returns the size of the allocated memory block.
-<a href=#391 id=391 data-nosnippet>391</a>		</span><span class="attr">#[must_use]
-<a href=#392 id=392 data-nosnippet>392</a>		</span><span class="kw">pub const fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
-<a href=#393 id=393 data-nosnippet>393</a>			<span class="self">self</span>.sz
-<a href=#394 id=394 data-nosnippet>394</a>		}
-<a href=#395 id=395 data-nosnippet>395</a>	};
-<a href=#396 id=396 data-nosnippet>396</a>}</code></pre></div></section></main></body></html>
+<a href=#384 id=384 data-nosnippet>384</a>		/// # Safety
+<a href=#385 id=385 data-nosnippet>385</a>		///
+<a href=#386 id=386 data-nosnippet>386</a>		/// Make sure the alignment is correct.
+<a href=#387 id=387 data-nosnippet>387</a>		</span><span class="attr">#[must_use]
+<a href=#388 id=388 data-nosnippet>388</a>		</span><span class="kw">pub const unsafe fn </span>as_mut_slice_aligned&lt;T&gt;(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[T] {
+<a href=#389 id=389 data-nosnippet>389</a>			<span class="kw">unsafe </span>{
+<a href=#390 id=390 data-nosnippet>390</a>				std::slice::from_raw_parts_mut(<span class="self">self</span>.pmem <span class="kw">as _</span>, <span class="self">self</span>.sz / std::mem::size_of::&lt;T&gt;())
+<a href=#391 id=391 data-nosnippet>391</a>			}
+<a href=#392 id=392 data-nosnippet>392</a>		}
+<a href=#393 id=393 data-nosnippet>393</a>
+<a href=#394 id=394 data-nosnippet>394</a>		<span class="doccomment">/// Returns the size of the allocated memory block.
+<a href=#395 id=395 data-nosnippet>395</a>		</span><span class="attr">#[must_use]
+<a href=#396 id=396 data-nosnippet>396</a>		</span><span class="kw">pub const fn </span>len(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; usize {
+<a href=#397 id=397 data-nosnippet>397</a>			<span class="self">self</span>.sz
+<a href=#398 id=398 data-nosnippet>398</a>		}
+<a href=#399 id=399 data-nosnippet>399</a>	};
+<a href=#400 id=400 data-nosnippet>400</a>}</code></pre></div></section></main></body></html>

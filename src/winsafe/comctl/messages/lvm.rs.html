@@ -76,7 +76,7 @@
 <a href=#76 id=76 data-nosnippet>76</a>	<span class="kw">type </span>RetType = SysResult&lt;HIMAGELIST&gt;;
 <a href=#77 id=77 data-nosnippet>77</a>
 <a href=#78 id=78 data-nosnippet>78</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#79 id=79 data-nosnippet>79</a>		zero_as_badargs(v).map(|p| HIMAGELIST::from_ptr(p <span class="kw">as _</span>))
+<a href=#79 id=79 data-nosnippet>79</a>		zero_as_badargs(v).map(|p| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(p <span class="kw">as _</span>) })
 <a href=#80 id=80 data-nosnippet>80</a>	}
 <a href=#81 id=81 data-nosnippet>81</a>
 <a href=#82 id=82 data-nosnippet>82</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -170,7 +170,7 @@
 <a href=#170 id=170 data-nosnippet>170</a>	<span class="kw">type </span>RetType = SysResult&lt;HWND&gt;;
 <a href=#171 id=171 data-nosnippet>171</a>
 <a href=#172 id=172 data-nosnippet>172</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#173 id=173 data-nosnippet>173</a>		zero_as_badargs(v).map(|p| HWND::from_ptr(p <span class="kw">as _</span>))
+<a href=#173 id=173 data-nosnippet>173</a>		zero_as_badargs(v).map(|p| <span class="kw">unsafe </span>{ HWND::from_ptr(p <span class="kw">as _</span>) })
 <a href=#174 id=174 data-nosnippet>174</a>	}
 <a href=#175 id=175 data-nosnippet>175</a>
 <a href=#176 id=176 data-nosnippet>176</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -266,7 +266,7 @@
 <a href=#266 id=266 data-nosnippet>266</a>	<span class="kw">type </span>RetType = COLORREF;
 <a href=#267 id=267 data-nosnippet>267</a>
 <a href=#268 id=268 data-nosnippet>268</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#269 id=269 data-nosnippet>269</a>		COLORREF::from_raw(v <span class="kw">as _</span>)
+<a href=#269 id=269 data-nosnippet>269</a>		<span class="kw">unsafe </span>{ COLORREF::from_raw(v <span class="kw">as _</span>) }
 <a href=#270 id=270 data-nosnippet>270</a>	}
 <a href=#271 id=271 data-nosnippet>271</a>
 <a href=#272 id=272 data-nosnippet>272</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -312,7 +312,7 @@
 <a href=#312 id=312 data-nosnippet>312</a>	<span class="kw">type </span>RetType = co::LVIS;
 <a href=#313 id=313 data-nosnippet>313</a>
 <a href=#314 id=314 data-nosnippet>314</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#315 id=315 data-nosnippet>315</a>		co::LVIS::from_raw(v <span class="kw">as _</span>)
+<a href=#315 id=315 data-nosnippet>315</a>		<span class="kw">unsafe </span>{ co::LVIS::from_raw(v <span class="kw">as _</span>) }
 <a href=#316 id=316 data-nosnippet>316</a>	}
 <a href=#317 id=317 data-nosnippet>317</a>
 <a href=#318 id=318 data-nosnippet>318</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -429,7 +429,7 @@
 <a href=#429 id=429 data-nosnippet>429</a>	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HWND&gt;;
 <a href=#430 id=430 data-nosnippet>430</a>
 <a href=#431 id=431 data-nosnippet>431</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#432 id=432 data-nosnippet>432</a>		zero_as_none(v).map(|p| HWND::from_ptr(p <span class="kw">as _</span>))
+<a href=#432 id=432 data-nosnippet>432</a>		zero_as_none(v).map(|p| <span class="kw">unsafe </span>{ HWND::from_ptr(p <span class="kw">as _</span>) })
 <a href=#433 id=433 data-nosnippet>433</a>	}
 <a href=#434 id=434 data-nosnippet>434</a>
 <a href=#435 id=435 data-nosnippet>435</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -475,7 +475,7 @@
 <a href=#475 id=475 data-nosnippet>475</a>	<span class="kw">type </span>RetType = co::LVS_EX;
 <a href=#476 id=476 data-nosnippet>476</a>
 <a href=#477 id=477 data-nosnippet>477</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#478 id=478 data-nosnippet>478</a>		co::LVS_EX::from_raw(v <span class="kw">as _</span>)
+<a href=#478 id=478 data-nosnippet>478</a>		<span class="kw">unsafe </span>{ co::LVS_EX::from_raw(v <span class="kw">as _</span>) }
 <a href=#479 id=479 data-nosnippet>479</a>	}
 <a href=#480 id=480 data-nosnippet>480</a>
 <a href=#481 id=481 data-nosnippet>481</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -746,7 +746,7 @@
 <a href=#746 id=746 data-nosnippet>746</a>	<span class="kw">type </span>RetType = co::LVGS;
 <a href=#747 id=747 data-nosnippet>747</a>
 <a href=#748 id=748 data-nosnippet>748</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#749 id=749 data-nosnippet>749</a>		co::LVGS::from_raw(v <span class="kw">as _</span>)
+<a href=#749 id=749 data-nosnippet>749</a>		<span class="kw">unsafe </span>{ co::LVGS::from_raw(v <span class="kw">as _</span>) }
 <a href=#750 id=750 data-nosnippet>750</a>	}
 <a href=#751 id=751 data-nosnippet>751</a>
 <a href=#752 id=752 data-nosnippet>752</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -768,7 +768,7 @@
 <a href=#768 id=768 data-nosnippet>768</a>	<span class="kw">type </span>RetType = SysResult&lt;HWND&gt;;
 <a href=#769 id=769 data-nosnippet>769</a>
 <a href=#770 id=770 data-nosnippet>770</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#771 id=771 data-nosnippet>771</a>		zero_as_badargs(v).map(|p| HWND::from_ptr(p <span class="kw">as _</span>))
+<a href=#771 id=771 data-nosnippet>771</a>		zero_as_badargs(v).map(|p| <span class="kw">unsafe </span>{ HWND::from_ptr(p <span class="kw">as _</span>) })
 <a href=#772 id=772 data-nosnippet>772</a>	}
 <a href=#773 id=773 data-nosnippet>773</a>
 <a href=#774 id=774 data-nosnippet>774</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -790,7 +790,7 @@
 <a href=#790 id=790 data-nosnippet>790</a>	<span class="kw">type </span>RetType = SysResult&lt;HCURSOR&gt;;
 <a href=#791 id=791 data-nosnippet>791</a>
 <a href=#792 id=792 data-nosnippet>792</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#793 id=793 data-nosnippet>793</a>		zero_as_badargs(v).map(|p| HCURSOR::from_ptr(p <span class="kw">as _</span>))
+<a href=#793 id=793 data-nosnippet>793</a>		zero_as_badargs(v).map(|p| <span class="kw">unsafe </span>{ HCURSOR::from_ptr(p <span class="kw">as _</span>) })
 <a href=#794 id=794 data-nosnippet>794</a>	}
 <a href=#795 id=795 data-nosnippet>795</a>
 <a href=#796 id=796 data-nosnippet>796</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -858,7 +858,7 @@
 <a href=#858 id=858 data-nosnippet>858</a>	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;;
 <a href=#859 id=859 data-nosnippet>859</a>
 <a href=#860 id=860 data-nosnippet>860</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#861 id=861 data-nosnippet>861</a>		zero_as_none(v).map(|p| HIMAGELIST::from_ptr(p <span class="kw">as _</span>))
+<a href=#861 id=861 data-nosnippet>861</a>		zero_as_none(v).map(|p| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(p <span class="kw">as _</span>) })
 <a href=#862 id=862 data-nosnippet>862</a>	}
 <a href=#863 id=863 data-nosnippet>863</a>
 <a href=#864 id=864 data-nosnippet>864</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -904,7 +904,7 @@
 <a href=#904 id=904 data-nosnippet>904</a>	<span class="kw">type </span>RetType = COLORREF;
 <a href=#905 id=905 data-nosnippet>905</a>
 <a href=#906 id=906 data-nosnippet>906</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#907 id=907 data-nosnippet>907</a>		COLORREF::from_raw(v <span class="kw">as _</span>)
+<a href=#907 id=907 data-nosnippet>907</a>		<span class="kw">unsafe </span>{ COLORREF::from_raw(v <span class="kw">as _</span>) }
 <a href=#908 id=908 data-nosnippet>908</a>	}
 <a href=#909 id=909 data-nosnippet>909</a>
 <a href=#910 id=910 data-nosnippet>910</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1133,7 +1133,7 @@
 <a href=#1133 id=1133 data-nosnippet>1133</a>	<span class="kw">type </span>RetType = co::LVIS;
 <a href=#1134 id=1134 data-nosnippet>1134</a>
 <a href=#1135 id=1135 data-nosnippet>1135</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#1136 id=1136 data-nosnippet>1136</a>		co::LVIS::from_raw(v <span class="kw">as _</span>)
+<a href=#1136 id=1136 data-nosnippet>1136</a>		<span class="kw">unsafe </span>{ co::LVIS::from_raw(v <span class="kw">as _</span>) }
 <a href=#1137 id=1137 data-nosnippet>1137</a>	}
 <a href=#1138 id=1138 data-nosnippet>1138</a>
 <a href=#1139 id=1139 data-nosnippet>1139</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1278,7 +1278,7 @@
 <a href=#1278 id=1278 data-nosnippet>1278</a>	<span class="kw">type </span>RetType = COLORREF;
 <a href=#1279 id=1279 data-nosnippet>1279</a>
 <a href=#1280 id=1280 data-nosnippet>1280</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#1281 id=1281 data-nosnippet>1281</a>		COLORREF::from_raw(v <span class="kw">as _</span>)
+<a href=#1281 id=1281 data-nosnippet>1281</a>		<span class="kw">unsafe </span>{ COLORREF::from_raw(v <span class="kw">as _</span>) }
 <a href=#1282 id=1282 data-nosnippet>1282</a>	}
 <a href=#1283 id=1283 data-nosnippet>1283</a>
 <a href=#1284 id=1284 data-nosnippet>1284</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1420,7 +1420,7 @@
 <a href=#1420 id=1420 data-nosnippet>1420</a>	<span class="kw">type </span>RetType = COLORREF;
 <a href=#1421 id=1421 data-nosnippet>1421</a>
 <a href=#1422 id=1422 data-nosnippet>1422</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#1423 id=1423 data-nosnippet>1423</a>		COLORREF::from_raw(v <span class="kw">as _</span>)
+<a href=#1423 id=1423 data-nosnippet>1423</a>		<span class="kw">unsafe </span>{ COLORREF::from_raw(v <span class="kw">as _</span>) }
 <a href=#1424 id=1424 data-nosnippet>1424</a>	}
 <a href=#1425 id=1425 data-nosnippet>1425</a>
 <a href=#1426 id=1426 data-nosnippet>1426</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1442,7 +1442,7 @@
 <a href=#1442 id=1442 data-nosnippet>1442</a>	<span class="kw">type </span>RetType = COLORREF;
 <a href=#1443 id=1443 data-nosnippet>1443</a>
 <a href=#1444 id=1444 data-nosnippet>1444</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#1445 id=1445 data-nosnippet>1445</a>		COLORREF::from_raw(v <span class="kw">as _</span>)
+<a href=#1445 id=1445 data-nosnippet>1445</a>		<span class="kw">unsafe </span>{ COLORREF::from_raw(v <span class="kw">as _</span>) }
 <a href=#1446 id=1446 data-nosnippet>1446</a>	}
 <a href=#1447 id=1447 data-nosnippet>1447</a>
 <a href=#1448 id=1448 data-nosnippet>1448</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1512,7 +1512,7 @@
 <a href=#1512 id=1512 data-nosnippet>1512</a>	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HWND&gt;;
 <a href=#1513 id=1513 data-nosnippet>1513</a>
 <a href=#1514 id=1514 data-nosnippet>1514</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#1515 id=1515 data-nosnippet>1515</a>		zero_as_none(v).map(|p| HWND::from_ptr(p <span class="kw">as _</span>))
+<a href=#1515 id=1515 data-nosnippet>1515</a>		zero_as_none(v).map(|p| <span class="kw">unsafe </span>{ HWND::from_ptr(p <span class="kw">as _</span>) })
 <a href=#1516 id=1516 data-nosnippet>1516</a>	}
 <a href=#1517 id=1517 data-nosnippet>1517</a>
 <a href=#1518 id=1518 data-nosnippet>1518</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -1581,7 +1581,7 @@
 <a href=#1581 id=1581 data-nosnippet>1581</a>	<span class="kw">type </span>RetType = co::LV_VIEW;
 <a href=#1582 id=1582 data-nosnippet>1582</a>
 <a href=#1583 id=1583 data-nosnippet>1583</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#1584 id=1584 data-nosnippet>1584</a>		co::LV_VIEW::from_raw(v <span class="kw">as _</span>)
+<a href=#1584 id=1584 data-nosnippet>1584</a>		<span class="kw">unsafe </span>{ co::LV_VIEW::from_raw(v <span class="kw">as _</span>) }
 <a href=#1585 id=1585 data-nosnippet>1585</a>	}
 <a href=#1586 id=1586 data-nosnippet>1586</a>
 <a href=#1587 id=1587 data-nosnippet>1587</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -2145,7 +2145,7 @@
 <a href=#2145 id=2145 data-nosnippet>2145</a>	<span class="kw">type </span>RetType = co::LVS_EX;
 <a href=#2146 id=2146 data-nosnippet>2146</a>
 <a href=#2147 id=2147 data-nosnippet>2147</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#2148 id=2148 data-nosnippet>2148</a>		co::LVS_EX::from_raw(v <span class="kw">as _</span>)
+<a href=#2148 id=2148 data-nosnippet>2148</a>		<span class="kw">unsafe </span>{ co::LVS_EX::from_raw(v <span class="kw">as _</span>) }
 <a href=#2149 id=2149 data-nosnippet>2149</a>	}
 <a href=#2150 id=2150 data-nosnippet>2150</a>
 <a href=#2151 id=2151 data-nosnippet>2151</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -2218,7 +2218,7 @@
 <a href=#2218 id=2218 data-nosnippet>2218</a>	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HCURSOR&gt;;
 <a href=#2219 id=2219 data-nosnippet>2219</a>
 <a href=#2220 id=2220 data-nosnippet>2220</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#2221 id=2221 data-nosnippet>2221</a>		zero_as_none(v).map(|p| HCURSOR::from_ptr(p <span class="kw">as _</span>))
+<a href=#2221 id=2221 data-nosnippet>2221</a>		zero_as_none(v).map(|p| <span class="kw">unsafe </span>{ HCURSOR::from_ptr(p <span class="kw">as _</span>) })
 <a href=#2222 id=2222 data-nosnippet>2222</a>	}
 <a href=#2223 id=2223 data-nosnippet>2223</a>
 <a href=#2224 id=2224 data-nosnippet>2224</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -2315,7 +2315,7 @@
 <a href=#2315 id=2315 data-nosnippet>2315</a>	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HIMAGELIST&gt;;
 <a href=#2316 id=2316 data-nosnippet>2316</a>
 <a href=#2317 id=2317 data-nosnippet>2317</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#2318 id=2318 data-nosnippet>2318</a>		zero_as_none(v).map(|p| HIMAGELIST::from_ptr(p <span class="kw">as _</span>))
+<a href=#2318 id=2318 data-nosnippet>2318</a>		zero_as_none(v).map(|p| <span class="kw">unsafe </span>{ HIMAGELIST::from_ptr(p <span class="kw">as _</span>) })
 <a href=#2319 id=2319 data-nosnippet>2319</a>	}
 <a href=#2320 id=2320 data-nosnippet>2320</a>
 <a href=#2321 id=2321 data-nosnippet>2321</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -2387,7 +2387,7 @@
 <a href=#2387 id=2387 data-nosnippet>2387</a>	<span class="kw">type </span>RetType = COLORREF;
 <a href=#2388 id=2388 data-nosnippet>2388</a>
 <a href=#2389 id=2389 data-nosnippet>2389</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#2390 id=2390 data-nosnippet>2390</a>		COLORREF::from_raw(v <span class="kw">as _</span>)
+<a href=#2390 id=2390 data-nosnippet>2390</a>		<span class="kw">unsafe </span>{ COLORREF::from_raw(v <span class="kw">as _</span>) }
 <a href=#2391 id=2391 data-nosnippet>2391</a>	}
 <a href=#2392 id=2392 data-nosnippet>2392</a>
 <a href=#2393 id=2393 data-nosnippet>2393</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -2585,7 +2585,7 @@
 <a href=#2585 id=2585 data-nosnippet>2585</a>	<span class="kw">type </span>RetType = COLORREF;
 <a href=#2586 id=2586 data-nosnippet>2586</a>
 <a href=#2587 id=2587 data-nosnippet>2587</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#2588 id=2588 data-nosnippet>2588</a>		COLORREF::from_raw(v <span class="kw">as _</span>)
+<a href=#2588 id=2588 data-nosnippet>2588</a>		<span class="kw">unsafe </span>{ COLORREF::from_raw(v <span class="kw">as _</span>) }
 <a href=#2589 id=2589 data-nosnippet>2589</a>	}
 <a href=#2590 id=2590 data-nosnippet>2590</a>
 <a href=#2591 id=2591 data-nosnippet>2591</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -2753,7 +2753,7 @@
 <a href=#2753 id=2753 data-nosnippet>2753</a>	<span class="kw">type </span>RetType = <span class="prelude-ty">Option</span>&lt;HWND&gt;;
 <a href=#2754 id=2754 data-nosnippet>2754</a>
 <a href=#2755 id=2755 data-nosnippet>2755</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#2756 id=2756 data-nosnippet>2756</a>		zero_as_none(v).map(|p| HWND::from_ptr(p <span class="kw">as _</span>))
+<a href=#2756 id=2756 data-nosnippet>2756</a>		zero_as_none(v).map(|p| <span class="kw">unsafe </span>{ HWND::from_ptr(p <span class="kw">as _</span>) })
 <a href=#2757 id=2757 data-nosnippet>2757</a>	}
 <a href=#2758 id=2758 data-nosnippet>2758</a>
 <a href=#2759 id=2759 data-nosnippet>2759</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {

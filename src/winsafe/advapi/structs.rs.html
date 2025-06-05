@@ -22,7 +22,7 @@
 <a href=#22 id=22 data-nosnippet>22</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; CLAIM_SECURITY_ATTRIBUTES_INFORMATION&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt; {
 <a href=#23 id=23 data-nosnippet>23</a>	<span class="doccomment">/// Returns the `pAttributeV1` field.
 <a href=#24 id=24 data-nosnippet>24</a>	</span><span class="attr">#[must_use]
-<a href=#25 id=25 data-nosnippet>25</a>	</span><span class="kw">pub fn </span>pAttributeV1(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[CLAIM_SECURITY_ATTRIBUTE_V1&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt;] {
+<a href=#25 id=25 data-nosnippet>25</a>	</span><span class="kw">pub const fn </span>pAttributeV1(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[CLAIM_SECURITY_ATTRIBUTE_V1&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>&gt;] {
 <a href=#26 id=26 data-nosnippet>26</a>		<span class="kw">unsafe </span>{ std::slice::from_raw_parts(<span class="self">self</span>.pAttributeV1, <span class="self">self</span>.AttributeCount <span class="kw">as _</span>) }
 <a href=#27 id=27 data-nosnippet>27</a>	}
 <a href=#28 id=28 data-nosnippet>28</a>}
@@ -205,13 +205,13 @@
 <a href=#205 id=205 data-nosnippet>205</a><span class="kw">impl </span>SID {
 <a href=#206 id=206 data-nosnippet>206</a>	<span class="doccomment">/// Returns the `SubAuthorityCount` field.
 <a href=#207 id=207 data-nosnippet>207</a>	</span><span class="attr">#[must_use]
-<a href=#208 id=208 data-nosnippet>208</a>	</span><span class="kw">pub fn </span>SubAuthorityCount(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u8 {
+<a href=#208 id=208 data-nosnippet>208</a>	</span><span class="kw">pub const fn </span>SubAuthorityCount(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; u8 {
 <a href=#209 id=209 data-nosnippet>209</a>		<span class="self">self</span>.SubAuthority().len() <span class="kw">as _
 <a href=#210 id=210 data-nosnippet>210</a>	</span>}
 <a href=#211 id=211 data-nosnippet>211</a>
 <a href=#212 id=212 data-nosnippet>212</a>	<span class="doccomment">/// Returns the `SubAuthority` field.
 <a href=#213 id=213 data-nosnippet>213</a>	</span><span class="attr">#[must_use]
-<a href=#214 id=214 data-nosnippet>214</a>	</span><span class="kw">pub fn </span>SubAuthority(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[co::RID] {
+<a href=#214 id=214 data-nosnippet>214</a>	</span><span class="kw">pub const fn </span>SubAuthority(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[co::RID] {
 <a href=#215 id=215 data-nosnippet>215</a>		<span class="kw">unsafe </span>{
 <a href=#216 id=216 data-nosnippet>216</a>			std::slice::from_raw_parts(<span class="self">self</span>.SubAuthority.as_ptr(), <span class="self">self</span>.SubAuthorityCount <span class="kw">as _</span>)
 <a href=#217 id=217 data-nosnippet>217</a>		}
@@ -389,7 +389,7 @@
 <a href=#389 id=389 data-nosnippet>389</a>
 <a href=#390 id=390 data-nosnippet>390</a>	<span class="doccomment">/// Returns a mutable slice over the `Groups` entries.
 <a href=#391 id=391 data-nosnippet>391</a>	</span><span class="attr">#[must_use]
-<a href=#392 id=392 data-nosnippet>392</a>	</span><span class="kw">pub fn </span>Groups_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[SID_AND_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt;] {
+<a href=#392 id=392 data-nosnippet>392</a>	</span><span class="kw">pub const fn </span>Groups_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[SID_AND_ATTRIBUTES&lt;<span class="lifetime">'a</span>&gt;] {
 <a href=#393 id=393 data-nosnippet>393</a>		<span class="kw">unsafe </span>{ std::slice::from_raw_parts_mut(<span class="self">self</span>.Groups.as_mut_ptr(), <span class="self">self</span>.GroupCount <span class="kw">as _</span>) }
 <a href=#394 id=394 data-nosnippet>394</a>	}
 <a href=#395 id=395 data-nosnippet>395</a>}
@@ -512,7 +512,7 @@
 <a href=#512 id=512 data-nosnippet>512</a>
 <a href=#513 id=513 data-nosnippet>513</a>	<span class="doccomment">/// Returns a mutable slice over the `Privileges` entries.
 <a href=#514 id=514 data-nosnippet>514</a>	</span><span class="attr">#[must_use]
-<a href=#515 id=515 data-nosnippet>515</a>	</span><span class="kw">pub fn </span>Privileges_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[LUID_AND_ATTRIBUTES] {
+<a href=#515 id=515 data-nosnippet>515</a>	</span><span class="kw">pub const fn </span>Privileges_mut(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;mut </span>[LUID_AND_ATTRIBUTES] {
 <a href=#516 id=516 data-nosnippet>516</a>		<span class="kw">unsafe </span>{
 <a href=#517 id=517 data-nosnippet>517</a>			std::slice::from_raw_parts_mut(<span class="self">self</span>.Privileges.as_mut_ptr(), <span class="self">self</span>.PrivilegeCount <span class="kw">as _</span>)
 <a href=#518 id=518 data-nosnippet>518</a>		}

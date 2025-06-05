@@ -19,9 +19,11 @@
 <a href=#19 id=19 data-nosnippet>19</a>	</span><span class="kw">pub unsafe fn </span>CreatePropertySheetPage(
 <a href=#20 id=20 data-nosnippet>20</a>		page: <span class="kw-2">&amp;</span>PROPSHEETPAGE,
 <a href=#21 id=21 data-nosnippet>21</a>	) -&gt; HrResult&lt;DestroyPropertySheetPageGuard&gt; {
-<a href=#22 id=22 data-nosnippet>22</a>		<span class="kw">match </span>ptr_to_option_handle(ffi::CreatePropertySheetPageW(pcvoid(page))) {
-<a href=#23 id=23 data-nosnippet>23</a>			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
-<a href=#24 id=24 data-nosnippet>24</a>			<span class="prelude-val">Some</span>(h) =&gt; <span class="prelude-val">Ok</span>(DestroyPropertySheetPageGuard::new(h)),
-<a href=#25 id=25 data-nosnippet>25</a>		}
-<a href=#26 id=26 data-nosnippet>26</a>	}
-<a href=#27 id=27 data-nosnippet>27</a>}</code></pre></div></section></main></body></html>
+<a href=#22 id=22 data-nosnippet>22</a>		<span class="kw">unsafe </span>{
+<a href=#23 id=23 data-nosnippet>23</a>			<span class="kw">match </span>ptr_to_option_handle(ffi::CreatePropertySheetPageW(pcvoid(page))) {
+<a href=#24 id=24 data-nosnippet>24</a>				<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Err</span>(co::HRESULT::E_FAIL),
+<a href=#25 id=25 data-nosnippet>25</a>				<span class="prelude-val">Some</span>(h) =&gt; <span class="prelude-val">Ok</span>(DestroyPropertySheetPageGuard::new(h)),
+<a href=#26 id=26 data-nosnippet>26</a>			}
+<a href=#27 id=27 data-nosnippet>27</a>		}
+<a href=#28 id=28 data-nosnippet>28</a>	}
+<a href=#29 id=29 data-nosnippet>29</a>}</code></pre></div></section></main></body></html>

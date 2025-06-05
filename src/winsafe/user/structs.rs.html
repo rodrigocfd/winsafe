@@ -103,7 +103,7 @@
 <a href=#103 id=103 data-nosnippet>103</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>&gt; CHOOSECOLOR&lt;<span class="lifetime">'a</span>&gt; {
 <a href=#104 id=104 data-nosnippet>104</a>	<span class="doccomment">/// Returns the `lpCustColors` field.
 <a href=#105 id=105 data-nosnippet>105</a>	</span><span class="attr">#[must_use]
-<a href=#106 id=106 data-nosnippet>106</a>	</span><span class="kw">pub fn </span>lpCustColors(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>[COLORREF; <span class="number">16</span>]&gt; {
+<a href=#106 id=106 data-nosnippet>106</a>	</span><span class="kw">pub const fn </span>lpCustColors(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="lifetime">'a </span><span class="kw-2">mut </span>[COLORREF; <span class="number">16</span>]&gt; {
 <a href=#107 id=107 data-nosnippet>107</a>		<span class="kw">unsafe </span>{ <span class="self">self</span>.lpCustColors.as_mut() }
 <a href=#108 id=108 data-nosnippet>108</a>	}
 <a href=#109 id=109 data-nosnippet>109</a>
@@ -1034,7 +1034,7 @@
 <a href=#1034 id=1034 data-nosnippet>1034</a>
 <a href=#1035 id=1035 data-nosnippet>1035</a>	<span class="doccomment">/// Returns the [`WS_EX`](crate::co::WS_EX) of `styleOld` field.
 <a href=#1036 id=1036 data-nosnippet>1036</a>	</span><span class="attr">#[must_use]
-<a href=#1037 id=1037 data-nosnippet>1037</a>	</span><span class="kw">pub fn </span>styleOld_WSEX(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::WS_EX {
+<a href=#1037 id=1037 data-nosnippet>1037</a>	</span><span class="kw">pub const fn </span>styleOld_WSEX(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; co::WS_EX {
 <a href=#1038 id=1038 data-nosnippet>1038</a>		<span class="kw">unsafe </span>{ co::WS_EX::from_raw(<span class="self">self</span>.styleOld) }
 <a href=#1039 id=1039 data-nosnippet>1039</a>	}
 <a href=#1040 id=1040 data-nosnippet>1040</a>

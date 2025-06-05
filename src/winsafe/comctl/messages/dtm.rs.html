@@ -69,7 +69,7 @@
 <a href=#69 id=69 data-nosnippet>69</a>	<span class="kw">type </span>RetType = SysResult&lt;COLORREF&gt;;
 <a href=#70 id=70 data-nosnippet>70</a>
 <a href=#71 id=71 data-nosnippet>71</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#72 id=72 data-nosnippet>72</a>		minus1_as_badargs(v).map(|v| COLORREF::from_raw(v <span class="kw">as _</span>))
+<a href=#72 id=72 data-nosnippet>72</a>		minus1_as_badargs(v).map(|v| <span class="kw">unsafe </span>{ COLORREF::from_raw(v <span class="kw">as _</span>) })
 <a href=#73 id=73 data-nosnippet>73</a>	}
 <a href=#74 id=74 data-nosnippet>74</a>
 <a href=#75 id=75 data-nosnippet>75</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -91,7 +91,7 @@
 <a href=#91 id=91 data-nosnippet>91</a>	<span class="kw">type </span>RetType = SysResult&lt;co::MCS&gt;;
 <a href=#92 id=92 data-nosnippet>92</a>
 <a href=#93 id=93 data-nosnippet>93</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#94 id=94 data-nosnippet>94</a>		zero_as_badargs(v).map(|v| co::MCS::from_raw(v <span class="kw">as _</span>))
+<a href=#94 id=94 data-nosnippet>94</a>		zero_as_badargs(v).map(|v| <span class="kw">unsafe </span>{ co::MCS::from_raw(v <span class="kw">as _</span>) })
 <a href=#95 id=95 data-nosnippet>95</a>	}
 <a href=#96 id=96 data-nosnippet>96</a>
 <a href=#97 id=97 data-nosnippet>97</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -113,7 +113,7 @@
 <a href=#113 id=113 data-nosnippet>113</a>	<span class="kw">type </span>RetType = SysResult&lt;HWND&gt;;
 <a href=#114 id=114 data-nosnippet>114</a>
 <a href=#115 id=115 data-nosnippet>115</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#116 id=116 data-nosnippet>116</a>		zero_as_badargs(v).map(|p| HWND::from_ptr(p <span class="kw">as _</span>))
+<a href=#116 id=116 data-nosnippet>116</a>		zero_as_badargs(v).map(|p| <span class="kw">unsafe </span>{ HWND::from_ptr(p <span class="kw">as _</span>) })
 <a href=#117 id=117 data-nosnippet>117</a>	}
 <a href=#118 id=118 data-nosnippet>118</a>
 <a href=#119 id=119 data-nosnippet>119</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -137,7 +137,7 @@
 <a href=#137 id=137 data-nosnippet>137</a>	<span class="kw">type </span>RetType = co::GDTR;
 <a href=#138 id=138 data-nosnippet>138</a>
 <a href=#139 id=139 data-nosnippet>139</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#140 id=140 data-nosnippet>140</a>		co::GDTR::from_raw(v <span class="kw">as _</span>)
+<a href=#140 id=140 data-nosnippet>140</a>		<span class="kw">unsafe </span>{ co::GDTR::from_raw(v <span class="kw">as _</span>) }
 <a href=#141 id=141 data-nosnippet>141</a>	}
 <a href=#142 id=142 data-nosnippet>142</a>
 <a href=#143 id=143 data-nosnippet>143</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -215,7 +215,7 @@
 <a href=#215 id=215 data-nosnippet>215</a>	<span class="kw">type </span>RetType = SysResult&lt;COLORREF&gt;;
 <a href=#216 id=216 data-nosnippet>216</a>
 <a href=#217 id=217 data-nosnippet>217</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#218 id=218 data-nosnippet>218</a>		minus1_as_badargs(v).map(|v| COLORREF::from_raw(v <span class="kw">as _</span>))
+<a href=#218 id=218 data-nosnippet>218</a>		minus1_as_badargs(v).map(|v| <span class="kw">unsafe </span>{ COLORREF::from_raw(v <span class="kw">as _</span>) })
 <a href=#219 id=219 data-nosnippet>219</a>	}
 <a href=#220 id=220 data-nosnippet>220</a>
 <a href=#221 id=221 data-nosnippet>221</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
@@ -239,7 +239,7 @@
 <a href=#239 id=239 data-nosnippet>239</a>	<span class="kw">type </span>RetType = SysResult&lt;co::MCS&gt;;
 <a href=#240 id=240 data-nosnippet>240</a>
 <a href=#241 id=241 data-nosnippet>241</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#242 id=242 data-nosnippet>242</a>		zero_as_badargs(v).map(|v| co::MCS::from_raw(v <span class="kw">as _</span>))
+<a href=#242 id=242 data-nosnippet>242</a>		zero_as_badargs(v).map(|v| <span class="kw">unsafe </span>{ co::MCS::from_raw(v <span class="kw">as _</span>) })
 <a href=#243 id=243 data-nosnippet>243</a>	}
 <a href=#244 id=244 data-nosnippet>244</a>
 <a href=#245 id=245 data-nosnippet>245</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {
