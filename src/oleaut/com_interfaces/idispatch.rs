@@ -32,7 +32,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	#[must_use]
 	fn GetIDsOfNames(&self, names: &[impl AsRef<str>], lcid: LCID) -> HrResult<Vec<i32>> {
 		let (_wstrs, pwstrs) = create_wstr_ptr_vecs(Some(names));
-		let mut ids = vec![i32::default(); names.len()];
+		let mut ids = vec![0i32; names.len()];
 
 		ok_to_hrresult(unsafe {
 			(vt::<IDispatchVT>(self).GetIDsOfNames)(
@@ -51,7 +51,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetTypeInfoCount(&self) -> HrResult<u32> {
-		let mut count = u32::default();
+		let mut count = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IDispatchVT>(self).GetTypeInfoCount)(self.ptr(), &mut count)
 		})
@@ -93,7 +93,7 @@ pub trait oleaut_IDispatch: ole_IUnknown {
 	) -> AnyResult<VARIANT> {
 		let mut remote_res = VARIANT::default();
 		let mut remote_err = EXCEPINFO::default();
-		let mut arg_err = u32::default();
+		let mut arg_err = 0u32;
 
 		match ok_to_hrresult(unsafe {
 			(vt::<IDispatchVT>(self).Invoke)(

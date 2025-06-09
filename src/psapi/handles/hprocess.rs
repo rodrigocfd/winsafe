@@ -17,7 +17,7 @@ impl HPROCESS {
 	#[must_use]
 	pub fn EnumProcessModules(&self) -> SysResult<Vec<HINSTANCE>> {
 		loop {
-			let mut bytes_needed = u32::default();
+			let mut bytes_needed = 0u32;
 			bool_to_sysresult(unsafe {
 				ffi::EnumProcessModules(self.ptr(), std::ptr::null_mut(), 0, &mut bytes_needed)
 			})?;
@@ -27,7 +27,7 @@ impl HPROCESS {
 				.map(|_| HINSTANCE::NULL)
 				.collect::<Vec<_>>();
 
-			let mut bytes_got = u32::default();
+			let mut bytes_got = 0u32;
 			bool_to_sysresult(unsafe {
 				ffi::EnumProcessModules(
 					self.ptr(),

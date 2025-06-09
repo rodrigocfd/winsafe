@@ -24,7 +24,7 @@ use crate::shell::ffi;
 /// ```
 #[must_use]
 pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
-	let mut num_args = i32::default();
+	let mut num_args = 0i32;
 	let lp_arr =
 		unsafe { ffi::CommandLineToArgvW(WString::from_str(cmd_line).as_ptr(), &mut num_args) };
 	if lp_arr.is_null() {
@@ -49,7 +49,7 @@ pub fn CommandLineToArgv(cmd_line: &str) -> SysResult<Vec<String>> {
 /// * [`GetProfilesDirectory`](crate::GetProfilesDirectory)
 #[must_use]
 pub fn GetAllUsersProfileDirectory() -> SysResult<String> {
-	let mut len = u32::default();
+	let mut len = 0u32;
 	unsafe {
 		ffi::GetAllUsersProfileDirectoryW(std::ptr::null_mut(), &mut len);
 	}
@@ -72,7 +72,7 @@ pub fn GetAllUsersProfileDirectory() -> SysResult<String> {
 /// * [`GetProfilesDirectory`](crate::GetProfilesDirectory)
 #[must_use]
 pub fn GetDefaultUserProfileDirectory() -> SysResult<String> {
-	let mut len = u32::default();
+	let mut len = 0u32;
 	unsafe {
 		ffi::GetDefaultUserProfileDirectoryW(std::ptr::null_mut(), &mut len);
 	}
@@ -95,7 +95,7 @@ pub fn GetDefaultUserProfileDirectory() -> SysResult<String> {
 /// * [`GetDefaultUserProfileDirectory`](crate::GetDefaultUserProfileDirectory)
 #[must_use]
 pub fn GetProfilesDirectory() -> SysResult<String> {
-	let mut len = u32::default();
+	let mut len = 0u32;
 	unsafe {
 		ffi::GetProfilesDirectoryW(std::ptr::null_mut(), &mut len);
 	}

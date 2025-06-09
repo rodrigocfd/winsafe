@@ -133,7 +133,7 @@ impl HFILE {
 	/// function.
 	#[must_use]
 	pub fn GetFileSizeEx(&self) -> SysResult<u64> {
-		let mut sz_buf = i64::default();
+		let mut sz_buf = 0i64;
 		bool_to_sysresult(unsafe { ffi::GetFileSizeEx(self.ptr(), &mut sz_buf) })
 			.map(|_| sz_buf as _)
 	}
@@ -241,7 +241,7 @@ impl HFILE {
 	/// this method, because the buffer must remain untouched until the async
 	/// operation is complete, thus making the method unsound.
 	pub fn ReadFile(&self, buffer: &mut [u8]) -> SysResult<u32> {
-		let mut bytes_read = u32::default();
+		let mut bytes_read = 0u32;
 		bool_to_sysresult(unsafe {
 			ffi::ReadFile(
 				self.ptr(),
@@ -267,7 +267,7 @@ impl HFILE {
 		distance_to_move: i64,
 		move_method: co::FILE_STARTING_POINT,
 	) -> SysResult<i64> {
-		let mut new_offset = i64::default();
+		let mut new_offset = 0i64;
 
 		bool_to_sysresult(unsafe {
 			ffi::SetFilePointerEx(self.ptr(), distance_to_move, &mut new_offset, move_method.raw())
@@ -303,7 +303,7 @@ impl HFILE {
 	/// this method, because the buffer must remain untouched until the async
 	/// operation is complete, thus making the method unsound.
 	pub fn WriteFile(&self, data: &[u8]) -> SysResult<u32> {
-		let mut bytes_written = u32::default();
+		let mut bytes_written = 0u32;
 
 		bool_to_sysresult(unsafe {
 			ffi::WriteFile(

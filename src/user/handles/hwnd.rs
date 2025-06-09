@@ -851,7 +851,7 @@ impl HWND {
 	/// Returns thread ID and process ID, respectively.
 	#[must_use]
 	pub fn GetWindowThreadProcessId(&self) -> (u32, u32) {
-		let mut proc_id = u32::default();
+		let mut proc_id = 0u32;
 		let thread_id = unsafe { ffi::GetWindowThreadProcessId(self.ptr(), &mut proc_id) };
 		(thread_id, proc_id)
 	}
@@ -1370,7 +1370,7 @@ impl HWND {
 	{
 		let mut msg = msg;
 		let wm_any = msg.as_generic_wm();
-		let mut result = isize::default();
+		let mut result = 0isize;
 
 		unsafe {
 			bool_to_sysresult(ffi::SendMessageTimeoutW(
@@ -1673,7 +1673,7 @@ impl HWND {
 	/// function.
 	#[must_use]
 	pub fn ShutdownBlockReasonQuery(&self) -> SysResult<String> {
-		let mut sz = u32::default();
+		let mut sz = 0u32;
 		bool_to_sysresult(unsafe {
 			ffi::ShutdownBlockReasonQuery(self.ptr(), std::ptr::null_mut(), &mut sz)
 		})?;

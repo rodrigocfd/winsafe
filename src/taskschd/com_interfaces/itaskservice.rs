@@ -84,7 +84,7 @@ pub trait taskschd_ITaskService: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn get_HighestVersion(&self) -> HrResult<u32> {
-		let mut ver = u32::default();
+		let mut ver = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<ITaskServiceVT>(self).get_HighestVersion)(self.ptr(), &mut ver)
 		})

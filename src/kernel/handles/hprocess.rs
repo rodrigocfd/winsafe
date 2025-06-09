@@ -43,7 +43,7 @@ impl HPROCESS {
 	/// function.
 	#[must_use]
 	pub fn GetExitCodeProcess(&self) -> SysResult<u32> {
-		let mut exit_code = u32::default();
+		let mut exit_code = 0u32;
 		bool_to_sysresult(unsafe { ffi::GetExitCodeProcess(self.ptr(), &mut exit_code) })
 			.map(|_| exit_code)
 	}
@@ -72,7 +72,7 @@ impl HPROCESS {
 	/// function.
 	#[must_use]
 	pub fn GetProcessHandleCount(&self) -> SysResult<u32> {
-		let mut count = u32::default();
+		let mut count = 0u32;
 		bool_to_sysresult(unsafe { ffi::GetProcessHandleCount(self.ptr(), &mut count) })
 			.map(|_| count)
 	}
@@ -194,7 +194,7 @@ impl HPROCESS {
 	/// function.
 	#[must_use]
 	pub fn QueryProcessCycleTime(&self) -> SysResult<u64> {
-		let mut t = u64::default();
+		let mut t = 0u64;
 		bool_to_sysresult(unsafe { ffi::QueryProcessCycleTime(self.ptr(), &mut t) }).map(|_| t)
 	}
 
@@ -209,7 +209,7 @@ impl HPROCESS {
 		base_address: *mut std::ffi::c_void,
 		buffer: &mut [u8],
 	) -> SysResult<usize> {
-		let mut bytes_read = usize::default();
+		let mut bytes_read = 0usize;
 		bool_to_sysresult(unsafe {
 			ffi::ReadProcessMemory(
 				self.ptr(),

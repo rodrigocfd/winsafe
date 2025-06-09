@@ -63,7 +63,7 @@ impl HSTD {
 		buffer: &mut WString,
 		input_control: Option<&CONSOLE_READCONSOLE_CONTROL>,
 	) -> SysResult<u32> {
-		let mut num_read = u32::default();
+		let mut num_read = 0u32;
 		bool_to_sysresult(unsafe {
 			ffi::ReadConsoleW(
 				self.ptr(),
@@ -88,7 +88,7 @@ impl HSTD {
 	/// Returns the number of chars actually written.
 	pub fn WriteConsole(&self, text: &str) -> SysResult<u32> {
 		let buf = WString::from_str(text);
-		let mut num_written = u32::default();
+		let mut num_written = 0u32;
 
 		unsafe {
 			bool_to_sysresult(ffi::WriteConsoleW(

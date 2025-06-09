@@ -126,7 +126,7 @@ impl HWND {
 		icon: IconRes,
 	) -> HrResult<co::DLGID> {
 		// https://weblogs.asp.net/kennykerr/Windows-Vista-for-Developers-_1320_-Part-2-_1320_-Task-Dialogs-in-Depth
-		let mut pn_button = i32::default();
+		let mut pn_button = 0i32;
 		let (hinst, raw_ico) = icon.as_ptr();
 
 		ok_to_hrresult(unsafe {

@@ -116,8 +116,8 @@ pub unsafe fn PropertySheet(header: &PROPSHEETHEADER) -> SysResult<isize> {
 /// ```
 pub fn TaskDialogIndirect(config: &TASKDIALOGCONFIG) -> HrResult<(co::DLGID, u16, bool)> {
 	let tdc_buf = config.to_raw();
-	let mut pn_button = i32::default();
-	let mut pn_radio_button = i32::default();
+	let mut pn_button = 0i32;
+	let mut pn_radio_button = 0i32;
 	let mut pf_bool = 0;
 
 	ok_to_hrresult(unsafe {

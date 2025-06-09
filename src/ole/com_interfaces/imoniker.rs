@@ -167,7 +167,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 	/// method.
 	#[must_use]
 	fn Hash(&self) -> HrResult<u32> {
-		let mut hash = u32::default();
+		let mut hash = 0u32;
 		ok_to_hrresult(unsafe { (vt::<IMonikerVT>(self).Hash)(self.ptr(), &mut hash) })
 			.map(|_| hash)
 	}
@@ -225,7 +225,7 @@ pub trait ole_IMoniker: ole_IPersistStream {
 		moniker_to_left: &impl ole_IMoniker,
 		display_name: &str,
 	) -> HrResult<(u32, IMoniker)> {
-		let mut ch_eaten = u32::default();
+		let mut ch_eaten = 0u32;
 		let mut queried = unsafe { IMoniker::null() };
 
 		ok_to_hrresult(unsafe {

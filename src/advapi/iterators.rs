@@ -26,8 +26,8 @@ impl<'a> DoubleEndedIterator for HkeyKeyIter<'a> {
 impl<'a> HkeyKeyIter<'a> {
 	#[must_use]
 	pub(in crate::advapi) fn new(hkey: &'a HKEY) -> SysResult<Self> {
-		let mut num_keys = u32::default();
-		let mut max_key_name_len = u32::default();
+		let mut num_keys = 0u32;
+		let mut max_key_name_len = 0u32;
 		hkey.RegQueryInfoKey(
 			None,
 			Some(&mut num_keys),
@@ -106,8 +106,8 @@ impl<'a> DoubleEndedIterator for HkeyValueIter<'a> {
 impl<'a> HkeyValueIter<'a> {
 	#[must_use]
 	pub(in crate::advapi) fn new(hkey: &'a HKEY) -> SysResult<Self> {
-		let mut num_vals = u32::default();
-		let mut max_val_name_len = u32::default();
+		let mut num_vals = 0u32;
+		let mut max_val_name_len = 0u32;
 		hkey.RegQueryInfoKey(
 			None,
 			None,
@@ -134,7 +134,7 @@ impl<'a> HkeyValueIter<'a> {
 		}
 		let our_idx = if is_front { self.front_idx } else { self.past_back_idx - 1 };
 
-		let mut raw_data_type = u32::default();
+		let mut raw_data_type = 0u32;
 		let mut len_buffer = self.name_buffer.buf_len() as u32;
 		match unsafe {
 			co::ERROR::from_raw(ffi::RegEnumValueW(

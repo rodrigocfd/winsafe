@@ -61,7 +61,7 @@ pub trait mf_IMFPresentationDescriptor: mf_IMFAttributes {
 	/// method.
 	#[must_use]
 	fn GetStreamDescriptorCount(&self) -> HrResult<u32> {
-		let mut descriptor_count = u32::default();
+		let mut descriptor_count = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFPresentationDescriptorVT>(self).GetStreamDescriptorCount)(
 				self.ptr(),

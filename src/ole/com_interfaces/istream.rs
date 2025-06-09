@@ -44,7 +44,7 @@ pub trait ole_IStream: ole_ISequentialStream {
 	///
 	/// Returns the number of bytes read and written.
 	fn CopyTo(&self, dest: &impl ole_IStream, num_bytes: u64) -> HrResult<(u64, u64)> {
-		let (mut read, mut written) = (u64::default(), u64::default());
+		let (mut read, mut written) = (0u64, 0u64);
 		ok_to_hrresult(unsafe {
 			(vt::<IStreamVT>(self).CopyTo)(
 				self.ptr(),
@@ -79,7 +79,7 @@ pub trait ole_IStream: ole_ISequentialStream {
 	///
 	/// Returns the new absolute offset.
 	fn Seek(&self, displacement: i64, origin: co::STREAM_SEEK) -> HrResult<u64> {
-		let mut new_off = u64::default();
+		let mut new_off = 0u64;
 		ok_to_hrresult(unsafe {
 			(vt::<IStreamVT>(self).Seek)(self.ptr(), displacement, origin.raw(), &mut new_off)
 		})

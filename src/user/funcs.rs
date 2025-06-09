@@ -278,7 +278,7 @@ pub fn EnumDisplayDevices(
 /// use winsafe::{self as w, prelude::*};
 ///
 /// let mut dm = w::DEVMODE::default();
-/// let mut graphics_mode_idx = u32::default();
+/// let mut graphics_mode_idx = 0u32;
 ///
 /// loop {
 ///     let is_good = w::EnumDisplaySettings(

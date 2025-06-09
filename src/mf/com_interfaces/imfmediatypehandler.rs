@@ -39,7 +39,7 @@ pub trait mf_IMFMediaTypeHandler: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetMediaTypeCount(&self) -> HrResult<u32> {
-		let mut count = u32::default();
+		let mut count = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFMediaTypeHandlerVT>(self).GetMediaTypeCount)(self.ptr(), &mut count)
 		})

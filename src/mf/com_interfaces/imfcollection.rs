@@ -89,7 +89,7 @@ pub trait mf_IMFCollection: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetElementCount(&self) -> HrResult<u32> {
-		let mut count = u32::default();
+		let mut count = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFCollectionVT>(self).GetElementCount)(self.ptr(), &mut count)
 		})

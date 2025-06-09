@@ -90,7 +90,7 @@ pub trait mf_IMFByteStream: ole_IUnknown {
 	/// [`IMFByteStream::EndRead`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfbytestream-endread)
 	/// method.
 	fn EndRead(&self, result: &impl mf_IMFAsyncResult) -> HrResult<u32> {
-		let mut read = u32::default();
+		let mut read = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFByteStreamVT>(self).EndRead)(self.ptr(), result.ptr(), &mut read)
 		})
@@ -100,7 +100,7 @@ pub trait mf_IMFByteStream: ole_IUnknown {
 	/// [`IMFByteStream::EndWrite`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfbytestream-endwrite)
 	/// method.
 	fn EndWrite(&self, result: &impl mf_IMFAsyncResult) -> HrResult<u32> {
-		let mut written = u32::default();
+		let mut written = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFByteStreamVT>(self).EndWrite)(self.ptr(), result.ptr(), &mut written)
 		})
@@ -127,7 +127,7 @@ pub trait mf_IMFByteStream: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetCurrentPosition(&self) -> HrResult<u64> {
-		let mut pos = u64::default();
+		let mut pos = 0u64;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFByteStreamVT>(self).GetCurrentPosition)(self.ptr(), &mut pos)
 		})
@@ -138,7 +138,7 @@ pub trait mf_IMFByteStream: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetLength(&self) -> HrResult<u64> {
-		let mut len = u64::default();
+		let mut len = 0u64;
 		ok_to_hrresult(unsafe { (vt::<IMFByteStreamVT>(self).GetLength)(self.ptr(), &mut len) })
 			.map(|_| len)
 	}
@@ -155,7 +155,7 @@ pub trait mf_IMFByteStream: ole_IUnknown {
 	/// [`IMFByteStream::Read`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfbytestream-read)
 	/// method.
 	fn Read(&self, buffer: &mut [u8]) -> HrResult<u32> {
-		let mut read = u32::default();
+		let mut read = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFByteStreamVT>(self).Read)(
 				self.ptr(),
@@ -175,7 +175,7 @@ pub trait mf_IMFByteStream: ole_IUnknown {
 		offset: i64,
 		flags: Option<co::MFBYTESTREAM_SEEK_FLAG>,
 	) -> HrResult<u64> {
-		let mut pos = u64::default();
+		let mut pos = 0u64;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFByteStreamVT>(self).Seek)(
 				self.ptr(),
@@ -205,7 +205,7 @@ pub trait mf_IMFByteStream: ole_IUnknown {
 	/// [`IMFByteStream::Write`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfbytestream-write)
 	/// method.
 	fn Write(&self, buffer: &[u8]) -> HrResult<u32> {
-		let mut written = u32::default();
+		let mut written = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFByteStreamVT>(self).Write)(
 				self.ptr(),

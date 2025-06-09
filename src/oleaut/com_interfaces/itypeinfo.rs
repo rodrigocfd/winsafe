@@ -80,7 +80,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 		inv_kind: co::INVOKEKIND,
 	) -> HrResult<(String, String, u16)> {
 		let (mut dll_name, mut name) = (BSTR::default(), BSTR::default());
-		let mut ordinal = u16::default();
+		let mut ordinal = 0u16;
 
 		ok_to_hrresult(unsafe {
 			(vt::<ITypeInfoVT>(self).GetDllEntry)(
@@ -112,7 +112,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 	fn GetDocumentation(&self, member_id: i32) -> HrResult<(String, String, u32, String)> {
 		let mut name = BSTR::default();
 		let mut doc = BSTR::default();
-		let mut context = u32::default();
+		let mut context = 0u32;
 		let mut help_file = BSTR::default();
 
 		ok_to_hrresult(unsafe {
@@ -133,7 +133,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 	#[must_use]
 	fn GetIDsOfNames(&self, names: &[impl AsRef<str>]) -> HrResult<Vec<i32>> {
 		let (_wstrs, pwstrs) = create_wstr_ptr_vecs(Some(names));
-		let mut ids = vec![i32::default(); names.len()];
+		let mut ids = vec![0i32; names.len()];
 
 		ok_to_hrresult(unsafe {
 			(vt::<ITypeInfoVT>(self).GetIDsOfNames)(

@@ -58,7 +58,7 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn get_LastTaskResult(&self) -> HrResult<i32> {
-		let mut r = i32::default();
+		let mut r = 0i32;
 		ok_to_hrresult(unsafe {
 			(vt::<IRegisteredTaskVT>(self).get_LastTaskResult)(self.ptr(), &mut r)
 		})
@@ -85,7 +85,7 @@ pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn get_NumberOfMissedRuns(&self) -> HrResult<i32> {
-		let mut mr = i32::default();
+		let mut mr = 0i32;
 		ok_to_hrresult(unsafe {
 			(vt::<IRegisteredTaskVT>(self).get_NumberOfMissedRuns)(self.ptr(), &mut mr)
 		})

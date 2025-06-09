@@ -76,7 +76,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetCount(&self) -> HrResult<u32> {
-		let mut count = u32::default();
+		let mut count = 0u32;
 		ok_to_hrresult(unsafe { (vt::<IPropertyStoreVT>(self).GetCount)(self.ptr(), &mut count) })
 			.map(|_| count)
 	}

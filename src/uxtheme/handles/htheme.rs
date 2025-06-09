@@ -163,7 +163,7 @@ impl HTHEME {
 		part_state: co::VS,
 		prop: co::TMT,
 	) -> HrResult<i32> {
-		let mut val = i32::default();
+		let mut val = 0i32;
 		ok_to_hrresult(unsafe {
 			ffi::GetThemeMetric(
 				self.ptr(),

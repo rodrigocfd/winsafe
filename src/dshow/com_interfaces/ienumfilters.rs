@@ -59,7 +59,7 @@ pub trait dshow_IEnumFilters: ole_IUnknown {
 	#[must_use]
 	fn Next(&self) -> HrResult<Option<IBaseFilter>> {
 		let mut queried = unsafe { IBaseFilter::null() };
-		let mut fetched = u32::default();
+		let mut fetched = 0u32;
 
 		match ok_to_hrresult(unsafe {
 			(vt::<IEnumFiltersVT>(self).Next)(

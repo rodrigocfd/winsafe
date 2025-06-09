@@ -59,7 +59,7 @@ pub trait shell_IFileOperation: ole_IUnknown {
 	/// [`IFileOperation::Advise`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-advise)
 	/// method.
 	fn Advise(&self, fops: &IFileOperationProgressSink) -> HrResult<u32> {
-		let mut cookie = u32::default();
+		let mut cookie = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IFileOperationVT>(self).Advise)(self.ptr(), fops.ptr(), &mut cookie)
 		})

@@ -69,7 +69,7 @@ pub trait shell_IEnumShellItems: ole_IUnknown {
 	#[must_use]
 	fn Next(&self) -> HrResult<Option<IShellItem>> {
 		let mut queried = unsafe { IShellItem::null() };
-		let mut fetched = u32::default();
+		let mut fetched = 0u32;
 
 		match ok_to_hrresult(unsafe {
 			(vt::<IEnumShellItemsVT>(self).Next)(

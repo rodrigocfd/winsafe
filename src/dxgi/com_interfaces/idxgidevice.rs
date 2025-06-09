@@ -61,7 +61,7 @@ pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {
 	/// method.
 	#[must_use]
 	fn GetGPUThreadPriority(&self) -> HrResult<i8> {
-		let mut priority = i32::default();
+		let mut priority = 0i32;
 		ok_to_hrresult(unsafe {
 			(vt::<IDXGIDeviceVT>(self).GetGPUThreadPriority)(self.ptr(), &mut priority)
 		})

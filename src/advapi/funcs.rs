@@ -222,7 +222,7 @@ pub fn CreateWellKnownSid(
 	well_known_sid: co::WELL_KNOWN_SID_TYPE,
 	domain_sid: Option<&SID>,
 ) -> SysResult<SidGuard> {
-	let mut sid_sz = u32::default();
+	let mut sid_sz = 0u32;
 
 	unsafe {
 		ffi::CreateWellKnownSid(
@@ -426,7 +426,7 @@ pub fn GetSidLengthRequired(sub_authority_count: u8) -> u32 {
 /// function.
 #[must_use]
 pub fn GetUserName() -> SysResult<String> {
-	let mut name_sz = u32::default();
+	let mut name_sz = 0u32;
 	unsafe {
 		ffi::GetUserNameW(std::ptr::null_mut(), &mut name_sz);
 	}
@@ -461,7 +461,7 @@ pub fn GetUserName() -> SysResult<String> {
 /// * [`LookupAccountSid`](crate::LookupAccountSid)
 #[must_use]
 pub fn GetWindowsAccountDomainSid(sid: &SID) -> SysResult<SidGuard> {
-	let mut ad_sid_sz = u32::default();
+	let mut ad_sid_sz = 0u32;
 
 	unsafe { ffi::GetWindowsAccountDomainSid(pcvoid(sid), std::ptr::null_mut(), &mut ad_sid_sz) };
 	let get_size_err = GetLastError();
@@ -634,8 +634,8 @@ pub fn LookupAccountName(
 	system_name: Option<&str>,
 	account_name: &str,
 ) -> SysResult<(String, SidGuard, co::SID_NAME_USE)> {
-	let mut sid_sz = u32::default();
-	let mut domain_sz = u32::default();
+	let mut sid_sz = 0u32;
+	let mut domain_sz = 0u32;
 	let mut sid_name_use = co::SID_NAME_USE::default();
 
 	unsafe {
@@ -697,8 +697,8 @@ pub fn LookupAccountSid(
 	system_name: Option<&str>,
 	sid: &SID,
 ) -> SysResult<(String, String, co::SID_NAME_USE)> {
-	let mut account_sz = u32::default();
-	let mut domain_sz = u32::default();
+	let mut account_sz = 0u32;
+	let mut domain_sz = 0u32;
 	let mut sid_name_use = co::SID_NAME_USE::default();
 
 	unsafe {
@@ -738,7 +738,7 @@ pub fn LookupAccountSid(
 /// function.
 #[must_use]
 pub fn LookupPrivilegeName(system_name: Option<&str>, luid: LUID) -> SysResult<co::SE_PRIV> {
-	let mut cch_name = u32::default();
+	let mut cch_name = 0u32;
 
 	bool_to_sysresult(unsafe {
 		ffi::LookupPrivilegeNameW(

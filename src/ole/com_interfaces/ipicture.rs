@@ -83,7 +83,7 @@ pub trait ole_IPicture: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn get_Height(&self) -> HrResult<i32> {
-		let mut h = i32::default();
+		let mut h = 0i32;
 		ok_to_hrresult(unsafe { (vt::<IPictureVT>(self).get_Height)(self.ptr(), &mut h) })
 			.map(|_| h)
 	}
@@ -139,7 +139,7 @@ pub trait ole_IPicture: ole_IUnknown {
 	/// ```
 	#[must_use]
 	fn get_Width(&self) -> HrResult<i32> {
-		let mut w = i32::default();
+		let mut w = 0i32;
 		ok_to_hrresult(unsafe { (vt::<IPictureVT>(self).get_Width)(self.ptr(), &mut w) }).map(|_| w)
 	}
 
@@ -216,7 +216,7 @@ pub trait ole_IPicture: ole_IUnknown {
 	///
 	/// Returns the number of bytes written into the stream.
 	fn SaveAsFile(&self, stream: &IStream, save_mem_copy: bool) -> HrResult<u32> {
-		let mut cb = i32::default();
+		let mut cb = 0i32;
 		ok_to_hrresult(unsafe {
 			(vt::<IPictureVT>(self).SaveAsFile)(
 				self.ptr(),

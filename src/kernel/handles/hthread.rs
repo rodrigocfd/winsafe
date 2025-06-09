@@ -25,7 +25,7 @@ impl HTHREAD {
 		parameter: *mut std::ffi::c_void,
 		flags: co::THREAD_CREATE,
 	) -> SysResult<(CloseHandleGuard<HTHREAD>, u32)> {
-		let mut thread_id = u32::default();
+		let mut thread_id = 0u32;
 		unsafe {
 			ptr_to_sysresult_handle(ffi::CreateThread(
 				pvoid_or_null(thread_attrs),
@@ -50,7 +50,7 @@ impl HTHREAD {
 	/// function.
 	#[must_use]
 	pub fn GetExitCodeThread(&self) -> SysResult<u32> {
-		let mut exit_code = u32::default();
+		let mut exit_code = 0u32;
 		bool_to_sysresult(unsafe { ffi::GetExitCodeThread(self.ptr(), &mut exit_code) })
 			.map(|_| exit_code)
 	}
@@ -143,7 +143,7 @@ impl HTHREAD {
 	/// function.
 	#[must_use]
 	pub fn QueryThreadCycleTime(&self) -> SysResult<u64> {
-		let mut t = u64::default();
+		let mut t = 0u64;
 		bool_to_sysresult(unsafe { ffi::QueryThreadCycleTime(self.ptr(), &mut t) }).map(|_| t)
 	}
 

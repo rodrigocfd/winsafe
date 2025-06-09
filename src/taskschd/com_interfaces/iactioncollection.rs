@@ -55,7 +55,7 @@ pub trait taskschd_IActionCollection: oleaut_IDispatch {
 	/// method.
 	#[must_use]
 	fn get_Count(&self) -> HrResult<i32> {
-		let mut count = i32::default();
+		let mut count = 0i32;
 		ok_to_hrresult(unsafe {
 			(vt::<IActionCollectionVT>(self).get_Count)(self.ptr(), &mut count)
 		})

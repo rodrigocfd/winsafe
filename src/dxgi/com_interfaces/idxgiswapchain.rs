@@ -95,7 +95,7 @@ pub trait dxgi_IDXGISwapChain: dxgi_IDXGIDeviceSubObject {
 	/// method.
 	#[must_use]
 	fn GetLastPresentCount(&self) -> HrResult<u32> {
-		let mut count = u32::default();
+		let mut count = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IDXGISwapChainVT>(self).GetLastPresentCount)(self.ptr(), &mut count)
 		})

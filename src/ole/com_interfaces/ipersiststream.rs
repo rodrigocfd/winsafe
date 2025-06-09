@@ -29,7 +29,7 @@ pub trait ole_IPersistStream: ole_IPersist {
 	/// method.
 	#[must_use]
 	fn GetSizeMax(&self) -> HrResult<u64> {
-		let mut max = u64::default();
+		let mut max = 0u64;
 		ok_to_hrresult(unsafe { (vt::<IPersistStreamVT>(self).GetSizeMax)(self.ptr(), &mut max) })
 			.map(|_| max)
 	}

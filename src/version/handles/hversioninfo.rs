@@ -51,7 +51,7 @@ impl HVERSIONINFO {
 	/// already calls it.
 	#[must_use]
 	pub fn GetFileVersionInfoSize(file_name: &str) -> SysResult<u32> {
-		let mut dw_handle = u32::default();
+		let mut dw_handle = 0u32;
 		match unsafe {
 			ffi::GetFileVersionInfoSizeW(WString::from_str(file_name).as_ptr(), &mut dw_handle)
 		} {

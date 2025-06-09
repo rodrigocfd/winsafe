@@ -49,7 +49,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 		source: i64,
 		source_format: &co::TIME_FORMAT,
 	) -> HrResult<i64> {
-		let mut target = i64::default();
+		let mut target = 0i64;
 		ok_to_hrresult(unsafe {
 			(vt::<IMediaSeekingVT>(self).ConvertTimeFormat)(
 				self.ptr(),
@@ -68,7 +68,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	/// Returns earliest and latest times for efficient seeking.
 	#[must_use]
 	fn GetAvailable(&self) -> HrResult<(i64, i64)> {
-		let (mut early, mut late) = (i64::default(), i64::default());
+		let (mut early, mut late) = (0i64, 0i64);
 		ok_to_hrresult(unsafe {
 			(vt::<IMediaSeekingVT>(self).GetPositions)(self.ptr(), &mut early, &mut late)
 		})
@@ -79,7 +79,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetCurrentPosition(&self) -> HrResult<i64> {
-		let mut pos = i64::default();
+		let mut pos = 0i64;
 		ok_to_hrresult(unsafe {
 			(vt::<IMediaSeekingVT>(self).GetCurrentPosition)(self.ptr(), &mut pos)
 		})
@@ -90,7 +90,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetDuration(&self) -> HrResult<i64> {
-		let mut duration = i64::default();
+		let mut duration = 0i64;
 		ok_to_hrresult(unsafe {
 			(vt::<IMediaSeekingVT>(self).GetDuration)(self.ptr(), &mut duration)
 		})
@@ -103,7 +103,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	/// Returns current and stop positions.
 	#[must_use]
 	fn GetPositions(&self) -> HrResult<(i64, i64)> {
-		let (mut current, mut stop) = (i64::default(), i64::default());
+		let (mut current, mut stop) = (0i64, 0i64);
 		ok_to_hrresult(unsafe {
 			(vt::<IMediaSeekingVT>(self).GetPositions)(self.ptr(), &mut current, &mut stop)
 		})
@@ -114,7 +114,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetPreroll(&self) -> HrResult<i64> {
-		let mut preroll = i64::default();
+		let mut preroll = 0i64;
 		ok_to_hrresult(unsafe {
 			(vt::<IMediaSeekingVT>(self).GetPreroll)(self.ptr(), &mut preroll)
 		})
@@ -134,7 +134,7 @@ pub trait dshow_IMediaSeeking: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetStopPosition(&self) -> HrResult<i64> {
-		let mut pos = i64::default();
+		let mut pos = 0i64;
 		ok_to_hrresult(unsafe {
 			(vt::<IMediaSeekingVT>(self).GetStopPosition)(self.ptr(), &mut pos)
 		})

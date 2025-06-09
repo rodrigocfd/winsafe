@@ -80,7 +80,7 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 	#[must_use]
 	fn GetInput(&self, input_index: u32) -> HrResult<(IMFTopologyNode, u32)> {
 		let mut queried = unsafe { IMFTopologyNode::null() };
-		let mut output_index_downstream_node = u32::default();
+		let mut output_index_downstream_node = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFTopologyNodeVT>(self).GetInput)(
 				self.ptr(),
@@ -96,7 +96,7 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 	/// method.
 	#[must_use]
 	fn GetInputCount(&self) -> HrResult<u32> {
-		let mut c = u32::default();
+		let mut c = 0u32;
 		ok_to_hrresult(unsafe { (vt::<IMFTopologyNodeVT>(self).GetInputCount)(self.ptr(), &mut c) })
 			.map(|_| c)
 	}
@@ -134,7 +134,7 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 	#[must_use]
 	fn GetOutput(&self, output_index: u32) -> HrResult<(IMFTopologyNode, u32)> {
 		let mut queried = unsafe { IMFTopologyNode::null() };
-		let mut input_index_downstream_node = u32::default();
+		let mut input_index_downstream_node = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFTopologyNodeVT>(self).GetOutput)(
 				self.ptr(),
@@ -150,7 +150,7 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 	/// method.
 	#[must_use]
 	fn GetOutputCount(&self) -> HrResult<u32> {
-		let mut c = u32::default();
+		let mut c = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFTopologyNodeVT>(self).GetOutputCount)(self.ptr(), &mut c)
 		})
@@ -161,7 +161,7 @@ pub trait mf_IMFTopologyNode: mf_IMFAttributes {
 	/// method.
 	#[must_use]
 	fn GetTopoNodeID(&self) -> HrResult<u64> {
-		let mut id = u64::default();
+		let mut id = 0u64;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFTopologyNodeVT>(self).GetTopoNodeID)(self.ptr(), &mut id)
 		})

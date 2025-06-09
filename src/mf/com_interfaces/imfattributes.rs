@@ -94,7 +94,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	#[must_use]
 	fn GetAllocatedBlob(&self, guid_key: &GUID) -> HrResult<Vec<u8>> {
 		let mut pbuf = std::ptr::null_mut::<u8>();
-		let mut sz = u32::default();
+		let mut sz = 0u32;
 
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).GetAllocatedBlob)(
@@ -119,7 +119,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	#[must_use]
 	fn GetAllocatedString(&self, guid_key: &GUID) -> HrResult<String> {
 		let mut pbuf = std::ptr::null_mut::<u16>();
-		let mut nchars = u32::default();
+		let mut nchars = 0u32;
 
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).GetAllocatedString)(
@@ -163,7 +163,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetBlobSize(&self, guid_key: &GUID) -> HrResult<u32> {
-		let mut sz = u32::default();
+		let mut sz = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).GetBlobSize)(self.ptr(), pcvoid(guid_key), &mut sz)
 		})
@@ -174,7 +174,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetCount(&self) -> HrResult<u32> {
-		let mut count = u32::default();
+		let mut count = 0u32;
 		ok_to_hrresult(unsafe { (vt::<IMFAttributesVT>(self).GetCount)(self.ptr(), &mut count) })
 			.map(|_| count)
 	}
@@ -268,7 +268,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetStringLength(&self, guid_key: &GUID) -> HrResult<u32> {
-		let mut len = u32::default();
+		let mut len = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).GetStringLength)(self.ptr(), pcvoid(guid_key), &mut len)
 		})
@@ -278,7 +278,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// [`IMFAttributes::GetUINT32`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getuint32)
 	/// method.
 	fn GetUINT32(&self, guid_key: &GUID) -> HrResult<u32> {
-		let mut value = u32::default();
+		let mut value = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).GetUINT32)(self.ptr(), pcvoid(guid_key), &mut value)
 		})
@@ -288,7 +288,7 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// [`IMFAttributes::GetUINT64`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getuint64)
 	/// method.
 	fn GetUINT64(&self, guid_key: &GUID) -> HrResult<u64> {
-		let mut value = u64::default();
+		let mut value = 0u64;
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).GetUINT64)(self.ptr(), pcvoid(guid_key), &mut value)
 		})

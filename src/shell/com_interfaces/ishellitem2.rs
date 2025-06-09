@@ -89,7 +89,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 	#[must_use]
 	fn GetInt32(&self, key: &impl AsRef<PROPERTYKEY>) -> HrResult<i32> {
-		let mut i = i32::default();
+		let mut i = 0i32;
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItem2VT>(self).GetInt32)(self.ptr(), pcvoid(key), &mut i)
 		})
@@ -118,7 +118,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 	#[must_use]
 	fn GetUInt32(&self, key: &impl AsRef<PROPERTYKEY>) -> HrResult<u32> {
-		let mut ui = u32::default();
+		let mut ui = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItem2VT>(self).GetUInt32)(self.ptr(), pcvoid(key), &mut ui)
 		})
@@ -131,7 +131,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 	#[must_use]
 	fn GetUInt64(&self, key: &impl AsRef<PROPERTYKEY>) -> HrResult<u64> {
-		let mut ull = u64::default();
+		let mut ull = 0u64;
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItem2VT>(self).GetUInt64)(self.ptr(), pcvoid(key), &mut ull)
 		})

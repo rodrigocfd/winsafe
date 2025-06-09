@@ -76,7 +76,7 @@ pub trait shell_IShellItemArray: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetCount(&self) -> HrResult<u32> {
-		let mut count = u32::default();
+		let mut count = 0u32;
 		ok_to_hrresult(unsafe { (vt::<IShellItemArrayVT>(self).GetCount)(self.ptr(), &mut count) })
 			.map(|_| count)
 	}

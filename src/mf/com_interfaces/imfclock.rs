@@ -42,7 +42,7 @@ pub trait mf_IMFClock: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetContinuityKey(&self) -> HrResult<u32> {
-		let mut ck = u32::default();
+		let mut ck = 0u32;
 		ok_to_hrresult(unsafe { (vt::<IMFClockVT>(self).GetContinuityKey)(self.ptr(), &mut ck) })
 			.map(|_| ck)
 	}
@@ -55,7 +55,7 @@ pub trait mf_IMFClock: ole_IUnknown {
 	/// 100-nanosecond units).
 	#[must_use]
 	fn GetCorrelatedTime(&self) -> HrResult<(i64, i64)> {
-		let (mut clock, mut system) = (i64::default(), i64::default());
+		let (mut clock, mut system) = (0i64, 0i64);
 		ok_to_hrresult(unsafe {
 			(vt::<IMFClockVT>(self).GetCorrelatedTime)(self.ptr(), 0, &mut clock, &mut system)
 		})

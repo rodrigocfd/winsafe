@@ -726,7 +726,7 @@ pub fn GetSystemDirectory() -> SysResult<String> {
 /// limit flags, respectively.
 #[must_use]
 pub fn GetSystemFileCacheSize() -> SysResult<(usize, usize, co::FILE_CACHE)> {
-	let (mut min, mut max) = (usize::default(), usize::default());
+	let (mut min, mut max) = (0usize, 0usize);
 	let mut flags = co::FILE_CACHE::default();
 	bool_to_sysresult(unsafe { ffi::GetSystemFileCacheSize(&mut min, &mut max, flags.as_mut()) })
 		.map(|_| (min, max, flags))
@@ -854,8 +854,8 @@ pub fn GetTickCount64() -> u64 {
 /// use winsafe::{self as w, prelude::*, co};
 ///
 /// let mut name = String::default();
-/// let mut serial_no = u32::default();
-/// let mut max_comp_len = u32::default();
+/// let mut serial_no = 0u32;
+/// let mut max_comp_len = 0u32;
 /// let mut sys_flags = co::FILE_VOL::default();
 /// let mut sys_name = String::default();
 ///
@@ -1339,7 +1339,7 @@ pub fn OutputDebugString(output_string: &str) {
 /// * [`QueryPerformanceFrequency`](crate::QueryPerformanceFrequency)
 #[must_use]
 pub fn QueryPerformanceCounter() -> SysResult<i64> {
-	let mut perf_count = i64::default();
+	let mut perf_count = 0i64;
 	bool_to_sysresult(unsafe { ffi::QueryPerformanceCounter(&mut perf_count) }).map(|_| perf_count)
 }
 
@@ -1351,7 +1351,7 @@ pub fn QueryPerformanceCounter() -> SysResult<i64> {
 /// * [`QueryPerformanceCounter`](crate::QueryPerformanceCounter)
 #[must_use]
 pub fn QueryPerformanceFrequency() -> SysResult<i64> {
-	let mut freq = i64::default();
+	let mut freq = 0i64;
 	bool_to_sysresult(unsafe { ffi::QueryPerformanceFrequency(&mut freq) }).map(|_| freq)
 }
 
@@ -1359,7 +1359,7 @@ pub fn QueryPerformanceFrequency() -> SysResult<i64> {
 /// function.
 #[must_use]
 pub fn QueryUnbiasedInterruptTime() -> SysResult<u64> {
-	let mut t = u64::default();
+	let mut t = 0u64;
 	bool_to_sysresult(unsafe { ffi::QueryUnbiasedInterruptTime(&mut t) }).map(|_| t)
 }
 

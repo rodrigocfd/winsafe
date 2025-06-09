@@ -128,7 +128,7 @@ pub fn EnumPrinters4<'a, 'b>(flags: co::PRINTER_ENUM) -> SysResult<Vec<PRINTER_I
 
 #[must_use]
 fn enum_printers<T: Default + Clone>(flags: co::PRINTER_ENUM, lvl: u32) -> SysResult<Vec<T>> {
-	let (mut sz_buf, mut count) = (u32::default(), u32::default());
+	let (mut sz_buf, mut count) = (0u32, 0u32);
 	unsafe {
 		ffi::EnumPrintersW(
 			flags.raw(),
@@ -171,7 +171,7 @@ fn enum_printers<T: Default + Clone>(flags: co::PRINTER_ENUM, lvl: u32) -> SysRe
 /// * [`EnumPrinters4`](crate::EnumPrinters4)
 #[must_use]
 pub fn GetDefaultPrinter() -> SysResult<String> {
-	let mut sz = u32::default();
+	let mut sz = 0u32;
 	unsafe {
 		ffi::GetDefaultPrinterW(std::ptr::null_mut(), &mut sz);
 	}

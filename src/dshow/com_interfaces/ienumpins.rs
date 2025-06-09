@@ -57,7 +57,7 @@ pub trait dshow_IEnumPins: ole_IUnknown {
 	#[must_use]
 	fn Next(&self) -> HrResult<Option<IPin>> {
 		let mut queried = unsafe { IPin::null() };
-		let mut fetched = u32::default();
+		let mut fetched = 0u32;
 
 		match ok_to_hrresult(unsafe {
 			(vt::<IEnumPinsVT>(self).Next)(

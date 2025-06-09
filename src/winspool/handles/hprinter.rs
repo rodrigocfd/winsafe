@@ -36,7 +36,7 @@ impl HPRINTER {
 	///
 	/// Returns the path and the job ID.
 	pub fn AddJob(&self) -> SysResult<(String, u32)> {
-		let mut sz = u32::default();
+		let mut sz = 0u32;
 		if let Err(e) = bool_to_invalidparm(unsafe {
 			ffi::AddJobW(self.ptr(), 1, std::ptr::null_mut(), 0, &mut sz)
 		}) {
@@ -120,7 +120,7 @@ impl HPRINTER {
 	#[must_use]
 	pub fn GetPrinter2(&self) -> SysResult<PRINTER_INFO_2> {
 		let mut nfo = PRINTER_INFO_2::default();
-		let mut needed = u32::default();
+		let mut needed = 0u32;
 
 		bool_to_invalidparm(unsafe {
 			ffi::GetPrinterW(
@@ -139,7 +139,7 @@ impl HPRINTER {
 	#[must_use]
 	pub fn GetPrinter3(&self) -> SysResult<PRINTER_INFO_3> {
 		let mut nfo = PRINTER_INFO_3::default();
-		let mut needed = u32::default();
+		let mut needed = 0u32;
 
 		bool_to_invalidparm(unsafe {
 			ffi::GetPrinterW(
@@ -158,7 +158,7 @@ impl HPRINTER {
 	#[must_use]
 	pub fn GetPrinter4(&self) -> SysResult<PRINTER_INFO_4> {
 		let mut nfo = PRINTER_INFO_4::default();
-		let mut needed = u32::default();
+		let mut needed = 0u32;
 
 		bool_to_invalidparm(unsafe {
 			ffi::GetPrinterW(

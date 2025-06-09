@@ -142,7 +142,7 @@ impl HACCESSTOKEN {
 		&self,
 		information_class: co::TOKEN_INFORMATION_CLASS,
 	) -> SysResult<TokenInfo> {
-		let mut num_bytes = u32::default();
+		let mut num_bytes = 0u32;
 		match bool_to_sysresult(unsafe {
 			ffi::GetTokenInformation(
 				self.ptr(),

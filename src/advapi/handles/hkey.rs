@@ -326,7 +326,7 @@ impl HKEY {
 		let mut buf = Vec::<u8>::default();
 
 		loop {
-			let mut data_len = u32::default(); // in bytes
+			let mut data_len = 0u32; // in bytes
 
 			match unsafe {
 				co::ERROR::from_raw(ffi::RegGetValueW(
@@ -344,7 +344,7 @@ impl HKEY {
 			}
 
 			buf.resize(data_len as _, 0x00);
-			let mut data_type = u32::default();
+			let mut data_type = 0u32;
 
 			match unsafe {
 				co::ERROR::from_raw(ffi::RegGetValueW(
@@ -553,7 +553,7 @@ impl HKEY {
 		let mut buf = Vec::<u8>::default();
 
 		loop {
-			let mut data_len = u32::default();
+			let mut data_len = 0u32;
 
 			match unsafe {
 				co::ERROR::from_raw(ffi::RegQueryMultipleValuesW(
@@ -630,7 +630,7 @@ impl HKEY {
 		let mut buf = Vec::<u8>::default();
 
 		loop {
-			let mut data_len = u32::default(); // in bytes
+			let mut data_len = 0u32; // in bytes
 
 			match unsafe {
 				co::ERROR::from_raw(ffi::RegQueryValueExW(
@@ -647,7 +647,7 @@ impl HKEY {
 			}
 
 			buf.resize(data_len as _, 0x00);
-			let mut data_type = u32::default();
+			let mut data_type = 0u32;
 
 			match unsafe {
 				co::ERROR::from_raw(ffi::RegQueryValueExW(

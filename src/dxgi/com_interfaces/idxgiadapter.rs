@@ -31,7 +31,7 @@ pub trait dxgi_IDXGIAdapter: dxgi_IDXGIObject {
 	/// method.
 	#[must_use]
 	fn CheckInterfaceSupport(&self, interface_name: &GUID) -> HrResult<i64> {
-		let mut umd_ver = i64::default();
+		let mut umd_ver = 0i64;
 		ok_to_hrresult(unsafe {
 			(vt::<IDXGIAdapterVT>(self).CheckInterfaceSupport)(
 				self.ptr(),

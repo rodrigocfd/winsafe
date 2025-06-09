@@ -35,7 +35,7 @@ pub trait ole_IDataObject: ole_IUnknown {
 		advf: co::ADVF,
 		adv_sink: &impl ole_IAdviseSink,
 	) -> HrResult<u32> {
-		let mut connection = u32::default();
+		let mut connection = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IDataObjectVT>(self).DAdvise)(
 				self.ptr(),

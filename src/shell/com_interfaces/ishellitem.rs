@@ -85,7 +85,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn Compare(&self, other: &impl shell_IShellItem, hint: co::SICHINTF) -> HrResult<i32> {
-		let mut order = i32::default();
+		let mut order = 0i32;
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItemVT>(self).Compare)(self.ptr(), other.ptr(), hint.raw(), &mut order)
 		})

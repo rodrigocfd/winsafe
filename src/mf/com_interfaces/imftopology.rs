@@ -81,7 +81,7 @@ pub trait mf_IMFTopology: mf_IMFAttributes {
 	/// method.
 	#[must_use]
 	fn GetNodeCount(&self) -> HrResult<u16> {
-		let mut nodes = u16::default();
+		let mut nodes = 0u16;
 		ok_to_hrresult(unsafe { (vt::<IMFTopologyVT>(self).GetNodeCount)(self.ptr(), &mut nodes) })
 			.map(|_| nodes)
 	}
@@ -100,7 +100,7 @@ pub trait mf_IMFTopology: mf_IMFAttributes {
 	/// method.
 	#[must_use]
 	fn GetTopologyID(&self) -> HrResult<u64> {
-		let mut id = u64::default();
+		let mut id = 0u64;
 		ok_to_hrresult(unsafe { (vt::<IMFTopologyVT>(self).GetTopologyID)(self.ptr(), &mut id) })
 			.map(|_| id)
 	}

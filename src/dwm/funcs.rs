@@ -23,7 +23,7 @@ pub fn DwmFlush() -> HrResult<()> {
 /// opaque blend.
 #[must_use]
 pub fn DwmGetColorizationColor() -> HrResult<(u32, bool)> {
-	let mut colorization = u32::default();
+	let mut colorization = 0u32;
 	let mut opaque_blend = 0;
 
 	ok_to_hrresult(unsafe { ffi::DwmGetColorizationColor(&mut colorization, &mut opaque_blend) })

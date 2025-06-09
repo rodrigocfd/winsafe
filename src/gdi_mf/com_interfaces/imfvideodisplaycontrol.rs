@@ -26,8 +26,8 @@ pub trait gdi_mf_IMFVideoDisplayControl: mf_IMFVideoDisplayControl {
 	fn GetCurrentImage(&self) -> HrResult<(BITMAPINFOHEADER, Vec<u8>, i64)> {
 		let mut bih = BITMAPINFOHEADER::default();
 		let mut dib_ptr = std::ptr::null_mut::<u8>();
-		let mut dib_sz = u32::default();
-		let mut time_stamp = i64::default();
+		let mut dib_sz = 0u32;
+		let mut time_stamp = 0i64;
 
 		ok_to_hrresult(unsafe {
 			(vt::<IMFVideoDisplayControlVT>(self).GetCurrentImage)(

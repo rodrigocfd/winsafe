@@ -65,7 +65,7 @@ pub trait dxgi_IDXGIOutput: dxgi_IDXGIObject {
 		format: co::DXGI_FORMAT,
 		flags: co::DXGI_ENUM_MODES,
 	) -> HrResult<Vec<DXGI_MODE_DESC>> {
-		let mut num_modes = u32::default();
+		let mut num_modes = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IDXGIOutputVT>(self).GetDisplayModeList)(
 				self.ptr(),

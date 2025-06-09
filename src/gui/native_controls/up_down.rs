@@ -152,7 +152,7 @@ impl UpDown {
 	/// [`udm::GetRange32`](crate::msg::udm::GetRange32) message.
 	#[must_use]
 	pub fn range(&self) -> (i32, i32) {
-		let (mut min, mut max) = (i32::default(), i32::default());
+		let (mut min, mut max) = (0i32, 0i32);
 		unsafe {
 			self.hwnd()
 				.SendMessage(udm::GetRange32 { min: &mut min, max: &mut max });

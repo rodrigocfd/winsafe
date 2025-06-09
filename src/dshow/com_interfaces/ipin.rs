@@ -106,7 +106,7 @@ pub trait dshow_IPin: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn QueryInternalConnections(&self) -> HrResult<Vec<IPin>> {
-		let mut count = u32::default();
+		let mut count = 0u32;
 		if let Err(e) = ok_to_hrresult(unsafe {
 			(vt::<IPinVT>(self).QueryInternalConnections)(
 				self.ptr(),
