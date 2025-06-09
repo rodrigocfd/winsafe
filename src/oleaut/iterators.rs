@@ -1,3 +1,4 @@
+use crate::co;
 use crate::decl::*;
 use crate::prelude::*;
 
@@ -14,7 +15,7 @@ impl<'a, I> Iterator for IpropertystoreIter<'a, I>
 where
 	I: oleaut_IPropertyStore,
 {
-	type Item = HrResult<PROPERTYKEY>;
+	type Item = HrResult<co::PKEY>;
 
 	fn next(&mut self) -> Option<Self::Item> {
 		if self.current == self.count {
@@ -26,9 +27,9 @@ where
 				self.current = self.count; // no further iterations will be made
 				Some(Err(e))
 			},
-			Ok(ppk) => {
+			Ok(pkey) => {
 				self.current += 1;
-				Some(Ok(ppk))
+				Some(Ok(pkey))
 			},
 		}
 	}

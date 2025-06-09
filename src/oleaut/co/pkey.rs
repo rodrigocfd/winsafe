@@ -2,10 +2,14 @@
 
 use crate::decl::*;
 
-/// Predefined [`PROPERTYKEY`](crate::PROPERTYKEY) values.
-#[repr(transparent)]
-#[derive(Clone, Copy, PartialEq, Eq)]
-pub struct PKEY(PROPERTYKEY);
+/// [`PROPERTYKEY`](https://learn.microsoft.com/en-us/windows/win32/api/wtypes/ns-wtypes-propertykey)
+/// struct.
+#[repr(C, packed(2))]
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
+pub struct PKEY {
+	pub fmtid: GUID,
+	pub pid: u32,
+}
 
 impl PKEY {
 	/// Creates a new `PKEY` constant.
@@ -15,13 +19,7 @@ impl PKEY {
 	/// Be sure the given value is meaningful for the actual type.
 	#[must_use]
 	pub const unsafe fn from_raw(fmtid: GUID, pid: u32) -> Self {
-		Self(PROPERTYKEY { fmtid, pid })
-	}
-}
-
-impl AsRef<PROPERTYKEY> for PKEY {
-	fn as_ref(&self) -> &PROPERTYKEY {
-		&self.0
+		Self { fmtid, pid }
 	}
 }
 

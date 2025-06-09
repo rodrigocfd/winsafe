@@ -8,7 +8,6 @@ mod structs;
 pub mod co;
 pub(in crate::oleaut) mod ffi;
 pub(in crate::oleaut) mod iterators;
-pub(crate) mod privs;
 pub(crate) mod vts;
 
 pub mod decl {

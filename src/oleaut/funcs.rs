@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use crate::co;
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::privs::*;
@@ -74,7 +75,7 @@ pub fn OleLoadPicturePath(path: &str, transparent_color: Option<COLORREF>) -> Hr
 /// [`PSGetNameFromPropertyKey`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-psgetnamefrompropertykey)
 /// function.
 #[must_use]
-pub fn PSGetNameFromPropertyKey(prop_key: &PROPERTYKEY) -> HrResult<String> {
+pub fn PSGetNameFromPropertyKey(prop_key: &co::PKEY) -> HrResult<String> {
 	let mut pstr = std::ptr::null_mut::<u16>();
 	ok_to_hrresult(unsafe { ffi::PSGetNameFromPropertyKey(pcvoid(prop_key), &mut pstr) }).map(
 		|_| {

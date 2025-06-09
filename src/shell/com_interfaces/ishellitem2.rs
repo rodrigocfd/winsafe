@@ -62,7 +62,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	///
 	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 	#[must_use]
-	fn GetBool(&self, key: &impl AsRef<PROPERTYKEY>) -> HrResult<bool> {
+	fn GetBool(&self, key: &co::PKEY) -> HrResult<bool> {
 		let mut f = 0;
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItem2VT>(self).GetBool)(self.ptr(), pcvoid(key), &mut f)
@@ -75,7 +75,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	///
 	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 	#[must_use]
-	fn GetFileTime(&self, key: &impl AsRef<PROPERTYKEY>) -> HrResult<FILETIME> {
+	fn GetFileTime(&self, key: &co::PKEY) -> HrResult<FILETIME> {
 		let mut ft = FILETIME::default();
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItem2VT>(self).GetFileTime)(self.ptr(), pcvoid(key), pvoid(&mut ft))
@@ -88,7 +88,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	///
 	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 	#[must_use]
-	fn GetInt32(&self, key: &impl AsRef<PROPERTYKEY>) -> HrResult<i32> {
+	fn GetInt32(&self, key: &co::PKEY) -> HrResult<i32> {
 		let mut i = 0i32;
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItem2VT>(self).GetInt32)(self.ptr(), pcvoid(key), &mut i)
@@ -117,7 +117,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	///
 	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 	#[must_use]
-	fn GetUInt32(&self, key: &impl AsRef<PROPERTYKEY>) -> HrResult<u32> {
+	fn GetUInt32(&self, key: &co::PKEY) -> HrResult<u32> {
 		let mut ui = 0u32;
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItem2VT>(self).GetUInt32)(self.ptr(), pcvoid(key), &mut ui)
@@ -130,7 +130,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 	///
 	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 	#[must_use]
-	fn GetUInt64(&self, key: &impl AsRef<PROPERTYKEY>) -> HrResult<u64> {
+	fn GetUInt64(&self, key: &co::PKEY) -> HrResult<u64> {
 		let mut ull = 0u64;
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItem2VT>(self).GetUInt64)(self.ptr(), pcvoid(key), &mut ull)

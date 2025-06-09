@@ -30,8 +30,8 @@ impl oleaut_IPropertyStore for IPropertyStore {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait oleaut_IPropertyStore: ole_IUnknown {
-	/// Returns an iterator over the [`PROPERTYKEY`](crate::PROPERTYKEY)
-	/// elements by calling
+	/// Returns an iterator over the [`co::PKEY`](crate::co::PKEY) elements by
+	/// calling
 	/// [`IPropertyStore::GetCount`](crate::prelude::oleaut_IPropertyStore::GetCount)
 	/// and
 	/// [`IPropertyStore::GetAt`](crate::prelude::oleaut_IPropertyStore::GetAt)
@@ -45,14 +45,14 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	/// let pstore: w::IPropertyStore; // initialized somewhere
 	/// # let pstore = unsafe { w::IPropertyStore::null() };
 	///
-	/// for ppk in pstore.iter()? {
-	///     let ppk = ppk?;
+	/// for pkey in pstore.iter()? {
+	///     let pkey = pkey?;
 	///     // ...
 	/// }
 	/// # w::HrResult::Ok(())
 	/// ```
 	#[must_use]
-	fn iter(&self) -> HrResult<impl Iterator<Item = HrResult<PROPERTYKEY>> + '_> {
+	fn iter(&self) -> HrResult<impl Iterator<Item = HrResult<co::PKEY>> + '_> {
 		Ok(IpropertystoreIter::new(self)?)
 	}
 
@@ -64,12 +64,12 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	/// [`IPropertyStore::GetAt`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getat)
 	/// method.
 	#[must_use]
-	fn GetAt(&self, index: u32) -> HrResult<PROPERTYKEY> {
-		let mut ppk = PROPERTYKEY::default();
+	fn GetAt(&self, index: u32) -> HrResult<co::PKEY> {
+		let mut pkey = co::PKEY::default();
 		ok_to_hrresult(unsafe {
-			(vt::<IPropertyStoreVT>(self).GetAt)(self.ptr(), index, pvoid(&mut ppk))
+			(vt::<IPropertyStoreVT>(self).GetAt)(self.ptr(), index, pvoid(&mut pkey))
 		})
-		.map(|_| ppk)
+		.map(|_| pkey)
 	}
 
 	/// [`IPropertyStore::GetCount`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getcount)
@@ -84,7 +84,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 	/// [`IPropertyStore::GetValue`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getvalue)
 	/// method.
 	#[must_use]
-	fn GetValue(&self, key: &PROPERTYKEY) -> HrResult<PropVariant> {
+	fn GetValue(&self, key: &co::PKEY) -> HrResult<PropVariant> {
 		let mut var = PROPVARIANT::default();
 		match unsafe {
 			co::HRESULT::from_raw((vt::<IPropertyStoreVT>(self).GetValue)(
@@ -102,7 +102,7 @@ pub trait oleaut_IPropertyStore: ole_IUnknown {
 
 	/// [`IPropertyStore::SetValue`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-setvalue)
 	/// method.
-	fn SetValue(&self, key: &PROPERTYKEY, value: &PropVariant) -> HrResult<()> {
+	fn SetValue(&self, key: &co::PKEY, value: &PropVariant) -> HrResult<()> {
 		ok_to_hrresult(unsafe {
 			(vt::<IPropertyStoreVT>(self).SetValue)(
 				self.ptr(),
