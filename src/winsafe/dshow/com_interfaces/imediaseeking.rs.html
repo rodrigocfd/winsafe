@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\dshow\com_interfaces\imediaseeking.rs`."><title>imediaseeking.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (99e7c15e8 2025-06-01)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../..\../static.files/storage-4e99c027.js"></script><script defer src="../../..\../static.files/src-script-63605ae7.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\dshow\com_interfaces/</div>imediaseeking.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\dshow\com_interfaces\imediaseeking.rs`."><title>imediaseeking.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../..\../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../..\../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../..\../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../..\../" data-static-root-path="../../..\../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (6ccd44760 2025-06-08)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../..\../static.files/storage-4e99c027.js"></script><script defer src="../../..\../static.files/src-script-63605ae7.js"></script><script defer src="../../..\../src-files.js"></script><script defer src="../../..\../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../../..\../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../..\../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../..\../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\dshow\com_interfaces/</div>imediaseeking.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 <a href=#2 id=2 data-nosnippet>2</a>
 <a href=#3 id=3 data-nosnippet>3</a></span><span class="kw">use </span><span class="kw">crate</span>::co;
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -49,7 +49,7 @@
 <a href=#49 id=49 data-nosnippet>49</a>		source: i64,
 <a href=#50 id=50 data-nosnippet>50</a>		source_format: <span class="kw-2">&amp;</span>co::TIME_FORMAT,
 <a href=#51 id=51 data-nosnippet>51</a>	) -&gt; HrResult&lt;i64&gt; {
-<a href=#52 id=52 data-nosnippet>52</a>		<span class="kw">let </span><span class="kw-2">mut </span>target = i64::default();
+<a href=#52 id=52 data-nosnippet>52</a>		<span class="kw">let </span><span class="kw-2">mut </span>target = <span class="number">0i64</span>;
 <a href=#53 id=53 data-nosnippet>53</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
 <a href=#54 id=54 data-nosnippet>54</a>			(vt::&lt;IMediaSeekingVT&gt;(<span class="self">self</span>).ConvertTimeFormat)(
 <a href=#55 id=55 data-nosnippet>55</a>				<span class="self">self</span>.ptr(),
@@ -68,7 +68,7 @@
 <a href=#68 id=68 data-nosnippet>68</a>	/// Returns earliest and latest times for efficient seeking.
 <a href=#69 id=69 data-nosnippet>69</a>	</span><span class="attr">#[must_use]
 <a href=#70 id=70 data-nosnippet>70</a>	</span><span class="kw">fn </span>GetAvailable(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;(i64, i64)&gt; {
-<a href=#71 id=71 data-nosnippet>71</a>		<span class="kw">let </span>(<span class="kw-2">mut </span>early, <span class="kw-2">mut </span>late) = (i64::default(), i64::default());
+<a href=#71 id=71 data-nosnippet>71</a>		<span class="kw">let </span>(<span class="kw-2">mut </span>early, <span class="kw-2">mut </span>late) = (<span class="number">0i64</span>, <span class="number">0i64</span>);
 <a href=#72 id=72 data-nosnippet>72</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
 <a href=#73 id=73 data-nosnippet>73</a>			(vt::&lt;IMediaSeekingVT&gt;(<span class="self">self</span>).GetPositions)(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>early, <span class="kw-2">&amp;mut </span>late)
 <a href=#74 id=74 data-nosnippet>74</a>		})
@@ -79,7 +79,7 @@
 <a href=#79 id=79 data-nosnippet>79</a>	/// method.
 <a href=#80 id=80 data-nosnippet>80</a>	</span><span class="attr">#[must_use]
 <a href=#81 id=81 data-nosnippet>81</a>	</span><span class="kw">fn </span>GetCurrentPosition(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;i64&gt; {
-<a href=#82 id=82 data-nosnippet>82</a>		<span class="kw">let </span><span class="kw-2">mut </span>pos = i64::default();
+<a href=#82 id=82 data-nosnippet>82</a>		<span class="kw">let </span><span class="kw-2">mut </span>pos = <span class="number">0i64</span>;
 <a href=#83 id=83 data-nosnippet>83</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
 <a href=#84 id=84 data-nosnippet>84</a>			(vt::&lt;IMediaSeekingVT&gt;(<span class="self">self</span>).GetCurrentPosition)(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>pos)
 <a href=#85 id=85 data-nosnippet>85</a>		})
@@ -90,7 +90,7 @@
 <a href=#90 id=90 data-nosnippet>90</a>	/// method.
 <a href=#91 id=91 data-nosnippet>91</a>	</span><span class="attr">#[must_use]
 <a href=#92 id=92 data-nosnippet>92</a>	</span><span class="kw">fn </span>GetDuration(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;i64&gt; {
-<a href=#93 id=93 data-nosnippet>93</a>		<span class="kw">let </span><span class="kw-2">mut </span>duration = i64::default();
+<a href=#93 id=93 data-nosnippet>93</a>		<span class="kw">let </span><span class="kw-2">mut </span>duration = <span class="number">0i64</span>;
 <a href=#94 id=94 data-nosnippet>94</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
 <a href=#95 id=95 data-nosnippet>95</a>			(vt::&lt;IMediaSeekingVT&gt;(<span class="self">self</span>).GetDuration)(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>duration)
 <a href=#96 id=96 data-nosnippet>96</a>		})
@@ -103,7 +103,7 @@
 <a href=#103 id=103 data-nosnippet>103</a>	/// Returns current and stop positions.
 <a href=#104 id=104 data-nosnippet>104</a>	</span><span class="attr">#[must_use]
 <a href=#105 id=105 data-nosnippet>105</a>	</span><span class="kw">fn </span>GetPositions(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;(i64, i64)&gt; {
-<a href=#106 id=106 data-nosnippet>106</a>		<span class="kw">let </span>(<span class="kw-2">mut </span>current, <span class="kw-2">mut </span>stop) = (i64::default(), i64::default());
+<a href=#106 id=106 data-nosnippet>106</a>		<span class="kw">let </span>(<span class="kw-2">mut </span>current, <span class="kw-2">mut </span>stop) = (<span class="number">0i64</span>, <span class="number">0i64</span>);
 <a href=#107 id=107 data-nosnippet>107</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
 <a href=#108 id=108 data-nosnippet>108</a>			(vt::&lt;IMediaSeekingVT&gt;(<span class="self">self</span>).GetPositions)(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>current, <span class="kw-2">&amp;mut </span>stop)
 <a href=#109 id=109 data-nosnippet>109</a>		})
@@ -114,7 +114,7 @@
 <a href=#114 id=114 data-nosnippet>114</a>	/// method.
 <a href=#115 id=115 data-nosnippet>115</a>	</span><span class="attr">#[must_use]
 <a href=#116 id=116 data-nosnippet>116</a>	</span><span class="kw">fn </span>GetPreroll(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;i64&gt; {
-<a href=#117 id=117 data-nosnippet>117</a>		<span class="kw">let </span><span class="kw-2">mut </span>preroll = i64::default();
+<a href=#117 id=117 data-nosnippet>117</a>		<span class="kw">let </span><span class="kw-2">mut </span>preroll = <span class="number">0i64</span>;
 <a href=#118 id=118 data-nosnippet>118</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
 <a href=#119 id=119 data-nosnippet>119</a>			(vt::&lt;IMediaSeekingVT&gt;(<span class="self">self</span>).GetPreroll)(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>preroll)
 <a href=#120 id=120 data-nosnippet>120</a>		})
@@ -134,7 +134,7 @@
 <a href=#134 id=134 data-nosnippet>134</a>	/// method.
 <a href=#135 id=135 data-nosnippet>135</a>	</span><span class="attr">#[must_use]
 <a href=#136 id=136 data-nosnippet>136</a>	</span><span class="kw">fn </span>GetStopPosition(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;i64&gt; {
-<a href=#137 id=137 data-nosnippet>137</a>		<span class="kw">let </span><span class="kw-2">mut </span>pos = i64::default();
+<a href=#137 id=137 data-nosnippet>137</a>		<span class="kw">let </span><span class="kw-2">mut </span>pos = <span class="number">0i64</span>;
 <a href=#138 id=138 data-nosnippet>138</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
 <a href=#139 id=139 data-nosnippet>139</a>			(vt::&lt;IMediaSeekingVT&gt;(<span class="self">self</span>).GetStopPosition)(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>pos)
 <a href=#140 id=140 data-nosnippet>140</a>		})

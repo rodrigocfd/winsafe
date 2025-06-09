@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\funcs.rs`."><title>funcs.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (99e7c15e8 2025-06-01)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../../static.files/storage-4e99c027.js"></script><script defer src="../../../static.files/src-script-63605ae7.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\kernel/</div>funcs.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-4"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_snake_case)]
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\kernel\funcs.rs`."><title>funcs.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (6ccd44760 2025-06-08)" data-channel="nightly" data-search-js="search-f7877310.js" data-settings-js="settings-5514c975.js" ><script src="../../../static.files/storage-4e99c027.js"></script><script defer src="../../../static.files/src-script-63605ae7.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\kernel/</div>funcs.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-4"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_snake_case)]
 <a href=#2 id=2 data-nosnippet>2</a>
 <a href=#3 id=3 data-nosnippet>3</a></span><span class="kw">use </span><span class="kw">crate</span>::co;
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -726,7 +726,7 @@
 <a href=#726 id=726 data-nosnippet>726</a>/// limit flags, respectively.
 <a href=#727 id=727 data-nosnippet>727</a></span><span class="attr">#[must_use]
 <a href=#728 id=728 data-nosnippet>728</a></span><span class="kw">pub fn </span>GetSystemFileCacheSize() -&gt; SysResult&lt;(usize, usize, co::FILE_CACHE)&gt; {
-<a href=#729 id=729 data-nosnippet>729</a>	<span class="kw">let </span>(<span class="kw-2">mut </span>min, <span class="kw-2">mut </span>max) = (usize::default(), usize::default());
+<a href=#729 id=729 data-nosnippet>729</a>	<span class="kw">let </span>(<span class="kw-2">mut </span>min, <span class="kw-2">mut </span>max) = (<span class="number">0usize</span>, <span class="number">0usize</span>);
 <a href=#730 id=730 data-nosnippet>730</a>	<span class="kw">let </span><span class="kw-2">mut </span>flags = co::FILE_CACHE::default();
 <a href=#731 id=731 data-nosnippet>731</a>	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::GetSystemFileCacheSize(<span class="kw-2">&amp;mut </span>min, <span class="kw-2">&amp;mut </span>max, flags.as_mut()) })
 <a href=#732 id=732 data-nosnippet>732</a>		.map(|<span class="kw">_</span>| (min, max, flags))
@@ -854,8 +854,8 @@
 <a href=#854 id=854 data-nosnippet>854</a>/// use winsafe::{self as w, prelude::*, co};
 <a href=#855 id=855 data-nosnippet>855</a>///
 <a href=#856 id=856 data-nosnippet>856</a>/// let mut name = String::default();
-<a href=#857 id=857 data-nosnippet>857</a>/// let mut serial_no = u32::default();
-<a href=#858 id=858 data-nosnippet>858</a>/// let mut max_comp_len = u32::default();
+<a href=#857 id=857 data-nosnippet>857</a>/// let mut serial_no = 0u32;
+<a href=#858 id=858 data-nosnippet>858</a>/// let mut max_comp_len = 0u32;
 <a href=#859 id=859 data-nosnippet>859</a>/// let mut sys_flags = co::FILE_VOL::default();
 <a href=#860 id=860 data-nosnippet>860</a>/// let mut sys_name = String::default();
 <a href=#861 id=861 data-nosnippet>861</a>///
@@ -1339,7 +1339,7 @@
 <a href=#1339 id=1339 data-nosnippet>1339</a>/// * [`QueryPerformanceFrequency`](crate::QueryPerformanceFrequency)
 <a href=#1340 id=1340 data-nosnippet>1340</a></span><span class="attr">#[must_use]
 <a href=#1341 id=1341 data-nosnippet>1341</a></span><span class="kw">pub fn </span>QueryPerformanceCounter() -&gt; SysResult&lt;i64&gt; {
-<a href=#1342 id=1342 data-nosnippet>1342</a>	<span class="kw">let </span><span class="kw-2">mut </span>perf_count = i64::default();
+<a href=#1342 id=1342 data-nosnippet>1342</a>	<span class="kw">let </span><span class="kw-2">mut </span>perf_count = <span class="number">0i64</span>;
 <a href=#1343 id=1343 data-nosnippet>1343</a>	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::QueryPerformanceCounter(<span class="kw-2">&amp;mut </span>perf_count) }).map(|<span class="kw">_</span>| perf_count)
 <a href=#1344 id=1344 data-nosnippet>1344</a>}
 <a href=#1345 id=1345 data-nosnippet>1345</a>
@@ -1351,7 +1351,7 @@
 <a href=#1351 id=1351 data-nosnippet>1351</a>/// * [`QueryPerformanceCounter`](crate::QueryPerformanceCounter)
 <a href=#1352 id=1352 data-nosnippet>1352</a></span><span class="attr">#[must_use]
 <a href=#1353 id=1353 data-nosnippet>1353</a></span><span class="kw">pub fn </span>QueryPerformanceFrequency() -&gt; SysResult&lt;i64&gt; {
-<a href=#1354 id=1354 data-nosnippet>1354</a>	<span class="kw">let </span><span class="kw-2">mut </span>freq = i64::default();
+<a href=#1354 id=1354 data-nosnippet>1354</a>	<span class="kw">let </span><span class="kw-2">mut </span>freq = <span class="number">0i64</span>;
 <a href=#1355 id=1355 data-nosnippet>1355</a>	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::QueryPerformanceFrequency(<span class="kw-2">&amp;mut </span>freq) }).map(|<span class="kw">_</span>| freq)
 <a href=#1356 id=1356 data-nosnippet>1356</a>}
 <a href=#1357 id=1357 data-nosnippet>1357</a>
@@ -1359,7 +1359,7 @@
 <a href=#1359 id=1359 data-nosnippet>1359</a>/// function.
 <a href=#1360 id=1360 data-nosnippet>1360</a></span><span class="attr">#[must_use]
 <a href=#1361 id=1361 data-nosnippet>1361</a></span><span class="kw">pub fn </span>QueryUnbiasedInterruptTime() -&gt; SysResult&lt;u64&gt; {
-<a href=#1362 id=1362 data-nosnippet>1362</a>	<span class="kw">let </span><span class="kw-2">mut </span>t = u64::default();
+<a href=#1362 id=1362 data-nosnippet>1362</a>	<span class="kw">let </span><span class="kw-2">mut </span>t = <span class="number">0u64</span>;
 <a href=#1363 id=1363 data-nosnippet>1363</a>	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::QueryUnbiasedInterruptTime(<span class="kw-2">&amp;mut </span>t) }).map(|<span class="kw">_</span>| t)
 <a href=#1364 id=1364 data-nosnippet>1364</a>}
 <a href=#1365 id=1365 data-nosnippet>1365</a>
