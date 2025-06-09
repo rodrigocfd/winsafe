@@ -6,11 +6,11 @@ function.</p>
 <span class="kw">let </span>parent_hwnd: w::HWND; <span class="comment">// initialized somewhere
 
 </span><span class="kw">let </span><span class="kw-2">mut </span>cc = w::CHOOSECOLOR::default();
-<span class="kw">let </span><span class="kw-2">mut </span>custom_colors = [w::COLORREF::new(<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>); <span class="number">16</span>];
+<span class="kw">let </span><span class="kw-2">mut </span>custom_colors = [w::COLORREF::from_rgb(<span class="number">255</span>, <span class="number">255</span>, <span class="number">255</span>); <span class="number">16</span>];
 
 cc.hwndOwner = parent_hwnd;
 cc.Flags = co::CC::ANYCOLOR | co::CC::FULLOPEN | co::CC::RGBINIT;
-cc.rgbResult = w::COLORREF::new(<span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>); <span class="comment">// color initially chosen
+cc.rgbResult = w::COLORREF::from_rgb(<span class="number">255</span>, <span class="number">0</span>, <span class="number">0</span>); <span class="comment">// color initially chosen
 </span>cc.set_lpCustColors(<span class="prelude-val">Some</span>(<span class="kw-2">&amp;mut </span>custom_colors));
 
 <span class="kw">if </span>w::ChooseColor(<span class="kw-2">&amp;mut </span>cc)<span class="question-mark">? </span>{

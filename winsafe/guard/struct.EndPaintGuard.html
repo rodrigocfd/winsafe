@@ -290,7 +290,7 @@ otherwise the cleanup will be performed right away.</p>
 </span><span class="kw">let </span>hpen = w::HPEN::CreatePen(
     co::PS::SOLID,
     <span class="number">1</span>,
-    w::COLORREF::new(<span class="number">0xff</span>, <span class="number">0x00</span>, <span class="number">0x88</span>),
+    w::COLORREF::from_rgb(<span class="number">0xff</span>, <span class="number">0x00</span>, <span class="number">0x88</span>),
 )<span class="question-mark">?</span>;
 
 <span class="kw">let </span>_pen_guard = hdc.SelectObject(<span class="kw-2">&amp;*</span>hpen); <span class="comment">// keep guard alive</span></code></pre></div>

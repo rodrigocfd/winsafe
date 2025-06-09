@@ -40,7 +40,7 @@
 <a href=#40 id=40 data-nosnippet>40</a>		snb_exclude: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;]&gt;,
 <a href=#41 id=41 data-nosnippet>41</a>		stg_dest: <span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IStorage,
 <a href=#42 id=42 data-nosnippet>42</a>	) -&gt; HrResult&lt;()&gt; {
-<a href=#43 id=43 data-nosnippet>43</a>		<span class="kw">let </span>snb = snb_exclude.map_or(<span class="prelude-val">Ok</span>(SNB::default()), |strs| SNB::new(strs))<span class="question-mark">?</span>;
+<a href=#43 id=43 data-nosnippet>43</a>		<span class="kw">let </span>snb = snb_exclude.map_or(<span class="prelude-val">Ok</span>(SNB::default()), |strs| SNB::from_strs(strs))<span class="question-mark">?</span>;
 <a href=#44 id=44 data-nosnippet>44</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
 <a href=#45 id=45 data-nosnippet>45</a>			(vt::&lt;IStorageVT&gt;(<span class="self">self</span>).CopyTo)(
 <a href=#46 id=46 data-nosnippet>46</a>				<span class="self">self</span>.ptr(),

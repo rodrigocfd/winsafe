@@ -140,10 +140,10 @@
 <a href=#140 id=140 data-nosnippet>140</a>	/// ```no_run
 <a href=#141 id=141 data-nosnippet>141</a>	/// use winsafe::{self as w, prelude::*};
 <a href=#142 id=142 data-nosnippet>142</a>	///
-<a href=#143 id=143 data-nosnippet>143</a>	/// let color = w::COLORREF::new(0xff, 0x80, 0x00);
+<a href=#143 id=143 data-nosnippet>143</a>	/// let color = w::COLORREF::from_rgb(0xff, 0x80, 0x00);
 <a href=#144 id=144 data-nosnippet>144</a>	/// ```
 <a href=#145 id=145 data-nosnippet>145</a>	</span><span class="attr">#[must_use]
-<a href=#146 id=146 data-nosnippet>146</a>	</span><span class="kw">pub const fn </span>new(red: u8, green: u8, blue: u8) -&gt; COLORREF {
+<a href=#146 id=146 data-nosnippet>146</a>	</span><span class="kw">pub const fn </span>from_rgb(red: u8, green: u8, blue: u8) -&gt; COLORREF {
 <a href=#147 id=147 data-nosnippet>147</a>		<span class="self">Self</span>(red <span class="kw">as </span>u32 | ((green <span class="kw">as </span>u32) &lt;&lt; <span class="number">8</span>) | ((blue <span class="kw">as </span>u32) &lt;&lt; <span class="number">16</span>))
 <a href=#148 id=148 data-nosnippet>148</a>	}
 <a href=#149 id=149 data-nosnippet>149</a>
@@ -667,7 +667,7 @@
 <a href=#667 id=667 data-nosnippet>667</a><span class="kw">impl </span>INPUT {
 <a href=#668 id=668 data-nosnippet>668</a>	<span class="doccomment">/// Creates the struct.
 <a href=#669 id=669 data-nosnippet>669</a>	</span><span class="attr">#[must_use]
-<a href=#670 id=670 data-nosnippet>670</a>	</span><span class="kw">pub fn </span>new(event: HwKbMouse) -&gt; INPUT {
+<a href=#670 id=670 data-nosnippet>670</a>	</span><span class="kw">pub fn </span>from_event(event: HwKbMouse) -&gt; INPUT {
 <a href=#671 id=671 data-nosnippet>671</a>		<span class="kw">let </span><span class="kw-2">mut </span>new_self = INPUT {
 <a href=#672 id=672 data-nosnippet>672</a>			dwType: co::INPUT::HARDWARE, <span class="comment">// default value, will be replaced
 <a href=#673 id=673 data-nosnippet>673</a>			</span>union0: INPUT_union0 { hi: HARDWAREINPUT::default() },

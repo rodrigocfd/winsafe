@@ -140,7 +140,7 @@
 <a href=#140 id=140 data-nosnippet>140</a>	<span class="doccomment">/// Creates a new `SNB` by allocating a contiguous memory block for pointers
 <a href=#141 id=141 data-nosnippet>141</a>	/// and strings.
 <a href=#142 id=142 data-nosnippet>142</a>	</span><span class="attr">#[must_use]
-<a href=#143 id=143 data-nosnippet>143</a>	</span><span class="kw">pub fn </span>new(strs: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;]) -&gt; HrResult&lt;<span class="self">Self</span>&gt; {
+<a href=#143 id=143 data-nosnippet>143</a>	</span><span class="kw">pub fn </span>from_strs(strs: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;]) -&gt; HrResult&lt;<span class="self">Self</span>&gt; {
 <a href=#144 id=144 data-nosnippet>144</a>		<span class="kw">if </span>strs.is_empty() {
 <a href=#145 id=145 data-nosnippet>145</a>			<span class="kw">return </span><span class="prelude-val">Ok</span>(<span class="self">Self</span>::default());
 <a href=#146 id=146 data-nosnippet>146</a>		}

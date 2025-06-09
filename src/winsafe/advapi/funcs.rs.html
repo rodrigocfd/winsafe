@@ -778,7 +778,7 @@
 <a href=#778 id=778 data-nosnippet>778</a>/// ```
 <a href=#779 id=779 data-nosnippet>779</a></span><span class="attr">#[must_use]
 <a href=#780 id=780 data-nosnippet>780</a></span><span class="kw">pub fn </span>LookupPrivilegeValue(system_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;, name: co::SE_PRIV) -&gt; SysResult&lt;LUID&gt; {
-<a href=#781 id=781 data-nosnippet>781</a>	<span class="kw">let </span><span class="kw-2">mut </span>luid = LUID::new(<span class="number">0</span>, <span class="number">0</span>);
+<a href=#781 id=781 data-nosnippet>781</a>	<span class="kw">let </span><span class="kw-2">mut </span>luid = LUID::from_parts(<span class="number">0</span>, <span class="number">0</span>);
 <a href=#782 id=782 data-nosnippet>782</a>	bool_to_sysresult(<span class="kw">unsafe </span>{
 <a href=#783 id=783 data-nosnippet>783</a>		ffi::LookupPrivilegeValueW(
 <a href=#784 id=784 data-nosnippet>784</a>			WString::from_opt_str(system_name).as_ptr(),

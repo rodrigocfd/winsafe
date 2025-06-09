@@ -166,11 +166,11 @@
 <a href=#166 id=166 data-nosnippet>166</a>/// # let parent_hwnd = w::HWND::NULL;
 <a href=#167 id=167 data-nosnippet>167</a>///
 <a href=#168 id=168 data-nosnippet>168</a>/// let mut cc = w::CHOOSECOLOR::default();
-<a href=#169 id=169 data-nosnippet>169</a>/// let mut custom_colors = [w::COLORREF::new(255, 255, 255); 16];
+<a href=#169 id=169 data-nosnippet>169</a>/// let mut custom_colors = [w::COLORREF::from_rgb(255, 255, 255); 16];
 <a href=#170 id=170 data-nosnippet>170</a>///
 <a href=#171 id=171 data-nosnippet>171</a>/// cc.hwndOwner = parent_hwnd;
 <a href=#172 id=172 data-nosnippet>172</a>/// cc.Flags = co::CC::ANYCOLOR | co::CC::FULLOPEN | co::CC::RGBINIT;
-<a href=#173 id=173 data-nosnippet>173</a>/// cc.rgbResult = w::COLORREF::new(255, 0, 0); // color initially chosen
+<a href=#173 id=173 data-nosnippet>173</a>/// cc.rgbResult = w::COLORREF::from_rgb(255, 0, 0); // color initially chosen
 <a href=#174 id=174 data-nosnippet>174</a>/// cc.set_lpCustColors(Some(&amp;mut custom_colors));
 <a href=#175 id=175 data-nosnippet>175</a>///
 <a href=#176 id=176 data-nosnippet>176</a>/// if w::ChooseColor(&amp;mut cc)? {
@@ -834,7 +834,7 @@
 <a href=#834 id=834 data-nosnippet>834</a></span><span class="kw">pub fn </span>SendInput(inputs: <span class="kw-2">&amp;</span>[HwKbMouse]) -&gt; SysResult&lt;u32&gt; {
 <a href=#835 id=835 data-nosnippet>835</a>	<span class="kw">let </span>objs = inputs
 <a href=#836 id=836 data-nosnippet>836</a>		.iter()
-<a href=#837 id=837 data-nosnippet>837</a>		.map(|ipt| INPUT::new(<span class="kw-2">*</span>ipt))
+<a href=#837 id=837 data-nosnippet>837</a>		.map(|ipt| INPUT::from_event(<span class="kw-2">*</span>ipt))
 <a href=#838 id=838 data-nosnippet>838</a>		.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
 <a href=#839 id=839 data-nosnippet>839</a>
 <a href=#840 id=840 data-nosnippet>840</a>	<span class="kw">match unsafe </span>{
