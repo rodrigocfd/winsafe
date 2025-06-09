@@ -62,7 +62,7 @@
 <a href=#62 id=62 data-nosnippet>62</a>	///
 <a href=#63 id=63 data-nosnippet>63</a>	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 <a href=#64 id=64 data-nosnippet>64</a>	</span><span class="attr">#[must_use]
-<a href=#65 id=65 data-nosnippet>65</a>	</span><span class="kw">fn </span>GetBool(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;PROPERTYKEY&gt;) -&gt; HrResult&lt;bool&gt; {
+<a href=#65 id=65 data-nosnippet>65</a>	</span><span class="kw">fn </span>GetBool(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>co::PKEY) -&gt; HrResult&lt;bool&gt; {
 <a href=#66 id=66 data-nosnippet>66</a>		<span class="kw">let </span><span class="kw-2">mut </span>f = <span class="number">0</span>;
 <a href=#67 id=67 data-nosnippet>67</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
 <a href=#68 id=68 data-nosnippet>68</a>			(vt::&lt;IShellItem2VT&gt;(<span class="self">self</span>).GetBool)(<span class="self">self</span>.ptr(), pcvoid(key), <span class="kw-2">&amp;mut </span>f)
@@ -75,7 +75,7 @@
 <a href=#75 id=75 data-nosnippet>75</a>	///
 <a href=#76 id=76 data-nosnippet>76</a>	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 <a href=#77 id=77 data-nosnippet>77</a>	</span><span class="attr">#[must_use]
-<a href=#78 id=78 data-nosnippet>78</a>	</span><span class="kw">fn </span>GetFileTime(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;PROPERTYKEY&gt;) -&gt; HrResult&lt;FILETIME&gt; {
+<a href=#78 id=78 data-nosnippet>78</a>	</span><span class="kw">fn </span>GetFileTime(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>co::PKEY) -&gt; HrResult&lt;FILETIME&gt; {
 <a href=#79 id=79 data-nosnippet>79</a>		<span class="kw">let </span><span class="kw-2">mut </span>ft = FILETIME::default();
 <a href=#80 id=80 data-nosnippet>80</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
 <a href=#81 id=81 data-nosnippet>81</a>			(vt::&lt;IShellItem2VT&gt;(<span class="self">self</span>).GetFileTime)(<span class="self">self</span>.ptr(), pcvoid(key), pvoid(<span class="kw-2">&amp;mut </span>ft))
@@ -88,7 +88,7 @@
 <a href=#88 id=88 data-nosnippet>88</a>	///
 <a href=#89 id=89 data-nosnippet>89</a>	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 <a href=#90 id=90 data-nosnippet>90</a>	</span><span class="attr">#[must_use]
-<a href=#91 id=91 data-nosnippet>91</a>	</span><span class="kw">fn </span>GetInt32(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;PROPERTYKEY&gt;) -&gt; HrResult&lt;i32&gt; {
+<a href=#91 id=91 data-nosnippet>91</a>	</span><span class="kw">fn </span>GetInt32(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>co::PKEY) -&gt; HrResult&lt;i32&gt; {
 <a href=#92 id=92 data-nosnippet>92</a>		<span class="kw">let </span><span class="kw-2">mut </span>i = <span class="number">0i32</span>;
 <a href=#93 id=93 data-nosnippet>93</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
 <a href=#94 id=94 data-nosnippet>94</a>			(vt::&lt;IShellItem2VT&gt;(<span class="self">self</span>).GetInt32)(<span class="self">self</span>.ptr(), pcvoid(key), <span class="kw-2">&amp;mut </span>i)
@@ -117,7 +117,7 @@
 <a href=#117 id=117 data-nosnippet>117</a>	///
 <a href=#118 id=118 data-nosnippet>118</a>	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 <a href=#119 id=119 data-nosnippet>119</a>	</span><span class="attr">#[must_use]
-<a href=#120 id=120 data-nosnippet>120</a>	</span><span class="kw">fn </span>GetUInt32(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;PROPERTYKEY&gt;) -&gt; HrResult&lt;u32&gt; {
+<a href=#120 id=120 data-nosnippet>120</a>	</span><span class="kw">fn </span>GetUInt32(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>co::PKEY) -&gt; HrResult&lt;u32&gt; {
 <a href=#121 id=121 data-nosnippet>121</a>		<span class="kw">let </span><span class="kw-2">mut </span>ui = <span class="number">0u32</span>;
 <a href=#122 id=122 data-nosnippet>122</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
 <a href=#123 id=123 data-nosnippet>123</a>			(vt::&lt;IShellItem2VT&gt;(<span class="self">self</span>).GetUInt32)(<span class="self">self</span>.ptr(), pcvoid(key), <span class="kw-2">&amp;mut </span>ui)
@@ -130,7 +130,7 @@
 <a href=#130 id=130 data-nosnippet>130</a>	///
 <a href=#131 id=131 data-nosnippet>131</a>	/// Usually `key` is a [`co::PKEY`](crate::co::PKEY) constant.
 <a href=#132 id=132 data-nosnippet>132</a>	</span><span class="attr">#[must_use]
-<a href=#133 id=133 data-nosnippet>133</a>	</span><span class="kw">fn </span>GetUInt64(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span><span class="kw">impl </span>AsRef&lt;PROPERTYKEY&gt;) -&gt; HrResult&lt;u64&gt; {
+<a href=#133 id=133 data-nosnippet>133</a>	</span><span class="kw">fn </span>GetUInt64(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>co::PKEY) -&gt; HrResult&lt;u64&gt; {
 <a href=#134 id=134 data-nosnippet>134</a>		<span class="kw">let </span><span class="kw-2">mut </span>ull = <span class="number">0u64</span>;
 <a href=#135 id=135 data-nosnippet>135</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
 <a href=#136 id=136 data-nosnippet>136</a>			(vt::&lt;IShellItem2VT&gt;(<span class="self">self</span>).GetUInt64)(<span class="self">self</span>.ptr(), pcvoid(key), <span class="kw-2">&amp;mut </span>ull)

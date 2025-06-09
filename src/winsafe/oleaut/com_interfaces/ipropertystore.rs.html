@@ -30,8 +30,8 @@
 <a href=#30 id=30 data-nosnippet>30</a>/// use winsafe::prelude::*;
 <a href=#31 id=31 data-nosnippet>31</a>/// ```
 <a href=#32 id=32 data-nosnippet>32</a></span><span class="kw">pub trait </span>oleaut_IPropertyStore: ole_IUnknown {
-<a href=#33 id=33 data-nosnippet>33</a>	<span class="doccomment">/// Returns an iterator over the [`PROPERTYKEY`](crate::PROPERTYKEY)
-<a href=#34 id=34 data-nosnippet>34</a>	/// elements by calling
+<a href=#33 id=33 data-nosnippet>33</a>	<span class="doccomment">/// Returns an iterator over the [`co::PKEY`](crate::co::PKEY) elements by
+<a href=#34 id=34 data-nosnippet>34</a>	/// calling
 <a href=#35 id=35 data-nosnippet>35</a>	/// [`IPropertyStore::GetCount`](crate::prelude::oleaut_IPropertyStore::GetCount)
 <a href=#36 id=36 data-nosnippet>36</a>	/// and
 <a href=#37 id=37 data-nosnippet>37</a>	/// [`IPropertyStore::GetAt`](crate::prelude::oleaut_IPropertyStore::GetAt)
@@ -52,7 +52,7 @@
 <a href=#52 id=52 data-nosnippet>52</a>	/// # w::HrResult::Ok(())
 <a href=#53 id=53 data-nosnippet>53</a>	/// ```
 <a href=#54 id=54 data-nosnippet>54</a>	</span><span class="attr">#[must_use]
-<a href=#55 id=55 data-nosnippet>55</a>	</span><span class="kw">fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;<span class="kw">impl </span>Iterator&lt;Item = HrResult&lt;PROPERTYKEY&gt;&gt; + <span class="lifetime">'_</span>&gt; {
+<a href=#55 id=55 data-nosnippet>55</a>	</span><span class="kw">fn </span>iter(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;<span class="kw">impl </span>Iterator&lt;Item = HrResult&lt;co::PKEY&gt;&gt; + <span class="lifetime">'_</span>&gt; {
 <a href=#56 id=56 data-nosnippet>56</a>		<span class="prelude-val">Ok</span>(IpropertystoreIter::new(<span class="self">self</span>)<span class="question-mark">?</span>)
 <a href=#57 id=57 data-nosnippet>57</a>	}
 <a href=#58 id=58 data-nosnippet>58</a>
@@ -64,8 +64,8 @@
 <a href=#64 id=64 data-nosnippet>64</a>	<span class="doccomment">/// [`IPropertyStore::GetAt`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getat)
 <a href=#65 id=65 data-nosnippet>65</a>	/// method.
 <a href=#66 id=66 data-nosnippet>66</a>	</span><span class="attr">#[must_use]
-<a href=#67 id=67 data-nosnippet>67</a>	</span><span class="kw">fn </span>GetAt(<span class="kw-2">&amp;</span><span class="self">self</span>, index: u32) -&gt; HrResult&lt;PROPERTYKEY&gt; {
-<a href=#68 id=68 data-nosnippet>68</a>		<span class="kw">let </span><span class="kw-2">mut </span>ppk = PROPERTYKEY::default();
+<a href=#67 id=67 data-nosnippet>67</a>	</span><span class="kw">fn </span>GetAt(<span class="kw-2">&amp;</span><span class="self">self</span>, index: u32) -&gt; HrResult&lt;co::PKEY&gt; {
+<a href=#68 id=68 data-nosnippet>68</a>		<span class="kw">let </span><span class="kw-2">mut </span>ppk = co::PKEY::default();
 <a href=#69 id=69 data-nosnippet>69</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
 <a href=#70 id=70 data-nosnippet>70</a>			(vt::&lt;IPropertyStoreVT&gt;(<span class="self">self</span>).GetAt)(<span class="self">self</span>.ptr(), index, pvoid(<span class="kw-2">&amp;mut </span>ppk))
 <a href=#71 id=71 data-nosnippet>71</a>		})
@@ -84,7 +84,7 @@
 <a href=#84 id=84 data-nosnippet>84</a>	<span class="doccomment">/// [`IPropertyStore::GetValue`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getvalue)
 <a href=#85 id=85 data-nosnippet>85</a>	/// method.
 <a href=#86 id=86 data-nosnippet>86</a>	</span><span class="attr">#[must_use]
-<a href=#87 id=87 data-nosnippet>87</a>	</span><span class="kw">fn </span>GetValue(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>PROPERTYKEY) -&gt; HrResult&lt;PropVariant&gt; {
+<a href=#87 id=87 data-nosnippet>87</a>	</span><span class="kw">fn </span>GetValue(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>co::PKEY) -&gt; HrResult&lt;PropVariant&gt; {
 <a href=#88 id=88 data-nosnippet>88</a>		<span class="kw">let </span><span class="kw-2">mut </span>var = PROPVARIANT::default();
 <a href=#89 id=89 data-nosnippet>89</a>		<span class="kw">match unsafe </span>{
 <a href=#90 id=90 data-nosnippet>90</a>			co::HRESULT::from_raw((vt::&lt;IPropertyStoreVT&gt;(<span class="self">self</span>).GetValue)(
@@ -102,7 +102,7 @@
 <a href=#102 id=102 data-nosnippet>102</a>
 <a href=#103 id=103 data-nosnippet>103</a>	<span class="doccomment">/// [`IPropertyStore::SetValue`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-setvalue)
 <a href=#104 id=104 data-nosnippet>104</a>	/// method.
-<a href=#105 id=105 data-nosnippet>105</a>	</span><span class="kw">fn </span>SetValue(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>PROPERTYKEY, value: <span class="kw-2">&amp;</span>PropVariant) -&gt; HrResult&lt;()&gt; {
+<a href=#105 id=105 data-nosnippet>105</a>	</span><span class="kw">fn </span>SetValue(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>co::PKEY, value: <span class="kw-2">&amp;</span>PropVariant) -&gt; HrResult&lt;()&gt; {
 <a href=#106 id=106 data-nosnippet>106</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
 <a href=#107 id=107 data-nosnippet>107</a>			(vt::&lt;IPropertyStoreVT&gt;(<span class="self">self</span>).SetValue)(
 <a href=#108 id=108 data-nosnippet>108</a>				<span class="self">self</span>.ptr(),
