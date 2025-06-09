@@ -815,7 +815,7 @@ impl HDC {
 	/// let hpen = w::HPEN::CreatePen(
 	///     co::PS::SOLID,
 	///     1,
-	///     w::COLORREF::new(0xff, 0x00, 0x88),
+	///     w::COLORREF::from_rgb(0xff, 0x00, 0x88),
 	/// )?;
 	///
 	/// let _pen_guard = hdc.SelectObject(&*hpen); // keep guard alive

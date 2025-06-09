@@ -166,11 +166,11 @@ pub fn ChangeDisplaySettingsEx(
 /// # let parent_hwnd = w::HWND::NULL;
 ///
 /// let mut cc = w::CHOOSECOLOR::default();
-/// let mut custom_colors = [w::COLORREF::new(255, 255, 255); 16];
+/// let mut custom_colors = [w::COLORREF::from_rgb(255, 255, 255); 16];
 ///
 /// cc.hwndOwner = parent_hwnd;
 /// cc.Flags = co::CC::ANYCOLOR | co::CC::FULLOPEN | co::CC::RGBINIT;
-/// cc.rgbResult = w::COLORREF::new(255, 0, 0); // color initially chosen
+/// cc.rgbResult = w::COLORREF::from_rgb(255, 0, 0); // color initially chosen
 /// cc.set_lpCustColors(Some(&mut custom_colors));
 ///
 /// if w::ChooseColor(&mut cc)? {
@@ -834,7 +834,7 @@ pub fn RegisterWindowMessage(s: &str) -> SysResult<u32> {
 pub fn SendInput(inputs: &[HwKbMouse]) -> SysResult<u32> {
 	let objs = inputs
 		.iter()
-		.map(|ipt| INPUT::new(*ipt))
+		.map(|ipt| INPUT::from_event(*ipt))
 		.collect::<Vec<_>>();
 
 	match unsafe {

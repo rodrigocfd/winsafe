@@ -140,10 +140,10 @@ impl COLORREF {
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let color = w::COLORREF::new(0xff, 0x80, 0x00);
+	/// let color = w::COLORREF::from_rgb(0xff, 0x80, 0x00);
 	/// ```
 	#[must_use]
-	pub const fn new(red: u8, green: u8, blue: u8) -> COLORREF {
+	pub const fn from_rgb(red: u8, green: u8, blue: u8) -> COLORREF {
 		Self(red as u32 | ((green as u32) << 8) | ((blue as u32) << 16))
 	}
 
@@ -667,7 +667,7 @@ union INPUT_union0 {
 impl INPUT {
 	/// Creates the struct.
 	#[must_use]
-	pub fn new(event: HwKbMouse) -> INPUT {
+	pub fn from_event(event: HwKbMouse) -> INPUT {
 		let mut new_self = INPUT {
 			dwType: co::INPUT::HARDWARE, // default value, will be replaced
 			union0: INPUT_union0 { hi: HARDWAREINPUT::default() },

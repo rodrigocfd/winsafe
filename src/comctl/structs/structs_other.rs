@@ -836,7 +836,7 @@ impl std::fmt::Display for NmhdrCode {
 
 impl NmhdrCode {
 	#[must_use]
-	pub(crate) const fn new(v: i32) -> Self {
+	pub(crate) const fn from_code(v: i32) -> Self {
 		Self(v)
 	}
 

@@ -40,7 +40,7 @@ pub trait ole_IStorage: ole_IUnknown {
 		snb_exclude: Option<&[impl AsRef<str>]>,
 		stg_dest: &impl ole_IStorage,
 	) -> HrResult<()> {
-		let snb = snb_exclude.map_or(Ok(SNB::default()), |strs| SNB::new(strs))?;
+		let snb = snb_exclude.map_or(Ok(SNB::default()), |strs| SNB::from_strs(strs))?;
 		ok_to_hrresult(unsafe {
 			(vt::<IStorageVT>(self).CopyTo)(
 				self.ptr(),

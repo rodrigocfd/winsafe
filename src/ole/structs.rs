@@ -140,7 +140,7 @@ impl SNB {
 	/// Creates a new `SNB` by allocating a contiguous memory block for pointers
 	/// and strings.
 	#[must_use]
-	pub fn new(strs: &[impl AsRef<str>]) -> HrResult<Self> {
+	pub fn from_strs(strs: &[impl AsRef<str>]) -> HrResult<Self> {
 		if strs.is_empty() {
 			return Ok(Self::default());
 		}

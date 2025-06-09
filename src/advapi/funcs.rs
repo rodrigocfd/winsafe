@@ -778,7 +778,7 @@ pub fn LookupPrivilegeName(system_name: Option<&str>, luid: LUID) -> SysResult<c
 /// ```
 #[must_use]
 pub fn LookupPrivilegeValue(system_name: Option<&str>, name: co::SE_PRIV) -> SysResult<LUID> {
-	let mut luid = LUID::new(0, 0);
+	let mut luid = LUID::from_parts(0, 0);
 	bool_to_sysresult(unsafe {
 		ffi::LookupPrivilegeValueW(
 			WString::from_opt_str(system_name).as_ptr(),

@@ -314,7 +314,7 @@ macro_rules! const_nm {
 		}
 		impl From<$name> for crate::NmhdrCode {
 			fn from(v: $name) -> Self {
-				Self::new(v.raw())
+				Self::from_code(v.raw())
 			}
 		}
 		impl TryFrom<crate::NmhdrCode> for $name {
