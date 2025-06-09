@@ -22,8 +22,8 @@ consecutively.</p>
 
 <span class="kw">let </span>pstore: w::IPropertyStore; <span class="comment">// initialized somewhere
 
-</span><span class="kw">for </span>ppk <span class="kw">in </span>pstore.iter()<span class="question-mark">? </span>{
-    <span class="kw">let </span>ppk = ppk<span class="question-mark">?</span>;
+</span><span class="kw">for </span>pkey <span class="kw">in </span>pstore.iter()<span class="question-mark">? </span>{
+    <span class="kw">let </span>pkey = pkey<span class="question-mark">?</span>;
     <span class="comment">// ...
 </span>}</code></pre></div>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.Commit" class="method"><a class="src rightside" href="../../src/winsafe/oleaut\com_interfaces/ipropertystore.rs.html#59-62">Source</a><h4 class="code-header">fn <a href="#method.Commit" class="fn">Commit</a>(&amp;self) -&gt; <a class="type" href="../type.HrResult.html" title="type winsafe::HrResult">HrResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-commit"><code>IPropertyStore::Commit</code></a>
