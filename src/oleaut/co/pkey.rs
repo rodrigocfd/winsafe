@@ -35,7 +35,7 @@ macro_rules! const_pkey_values {
 		impl PKEY {
 			$(
 				$( #[$valdoc] )*
-				pub const $name: PKEY = unsafe { PKEY::from_raw(GUID::new($guid), $pid) };
+				pub const $name: PKEY = unsafe { PKEY::from_raw(GUID::from_str($guid), $pid) };
 			)*
 		}
 	};

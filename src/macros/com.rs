@@ -317,7 +317,7 @@ macro_rules! const_guid {
 			/// Be sure the given value is meaningful for the actual type.
 			#[must_use]
 			pub const unsafe fn from_raw(guid_str: &str) -> Self {
-				Self(crate::kernel::decl::GUID::new(guid_str))
+				Self(crate::kernel::decl::GUID::from_str(guid_str))
 			}
 		}
 

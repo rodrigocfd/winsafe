@@ -34,7 +34,7 @@ impl std::fmt::Debug for GUID {
 
 impl GUID {
 	/// The null `GUID`, with all zeros.
-	pub const NULL: Self = Self::new("00000000-0000-0000-0000-000000000000");
+	pub const NULL: Self = Self::from_str("00000000-0000-0000-0000-000000000000");
 
 	/// Creates a new `GUID` from a representative hex string, which can be
 	/// copied straight from standard `GUID` declarations.
@@ -48,10 +48,10 @@ impl GUID {
 	/// ```no_run
 	/// use winsafe::{self as w, prelude::*};
 	///
-	/// let g = w::GUID::new("43826d1e-e718-42ee-bc55-a1e261c37bfe");
+	/// let g = w::GUID::from_str("43826d1e-e718-42ee-bc55-a1e261c37bfe");
 	/// ```
 	#[must_use]
-	pub const fn new(guid_str: &str) -> Self {
+	pub const fn from_str(guid_str: &str) -> Self {
 		if guid_str.len() != 36 {
 			panic!("Bad number of GUID chars.");
 		}
