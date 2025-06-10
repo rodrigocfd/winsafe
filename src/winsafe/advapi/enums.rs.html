@@ -264,7 +264,7 @@
 <a href=#264 id=264 data-nosnippet>264</a>	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::HSERVICESTATUS::RegisterServiceCtrlHandlerEx)
 <a href=#265 id=265 data-nosnippet>265</a>	/// callback, make sure all parameters are correct.
 <a href=#266 id=266 data-nosnippet>266</a>	</span><span class="attr">#[must_use]
-<a href=#267 id=267 data-nosnippet>267</a>	</span><span class="kw">pub unsafe fn </span>from_raw(event_data: <span class="kw-2">&amp;</span>DEV_BROADCAST_HDR) -&gt; <span class="self">Self </span>{
+<a href=#267 id=267 data-nosnippet>267</a>	</span><span class="kw">pub const unsafe fn </span>from_raw(event_data: <span class="kw-2">&amp;</span>DEV_BROADCAST_HDR) -&gt; <span class="self">Self </span>{
 <a href=#268 id=268 data-nosnippet>268</a>		<span class="kw">let </span>ptr = event_data <span class="kw">as </span><span class="kw-2">*const </span>DEV_BROADCAST_HDR;
 <a href=#269 id=269 data-nosnippet>269</a>		<span class="kw">unsafe </span>{
 <a href=#270 id=270 data-nosnippet>270</a>			<span class="kw">match </span>event_data.dbch_devicetype {
@@ -301,7 +301,7 @@
 <a href=#301 id=301 data-nosnippet>301</a>	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::HSERVICESTATUS::RegisterServiceCtrlHandlerEx)
 <a href=#302 id=302 data-nosnippet>302</a>	/// callback, make sure all parameters are correct.
 <a href=#303 id=303 data-nosnippet>303</a>	</span><span class="attr">#[must_use]
-<a href=#304 id=304 data-nosnippet>304</a>	</span><span class="kw">pub unsafe fn </span>from_raw(event: co::PBT, event_data: <span class="kw-2">*mut </span>std::ffi::c_void) -&gt; <span class="self">Self </span>{
+<a href=#304 id=304 data-nosnippet>304</a>	</span><span class="kw">pub const unsafe fn </span>from_raw(event: co::PBT, event_data: <span class="kw-2">*mut </span>std::ffi::c_void) -&gt; <span class="self">Self </span>{
 <a href=#305 id=305 data-nosnippet>305</a>		<span class="kw">match </span>event {
 <a href=#306 id=306 data-nosnippet>306</a>			co::PBT::APMPOWERSTATUSCHANGE =&gt; <span class="self">Self</span>::StatusChange,
 <a href=#307 id=307 data-nosnippet>307</a>			co::PBT::APMRESUMEAUTOMATIC =&gt; <span class="self">Self</span>::ResumeAutomatic,

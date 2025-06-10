@@ -1194,7 +1194,7 @@
 <a href=#1194 id=1194 data-nosnippet>1194</a>
 <a href=#1195 id=1195 data-nosnippet>1195</a><span class="kw">impl</span>&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>&gt; PROPSHEETHEADER&lt;<span class="lifetime">'a</span>, <span class="lifetime">'b</span>, <span class="lifetime">'c</span>, <span class="lifetime">'d</span>, <span class="lifetime">'e</span>, <span class="lifetime">'f</span>&gt; {
 <a href=#1196 id=1196 data-nosnippet>1196</a>	<span class="doccomment">/// Sets the `hIcon` field, which is part of an union.
-<a href=#1197 id=1197 data-nosnippet>1197</a>	</span><span class="kw">pub fn </span>set_hIcon(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hicon: HICON) {
+<a href=#1197 id=1197 data-nosnippet>1197</a>	</span><span class="kw">pub const fn </span>set_hIcon(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hicon: HICON) {
 <a href=#1198 id=1198 data-nosnippet>1198</a>		<span class="self">self</span>.hIcon_pszIcon = hicon.ptr();
 <a href=#1199 id=1199 data-nosnippet>1199</a>	}
 <a href=#1200 id=1200 data-nosnippet>1200</a>
@@ -1229,7 +1229,7 @@
 <a href=#1229 id=1229 data-nosnippet>1229</a>	}
 <a href=#1230 id=1230 data-nosnippet>1230</a>
 <a href=#1231 id=1231 data-nosnippet>1231</a>	<span class="doccomment">/// Sets the `hbmWatermark` field, which is part of an union.
-<a href=#1232 id=1232 data-nosnippet>1232</a>	</span><span class="kw">pub fn </span>set_hbmWatermark(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hbm: HBITMAP) {
+<a href=#1232 id=1232 data-nosnippet>1232</a>	</span><span class="kw">pub const fn </span>set_hbmWatermark(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hbm: HBITMAP) {
 <a href=#1233 id=1233 data-nosnippet>1233</a>		<span class="self">self</span>.hbmWatermark_pszbmWatermark = hbm.ptr();
 <a href=#1234 id=1234 data-nosnippet>1234</a>	}
 <a href=#1235 id=1235 data-nosnippet>1235</a>
@@ -1242,7 +1242,7 @@
 <a href=#1242 id=1242 data-nosnippet>1242</a>	}
 <a href=#1243 id=1243 data-nosnippet>1243</a>
 <a href=#1244 id=1244 data-nosnippet>1244</a>	<span class="doccomment">/// Sets the `hbmHeader` field, which is part of an union.
-<a href=#1245 id=1245 data-nosnippet>1245</a>	</span><span class="kw">pub fn </span>set_hbmHeader(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hbm: HBITMAP) {
+<a href=#1245 id=1245 data-nosnippet>1245</a>	</span><span class="kw">pub const fn </span>set_hbmHeader(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hbm: HBITMAP) {
 <a href=#1246 id=1246 data-nosnippet>1246</a>		<span class="self">self</span>.hbmHeader_pszbmHeader = hbm.ptr();
 <a href=#1247 id=1247 data-nosnippet>1247</a>	}
 <a href=#1248 id=1248 data-nosnippet>1248</a>
@@ -1300,7 +1300,7 @@
 <a href=#1300 id=1300 data-nosnippet>1300</a>	}
 <a href=#1301 id=1301 data-nosnippet>1301</a>
 <a href=#1302 id=1302 data-nosnippet>1302</a>	<span class="doccomment">/// Sets the `hIcon` field, which is part of an union.
-<a href=#1303 id=1303 data-nosnippet>1303</a>	</span><span class="kw">pub fn </span>set_hIcon(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hicon: HICON) {
+<a href=#1303 id=1303 data-nosnippet>1303</a>	</span><span class="kw">pub const fn </span>set_hIcon(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hicon: HICON) {
 <a href=#1304 id=1304 data-nosnippet>1304</a>		<span class="self">self</span>.hIcon_pszIcon = hicon.ptr();
 <a href=#1305 id=1305 data-nosnippet>1305</a>	}
 <a href=#1306 id=1306 data-nosnippet>1306</a>
@@ -1323,7 +1323,7 @@
 <a href=#1323 id=1323 data-nosnippet>1323</a>	<span class="macro">pub_fn_string_ptr_get_set!</span>(<span class="lifetime">'f</span>, pszHeaderSubTitle, set_pszHeaderSubTitle);
 <a href=#1324 id=1324 data-nosnippet>1324</a>
 <a href=#1325 id=1325 data-nosnippet>1325</a>	<span class="doccomment">/// Sets the `hbmHeader` field, which is part of an union.
-<a href=#1326 id=1326 data-nosnippet>1326</a>	</span><span class="kw">pub fn </span>set_hbmHeader(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hbm: HBITMAP) {
+<a href=#1326 id=1326 data-nosnippet>1326</a>	</span><span class="kw">pub const fn </span>set_hbmHeader(<span class="kw-2">&amp;mut </span><span class="self">self</span>, hbm: HBITMAP) {
 <a href=#1327 id=1327 data-nosnippet>1327</a>		<span class="self">self</span>.hbmHeader_pszbmHeader = hbm.ptr();
 <a href=#1328 id=1328 data-nosnippet>1328</a>	}
 <a href=#1329 id=1329 data-nosnippet>1329</a>

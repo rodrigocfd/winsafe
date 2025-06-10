@@ -284,7 +284,7 @@
 <a href=#284 id=284 data-nosnippet>284</a><span class="kw">impl </span>TreeitemTvi {
 <a href=#285 id=285 data-nosnippet>285</a>	<span class="doccomment">/// Constructs the enum from an `isize`.
 <a href=#286 id=286 data-nosnippet>286</a>	</span><span class="attr">#[must_use]
-<a href=#287 id=287 data-nosnippet>287</a>	</span><span class="kw">pub fn </span>from_isize(val: isize) -&gt; <span class="self">Self </span>{
+<a href=#287 id=287 data-nosnippet>287</a>	</span><span class="kw">pub const fn </span>from_isize(val: isize) -&gt; <span class="self">Self </span>{
 <a href=#288 id=288 data-nosnippet>288</a>		<span class="kw">match unsafe </span>{ co::TVI::from_raw(val) } {
 <a href=#289 id=289 data-nosnippet>289</a>			co::TVI::FIRST =&gt; <span class="self">Self</span>::Tvi(co::TVI::FIRST),
 <a href=#290 id=290 data-nosnippet>290</a>			co::TVI::LAST =&gt; <span class="self">Self</span>::Tvi(co::TVI::LAST),
