@@ -5,7 +5,6 @@ use crate::decl::*;
 use crate::gdi::ffi;
 use crate::guard::*;
 use crate::kernel::privs::*;
-use crate::prelude::*;
 
 impl HINSTANCE {
 	/// [`LoadImage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-loadimagew)

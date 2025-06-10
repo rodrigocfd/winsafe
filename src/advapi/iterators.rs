@@ -1,7 +1,6 @@
 use crate::advapi::ffi;
 use crate::co;
 use crate::decl::*;
-use crate::prelude::*;
 
 pub(in crate::advapi) struct HkeyKeyIter<'a> {
 	hkey: &'a HKEY,

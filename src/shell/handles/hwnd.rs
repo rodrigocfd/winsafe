@@ -3,7 +3,6 @@
 use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
-use crate::prelude::*;
 use crate::shell::ffi;
 
 impl HWND {
@@ -59,10 +58,6 @@ impl HWND {
 			)
 		};
 
-		if ret as usize > 32 {
-			Ok(())
-		} else {
-			Err(GetLastError())
-		}
+		if ret as usize > 32 { Ok(()) } else { Err(GetLastError()) }
 	}
 }

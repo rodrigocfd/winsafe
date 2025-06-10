@@ -41,18 +41,80 @@ macro_rules! handle {
 			const INVALID: Self = Self(-1 as _);
 
 			unsafe fn from_ptr(p: *mut std::ffi::c_void) -> Self {
-				Self(p)
-			}
-
-			unsafe fn as_mut(&mut self) -> &mut *mut std::ffi::c_void {
-				&mut self.0
+				unsafe { Self::from_ptr(p) }
 			}
 
 			unsafe fn raw_copy(&self) -> Self {
-				Self(self.0)
+				unsafe { self.raw_copy() }
+			}
+
+			unsafe fn as_mut(&mut self) -> &mut *mut std::ffi::c_void {
+				unsafe { self.as_mut() }
 			}
 
 			fn ptr(&self) -> *mut std::ffi::c_void {
+				self.ptr()
+			}
+		}
+
+		impl $name {
+			/// Constructs a new handle object by wrapping a pointer.
+			///
+			/// This method can be used as an escape hatch to interoperate with
+			/// other libraries.
+			///
+			/// # Safety
+			///
+			/// Be sure the pointer has the correct type and isn't owned by
+			/// anyone else, otherwise you may cause memory access violations.
+			#[must_use]
+			pub const unsafe fn from_ptr(p: *mut std::ffi::c_void) -> Self {
+				Self(p)
+			}
+
+			/// Returns a raw copy of the underlying handle pointer.
+			///
+			/// # Safety
+			///
+			/// As the name implies, `raw_copy` returns a raw copy of the
+			/// handle, so closing one of the copies won't close the others.
+			/// This means a handle can be used after it has been closed, what
+			/// can lead to errors and undefined behavior. Even worse: sometimes
+			/// Windows reuses handle values, so you can call a method on a
+			/// completely different handle type, what can be catastrophic.
+			///
+			/// However, in some cases the Windows API *demands* a copy of the
+			/// handle – `raw_copy` is an escape hatch to fill this gap.
+			#[must_use]
+			pub const unsafe fn raw_copy(&self) -> Self {
+				unsafe { Self::from_ptr(self.ptr()) }
+			}
+
+			/// Returns a mutable reference to the underlying raw pointer.
+			///
+			/// This method can be used as an escape hatch to interoperate with
+			/// other libraries.
+			///
+			/// # Safety
+			///
+			/// This method exposes the raw pointer used by raw Windows calls.
+			/// It's an opaque pointer to an internal Windows structure, and no
+			/// dereferencings should be attempted.
+			#[must_use]
+			pub const unsafe fn as_mut(&mut self) -> &mut *mut std::ffi::c_void {
+				&mut self.0
+			}
+
+			/// Returns the underlying raw pointer.
+			///
+			/// This method exposes the raw pointer used by raw Windows calls.
+			/// It's an opaque pointer to an internal Windows structure, and no
+			/// dereferencings should be attempted.
+			///
+			/// This method can be used as an escape hatch to interoperate with
+			/// other libraries.
+			#[must_use]
+			pub const fn ptr(&self) -> *mut std::ffi::c_void {
 				self.0
 			}
 		}

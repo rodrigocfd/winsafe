@@ -4,7 +4,6 @@ use crate::co;
 use crate::comctl_gdi::ffi;
 use crate::decl::*;
 use crate::kernel::privs::*;
-use crate::prelude::*;
 
 impl HIMAGELIST {
 	/// [`ImageList_DrawIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/commctrl/nf-commctrl-imagelist_drawindirect)

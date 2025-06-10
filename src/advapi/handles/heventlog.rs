@@ -5,7 +5,6 @@ use crate::co;
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::privs::*;
-use crate::prelude::*;
 
 handle! { HEVENTLOG;
 	/// Handle to an

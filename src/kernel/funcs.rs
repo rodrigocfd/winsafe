@@ -4,7 +4,6 @@ use crate::co;
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::{ffi, privs::*};
-use crate::prelude::*;
 
 /// [`CopyFile`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-copyfilew)
 /// function.

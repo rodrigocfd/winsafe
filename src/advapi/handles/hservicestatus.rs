@@ -3,7 +3,6 @@
 use crate::advapi::{ffi, proc};
 use crate::decl::*;
 use crate::kernel::privs::*;
-use crate::prelude::*;
 
 handle! { HSERVICESTATUS;
 	/// Handle to a

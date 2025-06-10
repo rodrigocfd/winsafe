@@ -4,7 +4,6 @@ use crate::co;
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::ffi;
-use crate::prelude::*;
 
 /// Stores a `[u16]` buffer for a null-terminated
 /// [Unicode UTF-16](https://learn.microsoft.com/en-us/windows/win32/intl/unicode-in-the-windows-api)

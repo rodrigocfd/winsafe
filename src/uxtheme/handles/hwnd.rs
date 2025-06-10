@@ -3,7 +3,6 @@
 use crate::decl::*;
 use crate::guard::*;
 use crate::ole::privs::*;
-use crate::prelude::*;
 use crate::uxtheme::ffi;
 
 impl HWND {

@@ -6,7 +6,6 @@ use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::ole::privs::*;
-use crate::prelude::*;
 
 /// [`ShellExecuteEx`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecuteexw)
 /// function.

@@ -2,7 +2,6 @@
 
 use crate::decl::*;
 use crate::kernel::{ffi, privs::*};
-use crate::prelude::*;
 
 handle! { HFILEMAPVIEW;
 	/// Address of a

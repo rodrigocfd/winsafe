@@ -4,7 +4,6 @@ use crate::co;
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::{ffi, privs::*, proc};
-use crate::prelude::*;
 
 handle! { HINSTANCE;
 	/// Handle to an

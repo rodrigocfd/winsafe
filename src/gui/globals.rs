@@ -56,7 +56,6 @@ pub(in crate::gui) mod ui_font {
 	use crate::decl::*;
 	use crate::guard::*;
 	use crate::msg::*;
-	use crate::prelude::*;
 
 	/// Global UI font object.
 	static mut UI_HFONT: Option<DeleteObjectGuard<HFONT>> = None;
@@ -117,11 +116,7 @@ pub(in crate::gui) mod auto_id {
 	/// If the given ID is zero, returns the next sequential control ID.
 	#[must_use]
 	pub(in crate::gui) const fn set_if_zero(id: u16) -> u16 {
-		if id == 0 {
-			next()
-		} else {
-			id
-		}
+		if id == 0 { next() } else { id }
 	}
 }
 

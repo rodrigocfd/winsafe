@@ -5,7 +5,6 @@ use crate::decl::*;
 use crate::dwm::ffi;
 use crate::kernel::privs::*;
 use crate::ole::privs::*;
-use crate::prelude::*;
 
 impl HWND {
 	/// [`DwmExtendFrameIntoClientArea`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmextendframeintoclientarea)

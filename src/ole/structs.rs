@@ -6,7 +6,6 @@ use crate::co;
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::ffi_types::*;
-use crate::prelude::*;
 
 /// [`COAUTHIDENTITY`](https://learn.microsoft.com/en-us/windows/win32/api/wtypesbase/ns-wtypesbase-coauthidentity)
 /// struct.

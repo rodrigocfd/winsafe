@@ -3,7 +3,6 @@ use std::any::Any;
 use crate::decl::*;
 use crate::gui::{events::*, privs::*};
 use crate::msg::*;
-use crate::prelude::*;
 
 /// Any window. Exposes the underlying window handle.
 ///

@@ -3,7 +3,6 @@
 use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
-use crate::prelude::*;
 use crate::winspool::ffi;
 
 /// [`AddPort`](https://learn.microsoft.com/en-us/windows/win32/printdocs/addport)

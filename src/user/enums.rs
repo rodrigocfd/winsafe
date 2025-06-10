@@ -3,7 +3,6 @@
 use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
-use crate::prelude::*;
 
 /// Variant parameter for:
 ///

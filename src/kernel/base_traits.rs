@@ -34,7 +34,7 @@ pub trait Handle:
 	/// [`ERROR::INVALID_HANDLE`](crate::co::ERROR::INVALID_HANDLE) error code.
 	const INVALID: Self;
 
-	/// Creates a new handle object by wrapping a pointer.
+	/// Constructs a new handle object by wrapping a pointer.
 	///
 	/// This method can be used as an escape hatch to interoperate with other
 	/// libraries.
