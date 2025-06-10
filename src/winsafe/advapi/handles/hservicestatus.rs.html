@@ -3,36 +3,35 @@
 <a href=#3 id=3 data-nosnippet>3</a></span><span class="kw">use </span><span class="kw">crate</span>::advapi::{ffi, proc};
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <a href=#5 id=5 data-nosnippet>5</a><span class="kw">use </span><span class="kw">crate</span>::kernel::privs::<span class="kw-2">*</span>;
-<a href=#6 id=6 data-nosnippet>6</a><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
-<a href=#7 id=7 data-nosnippet>7</a>
-<a href=#8 id=8 data-nosnippet>8</a><span class="macro">handle!</span> { HSERVICESTATUS;
-<a href=#9 id=9 data-nosnippet>9</a>	<span class="doccomment">/// Handle to a
-<a href=#10 id=10 data-nosnippet>10</a>	/// [service status](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-registerservicectrlhandlerexw).
-<a href=#11 id=11 data-nosnippet>11</a>	/// Originally `SERVICE_STATUS_HANDLE`.
-<a href=#12 id=12 data-nosnippet>12</a></span>}
-<a href=#13 id=13 data-nosnippet>13</a>
-<a href=#14 id=14 data-nosnippet>14</a><span class="kw">impl </span>HSERVICESTATUS {
-<a href=#15 id=15 data-nosnippet>15</a>	<span class="doccomment">/// [`RegisterServiceCtrlHandlerEx`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-registerservicectrlhandlerexw)
-<a href=#16 id=16 data-nosnippet>16</a>	/// function.
-<a href=#17 id=17 data-nosnippet>17</a>	</span><span class="kw">pub fn </span>RegisterServiceCtrlHandlerEx&lt;F&gt;(
-<a href=#18 id=18 data-nosnippet>18</a>		service_name: <span class="kw-2">&amp;</span>str,
-<a href=#19 id=19 data-nosnippet>19</a>		handler_proc: F,
-<a href=#20 id=20 data-nosnippet>20</a>	) -&gt; SysResult&lt;HSERVICESTATUS&gt;
-<a href=#21 id=21 data-nosnippet>21</a>	<span class="kw">where
-<a href=#22 id=22 data-nosnippet>22</a>		</span>F: FnMut(SvcCtl) -&gt; u32,
-<a href=#23 id=23 data-nosnippet>23</a>	{
-<a href=#24 id=24 data-nosnippet>24</a>		ptr_to_sysresult_handle(<span class="kw">unsafe </span>{
-<a href=#25 id=25 data-nosnippet>25</a>			ffi::RegisterServiceCtrlHandlerExW(
-<a href=#26 id=26 data-nosnippet>26</a>				WString::from_str(service_name).as_ptr(),
-<a href=#27 id=27 data-nosnippet>27</a>				proc::hservicestatus_register_service_ctrl_handler_ex::&lt;F&gt; <span class="kw">as _</span>,
-<a href=#28 id=28 data-nosnippet>28</a>				pcvoid(<span class="kw-2">&amp;</span>handler_proc),
-<a href=#29 id=29 data-nosnippet>29</a>			)
-<a href=#30 id=30 data-nosnippet>30</a>		})
-<a href=#31 id=31 data-nosnippet>31</a>	}
-<a href=#32 id=32 data-nosnippet>32</a>
-<a href=#33 id=33 data-nosnippet>33</a>	<span class="doccomment">/// [`SetServiceStatus`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-setservicestatus)
-<a href=#34 id=34 data-nosnippet>34</a>	/// function.
-<a href=#35 id=35 data-nosnippet>35</a>	</span><span class="kw">pub fn </span>SetServiceStatus(<span class="kw-2">&amp;</span><span class="self">self</span>, status: <span class="kw-2">&amp;mut </span>SERVICE_STATUS) -&gt; SysResult&lt;()&gt; {
-<a href=#36 id=36 data-nosnippet>36</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::SetServiceStatus(<span class="self">self</span>.ptr(), pvoid(status)) })
-<a href=#37 id=37 data-nosnippet>37</a>	}
-<a href=#38 id=38 data-nosnippet>38</a>}</code></pre></div></section></main></body></html>
+<a href=#6 id=6 data-nosnippet>6</a>
+<a href=#7 id=7 data-nosnippet>7</a><span class="macro">handle!</span> { HSERVICESTATUS;
+<a href=#8 id=8 data-nosnippet>8</a>	<span class="doccomment">/// Handle to a
+<a href=#9 id=9 data-nosnippet>9</a>	/// [service status](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-registerservicectrlhandlerexw).
+<a href=#10 id=10 data-nosnippet>10</a>	/// Originally `SERVICE_STATUS_HANDLE`.
+<a href=#11 id=11 data-nosnippet>11</a></span>}
+<a href=#12 id=12 data-nosnippet>12</a>
+<a href=#13 id=13 data-nosnippet>13</a><span class="kw">impl </span>HSERVICESTATUS {
+<a href=#14 id=14 data-nosnippet>14</a>	<span class="doccomment">/// [`RegisterServiceCtrlHandlerEx`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-registerservicectrlhandlerexw)
+<a href=#15 id=15 data-nosnippet>15</a>	/// function.
+<a href=#16 id=16 data-nosnippet>16</a>	</span><span class="kw">pub fn </span>RegisterServiceCtrlHandlerEx&lt;F&gt;(
+<a href=#17 id=17 data-nosnippet>17</a>		service_name: <span class="kw-2">&amp;</span>str,
+<a href=#18 id=18 data-nosnippet>18</a>		handler_proc: F,
+<a href=#19 id=19 data-nosnippet>19</a>	) -&gt; SysResult&lt;HSERVICESTATUS&gt;
+<a href=#20 id=20 data-nosnippet>20</a>	<span class="kw">where
+<a href=#21 id=21 data-nosnippet>21</a>		</span>F: FnMut(SvcCtl) -&gt; u32,
+<a href=#22 id=22 data-nosnippet>22</a>	{
+<a href=#23 id=23 data-nosnippet>23</a>		ptr_to_sysresult_handle(<span class="kw">unsafe </span>{
+<a href=#24 id=24 data-nosnippet>24</a>			ffi::RegisterServiceCtrlHandlerExW(
+<a href=#25 id=25 data-nosnippet>25</a>				WString::from_str(service_name).as_ptr(),
+<a href=#26 id=26 data-nosnippet>26</a>				proc::hservicestatus_register_service_ctrl_handler_ex::&lt;F&gt; <span class="kw">as _</span>,
+<a href=#27 id=27 data-nosnippet>27</a>				pcvoid(<span class="kw-2">&amp;</span>handler_proc),
+<a href=#28 id=28 data-nosnippet>28</a>			)
+<a href=#29 id=29 data-nosnippet>29</a>		})
+<a href=#30 id=30 data-nosnippet>30</a>	}
+<a href=#31 id=31 data-nosnippet>31</a>
+<a href=#32 id=32 data-nosnippet>32</a>	<span class="doccomment">/// [`SetServiceStatus`](https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-setservicestatus)
+<a href=#33 id=33 data-nosnippet>33</a>	/// function.
+<a href=#34 id=34 data-nosnippet>34</a>	</span><span class="kw">pub fn </span>SetServiceStatus(<span class="kw-2">&amp;</span><span class="self">self</span>, status: <span class="kw-2">&amp;mut </span>SERVICE_STATUS) -&gt; SysResult&lt;()&gt; {
+<a href=#35 id=35 data-nosnippet>35</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::SetServiceStatus(<span class="self">self</span>.ptr(), pvoid(status)) })
+<a href=#36 id=36 data-nosnippet>36</a>	}
+<a href=#37 id=37 data-nosnippet>37</a>}</code></pre></div></section></main></body></html>
