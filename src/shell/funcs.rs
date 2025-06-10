@@ -222,6 +222,46 @@ pub unsafe fn SHAddToRecentDocs<T>(flags: co::SHARD, pv: &T) {
 	}
 }
 
+/// [`SHBindToParent`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shbindtoparent)
+/// function.
+///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*, co};
+///
+/// let _com_guard = w::CoInitializeEx(
+///     co::COINIT::APARTMENTTHREADED | co::COINIT::DISABLE_OLE1DDE)?;
+///
+/// let f = w::SHCreateItemFromParsingName::<w::IShellItem>(
+///     "C:\\Temp",
+///     None::<&w::IBindCtx>,
+/// )?;
+///
+/// let pidl = w::SHGetIDListFromObject(&f)?;
+///
+/// let (f2, pidl2) = w::SHBindToParent::<w::IShellFolder>(&pidl)?;
+/// # w::HrResult::Ok(())
+/// ```
+#[must_use]
+pub fn SHBindToParent<T>(pidl: &PIDL) -> HrResult<(T, PIDL)>
+where
+	T: ole_IUnknown,
+{
+	unsafe {
+		let mut queried = T::null();
+		let mut pidl_last = PIDL::from_ptr(std::ptr::null_mut()); // belongs to the system
+
+		ok_to_hrresult(ffi::SHBindToParent(
+			pidl.ptr() as _,
+			pcvoid(&T::IID),
+			queried.as_mut(),
+			pvoid(&mut pidl_last),
+		))
+		.map(|_| (queried, pidl_last))
+	}
+}
+
 /// [`SHCreateItemFromIDList`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shcreateitemfromidlist)
 /// function.
 ///
@@ -235,7 +275,7 @@ where
 {
 	let mut queried = unsafe { T::null() };
 	ok_to_hrresult(unsafe {
-		ffi::SHCreateItemFromIDList(pidl.0 as _, pcvoid(&T::IID), queried.as_mut())
+		ffi::SHCreateItemFromIDList(pidl.ptr() as _, pcvoid(&T::IID), queried.as_mut())
 	})
 	.map(|_| queried)
 }
@@ -361,13 +401,30 @@ pub fn SHCreateMemStream(src: &[u8]) -> HrResult<IStream> {
 /// [`SHGetIDListFromObject`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shgetidlistfromobject)
 /// function.
 ///
+/// # Examples
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*, co};
+///
+/// let _com_guard = w::CoInitializeEx(
+///     co::COINIT::APARTMENTTHREADED | co::COINIT::DISABLE_OLE1DDE)?;
+///
+/// let f = w::SHCreateItemFromParsingName::<w::IShellItem>(
+///     "C:\\Temp",
+///     None::<&w::IBindCtx>,
+/// )?;
+///
+/// let pidl = w::SHGetIDListFromObject(&f)?;
+/// # w::HrResult::Ok(())
+/// ```
+///
 /// # Related functions
 ///
 /// * [`SHCreateItemFromIDList`](crate::SHCreateItemFromIDList)
 #[must_use]
 pub fn SHGetIDListFromObject(obj: &impl ole_IUnknown) -> HrResult<CoTaskMemFreePidlGuard> {
-	let mut pidl = PIDL(std::ptr::null_mut());
 	unsafe {
+		let mut pidl = PIDL::from_ptr(std::ptr::null_mut());
 		ok_to_hrresult(ffi::SHGetIDListFromObject(obj.ptr(), pvoid(&mut pidl)))
 			.map(|_| CoTaskMemFreePidlGuard::new(pidl))
 	}

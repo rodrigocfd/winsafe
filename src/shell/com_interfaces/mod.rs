@@ -4,6 +4,7 @@ mod ifileopendialog;
 mod ifileoperation;
 mod ifilesavedialog;
 mod imodalwindow;
+mod ishellfolder;
 mod ishellitem;
 mod ishellitem2;
 mod ishellitemarray;
@@ -20,6 +21,7 @@ pub mod decl {
 	pub use super::ifileoperation::IFileOperation;
 	pub use super::ifilesavedialog::IFileSaveDialog;
 	pub use super::imodalwindow::IModalWindow;
+	pub use super::ishellfolder::IShellFolder;
 	pub use super::ishellitem::IShellItem;
 	pub use super::ishellitem2::IShellItem2;
 	pub use super::ishellitemarray::IShellItemArray;
@@ -37,6 +39,7 @@ pub mod traits {
 	pub use super::ifileoperation::shell_IFileOperation;
 	pub use super::ifilesavedialog::shell_IFileSaveDialog;
 	pub use super::imodalwindow::shell_IModalWindow;
+	pub use super::ishellfolder::shell_IShellFolder;
 	pub use super::ishellitem::shell_IShellItem;
 	pub use super::ishellitem2::shell_IShellItem2;
 	pub use super::ishellitemarray::shell_IShellItemArray;

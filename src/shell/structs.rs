@@ -63,7 +63,29 @@ impl NOTIFYICONDATA {
 /// [`PIDL`](https://learn.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-itemidlist)
 /// struct.
 #[repr(transparent)]
-pub struct PIDL(pub(crate) *mut ITEMIDLIST);
+pub struct PIDL(*mut ITEMIDLIST);
+
+impl PIDL {
+	/// Constructs a new `PIDL` object by wrapping a pointer.
+	///
+	/// This method can be used as an escape hatch to interoperate with other
+	/// libraries.
+	///
+	/// # Safety
+	///
+	/// Be sure the pointer has the correct type and isn’t owned by anyone else,
+	/// otherwise you may cause memory access violations.
+	#[must_use]
+	pub const unsafe fn from_ptr(p: *mut ITEMIDLIST) -> Self {
+		Self(p)
+	}
+
+	/// Returns the underlying [`ITEMIDLIST`](crate::ITEMIDLIST) pointer value.
+	#[must_use]
+	pub const fn ptr(&self) -> *mut ITEMIDLIST {
+		self.0
+	}
+}
 
 /// [`SHFILEINFO`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-shfileinfow)
 /// struct.

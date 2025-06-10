@@ -133,7 +133,7 @@ pub struct CoTaskMemFreePidlGuard {
 
 impl Drop for CoTaskMemFreePidlGuard {
 	fn drop(&mut self) {
-		let ptr = self.pidl.0;
+		let ptr = self.pidl.ptr();
 		if !ptr.is_null() {
 			let _ = unsafe { CoTaskMemFreeGuard::new(ptr as _, 0) };
 		}

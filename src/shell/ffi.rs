@@ -7,6 +7,7 @@ extern_sys! { "shell32";
 	DragQueryFileW(HANDLE, u32, PSTR, u32) -> u32
 	DragQueryPoint(HANDLE, PVOID) -> BOOL
 	SHAddToRecentDocs(u32, PCVOID)
+	SHBindToParent(PCVOID, PCVOID, *mut COMPTR, PVOID) -> HRES
 	SHCreateItemFromIDList(PCVOID, PCVOID, *mut COMPTR) -> HRES
 	SHCreateItemFromParsingName(PCSTR, PVOID, PCVOID, *mut COMPTR) -> HRES
 	SHCreateItemFromRelativeName(COMPTR, PCSTR, COMPTR, PCVOID, *mut COMPTR) -> HRES

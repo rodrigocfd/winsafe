@@ -122,6 +122,21 @@ pub struct IModalWindowVT {
 }
 
 #[repr(C)]
+pub struct IShellFolderVT {
+	pub IUnknownVT: IUnknownVT,
+	pub ParseDisplayName: fn(COMPTR, HANDLE, COMPTR, PCSTR, *mut u32, PCVOID, *mut u32) -> HRES,
+	pub EnumObjects: fn(COMPTR, HANDLE, u32, *mut COMPTR) -> HRES,
+	pub BindToObject: fn(COMPTR, PCVOID, COMPTR, PCVOID, *mut COMPTR) -> HRES,
+	pub BindToStorage: fn(COMPTR, PCVOID, COMPTR, PCVOID, *mut COMPTR) -> HRES,
+	pub CompareIDs: fn(COMPTR, isize, PCVOID, PCVOID) -> HRES,
+	pub CreateViewObject: fn(COMPTR, HANDLE, PCVOID, *mut COMPTR) -> HRES,
+	pub GetAttributesOf: fn(COMPTR, u32, PCVOID, *mut u32) -> HRES,
+	pub GetUIObjectOf: fn(COMPTR, HANDLE, u32, PCVOID, PCVOID, *mut u32, *mut COMPTR) -> HRES,
+	pub GetDisplayNameOf: fn(COMPTR, PCVOID, u32, PVOID) -> HRES,
+	pub SetNameOf: fn(COMPTR, HANDLE, PCVOID, PCSTR, u32, PVOID) -> HRES,
+}
+
+#[repr(C)]
 pub struct IShellItemVT {
 	pub IUnknownVT: IUnknownVT,
 	pub BindToHandler: fn(COMPTR, PVOID, PCVOID, PCVOID, *mut COMPTR) -> HRES,
