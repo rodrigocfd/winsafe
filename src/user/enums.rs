@@ -332,7 +332,7 @@ pub enum IdMenu<'a> {
 impl<'a> IdMenu<'a> {
 	/// Returns a pointer to the raw data content.
 	#[must_use]
-	pub fn as_ptr(&self) -> *mut std::ffi::c_void {
+	pub const fn as_ptr(&self) -> *mut std::ffi::c_void {
 		match self {
 			Self::Id(id) => *id as _,
 			Self::Menu(hMenu) => hMenu.ptr(),

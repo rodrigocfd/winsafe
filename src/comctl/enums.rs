@@ -284,7 +284,7 @@ impl From<TreeitemTvi> for isize {
 impl TreeitemTvi {
 	/// Constructs the enum from an `isize`.
 	#[must_use]
-	pub fn from_isize(val: isize) -> Self {
+	pub const fn from_isize(val: isize) -> Self {
 		match unsafe { co::TVI::from_raw(val) } {
 			co::TVI::FIRST => Self::Tvi(co::TVI::FIRST),
 			co::TVI::LAST => Self::Tvi(co::TVI::LAST),

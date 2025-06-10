@@ -244,7 +244,7 @@ impl STGMEDIUM {
 	///
 	/// Make sure the struct has been properly initialized.
 	#[must_use]
-	pub unsafe fn ptr_hglobal(&self) -> Option<HGLOBAL> {
+	pub const unsafe fn ptr_hglobal(&self) -> Option<HGLOBAL> {
 		match &self.tymed {
 			&co::TYMED::HGLOBAL => Some(unsafe { HGLOBAL::from_ptr(self.ptr as _) }),
 			_ => None,

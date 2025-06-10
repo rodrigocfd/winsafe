@@ -264,7 +264,7 @@ impl<'a> SvcCtlDeviceEvent<'a> {
 	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::HSERVICESTATUS::RegisterServiceCtrlHandlerEx)
 	/// callback, make sure all parameters are correct.
 	#[must_use]
-	pub unsafe fn from_raw(event_data: &DEV_BROADCAST_HDR) -> Self {
+	pub const unsafe fn from_raw(event_data: &DEV_BROADCAST_HDR) -> Self {
 		let ptr = event_data as *const DEV_BROADCAST_HDR;
 		unsafe {
 			match event_data.dbch_devicetype {
@@ -301,7 +301,7 @@ impl<'a> SvcCtlPowerEvent<'a> {
 	/// [`HSERVICESTATUS::RegisterServiceCtrlHandlerEx`](crate::HSERVICESTATUS::RegisterServiceCtrlHandlerEx)
 	/// callback, make sure all parameters are correct.
 	#[must_use]
-	pub unsafe fn from_raw(event: co::PBT, event_data: *mut std::ffi::c_void) -> Self {
+	pub const unsafe fn from_raw(event: co::PBT, event_data: *mut std::ffi::c_void) -> Self {
 		match event {
 			co::PBT::APMPOWERSTATUSCHANGE => Self::StatusChange,
 			co::PBT::APMRESUMEAUTOMATIC => Self::ResumeAutomatic,

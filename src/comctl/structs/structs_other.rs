@@ -1194,7 +1194,7 @@ impl_default!(PROPSHEETHEADER, dwSize, 'a, 'b, 'c, 'd, 'e, 'f);
 
 impl<'a, 'b, 'c, 'd, 'e, 'f> PROPSHEETHEADER<'a, 'b, 'c, 'd, 'e, 'f> {
 	/// Sets the `hIcon` field, which is part of an union.
-	pub fn set_hIcon(&mut self, hicon: HICON) {
+	pub const fn set_hIcon(&mut self, hicon: HICON) {
 		self.hIcon_pszIcon = hicon.ptr();
 	}
 
@@ -1229,7 +1229,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f> PROPSHEETHEADER<'a, 'b, 'c, 'd, 'e, 'f> {
 	}
 
 	/// Sets the `hbmWatermark` field, which is part of an union.
-	pub fn set_hbmWatermark(&mut self, hbm: HBITMAP) {
+	pub const fn set_hbmWatermark(&mut self, hbm: HBITMAP) {
 		self.hbmWatermark_pszbmWatermark = hbm.ptr();
 	}
 
@@ -1242,7 +1242,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f> PROPSHEETHEADER<'a, 'b, 'c, 'd, 'e, 'f> {
 	}
 
 	/// Sets the `hbmHeader` field, which is part of an union.
-	pub fn set_hbmHeader(&mut self, hbm: HBITMAP) {
+	pub const fn set_hbmHeader(&mut self, hbm: HBITMAP) {
 		self.hbmHeader_pszbmHeader = hbm.ptr();
 	}
 
@@ -1300,7 +1300,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> PROPSHEETPAGE<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 	}
 
 	/// Sets the `hIcon` field, which is part of an union.
-	pub fn set_hIcon(&mut self, hicon: HICON) {
+	pub const fn set_hIcon(&mut self, hicon: HICON) {
 		self.hIcon_pszIcon = hicon.ptr();
 	}
 
@@ -1323,7 +1323,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g> PROPSHEETPAGE<'a, 'b, 'c, 'd, 'e, 'f, 'g> {
 	pub_fn_string_ptr_get_set!('f, pszHeaderSubTitle, set_pszHeaderSubTitle);
 
 	/// Sets the `hbmHeader` field, which is part of an union.
-	pub fn set_hbmHeader(&mut self, hbm: HBITMAP) {
+	pub const fn set_hbmHeader(&mut self, hbm: HBITMAP) {
 		self.hbmHeader_pszbmHeader = hbm.ptr();
 	}
 

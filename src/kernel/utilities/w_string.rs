@@ -137,7 +137,7 @@ impl WString {
 		Self { buf: Buffer::from_wchars_slice(src) }
 	}
 
-	/// Creates a new, empty `WString`. No allocation is made.
+	/// Constructs a new, empty `WString`. No allocation is made.
 	#[must_use]
 	pub const fn new() -> Self {
 		Self { buf: Buffer::new() }
