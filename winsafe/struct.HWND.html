@@ -621,7 +621,7 @@ which receives point coordinates and returns two values:</p>
 </span><span class="kw">let </span>(char_pos, line_pos) = <span class="kw">unsafe </span>{
     hwnd.SendMessage(
         msg::em::CharFromPos {
-            coords: w::POINT::new(<span class="number">12</span>, <span class="number">20</span>),
+            coords: w::POINT::with(<span class="number">12</span>, <span class="number">20</span>),
         },
     )
 };</code></pre></div>
@@ -730,7 +730,7 @@ function.</p>
 
 </span>hwnd.SetWindowPos(
     w::HwndPlace::None,
-    w::POINT::new(<span class="number">10</span>, <span class="number">10</span>),
+    w::POINT::with(<span class="number">10</span>, <span class="number">10</span>),
     w::SIZE::default(),
     co::SWP::NOZORDER | co::SWP::NOSIZE,
 )<span class="question-mark">?</span>;</code></pre></div>

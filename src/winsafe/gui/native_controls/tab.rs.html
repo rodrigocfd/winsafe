@@ -165,8 +165,8 @@
 <a href=#165 id=165 data-nosnippet>165</a>			}
 <a href=#166 id=166 data-nosnippet>166</a>			item.as_ref().as_ref().hwnd().SetWindowPos(
 <a href=#167 id=167 data-nosnippet>167</a>				HwndPlace::None,
-<a href=#168 id=168 data-nosnippet>168</a>				POINT::new(rc.left, rc.top),
-<a href=#169 id=169 data-nosnippet>169</a>				SIZE::new(rc.right - rc.left, rc.bottom - rc.top),
+<a href=#168 id=168 data-nosnippet>168</a>				POINT::with(rc.left, rc.top),
+<a href=#169 id=169 data-nosnippet>169</a>				SIZE::with(rc.right - rc.left, rc.bottom - rc.top),
 <a href=#170 id=170 data-nosnippet>170</a>				co::SWP::NOZORDER | co::SWP::SHOWWINDOW,
 <a href=#171 id=171 data-nosnippet>171</a>			)<span class="question-mark">?</span>;
 <a href=#172 id=172 data-nosnippet>172</a>		}
@@ -188,7 +188,7 @@
 <a href=#188 id=188 data-nosnippet>188</a>			<span class="prelude-val">Some</span>(h) =&gt; <span class="prelude-val">Ok</span>(h), <span class="comment">// already created
 <a href=#189 id=189 data-nosnippet>189</a>			</span><span class="prelude-val">None </span>=&gt; {
 <a href=#190 id=190 data-nosnippet>190</a>				<span class="comment">// Not created yet. Create a new image list and assign it to the list view.
-<a href=#191 id=191 data-nosnippet>191</a>				</span><span class="kw">let </span>h = HIMAGELIST::Create(SIZE::new(<span class="number">16</span>, <span class="number">16</span>), co::ILC::COLOR32, <span class="number">1</span>, <span class="number">1</span>)<span class="question-mark">?</span>.leak();
+<a href=#191 id=191 data-nosnippet>191</a>				</span><span class="kw">let </span>h = HIMAGELIST::Create(SIZE::with(<span class="number">16</span>, <span class="number">16</span>), co::ILC::COLOR32, <span class="number">1</span>, <span class="number">1</span>)<span class="question-mark">?</span>.leak();
 <a href=#192 id=192 data-nosnippet>192</a>				<span class="kw">unsafe </span>{
 <a href=#193 id=193 data-nosnippet>193</a>					<span class="self">self</span>.hwnd()
 <a href=#194 id=194 data-nosnippet>194</a>						.SendMessage(tcm::SetImageList { himagelist: <span class="prelude-val">Some</span>(h.raw_copy()) });

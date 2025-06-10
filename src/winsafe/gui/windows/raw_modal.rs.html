@@ -84,7 +84,7 @@
 <a href=#84 id=84 data-nosnippet>84</a>		rc_wnd = AdjustWindowRectEx(rc_wnd, opts.style, <span class="bool-val">false</span>, opts.ex_style)<span class="question-mark">?</span>;
 <a href=#85 id=85 data-nosnippet>85</a>
 <a href=#86 id=86 data-nosnippet>86</a>		<span class="kw">let </span>rc_parent = parent.hwnd().GetWindowRect()<span class="question-mark">?</span>; <span class="comment">// relative to screen
-<a href=#87 id=87 data-nosnippet>87</a>		</span><span class="kw">let </span>wnd_pos = POINT::new(
+<a href=#87 id=87 data-nosnippet>87</a>		</span><span class="kw">let </span>wnd_pos = POINT::with(
 <a href=#88 id=88 data-nosnippet>88</a>			rc_parent.left + (rc_parent.right - rc_parent.left) / <span class="number">2
 <a href=#89 id=89 data-nosnippet>89</a>				</span>- (rc_wnd.right - rc_wnd.left) / <span class="number">2</span>, <span class="comment">// center on parent
 <a href=#90 id=90 data-nosnippet>90</a>			</span>rc_parent.top + (rc_parent.bottom - rc_parent.top) / <span class="number">2
@@ -96,8 +96,8 @@
 <a href=#96 id=96 data-nosnippet>96</a>			atom,
 <a href=#97 id=97 data-nosnippet>97</a>			<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>opts.title),
 <a href=#98 id=98 data-nosnippet>98</a>			opts.style,
-<a href=#99 id=99 data-nosnippet>99</a>			POINT::new(wnd_pos.x, wnd_pos.y),
-<a href=#100 id=100 data-nosnippet>100</a>			SIZE::new(rc_wnd.right - rc_wnd.left, rc_wnd.bottom - rc_wnd.top),
+<a href=#99 id=99 data-nosnippet>99</a>			POINT::with(wnd_pos.x, wnd_pos.y),
+<a href=#100 id=100 data-nosnippet>100</a>			SIZE::with(rc_wnd.right - rc_wnd.left, rc_wnd.bottom - rc_wnd.top),
 <a href=#101 id=101 data-nosnippet>101</a>			<span class="prelude-val">Some</span>(parent.hwnd()),
 <a href=#102 id=102 data-nosnippet>102</a>			IdMenu::None,
 <a href=#103 id=103 data-nosnippet>103</a>			<span class="kw-2">&amp;</span>hinst,

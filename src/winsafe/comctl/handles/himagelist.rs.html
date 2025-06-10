@@ -100,7 +100,7 @@
 <a href=#100 id=100 data-nosnippet>100</a>	/// let himgl: w::HIMAGELIST; // initialized somewhere
 <a href=#101 id=101 data-nosnippet>101</a>	/// # let himgl = w::HIMAGELIST::NULL;
 <a href=#102 id=102 data-nosnippet>102</a>	///
-<a href=#103 id=103 data-nosnippet>103</a>	/// let _drag = himgl.BeginDrag(0, w::POINT::new(0, 0))?; // keep guard alive
+<a href=#103 id=103 data-nosnippet>103</a>	/// let _drag = himgl.BeginDrag(0, w::POINT::new())?; // keep guard alive
 <a href=#104 id=104 data-nosnippet>104</a>	/// # w::HrResult::Ok(())
 <a href=#105 id=105 data-nosnippet>105</a>	/// ```
 <a href=#106 id=106 data-nosnippet>106</a>	</span><span class="kw">pub fn </span>BeginDrag(<span class="kw-2">&amp;</span><span class="self">self</span>, itrack: u32, hotspot: POINT) -&gt; HrResult&lt;ImageListEndDragGuard&lt;<span class="lifetime">'_</span>&gt;&gt; {
@@ -121,7 +121,7 @@
 <a href=#121 id=121 data-nosnippet>121</a>	/// use winsafe::{self as w, prelude::*, co};
 <a href=#122 id=122 data-nosnippet>122</a>	///
 <a href=#123 id=123 data-nosnippet>123</a>	/// let himgl = w::HIMAGELIST::Create(
-<a href=#124 id=124 data-nosnippet>124</a>	///     w::SIZE::new(16, 16),
+<a href=#124 id=124 data-nosnippet>124</a>	///     w::SIZE::with(16, 16),
 <a href=#125 id=125 data-nosnippet>125</a>	///     co::ILC::COLOR32,
 <a href=#126 id=126 data-nosnippet>126</a>	///     1,
 <a href=#127 id=127 data-nosnippet>127</a>	///     1,

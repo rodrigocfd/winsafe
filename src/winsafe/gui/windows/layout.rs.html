@@ -87,7 +87,7 @@
 <a href=#87 id=87 data-nosnippet>87</a>			<span class="kw">if </span>ctrls.is_empty() {
 <a href=#88 id=88 data-nosnippet>88</a>				<span class="kw">let </span>rc_parent = hparent.GetClientRect()<span class="question-mark">?</span>;
 <a href=#89 id=89 data-nosnippet>89</a>				<span class="kw-2">*</span><span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span><span class="self">self</span>.<span class="number">0</span>.sz_parent_orig.get() } = <span class="prelude-val">Some</span>(
-<a href=#90 id=90 data-nosnippet>90</a>					SIZE::new(rc_parent.right, rc_parent.bottom), <span class="comment">// save parent client area
+<a href=#90 id=90 data-nosnippet>90</a>					SIZE::with(rc_parent.right, rc_parent.bottom), <span class="comment">// save parent client area
 <a href=#91 id=91 data-nosnippet>91</a>				</span>);
 <a href=#92 id=92 data-nosnippet>92</a>			}
 <a href=#93 id=93 data-nosnippet>93</a>
@@ -142,7 +142,7 @@
 <a href=#142 id=142 data-nosnippet>142</a>			hdwp.DeferWindowPos(
 <a href=#143 id=143 data-nosnippet>143</a>				<span class="kw-2">&amp;</span>ctrl.hchild,
 <a href=#144 id=144 data-nosnippet>144</a>				HwndPlace::None,
-<a href=#145 id=145 data-nosnippet>145</a>				POINT::new(
+<a href=#145 id=145 data-nosnippet>145</a>				POINT::with(
 <a href=#146 id=146 data-nosnippet>146</a>					<span class="kw">match </span>ctrl.horz {
 <a href=#147 id=147 data-nosnippet>147</a>						Horz::Repos =&gt; p.client_area.cx - sz_parent_orig.cx + rc_orig.left,
 <a href=#148 id=148 data-nosnippet>148</a>						<span class="kw">_ </span>=&gt; rc_orig.left, <span class="comment">// keep original x pos
@@ -152,7 +152,7 @@
 <a href=#152 id=152 data-nosnippet>152</a>						<span class="kw">_ </span>=&gt; rc_orig.top, <span class="comment">// keep original y pos
 <a href=#153 id=153 data-nosnippet>153</a>					</span>},
 <a href=#154 id=154 data-nosnippet>154</a>				),
-<a href=#155 id=155 data-nosnippet>155</a>				SIZE::new(
+<a href=#155 id=155 data-nosnippet>155</a>				SIZE::with(
 <a href=#156 id=156 data-nosnippet>156</a>					<span class="kw">match </span>ctrl.horz {
 <a href=#157 id=157 data-nosnippet>157</a>						Horz::Resize =&gt; {
 <a href=#158 id=158 data-nosnippet>158</a>							p.client_area.cx - sz_parent_orig.cx + rc_orig.right - rc_orig.left

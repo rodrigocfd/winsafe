@@ -185,12 +185,12 @@
 <a href=#185 id=185 data-nosnippet>185</a>			<span class="prelude-val">Some</span>(sz) =&gt; sz,
 <a href=#186 id=186 data-nosnippet>186</a>			<span class="prelude-val">None </span>=&gt; {
 <a href=#187 id=187 data-nosnippet>187</a>				<span class="kw">let </span>rc = hdc.WindowFromDC().unwrap().GetClientRect()<span class="question-mark">?</span>;
-<a href=#188 id=188 data-nosnippet>188</a>				SIZE::new(rc.right - rc.left, rc.bottom - rc.top)
+<a href=#188 id=188 data-nosnippet>188</a>				SIZE::with(rc.right - rc.left, rc.bottom - rc.top)
 <a href=#189 id=189 data-nosnippet>189</a>			},
 <a href=#190 id=190 data-nosnippet>190</a>		};
 <a href=#191 id=191 data-nosnippet>191</a>		<span class="kw">let </span>src_extent_compensated = <span class="kw">match </span>src_extent_himetric {
-<a href=#192 id=192 data-nosnippet>192</a>			<span class="prelude-val">Some</span>(sz) =&gt; SIZE::new(sz.cx, -sz.cy),
-<a href=#193 id=193 data-nosnippet>193</a>			<span class="prelude-val">None </span>=&gt; SIZE::new(<span class="self">self</span>.get_Width()<span class="question-mark">?</span>, -<span class="self">self</span>.get_Height()<span class="question-mark">?</span>),
+<a href=#192 id=192 data-nosnippet>192</a>			<span class="prelude-val">Some</span>(sz) =&gt; SIZE::with(sz.cx, -sz.cy),
+<a href=#193 id=193 data-nosnippet>193</a>			<span class="prelude-val">None </span>=&gt; SIZE::with(<span class="self">self</span>.get_Width()<span class="question-mark">?</span>, -<span class="self">self</span>.get_Height()<span class="question-mark">?</span>),
 <a href=#194 id=194 data-nosnippet>194</a>		};
 <a href=#195 id=195 data-nosnippet>195</a>
 <a href=#196 id=196 data-nosnippet>196</a>		ok_to_hrresult(<span class="kw">unsafe </span>{

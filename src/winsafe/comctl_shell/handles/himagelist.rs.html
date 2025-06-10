@@ -14,7 +14,7 @@
 <a href=#14 id=14 data-nosnippet>14</a>	/// use winsafe::{self as w, prelude::*, co};
 <a href=#15 id=15 data-nosnippet>15</a>	///
 <a href=#16 id=16 data-nosnippet>16</a>	/// let mut himgl = w::HIMAGELIST::Create(
-<a href=#17 id=17 data-nosnippet>17</a>	///     w::SIZE::new(16, 16),
+<a href=#17 id=17 data-nosnippet>17</a>	///     w::SIZE::with(16, 16),
 <a href=#18 id=18 data-nosnippet>18</a>	///     co::ILC::COLOR32,
 <a href=#19 id=19 data-nosnippet>19</a>	///     1,
 <a href=#20 id=20 data-nosnippet>20</a>	///     1,
@@ -25,7 +25,7 @@
 <a href=#25 id=25 data-nosnippet>25</a>	/// ```
 <a href=#26 id=26 data-nosnippet>26</a>	</span><span class="kw">pub fn </span>add_icons_from_shell(<span class="kw-2">&amp;</span><span class="self">self</span>, file_extensions: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;]) -&gt; HrResult&lt;()&gt; {
 <a href=#27 id=27 data-nosnippet>27</a>		<span class="kw">let </span>sz = <span class="self">self</span>.GetIconSize()<span class="question-mark">?</span>;
-<a href=#28 id=28 data-nosnippet>28</a>		<span class="kw">if </span>sz != SIZE::new(<span class="number">16</span>, <span class="number">16</span>) &amp;&amp; sz != SIZE::new(<span class="number">32</span>, <span class="number">32</span>) {
+<a href=#28 id=28 data-nosnippet>28</a>		<span class="kw">if </span>sz != SIZE::with(<span class="number">16</span>, <span class="number">16</span>) &amp;&amp; sz != SIZE::with(<span class="number">32</span>, <span class="number">32</span>) {
 <a href=#29 id=29 data-nosnippet>29</a>			<span class="kw">return </span><span class="prelude-val">Err</span>(co::HRESULT::E_NOTIMPL); <span class="comment">// only 16x16 or 32x32 icons can be loaded
 <a href=#30 id=30 data-nosnippet>30</a>		</span>}
 <a href=#31 id=31 data-nosnippet>31</a>
@@ -35,7 +35,7 @@
 <a href=#35 id=35 data-nosnippet>35</a>				co::FILE_ATTRIBUTE::NORMAL,
 <a href=#36 id=36 data-nosnippet>36</a>				co::SHGFI::USEFILEATTRIBUTES
 <a href=#37 id=37 data-nosnippet>37</a>					| co::SHGFI::ICON
-<a href=#38 id=38 data-nosnippet>38</a>					| <span class="kw">if </span>sz == SIZE::new(<span class="number">16</span>, <span class="number">16</span>) {
+<a href=#38 id=38 data-nosnippet>38</a>					| <span class="kw">if </span>sz == SIZE::with(<span class="number">16</span>, <span class="number">16</span>) {
 <a href=#39 id=39 data-nosnippet>39</a>						co::SHGFI::SMALLICON
 <a href=#40 id=40 data-nosnippet>40</a>					} <span class="kw">else </span>{
 <a href=#41 id=41 data-nosnippet>41</a>						co::SHGFI::LARGEICON

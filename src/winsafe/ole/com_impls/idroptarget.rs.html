@@ -156,7 +156,7 @@
 <a href=#156 id=156 data-nosnippet>156</a>			<span class="prelude-val">Some</span>(func) =&gt; {
 <a href=#157 id=157 data-nosnippet>157</a>				<span class="kw">let </span>dob = ManuallyDrop::new(<span class="kw">unsafe </span>{ IDataObject::from_ptr(pDataObj) });
 <a href=#158 id=158 data-nosnippet>158</a>				<span class="kw">let </span>mk = <span class="kw">unsafe </span>{ co::MK::from_raw(grfKeyState <span class="kw">as _</span>) };
-<a href=#159 id=159 data-nosnippet>159</a>				<span class="kw">let </span>pt = POINT::new(LODWORD(pt) <span class="kw">as _</span>, HIDWORD(pt) <span class="kw">as _</span>);
+<a href=#159 id=159 data-nosnippet>159</a>				<span class="kw">let </span>pt = POINT::with(LODWORD(pt) <span class="kw">as _</span>, HIDWORD(pt) <span class="kw">as _</span>);
 <a href=#160 id=160 data-nosnippet>160</a>				<span class="kw">let </span>pfx = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(pdwEffect <span class="kw">as </span><span class="kw-2">*mut </span>co::DROPEFFECT) };
 <a href=#161 id=161 data-nosnippet>161</a>				anyresult_to_hresult(func(<span class="kw-2">&amp;</span>dob, mk, pt, pfx))
 <a href=#162 id=162 data-nosnippet>162</a>			},
@@ -169,7 +169,7 @@
 <a href=#169 id=169 data-nosnippet>169</a>		hrresult_to_hres(<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.DragOver {
 <a href=#170 id=170 data-nosnippet>170</a>			<span class="prelude-val">Some</span>(func) =&gt; {
 <a href=#171 id=171 data-nosnippet>171</a>				<span class="kw">let </span>mk = <span class="kw">unsafe </span>{ co::MK::from_raw(grfKeyState <span class="kw">as _</span>) };
-<a href=#172 id=172 data-nosnippet>172</a>				<span class="kw">let </span>pt = POINT::new(LODWORD(pt) <span class="kw">as _</span>, HIDWORD(pt) <span class="kw">as _</span>);
+<a href=#172 id=172 data-nosnippet>172</a>				<span class="kw">let </span>pt = POINT::with(LODWORD(pt) <span class="kw">as _</span>, HIDWORD(pt) <span class="kw">as _</span>);
 <a href=#173 id=173 data-nosnippet>173</a>				<span class="kw">let </span>pfx = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(pdwEffect <span class="kw">as </span><span class="kw-2">*mut </span>co::DROPEFFECT) };
 <a href=#174 id=174 data-nosnippet>174</a>				anyresult_to_hresult(func(mk, pt, pfx))
 <a href=#175 id=175 data-nosnippet>175</a>			},
@@ -185,7 +185,7 @@
 <a href=#185 id=185 data-nosnippet>185</a>			<span class="prelude-val">Some</span>(func) =&gt; {
 <a href=#186 id=186 data-nosnippet>186</a>				<span class="kw">let </span>dob = ManuallyDrop::new(<span class="kw">unsafe </span>{ IDataObject::from_ptr(pDataObj) });
 <a href=#187 id=187 data-nosnippet>187</a>				<span class="kw">let </span>mk = <span class="kw">unsafe </span>{ co::MK::from_raw(grfKeyState <span class="kw">as _</span>) };
-<a href=#188 id=188 data-nosnippet>188</a>				<span class="kw">let </span>pt = POINT::new(LODWORD(pt) <span class="kw">as _</span>, HIDWORD(pt) <span class="kw">as _</span>);
+<a href=#188 id=188 data-nosnippet>188</a>				<span class="kw">let </span>pt = POINT::with(LODWORD(pt) <span class="kw">as _</span>, HIDWORD(pt) <span class="kw">as _</span>);
 <a href=#189 id=189 data-nosnippet>189</a>				<span class="kw">let </span>pfx = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(pdwEffect <span class="kw">as </span><span class="kw-2">*mut </span>co::DROPEFFECT) };
 <a href=#190 id=190 data-nosnippet>190</a>				anyresult_to_hresult(func(<span class="kw-2">&amp;</span>dob, mk, pt, pfx))
 <a href=#191 id=191 data-nosnippet>191</a>			},

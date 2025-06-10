@@ -110,7 +110,7 @@
 <a href=#110 id=110 data-nosnippet>110</a>				<span class="comment">// Force first resizing, so the panels are created.
 <a href=#111 id=111 data-nosnippet>111</a>				</span><span class="kw">let </span>parent_rc = parent2.hwnd().GetClientRect()<span class="question-mark">?</span>;
 <a href=#112 id=112 data-nosnippet>112</a>				self2.resize(<span class="kw-2">&amp;mut </span>wm::Size {
-<a href=#113 id=113 data-nosnippet>113</a>					client_area: SIZE::new(parent_rc.right, parent_rc.bottom),
+<a href=#113 id=113 data-nosnippet>113</a>					client_area: SIZE::with(parent_rc.right, parent_rc.bottom),
 <a href=#114 id=114 data-nosnippet>114</a>					request: co::SIZE_R::RESTORED,
 <a href=#115 id=115 data-nosnippet>115</a>				})<span class="question-mark">?</span>;
 <a href=#116 id=116 data-nosnippet>116</a>

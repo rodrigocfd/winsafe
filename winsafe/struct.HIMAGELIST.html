@@ -52,7 +52,7 @@ will be performed right away.</p>
 
 <span class="kw">let </span>himgl: w::HIMAGELIST; <span class="comment">// initialized somewhere
 
-</span><span class="kw">let </span>_drag = himgl.BeginDrag(<span class="number">0</span>, w::POINT::new(<span class="number">0</span>, <span class="number">0</span>))<span class="question-mark">?</span>; <span class="comment">// keep guard alive</span></code></pre></div>
+</span><span class="kw">let </span>_drag = himgl.BeginDrag(<span class="number">0</span>, w::POINT::new())<span class="question-mark">?</span>; <span class="comment">// keep guard alive</span></code></pre></div>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.Create" class="method"><a class="src rightside" href="../src/winsafe/comctl\handles/himagelist.rs.html#134-152">Source</a><h4 class="code-header">pub fn <a href="#method.Create" class="fn">Create</a>(
     image_sz: <a class="struct" href="struct.SIZE.html" title="struct winsafe::SIZE">SIZE</a>,
     flags: <a class="struct" href="co/struct.ILC.html" title="struct winsafe::co::ILC">ILC</a>,
@@ -64,7 +64,7 @@ function.</p>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, co};
 
 <span class="kw">let </span>himgl = w::HIMAGELIST::Create(
-    w::SIZE::new(<span class="number">16</span>, <span class="number">16</span>),
+    w::SIZE::with(<span class="number">16</span>, <span class="number">16</span>),
     co::ILC::COLOR32,
     <span class="number">1</span>,
     <span class="number">1</span>,
@@ -137,7 +137,7 @@ shell file icons, then passes them to
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, co};
 
 <span class="kw">let </span><span class="kw-2">mut </span>himgl = w::HIMAGELIST::Create(
-    w::SIZE::new(<span class="number">16</span>, <span class="number">16</span>),
+    w::SIZE::with(<span class="number">16</span>, <span class="number">16</span>),
     co::ILC::COLOR32,
     <span class="number">1</span>,
     <span class="number">1</span>,

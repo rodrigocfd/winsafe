@@ -83,9 +83,9 @@
 <a href=#83 id=83 data-nosnippet>83</a>		)<span class="question-mark">?</span>;
 <a href=#84 id=84 data-nosnippet>84</a>
 <a href=#85 id=85 data-nosnippet>85</a>		<span class="kw">let </span>sz_screen =
-<a href=#86 id=86 data-nosnippet>86</a>			SIZE::new(GetSystemMetrics(co::SM::CXSCREEN), GetSystemMetrics(co::SM::CYSCREEN));
+<a href=#86 id=86 data-nosnippet>86</a>			SIZE::with(GetSystemMetrics(co::SM::CXSCREEN), GetSystemMetrics(co::SM::CYSCREEN));
 <a href=#87 id=87 data-nosnippet>87</a>
-<a href=#88 id=88 data-nosnippet>88</a>		<span class="kw">let </span>pt_wnd = POINT::new(
+<a href=#88 id=88 data-nosnippet>88</a>		<span class="kw">let </span>pt_wnd = POINT::with(
 <a href=#89 id=89 data-nosnippet>89</a>			sz_screen.cx / <span class="number">2 </span>- opts.size.<span class="number">0 </span>/ <span class="number">2</span>, <span class="comment">// center on screen
 <a href=#90 id=90 data-nosnippet>90</a>			</span>sz_screen.cy / <span class="number">2 </span>- opts.size.<span class="number">1 </span>/ <span class="number">2</span>,
 <a href=#91 id=91 data-nosnippet>91</a>		);
@@ -103,8 +103,8 @@
 <a href=#103 id=103 data-nosnippet>103</a>			atom,
 <a href=#104 id=104 data-nosnippet>104</a>			<span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>opts.title),
 <a href=#105 id=105 data-nosnippet>105</a>			opts.style,
-<a href=#106 id=106 data-nosnippet>106</a>			POINT::new(rc_wnd.left, rc_wnd.top),
-<a href=#107 id=107 data-nosnippet>107</a>			SIZE::new(rc_wnd.right - rc_wnd.left, rc_wnd.bottom - rc_wnd.top),
+<a href=#106 id=106 data-nosnippet>106</a>			POINT::with(rc_wnd.left, rc_wnd.top),
+<a href=#107 id=107 data-nosnippet>107</a>			SIZE::with(rc_wnd.right - rc_wnd.left, rc_wnd.bottom - rc_wnd.top),
 <a href=#108 id=108 data-nosnippet>108</a>			<span class="prelude-val">None</span>,
 <a href=#109 id=109 data-nosnippet>109</a>			<span class="kw">if </span>opts.menu == HMENU::NULL { IdMenu::None } <span class="kw">else </span>{ IdMenu::Menu(<span class="kw-2">&amp;</span>opts.menu) },
 <a href=#110 id=110 data-nosnippet>110</a>			hinst,

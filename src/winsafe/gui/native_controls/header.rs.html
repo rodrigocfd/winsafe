@@ -51,7 +51,7 @@
 <a href=#51 id=51 data-nosnippet>51</a>					<span class="prelude-val">None</span>,
 <a href=#52 id=52 data-nosnippet>52</a>					opts.window_style | opts.control_style.into(),
 <a href=#53 id=53 data-nosnippet>53</a>					opts.position.into(),
-<a href=#54 id=54 data-nosnippet>54</a>					SIZE::new(opts.width, opts.height),
+<a href=#54 id=54 data-nosnippet>54</a>					SIZE::with(opts.width, opts.height),
 <a href=#55 id=55 data-nosnippet>55</a>					<span class="kw-2">&amp;</span>parent2,
 <a href=#56 id=56 data-nosnippet>56</a>				)<span class="question-mark">?</span>;
 <a href=#57 id=57 data-nosnippet>57</a>				ui_font::set(self2.hwnd())<span class="question-mark">?</span>;
@@ -163,7 +163,7 @@
 <a href=#163 id=163 data-nosnippet>163</a>			<span class="prelude-val">Some</span>(h) =&gt; <span class="prelude-val">Ok</span>(h), <span class="comment">// already created
 <a href=#164 id=164 data-nosnippet>164</a>			</span><span class="prelude-val">None </span>=&gt; {
 <a href=#165 id=165 data-nosnippet>165</a>				<span class="comment">// Not created yet. Create a new image list and assign it to the list view.
-<a href=#166 id=166 data-nosnippet>166</a>				</span><span class="kw">let </span>h = HIMAGELIST::Create(SIZE::new(<span class="number">16</span>, <span class="number">16</span>), co::ILC::COLOR32, <span class="number">1</span>, <span class="number">1</span>)<span class="question-mark">?</span>.leak();
+<a href=#166 id=166 data-nosnippet>166</a>				</span><span class="kw">let </span>h = HIMAGELIST::Create(SIZE::with(<span class="number">16</span>, <span class="number">16</span>), co::ILC::COLOR32, <span class="number">1</span>, <span class="number">1</span>)<span class="question-mark">?</span>.leak();
 <a href=#167 id=167 data-nosnippet>167</a>				<span class="kw">unsafe </span>{
 <a href=#168 id=168 data-nosnippet>168</a>					<span class="self">self</span>.hwnd()
 <a href=#169 id=169 data-nosnippet>169</a>						.SendMessage(hdm::SetImageList { himagelist: <span class="prelude-val">Some</span>(h.raw_copy()), kind });

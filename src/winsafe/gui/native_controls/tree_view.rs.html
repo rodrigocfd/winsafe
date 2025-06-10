@@ -198,7 +198,7 @@
 <a href=#198 id=198 data-nosnippet>198</a>			<span class="prelude-val">Some</span>(h) =&gt; <span class="prelude-val">Ok</span>(h), <span class="comment">// already created
 <a href=#199 id=199 data-nosnippet>199</a>			</span><span class="prelude-val">None </span>=&gt; {
 <a href=#200 id=200 data-nosnippet>200</a>				<span class="comment">// Not created yet. Create a new image list and assign it to the list view.
-<a href=#201 id=201 data-nosnippet>201</a>				</span><span class="kw">let </span>h = HIMAGELIST::Create(SIZE::new(<span class="number">16</span>, <span class="number">16</span>), co::ILC::COLOR32, <span class="number">1</span>, <span class="number">1</span>)<span class="question-mark">?</span>.leak();
+<a href=#201 id=201 data-nosnippet>201</a>				</span><span class="kw">let </span>h = HIMAGELIST::Create(SIZE::with(<span class="number">16</span>, <span class="number">16</span>), co::ILC::COLOR32, <span class="number">1</span>, <span class="number">1</span>)<span class="question-mark">?</span>.leak();
 <a href=#202 id=202 data-nosnippet>202</a>				<span class="kw">unsafe </span>{
 <a href=#203 id=203 data-nosnippet>203</a>					<span class="self">self</span>.hwnd()
 <a href=#204 id=204 data-nosnippet>204</a>						.SendMessage(tvm::SetImageList { himagelist: <span class="prelude-val">Some</span>(h.raw_copy()), kind });

@@ -1794,7 +1794,7 @@
 <a href=#1794 id=1794 data-nosnippet>1794</a>	<span class="kw">unsafe fn </span>from_generic_wm(p: WndMsg) -&gt; <span class="self">Self </span>{
 <a href=#1795 id=1795 data-nosnippet>1795</a>		<span class="self">Self </span>{
 <a href=#1796 id=1796 data-nosnippet>1796</a>			request: <span class="kw">unsafe </span>{ co::SIZE_R::from_raw(p.wparam <span class="kw">as _</span>) },
-<a href=#1797 id=1797 data-nosnippet>1797</a>			client_area: SIZE::new(LOWORD(p.lparam <span class="kw">as _</span>) <span class="kw">as _</span>, HIWORD(p.lparam <span class="kw">as _</span>) <span class="kw">as _</span>),
+<a href=#1797 id=1797 data-nosnippet>1797</a>			client_area: SIZE::with(LOWORD(p.lparam <span class="kw">as _</span>) <span class="kw">as _</span>, HIWORD(p.lparam <span class="kw">as _</span>) <span class="kw">as _</span>),
 <a href=#1798 id=1798 data-nosnippet>1798</a>		}
 <a href=#1799 id=1799 data-nosnippet>1799</a>	}
 <a href=#1800 id=1800 data-nosnippet>1800</a>}

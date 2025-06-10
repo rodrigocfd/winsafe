@@ -258,10 +258,10 @@
 <a href=#258 id=258 data-nosnippet>258</a>			<span class="kw">if </span>focused_opt.is_some() &amp;&amp; focused_opt.unwrap().is_visible() {
 <a href=#259 id=259 data-nosnippet>259</a>				<span class="kw">let </span>focused = focused_opt.unwrap();
 <a href=#260 id=260 data-nosnippet>260</a>				<span class="kw">let </span>rc_item = focused.rect(co::LVIR::BOUNDS)<span class="question-mark">?</span>;
-<a href=#261 id=261 data-nosnippet>261</a>				POINT::new(rc_item.left + <span class="number">16</span>, rc_item.top + (rc_item.bottom - rc_item.top) / <span class="number">2</span>)
+<a href=#261 id=261 data-nosnippet>261</a>				POINT::with(rc_item.left + <span class="number">16</span>, rc_item.top + (rc_item.bottom - rc_item.top) / <span class="number">2</span>)
 <a href=#262 id=262 data-nosnippet>262</a>			} <span class="kw">else </span>{
 <a href=#263 id=263 data-nosnippet>263</a>				<span class="comment">// No item is focused and visible.
-<a href=#264 id=264 data-nosnippet>264</a>				</span>POINT::new(<span class="number">6</span>, <span class="number">10</span>) <span class="comment">// arbitrary coordinates
+<a href=#264 id=264 data-nosnippet>264</a>				</span>POINT::with(<span class="number">6</span>, <span class="number">10</span>) <span class="comment">// arbitrary coordinates
 <a href=#265 id=265 data-nosnippet>265</a>			</span>}
 <a href=#266 id=266 data-nosnippet>266</a>		};
 <a href=#267 id=267 data-nosnippet>267</a>
@@ -343,8 +343,8 @@
 <a href=#343 id=343 data-nosnippet>343</a>			</span><span class="prelude-val">None </span>=&gt; {
 <a href=#344 id=344 data-nosnippet>344</a>				<span class="comment">// Not created yet. Create a new image list and assign it to the list view.
 <a href=#345 id=345 data-nosnippet>345</a>				</span><span class="kw">let </span>sz = <span class="kw">match </span>kind {
-<a href=#346 id=346 data-nosnippet>346</a>					co::LVSIL::NORMAL =&gt; SIZE::new(<span class="number">32</span>, <span class="number">32</span>),
-<a href=#347 id=347 data-nosnippet>347</a>					<span class="kw">_ </span>=&gt; SIZE::new(<span class="number">16</span>, <span class="number">16</span>),
+<a href=#346 id=346 data-nosnippet>346</a>					co::LVSIL::NORMAL =&gt; SIZE::with(<span class="number">32</span>, <span class="number">32</span>),
+<a href=#347 id=347 data-nosnippet>347</a>					<span class="kw">_ </span>=&gt; SIZE::with(<span class="number">16</span>, <span class="number">16</span>),
 <a href=#348 id=348 data-nosnippet>348</a>				};
 <a href=#349 id=349 data-nosnippet>349</a>				<span class="kw">let </span>h = HIMAGELIST::Create(sz, co::ILC::COLOR32, <span class="number">1</span>, <span class="number">1</span>)<span class="question-mark">?</span>.leak();
 <a href=#350 id=350 data-nosnippet>350</a>				<span class="kw">unsafe </span>{
