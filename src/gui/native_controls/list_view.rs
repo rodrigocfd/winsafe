@@ -258,10 +258,10 @@ impl<T> ListView<T> {
 			if focused_opt.is_some() && focused_opt.unwrap().is_visible() {
 				let focused = focused_opt.unwrap();
 				let rc_item = focused.rect(co::LVIR::BOUNDS)?;
-				POINT::new(rc_item.left + 16, rc_item.top + (rc_item.bottom - rc_item.top) / 2)
+				POINT::with(rc_item.left + 16, rc_item.top + (rc_item.bottom - rc_item.top) / 2)
 			} else {
 				// No item is focused and visible.
-				POINT::new(6, 10) // arbitrary coordinates
+				POINT::with(6, 10) // arbitrary coordinates
 			}
 		};
 
@@ -343,8 +343,8 @@ impl<T> ListView<T> {
 			None => {
 				// Not created yet. Create a new image list and assign it to the list view.
 				let sz = match kind {
-					co::LVSIL::NORMAL => SIZE::new(32, 32),
-					_ => SIZE::new(16, 16),
+					co::LVSIL::NORMAL => SIZE::with(32, 32),
+					_ => SIZE::with(16, 16),
 				};
 				let h = HIMAGELIST::Create(sz, co::ILC::COLOR32, 1, 1)?.leak();
 				unsafe {

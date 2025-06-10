@@ -51,7 +51,7 @@ impl Header {
 					None,
 					opts.window_style | opts.control_style.into(),
 					opts.position.into(),
-					SIZE::new(opts.width, opts.height),
+					SIZE::with(opts.width, opts.height),
 					&parent2,
 				)?;
 				ui_font::set(self2.hwnd())?;
@@ -163,7 +163,7 @@ impl Header {
 			Some(h) => Ok(h), // already created
 			None => {
 				// Not created yet. Create a new image list and assign it to the list view.
-				let h = HIMAGELIST::Create(SIZE::new(16, 16), co::ILC::COLOR32, 1, 1)?.leak();
+				let h = HIMAGELIST::Create(SIZE::with(16, 16), co::ILC::COLOR32, 1, 1)?.leak();
 				unsafe {
 					self.hwnd()
 						.SendMessage(hdm::SetImageList { himagelist: Some(h.raw_copy()), kind });

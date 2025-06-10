@@ -81,7 +81,7 @@ impl ComboBox {
 					None,
 					opts.window_style | opts.control_style.into(),
 					opts.position.into(),
-					SIZE::new(opts.width, 0),
+					SIZE::with(opts.width, 0),
 					&parent2,
 				)?;
 				ui_font::set(self2.hwnd())?;

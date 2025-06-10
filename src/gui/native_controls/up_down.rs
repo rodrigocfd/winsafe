@@ -87,7 +87,7 @@ impl UpDown {
 					None,
 					opts.window_style | opts.control_style.into(),
 					opts.position.into(),
-					SIZE::new(0, opts.height),
+					SIZE::with(0, opts.height),
 					&parent2,
 				)?;
 				if opts.range != (0, 100) {

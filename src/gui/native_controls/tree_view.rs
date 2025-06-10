@@ -198,7 +198,7 @@ impl<T> TreeView<T> {
 			Some(h) => Ok(h), // already created
 			None => {
 				// Not created yet. Create a new image list and assign it to the list view.
-				let h = HIMAGELIST::Create(SIZE::new(16, 16), co::ILC::COLOR32, 1, 1)?.leak();
+				let h = HIMAGELIST::Create(SIZE::with(16, 16), co::ILC::COLOR32, 1, 1)?.leak();
 				unsafe {
 					self.hwnd()
 						.SendMessage(tvm::SetImageList { himagelist: Some(h.raw_copy()), kind });

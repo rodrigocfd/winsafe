@@ -110,7 +110,7 @@ impl StatusBar {
 				// Force first resizing, so the panels are created.
 				let parent_rc = parent2.hwnd().GetClientRect()?;
 				self2.resize(&mut wm::Size {
-					client_area: SIZE::new(parent_rc.right, parent_rc.bottom),
+					client_area: SIZE::with(parent_rc.right, parent_rc.bottom),
 					request: co::SIZE_R::RESTORED,
 				})?;
 

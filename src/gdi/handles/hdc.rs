@@ -355,8 +355,13 @@ impl HDC {
 	/// let hdc_mem = hdc_screen.CreateCompatibleDC()?;
 	/// let _hbmp_guard = hdc_mem.SelectObject(&*hbmp)?;
 	///
-	/// hdc_mem.BitBlt(w::POINT::new(0, 0), w::SIZE::new(cx_screen, cy_screen),
-	///     &hdc_screen, w::POINT::new(0, 0), co::ROP::SRCCOPY)?;
+	/// hdc_mem.BitBlt(
+	///     w::POINT::new(),
+	///     w::SIZE::with(cx_screen, cy_screen),
+	///     &hdc_screen,
+	///     w::POINT::new(),
+	///     co::ROP::SRCCOPY,
+	/// )?;
 	///
 	/// let bmp_obj = hbmp.GetObject()?;
 	///
@@ -372,8 +377,14 @@ impl HDC {
 	/// let mut data_buf = vec![0u8; bmp_size as _];
 	///
 	/// unsafe {
-	///     hdc_screen.GetDIBits(&hbmp, 0, cy_screen as _,
-	///         Some(&mut data_buf), &mut bi, co::DIB::RGB_COLORS)?;
+	///     hdc_screen.GetDIBits(
+	///         &hbmp,
+	///         0,
+	///         cy_screen as _,
+	///         Some(&mut data_buf),
+	///         &mut bi,
+	///         co::DIB::RGB_COLORS,
+	///     )?;
 	/// }
 	///
 	/// let mut bfh = w::BITMAPFILEHEADER::default();

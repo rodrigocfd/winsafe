@@ -68,7 +68,7 @@ impl Edit {
 					Some(&opts.text),
 					opts.window_style | opts.control_style.into(),
 					opts.position.into(),
-					SIZE::new(opts.width, opts.height),
+					SIZE::with(opts.width, opts.height),
 					&parent2,
 				)?;
 				ui_font::set(self2.hwnd())?;

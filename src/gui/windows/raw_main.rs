@@ -83,9 +83,9 @@ impl RawMain {
 		)?;
 
 		let sz_screen =
-			SIZE::new(GetSystemMetrics(co::SM::CXSCREEN), GetSystemMetrics(co::SM::CYSCREEN));
+			SIZE::with(GetSystemMetrics(co::SM::CXSCREEN), GetSystemMetrics(co::SM::CYSCREEN));
 
-		let pt_wnd = POINT::new(
+		let pt_wnd = POINT::with(
 			sz_screen.cx / 2 - opts.size.0 / 2, // center on screen
 			sz_screen.cy / 2 - opts.size.1 / 2,
 		);
@@ -103,8 +103,8 @@ impl RawMain {
 			atom,
 			Some(&opts.title),
 			opts.style,
-			POINT::new(rc_wnd.left, rc_wnd.top),
-			SIZE::new(rc_wnd.right - rc_wnd.left, rc_wnd.bottom - rc_wnd.top),
+			POINT::with(rc_wnd.left, rc_wnd.top),
+			SIZE::with(rc_wnd.right - rc_wnd.left, rc_wnd.bottom - rc_wnd.top),
 			None,
 			if opts.menu == HMENU::NULL { IdMenu::None } else { IdMenu::Menu(&opts.menu) },
 			hinst,

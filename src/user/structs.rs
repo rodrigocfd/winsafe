@@ -918,20 +918,26 @@ impl From<POINT> for u32 {
 
 impl From<u32> for POINT {
 	fn from(v: u32) -> Self {
-		Self::new(LOWORD(v) as _, HIWORD(v) as _)
+		Self::with(LOWORD(v) as _, HIWORD(v) as _)
 	}
 }
 
 impl From<(i32, i32)> for POINT {
 	fn from(v: (i32, i32)) -> Self {
-		Self::new(v.0, v.1)
+		Self::with(v.0, v.1)
 	}
 }
 
 impl POINT {
-	/// Creates a new `POINT`.
+	/// Constructs a new `POINT` with the coordinates set to zero.
 	#[must_use]
-	pub const fn new(x: i32, y: i32) -> POINT {
+	pub const fn new() -> Self {
+		Self { x: 0, y: 0 }
+	}
+
+	/// Constructs a new `POINT` with the given coordinates.
+	#[must_use]
+	pub const fn with(x: i32, y: i32) -> Self {
 		Self { x, y }
 	}
 }
@@ -954,6 +960,14 @@ impl std::fmt::Display for RECT {
 			"left {}, top {}, right {}, bottom {}",
 			self.left, self.top, self.right, self.bottom
 		)
+	}
+}
+
+impl RECT {
+	/// Constructs a new `RECT` with the values set to zero.
+	#[must_use]
+	pub const fn new() -> Self {
+		Self { left: 0, top: 0, right: 0, bottom: 0 }
 	}
 }
 
@@ -996,20 +1010,26 @@ impl From<SIZE> for u32 {
 
 impl From<u32> for SIZE {
 	fn from(v: u32) -> Self {
-		Self::new(LOWORD(v) as _, HIWORD(v) as _)
+		Self::with(LOWORD(v) as _, HIWORD(v) as _)
 	}
 }
 
 impl From<(i32, i32)> for SIZE {
 	fn from(v: (i32, i32)) -> Self {
-		Self::new(v.0 as _, v.1 as _)
+		Self::with(v.0 as _, v.1 as _)
 	}
 }
 
 impl SIZE {
-	/// Creates a new `SIZE`.
+	/// Constructs a new `SIZE` with width and height set to zero.
 	#[must_use]
-	pub const fn new(cx: i32, cy: i32) -> SIZE {
+	pub const fn new() -> Self {
+		Self { cx: 0, cy: 0 }
+	}
+
+	/// Constructs a new `SIZE` with the given width and height.
+	#[must_use]
+	pub const fn with(cx: i32, cy: i32) -> Self {
 		Self { cx, cy }
 	}
 }

@@ -185,12 +185,12 @@ pub trait ole_IPicture: ole_IUnknown {
 			Some(sz) => sz,
 			None => {
 				let rc = hdc.WindowFromDC().unwrap().GetClientRect()?;
-				SIZE::new(rc.right - rc.left, rc.bottom - rc.top)
+				SIZE::with(rc.right - rc.left, rc.bottom - rc.top)
 			},
 		};
 		let src_extent_compensated = match src_extent_himetric {
-			Some(sz) => SIZE::new(sz.cx, -sz.cy),
-			None => SIZE::new(self.get_Width()?, -self.get_Height()?),
+			Some(sz) => SIZE::with(sz.cx, -sz.cy),
+			None => SIZE::with(self.get_Width()?, -self.get_Height()?),
 		};
 
 		ok_to_hrresult(unsafe {

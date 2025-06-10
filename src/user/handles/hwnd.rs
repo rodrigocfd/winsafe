@@ -1331,7 +1331,7 @@ impl HWND {
 	/// let (char_pos, line_pos) = unsafe {
 	///     hwnd.SendMessage(
 	///         msg::em::CharFromPos {
-	///             coords: w::POINT::new(12, 20),
+	///             coords: w::POINT::with(12, 20),
 	///         },
 	///     )
 	/// };
@@ -1591,7 +1591,7 @@ impl HWND {
 	///
 	/// hwnd.SetWindowPos(
 	///     w::HwndPlace::None,
-	///     w::POINT::new(10, 10),
+	///     w::POINT::with(10, 10),
 	///     w::SIZE::default(),
 	///     co::SWP::NOZORDER | co::SWP::NOSIZE,
 	/// )?;

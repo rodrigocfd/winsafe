@@ -50,7 +50,7 @@ impl RawModeless {
 					atom,
 					None,
 					opts.style,
-					POINT::new(opts.position.0 + rc_parent.left, opts.position.1 + rc_parent.top),
+					POINT::with(opts.position.0 + rc_parent.left, opts.position.1 + rc_parent.top),
 					opts.size.into(),
 					Some(parent2.hwnd()),
 					IdMenu::None,

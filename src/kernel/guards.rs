@@ -22,8 +22,8 @@ where
 	fn drop(&mut self) {
 		if let Some(h) = self.handle.as_opt() {
 			unsafe {
-				ffi::CloseHandle(h.ptr());
-			} // ignore errors
+				ffi::CloseHandle(h.ptr()); // ignore errors
+			}
 		}
 	}
 }

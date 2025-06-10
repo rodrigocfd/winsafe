@@ -50,7 +50,7 @@ impl DateTimePicker {
 					None,
 					opts.window_style | opts.control_style.into(),
 					opts.position.into(),
-					SIZE::new(opts.width, dpi_y(21)),
+					SIZE::with(opts.width, dpi_y(21)),
 					&parent2,
 				)?;
 				if opts.width == 0 {

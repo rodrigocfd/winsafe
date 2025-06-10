@@ -43,7 +43,7 @@ impl DlgModeless {
 					.ClientToScreenRc(parent2.hwnd().GetClientRect()?)?;
 				self2.0.dlg_base.base().hwnd().SetWindowPos(
 					HwndPlace::None,
-					POINT::new(position.0 + rc_parent.left, position.1 + rc_parent.top),
+					POINT::with(position.0 + rc_parent.left, position.1 + rc_parent.top),
 					SIZE::default(),
 					co::SWP::NOZORDER | co::SWP::NOSIZE,
 				)?;

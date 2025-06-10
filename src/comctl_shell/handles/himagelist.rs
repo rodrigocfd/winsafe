@@ -14,7 +14,7 @@ impl HIMAGELIST {
 	/// use winsafe::{self as w, prelude::*, co};
 	///
 	/// let mut himgl = w::HIMAGELIST::Create(
-	///     w::SIZE::new(16, 16),
+	///     w::SIZE::with(16, 16),
 	///     co::ILC::COLOR32,
 	///     1,
 	///     1,
@@ -25,7 +25,7 @@ impl HIMAGELIST {
 	/// ```
 	pub fn add_icons_from_shell(&self, file_extensions: &[impl AsRef<str>]) -> HrResult<()> {
 		let sz = self.GetIconSize()?;
-		if sz != SIZE::new(16, 16) && sz != SIZE::new(32, 32) {
+		if sz != SIZE::with(16, 16) && sz != SIZE::with(32, 32) {
 			return Err(co::HRESULT::E_NOTIMPL); // only 16x16 or 32x32 icons can be loaded
 		}
 
@@ -35,7 +35,7 @@ impl HIMAGELIST {
 				co::FILE_ATTRIBUTE::NORMAL,
 				co::SHGFI::USEFILEATTRIBUTES
 					| co::SHGFI::ICON
-					| if sz == SIZE::new(16, 16) {
+					| if sz == SIZE::with(16, 16) {
 						co::SHGFI::SMALLICON
 					} else {
 						co::SHGFI::LARGEICON

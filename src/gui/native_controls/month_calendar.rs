@@ -64,7 +64,7 @@ impl MonthCalendar {
 				self2.hwnd().SetWindowPos(
 					HwndPlace::None,
 					POINT::default(),
-					SIZE::new(bounds_rect.right, bounds_rect.bottom),
+					SIZE::with(bounds_rect.right, bounds_rect.bottom),
 					co::SWP::NOZORDER | co::SWP::NOMOVE,
 				)?;
 

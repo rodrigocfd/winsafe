@@ -35,7 +35,7 @@ impl DlgModal {
 			let rc_parent = hwnd.GetParent()?.GetWindowRect()?;
 			hwnd.SetWindowPos(
 				HwndPlace::None,
-				POINT::new(
+				POINT::with(
 					rc_parent.left + ((rc_parent.right - rc_parent.left) / 2) // center modal on parent
 						- (rc.right - rc.left) / 2,
 					rc_parent.top + ((rc_parent.bottom - rc_parent.top) / 2)

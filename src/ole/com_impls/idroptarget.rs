@@ -156,7 +156,7 @@ impl IDropTargetImpl {
 			Some(func) => {
 				let dob = ManuallyDrop::new(unsafe { IDataObject::from_ptr(pDataObj) });
 				let mk = unsafe { co::MK::from_raw(grfKeyState as _) };
-				let pt = POINT::new(LODWORD(pt) as _, HIDWORD(pt) as _);
+				let pt = POINT::with(LODWORD(pt) as _, HIDWORD(pt) as _);
 				let pfx = unsafe { &mut *(pdwEffect as *mut co::DROPEFFECT) };
 				anyresult_to_hresult(func(&dob, mk, pt, pfx))
 			},
@@ -169,7 +169,7 @@ impl IDropTargetImpl {
 		hrresult_to_hres(match &box_impl.DragOver {
 			Some(func) => {
 				let mk = unsafe { co::MK::from_raw(grfKeyState as _) };
-				let pt = POINT::new(LODWORD(pt) as _, HIDWORD(pt) as _);
+				let pt = POINT::with(LODWORD(pt) as _, HIDWORD(pt) as _);
 				let pfx = unsafe { &mut *(pdwEffect as *mut co::DROPEFFECT) };
 				anyresult_to_hresult(func(mk, pt, pfx))
 			},
@@ -185,7 +185,7 @@ impl IDropTargetImpl {
 			Some(func) => {
 				let dob = ManuallyDrop::new(unsafe { IDataObject::from_ptr(pDataObj) });
 				let mk = unsafe { co::MK::from_raw(grfKeyState as _) };
-				let pt = POINT::new(LODWORD(pt) as _, HIDWORD(pt) as _);
+				let pt = POINT::with(LODWORD(pt) as _, HIDWORD(pt) as _);
 				let pfx = unsafe { &mut *(pdwEffect as *mut co::DROPEFFECT) };
 				anyresult_to_hresult(func(&dob, mk, pt, pfx))
 			},

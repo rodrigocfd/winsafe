@@ -73,14 +73,14 @@ impl DlgBase {
 		unsafe {
 			self.base.hwnd().SendMessage(wm::SetIcon {
 				hicon: hinst
-					.LoadImageIcon(IdOicStr::Id(icon_id), SIZE::new(16, 16), co::LR::DEFAULTCOLOR)?
+					.LoadImageIcon(IdOicStr::Id(icon_id), SIZE::with(16, 16), co::LR::DEFAULTCOLOR)?
 					.leak(),
 				size: co::ICON_SZ::SMALL,
 			});
 
 			self.base.hwnd().SendMessage(wm::SetIcon {
 				hicon: hinst
-					.LoadImageIcon(IdOicStr::Id(icon_id), SIZE::new(32, 32), co::LR::DEFAULTCOLOR)?
+					.LoadImageIcon(IdOicStr::Id(icon_id), SIZE::with(32, 32), co::LR::DEFAULTCOLOR)?
 					.leak(),
 				size: co::ICON_SZ::BIG,
 			});

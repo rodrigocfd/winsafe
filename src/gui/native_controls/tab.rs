@@ -165,8 +165,8 @@ impl Tab {
 			}
 			item.as_ref().as_ref().hwnd().SetWindowPos(
 				HwndPlace::None,
-				POINT::new(rc.left, rc.top),
-				SIZE::new(rc.right - rc.left, rc.bottom - rc.top),
+				POINT::with(rc.left, rc.top),
+				SIZE::with(rc.right - rc.left, rc.bottom - rc.top),
 				co::SWP::NOZORDER | co::SWP::SHOWWINDOW,
 			)?;
 		}
@@ -188,7 +188,7 @@ impl Tab {
 			Some(h) => Ok(h), // already created
 			None => {
 				// Not created yet. Create a new image list and assign it to the list view.
-				let h = HIMAGELIST::Create(SIZE::new(16, 16), co::ILC::COLOR32, 1, 1)?.leak();
+				let h = HIMAGELIST::Create(SIZE::with(16, 16), co::ILC::COLOR32, 1, 1)?.leak();
 				unsafe {
 					self.hwnd()
 						.SendMessage(tcm::SetImageList { himagelist: Some(h.raw_copy()) });

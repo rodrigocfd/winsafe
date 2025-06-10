@@ -100,7 +100,7 @@ impl HIMAGELIST {
 	/// let himgl: w::HIMAGELIST; // initialized somewhere
 	/// # let himgl = w::HIMAGELIST::NULL;
 	///
-	/// let _drag = himgl.BeginDrag(0, w::POINT::new(0, 0))?; // keep guard alive
+	/// let _drag = himgl.BeginDrag(0, w::POINT::new())?; // keep guard alive
 	/// # w::HrResult::Ok(())
 	/// ```
 	pub fn BeginDrag(&self, itrack: u32, hotspot: POINT) -> HrResult<ImageListEndDragGuard<'_>> {
@@ -121,7 +121,7 @@ impl HIMAGELIST {
 	/// use winsafe::{self as w, prelude::*, co};
 	///
 	/// let himgl = w::HIMAGELIST::Create(
-	///     w::SIZE::new(16, 16),
+	///     w::SIZE::with(16, 16),
 	///     co::ILC::COLOR32,
 	///     1,
 	///     1,

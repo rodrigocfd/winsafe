@@ -87,7 +87,7 @@ impl Layout {
 			if ctrls.is_empty() {
 				let rc_parent = hparent.GetClientRect()?;
 				*unsafe { &mut *self.0.sz_parent_orig.get() } = Some(
-					SIZE::new(rc_parent.right, rc_parent.bottom), // save parent client area
+					SIZE::with(rc_parent.right, rc_parent.bottom), // save parent client area
 				);
 			}
 
@@ -142,7 +142,7 @@ impl Layout {
 			hdwp.DeferWindowPos(
 				&ctrl.hchild,
 				HwndPlace::None,
-				POINT::new(
+				POINT::with(
 					match ctrl.horz {
 						Horz::Repos => p.client_area.cx - sz_parent_orig.cx + rc_orig.left,
 						_ => rc_orig.left, // keep original x pos
@@ -152,7 +152,7 @@ impl Layout {
 						_ => rc_orig.top, // keep original y pos
 					},
 				),
-				SIZE::new(
+				SIZE::with(
 					match ctrl.horz {
 						Horz::Resize => {
 							p.client_area.cx - sz_parent_orig.cx + rc_orig.right - rc_orig.left

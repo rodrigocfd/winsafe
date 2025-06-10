@@ -84,7 +84,7 @@ impl RawModal {
 		rc_wnd = AdjustWindowRectEx(rc_wnd, opts.style, false, opts.ex_style)?;
 
 		let rc_parent = parent.hwnd().GetWindowRect()?; // relative to screen
-		let wnd_pos = POINT::new(
+		let wnd_pos = POINT::with(
 			rc_parent.left + (rc_parent.right - rc_parent.left) / 2
 				- (rc_wnd.right - rc_wnd.left) / 2, // center on parent
 			rc_parent.top + (rc_parent.bottom - rc_parent.top) / 2
@@ -96,8 +96,8 @@ impl RawModal {
 			atom,
 			Some(&opts.title),
 			opts.style,
-			POINT::new(wnd_pos.x, wnd_pos.y),
-			SIZE::new(rc_wnd.right - rc_wnd.left, rc_wnd.bottom - rc_wnd.top),
+			POINT::with(wnd_pos.x, wnd_pos.y),
+			SIZE::with(rc_wnd.right - rc_wnd.left, rc_wnd.bottom - rc_wnd.top),
 			Some(parent.hwnd()),
 			IdMenu::None,
 			&hinst,

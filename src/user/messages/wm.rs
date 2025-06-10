@@ -1794,7 +1794,7 @@ impl MsgSendRecv for Size {
 	unsafe fn from_generic_wm(p: WndMsg) -> Self {
 		Self {
 			request: unsafe { co::SIZE_R::from_raw(p.wparam as _) },
-			client_area: SIZE::new(LOWORD(p.lparam as _) as _, HIWORD(p.lparam as _) as _),
+			client_area: SIZE::with(LOWORD(p.lparam as _) as _, HIWORD(p.lparam as _) as _),
 		}
 	}
 }
