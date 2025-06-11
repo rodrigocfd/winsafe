@@ -57,7 +57,7 @@
 <a href=#57 id=57 data-nosnippet>57</a>		hinst: <span class="kw-2">&amp;</span>HINSTANCE,
 <a href=#58 id=58 data-nosnippet>58</a>		cmd_show: <span class="prelude-ty">Option</span>&lt;co::SW&gt;,
 <a href=#59 id=59 data-nosnippet>59</a>	) -&gt; AnyResult&lt;i32&gt; {
-<a href=#60 id=60 data-nosnippet>60</a>		<span class="self">self</span>.<span class="number">0</span>.dlg_base.create_dialog_param(hinst)<span class="question-mark">?</span>;
+<a href=#60 id=60 data-nosnippet>60</a>		<span class="self">self</span>.<span class="number">0</span>.dlg_base.create_dialog_param(hinst, <span class="prelude-val">None</span>);
 <a href=#61 id=61 data-nosnippet>61</a>		<span class="kw">if let </span><span class="prelude-val">Some</span>(id) = <span class="self">self</span>.<span class="number">0</span>.icon_id {
 <a href=#62 id=62 data-nosnippet>62</a>			<span class="self">self</span>.<span class="number">0</span>.dlg_base.set_icon(hinst, id)<span class="question-mark">?</span>;
 <a href=#63 id=63 data-nosnippet>63</a>		}

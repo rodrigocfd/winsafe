@@ -59,9 +59,10 @@
 <a href=#59 id=59 data-nosnippet>59</a>		<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="number">0</span>.dlg_base
 <a href=#60 id=60 data-nosnippet>60</a>	}
 <a href=#61 id=61 data-nosnippet>61</a>
-<a href=#62 id=62 data-nosnippet>62</a>	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>show_modal(<span class="kw-2">&amp;</span><span class="self">self</span>, parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>GuiParent) -&gt; AnyResult&lt;()&gt; {
+<a href=#62 id=62 data-nosnippet>62</a>	<span class="kw">pub</span>(<span class="kw">in </span><span class="kw">crate</span>::gui) <span class="kw">fn </span>show_modal(<span class="kw-2">&amp;</span><span class="self">self</span>, parent: <span class="kw-2">&amp;</span><span class="kw">impl </span>GuiParent) {
 <a href=#63 id=63 data-nosnippet>63</a>		<span class="kw">let </span>hinst = parent.hwnd().hinstance();
-<a href=#64 id=64 data-nosnippet>64</a>		<span class="self">self</span>.<span class="number">0</span>.dlg_base.dialog_box_param(<span class="kw-2">&amp;</span>hinst, parent.hwnd())<span class="question-mark">?</span>;
-<a href=#65 id=65 data-nosnippet>65</a>		<span class="prelude-val">Ok</span>(())
-<a href=#66 id=66 data-nosnippet>66</a>	}
-<a href=#67 id=67 data-nosnippet>67</a>}</code></pre></div></section></main></body></html>
+<a href=#64 id=64 data-nosnippet>64</a>		<span class="self">self</span>.<span class="number">0
+<a href=#65 id=65 data-nosnippet>65</a>			</span>.dlg_base
+<a href=#66 id=66 data-nosnippet>66</a>			.dialog_box_param(<span class="kw-2">&amp;</span>hinst, <span class="prelude-val">Some</span>(parent.hwnd()));
+<a href=#67 id=67 data-nosnippet>67</a>	}
+<a href=#68 id=68 data-nosnippet>68</a>}</code></pre></div></section></main></body></html>
