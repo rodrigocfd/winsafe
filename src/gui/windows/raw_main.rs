@@ -108,7 +108,7 @@ impl RawMain {
 			None,
 			if opts.menu == HMENU::NULL { IdMenu::None } else { IdMenu::Menu(&opts.menu) },
 			hinst,
-		)?;
+		);
 
 		self.0
 			.raw_base

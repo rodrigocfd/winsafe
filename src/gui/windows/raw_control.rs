@@ -54,7 +54,7 @@ impl RawControl {
 					Some(parent2.hwnd()),
 					IdMenu::Id(ctrl_id),
 					&hinst,
-				)?;
+				);
 
 				parent2
 					.as_ref()

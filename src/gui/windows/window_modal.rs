@@ -66,10 +66,12 @@ impl WindowModal {
 	/// # Panics
 	///
 	/// Panics if the window is already created.
+	///
+	/// Panics if the creation process fails.
 	pub fn show_modal(&self, parent: &impl GuiParent) -> AnyResult<()> {
 		match &self.0 {
 			RawDlg::Raw(r) => r.show_modal(parent),
-			RawDlg::Dlg(d) => d.show_modal(parent),
+			RawDlg::Dlg(d) => Ok(d.show_modal(parent)),
 		}
 	}
 

@@ -101,7 +101,7 @@ impl RawModal {
 			Some(parent.hwnd()),
 			IdMenu::None,
 			&hinst,
-		)?;
+		);
 
 		self.0
 			.raw_base

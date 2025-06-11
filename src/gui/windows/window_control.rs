@@ -75,6 +75,8 @@ impl WindowControl {
 	///
 	/// Panics if the parent dialog was already created – that is, you cannot
 	/// dynamically create a `WindowControl` in an event closure.
+	///
+	/// Panics if the creation process fails.
 	#[must_use]
 	pub fn new_dlg(
 		parent: &(impl GuiParent + 'static),

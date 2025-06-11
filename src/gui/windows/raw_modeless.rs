@@ -55,7 +55,7 @@ impl RawModeless {
 					Some(parent2.hwnd()),
 					IdMenu::None,
 					&hinst,
-				)?;
+				);
 
 				Ok(0) // ignored
 			});

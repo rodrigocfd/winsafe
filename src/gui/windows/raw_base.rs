@@ -81,7 +81,7 @@ impl RawBase {
 					let (atom, _) = hinst.GetClassInfoEx(&wcx.lpszClassName().unwrap())?;
 					Ok(atom)
 				},
-				err => Err(err),
+				err => panic!("ERROR: RawBase::register_class: {}", err.to_string()),
 			},
 		}
 	}
@@ -97,11 +97,12 @@ impl RawBase {
 		hparent: Option<&HWND>,
 		hmenu: IdMenu,
 		hinst: &HINSTANCE,
-	) -> SysResult<()> {
+	) {
 		if *self.base.hwnd() != HWND::NULL {
 			panic!("Cannot create window twice.");
 		}
-		unsafe {
+
+		if let Err(err) = unsafe {
 			HWND::CreateWindowEx(
 				ex_style,
 				AtomStr::Atom(class_name),
@@ -113,9 +114,10 @@ impl RawBase {
 				hmenu,
 				hinst,
 				Some(self as *const _ as _), // pass pointer to object itself
-			)?;
+			)
+		} {
+			panic!("ERROR: RawBase::create_window: {}", err.to_string());
 		}
-		Ok(())
 	}
 
 	pub(in crate::gui) fn delegate_focus_to_first_child(&self) {

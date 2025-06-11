@@ -66,6 +66,8 @@ impl WindowMain {
 	/// # Panics
 	///
 	/// Panics if the window is already created.
+	///
+	/// Panics if the creation process fails.
 	pub fn run_main(&self, cmd_show: Option<co::SW>) -> AnyResult<i32> {
 		if IsWindowsVistaOrGreater()? {
 			SetProcessDPIAware()?;

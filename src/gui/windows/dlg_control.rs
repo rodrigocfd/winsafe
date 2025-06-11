@@ -40,7 +40,7 @@ impl DlgControl {
 			.before_on()
 			.wm(parent.as_ref().wnd_ty().creation_msg(), move |_| {
 				let hinst = parent2.hwnd().hinstance();
-				self2.0.dlg_base.create_dialog_param(&hinst)?;
+				self2.0.dlg_base.create_dialog_param(&hinst);
 				unsafe {
 					self2
 						.0
