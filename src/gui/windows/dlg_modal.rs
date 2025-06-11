@@ -61,6 +61,8 @@ impl DlgModal {
 
 	pub(in crate::gui) fn show_modal(&self, parent: &impl GuiParent) {
 		let hinst = parent.hwnd().hinstance();
-		self.0.dlg_base.dialog_box_param(&hinst, parent.hwnd());
+		self.0
+			.dlg_base
+			.dialog_box_param(&hinst, Some(parent.hwnd()));
 	}
 }

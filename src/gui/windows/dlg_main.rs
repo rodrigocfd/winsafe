@@ -57,7 +57,7 @@ impl DlgMain {
 		hinst: &HINSTANCE,
 		cmd_show: Option<co::SW>,
 	) -> AnyResult<i32> {
-		self.0.dlg_base.create_dialog_param(hinst);
+		self.0.dlg_base.create_dialog_param(hinst, None);
 		if let Some(id) = self.0.icon_id {
 			self.0.dlg_base.set_icon(hinst, id)?;
 		}
