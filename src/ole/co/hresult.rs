@@ -1,3 +1,5 @@
+#![allow(non_snake_case)]
+
 use crate::co;
 use crate::prelude::*;
 
@@ -77,6 +79,7 @@ impl SystemError for HRESULT {}
 impl co::ERROR {
 	/// [`HRESULT_FROM_WIN32`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_from_win32)
 	/// macro.
+	#[must_use]
 	pub const fn to_hresult(self) -> co::HRESULT {
 		unsafe {
 			if self.raw() as i32 <= 0 {
@@ -93,20 +96,37 @@ impl co::ERROR {
 impl HRESULT {
 	/// [`HRESULT_CODE`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_code)
 	/// macro.
+	#[must_use]
 	pub const fn code(self) -> u16 {
 		(self.0 & 0xffff) as u16
 	}
 
 	/// [`HRESULT_FACILITY`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_facility)
 	/// macro.
+	#[must_use]
 	pub const fn facility(self) -> co::FACILITY {
 		unsafe { co::FACILITY::from_raw((self.0 >> 16) & 0x1fff) }
 	}
 
 	/// [`HRESULT_SEVERITY`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-hresult_severity)
 	/// macro.
+	#[must_use]
 	pub const fn severity(self) -> co::SEVERITY {
 		unsafe { co::SEVERITY::from_raw(((self.0 >> 31) & 0x1) as _) }
+	}
+
+	/// [`FAILED`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-failed)
+	/// macro.
+	#[must_use]
+	pub const fn FAILED(self) -> bool {
+		(self.0 as i32) < 0
+	}
+
+	/// [`SUCCEEDED`](https://learn.microsoft.com/en-us/windows/win32/api/winerror/nf-winerror-succeeded)
+	/// macro.
+	#[must_use]
+	pub const fn SUCCEEDED(self) -> bool {
+		(self.0 as i32) >= 0
 	}
 }
 
