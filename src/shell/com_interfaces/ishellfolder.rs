@@ -1,5 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
 use crate::ole::privs::*;
@@ -103,5 +104,27 @@ pub trait shell_IShellFolder: ole_IUnknown {
 			)
 		})
 		.map(|_| queried)
+	}
+
+	/// [`IShellFolder::CompareIDs`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellfolder-compareids)
+	/// method.
+	fn CompareIDs(
+		&self,
+		sorting_rule: u16,
+		sorting_flags: co::SHCIDS,
+		pidl1: &PIDL,
+		pidl2: &PIDL,
+	) -> HrResult<i32> {
+		let hr = unsafe {
+			co::HRESULT::from_raw({
+				(vt::<IShellFolderVT>(self).CompareIDs)(
+					self.ptr(),
+					(sorting_rule as u32 | sorting_flags.raw()) as _,
+					pidl1.ptr() as _,
+					pidl2.ptr() as _,
+				)
+			})
+		};
+		if hr.SUCCEEDED() { Ok(hr.code() as _) } else { Err(hr) }
 	}
 }

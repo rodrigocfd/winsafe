@@ -301,6 +301,14 @@ const_ordinary! { SHARD: u32;
 	SHELLITEM 0x0000_0008
 }
 
+const_bitflag! { SHCIDS: u32;
+	/// [`IShellFolder::CompareIDs`](crate::prelude::shell_IShellFolder::CompareIDs)
+	/// `sorting_flags` (`u32`).
+	=>
+	ALLFIELDS 0x8000_0000
+	CANONICALONLY 0x1000_0000
+}
+
 const_bitflag! { SHGFI: u32;
 	/// [`SHGetFileInfo`](crate::SHGetFileInfo) `flags` (`u32`).
 	=>
