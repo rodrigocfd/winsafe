@@ -105,30 +105,30 @@
 <a href=#105 id=105 data-nosnippet>105</a>					POINT::default(),
 <a href=#106 id=106 data-nosnippet>106</a>					SIZE::default(),
 <a href=#107 id=107 data-nosnippet>107</a>					<span class="kw-2">&amp;</span>parent2,
-<a href=#108 id=108 data-nosnippet>108</a>				)<span class="question-mark">?</span>;
+<a href=#108 id=108 data-nosnippet>108</a>				);
 <a href=#109 id=109 data-nosnippet>109</a>
 <a href=#110 id=110 data-nosnippet>110</a>				<span class="comment">// Force first resizing, so the panels are created.
-<a href=#111 id=111 data-nosnippet>111</a>				</span><span class="kw">let </span>parent_rc = parent2.hwnd().GetClientRect()<span class="question-mark">?</span>;
+<a href=#111 id=111 data-nosnippet>111</a>				</span><span class="kw">let </span>parent_rc = parent2.hwnd().GetClientRect().expect(DONTFAIL);
 <a href=#112 id=112 data-nosnippet>112</a>				self2.resize(<span class="kw-2">&amp;mut </span>wm::Size {
 <a href=#113 id=113 data-nosnippet>113</a>					client_area: SIZE::with(parent_rc.right, parent_rc.bottom),
 <a href=#114 id=114 data-nosnippet>114</a>					request: co::SIZE_R::RESTORED,
-<a href=#115 id=115 data-nosnippet>115</a>				})<span class="question-mark">?</span>;
+<a href=#115 id=115 data-nosnippet>115</a>				});
 <a href=#116 id=116 data-nosnippet>116</a>
 <a href=#117 id=117 data-nosnippet>117</a>				<span class="prelude-val">Ok</span>(<span class="number">0</span>) <span class="comment">// ignored
 <a href=#118 id=118 data-nosnippet>118</a>			</span>});
 <a href=#119 id=119 data-nosnippet>119</a>
 <a href=#120 id=120 data-nosnippet>120</a>		<span class="kw">let </span>self2 = new_self.clone();
 <a href=#121 id=121 data-nosnippet>121</a>		parent.as_ref().before_on().wm_size(<span class="kw">move </span>|<span class="kw-2">mut </span>p| {
-<a href=#122 id=122 data-nosnippet>122</a>			self2.resize(<span class="kw-2">&amp;mut </span>p)<span class="question-mark">?</span>;
+<a href=#122 id=122 data-nosnippet>122</a>			self2.resize(<span class="kw-2">&amp;mut </span>p);
 <a href=#123 id=123 data-nosnippet>123</a>			<span class="prelude-val">Ok</span>(())
 <a href=#124 id=124 data-nosnippet>124</a>		});
 <a href=#125 id=125 data-nosnippet>125</a>
 <a href=#126 id=126 data-nosnippet>126</a>		new_self
 <a href=#127 id=127 data-nosnippet>127</a>	}
 <a href=#128 id=128 data-nosnippet>128</a>
-<a href=#129 id=129 data-nosnippet>129</a>	<span class="kw">fn </span>resize(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>wm::Size) -&gt; SysResult&lt;()&gt; {
+<a href=#129 id=129 data-nosnippet>129</a>	<span class="kw">fn </span>resize(<span class="kw-2">&amp;</span><span class="self">self</span>, p: <span class="kw-2">&amp;mut </span>wm::Size) {
 <a href=#130 id=130 data-nosnippet>130</a>		<span class="kw">if </span>p.request == co::SIZE_R::MINIMIZED || <span class="kw-2">*</span><span class="self">self</span>.hwnd() == HWND::NULL {
-<a href=#131 id=131 data-nosnippet>131</a>			<span class="kw">return </span><span class="prelude-val">Ok</span>(()); <span class="comment">// nothing to do
+<a href=#131 id=131 data-nosnippet>131</a>			<span class="kw">return</span>; <span class="comment">// nothing to do
 <a href=#132 id=132 data-nosnippet>132</a>		</span>}
 <a href=#133 id=133 data-nosnippet>133</a>
 <a href=#134 id=134 data-nosnippet>134</a>		<span class="kw">unsafe </span>{
@@ -167,11 +167,12 @@
 <a href=#167 id=167 data-nosnippet>167</a>			<span class="self">self</span>.hwnd()
 <a href=#168 id=168 data-nosnippet>168</a>				.SendMessage(sb::SetParts { right_edges: <span class="kw-2">&amp;</span>right_edges })
 <a href=#169 id=169 data-nosnippet>169</a>		}
-<a href=#170 id=170 data-nosnippet>170</a>	}
-<a href=#171 id=171 data-nosnippet>171</a>
-<a href=#172 id=172 data-nosnippet>172</a>	<span class="doccomment">/// Part methods.
-<a href=#173 id=173 data-nosnippet>173</a>	</span><span class="attr">#[must_use]
-<a href=#174 id=174 data-nosnippet>174</a>	</span><span class="kw">pub const fn </span>parts(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; StatusBarParts&lt;<span class="lifetime">'_</span>&gt; {
-<a href=#175 id=175 data-nosnippet>175</a>		StatusBarParts::new(<span class="self">self</span>)
-<a href=#176 id=176 data-nosnippet>176</a>	}
-<a href=#177 id=177 data-nosnippet>177</a>}</code></pre></div></section></main></body></html>
+<a href=#170 id=170 data-nosnippet>170</a>		.expect(DONTFAIL);
+<a href=#171 id=171 data-nosnippet>171</a>	}
+<a href=#172 id=172 data-nosnippet>172</a>
+<a href=#173 id=173 data-nosnippet>173</a>	<span class="doccomment">/// Part methods.
+<a href=#174 id=174 data-nosnippet>174</a>	</span><span class="attr">#[must_use]
+<a href=#175 id=175 data-nosnippet>175</a>	</span><span class="kw">pub const fn </span>parts(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; StatusBarParts&lt;<span class="lifetime">'_</span>&gt; {
+<a href=#176 id=176 data-nosnippet>176</a>		StatusBarParts::new(<span class="self">self</span>)
+<a href=#177 id=177 data-nosnippet>177</a>	}
+<a href=#178 id=178 data-nosnippet>178</a>}</code></pre></div></section></main></body></html>

@@ -57,19 +57,19 @@
 <a href=#57 id=57 data-nosnippet>57</a>					<span class="kw">if </span>opts.size == (<span class="number">0</span>, <span class="number">0</span>) {
 <a href=#58 id=58 data-nosnippet>58</a>						text_calc::bound_box_with_check(<span class="kw-2">&amp;</span>text_calc::remove_accel_ampersands(
 <a href=#59 id=59 data-nosnippet>59</a>							<span class="kw-2">&amp;</span>opts.text,
-<a href=#60 id=60 data-nosnippet>60</a>						))<span class="question-mark">?
-<a href=#61 id=61 data-nosnippet>61</a>					</span>} <span class="kw">else </span>{
+<a href=#60 id=60 data-nosnippet>60</a>						))
+<a href=#61 id=61 data-nosnippet>61</a>					} <span class="kw">else </span>{
 <a href=#62 id=62 data-nosnippet>62</a>						opts.size.into()
 <a href=#63 id=63 data-nosnippet>63</a>					},
 <a href=#64 id=64 data-nosnippet>64</a>					<span class="kw-2">&amp;</span>parent2,
-<a href=#65 id=65 data-nosnippet>65</a>				)<span class="question-mark">?</span>;
-<a href=#66 id=66 data-nosnippet>66</a>				ui_font::set(self2.hwnd())<span class="question-mark">?</span>;
+<a href=#65 id=65 data-nosnippet>65</a>				);
+<a href=#66 id=66 data-nosnippet>66</a>				ui_font::set(self2.hwnd());
 <a href=#67 id=67 data-nosnippet>67</a>				<span class="kw">if </span>opts.selected {
 <a href=#68 id=68 data-nosnippet>68</a>					self2.select(<span class="bool-val">true</span>);
 <a href=#69 id=69 data-nosnippet>69</a>				}
 <a href=#70 id=70 data-nosnippet>70</a>				parent2
 <a href=#71 id=71 data-nosnippet>71</a>					.as_ref()
-<a href=#72 id=72 data-nosnippet>72</a>					.add_to_layout(self2.hwnd(), opts.resize_behavior)<span class="question-mark">?</span>;
+<a href=#72 id=72 data-nosnippet>72</a>					.add_to_layout(self2.hwnd(), opts.resize_behavior);
 <a href=#73 id=73 data-nosnippet>73</a>				<span class="prelude-val">Ok</span>(<span class="number">0</span>) <span class="comment">// ignored
 <a href=#74 id=74 data-nosnippet>74</a>			</span>});
 <a href=#75 id=75 data-nosnippet>75</a>
@@ -92,7 +92,7 @@
 <a href=#92 id=92 data-nosnippet>92</a>		<span class="kw">let </span>self2 = new_self.clone();
 <a href=#93 id=93 data-nosnippet>93</a>		<span class="kw">let </span>parent2 = parent.clone();
 <a href=#94 id=94 data-nosnippet>94</a>		parent.as_ref().before_on().wm_init_dialog(<span class="kw">move </span>|<span class="kw">_</span>| {
-<a href=#95 id=95 data-nosnippet>95</a>			self2.<span class="number">0</span>.base.assign_dlg(<span class="kw-2">&amp;</span>parent2)<span class="question-mark">?</span>;
+<a href=#95 id=95 data-nosnippet>95</a>			self2.<span class="number">0</span>.base.assign_dlg(<span class="kw-2">&amp;</span>parent2);
 <a href=#96 id=96 data-nosnippet>96</a>			self2.hwnd().set_style(<span class="kw">if </span>is_first {
 <a href=#97 id=97 data-nosnippet>97</a>				self2.hwnd().style() | co::WS::GROUP | co::WS::TABSTOP
 <a href=#98 id=98 data-nosnippet>98</a>			} <span class="kw">else </span>{
@@ -100,7 +100,7 @@
 <a href=#100 id=100 data-nosnippet>100</a>			});
 <a href=#101 id=101 data-nosnippet>101</a>			parent2
 <a href=#102 id=102 data-nosnippet>102</a>				.as_ref()
-<a href=#103 id=103 data-nosnippet>103</a>				.add_to_layout(self2.hwnd(), resize_behavior)<span class="question-mark">?</span>;
+<a href=#103 id=103 data-nosnippet>103</a>				.add_to_layout(self2.hwnd(), resize_behavior);
 <a href=#104 id=104 data-nosnippet>104</a>			<span class="prelude-val">Ok</span>(<span class="bool-val">true</span>) <span class="comment">// ignored
 <a href=#105 id=105 data-nosnippet>105</a>		</span>});
 <a href=#106 id=106 data-nosnippet>106</a>
@@ -145,7 +145,7 @@
 <a href=#145 id=145 data-nosnippet>145</a>	<span class="doccomment">/// Calls [`HWND::SetWindowText`](crate::HWND::SetWindowText) to set the
 <a href=#146 id=146 data-nosnippet>146</a>	/// text and resizes the control to exactly fit it.
 <a href=#147 id=147 data-nosnippet>147</a>	</span><span class="kw">pub fn </span>set_text_and_resize(<span class="kw-2">&amp;</span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;()&gt; {
-<a href=#148 id=148 data-nosnippet>148</a>		<span class="kw">let </span>bound_box = text_calc::bound_box_with_check(<span class="kw-2">&amp;</span>text_calc::remove_accel_ampersands(text))<span class="question-mark">?</span>;
+<a href=#148 id=148 data-nosnippet>148</a>		<span class="kw">let </span>bound_box = text_calc::bound_box_with_check(<span class="kw-2">&amp;</span>text_calc::remove_accel_ampersands(text));
 <a href=#149 id=149 data-nosnippet>149</a>		<span class="self">self</span>.hwnd().SetWindowPos(
 <a href=#150 id=150 data-nosnippet>150</a>			HwndPlace::None,
 <a href=#151 id=151 data-nosnippet>151</a>			POINT::default(),

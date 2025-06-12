@@ -53,12 +53,12 @@
 <a href=#53 id=53 data-nosnippet>53</a>					opts.position.into(),
 <a href=#54 id=54 data-nosnippet>54</a>					opts.size.into(),
 <a href=#55 id=55 data-nosnippet>55</a>					<span class="kw-2">&amp;</span>parent2,
-<a href=#56 id=56 data-nosnippet>56</a>				)<span class="question-mark">?</span>;
-<a href=#57 id=57 data-nosnippet>57</a>				ui_font::set(self2.hwnd())<span class="question-mark">?</span>;
+<a href=#56 id=56 data-nosnippet>56</a>				);
+<a href=#57 id=57 data-nosnippet>57</a>				ui_font::set(self2.hwnd());
 <a href=#58 id=58 data-nosnippet>58</a>				self2.items().add(<span class="kw-2">&amp;</span>opts.items)<span class="question-mark">?</span>;
 <a href=#59 id=59 data-nosnippet>59</a>				parent2
 <a href=#60 id=60 data-nosnippet>60</a>					.as_ref()
-<a href=#61 id=61 data-nosnippet>61</a>					.add_to_layout(self2.hwnd(), opts.resize_behavior)<span class="question-mark">?</span>;
+<a href=#61 id=61 data-nosnippet>61</a>					.add_to_layout(self2.hwnd(), opts.resize_behavior);
 <a href=#62 id=62 data-nosnippet>62</a>				<span class="prelude-val">Ok</span>(<span class="number">0</span>) <span class="comment">// ignored
 <a href=#63 id=63 data-nosnippet>63</a>			</span>});
 <a href=#64 id=64 data-nosnippet>64</a>
@@ -87,10 +87,10 @@
 <a href=#87 id=87 data-nosnippet>87</a>		<span class="kw">let </span>self2 = new_self.clone();
 <a href=#88 id=88 data-nosnippet>88</a>		<span class="kw">let </span>parent2 = parent.clone();
 <a href=#89 id=89 data-nosnippet>89</a>		parent.as_ref().before_on().wm_init_dialog(<span class="kw">move </span>|<span class="kw">_</span>| {
-<a href=#90 id=90 data-nosnippet>90</a>			self2.<span class="number">0</span>.base.assign_dlg(<span class="kw-2">&amp;</span>parent2)<span class="question-mark">?</span>;
+<a href=#90 id=90 data-nosnippet>90</a>			self2.<span class="number">0</span>.base.assign_dlg(<span class="kw-2">&amp;</span>parent2);
 <a href=#91 id=91 data-nosnippet>91</a>			parent2
 <a href=#92 id=92 data-nosnippet>92</a>				.as_ref()
-<a href=#93 id=93 data-nosnippet>93</a>				.add_to_layout(self2.hwnd(), resize_behavior)<span class="question-mark">?</span>;
+<a href=#93 id=93 data-nosnippet>93</a>				.add_to_layout(self2.hwnd(), resize_behavior);
 <a href=#94 id=94 data-nosnippet>94</a>			<span class="prelude-val">Ok</span>(<span class="bool-val">true</span>) <span class="comment">// ignored
 <a href=#95 id=95 data-nosnippet>95</a>		</span>});
 <a href=#96 id=96 data-nosnippet>96</a>

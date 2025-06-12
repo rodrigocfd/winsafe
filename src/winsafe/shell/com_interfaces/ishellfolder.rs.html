@@ -87,44 +87,44 @@
 <a href=#87 id=87 data-nosnippet>87</a>		.map(|<span class="kw">_</span>| queried)
 <a href=#88 id=88 data-nosnippet>88</a>	}
 <a href=#89 id=89 data-nosnippet>89</a>
-<a href=#90 id=90 data-nosnippet>90</a>	<span class="doccomment">/// [`IShellFolder::CreateViewObject`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellfolder-createviewobject)
+<a href=#90 id=90 data-nosnippet>90</a>	<span class="doccomment">/// [`IShellFolder::CompareIDs`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellfolder-compareids)
 <a href=#91 id=91 data-nosnippet>91</a>	/// method.
-<a href=#92 id=92 data-nosnippet>92</a>	</span><span class="attr">#[must_use]
-<a href=#93 id=93 data-nosnippet>93</a>	</span><span class="kw">fn </span>CreateViewObject&lt;T&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, hwnd_owner: <span class="kw-2">&amp;</span>HWND) -&gt; HrResult&lt;T&gt;
-<a href=#94 id=94 data-nosnippet>94</a>	<span class="kw">where
-<a href=#95 id=95 data-nosnippet>95</a>		</span>T: ole_IUnknown,
-<a href=#96 id=96 data-nosnippet>96</a>	{
-<a href=#97 id=97 data-nosnippet>97</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ T::null() };
-<a href=#98 id=98 data-nosnippet>98</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
-<a href=#99 id=99 data-nosnippet>99</a>			(vt::&lt;IShellFolderVT&gt;(<span class="self">self</span>).CreateViewObject)(
-<a href=#100 id=100 data-nosnippet>100</a>				<span class="self">self</span>.ptr(),
-<a href=#101 id=101 data-nosnippet>101</a>				hwnd_owner.ptr(),
-<a href=#102 id=102 data-nosnippet>102</a>				pcvoid(<span class="kw-2">&amp;</span>T::IID),
-<a href=#103 id=103 data-nosnippet>103</a>				queried.as_mut(),
-<a href=#104 id=104 data-nosnippet>104</a>			)
-<a href=#105 id=105 data-nosnippet>105</a>		})
-<a href=#106 id=106 data-nosnippet>106</a>		.map(|<span class="kw">_</span>| queried)
-<a href=#107 id=107 data-nosnippet>107</a>	}
-<a href=#108 id=108 data-nosnippet>108</a>
-<a href=#109 id=109 data-nosnippet>109</a>	<span class="doccomment">/// [`IShellFolder::CompareIDs`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellfolder-compareids)
-<a href=#110 id=110 data-nosnippet>110</a>	/// method.
-<a href=#111 id=111 data-nosnippet>111</a>	</span><span class="kw">fn </span>CompareIDs(
-<a href=#112 id=112 data-nosnippet>112</a>		<span class="kw-2">&amp;</span><span class="self">self</span>,
-<a href=#113 id=113 data-nosnippet>113</a>		sorting_rule: u16,
-<a href=#114 id=114 data-nosnippet>114</a>		sorting_flags: co::SHCIDS,
-<a href=#115 id=115 data-nosnippet>115</a>		pidl1: <span class="kw-2">&amp;</span>PIDL,
-<a href=#116 id=116 data-nosnippet>116</a>		pidl2: <span class="kw-2">&amp;</span>PIDL,
-<a href=#117 id=117 data-nosnippet>117</a>	) -&gt; HrResult&lt;i32&gt; {
-<a href=#118 id=118 data-nosnippet>118</a>		<span class="kw">let </span>hr = <span class="kw">unsafe </span>{
-<a href=#119 id=119 data-nosnippet>119</a>			co::HRESULT::from_raw({
-<a href=#120 id=120 data-nosnippet>120</a>				(vt::&lt;IShellFolderVT&gt;(<span class="self">self</span>).CompareIDs)(
-<a href=#121 id=121 data-nosnippet>121</a>					<span class="self">self</span>.ptr(),
-<a href=#122 id=122 data-nosnippet>122</a>					(sorting_rule <span class="kw">as </span>u32 | sorting_flags.raw()) <span class="kw">as _</span>,
-<a href=#123 id=123 data-nosnippet>123</a>					pidl1.ptr() <span class="kw">as _</span>,
-<a href=#124 id=124 data-nosnippet>124</a>					pidl2.ptr() <span class="kw">as _</span>,
-<a href=#125 id=125 data-nosnippet>125</a>				)
-<a href=#126 id=126 data-nosnippet>126</a>			})
-<a href=#127 id=127 data-nosnippet>127</a>		};
-<a href=#128 id=128 data-nosnippet>128</a>		<span class="kw">if </span>hr.SUCCEEDED() { <span class="prelude-val">Ok</span>(hr.code() <span class="kw">as _</span>) } <span class="kw">else </span>{ <span class="prelude-val">Err</span>(hr) }
+<a href=#92 id=92 data-nosnippet>92</a>	</span><span class="kw">fn </span>CompareIDs(
+<a href=#93 id=93 data-nosnippet>93</a>		<span class="kw-2">&amp;</span><span class="self">self</span>,
+<a href=#94 id=94 data-nosnippet>94</a>		sorting_rule: u16,
+<a href=#95 id=95 data-nosnippet>95</a>		sorting_flags: co::SHCIDS,
+<a href=#96 id=96 data-nosnippet>96</a>		pidl1: <span class="kw-2">&amp;</span>PIDL,
+<a href=#97 id=97 data-nosnippet>97</a>		pidl2: <span class="kw-2">&amp;</span>PIDL,
+<a href=#98 id=98 data-nosnippet>98</a>	) -&gt; HrResult&lt;i32&gt; {
+<a href=#99 id=99 data-nosnippet>99</a>		<span class="kw">let </span>hr = <span class="kw">unsafe </span>{
+<a href=#100 id=100 data-nosnippet>100</a>			co::HRESULT::from_raw({
+<a href=#101 id=101 data-nosnippet>101</a>				(vt::&lt;IShellFolderVT&gt;(<span class="self">self</span>).CompareIDs)(
+<a href=#102 id=102 data-nosnippet>102</a>					<span class="self">self</span>.ptr(),
+<a href=#103 id=103 data-nosnippet>103</a>					(sorting_rule <span class="kw">as </span>u32 | sorting_flags.raw()) <span class="kw">as _</span>,
+<a href=#104 id=104 data-nosnippet>104</a>					pidl1.ptr() <span class="kw">as _</span>,
+<a href=#105 id=105 data-nosnippet>105</a>					pidl2.ptr() <span class="kw">as _</span>,
+<a href=#106 id=106 data-nosnippet>106</a>				)
+<a href=#107 id=107 data-nosnippet>107</a>			})
+<a href=#108 id=108 data-nosnippet>108</a>		};
+<a href=#109 id=109 data-nosnippet>109</a>		<span class="kw">if </span>hr.SUCCEEDED() { <span class="prelude-val">Ok</span>(hr.code() <span class="kw">as _</span>) } <span class="kw">else </span>{ <span class="prelude-val">Err</span>(hr) }
+<a href=#110 id=110 data-nosnippet>110</a>	}
+<a href=#111 id=111 data-nosnippet>111</a>
+<a href=#112 id=112 data-nosnippet>112</a>	<span class="doccomment">/// [`IShellFolder::CreateViewObject`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellfolder-createviewobject)
+<a href=#113 id=113 data-nosnippet>113</a>	/// method.
+<a href=#114 id=114 data-nosnippet>114</a>	</span><span class="attr">#[must_use]
+<a href=#115 id=115 data-nosnippet>115</a>	</span><span class="kw">fn </span>CreateViewObject&lt;T&gt;(<span class="kw-2">&amp;</span><span class="self">self</span>, hwnd_owner: <span class="kw-2">&amp;</span>HWND) -&gt; HrResult&lt;T&gt;
+<a href=#116 id=116 data-nosnippet>116</a>	<span class="kw">where
+<a href=#117 id=117 data-nosnippet>117</a>		</span>T: ole_IUnknown,
+<a href=#118 id=118 data-nosnippet>118</a>	{
+<a href=#119 id=119 data-nosnippet>119</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ T::null() };
+<a href=#120 id=120 data-nosnippet>120</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#121 id=121 data-nosnippet>121</a>			(vt::&lt;IShellFolderVT&gt;(<span class="self">self</span>).CreateViewObject)(
+<a href=#122 id=122 data-nosnippet>122</a>				<span class="self">self</span>.ptr(),
+<a href=#123 id=123 data-nosnippet>123</a>				hwnd_owner.ptr(),
+<a href=#124 id=124 data-nosnippet>124</a>				pcvoid(<span class="kw-2">&amp;</span>T::IID),
+<a href=#125 id=125 data-nosnippet>125</a>				queried.as_mut(),
+<a href=#126 id=126 data-nosnippet>126</a>			)
+<a href=#127 id=127 data-nosnippet>127</a>		})
+<a href=#128 id=128 data-nosnippet>128</a>		.map(|<span class="kw">_</span>| queried)
 <a href=#129 id=129 data-nosnippet>129</a>	}
 <a href=#130 id=130 data-nosnippet>130</a>}</code></pre></div></section></main></body></html>

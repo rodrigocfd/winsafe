@@ -54,16 +54,16 @@
 <a href=#54 id=54 data-nosnippet>54</a>					<span class="kw">if </span>opts.size == (<span class="number">0</span>, <span class="number">0</span>) {
 <a href=#55 id=55 data-nosnippet>55</a>						text_calc::bound_box_with_check(<span class="kw-2">&amp;</span>text_calc::remove_accel_ampersands(
 <a href=#56 id=56 data-nosnippet>56</a>							<span class="kw-2">&amp;</span>opts.text,
-<a href=#57 id=57 data-nosnippet>57</a>						))<span class="question-mark">?
-<a href=#58 id=58 data-nosnippet>58</a>					</span>} <span class="kw">else </span>{
+<a href=#57 id=57 data-nosnippet>57</a>						))
+<a href=#58 id=58 data-nosnippet>58</a>					} <span class="kw">else </span>{
 <a href=#59 id=59 data-nosnippet>59</a>						opts.size.into()
 <a href=#60 id=60 data-nosnippet>60</a>					},
 <a href=#61 id=61 data-nosnippet>61</a>					<span class="kw-2">&amp;</span>parent2,
-<a href=#62 id=62 data-nosnippet>62</a>				)<span class="question-mark">?</span>;
-<a href=#63 id=63 data-nosnippet>63</a>				ui_font::set(self2.hwnd())<span class="question-mark">?</span>;
+<a href=#62 id=62 data-nosnippet>62</a>				);
+<a href=#63 id=63 data-nosnippet>63</a>				ui_font::set(self2.hwnd());
 <a href=#64 id=64 data-nosnippet>64</a>				parent2
 <a href=#65 id=65 data-nosnippet>65</a>					.as_ref()
-<a href=#66 id=66 data-nosnippet>66</a>					.add_to_layout(self2.hwnd(), opts.resize_behavior)<span class="question-mark">?</span>;
+<a href=#66 id=66 data-nosnippet>66</a>					.add_to_layout(self2.hwnd(), opts.resize_behavior);
 <a href=#67 id=67 data-nosnippet>67</a>				<span class="prelude-val">Ok</span>(<span class="number">0</span>) <span class="comment">// ignored
 <a href=#68 id=68 data-nosnippet>68</a>			</span>});
 <a href=#69 id=69 data-nosnippet>69</a>
@@ -92,10 +92,10 @@
 <a href=#92 id=92 data-nosnippet>92</a>		<span class="kw">let </span>self2 = new_self.clone();
 <a href=#93 id=93 data-nosnippet>93</a>		<span class="kw">let </span>parent2 = parent.clone();
 <a href=#94 id=94 data-nosnippet>94</a>		parent.as_ref().before_on().wm_init_dialog(<span class="kw">move </span>|<span class="kw">_</span>| {
-<a href=#95 id=95 data-nosnippet>95</a>			self2.<span class="number">0</span>.base.assign_dlg(<span class="kw-2">&amp;</span>parent2)<span class="question-mark">?</span>;
+<a href=#95 id=95 data-nosnippet>95</a>			self2.<span class="number">0</span>.base.assign_dlg(<span class="kw-2">&amp;</span>parent2);
 <a href=#96 id=96 data-nosnippet>96</a>			parent2
 <a href=#97 id=97 data-nosnippet>97</a>				.as_ref()
-<a href=#98 id=98 data-nosnippet>98</a>				.add_to_layout(self2.hwnd(), resize_behavior)<span class="question-mark">?</span>;
+<a href=#98 id=98 data-nosnippet>98</a>				.add_to_layout(self2.hwnd(), resize_behavior);
 <a href=#99 id=99 data-nosnippet>99</a>			<span class="prelude-val">Ok</span>(<span class="bool-val">true</span>) <span class="comment">// ignored
 <a href=#100 id=100 data-nosnippet>100</a>		</span>});
 <a href=#101 id=101 data-nosnippet>101</a>
@@ -152,7 +152,7 @@
 <a href=#152 id=152 data-nosnippet>152</a>	<span class="doccomment">/// Calls [`HWND::SetWindowText`](crate::HWND::SetWindowText) to set the
 <a href=#153 id=153 data-nosnippet>153</a>	/// text and resizes the control to exactly fit it.
 <a href=#154 id=154 data-nosnippet>154</a>	</span><span class="kw">pub fn </span>set_text_and_resize(<span class="kw-2">&amp;</span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;()&gt; {
-<a href=#155 id=155 data-nosnippet>155</a>		<span class="kw">let </span>bound_box = text_calc::bound_box_with_check(<span class="kw-2">&amp;</span>text_calc::remove_accel_ampersands(text))<span class="question-mark">?</span>;
+<a href=#155 id=155 data-nosnippet>155</a>		<span class="kw">let </span>bound_box = text_calc::bound_box_with_check(<span class="kw-2">&amp;</span>text_calc::remove_accel_ampersands(text));
 <a href=#156 id=156 data-nosnippet>156</a>		<span class="self">self</span>.hwnd().SetWindowPos(
 <a href=#157 id=157 data-nosnippet>157</a>			HwndPlace::None,
 <a href=#158 id=158 data-nosnippet>158</a>			POINT::default(),
