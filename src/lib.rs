@@ -291,16 +291,17 @@ pub mod prelude {
 	//! use winsafe::prelude::*;
 	//! ```
 
-	#[cfg(feature = "dshow")] pub use super::dshow::traits::*;
-	#[cfg(feature = "dxgi")] pub use super::dxgi::traits::*;
 	#[cfg(feature = "gdi")] pub use super::gdi::traits::*;
 	#[cfg(feature = "gui")] pub use super::gui::traits::*;
 	#[cfg(feature = "kernel")] pub use super::kernel::traits::*;
+	#[cfg(feature = "user")] pub use super::user::traits::*;
+
+	#[cfg(feature = "dshow")] pub use super::dshow::traits::*;
+	#[cfg(feature = "dxgi")] pub use super::dxgi::traits::*;
 	#[cfg(feature = "mf")] pub use super::mf::traits::*;
 	#[cfg(feature = "ole")] pub use super::ole::traits::*;
 	#[cfg(feature = "oleaut")] pub use super::oleaut::traits::*;
 	#[cfg(feature = "shell")] pub use super::shell::traits::*;
 	#[cfg(feature = "taskschd")] pub use super::taskschd::traits::*;
-	#[cfg(feature = "user")] pub use super::user::traits::*;
 	#[cfg(all(feature = "gdi", feature = "mf"))] pub use super::gdi_mf::traits::*;
 }

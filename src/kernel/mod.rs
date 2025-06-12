@@ -1,7 +1,6 @@
 #![cfg(feature = "kernel")]
 
 mod aliases;
-mod base_traits;
 mod enums;
 mod ffi;
 mod funcs;
@@ -15,6 +14,7 @@ pub mod co;
 pub(crate) mod ffi_types;
 pub mod guards;
 pub(crate) mod privs;
+pub(crate) mod traits;
 
 pub mod decl {
 	pub use super::aliases::*;
@@ -23,8 +23,4 @@ pub mod decl {
 	pub use super::handles::decl::*;
 	pub use super::structs::*;
 	pub use super::utilities::*;
-}
-
-pub mod traits {
-	pub use super::base_traits::*;
 }

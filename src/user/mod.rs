@@ -4,7 +4,6 @@ mod aliases;
 mod enums;
 mod funcs;
 mod handles;
-mod msg_traits;
 mod proc;
 mod structs;
 
@@ -14,6 +13,7 @@ pub mod guards;
 pub(in crate::user) mod iterators;
 pub mod messages;
 pub(crate) mod privs;
+pub(crate) mod traits;
 
 pub mod decl {
 	pub use super::aliases::*;
@@ -21,8 +21,4 @@ pub mod decl {
 	pub use super::funcs::*;
 	pub use super::handles::decl::*;
 	pub use super::structs::*;
-}
-
-pub mod traits {
-	pub use super::msg_traits::*;
 }
