@@ -105,30 +105,30 @@ impl StatusBar {
 					POINT::default(),
 					SIZE::default(),
 					&parent2,
-				)?;
+				);
 
 				// Force first resizing, so the panels are created.
-				let parent_rc = parent2.hwnd().GetClientRect()?;
+				let parent_rc = parent2.hwnd().GetClientRect().expect(DONTFAIL);
 				self2.resize(&mut wm::Size {
 					client_area: SIZE::with(parent_rc.right, parent_rc.bottom),
 					request: co::SIZE_R::RESTORED,
-				})?;
+				});
 
 				Ok(0) // ignored
 			});
 
 		let self2 = new_self.clone();
 		parent.as_ref().before_on().wm_size(move |mut p| {
-			self2.resize(&mut p)?;
+			self2.resize(&mut p);
 			Ok(())
 		});
 
 		new_self
 	}
 
-	fn resize(&self, p: &mut wm::Size) -> SysResult<()> {
+	fn resize(&self, p: &mut wm::Size) {
 		if p.request == co::SIZE_R::MINIMIZED || *self.hwnd() == HWND::NULL {
-			return Ok(()); // nothing to do
+			return; // nothing to do
 		}
 
 		unsafe {
@@ -167,6 +167,7 @@ impl StatusBar {
 			self.hwnd()
 				.SendMessage(sb::SetParts { right_edges: &right_edges })
 		}
+		.expect(DONTFAIL);
 	}
 
 	/// Part methods.

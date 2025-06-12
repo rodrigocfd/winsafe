@@ -1,3 +1,4 @@
+use std::any::TypeId;
 use std::cell::RefCell;
 use std::mem::ManuallyDrop;
 use std::rc::Rc;
@@ -47,18 +48,29 @@ impl<'a, T> TreeViewItem<'a, T> {
 	/// stored data by sending an [`lvm::GetItem`](crate::msg::lvm::GetItem)
 	/// message.
 	///
-	/// Returns `None` if the `ListView` holds a `()`, or if the item holds an
-	/// invalid index.
+	/// # Panics
+	///
+	/// Panics if the `TreeView` doesn't have an actual type, that is, if it was
+	/// declared as `TreeView<()>`.
+	///
+	/// Panics if the item index is invalid.
 	#[must_use]
-	pub fn data(&self) -> SysResult<Option<Rc<RefCell<T>>>> {
-		Ok(self.data_lparam()?.map(|pdata| {
-			let rc_data = ManuallyDrop::new(unsafe { Rc::from_raw(pdata) });
-			Rc::clone(&rc_data)
-		}))
+	pub fn data(&self) -> SysResult<Rc<RefCell<T>>> {
+		if TypeId::of::<T>() == TypeId::of::<()>() {
+			panic!("TreeView<()> will hold no data."); // user didn't define the generic type
+		}
+
+		let rc_ptr = self.data_lparam()?;
+		if rc_ptr.is_null() {
+			panic!("TreeViewItem with invalid index, no data.");
+		}
+
+		let rc_obj = ManuallyDrop::new(unsafe { Rc::from_raw(rc_ptr) });
+		Ok(Rc::clone(&rc_obj))
 	}
 
 	#[must_use]
-	pub(in crate::gui) fn data_lparam(&self) -> SysResult<Option<*mut RefCell<T>>> {
+	pub(in crate::gui) fn data_lparam(&self) -> SysResult<*mut RefCell<T>> {
 		let mut tvix = TVITEMEX::default();
 		tvix.hItem = unsafe { self.hitem.raw_copy() };
 		tvix.mask = co::TVIF::PARAM;
@@ -70,8 +82,8 @@ impl<'a, T> TreeViewItem<'a, T> {
 		}
 
 		Ok(match tvix.lParam {
-			0 => None,
-			lp => Some(lp as _),
+			0 => std::ptr::null_mut(),
+			lp => lp as _,
 		})
 	}
 

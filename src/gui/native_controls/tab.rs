@@ -58,18 +58,18 @@ impl Tab {
 					opts.position.into(),
 					opts.size.into(),
 					&parent2,
-				)?;
-				ui_font::set(self2.hwnd())?;
+				);
+				ui_font::set(self2.hwnd());
 				if opts.control_ex_style != co::TCS_EX::NoValue {
 					self2.set_extended_style(true, opts.control_ex_style);
 				}
 				self2.0.children.iter().for_each(|(text, _)| unsafe {
 					self2.items().add(text); // add the tabs
 				});
-				self2.display_tab(0)?; // 1st tab selected by default
+				self2.display_tab(0); // 1st tab selected by default
 				parent2
 					.as_ref()
-					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+					.add_to_layout(self2.hwnd(), opts.resize_behavior);
 				Ok(0) // ignored
 			});
 
@@ -101,14 +101,14 @@ impl Tab {
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
-			self2.0.base.assign_dlg(&parent2)?;
+			self2.0.base.assign_dlg(&parent2);
 			self2.0.children.iter().for_each(|(text, _)| unsafe {
 				self2.items().add(text); // add the tabs
 			});
-			self2.display_tab(0)?; // 1st tab selected by default
+			self2.display_tab(0); // 1st tab selected by default
 			parent2
 				.as_ref()
-				.add_to_layout(self2.hwnd(), resize_behavior)?;
+				.add_to_layout(self2.hwnd(), resize_behavior);
 			Ok(true) // ignored
 		});
 
@@ -123,7 +123,7 @@ impl Tab {
 			.before_on()
 			.wm_notify(self.ctrl_id(), co::TCN::SELCHANGE, move |_| {
 				if let Some(sel_item) = self2.items().selected() {
-					self2.display_tab(sel_item.index())?;
+					self2.display_tab(sel_item.index());
 				}
 				Ok(0) // ignored
 			});
@@ -142,7 +142,7 @@ impl Tab {
 		});
 	}
 
-	fn display_tab(&self, index: u32) -> SysResult<()> {
+	fn display_tab(&self, index: u32) {
 		self.0
 			.children
 			.iter()
@@ -155,23 +155,29 @@ impl Tab {
 		if let Some((_, item)) = self.0.children.get(index as usize) {
 			let mut rc = self
 				.hwnd()
-				.GetParent()?
-				.ScreenToClientRc(self.hwnd().GetWindowRect()?)?;
+				.GetParent()
+				.expect(DONTFAIL)
+				.ScreenToClientRc(self.hwnd().GetWindowRect().expect(DONTFAIL))
+				.expect(DONTFAIL);
+
 			unsafe {
 				self.hwnd().SendMessage(tcm::AdjustRect {
 					display_rect: false,
 					rect: &mut rc, // ideal size of the child
 				});
 			}
-			item.as_ref().as_ref().hwnd().SetWindowPos(
-				HwndPlace::None,
-				POINT::with(rc.left, rc.top),
-				SIZE::with(rc.right - rc.left, rc.bottom - rc.top),
-				co::SWP::NOZORDER | co::SWP::SHOWWINDOW,
-			)?;
-		}
 
-		Ok(())
+			item.as_ref()
+				.as_ref()
+				.hwnd()
+				.SetWindowPos(
+					HwndPlace::None,
+					POINT::with(rc.left, rc.top),
+					SIZE::with(rc.right - rc.left, rc.bottom - rc.top),
+					co::SWP::NOZORDER | co::SWP::SHOWWINDOW, // show the child of the selected tab
+				)
+				.expect(DONTFAIL);
+		}
 	}
 
 	/// Retrieves one of the associated image lists by sending a

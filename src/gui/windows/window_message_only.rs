@@ -42,14 +42,14 @@ impl WindowMessageOnly {
 	///
 	/// Panics if the creation process fails.
 	#[must_use]
-	pub fn new(parent: Option<&WindowMessageOnly>) -> AnyResult<Self> {
+	pub fn new(parent: Option<&WindowMessageOnly>) -> Self {
 		let new_self = Self(Arc::pin(RawBase::new()));
-		new_self.create(parent)?;
-		Ok(new_self)
+		new_self.create(parent);
+		new_self
 	}
 
-	fn create(&self, parent: Option<&WindowMessageOnly>) -> AnyResult<()> {
-		let hinst = HINSTANCE::GetModuleHandle(None)?;
+	fn create(&self, parent: Option<&WindowMessageOnly>) {
+		let hinst = HINSTANCE::GetModuleHandle(None).expect(DONTFAIL);
 		let atom = self.0.register_class(
 			&hinst,
 			"",
@@ -57,7 +57,7 @@ impl WindowMessageOnly {
 			&Icon::None,
 			&Brush::None,
 			&Cursor::None,
-		)?;
+		);
 
 		let hparent_msg = unsafe { HWND::from_ptr(HWND_MESSAGE as _) };
 
@@ -75,7 +75,5 @@ impl WindowMessageOnly {
 			IdMenu::None,
 			&hinst,
 		);
-
-		Ok(())
 	}
 }

@@ -50,16 +50,16 @@ impl Label {
 					opts.window_style | opts.control_style.into(),
 					opts.position.into(),
 					if opts.size == (0, 0) {
-						text_calc::bound_box(&text_calc::remove_accel_ampersands(&opts.text))?
+						text_calc::bound_box(&text_calc::remove_accel_ampersands(&opts.text))
 					} else {
 						opts.size.into()
 					},
 					&parent2,
-				)?;
-				ui_font::set(self2.hwnd())?;
+				);
+				ui_font::set(self2.hwnd());
 				parent2
 					.as_ref()
-					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+					.add_to_layout(self2.hwnd(), opts.resize_behavior);
 				Ok(0) // ignored
 			});
 
@@ -88,10 +88,10 @@ impl Label {
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
-			self2.0.base.assign_dlg(&parent2)?;
+			self2.0.base.assign_dlg(&parent2);
 			parent2
 				.as_ref()
-				.add_to_layout(self2.hwnd(), resize_behavior)?;
+				.add_to_layout(self2.hwnd(), resize_behavior);
 			Ok(true) // ignored
 		});
 
@@ -101,7 +101,7 @@ impl Label {
 	/// Calls [`HWND::SetWindowText`](crate::HWND::SetWindowText) to set the
 	/// text and resizes the control to exactly fit it.
 	pub fn set_text_and_resize(&self, text: &str) -> SysResult<()> {
-		let bound_box = text_calc::bound_box(&text_calc::remove_accel_ampersands(text))?;
+		let bound_box = text_calc::bound_box(&text_calc::remove_accel_ampersands(text));
 		self.hwnd().SetWindowPos(
 			HwndPlace::None,
 			POINT::default(),

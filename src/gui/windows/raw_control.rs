@@ -45,7 +45,7 @@ impl RawControl {
 					&opts.class_icon,
 					&opts.class_bg_brush,
 					&opts.class_cursor,
-				)?;
+				);
 				self2.0.raw_base.create_window(
 					opts.ex_style,
 					atom,
@@ -60,7 +60,7 @@ impl RawControl {
 
 				parent2
 					.as_ref()
-					.add_to_layout(self2.0.raw_base.base().hwnd(), opts.resize_behavior)?;
+					.add_to_layout(self2.0.raw_base.base().hwnd(), opts.resize_behavior);
 				Ok(0) // ignored
 			});
 
@@ -71,7 +71,7 @@ impl RawControl {
 	fn default_message_handlers(&self) {
 		let self2 = self.clone();
 		self.0.raw_base.base().before_on().wm_nc_paint(move |p| {
-			paint_control_borders(self2.0.raw_base.base().hwnd(), p)?;
+			paint_control_borders(self2.0.raw_base.base().hwnd(), p);
 			Ok(())
 		});
 	}

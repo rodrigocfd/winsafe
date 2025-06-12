@@ -1,5 +1,6 @@
 use crate::co;
 use crate::decl::*;
+use crate::gui::privs::*;
 use crate::prelude::*;
 
 /// Global horizontal and vertical system DPI factor.
@@ -7,7 +8,7 @@ static mut DPI: (i32, i32) = (0, 0);
 
 fn cache_dpi() {
 	if unsafe { DPI } == (0, 0) {
-		let hdc_screen = HWND::NULL.GetDC().unwrap(); // should really never fail
+		let hdc_screen = HWND::NULL.GetDC().expect(DONTFAIL);
 		let x = hdc_screen.GetDeviceCaps(co::GDC::LOGPIXELSX);
 		let y = hdc_screen.GetDeviceCaps(co::GDC::LOGPIXELSY);
 		unsafe {

@@ -57,19 +57,19 @@ impl RadioButton {
 					if opts.size == (0, 0) {
 						text_calc::bound_box_with_check(&text_calc::remove_accel_ampersands(
 							&opts.text,
-						))?
+						))
 					} else {
 						opts.size.into()
 					},
 					&parent2,
-				)?;
-				ui_font::set(self2.hwnd())?;
+				);
+				ui_font::set(self2.hwnd());
 				if opts.selected {
 					self2.select(true);
 				}
 				parent2
 					.as_ref()
-					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+					.add_to_layout(self2.hwnd(), opts.resize_behavior);
 				Ok(0) // ignored
 			});
 
@@ -92,7 +92,7 @@ impl RadioButton {
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
-			self2.0.base.assign_dlg(&parent2)?;
+			self2.0.base.assign_dlg(&parent2);
 			self2.hwnd().set_style(if is_first {
 				self2.hwnd().style() | co::WS::GROUP | co::WS::TABSTOP
 			} else {
@@ -100,7 +100,7 @@ impl RadioButton {
 			});
 			parent2
 				.as_ref()
-				.add_to_layout(self2.hwnd(), resize_behavior)?;
+				.add_to_layout(self2.hwnd(), resize_behavior);
 			Ok(true) // ignored
 		});
 
@@ -145,7 +145,7 @@ impl RadioButton {
 	/// Calls [`HWND::SetWindowText`](crate::HWND::SetWindowText) to set the
 	/// text and resizes the control to exactly fit it.
 	pub fn set_text_and_resize(&self, text: &str) -> SysResult<()> {
-		let bound_box = text_calc::bound_box_with_check(&text_calc::remove_accel_ampersands(text))?;
+		let bound_box = text_calc::bound_box_with_check(&text_calc::remove_accel_ampersands(text));
 		self.hwnd().SetWindowPos(
 			HwndPlace::None,
 			POINT::default(),

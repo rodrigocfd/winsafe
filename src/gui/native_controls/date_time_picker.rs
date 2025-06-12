@@ -52,7 +52,8 @@ impl DateTimePicker {
 					opts.position.into(),
 					SIZE::with(opts.width, dpi_y(21)),
 					&parent2,
-				)?;
+				);
+
 				if opts.width == 0 {
 					let mut sz = SIZE::default();
 					unsafe {
@@ -61,21 +62,26 @@ impl DateTimePicker {
 						});
 					}
 					sz.cy = dpi_y(21);
-					self2.hwnd().SetWindowPos(
-						HwndPlace::None,
-						POINT::default(),
-						sz,
-						co::SWP::NOZORDER | co::SWP::NOMOVE,
-					)?;
+					self2
+						.hwnd()
+						.SetWindowPos(
+							HwndPlace::None,
+							POINT::default(),
+							sz,
+							co::SWP::NOZORDER | co::SWP::NOMOVE,
+						)
+						.expect(DONTFAIL);
 				}
-				ui_font::set(self2.hwnd())?;
+
+				ui_font::set(self2.hwnd());
+
 				if opts.date.wDay != 0 {
 					// user defined a date
 					self2.set_date(&opts.date)?;
 				}
 				parent2
 					.as_ref()
-					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+					.add_to_layout(self2.hwnd(), opts.resize_behavior);
 				Ok(0) // ignored
 			});
 
@@ -104,10 +110,10 @@ impl DateTimePicker {
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
-			self2.0.base.assign_dlg(&parent2)?;
+			self2.0.base.assign_dlg(&parent2);
 			parent2
 				.as_ref()
-				.add_to_layout(self2.hwnd(), resize_behavior)?;
+				.add_to_layout(self2.hwnd(), resize_behavior);
 			Ok(true) // ignored
 		});
 

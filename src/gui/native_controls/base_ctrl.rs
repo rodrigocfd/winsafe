@@ -58,7 +58,7 @@ impl BaseCtrl {
 		pos: POINT,
 		size: SIZE,
 		parent: &impl GuiParent,
-	) -> SysResult<()> {
+	) {
 		let hparent = parent.as_ref().hwnd();
 
 		if *self.hwnd() != HWND::NULL {
@@ -79,13 +79,13 @@ impl BaseCtrl {
 				IdMenu::Id(self.ctrl_id),
 				&hparent.hinstance(),
 				None,
-			)?
+			)
+			.expect(DONTFAIL)
 		});
-		self.install_subclass_if_needed()?;
-		Ok(())
+		self.install_subclass_if_needed();
 	}
 
-	pub(in crate::gui) fn assign_dlg(&self, parent: &impl AsRef<BaseWnd>) -> SysResult<()> {
+	pub(in crate::gui) fn assign_dlg(&self, parent: &impl AsRef<BaseWnd>) {
 		let hparent = parent.as_ref().hwnd();
 
 		if !hparent.is_dialog() {
@@ -96,12 +96,11 @@ impl BaseCtrl {
 			panic!("Cannot create control before parent window creation.");
 		}
 
-		self.set_hwnd(hparent.GetDlgItem(self.ctrl_id)?);
-		self.install_subclass_if_needed()?;
-		Ok(())
+		self.set_hwnd(hparent.GetDlgItem(self.ctrl_id).expect(DONTFAIL));
+		self.install_subclass_if_needed();
 	}
 
-	fn install_subclass_if_needed(&self) -> SysResult<()> {
+	fn install_subclass_if_needed(&self) {
 		if self.subclass_events.has_message() {
 			let subclass_id = unsafe {
 				BASE_SUBCLASS_ID += 1;
@@ -113,10 +112,10 @@ impl BaseCtrl {
 					Self::subclass_proc,
 					subclass_id,
 					self as *const _ as _, // pass pointer to self
-				)?;
+				)
 			}
+			.expect(DONTFAIL);
 		}
-		Ok(())
 	}
 
 	extern "system" fn subclass_proc(

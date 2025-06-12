@@ -40,15 +40,15 @@ impl RawBase {
 		class_icon: &Icon,
 		class_bg_brush: &Brush,
 		class_cursor: &Cursor,
-	) -> SysResult<ATOM> {
+	) -> ATOM {
 		let mut wcx = WNDCLASSEX::default();
 		wcx.lpfnWndProc = Some(Self::wnd_proc);
 		wcx.hInstance = unsafe { hinst.raw_copy() };
 		wcx.style = class_style;
-		wcx.hIcon = class_icon.as_hicon(hinst)?;
-		wcx.hIconSm = class_icon.as_hicon(hinst)?;
+		wcx.hIcon = class_icon.as_hicon(hinst).expect(DONTFAIL);
+		wcx.hIconSm = class_icon.as_hicon(hinst).expect(DONTFAIL);
 		wcx.hbrBackground = class_bg_brush.as_hbrush();
-		wcx.hCursor = class_cursor.as_hcursor(hinst)?;
+		wcx.hCursor = class_cursor.as_hcursor(hinst).expect(DONTFAIL);
 
 		let mut wclass_name = if class_name.trim().is_empty() {
 			WString::from_str(&format!(
@@ -71,15 +71,17 @@ impl RawBase {
 
 		SetLastError(co::ERROR::SUCCESS);
 		match unsafe { RegisterClassEx(&wcx) } {
-			Ok(atom) => Ok(atom),
+			Ok(atom) => atom,
 			Err(err) => match err {
 				co::ERROR::CLASS_ALREADY_EXISTS => {
 					// https://devblogs.microsoft.com/oldnewthing/20150429-00/?p=44984
 					// https://devblogs.microsoft.com/oldnewthing/20041011-00/?p=37603
 					// Retrieve ATOM of existing window class.
 					let hinst = unsafe { wcx.hInstance.raw_copy() };
-					let (atom, _) = hinst.GetClassInfoEx(&wcx.lpszClassName().unwrap())?;
-					Ok(atom)
+					let (atom, _) = hinst
+						.GetClassInfoEx(&wcx.lpszClassName().unwrap())
+						.expect(DONTFAIL);
+					atom
 				},
 				err => panic!("ERROR: RawBase::register_class: {}", err.to_string()),
 			},
@@ -102,7 +104,8 @@ impl RawBase {
 			panic!("Cannot create window twice.");
 		}
 
-		if let Err(err) = unsafe {
+		unsafe {
+			// The hwnd member is saved in WM_INITDIALOG processing in wnd_proc.
 			HWND::CreateWindowEx(
 				ex_style,
 				AtomStr::Atom(class_name),
@@ -115,9 +118,8 @@ impl RawBase {
 				hinst,
 				Some(self as *const _ as _), // pass pointer to object itself
 			)
-		} {
-			panic!("ERROR: RawBase::create_window: {}", err.to_string());
 		}
+		.expect(DONTFAIL);
 	}
 
 	pub(in crate::gui) fn delegate_focus_to_first_child(&self) {

@@ -46,24 +46,21 @@ impl DlgControl {
 					.0
 					.dlg_base
 					.create_dialog_param(&hinst, Some(parent2.hwnd()));
+
+				let hwnd = self2.0.dlg_base.base().hwnd();
 				unsafe {
-					self2
-						.0
-						.dlg_base
-						.base()
-						.hwnd()
-						.SetWindowLongPtr(co::GWLP::ID, self2.0.ctrl_id as _); // give ID to the control
+					hwnd.SetWindowLongPtr(co::GWLP::ID, self2.0.ctrl_id as _); // give ID to the control
 				}
-				self2.0.dlg_base.base().hwnd().SetWindowPos(
+
+				hwnd.SetWindowPos(
 					HwndPlace::None,
 					position.into(),
 					SIZE::default(),
 					co::SWP::NOZORDER | co::SWP::NOSIZE,
-				)?;
+				)
+				.expect(DONTFAIL);
 
-				parent2
-					.as_ref()
-					.add_to_layout(self2.0.dlg_base.base().hwnd(), resize_behavior)?;
+				parent2.as_ref().add_to_layout(hwnd, resize_behavior);
 				Ok(0) // ignored
 			});
 
@@ -74,7 +71,7 @@ impl DlgControl {
 	fn default_message_handlers(&self) {
 		let self2 = self.clone();
 		self.0.dlg_base.base().before_on().wm_nc_paint(move |p| {
-			paint_control_borders(self2.0.dlg_base.base().hwnd(), p)?;
+			paint_control_borders(self2.0.dlg_base.base().hwnd(), p);
 			Ok(())
 		});
 	}

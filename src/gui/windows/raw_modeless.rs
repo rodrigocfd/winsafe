@@ -42,11 +42,13 @@ impl RawModeless {
 					&opts.class_icon,
 					&opts.class_bg_brush,
 					&opts.class_cursor,
-				)?;
+				);
 
 				let rc_parent = parent2
 					.hwnd()
-					.ClientToScreenRc(parent2.hwnd().GetClientRect()?)?;
+					.ClientToScreenRc(parent2.hwnd().GetClientRect().expect(DONTFAIL))
+					.expect(DONTFAIL);
+
 				self2.0.raw_base.create_window(
 					opts.ex_style,
 					atom,

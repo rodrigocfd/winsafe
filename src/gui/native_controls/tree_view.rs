@@ -62,10 +62,10 @@ impl<T> TreeView<T> {
 					opts.position.into(),
 					opts.size.into(),
 					&parent2,
-				)?;
+				);
 				parent2
 					.as_ref()
-					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+					.add_to_layout(self2.hwnd(), opts.resize_behavior);
 				Ok(0) // ignored
 			});
 
@@ -96,10 +96,10 @@ impl<T> TreeView<T> {
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
-			self2.0.base.assign_dlg(&parent2)?;
+			self2.0.base.assign_dlg(&parent2);
 			parent2
 				.as_ref()
-				.add_to_layout(self2.hwnd(), resize_behavior)?;
+				.add_to_layout(self2.hwnd(), resize_behavior);
 			Ok(true) // ignored
 		});
 
@@ -114,13 +114,15 @@ impl<T> TreeView<T> {
 			.after_on()
 			.wm_notify(self.ctrl_id(), co::TVN::DELETEITEM, move |p| {
 				let nmtv = unsafe { p.cast_nmhdr::<NMTREEVIEW>() };
-				self2
+				let rc_ptr = self2
 					.items()
 					.get(&nmtv.itemOld.hItem)
-					.data_lparam()?
-					.map(|pdata| {
-						let _ = unsafe { Rc::from_raw(pdata) }; // free allocated LPARAM, if any
-					});
+					.data_lparam()
+					.expect(DONTFAIL);
+
+				if !rc_ptr.is_null() {
+					let _ = unsafe { Rc::from_raw(rc_ptr) }; // free allocated LPARAM
+				}
 				Ok(0) // ignored
 			});
 

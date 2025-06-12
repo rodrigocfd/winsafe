@@ -72,13 +72,13 @@ impl WindowMain {
 	///
 	/// Panics if the creation process fails.
 	pub fn run_main(&self, cmd_show: Option<co::SW>) -> AnyResult<i32> {
-		if IsWindowsVistaOrGreater()? {
-			SetProcessDPIAware()?;
+		if IsWindowsVistaOrGreater().expect(DONTFAIL) {
+			SetProcessDPIAware().expect(DONTFAIL);
 		}
 
 		InitCommonControls();
 
-		if IsWindows8OrGreater()? {
+		if IsWindows8OrGreater().expect(DONTFAIL) {
 			// https://github.com/rodrigocfd/winsafe-examples/issues/6
 			let mut b_val = 0; // FALSE
 			match unsafe {
@@ -96,7 +96,7 @@ impl WindowMain {
 			}
 		}
 
-		let hinst = HINSTANCE::GetModuleHandle(None)?;
+		let hinst = HINSTANCE::GetModuleHandle(None).expect(DONTFAIL);
 		let res = match &self.0 {
 			RawDlg::Raw(r) => r.run_main(&hinst, cmd_show),
 			RawDlg::Dlg(d) => d.run_main(&hinst, cmd_show),

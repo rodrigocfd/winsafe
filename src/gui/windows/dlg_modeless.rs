@@ -41,17 +41,22 @@ impl DlgModeless {
 					.0
 					.dlg_base
 					.create_dialog_param(&hinst, Some(parent2.hwnd()));
-				self2.0.dlg_base.base().hwnd().ShowWindow(co::SW::SHOW);
+
+				let hwnd = self2.0.dlg_base.base().hwnd();
+				hwnd.ShowWindow(co::SW::SHOW);
 
 				let rc_parent = parent2
 					.hwnd()
-					.ClientToScreenRc(parent2.hwnd().GetClientRect()?)?;
-				self2.0.dlg_base.base().hwnd().SetWindowPos(
+					.ClientToScreenRc(parent2.hwnd().GetClientRect().expect(DONTFAIL))
+					.expect(DONTFAIL);
+
+				hwnd.SetWindowPos(
 					HwndPlace::None,
 					POINT::with(position.0 + rc_parent.left, position.1 + rc_parent.top),
 					SIZE::default(),
 					co::SWP::NOZORDER | co::SWP::NOSIZE,
-				)?;
+				)
+				.expect(DONTFAIL);
 
 				Ok(0) // ignored
 			});

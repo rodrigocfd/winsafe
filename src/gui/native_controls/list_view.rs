@@ -73,7 +73,7 @@ impl<T> ListView<T> {
 					opts.position.into(),
 					opts.size.into(),
 					&parent2,
-				)?;
+				);
 				if opts.control_ex_style != co::LVS_EX::NoValue {
 					self2.set_extended_style(true, opts.control_ex_style);
 				}
@@ -89,7 +89,7 @@ impl<T> ListView<T> {
 				}
 				parent2
 					.as_ref()
-					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+					.add_to_layout(self2.hwnd(), opts.resize_behavior);
 				Ok(0) // ignored
 			});
 
@@ -138,7 +138,7 @@ impl<T> ListView<T> {
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
-			self2.0.base.assign_dlg(&parent2)?;
+			self2.0.base.assign_dlg(&parent2);
 			self2
 				.hwnd()
 				.set_style(co::LVS::from(self2.hwnd().style()) & !co::LVS::SHAREIMAGELISTS);
@@ -151,7 +151,7 @@ impl<T> ListView<T> {
 			}
 			parent2
 				.as_ref()
-				.add_to_layout(self2.hwnd(), resize_behavior)?;
+				.add_to_layout(self2.hwnd(), resize_behavior);
 			Ok(true) // ignored
 		});
 
@@ -188,9 +188,9 @@ impl<T> ListView<T> {
 				let has_shift = GetAsyncKeyState(co::VK::SHIFT);
 
 				if has_ctrl && lvnk.wVKey == co::VK::CHAR_A {
-					self2.items().select_all(true)?; // Ctrl+A
+					self2.items().select_all(true).expect(DONTFAIL); // Ctrl+A
 				} else if lvnk.wVKey == co::VK::APPS {
-					self2.show_context_menu(false, has_ctrl, has_shift)?; // context menu key
+					self2.show_context_menu(false, has_ctrl, has_shift); // context menu key
 				}
 				Ok(0) // ignored
 			});
@@ -204,7 +204,7 @@ impl<T> ListView<T> {
 				let has_ctrl = nmia.uKeyFlags.has(co::LVKF::CONTROL);
 				let has_shift = nmia.uKeyFlags.has(co::LVKF::SHIFT);
 
-				self2.show_context_menu(true, has_ctrl, has_shift)?;
+				self2.show_context_menu(true, has_ctrl, has_shift);
 				Ok(0) // ignored
 			});
 
@@ -214,7 +214,12 @@ impl<T> ListView<T> {
 			.after_on()
 			.wm_notify(self.ctrl_id(), co::LVN::DELETEITEM, move |p| {
 				let nmlv = unsafe { p.cast_nmhdr::<NMLISTVIEW>() };
-				let rc_ptr = self2.items().get(nmlv.iItem as _).data_lparam()?;
+				let rc_ptr = self2
+					.items()
+					.get(nmlv.iItem as _)
+					.data_lparam()
+					.expect(DONTFAIL);
+
 				if !rc_ptr.is_null() {
 					let _ = unsafe { Rc::from_raw(rc_ptr) }; // free allocated LPARAM
 				}
@@ -222,34 +227,30 @@ impl<T> ListView<T> {
 			});
 	}
 
-	fn show_context_menu(
-		&self,
-		follow_cursor: bool,
-		has_ctrl: bool,
-		has_shift: bool,
-	) -> SysResult<()> {
+	fn show_context_menu(&self, follow_cursor: bool, has_ctrl: bool, has_shift: bool) {
 		let hmenu = match self.context_menu() {
 			Some(h) => h,
-			None => return Ok(()), // no menu, nothing to do
+			None => return, // no menu, nothing to do
 		};
 
 		let menu_pos = if follow_cursor {
 			// Usually when fired by a right-click.
-			let menu_pos = self.hwnd().ScreenToClient(
-				GetCursorPos()?, // relative to screen
-			)?; // now relative to list view
+			let menu_pos = self
+				.hwnd()
+				.ScreenToClient(GetCursorPos().expect(DONTFAIL)) // relative to screen
+				.expect(DONTFAIL); // now relative to list view
 
 			match self.items().hit_test(menu_pos) {
 				Some(item_over) => {
 					if !has_ctrl && !has_shift {
-						item_over.select(true)?; // if not yet
-						item_over.focus()?;
+						item_over.select(true).expect(DONTFAIL); // if not yet
+						item_over.focus().expect(DONTFAIL);
 					}
 				},
-				None => self.items().select_all(false)?, // no item was right-clicked
+				None => self.items().select_all(false).expect(DONTFAIL), // no item was right-clicked
 			}
 
-			self.focus()?; // because a right-click won't set the focus by itself
+			self.focus().expect(DONTFAIL); // because a right-click won't set the focus by itself
 			menu_pos
 		} else {
 			// Usually fired by the context menu key.
@@ -257,7 +258,7 @@ impl<T> ListView<T> {
 
 			if focused_opt.is_some() && focused_opt.unwrap().is_visible() {
 				let focused = focused_opt.unwrap();
-				let rc_item = focused.rect(co::LVIR::BOUNDS)?;
+				let rc_item = focused.rect(co::LVIR::BOUNDS).expect(DONTFAIL);
 				POINT::with(rc_item.left + 16, rc_item.top + (rc_item.bottom - rc_item.top) / 2)
 			} else {
 				// No item is focused and visible.
@@ -265,7 +266,13 @@ impl<T> ListView<T> {
 			}
 		};
 
-		hmenu.track_popup_menu_at_point(menu_pos, &self.hwnd().GetParent()?, self.hwnd())
+		hmenu
+			.track_popup_menu_at_point(
+				menu_pos,
+				&self.hwnd().GetParent().expect(DONTFAIL),
+				self.hwnd(),
+			)
+			.expect(DONTFAIL);
 	}
 
 	/// Column methods.

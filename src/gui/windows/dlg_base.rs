@@ -38,7 +38,7 @@ impl DlgBase {
 			panic!("Cannot create dialog twice.");
 		}
 
-		if let Err(err) = unsafe {
+		unsafe {
 			// The hwnd member is saved in WM_INITDIALOG processing in dlg_proc.
 			hinst.CreateDialogParam(
 				IdStr::Id(self.dlg_id),
@@ -46,16 +46,15 @@ impl DlgBase {
 				Self::dlg_proc,
 				Some(self as *const _ as _), // pointer to object itself
 			)
-		} {
-			panic!("ERROR: DlgBase::create_dialog_param: {}", err.to_string());
 		}
+		.expect(DONTFAIL);
 	}
 	pub(in crate::gui) fn dialog_box_param(&self, hinst: &HINSTANCE, hparent: Option<&HWND>) {
 		if *self.base.hwnd() != HWND::NULL {
 			panic!("Cannot create dialog twice.");
 		}
 
-		if let Err(err) = unsafe {
+		unsafe {
 			// The hwnd member is saved in WM_INITDIALOG processing in dlg_proc.
 			hinst.DialogBoxParam(
 				IdStr::Id(self.dlg_id),
@@ -63,9 +62,8 @@ impl DlgBase {
 				Self::dlg_proc,
 				Some(self as *const _ as _), // pointer to object itself
 			)
-		} {
-			panic!("ERROR: DlgBase::dialog_box_param: {}", err.to_string());
 		}
+		.expect(DONTFAIL);
 	}
 
 	pub(in crate::gui) fn set_icon(&self, hinst: &HINSTANCE, icon_id: u16) -> SysResult<()> {

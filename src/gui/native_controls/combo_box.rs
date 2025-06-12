@@ -83,13 +83,13 @@ impl ComboBox {
 					opts.position.into(),
 					SIZE::with(opts.width, 0),
 					&parent2,
-				)?;
-				ui_font::set(self2.hwnd())?;
+				);
+				ui_font::set(self2.hwnd());
 				self2.items().add(&opts.items)?;
 				self2.items().select(opts.selected_item);
 				parent2
 					.as_ref()
-					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+					.add_to_layout(self2.hwnd(), opts.resize_behavior);
 				Ok(0) // ignored
 			});
 
@@ -125,10 +125,10 @@ impl ComboBox {
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
-			self2.0.base.assign_dlg(&parent2)?;
+			self2.0.base.assign_dlg(&parent2);
 			parent2
 				.as_ref()
-				.add_to_layout(self2.hwnd(), resize_behavior)?;
+				.add_to_layout(self2.hwnd(), resize_behavior);
 			Ok(true) // ignored
 		});
 

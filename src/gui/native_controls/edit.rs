@@ -70,11 +70,11 @@ impl Edit {
 					opts.position.into(),
 					SIZE::with(opts.width, opts.height),
 					&parent2,
-				)?;
-				ui_font::set(self2.hwnd())?;
+				);
+				ui_font::set(self2.hwnd());
 				parent2
 					.as_ref()
-					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+					.add_to_layout(self2.hwnd(), opts.resize_behavior);
 				Ok(0) // ignored
 			});
 
@@ -104,10 +104,10 @@ impl Edit {
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
-			self2.0.base.assign_dlg(&parent2)?;
+			self2.0.base.assign_dlg(&parent2);
 			parent2
 				.as_ref()
-				.add_to_layout(self2.hwnd(), resize_behavior)?;
+				.add_to_layout(self2.hwnd(), resize_behavior);
 			Ok(true) // ignored
 		});
 
@@ -126,7 +126,11 @@ impl Edit {
 				// returns, so if the user handles EN_CHANGE, the Edit HWND won't be
 				// set yet. So we set the HWND here.
 				if *self2.hwnd() == HWND::NULL {
-					let hctrl = parent2.as_ref().hwnd().GetDlgItem(self2.ctrl_id())?;
+					let hctrl = parent2
+						.as_ref()
+						.hwnd()
+						.GetDlgItem(self2.ctrl_id())
+						.expect(DONTFAIL);
 					self2.0.base.set_hwnd(hctrl);
 				}
 				Ok(())

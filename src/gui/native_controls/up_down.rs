@@ -89,12 +89,14 @@ impl UpDown {
 					opts.position.into(),
 					SIZE::with(0, opts.height),
 					&parent2,
-				)?;
+				);
 				if opts.range != (0, 100) {
 					self2.set_range(opts.range.0, opts.range.1);
 					if opts.control_style.has(co::UDS::AUTOBUDDY) {
-						let prev_ctrl = self2.hwnd().GetWindow(co::GW::HWNDPREV)?;
-						prev_ctrl.SetWindowText(&opts.range.0.to_string())?;
+						let prev_ctrl = self2.hwnd().GetWindow(co::GW::HWNDPREV).expect(DONTFAIL);
+						prev_ctrl
+							.SetWindowText(&opts.range.0.to_string())
+							.expect(DONTFAIL);
 					}
 				}
 				if opts.value != 0 {
@@ -128,10 +130,10 @@ impl UpDown {
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
-			self2.0.base.assign_dlg(&parent2)?;
+			self2.0.base.assign_dlg(&parent2);
 			parent2
 				.as_ref()
-				.add_to_layout(self2.hwnd(), resize_behavior)?;
+				.add_to_layout(self2.hwnd(), resize_behavior);
 			Ok(true) // ignored
 		});
 

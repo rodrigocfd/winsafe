@@ -52,7 +52,7 @@ impl Trackbar {
 					opts.position.into(),
 					opts.size.into(),
 					&parent2,
-				)?;
+				);
 				if opts.range != (0, 100) {
 					self2.set_range(opts.range.0, opts.range.1);
 				}
@@ -61,7 +61,7 @@ impl Trackbar {
 				}
 				parent2
 					.as_ref()
-					.add_to_layout(self2.hwnd(), opts.resize_behavior)?;
+					.add_to_layout(self2.hwnd(), opts.resize_behavior);
 				Ok(0) // ignored
 			});
 
@@ -90,10 +90,10 @@ impl Trackbar {
 		let self2 = new_self.clone();
 		let parent2 = parent.clone();
 		parent.as_ref().before_on().wm_init_dialog(move |_| {
-			self2.0.base.assign_dlg(&parent2)?;
+			self2.0.base.assign_dlg(&parent2);
 			parent2
 				.as_ref()
-				.add_to_layout(self2.hwnd(), resize_behavior)?;
+				.add_to_layout(self2.hwnd(), resize_behavior);
 			Ok(true) // ignored
 		});
 

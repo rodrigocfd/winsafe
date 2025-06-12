@@ -2,6 +2,10 @@ use crate::co;
 use crate::decl::*;
 use crate::msg::*;
 
+/// Message to be used on `expect()` of internal calls, which are not supposed
+/// to fail.
+pub(crate) const DONTFAIL: &str = "GUI internals are not supposed to fail.";
+
 /// Identifies whether a window is dialog-based.
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub(in crate::gui) enum WndTy {
@@ -55,40 +59,41 @@ pub(in crate::gui) mod ui_font {
 	use crate::co;
 	use crate::decl::*;
 	use crate::guard::*;
+	use crate::gui::privs::*;
 	use crate::msg::*;
 
 	/// Global UI font object.
 	static mut UI_HFONT: Option<DeleteObjectGuard<HFONT>> = None;
 
 	// Returns the global UI font, creating it of not yet.
-	pub(in crate::gui) fn get() -> SysResult<HFONT> {
-		Ok(unsafe {
+	pub(in crate::gui) fn get() -> HFONT {
+		unsafe {
 			match &*&raw const UI_HFONT {
 				None => {
-					// not created yet
-					let mut ncm = NONCLIENTMETRICS::default();
+					let mut ncm = NONCLIENTMETRICS::default(); // create the font once
 					SystemParametersInfo(
 						co::SPI::GETNONCLIENTMETRICS,
 						std::mem::size_of::<NONCLIENTMETRICS>() as _,
 						&mut ncm,
 						co::SPIF::NoValue,
-					)?;
-					let font = HFONT::CreateFontIndirect(&ncm.lfMenuFont)?;
+					)
+					.expect(DONTFAIL);
+
+					let font = HFONT::CreateFontIndirect(&ncm.lfMenuFont).expect(DONTFAIL);
 					let ret_font = font.raw_copy();
 					UI_HFONT = Some(font);
 					ret_font
 				},
 				Some(font) => font.raw_copy(),
 			}
-		})
+		}
 	}
 
 	/// Sets the global UI font on the given window.
-	pub(in crate::gui) fn set(hwnd: &HWND) -> SysResult<()> {
+	pub(in crate::gui) fn set(hwnd: &HWND) {
 		unsafe {
-			hwnd.SendMessage(wm::SetFont { hfont: get()?, redraw: true });
+			hwnd.SendMessage(wm::SetFont { hfont: get(), redraw: true });
 		}
-		Ok(())
 	}
 
 	/// Frees the global UI font object.
@@ -125,7 +130,7 @@ pub(in crate::gui) mod text_calc {
 	use crate::decl::*;
 	use crate::gui::privs::*;
 
-	// "&He && she" becomes "He & she".
+	/// "&He && she" becomes "He & she".
 	#[must_use]
 	pub(in crate::gui) fn remove_accel_ampersands(text: &str) -> String {
 		let mut txt_no_ampersands = String::with_capacity(text.len());
@@ -148,43 +153,40 @@ pub(in crate::gui) mod text_calc {
 
 	/// Calculates the bound rectangle to fit the text with current system font.
 	#[must_use]
-	pub(in crate::gui) fn bound_box(text: &str) -> SysResult<SIZE> {
+	pub(in crate::gui) fn bound_box(text: &str) -> SIZE {
 		let desktop_hwnd = HWND::GetDesktopWindow();
-		let desktop_hdc = desktop_hwnd.GetDC()?;
-		let clone_dc = desktop_hdc.CreateCompatibleDC()?;
-		let _prev_font = clone_dc.SelectObject(&ui_font::get()?)?;
+		let desktop_hdc = desktop_hwnd.GetDC().expect(DONTFAIL);
+		let clone_dc = desktop_hdc.CreateCompatibleDC().expect(DONTFAIL);
+		let _prev_font = clone_dc.SelectObject(&ui_font::get()).expect(DONTFAIL);
 
-		let mut bounds =
-			clone_dc.GetTextExtentPoint32(
-				if text.trim().is_empty() { "Pj" } // just a placeholder to get the text height
-			else { text },
-			)?;
+		let mut bounds = clone_dc
+			.GetTextExtentPoint32(if text.trim().is_empty() { "Pj" } else { text }) // "Pj" is a placeholder to get the height
+			.expect(DONTFAIL);
 
 		if text.is_empty() {
 			bounds.cx = 0; // if no text was given, return just the height
 		}
-		Ok(bounds)
+		bounds
 	}
 
 	/// Calculates the bound rectangle to fit the text with current system font,
 	/// along with the system check/radio box.
 	#[must_use]
-	pub(in crate::gui) fn bound_box_with_check(text: &str) -> SysResult<SIZE> {
-		let mut bound_box = bound_box(text)?;
-		bound_box.cx += GetSystemMetrics(co::SM::CXMENUCHECK) // https://stackoverflow.com/a/1165052/6923555
+	pub(in crate::gui) fn bound_box_with_check(text: &str) -> SIZE {
+		let mut bounds = bound_box(text);
+		bounds.cx += GetSystemMetrics(co::SM::CXMENUCHECK) // https://stackoverflow.com/a/1165052/6923555
 			+ GetSystemMetrics(co::SM::CXEDGE);
 
 		let cy_check = GetSystemMetrics(co::SM::CYMENUCHECK);
-		if cy_check > bound_box.cy {
-			bound_box.cy = cy_check; // if the check is taller than the font, use its height
+		if cy_check > bounds.cy {
+			bounds.cy = cy_check; // if the check is taller than the font, use its height
 		}
-
-		Ok(bound_box)
+		bounds
 	}
 }
 
 /// Paints the themed border of an user control, if it has the proper styles.
-pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: wm::NcPaint) -> AnyResult<()> {
+pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: wm::NcPaint) {
 	unsafe {
 		hwnd.DefWindowProc(wm_ncp); // let the system draw the scrollbar for us
 	}
@@ -193,24 +195,27 @@ pub(in crate::gui) fn paint_control_borders(hwnd: &HWND, wm_ncp: wm::NcPaint) ->
 		|| !IsThemeActive()
 		|| !IsAppThemed()
 	{
-		return Ok(());
+		return;
 	}
 
-	let mut rc = hwnd.GetWindowRect()?; // window outmost coordinates, including margins
-	rc = hwnd.ScreenToClientRc(rc)?;
-	rc = OffsetRect(rc, 2, 2)?; // because it comes up anchored at -2,-2
+	let mut rc = hwnd.GetWindowRect().expect(DONTFAIL); // window outmost coordinates, including margins
+	rc = hwnd.ScreenToClientRc(rc).expect(DONTFAIL);
+	rc = OffsetRect(rc, 2, 2).expect(DONTFAIL); // because it comes up anchored at -2,-2
 
-	let hdc = hwnd.GetWindowDC()?;
+	let hdc = hwnd.GetWindowDC().expect(DONTFAIL);
 
 	// The HRGN which comes in WM_NCPAINT seems to be invalid, so we carve our own.
-	let hrgn_hole = HRGN::CreateRectRgnIndirect(InflateRect(rc, -2, -2)?)?;
-	let hrgn_clip = HRGN::CreateRectRgnIndirect(rc)?;
-	hrgn_clip.CombineRgn(&hrgn_clip, &hrgn_hole, co::RGN::DIFF)?;
-	hdc.SelectClipRgn(&hrgn_clip)?;
+	let hrgn_hole =
+		HRGN::CreateRectRgnIndirect(InflateRect(rc, -2, -2).expect(DONTFAIL)).expect(DONTFAIL);
+	let hrgn_clip = HRGN::CreateRectRgnIndirect(rc).expect(DONTFAIL);
+	hrgn_clip
+		.CombineRgn(&hrgn_clip, &hrgn_hole, co::RGN::DIFF)
+		.expect(DONTFAIL);
+	hdc.SelectClipRgn(&hrgn_clip).expect(DONTFAIL);
 
 	if let Some(htheme) = hwnd.OpenThemeData("EDIT") {
-		htheme.DrawThemeBackground(&hdc, co::VS::EDIT_EDITTEXT_NORMAL, rc, None)?;
+		htheme
+			.DrawThemeBackground(&hdc, co::VS::EDIT_EDITTEXT_NORMAL, rc, None)
+			.expect(DONTFAIL);
 	}
-
-	Ok(())
 }

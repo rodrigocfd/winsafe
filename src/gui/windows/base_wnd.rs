@@ -83,12 +83,8 @@ impl BaseWnd {
 		self.after_events.clear();
 	}
 
-	pub(in crate::gui) fn add_to_layout(
-		&self,
-		hchild: &HWND,
-		resize_behavior: (Horz, Vert),
-	) -> SysResult<()> {
-		self.layout.add_child(&self.hwnd, hchild, resize_behavior)
+	pub(in crate::gui) fn add_to_layout(&self, hchild: &HWND, resize_behavior: (Horz, Vert)) {
+		self.layout.add_child(&self.hwnd, hchild, resize_behavior);
 	}
 
 	pub(in crate::gui) fn spawn_thread<F>(&self, func: F)
@@ -141,7 +137,7 @@ impl BaseWnd {
 	pub(in crate::gui) fn default_message_handlers(&self) {
 		let layout = self.layout.clone();
 		self.before_events.wm_size(move |p| {
-			layout.rearrange(p)?;
+			layout.rearrange(p);
 			Ok(())
 		});
 
@@ -164,7 +160,8 @@ impl BaseWnd {
 		let mut msg = MSG::default();
 
 		loop {
-			if !GetMessage(&mut msg, None, 0, 0)? {
+			// GetMessage only fails if hWnd is invalid, what should not happen.
+			if !GetMessage(&mut msg, None, 0, 0).expect(DONTFAIL) {
 				// WM_QUIT was sent, gracefully terminate the program.
 				// wParam has the program exit code.
 				// https://learn.microsoft.com/en-us/windows/win32/winmsg/using-messages-and-message-queues
@@ -208,10 +205,11 @@ impl BaseWnd {
 	}
 
 	pub(in crate::gui) fn run_modal_loop(&self, process_dlg_msgs: bool) -> AnyResult<i32> {
-		loop {
-			let mut msg = MSG::default();
+		let mut msg = MSG::default();
 
-			if !GetMessage(&mut msg, None, 0, 0)? {
+		loop {
+			// GetMessage only fails if hWnd is invalid, what should not happen.
+			if !GetMessage(&mut msg, None, 0, 0).expect(DONTFAIL) {
 				// WM_QUIT was sent, exit modal loop now and signal parent.
 				// wParam has the program exit code.
 				// https://devblogs.microsoft.com/oldnewthing/20050222-00/?p=36393

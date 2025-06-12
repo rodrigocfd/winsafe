@@ -33,8 +33,13 @@ impl DlgModal {
 		let self2 = self.clone();
 		self.0.dlg_base.base().before_on().wm_init_dialog(move |_| {
 			let hwnd = self2.0.dlg_base.base().hwnd();
-			let rc = hwnd.GetWindowRect()?;
-			let rc_parent = hwnd.GetParent()?.GetWindowRect()?;
+			let rc = hwnd.GetWindowRect().expect(DONTFAIL);
+			let rc_parent = hwnd
+				.GetParent()
+				.expect(DONTFAIL)
+				.GetWindowRect()
+				.expect(DONTFAIL);
+
 			hwnd.SetWindowPos(
 				HwndPlace::None,
 				POINT::with(
@@ -45,13 +50,15 @@ impl DlgModal {
 				),
 				SIZE::default(),
 				co::SWP::NOSIZE | co::SWP::NOZORDER,
-			)?;
+			)
+			.expect(DONTFAIL);
+
 			Ok(false) // return value is discarded
 		});
 
 		let self2 = self.clone();
 		self.0.dlg_base.base().on().wm_close(move || {
-			self2.0.dlg_base.base().hwnd().EndDialog(0)?; // user clicked the X button
+			self2.0.dlg_base.base().hwnd().EndDialog(0).expect(DONTFAIL); // user clicked the X button
 			Ok(())
 		});
 	}

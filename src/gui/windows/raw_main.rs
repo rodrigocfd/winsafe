@@ -82,7 +82,7 @@ impl RawMain {
 			&opts.class_icon,
 			&opts.class_bg_brush,
 			&opts.class_cursor,
-		)?;
+		);
 
 		let sz_screen =
 			SIZE::with(GetSystemMetrics(co::SM::CXSCREEN), GetSystemMetrics(co::SM::CYSCREEN));
@@ -98,7 +98,8 @@ impl RawMain {
 			right: pt_wnd.x + opts.size.0 as i32,
 			bottom: pt_wnd.y + opts.size.1 as i32,
 		};
-		rc_wnd = AdjustWindowRectEx(rc_wnd, opts.style, opts.menu != HMENU::NULL, opts.ex_style)?;
+		rc_wnd = AdjustWindowRectEx(rc_wnd, opts.style, opts.menu != HMENU::NULL, opts.ex_style)
+			.expect(DONTFAIL);
 
 		self.0.raw_base.create_window(
 			opts.ex_style,
@@ -112,12 +113,9 @@ impl RawMain {
 			hinst,
 		);
 
-		self.0
-			.raw_base
-			.base()
-			.hwnd()
-			.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
-		self.0.raw_base.base().hwnd().UpdateWindow()?;
+		let hwnd = self.0.raw_base.base().hwnd();
+		hwnd.ShowWindow(cmd_show.unwrap_or(co::SW::SHOW));
+		hwnd.UpdateWindow().expect(DONTFAIL);
 		BaseWnd::run_main_loop(opts.accel_table.as_deref(), opts.process_dlg_msgs) // blocks until window is closed
 	}
 }

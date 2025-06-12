@@ -5,6 +5,7 @@ use std::sync::Arc;
 
 use crate::co;
 use crate::decl::*;
+use crate::gui::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
 
@@ -74,7 +75,7 @@ impl Layout {
 		hparent: &HWND,
 		hchild: &HWND,
 		resize_behavior: (Horz, Vert),
-	) -> SysResult<()> {
+	) {
 		if *hparent == HWND::NULL || *hchild == HWND::NULL {
 			panic!("Cannot add resizer entries before window/control creation.");
 		}
@@ -85,7 +86,7 @@ impl Layout {
 			let ctrls = unsafe { &mut *self.0.ctrls.get() };
 
 			if ctrls.is_empty() {
-				let rc_parent = hparent.GetClientRect()?;
+				let rc_parent = hparent.GetClientRect().expect(DONTFAIL);
 				*unsafe { &mut *self.0.sz_parent_orig.get() } = Some(
 					SIZE::with(rc_parent.right, rc_parent.bottom), // save parent client area
 				);
@@ -98,18 +99,16 @@ impl Layout {
 				rc_orig: None,
 			});
 		}
-
-		Ok(())
 	}
 
 	/// Rearranges all child controls to fit the new width/height of parent
 	/// window.
-	pub(in crate::gui) fn rearrange(&self, p: wm::Size) -> SysResult<()> {
+	pub(in crate::gui) fn rearrange(&self, p: wm::Size) {
 		let ctrls = unsafe { &mut *self.0.ctrls.get() };
 		if ctrls.is_empty() // no controls
 			|| p.request == co::SIZE_R::MINIMIZED
 		{
-			return Ok(()); // we're minimized
+			return; // we're minimized
 		}
 
 		let sz_parent_orig = match unsafe { &mut *self.0.sz_parent_orig.get() } {
@@ -117,7 +116,7 @@ impl Layout {
 			None => panic!("Original parent client area was not saved."),
 		};
 
-		let mut hdwp = HDWP::BeginDeferWindowPos(ctrls.len() as _)?;
+		let mut hdwp = HDWP::BeginDeferWindowPos(ctrls.len() as _).expect(DONTFAIL);
 
 		for ctrl in ctrls.iter_mut() {
 			let mut uflags = co::SWP::NOZORDER;
@@ -132,8 +131,10 @@ impl Layout {
 				None => {
 					let rc = ctrl
 						.hchild
-						.GetParent()?
-						.ScreenToClientRc(ctrl.hchild.GetWindowRect()?)?;
+						.GetParent()
+						.expect(DONTFAIL)
+						.ScreenToClientRc(ctrl.hchild.GetWindowRect().expect(DONTFAIL))
+						.expect(DONTFAIL);
 					ctrl.rc_orig = Some(rc); // save control client coordinates relative to parent
 					rc
 				},
@@ -167,9 +168,8 @@ impl Layout {
 					},
 				),
 				uflags,
-			)?;
+			)
+			.expect(DONTFAIL);
 		}
-
-		Ok(())
 	}
 }

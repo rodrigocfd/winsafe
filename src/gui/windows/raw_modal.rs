@@ -45,9 +45,17 @@ impl RawModal {
 		self.0.raw_base.base().on().wm_close(move || {
 			if let Ok(hparent) = self2.0.raw_base.base().hwnd().GetWindow(co::GW::OWNER) {
 				hparent.EnableWindow(true); // re-enable parent
-				self2.0.raw_base.base().hwnd().DestroyWindow()?; // then destroy modal
+				self2
+					.0
+					.raw_base
+					.base()
+					.hwnd()
+					.DestroyWindow()
+					.expect(DONTFAIL); // then destroy modal
+
 				let hchild_prev_focus_parent =
 					unsafe { &mut *self2.0.hchild_prev_focus_parent.get() };
+
 				if *hchild_prev_focus_parent != HWND::NULL {
 					hchild_prev_focus_parent.SetFocus(); // this focus could be set on WM_DESTROY as well
 				}
@@ -71,7 +79,7 @@ impl RawModal {
 			&opts.class_icon,
 			&opts.class_bg_brush,
 			&opts.class_cursor,
-		)?;
+		);
 
 		*unsafe { &mut *self.0.hchild_prev_focus_parent.get() } =
 			HWND::GetFocus().unwrap_or(HWND::NULL);
@@ -83,9 +91,9 @@ impl RawModal {
 			right: opts.size.0,
 			bottom: opts.size.1,
 		};
-		rc_wnd = AdjustWindowRectEx(rc_wnd, opts.style, false, opts.ex_style)?;
+		rc_wnd = AdjustWindowRectEx(rc_wnd, opts.style, false, opts.ex_style).expect(DONTFAIL);
 
-		let rc_parent = parent.hwnd().GetWindowRect()?; // relative to screen
+		let rc_parent = parent.hwnd().GetWindowRect().expect(DONTFAIL); // relative to screen
 		let wnd_pos = POINT::with(
 			rc_parent.left + (rc_parent.right - rc_parent.left) / 2
 				- (rc_wnd.right - rc_wnd.left) / 2, // center on parent
@@ -108,7 +116,7 @@ impl RawModal {
 		self.0
 			.raw_base
 			.base()
-			.run_modal_loop(opts.process_dlg_msgs)?; // blocks until window is closed
-		Ok(())
+			.run_modal_loop(opts.process_dlg_msgs) // blocks until window is closed
+			.map(|_| ())
 	}
 }
