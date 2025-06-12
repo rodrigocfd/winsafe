@@ -87,25 +87,6 @@ pub trait shell_IShellFolder: ole_IUnknown {
 		.map(|_| queried)
 	}
 
-	/// [`IShellFolder::CreateViewObject`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellfolder-createviewobject)
-	/// method.
-	#[must_use]
-	fn CreateViewObject<T>(&self, hwnd_owner: &HWND) -> HrResult<T>
-	where
-		T: ole_IUnknown,
-	{
-		let mut queried = unsafe { T::null() };
-		ok_to_hrresult(unsafe {
-			(vt::<IShellFolderVT>(self).CreateViewObject)(
-				self.ptr(),
-				hwnd_owner.ptr(),
-				pcvoid(&T::IID),
-				queried.as_mut(),
-			)
-		})
-		.map(|_| queried)
-	}
-
 	/// [`IShellFolder::CompareIDs`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellfolder-compareids)
 	/// method.
 	fn CompareIDs(
@@ -126,5 +107,24 @@ pub trait shell_IShellFolder: ole_IUnknown {
 			})
 		};
 		if hr.SUCCEEDED() { Ok(hr.code() as _) } else { Err(hr) }
+	}
+
+	/// [`IShellFolder::CreateViewObject`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellfolder-createviewobject)
+	/// method.
+	#[must_use]
+	fn CreateViewObject<T>(&self, hwnd_owner: &HWND) -> HrResult<T>
+	where
+		T: ole_IUnknown,
+	{
+		let mut queried = unsafe { T::null() };
+		ok_to_hrresult(unsafe {
+			(vt::<IShellFolderVT>(self).CreateViewObject)(
+				self.ptr(),
+				hwnd_owner.ptr(),
+				pcvoid(&T::IID),
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
 	}
 }
