@@ -14,6 +14,8 @@ struct DlgMainObj {
 }
 
 /// A dialog-based main window.
+///
+/// Hierarchy: `BaseWnd` -> `RawBase` -> `DlgMain`.
 #[derive(Clone)]
 pub(in crate::gui) struct DlgMain(Pin<Arc<DlgMainObj>>);
 

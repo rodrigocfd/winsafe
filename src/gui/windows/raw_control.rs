@@ -13,6 +13,8 @@ struct RawControlObj {
 }
 
 /// An ordinary custom control window.
+///
+/// Hierarchy: `BaseWnd` -> `RawBase` -> `RawControl`.
 #[derive(Clone)]
 pub(in crate::gui) struct RawControl(Pin<Arc<RawControlObj>>);
 

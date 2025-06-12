@@ -16,6 +16,8 @@ struct RawMainObj {
 }
 
 /// An ordinary main window.
+///
+/// Hierarchy: `BaseWnd` -> `RawBase` -> `RawMain`.
 #[derive(Clone)]
 pub(in crate::gui) struct RawMain(Pin<Arc<RawMainObj>>);
 

@@ -4,6 +4,9 @@ use crate::decl::*;
 use crate::gui::{privs::*, *};
 use crate::prelude::*;
 
+/// Switches between raw and dialog implementations.
+///
+/// Hierarchy: `BaseWnd` -> `(Raw|Dlg)Base` -> `(Raw|Dlg)Control` -> `WindowControl`.
 #[derive(Clone)]
 enum RawDlg {
 	Raw(RawControl),

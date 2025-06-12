@@ -12,6 +12,8 @@ struct RawModelessObj {
 }
 
 /// An ordinary modeless window.
+///
+/// Hierarchy: `BaseWnd` -> `RawBase` -> `RawModeless`.
 #[derive(Clone)]
 pub(in crate::gui) struct RawModeless(Pin<Arc<RawModelessObj>>);
 

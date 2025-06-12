@@ -10,6 +10,9 @@ struct ThreadPack {
 }
 
 /// Base to `RawBase` and `DlgBase`, which means all container windows.
+///
+/// Stores the message closures which are added internally and by the user.
+/// These closures are called by wndproc and dlgproc.
 pub(in crate::gui) struct BaseWnd {
 	hwnd: HWND,
 	wnd_ty: WndTy,

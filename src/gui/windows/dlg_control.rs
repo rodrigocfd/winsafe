@@ -14,6 +14,8 @@ struct DlgControlObj {
 }
 
 /// A dialog-based custom control window.
+///
+/// Hierarchy: `BaseWnd` -> `DlgBase` -> `DlgControl`.
 #[derive(Clone)]
 pub(in crate::gui) struct DlgControl(Pin<Arc<DlgControlObj>>);
 

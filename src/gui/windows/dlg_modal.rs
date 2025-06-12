@@ -13,6 +13,8 @@ struct DlgModalObj {
 }
 
 /// A dialog-based modal window.
+///
+/// Hierarchy: `BaseWnd` -> `RawBase` -> `DlgModal`.
 #[derive(Clone)]
 pub(in crate::gui) struct DlgModal(Pin<Arc<DlgModalObj>>);
 

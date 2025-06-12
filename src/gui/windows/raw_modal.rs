@@ -16,6 +16,8 @@ struct RawModalObj {
 }
 
 /// An ordinary modal window.
+///
+/// Hierarchy: `BaseWnd` -> `RawBase` -> `RawModal`.
 #[derive(Clone)]
 pub(in crate::gui) struct RawModal(Pin<Arc<RawModalObj>>);
 
