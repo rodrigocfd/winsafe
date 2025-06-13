@@ -2,6 +2,7 @@
 
 use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -126,5 +127,32 @@ pub trait shell_IShellFolder: ole_IUnknown {
 			)
 		})
 		.map(|_| queried)
+	}
+
+	/// [`IShellFolder::ParseDisplayName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellfolder-parsedisplayname)
+	/// method.
+	#[must_use]
+	fn ParseDisplayName(
+		&self,
+		hwnd: Option<&HWND>,
+		bind_ctx: Option<&impl ole_IBindCtx>,
+		display_name: &str,
+		attributes: Option<&mut co::SFGAO>,
+	) -> HrResult<CoTaskMemFreePidlGuard> {
+		let mut pidl = unsafe { PIDL::from_ptr(std::ptr::null_mut()) };
+		let mut ch_eaten = 0u32;
+
+		unsafe {
+			ok_to_hrresult((vt::<IShellFolderVT>(self).ParseDisplayName)(
+				self.ptr(),
+				hwnd.map_or(std::ptr::null_mut(), |h| h.ptr()),
+				bind_ctx.map_or(std::ptr::null_mut(), |p| p.ptr()),
+				WString::from_str(display_name).as_ptr(),
+				&mut ch_eaten,
+				pvoid(&mut pidl),
+				attributes.map_or(std::ptr::null_mut(), |a| a.as_mut()),
+			))
+			.map(|_| CoTaskMemFreePidlGuard::new(pidl))
+		}
 	}
 }
