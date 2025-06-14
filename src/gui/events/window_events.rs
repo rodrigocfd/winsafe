@@ -271,7 +271,7 @@ impl WindowEvents {
 			}
 		});
 
-		self.wm_command(ctrl_id, co::CMD::Accelerator, {
+		self.wm_command(ctrl_id, co::CMD::Accel, {
 			let shared_func = shared_func.clone();
 			move || {
 				shared_func()?;

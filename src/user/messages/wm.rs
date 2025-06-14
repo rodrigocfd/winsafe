@@ -188,7 +188,7 @@ impl MsgSend for Command {
 				},
 			},
 			lparam: match &self.event {
-				AccelMenuCtrl::Accel(_) => co::CMD::Accelerator.raw() as _,
+				AccelMenuCtrl::Accel(_) => co::CMD::Accel.raw() as _,
 				AccelMenuCtrl::Menu(_) => co::CMD::Menu.raw() as _,
 				AccelMenuCtrl::Ctrl { notif_code: _, ctrl_id: _, ctrl_hwnd } => {
 					ctrl_hwnd.ptr() as _

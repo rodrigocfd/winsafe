@@ -4,6 +4,7 @@ use crate::co;
 use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::privs::*;
+use crate::msg::*;
 use crate::prelude::*;
 use crate::user::{ffi, privs::*, proc};
 
@@ -1281,6 +1282,33 @@ impl HWND {
 		} {
 			0 => Err(GetLastError()),
 			v => Ok(unsafe { co::REGION::from_raw(v) }),
+		}
+	}
+
+	/// [`SendMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendmessagew)
+	/// function, specialized to send a [`wm::Command`](crate::msg::wm::Command)
+	/// message.
+	///
+	/// Unlike the general [`SendMessage`](crate::HWND::SendMessage), sending a
+	/// command is safe.
+	///
+	/// # Examples
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, prelude::*, msg};
+	///
+	/// let hwnd: w::HWND; // initialized somewhere
+	/// # let hwnd = w::HWND::NULL;
+	///
+	/// const ID_MENU_FILE_OPEN: u16 = 103;
+	///
+	/// hwnd.SendCommand(
+	///     w::AccelMenuCtrl::Menu(ID_MENU_FILE_OPEN),
+	/// );
+	/// ```
+	pub fn SendCommand(&self, cmd: AccelMenuCtrl) {
+		unsafe {
+			self.SendMessage(wm::Command { event: cmd });
 		}
 	}
 

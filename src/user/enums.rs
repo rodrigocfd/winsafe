@@ -8,11 +8,13 @@ use crate::kernel::privs::*;
 ///
 /// * [`wm::Command`](crate::msg::wm::Command).
 pub enum AccelMenuCtrl {
-	/// Accelerator event. Contains the accelerator command ID.
+	/// Accelerator event. Contains [`co::CMD::Accel`](crate::co::CMD::Accel)
+	/// and the accelerator command ID.
 	Accel(u16),
-	/// Menu item click event. Contains the menu item command ID.
+	/// Menu item click event. Contains [`co::CMD::Menu`](crate::co::CMD::Menu)
+	/// and the menu item command ID.
 	Menu(u16),
-	/// Some child control event.
+	/// Specific child control event, with a custom `co::CMD`.
 	Ctrl { notif_code: co::CMD, ctrl_id: u16, ctrl_hwnd: HWND },
 }
 
@@ -31,7 +33,7 @@ impl AccelMenuCtrl {
 	#[must_use]
 	pub const fn code(&self) -> co::CMD {
 		match self {
-			AccelMenuCtrl::Accel(_) => co::CMD::Accelerator,
+			AccelMenuCtrl::Accel(_) => co::CMD::Accel,
 			AccelMenuCtrl::Menu(_) => co::CMD::Menu,
 			AccelMenuCtrl::Ctrl { notif_code, ctrl_id: _, ctrl_hwnd: _ } => *notif_code,
 		}

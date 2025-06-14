@@ -416,11 +416,11 @@ const_ordinary! { CLR: u32;
 const_ordinary! { CMD: u16;
 	/// [`wm::Command`](crate::msg::wm::Command) notification codes (`u16`).
 	///
-	/// **Note:** Control-specific notification codes have their own types,
+	/// Note that control-specific notification codes have their own types,
 	/// which are convertible to `CMD`.
 	=>
 	Menu 0
-	Accelerator 1
+	Accel 1
 }
 
 const_bitflag! { CS: u32;
