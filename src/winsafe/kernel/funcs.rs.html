@@ -549,7 +549,7 @@
 <a href=#549 id=549 data-nosnippet>549</a>	</span><span class="kw">loop </span>{
 <a href=#550 id=550 data-nosnippet>550</a>		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
 <a href=#551 id=551 data-nosnippet>551</a>		<span class="kw">let </span>returned_chars = <span class="kw">unsafe </span>{
-<a href=#552 id=552 data-nosnippet>552</a>			<span class="comment">// char count without terminating null
+<a href=#552 id=552 data-nosnippet>552</a>			<span class="comment">// Char count without terminating null.
 <a href=#553 id=553 data-nosnippet>553</a>			</span>ffi::GetPrivateProfileSectionW(
 <a href=#554 id=554 data-nosnippet>554</a>				WString::from_str(section_name).as_ptr(),
 <a href=#555 id=555 data-nosnippet>555</a>				buf.as_mut_ptr(),
@@ -661,7 +661,7 @@
 <a href=#661 id=661 data-nosnippet>661</a>	</span><span class="kw">loop </span>{
 <a href=#662 id=662 data-nosnippet>662</a>		<span class="kw">let </span><span class="kw-2">mut </span>buf = WString::new_alloc_buf(buf_sz);
 <a href=#663 id=663 data-nosnippet>663</a>		<span class="kw">unsafe </span>{
-<a href=#664 id=664 data-nosnippet>664</a>			<span class="comment">// char count without terminating null
+<a href=#664 id=664 data-nosnippet>664</a>			<span class="comment">// Char count without terminating null.
 <a href=#665 id=665 data-nosnippet>665</a>			</span>ffi::GetPrivateProfileStringW(
 <a href=#666 id=666 data-nosnippet>666</a>				WString::from_str(section_name).as_ptr(),
 <a href=#667 id=667 data-nosnippet>667</a>				WString::from_str(key_name).as_ptr(),
@@ -884,11 +884,11 @@
 <a href=#884 id=884 data-nosnippet>884</a>	file_system_flags: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>co::FILE_VOL&gt;,
 <a href=#885 id=885 data-nosnippet>885</a>	file_system_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;mut </span>String&gt;,
 <a href=#886 id=886 data-nosnippet>886</a>) -&gt; SysResult&lt;()&gt; {
-<a href=#887 id=887 data-nosnippet>887</a>	<span class="kw">let </span><span class="kw-2">mut </span>name_buf = <span class="kw">match </span>name {
+<a href=#887 id=887 data-nosnippet>887</a>	<span class="kw">let </span>(<span class="kw-2">mut </span>name_buf, name_buf_sz) = <span class="kw">match </span>name {
 <a href=#888 id=888 data-nosnippet>888</a>		<span class="prelude-val">None </span>=&gt; (WString::new(), <span class="number">0</span>),
 <a href=#889 id=889 data-nosnippet>889</a>		<span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; (WString::new_alloc_buf(MAX_PATH + <span class="number">1</span>), MAX_PATH + <span class="number">1</span>),
 <a href=#890 id=890 data-nosnippet>890</a>	};
-<a href=#891 id=891 data-nosnippet>891</a>	<span class="kw">let </span><span class="kw-2">mut </span>sys_name_buf = <span class="kw">match </span>file_system_name {
+<a href=#891 id=891 data-nosnippet>891</a>	<span class="kw">let </span>(<span class="kw-2">mut </span>sys_name_buf, sys_name_buf_sz) = <span class="kw">match </span>file_system_name {
 <a href=#892 id=892 data-nosnippet>892</a>		<span class="prelude-val">None </span>=&gt; (WString::new(), <span class="number">0</span>),
 <a href=#893 id=893 data-nosnippet>893</a>		<span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; (WString::new_alloc_buf(MAX_PATH + <span class="number">1</span>), MAX_PATH + <span class="number">1</span>),
 <a href=#894 id=894 data-nosnippet>894</a>	};
@@ -897,26 +897,26 @@
 <a href=#897 id=897 data-nosnippet>897</a>		ffi::GetVolumeInformationW(
 <a href=#898 id=898 data-nosnippet>898</a>			WString::from_opt_str(root_path_name).as_ptr(),
 <a href=#899 id=899 data-nosnippet>899</a>			<span class="kw">match </span>name {
-<a href=#900 id=900 data-nosnippet>900</a>				<span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; name_buf.<span class="number">0</span>.as_mut_ptr(),
+<a href=#900 id=900 data-nosnippet>900</a>				<span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; name_buf.as_mut_ptr(),
 <a href=#901 id=901 data-nosnippet>901</a>				<span class="prelude-val">None </span>=&gt; std::ptr::null_mut(),
 <a href=#902 id=902 data-nosnippet>902</a>			},
-<a href=#903 id=903 data-nosnippet>903</a>			name_buf.<span class="number">1 </span><span class="kw">as </span>u32,
+<a href=#903 id=903 data-nosnippet>903</a>			name_buf_sz <span class="kw">as _</span>,
 <a href=#904 id=904 data-nosnippet>904</a>			serial_number.map_or(std::ptr::null_mut(), |n| n),
 <a href=#905 id=905 data-nosnippet>905</a>			max_component_len.map_or(std::ptr::null_mut(), |m| m),
 <a href=#906 id=906 data-nosnippet>906</a>			file_system_flags.map_or(std::ptr::null_mut(), |f| f.as_mut()),
 <a href=#907 id=907 data-nosnippet>907</a>			<span class="kw">match </span>file_system_name {
-<a href=#908 id=908 data-nosnippet>908</a>				<span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; sys_name_buf.<span class="number">0</span>.as_mut_ptr(),
+<a href=#908 id=908 data-nosnippet>908</a>				<span class="prelude-val">Some</span>(<span class="kw">_</span>) =&gt; sys_name_buf.as_mut_ptr(),
 <a href=#909 id=909 data-nosnippet>909</a>				<span class="prelude-val">None </span>=&gt; std::ptr::null_mut(),
 <a href=#910 id=910 data-nosnippet>910</a>			},
-<a href=#911 id=911 data-nosnippet>911</a>			sys_name_buf.<span class="number">1 </span><span class="kw">as </span>u32,
+<a href=#911 id=911 data-nosnippet>911</a>			sys_name_buf_sz <span class="kw">as _</span>,
 <a href=#912 id=912 data-nosnippet>912</a>		)
 <a href=#913 id=913 data-nosnippet>913</a>	})
 <a href=#914 id=914 data-nosnippet>914</a>	.map(|<span class="kw">_</span>| {
 <a href=#915 id=915 data-nosnippet>915</a>		<span class="kw">if let </span><span class="prelude-val">Some</span>(name) = name {
-<a href=#916 id=916 data-nosnippet>916</a>			<span class="kw-2">*</span>name = name_buf.<span class="number">0</span>.to_string();
+<a href=#916 id=916 data-nosnippet>916</a>			<span class="kw-2">*</span>name = name_buf.to_string();
 <a href=#917 id=917 data-nosnippet>917</a>		}
 <a href=#918 id=918 data-nosnippet>918</a>		<span class="kw">if let </span><span class="prelude-val">Some</span>(sys_name) = file_system_name {
-<a href=#919 id=919 data-nosnippet>919</a>			<span class="kw-2">*</span>sys_name = sys_name_buf.<span class="number">0</span>.to_string();
+<a href=#919 id=919 data-nosnippet>919</a>			<span class="kw-2">*</span>sys_name = sys_name_buf.to_string();
 <a href=#920 id=920 data-nosnippet>920</a>		}
 <a href=#921 id=921 data-nosnippet>921</a>	})
 <a href=#922 id=922 data-nosnippet>922</a>}
