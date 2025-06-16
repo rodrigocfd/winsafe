@@ -12,6 +12,7 @@ extern_sys! { "ole32";
 	CoTaskMemFree(PVOID)
 	CoTaskMemRealloc(PVOID, usize) -> PVOID
 	CoUninitialize()
+	CreateBindCtx(u32, *mut COMPTR) -> HRES
 	CreateClassMoniker(PCVOID, *mut COMPTR) -> HRES
 	CreateFileMoniker(PCSTR, *mut COMPTR) -> HRES
 	CreateItemMoniker(PCSTR, PCSTR, *mut COMPTR) -> HRES

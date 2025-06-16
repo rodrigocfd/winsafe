@@ -236,6 +236,14 @@ pub fn CoTaskMemRealloc(pv: &mut CoTaskMemFreeGuard, cb: usize) -> HrResult<()> 
 	}
 }
 
+/// [`CreateBindCtx`](https://learn.microsoft.com/en-us/windows/win32/api/objbase/nf-objbase-createbindctx)
+/// function.
+#[must_use]
+pub fn CreateBindCtx() -> HrResult<IBindCtx> {
+	let mut queried = unsafe { IBindCtx::null() };
+	ok_to_hrresult(unsafe { ffi::CreateBindCtx(0, queried.as_mut()) }).map(|_| queried)
+}
+
 /// [`CreateClassMoniker`](https://learn.microsoft.com/en-us/windows/win32/api/objbase/nf-objbase-createclassmoniker)
 /// function.
 #[must_use]

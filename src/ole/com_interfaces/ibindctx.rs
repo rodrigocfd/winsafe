@@ -11,6 +11,8 @@ com_interface! { IBindCtx: "0000000e-0000-0000-c000-000000000046";
 	/// Automatically calls
 	/// [`Release`](https://learn.microsoft.com/en-us/windows/win32/api/unknwn/nf-unknwn-iunknown-release)
 	/// when the object goes out of scope.
+	///
+	/// Can be created with [`CreateBindCtx`](crate::CreateBindCtx).
 }
 
 impl ole_IBindCtx for IBindCtx {}
