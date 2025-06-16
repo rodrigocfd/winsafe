@@ -3,7 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
-use crate::user::{ffi, proc};
+use crate::user::{callbacks, ffi};
 
 handle! { HDC;
 	/// Handle to a
@@ -92,7 +92,7 @@ impl HDC {
 			ffi::EnumDisplayMonitors(
 				self.ptr(),
 				pcvoid_or_null(rc_clip.as_ref()),
-				proc::hdc_enum_display_monitors::<F> as _,
+				callbacks::hdc_enum_display_monitors::<F> as _,
 				pcvoid(&func),
 			)
 		})

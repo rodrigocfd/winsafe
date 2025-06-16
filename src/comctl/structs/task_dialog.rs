@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::comctl::proc;
+use crate::comctl::callbacks;
 use crate::decl::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
@@ -167,7 +167,7 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p>
 			.map_or(WString::new(), |s| WString::from_str_force_heap(s));
 		raw.pszFooter = w_footer.as_ptr();
 
-		raw.pfCallback = Some(proc::func_task_dialog_callback);
+		raw.pfCallback = Some(callbacks::func_task_dialog_callback);
 		raw.lpCallbackData = self as *const _ as _; // object will exist until TaskDialogIndirect() returns
 		raw.cxWidth = self.width;
 

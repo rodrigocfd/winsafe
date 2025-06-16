@@ -1,10 +1,10 @@
 #![cfg(feature = "comctl")]
 
 mod aliases;
+mod callbacks;
 mod enums;
 mod funcs;
 mod handles;
-mod proc;
 mod structs;
 
 pub mod co;

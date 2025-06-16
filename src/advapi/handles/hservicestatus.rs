@@ -1,6 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
-use crate::advapi::{ffi, proc};
+use crate::advapi::{callbacks, ffi};
 use crate::decl::*;
 use crate::kernel::privs::*;
 
@@ -23,7 +23,7 @@ impl HSERVICESTATUS {
 		ptr_to_sysresult_handle(unsafe {
 			ffi::RegisterServiceCtrlHandlerExW(
 				WString::from_str(service_name).as_ptr(),
-				proc::hservicestatus_register_service_ctrl_handler_ex::<F> as _,
+				callbacks::hservicestatus_register_service_ctrl_handler_ex::<F> as _,
 				pcvoid(&handler_proc),
 			)
 		})

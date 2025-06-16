@@ -1,12 +1,12 @@
 #![cfg(feature = "advapi")]
 
+mod callbacks;
 mod enums;
 mod ffi;
 mod funcs;
 mod handles;
 mod iterators;
 mod privs;
-mod proc;
 mod structs;
 
 pub mod co;

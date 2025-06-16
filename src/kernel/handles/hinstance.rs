@@ -3,7 +3,7 @@
 use crate::co;
 use crate::decl::*;
 use crate::guard::*;
-use crate::kernel::{ffi, privs::*, proc};
+use crate::kernel::{callbacks, ffi, privs::*};
 
 handle! { HINSTANCE;
 	/// Handle to an
@@ -28,7 +28,7 @@ impl HINSTANCE {
 				self.ptr(),
 				resource_type.as_ptr(),
 				resource_id.as_ptr(),
-				proc::hinstance_enum_resource_languages::<F> as _,
+				callbacks::hinstance_enum_resource_languages::<F> as _,
 				pcvoid(&func),
 			)
 		})
@@ -69,7 +69,7 @@ impl HINSTANCE {
 			ffi::EnumResourceNamesW(
 				self.ptr(),
 				resource_type.as_ptr(),
-				proc::hinstance_enum_resource_names::<F> as _,
+				callbacks::hinstance_enum_resource_names::<F> as _,
 				pcvoid(&func),
 			)
 		})
@@ -102,7 +102,7 @@ impl HINSTANCE {
 		bool_to_sysresult(unsafe {
 			ffi::EnumResourceTypesW(
 				self.ptr(),
-				proc::hinstance_enum_resource_types::<F> as _,
+				callbacks::hinstance_enum_resource_types::<F> as _,
 				pcvoid(&func),
 			)
 		})

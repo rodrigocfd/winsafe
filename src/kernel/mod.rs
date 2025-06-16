@@ -1,12 +1,12 @@
 #![cfg(feature = "kernel")]
 
 mod aliases;
+mod callbacks;
 mod enums;
 mod ffi;
 mod funcs;
 mod handles;
 mod iterators;
-mod proc;
 mod structs;
 mod utilities;
 

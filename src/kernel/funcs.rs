@@ -549,7 +549,7 @@ pub fn GetPrivateProfileSection(
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz);
 		let returned_chars = unsafe {
-			// char count without terminating null
+			// Char count without terminating null.
 			ffi::GetPrivateProfileSectionW(
 				WString::from_str(section_name).as_ptr(),
 				buf.as_mut_ptr(),
@@ -661,7 +661,7 @@ pub fn GetPrivateProfileString(
 	loop {
 		let mut buf = WString::new_alloc_buf(buf_sz);
 		unsafe {
-			// char count without terminating null
+			// Char count without terminating null.
 			ffi::GetPrivateProfileStringW(
 				WString::from_str(section_name).as_ptr(),
 				WString::from_str(key_name).as_ptr(),
@@ -884,11 +884,11 @@ pub fn GetVolumeInformation(
 	file_system_flags: Option<&mut co::FILE_VOL>,
 	file_system_name: Option<&mut String>,
 ) -> SysResult<()> {
-	let mut name_buf = match name {
+	let (mut name_buf, name_buf_sz) = match name {
 		None => (WString::new(), 0),
 		Some(_) => (WString::new_alloc_buf(MAX_PATH + 1), MAX_PATH + 1),
 	};
-	let mut sys_name_buf = match file_system_name {
+	let (mut sys_name_buf, sys_name_buf_sz) = match file_system_name {
 		None => (WString::new(), 0),
 		Some(_) => (WString::new_alloc_buf(MAX_PATH + 1), MAX_PATH + 1),
 	};
@@ -897,26 +897,26 @@ pub fn GetVolumeInformation(
 		ffi::GetVolumeInformationW(
 			WString::from_opt_str(root_path_name).as_ptr(),
 			match name {
-				Some(_) => name_buf.0.as_mut_ptr(),
+				Some(_) => name_buf.as_mut_ptr(),
 				None => std::ptr::null_mut(),
 			},
-			name_buf.1 as u32,
+			name_buf_sz as _,
 			serial_number.map_or(std::ptr::null_mut(), |n| n),
 			max_component_len.map_or(std::ptr::null_mut(), |m| m),
 			file_system_flags.map_or(std::ptr::null_mut(), |f| f.as_mut()),
 			match file_system_name {
-				Some(_) => sys_name_buf.0.as_mut_ptr(),
+				Some(_) => sys_name_buf.as_mut_ptr(),
 				None => std::ptr::null_mut(),
 			},
-			sys_name_buf.1 as u32,
+			sys_name_buf_sz as _,
 		)
 	})
 	.map(|_| {
 		if let Some(name) = name {
-			*name = name_buf.0.to_string();
+			*name = name_buf.to_string();
 		}
 		if let Some(sys_name) = file_system_name {
-			*sys_name = sys_name_buf.0.to_string();
+			*sys_name = sys_name_buf.to_string();
 		}
 	})
 }

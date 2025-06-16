@@ -4,7 +4,7 @@ use crate::co;
 use crate::decl::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
-use crate::user::{ffi, iterators::*, privs::*, proc};
+use crate::user::{callbacks, ffi, iterators::*, privs::*};
 
 /// [`AdjustWindowRectEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-adjustwindowrectex)
 /// function.
@@ -383,7 +383,7 @@ where
 	F: FnMut(HWND) -> bool,
 {
 	bool_to_sysresult(unsafe {
-		ffi::EnumThreadWindows(thread_id, proc::func_enum_thread_wnd::<F> as _, pcvoid(&func))
+		ffi::EnumThreadWindows(thread_id, callbacks::func_enum_thread_wnd::<F> as _, pcvoid(&func))
 	})
 }
 
@@ -406,7 +406,7 @@ where
 	F: FnMut(HWND) -> bool,
 {
 	bool_to_sysresult(unsafe {
-		ffi::EnumWindows(proc::func_enum_windows::<F> as _, &func as *const _ as _)
+		ffi::EnumWindows(callbacks::func_enum_windows::<F> as _, &func as *const _ as _)
 	})
 }
 

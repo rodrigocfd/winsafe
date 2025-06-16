@@ -6,7 +6,7 @@ use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::msg::*;
 use crate::prelude::*;
-use crate::user::{ffi, privs::*, proc};
+use crate::user::{callbacks, ffi, privs::*};
 
 handle! { HWND;
 	/// Handle to a
@@ -324,7 +324,7 @@ impl HWND {
 		unsafe {
 			ffi::EnumChildWindows(
 				self.ptr(),
-				proc::hwnd_enum_child_windows::<F> as _, // https://redd.it/npehj9
+				callbacks::hwnd_enum_child_windows::<F> as _, // https://redd.it/npehj9
 				pcvoid(&func),
 			);
 		}
