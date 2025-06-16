@@ -189,9 +189,8 @@ impl HWND {
 	/// a properly registered class name and, if creating a custom window,
 	/// provide its own window procedure.
 	///
-	/// The usable ID range for dynamic child controls goes from 1 to 19,999.
-	/// IDs starting from 20,000 are used internally by the library, do not use
-	/// them.
+	/// The usable ID range for child controls is
+	/// [8 to 57,343](https://stackoverflow.com/a/18192766/6923555).
 	pub unsafe fn CreateWindowEx(
 		ex_style: co::WS_EX,
 		class_name: AtomStr,

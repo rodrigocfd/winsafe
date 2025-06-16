@@ -98,6 +98,15 @@ impl HDC {
 		})
 	}
 
+	/// [`ExcludeUpdateRgn`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-excludeupdatergn)
+	/// function.
+	pub fn ExcludeUpdateRgn(&self, hwnd: &HWND) -> SysResult<co::REGION> {
+		match unsafe { ffi::ExcludeUpdateRgn(self.ptr(), hwnd.ptr()) } {
+			0 => Err(co::ERROR::INVALID_PARAMETER),
+			v => Ok(unsafe { co::REGION::from_raw(v) }),
+		}
+	}
+
 	/// [`FrameRect`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-framerect)
 	/// function.
 	pub fn FrameRect(&self, rc: RECT, hbr: &HBRUSH) -> SysResult<()> {

@@ -2251,7 +2251,8 @@ const_bitflag! { RDW: u32;
 
 const_ordinary! { REGION: i32;
 	/// [`HWND::GetUpdateRgn`](crate::HWND::GetUpdateRgn),
-	/// [`HWND::GetWindowRgn`](crate::HWND::GetWindowRgn) and
+	/// [`HWND::GetWindowRgn`](crate::HWND::GetWindowRgn),
+	/// [`HDC::ExcludeUpdateRgn`](crate::HDC::ExcludeUpdateRgn) and
 	/// [`HDC::SelectObject`](crate::HDC::SelectObject) return value (`i32`).
 	=>
 	NULL 1
