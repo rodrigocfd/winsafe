@@ -48,23 +48,25 @@ pub fn CreateProcess(
 	thread_attrs: Option<&SECURITY_ATTRIBUTES>,
 	inherit_handles: bool,
 	creation_flags: co::CREATE,
-	environment: Option<Vec<(&str, &str)>>,
+	environment_vars: &[(&str, &str)],
 	current_dir: Option<&str>,
 	si: &mut STARTUPINFO,
 ) -> SysResult<CloseHandlePiGuard> {
 	let mut buf_cmd_line = WString::from_opt_str(command_line);
 	let mut pi = PROCESS_INFORMATION::default();
 
-	let mut env_buf = WString::default();
-	let env_ptr = environment.map_or(std::ptr::null_mut(), |env_strs| {
-		env_buf = WString::from_str_vec(
-			&env_strs
+	let mut _env_buf = WString::new();
+	let env_ptr = if environment_vars.is_empty() {
+		std::ptr::null_mut()
+	} else {
+		let env_buf = WString::from_str_vec(
+			&environment_vars
 				.iter()
 				.map(|(name, val)| format!("{}={}", name, val))
 				.collect::<Vec<_>>(),
 		);
 		env_buf.as_ptr() as _
-	});
+	};
 
 	unsafe {
 		bool_to_sysresult(ffi::CreateProcessW(

@@ -64,12 +64,7 @@ pub trait mf_IMFAsyncResult: ole_IUnknown {
 		T: ole_IUnknown,
 	{
 		let ptr = unsafe { (vt::<IMFAsyncResultVT>(self).GetStateNoAddRef)(self.ptr()) };
-
-		if ptr.is_null() {
-			None
-		} else {
-			Some(ManuallyDrop::new(unsafe { T::from_ptr(ptr) }))
-		}
+		if ptr.is_null() { None } else { Some(ManuallyDrop::new(unsafe { T::from_ptr(ptr) })) }
 	}
 
 	/// [`IMFAsyncResult::GetStatus`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasyncresult-getstatus)
