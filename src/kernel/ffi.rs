@@ -198,6 +198,7 @@ extern_sys! { "kernel32";
 	WideCharToMultiByte(u32, u32, PCSTR, i32, PSTR, i32, *const u8, *mut BOOL) -> i32
 	WriteConsoleW(HANDLE, PCVOID, u32, *mut u32, PVOID) -> BOOL
 	WriteFile(HANDLE, PCVOID, u32, *mut u32, PVOID) -> BOOL
+	WriteProcessMemory(HANDLE, PCVOID, PCVOID, usize, *mut usize) -> BOOL
 	WritePrivateProfileStringW(PCSTR, PCSTR, PCSTR, PCSTR) -> BOOL
 }
 

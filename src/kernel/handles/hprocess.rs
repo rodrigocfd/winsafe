@@ -214,7 +214,7 @@ impl HPROCESS {
 				self.ptr(),
 				base_address,
 				buffer.as_ptr() as _,
-				buffer.len() as _,
+				buffer.len(),
 				&mut bytes_read,
 			)
 		})
@@ -272,5 +272,27 @@ impl HPROCESS {
 	/// function.
 	pub fn WaitForSingleObject(&self, milliseconds: Option<u32>) -> SysResult<co::WAIT> {
 		unsafe { HEVENT::from_ptr(self.ptr()) }.WaitForSingleObject(milliseconds)
+	}
+
+	/// [`WriteProcessMemory`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-writeprocessmemory)
+	/// function.
+	///
+	/// Returns how many bytes were actually written.
+	pub fn WriteProcessMemory(
+		&self,
+		base_address: *mut std::ffi::c_void,
+		buffer: &[u8],
+	) -> SysResult<usize> {
+		let mut bytes_written = 0usize;
+		bool_to_sysresult(unsafe {
+			ffi::WriteProcessMemory(
+				self.ptr(),
+				base_address,
+				buffer.as_ptr() as _,
+				buffer.len(),
+				&mut bytes_written,
+			)
+		})
+		.map(|_| bytes_written)
 	}
 }
