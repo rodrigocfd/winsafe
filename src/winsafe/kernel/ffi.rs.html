@@ -198,10 +198,11 @@
 <a href=#198 id=198 data-nosnippet>198</a>	WideCharToMultiByte(u32, u32, PCSTR, i32, PSTR, i32, <span class="kw-2">*const </span>u8, <span class="kw-2">*mut </span>BOOL) -&gt; i32
 <a href=#199 id=199 data-nosnippet>199</a>	WriteConsoleW(HANDLE, PCVOID, u32, <span class="kw-2">*mut </span>u32, PVOID) -&gt; BOOL
 <a href=#200 id=200 data-nosnippet>200</a>	WriteFile(HANDLE, PCVOID, u32, <span class="kw-2">*mut </span>u32, PVOID) -&gt; BOOL
-<a href=#201 id=201 data-nosnippet>201</a>	WritePrivateProfileStringW(PCSTR, PCSTR, PCSTR, PCSTR) -&gt; BOOL
-<a href=#202 id=202 data-nosnippet>202</a>}
-<a href=#203 id=203 data-nosnippet>203</a>
-<a href=#204 id=204 data-nosnippet>204</a><span class="macro">extern_sys!</span> { <span class="string">"user32"</span>; <span class="comment">// these functions should belong to kernel
-<a href=#205 id=205 data-nosnippet>205</a>	</span>CharLowerW(PSTR) -&gt; PSTR
-<a href=#206 id=206 data-nosnippet>206</a>	CharUpperW(PSTR) -&gt; PSTR
-<a href=#207 id=207 data-nosnippet>207</a>}</code></pre></div></section></main></body></html>
+<a href=#201 id=201 data-nosnippet>201</a>	WriteProcessMemory(HANDLE, PCVOID, PCVOID, usize, <span class="kw-2">*mut </span>usize) -&gt; BOOL
+<a href=#202 id=202 data-nosnippet>202</a>	WritePrivateProfileStringW(PCSTR, PCSTR, PCSTR, PCSTR) -&gt; BOOL
+<a href=#203 id=203 data-nosnippet>203</a>}
+<a href=#204 id=204 data-nosnippet>204</a>
+<a href=#205 id=205 data-nosnippet>205</a><span class="macro">extern_sys!</span> { <span class="string">"user32"</span>; <span class="comment">// these functions should belong to kernel
+<a href=#206 id=206 data-nosnippet>206</a>	</span>CharLowerW(PSTR) -&gt; PSTR
+<a href=#207 id=207 data-nosnippet>207</a>	CharUpperW(PSTR) -&gt; PSTR
+<a href=#208 id=208 data-nosnippet>208</a>}</code></pre></div></section></main></body></html>
