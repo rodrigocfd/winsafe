@@ -62,7 +62,7 @@
 <a href=#62 id=62 data-nosnippet>62</a>/// use winsafe::prelude::*;
 <a href=#63 id=63 data-nosnippet>63</a>/// ```
 <a href=#64 id=64 data-nosnippet>64</a></span><span class="kw">pub trait </span>shell_IFileOpenDialog: shell_IFileDialog {
-<a href=#65 id=65 data-nosnippet>65</a>	<span class="macro">fn_com_interface_get!</span> { GetResults: IFileOpenDialogVT, IShellItemArray;
+<a href=#65 id=65 data-nosnippet>65</a>	<span class="macro">fn_com_interface_get!</span> { GetResults: IFileOpenDialogVT =&gt; IShellItemArray;
 <a href=#66 id=66 data-nosnippet>66</a>		<span class="doccomment">/// [`IFileOpenDialog::GetResults`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getresults)
 <a href=#67 id=67 data-nosnippet>67</a>		/// method.
 <a href=#68 id=68 data-nosnippet>68</a>		///
@@ -87,7 +87,7 @@
 <a href=#87 id=87 data-nosnippet>87</a>		/// ```
 <a href=#88 id=88 data-nosnippet>88</a>	</span>}
 <a href=#89 id=89 data-nosnippet>89</a>
-<a href=#90 id=90 data-nosnippet>90</a>	<span class="macro">fn_com_interface_get!</span> { GetSelectedItems: IFileOpenDialogVT, IShellItemArray;
+<a href=#90 id=90 data-nosnippet>90</a>	<span class="macro">fn_com_interface_get!</span> { GetSelectedItems: IFileOpenDialogVT =&gt; IShellItemArray;
 <a href=#91 id=91 data-nosnippet>91</a>		<span class="doccomment">/// [`IFileOpenDialog::GetSelectedItems`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileopendialog-getselecteditems)
 <a href=#92 id=92 data-nosnippet>92</a>		/// method.
 <a href=#93 id=93 data-nosnippet>93</a>	</span>}

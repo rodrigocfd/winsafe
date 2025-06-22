@@ -25,7 +25,7 @@
 <a href=#25 id=25 data-nosnippet>25</a>/// use winsafe::prelude::*;
 <a href=#26 id=26 data-nosnippet>26</a>/// ```
 <a href=#27 id=27 data-nosnippet>27</a></span><span class="kw">pub trait </span>taskschd_ITaskDefinition: oleaut_IDispatch {
-<a href=#28 id=28 data-nosnippet>28</a>	<span class="macro">fn_com_interface_get!</span> { get_Actions: ITaskDefinitionVT, IActionCollection;
+<a href=#28 id=28 data-nosnippet>28</a>	<span class="macro">fn_com_interface_get!</span> { get_Actions: ITaskDefinitionVT =&gt; IActionCollection;
 <a href=#29 id=29 data-nosnippet>29</a>		<span class="doccomment">/// [`ITaskDefinition::get_Actions`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_actions)
 <a href=#30 id=30 data-nosnippet>30</a>		/// method.
 <a href=#31 id=31 data-nosnippet>31</a>	</span>}
@@ -35,12 +35,12 @@
 <a href=#35 id=35 data-nosnippet>35</a>		/// method.
 <a href=#36 id=36 data-nosnippet>36</a>	</span>}
 <a href=#37 id=37 data-nosnippet>37</a>
-<a href=#38 id=38 data-nosnippet>38</a>	<span class="macro">fn_com_interface_get!</span> { get_RegistrationInfo: ITaskDefinitionVT, IRegistrationInfo;
+<a href=#38 id=38 data-nosnippet>38</a>	<span class="macro">fn_com_interface_get!</span> { get_RegistrationInfo: ITaskDefinitionVT =&gt; IRegistrationInfo;
 <a href=#39 id=39 data-nosnippet>39</a>		<span class="doccomment">/// [`ITaskDefinition::get_RegistrationInfo`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_registrationinfo)
 <a href=#40 id=40 data-nosnippet>40</a>		/// method.
 <a href=#41 id=41 data-nosnippet>41</a>	</span>}
 <a href=#42 id=42 data-nosnippet>42</a>
-<a href=#43 id=43 data-nosnippet>43</a>	<span class="macro">fn_com_interface_get!</span> { get_Triggers: ITaskDefinitionVT, ITriggerCollection;
+<a href=#43 id=43 data-nosnippet>43</a>	<span class="macro">fn_com_interface_get!</span> { get_Triggers: ITaskDefinitionVT =&gt; ITriggerCollection;
 <a href=#44 id=44 data-nosnippet>44</a>		<span class="doccomment">/// [`ITaskDefinition::get_Triggers`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_triggers)
 <a href=#45 id=45 data-nosnippet>45</a>		/// method.
 <a href=#46 id=46 data-nosnippet>46</a>	</span>}

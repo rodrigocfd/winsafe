@@ -42,7 +42,7 @@
 <a href=#42 id=42 data-nosnippet>42</a>/// use winsafe::prelude::*;
 <a href=#43 id=43 data-nosnippet>43</a>/// ```
 <a href=#44 id=44 data-nosnippet>44</a></span><span class="kw">pub trait </span>dshow_IBaseFilter: dshow_IMediaFilter {
-<a href=#45 id=45 data-nosnippet>45</a>	<span class="macro">fn_com_interface_get!</span> { EnumPins: IBaseFilterVT, IEnumPins;
+<a href=#45 id=45 data-nosnippet>45</a>	<span class="macro">fn_com_interface_get!</span> { EnumPins: IBaseFilterVT =&gt; IEnumPins;
 <a href=#46 id=46 data-nosnippet>46</a>		<span class="doccomment">/// [`IBaseFilter::EnumPins`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ibasefilter-enumpins)
 <a href=#47 id=47 data-nosnippet>47</a>		/// method.
 <a href=#48 id=48 data-nosnippet>48</a>	</span>}

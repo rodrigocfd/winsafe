@@ -10,7 +10,7 @@
 <a href=#10 id=10 data-nosnippet>10</a><span class="kw">use </span><span class="kw">crate</span>::ole::{privs::<span class="kw-2">*</span>, vts::<span class="kw-2">*</span>};
 <a href=#11 id=11 data-nosnippet>11</a><span class="kw">use </span><span class="kw">crate</span>::prelude::<span class="kw-2">*</span>;
 <a href=#12 id=12 data-nosnippet>12</a>
-<a href=#13 id=13 data-nosnippet>13</a><span class="macro">com_interface_userdef!</span> { IMFAsyncCallback, IMFAsyncCallbackImpl: <span class="string">"a27003cf-2354-4f2a-8d6a-ab7cff15437e"</span>;
+<a href=#13 id=13 data-nosnippet>13</a><span class="macro">com_interface_userdef!</span> { IMFAsyncCallback: IMFAsyncCallbackImpl, <span class="string">"a27003cf-2354-4f2a-8d6a-ab7cff15437e"</span>;
 <a href=#14 id=14 data-nosnippet>14</a>	<span class="doccomment">/// [`IMFAsyncCallback`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nn-mfobjects-imfasynccallback)
 <a href=#15 id=15 data-nosnippet>15</a>	/// COM interface.
 <a href=#16 id=16 data-nosnippet>16</a>	///
@@ -20,12 +20,12 @@
 <a href=#20 id=20 data-nosnippet>20</a></span>}
 <a href=#21 id=21 data-nosnippet>21</a>
 <a href=#22 id=22 data-nosnippet>22</a><span class="kw">impl </span>IMFAsyncCallback {
-<a href=#23 id=23 data-nosnippet>23</a>	<span class="macro">fn_com_interface_userdef_event!</span> { GetParameters: Fn(<span class="kw-2">&amp;mut </span>co::MFASYNC, <span class="kw-2">&amp;mut </span>u32) -&gt; AnyResult&lt;()&gt;;
+<a href=#23 id=23 data-nosnippet>23</a>	<span class="macro">fn_com_userdef_event!</span> { GetParameters: Fn(<span class="kw-2">&amp;mut </span>co::MFASYNC, <span class="kw-2">&amp;mut </span>u32) -&gt; AnyResult&lt;()&gt;;
 <a href=#24 id=24 data-nosnippet>24</a>		<span class="doccomment">/// [`IMFAsyncCallback::GetParameters`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasynccallback-getparameters)
 <a href=#25 id=25 data-nosnippet>25</a>		/// method.
 <a href=#26 id=26 data-nosnippet>26</a>	</span>}
 <a href=#27 id=27 data-nosnippet>27</a>
-<a href=#28 id=28 data-nosnippet>28</a>	<span class="macro">fn_com_interface_userdef_event!</span> { Invoke: Fn(<span class="kw-2">&amp;</span>IMFAsyncResult) -&gt; AnyResult&lt;()&gt;;
+<a href=#28 id=28 data-nosnippet>28</a>	<span class="macro">fn_com_userdef_event!</span> { Invoke: Fn(<span class="kw-2">&amp;</span>IMFAsyncResult) -&gt; AnyResult&lt;()&gt;;
 <a href=#29 id=29 data-nosnippet>29</a>		<span class="doccomment">/// [`IMFAsyncCallback::Invoke`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasynccallback-invoke)
 <a href=#30 id=30 data-nosnippet>30</a>		/// method.
 <a href=#31 id=31 data-nosnippet>31</a>	</span>}
@@ -58,28 +58,25 @@
 <a href=#58 id=58 data-nosnippet>58</a>		}
 <a href=#59 id=59 data-nosnippet>59</a>	}
 <a href=#60 id=60 data-nosnippet>60</a>
-<a href=#61 id=61 data-nosnippet>61</a>	<span class="macro">fn_com_interface_userdef_iunknown_impls!</span>(<span class="self">Self</span>);
+<a href=#61 id=61 data-nosnippet>61</a>	<span class="macro">fn_com_userdef_iunknown_impls!</span>(<span class="self">Self</span>);
 <a href=#62 id=62 data-nosnippet>62</a>
 <a href=#63 id=63 data-nosnippet>63</a>	<span class="kw">fn </span>GetParameters(p: COMPTR, pdwFlags: <span class="kw-2">*mut </span>u32, pdwQueue: <span class="kw-2">*mut </span>u32) -&gt; HRES {
 <a href=#64 id=64 data-nosnippet>64</a>		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
 <a href=#65 id=65 data-nosnippet>65</a>		hrresult_to_hres(<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.GetParameters {
-<a href=#66 id=66 data-nosnippet>66</a>			<span class="prelude-val">Some</span>(func) =&gt; {
-<a href=#67 id=67 data-nosnippet>67</a>				<span class="kw">let </span>pflags = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(pdwFlags <span class="kw">as </span><span class="kw-2">*mut </span>co::MFASYNC) };
-<a href=#68 id=68 data-nosnippet>68</a>				<span class="kw">let </span>pqueue = <span class="kw">unsafe </span>{ <span class="kw-2">&amp;mut *</span>(pdwQueue) };
-<a href=#69 id=69 data-nosnippet>69</a>				anyresult_to_hresult(func(pflags, pqueue))
-<a href=#70 id=70 data-nosnippet>70</a>			},
-<a href=#71 id=71 data-nosnippet>71</a>			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(()),
-<a href=#72 id=72 data-nosnippet>72</a>		})
-<a href=#73 id=73 data-nosnippet>73</a>	}
-<a href=#74 id=74 data-nosnippet>74</a>
-<a href=#75 id=75 data-nosnippet>75</a>	<span class="kw">fn </span>Invoke(p: COMPTR, pAsyncResult: COMPTR) -&gt; HRES {
-<a href=#76 id=76 data-nosnippet>76</a>		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
-<a href=#77 id=77 data-nosnippet>77</a>		hrresult_to_hres(<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.Invoke {
-<a href=#78 id=78 data-nosnippet>78</a>			<span class="prelude-val">Some</span>(func) =&gt; {
-<a href=#79 id=79 data-nosnippet>79</a>				<span class="kw">let </span>ar = ManuallyDrop::new(<span class="kw">unsafe </span>{ IMFAsyncResult::from_ptr(pAsyncResult) });
-<a href=#80 id=80 data-nosnippet>80</a>				anyresult_to_hresult(func(<span class="kw-2">&amp;</span>ar))
-<a href=#81 id=81 data-nosnippet>81</a>			},
-<a href=#82 id=82 data-nosnippet>82</a>			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(()),
-<a href=#83 id=83 data-nosnippet>83</a>		})
-<a href=#84 id=84 data-nosnippet>84</a>	}
-<a href=#85 id=85 data-nosnippet>85</a>}</code></pre></div></section></main></body></html>
+<a href=#66 id=66 data-nosnippet>66</a>			<span class="prelude-val">Some</span>(func) =&gt; <span class="kw">unsafe </span>{
+<a href=#67 id=67 data-nosnippet>67</a>				anyresult_to_hresult(func(<span class="kw-2">&amp;mut *</span>(pdwFlags <span class="kw">as </span><span class="kw-2">*mut </span>co::MFASYNC), <span class="kw-2">&amp;mut *</span>(pdwQueue)))
+<a href=#68 id=68 data-nosnippet>68</a>			},
+<a href=#69 id=69 data-nosnippet>69</a>			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(()),
+<a href=#70 id=70 data-nosnippet>70</a>		})
+<a href=#71 id=71 data-nosnippet>71</a>	}
+<a href=#72 id=72 data-nosnippet>72</a>
+<a href=#73 id=73 data-nosnippet>73</a>	<span class="kw">fn </span>Invoke(p: COMPTR, pAsyncResult: COMPTR) -&gt; HRES {
+<a href=#74 id=74 data-nosnippet>74</a>		<span class="kw">let </span>box_impl = box_impl_of::&lt;<span class="self">Self</span>&gt;(p);
+<a href=#75 id=75 data-nosnippet>75</a>		hrresult_to_hres(<span class="kw">match </span><span class="kw-2">&amp;</span>box_impl.Invoke {
+<a href=#76 id=76 data-nosnippet>76</a>			<span class="prelude-val">Some</span>(func) =&gt; anyresult_to_hresult(func(<span class="kw-2">&amp;</span>ManuallyDrop::new(<span class="kw">unsafe </span>{
+<a href=#77 id=77 data-nosnippet>77</a>				IMFAsyncResult::from_ptr(pAsyncResult)
+<a href=#78 id=78 data-nosnippet>78</a>			}))),
+<a href=#79 id=79 data-nosnippet>79</a>			<span class="prelude-val">None </span>=&gt; <span class="prelude-val">Ok</span>(()),
+<a href=#80 id=80 data-nosnippet>80</a>		})
+<a href=#81 id=81 data-nosnippet>81</a>	}
+<a href=#82 id=82 data-nosnippet>82</a>}</code></pre></div></section></main></body></html>

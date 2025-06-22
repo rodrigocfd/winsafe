@@ -27,7 +27,7 @@
 <a href=#27 id=27 data-nosnippet>27</a>/// use winsafe::prelude::*;
 <a href=#28 id=28 data-nosnippet>28</a>/// ```
 <a href=#29 id=29 data-nosnippet>29</a></span><span class="kw">pub trait </span>taskschd_IRegisteredTask: oleaut_IDispatch {
-<a href=#30 id=30 data-nosnippet>30</a>	<span class="macro">fn_com_interface_get!</span> { get_Definition: IRegisteredTaskVT, ITaskDefinition;
+<a href=#30 id=30 data-nosnippet>30</a>	<span class="macro">fn_com_interface_get!</span> { get_Definition: IRegisteredTaskVT =&gt; ITaskDefinition;
 <a href=#31 id=31 data-nosnippet>31</a>		<span class="doccomment">/// [`IRegisteredTask::get_Definition`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_definition)
 <a href=#32 id=32 data-nosnippet>32</a>		/// method.
 <a href=#33 id=33 data-nosnippet>33</a>	</span>}
