@@ -132,10 +132,9 @@ impl IFileDialogEventsImpl {
 	fn OnFileOk(p: COMPTR, pfd: COMPTR) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.OnFileOk {
-			Some(func) => {
-				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
-				anyresult_to_hresult(func(&fd))
-			},
+			Some(func) => anyresult_to_hresult(func(&ManuallyDrop::new(unsafe {
+				IFileDialog::from_ptr(pfd)
+			}))),
 			None => Ok(()),
 		})
 	}
@@ -143,10 +142,11 @@ impl IFileDialogEventsImpl {
 	fn OnFolderChanging(p: COMPTR, pfd: COMPTR, psiFolder: COMPTR) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.OnFolderChanging {
-			Some(func) => {
-				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
-				let si = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiFolder) });
-				anyresult_to_hresult(func(&fd, &si))
+			Some(func) => unsafe {
+				anyresult_to_hresult(func(
+					&ManuallyDrop::new(IFileDialog::from_ptr(pfd)),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiFolder)),
+				))
 			},
 			None => Ok(()),
 		})
@@ -155,10 +155,9 @@ impl IFileDialogEventsImpl {
 	fn OnFolderChange(p: COMPTR, pfd: COMPTR) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.OnFolderChange {
-			Some(func) => {
-				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
-				anyresult_to_hresult(func(&fd))
-			},
+			Some(func) => anyresult_to_hresult(func(&ManuallyDrop::new(unsafe {
+				IFileDialog::from_ptr(pfd)
+			}))),
 			None => Ok(()),
 		})
 	}
@@ -166,10 +165,9 @@ impl IFileDialogEventsImpl {
 	fn OnSelectionChange(p: COMPTR, pfd: COMPTR) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.OnSelectionChange {
-			Some(func) => {
-				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
-				anyresult_to_hresult(func(&fd))
-			},
+			Some(func) => anyresult_to_hresult(func(&ManuallyDrop::new(unsafe {
+				IFileDialog::from_ptr(pfd)
+			}))),
 			None => Ok(()),
 		})
 	}
@@ -177,11 +175,12 @@ impl IFileDialogEventsImpl {
 	fn OnShareViolation(p: COMPTR, pfd: COMPTR, psi: COMPTR, pResponse: *mut u32) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.OnShareViolation {
-			Some(func) => {
-				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
-				let si = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psi) });
-				let presp = unsafe { &mut *(pResponse as *mut co::FDESVR) };
-				anyresult_to_hresult(func(&fd, &si, presp))
+			Some(func) => unsafe {
+				anyresult_to_hresult(func(
+					&ManuallyDrop::new(IFileDialog::from_ptr(pfd)),
+					&ManuallyDrop::new(IShellItem::from_ptr(psi)),
+					&mut *(pResponse as *mut co::FDESVR),
+				))
 			},
 			None => Ok(()),
 		})
@@ -190,10 +189,9 @@ impl IFileDialogEventsImpl {
 	fn OnTypeChange(p: COMPTR, pfd: COMPTR) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.OnTypeChange {
-			Some(func) => {
-				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
-				anyresult_to_hresult(func(&fd))
-			},
+			Some(func) => anyresult_to_hresult(func(&ManuallyDrop::new(unsafe {
+				IFileDialog::from_ptr(pfd)
+			}))),
 			None => Ok(()),
 		})
 	}
@@ -201,11 +199,12 @@ impl IFileDialogEventsImpl {
 	fn OnOverwrite(p: COMPTR, pfd: COMPTR, psi: COMPTR, pResponse: *mut u32) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.OnOverwrite {
-			Some(func) => {
-				let fd = ManuallyDrop::new(unsafe { IFileDialog::from_ptr(pfd) });
-				let si = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psi) });
-				let presp = unsafe { &mut *(pResponse as *mut co::FDEOR) };
-				anyresult_to_hresult(func(&fd, &si, presp))
+			Some(func) => unsafe {
+				anyresult_to_hresult(func(
+					&ManuallyDrop::new(IFileDialog::from_ptr(pfd)),
+					&ManuallyDrop::new(IShellItem::from_ptr(psi)),
+					&mut *(pResponse as *mut co::FDEOR),
+				))
 			},
 			None => Ok(()),
 		})

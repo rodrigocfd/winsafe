@@ -213,10 +213,7 @@ impl IFileOperationProgressSinkImpl {
 	fn FinishOperations(p: COMPTR, hrResult: HRES) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.FinishOperations {
-			Some(func) => {
-				let hr = unsafe { co::HRESULT::from_raw(hrResult) };
-				anyresult_to_hresult(func(hr))
-			},
+			Some(func) => anyresult_to_hresult(func(unsafe { co::HRESULT::from_raw(hrResult) })),
 			None => Ok(()),
 		})
 	}
@@ -224,11 +221,12 @@ impl IFileOperationProgressSinkImpl {
 	fn PreRenameItem(p: COMPTR, dwFlags: u32, psiItem: COMPTR, pszNewName: PCSTR) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.PreRenameItem {
-			Some(func) => {
-				let flags = unsafe { co::TSF::from_raw(dwFlags) };
-				let item = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiItem) });
-				let new_name = unsafe { WString::from_wchars_nullt(pszNewName) }.to_string();
-				anyresult_to_hresult(func(flags, &item, &new_name))
+			Some(func) => unsafe {
+				anyresult_to_hresult(func(
+					co::TSF::from_raw(dwFlags),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiItem)),
+					&WString::from_wchars_nullt(pszNewName).to_string(),
+				))
 			},
 			None => Ok(()),
 		})
@@ -244,13 +242,14 @@ impl IFileOperationProgressSinkImpl {
 	) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.PostRenameItem {
-			Some(func) => {
-				let flags = unsafe { co::TSF::from_raw(dwFlags) };
-				let item = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiItem) });
-				let new_name = unsafe { WString::from_wchars_nullt(pszNewName) }.to_string();
-				let hr = unsafe { co::HRESULT::from_raw(hrRename) };
-				let new_item = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiNewlyCreated) });
-				anyresult_to_hresult(func(flags, &item, &new_name, hr, &new_item))
+			Some(func) => unsafe {
+				anyresult_to_hresult(func(
+					co::TSF::from_raw(dwFlags),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiItem)),
+					&WString::from_wchars_nullt(pszNewName).to_string(),
+					co::HRESULT::from_raw(hrRename),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiNewlyCreated)),
+				))
 			},
 			None => Ok(()),
 		})
@@ -265,13 +264,13 @@ impl IFileOperationProgressSinkImpl {
 	) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.PreMoveItem {
-			Some(func) => {
-				let flags = unsafe { co::TSF::from_raw(dwFlags) };
-				let item = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiItem) });
-				let dest_folder =
-					ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiDestinationFolder) });
-				let new_name = unsafe { WString::from_wchars_nullt(pszNewName) }.to_string();
-				anyresult_to_hresult(func(flags, &item, &dest_folder, &new_name))
+			Some(func) => unsafe {
+				anyresult_to_hresult(func(
+					co::TSF::from_raw(dwFlags),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiItem)),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiDestinationFolder)),
+					&WString::from_wchars_nullt(pszNewName).to_string(),
+				))
 			},
 			None => Ok(()),
 		})
@@ -288,15 +287,15 @@ impl IFileOperationProgressSinkImpl {
 	) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.PostMoveItem {
-			Some(func) => {
-				let flags = unsafe { co::TSF::from_raw(dwFlags) };
-				let item = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiItem) });
-				let dest_folder =
-					ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiDestinationFolder) });
-				let new_name = unsafe { WString::from_wchars_nullt(pszNewName) }.to_string();
-				let hr = unsafe { co::HRESULT::from_raw(hrMove) };
-				let new_item = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiNewlyCreated) });
-				anyresult_to_hresult(func(flags, &item, &dest_folder, &new_name, hr, &new_item))
+			Some(func) => unsafe {
+				anyresult_to_hresult(func(
+					co::TSF::from_raw(dwFlags),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiItem)),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiDestinationFolder)),
+					&WString::from_wchars_nullt(pszNewName).to_string(),
+					co::HRESULT::from_raw(hrMove),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiNewlyCreated)),
+				))
 			},
 			None => Ok(()),
 		})
@@ -311,13 +310,13 @@ impl IFileOperationProgressSinkImpl {
 	) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.PreCopyItem {
-			Some(func) => {
-				let flags = unsafe { co::TSF::from_raw(dwFlags) };
-				let item = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiItem) });
-				let dest_folder =
-					ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiDestinationFolder) });
-				let new_name = unsafe { WString::from_wchars_nullt(pszNewName) }.to_string();
-				anyresult_to_hresult(func(flags, &item, &dest_folder, &new_name))
+			Some(func) => unsafe {
+				anyresult_to_hresult(func(
+					co::TSF::from_raw(dwFlags),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiItem)),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiDestinationFolder)),
+					&WString::from_wchars_nullt(pszNewName).to_string(),
+				))
 			},
 			None => Ok(()),
 		})
@@ -334,15 +333,15 @@ impl IFileOperationProgressSinkImpl {
 	) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.PostCopyItem {
-			Some(func) => {
-				let flags = unsafe { co::TSF::from_raw(dwFlags) };
-				let item = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiItem) });
-				let dest_folder =
-					ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiDestinationFolder) });
-				let new_name = unsafe { WString::from_wchars_nullt(pszNewName) }.to_string();
-				let hr = unsafe { co::HRESULT::from_raw(hrCopy) };
-				let new_item = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiNewlyCreated) });
-				anyresult_to_hresult(func(flags, &item, &dest_folder, &new_name, hr, &new_item))
+			Some(func) => unsafe {
+				anyresult_to_hresult(func(
+					co::TSF::from_raw(dwFlags),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiItem)),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiDestinationFolder)),
+					&WString::from_wchars_nullt(pszNewName).to_string(),
+					co::HRESULT::from_raw(hrCopy),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiNewlyCreated)),
+				))
 			},
 			None => Ok(()),
 		})
@@ -351,10 +350,11 @@ impl IFileOperationProgressSinkImpl {
 	fn PreDeleteItem(p: COMPTR, dwFlags: u32, psiItem: COMPTR) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.PreDeleteItem {
-			Some(func) => {
-				let flags = unsafe { co::TSF::from_raw(dwFlags) };
-				let item = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiItem) });
-				anyresult_to_hresult(func(flags, &item))
+			Some(func) => unsafe {
+				anyresult_to_hresult(func(
+					co::TSF::from_raw(dwFlags),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiItem)),
+				))
 			},
 			None => Ok(()),
 		})
@@ -369,12 +369,13 @@ impl IFileOperationProgressSinkImpl {
 	) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.PostDeleteItem {
-			Some(func) => {
-				let flags = unsafe { co::TSF::from_raw(dwFlags) };
-				let item = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiItem) });
-				let hr = unsafe { co::HRESULT::from_raw(hrDelete) };
-				let new_item = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiNewlyCreated) });
-				anyresult_to_hresult(func(flags, &item, hr, &new_item))
+			Some(func) => unsafe {
+				anyresult_to_hresult(func(
+					co::TSF::from_raw(dwFlags),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiItem)),
+					co::HRESULT::from_raw(hrDelete),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiNewlyCreated)),
+				))
 			},
 			None => Ok(()),
 		})
@@ -388,12 +389,12 @@ impl IFileOperationProgressSinkImpl {
 	) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.PreNewItem {
-			Some(func) => {
-				let flags = unsafe { co::TSF::from_raw(dwFlags) };
-				let dest_folder =
-					ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiDestinationFolder) });
-				let new_name = unsafe { WString::from_wchars_nullt(pszNewName) }.to_string();
-				anyresult_to_hresult(func(flags, &dest_folder, &new_name))
+			Some(func) => unsafe {
+				anyresult_to_hresult(func(
+					co::TSF::from_raw(dwFlags),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiDestinationFolder)),
+					&WString::from_wchars_nullt(pszNewName).to_string(),
+				))
 			},
 			None => Ok(()),
 		})
@@ -411,24 +412,15 @@ impl IFileOperationProgressSinkImpl {
 	) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.PostNewItem {
-			Some(func) => {
-				let flags = unsafe { co::TSF::from_raw(dwFlags) };
-				let dest_folder =
-					ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiDestinationFolder) });
-				let new_name = unsafe { WString::from_wchars_nullt(pszNewName) }.to_string();
-				let template_name =
-					unsafe { WString::from_wchars_nullt(pszTemplateName) }.to_string();
-				let file_attr = unsafe { co::FILE_ATTRIBUTE::from_raw(dwFileAttributes) };
-				let hr = unsafe { co::HRESULT::from_raw(hrNew) };
-				let new_item = ManuallyDrop::new(unsafe { IShellItem::from_ptr(psiNewItem) });
+			Some(func) => unsafe {
 				anyresult_to_hresult(func(
-					flags,
-					&dest_folder,
-					&new_name,
-					&template_name,
-					file_attr,
-					hr,
-					&new_item,
+					co::TSF::from_raw(dwFlags),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiDestinationFolder)),
+					&WString::from_wchars_nullt(pszNewName).to_string(),
+					&WString::from_wchars_nullt(pszTemplateName).to_string(),
+					co::FILE_ATTRIBUTE::from_raw(dwFileAttributes),
+					co::HRESULT::from_raw(hrNew),
+					&ManuallyDrop::new(IShellItem::from_ptr(psiNewItem)),
 				))
 			},
 			None => Ok(()),

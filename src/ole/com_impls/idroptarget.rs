@@ -153,12 +153,13 @@ impl IDropTargetImpl {
 	) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.DragEnter {
-			Some(func) => {
-				let dob = ManuallyDrop::new(unsafe { IDataObject::from_ptr(pDataObj) });
-				let mk = unsafe { co::MK::from_raw(grfKeyState as _) };
-				let pt = POINT::with(LODWORD(pt) as _, HIDWORD(pt) as _);
-				let pfx = unsafe { &mut *(pdwEffect as *mut co::DROPEFFECT) };
-				anyresult_to_hresult(func(&dob, mk, pt, pfx))
+			Some(func) => unsafe {
+				anyresult_to_hresult(func(
+					&ManuallyDrop::new(IDataObject::from_ptr(pDataObj)),
+					co::MK::from_raw(grfKeyState as _),
+					POINT::with(LODWORD(pt) as _, HIDWORD(pt) as _),
+					&mut *(pdwEffect as *mut co::DROPEFFECT),
+				))
 			},
 			None => Ok(()),
 		})
@@ -167,11 +168,12 @@ impl IDropTargetImpl {
 	fn DragOver(p: COMPTR, grfKeyState: u32, pt: u64, pdwEffect: *mut u32) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.DragOver {
-			Some(func) => {
-				let mk = unsafe { co::MK::from_raw(grfKeyState as _) };
-				let pt = POINT::with(LODWORD(pt) as _, HIDWORD(pt) as _);
-				let pfx = unsafe { &mut *(pdwEffect as *mut co::DROPEFFECT) };
-				anyresult_to_hresult(func(mk, pt, pfx))
+			Some(func) => unsafe {
+				anyresult_to_hresult(func(
+					co::MK::from_raw(grfKeyState as _),
+					POINT::with(LODWORD(pt) as _, HIDWORD(pt) as _),
+					&mut *(pdwEffect as *mut co::DROPEFFECT),
+				))
 			},
 			None => Ok(()),
 		})
@@ -182,12 +184,13 @@ impl IDropTargetImpl {
 	fn Drop(p: COMPTR, pDataObj: COMPTR, grfKeyState: u32, pt: u64, pdwEffect: *mut u32) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
 		hrresult_to_hres(match &box_impl.Drop {
-			Some(func) => {
-				let dob = ManuallyDrop::new(unsafe { IDataObject::from_ptr(pDataObj) });
-				let mk = unsafe { co::MK::from_raw(grfKeyState as _) };
-				let pt = POINT::with(LODWORD(pt) as _, HIDWORD(pt) as _);
-				let pfx = unsafe { &mut *(pdwEffect as *mut co::DROPEFFECT) };
-				anyresult_to_hresult(func(&dob, mk, pt, pfx))
+			Some(func) => unsafe {
+				anyresult_to_hresult(func(
+					&ManuallyDrop::new(IDataObject::from_ptr(pDataObj)),
+					co::MK::from_raw(grfKeyState as _),
+					POINT::with(LODWORD(pt) as _, HIDWORD(pt) as _),
+					&mut *(pdwEffect as *mut co::DROPEFFECT),
+				))
 			},
 			None => Ok(()),
 		})
