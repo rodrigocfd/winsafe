@@ -137,6 +137,13 @@ pub struct IShellFolderVT {
 }
 
 #[repr(C)]
+pub struct IShellItemFilterVT {
+	pub IUnknownVT: IUnknownVT,
+	pub IncludeItem: fn(COMPTR, COMPTR) -> HRES,
+	pub GetEnumFlagsForItem: fn(COMPTR, COMPTR, *mut u32) -> HRES,
+}
+
+#[repr(C)]
 pub struct IShellItemVT {
 	pub IUnknownVT: IUnknownVT,
 	pub BindToHandler: fn(COMPTR, PVOID, PCVOID, PCVOID, *mut COMPTR) -> HRES,

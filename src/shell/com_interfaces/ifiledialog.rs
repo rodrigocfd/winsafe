@@ -207,6 +207,12 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 		})
 	}
 
+	/// [`IFileDialog::SetFilter`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfilter)
+	/// method.
+	fn SetFilter(&self, filter: &IShellItemFilter) -> HrResult<()> {
+		ok_to_hrresult(unsafe { (vt::<IFileDialogVT>(self).SetFilter)(self.ptr(), filter.ptr()) })
+	}
+
 	/// [`IFileDialog::SetFolder`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-setfolder)
 	/// method.
 	fn SetFolder(&self, si: &impl shell_IShellItem) -> HrResult<()> {
