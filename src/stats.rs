@@ -57,6 +57,7 @@ where
 				stats.count_wmsgs(&contents);
 				stats.count_handles(&contents);
 				stats.count_com(&contents, &path);
+				stats.count_com_impl(&contents, &path);
 				callback(idx); // pass the zero-based index of the file that has been processed
 			}
 			Ok(())
@@ -155,37 +156,62 @@ impl Stats {
 			}
 		}
 
-		let mut is_com_interface_impl_file = false;
 		let mut inside_block = false;
 
 		for line in contents.lines() {
-			if line.starts_with("com_interface! { ")
-				|| line.starts_with("com_interface_userdef! { ")
-			{
+			if !inside_block && line.starts_with("com_interface! { ") {
 				self.com_interfaces += 1;
+				continue;
 			}
 
-			if line.starts_with("\tfn_com_userdef_closure! { ") {
-				self.com_methods += 1;
+			if !inside_block && line.starts_with("pub trait ") {
+				inside_block = true;
+				continue;
 			}
 
-			if !is_com_interface_impl_file && line.starts_with("/// This trait is enabled with `") {
-				is_com_interface_impl_file = true;
-			} else {
-				if !inside_block && line.starts_with("pub trait ") {
-					inside_block = true;
-				} else {
-					if line.starts_with("}") {
-						inside_block = false;
-					} else if line.starts_with("\tfn ")
-						|| line.starts_with("\tfn_com_noparm! { ")
-						|| line.starts_with("\tfn_com_noparm_noret! { ")
-						|| line.starts_with("\tfn_com_interface_get! { ")
-						|| line.starts_with("\tfn_com_bstr_get! { ")
-						|| line.starts_with("\tfn_com_bstr_set! { ")
-					{
-						self.com_methods += 1;
-					}
+			if inside_block {
+				if line.starts_with("}") {
+					return; // we're done
+				} else if line.starts_with("\tfn ")
+					|| line.starts_with("\tfn_com_noparm! { ")
+					|| line.starts_with("\tfn_com_noparm_noret! { ")
+					|| line.starts_with("\tfn_com_interface_get! { ")
+					|| line.starts_with("\tfn_com_bstr_get! { ")
+					|| line.starts_with("\tfn_com_bstr_set! { ")
+				{
+					self.com_methods += 1;
+				}
+			}
+		}
+	}
+
+	fn count_com_impl(&mut self, contents: &str, path: &str) {
+		if !path.contains("\\com_impls\\") {
+			return; // this folder must be present
+		} else if let Some(file_name) = w::path::get_file_name(path) {
+			if !file_name.starts_with('i') {
+				return; // file must start with "i"
+			}
+		}
+
+		let mut inside_block = false;
+
+		for line in contents.lines() {
+			if !inside_block && line.starts_with("com_interface_userdef! { ") {
+				self.com_interfaces += 1;
+				continue;
+			}
+
+			if !inside_block && line.starts_with("impl ") {
+				inside_block = true;
+				continue;
+			}
+
+			if inside_block {
+				if line.starts_with("}") {
+					return; // we're done
+				} else if line.starts_with("\tfn_com_userdef_event! { ") {
+					self.com_methods += 1;
 				}
 			}
 		}
