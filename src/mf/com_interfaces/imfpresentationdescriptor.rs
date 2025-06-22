@@ -26,7 +26,7 @@ impl mf_IMFPresentationDescriptor for IMFPresentationDescriptor {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait mf_IMFPresentationDescriptor: mf_IMFAttributes {
-	fn_com_interface_get! { Clone: IMFPresentationDescriptorVT, IMFPresentationDescriptor;
+	fn_com_interface_get! { Clone: IMFPresentationDescriptorVT => IMFPresentationDescriptor;
 		/// [`IMFPresentationDescriptor::Clone`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfpresentationdescriptor-clone)
 		/// method.
 	}

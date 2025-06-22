@@ -62,7 +62,7 @@ pub trait dshow_IFilterGraph: ole_IUnknown {
 		ok_to_hrresult(unsafe { (vt::<IFilterGraphVT>(self).Disconnect)(self.ptr(), pin.ptr()) })
 	}
 
-	fn_com_interface_get! { EnumFilters: IFilterGraphVT, IEnumFilters;
+	fn_com_interface_get! { EnumFilters: IFilterGraphVT => IEnumFilters;
 		/// [`IFilterGraph::EnumFilters`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph-enumfilters)
 		/// method.
 	}

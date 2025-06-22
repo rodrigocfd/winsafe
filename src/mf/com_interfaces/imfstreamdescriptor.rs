@@ -26,7 +26,7 @@ impl mf_IMFStreamDescriptor for IMFStreamDescriptor {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait mf_IMFStreamDescriptor: mf_IMFAttributes {
-	fn_com_interface_get! { GetMediaTypeHandler: IMFStreamDescriptorVT, IMFMediaTypeHandler;
+	fn_com_interface_get! { GetMediaTypeHandler: IMFStreamDescriptorVT => IMFMediaTypeHandler;
 		/// [`IMFStreamDescriptor::GetMediaTypeHandler`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfstreamdescriptor-getmediatypehandler)
 		/// method.
 	}

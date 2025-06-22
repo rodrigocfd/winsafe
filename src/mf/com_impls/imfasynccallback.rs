@@ -10,7 +10,7 @@ use crate::mf::vts::*;
 use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 
-com_interface_userdef! { IMFAsyncCallback, IMFAsyncCallbackImpl: "a27003cf-2354-4f2a-8d6a-ab7cff15437e";
+com_interface_userdef! { IMFAsyncCallback: IMFAsyncCallbackImpl, "a27003cf-2354-4f2a-8d6a-ab7cff15437e";
 	/// [`IMFAsyncCallback`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nn-mfobjects-imfasynccallback)
 	/// COM interface.
 	///
@@ -20,12 +20,12 @@ com_interface_userdef! { IMFAsyncCallback, IMFAsyncCallbackImpl: "a27003cf-2354-
 }
 
 impl IMFAsyncCallback {
-	fn_com_interface_userdef_event! { GetParameters: Fn(&mut co::MFASYNC, &mut u32) -> AnyResult<()>;
+	fn_com_userdef_event! { GetParameters: Fn(&mut co::MFASYNC, &mut u32) -> AnyResult<()>;
 		/// [`IMFAsyncCallback::GetParameters`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasynccallback-getparameters)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { Invoke: Fn(&IMFAsyncResult) -> AnyResult<()>;
+	fn_com_userdef_event! { Invoke: Fn(&IMFAsyncResult) -> AnyResult<()>;
 		/// [`IMFAsyncCallback::Invoke`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfasynccallback-invoke)
 		/// method.
 	}
@@ -58,7 +58,7 @@ impl IMFAsyncCallbackImpl {
 		}
 	}
 
-	fn_com_interface_userdef_iunknown_impls!(Self);
+	fn_com_userdef_iunknown_impls!(Self);
 
 	fn GetParameters(p: COMPTR, pdwFlags: *mut u32, pdwQueue: *mut u32) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);

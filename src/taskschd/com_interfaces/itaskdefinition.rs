@@ -25,7 +25,7 @@ impl taskschd_ITaskDefinition for ITaskDefinition {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_ITaskDefinition: oleaut_IDispatch {
-	fn_com_interface_get! { get_Actions: ITaskDefinitionVT, IActionCollection;
+	fn_com_interface_get! { get_Actions: ITaskDefinitionVT => IActionCollection;
 		/// [`ITaskDefinition::get_Actions`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_actions)
 		/// method.
 	}
@@ -35,12 +35,12 @@ pub trait taskschd_ITaskDefinition: oleaut_IDispatch {
 		/// method.
 	}
 
-	fn_com_interface_get! { get_RegistrationInfo: ITaskDefinitionVT, IRegistrationInfo;
+	fn_com_interface_get! { get_RegistrationInfo: ITaskDefinitionVT => IRegistrationInfo;
 		/// [`ITaskDefinition::get_RegistrationInfo`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_registrationinfo)
 		/// method.
 	}
 
-	fn_com_interface_get! { get_Triggers: ITaskDefinitionVT, ITriggerCollection;
+	fn_com_interface_get! { get_Triggers: ITaskDefinitionVT => ITriggerCollection;
 		/// [`ITaskDefinition::get_Triggers`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-itaskdefinition-get_triggers)
 		/// method.
 	}

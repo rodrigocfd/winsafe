@@ -39,7 +39,7 @@ pub trait mf_IMFMediaSource: mf_IMFMediaEventGenerator {
 		.map(|_| characteristics)
 	}
 
-	fn_com_interface_get! { CreatePresentationDescriptor: IMFMediaSourceVT, IMFPresentationDescriptor;
+	fn_com_interface_get! { CreatePresentationDescriptor: IMFMediaSourceVT => IMFPresentationDescriptor;
 		/// [`IMFMediaSource::CreatePresentationDescriptor`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfmediasource-createpresentationdescriptor)
 		/// method.
 	}

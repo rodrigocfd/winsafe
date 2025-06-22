@@ -10,7 +10,7 @@ use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 use crate::shell::vts::*;
 
-com_interface_userdef! { IFileOperationProgressSink, IFileOperationProgressSinkImpl: "04b0f1a7-9490-44bc-96e1-4296a31252e2";
+com_interface_userdef! { IFileOperationProgressSink: IFileOperationProgressSinkImpl, "04b0f1a7-9490-44bc-96e1-4296a31252e2";
 	/// [`IFileOperationProgressSink`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-ifileoperationprogresssink)
 	/// COM interface.
 	///
@@ -20,82 +20,82 @@ com_interface_userdef! { IFileOperationProgressSink, IFileOperationProgressSinkI
 }
 
 impl IFileOperationProgressSink {
-	fn_com_interface_userdef_event! { StartOperations: Fn() -> AnyResult<()>;
+	fn_com_userdef_event! { StartOperations: Fn() -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::StartOperations`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-startoperations)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { FinishOperations: Fn(co::HRESULT) -> AnyResult<()>;
+	fn_com_userdef_event! { FinishOperations: Fn(co::HRESULT) -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::FinishOperations`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-finishoperations)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { PreRenameItem: Fn(co::TSF, &IShellItem, &str) -> AnyResult<()>;
+	fn_com_userdef_event! { PreRenameItem: Fn(co::TSF, &IShellItem, &str) -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::PreRenameItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-prerenameitem)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { PostRenameItem: Fn(co::TSF, &IShellItem, &str, co::HRESULT, &IShellItem) -> AnyResult<()>;
+	fn_com_userdef_event! { PostRenameItem: Fn(co::TSF, &IShellItem, &str, co::HRESULT, &IShellItem) -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::PostRenameItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-postrenameitem)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { PreMoveItem: Fn(co::TSF, &IShellItem, &IShellItem, &str) -> AnyResult<()>;
+	fn_com_userdef_event! { PreMoveItem: Fn(co::TSF, &IShellItem, &IShellItem, &str) -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::PreMoveItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-premoveitem)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { PostMoveItem: Fn(co::TSF, &IShellItem, &IShellItem, &str, co::HRESULT, &IShellItem) -> AnyResult<()>;
+	fn_com_userdef_event! { PostMoveItem: Fn(co::TSF, &IShellItem, &IShellItem, &str, co::HRESULT, &IShellItem) -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::PostMoveItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-postmoveitem)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { PreCopyItem: Fn(co::TSF, &IShellItem, &IShellItem, &str) -> AnyResult<()>;
+	fn_com_userdef_event! { PreCopyItem: Fn(co::TSF, &IShellItem, &IShellItem, &str) -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::PreCopyItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-precopyitem)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { PostCopyItem: Fn(co::TSF, &IShellItem, &IShellItem, &str, co::HRESULT, &IShellItem) -> AnyResult<()>;
+	fn_com_userdef_event! { PostCopyItem: Fn(co::TSF, &IShellItem, &IShellItem, &str, co::HRESULT, &IShellItem) -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::PostCopyItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-postcopyitem)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { PreDeleteItem: Fn(co::TSF, &IShellItem) -> AnyResult<()>;
+	fn_com_userdef_event! { PreDeleteItem: Fn(co::TSF, &IShellItem) -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::PreDeleteItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-predeleteitem)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { PostDeleteItem: Fn(co::TSF, &IShellItem, co::HRESULT, &IShellItem) -> AnyResult<()>;
+	fn_com_userdef_event! { PostDeleteItem: Fn(co::TSF, &IShellItem, co::HRESULT, &IShellItem) -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::PostDeleteItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-postdeleteitem)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { PreNewItem: Fn(co::TSF, &IShellItem, &str) -> AnyResult<()>;
+	fn_com_userdef_event! { PreNewItem: Fn(co::TSF, &IShellItem, &str) -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::PreNewItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-prenewitem)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { PostNewItem: Fn(co::TSF, &IShellItem, &str, &str, co::FILE_ATTRIBUTE, co::HRESULT, &IShellItem) -> AnyResult<()>;
+	fn_com_userdef_event! { PostNewItem: Fn(co::TSF, &IShellItem, &str, &str, co::FILE_ATTRIBUTE, co::HRESULT, &IShellItem) -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::PostNewItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-postnewitem)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { UpdateProgress: Fn(u32, u32) -> AnyResult<()>;
+	fn_com_userdef_event! { UpdateProgress: Fn(u32, u32) -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::UpdateProgress`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-updateprogress)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { ResetTimer: Fn() -> AnyResult<()>;
+	fn_com_userdef_event! { ResetTimer: Fn() -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::ResetTimer`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-resettimer)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { PauseTimer: Fn() -> AnyResult<()>;
+	fn_com_userdef_event! { PauseTimer: Fn() -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::PauseTimer`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-pausetimer)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { ResumeTimer: Fn() -> AnyResult<()>;
+	fn_com_userdef_event! { ResumeTimer: Fn() -> AnyResult<()>;
 		/// [`IFileOperationProgressSink::ResumeTimer`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperationprogresssink-resumetimer)
 		/// method.
 	}
@@ -206,9 +206,9 @@ impl IFileOperationProgressSinkImpl {
 		}
 	}
 
-	fn_com_interface_userdef_iunknown_impls!(Self);
+	fn_com_userdef_iunknown_impls!(Self);
 
-	fn_com_interface_userdef_impl_noparm!(StartOperations);
+	fn_com_userdef_impl_noparm!(StartOperations);
 
 	fn FinishOperations(p: COMPTR, hrResult: HRES) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);
@@ -443,9 +443,9 @@ impl IFileOperationProgressSinkImpl {
 		})
 	}
 
-	fn_com_interface_userdef_impl_noparm!(ResetTimer);
+	fn_com_userdef_impl_noparm!(ResetTimer);
 
-	fn_com_interface_userdef_impl_noparm!(PauseTimer);
+	fn_com_userdef_impl_noparm!(PauseTimer);
 
-	fn_com_interface_userdef_impl_noparm!(ResumeTimer);
+	fn_com_userdef_impl_noparm!(ResumeTimer);
 }

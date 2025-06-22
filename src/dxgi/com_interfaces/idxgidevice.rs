@@ -52,7 +52,7 @@ pub trait dxgi_IDXGIDevice: dxgi_IDXGIObject {
 		.map(|_| queried)
 	}
 
-	fn_com_interface_get! { GetAdapter: IDXGIDeviceVT,  IDXGIAdapter;
+	fn_com_interface_get! { GetAdapter: IDXGIDeviceVT => IDXGIAdapter;
 		/// [`IDXGIDevice::GetAdapter`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-getadapter)
 		/// method.
 	}

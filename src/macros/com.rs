@@ -49,7 +49,7 @@ macro_rules! com_interface {
 	};
 }
 
-/// Implements a trait function with no parameters.
+/// Implements a trait function with no parameters, returning ordinary HRESULT.
 macro_rules! fn_com_noparm {
 	(
 		$method:ident : $vt:ty;
@@ -82,7 +82,7 @@ macro_rules! fn_com_noparm_noret {
 /// Implements a trait function for a COM interface getter, no parameters.
 macro_rules! fn_com_interface_get {
 	(
-		$method:ident : $vt:ty, $iface:ty;
+		$method:ident : $vt:ty => $iface:ty;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -145,7 +145,7 @@ macro_rules! fn_com_bstr_set {
 /// ole_IUnknown trait.
 macro_rules! com_interface_userdef {
 	(
-		$name:ident, $impl:ident : $guid:expr;
+		$name:ident : $impl:ident, $guid:expr;
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
@@ -202,7 +202,7 @@ macro_rules! com_interface_userdef {
 
 /// Implements a function which stores a callback to an user-defined COM
 /// implementation.
-macro_rules! fn_com_interface_userdef_event {
+macro_rules! fn_com_userdef_event {
 	(
 		$method:ident: $fun: path;
 		$( #[$doc:meta] )*
@@ -220,7 +220,7 @@ macro_rules! fn_com_interface_userdef_event {
 
 /// Declares the static `QueryInterface`, `AddRef` and `Release` methods for an
 /// user-defined COM interface implementation.
-macro_rules! fn_com_interface_userdef_iunknown_impls {
+macro_rules! fn_com_userdef_iunknown_impls {
 	($impl:ident) => {
 		fn QueryInterface(
 			_p: crate::kernel::ffi_types::COMPTR,
@@ -260,7 +260,7 @@ macro_rules! fn_com_interface_userdef_iunknown_impls {
 
 /// Declares a zero-parameter static method for an user-defined COM interface
 /// implementation.
-macro_rules! fn_com_interface_userdef_impl_noparm {
+macro_rules! fn_com_userdef_impl_noparm {
 	($name:ident) => {
 		fn $name(p: crate::kernel::ffi_types::COMPTR) -> crate::kernel::ffi_types::HRES {
 			let box_impl = crate::ole::privs::box_impl_of::<Self>(p);

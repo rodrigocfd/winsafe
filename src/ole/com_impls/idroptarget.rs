@@ -9,7 +9,7 @@ use crate::kernel::ffi_types::*;
 use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 
-com_interface_userdef! { IDropTarget, IDropTargetImpl: "00000122-0000-0000-c000-000000000046";
+com_interface_userdef! { IDropTarget: IDropTargetImpl, "00000122-0000-0000-c000-000000000046";
 	/// [`IDropTarget`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nn-oleidl-idroptarget)
 	/// COM interface.
 	///
@@ -53,7 +53,7 @@ com_interface_userdef! { IDropTarget, IDropTargetImpl: "00000122-0000-0000-c000-
 }
 
 impl IDropTarget {
-	fn_com_interface_userdef_event! { DragEnter: Fn(&IDataObject, co::MK, POINT, &mut co::DROPEFFECT) -> AnyResult<()>;
+	fn_com_userdef_event! { DragEnter: Fn(&IDataObject, co::MK, POINT, &mut co::DROPEFFECT) -> AnyResult<()>;
 		/// [`IDropTarget::DragEnter`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragenter)
 		/// method.
 		///
@@ -75,12 +75,12 @@ impl IDropTarget {
 		/// ```
 	}
 
-	fn_com_interface_userdef_event! { DragLeave: Fn() -> AnyResult<()>;
+	fn_com_userdef_event! { DragLeave: Fn() -> AnyResult<()>;
 		/// [`IDropTarget::DragLeave`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragleave)
 		/// method.
 	}
 
-	fn_com_interface_userdef_event! { DragOver: Fn(co::MK, POINT, &mut co::DROPEFFECT) -> AnyResult<()>;
+	fn_com_userdef_event! { DragOver: Fn(co::MK, POINT, &mut co::DROPEFFECT) -> AnyResult<()>;
 		/// [`IDropTarget::DragOver`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-dragover)
 		/// method.
 		///
@@ -102,7 +102,7 @@ impl IDropTarget {
 		/// ```
 	}
 
-	fn_com_interface_userdef_event! { Drop: Fn(&IDataObject, co::MK, POINT, &mut co::DROPEFFECT) -> AnyResult<()>;
+	fn_com_userdef_event! { Drop: Fn(&IDataObject, co::MK, POINT, &mut co::DROPEFFECT) -> AnyResult<()>;
 		/// [`IDropTarget::Drop`](https://learn.microsoft.com/en-us/windows/win32/api/oleidl/nf-oleidl-idroptarget-drop)
 		/// method.
 	}
@@ -142,7 +142,7 @@ impl IDropTargetImpl {
 		}
 	}
 
-	fn_com_interface_userdef_iunknown_impls!(Self);
+	fn_com_userdef_iunknown_impls!(Self);
 
 	fn DragEnter(
 		p: COMPTR,
@@ -177,7 +177,7 @@ impl IDropTargetImpl {
 		})
 	}
 
-	fn_com_interface_userdef_impl_noparm!(DragLeave);
+	fn_com_userdef_impl_noparm!(DragLeave);
 
 	fn Drop(p: COMPTR, pDataObj: COMPTR, grfKeyState: u32, pt: u64, pdwEffect: *mut u32) -> HRES {
 		let box_impl = box_impl_of::<Self>(p);

@@ -27,7 +27,7 @@ impl taskschd_IRegisteredTask for IRegisteredTask {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait taskschd_IRegisteredTask: oleaut_IDispatch {
-	fn_com_interface_get! { get_Definition: IRegisteredTaskVT, ITaskDefinition;
+	fn_com_interface_get! { get_Definition: IRegisteredTaskVT => ITaskDefinition;
 		/// [`IRegisteredTask::get_Definition`](https://learn.microsoft.com/en-us/windows/win32/api/taskschd/nf-taskschd-iregisteredtask-get_definition)
 		/// method.
 	}

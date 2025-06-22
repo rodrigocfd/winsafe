@@ -35,7 +35,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		})
 	}
 
-	fn_com_interface_get! { ConnectedTo: IPinVT, IPin;
+	fn_com_interface_get! { ConnectedTo: IPinVT => IPin;
 		/// [`IPin::ConnectedTo`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-connectedto)
 		/// method.
 	}
@@ -61,7 +61,7 @@ pub trait dshow_IPin: ole_IUnknown {
 		/// method.
 	}
 
-	fn_com_interface_get! { EnumMediaTypes: IPinVT, IEnumMediaTypes;
+	fn_com_interface_get! { EnumMediaTypes: IPinVT => IEnumMediaTypes;
 		/// [`IPin::EnumMediaTypes`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-enummediatypes)
 		/// method.
 	}

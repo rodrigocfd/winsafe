@@ -48,7 +48,7 @@ pub trait dxgi_IDXGISwapChain: dxgi_IDXGIDeviceSubObject {
 		.map(|_| queried)
 	}
 
-	fn_com_interface_get! { GetContainingOutput: IDXGISwapChainVT, IDXGIOutput;
+	fn_com_interface_get! { GetContainingOutput: IDXGISwapChainVT => IDXGIOutput;
 		/// [`IDXGISwapChain::GetContainingOutput`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgiswapchain-getcontainingoutput)
 		/// method.
 	}
