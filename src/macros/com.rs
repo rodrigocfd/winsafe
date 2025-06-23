@@ -234,7 +234,7 @@ macro_rules! fn_com_userdef_iunknown_impls {
 		}
 
 		fn AddRef(p: crate::kernel::ffi_types::COMPTR) -> u32 {
-			let box_impl = box_impl_of::<Self>(p);
+			let box_impl = crate::ole::privs::box_impl_of::<Self>(p);
 			let cc = box_impl
 				.counter
 				.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
@@ -243,7 +243,7 @@ macro_rules! fn_com_userdef_iunknown_impls {
 		}
 
 		fn Release(p: crate::kernel::ffi_types::COMPTR) -> u32 {
-			let mut box_impl = box_impl_of::<Self>(p);
+			let mut box_impl = crate::ole::privs::box_impl_of::<Self>(p);
 			let count = box_impl
 				.counter
 				.fetch_sub(1, std::sync::atomic::Ordering::Relaxed)
