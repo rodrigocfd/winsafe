@@ -5,6 +5,9 @@ const_bitflag! { INTERNET_FLAG: u32;
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/wininet/api-flags)
 	/// (`u32`).
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
+
 	/// IDN enabled for direct connections.
 	IDN_DIRECT 0x0000_0001
 	/// IDN enabled for proxy.
@@ -109,6 +112,9 @@ const_ordinary! { INTERNET_PORT: u16;
 	///
 	/// Originally has `INTERNET_DEFAULT` prefix and `PORT` suffix.
 	=>
+	/// None of the actual values (zero).
+	NoValue 0
+
 	/// Uses the default port for the service specified by `service``.
 	INVALID 0
 	/// Uses the default port for FTP servers (port 21).
