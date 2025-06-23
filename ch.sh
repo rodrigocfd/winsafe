@@ -24,6 +24,7 @@ FEATS=(
 	user
 	uxtheme
 	version
+	wininet
 	winspool
 )
 

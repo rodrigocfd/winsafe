@@ -37,6 +37,7 @@ taskschd = ["oleaut"]
 user = ["kernel"]
 uxtheme = ["gdi", "ole"]
 version = ["kernel"]
+wininet = ["kernel"]
 winspool = ["user"]
 
 # Generate docs locally:

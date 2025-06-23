@@ -25,6 +25,7 @@
 #[cfg(feature = "user")] mod user;
 #[cfg(feature = "uxtheme")] mod uxtheme;
 #[cfg(feature = "version")] mod version;
+#[cfg(feature = "wininet")] mod wininet;
 #[cfg(feature = "winspool")] mod winspool;
 #[cfg(all(feature = "advapi", feature = "comctl"))] mod advapi_comctl;
 #[cfg(all(feature = "advapi", feature = "shell"))] mod advapi_shell;
@@ -55,6 +56,7 @@ mod decl {
 	#[cfg(feature = "user")] pub use super::user::decl::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::decl::*;
 	#[cfg(feature = "version")] pub use super::version::decl::*;
+	#[cfg(feature = "wininet")] pub use super::wininet::decl::*;
 	#[cfg(feature = "winspool")] pub use super::winspool::decl::*;
 	#[cfg(all(feature = "advapi", feature = "comctl"))] pub use super::advapi_comctl::decl::*;
 	#[cfg(all(feature = "advapi", feature = "shell"))] pub use super::advapi_shell::decl::*;
@@ -84,6 +86,7 @@ pub mod co {
 	#[cfg(feature = "user")] pub use super::user::co::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::co::*;
 	#[cfg(feature = "version")] pub use super::version::co::*;
+	#[cfg(feature = "wininet")] pub use super::wininet::co::*;
 	#[cfg(feature = "winspool")] pub use super::winspool::co::*;
 	#[cfg(all(feature = "advapi", feature = "shell"))] pub use super::advapi_shell::co::*;
 }
@@ -105,6 +108,7 @@ pub mod guard {
 	#[cfg(feature = "user")] pub use super::user::guards::*;
 	#[cfg(feature = "uxtheme")] pub use super::uxtheme::guards::*;
 	#[cfg(feature = "version")] pub use super::version::guards::*;
+	#[cfg(feature = "wininet")] pub use super::wininet::guards::*;
 	#[cfg(feature = "winspool")] pub use super::winspool::guards::*;
 }
 

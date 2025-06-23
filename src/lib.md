@@ -44,6 +44,7 @@ The following Cargo features are available so far:
 | `user` | User32.dll and ComDlg32.dll, the basic Windows GUI support |
 | `uxtheme` | UxTheme.dll, extended window theming |
 | `version` | Version.dll, to manipulate *.exe version info |
+| `wininet` | [Windows Internet](https://learn.microsoft.com/en-us/windows/win32/wininet/portal) |
 | `winspool` | [Print Spooler API](https://learn.microsoft.com/en-us/windows/win32/printdocs/print-spooler-api) |
 
 You can visualize the complete dependency graph [here](https://github.com/rodrigocfd/winsafe/blob/master/features-chart.md).
