@@ -130,15 +130,11 @@ impl RadioButton {
 	/// can handle the event.
 	pub fn select_and_trigger(&self, selected: bool) -> SysResult<()> {
 		self.select(selected);
-		unsafe {
-			self.hwnd().GetParent()?.SendMessage(wm::Command {
-				event: AccelMenuCtrl::Ctrl {
-					notif_code: co::BN::CLICKED.into(),
-					ctrl_id: self.ctrl_id(),
-					ctrl_hwnd: self.hwnd().raw_copy(),
-				},
-			});
-		}
+		self.hwnd().GetParent()?.SendCommand(AccelMenuCtrl::Ctrl {
+			notif_code: co::BN::CLICKED.into(),
+			ctrl_id: self.ctrl_id(),
+			ctrl_hwnd: unsafe { self.hwnd().raw_copy() },
+		});
 		Ok(())
 	}
 

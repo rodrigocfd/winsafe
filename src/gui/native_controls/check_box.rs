@@ -137,15 +137,11 @@ impl CheckBox {
 	/// can handle the event.
 	pub fn set_state_and_trigger(&self, state: co::BST) -> SysResult<()> {
 		self.set_state(state);
-		unsafe {
-			self.hwnd().GetParent()?.SendMessage(wm::Command {
-				event: AccelMenuCtrl::Ctrl {
-					notif_code: co::BN::CLICKED.into(),
-					ctrl_id: self.ctrl_id(),
-					ctrl_hwnd: self.hwnd().raw_copy(),
-				},
-			});
-		}
+		self.hwnd().GetParent()?.SendCommand(AccelMenuCtrl::Ctrl {
+			notif_code: co::BN::CLICKED.into(),
+			ctrl_id: self.ctrl_id(),
+			ctrl_hwnd: unsafe { self.hwnd().raw_copy() },
+		});
 		Ok(())
 	}
 
