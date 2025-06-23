@@ -85,19 +85,6 @@ const_bitflag! { INTERNET_FLAG: u32;
 	TRANSFER_BINARY 0x0000_0002 // FTP_TRANSFER_TYPE_BINARY
 }
 
-const_bitflag! { INTERNET_OPEN_FLAG: u32;
-	/// [`HINTERNET::InternetOpen`](crate::HINTERNET::InternetOpen) `flags`
-	/// (`u32`).
-	///
-	/// Originally has `INTERNET_FLAG` prefix.
-	=>
-	/// None of the actual values (zero).
-	NoValue 0
-	ASYNC 0x1000_0000
-	FROM_CACHE 0x0100_0000
-	OFFLINE Self::FROM_CACHE.0
-}
-
 const_ordinary! { INTERNET_OPEN_TYPE: u32;
 	/// [`HINTERNET::InternetOpen`](crate::HINTERNET::InternetOpen)
 	/// `access_type` (`u32`).
@@ -117,7 +104,8 @@ const_ordinary! { INTERNET_OPEN_TYPE: u32;
 }
 
 const_ordinary! { INTERNET_PORT: u16;
-	/// [`HINTERNET::InternetOpen`](HINTERNET::InternetOpen) `port` (`u16`).
+	/// [`HINTERNET::InternetOpen`](crate::HINTERNET::InternetOpen) `port`
+	/// (`u16`).
 	///
 	/// Originally has `INTERNET_DEFAULT` prefix and `PORT` suffix.
 	=>
@@ -137,7 +125,8 @@ const_ordinary! { INTERNET_PORT: u16;
 }
 
 const_ordinary! { INTERNET_SERVICE: u32;
-	/// [`HINTERNET::InternetOpen`](HINTERNET::InternetOpen) `service` (`u32`).
+	/// [`HINTERNET::InternetOpen`](crate::HINTERNET::InternetOpen) `service`
+	/// (`u32`).
 	=>
 	FTP 1
 	GOPHER 2

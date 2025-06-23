@@ -49,7 +49,7 @@ impl HINTERNET {
 		access_type: co::INTERNET_OPEN_TYPE,
 		proxy: Option<&str>,
 		proxy_bypass: Option<&str>,
-		flags: co::INTERNET_OPEN_FLAG,
+		flags: co::INTERNET_FLAG,
 	) -> SysResult<InternetCloseHandleGuard<HINTERNET>> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::InternetOpenW(
