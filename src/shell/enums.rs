@@ -2,7 +2,7 @@ use crate::decl::*;
 
 /// Variable parameter for:
 ///
-/// * [`SHELLEXECUTEINFO`](crate::SHELLEXECUTEINFO).
+/// * [`SHELLEXECUTEINFO`](crate::SHELLEXECUTEINFO)
 pub enum IcoMon<'a> {
 	/// No parameter (null value).
 	None,

@@ -4,7 +4,7 @@ use crate::kernel::privs::*;
 
 /// Variable parameter for:
 ///
-/// * [`HINSTANCE::GetModuleHandleEx`](crate::HINSTANCE::GetModuleHandleEx).
+/// * [`HINSTANCE::GetModuleHandleEx`](crate::HINSTANCE::GetModuleHandleEx)
 pub enum AddrStr {
 	/// No value, will pass `NULL` to the call.
 	None,
@@ -24,7 +24,7 @@ impl AddrStr {
 
 /// Variable parameter for:
 ///
-/// * [`CLAIM_SECURITY_ATTRIBUTE_V1`](crate::CLAIM_SECURITY_ATTRIBUTE_V1).
+/// * [`CLAIM_SECURITY_ATTRIBUTE_V1`](crate::CLAIM_SECURITY_ATTRIBUTE_V1)
 pub enum ClaimSecurityAttr<'a> {
 	Int64(&'a [i64]),
 	Uint64(&'a [u64]),
@@ -37,17 +37,17 @@ pub enum ClaimSecurityAttr<'a> {
 ///
 /// Variable parameter for:
 ///
-/// * [`HINSTANCE::CreateDialogParam`](crate::HINSTANCE::CreateDialogParam);
-/// * [`HINSTANCE::EnumResourceLanguages`](crate::HINSTANCE::EnumResourceLanguages);
-/// * [`HINSTANCE::EnumResourceNames`](crate::HINSTANCE::EnumResourceNames);
-/// * [`HINSTANCE::FindResource`](crate::HINSTANCE::FindResource);
-/// * [`HINSTANCE::FindResourceEx`](crate::HINSTANCE::FindResourceEx);
-/// * [`HINSTANCE::LoadAccelerators`](crate::HINSTANCE::LoadAccelerators);
-/// * [`HINSTANCE::LoadMenu`](crate::HINSTANCE::LoadMenu);
-/// * [`HUPDATERSRC::UpdateResource`](crate::HUPDATERSRC::UpdateResource);
-/// * [`BmpIdbRes`](crate::BmpIdbRes);
-/// * [`IconRes`](crate::IconRes);
-/// * [`ResStrs`](crate::ResStrs).
+/// * [`HINSTANCE::CreateDialogParam`](crate::HINSTANCE::CreateDialogParam)
+/// * [`HINSTANCE::EnumResourceLanguages`](crate::HINSTANCE::EnumResourceLanguages)
+/// * [`HINSTANCE::EnumResourceNames`](crate::HINSTANCE::EnumResourceNames)
+/// * [`HINSTANCE::FindResource`](crate::HINSTANCE::FindResource)
+/// * [`HINSTANCE::FindResourceEx`](crate::HINSTANCE::FindResourceEx)
+/// * [`HINSTANCE::LoadAccelerators`](crate::HINSTANCE::LoadAccelerators)
+/// * [`HINSTANCE::LoadMenu`](crate::HINSTANCE::LoadMenu)
+/// * [`HUPDATERSRC::UpdateResource`](crate::HUPDATERSRC::UpdateResource)
+/// * [`BmpIdbRes`](crate::BmpIdbRes)
+/// * [`IconRes`](crate::IconRes)
+/// * [`ResStrs`](crate::ResStrs)
 #[derive(Clone)]
 pub enum IdStr {
 	/// A resource ID.
@@ -99,7 +99,7 @@ impl IdStr {
 
 /// Variant parameter for:
 ///
-/// * [`POWERBROADCAST_SETTING`](crate::POWERBROADCAST_SETTING).
+/// * [`POWERBROADCAST_SETTING`](crate::POWERBROADCAST_SETTING)
 pub enum PowerSetting {
 	AcDcPowerSource(co::SYSTEM_POWER_CONDITION),
 	BatteryPercentageRemaining(u8),
@@ -117,7 +117,7 @@ pub enum PowerSetting {
 
 /// Variant parameter for:
 ///
-/// * [`PowerSetting::SystemAwayMode`](crate::PowerSetting::SystemAwayMode).
+/// * [`PowerSetting::SystemAwayMode`](crate::PowerSetting::SystemAwayMode)
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum PowerSettingAwayMode {
 	Exiting,
@@ -126,7 +126,7 @@ pub enum PowerSettingAwayMode {
 
 /// Variant parameter for:
 ///
-/// * [`PowerSetting::LidSwitchStateChange`](crate::PowerSetting::LidSwitchStateChange).
+/// * [`PowerSetting::LidSwitchStateChange`](crate::PowerSetting::LidSwitchStateChange)
 #[derive(Clone, Copy, PartialEq, Eq)]
 pub enum PowerSettingLid {
 	Closed,
@@ -137,12 +137,12 @@ pub enum PowerSettingLid {
 ///
 /// Variant parameter for:
 ///
-/// * [`HINSTANCE::EnumResourceLanguages`](crate::HINSTANCE::EnumResourceLanguages);
-/// * [`HINSTANCE::EnumResourceNames`](crate::HINSTANCE::EnumResourceNames);
-/// * [`HINSTANCE::EnumResourceTypes`](crate::HINSTANCE::EnumResourceTypes);
-/// * [`HINSTANCE::FindResource`](crate::HINSTANCE::FindResource);
-/// * [`HINSTANCE::FindResourceEx`](crate::HINSTANCE::FindResourceEx);
-/// * [`HUPDATERSRC`](crate::HUPDATERSRC::UpdateResource).
+/// * [`HINSTANCE::EnumResourceLanguages`](crate::HINSTANCE::EnumResourceLanguages)
+/// * [`HINSTANCE::EnumResourceNames`](crate::HINSTANCE::EnumResourceNames)
+/// * [`HINSTANCE::EnumResourceTypes`](crate::HINSTANCE::EnumResourceTypes)
+/// * [`HINSTANCE::FindResource`](crate::HINSTANCE::FindResource)
+/// * [`HINSTANCE::FindResourceEx`](crate::HINSTANCE::FindResourceEx)
+/// * [`HUPDATERSRC`](crate::HUPDATERSRC::UpdateResource)
 #[derive(Clone)]
 pub enum RtStr {
 	/// A predefined resource ID.

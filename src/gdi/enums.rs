@@ -4,7 +4,7 @@ use crate::kernel::privs::*;
 
 /// Variant parameter for:
 ///
-/// * [`HDC::GetCurrentObject`](crate::HDC::GetCurrentObject).
+/// * [`HDC::GetCurrentObject`](crate::HDC::GetCurrentObject)
 ///
 /// The enum values match those in [`co::CUR_OBJ`](crate::co::CUR_OBJ) constant
 /// type.
@@ -18,7 +18,7 @@ pub enum CurObj {
 
 /// Variant parameter for:
 ///
-/// * [`HINSTANCE::LoadImageBitmap`](crate::HINSTANCE::LoadImageBitmap).
+/// * [`HINSTANCE::LoadImageBitmap`](crate::HINSTANCE::LoadImageBitmap)
 #[derive(Clone)]
 pub enum IdObmStr {
 	/// A resource ID.
@@ -49,7 +49,7 @@ impl IdObmStr {
 
 /// Variant parameter for:
 ///
-/// * [`HINSTANCE::LoadImageCursor`](crate::HINSTANCE::LoadImageCursor).
+/// * [`HINSTANCE::LoadImageCursor`](crate::HINSTANCE::LoadImageCursor)
 #[derive(Clone)]
 pub enum IdOcrStr {
 	/// A resource ID.
@@ -80,7 +80,7 @@ impl IdOcrStr {
 
 /// Variant parameter for:
 ///
-/// * [`HINSTANCE::LoadImageIcon`](crate::HINSTANCE::LoadImageIcon).
+/// * [`HINSTANCE::LoadImageIcon`](crate::HINSTANCE::LoadImageIcon)
 #[derive(Clone)]
 pub enum IdOicStr {
 	/// A resource ID.

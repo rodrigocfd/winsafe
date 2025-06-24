@@ -6,7 +6,7 @@ use crate::kernel::privs::*;
 
 /// Variant parameter for:
 ///
-/// * [`wm::Command`](crate::msg::wm::Command).
+/// * [`wm::Command`](crate::msg::wm::Command)
 pub enum AccelMenuCtrl {
 	/// Accelerator event. Contains [`co::CMD::Accel`](crate::co::CMD::Accel)
 	/// and the accelerator command ID.
@@ -42,10 +42,10 @@ impl AccelMenuCtrl {
 
 /// Variant parameter for:
 ///
-/// * [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx);
-/// * [`HWND::FindWindow`](crate::HWND::FindWindow);
-/// * [`HWND::FindWindowEx`](crate::HWND::FindWindowEx);
-/// * [`UnregisterClass`](crate::UnregisterClass).
+/// * [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx)
+/// * [`HWND::FindWindow`](crate::HWND::FindWindow)
+/// * [`HWND::FindWindowEx`](crate::HWND::FindWindowEx)
+/// * [`UnregisterClass`](crate::UnregisterClass)
 #[derive(Clone)]
 pub enum AtomStr {
 	/// An [`ATOM`](crate::ATOM) returned by
@@ -74,8 +74,8 @@ impl AtomStr {
 
 /// Variant parameter for:
 ///
-/// * [`bm::GetImage`](crate::msg::bm::GetImage);
-/// * [`bm::SetImage`](crate::msg::bm::SetImage).
+/// * [`bm::GetImage`](crate::msg::bm::GetImage)
+/// * [`bm::SetImage`](crate::msg::bm::SetImage)
 pub enum BmpIcon {
 	/// A bitmap.
 	Bmp(HBITMAP),
@@ -98,7 +98,7 @@ impl BmpIcon {
 
 /// Variant parameter for:
 ///
-/// * [`HMENU::AppendMenu`](crate::HMENU::AppendMenu).
+/// * [`HMENU::AppendMenu`](crate::HMENU::AppendMenu)
 pub enum BmpPtrStr {
 	/// An [`HBITMAP`](crate::HBITMAP).
 	Bmp(HBITMAP),
@@ -131,7 +131,7 @@ impl BmpPtrStr {
 
 /// Variant parameter for:
 ///
-/// * [`DEVMODE`](crate::DEVMODE).
+/// * [`DEVMODE`](crate::DEVMODE)
 #[derive(Clone, Copy)]
 pub enum DispfNup {
 	/// Used for displays.
@@ -142,7 +142,7 @@ pub enum DispfNup {
 
 /// Variant parameter for:
 ///
-/// * [`EnumDisplaySettings`](crate::EnumDisplaySettings).
+/// * [`EnumDisplaySettings`](crate::EnumDisplaySettings)
 #[derive(Clone, Copy)]
 pub enum GmidxEnum {
 	/// Graphics mode index.
@@ -162,7 +162,7 @@ impl From<GmidxEnum> for u32 {
 
 /// Variant parameter for:
 ///
-/// * [`INPUT`](crate::INPUT).
+/// * [`INPUT`](crate::INPUT)
 #[derive(Clone, Copy)]
 pub enum HwKbMouse {
 	/// Hardware event.
@@ -175,7 +175,7 @@ pub enum HwKbMouse {
 
 /// Variant parameter for:
 ///
-/// * [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl).
+/// * [`wm::NextDlgCtl`](crate::msg::wm::NextDlgCtl)
 pub enum HwndFocus {
 	/// Handle to the control to receive the focus.
 	Hwnd(HWND),
@@ -186,8 +186,8 @@ pub enum HwndFocus {
 
 /// Variant parameter for:
 ///
-/// * [`wm::EnterIdle`](crate::msg::wm::EnterIdle);
-/// * [`HELPINFO`](crate::HELPINFO).
+/// * [`wm::EnterIdle`](crate::msg::wm::EnterIdle)
+/// * [`HELPINFO`](crate::HELPINFO)
 pub enum HwndHmenu {
 	/// A window.
 	Hwnd(HWND),
@@ -208,9 +208,9 @@ impl HwndHmenu {
 
 /// Variant parameter for:
 ///
-/// * [`HWND::SetWindowPos`](crate::HWND::SetWindowPos);
-/// * [`WINDOWPOS`](crate::WINDOWPOS);
-/// * [`WINDOWPOS`](crate::WINDOWPOS).
+/// * [`HWND::SetWindowPos`](crate::HWND::SetWindowPos)
+/// * [`WINDOWPOS`](crate::WINDOWPOS)
+/// * [`WINDOWPOS`](crate::WINDOWPOS)
 pub enum HwndPlace {
 	/// A handle to the window to precede the positioned window in the Z order.
 	Hwnd(HWND),
@@ -234,7 +234,7 @@ impl HwndPlace {
 
 /// Variant parameter for:
 ///
-/// * [`wm::ParentNotify`](crate::msg::wm::ParentNotify).
+/// * [`wm::ParentNotify`](crate::msg::wm::ParentNotify)
 pub enum HwndPointId {
 	/// Handle to the child window.
 	Hwnd(HWND),
@@ -258,7 +258,7 @@ impl HwndPointId {
 
 /// Variant parameter for:
 ///
-/// * [`HINSTANCE::LoadCursor`](crate::HINSTANCE::LoadCursor).
+/// * [`HINSTANCE::LoadCursor`](crate::HINSTANCE::LoadCursor)
 #[derive(Clone)]
 pub enum IdIdcStr {
 	/// A resource ID.
@@ -289,7 +289,7 @@ impl IdIdcStr {
 
 /// Variant parameter for:
 ///
-/// * [`HINSTANCE::LoadIcon`](crate::HINSTANCE::LoadIcon).
+/// * [`HINSTANCE::LoadIcon`](crate::HINSTANCE::LoadIcon)
 #[derive(Clone)]
 pub enum IdIdiStr {
 	/// A resource ID.
@@ -320,8 +320,8 @@ impl IdIdiStr {
 
 /// Variant parameter used in [menu](crate::HMENU) methods:
 ///
-/// * [`HMENU::AppendMenu`](crate::HMENU::AppendMenu);
-/// * [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx).
+/// * [`HMENU::AppendMenu`](crate::HMENU::AppendMenu)
+/// * [`HWND::CreateWindowEx`](crate::HWND::CreateWindowEx)
 pub enum IdMenu<'a> {
 	/// A command ID.
 	Id(u16),
@@ -355,19 +355,19 @@ impl<'a> IdMenu<'a> {
 
 /// Variant parameter for:
 ///
-/// * [`HMENU::CheckMenuItem`](crate::HMENU::CheckMenuItem);
-/// * [`HMENU::CheckMenuRadioItem`](crate::HMENU::CheckMenuRadioItem);
-/// * [`HMENU::DeleteMenu`](crate::HMENU::DeleteMenu);
-/// * [`HMENU::EnableMenuItem`](crate::HMENU::EnableMenuItem);
-/// * [`HMENU::GetMenuDefaultItem`](crate::HMENU::GetMenuDefaultItem);
-/// * [`HMENU::GetMenuItemInfo`](crate::HMENU::GetMenuItemInfo);
-/// * [`HMENU::GetMenuState`](crate::HMENU::GetMenuState);
-/// * [`HMENU::GetMenuString`](crate::HMENU::GetMenuString);
-/// * [`HMENU::InsertMenuItem`](crate::HMENU::InsertMenuItem);
-/// * [`HMENU::RemoveMenu`](crate::HMENU::RemoveMenu);
-/// * [`HMENU::SetMenuItemBitmaps`](crate::HMENU::SetMenuItemBitmaps);
-/// * [`HMENU::SetMenuItemInfo`](crate::HMENU::SetMenuItemInfo);
-/// * [`HWND::HiliteMenuItem`](crate::HWND::HiliteMenuItem).
+/// * [`HMENU::CheckMenuItem`](crate::HMENU::CheckMenuItem)
+/// * [`HMENU::CheckMenuRadioItem`](crate::HMENU::CheckMenuRadioItem)
+/// * [`HMENU::DeleteMenu`](crate::HMENU::DeleteMenu)
+/// * [`HMENU::EnableMenuItem`](crate::HMENU::EnableMenuItem)
+/// * [`HMENU::GetMenuDefaultItem`](crate::HMENU::GetMenuDefaultItem)
+/// * [`HMENU::GetMenuItemInfo`](crate::HMENU::GetMenuItemInfo)
+/// * [`HMENU::GetMenuState`](crate::HMENU::GetMenuState)
+/// * [`HMENU::GetMenuString`](crate::HMENU::GetMenuString)
+/// * [`HMENU::InsertMenuItem`](crate::HMENU::InsertMenuItem)
+/// * [`HMENU::RemoveMenu`](crate::HMENU::RemoveMenu)
+/// * [`HMENU::SetMenuItemBitmaps`](crate::HMENU::SetMenuItemBitmaps)
+/// * [`HMENU::SetMenuItemInfo`](crate::HMENU::SetMenuItemInfo)
+/// * [`HWND::HiliteMenuItem`](crate::HWND::HiliteMenuItem)
 #[derive(Clone, Copy)]
 pub enum IdPos {
 	/// A command ID.
@@ -408,7 +408,7 @@ impl IdPos {
 
 /// Variant parameter for:
 ///
-/// * [`HMENU::append_item`](crate::HMENU::append_item).
+/// * [`HMENU::append_item`](crate::HMENU::append_item)
 pub enum MenuItem<'a> {
 	/// A selectable entry item, with command ID and text.
 	Entry { cmd_id: u16, text: &'a str },
@@ -420,8 +420,8 @@ pub enum MenuItem<'a> {
 
 /// Variant parameter for:
 ///
-/// * [`HMENU::item_info`](crate::HMENU::item_info);
-/// * [`HMENU::iter_items`](crate::HMENU::iter_items).
+/// * [`HMENU::item_info`](crate::HMENU::item_info)
+/// * [`HMENU::iter_items`](crate::HMENU::iter_items)
 pub enum MenuItemInfo {
 	/// A selectable entry item, with command ID and text.
 	Entry { cmd_id: u16, text: String },
@@ -433,7 +433,7 @@ pub enum MenuItemInfo {
 
 /// Variant parameter for:
 ///
-/// * [`wm::NcCalcSize`](crate::msg::wm::NcCalcSize).
+/// * [`wm::NcCalcSize`](crate::msg::wm::NcCalcSize)
 pub enum NccspRect<'a, 'b> {
 	/// Mutable reference to [`NCCALCSIZE_PARAMS`](crate::NCCALCSIZE_PARAMS).
 	Nccsp(&'b mut NCCALCSIZE_PARAMS<'a>),
@@ -443,7 +443,7 @@ pub enum NccspRect<'a, 'b> {
 
 /// Variant parameter for:
 ///
-/// * [`HWND::MapWindowPoints`](crate::HWND::MapWindowPoints) `points`.
+/// * [`HWND::MapWindowPoints`](crate::HWND::MapWindowPoints)
 pub enum PtsRc<'a> {
 	/// A series of [`POINT`](crate::POINT) structs.
 	Pts(&'a mut [POINT]),
@@ -453,7 +453,7 @@ pub enum PtsRc<'a> {
 
 /// Variant parameter for:
 ///
-/// * [`HPROCESS::WaitForInputIdle`](crate::HPROCESS::WaitForInputIdle).
+/// * [`HPROCESS::WaitForInputIdle`](crate::HPROCESS::WaitForInputIdle)
 pub enum SuccessTimeout {
 	/// The wait was satisfied successfully.
 	Success,

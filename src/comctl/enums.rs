@@ -6,8 +6,8 @@ use crate::prelude::*;
 
 /// Variant parameter for:
 ///
-/// * [`stm::GetImage`](crate::msg::stm::GetImage);
-/// * [`stm::SetImage`](crate::msg::stm::SetImage).
+/// * [`stm::GetImage`](crate::msg::stm::GetImage)
+/// * [`stm::SetImage`](crate::msg::stm::SetImage)
 pub enum BmpIconCurMeta {
 	/// Bitmap.
 	Bmp(HBITMAP),
@@ -36,7 +36,7 @@ impl BmpIconCurMeta {
 
 /// Variant parameter for:
 ///
-/// * [`TBADDBITMAP`](crate::TBADDBITMAP).
+/// * [`TBADDBITMAP`](crate::TBADDBITMAP)
 pub enum BmpIdbRes {
 	/// An [`HBITMAP`](crate::HBITMAP).
 	Bmp(HBITMAP),
@@ -48,7 +48,7 @@ pub enum BmpIdbRes {
 
 /// Variant parameter for:
 ///
-/// * [`TBREPLACEBITMAP`](crate::TBREPLACEBITMAP).
+/// * [`TBREPLACEBITMAP`](crate::TBREPLACEBITMAP)
 pub enum BmpInstId {
 	/// Bitmap handle.
 	Bmp(HBITMAP),
@@ -58,7 +58,7 @@ pub enum BmpInstId {
 
 /// Variant parameter for:
 ///
-/// * [`HIMAGELIST::DrawEx`](crate::HIMAGELIST::DrawEx).
+/// * [`HIMAGELIST::DrawEx`](crate::HIMAGELIST::DrawEx)
 pub enum ClrDefNone {
 	/// A RGB color value.
 	Clr(COLORREF),
@@ -82,7 +82,7 @@ impl ClrDefNone {
 
 /// Variant parameter for:
 ///
-/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG).
+/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG)
 pub enum IconId<'a> {
 	/// No icon.
 	None,
@@ -100,7 +100,7 @@ impl<'a> Default for IconId<'a> {
 
 /// Variant parameter for:
 ///
-/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG).
+/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG)
 pub enum IconIdTd<'a> {
 	/// No icon.
 	None,
@@ -120,7 +120,7 @@ impl<'a> Default for IconIdTd<'a> {
 
 /// Variant parameter for:
 ///
-/// * [`HWND::TaskDialog`](crate::HWND::TaskDialog).
+/// * [`HWND::TaskDialog`](crate::HWND::TaskDialog)
 #[derive(Clone)]
 pub enum IconRes<'a> {
 	/// No icon.
@@ -156,7 +156,7 @@ impl<'a> IconRes<'a> {
 
 /// Variant type for:
 ///
-/// * [`tbm::ChangeBitmap`](crate::msg::tbm::ChangeBitmap).
+/// * [`tbm::ChangeBitmap`](crate::msg::tbm::ChangeBitmap)
 #[derive(Clone, Copy)]
 pub enum IdxCbNone {
 	/// Index of an image in the toolbar's image list.
@@ -179,7 +179,7 @@ impl From<IdxCbNone> for isize {
 
 /// Variant parameter for:
 ///
-/// * [`TBBUTTON`](crate::TBBUTTON).
+/// * [`TBBUTTON`](crate::TBBUTTON)
 #[derive(Clone)]
 pub enum IdxStr {
 	/// Index of button string.
@@ -190,7 +190,7 @@ pub enum IdxStr {
 
 /// Variant parameter for:
 ///
-/// * [`hdm::SetHotDivider`](crate::msg::hdm::SetHotDivider).
+/// * [`hdm::SetHotDivider`](crate::msg::hdm::SetHotDivider)
 pub enum PtIdx {
 	/// X and Y coordinates of the pointer
 	Pt(POINT),
@@ -220,7 +220,7 @@ impl ResStrs {
 
 /// Variant parameter for:
 ///
-/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG).
+/// * [`TASKDIALOGCONFIG`](crate::TASKDIALOGCONFIG)
 pub enum Tdn {
 	ButtonClicked(u16),
 	Created,
@@ -264,7 +264,7 @@ impl Tdn {
 
 /// Variant parameter for:
 ///
-/// * [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT).
+/// * [`TVINSERTSTRUCT`](crate::TVINSERTSTRUCT)
 pub enum TreeitemTvi {
 	/// Handle to a tree view item.
 	Treeitem(HTREEITEM),

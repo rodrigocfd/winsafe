@@ -4,7 +4,7 @@ use crate::kernel::privs::*;
 
 /// Variable parameter for:
 ///
-/// * [`HACCESSTOKEN::AdjustTokenPrivileges`](crate::HACCESSTOKEN::AdjustTokenPrivileges).
+/// * [`HACCESSTOKEN::AdjustTokenPrivileges`](crate::HACCESSTOKEN::AdjustTokenPrivileges)
 pub enum DisabPriv<'a> {
 	/// Disables all privileges.
 	Disab,
@@ -317,7 +317,7 @@ impl<'a> SvcCtlPowerEvent<'a> {
 
 /// Variant parameter for:
 ///
-/// * [`HACCESSTOKEN::GetTokenInformation`](crate::HACCESSTOKEN::GetTokenInformation).
+/// * [`HACCESSTOKEN::GetTokenInformation`](crate::HACCESSTOKEN::GetTokenInformation)
 ///
 /// The enum values match those in
 /// [`co::TOKEN_INFORMATION_CLASS`](crate::co::TOKEN_INFORMATION_CLASS) constant
