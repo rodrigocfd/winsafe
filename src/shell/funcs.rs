@@ -63,6 +63,21 @@ pub fn GetAllUsersProfileDirectory() -> SysResult<String> {
 		.map(|_| buf.to_string())
 }
 
+/// [`GetCurrentProcessExplicitAppUserModelID`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-getcurrentprocessexplicitappusermodelid)
+/// function.
+///
+/// # Related functions
+///
+/// * [`SetCurrentProcessExplicitAppUserModelID`](crate::SetCurrentProcessExplicitAppUserModelID)
+#[must_use]
+pub fn GetCurrentProcessExplicitAppUserModelID() -> HrResult<String> {
+	let mut pstr = std::ptr::null_mut() as *mut u16;
+	ok_to_hrresult(unsafe { ffi::GetCurrentProcessExplicitAppUserModelID(&mut pstr) })?;
+	let app_name = unsafe { WString::from_wchars_nullt(pstr) }.to_string();
+	let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
+	Ok(app_name)
+}
+
 /// [`GetDefaultUserProfileDirectory`](https://learn.microsoft.com/en-us/windows/win32/api/userenv/nf-userenv-getdefaultuserprofiledirectoryw)
 /// function.
 ///
@@ -207,6 +222,18 @@ pub fn PathUnquoteSpaces(str_path: &str) -> String {
 		ffi::PathUnquoteSpacesW(buf.as_mut_ptr());
 	}
 	buf.to_string()
+}
+
+/// [`SetCurrentProcessExplicitAppUserModelID`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-setcurrentprocessexplicitappusermodelid)
+/// function.
+///
+/// # Related functions
+///
+/// * [`GetCurrentProcessExplicitAppUserModelID`](crate::GetCurrentProcessExplicitAppUserModelID)
+pub fn SetCurrentProcessExplicitAppUserModelID(app_id: &str) -> HrResult<()> {
+	ok_to_hrresult(unsafe {
+		ffi::SetCurrentProcessExplicitAppUserModelID(WString::from_str(app_id).as_ptr())
+	})
 }
 
 /// [`SHAddToRecentDocs`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shaddtorecentdocs)
