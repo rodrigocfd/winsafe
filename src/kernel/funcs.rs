@@ -854,11 +854,11 @@ pub fn GetTickCount64() -> u64 {
 /// ```no_run
 /// use winsafe::{self as w, prelude::*, co};
 ///
-/// let mut name = String::default();
+/// let mut name = String::new();
 /// let mut serial_no = 0u32;
 /// let mut max_comp_len = 0u32;
 /// let mut sys_flags = co::FILE_VOL::default();
-/// let mut sys_name = String::default();
+/// let mut sys_name = String::new();
 ///
 /// w::GetVolumeInformation(
 ///     Some("C:\\"),

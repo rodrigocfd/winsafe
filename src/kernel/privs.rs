@@ -206,6 +206,6 @@ pub(crate) fn create_wstr_ptr_vecs(
 			let pwstrs = wstrs.iter().map(|w| w.as_ptr()).collect::<Vec<_>>();
 			(wstrs, pwstrs)
 		},
-		None => (Vec::default(), Vec::default()),
+		None => (Vec::new(), Vec::new()),
 	}
 }

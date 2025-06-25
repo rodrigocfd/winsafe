@@ -26,7 +26,7 @@ impl HHEAP {
 	pub fn GetProcessHeaps() -> SysResult<Vec<HHEAP>> {
 		let num = match unsafe { ffi::GetProcessHeaps(0, std::ptr::null_mut()) } {
 			0 => match GetLastError() {
-				co::ERROR::SUCCESS => return Ok(Vec::default()), // actual zero heaps
+				co::ERROR::SUCCESS => return Ok(Vec::new()), // actual zero heaps
 				err => return Err(err),
 			},
 			num => num,

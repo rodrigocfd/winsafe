@@ -94,8 +94,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 		})
 		.map(|_| {
 			let dll_name_str = dll_name.to_string();
-			let name_str =
-				if name.as_ptr().is_null() { String::default() } else { name.to_string() };
+			let name_str = if name.as_ptr().is_null() { String::new() } else { name.to_string() };
 			(dll_name_str, name_str, ordinal)
 		})
 	}

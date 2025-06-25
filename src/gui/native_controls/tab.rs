@@ -290,7 +290,7 @@ impl Default for TabOpts {
 			window_ex_style: co::WS_EX::LEFT,
 			ctrl_id: 0,
 			resize_behavior: (Horz::None, Vert::None),
-			items: Vec::default(),
+			items: Vec::new(),
 		}
 	}
 }
