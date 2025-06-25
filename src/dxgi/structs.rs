@@ -124,11 +124,11 @@ impl_default!(DXGI_MAPPED_RECT);
 impl DXGI_MAPPED_RECT {
 	/// Returns a slice over the `pBits` buffer.
 	#[must_use]
-	pub const fn pBits(&self) -> Option<&[u8]> {
+	pub const fn pBits(&self) -> &[u8] {
 		if self.pBits.is_null() {
-			None
+			&[]
 		} else {
-			Some(unsafe { std::slice::from_raw_parts(self.pBits, self.Pitch as _) })
+			unsafe { std::slice::from_raw_parts(self.pBits, self.Pitch as _) }
 		}
 	}
 }

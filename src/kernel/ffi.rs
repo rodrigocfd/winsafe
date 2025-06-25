@@ -32,7 +32,7 @@ extern_sys! { "kernel32";
 	FlushInstructionCache(HANDLE, PCVOID, usize) -> BOOL
 	FlushProcessWriteBuffers()
 	FlushViewOfFile(PVOID, usize) -> BOOL
-	FormatMessageW(u32, PCVOID, u32, u32, PSTR, u32, PVOID) -> u32
+	FormatMessageW(u32, PCVOID, u32, u32, PSTR, u32, PCVOID) -> u32
 	FreeEnvironmentStringsW(HANDLE) -> BOOL
 	FreeLibrary(HANDLE) -> BOOL
 	GetBinaryTypeW(PCSTR, *mut u32) -> BOOL

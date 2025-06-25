@@ -188,7 +188,7 @@ pub unsafe fn FormatMessage(
 	source: Option<*mut std::ffi::c_void>,
 	message_id: u32,
 	lang_id: LANGID,
-	args: Option<&[*mut std::ffi::c_void]>,
+	args: &[*mut std::ffi::c_void],
 ) -> SysResult<String> {
 	let mut ptr_buf = std::ptr::null_mut::<u16>();
 
@@ -200,7 +200,7 @@ pub unsafe fn FormatMessage(
 			u16::from(lang_id) as _,
 			&mut ptr_buf as *mut *mut _ as _, // pass pointer to pointer
 			0,
-			args.map_or(std::ptr::null_mut(), |arr| arr.as_ptr() as _),
+			vec_ptr(args) as _,
 		)
 	} as _
 	{

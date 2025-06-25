@@ -37,8 +37,8 @@ impl HEVENTLOG {
 		category: u16,
 		event_id: u32,
 		user_sid: Option<&SID>,
-		strings: Option<&[impl AsRef<str>]>,
-		raw_data: Option<&[u8]>,
+		strings: &[impl AsRef<str>],
+		raw_data: &[u8],
 	) -> SysResult<()> {
 		let (_wstrs, pwstrs) = create_wstr_ptr_vecs(strings);
 		bool_to_sysresult(unsafe {
@@ -48,10 +48,10 @@ impl HEVENTLOG {
 				category,
 				event_id,
 				pcvoid_or_null(user_sid),
-				strings.map_or(0, |ss| ss.len() as _),
-				raw_data.map_or(0, |d| d.len() as _),
+				pwstrs.len() as _,
+				raw_data.len() as _,
 				vec_ptr(&pwstrs),
-				raw_data.map_or(std::ptr::null(), |d| vec_ptr(d) as _),
+				vec_ptr(raw_data) as _,
 			)
 		})
 	}

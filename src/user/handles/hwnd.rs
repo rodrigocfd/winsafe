@@ -1718,15 +1718,15 @@ impl HWND {
 		&self,
 		how: co::MDITILE,
 		rect: Option<RECT>,
-		kids: Option<&[&HWND]>,
+		kids: &[&HWND],
 	) -> SysResult<u16> {
 		match unsafe {
 			ffi::TileWindows(
 				self.ptr(),
 				how.raw(),
 				pcvoid_or_null(rect.as_ref()),
-				kids.map_or(0, |s| s.len() as _),
-				kids.map_or(std::ptr::null(), |hs| vec_ptr(hs) as _),
+				kids.len() as _,
+				vec_ptr(kids) as _,
 			)
 		} {
 			0 => match GetLastError() {

@@ -14,14 +14,14 @@ handle! { HINTERNETREQUEST;
 impl HINTERNETREQUEST {
 	/// [`HttpSendRequest`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-httpsendrequestw)
 	/// function.
-	pub fn HttpSendRequest(&self, headers: Option<&str>, optional: Option<&[u8]>) -> SysResult<()> {
+	pub fn HttpSendRequest(&self, headers: Option<&str>, optional: &[u8]) -> SysResult<()> {
 		bool_to_sysresult(unsafe {
 			ffi::HttpSendRequestW(
 				self.ptr(),
 				WString::from_opt_str(headers).as_ptr(),
 				headers.map_or(0, |h| h.chars().count() as _),
-				optional.map_or(std::ptr::null(), |p| p.as_ptr() as _),
-				optional.map_or(0, |p| p.len() as _),
+				vec_ptr(optional) as _,
+				optional.len() as _,
 			)
 		})
 	}

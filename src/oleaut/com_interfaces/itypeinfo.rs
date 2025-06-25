@@ -131,7 +131,7 @@ pub trait oleaut_ITypeInfo: ole_IUnknown {
 	/// method.
 	#[must_use]
 	fn GetIDsOfNames(&self, names: &[impl AsRef<str>]) -> HrResult<Vec<i32>> {
-		let (_wstrs, pwstrs) = create_wstr_ptr_vecs(Some(names));
+		let (_wstrs, pwstrs) = create_wstr_ptr_vecs(names);
 		let mut ids = vec![0i32; names.len()];
 
 		ok_to_hrresult(unsafe {

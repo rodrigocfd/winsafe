@@ -197,15 +197,15 @@ pub(crate) unsafe fn parse_multi_z_str(src: *const u16, len: Option<usize>) -> V
 /// * the first with each string converted to `WString`;
 /// * the second with the pointers to each `WString` in the first vector.
 #[must_use]
-pub(crate) fn create_wstr_ptr_vecs(
-	strings: Option<&[impl AsRef<str>]>,
-) -> (Vec<WString>, Vec<*const u16>) {
-	match strings {
-		Some(ss) => {
-			let wstrs = ss.iter().map(|s| WString::from_str(s)).collect::<Vec<_>>();
-			let pwstrs = wstrs.iter().map(|w| w.as_ptr()).collect::<Vec<_>>();
-			(wstrs, pwstrs)
-		},
-		None => (Vec::new(), Vec::new()),
+pub(crate) fn create_wstr_ptr_vecs(strings: &[impl AsRef<str>]) -> (Vec<WString>, Vec<*const u16>) {
+	if strings.is_empty() {
+		(Vec::new(), Vec::new())
+	} else {
+		let wstrs = strings
+			.iter()
+			.map(|s| WString::from_str(s))
+			.collect::<Vec<_>>();
+		let pwstrs = wstrs.iter().map(|w| w.as_ptr()).collect::<Vec<_>>();
+		(wstrs, pwstrs)
 	}
 }

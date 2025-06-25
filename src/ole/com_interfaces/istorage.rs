@@ -36,17 +36,16 @@ pub trait ole_IStorage: ole_IUnknown {
 	/// method.
 	fn CopyTo(
 		&self,
-		iid_exclude: Option<&[co::IID]>,
-		snb_exclude: Option<&[impl AsRef<str>]>,
+		iid_exclude: &[co::IID],
+		snb_exclude: &[impl AsRef<str>],
 		stg_dest: &impl ole_IStorage,
 	) -> HrResult<()> {
-		let snb = snb_exclude.map_or(Ok(SNB::default()), |strs| SNB::from_strs(strs))?;
 		ok_to_hrresult(unsafe {
 			(vt::<IStorageVT>(self).CopyTo)(
 				self.ptr(),
-				iid_exclude.map_or(0, |iids| iids.len()) as _,
-				iid_exclude.map_or(std::ptr::null(), |iids| iids.as_ptr()) as _,
-				snb.as_ptr(),
+				iid_exclude.len() as _,
+				vec_ptr(iid_exclude) as _,
+				SNB::from_strs(snb_exclude)?.as_ptr(),
 				stg_dest.ptr(),
 			)
 		})

@@ -185,14 +185,14 @@ impl HHEAP {
 	pub fn HeapSetInformation(
 		&self,
 		information_class: co::HEAP_INFORMATION,
-		information: Option<&[u8]>,
+		information: &[u8],
 	) -> SysResult<()> {
 		bool_to_sysresult(unsafe {
 			ffi::HeapSetInformation(
 				self.ptr(),
 				information_class.raw(),
-				information.map_or(std::ptr::null(), |i| vec_ptr(i) as _),
-				information.map_or(0, |i| i.len()),
+				vec_ptr(information) as _,
+				information.len() as _,
 			)
 		})
 	}

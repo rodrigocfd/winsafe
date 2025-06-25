@@ -96,6 +96,8 @@ impl WString {
 	/// with two terminating nulls – that means further retrieval operations
 	/// will "see" only the first string.
 	///
+	/// If the slice is empty, no allocation is made.
+	///
 	/// This method can be used as an escape hatch to interoperate with other
 	/// libraries.
 	#[must_use]
@@ -426,6 +428,10 @@ impl Buffer {
 
 	#[must_use]
 	fn from_str_vec(v: &[impl AsRef<str>]) -> Self {
+		if v.is_empty() {
+			return Self::Unallocated; // no elements yield an empty buffer
+		}
+
 		let tot_chars = v.iter() // number of chars of all strings, including terminating nulls
 			.fold(0, |tot, s| tot + s.as_ref().chars().count() + 1) // include terminating null
 			+ 1; // double terminating null

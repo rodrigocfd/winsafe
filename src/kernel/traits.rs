@@ -127,7 +127,7 @@ pub trait SystemError: Into<u32> {
 				None,
 				err_code,
 				LANGID::USER_DEFAULT,
-				None,
+				&[],
 			)
 		} {
 			// This function never fails, return an informational text about the formatting error.

@@ -395,20 +395,17 @@ where
 pub fn SHCreateShellItemArray(
 	pidl_parent: Option<&PIDL>,
 	folder: Option<&impl shell_IShellFolder>,
-	pidl_children: Option<&[&PIDL]>,
+	pidl_children: &[&PIDL],
 ) -> HrResult<IShellItemArray> {
 	let mut queried = unsafe { IShellItemArray::null() };
-	let pidl_ptrs = match pidl_children {
-		None => Vec::new(),
-		Some(p) => p.iter().map(|p| p.ptr()).collect::<Vec<_>>(),
-	};
+	let pidl_ptrs = pidl_children.iter().map(|p| p.ptr()).collect::<Vec<_>>();
 
 	ok_to_hrresult(unsafe {
 		ffi::SHCreateShellItemArray(
 			pidl_parent.map_or(std::ptr::null(), |p| p.ptr() as _),
 			folder.map_or(std::ptr::null_mut(), |p| p.ptr()),
-			pidl_children.map_or(0, |p| p.len() as _),
-			pidl_children.map_or(std::ptr::null(), |_| pidl_ptrs.as_ptr() as _),
+			pidl_ptrs.len() as _,
+			vec_ptr(&pidl_ptrs) as _,
 			queried.as_mut(),
 		)
 	})
