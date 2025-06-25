@@ -124,11 +124,11 @@
 <a href=#124 id=124 data-nosnippet>124</a><span class="kw">impl </span>DXGI_MAPPED_RECT {
 <a href=#125 id=125 data-nosnippet>125</a>	<span class="doccomment">/// Returns a slice over the `pBits` buffer.
 <a href=#126 id=126 data-nosnippet>126</a>	</span><span class="attr">#[must_use]
-<a href=#127 id=127 data-nosnippet>127</a>	</span><span class="kw">pub const fn </span>pBits(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt; {
+<a href=#127 id=127 data-nosnippet>127</a>	</span><span class="kw">pub const fn </span>pBits(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="kw-2">&amp;</span>[u8] {
 <a href=#128 id=128 data-nosnippet>128</a>		<span class="kw">if </span><span class="self">self</span>.pBits.is_null() {
-<a href=#129 id=129 data-nosnippet>129</a>			<span class="prelude-val">None
-<a href=#130 id=130 data-nosnippet>130</a>		</span>} <span class="kw">else </span>{
-<a href=#131 id=131 data-nosnippet>131</a>			<span class="prelude-val">Some</span>(<span class="kw">unsafe </span>{ std::slice::from_raw_parts(<span class="self">self</span>.pBits, <span class="self">self</span>.Pitch <span class="kw">as _</span>) })
+<a href=#129 id=129 data-nosnippet>129</a>			<span class="kw-2">&amp;</span>[]
+<a href=#130 id=130 data-nosnippet>130</a>		} <span class="kw">else </span>{
+<a href=#131 id=131 data-nosnippet>131</a>			<span class="kw">unsafe </span>{ std::slice::from_raw_parts(<span class="self">self</span>.pBits, <span class="self">self</span>.Pitch <span class="kw">as _</span>) }
 <a href=#132 id=132 data-nosnippet>132</a>		}
 <a href=#133 id=133 data-nosnippet>133</a>	}
 <a href=#134 id=134 data-nosnippet>134</a>}

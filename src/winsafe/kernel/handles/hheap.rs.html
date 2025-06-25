@@ -26,7 +26,7 @@
 <a href=#26 id=26 data-nosnippet>26</a>	</span><span class="kw">pub fn </span>GetProcessHeaps() -&gt; SysResult&lt;Vec&lt;HHEAP&gt;&gt; {
 <a href=#27 id=27 data-nosnippet>27</a>		<span class="kw">let </span>num = <span class="kw">match unsafe </span>{ ffi::GetProcessHeaps(<span class="number">0</span>, std::ptr::null_mut()) } {
 <a href=#28 id=28 data-nosnippet>28</a>			<span class="number">0 </span>=&gt; <span class="kw">match </span>GetLastError() {
-<a href=#29 id=29 data-nosnippet>29</a>				co::ERROR::SUCCESS =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(Vec::default()), <span class="comment">// actual zero heaps
+<a href=#29 id=29 data-nosnippet>29</a>				co::ERROR::SUCCESS =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(Vec::new()), <span class="comment">// actual zero heaps
 <a href=#30 id=30 data-nosnippet>30</a>				</span>err =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(err),
 <a href=#31 id=31 data-nosnippet>31</a>			},
 <a href=#32 id=32 data-nosnippet>32</a>			num =&gt; num,
@@ -185,14 +185,14 @@
 <a href=#185 id=185 data-nosnippet>185</a>	</span><span class="kw">pub fn </span>HeapSetInformation(
 <a href=#186 id=186 data-nosnippet>186</a>		<span class="kw-2">&amp;</span><span class="self">self</span>,
 <a href=#187 id=187 data-nosnippet>187</a>		information_class: co::HEAP_INFORMATION,
-<a href=#188 id=188 data-nosnippet>188</a>		information: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;,
+<a href=#188 id=188 data-nosnippet>188</a>		information: <span class="kw-2">&amp;</span>[u8],
 <a href=#189 id=189 data-nosnippet>189</a>	) -&gt; SysResult&lt;()&gt; {
 <a href=#190 id=190 data-nosnippet>190</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
 <a href=#191 id=191 data-nosnippet>191</a>			ffi::HeapSetInformation(
 <a href=#192 id=192 data-nosnippet>192</a>				<span class="self">self</span>.ptr(),
 <a href=#193 id=193 data-nosnippet>193</a>				information_class.raw(),
-<a href=#194 id=194 data-nosnippet>194</a>				information.map_or(std::ptr::null(), |i| vec_ptr(i) <span class="kw">as _</span>),
-<a href=#195 id=195 data-nosnippet>195</a>				information.map_or(<span class="number">0</span>, |i| i.len()),
+<a href=#194 id=194 data-nosnippet>194</a>				vec_ptr(information) <span class="kw">as _</span>,
+<a href=#195 id=195 data-nosnippet>195</a>				information.len() <span class="kw">as _</span>,
 <a href=#196 id=196 data-nosnippet>196</a>			)
 <a href=#197 id=197 data-nosnippet>197</a>		})
 <a href=#198 id=198 data-nosnippet>198</a>	}

@@ -36,7 +36,7 @@ It’s an opaque pointer to an internal Windows structure, and no
 dereferencings should be attempted.</p>
 <p>This method can be used as an escape hatch to interoperate with
 other libraries.</p>
-</div></details><details class="toggle method-toggle" open><summary><section id="method.CreateService" class="method"><a class="src rightside" href="../../src/winsafe/advapi\handles/hsc.rs.html#19-61">Source</a><h4 class="code-header">pub fn <a href="#method.CreateService" class="fn">CreateService</a>(
+</div></details><details class="toggle method-toggle" open><summary><section id="method.CreateService" class="method"><a class="src rightside" href="../../src/winsafe/advapi\handles/hsc.rs.html#19-55">Source</a><h4 class="code-header">pub fn <a href="#method.CreateService" class="fn">CreateService</a>(
     &amp;self,
     service_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>,
     display_name: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;,
@@ -45,14 +45,14 @@ other libraries.</p>
     start_type: <a class="struct" href="../co/struct.SERVICE_START.html" title="struct winsafe::co::SERVICE_START">SERVICE_START</a>,
     error_control: <a class="struct" href="../co/struct.SERVICE_ERROR.html" title="struct winsafe::co::SERVICE_ERROR">SERVICE_ERROR</a>,
     binary_path_name: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;,
-    load_order_group: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;[impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;]&gt;,
+    load_order_group: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;,
     tag_id: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;mut <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>&gt;,
-    dependencies: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;[impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;]&gt;,
+    dependencies: &amp;[impl <a class="trait" href="https://doc.rust-lang.org/nightly/core/convert/trait.AsRef.html" title="trait core::convert::AsRef">AsRef</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;],
     service_start_name: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;,
     password: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;,
 ) -&gt; <a class="type" href="../type.SysResult.html" title="type winsafe::SysResult">SysResult</a>&lt;<a class="struct" href="struct.CloseServiceHandleSvcGuard.html" title="struct winsafe::guard::CloseServiceHandleSvcGuard">CloseServiceHandleSvcGuard</a>&gt;</h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-createservicew"><code>CreateService</code></a>
 function.</p>
-</div></details><details class="toggle method-toggle" open><summary><section id="method.OpenService" class="method"><a class="src rightside" href="../../src/winsafe/advapi\handles/hsc.rs.html#83-96">Source</a><h4 class="code-header">pub fn <a href="#method.OpenService" class="fn">OpenService</a>(
+</div></details><details class="toggle method-toggle" open><summary><section id="method.OpenService" class="method"><a class="src rightside" href="../../src/winsafe/advapi\handles/hsc.rs.html#77-90">Source</a><h4 class="code-header">pub fn <a href="#method.OpenService" class="fn">OpenService</a>(
     &amp;self,
     service_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>,
     desired_access: <a class="struct" href="../co/struct.SERVICE.html" title="struct winsafe::co::SERVICE">SERVICE</a>,

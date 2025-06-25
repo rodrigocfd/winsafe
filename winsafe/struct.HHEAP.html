@@ -113,7 +113,7 @@ heap.HeapReAlloc(<span class="prelude-val">Some</span>(co::HEAP_REALLOC::ZERO_ME
 </div></details><details class="toggle method-toggle" open><summary><section id="method.HeapSetInformation" class="method"><a class="src rightside" href="../src/winsafe/kernel\handles/hheap.rs.html#185-198">Source</a><h4 class="code-header">pub fn <a href="#method.HeapSetInformation" class="fn">HeapSetInformation</a>(
     &amp;self,
     information_class: <a class="struct" href="co/struct.HEAP_INFORMATION.html" title="struct winsafe::co::HEAP_INFORMATION">HEAP_INFORMATION</a>,
-    information: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;[<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>]&gt;,
+    information: &amp;[<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u8.html">u8</a>],
 ) -&gt; <a class="type" href="type.SysResult.html" title="type winsafe::SysResult">SysResult</a>&lt;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.unit.html">()</a>&gt;</h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/heapapi/nf-heapapi-heapsetinformation"><code>HeapSetInformation</code></a>
 function.</p>
 </div></details><details class="toggle method-toggle" open><summary><section id="method.HeapSize" class="method"><a class="src rightside" href="../src/winsafe/kernel\handles/hheap.rs.html#203-217">Source</a><h4 class="code-header">pub fn <a href="#method.HeapSize" class="fn">HeapSize</a>(

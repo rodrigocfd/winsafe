@@ -197,15 +197,15 @@
 <a href=#197 id=197 data-nosnippet>197</a>/// * the first with each string converted to `WString`;
 <a href=#198 id=198 data-nosnippet>198</a>/// * the second with the pointers to each `WString` in the first vector.
 <a href=#199 id=199 data-nosnippet>199</a></span><span class="attr">#[must_use]
-<a href=#200 id=200 data-nosnippet>200</a></span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>create_wstr_ptr_vecs(
-<a href=#201 id=201 data-nosnippet>201</a>	strings: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;]&gt;,
-<a href=#202 id=202 data-nosnippet>202</a>) -&gt; (Vec&lt;WString&gt;, Vec&lt;<span class="kw-2">*const </span>u16&gt;) {
-<a href=#203 id=203 data-nosnippet>203</a>	<span class="kw">match </span>strings {
-<a href=#204 id=204 data-nosnippet>204</a>		<span class="prelude-val">Some</span>(ss) =&gt; {
-<a href=#205 id=205 data-nosnippet>205</a>			<span class="kw">let </span>wstrs = ss.iter().map(|s| WString::from_str(s)).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-<a href=#206 id=206 data-nosnippet>206</a>			<span class="kw">let </span>pwstrs = wstrs.iter().map(|w| w.as_ptr()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
-<a href=#207 id=207 data-nosnippet>207</a>			(wstrs, pwstrs)
-<a href=#208 id=208 data-nosnippet>208</a>		},
-<a href=#209 id=209 data-nosnippet>209</a>		<span class="prelude-val">None </span>=&gt; (Vec::default(), Vec::default()),
+<a href=#200 id=200 data-nosnippet>200</a></span><span class="kw">pub</span>(<span class="kw">crate</span>) <span class="kw">fn </span>create_wstr_ptr_vecs(strings: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;]) -&gt; (Vec&lt;WString&gt;, Vec&lt;<span class="kw-2">*const </span>u16&gt;) {
+<a href=#201 id=201 data-nosnippet>201</a>	<span class="kw">if </span>strings.is_empty() {
+<a href=#202 id=202 data-nosnippet>202</a>		(Vec::new(), Vec::new())
+<a href=#203 id=203 data-nosnippet>203</a>	} <span class="kw">else </span>{
+<a href=#204 id=204 data-nosnippet>204</a>		<span class="kw">let </span>wstrs = strings
+<a href=#205 id=205 data-nosnippet>205</a>			.iter()
+<a href=#206 id=206 data-nosnippet>206</a>			.map(|s| WString::from_str(s))
+<a href=#207 id=207 data-nosnippet>207</a>			.collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+<a href=#208 id=208 data-nosnippet>208</a>		<span class="kw">let </span>pwstrs = wstrs.iter().map(|w| w.as_ptr()).collect::&lt;Vec&lt;<span class="kw">_</span>&gt;&gt;();
+<a href=#209 id=209 data-nosnippet>209</a>		(wstrs, pwstrs)
 <a href=#210 id=210 data-nosnippet>210</a>	}
 <a href=#211 id=211 data-nosnippet>211</a>}</code></pre></div></section></main></body></html>

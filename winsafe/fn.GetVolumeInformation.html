@@ -10,11 +10,11 @@ function.</p>
 <h2 id="examples"><a class="doc-anchor" href="#examples">§</a>Examples</h2>
 <div class="example-wrap"><pre class="rust rust-example-rendered"><code><span class="kw">use </span>winsafe::{<span class="self">self </span><span class="kw">as </span>w, prelude::<span class="kw-2">*</span>, co};
 
-<span class="kw">let </span><span class="kw-2">mut </span>name = String::default();
+<span class="kw">let </span><span class="kw-2">mut </span>name = String::new();
 <span class="kw">let </span><span class="kw-2">mut </span>serial_no = <span class="number">0u32</span>;
 <span class="kw">let </span><span class="kw-2">mut </span>max_comp_len = <span class="number">0u32</span>;
 <span class="kw">let </span><span class="kw-2">mut </span>sys_flags = co::FILE_VOL::default();
-<span class="kw">let </span><span class="kw-2">mut </span>sys_name = String::default();
+<span class="kw">let </span><span class="kw-2">mut </span>sys_name = String::new();
 
 w::GetVolumeInformation(
     <span class="prelude-val">Some</span>(<span class="string">"C:\\"</span>),

@@ -14,14 +14,14 @@
 <a href=#14 id=14 data-nosnippet>14</a><span class="kw">impl </span>HINTERNETREQUEST {
 <a href=#15 id=15 data-nosnippet>15</a>	<span class="doccomment">/// [`HttpSendRequest`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-httpsendrequestw)
 <a href=#16 id=16 data-nosnippet>16</a>	/// function.
-<a href=#17 id=17 data-nosnippet>17</a>	</span><span class="kw">pub fn </span>HttpSendRequest(<span class="kw-2">&amp;</span><span class="self">self</span>, headers: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;, optional: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[u8]&gt;) -&gt; SysResult&lt;()&gt; {
+<a href=#17 id=17 data-nosnippet>17</a>	</span><span class="kw">pub fn </span>HttpSendRequest(<span class="kw-2">&amp;</span><span class="self">self</span>, headers: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;, optional: <span class="kw-2">&amp;</span>[u8]) -&gt; SysResult&lt;()&gt; {
 <a href=#18 id=18 data-nosnippet>18</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
 <a href=#19 id=19 data-nosnippet>19</a>			ffi::HttpSendRequestW(
 <a href=#20 id=20 data-nosnippet>20</a>				<span class="self">self</span>.ptr(),
 <a href=#21 id=21 data-nosnippet>21</a>				WString::from_opt_str(headers).as_ptr(),
 <a href=#22 id=22 data-nosnippet>22</a>				headers.map_or(<span class="number">0</span>, |h| h.chars().count() <span class="kw">as _</span>),
-<a href=#23 id=23 data-nosnippet>23</a>				optional.map_or(std::ptr::null(), |p| p.as_ptr() <span class="kw">as _</span>),
-<a href=#24 id=24 data-nosnippet>24</a>				optional.map_or(<span class="number">0</span>, |p| p.len() <span class="kw">as _</span>),
+<a href=#23 id=23 data-nosnippet>23</a>				vec_ptr(optional) <span class="kw">as _</span>,
+<a href=#24 id=24 data-nosnippet>24</a>				optional.len() <span class="kw">as _</span>,
 <a href=#25 id=25 data-nosnippet>25</a>			)
 <a href=#26 id=26 data-nosnippet>26</a>		})
 <a href=#27 id=27 data-nosnippet>27</a>	}

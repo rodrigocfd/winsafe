@@ -31,7 +31,7 @@
 <a href=#31 id=31 data-nosnippet>31</a>	/// method.
 <a href=#32 id=32 data-nosnippet>32</a>	</span><span class="attr">#[must_use]
 <a href=#33 id=33 data-nosnippet>33</a>	</span><span class="kw">fn </span>GetIDsOfNames(<span class="kw-2">&amp;</span><span class="self">self</span>, names: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;], lcid: LCID) -&gt; HrResult&lt;Vec&lt;i32&gt;&gt; {
-<a href=#34 id=34 data-nosnippet>34</a>		<span class="kw">let </span>(_wstrs, pwstrs) = create_wstr_ptr_vecs(<span class="prelude-val">Some</span>(names));
+<a href=#34 id=34 data-nosnippet>34</a>		<span class="kw">let </span>(_wstrs, pwstrs) = create_wstr_ptr_vecs(names);
 <a href=#35 id=35 data-nosnippet>35</a>		<span class="kw">let </span><span class="kw-2">mut </span>ids = <span class="macro">vec!</span>[<span class="number">0i32</span>; names.len()];
 <a href=#36 id=36 data-nosnippet>36</a>
 <a href=#37 id=37 data-nosnippet>37</a>		ok_to_hrresult(<span class="kw">unsafe </span>{

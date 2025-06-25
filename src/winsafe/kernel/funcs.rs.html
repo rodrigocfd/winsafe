@@ -188,7 +188,7 @@
 <a href=#188 id=188 data-nosnippet>188</a>	source: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">*mut </span>std::ffi::c_void&gt;,
 <a href=#189 id=189 data-nosnippet>189</a>	message_id: u32,
 <a href=#190 id=190 data-nosnippet>190</a>	lang_id: LANGID,
-<a href=#191 id=191 data-nosnippet>191</a>	args: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[<span class="kw-2">*mut </span>std::ffi::c_void]&gt;,
+<a href=#191 id=191 data-nosnippet>191</a>	args: <span class="kw-2">&amp;</span>[<span class="kw-2">*mut </span>std::ffi::c_void],
 <a href=#192 id=192 data-nosnippet>192</a>) -&gt; SysResult&lt;String&gt; {
 <a href=#193 id=193 data-nosnippet>193</a>	<span class="kw">let </span><span class="kw-2">mut </span>ptr_buf = std::ptr::null_mut::&lt;u16&gt;();
 <a href=#194 id=194 data-nosnippet>194</a>
@@ -200,7 +200,7 @@
 <a href=#200 id=200 data-nosnippet>200</a>			u16::from(lang_id) <span class="kw">as _</span>,
 <a href=#201 id=201 data-nosnippet>201</a>			<span class="kw-2">&amp;mut </span>ptr_buf <span class="kw">as </span><span class="kw-2">*mut *mut </span><span class="kw">_ as _</span>, <span class="comment">// pass pointer to pointer
 <a href=#202 id=202 data-nosnippet>202</a>			</span><span class="number">0</span>,
-<a href=#203 id=203 data-nosnippet>203</a>			args.map_or(std::ptr::null_mut(), |arr| arr.as_ptr() <span class="kw">as _</span>),
+<a href=#203 id=203 data-nosnippet>203</a>			vec_ptr(args) <span class="kw">as _</span>,
 <a href=#204 id=204 data-nosnippet>204</a>		)
 <a href=#205 id=205 data-nosnippet>205</a>	} <span class="kw">as _
 <a href=#206 id=206 data-nosnippet>206</a>	</span>{
@@ -854,11 +854,11 @@
 <a href=#854 id=854 data-nosnippet>854</a>/// ```no_run
 <a href=#855 id=855 data-nosnippet>855</a>/// use winsafe::{self as w, prelude::*, co};
 <a href=#856 id=856 data-nosnippet>856</a>///
-<a href=#857 id=857 data-nosnippet>857</a>/// let mut name = String::default();
+<a href=#857 id=857 data-nosnippet>857</a>/// let mut name = String::new();
 <a href=#858 id=858 data-nosnippet>858</a>/// let mut serial_no = 0u32;
 <a href=#859 id=859 data-nosnippet>859</a>/// let mut max_comp_len = 0u32;
 <a href=#860 id=860 data-nosnippet>860</a>/// let mut sys_flags = co::FILE_VOL::default();
-<a href=#861 id=861 data-nosnippet>861</a>/// let mut sys_name = String::default();
+<a href=#861 id=861 data-nosnippet>861</a>/// let mut sys_name = String::new();
 <a href=#862 id=862 data-nosnippet>862</a>///
 <a href=#863 id=863 data-nosnippet>863</a>/// w::GetVolumeInformation(
 <a href=#864 id=864 data-nosnippet>864</a>///     Some("C:\\"),

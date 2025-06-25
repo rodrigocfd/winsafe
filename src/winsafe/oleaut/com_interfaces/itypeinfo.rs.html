@@ -94,55 +94,54 @@
 <a href=#94 id=94 data-nosnippet>94</a>		})
 <a href=#95 id=95 data-nosnippet>95</a>		.map(|<span class="kw">_</span>| {
 <a href=#96 id=96 data-nosnippet>96</a>			<span class="kw">let </span>dll_name_str = dll_name.to_string();
-<a href=#97 id=97 data-nosnippet>97</a>			<span class="kw">let </span>name_str =
-<a href=#98 id=98 data-nosnippet>98</a>				<span class="kw">if </span>name.as_ptr().is_null() { String::default() } <span class="kw">else </span>{ name.to_string() };
-<a href=#99 id=99 data-nosnippet>99</a>			(dll_name_str, name_str, ordinal)
-<a href=#100 id=100 data-nosnippet>100</a>		})
-<a href=#101 id=101 data-nosnippet>101</a>	}
-<a href=#102 id=102 data-nosnippet>102</a>
-<a href=#103 id=103 data-nosnippet>103</a>	<span class="doccomment">/// [`ITypeInfo::GetDocumentation`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-getdocumentation)
-<a href=#104 id=104 data-nosnippet>104</a>	/// method.
-<a href=#105 id=105 data-nosnippet>105</a>	///
-<a href=#106 id=106 data-nosnippet>106</a>	/// Returns:
-<a href=#107 id=107 data-nosnippet>107</a>	/// * item name;
-<a href=#108 id=108 data-nosnippet>108</a>	/// * documentation;
-<a href=#109 id=109 data-nosnippet>109</a>	/// * help localization context;
-<a href=#110 id=110 data-nosnippet>110</a>	/// * fully qualified name of the file containing the DLL used for help file.
-<a href=#111 id=111 data-nosnippet>111</a>	</span><span class="attr">#[must_use]
-<a href=#112 id=112 data-nosnippet>112</a>	</span><span class="kw">fn </span>GetDocumentation(<span class="kw-2">&amp;</span><span class="self">self</span>, member_id: i32) -&gt; HrResult&lt;(String, String, u32, String)&gt; {
-<a href=#113 id=113 data-nosnippet>113</a>		<span class="kw">let </span><span class="kw-2">mut </span>name = BSTR::default();
-<a href=#114 id=114 data-nosnippet>114</a>		<span class="kw">let </span><span class="kw-2">mut </span>doc = BSTR::default();
-<a href=#115 id=115 data-nosnippet>115</a>		<span class="kw">let </span><span class="kw-2">mut </span>context = <span class="number">0u32</span>;
-<a href=#116 id=116 data-nosnippet>116</a>		<span class="kw">let </span><span class="kw-2">mut </span>help_file = BSTR::default();
-<a href=#117 id=117 data-nosnippet>117</a>
-<a href=#118 id=118 data-nosnippet>118</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
-<a href=#119 id=119 data-nosnippet>119</a>			(vt::&lt;ITypeInfoVT&gt;(<span class="self">self</span>).GetDocumentation)(
-<a href=#120 id=120 data-nosnippet>120</a>				<span class="self">self</span>.ptr(),
-<a href=#121 id=121 data-nosnippet>121</a>				member_id,
-<a href=#122 id=122 data-nosnippet>122</a>				name.as_mut_ptr(),
-<a href=#123 id=123 data-nosnippet>123</a>				doc.as_mut_ptr(),
-<a href=#124 id=124 data-nosnippet>124</a>				<span class="kw-2">&amp;mut </span>context,
-<a href=#125 id=125 data-nosnippet>125</a>				help_file.as_mut_ptr(),
-<a href=#126 id=126 data-nosnippet>126</a>			)
-<a href=#127 id=127 data-nosnippet>127</a>		})
-<a href=#128 id=128 data-nosnippet>128</a>		.map(|<span class="kw">_</span>| (name.to_string(), doc.to_string(), context, help_file.to_string()))
-<a href=#129 id=129 data-nosnippet>129</a>	}
-<a href=#130 id=130 data-nosnippet>130</a>
-<a href=#131 id=131 data-nosnippet>131</a>	<span class="doccomment">/// [`ITypeInfo::GetIDsOfNames`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-getidsofnames)
-<a href=#132 id=132 data-nosnippet>132</a>	/// method.
-<a href=#133 id=133 data-nosnippet>133</a>	</span><span class="attr">#[must_use]
-<a href=#134 id=134 data-nosnippet>134</a>	</span><span class="kw">fn </span>GetIDsOfNames(<span class="kw-2">&amp;</span><span class="self">self</span>, names: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;]) -&gt; HrResult&lt;Vec&lt;i32&gt;&gt; {
-<a href=#135 id=135 data-nosnippet>135</a>		<span class="kw">let </span>(_wstrs, pwstrs) = create_wstr_ptr_vecs(<span class="prelude-val">Some</span>(names));
-<a href=#136 id=136 data-nosnippet>136</a>		<span class="kw">let </span><span class="kw-2">mut </span>ids = <span class="macro">vec!</span>[<span class="number">0i32</span>; names.len()];
-<a href=#137 id=137 data-nosnippet>137</a>
-<a href=#138 id=138 data-nosnippet>138</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
-<a href=#139 id=139 data-nosnippet>139</a>			(vt::&lt;ITypeInfoVT&gt;(<span class="self">self</span>).GetIDsOfNames)(
-<a href=#140 id=140 data-nosnippet>140</a>				<span class="self">self</span>.ptr(),
-<a href=#141 id=141 data-nosnippet>141</a>				vec_ptr(<span class="kw-2">&amp;</span>pwstrs),
-<a href=#142 id=142 data-nosnippet>142</a>				names.len() <span class="kw">as _</span>,
-<a href=#143 id=143 data-nosnippet>143</a>				ids.as_mut_ptr() <span class="kw">as _</span>,
-<a href=#144 id=144 data-nosnippet>144</a>			)
-<a href=#145 id=145 data-nosnippet>145</a>		})
-<a href=#146 id=146 data-nosnippet>146</a>		.map(|<span class="kw">_</span>| ids)
-<a href=#147 id=147 data-nosnippet>147</a>	}
-<a href=#148 id=148 data-nosnippet>148</a>}</code></pre></div></section></main></body></html>
+<a href=#97 id=97 data-nosnippet>97</a>			<span class="kw">let </span>name_str = <span class="kw">if </span>name.as_ptr().is_null() { String::new() } <span class="kw">else </span>{ name.to_string() };
+<a href=#98 id=98 data-nosnippet>98</a>			(dll_name_str, name_str, ordinal)
+<a href=#99 id=99 data-nosnippet>99</a>		})
+<a href=#100 id=100 data-nosnippet>100</a>	}
+<a href=#101 id=101 data-nosnippet>101</a>
+<a href=#102 id=102 data-nosnippet>102</a>	<span class="doccomment">/// [`ITypeInfo::GetDocumentation`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-getdocumentation)
+<a href=#103 id=103 data-nosnippet>103</a>	/// method.
+<a href=#104 id=104 data-nosnippet>104</a>	///
+<a href=#105 id=105 data-nosnippet>105</a>	/// Returns:
+<a href=#106 id=106 data-nosnippet>106</a>	/// * item name;
+<a href=#107 id=107 data-nosnippet>107</a>	/// * documentation;
+<a href=#108 id=108 data-nosnippet>108</a>	/// * help localization context;
+<a href=#109 id=109 data-nosnippet>109</a>	/// * fully qualified name of the file containing the DLL used for help file.
+<a href=#110 id=110 data-nosnippet>110</a>	</span><span class="attr">#[must_use]
+<a href=#111 id=111 data-nosnippet>111</a>	</span><span class="kw">fn </span>GetDocumentation(<span class="kw-2">&amp;</span><span class="self">self</span>, member_id: i32) -&gt; HrResult&lt;(String, String, u32, String)&gt; {
+<a href=#112 id=112 data-nosnippet>112</a>		<span class="kw">let </span><span class="kw-2">mut </span>name = BSTR::default();
+<a href=#113 id=113 data-nosnippet>113</a>		<span class="kw">let </span><span class="kw-2">mut </span>doc = BSTR::default();
+<a href=#114 id=114 data-nosnippet>114</a>		<span class="kw">let </span><span class="kw-2">mut </span>context = <span class="number">0u32</span>;
+<a href=#115 id=115 data-nosnippet>115</a>		<span class="kw">let </span><span class="kw-2">mut </span>help_file = BSTR::default();
+<a href=#116 id=116 data-nosnippet>116</a>
+<a href=#117 id=117 data-nosnippet>117</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#118 id=118 data-nosnippet>118</a>			(vt::&lt;ITypeInfoVT&gt;(<span class="self">self</span>).GetDocumentation)(
+<a href=#119 id=119 data-nosnippet>119</a>				<span class="self">self</span>.ptr(),
+<a href=#120 id=120 data-nosnippet>120</a>				member_id,
+<a href=#121 id=121 data-nosnippet>121</a>				name.as_mut_ptr(),
+<a href=#122 id=122 data-nosnippet>122</a>				doc.as_mut_ptr(),
+<a href=#123 id=123 data-nosnippet>123</a>				<span class="kw-2">&amp;mut </span>context,
+<a href=#124 id=124 data-nosnippet>124</a>				help_file.as_mut_ptr(),
+<a href=#125 id=125 data-nosnippet>125</a>			)
+<a href=#126 id=126 data-nosnippet>126</a>		})
+<a href=#127 id=127 data-nosnippet>127</a>		.map(|<span class="kw">_</span>| (name.to_string(), doc.to_string(), context, help_file.to_string()))
+<a href=#128 id=128 data-nosnippet>128</a>	}
+<a href=#129 id=129 data-nosnippet>129</a>
+<a href=#130 id=130 data-nosnippet>130</a>	<span class="doccomment">/// [`ITypeInfo::GetIDsOfNames`](https://learn.microsoft.com/en-us/windows/win32/api/oaidl/nf-oaidl-itypeinfo-getidsofnames)
+<a href=#131 id=131 data-nosnippet>131</a>	/// method.
+<a href=#132 id=132 data-nosnippet>132</a>	</span><span class="attr">#[must_use]
+<a href=#133 id=133 data-nosnippet>133</a>	</span><span class="kw">fn </span>GetIDsOfNames(<span class="kw-2">&amp;</span><span class="self">self</span>, names: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;]) -&gt; HrResult&lt;Vec&lt;i32&gt;&gt; {
+<a href=#134 id=134 data-nosnippet>134</a>		<span class="kw">let </span>(_wstrs, pwstrs) = create_wstr_ptr_vecs(names);
+<a href=#135 id=135 data-nosnippet>135</a>		<span class="kw">let </span><span class="kw-2">mut </span>ids = <span class="macro">vec!</span>[<span class="number">0i32</span>; names.len()];
+<a href=#136 id=136 data-nosnippet>136</a>
+<a href=#137 id=137 data-nosnippet>137</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#138 id=138 data-nosnippet>138</a>			(vt::&lt;ITypeInfoVT&gt;(<span class="self">self</span>).GetIDsOfNames)(
+<a href=#139 id=139 data-nosnippet>139</a>				<span class="self">self</span>.ptr(),
+<a href=#140 id=140 data-nosnippet>140</a>				vec_ptr(<span class="kw-2">&amp;</span>pwstrs),
+<a href=#141 id=141 data-nosnippet>141</a>				names.len() <span class="kw">as _</span>,
+<a href=#142 id=142 data-nosnippet>142</a>				ids.as_mut_ptr() <span class="kw">as _</span>,
+<a href=#143 id=143 data-nosnippet>143</a>			)
+<a href=#144 id=144 data-nosnippet>144</a>		})
+<a href=#145 id=145 data-nosnippet>145</a>		.map(|<span class="kw">_</span>| ids)
+<a href=#146 id=146 data-nosnippet>146</a>	}
+<a href=#147 id=147 data-nosnippet>147</a>}</code></pre></div></section></main></body></html>

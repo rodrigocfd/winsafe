@@ -23,22 +23,23 @@
 <a href=#23 id=23 data-nosnippet>23</a>		object_name: <span class="kw-2">&amp;</span>str,
 <a href=#24 id=24 data-nosnippet>24</a>		version: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
 <a href=#25 id=25 data-nosnippet>25</a>		referrer: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
-<a href=#26 id=26 data-nosnippet>26</a>		accept_types: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;]&gt;,
+<a href=#26 id=26 data-nosnippet>26</a>		accept_types: <span class="kw-2">&amp;</span>[<span class="kw">impl </span>AsRef&lt;str&gt;],
 <a href=#27 id=27 data-nosnippet>27</a>		flags: co::INTERNET_FLAG,
 <a href=#28 id=28 data-nosnippet>28</a>		context: usize,
 <a href=#29 id=29 data-nosnippet>29</a>	) -&gt; SysResult&lt;InternetCloseHandleGuard&lt;HINTERNETREQUEST&gt;&gt; {
-<a href=#30 id=30 data-nosnippet>30</a>		<span class="kw">unsafe </span>{
-<a href=#31 id=31 data-nosnippet>31</a>			ptr_to_sysresult_handle(ffi::HttpOpenRequestW(
-<a href=#32 id=32 data-nosnippet>32</a>				<span class="self">self</span>.ptr(),
-<a href=#33 id=33 data-nosnippet>33</a>				WString::from_opt_str(verb).as_ptr(),
-<a href=#34 id=34 data-nosnippet>34</a>				WString::from_str(object_name).as_ptr(),
-<a href=#35 id=35 data-nosnippet>35</a>				WString::from_opt_str(version).as_ptr(),
-<a href=#36 id=36 data-nosnippet>36</a>				WString::from_opt_str(referrer).as_ptr(),
-<a href=#37 id=37 data-nosnippet>37</a>				accept_types.map_or(std::ptr::null_mut(), |v| WString::from_str_vec(v).as_ptr()),
-<a href=#38 id=38 data-nosnippet>38</a>				flags.raw(),
-<a href=#39 id=39 data-nosnippet>39</a>				context,
-<a href=#40 id=40 data-nosnippet>40</a>			))
-<a href=#41 id=41 data-nosnippet>41</a>			.map(|h| InternetCloseHandleGuard::new(h))
-<a href=#42 id=42 data-nosnippet>42</a>		}
-<a href=#43 id=43 data-nosnippet>43</a>	}
-<a href=#44 id=44 data-nosnippet>44</a>}</code></pre></div></section></main></body></html>
+<a href=#30 id=30 data-nosnippet>30</a>		<span class="kw">let </span>(_wacctys, pacctys) = create_wstr_ptr_vecs(accept_types);
+<a href=#31 id=31 data-nosnippet>31</a>		<span class="kw">unsafe </span>{
+<a href=#32 id=32 data-nosnippet>32</a>			ptr_to_sysresult_handle(ffi::HttpOpenRequestW(
+<a href=#33 id=33 data-nosnippet>33</a>				<span class="self">self</span>.ptr(),
+<a href=#34 id=34 data-nosnippet>34</a>				WString::from_opt_str(verb).as_ptr(),
+<a href=#35 id=35 data-nosnippet>35</a>				WString::from_str(object_name).as_ptr(),
+<a href=#36 id=36 data-nosnippet>36</a>				WString::from_opt_str(version).as_ptr(),
+<a href=#37 id=37 data-nosnippet>37</a>				WString::from_opt_str(referrer).as_ptr(),
+<a href=#38 id=38 data-nosnippet>38</a>				vec_ptr(<span class="kw-2">&amp;</span>pacctys) <span class="kw">as _</span>,
+<a href=#39 id=39 data-nosnippet>39</a>				flags.raw(),
+<a href=#40 id=40 data-nosnippet>40</a>				context,
+<a href=#41 id=41 data-nosnippet>41</a>			))
+<a href=#42 id=42 data-nosnippet>42</a>			.map(|h| InternetCloseHandleGuard::new(h))
+<a href=#43 id=43 data-nosnippet>43</a>		}
+<a href=#44 id=44 data-nosnippet>44</a>	}
+<a href=#45 id=45 data-nosnippet>45</a>}</code></pre></div></section></main></body></html>
