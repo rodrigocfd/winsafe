@@ -44,8 +44,9 @@ impl DlgMain {
 	fn events(&self) {
 		let self2 = self.clone();
 		self.wnd.on().wm_init_dialog(move |_| {
-			let target_dir = "D:\\Stuff\\Core\\rs\\winsafe\\src"; // arbitrary initial dir
-			self2.txt_path.set_text(target_dir)?;
+			self2
+				.txt_path
+				.set_text(&format!("{}\\src", ids::ROOT_DIR))?;
 
 			unsafe {
 				self2.txt_out.hwnd().SendMessage(msg::wm::SetFont {

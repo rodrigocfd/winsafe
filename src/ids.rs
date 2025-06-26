@@ -1,5 +1,7 @@
 use winsafe::seq_ids;
 
+pub const ROOT_DIR: &str = "D:\\Stuff\\Core\\rs\\winsafe";
+
 seq_ids! {
 	ICO_MAIN = 101;
 }
