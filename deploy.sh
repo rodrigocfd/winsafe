@@ -1,4 +1,4 @@
-EXE=winsafe-stats.exe
+EXE=stats-winsafe.exe
 
 T0=$(date +%s%N)
 
