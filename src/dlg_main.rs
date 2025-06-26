@@ -1,7 +1,7 @@
 use std::rc::Rc;
 use winsafe::{self as w, co, gui, msg, prelude::*};
 
-use crate::{ids, stats};
+use crate::{file_repl, ids, stats};
 
 #[derive(Clone)]
 pub struct DlgMain {
@@ -109,6 +109,12 @@ impl DlgMain {
 
 			self2.txt_out.set_text(&stats.to_string())?;
 			self2.txt_out.focus()?;
+
+			file_repl::ask_update_stats(
+				self2.wnd.hwnd(),
+				&format!("{}\\README.md", ids::ROOT_DIR),
+				&stats,
+			)?;
 
 			self2.txt_path.hwnd().EnableWindow(true);
 			self2.btn_run.hwnd().EnableWindow(true);
