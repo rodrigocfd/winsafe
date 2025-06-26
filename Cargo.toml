@@ -1,5 +1,5 @@
 [package]
-name = "winsafe-stats"
+name = "stats-winsafe"
 description = "Computes WinSafe library stats."
 version = "1.0.0"
 authors = ["Rodrigo Cesar de Freitas Dias <rcesar@gmail.com>"]
