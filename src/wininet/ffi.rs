@@ -1,6 +1,7 @@
 use crate::kernel::ffi_types::*;
 
 extern_sys! { "wininet";
+	HttpAddRequestHeadersW(HANDLE, PCSTR, u32, u32) -> BOOL
 	HttpOpenRequestW(HANDLE, PCSTR, PCSTR, PCSTR, PCSTR, *const PCSTR, u32, isize) -> HANDLE
 	HttpQueryInfoW(HANDLE, u32, PVOID, *mut u32, *mut u32) -> BOOL
 	HttpSendRequestW(HANDLE, PCSTR, u32, PCVOID, u32) -> BOOL

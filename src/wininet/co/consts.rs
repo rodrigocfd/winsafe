@@ -1,5 +1,21 @@
 #![allow(non_camel_case_types, non_upper_case_globals)]
 
+const_bitflag! { HTTP_ADDREQ: u32;
+	/// [`HINTERNETREQUEST::HttpAddRequestHeaders`](crate::HINTERNETREQUEST::HttpAddRequestHeaders)
+	/// `modifiers` (`u32`).
+	///
+	/// Originally has `HTTP_ADDREQ_FLAG` prefix.
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	ADD_IF_NEW 0x1000_0000
+	ADD 0x2000_0000
+	COALESCE_WITH_COMMA 0x4000_0000
+	COALESCE_WITH_SEMICOLON 0x0100_0000
+	COALESCE Self::COALESCE_WITH_COMMA.0
+	REPLACE 0x8000_0000
+}
+
 const_ordinary! { HTTP_QUERY: u32;
 	/// [`HINTERNETREQUEST::HttpQueryInfo`](crate::HINTERNETREQUEST::HttpQueryInfo)
 	/// `info` (`u32`).

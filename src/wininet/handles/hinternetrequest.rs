@@ -85,6 +85,23 @@ impl HINTERNETREQUEST {
 		})
 	}
 
+	/// [`HttpAddRequestHeaders`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-httpaddrequestheadersw)
+	/// function.
+	pub fn HttpAddRequestHeaders(
+		&self,
+		headers: &str,
+		modifiers: co::HTTP_ADDREQ,
+	) -> SysResult<()> {
+		bool_to_sysresult(unsafe {
+			ffi::HttpAddRequestHeadersW(
+				self.ptr(),
+				WString::from_str(headers).as_ptr(),
+				headers.chars().count() as _,
+				modifiers.raw(),
+			)
+		})
+	}
+
 	/// [`HttpSendRequest`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-httpsendrequestw)
 	/// function.
 	pub fn HttpSendRequest(&self, headers: Option<&str>, optional: &[u8]) -> SysResult<()> {
