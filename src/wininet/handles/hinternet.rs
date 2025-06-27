@@ -19,12 +19,12 @@ impl HINTERNET {
 	pub fn InternetConnect(
 		&self,
 		server_name: &str,
-		server_port: co::INTERNET_PORT,
+		server_port: co::INTERNET_DEFAULT_PORT,
 		user_name: Option<&str>,
 		password: Option<&str>,
 		service: co::INTERNET_SERVICE,
 		flags: co::INTERNET_FLAG,
-		context: usize,
+		context: Option<isize>,
 	) -> SysResult<InternetCloseHandleGuard<HINTERNETSESSION>> {
 		unsafe {
 			ptr_to_sysresult_handle(ffi::InternetConnectW(
@@ -35,7 +35,7 @@ impl HINTERNET {
 				WString::from_opt_str(password).as_ptr(),
 				service.raw(),
 				flags.raw(),
-				context,
+				context.unwrap_or_default(),
 			))
 			.map(|h| InternetCloseHandleGuard::new(h))
 		}
@@ -58,6 +58,29 @@ impl HINTERNET {
 				WString::from_opt_str(proxy).as_ptr(),
 				WString::from_opt_str(proxy_bypass).as_ptr(),
 				flags.raw(),
+			))
+			.map(|h| InternetCloseHandleGuard::new(h))
+		}
+	}
+
+	/// [`InternetOpenUrl`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenurlw)
+	/// function.
+	#[must_use]
+	pub fn InternetOpenUrl(
+		&self,
+		url: &str,
+		headers: Option<&str>,
+		flags: co::INTERNET_FLAG,
+		context: Option<isize>,
+	) -> SysResult<InternetCloseHandleGuard<HINTERNETREQUEST>> {
+		unsafe {
+			ptr_to_sysresult_handle(ffi::InternetOpenUrlW(
+				self.ptr(),
+				WString::from_str(url).as_ptr(),
+				WString::from_opt_str(headers).as_ptr(),
+				headers.map_or(0, |h| h.chars().count() as _),
+				flags.raw(),
+				context.unwrap_or_default(),
 			))
 			.map(|h| InternetCloseHandleGuard::new(h))
 		}

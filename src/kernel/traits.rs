@@ -119,12 +119,29 @@ pub trait SystemError: Into<u32> {
 	#[must_use]
 	fn FormatMessage(self) -> String {
 		let err_code: u32 = self.into();
+
+		// Wininet error codes require specific treatment.
+		let is_wininet = err_code >= 12001 && err_code <= 12192;
+		let (wininet_flags, maybe_wininet_dll) = if is_wininet {
+			(
+				Some(co::FORMAT_MESSAGE::FROM_HMODULE),
+				Some(
+					HINSTANCE::GetModuleHandle(Some("wininet.dll"))
+						.expect("wininet.dll failed to load.") // should never happen
+						.ptr(),
+				),
+			)
+		} else {
+			(None, None)
+		};
+
 		match unsafe {
 			FormatMessage(
 				co::FORMAT_MESSAGE::ALLOCATE_BUFFER
 					| co::FORMAT_MESSAGE::FROM_SYSTEM
-					| co::FORMAT_MESSAGE::IGNORE_INSERTS,
-				None,
+					| co::FORMAT_MESSAGE::IGNORE_INSERTS
+					| wininet_flags.unwrap_or_default(),
+				maybe_wininet_dll,
 				err_code,
 				LANGID::USER_DEFAULT,
 				&[],

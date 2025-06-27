@@ -25,9 +25,11 @@ impl HINTERNETSESSION {
 		referrer: Option<&str>,
 		accept_types: &[impl AsRef<str>],
 		flags: co::INTERNET_FLAG,
-		context: usize,
+		context: Option<isize>,
 	) -> SysResult<InternetCloseHandleGuard<HINTERNETREQUEST>> {
-		let (_wacctys, pacctys) = create_wstr_ptr_vecs(accept_types);
+		let (_wacctys, mut pacctys) = create_wstr_ptr_vecs(accept_types);
+		pacctys.push(std::ptr::null()); // last element must be a null pointer
+
 		unsafe {
 			ptr_to_sysresult_handle(ffi::HttpOpenRequestW(
 				self.ptr(),
@@ -37,7 +39,7 @@ impl HINTERNETSESSION {
 				WString::from_opt_str(referrer).as_ptr(),
 				vec_ptr(&pacctys) as _,
 				flags.raw(),
-				context,
+				context.unwrap_or_default(),
 			))
 			.map(|h| InternetCloseHandleGuard::new(h))
 		}

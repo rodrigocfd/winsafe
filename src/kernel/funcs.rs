@@ -182,6 +182,11 @@ pub fn FlushProcessWriteBuffers() {
 /// You don't need to call this function: all error types implement the
 /// [`SystemError`](crate::prelude::SystemError) trait which will automatically
 /// call `FormatMessage`.
+///
+/// # Safety
+///
+/// Incorrect usage of the flags and formatting string may lead to memory
+/// corruption.
 #[must_use]
 pub unsafe fn FormatMessage(
 	flags: co::FORMAT_MESSAGE,
@@ -210,8 +215,7 @@ pub unsafe fn FormatMessage(
 
 	let final_wstr = WString::from_wchars_count(ptr_buf, nchars as _);
 	let _ = unsafe { LocalFreeGuard::new(HLOCAL::from_ptr(ptr_buf as _)) }; // free returned pointer
-	let final_str = final_wstr.to_string();
-	Ok(final_str)
+	Ok(final_wstr.to_string())
 }
 
 /// [`GetBinaryType`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getbinarytypew)

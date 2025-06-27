@@ -364,8 +364,8 @@ impl Variant {
 		Ok(v)
 	}
 
-	/// If the value is [`Variant::Bool`](crate::Variant::Bool), returns a copy
-	/// of it; otherwise panics.
+	/// If the value is [`Variant::Bool`](crate::Variant::Bool), returns it;
+	/// otherwise panics.
 	///
 	/// This is a syntactic sugar method to be used when you are sure of the
 	/// `Variant` content, its general use is discouraged.
