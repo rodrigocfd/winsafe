@@ -65,6 +65,10 @@ impl HINTERNET {
 
 	/// [`InternetOpenUrl`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenurlw)
 	/// function.
+	///
+	/// It's a good idea to pass `url` through
+	/// [`InternetCanonicalizeUrl`](crate::InternetCanonicalizeUrl) before
+	/// calling this function.
 	#[must_use]
 	pub fn InternetOpenUrl(
 		&self,

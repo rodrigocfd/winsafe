@@ -130,6 +130,26 @@ const_ordinary! { HTTP_QUERY_FLAG: u32;
 	SYSTEMTIME 0x4000_0000
 }
 
+const_bitflag! { ICU: u32;
+	/// [`InternetCanonicalizeUrl`](crate::InternetCanonicalizeUrl) `flags`
+	/// (`u32`).
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+	/// Don't convert unsafe characters to escape sequence.
+	NO_ENCODE 0x2000_0000
+	/// Convert %XX escape sequences to characters.
+	DECODE 0x1000_0000
+	/// Don't convert .. etc. meta path sequences.
+	NO_META 0x0800_0000
+	/// Encode spaces only.
+	ENCODE_SPACES_ONLY 0x0400_0000
+	/// Special encode/decode rules for browser.
+	BROWSER_MODE 0x0200_0000
+	/// Encode any percent (ASCII25).
+	ENCODE_PERCENT 0x0000_1000
+}
+
 const_bitflag! { INTERNET_FLAG: u32;
 	/// Internet API
 	/// [flags](https://learn.microsoft.com/en-us/windows/win32/wininet/api-flags)
