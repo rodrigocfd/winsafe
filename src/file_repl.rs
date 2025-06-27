@@ -49,7 +49,7 @@ fn write_readme(readme_md: &str, stats: &stats::Stats) -> w::AnyResult<()> {
 		final_str.push_str("\r\n");
 	});
 
-	let fout = w::File::open("c:\\users\\rodrigo\\desktop\\foo.md", w::FileAccess::OpenOrCreateRW)?;
+	let fout = w::File::open(readme_md, w::FileAccess::OpenOrCreateRW)?;
 	fout.erase_and_write(&final_str.into_bytes())?;
 
 	Ok(())
