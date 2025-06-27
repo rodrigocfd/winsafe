@@ -19,12 +19,12 @@
 <a href=#19 id=19 data-nosnippet>19</a>	</span><span class="kw">pub fn </span>InternetConnect(
 <a href=#20 id=20 data-nosnippet>20</a>		<span class="kw-2">&amp;</span><span class="self">self</span>,
 <a href=#21 id=21 data-nosnippet>21</a>		server_name: <span class="kw-2">&amp;</span>str,
-<a href=#22 id=22 data-nosnippet>22</a>		server_port: co::INTERNET_PORT,
+<a href=#22 id=22 data-nosnippet>22</a>		server_port: co::INTERNET_DEFAULT_PORT,
 <a href=#23 id=23 data-nosnippet>23</a>		user_name: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
 <a href=#24 id=24 data-nosnippet>24</a>		password: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
 <a href=#25 id=25 data-nosnippet>25</a>		service: co::INTERNET_SERVICE,
 <a href=#26 id=26 data-nosnippet>26</a>		flags: co::INTERNET_FLAG,
-<a href=#27 id=27 data-nosnippet>27</a>		context: usize,
+<a href=#27 id=27 data-nosnippet>27</a>		context: <span class="prelude-ty">Option</span>&lt;isize&gt;,
 <a href=#28 id=28 data-nosnippet>28</a>	) -&gt; SysResult&lt;InternetCloseHandleGuard&lt;HINTERNETSESSION&gt;&gt; {
 <a href=#29 id=29 data-nosnippet>29</a>		<span class="kw">unsafe </span>{
 <a href=#30 id=30 data-nosnippet>30</a>			ptr_to_sysresult_handle(ffi::InternetConnectW(
@@ -35,7 +35,7 @@
 <a href=#35 id=35 data-nosnippet>35</a>				WString::from_opt_str(password).as_ptr(),
 <a href=#36 id=36 data-nosnippet>36</a>				service.raw(),
 <a href=#37 id=37 data-nosnippet>37</a>				flags.raw(),
-<a href=#38 id=38 data-nosnippet>38</a>				context,
+<a href=#38 id=38 data-nosnippet>38</a>				context.unwrap_or_default(),
 <a href=#39 id=39 data-nosnippet>39</a>			))
 <a href=#40 id=40 data-nosnippet>40</a>			.map(|h| InternetCloseHandleGuard::new(h))
 <a href=#41 id=41 data-nosnippet>41</a>		}
@@ -62,4 +62,31 @@
 <a href=#62 id=62 data-nosnippet>62</a>			.map(|h| InternetCloseHandleGuard::new(h))
 <a href=#63 id=63 data-nosnippet>63</a>		}
 <a href=#64 id=64 data-nosnippet>64</a>	}
-<a href=#65 id=65 data-nosnippet>65</a>}</code></pre></div></section></main></body></html>
+<a href=#65 id=65 data-nosnippet>65</a>
+<a href=#66 id=66 data-nosnippet>66</a>	<span class="doccomment">/// [`InternetOpenUrl`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetopenurlw)
+<a href=#67 id=67 data-nosnippet>67</a>	/// function.
+<a href=#68 id=68 data-nosnippet>68</a>	///
+<a href=#69 id=69 data-nosnippet>69</a>	/// It's a good idea to pass `url` through
+<a href=#70 id=70 data-nosnippet>70</a>	/// [`InternetCanonicalizeUrl`](crate::InternetCanonicalizeUrl) before
+<a href=#71 id=71 data-nosnippet>71</a>	/// calling this function.
+<a href=#72 id=72 data-nosnippet>72</a>	</span><span class="attr">#[must_use]
+<a href=#73 id=73 data-nosnippet>73</a>	</span><span class="kw">pub fn </span>InternetOpenUrl(
+<a href=#74 id=74 data-nosnippet>74</a>		<span class="kw-2">&amp;</span><span class="self">self</span>,
+<a href=#75 id=75 data-nosnippet>75</a>		url: <span class="kw-2">&amp;</span>str,
+<a href=#76 id=76 data-nosnippet>76</a>		headers: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>str&gt;,
+<a href=#77 id=77 data-nosnippet>77</a>		flags: co::INTERNET_FLAG,
+<a href=#78 id=78 data-nosnippet>78</a>		context: <span class="prelude-ty">Option</span>&lt;isize&gt;,
+<a href=#79 id=79 data-nosnippet>79</a>	) -&gt; SysResult&lt;InternetCloseHandleGuard&lt;HINTERNETREQUEST&gt;&gt; {
+<a href=#80 id=80 data-nosnippet>80</a>		<span class="kw">unsafe </span>{
+<a href=#81 id=81 data-nosnippet>81</a>			ptr_to_sysresult_handle(ffi::InternetOpenUrlW(
+<a href=#82 id=82 data-nosnippet>82</a>				<span class="self">self</span>.ptr(),
+<a href=#83 id=83 data-nosnippet>83</a>				WString::from_str(url).as_ptr(),
+<a href=#84 id=84 data-nosnippet>84</a>				WString::from_opt_str(headers).as_ptr(),
+<a href=#85 id=85 data-nosnippet>85</a>				headers.map_or(<span class="number">0</span>, |h| h.chars().count() <span class="kw">as _</span>),
+<a href=#86 id=86 data-nosnippet>86</a>				flags.raw(),
+<a href=#87 id=87 data-nosnippet>87</a>				context.unwrap_or_default(),
+<a href=#88 id=88 data-nosnippet>88</a>			))
+<a href=#89 id=89 data-nosnippet>89</a>			.map(|h| InternetCloseHandleGuard::new(h))
+<a href=#90 id=90 data-nosnippet>90</a>		}
+<a href=#91 id=91 data-nosnippet>91</a>	}
+<a href=#92 id=92 data-nosnippet>92</a>}</code></pre></div></section></main></body></html>
