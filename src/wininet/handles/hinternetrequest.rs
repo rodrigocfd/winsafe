@@ -18,10 +18,10 @@ impl HINTERNETREQUEST {
 	///
 	/// The return types varies according to `format`:
 	///
-	/// * `co::HTTP_QUERY_FLAG::NUMBER` – `HttpInfo::Number`
-	/// * `co::HTTP_QUERY_FLAG::NUMBER64` – `HttpInfo::Number64`
-	/// * `co::HTTP_QUERY_FLAG::SYSTEMTIME` – `HttpInfo::Time`
-	/// * default – `HttpInfo::Str`
+	/// * [`co::HTTP_QUERY_FLAG::NUMBER`](crate::co::HTTP_QUERY_FLAG::NUMBER) – [`HttpInfo::Number`](crate::HttpInfo::Number)
+	/// * [`co::HTTP_QUERY_FLAG::NUMBER64`](crate::co::HTTP_QUERY_FLAG::NUMBER64) – [`HttpInfo::Number64`](crate::HttpInfo::Number64)
+	/// * [`co::HTTP_QUERY_FLAG::SYSTEMTIME`](crate::co::HTTP_QUERY_FLAG::SYSTEMTIME) – [`HttpInfo::Time`](crate::HttpInfo::Time)
+	/// * default – [`HttpInfo::Str`](crate::HttpInfo::Str)
 	#[must_use]
 	pub fn HttpQueryInfo(
 		&self,
