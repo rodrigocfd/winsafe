@@ -135,6 +135,15 @@ impl HDC {
 		bool_to_invalidparm(unsafe { ffi::CancelDC(self.ptr()) })
 	}
 
+	/// [`ChoosePixelFormathttps://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-choosepixelformat`]()
+	/// function.
+	pub fn ChoosePixelFormat(&self, pfd: &PIXELFORMATDESCRIPTOR) -> SysResult<i32> {
+		match unsafe { ffi::ChoosePixelFormat(self.ptr(), pcvoid(pfd)) } {
+			0 => Err(GetLastError()),
+			n => Ok(n),
+		}
+	}
+
 	/// [`Chord`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-chord)
 	/// function.
 	pub fn Chord(&self, bounds: RECT, start_radial: POINT, end_radial: POINT) -> SysResult<()> {

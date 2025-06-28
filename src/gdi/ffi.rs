@@ -9,6 +9,7 @@ extern_sys! { "gdi32";
 	BeginPath(HANDLE) -> BOOL
 	BitBlt(HANDLE, i32, i32, i32, i32, HANDLE, i32, i32, u32) -> BOOL
 	CancelDC(HANDLE) -> BOOL
+	ChoosePixelFormat(HANDLE, PCVOID) -> i32
 	Chord(HANDLE, i32, i32, i32, i32, i32, i32, i32, i32) -> BOOL
 	CloseFigure(HANDLE) -> BOOL
 	CombineRgn(HANDLE, HANDLE, HANDLE, i32) -> i32
