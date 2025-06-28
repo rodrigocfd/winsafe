@@ -41,7 +41,7 @@ const_values_num_privs! {
 	UDN_FIRST i32 = -721
 }
 
-const_values_pubcrate! { TDF;
-	USE_HICON_FOOTER 0x0004
-	USE_HICON_MAIN 0x0002
+const_values_num_privs! {
+	TDF_USE_HICON_FOOTER: TDF = 0x0004
+	TDF_USE_HICON_MAIN: TDF = 0x0002
 }

@@ -1,7 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::comctl::callbacks;
+use crate::comctl::{callbacks, privs::*};
 use crate::decl::*;
 use crate::kernel::privs::*;
 use crate::prelude::*;
@@ -69,12 +69,12 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p>
 
 		match &self.main_icon {
 			IconIdTd::None => {
-				let new_flags = raw.dwFlags | co::TDF::USE_HICON_MAIN;
+				let new_flags = raw.dwFlags | TDF_USE_HICON_MAIN;
 				raw.dwFlags = new_flags;
 			},
 			IconIdTd::Icon(h) => {
 				raw.hMainIcon = h.ptr();
-				let new_flags = raw.dwFlags | co::TDF::USE_HICON_MAIN;
+				let new_flags = raw.dwFlags | TDF_USE_HICON_MAIN;
 				raw.dwFlags = new_flags;
 			},
 			IconIdTd::Id(id) => {
@@ -149,12 +149,12 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i, 'j, 'k, 'l, 'm, 'n, 'o, 'p>
 
 		match &self.footer_icon {
 			IconId::None => {
-				let new_flags = raw.dwFlags | co::TDF::USE_HICON_FOOTER;
+				let new_flags = raw.dwFlags | TDF_USE_HICON_FOOTER;
 				raw.dwFlags = new_flags;
 			},
 			IconId::Icon(h) => {
 				raw.hFooterIcon = h.ptr();
-				let new_flags = raw.dwFlags | co::TDF::USE_HICON_FOOTER;
+				let new_flags = raw.dwFlags | TDF_USE_HICON_FOOTER;
 				raw.dwFlags = new_flags;
 			},
 			IconId::Id(id) => {

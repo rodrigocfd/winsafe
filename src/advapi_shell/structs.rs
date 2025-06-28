@@ -1,5 +1,6 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
+use crate::advapi_shell::privs::*;
 use crate::co;
 use crate::decl::*;
 use crate::kernel::ffi_types::*;
@@ -56,14 +57,14 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> SHELLEXECUTEINFO<'a, 'b, 'c, 'd, 'e, 'f
 
 		self.id_list.map(|l| {
 			raw.lpIDList = l.as_ptr() as _;
-			raw.fMask |= co::SEE_MASK::IDLIST;
+			raw.fMask |= SEE_MASK_IDLIST;
 		});
 
 		let w_class = match self.class {
 			Some(c) => {
 				let w_class = WString::from_str_force_heap(c);
 				raw.lpClass = w_class.as_ptr();
-				raw.fMask |= co::SEE_MASK::CLASSNAME;
+				raw.fMask |= SEE_MASK_CLASSNAME;
 				w_class
 			},
 			None => WString::new(),
@@ -71,23 +72,23 @@ impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'h, 'i> SHELLEXECUTEINFO<'a, 'b, 'c, 'd, 'e, 'f
 
 		self.hkey_class.map(|h| {
 			raw.hkeyClass = unsafe { h.raw_copy() };
-			raw.fMask |= co::SEE_MASK::CLASSKEY;
+			raw.fMask |= SEE_MASK_CLASSKEY;
 		});
 
 		self.hot_key.as_ref().map(|hk| {
 			raw.dwHotKey = MAKEDWORD(hk.0.raw(), hk.1.raw());
-			raw.fMask |= co::SEE_MASK::HOTKEY;
+			raw.fMask |= SEE_MASK_HOTKEY;
 		});
 
 		match self.hicon_hmonitor {
 			IcoMon::None => {},
 			IcoMon::Ico(i) => {
 				raw.hIcon_hMonitor = i.ptr();
-				raw.fMask |= co::SEE_MASK::ICON;
+				raw.fMask |= SEE_MASK_ICON;
 			},
 			IcoMon::Mon(m) => {
 				raw.hIcon_hMonitor = m.ptr();
-				raw.fMask |= co::SEE_MASK::HMONITOR;
+				raw.fMask |= SEE_MASK_HMONITOR;
 			},
 		}
 

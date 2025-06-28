@@ -130,31 +130,19 @@ macro_rules! const_values_pub {
 	};
 }
 
-/// Writes multiple pub(crate) values of a numeric newtype constant.
-macro_rules! const_values_pubcrate {
-	(
-		$name:ident;
-		$(
-			$( #[$valdoc:meta] )*
-			$valname:ident $val:expr
-		)*
-	) => {
-		impl $name {
-			$(
-				$( #[$valdoc] )*
-				pub(crate) const $valname: Self = unsafe { Self::from_raw($val) };
-			)*
-		}
-	};
-}
-
 /// Writes multiple pub(crate) values of an arbitrary numeric type; used in
 /// internal privs.rs files.
 macro_rules! const_values_num_privs {
 	(
-		$( $name:ident $ty:ty = $val:expr )*
+		$( $name:ident $ty:ty = $val:expr )* // for integers
 	) => {
 		$( pub(crate) const $name: $ty = $val; )*
+	};
+
+	(
+		$( $name:ident : $ty:ty = $val:expr )* // for consts
+	) => {
+		$( pub(crate) const $name: $ty = unsafe { <$ty>::from_raw($val) }; )*
 	};
 }
 
