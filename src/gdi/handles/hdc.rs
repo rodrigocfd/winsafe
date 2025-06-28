@@ -193,6 +193,22 @@ impl HDC {
 		}
 	}
 
+	/// [`DescribePixelFormat`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-describepixelformat)
+	/// function.
+	#[must_use]
+	pub fn DescribePixelFormat(&self, index: i32) -> SysResult<PIXELFORMATDESCRIPTOR> {
+		let mut pfd = PIXELFORMATDESCRIPTOR::default();
+		bool_to_invalidparm(unsafe {
+			ffi::DescribePixelFormat(
+				self.ptr(),
+				index,
+				std::mem::size_of::<PIXELFORMATDESCRIPTOR>() as _,
+				pvoid(&mut pfd),
+			)
+		})
+		.map(|_| pfd)
+	}
+
 	/// [`Ellipse`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-ellipse)
 	/// function.
 	pub fn Ellipse(&self, bound: RECT) -> SysResult<()> {

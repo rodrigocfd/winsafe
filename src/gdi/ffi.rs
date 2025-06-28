@@ -30,6 +30,7 @@ extern_sys! { "gdi32";
 	CreateSolidBrush(u32) -> HANDLE
 	DeleteDC(HANDLE) -> BOOL
 	DeleteObject(HANDLE) -> BOOL
+	DescribePixelFormat(HANDLE, i32, u32, PVOID) -> i32
 	Ellipse(HANDLE, i32, i32, i32, i32) -> BOOL
 	EndPath(HANDLE) -> BOOL
 	EqualRgn(HANDLE, HANDLE) -> BOOL

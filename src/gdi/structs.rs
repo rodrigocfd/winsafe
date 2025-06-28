@@ -250,6 +250,47 @@ pub struct PALETTEENTRY {
 	pub peFlags: co::PC,
 }
 
+/// [`PIXELFORMATDESCRIPTOR`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-pixelformatdescriptor)
+/// struct.
+#[repr(C)]
+pub struct PIXELFORMATDESCRIPTOR {
+	nSize: u16,
+	nVersion: u16,
+	pub dwFlags: co::PFD,
+	pub iPixelType: co::PFD_TYPE,
+	pub cColorBits: u8,
+	pub cRedBits: u8,
+	pub cRedShift: u8,
+	pub cGreenBits: u8,
+	pub cGreenShift: u8,
+	pub cBlueBits: u8,
+	pub cBlueShift: u8,
+	pub cAlphaBits: u8,
+	pub cAlphaShift: u8,
+	pub cAccumBits: u8,
+	pub cAccumRedBits: u8,
+	pub cAccumGreenBits: u8,
+	pub cAccumBlueBits: u8,
+	pub cAccumAlphaBits: u8,
+	pub cDepthBits: u8,
+	pub cStencilBits: u8,
+	pub cAuxBuffers: u8,
+	iLayerType: u8,
+	pub bReserved: u8,
+	dwLayerMask: u32,
+	pub dwVisibleMask: u32,
+	dwDamageMask: u32,
+}
+
+impl Default for PIXELFORMATDESCRIPTOR {
+	fn default() -> Self {
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.nSize = std::mem::size_of::<Self>() as _;
+		obj.nVersion = 1;
+		obj
+	}
+}
+
 /// [`RGBQUAD`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-rgbquad)
 /// struct.
 #[repr(C)]

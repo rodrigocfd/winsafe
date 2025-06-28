@@ -304,7 +304,6 @@ impl HFILE {
 	/// operation is complete, thus making the method unsound.
 	pub fn WriteFile(&self, data: &[u8]) -> SysResult<u32> {
 		let mut bytes_written = 0u32;
-
 		bool_to_sysresult(unsafe {
 			ffi::WriteFile(
 				self.ptr(),
