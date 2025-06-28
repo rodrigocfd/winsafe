@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gdi\structs.rs`."><title>structs.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.89.0-nightly (be19eda0d 2025-06-22)" data-channel="nightly" data-search-js="search-92309212.js" data-settings-js="settings-5514c975.js" ><script src="../../../static.files/storage-4e99c027.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-fd3af306.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gdi/</div>structs.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source of the Rust file `src\gdi\structs.rs`."><title>structs.rs - source</title><script>if(window.location.protocol!=="file:")document.head.insertAdjacentHTML("beforeend","SourceSerif4-Regular-6b053e98.ttf.woff2,FiraSans-Italic-81dc35de.woff2,FiraSans-Regular-0fe48ade.woff2,FiraSans-MediumItalic-ccf7e434.woff2,FiraSans-Medium-e1aa3f0a.woff2,SourceCodePro-Regular-8badfe75.ttf.woff2,SourceCodePro-Semibold-aa29a496.ttf.woff2".split(",").map(f=>`<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../static.files/${f}">`).join(""))</script><link rel="stylesheet" href="../../../static.files/normalize-9960930a.css"><link rel="stylesheet" href="../../../static.files/rustdoc-84e720fa.css"><meta name="rustdoc-vars" data-root-path="../../../" data-static-root-path="../../../static.files/" data-current-crate="winsafe" data-themes="" data-resource-suffix="" data-rustdoc-version="1.90.0-nightly (b03b3a7ec 2025-06-26)" data-channel="nightly" data-search-js="search-92309212.js" data-settings-js="settings-5514c975.js" ><script src="../../../static.files/storage-4e99c027.js"></script><script defer src="../../../static.files/src-script-813739b1.js"></script><script defer src="../../../src-files.js"></script><script defer src="../../../static.files/main-340f468f.js"></script><noscript><link rel="stylesheet" href="../../../static.files/noscript-32bb7600.css"></noscript><link rel="alternate icon" type="image/png" href="../../../static.files/favicon-32x32-6580c154.png"><link rel="icon" type="image/svg+xml" href="../../../static.files/favicon-044be391.svg"></head><body class="rustdoc src"><!--[if lte IE 11]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="src-sidebar-title"><h2>Files</h2></div></nav><div class="sidebar-resizer" title="Drag to resize sidebar"></div><main><rustdoc-search></rustdoc-search><section id="main-content" class="content"><div class="main-heading"><h1><div class="sub-heading">winsafe\gdi/</div>structs.rs</h1><rustdoc-toolbar></rustdoc-toolbar></div><div class="example-wrap digits-3"><pre class="rust"><code><a href=#1 id=1 data-nosnippet>1</a><span class="attr">#![allow(non_camel_case_types, non_snake_case)]
 <a href=#2 id=2 data-nosnippet>2</a>
 <a href=#3 id=3 data-nosnippet>3</a></span><span class="kw">use </span><span class="kw">crate</span>::co;
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
@@ -250,40 +250,81 @@
 <a href=#250 id=250 data-nosnippet>250</a>	<span class="kw">pub </span>peFlags: co::PC,
 <a href=#251 id=251 data-nosnippet>251</a>}
 <a href=#252 id=252 data-nosnippet>252</a>
-<a href=#253 id=253 data-nosnippet>253</a><span class="doccomment">/// [`RGBQUAD`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-rgbquad)
+<a href=#253 id=253 data-nosnippet>253</a><span class="doccomment">/// [`PIXELFORMATDESCRIPTOR`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-pixelformatdescriptor)
 <a href=#254 id=254 data-nosnippet>254</a>/// struct.
 <a href=#255 id=255 data-nosnippet>255</a></span><span class="attr">#[repr(C)]
-<a href=#256 id=256 data-nosnippet>256</a>#[derive(Default, Clone, Copy, PartialEq, Eq)]
-<a href=#257 id=257 data-nosnippet>257</a></span><span class="kw">pub struct </span>RGBQUAD {
-<a href=#258 id=258 data-nosnippet>258</a>	<span class="kw">pub </span>rgbBlue: u8,
-<a href=#259 id=259 data-nosnippet>259</a>	<span class="kw">pub </span>rgbGreen: u8,
-<a href=#260 id=260 data-nosnippet>260</a>	<span class="kw">pub </span>rgbRed: u8,
-<a href=#261 id=261 data-nosnippet>261</a>	rgbReserved: u8,
-<a href=#262 id=262 data-nosnippet>262</a>}
-<a href=#263 id=263 data-nosnippet>263</a>
-<a href=#264 id=264 data-nosnippet>264</a><span class="doccomment">/// [`TEXTMETRIC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-textmetricw)
-<a href=#265 id=265 data-nosnippet>265</a>/// struct.
-<a href=#266 id=266 data-nosnippet>266</a></span><span class="attr">#[repr(C)]
-<a href=#267 id=267 data-nosnippet>267</a>#[derive(Default, Clone)]
-<a href=#268 id=268 data-nosnippet>268</a></span><span class="kw">pub struct </span>TEXTMETRIC {
-<a href=#269 id=269 data-nosnippet>269</a>	<span class="kw">pub </span>tmHeight: i32,
-<a href=#270 id=270 data-nosnippet>270</a>	<span class="kw">pub </span>tmAscent: i32,
-<a href=#271 id=271 data-nosnippet>271</a>	<span class="kw">pub </span>tmDescent: i32,
-<a href=#272 id=272 data-nosnippet>272</a>	<span class="kw">pub </span>tmInternalLeading: i32,
-<a href=#273 id=273 data-nosnippet>273</a>	<span class="kw">pub </span>tmExternalLeading: i32,
-<a href=#274 id=274 data-nosnippet>274</a>	<span class="kw">pub </span>tmAveCharWidth: i32,
-<a href=#275 id=275 data-nosnippet>275</a>	<span class="kw">pub </span>tmMaxCharWidth: i32,
-<a href=#276 id=276 data-nosnippet>276</a>	<span class="kw">pub </span>tmWeight: i32,
-<a href=#277 id=277 data-nosnippet>277</a>	<span class="kw">pub </span>tmOverhang: i32,
-<a href=#278 id=278 data-nosnippet>278</a>	<span class="kw">pub </span>tmDigitizedAspectX: i32,
-<a href=#279 id=279 data-nosnippet>279</a>	<span class="kw">pub </span>tmDigitizedAspectY: i32,
-<a href=#280 id=280 data-nosnippet>280</a>	<span class="kw">pub </span>tmFirstChar: u16,
-<a href=#281 id=281 data-nosnippet>281</a>	<span class="kw">pub </span>tmLastChar: u16,
-<a href=#282 id=282 data-nosnippet>282</a>	<span class="kw">pub </span>tmDefaultChar: u16,
-<a href=#283 id=283 data-nosnippet>283</a>	<span class="kw">pub </span>tmBreakChar: u16,
-<a href=#284 id=284 data-nosnippet>284</a>	<span class="kw">pub </span>tmItalic: u8,
-<a href=#285 id=285 data-nosnippet>285</a>	<span class="kw">pub </span>tmUnderlined: u8,
-<a href=#286 id=286 data-nosnippet>286</a>	<span class="kw">pub </span>tmStruckOut: u8,
-<a href=#287 id=287 data-nosnippet>287</a>	<span class="kw">pub </span>tmPitchAndFamily: u8,
-<a href=#288 id=288 data-nosnippet>288</a>	<span class="kw">pub </span>tmCharSet: u8,
-<a href=#289 id=289 data-nosnippet>289</a>}</code></pre></div></section></main></body></html>
+<a href=#256 id=256 data-nosnippet>256</a></span><span class="kw">pub struct </span>PIXELFORMATDESCRIPTOR {
+<a href=#257 id=257 data-nosnippet>257</a>	nSize: u16,
+<a href=#258 id=258 data-nosnippet>258</a>	nVersion: u16,
+<a href=#259 id=259 data-nosnippet>259</a>	<span class="kw">pub </span>dwFlags: co::PFD,
+<a href=#260 id=260 data-nosnippet>260</a>	<span class="kw">pub </span>iPixelType: co::PFD_TYPE,
+<a href=#261 id=261 data-nosnippet>261</a>	<span class="kw">pub </span>cColorBits: u8,
+<a href=#262 id=262 data-nosnippet>262</a>	<span class="kw">pub </span>cRedBits: u8,
+<a href=#263 id=263 data-nosnippet>263</a>	<span class="kw">pub </span>cRedShift: u8,
+<a href=#264 id=264 data-nosnippet>264</a>	<span class="kw">pub </span>cGreenBits: u8,
+<a href=#265 id=265 data-nosnippet>265</a>	<span class="kw">pub </span>cGreenShift: u8,
+<a href=#266 id=266 data-nosnippet>266</a>	<span class="kw">pub </span>cBlueBits: u8,
+<a href=#267 id=267 data-nosnippet>267</a>	<span class="kw">pub </span>cBlueShift: u8,
+<a href=#268 id=268 data-nosnippet>268</a>	<span class="kw">pub </span>cAlphaBits: u8,
+<a href=#269 id=269 data-nosnippet>269</a>	<span class="kw">pub </span>cAlphaShift: u8,
+<a href=#270 id=270 data-nosnippet>270</a>	<span class="kw">pub </span>cAccumBits: u8,
+<a href=#271 id=271 data-nosnippet>271</a>	<span class="kw">pub </span>cAccumRedBits: u8,
+<a href=#272 id=272 data-nosnippet>272</a>	<span class="kw">pub </span>cAccumGreenBits: u8,
+<a href=#273 id=273 data-nosnippet>273</a>	<span class="kw">pub </span>cAccumBlueBits: u8,
+<a href=#274 id=274 data-nosnippet>274</a>	<span class="kw">pub </span>cAccumAlphaBits: u8,
+<a href=#275 id=275 data-nosnippet>275</a>	<span class="kw">pub </span>cDepthBits: u8,
+<a href=#276 id=276 data-nosnippet>276</a>	<span class="kw">pub </span>cStencilBits: u8,
+<a href=#277 id=277 data-nosnippet>277</a>	<span class="kw">pub </span>cAuxBuffers: u8,
+<a href=#278 id=278 data-nosnippet>278</a>	iLayerType: u8,
+<a href=#279 id=279 data-nosnippet>279</a>	<span class="kw">pub </span>bReserved: u8,
+<a href=#280 id=280 data-nosnippet>280</a>	dwLayerMask: u32,
+<a href=#281 id=281 data-nosnippet>281</a>	<span class="kw">pub </span>dwVisibleMask: u32,
+<a href=#282 id=282 data-nosnippet>282</a>	dwDamageMask: u32,
+<a href=#283 id=283 data-nosnippet>283</a>}
+<a href=#284 id=284 data-nosnippet>284</a>
+<a href=#285 id=285 data-nosnippet>285</a><span class="kw">impl </span>Default <span class="kw">for </span>PIXELFORMATDESCRIPTOR {
+<a href=#286 id=286 data-nosnippet>286</a>	<span class="kw">fn </span>default() -&gt; <span class="self">Self </span>{
+<a href=#287 id=287 data-nosnippet>287</a>		<span class="kw">let </span><span class="kw-2">mut </span>obj = <span class="kw">unsafe </span>{ std::mem::zeroed::&lt;<span class="self">Self</span>&gt;() };
+<a href=#288 id=288 data-nosnippet>288</a>		obj.nSize = std::mem::size_of::&lt;<span class="self">Self</span>&gt;() <span class="kw">as _</span>;
+<a href=#289 id=289 data-nosnippet>289</a>		obj.nVersion = <span class="number">1</span>;
+<a href=#290 id=290 data-nosnippet>290</a>		obj
+<a href=#291 id=291 data-nosnippet>291</a>	}
+<a href=#292 id=292 data-nosnippet>292</a>}
+<a href=#293 id=293 data-nosnippet>293</a>
+<a href=#294 id=294 data-nosnippet>294</a><span class="doccomment">/// [`RGBQUAD`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-rgbquad)
+<a href=#295 id=295 data-nosnippet>295</a>/// struct.
+<a href=#296 id=296 data-nosnippet>296</a></span><span class="attr">#[repr(C)]
+<a href=#297 id=297 data-nosnippet>297</a>#[derive(Default, Clone, Copy, PartialEq, Eq)]
+<a href=#298 id=298 data-nosnippet>298</a></span><span class="kw">pub struct </span>RGBQUAD {
+<a href=#299 id=299 data-nosnippet>299</a>	<span class="kw">pub </span>rgbBlue: u8,
+<a href=#300 id=300 data-nosnippet>300</a>	<span class="kw">pub </span>rgbGreen: u8,
+<a href=#301 id=301 data-nosnippet>301</a>	<span class="kw">pub </span>rgbRed: u8,
+<a href=#302 id=302 data-nosnippet>302</a>	rgbReserved: u8,
+<a href=#303 id=303 data-nosnippet>303</a>}
+<a href=#304 id=304 data-nosnippet>304</a>
+<a href=#305 id=305 data-nosnippet>305</a><span class="doccomment">/// [`TEXTMETRIC`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/ns-wingdi-textmetricw)
+<a href=#306 id=306 data-nosnippet>306</a>/// struct.
+<a href=#307 id=307 data-nosnippet>307</a></span><span class="attr">#[repr(C)]
+<a href=#308 id=308 data-nosnippet>308</a>#[derive(Default, Clone)]
+<a href=#309 id=309 data-nosnippet>309</a></span><span class="kw">pub struct </span>TEXTMETRIC {
+<a href=#310 id=310 data-nosnippet>310</a>	<span class="kw">pub </span>tmHeight: i32,
+<a href=#311 id=311 data-nosnippet>311</a>	<span class="kw">pub </span>tmAscent: i32,
+<a href=#312 id=312 data-nosnippet>312</a>	<span class="kw">pub </span>tmDescent: i32,
+<a href=#313 id=313 data-nosnippet>313</a>	<span class="kw">pub </span>tmInternalLeading: i32,
+<a href=#314 id=314 data-nosnippet>314</a>	<span class="kw">pub </span>tmExternalLeading: i32,
+<a href=#315 id=315 data-nosnippet>315</a>	<span class="kw">pub </span>tmAveCharWidth: i32,
+<a href=#316 id=316 data-nosnippet>316</a>	<span class="kw">pub </span>tmMaxCharWidth: i32,
+<a href=#317 id=317 data-nosnippet>317</a>	<span class="kw">pub </span>tmWeight: i32,
+<a href=#318 id=318 data-nosnippet>318</a>	<span class="kw">pub </span>tmOverhang: i32,
+<a href=#319 id=319 data-nosnippet>319</a>	<span class="kw">pub </span>tmDigitizedAspectX: i32,
+<a href=#320 id=320 data-nosnippet>320</a>	<span class="kw">pub </span>tmDigitizedAspectY: i32,
+<a href=#321 id=321 data-nosnippet>321</a>	<span class="kw">pub </span>tmFirstChar: u16,
+<a href=#322 id=322 data-nosnippet>322</a>	<span class="kw">pub </span>tmLastChar: u16,
+<a href=#323 id=323 data-nosnippet>323</a>	<span class="kw">pub </span>tmDefaultChar: u16,
+<a href=#324 id=324 data-nosnippet>324</a>	<span class="kw">pub </span>tmBreakChar: u16,
+<a href=#325 id=325 data-nosnippet>325</a>	<span class="kw">pub </span>tmItalic: u8,
+<a href=#326 id=326 data-nosnippet>326</a>	<span class="kw">pub </span>tmUnderlined: u8,
+<a href=#327 id=327 data-nosnippet>327</a>	<span class="kw">pub </span>tmStruckOut: u8,
+<a href=#328 id=328 data-nosnippet>328</a>	<span class="kw">pub </span>tmPitchAndFamily: u8,
+<a href=#329 id=329 data-nosnippet>329</a>	<span class="kw">pub </span>tmCharSet: u8,
+<a href=#330 id=330 data-nosnippet>330</a>}</code></pre></div></section></main></body></html>
