@@ -53,6 +53,7 @@ extern_sys! { "gdi32";
 	GetDeviceCaps(HANDLE, i32) -> i32
 	GetDIBits(HANDLE, HANDLE, u32, u32, PVOID, PVOID, u32) -> i32
 	GetObjectW(HANDLE, i32, PVOID) -> i32
+	GetPixelFormat(HANDLE) -> i32
 	GetStockObject(i32) -> HANDLE
 	GetStretchBltMode(HANDLE) -> i32
 	GetSysColorBrush(i32) -> HANDLE

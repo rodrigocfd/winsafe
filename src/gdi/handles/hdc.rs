@@ -135,7 +135,7 @@ impl HDC {
 		bool_to_invalidparm(unsafe { ffi::CancelDC(self.ptr()) })
 	}
 
-	/// [`ChoosePixelFormathttps://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-choosepixelformat`]()
+	/// [`ChoosePixelFormat`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-choosepixelformat)
 	/// function.
 	pub fn ChoosePixelFormat(&self, pfd: &PIXELFORMATDESCRIPTOR) -> SysResult<i32> {
 		match unsafe { ffi::ChoosePixelFormat(self.ptr(), pcvoid(pfd)) } {
@@ -445,6 +445,16 @@ impl HDC {
 		};
 
 		if ret == 0 { Err(co::ERROR::INVALID_PARAMETER) } else { Ok(ret) }
+	}
+
+	/// [`GetPixelFormat`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getpixelformat)
+	/// function.
+	#[must_use]
+	pub fn GetPixelFormat(&self) -> SysResult<i32> {
+		match unsafe { ffi::GetPixelFormat(self.ptr()) } {
+			0 => Err(GetLastError()),
+			n => Ok(n),
+		}
 	}
 
 	/// [`GetStretchBltMode`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstretchbltmode)
