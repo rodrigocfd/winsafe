@@ -2,7 +2,6 @@ use std::cmp::Ordering;
 
 use crate::co;
 use crate::decl::*;
-use crate::guard::*;
 use crate::kernel::ffi;
 
 /// Stores a `[u16]` buffer for a null-terminated
@@ -167,13 +166,13 @@ impl WString {
 	///
 	/// Be sure to alloc enough room, otherwise a buffer overrun may occur.
 	#[must_use]
-	pub unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
+	pub const unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
 		unsafe { self.buf.as_mut_ptr() }
 	}
 
 	/// Returns a mutable slice to the internal UTF-16 string buffer.
 	#[must_use]
-	pub fn as_mut_slice(&mut self) -> &mut [u16] {
+	pub const fn as_mut_slice(&mut self) -> &mut [u16] {
 		self.buf.as_mut_slice()
 	}
 
@@ -184,13 +183,13 @@ impl WString {
 	///
 	/// If the buffer was not allocated, returns a null pointer.
 	#[must_use]
-	pub fn as_ptr(&self) -> *const u16 {
+	pub const fn as_ptr(&self) -> *const u16 {
 		self.buf.as_ptr()
 	}
 
 	/// Returns a slice to the internal UTF-16 string buffer.
 	#[must_use]
-	pub fn as_slice(&self) -> &[u16] {
+	pub const fn as_slice(&self) -> &[u16] {
 		self.buf.as_slice()
 	}
 
@@ -355,7 +354,7 @@ enum ForceHeap {
 
 enum Buffer {
 	Stack([u16; Self::SSO_LEN]),
-	Heap(usize, GlobalFreeGuard), // keep memory size in bytes
+	Heap(Vec<u16>),
 	Unallocated,
 }
 
@@ -392,7 +391,7 @@ impl std::fmt::Debug for Buffer {
 			"{}",
 			match self {
 				Self::Stack(_) => format!("STACK({}) \"{}\"", self.buf_len(), txt),
-				Self::Heap(_, _) => format!("HEAP({}) \"{}\"", self.buf_len(), txt),
+				Self::Heap(_) => format!("HEAP({}) \"{}\"", self.buf_len(), txt),
 				Self::Unallocated => "UNALLOCATED \"\"".to_owned(),
 			}
 		)
@@ -488,55 +487,44 @@ impl Buffer {
 		if num_chars == 0 {
 			Self::Unallocated
 		} else if force_heap == ForceHeap::Yes || num_chars > Self::SSO_LEN {
-			Self::Heap(
-				num_chars * std::mem::size_of::<u16>(),
-				HGLOBAL::GlobalAlloc(
-					co::GMEM::FIXED | co::GMEM::ZEROINIT,
-					num_chars * std::mem::size_of::<u16>(),
-				)
-				.unwrap(), // assume no allocation errors
-			)
+			Self::Heap(vec![0x0000; num_chars])
 		} else {
 			Self::Stack([0x0000; Self::SSO_LEN])
 		}
 	}
 
 	#[must_use]
-	unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
+	const unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
 		match self {
 			Self::Stack(arr) => arr.as_mut_ptr(),
-			Self::Heap(_, ptr) => ptr.ptr() as _,
+			Self::Heap(vec) => vec.as_mut_ptr(),
 			Self::Unallocated => panic!("Trying to use an unallocated WString buffer."),
 		}
 	}
 
 	#[must_use]
-	fn as_mut_slice(&mut self) -> &mut [u16] {
+	const fn as_mut_slice(&mut self) -> &mut [u16] {
 		match self {
 			Self::Stack(arr) => arr,
-			Self::Heap(_, ptr) => unsafe {
-				std::slice::from_raw_parts_mut(ptr.ptr() as _, self.buf_len())
-			},
+			Self::Heap(vec) => vec.as_mut_slice(),
 			Self::Unallocated => &mut [],
 		}
 	}
 
 	#[must_use]
-	fn as_ptr(&self) -> *const u16 {
+	const fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Stack(arr) => arr.as_ptr(),
-			Self::Heap(_, ptr) => ptr.ptr() as _,
+			Self::Heap(vec) => vec.as_ptr(),
 			Self::Unallocated => std::ptr::null(),
 		}
 	}
 
 	#[must_use]
-	fn as_slice(&self) -> &[u16] {
+	const fn as_slice(&self) -> &[u16] {
 		match self {
 			Self::Stack(arr) => arr,
-			Self::Heap(_, ptr) => unsafe {
-				std::slice::from_raw_parts(ptr.ptr() as _, self.buf_len())
-			},
+			Self::Heap(vec) => vec.as_slice(),
 			Self::Unallocated => &[],
 		}
 	}
@@ -545,7 +533,7 @@ impl Buffer {
 	const fn buf_len(&self) -> usize {
 		match self {
 			Self::Stack(arr) => arr.len(),
-			Self::Heap(sz_bytes, _) => *sz_bytes / std::mem::size_of::<u16>(),
+			Self::Heap(vec) => vec.len(),
 			Self::Unallocated => 0,
 		}
 	}
