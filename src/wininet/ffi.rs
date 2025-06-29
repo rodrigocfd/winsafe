@@ -10,5 +10,6 @@ extern_sys! { "wininet";
 	InternetConnectW(HANDLE, PCSTR, u16, PCSTR, PCSTR, u32, u32, isize) -> HANDLE
 	InternetOpenUrlW(HANDLE, PCSTR, PCSTR, u32, u32, isize) -> HANDLE
 	InternetOpenW(PCSTR, u32, PCSTR, PCSTR, u32) -> HANDLE
+	InternetQueryDataAvailable(HANDLE, *mut u32, u32, isize) -> BOOL
 	InternetReadFile(HANDLE, PVOID, u32, *mut u32) -> BOOL
 }

@@ -116,6 +116,17 @@ impl HINTERNETREQUEST {
 		})
 	}
 
+	/// [`InternetQueryDataAvailable`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetquerydataavailable)
+	/// function.
+	#[must_use]
+	pub fn InternetQueryDataAvailable(&self) -> SysResult<u32> {
+		let mut num_bytes = 0u32;
+		bool_to_sysresult(unsafe {
+			ffi::InternetQueryDataAvailable(self.ptr(), &mut num_bytes, 0, 0)
+		})
+		.map(|_| num_bytes)
+	}
+
 	/// [`InternetReadFile`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetreadfile)
 	/// function.
 	///
