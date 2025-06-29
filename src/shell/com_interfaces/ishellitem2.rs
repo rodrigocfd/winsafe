@@ -107,6 +107,17 @@ pub trait shell_IShellItem2: shell_IShellItem {
 		.map(|_| i)
 	}
 
+	/// [`IShellItem2::GetProperty`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getproperty)
+	/// method.
+	#[must_use]
+	fn GetProperty(&self, key: &co::PKEY) -> HrResult<PropVariant> {
+		let mut pv = PROPVARIANT::default();
+		ok_to_hrresult(unsafe {
+			(vt::<IShellItem2VT>(self).GetProperty)(self.ptr(), pcvoid(key), pvoid(&mut pv))
+		})?;
+		PropVariant::from_raw(&pv)
+	}
+
 	/// [`IShellItem2::GetPropertyStore`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getpropertystore)
 	/// method.
 	#[must_use]

@@ -31,7 +31,7 @@ WinSafe documentation:
 | Window messages | 655 |
 | Handles | 53 |
 | COM interfaces | 94 |
-| COM methods | 579 |
+| COM methods | 580 |
 
 Although WinSafe already has a lot of Win32 APIs, it doesn't have *everything*, simply because Win32 API is gigantic. So if you're looking for a comprehensive Win32 coverage, take a look at [winapi](https://crates.io/crates/winapi) or [windows](https://crates.io/crates/windows) crates, which are *unsafe*, but have everything.
 
