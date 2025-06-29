@@ -147,8 +147,8 @@ const_ordinary! { HTTP_QUERY_FLAG: u32;
 }
 
 const_bitflag! { ICU: u32;
-	/// [`InternetCanonicalizeUrl`](crate::InternetCanonicalizeUrl) `flags`
-	/// (`u32`).
+	/// [`InternetCanonicalizeUrl`](crate::InternetCanonicalizeUrl) and
+	/// [`InternetCombineUrl`](crate::InternetCombineUrl) `flags` (`u32`).
 	=>
 	/// None of the actual values (zero).
 	NoValue 0

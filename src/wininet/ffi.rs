@@ -7,6 +7,7 @@ extern_sys! { "wininet";
 	HttpSendRequestW(HANDLE, PCSTR, u32, PCVOID, u32) -> BOOL
 	InternetCanonicalizeUrlW(PCSTR, PSTR, *mut u32, u32) -> BOOL
 	InternetCloseHandle(HANDLE) -> BOOL
+	InternetCombineUrlW(PCSTR, PCSTR, PSTR, *mut u32, u32) -> BOOL
 	InternetConnectW(HANDLE, PCSTR, u16, PCSTR, PCSTR, u32, u32, isize) -> HANDLE
 	InternetOpenUrlW(HANDLE, PCSTR, PCSTR, u32, u32, isize) -> HANDLE
 	InternetOpenW(PCSTR, u32, PCSTR, PCSTR, u32) -> HANDLE
