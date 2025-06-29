@@ -336,9 +336,6 @@
 <a href=#336 id=336 data-nosnippet>336</a></span><span class="attr">#[must_use]
 <a href=#337 id=337 data-nosnippet>337</a></span><span class="kw">pub fn </span>StringFromCLSID(clsid: <span class="kw-2">&amp;</span>co::CLSID) -&gt; HrResult&lt;String&gt; {
 <a href=#338 id=338 data-nosnippet>338</a>	<span class="kw">let </span><span class="kw-2">mut </span>pstr = std::ptr::null_mut::&lt;u16&gt;();
-<a href=#339 id=339 data-nosnippet>339</a>	ok_to_hrresult(<span class="kw">unsafe </span>{ ffi::StringFromCLSID(pcvoid(clsid), <span class="kw-2">&amp;mut </span>pstr) }).map(|<span class="kw">_</span>| {
-<a href=#340 id=340 data-nosnippet>340</a>		<span class="kw">let </span>name = <span class="kw">unsafe </span>{ WString::from_wchars_nullt(pstr) };
-<a href=#341 id=341 data-nosnippet>341</a>		<span class="kw">let _ </span>= <span class="kw">unsafe </span>{ CoTaskMemFreeGuard::new(pstr <span class="kw">as _</span>, <span class="number">0</span>) };
-<a href=#342 id=342 data-nosnippet>342</a>		name.to_string()
-<a href=#343 id=343 data-nosnippet>343</a>	})
-<a href=#344 id=344 data-nosnippet>344</a>}</code></pre></div></section></main></body></html>
+<a href=#339 id=339 data-nosnippet>339</a>	ok_to_hrresult(<span class="kw">unsafe </span>{ ffi::StringFromCLSID(pcvoid(clsid), <span class="kw-2">&amp;mut </span>pstr) })
+<a href=#340 id=340 data-nosnippet>340</a>		.map(|<span class="kw">_</span>| htaskmem_ptr_to_str(pstr))
+<a href=#341 id=341 data-nosnippet>341</a>}</code></pre></div></section></main></body></html>
