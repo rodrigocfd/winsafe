@@ -70,6 +70,17 @@ pub trait shell_IShellItem2: shell_IShellItem {
 		.map(|_| f != 0)
 	}
 
+	/// [`IShellItem2::GetCLSID`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getclsid)
+	/// method.
+	#[must_use]
+	fn GetCLSID(&self, key: &co::PKEY) -> HrResult<co::CLSID> {
+		let mut clsid = co::CLSID::default();
+		ok_to_hrresult(unsafe {
+			(vt::<IShellItem2VT>(self).GetCLSID)(self.ptr(), pcvoid(key), pvoid(&mut clsid))
+		})
+		.map(|_| clsid)
+	}
+
 	/// [`IShellItem2::GetFileTime`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getfiletime)
 	/// method.
 	///
