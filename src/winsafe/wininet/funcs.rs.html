@@ -3,7 +3,7 @@
 <a href=#3 id=3 data-nosnippet>3</a></span><span class="kw">use </span><span class="kw">crate</span>::co;
 <a href=#4 id=4 data-nosnippet>4</a><span class="kw">use </span><span class="kw">crate</span>::decl::<span class="kw-2">*</span>;
 <a href=#5 id=5 data-nosnippet>5</a><span class="kw">use </span><span class="kw">crate</span>::kernel::privs::<span class="kw-2">*</span>;
-<a href=#6 id=6 data-nosnippet>6</a><span class="kw">use </span><span class="kw">crate</span>::wininet::ffi;
+<a href=#6 id=6 data-nosnippet>6</a><span class="kw">use </span><span class="kw">crate</span>::wininet::{ffi, structs::<span class="kw-2">*</span>};
 <a href=#7 id=7 data-nosnippet>7</a>
 <a href=#8 id=8 data-nosnippet>8</a><span class="doccomment">/// [`InternetCanonicalizeUrl`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetcanonicalizeurlw)
 <a href=#9 id=9 data-nosnippet>9</a>/// function.
@@ -54,13 +54,42 @@
 <a href=#54 id=54 data-nosnippet>54</a>	}
 <a href=#55 id=55 data-nosnippet>55</a>}
 <a href=#56 id=56 data-nosnippet>56</a>
-<a href=#57 id=57 data-nosnippet>57</a><span class="doccomment">/// [`InternetTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internettimetosystemtime)
+<a href=#57 id=57 data-nosnippet>57</a><span class="doccomment">/// [`InternetCrackUrl`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetcrackurlw)
 <a href=#58 id=58 data-nosnippet>58</a>/// function.
 <a href=#59 id=59 data-nosnippet>59</a></span><span class="attr">#[must_use]
-<a href=#60 id=60 data-nosnippet>60</a></span><span class="kw">pub fn </span>InternetTimeToSystemTime(time: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;SYSTEMTIME&gt; {
-<a href=#61 id=61 data-nosnippet>61</a>	<span class="kw">let </span><span class="kw-2">mut </span>st = SYSTEMTIME::default();
-<a href=#62 id=62 data-nosnippet>62</a>	bool_to_sysresult(<span class="kw">unsafe </span>{
-<a href=#63 id=63 data-nosnippet>63</a>		ffi::InternetTimeToSystemTimeW(WString::from_str(time).as_ptr(), pvoid(<span class="kw-2">&amp;mut </span>st), <span class="number">0</span>)
-<a href=#64 id=64 data-nosnippet>64</a>	})
-<a href=#65 id=65 data-nosnippet>65</a>	.map(|<span class="kw">_</span>| st)
-<a href=#66 id=66 data-nosnippet>66</a>}</code></pre></div></section></main></body></html>
+<a href=#60 id=60 data-nosnippet>60</a></span><span class="kw">pub fn </span>InternetCrackUrl(url: <span class="kw-2">&amp;</span>str, flags: co::ICU) -&gt; SysResult&lt;URL_COMPONENTS&gt; {
+<a href=#61 id=61 data-nosnippet>61</a>	<span class="kw">let </span>w_url = WString::from_str(url);
+<a href=#62 id=62 data-nosnippet>62</a>	<span class="kw">let </span><span class="kw-2">mut </span>buf = URL_COMPONENTS_buf::new();
+<a href=#63 id=63 data-nosnippet>63</a>	buf.set_initial_ptrs();
+<a href=#64 id=64 data-nosnippet>64</a>
+<a href=#65 id=65 data-nosnippet>65</a>	<span class="kw">loop </span>{
+<a href=#66 id=66 data-nosnippet>66</a>		<span class="kw">match </span>bool_to_sysresult(<span class="kw">unsafe </span>{
+<a href=#67 id=67 data-nosnippet>67</a>			ffi::InternetCrackUrlW(
+<a href=#68 id=68 data-nosnippet>68</a>				w_url.as_ptr(),
+<a href=#69 id=69 data-nosnippet>69</a>				url.chars().count() <span class="kw">as _</span>,
+<a href=#70 id=70 data-nosnippet>70</a>				flags.raw(),
+<a href=#71 id=71 data-nosnippet>71</a>				pvoid(<span class="kw-2">&amp;mut </span>buf.raw),
+<a href=#72 id=72 data-nosnippet>72</a>			)
+<a href=#73 id=73 data-nosnippet>73</a>		}) {
+<a href=#74 id=74 data-nosnippet>74</a>			<span class="prelude-val">Ok</span>(<span class="kw">_</span>) =&gt; <span class="kw">return </span><span class="prelude-val">Ok</span>(buf.to_final()),
+<a href=#75 id=75 data-nosnippet>75</a>			<span class="prelude-val">Err</span>(err) =&gt; <span class="kw">match </span>err {
+<a href=#76 id=76 data-nosnippet>76</a>				co::ERROR::INSUFFICIENT_BUFFER =&gt; {
+<a href=#77 id=77 data-nosnippet>77</a>					buf.alloc_more_strs();
+<a href=#78 id=78 data-nosnippet>78</a>					<span class="kw">continue</span>;
+<a href=#79 id=79 data-nosnippet>79</a>				},
+<a href=#80 id=80 data-nosnippet>80</a>				err =&gt; <span class="kw">return </span><span class="prelude-val">Err</span>(err),
+<a href=#81 id=81 data-nosnippet>81</a>			},
+<a href=#82 id=82 data-nosnippet>82</a>		}
+<a href=#83 id=83 data-nosnippet>83</a>	}
+<a href=#84 id=84 data-nosnippet>84</a>}
+<a href=#85 id=85 data-nosnippet>85</a>
+<a href=#86 id=86 data-nosnippet>86</a><span class="doccomment">/// [`InternetTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internettimetosystemtime)
+<a href=#87 id=87 data-nosnippet>87</a>/// function.
+<a href=#88 id=88 data-nosnippet>88</a></span><span class="attr">#[must_use]
+<a href=#89 id=89 data-nosnippet>89</a></span><span class="kw">pub fn </span>InternetTimeToSystemTime(time: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;SYSTEMTIME&gt; {
+<a href=#90 id=90 data-nosnippet>90</a>	<span class="kw">let </span><span class="kw-2">mut </span>st = SYSTEMTIME::default();
+<a href=#91 id=91 data-nosnippet>91</a>	bool_to_sysresult(<span class="kw">unsafe </span>{
+<a href=#92 id=92 data-nosnippet>92</a>		ffi::InternetTimeToSystemTimeW(WString::from_str(time).as_ptr(), pvoid(<span class="kw-2">&amp;mut </span>st), <span class="number">0</span>)
+<a href=#93 id=93 data-nosnippet>93</a>	})
+<a href=#94 id=94 data-nosnippet>94</a>	.map(|<span class="kw">_</span>| st)
+<a href=#95 id=95 data-nosnippet>95</a>}</code></pre></div></section></main></body></html>

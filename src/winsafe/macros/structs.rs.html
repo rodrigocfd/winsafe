@@ -152,12 +152,12 @@
 <a href=#152 id=152 data-nosnippet>152</a>		</span><span class="attr">#[must_use]
 <a href=#153 id=153 data-nosnippet>153</a>		</span><span class="kw">pub fn </span><span class="macro-nonterminal">$field</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; <span class="prelude-ty">Option</span>&lt;String&gt; {
 <a href=#154 id=154 data-nosnippet>154</a>			<span class="kw">unsafe </span>{ <span class="self">self</span>.<span class="macro-nonterminal">$field</span>.as_mut() }.map(|psz| {
-<a href=#155 id=155 data-nosnippet>155</a>				WString::from_wchars_count(psz, <span class="self">self</span>.<span class="macro-nonterminal">$length </span><span class="kw">as _</span>).to_string()
+<a href=#155 id=155 data-nosnippet>155</a>				<span class="kw">crate</span>::WString::from_wchars_count(psz, <span class="self">self</span>.<span class="macro-nonterminal">$length </span><span class="kw">as _</span>).to_string()
 <a href=#156 id=156 data-nosnippet>156</a>			})
 <a href=#157 id=157 data-nosnippet>157</a>		}
 <a href=#158 id=158 data-nosnippet>158</a>
 <a href=#159 id=159 data-nosnippet>159</a>		<span class="doccomment">/// Sets the string field.
-<a href=#160 id=160 data-nosnippet>160</a>		</span><span class="kw">pub fn </span><span class="macro-nonterminal">$setter</span>(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="macro-nonterminal">$life </span><span class="kw-2">mut </span>WString&gt;) {
+<a href=#160 id=160 data-nosnippet>160</a>		</span><span class="kw">pub fn </span><span class="macro-nonterminal">$setter</span>(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="macro-nonterminal">$life </span><span class="kw-2">mut </span><span class="kw">crate</span>::WString&gt;) {
 <a href=#161 id=161 data-nosnippet>161</a>			<span class="self">self</span>.<span class="macro-nonterminal">$length </span>= buf.as_ref().map_or(<span class="number">0</span>, |buf| buf.str_len() <span class="kw">as _</span>);
 <a href=#162 id=162 data-nosnippet>162</a>			<span class="self">self</span>.<span class="macro-nonterminal">$field </span>= buf.map_or(
 <a href=#163 id=163 data-nosnippet>163</a>				std::ptr::null_mut(),
@@ -173,12 +173,12 @@
 <a href=#173 id=173 data-nosnippet>173</a>		<span class="doccomment">/// Returns the string field.
 <a href=#174 id=174 data-nosnippet>174</a>		</span><span class="attr">#[must_use]
 <a href=#175 id=175 data-nosnippet>175</a>		</span><span class="kw">pub fn </span><span class="macro-nonterminal">$field</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; String {
-<a href=#176 id=176 data-nosnippet>176</a>			<span class="kw">crate</span>::kernel::decl::WString::from_wchars_slice(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="macro-nonterminal">$field</span>).to_string()
+<a href=#176 id=176 data-nosnippet>176</a>			<span class="kw">crate</span>::WString::from_wchars_slice(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="macro-nonterminal">$field</span>).to_string()
 <a href=#177 id=177 data-nosnippet>177</a>		}
 <a href=#178 id=178 data-nosnippet>178</a>
 <a href=#179 id=179 data-nosnippet>179</a>		<span class="doccomment">/// Sets the string field.
 <a href=#180 id=180 data-nosnippet>180</a>		</span><span class="kw">pub fn </span><span class="macro-nonterminal">$setter</span>(<span class="kw-2">&amp;mut </span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) {
-<a href=#181 id=181 data-nosnippet>181</a>			<span class="kw">crate</span>::kernel::decl::WString::from_str(text).copy_to_slice(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="macro-nonterminal">$field</span>);
+<a href=#181 id=181 data-nosnippet>181</a>			<span class="kw">crate</span>::WString::from_str(text).copy_to_slice(<span class="kw-2">&amp;mut </span><span class="self">self</span>.<span class="macro-nonterminal">$field</span>);
 <a href=#182 id=182 data-nosnippet>182</a>		}
 <a href=#183 id=183 data-nosnippet>183</a>	};
 <a href=#184 id=184 data-nosnippet>184</a>}
@@ -205,7 +205,7 @@
 <a href=#205 id=205 data-nosnippet>205</a>		}
 <a href=#206 id=206 data-nosnippet>206</a>
 <a href=#207 id=207 data-nosnippet>207</a>		<span class="doccomment">/// Sets the string field.
-<a href=#208 id=208 data-nosnippet>208</a>		</span><span class="kw">pub fn </span><span class="macro-nonterminal">$setter</span>(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="macro-nonterminal">$life </span><span class="kw-2">mut </span>WString&gt;) {
+<a href=#208 id=208 data-nosnippet>208</a>		</span><span class="kw">pub fn </span><span class="macro-nonterminal">$setter</span>(<span class="kw-2">&amp;mut </span><span class="self">self</span>, buf: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="macro-nonterminal">$life </span><span class="kw-2">mut </span><span class="kw">crate</span>::WString&gt;) {
 <a href=#209 id=209 data-nosnippet>209</a>			<span class="self">self</span>.<span class="macro-nonterminal">$cch </span>= buf.as_ref().map_or(<span class="number">0</span>, |buf| buf.buf_len() <span class="kw">as _</span>);
 <a href=#210 id=210 data-nosnippet>210</a>			<span class="self">self</span>.<span class="macro-nonterminal">$field </span>= buf.map_or(std::ptr::null_mut(), |buf| {
 <a href=#211 id=211 data-nosnippet>211</a>				<span class="kw">if </span>buf.is_allocated() {
