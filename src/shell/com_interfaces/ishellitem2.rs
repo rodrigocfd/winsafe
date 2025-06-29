@@ -134,6 +134,28 @@ pub trait shell_IShellItem2: shell_IShellItem {
 		.map(|_| queried)
 	}
 
+	/// [`IShellItem2::GetPropertyStoreForKeys`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getpropertystoreforkeys)
+	/// method.
+	#[must_use]
+	fn GetPropertyStoreForKeys(
+		&self,
+		keys: &[co::PKEY],
+		flags: co::GPS,
+	) -> HrResult<IPropertyStore> {
+		let mut queried = unsafe { IPropertyStore::null() };
+		ok_to_hrresult(unsafe {
+			(vt::<IShellItem2VT>(self).GetPropertyStoreForKeys)(
+				self.ptr(),
+				keys.as_ptr() as _,
+				keys.len() as _,
+				flags.raw(),
+				pcvoid(&IPropertyStore::IID),
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
+	}
+
 	/// [`IShellItem2::GetUInt32`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getuint32)
 	/// method.
 	///
