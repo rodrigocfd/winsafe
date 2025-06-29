@@ -497,7 +497,13 @@ impl Buffer {
 	const unsafe fn as_mut_ptr(&mut self) -> *mut u16 {
 		match self {
 			Self::Stack(arr) => arr.as_mut_ptr(),
-			Self::Heap(vec) => vec.as_mut_ptr(),
+			Self::Heap(vec) => {
+				if vec.is_empty() {
+					std::ptr::null_mut() // because empty Vec returns garbage as ptr
+				} else {
+					vec.as_mut_ptr()
+				}
+			},
 			Self::Unallocated => panic!("Trying to use an unallocated WString buffer."),
 		}
 	}
@@ -515,7 +521,13 @@ impl Buffer {
 	const fn as_ptr(&self) -> *const u16 {
 		match self {
 			Self::Stack(arr) => arr.as_ptr(),
-			Self::Heap(vec) => vec.as_ptr(),
+			Self::Heap(vec) => {
+				if vec.is_empty() {
+					std::ptr::null() // because empty Vec returns garbage as ptr
+				} else {
+					vec.as_ptr()
+				}
+			},
 			Self::Unallocated => std::ptr::null(),
 		}
 	}

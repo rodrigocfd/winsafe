@@ -147,11 +147,17 @@ const_ordinary! { HTTP_QUERY_FLAG: u32;
 }
 
 const_bitflag! { ICU: u32;
-	/// [`InternetCanonicalizeUrl`](crate::InternetCanonicalizeUrl) and
-	/// [`InternetCombineUrl`](crate::InternetCombineUrl) `flags` (`u32`).
+	/// [`InternetCanonicalizeUrl`](crate::InternetCanonicalizeUrl),
+	/// [`InternetCombineUrl`](crate::InternetCombineUrl) and
+	/// [`InternetCrackUrl`](crate::InternetCrackUrl) `flags` (`u32`).
 	=>
 	/// None of the actual values (zero).
 	NoValue 0
+	/// (Un)escape URL characters.
+	ESCAPE 0x8000_0000
+	/// Use internal username & password.
+	USERNAME 0x4000_0000
+
 	/// Don't convert unsafe characters to escape sequence.
 	NO_ENCODE 0x2000_0000
 	/// Convert %XX escape sequences to characters.
@@ -164,6 +170,30 @@ const_bitflag! { ICU: u32;
 	BROWSER_MODE 0x0200_0000
 	/// Encode any percent (ASCII25).
 	ENCODE_PERCENT 0x0000_1000
+}
+
+const_ordinary! { INTERNET_DEFAULT_PORT: u16;
+	/// [`HINTERNET::InternetOpen`](crate::HINTERNET::InternetOpen) `port`
+	/// (`u16`).
+	///
+	/// Originally has `INTERNET_DEFAULT` prefix and `PORT` suffix.
+	=>
+	/// None of the actual values (zero).
+	NoValue 0
+
+	/// Uses the default port for the service specified by `service``.
+	INVALID 0
+	/// Uses the default port for FTP servers (port 21).
+	FTP 21
+	/// Uses the default port for Gopher servers (port 70).
+	GOPHER 70
+	/// Uses the default port for HTTP servers (port 80).
+	HTTP 80
+	/// Uses the default port for Secure Hypertext Transfer Protocol (HTTPS)
+	/// servers (port 443).
+	HTTPS 443
+	/// Uses the default port for SOCKS firewall servers (port 1080).
+	SOCKS 1080
 }
 
 const_bitflag! { INTERNET_FLAG: u32;
@@ -272,28 +302,24 @@ const_ordinary! { INTERNET_OPEN_TYPE: u32;
 	PRECONFIG_WITH_NO_AUTOPROXY 4
 }
 
-const_ordinary! { INTERNET_DEFAULT_PORT: u16;
-	/// [`HINTERNET::InternetOpen`](crate::HINTERNET::InternetOpen) `port`
-	/// (`u16`).
-	///
-	/// Originally has `INTERNET_DEFAULT` prefix and `PORT` suffix.
+const_ordinary! { INTERNET_SCHEME: i32;
+	/// [`INTERNET_SCHEME`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/ne-wininet-internet_scheme)
+	/// enumeration (`i32`).
 	=>
-	/// None of the actual values (zero).
-	NoValue 0
-
-	/// Uses the default port for the service specified by `service``.
-	INVALID 0
-	/// Uses the default port for FTP servers (port 21).
-	FTP 21
-	/// Uses the default port for Gopher servers (port 70).
-	GOPHER 70
-	/// Uses the default port for HTTP servers (port 80).
-	HTTP 80
-	/// Uses the default port for Secure Hypertext Transfer Protocol (HTTPS)
-	/// servers (port 443).
-	HTTPS 443
-	/// Uses the default port for SOCKS firewall servers (port 1080).
-	SOCKS 1080
+	PARTIAL -2
+	UNKNOWN -1
+	DEFAULT 0
+	FTP 1
+	GOPHER 2
+	HTTP 3
+	HTTPS 4
+	FILE 5
+	NEWS 6
+	MAILTO 7
+	SOCKS 8
+	JAVASCRIPT 9
+	VBSCRIPT 10
+	RES 11
 }
 
 const_ordinary! { INTERNET_SERVICE: u32;
