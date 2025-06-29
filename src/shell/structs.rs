@@ -62,6 +62,26 @@ impl NOTIFYICONDATA {
 
 /// [`PIDL`](https://learn.microsoft.com/en-us/windows/win32/api/shtypes/ns-shtypes-itemidlist)
 /// struct.
+///
+/// # Examples
+///
+/// Retrieving the `PIDL` from an [`IShellItem`](crate::IShellItem) with
+/// [`SHGetIDListFromObject`](crate::SHGetIDListFromObject):
+///
+/// ```no_run
+/// use winsafe::{self as w, prelude::*, co};
+///
+/// let _com_guard = w::CoInitializeEx(
+///     co::COINIT::APARTMENTTHREADED | co::COINIT::DISABLE_OLE1DDE)?;
+///
+/// let f = w::SHCreateItemFromParsingName::<w::IShellItem>(
+///     "C:\\Temp",
+///     None::<&w::IBindCtx>,
+/// )?;
+///
+/// let pidl = w::SHGetIDListFromObject(&f)?;
+/// # w::HrResult::Ok(())
+/// ```
 #[repr(transparent)]
 pub struct PIDL(*mut ITEMIDLIST);
 
