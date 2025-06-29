@@ -28,3 +28,14 @@ pub fn InternetCanonicalizeUrl(url: &str, flags: co::ICU) -> SysResult<String> {
 		}
 	}
 }
+
+/// [`InternetTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internettimetosystemtime)
+/// function.
+#[must_use]
+pub fn InternetTimeToSystemTime(time: &str) -> SysResult<SYSTEMTIME> {
+	let mut st = SYSTEMTIME::default();
+	bool_to_sysresult(unsafe {
+		ffi::InternetTimeToSystemTimeW(WString::from_str(time).as_ptr(), pvoid(&mut st), 0)
+	})
+	.map(|_| st)
+}

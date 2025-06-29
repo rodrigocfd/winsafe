@@ -12,4 +12,5 @@ extern_sys! { "wininet";
 	InternetOpenW(PCSTR, u32, PCSTR, PCSTR, u32) -> HANDLE
 	InternetQueryDataAvailable(HANDLE, *mut u32, u32, isize) -> BOOL
 	InternetReadFile(HANDLE, PVOID, u32, *mut u32) -> BOOL
+	InternetTimeToSystemTimeW(PCSTR, PVOID, u32) -> BOOL
 }
