@@ -3,7 +3,6 @@
 use crate::advapi_shell::ffi;
 use crate::co;
 use crate::decl::*;
-use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::ole::privs::*;
 
@@ -65,9 +64,5 @@ pub fn SHGetKnownFolderPath(
 			&mut pstr,
 		)
 	})
-	.map(|_| {
-		let path = unsafe { WString::from_wchars_nullt(pstr) };
-		let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
-		path.to_string()
-	})
+	.map(|_| htaskmem_ptr_to_str(pstr))
 }

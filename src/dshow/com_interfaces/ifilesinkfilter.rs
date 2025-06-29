@@ -2,7 +2,6 @@
 
 use crate::decl::*;
 use crate::dshow::vts::*;
-use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -61,11 +60,7 @@ pub trait dshow_IFileSinkFilter: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IFileSinkFilterVT>(self).GetCurFile)(self.ptr(), &mut pstr, pvoid_or_null(mt))
 		})
-		.map(|_| {
-			let name = unsafe { WString::from_wchars_nullt(pstr) };
-			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
-			name.to_string()
-		})
+		.map(|_| htaskmem_ptr_to_str(pstr))
 	}
 
 	/// [`IFileSinkFilter::SetFileName`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifilesinkfilter-setfilename)

@@ -2,7 +2,6 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -165,11 +164,7 @@ pub trait shell_IShellItem2: shell_IShellItem {
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItem2VT>(self).GetString)(self.ptr(), pcvoid(key), &mut pstr)
 		})
-		.map(|_| {
-			let path = unsafe { WString::from_wchars_nullt(pstr) };
-			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
-			path.to_string()
-		})
+		.map(|_| htaskmem_ptr_to_str(pstr))
 	}
 
 	/// [`IShellItem2::GetUInt32`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ishellitem2-getuint32)

@@ -2,7 +2,6 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::oleaut::ffi;
@@ -77,13 +76,8 @@ pub fn OleLoadPicturePath(path: &str, transparent_color: Option<COLORREF>) -> Hr
 #[must_use]
 pub fn PSGetNameFromPropertyKey(prop_key: &co::PKEY) -> HrResult<String> {
 	let mut pstr = std::ptr::null_mut::<u16>();
-	ok_to_hrresult(unsafe { ffi::PSGetNameFromPropertyKey(pcvoid(prop_key), &mut pstr) }).map(
-		|_| {
-			let name = unsafe { WString::from_wchars_nullt(pstr) };
-			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
-			name.to_string()
-		},
-	)
+	ok_to_hrresult(unsafe { ffi::PSGetNameFromPropertyKey(pcvoid(prop_key), &mut pstr) })
+		.map(|_| htaskmem_ptr_to_str(pstr))
 }
 
 /// [`SystemTimeToVariantTime`](https://learn.microsoft.com/en-us/windows/win32/api/oleauto/nf-oleauto-systemtimetovarianttime)

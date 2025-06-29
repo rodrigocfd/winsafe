@@ -3,7 +3,6 @@
 use crate::co;
 use crate::decl::*;
 use crate::dshow::vts::*;
-use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -95,11 +94,8 @@ pub trait dshow_IPin: ole_IUnknown {
 	#[must_use]
 	fn QueryId(&self) -> HrResult<String> {
 		let mut pstr = std::ptr::null_mut::<u16>();
-		ok_to_hrresult(unsafe { (vt::<IPinVT>(self).QueryId)(self.ptr(), &mut pstr) }).map(|_| {
-			let name = unsafe { WString::from_wchars_nullt(pstr) };
-			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
-			name.to_string()
-		})
+		ok_to_hrresult(unsafe { (vt::<IPinVT>(self).QueryId)(self.ptr(), &mut pstr) })
+			.map(|_| htaskmem_ptr_to_str(pstr))
 	}
 
 	/// [`IPin::QueryInternalConnections`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ipin-queryinternalconnections)

@@ -2,7 +2,6 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -133,11 +132,7 @@ pub trait shell_IShellItem: ole_IUnknown {
 		ok_to_hrresult(unsafe {
 			(vt::<IShellItemVT>(self).GetDisplayName)(self.ptr(), sigdn_name.raw(), &mut pstr)
 		})
-		.map(|_| {
-			let name = unsafe { WString::from_wchars_nullt(pstr) };
-			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
-			name.to_string()
-		})
+		.map(|_| htaskmem_ptr_to_str(pstr))
 	}
 
 	fn_com_interface_get! { GetParent: IShellItemVT => IShellItem;

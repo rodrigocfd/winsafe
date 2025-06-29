@@ -2,6 +2,7 @@ use std::mem::ManuallyDrop;
 
 use crate::co;
 use crate::decl::*;
+use crate::guard::*;
 use crate::kernel::ffi_types::*;
 use crate::prelude::*;
 
@@ -14,15 +15,6 @@ use crate::prelude::*;
 pub(crate) unsafe fn vt<T>(obj: &impl ole_IUnknown) -> &T {
 	let ppvt = obj.ptr() as *mut *mut T;
 	unsafe { &**ppvt }
-}
-
-/// Given the pointer to the memory block, converts it to the `Box` of the
-/// allocated VT struct.
-#[must_use]
-pub(crate) fn box_impl_of<T>(p: COMPTR) -> ManuallyDrop<Box<T>> {
-	let pp = p as *mut *mut T;
-	let box_impl = ManuallyDrop::new(unsafe { Box::from_raw(*pp) });
-	box_impl
 }
 
 /// If value is `S_OK` yields `Ok()`, othersize `Err(hresult)`.
@@ -54,8 +46,30 @@ pub(crate) fn hrresult_to_hres<T>(hrr: HrResult<T>) -> HRES {
 	}
 }
 
+/// Converts the `*mut u16` to `String`, and releases the pointer with
+/// `CoTaskMemFree`.
+#[must_use]
+pub(crate) fn htaskmem_ptr_to_str(p: *mut u16) -> String {
+	let wstr = unsafe { WString::from_wchars_nullt(p) };
+	let _ = unsafe { CoTaskMemFreeGuard::new(p as _, 0) };
+	wstr.to_string()
+}
+
+/// Given the pointer to the memory block, converts it to the `Box` of the
+/// allocated VT struct.
+///
+/// Used with COM interface impls.
+#[must_use]
+pub(crate) fn box_impl_of<T>(p: COMPTR) -> ManuallyDrop<Box<T>> {
+	let pp = p as *mut *mut T;
+	let box_impl = ManuallyDrop::new(unsafe { Box::from_raw(*pp) });
+	box_impl
+}
+
 /// If the error is `HrResult`, returns it, otherwise displays a message box
 /// with the error and returns `ERROR::E_UNEXPECTED`.
+///
+/// Used with COM interface impls.
 #[must_use]
 pub(crate) fn anyresult_to_hresult<T>(res: AnyResult<T>) -> HrResult<T> {
 	res.map_err(|err| {

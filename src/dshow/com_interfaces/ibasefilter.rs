@@ -2,7 +2,6 @@
 
 use crate::decl::*;
 use crate::dshow::vts::*;
-use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -90,10 +89,6 @@ pub trait dshow_IBaseFilter: dshow_IMediaFilter {
 		ok_to_hrresult(unsafe {
 			(vt::<IBaseFilterVT>(self).QueryVendorInfo)(self.ptr(), &mut pstr)
 		})
-		.map(|_| {
-			let name = unsafe { WString::from_wchars_nullt(pstr) };
-			let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
-			name.to_string()
-		})
+		.map(|_| htaskmem_ptr_to_str(pstr))
 	}
 }

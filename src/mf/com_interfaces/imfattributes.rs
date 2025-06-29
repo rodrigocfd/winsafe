@@ -118,22 +118,18 @@ pub trait mf_IMFAttributes: ole_IUnknown {
 	/// allocates only once, thus being more efficient.
 	#[must_use]
 	fn GetAllocatedString(&self, guid_key: &GUID) -> HrResult<String> {
-		let mut pbuf = std::ptr::null_mut::<u16>();
+		let mut pstr = std::ptr::null_mut::<u16>();
 		let mut nchars = 0u32;
 
 		ok_to_hrresult(unsafe {
 			(vt::<IMFAttributesVT>(self).GetAllocatedString)(
 				self.ptr(),
 				pcvoid(guid_key),
-				&mut pbuf,
+				&mut pstr,
 				&mut nchars,
 			)
 		})
-		.map(|_| {
-			let str = unsafe { WString::from_wchars_nullt(pbuf) };
-			let _ = unsafe { CoTaskMemFreeGuard::new(pbuf as _, 0) };
-			str.to_string()
-		})
+		.map(|_| htaskmem_ptr_to_str(pstr))
 	}
 
 	/// [`IMFAttributes::GetBlob`](https://learn.microsoft.com/en-us/windows/win32/api/mfobjects/nf-mfobjects-imfattributes-getblob)

@@ -2,7 +2,6 @@
 
 use crate::co;
 use crate::decl::*;
-use crate::guard::*;
 use crate::kernel::privs::*;
 use crate::ole::privs::*;
 use crate::prelude::*;
@@ -69,11 +68,7 @@ pub trait shell_IFileDialog: shell_IModalWindow {
 	fn GetFileName(&self) -> HrResult<String> {
 		let mut pstr = std::ptr::null_mut::<u16>();
 		ok_to_hrresult(unsafe { (vt::<IFileDialogVT>(self).GetFileName)(self.ptr(), &mut pstr) })
-			.map(|_| {
-				let name = unsafe { WString::from_wchars_nullt(pstr) };
-				let _ = unsafe { CoTaskMemFreeGuard::new(pstr as _, 0) };
-				name.to_string()
-			})
+			.map(|_| htaskmem_ptr_to_str(pstr))
 	}
 
 	/// [`IFileDialog::GetFileTypeIndex`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifiledialog-getfiletypeindex)
