@@ -13,15 +13,15 @@ macro_rules! pub_struct_msg_empty {
 		#[derive(Clone, Copy)]
 		pub struct $name {}
 
-		impl MsgSend for $name {
+		impl crate::prelude::MsgSend for $name {
 			type RetType = ();
 
 			unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
 				()
 			}
 
-			fn as_generic_wm(&mut self) -> WndMsg {
-				WndMsg {
+			fn as_generic_wm(&mut self) -> crate::msg::WndMsg {
+				crate::msg::WndMsg {
 					msg_id: $wmconst,
 					wparam: 0,
 					lparam: 0,
@@ -43,8 +43,8 @@ macro_rules! pub_struct_msg_empty_handleable {
 			$( #[$msdn] )*
 		}
 
-		impl MsgSendRecv for $name {
-			unsafe fn from_generic_wm(_: WndMsg) -> Self {
+		impl crate::prelude::MsgSendRecv for $name {
+			unsafe fn from_generic_wm(_: crate::msg::WndMsg) -> Self {
 				Self {}
 			}
 		}
@@ -82,9 +82,9 @@ macro_rules! pub_struct_msg_char_code {
 				crate::msg::WndMsg {
 					msg_id: $wmconst,
 					wparam: self.char_code as _,
-					lparam: crate::kernel::decl::MAKEDWORD(
+					lparam: crate::MAKEDWORD(
 						self.repeat_count,
-						crate::kernel::decl::MAKEWORD(
+						crate::MAKEWORD(
 							self.scan_code,
 							if self.is_extended_key { 0b0000_0001 } else { 0 } |
 							if self.has_alt_key { 0b0010_0000 } else { 0 } |
@@ -98,7 +98,7 @@ macro_rules! pub_struct_msg_char_code {
 
 		impl crate::prelude::MsgSendRecv for $name {
 			unsafe fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
-				use crate::kernel::decl::{HIBYTE, HIWORD, LOBYTE, LOWORD};
+				use crate::{HIBYTE, HIWORD, LOBYTE, LOWORD};
 				Self {
 					char_code: p.wparam as _,
 					repeat_count: LOWORD(p.lparam as _),
@@ -144,9 +144,9 @@ macro_rules! pub_struct_msg_char_key {
 				crate::msg::WndMsg {
 					msg_id: $wmconst,
 					wparam: self.vkey_code.raw() as _,
-					lparam: crate::kernel::decl::MAKEDWORD(
+					lparam: crate::MAKEDWORD(
 						self.repeat_count,
-						crate::kernel::decl::MAKEWORD(
+						crate::MAKEWORD(
 							self.scan_code,
 							if self.is_extended_key { 0b0000_0001 } else { 0 } |
 							if self.has_alt_key { 0b0010_0000 } else { 0 } |
@@ -160,7 +160,7 @@ macro_rules! pub_struct_msg_char_key {
 
 		impl crate::prelude::MsgSendRecv for $name {
 			unsafe fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
-				use crate::kernel::decl::{HIBYTE, HIWORD, LOBYTE, LOWORD};
+				use crate::{HIBYTE, HIWORD, LOBYTE, LOWORD};
 				Self {
 					vkey_code: unsafe{co::VK::from_raw(p.wparam as _)},
 					repeat_count: LOWORD(p.lparam as _),
@@ -186,24 +186,24 @@ macro_rules! pub_struct_msg_ctlcolor {
 		///
 		/// Return type: `HBRUSH`.
 		pub struct $name {
-			pub hdc: crate::user::decl::HDC,
-			pub hwnd: crate::user::decl::HWND,
+			pub hdc: crate::HDC,
+			pub hwnd: crate::HWND,
 		}
 
 		impl crate::prelude::MsgSend for $name {
-			type RetType = crate::user::decl::HBRUSH;
+			type RetType = crate::HBRUSH;
 
 			unsafe fn isize_to_ret(&self, v: isize) -> Self::RetType {
 				unsafe {
-					<crate::user::decl::HBRUSH as crate::prelude::Handle>::from_ptr(v as _)
+					<crate::HBRUSH as crate::prelude::Handle>::from_ptr(v as _)
 				}
 			}
 
 			fn as_generic_wm(&mut self) -> crate::msg::WndMsg {
 				crate::msg::WndMsg {
 					msg_id: $wmconst,
-					wparam: <crate::user::decl::HDC as crate::prelude::Handle>::ptr(&self.hdc) as _,
-					lparam: <crate::user::decl::HWND as crate::prelude::Handle>::ptr(&self.hwnd) as _,
+					wparam: <crate::HDC as crate::prelude::Handle>::ptr(&self.hdc) as _,
+					lparam: <crate::HWND as crate::prelude::Handle>::ptr(&self.hwnd) as _,
 				}
 			}
 		}
@@ -212,8 +212,8 @@ macro_rules! pub_struct_msg_ctlcolor {
 			unsafe fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
 				unsafe {
 					Self {
-						hdc: <crate::user::decl::HDC as crate::prelude::Handle>::from_ptr(p.wparam as _),
-						hwnd: <crate::user::decl::HWND as crate::prelude::Handle>::from_ptr(p.lparam as _),
+						hdc: <crate::HDC as crate::prelude::Handle>::from_ptr(p.wparam as _),
+						hwnd: <crate::HWND as crate::prelude::Handle>::from_ptr(p.lparam as _),
 					}
 				}
 			}
@@ -232,11 +232,11 @@ macro_rules! pub_struct_msg_button {
 		///
 		/// Return type: `()`.
 		pub struct $name {
-			pub vkey_code: co::VK,
-			pub coords: POINT,
+			pub vkey_code: crate::co::VK,
+			pub coords: crate::POINT,
 		}
 
-		impl MsgSend for $name {
+		impl crate::prelude::MsgSend for $name {
 			type RetType = ();
 
 			unsafe fn isize_to_ret(&self, _: isize) -> Self::RetType {
@@ -244,7 +244,7 @@ macro_rules! pub_struct_msg_button {
 			}
 
 			fn as_generic_wm(&mut self) -> WndMsg {
-				WndMsg {
+				crate::msg::WndMsg {
 					msg_id: $wmconst,
 					wparam: self.vkey_code.raw() as _,
 					lparam: u32::from(self.coords) as _,
@@ -252,13 +252,13 @@ macro_rules! pub_struct_msg_button {
 			}
 		}
 
-		impl MsgSendRecv for $name {
-			unsafe fn from_generic_wm(p: WndMsg) -> Self {
+		impl crate::prelude::MsgSendRecv for $name {
+			unsafe fn from_generic_wm(p: crate::msg::WndMsg) -> Self {
 				Self {
-					vkey_code: unsafe { co::VK::from_raw(p.wparam as _) },
-					coords: POINT {
-						x: LOWORD(p.lparam as _) as _,
-						y: HIWORD(p.lparam as _) as _,
+					vkey_code: unsafe { crate::co::VK::from_raw(p.wparam as _) },
+					coords: crate::POINT {
+						x: crate::LOWORD(p.lparam as _) as _,
+						y: crate::HIWORD(p.lparam as _) as _,
 					},
 				}
 			}

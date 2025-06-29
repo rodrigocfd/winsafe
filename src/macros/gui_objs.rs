@@ -20,8 +20,8 @@ macro_rules! native_ctrl {
 			}
 		}
 
-		impl<$( $genp )?> GuiWindow for $name<$( $genp )?> {
-			fn hwnd(&self) -> &crate::user::decl::HWND {
+		impl<$( $genp )?> crate::prelude::GuiWindow for $name<$( $genp )?> {
+			fn hwnd(&self) -> &crate::HWND {
 				self.0.base.hwnd()
 			}
 
@@ -30,7 +30,7 @@ macro_rules! native_ctrl {
 			}
 		}
 
-		impl<$( $genp )?> GuiControl for $name<$( $genp )?> {
+		impl<$( $genp )?> crate::prelude::GuiControl for $name<$( $genp )?> {
 			fn ctrl_id(&self) -> u16 {
 				self.0.base.ctrl_id()
 			}
@@ -48,7 +48,7 @@ macro_rules! native_ctrl {
 			/// Panics if the control or the parent window are already created. Events
 			/// must be set before control and parent window creation.
 			#[must_use]
-			pub fn on_subclass(&self) -> &WindowEvents {
+			pub fn on_subclass(&self) -> &crate::gui::events::WindowEvents {
 				self.0.base.on_subclass()
 			}
 
@@ -61,7 +61,7 @@ macro_rules! native_ctrl {
 				/// control creation.
 				#[must_use]
 				pub fn on(&self) -> &$events {
-					if *self.hwnd() != HWND::NULL {
+					if *self.hwnd() != crate::HWND::NULL {
 						panic!("Cannot add events after control creation.");
 					}
 					&self.0.events

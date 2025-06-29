@@ -4,7 +4,6 @@ use std::pin::Pin;
 use std::sync::Arc;
 
 use crate::co;
-use crate::decl::*;
 use crate::gui::{events::*, privs::*, *};
 use crate::msg::*;
 use crate::prelude::*;

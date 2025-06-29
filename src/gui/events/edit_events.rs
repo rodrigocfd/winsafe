@@ -1,5 +1,4 @@
 use crate::co;
-use crate::decl::*;
 use crate::gui::{events::*, privs::*};
 
 /// Exposes edit control

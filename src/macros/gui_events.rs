@@ -8,7 +8,7 @@ macro_rules! pub_fn_wm_noparm_noret {
 	) => {
 		$( #[$doc] )*
 		pub fn $name<F>(&self, func: F) -> &Self
-			where F: Fn() -> AnyResult<()> + 'static,
+			where F: Fn() -> crate::AnyResult<()> + 'static,
 		{
 			let def_proc_val = self.wnd_ty.def_proc_val();
 			self.wm($wmconst, move |_| {
@@ -28,7 +28,7 @@ macro_rules! pub_fn_wm_noparm_boolret {
 	) => {
 		$( #[$doc] )*
 		pub fn $name<F>(&self, func: F) -> &Self
-			where F: Fn() -> AnyResult<bool> + 'static,
+			where F: Fn() -> crate::AnyResult<bool> + 'static,
 		{
 			self.wm($wmconst, move |_| {
 				Ok(func()? as _)
@@ -46,7 +46,7 @@ macro_rules! pub_fn_wm_withparm_noret {
 	) => {
 		$( #[$doc] )*
 		pub fn $name<F>(&self, func: F) -> &Self
-			where F: Fn($parm) -> AnyResult<()> + 'static,
+			where F: Fn($parm) -> crate::AnyResult<()> + 'static,
 		{
 			let def_proc_val = self.wnd_ty.def_proc_val();
 			self.wm($wmconst, move |p| {
@@ -66,7 +66,7 @@ macro_rules! pub_fn_wm_withparm_boolret {
 	) => {
 		$( #[$doc] )*
 		pub fn $name<F>(&self, func: F) -> &Self
-			where F: Fn($parm) -> AnyResult<bool> + 'static,
+			where F: Fn($parm) -> crate::AnyResult<bool> + 'static,
 		{
 			self.wm($wmconst, move |p| {
 				Ok(func(unsafe { <$parm>::from_generic_wm(p) })? as _)
@@ -84,7 +84,7 @@ macro_rules! pub_fn_wm_withparm_coret {
 	) => {
 		$( #[$doc] )*
 		pub fn $name<F>(&self, func: F) -> &Self
-			where F: Fn($parm) -> AnyResult<$coret> + 'static,
+			where F: Fn($parm) -> crate::AnyResult<$coret> + 'static,
 		{
 			self.wm($wmconst, move |p| {
 				Ok(func(unsafe { <$parm>::from_generic_wm(p) })?.raw() as _)
@@ -102,7 +102,7 @@ macro_rules! pub_fn_wm_ctlcolor {
 	) => {
 		$( #[$doc] )*
 		pub fn $name<F>(&self, func: F) -> &Self
-			where F: Fn($parm) -> AnyResult<crate::user::decl::HBRUSH> + 'static,
+			where F: Fn($parm) -> crate::AnyResult<crate::HBRUSH> + 'static,
 		{
 			self.wm($wmconst, move |p| {
 				Ok(func(unsafe { <$parm>::from_generic_wm(p) })?.ptr() as _)
@@ -120,7 +120,7 @@ macro_rules! pub_fn_cmd_noparm_noret {
 	) => {
 		$( #[$doc] )*
 		pub fn $name<F>(&self, func: F) -> &Self
-			where F: Fn() -> AnyResult<()> + 'static,
+			where F: Fn() -> crate::AnyResult<()> + 'static,
 		{
 			self.0.wm_command($cmd, move || {
 				func()
@@ -138,7 +138,7 @@ macro_rules! pub_fn_nfy_noparm_noret {
 	) => {
 		$( #[$doc] )*
 		pub fn $name<F>(&self, func: F) -> &Self
-			where F: Fn() -> AnyResult<()> + 'static,
+			where F: Fn() -> crate::AnyResult<()> + 'static,
 		{
 			let def_proc_val = self.0.wnd_ty().def_proc_val();
 			self.0.wm_notify($nfy, move |_| {
@@ -158,7 +158,7 @@ macro_rules! pub_fn_nfy_withparm_noret {
 	) => {
 		$( #[$doc] )*
 		pub fn $name<F>(&self, func: F) -> &Self
-			where F: Fn(&$param) -> AnyResult<()> + 'static,
+			where F: Fn(&$param) -> crate::AnyResult<()> + 'static,
 		{
 			let def_proc_val = self.0.wnd_ty().def_proc_val();
 			self.0.wm_notify($nfy, move |p| {
@@ -178,7 +178,7 @@ macro_rules! pub_fn_nfy_withmutparm_noret {
 	) => {
 		$( #[$doc] )*
 		pub fn $name<F>(&self, func: F) -> &Self
-			where F: Fn(&mut $param) -> AnyResult<()> + 'static,
+			where F: Fn(&mut $param) -> crate::AnyResult<()> + 'static,
 		{
 			let def_proc_val = self.0.wnd_ty().def_proc_val();
 			self.0.wm_notify($nfy, move |p| {
@@ -198,7 +198,7 @@ macro_rules! pub_fn_nfy_noparm_boolret {
 	) => {
 		$( #[$doc] )*
 		pub fn $name<F>(&self, func: F) -> &Self
-			where F: Fn() -> AnyResult<bool> + 'static,
+			where F: Fn() -> crate::AnyResult<bool> + 'static,
 		{
 			self.0.wm_notify($nfy, move |_| {
 				Ok(func()? as _)
@@ -216,7 +216,7 @@ macro_rules! pub_fn_nfy_withparm_boolret {
 	) => {
 		$( #[$doc] )*
 		pub fn $name<F>(&self, func: F) -> &Self
-			where F: Fn(&$param) -> AnyResult<bool> + 'static,
+			where F: Fn(&$param) -> crate::AnyResult<bool> + 'static,
 		{
 			self.0.wm_notify($nfy, move |p| {
 				Ok(func(unsafe { p.cast_nmhdr::<$param>() })? as _)
@@ -234,7 +234,7 @@ macro_rules! pub_fn_nfy_noparm_i32ret {
 	) => {
 		$( #[$doc] )*
 		pub fn $name<F>(&self, func: F) -> &Self
-			where F: Fn() -> AnyResult<i32> + 'static,
+			where F: Fn() -> crate::AnyResult<i32> + 'static,
 		{
 			self.0.wm_notify($nfy, move |_| {
 				Ok(func()? as _)
@@ -252,7 +252,7 @@ macro_rules! pub_fn_nfy_withparm_i32ret {
 	) => {
 		$( #[$doc] )*
 		pub fn $name<F>(&self, func: F) -> &Self
-			where F: Fn(&$param) -> AnyResult<i32> + 'static,
+			where F: Fn(&$param) -> crate::AnyResult<i32> + 'static,
 		{
 			self.0.wm_notify($nfy, move |p| {
 				Ok(func(unsafe { p.cast_nmhdr::<$param>() })? as _)

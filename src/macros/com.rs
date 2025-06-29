@@ -56,7 +56,7 @@ macro_rules! fn_com_noparm {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		fn $method(&self) -> HrResult<()> {
+		fn $method(&self) -> crate::HrResult<()> {
 			crate::ole::privs::ok_to_hrresult(
 				unsafe {
 					(crate::ole::privs::vt::<$vt>(self).$method)(self.ptr())
@@ -87,7 +87,7 @@ macro_rules! fn_com_interface_get {
 	) => {
 		$( #[$doc] )*
 		#[must_use]
-		fn $method(&self) -> HrResult<$iface> {
+		fn $method(&self) -> crate::HrResult<$iface> {
 			use crate::prelude::ole_IUnknown;
 			let mut queried = unsafe { <$iface>::null() };
 			crate::ole::privs::ok_to_hrresult(
@@ -107,14 +107,14 @@ macro_rules! fn_com_bstr_get {
 	) => {
 		$( #[$doc] )*
 		#[must_use]
-		fn $method(&self) -> HrResult<String> {
+		fn $method(&self) -> crate::HrResult<String> {
 			let mut pstr = std::ptr::null_mut::<u16>();
 			crate::ole::privs::ok_to_hrresult(
 				unsafe {
 					(crate::ole::privs::vt::<$vt>(self).$method)(self.ptr(), &mut pstr)
 				},
 			).map(|_| {
-				let bstr = unsafe { crate::oleaut::decl::BSTR::from_ptr(pstr) };
+				let bstr = unsafe { crate::BSTR::from_ptr(pstr) };
 				bstr.to_string()
 			})
 		}
@@ -128,12 +128,12 @@ macro_rules! fn_com_bstr_set {
 		$( #[$doc:meta] )*
 	) => {
 		$( #[$doc] )*
-		fn $method(&self, $arg: &str) -> HrResult<()> {
+		fn $method(&self, $arg: &str) -> crate::HrResult<()> {
 			crate::ole::privs::ok_to_hrresult(
 				unsafe {
 					(crate::ole::privs::vt::<$vt>(self).$method)(
 						self.ptr(),
-						crate::oleaut::decl::BSTR::SysAllocString($arg)?.as_ptr(),
+						crate::BSTR::SysAllocString($arg)?.as_ptr(),
 					)
 				},
 			)
@@ -283,16 +283,16 @@ macro_rules! const_guid {
 		$( #[$doc] )*
 		#[repr(transparent)]
 		#[derive(Clone, Copy, PartialEq, Eq, Hash, Default)]
-		pub struct $name(crate::kernel::decl::GUID);
+		pub struct $name(crate::GUID);
 
-		impl From<crate::kernel::decl::GUID> for $name {
-			fn from(guid: crate::kernel::decl::GUID) -> Self {
+		impl From<crate::GUID> for $name {
+			fn from(guid: crate::GUID) -> Self {
 				Self(guid)
 			}
 		}
 
-		impl AsRef<crate::kernel::decl::GUID> for $name {
-			fn as_ref(&self) -> &crate::kernel::decl::GUID {
+		impl AsRef<crate::GUID> for $name {
+			fn as_ref(&self) -> &crate::GUID {
 				&self.0
 			}
 		}
@@ -317,7 +317,7 @@ macro_rules! const_guid {
 			/// Be sure the given value is meaningful for the actual type.
 			#[must_use]
 			pub const unsafe fn from_raw(guid_str: &str) -> Self {
-				Self(crate::kernel::decl::GUID::from_str(guid_str))
+				Self(crate::GUID::from_str(guid_str))
 			}
 		}
 
