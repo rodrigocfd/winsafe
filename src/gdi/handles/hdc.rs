@@ -482,11 +482,13 @@ impl HDC {
 	#[must_use]
 	pub fn GetTextExtentPoint32(&self, text: &str) -> SysResult<SIZE> {
 		let mut sz = SIZE::default();
+		let wtext = WString::from_str(text);
+
 		bool_to_invalidparm(unsafe {
 			ffi::GetTextExtentPoint32W(
 				self.ptr(),
-				WString::from_str(text).as_ptr(),
-				text.chars().count() as _,
+				wtext.as_ptr(),
+				wtext.str_len() as _,
 				pvoid(&mut sz),
 			)
 		})

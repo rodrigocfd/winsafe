@@ -77,12 +77,13 @@ impl HINTERNET {
 		flags: co::INTERNET_FLAG,
 		context: Option<isize>,
 	) -> SysResult<InternetCloseHandleGuard<HINTERNETREQUEST>> {
+		let wheaders = WString::from_opt_str(headers);
 		unsafe {
 			ptr_to_sysresult_handle(ffi::InternetOpenUrlW(
 				self.ptr(),
 				WString::from_str(url).as_ptr(),
-				WString::from_opt_str(headers).as_ptr(),
-				headers.map_or(0, |h| h.chars().count() as _),
+				wheaders.as_ptr(),
+				wheaders.str_len() as _,
 				flags.raw(),
 				context.unwrap_or_default(),
 			))

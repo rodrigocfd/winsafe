@@ -92,11 +92,12 @@ impl HINTERNETREQUEST {
 		headers: &str,
 		modifiers: co::HTTP_ADDREQ,
 	) -> SysResult<()> {
+		let wheaders = WString::from_str(headers);
 		bool_to_sysresult(unsafe {
 			ffi::HttpAddRequestHeadersW(
 				self.ptr(),
-				WString::from_str(headers).as_ptr(),
-				headers.chars().count() as _,
+				wheaders.as_ptr(),
+				wheaders.str_len() as _,
 				modifiers.raw(),
 			)
 		})
@@ -105,11 +106,12 @@ impl HINTERNETREQUEST {
 	/// [`HttpSendRequest`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-httpsendrequestw)
 	/// function.
 	pub fn HttpSendRequest(&self, headers: Option<&str>, optional: &[u8]) -> SysResult<()> {
+		let wheaders = WString::from_opt_str(headers);
 		bool_to_sysresult(unsafe {
 			ffi::HttpSendRequestW(
 				self.ptr(),
-				WString::from_opt_str(headers).as_ptr(),
-				headers.map_or(0, |h| h.chars().count() as _),
+				wheaders.as_ptr(),
+				wheaders.str_len() as _,
 				vec_ptr(optional) as _,
 				optional.len() as _,
 			)
