@@ -1,10 +1,10 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::co;
-use crate::decl::*;
 
 /// [`URL_COMPONENTS`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/ns-wininet-url_componentsw)
 /// struct.
+#[derive(Default, Clone)]
 pub struct URL_COMPONENTS {
 	pub scheme: String,
 	pub protocol_scheme: co::INTERNET_SCHEME,
@@ -36,8 +36,10 @@ pub(in crate::wininet) struct URL_COMPONENTS_raw {
 }
 
 impl URL_COMPONENTS_raw {
+	/// Constructs the struct to be passed to `InternetCrackUrl`.
 	#[must_use]
-	pub(in crate::wininet) const fn new() -> Self {
+	pub(in crate::wininet) const fn new_crack() -> Self {
+		// https://learn.microsoft.com/en-us/windows/win32/api/winhttp/nf-winhttp-winhttpcreateurl#examples
 		let mut obj = unsafe { std::mem::zeroed::<Self>() };
 		obj.dwStructSize = std::mem::size_of::<Self>() as _;
 		obj.dwSchemeLength = 0xffff_ffff; // -1
@@ -49,23 +51,13 @@ impl URL_COMPONENTS_raw {
 		obj
 	}
 
+	/// Constructs the struct to be passed to `InternetCreateUrl`.
 	#[must_use]
-	pub(in crate::wininet) fn to_final(&self) -> URL_COMPONENTS {
-		URL_COMPONENTS {
-			scheme: WString::from_wchars_count(self.lpszScheme, self.dwSchemeLength as _)
-				.to_string(),
-			protocol_scheme: self.nScheme,
-			host_name: WString::from_wchars_count(self.lpszHostName, self.dwHostNameLength as _)
-				.to_string(),
-			port: self.nPort,
-			user_name: WString::from_wchars_count(self.lpszUserName, self.dwUserNameLength as _)
-				.to_string(),
-			password: WString::from_wchars_count(self.lpszPassword, self.dwPasswordLength as _)
-				.to_string(),
-			url_path: WString::from_wchars_count(self.lpszUrlPath, self.dwUrlPathLength as _)
-				.to_string(),
-			extra_info: WString::from_wchars_count(self.lpszExtraInfo, self.dwExtraInfoLength as _)
-				.to_string(),
-		}
+	pub(in crate::wininet) const fn new_create(uc: &URL_COMPONENTS) -> Self {
+		let mut obj = unsafe { std::mem::zeroed::<Self>() };
+		obj.dwStructSize = std::mem::size_of::<Self>() as _;
+		obj.nPort = uc.port;
+		obj.nScheme = uc.protocol_scheme;
+		obj
 	}
 }

@@ -10,6 +10,7 @@ extern_sys! { "wininet";
 	InternetCombineUrlW(PCSTR, PCSTR, PSTR, *mut u32, u32) -> BOOL
 	InternetConnectW(HANDLE, PCSTR, u16, PCSTR, PCSTR, u32, u32, isize) -> HANDLE
 	InternetCrackUrlW(PCSTR, u32, u32, PVOID) -> BOOL
+	InternetCreateUrlW(PCVOID, u32, PSTR, *mut u32) -> BOOL
 	InternetOpenUrlW(HANDLE, PCSTR, PCSTR, u32, u32, isize) -> HANDLE
 	InternetOpenW(PCSTR, u32, PCSTR, PCSTR, u32) -> HANDLE
 	InternetQueryDataAvailable(HANDLE, *mut u32, u32, isize) -> BOOL

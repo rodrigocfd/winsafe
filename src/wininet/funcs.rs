@@ -59,12 +59,80 @@ pub fn InternetCombineUrl(base_url: &str, relative_url: &str, flags: co::ICU) ->
 #[must_use]
 pub fn InternetCrackUrl(url: &str, flags: co::ICU) -> SysResult<URL_COMPONENTS> {
 	let w_url = WString::from_str(url);
-	let mut buf = URL_COMPONENTS_raw::new();
+	let mut raw = URL_COMPONENTS_raw::new_crack();
 
 	bool_to_sysresult(unsafe {
-		ffi::InternetCrackUrlW(w_url.as_ptr(), w_url.str_len() as _, flags.raw(), pvoid(&mut buf))
+		ffi::InternetCrackUrlW(w_url.as_ptr(), w_url.str_len() as _, flags.raw(), pvoid(&mut raw))
 	})
-	.map(|_| buf.to_final())
+	.map(|_| URL_COMPONENTS {
+		scheme: WString::from_wchars_count(raw.lpszScheme, raw.dwSchemeLength as _).to_string(),
+		protocol_scheme: raw.nScheme,
+		host_name: WString::from_wchars_count(raw.lpszHostName, raw.dwHostNameLength as _)
+			.to_string(),
+		port: raw.nPort,
+		user_name: WString::from_wchars_count(raw.lpszUserName, raw.dwUserNameLength as _)
+			.to_string(),
+		password: WString::from_wchars_count(raw.lpszPassword, raw.dwPasswordLength as _)
+			.to_string(),
+		url_path: WString::from_wchars_count(raw.lpszUrlPath, raw.dwUrlPathLength as _).to_string(),
+		extra_info: WString::from_wchars_count(raw.lpszExtraInfo, raw.dwExtraInfoLength as _)
+			.to_string(),
+	})
+}
+
+/// [`InternetCreateUrl`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetcreateurlw)
+/// function.
+#[must_use]
+pub fn InternetCreateUrl(components: &URL_COMPONENTS, flags: co::ICU) -> SysResult<String> {
+	let mut scheme_w = WString::from_str(&components.scheme);
+	let mut host_name_w = WString::from_str(&components.host_name);
+	let mut user_name_w = WString::from_str(&components.user_name);
+	let mut password_w = WString::from_str(&components.password);
+	let mut url_path_w = WString::from_str(&components.url_path);
+	let mut extra_info_w = WString::from_str(&components.extra_info);
+
+	let mut raw = URL_COMPONENTS_raw::new_create(&components);
+	if scheme_w.is_allocated() {
+		raw.lpszScheme = unsafe { scheme_w.as_mut_ptr() };
+		raw.dwSchemeLength = scheme_w.str_len() as _;
+	}
+	if host_name_w.is_allocated() {
+		raw.lpszHostName = unsafe { host_name_w.as_mut_ptr() };
+		raw.dwHostNameLength = host_name_w.str_len() as _;
+	}
+	if user_name_w.is_allocated() {
+		raw.lpszUserName = unsafe { user_name_w.as_mut_ptr() };
+		raw.dwUserNameLength = user_name_w.str_len() as _;
+	}
+	if password_w.is_allocated() {
+		raw.lpszPassword = unsafe { password_w.as_mut_ptr() };
+		raw.dwPasswordLength = password_w.str_len() as _;
+	}
+	if url_path_w.is_allocated() {
+		raw.lpszUrlPath = unsafe { url_path_w.as_mut_ptr() };
+		raw.dwUrlPathLength = url_path_w.str_len() as _;
+	}
+	if extra_info_w.is_allocated() {
+		raw.lpszExtraInfo = unsafe { extra_info_w.as_mut_ptr() };
+		raw.dwExtraInfoLength = extra_info_w.str_len() as _;
+	}
+
+	let mut url_len = 0u32;
+	match bool_to_sysresult(unsafe {
+		ffi::InternetCreateUrlW(pcvoid(&raw), flags.raw(), std::ptr::null_mut(), &mut url_len) // first call to retrieve len
+	}) {
+		Ok(_) => {}, // should never happen
+		Err(err) => match err {
+			co::ERROR::INSUFFICIENT_BUFFER => {}, // expected
+			err => return Err(err),
+		},
+	}
+
+	let mut buf = WString::new_alloc_buf(url_len as _);
+	bool_to_sysresult(unsafe {
+		ffi::InternetCreateUrlW(pcvoid(&raw), flags.raw(), buf.as_mut_ptr(), &mut url_len)
+	})
+	.map(|_| buf.to_string())
 }
 
 /// [`InternetTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internettimetosystemtime)
