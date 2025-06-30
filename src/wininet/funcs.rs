@@ -59,28 +59,12 @@ pub fn InternetCombineUrl(base_url: &str, relative_url: &str, flags: co::ICU) ->
 #[must_use]
 pub fn InternetCrackUrl(url: &str, flags: co::ICU) -> SysResult<URL_COMPONENTS> {
 	let w_url = WString::from_str(url);
-	let mut buf = URL_COMPONENTS_buf::new();
-	buf.set_initial_ptrs();
+	let mut buf = URL_COMPONENTS_raw::new();
 
-	loop {
-		match bool_to_sysresult(unsafe {
-			ffi::InternetCrackUrlW(
-				w_url.as_ptr(),
-				url.chars().count() as _,
-				flags.raw(),
-				pvoid(&mut buf.raw),
-			)
-		}) {
-			Ok(_) => return Ok(buf.to_final()),
-			Err(err) => match err {
-				co::ERROR::INSUFFICIENT_BUFFER => {
-					buf.alloc_more_strs();
-					continue;
-				},
-				err => return Err(err),
-			},
-		}
-	}
+	bool_to_sysresult(unsafe {
+		ffi::InternetCrackUrlW(w_url.as_ptr(), w_url.str_len() as _, flags.raw(), pvoid(&mut buf))
+	})
+	.map(|_| buf.to_final())
 }
 
 /// [`InternetTimeToSystemTime`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internettimetosystemtime)
