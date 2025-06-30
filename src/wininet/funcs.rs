@@ -56,6 +56,10 @@ pub fn InternetCombineUrl(base_url: &str, relative_url: &str, flags: co::ICU) ->
 
 /// [`InternetCrackUrl`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetcrackurlw)
 /// function.
+///
+/// # Related functions
+///
+/// * [`InternetCreateUrl`](crate::InternetCreateUrl)
 #[must_use]
 pub fn InternetCrackUrl(url: &str, flags: co::ICU) -> SysResult<URL_COMPONENTS> {
 	let w_url = WString::from_str(url);
@@ -82,6 +86,10 @@ pub fn InternetCrackUrl(url: &str, flags: co::ICU) -> SysResult<URL_COMPONENTS> 
 
 /// [`InternetCreateUrl`](https://learn.microsoft.com/en-us/windows/win32/api/wininet/nf-wininet-internetcreateurlw)
 /// function.
+///
+/// # Related functions
+///
+/// * [`InternetCrackUrl`](crate::InternetCrackUrl)
 #[must_use]
 pub fn InternetCreateUrl(components: &URL_COMPONENTS, flags: co::ICU) -> SysResult<String> {
 	let mut scheme_w = WString::from_str(&components.scheme);
