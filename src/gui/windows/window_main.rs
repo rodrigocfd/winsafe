@@ -18,6 +18,50 @@ enum RawDlg {
 /// An user main window, which can handle events. Usually, this is the first
 /// window of your application, launched directly from the `main` function. Can
 /// be programmatically created or load a dialog resource from a `.res` file.
+///
+/// # Examples
+///
+/// Basic structure of a program with a main window, created programmatically:
+///
+/// ```no_run
+/// use winsafe::{self as w, co, gui, prelude::*};
+///
+/// fn main() {
+///     if let Err(err) = Main::create_and_run() {
+///         w::HWND::NULL
+///             .MessageBox(&err.to_string(), "Uncaught error", co::MB::ICONERROR)
+///             .unwrap();
+///     }
+/// }
+///
+/// #[derive(Clone)]
+/// struct Main {
+///     wnd: gui::WindowMain,
+/// }
+///
+/// impl Main {
+///     #[must_use]
+///     fn create_and_run() -> w::AnyResult<i32> {
+///         let wnd = gui::WindowMain::new(gui::WindowMainOpts {
+///             title: "Main window".to_owned(),
+///             ..Default::default()
+///         });
+///
+///         let new_self = Self { wnd };
+///         new_self.events();
+///
+///         new_self.wnd.run_main(None)
+///     }
+///
+///     fn events(&self) {
+///         let self2 = self.clone();
+///         self.wnd.on().wm_create(move |_| {
+///             self2.wnd.hwnd().SetWindowText("Hello")?;
+///             Ok(0)
+///         });
+///     }
+/// }
+/// ```
 #[derive(Clone)]
 pub struct WindowMain(RawDlg);
 
