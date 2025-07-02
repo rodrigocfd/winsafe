@@ -19,6 +19,60 @@ native_ctrl! { Button: ButtonObj => ButtonEvents;
 	/// Native
 	/// [button](https://learn.microsoft.com/en-us/windows/win32/controls/button-types-and-styles#push-buttons)
 	/// control.
+	///
+	/// # Examples
+	///
+	/// Basic structure of a program with a main window and a button, both
+	/// created programmatically:
+	///
+	/// ```no_run
+	/// use winsafe::{self as w, co, gui, prelude::*};
+	///
+	/// fn main() {
+	///     if let Err(err) = Main::create_and_run() {
+	///         w::HWND::NULL
+	///             .MessageBox(&err.to_string(), "Uncaught error", co::MB::ICONERROR)
+	///             .unwrap();
+	///     }
+	/// }
+	///
+	/// #[derive(Clone)]
+	/// struct Main {
+	///     wnd: gui::WindowMain,
+	///     btn: gui::Button,
+	/// }
+	///
+	/// impl Main {
+	///     #[must_use]
+	///     fn create_and_run() -> w::AnyResult<i32> {
+	///         let wnd = gui::WindowMain::new(gui::WindowMainOpts {
+	///             title: "Main window".to_owned(),
+	///             ..Default::default()
+	///         });
+	///         let btn = gui::Button::new(
+	///             &wnd,
+	///             gui::ButtonOpts {
+	///                 text: "&Click me".to_owned(),
+	///                 position: gui::dpi(20, 20),
+	///                 ..Default::default()
+	///             },
+	///         );
+	///
+	///         let new_self = Self { wnd, btn };
+	///         new_self.events();
+	///
+	///         new_self.wnd.run_main(None)
+	///     }
+	///
+	///     fn events(&self) {
+	///         let self2 = self.clone();
+	///             self.btn.on().bn_clicked(move || {
+	///             self2.wnd.hwnd().SetWindowText("Button clicked")?;
+	///             Ok(())
+	///         });
+	///     }
+	/// }
+	/// ```
 }
 
 impl Button {
@@ -29,24 +83,6 @@ impl Button {
 	///
 	/// Panics if the parent window was already created – that is, you cannot
 	/// dynamically create a `Button` in an event closure.
-	///
-	/// # Examples
-	///
-	/// ```no_run
-	/// use winsafe::{self as w, prelude::*, gui};
-	///
-	/// let wnd: gui::WindowMain; // initialized somewhere
-	/// # let wnd = gui::WindowMain::new(gui::WindowMainOpts::default());
-	///
-	/// let btn = gui::Button::new(
-	///     &wnd,
-	///     gui::ButtonOpts {
-	///         position: gui::dpi(10, 10),
-	///         text: "&Click me".to_owned(),
-	///         ..Default::default()
-	///     },
-	/// );
-	/// ```
 	#[must_use]
 	pub fn new(parent: &(impl GuiParent + 'static), opts: ButtonOpts) -> Self {
 		let ctrl_id = auto_id::set_if_zero(opts.ctrl_id);
