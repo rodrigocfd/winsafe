@@ -369,6 +369,10 @@ impl Variant {
 	///
 	/// This is a syntactic sugar method to be used when you are sure of the
 	/// `Variant` content, its general use is discouraged.
+	///
+	/// # Panics
+	///
+	/// Panics if the value is not `Variant::Bool`.
 	#[must_use]
 	pub const fn unwrap_bool(&self) -> bool {
 		match self {
@@ -382,6 +386,10 @@ impl Variant {
 	///
 	/// This is a syntactic sugar method to be used when you are sure of the
 	/// `Variant` content, its general use is discouraged.
+	///
+	/// # Panics
+	///
+	/// Panics if the value is not `Variant::Bstr`.
 	#[must_use]
 	pub fn unwrap_bstr(&self) -> String {
 		match self {
@@ -395,6 +403,10 @@ impl Variant {
 	///
 	/// This is a syntactic sugar method to be used when you are sure of the
 	/// `Variant` content, its general use is discouraged.
+	///
+	/// # Panics
+	///
+	/// Panics if the value is not `IDispatch`.
 	#[must_use]
 	pub fn unwrap_dispatch(&self) -> IDispatch {
 		match self {

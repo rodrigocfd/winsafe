@@ -26,6 +26,10 @@ impl HttpInfo {
 	///
 	/// This is a syntactic sugar method to be used when you are sure of the
 	/// `HttpInfo` content, its general use is discouraged.
+	///
+	/// # Panics
+	///
+	/// Panics if the value is not `HttpInfo::Number`.
 	#[must_use]
 	pub const fn unwrap_number(&self) -> u32 {
 		match self {
@@ -39,6 +43,10 @@ impl HttpInfo {
 	///
 	/// This is a syntactic sugar method to be used when you are sure of the
 	/// `HttpInfo` content, its general use is discouraged.
+	///
+	/// # Panics
+	///
+	/// Panics if the value is not `HttpInfo::Number64`.
 	#[must_use]
 	pub const fn unwrap_number64(&self) -> u64 {
 		match self {
@@ -52,6 +60,10 @@ impl HttpInfo {
 	///
 	/// This is a syntactic sugar method to be used when you are sure of the
 	/// `HttpInfo` content, its general use is discouraged.
+	///
+	/// # Panics
+	///
+	/// Panics if the value is not `HttpInfo::Str`.
 	#[must_use]
 	pub fn unwrap_str(&self) -> String {
 		match self {
@@ -65,6 +77,10 @@ impl HttpInfo {
 	///
 	/// This is a syntactic sugar method to be used when you are sure of the
 	/// `HttpInfo` content, its general use is discouraged.
+	///
+	/// # Panics
+	///
+	/// Panics if the value is not `HttpInfo::Time`.
 	#[must_use]
 	pub const fn unwrap_time(&self) -> SYSTEMTIME {
 		match self {
