@@ -319,7 +319,7 @@ impl DwmAttr {
 	}
 
 	/// If the enum contains a
-	/// [`co::DWMNCRENDERINGPOLICY`](crate::co::DWMNCRENDERINGPOLICY),
+	/// [`co::DWMNCRENDERINGPOLICY`](crate::co::DWMNCRENDERINGPOLICY)
 	/// ([`DwmAttr::NcRenderingPolicy`](crate::DwmAttr::NcRenderingPolicy)),
 	/// returns it; otherwise panics.
 	///
@@ -393,7 +393,7 @@ impl DwmAttr {
 	}
 
 	/// If the enum contains a [`co::DWMSBT`](crate::co::DWMSBT)
-	/// ([`DwmAttr::SystemBackdropType`](crate::DwmAttr::SystemBackdropType)),,
+	/// ([`DwmAttr::SystemBackdropType`](crate::DwmAttr::SystemBackdropType)),
 	/// returns it; otherwise panics.
 	///
 	/// This is a syntactic sugar method to be used when you are sure of the
