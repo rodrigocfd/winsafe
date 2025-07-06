@@ -480,6 +480,25 @@ pub fn SHGetIDListFromObject(obj: &impl ole_IUnknown) -> HrResult<CoTaskMemFreeP
 	}
 }
 
+/// [`SHGetPropertyStoreFromIDList`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shgetpropertystorefromidlist)
+/// function.
+#[must_use]
+pub fn SHGetPropertyStoreFromIDList<T>(pidl: &PIDL, flags: co::GPS) -> HrResult<T>
+where
+	T: oleaut_IPropertyStore,
+{
+	let mut queried = unsafe { T::null() };
+	ok_to_hrresult(unsafe {
+		ffi::SHGetPropertyStoreFromIDList(
+			pidl.ptr() as _,
+			flags.raw(),
+			pcvoid(&T::IID),
+			queried.as_mut(),
+		)
+	})
+	.map(|_| queried)
+}
+
 /// [`SHGetPropertyStoreFromParsingName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shgetpropertystorefromparsingname)
 /// function.
 #[must_use]
