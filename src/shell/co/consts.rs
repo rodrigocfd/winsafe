@@ -247,6 +247,43 @@ const_bitflag! { NIS: u32;
 	SHAREDICON 0x0000_0002
 }
 
+const_ordinary! { PDM: u32;
+	/// [`IOperationsProgressDialog::SetMode`](crate::IOperationsProgressDialog::SetMode)
+	/// `mode` (`u32`).
+	=>
+	DEFAULT 0
+	RUN 0x1
+	PREFLIGHT 0x2
+	UNDOING 0x4
+	ERRORSBLOCKING 0x8
+	INDETERMINATE 0x10
+}
+
+const_ordinary! { PDOPS: u32;
+	/// [`PDOPSTATUS`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-pdopstatus)
+	/// enumeration (`u32`).
+	=>
+	RUNNING 1
+	PAUSED 2
+	CANCELLED 3
+	STOPPED 4
+	ERRORS 5
+}
+
+const_bitflag! { PROGDLG: u32;
+	/// [`IOperationsProgressDialog::StartProgressDialog`](crate::IOperationsProgressDialog::StartProgressDialog)
+	/// `flags` (`u32`).
+	=>
+	NORMAL 0x0000_0000
+	MODAL 0x0000_0001
+	AUTOTIME 0x0000_0002
+	NOTIME 0x0000_0004
+	NOMINIMIZE 0x0000_0008
+	NOPROGRESSBAR 0x0000_0010
+	MARQUEEPROGRESS 0x0000_0020
+	NOCANCEL 0x0000_0040
+}
+
 const_bitflag! { SFGAO: u32;
 	/// [`SFGAO`](https://learn.microsoft.com/en-us/windows/win32/shell/sfgao)
 	/// constants (`u32`).
@@ -549,6 +586,26 @@ const_bitflag! { SLR: u32;
 	MACHINE_IN_LOCAL_TARGET 0x800
 	UPDATE_MACHINE_AND_SID 0x1000
 	NO_OBJECT_ID 0x2000
+}
+
+const_ordinary! { SPACTION: u32;
+	/// [`SPACTION`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-spaction)
+	/// enumeration (`u32`).
+	=>
+	NONE 0
+	MOVING Self::NONE.raw() + 1
+	COPYING Self::MOVING.raw() + 1
+	RECYCLING Self::COPYING.raw() + 1
+	APPLYINGATTRIBS Self::RECYCLING.raw() + 1
+	DOWNLOADING Self::APPLYINGATTRIBS.raw() + 1
+	SEARCHING_INTERNET Self::DOWNLOADING.raw() + 1
+	CALCULATING Self::SEARCHING_INTERNET.raw() + 1
+	UPLOADING Self::CALCULATING.raw() + 1
+	SEARCHING_FILES Self::UPLOADING.raw() + 1
+	DELETING Self::SEARCHING_FILES.raw() + 1
+	RENAMING Self::DELETING.raw() + 1
+	FORMATTING Self::RENAMING.raw() + 1
+	COPY_MOVING Self::FORMATTING.raw() + 1
 }
 
 const_ordinary! { STPFLAG: u32;

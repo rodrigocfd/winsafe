@@ -202,6 +202,14 @@ pub trait shell_IFileOperation: ole_IUnknown {
 		})
 	}
 
+	/// [`IFileOperation::SetProgressDialog`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-setprogressdialog)
+	/// method.
+	fn SetProgressDialog(&self, popd: &IOperationsProgressDialog) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			(vt::<IFileOperationVT>(self).SetProgressDialog)(self.ptr(), popd.ptr())
+		})
+	}
+
 	/// [`IFileOperation::Unadvise`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-unadvise)
 	/// method.
 	fn Unadvise(&self, cookie: u32) -> HrResult<()> {

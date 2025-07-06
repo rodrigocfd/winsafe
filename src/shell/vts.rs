@@ -122,6 +122,22 @@ pub struct IModalWindowVT {
 }
 
 #[repr(C)]
+pub struct IOperationsProgressDialogVT {
+	pub IUnknownVT: IUnknownVT,
+	pub StartProgressDialog: fn(COMPTR, HANDLE, u32) -> HRES,
+	pub StopProgressDialog: fn(COMPTR) -> HRES,
+	pub SetOperation: fn(COMPTR, u32) -> HRES,
+	pub SetMode: fn(COMPTR, u32) -> HRES,
+	pub UpdateProgress: fn(COMPTR, u64, u64, u64, u64, u64, u64) -> HRES,
+	pub UpdateLocations: fn(COMPTR, COMPTR, COMPTR, COMPTR) -> HRES,
+	pub ResetTimer: fn(COMPTR) -> HRES,
+	pub PauseTimer: fn(COMPTR) -> HRES,
+	pub ResumeTimer: fn(COMPTR) -> HRES,
+	pub GetMilliseconds: fn(COMPTR, *mut u64, *mut u64) -> HRES,
+	pub GetOperationStatus: fn(COMPTR, *mut u32) -> HRES,
+}
+
+#[repr(C)]
 pub struct IShellFolderVT {
 	pub IUnknownVT: IUnknownVT,
 	pub ParseDisplayName: fn(COMPTR, HANDLE, COMPTR, PCSTR, *mut u32, PCVOID, *mut u32) -> HRES,
