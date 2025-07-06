@@ -9,6 +9,7 @@ extern_sys! { "dwmapi";
 	DwmInvalidateIconicBitmaps(HANDLE) -> HRES
 	DwmIsCompositionEnabled(*mut BOOL) -> HRES
 	DwmModifyPreviousDxFrameDuration(HANDLE, i32, BOOL) -> HRES
+	DwmSetDxFrameDuration(HANDLE, i32) -> HRES
 	DwmSetIconicLivePreviewBitmap(HANDLE, HANDLE, PCVOID, u32) -> HRES
 	DwmSetIconicThumbnail(HANDLE, HANDLE, u32) -> HRES
 	DwmSetWindowAttribute(HANDLE, u32, PCVOID, u32) -> HRES

@@ -48,6 +48,12 @@ impl HWND {
 		})
 	}
 
+	/// [`DwmSetDxFrameDuration`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmsetdxframeduration)
+	/// function.
+	pub fn DwmSetDxFrameDuration(&self, num_refreshes: i32) -> HrResult<()> {
+		ok_to_hrresult(unsafe { ffi::DwmSetDxFrameDuration(self.ptr(), num_refreshes) })
+	}
+
 	/// [`DwmSetIconicLivePreviewBitmap`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmseticoniclivepreviewbitmap)
 	/// function.
 	pub fn DwmSetIconicLivePreviewBitmap(
