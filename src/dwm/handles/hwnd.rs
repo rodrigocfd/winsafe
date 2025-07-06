@@ -32,6 +32,22 @@ impl HWND {
 		ok_to_hrresult(unsafe { ffi::DwmInvalidateIconicBitmaps(self.ptr()) })
 	}
 
+	/// [`DwmModifyPreviousDxFrameDuration`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmmodifypreviousdxframeduration)
+	/// function.
+	pub fn DwmModifyPreviousDxFrameDuration(
+		&self,
+		num_refreshes: i32,
+		relative_to_current: bool,
+	) -> HrResult<()> {
+		ok_to_hrresult(unsafe {
+			ffi::DwmModifyPreviousDxFrameDuration(
+				self.ptr(),
+				num_refreshes,
+				relative_to_current as _,
+			)
+		})
+	}
+
 	/// [`DwmSetIconicLivePreviewBitmap`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmseticoniclivepreviewbitmap)
 	/// function.
 	pub fn DwmSetIconicLivePreviewBitmap(
