@@ -202,9 +202,17 @@
 <a href=#202 id=202 data-nosnippet>202</a>		})
 <a href=#203 id=203 data-nosnippet>203</a>	}
 <a href=#204 id=204 data-nosnippet>204</a>
-<a href=#205 id=205 data-nosnippet>205</a>	<span class="doccomment">/// [`IFileOperation::Unadvise`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-unadvise)
+<a href=#205 id=205 data-nosnippet>205</a>	<span class="doccomment">/// [`IFileOperation::SetProgressDialog`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-setprogressdialog)
 <a href=#206 id=206 data-nosnippet>206</a>	/// method.
-<a href=#207 id=207 data-nosnippet>207</a>	</span><span class="kw">fn </span>Unadvise(<span class="kw-2">&amp;</span><span class="self">self</span>, cookie: u32) -&gt; HrResult&lt;()&gt; {
-<a href=#208 id=208 data-nosnippet>208</a>		ok_to_hrresult(<span class="kw">unsafe </span>{ (vt::&lt;IFileOperationVT&gt;(<span class="self">self</span>).Unadvise)(<span class="self">self</span>.ptr(), cookie) })
-<a href=#209 id=209 data-nosnippet>209</a>	}
-<a href=#210 id=210 data-nosnippet>210</a>}</code></pre></div></section></main></body></html>
+<a href=#207 id=207 data-nosnippet>207</a>	</span><span class="kw">fn </span>SetProgressDialog(<span class="kw-2">&amp;</span><span class="self">self</span>, popd: <span class="kw-2">&amp;</span>IOperationsProgressDialog) -&gt; HrResult&lt;()&gt; {
+<a href=#208 id=208 data-nosnippet>208</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#209 id=209 data-nosnippet>209</a>			(vt::&lt;IFileOperationVT&gt;(<span class="self">self</span>).SetProgressDialog)(<span class="self">self</span>.ptr(), popd.ptr())
+<a href=#210 id=210 data-nosnippet>210</a>		})
+<a href=#211 id=211 data-nosnippet>211</a>	}
+<a href=#212 id=212 data-nosnippet>212</a>
+<a href=#213 id=213 data-nosnippet>213</a>	<span class="doccomment">/// [`IFileOperation::Unadvise`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifileoperation-unadvise)
+<a href=#214 id=214 data-nosnippet>214</a>	/// method.
+<a href=#215 id=215 data-nosnippet>215</a>	</span><span class="kw">fn </span>Unadvise(<span class="kw-2">&amp;</span><span class="self">self</span>, cookie: u32) -&gt; HrResult&lt;()&gt; {
+<a href=#216 id=216 data-nosnippet>216</a>		ok_to_hrresult(<span class="kw">unsafe </span>{ (vt::&lt;IFileOperationVT&gt;(<span class="self">self</span>).Unadvise)(<span class="self">self</span>.ptr(), cookie) })
+<a href=#217 id=217 data-nosnippet>217</a>	}
+<a href=#218 id=218 data-nosnippet>218</a>}</code></pre></div></section></main></body></html>
