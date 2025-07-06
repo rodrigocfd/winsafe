@@ -13,4 +13,5 @@ extern_sys! { "dwmapi";
 	DwmSetIconicLivePreviewBitmap(HANDLE, HANDLE, PCVOID, u32) -> HRES
 	DwmSetIconicThumbnail(HANDLE, HANDLE, u32) -> HRES
 	DwmSetWindowAttribute(HANDLE, u32, PCVOID, u32) -> HRES
+	DwmShowContact(u32, u32) -> HRES
 }

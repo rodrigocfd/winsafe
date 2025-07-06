@@ -43,6 +43,18 @@ const_ordinary! { DWMSBT: u32;
 	TABBEDWINDOW 4
 }
 
+const_bitflag! { DWMSC: u32;
+	/// [`DwmShowContact`](crate::DwmShowContact) `show_contact` (`u32`).
+	=>
+	NONE 0x0000_0000
+	DOWN 0x0000_0001
+	UP 0x0000_0002
+	DRAG 0x0000_0004
+	HOLD 0x0000_0008
+	PENBARREL 0x0000_0010
+	ALL 0xffff_ffff
+}
+
 const_ordinary! { DWMWA: u32;
 	/// [`DWMWINDOWATTRIBUTE`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute)
 	/// enumeration (`u32`).

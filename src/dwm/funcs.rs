@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 
+use crate::co;
 use crate::decl::*;
 use crate::dwm::ffi;
 use crate::ole::privs::*;
@@ -37,4 +38,10 @@ pub fn DwmIsCompositionEnabled() -> HrResult<bool> {
 	let mut pf_enabled = 0;
 	ok_to_hrresult(unsafe { ffi::DwmIsCompositionEnabled(&mut pf_enabled) })
 		.map(|_| pf_enabled != 0)
+}
+
+/// [`DwmShowContact`](https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/nf-dwmapi-dwmshowcontact)
+/// function.
+pub fn DwmShowContact(pointer_id: u32, show_contact: co::DWMSC) -> HrResult<()> {
+	ok_to_hrresult(unsafe { ffi::DwmShowContact(pointer_id, show_contact.raw()) })
 }
