@@ -480,6 +480,30 @@ pub fn SHGetIDListFromObject(obj: &impl ole_IUnknown) -> HrResult<CoTaskMemFreeP
 	}
 }
 
+/// [`SHGetPropertyStoreFromParsingName`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-shgetpropertystorefromparsingname)
+/// function.
+#[must_use]
+pub fn SHGetPropertyStoreFromParsingName<T>(
+	path: &str,
+	bind_ctx: Option<&impl ole_IBindCtx>,
+	flags: co::GPS,
+) -> HrResult<T>
+where
+	T: oleaut_IPropertyStore,
+{
+	let mut queried = unsafe { T::null() };
+	ok_to_hrresult(unsafe {
+		ffi::SHGetPropertyStoreFromParsingName(
+			WString::from_str(path).as_ptr(),
+			bind_ctx.map_or(std::ptr::null_mut(), |p| p.ptr()),
+			flags.raw(),
+			pcvoid(&T::IID),
+			queried.as_mut(),
+		)
+	})
+	.map(|_| queried)
+}
+
 /// [`Shell_NotifyIcon`](https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw)
 /// function.
 pub fn Shell_NotifyIcon(message: co::NIM, data: &NOTIFYICONDATA) -> HrResult<()> {

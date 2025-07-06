@@ -22,6 +22,7 @@ extern_sys! { "shell32";
 	SHFileOperationW(PVOID) -> i32
 	SHGetFileInfoW(PCSTR, u32, PVOID, u32, u32) -> usize
 	SHGetIDListFromObject(COMPTR, PVOID) -> HRES
+	SHGetPropertyStoreFromParsingName(PCSTR, COMPTR, u32, PCVOID, *mut COMPTR) -> HRES
 	SHGetStockIconInfo(u32, u32, PVOID) -> HRES
 }
 
