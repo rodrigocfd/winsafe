@@ -1,6 +1,6 @@
 use crate::co;
 use crate::decl::*;
-use crate::kernel::privs::*;
+use crate::kernel::{ffi_types::*, privs::*};
 
 /// Variant parameter for:
 ///
@@ -131,24 +131,24 @@ impl DwmAttr {
 	pub(in crate::dwm) const fn sz(&self) -> u32 {
 		use std::mem::size_of;
 		match self {
-			Self::NcRenderingEnabled(_) => size_of::<bool>() as _,
+			Self::NcRenderingEnabled(_) => size_of::<BOOL>() as _,
 			Self::NcRenderingPolicy(_) => size_of::<co::DWMNCRENDERINGPOLICY>() as _,
-			Self::TransitionsForceDisabled(_) => size_of::<bool>() as _,
-			Self::AllowNcPaint(_) => size_of::<bool>() as _,
+			Self::TransitionsForceDisabled(_) => size_of::<BOOL>() as _,
+			Self::AllowNcPaint(_) => size_of::<BOOL>() as _,
 			Self::CaptionButtonBounds(_) => size_of::<RECT>() as _,
-			Self::NonClientRtlLayout(_) => size_of::<bool>() as _,
-			Self::ForceIconicRepresentation(_) => size_of::<bool>() as _,
+			Self::NonClientRtlLayout(_) => size_of::<BOOL>() as _,
+			Self::ForceIconicRepresentation(_) => size_of::<BOOL>() as _,
 			Self::Flip3dPolicy(_) => size_of::<co::DWMFLIP3DWINDOWPOLICY>() as _,
 			Self::ExtendedFrameBounds(_) => size_of::<RECT>() as _,
-			Self::HasIconicBitmap(_) => size_of::<bool>() as _,
-			Self::DisallowPeek(_) => size_of::<bool>() as _,
-			Self::ExcludedFromPeek(_) => size_of::<bool>() as _,
-			Self::Cloak(_) => size_of::<bool>() as _,
+			Self::HasIconicBitmap(_) => size_of::<BOOL>() as _,
+			Self::DisallowPeek(_) => size_of::<BOOL>() as _,
+			Self::ExcludedFromPeek(_) => size_of::<BOOL>() as _,
+			Self::Cloak(_) => size_of::<BOOL>() as _,
 			Self::Cloaked(_) => size_of::<co::DWM_CLOAKED>() as _,
-			Self::FreezeRepresentation(_) => size_of::<bool>() as _,
-			Self::PassiveUpdateMode(_) => size_of::<bool>() as _,
-			Self::UseHostBackdropBrush(_) => size_of::<bool>() as _,
-			Self::UseImmersiveDarkMode(_) => size_of::<bool>() as _,
+			Self::FreezeRepresentation(_) => size_of::<BOOL>() as _,
+			Self::PassiveUpdateMode(_) => size_of::<BOOL>() as _,
+			Self::UseHostBackdropBrush(_) => size_of::<BOOL>() as _,
+			Self::UseImmersiveDarkMode(_) => size_of::<BOOL>() as _,
 			Self::WindowCornerPreference(_) => size_of::<co::DWMWCP>() as _,
 			Self::BorderColor(_) => size_of::<COLORREF>() as _,
 			Self::CaptionColor(_) => size_of::<COLORREF>() as _,
