@@ -39,7 +39,7 @@ pub struct COAUTHINFO<'a, 'b, 'c, 'd, 'e> {
 	pub dwAuthnSvc: co::RPC_C_AUTHN,
 	pub dwAuthzSvc: co::RPC_C_AUTHZ,
 	pwszServerPrincName: *mut u16,
-	pub dwAuthnLevel: co::RPC_C_AUTHN,
+	pub dwAuthnLevel: co::RPC_C_AUTHN_LEVEL,
 	pub dwImpersonationLevel: co::RPC_C_IMP_LEVEL,
 	pAuthIdentityData: *mut COAUTHIDENTITY<'c, 'd, 'e>,
 	pub dwCapabilities: co::RPC_C_QOS_CAPABILITIES,

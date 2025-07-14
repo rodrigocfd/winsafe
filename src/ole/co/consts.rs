@@ -346,6 +346,20 @@ const_ordinary! { RPC_C_AUTHN: u32;
 	DEFAULT 0xffff_ffff
 }
 
+const_ordinary! { RPC_C_AUTHN_LEVEL: u32;
+	/// Authentication level
+	/// [constants](https://learn.microsoft.com/en-us/windows/win32/com/com-authentication-level-constants)
+	/// (`u32`).
+	=>
+	DEFAULT 0
+	NONE 1
+	CONNECT 2
+	CALL 3
+	PKT 4
+	PKT_INTEGRITY 5
+	PKT_PRIVACY 6
+}
+
 const_ordinary! { RPC_C_AUTHZ: u32;
 	/// Authorization
 	/// [constants](https://learn.microsoft.com/en-us/windows/win32/com/com-authorization-constants)
