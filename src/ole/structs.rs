@@ -7,6 +7,29 @@ use crate::decl::*;
 use crate::guard::*;
 use crate::kernel::ffi_types::*;
 
+/// [`BIND_OPTS3`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ns-objidl-bind_opts3-r1)
+/// struct.
+#[repr(C)]
+pub struct BIND_OPTS3<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'i> {
+	cbStruct: u32,
+	pub grfFlags: co::BIND,
+	pub grfMode: co::STGM,
+	pub dwTickCountDeadline: u32,
+	pub dwTrackFlags: co::SLR,
+	pub dwClassContext: co::CLSCTX,
+	pub locale: LCID,
+	pServerInfo: *mut COSERVERINFO<'b, 'c, 'd, 'e, 'f, 'g, 'i>,
+	pub hWnd: HWND,
+
+	_pServerInfo: PhantomData<&'a mut COSERVERINFO<'b, 'c, 'd, 'e, 'f, 'g, 'i>>,
+}
+
+impl_default!(BIND_OPTS3, cbStruct, 'a, 'b, 'c, 'd, 'e, 'f, 'g, 'i);
+
+impl<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'i> BIND_OPTS3<'a, 'b, 'c, 'd, 'e, 'f, 'g, 'i> {
+	pub_fn_ptr_get_set!('a, pServerInfo, set_pServerInfo, COSERVERINFO<'b, 'c, 'd, 'e, 'f, 'g, 'i>);
+}
+
 /// [`COAUTHIDENTITY`](https://learn.microsoft.com/en-us/windows/win32/api/wtypesbase/ns-wtypesbase-coauthidentity)
 /// struct.
 #[repr(C)]

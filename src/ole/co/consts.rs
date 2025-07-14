@@ -10,6 +10,14 @@ const_bitflag! { ADVF: u32;
 	DATAONSTOP 64
 }
 
+const_bitflag! { BIND: u32;
+	/// [`BIND_FLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/ne-objidl-bind_flags)
+	/// enumeration (`u32`).
+	=>
+	MAYBOTHERUSER 1
+	JUSTTESTEXISTENCE 2
+}
+
 const_ordinary! { CLSCTX: u32;
 	/// [`CLSCTX`](https://learn.microsoft.com/en-us/windows/win32/api/wtypesbase/ne-wtypesbase-clsctx)
 	/// enumeration (`u32`).
@@ -408,6 +416,28 @@ const_ordinary! { SEVERITY: u8;
 	=>
 	SUCCESS 0
 	FAILURE 1
+}
+
+const_bitflag! { SLR: u32;
+	/// [`BIND_OPTS3`](crate::BIND_OPTS3) and
+	/// [`IShellLink::Resolve`](crate::prelude::shell_IShellLink::GetPath)
+	/// `flags` (`u32`).
+	=>
+	NONE 0
+	NO_UI 0x1
+	ANY_MATCH 0x2
+	UPDATE 0x4
+	NOUPDATE 0x8
+	NOSEARCH 0x10
+	NOTRACK 0x20
+	NOLINKINFO 0x40
+	INVOKE_MSI 0x80
+	NO_UI_WITH_MSG_PUMP 0x101
+	OFFER_DELETE_WITHOUT_FILE 0x200
+	KNOWNFOLDER 0x400
+	MACHINE_IN_LOCAL_TARGET 0x800
+	UPDATE_MACHINE_AND_SID 0x1000
+	NO_OBJECT_ID 0x2000
 }
 
 const_bitflag! { STGC: u32;

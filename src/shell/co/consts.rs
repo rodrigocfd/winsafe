@@ -567,27 +567,6 @@ const_bitflag! { SLGP: u32;
 	RELATIVEPRIORITY 0x8
 }
 
-const_bitflag! { SLR: u32;
-	/// [`IShellLink::Resolve`](crate::prelude::shell_IShellLink::GetPath)
-	/// `flags` (`u32`).
-	=>
-	NONE 0
-	NO_UI 0x1
-	ANY_MATCH 0x2
-	UPDATE 0x4
-	NOUPDATE 0x8
-	NOSEARCH 0x10
-	NOTRACK 0x20
-	NOLINKINFO 0x40
-	INVOKE_MSI 0x80
-	NO_UI_WITH_MSG_PUMP 0x101
-	OFFER_DELETE_WITHOUT_FILE 0x200
-	KNOWNFOLDER 0x400
-	MACHINE_IN_LOCAL_TARGET 0x800
-	UPDATE_MACHINE_AND_SID 0x1000
-	NO_OBJECT_ID 0x2000
-}
-
 const_ordinary! { SPACTION: u32;
 	/// [`SPACTION`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-spaction)
 	/// enumeration (`u32`).

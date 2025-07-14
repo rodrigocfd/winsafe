@@ -1,6 +1,7 @@
 #![allow(non_camel_case_types, non_snake_case)]
 
 use crate::decl::*;
+use crate::kernel::privs::*;
 use crate::ole::{privs::*, vts::*};
 use crate::prelude::*;
 
@@ -26,6 +27,17 @@ impl ole_IBindCtx for IBindCtx {}
 /// use winsafe::prelude::*;
 /// ```
 pub trait ole_IBindCtx: ole_IUnknown {
+	/// [`IBindCtx::GetBindOptions`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-getbindoptions)
+	/// method.
+	#[must_use]
+	fn GetBindOptions(&self) -> HrResult<BIND_OPTS3> {
+		let mut bo = BIND_OPTS3::default();
+		ok_to_hrresult(unsafe {
+			(vt::<IBindCtxVT>(self).GetBindOptions)(self.ptr(), pvoid(&mut bo))
+		})
+		.map(|_| bo)
+	}
+
 	fn_com_noparm! { ReleaseBoundObjects: IBindCtxVT;
 		/// [`IBindCtx::ReleaseBoundObjects`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-releaseboundobjects)
 		/// method.
