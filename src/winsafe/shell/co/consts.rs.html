@@ -567,108 +567,87 @@
 <a href=#567 id=567 data-nosnippet>567</a>	</span>RELATIVEPRIORITY <span class="number">0x8
 <a href=#568 id=568 data-nosnippet>568</a></span>}
 <a href=#569 id=569 data-nosnippet>569</a>
-<a href=#570 id=570 data-nosnippet>570</a><span class="macro">const_bitflag!</span> { SLR: u32;
-<a href=#571 id=571 data-nosnippet>571</a>	<span class="doccomment">/// [`IShellLink::Resolve`](crate::prelude::shell_IShellLink::GetPath)
-<a href=#572 id=572 data-nosnippet>572</a>	/// `flags` (`u32`).
+<a href=#570 id=570 data-nosnippet>570</a><span class="macro">const_ordinary!</span> { SPACTION: u32;
+<a href=#571 id=571 data-nosnippet>571</a>	<span class="doccomment">/// [`SPACTION`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-spaction)
+<a href=#572 id=572 data-nosnippet>572</a>	/// enumeration (`u32`).
 <a href=#573 id=573 data-nosnippet>573</a>	</span>=&gt;
 <a href=#574 id=574 data-nosnippet>574</a>	NONE <span class="number">0
-<a href=#575 id=575 data-nosnippet>575</a>	</span>NO_UI <span class="number">0x1
-<a href=#576 id=576 data-nosnippet>576</a>	</span>ANY_MATCH <span class="number">0x2
-<a href=#577 id=577 data-nosnippet>577</a>	</span>UPDATE <span class="number">0x4
-<a href=#578 id=578 data-nosnippet>578</a>	</span>NOUPDATE <span class="number">0x8
-<a href=#579 id=579 data-nosnippet>579</a>	</span>NOSEARCH <span class="number">0x10
-<a href=#580 id=580 data-nosnippet>580</a>	</span>NOTRACK <span class="number">0x20
-<a href=#581 id=581 data-nosnippet>581</a>	</span>NOLINKINFO <span class="number">0x40
-<a href=#582 id=582 data-nosnippet>582</a>	</span>INVOKE_MSI <span class="number">0x80
-<a href=#583 id=583 data-nosnippet>583</a>	</span>NO_UI_WITH_MSG_PUMP <span class="number">0x101
-<a href=#584 id=584 data-nosnippet>584</a>	</span>OFFER_DELETE_WITHOUT_FILE <span class="number">0x200
-<a href=#585 id=585 data-nosnippet>585</a>	</span>KNOWNFOLDER <span class="number">0x400
-<a href=#586 id=586 data-nosnippet>586</a>	</span>MACHINE_IN_LOCAL_TARGET <span class="number">0x800
-<a href=#587 id=587 data-nosnippet>587</a>	</span>UPDATE_MACHINE_AND_SID <span class="number">0x1000
-<a href=#588 id=588 data-nosnippet>588</a>	</span>NO_OBJECT_ID <span class="number">0x2000
-<a href=#589 id=589 data-nosnippet>589</a></span>}
-<a href=#590 id=590 data-nosnippet>590</a>
-<a href=#591 id=591 data-nosnippet>591</a><span class="macro">const_ordinary!</span> { SPACTION: u32;
-<a href=#592 id=592 data-nosnippet>592</a>	<span class="doccomment">/// [`SPACTION`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-spaction)
-<a href=#593 id=593 data-nosnippet>593</a>	/// enumeration (`u32`).
-<a href=#594 id=594 data-nosnippet>594</a>	</span>=&gt;
-<a href=#595 id=595 data-nosnippet>595</a>	NONE <span class="number">0
-<a href=#596 id=596 data-nosnippet>596</a>	</span>MOVING <span class="self">Self</span>::NONE.raw() + <span class="number">1
-<a href=#597 id=597 data-nosnippet>597</a>	</span>COPYING <span class="self">Self</span>::MOVING.raw() + <span class="number">1
-<a href=#598 id=598 data-nosnippet>598</a>	</span>RECYCLING <span class="self">Self</span>::COPYING.raw() + <span class="number">1
-<a href=#599 id=599 data-nosnippet>599</a>	</span>APPLYINGATTRIBS <span class="self">Self</span>::RECYCLING.raw() + <span class="number">1
-<a href=#600 id=600 data-nosnippet>600</a>	</span>DOWNLOADING <span class="self">Self</span>::APPLYINGATTRIBS.raw() + <span class="number">1
-<a href=#601 id=601 data-nosnippet>601</a>	</span>SEARCHING_INTERNET <span class="self">Self</span>::DOWNLOADING.raw() + <span class="number">1
-<a href=#602 id=602 data-nosnippet>602</a>	</span>CALCULATING <span class="self">Self</span>::SEARCHING_INTERNET.raw() + <span class="number">1
-<a href=#603 id=603 data-nosnippet>603</a>	</span>UPLOADING <span class="self">Self</span>::CALCULATING.raw() + <span class="number">1
-<a href=#604 id=604 data-nosnippet>604</a>	</span>SEARCHING_FILES <span class="self">Self</span>::UPLOADING.raw() + <span class="number">1
-<a href=#605 id=605 data-nosnippet>605</a>	</span>DELETING <span class="self">Self</span>::SEARCHING_FILES.raw() + <span class="number">1
-<a href=#606 id=606 data-nosnippet>606</a>	</span>RENAMING <span class="self">Self</span>::DELETING.raw() + <span class="number">1
-<a href=#607 id=607 data-nosnippet>607</a>	</span>FORMATTING <span class="self">Self</span>::RENAMING.raw() + <span class="number">1
-<a href=#608 id=608 data-nosnippet>608</a>	</span>COPY_MOVING <span class="self">Self</span>::FORMATTING.raw() + <span class="number">1
-<a href=#609 id=609 data-nosnippet>609</a></span>}
-<a href=#610 id=610 data-nosnippet>610</a>
-<a href=#611 id=611 data-nosnippet>611</a><span class="macro">const_ordinary!</span> { STPFLAG: u32;
-<a href=#612 id=612 data-nosnippet>612</a>	<span class="doccomment">/// [`STPFLAG`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-stpflag)
-<a href=#613 id=613 data-nosnippet>613</a>	/// enumeration (`u32`).
-<a href=#614 id=614 data-nosnippet>614</a>	</span>=&gt;
-<a href=#615 id=615 data-nosnippet>615</a>	NONE <span class="number">0
-<a href=#616 id=616 data-nosnippet>616</a>	</span>USEAPPTHUMBNAILALWAYS <span class="number">0x1
-<a href=#617 id=617 data-nosnippet>617</a>	</span>USEAPPTHUMBNAILWHENACTIVE <span class="number">0x2
-<a href=#618 id=618 data-nosnippet>618</a>	</span>USEAPPPEEKALWAYS <span class="number">0x4
-<a href=#619 id=619 data-nosnippet>619</a>	</span>USEAPPPEEKWHENACTIVE <span class="number">0x8
-<a href=#620 id=620 data-nosnippet>620</a></span>}
-<a href=#621 id=621 data-nosnippet>621</a>
-<a href=#622 id=622 data-nosnippet>622</a><span class="macro">const_ordinary!</span> { TBPF: u32;
-<a href=#623 id=623 data-nosnippet>623</a>	<span class="doccomment">/// [`ITaskbarList3::SetProgressState`](crate::prelude::shell_ITaskbarList3::SetProgressState)
-<a href=#624 id=624 data-nosnippet>624</a>	/// `tbpFlags` (`u32`).
-<a href=#625 id=625 data-nosnippet>625</a>	</span>=&gt;
-<a href=#626 id=626 data-nosnippet>626</a>	<span class="doccomment">/// Stops displaying progress and returns the button to its normal state.
-<a href=#627 id=627 data-nosnippet>627</a>	/// Call this method with this flag to dismiss the progress bar when the
-<a href=#628 id=628 data-nosnippet>628</a>	/// operation is complete or canceled.
-<a href=#629 id=629 data-nosnippet>629</a>	</span>NOPROGRESS <span class="number">0
-<a href=#630 id=630 data-nosnippet>630</a>	</span><span class="doccomment">/// The progress indicator does not grow in size but cycles repeatedly
-<a href=#631 id=631 data-nosnippet>631</a>	/// along the length of the taskbar button. This indicates activity without
-<a href=#632 id=632 data-nosnippet>632</a>	/// specifying what proportion of the progress is complete. Progress is
-<a href=#633 id=633 data-nosnippet>633</a>	/// taking place but there is no prediction as to how long the operation
-<a href=#634 id=634 data-nosnippet>634</a>	/// will take.
-<a href=#635 id=635 data-nosnippet>635</a>	</span>INDETERMINATE <span class="number">0x1
-<a href=#636 id=636 data-nosnippet>636</a>	</span><span class="doccomment">/// The progress indicator grows in size from left to right in proportion to
-<a href=#637 id=637 data-nosnippet>637</a>	/// the estimated amount of the operation completed. This is a determinate
-<a href=#638 id=638 data-nosnippet>638</a>	/// progress indicator; a prediction is being made as to the duration of the
-<a href=#639 id=639 data-nosnippet>639</a>	/// operation.
-<a href=#640 id=640 data-nosnippet>640</a>	</span>NORMAL <span class="number">0x2
-<a href=#641 id=641 data-nosnippet>641</a>	</span><span class="doccomment">/// The progress indicator turns red to show that an error has occurred in
-<a href=#642 id=642 data-nosnippet>642</a>	/// one of the windows that is broadcasting progress. This is a determinate
-<a href=#643 id=643 data-nosnippet>643</a>	/// state. If the progress indicator is in the indeterminate state it
-<a href=#644 id=644 data-nosnippet>644</a>	/// switches to a red determinate display of a generic percentage not
-<a href=#645 id=645 data-nosnippet>645</a>	/// indicative of actual progress.
-<a href=#646 id=646 data-nosnippet>646</a>	</span>ERROR <span class="number">0x4
-<a href=#647 id=647 data-nosnippet>647</a>	</span><span class="doccomment">/// The progress indicator turns yellow to show that progress is currently
-<a href=#648 id=648 data-nosnippet>648</a>	/// stopped in one of the windows but can be resumed by the user. No error
-<a href=#649 id=649 data-nosnippet>649</a>	/// condition exists and nothing is preventing the progress from continuing.
-<a href=#650 id=650 data-nosnippet>650</a>	/// This is a determinate state. If the progress indicator is in the
-<a href=#651 id=651 data-nosnippet>651</a>	/// indeterminate state it switches to a yellow determinate display of a
-<a href=#652 id=652 data-nosnippet>652</a>	/// generic percentage not indicative of actual progress.
-<a href=#653 id=653 data-nosnippet>653</a>	</span>PAUSED <span class="number">0x8
-<a href=#654 id=654 data-nosnippet>654</a></span>}
-<a href=#655 id=655 data-nosnippet>655</a>
-<a href=#656 id=656 data-nosnippet>656</a><span class="macro">const_bitflag!</span> { TSF: u32;
-<a href=#657 id=657 data-nosnippet>657</a>	<span class="doccomment">/// [`_TRANSFER_SOURCE_FLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_transfer_source_flags)
-<a href=#658 id=658 data-nosnippet>658</a>	/// enumeration (`u32`).
-<a href=#659 id=659 data-nosnippet>659</a>	</span>=&gt;
-<a href=#660 id=660 data-nosnippet>660</a>	NORMAL <span class="number">0
-<a href=#661 id=661 data-nosnippet>661</a>	</span>FAIL_EXIST <span class="number">0
-<a href=#662 id=662 data-nosnippet>662</a>	</span>RENAME_EXIST <span class="number">0x1
-<a href=#663 id=663 data-nosnippet>663</a>	</span>OVERWRITE_EXIST <span class="number">0x2
-<a href=#664 id=664 data-nosnippet>664</a>	</span>ALLOW_DECRYPTION <span class="number">0x4
-<a href=#665 id=665 data-nosnippet>665</a>	</span>NO_SECURITY <span class="number">0x8
-<a href=#666 id=666 data-nosnippet>666</a>	</span>COPY_CREATION_TIME <span class="number">0x10
-<a href=#667 id=667 data-nosnippet>667</a>	</span>COPY_WRITE_TIME <span class="number">0x20
-<a href=#668 id=668 data-nosnippet>668</a>	</span>USE_FULL_ACCESS <span class="number">0x40
-<a href=#669 id=669 data-nosnippet>669</a>	</span>DELETE_RECYCLE_IF_POSSIBLE <span class="number">0x80
-<a href=#670 id=670 data-nosnippet>670</a>	</span>COPY_HARD_LINK <span class="number">0x100
-<a href=#671 id=671 data-nosnippet>671</a>	</span>COPY_LOCALIZED_NAME <span class="number">0x200
-<a href=#672 id=672 data-nosnippet>672</a>	</span>MOVE_AS_COPY_DELETE <span class="number">0x400
-<a href=#673 id=673 data-nosnippet>673</a>	</span>SUSPEND_SHELLEVENTS <span class="number">0x800
-<a href=#674 id=674 data-nosnippet>674</a></span>}</code></pre></div></section></main></body></html>
+<a href=#575 id=575 data-nosnippet>575</a>	</span>MOVING <span class="self">Self</span>::NONE.raw() + <span class="number">1
+<a href=#576 id=576 data-nosnippet>576</a>	</span>COPYING <span class="self">Self</span>::MOVING.raw() + <span class="number">1
+<a href=#577 id=577 data-nosnippet>577</a>	</span>RECYCLING <span class="self">Self</span>::COPYING.raw() + <span class="number">1
+<a href=#578 id=578 data-nosnippet>578</a>	</span>APPLYINGATTRIBS <span class="self">Self</span>::RECYCLING.raw() + <span class="number">1
+<a href=#579 id=579 data-nosnippet>579</a>	</span>DOWNLOADING <span class="self">Self</span>::APPLYINGATTRIBS.raw() + <span class="number">1
+<a href=#580 id=580 data-nosnippet>580</a>	</span>SEARCHING_INTERNET <span class="self">Self</span>::DOWNLOADING.raw() + <span class="number">1
+<a href=#581 id=581 data-nosnippet>581</a>	</span>CALCULATING <span class="self">Self</span>::SEARCHING_INTERNET.raw() + <span class="number">1
+<a href=#582 id=582 data-nosnippet>582</a>	</span>UPLOADING <span class="self">Self</span>::CALCULATING.raw() + <span class="number">1
+<a href=#583 id=583 data-nosnippet>583</a>	</span>SEARCHING_FILES <span class="self">Self</span>::UPLOADING.raw() + <span class="number">1
+<a href=#584 id=584 data-nosnippet>584</a>	</span>DELETING <span class="self">Self</span>::SEARCHING_FILES.raw() + <span class="number">1
+<a href=#585 id=585 data-nosnippet>585</a>	</span>RENAMING <span class="self">Self</span>::DELETING.raw() + <span class="number">1
+<a href=#586 id=586 data-nosnippet>586</a>	</span>FORMATTING <span class="self">Self</span>::RENAMING.raw() + <span class="number">1
+<a href=#587 id=587 data-nosnippet>587</a>	</span>COPY_MOVING <span class="self">Self</span>::FORMATTING.raw() + <span class="number">1
+<a href=#588 id=588 data-nosnippet>588</a></span>}
+<a href=#589 id=589 data-nosnippet>589</a>
+<a href=#590 id=590 data-nosnippet>590</a><span class="macro">const_ordinary!</span> { STPFLAG: u32;
+<a href=#591 id=591 data-nosnippet>591</a>	<span class="doccomment">/// [`STPFLAG`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-stpflag)
+<a href=#592 id=592 data-nosnippet>592</a>	/// enumeration (`u32`).
+<a href=#593 id=593 data-nosnippet>593</a>	</span>=&gt;
+<a href=#594 id=594 data-nosnippet>594</a>	NONE <span class="number">0
+<a href=#595 id=595 data-nosnippet>595</a>	</span>USEAPPTHUMBNAILALWAYS <span class="number">0x1
+<a href=#596 id=596 data-nosnippet>596</a>	</span>USEAPPTHUMBNAILWHENACTIVE <span class="number">0x2
+<a href=#597 id=597 data-nosnippet>597</a>	</span>USEAPPPEEKALWAYS <span class="number">0x4
+<a href=#598 id=598 data-nosnippet>598</a>	</span>USEAPPPEEKWHENACTIVE <span class="number">0x8
+<a href=#599 id=599 data-nosnippet>599</a></span>}
+<a href=#600 id=600 data-nosnippet>600</a>
+<a href=#601 id=601 data-nosnippet>601</a><span class="macro">const_ordinary!</span> { TBPF: u32;
+<a href=#602 id=602 data-nosnippet>602</a>	<span class="doccomment">/// [`ITaskbarList3::SetProgressState`](crate::prelude::shell_ITaskbarList3::SetProgressState)
+<a href=#603 id=603 data-nosnippet>603</a>	/// `tbpFlags` (`u32`).
+<a href=#604 id=604 data-nosnippet>604</a>	</span>=&gt;
+<a href=#605 id=605 data-nosnippet>605</a>	<span class="doccomment">/// Stops displaying progress and returns the button to its normal state.
+<a href=#606 id=606 data-nosnippet>606</a>	/// Call this method with this flag to dismiss the progress bar when the
+<a href=#607 id=607 data-nosnippet>607</a>	/// operation is complete or canceled.
+<a href=#608 id=608 data-nosnippet>608</a>	</span>NOPROGRESS <span class="number">0
+<a href=#609 id=609 data-nosnippet>609</a>	</span><span class="doccomment">/// The progress indicator does not grow in size but cycles repeatedly
+<a href=#610 id=610 data-nosnippet>610</a>	/// along the length of the taskbar button. This indicates activity without
+<a href=#611 id=611 data-nosnippet>611</a>	/// specifying what proportion of the progress is complete. Progress is
+<a href=#612 id=612 data-nosnippet>612</a>	/// taking place but there is no prediction as to how long the operation
+<a href=#613 id=613 data-nosnippet>613</a>	/// will take.
+<a href=#614 id=614 data-nosnippet>614</a>	</span>INDETERMINATE <span class="number">0x1
+<a href=#615 id=615 data-nosnippet>615</a>	</span><span class="doccomment">/// The progress indicator grows in size from left to right in proportion to
+<a href=#616 id=616 data-nosnippet>616</a>	/// the estimated amount of the operation completed. This is a determinate
+<a href=#617 id=617 data-nosnippet>617</a>	/// progress indicator; a prediction is being made as to the duration of the
+<a href=#618 id=618 data-nosnippet>618</a>	/// operation.
+<a href=#619 id=619 data-nosnippet>619</a>	</span>NORMAL <span class="number">0x2
+<a href=#620 id=620 data-nosnippet>620</a>	</span><span class="doccomment">/// The progress indicator turns red to show that an error has occurred in
+<a href=#621 id=621 data-nosnippet>621</a>	/// one of the windows that is broadcasting progress. This is a determinate
+<a href=#622 id=622 data-nosnippet>622</a>	/// state. If the progress indicator is in the indeterminate state it
+<a href=#623 id=623 data-nosnippet>623</a>	/// switches to a red determinate display of a generic percentage not
+<a href=#624 id=624 data-nosnippet>624</a>	/// indicative of actual progress.
+<a href=#625 id=625 data-nosnippet>625</a>	</span>ERROR <span class="number">0x4
+<a href=#626 id=626 data-nosnippet>626</a>	</span><span class="doccomment">/// The progress indicator turns yellow to show that progress is currently
+<a href=#627 id=627 data-nosnippet>627</a>	/// stopped in one of the windows but can be resumed by the user. No error
+<a href=#628 id=628 data-nosnippet>628</a>	/// condition exists and nothing is preventing the progress from continuing.
+<a href=#629 id=629 data-nosnippet>629</a>	/// This is a determinate state. If the progress indicator is in the
+<a href=#630 id=630 data-nosnippet>630</a>	/// indeterminate state it switches to a yellow determinate display of a
+<a href=#631 id=631 data-nosnippet>631</a>	/// generic percentage not indicative of actual progress.
+<a href=#632 id=632 data-nosnippet>632</a>	</span>PAUSED <span class="number">0x8
+<a href=#633 id=633 data-nosnippet>633</a></span>}
+<a href=#634 id=634 data-nosnippet>634</a>
+<a href=#635 id=635 data-nosnippet>635</a><span class="macro">const_bitflag!</span> { TSF: u32;
+<a href=#636 id=636 data-nosnippet>636</a>	<span class="doccomment">/// [`_TRANSFER_SOURCE_FLAGS`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/ne-shobjidl_core-_transfer_source_flags)
+<a href=#637 id=637 data-nosnippet>637</a>	/// enumeration (`u32`).
+<a href=#638 id=638 data-nosnippet>638</a>	</span>=&gt;
+<a href=#639 id=639 data-nosnippet>639</a>	NORMAL <span class="number">0
+<a href=#640 id=640 data-nosnippet>640</a>	</span>FAIL_EXIST <span class="number">0
+<a href=#641 id=641 data-nosnippet>641</a>	</span>RENAME_EXIST <span class="number">0x1
+<a href=#642 id=642 data-nosnippet>642</a>	</span>OVERWRITE_EXIST <span class="number">0x2
+<a href=#643 id=643 data-nosnippet>643</a>	</span>ALLOW_DECRYPTION <span class="number">0x4
+<a href=#644 id=644 data-nosnippet>644</a>	</span>NO_SECURITY <span class="number">0x8
+<a href=#645 id=645 data-nosnippet>645</a>	</span>COPY_CREATION_TIME <span class="number">0x10
+<a href=#646 id=646 data-nosnippet>646</a>	</span>COPY_WRITE_TIME <span class="number">0x20
+<a href=#647 id=647 data-nosnippet>647</a>	</span>USE_FULL_ACCESS <span class="number">0x40
+<a href=#648 id=648 data-nosnippet>648</a>	</span>DELETE_RECYCLE_IF_POSSIBLE <span class="number">0x80
+<a href=#649 id=649 data-nosnippet>649</a>	</span>COPY_HARD_LINK <span class="number">0x100
+<a href=#650 id=650 data-nosnippet>650</a>	</span>COPY_LOCALIZED_NAME <span class="number">0x200
+<a href=#651 id=651 data-nosnippet>651</a>	</span>MOVE_AS_COPY_DELETE <span class="number">0x400
+<a href=#652 id=652 data-nosnippet>652</a>	</span>SUSPEND_SHELLEVENTS <span class="number">0x800
+<a href=#653 id=653 data-nosnippet>653</a></span>}</code></pre></div></section></main></body></html>
