@@ -38,6 +38,24 @@ pub trait ole_IBindCtx: ole_IUnknown {
 		.map(|_| bo)
 	}
 
+	/// [`IBindCtx::GetObjectParam`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-getobjectparam)
+	/// method.
+	#[must_use]
+	fn GetObjectParam<T>(&self, key: &str) -> HrResult<T>
+	where
+		T: ole_IUnknown,
+	{
+		let mut queried = unsafe { T::null() };
+		ok_to_hrresult(unsafe {
+			(vt::<IBindCtxVT>(self).GetObjectParam)(
+				self.ptr(),
+				WString::from_str(key).as_ptr(),
+				queried.as_mut(),
+			)
+		})
+		.map(|_| queried)
+	}
+
 	fn_com_noparm! { ReleaseBoundObjects: IBindCtxVT;
 		/// [`IBindCtx::ReleaseBoundObjects`](https://learn.microsoft.com/en-us/windows/win32/api/objidl/nf-objidl-ibindctx-releaseboundobjects)
 		/// method.
