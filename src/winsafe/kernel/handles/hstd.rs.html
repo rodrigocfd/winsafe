@@ -76,29 +76,55 @@
 <a href=#76 id=76 data-nosnippet>76</a>		.map(|<span class="kw">_</span>| num_read)
 <a href=#77 id=77 data-nosnippet>77</a>	}
 <a href=#78 id=78 data-nosnippet>78</a>
-<a href=#79 id=79 data-nosnippet>79</a>	<span class="doccomment">/// [`SetConsoleMode`](https://learn.microsoft.com/en-us/windows/console/setconsolemode)
+<a href=#79 id=79 data-nosnippet>79</a>	<span class="doccomment">/// [`ReadFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-readfile)
 <a href=#80 id=80 data-nosnippet>80</a>	/// function.
-<a href=#81 id=81 data-nosnippet>81</a>	</span><span class="kw">pub fn </span>SetConsoleMode(<span class="kw-2">&amp;</span><span class="self">self</span>, mode: co::CONSOLE) -&gt; SysResult&lt;()&gt; {
-<a href=#82 id=82 data-nosnippet>82</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::SetConsoleMode(<span class="self">self</span>.ptr(), mode.raw()) })
-<a href=#83 id=83 data-nosnippet>83</a>	}
-<a href=#84 id=84 data-nosnippet>84</a>
-<a href=#85 id=85 data-nosnippet>85</a>	<span class="doccomment">/// [`WriteConsole`](https://learn.microsoft.com/en-us/windows/console/writeconsole)
-<a href=#86 id=86 data-nosnippet>86</a>	/// function.
-<a href=#87 id=87 data-nosnippet>87</a>	///
-<a href=#88 id=88 data-nosnippet>88</a>	/// Returns the number of chars actually written.
-<a href=#89 id=89 data-nosnippet>89</a>	</span><span class="kw">pub fn </span>WriteConsole(<span class="kw-2">&amp;</span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;u32&gt; {
-<a href=#90 id=90 data-nosnippet>90</a>		<span class="kw">let </span>buf = WString::from_str(text);
-<a href=#91 id=91 data-nosnippet>91</a>		<span class="kw">let </span><span class="kw-2">mut </span>num_written = <span class="number">0u32</span>;
-<a href=#92 id=92 data-nosnippet>92</a>
-<a href=#93 id=93 data-nosnippet>93</a>		<span class="kw">unsafe </span>{
-<a href=#94 id=94 data-nosnippet>94</a>			bool_to_sysresult(ffi::WriteConsoleW(
-<a href=#95 id=95 data-nosnippet>95</a>				<span class="self">self</span>.ptr(),
-<a href=#96 id=96 data-nosnippet>96</a>				buf.as_ptr() <span class="kw">as _</span>,
-<a href=#97 id=97 data-nosnippet>97</a>				buf.str_len() <span class="kw">as _</span>,
-<a href=#98 id=98 data-nosnippet>98</a>				<span class="kw-2">&amp;mut </span>num_written,
-<a href=#99 id=99 data-nosnippet>99</a>				std::ptr::null_mut(),
-<a href=#100 id=100 data-nosnippet>100</a>			))
-<a href=#101 id=101 data-nosnippet>101</a>		}
-<a href=#102 id=102 data-nosnippet>102</a>		.map(|<span class="kw">_</span>| num_written)
-<a href=#103 id=103 data-nosnippet>103</a>	}
-<a href=#104 id=104 data-nosnippet>104</a>}</code></pre></div></section></main></body></html>
+<a href=#81 id=81 data-nosnippet>81</a>	///
+<a href=#82 id=82 data-nosnippet>82</a>	/// Returns the number of bytes read.
+<a href=#83 id=83 data-nosnippet>83</a>	///
+<a href=#84 id=84 data-nosnippet>84</a>	/// Note that asynchronous reading – which use the
+<a href=#85 id=85 data-nosnippet>85</a>	/// [`OVERLAPPED`](crate::OVERLAPPED) struct – is not currently supported by
+<a href=#86 id=86 data-nosnippet>86</a>	/// this method, because the buffer must remain untouched until the async
+<a href=#87 id=87 data-nosnippet>87</a>	/// operation is complete, thus making the method unsound.
+<a href=#88 id=88 data-nosnippet>88</a>	</span><span class="kw">pub fn </span>ReadFile(<span class="kw-2">&amp;</span><span class="self">self</span>, buffer: <span class="kw-2">&amp;mut </span>[u8]) -&gt; SysResult&lt;u32&gt; {
+<a href=#89 id=89 data-nosnippet>89</a>		<span class="kw">unsafe </span>{ HFILE::from_ptr(<span class="self">self</span>.ptr()) }.ReadFile(buffer)
+<a href=#90 id=90 data-nosnippet>90</a>	}
+<a href=#91 id=91 data-nosnippet>91</a>
+<a href=#92 id=92 data-nosnippet>92</a>	<span class="doccomment">/// [`SetConsoleMode`](https://learn.microsoft.com/en-us/windows/console/setconsolemode)
+<a href=#93 id=93 data-nosnippet>93</a>	/// function.
+<a href=#94 id=94 data-nosnippet>94</a>	</span><span class="kw">pub fn </span>SetConsoleMode(<span class="kw-2">&amp;</span><span class="self">self</span>, mode: co::CONSOLE) -&gt; SysResult&lt;()&gt; {
+<a href=#95 id=95 data-nosnippet>95</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::SetConsoleMode(<span class="self">self</span>.ptr(), mode.raw()) })
+<a href=#96 id=96 data-nosnippet>96</a>	}
+<a href=#97 id=97 data-nosnippet>97</a>
+<a href=#98 id=98 data-nosnippet>98</a>	<span class="doccomment">/// [`WriteConsole`](https://learn.microsoft.com/en-us/windows/console/writeconsole)
+<a href=#99 id=99 data-nosnippet>99</a>	/// function.
+<a href=#100 id=100 data-nosnippet>100</a>	///
+<a href=#101 id=101 data-nosnippet>101</a>	/// Returns the number of chars actually written.
+<a href=#102 id=102 data-nosnippet>102</a>	</span><span class="kw">pub fn </span>WriteConsole(<span class="kw-2">&amp;</span><span class="self">self</span>, text: <span class="kw-2">&amp;</span>str) -&gt; SysResult&lt;u32&gt; {
+<a href=#103 id=103 data-nosnippet>103</a>		<span class="kw">let </span>buf = WString::from_str(text);
+<a href=#104 id=104 data-nosnippet>104</a>		<span class="kw">let </span><span class="kw-2">mut </span>num_written = <span class="number">0u32</span>;
+<a href=#105 id=105 data-nosnippet>105</a>
+<a href=#106 id=106 data-nosnippet>106</a>		<span class="kw">unsafe </span>{
+<a href=#107 id=107 data-nosnippet>107</a>			bool_to_sysresult(ffi::WriteConsoleW(
+<a href=#108 id=108 data-nosnippet>108</a>				<span class="self">self</span>.ptr(),
+<a href=#109 id=109 data-nosnippet>109</a>				buf.as_ptr() <span class="kw">as _</span>,
+<a href=#110 id=110 data-nosnippet>110</a>				buf.str_len() <span class="kw">as _</span>,
+<a href=#111 id=111 data-nosnippet>111</a>				<span class="kw-2">&amp;mut </span>num_written,
+<a href=#112 id=112 data-nosnippet>112</a>				std::ptr::null_mut(),
+<a href=#113 id=113 data-nosnippet>113</a>			))
+<a href=#114 id=114 data-nosnippet>114</a>		}
+<a href=#115 id=115 data-nosnippet>115</a>		.map(|<span class="kw">_</span>| num_written)
+<a href=#116 id=116 data-nosnippet>116</a>	}
+<a href=#117 id=117 data-nosnippet>117</a>
+<a href=#118 id=118 data-nosnippet>118</a>	<span class="doccomment">/// [`WriteFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-writefile)
+<a href=#119 id=119 data-nosnippet>119</a>	/// function.
+<a href=#120 id=120 data-nosnippet>120</a>	///
+<a href=#121 id=121 data-nosnippet>121</a>	/// Returns the number of bytes written.
+<a href=#122 id=122 data-nosnippet>122</a>	///
+<a href=#123 id=123 data-nosnippet>123</a>	/// Note that asynchronous writing – which use the
+<a href=#124 id=124 data-nosnippet>124</a>	/// [`OVERLAPPED`](crate::OVERLAPPED) struct – is not currently supported by
+<a href=#125 id=125 data-nosnippet>125</a>	/// this method, because the buffer must remain untouched until the async
+<a href=#126 id=126 data-nosnippet>126</a>	/// operation is complete, thus making the method unsound.
+<a href=#127 id=127 data-nosnippet>127</a>	</span><span class="kw">pub fn </span>WriteFile(<span class="kw-2">&amp;</span><span class="self">self</span>, data: <span class="kw-2">&amp;</span>[u8]) -&gt; SysResult&lt;u32&gt; {
+<a href=#128 id=128 data-nosnippet>128</a>		<span class="kw">unsafe </span>{ HFILE::from_ptr(<span class="self">self</span>.ptr()) }.WriteFile(data)
+<a href=#129 id=129 data-nosnippet>129</a>	}
+<a href=#130 id=130 data-nosnippet>130</a>}</code></pre></div></section></main></body></html>
