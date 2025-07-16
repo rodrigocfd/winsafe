@@ -18,6 +18,35 @@ pub struct ACL {
 	pub Sbz2: u16,
 }
 
+/// [`ACTCTX`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-actctxw)
+/// struct.
+#[repr(C)]
+pub struct ACTCTX<'a, 'b, 'c, 'd> {
+	cbSize: u32,
+	pub dwFlags: co::ACTCTX_FLAG,
+	lpSource: *mut u16,
+	pub wProcessorArchitecture: co::PROCESSOR_ARCHITECTURE,
+	pub wLangId: LANGID,
+	lpAssemblyDirectory: *mut u16,
+	lpResourceName: *mut u16,
+	lpApplicationName: *mut u16,
+	pub hModule: HINSTANCE,
+
+	_lpSource: PhantomData<&'a mut u16>,
+	_lpAssemblyDirectory: PhantomData<&'b mut u16>,
+	_lpResourceName: PhantomData<&'c mut u16>,
+	_lpApplicationName: PhantomData<&'d mut u16>,
+}
+
+impl_default!(ACTCTX, cbSize, 'a, 'b, 'c, 'd);
+
+impl<'a, 'b, 'c, 'd> ACTCTX<'a, 'b, 'c, 'd> {
+	pub_fn_string_ptr_get_set!('a, lpSource, set_lpSource);
+	pub_fn_string_ptr_get_set!('b, lpAssemblyDirectory, set_lpAssemblyDirectory);
+	pub_fn_string_ptr_get_set!('c, lpResourceName, set_lpResourceName);
+	pub_fn_string_ptr_get_set!('d, lpApplicationName, set_lpApplicationName);
+}
+
 /// [`BY_HANDLE_FILE_INFORMATION`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/ns-fileapi-by_handle_file_information)
 /// struct.
 #[repr(C)]

@@ -387,6 +387,14 @@ impl<'a> LocalUnlockGuard<'a> {
 	pub_fn_mem_block!();
 }
 
+handle_guard! { ReleaseActCtxGuard: HACTCTX;
+	ffi::ReleaseActCtx;
+	/// RAII implementation for [`HACTCTX`](crate::HACTCTX) which automatically
+	/// calls
+	/// [`ReleaseActCtx`](https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-releaseactctx)
+	/// when the object goes out of scope.
+}
+
 /// RAII implementation for the [`HFILE`](crate::HFILE) lock which automatically
 /// calls
 /// [`UnlockFile`](https://learn.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-lockfile)

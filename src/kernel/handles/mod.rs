@@ -1,3 +1,4 @@
+mod hactctx;
 mod hevent;
 mod hfile;
 mod hfilemap;
@@ -15,6 +16,7 @@ mod hthread;
 mod hupdatesrc;
 
 pub mod decl {
+	pub use super::hactctx::HACTCTX;
 	pub use super::hevent::HEVENT;
 	pub use super::hfile::HFILE;
 	pub use super::hfilemap::HFILEMAP;

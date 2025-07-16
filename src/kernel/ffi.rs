@@ -5,6 +5,7 @@ extern_sys! { "kernel32";
 	CheckRemoteDebuggerPresent(HANDLE, *mut BOOL) -> BOOL
 	CloseHandle(HANDLE) -> BOOL
 	CopyFileW(PCSTR, PCSTR, BOOL) -> BOOL
+	CreateActCtxW(PVOID) -> HANDLE
 	CreateDirectoryW(PCSTR, PCVOID) -> BOOL
 	CreateEventExW(PCVOID, PCSTR, u32, u32) -> HANDLE
 	CreateEventW(PCVOID, BOOL, BOOL, PCSTR) -> HANDLE
@@ -160,6 +161,7 @@ extern_sys! { "kernel32";
 	ReadConsoleW(HANDLE, PVOID, u32, *mut u32, PCVOID) -> BOOL
 	ReadFile(HANDLE, PVOID, u32, *mut u32, PVOID) -> BOOL
 	ReadProcessMemory(HANDLE, PCVOID, PVOID, usize, *mut usize) -> BOOL
+	ReleaseActCtx(HANDLE)
 	ReplaceFileW(PCSTR, PCSTR, PCSTR, u32, PVOID, PVOID) -> BOOL
 	ResetEvent(HANDLE) -> BOOL
 	ResumeThread(HANDLE) -> u32
@@ -200,6 +202,7 @@ extern_sys! { "kernel32";
 	WriteFile(HANDLE, PCVOID, u32, *mut u32, PVOID) -> BOOL
 	WriteProcessMemory(HANDLE, PCVOID, PCVOID, usize, *mut usize) -> BOOL
 	WritePrivateProfileStringW(PCSTR, PCSTR, PCSTR, PCSTR) -> BOOL
+	ZombifyActCtx(HANDLE) -> BOOL
 }
 
 extern_sys! { "user32"; // these functions should belong to kernel
