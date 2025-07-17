@@ -36,7 +36,7 @@ It’s an opaque pointer to an internal Windows structure, and no
 dereferencings should be attempted.</p>
 <p>This method can be used as an escape hatch to interoperate with
 other libraries.</p>
-</div></details><details class="toggle method-toggle" open><summary><section id="method.CreateService" class="method"><a class="src rightside" href="../../src/winsafe/advapi\handles/hsc.rs.html#19-55">Source</a><h4 class="code-header">pub fn <a href="#method.CreateService" class="fn">CreateService</a>(
+</div></details><details class="toggle method-toggle" open><summary><section id="method.CreateService" class="method"><a class="src rightside" href="../../src/winsafe/advapi\handles/hsc.rs.html#19-56">Source</a><h4 class="code-header">pub fn <a href="#method.CreateService" class="fn">CreateService</a>(
     &amp;self,
     service_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>,
     display_name: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;,
@@ -52,7 +52,7 @@ other libraries.</p>
     password: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;,
 ) -&gt; <a class="type" href="../type.SysResult.html" title="type winsafe::SysResult">SysResult</a>&lt;<a class="struct" href="struct.CloseServiceHandleSvcGuard.html" title="struct winsafe::guard::CloseServiceHandleSvcGuard">CloseServiceHandleSvcGuard</a>&gt;</h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-createservicew"><code>CreateService</code></a>
 function.</p>
-</div></details><details class="toggle method-toggle" open><summary><section id="method.OpenService" class="method"><a class="src rightside" href="../../src/winsafe/advapi\handles/hsc.rs.html#77-90">Source</a><h4 class="code-header">pub fn <a href="#method.OpenService" class="fn">OpenService</a>(
+</div></details><details class="toggle method-toggle" open><summary><section id="method.OpenService" class="method"><a class="src rightside" href="../../src/winsafe/advapi\handles/hsc.rs.html#79-93">Source</a><h4 class="code-header">pub fn <a href="#method.OpenService" class="fn">OpenService</a>(
     &amp;self,
     service_name: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>,
     desired_access: <a class="struct" href="../co/struct.SERVICE.html" title="struct winsafe::co::SERVICE">SERVICE</a>,

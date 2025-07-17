@@ -31,8 +31,9 @@
 <a href=#31 id=31 data-nosnippet>31</a>	<span class="doccomment">/// [`IFilterGraph2::ReconnectEx`](https://learn.microsoft.com/en-us/windows/win32/api/strmif/nf-strmif-ifiltergraph2-reconnectex)
 <a href=#32 id=32 data-nosnippet>32</a>	/// method.
 <a href=#33 id=33 data-nosnippet>33</a>	</span><span class="kw">fn </span>ReconnectEx(<span class="kw-2">&amp;</span><span class="self">self</span>, pin: <span class="kw-2">&amp;</span><span class="kw">impl </span>dshow_IPin, mt: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>AM_MEDIA_TYPE&gt;) -&gt; HrResult&lt;()&gt; {
-<a href=#34 id=34 data-nosnippet>34</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#34 id=34 data-nosnippet>34</a>		HrRet(<span class="kw">unsafe </span>{
 <a href=#35 id=35 data-nosnippet>35</a>			(vt::&lt;IFilterGraph2VT&gt;(<span class="self">self</span>).ReconnectEx)(<span class="self">self</span>.ptr(), pin.ptr(), pcvoid_or_null(mt))
 <a href=#36 id=36 data-nosnippet>36</a>		})
-<a href=#37 id=37 data-nosnippet>37</a>	}
-<a href=#38 id=38 data-nosnippet>38</a>}</code></pre></div></section></main></body></html>
+<a href=#37 id=37 data-nosnippet>37</a>		.to_hrresult()
+<a href=#38 id=38 data-nosnippet>38</a>	}
+<a href=#39 id=39 data-nosnippet>39</a>}</code></pre></div></section></main></body></html>

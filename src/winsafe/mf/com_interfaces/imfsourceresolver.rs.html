@@ -52,7 +52,7 @@
 <a href=#52 id=52 data-nosnippet>52</a>		state: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IUnknown&gt;,
 <a href=#53 id=53 data-nosnippet>53</a>	) -&gt; HrResult&lt;IUnknown&gt; {
 <a href=#54 id=54 data-nosnippet>54</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ IUnknown::null() };
-<a href=#55 id=55 data-nosnippet>55</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#55 id=55 data-nosnippet>55</a>		HrRet(<span class="kw">unsafe </span>{
 <a href=#56 id=56 data-nosnippet>56</a>			(vt::&lt;IMFSourceResolverVT&gt;(<span class="self">self</span>).BeginCreateObjectFromByteStream)(
 <a href=#57 id=57 data-nosnippet>57</a>				<span class="self">self</span>.ptr(),
 <a href=#58 id=58 data-nosnippet>58</a>				byte_stream.ptr(),
@@ -63,7 +63,7 @@
 <a href=#63 id=63 data-nosnippet>63</a>				callback.ptr(),
 <a href=#64 id=64 data-nosnippet>64</a>				state.map_or(std::ptr::null_mut(), |s| s.ptr()),
 <a href=#65 id=65 data-nosnippet>65</a>			)
-<a href=#66 id=66 data-nosnippet>66</a>		})
+<a href=#66 id=66 data-nosnippet>66</a>		}).to_hrresult()
 <a href=#67 id=67 data-nosnippet>67</a>		.map(|<span class="kw">_</span>| queried)
 <a href=#68 id=68 data-nosnippet>68</a>	}
 <a href=#69 id=69 data-nosnippet>69</a>
@@ -80,7 +80,7 @@
 <a href=#80 id=80 data-nosnippet>80</a>		state: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IUnknown&gt;,
 <a href=#81 id=81 data-nosnippet>81</a>	) -&gt; HrResult&lt;IUnknown&gt; {
 <a href=#82 id=82 data-nosnippet>82</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ IUnknown::null() };
-<a href=#83 id=83 data-nosnippet>83</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#83 id=83 data-nosnippet>83</a>		HrRet(<span class="kw">unsafe </span>{
 <a href=#84 id=84 data-nosnippet>84</a>			(vt::&lt;IMFSourceResolverVT&gt;(<span class="self">self</span>).BeginCreateObjectFromURL)(
 <a href=#85 id=85 data-nosnippet>85</a>				<span class="self">self</span>.ptr(),
 <a href=#86 id=86 data-nosnippet>86</a>				WString::from_str(url).as_ptr(),
@@ -90,16 +90,16 @@
 <a href=#90 id=90 data-nosnippet>90</a>				callback.ptr(),
 <a href=#91 id=91 data-nosnippet>91</a>				state.map_or(std::ptr::null_mut(), |s| s.ptr()),
 <a href=#92 id=92 data-nosnippet>92</a>			)
-<a href=#93 id=93 data-nosnippet>93</a>		})
+<a href=#93 id=93 data-nosnippet>93</a>		}).to_hrresult()
 <a href=#94 id=94 data-nosnippet>94</a>		.map(|<span class="kw">_</span>| queried)
 <a href=#95 id=95 data-nosnippet>95</a>	}
 <a href=#96 id=96 data-nosnippet>96</a>
 <a href=#97 id=97 data-nosnippet>97</a>	<span class="doccomment">/// [`IMFSourceResolver::CancelObjectCreation`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfsourceresolver-cancelobjectcreation)
 <a href=#98 id=98 data-nosnippet>98</a>	/// method.
 <a href=#99 id=99 data-nosnippet>99</a>	</span><span class="kw">fn </span>CancelObjectCreation(<span class="kw-2">&amp;</span><span class="self">self</span>, cookie: <span class="kw-2">&amp;</span><span class="kw">impl </span>ole_IUnknown) -&gt; HrResult&lt;()&gt; {
-<a href=#100 id=100 data-nosnippet>100</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#100 id=100 data-nosnippet>100</a>		HrRet(<span class="kw">unsafe </span>{
 <a href=#101 id=101 data-nosnippet>101</a>			(vt::&lt;IMFSourceResolverVT&gt;(<span class="self">self</span>).CancelObjectCreation)(<span class="self">self</span>.ptr(), cookie.ptr())
-<a href=#102 id=102 data-nosnippet>102</a>		})
+<a href=#102 id=102 data-nosnippet>102</a>		}).to_hrresult()
 <a href=#103 id=103 data-nosnippet>103</a>	}
 <a href=#104 id=104 data-nosnippet>104</a>
 <a href=#105 id=105 data-nosnippet>105</a>	<span class="doccomment">/// [`IMFSourceResolver::CreateObjectFromByteStream`](https://learn.microsoft.com/en-us/windows/win32/api/mfidl/nf-mfidl-imfsourceresolver-createobjectfrombytestream)
@@ -114,7 +114,7 @@
 <a href=#114 id=114 data-nosnippet>114</a>		<span class="kw">let </span><span class="kw-2">mut </span>obj_type = co::MF_OBJECT::default();
 <a href=#115 id=115 data-nosnippet>115</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ IUnknown::null() };
 <a href=#116 id=116 data-nosnippet>116</a>
-<a href=#117 id=117 data-nosnippet>117</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#117 id=117 data-nosnippet>117</a>		HrRet(<span class="kw">unsafe </span>{
 <a href=#118 id=118 data-nosnippet>118</a>			(vt::&lt;IMFSourceResolverVT&gt;(<span class="self">self</span>).CreateObjectFromByteStream)(
 <a href=#119 id=119 data-nosnippet>119</a>				<span class="self">self</span>.ptr(),
 <a href=#120 id=120 data-nosnippet>120</a>				byte_stream.ptr(),
@@ -124,7 +124,7 @@
 <a href=#124 id=124 data-nosnippet>124</a>				obj_type.as_mut(),
 <a href=#125 id=125 data-nosnippet>125</a>				queried.as_mut(),
 <a href=#126 id=126 data-nosnippet>126</a>			)
-<a href=#127 id=127 data-nosnippet>127</a>		})
+<a href=#127 id=127 data-nosnippet>127</a>		}).to_hrresult()
 <a href=#128 id=128 data-nosnippet>128</a>		.map(|<span class="kw">_</span>| (obj_type, queried))
 <a href=#129 id=129 data-nosnippet>129</a>	}
 <a href=#130 id=130 data-nosnippet>130</a>
@@ -139,7 +139,7 @@
 <a href=#139 id=139 data-nosnippet>139</a>		<span class="kw">let </span><span class="kw-2">mut </span>obj_type = co::MF_OBJECT::default();
 <a href=#140 id=140 data-nosnippet>140</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ IUnknown::null() };
 <a href=#141 id=141 data-nosnippet>141</a>
-<a href=#142 id=142 data-nosnippet>142</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#142 id=142 data-nosnippet>142</a>		HrRet(<span class="kw">unsafe </span>{
 <a href=#143 id=143 data-nosnippet>143</a>			(vt::&lt;IMFSourceResolverVT&gt;(<span class="self">self</span>).CreateObjectFromURL)(
 <a href=#144 id=144 data-nosnippet>144</a>				<span class="self">self</span>.ptr(),
 <a href=#145 id=145 data-nosnippet>145</a>				WString::from_str(url).as_ptr(),
@@ -148,7 +148,7 @@
 <a href=#148 id=148 data-nosnippet>148</a>				obj_type.as_mut(),
 <a href=#149 id=149 data-nosnippet>149</a>				queried.as_mut(),
 <a href=#150 id=150 data-nosnippet>150</a>			)
-<a href=#151 id=151 data-nosnippet>151</a>		})
+<a href=#151 id=151 data-nosnippet>151</a>		}).to_hrresult()
 <a href=#152 id=152 data-nosnippet>152</a>		.map(|<span class="kw">_</span>| (obj_type, queried))
 <a href=#153 id=153 data-nosnippet>153</a>	}
 <a href=#154 id=154 data-nosnippet>154</a>
@@ -161,14 +161,14 @@
 <a href=#161 id=161 data-nosnippet>161</a>		<span class="kw">let </span><span class="kw-2">mut </span>obj_type = co::MF_OBJECT::default();
 <a href=#162 id=162 data-nosnippet>162</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ IUnknown::null() };
 <a href=#163 id=163 data-nosnippet>163</a>
-<a href=#164 id=164 data-nosnippet>164</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#164 id=164 data-nosnippet>164</a>		HrRet(<span class="kw">unsafe </span>{
 <a href=#165 id=165 data-nosnippet>165</a>			(vt::&lt;IMFSourceResolverVT&gt;(<span class="self">self</span>).EndCreateObjectFromByteStream)(
 <a href=#166 id=166 data-nosnippet>166</a>				<span class="self">self</span>.ptr(),
 <a href=#167 id=167 data-nosnippet>167</a>				result.ptr(),
 <a href=#168 id=168 data-nosnippet>168</a>				obj_type.as_mut(),
 <a href=#169 id=169 data-nosnippet>169</a>				queried.as_mut(),
 <a href=#170 id=170 data-nosnippet>170</a>			)
-<a href=#171 id=171 data-nosnippet>171</a>		})
+<a href=#171 id=171 data-nosnippet>171</a>		}).to_hrresult()
 <a href=#172 id=172 data-nosnippet>172</a>		.map(|<span class="kw">_</span>| (obj_type, queried))
 <a href=#173 id=173 data-nosnippet>173</a>	}
 <a href=#174 id=174 data-nosnippet>174</a>
@@ -181,14 +181,14 @@
 <a href=#181 id=181 data-nosnippet>181</a>		<span class="kw">let </span><span class="kw-2">mut </span>obj_type = co::MF_OBJECT::default();
 <a href=#182 id=182 data-nosnippet>182</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ IUnknown::null() };
 <a href=#183 id=183 data-nosnippet>183</a>
-<a href=#184 id=184 data-nosnippet>184</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#184 id=184 data-nosnippet>184</a>		HrRet(<span class="kw">unsafe </span>{
 <a href=#185 id=185 data-nosnippet>185</a>			(vt::&lt;IMFSourceResolverVT&gt;(<span class="self">self</span>).EndCreateObjectFromURL)(
 <a href=#186 id=186 data-nosnippet>186</a>				<span class="self">self</span>.ptr(),
 <a href=#187 id=187 data-nosnippet>187</a>				result.ptr(),
 <a href=#188 id=188 data-nosnippet>188</a>				obj_type.as_mut(),
 <a href=#189 id=189 data-nosnippet>189</a>				queried.as_mut(),
 <a href=#190 id=190 data-nosnippet>190</a>			)
-<a href=#191 id=191 data-nosnippet>191</a>		})
+<a href=#191 id=191 data-nosnippet>191</a>		}).to_hrresult()
 <a href=#192 id=192 data-nosnippet>192</a>		.map(|<span class="kw">_</span>| (obj_type, queried))
 <a href=#193 id=193 data-nosnippet>193</a>	}
 <a href=#194 id=194 data-nosnippet>194</a>}</code></pre></div></section></main></body></html>

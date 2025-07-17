@@ -34,7 +34,7 @@
 <a href=#34 id=34 data-nosnippet>34</a>		face_name: <span class="kw-2">&amp;</span>str,
 <a href=#35 id=35 data-nosnippet>35</a>	) -&gt; SysResult&lt;DeleteObjectGuard&lt;HFONT&gt;&gt; {
 <a href=#36 id=36 data-nosnippet>36</a>		<span class="kw">unsafe </span>{
-<a href=#37 id=37 data-nosnippet>37</a>			ptr_to_invalidparm_handle(ffi::CreateFontW(
+<a href=#37 id=37 data-nosnippet>37</a>			PtrRet(ffi::CreateFontW(
 <a href=#38 id=38 data-nosnippet>38</a>				sz.cy,
 <a href=#39 id=39 data-nosnippet>39</a>				sz.cx,
 <a href=#40 id=40 data-nosnippet>40</a>				escapement,
@@ -50,34 +50,37 @@
 <a href=#50 id=50 data-nosnippet>50</a>				pitch_and_family.raw() <span class="kw">as _</span>,
 <a href=#51 id=51 data-nosnippet>51</a>				WString::from_str(face_name).as_ptr(),
 <a href=#52 id=52 data-nosnippet>52</a>			))
-<a href=#53 id=53 data-nosnippet>53</a>			.map(|h| DeleteObjectGuard::new(h))
-<a href=#54 id=54 data-nosnippet>54</a>		}
-<a href=#55 id=55 data-nosnippet>55</a>	}
-<a href=#56 id=56 data-nosnippet>56</a>
-<a href=#57 id=57 data-nosnippet>57</a>	<span class="doccomment">/// [`CreateFontIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirectw)
-<a href=#58 id=58 data-nosnippet>58</a>	/// function.
-<a href=#59 id=59 data-nosnippet>59</a>	</span><span class="attr">#[must_use]
-<a href=#60 id=60 data-nosnippet>60</a>	</span><span class="kw">pub fn </span>CreateFontIndirect(lf: <span class="kw-2">&amp;</span>LOGFONT) -&gt; SysResult&lt;DeleteObjectGuard&lt;HFONT&gt;&gt; {
-<a href=#61 id=61 data-nosnippet>61</a>		<span class="kw">unsafe </span>{
-<a href=#62 id=62 data-nosnippet>62</a>			ptr_to_invalidparm_handle(ffi::CreateFontIndirectW(pcvoid(lf)))
-<a href=#63 id=63 data-nosnippet>63</a>				.map(|h| DeleteObjectGuard::new(h))
-<a href=#64 id=64 data-nosnippet>64</a>		}
-<a href=#65 id=65 data-nosnippet>65</a>	}
-<a href=#66 id=66 data-nosnippet>66</a>
-<a href=#67 id=67 data-nosnippet>67</a>	<span class="doccomment">/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
-<a href=#68 id=68 data-nosnippet>68</a>	/// function.
-<a href=#69 id=69 data-nosnippet>69</a>	</span><span class="kw">pub fn </span>GetObject(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;LOGFONT&gt; {
-<a href=#70 id=70 data-nosnippet>70</a>		<span class="kw">let </span><span class="kw-2">mut </span>lf = LOGFONT::default();
-<a href=#71 id=71 data-nosnippet>71</a>		bool_to_invalidparm(<span class="kw">unsafe </span>{
-<a href=#72 id=72 data-nosnippet>72</a>			ffi::GetObjectW(<span class="self">self</span>.ptr(), std::mem::size_of::&lt;LOGFONT&gt;() <span class="kw">as _</span>, pvoid(<span class="kw-2">&amp;mut </span>lf))
-<a href=#73 id=73 data-nosnippet>73</a>		})
-<a href=#74 id=74 data-nosnippet>74</a>		.map(|<span class="kw">_</span>| lf)
-<a href=#75 id=75 data-nosnippet>75</a>	}
-<a href=#76 id=76 data-nosnippet>76</a>
-<a href=#77 id=77 data-nosnippet>77</a>	<span class="doccomment">/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
-<a href=#78 id=78 data-nosnippet>78</a>	/// function.
-<a href=#79 id=79 data-nosnippet>79</a>	</span><span class="attr">#[must_use]
-<a href=#80 id=80 data-nosnippet>80</a>	</span><span class="kw">pub fn </span>GetStockObject(sf: co::STOCK_FONT) -&gt; SysResult&lt;HFONT&gt; {
-<a href=#81 id=81 data-nosnippet>81</a>		ptr_to_invalidparm_handle(<span class="kw">unsafe </span>{ ffi::GetStockObject(sf.raw()) })
-<a href=#82 id=82 data-nosnippet>82</a>	}
-<a href=#83 id=83 data-nosnippet>83</a>}</code></pre></div></section></main></body></html>
+<a href=#53 id=53 data-nosnippet>53</a>			.to_invalidparm_handle()
+<a href=#54 id=54 data-nosnippet>54</a>			.map(|h| DeleteObjectGuard::new(h))
+<a href=#55 id=55 data-nosnippet>55</a>		}
+<a href=#56 id=56 data-nosnippet>56</a>	}
+<a href=#57 id=57 data-nosnippet>57</a>
+<a href=#58 id=58 data-nosnippet>58</a>	<span class="doccomment">/// [`CreateFontIndirect`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-createfontindirectw)
+<a href=#59 id=59 data-nosnippet>59</a>	/// function.
+<a href=#60 id=60 data-nosnippet>60</a>	</span><span class="attr">#[must_use]
+<a href=#61 id=61 data-nosnippet>61</a>	</span><span class="kw">pub fn </span>CreateFontIndirect(lf: <span class="kw-2">&amp;</span>LOGFONT) -&gt; SysResult&lt;DeleteObjectGuard&lt;HFONT&gt;&gt; {
+<a href=#62 id=62 data-nosnippet>62</a>		<span class="kw">unsafe </span>{
+<a href=#63 id=63 data-nosnippet>63</a>			PtrRet(ffi::CreateFontIndirectW(pcvoid(lf)))
+<a href=#64 id=64 data-nosnippet>64</a>				.to_invalidparm_handle()
+<a href=#65 id=65 data-nosnippet>65</a>				.map(|h| DeleteObjectGuard::new(h))
+<a href=#66 id=66 data-nosnippet>66</a>		}
+<a href=#67 id=67 data-nosnippet>67</a>	}
+<a href=#68 id=68 data-nosnippet>68</a>
+<a href=#69 id=69 data-nosnippet>69</a>	<span class="doccomment">/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
+<a href=#70 id=70 data-nosnippet>70</a>	/// function.
+<a href=#71 id=71 data-nosnippet>71</a>	</span><span class="kw">pub fn </span>GetObject(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;LOGFONT&gt; {
+<a href=#72 id=72 data-nosnippet>72</a>		<span class="kw">let </span><span class="kw-2">mut </span>lf = LOGFONT::default();
+<a href=#73 id=73 data-nosnippet>73</a>		BoolRet(<span class="kw">unsafe </span>{
+<a href=#74 id=74 data-nosnippet>74</a>			ffi::GetObjectW(<span class="self">self</span>.ptr(), std::mem::size_of::&lt;LOGFONT&gt;() <span class="kw">as _</span>, pvoid(<span class="kw-2">&amp;mut </span>lf))
+<a href=#75 id=75 data-nosnippet>75</a>		})
+<a href=#76 id=76 data-nosnippet>76</a>		.to_invalidparm()
+<a href=#77 id=77 data-nosnippet>77</a>		.map(|<span class="kw">_</span>| lf)
+<a href=#78 id=78 data-nosnippet>78</a>	}
+<a href=#79 id=79 data-nosnippet>79</a>
+<a href=#80 id=80 data-nosnippet>80</a>	<span class="doccomment">/// [`GetStockObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getstockobject)
+<a href=#81 id=81 data-nosnippet>81</a>	/// function.
+<a href=#82 id=82 data-nosnippet>82</a>	</span><span class="attr">#[must_use]
+<a href=#83 id=83 data-nosnippet>83</a>	</span><span class="kw">pub fn </span>GetStockObject(sf: co::STOCK_FONT) -&gt; SysResult&lt;HFONT&gt; {
+<a href=#84 id=84 data-nosnippet>84</a>		PtrRet(<span class="kw">unsafe </span>{ ffi::GetStockObject(sf.raw()) }).to_invalidparm_handle()
+<a href=#85 id=85 data-nosnippet>85</a>	}
+<a href=#86 id=86 data-nosnippet>86</a>}</code></pre></div></section></main></body></html>

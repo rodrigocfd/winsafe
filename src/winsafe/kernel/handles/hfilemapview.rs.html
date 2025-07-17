@@ -73,8 +73,7 @@
 <a href=#73 id=73 data-nosnippet>73</a>	<span class="doccomment">/// [`FlushViewOfFile`](https://learn.microsoft.com/en-us/windows/win32/api/memoryapi/nf-memoryapi-flushviewoffile)
 <a href=#74 id=74 data-nosnippet>74</a>	/// function.
 <a href=#75 id=75 data-nosnippet>75</a>	</span><span class="kw">pub fn </span>FlushViewOfFile(<span class="kw-2">&amp;</span><span class="self">self</span>, start_at_byte: usize, num_bytes: usize) -&gt; SysResult&lt;()&gt; {
-<a href=#76 id=76 data-nosnippet>76</a>		bool_to_sysresult(<span class="kw">unsafe </span>{
-<a href=#77 id=77 data-nosnippet>77</a>			ffi::FlushViewOfFile(<span class="self">self</span>.ptr().offset(start_at_byte <span class="kw">as _</span>), num_bytes)
-<a href=#78 id=78 data-nosnippet>78</a>		})
-<a href=#79 id=79 data-nosnippet>79</a>	}
-<a href=#80 id=80 data-nosnippet>80</a>}</code></pre></div></section></main></body></html>
+<a href=#76 id=76 data-nosnippet>76</a>		BoolRet(<span class="kw">unsafe </span>{ ffi::FlushViewOfFile(<span class="self">self</span>.ptr().offset(start_at_byte <span class="kw">as _</span>), num_bytes) })
+<a href=#77 id=77 data-nosnippet>77</a>			.to_sysresult()
+<a href=#78 id=78 data-nosnippet>78</a>	}
+<a href=#79 id=79 data-nosnippet>79</a>}</code></pre></div></section></main></body></html>

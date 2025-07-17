@@ -33,9 +33,9 @@
 <a href=#33 id=33 data-nosnippet>33</a>	</span><span class="attr">#[must_use]
 <a href=#34 id=34 data-nosnippet>34</a>	</span><span class="kw">fn </span>GetCharacteristics(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;co::MFMEDIASOURCE&gt; {
 <a href=#35 id=35 data-nosnippet>35</a>		<span class="kw">let </span><span class="kw-2">mut </span>characteristics = co::MFMEDIASOURCE::default();
-<a href=#36 id=36 data-nosnippet>36</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#36 id=36 data-nosnippet>36</a>		HrRet(<span class="kw">unsafe </span>{
 <a href=#37 id=37 data-nosnippet>37</a>			(vt::&lt;IMFMediaSourceVT&gt;(<span class="self">self</span>).GetCharacteristics)(<span class="self">self</span>.ptr(), characteristics.as_mut())
-<a href=#38 id=38 data-nosnippet>38</a>		})
+<a href=#38 id=38 data-nosnippet>38</a>		}).to_hrresult()
 <a href=#39 id=39 data-nosnippet>39</a>		.map(|<span class="kw">_</span>| characteristics)
 <a href=#40 id=40 data-nosnippet>40</a>	}
 <a href=#41 id=41 data-nosnippet>41</a>
@@ -62,14 +62,14 @@
 <a href=#62 id=62 data-nosnippet>62</a>		time_format: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>GUID&gt;,
 <a href=#63 id=63 data-nosnippet>63</a>		start_position: <span class="kw-2">&amp;</span>PropVariant,
 <a href=#64 id=64 data-nosnippet>64</a>	) -&gt; HrResult&lt;()&gt; {
-<a href=#65 id=65 data-nosnippet>65</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#65 id=65 data-nosnippet>65</a>		HrRet(<span class="kw">unsafe </span>{
 <a href=#66 id=66 data-nosnippet>66</a>			(vt::&lt;IMFMediaSourceVT&gt;(<span class="self">self</span>).Start)(
 <a href=#67 id=67 data-nosnippet>67</a>				<span class="self">self</span>.ptr(),
 <a href=#68 id=68 data-nosnippet>68</a>				presentation_descriptor.ptr(),
 <a href=#69 id=69 data-nosnippet>69</a>				pcvoid(time_format.unwrap_or(<span class="kw-2">&amp;</span>GUID::default())),
 <a href=#70 id=70 data-nosnippet>70</a>				pcvoid(<span class="kw-2">&amp;</span>start_position.to_raw()<span class="question-mark">?</span>),
 <a href=#71 id=71 data-nosnippet>71</a>			)
-<a href=#72 id=72 data-nosnippet>72</a>		})
+<a href=#72 id=72 data-nosnippet>72</a>		}).to_hrresult()
 <a href=#73 id=73 data-nosnippet>73</a>	}
 <a href=#74 id=74 data-nosnippet>74</a>
 <a href=#75 id=75 data-nosnippet>75</a>	<span class="macro">fn_com_noparm!</span> { Stop: IMFMediaSourceVT;

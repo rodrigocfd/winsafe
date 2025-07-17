@@ -27,7 +27,7 @@
 <a href=#27 id=27 data-nosnippet>27</a>/// ```
 <a href=#28 id=28 data-nosnippet>28</a></span><span class="kw">pub fn </span>ShellExecuteEx(exec_info: <span class="kw-2">&amp;</span>SHELLEXECUTEINFO) -&gt; SysResult&lt;()&gt; {
 <a href=#29 id=29 data-nosnippet>29</a>	<span class="kw">let </span><span class="kw-2">mut </span>buf = exec_info.to_raw();
-<a href=#30 id=30 data-nosnippet>30</a>	bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::ShellExecuteExW(pvoid(<span class="kw-2">&amp;mut </span>buf.raw)) })
+<a href=#30 id=30 data-nosnippet>30</a>	BoolRet(<span class="kw">unsafe </span>{ ffi::ShellExecuteExW(pvoid(<span class="kw-2">&amp;mut </span>buf.raw)) }).to_sysresult()
 <a href=#31 id=31 data-nosnippet>31</a>}
 <a href=#32 id=32 data-nosnippet>32</a>
 <a href=#33 id=33 data-nosnippet>33</a><span class="doccomment">/// [`SHGetKnownFolderPath`](https://learn.microsoft.com/en-us/windows/win32/api/shlobj_core/nf-shlobj_core-shgetknownfolderpath)
@@ -56,7 +56,7 @@
 <a href=#56 id=56 data-nosnippet>56</a>	token: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>HACCESSTOKEN&gt;,
 <a href=#57 id=57 data-nosnippet>57</a>) -&gt; HrResult&lt;String&gt; {
 <a href=#58 id=58 data-nosnippet>58</a>	<span class="kw">let </span><span class="kw-2">mut </span>pstr = std::ptr::null_mut::&lt;u16&gt;();
-<a href=#59 id=59 data-nosnippet>59</a>	ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#59 id=59 data-nosnippet>59</a>	HrRet(<span class="kw">unsafe </span>{
 <a href=#60 id=60 data-nosnippet>60</a>		ffi::SHGetKnownFolderPath(
 <a href=#61 id=61 data-nosnippet>61</a>			pcvoid(folder_id),
 <a href=#62 id=62 data-nosnippet>62</a>			flags.raw(),
@@ -64,5 +64,6 @@
 <a href=#64 id=64 data-nosnippet>64</a>			<span class="kw-2">&amp;mut </span>pstr,
 <a href=#65 id=65 data-nosnippet>65</a>		)
 <a href=#66 id=66 data-nosnippet>66</a>	})
-<a href=#67 id=67 data-nosnippet>67</a>	.map(|<span class="kw">_</span>| htaskmem_ptr_to_str(pstr))
-<a href=#68 id=68 data-nosnippet>68</a>}</code></pre></div></section></main></body></html>
+<a href=#67 id=67 data-nosnippet>67</a>	.to_hrresult()
+<a href=#68 id=68 data-nosnippet>68</a>	.map(|<span class="kw">_</span>| htaskmem_ptr_to_str(pstr))
+<a href=#69 id=69 data-nosnippet>69</a>}</code></pre></div></section></main></body></html>

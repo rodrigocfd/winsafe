@@ -39,7 +39,7 @@
 <a href=#39 id=39 data-nosnippet>39</a>		shared_resource: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>DXGI_SHARED_RESOURCE&gt;,
 <a href=#40 id=40 data-nosnippet>40</a>	) -&gt; HrResult&lt;IDXGISurface&gt; {
 <a href=#41 id=41 data-nosnippet>41</a>		<span class="kw">let </span><span class="kw-2">mut </span>queried = <span class="kw">unsafe </span>{ IDXGISurface::null() };
-<a href=#42 id=42 data-nosnippet>42</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#42 id=42 data-nosnippet>42</a>		HrRet(<span class="kw">unsafe </span>{
 <a href=#43 id=43 data-nosnippet>43</a>			(vt::&lt;IDXGIDeviceVT&gt;(<span class="self">self</span>).CreateSurface)(
 <a href=#44 id=44 data-nosnippet>44</a>				<span class="self">self</span>.ptr(),
 <a href=#45 id=45 data-nosnippet>45</a>				pcvoid(desc),
@@ -49,49 +49,50 @@
 <a href=#49 id=49 data-nosnippet>49</a>				queried.as_mut(),
 <a href=#50 id=50 data-nosnippet>50</a>			)
 <a href=#51 id=51 data-nosnippet>51</a>		})
-<a href=#52 id=52 data-nosnippet>52</a>		.map(|<span class="kw">_</span>| queried)
-<a href=#53 id=53 data-nosnippet>53</a>	}
-<a href=#54 id=54 data-nosnippet>54</a>
-<a href=#55 id=55 data-nosnippet>55</a>	<span class="macro">fn_com_interface_get!</span> { GetAdapter: IDXGIDeviceVT =&gt; IDXGIAdapter;
-<a href=#56 id=56 data-nosnippet>56</a>		<span class="doccomment">/// [`IDXGIDevice::GetAdapter`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-getadapter)
-<a href=#57 id=57 data-nosnippet>57</a>		/// method.
-<a href=#58 id=58 data-nosnippet>58</a>	</span>}
-<a href=#59 id=59 data-nosnippet>59</a>
-<a href=#60 id=60 data-nosnippet>60</a>	<span class="doccomment">/// [`IDXGIDevice::GetGPUThreadPriority`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-getgputhreadpriority)
-<a href=#61 id=61 data-nosnippet>61</a>	/// method.
-<a href=#62 id=62 data-nosnippet>62</a>	</span><span class="attr">#[must_use]
-<a href=#63 id=63 data-nosnippet>63</a>	</span><span class="kw">fn </span>GetGPUThreadPriority(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;i8&gt; {
-<a href=#64 id=64 data-nosnippet>64</a>		<span class="kw">let </span><span class="kw-2">mut </span>priority = <span class="number">0i32</span>;
-<a href=#65 id=65 data-nosnippet>65</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
-<a href=#66 id=66 data-nosnippet>66</a>			(vt::&lt;IDXGIDeviceVT&gt;(<span class="self">self</span>).GetGPUThreadPriority)(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>priority)
-<a href=#67 id=67 data-nosnippet>67</a>		})
-<a href=#68 id=68 data-nosnippet>68</a>		.map(|<span class="kw">_</span>| priority <span class="kw">as _</span>)
-<a href=#69 id=69 data-nosnippet>69</a>	}
-<a href=#70 id=70 data-nosnippet>70</a>
-<a href=#71 id=71 data-nosnippet>71</a>	<span class="doccomment">/// [`IDXGIDevice::QueryResourceResidency`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-queryresourceresidency)
-<a href=#72 id=72 data-nosnippet>72</a>	/// method.
-<a href=#73 id=73 data-nosnippet>73</a>	</span><span class="attr">#[must_use]
-<a href=#74 id=74 data-nosnippet>74</a>	</span><span class="kw">fn </span>QueryResourceResidency(
-<a href=#75 id=75 data-nosnippet>75</a>		<span class="kw-2">&amp;</span><span class="self">self</span>,
-<a href=#76 id=76 data-nosnippet>76</a>		resources: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="kw">impl </span>dxgi_IDXGIResource],
-<a href=#77 id=77 data-nosnippet>77</a>	) -&gt; HrResult&lt;Vec&lt;co::DXGI_RESIDENCY&gt;&gt; {
-<a href=#78 id=78 data-nosnippet>78</a>		<span class="kw">let </span><span class="kw-2">mut </span>status = <span class="macro">vec!</span>[co::DXGI_RESIDENCY::default(); resources.len()];
-<a href=#79 id=79 data-nosnippet>79</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
-<a href=#80 id=80 data-nosnippet>80</a>			(vt::&lt;IDXGIDeviceVT&gt;(<span class="self">self</span>).QueryResourceResidency)(
-<a href=#81 id=81 data-nosnippet>81</a>				<span class="self">self</span>.ptr(),
-<a href=#82 id=82 data-nosnippet>82</a>				resources.as_ptr() <span class="kw">as _</span>,
-<a href=#83 id=83 data-nosnippet>83</a>				status.as_mut_ptr() <span class="kw">as _</span>,
-<a href=#84 id=84 data-nosnippet>84</a>				resources.len() <span class="kw">as _</span>,
-<a href=#85 id=85 data-nosnippet>85</a>			)
-<a href=#86 id=86 data-nosnippet>86</a>		})
-<a href=#87 id=87 data-nosnippet>87</a>		.map(|<span class="kw">_</span>| status)
-<a href=#88 id=88 data-nosnippet>88</a>	}
-<a href=#89 id=89 data-nosnippet>89</a>
-<a href=#90 id=90 data-nosnippet>90</a>	<span class="doccomment">/// [`IDXGIDevice::SetGPUThreadPriority`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-setgputhreadpriority)
-<a href=#91 id=91 data-nosnippet>91</a>	/// method.
-<a href=#92 id=92 data-nosnippet>92</a>	</span><span class="kw">fn </span>SetGPUThreadPriority(<span class="kw-2">&amp;</span><span class="self">self</span>, priority: i8) -&gt; HrResult&lt;()&gt; {
-<a href=#93 id=93 data-nosnippet>93</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
-<a href=#94 id=94 data-nosnippet>94</a>			(vt::&lt;IDXGIDeviceVT&gt;(<span class="self">self</span>).SetGPUThreadPriority)(<span class="self">self</span>.ptr(), priority <span class="kw">as _</span>)
-<a href=#95 id=95 data-nosnippet>95</a>		})
-<a href=#96 id=96 data-nosnippet>96</a>	}
-<a href=#97 id=97 data-nosnippet>97</a>}</code></pre></div></section></main></body></html>
+<a href=#52 id=52 data-nosnippet>52</a>		.to_hrresult()
+<a href=#53 id=53 data-nosnippet>53</a>		.map(|<span class="kw">_</span>| queried)
+<a href=#54 id=54 data-nosnippet>54</a>	}
+<a href=#55 id=55 data-nosnippet>55</a>
+<a href=#56 id=56 data-nosnippet>56</a>	<span class="macro">fn_com_interface_get!</span> { GetAdapter: IDXGIDeviceVT =&gt; IDXGIAdapter;
+<a href=#57 id=57 data-nosnippet>57</a>		<span class="doccomment">/// [`IDXGIDevice::GetAdapter`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-getadapter)
+<a href=#58 id=58 data-nosnippet>58</a>		/// method.
+<a href=#59 id=59 data-nosnippet>59</a>	</span>}
+<a href=#60 id=60 data-nosnippet>60</a>
+<a href=#61 id=61 data-nosnippet>61</a>	<span class="doccomment">/// [`IDXGIDevice::GetGPUThreadPriority`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-getgputhreadpriority)
+<a href=#62 id=62 data-nosnippet>62</a>	/// method.
+<a href=#63 id=63 data-nosnippet>63</a>	</span><span class="attr">#[must_use]
+<a href=#64 id=64 data-nosnippet>64</a>	</span><span class="kw">fn </span>GetGPUThreadPriority(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;i8&gt; {
+<a href=#65 id=65 data-nosnippet>65</a>		<span class="kw">let </span><span class="kw-2">mut </span>priority = <span class="number">0i32</span>;
+<a href=#66 id=66 data-nosnippet>66</a>		HrRet(<span class="kw">unsafe </span>{
+<a href=#67 id=67 data-nosnippet>67</a>			(vt::&lt;IDXGIDeviceVT&gt;(<span class="self">self</span>).GetGPUThreadPriority)(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>priority)
+<a href=#68 id=68 data-nosnippet>68</a>		}).to_hrresult()
+<a href=#69 id=69 data-nosnippet>69</a>		.map(|<span class="kw">_</span>| priority <span class="kw">as _</span>)
+<a href=#70 id=70 data-nosnippet>70</a>	}
+<a href=#71 id=71 data-nosnippet>71</a>
+<a href=#72 id=72 data-nosnippet>72</a>	<span class="doccomment">/// [`IDXGIDevice::QueryResourceResidency`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-queryresourceresidency)
+<a href=#73 id=73 data-nosnippet>73</a>	/// method.
+<a href=#74 id=74 data-nosnippet>74</a>	</span><span class="attr">#[must_use]
+<a href=#75 id=75 data-nosnippet>75</a>	</span><span class="kw">fn </span>QueryResourceResidency(
+<a href=#76 id=76 data-nosnippet>76</a>		<span class="kw-2">&amp;</span><span class="self">self</span>,
+<a href=#77 id=77 data-nosnippet>77</a>		resources: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="kw">impl </span>dxgi_IDXGIResource],
+<a href=#78 id=78 data-nosnippet>78</a>	) -&gt; HrResult&lt;Vec&lt;co::DXGI_RESIDENCY&gt;&gt; {
+<a href=#79 id=79 data-nosnippet>79</a>		<span class="kw">let </span><span class="kw-2">mut </span>status = <span class="macro">vec!</span>[co::DXGI_RESIDENCY::default(); resources.len()];
+<a href=#80 id=80 data-nosnippet>80</a>		HrRet(<span class="kw">unsafe </span>{
+<a href=#81 id=81 data-nosnippet>81</a>			(vt::&lt;IDXGIDeviceVT&gt;(<span class="self">self</span>).QueryResourceResidency)(
+<a href=#82 id=82 data-nosnippet>82</a>				<span class="self">self</span>.ptr(),
+<a href=#83 id=83 data-nosnippet>83</a>				resources.as_ptr() <span class="kw">as _</span>,
+<a href=#84 id=84 data-nosnippet>84</a>				status.as_mut_ptr() <span class="kw">as _</span>,
+<a href=#85 id=85 data-nosnippet>85</a>				resources.len() <span class="kw">as _</span>,
+<a href=#86 id=86 data-nosnippet>86</a>			)
+<a href=#87 id=87 data-nosnippet>87</a>		}).to_hrresult()
+<a href=#88 id=88 data-nosnippet>88</a>		.map(|<span class="kw">_</span>| status)
+<a href=#89 id=89 data-nosnippet>89</a>	}
+<a href=#90 id=90 data-nosnippet>90</a>
+<a href=#91 id=91 data-nosnippet>91</a>	<span class="doccomment">/// [`IDXGIDevice::SetGPUThreadPriority`](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgidevice-setgputhreadpriority)
+<a href=#92 id=92 data-nosnippet>92</a>	/// method.
+<a href=#93 id=93 data-nosnippet>93</a>	</span><span class="kw">fn </span>SetGPUThreadPriority(<span class="kw-2">&amp;</span><span class="self">self</span>, priority: i8) -&gt; HrResult&lt;()&gt; {
+<a href=#94 id=94 data-nosnippet>94</a>		HrRet(<span class="kw">unsafe </span>{
+<a href=#95 id=95 data-nosnippet>95</a>			(vt::&lt;IDXGIDeviceVT&gt;(<span class="self">self</span>).SetGPUThreadPriority)(<span class="self">self</span>.ptr(), priority <span class="kw">as _</span>)
+<a href=#96 id=96 data-nosnippet>96</a>		}).to_hrresult()
+<a href=#97 id=97 data-nosnippet>97</a>	}
+<a href=#98 id=98 data-nosnippet>98</a>}</code></pre></div></section></main></body></html>

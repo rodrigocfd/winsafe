@@ -2461,7 +2461,7 @@
 <a href=#2461 id=2461 data-nosnippet>2461</a>	<span class="kw">type </span>RetType = HrResult&lt;()&gt;;
 <a href=#2462 id=2462 data-nosnippet>2462</a>
 <a href=#2463 id=2463 data-nosnippet>2463</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#2464 id=2464 data-nosnippet>2464</a>		ok_to_hrresult(v <span class="kw">as _</span>)
+<a href=#2464 id=2464 data-nosnippet>2464</a>		HrRet(v <span class="kw">as _</span>).to_hrresult()
 <a href=#2465 id=2465 data-nosnippet>2465</a>	}
 <a href=#2466 id=2466 data-nosnippet>2466</a>
 <a href=#2467 id=2467 data-nosnippet>2467</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {

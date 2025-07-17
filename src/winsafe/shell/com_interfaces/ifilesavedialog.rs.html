@@ -67,7 +67,7 @@
 <a href=#67 id=67 data-nosnippet>67</a>		hwnd: <span class="kw-2">&amp;</span>HWND,
 <a href=#68 id=68 data-nosnippet>68</a>		sink: <span class="prelude-ty">Option</span>&lt;<span class="kw-2">&amp;</span>IFileOperationProgressSink&gt;,
 <a href=#69 id=69 data-nosnippet>69</a>	) -&gt; HrResult&lt;()&gt; {
-<a href=#70 id=70 data-nosnippet>70</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#70 id=70 data-nosnippet>70</a>		HrRet(<span class="kw">unsafe </span>{
 <a href=#71 id=71 data-nosnippet>71</a>			(vt::&lt;IFileSaveDialogVT&gt;(<span class="self">self</span>).ApplyProperties)(
 <a href=#72 id=72 data-nosnippet>72</a>				<span class="self">self</span>.ptr(),
 <a href=#73 id=73 data-nosnippet>73</a>				item.ptr(),
@@ -76,26 +76,25 @@
 <a href=#76 id=76 data-nosnippet>76</a>				sink.map_or(std::ptr::null_mut(), |s| s.ptr()),
 <a href=#77 id=77 data-nosnippet>77</a>			)
 <a href=#78 id=78 data-nosnippet>78</a>		})
-<a href=#79 id=79 data-nosnippet>79</a>	}
-<a href=#80 id=80 data-nosnippet>80</a>
-<a href=#81 id=81 data-nosnippet>81</a>	<span class="macro">fn_com_interface_get!</span> { GetProperties: IFileSaveDialogVT =&gt; IPropertyStore;
-<a href=#82 id=82 data-nosnippet>82</a>		<span class="doccomment">/// [`IFileSaveDialog::GetProperties`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-getproperties)
-<a href=#83 id=83 data-nosnippet>83</a>		/// method.
-<a href=#84 id=84 data-nosnippet>84</a>	</span>}
-<a href=#85 id=85 data-nosnippet>85</a>
-<a href=#86 id=86 data-nosnippet>86</a>	<span class="doccomment">/// [`IFileSaveDialog::SetProperties`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setproperties)
-<a href=#87 id=87 data-nosnippet>87</a>	/// method.
-<a href=#88 id=88 data-nosnippet>88</a>	</span><span class="kw">fn </span>SetProperties(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="kw">impl </span>oleaut_IPropertyStore) -&gt; HrResult&lt;()&gt; {
-<a href=#89 id=89 data-nosnippet>89</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
-<a href=#90 id=90 data-nosnippet>90</a>			(vt::&lt;IFileSaveDialogVT&gt;(<span class="self">self</span>).SetProperties)(<span class="self">self</span>.ptr(), store.ptr())
-<a href=#91 id=91 data-nosnippet>91</a>		})
+<a href=#79 id=79 data-nosnippet>79</a>		.to_hrresult()
+<a href=#80 id=80 data-nosnippet>80</a>	}
+<a href=#81 id=81 data-nosnippet>81</a>
+<a href=#82 id=82 data-nosnippet>82</a>	<span class="macro">fn_com_interface_get!</span> { GetProperties: IFileSaveDialogVT =&gt; IPropertyStore;
+<a href=#83 id=83 data-nosnippet>83</a>		<span class="doccomment">/// [`IFileSaveDialog::GetProperties`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-getproperties)
+<a href=#84 id=84 data-nosnippet>84</a>		/// method.
+<a href=#85 id=85 data-nosnippet>85</a>	</span>}
+<a href=#86 id=86 data-nosnippet>86</a>
+<a href=#87 id=87 data-nosnippet>87</a>	<span class="doccomment">/// [`IFileSaveDialog::SetProperties`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setproperties)
+<a href=#88 id=88 data-nosnippet>88</a>	/// method.
+<a href=#89 id=89 data-nosnippet>89</a>	</span><span class="kw">fn </span>SetProperties(<span class="kw-2">&amp;</span><span class="self">self</span>, store: <span class="kw-2">&amp;</span><span class="kw">impl </span>oleaut_IPropertyStore) -&gt; HrResult&lt;()&gt; {
+<a href=#90 id=90 data-nosnippet>90</a>		HrRet(<span class="kw">unsafe </span>{ (vt::&lt;IFileSaveDialogVT&gt;(<span class="self">self</span>).SetProperties)(<span class="self">self</span>.ptr(), store.ptr()) })
+<a href=#91 id=91 data-nosnippet>91</a>			.to_hrresult()
 <a href=#92 id=92 data-nosnippet>92</a>	}
 <a href=#93 id=93 data-nosnippet>93</a>
 <a href=#94 id=94 data-nosnippet>94</a>	<span class="doccomment">/// [`IFileSaveDialog::SetSaveAsItem`](https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nf-shobjidl_core-ifilesavedialog-setsaveasitem)
 <a href=#95 id=95 data-nosnippet>95</a>	/// method.
 <a href=#96 id=96 data-nosnippet>96</a>	</span><span class="kw">fn </span>SetSaveAsItem(<span class="kw-2">&amp;</span><span class="self">self</span>, item: <span class="kw-2">&amp;</span><span class="kw">impl </span>shell_IShellItem) -&gt; HrResult&lt;()&gt; {
-<a href=#97 id=97 data-nosnippet>97</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
-<a href=#98 id=98 data-nosnippet>98</a>			(vt::&lt;IFileSaveDialogVT&gt;(<span class="self">self</span>).SetSaveAsItem)(<span class="self">self</span>.ptr(), item.ptr())
-<a href=#99 id=99 data-nosnippet>99</a>		})
-<a href=#100 id=100 data-nosnippet>100</a>	}
-<a href=#101 id=101 data-nosnippet>101</a>}</code></pre></div></section></main></body></html>
+<a href=#97 id=97 data-nosnippet>97</a>		HrRet(<span class="kw">unsafe </span>{ (vt::&lt;IFileSaveDialogVT&gt;(<span class="self">self</span>).SetSaveAsItem)(<span class="self">self</span>.ptr(), item.ptr()) })
+<a href=#98 id=98 data-nosnippet>98</a>			.to_hrresult()
+<a href=#99 id=99 data-nosnippet>99</a>	}
+<a href=#100 id=100 data-nosnippet>100</a>}</code></pre></div></section></main></body></html>

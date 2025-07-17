@@ -29,7 +29,7 @@
 <a href=#29 id=29 data-nosnippet>29</a>		<span class="kw">let </span><span class="kw-2">mut </span>dib_sz = <span class="number">0u32</span>;
 <a href=#30 id=30 data-nosnippet>30</a>		<span class="kw">let </span><span class="kw-2">mut </span>time_stamp = <span class="number">0i64</span>;
 <a href=#31 id=31 data-nosnippet>31</a>
-<a href=#32 id=32 data-nosnippet>32</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#32 id=32 data-nosnippet>32</a>		HrRet(<span class="kw">unsafe </span>{
 <a href=#33 id=33 data-nosnippet>33</a>			(vt::&lt;IMFVideoDisplayControlVT&gt;(<span class="self">self</span>).GetCurrentImage)(
 <a href=#34 id=34 data-nosnippet>34</a>				<span class="self">self</span>.ptr(),
 <a href=#35 id=35 data-nosnippet>35</a>				pvoid(<span class="kw-2">&amp;mut </span>bih),
@@ -38,10 +38,11 @@
 <a href=#38 id=38 data-nosnippet>38</a>				<span class="kw-2">&amp;mut </span>time_stamp,
 <a href=#39 id=39 data-nosnippet>39</a>			)
 <a href=#40 id=40 data-nosnippet>40</a>		})
-<a href=#41 id=41 data-nosnippet>41</a>		.map(|<span class="kw">_</span>| {
-<a href=#42 id=42 data-nosnippet>42</a>			<span class="kw">let </span>dib_vec = <span class="kw">unsafe </span>{ std::slice::from_raw_parts(dib_ptr, dib_sz <span class="kw">as _</span>) }.to_vec();
-<a href=#43 id=43 data-nosnippet>43</a>			<span class="kw">let _ </span>= <span class="kw">unsafe </span>{ CoTaskMemFreeGuard::new(dib_ptr <span class="kw">as _</span>, <span class="number">0</span>) };
-<a href=#44 id=44 data-nosnippet>44</a>			(bih, dib_vec, time_stamp)
-<a href=#45 id=45 data-nosnippet>45</a>		})
-<a href=#46 id=46 data-nosnippet>46</a>	}
-<a href=#47 id=47 data-nosnippet>47</a>}</code></pre></div></section></main></body></html>
+<a href=#41 id=41 data-nosnippet>41</a>		.to_hrresult()
+<a href=#42 id=42 data-nosnippet>42</a>		.map(|<span class="kw">_</span>| {
+<a href=#43 id=43 data-nosnippet>43</a>			<span class="kw">let </span>dib_vec = <span class="kw">unsafe </span>{ std::slice::from_raw_parts(dib_ptr, dib_sz <span class="kw">as _</span>) }.to_vec();
+<a href=#44 id=44 data-nosnippet>44</a>			<span class="kw">let _ </span>= <span class="kw">unsafe </span>{ CoTaskMemFreeGuard::new(dib_ptr <span class="kw">as _</span>, <span class="number">0</span>) };
+<a href=#45 id=45 data-nosnippet>45</a>			(bih, dib_vec, time_stamp)
+<a href=#46 id=46 data-nosnippet>46</a>		})
+<a href=#47 id=47 data-nosnippet>47</a>	}
+<a href=#48 id=48 data-nosnippet>48</a>}</code></pre></div></section></main></body></html>

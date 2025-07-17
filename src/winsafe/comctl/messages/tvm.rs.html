@@ -799,7 +799,7 @@
 <a href=#799 id=799 data-nosnippet>799</a>	<span class="kw">type </span>RetType = HrResult&lt;()&gt;;
 <a href=#800 id=800 data-nosnippet>800</a>
 <a href=#801 id=801 data-nosnippet>801</a>	<span class="kw">unsafe fn </span>isize_to_ret(<span class="kw-2">&amp;</span><span class="self">self</span>, v: isize) -&gt; <span class="self">Self</span>::RetType {
-<a href=#802 id=802 data-nosnippet>802</a>		ok_to_hrresult(v <span class="kw">as _</span>)
+<a href=#802 id=802 data-nosnippet>802</a>		HrRet(v <span class="kw">as _</span>).to_hrresult()
 <a href=#803 id=803 data-nosnippet>803</a>	}
 <a href=#804 id=804 data-nosnippet>804</a>
 <a href=#805 id=805 data-nosnippet>805</a>	<span class="kw">fn </span>as_generic_wm(<span class="kw-2">&amp;mut </span><span class="self">self</span>) -&gt; WndMsg {

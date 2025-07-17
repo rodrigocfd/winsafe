@@ -66,18 +66,18 @@
 <a href=#66 id=66 data-nosnippet>66</a>	</span><span class="attr">#[must_use]
 <a href=#67 id=67 data-nosnippet>67</a>	</span><span class="kw">fn </span>GetAt(<span class="kw-2">&amp;</span><span class="self">self</span>, index: u32) -&gt; HrResult&lt;co::PKEY&gt; {
 <a href=#68 id=68 data-nosnippet>68</a>		<span class="kw">let </span><span class="kw-2">mut </span>pkey = co::PKEY::default();
-<a href=#69 id=69 data-nosnippet>69</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
-<a href=#70 id=70 data-nosnippet>70</a>			(vt::&lt;IPropertyStoreVT&gt;(<span class="self">self</span>).GetAt)(<span class="self">self</span>.ptr(), index, pvoid(<span class="kw-2">&amp;mut </span>pkey))
-<a href=#71 id=71 data-nosnippet>71</a>		})
-<a href=#72 id=72 data-nosnippet>72</a>		.map(|<span class="kw">_</span>| pkey)
-<a href=#73 id=73 data-nosnippet>73</a>	}
-<a href=#74 id=74 data-nosnippet>74</a>
-<a href=#75 id=75 data-nosnippet>75</a>	<span class="doccomment">/// [`IPropertyStore::GetCount`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getcount)
-<a href=#76 id=76 data-nosnippet>76</a>	/// method.
-<a href=#77 id=77 data-nosnippet>77</a>	</span><span class="attr">#[must_use]
-<a href=#78 id=78 data-nosnippet>78</a>	</span><span class="kw">fn </span>GetCount(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;u32&gt; {
-<a href=#79 id=79 data-nosnippet>79</a>		<span class="kw">let </span><span class="kw-2">mut </span>count = <span class="number">0u32</span>;
-<a href=#80 id=80 data-nosnippet>80</a>		ok_to_hrresult(<span class="kw">unsafe </span>{ (vt::&lt;IPropertyStoreVT&gt;(<span class="self">self</span>).GetCount)(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>count) })
+<a href=#69 id=69 data-nosnippet>69</a>		HrRet(<span class="kw">unsafe </span>{ (vt::&lt;IPropertyStoreVT&gt;(<span class="self">self</span>).GetAt)(<span class="self">self</span>.ptr(), index, pvoid(<span class="kw-2">&amp;mut </span>pkey)) })
+<a href=#70 id=70 data-nosnippet>70</a>			.to_hrresult()
+<a href=#71 id=71 data-nosnippet>71</a>			.map(|<span class="kw">_</span>| pkey)
+<a href=#72 id=72 data-nosnippet>72</a>	}
+<a href=#73 id=73 data-nosnippet>73</a>
+<a href=#74 id=74 data-nosnippet>74</a>	<span class="doccomment">/// [`IPropertyStore::GetCount`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-getcount)
+<a href=#75 id=75 data-nosnippet>75</a>	/// method.
+<a href=#76 id=76 data-nosnippet>76</a>	</span><span class="attr">#[must_use]
+<a href=#77 id=77 data-nosnippet>77</a>	</span><span class="kw">fn </span>GetCount(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; HrResult&lt;u32&gt; {
+<a href=#78 id=78 data-nosnippet>78</a>		<span class="kw">let </span><span class="kw-2">mut </span>count = <span class="number">0u32</span>;
+<a href=#79 id=79 data-nosnippet>79</a>		HrRet(<span class="kw">unsafe </span>{ (vt::&lt;IPropertyStoreVT&gt;(<span class="self">self</span>).GetCount)(<span class="self">self</span>.ptr(), <span class="kw-2">&amp;mut </span>count) })
+<a href=#80 id=80 data-nosnippet>80</a>			.to_hrresult()
 <a href=#81 id=81 data-nosnippet>81</a>			.map(|<span class="kw">_</span>| count)
 <a href=#82 id=82 data-nosnippet>82</a>	}
 <a href=#83 id=83 data-nosnippet>83</a>
@@ -103,12 +103,13 @@
 <a href=#103 id=103 data-nosnippet>103</a>	<span class="doccomment">/// [`IPropertyStore::SetValue`](https://learn.microsoft.com/en-us/windows/win32/api/propsys/nf-propsys-ipropertystore-setvalue)
 <a href=#104 id=104 data-nosnippet>104</a>	/// method.
 <a href=#105 id=105 data-nosnippet>105</a>	</span><span class="kw">fn </span>SetValue(<span class="kw-2">&amp;</span><span class="self">self</span>, key: <span class="kw-2">&amp;</span>co::PKEY, value: <span class="kw-2">&amp;</span>PropVariant) -&gt; HrResult&lt;()&gt; {
-<a href=#106 id=106 data-nosnippet>106</a>		ok_to_hrresult(<span class="kw">unsafe </span>{
+<a href=#106 id=106 data-nosnippet>106</a>		HrRet(<span class="kw">unsafe </span>{
 <a href=#107 id=107 data-nosnippet>107</a>			(vt::&lt;IPropertyStoreVT&gt;(<span class="self">self</span>).SetValue)(
 <a href=#108 id=108 data-nosnippet>108</a>				<span class="self">self</span>.ptr(),
 <a href=#109 id=109 data-nosnippet>109</a>				pcvoid(key),
 <a href=#110 id=110 data-nosnippet>110</a>				pcvoid(<span class="kw-2">&amp;</span>value.to_raw()<span class="question-mark">?</span>),
 <a href=#111 id=111 data-nosnippet>111</a>			)
 <a href=#112 id=112 data-nosnippet>112</a>		})
-<a href=#113 id=113 data-nosnippet>113</a>	}
-<a href=#114 id=114 data-nosnippet>114</a>}</code></pre></div></section></main></body></html>
+<a href=#113 id=113 data-nosnippet>113</a>		.to_hrresult()
+<a href=#114 id=114 data-nosnippet>114</a>	}
+<a href=#115 id=115 data-nosnippet>115</a>}</code></pre></div></section></main></body></html>

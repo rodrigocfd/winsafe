@@ -19,20 +19,20 @@
 <a href=#19 id=19 data-nosnippet>19</a>		bits: <span class="kw-2">*mut </span>u8,
 <a href=#20 id=20 data-nosnippet>20</a>	) -&gt; SysResult&lt;DeleteObjectGuard&lt;HBITMAP&gt;&gt; {
 <a href=#21 id=21 data-nosnippet>21</a>		<span class="kw">unsafe </span>{
-<a href=#22 id=22 data-nosnippet>22</a>			ptr_to_invalidparm_handle(ffi::CreateBitmap(
-<a href=#23 id=23 data-nosnippet>23</a>				sz.cx, sz.cy, num_planes, bit_count, bits <span class="kw">as _</span>,
-<a href=#24 id=24 data-nosnippet>24</a>			))
-<a href=#25 id=25 data-nosnippet>25</a>			.map(|h| DeleteObjectGuard::new(h))
-<a href=#26 id=26 data-nosnippet>26</a>		}
-<a href=#27 id=27 data-nosnippet>27</a>	}
-<a href=#28 id=28 data-nosnippet>28</a>
-<a href=#29 id=29 data-nosnippet>29</a>	<span class="doccomment">/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
-<a href=#30 id=30 data-nosnippet>30</a>	/// function.
-<a href=#31 id=31 data-nosnippet>31</a>	</span><span class="kw">pub fn </span>GetObject(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;BITMAP&gt; {
-<a href=#32 id=32 data-nosnippet>32</a>		<span class="kw">let </span><span class="kw-2">mut </span>bm = BITMAP::default();
-<a href=#33 id=33 data-nosnippet>33</a>		bool_to_invalidparm(<span class="kw">unsafe </span>{
-<a href=#34 id=34 data-nosnippet>34</a>			ffi::GetObjectW(<span class="self">self</span>.ptr(), std::mem::size_of::&lt;BITMAP&gt;() <span class="kw">as _</span>, pvoid(<span class="kw-2">&amp;mut </span>bm))
-<a href=#35 id=35 data-nosnippet>35</a>		})
+<a href=#22 id=22 data-nosnippet>22</a>			PtrRet(ffi::CreateBitmap(sz.cx, sz.cy, num_planes, bit_count, bits <span class="kw">as _</span>))
+<a href=#23 id=23 data-nosnippet>23</a>				.to_invalidparm_handle()
+<a href=#24 id=24 data-nosnippet>24</a>				.map(|h| DeleteObjectGuard::new(h))
+<a href=#25 id=25 data-nosnippet>25</a>		}
+<a href=#26 id=26 data-nosnippet>26</a>	}
+<a href=#27 id=27 data-nosnippet>27</a>
+<a href=#28 id=28 data-nosnippet>28</a>	<span class="doccomment">/// [`GetObject`](https://learn.microsoft.com/en-us/windows/win32/api/wingdi/nf-wingdi-getobjectw)
+<a href=#29 id=29 data-nosnippet>29</a>	/// function.
+<a href=#30 id=30 data-nosnippet>30</a>	</span><span class="kw">pub fn </span>GetObject(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;BITMAP&gt; {
+<a href=#31 id=31 data-nosnippet>31</a>		<span class="kw">let </span><span class="kw-2">mut </span>bm = BITMAP::default();
+<a href=#32 id=32 data-nosnippet>32</a>		BoolRet(<span class="kw">unsafe </span>{
+<a href=#33 id=33 data-nosnippet>33</a>			ffi::GetObjectW(<span class="self">self</span>.ptr(), std::mem::size_of::&lt;BITMAP&gt;() <span class="kw">as _</span>, pvoid(<span class="kw-2">&amp;mut </span>bm))
+<a href=#34 id=34 data-nosnippet>34</a>		})
+<a href=#35 id=35 data-nosnippet>35</a>		.to_invalidparm()
 <a href=#36 id=36 data-nosnippet>36</a>		.map(|<span class="kw">_</span>| bm)
 <a href=#37 id=37 data-nosnippet>37</a>	}
 <a href=#38 id=38 data-nosnippet>38</a>}</code></pre></div></section></main></body></html>

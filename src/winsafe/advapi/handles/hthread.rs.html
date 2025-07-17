@@ -18,13 +18,14 @@
 <a href=#18 id=18 data-nosnippet>18</a>	) -&gt; SysResult&lt;CloseHandleGuard&lt;HACCESSTOKEN&gt;&gt; {
 <a href=#19 id=19 data-nosnippet>19</a>		<span class="kw">let </span><span class="kw-2">mut </span>handle = HACCESSTOKEN::NULL;
 <a href=#20 id=20 data-nosnippet>20</a>		<span class="kw">unsafe </span>{
-<a href=#21 id=21 data-nosnippet>21</a>			bool_to_sysresult(ffi::OpenThreadToken(
+<a href=#21 id=21 data-nosnippet>21</a>			BoolRet(ffi::OpenThreadToken(
 <a href=#22 id=22 data-nosnippet>22</a>				<span class="self">self</span>.ptr(),
 <a href=#23 id=23 data-nosnippet>23</a>				desired_access.raw(),
 <a href=#24 id=24 data-nosnippet>24</a>				open_as_self <span class="kw">as _</span>,
 <a href=#25 id=25 data-nosnippet>25</a>				handle.as_mut(),
 <a href=#26 id=26 data-nosnippet>26</a>			))
-<a href=#27 id=27 data-nosnippet>27</a>			.map(|<span class="kw">_</span>| CloseHandleGuard::new(handle))
-<a href=#28 id=28 data-nosnippet>28</a>		}
-<a href=#29 id=29 data-nosnippet>29</a>	}
-<a href=#30 id=30 data-nosnippet>30</a>}</code></pre></div></section></main></body></html>
+<a href=#27 id=27 data-nosnippet>27</a>			.to_sysresult()
+<a href=#28 id=28 data-nosnippet>28</a>			.map(|<span class="kw">_</span>| CloseHandleGuard::new(handle))
+<a href=#29 id=29 data-nosnippet>29</a>		}
+<a href=#30 id=30 data-nosnippet>30</a>	}
+<a href=#31 id=31 data-nosnippet>31</a>}</code></pre></div></section></main></body></html>

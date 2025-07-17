@@ -17,7 +17,7 @@
 <a href=#17 id=17 data-nosnippet>17</a>	<span class="doccomment">/// [`CommitTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-committransaction)
 <a href=#18 id=18 data-nosnippet>18</a>	/// function.
 <a href=#19 id=19 data-nosnippet>19</a>	</span><span class="kw">pub fn </span>CommitTransaction(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;()&gt; {
-<a href=#20 id=20 data-nosnippet>20</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::CommitTransaction(<span class="self">self</span>.ptr()) })
+<a href=#20 id=20 data-nosnippet>20</a>		BoolRet(<span class="kw">unsafe </span>{ ffi::CommitTransaction(<span class="self">self</span>.ptr()) }).to_sysresult()
 <a href=#21 id=21 data-nosnippet>21</a>	}
 <a href=#22 id=22 data-nosnippet>22</a>
 <a href=#23 id=23 data-nosnippet>23</a>	<span class="doccomment">/// [`CreateTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-createtransaction)
@@ -50,28 +50,29 @@
 <a href=#50 id=50 data-nosnippet>50</a>	</span><span class="attr">#[must_use]
 <a href=#51 id=51 data-nosnippet>51</a>	</span><span class="kw">pub fn </span>GetTransactionId(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;GUID&gt; {
 <a href=#52 id=52 data-nosnippet>52</a>		<span class="kw">let </span><span class="kw-2">mut </span>guid = GUID::default();
-<a href=#53 id=53 data-nosnippet>53</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::GetTransactionId(<span class="self">self</span>.ptr(), pvoid(<span class="kw-2">&amp;mut </span>guid)) })
-<a href=#54 id=54 data-nosnippet>54</a>			.map(|<span class="kw">_</span>| guid)
-<a href=#55 id=55 data-nosnippet>55</a>	}
-<a href=#56 id=56 data-nosnippet>56</a>
-<a href=#57 id=57 data-nosnippet>57</a>	<span class="doccomment">/// [`OpenTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-opentransaction)
-<a href=#58 id=58 data-nosnippet>58</a>	/// function.
-<a href=#59 id=59 data-nosnippet>59</a>	</span><span class="attr">#[must_use]
-<a href=#60 id=60 data-nosnippet>60</a>	</span><span class="kw">pub fn </span>OpenTransaction(
-<a href=#61 id=61 data-nosnippet>61</a>		desired_access: co::TRANSACTION,
-<a href=#62 id=62 data-nosnippet>62</a>		transaction_id: <span class="kw-2">&amp;</span>GUID,
-<a href=#63 id=63 data-nosnippet>63</a>	) -&gt; SysResult&lt;CloseHandleGuard&lt;HTRANSACTION&gt;&gt; {
-<a href=#64 id=64 data-nosnippet>64</a>		<span class="kw">unsafe </span>{
-<a href=#65 id=65 data-nosnippet>65</a>			<span class="kw">match </span>HTRANSACTION(ffi::OpenTransaction(desired_access.raw(), pcvoid(transaction_id))) {
-<a href=#66 id=66 data-nosnippet>66</a>				HTRANSACTION::INVALID =&gt; <span class="prelude-val">Err</span>(GetLastError()),
-<a href=#67 id=67 data-nosnippet>67</a>				handle =&gt; <span class="prelude-val">Ok</span>(CloseHandleGuard::new(handle)),
-<a href=#68 id=68 data-nosnippet>68</a>			}
-<a href=#69 id=69 data-nosnippet>69</a>		}
-<a href=#70 id=70 data-nosnippet>70</a>	}
-<a href=#71 id=71 data-nosnippet>71</a>
-<a href=#72 id=72 data-nosnippet>72</a>	<span class="doccomment">/// [`RollbackTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-rollbacktransaction)
-<a href=#73 id=73 data-nosnippet>73</a>	/// function.
-<a href=#74 id=74 data-nosnippet>74</a>	</span><span class="kw">pub fn </span>RollbackTransaction(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;()&gt; {
-<a href=#75 id=75 data-nosnippet>75</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::RollbackTransaction(<span class="self">self</span>.ptr()) })
-<a href=#76 id=76 data-nosnippet>76</a>	}
-<a href=#77 id=77 data-nosnippet>77</a>}</code></pre></div></section></main></body></html>
+<a href=#53 id=53 data-nosnippet>53</a>		BoolRet(<span class="kw">unsafe </span>{ ffi::GetTransactionId(<span class="self">self</span>.ptr(), pvoid(<span class="kw-2">&amp;mut </span>guid)) })
+<a href=#54 id=54 data-nosnippet>54</a>			.to_sysresult()
+<a href=#55 id=55 data-nosnippet>55</a>			.map(|<span class="kw">_</span>| guid)
+<a href=#56 id=56 data-nosnippet>56</a>	}
+<a href=#57 id=57 data-nosnippet>57</a>
+<a href=#58 id=58 data-nosnippet>58</a>	<span class="doccomment">/// [`OpenTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-opentransaction)
+<a href=#59 id=59 data-nosnippet>59</a>	/// function.
+<a href=#60 id=60 data-nosnippet>60</a>	</span><span class="attr">#[must_use]
+<a href=#61 id=61 data-nosnippet>61</a>	</span><span class="kw">pub fn </span>OpenTransaction(
+<a href=#62 id=62 data-nosnippet>62</a>		desired_access: co::TRANSACTION,
+<a href=#63 id=63 data-nosnippet>63</a>		transaction_id: <span class="kw-2">&amp;</span>GUID,
+<a href=#64 id=64 data-nosnippet>64</a>	) -&gt; SysResult&lt;CloseHandleGuard&lt;HTRANSACTION&gt;&gt; {
+<a href=#65 id=65 data-nosnippet>65</a>		<span class="kw">unsafe </span>{
+<a href=#66 id=66 data-nosnippet>66</a>			<span class="kw">match </span>HTRANSACTION(ffi::OpenTransaction(desired_access.raw(), pcvoid(transaction_id))) {
+<a href=#67 id=67 data-nosnippet>67</a>				HTRANSACTION::INVALID =&gt; <span class="prelude-val">Err</span>(GetLastError()),
+<a href=#68 id=68 data-nosnippet>68</a>				handle =&gt; <span class="prelude-val">Ok</span>(CloseHandleGuard::new(handle)),
+<a href=#69 id=69 data-nosnippet>69</a>			}
+<a href=#70 id=70 data-nosnippet>70</a>		}
+<a href=#71 id=71 data-nosnippet>71</a>	}
+<a href=#72 id=72 data-nosnippet>72</a>
+<a href=#73 id=73 data-nosnippet>73</a>	<span class="doccomment">/// [`RollbackTransaction`](https://learn.microsoft.com/en-us/windows/win32/api/ktmw32/nf-ktmw32-rollbacktransaction)
+<a href=#74 id=74 data-nosnippet>74</a>	/// function.
+<a href=#75 id=75 data-nosnippet>75</a>	</span><span class="kw">pub fn </span>RollbackTransaction(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;()&gt; {
+<a href=#76 id=76 data-nosnippet>76</a>		BoolRet(<span class="kw">unsafe </span>{ ffi::RollbackTransaction(<span class="self">self</span>.ptr()) }).to_sysresult()
+<a href=#77 id=77 data-nosnippet>77</a>	}
+<a href=#78 id=78 data-nosnippet>78</a>}</code></pre></div></section></main></body></html>

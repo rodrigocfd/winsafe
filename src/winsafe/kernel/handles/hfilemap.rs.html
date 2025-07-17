@@ -25,13 +25,14 @@
 <a href=#25 id=25 data-nosnippet>25</a>		number_of_bytes_to_map: <span class="prelude-ty">Option</span>&lt;usize&gt;,
 <a href=#26 id=26 data-nosnippet>26</a>	) -&gt; SysResult&lt;UnmapViewOfFileGuard&gt; {
 <a href=#27 id=27 data-nosnippet>27</a>		<span class="kw">unsafe </span>{
-<a href=#28 id=28 data-nosnippet>28</a>			ptr_to_sysresult_handle(ffi::MapViewOfFileFromApp(
+<a href=#28 id=28 data-nosnippet>28</a>			PtrRet(ffi::MapViewOfFileFromApp(
 <a href=#29 id=29 data-nosnippet>29</a>				<span class="self">self</span>.ptr(),
 <a href=#30 id=30 data-nosnippet>30</a>				desired_access.raw(),
 <a href=#31 id=31 data-nosnippet>31</a>				offset,
 <a href=#32 id=32 data-nosnippet>32</a>				number_of_bytes_to_map.unwrap_or_default(),
 <a href=#33 id=33 data-nosnippet>33</a>			))
-<a href=#34 id=34 data-nosnippet>34</a>			.map(|h| UnmapViewOfFileGuard::new(h))
-<a href=#35 id=35 data-nosnippet>35</a>		}
-<a href=#36 id=36 data-nosnippet>36</a>	}
-<a href=#37 id=37 data-nosnippet>37</a>}</code></pre></div></section></main></body></html>
+<a href=#34 id=34 data-nosnippet>34</a>			.to_sysresult_handle()
+<a href=#35 id=35 data-nosnippet>35</a>			.map(|h| UnmapViewOfFileGuard::new(h))
+<a href=#36 id=36 data-nosnippet>36</a>		}
+<a href=#37 id=37 data-nosnippet>37</a>	}
+<a href=#38 id=38 data-nosnippet>38</a>}</code></pre></div></section></main></body></html>

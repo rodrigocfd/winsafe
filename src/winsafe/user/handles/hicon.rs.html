@@ -16,21 +16,25 @@
 <a href=#16 id=16 data-nosnippet>16</a>	</span><span class="attr">#[must_use]
 <a href=#17 id=17 data-nosnippet>17</a>	</span><span class="kw">pub fn </span>CopyIcon(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;DestroyIconGuard&gt; {
 <a href=#18 id=18 data-nosnippet>18</a>		<span class="kw">unsafe </span>{
-<a href=#19 id=19 data-nosnippet>19</a>			ptr_to_sysresult_handle(ffi::CopyIcon(<span class="self">self</span>.ptr())).map(|h| DestroyIconGuard::new(h))
-<a href=#20 id=20 data-nosnippet>20</a>		}
-<a href=#21 id=21 data-nosnippet>21</a>	}
-<a href=#22 id=22 data-nosnippet>22</a>
-<a href=#23 id=23 data-nosnippet>23</a>	<span class="doccomment">/// [`GetIconInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-geticoninfo)
-<a href=#24 id=24 data-nosnippet>24</a>	/// function.
-<a href=#25 id=25 data-nosnippet>25</a>	</span><span class="attr">#[must_use]
-<a href=#26 id=26 data-nosnippet>26</a>	</span><span class="kw">pub fn </span>GetIconInfo(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;ICONINFO&gt; {
-<a href=#27 id=27 data-nosnippet>27</a>		<span class="kw">let </span><span class="kw-2">mut </span>ii = ICONINFO::default();
-<a href=#28 id=28 data-nosnippet>28</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::GetIconInfo(<span class="self">self</span>.ptr(), pvoid(<span class="kw-2">&amp;mut </span>ii)) }).map(|<span class="kw">_</span>| ii)
-<a href=#29 id=29 data-nosnippet>29</a>	}
-<a href=#30 id=30 data-nosnippet>30</a>
-<a href=#31 id=31 data-nosnippet>31</a>	<span class="doccomment">/// [`GetIconInfoEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-geticoninfoexw)
-<a href=#32 id=32 data-nosnippet>32</a>	/// function.
-<a href=#33 id=33 data-nosnippet>33</a>	</span><span class="kw">pub fn </span>GetIconInfoEx(<span class="kw-2">&amp;</span><span class="self">self</span>, icon_info: <span class="kw-2">&amp;mut </span>ICONINFOEX) -&gt; SysResult&lt;()&gt; {
-<a href=#34 id=34 data-nosnippet>34</a>		bool_to_sysresult(<span class="kw">unsafe </span>{ ffi::GetIconInfoExW(<span class="self">self</span>.ptr(), pvoid(icon_info)) })
-<a href=#35 id=35 data-nosnippet>35</a>	}
-<a href=#36 id=36 data-nosnippet>36</a>}</code></pre></div></section></main></body></html>
+<a href=#19 id=19 data-nosnippet>19</a>			PtrRet(ffi::CopyIcon(<span class="self">self</span>.ptr()))
+<a href=#20 id=20 data-nosnippet>20</a>				.to_sysresult_handle()
+<a href=#21 id=21 data-nosnippet>21</a>				.map(|h| DestroyIconGuard::new(h))
+<a href=#22 id=22 data-nosnippet>22</a>		}
+<a href=#23 id=23 data-nosnippet>23</a>	}
+<a href=#24 id=24 data-nosnippet>24</a>
+<a href=#25 id=25 data-nosnippet>25</a>	<span class="doccomment">/// [`GetIconInfo`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-geticoninfo)
+<a href=#26 id=26 data-nosnippet>26</a>	/// function.
+<a href=#27 id=27 data-nosnippet>27</a>	</span><span class="attr">#[must_use]
+<a href=#28 id=28 data-nosnippet>28</a>	</span><span class="kw">pub fn </span>GetIconInfo(<span class="kw-2">&amp;</span><span class="self">self</span>) -&gt; SysResult&lt;ICONINFO&gt; {
+<a href=#29 id=29 data-nosnippet>29</a>		<span class="kw">let </span><span class="kw-2">mut </span>ii = ICONINFO::default();
+<a href=#30 id=30 data-nosnippet>30</a>		BoolRet(<span class="kw">unsafe </span>{ ffi::GetIconInfo(<span class="self">self</span>.ptr(), pvoid(<span class="kw-2">&amp;mut </span>ii)) })
+<a href=#31 id=31 data-nosnippet>31</a>			.to_sysresult()
+<a href=#32 id=32 data-nosnippet>32</a>			.map(|<span class="kw">_</span>| ii)
+<a href=#33 id=33 data-nosnippet>33</a>	}
+<a href=#34 id=34 data-nosnippet>34</a>
+<a href=#35 id=35 data-nosnippet>35</a>	<span class="doccomment">/// [`GetIconInfoEx`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-geticoninfoexw)
+<a href=#36 id=36 data-nosnippet>36</a>	/// function.
+<a href=#37 id=37 data-nosnippet>37</a>	</span><span class="kw">pub fn </span>GetIconInfoEx(<span class="kw-2">&amp;</span><span class="self">self</span>, icon_info: <span class="kw-2">&amp;mut </span>ICONINFOEX) -&gt; SysResult&lt;()&gt; {
+<a href=#38 id=38 data-nosnippet>38</a>		BoolRet(<span class="kw">unsafe </span>{ ffi::GetIconInfoExW(<span class="self">self</span>.ptr(), pvoid(icon_info)) }).to_sysresult()
+<a href=#39 id=39 data-nosnippet>39</a>	}
+<a href=#40 id=40 data-nosnippet>40</a>}</code></pre></div></section></main></body></html>

@@ -29,7 +29,7 @@ It’s an opaque pointer to an internal Windows structure, and no
 dereferencings should be attempted.</p>
 <p>This method can be used as an escape hatch to interoperate with
 other libraries.</p>
-</div></details></div></details><details class="toggle implementors-toggle" open><summary><section id="impl-HDWP-1" class="impl"><a class="src rightside" href="../src/winsafe/user\handles/hdwp.rs.html#15-73">Source</a><a href="#impl-HDWP-1" class="anchor">§</a><h3 class="code-header">impl <a class="struct" href="struct.HDWP.html" title="struct winsafe::HDWP">HDWP</a></h3></section></summary><div class="impl-items"><details class="toggle method-toggle" open><summary><section id="method.BeginDeferWindowPos" class="method"><a class="src rightside" href="../src/winsafe/user\handles/hdwp.rs.html#30-35">Source</a><h4 class="code-header">pub fn <a href="#method.BeginDeferWindowPos" class="fn">BeginDeferWindowPos</a>(
+</div></details></div></details><details class="toggle implementors-toggle" open><summary><section id="impl-HDWP-1" class="impl"><a class="src rightside" href="../src/winsafe/user\handles/hdwp.rs.html#15-74">Source</a><a href="#impl-HDWP-1" class="anchor">§</a><h3 class="code-header">impl <a class="struct" href="struct.HDWP.html" title="struct winsafe::HDWP">HDWP</a></h3></section></summary><div class="impl-items"><details class="toggle method-toggle" open><summary><section id="method.BeginDeferWindowPos" class="method"><a class="src rightside" href="../src/winsafe/user\handles/hdwp.rs.html#30-36">Source</a><h4 class="code-header">pub fn <a href="#method.BeginDeferWindowPos" class="fn">BeginDeferWindowPos</a>(
     num_windows: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.u32.html">u32</a>,
 ) -&gt; <a class="type" href="type.SysResult.html" title="type winsafe::SysResult">SysResult</a>&lt;<a class="struct" href="guard/struct.EndDeferWindowPosGuard.html" title="struct winsafe::guard::EndDeferWindowPosGuard">EndDeferWindowPosGuard</a>&gt;</h4></section></summary><div class="docblock"><p><a href="https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-begindeferwindowpos"><code>BeginDeferWindowPos</code></a>
 function.</p>
@@ -42,7 +42,7 @@ as a cleanup operation.</p>
 <a href="guard/struct.EndDeferWindowPosGuard.html" title="struct winsafe::guard::EndDeferWindowPosGuard"><code>EndDeferWindowPosGuard</code></a>, which
 automatically calls <code>EndDeferWindowPos</code> when the guard goes out of
 scope.</p>
-</div></details><details class="toggle method-toggle" open><summary><section id="method.DeferWindowPos" class="method"><a class="src rightside" href="../src/winsafe/user\handles/hdwp.rs.html#42-72">Source</a><h4 class="code-header">pub fn <a href="#method.DeferWindowPos" class="fn">DeferWindowPos</a>(
+</div></details><details class="toggle method-toggle" open><summary><section id="method.DeferWindowPos" class="method"><a class="src rightside" href="../src/winsafe/user\handles/hdwp.rs.html#43-73">Source</a><h4 class="code-header">pub fn <a href="#method.DeferWindowPos" class="fn">DeferWindowPos</a>(
     &amp;mut self,
     hwnd: &amp;<a class="struct" href="struct.HWND.html" title="struct winsafe::HWND">HWND</a>,
     hwnd_insert_after: <a class="enum" href="enum.HwndPlace.html" title="enum winsafe::HwndPlace">HwndPlace</a>,
